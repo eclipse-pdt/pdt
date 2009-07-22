@@ -291,14 +291,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 															.getTypeField(type,
 																	fieldName,
 																	true)));
-
-											fields
-													.addAll(Arrays
-															.asList(PHPModelUtils
-																	.getTypeField(
-																			type,
-																			'$' + fieldName,
-																			true)));
 										} catch (ModelException e) {
 											PHPCorePlugin.log(e);
 										}

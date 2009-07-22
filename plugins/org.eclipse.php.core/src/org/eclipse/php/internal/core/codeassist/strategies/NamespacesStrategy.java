@@ -23,7 +23,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 public class NamespacesStrategy extends GlobalTypesStrategy {
 
 	public NamespacesStrategy(ICompletionContext context) {
-		super(context, Modifiers.AccNameSpace);
+		super(context, Modifiers.AccNameSpace, 0);
 	}
 
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {

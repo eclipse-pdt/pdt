@@ -23,11 +23,12 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 public class GlobalClassesStrategy extends GlobalTypesStrategy {
 
 	public GlobalClassesStrategy(ICompletionContext context) {
-		super(context, ~Modifiers.AccInterface & ~Modifiers.AccNameSpace);
+		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace);
 	}
 
-	public GlobalClassesStrategy(ICompletionContext context, int extraFlags) {
-		super(context, extraFlags);
+	public GlobalClassesStrategy(ICompletionContext context, int trueFlag,
+			int falseFlag) {
+		super(context, trueFlag, falseFlag);
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

@@ -23,7 +23,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 public class GlobalInterfacesStrategy extends GlobalTypesStrategy {
 
 	public GlobalInterfacesStrategy(ICompletionContext context) {
-		super(context, Modifiers.AccInterface);
+		super(context, Modifiers.AccInterface, 0);
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

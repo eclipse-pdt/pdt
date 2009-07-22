@@ -42,16 +42,19 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  */
 public class GlobalTypesStrategy extends GlobalElementStrategy {
 
-	private final int typeFlag;
+	private final int trueFlag;
+	private final int falseFlag;
 	private static final IType[] EMPTY = {};
 
-	public GlobalTypesStrategy(ICompletionContext context, int typeFlag) {
+	public GlobalTypesStrategy(ICompletionContext context, int trueFlag,
+			int falseFlag) {
 		super(context, null);
-		this.typeFlag = typeFlag;
+		this.trueFlag = trueFlag;
+		this.falseFlag = falseFlag;
 	}
 
 	public GlobalTypesStrategy(ICompletionContext context) {
-		this(context, 0);
+		this(context, 0, 0);
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
@@ -94,21 +97,21 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
 			return PhpModelAccess.getDefault().findTypes(prefix,
-					MatchRule.EXACT, typeFlag, IPHPModifiers.Internal, scope,
-					null);
+					MatchRule.EXACT, trueFlag,
+					falseFlag | IPHPModifiers.Internal, scope, null);
 		}
 
 		Set<IType> result = new TreeSet<IType>(new AlphabeticComparator());
 		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
 			// Search by camel-case
 			IType[] types = PhpModelAccess.getDefault().findTypes(prefix,
-					MatchRule.CAMEL_CASE, typeFlag, IPHPModifiers.Internal,
-					scope, null);
+					MatchRule.CAMEL_CASE, trueFlag,
+					falseFlag | IPHPModifiers.Internal, scope, null);
 			result.addAll(Arrays.asList(types));
 		}
-		IType[] types = PhpModelAccess.getDefault()
-				.findTypes(prefix, MatchRule.PREFIX, typeFlag,
-						IPHPModifiers.Internal, scope, null);
+		IType[] types = PhpModelAccess.getDefault().findTypes(prefix,
+				MatchRule.PREFIX, trueFlag, falseFlag | IPHPModifiers.Internal,
+				scope, null);
 		result.addAll(Arrays.asList(types));
 
 		return (IType[]) result.toArray(new IType[result.size()]);

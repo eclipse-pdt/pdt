@@ -31,8 +31,8 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
 public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 
 	public ClassInstantiationStrategy(ICompletionContext context) {
-		super(context, ~Modifiers.AccInterface & ~Modifiers.AccNameSpace
-				& ~Modifiers.AccAbstract);
+		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace
+				| Modifiers.AccAbstract);
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {

@@ -18,10 +18,14 @@ import java.util.Hashtable;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.*;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
 import org.osgi.framework.BundleContext;
@@ -38,7 +42,7 @@ public class PHPCorePlugin extends Plugin {
 
 	public static final int INTERNAL_ERROR = 10001;
 
-	//The shared instance.
+	// The shared instance.
 	private static PHPCorePlugin plugin;
 
 	/**
@@ -57,21 +61,26 @@ public class PHPCorePlugin extends Plugin {
 
 		initializeAfterStart();
 	}
-	
+
 	/**
-	 * This method is used for later initialization. This trick should release plug-in start-up.
+	 * This method is used for later initialization. This trick should release
+	 * plug-in start-up.
 	 */
 	void initializeAfterStart() {
 		Job job = new Job("") {
 			protected IStatus run(IProgressMonitor monitor) {
-				
+
 				// start the include path manager
 				IncludePathManager.getInstance();
 
-				// register the listener in charge of converting the projects - applies for projects being opened during work
-				ResourcesPlugin.getWorkspace().addResourceChangeListener(fProjectConvertListener, IResourceChangeEvent.PRE_BUILD);
-				
-				// run the conversion over all the projects in the workspace - all open projects will be converted
+				// register the listener in charge of converting the projects -
+				// applies for projects being opened during work
+				ResourcesPlugin.getWorkspace()
+						.addResourceChangeListener(fProjectConvertListener,
+								IResourceChangeEvent.PRE_BUILD);
+
+				// run the conversion over all the projects in the workspace -
+				// all open projects will be converted
 				try {
 					convertProjects();
 				} catch (ModelException e) {
@@ -79,7 +88,7 @@ public class PHPCorePlugin extends Plugin {
 				} catch (CoreException e) {
 					log(e);
 				}
-				
+
 				return Status.OK_STATUS;
 			}
 		};
@@ -87,15 +96,20 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	/*
-	 * Listener on changed projects, used for converting them into PDT 2.0.x projects if needed
+	 * Listener on changed projects, used for converting them into PDT 2.0.x
+	 * projects if needed
 	 */
 	private class ProjectConversionListener implements IResourceChangeListener {
 
 		/*
-		 * Gathers all the projects that changed in the workspace and sends them to the conversion method
+		 * Gathers all the projects that changed in the workspace and sends them
+		 * to the conversion method
 		 * 
 		 * (non-Javadoc)
-		 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+		 * 
+		 * @see
+		 * org.eclipse.core.resources.IResourceChangeListener#resourceChanged
+		 * (org.eclipse.core.resources.IResourceChangeEvent)
 		 */
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
@@ -117,17 +131,20 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	/*
-	 * Gathers all the projects in the workspace and sends them to the conversion method
+	 * Gathers all the projects in the workspace and sends them to the
+	 * conversion method
 	 */
 	private void convertProjects() throws CoreException, ModelException {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+				.getProjects();
 		processProjects(projects);
 	}
 
 	/*
 	 * Goes over the given projects and converts them
 	 */
-	private void processProjects(final IProject[] projects) throws CoreException, ModelException {
+	private void processProjects(final IProject[] projects)
+			throws CoreException, ModelException {
 		ProjectsIterate: for (IProject project : projects) {
 			// skip unaccessible projects
 			if (!project.isAccessible()) {
@@ -135,12 +152,15 @@ public class PHPCorePlugin extends Plugin {
 			}
 			// verify that the project is a PHP project
 			if (PHPToolkitUtil.isPhpProject(project)) {
-				IProjectDescription projectDescription = project.getDescription();
+				IProjectDescription projectDescription = project
+						.getDescription();
 				ICommand[] commands = projectDescription.getBuildSpec();
 				// check if the Script Builder is installed
 				for (int i = 0; i < commands.length; ++i) {
-					if (commands[i].getBuilderName().equals(DLTKCore.BUILDER_ID)) {
-						// when the builder exists - continue to the next project
+					if (commands[i].getBuilderName()
+							.equals(DLTKCore.BUILDER_ID)) {
+						// when the builder exists - continue to the next
+						// project
 						continue ProjectsIterate;
 					}
 				}
@@ -153,10 +173,12 @@ public class PHPCorePlugin extends Plugin {
 	/*
 	 * Do the actual modifications on the project
 	 */
-	private void modifyProject(IProject project) throws CoreException, ModelException {
+	private void modifyProject(IProject project) throws CoreException,
+			ModelException {
 		final PHPNature phpNature = new PHPNature();
 
-		// add the required builders and build paths as defined in the new PHP nature
+		// add the required builders and build paths as defined in the new PHP
+		// nature
 		phpNature.setProject(project);
 		phpNature.configure();
 
@@ -168,11 +190,14 @@ public class PHPCorePlugin extends Plugin {
 		if (existingPath != null) {
 			newPath.addAll(Arrays.asList(existingPath));
 		}
-		IBuildpathEntry[] oldIncludePath = ProjectBackwardCompatibilityUtil.convertIncludePathForProject(project);
+		IBuildpathEntry[] oldIncludePath = ProjectBackwardCompatibilityUtil
+				.convertIncludePathForProject(project);
 		if (oldIncludePath != null) {
 			newPath.addAll(Arrays.asList(oldIncludePath));
 		}
-		scriptProject.setRawBuildpath(newPath.toArray(new IBuildpathEntry[newPath.size()]), new NullProgressMonitor());
+		scriptProject.setRawBuildpath(newPath
+				.toArray(new IBuildpathEntry[newPath.size()]),
+				new NullProgressMonitor());
 	}
 
 	private final ListenerList shutdownListeners = new ListenerList();
@@ -193,7 +218,8 @@ public class PHPCorePlugin extends Plugin {
 		shutdownListeners.clear();
 
 		super.stop(context);
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(fProjectConvertListener);
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(
+				fProjectConvertListener);
 		plugin = null;
 	}
 
@@ -209,7 +235,8 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	public static void log(Throwable e) {
-		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, "PHPCore plugin internal error", e)); //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR,
+				"PHPCore plugin internal error", e)); //$NON-NLS-1$
 	}
 
 	public static void logErrorMessage(String message) {
@@ -227,13 +254,16 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	/**
-	 * Helper method for returning one option value only. Equivalent to <code>(String)PhpCore.getOptions().get(optionName)</code>
-	 * Note that it may answer <code>null</code> if this option does not exist.
+	 * Helper method for returning one option value only. Equivalent to
+	 * <code>(String)PhpCore.getOptions().get(optionName)</code> Note that it
+	 * may answer <code>null</code> if this option does not exist.
 	 * <p>
-	 * For a complete description of the configurable options, see <code>getDefaultOptions</code>.
+	 * For a complete description of the configurable options, see
+	 * <code>getDefaultOptions</code>.
 	 * </p>
-	 *
-	 * @param optionName the name of an option
+	 * 
+	 * @param optionName
+	 *            the name of an option
 	 * @return the String value of a given option
 	 * @see PhpCore#getDefaultOptions()
 	 * @see PhpCorePreferenceInitializer for changing default settings
@@ -244,13 +274,19 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	/**
-	 * Returns the table of the current options. Initially, all options have their default values,
-	 * and this method returns a table that includes all known options.
-	 * <p>For a complete description of the configurable options, see <code>getDefaultOptions</code>.</p>
-	 * <p>Returns a default set of options even if the platform is not running.</p>
-	 *
-	 * @return table of current settings of all options
-	 *   (key type: <code>String</code>; value type: <code>String</code>)
+	 * Returns the table of the current options. Initially, all options have
+	 * their default values, and this method returns a table that includes all
+	 * known options.
+	 * <p>
+	 * For a complete description of the configurable options, see
+	 * <code>getDefaultOptions</code>.
+	 * </p>
+	 * <p>
+	 * Returns a default set of options even if the platform is not running.
+	 * </p>
+	 * 
+	 * @return table of current settings of all options (key type:
+	 *         <code>String</code>; value type: <code>String</code>)
 	 * @see #getDefaultOptions()
 	 * @see JavaCorePreferenceInitializer for changing default settings
 	 */
@@ -291,29 +327,34 @@ public class PHPCorePlugin extends Plugin {
 	 *                indicates the reason of the failure
 	 * @since 3.1
 	 */
-	public static void initializeAfterLoad(IProgressMonitor monitor) throws CoreException {
+	public static void initializeAfterLoad(IProgressMonitor monitor)
+			throws CoreException {
 		try {
 			if (monitor != null) {
-				monitor.beginTask(CoreMessages.PHPCorePlugin_initializingPHPToolkit, 100);
+				monitor.beginTask(
+						CoreMessages.PHPCorePlugin_initializingPHPToolkit, 100);
 			}
 			// dummy query for waiting until the indexes are ready
-			SearchEngine engine = new SearchEngine();
-			IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
+			IDLTKSearchScope scope = SearchEngine
+					.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 			try {
 				if (monitor != null) {
-					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
+					monitor
+							.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
 				}
-				engine.searchAllMethodNames("@$%#^".toCharArray(), SearchPattern.R_EXACT_MATCH, IDLTKSearchConstants.DECLARATIONS,
-					scope, new MethodNameRequestor() {
-					},
-					// will not activate index query caches if indexes are
-					// not ready, since it would take to long
-					// to wait until indexes are fully rebuild
-					IDLTKSearchConstants.CANCEL_IF_NOT_READY_TO_SEARCH,
-					monitor == null ? null : new SubProgressMonitor(monitor, 49) // 49% of the time is spent in the dummy search
-				);
-			} catch (ModelException e) {
-				// /search failed: ignore
+
+				PhpModelAccess.getDefault().findMethods(null, MatchRule.PREFIX,
+						Modifiers.AccGlobal, 0, scope, monitor);
+				monitor.worked(50);
+
+				PhpModelAccess.getDefault().findTypes(null, MatchRule.PREFIX,
+						Modifiers.AccGlobal, 0, scope, monitor);
+				monitor.worked(25);
+
+				PhpModelAccess.getDefault().findFields(null, MatchRule.PREFIX,
+						Modifiers.AccGlobal, 0, scope, monitor);
+				monitor.worked(25);
+
 			} catch (OperationCanceledException e) {
 				if (monitor != null && monitor.isCanceled()) {
 					throw e;

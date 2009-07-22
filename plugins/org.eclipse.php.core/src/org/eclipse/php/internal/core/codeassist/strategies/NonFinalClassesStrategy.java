@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 public class NonFinalClassesStrategy extends GlobalClassesStrategy {
 
 	public NonFinalClassesStrategy(ICompletionContext context) {
-		super(context, ~Modifiers.AccInterface & ~Modifiers.AccNameSpace
-				& ~Modifiers.AccFinal);
+		super(context, 0, Modifiers.AccInterface | Modifiers.AccNameSpace
+				| Modifiers.AccFinal);
 	}
 }
