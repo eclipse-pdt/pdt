@@ -27,30 +27,39 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
- * A PHP function binding.
- * This class is also the base class for the {@link MethodBinding} implementation.
+ * A PHP function binding. This class is also the base class for the
+ * {@link MethodBinding} implementation.
  * 
  * @author shalom
  */
 public class FunctionBinding implements IFunctionBinding {
 
-	protected static final int VALID_MODIFIERS = Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate | Modifiers.AccDefault | Modifiers.AccStatic | Modifiers.AccFinal | Modifiers.AccAbstract;
+	protected static final int VALID_MODIFIERS = Modifiers.AccPublic
+			| Modifiers.AccProtected | Modifiers.AccPrivate
+			| Modifiers.AccDefault | Modifiers.AccStatic | Modifiers.AccFinal
+			| Modifiers.AccAbstract;
 	protected BindingResolver resolver;
 	protected IMethod modelElement;
 
 	/**
 	 * Constructs a new FunctionBinding.
 	 * 
-	 * @param resolver A {@link BindingResolver}.
-	 * @param modelElement An {@link IMethod}.
+	 * @param resolver
+	 *            A {@link BindingResolver}.
+	 * @param modelElement
+	 *            An {@link IMethod}.
 	 */
 	public FunctionBinding(BindingResolver resolver, IMethod modelElement) {
 		this.resolver = resolver;
 		this.modelElement = modelElement;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getExceptionTypes()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getExceptionTypes
+	 * ()
 	 */
 	public ITypeBinding[] getExceptionTypes() {
 		// Get an array of PHPDocFields
@@ -60,37 +69,50 @@ public class FunctionBinding implements IFunctionBinding {
 		for (PHPDocTag tag : docTags) {
 			if (tag.getTagKind() == PHPDocTag.THROWS) {
 				SimpleReference[] references = tag.getReferences();
-				// TODO - create ITypeBinding array from this SimpleReference array
+				// TODO - create ITypeBinding array from this SimpleReference
+				// array
 			}
 		}
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getName()
 	 */
 	public String getName() {
 		return modelElement.getElementName();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getParameterTypes()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getParameterTypes
+	 * ()
 	 */
 	public ITypeBinding[] getParameterTypes() {
-		// TODO - Create the parameters types according to the defined types in the function declaration 
+		// TODO - Create the parameters types according to the defined types in
+		// the function declaration
 		// and in its DocBlock.
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getReturnType()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getReturnType()
 	 */
 	public ITypeBinding getReturnType() {
 		// TODO
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#isVarargs()
 	 */
 	public boolean isVarargs() {
@@ -98,21 +120,27 @@ public class FunctionBinding implements IFunctionBinding {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getKey()
 	 */
 	public String getKey() {
 		return modelElement.getHandleIdentifier();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getKind()
 	 */
 	public int getKind() {
 		return IBinding.METHOD;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getModifiers()
 	 */
 	public int getModifiers() {
@@ -126,14 +154,18 @@ public class FunctionBinding implements IFunctionBinding {
 		return 0;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getPHPElement()
 	 */
 	public IModelElement getPHPElement() {
 		return modelElement;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#isDeprecated()
 	 */
 	public boolean isDeprecated() {
