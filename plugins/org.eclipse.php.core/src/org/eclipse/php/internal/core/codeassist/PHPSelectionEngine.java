@@ -213,8 +213,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						String methodName = callName instanceof FullyQualifiedReference ? ((FullyQualifiedReference) callName)
 								.getFullyQualifiedName()
 								: callName.getName();
-						return PHPModelUtils.getFunctions(methodName,
-								sourceModule, offset, null);
+						IMethod[] functions = PHPModelUtils.getFunctions(
+								methodName, sourceModule, offset, null);
+						return functions == null ? EMPTY : functions;
 					}
 				}
 				// Static field or constant access:
@@ -303,9 +304,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					}
 				} else if (node instanceof NamespaceReference) {
 					String name = ((NamespaceReference) node).getName();
-					return PHPModelUtils.getNamespaceOf(name
+					IType[] namespace = PHPModelUtils.getNamespaceOf(name
 							+ NamespaceReference.NAMESPACE_SEPARATOR,
 							sourceModule, offset);
+					return namespace == null ? EMPTY : namespace;
 				}
 				// Class/Interface reference:
 				else if (node instanceof TypeReference) {

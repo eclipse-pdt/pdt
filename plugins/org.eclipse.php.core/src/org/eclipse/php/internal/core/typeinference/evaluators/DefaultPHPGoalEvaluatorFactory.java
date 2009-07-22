@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.evaluation.types.SimpleType;
@@ -30,9 +31,9 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodRetu
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
 	public GoalEvaluator createEvaluator(IGoal goal) {
-		
+
 		Class<?> goalClass = goal.getClass();
-		
+
 		if (goalClass == ExpressionTypeGoal.class) {
 			ExpressionTypeGoal exprGoal = (ExpressionTypeGoal) goal;
 			return createExpressionEvaluator(exprGoal);
@@ -66,8 +67,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		ASTNode expression = exprGoal.getExpression();
 		Class<?> expressionClass = expression.getClass();
 
-		if (expressionClass == ClassDeclaration.class) {
-			return new PHPClassEvaluator(exprGoal, (ClassDeclaration) expression);
+		if (expressionClass == InterfaceDeclaration.class
+				|| expressionClass == ClassDeclaration.class) {
+			return new PHPClassEvaluator(exprGoal, (TypeDeclaration) expression);
 		}
 		if (expressionClass == Assignment.class) {
 			return new AssignmentEvaluator(exprGoal);
@@ -76,11 +78,13 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			Scalar scalar = (Scalar) expression;
 			return new ScalarEvaluator(exprGoal, scalar);
 		}
-		if (expressionClass == TypeReference.class || expressionClass == FullyQualifiedReference.class) {
+		if (expressionClass == TypeReference.class
+				|| expressionClass == FullyQualifiedReference.class) {
 			TypeReference type = (TypeReference) expression;
 			return new TypeReferenceEvaluator(exprGoal, type);
 		}
-		if (expressionClass == PHPCallExpression.class || expressionClass == StaticMethodInvocation.class) {
+		if (expressionClass == PHPCallExpression.class
+				|| expressionClass == StaticMethodInvocation.class) {
 			return new MethodCallTypeEvaluator(exprGoal);
 		}
 		if (expressionClass == ClassInstanceCreation.class) {
@@ -104,14 +108,17 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == VariableReference.class) {
 			return new VariableReferenceEvaluator(exprGoal);
 		}
-		if (expressionClass == BackTickExpression.class || expressionClass == Quote.class) {
-			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_STRING));
+		if (expressionClass == BackTickExpression.class
+				|| expressionClass == Quote.class) {
+			return new FixedAnswerEvaluator(exprGoal, new SimpleType(
+					SimpleType.TYPE_STRING));
 		}
 		if (expressionClass == CloneExpression.class) {
 			return new CloneEvaluator(exprGoal);
 		}
 		if (expressionClass == InstanceOfExpression.class) {
-			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_BOOLEAN));
+			return new FixedAnswerEvaluator(exprGoal, new SimpleType(
+					SimpleType.TYPE_BOOLEAN));
 		}
 		if (expressionClass == ConditionalExpression.class) {
 			return new ConditionalExpressionEvaluator(exprGoal);
@@ -122,13 +129,15 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == ArrayVariableReference.class) {
 			return new ArrayVariableReferenceEvaluator(exprGoal);
 		}
-		if (expressionClass == FieldAccess.class || expressionClass == StaticFieldAccess.class) {
+		if (expressionClass == FieldAccess.class
+				|| expressionClass == StaticFieldAccess.class) {
 			return new FieldAccessEvaluator(exprGoal);
 		}
 		if (expressionClass == StaticConstantAccess.class) {
 			return new StaticConstantAccessEvaluator(exprGoal);
 		}
-		if (expressionClass == FormalParameter.class || expressionClass == FormalParameterByReference.class) {
+		if (expressionClass == FormalParameter.class
+				|| expressionClass == FormalParameterByReference.class) {
 			return new FormalParameterEvaluator(exprGoal);
 		}
 		if (expressionClass == CatchClause.class) {
