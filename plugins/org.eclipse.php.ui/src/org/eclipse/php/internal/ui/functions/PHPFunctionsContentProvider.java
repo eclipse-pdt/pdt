@@ -44,9 +44,8 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 				ConstantNode constantNode = new ConstantNode();
 				children.add(constantNode);
 
-				IModelElement[] projectFragmentContent = (IModelElement[]) getProjectFragmentContent((IProjectFragment) element);
-
-				for (IModelElement modelElement : projectFragmentContent) {
+				Object[] projectFragmentContent = getProjectFragmentContent((IProjectFragment) element);
+				for (Object modelElement : projectFragmentContent) {
 					if (modelElement instanceof ExternalSourceModule) {
 						IModelElement[] externalSourceModuleChildren = ((ExternalSourceModule) modelElement).getChildren();
 						constantNode.addSourceModuleChildren(externalSourceModuleChildren);
