@@ -33,6 +33,10 @@ public class TypeBinding implements ITypeBinding {
 	private IEvaluatedType type;
 	private IModelElement[] elements;
 	private BindingResolver resolver;
+	private ITypeBinding superClass;
+	private ITypeBinding[] interfaces;
+	private IVariableBinding[] fields;
+	private IMethodBinding[] methods;
 
 	/**
 	 * Constructs a new TypeBinding.
@@ -161,30 +165,35 @@ public class TypeBinding implements ITypeBinding {
 		if (isUnknown()) {
 			return new IVariableBinding[0];
 		}
-		if (isClass()) {
-			List<IVariableBinding> variableBindings = new ArrayList<IVariableBinding>();
 
-			for (IModelElement element : this.elements) {
-				IType type = (IType) element;
-				try {
-					IField[] fields = type.getFields();
-					for (int i = 0; i < fields.length; i++) {
-						IVariableBinding variableBinding = resolver
-								.getVariableBinding(fields[i]);
-						if (variableBinding != null) {
-							variableBindings.add(variableBinding);
+		if (fields == null) {
+			if (isClass()) {
+				List<IVariableBinding> variableBindings = new ArrayList<IVariableBinding>();
+
+				for (IModelElement element : this.elements) {
+					IType type = (IType) element;
+					try {
+						IField[] fields = type.getFields();
+						for (int i = 0; i < fields.length; i++) {
+							IVariableBinding variableBinding = resolver
+									.getVariableBinding(fields[i]);
+							if (variableBinding != null) {
+								variableBindings.add(variableBinding);
+							}
+						}
+					} catch (ModelException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
 						}
 					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
 				}
+				fields = variableBindings
+						.toArray(new IVariableBinding[variableBindings.size()]);
+			} else {
+				fields = new IVariableBinding[0];
 			}
-			return variableBindings
-					.toArray(new IVariableBinding[variableBindings.size()]);
 		}
-		return new IVariableBinding[0];
+		return fields;
 	}
 
 	/**
@@ -212,29 +221,35 @@ public class TypeBinding implements ITypeBinding {
 		if (isUnknown()) {
 			return new IMethodBinding[0];
 		}
-		if (isClass()) {
-			List<IMethodBinding> methodBindings = new ArrayList<IMethodBinding>();
-			for (IModelElement element : this.elements) {
-				IType type = (IType) element;
-				try {
-					IMethod[] methods = type.getMethods();
-					if (methods != null) {
-						for (int i = 0; i < methods.length; i++) {
-							IMethodBinding methodBinding = resolver
-									.getMethodBinding(methods[i]);
-							methodBindings.add(methodBinding);
+
+		if (methods == null) {
+			if (isClass()) {
+				List<IMethodBinding> methodBindings = new ArrayList<IMethodBinding>();
+				for (IModelElement element : this.elements) {
+					IType type = (IType) element;
+					try {
+						IMethod[] methods = type.getMethods();
+						if (methods != null) {
+							for (int i = 0; i < methods.length; i++) {
+								IMethodBinding methodBinding = resolver
+										.getMethodBinding(methods[i]);
+								methodBindings.add(methodBinding);
+							}
+						}
+					} catch (ModelException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
 						}
 					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
 				}
+				methods = methodBindings
+						.toArray(new IMethodBinding[methodBindings.size()]);
+			} else {
+				methods = new IMethodBinding[0]; // TODO - Implement
+				// IMethodBinding
 			}
-			return methodBindings.toArray(new IMethodBinding[methodBindings
-					.size()]);
 		}
-		return new IMethodBinding[0]; // TODO - Implement IMethodBinding
+		return methods;
 	}
 
 	/**
@@ -319,32 +334,44 @@ public class TypeBinding implements ITypeBinding {
 			return new ITypeBinding[0];
 		}
 
-		final ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
-		for (IModelElement element : elements) {
-			IType type = (IType) element;
-			try {
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(type
-						.getScriptProject());
+		if (this.interfaces == null) {
+			final ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
+			for (IModelElement element : elements) {
+				IType type = (IType) element;
+				try {
+					IDLTKSearchScope scope = SearchEngine
+							.createSearchScope(type.getScriptProject());
 
-				String[] superClassNames = type.getSuperClasses();
+					String[] superClassNames = type.getSuperClasses();
 
-				if (superClassNames != null) {
-					for (String superClass : superClassNames) {
-						IType[] ifaces = PhpModelAccess.getDefault().findTypes(
-								superClass, MatchRule.EXACT,
-								Modifiers.AccInterface, 0, scope, null);
-						for (IType t : ifaces) {
-							interfaces.add(resolver.getTypeBinding(t));
+					if (superClassNames != null) {
+						StringBuilder buf = new StringBuilder();
+						for (int i = 0; i < superClassNames.length; ++i) {
+							if (i > 0) {
+								buf.append(',');
+							}
+							buf.append(superClassNames[i]);
+						}
+						if (buf.length() > 0) {
+							IType[] types = PhpModelAccess.getDefault()
+									.findTypes(buf.toString(), MatchRule.SET,
+											Modifiers.AccInterface, 0, scope,
+											null);
+							for (IType t : types) {
+								interfaces.add(resolver.getTypeBinding(t));
+							}
 						}
 					}
-				}
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
+				} catch (CoreException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
+			this.interfaces = interfaces.toArray(new ITypeBinding[interfaces
+					.size()]);
 		}
-		return interfaces.toArray(new ITypeBinding[interfaces.size()]);
+		return this.interfaces;
 	}
 
 	/**
@@ -422,30 +449,46 @@ public class TypeBinding implements ITypeBinding {
 			return null;
 		}
 
-		final List<IType> superClasses = new ArrayList<IType>(elements.length);
-		for (IModelElement element : elements) {
-			IType type = (IType) element;
-			try {
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(type
-						.getScriptProject());
-				String[] superClassNames = type.getSuperClasses();
+		if (superClass == null) {
+			final List<IType> superClasses = new ArrayList<IType>(
+					elements.length);
+			for (IModelElement element : elements) {
+				IType type = (IType) element;
+				try {
+					IDLTKSearchScope scope = SearchEngine
+							.createSearchScope(type.getScriptProject());
+					String[] superClassNames = type.getSuperClasses();
 
-				if (superClassNames != null) {
-					for (String superClass : superClassNames) {
-						IType[] types = PhpModelAccess.getDefault().findTypes(
-								superClass, MatchRule.EXACT, 0,
-								Modifiers.AccInterface, scope, null);
-						superClasses.addAll(Arrays.asList(types));
+					if (superClassNames != null) {
+						StringBuilder buf = new StringBuilder();
+						for (int i = 0; i < superClassNames.length; ++i) {
+							if (i > 0) {
+								buf.append(',');
+							}
+							buf.append(superClassNames[i]);
+						}
+						if (buf.length() > 0) {
+							IType[] types = PhpModelAccess.getDefault()
+									.findTypes(
+											buf.toString(),
+											MatchRule.SET,
+											0,
+											Modifiers.AccInterface
+													| Modifiers.AccNameSpace,
+											scope, null);
+							superClasses.addAll(Arrays.asList(types));
+						}
+					}
+				} catch (CoreException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
 					}
 				}
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
 			}
+			superClass = resolver.getTypeBinding(superClasses
+					.toArray(new IType[superClasses.size()]));
 		}
-		return resolver.getTypeBinding(superClasses
-				.toArray(new IType[superClasses.size()]));
+		return superClass;
 	}
 
 	/**
