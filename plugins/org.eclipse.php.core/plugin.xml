@@ -21,10 +21,6 @@
 		name="PHP Source Element Requestor"
 		schema="schema/phpSourceElementRequestors.exsd" />
 	<extension-point
-		id="phpMixinBuildVisitors"
-		name="PHP Mixin Build Visitor"
-		schema="schema/phpMixinBuildVisitors.exsd" />
-	<extension-point
 		id="completionStrategyFactories"
 		name="PHP Completion Strategy Factory"
 		schema="schema/completionStrategyFactories.exsd" />

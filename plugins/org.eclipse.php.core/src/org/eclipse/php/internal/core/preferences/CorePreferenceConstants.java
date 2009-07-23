@@ -63,8 +63,8 @@ public class CorePreferenceConstants {
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES,
 				false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false);
-		node.putInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
+		node.putInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 0);
 	}
 
 	// Don't instantiate
