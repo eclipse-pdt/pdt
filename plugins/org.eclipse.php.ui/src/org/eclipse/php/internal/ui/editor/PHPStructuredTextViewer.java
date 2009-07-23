@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
@@ -35,7 +34,6 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -75,7 +73,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	public static final int SHOW_OUTLINE = 51;
 
 	/**
-	 * Text operation code for requesting the outline for the element at the current position.
+	 * Text operation code for requesting the outline for the element at the
+	 * current position.
 	 */
 	public static final int OPEN_STRUCTURE = 52;
 
@@ -92,33 +91,30 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private IInformationPresenter fHierarchyPresenter;
 	private IAnnotationHover fProjectionAnnotationHover;
 	private boolean fFireSelectionChanged = true;
-	private DirtyModelStateUpdater fDirtyStateUpdater;
 
-	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
-		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
+	public PHPStructuredTextViewer(Composite parent,
+			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
+			boolean showAnnotationsOverview, int styles) {
+		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview,
+				styles);
 	}
 
-	public PHPStructuredTextViewer(ITextEditor textEditor, Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
-		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
+	public PHPStructuredTextViewer(ITextEditor textEditor, Composite parent,
+			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
+			boolean showAnnotationsOverview, int styles) {
+		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview,
+				styles);
 		this.fTextEditor = textEditor;
-		
-		fDirtyStateUpdater = new DirtyModelStateUpdater();
-		fDirtyStateUpdater.install();
 	}
 
 	public ITextEditor getTextEditor() {
 		return fTextEditor;
 	}
-	
-	public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset, int modelRangeLength) {
-		if (fDirtyStateUpdater != null) {
-			fDirtyStateUpdater.setDocument(document);
-		}
-		super.setDocument(document, annotationModel, modelRangeOffset, modelRangeLength);
-	}
 
 	/**
-	 * This method overrides WST since sometimes we get a subset of the document and NOT the whole document, although the case is FORMAT_DOCUMENT. In all other cases we call the parent method.
+	 * This method overrides WST since sometimes we get a subset of the document
+	 * and NOT the whole document, although the case is FORMAT_DOCUMENT. In all
+	 * other cases we call the parent method.
 	 */
 	@Override
 	public void doOperation(int operation) {
@@ -129,160 +125,184 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		int topLine = getTextWidget().getTopIndex();
 
 		switch (operation) {
-			case FORMAT_DOCUMENT:
+		case FORMAT_DOCUMENT:
+			try {
+				setRedraw(false);
+				// begin recording
+				beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT,
+						cursorPosition, selectionLength);
+
+				// format the whole document !
+				IRegion region = new Region(0, getDocument().getLength());
+				if (fContentFormatter instanceof IContentFormatterExtension) {
+					IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
+					IFormattingContext context = new FormattingContext();
+					context.setProperty(
+							FormattingContextProperties.CONTEXT_DOCUMENT,
+							Boolean.TRUE);
+					context.setProperty(
+							FormattingContextProperties.CONTEXT_REGION, region);
+					extension.format(getDocument(), context);
+				} else {
+					fContentFormatter.format(getDocument(), region);
+				}
+			} finally {
+				// end recording
+				selection = getTextWidget().getSelection();
+
+				selectionLength = selection.y - selection.x;
+				endRecording(cursorPosition, selectionLength);
+				// return the cursor to its original position after the
+				// formatter change its position.
+				getTextWidget().setSelection(cursorPosition);
+				getTextWidget().setTopIndex(topLine);
+				setRedraw(true);
+			}
+			return;
+
+		case PASTE:
+			super.doOperation(operation);
+			return;
+
+		case CONTENTASSIST_PROPOSALS:
+			// Handle javascript content assist when there is no support
+			// (instead of printing the stack trace)
+			if (fViewerConfiguration != null) {
+				IProject project = null;
+				boolean isJavaScriptRegion = false;
+				boolean hasJavaScriptNature = true;
 				try {
-					setRedraw(false);
-					// begin recording
-					beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
-
-					// format the whole document !
-					IRegion region = new Region(0, getDocument().getLength());
-					if (fContentFormatter instanceof IContentFormatterExtension) {
-						IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
-						IFormattingContext context = new FormattingContext();
-						context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.TRUE);
-						context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
-						extension.format(getDocument(), context);
-					} else {
-						fContentFormatter.format(getDocument(), region);
+					// Resolve the partition type
+					IStructuredDocument sDoc = (IStructuredDocument) getDocument();
+					// get the "real" offset - adjusted according to the
+					// projection
+					int selectionOffset = getSelectedRange().x;
+					IStructuredDocumentRegion sdRegion = sDoc
+							.getRegionAtCharacterOffset(selectionOffset);
+					if (sdRegion == null) {
+						super.doOperation(operation);
+						return;
 					}
-				} finally {
-					// end recording
-					selection = getTextWidget().getSelection();
+					ITextRegion textRegion = sdRegion
+							.getRegionAtCharacterOffset(selectionOffset);
+					if (textRegion instanceof ForeignRegion) {
+						isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
+					}
 
-					selectionLength = selection.y - selection.x;
-					endRecording(cursorPosition, selectionLength);
-					// return the cursor to its original position after the formatter change its position.
-					getTextWidget().setSelection(cursorPosition);
-					getTextWidget().setTopIndex(topLine);
-					setRedraw(true);
-				}
-				return;
-				
-			case PASTE:
-				super.doOperation(operation);
-				return;
+					// Check if the containing project has JS nature or not
+					if (fTextEditor instanceof PHPStructuredEditor) {
+						PHPStructuredEditor phpEditor = (PHPStructuredEditor) fTextEditor;
+						IModelElement modelElement = phpEditor
+								.getModelElement();
 
-			case CONTENTASSIST_PROPOSALS:
-				// Handle javascript content assist when there is no support (instead of printing the stack trace)
-				if (fViewerConfiguration != null) {
-					IProject project = null;
-					boolean isJavaScriptRegion = false;
-					boolean hasJavaScriptNature = true;
-					try {
-						// Resolve the partition type
-						IStructuredDocument sDoc = (IStructuredDocument) getDocument();
-						// get the "real" offset - adjusted according to the projection
-						int selectionOffset = getSelectedRange().x;
-						IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
-						if (sdRegion == null) {
-							super.doOperation(operation);
-							return;
-						}
-						ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
-						if (textRegion instanceof ForeignRegion) {
-							isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
-						}
-
-						// Check if the containing project has JS nature or not
-						if (fTextEditor instanceof PHPStructuredEditor) {
-							PHPStructuredEditor phpEditor = (PHPStructuredEditor) fTextEditor;
-							IModelElement modelElement = phpEditor.getModelElement();
-
-							// Wait until the editor is fully reconciled:
-							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=278992
-							while (fDirtyStateUpdater != null && fDirtyStateUpdater.isModelDirty()) {
-								try {
-									Thread.sleep(50);
-								} catch (InterruptedException e) {
-								}
-							}
-							
-							if (modelElement != null) {
-								IScriptProject scriptProject = modelElement.getScriptProject();
-								project = scriptProject.getProject();
-								if (project != null && project.isAccessible() && project.getNature(JavaScriptCore.NATURE_ID) == null) {
-									hasJavaScriptNature = false;
-								}
+						if (modelElement != null) {
+							IScriptProject scriptProject = modelElement
+									.getScriptProject();
+							project = scriptProject.getProject();
+							if (project != null
+									&& project.isAccessible()
+									&& project
+											.getNature(JavaScriptCore.NATURE_ID) == null) {
+								hasJavaScriptNature = false;
 							}
 						}
+					}
 
-						// open dialog if required
-						if (isJavaScriptRegion && !hasJavaScriptNature) {
-							Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
-							// Pop a question dialog - if the user selects 'Yes' JS Support is added, otherwise no change
-							int addJavaScriptSupport = OptionalMessageDialog.open("PROMPT_ADD_JAVASCRIPT_SUPPORT", activeWorkbenchShell, PHPUIMessages.getString("PHPStructuredTextViewer.0"), null, PHPUIMessages.getString("PHPStructuredTextViewer.1"), OptionalMessageDialog.QUESTION, new String[] {
-								IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0); //$NON-NLS-1$
+					// open dialog if required
+					if (isJavaScriptRegion && !hasJavaScriptNature) {
+						Shell activeWorkbenchShell = PHPUiPlugin
+								.getActiveWorkbenchShell();
+						// Pop a question dialog - if the user selects 'Yes' JS
+						// Support is added, otherwise no change
+						int addJavaScriptSupport = OptionalMessageDialog
+								.open(
+										"PROMPT_ADD_JAVASCRIPT_SUPPORT",
+										activeWorkbenchShell,
+										PHPUIMessages
+												.getString("PHPStructuredTextViewer.0"),
+										null,
+										PHPUIMessages
+												.getString("PHPStructuredTextViewer.1"),
+										OptionalMessageDialog.QUESTION,
+										new String[] {
+												IDialogConstants.YES_LABEL,
+												IDialogConstants.NO_LABEL }, 0); //$NON-NLS-1$
 
-							// run the JSDT action for adding the JS nature
-							if (addJavaScriptSupport == 0 && project != null) {
-								SetupProjectsWizzard wiz = new SetupProjectsWizzard();
-								wiz.selectionChanged(null, new StructuredSelection(project));
-								wiz.run(null);
-							}
-							return;
+						// run the JSDT action for adding the JS nature
+						if (addJavaScriptSupport == 0 && project != null) {
+							SetupProjectsWizzard wiz = new SetupProjectsWizzard();
+							wiz.selectionChanged(null, new StructuredSelection(
+									project));
+							wiz.run(null);
 						}
+						return;
+					}
 
-					} catch (CoreException e) {
-						Logger.logException(e);
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+			}
+
+			// notifing the processors that the next request for completion is
+			// an explicit request
+			if (fViewerConfiguration != null) {
+				PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) fViewerConfiguration;
+				IContentAssistProcessor[] all = structuredTextViewerConfiguration
+						.getContentAssistProcessors(this,
+								PHPPartitionTypes.PHP_DEFAULT);
+				for (IContentAssistProcessor element : all) {
+					if (element instanceof PHPCompletionProcessor) {
+						((PHPCompletionProcessor) element).setExplicit(true);
 					}
 				}
+			}
+			super.doOperation(operation);
+			return;
 
-				// notifing the processors that the next request for completion is an explicit request
-				if (fViewerConfiguration != null) {
-					PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) fViewerConfiguration;
-					IContentAssistProcessor[] all = structuredTextViewerConfiguration.getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
-					for (IContentAssistProcessor element : all) {
-						if (element instanceof PHPCompletionProcessor) {
-							((PHPCompletionProcessor) element).setExplicit(true);
-						}
+		case SHOW_OUTLINE:
+			if (fOutlinePresenter != null) {
+				fOutlinePresenter.showInformation();
+			}
+			return;
+
+		case SHIFT_LEFT:
+			shift(false, false, true);
+			return;
+
+		case SHOW_HIERARCHY:
+			if (fHierarchyPresenter != null) {
+				fHierarchyPresenter.showInformation();
+			}
+			return;
+
+		case DELETE:
+			StyledText textWidget = getTextWidget();
+			if (textWidget == null)
+				return;
+			ITextSelection textSelection = null;
+			if (redraws()) {
+				try {
+					textSelection = (ITextSelection) getSelection();
+					int length = textSelection.getLength();
+					if (!textWidget.getBlockSelection()
+							&& (length == 0 || length == textWidget
+									.getSelectionRange().y))
+						getTextWidget().invokeAction(ST.DELETE_NEXT);
+					else
+						deleteSelection(textSelection, textWidget);
+
+					if (fFireSelectionChanged) {
+						Point range = textWidget.getSelectionRange();
+						fireSelectionChanged(range.x, range.y);
 					}
-				}
-				super.doOperation(operation);
-				return;
-				
-			case SHOW_OUTLINE:
-				if (fOutlinePresenter != null) {
-					fOutlinePresenter.showInformation();
-				}
-				return;
-				
-			case SHIFT_LEFT:
-				shift(false, false, true);
-				return;
-				
-			case SHOW_HIERARCHY:
-				if (fHierarchyPresenter != null) {
-					fHierarchyPresenter.showInformation();
-				}
-				return;
-				
-			case DELETE:
-				StyledText textWidget = getTextWidget();
-				if (textWidget == null)
-					return;
-				ITextSelection textSelection = null;
-				if (redraws()) {
-					try {
-						textSelection = (ITextSelection) getSelection();
-						int length = textSelection.getLength();
-						if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y))
-							getTextWidget().invokeAction(ST.DELETE_NEXT);
-						else
-							deleteSelection(textSelection, textWidget);
 
-						if (fFireSelectionChanged) {
-							Point range = textWidget.getSelectionRange();
-							fireSelectionChanged(range.x, range.y);
-						}
-
-					} catch (BadLocationException x) {
-						// ignore
-					}
+				} catch (BadLocationException x) {
+					// ignore
 				}
-				return;
+			}
+			return;
 		}
-		
+
 		super.doOperation(operation);
 	}
 
@@ -293,17 +313,24 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	/**
 	 * Deletes the selection and sets the caret before the deleted range.
 	 * 
-	 * @param selection the selection to delete
-	 * @param textWidget the widget
-	 * @throws BadLocationException on document access failure
+	 * @param selection
+	 *            the selection to delete
+	 * @param textWidget
+	 *            the widget
+	 * @throws BadLocationException
+	 *             on document access failure
 	 * @since 3.5
 	 */
-	private void deleteSelection(ITextSelection selection, StyledText textWidget) throws BadLocationException {
+	private void deleteSelection(ITextSelection selection, StyledText textWidget)
+			throws BadLocationException {
 		new SelectionProcessor(this).doDelete(selection);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#canDoOperation(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.wst.sse.ui.internal.StructuredTextViewer#canDoOperation(int)
 	 */
 	public boolean canDoOperation(int operation) {
 		if (operation == SHOW_HIERARCHY) {
@@ -315,12 +342,15 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		return super.canDoOperation(operation);
 	}
 
-	private void beginRecording(String label, String description, int cursorPosition, int selectionLength) {
+	private void beginRecording(String label, String description,
+			int cursorPosition, int selectionLength) {
 		IDocument doc = getDocument();
 		if (doc instanceof IStructuredDocument) {
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
-			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
-			undoManager.beginRecording(this, label, description, cursorPosition, selectionLength);
+			IStructuredTextUndoManager undoManager = structuredDocument
+					.getUndoManager();
+			undoManager.beginRecording(this, label, description,
+					cursorPosition, selectionLength);
 		} else {
 			// TODO: how to handle other document types?
 		}
@@ -330,7 +360,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		IDocument doc = getDocument();
 		if (doc instanceof IStructuredDocument) {
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
-			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
+			IStructuredTextUndoManager undoManager = structuredDocument
+					.getUndoManager();
 			undoManager.endRecording(this, cursorPosition, selectionLength);
 		} else {
 			// TODO: how to handle other document types?
@@ -342,11 +373,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		return new StructuredDocumentToTextAdapterForPhp(getTextWidget());
 	}
 
-	/** (non-Javadoc)
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.text.source.projection.ProjectionViewer#addVerticalRulerColumn(org.eclipse.jface.text.source.IVerticalRulerColumn)
-	 *
-	 * This method is only called to add Projection ruler column.
-	 * It's actually a hack to override Projection presentation (information control) in order to enable syntax highlighting
+	 * 
+	 *      This method is only called to add Projection ruler column. It's
+	 *      actually a hack to override Projection presentation (information
+	 *      control) in order to enable syntax highlighting
 	 */
 	@Override
 	public void addVerticalRulerColumn(IVerticalRulerColumn column) {
@@ -358,7 +392,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		super.addVerticalRulerColumn(column);
 	}
 
-	public class StructuredDocumentToTextAdapterForPhp extends StructuredDocumentToTextAdapter {
+	public class StructuredDocumentToTextAdapterForPhp extends
+			StructuredDocumentToTextAdapter {
 
 		public StructuredDocumentToTextAdapterForPhp() {
 			super();
@@ -369,15 +404,23 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 
 		@Override
-		protected void redrawRegionChanged(RegionChangedEvent structuredDocumentEvent) {
-			if (structuredDocumentEvent != null && structuredDocumentEvent.getRegion() != null && structuredDocumentEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
-				final IPhpScriptRegion region = (IPhpScriptRegion) structuredDocumentEvent.getRegion();
+		protected void redrawRegionChanged(
+				RegionChangedEvent structuredDocumentEvent) {
+			if (structuredDocumentEvent != null
+					&& structuredDocumentEvent.getRegion() != null
+					&& structuredDocumentEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
+				final IPhpScriptRegion region = (IPhpScriptRegion) structuredDocumentEvent
+						.getRegion();
 				if (region.isFullReparsed()) {
 					final TextRegionListImpl newList = new TextRegionListImpl();
 					newList.add(region);
-					final IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentEvent.getStructuredDocumentRegion();
-					final IStructuredDocument structuredDocument = structuredDocumentEvent.getStructuredDocument();
-					final RegionsReplacedEvent regionsReplacedEvent = new RegionsReplacedEvent(structuredDocument, structuredDocumentRegion, structuredDocumentRegion, null, newList, null, 0, 0);
+					final IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentEvent
+							.getStructuredDocumentRegion();
+					final IStructuredDocument structuredDocument = structuredDocumentEvent
+							.getStructuredDocument();
+					final RegionsReplacedEvent regionsReplacedEvent = new RegionsReplacedEvent(
+							structuredDocument, structuredDocumentRegion,
+							structuredDocumentRegion, null, newList, null, 0, 0);
 					redrawRegionsReplaced(regionsReplacedEvent);
 				} else {
 					region.setFullReparsed(true);
@@ -388,7 +431,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	/**
-	 * We override this function in order to use content assist for php and not use the default one dictated by StructuredTextViewerConfiguration
+	 * We override this function in order to use content assist for php and not
+	 * use the default one dictated by StructuredTextViewerConfiguration
 	 */
 	@Override
 	public void configure(SourceViewerConfiguration configuration) {
@@ -410,7 +454,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		fViewerConfiguration = configuration;
 
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
-		IContentAssistant newPHPAssistant = phpConfiguration.getPHPContentAssistant(this, true);
+		IContentAssistant newPHPAssistant = phpConfiguration
+				.getPHPContentAssistant(this, true);
 
 		// Uninstall content assistant created in super:
 		if (fContentAssistant != null) {
@@ -423,7 +468,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			fContentAssistant.install(this);
 			fContentAssistantInstalled = true;
 		} else {
-			// 248036 - disable the content assist operation if no content assistant
+			// 248036 - disable the content assist operation if no content
+			// assistant
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
 		}
 
@@ -432,13 +478,16 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			fOutlinePresenter.install(this);
 		}
 
-		fHierarchyPresenter = phpConfiguration.getHierarchyPresenter(this, true);
+		fHierarchyPresenter = phpConfiguration
+				.getHierarchyPresenter(this, true);
 		if (fHierarchyPresenter != null) {
 			fHierarchyPresenter.install(this);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#unconfigure()
 	 */
 	public void unconfigure() {
@@ -449,9 +498,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		if (fOutlinePresenter != null) {
 			fOutlinePresenter.uninstall();
 			fOutlinePresenter = null;
-		}
-		if (fDirtyStateUpdater != null) {
-			fDirtyStateUpdater.uninstall();
 		}
 		super.unconfigure();
 	}
@@ -469,8 +515,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	/**
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#modelLine2WidgetLine(int)
-	 * Workaround for bug #195600 IllegalState is thrown by {@link ProjectionMapping#toImageLine(int)}
+	 *      Workaround for bug #195600 IllegalState is thrown by
+	 *      {@link ProjectionMapping#toImageLine(int)}
 	 */
 	@Override
 	public int modelLine2WidgetLine(int modelLine) {
@@ -481,9 +529,12 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 	}
 
-	/** (non-Javadoc)
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.text.TextViewer#getClosestWidgetLineForModelLine(int)
-	 * Workaround for bug #195600 IllegalState is thrown by {@link ProjectionMapping#toImageLine(int)}
+	 *      Workaround for bug #195600 IllegalState is thrown by
+	 *      {@link ProjectionMapping#toImageLine(int)}
 	 */
 	@Override
 	protected int getClosestWidgetLineForModelLine(int modelLine) {
@@ -498,7 +549,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * Reconciles the whole document (to re-run PHPValidator)
 	 */
 	public void reconcile() {
-		((StructuredRegionProcessor) fReconciler).processDirtyRegion(new DirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT, getDocument().get()));
+		((StructuredRegionProcessor) fReconciler)
+				.processDirtyRegion(new DirtyRegion(0, getDocument()
+						.getLength(), DirtyRegion.INSERT, getDocument().get()));
 
 	}
 
@@ -507,7 +560,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * 
 	 * @param reconciler
 	 *            the reconciler
-	 *
+	 * 
 	 */
 	void setReconciler(IReconciler reconciler) {
 		fReconciler = reconciler;
@@ -517,7 +570,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * Returns the reconciler.
 	 * 
 	 * @return the reconciler or <code>null</code> if not set
-	 *
+	 * 
 	 */
 	IReconciler getReconciler() {
 		return fReconciler;
@@ -525,14 +578,16 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	/**
 	 * Prepends the text presentation listener at the beginning of the viewer's
-	 * list of text presentation listeners.  If the listener is already registered
-	 * with the viewer this call moves the listener to the beginning of
-	 * the list.
-	 *
-	 * @param listener the text presentation listener
+	 * list of text presentation listeners. If the listener is already
+	 * registered with the viewer this call moves the listener to the beginning
+	 * of the list.
+	 * 
+	 * @param listener
+	 *            the text presentation listener
 	 * @since 3.0
 	 */
-	public void prependTextPresentationListener(ITextPresentationListener listener) {
+	public void prependTextPresentationListener(
+			ITextPresentationListener listener) {
 
 		Assert.isNotNull(listener);
 
@@ -542,73 +597,20 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		fTextPresentationListeners.remove(listener);
 		fTextPresentationListeners.add(0, listener);
 	}
-	
+
 	/**
 	 * Sends out a text selection changed event to all registered listeners and
-	 * registers the selection changed event to be sent out to all post selection
-	 * listeners.
-	 *
-	 * @param offset the offset of the newly selected range in the visible document
-	 * @param length the length of the newly selected range in the visible document
+	 * registers the selection changed event to be sent out to all post
+	 * selection listeners.
+	 * 
+	 * @param offset
+	 *            the offset of the newly selected range in the visible document
+	 * @param length
+	 *            the length of the newly selected range in the visible document
 	 */
 	protected void selectionChanged(int offset, int length) {
 		if (fFireSelectionChanged) {
 			super.selectionChanged(offset, length);
-		}
-	}
-
-	class DirtyModelStateUpdater implements IDocumentListener, IPhpScriptReconcilingListener {
-		
-		private boolean fIsModelDirty;
-
-		public void install() {
-			if (fTextEditor instanceof PHPStructuredEditor) {
-				((PHPStructuredEditor)fTextEditor).addReconcileListener(this);
-			}
-		}
-		
-		public void uninstall() {
-			if (fTextEditor instanceof PHPStructuredEditor) {
-				((PHPStructuredEditor)fTextEditor).removeReconcileListener(this);
-			}
-			IDocument oldDocument = getDocument();
-			if (oldDocument != null) {
-				oldDocument.removeDocumentListener(this);
-			}
-		}
-		
-		public void setDocument(IDocument document) {
-			IDocument oldDocument = getDocument();
-			if (oldDocument != null) {
-				oldDocument.removeDocumentListener(this);
-			}
-			if (document != null) {
-				document.addDocumentListener(this);
-			}
-		}
-		
-		public void documentAboutToBeChanged(DocumentEvent event) {
-			IDocument document = event.getDocument();
-			if (document instanceof IStructuredDocument) {
-				IStructuredDocumentRegion region = ((IStructuredDocument)document).getRegionAtCharacterOffset(event.getOffset());
-				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-					fIsModelDirty = true;
-				}
-			}
-		}
-	
-		public void documentChanged(DocumentEvent event) {
-		}
-	
-		public void aboutToBeReconciled() {
-		}
-	
-		public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
-			fIsModelDirty = false;
-		}
-		
-		public boolean isModelDirty() {
-			return fIsModelDirty;
 		}
 	}
 }

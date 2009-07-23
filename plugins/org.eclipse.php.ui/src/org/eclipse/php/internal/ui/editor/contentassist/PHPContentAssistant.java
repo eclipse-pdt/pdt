@@ -14,25 +14,18 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener;
-import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 
 public class PHPContentAssistant extends StructuredContentAssistant {
@@ -41,8 +34,6 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 	private int fAutoActivationDelay = DEFAULT_AUTO_ACTIVATION_DELAY;
 
 	private ITextViewer fViewer;
-	private ITextEditor fTextEditor;
-	private DirtyModelStateUpdater fDirtyStateUpdater;
 
 	protected AutoAssistListener createAutoAssistListener() {
 		return new AutoAssistListener2();
@@ -51,21 +42,11 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 	public void install(ITextViewer textViewer) {
 		super.install(textViewer);
 		fViewer = textViewer;
-		if (textViewer instanceof PHPStructuredTextViewer) {
-			fTextEditor = ((PHPStructuredTextViewer) textViewer).getTextEditor();
-		}
-		fDirtyStateUpdater = new DirtyModelStateUpdater();
-		fDirtyStateUpdater.install();
 	}
 
 	public void uninstall() {
 		super.uninstall();
 		fViewer = null;
-
-		if (fDirtyStateUpdater != null) {
-			fDirtyStateUpdater.uninstall();
-			fDirtyStateUpdater = null;
-		}
 	}
 
 	public void setAutoActivationDelay(int delay) {
@@ -73,7 +54,8 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 		super.setAutoActivationDelay(delay);
 	}
 
-	class AutoAssistListener2 extends AutoAssistListener implements KeyListener, Runnable, VerifyKeyListener {
+	class AutoAssistListener2 extends AutoAssistListener implements
+			KeyListener, Runnable, VerifyKeyListener {
 
 		private Thread fThread;
 		private boolean fIsReset = false;
@@ -99,13 +81,6 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 						if (fIsReset) {
 							fIsReset = false;
 							continue;
-						}
-					}
-
-					while (fDirtyStateUpdater != null && fDirtyStateUpdater.isModelDirty()) {
-						try {
-							Thread.sleep(50);
-						} catch (InterruptedException e) {
 						}
 					}
 					showAssist(fShowStyle);
@@ -140,18 +115,22 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 				return;
 			}
 			try {
-				int pos = ((Point) evaluatePrivateMemberMethod("fContentAssistSubjectControlAdapter", "getSelectedRange", new Class[0], new Object[0])).x; //$NON-NLS-1$ //$NON-NLS-2$
+				int pos = ((Point) evaluatePrivateMemberMethod(
+						"fContentAssistSubjectControlAdapter", "getSelectedRange", new Class[0], new Object[0])).x; //$NON-NLS-1$ //$NON-NLS-2$
 				IDocument document = fViewer.getDocument();
-				String type = TextUtilities.getContentType(document, getDocumentPartitioning(), pos, true);
+				String type = TextUtilities.getContentType(document,
+						getDocumentPartitioning(), pos, true);
 				boolean activated = true;
 				if (type != PHPPartitionTypes.PHP_DEFAULT) {
 					IContentAssistProcessor processor = getContentAssistProcessor(type);
-					if (computeAllAutoActivationTriggers(processor).indexOf(e.character) < 0) {
+					if (computeAllAutoActivationTriggers(processor).indexOf(
+							e.character) < 0) {
 						stop();
 						return;
 					}
 					char[] activation;
-					activation = (char[]) evaluatePrivateMemberMethod("fContentAssistSubjectControlAdapter", "getCompletionProposalAutoActivationCharacters", new Class[] { ContentAssistant.class, int.class }, new Object[] { PHPContentAssistant.super, pos }); //$NON-NLS-1$ //$NON-NLS-2$
+					activation = (char[]) evaluatePrivateMemberMethod(
+							"fContentAssistSubjectControlAdapter", "getCompletionProposalAutoActivationCharacters", new Class[] { ContentAssistant.class, int.class }, new Object[] { PHPContentAssistant.super, pos }); //$NON-NLS-1$ //$NON-NLS-2$
 					activated = contains(activation, e.character);
 				}
 				int showStyle;
@@ -177,17 +156,20 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 			}
 		}
 
-		private String computeAllAutoActivationTriggers(IContentAssistProcessor processor) {
+		private String computeAllAutoActivationTriggers(
+				IContentAssistProcessor processor) {
 			if (processor == null) {
 				return ""; //$NON-NLS-1$
 			}
 
 			StringBuffer buf = new StringBuffer(5);
-			char[] triggers = processor.getCompletionProposalAutoActivationCharacters();
+			char[] triggers = processor
+					.getCompletionProposalAutoActivationCharacters();
 			if (triggers != null) {
 				buf.append(triggers);
 			}
-			triggers = processor.getContextInformationAutoActivationCharacters();
+			triggers = processor
+					.getContextInformationAutoActivationCharacters();
 			if (triggers != null) {
 				buf.append(triggers);
 			}
@@ -206,14 +188,18 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 		}
 
 		private Object getPrivateMember(String member) throws Exception {
-			Field declaredField = PHPContentAssistant.this.getClass().getSuperclass().getSuperclass().getDeclaredField(member);
+			Field declaredField = PHPContentAssistant.this.getClass()
+					.getSuperclass().getSuperclass().getDeclaredField(member);
 			declaredField.setAccessible(true);
 			Object fProposalPopup = declaredField.get(PHPContentAssistant.this);
 			return fProposalPopup;
 		}
 
-		private Object evaluatePrivateMemberMethod(String privateMember, String method, Class<?>[] params, Object[] args) throws Exception {
-			Method declaredMethod = getPrivateMemberMethod(privateMember, method, params);
+		private Object evaluatePrivateMemberMethod(String privateMember,
+				String method, Class<?>[] params, Object[] args)
+				throws Exception {
+			Method declaredMethod = getPrivateMemberMethod(privateMember,
+					method, params);
 			if (declaredMethod == null) {
 				return null;
 			}
@@ -221,7 +207,8 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 			return declaredMethod.invoke(member, args);
 		}
 
-		private Method getPrivateMemberMethod(String privateMember, String method, Class<?>[] params) throws Exception {
+		private Method getPrivateMemberMethod(String privateMember,
+				String method, Class<?>[] params) throws Exception {
 			Object member = getPrivateMember(privateMember);
 			if (member == null) {
 				return null;
@@ -229,55 +216,12 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 			return getPrivateMetod(member, method, params);
 		}
 
-		private Method getPrivateMetod(Object obj, String method, Class<?>[] params) throws Exception {
-			Method declaredMethod = obj.getClass().getDeclaredMethod(method, params);
+		private Method getPrivateMetod(Object obj, String method,
+				Class<?>[] params) throws Exception {
+			Method declaredMethod = obj.getClass().getDeclaredMethod(method,
+					params);
 			declaredMethod.setAccessible(true);
 			return declaredMethod;
-		}
-	}
-
-	class DirtyModelStateUpdater implements ITextListener, IPhpScriptReconcilingListener {
-
-		private boolean fIsModelDirty;
-
-		public void install() {
-			if (fTextEditor instanceof PHPStructuredEditor) {
-				((PHPStructuredEditor) fTextEditor).addReconcileListener(this);
-			}
-			fViewer.addTextListener(this);
-		}
-
-		public void uninstall() {
-			if (fTextEditor instanceof PHPStructuredEditor) {
-				((PHPStructuredEditor) fTextEditor).removeReconcileListener(this);
-			}
-			if (fViewer != null) {
-				fViewer.removeTextListener(this);
-			}
-		}
-
-		public void textChanged(TextEvent event) {
-			DocumentEvent docEvent = event.getDocumentEvent();
-			if (docEvent != null) {
-				IDocument document = docEvent.getDocument();
-				if (document instanceof IStructuredDocument) {
-					IStructuredDocumentRegion region = ((IStructuredDocument) document).getRegionAtCharacterOffset(event.getOffset());
-					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-						fIsModelDirty = true;
-					}
-				}
-			}
-		}
-
-		public void aboutToBeReconciled() {
-		}
-
-		public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
-			fIsModelDirty = false;
-		}
-
-		public boolean isModelDirty() {
-			return fIsModelDirty;
 		}
 	}
 }
