@@ -682,9 +682,9 @@ public class PHPLaunchUtilities {
 		StringBuilder buf = new StringBuilder();
 		File libDirectory = new File(phpExeDir.getParentFile(), "lib");
 		if (libDirectory.exists()) {
-			buf.append(libDirectory.getAbsolutePath());
+			buf.append('"' + libDirectory.getAbsolutePath() + '"');
 		} else {
-			buf.append(phpExeDir.getAbsolutePath());
+			buf.append('"' + phpExeDir.getAbsolutePath() + '"');
 		}
 		try {
 			String env = System.getenv(variable);
