@@ -16,22 +16,25 @@ import org.eclipse.dltk.ast.DLTKToken;
 import org.eclipse.dltk.ast.references.TypeReference;
 
 /**
- * This is a reference to the PHP element name which has a namespace prefix in it.
+ * This is a reference to the PHP element name which has a namespace prefix in
+ * it.
+ * 
  * @author michael
  */
 public class FullyQualifiedReference extends TypeReference {
-	
+
 	private NamespaceReference namespace;
 
 	public FullyQualifiedReference(DLTKToken token) {
 		super(token);
 	}
 
-	public FullyQualifiedReference(int start, int end, String name, NamespaceReference namespace) {
+	public FullyQualifiedReference(int start, int end, String name,
+			NamespaceReference namespace) {
 		super(start, end, name);
 		this.namespace = namespace;
 	}
-	
+
 	public void traverse(ASTVisitor pVisitor) throws Exception {
 		if (pVisitor.visit(this)) {
 			if (namespace != null) {
@@ -43,6 +46,7 @@ public class FullyQualifiedReference extends TypeReference {
 
 	/**
 	 * Returns namespace reference prefix
+	 * 
 	 * @return
 	 */
 	public NamespaceReference getNamespace() {
@@ -51,24 +55,29 @@ public class FullyQualifiedReference extends TypeReference {
 
 	/**
 	 * Sets namespace reference prefix
+	 * 
 	 * @param namespace
 	 */
 	public void setNamespace(NamespaceReference namespace) {
 		this.namespace = namespace;
 	}
-	
+
 	/**
-	 * Returns the full name including the namespace prefix 
+	 * Returns the full name including the namespace prefix
+	 * 
 	 * @return
 	 */
 	public String getFullyQualifiedName() {
 		if (namespace == null) {
 			return getName();
 		}
-		
-		StringBuilder buf = new StringBuilder(namespace.getName())
-			.append(NamespaceReference.NAMESPACE_SEPARATOR).append(getName());
-		
+
+		StringBuilder buf = new StringBuilder(namespace.getName());
+		if (!namespace.isLocal() && !namespace.isGlobal()) {
+			buf.append(NamespaceReference.NAMESPACE_SEPARATOR);
+		}
+		buf.append(getName());
+
 		return buf.toString();
 	}
 }
