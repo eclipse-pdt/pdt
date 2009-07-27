@@ -640,12 +640,12 @@ public class PHPLaunchUtilities {
 		env.put("QUERY_STRING", queryStringBuf.toString());
 		env.put("REDIRECT_STATUS", "1"); //$NON-NLS-1$
 		env.put("PHPRC", phpConfigDir); //$NON-NLS-1$
-		
+
 		appendLibrarySearchPathEnv(env, new File(phpExeDir));
-		
+
 		return env;
 	}
-	
+
 	/**
 	 * Appends needed environment variable that says where to look for 3rd party libraries
 	 * depending on the OS.
@@ -658,10 +658,10 @@ public class PHPLaunchUtilities {
 		if (variable == null) {
 			return;
 		}
-		String value = getLibrarySearchEnvValue(variable, phpExeDir);
+		String value = getLibrarySearchEnvValue(variable, phpExeDir, false);
 		env.put(variable, value);
 	}
-	
+
 	/**
 	 * Returns needed environment variable that says where to look for 3rd party libraries
 	 * depending on the OS.
@@ -669,22 +669,26 @@ public class PHPLaunchUtilities {
 	 * @param phpExeDir Directory handle where PHP.exe is located
 	 * @return string containing variable=value for appending it to the process environment vars array 
 	 */
-	public static String getLibrarySearchPathEnv(File phpExeDir) {
+	public static String getLibrarySearchPathEnv(File phpExeDir, boolean quoted) {
 		String variable = getLibrarySearchEnvVariable();
 		if (variable == null) {
 			return null;
 		}
-		String value = getLibrarySearchEnvValue(variable, phpExeDir);
+		String value = getLibrarySearchEnvValue(variable, phpExeDir, quoted);
 		return new StringBuilder(variable).append('=').append(value).toString();
 	}
-	
-	private static String getLibrarySearchEnvValue(String variable, File phpExeDir) {
+
+	public static String getLibrarySearchPathEnv(File phpExeDir) {
+		return getLibrarySearchPathEnv(phpExeDir, false);
+	}
+
+	private static String getLibrarySearchEnvValue(String variable, File phpExeDir, boolean quoted) {
 		StringBuilder buf = new StringBuilder();
 		File libDirectory = new File(phpExeDir.getParentFile(), "lib");
 		if (libDirectory.exists()) {
-			buf.append('"' + libDirectory.getAbsolutePath() + '"');
+			buf.append(createPath(libDirectory, quoted));
 		} else {
-			buf.append('"' + phpExeDir.getAbsolutePath() + '"');
+			buf.append(createPath(phpExeDir, quoted));
 		}
 		try {
 			String env = System.getenv(variable);
@@ -695,7 +699,11 @@ public class PHPLaunchUtilities {
 		}
 		return buf.toString();
 	}
-	
+
+	private static String createPath(File path, boolean quoted) {
+		return quoted ? '"' + path.getAbsolutePath() + '"' : path.getAbsolutePath();
+	}
+
 	private static String getLibrarySearchEnvVariable() {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
 		if (os.startsWith("Win")) { //$NON-NLS-1$
@@ -784,7 +792,6 @@ public class PHPLaunchUtilities {
 		}
 		return Boolean.valueOf(value).booleanValue();
 	}
-	
 
 	/**
 	 * Generates debug query from parameters for the GET method. This method encodes debug parameters.
