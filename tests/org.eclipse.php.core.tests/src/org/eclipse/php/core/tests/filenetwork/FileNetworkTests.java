@@ -14,6 +14,7 @@ package org.eclipse.php.core.tests.filenetwork;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import junit.framework.Assert;
 import junit.framework.Test;
@@ -79,7 +80,23 @@ public class FileNetworkTests extends AbstractModelTests {
 		return suite;
 	}
 
+	protected String sortLines(String str) {
+		String[] split = str.split("[\r\n]+");
+		Arrays.sort(split);
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < split.length; ++i) {
+			if (i > 0) {
+				buf.append("\n");
+			}
+			buf.append(split[i]);
+		}
+		return buf.toString();
+	}
+
 	protected void assertContents(String expected, String actual) {
+		expected = sortLines(expected);
+		actual = sortLines(actual);
+
 		String diff = PHPCoreTests.compareContents(expected, actual);
 		if (diff != null) {
 			fail(diff);
