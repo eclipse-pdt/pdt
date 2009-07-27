@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.internal.ui.refactoring.actions.RenameResourceAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -62,18 +62,15 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 			if (!selection.isEmpty()) {
 				Object object = ((IStructuredSelection) selection).getFirstElement();
 				IResource resource = null;
-				if (object instanceof ISourceModule) {
-					resource = ((ISourceModule) object).getResource();
+				if (object instanceof IModelElement) {
+					resource = ((IModelElement) object).getResource();
 				}
-
 				if (object instanceof IResource) {
 					resource = (IResource) object;
 				}
-
 				if (object instanceof ElementImplForPhp) {
 					resource = ((ElementImplForPhp) object).getModelElement().getResource();
 				}
-
 				if (resource != null) {
 					IStructuredSelection resourceSel = new StructuredSelection(resource);
 					resourceAction.run(resourceSel);
