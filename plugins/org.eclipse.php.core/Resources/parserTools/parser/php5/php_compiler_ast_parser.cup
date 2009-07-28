@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.28 2009/07/02 06:47:41 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.29 2009/07/28 12:02:18 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -414,10 +414,7 @@ unticked_statement:statement
 {: 
 	RESULT = statement; 
 :}
-| T_VAR_COMMENT unticked_statement:statement
-{:
-	RESULT = statement;
-:}
+| T_VAR_COMMENT
 | error:theError /* error statement */
 {:
 	parser.reportError();
@@ -1458,10 +1455,7 @@ method_body:body
 	methodDeclaration.setDeclaringTypeName(type.getName());
 :}
 
-| T_VAR_COMMENT class_statement:statement
-{:
-	RESULT = statement;
-:}
+| T_VAR_COMMENT
 | error:theError /* error statement */
 {:
 	parser.reportError();
