@@ -81,7 +81,7 @@ public class Locator extends ApplyAll {
 	}
 
 	private static final boolean inNode(final ASTNode node, final int offset) {
-		return offset >= node.getStart() && (node.getStart() + node.getLength() >= offset);
+		return offset >= node.getStart() && (node.getStart() + node.getLength() > offset);
 	}
 
 	/**
