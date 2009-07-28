@@ -20,13 +20,16 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 
 /**
  * This composite contains strategies that complete namespace elements
+ * 
  * @author michael
  */
-public class NamespaceElementsCompositeStrategy extends AbstractCompletionStrategy {
+public class NamespaceElementsCompositeStrategy extends
+		AbstractCompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
 
-	public NamespaceElementsCompositeStrategy(ICompletionContext context, ICompletionContext[] allContexts, boolean isGlobalNamespace) {
+	public NamespaceElementsCompositeStrategy(ICompletionContext context,
+			ICompletionContext[] allContexts, boolean isGlobalNamespace) {
 		super(context);
 
 		boolean hasNewClassContext = false;
@@ -36,7 +39,7 @@ public class NamespaceElementsCompositeStrategy extends AbstractCompletionStrate
 				break;
 			}
 		}
-		
+
 		if (isGlobalNamespace) {
 			if (!hasNewClassContext) {
 				strategies.add(new GlobalTypesStrategy(context));
@@ -51,7 +54,8 @@ public class NamespaceElementsCompositeStrategy extends AbstractCompletionStrate
 				strategies.add(new NamespaceFunctionsStrategy(context));
 				strategies.add(new NamespaceConstantsStrategy(context));
 			} else {
-				strategies.add(new NamespaceClassInstantiationStrategy(context));
+				strategies
+						.add(new NamespaceClassInstantiationStrategy(context));
 			}
 		}
 	}

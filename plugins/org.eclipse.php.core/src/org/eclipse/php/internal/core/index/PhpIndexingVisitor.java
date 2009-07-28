@@ -179,15 +179,6 @@ public class PhpIndexingVisitor extends ASTVisitor {
 				metadata.length() == 0 ? null : metadata.toString(),
 				fCurrentQualifier, fCurrentParent);
 
-		// Process method argument (local variable) declarations:
-		for (Argument arg : arguments) {
-			requestor.addDeclaration(IModelElement.FIELD, Modifiers.AccPublic,
-					arg.sourceStart(), arg.sourceEnd() - arg.sourceStart(), arg
-							.getNameStart(), arg.getNameEnd()
-							- arg.getNameStart(), arg.getName(), null, null,
-					null);
-		}
-
 		return visitGeneral(method);
 	}
 
@@ -319,7 +310,8 @@ public class PhpIndexingVisitor extends ASTVisitor {
 						int length = docTag.sourceStart() + 9;
 						requestor.addDeclaration(IModelElement.FIELD,
 								Modifiers.AccPublic, offset, length, offset,
-								length, name, null, null, null);
+								length, name, null, fCurrentQualifier,
+								fCurrentParent);
 
 					} else if (tagKind == PHPDocTag.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
@@ -371,49 +363,9 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		requestor.addDeclaration(IModelElement.FIELD, modifiers, decl
 				.sourceStart(), decl.sourceEnd() - decl.sourceStart(), decl
 				.getNameStart(), decl.getNameEnd() - decl.getNameStart(), decl
-				.getName(), null, null, fCurrentParent);
+				.getName(), null, fCurrentQualifier, fCurrentParent);
 
 		return visitGeneral(decl);
-	}
-
-	public boolean visit(CatchClause catchClause) throws Exception {
-		int modifiers = Modifiers.AccPublic;
-		SimpleReference var = catchClause.getVariable();
-		int offset = var.sourceStart();
-		int length = var.sourceEnd() - offset;
-		requestor.addDeclaration(IModelElement.FIELD, modifiers, offset,
-				length, offset, length, var.getName(), null, null, null);
-		return visitGeneral(catchClause);
-	}
-
-	public boolean endvisit(CatchClause catchClause) throws Exception {
-		endvisitGeneral(catchClause);
-		return true;
-	}
-
-	public boolean visit(ForEachStatement foreachStatement) throws Exception {
-		if (foreachStatement.getKey() instanceof VariableReference) {
-			SimpleReference var = (SimpleReference) foreachStatement.getKey();
-			int modifiers = Modifiers.AccPublic;
-			int offset = var.sourceStart();
-			int length = var.sourceEnd() - offset;
-			requestor.addDeclaration(IModelElement.FIELD, modifiers, offset,
-					length, offset, length, var.getName(), null, null, null);
-		}
-		if (foreachStatement.getValue() instanceof VariableReference) {
-			SimpleReference var = (SimpleReference) foreachStatement.getValue();
-			int modifiers = Modifiers.AccPublic;
-			int offset = var.sourceStart();
-			int length = var.sourceEnd() - offset;
-			requestor.addDeclaration(IModelElement.FIELD, modifiers, offset,
-					length, offset, length, var.getName(), null, null, null);
-		}
-		return visitGeneral(foreachStatement);
-	}
-
-	public boolean endvisit(ForEachStatement foreachStatement) throws Exception {
-		endvisitGeneral(foreachStatement);
-		return true;
 	}
 
 	public boolean endvisit(PHPFieldDeclaration declaration) throws Exception {
@@ -500,7 +452,8 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		if (left instanceof FieldAccess) { // class variable ($this->a = .)
 			FieldAccess fieldAccess = (FieldAccess) left;
 			Expression dispatcher = fieldAccess.getDispatcher();
-			if (dispatcher instanceof VariableReference) {//&& "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
+			if (dispatcher instanceof VariableReference
+					&& "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
 				Expression field = fieldAccess.getField();
 				if (field instanceof SimpleReference) {
 					SimpleReference var = (SimpleReference) field;
@@ -509,24 +462,18 @@ public class PhpIndexingVisitor extends ASTVisitor {
 					int length = var.sourceEnd() - offset;
 					requestor.addDeclaration(IModelElement.FIELD, modifiers,
 							offset, length, offset, length,
-							'$' + var.getName(), null, null, fCurrentParent);
+							'$' + var.getName(), null, fCurrentQualifier,
+							fCurrentParent);
 				}
 			}
 		} else if (left instanceof VariableReference) {
-
-			int modifiers = Modifiers.AccPublic;
-
+			int modifiers = Modifiers.AccPublic | Modifiers.AccGlobal;
 			if (!declarations.empty()
-					&& declarations.peek() instanceof MethodDeclaration) {
-				if (methodGlobalVars.peek().contains(
-						((VariableReference) left).getName())) {
-					deferredDeclarations.add(assignment);
-					return visitGeneral(assignment);
-				}
-			} else {
-				modifiers |= Modifiers.AccGlobal;
+					&& declarations.peek() instanceof MethodDeclaration
+					&& !methodGlobalVars.peek().contains(
+							((VariableReference) left).getName())) {
+				return visitGeneral(assignment);
 			}
-
 			int offset = left.sourceStart();
 			int length = left.sourceEnd() - offset;
 			requestor.addDeclaration(IModelElement.FIELD, modifiers, offset,
@@ -575,12 +522,6 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		if (statementClass.equals(ConstantDeclaration.class)) {
 			return visit((ConstantDeclaration) node);
 		}
-		if (statementClass.equals(CatchClause.class)) {
-			return visit((CatchClause) node);
-		}
-		if (statementClass.equals(ForEachStatement.class)) {
-			return visit((ForEachStatement) node);
-		}
 		if (statementClass.equals(GlobalStatement.class)) {
 			return visit((GlobalStatement) node);
 		}
@@ -597,12 +538,6 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		}
 		if (statementClass.equals(ConstantDeclaration.class)) {
 			return endvisit((ConstantDeclaration) node);
-		}
-		if (statementClass.equals(CatchClause.class)) {
-			return endvisit((CatchClause) node);
-		}
-		if (statementClass.equals(ForEachStatement.class)) {
-			return endvisit((ForEachStatement) node);
 		}
 		endvisitGeneral(node);
 		return true;
