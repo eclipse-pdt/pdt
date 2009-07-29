@@ -23,14 +23,19 @@ import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.php.internal.ui.Logger;
 
-public class PHPFunctionsContentProvider extends StandardModelElementContentProvider {
+public class PHPFunctionsContentProvider extends
+		StandardModelElementContentProvider {
 
 	public PHPFunctionsContentProvider() {
 		super(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.ui.StandardModelElementContentProvider#getChildren(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.internal.ui.StandardModelElementContentProvider#getChildren
+	 * (java.lang.Object)
 	 */
 	@Override
 	public Object[] getChildren(Object element) {
@@ -40,15 +45,18 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 			try {
 				List<Object> children = new ArrayList<Object>();
 
-				// Create the constant node that will aggregate all of the PHP constants
+				// Create the constant node that will aggregate all of the PHP
+				// constants
 				ConstantNode constantNode = new ConstantNode();
 				children.add(constantNode);
 
 				Object[] projectFragmentContent = getProjectFragmentContent((IProjectFragment) element);
 				for (Object modelElement : projectFragmentContent) {
 					if (modelElement instanceof ExternalSourceModule) {
-						IModelElement[] externalSourceModuleChildren = ((ExternalSourceModule) modelElement).getChildren();
-						constantNode.addSourceModuleChildren(externalSourceModuleChildren);
+						IModelElement[] externalSourceModuleChildren = ((ExternalSourceModule) modelElement)
+								.getChildren();
+						constantNode
+								.addSourceModuleChildren(externalSourceModuleChildren);
 						// filter the constants from the main view
 						IModelElement[] elements = filterConstants(externalSourceModuleChildren);
 						children.addAll(Arrays.asList(elements));
@@ -73,11 +81,14 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 	}
 
 	/**
-	 * Filter the constants from the main view (will appear under the constants node)
+	 * Filter the constants from the main view (will appear under the constants
+	 * node)
+	 * 
 	 * @param externalSourceModuleChildren
 	 * @return
 	 */
-	private IModelElement[] filterConstants(IModelElement[] externalSourceModuleChildren) {
+	private IModelElement[] filterConstants(
+			IModelElement[] externalSourceModuleChildren) {
 		List<IModelElement> filteredList = new ArrayList<IModelElement>();
 		for (IModelElement modelElement : externalSourceModuleChildren) {
 			if (!ConstantNode.isConstant(modelElement)) {
@@ -90,7 +101,8 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 	@Override
 	public boolean hasChildren(Object element) {
 		// do not show children for methods
-		if (element instanceof IModelElement && ((IModelElement) element).getElementType() == IModelElement.METHOD) {
+		if (element instanceof IModelElement
+				&& ((IModelElement) element).getElementType() == IModelElement.METHOD) {
 			return false;
 		}
 		return super.hasChildren(element);

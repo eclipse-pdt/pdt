@@ -21,21 +21,26 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.codeassist.strategies.IncludeStatementStrategy;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 public class PHPCompletionProposal extends ScriptCompletionProposal {
 
-	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image, String displayString, int relevance) {
-		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance);
+	public PHPCompletionProposal(String replacementString,
+			int replacementOffset, int replacementLength, Image image,
+			String displayString, int relevance) {
+		super(replacementString, replacementOffset, replacementLength, image,
+				displayString, relevance);
 	}
 
-	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image, String displayString, int relevance, boolean indoc) {
-		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
+	public PHPCompletionProposal(String replacementString,
+			int replacementOffset, int replacementLength, Image image,
+			String displayString, int relevance, boolean indoc) {
+		super(replacementString, replacementOffset, replacementLength, image,
+				displayString, relevance, indoc);
 	}
-	
+
 	protected boolean isValidPrefix(String prefix) {
 		String word = getDisplayString();
 		if (word.startsWith("$") && !prefix.startsWith("$")) {
@@ -43,7 +48,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 		}
 		return isPrefix(prefix, word);
 	}
-	
+
 	protected boolean isSmartTrigger(char trigger) {
 		return trigger == '$';
 	}
@@ -53,16 +58,21 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 
 		boolean activateCodeAssist = false;
 		String replacementString = getReplacementString();
-		if (modelElement instanceof FakeGroupType) {
-			activateCodeAssist = true;
-		} else if (modelElement instanceof IScriptProject && replacementString.endsWith(IncludeStatementStrategy.FOLDER_SEPARATOR)) {
-			// workaround for: https://bugs.eclipse.org/bugs/show_bug.cgi?id=269634
+		if (modelElement instanceof IScriptProject
+				&& replacementString
+						.endsWith(IncludeStatementStrategy.FOLDER_SEPARATOR)) {
+			// workaround for:
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=269634
 			activateCodeAssist = true;
 		} else {
-			IPreferencesService preferencesService = Platform.getPreferencesService();
-			boolean enableAutoactivation = preferencesService.getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false, null);
+			IPreferencesService preferencesService = Platform
+					.getPreferencesService();
+			boolean enableAutoactivation = preferencesService.getBoolean(
+					PHPCorePlugin.ID,
+					PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false, null);
 			if (enableAutoactivation) {
-				char lastChar = replacementString.charAt(replacementString.length() - 1);
+				char lastChar = replacementString.charAt(replacementString
+						.length() - 1);
 				for (char autoActivationChar : PHPCompletionProcessor.completionAutoActivationChars) {
 					if (autoActivationChar == lastChar) {
 						activateCodeAssist = true;
@@ -113,7 +123,8 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 	}
 
 	protected boolean insertCompletion() {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true, null);
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true, null);
 	}
 
 	protected ScriptTextTools getTextTools() {

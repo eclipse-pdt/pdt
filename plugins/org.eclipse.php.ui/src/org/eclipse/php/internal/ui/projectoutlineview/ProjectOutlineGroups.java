@@ -15,14 +15,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
@@ -35,10 +33,14 @@ import org.eclipse.swt.graphics.Image;
  */
 public enum ProjectOutlineGroups {
 
-	GROUP_CLASSES(PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.classes")),
-	GROUP_NAMESPACES(PHPPluginImages.DESC_OBJ_PHP_NAMESPACES_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.namespaces")),
-	GROUP_CONSTANTS(PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.constants")),
-	GROUP_FUNCTIONS(PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.functions"));
+	GROUP_CLASSES(PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage(),
+			PHPUIMessages.getString("PHPProjectOutline.nodes.classes")), GROUP_NAMESPACES(
+			PHPPluginImages.DESC_OBJ_PHP_NAMESPACES_GROUP.createImage(),
+			PHPUIMessages.getString("PHPProjectOutline.nodes.namespaces")), GROUP_CONSTANTS(
+			PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage(),
+			PHPUIMessages.getString("PHPProjectOutline.nodes.constants")), GROUP_FUNCTIONS(
+			PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage(),
+			PHPUIMessages.getString("PHPProjectOutline.nodes.functions"));
 
 	private final Image image;
 	private final String text;
@@ -61,43 +63,50 @@ public enum ProjectOutlineGroups {
 	protected Object[] getChildren() {
 		if (ProjectOutlineContentProvider.scripProject != null) {
 
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(ProjectOutlineContentProvider.scripProject, IDLTKSearchScope.SOURCES);
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(
+					ProjectOutlineContentProvider.scripProject,
+					IDLTKSearchScope.SOURCES);
 
-			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
-				public int compare(IModelElement o1, IModelElement o2) {
-					int res = o1.getElementName().compareTo(o2.getElementName());
-					if (res == 0) {
-						return (o1.getPath().toOSString() + o1.getElementName()).compareTo(o2.getPath().toOSString() + o2.getElementName());
-					}
-					return res;
-
-				}
-			});
-			switch (this) {
-				case GROUP_NAMESPACES:
-					childrenList.addAll(Arrays.asList(PHPModelUtils.getAllNamespaces(scope)));
-					break;
-
-				case GROUP_CLASSES:
-					childrenList.addAll(Arrays.asList(PHPModelUtils.getAllClassesAndInterfaces(scope)));
-					break;
-
-				case GROUP_FUNCTIONS:
-					childrenList.addAll(Arrays.asList(PHPModelUtils.getAllFunctions(scope)));
-					break;
-
-				case GROUP_CONSTANTS:
-					IField[] fields = PHPModelUtils.getAllFields(scope);
-					for (IField iField : fields) {
-						try {
-							if (PHPFlags.isConstant(iField.getFlags())) {
-								childrenList.add(iField);
+			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(
+					new Comparator<IModelElement>() {
+						public int compare(IModelElement o1, IModelElement o2) {
+							int res = o1.getElementName().compareTo(
+									o2.getElementName());
+							if (res == 0) {
+								return (o1.getPath().toOSString() + o1
+										.getElementName()).compareTo(o2
+										.getPath().toOSString()
+										+ o2.getElementName());
 							}
-						} catch (ModelException e) {
-							Logger.logException(e);
+							return res;
+
 						}
-					}
-					break;
+					});
+			switch (this) {
+			case GROUP_NAMESPACES:
+				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
+						.findTypes(null, MatchRule.PREFIX,
+								Modifiers.AccNameSpace, 0, scope, null)));
+				break;
+
+			case GROUP_CLASSES:
+				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
+						.findTypes(null, MatchRule.PREFIX, 0,
+								Modifiers.AccNameSpace, scope, null)));
+				break;
+
+			case GROUP_FUNCTIONS:
+				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
+						.findMethods(null, MatchRule.PREFIX,
+								Modifiers.AccGlobal, 0, scope, null)));
+				break;
+
+			case GROUP_CONSTANTS:
+				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
+						.findFields(null, MatchRule.PREFIX,
+								Modifiers.AccConstant | Modifiers.AccGlobal, 0,
+								scope, null)));
+				break;
 			}
 			return childrenList.toArray();
 		}

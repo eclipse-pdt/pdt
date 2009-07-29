@@ -22,40 +22,43 @@ import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.FakeGroupMethod;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 
-public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionProposal implements ICompletionProposalExtension4 {
+public class PHPOverrideCompletionProposal extends
+		ScriptOverrideCompletionProposal implements
+		ICompletionProposalExtension4 {
 
-	public PHPOverrideCompletionProposal(IScriptProject jproject, ISourceModule cu, String methodName, String[] paramTypes, int start, int length, String displayName, String completionProposal) {
-		super(jproject, cu, methodName, paramTypes, start, length, displayName, completionProposal);
+	public PHPOverrideCompletionProposal(IScriptProject jproject,
+			ISourceModule cu, String methodName, String[] paramTypes,
+			int start, int length, String displayName, String completionProposal) {
+		super(jproject, cu, methodName, paramTypes, start, length, displayName,
+				completionProposal);
 	}
 
 	public void apply(IDocument document, char trigger, int offset) {
-		if (getModelElement() instanceof FakeGroupMethod) {
-			AutoActivationTrigger.register(document);
-		}
-		
 		UseStatementInjector injector = new UseStatementInjector(this);
 		offset = injector.inject(document, getTextViewer(), offset);
-		
+
 		super.apply(document, trigger, offset);
-		
+
 		calculateCursorPosition(document, offset);
 	}
 
 	public boolean isAutoInsertable() {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOINSERT, false, null);
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_AUTOINSERT, false, null);
 	}
 
 	protected boolean insertCompletion() {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true, null);
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true, null);
 	}
 
 	protected void calculateCursorPosition(IDocument document, int offset) {
 		try {
-			while (Character.isJavaIdentifierPart(document.getChar(offset)) || document.getChar(offset) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			while (Character.isJavaIdentifierPart(document.getChar(offset))
+					|| document.getChar(offset) == NamespaceReference.NAMESPACE_SEPARATOR) {
 				++offset;
 			}
 			if (document.getChar(offset) == '(') {

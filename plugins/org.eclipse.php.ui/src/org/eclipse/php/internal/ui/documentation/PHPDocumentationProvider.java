@@ -25,8 +25,6 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
-import org.eclipse.php.internal.core.codeassist.FakeGroupMethod;
-import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
@@ -58,7 +56,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	protected static final String FIELD_INTERFACE = "Interface";
 	protected static final String FIELD_TYPE = "Type";
 
-	public Reader getInfo(IMember element, boolean lookIntoParents, boolean lookIntoExternal) {
+	public Reader getInfo(IMember element, boolean lookIntoParents,
+			boolean lookIntoExternal) {
 		StringBuilder buf = new StringBuilder(DL_START);
 		try {
 			if (!appendBuiltinDoc(element, buf)) {
@@ -106,12 +105,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		return false;
 	}
 
-	private void appendMethodInfo(IMethod method, StringBuilder buf) throws ModelException {
-		
-		if (method instanceof FakeGroupMethod) {
-			appendDefinitionRow(FIELD_DESC, "This is a group containing multiple functions.", buf);
-			return;
-		}
+	private void appendMethodInfo(IMethod method, StringBuilder buf)
+			throws ModelException {
 
 		ISourceModule sourceModule = method.getSourceModule();
 		String fileName = getFileName(method);
@@ -123,13 +118,16 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		IType declaringType = method.getDeclaringType();
 		appendTypeInfoRow(declaringType, buf);
 
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
-		MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(module, method);
+		ModuleDeclaration module = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
+		MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(
+				module, method);
 		if (!(methodDeclaration instanceof IPHPDocAwareDeclaration)) {
 			return;
 		}
 
-		PHPDocBlock doc = ((IPHPDocAwareDeclaration) methodDeclaration).getPHPDoc();
+		PHPDocBlock doc = ((IPHPDocAwareDeclaration) methodDeclaration)
+				.getPHPDoc();
 		if (doc == null) {
 			return;
 		}
@@ -156,25 +154,23 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		appendTagInfo(doc, PHPDocTag.AUTHOR, FIELD_AUTHOR, buf);
 	}
 
-	private void appendTypeInfo(IType type, StringBuilder buf) throws ModelException {
-		
-		if (type instanceof FakeGroupType) {
-			appendDefinitionRow(FIELD_DESC, "This is a group containing multiple classes or interfaces.", buf);
-			return;
-		}
+	private void appendTypeInfo(IType type, StringBuilder buf)
+			throws ModelException {
 
 		ISourceModule sourceModule = type.getSourceModule();
 		String fileName = getFileName(type);
 
 		// append the file name
 		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
-		
+
 		// append the namespace name if it exists
 		IType declaringType = type.getDeclaringType();
 		appendTypeInfoRow(declaringType, buf);
 
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
-		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(module, type);
+		ModuleDeclaration module = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
+		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(module,
+				type);
 
 		if (typeDeclaration instanceof ClassDeclaration) {
 			ClassDeclaration classDeclaration = (ClassDeclaration) typeDeclaration;
@@ -196,7 +192,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		if (!(typeDeclaration instanceof IPHPDocAwareDeclaration)) {
 			return;
 		}
-		PHPDocBlock doc = ((IPHPDocAwareDeclaration) typeDeclaration).getPHPDoc();
+		PHPDocBlock doc = ((IPHPDocAwareDeclaration) typeDeclaration)
+				.getPHPDoc();
 		if (doc == null) {
 			return;
 		}
@@ -214,7 +211,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		appendTagInfo(doc, PHPDocTag.AUTHOR, FIELD_AUTHOR, buf);
 	}
 
-	private void appendFieldInfo(IField field, StringBuilder buf) throws ModelException {
+	private void appendFieldInfo(IField field, StringBuilder buf)
+			throws ModelException {
 
 		ISourceModule sourceModule = field.getSourceModule();
 		String fileName = getFileName(field);
@@ -226,7 +224,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		IType declaringType = field.getDeclaringType();
 		appendTypeInfoRow(declaringType, buf);
 
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
+		ModuleDeclaration module = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
 		ASTNode node = PHPModelUtils.getNodeByField(module, field);
 
 		if (!(node instanceof IPHPDocAwareDeclaration)) {
@@ -239,7 +238,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 		// append description if it exists
 		appendShortDescription(doc, buf);
-		
+
 		// append type information
 		for (PHPDocTag tag : doc.getTags()) {
 			if (tag.getTagKind() == PHPDocTag.VAR) {
@@ -255,12 +254,12 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			}
 		}
 	}
-	
+
 	private void appendTypeInfoRow(IType type, StringBuilder buf) {
 		if (type == null) {
 			return;
 		}
-		
+
 		int flags = 0;
 		try {
 			flags = type.getFlags();
@@ -268,11 +267,9 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 		if (PHPFlags.isNamespace(flags)) {
 			appendDefinitionRow(FIELD_NAMESPACE, type.getElementName(), buf);
-		}
-		else if (PHPFlags.isInterface(flags)) {
+		} else if (PHPFlags.isInterface(flags)) {
 			appendDefinitionRow(FIELD_INTERFACE, type.getElementName(), buf);
-		}
-		else {
+		} else {
 			appendDefinitionRow(FIELD_CLASS, type.getElementName(), buf);
 		}
 	}
@@ -281,12 +278,14 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		return str.replaceAll("\\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	protected void appendDefinitionRow(String field, String data, StringBuilder buf) {
+	protected void appendDefinitionRow(String field, String data,
+			StringBuilder buf) {
 		buf.append(DT_START).append(field).append(DT_END);
 		buf.append(DD_START).append(data).append(DD_END);
 	}
 
-	protected void appendDefinitionRows(String field, String[] data, StringBuilder buf) {
+	protected void appendDefinitionRows(String field, String[] data,
+			StringBuilder buf) {
 		buf.append(DT_START).append(field).append(DT_END);
 		for (String row : data) {
 			buf.append(DD_START).append(row).append(DD_END);
@@ -300,7 +299,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 	}
 
-	protected void appendTagInfo(PHPDocBlock doc, int tagKind, String field, StringBuilder buf) {
+	protected void appendTagInfo(PHPDocBlock doc, int tagKind, String field,
+			StringBuilder buf) {
 		PHPDocTag[] tags = getTags(doc, tagKind);
 		if (tags.length > 0) {
 			buf.append(DT_START).append(field).append(DT_END);
@@ -319,9 +319,10 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 		return tags.toArray(new PHPDocTag[tags.size()]);
 	}
-	
+
 	protected String getFileName(IMember modelElement) {
-		IPath path = EnvironmentPathUtils.getLocalPath(modelElement.getSourceModule().getPath());
+		IPath path = EnvironmentPathUtils.getLocalPath(modelElement
+				.getSourceModule().getPath());
 		String fileName = path.toOSString();
 		if (fileName.startsWith("\\") || fileName.startsWith("/")) {
 			fileName = fileName.substring(1);
