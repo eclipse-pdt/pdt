@@ -14,6 +14,7 @@ package org.eclipse.php.core.tests.filenetwork;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 import junit.framework.Assert;
 import junit.framework.Test;
@@ -31,14 +32,14 @@ import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class FileNetworkTests extends AbstractModelTests {
-	
+
 	protected static final String PROJECT = "filenetwork";
 	protected IScriptProject SCRIPT_PROJECT;
 
 	public FileNetworkTests(String name) {
 		super(PHPCoreTests.PLUGIN_ID, name);
 	}
-	
+
 	public void setUpSuite() throws Exception {
 		deleteProject(PROJECT);
 		if (SCRIPT_PROJECT != null) {
@@ -52,17 +53,20 @@ public class FileNetworkTests extends AbstractModelTests {
 		deleteProject(PROJECT);
 		super.tearDownSuite();
 	}
-	
+
 	protected void setUp() throws Exception {
 		if (SCRIPT_PROJECT == null) {
 			SCRIPT_PROJECT = setUpScriptProject(PROJECT);
+			PHPCoreTests.waitForIndexer();
 		}
 	}
 
-	protected String getSavedHierarchy(String subfolder) throws CoreException, IOException {
+	protected String getSavedHierarchy(String subfolder) throws CoreException,
+			IOException {
 		IFile file = getFile(getFilePath(subfolder + "/hierarchy"));
 		StringBuilder buf = new StringBuilder();
-		BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
+		BufferedReader r = new BufferedReader(new InputStreamReader(file
+				.getContents()));
 		String l;
 		while ((l = r.readLine()) != null) {
 			buf.append(l).append("\n");
@@ -70,49 +74,71 @@ public class FileNetworkTests extends AbstractModelTests {
 		r.close();
 		return buf.toString();
 	}
-	
+
 	public static Test suite() {
 		Suite suite = new Suite(FileNetworkTests.class);
 		return suite;
 	}
-	
+
+	protected String sortLines(String str) {
+		String[] split = str.split("[\r\n]+");
+		Arrays.sort(split);
+		StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < split.length; ++i) {
+			if (i > 0) {
+				buf.append("\n");
+			}
+			buf.append(split[i]);
+		}
+		return buf.toString();
+	}
+
 	protected void assertContents(String expected, String actual) {
+		expected = sortLines(expected);
+		actual = sortLines(actual);
+
 		String diff = PHPCoreTests.compareContents(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}
 	}
-	
+
 	protected String getFilePath(String projectRelativePath) {
 		return "/" + PROJECT + "/" + projectRelativePath;
 	}
-	
+
 	public void testReferencingFiles() throws Exception {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test1/a.php"));
-		ReferenceTree tree = FileNetworkUtility.buildReferencingFilesTree(sourceModule, null);
+		ReferenceTree tree = FileNetworkUtility.buildReferencingFilesTree(
+				sourceModule, null);
 		assertContents(getSavedHierarchy("test1"), tree.toString());
 	}
 
 	public void testReferencedFiles() throws Exception {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test2/a.php"));
-		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
+		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(
+				sourceModule, null);
 		assertContents(getSavedHierarchy("test2"), tree.toString());
 	}
-	
+
 	public void testSearchMethod() throws Exception {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test3/c.php"));
 		IType type = sourceModule.getType("Test3");
-		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo", null);
+		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo",
+				true, null);
 
 		Assert.assertTrue("Can't find method", method.length > 0);
-		Assert.assertEquals("Wrong method was found", "a.php", method[0].getSourceModule().getElementName());
+		Assert.assertEquals("Wrong method was found", "a.php", method[0]
+				.getSourceModule().getElementName());
 	}
 
 	public void testSearchMethodBadNetwork() throws Exception {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test4/c.php"));
 		IType type = sourceModule.getType("Test4");
-		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo", null);
+		IMethod[] method = PHPModelUtils.getTypeHierarchyMethod(type, "foo",
+				true, null);
 
-		Assert.assertTrue("There should be two methods found", method.length == 2);
+		Assert.assertTrue("There should be two methods found",
+				method.length == 2);
 	}
 }

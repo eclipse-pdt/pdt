@@ -31,8 +31,6 @@ Export-Package: org.eclipse.php.core.tests,
  org.eclipse.php.core.tests.filenetwork,
  org.eclipse.php.core.tests.formatter,
  org.eclipse.php.core.tests.includepath,
- org.eclipse.php.core.tests.mixin,
  org.eclipse.php.core.tests.model_structure,
- org.eclipse.php.core.tests.search,
  org.eclipse.php.core.tests.selection,
  org.eclipse.php.core.tests.typeinference

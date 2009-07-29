@@ -29,7 +29,8 @@ import org.eclipse.php.internal.core.ast.nodes.Statement;
 
 /**
  * Tests {@link ASTMatcher}
- * @author Eden K., 2008 
+ * 
+ * @author Eden K., 2008
  */
 public class ASTMatcherTests extends TestCase {
 
@@ -41,21 +42,26 @@ public class ASTMatcherTests extends TestCase {
 		return new TestSuite(ASTMatcherTests.class);
 	}
 
-	public void performMatching(String matchingStr, String notMatchingStr) throws Exception {
+	public void performMatching(String matchingStr, String notMatchingStr)
+			throws Exception {
 
 		ASTNode node = getAstNode(matchingStr);
 		ASTNode notMatchingNode = getAstNode(notMatchingStr);
 
 		Assert.assertTrue(node.subtreeMatch(new PHPASTMatcher(), node));
-		Assert.assertFalse(node.subtreeMatch(new PHPASTMatcher(), notMatchingNode));
+		Assert.assertFalse(node.subtreeMatch(new PHPASTMatcher(),
+				notMatchingNode));
 
-		Assert.assertFalse(node.subtreeMatch(new PHPASTMatcher(), new Object()));
+		Assert
+				.assertFalse(node.subtreeMatch(new PHPASTMatcher(),
+						new Object()));
 		Assert.assertFalse(node.subtreeMatch(new PHPASTMatcher(), null));
 	}
 
 	private ASTNode getAstNode(String str) throws Exception {
 		StringReader reader = new StringReader(str);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5).createAST(new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5)
+				.createAST(new NullProgressMonitor());
 		List<Statement> statements = program.statements();
 
 		Assert.assertNotNull(statements);
@@ -593,7 +599,8 @@ public class ASTMatcherTests extends TestCase {
 		performMatching(matchingStr, notMatchingStr);
 	}
 
-	public void testMatchGlobalStatementReflectionWithExpression() throws Exception {
+	public void testMatchGlobalStatementReflectionWithExpression()
+			throws Exception {
 		String matchingStr = "<?php global ${foo()->bar()}; ?>";
 		String notMatchingStr = "<?php global ${foo2()->bar()}; ?>";
 		performMatching(matchingStr, notMatchingStr);
@@ -617,17 +624,17 @@ public class ASTMatcherTests extends TestCase {
 		performMatching(matchingStr, notMatchingStr);
 	}
 
-	public void testMatchInLineHtml() throws Exception {
-		String matchingStr = "<html> </html>";
-		String notMatchingStr = "<body> </body>";
-		performMatching(matchingStr, notMatchingStr);
-	}
-
-	public void testMatchInLineHtmlWithPHP() throws Exception {
-		String matchingStr = "<html> <?php ?> </html> <?php ?>";
-		String notMatchingStr = "<body> <?php ?> </body> <?php ?>";
-		performMatching(matchingStr, notMatchingStr);
-	}
+	// public void testMatchInLineHtml() throws Exception {
+	// String matchingStr = "<html> </html>";
+	// String notMatchingStr = "<body> </body>";
+	// performMatching(matchingStr, notMatchingStr);
+	// }
+	//
+	// public void testMatchInLineHtmlWithPHP() throws Exception {
+	// String matchingStr = "<html> <?php ?> </html> <?php ?>";
+	// String notMatchingStr = "<body> <?php ?> </body> <?php ?>";
+	// performMatching(matchingStr, notMatchingStr);
+	// }
 
 	public void testMatchDeclareSimple() throws Exception {
 		String matchingStr = "<?php declare(ticks=1) { };?> ";
@@ -683,7 +690,8 @@ public class ASTMatcherTests extends TestCase {
 		performMatching(matchingStr, notMatchingStr);
 	}
 
-	public void testMatchInterfaceDeclarationWithDeclarations() throws Exception {
+	public void testMatchInterfaceDeclarationWithDeclarations()
+			throws Exception {
 		String matchingStr = "<?php interface MyInterface extends Interface1, Interface2 { const MY_CONSTANT = 3; public function myFunction($a); } ?> ";
 		String notMatchingStr = "<?php interface MyInterface2 extends Interface3, Interface2 { const MY_CONSTANT = 3; public function myFunction($a); } ?> ";
 		performMatching(matchingStr, notMatchingStr);

@@ -42,15 +42,19 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 	protected static final char SELECTION_CHAR = '|';
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/selection/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/selection/php5", "/workspace/selection/php53" });
+		TESTS
+				.put(PHPVersion.PHP5,
+						new String[] { "/workspace/selection/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] {
+				"/workspace/selection/php5", "/workspace/selection/php53" });
 	};
 
 	protected static IProject project;
 	protected static IFile testFile;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("AutoSelectionEngine");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+				"AutoSelectionEngine");
 		if (project.exists()) {
 			return;
 		}
@@ -85,11 +89,15 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 
 				for (final String fileName : getPDTTFiles(testsDirectory)) {
 					try {
-						final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
-						phpVerSuite.addTest(new SelectionEngineTests(phpVersion.getAlias() + " - /" + fileName) {
+						final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
+								fileName);
+						phpVerSuite.addTest(new SelectionEngineTests(phpVersion
+								.getAlias()
+								+ " - /" + fileName) {
 
 							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+								PHPCoreTests.setProjectPhpVersion(project,
+										phpVersion);
 							}
 
 							protected void tearDown() throws Exception {
@@ -100,15 +108,22 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 							}
 
 							protected void runTest() throws Throwable {
-								IModelElement[] elements = getSelection(pdttFile.getFile());
-								ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
+								IModelElement[] elements = getSelection(pdttFile
+										.getFile());
+								ExpectedProposal[] expectedProposals = pdttFile
+										.getExpectedProposals();
 
 								boolean proposalsEqual = true;
 								if (elements.length == expectedProposals.length) {
-									for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
+									for (ExpectedProposal expectedProposal : pdttFile
+											.getExpectedProposals()) {
 										boolean found = false;
 										for (IModelElement modelElement : elements) {
-											if (modelElement.getElementType() == expectedProposal.type && modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
+											if (modelElement.getElementType() == expectedProposal.type
+													&& modelElement
+															.getElementName()
+															.equalsIgnoreCase(
+																	expectedProposal.name)) {
 												found = true;
 												break;
 											}
@@ -124,33 +139,43 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 
 								if (!proposalsEqual) {
 									StringBuilder errorBuf = new StringBuilder();
-									errorBuf.append("\nEXPECTED ELEMENTS LIST:\n-----------------------------\n");
+									errorBuf
+											.append("\nEXPECTED ELEMENTS LIST:\n-----------------------------\n");
 									errorBuf.append(pdttFile.getExpected());
-									errorBuf.append("\nACTUAL ELEMENTS LIST:\n-----------------------------\n");
+									errorBuf
+											.append("\nACTUAL ELEMENTS LIST:\n-----------------------------\n");
 									for (IModelElement modelElement : elements) {
 										switch (modelElement.getElementType()) {
-											case IModelElement.FIELD:
-												errorBuf.append("field");
-												break;
-											case IModelElement.METHOD:
-												errorBuf.append("method");
-												break;
-											case IModelElement.TYPE:
-												errorBuf.append("type");
-												break;
+										case IModelElement.FIELD:
+											errorBuf.append("field");
+											break;
+										case IModelElement.METHOD:
+											errorBuf.append("method");
+											break;
+										case IModelElement.TYPE:
+											errorBuf.append("type");
+											break;
 										}
-										errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
+										errorBuf.append('(').append(
+												modelElement.getElementName())
+												.append(")\n");
 									}
 									fail(errorBuf.toString());
 								}
 							}
 						});
 					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy test indicating PDTT file parsing failure
-								protected void runTest() throws Throwable {
-									throw e;
-								}
-							});
+						phpVerSuite.addTest(new TestCase(fileName) { // dummy
+																		// test
+																		// indicating
+																		// PDTT
+																		// file
+																		// parsing
+																		// failure
+									protected void runTest() throws Throwable {
+										throw e;
+									}
+								});
 					}
 				}
 			}
@@ -171,17 +196,19 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the source range
-	 * for the selection. Selection characters themself are stripped off.
+	 * Creates test file with the specified content and calculates the source
+	 * range for the selection. Selection characters themself are stripped off.
 	 * 
-	 * @param data File data
-	 * @return offset where's the offset character set. 
+	 * @param data
+	 *            File data
+	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
 	protected static SourceRange createFile(String data) throws Exception {
 		int left = data.indexOf(SELECTION_CHAR);
 		if (left == -1) {
-			throw new IllegalArgumentException("Selection characters are not set");
+			throw new IllegalArgumentException(
+					"Selection characters are not set");
 		}
 		// replace the left character
 		data = data.substring(0, left) + data.substring(left + 1);
@@ -198,7 +225,7 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
+		// PHPCoreTests.waitForAutoBuild();
 
 		return new SourceRange(left, right - left);
 	}
@@ -210,7 +237,8 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 	protected static IModelElement[] getSelection(String data) throws Exception {
 		SourceRange range = createFile(data);
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(testFile);
-		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(), range.getLength());
+		IModelElement[] elements = sourceModule.codeSelect(range.getOffset(),
+				range.getLength());
 		return elements;
 	}
 }

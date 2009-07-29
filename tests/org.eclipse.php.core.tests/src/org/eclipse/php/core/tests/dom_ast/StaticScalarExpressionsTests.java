@@ -63,7 +63,7 @@ public class StaticScalarExpressionsTests extends TestCase {
 	}
 
 	public static Object[][] DATA = new Object[][] {
-		{ "class constant", "<?php class A { const A = 5; const B = 'dsafsfd'; } ", 27, true },
+		{ "class constant", "<?php class A { const A = 5; const B = 'dsafsfd'; } ", 26, true },
 		{ "declare expression", "<?php declare ( ticks = 1) {  }", 24, true },
 		{ "formal parameter", "<?php function foo($a = 5) { }", 24, true },
 		{ "static statement", "<?php function foo($a = 5) { static $a = 5, $b = array(); }", 41, true },
@@ -76,7 +76,6 @@ public class StaticScalarExpressionsTests extends TestCase {
 		{ "twice hashmap 3", "<?php function foo($a = array(4 => 6, 7 => 4)) { }", 28, true },
 		{ "twice hashmap 4", "<?php function foo($a = array(4 => 6, 7 => 4)) { }", 29, true },
 		{ "twice hashmap 5", "<?php function foo($a = array(4 => 6, 7 => 4)) { }", 30, true },
-		{ "twice hashmap 6", "<?php function foo($a = array(4 => 6, 7 => 4)) { }", 31, true },
 		{ "nested hashmap 1", "<?php function foo($a = array(4 => array(), 7 => 4)) { }", 36, true },
 		{ "array element", "<?php function foo($a = array(4 => array(4, 6), 7 => 4)) { }", 45, true },
 		{ "nested unary operation", "<?php function foo($a = +-+5) { }", 24, true },

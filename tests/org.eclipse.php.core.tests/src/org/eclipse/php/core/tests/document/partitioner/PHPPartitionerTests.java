@@ -21,7 +21,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.dltk.core.tests.model.AbstractSingleProjectSearchTests;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.core.tests.PHPCoreTests;
-import org.eclipse.php.core.tests.search.SearchTests;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -29,89 +28,111 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
- * Description: This class tests {@link PHPStructuredTextPartitioner}
- * Each method checks a different situation in which a PHP partition can appear. Certain markers 
- * contained in the PHP markers are looked for each time. 
+ * Description: This class tests {@link PHPStructuredTextPartitioner} Each
+ * method checks a different situation in which a PHP partition can appear.
+ * Certain markers contained in the PHP markers are looked for each time.
  * 
  * @author Alon Peled
  */
 public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
-	
+
 	private static final String PROJECT_NAME = "partitioner";
-	
+
 	public PHPPartitionerTests(String name) {
 		super(PHPCoreTests.PLUGIN_ID, name, PROJECT_NAME);
 	}
-	
+
 	public static Suite suite() {
-		return new Suite(SearchTests.class);
+		return new Suite(PHPPartitionerTests.class);
 	}
-	
-	// Stores length of system line separator to compute the offset within the file
-	private static final int endLine = System.getProperty("line.separator").length();
+
+	// Stores length of system line separator to compute the offset within the
+	// file
+	private static final int endLine = System.getProperty("line.separator")
+			.length();
 
 	// The markers looked for in the PHP partition
-	private static final String[] phpLookUp = { "php", "echo", "PHP_Single_Comment", "PHP_Multi_Comment", "PHP_Doc", "Test quoted string partition", "1 F d, Y", "Running test" };
+	private static final String[] phpLookUp = { "php", "echo",
+			"PHP_Single_Comment", "PHP_Multi_Comment", "PHP_Doc",
+			"Test quoted string partition", "1 F d, Y", "Running test" };
 
 	/**
 	 * Test PHP partition inside HTML
+	 * 
 	 * @throws Exception
 	 */
-	
+
 	public void testPartitionInHTML() throws Exception {
-		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestHTML.php");
+		ArrayList<String> matches = getPartitionType(phpLookUp,
+				"phpPartitionerTestHTML.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
+			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches
+					.get(i));
 		}
 	}
 
 	/**
 	 * Test PHP partition in a PHP-only file
+	 * 
 	 * @throws Exception
 	 */
-	
+
 	public void testPartitionStandalone() throws Exception {
 
-		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhp.php");
+		ArrayList<String> matches = getPartitionType(phpLookUp,
+				"phpPartitionerTestPhp.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
+			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches
+					.get(i));
 		}
 	}
 
 	/**
 	 * Test PHP partition in HTML when PHP is an HTML attribute key
+	 * 
 	 * @throws Exception
 	 */
-	
+
 	public void testPartitionPhpAsHTMLAttributeKey() throws Exception {
 
-		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhpAsHTMLAttributeKey.php");
+		ArrayList<String> matches = getPartitionType(phpLookUp,
+				"phpPartitionerTestPhpAsHTMLAttributeKey.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
+			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches
+					.get(i));
 		}
 	}
 
 	/**
 	 * Test PHP partition in HTML when PHP is an HTML attribute value
+	 * 
 	 * @throws Exception
 	 */
-	
+
 	public void testPartitionPhpAsHTMLAttributeValue() throws Exception {
 
-		ArrayList<String> matches = getPartitionType(phpLookUp, "phpPartitionerTestPhpAsHTMLAttributeValue.php");
+		ArrayList<String> matches = getPartitionType(phpLookUp,
+				"phpPartitionerTestPhpAsHTMLAttributeValue.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches.get(i));
+			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches
+					.get(i));
 		}
 	}
 
 	/**
-	 * This method invokes the partitioner, and returns the partition type of each marker
-	 * @param markers Strings to be looked for in the file, which have the same partiotion type
+	 * This method invokes the partitioner, and returns the partition type of
+	 * each marker
+	 * 
+	 * @param markers
+	 *            Strings to be looked for in the file, which have the same
+	 *            partiotion type
 	 * @param preferOpenPartitions
-	 * @return a Vector of partition types, all are expected to be with the same type
+	 * @return a Vector of partition types, all are expected to be with the same
+	 *         type
 	 * @throws Exception
 	 */
-	private ArrayList<String> getPartitionType(String[] markers, String testDataFile) throws Exception {
+	private ArrayList<String> getPartitionType(String[] markers,
+			String testDataFile) throws Exception {
 		// offset from beginning of stream
 		int offset = 0;
 
@@ -124,22 +145,25 @@ public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
 		InputStreamReader inStream = new InputStreamReader(inFile.getContents());
 		BufferedReader reader = new BufferedReader(inStream);
 
-		final IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(inFile);
+		final IStructuredModel modelForEdit = StructuredModelManager
+				.getModelManager().getModelForEdit(inFile);
 		try {
-			final IStructuredDocument structuredDocument = modelForEdit.getStructuredDocument();
+			final IStructuredDocument structuredDocument = modelForEdit
+					.getStructuredDocument();
 
 			// create the partitioner
 			final PHPStructuredTextPartitioner structuredTextPartitioner = new PHPStructuredTextPartitioner();
 			structuredTextPartitioner.connect(structuredDocument);
 
-			// go over the file, one line at a time, and search for the markers 
+			// go over the file, one line at a time, and search for the markers
 			String curLine = reader.readLine();
 			while (curLine != null) {
 				for (int i = 0; i < markers.length; i++) {
 					int lineOffset = curLine.indexOf(markers[i]);
 					// if marker was found in current line, get partition type
 					if (lineOffset != -1) {
-						ITypedRegion partition = structuredTextPartitioner.getPartition(offset + lineOffset);
+						ITypedRegion partition = structuredTextPartitioner
+								.getPartition(offset + lineOffset);
 						results.add(partition.getType());
 					}
 				}
@@ -148,6 +172,8 @@ public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
 				curLine = reader.readLine();
 			}
 		} finally {
+			reader.close();
+
 			if (modelForEdit != null) {
 				modelForEdit.releaseFromEdit();
 			}
