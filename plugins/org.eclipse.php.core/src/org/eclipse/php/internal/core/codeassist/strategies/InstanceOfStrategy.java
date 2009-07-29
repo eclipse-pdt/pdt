@@ -17,14 +17,11 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 
 /**
- * This strategy completes global classes after 'new' statement 
+ * This strategy completes global classes after 'new' statement
+ * 
  * @author michael
  */
 public class InstanceOfStrategy extends GlobalTypesStrategy {
-	
-	public InstanceOfStrategy(ICompletionContext context, IElementFilter elementFilter) {
-		super(context, elementFilter);
-	}
 
 	public InstanceOfStrategy(ICompletionContext context) {
 		super(context);
@@ -32,7 +29,7 @@ public class InstanceOfStrategy extends GlobalTypesStrategy {
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		super.apply(reporter);
-		
+
 		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
 		addSelf(concreteContext, reporter);

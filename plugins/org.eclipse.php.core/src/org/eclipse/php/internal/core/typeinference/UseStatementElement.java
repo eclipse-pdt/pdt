@@ -12,22 +12,21 @@
 package org.eclipse.php.internal.core.typeinference;
 
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.php.internal.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 
 /**
  * This class represents USE statement as a "fake" model element.
+ * 
  * @author michael
- *
+ * 
  */
 public class UseStatementElement extends FakeField {
 
 	public UseStatementElement(ModelElement parent, UsePart usePart) {
-		super(parent, usePart.getNamespace().getFullyQualifiedName(), usePart.getNamespace().sourceStart(), usePart.getNamespace().sourceEnd() - usePart.getNamespace().sourceStart());
-	}
-
-	public int getFlags() {
-		return IPHPModifiers.UseStatement;
+		super(parent, usePart.getNamespace().getFullyQualifiedName(), usePart
+				.getNamespace().sourceStart(), usePart.getNamespace()
+				.sourceEnd()
+				- usePart.getNamespace().sourceStart());
 	}
 
 	public boolean exists() {

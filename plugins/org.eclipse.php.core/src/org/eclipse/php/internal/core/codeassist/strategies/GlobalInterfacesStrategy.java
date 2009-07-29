@@ -11,34 +11,21 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
- * This strategy completes global classes 
+ * This strategy completes global classes
+ * 
  * @author michael
  */
 public class GlobalInterfacesStrategy extends GlobalTypesStrategy {
 
 	public GlobalInterfacesStrategy(ICompletionContext context) {
-		super(context, new IElementFilter() {
-			public boolean filter(IModelElement element) {
-				try {
-					return !PHPFlags.isInterface(((IType)element).getFlags());
-				} catch (ModelException e) {
-					PHPCorePlugin.log(e);
-				}
-				return false;
-			}
-		});
+		super(context, Modifiers.AccInterface, 0);
 	}
-	
+
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}

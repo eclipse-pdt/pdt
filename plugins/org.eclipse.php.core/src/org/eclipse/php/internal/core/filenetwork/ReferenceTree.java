@@ -11,12 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.filenetwork;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.dltk.core.IFileHierarchyInfo;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
-import org.eclipse.php.internal.core.mixin.IncludeField;
 
 /**
  * This tree represents file references network
@@ -40,8 +40,10 @@ public class ReferenceTree implements IFileHierarchyInfo {
 
 	/**
 	 * Looks for the given file in tree hierarchy
+	 * 
 	 * @param sourceModule
-	 * @return <code>true</code> if such a file was found, otherwise - <code>false</code>
+	 * @return <code>true</code> if such a file was found, otherwise -
+	 *         <code>false</code>
 	 */
 	public boolean find(ISourceModule sourceModule) {
 		return root.find(sourceModule);
@@ -123,4 +125,3 @@ public class ReferenceTree implements IFileHierarchyInfo {
 		return find(file);
 	}
 }
-

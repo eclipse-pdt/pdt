@@ -29,8 +29,7 @@ import org.eclipse.php.internal.core.typeinference.BindingUtility;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 /**
- * @author Roy, 2008
- * TODO : caching is a must have for this resolver
+ * @author Roy, 2008 TODO : caching is a must have for this resolver
  */
 public class DefaultBindingResolver extends BindingResolver {
 
@@ -45,8 +44,8 @@ public class DefaultBindingResolver extends BindingResolver {
 		Map<String, IBinding> bindingKeysToBindings;
 
 		/**
-		 * This map is used to keep the correspondence between new ast nodes and the
-		 * compiler nodes 
+		 * This map is used to keep the correspondence between new ast nodes and
+		 * the compiler nodes
 		 */
 		Map<Integer, org.eclipse.dltk.ast.ASTNode> compilerNodeToASTNode;
 
@@ -68,7 +67,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	private final ISourceModule sourceModule;
 
 	/**
-	 * The working copy owner that defines the context in which this resolver is creating the bindings.
+	 * The working copy owner that defines the context in which this resolver is
+	 * creating the bindings.
 	 */
 	WorkingCopyOwner workingCopyOwner;
 
@@ -78,9 +78,11 @@ public class DefaultBindingResolver extends BindingResolver {
 	private BindingUtility bindingUtil;
 
 	/**
-	 * @param sourceModule of this resolver
+	 * @param sourceModule
+	 *            of this resolver
 	 */
-	public DefaultBindingResolver(ISourceModule sourceModule, WorkingCopyOwner owner) {
+	public DefaultBindingResolver(ISourceModule sourceModule,
+			WorkingCopyOwner owner) {
 		this.sourceModule = sourceModule;
 		this.workingCopyOwner = owner;
 		this.bindingUtil = new BindingUtility(this.sourceModule);
@@ -88,14 +90,15 @@ public class DefaultBindingResolver extends BindingResolver {
 	}
 
 	/**
-	 * Returns the new type binding corresponding to the given type. 
+	 * Returns the new type binding corresponding to the given type.
 	 * 
 	 * <p>
 	 * The default implementation of this method returns <code>null</code>.
 	 * Subclasses may reimplement.
 	 * </p>
-	 *
-	 * @param type the given type
+	 * 
+	 * @param type
+	 *            the given type
 	 * @return the new type binding
 	 */
 	ITypeBinding getTypeBinding(IType type) {
@@ -105,22 +108,30 @@ public class DefaultBindingResolver extends BindingResolver {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.dltk.core.IType[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding
+	 * (org.eclipse.dltk.core.IType[])
 	 */
 	@Override
 	ITypeBinding getTypeBinding(IType[] types) {
 		if (types != null && types.length > 0) {
-			return new TypeBinding(this, PHPClassType.fromIType(types[0]), types);
+			return new TypeBinding(this, PHPClassType.fromIType(types[0]),
+					types);
 		}
 		return null;
 	}
 
 	/**
-	 * Returns the new variable binding corresponding to the given old variable binding.
+	 * Returns the new variable binding corresponding to the given old variable
+	 * binding.
 	 * 
-	 * @param field An {@link IField}
-	 * @return the new variable binding, or null in case the given field is null.
+	 * @param field
+	 *            An {@link IField}
+	 * @return the new variable binding, or null in case the given field is
+	 *         null.
 	 */
 	IVariableBinding getVariableBinding(IField field) {
 		if (field != null) {
@@ -131,9 +142,11 @@ public class DefaultBindingResolver extends BindingResolver {
 	}
 
 	/**
-	 * Returns the new method binding corresponding to the given {@link IMethod}.
-	 *
-	 * @param method An {@link IMethod}
+	 * Returns the new method binding corresponding to the given {@link IMethod}
+	 * .
+	 * 
+	 * @param method
+	 *            An {@link IMethod}
 	 * @return the new method binding
 	 */
 	public IMethodBinding getMethodBinding(IMethod method) {
@@ -145,7 +158,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	}
 
 	/**
-	 * Returns the {@link IEvaluatedType} according to the offset and the length.
+	 * Returns the {@link IEvaluatedType} according to the offset and the
+	 * length.
 	 */
 	protected IEvaluatedType getEvaluatedType(int offset, int length) {
 		try {
@@ -157,8 +171,9 @@ public class DefaultBindingResolver extends BindingResolver {
 	}
 
 	/**
-	 * Returns an {@link IModelElement} array according to the offset and the length.
-	 * The result is filtered using the 'File-Network'.
+	 * Returns an {@link IModelElement} array according to the offset and the
+	 * length. The result is filtered using the 'File-Network'.
+	 * 
 	 * @param offset
 	 * @param length
 	 * 
@@ -170,17 +185,21 @@ public class DefaultBindingResolver extends BindingResolver {
 	}
 
 	/**
-	 * Returns an {@link IModelElement} array according to the offset and the length.
-	 * Use the filter flag to indicate whether the 'File-Network' should be used to filter the
-	 * results.
+	 * Returns an {@link IModelElement} array according to the offset and the
+	 * length. Use the filter flag to indicate whether the 'File-Network' should
+	 * be used to filter the results.
+	 * 
 	 * @param offset
 	 * @param length
-	 * @param filter Indicate whether to use the File-Network in order to filter the results.
+	 * @param filter
+	 *            Indicate whether to use the File-Network in order to filter
+	 *            the results.
 	 * 
 	 * @see #getModelElements(int, int)
 	 * @see BindingUtility#getModelElement(int, int, boolean)
 	 */
-	public IModelElement[] getModelElements(int offset, int length, boolean filter) {
+	public IModelElement[] getModelElements(int offset, int length,
+			boolean filter) {
 		try {
 			return bindingUtil.getModelElement(offset, length, filter);
 		} catch (ModelException e) {
@@ -189,8 +208,12 @@ public class DefaultBindingResolver extends BindingResolver {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveName(org.eclipse.php.internal.core.ast.nodes.Identifier)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveName(org
+	 * .eclipse.php.internal.core.ast.nodes.Identifier)
 	 */
 	IBinding resolveName(Identifier name) {
 		return resolveExpressionType(name);
@@ -208,18 +231,21 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * The default implementation of this method returns <code>null</code>.
 	 * Subclasses may reimplement.
 	 * </p>
-	 *
-	 * @param method the method or constructor declaration of interest
+	 * 
+	 * @param method
+	 *            the method or constructor declaration of interest
 	 * @return the binding for the given method declaration, or
-	 *    <code>null</code> if no binding is available
+	 *         <code>null</code> if no binding is available
 	 */
 	IMethodBinding resolveMethod(MethodDeclaration method) {
 		if (method == null || method.getFunction() == null) {
-			throw new IllegalArgumentException("Can not resolve null expression");
+			throw new IllegalArgumentException(
+					"Can not resolve null expression");
 		}
 
 		try {
-			IModelElement elementAt = sourceModule.getElementAt(method.getStart());
+			IModelElement elementAt = sourceModule.getElementAt(method
+					.getStart());
 			if (elementAt instanceof IMethod) {
 				return getMethodBinding((IMethod) elementAt);
 			}
@@ -233,14 +259,16 @@ public class DefaultBindingResolver extends BindingResolver {
 	}
 
 	/**
-	 * Returns the resolved type of the given expression. The results are NOT filtered by the
-	 * File-Network.
+	 * Returns the resolved type of the given expression. The results are NOT
+	 * filtered by the File-Network.
 	 * 
-	 * @return the resolved type of the given expression, null if can't evaluate.
+	 * @return the resolved type of the given expression, null if can't
+	 *         evaluate.
 	 */
 	ITypeBinding resolveExpressionType(Expression expression) {
 		if (expression == null) {
-			throw new IllegalArgumentException("Can not resolve null expression");
+			throw new IllegalArgumentException(
+					"Can not resolve null expression");
 		}
 		int start = expression.getStart();
 		int length = expression.getLength();
@@ -250,39 +278,56 @@ public class DefaultBindingResolver extends BindingResolver {
 
 	}
 
-	/* (non-Javadoc) 
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see BindingResolver#resolveInclude(Include)
 	 */
 	IBinding resolveInclude(Include includeDeclaration) {
 		return new IncludeBinding(sourceModule, includeDeclaration);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#findDeclaringNode(org.eclipse.php.internal.core.ast.nodes.IBinding)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#findDeclaringNode
+	 * (org.eclipse.php.internal.core.ast.nodes.IBinding)
 	 */
 	@Override
-	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(IBinding binding) {
+	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(
+			IBinding binding) {
 		// TODO Auto-generated method stub
 		return super.findDeclaringNode(binding);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#findDeclaringNode(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#findDeclaringNode
+	 * (java.lang.String)
 	 */
 	@Override
-	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(String bindingKey) {
+	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(
+			String bindingKey) {
 		// TODO Auto-generated method stub
 		return super.findDeclaringNode(bindingKey);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding
+	 * (org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration)
 	 */
 	@Override
 	ITypeBinding getTypeBinding(SingleFieldDeclaration fieldDeclaration) {
 		IModelElement[] modelElements;
 		try {
-			modelElements = this.bindingUtil.getModelElement(fieldDeclaration.getStart(), fieldDeclaration.getLength());
+			modelElements = this.bindingUtil.getModelElement(fieldDeclaration
+					.getStart(), fieldDeclaration.getLength());
 		} catch (ModelException e) {
 			Logger.log(IStatus.ERROR, e.toString());
 			return null;
@@ -291,15 +336,20 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (modelElements.length > 0) {
 			for (IModelElement type : modelElements) {
 				if (type.getElementType() == IModelElement.TYPE) {
-					return new TypeBinding(this, PHPClassType.fromIType((IType) type), modelElements);
+					return new TypeBinding(this, PHPClassType
+							.fromIType((IType) type), modelElements);
 				}
 			}
 		}
 		return super.getTypeBinding(fieldDeclaration);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.dltk.ti.types.IEvaluatedType)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding
+	 * (org.eclipse.dltk.ti.types.IEvaluatedType)
 	 */
 	@Override
 	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding) {
@@ -307,8 +357,12 @@ public class DefaultBindingResolver extends BindingResolver {
 		return super.getTypeBinding(referenceBinding);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstantExpressionValue(org.eclipse.php.internal.core.ast.nodes.Expression)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.core.ast.nodes.BindingResolver#
+	 * resolveConstantExpressionValue
+	 * (org.eclipse.php.internal.core.ast.nodes.Expression)
 	 */
 	@Override
 	Object resolveConstantExpressionValue(Expression expression) {
@@ -316,115 +370,239 @@ public class DefaultBindingResolver extends BindingResolver {
 		return super.resolveConstantExpressionValue(expression);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstructor(org.eclipse.php.internal.core.ast.nodes.ClassInstanceCreation)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstructor
+	 * (org.eclipse.php.internal.core.ast.nodes.ClassInstanceCreation)
 	 */
 	@Override
 	IMethodBinding resolveConstructor(ClassInstanceCreation expression) {
-		// TODO Auto-generated method stub		
+		IModelElement[] modelElements;
+		try {
+			modelElements = sourceModule.codeSelect(expression.getStart(),
+					expression.getLength());
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+			return null;
+		}
+
+		if (modelElements != null && modelElements.length > 0) {
+			for (IModelElement element : modelElements) {
+				if (element.getElementType() == IModelElement.METHOD) {
+					return new MethodBinding(this, (IMethod) element);
+				}
+			}
+		}
 		return super.resolveConstructor(expression);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstructor(org.eclipse.php.internal.core.ast.nodes.MethodInvocation)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstructor
+	 * (org.eclipse.php.internal.core.ast.nodes.MethodInvocation)
 	 */
 	@Override
 	IMethodBinding resolveConstructor(MethodInvocation expression) {
-		// TODO Auto-generated method stub
+		IMethodBinding binding = resolveMethod(expression);
+		if (binding != null) {
+			return binding;
+		}
 		return super.resolveConstructor(expression);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(org.eclipse.php.internal.core.ast.nodes.FieldAccess)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(
+	 * org.eclipse.php.internal.core.ast.nodes.FieldAccess)
 	 */
 	@Override
 	IVariableBinding resolveField(FieldAccess fieldAccess) {
 		final VariableBase member = fieldAccess.getMember();
 		if (member.getType() == ASTNode.VARIABLE) {
 			Variable var = (Variable) member;
-			if (!var.isDollared() && var.getName().getType() == ASTNode.IDENTIFIER) {
+			if (!var.isDollared()
+					&& var.getName().getType() == ASTNode.IDENTIFIER) {
 				Identifier id = (Identifier) var.getName();
 				final String fieldName = "$" + id.getName();
-				final ITypeBinding type = fieldAccess.getDispatcher().resolveTypeBinding();
+				final ITypeBinding type = fieldAccess.getDispatcher()
+						.resolveTypeBinding();
 				return Bindings.findFieldInHierarchy(type, fieldName);
 			}
 		}
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(org.eclipse.php.internal.core.ast.nodes.StaticConstantAccess)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(
+	 * org.eclipse.php.internal.core.ast.nodes.StaticConstantAccess)
 	 */
 	@Override
 	IVariableBinding resolveField(StaticConstantAccess constantAccess) {
 		final Identifier constName = constantAccess.getConstant();
-		final ITypeBinding type = constantAccess.getClassName().resolveTypeBinding();
+		final ITypeBinding type = constantAccess.getClassName()
+				.resolveTypeBinding();
 		return Bindings.findFieldInHierarchy(type, constName.getName());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(
+	 * org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess)
 	 */
 	@Override
 	IVariableBinding resolveField(StaticFieldAccess fieldAccess) {
 		final VariableBase member = fieldAccess.getField();
 		if (member.getType() == ASTNode.VARIABLE) {
 			Variable var = (Variable) member;
-			if (var.isDollared() && var.getName().getType() == ASTNode.IDENTIFIER) {
+			if (var.isDollared()
+					&& var.getName().getType() == ASTNode.IDENTIFIER) {
 				Identifier id = (Identifier) var.getName();
 				final String fieldName = "$" + id.getName();
-				final ITypeBinding type = fieldAccess.getClassName().resolveTypeBinding();
+				final ITypeBinding type = fieldAccess.getClassName()
+						.resolveTypeBinding();
 				return Bindings.findFieldInHierarchy(type, fieldName);
 			}
 		}
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveFunction(org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveFunction
+	 * (org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration)
 	 */
 	@Override
 	IFunctionBinding resolveFunction(FunctionDeclaration function) {
-		// TODO Auto-generated method stub
+		IModelElement[] modelElements = null;
+		try {
+			Identifier functionName = function.getFunctionName();
+			modelElements = sourceModule.codeSelect(functionName.getStart(),
+					functionName.getLength());
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+			return null;
+		}
+		if (modelElements != null && modelElements.length > 0) {
+			for (IModelElement element : modelElements) {
+				if (element.getElementType() == IModelElement.METHOD) {
+					return new MethodBinding(this, (IMethod) element);
+				}
+			}
+		}
 		return super.resolveFunction(function);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveFunction(org.eclipse.php.internal.core.ast.nodes.FunctionInvocation)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveFunction
+	 * (org.eclipse.php.internal.core.ast.nodes.FunctionInvocation)
 	 */
 	@Override
 	IFunctionBinding resolveFunction(FunctionInvocation function) {
-		// TODO Auto-generated method stub
+		IModelElement[] modelElements = null;
+		try {
+			FunctionName functionName = function.getFunctionName();
+			modelElements = sourceModule.codeSelect(functionName.getStart(),
+					functionName.getLength());
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+			return null;
+		}
+		if (modelElements != null && modelElements.length > 0) {
+			for (IModelElement element : modelElements) {
+				if (element.getElementType() == IModelElement.METHOD) {
+					return new MethodBinding(this, (IMethod) element);
+				}
+			}
+		}
 		return super.resolveFunction(function);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveMethod(org.eclipse.php.internal.core.ast.nodes.MethodInvocation)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveMethod
+	 * (org.eclipse.php.internal.core.ast.nodes.MethodInvocation)
 	 */
 	@Override
 	IMethodBinding resolveMethod(MethodInvocation method) {
-		// TODO Auto-generated method stub
+		IModelElement[] modelElements = null;
+		try {
+			FunctionName functionName = method.getMethod().getFunctionName();
+			modelElements = sourceModule.codeSelect(functionName.getStart(),
+					functionName.getLength());
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+			return null;
+		}
+		if (modelElements != null && modelElements.length > 0) {
+			for (IModelElement element : modelElements) {
+				if (element.getElementType() == IModelElement.METHOD) {
+					return new MethodBinding(this, (IMethod) element);
+				}
+			}
+		}
 		return super.resolveMethod(method);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveMethod(org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveMethod
+	 * (org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation)
 	 */
 	@Override
 	IMethodBinding resolveMethod(StaticMethodInvocation method) {
-		// TODO Auto-generated method stub
+		IModelElement[] modelElements = null;
+		try {
+			FunctionName functionName = method.getMethod().getFunctionName();
+			modelElements = sourceModule.codeSelect(functionName.getStart(),
+					functionName.getLength());
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+			return null;
+		}
+		if (modelElements != null && modelElements.length > 0) {
+			for (IModelElement element : modelElements) {
+				if (element.getElementType() == IModelElement.METHOD) {
+					return new MethodBinding(this, (IMethod) element);
+				}
+			}
+		}
 		return super.resolveMethod(method);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveType(org.eclipse.php.internal.core.ast.nodes.TypeDeclaration)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveType(org
+	 * .eclipse.php.internal.core.ast.nodes.TypeDeclaration)
 	 */
 	@Override
 	ITypeBinding resolveType(TypeDeclaration type) {
 
 		IModelElement[] modelElements;
 		try {
-			modelElements = this.bindingUtil.getModelElement(type.getName().getStart(), type.getName().getLength());
+			modelElements = this.bindingUtil.getModelElement(type.getName()
+					.getStart(), type.getName().getLength());
 		} catch (ModelException e) {
 			Logger.log(IStatus.ERROR, e.toString());
 			return null;
@@ -433,15 +611,20 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (modelElements != null && modelElements.length > 0) {
 			for (IModelElement element : modelElements) {
 				if (element.getElementType() == IModelElement.TYPE) {
-					return new TypeBinding(this, PHPClassType.fromIType((IType) element), modelElements);
+					return new TypeBinding(this, PHPClassType
+							.fromIType((IType) element), modelElements);
 				}
 			}
 		}
 		return super.resolveType(type);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveTypeParameter(org.eclipse.php.internal.core.ast.nodes.FormalParameter)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveTypeParameter
+	 * (org.eclipse.php.internal.core.ast.nodes.FormalParameter)
 	 */
 	@Override
 	ITypeBinding resolveTypeParameter(FormalParameter typeParameter) {
@@ -449,8 +632,12 @@ public class DefaultBindingResolver extends BindingResolver {
 		return super.resolveTypeParameter(typeParameter);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveVariable(org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveVariable
+	 * (org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration)
 	 */
 	@Override
 	IVariableBinding resolveVariable(FieldsDeclaration variable) {
@@ -458,14 +645,19 @@ public class DefaultBindingResolver extends BindingResolver {
 		return super.resolveVariable(variable);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveVariable(org.eclipse.php.internal.core.ast.nodes.Variable)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveVariable
+	 * (org.eclipse.php.internal.core.ast.nodes.Variable)
 	 */
 	@Override
 	IVariableBinding resolveVariable(Variable variable) {
 		IModelElement modelElements = null;
 		try {
-			modelElements = bindingUtil.getFieldByPosition(variable.getStart(), variable.getLength());
+			modelElements = bindingUtil.getFieldByPosition(variable.getStart(),
+					variable.getLength());
 		} catch (ModelException e) {
 			Logger.log(IStatus.ERROR, e.toString());
 		} catch (Exception e) {
@@ -474,16 +666,22 @@ public class DefaultBindingResolver extends BindingResolver {
 
 		if (modelElements != null) {
 			if (modelElements.getElementType() == IModelElement.FIELD) {
-				int id = LocalVariableIndex.perform(variable.getEnclosingBodyNode(), variable);
-				return new VariableBinding(this, (IMember) modelElements, variable, id);
+				int id = LocalVariableIndex.perform(variable
+						.getEnclosingBodyNode(), variable);
+				return new VariableBinding(this, (IMember) modelElements,
+						variable, id);
 			}
 
 		}
 		return super.resolveVariable(variable);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveWellKnownType(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveWellKnownType
+	 * (java.lang.String)
 	 */
 	@Override
 	ITypeBinding resolveWellKnownType(String name) {
@@ -506,28 +704,30 @@ public class DefaultBindingResolver extends BindingResolver {
 		}
 
 		/**
-		 * Computes the maximum number of local variable declarations in the 
+		 * Computes the maximum number of local variable declarations in the
 		 * given body declaration.
-		 *  
-		 * @param node the body declaration. Must either be a method
-		 *  declaration or an initializer.
+		 * 
+		 * @param node
+		 *            the body declaration. Must either be a method declaration
+		 *            or an initializer.
 		 * @return the maximum number of local variables
 		 */
 		public static int perform(ASTNode node, Variable variable) {
 			Assert.isTrue(node != null);
 
 			switch (node.getType()) {
-				case ASTNode.METHOD_DECLARATION:
-					isProgramScope = false;
-					return internalPerform(((MethodDeclaration) node).getFunction(), variable);
-				case ASTNode.FUNCTION_DECLARATION:
-					isProgramScope = false;
-					return internalPerform((FunctionDeclaration) node, variable);
-				case ASTNode.PROGRAM:
-					isProgramScope = true;
-					return internalPerform((Program) node, variable);
-				default:
-					Assert.isTrue(false);
+			case ASTNode.METHOD_DECLARATION:
+				isProgramScope = false;
+				return internalPerform(
+						((MethodDeclaration) node).getFunction(), variable);
+			case ASTNode.FUNCTION_DECLARATION:
+				isProgramScope = false;
+				return internalPerform((FunctionDeclaration) node, variable);
+			case ASTNode.PROGRAM:
+				isProgramScope = true;
+				return internalPerform((Program) node, variable);
+			default:
+				Assert.isTrue(false);
 			}
 			return -1;
 		}
@@ -539,15 +739,19 @@ public class DefaultBindingResolver extends BindingResolver {
 		}
 
 		/**
-		 * Insert to the variables Name set each variable that is first encountered in the flow
+		 * Insert to the variables Name set each variable that is first
+		 * encountered in the flow
 		 */
 		public boolean visit(Variable variable) {
 			Expression name = variable.getName();
 			if (variable.isDollared() && name.getType() == ASTNode.IDENTIFIER) {
 				String variableName = ((Identifier) name).getName();
-				if (!variableName.equalsIgnoreCase("this") && !variablesSet.contains(variableName)) {
-					String searchName = ((Identifier) this.variable.getName()).getName();
-					if (variableName.equals(searchName) && variable.getType() == this.variable.getType()) {
+				if (!variableName.equalsIgnoreCase("this")
+						&& !variablesSet.contains(variableName)) {
+					String searchName = ((Identifier) this.variable.getName())
+							.getName();
+					if (variableName.equals(searchName)
+							&& variable.getType() == this.variable.getType()) {
 						handleVariableBinding();
 					}
 

@@ -29,6 +29,7 @@ import org.eclipse.php.internal.core.util.XMLWriter;
 
 /**
  * This visitor is used for printing AST nodes in an XML format
+ * 
  * @author michael
  */
 public class ASTPrintVisitor extends PHPASTVisitor {
@@ -37,7 +38,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	/**
 	 * Constructs new {@link ASTPrintVisitor}
-	 * @param out Output stream to print the XML to
+	 * 
+	 * @param out
+	 *            Output stream to print the XML to
 	 * @throws Exception
 	 */
 	private ASTPrintVisitor(OutputStream out) throws Exception {
@@ -62,7 +65,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		}
 	}
 
-	protected Map<String, String> createInitialParameters(ASTNode s) throws Exception {
+	protected Map<String, String> createInitialParameters(ASTNode s)
+			throws Exception {
 		Map<String, String> parameters = new LinkedHashMap<String, String>();
 
 		// Print offset information:
@@ -92,7 +96,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 				buf.append(",static");
 			}
 			String modifiers = buf.toString();
-			parameters.put("modifiers", modifiers.length() > 0 ? modifiers.substring(1) : modifiers);
+			parameters.put("modifiers", modifiers.length() > 0 ? modifiers
+					.substring(1) : modifiers);
 		}
 
 		return parameters;
@@ -328,7 +333,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean endvisit(ReflectionArrayVariableReference s) throws Exception {
+	public boolean endvisit(ReflectionArrayVariableReference s)
+			throws Exception {
 		xmlWriter.endTag("ReflectionArrayVariableReference");
 		return true;
 	}
@@ -338,7 +344,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean endvisit(ReflectionStaticMethodInvocation s) throws Exception {
+	public boolean endvisit(ReflectionStaticMethodInvocation s)
+			throws Exception {
 		xmlWriter.endTag("ReflectionStaticMethodInvocation");
 		return true;
 	}
@@ -412,7 +419,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.endTag("TypeReference");
 		return true;
 	}
-	
+
 	public boolean endvisit(FullyQualifiedReference s) throws Exception {
 		xmlWriter.endTag("FullyQualifiedReference");
 		return true;
@@ -450,27 +457,22 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.endTag("ModuleDeclaration");
 		return true;
 	}
-	
+
 	public boolean endvisit(NamespaceDeclaration s) throws Exception {
 		xmlWriter.endTag("NamespaceDeclaration");
 		return true;
 	}
-	
-	public boolean endvisit(UseStatement s) throws Exception {
-		xmlWriter.endTag("UseStatement");
-		return true;
-	}
-	
+
 	public boolean endvisit(GotoLabel s) throws Exception {
 		xmlWriter.endTag("GotoLabel");
 		return true;
 	}
-	
+
 	public boolean endvisit(GotoStatement s) throws Exception {
 		xmlWriter.endTag("GotoStatement");
 		return true;
 	}
-	
+
 	public boolean endvisit(LambdaFunctionDeclaration s) throws Exception {
 		xmlWriter.endTag("LambdaFunctionDeclaration");
 		return true;
@@ -490,7 +492,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(ArrayVariableReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
-		parameters.put("type", ArrayVariableReference.getArrayType(s.getArrayType()));
+		parameters.put("type", ArrayVariableReference.getArrayType(s
+				.getArrayType()));
 		parameters.put("name", s.getName());
 		xmlWriter.startTag("ArrayVariableReference", parameters);
 		return true;
@@ -931,19 +934,19 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.startTag("TypeReference", parameters);
 		return true;
 	}
-	
+
 	public boolean visit(FullyQualifiedReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getFullyQualifiedName());
 		xmlWriter.startTag("FullyQualifiedReference", parameters);
 		return true;
 	}
-	
+
 	public boolean visit(NamespaceReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName());
 		parameters.put("global", Boolean.toString(s.isGlobal()));
-		parameters.put("local", Boolean.toString(s.isGlobal()));
+		parameters.put("local", Boolean.toString(s.isLocal()));
 		xmlWriter.startTag("NamespaceReference", parameters);
 		return true;
 	}
@@ -990,9 +993,10 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			p.traverse(this);
 		}
 		xmlWriter.endTag("Parts");
-		return true;
+		xmlWriter.endTag("UseStatement");
+		return false;
 	}
-	
+
 	public boolean visit(UsePart s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("UsePart", parameters);
@@ -1001,9 +1005,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			s.getAlias().traverse(this);
 		}
 		xmlWriter.endTag("UsePart");
-		return true;
+		return false;
 	}
-	
+
 	public boolean visit(GotoLabel s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("label", s.getLabel());
@@ -1022,13 +1026,13 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("isReference", Boolean.toString(s.isReference()));
 		xmlWriter.startTag("LambdaFunctionDeclaration", parameters);
-		
+
 		xmlWriter.startTag("Arguments", new HashMap<String, String>());
 		for (FormalParameter p : s.getArguments()) {
 			p.traverse(this);
 		}
 		xmlWriter.endTag("Arguments");
-		
+
 		Collection<? extends Expression> lexicalVars = s.getLexicalVars();
 		if (lexicalVars != null) {
 			xmlWriter.startTag("LexicalVars", new HashMap<String, String>());
@@ -1037,9 +1041,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			}
 			xmlWriter.endTag("LexicalVars");
 		}
-		
+
 		s.getBody().traverse(this);
-		
+
 		return false;
 	}
 }

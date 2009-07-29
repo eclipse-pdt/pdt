@@ -11,7 +11,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -22,40 +31,44 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 
 /**
  * This strategy contains common utilities of all completion strategies.
+ * 
  * @author michael
  */
 public abstract class AbstractCompletionStrategy implements ICompletionStrategy {
-	
+
 	private IElementFilter elementFilter;
 	private ICompletionContext context;
 	private CompletionCompanion companion;
-	
+
 	public AbstractCompletionStrategy(ICompletionContext context) {
 		this.context = context;
 	}
-	
-	public AbstractCompletionStrategy(ICompletionContext context, IElementFilter elementFilter) {
+
+	public AbstractCompletionStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		this.context = context;
 		this.elementFilter = elementFilter;
 	}
-	
+
 	public void init(CompletionCompanion companion) {
 		this.companion = companion;
 	}
-	
+
 	protected CompletionCompanion getCompanion() {
 		return companion;
 	}
 
 	/**
 	 * Return completion context
+	 * 
 	 * @return
 	 */
 	public ICompletionContext getContext() {
 		return context;
 	}
 
-	public SourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
+	public SourceRange getReplacementRange(ICompletionContext context)
+			throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
@@ -72,7 +85,9 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	}
 
 	/**
-	 * Returns element filter that will be used for filtering out model elements from proposals list
+	 * Returns element filter that will be used for filtering out model elements
+	 * from proposals list
+	 * 
 	 * @return
 	 */
 	public IElementFilter getElementFilter() {
@@ -80,18 +95,62 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	}
 
 	/**
-	 * Sets element filter that will be used for filtering out model elements from proposals list
+	 * Sets element filter that will be used for filtering out model elements
+	 * from proposals list
+	 * 
 	 * @param elementFilter
 	 */
 	public void setElementFilter(IElementFilter elementFilter) {
 		this.elementFilter = elementFilter;
 	}
-	
+
 	/**
 	 * Whether code assist should respect case sensitivity
+	 * 
 	 * @return
 	 */
 	protected boolean isCaseSensitive() {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, false, null);
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, false, null);
+	}
+
+	/**
+	 * Filters elements by prefix using case-sensitive comparison
+	 * 
+	 * @param elements
+	 *            Model elements
+	 * @param prefix
+	 *            String prefix
+	 */
+	protected IModelElement[] filterByCase(IModelElement[] elements,
+			String prefix) {
+		List<IModelElement> result = new ArrayList<IModelElement>(
+				elements.length);
+		for (IModelElement element : elements) {
+			if (element.getElementName().startsWith(prefix)) {
+				result.add(element);
+			}
+		}
+		return (IModelElement[]) result
+				.toArray(new IModelElement[result.size()]);
+	}
+
+	/**
+	 * Creates search scope
+	 */
+	protected IDLTKSearchScope createSearchScope() {
+		ISourceModule sourceModule = ((AbstractCompletionContext) context)
+				.getSourceModule();
+		IScriptProject scriptProject = sourceModule.getScriptProject();
+		if (scriptProject != null) {
+			return SearchEngine.createSearchScope(scriptProject);
+		}
+		IProjectFragment projectFragment = (IProjectFragment) sourceModule
+				.getAncestor(IModelElement.PROJECT_FRAGMENT);
+		if (projectFragment != null) {
+			return SearchEngine.createSearchScope(projectFragment);
+		}
+		// XXX: add language model here
+		return SearchEngine.createSearchScope(sourceModule);
 	}
 }

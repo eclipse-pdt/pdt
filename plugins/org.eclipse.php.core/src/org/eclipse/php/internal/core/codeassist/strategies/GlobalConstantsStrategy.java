@@ -11,26 +11,28 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
- * This strategy completes global constants 
+ * This strategy completes global constants
+ * 
  * @author michael
  */
 public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
-	public GlobalConstantsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public GlobalConstantsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -42,32 +44,30 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		ICompletionContext context = getContext();
 
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
-
-		int mask = CodeAssistUtils.EXCLUDE_VARIABLES;
-		if (requestor.isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
-		}
-		if (isCaseSensitive()) {
-			mask |= CodeAssistUtils.CASE_SENSITIVE;
-		}
+		CompletionRequestor requestor = abstractContext
+				.getCompletionRequestor();
 
 		String prefix = abstractContext.getPrefix();
 		if (prefix.startsWith("$")) {
 			return;
 		}
 
-		SourceRange replaceRange = getReplacementRange(abstractContext);
+		MatchRule matchRule = MatchRule.PREFIX;
+		if (requestor.isContextInformationMode()) {
+			matchRule = MatchRule.EXACT;
+		}
+		IDLTKSearchScope scope = createSearchScope();
+		IModelElement[] constants = PhpModelAccess.getDefault().findFields(
+				prefix, matchRule, Modifiers.AccGlobal | Modifiers.AccConstant,
+				0, scope, null);
 
-		IModelElement[] constants = CodeAssistUtils.getGlobalFields(abstractContext.getSourceModule(), prefix, mask);
+		if (isCaseSensitive()) {
+			constants = filterByCase(constants, prefix);
+		}
+
+		SourceRange replaceRange = getReplacementRange(abstractContext);
 		for (IModelElement constant : constants) {
-			try {
-				if (!constant.getElementName().startsWith("$") && PHPFlags.isConstant(((IField) constant).getFlags())) {
-					reporter.reportField((IField) constant, "", replaceRange, false);
-				}
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-			}
+			reporter.reportField((IField) constant, "", replaceRange, false);
 		}
 	}
 }

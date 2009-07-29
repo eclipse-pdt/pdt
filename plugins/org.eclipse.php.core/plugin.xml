@@ -21,10 +21,6 @@
 		name="PHP Source Element Requestor"
 		schema="schema/phpSourceElementRequestors.exsd" />
 	<extension-point
-		id="phpMixinBuildVisitors"
-		name="PHP Mixin Build Visitor"
-		schema="schema/phpMixinBuildVisitors.exsd" />
-	<extension-point
 		id="completionStrategyFactories"
 		name="PHP Completion Strategy Factory"
 		schema="schema/completionStrategyFactories.exsd" />
@@ -199,15 +195,6 @@
 	</extension>
 
 	<extension
-		point="org.eclipse.dltk.core.mixin">
-		<mixin
-			class="org.eclipse.php.internal.core.mixin.PHPMixinParser"
-			nature="org.eclipse.php.core.PHPNature"
-			priority="0">
-		</mixin>
-	</extension>
-
-	<extension
 		point="org.eclipse.dltk.core.search">
 		<seachFactory
 			class="org.eclipse.php.internal.core.search.PHPSearchFactory"
@@ -314,4 +301,23 @@
 		</validator>
 	</extension>
 
+	<!-- DLTK SQL-based index -->
+	<extension
+         point="org.eclipse.dltk.core.indexerParticipant">
+      <indexerParticipant
+            class="org.eclipse.php.internal.core.index.PhpIndexerParticipant"
+            nature="org.eclipse.php.core.PHPNature"
+            target="org.eclipse.dltk.core.h2.indexer"
+            targetId="org.eclipse.dltk.core.index.sql.indexer">
+      </indexerParticipant>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.core.projectIndexer">
+      <disable
+            class="org.eclipse.dltk.internal.core.structure.StructureProjectIndexer">
+      </disable>
+      <disable
+            class="org.eclipse.dltk.internal.core.mixin.MixinProjectIndexer">
+      </disable>
+   </extension>
 </plugin>

@@ -20,7 +20,7 @@ import org.eclipse.php.internal.core.ast.nodes.Comment;
 import java_cup.sym;
 import org.eclipse.php.internal.core.ast.nodes.AST;
 import java_cup.runtime.Symbol;
-import org.eclipse.php.internal.core.phpModel.parser.StateStack;
+import org.eclipse.php.internal.core.ast.scanner.StateStack;
 import org.eclipse.php.internal.core.PHPVersion;
 
 %%

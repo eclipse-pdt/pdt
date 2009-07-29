@@ -31,7 +31,8 @@ import org.eclipse.php.internal.core.typeinference.evaluators.AbstractPHPGoalEva
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 
 /**
- * This evaluator finds class field declartion either using "var" or in method body using field access.
+ * This evaluator finds class field declartion either using "var" or in method
+ * body using field access.
  */
 public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
@@ -46,20 +47,26 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		TypeContext context = (TypeContext) typedGoal.getContext();
 		String variableName = typedGoal.getVariableName();
 
-		IType[] types = PHPTypeInferenceUtils.getModelElements(context.getInstanceType(), context);
+		IType[] types = PHPTypeInferenceUtils.getModelElements(context
+				.getInstanceType(), context);
 		Set<PHPDocBlock> docs = new HashSet<PHPDocBlock>();
-		
+
 		if (types != null) {
 			for (IType type : types) {
 				try {
 					// we look in whole hiearchy
-					ITypeHierarchy superHierarchy = type.newSupertypeHierarchy(null);
+					ITypeHierarchy superHierarchy = type
+							.newSupertypeHierarchy(null);
 					IType[] superTypes = superHierarchy.getAllTypes();
 					for (IType superType : superTypes) {
-						IField typeField = PHPModelUtils.getTypeField(superType, variableName);
-						PHPDocBlock docBlock = PHPModelUtils.getDocBlock(typeField);
-						if (docBlock != null) {
-							docs.add(docBlock);
+						IField[] typeField = PHPModelUtils.getTypeField(
+								superType, variableName, true);
+						if (typeField.length > 0) {
+							PHPDocBlock docBlock = PHPModelUtils
+									.getDocBlock(typeField[0]);
+							if (docBlock != null) {
+								docs.add(docBlock);
+							}
 						}
 					}
 				} catch (ModelException e) {
@@ -75,7 +82,8 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 				if (tag.getTagKind() == PHPDocTag.VAR) {
 					SimpleReference[] references = tag.getReferences();
 					for (SimpleReference ref : references) {
-						IEvaluatedType type = PHPClassType.fromSimpleReference(ref);
+						IEvaluatedType type = PHPClassType
+								.fromSimpleReference(ref);
 						evaluated.add(type);
 					}
 				}

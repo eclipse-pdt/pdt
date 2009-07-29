@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.24 2009/07/28 12:02:18 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.25 2009/07/29 14:00:29 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -563,24 +563,30 @@ namespace_name:name
 	RESULT = usePart;
 :}
 
-| T_NS_SEPARATOR namespace_name:name
+| T_NS_SEPARATOR:s namespace_name:name
 {:
 	NamespaceReference namespace = name.getNamespace();
-	if (namespace != null) {
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
 		namespace.setGlobal(true);
 		namespace.setStart(namespace.sourceStart() - 1);
-	}
+
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
 :}
 
-| T_NS_SEPARATOR namespace_name:name T_AS T_STRING:aliasName
+| T_NS_SEPARATOR:s namespace_name:name T_AS T_STRING:aliasName
 {:
 	NamespaceReference namespace = name.getNamespace();
-	if (namespace != null) {
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
 		namespace.setGlobal(true);
 		namespace.setStart(namespace.sourceStart() - 1);
-	}
+	
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
 	RESULT = usePart;
@@ -967,7 +973,7 @@ is_reference ::=
 unticked_function_declaration_statement ::=
 T_FUNCTION:start is_reference:isReference string_st:functionName
 {:
-	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, functionNameright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, null, new Block(functionNameright,functionNameright,null), isReference.booleanValue(), start);
+	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, functionNameright, functionNameleft, functionNameright, functionName, 0, null, new Block(functionNameright,functionNameright,null), isReference.booleanValue(), start);
 	parser.addDeclarationStatement(functionDeclaration);
 	parser.declarations.push(functionDeclaration);
 :}
@@ -2347,16 +2353,18 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	RESULT = new PHPCallExpression(namespaceleft, endright, null, functionName, parameters); 
 :}
 
-| T_NS_SEPARATOR:sep namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+| T_NS_SEPARATOR:s namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
 	NamespaceReference namespace = functionName.getNamespace();
-	if (namespace != null) {
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		functionName.setNamespace(namespace);
+	}
 		namespace.setGlobal(true);
 		namespace.setStart(namespace.sourceStart() - 1);
-	}
-	RESULT = new PHPCallExpression(sepleft, endright, null, functionName, parameters); 
+	RESULT = new PHPCallExpression(sleft, endright, null, functionName, parameters); 
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
@@ -2423,10 +2431,12 @@ T_STATIC:s
 | T_NS_SEPARATOR:s namespace_name:name
 {:
 	NamespaceReference namespace = name.getNamespace();
-	if (namespace != null) {
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
 		namespace.setGlobal(true);
 		namespace.setStart(namespace.sourceStart() - 1);
-	}
 	RESULT = name;
 :}
 ;
@@ -2448,10 +2458,12 @@ namespace_name:name
 | T_NS_SEPARATOR:s namespace_name:name
 {:
 	NamespaceReference namespace = name.getNamespace();
-	if (namespace != null) {
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
 		namespace.setGlobal(true);
 		namespace.setStart(namespace.sourceStart() - 1);
-	}
 	RESULT = name;
 :}
 ;
@@ -2664,10 +2676,12 @@ common_scalar:scalar
 | T_NS_SEPARATOR:s namespace_name:name
 {:
 	NamespaceReference namespace = name.getNamespace();
-	if (namespace != null) {
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
 		namespace.setGlobal(true);
 		namespace.setStart(namespace.sourceStart() - 1);
-	}
 	RESULT = name;
 :}
 
@@ -2733,10 +2747,12 @@ T_STRING_VARNAME:scalar
 | T_NS_SEPARATOR:s namespace_name:name
 {:
 	NamespaceReference namespace = name.getNamespace();
-	if (namespace != null) {
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
 		namespace.setGlobal(true);
 		namespace.setStart(namespace.sourceStart() - 1);
-	}
 	RESULT = name;
 :}
 | common_scalar:scalar
