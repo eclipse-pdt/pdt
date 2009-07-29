@@ -465,7 +465,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				argsCount = args.getChilds().size();
 			}
 			fRequestor.acceptMethodReference(call.getName().toCharArray(),
-					argsCount, call.sourceStart(), call.sourceEnd());
+					argsCount, call.getCallName().sourceStart(), call
+							.getCallName().sourceEnd());
 		}
 		return true;
 	}
