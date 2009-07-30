@@ -14,8 +14,8 @@
  */
 package org.eclipse.php.internal.ui.search;
 
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 
 /**
