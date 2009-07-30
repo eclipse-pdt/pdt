@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.core.compiler.PHPFlags;
 
 /**
  * Base class for class member declarations

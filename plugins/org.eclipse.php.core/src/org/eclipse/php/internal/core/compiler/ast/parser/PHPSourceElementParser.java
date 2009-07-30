@@ -15,6 +15,7 @@ import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.AbstractSourceElementParser;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
+import org.eclipse.php.internal.core.compiler.PHPSourceElementRequestor;
 import org.eclipse.php.internal.core.project.PHPNature;
 
 public class PHPSourceElementParser extends AbstractSourceElementParser {

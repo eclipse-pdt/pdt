@@ -16,6 +16,10 @@ import java.util.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.codeassist.ICompletionContextResolver;
+import org.eclipse.php.core.codeassist.ICompletionStrategy;
+import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.*;
 

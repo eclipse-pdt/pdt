@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.codeassist.contexts;
+package org.eclipse.php.core.codeassist;
 
 import java.io.IOException;
 

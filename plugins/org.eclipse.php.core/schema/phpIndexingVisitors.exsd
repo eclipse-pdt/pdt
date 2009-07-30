@@ -3,11 +3,10 @@
 <schema targetNamespace="org.eclipse.php.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.php.core" id="phpSourceElementRequestors" name="PHP Source Element Requestor"/>
+         <meta.schema plugin="org.eclipse.php.core" id="phpIndexingVisitors" name="PHP Indexing Visitor"/>
       </appInfo>
       <documentation>
-         This extension point allows intervention into structured model build process for contribution additional model elements. Structured model (IModuleElement hierarchy) is used to present elements structure in script explorer, outline, search, code completion, code selection, etc...
-This model consists only from top level elements, like: IType, IMethod, IField. If additional element type is considered to be added - it must derive from one of those basic types.
+         This extension point can be used for modifying elements or adding new ones before updating index.
       </documentation>
    </annotation>
 
@@ -18,8 +17,8 @@ This model consists only from top level elements, like: IType, IMethod, IField. 
          </appInfo>
       </annotation>
       <complexType>
-         <sequence minOccurs="0" maxOccurs="unbounded">
-            <element ref="requestor"/>
+         <sequence>
+            <element ref="visitor"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -48,7 +47,7 @@ This model consists only from top level elements, like: IType, IMethod, IField. 
       </complexType>
    </element>
 
-   <element name="requestor">
+   <element name="visitor">
       <complexType>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -56,7 +55,7 @@ This model consists only from top level elements, like: IType, IMethod, IField. 
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension:"/>
+                  <meta.attribute kind="java" basedOn="org.eclipse.php.core.index.PhpIndexingVisitorExtension:"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -68,28 +67,12 @@ This model consists only from top level elements, like: IType, IMethod, IField. 
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         2.0
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         Extension classes must subclass &lt;code&gt;org.eclipse.php.core.PHPSourceElementRequestorExtension&lt;/code&gt;
+         2.2
       </documentation>
    </annotation>
 
 
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         No supplied implementation at this point.
-      </documentation>
-   </annotation>
+
 
 
 </schema>

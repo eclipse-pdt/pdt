@@ -12,23 +12,12 @@
 -->
 
 <plugin>
-	<extension-point
-		id="goalEvaluatorFactories"
-		name="PHP Evaluator Factory"
-		schema="schema/goalEvaluatorFactories.exsd" />
-	<extension-point
-		id="phpSourceElementRequestors"
-		name="PHP Source Element Requestor"
-		schema="schema/phpSourceElementRequestors.exsd" />
-	<extension-point
-		id="completionStrategyFactories"
-		name="PHP Completion Strategy Factory"
-		schema="schema/completionStrategyFactories.exsd" />
-	<extension-point
-		id="completionContextResolvers"
-		name="PHP Completion Context Resolver"
-		schema="schema/completionContextResolvers.exsd" />
- <extension-point id="languageModelProviders" name="PHP Language Model Provider" schema="schema/languageModelProviders.exsd"/>
+	<extension-point id="goalEvaluatorFactories" name="PHP Evaluator Factory" schema="schema/goalEvaluatorFactories.exsd" />
+	<extension-point id="phpSourceElementRequestors" name="PHP Source Element Requestor" schema="schema/phpSourceElementRequestors.exsd" />
+ 	<extension-point id="phpIndexingVisitors" name="PHP Indexing Visitor" schema="schema/phpIndexingVisitors.exsd"/>
+	<extension-point id="completionStrategyFactories" name="PHP Completion Strategy Factory" schema="schema/completionStrategyFactories.exsd" />
+	<extension-point id="completionContextResolvers" name="PHP Completion Context Resolver" schema="schema/completionContextResolvers.exsd" />
+ 	<extension-point id="languageModelProviders" name="PHP Language Model Provider" schema="schema/languageModelProviders.exsd"/>
 
 	<!-- PHP Model Handler -->
 	<extension

@@ -14,8 +14,9 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 
 /**
  * This composite contains strategies that complete elements inside method

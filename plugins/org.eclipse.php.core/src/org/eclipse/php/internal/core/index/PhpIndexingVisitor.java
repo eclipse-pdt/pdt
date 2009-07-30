@@ -14,9 +14,11 @@ package org.eclipse.php.internal.core.index;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
@@ -29,7 +31,12 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.index2.IIndexingRequestor;
-import org.eclipse.php.internal.core.compiler.IPHPModifiers;
+import org.eclipse.dltk.core.index2.IIndexingRequestor.DeclarationInfo;
+import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
+import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
+import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
@@ -39,16 +46,12 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
  * @author michael
  * 
  */
-public class PhpIndexingVisitor extends ASTVisitor {
-
-	private IIndexingRequestor requestor;
-
-	public PhpIndexingVisitor(IIndexingRequestor requestor) {
-		this.requestor = requestor;
-	}
+public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 	private static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
+	private static final String EXTENSION_POINT = "phpIndexingVisitors"; //$NON-NLS-1$
+	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
@@ -68,24 +71,60 @@ public class PhpIndexingVisitor extends ASTVisitor {
 	 */
 	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
 
+	/**
+	 * Extensions indexing visitor extensions
+	 */
+	private PhpIndexingVisitorExtension[] extensions;
+	private static IConfigurationElement[] extensionElements = Platform
+			.getExtensionRegistry().getConfigurationElementsFor(
+					PHPCorePlugin.ID, EXTENSION_POINT);
+
 	protected NamespaceDeclaration fCurrentNamespace;
 	protected String fCurrentQualifier;
 	protected String fCurrentParent;
-	protected Stack<ASTNode> fNodes = new Stack<ASTNode>(); // Used to hold
+	protected Stack<ASTNode> fNodes = new Stack<ASTNode>();
 
-	// visited nodes
+	protected IIndexingRequestor requestor;
 
-	public MethodDeclaration getCurrentMethod() {
-		Declaration currDecleration = declarations.peek();
-		if (currDecleration instanceof MethodDeclaration) {
-			return (MethodDeclaration) currDecleration;
+	public PhpIndexingVisitor(IIndexingRequestor requestor) {
+		this.requestor = requestor;
+
+		List<PhpIndexingVisitorExtension> extensions = new ArrayList<PhpIndexingVisitorExtension>(
+				extensionElements.length);
+		for (IConfigurationElement element : extensionElements) {
+			try {
+				extensions.add((PhpIndexingVisitorExtension) element
+						.createExecutableExtension(CLASS_ATTR));
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
 		}
-		return null;
+		this.extensions = extensions
+				.toArray(new PhpIndexingVisitorExtension[extensions.size()]);
+	}
+
+	public void modifyDeclaration(ASTNode node, DeclarationInfo info) {
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.modifyDeclaration(node, info);
+		}
+		requestor.addDeclaration(info);
+	}
+
+	public void modifyReference(ASTNode node, ReferenceInfo info) {
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.modifyReference(node, info);
+		}
+		requestor.addReference(info);
 	}
 
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		methodGlobalVars.pop();
 		declarations.pop();
+
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.endvisit(method);
+		}
+
 		endvisitGeneral(method);
 		return true;
 	}
@@ -105,6 +144,10 @@ public class PhpIndexingVisitor extends ASTVisitor {
 
 		// resolve more type member declarations
 		resolveMagicMembers(type);
+
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.endvisit(type);
+		}
 
 		endvisitGeneral(type);
 		return true;
@@ -172,12 +215,17 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		}
 
 		// Add method declaration:
-		requestor.addDeclaration(IModelElement.METHOD, modifiers, method
-				.sourceStart(), method.sourceEnd() - method.sourceStart(),
-				method.getNameStart(), method.getNameEnd()
+		modifyDeclaration(method, new DeclarationInfo(IModelElement.METHOD,
+				modifiers, method.sourceStart(), method.sourceEnd()
+						- method.sourceStart(), method.getNameStart(), method
+						.getNameEnd()
 						- method.getNameStart(), methodName,
 				metadata.length() == 0 ? null : metadata.toString(),
-				fCurrentQualifier, fCurrentParent);
+				fCurrentQualifier, fCurrentParent));
+
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.visit(method);
+		}
 
 		return visitGeneral(method);
 	}
@@ -237,12 +285,17 @@ public class PhpIndexingVisitor extends ASTVisitor {
 			}
 		}
 
-		requestor.addDeclaration(IModelElement.TYPE, modifiers, type
-				.sourceStart(), type.sourceEnd() - type.sourceStart(), type
-				.getNameStart(), type.getNameEnd() - type.getNameStart(), type
-				.getName(),
-				metadata.length() == 0 ? null : metadata.toString(),
-				isNamespace ? null : fCurrentQualifier, null);
+		modifyDeclaration(type, new DeclarationInfo(IModelElement.TYPE,
+				modifiers, type.sourceStart(), type.sourceEnd()
+						- type.sourceStart(), type.getNameStart(), type
+						.getNameEnd()
+						- type.getNameStart(), type.getName(), metadata
+						.length() == 0 ? null : metadata.toString(),
+				isNamespace ? null : fCurrentQualifier, null));
+
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.visit(type);
+		}
 
 		return visitGeneral(type);
 	}
@@ -308,10 +361,10 @@ public class PhpIndexingVisitor extends ASTVisitor {
 						String name = removeParenthesis(split);
 						int offset = docTag.sourceStart();
 						int length = docTag.sourceStart() + 9;
-						requestor.addDeclaration(IModelElement.FIELD,
-								Modifiers.AccPublic, offset, length, offset,
-								length, name, null, fCurrentQualifier,
-								fCurrentParent);
+						modifyDeclaration(null, new DeclarationInfo(
+								IModelElement.FIELD, Modifiers.AccPublic,
+								offset, length, offset, length, name, null,
+								fCurrentQualifier, fCurrentParent));
 
 					} else if (tagKind == PHPDocTag.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
@@ -324,10 +377,10 @@ public class PhpIndexingVisitor extends ASTVisitor {
 						String name = removeParenthesis(split);
 						int offset = docTag.sourceStart();
 						int length = docTag.sourceStart() + 6;
-						requestor.addDeclaration(IModelElement.METHOD,
-								Modifiers.AccPublic, offset, length, offset,
-								length, name, null, fCurrentQualifier,
-								fCurrentParent);
+						modifyDeclaration(null, new DeclarationInfo(
+								IModelElement.METHOD, Modifiers.AccPublic,
+								offset, length, offset, length, name, null,
+								fCurrentQualifier, fCurrentParent));
 					}
 				}
 			}
@@ -343,10 +396,12 @@ public class PhpIndexingVisitor extends ASTVisitor {
 	public boolean visit(FieldDeclaration decl) throws Exception {
 		// This is constant declaration:
 		int modifiers = decl.getModifiers();
-		requestor.addDeclaration(IModelElement.FIELD, modifiers, decl
-				.sourceStart(), decl.sourceEnd() - decl.sourceStart(), decl
-				.getNameStart(), decl.getNameEnd() - decl.getNameStart(), decl
-				.getName(), null, null, null);
+		modifyDeclaration(decl,
+				new DeclarationInfo(IModelElement.FIELD, modifiers, decl
+						.sourceStart(), decl.sourceEnd() - decl.sourceStart(),
+						decl.getNameStart(), decl.getNameEnd()
+								- decl.getNameStart(), decl.getName(), null,
+						null, null));
 
 		return visitGeneral(decl);
 	}
@@ -360,10 +415,12 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		// This is variable declaration:
 		int modifiers = decl.getModifiers();
 
-		requestor.addDeclaration(IModelElement.FIELD, modifiers, decl
-				.sourceStart(), decl.sourceEnd() - decl.sourceStart(), decl
-				.getNameStart(), decl.getNameEnd() - decl.getNameStart(), decl
-				.getName(), null, fCurrentQualifier, fCurrentParent);
+		modifyDeclaration(decl, new DeclarationInfo(IModelElement.FIELD,
+				modifiers, decl.sourceStart(), decl.sourceEnd()
+						- decl.sourceStart(), decl.getNameStart(), decl
+						.getNameEnd()
+						- decl.getNameStart(), decl.getName(), null,
+				fCurrentQualifier, fCurrentParent));
 
 		return visitGeneral(decl);
 	}
@@ -392,9 +449,9 @@ public class PhpIndexingVisitor extends ASTVisitor {
 				argsCount = args.getChilds().size();
 			}
 
-			requestor.addReference(IModelElement.METHOD, call.sourceStart(),
-					call.sourceEnd() - call.sourceStart(), call.getName(),
-					Integer.toString(argsCount), null);
+			modifyReference(call, new ReferenceInfo(IModelElement.METHOD, call
+					.sourceStart(), call.sourceEnd() - call.sourceStart(), call
+					.getName(), Integer.toString(argsCount), null));
 		}
 
 		return visitGeneral(call);
@@ -405,10 +462,10 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		// information in order to access it quickly:
 		if (include.getExpr() instanceof Scalar) {
 			Scalar filePath = (Scalar) include.getExpr();
-			requestor.addReference(IModelElement.METHOD,
+			modifyReference(include, new ReferenceInfo(IModelElement.METHOD,
 					filePath.sourceStart(), filePath.sourceEnd()
 							- filePath.sourceStart(), "include", Integer
-							.toString(1), null);
+							.toString(1), null));
 
 			String fullPath = ASTUtils.stripQuotes(((Scalar) filePath)
 					.getValue());
@@ -419,11 +476,12 @@ public class PhpIndexingVisitor extends ASTVisitor {
 			if (idx != -1) {
 				lastSegment = lastSegment.substring(idx + 1);
 			}
-			requestor.addDeclaration(IModelElement.IMPORT_DECLARATION, 0,
-					include.sourceStart(), include.sourceEnd()
-							- include.sourceStart(), filePath.sourceStart(),
-					filePath.sourceEnd() - filePath.sourceStart(), lastSegment,
-					fullPath, null, null);
+			modifyDeclaration(include, new DeclarationInfo(
+					IModelElement.IMPORT_DECLARATION, 0, include.sourceStart(),
+					include.sourceEnd() - include.sourceStart(), filePath
+							.sourceStart(), filePath.sourceEnd()
+							- filePath.sourceStart(), lastSegment, fullPath,
+					null, null));
 		}
 
 		return visitGeneral(include);
@@ -436,9 +494,10 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		ConstantReference constantName = declaration.getConstantName();
 		int offset = constantName.sourceStart();
 		int length = constantName.sourceEnd();
-		requestor.addDeclaration(IModelElement.FIELD, modifiers, offset,
-				length, offset, length, ASTUtils.stripQuotes(constantName
-						.getName()), null, fCurrentQualifier, fCurrentParent);
+		modifyDeclaration(declaration, new DeclarationInfo(IModelElement.FIELD,
+				modifiers, offset, length, offset, length, ASTUtils
+						.stripQuotes(constantName.getName()), null,
+				fCurrentQualifier, fCurrentParent));
 		return visitGeneral(declaration);
 	}
 
@@ -460,10 +519,10 @@ public class PhpIndexingVisitor extends ASTVisitor {
 					int modifiers = Modifiers.AccPublic;
 					int offset = var.sourceStart();
 					int length = var.sourceEnd() - offset;
-					requestor.addDeclaration(IModelElement.FIELD, modifiers,
-							offset, length, offset, length,
-							'$' + var.getName(), null, fCurrentQualifier,
-							fCurrentParent);
+					modifyDeclaration(assignment, new DeclarationInfo(
+							IModelElement.FIELD, modifiers, offset, length,
+							offset, length, '$' + var.getName(), null,
+							fCurrentQualifier, fCurrentParent));
 				}
 			}
 		} else if (left instanceof VariableReference) {
@@ -476,9 +535,10 @@ public class PhpIndexingVisitor extends ASTVisitor {
 			}
 			int offset = left.sourceStart();
 			int length = left.sourceEnd() - offset;
-			requestor.addDeclaration(IModelElement.FIELD, modifiers, offset,
-					length, offset, length, ((VariableReference) left)
-							.getName(), null, null, null);
+			modifyDeclaration(assignment, new DeclarationInfo(
+					IModelElement.FIELD, modifiers, offset, length, offset,
+					length, ((VariableReference) left).getName(), null, null,
+					null));
 		}
 		return visitGeneral(assignment);
 	}
@@ -505,9 +565,10 @@ public class PhpIndexingVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(TypeReference reference) throws Exception {
-		requestor.addReference(IModelElement.TYPE, reference.sourceStart(),
-				reference.sourceEnd() - reference.sourceStart(), reference
-						.getName(), null, null);
+		modifyReference(reference, new ReferenceInfo(IModelElement.TYPE,
+				reference.sourceStart(), reference.sourceEnd()
+						- reference.sourceStart(), reference.getName(), null,
+				null));
 		return visitGeneral(reference);
 	}
 
@@ -525,6 +586,11 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		if (statementClass.equals(GlobalStatement.class)) {
 			return visit((GlobalStatement) node);
 		}
+
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.visit(node);
+		}
+
 		return visitGeneral(node);
 	}
 
@@ -539,6 +605,11 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		if (statementClass.equals(ConstantDeclaration.class)) {
 			return endvisit((ConstantDeclaration) node);
 		}
+
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.endvisit(node);
+		}
+
 		endvisitGeneral(node);
 		return true;
 	}
@@ -557,6 +628,11 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		if (expressionClass.equals(PHPCallExpression.class)) {
 			return visit((PHPCallExpression) node);
 		}
+
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.visit(node);
+		}
+
 		return visitGeneral(node);
 	}
 
@@ -565,6 +641,11 @@ public class PhpIndexingVisitor extends ASTVisitor {
 		if (expressionClass.equals(Assignment.class)) {
 			return endvisit((Assignment) node);
 		}
+
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.endvisit(node);
+		}
+
 		endvisitGeneral(node);
 		return true;
 	}
@@ -579,6 +660,11 @@ public class PhpIndexingVisitor extends ASTVisitor {
 				deferred.traverse(this);
 			}
 		}
+
+		for (PhpIndexingVisitorExtension visitor : extensions) {
+			visitor.endvisit(declaration);
+		}
+
 		endvisitGeneral(declaration);
 		return true;
 	}

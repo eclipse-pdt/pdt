@@ -13,12 +13,13 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassDeclarationKeywordContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 
 /**
  * This strategy completes keywords that can be shown in a class body 

@@ -20,8 +20,8 @@ import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.internal.core.*;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.model.IncludeField;
 
 public class PhpElementResolver implements IElementResolver {

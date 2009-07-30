@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.compiler;
+package org.eclipse.php.core.compiler;
 
 import org.eclipse.dltk.ast.Modifiers;
 

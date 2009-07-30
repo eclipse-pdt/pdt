@@ -21,14 +21,14 @@ import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.codeassist.ICompletionContextResolver;
+import org.eclipse.php.core.codeassist.ICompletionStrategy;
+import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContextResolver;
 import org.eclipse.php.internal.core.codeassist.strategies.CompletionStrategyFactory;
-import org.eclipse.php.internal.core.codeassist.strategies.ICompletionStrategy;
-import org.eclipse.php.internal.core.codeassist.strategies.ICompletionStrategyFactory;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
  * Completion engine for PHP. This engine uses structured document for defining

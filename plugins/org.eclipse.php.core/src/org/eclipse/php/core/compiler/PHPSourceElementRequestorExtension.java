@@ -9,38 +9,84 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.core;
+package org.eclipse.php.core.compiler;
 
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
+import org.eclipse.dltk.compiler.ISourceElementRequestor.MethodInfo;
 import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 
-public class PHPSourceElementRequestorExtension extends ASTVisitor {
+/**
+ * This class provides last chance for modifying or adding new elements when
+ * building DLTK structured model
+ * 
+ * @author michael
+ * 
+ */
+public abstract class PHPSourceElementRequestorExtension extends ASTVisitor {
 
 	private ISourceModule fSourceModule;
 	protected ISourceElementRequestor fRequestor;
 
-	public PHPSourceElementRequestorExtension() {
-	}
-
+	/**
+	 * Sets source element requestor
+	 * 
+	 * @param requesor
+	 */
 	public void setRequestor(ISourceElementRequestor requesor) {
 		fRequestor = requesor;
 	}
-	
+
+	/**
+	 * Returns source element requestor
+	 * 
+	 * @return
+	 */
 	public ISourceElementRequestor getRequestor() {
 		return fRequestor;
 	}
-	
+
+	/**
+	 * Set source module to process
+	 * 
+	 * @param sourceModule
+	 */
 	public void setSourceModule(ISourceModule sourceModule) {
 		fSourceModule = sourceModule;
 	}
 
+	/**
+	 * Returns source model being processed
+	 * 
+	 * @return
+	 */
 	public ISourceModule getSourceModule() {
 		return fSourceModule;
 	}
-	
+
+	/**
+	 * Modify type declaration before inserting it into structured model
+	 * 
+	 * @param typeDeclaration
+	 *            Type declaration node
+	 * @param ti
+	 *            Type information structure
+	 */
 	public void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
+	}
+
+	/**
+	 * Modify method declaration before inserting it into structured model
+	 * 
+	 * @param methodDeclaration
+	 *            Method declaration node
+	 * @param mi
+	 *            Method information structure
+	 */
+	public void modifyMethodInfo(MethodDeclaration methodDeclaration,
+			MethodInfo mi) {
 	}
 }

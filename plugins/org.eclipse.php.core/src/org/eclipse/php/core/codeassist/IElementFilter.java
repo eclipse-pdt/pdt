@@ -9,20 +9,23 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.codeassist.strategies;
+package org.eclipse.php.core.codeassist;
 
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+import org.eclipse.dltk.core.IModelElement;
 
 /**
- * This factory finds correct strategies according to the given completion context.
+ * This is a model element filter that filters out model elements from adding
+ * them to code assist list
+ * 
  * @author michael
  */
-public interface ICompletionStrategyFactory {
+public interface IElementFilter {
 
 	/**
-	 * Creates completion strategies for the given context.
-	 * @param contexts Completion contexts list
-	 * @return completion strategies or empty list in case no strategy could be found for the given context
+	 * @param element
+	 *            Model element
+	 * @return <code>true</code> if given element must be filtered out from code
+	 *         assist, otherwise <code>false</code>
 	 */
-	public ICompletionStrategy[] create(ICompletionContext[] contexts);
+	public boolean filter(IModelElement element);
 }

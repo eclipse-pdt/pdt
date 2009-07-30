@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.compiler.ast.parser;
+package org.eclipse.php.internal.core.compiler;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -33,14 +33,15 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.ISourceModule;
-import org.eclipse.php.core.PHPSourceElementRequestorExtension;
+import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 /**
- * This visitor builds DLTK model source elements.
+ * This visitor builds DLTK structured model elements.
  * 
  * @author michael
  */
@@ -212,6 +213,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		if (fCurrentClass == null || fCurrentClass == fLastNamespace) {
 			mi.modifiers |= Modifiers.AccGlobal;
+		}
+
+		// modify method info if needed by extensions
+		for (PHPSourceElementRequestorExtension extension : extensions) {
+			extension.modifyMethodInfo(methodDeclaration, mi);
 		}
 	}
 

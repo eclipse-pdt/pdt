@@ -9,19 +9,24 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.codeassist.strategies;
+package org.eclipse.php.core.language;
 
-import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.IScriptProject;
 
 /**
- * This is a model element filter that filters out model elements from adding them to code assist list  
+ * Provides PHP stub files for buiding PHP Language Library.
  * @author michael
+ *
  */
-interface IElementFilter {
-	
+public interface ILanguageModelProvider {
+
 	/**
-	 * @param element Model element
-	 * @return <code>true</code> if given element must be filtered out from code assist, otherwise <code>false</code>
+	 * Returns path to directory that contains PHP stubs
+	 * used for building PHP Language Library.
+	 * 
+	 * @param project Script project
+	 * @return
 	 */
-	public boolean filter(IModelElement element);
+	public IPath getPath(IScriptProject project);
 }

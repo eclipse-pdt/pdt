@@ -9,24 +9,19 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.language;
+package org.eclipse.php.core.codeassist;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.core.IScriptProject;
 
 /**
- * Provides PHP stub files for buiding PHP Language Library.
+ * This factory finds correct strategies according to the given completion context.
  * @author michael
- *
  */
-public interface ILanguageModelProvider {
+public interface ICompletionStrategyFactory {
 
 	/**
-	 * Returns path to directory that contains PHP stubs
-	 * used for building PHP Language Library.
-	 * 
-	 * @param project Script project
-	 * @return
+	 * Creates completion strategies for the given context.
+	 * @param contexts Completion contexts list
+	 * @return completion strategies or empty list in case no strategy could be found for the given context
 	 */
-	public IPath getPath(IScriptProject project);
+	public ICompletionStrategy[] create(ICompletionContext[] contexts);
 }

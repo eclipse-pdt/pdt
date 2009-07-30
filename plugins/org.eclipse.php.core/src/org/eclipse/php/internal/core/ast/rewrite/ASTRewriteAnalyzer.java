@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.compiler.util.ScannerHelper;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -36,7 +37,6 @@ import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInf
 import org.eclipse.php.internal.core.ast.rewrite.TargetSourceRangeComputer.SourceRange;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.text.edits.*;
 
 /**

@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.core.compiler.PHPFlags;
 
 public class Bindings {
 

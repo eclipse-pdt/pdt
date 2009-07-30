@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+import org.eclipse.php.core.codeassist.ICompletionContext;
 
 /**
  * This strategy results like {@link GlobalClassesStrategy}, but filters final
