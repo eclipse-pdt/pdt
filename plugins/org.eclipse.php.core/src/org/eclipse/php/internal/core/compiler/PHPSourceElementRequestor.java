@@ -664,6 +664,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean endvisit(ModuleDeclaration declaration) throws Exception {
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
+			visitor.endvisit(declaration);
+		}
+
 		while (deferredDeclarations != null && !deferredDeclarations.isEmpty()) {
 			final ASTNode[] declarations = deferredDeclarations
 					.toArray(new ASTNode[deferredDeclarations.size()]);
