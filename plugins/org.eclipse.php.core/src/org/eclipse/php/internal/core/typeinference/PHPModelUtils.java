@@ -1287,4 +1287,75 @@ public class PHPModelUtils {
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
 	}
+
+	/**
+	 * Returns methods that must be overridden in first non-abstract class in
+	 * hierarchy.
+	 * 
+	 * @param type
+	 *            Type to start the search from
+	 * @param monitor
+	 *            Progress monitor
+	 * @return unimplemented methods
+	 * @throws ModelException
+	 */
+	public static IMethod[] getUnimplementedMethods(IType type,
+			IProgressMonitor monitor) throws ModelException {
+
+		HashMap<String, IMethod> abstractMethods = new HashMap<String, IMethod>();
+		HashSet<String> nonAbstractMethods = new HashSet<String>();
+
+		internalGetUnimplementedMethods(type, nonAbstractMethods,
+				abstractMethods, new HashSet<String>(), monitor);
+
+		for (String methodName : nonAbstractMethods) {
+			abstractMethods.remove(methodName);
+		}
+
+		Collection<IMethod> unimplementedMethods = abstractMethods.values();
+		return (IMethod[]) unimplementedMethods
+				.toArray(new IMethod[unimplementedMethods.size()]);
+	}
+
+	private static void internalGetUnimplementedMethods(IType type,
+			HashSet<String> nonAbstractMethods,
+			HashMap<String, IMethod> abstractMethods,
+			Set<String> processedTypes, IProgressMonitor monitor)
+			throws ModelException {
+
+		int typeFlags = type.getFlags();
+		for (IMethod method : type.getMethods()) {
+			String methodName = method.getElementName();
+			int methodFlags = method.getFlags();
+			boolean isAbstract = PHPFlags.isAbstract(methodFlags);
+			if (isAbstract || PHPFlags.isInterface(typeFlags)) {
+				if (!abstractMethods.containsKey(methodName)) {
+					abstractMethods.put(methodName, method);
+				}
+			} else if (!isAbstract) {
+				nonAbstractMethods.add(methodName);
+			}
+		}
+
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(type
+				.getScriptProject());
+		String[] superClasses = type.getSuperClasses();
+		if (superClasses != null) {
+			for (String superClass : superClasses) {
+				if (!processedTypes.add(superClass)) {
+					continue;
+				}
+				IType[] superTypes = PhpModelAccess.getDefault().findTypes(
+						superClass, MatchRule.EXACT, 0, Modifiers.AccNameSpace,
+						scope, null);
+				Collection<IType> filteredTypes = PHPModelUtils.filterElements(
+						type.getSourceModule(), Arrays.asList(superTypes));
+				for (IType superType : filteredTypes) {
+					internalGetUnimplementedMethods(superType,
+							nonAbstractMethods, abstractMethods,
+							processedTypes, monitor);
+				}
+			}
+		}
+	}
 }

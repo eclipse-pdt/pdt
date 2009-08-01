@@ -290,7 +290,6 @@ public class PHPCorePlugin extends Plugin {
 	 * @see #getDefaultOptions()
 	 * @see JavaCorePreferenceInitializer for changing default settings
 	 */
-	@SuppressWarnings("unchecked")
 	public static Hashtable getOptions() {
 		return ModelManager.getModelManager().getOptions();
 	}
