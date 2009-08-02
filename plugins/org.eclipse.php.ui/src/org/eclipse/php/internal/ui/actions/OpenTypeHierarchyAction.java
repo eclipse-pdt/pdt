@@ -62,29 +62,36 @@ import org.eclipse.ui.texteditor.IUpdate;
  * 
  * @since 2.0
  */
-public class OpenTypeHierarchyAction extends SelectionDispatchAction implements IUpdate {
+public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
+		IUpdate {
 
 	private PHPStructuredEditor fEditor;
 	private IModelElement lastSelectedElement;
 
 	/**
 	 * Creates a new <code>OpenTypeHierarchyAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type <code>
+	 * that the selection provided by the site's selection provider is of type
+	 * <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
-	 * @param site the site providing context information for this action
+	 * @param site
+	 *            the site providing context information for this action
 	 */
 	public OpenTypeHierarchyAction(IWorkbenchSite site) {
 		super(site);
 		setText("Open &Type Hierarchy");
 		setToolTipText("Open &Type Hierarchy");
 		setDescription("Open &Type Hierarchy");
-		//		HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_TYPE_HIERARCHY_ACTION);
+		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IPHPHelpContextIds.OPEN_TYPE_HIERARCHY_ACTION);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
-	 * @param editor the PHP editor
+	 * Note: This constructor is for internal use only. Clients should not call
+	 * this constructor.
+	 * 
+	 * @param editor
+	 *            the PHP editor
 	 */
 	public OpenTypeHierarchyAction(PHPStructuredEditor editor) {
 		this(editor.getEditorSite());
@@ -92,15 +99,15 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		setEnabled(SelectionConverter.canOperateOn(fEditor));
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on SelectionDispatchAction.
+	/*
+	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void selectionChanged(ITextSelection selection) {
 		setEnabled(isEnabled(selection));
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on SelectionDispatchAction.
+	/*
+	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void selectionChanged(IStructuredSelection selection) {
 		if (selection == null || selection.size() != 1) {
@@ -112,31 +119,35 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			if (firstElement instanceof IMethod) {
 				setEnabled(((IMethod) firstElement).getParent() instanceof IType);
 			} else {
-				setEnabled(firstElement instanceof IType || firstElement instanceof IField);
+				setEnabled(firstElement instanceof IType
+						|| firstElement instanceof IField);
 			}
 		}
 	}
 
 	/**
-	 * Returns true if the given selection is for an {@link IModelElement} that is a TYPE (e.g. Class or Interface).
+	 * Returns true if the given selection is for an {@link IModelElement} that
+	 * is a TYPE (e.g. Class or Interface).
 	 */
 	private boolean isEnabled(ITextSelection selection) {
 		if (fEditor == null || selection == null)
 			return false;
 		if (fEditor.getModelElement() instanceof ISourceModule) {
-			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
-			IModelElement element = getSelectionModelElement(selection.getOffset(), selection.getLength(), sourceModule);
+			ISourceModule sourceModule = (ISourceModule) fEditor
+					.getModelElement();
+			IModelElement element = getSelectionModelElement(selection
+					.getOffset(), selection.getLength(), sourceModule);
 			if (element == null) {
 				lastSelectedElement = null;
 				return false;
 			}
 			switch (element.getElementType()) {
-				case IModelElement.TYPE:
-				case IModelElement.FIELD:
-				case IModelElement.METHOD:
-				case IModelElement.SOURCE_MODULE:
-					lastSelectedElement = element;
-					return true;
+			case IModelElement.TYPE:
+			case IModelElement.FIELD:
+			case IModelElement.METHOD:
+			case IModelElement.SOURCE_MODULE:
+				lastSelectedElement = element;
+				return true;
 			}
 		}
 		lastSelectedElement = null;
@@ -144,21 +155,25 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	}
 
 	/**
-	 * Returns an {@link IModelElement} from the given selection.
-	 * In case that the element is not resolvable, return null.
+	 * Returns an {@link IModelElement} from the given selection. In case that
+	 * the element is not resolvable, return null.
 	 * 
 	 * @param selection
 	 * @param sourceModule
 	 * @return The {@link IModelElement} or null.
 	 */
-	protected IModelElement getSelectionModelElement(int offset, int length, ISourceModule sourceModule) {
+	protected IModelElement getSelectionModelElement(int offset, int length,
+			ISourceModule sourceModule) {
 		IModelElement element = null;
 		try {
-			Program ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_NO, null);
+			Program ast = SharedASTProvider.getAST(sourceModule,
+					SharedASTProvider.WAIT_NO, null);
 			if (ast != null) {
 				ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
-				if (selectedNode != null && selectedNode.getType() == ASTNode.IDENTIFIER) {
-					element = ((Identifier) selectedNode).resolveBinding().getPHPElement();
+				if (selectedNode != null
+						&& selectedNode.getType() == ASTNode.IDENTIFIER) {
+					element = ((Identifier) selectedNode).resolveBinding()
+							.getPHPElement();
 				}
 			}
 		} catch (Exception e) {
@@ -167,27 +182,34 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		if (element == null) {
 			// try to get the top level
 			try {
-				element = sourceModule.getElementAt(offset);
+				IModelElement[] selected = sourceModule.codeSelect(offset, 1);
+				if (selected.length > 0) {
+					element = selected[0];
+				}
 			} catch (ModelException e) {
 			}
 		}
 		return element;
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on SelectionDispatchAction.
+	/*
+	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void run(ITextSelection selection) {
-		IModelElement input = EditorUtility.getEditorInputModelElement(fEditor, true);
-		if (input == null || !ActionUtil.isProcessable(getShell(), input) || !(input instanceof ISourceModule)) {
+		IModelElement input = EditorUtility.getEditorInputModelElement(fEditor,
+				true);
+		if (input == null || !ActionUtil.isProcessable(getShell(), input)
+				|| !(input instanceof ISourceModule)) {
 			return;
 		}
-		final IModelElement selectionModelElement = getSelectionModelElement(selection.getOffset(), selection.getLength(), (ISourceModule) input);
+		final IModelElement selectionModelElement = getSelectionModelElement(
+				selection.getOffset(), selection.getLength(),
+				(ISourceModule) input);
 		run(new IModelElement[] { selectionModelElement });
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on SelectionDispatchAction.
+	/*
+	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void run(IStructuredSelection selection) {
 		if (selection instanceof ITextSelection) {
@@ -196,15 +218,19 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			if (selection.size() != 1)
 				return;
 			Object input = selection.getFirstElement();
-			//|| firstElement instanceof PHPSuperClassNameData || firstElement instanceof PHPInterfaceNameData
+			// || firstElement instanceof PHPSuperClassNameData || firstElement
+			// instanceof PHPInterfaceNameData
 			if (!(input instanceof ISourceModule)) {
 				IStatus status = createStatus("A PHP element must be selected.");
-				ErrorDialog.openError(getShell(), getDialogTitle(), "Cannot create type hierarchy", status);
+				ErrorDialog.openError(getShell(), getDialogTitle(),
+						"Cannot create type hierarchy", status);
 				return;
 			}
 			ISourceModule sourceModule = (ISourceModule) input;
 			String fileName = sourceModule.getElementName();
-			IModelElement element = DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(fileName)));
+			IModelElement element = DLTKCore.create(ResourcesPlugin
+					.getWorkspace().getRoot().getFile(
+							Path.fromOSString(fileName)));
 			if (element instanceof ISourceModule) {
 				int offset = 0;
 				try {
@@ -213,7 +239,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				IModelElement modelElement = getSelectionModelElement(offset, 1, (ISourceModule) element);
+				IModelElement modelElement = getSelectionModelElement(offset,
+						1, (ISourceModule) element);
 				if (modelElement != null) {
 					if (!ActionUtil.isProcessable(getShell(), modelElement)) {
 						return;
@@ -225,8 +252,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	}
 
 	/*
-	 * No Javadoc since the method isn't meant to be public but is
-	 * since the beginning
+	 * No Javadoc since the method isn't meant to be public but is since the
+	 * beginning
 	 */
 	public void run(IModelElement[] elements) {
 		if (elements.length == 0) {
@@ -236,7 +263,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		open(elements, getSite().getWorkbenchWindow());
 	}
 
-	public static TypeHierarchyViewPart open(IModelElement[] candidates, IWorkbenchWindow window) {
+	public static TypeHierarchyViewPart open(IModelElement[] candidates,
+			IWorkbenchWindow window) {
 		Assert.isNotNull(candidates);
 		Assert.isTrue(candidates.length != 0);
 
@@ -244,7 +272,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		if (candidates.length > 1) {
 			String title = DLTKUIMessages.OpenTypeHierarchyUtil_selectionDialog_title;
 			String message = DLTKUIMessages.OpenTypeHierarchyUtil_selectionDialog_message;
-			input = OpenActionUtil.selectModelElement(candidates, window.getShell(), title, message);
+			input = OpenActionUtil.selectModelElement(candidates, window
+					.getShell(), title, message);
 		} else {
 			input = candidates[0];
 		}
@@ -255,18 +284,24 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 		return openInViewPart(window, input);
 	}
 
-	private static TypeHierarchyViewPart openInViewPart(IWorkbenchWindow window, IModelElement input) {
+	private static TypeHierarchyViewPart openInViewPart(
+			IWorkbenchWindow window, IModelElement input) {
 		IWorkbenchPage page = window.getActivePage();
 		try {
-			TypeHierarchyViewPart result = (TypeHierarchyViewPart) page.findView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
+			TypeHierarchyViewPart result = (TypeHierarchyViewPart) page
+					.findView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
 			if (result != null) {
-				result.clearNeededRefresh(); // avoid refresh of old hierarchy on 'becomes visible'
+				result.clearNeededRefresh(); // avoid refresh of old hierarchy
+												// on 'becomes visible'
 			}
-			result = (TypeHierarchyViewPart) page.showView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
+			result = (TypeHierarchyViewPart) page
+					.showView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
 			result.setInputElement(input);
 			return result;
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, window.getShell(), DLTKUIMessages.OpenTypeHierarchyUtil_error_open_view, e.getMessage());
+			ExceptionHandler.handle(e, window.getShell(),
+					DLTKUIMessages.OpenTypeHierarchyUtil_error_open_view, e
+							.getMessage());
 		}
 		return null;
 	}
@@ -276,7 +311,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	}
 
 	private static IStatus createStatus(String message) {
-		return new Status(IStatus.INFO, PHPUiPlugin.getPluginId(), PHPUiPlugin.INTERNAL_ERROR, message, null);
+		return new Status(IStatus.INFO, PHPUiPlugin.getPluginId(),
+				PHPUiPlugin.INTERNAL_ERROR, message, null);
 	}
 
 	public void update() {
