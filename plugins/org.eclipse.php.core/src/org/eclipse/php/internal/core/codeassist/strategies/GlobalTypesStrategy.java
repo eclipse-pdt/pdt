@@ -12,8 +12,8 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.ISourceRange;
@@ -30,7 +30,6 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils.AlphabeticComparator;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
@@ -101,7 +100,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 					falseFlag | IPHPModifiers.Internal, scope, null);
 		}
 
-		Set<IType> result = new TreeSet<IType>(new AlphabeticComparator());
+		List<IType> result = new LinkedList<IType>();
 		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
 			// Search by camel-case
 			IType[] types = PhpModelAccess.getDefault().findTypes(prefix,

@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import java.util.Arrays;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -30,7 +28,6 @@ import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.language.PHPVariables;
@@ -75,7 +72,6 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		IField[] fields = PhpModelAccess.getDefault().findFields(prefix,
 				matchRule, Modifiers.AccGlobal, Modifiers.AccConstant, scope,
 				null);
-		Arrays.sort(fields, new CodeAssistUtils.AlphabeticComparator());
 
 		SourceRange replaceRange = getReplacementRange(context);
 		for (IModelElement var : fields) {

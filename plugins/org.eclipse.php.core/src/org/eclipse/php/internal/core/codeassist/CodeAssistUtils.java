@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.core.codeassist;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -446,46 +445,5 @@ public class CodeAssistUtils {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * This class not only used for sorting elements alphabetically, but it also
-	 * gives priority to the elements declared in current file.
-	 */
-	public static class AlphabeticComparator implements
-			Comparator<IModelElement> {
-
-		private ISourceModule currentFile;
-
-		public AlphabeticComparator() {
-		}
-
-		public AlphabeticComparator(ISourceModule currentFile) {
-			this.currentFile = currentFile;
-		}
-
-		public int compare(IModelElement o1, IModelElement o2) {
-			int r = o1.getElementName().compareTo(o2.getElementName());
-			if (r == 0) {
-				if (currentFile != null && currentFile.equals(o1.getOpenable())) {
-					return -1;
-				}
-				if (o1 instanceof IMember) {
-					IType t1 = ((IMember) o1).getDeclaringType();
-					// IType t2 = ((IMember)o2).getDeclaringType();
-					if (t1 != null) {
-						try {
-							if (PHPFlags.isInterface(t1.getFlags())) {
-								return -1;
-							}
-						} catch (Exception e) {
-							PHPCorePlugin.log(e);
-						}
-					}
-				}
-				return 1;
-			}
-			return r;
-		}
 	}
 }
