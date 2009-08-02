@@ -38,18 +38,8 @@ import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
-import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPModelUtils {
-
-	public static IDLTKSearchScope createProjectSearchScope(
-			IScriptProject project) {
-		int includeMask = IDLTKSearchScope.SOURCES
-				| IDLTKSearchScope.APPLICATION_LIBRARIES
-				| IDLTKSearchScope.REFERENCED_PROJECTS
-				| IDLTKSearchScope.SYSTEM_LIBRARIES;
-		return SearchEngine.createSearchScope(project, includeMask);
-	}
 
 	/**
 	 * Extracts the element name from the given fully qualified name
@@ -249,7 +239,7 @@ public class PHPModelUtils {
 				currentMethod = currentMethod.getParent();
 			}
 		} catch (ModelException e) {
-			Logger.logException(e);
+			PHPCorePlugin.log(e);
 		}
 		return null;
 	}
@@ -273,7 +263,7 @@ public class PHPModelUtils {
 				currentNs = currentNs.getParent();
 			}
 		} catch (ModelException e) {
-			Logger.logException(e);
+			PHPCorePlugin.log(e);
 		}
 		return null;
 	}
@@ -300,7 +290,7 @@ public class PHPModelUtils {
 				currentNs = currentNs.getParent();
 			}
 		} catch (ModelException e) {
-			Logger.logException(e);
+			PHPCorePlugin.log(e);
 		}
 		return null;
 	}
@@ -327,7 +317,7 @@ public class PHPModelUtils {
 				element = element.getParent();
 			}
 		} catch (ModelException e) {
-			Logger.logException(e);
+			PHPCorePlugin.log(e);
 		}
 		return null;
 	}
@@ -346,7 +336,7 @@ public class PHPModelUtils {
 		try {
 			return getCurrentType(sourceModule.getElementAt(offset));
 		} catch (ModelException e) {
-			Logger.logException(e);
+			PHPCorePlugin.log(e);
 		}
 		return null;
 	}

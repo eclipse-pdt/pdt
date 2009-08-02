@@ -28,11 +28,12 @@ public class PhpModelAccess extends ModelAccess {
 		return instance;
 	}
 
-	public IField[] findIncludes(String name, IDLTKSearchScope scope) {
+	public IField[] findIncludes(String name, MatchRule matchRule,
+			IDLTKSearchScope scope) {
 
 		List<IField> result = new LinkedList<IField>();
-		if (!findElements(IModelElement.IMPORT_DECLARATION, name,
-				MatchRule.EXACT, 0, 0, scope, result, null)) {
+		if (!findElements(IModelElement.IMPORT_DECLARATION, name, matchRule, 0,
+				0, scope, result, null)) {
 			return null;
 		}
 		return (IField[]) result.toArray(new IField[result.size()]);

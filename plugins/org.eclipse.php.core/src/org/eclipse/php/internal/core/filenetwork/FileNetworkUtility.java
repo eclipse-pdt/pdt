@@ -21,8 +21,10 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
@@ -99,15 +101,26 @@ public class FileNetworkUtility {
 	private static void internalBuildReferencingFilesTree(Node root,
 			Set<ISourceModule> processedFiles, IProgressMonitor monitor) {
 
+		if (monitor != null && monitor.isCanceled()) {
+			return;
+		}
+
 		ISourceModule file = root.getFile();
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(file
-				.getScriptProject());
+		IDLTKSearchScope scope;
+		if (file instanceof ExternalSourceModule) {
+			scope = SearchEngine.createWorkspaceScope(DLTKLanguageManager
+					.getLanguageToolkit(file));
+		} else {
+			scope = SearchEngine.createSearchScope(file.getScriptProject());
+		}
 
-		// Find all includes to the current source module in mixin:
 		IField[] includes = PhpModelAccess.getDefault().findIncludes(
-				file.getPath().lastSegment(), scope);
+				file.getPath().lastSegment(), MatchRule.EXACT, scope);
 		for (IField include : includes) {
+			if (monitor != null && monitor.isCanceled()) {
+				return;
+			}
 
 			// Candidate that includes the original source module:
 			ISourceModule referencingFile = include.getSourceModule();
