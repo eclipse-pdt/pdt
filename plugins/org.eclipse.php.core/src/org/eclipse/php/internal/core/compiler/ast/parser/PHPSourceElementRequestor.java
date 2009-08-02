@@ -202,6 +202,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 	}
 
+
 	public boolean visit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
@@ -514,6 +515,29 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	
+	public boolean visit (ListVariable listVariable) throws Exception {
+		final Collection<? extends Expression> variables = ((ListVariable) listVariable).getVariables();
+		for (Expression expression : variables) {
+			
+			if (expression instanceof VariableReference) {
+				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+				info.modifiers = Modifiers.AccPublic;
+				info.name = ((VariableReference) expression).getName();
+				info.nameSourceEnd = expression.sourceEnd() - 1;
+				info.nameSourceStart = expression.sourceStart();
+				info.declarationStart = expression.sourceStart();
+				fRequestor.enterField(info);
+				fRequestor.exitField(expression.sourceEnd() - 1);
+			}
+		} 
+		return true;
+	}	
+	
+	public boolean endvisit(ListVariable listVariable) throws Exception {
+		return true;
+	}	
+	
 	public boolean visit(GlobalStatement s) throws Exception {
 		if (!declarations.empty() && declarations.peek() instanceof MethodDeclaration) {
 			for (Expression var : s.getVariables()) {
@@ -593,6 +617,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (expressionClass.equals(Assignment.class)) {
 			return visit((Assignment) node);
 		}
+		if (expressionClass.equals(ListVariable.class)) {
+			return visit((ListVariable) node);
+		}
 		if (expressionClass.equals(TypeReference.class)) {
 			return visit((TypeReference) node);
 		}
@@ -613,6 +640,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		Class<?> expressionClass = node.getClass();
 		if (expressionClass.equals(Assignment.class)) {
 			return endvisit((Assignment) node);
+		} else if (expressionClass.equals(ListVariable.class)) {
+			return endvisit((ListVariable) node);
 		}
 		return true;
 	}
