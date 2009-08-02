@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.search;
 
+import java.util.Collection;
+
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Argument;
@@ -95,6 +97,9 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 				locator.match(decl, getNodeSet());
 			}
 		}
+		else if (node instanceof ListVariable){
+			recursiveListMatch(node, locator);
+		}
 		else if (node instanceof TypeReference) {
 			locator.match((TypeReference)node, getNodeSet());
 		}
@@ -132,7 +137,7 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			}
 			if (value instanceof SimpleReference) {
 				SimpleReference ref = (SimpleReference) value;
-				FieldDeclaration decl = new FieldDeclarationLocation(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
+				FieldDeclaration decl = new FieldDeclarationLocation(ref.getName(), ref.sourceStart(), ref.sourceEnd(), ref.sourceStart(), ref.sourceEnd());
 				locator.match(decl, getNodeSet());
 			}
 		}
@@ -140,6 +145,18 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			VariableReference ref = ((CatchClause) node).getVariable();
 			FieldDeclaration decl = new FieldDeclarationLocation(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
 			locator.match(decl, getNodeSet());
+		}
+	}
+
+	private void recursiveListMatch(ASTNode node, PatternLocator locator) {
+		final Collection<? extends Expression> variables = ((ListVariable) node).getVariables();
+		for (Expression expression : variables) {
+			if (expression instanceof ListVariable) {
+				recursiveListMatch(expression, locator);
+			} else if (expression instanceof VariableReference) {
+				FieldDeclaration decl = new FieldDeclarationLocation(((VariableReference)expression).getName(), expression.sourceStart(), expression.sourceEnd(), expression.sourceStart(), expression.sourceEnd());
+				locator.match(decl, getNodeSet());
+			}
 		}
 	}
 	
