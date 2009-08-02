@@ -16,17 +16,15 @@ import org.eclipse.dltk.core.IFileHierarchyInfo;
 import org.eclipse.dltk.core.IFileHierarchyResolver;
 import org.eclipse.dltk.core.ISourceModule;
 
-
 public class PHPFileHierarchyResolver implements IFileHierarchyResolver {
 
-	public PHPFileHierarchyResolver() {
-	}
-
-	public IFileHierarchyInfo resolveDown(ISourceModule file, IProgressMonitor monitor) {
+	public IFileHierarchyInfo resolveDown(ISourceModule file,
+			IProgressMonitor monitor) {
 		return FileNetworkUtility.buildReferencingFilesTree(file, monitor);
 	}
 
-	public IFileHierarchyInfo resolveUp(ISourceModule file, IProgressMonitor monitor) {
+	public IFileHierarchyInfo resolveUp(ISourceModule file,
+			IProgressMonitor monitor) {
 		return FileNetworkUtility.buildReferencedFilesTree(file, monitor);
 	}
 

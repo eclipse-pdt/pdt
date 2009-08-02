@@ -25,11 +25,14 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ExternalSourceModule;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.IncludeField;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
@@ -93,41 +96,87 @@ public class FileNetworkUtility {
 		processedFiles.add(file);
 
 		Node root = new Node(file);
-		internalBuildReferencingFilesTree(root, processedFiles, monitor);
+
+		internalBuildReferencingFilesTree(root, processedFiles,
+				new HashMap<IDLTKSearchScope, IField[]>(), monitor);
 
 		return new ReferenceTree(root);
 	}
 
+	private static IDLTKSearchScope createSearchScope(ISourceModule file) {
+		if (LanguageModelInitializer.isLanguageModelElement(file)) {
+			return null;
+		}
+		if (file instanceof ExternalSourceModule) {
+			try {
+				IProjectFragment fileFragment = ((ExternalSourceModule) file)
+						.getProjectFragment();
+				List<IModelElement> scopeElements = new LinkedList<IModelElement>();
+				scopeElements.add(fileFragment);
+
+				IScriptProject[] scriptProjects = ModelManager
+						.getModelManager().getModel().getScriptProjects();
+				for (IScriptProject scriptProject : scriptProjects) {
+					for (IProjectFragment fragment : scriptProject
+							.getProjectFragments()) {
+						if (fragment.equals(fileFragment)) {
+							scopeElements.add(scriptProject);
+						}
+					}
+				}
+				return SearchEngine.createSearchScope(scopeElements
+						.toArray(new IModelElement[scopeElements.size()]),
+						IDLTKSearchScope.SOURCES, PHPLanguageToolkit
+								.getDefault());
+			} catch (ModelException e) {
+				return null;
+			}
+		}
+		return SearchEngine.createSearchScope(file.getScriptProject(),
+				IDLTKSearchScope.SOURCES);
+	}
+
 	private static void internalBuildReferencingFilesTree(Node root,
-			Set<ISourceModule> processedFiles, IProgressMonitor monitor) {
+			Set<ISourceModule> processedFiles,
+			Map<IDLTKSearchScope, IField[]> includesCache,
+			IProgressMonitor monitor) {
 
 		if (monitor != null && monitor.isCanceled()) {
 			return;
 		}
 
 		ISourceModule file = root.getFile();
-
-		IDLTKSearchScope scope;
-		if (file instanceof ExternalSourceModule) {
-			scope = SearchEngine.createWorkspaceScope(DLTKLanguageManager
-					.getLanguageToolkit(file));
-		} else {
-			scope = SearchEngine.createSearchScope(file.getScriptProject());
+		IDLTKSearchScope scope = createSearchScope(file);
+		if (scope == null) {
+			return;
 		}
 
-		IField[] includes = PhpModelAccess.getDefault().findIncludes(
-				file.getPath().lastSegment(), MatchRule.EXACT, scope);
+		IField[] includes = includesCache.get(scope);
+		if (includes == null) {
+			includes = PhpModelAccess.getDefault().findIncludes(null,
+					MatchRule.PREFIX, scope, monitor);
+			includesCache.put(scope, includes);
+		}
+
 		for (IField include : includes) {
 			if (monitor != null && monitor.isCanceled()) {
 				return;
+			}
+			String filePath = ((IncludeField) include).getFilePath();
+			int i = Math.max(filePath.lastIndexOf('/'), filePath
+					.lastIndexOf('\\'));
+			if (i > 0) {
+				filePath = filePath.substring(i + 1);
+			}
+			if (!filePath.equals(file.getElementName())) {
+				continue;
 			}
 
 			// Candidate that includes the original source module:
 			ISourceModule referencingFile = include.getSourceModule();
 
 			// Try to resolve include:
-			ISourceModule testFile = findSourceModule(referencingFile,
-					((IncludeField) include).getFilePath());
+			ISourceModule testFile = findSourceModule(referencingFile, filePath);
 
 			// If this is the correct include (that means that included file is
 			// the original file):
@@ -143,7 +192,7 @@ public class FileNetworkUtility {
 		if (children != null) {
 			for (Node child : children) {
 				internalBuildReferencingFilesTree(child, processedFiles,
-						monitor);
+						includesCache, monitor);
 			}
 		}
 	}

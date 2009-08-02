@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
@@ -29,11 +30,11 @@ public class PhpModelAccess extends ModelAccess {
 	}
 
 	public IField[] findIncludes(String name, MatchRule matchRule,
-			IDLTKSearchScope scope) {
+			IDLTKSearchScope scope, IProgressMonitor monitor) {
 
 		List<IField> result = new LinkedList<IField>();
 		if (!findElements(IModelElement.IMPORT_DECLARATION, name, matchRule, 0,
-				0, scope, result, null)) {
+				0, scope, result, monitor)) {
 			return null;
 		}
 		return (IField[]) result.toArray(new IField[result.size()]);

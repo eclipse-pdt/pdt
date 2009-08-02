@@ -350,8 +350,8 @@ public class PHPCorePlugin extends Plugin {
 						Modifiers.AccGlobal, 0, scope, monitor);
 				monitor.worked(25);
 
-				PhpModelAccess.getDefault().findFields(null, MatchRule.PREFIX,
-						Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault().findIncludes(null,
+						MatchRule.PREFIX, scope, monitor);
 				monitor.worked(25);
 
 			} catch (OperationCanceledException e) {

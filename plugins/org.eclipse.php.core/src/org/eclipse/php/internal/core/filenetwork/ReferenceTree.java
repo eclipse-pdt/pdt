@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.dltk.core.IFileHierarchyInfo;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 
 /**
  * This tree represents file references network
@@ -24,10 +25,13 @@ import org.eclipse.dltk.core.ISourceModule;
 public class ReferenceTree implements IFileHierarchyInfo {
 
 	final private Node root;
+	final private boolean isLanguageModel;
 
 	public ReferenceTree(Node root) {
 		assert root != null;
 		this.root = root;
+		isLanguageModel = LanguageModelInitializer.isLanguageModelElement(root
+				.getFile());
 	}
 
 	public Node getRoot() {
@@ -46,6 +50,9 @@ public class ReferenceTree implements IFileHierarchyInfo {
 	 *         <code>false</code>
 	 */
 	public boolean find(ISourceModule sourceModule) {
+		if (isLanguageModel) {
+			return true;
+		}
 		return root.find(sourceModule);
 	}
 
