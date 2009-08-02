@@ -12,9 +12,9 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.editors.text.EditorsUI;
-
 
 public class PHPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
@@ -23,6 +23,12 @@ public class PHPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		EditorsUI.useAnnotationsPreferencePage(store);
 		EditorsUI.useQuickDiffPreferencePage(store);
 		PreferenceConstants.initializeDefaultValues();
+
+		IPreferenceStore dltkStore = DLTKUIPlugin.getDefault()
+				.getPreferenceStore();
+		dltkStore.setDefault(
+				org.eclipse.dltk.ui.PreferenceConstants.CODEASSIST_SORTER,
+				"org.eclipse.dltk.ui.AlphabeticSorter"); //$NON-NLS-1$
 	}
 
 }
