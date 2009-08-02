@@ -163,12 +163,13 @@ public class FileNetworkUtility {
 				return;
 			}
 			String filePath = ((IncludeField) include).getFilePath();
+			String lastSegment = filePath;
 			int i = Math.max(filePath.lastIndexOf('/'), filePath
 					.lastIndexOf('\\'));
 			if (i > 0) {
-				filePath = filePath.substring(i + 1);
+				lastSegment = lastSegment.substring(i + 1);
 			}
-			if (!filePath.equals(file.getElementName())) {
+			if (!lastSegment.equals(file.getElementName())) {
 				continue;
 			}
 
