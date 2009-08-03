@@ -30,6 +30,10 @@ public class TypeBinding implements ITypeBinding {
 	private IEvaluatedType type;
 	private IModelElement[] elements;
 	private BindingResolver resolver;
+	private ITypeBinding[] interfaces;
+	private ITypeBinding superClasses;
+	private IMethodBinding[] methods;
+	private IVariableBinding[] fields;
 
 	/**
 	 * Constructs a new TypeBinding.
@@ -141,28 +145,32 @@ public class TypeBinding implements ITypeBinding {
 		if (isUnknown()) {
 			return new IVariableBinding[0];
 		}
-		if (isClass()) {
-			List<IVariableBinding> variableBindings = new ArrayList<IVariableBinding>();
 
-			for (IModelElement element : this.elements) {
-				IType type = (IType) element;
-				try {
-					IField[] fields = type.getFields();
-					for (int i = 0; i < fields.length; i++) {
-						IVariableBinding variableBinding = resolver.getVariableBinding(fields[i]);
-						if (variableBinding != null) {
-							variableBindings.add(variableBinding);
+		if (this.fields == null) {
+			if (isClass()) {
+				List<IVariableBinding> variableBindings = new ArrayList<IVariableBinding>();
+
+				for (IModelElement element : this.elements) {
+					IType type = (IType) element;
+					try {
+						IField[] fields = type.getFields();
+						for (int i = 0; i < fields.length; i++) {
+							IVariableBinding variableBinding = resolver.getVariableBinding(fields[i]);
+							if (variableBinding != null) {
+								variableBindings.add(variableBinding);
+							}
+						}
+					} catch (ModelException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
 						}
 					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
 				}
+				this.fields = variableBindings.toArray(new IVariableBinding[variableBindings.size()]);
 			}
-			return variableBindings.toArray(new IVariableBinding[variableBindings.size()]);
+			this.fields = new IVariableBinding[0];
 		}
-		return new IVariableBinding[0];
+		return this.fields;
 	}
 
 	/**
@@ -186,27 +194,31 @@ public class TypeBinding implements ITypeBinding {
 		if (isUnknown()) {
 			return new IMethodBinding[0];
 		}
-		if (isClass()) {
-			List<IMethodBinding> methodBindings = new ArrayList<IMethodBinding>();
-			for (IModelElement element : this.elements) {
-				IType type = (IType) element;
-				try {
-					IMethod[] methods = type.getMethods();
-					if (methods != null) {
-						for (int i = 0; i < methods.length; i++) {
-							IMethodBinding methodBinding = resolver.getMethodBinding(methods[i]);
-							methodBindings.add(methodBinding);
+
+		if (this.methods == null) {
+			if (isClass()) {
+				List<IMethodBinding> methodBindings = new ArrayList<IMethodBinding>();
+				for (IModelElement element : this.elements) {
+					IType type = (IType) element;
+					try {
+						IMethod[] methods = type.getMethods();
+						if (methods != null) {
+							for (int i = 0; i < methods.length; i++) {
+								IMethodBinding methodBinding = resolver.getMethodBinding(methods[i]);
+								methodBindings.add(methodBinding);
+							}
+						}
+					} catch (ModelException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
 						}
 					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
 				}
+				this.methods = methodBindings.toArray(new IMethodBinding[methodBindings.size()]);
 			}
-			return methodBindings.toArray(new IMethodBinding[methodBindings.size()]);
+			this.methods = new IMethodBinding[0]; // TODO - Implement IMethodBinding
 		}
-		return new IMethodBinding[0]; // TODO - Implement IMethodBinding
+		return this.methods;
 	}
 
 	/**
@@ -291,36 +303,39 @@ public class TypeBinding implements ITypeBinding {
 			return new ITypeBinding[0];
 		}
 
-		final ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
-		for (IModelElement element : elements) {
-			IType type = (IType) element;
-			try {
-				SearchEngine searchEngine = new SearchEngine();
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
+		if (this.interfaces == null) {
+			final ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
+			for (IModelElement element : elements) {
+				IType type = (IType) element;
+				try {
+					SearchEngine searchEngine = new SearchEngine();
+					IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
 
-				String[] superClassNames = type.getSuperClasses();
+					String[] superClassNames = type.getSuperClasses();
 
-				if (superClassNames != null) {
-					for (String superClass : superClassNames) {
-						int matchRule = SearchPattern.R_EXACT_MATCH;
-						SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-						searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-							public void acceptSearchMatch(SearchMatch match) throws CoreException {
-								IType t = (IType) match.getElement();
-								if ((t.getFlags() & Modifiers.AccInterface) != 0) {
-									interfaces.add(resolver.getTypeBinding(t));
+					if (superClassNames != null) {
+						for (String superClass : superClassNames) {
+							int matchRule = SearchPattern.R_EXACT_MATCH;
+							SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+							searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+								public void acceptSearchMatch(SearchMatch match) throws CoreException {
+									IType t = (IType) match.getElement();
+									if ((t.getFlags() & Modifiers.AccInterface) != 0) {
+										interfaces.add(resolver.getTypeBinding(t));
+									}
 								}
-							}
-						}, null);
+							}, null);
+						}
+					}
+				} catch (CoreException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
 					}
 				}
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
 			}
+			this.interfaces = interfaces.toArray(new ITypeBinding[interfaces.size()]);
 		}
-		return interfaces.toArray(new ITypeBinding[interfaces.size()]);
+		return this.interfaces;
 	}
 
 	/**
@@ -404,35 +419,38 @@ public class TypeBinding implements ITypeBinding {
 			return null;
 		}
 
-		final List<IType> superClasses = new ArrayList<IType>(elements.length);
-		for (IModelElement element : elements) {
-			IType type = (IType) element;
-			try {
-				SearchEngine searchEngine = new SearchEngine();
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
-				String[] superClassNames = type.getSuperClasses();
+		if (this.superClasses == null) {
+			final List<IType> superClasses = new ArrayList<IType>(elements.length);
+			for (IModelElement element : elements) {
+				IType type = (IType) element;
+				try {
+					SearchEngine searchEngine = new SearchEngine();
+					IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
+					String[] superClassNames = type.getSuperClasses();
 
-				if (superClassNames != null) {
-					for (String superClass : superClassNames) {
-						int matchRule = SearchPattern.R_EXACT_MATCH;
-						SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-						searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-							public void acceptSearchMatch(SearchMatch match) throws CoreException {
-								IType t = (IType) match.getElement();
-								if ((t.getFlags() & Modifiers.AccInterface) == 0) {
-									superClasses.add(t);
+					if (superClassNames != null) {
+						for (String superClass : superClassNames) {
+							int matchRule = SearchPattern.R_EXACT_MATCH;
+							SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+							searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+								public void acceptSearchMatch(SearchMatch match) throws CoreException {
+									IType t = (IType) match.getElement();
+									if ((t.getFlags() & Modifiers.AccInterface) == 0) {
+										superClasses.add(t);
+									}
 								}
-							}
-						}, null);
+							}, null);
+						}
+					}
+				} catch (CoreException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
 					}
 				}
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
 			}
+			this.superClasses = resolver.getTypeBinding(superClasses.toArray(new IType[superClasses.size()]));
 		}
-		return resolver.getTypeBinding(superClasses.toArray(new IType[superClasses.size()]));
+		return this.superClasses;
 	}
 
 	/**
@@ -551,7 +569,7 @@ public class TypeBinding implements ITypeBinding {
 	 * <code>false</code> is returned 
 	 */
 	public boolean isSubTypeCompatible(ITypeBinding otherType) {
-		
+
 		if (otherType == null || elements == null || elements.length == 0) {
 			return false;
 		}
