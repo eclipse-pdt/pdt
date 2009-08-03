@@ -282,6 +282,10 @@ public class PHPModelUtils {
 			int offset) {
 		try {
 			IModelElement currentNs = sourceModule.getElementAt(offset);
+			while (currentNs instanceof IField) {
+				currentNs = sourceModule.getElementAt(((IField) currentNs)
+						.getSourceRange().getOffset() - 1);
+			}
 			while (currentNs != null) {
 				if (currentNs instanceof IType
 						&& PHPFlags.isNamespace(((IType) currentNs).getFlags())) {
