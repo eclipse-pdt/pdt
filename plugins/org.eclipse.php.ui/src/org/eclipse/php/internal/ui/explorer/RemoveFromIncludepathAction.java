@@ -33,16 +33,18 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.ui.IWorkbenchSite;
 
 /**
- * Include path removal action 
+ * Include path removal action
  */
-public class RemoveFromIncludepathAction extends Action implements ISelectionChangedListener {
+public class RemoveFromIncludepathAction extends Action implements
+		ISelectionChangedListener {
 
 	private List<Object> fSelectedElements;
 
 	// BuildpathContainer iff isEnabled()
 
 	public RemoveFromIncludepathAction(IWorkbenchSite site) {
-		super("Remove from Include Path", DLTKPluginImages.DESC_ELCL_REMOVE_FROM_BP);
+		super("Remove from Include Path",
+				DLTKPluginImages.DESC_ELCL_REMOVE_FROM_BP);
 		setToolTipText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_RemoveFromCP_tooltip);
 		fSelectedElements = new ArrayList<Object>();
 	}
@@ -51,28 +53,32 @@ public class RemoveFromIncludepathAction extends Action implements ISelectionCha
 	 * {@inheritDoc}
 	 */
 	public void run() {
-
 		Object object = fSelectedElements.get(0);
 		if (object instanceof ExternalProjectFragment) {
 			ExternalProjectFragment projFragment = (ExternalProjectFragment) object;
 			IScriptProject scriptProject = projFragment.getScriptProject();
 			try {
-				BuildPathUtils.removeEntryFromBuildPath(scriptProject, projFragment.getBuildpathEntry());
+				BuildPathUtils.removeEntryFromBuildPath(scriptProject,
+						projFragment.getBuildpathEntry());
 			} catch (ModelException e) {
 				Logger.logException("Could not remove buildPathEntry", e);
 			}
 		} else if (object instanceof IProjectFragment) {
 			IProjectFragment root = (IProjectFragment) object;
 		} else {
-			assert object instanceof IncludePath; 
+			assert object instanceof IncludePath;
 
 			IncludePath includePath = (IncludePath) object;
 			try {
 				if (includePath.isBuildpath())
-					IncludePathManager.getInstance().removeEntryFromIncludePath(includePath.getProject(), (IBuildpathEntry) (includePath.getEntry()));
+					IncludePathManager.getInstance()
+							.removeEntryFromIncludePath(
+									includePath.getProject(),
+									(IBuildpathEntry) (includePath.getEntry()));
 				else {
 					IProject proj = includePath.getProject();
-					IncludePathManager manager = IncludePathManager.getInstance();
+					IncludePathManager manager = IncludePathManager
+							.getInstance();
 					IncludePath[] paths = manager.getIncludePaths(proj);
 					List<IncludePath> entries = new ArrayList<IncludePath>();
 					for (IncludePath path : paths) {
@@ -80,7 +86,8 @@ public class RemoveFromIncludepathAction extends Action implements ISelectionCha
 							entries.add(path);
 						}
 					}
-					manager.setIncludePath(proj, entries.toArray(new IncludePath[entries.size()]));
+					manager.setIncludePath(proj, entries
+							.toArray(new IncludePath[entries.size()]));
 				}
 			} catch (ModelException e) {
 				Logger.logException("Could not remove buildPathEntry", e);
@@ -105,15 +112,20 @@ public class RemoveFromIncludepathAction extends Action implements ISelectionCha
 			for (Iterator iter = elements.iterator(); iter.hasNext();) {
 				Object element = iter.next();
 				fSelectedElements.add(element);
-				if (!(element instanceof IProjectFragment || element instanceof IScriptProject || element instanceof IncludePath))
+				if (!(element instanceof IProjectFragment
+						|| element instanceof IScriptProject || element instanceof IncludePath))
 					return false;
 				if (element instanceof IScriptProject) {
 					IScriptProject project = (IScriptProject) element;
-					if (!BuildpathModifier.isSourceFolder(project))
+					if (!BuildpathModifier.isSourceFolder(project)
+							|| BuildPathUtils.isInBuildpath(project.getPath(),
+									project))
 						return false;
 				} else if (element instanceof IProjectFragment) {
-					IBuildpathEntry entry = ((IProjectFragment) element).getRawBuildpathEntry();
-					if (entry != null && entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+					IBuildpathEntry entry = ((IProjectFragment) element)
+							.getRawBuildpathEntry();
+					if (entry != null
+							&& entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 						return false;
 					}
 				} else if (element instanceof IncludePath) {
@@ -125,5 +137,4 @@ public class RemoveFromIncludepathAction extends Action implements ISelectionCha
 		}
 		return false;
 	}
-
 }
