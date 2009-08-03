@@ -98,7 +98,7 @@ public class FileNetworkUtility {
 		Node root = new Node(file);
 
 		internalBuildReferencingFilesTree(root, processedFiles,
-				new HashMap<IDLTKSearchScope, IField[]>(), monitor);
+				new HashMap<IModelElement, IField[]>(), monitor);
 
 		return new ReferenceTree(root);
 	}
@@ -138,8 +138,7 @@ public class FileNetworkUtility {
 
 	private static void internalBuildReferencingFilesTree(Node root,
 			Set<ISourceModule> processedFiles,
-			Map<IDLTKSearchScope, IField[]> includesCache,
-			IProgressMonitor monitor) {
+			Map<IModelElement, IField[]> includesCache, IProgressMonitor monitor) {
 
 		if (monitor != null && monitor.isCanceled()) {
 			return;
@@ -151,11 +150,15 @@ public class FileNetworkUtility {
 			return;
 		}
 
-		IField[] includes = includesCache.get(scope);
+		IModelElement parentElement = (file instanceof ExternalSourceModule) ? ((ExternalSourceModule) file)
+				.getProjectFragment()
+				: file.getScriptProject();
+
+		IField[] includes = includesCache.get(parentElement);
 		if (includes == null) {
 			includes = PhpModelAccess.getDefault().findIncludes(null,
 					MatchRule.PREFIX, scope, monitor);
-			includesCache.put(scope, includes);
+			includesCache.put(parentElement, includes);
 		}
 
 		for (IField include : includes) {
