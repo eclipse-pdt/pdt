@@ -16,10 +16,9 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -68,10 +67,19 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 
-		IDLTKSearchScope scope = createSearchScope();
-		IField[] fields = PhpModelAccess.getDefault().findFields(prefix,
-				matchRule, Modifiers.AccGlobal, Modifiers.AccConstant, scope,
-				null);
+		IField[] fields;
+		if (showVarsFromOtherFiles()) {
+			IDLTKSearchScope scope = createSearchScope();
+			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule,
+					Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
+		} else {
+			try {
+				fields = abstractContext.getSourceModule().getFields();
+			} catch (ModelException e) {
+				PHPCorePlugin.log(e);
+				return;
+			}
+		}
 
 		SourceRange replaceRange = getReplacementRange(context);
 		for (IModelElement var : fields) {
@@ -95,14 +103,5 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES,
 				true, null);
-	}
-
-	protected IDLTKSearchScope createSearchScope() {
-		if (showVarsFromOtherFiles()) {
-			return super.createSearchScope();
-		}
-		ISourceModule sourceModule = ((AbstractCompletionContext) getContext())
-				.getSourceModule();
-		return SearchEngine.createSearchScope(sourceModule);
 	}
 }
