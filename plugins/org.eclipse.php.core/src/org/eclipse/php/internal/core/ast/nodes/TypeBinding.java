@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -37,6 +35,7 @@ public class TypeBinding implements ITypeBinding {
 	private ITypeBinding[] interfaces;
 	private IVariableBinding[] fields;
 	private IMethodBinding[] methods;
+	private Map<IType, ITypeHierarchy> hierarchy = new HashMap<IType, ITypeHierarchy>();
 
 	/**
 	 * Constructs a new TypeBinding.
@@ -629,8 +628,13 @@ public class TypeBinding implements ITypeBinding {
 						|| type.getSuperClasses().length == 0) {
 					return false;
 				}
-				ITypeHierarchy supertypeHierarchy = type
-						.newSupertypeHierarchy(new NullProgressMonitor());
+
+				ITypeHierarchy supertypeHierarchy = hierarchy.get(type);
+				if (supertypeHierarchy == null) {
+					supertypeHierarchy = type
+							.newSupertypeHierarchy(new NullProgressMonitor());
+					hierarchy.put(type, supertypeHierarchy);
+				}
 				IModelElement[] otherElements = ((TypeBinding) otherType).elements;
 				if (otherElements != null) {
 					for (IModelElement modelElement : otherElements) {
