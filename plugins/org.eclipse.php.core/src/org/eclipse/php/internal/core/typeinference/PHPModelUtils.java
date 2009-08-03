@@ -655,6 +655,43 @@ public class PHPModelUtils {
 	};
 
 	/**
+	 * This method searches for all global fields that where declared in the
+	 * specified file.
+	 * 
+	 * @param sourceModule
+	 *            Source module to look at
+	 * @param prefix
+	 *            Field name
+	 * @param exactName
+	 *            Whether the name is exact or it is prefix
+	 * @param monitor
+	 *            Progress monitor
+	 */
+	public static IField[] getFileFields(final ISourceModule sourceModule,
+			final String prefix, final boolean exactName,
+			IProgressMonitor monitor) {
+
+		final List<IField> elements = new LinkedList<IField>();
+		try {
+			IField[] sourceModuleFields = sourceModule.getFields();
+			for (IField field : sourceModuleFields) {
+				String elementName = field.getElementName();
+				if (exactName
+						&& elementName.equalsIgnoreCase(prefix)
+						|| !exactName
+						&& elementName.toLowerCase().startsWith(
+								prefix.toLowerCase())) {
+					elements.add(field);
+				}
+			}
+		} catch (Exception e) {
+			PHPCorePlugin.log(e);
+		}
+
+		return elements.toArray(new IField[elements.size()]);
+	}
+
+	/**
 	 * This method returns field declared unders specified namespace
 	 * 
 	 * @param namespace

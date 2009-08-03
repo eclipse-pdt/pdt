@@ -16,7 +16,6 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -32,6 +31,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
 import org.eclipse.php.internal.core.language.PHPVariables;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeField;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This strategy completes global variables including constants
@@ -81,12 +81,8 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule,
 					Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
 		} else {
-			try {
-				fields = abstractContext.getSourceModule().getFields();
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-				return;
-			}
+			fields = PHPModelUtils.getFileFields(abstractContext
+					.getSourceModule(), prefix, false, null);
 		}
 
 		SourceRange replaceRange = getReplacementRange(context);

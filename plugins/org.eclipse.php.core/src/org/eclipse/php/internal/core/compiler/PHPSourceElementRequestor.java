@@ -527,11 +527,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				}
 			}
 		} else if (left instanceof VariableReference) {
-
-			if (!declarations.empty()
-					&& declarations.peek() instanceof MethodDeclaration) {
-				if (methodGlobalVars.peek().contains(
-						((VariableReference) left).getName())) {
+			if (!declarations.empty()) {
+				Declaration parentDeclaration = declarations.peek();
+				if (parentDeclaration instanceof MethodDeclaration
+						&& methodGlobalVars.peek().contains(
+								((VariableReference) left).getName())
+						|| parentDeclaration == fLastNamespace) {
 					deferredDeclarations.add(assignment);
 					return false;
 				}
