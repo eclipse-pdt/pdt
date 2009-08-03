@@ -1,0 +1,6 @@
+--TEST--
+Test Variable Inside String
+--FILE--
+<? list($myGlobalVar) = 0; echo "$my|"; ?>
+--EXPECT--
+field($myGlobalVar)
