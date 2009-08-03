@@ -40,9 +40,17 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  */
 public class GlobalVariablesStrategy extends GlobalElementStrategy {
 
+	private boolean showPhpVariables = true;
+
 	public GlobalVariablesStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
 		super(context, elementFilter);
+	}
+
+	public GlobalVariablesStrategy(ICompletionContext context,
+			boolean showPhpVariables) {
+		super(context);
+		this.showPhpVariables = showPhpVariables;
 	}
 
 	public GlobalVariablesStrategy(ICompletionContext context) {
@@ -86,14 +94,17 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 			reporter.reportField((IField) var, "", replaceRange, false);
 		}
 
-		PHPVersion phpVersion = abstractContext.getPhpVersion();
-		for (String variable : PHPVariables.getVariables(phpVersion)) {
-			if (variable.startsWith(prefix)) {
-				if (!requestor.isContextInformationMode()
-						|| variable.length() == prefix.length()) {
-					reporter.reportField(new FakeField(
-							(ModelElement) abstractContext.getSourceModule(),
-							variable, 0, 0), "", replaceRange, false); // NON-NLS-1
+		if (showPhpVariables) {
+			PHPVersion phpVersion = abstractContext.getPhpVersion();
+			for (String variable : PHPVariables.getVariables(phpVersion)) {
+				if (variable.startsWith(prefix)) {
+					if (!requestor.isContextInformationMode()
+							|| variable.length() == prefix.length()) {
+						reporter.reportField(new FakeField(
+								(ModelElement) abstractContext
+										.getSourceModule(), variable, 0, 0),
+								"", replaceRange, false); // NON-NLS-1
+					}
 				}
 			}
 		}
