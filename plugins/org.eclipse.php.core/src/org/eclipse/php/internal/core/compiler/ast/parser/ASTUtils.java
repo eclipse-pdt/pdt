@@ -84,14 +84,6 @@ public class ASTUtils {
 				if (s instanceof Block) {
 					realStart = realEnd = -42; // never select on blocks
 					// ssanders: BEGIN - Modify narrowing logic
-				} else if (s instanceof TypeDeclaration) {
-					TypeDeclaration declaration = (TypeDeclaration) s;
-					realStart = declaration.sourceStart();
-					realEnd = declaration.sourceEnd();
-				} else if (s instanceof MethodDeclaration) {
-					MethodDeclaration declaration = (MethodDeclaration) s;
-					realStart = declaration.sourceStart();
-					realEnd = declaration.sourceEnd();
 				}
 				if (realStart <= start && realEnd >= end) {
 					if (result != null) {
