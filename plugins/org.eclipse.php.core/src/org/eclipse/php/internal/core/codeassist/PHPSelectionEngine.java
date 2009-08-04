@@ -17,7 +17,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -330,7 +332,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 					}
 					return types;
-				} else if (node instanceof ClassInstanceCreation) {
+				}
+				// 'new' statement
+				else if (node instanceof ClassInstanceCreation) {
 					ClassInstanceCreation newNode = (ClassInstanceCreation) node;
 					Expression className = newNode.getClassName();
 					if (className instanceof SimpleReference) {
@@ -339,6 +343,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								: ((SimpleReference) className).getName();
 						return getConstructorsIfAny(extractClasses(PHPModelUtils
 								.getTypes(name, sourceModule, offset, null)));
+					}
+				}
+				// Class name in declaration
+				else if (node instanceof TypeDeclaration
+						|| node instanceof MethodDeclaration) {
+					IModelElement element = sourceModule.getElementAt(node
+							.sourceStart());
+					if (element != null) {
+						return new IModelElement[] { element };
 					}
 				}
 			}
