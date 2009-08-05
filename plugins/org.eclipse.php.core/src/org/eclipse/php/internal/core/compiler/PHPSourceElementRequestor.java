@@ -607,24 +607,22 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(node);
 		}
-
-		Class<?> statementClass = node.getClass();
-		if (statementClass.equals(PHPFieldDeclaration.class)) {
+		if (node instanceof PHPFieldDeclaration) {
 			return visit((PHPFieldDeclaration) node);
 		}
-		if (statementClass.equals(FieldDeclaration.class)) {
+		if (node instanceof FieldDeclaration) {
 			return visit((FieldDeclaration) node);
 		}
-		if (statementClass.equals(ConstantDeclaration.class)) {
+		if (node instanceof ConstantDeclaration) {
 			return visit((ConstantDeclaration) node);
 		}
-		if (statementClass.equals(CatchClause.class)) {
+		if (node instanceof CatchClause) {
 			return visit((CatchClause) node);
 		}
-		if (statementClass.equals(ForEachStatement.class)) {
+		if (node instanceof ForEachStatement) {
 			return visit((ForEachStatement) node);
 		}
-		if (statementClass.equals(GlobalStatement.class)) {
+		if (node instanceof GlobalStatement) {
 			return visit((GlobalStatement) node);
 		}
 		return true;
@@ -634,21 +632,19 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(node);
 		}
-
-		Class<?> statementClass = node.getClass();
-		if (statementClass.equals(PHPFieldDeclaration.class)) {
+		if (node instanceof PHPFieldDeclaration) {
 			return endvisit((PHPFieldDeclaration) node);
 		}
-		if (statementClass.equals(FieldDeclaration.class)) {
+		if (node instanceof FieldDeclaration) {
 			return endvisit((FieldDeclaration) node);
 		}
-		if (statementClass.equals(ConstantDeclaration.class)) {
+		if (node instanceof ConstantDeclaration) {
 			return endvisit((ConstantDeclaration) node);
 		}
-		if (statementClass.equals(CatchClause.class)) {
+		if (node instanceof CatchClause) {
 			return endvisit((CatchClause) node);
 		}
-		if (statementClass.equals(ForEachStatement.class)) {
+		if (node instanceof ForEachStatement) {
 			return endvisit((ForEachStatement) node);
 		}
 		return true;
@@ -658,21 +654,19 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(node);
 		}
-
-		Class<?> expressionClass = node.getClass();
-		if (expressionClass.equals(Assignment.class)) {
+		if (node instanceof Assignment) {
 			return visit((Assignment) node);
 		}
-		if (expressionClass.equals(ListVariable.class)) {
+		if (node instanceof ListVariable) {
 			return visit((ListVariable) node);
 		}
-		if (expressionClass.equals(TypeReference.class)) {
+		if (node instanceof TypeReference) {
 			return visit((TypeReference) node);
 		}
-		if (expressionClass.equals(Include.class)) {
+		if (node instanceof Include) {
 			return visit((Include) node);
 		}
-		if (expressionClass.equals(PHPCallExpression.class)) {
+		if (node instanceof PHPCallExpression) {
 			return visit((PHPCallExpression) node);
 		}
 		return true;
@@ -682,12 +676,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(node);
 		}
-
-		Class<?> expressionClass = node.getClass();
-		if (expressionClass.equals(Assignment.class)) {
+		if (node instanceof Assignment) {
 			return endvisit((Assignment) node);
 		}
-		if (expressionClass.equals(ListVariable.class)) {
+		if (node instanceof ListVariable) {
 			return endvisit((ListVariable) node);
 		}
 		return true;
