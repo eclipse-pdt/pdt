@@ -14,7 +14,6 @@ package org.eclipse.php.internal.ui.editor.adapter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.internal.ui.search.DLTKSearchPageScoreComputer;
@@ -24,33 +23,41 @@ import org.eclipse.search.ui.ISearchPageScoreComputer;
 import org.eclipse.ui.IActionFilter;
 
 /**
- * This adapter factory class is used to create a GenericActionFilter
- * when performing a right-click within the editor
+ * This adapter factory class is used to create a GenericActionFilter when
+ * performing a right-click within the editor
+ * 
  * @author yaronm
  */
 public class PhpElementAdapterFactory implements IAdapterFactory {
 
-	private static Map<Class<?>, Object> adapterType2Object = new HashMap<Class<?>, Object>(4);
+	private static Map<Class<?>, Object> adapterType2Object = new HashMap<Class<?>, Object>(
+			4);
 	static {
 		adapterType2Object.put(IActionFilter.class, new GenericActionFilter());
-		adapterType2Object.put(ISearchPageScoreComputer.class, new DLTKSearchPageScoreComputer());
+		adapterType2Object.put(ISearchPageScoreComputer.class,
+				new DLTKSearchPageScoreComputer());
 	}
 
 	public PhpElementAdapterFactory() {
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adaptableObject instanceof IImplForPhp) {
 			if (adapterType == IModelElement.class) {
 				return ((IImplForPhp) adaptableObject).getModelElement();
 			}
-			if (adapterType == IResource.class) {
-				IModelElement modelElement = ((IImplForPhp) adaptableObject).getModelElement();
-				if (modelElement != null) {
-					return modelElement.getResource();
-				}
-			}
+			// commenting the next block of code fixes these bugs
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=257421
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=257681
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=271734
+
+			// if (adapterType == IResource.class) {
+			// IModelElement modelElement = ((IImplForPhp)
+			// adaptableObject).getModelElement();
+			// if (modelElement != null) {
+			// return modelElement.getResource();
+			// }
+			// }
 		}
 		return adapterType2Object.get(adapterType);
 	}

@@ -664,11 +664,17 @@
 			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
 			<adapter type="org.eclipse.dltk.core.IModelElement" />
 		</factory>
+		<!--
+//			commenting the next block of code fixes these bugs			
+//			https://bugs.eclipse.org/bugs/show_bug.cgi?id=257421
+//			https://bugs.eclipse.org/bugs/show_bug.cgi?id=257681
+//			https://bugs.eclipse.org/bugs/show_bug.cgi?id=271734	
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
 			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
 			<adapter type="org.eclipse.core.resources.IResource" />
 		</factory>
+		-->
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
 			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
@@ -684,11 +690,17 @@
 			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
 			<adapter type="org.eclipse.dltk.core.IModelElement" />
 		</factory>
+		<!--
+//			commenting the next block of code fixes these bugs			
+//			https://bugs.eclipse.org/bugs/show_bug.cgi?id=257421
+//			https://bugs.eclipse.org/bugs/show_bug.cgi?id=257681
+//			https://bugs.eclipse.org/bugs/show_bug.cgi?id=271734		
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
 			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
 			<adapter type="org.eclipse.core.resources.IResource" />
 		</factory>
+		-->
 	</extension>
 
 	<!-- Editor actionsets -->
