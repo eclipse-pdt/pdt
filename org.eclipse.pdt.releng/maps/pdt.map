@@ -20,6 +20,7 @@ plugin@org.eclipse.php.server.ui=v20090811-1641,:pserver:anonymous@dev.eclipse.o
 plugin@org.eclipse.php.ui=v20090811-1641,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.ui
 plugin@org.eclipse.php.help=v20090811-1641,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.help
 plugin@org.eclipse.php.core.tests=v20090811-1641,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/tests/org.eclipse.php.core.tests
+plugin@org.h2.core=v20090811-2019,:pserver:anonymous@dev.eclipse.org:/cvsroot/technology,,org.eclipse.dltk/external/plugins/org.h2.core
 
 !*** Mylyn bridge
 feature@org.eclipse.php.mylyn=v20090811-1641,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.mylyn-feature
