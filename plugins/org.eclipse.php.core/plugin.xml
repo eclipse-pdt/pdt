@@ -300,13 +300,30 @@
             targetId="org.eclipse.dltk.core.index.sql.indexer">
       </indexerParticipant>
    </extension>
+   
+   <extension
+         point="org.eclipse.dltk.core.projectIndexer">
+      <projectIndexer
+            class="org.eclipse.dltk.core.index2.ProjectIndexer2"
+            nature="#">
+      </projectIndexer>
+	</extension>
+   
+   
    <extension
          point="org.eclipse.dltk.core.projectIndexer">
       <disable
+      		nature="org.eclipse.php.core.PHPNature"
             class="org.eclipse.dltk.internal.core.structure.StructureProjectIndexer">
+            
       </disable>
       <disable
+      		nature="org.eclipse.php.core.PHPNature"
             class="org.eclipse.dltk.internal.core.mixin.MixinProjectIndexer">
       </disable>
+      <projectIndexer
+      		nature="org.eclipse.php.core.PHPNature"
+            class="org.eclipse.dltk.core.index2.ProjectIndexer2">
+      </projectIndexer>
    </extension>
 </plugin>
