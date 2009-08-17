@@ -1,0 +1,12 @@
+--TEST--
+Should complete sub-namespaces using prefix (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=267805)
+--FILE--
+<?php
+namespace A {
+   function foo() { $a = new \DOMDocume|  }
+}
+?>
+--EXPECT--
+type(DOMDocument)
+type(DOMDocumentFragment)
+type(DOMDocumentType)

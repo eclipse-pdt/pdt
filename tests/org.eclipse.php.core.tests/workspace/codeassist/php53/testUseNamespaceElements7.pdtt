@@ -1,0 +1,22 @@
+--TEST--
+Use statement test.
+Case with leading slash, nested, with tail slash
+--FILE--
+<?php
+namespace NS1 {	class A {}	}
+namespace NS2 {	class A {}	}
+
+namespace NS1\NS11 { class Foo {} }
+namespace NS1\NS12 { class Foo {} }
+
+namespace NS2\NS21 { class Foo {} }
+namespace NS2\NS22 { class Foo {} }
+
+namespace test{
+	use \NS1\|
+}
+?>
+--EXPECT--
+type(A)
+type(NS1\NS11)
+type(NS1\NS12)
