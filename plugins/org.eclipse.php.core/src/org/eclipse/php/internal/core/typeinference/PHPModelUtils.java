@@ -11,15 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.internal.resources.Workspace;
+import org.eclipse.core.internal.resources.WorkspaceRoot;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -522,7 +520,7 @@ public class PHPModelUtils {
 	/**
 	 * This method returns type corresponding to its name and the file where it was referenced.
 	 * The type name may contain also the namespace part, like: A\B\C or \A\B\C
-	 * @param typeName Tye fully qualified type name
+	 * @param typeName fully qualified type name
 	 * @param sourceModule The file where the element is referenced
 	 * @param offset The offset where the element is referenced
 	 * @return a list of relevant IType elements, or <code>null</code> in case there's no IType found
@@ -541,7 +539,6 @@ public class PHPModelUtils {
 				if (namespaceType != null) {
 					return new IType[] { namespaceType };
 				}
-				return null;
 			}
 			// it's a global reference: \A
 		} else {
@@ -553,7 +550,6 @@ public class PHPModelUtils {
 				if (namespaceType != null) {
 					return new IType[] { namespaceType };
 				}
-				return null;
 			}
 		}
 	
@@ -731,6 +727,11 @@ public class PHPModelUtils {
 
 		int nsIndex = elementName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 		if (nsIndex != -1) {
+			if(elementName.length() == 1) {
+				//global namespace
+				return new String (new char[]{NamespaceReference.NAMESPACE_SEPARATOR});
+			}
+			
 			String namespace = elementName.substring(0, nsIndex);
 			if (isGlobal && namespace.length() > 0) {
 				namespace = namespace.substring(1);
@@ -1015,6 +1016,20 @@ public class PHPModelUtils {
 	 * @return namespace element array
 	 */
 	public static IType[] getNamespaces(String prefix, int matchRule, final IDLTKSearchScope scope) {
+		if ("\\".equals(prefix)) {
+			IPath[] paths = scope.enclosingProjectsAndZips();
+			List<IType> globalNamespaces = new ArrayList<IType>();
+			for (IPath path : paths) {
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+				IModelElement modelElement = DLTKCore.create(resource);
+				if (modelElement instanceof IScriptProject) {
+					IScriptProject scriptProject = (IScriptProject) modelElement;
+					globalNamespaces.add((IType) new GlobalNamespace(scriptProject));
+				}
+			}
+			return (IType[]) globalNamespaces.toArray(new IType[globalNamespaces.size()]);
+		}
+		
 		IType[] types = getTypes(prefix, matchRule, scope);
 		List<IType> result = new LinkedList<IType>();
 		for (IType type : types) {
