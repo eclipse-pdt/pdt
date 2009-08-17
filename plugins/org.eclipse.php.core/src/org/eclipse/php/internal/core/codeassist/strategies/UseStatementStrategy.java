@@ -15,47 +15,41 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This strategy completes namespaces 
  * @author michael
  */
-public class NamespacesStrategy extends GlobalTypesStrategy {
+public class UseStatementStrategy extends GlobalTypesStrategy {
 
-	public NamespacesStrategy(ICompletionContext context) {
-		super(context, new IElementFilter() {
-			public boolean filter(IModelElement element) {
-				try {
-					int flags = ((IType)element).getFlags();
-					return !(PHPFlags.isNamespace(flags) || PHPFlags.isClass(flags));
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
-				}
-				return false;
-			}
-		});
+	public UseStatementStrategy(ICompletionContext context) {
+		super(context, null);
 	}
 	
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
-	}
-	
+	}	
+
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		return ""; //$NON-NLS-1$
+	}	
 	
 	@Override
 	protected IType[] getTypes(AbstractCompletionContext context) throws BadLocationException {
-		int mask = CodeAssistUtils.EXCLUDE_CONSTANTS | CodeAssistUtils.EXCLUDE_INTERFACES| CodeAssistUtils.EXCLUDE_VARIABLES;
+		int mask = CodeAssistUtils.EXCLUDE_CONSTANTS | CodeAssistUtils.EXCLUDE_VARIABLES;
 		if (context.getCompletionRequestor().isContextInformationMode()) {
 			mask |= CodeAssistUtils.EXACT_NAME;
 		}
 		String prefix = context.getPrefix();
-			
 		if("\\".equals(prefix)) {
 			return CodeAssistUtils.getGlobalTypes(context.getSourceModule(), "", mask);
 		}

@@ -58,9 +58,13 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	public SourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
+		String prefix = completionContext.getPrefix();
 
-		int length = completionContext.getPrefix().length();
-		int start = completionContext.getOffset() - length;
+		int length = prefix.length();
+		int start = completionContext.getOffset();
+		if(!("\\".equals(prefix))) {
+			start -= length;
+		}
 		int prefixEnd = completionContext.getPrefixEnd();
 
 		if (start + length < prefixEnd) {
