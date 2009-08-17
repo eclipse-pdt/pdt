@@ -41,6 +41,10 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 		if (word.startsWith("$") && !prefix.startsWith("$")) {
 			word = word.substring(1);
 		}
+		
+		if(prefix.startsWith("\\")) {
+			word = "\\" + word;
+		}
 		return isPrefix(prefix, word);
 	}
 	
