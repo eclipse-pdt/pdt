@@ -258,6 +258,9 @@ public class PHPTextSequenceUtilities {
 					onWhitespace = false;
 				}
 				else if (Character.isWhitespace(ch)) {
+					if (onBackslash) {
+						break;
+					}
 					onWhitespace = true;
 					onBackslash = false;
 				}
@@ -298,6 +301,9 @@ public class PHPTextSequenceUtilities {
 					onWhitespace = false;
 				}
 				else if (Character.isWhitespace(ch)) {
+					if (onBackslash) {
+						break;
+					}
 					onWhitespace = true;
 					onBackslash = false;
 				}
