@@ -270,6 +270,22 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						String name = (className instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) className).getFullyQualifiedName() : ((SimpleReference) className).getName();
 						return getConstructorsIfAny(extractClasses(PHPModelUtils.getTypes(name, sourceModule, offset)));
 					}
+				}else if (node instanceof ReflectionCallExpression) {
+					ReflectionCallExpression newNode = (ReflectionCallExpression)node;
+					Expression name = newNode.getName();
+					IEvaluatedType resolvedExpression = PHPTypeInferenceUtils.resolveExpression(sourceModule, name);
+					IType[] modelElements = PHPTypeInferenceUtils.getModelElements(resolvedExpression, (ISourceModuleContext) context, offset);
+					List<IMethod> result = new ArrayList<IMethod>();
+					if(modelElements != null && modelElements.length >0 ) {
+						for (IType element : modelElements) {
+							IMethod[] methods = element.getMethods();
+							IMethod invokeMethod = element.getMethod("__invoke"); 
+							if(invokeMethod != null) {
+								result.add(invokeMethod);
+							}
+						}
+					}
+					return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
 				}
 			}
 		}
@@ -294,10 +310,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 					// Determine element name:
 					int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
-					TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + tRegion.getLength(), sRegion, true);
+					TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + 1, sRegion, true);
 					int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
 					int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement, endPosition, true);
 					String elementName = statement.subSequence(startPosition, endPosition).toString();
+					
+					if("\\".equals(elementName)) {
+						return EMPTY;
+					}
 
 					// Determine previous word:
 					int prevWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, startPosition);

@@ -58,25 +58,20 @@ public class NamespaceMemberContext extends StatementContext {
 			return false;
 		}
 
-		String triggerText = statementText.subSequence(elementStart - 1, elementStart).toString();
-		if (!triggerText.equals("\\")) {
-			return false;
-		}
-		
 		isGlobal = false;
 		if (elementStart == 1) {
 			isGlobal = true;
 			return true;
 		}
-		
-		int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart - 1);
+
+		int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart);
 		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace, false);
-		String nsName = statementText.subSequence(nsNameStart, elementStart).toString();
-		
+		String nsName = statementText.subSequence(nsNameStart, endPosition).toString();
+
 		namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule, offset);
-		return true;
+		return namespaces != null && namespaces.length > 0;
 	}
-	
+
 	/**
 	 * Returns the start position of class/object element relative to the text sequence.
 	 * @see #getStatementText()
@@ -84,21 +79,21 @@ public class NamespaceMemberContext extends StatementContext {
 	public int getElementStart() {
 		return elementStart;
 	}
-	
+
 	/**
 	 * Returns the left hand side possible namespace elements.
 	 */
 	public IType[] getNamespaces() {
 		return namespaces;
 	}
-	
+
 	/**
 	 * Returns whether the namespace is global (only the '\' presents in the left side)
 	 */
 	public boolean isGlobal() {
 		return isGlobal;
 	}
-	
+
 	public String getPrefix() throws BadLocationException {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$
