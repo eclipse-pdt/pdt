@@ -1,0 +1,12 @@
+--TEST--
+Bug 285422 - [php 5.3] magic method __invoke() is ignored
+--FILE--
+<?php 
+class MyCustomClosure { 
+   function __invoke() { echo "hello"; } 
+} 
+$closure = new MyCustomClosure(); 
+|$closure|();
+?>
+--EXPECT--
+method(__invoke)
