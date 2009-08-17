@@ -19,7 +19,6 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
@@ -59,15 +58,20 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 		String prefix = context.getPrefix();
 
 		List<IType> result = new LinkedList<IType>();
-		for (IType ns : context.getNamespaces()) {
-			try {
-				for (IType type : ns.getTypes()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), prefix)) {
-						result.add(type);
+		IType[] namespaces = context.getNamespaces();
+		if(namespaces != null && namespaces.length > 0) {
+			for (IType ns : namespaces) {
+				try {
+					for (IType type : ns.getTypes()) {
+						if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), prefix)) {
+							result.add(type);
+						}
+					}
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
 					}
 				}
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
 			}
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
@@ -86,7 +90,9 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
-			PHPCorePlugin.log(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
