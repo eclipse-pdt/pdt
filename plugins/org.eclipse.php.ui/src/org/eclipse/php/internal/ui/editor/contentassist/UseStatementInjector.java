@@ -24,6 +24,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -130,7 +131,25 @@ public class UseStatementInjector {
 
 							// find existing use statement:
 							UsePart usePart = ASTUtils.findUseStatementByNamespace(moduleDeclaration, namespaceName, offset);
-							if (usePart == null) {
+							
+							//"use NS" should be injected if still not exists
+							boolean isNamespaceAlreayUsed = false;
+							if (usePart != null) {
+								List childs = usePart.getChilds();
+								for (Object child : childs) {
+									if(child instanceof FullyQualifiedReference) {
+										FullyQualifiedReference nsRef = (FullyQualifiedReference) child;
+										String fullyQualifiendNamespaceName = nsRef.getFullyQualifiedName();
+										if(fullyQualifiendNamespaceName.equals(namespaceName)) {
+											isNamespaceAlreayUsed = true;
+											break;
+										}
+									}
+								}
+							}
+							
+							//if no not exists in use clause, inject it
+							if (!isNamespaceAlreayUsed) {
 								ASTParser parser = ASTParser.newParser(sourceModule);
 								parser.setSource(document.get().toCharArray());
 
