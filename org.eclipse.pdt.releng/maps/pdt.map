@@ -5,7 +5,7 @@ plugin@org.eclipse.test=v20081002,:pserver:anonymous@dev.eclipse.org:/cvsroot/ec
 fragment@org.eclipse.ant.optional.junit=v20080717,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
 
 !*** Project's plugins, features and fragments
-feature@org.eclipse.php=v20090819-1900,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php-feature
+feature@org.eclipse.php=v20090820-1700,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php-feature
 feature@org.eclipse.php.sdk=v20090625-0930,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.sdk-feature
 feature@org.eclipse.php.all=v20090625-0930,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.all-feature
 feature@org.eclipse.php.test=v20090625-0930,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.test-feature
