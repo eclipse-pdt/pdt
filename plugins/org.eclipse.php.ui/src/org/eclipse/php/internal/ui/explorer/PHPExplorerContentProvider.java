@@ -46,6 +46,7 @@ import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.jsdt.core.*;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.ui.project.JsNature;
 
 /**
@@ -56,10 +57,13 @@ import org.eclipse.wst.jsdt.ui.project.JsNature;
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		implements IIncludepathListener /* , IResourceChangeListener */{
 
+	StandardJavaScriptElementContentProvider jsContentProvider;
+
 	public PHPExplorerContentProvider(boolean provideMembers) {
 		super(provideMembers);
 		IncludePathManager.getInstance().registerIncludepathListener(this);
 		setIsFlatLayout(false);
+		jsContentProvider = new StandardJavaScriptElementContentProvider(true);
 	}
 
 	public void setIsFlatLayout(final boolean state) {
@@ -94,6 +98,10 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		if (parentElement instanceof PackageFragmentRootContainer) {
 			return getContainerPackageFragmentRoots(
 					(PackageFragmentRootContainer) parentElement, true);
+		}
+
+		if (parentElement instanceof org.eclipse.wst.jsdt.core.IJavaScriptElement) {
+			return jsContentProvider.getChildren(parentElement);
 		}
 
 		try {
