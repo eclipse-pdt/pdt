@@ -23,19 +23,46 @@ import org.w3c.dom.Node;
 public class DBGpStringValue extends DBGpValue {
 
 	private boolean complete = false;
-	private int requiredBytes; 
+	private int requiredBytes;
 	private IVariable[] stringInfo = null;
-	
+
 	/**
 	 * 
 	 * @param owningVariable
 	 * @param property
-	 * @param strByteLen if set to -1, always states we don't have the complete string
+	 * @param strByteLen
+	 *            if set to -1, always states we don't have the complete string
 	 */
-	public DBGpStringValue(DBGpVariable owningVariable, Node property, int strByteLen) {
+	public DBGpStringValue(DBGpVariable owningVariable, Node property,
+			int strByteLen) {
 		super(owningVariable);
 		setModifiable(true);
 		simpleParseNode(property);
+		if (getValueBytes() == null) {
+			// we didn't get a binary representation, so we must create one
+			String XMLEncoding = property.getOwnerDocument().getInputEncoding();
+			if (XMLEncoding == null) {
+				XMLEncoding = ((DBGpTarget) getDebugTarget())
+						.getBinaryEncoding();
+			}
+			try {
+				setValueBytes(getValueString().getBytes(XMLEncoding));
+			} catch (UnsupportedEncodingException uee) {
+				DBGpLogger.logException("unexpected encoding problem", this,
+						uee);
+				// use the platform encoding
+				try {
+					setValueBytes(getValueString().getBytes());
+				} catch (DebugException e) {
+					DBGpLogger.logException("unexpected exception", this, e);
+					setValueBytes(new byte[0]);
+				}
+			} catch (DebugException e) {
+				DBGpLogger.logException("unexpected exception", this, e);
+				setValueBytes(new byte[0]);
+			}
+		}
+
 		int actualLength = getValueBytes().length;
 		complete = actualLength >= strByteLen;
 		requiredBytes = strByteLen;
@@ -43,7 +70,9 @@ public class DBGpStringValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
 		return DBGpVariable.PHP_STRING;
@@ -54,7 +83,8 @@ public class DBGpStringValue extends DBGpValue {
 		if (data != null && data.trim().length() > 0) {
 			setValueString(data);
 		} else {
-			// if we have no data, then we have an empty string. Could confirm this
+			// if we have no data, then we have an empty string. Could confirm
+			// this
 			// with the length.
 			setValueString(""); //$NON-NLS-1$
 			setValueBytes(new byte[0]);
@@ -63,7 +93,10 @@ public class DBGpStringValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.String
+	 * )
 	 */
 	public void setValue(String expression) throws DebugException {
 		stringInfo = null;
@@ -74,10 +107,11 @@ public class DBGpStringValue extends DBGpValue {
 		}
 		byte[] newBytes;
 		try {
-			newBytes = expression.getBytes(((DBGpTarget)getDebugTarget()).getBinaryEncoding());
+			newBytes = expression.getBytes(((DBGpTarget) getDebugTarget())
+					.getBinaryEncoding());
 		} catch (UnsupportedEncodingException e) {
 			DBGpLogger.logException("unexpected encoding problem", this, e); //$NON-NLS-1$
-			newBytes = expression.getBytes();			
+			newBytes = expression.getBytes();
 		}
 		setValueBytes(newBytes);
 		requiredBytes = newBytes.length;
@@ -85,7 +119,10 @@ public class DBGpStringValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang
+	 * .String)
 	 */
 	boolean verifyValue(String expression) throws DebugException {
 		// any string is ok
@@ -102,16 +139,21 @@ public class DBGpStringValue extends DBGpValue {
 
 	@Override
 	public IVariable[] getVariables() throws DebugException {
-		
+
 		if (stringInfo == null) {
 			int arrayLength = getValueBytes().length;
-			//stringInfo = createVariables(getValueBytes(), 0, arrayLength, 1, getDebugTarget());
-			stringInfo = SimpleByteArrayValue.createVariables(getValueBytes(), 0, arrayLength, 1, getDebugTarget());
-			
+			// stringInfo = createVariables(getValueBytes(), 0, arrayLength, 1,
+			// getDebugTarget());
+			stringInfo = SimpleByteArrayValue.createVariables(getValueBytes(),
+					0, arrayLength, 1, getDebugTarget());
+
 			// add in the current length (real length) information
-			IValue iv = new SimpleIntValue(arrayLength, getRequiredBytes(), getDebugTarget());
-			//length
-			stringInfo[0] = new SimpleVariable(PHPDebugCoreMessages.XDebug_DBGpStringValue_0, iv, getDebugTarget()); //$NON-NLS-1$
+			IValue iv = new SimpleIntValue(arrayLength, getRequiredBytes(),
+					getDebugTarget());
+			// length
+			stringInfo[0] = new SimpleVariable(
+					PHPDebugCoreMessages.XDebug_DBGpStringValue_0, iv,
+					getDebugTarget()); //$NON-NLS-1$
 		}
 		return stringInfo;
 	}
