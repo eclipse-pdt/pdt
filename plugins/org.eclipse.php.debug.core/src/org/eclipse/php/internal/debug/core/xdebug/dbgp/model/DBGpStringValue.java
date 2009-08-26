@@ -36,6 +36,30 @@ public class DBGpStringValue extends DBGpValue {
 		super(owningVariable);
 		setModifiable(true);
 		simpleParseNode(property);
+		if (getValueBytes() == null) {
+			// we didn't get a binary representation, so we must create one
+			String XMLEncoding = property.getOwnerDocument().getInputEncoding();
+			if (XMLEncoding == null) {
+				XMLEncoding = ((DBGpTarget) getDebugTarget())
+						.getBinaryEncoding();
+			}
+			try {
+				setValueBytes(getValueString().getBytes(XMLEncoding));
+			} catch (UnsupportedEncodingException uee) {
+				DBGpLogger.logException("unexpected encoding problem", this,
+						uee);
+				// use the platform encoding
+				try {
+					setValueBytes(getValueString().getBytes());
+				} catch (DebugException e) {
+					DBGpLogger.logException("unexpected exception", this, e);
+					setValueBytes(new byte[0]);
+				}
+			} catch (DebugException e) {
+				DBGpLogger.logException("unexpected exception", this, e);
+				setValueBytes(new byte[0]);
+			}
+		}		
 		int actualLength = getValueBytes().length;
 		complete = actualLength >= strByteLen;
 		requiredBytes = strByteLen;
