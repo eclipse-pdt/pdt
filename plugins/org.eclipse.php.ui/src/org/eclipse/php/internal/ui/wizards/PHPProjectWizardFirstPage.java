@@ -56,7 +56,8 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 /**
  * The first page of the <code>SimpleProjectWizard</code>.
  */
-public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProjectCreateWizardPage {
+public class PHPProjectWizardFirstPage extends WizardPage implements
+		IPHPProjectCreateWizardPage {
 	public PHPProjectWizardFirstPage() {
 		super(PAGE_NAME);
 		setPageComplete(false);
@@ -66,6 +67,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	}
 
 	private static final String PAGE_NAME = NewWizardMessages.ScriptProjectWizardFirstPage_page_pageName;
+	public static final String ERROR_MESSAGE = "ErrorMessage";
 
 	protected Validator fPdtValidator;
 	protected String fInitialName;
@@ -109,12 +111,13 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		// set the focus to the project name
 		fNameGroup.postSetFocus();
-		
+
 		setHelpContext(composite);
 	}
 
 	protected void setHelpContext(Composite parent) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.CREATING_PHP_PROJECTS);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.CREATING_PHP_PROJECTS);
 	}
 
 	public URI getLocationURI() {
@@ -138,7 +141,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	 * @return the new project resource handle
 	 */
 	public IProject getProjectHandle() {
-		return ResourcesPlugin.getWorkspace().getRoot().getProject(fNameGroup.getName());
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(
+				fNameGroup.getName());
 	}
 
 	public String getProjectName() {
@@ -158,8 +162,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	}
 
 	/**
-	 * returns whether this project layout is "detailed" - 
-	 * meaning tree structure - one folder for source, one for resources
+	 * returns whether this project layout is "detailed" - meaning tree
+	 * structure - one folder for source, one for resources
+	 * 
 	 * @return
 	 */
 	public boolean hasPhpSourceFolder() {
@@ -185,30 +190,32 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	/**
 	 * Show a warning when the project location contains files.
 	 */
-	protected final class DetectGroup extends Observable implements Observer, SelectionListener {
+	protected final class DetectGroup extends Observable implements Observer,
+			SelectionListener {
 		private final Link fHintText;
 		private Label fIcon;
 		private boolean fDetect;
-		
+
 		public DetectGroup(Composite parent) {
-			
-			Composite composite= new Composite(parent, SWT.NONE);
-			composite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-			GridLayout layout= new GridLayout(2, false);
-			layout.horizontalSpacing= 10;
+
+			Composite composite = new Composite(parent, SWT.NONE);
+			composite
+					.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+			GridLayout layout = new GridLayout(2, false);
+			layout.horizontalSpacing = 10;
 			composite.setLayout(layout);
-			
-			fIcon= new Label(composite, SWT.LEFT);
+
+			fIcon = new Label(composite, SWT.LEFT);
 			fIcon.setImage(Dialog.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
-			GridData gridData= new GridData(SWT.LEFT, SWT.CENTER, false, false);
+			GridData gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
 			fIcon.setLayoutData(gridData);
 			fIcon.setVisible(false);
-			
-			fHintText= new Link(composite, SWT.WRAP);
+
+			fHintText = new Link(composite, SWT.WRAP);
 			fHintText.setFont(composite.getFont());
-			gridData= new GridData(GridData.FILL, SWT.FILL, true, true);
-			gridData.widthHint= convertWidthInCharsToPixels(50);
-			gridData.heightHint= convertHeightInCharsToPixels(3);
+			gridData = new GridData(GridData.FILL, SWT.FILL, true, true);
+			gridData.widthHint = convertWidthInCharsToPixels(50);
+			gridData.heightHint = convertHeightInCharsToPixels(3);
 			fHintText.setLayoutData(gridData);
 		}
 
@@ -217,7 +224,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				return false;
 			}
 			final IWorkspace workspace = DLTKUIPlugin.getWorkspace();
-			return workspace.validateName(name, IResource.PROJECT).isOK() && workspace.getRoot().findMember(name) == null;
+			return workspace.validateName(name, IResource.PROJECT).isOK()
+					&& workspace.getRoot().findMember(name) == null;
 		}
 
 		public void update(Observable o, Object arg) {
@@ -228,14 +236,18 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 					if (!isValidProjectName(getProjectName())) {
 						fDetect = false;
 					} else {
-						IEnvironment environment = fPHPLocationGroup.getEnvironment();
-						final IFileHandle directory = environment.getFile(location.append(getProjectName()));
+						IEnvironment environment = fPHPLocationGroup
+								.getEnvironment();
+						final IFileHandle directory = environment
+								.getFile(location.append(getProjectName()));
 						fDetect = directory.isDirectory();
 					}
 				} else {
-					IEnvironment environment = fPHPLocationGroup.getEnvironment();
+					IEnvironment environment = fPHPLocationGroup
+							.getEnvironment();
 					if (location.toPortableString().length() > 0) {
-						final IFileHandle directory = environment.getFile(location);
+						final IFileHandle directory = environment
+								.getFile(location);
 						fDetect = directory.isDirectory();
 					}
 				}
@@ -244,7 +256,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 					notifyObservers();
 					if (fDetect) {
 						fHintText.setVisible(true);
-						fHintText.setText(NewWizardMessages.ScriptProjectWizardFirstPage_DetectGroup_message);
+						fHintText
+								.setText(NewWizardMessages.ScriptProjectWizardFirstPage_DetectGroup_message);
 					} else {
 						fHintText.setVisible(false);
 					}
@@ -277,7 +290,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		 */
 		public void widgetDefaultSelected(SelectionEvent e) {
 			if (DLTKCore.DEBUG) {
-				System.err.println("DetectGroup show compilancePreferencePage..."); //$NON-NLS-1$
+				System.err
+						.println("DetectGroup show compilancePreferencePage..."); //$NON-NLS-1$
 			}
 
 		}
@@ -287,17 +301,20 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	 * Request a project name. Fires an event whenever the text field is
 	 * changed, regardless of its content.
 	 */
-	public final class NameGroup extends Observable implements IDialogFieldListener {
+	public final class NameGroup extends Observable implements
+			IDialogFieldListener {
 		protected final StringDialogField fNameField;
 
 		public NameGroup(Composite composite, String initialName) {
 			final Composite nameComposite = new Composite(composite, SWT.NONE);
 			nameComposite.setFont(composite.getFont());
-			nameComposite.setLayout(initGridLayout(new GridLayout(2, false), false));
+			nameComposite.setLayout(initGridLayout(new GridLayout(2, false),
+					false));
 			nameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			// text field for project name
 			fNameField = new StringDialogField();
-			fNameField.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_NameGroup_label_text);
+			fNameField
+					.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_NameGroup_label_text);
 			fNameField.setDialogFieldListener(this);
 			setName(initialName);
 			fNameField.doFillIntoGrid(nameComposite, 2);
@@ -342,7 +359,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				return;
 			}
 			// check whether the project name is valid
-			final IStatus nameStatus = workspace.validateName(name, IResource.PROJECT);
+			final IStatus nameStatus = workspace.validateName(name,
+					IResource.PROJECT);
 			if (!nameStatus.isOK()) {
 				setErrorMessage(nameStatus.getMessage());
 				setPageComplete(false);
@@ -359,7 +377,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				}
 			}
 
-			final String location = fPHPLocationGroup.getLocation().toOSString();
+			final String location = fPHPLocationGroup.getLocation()
+					.toOSString();
 			// check whether location is empty
 			if (location.length() == 0) {
 				setErrorMessage(null);
@@ -375,7 +394,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			}
 			// check whether the location has the workspace as prefix
 			IPath projectPath = Path.fromOSString(location);
-			if (!fPHPLocationGroup.isInWorkspace() && Platform.getLocation().isPrefixOf(projectPath)) {
+			if (!fPHPLocationGroup.isInWorkspace()
+					&& Platform.getLocation().isPrefixOf(projectPath)) {
 				setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_cannotCreateInWorkspace);
 				setPageComplete(false);
 				return;
@@ -385,7 +405,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			if (!fPHPLocationGroup.isInWorkspace()) {
 				IEnvironment environment = getEnvironment();
 				if (EnvironmentManager.isLocal(environment)) {
-					final IStatus locationStatus = workspace.validateProjectLocation(handle, projectPath);
+					final IStatus locationStatus = workspace
+							.validateProjectLocation(handle, projectPath);
 					if (!locationStatus.isOK()) {
 						setErrorMessage(locationStatus.getMessage());
 						setPageComplete(false);
@@ -394,15 +415,24 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				}
 			}
 
+			if (!fPHPLocationGroup.isComplete()) {
+				setErrorMessage(fPHPLocationGroup.getErrorMessage());
+				setPageComplete(false);
+				return;
+			}
+
 			setPageComplete(true);
 			setErrorMessage(null);
 			setMessage(null);
 		}
 	}
+
 	/**
-	 * GUI for controlling whether a new PHP project should include JavaScript support or not 
+	 * GUI for controlling whether a new PHP project should include JavaScript
+	 * support or not
+	 * 
 	 * @author alon
-	 *
+	 * 
 	 */
 	public class JavaScriptSupportGroup implements SelectionListener {
 
@@ -410,37 +440,49 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		protected Button fEnableJavaScriptSupport;
 
 		public boolean shouldSupportJavaScript() {
-			return PHPUiPlugin.getDefault().getPreferenceStore().getBoolean((PreferenceConstants.JavaScriptSupportEnable));
+			return PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(
+					(PreferenceConstants.JavaScriptSupportEnable));
 		}
 
-		public JavaScriptSupportGroup(Composite composite, WizardPage projectWizardFirstPage) {
+		public JavaScriptSupportGroup(Composite composite,
+				WizardPage projectWizardFirstPage) {
 			final int numColumns = 3;
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
 
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
-			fGroup.setText(PHPUIMessages.getString("JavaScriptSupportGroup_OptionBlockTitle")); //$NON-NLS-1$
+			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
+					true));
+			fGroup.setText(PHPUIMessages
+					.getString("JavaScriptSupportGroup_OptionBlockTitle")); //$NON-NLS-1$
 
 			fEnableJavaScriptSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
-			fEnableJavaScriptSupport.setText(PHPUIMessages.getString("JavaScriptSupportGroup_EnableSupport")); //$NON-NLS-1$
-			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+			fEnableJavaScriptSupport.setText(PHPUIMessages
+					.getString("JavaScriptSupportGroup_EnableSupport")); //$NON-NLS-1$
+			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING,
+					SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.addSelectionListener(this);
-			fEnableJavaScriptSupport.setSelection(PHPUiPlugin.getDefault().getPreferenceStore().getBoolean((PreferenceConstants.JavaScriptSupportEnable)));
+			fEnableJavaScriptSupport.setSelection(PHPUiPlugin.getDefault()
+					.getPreferenceStore().getBoolean(
+							(PreferenceConstants.JavaScriptSupportEnable)));
 		}
 
 		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			PHPUiPlugin.getDefault().getPreferenceStore().setValue((PreferenceConstants.JavaScriptSupportEnable), fEnableJavaScriptSupport.getSelection());
+			PHPUiPlugin.getDefault().getPreferenceStore().setValue(
+					(PreferenceConstants.JavaScriptSupportEnable),
+					fEnableJavaScriptSupport.getSelection());
 		}
 
 	}
+
 	/**
 	 * Request a project layout.
 	 */
-	public class LayoutGroup implements Observer, SelectionListener, IDialogFieldListener {
+	public class LayoutGroup implements Observer, SelectionListener,
+			IDialogFieldListener {
 
 		private final SelectionButtonDialogField fStdRadio, fSrcBinRadio;
 		private Group fGroup;
@@ -450,42 +492,53 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			final int numColumns = 3;
 
 			fStdRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fStdRadio.setLabelText(PHPUIMessages.getString("LayoutGroup_OptionBlock_ProjectSrc")); //$NON-NLS-1$
+			fStdRadio.setLabelText(PHPUIMessages
+					.getString("LayoutGroup_OptionBlock_ProjectSrc")); //$NON-NLS-1$
 			fStdRadio.setDialogFieldListener(this);
 
 			fSrcBinRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fSrcBinRadio.setLabelText(PHPUIMessages.getString("LayoutGroup_OptionBlock_SrcResources")); //$NON-NLS-1$
+			fSrcBinRadio.setLabelText(PHPUIMessages
+					.getString("LayoutGroup_OptionBlock_SrcResources")); //$NON-NLS-1$
 			fSrcBinRadio.setDialogFieldListener(this);
 
-			//getting Preferences default choice
-			boolean useSrcBin = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ);
+			// getting Preferences default choice
+			boolean useSrcBin = PreferenceConstants.getPreferenceStore()
+					.getBoolean(PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ);
 
 			fSrcBinRadio.setSelection(useSrcBin);
 			fStdRadio.setSelection(!useSrcBin);
 
-			//createContent
+			// createContent
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
-			fGroup.setText(PHPUIMessages.getString("LayoutGroup_OptionBlock_Title")); //$NON-NLS-1$
+			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
+					true));
+			fGroup.setText(PHPUIMessages
+					.getString("LayoutGroup_OptionBlock_Title")); //$NON-NLS-1$
 
 			fStdRadio.doFillIntoGrid(fGroup, 3);
-			LayoutUtil.setHorizontalGrabbing(fStdRadio.getSelectionButton(null));
+			LayoutUtil
+					.setHorizontalGrabbing(fStdRadio.getSelectionButton(null));
 
 			fSrcBinRadio.doFillIntoGrid(fGroup, 2);
 
 			fPreferenceLink = new Link(fGroup, SWT.NONE);
-			fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description")); //$NON-NLS-1$
-			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
+			fPreferenceLink.setText(PHPUIMessages
+					.getString("ToggleLinkingAction_link_description")); //$NON-NLS-1$
+			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
+					true, false));
 			fPreferenceLink.addSelectionListener(this);
 			fPreferenceLink.setEnabled(true);
 
 			updateEnableState();
 		}
 
-		/* (non-Javadoc)
-		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.util.Observer#update(java.util.Observable,
+		 * java.lang.Object)
 		 */
 		public void update(Observable o, Object arg) {
 			updateEnableState();
@@ -505,23 +558,33 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 
 		/**
-		 * Return <code>true</code> if the user specified to create 'application' and 'public' folders.
-		 *
-		 * @return returns <code>true</code> if the user specified to create 'source' and 'bin' folders.
+		 * Return <code>true</code> if the user specified to create
+		 * 'application' and 'public' folders.
+		 * 
+		 * @return returns <code>true</code> if the user specified to create
+		 *         'source' and 'bin' folders.
 		 */
 		public boolean isDetailedLayout() {
 			return fSrcBinRadio.isSelected();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse
+		 * .swt.events.SelectionEvent)
 		 */
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}
 
 		/*
-		 * @see org.eclipse.jdt.internal.ui.wizards.dialogfields.IDialogFieldListener#dialogFieldChanged(org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField)
+		 * @see
+		 * org.eclipse.jdt.internal.ui.wizards.dialogfields.IDialogFieldListener
+		 * #dialogFieldChanged(org.eclipse.jdt.internal.ui.wizards.dialogfields.
+		 * DialogField)
+		 * 
 		 * @since 3.5
 		 */
 		public void dialogFieldChanged(DialogField field) {
@@ -533,19 +596,22 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			String prefID = PHPProjectLayoutPreferencePage.PREF_ID;
 
 			Map data = null;
-			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
+			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID,
+					new String[] { prefID }, data).open();
 		}
 	}
+
 	/**
 	 * Request a location. Fires an event whenever the checkbox or the location
 	 * field is changed, regardless of whether the change originates from the
 	 * user or has been invoked programmatically.
 	 */
-	public class LocationGroup extends Observable implements Observer, IStringButtonAdapter, IDialogFieldListener {
+	public class LocationGroup extends Observable implements Observer,
+			IStringButtonAdapter, IDialogFieldListener {
 		protected final SelectionButtonDialogField fWorkspaceRadio;
 		protected final SelectionButtonDialogField fExternalRadio;
 		protected final StringButtonDialogField fLocation;
-		//		protected final ComboDialogField fEnvironment;
+		// protected final ComboDialogField fEnvironment;
 		private IEnvironment[] environments;
 
 		private String fPreviousExternalLocation;
@@ -553,24 +619,32 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		protected SelectionButtonDialogField fLocalServerRadio;
 		protected ComboDialogField fSeverLocationList;
 		private String[] docRootArray;
-		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID + ".last.external.project"; //$NON-NLS-1$
+		private WizardFragment fragment;
+		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID
+				+ ".last.external.project"; //$NON-NLS-1$
 
 		public LocationGroup(Composite composite) {
 			final int numColumns = 3;
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			group.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
-			group.setText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_title);
+			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
+					true));
+			group
+					.setText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_title);
 			fWorkspaceRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fWorkspaceRadio.setDialogFieldListener(this);
-			fWorkspaceRadio.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_workspace_desc);
+			fWorkspaceRadio
+					.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_workspace_desc);
 			fExternalRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fExternalRadio.setDialogFieldListener(this);
-			fExternalRadio.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_external_desc);
+			fExternalRadio
+					.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_external_desc);
 			fLocation = new StringButtonDialogField(this);
 			fLocation.setDialogFieldListener(this);
-			fLocation.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
-			fLocation.setButtonLabel(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_browseButton_desc);
+			fLocation
+					.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
+			fLocation
+					.setButtonLabel(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_browseButton_desc);
 			// fExternalRadio.attachDialogField(fLocation);
 			fWorkspaceRadio.setSelection(true);
 			fExternalRadio.setSelection(false);
@@ -591,14 +665,16 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				}
 			}
 
-			//check if any of the server can provide local doc root.
+			// check if any of the server can provide local doc root.
 
 			Server[] servers = ServersManager.getServers();
 			List<String> docRoots = new ArrayList<String>();
 			for (int i = 0; i < servers.length; i++) {
 				String docRoot = servers[i].getDocumentRoot();
-				String isLocal = servers[i].getAttribute(Server.LOCALSERVER, null);
-				if (isLocal != null && docRoot != null && !"".equals(docRoot.trim())) { //$NON-NLS-1$
+				String isLocal = servers[i].getAttribute(Server.LOCALSERVER,
+						null);
+				if (isLocal != null && docRoot != null
+						&& !"".equals(docRoot.trim())) { //$NON-NLS-1$
 					docRoots.add(docRoot);
 				}
 			}
@@ -606,11 +682,14 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			if (docRoots.size() > 0) {
 				fLocalServerRadio = new SelectionButtonDialogField(SWT.RADIO);
 				fLocalServerRadio.setDialogFieldListener(this);
-				fLocalServerRadio.setLabelText(PHPUIMessages.getString("PHPProjectWizardFirstPage.localServerLabel")); //$NON-NLS-1$
+				fLocalServerRadio
+						.setLabelText(PHPUIMessages
+								.getString("PHPProjectWizardFirstPage.localServerLabel")); //$NON-NLS-1$
 				fLocalServerRadio.setSelection(false);
 				fLocalServerRadio.doFillIntoGrid(group, numColumns);
 				fSeverLocationList = new ComboDialogField(SWT.READ_ONLY);
-				fSeverLocationList.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
+				fSeverLocationList
+						.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
 				fSeverLocationList.doFillIntoGrid(group, numColumns);
 				fSeverLocationList.setEnabled(false);
 				docRootArray = new String[docRoots.size()];
@@ -621,6 +700,25 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				fWorkspaceRadio.setSelection(false);
 				fLocalServerRadio.setSelection(true);
 			}
+
+			CompositeData data = new CompositeData();
+			data.setParetnt(group);
+			data.setSettings(getDialogSettings());
+			data.setObserver(this);
+
+			fragment = (WizardFragment) Platform.getAdapterManager()
+					.getAdapter(data, PHPProjectWizardFirstPage.class);
+		}
+
+		public boolean isComplete() {
+			return fragment == null || fragment.isComplete();
+		}
+
+		public String getErrorMessage() {
+			if (fragment == null) {
+				return "";
+			}
+			return (String) fragment.getWizardModel().getObject(ERROR_MESSAGE);
 		}
 
 		public boolean isInLocalServer() {
@@ -665,7 +763,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		private String[] getDocItems(String[] docRootArray) {
 			String[] items = new String[docRootArray.length];
 			for (int i = 0; i < docRootArray.length; i++) {
-				items[i] = docRootArray[i] + File.separator + fNameGroup.getName(); //$NON-NLS-1$
+				items[i] = docRootArray[i] + File.separator
+						+ fNameGroup.getName(); //$NON-NLS-1$
 			}
 			return items;
 		}
@@ -686,21 +785,25 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		public IEnvironment getEnvironment() {
 			if (fWorkspaceRadio.isSelected()) {
-				return EnvironmentManager.getEnvironmentById(LocalEnvironment.ENVIRONMENT_ID);
+				return EnvironmentManager
+						.getEnvironmentById(LocalEnvironment.ENVIRONMENT_ID);
 			}
-			//			return environments[fEnvironment.getSelectionIndex()];
+			// return environments[fEnvironment.getSelectionIndex()];
 			return environments[localEnv];
 		}
 
 		public void changeControlPressed(DialogField field) {
 			IEnvironment environment = getEnvironment();
-			IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
+			IEnvironmentUI environmentUI = (IEnvironmentUI) environment
+					.getAdapter(IEnvironmentUI.class);
 			if (environmentUI != null) {
-				String selectedDirectory = environmentUI.selectFolder(getShell());
+				String selectedDirectory = environmentUI
+						.selectFolder(getShell());
 
 				if (selectedDirectory != null) {
 					fLocation.setText(selectedDirectory);
-					DLTKUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
+					DLTKUIPlugin.getDefault().getDialogSettings().put(
+							DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
 				}
 			}
 		}
@@ -724,6 +827,13 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			fireEvent();
 		}
 
+		public WizardModel getWizardData() {
+			if (fragment == null) {
+				return null;
+			}
+			return fragment.getWizardModel();
+		}
+
 	}
 
 	/**
@@ -731,51 +841,63 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	 * field is changed, regardless of whether the change originates from the
 	 * user or has been invoked programmatically.
 	 */
-	public class VersionGroup extends Observable implements Observer, IStringButtonAdapter, IDialogFieldListener, SelectionListener {
+	public class VersionGroup extends Observable implements Observer,
+			IStringButtonAdapter, IDialogFieldListener, SelectionListener {
 		protected final SelectionButtonDialogField fDefaultValues;
 		protected final SelectionButtonDialogField fCustomValues;
 
 		protected PHPVersionConfigurationBlock fConfigurationBlock;
 
-		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID + ".last.external.project"; //$NON-NLS-1$
+		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID
+				+ ".last.external.project"; //$NON-NLS-1$
 		private Link fPreferenceLink;
 
 		public VersionGroup(Composite composite) {
 			final int numColumns = 3;
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			group.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
-			group.setText(PHPUIMessages.getString("VersionGroup_OptionBlock_Title"));//$NON-NLS-1$ 
+			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
+					true));
+			group.setText(PHPUIMessages
+					.getString("VersionGroup_OptionBlock_Title"));//$NON-NLS-1$ 
 			fDefaultValues = new SelectionButtonDialogField(SWT.RADIO);
 			fDefaultValues.setDialogFieldListener(this);
-			fDefaultValues.setLabelText(PHPUIMessages.getString("VersionGroup_OptionBlock_fDefaultValues"));//$NON-NLS-1$ 
+			fDefaultValues.setLabelText(PHPUIMessages
+					.getString("VersionGroup_OptionBlock_fDefaultValues"));//$NON-NLS-1$ 
 			fCustomValues = new SelectionButtonDialogField(SWT.RADIO);
 			fCustomValues.setDialogFieldListener(this);
-			fCustomValues.setLabelText(PHPUIMessages.getString("VersionGroup_OptionBlock_fCustomValues"));//$NON-NLS-1$ 
+			fCustomValues.setLabelText(PHPUIMessages
+					.getString("VersionGroup_OptionBlock_fCustomValues"));//$NON-NLS-1$ 
 
-			fDefaultValues.setSelection(true);
-			fCustomValues.setSelection(false);
+			fDefaultValues.setSelection(false);
+			fCustomValues.setSelection(true);
 
 			fDefaultValues.doFillIntoGrid(group, numColumns);
-			fCustomValues.doFillIntoGrid(group, numColumns);
+			fCustomValues.doFillIntoGrid(group, 2);
 
-			fConfigurationBlock = createConfigurationBlock(new IStatusChangeListener() {
-				public void statusChanged(IStatus status) {
-				}
-			}, (IProject) null, null);
+			fConfigurationBlock = createConfigurationBlock(
+					new IStatusChangeListener() {
+						public void statusChanged(IStatus status) {
+						}
+					}, (IProject) null, null);
 			fConfigurationBlock.createContents(group);
-			fConfigurationBlock.setEnabled(false);
-			//			fPreferenceLink = new Link(fGroup, SWT.NONE);
-			//			fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
-			//			//fPreferenceLink.setLayoutData(new GridData(GridData.END, GridData.END, false, false));
-			//			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
-			//			fPreferenceLink.addSelectionListener(this);
-			//			fPreferenceLink.setEnabled(true);
+			fConfigurationBlock.setEnabled(true);
+			// fPreferenceLink = new Link(fGroup, SWT.NONE);
+			// fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
+			// //fPreferenceLink.setLayoutData(new GridData(GridData.END,
+			// GridData.END, false, false));
+			// fPreferenceLink.setLayoutData(new GridData(SWT.END,
+			// SWT.BEGINNING, true, false));
+			// fPreferenceLink.addSelectionListener(this);
+			// fPreferenceLink.setEnabled(true);
 
 		}
 
-		protected PHPVersionConfigurationBlock createConfigurationBlock(IStatusChangeListener listener, IProject project, IWorkbenchPreferenceContainer container) {
-			return new PHPVersionConfigurationBlock(listener, project, container);
+		protected PHPVersionConfigurationBlock createConfigurationBlock(
+				IStatusChangeListener listener, IProject project,
+				IWorkbenchPreferenceContainer container) {
+			return new PHPVersionConfigurationBlock(listener, project,
+					container);
 		}
 
 		protected void fireEvent() {
@@ -797,13 +919,16 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		public void changeControlPressed(DialogField field) {
 			IEnvironment environment = getEnvironment();
-			IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
+			IEnvironmentUI environmentUI = (IEnvironmentUI) environment
+					.getAdapter(IEnvironmentUI.class);
 			if (environmentUI != null) {
-				String selectedDirectory = environmentUI.selectFolder(getShell());
+				String selectedDirectory = environmentUI
+						.selectFolder(getShell());
 
 				if (selectedDirectory != null) {
-					//fLocation.setText(selectedDirectory);
-					DLTKUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
+					// fLocation.setText(selectedDirectory);
+					DLTKUIPlugin.getDefault().getDialogSettings().put(
+							DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
 				}
 			}
 		}
@@ -825,7 +950,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		public void widgetDefaultSelected(SelectionEvent e) {
 			String prefID = PHPInterpreterPreferencePage.PREF_ID;
 			Map data = null;
-			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
+			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID,
+					new String[] { prefID }, data).open();
 			if (!fCustomValues.isSelected()) {
 				fConfigurationBlock.performRevert();
 			}
@@ -839,7 +965,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		IWizardPage currentPage = getContainer().getCurrentPage();
 		if (!visible && currentPage != null) {
-			//going forward from 1st page to 2nd one
+			// going forward from 1st page to 2nd one
 			if (currentPage instanceof IPHPProjectCreateWizardPage) {
 				((IPHPProjectCreateWizardPage) currentPage).initPage();
 			}
@@ -848,6 +974,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	}
 
 	public void initPage() {
+	}
+
+	public WizardModel getWizardData() {
+		return fPHPLocationGroup.getWizardData();
 	}
 
 }

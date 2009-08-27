@@ -28,61 +28,70 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  * PHP version configuration block preferences page.
  */
-public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlock {
+public class PHPVersionConfigurationBlock extends
+		PHPCoreOptionsConfigurationBlock {
 
-	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP4.getAlias(), PHPVersion.PHP5.getAlias(), PHPVersion.PHP5_3.getAlias() };
+	public static final String[] PHP_VERSION_VALUES = {
+			PHPVersion.PHP4.getAlias(), PHPVersion.PHP5.getAlias(),
+			PHPVersion.PHP5_3.getAlias() };
 
-	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.getString("PHPCreationDataModelProvider.0"), PHPUIMessages.getString("PHPCreationDataModelProvider.1"), PHPUIMessages.getString("PHPCreationDataModelProvider.2") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	
+	public static final String[] PHP_VERSION_DESCRIPTIONS = {
+			PHPUIMessages.getString("PHPCreationDataModelProvider.0"), PHPUIMessages.getString("PHPCreationDataModelProvider.1"), PHPUIMessages.getString("PHPCreationDataModelProvider.2") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
 	private static final Key PREF_PHP_VERSION = getPHPCoreKey(Keys.PHP_VERSION);
 	private static final Key PREF_ASP_TAGS = getPHPCoreKey(Keys.EDITOR_USE_ASP_TAGS);
 	private IStatus fTaskTagsStatus;
 	protected ValuedCombo versionCombo;
-	protected Button useAspTagsButton;
+	// protected Button useAspTagsButton;
 	protected Label nameLabel;
 
-	public PHPVersionConfigurationBlock(IStatusChangeListener context, IProject project, IWorkbenchPreferenceContainer container) {
+	public PHPVersionConfigurationBlock(IStatusChangeListener context,
+			IProject project, IWorkbenchPreferenceContainer container) {
 		super(context, project, getKeys(), container);
 	}
 
 	public void setEnabled(boolean isEnabled) {
 		versionCombo.setEnabled(isEnabled);
-		useAspTagsButton.setEnabled(isEnabled);
-        nameLabel.setEnabled(isEnabled);
+		// useAspTagsButton.setEnabled(isEnabled);
+		nameLabel.setEnabled(isEnabled);
 	}
 
 	private static Key[] getKeys() {
-		return new Key[] {PREF_PHP_VERSION, PREF_ASP_TAGS};
+		return new Key[] { PREF_PHP_VERSION, PREF_ASP_TAGS };
 	}
 
-    // Accessed from the PHP project Wizard
+	// Accessed from the PHP project Wizard
 	public Control createContents(Composite parent) {
 		setShell(parent.getShell());
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout());
 		createVersionContent(composite);
-		createUseAspTagsContent(composite);
+		// createUseAspTagsContent(composite);
 		unpackPHPVersion();
-		unpackUseAspTags();
+		// unpackUseAspTags();
 		validateSettings(null, null, null);
 		return composite;
 	}
 
-	private void createUseAspTagsContent(Composite composite) {
-		useAspTagsButton = new Button(composite, SWT.CHECK | SWT.RIGHT);
-		useAspTagsButton.setText(PHPUIMessages.getString("Preferences_php_editor_useAspTagsAsPhp_label"));
-		useAspTagsButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				setUseAspTagsValue(Boolean.toString(useAspTagsButton.getSelection()));
-			}
-		});
-	}
+	// private void createUseAspTagsContent(Composite composite) {
+	// useAspTagsButton = new Button(composite, SWT.CHECK | SWT.RIGHT);
+	// useAspTagsButton.setText(PHPUIMessages
+	// .getString("Preferences_php_editor_useAspTagsAsPhp_label"));
+	// useAspTagsButton.addListener(SWT.Selection, new Listener() {
+	// public void handleEvent(Event event) {
+	// setUseAspTagsValue(Boolean.toString(useAspTagsButton
+	// .getSelection()));
+	// }
+	// });
+	// }
 
 	private Composite createVersionContent(Composite parent) {
 		Composite composite = new Composite(parent, SWT.RESIZE);
@@ -92,24 +101,28 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		layout.horizontalSpacing = 0;
 		layout.verticalSpacing = 0;
 		layout.marginHeight = 0;
-		layout.marginWidth= 0;
+		layout.marginWidth = 0;
 
-//		layout.marginHeight = Dialog.convertVerticalDLUsToPixels(fontMetrics, IDialogConstants.VERTICAL_MARGIN);
-//		layout.marginWidth = Dialog.convertHorizontalDLUsToPixels(fontMetrics, IDialogConstants.HORIZONTAL_MARGIN);
-//		layout.verticalSpacing = Dialog.convertVerticalDLUsToPixels(fontMetrics, IDialogConstants.VERTICAL_SPACING);
-//		layout.horizontalSpacing = Dialog.convertHorizontalDLUsToPixels(fontMetrics, IDialogConstants.HORIZONTAL_SPACING);
+		// layout.marginHeight = Dialog.convertVerticalDLUsToPixels(fontMetrics,
+		// IDialogConstants.VERTICAL_MARGIN);
+		// layout.marginWidth =
+		// Dialog.convertHorizontalDLUsToPixels(fontMetrics,
+		// IDialogConstants.HORIZONTAL_MARGIN);
+		// layout.verticalSpacing =
+		// Dialog.convertVerticalDLUsToPixels(fontMetrics,
+		// IDialogConstants.VERTICAL_SPACING);
+		// layout.horizontalSpacing =
+		// Dialog.convertHorizontalDLUsToPixels(fontMetrics,
+		// IDialogConstants.HORIZONTAL_SPACING);
 		composite.setLayout(layout);
-		
-		
+
 		nameLabel = new Label(composite, SWT.NONE);
 		nameLabel.setText(PHPUIMessages.getString("PHPVersionComboName"));
 
 		GC gc = new GC(nameLabel);
 		gc.setFont(nameLabel.getFont());
-//		FontMetrics fontMetrics = gc.getFontMetrics();
+		// FontMetrics fontMetrics = gc.getFontMetrics();
 		gc.dispose();
-
-
 
 		List entryList = prepareVersionEntryList();
 		versionCombo = new ValuedCombo(composite, SWT.READ_ONLY, entryList);
@@ -127,13 +140,14 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		return composite;
 	}
 
-	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
+	protected void validateSettings(Key changedKey, String oldValue,
+			String newValue) {
 		if (changedKey != null) {
 			if (PREF_PHP_VERSION.equals(changedKey)) {
 				fTaskTagsStatus = validatePHPVersion();
-			}else if (PREF_ASP_TAGS.equals(changedKey)) {
+			} else if (PREF_ASP_TAGS.equals(changedKey)) {
 				fTaskTagsStatus = validatePHPVersion();
-			}else {
+			} else {
 				return;
 			}
 		} else {
@@ -175,23 +189,29 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	}
 
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
-		String title= PHPUIMessages.getString("PHPVersionConfigurationBlock_needsbuild_title"); 
+		String title = PHPUIMessages
+				.getString("PHPVersionConfigurationBlock_needsbuild_title");
 		String message;
 		if (workspaceSettings) {
-			message= PHPUIMessages.getString("PHPVersionConfigurationBlock_needsfullbuild_message"); 
+			message = PHPUIMessages
+					.getString("PHPVersionConfigurationBlock_needsfullbuild_message");
 		} else {
-			message= PHPUIMessages.getString("PHPVersionConfigurationBlock_needsprojectbuild_message"); 
+			message = PHPUIMessages
+					.getString("PHPVersionConfigurationBlock_needsprojectbuild_message");
 		}
 		return new String[] { title, message };
-//		return null;
+		// return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock#updateControls()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock#
+	 * updateControls()
 	 */
 	protected void updateControls() {
 		unpackPHPVersion();
-		unpackUseAspTags();
+		// unpackUseAspTags();
 	}
 
 	private void unpackPHPVersion() {
@@ -199,19 +219,19 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 		versionCombo.selectValue(currTags);
 	}
 
-	private void unpackUseAspTags() {
-		String value = getValue(PREF_ASP_TAGS);
-		useAspTagsButton.setSelection(Boolean.valueOf(value).booleanValue());
+	// private void unpackUseAspTags() {
+	// String value = getValue(PREF_ASP_TAGS);
+	// useAspTagsButton.setSelection(Boolean.valueOf(value).booleanValue());
+	// }
+
+	// Accessed from the PHP project Wizard
+	public PHPVersion getPHPVersionValue() {
+		return PHPVersion.byAlias(getValue(PREF_PHP_VERSION));
 	}
-    
-	//   Accessed from the PHP project Wizard 
-    public PHPVersion getPHPVersionValue() {
-        return PHPVersion.byAlias(getValue(PREF_PHP_VERSION));       
-    }
-    
-    //  Accessed from the PHP project Wizard
-    public boolean getUseAspTagsValue() {
-        return getBooleanValue(PREF_ASP_TAGS);
-    }
+
+	// Accessed from the PHP project Wizard
+	public boolean getUseAspTagsValue() {
+		return getBooleanValue(PREF_ASP_TAGS);
+	}
 
 }
