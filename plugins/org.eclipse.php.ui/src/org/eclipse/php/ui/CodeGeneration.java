@@ -364,6 +364,8 @@ public class CodeGeneration {
 					if (parameterType != null) {
 						String typeName = ((Identifier) parameterType).getName();
 						parameterTypes[i++] = typeName;
+					} else{
+						parameterTypes[i++] = null;
 					}
 				}
 			}
