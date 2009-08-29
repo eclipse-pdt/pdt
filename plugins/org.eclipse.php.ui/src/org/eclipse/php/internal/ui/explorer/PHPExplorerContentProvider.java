@@ -13,12 +13,10 @@ package org.eclipse.php.internal.ui.explorer;
 
 import java.util.*;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
@@ -56,7 +54,7 @@ import org.eclipse.wst.jsdt.ui.project.JsNature;
  */
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		implements IIncludepathListener /* , IResourceChangeListener */{
-
+	public final static ArrayList EMPTY_LIST = new ArrayList();
 	StandardJavaScriptElementContentProvider jsContentProvider;
 
 	public PHPExplorerContentProvider(boolean provideMembers) {
@@ -82,7 +80,23 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	}
 
 	public Object[] getChildren(Object parentElement) {
-
+		if (parentElement instanceof IPath) {
+			IPath path = (IPath) parentElement;
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			IResource iesource = workspace.getRoot().findMember(path);
+			if (iesource instanceof IProject) {
+				IProject project = (IProject) iesource;
+				IScriptProject sp = DLTKCore.create(project);
+				if (sp instanceof ScriptProject) {
+					ScriptProject scriptProject = (ScriptProject) sp;
+					try {
+						return scriptProject.getAllProjectFragments();
+					} catch (ModelException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 		// include path node
 		if (parentElement instanceof IncludePath) {
 			final Object entry = ((IncludePath) parentElement).getEntry();
@@ -209,7 +223,10 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
-
+		if (parentElement instanceof ArchiveProjectFragment
+				|| parentElement instanceof ArchiveFolder) {
+			return super.getChildren(parentElement);
+		}
 		return NO_CHILDREN;
 	}
 

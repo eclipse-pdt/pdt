@@ -1620,5 +1620,52 @@
     </correctionProcessor>
  </extension>
 	
-		
+	<extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+	     name="%importExportWizards.category"
+	     id="org.eclipse.php.ui.PHP">
+	  </category>
+    </extension>
+   	
+	<extension
+         point="org.eclipse.ui.importWizards">
+      <category
+	     name="%importExportWizards.category"
+	     id="org.eclipse.php.ui.PHP">
+	  </category>
+    </extension>
+   
+	<extension 
+         point="org.eclipse.ui.exportWizards"> 
+      <wizard 
+            id="org.eclipse.php.ui.export" 
+            name="Phar Export"
+            class="org.eclipse.php.internal.ui.phar.wizard.PharPackageWizard" 
+            icon="$nl$/icons/full/etool16/exportjar_wiz.gif"
+            category="org.eclipse.php.ui.PHP">
+         <description> 
+            %jarExportWizard.description
+         </description>
+         <selection
+               class="org.eclipse.core.resources.IResource">
+         </selection>
+      </wizard> 
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="Phar File"
+            icon="$nl$/icons/full/etool16/exportjar_wiz.gif"
+            category="org.eclipse.php.ui.PHP"            
+            class="org.eclipse.php.internal.ui.phar.wizard.PharFileImportWizard"
+            id="org.eclipse.ui.wizards.import.ZipFile">
+         <description>
+         	%jarImportWizard.description
+         </description>
+         <selection
+               class="org.eclipse.core.resources.IResource">
+         </selection>
+      </wizard>
+   </extension>
 </plugin>

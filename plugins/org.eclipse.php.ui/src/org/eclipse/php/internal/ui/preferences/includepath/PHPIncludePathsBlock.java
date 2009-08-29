@@ -60,17 +60,20 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  * This class is responsible for the inner side of Include path property page.
- * Extends most of the dltk build path behavior with a few adaptations to the include path needs  
+ * Extends most of the dltk build path behavior with a few adaptations to the
+ * include path needs
+ * 
  * @author Eden K., 2008
- *
+ * 
  */
 public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 
 	/**
-	 * @author nir.c
-	 * Wrapper composite, that un/register itself to any includepath changes
+	 * @author nir.c Wrapper composite, that un/register itself to any
+	 *         includepath changes
 	 */
-	private final class IncludePathComposite extends Composite implements IIncludepathListener, IChangeListener {
+	private final class IncludePathComposite extends Composite implements
+			IIncludepathListener, IChangeListener {
 
 		private IncludePathComposite(Composite parent, int style) {
 			super(parent, style);
@@ -83,7 +86,8 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 				PHPSourceContainerWorkbookPage page = (PHPSourceContainerWorkbookPage) fSourceContainerPage;
 				page.unregisterAddedElementListener(this);
 			}
-			IncludePathManager.getInstance().unregisterIncludepathListener(this);
+			IncludePathManager.getInstance()
+					.unregisterIncludepathListener(this);
 			super.dispose();
 		}
 
@@ -100,26 +104,34 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 			} catch (CoreException e) {
 				PHPCorePlugin.log(e);
 			}
-			
+
 		}
 	}
 
-	public PHPIncludePathsBlock(IRunnableContext runnableContext, IStatusChangeListener context, int pageToShow, boolean useNewPage, IWorkbenchPreferenceContainer pageContainer) {
+	public PHPIncludePathsBlock(IRunnableContext runnableContext,
+			IStatusChangeListener context, int pageToShow, boolean useNewPage,
+			IWorkbenchPreferenceContainer pageContainer) {
 		super(runnableContext, context, pageToShow, useNewPage, pageContainer);
 	}
 
 	protected void initContainerElements() {
 		BuildPathAdapter adapter = new BuildPathAdapter();
-		String[] buttonLabels = new String[] { NewWizardMessages.BuildPathsBlock_buildpath_up_button, NewWizardMessages.BuildPathsBlock_buildpath_down_button };
-		fBuildPathList = new ListDialogField(null, buttonLabels, new PHPIPListLabelProvider());
+		String[] buttonLabels = new String[] {
+				NewWizardMessages.BuildPathsBlock_buildpath_up_button,
+				NewWizardMessages.BuildPathsBlock_buildpath_down_button };
+		fBuildPathList = new ListDialogField(null, buttonLabels,
+				new PHPIPListLabelProvider());
 		fBuildPathList.setDialogFieldListener(adapter);
-		fBuildPathList.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
+		fBuildPathList
+				.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
 		fBuildPathList.setUpButtonIndex(0);
 		fBuildPathList.setDownButtonIndex(1);
 		fBuildPathDialogField = new StringButtonDialogField(adapter);
-		fBuildPathDialogField.setButtonLabel(NewWizardMessages.BuildPathsBlock_buildpath_button);
+		fBuildPathDialogField
+				.setButtonLabel(NewWizardMessages.BuildPathsBlock_buildpath_button);
 		fBuildPathDialogField.setDialogFieldListener(adapter);
-		fBuildPathDialogField.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
+		fBuildPathDialogField
+				.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
 	}
 
 	@Override
@@ -129,7 +141,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 
 	@Override
 	protected boolean supportZips() {
-		return false;
+		return true;
 	}
 
 	// -------- UI creation ---------
@@ -137,7 +149,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 
 		fSWTWidget = parent;
 		Composite composite = new IncludePathComposite(parent, SWT.NONE);
-		
+
 		composite.setFont(parent.getFont());
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
@@ -150,25 +162,32 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		TabItem item;
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_source);
-		item.setImage(DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
+		item.setImage(DLTKPluginImages
+				.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
 
 		fSourceContainerPage = new PHPIncludePathSourcePage(fBuildPathList);
-		((PHPSourceContainerWorkbookPage)fSourceContainerPage).registerAddedElementListener((IChangeListener)composite);
+		((PHPSourceContainerWorkbookPage) fSourceContainerPage)
+				.registerAddedElementListener((IChangeListener) composite);
 
 		item.setData(fSourceContainerPage);
 		item.setControl(fSourceContainerPage.getControl(folder));
 
 		IWorkbench workbench = DLTKUIPlugin.getDefault().getWorkbench();
-		Image projectImage = workbench.getSharedImages().getImage(IDE.SharedImages.IMG_OBJ_PROJECT);
-		fProjectsPage = new PHPProjectsWorkbookPage(fBuildPathList, fPageContainer);
-		fProjectsPage.setTitle(PHPUIMessages.getString("IncludePathProjectsPage_Folders_Label")); //$NON-NLS-1$
+		Image projectImage = workbench.getSharedImages().getImage(
+				IDE.SharedImages.IMG_OBJ_PROJECT);
+		fProjectsPage = new PHPProjectsWorkbookPage(fBuildPathList,
+				fPageContainer);
+		fProjectsPage.setTitle(PHPUIMessages
+				.getString("IncludePathProjectsPage_Folders_Label")); //$NON-NLS-1$
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_projects);
 		item.setImage(projectImage);
 		item.setData(fProjectsPage);
 		item.setControl(fProjectsPage.getControl(folder));
-		fLibrariesPage = new PHPLibrariesWorkbookPage(this.supportZips(), fBuildPathList, fPageContainer);
-		fLibrariesPage.setTitle(PHPUIMessages.getString("IncludePathLibrariesPage_Folders_Label")); //$NON-NLS-1$
+		fLibrariesPage = new PHPLibrariesWorkbookPage(this.supportZips(),
+				fBuildPathList, fPageContainer);
+		fLibrariesPage.setTitle(PHPUIMessages
+				.getString("IncludePathLibrariesPage_Folders_Label")); //$NON-NLS-1$
 		fLibrariesPage.setScriptProject(getScriptProject());
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_libraries);
@@ -176,9 +195,11 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		item.setData(fLibrariesPage);
 		item.setControl(fLibrariesPage.getControl(folder));
 		// a non shared image
-		Image cpoImage = DLTKPluginImages.DESC_TOOL_BUILDPATH_ORDER.createImage();
+		Image cpoImage = DLTKPluginImages.DESC_TOOL_BUILDPATH_ORDER
+				.createImage();
 		composite.addDisposeListener(new ImageDisposer(cpoImage));
-		PHPBuildpathOrderingWorkbookPage ordpage = new PHPBuildpathOrderingWorkbookPage(fBuildPathList);
+		PHPBuildpathOrderingWorkbookPage ordpage = new PHPBuildpathOrderingWorkbookPage(
+				fBuildPathList);
 		setTitle(PHPUIMessages.getString("IncludePathOrderPage_Folders_Label")); //$NON-NLS-1$
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(PHPUIMessages.getString("BuildPathsBlock_tab_order")); //$NON-NLS-1$
@@ -198,12 +219,11 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 			}
 		});
 		fTabFolder = folder;
-		
-		//TODO - add listener to include path manager changes
-		// upon change call updateUI(); 
+
+		// TODO - add listener to include path manager changes
+		// upon change call updateUI();
 		// and release listener on dispose
-				
-		
+
 		Dialog.applyDialogFont(composite);
 		return composite;
 	}
@@ -212,7 +232,9 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	protected void updateBuildPathStatus() {
 		// disable checking for nested folders errors
 	}
-	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+
+	public void configureScriptProject(IProgressMonitor monitor)
+			throws CoreException, OperationCanceledException {
 		updateBuildPath();
 		flush(fBuildPathList.getElements(), getScriptProject(), monitor);
 		initializeTimeStamps();
@@ -220,35 +242,41 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	}
 
 	/**
-	 * The purpose of this method is to adapt the build path according to the entries added to the include path.
-	 * If the user added to the include path source folders that are not in (or contained in) the build path,
-	 * he will not get code completion and other functionality for this sources.
-	 * THe user is prompted and asked if he wants to add the relevant sources to the build path as well
-	 * see bug#255930
+	 * The purpose of this method is to adapt the build path according to the
+	 * entries added to the include path. If the user added to the include path
+	 * source folders that are not in (or contained in) the build path, he will
+	 * not get code completion and other functionality for this sources. THe
+	 * user is prompted and asked if he wants to add the relevant sources to the
+	 * build path as well see bug#255930
 	 */
 	private void updateBuildPath() {
 		PHPIncludePathSourcePage includePathSourcePage = (PHPIncludePathSourcePage) fSourceContainerPage;
 
-		boolean shouldAddToBuildPath = includePathSourcePage.shouldAddToBuildPath();
+		boolean shouldAddToBuildPath = includePathSourcePage
+				.shouldAddToBuildPath();
 		if (!shouldAddToBuildPath) {
 			return;
 		}
 
 		// get the source elements that the user added in the source tab
-		List<BPListElement> addedElements = includePathSourcePage.getAddedElements();
+		List<BPListElement> addedElements = includePathSourcePage
+				.getAddedElements();
 		List<IBuildpathEntry> buildPathEntries = new ArrayList<IBuildpathEntry>();
 
-		//in case there are any, the user is prompted with a question 
+		// in case there are any, the user is prompted with a question
 		if (addedElements.size() > 0) {
 			for (BPListElement listElement : addedElements) {
-				if(!BuildPathUtils.isContainedInBuildpath(listElement.getPath(), fCurrScriptProject)) {
+				if (!BuildPathUtils.isContainedInBuildpath(listElement
+						.getPath(), fCurrScriptProject)) {
 					buildPathEntries.add(listElement.getBuildpathEntry());
 				}
 			}
-			
-			// if the user chose to, the relevant entries are added to the buildpath
+
+			// if the user chose to, the relevant entries are added to the
+			// buildpath
 			try {
-				BuildPathUtils.addEntriesToBuildPath(fCurrScriptProject, buildPathEntries);
+				BuildPathUtils.addEntriesToBuildPath(fCurrScriptProject,
+						buildPathEntries);
 			} catch (ModelException e) {
 				Logger.logException("Failed adding entries to build path", e); ////$NON-NLS-1$
 			}
@@ -259,11 +287,14 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	 * Creates the script project and sets the configured build path and output
 	 * location. If the project already exists only build paths are updated.
 	 */
-	public static void flush(List buildpathEntries, IScriptProject javaProject, IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+	public static void flush(List buildpathEntries, IScriptProject javaProject,
+			IProgressMonitor monitor) throws CoreException,
+			OperationCanceledException {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_Script);
+		monitor
+				.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_Script);
 		monitor.beginTask("", buildpathEntries.size() * 4 + 4); //$NON-NLS-1$
 		try {
 			IProject project = javaProject.getProject();
@@ -277,9 +308,11 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 			List<IBuildpathEntry> newBuildPathEntries = new ArrayList<IBuildpathEntry>();
 			List<IBuildpathEntry> newIncludePathEntries = new ArrayList<IBuildpathEntry>();
 
-			// go over the dialog entries. collect all of the source entries for the include path array 
+			// go over the dialog entries. collect all of the source entries for
+			// the include path array
 			// and the rest for the build path array
-			for (Iterator<IBuildpathEntry> iter = buildpathEntries.iterator(); iter.hasNext();) {
+			for (Iterator<IBuildpathEntry> iter = buildpathEntries.iterator(); iter
+					.hasNext();) {
 				BPListElement entry = (BPListElement) iter.next();
 				newIncludePathEntries.add(entry.getBuildpathEntry());
 				if (entry.getEntryKind() != IBuildpathEntry.BPE_SOURCE) {
@@ -287,26 +320,30 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 				}
 
 				IResource res = entry.getResource();
-				if (res instanceof IFolder && entry.getLinkTarget() == null && !res.exists()) {
-					CoreUtility.createFolder((IFolder) res, true, true, new SubProgressMonitor(monitor, 1));
+				if (res instanceof IFolder && entry.getLinkTarget() == null
+						&& !res.exists()) {
+					CoreUtility.createFolder((IFolder) res, true, true,
+							new SubProgressMonitor(monitor, 1));
 				} else {
 					monitor.worked(1);
 				}
 			}
-			if(newBuildPathEntries.size() > 0){
-				BuildPathUtils.addEntriesToBuildPath(javaProject, newBuildPathEntries);
-			}			
-			IncludePathManager.getInstance().addEntriesToIncludePath(project, newIncludePathEntries);
+			if (newBuildPathEntries.size() > 0) {
+				BuildPathUtils.addEntriesToBuildPath(javaProject,
+						newBuildPathEntries);
+			}
+			IncludePathManager.getInstance().addEntriesToIncludePath(project,
+					newIncludePathEntries);
 
 		} finally {
 			monitor.done();
 		}
 	}
-	
+
 	/**
-	 * Initializes the include path for the given project. Multiple calls to init
-	 * are allowed, but all existing settings will be cleared and replace by the
-	 * given or default paths.
+	 * Initializes the include path for the given project. Multiple calls to
+	 * init are allowed, but all existing settings will be cleared and replace
+	 * by the given or default paths.
 	 * 
 	 * @param jproject
 	 *            The java project to configure. Does not have to exist.
@@ -327,16 +364,20 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		List<BPListElement> newBuildpath = new ArrayList<BPListElement>();
 		IProject project = fCurrScriptProject.getProject();
 
-		IncludePath[] includePathEntries = IncludePathManager.getInstance().getIncludePaths(project);
+		IncludePath[] includePathEntries = IncludePathManager.getInstance()
+				.getIncludePaths(project);
 		for (IncludePath entry : includePathEntries) {
 			Object includePathEntry = entry.getEntry();
 
 			if (includePathEntry instanceof IBuildpathEntry) {
 				IBuildpathEntry bpEntry = (IBuildpathEntry) includePathEntry;
-				newBuildpath.add(BPListElement.createFromExisting(bpEntry, fCurrScriptProject));
+				newBuildpath.add(BPListElement.createFromExisting(bpEntry,
+						fCurrScriptProject));
 			} else {
 				IResource resource = (IResource) includePathEntry;
-				newBuildpath.add(new BPListElement(fCurrScriptProject, IBuildpathEntry.BPE_SOURCE, resource.getFullPath(), resource, false));
+				newBuildpath.add(new BPListElement(fCurrScriptProject,
+						IBuildpathEntry.BPE_SOURCE, resource.getFullPath(),
+						resource, false));
 			}
 
 		}
@@ -344,7 +385,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		// inits the dialog field
 		fBuildPathDialogField.enableButton(project.exists());
 		fBuildPathList.setElements(newBuildpath);
-		//	fBuildPathList.setCheckedElements(newBuildpath);
+		// fBuildPathList.setCheckedElements(newBuildpath);
 		initializeTimeStamps();
 		updateUI();
 	}
