@@ -11,14 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.AbstractLanguageToolkit;
+import org.eclipse.dltk.core.IArchive;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.IDLTKLanguageToolkitExtension;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.PHPNature;
 
-public class PHPLanguageToolkit extends AbstractLanguageToolkit {
+public class PHPLanguageToolkit extends AbstractLanguageToolkit implements IDLTKLanguageToolkitExtension{
 
 	private static PHPLanguageToolkit toolkit = new PHPLanguageToolkit();
 
@@ -45,5 +49,17 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit {
 
 	public static IDLTKLanguageToolkit getDefault() {
 		return toolkit;
+	}
+	
+	//add by zhaozw
+	public boolean languageSupportZIPBuildpath() {
+		return true;
+	}
+	@Override
+	public IArchive openArchive(File localFile) {
+		return PHPToolkitUtil.getArchive(localFile);
+	}
+	public boolean isArchiveFileName(String name) {
+		return PHPToolkitUtil.isPharFileName(name);
 	}
 }
