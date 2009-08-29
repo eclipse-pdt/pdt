@@ -507,5 +507,5 @@
   	<context id="type_hierarchy_view">
     	<description>Type Hierarchy View</description>
 	    <topic href="html/Type_Hierarchy_View.htm" label="Type Hierarchy View"/>
-  	</context>
+  	</context>  	  	<context id="phar_packager_wizard_page_context">    	<description>This wizard helps you set packaging options for exporting resources to a PHAR file.</description>     	<topic label="Creating a new PHAR file" href="html/phar/tasks-33.htm" />     	<topic label="Creating PHAR files" href="html/phar/tasks-32.htm" />     	<topic label="Export PHAR Wizard" href="html/phar/ref-export-jar.htm" />   	</context>  	<context id="phar_file_import_wizard_page">    	<description>This page helps you provide all the information required to import files from an archive file into the workspace.</description>     	<topic label="Importing from a Phar File" href="html/phar/tasks-55bg.htm" />     	<topic label="Import Wizard" href="html/phar/ref-70.htm" />   	</context>
  </contexts>

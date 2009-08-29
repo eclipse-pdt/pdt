@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+  <head>
+<meta name="copyright" content="Copyright (c) IBM Corporation and others 2000, 2008. This page is made available under license. For full details see the LEGAL in the documentation book that contains this page." >
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <title>
+      Setting Advanced Options
+    </title>
+    <link rel="stylesheet" href="../book.css" charset="ISO-8859-1" type="text/css">
+  </head>
+  <body>
+    <h1>
+      Setting Advanced Options
+    </h1>
+    <ol>
+      <li>
+        Follow the procedure for <a href="tasks-33.htm">creating a PHAR file</a>, but click <strong>Next</strong> in the last step to go to the PHAR Packaging Options page.
+      </li>
+      <li>
+        If you want to save the PHAR file description, select the <strong>Save the description of this PHAR in the workspace</strong> checkbox. A PHAR file description can be used to
+        <a href="tasks-36.htm">regenerate a PHAR file</a> without using the wizard.
+      </li>
+      <li>
+        The compiler is able to generate CLASS files even when source contains errors. You have the option to exclude CLASS (but not source) files with compile errors. These files
+        will be reported at the end, if reporting is enabled.
+      </li>
+      <li>
+        You can choose to exclude CLASS (but not source) files that have compile warnings. These files will be reported at the end.<br>
+         <strong>Note</strong>: This option does not automatically exclude class files with compile errors.
+      </li>
+      <li>
+        You can choose to include the source folder path by selecting the <strong>Create source folder structure</strong> checkbox.
+      </li>
+      <li>
+        Select the <strong>Build projects if not built automatically</strong> checkbox if you want the export to perform a build before creating the PHAR file.
+      </li>
+      <li>
+        Click <strong>Finish</strong> to create the PHAR file immediately or <strong>Next</strong> if you want to <a href="tasks-35.htm">change the default manifest</a>.
+      </li>
+    </ol>
+    <p>
+      <img src="ngrelt.png" alt="Related tasks" border="0" >
+	</p>
+	<p>
+       <a href="tasks-33.htm">Creating a new PHAR file</a><br>
+       <a href="tasks-35.htm">Defining the PHAR file's manifest</a><br>
+       <a href="tasks-36.htm">Regenerating a PHAR file</a>
+    </p>
+    <p>
+      <img src="ngrelr.png" alt="Related reference" border="0" >
+	</p>
+	<p>	  
+       <a href="ref-export-jar.htm">PHAR file exporter</a>
+    </p>
+    
+  </body>
+</html>
+

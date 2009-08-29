@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+  <head>
+<meta name="copyright" content="Copyright (c) IBM Corporation and others 2000, 2008. This page is made available under license. For full details see the LEGAL in the documentation book that contains this page." >
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <title>
+      Defining the PHAR File's Manifest
+    </title>
+    <link rel="stylesheet" href="../book.css" charset="ISO-8859-1" type="text/css">
+  </head>
+  <body>
+    <h1>
+      Defining the PHAR File's Manifest
+    </h1>
+    <p>
+      You can either define the important parts of the PHAR file manifest directly in the wizard or choose to use a manifest file that already exists in your workbench.
+    </p>
+    <h2>
+      Creating a new manifest
+    </h2>
+    <ol>
+      <li>
+        Follow the procedure for <a href="tasks-33.htm">creating a PHAR file</a>, but click&nbsp;<strong>Next</strong> in the last step to go to the PHAR Packaging Options page.
+      </li>
+      <li>
+        Set any <a href="tasks-34.htm">advanced options</a> that you want to set, and then click&nbsp;<strong>Next</strong> again to go to the PHAR Manifest Specification page.
+      </li>
+      <li>
+        If it is not already selected, click the&nbsp;<strong>Generate the manifest file</strong> button.
+      </li>
+      <li>
+        You can now choose to save the manifest in the workbench. This will save the manifest for later use. Click&nbsp;<strong>Save the manifest in the workspace</strong>, then
+        click&nbsp;<strong>Browse</strong> next to the&nbsp;<strong>Manifest file</strong> field to specify a path and file name for the
+        manifest.
+      </li>
+      <li>
+        If you decided to save the manifest file in the previous step and you chose to save the PHAR description on the previous wizard page, then you can choose to reuse it in the
+        PHAR description (by selecting the <strong>Reuse and save the manifest in the workspace</strong> checkbox). This means that the saved file will be used when the PHAR file is
+        recreated from the PHAR description.This option is useful if you want to modify or replace the manifest file before recreating the PHAR file from the description.
+      </li>
+      <li>
+        You can choose to seal the PHAR and optionally exclude some packages from being sealed or specify a list with sealed packages. By default, nothing is sealed.
+      </li>
+      <li>
+        Click the&nbsp;<strong>Browse</strong> button next to the&nbsp;<strong>Main class</strong> field to specify the entry point for your
+        applications.<br>
+         <strong>Note</strong>: If your class is not in the list, then you forgot to select it at the beginning.
+      </li>
+      <li>
+        Click&nbsp;<strong>Finish</strong>. This will create the PHAR, and optionally a PHAR description and a manifest file.
+      </li>
+    </ol>
+    <h2>
+      Using an existing manifest
+    </h2>
+    You can use an existing manifest file that already exists in your workbench. 
+    <ol>
+      <li>
+        Follow the procedure for creating a PHAR file, but click&nbsp;<strong>Next</strong> in the last step to go to the PHAR Packaging Options page.
+      </li>
+      <li>
+        Set any advanced options that you want to set, and the click&nbsp;<strong>Next</strong> again to go to the PHAR Manifest Specification page.
+      </li>
+      <li>
+        Click the&nbsp;<strong>Use existing manifest from workspace</strong> radio button.
+      </li>
+      <li>
+        Click the&nbsp;<strong>Browse</strong> button to choose a manifest file from the workbench.
+      </li>
+      <li>
+        Click&nbsp;<strong>Finish</strong>. This will create the PHAR and optionally a PHAR description.
+      </li>
+    </ol>
+    <p>
+    <img src="ngrelt.png" alt="Related tasks" border="0" >
+	</p>
+	<p> 
+       <a href="tasks-33.htm">Creating a new PHAR file</a><br>
+       <a href="tasks-34.htm">Setting advanced options</a><br>
+       <a href="tasks-36.htm">Regenerating a PHAR file</a>
+    </p>
+    <p>
+      <img src="ngrelr.png" alt="Related reference" border="0" >
+	</p>
+	<p>
+       <a href="ref-export-jar.htm">PHAR file exporter</a>
+    </p>
+    
+  </body>
+</html>
+
