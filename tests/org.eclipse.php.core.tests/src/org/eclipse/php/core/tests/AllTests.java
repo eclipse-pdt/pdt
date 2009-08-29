@@ -31,6 +31,7 @@ import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
 import org.eclipse.php.core.tests.formatter.FormatterTests;
 import org.eclipse.php.core.tests.includepath.IncludePathManagerTests;
 import org.eclipse.php.core.tests.model_structure.ModelStructureTests;
+import org.eclipse.php.core.tests.phar.PharFileTest;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
 import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
 
@@ -68,7 +69,8 @@ public class AllTests {
 		suite.addTest(DocumentLexerTests.suite());
 		suite.addTest(FormatterTests.suite());
 		suite.addTest(PHPPartitionerTests.suite());
-
+		// add by zhaozw
+		suite.addTest(PharFileTest.suite());
 		// $JUnit-END$
 
 		return suite;
