@@ -77,6 +77,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	protected JavaScriptSupportGroup fJavaScriptSupportGroup;
 	protected LayoutGroup fLayoutGroup;
 	protected LocationGroup fPHPLocationGroup;
+	private WizardFragment fragment;
 
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
@@ -91,6 +92,14 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		fVersionGroup = new VersionGroup(composite);
 		fLayoutGroup = new LayoutGroup(composite);
 		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
+
+		CompositeData data = new CompositeData();
+		data.setParetnt(composite);
+		data.setSettings(getDialogSettings());
+		data.setObserver(fPHPLocationGroup);
+		fragment = (WizardFragment) Platform.getAdapterManager().getAdapter(
+				data, PHPProjectWizardFirstPage.class);
+
 		fDetectGroup = new DetectGroup(composite);
 
 		// establish connections
@@ -415,10 +424,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 				}
 			}
 
-			if (!fPHPLocationGroup.isComplete()) {
-				setErrorMessage(fPHPLocationGroup.getErrorMessage());
-				setPageComplete(false);
-				return;
+			if (fragment != null) {
+				fragment.getWizardModel().putObject("ProjectName",
+						fNameGroup.getName());
+				if (!fragment.isComplete()) {
+					setErrorMessage((String) fragment.getWizardModel()
+							.getObject(ERROR_MESSAGE));
+					setPageComplete(false);
+					return;
+				}
 			}
 
 			setPageComplete(true);
@@ -619,7 +633,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		protected SelectionButtonDialogField fLocalServerRadio;
 		protected ComboDialogField fSeverLocationList;
 		private String[] docRootArray;
-		private WizardFragment fragment;
+
 		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID
 				+ ".last.external.project"; //$NON-NLS-1$
 
@@ -701,24 +715,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 				fLocalServerRadio.setSelection(true);
 			}
 
-			CompositeData data = new CompositeData();
-			data.setParetnt(group);
-			data.setSettings(getDialogSettings());
-			data.setObserver(this);
-
-			fragment = (WizardFragment) Platform.getAdapterManager()
-					.getAdapter(data, PHPProjectWizardFirstPage.class);
-		}
-
-		public boolean isComplete() {
-			return fragment == null || fragment.isComplete();
-		}
-
-		public String getErrorMessage() {
-			if (fragment == null) {
-				return "";
-			}
-			return (String) fragment.getWizardModel().getObject(ERROR_MESSAGE);
 		}
 
 		public boolean isInLocalServer() {
@@ -825,13 +821,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			}
 
 			fireEvent();
-		}
-
-		public WizardModel getWizardData() {
-			if (fragment == null) {
-				return null;
-			}
-			return fragment.getWizardModel();
 		}
 
 	}
@@ -977,7 +966,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	}
 
 	public WizardModel getWizardData() {
-		return fPHPLocationGroup.getWizardData();
+		if (fragment != null) {
+			return fragment.getWizardModel();
+		}
+		return null;
 	}
-
 }
