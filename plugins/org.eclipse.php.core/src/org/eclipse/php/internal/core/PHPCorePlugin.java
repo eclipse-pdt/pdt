@@ -190,7 +190,8 @@ public class PHPCorePlugin extends Plugin {
 		if (existingPath != null) {
 			newPath.addAll(Arrays.asList(existingPath));
 		}
-		IBuildpathEntry[] oldIncludePath = ProjectBackwardCompatibilityUtil
+		ProjectBackwardCompatibilityUtil unit = new ProjectBackwardCompatibilityUtil();
+		IBuildpathEntry[] oldIncludePath = unit
 				.convertIncludePathForProject(project);
 		if (oldIncludePath != null) {
 			newPath.addAll(Arrays.asList(oldIncludePath));

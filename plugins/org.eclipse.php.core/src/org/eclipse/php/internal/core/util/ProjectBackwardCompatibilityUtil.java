@@ -55,13 +55,19 @@ public class ProjectBackwardCompatibilityUtil {
 	public static final String TAG_RESOURCE = "resource"; //$NON-NLS-1$
 	public static final String TAG_EXPORTED = "exported"; //$NON-NLS-1$
 	private static final String PREF_QUALIFIER = PHPCorePlugin.ID + ".projectOptions"; //$NON-NLS-1$
+	
+	private IBuildpathEntry[] buildpathEntries = {};
+	private List<String> notImportedIncludePathVariableNames = new ArrayList<String>();
+	
+	public List<String> getNotImportedIncludePathVariableNames() {
+		return notImportedIncludePathVariableNames;
+	}
 
-	private static IBuildpathEntry[] buildpathEntries = {};
 
 	/*
 	 * Reads the project include paths and returns the corresponding build paths
 	 */
-	public static IBuildpathEntry[] convertIncludePathForProject(IProject project) {
+	public IBuildpathEntry[] convertIncludePathForProject(IProject project) {
 		try {
 			ProjectScope projectScope = new ProjectScope(project);
 			// reads the project options created by the old model
@@ -115,7 +121,7 @@ public class ProjectBackwardCompatibilityUtil {
 	/*
 	 * constructs a build entry from an element 
 	 */
-	private static IBuildpathEntry elementDecode(Element element) {
+	private IBuildpathEntry elementDecode(Element element) {
 
 		String entryKindAttr = element.getAttribute(TAG_ENTRY_KIND);
 		String pathAttr = element.getAttribute(TAG_PATH);
@@ -153,6 +159,8 @@ public class ProjectBackwardCompatibilityUtil {
 						
 						if(path != null) {
 							entry = DLTKCore.newExtLibraryEntry(EnvironmentPathUtils.getFullPath(LocalEnvironment.getInstance(), path));
+						}else {
+							notImportedIncludePathVariableNames.add(variableName);
 						}
 					}
 				} else {
