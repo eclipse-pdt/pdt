@@ -81,9 +81,10 @@ public class IncludePathUtils {
 			return getRelativeLocationFromIncludePath(project, modelElement.getPath());
 		}
 
-		// built in element 
+		// built in element
+		final IProjectFragment projectFragment = ScriptModelUtil.getProjectFragment(modelElement);
 		final IScriptProject elementProject = modelElement.getScriptProject();
-		if (elementProject != null && !elementProject.equals(project)) {
+		if (elementProject != null && !elementProject.equals(project) && !projectFragment.isExternal()) {
 			// TODO add project dependency 
 			return Path.EMPTY;
 		}
