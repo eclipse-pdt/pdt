@@ -97,8 +97,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		data.setParetnt(composite);
 		data.setSettings(getDialogSettings());
 		data.setObserver(fPHPLocationGroup);
-		fragment = (WizardFragment) Platform.getAdapterManager().getAdapter(
-				data, PHPProjectWizardFirstPage.class);
+		fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(
+				data, PHPProjectWizardFirstPage.class.getName());
 
 		fDetectGroup = new DetectGroup(composite);
 
