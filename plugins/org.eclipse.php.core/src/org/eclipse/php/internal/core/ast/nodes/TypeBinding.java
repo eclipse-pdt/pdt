@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class TypeBinding implements ITypeBinding {
 
+	private static final IMethodBinding[] EMPTY_METHODS = new IMethodBinding[0];
 	private IEvaluatedType type;
 	private IModelElement[] elements;
 	private BindingResolver resolver;
@@ -192,7 +193,7 @@ public class TypeBinding implements ITypeBinding {
 	 */
 	public IMethodBinding[] getDeclaredMethods() {
 		if (isUnknown()) {
-			return new IMethodBinding[0];
+			return EMPTY_METHODS;
 		}
 
 		if (this.methods == null) {
@@ -215,8 +216,9 @@ public class TypeBinding implements ITypeBinding {
 					}
 				}
 				this.methods = methodBindings.toArray(new IMethodBinding[methodBindings.size()]);
+			} else {
+				this.methods = EMPTY_METHODS; // TODO - Implement IMethodBinding				
 			}
-			this.methods = new IMethodBinding[0]; // TODO - Implement IMethodBinding
 		}
 		return this.methods;
 	}
