@@ -1,0 +1,30 @@
+--TEST--
+Test Class Var Hinting of one element from non global namespaces
+Should return result evein if no "use NS1;" statement exists,
+Will be injected automatically after proposal selected
+--FILE--
+<?
+namespace NS1 {
+	interface If1 { public function testIf1(); }
+}
+
+namespace NS2 {
+	interface If2 { public function testIf2(); }
+}
+
+namespace NS3 {
+// should fail because no NS1 and NS2 are used to NS3
+// use NS1;
+// use NS2;
+class TestClass {
+	/**
+	 * @var NS1\If1
+	 */
+	public $_testObject;
+} 
+$test = new TestClass(); 
+$test->_testObject-> 
+}
+?>
+--EXPECT--
+method(testIf1)

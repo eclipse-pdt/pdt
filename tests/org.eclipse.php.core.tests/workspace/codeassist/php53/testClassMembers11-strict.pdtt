@@ -1,0 +1,23 @@
+--TEST--
+Should complete class variables using PHPDoc @var hinting
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?
+namespace NS;
+class Person {
+	public $FirstName;
+	public $LastName;
+}
+class FooBase {}
+class Foo extends FooBase {
+	/**
+	 * @var \NS\Person
+	 */
+	public static $Person;
+}
+\NS\Foo::$Person->|
+?>
+--EXPECT--
+field($FirstName)
+field($LastName)
