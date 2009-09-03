@@ -95,6 +95,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 	private void addExternalEntries(ICompletionReporter reporter, SourceRange replaceRange, IScriptProject project, final Object entry, IPath prefixPathFolder, IPath lastSegmant) throws ModelException {
 		switch (((IBuildpathEntry) entry).getEntryKind()) {
 			case IBuildpathEntry.BPE_CONTAINER:
+			case IBuildpathEntry.BPE_LIBRARY:
 				final IProjectFragment[] findProjectFragments = project.findProjectFragments((IBuildpathEntry) entry);
 				for (IProjectFragment projectFragment : findProjectFragments) {
 					

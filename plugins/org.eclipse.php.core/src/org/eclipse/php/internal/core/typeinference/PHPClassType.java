@@ -38,16 +38,22 @@ public class PHPClassType extends ClassType implements IClassType {
 		if (typeName == null) {
 			throw new IllegalArgumentException();
 		}
-		// detect the namespace prefix:
+		
 		int i = typeName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-		if (i != -1) {
+		// detect the namespace prefix:
+		// global namespace case
+		if(i == -1) {
+			this.typeName = typeName;
+		}else if(i == 0) {
+			this.typeName = typeName.substring(1, typeName.length());
+		}else if(i > 0) {
+			// check is global namespace
 			if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 				// make the type name fully qualified:
 				typeName = new StringBuilder().append(NamespaceReference.NAMESPACE_SEPARATOR).append(typeName).toString();
 				i += 1;
 			}
 			this.namespace = typeName.substring(0, i);
-		} else {
 			this.typeName = typeName;
 		}
 	}
