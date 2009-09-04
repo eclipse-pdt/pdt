@@ -29,9 +29,9 @@ import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 
 /**
- *
+ * 
  * @author guy.g
- *
+ * 
  */
 public class FormatPreferencesSupport {
 
@@ -49,11 +49,13 @@ public class FormatPreferencesSupport {
 	private PreferencesPropagator preferencesPropagator;
 
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
-	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
+	private static final Preferences store = PHPCorePlugin.getDefault()
+			.getPluginPreferences();
 
 	private FormatPreferencesSupport() {
 
-		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER, store);
+		preferencesPropagator = PreferencePropagatorFactory
+				.getPreferencePropagator(NODES_QUALIFIER, store);
 		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
 	}
 
@@ -68,7 +70,8 @@ public class FormatPreferencesSupport {
 
 	public int getIndentationSize(IDocument document) {
 		if (document == null) {
-			String indentSize = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+			String indentSize = preferencesSupport
+					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 			if (indentSize == null) {
 				return 1;
 			}
@@ -80,7 +83,8 @@ public class FormatPreferencesSupport {
 
 	public char getIndentationChar(IDocument document) {
 		if (document == null) {
-			String useTab = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
+			String useTab = preferencesSupport
+					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTab == null) {
 				return '\t';
 			}
@@ -94,8 +98,9 @@ public class FormatPreferencesSupport {
 		if (fLastDocument != document) {
 			DOMModelForPHP editorModel = null;
 			try {
-				editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager().getExistingModelForRead(document);
-				
+				editorModel = (DOMModelForPHP) StructuredModelManager
+						.getModelManager().getExistingModelForRead(document);
+
 				String baseLocation = editorModel.getBaseLocation();
 				// The baseLocation may be a path on disk or relative to the
 				// workspace root. Don't translate on-disk paths to
@@ -103,7 +108,8 @@ public class FormatPreferencesSupport {
 				IPath basePath = new Path(baseLocation);
 				IFile file = null;
 				if (basePath.segmentCount() > 1) {
-					file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+					file = ResourcesPlugin.getWorkspace().getRoot().getFile(
+							basePath);
 					if (!file.exists()) {
 						file = null;
 					}
@@ -124,10 +130,14 @@ public class FormatPreferencesSupport {
 		}
 
 		if (fLastDocument != document || preferencesChanged) {
-			String useTab = preferencesSupport.getPreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS, null, fLastProject);
-			String indentSize = preferencesSupport.getPreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE, null, fLastProject);
+			String useTab = preferencesSupport.getPreferencesValue(
+					PHPCoreConstants.FORMATTER_USE_TABS, null, fLastProject);
+			String indentSize = preferencesSupport.getPreferencesValue(
+					PHPCoreConstants.FORMATTER_INDENTATION_SIZE, null,
+					fLastProject);
 
-			indentationChar = (Boolean.valueOf(useTab).booleanValue()) ? '\t' : ' ';
+			indentationChar = (Boolean.valueOf(useTab).booleanValue()) ? '\t'
+					: ' ';
 			indentationSize = Integer.valueOf(indentSize).intValue();
 
 			preferencesChanged = false;
@@ -137,16 +147,21 @@ public class FormatPreferencesSupport {
 
 	private void verifyListening() {
 		if (listener != null) {
-			preferencesPropagator.removePropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
-			preferencesPropagator.removePropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+			preferencesPropagator.removePropagatorListener(listener,
+					PHPCoreConstants.FORMATTER_USE_TABS);
+			preferencesPropagator.removePropagatorListener(listener,
+					PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 		}
 
 		listener = new PreferencesPropagatorListener(fLastProject);
-		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_USE_TABS);
-		preferencesPropagator.addPropagatorListener(listener, PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+		preferencesPropagator.addPropagatorListener(listener,
+				PHPCoreConstants.FORMATTER_USE_TABS);
+		preferencesPropagator.addPropagatorListener(listener,
+				PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 	}
 
-	private class PreferencesPropagatorListener implements IPreferencesPropagatorListener {
+	private class PreferencesPropagatorListener implements
+			IPreferencesPropagatorListener {
 
 		private IProject project;
 

@@ -22,21 +22,22 @@ import org.eclipse.text.edits.TextEdit;
  * functionalities for creating code indentations and {@link TextEdit}s.
  * 
  * @author shalom
- *
+ * 
  */
 public interface ICodeFormattingProcessor {
 
 	/**
-	 * Returns the text edits that represents the result of this visitor's code formatting
-	 * process.
+	 * Returns the text edits that represents the result of this visitor's code
+	 * formatting process.
 	 * 
-	 * @return A {@link MultiTextEdit} that holds all the text edits that were aggregated during the 
-	 * code formatter visitor's processing.
+	 * @return A {@link MultiTextEdit} that holds all the text edits that were
+	 *         aggregated during the code formatter visitor's processing.
 	 */
 	public MultiTextEdit getTextEdits();
 
 	/**
-	 * Returns a string that represents the indentation 
+	 * Returns a string that represents the indentation
+	 * 
 	 * @param indentationUnits
 	 * @return
 	 */

@@ -26,9 +26,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 public class FormatterUtils {
 	private static PHPStructuredTextPartitioner partitioner = new PHPStructuredTextPartitioner();
 
-	public static String getPartitionType(IStructuredDocument document, int offset, boolean perferOpenPartitions) {
+	public static String getPartitionType(IStructuredDocument document,
+			int offset, boolean perferOpenPartitions) {
 		try {
-			IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+			IStructuredDocumentRegion sdRegion = document
+					.getRegionAtCharacterOffset(offset);
 			if (sdRegion == null) {
 				return null;
 			}
@@ -39,7 +41,7 @@ public class FormatterUtils {
 				tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 			}
 			// in case the cursor on the beginning of '?>' tag
-			// we decrease the offset to get the PhpScriptRegion 
+			// we decrease the offset to get the PhpScriptRegion
 			if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
 				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
 			}
@@ -56,17 +58,23 @@ public class FormatterUtils {
 			if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				int regionOffset = offset - regionStart;
-				ITextRegion innerRegion = scriptRegion.getPhpToken(regionOffset);
+				ITextRegion innerRegion = scriptRegion
+						.getPhpToken(regionOffset);
 				String partition = scriptRegion.getPartition(regionOffset);
 				// check if the offset is in the start of the php token
-				// because if so this means we're at PHP_DEFAULT partition type 
-				if (offset - (sdRegion.getStart() + regionStart + innerRegion.getStart()) == 0) {
+				// because if so this means we're at PHP_DEFAULT partition type
+				if (offset
+						- (sdRegion.getStart() + regionStart + innerRegion
+								.getStart()) == 0) {
 					String regionType = innerRegion.getType();
-					//except for cases we're inside the fragments of comments
-					if (PHPPartitionTypes.isPHPDocCommentState(regionType) || regionType != PHPRegionTypes.PHPDOC_COMMENT_START) {
+					// except for cases we're inside the fragments of comments
+					if (PHPPartitionTypes.isPHPDocCommentState(regionType)
+							|| regionType != PHPRegionTypes.PHPDOC_COMMENT_START) {
 						return partition;
 					}
-					if (PHPPartitionTypes.isPHPMultiLineCommentState(regionType) || regionType != PHPRegionTypes.PHP_COMMENT_START) {
+					if (PHPPartitionTypes
+							.isPHPMultiLineCommentState(regionType)
+							|| regionType != PHPRegionTypes.PHP_COMMENT_START) {
 						return partition;
 					}
 
@@ -81,7 +89,8 @@ public class FormatterUtils {
 		return partitioner.getContentType(offset, perferOpenPartitions);
 	}
 
-	public static String getPartitionType(IStructuredDocument document, int offset) {
+	public static String getPartitionType(IStructuredDocument document,
+			int offset) {
 		return getPartitionType(document, offset, false);
 	}
 
@@ -90,7 +99,8 @@ public class FormatterUtils {
 	/**
 	 * Return the blanks at the start of the line.
 	 */
-	public static String getLineBlanks(IStructuredDocument document, IRegion lineInfo) throws BadLocationException {
+	public static String getLineBlanks(IStructuredDocument document,
+			IRegion lineInfo) throws BadLocationException {
 		helpBuffer.setLength(0);
 		int startOffset = lineInfo.getOffset();
 		int length = lineInfo.getLength();
@@ -107,21 +117,25 @@ public class FormatterUtils {
 	}
 
 	/**
-	 * Returns the previous php structured document.
-	 * Special cases : 
-	 * 1) previous is null - returns null
-	 * 2) previous is not PHP region - returns the last region of the last php block  
+	 * Returns the previous php structured document. Special cases : 1) previous
+	 * is null - returns null 2) previous is not PHP region - returns the last
+	 * region of the last php block
+	 * 
 	 * @param currentStructuredDocumentRegion
 	 */
-	public static IStructuredDocumentRegion getLastPhpStructuredDocumentRegion(IStructuredDocumentRegion currentStructuredDocumentRegion) {
+	public static IStructuredDocumentRegion getLastPhpStructuredDocumentRegion(
+			IStructuredDocumentRegion currentStructuredDocumentRegion) {
 		assert currentStructuredDocumentRegion != null;
 
 		// get last region
-		currentStructuredDocumentRegion = currentStructuredDocumentRegion.getPrevious();
+		currentStructuredDocumentRegion = currentStructuredDocumentRegion
+				.getPrevious();
 
 		// search for last php block (then returns the last region)
-		while (currentStructuredDocumentRegion != null && currentStructuredDocumentRegion.getType() != PHPRegionContext.PHP_CONTENT) {
-			currentStructuredDocumentRegion = currentStructuredDocumentRegion.getPrevious();
+		while (currentStructuredDocumentRegion != null
+				&& currentStructuredDocumentRegion.getType() != PHPRegionContext.PHP_CONTENT) {
+			currentStructuredDocumentRegion = currentStructuredDocumentRegion
+					.getPrevious();
 		}
 
 		return currentStructuredDocumentRegion;

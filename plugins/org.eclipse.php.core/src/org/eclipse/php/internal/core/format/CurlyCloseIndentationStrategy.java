@@ -23,13 +23,18 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 
-	public void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int forOffset) throws BadLocationException {
-		final IRegion indentationBaseLine = getCurlyOpenLineInformation(document, forOffset);
+	public void placeMatchingBlanks(IStructuredDocument document,
+			StringBuffer result, int lineNumber, int forOffset)
+			throws BadLocationException {
+		final IRegion indentationBaseLine = getCurlyOpenLineInformation(
+				document, forOffset);
 		String blanks = "";
 		if (indentationBaseLine != null) {
-			blanks = FormatterUtils.getLineBlanks(document, indentationBaseLine);
-		} else { //if no matching bracket was found leaving the bracket as is.
-			blanks = FormatterUtils.getLineBlanks(document, document.getLineInformationOfOffset(forOffset));
+			blanks = FormatterUtils
+					.getLineBlanks(document, indentationBaseLine);
+		} else { // if no matching bracket was found leaving the bracket as is.
+			blanks = FormatterUtils.getLineBlanks(document, document
+					.getLineInformationOfOffset(forOffset));
 		}
 		result.append(blanks);
 	}
@@ -41,11 +46,13 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 	 * TODO this function has a bug in it: if there is a '{' inside inner state
 	 * then it will not ignore it as it should.
 	 */
-	protected IRegion getCurlyOpenLineInformation(IStructuredDocument document, int forOffset) throws BadLocationException {
+	protected IRegion getCurlyOpenLineInformation(IStructuredDocument document,
+			int forOffset) throws BadLocationException {
 		int offset = forOffset;
 		int curlyCount = 0;
 
-		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+		IStructuredDocumentRegion sdRegion = document
+				.getRegionAtCharacterOffset(offset);
 		if (sdRegion == null) {
 			return null;
 		}
@@ -66,7 +73,8 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				tRegion = scriptRegion.getPhpToken(offset - regionStart - 1);
 
-				// go backward over the region to find a 'case' or 'default' region
+				// go backward over the region to find a 'case' or 'default'
+				// region
 				// in this case is the same indentation
 				// other case if look for the '{' of the 'switch' region
 				while (tRegion != null) {
@@ -74,13 +82,16 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 					if (token == PHPRegionTypes.PHP_CURLY_OPEN) {
 						curlyCount--;
 						if (curlyCount < 0) {
-							return document.getLineInformationOfOffset(tRegion.getStart() + regionStart);
+							return document.getLineInformationOfOffset(tRegion
+									.getStart()
+									+ regionStart);
 						}
 					} else if (token == PHPRegionTypes.PHP_CURLY_CLOSE) {
 						curlyCount++;
 					}
 					if (tRegion.getStart() > 0) {
-						tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+						tRegion = scriptRegion
+								.getPhpToken(tRegion.getStart() - 1);
 					} else {
 						break;
 					}
@@ -88,9 +99,11 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 			}
 
 			tRegion = null;
-			//looking for the previous php block, maybe the '{' is in it (https://bugs.eclipse.org/bugs/show_bug.cgi?id=201648)
+			// looking for the previous php block, maybe the '{' is in it
+			// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=201648)
 			while ((sdRegion = sdRegion.getPrevious()) != null) {
-				if (sdRegion.getFirstRegion().getType().equals(PHPRegionContext.PHP_OPEN)) {
+				if (sdRegion.getFirstRegion().getType().equals(
+						PHPRegionContext.PHP_OPEN)) {
 					tRegion = sdRegion.getRegions().get(1);
 					regionStart = sdRegion.getStartOffset(tRegion);
 					offset = sdRegion.getEndOffset(tRegion);

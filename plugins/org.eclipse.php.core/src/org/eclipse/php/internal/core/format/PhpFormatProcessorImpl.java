@@ -24,35 +24,40 @@ import org.w3c.dom.Node;
 
 public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 
-	// saving the paramenters of the formatting areas 
-	//so that if we are required to format only part of the php - we'll have the data.
-
+	// saving the paramenters of the formatting areas
+	// so that if we are required to format only part of the php - we'll have
+	// the data.
 
 	protected String getFileExtension() {
 		return "php"; //$NON-NLS-1$
 	}
 
 	/**
-	 * Overrites the getFormatter so now the formatter for php is PhpFormatter and 
-	 * the others get the default (html) formatter 
+	 * Overrites the getFormatter so now the formatter for php is PhpFormatter
+	 * and the others get the default (html) formatter
 	 */
 	protected IStructuredFormatter getFormatter(Node node) {
-		return HTMLFormatterNoPHPFactory.getInstance().createFormatter(node, getFormatPreferences());
+		return HTMLFormatterNoPHPFactory.getInstance().createFormatter(node,
+				getFormatPreferences());
 	}
 
 	protected void refreshFormatPreferences() {
 		super.refreshFormatPreferences();
 	}
 
-	public void formatDocument(IDocument document, int start, int length) throws IOException, CoreException {
+	public void formatDocument(IDocument document, int start, int length)
+			throws IOException, CoreException {
 
 		if (document == null)
 			return;
 
 		if ((start >= 0) && (length >= 0)) {
-			// the following if is the reason for not using the super (except for saving the start and length)
-			// the bug in the super is that in a multipass formatter the document length is changed and thus
-			// the test (start + length <= document.getLength()) is not valid because it will always fail
+			// the following if is the reason for not using the super (except
+			// for saving the start and length)
+			// the bug in the super is that in a multipass formatter the
+			// document length is changed and thus
+			// the test (start + length <= document.getLength()) is not valid
+			// because it will always fail
 			if ((start + length > document.getLength())) {
 				if (start > document.getLength()) {
 					return;
@@ -66,13 +71,15 @@ public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 				// setup structuredModel
 				// Note: We are getting model for edit. Will save model if
 				// model changed.
-				structuredModel = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
+				structuredModel = StructuredModelManager.getModelManager()
+						.getExistingModelForEdit(document);
 
 				// format
 				formatModel(structuredModel, start, length);
 
 				// save model if needed
-				if (!structuredModel.isSharedForEdit() && structuredModel.isSaveNeeded())
+				if (!structuredModel.isSharedForEdit()
+						&& structuredModel.isSaveNeeded())
 					structuredModel.save();
 			} finally {
 				// ensureClosed(outputStream, null);
@@ -83,7 +90,8 @@ public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 		}
 	}
 
-	public void formatModel(IStructuredModel structuredModel, int start, int length) {
+	public void formatModel(IStructuredModel structuredModel, int start,
+			int length) {
 		HTMLFormatterNoPHPFactory.getInstance().start = start;
 		HTMLFormatterNoPHPFactory.getInstance().length = length;
 		super.formatModel(structuredModel, start, length);

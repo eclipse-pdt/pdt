@@ -22,24 +22,27 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 
-	public void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int offset) throws BadLocationException {
+	public void placeMatchingBlanks(IStructuredDocument document,
+			StringBuffer result, int lineNumber, int offset)
+			throws BadLocationException {
 
 		IRegion indentationBase = null;
 		boolean found = false;
 		boolean addIndentation = false;
 		int curlyCount = 0;
 		/*
-		 *  TODO this function has a bug in it: if there is a '{' inside inner state then it will not ignore it 
-		 *  as it should.
+		 * TODO this function has a bug in it: if there is a '{' inside inner
+		 * state then it will not ignore it as it should.
 		 */
 
-		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+		IStructuredDocumentRegion sdRegion = document
+				.getRegionAtCharacterOffset(offset);
 		if (sdRegion == null) {
 			return;
 		}
 
-		// in 'case default' indentation case we move one char back to avoid 
-		// the first 'case' or 'default' region 
+		// in 'case default' indentation case we move one char back to avoid
+		// the first 'case' or 'default' region
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		int regionStart = sdRegion.getStartOffset(tRegion);
 
@@ -67,11 +70,15 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 					}
 				} else if (token == PHPRegionTypes.PHP_CURLY_CLOSE) {
 					curlyCount++;
-				} else if ((token == PHPRegionTypes.PHP_CASE) || (token == PHPRegionTypes.PHP_DEFAULT)) {
-					if(curlyCount == 0)found = true;
+				} else if ((token == PHPRegionTypes.PHP_CASE)
+						|| (token == PHPRegionTypes.PHP_DEFAULT)) {
+					if (curlyCount == 0)
+						found = true;
 				}
 				if (found) {
-					indentationBase = document.getLineInformationOfOffset(tRegion.getStart() + regionStart);
+					indentationBase = document
+							.getLineInformationOfOffset(tRegion.getStart()
+									+ regionStart);
 					break;
 				}
 				if (tRegion.getStart() > 0) {
@@ -83,11 +90,14 @@ public class CaseDefaultIndentationStrategy implements IIndentationStrategy {
 		}
 
 		if (indentationBase != null) {
-			String blanks = FormatterUtils.getLineBlanks(document, indentationBase);
+			String blanks = FormatterUtils.getLineBlanks(document,
+					indentationBase);
 			result.append(blanks);
 			if (addIndentation) {
-				int indentationSize = FormatPreferencesSupport.getInstance().getIndentationSize(document);
-				char indentationChar = FormatPreferencesSupport.getInstance().getIndentationChar(document);
+				int indentationSize = FormatPreferencesSupport.getInstance()
+						.getIndentationSize(document);
+				char indentationChar = FormatPreferencesSupport.getInstance()
+						.getIndentationChar(document);
 				for (int i = 0; i < indentationSize; i++) {
 					result.append(indentationChar);
 				}

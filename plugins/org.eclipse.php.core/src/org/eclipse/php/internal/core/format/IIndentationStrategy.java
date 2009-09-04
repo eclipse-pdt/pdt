@@ -16,6 +16,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public interface IIndentationStrategy {
 
-	void placeMatchingBlanks(IStructuredDocument document, StringBuffer result, int lineNumber, int forOffset) throws BadLocationException;
+	void placeMatchingBlanks(IStructuredDocument document, StringBuffer result,
+			int lineNumber, int forOffset) throws BadLocationException;
 
 }
