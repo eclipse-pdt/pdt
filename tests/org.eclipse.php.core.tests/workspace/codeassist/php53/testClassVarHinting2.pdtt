@@ -1,0 +1,28 @@
+--TEST--
+Test Class Var Hinting of two elements from non global namespaces
+--FILE--
+<?
+namespace NS1 {
+	interface If1 { public function testIf1(); }
+}
+
+namespace NS2 {
+	interface If2 { public function testIf2(); }
+}
+
+namespace NS3 {
+	use NS1;
+	use NS2;
+class TestClass {
+	/**
+	 * @var \NS1\If1|\NS2\If2
+	 */
+	public $_testObject;
+} 
+$test = new TestClass(); 
+$test->_testObject->|
+}
+?>
+--EXPECT--
+method(testIf1)
+method(testIf2)
