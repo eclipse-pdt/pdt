@@ -16,8 +16,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.ArchiveFolder;
 import org.eclipse.dltk.internal.core.ScriptFolder;
-import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.Logger;
@@ -29,12 +29,11 @@ import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 
 /**
- * This strategy completes resources (both folders and files) that are 
- * available to the include statement.
- * {@link IncludeStatementContext}
+ * This strategy completes resources (both folders and files) that are available
+ * to the include statement. {@link IncludeStatementContext}
  */
 public class IncludeStatementStrategy extends AbstractCompletionStrategy {
-	
+
 	public final static String FOLDER_SEPARATOR = "/"; //$NON-NLS-1$
 
 	public IncludeStatementStrategy(ICompletionContext context) {
@@ -60,30 +59,37 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		}
 
 		final IScriptProject scriptProject = sourceModule.getScriptProject();
-		final IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(scriptProject.getProject());
+		final IncludePath[] includePaths = IncludePathManager.getInstance()
+				.getIncludePaths(scriptProject.getProject());
 
 		for (IncludePath includePath : includePaths) {
-			visitEntry(includePath, prefix, reporter, replaceRange, sourceModule.getScriptProject());
+			visitEntry(includePath, prefix, reporter, replaceRange,
+					sourceModule.getScriptProject());
 		}
 
 	}
 
-	private void visitEntry(IncludePath includePath, String prefix, ICompletionReporter reporter, SourceRange replaceRange, IScriptProject project) {
+	private void visitEntry(IncludePath includePath, String prefix,
+			ICompletionReporter reporter, SourceRange replaceRange,
+			IScriptProject project) {
 		// the root entry of this element
 		final Object entry = includePath.getEntry();
 
 		final IPath prefixPath = new Path(prefix);
 		IPath prefixPathFolder = prefixPath;
 		IPath lastSegmant = new Path("");
-		if (prefixPath.segmentCount() != 0 && !prefix.endsWith("\\") && !prefix.endsWith("/")) {
+		if (prefixPath.segmentCount() != 0 && !prefix.endsWith("\\")
+				&& !prefix.endsWith("/")) {
 			prefixPathFolder = prefixPath.removeLastSegments(1);
 			lastSegmant = new Path(prefixPath.lastSegment());
 		}
 		try {
 			if (!includePath.isBuildpath()) {
-				addInternalEntries(reporter, replaceRange, entry, prefixPathFolder, lastSegmant);
+				addInternalEntries(reporter, replaceRange, entry,
+						prefixPathFolder, lastSegmant);
 			} else {
-				addExternalEntries(reporter, replaceRange, project, entry, prefixPathFolder, lastSegmant);
+				addExternalEntries(reporter, replaceRange, project, entry,
+						prefixPathFolder, lastSegmant);
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);
@@ -91,56 +97,111 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		}
 	}
 
-	private void addExternalEntries(ICompletionReporter reporter, SourceRange replaceRange, IScriptProject project, final Object entry, IPath prefixPathFolder, IPath lastSegmant) throws ModelException {
+	private void addExternalEntries(ICompletionReporter reporter,
+			SourceRange replaceRange, IScriptProject project,
+			final Object entry, IPath prefixPathFolder, IPath lastSegmant)
+			throws ModelException {
 		switch (((IBuildpathEntry) entry).getEntryKind()) {
-			case IBuildpathEntry.BPE_CONTAINER:
-			case IBuildpathEntry.BPE_LIBRARY:
+		case IBuildpathEntry.BPE_CONTAINER:
 				final IProjectFragment[] findProjectFragments = project.findProjectFragments((IBuildpathEntry) entry);
-				for (IProjectFragment projectFragment : findProjectFragments) {
-					
-					// add folders 
-					IModelElement[] children = projectFragment.getChildren();
-					for (IModelElement element : children) {
-						if (element instanceof ScriptFolder) {
-							final IPath relative = ((ScriptFolder) element).getRelativePath();
-							if (relative.segmentCount() != 0 && isLastSegmantPrefix(lastSegmant, relative) && isPathPrefix(prefixPathFolder, relative)) {
-								reporter.reportResource(element, relative, getSuffix(element), replaceRange);
-							}
-						}
-					}
+			for (IProjectFragment projectFragment : findProjectFragments) {
 
-					// add files
-					final IScriptFolder scriptFolder = projectFragment.getScriptFolder(prefixPathFolder);
-					children = scriptFolder.getChildren();
-					for (IModelElement element : children) {
-						final IPath relative = element.getPath().makeRelativeTo(projectFragment.getPath());
-						if (isLastSegmantPrefix(lastSegmant, relative)) {
-							reporter.reportResource(element, relative, getSuffix(element), replaceRange);
+				// add folders
+				IModelElement[] children = projectFragment.getChildren();
+				for (IModelElement element : children) {
+					if (element instanceof ScriptFolder) {
+						final IPath relative = ((ScriptFolder) element)
+								.getRelativePath();
+						if (relative.segmentCount() != 0
+								&& isLastSegmantPrefix(lastSegmant, relative)
+								&& isPathPrefix(prefixPathFolder, relative)) {
+							reporter.reportResource(element, relative,
+									getSuffix(element), replaceRange);
 						}
 					}
 				}
-				break;
-			case IBuildpathEntry.BPE_PROJECT:
-				IWorkspace workspace = ResourcesPlugin.getWorkspace();
-				IProject refProject = (IProject)workspace.getRoot().findMember(((IBuildpathEntry) entry).getPath());
-				try {
-					addInternalEntries(reporter, replaceRange, refProject, prefixPathFolder, lastSegmant);
-				} catch (CoreException e) {
-					e.printStackTrace();
+
+				// add files
+				final IScriptFolder scriptFolder = projectFragment
+						.getScriptFolder(prefixPathFolder);
+				children = scriptFolder.getChildren();
+				for (IModelElement element : children) {
+					final IPath relative = element.getPath().makeRelativeTo(
+							projectFragment.getPath());
+					if (isLastSegmantPrefix(lastSegmant, relative)) {
+						reporter.reportResource(element, relative,
+								getSuffix(element), replaceRange);
+					}
 				}
-				break;
-			default:
+			}
+			break;
+		case IBuildpathEntry.BPE_PROJECT:
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			IProject refProject = (IProject) workspace.getRoot().findMember(
+					((IBuildpathEntry) entry).getPath());
+			// if(refProject.isAccessible()){
+			try {
+				addInternalEntries(reporter, replaceRange, refProject,
+						prefixPathFolder, lastSegmant);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+			// }
+
+			break;
+		case IBuildpathEntry.BPE_LIBRARY:
+			final IProjectFragment[] findProjectFragments1 = project
+					.findProjectFragments((IBuildpathEntry) entry);
+			for (IProjectFragment projectFragment : findProjectFragments1) {
+
+				// add folders
+				IModelElement[] children = projectFragment.getChildren();
+				for (IModelElement element : children) {
+					if (element instanceof ArchiveFolder) {
+						final IPath relative = ((ArchiveFolder) element)
+								.getRelativePath();
+						if (relative.segmentCount() != 0
+								&& !relative.toString().equals(".phar")//exclude the .phar folder
+								&& isLastSegmantPrefix(lastSegmant, relative)
+								&& isPathPrefix(prefixPathFolder, relative)) {
+							reporter.reportResource(element, relative,
+									getSuffix(element), replaceRange);
+						}
+					}
+				}
+
+				// add files
+				final IScriptFolder scriptFolder = projectFragment
+						.getScriptFolder(prefixPathFolder);
+				children = scriptFolder.getChildren();
+				for (IModelElement element : children) {
+					// final IPath relative = new
+					// Path(element.getElementName());
+					final IPath relative = prefixPathFolder.append(element
+							.getElementName());
+					if (/*
+						 * relative.segmentCount() != 0 &&
+						 */isLastSegmantPrefix(lastSegmant, relative)) {
+						reporter.reportResource(element, relative,
+								getSuffix(element), replaceRange);
+					}
+				}
+			}
+			break;
+		default:
 
 		}
-		
+
 	}
 
-	private void addInternalEntries(ICompletionReporter reporter, SourceRange replaceRange, final Object entry, IPath prefixPathFolder, IPath lastSegmant) throws CoreException {
+	private void addInternalEntries(ICompletionReporter reporter,
+			SourceRange replaceRange, final Object entry,
+			IPath prefixPathFolder, IPath lastSegmant) throws CoreException {
 		IContainer container = (IContainer) entry;
 		if (prefixPathFolder.segmentCount() > 0) {
 			container = container.getFolder(prefixPathFolder);
 		}
-		
+
 		if (!container.exists()) {
 			return;
 		}
@@ -148,17 +209,28 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		ICompletionContext context = getContext();
 		IResource[] members = container.members();
 		for (IResource resource : members) {
-			final IPath relative = resource.getFullPath().makeRelativeTo(container.getFullPath());
+			final IPath relative = resource.getFullPath().makeRelativeTo(
+					container.getFullPath());
 			if (isLastSegmantPrefix(lastSegmant, relative)) {
-				final IPath rel = resource.getFullPath().makeRelativeTo(((IContainer) entry).getFullPath());
+				final IPath rel = resource.getFullPath().makeRelativeTo(
+						((IContainer) entry).getFullPath());
 				final IModelElement modelElement = DLTKCore.create(resource);
+				if (modelElement == null) {
+					continue;
+				}
 				if (resource.getType() == IResource.FILE) {
-					if (PHPToolkitUtil.isPhpFile((IFile) resource) && !modelElement.equals(((IncludeStatementContext)context).getSourceModule())) {
-						reporter.reportResource(modelElement, rel, getSuffix(modelElement), replaceRange);
+					if (PHPToolkitUtil.isPhpFile((IFile) resource)
+							&& !modelElement
+									.equals(((IncludeStatementContext) context)
+											.getSourceModule())) {
+						reporter.reportResource(modelElement, rel,
+								getSuffix(modelElement), replaceRange);
 					}
 				} else {
-					if (resource.getName().charAt(0) != '.') { // filter dot resources
-						reporter.reportResource(modelElement, rel, getSuffix(modelElement), replaceRange);
+					if (resource.getName().charAt(0) != '.') { // filter dot
+						// resources
+						reporter.reportResource(modelElement, rel,
+								getSuffix(modelElement), replaceRange);
 					}
 				}
 			}
@@ -183,7 +255,8 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		if (lastPrefixSegment == null) {
 			lastPrefixSegment = ""; //$NON-NLS-1$
 		}
-		if (CodeAssistUtils.startsWithIgnoreCase(lastCurrentSegment, lastPrefixSegment)) {
+		if (CodeAssistUtils.startsWithIgnoreCase(lastCurrentSegment,
+				lastPrefixSegment)) {
 			return true;
 		}
 

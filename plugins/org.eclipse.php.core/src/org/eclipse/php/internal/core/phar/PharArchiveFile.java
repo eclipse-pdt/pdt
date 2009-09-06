@@ -1,13 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2009 Zhao and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Zhao - initial API and implementation
- *******************************************************************************/
 package org.eclipse.php.internal.core.phar;
 
 import java.io.File;
@@ -19,17 +9,26 @@ import java.util.List;
 
 import org.eclipse.dltk.core.IArchive;
 import org.eclipse.dltk.core.IArchiveEntry;
+import org.eclipse.dltk.core.IArchiveProjectFragment;
 
 public class PharArchiveFile implements IArchive {
+	PharFile pharFile;
 
-	private PharFile pharFile;
-
-	public PharArchiveFile(String fileName) throws IOException, PharException {
-		this(new File(fileName));
+	public PharArchiveFile(IArchiveProjectFragment archiveProjectFragment,
+			String fileName) throws IOException, PharException {
+		this(archiveProjectFragment, new File(fileName));
 	}
 
-	public PharArchiveFile(File file) throws IOException, PharException {
-		pharFile = new PharFile(file);
+	public PharArchiveFile(IArchiveProjectFragment archiveProjectFragment,
+			File file) throws IOException, PharException {
+		PharFile oldPharFile = null;
+		if (archiveProjectFragment != null
+				&& archiveProjectFragment.getArchive() instanceof PharArchiveFile) {
+			oldPharFile = ((PharArchiveFile) archiveProjectFragment
+					.getArchive()).pharFile;
+		}
+		pharFile = new PharFile(oldPharFile, file);
+
 	}
 
 	public void close() throws IOException {
@@ -70,6 +69,7 @@ public class PharArchiveFile implements IArchive {
 	}
 
 	public int fileSize() {
+		// TODO Auto-generated method stub
 		return pharFile.getFileNumber();
 	}
 

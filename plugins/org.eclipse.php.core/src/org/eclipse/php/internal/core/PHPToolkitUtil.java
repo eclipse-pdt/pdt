@@ -1,3 +1,5 @@
+package org.eclipse.php.internal.core;
+
 /*******************************************************************************
  * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,21 +11,19 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.zip.ZipException;
+import java.net.URI;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ZipArchiveFile;
+import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharException;
@@ -85,9 +85,47 @@ public class PHPToolkitUtil {
 	}
 
 	public static boolean isPharFileName(String fileName) {
-		String extension = getExtention(fileName);
+		File localFile = null;
+		IPath path = new Path(fileName);
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+				.findMember(path);
+		if (resource != null) {
+			// internal resource
+			URI location;
+			if (resource.getType() != IResource.FILE
+					&& (location = resource.getLocationURI()) != null) {
+				try {
+					localFile = Util.toLocalFile(location, null/*
+																 * no progress
+																 * availaible
+																 */);
+				} catch (CoreException e) {
+				}
+			}
+		} else {
+			// external resource -> it is ok to use toFile()
+			if (EnvironmentPathUtils.isFull(path)) {
+				path = EnvironmentPathUtils.getLocalPath(path);
+			}
+			localFile = path.toFile();
+		}
+
+		if (localFile != null && localFile.exists() && localFile.isDirectory()) {
+			return false;
+		}
+
+		// if (isFolder(fileName)) {
+		// return false;
+		// }
+		String extension = path.getFileExtension();
 		return isPharExtention(extension);
 	}
+
+	// public static boolean isFolder(String fileName) {
+	// // TODO Auto-generated method stub
+	// IPath path = new Path(fileName);
+	// return false;
+	// }
 
 	public static boolean isPhpFile(final IFile file) {
 		IContentDescription contentDescription = null;
@@ -232,13 +270,16 @@ public class PHPToolkitUtil {
 		return null;
 	}
 
-	public static IArchive getArchive(File localFile) {
+	public static IArchive getArchive(
+			IArchiveProjectFragment archiveProjectFragment, File localFile)
+			throws IOException {
 		String extension = getExtension(localFile);
 		if (isPharExtention(extension)) {
 			IArchive archive = null;
 			try {
 				if (PHAR_EXTENSTION.equals(extension)) {
-					archive = new PharArchiveFile(localFile);
+					archive = new PharArchiveFile(archiveProjectFragment,
+							localFile);
 				} else if (ZIP_EXTENSTION.equals(extension)) {
 					archive = new ZipArchiveFile(localFile);
 				} else if (TAR_EXTENSTION.equals(extension)
@@ -248,35 +289,15 @@ public class PHPToolkitUtil {
 					archive = new TarArchiveFile(localFile);
 				}
 			} catch (PharException e) {
-				// e.printStackTrace();
-			} catch (ZipException e) {
-				// e.printStackTrace();
+				throw new IOException(e);
 			} catch (TarException e) {
-				// e.printStackTrace();
-			} catch (IOException e) {
-				// e.printStackTrace();
+				throw new IOException(e);
 			}
 			return archive;
 			// return getArchive(localFile,extension);
 		}
 		return null;
 	}
-
-	// private static Archive getArchive(File localFile, String extension) {
-	// // TODO Auto-generated method stub
-	// Archive archive = null;
-	// if(PHAR_EXTENSTION.equals(extension)){
-	//			
-	// }else if(ZIP_EXTENSTION.equals(extension)){
-	//			
-	// }else if(BZ2_EXTENSTION.equals(extension)){
-	//			
-	// }else if(TAR_EXTENSTION.equals(extension) ||
-	// GZ_EXTENSTION.equals(extension)){
-	//			
-	// }
-	// return archive;
-	// }
 
 	private static String getExtension(File localFile) {
 		if (localFile.isFile()) {
@@ -289,18 +310,5 @@ public class PHPToolkitUtil {
 		}
 		return null;
 	}
-
-	// private static boolean isPhar(File localFile) {
-	// // TODO Auto-generated method stub
-	// if (localFile.isFile()) {
-	// int index = localFile.getName().lastIndexOf(".");
-	// if (localFile.getName().length() > index + 1) {
-	// String extension = localFile.getName().substring(index + 1);
-	// return isPhar(extension);
-	// }
-	//
-	// }
-	// return false;
-	// }
 
 }

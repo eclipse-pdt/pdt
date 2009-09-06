@@ -46,6 +46,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	private int relevanceVar;
 	private int relevanceConst;
 	private Set<? super Object> processedElements = new HashSet<Object>();
+	private Set<? super Object> processedPaths = new HashSet<Object>();
 
 	public void complete(ISourceModule module, int position, int i) {
 
@@ -93,6 +94,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			}
 		} finally {
 			processedElements.clear();
+			processedPaths.clear();
 		}
 	}
 
@@ -336,10 +338,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportResource(IModelElement model, IPath relative,
 			String suffix, SourceRange replaceRange) {
-		if (processedElements.contains(model)) {
+		if (processedElements.contains(model)
+				|| processedPaths.contains(relative)) {
 			return;
 		}
 		processedElements.add(model);
+		processedPaths.add(relative);
 		noProposal = false;
 
 		CompletionProposal proposal = null;

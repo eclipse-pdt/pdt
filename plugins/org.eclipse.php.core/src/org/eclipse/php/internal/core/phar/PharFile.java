@@ -1,13 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2009 Zhao and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Zhao - initial API and implementation
- *******************************************************************************/
 package org.eclipse.php.internal.core.phar;
 
 import java.io.*;
@@ -32,15 +22,46 @@ public class PharFile {
 	private String metadata;
 	private List<PharEntry> pharEntryList = new ArrayList<PharEntry>();
 	private Map<String, PharEntry> pharEntryMap = new HashMap<String, PharEntry>();
-
 	private List<Integer> bytesAfterStub;
 	private BufferedInputStream bis;
 	private PharEntry stubEntry;
 	private PharEntry signatureEntry;
 
-	public PharFile(File file) throws IOException, PharException {
+	public PharFile(PharFile oldPharFile, File file) throws IOException,
+			PharException {
 		this.file = file;
-		init();
+
+		if (oldPharFile != null && oldPharFile.file.equals(file)) {
+			copyProperties(oldPharFile);
+		} else {
+			init();
+		}
+
+		// initManifest();
+
+	}
+
+	public PharFile(File file) throws IOException, PharException {
+		this(null, file);
+	}
+
+	private void copyProperties(PharFile oldPharFile) {
+		this.currentIndex = oldPharFile.currentIndex;
+		this.manifestLength = oldPharFile.manifestLength;
+		this.fileNumber = oldPharFile.fileNumber;
+		this.stubLength = oldPharFile.stubLength;
+		this.version = oldPharFile.version;
+		this.hasSignature = oldPharFile.hasSignature;
+		this.hasZlibcompression = oldPharFile.hasZlibcompression;
+		this.hasBzipcompression = oldPharFile.hasBzipcompression;
+		this.alias = oldPharFile.alias;
+		this.metadata = oldPharFile.metadata;
+
+		this.pharEntryList = oldPharFile.pharEntryList;
+		this.pharEntryMap = oldPharFile.pharEntryMap;
+		// this.bytesAfterStub = oldPharFile.bytesAfterStub;
+		this.stubEntry = oldPharFile.stubEntry;
+		this.signatureEntry = oldPharFile.signatureEntry;
 	}
 
 	protected void init() throws IOException, PharException {
@@ -347,7 +368,6 @@ public class PharFile {
 	}
 
 	public void close() throws IOException {
-		bis.close();
 	}
 
 	public PharEntry getEntry(String name) {
