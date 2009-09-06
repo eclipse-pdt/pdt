@@ -15,10 +15,15 @@ import java.util.Observer;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * The basic added composite
+ */
 public interface ICompositeData {
-	Composite getParentComposite();
 
-	IDialogSettings getSettings();
+	public Composite getParentComposite();
 
-	Observer getObserver();
+	public IDialogSettings getSettings();
+
+	public Observer getObserver();
+
 }

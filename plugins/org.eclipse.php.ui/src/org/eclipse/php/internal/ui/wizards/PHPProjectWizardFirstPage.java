@@ -77,7 +77,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	protected JavaScriptSupportGroup fJavaScriptSupportGroup;
 	protected LayoutGroup fLayoutGroup;
 	protected LocationGroup fPHPLocationGroup;
-	private WizardFragment fragment;
+	protected WizardFragment fragment;
 
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
