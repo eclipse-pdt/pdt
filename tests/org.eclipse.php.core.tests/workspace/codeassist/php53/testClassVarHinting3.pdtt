@@ -23,7 +23,7 @@ class TestClass {
 	public $_testObject;
 } 
 $test = new TestClass(); 
-$test->_testObject-> 
+$test->_testObject->|
 }
 ?>
 --EXPECT--
