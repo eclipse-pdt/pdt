@@ -114,10 +114,11 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 
 	private String[] fileNames;
 
-	public PharPackageWizardPage(PharPackage pharData, IStructuredSelection fSelection) {
+	public PharPackageWizardPage(PharPackage pharData,
+			IStructuredSelection fSelection) {
 		super(PAGE_NAME, fSelection);
-		setTitle(JarPackagerMessages.JarPackageWizardPage_title);
-		setDescription(JarPackagerMessages.JarPackageWizardPage_description);
+		setTitle(PharPackagerMessages.JarPackageWizardPage_title);
+		setDescription(PharPackagerMessages.JarPackageWizardPage_description);
 		this.pharData = pharData;
 		fInitialSelection = fSelection;
 	}
@@ -142,7 +143,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		createOptionsGroup(composite);
 
 		createLabel(composite,
-				JarPackagerMessages.JarManifestWizardPage_manifestSource_label,
+				PharPackagerMessages.JarManifestWizardPage_manifestSource_label,
 				false);
 		createManifestGroup(composite);
 
@@ -360,14 +361,14 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		fGenerateManifestRadioButton = new Button(fManifestGroup, SWT.RADIO
 				| SWT.LEFT);
 		fGenerateManifestRadioButton
-				.setText(JarPackagerMessages.JarManifestWizardPage_genetateManifest_text);
+				.setText(PharPackagerMessages.JarManifestWizardPage_genetateManifest_text);
 		fGenerateManifestRadioButton.addListener(SWT.Selection,
 				fUntypedListener);
 
 		fUseManifestRadioButton = new Button(fManifestGroup, SWT.RADIO
 				| SWT.LEFT);
 		fUseManifestRadioButton
-				.setText(JarPackagerMessages.JarManifestWizardPage_useManifest_text);
+				.setText(PharPackagerMessages.JarManifestWizardPage_useManifest_text);
 		fUseManifestRadioButton.addListener(SWT.Selection, fUntypedListener);
 
 		fUseManifestRadioButton.setLayoutData(new GridData(
@@ -398,7 +399,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 
 		fManifestFileLabel = new Label(manifestFileGroup, SWT.NONE);
 		fManifestFileLabel
-				.setText(JarPackagerMessages.JarManifestWizardPage_manifestFile_text);
+				.setText(PharPackagerMessages.JarManifestWizardPage_manifestFile_text);
 
 		// entry field
 		fManifestFileText = new Text(manifestFileGroup, SWT.SINGLE | SWT.BORDER);
@@ -412,7 +413,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		// browse button
 		fManifestFileBrowseButton = new Button(manifestFileGroup, SWT.PUSH);
 		fManifestFileBrowseButton
-				.setText(JarPackagerMessages.JarManifestWizardPage_manifestFileBrowse_text);
+				.setText(PharPackagerMessages.JarManifestWizardPage_manifestFileBrowse_text);
 		fManifestFileBrowseButton.setLayoutData(new GridData(
 				GridData.HORIZONTAL_ALIGN_FILL));
 		fManifestFileBrowseButton.addSelectionListener(new SelectionAdapter() {
@@ -424,15 +425,15 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 
 	protected void handleManifestFileBrowseButtonPressed() {
 		ElementTreeSelectionDialog dialog = createWorkspaceFileSelectionDialog(
-				JarPackagerMessages.JarManifestWizardPage_manifestSelectionDialog_title,
-				JarPackagerMessages.JarManifestWizardPage_manifestSelectionDialog_message);
+				PharPackagerMessages.JarManifestWizardPage_manifestSelectionDialog_title,
+				PharPackagerMessages.JarManifestWizardPage_manifestSelectionDialog_message);
 		if (pharData.getStubFile() != null && pharData.isStubAccessible())
 			dialog.setInitialSelections(new IResource[] { pharData
 					.getStubFile() });
 		if (dialog.open() == Window.OK) {
 			Object[] resources = dialog.getResult();
 			if (resources.length != 1)
-				setErrorMessage(JarPackagerMessages.JarManifestWizardPage_error_onlyOneManifestMustBeSelected);
+				setErrorMessage(PharPackagerMessages.JarManifestWizardPage_error_onlyOneManifestMustBeSelected);
 			else {
 				//				setErrorMessage(""); //$NON-NLS-1$
 				pharData.setStubLocation(((IResource) resources[0])
@@ -706,7 +707,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		// destination browse button
 		fDestinationBrowseButton = new Button(destinationSelectionGroup,
 				SWT.PUSH);
-		fDestinationBrowseButton.setText("browser");
+		fDestinationBrowseButton
+				.setText(PharPackagerMessages.JarPackageWizardPage_browseButton_text);
 		fDestinationBrowseButton.setLayoutData(new GridData(
 				GridData.HORIZONTAL_ALIGN_FILL));
 		Object gd = fDestinationBrowseButton.getLayoutData();

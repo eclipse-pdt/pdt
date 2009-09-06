@@ -21,9 +21,9 @@ public class PharUIUtil {
 		if (parent == null)
 			return false;
 		return queryDialog(parent,
-				JarPackagerMessages.JarPackage_confirmReplace_title,
+				PharPackagerMessages.JarPackage_confirmReplace_title,
 				Messages.format(
-						JarPackagerMessages.JarPackage_confirmReplace_message,
+						PharPackagerMessages.JarPackage_confirmReplace_message,
 						BasicElementLabels.getPathLabel(filePath, isOSPath)));
 	}
 
@@ -48,9 +48,9 @@ public class PharUIUtil {
 		if (parent == null)
 			return false;
 		return queryDialog(parent,
-				JarPackagerMessages.JarPackage_confirmCreate_title,
+				PharPackagerMessages.JarPackage_confirmCreate_title,
 				Messages.format(
-						JarPackagerMessages.JarPackage_confirmCreate_message,
+						PharPackagerMessages.JarPackage_confirmCreate_message,
 						BasicElementLabels.getPathLabel(directory)));
 	}
 

@@ -14,9 +14,9 @@ package org.eclipse.php.internal.ui.phar.wizard;
 
 import org.eclipse.osgi.util.NLS;
 
-public final class JarPackagerMessages extends NLS {
+public final class PharPackagerMessages extends NLS {
 
-	private static final String BUNDLE_NAME= "org.eclipse.php.internal.ui.phar.wizard.JarPackagerMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.phar.wizard.PharPackagerMessages";//$NON-NLS-1$
 
 	public static String AbstractJarDestinationWizardPage_destinationCombo_AccessibilityText;
 
@@ -347,10 +347,10 @@ public final class JarPackagerMessages extends NLS {
 	public static String OpenJarPackageWizardDelegate_onlyJardesc;
 
 	static {
-		NLS.initializeMessages(BUNDLE_NAME, JarPackagerMessages.class);
+		NLS.initializeMessages(BUNDLE_NAME, PharPackagerMessages.class);
 	}
 
-	private JarPackagerMessages() {
+	private PharPackagerMessages() {
 		// Do not instantiate
 	}
 }

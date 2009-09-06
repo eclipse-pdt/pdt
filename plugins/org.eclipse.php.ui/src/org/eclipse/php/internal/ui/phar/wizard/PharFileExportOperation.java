@@ -490,26 +490,26 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		if (fJarPackage.getElements() == null
 				|| fJarPackage.getElements().length == 0) {
 			addError(
-					JarPackagerMessages.JarFileExportOperation_noResourcesSelected,
+					PharPackagerMessages.JarFileExportOperation_noResourcesSelected,
 					null);
 			return false;
 		}
 		if (fJarPackage.getAbsolutePharLocation() == null) {
 			addError(
-					JarPackagerMessages.JarFileExportOperation_invalidJarLocation,
+					PharPackagerMessages.JarFileExportOperation_invalidJarLocation,
 					null);
 			return false;
 		}
 		File targetFile = fJarPackage.getAbsolutePharLocation().toFile();
 		if (targetFile.exists() && !targetFile.canWrite()) {
 			addError(
-					JarPackagerMessages.JarFileExportOperation_jarFileExistsAndNotWritable,
+					PharPackagerMessages.JarFileExportOperation_jarFileExistsAndNotWritable,
 					null);
 			return false;
 		}
 		if (!fJarPackage.isStubAccessible()) {
 			addError(
-					JarPackagerMessages.JarFileExportOperation_manifestDoesNotExist,
+					PharPackagerMessages.JarFileExportOperation_manifestDoesNotExist,
 					null);
 			return false;
 		}
