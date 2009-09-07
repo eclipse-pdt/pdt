@@ -95,10 +95,10 @@ public class PHPToolkitUtil {
 			if (resource.getType() != IResource.FILE
 					&& (location = resource.getLocationURI()) != null) {
 				try {
-					localFile = Util.toLocalFile(location, null/*
-																 * no progress
-																 * availaible
-																 */);
+					/*
+					 * no progress availaible
+					 */
+					localFile = Util.toLocalFile(location, null);
 				} catch (CoreException e) {
 				}
 			}
@@ -114,18 +114,9 @@ public class PHPToolkitUtil {
 			return false;
 		}
 
-		// if (isFolder(fileName)) {
-		// return false;
-		// }
 		String extension = path.getFileExtension();
 		return isPharExtention(extension);
 	}
-
-	// public static boolean isFolder(String fileName) {
-	// // TODO Auto-generated method stub
-	// IPath path = new Path(fileName);
-	// return false;
-	// }
 
 	public static boolean isPhpFile(final IFile file) {
 		IContentDescription contentDescription = null;
@@ -270,16 +261,13 @@ public class PHPToolkitUtil {
 		return null;
 	}
 
-	public static IArchive getArchive(
-			IArchiveProjectFragment archiveProjectFragment, File localFile)
-			throws IOException {
+	public static IArchive getArchive(File localFile) throws IOException {
 		String extension = getExtension(localFile);
 		if (isPharExtention(extension)) {
 			IArchive archive = null;
 			try {
 				if (PHAR_EXTENSTION.equals(extension)) {
-					archive = new PharArchiveFile(archiveProjectFragment,
-							localFile);
+					archive = new PharArchiveFile(localFile);
 				} else if (ZIP_EXTENSTION.equals(extension)) {
 					archive = new ZipArchiveFile(localFile);
 				} else if (TAR_EXTENSTION.equals(extension)

@@ -17,7 +17,10 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.AbstractLanguageToolkit;
+import org.eclipse.dltk.core.IArchive;
+import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.IDLTKLanguageToolkitExtension;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.PHPNature;
 
@@ -58,9 +61,8 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit implements
 	}
 
 	@Override
-	public IArchive openArchive(IArchiveProjectFragment archiveProjectFragment,
-			File localFile) throws IOException {
-		return PHPToolkitUtil.getArchive(archiveProjectFragment, localFile);
+	public IArchive openArchive(File localFile) throws IOException {
+		return PHPToolkitUtil.getArchive(localFile);
 	}
 
 	public boolean isArchiveFileName(String name) {
