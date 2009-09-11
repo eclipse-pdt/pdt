@@ -279,7 +279,7 @@ public class PHPToolkitUtil {
 			} catch (PharException e) {
 				throw new IOException(e.getMessage());
 			} catch (TarException e) {
-				throw new IOException(e);
+				throw new IOException(e.getMessage());
 			}
 			return archive;
 			// return getArchive(localFile,extension);
