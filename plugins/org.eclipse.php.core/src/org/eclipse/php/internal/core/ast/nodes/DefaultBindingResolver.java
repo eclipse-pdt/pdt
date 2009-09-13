@@ -21,10 +21,12 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.dltk.ast.utils.ASTUtil;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.BindingUtility;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
@@ -302,9 +304,11 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.dltk.ti.types.IEvaluatedType)
 	 */
 	@Override
-	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding) {
-		// TODO Auto-generated method stub
-		return super.getTypeBinding(referenceBinding);
+	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding, ISourceModule sourceModule) {
+		if (referenceBinding != null) {
+			return new TypeBinding(this, referenceBinding, sourceModule);
+		}
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -385,8 +389,22 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	@Override
 	IFunctionBinding resolveFunction(FunctionDeclaration function) {
-		// TODO Auto-generated method stub
-		return super.resolveFunction(function);
+		if (function == null) {
+			throw new IllegalArgumentException("Can not resolve null expression");
+		}
+
+		try {
+			IModelElement elementAt = sourceModule.getElementAt(function.getStart());
+			if (elementAt != null && elementAt instanceof IMethod) {
+				return new FunctionBinding(this, (IMethod) elementAt);
+			}
+
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 
 	/* (non-Javadoc)

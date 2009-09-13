@@ -135,7 +135,7 @@ class BindingResolver {
 	 * @param referenceBinding the old type binding
 	 * @return the new type binding
 	 */
-	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding) {
+	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding, ISourceModule sourceModule) {
 		return null;
 	}
 

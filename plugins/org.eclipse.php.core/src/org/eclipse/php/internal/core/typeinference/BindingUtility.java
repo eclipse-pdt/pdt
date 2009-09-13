@@ -12,10 +12,16 @@
 package org.eclipse.php.internal.core.typeinference;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRefElement;
@@ -23,7 +29,9 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
+import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.VariableReferenceEvaluator;
 
 /**
@@ -252,6 +260,66 @@ public class BindingUtility {
 		}
 
 		return null;
+	}
+	
+	public IEvaluatedType[] getFunctionReturnType(IMethod functionElement) {
+		
+		ISourceModule sourceModule = functionElement.getSourceModule();
+		ModuleDeclaration sourceModuleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		MethodDeclaration functionDeclaration = null;
+		try {
+			functionDeclaration = PHPModelUtils.getNodeByMethod(sourceModuleDeclaration, functionElement);
+			
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		FileContext fileContext = new FileContext(sourceModule, sourceModuleDeclaration);
+		
+		final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+		final List<Expression> returnExpressions= new LinkedList<Expression>();
+
+		if (functionDeclaration != null) {
+
+			ASTVisitor visitor = new ASTVisitor() {
+				public boolean visitGeneral(ASTNode node) throws Exception {
+					if (node instanceof ReturnStatement) {
+						ReturnStatement statement = (ReturnStatement) node;
+						Expression expr = statement.getExpr();
+						if (expr == null) {
+							evaluated.add(PHPSimpleTypes.VOID);
+						} else {
+							returnExpressions.add(expr);
+						}
+					}
+					return super.visitGeneral(node);
+				}
+			};
+
+			try {
+				functionDeclaration.traverse(visitor);
+			} catch (Exception e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		for (Expression expr : returnExpressions) {
+			IEvaluatedType resolvedExpression = PHPTypeInferenceUtils.resolveExpression(sourceModule, sourceModuleDeclaration, fileContext, expr);
+			evaluated.add(resolvedExpression);
+		}
+		
+		return (IEvaluatedType[]) evaluated.toArray(new IEvaluatedType[evaluated.size()]);
+//		final List<IType> result = new LinkedList<IType>();
+//		for (IEvaluatedType eval : evaluated) {
+//			IType[] elements = PHPTypeInferenceUtils.getModelElements(eval, fileContext);
+//			result.addAll(Arrays.asList(elements));
+//		}
+//		
+//		return (IType[]) result.toArray(new IType[result.size()]);
+		
 	}
 
 	private class SourceRange {

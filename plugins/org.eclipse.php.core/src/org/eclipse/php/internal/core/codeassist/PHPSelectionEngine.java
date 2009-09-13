@@ -356,10 +356,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// If we are in class declaration:
 						if (CLASS.equalsIgnoreCase(prevWord) || INTERFACE.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$ //$NON-NLS-2$
 							if (containerType != null) {
+								IType typeType = null;
 								if (containerType.getElementName().equalsIgnoreCase(elementName)) {
-									containerType = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+										containerType = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+									if (containerType != null) {
+										typeType = PHPModelUtils.getTypeType(containerType, elementName);
+									}
 								}
-								IType typeType = PHPModelUtils.getTypeType(containerType, elementName);
 								if (typeType != null) {
 									return new IType[] { typeType };
 								}

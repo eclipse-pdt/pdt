@@ -65,7 +65,7 @@ public interface IFunctionBinding extends IBinding {
 	 * @return the binding for the return type of this method, or the
 	 *    <code>void</code> return type for constructors
 	 */
-	public ITypeBinding getReturnType();
+	public ITypeBinding[] getReturnType();
 
 	/**
 	 * Returns a list of type bindings representing the types of the exceptions thrown
