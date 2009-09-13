@@ -343,18 +343,16 @@ public class PHPCorePlugin extends Plugin {
 							.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
 				}
 
-				PhpModelAccess.getDefault()
-						.findMethods("!@#$%^&*", MatchRule.EXACT,
-								Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault().findMethods("", MatchRule.PREFIX,
+						Modifiers.AccGlobal, 0, scope, monitor);
 				monitor.worked(50);
 
-				PhpModelAccess.getDefault()
-						.findTypes("!@#$%^&*", MatchRule.EXACT,
-								Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault().findTypes("", MatchRule.PREFIX,
+						Modifiers.AccGlobal, 0, scope, monitor);
 				monitor.worked(25);
 
-				PhpModelAccess.getDefault().findIncludes("!@#$%^&*",
-						MatchRule.EXACT, scope, monitor);
+				PhpModelAccess.getDefault().findIncludes("", MatchRule.PREFIX,
+						scope, monitor);
 				monitor.worked(25);
 
 			} catch (OperationCanceledException e) {
