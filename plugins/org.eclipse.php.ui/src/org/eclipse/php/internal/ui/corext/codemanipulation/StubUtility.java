@@ -233,10 +233,13 @@ public class StubUtility {
 	 */
 	public static String[] getParameterTypeNamesForSeeTag(IFunctionBinding binding) {
 		ITypeBinding[] typeParametersTypes = binding.getParameterTypes();
-		String[] typeParameterNames = new String[typeParametersTypes.length];
-		int i = 0;
-		for (ITypeBinding type : typeParametersTypes) {
-			typeParameterNames[i++] = type.getName();
+		String[] typeParameterNames = null;
+		if (typeParametersTypes != null) {
+			typeParameterNames = new String[typeParametersTypes.length];
+			int i = 0;
+			for (ITypeBinding type : typeParametersTypes) {
+				typeParameterNames[i++] = type.getName();
+			}
 		}
 		return typeParameterNames;
 	}
