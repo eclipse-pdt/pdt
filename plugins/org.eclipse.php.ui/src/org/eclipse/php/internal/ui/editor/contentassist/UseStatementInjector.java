@@ -144,7 +144,7 @@ public class UseStatementInjector {
 								UseStatementPart newUseStatementPart = ast.newUseStatementPart(newNamespaceName, null);
 								org.eclipse.php.internal.core.ast.nodes.UseStatement newUseStatement = ast.newUseStatement(Arrays.asList(new UseStatementPart[] { newUseStatementPart }));
 
-								NamespaceDeclaration currentNamespace = getCurrentNamespace(program, offset);
+								NamespaceDeclaration currentNamespace = getCurrentNamespace(program, offset - 1);
 								if (currentNamespace != null) {
 									if (namespaceName.equals(getNamespaceName(currentNamespace))) {
 										return offset; // don't insert USE statement for current namespace
