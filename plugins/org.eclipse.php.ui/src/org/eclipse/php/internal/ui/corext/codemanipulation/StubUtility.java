@@ -57,23 +57,32 @@ public class StubUtility {
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.CLASSBODY_ID);
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.INTERFACEBODY_ID);
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.ENUMBODY_ID);
-		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.ANNOTATIONBODY_ID);
+		VALID_TYPE_BODY_TEMPLATES
+				.add(CodeTemplateContextType.ANNOTATIONBODY_ID);
 	}
 
 	/*
 	 * Don't use this method directly, use CodeGeneration.
 	 */
-	public static String getMethodBodyContent(boolean isConstructor, IScriptProject project, String destTypeName, String methodName, String bodyStatement, String lineDelimiter) throws CoreException {
-		String templateName = isConstructor ? CodeTemplateContextType.CONSTRUCTORSTUB_ID : CodeTemplateContextType.METHODSTUB_ID;
+	public static String getMethodBodyContent(boolean isConstructor,
+			IScriptProject project, String destTypeName, String methodName,
+			String bodyStatement, String lineDelimiter) throws CoreException {
+		String templateName = isConstructor ? CodeTemplateContextType.CONSTRUCTORSTUB_ID
+				: CodeTemplateContextType.METHODSTUB_ID;
 		Template template = getCodeTemplate(templateName, project);
 		if (template == null) {
 			return bodyStatement;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, destTypeName);
-		context.setVariable(CodeTemplateContextType.BODY_STATEMENT, bodyStatement);
-		String str = evaluateTemplate(context, template, new String[] { CodeTemplateContextType.BODY_STATEMENT });
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), project, lineDelimiter);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
+				methodName);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE,
+				destTypeName);
+		context.setVariable(CodeTemplateContextType.BODY_STATEMENT,
+				bodyStatement);
+		String str = evaluateTemplate(context, template,
+				new String[] { CodeTemplateContextType.BODY_STATEMENT });
 		if (str == null && !Strings.containsOnlyWhitespaces(bodyStatement)) {
 			return bodyStatement;
 		}
@@ -83,15 +92,20 @@ public class StubUtility {
 	/*
 	 * Don't use this method directly, use CodeGeneration.
 	 */
-	public static String getGetterMethodBodyContent(IScriptProject project, String destTypeName, String methodName, String fieldName, String lineDelimiter) throws CoreException {
+	public static String getGetterMethodBodyContent(IScriptProject project,
+			String destTypeName, String methodName, String fieldName,
+			String lineDelimiter) throws CoreException {
 		String templateName = CodeTemplateContextType.GETTERSTUB_ID;
 		Template template = getCodeTemplate(templateName, project);
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, destTypeName);
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), project, lineDelimiter);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
+				methodName);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE,
+				destTypeName);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 
 		return evaluateTemplate(context, template);
@@ -100,15 +114,20 @@ public class StubUtility {
 	/*
 	 * Don't use this method directly, use CodeGeneration.
 	 */
-	public static String getSetterMethodBodyContent(IScriptProject project, String destTypeName, String methodName, String fieldName, String paramName, String lineDelimiter) throws CoreException {
+	public static String getSetterMethodBodyContent(IScriptProject project,
+			String destTypeName, String methodName, String fieldName,
+			String paramName, String lineDelimiter) throws CoreException {
 		String templateName = CodeTemplateContextType.SETTERSTUB_ID;
 		Template template = getCodeTemplate(templateName, project);
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, destTypeName);
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), project, lineDelimiter);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
+				methodName);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE,
+				destTypeName);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldName);
 		context.setVariable(CodeTemplateContextType.PARAM, paramName);
@@ -116,87 +135,121 @@ public class StubUtility {
 		return evaluateTemplate(context, template);
 	}
 
-	/*public static String getCatchBodyContent(IScriptProject sp, String exceptionType, String variableName, ASTNode locationInAST, String lineDelimiter) throws CoreException {
-		String enclosingType = ""; //$NON-NLS-1$
-		String enclosingMethod = ""; //$NON-NLS-1$
+	/*
+	 * public static String getCatchBodyContent(IScriptProject sp, String
+	 * exceptionType, String variableName, ASTNode locationInAST, String
+	 * lineDelimiter) throws CoreException { String enclosingType = "";
+	 * //$NON-NLS-1$ String enclosingMethod = ""; //$NON-NLS-1$
+	 * 
+	 * if (locationInAST != null) { MethodDeclaration parentMethod =
+	 * ASTResolving.findParentMethodDeclaration(locationInAST); if (parentMethod
+	 * != null) { enclosingMethod = parentMethod.getName(); locationInAST =
+	 * parentMethod; } ASTNode parentType =
+	 * ASTResolving.findParentType(locationInAST); if (parentType instanceof
+	 * AbstractTypeDeclaration) { enclosingType = ((AbstractTypeDeclaration)
+	 * parentType).getName().getIdentifier(); } } return getCatchBodyContent(sp,
+	 * exceptionType, variableName, enclosingType, enclosingMethod,
+	 * lineDelimiter); }
+	 */
 
-		if (locationInAST != null) {
-			MethodDeclaration parentMethod = ASTResolving.findParentMethodDeclaration(locationInAST);
-			if (parentMethod != null) {
-				enclosingMethod = parentMethod.getName();
-				locationInAST = parentMethod;
-			}
-			ASTNode parentType = ASTResolving.findParentType(locationInAST);
-			if (parentType instanceof AbstractTypeDeclaration) {
-				enclosingType = ((AbstractTypeDeclaration) parentType).getName().getIdentifier();
-			}
-		}
-		return getCatchBodyContent(sp, exceptionType, variableName, enclosingType, enclosingMethod, lineDelimiter);
-	}*/
-
-	public static String getCatchBodyContent(IScriptProject sp, String exceptionType, String variableName, String enclosingType, String enclosingMethod, String lineDelimiter) throws CoreException {
-		Template template = getCodeTemplate(CodeTemplateContextType.CATCHBLOCK_ID, sp);
+	public static String getCatchBodyContent(IScriptProject sp,
+			String exceptionType, String variableName, String enclosingType,
+			String enclosingMethod, String lineDelimiter) throws CoreException {
+		Template template = getCodeTemplate(
+				CodeTemplateContextType.CATCHBLOCK_ID, sp);
 		if (template == null) {
 			return null;
 		}
 
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, enclosingType);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, enclosingMethod);
-		context.setVariable(CodeTemplateContextType.EXCEPTION_TYPE, exceptionType);
-		context.setVariable(CodeTemplateContextType.EXCEPTION_VAR, variableName);
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), sp, lineDelimiter);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE,
+				enclosingType);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
+				enclosingMethod);
+		context.setVariable(CodeTemplateContextType.EXCEPTION_TYPE,
+				exceptionType);
+		context
+				.setVariable(CodeTemplateContextType.EXCEPTION_VAR,
+						variableName);
 		return evaluateTemplate(context, template);
 	}
 
-	public static String getCompilationUnitContent(IScriptProject sp, String fileComment, String typeComment, String typeContent, String lineDelimiter) throws CoreException {
-		Template template = getCodeTemplate(CodeTemplateContextType.NEWTYPE_ID, sp);
+	public static String getCompilationUnitContent(IScriptProject sp,
+			String fileComment, String typeComment, String typeContent,
+			String lineDelimiter) throws CoreException {
+		Template template = getCodeTemplate(CodeTemplateContextType.NEWTYPE_ID,
+				sp);
 		if (template == null) {
 			return null;
 		}
 
 		IScriptProject project = sp;
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
-		//		context.setCompilationUnitVariables(sp);
-		//		context.setVariable(CodeTemplateContextType.PACKAGE_DECLARATION, packDecl);
-		context.setVariable(CodeTemplateContextType.TYPE_COMMENT, typeComment != null ? typeComment : ""); //$NON-NLS-1$
-		context.setVariable(CodeTemplateContextType.FILE_COMMENT, fileComment != null ? fileComment : ""); //$NON-NLS-1$
-		context.setVariable(CodeTemplateContextType.TYPE_DECLARATION, typeContent);
-		context.setVariable(CodeTemplateContextType.TYPENAME, sp.getElementName());
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), project, lineDelimiter);
+		// context.setCompilationUnitVariables(sp);
+		// context.setVariable(CodeTemplateContextType.PACKAGE_DECLARATION,
+		// packDecl);
+		context.setVariable(CodeTemplateContextType.TYPE_COMMENT,
+				typeComment != null ? typeComment : ""); //$NON-NLS-1$
+		context.setVariable(CodeTemplateContextType.FILE_COMMENT,
+				fileComment != null ? fileComment : ""); //$NON-NLS-1$
+		context.setVariable(CodeTemplateContextType.TYPE_DECLARATION,
+				typeContent);
+		context.setVariable(CodeTemplateContextType.TYPENAME, sp
+				.getElementName());
 
-		String[] fullLine = { CodeTemplateContextType.PACKAGE_DECLARATION, CodeTemplateContextType.FILE_COMMENT, CodeTemplateContextType.TYPE_COMMENT };
+		String[] fullLine = { CodeTemplateContextType.PACKAGE_DECLARATION,
+				CodeTemplateContextType.FILE_COMMENT,
+				CodeTemplateContextType.TYPE_COMMENT };
 		return evaluateTemplate(context, template, fullLine);
 	}
 
 	/*
 	 * Don't use this method directly, use CodeGeneration.
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getFileComment(ICompilationUnit, String)
+	 * 
+	 * @see org.eclipse.jdt.ui.CodeGeneration#getFileComment(ICompilationUnit,
+	 * String)
 	 */
-	public static String getFileComment(IScriptProject sp, String lineDelimiter) throws CoreException {
-		Template template = getCodeTemplate(CodeTemplateContextType.FILECOMMENT_ID, sp);
+	public static String getFileComment(IScriptProject sp, String lineDelimiter)
+			throws CoreException {
+		Template template = getCodeTemplate(
+				CodeTemplateContextType.FILECOMMENT_ID, sp);
 		if (template == null) {
 			return null;
 		}
 
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
-		//		context.setCompilationUnitVariables(sp);
-		context.setVariable(CodeTemplateContextType.FILENAME, sp.getElementName());
-		//context.setVariable(CodeTemplateContextType.TYPENAME , sp.getElementName());
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), sp, lineDelimiter);
+		// context.setCompilationUnitVariables(sp);
+		context.setVariable(CodeTemplateContextType.FILENAME, sp
+				.getElementName());
+		// context.setVariable(CodeTemplateContextType.TYPENAME ,
+		// sp.getElementName());
 		return evaluateTemplate(context, template);
 	}
 
 	/*
 	 * Don't use this method directly, use CodeGeneration.
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getTypeComment(ICompilationUnit, String, String[], String)
+	 * 
+	 * @see org.eclipse.jdt.ui.CodeGeneration#getTypeComment(ICompilationUnit,
+	 * String, String[], String)
 	 */
-	public static String getTypeComment(IScriptProject sp, String typeQualifiedName, String[] typeParameterNames, String lineDelim) throws CoreException {
-		Template template = getCodeTemplate(CodeTemplateContextType.TYPECOMMENT_ID, sp);
+	public static String getTypeComment(IScriptProject sp,
+			String typeQualifiedName, String[] typeParameterNames,
+			String lineDelim) throws CoreException {
+		Template template = getCodeTemplate(
+				CodeTemplateContextType.TYPECOMMENT_ID, sp);
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelim);
-		//context.setCompilationUnitVariables(sp);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature.getQualifier(typeQualifiedName));
-		context.setVariable(CodeTemplateContextType.TYPENAME, Signature.getSimpleName(typeQualifiedName));
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), sp, lineDelim);
+		// context.setCompilationUnitVariables(sp);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature
+				.getQualifier(typeQualifiedName));
+		context.setVariable(CodeTemplateContextType.TYPENAME, Signature
+				.getSimpleName(typeQualifiedName));
 
 		TemplateBuffer buffer;
 		try {
@@ -211,7 +264,9 @@ public class StubUtility {
 			return null;
 		}
 
-		TemplateVariable position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
+		TemplateVariable position = findVariable(buffer,
+				CodeTemplateContextType.TAGS); // look if Javadoc tags have to
+												// be added
 		if (position == null) {
 			return str;
 		}
@@ -220,34 +275,46 @@ public class StubUtility {
 		int[] tagOffsets = position.getOffsets();
 		for (int i = tagOffsets.length - 1; i >= 0; i--) { // from last to first
 			try {
-				insertTag(document, tagOffsets[i], position.getLength(), EMPTY, null, typeParameterNames, false, lineDelim);
+				insertTag(document, tagOffsets[i], position.getLength(), EMPTY,
+						null, typeParameterNames, false, lineDelim);
 			} catch (BadLocationException e) {
-				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR, e));
+				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR,
+						e));
 			}
 		}
 		return document.get();
 	}
 
 	/*
-	 * Returns the parameters type names used in see tags. Currently, these are always fully qualified.
+	 * Returns the parameters type names used in see tags. Currently, these are
+	 * always fully qualified.
 	 */
-	public static String[] getParameterTypeNamesForSeeTag(IFunctionBinding binding) {
+	public static String[] getParameterTypeNamesForSeeTag(
+			IFunctionBinding binding) {
 		ITypeBinding[] typeParametersTypes = binding.getParameterTypes();
-		String[] typeParameterNames = new String[typeParametersTypes.length];
-		int i = 0;
-		for (ITypeBinding type : typeParametersTypes) {
-			typeParameterNames[i++] = type.getName();
+		String[] typeParameterNames = null;
+		if (typeParametersTypes != null) {
+			typeParameterNames = new String[typeParametersTypes.length];
+			int i = 0;
+			for (ITypeBinding type : typeParametersTypes) {
+				typeParameterNames[i++] = type.getName();
+			}
 		}
 		return typeParameterNames;
 	}
 
 	/*
-	 * Returns the parameters type names used in see tags. Currently, these are always fully qualified.
+	 * Returns the parameters type names used in see tags. Currently, these are
+	 * always fully qualified.
 	 */
-	private static String[] getParameterTypeNamesForSeeTag(IMethod overridden) throws ModelException {
+	private static String[] getParameterTypeNamesForSeeTag(IMethod overridden)
+			throws ModelException {
 		try {
-			Program program = SharedASTProvider.getAST(overridden.getSourceModule(), SharedASTProvider.WAIT_YES, new NullProgressMonitor());
-			ASTNode elementAt = program.getElementAt(overridden.getSourceRange().getOffset());
+			Program program = SharedASTProvider.getAST(overridden
+					.getSourceModule(), SharedASTProvider.WAIT_YES,
+					new NullProgressMonitor());
+			ASTNode elementAt = program.getElementAt(overridden
+					.getSourceRange().getOffset());
 			IFunctionBinding resolvedBinding = null;
 
 			if (elementAt instanceof MethodDeclaration) {
@@ -270,12 +337,14 @@ public class StubUtility {
 		String[] paramTypes = overridden.getParameters();
 		String[] paramTypeNames = new String[paramTypes.length];
 		for (int i = 0; i < paramTypes.length; i++) {
-			paramTypeNames[i] = Signature.toString(Signature.getTypeErasure(paramTypes[i]));
+			paramTypeNames[i] = Signature.toString(Signature
+					.getTypeErasure(paramTypes[i]));
 		}
 		return paramTypeNames;
 	}
 
-	private static String getSeeTag(String declaringClassQualifiedName, String methodName, String[] parameterTypesQualifiedNames) {
+	private static String getSeeTag(String declaringClassQualifiedName,
+			String methodName, String[] parameterTypesQualifiedNames) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("@see "); //$NON-NLS-1$
 		buf.append(declaringClassQualifiedName);
@@ -305,26 +374,39 @@ public class StubUtility {
 
 	/**
 	 * Don't use this method directly, use CodeGeneration.
-	 * @param templateID the template id of the type body to get. Valid id's are {@link CodeTemplateContextType#CLASSBODY_ID},
-	 * {@link CodeTemplateContextType#INTERFACEBODY_ID}, {@link CodeTemplateContextType#ENUMBODY_ID},{@link CodeTemplateContextType#ANNOTATIONBODY_ID},
-	 * @param sp the compilation unit to which the template is added
-	 * @param typeName the type name
-	 * @param lineDelim the line delimiter to use
+	 * 
+	 * @param templateID
+	 *            the template id of the type body to get. Valid id's are
+	 *            {@link CodeTemplateContextType#CLASSBODY_ID},
+	 *            {@link CodeTemplateContextType#INTERFACEBODY_ID},
+	 *            {@link CodeTemplateContextType#ENUMBODY_ID},
+	 *            {@link CodeTemplateContextType#ANNOTATIONBODY_ID},
+	 * @param sp
+	 *            the compilation unit to which the template is added
+	 * @param typeName
+	 *            the type name
+	 * @param lineDelim
+	 *            the line delimiter to use
 	 * @return return the type body template or <code>null</code>
-	 * @throws CoreException thrown if the template could not be evaluated
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getTypeBody(String, ICompilationUnit, String, String)
+	 * @throws CoreException
+	 *             thrown if the template could not be evaluated
+	 * @see org.eclipse.jdt.ui.CodeGeneration#getTypeBody(String,
+	 *      ICompilationUnit, String, String)
 	 */
-	public static String getTypeBody(String templateID, IScriptProject sp, String typeName, String lineDelim) throws CoreException {
+	public static String getTypeBody(String templateID, IScriptProject sp,
+			String typeName, String lineDelim) throws CoreException {
 		if (!VALID_TYPE_BODY_TEMPLATES.contains(templateID)) {
-			throw new IllegalArgumentException("Invalid code template ID: " + templateID); //$NON-NLS-1$
+			throw new IllegalArgumentException(
+					"Invalid code template ID: " + templateID); //$NON-NLS-1$
 		}
 
 		Template template = getCodeTemplate(templateID, sp);
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelim);
-		//context.setCompilationUnitVariables(sp);
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), sp, lineDelim);
+		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.TYPENAME, typeName);
 
 		return evaluateTemplate(context, template);
@@ -332,9 +414,14 @@ public class StubUtility {
 
 	/*
 	 * Don't use this method directly, use CodeGeneration.
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getMethodComment(ICompilationUnit, String, String, String[], String[], String, String[], IMethod, String)
+	 * 
+	 * @see org.eclipse.jdt.ui.CodeGeneration#getMethodComment(ICompilationUnit,
+	 * String, String, String[], String[], String, String[], IMethod, String)
 	 */
-	public static String getMethodComment(IScriptProject sp, String typeName, String methodName, String[] paramNames, String retTypeSig, String[] typeParameterNames, IMethod target, boolean delegate, String lineDelimiter) throws CoreException {
+	public static String getMethodComment(IScriptProject sp, String typeName,
+			String methodName, String[] paramNames, String retTypeSig,
+			String[] typeParameterNames, IMethod target, boolean delegate,
+			String lineDelimiter) throws CoreException {
 		String templateName = CodeTemplateContextType.METHODCOMMENT_ID;
 		if (retTypeSig == null) {
 			templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
@@ -348,21 +435,31 @@ public class StubUtility {
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
-		//context.setCompilationUnitVariables(sp);
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), sp, lineDelimiter);
+		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
+				methodName);
 
 		if (retTypeSig != null) {
-			context.setVariable(CodeTemplateContextType.RETURN_TYPE, retTypeSig);
+			context
+					.setVariable(CodeTemplateContextType.RETURN_TYPE,
+							retTypeSig);
 		}
 		if (target != null) {
-			String targetTypeName = target.getDeclaringType().getFullyQualifiedName(".");
+			String targetTypeName = target.getDeclaringType()
+					.getFullyQualifiedName(".");
 			String[] targetParamTypeNames = getParameterTypeNamesForSeeTag(target);
 			if (delegate)
-				context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG, getSeeTag(targetTypeName, methodName, targetParamTypeNames));
+				context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG,
+						getSeeTag(targetTypeName, methodName,
+								targetParamTypeNames));
 			else
-				context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG, getSeeTag(targetTypeName, methodName, targetParamTypeNames));
+				context.setVariable(
+						CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG,
+						getSeeTag(targetTypeName, methodName,
+								targetParamTypeNames));
 		}
 		TemplateBuffer buffer;
 		try {
@@ -380,7 +477,9 @@ public class StubUtility {
 		if (Strings.containsOnlyWhitespaces(str)) {
 			return null;
 		}
-		TemplateVariable position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
+		TemplateVariable position = findVariable(buffer,
+				CodeTemplateContextType.TAGS); // look if Javadoc tags have to
+												// be added
 		if (position == null) {
 			return str;
 		}
@@ -391,22 +490,34 @@ public class StubUtility {
 		int[] tagOffsets = position.getOffsets();
 		for (int i = tagOffsets.length - 1; i >= 0; i--) { // from last to first
 			try {
-				insertTag(document, tagOffsets[i], position.getLength(), paramNames, returnType, typeParameterNames, false, lineDelimiter);
+				insertTag(document, tagOffsets[i], position.getLength(),
+						paramNames, returnType, typeParameterNames, false,
+						lineDelimiter);
 			} catch (BadLocationException e) {
-				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR, e));
+				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR,
+						e));
 			}
 		}
 		return document.get();
 	}
 
 	// remove lines for empty variables
-	private static String fixEmptyVariables(TemplateBuffer buffer, String[] variables) throws MalformedTreeException, BadLocationException {
+	private static String fixEmptyVariables(TemplateBuffer buffer,
+			String[] variables) throws MalformedTreeException,
+			BadLocationException {
 		IDocument doc = new Document(buffer.getString());
 		int nLines = doc.getNumberOfLines();
 		MultiTextEdit edit = new MultiTextEdit();
 		HashSet removedLines = new HashSet();
 		for (int i = 0; i < variables.length; i++) {
-			TemplateVariable position = findVariable(buffer, variables[i]); // look if Javadoc tags have to be added
+			TemplateVariable position = findVariable(buffer, variables[i]); // look
+																			// if
+																			// Javadoc
+																			// tags
+																			// have
+																			// to
+																			// be
+																			// added
 			if (position == null || position.getLength() > 0) {
 				continue;
 			}
@@ -416,7 +527,8 @@ public class StubUtility {
 				IRegion lineInfo = doc.getLineInformation(line);
 				int offset = lineInfo.getOffset();
 				String str = doc.get(offset, lineInfo.getLength());
-				if (Strings.containsOnlyWhitespaces(str) && nLines > line + 1 && removedLines.add(new Integer(line))) {
+				if (Strings.containsOnlyWhitespaces(str) && nLines > line + 1
+						&& removedLines.add(new Integer(line))) {
 					int nextStart = doc.getLineOffset(line + 1);
 					edit.addChild(new DeleteEdit(offset, nextStart - offset));
 				}
@@ -429,26 +541,32 @@ public class StubUtility {
 	/*
 	 * Don't use this method directly, use CodeGeneration.
 	 */
-	public static String getFieldComment(IScriptProject sp, String fieldType, String fieldName, String lineDelimiter) throws CoreException {
-		Template template = getCodeTemplate(CodeTemplateContextType.FIELDCOMMENT_ID, sp);
+	public static String getFieldComment(IScriptProject sp, String fieldType,
+			String fieldName, String lineDelimiter) throws CoreException {
+		Template template = getCodeTemplate(
+				CodeTemplateContextType.FIELDCOMMENT_ID, sp);
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
-		//context.setCompilationUnitVariables(sp);
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), sp, lineDelimiter);
+		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 
 		return evaluateTemplate(context, template);
 	}
 
-	public static String getVarComment(IScriptProject sp, String fieldType, String fieldName, String lineDelimiter) throws CoreException {
-		Template template = getCodeTemplate(CodeTemplateContextType.VARCOMMENT_ID, sp);
+	public static String getVarComment(IScriptProject sp, String fieldType,
+			String fieldName, String lineDelimiter) throws CoreException {
+		Template template = getCodeTemplate(
+				CodeTemplateContextType.VARCOMMENT_ID, sp);
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
-		//context.setCompilationUnitVariables(sp);
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), sp, lineDelimiter);
+		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 
@@ -457,22 +575,30 @@ public class StubUtility {
 
 	/*
 	 * Don't use this method directly, use CodeGeneration.
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getSetterComment(ICompilationUnit, String, String, String, String, String, String, String)
+	 * 
+	 * @see org.eclipse.jdt.ui.CodeGeneration#getSetterComment(ICompilationUnit,
+	 * String, String, String, String, String, String, String)
 	 */
-	public static String getSetterComment(IScriptProject sp, String typeName, String methodName, String fieldName, String fieldType, String paramName, String bareFieldName, String lineDelimiter) throws CoreException {
+	public static String getSetterComment(IScriptProject sp, String typeName,
+			String methodName, String fieldName, String fieldType,
+			String paramName, String bareFieldName, String lineDelimiter)
+			throws CoreException {
 		String templateName = CodeTemplateContextType.SETTERCOMMENT_ID;
 		Template template = getCodeTemplate(templateName, sp);
 		if (template == null) {
 			return null;
 		}
 
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
-		//		context.setCompilationUnitVariables(sp);
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), sp, lineDelimiter);
+		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
+				methodName);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
-		context.setVariable(CodeTemplateContextType.BARE_FIELD_NAME, bareFieldName);
+		context.setVariable(CodeTemplateContextType.BARE_FIELD_NAME,
+				bareFieldName);
 		context.setVariable(CodeTemplateContextType.PARAM, paramName);
 
 		return evaluateTemplate(context, template);
@@ -480,26 +606,34 @@ public class StubUtility {
 
 	/*
 	 * Don't use this method directly, use CodeGeneration.
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getGetterComment(ICompilationUnit, String, String, String, String, String, String)
+	 * 
+	 * @see org.eclipse.jdt.ui.CodeGeneration#getGetterComment(ICompilationUnit,
+	 * String, String, String, String, String, String)
 	 */
-	public static String getGetterComment(IScriptProject sp, String typeName, String methodName, String fieldName, String fieldType, String bareFieldName, String lineDelimiter) throws CoreException {
+	public static String getGetterComment(IScriptProject sp, String typeName,
+			String methodName, String fieldName, String fieldType,
+			String bareFieldName, String lineDelimiter) throws CoreException {
 		String templateName = CodeTemplateContextType.GETTERCOMMENT_ID;
 		Template template = getCodeTemplate(templateName, sp);
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
-		//		context.setCompilationUnitVariables(sp);
+		CodeTemplateContext context = new CodeTemplateContext(template
+				.getContextTypeId(), sp, lineDelimiter);
+		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, methodName);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
+				methodName);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
-		context.setVariable(CodeTemplateContextType.BARE_FIELD_NAME, bareFieldName);
+		context.setVariable(CodeTemplateContextType.BARE_FIELD_NAME,
+				bareFieldName);
 
 		return evaluateTemplate(context, template);
 	}
 
-	private static String evaluateTemplate(CodeTemplateContext context, Template template) throws CoreException {
+	private static String evaluateTemplate(CodeTemplateContext context,
+			Template template) throws CoreException {
 		TemplateBuffer buffer;
 		try {
 			buffer = context.evaluate(template);
@@ -517,7 +651,8 @@ public class StubUtility {
 		return str;
 	}
 
-	private static String evaluateTemplate(CodeTemplateContext context, Template template, String[] fullLineVariables) throws CoreException {
+	private static String evaluateTemplate(CodeTemplateContext context,
+			Template template, String[] fullLineVariables) throws CoreException {
 		TemplateBuffer buffer;
 		try {
 			buffer = context.evaluate(template);
@@ -537,96 +672,82 @@ public class StubUtility {
 
 	/*
 	 * Don't use this method directly, use CodeGeneration.
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getMethodComment(ICompilationUnit, String, MethodDeclaration, boolean, String, String[], String)
+	 * 
+	 * @see org.eclipse.jdt.ui.CodeGeneration#getMethodComment(ICompilationUnit,
+	 * String, MethodDeclaration, boolean, String, String[], String)
 	 */
-	/*public static String getMethodComment(IScriptProject sp, String typeName, MethodDeclaration decl, boolean isDeprecated, String targetName, String targetMethodDeclaringTypeName, String[] targetMethodParameterTypeNames, boolean delegate, String lineDelimiter) throws CoreException {
-		boolean needsTarget = targetMethodDeclaringTypeName != null && targetMethodParameterTypeNames != null;
-		String templateName = CodeTemplateContextType.METHODCOMMENT_ID;
-		if (decl.isConstructor()) {
-			templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
-		} else if (needsTarget) {
-			if (delegate)
-				templateName = CodeTemplateContextType.DELEGATECOMMENT_ID;
-			else
-				templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
-		}
-		Template template = getCodeTemplate(templateName, sp);
-		if (template == null) {
-			return null;
-		}
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
-		//		context.setCompilationUnitVariables(sp);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD, decl.getName().getIdentifier());
-		if (!decl.isConstructor()) {
-			context.setVariable(CodeTemplateContextType.RETURN_TYPE, ASTNodes.asString(getReturnType(decl)));
-		}
-		if (needsTarget) {
-			if (delegate)
-				context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG, getSeeTag(targetMethodDeclaringTypeName, targetName, targetMethodParameterTypeNames));
-			else
-				context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG, getSeeTag(targetMethodDeclaringTypeName, targetName, targetMethodParameterTypeNames));
-		}
-
-		TemplateBuffer buffer;
-		try {
-			buffer = context.evaluate(template);
-		} catch (BadLocationException e) {
-			throw new CoreException(Status.CANCEL_STATUS);
-		} catch (TemplateException e) {
-			throw new CoreException(Status.CANCEL_STATUS);
-		}
-		if (buffer == null)
-			return null;
-		String str = buffer.getString();
-		if (Strings.containsOnlyWhitespaces(str)) {
-			return null;
-		}
-		TemplateVariable position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
-		if (position == null) {
-			return str;
-		}
-
-		IDocument textBuffer = new Document(str);
-		List typeParams = decl.typeParameters();
-		String[] typeParamNames = new String[typeParams.size()];
-		for (int i = 0; i < typeParamNames.length; i++) {
-			TypeParameter elem = (TypeParameter) typeParams.get(i);
-			typeParamNames[i] = elem.getName().getIdentifier();
-		}
-		List params = decl.parameters();
-		String[] paramNames = new String[params.size()];
-		for (int i = 0; i < paramNames.length; i++) {
-			SingleVariableDeclaration elem = (SingleVariableDeclaration) params.get(i);
-			paramNames[i] = elem.getName().getIdentifier();
-		}
-
-		String returnType = null;
-		if (!decl.isConstructor()) {
-			returnType = ASTNodes.asString(getReturnType(decl));
-		}
-		int[] tagOffsets = position.getOffsets();
-		for (int i = tagOffsets.length - 1; i >= 0; i--) { // from last to first
-			try {
-				insertTag(textBuffer, tagOffsets[i], position.getLength(), paramNames, exceptionNames, returnType, typeParamNames, isDeprecated, lineDelimiter);
-			} catch (BadLocationException e) {
-				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR, e));
-			}
-		}
-		return textBuffer.get();
-	}*/
+	/*
+	 * public static String getMethodComment(IScriptProject sp, String typeName,
+	 * MethodDeclaration decl, boolean isDeprecated, String targetName, String
+	 * targetMethodDeclaringTypeName, String[] targetMethodParameterTypeNames,
+	 * boolean delegate, String lineDelimiter) throws CoreException { boolean
+	 * needsTarget = targetMethodDeclaringTypeName != null &&
+	 * targetMethodParameterTypeNames != null; String templateName =
+	 * CodeTemplateContextType.METHODCOMMENT_ID; if (decl.isConstructor()) {
+	 * templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID; } else if
+	 * (needsTarget) { if (delegate) templateName =
+	 * CodeTemplateContextType.DELEGATECOMMENT_ID; else templateName =
+	 * CodeTemplateContextType.OVERRIDECOMMENT_ID; } Template template =
+	 * getCodeTemplate(templateName, sp); if (template == null) { return null; }
+	 * CodeTemplateContext context = new
+	 * CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter); //
+	 * context.setCompilationUnitVariables(sp);
+	 * context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
+	 * context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
+	 * decl.getName().getIdentifier()); if (!decl.isConstructor()) {
+	 * context.setVariable(CodeTemplateContextType.RETURN_TYPE,
+	 * ASTNodes.asString(getReturnType(decl))); } if (needsTarget) { if
+	 * (delegate) context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG,
+	 * getSeeTag(targetMethodDeclaringTypeName, targetName,
+	 * targetMethodParameterTypeNames)); else
+	 * context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG,
+	 * getSeeTag(targetMethodDeclaringTypeName, targetName,
+	 * targetMethodParameterTypeNames)); }
+	 * 
+	 * TemplateBuffer buffer; try { buffer = context.evaluate(template); } catch
+	 * (BadLocationException e) { throw new CoreException(Status.CANCEL_STATUS);
+	 * } catch (TemplateException e) { throw new
+	 * CoreException(Status.CANCEL_STATUS); } if (buffer == null) return null;
+	 * String str = buffer.getString(); if
+	 * (Strings.containsOnlyWhitespaces(str)) { return null; } TemplateVariable
+	 * position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if
+	 * Javadoc tags have to be added if (position == null) { return str; }
+	 * 
+	 * IDocument textBuffer = new Document(str); List typeParams =
+	 * decl.typeParameters(); String[] typeParamNames = new
+	 * String[typeParams.size()]; for (int i = 0; i < typeParamNames.length;
+	 * i++) { TypeParameter elem = (TypeParameter) typeParams.get(i);
+	 * typeParamNames[i] = elem.getName().getIdentifier(); } List params =
+	 * decl.parameters(); String[] paramNames = new String[params.size()]; for
+	 * (int i = 0; i < paramNames.length; i++) { SingleVariableDeclaration elem
+	 * = (SingleVariableDeclaration) params.get(i); paramNames[i] =
+	 * elem.getName().getIdentifier(); }
+	 * 
+	 * String returnType = null; if (!decl.isConstructor()) { returnType =
+	 * ASTNodes.asString(getReturnType(decl)); } int[] tagOffsets =
+	 * position.getOffsets(); for (int i = tagOffsets.length - 1; i >= 0; i--) {
+	 * // from last to first try { insertTag(textBuffer, tagOffsets[i],
+	 * position.getLength(), paramNames, exceptionNames, returnType,
+	 * typeParamNames, isDeprecated, lineDelimiter); } catch
+	 * (BadLocationException e) { throw new
+	 * CoreException(DLTKUIStatus.createError(IStatus.ERROR, e)); } } return
+	 * textBuffer.get(); }
+	 */
 
 	/**
-	 * @param decl the method declaration
+	 * @param decl
+	 *            the method declaration
 	 * @return the return type
 	 * @deprecated Deprecated to avoid deprecated warnings
 	 */
-	/*	private static ASTNode getReturnType(MethodDeclaration decl) {
-			// used from API, can't eliminate
-			return decl.getAST().apiLevel() == AST.JLS2 ? decl.getReturnType() : decl.getReturnType2();
-		}*/
+	/*
+	 * private static ASTNode getReturnType(MethodDeclaration decl) { // used
+	 * from API, can't eliminate return decl.getAST().apiLevel() == AST.JLS2 ?
+	 * decl.getReturnType() : decl.getReturnType2(); }
+	 */
 
-	private static TemplateVariable findVariable(TemplateBuffer buffer, String variable) {
+	private static TemplateVariable findVariable(TemplateBuffer buffer,
+			String variable) {
 		TemplateVariable[] positions = buffer.getVariables();
 		for (int i = 0; i < positions.length; i++) {
 			TemplateVariable curr = positions[i];
@@ -637,12 +758,16 @@ public class StubUtility {
 		return null;
 	}
 
-	private static void insertTag(IDocument textBuffer, int offset, int length, String[] paramNames, String returnType, String[] typeParameterNames, boolean isDeprecated, String lineDelimiter) throws BadLocationException {
+	private static void insertTag(IDocument textBuffer, int offset, int length,
+			String[] paramNames, String returnType,
+			String[] typeParameterNames, boolean isDeprecated,
+			String lineDelimiter) throws BadLocationException {
 		IRegion region = textBuffer.getLineInformationOfOffset(offset);
 		if (region == null) {
 			return;
 		}
-		String lineStart = textBuffer.get(region.getOffset(), offset - region.getOffset());
+		String lineStart = textBuffer.get(region.getOffset(), offset
+				- region.getOffset());
 
 		StringBuffer buf = new StringBuffer();
 		if (null != typeParameterNames) {
@@ -650,7 +775,8 @@ public class StubUtility {
 				if (buf.length() > 0) {
 					buf.append(lineDelimiter).append(lineStart);
 				}
-				buf.append("@param <").append(typeParameterNames[i]).append('>'); //$NON-NLS-1$
+				buf
+						.append("@param <").append(typeParameterNames[i]).append('>'); //$NON-NLS-1$
 			}
 		}
 		for (int i = 0; i < paramNames.length; i++) {
@@ -676,9 +802,11 @@ public class StubUtility {
 			int prevLine = textBuffer.getLineOfOffset(offset) - 1;
 			if (prevLine > 0) {
 				IRegion prevRegion = textBuffer.getLineInformation(prevLine);
-				int prevLineEnd = prevRegion.getOffset() + prevRegion.getLength();
+				int prevLineEnd = prevRegion.getOffset()
+						+ prevRegion.getLength();
 				// clear full line
-				textBuffer.replace(prevLineEnd, offset + length - prevLineEnd, ""); //$NON-NLS-1$
+				textBuffer.replace(prevLineEnd, offset + length - prevLineEnd,
+						""); //$NON-NLS-1$
 				return;
 			}
 		}
@@ -698,7 +826,8 @@ public class StubUtility {
 	/**
 	 * Returns the line delimiter which is used in the specified project.
 	 * 
-	 * @param project the java project, or <code>null</code>
+	 * @param project
+	 *            the java project, or <code>null</code>
 	 * @return the used line delimiter
 	 */
 	public static String getLineDelimiterUsed(IScriptProject project) {
@@ -722,15 +851,19 @@ public class StubUtility {
 		IScopeContext[] scopeContext;
 		if (project != null) {
 			// project preference
-			scopeContext = new IScopeContext[] { new ProjectScope(project.getProject()) };
-			String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null, scopeContext);
+			scopeContext = new IScopeContext[] { new ProjectScope(project
+					.getProject()) };
+			String lineDelimiter = Platform.getPreferencesService().getString(
+					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
+					scopeContext);
 			if (lineDelimiter != null)
 				return lineDelimiter;
 		}
 		// workspace preference
 		scopeContext = new IScopeContext[] { new InstanceScope() };
 		String platformDefault = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		return Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, platformDefault, scopeContext);
+		return Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
+				Platform.PREF_LINE_SEPARATOR, platformDefault, scopeContext);
 	}
 
 	private static String removeTypeArguments(String baseName) {
@@ -785,36 +918,50 @@ public class StubUtility {
 
 	// -------------------- preference access -----------------------
 
-	/*	public static boolean useThisForFieldAccess(IScriptProject project) {
-			return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_KEYWORD_THIS, project)).booleanValue();
-		}
-
-		public static boolean useIsForBooleanGetters(IScriptProject project) {
-			return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_IS_FOR_GETTERS, project)).booleanValue();
-		}
-
-		public static boolean doAddComments(IScriptProject project) {
-			return Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.CODEGEN_ADD_COMMENTS, project)).booleanValue();
-		}*/
+	/*
+	 * public static boolean useThisForFieldAccess(IScriptProject project) {
+	 * return
+	 * Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants
+	 * .CODEGEN_KEYWORD_THIS, project)).booleanValue(); }
+	 * 
+	 * public static boolean useIsForBooleanGetters(IScriptProject project) {
+	 * return
+	 * Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants
+	 * .CODEGEN_IS_FOR_GETTERS, project)).booleanValue(); }
+	 * 
+	 * public static boolean doAddComments(IScriptProject project) { return
+	 * Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.
+	 * CODEGEN_ADD_COMMENTS, project)).booleanValue(); }
+	 */
 
 	/**
 	 * Only to be used by tests
-	 * @param templateId the template id
-	 * @param pattern the new pattern
-	 * @param project not used
+	 * 
+	 * @param templateId
+	 *            the template id
+	 * @param pattern
+	 *            the new pattern
+	 * @param project
+	 *            not used
 	 */
-	public static void setCodeTemplate(String templateId, String pattern, IScriptProject project) {
-		TemplateStore codeTemplateStore = PHPUiPlugin.getDefault().getTemplateStore();
-		TemplatePersistenceData data = codeTemplateStore.getTemplateData(templateId);
+	public static void setCodeTemplate(String templateId, String pattern,
+			IScriptProject project) {
+		TemplateStore codeTemplateStore = PHPUiPlugin.getDefault()
+				.getTemplateStore();
+		TemplatePersistenceData data = codeTemplateStore
+				.getTemplateData(templateId);
 		Template orig = data.getTemplate();
-		Template copy = new Template(orig.getName(), orig.getDescription(), orig.getContextTypeId(), pattern, true);
+		Template copy = new Template(orig.getName(), orig.getDescription(),
+				orig.getContextTypeId(), pattern, true);
 		data.setTemplate(copy);
 	}
 
 	private static Template getCodeTemplate(String id, IScriptProject sp) {
 		if (sp == null)
-			return PHPUiPlugin.getDefault().getTemplateStore().findTemplateById(id);
-		ProjectTemplateStore projectStore = new ProjectTemplateStore(sp.getProject());
+			return PHPUiPlugin.getDefault().getTemplateStore()
+					.findTemplateById(id);
+		ProjectTemplateStore projectStore = new ProjectTemplateStore(sp
+				.getProject());
 		try {
 			projectStore.load();
 		} catch (IOException e) {
@@ -823,12 +970,15 @@ public class StubUtility {
 		return projectStore.findTemplateById(id);
 	}
 
-	/*	public static ImportRewrite createImportRewrite(IScriptProject sp, boolean restoreExistingImports) throws ModelException {
-			return CodeStyleConfiguration.createImportRewrite(sp, restoreExistingImports);
-		}
-
-		public static ImportRewrite createImportRewrite(ScriptProject astRoot, boolean restoreExistingImports) {
-			return CodeStyleConfiguration.createImportRewrite(astRoot, restoreExistingImports);
-		}*/
+	/*
+	 * public static ImportRewrite createImportRewrite(IScriptProject sp,
+	 * boolean restoreExistingImports) throws ModelException { return
+	 * CodeStyleConfiguration.createImportRewrite(sp, restoreExistingImports); }
+	 * 
+	 * public static ImportRewrite createImportRewrite(ScriptProject astRoot,
+	 * boolean restoreExistingImports) { return
+	 * CodeStyleConfiguration.createImportRewrite(astRoot,
+	 * restoreExistingImports); }
+	 */
 
 }

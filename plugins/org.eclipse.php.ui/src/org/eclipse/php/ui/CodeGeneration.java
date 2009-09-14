@@ -530,7 +530,12 @@ public class CodeGeneration {
 					new NullProgressMonitor());
 			ASTNode elementAt = program.getElementAt(method.getSourceRange()
 					.getOffset());
-			ITypeBinding returnType = null;
+
+			if (elementAt.getParent() instanceof MethodDeclaration) {
+				elementAt = elementAt.getParent();
+			}
+
+			ITypeBinding[] returnTypes = null;
 			ITypeBinding[] typeParametersTypes = null;
 			IFunctionBinding resolvedBinding = null;
 			List<FormalParameter> formalParameters = null;
@@ -564,21 +569,29 @@ public class CodeGeneration {
 				}
 			}
 
+			StringBuilder returnTypeBuffer = new StringBuilder();
 			if (null != resolvedBinding) {
-				returnType = resolvedBinding.getReturnType();
-				if (null != returnType) {
-					if (returnType.isUnknown()) {
-						retType = "unknown_type";
-					} else if (returnType.isAmbiguous()) {
-						retType = "Ambiguous";
-					} else {
-						retType = returnType.getName();
+				returnTypes = resolvedBinding.getReturnType();
+				if (null != returnTypes) {
+					for (ITypeBinding returnType : returnTypes) {
+						if (returnType.isUnknown()) {
+							returnTypeBuffer.append("null").append("|");
+						} else if (returnType.isAmbiguous()) {
+							returnTypeBuffer.append("Ambiguous").append("|");
+						} else {
+							returnTypeBuffer.append(returnType.getName())
+									.append("|");
+						}
+					}
+					if (returnTypeBuffer.length() > 0) {
+						retType = returnTypeBuffer.substring(0,
+								returnTypeBuffer.length() - 1);
 					}
 				}
 
 				typeParametersTypes = resolvedBinding.getParameterTypes();
 
-				if (null != returnType) {
+				if (null != typeParametersTypes) {
 					int i = 0;
 					typeParameterNames = new String[typeParametersTypes.length];
 					for (ITypeBinding type : typeParametersTypes) {
