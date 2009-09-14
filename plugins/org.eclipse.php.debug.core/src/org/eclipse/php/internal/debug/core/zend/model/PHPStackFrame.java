@@ -28,7 +28,8 @@ import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
  */
 public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
-	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
+	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern
+			.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
 
 	private PHPThread fThread;
 	private String fFunctionName;
@@ -36,19 +37,24 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	private int fLineNumber;
 	private int fId;
 	private String fResName;
+	private Expression[] fVariables;
 
-	public PHPStackFrame(IThread thread, String fileName, String funcName, int lineNumber, int id, String rName) {
+	public PHPStackFrame(IThread thread, String fileName, String funcName,
+			int lineNumber, int id, String rName, Expression[] variables) {
 		super((PHPDebugTarget) thread.getDebugTarget());
-		baseInit(thread, fileName, funcName, lineNumber, id, rName);
+		baseInit(thread, fileName, funcName, lineNumber, id, rName, variables);
 	}
 
-	public PHPStackFrame(IThread thread, String fileName, String funcName, int lineNumber, int id, StackLayer layer, String rName) {
+	public PHPStackFrame(IThread thread, String fileName, String funcName,
+			int lineNumber, int id, StackLayer layer, String rName,
+			Expression[] variables) {
 		super((PHPDebugTarget) thread.getDebugTarget());
-		baseInit(thread, fileName, funcName, lineNumber, id, rName);
+		baseInit(thread, fileName, funcName, lineNumber, id, rName, variables);
 
 	}
 
-	private void baseInit(IThread thread, String fileName, String funcName, int lineNumber, int id, String rName) {
+	private void baseInit(IThread thread, String fileName, String funcName,
+			int lineNumber, int id, String rName, Expression[] variables) {
 		Matcher matcher = LAMBDA_FUNC_PATTERN.matcher(fileName);
 		if (matcher.matches()) {
 			fileName = matcher.group(1);
@@ -61,15 +67,18 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		fId = id;
 		fThread = (PHPThread) thread;
 		fResName = rName;
+		fVariables = variables;
 	}
 
-	public String createUID() {
-		return new StringBuilder(fFileName).append(':').append(fFunctionName).append(':').append(fLineNumber).toString();
+	public String createUID(int depth) {
+		return new StringBuilder(fFileName).append(':').append(fFunctionName)
+				.append(':').append(fLineNumber).append(':').append(depth)
+				.toString();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getThread()
 	 */
 	public IThread getThread() {
@@ -78,16 +87,21 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
 	public IVariable[] getVariables() throws DebugException {
-		return ((PHPDebugTarget) getDebugTarget()).getVariables(this);
+		IVariable[] variables = new PHPVariable[fVariables.length];
+		for (int i = 0; i < fVariables.length; i++) {
+			variables[i] = new PHPVariable((PHPDebugTarget) fThread
+					.getDebugTarget(), fVariables[i]);
+		}
+		return variables;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
 	 */
 	public boolean hasVariables() throws DebugException {
@@ -96,7 +110,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
 	 */
 	public int getLineNumber() throws DebugException {
@@ -109,7 +123,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getCharStart()
 	 */
 	public int getCharStart() throws DebugException {
@@ -118,7 +132,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getCharEnd()
 	 */
 	public int getCharEnd() throws DebugException {
@@ -127,7 +141,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getName()
 	 */
 	public String getName() throws DebugException {
@@ -136,7 +150,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getRegisterGroups()
 	 */
 	public IRegisterGroup[] getRegisterGroups() throws DebugException {
@@ -145,7 +159,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#hasRegisterGroups()
 	 */
 	public boolean hasRegisterGroups() throws DebugException {
@@ -154,7 +168,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
 	 */
 	public boolean canStepInto() {
@@ -163,7 +177,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
 	 */
 	public boolean canStepOver() {
@@ -172,7 +186,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
 	 */
 	public boolean canStepReturn() {
@@ -181,7 +195,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#isStepping()
 	 */
 	public boolean isStepping() {
@@ -190,7 +204,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepInto()
 	 */
 	public void stepInto() throws DebugException {
@@ -199,7 +213,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepOver()
 	 */
 	public void stepOver() throws DebugException {
@@ -208,7 +222,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
 	 */
 	public void stepReturn() throws DebugException {
@@ -217,7 +231,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
 	 */
 	public boolean canResume() {
@@ -226,7 +240,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
 	 */
 	public boolean canSuspend() {
@@ -235,7 +249,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
 	 */
 	public boolean isSuspended() {
@@ -244,7 +258,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
 	 */
 	public void resume() throws DebugException {
@@ -253,7 +267,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
 	 */
 	public void suspend() throws DebugException {
@@ -262,7 +276,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
 	public boolean canTerminate() {
@@ -271,7 +285,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
 	public boolean isTerminated() {
@@ -280,7 +294,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
 	public void terminate() throws DebugException {
@@ -289,7 +303,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/**
 	 * Returns the name of the source file this stack frame is associated with.
-	 *
+	 * 
 	 * @return the name of the source file this stack frame is associated with
 	 */
 	public String getSourceName() {
@@ -298,7 +312,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/**
 	 * Returns the file name with full path.
-	 *
+	 * 
 	 * @return the file name with full path
 	 */
 	public String getAbsoluteFileName() {
@@ -307,30 +321,31 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 	/**
 	 * Returns this stack frame's unique identifier within its thread
-	 *
+	 * 
 	 * @return this stack frame's unique identifier within its thread
 	 */
 	protected int getIdentifier() {
 		return fId;
 	}
 
-	/**
-	 * Returns this frame's PHP stack variables
-	 *
-	 * @return this frame's PHP stack variables
-	 */
 	public Expression[] getStackVariables() {
-		return ((PHPDebugTarget) getDebugTarget()).getStackVariables(this);
+		return fVariables;
+	}
+
+	public void setStackVariables(Expression[] variables) {
+		fVariables = variables;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fFunctionName == null) ? 0 : fFunctionName.hashCode());
+		result = prime * result
+				+ ((fFunctionName == null) ? 0 : fFunctionName.hashCode());
 		result = prime * result + fId;
 		result = prime * result + fLineNumber;
-		result = prime * result + ((fResName == null) ? 0 : fResName.hashCode());
+		result = prime * result
+				+ ((fResName == null) ? 0 : fResName.hashCode());
 		result = prime * result + ((fThread == null) ? 0 : fThread.hashCode());
 		return result;
 	}
