@@ -37,22 +37,24 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	private int fLineNumber;
 	private int fId;
 	private String fResName;
+	private Expression[] fVariables;
 
 	public PHPStackFrame(IThread thread, String fileName, String funcName,
-			int lineNumber, int id, String rName) {
+			int lineNumber, int id, String rName, Expression[] variables) {
 		super((PHPDebugTarget) thread.getDebugTarget());
-		baseInit(thread, fileName, funcName, lineNumber, id, rName);
+		baseInit(thread, fileName, funcName, lineNumber, id, rName, variables);
 	}
 
 	public PHPStackFrame(IThread thread, String fileName, String funcName,
-			int lineNumber, int id, StackLayer layer, String rName) {
+			int lineNumber, int id, StackLayer layer, String rName,
+			Expression[] variables) {
 		super((PHPDebugTarget) thread.getDebugTarget());
-		baseInit(thread, fileName, funcName, lineNumber, id, rName);
+		baseInit(thread, fileName, funcName, lineNumber, id, rName, variables);
 
 	}
 
 	private void baseInit(IThread thread, String fileName, String funcName,
-			int lineNumber, int id, String rName) {
+			int lineNumber, int id, String rName, Expression[] variables) {
 		Matcher matcher = LAMBDA_FUNC_PATTERN.matcher(fileName);
 		if (matcher.matches()) {
 			fileName = matcher.group(1);
@@ -65,11 +67,13 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		fId = id;
 		fThread = (PHPThread) thread;
 		fResName = rName;
+		fVariables = variables;
 	}
 
-	public String createUID() {
+	public String createUID(int depth) {
 		return new StringBuilder(fFileName).append(':').append(fFunctionName)
-				.append(':').append(fLineNumber).toString();
+				.append(':').append(fLineNumber).append(':').append(depth)
+				.toString();
 	}
 
 	/*
@@ -87,7 +91,12 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
 	public IVariable[] getVariables() throws DebugException {
-		return ((PHPDebugTarget) getDebugTarget()).getVariables(this);
+		IVariable[] variables = new PHPVariable[fVariables.length];
+		for (int i = 0; i < fVariables.length; i++) {
+			variables[i] = new PHPVariable((PHPDebugTarget) fThread
+					.getDebugTarget(), fVariables[i]);
+		}
+		return variables;
 	}
 
 	/*
@@ -319,13 +328,12 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		return fId;
 	}
 
-	/**
-	 * Returns this frame's PHP stack variables
-	 * 
-	 * @return this frame's PHP stack variables
-	 */
 	public Expression[] getStackVariables() {
-		return ((PHPDebugTarget) getDebugTarget()).getStackVariables(this);
+		return fVariables;
+	}
+
+	public void setStackVariables(Expression[] variables) {
+		fVariables = variables;
 	}
 
 	@Override
