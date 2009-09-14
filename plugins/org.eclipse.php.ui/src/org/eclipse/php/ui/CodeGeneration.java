@@ -338,15 +338,6 @@ public class CodeGeneration {
 		String[] typeParameterNames = null;
 		String[] parameterTypes = null;
 		
-//		
-//		//TODO fix waiting for reconciling in DLTK to wait for /** + enter typed and model rebuild
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-
 		try {
 			Program program = SharedASTProvider.getAST(method.getSourceModule(), SharedASTProvider.WAIT_YES, new NullProgressMonitor());
 			ASTNode elementAt = program.getElementAt(method.getSourceRange().getOffset());
@@ -381,7 +372,7 @@ public class CodeGeneration {
 						String typeName = ((Identifier) parameterType).getName();
 						parameterTypes[i++] = typeName;
 					} else{
-						parameterTypes[i++] = null;
+						parameterTypes[i++] = "unknown_type";
 					}
 				}
 			}
