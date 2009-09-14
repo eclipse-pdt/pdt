@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.buildpath;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
@@ -160,6 +157,48 @@ public class BuildPathUtils {
 				}
 			}
 		}
+		return result;
+	}
+
+	/**
+	 * Returns whether the include path is a part of build path
+	 * 
+	 * @param resourcePath
+	 *            Include path
+	 * @param project
+	 * @return
+	 */
+	public static List<IBuildpathEntry> getContainedBuildpathes(IPath resourcePath,
+			IScriptProject project) {
+		if (resourcePath == null) {
+			return Collections.EMPTY_LIST;
+		}
+
+		IBuildpathEntry[] buildpath = null;
+		try {
+			buildpath = project.getRawBuildpath();
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+			return Collections.EMPTY_LIST;
+		}
+
+		ArrayList<IBuildpathEntry> result = new ArrayList<IBuildpathEntry>();
+		// go over the build path entries and for each one of the "sources"
+		// check if they are the same as the given include path entry or if they
+		// contain it
+		for (IBuildpathEntry buildpathEntry : buildpath) {
+			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+				IPath buildPathEntryPath = buildpathEntry.getPath();
+				if (buildPathEntryPath.isPrefixOf(resourcePath)
+						|| resourcePath.toString().equals(
+								buildPathEntryPath.toString())) {
+					result.add(buildpathEntry);
+				}
+			}
+		}
+
 		return result;
 	}
 }
