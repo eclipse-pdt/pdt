@@ -352,9 +352,11 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * (org.eclipse.dltk.ti.types.IEvaluatedType)
 	 */
 	@Override
-	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding) {
-		// TODO Auto-generated method stub
-		return super.getTypeBinding(referenceBinding);
+	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding, ISourceModule sourceModule) {
+		if (referenceBinding != null) {
+			return new TypeBinding(this, referenceBinding, sourceModule);
+		}
+		return null;
 	}
 
 	/*

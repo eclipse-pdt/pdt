@@ -12,10 +12,16 @@
 package org.eclipse.php.internal.core.typeinference;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRefElement;
@@ -23,12 +29,14 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
+import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.VariableReferenceEvaluator;
 
 /**
- * This utility allows to determine types of expressions represented in AST tree.
- * Results are cached until instance of this class is alive.
+ * This utility allows to determine types of expressions represented in AST
+ * tree. Results are cached until instance of this class is alive.
  */
 public class BindingUtility {
 
@@ -42,7 +50,9 @@ public class BindingUtility {
 
 	/**
 	 * Creates new instance of binding utility.
-	 * @param sourceModule Source module of the file.
+	 * 
+	 * @param sourceModule
+	 *            Source module of the file.
 	 */
 	public BindingUtility(ISourceModule sourceModule) {
 		this.sourceModule = sourceModule;
@@ -51,8 +61,12 @@ public class BindingUtility {
 
 	/**
 	 * Creates new instance of binding utility
-	 * @param sourceModule Source module of the file.
-	 * @param rootNode AST tree of the the file represented by the given source module.
+	 * 
+	 * @param sourceModule
+	 *            Source module of the file.
+	 * @param rootNode
+	 *            AST tree of the the file represented by the given source
+	 *            module.
 	 */
 	public BindingUtility(ISourceModule sourceModule, ASTNode rootNode) {
 		this.sourceModule = sourceModule;
@@ -60,7 +74,9 @@ public class BindingUtility {
 	}
 
 	/**
-	 * Sets new time limit in milliseconds for the type inference evaluation. Default value is 500ms.
+	 * Sets new time limit in milliseconds for the type inference evaluation.
+	 * Default value is 500ms.
+	 * 
 	 * @param timeLimit
 	 */
 	public void setTimeLimit(int timeLimit) {
@@ -70,13 +86,16 @@ public class BindingUtility {
 	/**
 	 * This method returns evaluated type for the given AST expression node.
 	 * Returns cached type from previous evaluations (if exists).
-	 *
-	 * @param node AST node that needs to be evaluated.
+	 * 
+	 * @param node
+	 *            AST node that needs to be evaluated.
 	 * @return evaluated type.
-	 * @throws ModelException 
-	 *
-	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
-	 * @throws NullPointerException if the given node is <code>null</code>.
+	 * @throws ModelException
+	 * 
+	 * @throws IllegalArgumentException
+	 *             in case if context cannot be found for the given node.
+	 * @throws NullPointerException
+	 *             if the given node is <code>null</code>.
 	 */
 	public IEvaluatedType getType(ASTNode node) throws ModelException {
 		if (node == null) {
@@ -86,17 +105,21 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns evaluated type for the given model element.
-	 * Returns cached type from previous evaluations (if exists).
-	 *
-	 * @param element Model element.
+	 * This method returns evaluated type for the given model element. Returns
+	 * cached type from previous evaluations (if exists).
+	 * 
+	 * @param element
+	 *            Model element.
 	 * @return evaluated type.
-	 *
-	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
-	 * @throws NullPointerException if the given element is <code>null</code>.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             in case if context cannot be found for the given node.
+	 * @throws NullPointerException
+	 *             if the given element is <code>null</code>.
 	 * @throws ModelException
 	 */
-	public IEvaluatedType getType(SourceRefElement element) throws ModelException {
+	public IEvaluatedType getType(SourceRefElement element)
+			throws ModelException {
 		if (element == null) {
 			throw new NullPointerException();
 		}
@@ -108,25 +131,33 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns evaluated type for the expression under the given offset and length.
-	 * Returns cached type from previous evaluations (if exists).
-	 *
-	 * @param startOffset Starting offset of the expression.
-	 * @param length Length of the expression.
+	 * This method returns evaluated type for the expression under the given
+	 * offset and length. Returns cached type from previous evaluations (if
+	 * exists).
+	 * 
+	 * @param startOffset
+	 *            Starting offset of the expression.
+	 * @param length
+	 *            Length of the expression.
 	 * @return evaluated type.
-	 *
-	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             in case if context cannot be found for the given node.
 	 */
-	public IEvaluatedType getType(int startOffset, int length) throws ModelException {
+	public IEvaluatedType getType(int startOffset, int length)
+			throws ModelException {
 		return getType(new SourceRange(startOffset, length));
 	}
 
-	protected IEvaluatedType getType(SourceRange sourceRange, IContext context, ASTNode node) {
+	protected IEvaluatedType getType(SourceRange sourceRange, IContext context,
+			ASTNode node) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-		return typeInferencer.evaluateType(new ExpressionTypeGoal(context, node), timeLimit);
+		return typeInferencer.evaluateType(
+				new ExpressionTypeGoal(context, node), timeLimit);
 	}
 
-	protected ContextFinder getContext(SourceRange sourceRange) throws ModelException {
+	protected ContextFinder getContext(SourceRange sourceRange)
+			throws ModelException {
 		ContextFinder contextFinder = new ContextFinder(sourceRange);
 		try {
 			rootNode.traverse(contextFinder);
@@ -134,29 +165,37 @@ public class BindingUtility {
 			throw new ModelException(e, IStatus.ERROR);
 		}
 		if (contextFinder.getNode() == null) {
-			throw new ModelException(new IllegalArgumentException("AST node can not be found for the given source range: " + sourceRange), IStatus.ERROR);
+			throw new ModelException(new IllegalArgumentException(
+					"AST node can not be found for the given source range: "
+							+ sourceRange), IStatus.ERROR);
 		}
 		return contextFinder;
 	}
 
-	protected IEvaluatedType getType(SourceRange sourceRange) throws ModelException {
+	protected IEvaluatedType getType(SourceRange sourceRange)
+			throws ModelException {
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
 			ContextFinder contextFinder = getContext(sourceRange);
-			evaluatedTypesCache.put(sourceRange, getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
+			evaluatedTypesCache.put(sourceRange, getType(sourceRange,
+					contextFinder.getContext(), contextFinder.getNode()));
 		}
 		return evaluatedTypesCache.get(sourceRange);
 	}
 
 	/**
 	 * This method returns model elements for the given AST expression node.
-	 * This method uses cached evaluated type from previous evaluations (if exists).
-	 *
-	 * @param node AST node that needs to be evaluated.
+	 * This method uses cached evaluated type from previous evaluations (if
+	 * exists).
+	 * 
+	 * @param node
+	 *            AST node that needs to be evaluated.
 	 * @return model element or <code>null</code> in case it couldn't be found
-	 * @throws ModelException 
-	 *
-	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
-	 * @throws NullPointerException if the given node is <code>null</code>.
+	 * @throws ModelException
+	 * 
+	 * @throws IllegalArgumentException
+	 *             in case if context cannot be found for the given node.
+	 * @throws NullPointerException
+	 *             if the given node is <code>null</code>.
 	 */
 	public IModelElement[] getModelElement(ASTNode node) throws ModelException {
 		if (node == null) {
@@ -166,17 +205,21 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns model elements for the given model element.
-	 * This method uses cached evaluated type from previous evaluations (if exists).
-	 *
-	 * @param element Source Reference Model element.
+	 * This method returns model elements for the given model element. This
+	 * method uses cached evaluated type from previous evaluations (if exists).
+	 * 
+	 * @param element
+	 *            Source Reference Model element.
 	 * @return model element or <code>null</code> in case it couldn't be found
-	 *
-	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
-	 * @throws NullPointerException if the given element is <code>null</code>.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             in case if context cannot be found for the given node.
+	 * @throws NullPointerException
+	 *             if the given element is <code>null</code>.
 	 * @throws ModelException
 	 */
-	public IModelElement[] getModelElement(SourceRefElement element) throws ModelException {
+	public IModelElement[] getModelElement(SourceRefElement element)
+			throws ModelException {
 		if (element == null) {
 			throw new NullPointerException();
 		}
@@ -188,66 +231,86 @@ public class BindingUtility {
 	}
 
 	/**
-	 * This method returns model elements for the expression under the given offset and length, and
-	 * will filter the results using the file-network.
-	 * This method uses cached evaluated type from previous evaluations (if exists).
-	 *
-	 * @param startOffset Starting offset of the expression.
-	 * @param length Length of the expression.
+	 * This method returns model elements for the expression under the given
+	 * offset and length, and will filter the results using the file-network.
+	 * This method uses cached evaluated type from previous evaluations (if
+	 * exists).
+	 * 
+	 * @param startOffset
+	 *            Starting offset of the expression.
+	 * @param length
+	 *            Length of the expression.
 	 * @return model element or <code>null</code> in case it couldn't be found
-	 * @throws ModelException 
-	 *
-	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
+	 * @throws ModelException
+	 * 
+	 * @throws IllegalArgumentException
+	 *             in case if context cannot be found for the given node.
 	 * @see #getModelElement(int, int, boolean)
 	 */
-	public IModelElement[] getModelElement(int startOffset, int length) throws ModelException {
+	public IModelElement[] getModelElement(int startOffset, int length)
+			throws ModelException {
 		return getModelElement(startOffset, length, true);
 	}
 
 	/**
-	 * This method returns model elements for the expression under the given offset and length.
-	 * This method uses cached evaluated type from previous evaluations (if exists).
-	 *
-	 * @param startOffset Starting offset of the expression.
-	 * @param length Length of the expression.
-	 * @param filter Filter the results using the 'File-Network'.
+	 * This method returns model elements for the expression under the given
+	 * offset and length. This method uses cached evaluated type from previous
+	 * evaluations (if exists).
+	 * 
+	 * @param startOffset
+	 *            Starting offset of the expression.
+	 * @param length
+	 *            Length of the expression.
+	 * @param filter
+	 *            Filter the results using the 'File-Network'.
 	 * @return model element or <code>null</code> in case it couldn't be found
-	 * @throws ModelException 
-	 *
-	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
+	 * @throws ModelException
+	 * 
+	 * @throws IllegalArgumentException
+	 *             in case if context cannot be found for the given node.
 	 */
-	public IModelElement[] getModelElement(int startOffset, int length, boolean filter) throws ModelException {
+	public IModelElement[] getModelElement(int startOffset, int length,
+			boolean filter) throws ModelException {
 		return getModelElement(new SourceRange(startOffset, length), filter);
 	}
 
-	protected IModelElement[] getModelElement(SourceRange sourceRange, boolean filter) throws ModelException {
+	protected IModelElement[] getModelElement(SourceRange sourceRange,
+			boolean filter) throws ModelException {
 		ContextFinder contextFinder = getContext(sourceRange);
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
-			evaluatedTypesCache.put(sourceRange, getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
+			evaluatedTypesCache.put(sourceRange, getType(sourceRange,
+					contextFinder.getContext(), contextFinder.getNode()));
 		}
 		IEvaluatedType evaluatedType = evaluatedTypesCache.get(sourceRange);
-		return PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) contextFinder.getContext(), sourceRange.getOffset());
+		return PHPTypeInferenceUtils.getModelElements(evaluatedType,
+				(ISourceModuleContext) contextFinder.getContext(), sourceRange
+						.getOffset());
 	}
 
 	/**
 	 * get the IModelElement at the given position.
+	 * 
 	 * @param start
 	 * @param length
-	 * @return the IModelElement instance which represents a IField node, or null.
+	 * @return the IModelElement instance which represents a IField node, or
+	 *         null.
 	 * @throws Exception
 	 */
-	public IModelElement getFieldByPosition(int start, int length) throws Exception {
+	public IModelElement getFieldByPosition(int start, int length)
+			throws Exception {
 		SourceRange sourceRange = new SourceRange(start, length);
 		ContextFinder contextFinder = getContext(sourceRange);
 		ASTNode node = contextFinder.getNode();
 
 		if (node instanceof VariableReference) {
-			VariableReferenceEvaluator.LocalReferenceDeclSearcher varDecSearcher = new VariableReferenceEvaluator.LocalReferenceDeclSearcher(sourceModule, (VariableReference) node);
+			VariableReferenceEvaluator.LocalReferenceDeclSearcher varDecSearcher = new VariableReferenceEvaluator.LocalReferenceDeclSearcher(
+					sourceModule, (VariableReference) node);
 			rootNode.traverse(varDecSearcher);
 
 			Declaration[] decls = varDecSearcher.getDeclarations();
 			if (decls != null && decls.length > 0) {
-				return this.sourceModule.getElementAt(decls[0].getNode().sourceStart());
+				return this.sourceModule.getElementAt(decls[0].getNode()
+						.sourceStart());
 			}
 		}
 
@@ -313,14 +376,16 @@ public class BindingUtility {
 		}
 
 		public String toString() {
-			return new StringBuilder("<offset=").append(offset).append(", length=").append(length).append(">").toString();
+			return new StringBuilder("<offset=").append(offset).append(
+					", length=").append(length).append(">").toString();
 		}
 	}
 
 	/**
 	 * Finds binding context for the given AST node for internal usages only.
 	 */
-	private class ContextFinder extends org.eclipse.php.internal.core.typeinference.context.ContextFinder {
+	private class ContextFinder extends
+			org.eclipse.php.internal.core.typeinference.context.ContextFinder {
 
 		private SourceRange sourceRange;
 		private IContext context;
@@ -337,6 +402,7 @@ public class BindingUtility {
 
 		/**
 		 * Returns found AST node
+		 * 
 		 * @return AST node
 		 */
 		public ASTNode getNode() {
@@ -350,7 +416,8 @@ public class BindingUtility {
 			if (node.sourceEnd() < sourceRange.offset) {
 				return false;
 			}
-			if (node.sourceStart() <= sourceRange.offset && node.sourceEnd() >= sourceRange.getEnd()) {
+			if (node.sourceStart() <= sourceRange.offset
+					&& node.sourceEnd() >= sourceRange.getEnd()) {
 				if (!contextStack.isEmpty()) {
 					this.context = contextStack.peek();
 					this.node = node;
@@ -359,5 +426,62 @@ public class BindingUtility {
 			// search inside - we are looking for minimal node
 			return true;
 		}
+	}
+
+	public IEvaluatedType[] getFunctionReturnType(IMethod functionElement) {
+
+		ISourceModule sourceModule = functionElement.getSourceModule();
+		ModuleDeclaration sourceModuleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
+		MethodDeclaration functionDeclaration = null;
+		try {
+			functionDeclaration = PHPModelUtils.getNodeByMethod(
+					sourceModuleDeclaration, functionElement);
+
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		FileContext fileContext = new FileContext(sourceModule,
+				sourceModuleDeclaration);
+
+		final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+		final List<Expression> returnExpressions = new LinkedList<Expression>();
+
+		if (functionDeclaration != null) {
+
+			ASTVisitor visitor = new ASTVisitor() {
+				public boolean visitGeneral(ASTNode node) throws Exception {
+					if (node instanceof ReturnStatement) {
+						ReturnStatement statement = (ReturnStatement) node;
+						Expression expr = statement.getExpr();
+						if (expr == null) {
+							evaluated.add(PHPSimpleTypes.VOID);
+						} else {
+							returnExpressions.add(expr);
+						}
+					}
+					return super.visitGeneral(node);
+				}
+			};
+
+			try {
+				functionDeclaration.traverse(visitor);
+			} catch (Exception e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		for (Expression expr : returnExpressions) {
+			IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
+					.resolveExpression(sourceModule, sourceModuleDeclaration,
+							fileContext, expr);
+			evaluated.add(resolvedExpression);
+		}
+		return (IEvaluatedType[]) evaluated
+				.toArray(new IEvaluatedType[evaluated.size()]);
 	}
 }

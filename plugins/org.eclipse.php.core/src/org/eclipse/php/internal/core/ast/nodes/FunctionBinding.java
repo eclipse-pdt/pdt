@@ -15,15 +15,15 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.typeinference.BindingUtility;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
@@ -105,9 +105,19 @@ public class FunctionBinding implements IFunctionBinding {
 	 * @see
 	 * org.eclipse.php.internal.core.ast.nodes.IFunctionBinding#getReturnType()
 	 */
-	public ITypeBinding getReturnType() {
-		// TODO
-		return null;
+	public ITypeBinding[] getReturnType() {
+		List<ITypeBinding> result = new ArrayList<ITypeBinding>();
+		ISourceModule sourceModule = modelElement.getSourceModule();
+
+		BindingUtility bindingUtility = new BindingUtility(sourceModule);
+		IEvaluatedType[] evaluatedFunctionReturnTypes = bindingUtility
+				.getFunctionReturnType(modelElement);
+		for (IEvaluatedType currentEvaluatedType : evaluatedFunctionReturnTypes) {
+			ITypeBinding typeBinding = this.resolver.getTypeBinding(
+					currentEvaluatedType, sourceModule);
+			result.add(typeBinding);
+		}
+		return (ITypeBinding[]) result.toArray(new ITypeBinding[result.size()]);
 	}
 
 	/*
