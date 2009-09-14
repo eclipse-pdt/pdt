@@ -246,7 +246,7 @@ public class DebugSearchEngine {
 								find(entryDir, abstractPath, entry, results);
 							}
 						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
-							IScriptProject project = DLTKCore.create(currentProject);
+							IScriptProject project = DLTKCore.create(currentProject == null ? includePath.getProject() : currentProject);
 							try {
 								IBuildpathContainer buildpathContainer = DLTKCore.getBuildpathContainer(entry.getPath(), project);
 								if (buildpathContainer != null) {
