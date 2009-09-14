@@ -425,7 +425,7 @@ public class BindingTests extends SuiteOfTestCases {
 	}
 
 	public void testFunctionDeclarationBinding() throws Exception {
-		String str = "<?php function foo() {} ?> ";
+		String str = "<?php function foo() { return new SoapClient(); } ?> ";
 		Program program = createAndParse(str);
 
 		FunctionDeclaration functionDeclaration = (FunctionDeclaration) program
@@ -436,11 +436,13 @@ public class BindingTests extends SuiteOfTestCases {
 
 		Assert.assertNotNull(functionBinding);
 		Assert.assertTrue(functionBinding.getName().equals("foo"));
-		// Assert.assertTrue(functionBinding.getReturnType());
+
+		ITypeBinding[] returnTypes = functionBinding.getReturnType();
+		Assert.assertTrue(returnTypes[0].getName().equals("SoapClient"));
 	}
 
 	public void testMethodDeclarationBinding() throws Exception {
-		String str = "<?php class MyClass { function foo(){} } ?>";
+		String str = "<?php class MyClass { function foo(){ return new MyClass(); } } ?>";
 		Program program = createAndParse(str);
 
 		ClassDeclaration classDeclaration = (ClassDeclaration) program
@@ -455,6 +457,9 @@ public class BindingTests extends SuiteOfTestCases {
 		Assert.assertTrue(methodBinding.getDeclaringClass().getName().equals(
 				"MyClass"));
 		Assert.assertTrue(methodBinding.isConstructor() == false);
+		Assert.assertTrue(methodBinding.getReturnType()[0].getName().equals(
+				"MyClass"));
+
 	}
 
 	public void testMethodParametersBinding() throws Exception {
