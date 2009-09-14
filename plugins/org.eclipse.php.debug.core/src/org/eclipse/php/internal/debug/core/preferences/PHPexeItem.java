@@ -37,7 +37,7 @@ public class PHPexeItem {
 	public static final String SAPI_CGI = "CGI"; //$NON-NLS-1$
 
 	private static final Pattern PHP_VERSION = Pattern.compile("PHP (\\d\\.\\d\\.\\d+).*? \\((.*?)\\)"); //$NON-NLS-1$
-	private static final Pattern PHP_CLI_CONFIG = Pattern.compile("Configuration File \\(php.ini\\) Path => (.*?)"); //$NON-NLS-1$
+	private static final Pattern PHP_CLI_CONFIG = Pattern.compile("Configuration File \\(php.ini\\) Path => (.*)"); //$NON-NLS-1$
 	private static final Pattern PHP_CGI_CONFIG = Pattern.compile("Configuration File \\(php.ini\\) Path </td><td class=\"v\">(.*?)</td>"); //$NON-NLS-1$
 
 	private String sapiType;
