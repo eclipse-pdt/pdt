@@ -12,29 +12,32 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 /**
- * This context represents the state when staying in a use statement in a namespace name part.
- * <br/>Examples:
+ * This context represents the state when staying in a use statement in a
+ * namespace name part. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. use |
  *  2. use A\B| 
- *  etc... 
+ *  etc...
  * </pre>
+ * 
  * @author michael
  */
 public class UseNameContext extends UseStatementContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		try {
 			String previousWord = getPreviousWord();
 			if ("use".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
@@ -44,5 +47,14 @@ public class UseNameContext extends UseStatementContext {
 			PHPCorePlugin.log(e);
 		}
 		return false;
+	}
+
+	public String getPrefix() throws BadLocationException {
+		String prefix = super.getPrefix();
+		if (prefix.length() > 0
+				&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			return prefix.substring(1);
+		}
+		return prefix;
 	}
 }

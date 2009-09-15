@@ -41,9 +41,9 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  */
 public class GlobalTypesStrategy extends GlobalElementStrategy {
 
-	private final int trueFlag;
-	private final int falseFlag;
-	private static final IType[] EMPTY = {};
+	protected final int trueFlag;
+	protected final int falseFlag;
+	protected static final IType[] EMPTY = {};
 
 	public GlobalTypesStrategy(ICompletionContext context, int trueFlag,
 			int falseFlag) {

@@ -12,8 +12,14 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
  * This strategy completes namespaces
@@ -28,5 +34,24 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
+	}
+
+	protected IType[] getTypes(AbstractCompletionContext context)
+			throws BadLocationException {
+
+		String prefix = context.getPrefix();
+		if (prefix.startsWith("$")) {
+			return EMPTY;
+		}
+
+		IDLTKSearchScope scope = createSearchScope();
+		if (context.getCompletionRequestor().isContextInformationMode()) {
+			return PhpModelAccess.getDefault().findTypes(null, prefix,
+					MatchRule.EXACT, trueFlag,
+					falseFlag | IPHPModifiers.Internal, scope, null);
+		}
+		return PhpModelAccess.getDefault().findTypes(null, prefix,
+				MatchRule.PREFIX, trueFlag, falseFlag | IPHPModifiers.Internal,
+				scope, null);
 	}
 }
