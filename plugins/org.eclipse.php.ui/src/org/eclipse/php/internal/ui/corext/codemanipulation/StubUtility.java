@@ -266,7 +266,7 @@ public class StubUtility {
 
 		TemplateVariable position = findVariable(buffer,
 				CodeTemplateContextType.TAGS); // look if Javadoc tags have to
-												// be added
+		// be added
 		if (position == null) {
 			return str;
 		}
@@ -479,19 +479,18 @@ public class StubUtility {
 		}
 		TemplateVariable position = findVariable(buffer,
 				CodeTemplateContextType.TAGS); // look if Javadoc tags have to
-												// be added
+		// be added
 		if (position == null) {
 			return str;
 		}
 
 		IDocument document = new Document(str);
 
-		String returnType = retTypeSig != null ? retTypeSig : null;
 		int[] tagOffsets = position.getOffsets();
 		for (int i = tagOffsets.length - 1; i >= 0; i--) { // from last to first
 			try {
 				insertTag(document, tagOffsets[i], position.getLength(),
-						paramNames, returnType, typeParameterNames, false,
+						paramNames, retTypeSig, typeParameterNames, false,
 						lineDelimiter);
 			} catch (BadLocationException e) {
 				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR,
@@ -511,13 +510,13 @@ public class StubUtility {
 		HashSet removedLines = new HashSet();
 		for (int i = 0; i < variables.length; i++) {
 			TemplateVariable position = findVariable(buffer, variables[i]); // look
-																			// if
-																			// Javadoc
-																			// tags
-																			// have
-																			// to
-																			// be
-																			// added
+			// if
+			// Javadoc
+			// tags
+			// have
+			// to
+			// be
+			// added
 			if (position == null || position.getLength() > 0) {
 				continue;
 			}
