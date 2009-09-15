@@ -216,6 +216,9 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * .eclipse.php.internal.core.ast.nodes.Identifier)
 	 */
 	IBinding resolveName(Identifier name) {
+		if (name.getParent() instanceof Variable) {
+			return resolveVariable((Variable) name.getParent());
+		}
 		return resolveExpressionType(name);
 	}
 
@@ -352,7 +355,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * (org.eclipse.dltk.ti.types.IEvaluatedType)
 	 */
 	@Override
-	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding, ISourceModule sourceModule) {
+	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding,
+			ISourceModule sourceModule) {
 		if (referenceBinding != null) {
 			return new TypeBinding(this, referenceBinding, sourceModule);
 		}
