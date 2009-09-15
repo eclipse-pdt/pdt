@@ -341,19 +341,26 @@ public class PHPCorePlugin extends Plugin {
 				if (monitor != null) {
 					monitor
 							.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
+					monitor.worked(25);
 				}
 
 				PhpModelAccess.getDefault().findMethods("", MatchRule.PREFIX,
 						Modifiers.AccGlobal, 0, scope, monitor);
-				monitor.worked(50);
+				if (monitor != null) {
+					monitor.worked(25);
+				}
 
 				PhpModelAccess.getDefault().findTypes("", MatchRule.PREFIX,
 						Modifiers.AccGlobal, 0, scope, monitor);
-				monitor.worked(25);
+				if (monitor != null) {
+					monitor.worked(25);
+				}
 
 				PhpModelAccess.getDefault().findIncludes("", MatchRule.PREFIX,
 						scope, monitor);
-				monitor.worked(25);
+				if (monitor != null) {
+					monitor.worked(25);
+				}
 
 			} catch (OperationCanceledException e) {
 				if (monitor != null && monitor.isCanceled()) {
