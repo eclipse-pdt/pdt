@@ -36,6 +36,7 @@ import org.eclipse.wst.html.core.internal.Logger;
 
 /**
  * This class injects USE statement if needed for the given completion proposal
+ * 
  * @author michael
  */
 public class UseStatementInjector {
@@ -46,7 +47,8 @@ public class UseStatementInjector {
 		this.proposal = proposal;
 	}
 
-	private Collection<Identifier> createIdentifiers(AST ast, String namespaceName) {
+	private Collection<Identifier> createIdentifiers(AST ast,
+			String namespaceName) {
 		String[] split = namespaceName.split("\\\\");
 		List<Identifier> identifiers = new ArrayList<Identifier>(split.length);
 		for (String s : split) {
@@ -59,8 +61,8 @@ public class UseStatementInjector {
 		ASTNode node = program.getElementAt(offset);
 		do {
 			switch (node.getType()) {
-				case ASTNode.NAMESPACE:
-					return (NamespaceDeclaration) node;
+			case ASTNode.NAMESPACE:
+				return (NamespaceDeclaration) node;
 			}
 			node = node.getParent();
 		} while (node != null);
@@ -80,22 +82,29 @@ public class UseStatementInjector {
 		return nameBuf.toString();
 	}
 
-	private boolean needsAliasPrepend(IModelElement modelElement) throws ModelException {
+	private boolean needsAliasPrepend(IModelElement modelElement)
+			throws ModelException {
 		if (modelElement instanceof IMethod) {
 			IType declaringType = ((IMethod) modelElement).getDeclaringType();
-			return declaringType == null || PHPFlags.isNamespace(declaringType.getFlags());
+			return declaringType == null
+					|| PHPFlags.isNamespace(declaringType.getFlags());
 		}
 		if (modelElement instanceof IField) {
 			IField field = (IField) modelElement;
 			if (!PHPFlags.isConstant(field.getFlags())) {
 				return false;
 			}
+			IType declaringType = ((IField) modelElement).getDeclaringType();
+			return declaringType == null
+					|| PHPFlags.isNamespace(declaringType.getFlags());
 		}
 		return true;
 	}
 
 	/**
-	 * Inserts USE statement into beginning of the document, or after the last USE statement.
+	 * Inserts USE statement into beginning of the document, or after the last
+	 * USE statement.
+	 * 
 	 * @param document
 	 * @param textViewer
 	 * @param offset
@@ -105,7 +114,8 @@ public class UseStatementInjector {
 		IModelElement modelElement = proposal.getModelElement();
 
 		try {
-			if (modelElement.getElementType() == IModelElement.TYPE && PHPFlags.isNamespace(((IType) modelElement).getFlags())) {
+			if (modelElement.getElementType() == IModelElement.TYPE
+					&& PHPFlags.isNamespace(((IType) modelElement).getFlags())) {
 				return offset;
 			}
 		} catch (ModelException e) {
@@ -118,21 +128,29 @@ public class UseStatementInjector {
 
 			// find source module of the current editor:
 			if (textViewer instanceof PHPStructuredTextViewer) {
-				ITextEditor textEditor = ((PHPStructuredTextViewer) textViewer).getTextEditor();
+				ITextEditor textEditor = ((PHPStructuredTextViewer) textViewer)
+						.getTextEditor();
 				if (textEditor instanceof PHPStructuredEditor) {
-					IModelElement editorElement = ((PHPStructuredEditor) textEditor).getModelElement();
+					IModelElement editorElement = ((PHPStructuredEditor) textEditor)
+							.getModelElement();
 					if (editorElement != null) {
-						ISourceModule sourceModule = ((ModelElement) editorElement).getSourceModule();
+						ISourceModule sourceModule = ((ModelElement) editorElement)
+								.getSourceModule();
 
 						try {
 							String namespaceName = namespace.getElementName();
-							ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+							ModuleDeclaration moduleDeclaration = SourceParserUtil
+									.getModuleDeclaration(sourceModule);
 							TextEdit edits = null;
 
 							// find existing use statement:
-							UsePart usePart = ASTUtils.findUseStatementByNamespace(moduleDeclaration, namespaceName, offset);
+							UsePart usePart = ASTUtils
+									.findUseStatementByNamespace(
+											moduleDeclaration, namespaceName,
+											offset);
 							if (usePart == null) {
-								ASTParser parser = ASTParser.newParser(sourceModule);
+								ASTParser parser = ASTParser
+										.newParser(sourceModule);
 								parser.setSource(document.get().toCharArray());
 
 								Program program = parser.createAST(null);
@@ -140,55 +158,83 @@ public class UseStatementInjector {
 
 								AST ast = program.getAST();
 
-								NamespaceName newNamespaceName = ast.newNamespaceName(createIdentifiers(ast, namespaceName), false, false);
-								UseStatementPart newUseStatementPart = ast.newUseStatementPart(newNamespaceName, null);
-								org.eclipse.php.internal.core.ast.nodes.UseStatement newUseStatement = ast.newUseStatement(Arrays.asList(new UseStatementPart[] { newUseStatementPart }));
+								NamespaceName newNamespaceName = ast
+										.newNamespaceName(createIdentifiers(
+												ast, namespaceName), false,
+												false);
+								UseStatementPart newUseStatementPart = ast
+										.newUseStatementPart(newNamespaceName,
+												null);
+								org.eclipse.php.internal.core.ast.nodes.UseStatement newUseStatement = ast
+										.newUseStatement(Arrays
+												.asList(new UseStatementPart[] { newUseStatementPart }));
 
-								NamespaceDeclaration currentNamespace = getCurrentNamespace(program, offset - 1);
+								NamespaceDeclaration currentNamespace = getCurrentNamespace(
+										program, offset - 1);
 								if (currentNamespace != null) {
-									if (namespaceName.equals(getNamespaceName(currentNamespace))) {
-										return offset; // don't insert USE statement for current namespace
+									if (namespaceName
+											.equals(getNamespaceName(currentNamespace))) {
+										return offset; // don't insert USE
+										// statement for current
+										// namespace
 									}
-									// insert in the beginning of the current namespace:
-									currentNamespace.getBody().statements().add(0, newUseStatement);
+									// insert in the beginning of the current
+									// namespace:
+									currentNamespace.getBody().statements()
+											.add(0, newUseStatement);
 								} else {
 									// insert in the beginning of the document:
-									program.statements().add(0, newUseStatement);
+									program.statements()
+											.add(0, newUseStatement);
 								}
 								edits = program.rewrite(document, null);
 								edits.apply(document);
 							}
 
 							if (needsAliasPrepend(modelElement)) {
-								// update replacement string: add namespace alias prefix
-								int i = namespaceName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+								// update replacement string: add namespace
+								// alias prefix
+								int i = namespaceName
+										.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 								String alias = namespaceName;
 								if (i != -1) {
 									alias = namespaceName.substring(i + 1);
 								}
 
-								String namespacePrefix = alias + NamespaceReference.NAMESPACE_SEPARATOR;
-								String replacementString = proposal.getReplacementString();
+								String namespacePrefix = alias
+										+ NamespaceReference.NAMESPACE_SEPARATOR;
+								String replacementString = proposal
+										.getReplacementString();
 
-								// Remove fully qualified namespace prefix form the replacement string:
+								// Remove fully qualified namespace prefix form
+								// the replacement string:
 								if (replacementString.startsWith(namespaceName)) {
-									replacementString = replacementString.substring(namespaceName.length());
-									if (replacementString.length() > 0 && replacementString.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-										replacementString = replacementString.substring(1);
+									replacementString = replacementString
+											.substring(namespaceName.length());
+									if (replacementString.length() > 0
+											&& replacementString.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+										replacementString = replacementString
+												.substring(1);
 									}
 								}
 
 								// Add alias to the replacement string:
-								if (!replacementString.startsWith(namespacePrefix)) {
-									replacementString = namespacePrefix + replacementString;
+								if (!replacementString
+										.startsWith(namespacePrefix)) {
+									replacementString = namespacePrefix
+											+ replacementString;
 								}
-								proposal.setReplacementString(replacementString);
+								proposal
+										.setReplacementString(replacementString);
 							}
 
 							if (edits != null) {
-								int replacementOffset = proposal.getReplacementOffset() + edits.getLength();
+								int replacementOffset = proposal
+										.getReplacementOffset()
+										+ edits.getLength();
 								offset += edits.getLength();
-								proposal.setReplacementOffset(replacementOffset);
+								proposal
+										.setReplacementOffset(replacementOffset);
 							}
 
 						} catch (Exception e) {
