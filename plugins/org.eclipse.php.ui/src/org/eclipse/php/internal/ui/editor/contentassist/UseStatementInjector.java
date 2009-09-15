@@ -20,19 +20,27 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.html.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 /**
  * This class injects USE statement if needed for the given completion proposal
@@ -99,6 +107,51 @@ public class UseStatementInjector {
 					|| PHPFlags.isNamespace(declaringType.getFlags());
 		}
 		return true;
+	}
+
+	private String readNamespacePrefix(ISourceModule sourceModule,
+			IDocument document, int offset, PHPVersion phpVersion) {
+
+		IStructuredDocumentRegion sRegion = ((IStructuredDocument) document)
+				.getRegionAtCharacterOffset(offset);
+		if (sRegion != null) {
+			ITextRegion tRegion = sRegion.getRegionAtCharacterOffset(offset);
+
+			ITextRegionCollection container = sRegion;
+			if (tRegion instanceof ITextRegionContainer) {
+				container = (ITextRegionContainer) tRegion;
+				tRegion = container.getRegionAtCharacterOffset(offset);
+			}
+
+			if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+				try {
+					tRegion = phpScriptRegion.getPhpToken(offset
+							- container.getStartOffset()
+							- phpScriptRegion.getStart());
+				} catch (BadLocationException e) {
+					return null;
+				}
+
+				// Determine element name:
+				int elementStart = container.getStartOffset()
+						+ phpScriptRegion.getStart() + tRegion.getStart();
+				TextSequence statement = PHPTextSequenceUtilities.getStatement(
+						elementStart + tRegion.getLength(), sRegion, true);
+				int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
+						statement, statement.length());
+				int startPosition = PHPTextSequenceUtilities
+						.readIdentifierStartIndex(phpVersion, statement,
+								endPosition, true);
+				String elementName = statement.subSequence(startPosition,
+						endPosition).toString();
+				if (elementName.length() > 0) {
+					return PHPModelUtils.extractNamespaceName(elementName,
+							sourceModule, offset);
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -196,7 +249,9 @@ public class UseStatementInjector {
 								// alias prefix
 								int i = namespaceName
 										.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-								String alias = namespaceName;
+								String alias = namespaceName; // XXX: search for
+								// existing
+								// alias
 								if (i != -1) {
 									alias = namespaceName.substring(i + 1);
 								}
@@ -206,21 +261,14 @@ public class UseStatementInjector {
 								String replacementString = proposal
 										.getReplacementString();
 
-								// Remove fully qualified namespace prefix form
-								// the replacement string:
-								if (replacementString.startsWith(namespaceName)) {
-									replacementString = replacementString
-											.substring(namespaceName.length());
-									if (replacementString.length() > 0
-											&& replacementString.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-										replacementString = replacementString
-												.substring(1);
-									}
-								}
+								String existingNamespacePrefix = readNamespacePrefix(
+										sourceModule, document, offset,
+										ProjectOptions
+												.getPhpVersion(editorElement));
 
 								// Add alias to the replacement string:
-								if (!replacementString
-										.startsWith(namespacePrefix)) {
+								if (!namespaceName
+										.equals(existingNamespacePrefix)) {
 									replacementString = namespacePrefix
 											+ replacementString;
 								}
