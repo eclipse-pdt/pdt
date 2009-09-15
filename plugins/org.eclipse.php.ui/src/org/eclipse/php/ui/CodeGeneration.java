@@ -334,7 +334,7 @@ public class CodeGeneration {
 	public static String getMethodComment(IMethod method, IMethod overridden, String lineDelimiter) throws CoreException {
 		//FIXME - 'retType' should be initialized to null after the 'getReturnType will be functional, so void/c'tor will not have 'return' tag
 
-		String retType = "unknown_type";
+		String retType = null;
 		String[] typeParameterNames = null;
 		String[] parameterTypes = null;
 		
@@ -380,7 +380,7 @@ public class CodeGeneration {
 			StringBuilder returnTypeBuffer = new StringBuilder();
 			if (null != resolvedBinding) {
 				returnTypes = resolvedBinding.getReturnType();
-				if (null != returnTypes) {
+				if (null != returnTypes && returnTypes.length > 0) {
 					for (ITypeBinding returnType : returnTypes) {
 						if (returnType.isUnknown()) {
 							returnTypeBuffer.append("null").append("|");

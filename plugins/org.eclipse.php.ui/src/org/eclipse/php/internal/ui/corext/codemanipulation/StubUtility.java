@@ -390,11 +390,10 @@ public class StubUtility {
 
 		IDocument document = new Document(str);
 
-		String returnType = retTypeSig != null ? retTypeSig : null;
 		int[] tagOffsets = position.getOffsets();
 		for (int i = tagOffsets.length - 1; i >= 0; i--) { // from last to first
 			try {
-				insertTag(document, tagOffsets[i], position.getLength(), paramNames, returnType, typeParameterNames, false, lineDelimiter);
+				insertTag(document, tagOffsets[i], position.getLength(), paramNames, retTypeSig, typeParameterNames, false, lineDelimiter);
 			} catch (BadLocationException e) {
 				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR, e));
 			}
