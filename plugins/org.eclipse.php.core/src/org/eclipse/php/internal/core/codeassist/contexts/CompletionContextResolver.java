@@ -92,6 +92,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 			new UseNameContext(),
 			new NamespaceMemberContext(),
 			new NamespaceNameContext(),
+			new NamespaceDeclContext(),
 			new IncludeStatementContext(),
 		};
 	}

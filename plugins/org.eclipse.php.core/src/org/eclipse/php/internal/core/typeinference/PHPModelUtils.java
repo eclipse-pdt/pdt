@@ -718,8 +718,9 @@ public class PHPModelUtils {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IType[] namespaces = PhpModelAccess.getDefault().findTypes(namespace,
-				MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, monitor);
+		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
+				namespace, MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope,
+				monitor);
 
 		List<IField> result = new LinkedList<IField>();
 		for (IType ns : namespaces) {
@@ -750,8 +751,9 @@ public class PHPModelUtils {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IType[] namespaces = PhpModelAccess.getDefault().findTypes(namespace,
-				MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, monitor);
+		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
+				namespace, MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope,
+				monitor);
 
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType ns : namespaces) {
@@ -781,7 +783,7 @@ public class PHPModelUtils {
 		if (namespace != null && namespace.length() > 0) {
 			IDLTKSearchScope scope = SearchEngine
 					.createSearchScope(sourceModule.getScriptProject());
-			return PhpModelAccess.getDefault().findTypes(namespace,
+			return PhpModelAccess.getDefault().findTypes(null, namespace,
 					MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, null);
 		}
 		return null;
@@ -810,8 +812,9 @@ public class PHPModelUtils {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IType[] namespaces = PhpModelAccess.getDefault().findTypes(namespace,
-				MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, monitor);
+		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
+				namespace, MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope,
+				monitor);
 
 		List<IType> result = new LinkedList<IType>();
 		for (IType ns : namespaces) {

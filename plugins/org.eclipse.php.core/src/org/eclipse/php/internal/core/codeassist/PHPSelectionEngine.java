@@ -323,9 +323,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						IDLTKSearchScope scope = SearchEngine
 								.createSearchScope(sourceModule
 										.getScriptProject());
-						types = PhpModelAccess.getDefault().findTypes(name,
-								MatchRule.EXACT, Modifiers.AccNameSpace, 0,
-								scope, null);
+						types = PhpModelAccess.getDefault().findTypes(null,
+								name, MatchRule.EXACT, Modifiers.AccNameSpace,
+								0, scope, null);
 						if (types == null || types.length == 0) {
 							return PHPModelUtils.getFields(name, sourceModule,
 									offset, null);
@@ -567,7 +567,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							IDLTKSearchScope scope = SearchEngine
 									.createSearchScope(sourceModule
 											.getScriptProject());
-							return PhpModelAccess.getDefault().findTypes(
+							return PhpModelAccess.getDefault().findTypes(null,
 									elementName, MatchRule.EXACT,
 									Modifiers.AccNameSpace, 0, scope, null);
 						}

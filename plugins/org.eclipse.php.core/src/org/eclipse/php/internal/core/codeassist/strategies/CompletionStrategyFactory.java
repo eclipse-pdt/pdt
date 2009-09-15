@@ -43,8 +43,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 	 */
 	public static ICompletionStrategyFactory[] getActive() {
 		if (instances == null) { // not synchronized since we don't care about
-									// creating multiple instances of factories
-									// in worst case
+			// creating multiple instances of factories
+			// in worst case
 
 			List<ICompletionStrategyFactory> factories = new LinkedList<ICompletionStrategyFactory>();
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
@@ -178,7 +178,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					context, allContexts, ((NamespaceMemberContext) context)
 							.isGlobal()) };
 		}
-		if (contextClass == NamespaceNameContext.class) {
+		if (contextClass == NamespaceNameContext.class
+				|| contextClass == NamespaceDeclContext.class) {
 			return new ICompletionStrategy[] { new NamespacesStrategy(context) };
 		}
 		if (contextClass == UseNameContext.class) {
