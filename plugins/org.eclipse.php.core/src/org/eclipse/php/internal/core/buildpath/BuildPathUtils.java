@@ -159,7 +159,7 @@ public class BuildPathUtils {
 		}
 		return result;
 	}
-
+	
 	/**
 	 * Returns whether the include path is a part of build path
 	 * 
@@ -191,7 +191,7 @@ public class BuildPathUtils {
 		for (IBuildpathEntry buildpathEntry : buildpath) {
 			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 				IPath buildPathEntryPath = buildpathEntry.getPath();
-				if (buildPathEntryPath.isPrefixOf(resourcePath)
+				if (resourcePath.isPrefixOf(buildPathEntryPath)
 						|| resourcePath.toString().equals(
 								buildPathEntryPath.toString())) {
 					result.add(buildpathEntry);
