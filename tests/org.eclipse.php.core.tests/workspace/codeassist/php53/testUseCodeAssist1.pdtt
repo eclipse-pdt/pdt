@@ -1,0 +1,14 @@
+--TEST--
+[php 5.3] Code assist is not suggested for global classes
+--FILE--
+<?php
+use \Iterat|
+?>
+--EXPECT--
+type(Iterator)
+type(IteratorAggregate)
+type(IteratorIterator)
+
+
+
+
