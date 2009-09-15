@@ -2,12 +2,15 @@
 [php 5.3] Code assist is not suggested for global classes
 --FILE--
 <?php
-use \Iterat|
+class MyTestClass {
+}
+interface MyTestInterface {
+}
+use \MyTest|
 ?>
 --EXPECT--
-type(Iterator)
-type(IteratorAggregate)
-type(IteratorIterator)
+type(MyTestClass)
+type(MyTestInterface)
 
 
 
