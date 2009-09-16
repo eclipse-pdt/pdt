@@ -22,6 +22,7 @@ import org.osgi.framework.Bundle;
 
 /**
  * This is an abstract test for .pdtt tests
+ * 
  * @author michael
  */
 public class AbstractPDTTTest extends TestCase {
@@ -35,11 +36,22 @@ public class AbstractPDTTTest extends TestCase {
 	}
 
 	protected static String[] getPDTTFiles(String testsDirectory) {
-		return getPDTTFiles(testsDirectory, PHPCoreTests.getDefault().getBundle());
+		return getPDTTFiles(testsDirectory, PHPCoreTests.getDefault()
+				.getBundle());
+	}
+
+	protected static String[] getPDTTFiles(String testsDirectory, Bundle bundle) {
+		return getFiles(testsDirectory, bundle, ".pdtt");
+	}
+
+	protected static String[] getFiles(String testsDirectory, String ext) {
+		return getFiles(testsDirectory, PHPCoreTests.getDefault().getBundle(),
+				ext);
 	}
 
 	@SuppressWarnings("unchecked")
-	protected static String[] getPDTTFiles(String testsDirectory, Bundle bundle) {
+	protected static String[] getFiles(String testsDirectory, Bundle bundle,
+			String ext) {
 		List<String> files = new LinkedList<String>();
 		Enumeration<String> entryPaths = bundle.getEntryPaths(testsDirectory);
 		if (entryPaths != null) {
@@ -54,7 +66,7 @@ public class AbstractPDTTTest extends TestCase {
 				}
 				int pos = path.lastIndexOf('/');
 				final String name = (pos >= 0 ? path.substring(pos + 1) : path);
-				if (!name.endsWith(".pdtt")) { // check fhe file extention
+				if (!name.endsWith(ext)) { // check fhe file extention
 					continue;
 				}
 				files.add(path);

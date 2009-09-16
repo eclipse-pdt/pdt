@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import junit.extensions.TestSetup;
@@ -19,8 +18,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
-import org.eclipse.php.core.tests.PHPCoreTests;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.phar.PharConstants;
 import org.eclipse.php.internal.core.phar.PharEntry;
 import org.eclipse.php.internal.core.phar.PharFile;
@@ -30,18 +27,13 @@ public class PharFileTest extends AbstractPDTTTest {
 
 	private static final class SamplePharTest extends PharFileTest {
 		private final PharFile pharFile;
-		private final PHPVersion phpVersion;
 
-		private SamplePharTest(String description, PharFile pharFile,
-				PHPVersion phpVersion) {
+		private SamplePharTest(String description, PharFile pharFile) {
 			super(description);
 			this.pharFile = pharFile;
-			this.phpVersion = phpVersion;
 		}
 
 		protected void setUp() throws Exception {
-			PHPCoreTests.setProjectPhpVersion(project, phpVersion);
-			// pdttFile.applyPreferences();
 		}
 
 		protected void tearDown() throws Exception {
@@ -52,18 +44,12 @@ public class PharFileTest extends AbstractPDTTTest {
 		}
 
 		protected void runTest() throws Throwable {
-			// CompletionProposal[] proposals =
-			// getProposals(pdttFile.getFile());
 			compareContent(File_To_Content, pharFile);
 		}
 	}
 
 	protected static final char OFFSET_CHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
-	static {
-		TESTS.put(PHPVersion.PHP5_3, new String[] {
-				"/workspace/codeassist/php5", "/workspace/phar" });
-	};
+	protected static final String[] TESTS = new String[] { "/workspace/phar" };
 
 	protected static IProject project;
 	protected static IFile testFile;
@@ -127,37 +113,27 @@ public class PharFileTest extends AbstractPDTTTest {
 	}
 
 	public static Test suite() {
+		TestSuite suite = new TestSuite("PHAR Tests");
 
-		TestSuite suite = new TestSuite("Auto Code Assist Tests");
-
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-
-			for (String testsDirectory : TESTS.get(phpVersion)) {
-
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final PharFile pharFile = new PharFile(new File(
-								fileName));
-						phpVerSuite.addTest(new SamplePharTest(phpVersion
-								.getAlias()
-								+ " - /" + fileName, pharFile, phpVersion));
-					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy
-																		// test
-																		// indicating
-																		// PDTT
-																		// file
-																		// parsing
-																		// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
-					}
+		for (String testsDirectory : TESTS) {
+			for (final String fileName : getFiles(testsDirectory, ".phar")) {
+				try {
+					final PharFile pharFile = new PharFile(new File(fileName));
+					suite.addTest(new SamplePharTest(fileName, pharFile));
+				} catch (final Exception e) {
+					suite.addTest(new TestCase(fileName) { // dummy
+								// test
+								// indicating
+								// PDTT
+								// file
+								// parsing
+								// failure
+								protected void runTest() throws Throwable {
+									throw e;
+								}
+							});
 				}
 			}
-			suite.addTest(phpVerSuite);
 		}
 
 		// Create a setup wrapper
