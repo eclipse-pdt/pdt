@@ -112,6 +112,10 @@ public class UseStatementInjector {
 	private String readNamespacePrefix(ISourceModule sourceModule,
 			IDocument document, int offset, PHPVersion phpVersion) {
 
+		if (offset > 0) {
+			--offset;
+		}
+
 		IStructuredDocumentRegion sRegion = ((IStructuredDocument) document)
 				.getRegionAtCharacterOffset(offset);
 		if (sRegion != null) {
@@ -123,7 +127,8 @@ public class UseStatementInjector {
 				tRegion = container.getRegionAtCharacterOffset(offset);
 			}
 
-			if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+			if (tRegion != null
+					&& tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 				try {
 					tRegion = phpScriptRegion.getPhpToken(offset
@@ -227,9 +232,9 @@ public class UseStatementInjector {
 								if (currentNamespace != null) {
 									if (namespaceName
 											.equals(getNamespaceName(currentNamespace))) {
-										return offset; // don't insert USE
-										// statement for current
-										// namespace
+										// don't insert USE statement for
+										// current namespace
+										return offset;
 									}
 									// insert in the beginning of the current
 									// namespace:
@@ -247,13 +252,16 @@ public class UseStatementInjector {
 							if (needsAliasPrepend(modelElement)) {
 								// update replacement string: add namespace
 								// alias prefix
-								int i = namespaceName
-										.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-								String alias = namespaceName; // XXX: search for
-								// existing
-								// alias
-								if (i != -1) {
-									alias = namespaceName.substring(i + 1);
+								String alias;
+								if (usePart != null) {
+									alias = usePart.getAlias().getName();
+								} else {
+									int i = namespaceName
+											.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+									alias = namespaceName;
+									if (i != -1) {
+										alias = namespaceName.substring(i + 1);
+									}
 								}
 
 								String namespacePrefix = alias
