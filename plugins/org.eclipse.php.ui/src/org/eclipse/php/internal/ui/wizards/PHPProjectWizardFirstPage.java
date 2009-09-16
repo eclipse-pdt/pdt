@@ -89,16 +89,16 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		fNameGroup = new NameGroup(composite, fInitialName);
 		fPHPLocationGroup = new LocationGroup(composite);
 
-		fVersionGroup = new VersionGroup(composite);
-		fLayoutGroup = new LayoutGroup(composite);
-		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
-
 		CompositeData data = new CompositeData();
 		data.setParetnt(composite);
 		data.setSettings(getDialogSettings());
 		data.setObserver(fPHPLocationGroup);
 		fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(
 				data, PHPProjectWizardFirstPage.class.getName());
+
+		fVersionGroup = new VersionGroup(composite);
+		fLayoutGroup = new LayoutGroup(composite);
+		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
 
 		fDetectGroup = new DetectGroup(composite);
 
