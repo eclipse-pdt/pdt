@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.model.IncludeField;
 public class PhpElementResolver implements IElementResolver {
 
 	private static final Pattern SEPARATOR_PATTERN = Pattern.compile(","); //$NON-NLS-1$
+	private static final String[] EMPTY = new String[0];
 
 	public IModelElement resolve(int elementType, int flags, int offset,
 			int length, int nameOffset, int nameLength, String elementName,
@@ -53,9 +54,11 @@ public class PhpElementResolver implements IElementResolver {
 					length, nameOffset, nameLength, superClassNames);
 
 		case IModelElement.METHOD:
-			String[] parameters = null;
+			String[] parameters;
 			if (metadata != null) {
 				parameters = SEPARATOR_PATTERN.split(metadata);
+			} else {
+				parameters = EMPTY;
 			}
 			return new IndexMethod(parentElement, elementName, flags, offset,
 					length, nameOffset, nameLength, parameters);
