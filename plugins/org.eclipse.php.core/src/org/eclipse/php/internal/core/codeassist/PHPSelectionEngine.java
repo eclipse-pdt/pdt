@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -346,8 +347,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					}
 				}
 				// Class name in declaration
-				else if (node instanceof TypeDeclaration
-						|| node instanceof MethodDeclaration) {
+				else if ((node instanceof TypeDeclaration || node instanceof MethodDeclaration)
+						&& ((Declaration) node).getNameStart() <= offset
+						&& ((Declaration) node).getNameEnd() >= offset) {
+
 					IModelElement element = sourceModule.getElementAt(node
 							.sourceStart());
 					if (element != null) {
