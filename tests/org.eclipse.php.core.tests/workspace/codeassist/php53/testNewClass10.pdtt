@@ -1,0 +1,17 @@
+--TEST--
+Bug 287427 - [PHP 5.3] Wrong insertion of classes when using a namespace
+--FILE--
+<?php
+namespace {
+	class GlobalClass {
+	}
+}
+namespace NS {
+	class NSClass {
+		function fun() {
+			$a = new \GlobalC|
+		}
+	}
+}
+--EXPECT--
+type(GlobalClass)
