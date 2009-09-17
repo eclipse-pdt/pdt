@@ -17,7 +17,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.IOpenable;
@@ -355,32 +354,5 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 		postRefresh(resources, true, runnables);
 		this.executeRunnables(runnables);
-	}
-
-	static class NamespaceNode extends SourceType {
-		private IType[] namespaces;
-
-		public NamespaceNode(IScriptProject project, String name,
-				IType[] namespaces) {
-			super((ModelElement) project, name);
-			this.namespaces = namespaces;
-		}
-
-		public IModelElement[] getChildren(IProgressMonitor monitor)
-				throws ModelException {
-			List<IModelElement> children = new LinkedList<IModelElement>();
-			for (IType namespace : namespaces) {
-				children.addAll(Arrays.asList(namespace.getChildren()));
-			}
-			return children.toArray(new IModelElement[children.size()]);
-		}
-
-		public int getFlags() throws ModelException {
-			return Modifiers.AccNameSpace;
-		}
-
-		public boolean exists() {
-			return true;
-		}
 	}
 }
