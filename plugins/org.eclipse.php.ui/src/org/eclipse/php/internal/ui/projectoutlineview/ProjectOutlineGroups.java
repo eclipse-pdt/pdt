@@ -11,12 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.projectoutlineview;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
@@ -24,6 +23,7 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.explorer.NamespaceNode;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -75,7 +75,22 @@ public enum ProjectOutlineGroups {
 			});
 			switch (this) {
 				case GROUP_NAMESPACES:
-					childrenList.addAll(Arrays.asList(PHPModelUtils.getAllNamespaces(scope)));
+					IType[] allNamespaces = PHPModelUtils.getAllNamespaces(scope);
+					Map<String, List<IType>> nsByName = new HashMap<String, List<IType>>();
+					for (IType namespace : allNamespaces) {
+						String namespaceName = namespace.getElementName();
+						List<IType> nsList = nsByName.get(namespaceName);
+						if (nsList == null) {
+							nsList = new LinkedList<IType>();
+							nsByName.put(namespaceName, nsList);
+						}
+						nsList.add(namespace);
+					}
+					for (String namespaceName : nsByName.keySet()) {
+						List<IType> nsList = nsByName.get(namespaceName);
+						childrenList.add(new NamespaceNode(ProjectOutlineContentProvider.scripProject, 
+							namespaceName, nsList.toArray(new IType[nsList.size()])));
+					}
 					break;
 
 				case GROUP_CLASSES:
