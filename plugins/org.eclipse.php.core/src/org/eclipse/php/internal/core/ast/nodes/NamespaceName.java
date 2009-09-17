@@ -26,7 +26,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  *MyProject\Sub\Level;
  *namespace\MyProject\Sub\Level;
  */
-public class NamespaceName extends Expression {
+public class NamespaceName extends Identifier {
 	
 	protected ASTNode.NodeList<Identifier> segments = new ASTNode.NodeList<Identifier>(ELEMENTS_PROPERTY);
 	
@@ -65,7 +65,7 @@ public class NamespaceName extends Expression {
 	}
 
 	public NamespaceName(int start, int end, AST ast, Identifier[] segments, boolean global, boolean current) {
-		super(start, end, ast);
+		super(start, end, ast, buildName(segments, global, current));
 
 		if (segments == null) {
 			throw new IllegalArgumentException();
@@ -79,7 +79,7 @@ public class NamespaceName extends Expression {
 	}
 	
 	public NamespaceName(int start, int end, AST ast, List segments, boolean global, boolean current) {
-		super(start, end, ast);
+		super(start, end, ast, buildName((Identifier[]) segments.toArray(new Identifier[segments.size()]), global, current));
 
 		if (segments == null) {
 			throw new IllegalArgumentException();
@@ -91,6 +91,23 @@ public class NamespaceName extends Expression {
 		
 		this.global = global;
 		this.current = current;
+	}
+	
+	protected static String buildName(Identifier[] segments, boolean global, boolean current) {
+		StringBuilder buf = new StringBuilder();
+		if (global) {
+			buf.append('\\');
+		}
+		else if (current) {
+			buf.append("namespace\\");
+		}
+		for (int i = 0; i < segments.length; ++i) {
+			if (i > 0) {
+				buf.append('\\');
+			}
+			buf.append(segments[i].getName());
+		}
+		return buf.toString();
 	}
 
 	public void childrenAccept(Visitor visitor) {
@@ -185,7 +202,7 @@ public class NamespaceName extends Expression {
 	/* (omit javadoc for this method)
 	 * Method declared on ASTNode.
 	 */
-	ASTNode clone0(AST target) {
+	protected ASTNode clone0(AST target) {
 		final List segments = ASTNode.copySubtrees(target, segments());
 		final boolean global = isGlobal();
 		final boolean current = isCurrent();
@@ -194,7 +211,7 @@ public class NamespaceName extends Expression {
 	}
 	
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
+	protected List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 	
