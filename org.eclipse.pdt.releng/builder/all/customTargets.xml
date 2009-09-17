@@ -149,6 +149,16 @@
 			</then>
 		</if>
 		<if>
+			<isset property="dltkindexURL" />
+			<then>
+				<ant target="getDependency" antfile="${getDependencies.xml}">
+					<property name="url" value="${dltkindexURL}" />
+					<property name="file" value="${dltkindexFile}" />
+					<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.dltk.core.index.sql/plugin.xml" />
+				</ant>
+			</then>
+		</if>
+		<if>
 			<isset property="dltkmylynURL" />
 			<then>
 				<ant target="getDependency" antfile="${getDependencies.xml}">
