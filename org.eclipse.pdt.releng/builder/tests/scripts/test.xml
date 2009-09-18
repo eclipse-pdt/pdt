@@ -97,6 +97,7 @@
 		<copy todir="${dropins-home}/eclipse/plugins" flatten="true" verbose="true">
 			<fileset dir="${thirdPartyJarsDir}/">
 				<include name="orbit-*/org.apache.commons.lang_2.3.0*.jar" />
+				<include name="org.h2_1.1.117.jar" />
 			</fileset>
 		</copy>
 
