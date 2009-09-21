@@ -182,7 +182,7 @@ public final class ASTProvider {
 		}
 	}
 
-	public static final PHPVersion SHARED_AST_LEVEL = PHPVersion.PHP5;
+	public static final PHPVersion SHARED_AST_LEVEL = PHPVersion.PHP5_3;
 	public static final boolean SHARED_AST_STATEMENT_RECOVERY= true;
 	public static final boolean SHARED_BINDING_RECOVERY= true;
 
