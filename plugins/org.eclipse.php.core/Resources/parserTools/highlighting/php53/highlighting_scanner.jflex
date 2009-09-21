@@ -866,6 +866,10 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
     return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
+<ST_PHP_NOWDOC>{NOWDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
+	return PHP_ENCAPSED_AND_WHITESPACE;
+}
+
 <ST_PHP_DOUBLE_QUOTES>[\"] {
     popState();
     return PHP_CONSTANT_ENCAPSED_STRING;
