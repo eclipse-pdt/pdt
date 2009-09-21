@@ -118,7 +118,9 @@ public abstract class ClassMemberContext extends StatementContext {
 		if (phpToken.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR || phpToken.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
 			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
-			return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			if (phpToken.getTextLength() == phpToken.getLength()) {
+				return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			}
 		}
 		return super.getPrefixEnd();
 	}
