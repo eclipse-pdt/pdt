@@ -1518,7 +1518,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		try {
 
 			int start = document.getLineOfOffset(region.getOffset());
-			int end = document.getLineOfOffset(Math.min(region.getOffset() + region.getLength(), document.getLength()));
+			int end = document.getLineOfOffset(Math.min(region.getOffset() + region.getLength() - 1, document.getLength()));
 			if (start >= end)
 				return null;
 
