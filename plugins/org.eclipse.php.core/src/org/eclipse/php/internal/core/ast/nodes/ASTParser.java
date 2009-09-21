@@ -201,7 +201,7 @@ public class ASTParser {
 	*/
 	public static final Program parse(String phpCode, boolean aspTagsAsPhp) throws Exception {
 		StringReader reader = new StringReader(phpCode);
-		return parse(reader, aspTagsAsPhp, PHPVersion.PHP5);
+		return parse(reader, aspTagsAsPhp, ProjectOptions.getDefaultPhpVersion());
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class ASTParser {
 	*/
 	public static final Program parse(File phpFile, boolean aspTagsAsPhp) throws Exception {
 		final Reader reader = new FileReader(phpFile);
-		return parse(reader, aspTagsAsPhp, PHPVersion.PHP5);
+		return parse(reader, aspTagsAsPhp, ProjectOptions.getDefaultPhpVersion());
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class ASTParser {
 	* @deprecated use Thread-Safe ASTParser methods
 	*/
 	public static final Program parse(IDocument phpDocument, boolean aspTagsAsPhp) throws Exception {
-		return parse(phpDocument, aspTagsAsPhp, PHPVersion.PHP5);
+		return parse(phpDocument, aspTagsAsPhp, ProjectOptions.getDefaultPhpVersion());
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class ASTParser {
 	* @deprecated use Thread-Safe ASTParser methods
 	*/
 	public static final Program parse(Reader reader) throws Exception {
-		return parse(reader, true, PHPVersion.PHP5);
+		return parse(reader, true, ProjectOptions.getDefaultPhpVersion());
 	}
 
 	/**

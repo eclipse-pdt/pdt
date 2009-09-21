@@ -13,6 +13,8 @@ package org.eclipse.php.internal.core.project;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -37,9 +39,32 @@ public class ProjectOptions {
 	
 	public static PHPVersion getPhpVersion(IProject project) {
 		if (project != null) {
-			return PHPVersion.byAlias(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project));
+			return PHPVersion.byAlias(CorePreferencesSupport.getInstance()
+					.getPreferencesValue(Keys.PHP_VERSION, null, project));
 		}
 		return getDefaultPhpVersion();
+	}
+
+	public static PHPVersion getPhpVersion(IFile file) {
+		PHPVersion phpVersion = ProjectOptions.getDefaultPhpVersion();
+		IProject project = file.getProject();
+		if (project != null && project.isAccessible()) {
+			phpVersion = ProjectOptions.getPhpVersion(project);
+		}
+		return phpVersion;
+	}
+
+	public static PHPVersion getPhpVersion(String fileName) {
+		PHPVersion phpVersion = ProjectOptions.getDefaultPhpVersion();
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+				.findMember(fileName);
+		if (resource != null) {
+			IProject project = resource.getProject();
+			if (project.isAccessible()) {
+				phpVersion = ProjectOptions.getPhpVersion(project);
+			}
+		}
+		return phpVersion;
 	}
 	
 	public static PHPVersion getDefaultPhpVersion() {

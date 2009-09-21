@@ -34,16 +34,7 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 	}
 
 	protected AbstractPHPSourceParser createParser(String fileName) {
-		PHPVersion phpVersion = PHPVersion.PHP5; // default
-		
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fileName);
-		if (resource != null) {
-			IProject project = resource.getProject();
-			if (project.isAccessible()) {
-				phpVersion = ProjectOptions.getPhpVersion(project);
-			}
-		}
-		
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(fileName);
 		AbstractPHPSourceParser parser = createParser(fileName, phpVersion);
 		if (parser == null) {
 			throw new IllegalStateException("Unknown PHP version!");
