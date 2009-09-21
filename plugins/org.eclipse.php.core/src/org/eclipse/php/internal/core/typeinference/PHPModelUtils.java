@@ -1230,7 +1230,6 @@ public class PHPModelUtils {
 				if (types.length > 0) {
 					return types;
 				}
-				return null;
 			}
 		}
 
