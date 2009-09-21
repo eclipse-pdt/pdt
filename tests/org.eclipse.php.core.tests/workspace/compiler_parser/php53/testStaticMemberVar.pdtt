@@ -1,0 +1,17 @@
+--TEST--
+Test static member $className::$var
+--FILE--
+<?php $className::$var; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="27">
+	<ExpressionStatement start="6" end="23">
+		<StaticFieldAccess start="6" end="22">
+			<VariableReference start="6" end="16" name="$className">
+			</VariableReference>
+			<VariableReference start="18" end="22" name="$var">
+			</VariableReference>
+		</StaticFieldAccess>
+	</ExpressionStatement>
+	<EmptyStatement start="24" end="26">
+	</EmptyStatement>
+</ModuleDeclaration>
