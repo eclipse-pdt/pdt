@@ -50,6 +50,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void complete(ISourceModule module, int position, int i) {
 
+		if (!PHPCorePlugin.toolkitInitialized) {
+			return;
+		}
+
 		ModelManager.getModelManager().getIndexManager().waitUntilReady();
 
 		relevanceKeyword = RELEVANCE_KEYWORD;

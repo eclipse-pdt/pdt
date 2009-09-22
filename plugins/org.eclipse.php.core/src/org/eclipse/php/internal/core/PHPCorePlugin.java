@@ -45,6 +45,8 @@ public class PHPCorePlugin extends Plugin {
 	// The shared instance.
 	private static PHPCorePlugin plugin;
 
+	public static transient boolean toolkitInitialized;
+
 	/**
 	 * The constructor.
 	 */
@@ -344,20 +346,22 @@ public class PHPCorePlugin extends Plugin {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findMethods("", MatchRule.PREFIX,
-						Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault()
+						.findMethods("!@#$%^&", MatchRule.EXACT,
+								Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findTypes("", MatchRule.PREFIX,
-						Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault()
+						.findTypes("!@#$%^&", MatchRule.EXACT,
+								Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findIncludes("", MatchRule.PREFIX,
-						scope, monitor);
+				PhpModelAccess.getDefault().findIncludes("!@#$%^&",
+						MatchRule.EXACT, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
@@ -373,6 +377,7 @@ public class PHPCorePlugin extends Plugin {
 			if (monitor != null) {
 				monitor.done();
 			}
+			toolkitInitialized = true;
 		}
 	}
 }

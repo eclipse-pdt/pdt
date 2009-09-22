@@ -305,16 +305,15 @@
          point="org.eclipse.dltk.core.projectIndexer">
       <disable
       		nature="org.eclipse.php.core.PHPNature"
-            class="org.eclipse.dltk.internal.core.structure.StructureProjectIndexer">
-            
+            indexer="org.eclipse.dltk.core.indexer.structure">
       </disable>
       <disable
       		nature="org.eclipse.php.core.PHPNature"
-            class="org.eclipse.dltk.internal.core.mixin.MixinProjectIndexer">
+            indexer="org.eclipse.dltk.core.indexer.mixin">
       </disable>
-      <projectIndexer
-      		nature="org.eclipse.php.core.PHPNature"
-            class="org.eclipse.dltk.core.index2.ProjectIndexer2">
-      </projectIndexer>
+      <enable
+            indexer="org.eclipse.dltk.core.indexer.index2"
+            nature="org.eclipse.php.core.PHPNature">
+      </enable>
    </extension>
 </plugin>

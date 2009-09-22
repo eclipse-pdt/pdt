@@ -85,6 +85,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			org.eclipse.dltk.compiler.env.ISourceModule sourceUnit, int offset,
 			int end) {
 
+		if (!PHPCorePlugin.toolkitInitialized) {
+			return EMPTY;
+		}
+
 		if (end < offset) {
 			end = offset + 1;
 		}
