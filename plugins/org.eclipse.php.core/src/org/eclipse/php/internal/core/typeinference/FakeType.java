@@ -20,7 +20,9 @@ import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.dltk.internal.core.SourceType;
 
 /**
- * This is a fake model element that can live independently from the DLTK model manager. 
+ * This is a fake model element that can live independently from the DLTK model
+ * manager.
+ * 
  * @author michael
  */
 public class FakeType extends SourceType {
@@ -33,13 +35,16 @@ public class FakeType extends SourceType {
 	private int nameLength;
 	private String[] superClassNames;
 
-	public FakeType(ModelElement sourceModule, String name, int flags, String[] superClassNames) {
+	public FakeType(ModelElement sourceModule, String name, int flags,
+			String[] superClassNames) {
 		super(sourceModule, name);
 		this.flags = flags;
 		this.superClassNames = superClassNames;
 	}
 
-	public FakeType(ModelElement parent, String name, int flags, String[] superClassNames, int offset, int length, int nameOffset, int nameLength) {
+	public FakeType(ModelElement parent, String name, int flags,
+			String[] superClassNames, int offset, int length, int nameOffset,
+			int nameLength) {
 		super(parent, name);
 		this.flags = flags;
 		this.offset = offset;
@@ -49,7 +54,7 @@ public class FakeType extends SourceType {
 		this.superClassNames = superClassNames;
 		hasSpecialOffsets = true;
 	}
-	
+
 	public String[] getSuperClasses() throws ModelException {
 		return superClassNames;
 	}
@@ -57,13 +62,17 @@ public class FakeType extends SourceType {
 	public ISourceRange getNameRange() throws ModelException {
 		if (hasSpecialOffsets)
 			return new SourceRange(nameOffset, nameLength);
-		return super.getNameRange();
+		if (getElementInfo() != null)
+			return super.getNameRange();
+		return new SourceRange(0, 0);
 	}
 
 	public ISourceRange getSourceRange() throws ModelException {
 		if (hasSpecialOffsets)
 			return new SourceRange(offset, length);
-		return super.getSourceRange();
+		if (getElementInfo() != null)
+			return super.getSourceRange();
+		return new SourceRange(0, 0);
 	}
 
 	public IScriptProject getScriptProject() {
