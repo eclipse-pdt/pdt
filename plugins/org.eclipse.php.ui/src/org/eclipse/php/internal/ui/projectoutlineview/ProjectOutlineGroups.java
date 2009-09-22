@@ -19,6 +19,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.explorer.NamespaceNode;
@@ -73,10 +74,17 @@ public enum ProjectOutlineGroups {
 							int res = o1.getElementName().compareTo(
 									o2.getElementName());
 							if (res == 0) {
-								return (o1.getPath().toOSString() + o1
-										.getElementName()).compareTo(o2
-										.getPath().toOSString()
-										+ o2.getElementName());
+								String label1 = ScriptElementLabels
+										.getDefault()
+										.getElementLabel(
+												o1,
+												ScriptElementLabels.T_FULLY_QUALIFIED);
+								String label2 = ScriptElementLabels
+										.getDefault()
+										.getElementLabel(
+												o2,
+												ScriptElementLabels.T_FULLY_QUALIFIED);
+								return label1.compareTo(label2);
 							}
 							return res;
 
