@@ -15,8 +15,8 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
-import org.eclipse.dltk.compiler.ISourceElementRequestor.MethodInfo;
-import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
+import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
+import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 
 /**
