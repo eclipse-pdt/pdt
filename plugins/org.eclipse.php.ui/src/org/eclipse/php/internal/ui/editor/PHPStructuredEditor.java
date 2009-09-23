@@ -1632,10 +1632,16 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 			if (newCaretOffset == -1)
 				newCaretOffset = caretOffset;
-			else
-				st.setCaretOffset(newCaretOffset);
+
+			int offsetInLine = newCaretOffset - lineOffset;
+			int lineFullLength = st.getLine(lineNumber).length();
+			while (offsetInLine > lineFullLength) {
+				--newCaretOffset;
+				--offsetInLine;
+			}
 
 			st.setCaretOffset(newCaretOffset);
+
 			if (fDoSelect) {
 				if (caretOffset < oldSelection.y)
 					st.setSelection(oldSelection.y, newCaretOffset);
