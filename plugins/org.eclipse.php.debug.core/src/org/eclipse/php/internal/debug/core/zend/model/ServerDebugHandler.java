@@ -32,7 +32,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 
 /**
  * A PHP debug server handler.
- *
+ * 
  * @author Shalom Gibly
  */
 public class ServerDebugHandler extends SimpleDebugHandler {
@@ -53,12 +53,14 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		return fRemoteDebugger;
 	}
 
-	public void sessionStarted(String remoteFile, String uri, String query, String options) {
+	public void sessionStarted(String remoteFile, String uri, String query,
+			String options) {
 		super.sessionStarted(remoteFile, uri, query, options);
 
 		if (isUsingPathMapper()) {
 			// Hack for the case when htdocs is symlinked to the workspace.
-			// Zend Debugger resolves symbolic links later, and it fucks up the path mapper:
+			// Zend Debugger resolves symbolic links later, and it fucks up the
+			// path mapper:
 			try {
 				File file = new File(remoteFile);
 				if (file.exists()) {
@@ -80,9 +82,11 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 			if (startLock.isRunStart()) {
 				startLock.setStarted(true);
 				fDebugTarget.started();
-				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
+				fStatus = getRemoteDebugger().start(
+						fDebugTarget.getStartResponseHandler());
 				if (!fStatus) {
-					Logger.log(Logger.ERROR, "ServerDebugHandler: debugger.start return false");
+					Logger.log(Logger.ERROR,
+							"ServerDebugHandler: debugger.start return false");
 					try {
 						fDebugTarget.disconnect();
 					} catch (DebugException e) {
@@ -108,9 +112,11 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				startLock.setStarted(true);
 				fDebugTarget.started();
 
-				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
+				fStatus = getRemoteDebugger().start(
+						fDebugTarget.getStartResponseHandler());
 				if (!fStatus) {
-					Logger.log(Logger.ERROR, "ServerDebugHandler: debugger.start return false");
+					Logger.log(Logger.ERROR,
+							"ServerDebugHandler: debugger.start return false");
 				}
 				fDebugTarget.setLastCommand("start");
 			} else {
@@ -129,16 +135,22 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 		fDebugTarget.setBreakpoints(new IBreakpoint[] {});
 
-		ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch().getLaunchConfiguration();
+		ILaunchConfiguration launchConfiguration = fDebugTarget.getLaunch()
+				.getLaunchConfiguration();
 		try {
-			fDebugTarget.setExpressionManager(new DefaultExpressionsManager(fRemoteDebugger, launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(null))));
+			fDebugTarget.setExpressionManager(new DefaultExpressionsManager(
+					fRemoteDebugger, launchConfiguration.getAttribute(
+							IDebugParametersKeys.TRANSFER_ENCODING,
+							PHPProjectPreferences.getTransferEncoding(null))));
 		} catch (CoreException e) {
 		}
 
 		if (fLastcmd.equals("start")) {
-			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(), lineNumber);
+			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(),
+					lineNumber);
 		} else if (fLastcmd.equals("resume")) {
-			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(), lineNumber);
+			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(),
+					lineNumber);
 		} else if (fLastcmd.equals("suspend")) {
 			fDebugTarget.suspended(DebugEvent.CLIENT_REQUEST);
 		} else if (fLastcmd.equals("stepReturn")) {
@@ -169,11 +181,11 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		Logger.debugMSG("ServerDebugHandler: Starting connectionClosed()");
 		super.connectionClosed();
 		fRemoteDebugger.finish();
-		//		if (fDebugTarget.isPHPCGI()) {
-		//			Logger.debugMSG("ServerDebugHandler: Calling Terminated() for PHP CGI");
+		// if (fDebugTarget.isPHPCGI()) {
+		// Logger.debugMSG("ServerDebugHandler: Calling Terminated() for PHP CGI");
 		Logger.debugMSG("ServerDebugHandler: Calling Terminated()");
 		fDebugTarget.terminated();
-		//		}
+		// }
 	}
 
 	public void handleScriptEnded() {
@@ -201,22 +213,29 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		super.parsingErrorOccured(debugError);
 
 		// resolve path
-		String localFileName = ((RemoteDebugger) fRemoteDebugger).convertToLocalFilename(debugError.getFullPathName(), null, null);
+		String localFileName = ((RemoteDebugger) fRemoteDebugger)
+				.convertToLocalFilename(debugError.getFullPathName(), null,
+						null);
 		if (localFileName == null) {
 			localFileName = debugError.getFullPathName();
 		}
 		debugError.setFileName(localFileName);
 
 		if (fDebugTarget.getDebugErrors().add(debugError)) {
-			Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();
+			Object[] listeners = fDebugTarget.getConsoleEventListeners()
+					.toArray();
 			for (Object element : listeners) {
 				((IPHPConsoleEventListener) element).handleEvent(debugError);
 			}
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.model.SimpleDebugHandler#wrongDebugServer()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.model.SimpleDebugHandler#wrongDebugServer
+	 * ()
 	 */
 	public void wrongDebugServer() {
 		super.wrongDebugServer();
@@ -238,7 +257,8 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		this.fDebugTarget = debugTarget;
 		fConnectionThread = fDebugTarget.getConnectionThread();
 		fRemoteDebugger = createRemoteDebugger();
-		fConnectionThread.getCommunicationAdministrator().connectionEstablished();
+		fConnectionThread.getCommunicationAdministrator()
+				.connectionEstablished();
 	}
 
 	public PHPDebugTarget getDebugTarget() {
