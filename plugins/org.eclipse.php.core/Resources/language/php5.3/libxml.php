@@ -50,6 +50,18 @@ function libxml_clear_errors () {}
  */
 function libxml_get_errors () {}
 
+/**
+ * Disable the ability to load external entities
+ * @link http://php.net/manual/en/function.libxml-disable-entity-loader.php
+ * @param disable bool[optional] <p>
+ * Disable (true) or enable (false) libxml extensions (such as
+ * , 
+ * and ) to load external entities.
+ * </p>
+ * @return ReturnType the previous value.
+ */
+function libxml_disable_entity_loader ($disable = null) {}
+
 
 /**
  * libxml version like 20605 or 20617
@@ -62,6 +74,7 @@ define ('LIBXML_VERSION', 20703);
  * @link http://php.net/manual/en/libxml.constants.php
  */
 define ('LIBXML_DOTTED_VERSION', "2.7.3");
+define ('LIBXML_LOADED_VERSION', 20703);
 
 /**
  * Substitute entities

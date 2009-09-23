@@ -30,8 +30,9 @@ function ldap_connect ($hostname = null, $port = null) {}
 /**
  * &Alias; <function>ldap_unbind</function>
  * @link http://php.net/manual/en/function.ldap-close.php
+ * @param link_identifier
  */
-function ldap_close () {}
+function ldap_close ($link_identifier) {}
 
 /**
  * Bind to LDAP directory
@@ -413,6 +414,9 @@ function ldap_get_dn ($link_identifier, $result_entry_identifier) {}
  * and to get only values set it to 1.
  * </p>
  * @return array an array of all DN components.
+ * The first element in this array has count key and
+ * represents the number of returned values, next elements are numerically
+ * indexed DN components.
  */
 function ldap_explode_dn ($dn, $with_attrib) {}
 
@@ -686,58 +690,72 @@ function ldap_get_option ($link_identifier, $option, &$retval) {}
  * <tr valign="top">
  * <td>Option</td>
  * <td>Type</td>
+ * <td>Available since</td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_DEREF</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_SIZELIMIT</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_TIMELIMIT</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_NETWORK_TIMEOUT</td>
  * <td>integer</td>
+ * <td>PHP 5.3.0</td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_PROTOCOL_VERSION</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_ERROR_NUMBER</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_REFERRALS</td>
  * <td>bool</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_RESTART</td>
  * <td>bool</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_HOST_NAME</td>
  * <td>string</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_ERROR_STRING</td>
  * <td>string</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_MATCHED_DN</td>
  * <td>string</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_SERVER_CONTROLS</td>
  * <td>array</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_CLIENT_CONTROLS</td>
  * <td>array</td>
+ * <td></td>
  * </tr>
  * </p>
  * <p>
@@ -827,6 +845,13 @@ define ('LDAP_DEREF_ALWAYS', 3);
 define ('LDAP_OPT_DEREF', 2);
 define ('LDAP_OPT_SIZELIMIT', 3);
 define ('LDAP_OPT_TIMELIMIT', 4);
+
+/**
+ * Option for ldap_set_option to allow setting network timeout.
+ * (Available as of PHP 5.3.0)
+ * @link http://php.net/manual/en/ldap.constants.php
+ */
+define ('LDAP_OPT_NETWORK_TIMEOUT', 20485);
 define ('LDAP_OPT_PROTOCOL_VERSION', 17);
 define ('LDAP_OPT_ERROR_NUMBER', 49);
 define ('LDAP_OPT_REFERRALS', 8);

@@ -211,8 +211,9 @@ function msg_remove_queue ($queue) {}
  * <tr valign="top">
  * <td>msg_qbytes</td>
  * <td>
- * The number of bytes of space currently available in the queue to
- * hold sent messages until they are received.
+ * The maximum number of bytes allowed in one message queue. On
+ * Linux, this value may be read and modified via
+ * /proc/sys/kernel/msgmnb.
  * </td>
  * </tr>
  * <tr valign="top">
@@ -244,6 +245,16 @@ function msg_stat_queue ($queue) {}
  * @return bool Returns true on success or false on failure.
  */
 function msg_set_queue ($queue, array $data) {}
+
+/**
+ * Check whether a message queue exists
+ * @link http://php.net/manual/en/function.msg-queue-exists.php
+ * @param key int <p>
+ * Queue key.
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ */
+function msg_queue_exists ($key) {}
 
 define ('MSG_IPC_NOWAIT', 1);
 define ('MSG_EAGAIN', 11);

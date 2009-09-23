@@ -43,7 +43,7 @@ function gzrewind ($zp) {}
 function gzclose ($zp) {}
 
 /**
- * Test for end-of-file on a gz-file pointer
+ * Test for <acronym>EOF</acronym> on a gz-file pointer
  * @link http://php.net/manual/en/function.gzeof.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file

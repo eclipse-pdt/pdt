@@ -13,10 +13,11 @@
  * This function only works with UTF-8 encoded data.
  * </p>
  * @param options int[optional] <p>
- * Bitmask consisting of PHP_JSON_HEX_QUOT,
- * PHP_JSON_HEX_TAG,
- * PHP_JSON_HEX_AMP,
- * PHP_JSON_HEX_APOS. Defaults to 0.
+ * Bitmask consisting of JSON_HEX_QUOT,
+ * JSON_HEX_TAG,
+ * JSON_HEX_AMP,
+ * JSON_HEX_APOS,
+ * JSON_FORCE_OBJECT. Defaults to 0.
  * </p>
  * @return string a JSON encoded string on success.
  */
@@ -33,10 +34,13 @@ function json_encode ($value, $options = null) {}
  * associative arrays.
  * </p>
  * @param depth int[optional] <p>
+ * User specified recursion depth.
  * </p>
  * @return mixed an object or if the optional
  * assoc parameter is true, an associative 
- * array is instead returned.
+ * array is instead returned. &null; is returned if the
+ * json cannot be decoded or if the encoded
+ * data is deeper than the recursion limit.
  */
 function json_decode ($json, $assoc = null, $depth = null) {}
 

@@ -211,8 +211,9 @@ function msg_remove_queue ($queue) {}
  * <tr valign="top">
  * <td>msg_qbytes</td>
  * <td>
- * The number of bytes of space currently available in the queue to
- * hold sent messages until they are received.
+ * The maximum number of bytes allowed in one message queue. On
+ * Linux, this value may be read and modified via
+ * /proc/sys/kernel/msgmnb.
  * </td>
  * </tr>
  * <tr valign="top">

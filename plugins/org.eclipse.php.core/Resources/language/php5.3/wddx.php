@@ -65,8 +65,9 @@ function wddx_add_vars ($packet_id, $var_name, $_ = null) {}
 /**
  * &Alias; <function>wddx_unserialize</function>
  * @link http://php.net/manual/en/function.wddx-deserialize.php
+ * @param packet
  */
-function wddx_deserialize () {}
+function wddx_deserialize ($packet) {}
 
 // End of wddx v.
 ?>

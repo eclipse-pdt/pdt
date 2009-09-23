@@ -71,7 +71,7 @@ function socket_select (array &$read, array &$write, array &$except, $tv_sec, $t
  * <td>AF_INET6</td>
  * <td>
  * IPv6 Internet based protocols. TCP and UDP are common protocols of
- * this protocol family. Support added in PHP 5.0.0.
+ * this protocol family.
  * </td>
  * </tr>
  * <tr valign="top">
@@ -353,8 +353,9 @@ function socket_write ($socket, $buffer, $length = null) {}
  * </p>
  * @param length int <p>
  * The maximum number of bytes read is specified by the
- * length parameter. Otherwise you can use \r, \n,
- * or \0 to end reading (depending on the type
+ * length parameter. Otherwise you can use
+ * &#92;r, &#92;n,
+ * or &#92;0 to end reading (depending on the type
  * parameter, see below).
  * </p>
  * @param type int[optional] <p>
@@ -515,11 +516,64 @@ function socket_bind ($socket, $address, $port = null) {}
 /**
  * Receives data from a connected socket
  * @link http://php.net/manual/en/function.socket-recv.php
- * @param socket resource 
- * @param buf string 
- * @param len int 
- * @param flags int 
- * @return int 
+ * @param socket resource <p>
+ * The socket must be a socket resource previously
+ * created by socket_create().
+ * </p>
+ * @param buf string <p>
+ * The data received will be fetched to the variable specified with
+ * buf. If an error occurs, if the
+ * connection is reset, or if no data is
+ * available, buf will be set to &null;.
+ * </p>
+ * @param len int <p>
+ * Up to len bytes will be fetched from remote host.
+ * </p>
+ * @param flags int <p>
+ * The value of flags can be any combination of 
+ * the following flags, joined with the binary OR (|)
+ * operator.
+ * </p>
+ * <table>
+ * Possible values for flags
+ * <tr valign="top">
+ * <td>Flag</td>
+ * <td>Description</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>MSG_OOB</td>
+ * <td>
+ * Process out-of-band data.
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>MSG_PEEK</td>
+ * <td>
+ * Receive data from the beginning of the receive queue without
+ * removing it from the queue.
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>MSG_WAITALL</td>
+ * <td>
+ * Block until at least len are received.
+ * However, if a signal is caught or the remote host disconnects, the
+ * function may return less data.
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>MSG_DONTWAIT</td>
+ * <td>
+ * With this flag set, the function returns even if it would normally
+ * have blocked.
+ * </td>
+ * </tr>
+ * </table>
+ * @return int socket_recv returns the number of bytes received,
+ * or false if there was an error. The actual error code can be retrieved by 
+ * calling socket_last_error. This error code may be
+ * passed to socket_strerror to get a textual explanation
+ * of the error.
  */
 function socket_recv ($socket, &$buf, $len, $flags) {}
 
@@ -642,7 +696,7 @@ function socket_send ($socket, $buf, $len, $flags) {}
  * port will be &null;.
  * </p>
  * @return int socket_recvfrom returns the number of bytes received,
- * or -1 if there was an error. The actual error code can be retrieved by 
+ * or false if there was an error. The actual error code can be retrieved by 
  * calling socket_last_error. This error code may be
  * passed to socket_strerror to get a textual explanation
  * of the error.
@@ -719,7 +773,8 @@ function socket_sendto ($socket, $buf, $len, $flags, $addr, $port = null) {}
  * The level parameter specifies the protocol
  * level at which the option resides. For example, to retrieve options at
  * the socket level, a level parameter of
- * SOL_SOCKET would be used. Other levels, such as TCP, can be used by
+ * SOL_SOCKET would be used. Other levels, such as
+ * TCP, can be used by
  * specifying the protocol number of that level. Protocol numbers can be
  * found by using the getprotobyname function.
  * </p>
@@ -900,6 +955,15 @@ function socket_sendto ($socket, $buf, $len, $flags, $addr, $port = null) {}
  * int
  * </td>
  * </tr>
+ * <tr valign="top">
+ * <td>TCP_NODELAY</td>
+ * <td>
+ * Reports whether the Nagle TCP algorithm is disabled.
+ * </td>
+ * <td>
+ * int
+ * </td>
+ * </tr>
  * </table>
  * @return mixed the value of the given option, or false on errors.
  */
@@ -1016,6 +1080,7 @@ define ('SOCK_SEQPACKET', 5);
 define ('SOCK_RDM', 4);
 define ('MSG_OOB', 1);
 define ('MSG_WAITALL', 256);
+define ('MSG_DONTWAIT', 64);
 define ('MSG_PEEK', 2);
 define ('MSG_DONTROUTE', 4);
 
@@ -1047,6 +1112,12 @@ define ('SO_TYPE', 3);
 define ('SO_ERROR', 4);
 define ('SOL_SOCKET', 1);
 define ('SOMAXCONN', 128);
+
+/**
+ * Used to disable Nagle TCP algorithm.
+ * Added in PHP 5.2.7.
+ * @link http://php.net/manual/en/sockets.constants.php
+ */
 define ('TCP_NODELAY', 1);
 define ('PHP_NORMAL_READ', 1);
 define ('PHP_BINARY_READ', 2);
@@ -1434,6 +1505,11 @@ define ('SOCKET_ENOTUNIQ', 76);
  * @link http://php.net/manual/en/sockets.constants.php
  */
 define ('SOCKET_EBADFD', 77);
+
+/**
+ * Remote address changed.
+ * @link http://php.net/manual/en/sockets.constants.php
+ */
 define ('SOCKET_EREMCHG', 78);
 
 /**

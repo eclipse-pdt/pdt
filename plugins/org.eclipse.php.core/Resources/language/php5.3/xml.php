@@ -541,6 +541,12 @@ define ('XML_OPTION_CASE_FOLDING', 1);
 define ('XML_OPTION_TARGET_ENCODING', 2);
 define ('XML_OPTION_SKIP_TAGSTART', 3);
 define ('XML_OPTION_SKIP_WHITE', 4);
+
+/**
+ * Holds the SAX implementation method.
+ * Can be libxml or expat.
+ * @link http://php.net/manual/en/xml.constants.php
+ */
 define ('XML_SAX_IMPL', "libxml");
 
 // End of xml v.

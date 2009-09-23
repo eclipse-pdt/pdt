@@ -1,6 +1,6 @@
 <?php
 
-// Start of date v.5.2.9
+// Start of date v.5.2.10
 
 class DateTime  {
 	const ATOM = "Y-m-d\TH:i:sP";
@@ -16,39 +16,167 @@ class DateTime  {
 	const W3C = "Y-m-d\TH:i:sP";
 
 
+	/**
+	 * Returns new DateTime object
+	 * @link http://php.net/manual/en/datetime.construct.php
+	 */
 	public function __construct () {}
 
-	public function format () {}
+	/**
+	 * Returns date formatted according to given format
+	 * @link http://php.net/manual/en/datetime.format.php
+	 * @param format string <p>
+	 * Format accepted by date.
+	 * </p>
+	 * @return string formatted date on success or false on failure.
+	 */
+	public function format ($format) {}
 
-	public function modify () {}
+	/**
+	 * Alters the timestamp
+	 * @link http://php.net/manual/en/datetime.modify.php
+	 * @param modify string <p>
+	 * String in a relative format accepted by strtotime.
+	 * </p>
+	 * @return DateTime the modified DateTime.
+	 */
+	public function modify ($modify) {}
 
+	/**
+	 * Return time zone relative to given DateTime
+	 * @link http://php.net/manual/en/datetime.gettimezone.php
+	 * @return DateTimeZone DateTimeZone object on success or false on failure.
+	 */
 	public function getTimezone () {}
 
-	public function setTimezone () {}
+	/**
+	 * Sets the time zone for the DateTime object
+	 * @link http://php.net/manual/en/datetime.settimezone.php
+	 * @param timezone DateTimeZone <p>
+	 * Desired time zone.
+	 * </p>
+	 * @return DateTime the modified DateTime.
+	 */
+	public function setTimezone (DateTimeZone $timezone) {}
 
+	/**
+	 * Returns the daylight saving time offset
+	 * @link http://php.net/manual/en/datetime.getoffset.php
+	 * @return int DST offset in seconds on success or false on failure.
+	 */
 	public function getOffset () {}
 
-	public function setTime () {}
+	/**
+	 * Sets the time
+	 * @link http://php.net/manual/en/datetime.settime.php
+	 * @param hour int <p>
+	 * Hour of the time.
+	 * </p>
+	 * @param minute int <p>
+	 * Minute of the time.
+	 * </p>
+	 * @param second int[optional] <p>
+	 * Second of the time.
+	 * </p>
+	 * @return DateTime the modified DateTime.
+	 */
+	public function setTime ($hour, $minute, $second = null) {}
 
-	public function setDate () {}
+	/**
+	 * Sets the date
+	 * @link http://php.net/manual/en/datetime.setdate.php
+	 * @param year int <p>
+	 * Year of the date.
+	 * </p>
+	 * @param month int <p>
+	 * Month of the date.
+	 * </p>
+	 * @param day int <p>
+	 * Day of the date.
+	 * </p>
+	 * @return DateTime the modified DateTime.
+	 */
+	public function setDate ($year, $month, $day) {}
 
-	public function setISODate () {}
+	/**
+	 * Sets the ISO date
+	 * @link http://php.net/manual/en/datetime.setisodate.php
+	 * @param year int <p>
+	 * Year of the date.
+	 * </p>
+	 * @param week int <p>
+	 * Week of the date.
+	 * </p>
+	 * @param day int[optional] <p>
+	 * Offset from the first day of the week.
+	 * </p>
+	 * @return DateTime the modified DateTime.
+	 */
+	public function setISODate ($year, $week, $day = null) {}
 
 }
 
 class DateTimeZone  {
 
+	/**
+	 * Creates new DateTimeZone object
+	 * @link http://php.net/manual/en/datetimezone.construct.php
+	 */
 	public function __construct () {}
 
+	/**
+	 * Returns the name of the timezone
+	 * @link http://php.net/manual/en/datetimezone.getname.php
+	 * @return string One of timezones.
+	 */
 	public function getName () {}
 
-	public function getOffset () {}
+	/**
+	 * Returns the timezone offset from GMT
+	 * @link http://php.net/manual/en/datetimezone.getoffset.php
+	 * @param datetime DateTime <p>
+	 * DateTime that contains the date/time to compute the offset from. 
+	 * </p>
+	 * @return int time zone offset in seconds on success or false on failure.
+	 */
+	public function getOffset (DateTime $datetime) {}
 
-	public function getTransitions () {}
+	/**
+	 * Returns all transitions for the timezone
+	 * @link http://php.net/manual/en/datetimezone.gettransitions.php
+	 * @param timestamp_begin int[optional] <p>
+	 * Begin timestamp.
+	 * </p>
+	 * @param timestamp_end int[optional] <p>
+	 * End timestamp.
+	 * </p>
+	 * @return array numerically indexed array containing associative array with all
+	 * transitions on success or false on failure.
+	 */
+	public function getTransitions ($timestamp_begin = null, $timestamp_end = null) {}
 
+	/**
+	 * Returns associative array containing dst, offset and the timezone name
+	 * @link http://php.net/manual/en/datetimezone.listabbreviations.php
+	 * @return array array on success or false on failure.
+	 */
 	public static function listAbbreviations () {}
 
-	public static function listIdentifiers () {}
+	/**
+	 * Returns numerically index array with all timezone identifiers
+	 * @link http://php.net/manual/en/datetimezone.listidentifiers.php
+	 * @param what int[optional] <p>
+	 * One of DateTimeZone class constants, defaults to
+	 * DateTimeZone::ALL.
+	 * </p>
+	 * @param country string[optional] <p>
+	 * A two-letter ISO 3166-1 compatible country code.
+	 * </p>
+	 * This option is only used when what is set to
+	 * DateTimeZone::PER_COUNTRY.
+	 * @return array array on success or false on failure.
+	 */
+	public static function listIdentifiers ($what = null, $country = null) {}
 
 }
 
@@ -60,7 +188,8 @@ class DateTimeZone  {
  * the time, since PHP 5.0.0 they are allowed but ignored.
  * </p>
  * @param now int[optional] <p>
- * The timestamp used to calculate the returned value.
+ * The timestamp which is used as a base for the calculation of relative
+ * dates.
  * </p>
  * @return int a timestamp on success, false otherwise. Previous to PHP 5.1.0,
  * this function would return -1 on failure.
@@ -72,7 +201,10 @@ function strtotime ($time, $now = null) {}
  * @link http://php.net/manual/en/function.date.php
  * @param format string <p>
  * The format of the outputted date string. See the formatting
- * options below.
+ * options below. There are also several
+ * predefined date constants
+ * that may be used instead, so for example DATE_RSS
+ * contains the format string 'D, d M Y H:i:s'.
  * </p>
  * <p>
  * <table>
@@ -253,7 +385,7 @@ function strtotime ($time, $now = null) {}
  * <tr valign="top">
  * <td>u</td>
  * <td>Microseconds (added in PHP 5.2.2)</td>
- * <td>Example: 54321</td>
+ * <td>Example: 654321</td>
  * </tr>
  * <tr valign="top">
  * Timezone</td>
@@ -570,7 +702,7 @@ function checkdate ($month, $day, $year) {}
  * </tr>
  * <tr valign="top">
  * <td>%e</td>
- * <td>Day of the month, with a space preceeding single digits</td>
+ * <td>Day of the month, with a space preceding single digits</td>
  * <td> 1 to 31</td>
  * </tr>
  * <tr valign="top">
@@ -595,7 +727,7 @@ function checkdate ($month, $day, $year) {}
  * </tr>
  * <tr valign="top">
  * <td>%U</td>
- * <td>Week number of the given year, starting with the the first
+ * <td>Week number of the given year, starting with the first
  * 	 Sunday as the first week</td>
  * <td>13 (for the 13th full week of the year)</td>
  * </tr>
@@ -759,7 +891,7 @@ function checkdate ($month, $day, $year) {}
  * </tr>
  * <tr valign="top">
  * <td>%F</td>
- * <td>Same as "%y-%m-%d" (commonly used in database datestamps)</td>
+ * <td>Same as "%Y-%m-%d" (commonly used in database datestamps)</td>
  * <td>Example: 2009-02-05 for February 5, 2009</td>
  * </tr>
  * <tr valign="top">
@@ -800,7 +932,7 @@ function checkdate ($month, $day, $year) {}
  * <p>
  * Maximum length of this parameter is 1023 characters.
  * </p>
- * Contrary to ISO-9889:1999, Sun Solaris starts with Sunday as 1.
+ * Contrary to ISO-9899:1999, Sun Solaris starts with Sunday as 1.
  * As a result, %u may not function as described in this manual.
  * @param timestamp int[optional] 
  * @return string a string formatted according format
@@ -1023,7 +1155,7 @@ function timezone_open ($timezone) {}
 function timezone_name_get () {}
 
 /**
- * Returns the timezone name from abbrevation
+ * Returns the timezone name from abbreviation
  * @link http://php.net/manual/en/function.timezone-name-from-abbr.php
  * @param abbr string <p>
  * Time zone abbreviation.
@@ -1232,5 +1364,5 @@ define ('SUNFUNCS_RET_STRING', 1);
  */
 define ('SUNFUNCS_RET_DOUBLE', 2);
 
-// End of date v.5.2.9
+// End of date v.5.2.10
 ?>

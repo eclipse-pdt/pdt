@@ -112,6 +112,7 @@ foreach (glob("{$phpDir}/*.php") as $f) {
 }
 fclose($fp);
 
+echo 'Finished...';
 
 // === Functions ===
 /**
@@ -157,8 +158,7 @@ function make_funckey_from_ref ($ref) {
  */
 function parse_phpdoc_functions ($phpdocDir) {
 	$xml_files = array_merge (
-		glob ("{$phpdocDir}/en/reference/*/functions/*.xml"), 
-		glob ("{$phpdocDir}/en/reference/*/functions/*/*.xml") 
+		glob ("{$phpdocDir}/en/reference/*/*/*.xml")
 	);
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
@@ -290,7 +290,7 @@ function parse_phpdoc_constants ($phpdocDir) {
 				}
 			}
 			if (preg_match_all (
-				'@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>\d+</entry>\s*<entry>(.*?)</entry>@s', $xml, $match) 
+				                   '@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>\d+</entry>\s*<entry>(.*?)</entry>@s', $xml, $match) 
 				|| preg_match_all ('@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>(.*?)</entry>@s', $xml, $match)) {
 
 				for ($i = 0; $i < count($match[0]); ++$i) {

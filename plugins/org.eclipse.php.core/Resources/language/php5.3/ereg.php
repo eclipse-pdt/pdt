@@ -18,9 +18,10 @@
  * in the elements of the array regs. 
  * </p>
  * <p>
- * $regs[1] will contain the substring which starts at the first left
- * parenthesis; $regs[2] will contain the substring starting at the
- * second, and so on. $regs[0] will contain a copy of the complete string
+ * $regs[1] will contain the substring which starts at
+ * the first left parenthesis; $regs[2] will contain
+ * the substring starting at the second, and so on.
+ * $regs[0] will contain a copy of the complete string
  * matched.
  * </p>
  * @return int the length of the matched string if a match for

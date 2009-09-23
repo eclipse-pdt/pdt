@@ -1,16 +1,33 @@
 <?php
 
-// Start of fileinfo v.0.1
+// Start of fileinfo v.1.0.5-dev
 
 class finfo  {
 
-	public function finfo () {}
+	/**
+	 * @param options[optional]
+	 * @param arg[optional]
+	 */
+	public function finfo ($options, $arg) {}
 
-	public function set_flags () {}
+	/**
+	 * @param options
+	 */
+	public function set_flags ($options) {}
 
-	public function file () {}
+	/**
+	 * @param filename
+	 * @param options[optional]
+	 * @param context[optional]
+	 */
+	public function file ($filename, $options, $context) {}
 
-	public function buffer () {}
+	/**
+	 * @param string
+	 * @param options[optional]
+	 * @param context[optional]
+	 */
+	public function buffer ($string, $options, $context) {}
 
 }
 
@@ -21,10 +38,17 @@ class finfo  {
  * One or disjunction of more Fileinfo
  * constants.
  * </p>
- * @param arg string[optional] 
+ * @param magic_file string[optional] <p>
+ * Name of a magic database file, usually something like
+ * /path/to/magic.mime. If not specified,
+ * the MAGIC environment variable is used. If this variable
+ * is not set either, /usr/share/misc/magic is used by default.
+ * A .mime and/or .mgc suffix is added if
+ * needed.
+ * </p>
  * @return resource a magic database resource on success or false on failure.
  */
-function finfo_open ($options = null, $arg = null) {}
+function finfo_open ($options = null, $magic_file = null) {}
 
 /**
  * Close fileinfo resource
@@ -82,6 +106,17 @@ function finfo_file ($file_name, $options = null, $context = null) {}
  */
 function finfo_buffer ($string, $options = null, $context = null) {}
 
+/**
+ * Detect MIME Content-type for a file (deprecated)
+ * @link http://php.net/manual/en/function.mime-content-type.php
+ * @param filename string <p>
+ * Path to the tested file.
+ * </p>
+ * @return string the content type in MIME format, like 
+ * text/plain or application/octet-stream.
+ */
+function mime_content_type ($filename) {}
+
 
 /**
  * No special handling.
@@ -96,16 +131,24 @@ define ('FILEINFO_NONE', 0);
 define ('FILEINFO_SYMLINK', 2);
 
 /**
- * Return a mime string, instead of a textual description.
+ * Return the mime type and mime encoding as defined by RFC 2045.
  * @link http://php.net/manual/en/fileinfo.constants.php
  */
 define ('FILEINFO_MIME', 1040);
 
 /**
- * Decompress compressed files.
+ * Return the mime type.
+ * Available since PHP 5.3.0.
  * @link http://php.net/manual/en/fileinfo.constants.php
  */
-define ('FILEINFO_COMPRESS', 4);
+define ('FILEINFO_MIME_TYPE', 16);
+
+/**
+ * Return the mime encoding of the file.
+ * Available since PHP 5.3.0.
+ * @link http://php.net/manual/en/fileinfo.constants.php
+ */
+define ('FILEINFO_MIME_ENCODING', 1024);
 
 /**
  * Look at the contents of blocks or character special devices.
@@ -132,5 +175,5 @@ define ('FILEINFO_PRESERVE_ATIME', 128);
  */
 define ('FILEINFO_RAW', 256);
 
-// End of fileinfo v.0.1
+// End of fileinfo v.1.0.5-dev
 ?>

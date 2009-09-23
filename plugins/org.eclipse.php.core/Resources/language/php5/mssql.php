@@ -139,7 +139,7 @@ function mssql_fetch_batch ($result) {}
  * mssql_connect or 
  * mssql_pconnect.
  * </p>
- * @return int 
+ * @return int the number of records affected by last operation.
  */
 function mssql_rows_affected ($link_identifier) {}
 
@@ -157,7 +157,8 @@ function mssql_free_result ($result) {}
 /**
  * Returns the last message from the server
  * @link http://php.net/manual/en/function.mssql-get-last-message.php
- * @return string 
+ * @return string last error message from server, or an empty string if 
+ * no error messages are returned from MSSQL.
  */
 function mssql_get_last_message () {}
 
@@ -364,18 +365,20 @@ function mssql_result ($result, $row, $field) {}
 function mssql_next_result ($result_id) {}
 
 /**
- * Sets the lower error severity
+ * Sets the minimum error severity
  * @link http://php.net/manual/en/function.mssql-min-error-severity.php
  * @param severity int <p>
+ * The new error severity.
  * </p>
  * @return void 
  */
 function mssql_min_error_severity ($severity) {}
 
 /**
- * Sets the lower message severity
+ * Sets the minimum message severity
  * @link http://php.net/manual/en/function.mssql-min-message-severity.php
  * @param severity int <p>
+ * The new message severity.
  * </p>
  * @return void 
  */
@@ -413,8 +416,8 @@ function mssql_init ($sp_name, $link_identifier = null) {}
  * mssql_execute. 
  * </p>
  * @param var mixed <p>
- * The PHP variable you'll bind the MSSQL parameter to. You can pass it
- * by value, or by reference, to retrieve OUTPUT and RETVAL values after
+ * The PHP variable you'll bind the MSSQL parameter to. It is passed by
+ * reference, to retrieve OUTPUT and RETVAL values after
  * the procedure execution. 
  * </p>
  * @param type int <p>
@@ -425,12 +428,12 @@ function mssql_init ($sp_name, $link_identifier = null) {}
  * SQLFLT4, SQLFLT8,
  * SQLFLTN. 
  * </p>
- * @param is_output int[optional] <p>
+ * @param is_output bool[optional] <p>
  * Whether the value is an OUTPUT parameter or not. If it's an OUTPUT
  * parameter and you don't mention it, it will be treated as a normal
  * input parameter and no error will be thrown. 
  * </p>
- * @param is_null int[optional] <p>
+ * @param is_null bool[optional] <p>
  * Whether the parameter is &null; or not. Passing the &null; value as
  * var will not do the job.
  * </p>
@@ -450,6 +453,7 @@ function mssql_bind ($stmt, $param_name, &$var, $type, $is_output = null, $is_nu
  * Statement handle obtained with mssql_init. 
  * </p>
  * @param skip_results bool[optional] <p>
+ * Whenever to skip the results or not.
  * </p>
  * @return mixed 
  */
@@ -468,23 +472,104 @@ function mssql_free_statement ($stmt) {}
 /**
  * Converts a 16 byte binary GUID to a string
  * @link http://php.net/manual/en/function.mssql-guid-string.php
- * @param binary string 
- * @param short_format int[optional] 
- * @return string 
+ * @param binary string <p>
+ * A 16 byte binary GUID.
+ * </p>
+ * @param short_format bool[optional] <p>
+ * Whenever to use short to use short format, defaults to false
+ * </p>
+ * @return string the converted string on success.
  */
 function mssql_guid_string ($binary, $short_format = null) {}
 
+
+/**
+ * Return an associative array. Used on 
+ * mssql_fetch_array's 
+ * result_type parameter.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('MSSQL_ASSOC', 1);
+
+/**
+ * Return an array with numeric keys. Used on 
+ * mssql_fetch_array's 
+ * result_type parameter.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('MSSQL_NUM', 2);
+
+/**
+ * Return an array with both numeric keys and 
+ * keys with their field name. This is the 
+ * default value for mssql_fetch_array's 
+ * result_type parameter.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('MSSQL_BOTH', 3);
+
+/**
+ * Indicates the 'TEXT' type in MSSQL, used by 
+ * mssql_bind's type 
+ * parameter.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('SQLTEXT', 35);
+
+/**
+ * Indicates the 'VARCHAR' type in MSSQL, used by 
+ * mssql_bind's type 
+ * parameter.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('SQLVARCHAR', 39);
+
+/**
+ * Indicates the 'CHAR' type in MSSQL, used by 
+ * mssql_bind's type 
+ * parameter.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('SQLCHAR', 47);
+
+/**
+ * Represents one byte, with a range of -128 to 127.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('SQLINT1', 48);
+
+/**
+ * Represents two bytes, with a range of -32768 
+ * to 32767.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('SQLINT2', 52);
+
+/**
+ * Represents four bytes, with a range of -2147483648 
+ * to 2147483647.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('SQLINT4', 56);
+
+/**
+ * Indicates the 'BIT' type in MSSQL, used by 
+ * mssql_bind's type 
+ * parameter.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('SQLBIT', 50);
+
+/**
+ * Represents an four byte float.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('SQLFLT4', 59);
+
+/**
+ * Represents an eight byte float.
+ * @link http://php.net/manual/en/mssql.constants.php
+ */
 define ('SQLFLT8', 62);
 define ('SQLFLTN', 109);
 

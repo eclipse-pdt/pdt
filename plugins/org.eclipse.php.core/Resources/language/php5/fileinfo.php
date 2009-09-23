@@ -21,10 +21,17 @@ class finfo  {
  * One or disjunction of more Fileinfo
  * constants.
  * </p>
- * @param arg string[optional] 
+ * @param magic_file string[optional] <p>
+ * Name of a magic database file, usually something like
+ * /path/to/magic.mime. If not specified,
+ * the MAGIC environment variable is used. If this variable
+ * is not set either, /usr/share/misc/magic is used by default.
+ * A .mime and/or .mgc suffix is added if
+ * needed.
+ * </p>
  * @return resource a magic database resource on success or false on failure.
  */
-function finfo_open ($options = null, $arg = null) {}
+function finfo_open ($options = null, $magic_file = null) {}
 
 /**
  * Close fileinfo resource
@@ -96,13 +103,14 @@ define ('FILEINFO_NONE', 0);
 define ('FILEINFO_SYMLINK', 2);
 
 /**
- * Return a mime string, instead of a textual description.
+ * Return the mime type and mime encoding as defined by RFC 2045.
  * @link http://php.net/manual/en/fileinfo.constants.php
  */
 define ('FILEINFO_MIME', 1040);
 
 /**
  * Decompress compressed files.
+ * Disabled since PHP 5.3.0 due to thread safety issues.
  * @link http://php.net/manual/en/fileinfo.constants.php
  */
 define ('FILEINFO_COMPRESS', 4);

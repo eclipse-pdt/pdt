@@ -42,7 +42,35 @@ function filter_input ($type, $variable_name, $filter = null, $options = null) {
  * @param options mixed[optional] <p>
  * Associative array of options or bitwise disjunction of flags. If filter
  * accepts options, flags can be provided in "flags" field of array. For
- * the "callback" filter, callback type should be passed.
+ * the "callback" filter, callback type should be passed. The
+ * callback must accept one argument, the value to be filtered, and return
+ * the value after filtering/sanitizing it.
+ * </p>
+ * <p>
+ * array(
+ * 'default' => 3, // value to return if the filter fails
+ * // other options here
+ * 'min_range' => 0
+ * ),
+ * 'flags' => FILTER_FLAG_ALLOW_OCTAL,
+ * );
+ * $var = filter_var('0755', FILTER_VALIDATE_INT, $options);
+ * // for filter that only accept flags, you can pass them directly
+ * $var = filter_var('oops', FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+ * // for filter that only accept flags, you can also pass as an array
+ * $var = filter_var('oops', FILTER_VALIDATE_BOOLEAN,
+ * array('flags' => FILTER_NULL_ON_FAILURE));
+ * // callback filter
+ * function foo($value)
+ * {
+ * $ret = new stdClass;
+ * $ret->value = filter_var($value, FILTER_VALIDATE_BOOLEAN,
+ * array('flags' => FILTER_NULL_ON_FAILURE));
+ * return $ret;
+ * }
+ * $var = filter_var('yes', FILTER_CALLBACK, array('options' => 'foo'));
+ * ?>
+ * ]]>
  * </p>
  * @return mixed the filtered data, or false if the filter fails.
  */

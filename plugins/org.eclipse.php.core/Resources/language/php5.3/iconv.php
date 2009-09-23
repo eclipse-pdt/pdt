@@ -19,7 +19,7 @@
  * characters. If you append the string //IGNORE,
  * characters that cannot be represented in the target charset are silently
  * discarded. Otherwise, str is cut from the first
- * illegal character.
+ * illegal character and an E_NOTICE is generated.
  * </p>
  * @param str string <p>
  * The string to be converted.
@@ -107,6 +107,33 @@ function iconv_strlen ($str, $charset = null) {}
  * at the position, offset characters
  * away from the end of str.
  * </p>
+ * @param length int[optional] <p>
+ * If length is given and is positive, the return
+ * value will contain at most length characters
+ * of the portion that begins at offset
+ * (depending on the length of string).
+ * </p>
+ * <p>
+ * If negative length is passed,
+ * iconv_substr cuts the portion out of
+ * str from the offset'th
+ * character up to the character that is
+ * length characters away from the end of the string.
+ * In case offset is also negative, the start position
+ * is calculated beforehand according to the rule explained above.
+ * </p>
+ * @param charset string[optional] <p>
+ * If charset parameter is omitted,
+ * string are assumed to be encoded in
+ * iconv.internal_encoding.
+ * </p>
+ * <p>
+ * Note that offset and length
+ * parameters are always deemed to represent offsets that are
+ * calculated on the basis of the character set determined by
+ * charset, whilst the counterpart
+ * substr always takes these for byte offsets.
+ * </p>
  * @return string the portion of str specified by the
  * offset and length parameters.
  * </p>
@@ -114,7 +141,7 @@ function iconv_strlen ($str, $charset = null) {}
  * If str is shorter than offset
  * characters long, false will be returned.
  */
-function iconv_substr ($str, $offset) {}
+function iconv_substr ($str, $offset, $length = null, $charset = null) {}
 
 /**
  * Finds position of first occurrence of a needle within a haystack
@@ -366,13 +393,43 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
  * iconv.internal_encoding
  * will be used.
  * </p>
- * @return array 
+ * @return array an associative array that holds a whole set of
+ * MIME header fields specified by
+ * encoded_headers on success, or false
+ * if an error occurs during the decoding.
+ * </p>
+ * <p>
+ * Each key of the return value represents an individual
+ * field name and the corresponding element represents a field value.
+ * If more than one field of the same name are present,
+ * iconv_mime_decode_headers automatically incorporates
+ * them into a numerically indexed array in the order of occurrence.
  */
 function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = null) {}
 
+
+/**
+ * string
+ * @link http://php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_IMPL', "glibc");
-define ('ICONV_VERSION', 2.7);
+
+/**
+ * string
+ * @link http://php.net/manual/en/iconv.constants.php
+ */
+define ('ICONV_VERSION', 2.9);
+
+/**
+ * integer
+ * @link http://php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_MIME_DECODE_STRICT', 1);
+
+/**
+ * integer
+ * @link http://php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 
 // End of iconv v.

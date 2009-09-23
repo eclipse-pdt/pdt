@@ -1,6 +1,6 @@
 <?php
 
-// Start of date v.5.3.0beta1
+// Start of date v.5.3.0
 
 class DateTime  {
 	const ATOM = "Y-m-d\TH:i:sP";
@@ -17,87 +17,220 @@ class DateTime  {
 
 
 	/**
+	 * Returns new DateTime object
+	 * @link http://php.net/manual/en/datetime.construct.php
 	 * @param time[optional]
 	 * @param object[optional]
 	 */
 	public function __construct ($time, $object) {}
 
+	/**
+	 * The __wakeup handler
+	 * @link http://php.net/manual/en/datetime.wakeup.php
+	 * @return DateTime Initializes a DateTime object.
+	 */
 	public function __wakeup () {}
 
-	public static function __set_state () {}
+	/**
+	 * The __set_state handler
+	 * @link http://php.net/manual/en/datetime.set-state.php
+	 * @param array array <p>
+	 * Initialization array.
+	 * </p>
+	 * @return DateTime a new instance of a DateTime object.
+	 */
+	public static function __set_state (array $array) {}
 
 	/**
-	 * @param format
-	 * @param time
-	 * @param object[optional]
+	 * Returns new DateTime object formatted according to the specified format
+	 * @link http://php.net/manual/en/datetime.createfromformat.php
+	 * @param format string <p>
+	 * Format accepted by date.
+	 * </p>
+	 * <p>
+	 * If format does not contain the character
+	 * ! then portions of the date/time value
+	 * specified in format but not specified
+	 * in time will be set to the current
+	 * system time.
+	 * </p>
+	 * <p>
+	 * If format contains the
+	 * character !, then portions of the generated
+	 * time specified to the left-hand side of
+	 * the ! in format will
+	 * be set to corresponding values from the Unix epoch.
+	 * </p>
+	 * <p>
+	 * If the first character of format
+	 * is !, then all portions of the date/time
+	 * value generated which are not specified in
+	 * time will be initialized to corresponding
+	 * values from the Unix epoch. 
+	 * </p>
+	 * <p>
+	 * The Unix epoch is 1970-01-01 00:00:00.
+	 * </p>
+	 * @param time string <p>
+	 * String representing the time.
+	 * </p>
+	 * @param timezone DateTimeZone[optional] <p>
+	 * Time zone.
+	 * </p>
+	 * @return DateTime new DateTime instance.
 	 */
-	public static function createFromFormat ($format, $time, $object) {}
+	public static function createFromFormat ($format, $time, DateTimeZone $timezone = null) {}
 
+	/**
+	 * Returns the warnings and errors
+	 * @link http://php.net/manual/en/datetime.getlasterrors.php
+	 * @return array array containing info about warnings and errors.
+	 */
 	public static function getLastErrors () {}
 
 	/**
-	 * @param format
+	 * Returns date formatted according to given format
+	 * @link http://php.net/manual/en/datetime.format.php
+	 * @param format string <p>
+	 * Format accepted by date.
+	 * </p>
+	 * @return string formatted date on success or false on failure.
 	 */
 	public function format ($format) {}
 
 	/**
-	 * @param modify
+	 * Alters the timestamp
+	 * @link http://php.net/manual/en/datetime.modify.php
+	 * @param modify string <p>
+	 * String in a relative format accepted by strtotime.
+	 * </p>
+	 * @return DateTime the modified DateTime.
 	 */
 	public function modify ($modify) {}
 
 	/**
-	 * @param interval
+	 * Adds an amount of days, months, years, hours, minutes and seconds to a
+   DateTime object
+	 * @link http://php.net/manual/en/datetime.add.php
+	 * @param interval string <p>
+	 * A DateInterval object
+	 * </p>
+	 * @return DateTime the modified DateTime.
 	 */
 	public function add ($interval) {}
 
 	/**
-	 * @param interval
+	 * Subtracts an amount of days, months, years, hours, minutes and seconds from
+   a DateTime object
+	 * @link http://php.net/manual/en/datetime.sub.php
+	 * @param interval DateInterval <p>
+	 * A DateInterval object
+	 * </p>
+	 * @return DateTime the modified DateTime.
 	 */
-	public function sub ($interval) {}
+	public function sub (DateInterval $interval) {}
 
+	/**
+	 * Return time zone relative to given DateTime
+	 * @link http://php.net/manual/en/datetime.gettimezone.php
+	 * @return DateTimeZone DateTimeZone object on success or false on failure.
+	 */
 	public function getTimezone () {}
 
 	/**
-	 * @param timezone
+	 * Sets the time zone for the DateTime object
+	 * @link http://php.net/manual/en/datetime.settimezone.php
+	 * @param timezone DateTimeZone <p>
+	 * Desired time zone.
+	 * </p>
+	 * @return DateTime the modified DateTime.
 	 */
-	public function setTimezone ($timezone) {}
+	public function setTimezone (DateTimeZone $timezone) {}
 
+	/**
+	 * Returns the daylight saving time offset
+	 * @link http://php.net/manual/en/datetime.getoffset.php
+	 * @return int DST offset in seconds on success or false on failure.
+	 */
 	public function getOffset () {}
 
 	/**
-	 * @param hour
-	 * @param minute
-	 * @param second[optional]
+	 * Sets the time
+	 * @link http://php.net/manual/en/datetime.settime.php
+	 * @param hour int <p>
+	 * Hour of the time.
+	 * </p>
+	 * @param minute int <p>
+	 * Minute of the time.
+	 * </p>
+	 * @param second int[optional] <p>
+	 * Second of the time.
+	 * </p>
+	 * @return DateTime the modified DateTime.
 	 */
-	public function setTime ($hour, $minute, $second) {}
+	public function setTime ($hour, $minute, $second = null) {}
 
 	/**
-	 * @param year
-	 * @param month
-	 * @param day
+	 * Sets the date
+	 * @link http://php.net/manual/en/datetime.setdate.php
+	 * @param year int <p>
+	 * Year of the date.
+	 * </p>
+	 * @param month int <p>
+	 * Month of the date.
+	 * </p>
+	 * @param day int <p>
+	 * Day of the date.
+	 * </p>
+	 * @return DateTime the modified DateTime.
 	 */
 	public function setDate ($year, $month, $day) {}
 
 	/**
-	 * @param object
-	 * @param year
-	 * @param week
-	 * @param day[optional]
+	 * Sets the ISO date
+	 * @link http://php.net/manual/en/datetime.setisodate.php
+	 * @param year int <p>
+	 * Year of the date.
+	 * </p>
+	 * @param week int <p>
+	 * Week of the date.
+	 * </p>
+	 * @param day int[optional] <p>
+	 * Offset from the first day of the week.
+	 * </p>
+	 * @return DateTime the modified DateTime.
 	 */
-	public function setISODate ($object, $year, $week, $day) {}
+	public function setISODate ($year, $week, $day = null) {}
 
 	/**
-	 * @param unixtimestamp
+	 * Sets the date and time based on an Unix timestamp
+	 * @link http://php.net/manual/en/datetime.settimestamp.php
+	 * @param unixtimestamp int <p>
+	 * Unix timestamp representing the date.
+	 * </p>
+	 * @return DateTime the modified DateTime.
 	 */
 	public function setTimestamp ($unixtimestamp) {}
 
+	/**
+	 * Gets the Unix timestamp
+	 * @link http://php.net/manual/en/datetime.gettimestamp.php
+	 * @return int Unix timestamp representing the date.
+	 */
 	public function getTimestamp () {}
 
 	/**
-	 * @param object
-	 * @param absolute[optional]
+	 * Returns the difference between two DateTime objects
+	 * @link http://php.net/manual/en/datetime.diff.php
+	 * @param datetime DateTime <p>
+	 * The date to compare to.
+	 * </p>
+	 * @param absolute bool[optional] <p>
+	 * Whether to return absolute difference. Defaults to false.
+	 * </p>
+	 * @return DateInterval The difference between two dates.
 	 */
-	public function diff ($object, $absolute) {}
+	public function diff (DateTime $datetime, $absolute = null) {}
 
 }
 
@@ -119,45 +252,193 @@ class DateTimeZone  {
 
 
 	/**
+	 * Creates new DateTimeZone object
+	 * @link http://php.net/manual/en/datetimezone.construct.php
 	 * @param timezone
 	 */
 	public function __construct ($timezone) {}
 
+	/**
+	 * Returns the name of the timezone
+	 * @link http://php.net/manual/en/datetimezone.getname.php
+	 * @return string One of timezones.
+	 */
 	public function getName () {}
 
 	/**
-	 * @param datetime
+	 * Returns the timezone offset from GMT
+	 * @link http://php.net/manual/en/datetimezone.getoffset.php
+	 * @param datetime DateTime <p>
+	 * DateTime that contains the date/time to compute the offset from. 
+	 * </p>
+	 * @return int time zone offset in seconds on success or false on failure.
 	 */
-	public function getOffset ($datetime) {}
+	public function getOffset (DateTime $datetime) {}
 
 	/**
-	 * @param timestamp_begin
-	 * @param timestamp_end
+	 * Returns all transitions for the timezone
+	 * @link http://php.net/manual/en/datetimezone.gettransitions.php
+	 * @param timestamp_begin int[optional] <p>
+	 * Begin timestamp.
+	 * </p>
+	 * @param timestamp_end int[optional] <p>
+	 * End timestamp.
+	 * </p>
+	 * @return array numerically indexed array containing associative array with all
+	 * transitions on success or false on failure.
 	 */
-	public function getTransitions ($timestamp_begin, $timestamp_end) {}
+	public function getTransitions ($timestamp_begin = null, $timestamp_end = null) {}
 
+	/**
+	 * Returns location information for a timezone
+	 * @link http://php.net/manual/en/datetimezone.getlocation.php
+	 * @return array Array containing location information about timezone.
+	 */
 	public function getLocation () {}
 
+	/**
+	 * Returns associative array containing dst, offset and the timezone name
+	 * @link http://php.net/manual/en/datetimezone.listabbreviations.php
+	 * @return array array on success or false on failure.
+	 */
 	public static function listAbbreviations () {}
 
 	/**
-	 * @param what[optional]
+	 * Returns numerically index array with all timezone identifiers
+	 * @link http://php.net/manual/en/datetimezone.listidentifiers.php
+	 * @param what int[optional] <p>
+	 * One of DateTimeZone class constants, defaults to
+	 * DateTimeZone::ALL.
+	 * </p>
+	 * @param country string[optional] <p>
+	 * A two-letter ISO 3166-1 compatible country code.
+	 * </p>
+	 * This option is only used when what is set to
+	 * DateTimeZone::PER_COUNTRY.
+	 * @return array array on success or false on failure.
 	 */
-	public static function listIdentifiers ($what) {}
+	public static function listIdentifiers ($what = null, $country = null) {}
 
 }
 
 class DateInterval  {
 
 	/**
+	 * Creates new DateInterval object
+	 * @link http://php.net/manual/en/dateinterval.construct.php
 	 * @param interval_spec[optional]
 	 */
 	public function __construct ($interval_spec) {}
 
-	public function format () {}
+	/**
+	 * Formats the interval
+	 * @link http://php.net/manual/en/dateinterval.format.php
+	 * @param format string <p>
+	 * <table>
+	 * The following characters are recognized in the
+	 * format parameter string.
+	 * <tr valign="top">
+	 * <td>format character</td>
+	 * <td>Description</td>
+	 * <td>Example values</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>Y</td>
+	 * <td>Years, numeric, at least 2 digits with leading 0</td>
+	 * <td>01, 03</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>y</td>
+	 * <td>Years, numeric</td>
+	 * <td>1, 3</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>M</td>
+	 * <td>Months, numeric, at least 2 digits with leading 0</td>
+	 * <td>01, 03, 12</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>m</td>
+	 * <td>Months, numeric</td>
+	 * <td>01, 03, 12</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>D</td>
+	 * <td>Days, numeric, at least 2 digits with leading 0</td>
+	 * <td>01, 03, 31</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>d</td>
+	 * <td>Days, numeric</td>
+	 * <td>1, 3, 31</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>a</td>
+	 * <td>Total amount of days</td>
+	 * <td>4, 18, 8123</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>H</td>
+	 * <td>Hours, numeric, at least 2 digits with leading 0</td>
+	 * <td>01, 03, 23</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>h</td>
+	 * <td>Hours, numeric</td>
+	 * <td>1, 3, 23</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>I</td>
+	 * <td>Minutes, numeric, at least 2 digits with leading 0</td>
+	 * <td>01, 03, 59</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>i</td>
+	 * <td>Minutes, numeric</td>
+	 * <td>1, 3, 59</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>S</td>
+	 * <td>Seconds, numeric, at least 2 digits with leading 0</td>
+	 * <td>01, 03, 57</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>s</td>
+	 * <td>Seconds, numeric</td>
+	 * <td>1, 3, 57</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>R</td>
+	 * <td>Sign "-" when negative, "+" when positive</td>
+	 * <td>-, +</td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>r</td>
+	 * <td>Sign "-" when negative, empty when positive</td>
+	 * <td>-, </td>
+	 * </tr>
+	 * <tr valign="top">
+	 * <td>%</td>
+	 * <td>Literal %</td>
+	 * <td>%</td>
+	 * </tr>
+	 * </table>
+	 * </p>
+	 * <p>
+	 * The prefix % is required in order for the format
+	 * specifiers to work correctly.
+	 * </p>
+	 * @return string the formatted interval.
+	 */
+	public function format ($format) {}
 
 	/**
-	 * @param time
+	 * Sets up a DateInterval from the relative parts of the string
+	 * @link http://php.net/manual/en/dateinterval.createfromdatestring.php
+	 * @param time string <p>
+	 * Date with relative parts.
+	 * </p>
+	 * @return DateInterval new DateInterval instance if success.
 	 */
 	public static function createFromDateString ($time) {}
 
@@ -168,11 +449,23 @@ class DatePeriod implements Traversable {
 
 
 	/**
-	 * @param start
-	 * @param interval
-	 * @param end
+	 * Creates new DatePeriod object
+	 * @link http://php.net/manual/en/dateperiod.construct.php
+	 * @param start DateTime <p>
+	 * Start date.
+	 * </p>
+	 * @param interval DateInterval <p>
+	 * Interval.
+	 * </p>
+	 * @param end DateTime <p>
+	 * End date.
+	 * </p>
+	 * @param options int[optional] <p>
+	 * Can be set to DateTime::EXCLUDE_START_DATE.
+	 * </p>
+	 * @return DateTime 
 	 */
-	public function __construct ($start, $interval, $end) {}
+	public function __construct (DateTime $start, DateInterval $interval, DateTime $end, $options = null) {}
 
 }
 
@@ -184,7 +477,8 @@ class DatePeriod implements Traversable {
  * the time, since PHP 5.0.0 they are allowed but ignored.
  * </p>
  * @param now int[optional] <p>
- * The timestamp used to calculate the returned value.
+ * The timestamp which is used as a base for the calculation of relative
+ * dates.
  * </p>
  * @return int a timestamp on success, false otherwise. Previous to PHP 5.1.0,
  * this function would return -1 on failure.
@@ -196,7 +490,10 @@ function strtotime ($time, $now = null) {}
  * @link http://php.net/manual/en/function.date.php
  * @param format string <p>
  * The format of the outputted date string. See the formatting
- * options below.
+ * options below. There are also several
+ * predefined date constants
+ * that may be used instead, so for example DATE_RSS
+ * contains the format string 'D, d M Y H:i:s'.
  * </p>
  * <p>
  * <table>
@@ -377,7 +674,7 @@ function strtotime ($time, $now = null) {}
  * <tr valign="top">
  * <td>u</td>
  * <td>Microseconds (added in PHP 5.2.2)</td>
- * <td>Example: 54321</td>
+ * <td>Example: 654321</td>
  * </tr>
  * <tr valign="top">
  * Timezone</td>
@@ -694,7 +991,7 @@ function checkdate ($month, $day, $year) {}
  * </tr>
  * <tr valign="top">
  * <td>%e</td>
- * <td>Day of the month, with a space preceeding single digits</td>
+ * <td>Day of the month, with a space preceding single digits</td>
  * <td> 1 to 31</td>
  * </tr>
  * <tr valign="top">
@@ -719,7 +1016,7 @@ function checkdate ($month, $day, $year) {}
  * </tr>
  * <tr valign="top">
  * <td>%U</td>
- * <td>Week number of the given year, starting with the the first
+ * <td>Week number of the given year, starting with the first
  * 	 Sunday as the first week</td>
  * <td>13 (for the 13th full week of the year)</td>
  * </tr>
@@ -883,7 +1180,7 @@ function checkdate ($month, $day, $year) {}
  * </tr>
  * <tr valign="top">
  * <td>%F</td>
- * <td>Same as "%y-%m-%d" (commonly used in database datestamps)</td>
+ * <td>Same as "%Y-%m-%d" (commonly used in database datestamps)</td>
  * <td>Example: 2009-02-05 for February 5, 2009</td>
  * </tr>
  * <tr valign="top">
@@ -924,7 +1221,7 @@ function checkdate ($month, $day, $year) {}
  * <p>
  * Maximum length of this parameter is 1023 characters.
  * </p>
- * Contrary to ISO-9889:1999, Sun Solaris starts with Sunday as 1.
+ * Contrary to ISO-9899:1999, Sun Solaris starts with Sunday as 1.
  * As a result, %u may not function as described in this manual.
  * @param timestamp int[optional] 
  * @return string a string formatted according format
@@ -1236,7 +1533,7 @@ function timezone_open ($timezone) {}
 function timezone_name_get ($object) {}
 
 /**
- * Returns the timezone name from abbrevation
+ * Returns the timezone name from abbreviation
  * @link http://php.net/manual/en/function.timezone-name-from-abbr.php
  * @param abbr string <p>
  * Time zone abbreviation.
@@ -1284,14 +1581,22 @@ function timezone_location_get ($object) {}
  * &Alias; <methodname>DateTimeZone::listIdentifiers</methodname>
  * @link http://php.net/manual/en/function.timezone-identifiers-list.php
  * @param what[optional]
+ * @param country[optional]
  */
-function timezone_identifiers_list ($what) {}
+function timezone_identifiers_list ($what, $country) {}
 
 /**
  * &Alias; <methodname>DateTimeZone::listAbbreviations</methodname>
  * @link http://php.net/manual/en/function.timezone-abbreviations-list.php
  */
 function timezone_abbreviations_list () {}
+
+/**
+ * Gets the version of the timezonedb
+ * @link http://php.net/manual/en/function.timezone-version-get.php
+ * @return string a string.
+ */
+function timezone_version_get () {}
 
 /**
  * &Alias; <methodname>DateInterval::createFromDateString</methodname>
@@ -1304,8 +1609,9 @@ function date_interval_create_from_date_string ($time) {}
  * &Alias; <methodname>DateInterval::format</methodname>
  * @link http://php.net/manual/en/function.date-interval-format.php
  * @param object
+ * @param format
  */
-function date_interval_format ($object) {}
+function date_interval_format ($object, $format) {}
 
 /**
  * Sets the default timezone used by all date/time functions in a script
@@ -1472,5 +1778,5 @@ define ('SUNFUNCS_RET_STRING', 1);
  */
 define ('SUNFUNCS_RET_DOUBLE', 2);
 
-// End of date v.5.3.0beta1
+// End of date v.5.3.0
 ?>

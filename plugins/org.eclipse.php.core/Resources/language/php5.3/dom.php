@@ -104,21 +104,56 @@ class DOMImplementation  {
 	 */
 	public function getFeature ($feature, $version) {}
 
-	public function hasFeature () {}
+	/**
+	 * Test if the DOM implementation implements a specific feature
+	 * @link http://php.net/manual/en/domimplementation.hasfeature.php
+	 * @param feature string <p>
+	 * The feature to test.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test. In 
+	 * level 2, this can be either 2.0 or
+	 * 1.0.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public function hasFeature ($feature, $version) {}
 
 	/**
-	 * @param qualifiedName
-	 * @param publicId
-	 * @param systemId
+	 * Creates an empty DOMDocumentType object
+	 * @link http://php.net/manual/en/domimplementation.createdocumenttype.php
+	 * @param qualifiedName string[optional] <p>
+	 * The qualified name of the document type to create.
+	 * </p>
+	 * @param publicId string[optional] <p>
+	 * The external subset public identifier.
+	 * </p>
+	 * @param systemId string[optional] <p>
+	 * The external subset system identifier.
+	 * </p>
+	 * @return DOMDocumentType A new DOMDocumentType node with its 
+	 * ownerDocument set to &null;.
 	 */
-	public function createDocumentType ($qualifiedName, $publicId, $systemId) {}
+	public function createDocumentType ($qualifiedName = null, $publicId = null, $systemId = null) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param qualifiedName
-	 * @param docType DOMDocumentType
+	 * Creates a DOMDocument object of the specified type with its document element
+	 * @link http://php.net/manual/en/domimplementation.createdocument.php
+	 * @param namespaceURI string[optional] <p>
+	 * The namespace URI of the document element to create.
+	 * </p>
+	 * @param qualifiedName string[optional] <p>
+	 * The qualified name of the document element to create.
+	 * </p>
+	 * @param doctype DOMDocumentType[optional] <p>
+	 * The type of document to create or &null;.
+	 * </p>
+	 * @return DOMDocument A new DOMDocument object. If 
+	 * namespaceURI, qualifiedName, 
+	 * and doctype are null, the returned 
+	 * DOMDocument is empty with no document element
 	 */
-	public function createDocument ($namespaceURI, $qualifiedNameDOMDocumentType , $docType) {}
+	public function createDocument ($namespaceURI = null, $qualifiedName = null, DOMDocumentType $doctype = null) {}
 
 }
 
@@ -128,42 +163,99 @@ class DOMImplementation  {
 class DOMNode  {
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -172,22 +264,43 @@ class DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -216,6 +329,11 @@ class DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -249,47 +367,109 @@ class DOMDocumentFragment extends DOMNode  {
 	public function __construct () {}
 
 	/**
-	 * @param data
+	 * Append raw XML data
+	 * @link http://php.net/manual/en/domdocumentfragment.appendxml.php
+	 * @param data string <p>
+	 * XML to append.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function appendXML ($data) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -298,22 +478,43 @@ class DOMDocumentFragment extends DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -342,6 +543,11 @@ class DOMDocumentFragment extends DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -370,76 +576,176 @@ class DOMDocumentFragment extends DOMNode  {
 class DOMDocument extends DOMNode  {
 
 	/**
-	 * @param tagName
-	 * @param value[optional]
+	 * Create new element node
+	 * @link http://php.net/manual/en/domdocument.createelement.php
+	 * @param name string <p>
+	 * The tag name of the element.
+	 * </p>
+	 * @param value string[optional] <p>
+	 * The value of the element. By default, an empty element will be created.
+	 * You can also set the value later with DOMElement->nodeValue.
+	 * </p>
+	 * @return DOMElement a new instance of class DOMElement or false
+	 * if an error occured.
 	 */
-	public function createElement ($tagName, $value) {}
+	public function createElement ($name, $value = null) {}
 
+	/**
+	 * Create new document fragment
+	 * @link http://php.net/manual/en/domdocument.createdocumentfragment.php
+	 * @return DOMDocumentFragment The new DOMDocumentFragment or false if an error occured.
+	 */
 	public function createDocumentFragment () {}
 
 	/**
-	 * @param data
+	 * Create new text node
+	 * @link http://php.net/manual/en/domdocument.createtextnode.php
+	 * @param content string <p>
+	 * The content of the text.
+	 * </p>
+	 * @return DOMText The new DOMText or false if an error occured.
 	 */
-	public function createTextNode ($data) {}
+	public function createTextNode ($content) {}
 
 	/**
-	 * @param data
+	 * Create new comment node
+	 * @link http://php.net/manual/en/domdocument.createcomment.php
+	 * @param data string <p>
+	 * The content of the comment.
+	 * </p>
+	 * @return DOMComment The new DOMComment or false if an error occured.
 	 */
 	public function createComment ($data) {}
 
 	/**
-	 * @param data
+	 * Create new cdata node
+	 * @link http://php.net/manual/en/domdocument.createcdatasection.php
+	 * @param data string <p>
+	 * The content of the cdata.
+	 * </p>
+	 * @return DOMCDATASection The new DOMCDATASection or false if an error occured.
 	 */
 	public function createCDATASection ($data) {}
 
 	/**
-	 * @param target
-	 * @param data
+	 * Creates new PI node
+	 * @link http://php.net/manual/en/domdocument.createprocessinginstruction.php
+	 * @param target string <p>
+	 * The target of the processing instruction.
+	 * </p>
+	 * @param data string[optional] <p>
+	 * The content of the processing instruction.
+	 * </p>
+	 * @return DOMProcessingInstruction The new DOMProcessingInstruction or false if an error occured.
 	 */
-	public function createProcessingInstruction ($target, $data) {}
+	public function createProcessingInstruction ($target, $data = null) {}
 
 	/**
-	 * @param name
+	 * Create new attribute
+	 * @link http://php.net/manual/en/domdocument.createattribute.php
+	 * @param name string <p>
+	 * The name of the attribute.
+	 * </p>
+	 * @return DOMAttr The new DOMAttr or false if an error occured.
 	 */
 	public function createAttribute ($name) {}
 
 	/**
-	 * @param name
+	 * Create new entity reference node
+	 * @link http://php.net/manual/en/domdocument.createentityreference.php
+	 * @param name string <p>
+	 * The content of the entity reference, e.g. the entity reference minus
+	 * the leading &amp; and the trailing
+	 * ; characters.
+	 * </p>
+	 * @return DOMEntityReference The new DOMEntityReference or false if an error
+	 * occured.
 	 */
 	public function createEntityReference ($name) {}
 
 	/**
-	 * @param tagName
+	 * Searches for all elements with given tag name
+	 * @link http://php.net/manual/en/domdocument.getelementsbytagname.php
+	 * @param name string <p>
+	 * The name of the tag to match on. The special value *
+	 * matches all tags.
+	 * </p>
+	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
+	 * elements.
 	 */
-	public function getElementsByTagName ($tagName) {}
+	public function getElementsByTagName ($name) {}
 
 	/**
-	 * @param importedNode DOMNode
-	 * @param deep
+	 * Import node into current document
+	 * @link http://php.net/manual/en/domdocument.importnode.php
+	 * @param importedNode DOMNode <p>
+	 * The node to import.
+	 * </p>
+	 * @param deep bool[optional] <p>
+	 * If set to true, this method will recursively import the subtree under
+	 * the importedNode.
+	 * </p>
+	 * <p>
+	 * To copy the nodes attributes deep needs to be set to true
+	 * </p>
+	 * @return DOMNode The copied node or false, if it cannot be copied.
 	 */
-	public function importNode (DOMNode $importedNode, $deep) {}
+	public function importNode (DOMNode $importedNode, $deep = null) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param qualifiedName
-	 * @param value[optional]
+	 * Create new element node with an associated namespace
+	 * @link http://php.net/manual/en/domdocument.createelementns.php
+	 * @param namespaceURI string <p>
+	 * The URI of the namespace.
+	 * </p>
+	 * @param qualifiedName string <p>
+	 * The qualified name of the element, as prefix:tagname.
+	 * </p>
+	 * @param value string[optional] <p>
+	 * The value of the element. By default, an empty element will be created.
+	 * You can also set the value later with DOMElement->nodeValue.
+	 * </p>
+	 * @return DOMElement The new DOMElement or false if an error occured.
 	 */
-	public function createElementNS ($namespaceURI, $qualifiedName, $value) {}
+	public function createElementNS ($namespaceURI, $qualifiedName, $value = null) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param qualifiedName
+	 * Create new attribute node with an associated namespace
+	 * @link http://php.net/manual/en/domdocument.createattributens.php
+	 * @param namespaceURI string <p>
+	 * The URI of the namespace.
+	 * </p>
+	 * @param qualifiedName string <p>
+	 * The tag name and prefix of the attribute, as prefix:tagname.
+	 * </p>
+	 * @return DOMAttr The new DOMAttr or false if an error occured.
 	 */
 	public function createAttributeNS ($namespaceURI, $qualifiedName) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param localName
+	 * Searches for all elements with given tag name in specified namespace
+	 * @link http://php.net/manual/en/domdocument.getelementsbytagnamens.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI of the elements to match on. 
+	 * The special value * matches all namespaces.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name of the elements to match on. 
+	 * The special value * matches all local names.
+	 * </p>
+	 * @return DOMNodeList A new DOMNodeList object containing all the matched 
+	 * elements.
 	 */
 	public function getElementsByTagNameNS ($namespaceURI, $localName) {}
 
 	/**
-	 * @param elementId
+	 * Searches for an element with a certain id
+	 * @link http://php.net/manual/en/domdocument.getelementbyid.php
+	 * @param elementId string <p>
+	 * The unique id value for an element.
+	 * </p>
+	 * @return DOMElement the DOMElement or &null; if the element is
+	 * not found.
 	 */
 	public function getElementById ($elementId) {}
 
@@ -448,6 +754,11 @@ class DOMDocument extends DOMNode  {
 	 */
 	public function adoptNode (DOMNode $source) {}
 
+	/**
+	 * Normalizes the document
+	 * @link http://php.net/manual/en/domdocument.normalizedocument.php
+	 * @return void 
+	 */
 	public function normalizeDocument () {}
 
 	/**
@@ -458,122 +769,282 @@ class DOMDocument extends DOMNode  {
 	public function renameNode (DOMNode $node, $namespaceURI, $qualifiedName) {}
 
 	/**
-	 * @param source
-	 * @param options[optional]
+	 * Load XML from a file
+	 * @link http://php.net/manual/en/domdocument.load.php
+	 * @param filename string <p>
+	 * The path to the XML document.
+	 * </p>
+	 * @param options int[optional] <p>
+	 * Bitwise OR
+	 * of the libxml option constants.
+	 * </p>
+	 * @return mixed Returns true on success or false on failure. If called statically, returns a
+	 * DOMDocument and issues E_STRICT
+	 * warning.
 	 */
-	public function load ($source, $options) {}
+	public function load ($filename, $options = null) {}
 
 	/**
-	 * @param file
+	 * Dumps the internal XML tree back into a file
+	 * @link http://php.net/manual/en/domdocument.save.php
+	 * @param filename string <p>
+	 * The path to the saved XML document.
+	 * </p>
+	 * @param options int[optional] <p>
+	 * Additional Options. Currently only LIBXML_NOEMPTYTAG is supported.
+	 * </p>
+	 * @return int the number of bytes written or false if an error occurred.
 	 */
-	public function save ($file) {}
+	public function save ($filename, $options = null) {}
 
 	/**
-	 * @param source
-	 * @param options[optional]
+	 * Load XML from a string
+	 * @link http://php.net/manual/en/domdocument.loadxml.php
+	 * @param source string <p>
+	 * The string containing the XML.
+	 * </p>
+	 * @param options int[optional] <p>
+	 * Bitwise OR
+	 * of the libxml option constants.
+	 * </p>
+	 * @return mixed Returns true on success or false on failure. If called statically, returns a
+	 * DOMDocument and issues E_STRICT
+	 * warning.
 	 */
-	public function loadXML ($source, $options) {}
+	public function loadXML ($source, $options = null) {}
 
 	/**
-	 * @param node DOMNode[optional]
+	 * Dumps the internal XML tree back into a string
+	 * @link http://php.net/manual/en/domdocument.savexml.php
+	 * @param node DOMNode[optional] <p>
+	 * Use this parameter to output only a specific node without XML declaration
+	 * rather than the entire document.
+	 * </p>
+	 * @param options int[optional] <p>
+	 * Additional Options. Currently only LIBXML_NOEMPTYTAG is supported.
+	 * </p>
+	 * @return string the XML, or false if an error occurred.
 	 */
-	public function saveXML (DOMNode $node = null) {}
+	public function saveXML (DOMNode $node = null, $options = null) {}
 
 	/**
+	 * Creates a new DOMDocument object
+	 * @link http://php.net/manual/en/domdocument.construct.php
 	 * @param version[optional]
 	 * @param encoding[optional]
 	 */
 	public function __construct ($version, $encoding) {}
 
+	/**
+	 * Validates the document based on its DTD
+	 * @link http://php.net/manual/en/domdocument.validate.php
+	 * @return bool Returns true on success or false on failure.
+	 * If the document have no DTD attached, this method will return false.
+	 */
 	public function validate () {}
 
 	/**
 	 * Substitutes XIncludes in a DomDocument Object
 	 * @link http://php.net/manual/en/function.domdocument-xinclude.php
-	 * @param options[optional]
+	 * @param options int[optional] <p>
+	 * libxml parameters. Available
+	 * since PHP 5.1.0 and Libxml 2.6.7.
+	 * </p>
+	 * @return int the number of XIncludes in the document.
 	 */
-	public function xinclude ($options) {}
+	public function xinclude ($options = null) {}
 
 	/**
-	 * @param source
+	 * Load HTML from a string
+	 * @link http://php.net/manual/en/domdocument.loadhtml.php
+	 * @param source string <p>
+	 * The HTML string.
+	 * </p>
+	 * @return bool Returns true on success or false on failure. If called statically, returns a
+	 * DOMDocument and issues E_STRICT
+	 * warning.
 	 */
 	public function loadHTML ($source) {}
 
 	/**
-	 * @param source
+	 * Load HTML from a file
+	 * @link http://php.net/manual/en/domdocument.loadhtmlfile.php
+	 * @param filename string <p>
+	 * The path to the HTML file.
+	 * </p>
+	 * @return bool Returns true on success or false on failure. If called statically, returns a
+	 * DOMDocument and issues E_STRICT
+	 * warning.
 	 */
-	public function loadHTMLFile ($source) {}
+	public function loadHTMLFile ($filename) {}
 
+	/**
+	 * Dumps the internal document into a string using HTML formatting
+	 * @link http://php.net/manual/en/domdocument.savehtml.php
+	 * @return string the HTML, or false if an error occurred.
+	 */
 	public function saveHTML () {}
 
 	/**
-	 * @param file
+	 * Dumps the internal document into a file using HTML formatting
+	 * @link http://php.net/manual/en/domdocument.savehtmlfile.php
+	 * @param filename string <p>
+	 * The path to the saved HTML document.
+	 * </p>
+	 * @return int the number of bytes written or false if an error occurred.
 	 */
-	public function saveHTMLFile ($file) {}
+	public function saveHTMLFile ($filename) {}
 
 	/**
-	 * @param filename
+	 * Validates a document based on a schema
+	 * @link http://php.net/manual/en/domdocument.schemavalidate.php
+	 * @param filename string <p>
+	 * The path to the schema.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function schemaValidate ($filename) {}
 
 	/**
-	 * @param source
+	 * Validates a document based on a schema
+	 * @link http://php.net/manual/en/domdocument.schemavalidatesource.php
+	 * @param source string <p>
+	 * A string containing the schema.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function schemaValidateSource ($source) {}
 
 	/**
-	 * @param filename
+	 * Performs relaxNG validation on the document
+	 * @link http://php.net/manual/en/domdocument.relaxngvalidate.php
+	 * @param filename string <p>
+	 * The RNG file.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function relaxNGValidate ($filename) {}
 
 	/**
-	 * @param source
+	 * Performs relaxNG validation on the document
+	 * @link http://php.net/manual/en/domdocument.relaxngvalidatesource.php
+	 * @param source string <p>
+	 * A string containing the RNG schema.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function relaxNGValidateSource ($source) {}
 
 	/**
-	 * @param baseClass
-	 * @param extendedClass
+	 * Register extended class used to create base node type
+	 * @link http://php.net/manual/en/domdocument.registernodeclass.php
+	 * @param baseclass string <p>
+	 * The DOM class that you want to extend. You can find a list of these 
+	 * classes in the chapter introduction.
+	 * </p>
+	 * @param extendedclass string <p>
+	 * Your extended class name. If &null; is provided, any previously 
+	 * registered class extending baseclass will
+	 * be removed.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function registerNodeClass ($baseClass, $extendedClass) {}
+	public function registerNodeClass ($baseclass, $extendedclass) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -582,22 +1053,43 @@ class DOMDocument extends DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -626,6 +1118,11 @@ class DOMDocument extends DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -653,7 +1150,14 @@ class DOMDocument extends DOMNode  {
 class DOMNodeList  {
 
 	/**
-	 * @param index
+	 * Retrieves a node specified by index
+	 * @link http://php.net/manual/en/domnodelist.item.php
+	 * @param index int <p>
+	 * Index of the node into the collection.
+	 * </p>
+	 * @return DOMNode The node at the indexth position in the 
+	 * DOMNodeList, or &null; if that is not a valid
+	 * index.
 	 */
 	public function item ($index) {}
 
@@ -665,7 +1169,13 @@ class DOMNodeList  {
 class DOMNamedNodeMap  {
 
 	/**
-	 * @param name
+	 * Retrieves a node specified by name
+	 * @link http://php.net/manual/en/domnamednodemap.getnameditem.php
+	 * @param name string <p>
+	 * The nodeName of the node to retrieve.
+	 * </p>
+	 * @return DOMNode A node (of any type) with the specified nodeName, or 
+	 * &null; if no node is found.
 	 */
 	public function getNamedItem ($name) {}
 
@@ -680,13 +1190,28 @@ class DOMNamedNodeMap  {
 	public function removeNamedItem ($name) {}
 
 	/**
-	 * @param index[optional]
+	 * Retrieves a node specified by index
+	 * @link http://php.net/manual/en/domnamednodemap.item.php
+	 * @param index int <p>
+	 * Index into this map.
+	 * </p>
+	 * @return DOMNode The node at the indexth position in the map, or &null;
+	 * if that is not a valid index (greater than or equal to the number of nodes 
+	 * in this map).
 	 */
 	public function item ($index) {}
 
 	/**
-	 * @param namespaceURI[optional]
-	 * @param localName[optional]
+	 * Retrieves a node specified by local name and namespace URI
+	 * @link http://php.net/manual/en/domnamednodemap.getnameditemns.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI of the node to retrieve.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name of the node to retrieve.
+	 * </p>
+	 * @return DOMNode A node (of any type) with the specified local name and namespace URI, or 
+	 * &null; if no node is found.
 	 */
 	public function getNamedItemNS ($namespaceURI, $localName) {}
 
@@ -710,72 +1235,170 @@ class DOMNamedNodeMap  {
 class DOMCharacterData extends DOMNode  {
 
 	/**
-	 * @param offset
-	 * @param count
+	 * Extracts a range of data from the node
+	 * @link http://php.net/manual/en/domcharacterdata.substringdata.php
+	 * @param offset int <p>
+	 * Start offset of substring to extract.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to extract.
+	 * </p>
+	 * @return string The specified substring. If the sum of offset 
+	 * and count exceeds the length, then all 16-bit units 
+	 * to the end of the data are returned.
 	 */
 	public function substringData ($offset, $count) {}
 
 	/**
-	 * @param arg
+	 * Append the string to the end of the character data of the node
+	 * @link http://php.net/manual/en/domcharacterdata.appenddata.php
+	 * @param data string <p>
+	 * The string to append.
+	 * </p>
+	 * @return void 
 	 */
-	public function appendData ($arg) {}
+	public function appendData ($data) {}
 
 	/**
-	 * @param offset
-	 * @param arg
+	 * Insert a string at the specified 16-bit unit offset
+	 * @link http://php.net/manual/en/domcharacterdata.insertdata.php
+	 * @param offset int <p>
+	 * The character offset at which to insert.
+	 * </p>
+	 * @param data string <p>
+	 * The string to insert.
+	 * </p>
+	 * @return void 
 	 */
-	public function insertData ($offset, $arg) {}
+	public function insertData ($offset, $data) {}
 
 	/**
-	 * @param offset
-	 * @param count
+	 * Remove a range of characters from the node
+	 * @link http://php.net/manual/en/domcharacterdata.deletedata.php
+	 * @param offset int <p>
+	 * The offset from which to start removing.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to delete. If the sum of 
+	 * offset and count exceeds
+	 * the length, then all characters to the end of the data are deleted.
+	 * </p>
+	 * @return void 
 	 */
 	public function deleteData ($offset, $count) {}
 
 	/**
-	 * @param offset
-	 * @param count
-	 * @param arg
+	 * Replace a substring within the DOMCharacterData node
+	 * @link http://php.net/manual/en/domcharacterdata.replacedata.php
+	 * @param offset int <p>
+	 * The offset from which to start replacing.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to replace. If the sum of 
+	 * offset and count exceeds
+	 * the length, then all characters to the end of the data are replaced.
+	 * </p>
+	 * @param data string <p>
+	 * The string with which the range must be replaced.
+	 * </p>
+	 * @return void 
 	 */
-	public function replaceData ($offset, $count, $arg) {}
+	public function replaceData ($offset, $count, $data) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -784,22 +1407,43 @@ class DOMCharacterData extends DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -828,6 +1472,11 @@ class DOMCharacterData extends DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -856,51 +1505,115 @@ class DOMCharacterData extends DOMNode  {
  */
 class DOMAttr extends DOMNode  {
 
+	/**
+	 * Checks if attribute is a defined ID
+	 * @link http://php.net/manual/en/domattr.isid.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function isId () {}
 
 	/**
+	 * Creates a new <classname>DOMAttr</classname> object
+	 * @link http://php.net/manual/en/domattr.construct.php
 	 * @param name
 	 * @param value[optional]
 	 */
 	public function __construct ($name, $value) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -909,22 +1622,43 @@ class DOMAttr extends DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -953,6 +1687,11 @@ class DOMAttr extends DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -981,108 +1720,233 @@ class DOMAttr extends DOMNode  {
 class DOMElement extends DOMNode  {
 
 	/**
-	 * @param name
+	 * Returns value of attribute
+	 * @link http://php.net/manual/en/domelement.getattribute.php
+	 * @param name string <p>
+	 * The name of the attribute.
+	 * </p>
+	 * @return string The value of the attribute, or an empty string if no attribute with the
+	 * given name is found.
 	 */
 	public function getAttribute ($name) {}
 
 	/**
-	 * @param name
-	 * @param value
+	 * Adds new attribute
+	 * @link http://php.net/manual/en/domelement.setattribute.php
+	 * @param name string <p>
+	 * The name of the attribute.
+	 * </p>
+	 * @param value string <p>
+	 * The value of the attribute.
+	 * </p>
+	 * @return DOMAttr The new DOMAttr or false if an error occured.
 	 */
 	public function setAttribute ($name, $value) {}
 
 	/**
-	 * @param name
+	 * Removes attribute
+	 * @link http://php.net/manual/en/domelement.removeattribute.php
+	 * @param name string <p>
+	 * The name of the attribute.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function removeAttribute ($name) {}
 
 	/**
-	 * @param name
+	 * Returns attribute node
+	 * @link http://php.net/manual/en/domelement.getattributenode.php
+	 * @param name string <p>
+	 * The name of the attribute.
+	 * </p>
+	 * @return DOMAttr The attribute node.
 	 */
 	public function getAttributeNode ($name) {}
 
 	/**
-	 * @param newAttr DOMAttr
+	 * Adds new attribute node to element
+	 * @link http://php.net/manual/en/domelement.setattributenode.php
+	 * @param attr DOMAttr <p>
+	 * The attribute node.
+	 * </p>
+	 * @return DOMAttr old node if the attribute has been replaced or &null;.
 	 */
-	public function setAttributeNode (DOMAttr $newAttr) {}
+	public function setAttributeNode (DOMAttr $attr) {}
 
 	/**
-	 * @param oldAttr DOMAttr
+	 * Removes attribute
+	 * @link http://php.net/manual/en/domelement.removeattributenode.php
+	 * @param oldnode DOMAttr <p>
+	 * The attribute node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function removeAttributeNode (DOMAttr $oldAttr) {}
+	public function removeAttributeNode (DOMAttr $oldnode) {}
 
 	/**
-	 * @param name
+	 * Gets elements by tagname
+	 * @link http://php.net/manual/en/domelement.getelementsbytagname.php
+	 * @param name string <p>
+	 * The tag name. Use * to return all elements within 
+	 * the element tree.
+	 * </p>
+	 * @return DOMNodeList This function returns a new instance of the class
+	 * DOMNodeList of all matched elements.
 	 */
 	public function getElementsByTagName ($name) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param localName
+	 * Returns value of attribute
+	 * @link http://php.net/manual/en/domelement.getattributens.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name.
+	 * </p>
+	 * @return string The value of the attribute, or an empty string if no attribute with the
+	 * given localName and namespaceURI 
+	 * is found.
 	 */
 	public function getAttributeNS ($namespaceURI, $localName) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param qualifiedName
-	 * @param value
+	 * Adds new attribute
+	 * @link http://php.net/manual/en/domelement.setattributens.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @param qualifiedName string <p>
+	 * The qualified name of the attribute, as prefix:tagname.
+	 * </p>
+	 * @param value string <p>
+	 * The value of the attribute.
+	 * </p>
+	 * @return void 
 	 */
 	public function setAttributeNS ($namespaceURI, $qualifiedName, $value) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param localName
+	 * Removes attribute
+	 * @link http://php.net/manual/en/domelement.removeattributens.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function removeAttributeNS ($namespaceURI, $localName) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param localName
+	 * Returns attribute node
+	 * @link http://php.net/manual/en/domelement.getattributenodens.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name.
+	 * </p>
+	 * @return DOMAttr The attribute node.
 	 */
 	public function getAttributeNodeNS ($namespaceURI, $localName) {}
 
 	/**
-	 * @param newAttr DOMAttr
+	 * Adds new attribute node to element
+	 * @link http://php.net/manual/en/domelement.setattributenodens.php
+	 * @param attr DOMAttr 
+	 * @return DOMAttr the old node if the attribute has been replaced.
 	 */
-	public function setAttributeNodeNS (DOMAttr $newAttr) {}
+	public function setAttributeNodeNS (DOMAttr $attr) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param localName
+	 * Get elements by namespaceURI and localName
+	 * @link http://php.net/manual/en/domelement.getelementsbytagnamens.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name. Use * to return all elements within 
+	 * the element tree.
+	 * </p>
+	 * @return DOMNodeList This function returns a new instance of the class
+	 * DOMNodeList of all matched elements in the order in
+	 * which they are encountered in a preorder traversal of this element tree.
 	 */
 	public function getElementsByTagNameNS ($namespaceURI, $localName) {}
 
 	/**
-	 * @param name
+	 * Checks to see if attribute exists
+	 * @link http://php.net/manual/en/domelement.hasattribute.php
+	 * @param name string <p>
+	 * The attribute name.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function hasAttribute ($name) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param localName
+	 * Checks to see if attribute exists
+	 * @link http://php.net/manual/en/domelement.hasattributens.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function hasAttributeNS ($namespaceURI, $localName) {}
 
 	/**
-	 * @param name
-	 * @param isId
+	 * Declares the attribute specified by name to be of type ID
+	 * @link http://php.net/manual/en/domelement.setidattribute.php
+	 * @param name string <p>
+	 * The name of the attribute.
+	 * </p>
+	 * @param isId bool <p>
+	 * Set it to true if you want name to be of type
+	 * ID, false otherwise.
+	 * </p>
+	 * @return void 
 	 */
 	public function setIdAttribute ($name, $isId) {}
 
 	/**
-	 * @param namespaceURI
-	 * @param localName
-	 * @param isId
+	 * Declares the attribute specified by local name and namespace URI to be of type ID
+	 * @link http://php.net/manual/en/domelement.setidattributens.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI of the attribute.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name of the attribute, as prefix:tagname.
+	 * </p>
+	 * @param isId bool <p>
+	 * Set it to true if you want name to be of type
+	 * ID, false otherwise.
+	 * </p>
+	 * @return void 
 	 */
 	public function setIdAttributeNS ($namespaceURI, $localName, $isId) {}
 
 	/**
-	 * @param attr DOMAttr
-	 * @param isId
+	 * Declares the attribute specified by node to be of type ID
+	 * @link http://php.net/manual/en/domelement.setidattributenode.php
+	 * @param attr DOMAttr <p>
+	 * The attribute node.
+	 * </p>
+	 * @param isId bool <p>
+	 * Set it to true if you want name to be of type
+	 * ID, false otherwise.
+	 * </p>
+	 * @return void 
 	 */
 	public function setIdAttributeNode (DOMAttr $attr, $isId) {}
 
 	/**
+	 * Creates a new DOMElement object
+	 * @link http://php.net/manual/en/domelement.construct.php
 	 * @param name
 	 * @param value[optional]
 	 * @param uri[optional]
@@ -1090,42 +1954,99 @@ class DOMElement extends DOMNode  {
 	public function __construct ($name, $value, $uri) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -1134,22 +2055,43 @@ class DOMElement extends DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -1178,6 +2120,11 @@ class DOMElement extends DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -1206,10 +2153,21 @@ class DOMElement extends DOMNode  {
 class DOMText extends DOMCharacterData  {
 
 	/**
-	 * @param offset
+	 * Breaks this node into two nodes at the specified offset
+	 * @link http://php.net/manual/en/domtext.splittext.php
+	 * @param offset int <p>
+	 * The offset at which to split, starting from 0.
+	 * </p>
+	 * @return DOMText The new node of the same type, which contains all the content at and after the 
+	 * offset.
 	 */
 	public function splitText ($offset) {}
 
+	/**
+	 * Indicates whether this text node contains whitespace
+	 * @link http://php.net/manual/en/domtext.iswhitespaceinelementcontent.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function isWhitespaceInElementContent () {}
 
 	public function isElementContentWhitespace () {}
@@ -1220,77 +2178,177 @@ class DOMText extends DOMCharacterData  {
 	public function replaceWholeText ($content) {}
 
 	/**
+	 * Creates a new <classname>DOMText</classname> object
+	 * @link http://php.net/manual/en/domtext.construct.php
 	 * @param value[optional]
 	 */
 	public function __construct ($value) {}
 
 	/**
-	 * @param offset
-	 * @param count
+	 * Extracts a range of data from the node
+	 * @link http://php.net/manual/en/domcharacterdata.substringdata.php
+	 * @param offset int <p>
+	 * Start offset of substring to extract.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to extract.
+	 * </p>
+	 * @return string The specified substring. If the sum of offset 
+	 * and count exceeds the length, then all 16-bit units 
+	 * to the end of the data are returned.
 	 */
 	public function substringData ($offset, $count) {}
 
 	/**
-	 * @param arg
+	 * Append the string to the end of the character data of the node
+	 * @link http://php.net/manual/en/domcharacterdata.appenddata.php
+	 * @param data string <p>
+	 * The string to append.
+	 * </p>
+	 * @return void 
 	 */
-	public function appendData ($arg) {}
+	public function appendData ($data) {}
 
 	/**
-	 * @param offset
-	 * @param arg
+	 * Insert a string at the specified 16-bit unit offset
+	 * @link http://php.net/manual/en/domcharacterdata.insertdata.php
+	 * @param offset int <p>
+	 * The character offset at which to insert.
+	 * </p>
+	 * @param data string <p>
+	 * The string to insert.
+	 * </p>
+	 * @return void 
 	 */
-	public function insertData ($offset, $arg) {}
+	public function insertData ($offset, $data) {}
 
 	/**
-	 * @param offset
-	 * @param count
+	 * Remove a range of characters from the node
+	 * @link http://php.net/manual/en/domcharacterdata.deletedata.php
+	 * @param offset int <p>
+	 * The offset from which to start removing.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to delete. If the sum of 
+	 * offset and count exceeds
+	 * the length, then all characters to the end of the data are deleted.
+	 * </p>
+	 * @return void 
 	 */
 	public function deleteData ($offset, $count) {}
 
 	/**
-	 * @param offset
-	 * @param count
-	 * @param arg
+	 * Replace a substring within the DOMCharacterData node
+	 * @link http://php.net/manual/en/domcharacterdata.replacedata.php
+	 * @param offset int <p>
+	 * The offset from which to start replacing.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to replace. If the sum of 
+	 * offset and count exceeds
+	 * the length, then all characters to the end of the data are replaced.
+	 * </p>
+	 * @param data string <p>
+	 * The string with which the range must be replaced.
+	 * </p>
+	 * @return void 
 	 */
-	public function replaceData ($offset, $count, $arg) {}
+	public function replaceData ($offset, $count, $data) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -1299,22 +2357,43 @@ class DOMText extends DOMCharacterData  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -1343,6 +2422,11 @@ class DOMText extends DOMCharacterData  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -1371,77 +2455,177 @@ class DOMText extends DOMCharacterData  {
 class DOMComment extends DOMCharacterData  {
 
 	/**
+	 * Creates a new DOMComment object
+	 * @link http://php.net/manual/en/domcomment.construct.php
 	 * @param value[optional]
 	 */
 	public function __construct ($value) {}
 
 	/**
-	 * @param offset
-	 * @param count
+	 * Extracts a range of data from the node
+	 * @link http://php.net/manual/en/domcharacterdata.substringdata.php
+	 * @param offset int <p>
+	 * Start offset of substring to extract.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to extract.
+	 * </p>
+	 * @return string The specified substring. If the sum of offset 
+	 * and count exceeds the length, then all 16-bit units 
+	 * to the end of the data are returned.
 	 */
 	public function substringData ($offset, $count) {}
 
 	/**
-	 * @param arg
+	 * Append the string to the end of the character data of the node
+	 * @link http://php.net/manual/en/domcharacterdata.appenddata.php
+	 * @param data string <p>
+	 * The string to append.
+	 * </p>
+	 * @return void 
 	 */
-	public function appendData ($arg) {}
+	public function appendData ($data) {}
 
 	/**
-	 * @param offset
-	 * @param arg
+	 * Insert a string at the specified 16-bit unit offset
+	 * @link http://php.net/manual/en/domcharacterdata.insertdata.php
+	 * @param offset int <p>
+	 * The character offset at which to insert.
+	 * </p>
+	 * @param data string <p>
+	 * The string to insert.
+	 * </p>
+	 * @return void 
 	 */
-	public function insertData ($offset, $arg) {}
+	public function insertData ($offset, $data) {}
 
 	/**
-	 * @param offset
-	 * @param count
+	 * Remove a range of characters from the node
+	 * @link http://php.net/manual/en/domcharacterdata.deletedata.php
+	 * @param offset int <p>
+	 * The offset from which to start removing.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to delete. If the sum of 
+	 * offset and count exceeds
+	 * the length, then all characters to the end of the data are deleted.
+	 * </p>
+	 * @return void 
 	 */
 	public function deleteData ($offset, $count) {}
 
 	/**
-	 * @param offset
-	 * @param count
-	 * @param arg
+	 * Replace a substring within the DOMCharacterData node
+	 * @link http://php.net/manual/en/domcharacterdata.replacedata.php
+	 * @param offset int <p>
+	 * The offset from which to start replacing.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to replace. If the sum of 
+	 * offset and count exceeds
+	 * the length, then all characters to the end of the data are replaced.
+	 * </p>
+	 * @param data string <p>
+	 * The string with which the range must be replaced.
+	 * </p>
+	 * @return void 
 	 */
-	public function replaceData ($offset, $count, $arg) {}
+	public function replaceData ($offset, $count, $data) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -1450,22 +2634,43 @@ class DOMComment extends DOMCharacterData  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -1494,6 +2699,11 @@ class DOMComment extends DOMCharacterData  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -1568,10 +2778,21 @@ class DOMCdataSection extends DOMText  {
 	public function __construct ($value) {}
 
 	/**
-	 * @param offset
+	 * Breaks this node into two nodes at the specified offset
+	 * @link http://php.net/manual/en/domtext.splittext.php
+	 * @param offset int <p>
+	 * The offset at which to split, starting from 0.
+	 * </p>
+	 * @return DOMText The new node of the same type, which contains all the content at and after the 
+	 * offset.
 	 */
 	public function splitText ($offset) {}
 
+	/**
+	 * Indicates whether this text node contains whitespace
+	 * @link http://php.net/manual/en/domtext.iswhitespaceinelementcontent.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function isWhitespaceInElementContent () {}
 
 	public function isElementContentWhitespace () {}
@@ -1582,72 +2803,170 @@ class DOMCdataSection extends DOMText  {
 	public function replaceWholeText ($content) {}
 
 	/**
-	 * @param offset
-	 * @param count
+	 * Extracts a range of data from the node
+	 * @link http://php.net/manual/en/domcharacterdata.substringdata.php
+	 * @param offset int <p>
+	 * Start offset of substring to extract.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to extract.
+	 * </p>
+	 * @return string The specified substring. If the sum of offset 
+	 * and count exceeds the length, then all 16-bit units 
+	 * to the end of the data are returned.
 	 */
 	public function substringData ($offset, $count) {}
 
 	/**
-	 * @param arg
+	 * Append the string to the end of the character data of the node
+	 * @link http://php.net/manual/en/domcharacterdata.appenddata.php
+	 * @param data string <p>
+	 * The string to append.
+	 * </p>
+	 * @return void 
 	 */
-	public function appendData ($arg) {}
+	public function appendData ($data) {}
 
 	/**
-	 * @param offset
-	 * @param arg
+	 * Insert a string at the specified 16-bit unit offset
+	 * @link http://php.net/manual/en/domcharacterdata.insertdata.php
+	 * @param offset int <p>
+	 * The character offset at which to insert.
+	 * </p>
+	 * @param data string <p>
+	 * The string to insert.
+	 * </p>
+	 * @return void 
 	 */
-	public function insertData ($offset, $arg) {}
+	public function insertData ($offset, $data) {}
 
 	/**
-	 * @param offset
-	 * @param count
+	 * Remove a range of characters from the node
+	 * @link http://php.net/manual/en/domcharacterdata.deletedata.php
+	 * @param offset int <p>
+	 * The offset from which to start removing.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to delete. If the sum of 
+	 * offset and count exceeds
+	 * the length, then all characters to the end of the data are deleted.
+	 * </p>
+	 * @return void 
 	 */
 	public function deleteData ($offset, $count) {}
 
 	/**
-	 * @param offset
-	 * @param count
-	 * @param arg
+	 * Replace a substring within the DOMCharacterData node
+	 * @link http://php.net/manual/en/domcharacterdata.replacedata.php
+	 * @param offset int <p>
+	 * The offset from which to start replacing.
+	 * </p>
+	 * @param count int <p>
+	 * The number of characters to replace. If the sum of 
+	 * offset and count exceeds
+	 * the length, then all characters to the end of the data are replaced.
+	 * </p>
+	 * @param data string <p>
+	 * The string with which the range must be replaced.
+	 * </p>
+	 * @return void 
 	 */
-	public function replaceData ($offset, $count, $arg) {}
+	public function replaceData ($offset, $count, $data) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -1656,22 +2975,43 @@ class DOMCdataSection extends DOMText  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -1700,6 +3040,11 @@ class DOMCdataSection extends DOMText  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -1728,42 +3073,99 @@ class DOMCdataSection extends DOMText  {
 class DOMDocumentType extends DOMNode  {
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -1772,22 +3174,43 @@ class DOMDocumentType extends DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -1816,6 +3239,11 @@ class DOMDocumentType extends DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -1851,42 +3279,99 @@ class DOMNotation  {
 class DOMEntity extends DOMNode  {
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -1895,22 +3380,43 @@ class DOMEntity extends DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -1939,6 +3445,11 @@ class DOMEntity extends DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -1967,47 +3478,106 @@ class DOMEntity extends DOMNode  {
 class DOMEntityReference extends DOMNode  {
 
 	/**
+	 * Creates a new DOMEntityReference object
+	 * @link http://php.net/manual/en/domentityreference.construct.php
 	 * @param name
 	 */
 	public function __construct ($name) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -2016,22 +3586,43 @@ class DOMEntityReference extends DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -2060,6 +3651,11 @@ class DOMEntityReference extends DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -2088,48 +3684,107 @@ class DOMEntityReference extends DOMNode  {
 class DOMProcessingInstruction extends DOMNode  {
 
 	/**
+	 * Creates a new <classname>DOMProcessingInstruction</classname> object
+	 * @link http://php.net/manual/en/domprocessinginstruction.construct.php
 	 * @param name
 	 * @param value[optional]
 	 */
 	public function __construct ($name, $value) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param refChild DOMNode[optional]
+	 * Adds a new child before a reference node
+	 * @link http://php.net/manual/en/domnode.insertbefore.php
+	 * @param newnode DOMNode <p>
+	 * The new node.
+	 * </p>
+	 * @param refnode DOMNode[optional] <p>
+	 * The reference node. If not supplied, newnode is
+	 * appended to the children.
+	 * </p>
+	 * @return DOMNode The inserted node.
 	 */
-	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
+	public function insertBefore (DOMNode $newnode, DOMNode $refnode = null) {}
 
 	/**
-	 * @param newChild DOMNode
-	 * @param oldChild DOMNode
+	 * Replaces a child
+	 * @link http://php.net/manual/en/domnode.replacechild.php
+	 * @param newnode DOMNode <p>
+	 * The new node. It must be a member of the target document, i.e.
+	 * created by one of the DOMDocument->createXXX() methods or imported in
+	 * the document by .
+	 * </p>
+	 * @param oldnode DOMNode <p>
+	 * The old node.
+	 * </p>
+	 * @return DOMNode The old node or false if an error occur.
 	 */
-	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
+	public function replaceChild (DOMNode $newnode, DOMNode $oldnode) {}
 
 	/**
-	 * @param oldChild DOMNode
+	 * Removes child from list of children
+	 * @link http://php.net/manual/en/domnode.removechild.php
+	 * @param oldnode DOMNode <p>
+	 * The removed child.
+	 * </p>
+	 * @return DOMNode If the child could be removed the functions returns the old child.
 	 */
-	public function removeChild (DOMNode $oldChild) {}
+	public function removeChild (DOMNode $oldnode) {}
 
 	/**
-	 * @param newChild DOMNode
+	 * Adds new child at the end of the children
+	 * @link http://php.net/manual/en/domnode.appendchild.php
+	 * @param newnode DOMNode <p>
+	 * The appended child.
+	 * </p>
+	 * @return DOMNode The node added.
 	 */
-	public function appendChild (DOMNode $newChild) {}
+	public function appendChild (DOMNode $newnode) {}
 
+	/**
+	 * Checks if node has children
+	 * @link http://php.net/manual/en/domnode.haschildnodes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasChildNodes () {}
 
 	/**
-	 * @param deep
+	 * Clones a node
+	 * @link http://php.net/manual/en/domnode.clonenode.php
+	 * @param deep bool[optional] <p>
+	 * Indicates whether to copy all descendant nodes. This parameter is 
+	 * defaulted to false.
+	 * </p>
+	 * @return DOMNode The cloned node.
 	 */
-	public function cloneNode ($deep) {}
+	public function cloneNode ($deep = null) {}
 
+	/**
+	 * Normalizes the node
+	 * @link http://php.net/manual/en/domnode.normalize.php
+	 * @return void 
+	 */
 	public function normalize () {}
 
 	/**
-	 * @param feature
-	 * @param version
+	 * Checks if feature is supported for specified version
+	 * @link http://php.net/manual/en/domnode.issupported.php
+	 * @param feature string <p>
+	 * The feature to test. See the example of 
+	 * DOMImplementation::hasFeature for a
+	 * list of features.
+	 * </p>
+	 * @param version string <p>
+	 * The version number of the feature to test.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isSupported ($feature, $version) {}
 
+	/**
+	 * Checks if node has attributes
+	 * @link http://php.net/manual/en/domnode.hasattributes.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasAttributes () {}
 
 	/**
@@ -2138,22 +3793,43 @@ class DOMProcessingInstruction extends DOMNode  {
 	public function compareDocumentPosition (DOMNode $other) {}
 
 	/**
-	 * @param other DOMNode
+	 * Indicates if two nodes are the same node
+	 * @link http://php.net/manual/en/domnode.issamenode.php
+	 * @param node DOMNode <p>
+	 * The compared node.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function isSameNode (DOMNode $other) {}
+	public function isSameNode (DOMNode $node) {}
 
 	/**
-	 * @param namespaceURI
+	 * Gets the namespace prefix of the node based on the namespace URI
+	 * @link http://php.net/manual/en/domnode.lookupprefix.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI.
+	 * </p>
+	 * @return string The prefix of the namespace.
 	 */
 	public function lookupPrefix ($namespaceURI) {}
 
 	/**
-	 * @param namespaceURI
+	 * Checks if the specified namespaceURI is the default namespace or not
+	 * @link http://php.net/manual/en/domnode.isdefaultnamespace.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI to look for.
+	 * </p>
+	 * @return bool Return true if namespaceURI is the default
+	 * namespace, false otherwise.
 	 */
 	public function isDefaultNamespace ($namespaceURI) {}
 
 	/**
-	 * @param prefix
+	 * Gets the namespace URI of the node based on the prefix
+	 * @link http://php.net/manual/en/domnode.lookupnamespaceuri.php
+	 * @param prefix string <p>
+	 * The prefix of the namespace.
+	 * </p>
+	 * @return string The namespace URI of the node.
 	 */
 	public function lookupNamespaceUri ($prefix) {}
 
@@ -2182,6 +3858,11 @@ class DOMProcessingInstruction extends DOMNode  {
 
 	public function getNodePath () {}
 
+	/**
+	 * Get line number for a node
+	 * @link http://php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
 	public function getLineNo () {}
 
 	/**
@@ -2223,34 +3904,65 @@ class DOMStringExtend  {
 class DOMXPath  {
 
 	/**
+	 * Creates a new <classname>DOMXPath</classname> object
+	 * @link http://php.net/manual/en/domxpath.construct.php
 	 * @param doc DOMDocument
 	 */
 	public function __construct (DOMDocument $doc) {}
 
 	/**
-	 * @param prefix
-	 * @param uri
+	 * Registers the namespace with the <classname>DOMXPath</classname> object
+	 * @link http://php.net/manual/en/domxpath.registernamespace.php
+	 * @param prefix string <p>
+	 * The prefix.
+	 * </p>
+	 * @param namespaceURI string <p>
+	 * The URI of the namespace.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function registerNamespace ($prefix, $uri) {}
+	public function registerNamespace ($prefix, $namespaceURI) {}
 
 	/**
-	 * @param expr
-	 * @param context DOMNode[optional]
+	 * Evaluates the given XPath expression
+	 * @link http://php.net/manual/en/domxpath.query.php
+	 * @param expression string <p>
+	 * The XPath expression to execute.
+	 * </p>
+	 * @param contextnode DOMNode[optional] <p>
+	 * The optional contextnode can be specified for
+	 * doing relative XPath queries. By default, the queries are relative to 
+	 * the root element.
+	 * </p>
+	 * @return DOMNodeList a DOMNodeList containing all nodes matching 
+	 * the given XPath expression. Any expression which do
+	 * not return nodes will return an empty DOMNodeList.
 	 */
-	public function query ($exprDOMNode , $context) {}
+	public function query ($expression, DOMNode $contextnode = null) {}
 
 	/**
-	 * @param expr
-	 * @param context DOMNode[optional]
+	 * Evaluates the given XPath expression and returns a typed result if possible.
+	 * @link http://php.net/manual/en/domxpath.evaluate.php
+	 * @param expression string <p>
+	 * The XPath expression to execute.
+	 * </p>
+	 * @param contextnode DOMNode[optional] <p>
+	 * The optional contextnode can be specified for
+	 * doing relative XPath queries. By default, the queries are relative to 
+	 * the root element.
+	 * </p>
+	 * @return mixed a typed result if possible or a DOMNodeList 
+	 * containing all nodes matching the given XPath expression.
 	 */
-	public function evaluate ($exprDOMNode , $context) {}
+	public function evaluate ($expression, DOMNode $contextnode = null) {}
 
 	public function registerPhpFunctions () {}
 
 }
 
 /**
- * Gets a DOMElement object from a SimpleXMLElement object
+ * Gets a <classname>DOMElement</classname> object from a
+   <classname>SimpleXMLElement</classname> object
  * @link http://php.net/manual/en/function.dom-import-simplexml.php
  * @param node SimpleXMLElement <p>
  * The SimpleXMLElement node.
@@ -2347,6 +4059,11 @@ define ('XML_ATTRIBUTE_NMTOKEN', 7);
 define ('XML_ATTRIBUTE_NMTOKENS', 8);
 define ('XML_ATTRIBUTE_ENUMERATION', 9);
 define ('XML_ATTRIBUTE_NOTATION', 10);
+
+/**
+ * Error code not part of the DOM specification. Meant for PHP errors.
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('DOM_PHP_ERR', 0);
 
 /**
