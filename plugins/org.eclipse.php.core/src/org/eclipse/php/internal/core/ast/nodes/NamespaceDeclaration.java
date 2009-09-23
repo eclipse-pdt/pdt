@@ -70,9 +70,9 @@ public class NamespaceDeclaration extends Statement {
 			NamespaceName name, Block body, boolean bracketed) {
 		super(start, end, ast);
 
-		if (bracketed && name == null) {
+		if (!bracketed && name == null) {
 			throw new IllegalArgumentException(
-					"Namespace name must not be null in a bracketed statement");
+					"Namespace name must not be null in an un-bracketed statement");
 		}
 
 		this.bracketed = bracketed;
