@@ -35,7 +35,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 
-public class PHPExeCompositeFragment extends CompositeFragment implements IPHPExeCompositeFragment {
+public class PHPExeCompositeFragment extends CompositeFragment implements
+		IPHPExeCompositeFragment {
 
 	private PHPexeItem[] existingItems;
 	private StringDialogField fPHPexeName;
@@ -48,14 +49,17 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 	private Combo fSapiTypes;
 	private String initialName;
 
-	public PHPExeCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
+	public PHPExeCompositeFragment(Composite parent, IControlHandler handler,
+			boolean isForEditing) {
 		super(parent, handler, isForEditing);
 		setDescription("Specify the PHP Executable Information");
 		setDisplayName("PHP Executable");
 		controlHandler.setDescription(getDescription());
-		controlHandler.setImageDescriptor(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
+		controlHandler.setImageDescriptor(PHPDebugUIImages
+				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
 
-		debuggersIds = new LinkedList<String>(PHPDebuggersRegistry.getDebuggersIds());
+		debuggersIds = new LinkedList<String>(PHPDebuggersRegistry
+				.getDebuggersIds());
 		createControl();
 	}
 
@@ -65,7 +69,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 
 	public void setData(Object data) {
 		if (data != null && !(data instanceof PHPexeItem)) {
-			throw new IllegalArgumentException("Data must be instance of PHPExeItem");
+			throw new IllegalArgumentException(
+					"Data must be instance of PHPExeItem");
 		}
 		super.setData(data);
 		init();
@@ -107,7 +112,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			public void changeControlPressed(DialogField field) {
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setFilterPath(fPHPExePath.getText());
-				dialog.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPRootDialog_message);
+				dialog
+						.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPRootDialog_message);
 				String newPath = dialog.open();
 				if (newPath != null) {
 					fPHPExePath.setText(newPath);
@@ -123,7 +129,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setFilterPath(fPHPIni.getText());
 				dialog.setFilterExtensions(new String[] { "*.ini", "*.*" });
-				dialog.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPIniDialog_message);
+				dialog
+						.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPIniDialog_message);
 				String newPath = dialog.open();
 				if (newPath != null) {
 					fPHPIni.setText(newPath);
@@ -135,11 +142,13 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 
 		fPHPexeName.doFillIntoGrid(parent, 3);
 		fPHPExePath.doFillIntoGrid(parent, 3);
-		((GridData) fPHPExePath.getTextControl(parent).getLayoutData()).widthHint = pixelConverter.convertWidthInCharsToPixels(50);
+		((GridData) fPHPExePath.getTextControl(parent).getLayoutData()).widthHint = pixelConverter
+				.convertWidthInCharsToPixels(50);
 
 		fPHPIni.doFillIntoGrid(parent, 3);
-		((GridData) fPHPIni.getTextControl(parent).getLayoutData()).widthHint = pixelConverter.convertWidthInCharsToPixels(50);
-		
+		((GridData) fPHPIni.getTextControl(parent).getLayoutData()).widthHint = pixelConverter
+				.convertWidthInCharsToPixels(50);
+
 		fSapiTypesLabel = new Label(parent, SWT.LEFT | SWT.WRAP);
 		fSapiTypesLabel.setFont(parent.getFont());
 		fSapiTypesLabel.setText("&SAPI Type:");
@@ -199,7 +208,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 				validate();
 			}
 		});
-		
+
 		fSapiTypes.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				validate();
@@ -209,7 +218,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 				validate();
 			}
 		});
-		
+
 		fDebuggers.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				validate();
@@ -227,9 +236,11 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			fPHPexeName.setText(""); //$NON-NLS-1$
 			fPHPExePath.setText(""); //$NON-NLS-1$
 			fPHPIni.setText(""); //$NON-NLS-1$
-			String defaultDebuggerId = PHPDebuggersRegistry.getDefaultDebuggerId();
+			String defaultDebuggerId = PHPDebuggersRegistry
+					.getDefaultDebuggerId();
 			if (defaultDebuggerId != null) {
-				int index = fDebuggers.indexOf(PHPDebuggersRegistry.getDebuggerName(defaultDebuggerId));
+				int index = fDebuggers.indexOf(PHPDebuggersRegistry
+						.getDebuggerName(defaultDebuggerId));
 				fDebuggers.select(index);
 			} else {
 				if (fDebuggers.getItemCount() > 0) {
@@ -243,16 +254,19 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			initialName = phpExeItem.getName();
 			fPHPexeName.setTextWithoutUpdate(phpExeItem.getName());
 			fPHPexeName.setEnabled(phpExeItem.isEditable());
-			fPHPExePath.setTextWithoutUpdate(phpExeItem.getExecutable().getAbsolutePath());
+			fPHPExePath.setTextWithoutUpdate(phpExeItem.getExecutable()
+					.getAbsolutePath());
 			fPHPExePath.setEnabled(phpExeItem.isEditable());
 			if (phpExeItem.getINILocation() != null) {
-				fPHPIni.setTextWithoutUpdate(phpExeItem.getINILocation().toString());
+				fPHPIni.setTextWithoutUpdate(phpExeItem.getINILocation()
+						.toString());
 			}
 			fPHPIni.setEnabled(phpExeItem.isEditable());
 			String debuggerID = phpExeItem.getDebuggerID();
 			fDebuggers.setEnabled(phpExeItem.isEditable());
 			fDebuggersLabel.setEnabled(phpExeItem.isEditable());
-			int index = fDebuggers.indexOf(PHPDebuggersRegistry.getDebuggerName(debuggerID));
+			int index = fDebuggers.indexOf(PHPDebuggersRegistry
+					.getDebuggerName(debuggerID));
 			if (index > -1) {
 				fDebuggers.select(index);
 			} else {
@@ -262,6 +276,13 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 					hideDebuggersCombo();
 				}
 			}
+			String sapiType = phpExeItem.getSapiType();
+			if (sapiType != null) {
+				fSapiTypes.setText(sapiType);
+			}
+			fSapiTypes.setEnabled(phpExeItem.isEditable());
+			fSapiTypesLabel.setEnabled(phpExeItem.isEditable());
+
 			setTitle("Edit PHP Executable");
 		}
 
@@ -279,22 +300,27 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 
 		// Check whether we can edit this item
 		if (phpExeItem != null && !phpExeItem.isEditable()) {
-			setMessage(PHPDebugUIMessages.addPHPexeDialog_readOnlyPHPExe, IMessageProvider.INFORMATION);
+			setMessage(PHPDebugUIMessages.addPHPexeDialog_readOnlyPHPExe,
+					IMessageProvider.INFORMATION);
 			return;
 		}
-		
+
 		String locationName = fPHPExePath.getText();
 		if (locationName.length() == 0) {
-			setMessage(PHPDebugUIMessages.addPHPexeDialog_enterLocation, IMessageProvider.INFORMATION);
+			setMessage(PHPDebugUIMessages.addPHPexeDialog_enterLocation,
+					IMessageProvider.INFORMATION);
 			return;
 		}
 		final File executableLocation = new File(locationName);
 		if (!executableLocation.exists()) {
-			setMessage(PHPDebugUIMessages.addPHPexeDialog_locationNotExists, IMessageProvider.ERROR);
+			setMessage(PHPDebugUIMessages.addPHPexeDialog_locationNotExists,
+					IMessageProvider.ERROR);
 			return;
 		}
 		if (!executableLocation.getName().toLowerCase().contains("php")) { //$NON-NLS-1$
-			setMessage("Selected location doesn't refer to a valid PHP executable", IMessageProvider.ERROR);
+			setMessage(
+					"Selected location doesn't refer to a valid PHP executable",
+					IMessageProvider.ERROR);
 			return;
 		}
 
@@ -303,31 +329,38 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		if (phpExeItem.getSapiType() != null) {
 			fSapiTypes.setText(phpExeItem.getSapiType());
 		}
-		if (phpExeItem.getINILocation() != null && fPHPIni.getText().trim().length() == 0) {
+		if (phpExeItem.getINILocation() != null
+				&& fPHPIni.getText().trim().length() == 0) {
 			fPHPIni.setText(phpExeItem.getINILocation().getAbsolutePath());
 		}
-		
+
 		if (phpExeItem.getExecutable() == null) {
-			setMessage("Selected location doesn't refer to a valid PHP executable", IMessageProvider.ERROR);
+			setMessage(
+					"Selected location doesn't refer to a valid PHP executable",
+					IMessageProvider.ERROR);
 			return;
 		}
 
 		String name = fPHPexeName.getText();
 		if (name == null || name.trim().length() == 0) {
-			setMessage(PHPDebugUIMessages.addPHPexeDialog_enterName, IMessageProvider.INFORMATION);
+			setMessage(PHPDebugUIMessages.addPHPexeDialog_enterName,
+					IMessageProvider.INFORMATION);
 			return;
 		}
 
 		// Check whether the name already exists:
 		if (existingItems != null) {
 			for (PHPexeItem item : existingItems) {
-				if (!item.getName().equals(initialName) && item.getName().equals(name)) {
-					setMessage(PHPDebugUIMessages.addPHPexeDialog_duplicateName, IMessageProvider.ERROR);
+				if (!item.getName().equals(initialName)
+						&& item.getName().equals(name)) {
+					setMessage(
+							PHPDebugUIMessages.addPHPexeDialog_duplicateName,
+							IMessageProvider.ERROR);
 					return;
 				}
 			}
 		}
-		
+
 		String sapiType = fSapiTypes.getText().trim();
 		if (sapiType.length() == 0) {
 			setMessage("Please select SAPI type", IMessageProvider.ERROR);
@@ -339,16 +372,19 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 		if (iniLocationName.trim().length() > 0) {
 			iniFile = new File(iniLocationName);
 			if (!iniFile.exists()) {
-				setMessage(PHPDebugUIMessages.addPHPexeDialog_iniLocationNotExists, IMessageProvider.ERROR);
+				setMessage(
+						PHPDebugUIMessages.addPHPexeDialog_iniLocationNotExists,
+						IMessageProvider.ERROR);
 				return;
 			}
 		}
 
 		phpExeItem.setName(name);
-		phpExeItem.setDebuggerID(debuggersIds.get(fDebuggers.getSelectionIndex()));
+		phpExeItem.setDebuggerID(debuggersIds.get(fDebuggers
+				.getSelectionIndex()));
 		phpExeItem.setINILocation(iniFile);
 		phpExeItem.setSapiType(sapiType);
-		
+
 		setMessage(getDescription(), IMessageProvider.NONE);
 		controlHandler.update();
 	}
