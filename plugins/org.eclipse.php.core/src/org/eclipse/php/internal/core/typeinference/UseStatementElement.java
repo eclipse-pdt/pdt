@@ -22,11 +22,18 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
  */
 public class UseStatementElement extends FakeField {
 
+	private UsePart usePart;
+
 	public UseStatementElement(ModelElement parent, UsePart usePart) {
 		super(parent, usePart.getNamespace().getFullyQualifiedName(), usePart
 				.getNamespace().sourceStart(), usePart.getNamespace()
 				.sourceEnd()
 				- usePart.getNamespace().sourceStart());
+		this.usePart = usePart;
+	}
+
+	public UsePart getUsePart() {
+		return usePart;
 	}
 
 	public boolean exists() {
