@@ -111,6 +111,7 @@ function mysql_select_db ($database_name, $link_identifier = null) {}
  * </p>
  * <p>
  * The query string should not end with a semicolon.
+ * Data inside the query should be properly escaped.
  * </p>
  * @param link_identifier resource[optional] 
  * @return resource For SELECT, SHOW, DESCRIBE, EXPLAIN and other statements returning resultset,
@@ -148,6 +149,9 @@ function mysql_query ($query, $link_identifier = null) {}
  * @param query string <p>
  * A SQL query
  * </p>
+ * <p>
+ * Data inside the query should be properly escaped.
+ * </p>
  * @param link_identifier resource[optional] 
  * @return resource For SELECT, SHOW, DESCRIBE or EXPLAIN statements,
  * mysql_unbuffered_query 
@@ -169,6 +173,9 @@ function mysql_unbuffered_query ($query, $link_identifier = null) {}
  * </p>
  * @param query string <p>
  * The MySQL query.
+ * </p>
+ * <p>
+ * Data inside the query should be properly escaped.
  * </p>
  * @param link_identifier resource[optional] 
  * @return resource a positive MySQL result resource to the query result,
@@ -719,12 +726,53 @@ function mysql_tablename ($result, $i) {}
 
 function mysql_table_name () {}
 
+
+/**
+ * Columns are returned into the array having the fieldname as the array
+ * index.
+ * @link http://php.net/manual/en/mysql.constants.php
+ */
 define ('MYSQL_ASSOC', 1);
+
+/**
+ * Columns are returned into the array having a numerical index to the
+ * fields. This index starts with 0, the first field in the result.
+ * @link http://php.net/manual/en/mysql.constants.php
+ */
 define ('MYSQL_NUM', 2);
+
+/**
+ * Columns are returned into the array having both a numerical index
+ * and the fieldname as the array index.
+ * @link http://php.net/manual/en/mysql.constants.php
+ */
 define ('MYSQL_BOTH', 3);
+
+/**
+ * Use compression protocol
+ * @link http://php.net/manual/en/mysql.constants.php
+ */
 define ('MYSQL_CLIENT_COMPRESS', 32);
+
+/**
+ * Use SSL encryption. This flag is only available with version 4.x
+ * of the MySQL client library or newer. Version 3.23.x is bundled both
+ * with PHP 4 and Windows binaries of PHP 5.
+ * @link http://php.net/manual/en/mysql.constants.php
+ */
 define ('MYSQL_CLIENT_SSL', 2048);
+
+/**
+ * Allow interactive_timeout seconds (instead of wait_timeout) of
+ * inactivity before closing the connection.
+ * @link http://php.net/manual/en/mysql.constants.php
+ */
 define ('MYSQL_CLIENT_INTERACTIVE', 1024);
+
+/**
+ * Allow space after function names
+ * @link http://php.net/manual/en/mysql.constants.php
+ */
 define ('MYSQL_CLIENT_IGNORE_SPACE', 256);
 
 // End of mysql v.1.0

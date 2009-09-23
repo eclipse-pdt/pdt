@@ -19,7 +19,7 @@
  * characters. If you append the string //IGNORE,
  * characters that cannot be represented in the target charset are silently
  * discarded. Otherwise, str is cut from the first
- * illegal character.
+ * illegal character and an E_NOTICE is generated.
  * </p>
  * @param str string <p>
  * The string to be converted.
@@ -393,13 +393,43 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
  * iconv.internal_encoding
  * will be used.
  * </p>
- * @return array 
+ * @return array an associative array that holds a whole set of
+ * MIME header fields specified by
+ * encoded_headers on success, or false
+ * if an error occurs during the decoding.
+ * </p>
+ * <p>
+ * Each key of the return value represents an individual
+ * field name and the corresponding element represents a field value.
+ * If more than one field of the same name are present,
+ * iconv_mime_decode_headers automatically incorporates
+ * them into a numerically indexed array in the order of occurrence.
  */
 function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = null) {}
 
+
+/**
+ * string
+ * @link http://php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_IMPL', "glibc");
-define ('ICONV_VERSION', 2.7);
+
+/**
+ * string
+ * @link http://php.net/manual/en/iconv.constants.php
+ */
+define ('ICONV_VERSION', 2.9);
+
+/**
+ * integer
+ * @link http://php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_MIME_DECODE_STRICT', 1);
+
+/**
+ * integer
+ * @link http://php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 
 // End of iconv v.

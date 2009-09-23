@@ -1,6 +1,6 @@
 <?php
 
-// Start of oci8 v.1.3.4
+// Start of oci8 v.1.3.5
 
 class OCI_Lob  {
 
@@ -558,7 +558,8 @@ function oci_cancel ($statement) {}
  * @param statement resource <p>
  * A valid OCI statement identifier.
  * </p>
- * @return bool Returns true on success or false on failure.
+ * @return bool true on success or false if there are no more rows in the
+ * statement.
  */
 function oci_fetch ($statement) {}
 
@@ -800,8 +801,8 @@ function oci_close ($connection) {}
  * <p>
  * If the not specified, PHP uses environment variables
  * ORACLE_SID and TWO_TASK to
- * determine the name of local Oracle instance and location of 
- * tnsnames.ora accordingly.
+ * determine the name of local Oracle instance and
+ * location of tnsnames.ora accordingly.
  * </p>
  * @param charset string[optional] &oci.charset;
  * @param session_mode int[optional] <p>
@@ -1899,5 +1900,5 @@ define ('OCI_TEMP_CLOB', 2);
  */
 define ('OCI_TEMP_BLOB', 1);
 
-// End of oci8 v.1.3.4
+// End of oci8 v.1.3.5
 ?>

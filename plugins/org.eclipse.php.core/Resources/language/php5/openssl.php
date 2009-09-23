@@ -766,8 +766,8 @@ function openssl_public_decrypt ($data, &$decrypted, $key, $padding = null) {}
  */
 function openssl_error_string () {}
 
-define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8j 07 Jan 2009");
-define ('OPENSSL_VERSION_NUMBER', 9470127);
+define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8k 25 Mar 2009");
+define ('OPENSSL_VERSION_NUMBER', 9470143);
 define ('X509_PURPOSE_SSL_CLIENT', 1);
 define ('X509_PURPOSE_SSL_SERVER', 2);
 define ('X509_PURPOSE_NS_SSL_SERVER', 3);
@@ -786,14 +786,87 @@ define ('OPENSSL_ALGO_MD5', 2);
 define ('OPENSSL_ALGO_MD4', 3);
 define ('OPENSSL_ALGO_MD2', 4);
 define ('OPENSSL_ALGO_DSS1', 5);
+
+/**
+ * When signing a message, use cleartext signing with the MIME
+ * type "multipart/signed". This is the default
+ * if you do not specify any flags to
+ * openssl_pkcs7_sign.
+ * If you turn this option off, the message will be signed using
+ * opaque signing, which is more resistant to translation by mail relays
+ * but cannot be read by mail agents that do not support S/MIME.
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_DETACHED', 64);
+
+/**
+ * Adds text/plain content type headers to encrypted/signed
+ * message. If decrypting or verifying, it strips those headers from
+ * the output - if the decrypted or verified message is not of MIME type
+ * text/plain then an error will occur.
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_TEXT', 1);
+
+/**
+ * When verifying a message, certificates (if
+ * any) included in the message are normally searched for the
+ * signing certificate. With this option only the
+ * certificates specified in the extracerts
+ * parameter of openssl_pkcs7_verify are
+ * used. The supplied certificates can still be used as
+ * untrusted CAs however.
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOINTERN', 16);
+
+/**
+ * Do not verify the signers certificate of a signed
+ * message.
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOVERIFY', 32);
+
+/**
+ * Do not chain verification of signers certificates: that is
+ * don't use the certificates in the signed message as untrusted CAs.
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOCHAIN', 8);
+
+/**
+ * When signing a message the signer's certificate is normally
+ * included - with this option it is excluded. This will reduce the
+ * size of the signed message but the verifier must have a copy of the
+ * signers certificate available locally (passed using the
+ * extracerts to
+ * openssl_pkcs7_verify for example).
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOCERTS', 2);
+
+/**
+ * Normally when a message is signed, a set of attributes are
+ * included which include the signing time and the supported symmetric
+ * algorithms. With this option they are not included.
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOATTR', 256);
+
+/**
+ * Normally the input message is converted to "canonical" format
+ * which is effectively using CR and LF
+ * as end of line: as required by the S/MIME specification. When this
+ * options is present, no translation occurs. This is useful when
+ * handling binary data which may not be in MIME format.
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_BINARY', 128);
+
+/**
+ * Don't try and verify the signatures on a message
+ * @link http://php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOSIGS', 4);
 define ('OPENSSL_PKCS1_PADDING', 1);
 define ('OPENSSL_SSLV23_PADDING', 2);

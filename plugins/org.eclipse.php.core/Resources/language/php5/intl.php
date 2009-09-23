@@ -30,64 +30,164 @@ class Collator  {
 
 
 	/**
+	 * Create a collator
+	 * @link http://php.net/manual/en/collator.construct.php
 	 * @param arg1
 	 */
 	public function __construct ($arg1) {}
 
 	/**
-	 * @param arg1
+	 * Create a collator
+	 * @link http://php.net/manual/en/collator.create.php
+	 * @param locale string <p>
+	 * The locale containing the required collation rules. Special values for
+	 * locales can be passed in - if null is passed for the locale, the
+	 * default locale collation rules will be used. If empty string ("") or
+	 * "root" are passed, UCA rules will be used.
+	 * </p>
+	 * @return Collator Return new instance of Collator object, or &null;
+	 * on error.
 	 */
-	public static function create ($arg1) {}
+	public static function create ($locale) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
+	 * Compare two Unicode strings
+	 * @link http://php.net/manual/en/collator.compare.php
+	 * @param str1 string <p>
+	 * The first string to compare.
+	 * </p>
+	 * @param str2 string <p>
+	 * The second string to compare.
+	 * </p>
+	 * @return int Return comparison result:</p>
+	 * <p>
+	 * <p>
+	 * 1 if str1 is greater than 
+	 * str2 ;
+	 * </p>
+	 * <p>
+	 * 0 if str1 is equal to 
+	 * str2;
+	 * </p>
+	 * <p>
+	 * -1 if str1 is less than 
+	 * str2 .
+	 * </p>
+	 * On error
+	 * boolean
+	 * false
+	 * is returned.
 	 */
-	public function compare ($arg1, $arg2) {}
+	public function compare ($str1, $str2) {}
 
 	/**
-	 * @param arr
-	 * @param flags[optional]
+	 * Sort array using specified collator
+	 * @link http://php.net/manual/en/collator.sort.php
+	 * @param arr array <p>
+	 * Array of strings to sort.
+	 * </p>
+	 * @param sort_flag int[optional] <p>
+	 * Optional sorting type, one of the following:
+	 * </p>
+	 * <p>
+	 * <p>
+	 * Collator::SORT_REGULAR
+	 * - compare items normally (don't change types)
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function sort (array &$arr, $flags) {}
+	public function sort (array &$arr, $sort_flag = null) {}
 
 	/**
-	 * @param arr
-	 * @param flags[optional]
+	 * Sort array using specified collator and sort keys
+	 * @link http://php.net/manual/en/collator.sortwithsortkeys.php
+	 * @param arr array <p>Array of strings to sort</p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function sortWithSortKeys (array &$arr, $flags) {}
+	public function sortWithSortKeys (array &$arr) {}
 
 	/**
-	 * @param arr
-	 * @param flags[optional]
+	 * Sort array maintaining index association
+	 * @link http://php.net/manual/en/collator.asort.php
+	 * @param arr array <p>Array of strings to sort.</p>
+	 * @param sort_flag int[optional] <p>
+	 * Optional sorting type, one of the following:
+	 * <p>
+	 * Collator::SORT_REGULAR
+	 * - compare items normally (don't change types)
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function asort (array &$arr, $flags) {}
+	public function asort (array &$arr, $sort_flag = null) {}
 
 	/**
-	 * @param arg1
+	 * Get collation attribute value
+	 * @link http://php.net/manual/en/collator.getattribute.php
+	 * @param attr int <p>
+	 * Attribute to get value for.
+	 * </p>
+	 * @return int Attribute value, or boolean false on error.
 	 */
-	public function getAttribute ($arg1) {}
+	public function getAttribute ($attr) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
+	 * Set collation attribute
+	 * @link http://php.net/manual/en/collator.setattribute.php
+	 * @param attr int <p>Attribute.</p>
+	 * @param val int <p>
+	 * Attribute value.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setAttribute ($arg1, $arg2) {}
+	public function setAttribute ($attr, $val) {}
 
+	/**
+	 * Get current collation strength
+	 * @link http://php.net/manual/en/collator.getstrength.php
+	 * @return int current collation strength, or boolean false on error.
+	 */
 	public function getStrength () {}
 
 	/**
-	 * @param arg1
+	 * Set collation strength
+	 * @link http://php.net/manual/en/collator.setstrength.php
+	 * @param strength int <p>Strength to set.</p>
+	 * <p>
+	 * Possible values are:
+	 * <p>
+	 * Collator::PRIMARY
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setStrength ($arg1) {}
+	public function setStrength ($strength) {}
 
 	/**
-	 * @param arg1
+	 * Get the locale name of the collator
+	 * @link http://php.net/manual/en/collator.getlocale.php
+	 * @param type int[optional] <p>
+	 * You can choose between valid and actual locale (
+	 * Locale::VALID_LOCALE and 
+	 * Locale::ACTUAL_LOCALE,
+	 * respectively). The default is the actual locale.
+	 * </p>
+	 * @return string Real locale name from which the collation data comes. If the collator was
+	 * instantiated from rules or an error occurred, returns
+	 * boolean false.
 	 */
-	public function getLocale ($arg1) {}
+	public function getLocale ($type = null) {}
 
+	/**
+	 * Get collator's last error code
+	 * @link http://php.net/manual/en/collator.geterrorcode.php
+	 * @return int Error code returned by the last Collator API function call.
+	 */
 	public function getErrorCode () {}
 
+	/**
+	 * Get text for collator's last error code
+	 * @link http://php.net/manual/en/collator.geterrormessage.php
+	 * @return string Description of an error occurred in the last Collator API function call.
+	 */
 	public function getErrorMessage () {}
 
 }
@@ -176,85 +276,211 @@ class NumberFormatter  {
 	public function __construct ($locale, $style, $pattern) {}
 
 	/**
-	 * @param locale
-	 * @param style
-	 * @param pattern[optional]
+	 * Create a number formatter
+	 * @link http://php.net/manual/en/numberformatter.create.php
+	 * @param locale string <p>
+	 * Locale in which the number would be formatted (locale name, e.g. en_CA).
+	 * </p>
+	 * @param style int <p>
+	 * Style of the formatting, one of the
+	 * format style constants. If
+	 * NumberFormatter::PATTERN_DECIMAL
+	 * or NumberFormatter::PATTERN_RULEBASED
+	 * is passed then the number format is opened using the given pattern,
+	 * which must conform to the syntax described in
+	 * ICU DecimalFormat
+	 * documentation or
+	 * ICU RuleBasedNumberFormat
+	 * documentation, respectively.
+	 * </p>
+	 * @param pattern string[optional] <p>
+	 * Pattern string in case chosen style requires pattern.
+	 * </p>
+	 * @return NumberFormatter NumberFormatter object or false on error.
 	 */
-	public static function create ($locale, $style, $pattern) {}
+	public static function create ($locale, $style, $pattern = null) {}
 
 	/**
-	 * @param num
-	 * @param type[optional]
+	 * Format a number
+	 * @link http://php.net/manual/en/numberformatter.format.php
+	 * @param value number <p>
+	 * The value to format. Can be integer or double,
+	 * other values will be converted to a numeric value.
+	 * </p>
+	 * @param type int[optional] <p>
+	 * The
+	 * formatting type to use.
+	 * </p>
+	 * @return string the string containing formatted value, or false on error.
 	 */
-	public function format ($num, $type) {}
+	public function format ($value, $type = null) {}
 
 	/**
-	 * @param string
-	 * @param type[optional]
-	 * @param position[optional]
+	 * Parse a number
+	 * @link http://php.net/manual/en/numberformatter.parse.php
+	 * @param value string 
+	 * @param type int[optional] <p>
+	 * The
+	 * formatting type to use. By default,
+	 * NumberFormatter::TYPE_DOUBLE is used.
+	 * </p>
+	 * @param position int[optional] <p>
+	 * Offset in the string at which to begin parsing. On return, this value
+	 * will hold the offset at which parsing ended.
+	 * </p>
+	 * @return mixed The value of the parsed number or false on error.
 	 */
-	public function parse ($string, $type, &$position) {}
+	public function parse ($value, $type = null, &$position = null) {}
 
 	/**
-	 * @param num
-	 * @param currency
+	 * Format a currency value
+	 * @link http://php.net/manual/en/numberformatter.formatcurrency.php
+	 * @param value float <p>
+	 * The numeric currency value.
+	 * </p>
+	 * @param currency string <p>
+	 * The 3-letter ISO 4217 currency code indicating the currency to use.
+	 * </p>
+	 * @return string String representing the formatted currency value.
 	 */
-	public function formatCurrency ($num, $currency) {}
+	public function formatCurrency ($value, $currency) {}
 
 	/**
-	 * @param string
-	 * @param currency
-	 * @param position[optional]
+	 * Parse a currency number
+	 * @link http://php.net/manual/en/numberformatter.parsecurrency.php
+	 * @param value string 
+	 * @param currency string <p>
+	 * Parameter to receive the currency name (3-letter ISO 4217 currency
+	 * code).
+	 * </p>
+	 * @param position int[optional] <p>
+	 * Offset in the string at which to begin parsing. On return, this value
+	 * will hold the offset at which parsing ended.
+	 * </p>
+	 * @return float The parsed numeric value or false on error.
 	 */
-	public function parseCurrency ($string, &$currency, &$position) {}
+	public function parseCurrency ($value, &$currency, &$position = null) {}
 
 	/**
-	 * @param attr
-	 * @param value
+	 * Set an attribute
+	 * @link http://php.net/manual/en/numberformatter.setattribute.php
+	 * @param attr int <p>
+	 * Attribute specifier - one of the
+	 * numeric attribute constants.
+	 * </p>
+	 * @param value int <p>
+	 * The attribute value.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function setAttribute ($attr, $value) {}
 
 	/**
-	 * @param attr
+	 * Get an attribute
+	 * @link http://php.net/manual/en/numberformatter.getattribute.php
+	 * @param attr int <p>
+	 * Attribute specifier - one of the
+	 * numeric attribute constants.
+	 * </p>
+	 * @return int Return attribute value on success, or false on error.
 	 */
 	public function getAttribute ($attr) {}
 
 	/**
-	 * @param attr
-	 * @param value
+	 * Set a text attribute
+	 * @link http://php.net/manual/en/numberformatter.settextattribute.php
+	 * @param attr int <p>
+	 * Attribute specifier - one of the
+	 * text attribute
+	 * constants.
+	 * </p>
+	 * @param value string <p>
+	 * Text for the attribute value.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function setTextAttribute ($attr, $value) {}
 
 	/**
-	 * @param attr
+	 * Get a text attribute
+	 * @link http://php.net/manual/en/numberformatter.gettextattribute.php
+	 * @param attr int <p>
+	 * Attribute specifier - one of the
+	 * text attribute constants.
+	 * </p>
+	 * @return string Return attribute value on success, or false on error.
 	 */
 	public function getTextAttribute ($attr) {}
 
 	/**
-	 * @param attr
-	 * @param symbol
+	 * Set a symbol value
+	 * @link http://php.net/manual/en/numberformatter.setsymbol.php
+	 * @param attr int <p>
+	 * Symbol specifier, one of the
+	 * format symbol constants.
+	 * </p>
+	 * @param value string <p>
+	 * Text for the symbol.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setSymbol ($attr, $symbol) {}
+	public function setSymbol ($attr, $value) {}
 
 	/**
-	 * @param attr
+	 * Get a symbol value
+	 * @link http://php.net/manual/en/numberformatter.getsymbol.php
+	 * @param attr int <p>
+	 * Symbol specifier, one of the
+	 * format symbol constants.
+	 * </p>
+	 * @return string The symbol string or false on error.
 	 */
 	public function getSymbol ($attr) {}
 
 	/**
-	 * @param pattern
+	 * Set formatter pattern
+	 * @link http://php.net/manual/en/numberformatter.setpattern.php
+	 * @param pattern string <p>
+	 * Pattern in syntax described in
+	 * ICU DecimalFormat
+	 * documentation.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function setPattern ($pattern) {}
 
+	/**
+	 * Get formatter pattern
+	 * @link http://php.net/manual/en/numberformatter.getpattern.php
+	 * @return string Pattern string that is used by the formatter, or false if an error happens.
+	 */
 	public function getPattern () {}
 
 	/**
-	 * @param type[optional]
+	 * Get formatter locale
+	 * @link http://php.net/manual/en/numberformatter.getlocale.php
+	 * @param type int[optional] <p>
+	 * You can choose between valid and actual locale (
+	 * Locale::VALID_LOCALE,
+	 * Locale::ACTUAL_LOCALE,
+	 * respectively). The default is the actual locale.
+	 * </p>
+	 * @return string The locale name used to create the formatter.
 	 */
-	public function getLocale ($type) {}
+	public function getLocale ($type = null) {}
 
+	/**
+	 * Get formatter's last error code.
+	 * @link http://php.net/manual/en/numberformatter.geterrorcode.php
+	 * @return int error code from last formatter call.
+	 */
 	public function getErrorCode () {}
 
+	/**
+	 * Get formatter's last error message.
+	 * @link http://php.net/manual/en/numberformatter.geterrormessage.php
+	 * @return string error message from last formatter call.
+	 */
 	public function getErrorMessage () {}
 
 }
@@ -272,18 +498,25 @@ class Normalizer  {
 
 
 	/**
-	 * @param arg1
-	 * @param arg2
-	 * @param arg3
+	 * Normalizes the input provided and returns the normalized string
+	 * @link http://php.net/manual/en/normalizer.normalize.php
+	 * @param input string <p>The input string to normalize</p>
+	 * @param form string[optional] <p>One of the normalization forms. If not provided the default is
+	 * Normalizer::FORM_C.</p>
+	 * @return string The normalized string or &null; if an error occurred.
 	 */
-	public static function normalize ($arg1, $arg2, $arg3) {}
+	public static function normalize ($input, $form = null) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
-	 * @param arg3
+	 * Checks if the provided string is already in the specified normalization
+   form.
+	 * @link http://php.net/manual/en/normalizer.isnormalized.php
+	 * @param input string <p>The input string to normalize</p>
+	 * @param form string[optional] <p>One of the normalization forms.
+	 * Defaults to Normalizer::FORM_C.</p>
+	 * @return bool true if normalized, false otherwise or if there an error
 	 */
-	public static function isNormalized ($arg1, $arg2, $arg3) {}
+	public static function isNormalized ($input, $form = null) {}
 
 }
 
@@ -300,92 +533,220 @@ class Locale  {
 	const PRIVATE_TAG = "private";
 
 
+	/**
+	 * Gets the default locale value from the INTL global 'default_locale'
+	 * @link http://php.net/manual/en/locale.getdefault.php
+	 * @return string The current runtime locale
+	 */
 	public static function getDefault () {}
 
 	/**
-	 * @param arg1
+	 * sets the default runtime locale
+	 * @link http://php.net/manual/en/locale.setdefault.php
+	 * @param locale string <p>
+	 * Is a BCP 47 compliant language tag containing the
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public static function setDefault ($arg1) {}
+	public static function setDefault ($locale) {}
 
 	/**
-	 * @param arg1
+	 * Gets the primary language for the input locale
+	 * @link http://php.net/manual/en/locale.getprimarylanguage.php
+	 * @param locale string <p>
+	 * The locale to extract the primary language code from
+	 * </p>
+	 * @return string The language code associated with the language or &null; in case of error.
 	 */
-	public static function getPrimaryLanguage ($arg1) {}
+	public static function getPrimaryLanguage ($locale) {}
 
 	/**
-	 * @param arg1
+	 * Gets the script for the input locale
+	 * @link http://php.net/manual/en/locale.getscript.php
+	 * @param locale string <p>
+	 * The locale to extract the script code from
+	 * </p>
+	 * @return string The script subtag for the locale or &null; if not present
 	 */
-	public static function getScript ($arg1) {}
+	public static function getScript ($locale) {}
 
 	/**
-	 * @param arg1
+	 * Gets the region for the input locale
+	 * @link http://php.net/manual/en/locale.getregion.php
+	 * @param locale string <p>
+	 * The locale to extract the region code from
+	 * </p>
+	 * @return string The region subtag for the locale or &null; if not present
 	 */
-	public static function getRegion ($arg1) {}
+	public static function getRegion ($locale) {}
 
 	/**
-	 * @param arg1
+	 * Gets the keywords for the input locale
+	 * @link http://php.net/manual/en/locale.getkeywords.php
+	 * @param locale string <p>
+	 * The locale to extract the keywords from
+	 * </p>
+	 * @return array Associative array containing the keyword-value pairs for this locale
 	 */
-	public static function getKeywords ($arg1) {}
+	public static function getKeywords ($locale) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
+	 * Returns an appropriately localized display name for script of the input locale
+	 * @link http://php.net/manual/en/locale.getdisplayscript.php
+	 * @param locale string <p>
+	 * The locale to return a display script for
+	 * </p>
+	 * @param in_locale string[optional] <p>
+	 * Optional format locale to use to display the script name
+	 * </p>
+	 * @return string Display name of the script for the $locale in the format appropriate for
+	 * $in_locale.
 	 */
-	public static function getDisplayScript ($arg1, $arg2) {}
+	public static function getDisplayScript ($locale, $in_locale = null) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
+	 * Returns an appropriately localized display name for region of the input locale
+	 * @link http://php.net/manual/en/locale.getdisplayregion.php
+	 * @param locale string <p>
+	 * The locale to return a display region for.
+	 * </p>
+	 * @param in_locale string[optional] <p>
+	 * Optional format locale to use to display the region name
+	 * </p>
+	 * @return string display name of the region for the $locale in the format appropriate for
+	 * $in_locale.
 	 */
-	public static function getDisplayRegion ($arg1, $arg2) {}
+	public static function getDisplayRegion ($locale, $in_locale = null) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
+	 * Returns an appropriately localized display name for the input locale
+	 * @link http://php.net/manual/en/locale.getdisplayname.php
+	 * @param locale string <p>
+	 * The locale to return a display name for.
+	 * </p>
+	 * @param in_locale string[optional] <p>optional format locale</p>
+	 * @return string Display name of the locale in the format appropriate for $in_locale.
 	 */
-	public static function getDisplayName ($arg1, $arg2) {}
+	public static function getDisplayName ($locale, $in_locale = null) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
+	 * Returns an appropriately localized display name for language of the inputlocale
+	 * @link http://php.net/manual/en/locale.getdisplaylanguage.php
+	 * @param locale string <p>
+	 * The locale to return a display language for
+	 * </p>
+	 * @param in_locale string[optional] <p>
+	 * Optional format locale to use to display the language name
+	 * </p>
+	 * @return string display name of the language for the $locale in the format appropriate for
+	 * $in_locale.
 	 */
-	public static function getDisplayLanguage ($arg1, $arg2) {}
+	public static function getDisplayLanguage ($locale, $in_locale = null) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
+	 * Returns an appropriately localized display name for variants of the input locale
+	 * @link http://php.net/manual/en/locale.getdisplayvariant.php
+	 * @param locale string <p>
+	 * The locale to return a display variant for
+	 * </p>
+	 * @param in_locale string[optional] <p>
+	 * Optional format locale to use to display the variant name
+	 * </p>
+	 * @return string Display name of the variant for the $locale in the format appropriate for
+	 * $in_locale.
 	 */
-	public static function getDisplayVariant ($arg1, $arg2) {}
+	public static function getDisplayVariant ($locale, $in_locale = null) {}
 
 	/**
-	 * @param arg1
+	 * Returns a correctly ordered and delimited locale ID
+	 * @link http://php.net/manual/en/locale.composelocale.php
+	 * @param subtags array <p>
+	 * an array containing a list of key-value pairs, where the keys identify
+	 * the particular locale ID subtags, and the values are the associated
+	 * subtag values. 
+	 * <p>
+	 * The 'variant' and 'private' subtags can take maximum 15 values
+	 * whereas 'extlang' can take maximum 3 values.e.g. Variants are allowed
+	 * with the suffix ranging from 0-14. Hence the keys for the input array
+	 * can be variant0, variant1, ...,variant14. In the returned locale id,
+	 * the subtag is ordered by suffix resulting in variant0 followed by
+	 * variant1 followed by variant2 and so on.
+	 * </p>
+	 * 	<p>
+	 * 	The 'variant', 'private' and 'extlang' multiple values can be specified both
+	 * 	as array under specific key (e.g. 'variant') and as multiple numbered keys
+	 * 	(e.g. 'variant0', 'variant1', etc.).
+	 * 	</p>
+	 * </p>
+	 * @return string The corresponding locale identifier.
 	 */
-	public static function composeLocale ($arg1) {}
+	public static function composeLocale (array $subtags) {}
 
 	/**
-	 * @param arg1
+	 * Returns a key-value array of locale ID subtag elements.
+	 * @link http://php.net/manual/en/locale.parselocale.php
+	 * @param locale string <p>
+	 * The locale to extract the subtag array from. Note: The 'variant' and
+	 * 'private' subtags can take maximum 15 values whereas 'extlang' can take
+	 * maximum 3 values.
+	 * </p>
+	 * @return array an array containing a list of key-value pairs, where the keys
+	 * identify the particular locale ID subtags, and the values are the
+	 * associated subtag values. The array will be ordered as the locale id
+	 * subtags e.g. in the locale id if variants are '-varX-varY-varZ' then the
+	 * returned array will have variant0=&gt;varX , variant1=&gt;varY ,
+	 * variant2=&gt;varZ
 	 */
-	public static function parseLocale ($arg1) {}
+	public static function parseLocale ($locale) {}
 
 	/**
-	 * @param arg1
+	 * Gets the variants for the input locale
+	 * @link http://php.net/manual/en/locale.getallvariants.php
+	 * @param locale string <p>
+	 * The locale to extract the variants from
+	 * </p>
+	 * @return array The array containing the list of all variants subtag for the locale 
+	 * or &null; if not present
 	 */
-	public static function getAllVariants ($arg1) {}
+	public static function getAllVariants ($locale) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
-	 * @param arg3
+	 * Checks if a language tag filter matches with locale
+	 * @link http://php.net/manual/en/locale.filtermatches.php
+	 * @param langtag string <p>
+	 * The language tag to check
+	 * </p>
+	 * @param locale string <p>
+	 * The language range to check against
+	 * </p>
+	 * @param canonicalize bool[optional] <p>
+	 * If true, the arguments will be converted to canonical form before
+	 * matching. 
+	 * </p>
+	 * @return bool true if $locale matches $langtag false otherwise.
 	 */
-	public static function filterMatches ($arg1, $arg2, $arg3) {}
+	public static function filterMatches ($langtag, $locale, $canonicalize = null) {}
 
 	/**
-	 * @param arg1
-	 * @param arg2
-	 * @param arg3
-	 * @param arg4
+	 * Searches the language tag list for the best match to the language
+	 * @link http://php.net/manual/en/locale.lookup.php
+	 * @param langtag array <p>
+	 * An array containing a list of language tags to compare to 
+	 * locale. Maximum 100 items allowed.
+	 * </p>
+	 * @param locale string <p>
+	 * The locale to use as the language range when matching.
+	 * </p>
+	 * @param canonicalize bool[optional] <p>
+	 * If true, the arguments will be converted to canonical form before
+	 * matching.
+	 * </p>
+	 * @param default string[optional] <p>
+	 * The locale to use if no match is found.
+	 * </p>
+	 * @return string The closest matching language tag or default value.
 	 */
-	public static function lookup ($arg1, $arg2, $arg3, $arg4) {}
+	public static function lookup (array $langtag, $locale, $canonicalize = null, $default = null) {}
 
 	/**
 	 * @param arg1
@@ -393,9 +754,14 @@ class Locale  {
 	public static function canonicalize ($arg1) {}
 
 	/**
-	 * @param arg1
+	 * Tries to find out best available locale based on HTTP "Accept-Language" header
+	 * @link http://php.net/manual/en/locale.acceptfromhttp.php
+	 * @param header string <p>
+	 * The string containing the "Accept-Language" header according to format in RFC 2616.
+	 * </p>
+	 * @return string The corresponding locale identifier.
 	 */
-	public static function acceptFromHttp ($arg1) {}
+	public static function acceptFromHttp ($header) {}
 
 }
 
@@ -408,46 +774,112 @@ class MessageFormatter  {
 	public function __construct ($locale, $pattern) {}
 
 	/**
-	 * @param locale
-	 * @param pattern
+	 * Constructs a new Message Formatter
+	 * @link http://php.net/manual/en/messageformatter.create.php
+	 * @param locale string <p>
+	 * The locale to use when formatting arguments
+	 * </p>
+	 * @param pattern string <p>
+	 * The pattern string to stick arguments into. 
+	 * The pattern uses an 'apostrophe-friendly' syntax; it is run through
+	 * umsg_autoQuoteApostrophe 
+	 * before being interpreted.
+	 * </p>
+	 * @return MessageFormatter The formatter object
 	 */
 	public static function create ($locale, $pattern) {}
 
 	/**
-	 * @param args
+	 * Format the message
+	 * @link http://php.net/manual/en/messageformatter.format.php
+	 * @param args array <p>
+	 * Arguments to insert into the format string
+	 * </p>
+	 * @return string The formatted string, or false if an error occurred
 	 */
-	public function format ($args) {}
+	public function format (array $args) {}
 
 	/**
-	 * @param locale
-	 * @param pattern
-	 * @param args
+	 * Quick format message
+	 * @link http://php.net/manual/en/messageformatter.formatmessage.php
+	 * @param locale string <p>
+	 * The locale to use for formatting locale-dependent parts
+	 * </p>
+	 * @param pattern string <p>
+	 * The pattern string to insert things into.
+	 * The pattern uses an 'apostrophe-friendly' syntax; it is run through
+	 * umsg_autoQuoteApostrophe 
+	 * before being interpreted.
+	 * </p>
+	 * @param args array <p>
+	 * The array of values to insert into the format string
+	 * </p>
+	 * @return string The formatted pattern string or false if an error occurred
 	 */
-	public static function formatMessage ($locale, $pattern, $args) {}
+	public static function formatMessage ($locale, $pattern, array $args) {}
 
 	/**
-	 * @param source
+	 * Parse input string according to pattern
+	 * @link http://php.net/manual/en/messageformatter.parse.php
+	 * @param value string <p>
+	 * The string to parse
+	 * </p>
+	 * @return array An array containing the items extracted, or false on error
 	 */
-	public function parse ($source) {}
+	public function parse ($value) {}
 
 	/**
-	 * @param locale
-	 * @param pattern
-	 * @param args
+	 * Quick parse input string
+	 * @link http://php.net/manual/en/messageformatter.parsemessage.php
+	 * @param locale string <p>
+	 * The locale to use for parsing locale-dependent parts
+	 * </p>
+	 * @param value string <p>
+	 * The string to parse for items
+	 * </p>
+	 * @return array An array containing items extracted, or false on error
 	 */
-	public static function parseMessage ($locale, $pattern, $args) {}
+	public static function parseMessage ($locale, $value) {}
 
 	/**
-	 * @param pattern
+	 * Set the pattern used by the formatter
+	 * @link http://php.net/manual/en/messageformatter.setpattern.php
+	 * @param pattern string <p>
+	 * The pattern string to use in this message formatter.
+	 * The pattern uses an 'apostrophe-friendly' syntax; it is run through
+	 * umsg_autoQuoteApostrophe 
+	 * before being interpreted.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function setPattern ($pattern) {}
 
+	/**
+	 * Get the pattern used by the formatter
+	 * @link http://php.net/manual/en/messageformatter.getpattern.php
+	 * @return string The pattern string for this message formatter
+	 */
 	public function getPattern () {}
 
+	/**
+	 * Get the locale for which the formatter was created.
+	 * @link http://php.net/manual/en/messageformatter.getlocale.php
+	 * @return string The locale name
+	 */
 	public function getLocale () {}
 
+	/**
+	 * Get the error code from last operation
+	 * @link http://php.net/manual/en/messageformatter.geterrorcode.php
+	 * @return int The error code, one of UErrorCode values. Initial value is U_ZERO_ERROR.
+	 */
 	public function getErrorCode () {}
 
+	/**
+	 * Get the error text from the last operation
+	 * @link http://php.net/manual/en/messageformatter.geterrormessage.php
+	 * @return string Description of the last error.
+	 */
 	public function getErrorMessage () {}
 
 }
@@ -473,69 +905,189 @@ class IntlDateFormatter  {
 	public function __construct ($locale, $datetype, $timetype, $timezone, $calendar, $pattern) {}
 
 	/**
-	 * @param locale
-	 * @param datetype
-	 * @param timetype
-	 * @param timezone[optional]
-	 * @param calendar[optional]
-	 * @param pattern[optional]
+	 * Create a date formatter
+	 * @link http://php.net/manual/en/intldateformatter.create.php
+	 * @param locale string <p>
+	 * Locale to use when formatting or parsing.
+	 * </p>
+	 * @param datetype int <p>
+	 * Date type to use (none, 
+	 * short, medium, 
+	 * long, full). 
+	 * This is one of the 
+	 * IntlDateFormatter constants.
+	 * </p>
+	 * @param timetype int <p>
+	 * Time type to use (none, 
+	 * short, medium, 
+	 * long, full).
+	 * This is one of the 
+	 * IntlDateFormatter constants.
+	 * </p>
+	 * @param timezone string[optional] <p>
+	 * Time zone ID, default is system default. 
+	 * </p>
+	 * @param calendar int[optional] <p>
+	 * Calendar to use for formatting or parsing; default is Gregorian.
+	 * This is one of the 
+	 * IntlDateFormatter calendar constants.
+	 * </p>
+	 * @param pattern string[optional] <p>
+	 * Optional pattern to use when formatting or parsing 
+	 * </p>
+	 * @return IntlDateFormatter 
 	 */
-	public static function create ($locale, $datetype, $timetype, $timezone, $calendar, $pattern) {}
+	public static function create ($locale, $datetype, $timetype, $timezone = null, $calendar = null, $pattern = null) {}
 
+	/**
+	 * Get the datetype used for the IntlDateFormatter
+	 * @link http://php.net/manual/en/intldateformatter.getdatetype.php
+	 * @return int The current date type value of the formatter.
+	 */
 	public function getDateType () {}
 
+	/**
+	 * Get the timetype used for the IntlDateFormatter
+	 * @link http://php.net/manual/en/intldateformatter.gettimetype.php
+	 * @return int The current date type value of the formatter.
+	 */
 	public function getTimeType () {}
 
+	/**
+	 * Get the calendar used for the IntlDateFormatter
+	 * @link http://php.net/manual/en/intldateformatter.getcalendar.php
+	 * @return int The calendar being used by the formatter.
+	 */
 	public function getCalendar () {}
 
 	/**
-	 * @param which
+	 * sets the calendar used to the appropriate calendar, which must be
+	 * @link http://php.net/manual/en/intldateformatter.setcalendar.php
+	 * @param which int <p>
+	 *  The calendar to use.
+	 *  Default is IntlDateFormatter::GREGORIAN.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function setCalendar ($which) {}
 
+	/**
+	 * Get the timezone-id used for the IntlDateFormatter
+	 * @link http://php.net/manual/en/intldateformatter.gettimezoneid.php
+	 * @return string ID string for the time zone used by this formatter.
+	 */
 	public function getTimeZoneId () {}
 
 	/**
-	 * @param zone
+	 * Sets the time zone to use
+	 * @link http://php.net/manual/en/intldateformatter.settimezoneid.php
+	 * @param zone string <p>
+	 * The time zone ID string of the time zone to use. 
+	 * If &null; or the empty string, the default time zone for the runtime is used. 
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function setTimeZoneId ($zone) {}
 
 	/**
-	 * @param pattern
+	 * Set the pattern used for the IntlDateFormatter
+	 * @link http://php.net/manual/en/intldateformatter.setpattern.php
+	 * @param pattern string <p>
+	 *  New pattern string to use.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
+	 * Bad formatstrings are usually the cause of the failure.
 	 */
 	public function setPattern ($pattern) {}
 
+	/**
+	 * Get the pattern used for the IntlDateFormatter
+	 * @link http://php.net/manual/en/intldateformatter.getpattern.php
+	 * @return string The pattern string being used to format/parse.
+	 */
 	public function getPattern () {}
 
-	public function getLocale () {}
+	/**
+	 * Get the locale used by formatter
+	 * @link http://php.net/manual/en/intldateformatter.getlocale.php
+	 * @param which int[optional] 
+	 * @return string the locale of this formatter or 'false' if error
+	 */
+	public function getLocale ($which = null) {}
 
 	/**
-	 * @param lenient
+	 * Set the leniency of the parser
+	 * @link http://php.net/manual/en/intldateformatter.setlenient.php
+	 * @param lenient bool <p>
+	 *  Sets whether the parser is lenient or not, default is false (strict).
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function setLenient ($lenient) {}
 
+	/**
+	 * Get the lenient used for the IntlDateFormatter
+	 * @link http://php.net/manual/en/intldateformatter.islenient.php
+	 * @return bool true if parser is lenient, false if parser is strict. By default the parser is strict.
+	 */
 	public function isLenient () {}
 
 	/**
-	 * @param args[optional]
-	 * @param array[optional]
+	 * Format the date/time value as a string
+	 * @link http://php.net/manual/en/intldateformatter.format.php
+	 * @param value mixed <p>
+	 *  Value to format. Can be integer for an Unix timestamp value (seconds since epoch, UTC) or 
+	 * array for a localtime array.
+	 * </p>
+	 * @return string The formatted string or, if an error occurred, false.
 	 */
-	public function format ($args, $array) {}
+	public function format ($value) {}
 
 	/**
-	 * @param string
-	 * @param position[optional]
+	 * Parse string to a timestamp value
+	 * @link http://php.net/manual/en/intldateformatter.parse.php
+	 * @param value string <p>
+	 *  string to convert to a time 
+	 * </p>
+	 * @param position int[optional] <p>
+	 *  Position at which to start the parsing in $value (zero-based).
+	 *  If no error occurs before $value is consumed, $parse_pos will contain -1
+	 * otherwise it will contain the position at which parsing ended (and the error occurred).
+	 * This variable will contain the end position if the parse fails.
+	 *  If $parse_pos > strlen($value), the parse fails immediately. 
+	 * </p>
+	 * @return int timestamp parsed value
 	 */
-	public function parse ($string, &$position) {}
+	public function parse ($value, &$position = null) {}
 
 	/**
-	 * @param string
-	 * @param position[optional]
+	 * Parse string to a field-based time value
+	 * @link http://php.net/manual/en/intldateformatter.localtime.php
+	 * @param value string <p>
+	 *  string to convert to a time 
+	 * </p>
+	 * @param position int[optional] <p>
+	 * Position at which to start the parsing in $value (zero-based).
+	 * If no error occurs before $value is consumed, $parse_pos will contain -1
+	 * otherwise it will contain the position at which parsing ended .
+	 * If $parse_pos > strlen($value), the parse fails immediately. 
+	 * </p>
+	 * @return array Localtime compatible array of integers : contains 24 hour clock value in tm_hour field
 	 */
-	public function localtime ($string, &$position) {}
+	public function localtime ($value, &$position = null) {}
 
+	/**
+	 * Get the error code from last operation
+	 * @link http://php.net/manual/en/intldateformatter.geterrorcode.php
+	 * @return int The error code, one of UErrorCode values. Initial value is U_ZERO_ERROR.
+	 */
 	public function getErrorCode () {}
 
+	/**
+	 * Get the error text from the last operation.
+	 * @link http://php.net/manual/en/intldateformatter.geterrormessage.php
+	 * @return string Description of the last error.
+	 */
 	public function getErrorMessage () {}
 
 }
@@ -1352,7 +1904,7 @@ define ('U_REGEX_ERROR_LIMIT', 66318);
 define ('U_STRINGPREP_PROHIBITED_ERROR', 66560);
 define ('U_STRINGPREP_UNASSIGNED_ERROR', 66561);
 define ('U_STRINGPREP_CHECK_BIDI_ERROR', 66562);
-define ('U_ERROR_LIMIT', 66568);
+define ('U_ERROR_LIMIT', 66569);
 
 // End of intl v.1.0.0
 ?>

@@ -204,6 +204,33 @@ function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc) 
  * If cache_limiter is specified, the name of the
  * current cache limiter is changed to the new value.
  * </p>
+ * <table>
+ * Possible values
+ * <tr valign="top">
+ * <td>Value</td>
+ * <td>Headers sent</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>public</td>
+ * <td>
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>private_no_expire</td>
+ * <td>
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>private</td>
+ * <td>
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>nocache</td>
+ * <td>
+ * </td>
+ * </tr>
+ * </table>
  * @return string the name of the current cache limiter.
  */
 function session_cache_limiter ($cache_limiter = null) {}
@@ -229,22 +256,26 @@ function session_cache_expire ($new_cache_expire = null) {}
  * Set the session cookie parameters
  * @link http://php.net/manual/en/function.session-set-cookie-params.php
  * @param lifetime int <p>
- * Lifetime of the session cookie, defined in seconds.
+ * Lifetime of the
+ * session cookie, defined in seconds.
  * </p>
  * @param path string[optional] <p>
- * Path on the domain where the cookie will work. Use a single 
- * slash ('/') for all paths on the domain.
+ * Path on the domain where
+ * the cookie will work. Use a single slash ('/') for all paths on the
+ * domain.
  * </p>
  * @param domain string[optional] <p>
- * Cookie domain, for example 'www.php.net'. To make cookies visible 
- * on all subdomains then the domain must be prefixed with a dot like 
- * '.php.net'.
+ * Cookie domain, for
+ * example 'www.php.net'. To make cookies visible on all subdomains then
+ * the domain must be prefixed with a dot like '.php.net'.
  * </p>
  * @param secure bool[optional] <p>
- * If true cookie will only be sent over secure connections.
+ * If true cookie will only be sent over
+ * secure connections.
  * </p>
  * @param httponly bool[optional] <p>
- * If set to true then PHP will attempt to send the httponly 
+ * If set to true then PHP will attempt to send the
+ * httponly
  * flag when setting the session cookie.
  * </p>
  * @return void 
@@ -256,11 +287,16 @@ function session_set_cookie_params ($lifetime, $path = null, $domain = null, $se
  * @link http://php.net/manual/en/function.session-get-cookie-params.php
  * @return array an array with the current session cookie information, the array
  * contains the following items:
- * "lifetime" - The lifetime of the cookie in seconds.
- * "path" - The path where information is stored.
- * "domain" - The domain of the cookie.
- * "secure" - The cookie should only be sent over secure connections.
- * "httponly" - The cookie can only be accessed through the HTTP protocol.
+ * "lifetime" - The
+ * lifetime of the cookie in seconds.
+ * "path" - The path where
+ * information is stored.
+ * "domain" - The domain
+ * of the cookie.
+ * "secure" - The cookie
+ * should only be sent over secure connections.
+ * "httponly" - The
+ * cookie can only be accessed through the HTTP protocol.
  */
 function session_get_cookie_params () {}
 

@@ -100,6 +100,11 @@ class ZipArchive  {
 	 */
 	public function close () {}
 
+	/**
+	 * Returns the status error message, system and/or zip messages.
+	 * @link http://php.net/manual/en/function.ziparchive-getstatusstring.php
+	 * @return string a file pointer (resource) on success or false on failure.
+	 */
 	public function getStatusString () {}
 
 	/**
@@ -300,8 +305,7 @@ class ZipArchive  {
 	 * The name of the entry to look up
 	 * </p>
 	 * @param flags int[optional] <p>
-	 * The function returns the index of the file named fname in
-	 * archive. The flags are specified by ORing the following values,
+	 * The flags are specified by ORing the following values,
 	 * or 0 for none of them.
 	 * <p>
 	 * ZIPARCHIVE::FL_NOCASE

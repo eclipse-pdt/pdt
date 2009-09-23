@@ -1,6 +1,6 @@
 <?php
 
-// Start of standard v.5.3.0beta1
+// Start of standard v.5.3.0
 
 class __PHP_Incomplete_Class  {
 }
@@ -133,39 +133,39 @@ function time_sleep_until ($timestamp) {}
  * <td>Description</td>
  * </tr>
  * <tr valign="top">
- * <td>tm_sec</td>
+ * <td>"tm_sec"</td>
  * <td>Seconds after the minute (0-61)</td>
  * </tr>
  * <tr valign="top">
- * <td>tm_min</td>
+ * <td>"tm_min"</td>
  * <td>Minutes after the hour (0-59)</td>
  * </tr>
  * <tr valign="top">
- * <td>tm_hour</td>
+ * <td>"tm_hour"</td>
  * <td>Hour since midnight (0-23)</td>
  * </tr>
  * <tr valign="top">
- * <td>tm_mday</td>
+ * <td>"tm_mday"</td>
  * <td>Day of the month (1-31)</td>
  * </tr>
  * <tr valign="top">
- * <td>tm_mon</td>
+ * <td>"tm_mon"</td>
  * <td>Months since January (0-11)</td>
  * </tr>
  * <tr valign="top">
- * <td>tm_year</td>
+ * <td>"tm_year"</td>
  * <td>Years since 1900</td>
  * </tr>
  * <tr valign="top">
- * <td>tm_wday</td>
+ * <td>"tm_wday"</td>
  * <td>Days since Sunday (0-6)</td>
  * </tr>
  * <tr valign="top">
- * <td>tm_yday</td>
+ * <td>"tm_yday"</td>
  * <td>Days since January 1 (0-365)</td>
  * </tr>
  * <tr valign="top">
- * <td>unparsed</td>
+ * <td>"unparsed"</td>
  * <td>the date part which was not
  * recognized using the specified format</td>
  * </tr>
@@ -196,9 +196,9 @@ function flush () {}
  * </p>
  * @param cut bool[optional] <p>
  * If the cut is set to true, the string is
- * always wrapped at the specified width. So if you have a word that
- * is larger than the given width, it is broken apart. (See second
- * example).
+ * always wrapped at or before the specified width. So if you have
+ * a word that is larger than the given width, it is broken apart.
+ * (See second example).
  * </p>
  * @return string the given string wrapped at the specified column.
  */
@@ -453,7 +453,7 @@ function crc32 ($str) {}
 function iptcparse ($iptcblock) {}
 
 /**
- * Embed binary IPTC data into a JPEG image
+ * Embeds binary IPTC data into a JPEG image
  * @link http://php.net/manual/en/function.iptcembed.php
  * @param iptcdata string <p>
  * The data to be written.
@@ -512,7 +512,7 @@ function iptcembed ($iptcdata, $jpeg_file_name, $spool = null) {}
  * mime is the correspondant MIME type of the image.
  * This information can be used to deliver images with correct the HTTP 
  * Content-type header:
- * getimagesize() and MIME types
+ * getimagesize and MIME types
  * ]]>
  * </p>
  * <p>
@@ -753,9 +753,9 @@ function phpversion ($extension = null) {}
  * <td>CREDITS_ALL</td>
  * <td>
  * All the credits, equivalent to using: CREDITS_DOCS +
- * CREDITS_GENERAL + CREDITS_GROUP + CREDITS_MODULES +
- * CREDITS_FULLPAGE. It generates a complete stand-alone HTML
- * page with the appropriate tags.
+ * CREDITS_GENERAL + CREDITS_GROUP +
+ * CREDITS_MODULES + CREDITS_FULLPAGE.
+ * It generates a complete stand-alone HTML page with the appropriate tags.
  * </td>
  * </tr>
  * <tr valign="top">
@@ -923,26 +923,56 @@ function strnatcasecmp ($str1, $str2) {}
 function substr_count ($haystack, $needle, $offset = null, $length = null) {}
 
 /**
- * Find length of initial segment matching mask
+ * Finds the length of the first segment of a string consisting
+   entirely of characters contained within a given mask.
  * @link http://php.net/manual/en/function.strspn.php
- * @param str1 string <p>
- * The first string.
+ * @param subject string <p>
+ * The string to examine.
  * </p>
- * @param str2 string <p>
- * The second string.
+ * @param mask string <p>
+ * The list of allowable characters to include in counted segments.
  * </p>
  * @param start int[optional] <p>
- * The start position of the string to examine.
- * Negative value counts position from the end of a string.
+ * The position in subject to
+ * start searching.
+ * </p>
+ * <p>
+ * If start is given and is non-negative,
+ * then strspn will begin
+ * examining subject at
+ * the start'th position. For instance, in
+ * the string 'abcdef', the character at
+ * position 0 is 'a', the
+ * character at position 2 is
+ * 'c', and so forth.
+ * </p>
+ * <p>
+ * If start is given and is negative,
+ * then strspn will begin
+ * examining subject at
+ * the start'th position from the end
+ * of subject.
  * </p>
  * @param length int[optional] <p>
- * The length of the string to examine.
- * Negative value sets length from the end of a string.
+ * The length of the segment from subject
+ * to examine. 
+ * </p>
+ * <p>
+ * If length is given and is non-negative,
+ * then subject will be examined
+ * for length characters after the starting
+ * position.
+ * </p>
+ * <p>
+ * If lengthis given and is negative,
+ * then subject will be examined from the
+ * starting position up to length
+ * characters from the end of subject.
  * </p>
  * @return int the length of the initial segment of str1
  * which consists entirely of characters in str2.
  */
-function strspn ($str1, $str2, $start = null, $length = null) {}
+function strspn ($subject, $mask, $start = null, $length = null) {}
 
 /**
  * Find length of initial segment not matching mask
@@ -1804,7 +1834,7 @@ function similar_text ($first, $second, &$percent = null) {}
  * The input string.
  * </p>
  * @param limit int[optional] <p>
- * If limit is set, the returned array will contain
+ * If limit is set and positive, the returned array will contain
  * a maximum of limit elements with the last
  * element containing the rest of string.
  * </p>
@@ -1812,11 +1842,16 @@ function similar_text ($first, $second, &$percent = null) {}
  * If the limit parameter is negative, all components
  * except the last -limit are returned.
  * </p>
+ * <p>
+ * If the limit parameter is zero, then this is treated as 1.
+ * </p>
  * @return array If delimiter is an empty string (""),
- * explode will return false. If
- * delimiter contains a value that is not contained
- * in string, then explode will
- * return an array containing string.
+ * explode will return false.
+ * If delimiter contains a value that is not
+ * contained in string and a negative
+ * limit is used, then an empty array will be
+ * returned. For any other limit, an array containing
+ * string will be returned.
  */
 function explode ($delimiter, $string, $limit = null) {}
 
@@ -2109,7 +2144,7 @@ function localeconv () {}
  * </tr>
  * <tr valign="top">
  * <td>MON_GROUPING</td>
- * <td>Like 'grouping' element.</td>
+ * <td>Like "grouping" element.</td>
  * </tr>
  * <tr valign="top">
  * <td>POSITIVE_SIGN</td>
@@ -2145,7 +2180,7 @@ function localeconv () {}
  * </tr>
  * <tr valign="top">
  * <td>P_SIGN_POSN</td>
- * Returns 0 if parentheses surround the quantity and currency_symbol.
+ * Returns 0 if parentheses surround the quantity and CURRENCY_SYMBOL.
  * @return string the element as a string, or false if item
  * is not valid.
  */
@@ -2561,15 +2596,15 @@ function symlink ($target, $link) {}
 /**
  * Create a hard link
  * @link http://php.net/manual/en/function.link.php
- * @param target string <p>
+ * @param to_path string <p>
  * Target of the link.
  * </p>
- * @param link string <p>
+ * @param from_path string <p>
  * The link name.
  * </p>
  * @return bool Returns true on success or false on failure.
  */
-function link ($target, $link) {}
+function link ($to_path, $from_path) {}
 
 /**
  * Deletes a file
@@ -3425,8 +3460,116 @@ function octdec ($octal_string) {}
  * Decimal to binary
  * @link http://php.net/manual/en/function.decbin.php
  * @param number int <p>
- * Decimal value to convert 
+ * Decimal value to convert
  * </p>
+ * <table>
+ * Range of inputs on 32-bit machines
+ * <tr valign="top">
+ * <td>positive number</td>
+ * <td>negative number</td>
+ * <td>return value</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>0</td>
+ * <td></td>
+ * <td>0</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>1</td>
+ * <td></td>
+ * <td>1</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2</td>
+ * <td></td>
+ * <td>10</td>
+ * </tr>
+ * <tr valign="top">
+ * ... normal progression ...</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2147483646</td>
+ * <td></td>
+ * <td>1111111111111111111111111111110</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2147483647 (largest signed integer)</td>
+ * <td></td>
+ * <td>1111111111111111111111111111111 (31 1's)</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2147483648</td>
+ * <td>-2147483648</td>
+ * <td>10000000000000000000000000000000</td>
+ * </tr>
+ * <tr valign="top">
+ * ... normal progression ...</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>4294967294</td>
+ * <td>-2</td>
+ * <td>11111111111111111111111111111110</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>4294967295 (largest unsigned integer)</td>
+ * <td>-1</td>
+ * <td>11111111111111111111111111111111 (32 1's)</td>
+ * </tr>
+ * </table>
+ * <table>
+ * Range of inputs on 64-bit machines
+ * <tr valign="top">
+ * <td>positive number</td>
+ * <td>negative number</td>
+ * <td>return value</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>0</td>
+ * <td></td>
+ * <td>0</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>1</td>
+ * <td></td>
+ * <td>1</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2</td>
+ * <td></td>
+ * <td>10</td>
+ * </tr>
+ * <tr valign="top">
+ * ... normal progression ...</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>9223372036854775806</td>
+ * <td></td>
+ * <td>111111111111111111111111111111111111111111111111111111111111110</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>9223372036854775807 (largest signed integer)</td>
+ * <td></td>
+ * <td>111111111111111111111111111111111111111111111111111111111111111 (31 1's)</td>
+ * </tr>
+ * <tr valign="top">
+ * <td></td>
+ * <td>-9223372036854775808</td>
+ * <td>1000000000000000000000000000000000000000000000000000000000000000</td>
+ * </tr>
+ * <tr valign="top">
+ * ... normal progression ...</td>
+ * </tr>
+ * <tr valign="top">
+ * <td></td>
+ * <td>-2</td>
+ * <td>1111111111111111111111111111111111111111111111111111111111111110</td>
+ * </tr>
+ * <tr valign="top">
+ * <td></td>
+ * <td>-1</td>
+ * <td>1111111111111111111111111111111111111111111111111111111111111111 (64 1's)</td>
+ * </tr>
+ * </table>
  * @return string Binary string representation of number
  */
 function decbin ($number) {}
@@ -3625,7 +3768,8 @@ function gettimeofday ($return_float = null) {}
  * Gets the current resource usages
  * @link http://php.net/manual/en/function.getrusage.php
  * @param who int[optional] <p>
- * If who is 1, getrusage will be called with RUSAGE_CHILDREN.
+ * If who is 1, getrusage will be called with
+ * RUSAGE_CHILDREN.
  * </p>
  * @return array an associative array containing the data returned from the system
  * call. All entries are accessible by using their documented field names.
@@ -3720,6 +3864,8 @@ function set_time_limit ($seconds) {}
 function get_cfg_var ($option) {}
 
 /**
+ * &Alias; <function>set_magic_quotes_runtime</function>
+ * @link http://php.net/manual/en/function.magic-quotes-runtime.php
  * @param new_setting
  */
 function magic_quotes_runtime ($new_setting) {}
@@ -3759,14 +3905,16 @@ function get_magic_quotes_runtime () {}
  * and 'c'. POST includes the POST uploaded file information.
  * </p>
  * <p>
- * Note that the order of the letters matters, as when using "gp", the
+ * Note that the order of the letters matters, as when using
+ * "GP", the
  * POST variables will overwrite GET variables with the same name. Any
  * other letters than GPC are discarded.
  * </p>
  * @param prefix string[optional] <p>
  * Variable name prefix, prepended before all variable's name imported
- * into the global scope. So if you have a GET value named "userid", and
- * provide a prefix "pref_", then you'll get a global variable named
+ * into the global scope. So if you have a GET value named
+ * "userid", and provide a prefix
+ * "pref_", then you'll get a global variable named
  * $pref_userid.
  * </p>
  * <p>
@@ -3864,6 +4012,8 @@ function error_get_last () {}
  * The function to be called. Class methods may also be invoked
  * statically using this function by passing
  * array($classname, $methodname) to this parameter.
+ * Additionally class methods of an object instance may be called by passing
+ * array($objectinstance, $methodname) to this parameter.
  * </p>
  * @param parameter mixed[optional] <p>
  * Zero or more parameters to be passed to the function.
@@ -3871,7 +4021,9 @@ function error_get_last () {}
  * <p>
  * Note that the parameters for call_user_func are
  * not passed by reference.
+ * call_user_func example and references
  * ]]>
+ * &example.outputs;
  * </p>
  * @param _ mixed[optional] 
  * @return mixed the function result, or false on error.
@@ -3913,17 +4065,33 @@ function call_user_method ($method_name, &$obj, $parameter = null, $_ = null) {}
 function call_user_method_array ($method_name, &$obj, array $params) {}
 
 /**
- * @param function_name
- * @param parameter[optional]
- * @param ...[optional]
+ * Call a static method
+ * @link http://php.net/manual/en/function.forward-static-call.php
+ * @param function callback <p>
+ * The function or method to be called. This parameter may be an array,
+ * with the name of the class, and the method, or a string, with a function
+ * name.
+ * </p>
+ * @param parameter mixed[optional] <p>
+ * Zero or more parameters to be passed to the function.
+ * </p>
+ * @param _ mixed[optional] 
+ * @return mixed the function result, or false on error.
  */
-function forward_static_call ($function_name, $parameter) {}
+function forward_static_call ($function, $parameter = null, $_ = null) {}
 
 /**
- * @param function_name
- * @param parameters
+ * Call a static method and pass the arguments as array
+ * @link http://php.net/manual/en/function.forward-static-call-array.php
+ * @param function callback <p>
+ * The function or method to be called. This parameter may be an &array;,
+ * with the name of the class, and the method, or a &string;, with a function
+ * name.
+ * </p>
+ * @param parameters array[optional] 
+ * @return mixed the function result, or false on error.
  */
-function forward_static_call_array ($function_name, $parameters) {}
+function forward_static_call_array ($function, array $parameters = null) {}
 
 /**
  * Generates a storable representation of a value
@@ -4071,8 +4239,22 @@ function memory_get_peak_usage ($real_usage = null) {}
  * Register a function for execution on shutdown
  * @link http://php.net/manual/en/function.register-shutdown-function.php
  * @param function callback <p>
+ * The shutdown function to register.
+ * </p>
+ * <p>
+ * The shutdown functions are called as the part of the request so that 
+ * it's possible to send the output from them. There is currently no way
+ * to process the data with output buffering functions in the shutdown
+ * function.
+ * </p>
+ * <p>
+ * Shutdown functions are called after closing all opened output buffers
+ * thus, for example, its output will not be compressed if zlib.output_compression is
+ * enabled.
  * </p>
  * @param parameter mixed[optional] <p>
+ * It is possible to pass parameters to the shutdown function by passing
+ * additional parameters.
  * </p>
  * @param _ mixed[optional] 
  * @return void 
@@ -4377,8 +4559,9 @@ function setrawcookie ($name, $value = null, $expire = null, $path = null, $doma
  * <p>
  * The second special case is the "Location:" header. Not only does
  * it send this header back to the browser, but it also returns a
- * REDIRECT (302) status code to the browser unless
- * some 3xx status code has already been set.
+ * REDIRECT (302) status code to the browser
+ * unless the 201 or
+ * a 3xx status code has already been set.
  * </p>
  * <p>
  * ]]>
@@ -4401,9 +4584,15 @@ function setrawcookie ($name, $value = null, $expire = null, $path = null, $doma
 function header ($string, $replace = null, $http_response_code = null) {}
 
 /**
- * @param name[optional]
+ * Remove previously set headers
+ * @link http://php.net/manual/en/function.header-remove.php
+ * @param name string[optional] <p>
+ * The header name to be removed.
+ * </p>
+ * This parameter is case-insensitive.
+ * @return void 
  */
-function header_remove ($name) {}
+function header_remove ($name = null) {}
 
 /**
  * Checks if or where headers have been sent
@@ -4449,12 +4638,14 @@ function connection_status () {}
 /**
  * Set whether a client disconnect should abort script execution
  * @link http://php.net/manual/en/function.ignore-user-abort.php
- * @param setting string[optional] <p>
- * If not set, the function will only return the current setting.
+ * @param value string[optional] <p>
+ * If set, this function will set the ignore_user_abort ini setting
+ * to the given value. If not, this function will
+ * only return the previous setting without changing it.
  * </p>
- * @return int the previous setting, as a boolean.
+ * @return int the previous setting, as an integer.
  */
-function ignore_user_abort ($setting = null) {}
+function ignore_user_abort ($value = null) {}
 
 /**
  * Parse a configuration file
@@ -4544,28 +4735,34 @@ function move_uploaded_file ($filename, $destination) {}
 function gethostbyaddr ($ip_address) {}
 
 /**
- * Get the IP address corresponding to a given Internet host name
+ * Get the IPv4 address corresponding to a given Internet host name
  * @link http://php.net/manual/en/function.gethostbyname.php
  * @param hostname string <p>
  * The host name.
  * </p>
- * @return string the IP address or a string containing the unmodified
+ * @return string the IPv4 address or a string containing the unmodified
  * hostname on failure.
  */
 function gethostbyname ($hostname) {}
 
 /**
- * Get a list of IP addresses corresponding to a given Internet host
+ * Get a list of IPv4 addresses corresponding to a given Internet host
    name
  * @link http://php.net/manual/en/function.gethostbynamel.php
  * @param hostname string <p>
  * The host name.
  * </p>
- * @return array an array of IP addresses or false if
+ * @return array an array of IPv4 addresses or false if
  * hostname could not be resolved.
  */
 function gethostbynamel ($hostname) {}
 
+/**
+ * Gets the host name
+ * @link http://php.net/manual/en/function.gethostname.php
+ * @return string a string with the hostname on success, otherwise false is 
+ * returned.
+ */
 function gethostname () {}
 
 /**
@@ -4625,8 +4822,9 @@ function getmxrr ($hostname, array &$mxhosts, array &$weight = null) {}
  * @link http://php.net/manual/en/function.dns-get-record.php
  * @param hostname string <p>
  * hostname should be a valid DNS hostname such
- * as "www.example.com". Reverse lookups can be generated using in-addr.arpa
- * notation, but gethostbyaddr is more suitable for
+ * as "www.example.com". Reverse lookups can be generated
+ * using in-addr.arpa notation, but
+ * gethostbyaddr is more suitable for
  * the majority of reverse lookups.
  * </p>
  * <p>
@@ -4694,7 +4892,7 @@ function getmxrr ($hostname, array &$mxhosts, array &$weight = null) {}
  * <tr valign="top">
  * <td>ttl</td>
  * <td>
- * Time To Live remaining for this record. This will not equal
+ * "Time To Live" remaining for this record. This will not equal
  * the record's original ttl, but will rather equal the original ttl minus whatever
  * length of time has passed since the authoritative name server was queried.
  * </td>
@@ -5060,14 +5258,14 @@ function is_scalar ($var) {}
 /**
  * Verify that the contents of a variable can be called as a function
  * @link http://php.net/manual/en/function.is-callable.php
- * @param var mixed <p>
+ * @param name callback <p>
  * Can be either the name of a function stored in a string variable, or
  * an object and the name of a method within the object, like this: 
  * array($SomeObject, 'MethodName')
  * </p>
  * @param syntax_only bool[optional] <p>
  * If set to true the function only verifies that
- * var might be a function or method. It will only
+ * name might be a function or method. It will only
  * reject simple variables that are not strings, or an array that does
  * not have a valid structure to be used as a callback. The valid ones
  * are supposed to have only 2 entries, the first of which is an object
@@ -5079,10 +5277,10 @@ function is_scalar ($var) {}
  * that someClass::SomeMethod() is a callable static method, this is not
  * the case.
  * </p>
- * @return bool true if var is callable, false 
+ * @return bool true if name is callable, false 
  * otherwise.
  */
-function is_callable ($var, $syntax_only = null, &$callable_name = null) {}
+function is_callable ($name, $syntax_only = null, &$callable_name = null) {}
 
 /**
  * Closes process file pointer
@@ -5234,7 +5432,7 @@ function fgets ($handle, $length = null) {}
  * </p>
  * @return string a string of up to length - 1 bytes read from
  * the file pointed to by handle, with all HTML and PHP
- * code striped.
+ * code stripped.
  * </p>
  * <p>
  * If an error occurs, returns false.
@@ -5483,8 +5681,10 @@ function fstat ($handle) {}
  * The offset.
  * </p>
  * <p>
- * To move to a position before the end-of-file, you need to pass a negative
- * value in offset.
+ * To move to a position before the end-of-file, you need to pass
+ * a negative value in offset and
+ * set whence
+ * to SEEK_END.
  * </p>
  * @param whence int[optional] <p>
  * whence values are:
@@ -5687,14 +5887,11 @@ function file ($filename, $flags = null, $context = null) {}
  * Name of the file to read.
  * </p>
  * @param flags int[optional] <p>
- * For all versions prior to PHP 6, this parameter is called
+ * Prior to PHP 6, this parameter is called
  * use_include_path and is a bool.
- * The flags parameter is only available since
- * PHP 6. If you use an older version and want to search for 
- * filename in the 
- * include path, this 
- * parameter must be true. Since PHP 6, you have to use the 
- * FILE_USE_INCLUDE_PATH flag instead.
+ * As of PHP 5 the FILE_USE_INCLUDE_PATH can be used
+ * to trigger include path
+ * search.
  * </p>
  * <p>
  * The value of flags can be any combination of 
@@ -5724,7 +5921,7 @@ function file ($filename, $flags = null, $context = null) {}
  * FILE_TEXT
  * </td>
  * <td>
- * If unicode semantics are enabled, the default encoding of the read
+ * As of PHP 6, the default encoding of the read
  * data is UTF-8. You can specify a different encoding by creating a 
  * custom context or by changing the default using 
  * stream_default_encoding. This flag cannot be 
@@ -5751,7 +5948,8 @@ function file ($filename, $flags = null, $context = null) {}
  * The offset where the reading starts.
  * </p>
  * @param maxlen int[optional] <p>
- * Maximum length of data read.
+ * Maximum length of data read. The default is to read until end
+ * of file is reached.
  * </p>
  * @return string The function returns the read data or false on failure.
  */
@@ -5765,7 +5963,7 @@ function file_get_contents ($filename, $flags = null, $context = null, $offset =
  * </p>
  * @param data mixed <p>
  * The data to write. Can be either a string, an
- * array or a stream resource (explained above).
+ * array or a stream resource.
  * </p>
  * <p>
  * If data is a stream resource, the
@@ -5805,7 +6003,9 @@ function file_get_contents ($filename, $flags = null, $context = null, $offset =
  * </td>
  * <td>
  * If file filename already exists, append 
- * the data to the file instead of overwriting it.
+ * the data to the file instead of overwriting it. Mutually
+ * exclusive with LOCK_EX since appends are atomic and thus there
+ * is no reason to lock.
  * </td>
  * </tr>
  * <tr valign="top">
@@ -5814,7 +6014,7 @@ function file_get_contents ($filename, $flags = null, $context = null, $offset =
  * </td>
  * <td>
  * Acquire an exclusive lock on the file while proceeding to the 
- * writing.
+ * writing. Mutually exclusive with FILE_APPEND.
  * </td>
  * </tr>
  * <tr valign="top">
@@ -5857,13 +6057,76 @@ function file_put_contents ($filename, $data, $flags = null, $context = null) {}
  * Runs the equivalent of the select() system call on the given
    arrays of streams with a timeout specified by tv_sec and tv_usec
  * @link http://php.net/manual/en/function.stream-select.php
- * @param read_streams
- * @param write_streams
- * @param except_streams
- * @param tv_sec
- * @param tv_usec[optional]
+ * @param read array <p>
+ * The streams listed in the read array will be watched to
+ * see if characters become available for reading (more precisely, to see if
+ * a read will not block - in particular, a stream resource is also ready on
+ * end-of-file, in which case an fread will return
+ * a zero length string).
+ * </p>
+ * @param write array <p>
+ * The streams listed in the write array will be
+ * watched to see if a write will not block.
+ * </p>
+ * @param except array <p>
+ * The streams listed in the except array will be
+ * watched for high priority exceptional ("out-of-band") data arriving.
+ * </p>
+ * <p>
+ * When stream_select returns, the arrays
+ * read, write and
+ * except are modified to indicate which stream
+ * resource(s) actually changed status.
+ * </p>
+ * You do not need to pass every array to
+ * stream_select. You can leave it out and use an
+ * empty array or &null; instead. Also do not forget that those arrays are
+ * passed by reference and will be modified after
+ * stream_select returns.
+ * @param tv_sec int <p>
+ * The tv_sec and tv_usec
+ * together form the timeout parameter,
+ * tv_sec specifies the number of seconds while
+ * tv_usec the number of microseconds.
+ * The timeout is an upper bound on the amount of time
+ * that stream_select will wait before it returns.
+ * If tv_sec and tv_usec are
+ * both set to 0, stream_select will
+ * not wait for data - instead it will return immediately, indicating the
+ * current status of the streams.
+ * </p>
+ * <p>
+ * If tv_sec is &null; stream_select
+ * can block indefinitely, returning only when an event on one of the
+ * watched streams occurs (or if a signal interrupts the system call).
+ * </p>
+ * <p>
+ * Using a timeout value of 0 allows you to
+ * instantaneously poll the status of the streams, however, it is NOT a
+ * good idea to use a 0 timeout value in a loop as it
+ * will cause your script to consume too much CPU time.
+ * </p>
+ * <p>
+ * It is much better to specify a timeout value of a few seconds, although
+ * if you need to be checking and running other code concurrently, using a
+ * timeout value of at least 200000 microseconds will
+ * help reduce the CPU usage of your script.
+ * </p>
+ * <p>
+ * Remember that the timeout value is the maximum time that will elapse;
+ * stream_select will return as soon as the
+ * requested streams are ready for use.
+ * </p>
+ * @param tv_usec int[optional] <p>
+ * See tv_sec description.
+ * </p>
+ * @return int On success stream_select returns the number of
+ * stream resources contained in the modified arrays, which may be zero if
+ * the timeout expires before anything interesting happens. On error false
+ * is returned and a warning raised (this can happen if the system call is
+ * interrupted by an incoming signal).
  */
-function stream_select (&$read_streams, &$write_streams, &$except_streams, $tv_sec, $tv_usec) {}
+function stream_select (array &$read, array &$write, array &$except, $tv_sec, $tv_usec = null) {}
 
 /**
  * Create a streams context
@@ -5878,7 +6141,7 @@ function stream_select (&$read_streams, &$write_streams, &$except_streams, $tv_s
  * @param params array[optional] <p>
  * Must be an associative array in the format
  * $arr['parameter'] = $value.
- * Refer to stream_context_set_params for
+ * Refer to context parameters for
  * a listing of standard stream parameters.
  * </p>
  * @return resource A stream context resource.
@@ -5903,7 +6166,13 @@ function stream_context_create (array $options = null, array $params = null) {}
 function stream_context_set_params ($stream_or_context, array $params) {}
 
 /**
- * @param stream_or_context
+ * Retrieves parameters from a context
+ * @link http://php.net/manual/en/function.stream-context-get-params.php
+ * @param stream_or_context resource <p>
+ * A stream resource or a
+ * context resource
+ * </p>
+ * @return array an associate array containing all context options and parameters.
  */
 function stream_context_get_params ($stream_or_context) {}
 
@@ -5962,27 +6231,79 @@ function stream_context_set_default (array $options) {}
 /**
  * Attach a filter to a stream
  * @link http://php.net/manual/en/function.stream-filter-prepend.php
- * @param stream
- * @param filtername
- * @param read_write[optional]
- * @param filterparams[optional]
+ * @param stream resource <p>
+ * The target stream.
+ * </p>
+ * @param filtername string <p>
+ * The filter name.
+ * </p>
+ * @param read_write int[optional] <p>
+ * By default, stream_filter_prepend will
+ * attach the filter to the read filter chain
+ * if the file was opened for reading (i.e. File Mode:
+ * r, and/or +). The filter
+ * will also be attached to the write filter chain
+ * if the file was opened for writing (i.e. File Mode:
+ * w, a, and/or +).
+ * STREAM_FILTER_READ,
+ * STREAM_FILTER_WRITE, and/or
+ * STREAM_FILTER_ALL can also be passed to the
+ * read_write parameter to override this behavior.
+ * See stream_filter_append for an example of
+ * using this parameter.
+ * </p>
+ * @param params mixed[optional] <p>
+ * This filter will be added with the specified params
+ * to the beginning of the list and will therefore be
+ * called first during stream operations. To add a filter to the end of the
+ * list, use stream_filter_append.
+ * </p>
+ * @return resource a resource which can be used to refer to this filter
+ * instance during a call to stream_filter_remove.
  */
-function stream_filter_prepend ($stream, $filtername, $read_write, $filterparams) {}
+function stream_filter_prepend ($stream, $filtername, $read_write = null, $params = null) {}
 
 /**
  * Attach a filter to a stream
  * @link http://php.net/manual/en/function.stream-filter-append.php
- * @param stream
- * @param filtername
- * @param read_write[optional]
- * @param filterparams[optional]
+ * @param stream resource <p>
+ * The target stream.
+ * </p>
+ * @param filtername string <p>
+ * The filter name.
+ * </p>
+ * @param read_write int[optional] <p>
+ * By default, stream_filter_append will
+ * attach the filter to the read filter chain
+ * if the file was opened for reading (i.e. File Mode:
+ * r, and/or +). The filter
+ * will also be attached to the write filter chain
+ * if the file was opened for writing (i.e. File Mode:
+ * w, a, and/or +).
+ * STREAM_FILTER_READ,
+ * STREAM_FILTER_WRITE, and/or
+ * STREAM_FILTER_ALL can also be passed to the
+ * read_write parameter to override this behavior.
+ * </p>
+ * @param params mixed[optional] <p>
+ * This filter will be added with the specified 
+ * params to the end of
+ * the list and will therefore be called last during stream operations.
+ * To add a filter to the beginning of the list, use
+ * stream_filter_prepend.
+ * </p>
+ * @return resource a resource which can be used to refer to this filter
+ * instance during a call to stream_filter_remove.
  */
-function stream_filter_append ($stream, $filtername, $read_write, $filterparams) {}
+function stream_filter_append ($stream, $filtername, $read_write = null, $params = null) {}
 
 /**
  * Remove a filter from a stream
  * @link http://php.net/manual/en/function.stream-filter-remove.php
- * @param stream_filter
+ * @param stream_filter resource <p>
+ * The stream filter to be removed.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function stream_filter_remove ($stream_filter) {}
 
@@ -6031,13 +6352,53 @@ function stream_socket_client ($remote_socket, &$errno = null, &$errstr = null, 
 /**
  * Create an Internet or Unix domain server socket
  * @link http://php.net/manual/en/function.stream-socket-server.php
- * @param localaddress
- * @param errcode[optional]
- * @param errstring[optional]
- * @param flags[optional]
- * @param context[optional]
+ * @param local_socket string <p>
+ * The type of socket created is determined by the transport specified
+ * using standard URL formatting: transport://target.
+ * </p>
+ * <p>
+ * For Internet Domain sockets (AF_INET) such as TCP and UDP, the
+ * target portion of the 
+ * remote_socket parameter should consist of a
+ * hostname or IP address followed by a colon and a port number. For
+ * Unix domain sockets, the target portion should
+ * point to the socket file on the filesystem.
+ * </p>
+ * <p>
+ * Depending on the environment, Unix domain sockets may not be available.
+ * A list of available transports can be retrieved using
+ * stream_get_transports. See
+ * for a list of bulitin transports.
+ * </p>
+ * @param errno int[optional] <p>
+ * If the optional errno and errstr
+ * arguments are present they will be set to indicate the actual system
+ * level error that occurred in the system-level socket(),
+ * bind(), and listen() calls. If
+ * the value returned in errno is 
+ * 0 and the function returned false, it is an
+ * indication that the error occurred before the bind()
+ * call. This is most likely due to a problem initializing the socket. 
+ * Note that the errno and
+ * errstr arguments will always be passed by reference.
+ * </p>
+ * @param errstr string[optional] <p>
+ * See errno description.
+ * </p>
+ * @param flags int[optional] <p>
+ * A bitmask field which may be set to any combination of socket creation
+ * flags. The default value of flags is STREAM_SERVER_BIND
+ * | STREAM_SERVER_LISTEN.
+ * </p>
+ * <p>
+ * For UDP sockets, you must use STREAM_SERVER_BIND as
+ * the flags parameter.
+ * </p>
+ * @param context resource[optional] <p>
+ * </p>
+ * @return resource the created stream, or false on error.
  */
-function stream_socket_server ($localaddress, &$errcode, &$errstring, $flags, $context) {}
+function stream_socket_server ($local_socket, &$errno = null, &$errstr = null, $flags = null, $context = null) {}
 
 /**
  * Accept a connection on a socket created by <function>stream_socket_server</function>
@@ -6076,22 +6437,74 @@ function stream_socket_get_name ($handle, $want_peer) {}
 /**
  * Receives data from a socket, connected or not
  * @link http://php.net/manual/en/function.stream-socket-recvfrom.php
- * @param stream
- * @param amount
- * @param flags[optional]
- * @param remote_addr[optional]
+ * @param socket resource <p>
+ * The remote socket.
+ * </p>
+ * @param length int <p>
+ * The number of bytes to receive from the socket.
+ * </p>
+ * @param flags int[optional] <p>
+ * The value of flags can be any combination
+ * of the following:
+ * <table>
+ * Possible values for flags
+ * <tr valign="top">
+ * <td>STREAM_OOB</td>
+ * <td>
+ * Process OOB (out-of-band) data.
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>STREAM_PEEK</td>
+ * <td>
+ * Retrieve data from the socket, but do not consume the buffer.
+ * Subsequent calls to fread or
+ * stream_socket_recvfrom will see
+ * the same data.
+ * </td>
+ * </tr>
+ * </table>
+ * </p>
+ * @param address string[optional] <p>
+ * If address is provided it will be populated with
+ * the address of the remote socket.
+ * </p>
+ * @return string the read data, as a string
  */
-function stream_socket_recvfrom ($stream, $amount, $flags, &$remote_addr) {}
+function stream_socket_recvfrom ($socket, $length, $flags = null, &$address = null) {}
 
 /**
  * Sends a message to a socket, whether it is connected or not
  * @link http://php.net/manual/en/function.stream-socket-sendto.php
- * @param stream
- * @param data
- * @param flags[optional]
- * @param target_addr[optional]
+ * @param socket resource <p>
+ * The socket to send data to.
+ * </p>
+ * @param data string <p>
+ * The data to be sent.
+ * </p>
+ * @param flags int[optional] <p>
+ * The value of flags can be any combination
+ * of the following:
+ * <table>
+ * possible values for flags
+ * <tr valign="top">
+ * <td>STREAM_OOB</td>
+ * <td>
+ * Process OOB (out-of-band) data.
+ * </td>
+ * </tr>
+ * </table>
+ * </p>
+ * @param address string[optional] <p>
+ * The address specified when the socket stream was created will be used
+ * unless an alternate address is specified in address.
+ * </p>
+ * <p>
+ * If specified, it must be in dotted quad (or [ipv6]) format.
+ * </p>
+ * @return int a result code, as an integer.
  */
-function stream_socket_sendto ($stream, $data, $flags, $target_addr) {}
+function stream_socket_sendto ($socket, $data, $flags = null, $address = null) {}
 
 /**
  * Turns encryption on/off on an already connected socket
@@ -6183,11 +6596,19 @@ function stream_copy_to_stream ($source, $dest, $maxlength = null, $offset = nul
 /**
  * Reads remainder of a stream into a string
  * @link http://php.net/manual/en/function.stream-get-contents.php
- * @param source
- * @param maxlen[optional]
- * @param offset[optional]
+ * @param handle resource <p>
+ * A stream resource (e.g. returned from fopen)
+ * </p>
+ * @param maxlength int[optional] <p>
+ * The maximum bytes to read. Defaults to -1 (read all the remaining
+ * buffer).
+ * </p>
+ * @param offset int[optional] <p>
+ * Seek to the specified offset before reading.
+ * </p>
+ * @return string a string, or false on failure.
  */
-function stream_get_contents ($source, $maxlen, $offset) {}
+function stream_get_contents ($handle, $maxlength = null, $offset = null) {}
 
 /**
  * Tells whether the stream supports locking.
@@ -6310,10 +6731,18 @@ function get_meta_tags ($filename, $use_include_path = null) {}
 /**
  * Sets file buffering on the given stream
  * @link http://php.net/manual/en/function.stream-set-write-buffer.php
- * @param fp
- * @param buffer
+ * @param stream resource <p>
+ * The file pointer.
+ * </p>
+ * @param buffer int <p>
+ * The number of bytes to buffer. If buffer
+ * is 0 then write operations are unbuffered. This ensures that all writes
+ * with fwrite are completed before other processes are
+ * allowed to write to that output stream.
+ * </p>
+ * @return int 0 on success, or EOF if the request cannot be honored.
  */
-function stream_set_write_buffer ($fp, $buffer) {}
+function stream_set_write_buffer ($stream, $buffer) {}
 
 /**
  * &Alias; <function>stream_set_write_buffer</function>
@@ -6324,6 +6753,8 @@ function stream_set_write_buffer ($fp, $buffer) {}
 function set_file_buffer ($fp, $buffer) {}
 
 /**
+ * &Alias; <function>stream_set_blocking</function>
+ * @link http://php.net/manual/en/function.set-socket-blocking.php
  * @param socket
  * @param mode
  */
@@ -6332,10 +6763,22 @@ function set_socket_blocking ($socket, $mode) {}
 /**
  * Set blocking/non-blocking mode on a stream
  * @link http://php.net/manual/en/function.stream-set-blocking.php
- * @param socket
- * @param mode
+ * @param stream resource <p>
+ * The stream.
+ * </p>
+ * @param mode int <p>
+ * If mode is 0, the given stream
+ * will be switched to non-blocking mode, and if 1, it
+ * will be switched to blocking mode. This affects calls like
+ * fgets and fread
+ * that read from the stream. In non-blocking mode an
+ * fgets call will always return right away
+ * while in blocking mode it will wait for data to become available
+ * on the stream.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
-function stream_set_blocking ($socket, $mode) {}
+function stream_set_blocking ($stream, $mode) {}
 
 /**
  * &Alias; <function>stream_set_blocking</function>
@@ -6348,27 +6791,108 @@ function socket_set_blocking ($socket, $mode) {}
 /**
  * Retrieves header/meta data from streams/file pointers
  * @link http://php.net/manual/en/function.stream-get-meta-data.php
- * @param fp
+ * @param stream resource <p>
+ * The stream can be any stream created by fopen,
+ * fsockopen and pfsockopen.
+ * </p>
+ * @return array The result array contains the following items:
+ * </p>
+ * <p>
+ * timed_out (bool) - true if the stream
+ * timed out while waiting for data on the last call to
+ * fread or fgets.
+ * </p>
+ * <p>
+ * blocked (bool) - true if the stream is
+ * in blocking IO mode. See stream_set_blocking.
+ * </p>
+ * <p>
+ * eof (bool) - true if the stream has reached
+ * end-of-file. Note that for socket streams this member can be true
+ * even when unread_bytes is non-zero. To
+ * determine if there is more data to be read, use
+ * feof instead of reading this item.
+ * </p>
+ * <p>
+ * unread_bytes (int) - the number of bytes
+ * currently contained in the PHP's own internal buffer.
+ * </p>
+ * You shouldn't use this value in a script.
+ * <p>
+ * stream_type (string) - a label describing
+ * the underlying implementation of the stream.
+ * </p>
+ * <p>
+ * wrapper_type (string) - a label describing
+ * the protocol wrapper implementation layered over the stream.
+ * See for more information about wrappers.
+ * </p>
+ * <p>
+ * wrapper_data (mixed) - wrapper specific
+ * data attached to this stream. See for
+ * more information about wrappers and their wrapper data.
+ * </p>
+ * <p>
+ * filters (array) - and array containing
+ * the names of any filters that have been stacked onto this stream.
+ * Documentation on filters can be found in the
+ * Filters appendix.
+ * </p>
+ * <p>
+ * mode (string) - the type of access required for
+ * this stream (see Table 1 of the fopen() reference)
+ * </p>
+ * <p>
+ * seekable (bool) - whether the current stream can
+ * be seeked.
+ * </p>
+ * <p>
+ * uri (string) - the URI/filename associated with this
+ * stream.
  */
-function stream_get_meta_data ($fp) {}
+function stream_get_meta_data ($stream) {}
 
 /**
  * Gets line from stream resource up to a given delimiter
  * @link http://php.net/manual/en/function.stream-get-line.php
- * @param stream
- * @param maxlen
- * @param ending[optional]
+ * @param handle resource <p>
+ * A valid file handle.
+ * </p>
+ * @param length int <p>
+ * The number of bytes to read from the handle.
+ * </p>
+ * @param ending string[optional] <p>
+ * An optional string delimiter.
+ * </p>
+ * @return string a string of up to length bytes read from the file
+ * pointed to by handle.
+ * </p>
+ * <p>
+ * If an error occurs, returns false.
  */
-function stream_get_line ($stream, $maxlen, $ending) {}
+function stream_get_line ($handle, $length, $ending = null) {}
 
 /**
  * Register a URL wrapper implemented as a PHP class
  * @link http://php.net/manual/en/function.stream-wrapper-register.php
- * @param protocol
- * @param classname
- * @param flags[optional]
+ * @param protocol string <p>
+ * The wrapper name to be registered.
+ * </p>
+ * @param classname string <p>
+ * The classname which implements the protocol.
+ * </p>
+ * @param flags int[optional] <p>
+ * Should be set to STREAM_IS_URL if
+ * protocol is a URL protocol. Default is 0, local
+ * stream.
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ * </p>
+ * <p>
+ * stream_wrapper_register will return false if the
+ * protocol already has a handler.
  */
-function stream_wrapper_register ($protocol, $classname, $flags) {}
+function stream_wrapper_register ($protocol, $classname, $flags = null) {}
 
 /**
  * &Alias; <function>stream_wrapper_register</function>
@@ -6400,19 +6924,27 @@ function stream_wrapper_restore ($protocol) {}
 /**
  * Retrieve list of registered streams
  * @link http://php.net/manual/en/function.stream-get-wrappers.php
+ * @return array an indexed array containing the name of all stream wrappers
+ * available on the running system.
  */
 function stream_get_wrappers () {}
 
 /**
  * Retrieve list of registered socket transports
  * @link http://php.net/manual/en/function.stream-get-transports.php
+ * @return array an indexed array of socket transports names.
  */
 function stream_get_transports () {}
 
 /**
- * @param stream
+ * Checks if a stream is a local stream
+ * @link http://php.net/manual/en/function.stream-is-local.php
+ * @param stream_or_url mixed <p>
+ * The stream resource or URL to check.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
-function stream_is_local ($stream) {}
+function stream_is_local ($stream_or_url) {}
 
 /**
  * Fetches all the headers sent by the server in response to a HTTP request
@@ -6433,11 +6965,18 @@ function get_headers ($url, $format = null) {}
 /**
  * Set timeout period on a stream
  * @link http://php.net/manual/en/function.stream-set-timeout.php
- * @param stream
- * @param seconds
- * @param microseconds
+ * @param stream resource <p>
+ * The target stream.
+ * </p>
+ * @param seconds int <p>
+ * The seconds part of the timeout to be set.
+ * </p>
+ * @param microseconds int[optional] <p>
+ * The microseconds part of the timeout to be set.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
-function stream_set_timeout ($stream, $seconds, $microseconds) {}
+function stream_set_timeout ($stream, $seconds, $microseconds = null) {}
 
 /**
  * &Alias; <function>stream_set_timeout</function>
@@ -6489,8 +7028,7 @@ function realpath ($path) {}
  * non-programming users.
  * </p>
  * @param flags int[optional] <p>
- * See the Unix manpage on fnmatch(3) for flag names
- * (as long as they are not documented here).
+ * One of the FNM_XXX constants.
  * </p>
  * @return bool true if there is a match, false otherwise.
  */
@@ -6769,16 +7307,6 @@ function closedir ($dir_handle = null) {}
  * @return bool Returns true on success or false on failure.
  */
 function chdir ($directory) {}
-
-/**
- * Change the root directory
- * @link http://php.net/manual/en/function.chroot.php
- * @param directory string <p>
- * The new directory
- * </p>
- * @return bool Returns true on success or false on failure.
- */
-function chroot ($directory) {}
 
 /**
  * Gets the current working directory
@@ -7263,7 +7791,8 @@ function lchgrp ($filename, $group) {}
  * grant execute rights, number 2 means that you make the file
  * writeable, number 4 means that you make the file readable. Add
  * up these numbers to specify needed rights. You can also read more
- * about modes on Unix systems with 'man 1 chmod' and 'man 2 chmod'.
+ * about modes on Unix systems with 'man 1 chmod'
+ * and 'man 2 chmod'.
  * </p>
  * <p>
  * @return bool Returns true on success or false on failure.
@@ -7397,11 +7926,11 @@ function diskfreespace ($path) {}
  * </p>
  * @param additional_parameters string[optional] <p>
  * The additional_parameters parameter
- * can be used to pass an additional parameter to the program configured
- * to use when sending mail using the sendmail_path
- * configuration setting. For example, this can be used to set the
- * envelope sender address when using sendmail with the
- * -f sendmail option.
+ * can be used to pass additional flags as command line options to the
+ * program configured to be used when sending mail, as defined by the
+ * sendmail_path configuration setting. For example,
+ * this can be used to set the envelope sender address when using
+ * sendmail with the -f sendmail option.
  * </p>
  * <p>
  * The user that the webserver runs as should be added as a trusted user to the
@@ -7698,7 +8227,7 @@ function metaphone ($str, $phones = null) {}
  * </p>
  * @param erase bool[optional] <p>
  * If the optional parameter erase is set to false,
- * the buffer will not be deleted until the script finishes (as of PHP 4.3.0).
+ * the buffer will not be deleted until the script finishes.
  * </p>
  * @return bool Returns true on success or false on failure.
  */
@@ -8133,7 +8662,10 @@ function count ($var, $mode = null) {}
  * Set the internal pointer of an array to its last element
  * @link http://php.net/manual/en/function.end.php
  * @param array array <p>
- * The array.
+ * The array. This array is passed by reference because it is modified by
+ * the function. This means you must pass it a real variable and not
+ * a function returning an array because only actual variables may be
+ * passed by reference.
  * </p>
  * @return mixed the value of the last element or false for empty array.
  */
@@ -8193,7 +8725,11 @@ function current (array &$array) {}
  * @param array array <p>
  * The array.
  * </p>
- * @return mixed the index.
+ * @return mixed The key function simply returns the
+ * key of the array element that's currently being pointed to by the
+ * internal pointer. It does not move the pointer in any way. If the
+ * internal pointer points beyond the end of the elements list or the array is 
+ * empty, key returns &null;.
  */
 function key (array &$array) {}
 
@@ -8382,10 +8918,11 @@ function range ($low, $high, $step = null) {}
  * SORT_NUMERIC,
  * SORT_STRING.
  * </p>
+ * @param arg mixed[optional] 
  * @param _ mixed[optional] 
  * @return bool Returns true on success or false on failure.
  */
-function array_multisort (array $arr, $arg = null, $_ = null) {}
+function array_multisort (array &$arr, $arg = null, $arg = null, $_ = null) {}
 
 /**
  * Push one or more elements onto the end of array
@@ -8538,18 +9075,34 @@ function array_merge (array $array1, array $array2 = null, array $_ = null) {}
 function array_merge_recursive (array $array1, array $_ = null) {}
 
 /**
- * @param arr1
- * @param arr2
- * @param ...[optional]
+ * Replaces elements from passed arrays into the first array
+ * @link http://php.net/manual/en/function.array-replace.php
+ * @param array array <p>
+ * The array in which elements are replaced.
+ * </p>
+ * @param array1 array <p>
+ * The array from which elements will be extracted.
+ * </p>
+ * @param array2 array[optional] 
+ * @param _ array[optional] 
+ * @return array an array, or &null; if an error occurs.
  */
-function array_replace ($arr1, $arr2) {}
+function array_replace (array &$array, array &$array1, array &$array2 = null, array &$_ = null) {}
 
 /**
- * @param arr1
- * @param arr2
- * @param ...[optional]
+ * Replaces elements from passed arrays into the first array recursively
+ * @link http://php.net/manual/en/function.array-replace-recursive.php
+ * @param array array <p>
+ * The array in which elements are replaced.
+ * </p>
+ * @param array1 array <p>
+ * The array from which elements will be extracted.
+ * </p>
+ * @param array2 array[optional] 
+ * @param _ array[optional] 
+ * @return array an array, or &null; if an error occurs.
  */
-function array_replace_recursive ($arr1, $arr2) {}
+function array_replace_recursive (array &$array, array &$array1, array &$array2 = null, array &$_ = null) {}
 
 /**
  * Return all the keys of an array
@@ -8561,8 +9114,7 @@ function array_replace_recursive ($arr1, $arr2) {}
  * If specified, then only keys containing these values are returned.
  * </p>
  * @param strict bool[optional] <p>
- * As of PHP 5, this parameter determines if strict comparison (===)
- * should be used during the search.
+ * Determines if strict comparison (===) should be used during the search.
  * </p>
  * @return array an array of all the keys in input.
  */
@@ -9177,10 +9729,10 @@ function assert ($assertion) {}
  * <table>
  * Assert Options
  * <tr valign="top">
- * <td>option</td>
- * <td>ini-parameter</td>
- * <td>default</td>
- * <td>description</td>
+ * <td>Option</td>
+ * <td>INI Setting</td>
+ * <td>Default value</td>
+ * <td>Description</td>
  * </tr>
  * <tr valign="top">
  * <td>ASSERT_ACTIVE</td>
@@ -9213,7 +9765,7 @@ function assert ($assertion) {}
  * <td>ASSERT_CALLBACK</td>
  * <td>assert.callback</td>
  * <td)<&null;)</td>
- * <td>user function to call on failed assertions</td>
+ * <td>Callback to call on failed assertions</td>
  * </tr>
  * </table>
  * </p>
@@ -9287,14 +9839,124 @@ function str_rot13 ($str) {}
 /**
  * Retrieve list of registered filters
  * @link http://php.net/manual/en/function.stream-get-filters.php
+ * @return array an indexed array containing the name of all stream filters
+ * available.
  */
 function stream_get_filters () {}
 
 /**
- * Register a stream filter implemented as a PHP class derived from <literal>php_user_filter</literal>
+ * Register a user defined stream filter
  * @link http://php.net/manual/en/function.stream-filter-register.php
- * @param filtername
- * @param classname
+ * @param filtername string <p>
+ * The filter name to be registered.
+ * </p>
+ * @param classname string <p>
+ * To implement a filter, you need to define a class as an extension of
+ * php_user_filter with a number of member functions
+ * as defined below. When performing read/write operations on the stream
+ * to which your filter is attached, PHP will pass the data through your
+ * filter (and any other filters attached to that stream) so that the
+ * data may be modified as desired. You must implement the methods
+ * exactly as described below - doing otherwise will lead to undefined
+ * behaviour.
+ * </p>
+ * intfilter
+ * resourcein
+ * resourceout
+ * intconsumed
+ * boolclosing
+ * <p>
+ * This method is called whenever data is read from or written to
+ * the attached stream (such as with fread or fwrite).
+ * in is a resource pointing to a bucket brigade
+ * which contains one or more bucket objects containing data to be filtered.
+ * out is a resource pointing to a second bucket brigade
+ * into which your modified buckets should be placed.
+ * consumed, which must always
+ * be declared by reference, should be incremented by the length of the data
+ * which your filter reads in and alters. In most cases this means you will
+ * increment consumed by $bucket->datalen
+ * for each $bucket. If the stream is in the process of closing
+ * (and therefore this is the last pass through the filterchain),
+ * the closing parameter will be set to true.
+ * The filter method must return one of
+ * three values upon completion.
+ * <tr valign="top">
+ * <td>Return Value</td>
+ * <td>Meaning</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>PSFS_PASS_ON</td>
+ * <td>
+ * Filter processed successfully with data available in the
+ * out bucket brigade.
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>PSFS_FEED_ME</td>
+ * <td>
+ * Filter processed successfully, however no data was available to
+ * return. More data is required from the stream or prior filter.
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>PSFS_ERR_FATAL (default)</td>
+ * <td>
+ * The filter experienced an unrecoverable error and cannot continue.
+ * </td>
+ * </tr>
+ * </p>
+ * boolonCreate
+ * This method is called during instantiation of the filter class
+ * object. If your filter allocates or initializes any other resources
+ * (such as a buffer), this is the place to do it. Your implementation of
+ * this method should return false on failure, or true on success.
+ * When your filter is first instantiated, and
+ * yourfilter-&gt;onCreate() is called, a number of properties
+ * will be available as shown in the table below.
+ * <p>
+ * <tr valign="top">
+ * <td>Property</td>
+ * <td>Contents</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>FilterClass-&gt;filtername</td>
+ * <td>
+ * A string containing the name the filter was instantiated with.
+ * Filters may be registered under multiple names or under wildcards.
+ * Use this property to determine which name was used.
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>FilterClass-&gt;params</td>
+ * <td>
+ * The contents of the params parameter passed
+ * to stream_filter_append
+ * or stream_filter_prepend.
+ * </td>
+ * </tr>
+ * <tr valign="top">
+ * <td>FilterClass-&gt;stream</td>
+ * <td>
+ * The stream resource being filtered. Maybe available only during
+ * filter calls when the 
+ * closing parameter is set to false.
+ * </td>
+ * </tr>
+ * </p>
+ * voidonClose
+ * <p>
+ * This method is called upon filter shutdown (typically, this is also
+ * during stream shutdown), and is executed after
+ * the flush method is called. If any resources
+ * were allocated or initialzed during onCreate()
+ * this would be the time to destroy or dispose of them.
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ * </p>
+ * <p>
+ * stream_filter_register will return false if the
+ * filtername is already defined.
  */
 function stream_filter_register ($filtername, $classname) {}
 
@@ -9392,6 +10054,11 @@ define ('M_LOG2E', 1.442695040889);
 define ('M_LOG10E', 0.43429448190325);
 define ('M_LN2', 0.69314718055995);
 define ('M_LN10', 2.302585092994);
+
+/**
+ * Round halves up [5.3.0]
+ * @link http://php.net/manual/en/math.constants.php
+ */
 define ('M_PI', 3.1415926535898);
 define ('M_PI_2', 1.5707963267949);
 define ('M_PI_4', 0.78539816339745);
@@ -9407,24 +10074,118 @@ define ('M_SQRT3', 1.7320508075689);
 define ('INF', INF);
 define ('NAN', NAN);
 define ('PHP_ROUND_HALF_UP', 1);
+
+/**
+ * Round halves down [5.3.0]
+ * @link http://php.net/manual/en/math.constants.php
+ */
 define ('PHP_ROUND_HALF_DOWN', 2);
+
+/**
+ * Round halves to even numbers [5.3.0]
+ * @link http://php.net/manual/en/math.constants.php
+ */
 define ('PHP_ROUND_HALF_EVEN', 3);
+
+/**
+ * Round halves to odd numbers [5.3.0]
+ * @link http://php.net/manual/en/math.constants.php
+ */
 define ('PHP_ROUND_HALF_ODD', 4);
 define ('INFO_GENERAL', 1);
+
+/**
+ * PHP Credits. See also phpcredits.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('INFO_CREDITS', 2);
+
+/**
+ * Current Local and Master values for PHP directives. See
+ * also ini_get.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('INFO_CONFIGURATION', 4);
+
+/**
+ * Loaded modules and their respective settings.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('INFO_MODULES', 8);
+
+/**
+ * Environment Variable information that's also available in
+ * $_ENV.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('INFO_ENVIRONMENT', 16);
+
+/**
+ * Shows all 
+ * predefined variables from EGPCS (Environment, GET,
+ * POST, Cookie, Server).
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('INFO_VARIABLES', 32);
+
+/**
+ * PHP License information. See also the license faq.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('INFO_LICENSE', 64);
 define ('INFO_ALL', -1);
+
+/**
+ * A list of the core developers
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('CREDITS_GROUP', 1);
+
+/**
+ * General credits: Language design and concept, PHP
+ * authors and SAPI module.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('CREDITS_GENERAL', 2);
+
+/**
+ * A list of the server API modules for PHP, and their authors.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('CREDITS_SAPI', 4);
+
+/**
+ * A list of the extension modules for PHP, and their authors.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('CREDITS_MODULES', 8);
+
+/**
+ * The credits for the documentation team.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('CREDITS_DOCS', 16);
+
+/**
+ * Usually used in combination with the other flags. Indicates
+ * that a complete stand-alone HTML page needs to be
+ * printed including the information indicated by the other
+ * flags.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('CREDITS_FULLPAGE', 32);
+
+/**
+ * The credits for the quality assurance team.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('CREDITS_QA', 64);
+
+/**
+ * The configuration line, &php.ini; location, build date, Web
+ * Server, System and more.
+ * @link http://php.net/manual/en/info.constants.php
+ */
 define ('CREDITS_ALL', -1);
 define ('HTML_SPECIALCHARS', 0);
 define ('HTML_ENTITIES', 1);
@@ -9752,19 +10513,51 @@ define ('FILE_APPEND', 8);
 define ('FILE_NO_DEFAULT_CONTEXT', 16);
 
 /**
+ * <p>
  * Text mode (since PHP 5.2.7).
+ * <p>
+ * This constant has no effect prior to PHP 6. It is only available for 
+ * forward compatibility.
+ * </p>
+ * </p>
  * @link http://php.net/manual/en/filesystem.constants.php
  */
 define ('FILE_TEXT', 0);
 
 /**
+ * <p>
  * Binary mode (since PHP 5.2.7).
+ * <p>
+ * This constant has no effect prior to PHP 6. It is only available for 
+ * forward compatibility.
+ * </p>
+ * </p>
  * @link http://php.net/manual/en/filesystem.constants.php
  */
 define ('FILE_BINARY', 0);
+
+/**
+ * Disable backslash escaping.
+ * @link http://php.net/manual/en/filesystem.constants.php
+ */
 define ('FNM_NOESCAPE', 2);
+
+/**
+ * Slash in string only matches slash in the given pattern.
+ * @link http://php.net/manual/en/filesystem.constants.php
+ */
 define ('FNM_PATHNAME', 1);
+
+/**
+ * Leading period in string must be exactly matched by period in the given pattern.
+ * @link http://php.net/manual/en/filesystem.constants.php
+ */
 define ('FNM_PERIOD', 4);
+
+/**
+ * Caseless match. Part of the GNU extension.
+ * @link http://php.net/manual/en/filesystem.constants.php
+ */
 define ('FNM_CASEFOLD', 16);
 
 /**
@@ -9789,8 +10582,23 @@ define ('PSFS_FEED_ME', 1);
  * @link http://php.net/manual/en/stream.constants.php
  */
 define ('PSFS_ERR_FATAL', 0);
+
+/**
+ * Regular read/write.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('PSFS_FLAG_NORMAL', 0);
+
+/**
+ * An incremental flush.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('PSFS_FLAG_FLUSH_INC', 1);
+
+/**
+ * Final flush prior to closing.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('PSFS_FLAG_FLUSH_CLOSE', 2);
 define ('ABDAY_1', 131072);
 define ('ABDAY_2', 131073);
@@ -9862,24 +10670,120 @@ define ('GLOB_NOESCAPE', 64);
 define ('GLOB_ERR', 1);
 define ('GLOB_ONLYDIR', 8192);
 define ('GLOB_AVAILABLE_FLAGS', 9303);
+
+/**
+ * system is unusable
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_EMERG', 0);
+
+/**
+ * action must be taken immediately
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_ALERT', 1);
+
+/**
+ * critical conditions
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_CRIT', 2);
+
+/**
+ * error conditions
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_ERR', 3);
+
+/**
+ * warning conditions
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_WARNING', 4);
+
+/**
+ * normal, but significant, condition
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_NOTICE', 5);
+
+/**
+ * informational message
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_INFO', 6);
+
+/**
+ * debug-level message
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_DEBUG', 7);
+
+/**
+ * kernel messages
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_KERN', 0);
+
+/**
+ * generic user-level messages
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_USER', 8);
+
+/**
+ * mail subsystem
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_MAIL', 16);
+
+/**
+ * other system daemons
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_DAEMON', 24);
+
+/**
+ * security/authorization messages (use LOG_AUTHPRIV instead
+ * in systems where that constant is defined)
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_AUTH', 32);
+
+/**
+ * messages generated internally by syslogd
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_SYSLOG', 40);
+
+/**
+ * line printer subsystem
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_LPR', 48);
+
+/**
+ * USENET news subsystem
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_NEWS', 56);
+
+/**
+ * UUCP subsystem
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_UUCP', 64);
+
+/**
+ * clock daemon (cron and at)
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_CRON', 72);
+
+/**
+ * security/authorization messages (private)
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_AUTHPRIV', 80);
 define ('LOG_LOCAL0', 128);
 define ('LOG_LOCAL1', 136);
@@ -9889,11 +10793,38 @@ define ('LOG_LOCAL4', 160);
 define ('LOG_LOCAL5', 168);
 define ('LOG_LOCAL6', 176);
 define ('LOG_LOCAL7', 184);
+
+/**
+ * include PID with each message
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_PID', 1);
+
+/**
+ * if there is an error while sending data to the system logger,
+ * write directly to the system console
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_CONS', 2);
+
+/**
+ * (default) delay opening the connection until the first
+ * message is logged
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_ODELAY', 4);
+
+/**
+ * open the connection to the logger immediately
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_NDELAY', 8);
 define ('LOG_NOWAIT', 16);
+
+/**
+ * print log message also to standard error
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('LOG_PERROR', 32);
 define ('EXTR_OVERWRITE', 0);
 define ('EXTR_SKIP', 1);
@@ -10011,7 +10942,19 @@ define ('STREAM_OPTION_WRITE_BUFFER', 3);
 define ('STREAM_BUFFER_NONE', 0);
 define ('STREAM_BUFFER_LINE', 1);
 define ('STREAM_BUFFER_FULL', 2);
+
+/**
+ * Stream casting, when stream_cast is called 
+ * otherwise (see above).
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_CAST_AS_STREAM', 0);
+
+/**
+ * Stream casting, for when stream_select is 
+ * calling stream_cast.
+ * @link http://php.net/manual/en/stream.constants.php
+ */
 define ('STREAM_CAST_FOR_SELECT', 3);
 
 /**
@@ -10133,6 +11076,13 @@ define ('IMAGETYPE_IFF', 14);
  * @link http://php.net/manual/en/image.constants.php
  */
 define ('IMAGETYPE_WBMP', 15);
+
+/**
+ * Image type constant used by the
+ * image_type_to_mime_type and
+ * image_type_to_extension functions.
+ * @link http://php.net/manual/en/image.constants.php
+ */
 define ('IMAGETYPE_JPEG2000', 9);
 
 /**
@@ -10153,20 +11103,81 @@ define ('IMAGETYPE_XBM', 16);
 define ('IMAGETYPE_ICO', 17);
 define ('IMAGETYPE_UNKNOWN', 0);
 define ('IMAGETYPE_COUNT', 18);
+
+/**
+ * IPv4 Address Resource
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_A', 1);
+
+/**
+ * Authoritative Name Server Resource
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_NS', 2);
+
+/**
+ * Alias (Canonical Name) Resource
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_CNAME', 16);
+
+/**
+ * Start of Authority Resource
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_SOA', 32);
+
+/**
+ * Pointer Resource
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_PTR', 2048);
+
+/**
+ * Host Info Resource (See IANA's
+ * Operating System Names
+ * for the meaning of these values)
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_HINFO', 4096);
+
+/**
+ * Mail Exchanger Resource
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_MX', 16384);
+
+/**
+ * Text Resource
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_TXT', 32768);
 define ('DNS_SRV', 33554432);
 define ('DNS_NAPTR', 67108864);
+
+/**
+ * IPv6 Address Resource
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_AAAA', 134217728);
 define ('DNS_A6', 16777216);
+
+/**
+ * Any Resource Record. On most systems
+ * this returns all resource records, however
+ * it should not be counted upon for critical
+ * uses. Try DNS_ALL instead.
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_ANY', 268435456);
+
+/**
+ * Iteratively query the name server for
+ * each available record type.
+ * @link http://php.net/manual/en/network.constants.php
+ */
 define ('DNS_ALL', 251713587);
 
-// End of standard v.5.3.0beta1
+// End of standard v.5.3.0
 ?>

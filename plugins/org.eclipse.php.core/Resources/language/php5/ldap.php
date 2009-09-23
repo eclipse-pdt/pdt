@@ -689,58 +689,72 @@ function ldap_get_option ($link_identifier, $option, &$retval) {}
  * <tr valign="top">
  * <td>Option</td>
  * <td>Type</td>
+ * <td>Available since</td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_DEREF</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_SIZELIMIT</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_TIMELIMIT</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_NETWORK_TIMEOUT</td>
  * <td>integer</td>
+ * <td>PHP 5.3.0</td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_PROTOCOL_VERSION</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_ERROR_NUMBER</td>
  * <td>integer</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_REFERRALS</td>
  * <td>bool</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_RESTART</td>
  * <td>bool</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_HOST_NAME</td>
  * <td>string</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_ERROR_STRING</td>
  * <td>string</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_MATCHED_DN</td>
  * <td>string</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_SERVER_CONTROLS</td>
  * <td>array</td>
+ * <td></td>
  * </tr>
  * <tr valign="top">
  * <td>LDAP_OPT_CLIENT_CONTROLS</td>
  * <td>array</td>
+ * <td></td>
  * </tr>
  * </p>
  * <p>

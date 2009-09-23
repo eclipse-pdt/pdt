@@ -1,6 +1,6 @@
 <?php
 
-// Start of Core v.5.3.0beta1
+// Start of Core v.5.3.0
 
 class stdClass  {
 }
@@ -293,112 +293,9 @@ function each (array &$array) {}
  * so older integer-based error levels will not always behave as expected.
  * </p>
  * <p>
- * The available error level constants are listed below. The actual
+ * The available error level constants and the actual
  * meanings of these error levels are described in the
  * predefined constants.
- * <table>
- * error_reporting level constants and bit values
- * <tr valign="top">
- * <td>value</td>
- * <td>constant</td>
- * </tr>
- * <tr valign="top">
- * <td>1</td>
- * <td>
- * E_ERROR
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>2</td>
- * <td>
- * E_WARNING
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>4</td>
- * <td>
- * E_PARSE
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>8</td>
- * <td>
- * E_NOTICE
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>16</td>
- * <td>
- * E_CORE_ERROR
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>32</td>
- * <td>
- * E_CORE_WARNING
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>64</td>
- * <td>
- * E_COMPILE_ERROR
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>128</td>
- * <td>
- * E_COMPILE_WARNING
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>256</td>
- * <td>
- * E_USER_ERROR
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>512</td>
- * <td>
- * E_USER_WARNING
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>1024</td>
- * <td>
- * E_USER_NOTICE
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>6143</td>
- * <td>
- * E_ALL
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>2048</td>
- * <td>
- * E_STRICT
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>4096</td>
- * <td>
- * E_RECOVERABLE_ERROR
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>8192</td>
- * <td>
- * E_DEPRECATED
- * </td>
- * </tr>
- * <tr valign="top">
- * <td>16384</td>
- * <td>
- * E_USER_DEPRECATED
- * </td>
- * </tr>
- * </table>
  * </p>
  * @return int the old error_reporting
  * level.
@@ -414,11 +311,13 @@ function error_reporting ($level = null) {}
  * @param value mixed <p>
  * The value of the constant; only scalar and null values are allowed. 
  * Scalar values are integer, 
- * float, string or boolean values.
+ * float, string or boolean values. It is 
+ * possible to define resource constants, however it is not recommended 
+ * and may cause unpredictable behavior.
  * </p>
  * @param case_insensitive bool[optional] <p>
  * If set to true, the constant will be defined case-insensitive. 
- * The default behaviour is case-sensitive; i.e. 
+ * The default behavior is case-sensitive; i.e. 
  * CONSTANT and Constant represent
  * different values.
  * </p>
@@ -546,11 +445,17 @@ function interface_exists ($interface_name, $autoload = null) {}
 function function_exists ($function_name) {}
 
 /**
- * @param user_class_name
- * @param alias_name
- * @param autoload[optional]
+ * Creates an alias for a class
+ * @link http://php.net/manual/en/function.class-alias.php
+ * @param original string[optional] <p>
+ * The original class.
+ * </p>
+ * @param alias string[optional] <p>
+ * The alias name for the class.
+ * </p>
+ * @return boolean Returns true on success or false on failure.
  */
-function class_alias ($user_class_name, $alias_name, $autoload) {}
+function class_alias ($original = null, $alias = null) {}
 
 /**
  * Returns an array with the names of included or required files
@@ -716,7 +621,7 @@ function restore_error_handler () {}
  * needs to accept one parameter, which will be the exception object that
  * was thrown.
  * </p>
- * @return string the name of the previously defined exception handler, or &null; on error. If
+ * @return callback the name of the previously defined exception handler, or &null; on error. If
  * no previous handler was defined, &null; is also returned.
  */
 function set_exception_handler ($exception_handler) {}
@@ -735,16 +640,7 @@ function restore_exception_handler () {}
  * script.
  * </p>
  * <p>
- * In PHP 4.0.1, three extra classes are returned at the beginning of
- * the array: stdClass (defined in
- * Zend/zend.c),
- * OverloadedTestClass (defined in
- * ext/standard/basic_functions.c)
- * and Directory
- * (defined in ext/standard/dir.c).
- * </p>
- * <p>
- * Also note that depending on what extensions you have compiled or
+ * Note that depending on what extensions you have compiled or
  * loaded into PHP, additional classes could be present. This means that
  * you will not be able to define your own classes using these
  * names. There is a list of predefined classes in the Predefined Classes section of
@@ -1137,11 +1033,11 @@ define ('FALSE', false);
 define ('NULL', null);
 define ('ZEND_THREAD_SAFE', false);
 define ('ZEND_DEBUG_BUILD', false);
-define ('PHP_VERSION', "5.3.0beta1");
+define ('PHP_VERSION', "5.3.0");
 define ('PHP_MAJOR_VERSION', 5);
 define ('PHP_MINOR_VERSION', 3);
 define ('PHP_RELEASE_VERSION', 0);
-define ('PHP_EXTRA_VERSION', "beta1");
+define ('PHP_EXTRA_VERSION', "");
 define ('PHP_VERSION_ID', 50300);
 define ('PHP_ZTS', 0);
 define ('PHP_DEBUG', 0);
@@ -1149,12 +1045,12 @@ define ('PHP_OS', "Linux");
 define ('PHP_SAPI', "cli");
 define ('DEFAULT_INCLUDE_PATH', ".:/usr/local/zend/share/pear");
 define ('PEAR_INSTALL_DIR', "/usr/local/zend/share/pear");
-define ('PEAR_EXTENSION_DIR', "/usr/local/zend/lib/php/20090115");
-define ('PHP_EXTENSION_DIR', "/usr/local/zend/lib/php/20090115");
+define ('PEAR_EXTENSION_DIR', "/usr/local/zend/lib/php/20090626");
+define ('PHP_EXTENSION_DIR', "/usr/local/zend/lib/php/20090626");
 define ('PHP_PREFIX', "/usr/local/zend");
 define ('PHP_BINDIR', "/usr/local/zend/bin");
 define ('PHP_LIBDIR', "/usr/local/zend/lib/php");
-define ('PHP_DATADIR', "/usr/local/zend/share/php");
+define ('PHP_DATADIR', "${prefix}/share");
 define ('PHP_SYSCONFDIR', "/usr/local/zend/etc");
 define ('PHP_LOCALSTATEDIR', "/usr/local/zend/var");
 define ('PHP_CONFIG_FILE_PATH', "/usr/local/zend/etc");
@@ -1175,9 +1071,10 @@ define ('UPLOAD_ERR_NO_FILE', 4);
 define ('UPLOAD_ERR_NO_TMP_DIR', 6);
 define ('UPLOAD_ERR_CANT_WRITE', 7);
 define ('UPLOAD_ERR_EXTENSION', 8);
-define ('STDIN', "");
-define ('STDOUT', "");
-define ('STDERR', "");
+define ('DEBUGGER_VERSION', 5.3);
+define ('STDIN', "Resource id #1");
+define ('STDOUT', "Resource id #2");
+define ('STDERR', "Resource id #3");
 
-// End of Core v.5.3.0beta1
+// End of Core v.5.3.0
 ?>

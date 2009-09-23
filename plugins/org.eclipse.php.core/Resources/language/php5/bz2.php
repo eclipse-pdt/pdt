@@ -9,10 +9,11 @@
  * The name of the file to open.
  * </p>
  * @param mode string <p>
- * Similar to the fopen function ('r' for read, 
- * 'w' for write, etc.).
+ * Similar to the fopen function, only 'r' (read)
+ * and 'w' (write) are supported. Everything else will cause bzopen
+ * to return false.
  * </p>
- * @return resource If the open fails, bzopen returns false, otherwise 
+ * @return resource If the open fails, bzopen returns false, otherwise
  * it returns a pointer to the newly opened file.
  */
 function bzopen ($filename, $mode) {}

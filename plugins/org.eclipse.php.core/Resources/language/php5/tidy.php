@@ -4,106 +4,382 @@
 
 class tidy  {
 
-	public function getOpt () {}
+	/**
+	 * Returns the value of the specified configuration option for the tidy document
+	 * @link http://php.net/manual/en/tidy.getopt.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @param option string <p>
+	 * You will find a list with each configuration option and their types
+	 * at: &url.tidy.conf;.
+	 * </p>
+	 * @return mixed the value of the specified option.
+	 * The return type depends on the type of the specified one.
+	 */
+	public function getOpt (tidy $object, $option) {}
 
-	public function cleanRepair () {}
+	/**
+	 * Execute configured cleanup and repair operations on parsed markup
+	 * @link http://php.net/manual/en/tidy.cleanrepair.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public function cleanRepair (tidy $object) {}
 
-	public function parseFile () {}
+	/**
+	 * Parse markup in file or URI
+	 * @link http://php.net/manual/en/tidy.parsefile.php
+	 * @param filename string <p>
+	 * If the filename parameter is given, this function
+	 * will also read that file and initialize the object with the file,
+	 * acting like tidy_parse_file.
+	 * </p>
+	 * @param config mixed[optional] <p>
+	 * The config config can be passed either as an
+	 * array or as a string. If a string is passed, it is interpreted as the
+	 * name of the configuration file, otherwise, it is interpreted as the
+	 * options themselves.
+	 * </p>
+	 * <p>
+	 * For an explanation about each option, see
+	 * &url.tidy.conf;.
+	 * </p>
+	 * @param encoding string[optional] <p>
+	 * The encoding parameter sets the encoding for
+	 * input/output documents. The possible values for encoding are: 
+	 * ascii, latin0, latin1,
+	 * raw, utf8, iso2022,
+	 * mac, win1252, ibm858,
+	 * utf16, utf16le, utf16be,
+	 * big5, and shiftjis.
+	 * </p>
+	 * @param use_include_path bool[optional] <p>
+	 * Search for the file in the include_path.
+	 * </p>
+	 * @return tidy Returns true on success or false on failure.
+	 */
+	public function parseFile ($filename, $config = null, $encoding = null, $use_include_path = null) {}
 
-	public function parseString () {}
+	/**
+	 * Parse a document stored in a string
+	 * @link http://php.net/manual/en/tidy.parsestring.php
+	 * @param input string <p>
+	 * The data to be parsed.
+	 * </p>
+	 * @param config mixed[optional] <p>
+	 * The config config can be passed either as an
+	 * array or as a string. If a string is passed, it is interpreted as the
+	 * name of the configuration file, otherwise, it is interpreted as the
+	 * options themselves.
+	 * </p>
+	 * <p>
+	 * For an explanation about each option, visit &url.tidy.conf;.
+	 * </p>
+	 * @param encoding string[optional] <p>
+	 * The encoding parameter sets the encoding for
+	 * input/output documents. The possible values for encoding are: 
+	 * ascii, latin0, latin1,
+	 * raw, utf8, iso2022,
+	 * mac, win1252, ibm858,
+	 * utf16, utf16le, utf16be,
+	 * big5, and shiftjis.
+	 * </p>
+	 * @return tidy a new tidy instance.
+	 */
+	public function parseString ($input, $config = null, $encoding = null) {}
 
-	public function repairString () {}
+	/**
+	 * Repair a string using an optionally provided configuration file
+	 * @link http://php.net/manual/en/tidy.repairstring.php
+	 * @param data string <p>
+	 * The data to be repaired.
+	 * </p>
+	 * @param config mixed[optional] <p>
+	 * The config config can be passed either as an
+	 * array or as a string. If a string is passed, it is interpreted as the
+	 * name of the configuration file, otherwise, it is interpreted as the
+	 * options themselves.
+	 * </p>
+	 * <p>
+	 * Check &url.tidy.conf; for
+	 * an explanation about each option.
+	 * </p>
+	 * @param encoding string[optional] <p>
+	 * The encoding parameter sets the encoding for
+	 * input/output documents. The possible values for encoding are: 
+	 * ascii, latin0, latin1,
+	 * raw, utf8, iso2022,
+	 * mac, win1252, ibm858,
+	 * utf16, utf16le, utf16be,
+	 * big5, and shiftjis.
+	 * </p>
+	 * @return string the repaired string.
+	 */
+	public function repairString ($data, $config = null, $encoding = null) {}
 
-	public function repairFile () {}
+	/**
+	 * Repair a file and return it as a string
+	 * @link http://php.net/manual/en/tidy.repairfile.php
+	 * @param filename string <p>
+	 * The file to be repaired.
+	 * </p>
+	 * @param config mixed[optional] <p>
+	 * The config config can be passed either as an
+	 * array or as a string. If a string is passed, it is interpreted as the
+	 * name of the configuration file, otherwise, it is interpreted as the
+	 * options themselves.
+	 * </p>
+	 * <p>
+	 * Check http://tidy.sourceforge.net/docs/quickref.html for an
+	 * explanation about each option.
+	 * </p>
+	 * @param encoding string[optional] <p>
+	 * The encoding parameter sets the encoding for
+	 * input/output documents. The possible values for encoding are: 
+	 * ascii, latin0, latin1,
+	 * raw, utf8, iso2022,
+	 * mac, win1252, ibm858,
+	 * utf16, utf16le, utf16be,
+	 * big5, and shiftjis.
+	 * </p>
+	 * @param use_include_path bool[optional] <p>
+	 * Search for the file in the include_path.
+	 * </p>
+	 * @return string the repaired contents as a string.
+	 */
+	public function repairFile ($filename, $config = null, $encoding = null, $use_include_path = null) {}
 
-	public function diagnose () {}
+	/**
+	 * Run configured diagnostics on parsed and repaired markup
+	 * @link http://php.net/manual/en/function.tidy-diagnose.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public function diagnose (tidy $object) {}
 
+	/**
+	 * Get release date (version) for Tidy library
+	 * @link http://php.net/manual/en/tidy.getrelease.php
+	 * @return string a string with the release date of the Tidy library.
+	 */
 	public function getRelease () {}
 
-	public function getConfig () {}
+	/**
+	 * Get current Tidy configuration
+	 * @link http://php.net/manual/en/tidy.getconfig.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return array an array of configuration options.
+	 * </p>
+	 * <p>
+	 * For an explanation about each option, visit &url.tidy.conf;.
+	 */
+	public function getConfig (tidy $object) {}
 
-	public function getStatus () {}
+	/**
+	 * Get status of specified document
+	 * @link http://php.net/manual/en/tidy.getstatus.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return int 0 if no error/warning was raised, 1 for warnings or accessibility
+	 * errors, or 2 for errors.
+	 */
+	public function getStatus (tidy $object) {}
 
 	public function getHtmlVer () {}
 
-	public function getOptDoc () {}
-
-	public function isXhtml () {}
-
-	public function isXml () {}
-
-	public function root () {}
-
-	public function head () {}
-
-	public function html () {}
-
-	public function body () {}
+	/**
+	 * Returns the documentation for the given option name
+	 * @link http://php.net/manual/en/tidy.getoptdoc.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @param optname string <p>
+	 * The option name
+	 * </p>
+	 * @return string a string if the option exists and has documentation available, or
+	 * false otherwise.
+	 */
+	public function getOptDoc (tidy $object, $optname) {}
 
 	/**
-	 * Constructs a new tidy object
-	 * @link http://php.net/manual/en/function.tidy-construct.php
+	 * Indicates if the document is a XHTML document
+	 * @link http://php.net/manual/en/tidy.isxhtml.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return bool This function returns true if the specified tidy
+	 * object is a XHTML document, or false otherwise.
+	 * </p>
+	 * <p>
+	 * This function is not yet implemented in the Tidylib itself, so it always
+	 * return false.
 	 */
-	public function __construct () {}
+	public function isXhtml (tidy $object) {}
+
+	/**
+	 * Indicates if the document is a generic (non HTML/XHTML) XML document
+	 * @link http://php.net/manual/en/tidy.isxml.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return bool This function returns true if the specified tidy
+	 * object is a generic XML document (non HTML/XHTML),
+	 * or false otherwise.
+	 * </p>
+	 * <p>
+	 * This function is not yet implemented in the Tidylib itself, so it always
+	 * return false.
+	 */
+	public function isXml (tidy $object) {}
+
+	/**
+	 * Returns a <classname>tidyNode</classname> object representing the root of the tidy parse tree
+	 * @link http://php.net/manual/en/tidy.root.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return tidyNode the tidyNode object.
+	 */
+	public function root (tidy $object) {}
+
+	/**
+	 * Returns a <classname>tidyNode</classname> object starting from the &lt;head&gt; tag of the tidy parse tree
+	 * @link http://php.net/manual/en/tidy.head.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return tidyNode the tidyNode object.
+	 */
+	public function head (tidy $object) {}
+
+	/**
+	 * Returns a <classname>tidyNode</classname> object starting from the &lt;html&gt; tag of the tidy parse tree
+	 * @link http://php.net/manual/en/tidy.html.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return tidyNode the tidyNode object.
+	 */
+	public function html (tidy $object) {}
+
+	/**
+	 * Returns a <classname>tidyNode</classname> object starting from the &lt;body&gt; tag of the tidy parse tree
+	 * @link http://php.net/manual/en/tidy.body.php
+	 * @param object tidy <p>
+	 * &tidy.object;
+	 * </p>
+	 * @return tidyNode the detected HTML version.
+	 * </p>
+	 * <p>
+	 * This function is not yet implemented in the Tidylib itself, so it always
+	 * return 0.
+	 */
+	public function body (tidy $object) {}
+
+	/**
+	 * Constructs a new <classname>tidy</classname> object
+	 * @link http://php.net/manual/en/tidy.construct.php
+	 * @param filename string[optional] <p>
+	 * If the filename parameter is given, this function
+	 * will also read that file and initialize the object with the file,
+	 * acting like tidy_parse_file.
+	 * </p>
+	 * @param config mixed[optional] <p>
+	 * The config config can be passed either as an
+	 * array or as a string. If a string is passed, it is interpreted as the
+	 * name of the configuration file, otherwise, it is interpreted as the
+	 * options themselves.
+	 * </p>
+	 * <p>
+	 * For an explanation about each option, visit &url.tidy.conf;.
+	 * </p>
+	 * @param encoding string[optional] <p>
+	 * The encoding parameter sets the encoding for
+	 * input/output documents. The possible values for encoding are: 
+	 * ascii, latin0, latin1,
+	 * raw, utf8, iso2022,
+	 * mac, win1252, ibm858,
+	 * utf16, utf16le, utf16be,
+	 * big5, and shiftjis.
+	 * </p>
+	 * @param use_include_path bool[optional] <p>
+	 * Search for the file in the include_path.
+	 * </p>
+	 * @return tidy the new tidy instance.
+	 */
+	public function __construct ($filename = null, $config = null, $encoding = null, $use_include_path = null) {}
 
 }
 
-/**
- * @link http://php.net/manual/en/ref.tidy.php
- */
 final class tidyNode  {
 
 	/**
-	 * Returns true if this node has children
-	 * @link http://php.net/manual/en/function.tidynode-haschildren.php
+	 * Checks if a node has children
+	 * @link http://php.net/manual/en/tidynode.haschildren.php
+	 * @return bool true if the node has children, false otherwise.
 	 */
 	public function hasChildren () {}
 
 	/**
-	 * Returns true if this node has siblings
-	 * @link http://php.net/manual/en/function.tidynode-hassiblings.php
+	 * Checks if a node has siblings
+	 * @link http://php.net/manual/en/tidynode.hassiblings.php
+	 * @return bool true if the node has siblings, false otherwise.
 	 */
 	public function hasSiblings () {}
 
 	/**
-	 * Returns true if this node represents a comment
-	 * @link http://php.net/manual/en/function.tidynode-iscomment.php
+	 * Checks if a node represents a comment
+	 * @link http://php.net/manual/en/tidynode.iscomment.php
+	 * @return bool true if the node is a comment, false otherwise.
 	 */
 	public function isComment () {}
 
 	/**
-	 * Returns true if this node is part of a HTML document
-	 * @link http://php.net/manual/en/function.tidynode-ishtml.php
+	 * Checks if a node is part of a HTML document
+	 * @link http://php.net/manual/en/tidynode.ishtml.php
+	 * @return bool true if the node is part of a HTML document, false otherwise.
 	 */
 	public function isHtml () {}
 
 	/**
-	 * Returns true if this node represents text (no markup)
-	 * @link http://php.net/manual/en/function.tidynode-istext.php
+	 * Checks if a node represents text (no markup)
+	 * @link http://php.net/manual/en/tidynode.istext.php
+	 * @return bool true if the node represent a text, false otherwise.
 	 */
 	public function isText () {}
 
 	/**
-	 * Returns true if this node is JSTE
-	 * @link http://php.net/manual/en/function.tidynode-isjste.php
+	 * Checks if this node is JSTE
+	 * @link http://php.net/manual/en/tidynode.isjste.php
+	 * @return bool true if the node is JSTE, false otherwise.
 	 */
 	public function isJste () {}
 
 	/**
-	 * Returns true if this node is ASP
-	 * @link http://php.net/manual/en/function.tidynode-isasp.php
+	 * Checks if this node is ASP
+	 * @link http://php.net/manual/en/tidynode.isasp.php
+	 * @return bool true if the node is ASP, false otherwise.
 	 */
 	public function isAsp () {}
 
 	/**
-	 * Returns true if this node is PHP
-	 * @link http://php.net/manual/en/function.tidynode-isphp.php
+	 * Checks if a node is PHP
+	 * @link http://php.net/manual/en/tidynode.isphp.php
+	 * @return bool true if the current node is PHP code, false otherwise.
 	 */
 	public function isPhp () {}
 
 	/**
-	 * returns the parent node of the current node
-	 * @link http://php.net/manual/en/function.tidynode-getparent.php
+	 * Returns the parent node of the current node
+	 * @link http://php.net/manual/en/tidynode.getparent.php
 	 * @return tidyNode a tidyNode if the node has a parent, or &null;
 	 * otherwise.
 	 */
@@ -111,29 +387,17 @@ final class tidyNode  {
 
 }
 
-/**
- * Returns the value of the specified configuration option for the tidy document
- * @link http://php.net/manual/en/function.tidy-getopt.php
- */
 function tidy_getopt () {}
 
-/**
- * Parse a document stored in a string
- * @link http://php.net/manual/en/function.tidy-parse-string.php
- */
 function tidy_parse_string () {}
 
-/**
- * Parse markup in file or URI
- * @link http://php.net/manual/en/function.tidy-parse-file.php
- */
 function tidy_parse_file () {}
 
 /**
  * Return a string representing the parsed tidy markup
  * @link http://php.net/manual/en/function.tidy-get-output.php
  * @param object tidy <p>
- * The tidy object.
+ * &tidy.object;
  * </p>
  * @return string the parsed tidy markup.
  */
@@ -142,81 +406,48 @@ function tidy_get_output (tidy $object) {}
 /**
  * Return warnings and errors which occurred parsing the specified document
  * @link http://php.net/manual/en/function.tidy-get-error-buffer.php
+ * @param object tidy <p>
+ * &tidy.object;
+ * </p>
+ * @return string the error buffer as a string.
  */
-function tidy_get_error_buffer () {}
+function tidy_get_error_buffer (tidy $object) {}
 
-/**
- * Execute configured cleanup and repair operations on parsed markup
- * @link http://php.net/manual/en/function.tidy-clean-repair.php
- */
 function tidy_clean_repair () {}
 
-/**
- * Repair a string using an optionally provided configuration file
- * @link http://php.net/manual/en/function.tidy-repair-string.php
- */
 function tidy_repair_string () {}
 
-/**
- * Repair a file and return it as a string
- * @link http://php.net/manual/en/function.tidy-repair-file.php
- */
 function tidy_repair_file () {}
 
-/**
- * Run configured diagnostics on parsed and repaired markup
- * @link http://php.net/manual/en/function.tidy-diagnose.php
- */
 function tidy_diagnose () {}
 
-/**
- * Get release date (version) for Tidy library
- * @link http://php.net/manual/en/function.tidy-get-release.php
- * @return string a string with the release date of the Tidy library.
- */
 function tidy_get_release () {}
 
-/**
- * Get current Tidy configuration
- * @link http://php.net/manual/en/function.tidy-get-config.php
- */
 function tidy_get_config () {}
 
-/**
- * Get status of specified document
- * @link http://php.net/manual/en/function.tidy-get-status.php
- */
 function tidy_get_status () {}
 
-/**
- * Get the Detected HTML version for the specified document
- * @link http://php.net/manual/en/function.tidy-get-html-ver.php
- */
 function tidy_get_html_ver () {}
 
-/**
- * Indicates if the document is a XHTML document
- * @link http://php.net/manual/en/function.tidy-is-xhtml.php
- */
 function tidy_is_xhtml () {}
 
-/**
- * Indicates if the document is a generic (non HTML/XHTML) XML document
- * @link http://php.net/manual/en/function.tidy-is-xml.php
- */
 function tidy_is_xml () {}
 
 /**
  * Returns the Number of Tidy errors encountered for specified document
  * @link http://php.net/manual/en/function.tidy-error-count.php
+ * @param object tidy <p>
+ * &tidy.object;
+ * </p>
+ * @return int the number of errors.
  */
-function tidy_error_count () {}
+function tidy_error_count (tidy $object) {}
 
 /**
  * Returns the Number of Tidy warnings encountered for specified document
  * @link http://php.net/manual/en/function.tidy-warning-count.php
  * @param object tidy <p>
- * The Tidy object.
+ * &tidy.object;
  * </p>
  * @return int the number of warnings.
  */
@@ -226,7 +457,7 @@ function tidy_warning_count (tidy $object) {}
  * Returns the Number of Tidy accessibility warnings encountered for specified document
  * @link http://php.net/manual/en/function.tidy-access-count.php
  * @param object tidy <p>
- * The Tidy object.
+ * &tidy.object;
  * </p>
  * @return int the number of warnings.
  */
@@ -235,45 +466,21 @@ function tidy_access_count (tidy $object) {}
 /**
  * Returns the Number of Tidy configuration errors encountered for specified document
  * @link http://php.net/manual/en/function.tidy-config-count.php
- */
-function tidy_config_count () {}
-
-/**
- * Returns the documentation for the given option name
- * @link http://php.net/manual/en/function.tidy-get-opt-doc.php
  * @param object tidy <p>
- * A tidy object
+ * &tidy.object;
  * </p>
- * @param optname string <p>
- * The option name
- * </p>
- * @return string a string if the option exists and has documentation available, or
- * false otherwise.
+ * @return int the number of errors.
  */
-function tidy_get_opt_doc (tidy $object, $optname) {}
+function tidy_config_count (tidy $object) {}
 
-/**
- * Returns a tidyNode object representing the root of the tidy parse tree
- * @link http://php.net/manual/en/function.tidy-get-root.php
- */
+function tidy_get_opt_doc () {}
+
 function tidy_get_root () {}
 
-/**
- * Returns a tidyNode Object starting from the &lt;head&gt; tag of the tidy parse tree
- * @link http://php.net/manual/en/function.tidy-get-head.php
- */
 function tidy_get_head () {}
 
-/**
- * Returns a tidyNode Object starting from the &lt;html&gt; tag of the tidy parse tree
- * @link http://php.net/manual/en/function.tidy-get-html.php
- */
 function tidy_get_html () {}
 
-/**
- * Returns a tidyNode Object starting from the &lt;body&gt; tag of the tidy parse tree
- * @link http://php.net/manual/en/function.tidy-get-body.php
- */
 function tidy_get_body () {}
 
 /**
@@ -289,6 +496,11 @@ function tidy_get_body () {}
  */
 function ob_tidyhandler ($input, $mode = null) {}
 
+
+/**
+ * description
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_TAG_UNKNOWN', 0);
 define ('TIDY_TAG_A', 1);
 define ('TIDY_TAG_ABBR', 2);
@@ -408,19 +620,89 @@ define ('TIDY_TAG_UL', 115);
 define ('TIDY_TAG_VAR', 116);
 define ('TIDY_TAG_WBR', 117);
 define ('TIDY_TAG_XMP', 118);
+
+/**
+ * root node
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_ROOT', 0);
+
+/**
+ * doctype
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_DOCTYPE', 1);
+
+/**
+ * HTML comment
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_COMMENT', 2);
+
+/**
+ * Processing Instruction
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_PROCINS', 3);
+
+/**
+ * Text
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_TEXT', 4);
+
+/**
+ * start tag
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_START', 5);
+
+/**
+ * end tag
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_END', 6);
+
+/**
+ * empty tag
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_STARTEND', 7);
+
+/**
+ * CDATA
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_CDATA', 8);
+
+/**
+ * XML section
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_SECTION', 9);
+
+/**
+ * ASP code
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_ASP', 10);
+
+/**
+ * JSTE code
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_JSTE', 11);
+
+/**
+ * PHP code
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_PHP', 12);
+
+/**
+ * XML declaration
+ * @link http://php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_XMLDECL', 13);
 
 // End of tidy v.2.0

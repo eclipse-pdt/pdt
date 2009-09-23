@@ -258,6 +258,9 @@ function pg_transaction_status ($connection) {}
  * they are automatically executed as one transaction, unless there are explicit BEGIN/COMMIT commands
  * included in the query string. However, using multiple transactions in one function call is not recommended.
  * </p>
+ * <p>
+ * Data inside the query should be properly escaped.
+ * </p>
  * @return resource A query result resource on success, or false on failure.
  */
 function pg_query ($connection = null, $query) {}
@@ -345,6 +348,9 @@ function pg_execute ($connection = null, $stmtname, array $params) {}
  * </p>
  * @param query string <p>
  * The SQL statement or statements to be executed.
+ * </p>
+ * <p>
+ * Data inside the query should be properly escaped.
  * </p>
  * @return bool Returns true on success or false on failure.</p>
  * <p>

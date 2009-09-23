@@ -5,6 +5,10 @@ I. Installing environment:
 	1. Download latest PHPDoc:
 
 		cvs -d :pserver:cvsread@cvs.php.net:/repository checkout phpdoc
+		
+		or
+		
+		svn co http://svn.php.net/repository/phpdoc/en/trunk phpdoc
 
 	2. Install latest Zend CE containing all extensions and PHP-cli binary:
 

@@ -50,9 +50,9 @@
  * images is included.</td>
  * </tr>
  * <tr valign="top">
- * <td>JPG Support</td>
+ * <td>JPEG Support</td>
  * <td>boolean value. true
- * if JPG support is included.</td>
+ * if JPEG support is included.</td>
  * </tr>
  * <tr valign="top">
  * <td>PNG Support</td>
@@ -70,6 +70,10 @@
  * if XBM support is included.</td>
  * </tr>
  * </table>
+ * </p>
+ * <p>
+ * Previous to PHP 5.3.0, the JPEG Support attribute was named
+ * JPG Support.
  */
 function gd_info () {}
 
@@ -94,7 +98,7 @@ function gd_info () {}
  * </p>
  * @param end int <p>
  * The arc end angle, in degrees.
- * 0&deg; is located at the three-o'clock position, and the arc is drawn
+ * 0° is located at the three-o'clock position, and the arc is drawn
  * clockwise.
  * </p>
  * @param color int <p>
@@ -586,7 +590,7 @@ function imagesetthickness ($image, $thickness) {}
  * </p>
  * @param end int <p>
  * The arc end angle, in degrees.
- * 0&deg; is located at the three-o'clock position, and the arc is drawn
+ * 0° is located at the three-o'clock position, and the arc is drawn
  * clockwise.
  * </p>
  * @param color int <p>
@@ -1524,7 +1528,7 @@ function imagettfbbox ($size, $angle, $fontfile, $text) {}
  * <p>
  * May include decimal numeric character references (of the form:
  * &amp;#8364;) to access characters in a font beyond position 127.
- * The hexadecimal format (like &amp;#xA9;) is supported as of PHP 5.2.0.
+ * The hexadecimal format (like &amp;#xA9;) is supported.
  * Strings in UTF-8 encoding can be passed directly.
  * </p>
  * <p>
@@ -2029,6 +2033,12 @@ define ('IMG_EFFECT_NORMAL', 2);
  * @link http://php.net/manual/en/image.constants.php
  */
 define ('IMG_EFFECT_OVERLAY', 3);
+
+/**
+ * When the bundled version of GD is used this is 1 otherwise 
+ * its set to 0.
+ * @link http://php.net/manual/en/image.constants.php
+ */
 define ('GD_BUNDLED', 1);
 
 /**

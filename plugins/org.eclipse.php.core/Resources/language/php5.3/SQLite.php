@@ -3,7 +3,6 @@
 // Start of SQLite v.2.0-dev
 
 /**
- * Represents an opened SQLite database.
  * @link http://php.net/manual/en/ref.sqlite.php
  */
 class SQLiteDatabase  {
@@ -84,7 +83,6 @@ class SQLiteDatabase  {
 }
 
 /**
- * Represents a buffered SQLite result set.
  * @link http://php.net/manual/en/ref.sqlite.php
  */
 final class SQLiteResult implements Iterator, Traversable, Countable {
@@ -156,7 +154,6 @@ final class SQLiteResult implements Iterator, Traversable, Countable {
 }
 
 /**
- * Represents an unbuffered SQLite result set. Unbuffered results sets are sequential, forward-seeking only.
  * @link http://php.net/manual/en/ref.sqlite.php
  */
 final class SQLiteUnbuffered  {
@@ -307,6 +304,9 @@ function sqlite_close ($dbhandle) {}
  * @param query string <p>
  * The query to be executed.
  * </p>
+ * <p>
+ * Data inside the query should be properly escaped.
+ * </p>
  * @param result_type int[optional] &sqlite.result-type;
  * @param error_msg string[optional] <p>
  * The specified variable will be filled if an error occurs. This is
@@ -339,6 +339,9 @@ function sqlite_query ($query, $result_type = null, &$error_msg = null) {}
  * @param query string <p>
  * The query to be executed.
  * </p>
+ * <p>
+ * Data inside the query should be properly escaped.
+ * </p>
  * @param error_msg string[optional] <p>
  * The specified variable will be filled if an error occurs. This is
  * specially important because SQL syntax errors can't be fetched using
@@ -354,6 +357,9 @@ function sqlite_exec ($query, &$error_msg = null) {}
  * @link http://php.net/manual/en/function.sqlite-array-query.php
  * @param query string <p>
  * The query to be executed.
+ * </p>
+ * <p>
+ * Data inside the query should be properly escaped.
  * </p>
  * @param result_type int[optional] &sqlite.result-type;
  * @param decode_binary bool[optional] &sqlite.decode-bin;
@@ -395,7 +401,7 @@ function sqlite_fetch_object ($class_name = null, array $ctor_params = null, $de
  * Fetches the first column of a result set as a string
  * @link http://php.net/manual/en/function.sqlite-fetch-single.php
  * @param decode_binary bool[optional] &sqlite.decode-bin;
- * @return string 
+ * @return string the first column value, as a string.
  */
 function sqlite_fetch_single ($decode_binary = null) {}
 
@@ -436,21 +442,21 @@ function sqlite_current ($result_type = null, $decode_binary = null) {}
  * The column index or name to fetch.
  * </p>
  * @param decode_binary bool[optional] &sqlite.decode-bin;
- * @return mixed 
+ * @return mixed the column value.
  */
 function sqlite_column ($index_or_name, $decode_binary = null) {}
 
 /**
  * Returns the version of the linked SQLite library
  * @link http://php.net/manual/en/function.sqlite-libversion.php
- * @return string 
+ * @return string the librart version, as a string.
  */
 function sqlite_libversion () {}
 
 /**
  * Returns the encoding of the linked SQLite library
  * @link http://php.net/manual/en/function.sqlite-libencoding.php
- * @return string 
+ * @return string the library encoding.
  */
 function sqlite_libencoding () {}
 
@@ -459,7 +465,7 @@ function sqlite_libencoding () {}
    recent SQL statement
  * @link http://php.net/manual/en/function.sqlite-changes.php
  * @param db
- * @return int 
+ * @return int the number of changed rows.
  */
 function sqlite_changes ($db) {}
 
@@ -467,7 +473,7 @@ function sqlite_changes ($db) {}
  * Returns the rowid of the most recently inserted row
  * @link http://php.net/manual/en/function.sqlite-last-insert-rowid.php
  * @param db
- * @return int 
+ * @return int the row id, as an integer.
  */
 function sqlite_last_insert_rowid ($db) {}
 
@@ -475,7 +481,7 @@ function sqlite_last_insert_rowid ($db) {}
  * Returns the number of rows in a buffered result set
  * @link http://php.net/manual/en/function.sqlite-num-rows.php
  * @param result
- * @return int 
+ * @return int the number of rows, as an integer.
  */
 function sqlite_num_rows ($result) {}
 
@@ -483,7 +489,7 @@ function sqlite_num_rows ($result) {}
  * Returns the number of fields in a result set
  * @link http://php.net/manual/en/function.sqlite-num-fields.php
  * @param result
- * @return int 
+ * @return int the number of fields, as an integer.
  */
 function sqlite_num_fields ($result) {}
 
@@ -603,7 +609,7 @@ function sqlite_busy_timeout ($milliseconds) {}
  * Returns the error code of the last error for a database
  * @link http://php.net/manual/en/function.sqlite-last-error.php
  * @param db
- * @return int 
+ * @return int an error code, or 0 if no error occurred.
  */
 function sqlite_last_error ($db) {}
 
@@ -624,6 +630,9 @@ function sqlite_error_string ($error_code) {}
  * @link http://php.net/manual/en/function.sqlite-unbuffered-query.php
  * @param query string <p>
  * The query to be executed.
+ * </p>
+ * <p>
+ * Data inside the query should be properly escaped.
  * </p>
  * @param result_type int[optional] &sqlite.result-type;
  * @param error_msg string[optional] <p>
@@ -710,7 +719,7 @@ function sqlite_factory ($filename, $mode = null, &$error_message = null) {}
 function sqlite_udf_encode_binary ($data) {}
 
 /**
- * Decode binary data passed as parameters to an UDF
+ * Decode binary data passed as parameters to an <acronym>UDF</acronym>
  * @link http://php.net/manual/en/function.sqlite-udf-decode-binary.php
  * @param data string <p>
  * The encoded data that will be decoded, data that was applied by either
@@ -906,7 +915,17 @@ define ('SQLITE_NOLFS', 22);
  * @link http://php.net/manual/en/sqlite.constants.php
  */
 define ('SQLITE_AUTH', 23);
+
+/**
+ * File opened that is not a database file.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NOTADB', 26);
+
+/**
+ * Auxiliary database format error.
+ * @link http://php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_FORMAT', 24);
 
 /**

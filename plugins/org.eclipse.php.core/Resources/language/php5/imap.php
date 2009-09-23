@@ -3,7 +3,7 @@
 // Start of imap v.
 
 /**
- * Open an IMAP stream to a mailbox
+ * Open an <acronym>IMAP</acronym> stream to a mailbox
  * @link http://php.net/manual/en/function.imap-open.php
  * @param mailbox string <p>
  * A mailbox name consists of a server and a mailbox path on this server.
@@ -45,7 +45,7 @@
 function imap_open ($mailbox, $username, $password, $options = null, $n_retries = null) {}
 
 /**
- * Reopen IMAP stream to new mailbox
+ * Reopen <acronym>IMAP</acronym> stream to new mailbox
  * @link http://php.net/manual/en/function.imap-reopen.php
  * @param imap_stream resource 
  * @param mailbox string <p>
@@ -391,9 +391,11 @@ function imap_fetchheader ($imap_stream, $msg_number, $options = null) {}
  * </tr>
  * <tr valign="top">
  * <td>dparameters</td>
- * <td>An array of objects where each object has an "attribute" and a
- * "value" property corresponding to the parameters on the
- * Content-disposition MIMEheader.</td>
+ * <td>An array of objects where each object has an
+ * "attribute" and a "value"
+ * property corresponding to the parameters on the
+ * Content-disposition MIME
+ * header.</td>
  * </tr>
  * <tr valign="top">
  * <td>ifparameters</td>
@@ -401,8 +403,9 @@ function imap_fetchheader ($imap_stream, $msg_number, $options = null) {}
  * </tr>
  * <tr valign="top">
  * <td>parameters</td>
- * <td>An array of objects where each object has an "attribute" and
- * a "value" property.</td>
+ * <td>An array of objects where each object has an
+ * "attribute" and a "value"
+ * property.</td>
  * </tr>
  * <tr valign="top">
  * <td>parts</td>
@@ -481,12 +484,13 @@ function imap_undelete ($imap_stream, $msg_number, $flags = null) {}
  * @param imap_stream resource 
  * @return object the information in an object with following properties:
  * Date - current system time formatted according to RFC2822
- * Driver - protocol used to access this mailbox: POP3, IMAP, NNTP
+ * Driver - protocol used to access this mailbox:
+ * POP3, IMAP, NNTP
  * Mailbox - the mailbox name
  * Nmsgs - number of messages in the mailbox
  * Recent - number of recent messages in the mailbox
  * </p>
- * <p> 
+ * <p>
  * Returns false on failure.
  */
 function imap_check ($imap_stream) {}
@@ -704,7 +708,7 @@ function imap_utf8 ($mime_encoded_text) {}
  * </p>
  * @param options int <p>
  * Valid flags are:
- * SA_MESSAGES - set status->messages to the
+ * SA_MESSAGES - set $status->messages to the
  * number of messages in the mailbox
  * @return object This function returns an object containing status information.
  * The object has the following properties: messages,
@@ -862,20 +866,7 @@ function imap_msgno ($imap_stream, $uid) {}
  * ref should normally be just the server
  * specification as described in imap_open.
  * </p>
- * @param pattern string <p>
- * Specifies where in the mailbox hierarchy to start searching.
- * </p>
- * <p>
- * There are two special characters you can pass as part of the
- * pattern: '*' and '%'. '*' means to return
- * all mailboxes. If you pass pattern as '*',
- * you will get a list of the entire mailbox hierarchy. '%' means to
- * return the current level only. '%' as the
- * pattern parameter will return only the top
- * level mailboxes; '~/mail/%' on UW_IMAPD will return every mailbox
- * in the ~/mail directory, but none in subfolders of that
- * directory.
- * </p>
+ * @param pattern string &imap.pattern;
  * @return array an array containing the names of the mailboxes.
  */
 function imap_list ($imap_stream, $ref, $pattern) {}
@@ -888,20 +879,7 @@ function imap_list ($imap_stream, $ref, $pattern) {}
  * ref should normally be just the server 
  * specification as described in imap_open
  * </p>
- * @param pattern string <p>
- * Specifies where in the mailbox hierarchy to start searching.
- * </p>
- * <p>
- * There are two special characters you can pass as part of the
- * pattern: '*' and '%'. '*' means to return
- * all mailboxes. If you pass pattern as '*',
- * you will get a list of the entire mailbox hierarchy. '%' means to
- * return the current level only. '%' as the
- * pattern parameter will return only the top
- * level mailboxes; '~/mail/%' on UW_IMAPD will return every mailbox
- * in the ~/mail directory, but none in subfolders of that
- * directory.
- * </p>
+ * @param pattern string &imap.pattern;
  * @return array an array of all the subscribed mailboxes.
  */
 function imap_lsub ($imap_stream, $ref, $pattern) {}
@@ -974,8 +952,8 @@ function imap_last_error () {}
  * @param imap_stream resource 
  * @param criteria string <p>
  * A string, delimited by spaces, in which the following keywords are
- * allowed. Any multi-word arguments (e.g. FROM "joey smith") must be
- * quoted.
+ * allowed. Any multi-word arguments (e.g.
+ * FROM "joey smith") must be quoted.
  * ALL - return all messages matching the rest of the criteria
  * @param options int[optional] <p>
  * Valid values for options are 
@@ -1226,20 +1204,7 @@ function imap_listmailbox () {}
  * ref should normally be just the server
  * specification as described in imap_open
  * </p>
- * @param pattern string <p>
- * Specifies where in the mailbox hierarchy to start searching.
- * </p>
- * <p>
- * There are two special characters you can pass as part of the
- * pattern: '*' and '%'. '*' means to return
- * all mailboxes. If you pass pattern as '*',
- * you will get a list of the entire mailbox hierarchy. '%' means to
- * return the current level only. '%' as the
- * pattern parameter will return only the top
- * level mailboxes; '~/mail/%' on UW_IMAPD will return every mailbox
- * in the ~/mail directory, but none in subfolders of that
- * directory.
- * </p>
+ * @param pattern string &imap.pattern;
  * @return array an array of objects containing mailbox information. Each
  * object has the attributes name, specifying
  * the full name of the mailbox; delimiter,
@@ -1263,8 +1228,8 @@ function imap_listmailbox () {}
  * </p>
  * <p>
  * LATT_UNMARKED - This mailbox is not marked, does not contain new
- * messages. If either MARKED or UNMARKED is provided, you can assume the IMAP server 
- * supports this feature for this mailbox. 
+ * messages. If either MARKED or UNMARKED is
+ * provided, you can assume the IMAP server supports this feature for this mailbox.
  * </p>
  */
 function imap_getmailboxes ($imap_stream, $ref, $pattern) {}
@@ -1289,20 +1254,7 @@ function imap_listsubscribed () {}
  * ref should normally be just the server
  * specification as described in imap_open
  * </p>
- * @param pattern string <p>
- * Specifies where in the mailbox hierarchy to start searching.
- * </p>
- * <p>
- * There are two special characters you can pass as part of the
- * pattern: '*' and '%'. '*' means to return
- * all mailboxes. If you pass pattern as '*',
- * you will get a list of the entire mailbox hierarchy. '%' means to
- * return the current level only. '%' as the
- * pattern parameter will return only the top
- * level mailboxes; '~/mail/%' on UW_IMAPD will return every mailbox
- * in the ~/mail directory, but none in subfolders of that
- * directory.
- * </p>
+ * @param pattern string &imap.pattern;
  * @return array an array of objects containing mailbox information. Each
  * object has the attributes name, specifying
  * the full name of the mailbox; delimiter,
@@ -1353,7 +1305,8 @@ define ('OP_SILENT', 16);
 define ('OP_PROTOTYPE', 32);
 
 /**
- * For IMAP and NNTP names, open a connection but don't open a mailbox.
+ * For IMAP and NNTP
+ * names, open a connection but don't open a mailbox.
  * @link http://php.net/manual/en/imap.constants.php
  */
 define ('OP_HALFOPEN', 64);

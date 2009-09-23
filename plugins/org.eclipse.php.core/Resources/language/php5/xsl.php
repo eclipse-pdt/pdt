@@ -5,51 +5,108 @@
 class XSLTProcessor  {
 
 	/**
-	 * @param doc
+	 * Import stylesheet
+	 * @link http://php.net/manual/en/xsltprocessor.importstylesheet.php
+	 * @param stylesheet DOMDocument <p>
+	 * The imported style sheet as a DOMDocument object.
+	 * </p>
+	 * @return void 
 	 */
-	public function importStylesheet ($doc) {}
+	public function importStylesheet (DOMDocument $stylesheet) {}
 
 	/**
-	 * @param doc
+	 * Transform to a DOMDocument
+	 * @link http://php.net/manual/en/xsltprocessor.transformtodoc.php
+	 * @param doc DOMNode <p>
+	 * The node to be transformed.
+	 * </p>
+	 * @return DOMDocument The resulting DOMDocument or false on error.
 	 */
-	public function transformToDoc ($doc) {}
+	public function transformToDoc (DOMNode $doc) {}
 
 	/**
-	 * @param doc
-	 * @param uri
+	 * Transform to URI
+	 * @link http://php.net/manual/en/xsltprocessor.transformtouri.php
+	 * @param doc DOMDocument <p>
+	 * The transformed document.
+	 * </p>
+	 * @param uri string <p>
+	 * </p>
+	 * @return int the number of bytes written or false if an error occurred.
 	 */
-	public function transformToUri ($doc, $uri) {}
+	public function transformToUri (DOMDocument $doc, $uri) {}
 
 	/**
-	 * @param doc
+	 * Transform to XML
+	 * @link http://php.net/manual/en/xsltprocessor.transformtoxml.php
+	 * @param doc DOMDocument <p>
+	 * The transformed document.
+	 * </p>
+	 * @return string The result of the transformation as a string or false on error.
 	 */
-	public function transformToXml ($doc) {}
+	public function transformToXml (DOMDocument $doc) {}
 
 	/**
-	 * @param namespace
-	 * @param name
-	 * @param value[optional]
+	 * Set value for a parameter
+	 * @link http://php.net/manual/en/xsltprocessor.setparameter.php
+	 * @param namespace string <p>
+	 * The namespace URI of the XSLT parameter.
+	 * </p>
+	 * @param options array <p>
+	 * An array of name =&gt; value pairs. This syntax is
+	 * available since PHP 5.1.0.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function setParameter ($namespace, $name, $value) {}
+	public function setParameter ($namespace, array $options) {}
 
 	/**
-	 * @param namespace
-	 * @param name
+	 * Get value of a parameter
+	 * @link http://php.net/manual/en/xsltprocessor.getparameter.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI of the XSLT parameter.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name of the XSLT parameter.
+	 * </p>
+	 * @return string The value of the parameter or &null; if it's not set.
 	 */
-	public function getParameter ($namespace, $name) {}
+	public function getParameter ($namespaceURI, $localName) {}
 
 	/**
-	 * @param namespace
-	 * @param name
+	 * Remove parameter
+	 * @link http://php.net/manual/en/xsltprocessor.removeparameter.php
+	 * @param namespaceURI string <p>
+	 * The namespace URI of the XSLT parameter.
+	 * </p>
+	 * @param localName string <p>
+	 * The local name of the XSLT parameter.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
-	public function removeParameter ($namespace, $name) {}
+	public function removeParameter ($namespaceURI, $localName) {}
 
+	/**
+	 * Determine if PHP has EXSLT support
+	 * @link http://php.net/manual/en/xsltprocessor.hasexsltsupport.php
+	 * @return bool Returns true on success or false on failure.
+	 */
 	public function hasExsltSupport () {}
 
 	/**
-	 * @param restrict[optional]
+	 * Enables the ability to use PHP functions as XSLT functions
+	 * @link http://php.net/manual/en/xsltprocessor.registerphpfunctions.php
+	 * @param restrict mixed[optional] <p>
+	 * Use this parameter to only allow certain functions to be called from 
+	 * XSLT.
+	 * </p>
+	 * <p>
+	 * This parameter can be either a string (a function name) or an array of
+	 * functions.
+	 * </p>
+	 * @return void 
 	 */
-	public function registerPHPFunctions ($restrict) {}
+	public function registerPHPFunctions ($restrict = null) {}
 
 }
 define ('XSL_CLONE_AUTO', 0);

@@ -60,62 +60,135 @@ function mcrypt_get_key_size ($cipher) {}
 /**
  * Get the block size of the specified cipher
  * @link http://php.net/manual/en/function.mcrypt-get-block-size.php
- * @param cipher int 
- * @return int 
+ * @param cipher int <p>
+ * One of the MCRYPT_ciphername constants or the name
+ * of the algorithm as string.
+ * </p>
+ * @return int Gets the block size, as an integer.
  */
 function mcrypt_get_block_size ($cipher) {}
 
 /**
  * Get the name of the specified cipher
  * @link http://php.net/manual/en/function.mcrypt-get-cipher-name.php
- * @param cipher int 
- * @return string 
+ * @param cipher int <p>
+ * One of the MCRYPT_ciphername constants or the name
+ * of the algorithm as string.
+ * </p>
+ * @return string This function returns the name of the cipher or false, if the cipher does
+ * not exist.
  */
 function mcrypt_get_cipher_name ($cipher) {}
 
 /**
  * Create an initialization vector (IV) from a random source
  * @link http://php.net/manual/en/function.mcrypt-create-iv.php
- * @param size int 
- * @param source int[optional] 
- * @return string 
+ * @param size int <p>
+ * Determines the size of the IV, parameter source
+ * (defaults to random value) specifies the source of the IV.
+ * </p>
+ * @param source int[optional] <p>
+ * The source can be MCRYPT_RAND (system random
+ * number generator), MCRYPT_DEV_RANDOM (read
+ * data from /dev/random) and
+ * MCRYPT_DEV_URANDOM (read data from
+ * /dev/urandom). MCRYPT_RAND
+ * is the only one supported on Windows because Windows (of course)
+ * doesn't have /dev/random or
+ * /dev/urandom.
+ * </p>
+ * <p>
+ * When using MCRYPT_RAND, remember to call
+ * srand before
+ * mcrypt_create_iv to initialize the random
+ * number generator; it is not seeded automatically like
+ * rand is.
+ * </p>
+ * @return string the initialization vector, or false on error.
  */
 function mcrypt_create_iv ($size, $source = null) {}
 
 /**
  * Get an array of all supported ciphers
  * @link http://php.net/manual/en/function.mcrypt-list-algorithms.php
- * @param lib_dir string[optional] 
- * @return array 
+ * @param lib_dir string[optional] <p>
+ * Specifies the directory where all algorithms are located. If not
+ * specifies, the value of the mcrypt.algorithms_dir &php.ini; directive
+ * is used.
+ * </p>
+ * @return array an array with all the supported algorithms.
  */
 function mcrypt_list_algorithms ($lib_dir = null) {}
 
 /**
  * Get an array of all supported modes
  * @link http://php.net/manual/en/function.mcrypt-list-modes.php
- * @param lib_dir string[optional] 
- * @return array 
+ * @param lib_dir string[optional] <p>
+ * Specifies the directory where all modes are located. If not
+ * specifies, the value of the mcrypt.modes_dir
+ * &php.ini; directive is used.
+ * </p>
+ * @return array an array with all the supported modes.
  */
 function mcrypt_list_modes ($lib_dir = null) {}
 
 /**
  * Returns the size of the IV belonging to a specific cipher/mode combination
  * @link http://php.net/manual/en/function.mcrypt-get-iv-size.php
- * @param cipher string 
- * @param mode string 
- * @return int 
+ * @param cipher string <p>
+ * One of the MCRYPT_ciphername constants of the name
+ * of the algorithm as string.
+ * </p>
+ * @param mode string <p>
+ * mode is one of the MCRYPT_MODE_modename constants
+ * or one of "ecb", "cbc", "cfb", "ofb", "nofb" or "stream". The IV is
+ * ignored in ECB mode as this mode does not require it. You will need to
+ * have the same IV (think: starting point) both at encryption and
+ * decryption stages, otherwise your encryption will fail.
+ * </p>
+ * @return int the size of the Initialisation Vector (IV) in bytes. On error the
+ * function returns false. If the IV is ignored in the specified cipher/mode
+ * combination zero is returned.
  */
 function mcrypt_get_iv_size ($cipher, $mode) {}
 
 /**
  * Encrypts plaintext with given parameters
  * @link http://php.net/manual/en/function.mcrypt-encrypt.php
- * @param cipher string 
- * @param key string 
- * @param data string 
- * @param mode string 
- * @param iv string[optional] 
- * @return string 
+ * @param cipher string <p>
+ * One of the MCRYPT_ciphername
+ * constants of the name of the algorithm as string.
+ * </p>
+ * @param key string <p>
+ * The key with which the data will be encrypted. If it's smaller that
+ * the required keysize, it is padded with '\0'. It is
+ * better not to use ASCII strings for keys.
+ * </p>
+ * <p>
+ * It is recommended to use the mhash functions to create a key from a
+ * string.
+ * </p>
+ * @param data string <p>
+ * The data that will be encrypted with the given cipher and mode. If the
+ * size of the data is not n * blocksize, the data will be padded with
+ * '\0'.
+ * </p>
+ * <p>
+ * The returned crypttext can be larger that the size of the data that is
+ * given by data.
+ * </p>
+ * @param mode string <p>
+ * One of the MCRYPT_MODE_modename
+ * constants of one of "ecb", "cbc", "cfb", "ofb", "nofb" or
+ * "stream".
+ * </p>
+ * @param iv string[optional] <p>
+ * Used for the initialisation in CBC, CFB, OFB modes, and in some
+ * algorithms in STREAM mode. If you do not supply an IV, while it is
+ * needed for an algorithm, the function issues a warning and uses an
+ * IV with all bytes set to '\0'.
+ * </p>
+ * @return string the encrypted data, as a string.
  */
 function mcrypt_encrypt ($cipher, $key, $data, $mode, $iv = null) {}
 
@@ -154,11 +227,26 @@ function mcrypt_decrypt ($cipher, $key, $data, $mode, $iv = null) {}
 /**
  * Opens the module of the algorithm and the mode to be used
  * @link http://php.net/manual/en/function.mcrypt-module-open.php
- * @param algorithm string 
- * @param algorithm_directory string 
- * @param mode string 
- * @param mode_directory string 
- * @return resource 
+ * @param algorithm string <p>
+ * The algorithm to be used.
+ * </p>
+ * @param algorithm_directory string <p>
+ * The algorithm_directory and
+ * mode_directory are used to locate the encryption
+ * modules. When you supply a directory name, it is used. When you set one
+ * of these to the empty string (""), the value set by
+ * the mcrypt.algorithms_dir or
+ * mcrypt.modes_dir ini-directive is used. When
+ * these are not set, the default directories that are used are the ones
+ * that were compiled in into libmcrypt (usually
+ * /usr/local/lib/libmcrypt).
+ * </p>
+ * @param mode string <p>
+ * The mode to be used.
+ * </p>
+ * @param mode_directory string <p>
+ * </p>
+ * @return resource Normally it returns an encryption descriptor, or false on error.
  */
 function mcrypt_module_open ($algorithm, $algorithm_directory, $mode, $mode_directory) {}
 
@@ -193,17 +281,33 @@ function mcrypt_generic_init ($td, $key, $iv) {}
 /**
  * This function encrypts data
  * @link http://php.net/manual/en/function.mcrypt-generic.php
- * @param td resource 
- * @param data string 
- * @return string 
+ * @param td resource <p>
+ * The encryption descriptor.
+ * </p>
+ * <p>
+ * The encryption handle should always be initialized with
+ * mcrypt_generic_init with a key and an IV before
+ * calling this function. Where the encryption is done, you should free the
+ * encryption buffers by calling mcrypt_generic_deinit.
+ * See mcrypt_module_open for an example.
+ * </p>
+ * @param data string <p>
+ * The data to encrypt.
+ * </p>
+ * @return string the encrypted data.
  */
 function mcrypt_generic ($td, $data) {}
 
 /**
  * Decrypt data
  * @link http://php.net/manual/en/function.mdecrypt-generic.php
- * @param td resource 
- * @param data string 
+ * @param td resource <p>
+ * An encryption descriptor returned by
+ * mcrypt_module_open
+ * </p>
+ * @param data string <p>
+ * Encrypted data.
+ * </p>
  * @return string 
  */
 function mdecrypt_generic ($td, $data) {}
@@ -219,8 +323,10 @@ function mcrypt_generic_end ($td) {}
 /**
  * This function deinitializes an encryption module
  * @link http://php.net/manual/en/function.mcrypt-generic-deinit.php
- * @param td resource 
- * @return bool 
+ * @param td resource <p>
+ * The encryption descriptor.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function mcrypt_generic_deinit ($td) {}
 
@@ -290,8 +396,14 @@ function mcrypt_enc_get_key_size ($td) {}
 /**
  * Returns an array with the supported keysizes of the opened algorithm
  * @link http://php.net/manual/en/function.mcrypt-enc-get-supported-key-sizes.php
- * @param td resource 
- * @return array 
+ * @param td resource <p>
+ * The encryption descriptor.
+ * </p>
+ * @return array an array with the key sizes supported by the algorithm
+ * specified by the encryption descriptor. If it returns an empty
+ * array then all key sizes between 1 and
+ * mcrypt_enc_get_key_size are supported by the
+ * algorithm.
  */
 function mcrypt_enc_get_supported_key_sizes ($td) {}
 
@@ -308,8 +420,10 @@ function mcrypt_enc_get_iv_size ($td) {}
 /**
  * Returns the name of the opened algorithm
  * @link http://php.net/manual/en/function.mcrypt-enc-get-algorithms-name.php
- * @param td resource 
- * @return string 
+ * @param td resource <p>
+ * The encryption descriptor.
+ * </p>
+ * @return string the name of the opened algorithm as a string.
  */
 function mcrypt_enc_get_algorithms_name ($td) {}
 
@@ -326,36 +440,62 @@ function mcrypt_enc_get_modes_name ($td) {}
 /**
  * This function runs a self test on the specified module
  * @link http://php.net/manual/en/function.mcrypt-module-self-test.php
- * @param algorithm string 
- * @param lib_dir string[optional] 
- * @return bool 
+ * @param algorithm string <p>
+ * The algorithm to test.
+ * </p>
+ * @param lib_dir string[optional] <p>
+ * The optional lib_dir parameter can contain the
+ * location of where the algorithm module is on the system.
+ * </p>
+ * @return bool The function returns true if the self test succeeds, or false when if
+ * fails.
  */
 function mcrypt_module_self_test ($algorithm, $lib_dir = null) {}
 
 /**
  * Returns if the specified module is a block algorithm or not
  * @link http://php.net/manual/en/function.mcrypt-module-is-block-algorithm-mode.php
- * @param mode string 
- * @param lib_dir string[optional] 
- * @return bool 
+ * @param mode string <p>
+ * The mode to check.
+ * </p>
+ * @param lib_dir string[optional] <p>
+ * The optional lib_dir parameter can contain the
+ * location of where the algorithm module is on the system.
+ * </p>
+ * @return bool This function returns true if the mode is for use with block
+ * algorithms, otherwise it returns false. (e.g. false for stream, and
+ * true for cbc, cfb, ofb).
  */
 function mcrypt_module_is_block_algorithm_mode ($mode, $lib_dir = null) {}
 
 /**
  * This function checks whether the specified algorithm is a block algorithm
  * @link http://php.net/manual/en/function.mcrypt-module-is-block-algorithm.php
- * @param algorithm string 
- * @param lib_dir string[optional] 
- * @return bool 
+ * @param algorithm string <p>
+ * The algorithm to check.
+ * </p>
+ * @param lib_dir string[optional] <p>
+ * The optional lib_dir parameter can contain the
+ * location of where the algorithm module is on the system.
+ * </p>
+ * @return bool This function returns true if the specified algorithm is a block
+ * algorithm, or false is it is a stream algorithm.
  */
 function mcrypt_module_is_block_algorithm ($algorithm, $lib_dir = null) {}
 
 /**
  * Returns if the specified mode outputs blocks or not
  * @link http://php.net/manual/en/function.mcrypt-module-is-block-mode.php
- * @param mode string 
- * @param lib_dir string[optional] 
- * @return bool 
+ * @param mode string <p>
+ * The mode to check.
+ * </p>
+ * @param lib_dir string[optional] <p>
+ * The optional lib_dir parameter can contain the
+ * location of where the algorithm module is on the system.
+ * </p>
+ * @return bool This function returns true if the mode outputs blocks of bytes or
+ * false if it outputs just bytes. (e.g. true for cbc and ecb, and
+ * false for cfb and stream).
  */
 function mcrypt_module_is_block_mode ($mode, $lib_dir = null) {}
 
@@ -391,9 +531,17 @@ function mcrypt_module_get_algo_key_size ($algorithm, $lib_dir = null) {}
 /**
  * Returns an array with the supported keysizes of the opened algorithm
  * @link http://php.net/manual/en/function.mcrypt-module-get-supported-key-sizes.php
- * @param algorithm string 
- * @param lib_dir string[optional] 
- * @return array 
+ * @param algorithm string <p>
+ * The algorithm to used.
+ * </p>
+ * @param lib_dir string[optional] <p>
+ * The optional lib_dir parameter can contain the
+ * location of where the algorithm module is on the system.
+ * </p>
+ * @return array an array with the key sizes supported by the specified algorithm.
+ * If it returns an empty array then all key sizes between 1 and
+ * mcrypt_module_get_algo_key_size are supported by the
+ * algorithm.
  */
 function mcrypt_module_get_supported_key_sizes ($algorithm, $lib_dir = null) {}
 

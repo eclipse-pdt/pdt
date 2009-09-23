@@ -559,7 +559,8 @@ function mb_convert_encoding ($str, $to_encoding, $from_encoding = null) {}
  * the strict encoding detection or not.
  * Default is false.
  * </p>
- * @return string The detected character encoding.
+ * @return string The detected character encoding or false if the encoding cannot be
+ * detected from the given string.
  */
 function mb_detect_encoding ($str, $encoding_list = null, $strict = null) {}
 
@@ -697,6 +698,7 @@ function mb_convert_kana ($str, $option = null, $encoding = null) {}
  * charset specifies the name of the character set
  * in which str is represented in. The default value
  * is determined by the current NLS setting (mbstring.language).
+ * mb_internal_encoding should be set to same encoding.
  * </p>
  * @param transfer_encoding string[optional] <p>
  * transfer_encoding specifies the scheme of MIME
@@ -713,6 +715,8 @@ function mb_convert_kana ($str, $option = null, $encoding = null) {}
  * Falls back to "\r\n" (CRLF) if not given.
  * </p>
  * @param indent int[optional] <p>
+ * Indentation of the first line (number of characters in the header
+ * before str).
  * </p>
  * @return string A converted version of the string represented in ASCII.
  */
@@ -762,10 +766,10 @@ function mb_convert_variables ($to_encoding, $from_encoding, &$vars, &$_ = null)
  * convmap is array specifies code area to
  * convert.
  * </p>
- * @param encoding string[optional] &mbstring.encoding.parameter;
+ * @param encoding string &mbstring.encoding.parameter;
  * @return string The converted string.
  */
-function mb_encode_numericentity ($str, array $convmap, $encoding = null) {}
+function mb_encode_numericentity ($str, array $convmap, $encoding) {}
 
 /**
  * Decode HTML numeric string reference to character
@@ -777,10 +781,10 @@ function mb_encode_numericentity ($str, array $convmap, $encoding = null) {}
  * convmap is an array that specifies 
  * the code area to convert.
  * </p>
- * @param encoding string[optional] &mbstring.encoding.parameter;
+ * @param encoding string &mbstring.encoding.parameter;
  * @return string The converted string.
  */
-function mb_decode_numericentity ($str, array $convmap, $encoding = null) {}
+function mb_decode_numericentity ($str, array $convmap, $encoding) {}
 
 /**
  * Send encoded mail
@@ -981,7 +985,7 @@ function mb_ereg_match ($pattern, $string, $option = null) {}
  * The search pattern.
  * </p>
  * @param option string[optional] <p>
- * The search option.
+ * The search option. Defaults to 'ms'.
  * </p>
  * @return bool 
  */
@@ -994,7 +998,7 @@ function mb_ereg_search ($pattern = null, $option = null) {}
  * The search pattern.
  * </p>
  * @param option string[optional] <p>
- * The search option.
+ * The search option. Defaults to 'ms'.
  * </p>
  * @return array 
  */
@@ -1007,7 +1011,7 @@ function mb_ereg_search_pos ($pattern = null, $option = null) {}
  * The search pattern.
  * </p>
  * @param option string[optional] <p>
- * The search option.
+ * The search option. Defaults to 'ms'.
  * </p>
  * @return array 
  */
@@ -1016,9 +1020,15 @@ function mb_ereg_search_regs ($pattern = null, $option = null) {}
 /**
  * Setup string and regular expression for a multibyte regular expression match
  * @link http://php.net/manual/en/function.mb-ereg-search-init.php
- * @param string string 
- * @param pattern string[optional] 
- * @param option string[optional] 
+ * @param string string <p>
+ * The search string.
+ * </p>
+ * @param pattern string[optional] <p>
+ * The search pattern.
+ * </p>
+ * @param option string[optional] <p>
+ * The search option. Defaults to 'ms'.
+ * </p>
  * @return bool 
  */
 function mb_ereg_search_init ($string, $pattern = null, $option = null) {}

@@ -222,7 +222,9 @@ function preg_replace ($pattern, $replacement, $subject, $limit = null, &$count 
  * <p>
  * You'll often need the callback function
  * for a preg_replace_callback in just one place.
- * In this case you can use create_function to
+ * In this case you can use an
+ * anonymous function (since
+ * PHP 5.3.0) or create_function to
  * declare an anonymous function as callback within the call to
  * preg_replace_callback. By doing it this way
  * you have all information for the call in one place and do not
@@ -257,13 +259,27 @@ function preg_replace ($pattern, $replacement, $subject, $limit = null, &$count 
 function preg_replace_callback ($pattern, $callback, $subject, $limit = null, &$count = null) {}
 
 /**
- * @param regex
- * @param replace
- * @param subject[optional]
- * @param limit[optional]
- * @param count[optional]
+ * Perform a regular expression search and replace
+ * @link http://php.net/manual/en/function.preg-filter.php
+ * @param pattern mixed <p>
+ * </p>
+ * @param replacement mixed <p>
+ * </p>
+ * @param subject mixed <p>
+ * </p>
+ * @param limit int[optional] <p>
+ * </p>
+ * @param count int[optional] <p>
+ * </p>
+ * @return mixed an array if the subject
+ * parameter is an array, or a string otherwise.
+ * </p>
+ * <p>
+ * If matches are found, the new subject will
+ * be returned, otherwise subject will be
+ * returned unchanged or &null; if an error occurred.
  */
-function preg_filter ($regex, $replace, $subject, $limit, &$count) {}
+function preg_filter ($pattern, $replacement, $subject, $limit = null, &$count = null) {}
 
 /**
  * Split string by a regular expression
@@ -276,9 +292,10 @@ function preg_filter ($regex, $replace, $subject, $limit, &$count) {}
  * </p>
  * @param limit int[optional] <p>
  * If specified, then only substrings up to limit
- * are returned, and if limit is -1, it actually
- * means "no limit", which is useful for specifying the
- * flags.
+ * are returned with the rest of the string being placed in the last
+ * substring. A limit of -1, 0 or null means "no limit"
+ * and, as is standard across PHP, you can use null to skip to the 
+ * flags parameter.
  * </p>
  * @param flags int[optional] <p>
  * flags can be any combination of the following
@@ -438,11 +455,11 @@ define ('PREG_BAD_UTF8_ERROR', 4);
 define ('PREG_BAD_UTF8_OFFSET_ERROR', 5);
 
 /**
- * PCRE version and release date (e.g. "7.0 18-Dec-2006"). Available since
- * PHP 5.2.4.
+ * PCRE version and release date (e.g. "7.0 18-Dec-2006").
+ * Available since PHP 5.2.4.
  * @link http://php.net/manual/en/pcre.constants.php
  */
-define ('PCRE_VERSION', "7.8 2008-09-05");
+define ('PCRE_VERSION', "7.9 2009-04-11");
 
 // End of pcre v.
 ?>
