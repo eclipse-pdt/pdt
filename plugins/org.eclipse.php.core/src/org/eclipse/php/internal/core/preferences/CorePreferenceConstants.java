@@ -64,7 +64,7 @@ public class CorePreferenceConstants {
 				false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
-		node.putInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);
+		node.putInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 500);
 	}
 
 	// Don't instantiate
