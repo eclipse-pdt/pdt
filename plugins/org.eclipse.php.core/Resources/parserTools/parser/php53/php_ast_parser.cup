@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.17 2009/09/21 11:18:44 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.18 2009/09/23 15:30:52 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -404,20 +404,20 @@ statement:statement
 | T_NAMESPACE:s namespace_name:list T_SEMICOLON:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast, 
-		new NamespaceName(listleft, listright, parser.ast, list, false, false), null, true);
+		new NamespaceName(listleft, listright, parser.ast, list, false, false), null, false);
 :}
 
 | T_NAMESPACE:s namespace_name:list T_CURLY_OPEN:token top_statement_list:sList T_CURLY_CLOSE:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast,
 		new NamespaceName(listleft, listright, parser.ast, list, false, false),  
-		new Block(tokenleft, eright, parser.ast, sList), false);
+		new Block(tokenleft, eright, parser.ast, sList), true);
 :}
 
 | T_NAMESPACE:s T_CURLY_OPEN:token top_statement_list:sList T_CURLY_CLOSE:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast, null, 
-		new Block(tokenleft, eright, parser.ast, sList), false);
+		new Block(tokenleft, eright, parser.ast, sList), true);
 :}
 
 | T_USE:s use_declarations:list T_SEMICOLON:e
