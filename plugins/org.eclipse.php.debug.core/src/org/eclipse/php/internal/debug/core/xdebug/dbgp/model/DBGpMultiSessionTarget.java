@@ -193,8 +193,13 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IPHPDebugTarg
 	}
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
-		IDebugTarget firstTarget = debugTargets.get(0);
-		return firstTarget.supportsBreakpoint(breakpoint);
+		synchronized (debugTargets) {
+			if (debugTargets.size() > 0) {
+				IDebugTarget firstTarget = debugTargets.get(0);
+				return firstTarget.supportsBreakpoint(breakpoint);
+			}
+		}
+		return false;
 	}
 
 	public boolean isSuspended() {
