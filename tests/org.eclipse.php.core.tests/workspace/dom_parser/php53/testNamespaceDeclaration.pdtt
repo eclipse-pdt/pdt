@@ -5,11 +5,11 @@ Test Namespace Declaration
 --EXPECT--
 <Program start='0' length='21'>
 	<Statements>
-		<NamespaceDeclaration start='6' length='15' isBracketed='true'>
+		<NamespaceDeclaration start='6' length='15' isBracketed='false'>
 			<NamespaceName start='16' length='1' global='false' current='false'>
 				<Identifier start='16' length='1' name='A'/>
 			</NamespaceName>
-			<Block start='6' length='15' isCurly='true'>
+			<Block start='19' length='3' isCurly='false'>
 				<EmptyStatement start='19' length='2'/>
 			</Block>
 		</NamespaceDeclaration>

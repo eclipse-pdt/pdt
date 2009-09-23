@@ -5,13 +5,13 @@ Test Sub Namespace Declaration
 --EXPECT--
 <Program start='0' length='25'>
 	<Statements>
-		<NamespaceDeclaration start='6' length='19' isBracketed='true'>
+		<NamespaceDeclaration start='6' length='19' isBracketed='false'>
 			<NamespaceName start='16' length='5' global='false' current='false'>
 				<Identifier start='16' length='1' name='A'/>
 				<Identifier start='18' length='1' name='B'/>
 				<Identifier start='20' length='1' name='C'/>
 			</NamespaceName>
-			<Block start='6' length='19' isCurly='true'>
+			<Block start='23' length='3' isCurly='false'>
 				<EmptyStatement start='23' length='2'/>
 			</Block>
 		</NamespaceDeclaration>

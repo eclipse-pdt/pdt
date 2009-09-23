@@ -12,11 +12,11 @@ function bar() {}
 --EXPECT--
 <Program start='0' length='96'>
 	<Statements>
-		<NamespaceDeclaration start='6' length='43' isBracketed='true'>
+		<NamespaceDeclaration start='6' length='43' isBracketed='false'>
 			<NamespaceName start='16' length='3' global='false' current='false'>
 				<Identifier start='16' length='3' name='NS1'/>
 			</NamespaceName>
-			<Block start='6' length='43' isCurly='true'>
+			<Block start='21' length='29' isCurly='false'>
 				<ClassDeclaration start='21' length='10' modifier=''>
 					<ClassName>
 						<Identifier start='27' length='1' name='A'/>
@@ -41,11 +41,11 @@ function bar() {}
 				</FunctionDeclaration>
 			</Block>
 		</NamespaceDeclaration>
-		<NamespaceDeclaration start='50' length='46' isBracketed='true'>
+		<NamespaceDeclaration start='50' length='46' isBracketed='false'>
 			<NamespaceName start='60' length='3' global='false' current='false'>
 				<Identifier start='60' length='3' name='NS2'/>
 			</NamespaceName>
-			<Block start='50' length='46' isCurly='true'>
+			<Block start='65' length='32' isCurly='false'>
 				<ClassDeclaration start='65' length='10' modifier=''>
 					<ClassName>
 						<Identifier start='71' length='1' name='A'/>
