@@ -21,91 +21,101 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents namespace declaration:
- * <pre>e.g.<pre>namespace MyNamespace;
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
+ * namespace MyNamespace;
  *namespace MyProject\Sub\Level;
  */
 public class NamespaceDeclaration extends Statement {
-	
+
 	private NamespaceName name;
 	private Block body;
 	private boolean bracketed = true;
-	
+
 	/**
 	 * The "namespace" structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor NAME_PROPERTY = 
-		new ChildPropertyDescriptor(NamespaceDeclaration.class, "name", NamespaceName.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
-	
-	public static final ChildPropertyDescriptor BODY_PROPERTY = 
-		new ChildPropertyDescriptor(NamespaceDeclaration.class, "body", Block.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	
-	public static final SimplePropertyDescriptor BRACKETED_PROPERTY = 
-		new SimplePropertyDescriptor(NamespaceDeclaration.class, "bracketed", Boolean.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(
+			NamespaceDeclaration.class,
+			"name", NamespaceName.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
+
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(
+			NamespaceDeclaration.class,
+			"body", Block.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+
+	public static final SimplePropertyDescriptor BRACKETED_PROPERTY = new SimplePropertyDescriptor(
+			NamespaceDeclaration.class, "bracketed", Boolean.class, MANDATORY); //$NON-NLS-1$
 
 	/**
-	 * A list of property descriptors (element type: 
-	 * {@link StructuralPropertyDescriptor}),
-	 * or null if uninitialized.
+	 * A list of property descriptors (element type:
+	 * {@link StructuralPropertyDescriptor}), or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 	static {
-		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(
+				2);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(BODY_PROPERTY);
 		properyList.add(BRACKETED_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
-	
+
 	public NamespaceDeclaration(AST ast) {
 		super(ast);
 	}
 
-	public NamespaceDeclaration(int start, int end, AST ast, NamespaceName name, Block body, boolean bracketed) {
+	public NamespaceDeclaration(int start, int end, AST ast,
+			NamespaceName name, Block body, boolean bracketed) {
 		super(start, end, ast);
-		
+
 		if (bracketed && name == null) {
-			throw new IllegalArgumentException("Namespace name must not be null in a bracketed statement");
+			throw new IllegalArgumentException(
+					"Namespace name must not be null in a bracketed statement");
 		}
-		
+
 		this.bracketed = bracketed;
-		
+
 		if (body == null) {
-			body = new Block(start, end, ast, new ArrayList());
+			body = new Block(end + 1, end + 1, ast, new ArrayList(), false);
 		}
 		body.setParent(this, BODY_PROPERTY);
-		
+
 		this.name = name;
 		this.body = body;
 	}
-	
+
 	/**
 	 * Returns whether this namespace declaration has a bracketed syntax
+	 * 
 	 * @return
 	 */
 	public boolean isBracketed() {
 		return bracketed;
 	}
-	
+
 	public void setBracketed(boolean bracketed) {
 		preValueChange(BRACKETED_PROPERTY);
 		this.bracketed = bracketed;
 		postValueChange(BRACKETED_PROPERTY);
 	}
-	
+
 	public void addStatement(Statement statement) {
 		Block body = getBody();
 		body.statements().add(statement);
-		
+
 		int statementEnd = statement.getEnd();
 		int bodyStart = body.getStart();
-		body.setSourceRange(bodyStart, statementEnd - bodyStart);
-		
+		body.setSourceRange(bodyStart, statementEnd - bodyStart + 1);
+
 		int namespaceStart = getStart();
 		setSourceRange(namespaceStart, statementEnd - namespaceStart);
 	}
-	
+
 	/**
-	 * The body component of this namespace declaration node 
+	 * The body component of this namespace declaration node
+	 * 
 	 * @return body component of this namespace declaration node
 	 */
 	public Block getBody() {
@@ -115,14 +125,16 @@ public class NamespaceDeclaration extends Statement {
 	/**
 	 * Sets the name of this parameter
 	 * 
-	 * @param name of this type declaration.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param name
+	 *            of this type declaration.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setBody(Block block) {
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.body;
@@ -130,9 +142,10 @@ public class NamespaceDeclaration extends Statement {
 		this.body = block;
 		postReplaceChild(oldChild, block, BODY_PROPERTY);
 	}
-	
+
 	/**
-	 * The name component of this namespace declaration node 
+	 * The name component of this namespace declaration node
+	 * 
 	 * @return name component of this namespace declaration node
 	 */
 	public NamespaceName getName() {
@@ -142,14 +155,16 @@ public class NamespaceDeclaration extends Statement {
 	/**
 	 * Sets the name of this parameter
 	 * 
-	 * @param name of this type declaration.
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */ 
+	 * @param name
+	 *            of this type declaration.
+	 * @exception IllegalArgumentException
+	 *                if:
+	 *                <ul>
+	 *                <li>the node belongs to a different AST</li>
+	 *                <li>the node already has a parent</li>
+	 *                <li>a cycle in would be created</li>
+	 *                </ul>
+	 */
 	public void setName(NamespaceName name) {
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.name;
@@ -157,7 +172,7 @@ public class NamespaceDeclaration extends Statement {
 		this.name = name;
 		postReplaceChild(oldChild, name, NAME_PROPERTY);
 	}
-	
+
 	public void childrenAccept(Visitor visitor) {
 		NamespaceName name = getName();
 		if (name != null) {
@@ -191,13 +206,13 @@ public class NamespaceDeclaration extends Statement {
 		buffer.append(tab).append("<NamespaceDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" isBracketed='").append(bracketed).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		
+
 		NamespaceName name = getName();
 		if (name != null) {
 			name.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
-		
+
 		Block body = getBody();
 		body.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
@@ -211,49 +226,53 @@ public class NamespaceDeclaration extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public int getType() {
 		return ASTNode.NAMESPACE;
 	}
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
 
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	ASTNode clone0(AST target) {
 		final NamespaceName name = ASTNode.copySubtree(target, getName());
 		final Block body = ASTNode.copySubtree(target, getBody());
 		final boolean bracketed = isBracketed();
-		final NamespaceDeclaration result = new NamespaceDeclaration(this.getStart(), this.getEnd(), target, name, body, bracketed);
+		final NamespaceDeclaration result = new NamespaceDeclaration(this
+				.getStart(), this.getEnd(), target, name, body, bracketed);
 		return result;
 	}
-	
+
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
+			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
-	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
+
+	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property,
+			boolean get, boolean value) {
 		if (property == BRACKETED_PROPERTY) {
 			if (get) {
 				return isBracketed();
 			} else {
-				setBracketed(value); 
+				setBracketed(value);
 				return false;
 			}
 		}
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
-	
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
 				return getBody();
