@@ -29,6 +29,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.typeinference.UseStatementElement;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -45,9 +46,10 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 
 /**
- * Configuration holder for the PHP outline at the WST outline 
+ * Configuration holder for the PHP outline at the WST outline
  */
-public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfiguration {
+public class PHPContentOutlineConfiguration extends
+		HTMLContentOutlineConfiguration {
 
 	public static final int MODE_PHP = 1;
 	public static final int MODE_HTML = 2;
@@ -62,16 +64,18 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	static Object[] NO_CHILDREN = new Object[0];
 	private SortAction sortAction;
 	private ScriptUILabelProvider fSimpleLabelProvider;
-	//	private ShowGroupsAction fShowGroupsAction;
+	// private ShowGroupsAction fShowGroupsAction;
 	private boolean fShowAttributes = false;
-	protected IPreferenceStore fStore = PHPUiPlugin.getDefault().getPreferenceStore();
+	protected IPreferenceStore fStore = PHPUiPlugin.getDefault()
+			.getPreferenceStore();
 
 	/** See {@link #MODE_PHP}, {@link #MODE_HTML} */
 	private int mode;
 
 	public PHPContentOutlineConfiguration() {
 		super();
-		mode = PHPUiPlugin.getDefault().getPreferenceStore().getInt(PreferenceConstants.PREF_OUTLINEMODE);
+		mode = PHPUiPlugin.getDefault().getPreferenceStore().getInt(
+				PreferenceConstants.PREF_OUTLINEMODE);
 	}
 
 	public int getMode() {
@@ -82,27 +86,34 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		this.mode = mode;
 	}
 
-	protected IContributionItem[] createMenuContributions(final TreeViewer viewer) {
+	protected IContributionItem[] createMenuContributions(
+			final TreeViewer viewer) {
 		IContributionItem[] items;
 
-		changeOutlineModeActionPHP = new ChangeOutlineModeAction(PHPUIMessages.getString("PHPOutlinePage_mode_php"), MODE_PHP, this, viewer);
-		final IContributionItem showPHPItem = new ActionContributionItem(changeOutlineModeActionPHP);
+		changeOutlineModeActionPHP = new ChangeOutlineModeAction(PHPUIMessages
+				.getString("PHPOutlinePage_mode_php"), MODE_PHP, this, viewer); //$NON-NLS-1$
+		final IContributionItem showPHPItem = new ActionContributionItem(
+				changeOutlineModeActionPHP);
 
-		changeOutlineModeActionHTML = new ChangeOutlineModeAction(PHPUIMessages.getString("PHPOutlinePage_mode_html"), MODE_HTML, this, viewer);
+		changeOutlineModeActionHTML = new ChangeOutlineModeAction(PHPUIMessages
+				.getString("PHPOutlinePage_mode_html"), MODE_HTML, this, viewer); //$NON-NLS-1$
 
 		propertyChangeListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals("checked")) { //$NON-NLS-1$
-					boolean checked = ((Boolean) event.getNewValue()).booleanValue();
+					boolean checked = ((Boolean) event.getNewValue())
+							.booleanValue();
 					if (sortAction != null) {
 						sortAction.setEnabled(!checked);
 					}
 				}
 			}
 		};
-		changeOutlineModeActionHTML.addPropertyChangeListener(propertyChangeListener);
+		changeOutlineModeActionHTML
+				.addPropertyChangeListener(propertyChangeListener);
 
-		final IContributionItem showHTMLItem = new ActionContributionItem(changeOutlineModeActionHTML);
+		final IContributionItem showHTMLItem = new ActionContributionItem(
+				changeOutlineModeActionHTML);
 		items = super.createMenuContributions(viewer);
 		if (items == null)
 			items = new IContributionItem[] { showPHPItem, showHTMLItem };
@@ -119,29 +130,32 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return items;
 	}
 
-	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
+	protected IContributionItem[] createToolbarContributions(
+			final TreeViewer viewer) {
 		IContributionItem[] items;
-		//		fShowGroupsAction = new ShowGroupsAction("Show Groups", viewer);
+		// fShowGroupsAction = new ShowGroupsAction("Show Groups", viewer);
 		//		final IContributionItem showGroupsItem = new ActionContributionItem(fShowGroupsAction); //$NON-NLS-1$
 
 		// fixed bug 174653
 		// use only the toggleLinking menu and dispose the others
-		IContributionItem[] menuContributions = super.createMenuContributions(viewer);
+		IContributionItem[] menuContributions = super
+				.createMenuContributions(viewer);
 		final IContributionItem toggleLinking = menuContributions[0];
 		for (int i = 1; i < menuContributions.length; i++) {
 			menuContributions[i].dispose();
 		}
 		sortAction = new SortAction(viewer);
-		final IContributionItem sortItem = new ActionContributionItem(sortAction);
+		final IContributionItem sortItem = new ActionContributionItem(
+				sortAction);
 
 		items = super.createToolbarContributions(viewer);
 		if (items == null)
-			items = new IContributionItem[] { sortItem /*, showGroupsItem*/};
+			items = new IContributionItem[] { sortItem /* , showGroupsItem */};
 		else {
 			final IContributionItem[] combinedItems = new IContributionItem[items.length + 2];
 			System.arraycopy(items, 0, combinedItems, 0, items.length);
 			combinedItems[items.length] = sortItem;
-			//			combinedItems[items.length + 1] = showGroupsItem;
+			// combinedItems[items.length + 1] = showGroupsItem;
 			combinedItems[items.length + 1] = toggleLinking;
 			items = combinedItems;
 		}
@@ -150,11 +164,13 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	}
 
 	public void unconfigure(TreeViewer viewer) {
-		//		if (fShowGroupsAction != null) {
-		//			fShowGroupsAction.dispose();
-		//		}
-		if (changeOutlineModeActionHTML != null && propertyChangeListener != null) {
-			changeOutlineModeActionHTML.removePropertyChangeListener(propertyChangeListener);
+		// if (fShowGroupsAction != null) {
+		// fShowGroupsAction.dispose();
+		// }
+		if (changeOutlineModeActionHTML != null
+				&& propertyChangeListener != null) {
+			changeOutlineModeActionHTML
+					.removePropertyChangeListener(propertyChangeListener);
 		}
 		super.unconfigure(viewer);
 	}
@@ -170,13 +186,18 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 				fContentProviderHTML = new JFaceNodeContentProvider() {
 					public Object[] getElements(Object object) {
 						if (object instanceof ISourceModule) {
-							IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
+							IEditorPart activeEditor = PHPUiPlugin
+									.getActiveEditor();
 							if (activeEditor instanceof StructuredTextEditor) {
 								StructuredTextEditor editor = (StructuredTextEditor) activeEditor;
-								IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+								IDocument document = editor
+										.getDocumentProvider().getDocument(
+												editor.getEditorInput());
 								IStructuredModel model = null;
 								try {
-									model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+									model = StructuredModelManager
+											.getModelManager()
+											.getExistingModelForRead(document);
 									return super.getElements(model);
 								} finally {
 									if (model != null) {
@@ -189,15 +210,21 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 					}
 
 					@Override
-					public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+					public void inputChanged(Viewer viewer, Object oldInput,
+							Object newInput) {
 						if (newInput instanceof ISourceModule) {
-							IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
+							IEditorPart activeEditor = PHPUiPlugin
+									.getActiveEditor();
 							if (activeEditor instanceof StructuredTextEditor) {
 								StructuredTextEditor editor = (StructuredTextEditor) activeEditor;
-								IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+								IDocument document = editor
+										.getDocumentProvider().getDocument(
+												editor.getEditorInput());
 								IStructuredModel model = null;
 								try {
-									model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+									model = StructuredModelManager
+											.getModelManager()
+											.getExistingModelForRead(document);
 								} finally {
 									if (model != null) {
 										model.releaseFromRead();
@@ -214,22 +241,22 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		}
 		return viewer.getContentProvider();
 	}
-	
+
 	public ILabelProvider getLabelProvider(final TreeViewer viewer) {
-		
+
 		if (fLabelProvider == null) {
 			fLabelProvider = new DecoratingModelLabelProvider(
-				new PHPAppearanceAwareLabelProvider(
-					AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.ALL_CATEGORY,
-					AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS,
-					fStore)
-			);
+					new PHPAppearanceAwareLabelProvider(
+							AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS
+									| ScriptElementLabels.F_APP_TYPE_SIGNATURE
+									| ScriptElementLabels.ALL_CATEGORY,
+							AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS,
+							fStore));
 		}
 
 		if (MODE_PHP == mode) {
 			viewer.setLabelProvider(fLabelProvider);
-		}
-		else if (MODE_HTML == mode) {
+		} else if (MODE_HTML == mode) {
 			if (fLabelProviderHTML == null) {
 				fLabelProviderHTML = new PHPOutlineLabelProvider(fLabelProvider);
 				fLabelProviderHTML.fShowAttributes = fShowAttributes;
@@ -239,16 +266,20 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return (ILabelProvider) viewer.getLabelProvider();
 	}
 
-	public ISelection getSelection(final TreeViewer viewer, final ISelection selection) {
+	public ISelection getSelection(final TreeViewer viewer,
+			final ISelection selection) {
 		final IContentProvider contentProvider = viewer.getContentProvider();
 		if (contentProvider instanceof PHPOutlineContentProvider) {
 			if (MODE_PHP == mode) {
-				if (selection instanceof IStructuredSelection && selection instanceof TextSelection) {
+				if (selection instanceof IStructuredSelection
+						&& selection instanceof TextSelection) {
 					IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
 					if (activeEditor instanceof PHPStructuredEditor) {
-						ISourceReference computedSourceReference = ((PHPStructuredEditor) activeEditor).computeHighlightRangeSourceReference();
+						ISourceReference computedSourceReference = ((PHPStructuredEditor) activeEditor)
+								.computeHighlightRangeSourceReference();
 						if (computedSourceReference != null) {
-							return new StructuredSelection(computedSourceReference);
+							return new StructuredSelection(
+									computedSourceReference);
 						}
 					}
 				}
@@ -260,9 +291,16 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
 		if (fSimpleLabelProvider == null) {
 			fSimpleLabelProvider = new ScriptUILabelProvider();
-			fSimpleLabelProvider.setTextFlags(ScriptElementLabels.DEFAULT_QUALIFIED | ScriptElementLabels.ROOT_POST_QUALIFIED | ScriptElementLabels.APPEND_ROOT_PATH |
-				ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.M_EXCEPTIONS | 
-			 	ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.T_TYPE_PARAMETERS);
+			fSimpleLabelProvider
+					.setTextFlags(ScriptElementLabels.DEFAULT_QUALIFIED
+							| ScriptElementLabels.ROOT_POST_QUALIFIED
+							| ScriptElementLabels.APPEND_ROOT_PATH
+							| ScriptElementLabels.M_PARAMETER_TYPES
+							| ScriptElementLabels.M_PARAMETER_NAMES
+							| ScriptElementLabels.M_APP_RETURNTYPE
+							| ScriptElementLabels.M_EXCEPTIONS
+							| ScriptElementLabels.F_APP_TYPE_SIGNATURE
+							| ScriptElementLabels.T_TYPE_PARAMETERS);
 		}
 		return fSimpleLabelProvider;
 	}
@@ -271,10 +309,12 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
 		if (activeEditor instanceof StructuredTextEditor) {
 			StructuredTextEditor editor = (StructuredTextEditor) activeEditor;
-			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+			IDocument document = editor.getDocumentProvider().getDocument(
+					editor.getEditorInput());
 			IStructuredModel model = null;
 			try {
-				model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+				model = StructuredModelManager.getModelManager()
+						.getExistingModelForRead(document);
 				return new PHPNodeActionManager(model, treeViewer);
 			} finally {
 				if (model != null) {
@@ -285,7 +325,8 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return null;
 	}
 
-	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
+	protected void enableShowAttributes(boolean showAttributes,
+			TreeViewer treeViewer) {
 		super.enableShowAttributes(showAttributes, treeViewer);
 		// fix bug #241111 - show attributes in outline
 		if (fLabelProviderHTML != null) {
@@ -294,10 +335,11 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		}
 		fShowAttributes = showAttributes;
 	}
-	
+
 	class UseStatementAwareImageProvider extends ScriptElementImageProvider {
 
-		public ImageDescriptor getBaseImageDescriptor(IModelElement element, int renderFlags) {
+		public ImageDescriptor getBaseImageDescriptor(IModelElement element,
+				int renderFlags) {
 			if (element instanceof UseStatementElement) {
 				return DLTKPluginImages.DESC_OBJS_IMPDECL;
 			}
@@ -307,7 +349,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			return super.getBaseImageDescriptor(element, renderFlags);
 		}
 	}
-	
+
 	class PHPAppearanceAwareLabelProvider extends AppearanceAwareLabelProvider {
 
 		public PHPAppearanceAwareLabelProvider(IPreferenceStore store) {
@@ -315,14 +357,20 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			fImageLabelProvider = new UseStatementAwareImageProvider();
 		}
 
-		public PHPAppearanceAwareLabelProvider(long textFlags, int imageFlags, IPreferenceStore store) {
+		public PHPAppearanceAwareLabelProvider(long textFlags, int imageFlags,
+				IPreferenceStore store) {
 			super(textFlags, imageFlags, store);
 			fImageLabelProvider = new UseStatementAwareImageProvider();
 		}
-		
+
 		public String getText(Object element) {
 			if (element instanceof UseStatementsNode) {
-				return "use statements";
+				return PHPUIMessages.getString("PHPContentOutlineConfiguration.2"); //$NON-NLS-1$
+			}
+			if (element instanceof UseStatementElement) {
+				return NLS.bind(PHPUIMessages.getString("PHPContentOutlineConfiguration.3"), super.getText(element), //$NON-NLS-1$
+						((UseStatementElement) element).getUsePart().getAlias()
+								.getName());
 			}
 			return super.getText(element);
 		}
