@@ -242,14 +242,16 @@ public class BindingLabelProvider extends LabelProvider {
 		// return type
 		IMethodBinding methodBinding = binding instanceof IMethodBinding ? (IMethodBinding) binding
 				: null;
-		ITypeBinding[] returnTypes = binding.getReturnType();
-		for (ITypeBinding returnType : returnTypes) {
-
-			if (((flags & ScriptElementLabels.M_PRE_RETURNTYPE) != 0)
-					&& (methodBinding == null || !methodBinding.isConstructor())) {
-				getTypeLabel(returnType,
-						(flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
-				buffer.append('|');
+		ITypeBinding[] returnTypes = null;
+		if ((flags & ScriptElementLabels.M_PRE_RETURNTYPE) != 0) {
+			returnTypes = binding.getReturnType();
+			for (ITypeBinding returnType : returnTypes) {
+				if ((methodBinding == null || !methodBinding.isConstructor())) {
+					getTypeLabel(returnType,
+							(flags & ScriptElementLabels.T_TYPE_PARAMETERS),
+							buffer);
+					buffer.append('|');
+				}
 			}
 		}
 
@@ -333,6 +335,9 @@ public class BindingLabelProvider extends LabelProvider {
 		}
 		if (((flags & ScriptElementLabels.M_APP_RETURNTYPE) != 0)
 				&& (methodBinding == null || !methodBinding.isConstructor())) {
+			if (returnTypes == null) {
+				returnTypes = binding.getReturnType();
+			}
 			buffer.append(ScriptElementLabels.DECL_STRING);
 			for (ITypeBinding returnType : returnTypes) {
 				getTypeLabel(returnType,
