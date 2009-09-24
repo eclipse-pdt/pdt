@@ -556,13 +556,14 @@ public final class ASTProvider {
 		if (je == null || !je.exists())
 			return false;
 
-		try {
-			return je.getBuffer() != null;
-		} catch (ModelException ex) {
-			IStatus status= new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK, "Error in PDT UI during AST creation", ex);  //$NON-NLS-1$
-			PHPUiPlugin.log(status);
-		}
-		return false;
+		return true;
+//		try {
+//			return je.getBuffer() != null;
+//		} catch (ModelException ex) {
+//			IStatus status= new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK, "Error in PDT UI during AST creation", ex);  //$NON-NLS-1$
+//			PHPUiPlugin.log(status);
+//		}
+//		return false;
 	}
 
 	/**
