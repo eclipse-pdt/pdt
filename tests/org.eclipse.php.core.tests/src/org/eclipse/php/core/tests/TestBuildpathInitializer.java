@@ -30,38 +30,36 @@ import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.php.internal.core.Logger;
 
 /**
- * Build path entries for test projects.
- * In order to add new library add new entry to plugin.xml where ID contains library folder after the last dot.
- * Example:  org.eclipse.core.tests.LIBRARY.person ("person" - existing folder under libraries)
+ * Build path entries for test projects. In order to add new library add new
+ * entry to plugin.xml where ID contains library folder after the last dot.
+ * Example: org.eclipse.core.tests.LIBRARY.person ("person" - existing folder
+ * under libraries)
  * 
  * @author michael
- *
+ * 
  */
 public class TestBuildpathInitializer extends BuildpathContainerInitializer {
-	
+
 	private static final String LIBRARY = ".LIBRARY."; //$NON-NLS-1$
 
-	public void initialize(IPath containerPath, IScriptProject project) throws CoreException {
-		
+	public void initialize(IPath containerPath, IScriptProject project)
+			throws CoreException {
+
 		if (containerPath.segmentCount() > 0) {
 			String segment = containerPath.segment(0);
-			
+
 			int i = segment.indexOf(LIBRARY);
 			if (i != -1) {
 				String library = segment.substring(i + LIBRARY.length());
-				BuildpathContainer container = new BuildpathContainer(library + " Library", containerPath, "libraries/" + library);
-				DLTKCore.setBuildpathContainer(
-					containerPath, 
-					new IScriptProject[] { project },
-					new IBuildpathContainer[] {
-						container
-					},
-					null
-				);
+				BuildpathContainer container = new BuildpathContainer(library
+						+ " Library", containerPath, "libraries/" + library);
+				DLTKCore.setBuildpathContainer(containerPath,
+						new IScriptProject[] { project },
+						new IBuildpathContainer[] { container }, null);
 			}
 		}
 	}
-	
+
 	class BuildpathContainer implements IBuildpathContainer {
 
 		private String description;
@@ -69,7 +67,8 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 		private String libraryPath;
 		private IBuildpathEntry[] buildPathEntries;
 
-		public BuildpathContainer(String description, IPath containerPath, String libraryPath) {
+		public BuildpathContainer(String description, IPath containerPath,
+				String libraryPath) {
 			this.description = description;
 			this.containerPath = containerPath;
 			this.libraryPath = libraryPath;
@@ -77,25 +76,23 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 
 		public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
 			if (buildPathEntries == null) {
-				IEnvironment environment = EnvironmentManager.getEnvironment(project);
+				IEnvironment environment = EnvironmentManager
+						.getEnvironment(project);
 				try {
-					URL url = FileLocator.find(PHPCoreTests.getDefault().getBundle(), new Path(libraryPath), null);
+					URL url = FileLocator.find(PHPCoreTests.getDefault()
+							.getBundle(), new Path(libraryPath), null);
 					URL resolved = FileLocator.resolve(url);
 					IPath path = Path.fromOSString(resolved.getFile());
 					if (environment != null) {
-						path = EnvironmentPathUtils.getFullPath(environment, path);
+						path = EnvironmentPathUtils.getFullPath(environment,
+								path);
 					}
-					buildPathEntries = new IBuildpathEntry[] {
-						DLTKCore.newLibraryEntry(
-							path, 
-							BuildpathEntry.NO_ACCESS_RULES,
-							BuildpathEntry.NO_EXTRA_ATTRIBUTES,
-							BuildpathEntry.INCLUDE_ALL,
-							BuildpathEntry.EXCLUDE_NONE,
-							false,
-							true
-						)
-					};
+					buildPathEntries = new IBuildpathEntry[] { DLTKCore
+							.newLibraryEntry(path,
+									BuildpathEntry.NO_ACCESS_RULES,
+									BuildpathEntry.NO_EXTRA_ATTRIBUTES,
+									BuildpathEntry.INCLUDE_ALL,
+									BuildpathEntry.EXCLUDE_NONE, false, true) };
 				} catch (Exception e) {
 					Logger.logException(e);
 				}
@@ -117,6 +114,10 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 
 		public IPath getPath() {
 			return containerPath;
+		}
+
+		public IBuildpathEntry[] getRawBuildpathEntries(IScriptProject project) {
+			return getBuildpathEntries(project);
 		}
 	}
 }
