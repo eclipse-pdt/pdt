@@ -140,7 +140,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					context) };
 		}
 		if (contextClass == CatchTypeContext.class) {
-			return new ICompletionStrategy[] { new GlobalTypesStrategy(context) };
+			return new ICompletionStrategy[] { new CatchTypeStrategy(context) };
 		}
 		if (contextClass == ClassInstantiationContext.class) {
 			return new ICompletionStrategy[] {
