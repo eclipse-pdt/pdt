@@ -16,12 +16,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -523,85 +520,99 @@ public class CodeGeneration {
 		String retType = null;
 		String[] typeParameterNames = null;
 		String[] parameterTypes = null;
+		Program program = null;
 
 		try {
-			Program program = SharedASTProvider.getAST(
-					method.getSourceModule(), SharedASTProvider.WAIT_YES,
-					new NullProgressMonitor());
-			ASTNode elementAt = program.getElementAt(method.getSourceRange()
-					.getOffset());
+			program = SharedASTProvider.getAST(method.getSourceModule(),
+					SharedASTProvider.WAIT_YES, new NullProgressMonitor());
+		} catch (IOException e1) {
+		}
 
-			if (elementAt.getParent() instanceof MethodDeclaration) {
-				elementAt = elementAt.getParent();
+		if (program == null) {
+			ISourceModule source = method.getSourceModule();
+			ASTParser parserForExpected = ASTParser.newParser(ProjectOptions
+					.getPhpVersion(source.getScriptProject().getProject()));
+			try {
+				parserForExpected.setSource(source);
+				program = parserForExpected
+						.createAST(new NullProgressMonitor());
+				program.recordModifications();
+				program.setSourceModule(source);
+			} catch (Exception e) {
 			}
-
-			ITypeBinding[] returnTypes = null;
-			ITypeBinding[] typeParametersTypes = null;
-			IFunctionBinding resolvedBinding = null;
-			List<FormalParameter> formalParameters = null;
-
-			if (elementAt instanceof MethodDeclaration) {
-				MethodDeclaration methodDeclaration = (MethodDeclaration) elementAt;
-				resolvedBinding = methodDeclaration.resolveMethodBinding();
-				formalParameters = methodDeclaration.getFunction()
-						.formalParameters();
-			} else if (elementAt instanceof FunctionDeclaration) {
-				FunctionDeclaration functionDeclaration = (FunctionDeclaration) elementAt;
-				resolvedBinding = functionDeclaration.resolveFunctionBinding();
-				formalParameters = functionDeclaration.formalParameters();
+			if (program == null) {
+				return null;
 			}
+		}
 
-			if (formalParameters != null) {
-				// get parameter type
-				parameterTypes = new String[formalParameters.size()];
-				int i = 0;
-				for (ASTNode node : formalParameters) {
-					FormalParameter formalParameter = (FormalParameter) node;
-					Expression parameterType = formalParameter
-							.getParameterType();
-					if (parameterType != null) {
-						String typeName = ((Identifier) parameterType)
-								.getName();
-						parameterTypes[i++] = typeName;
+		ASTNode elementAt = program.getElementAt(method.getSourceRange()
+				.getOffset());
+
+		if (elementAt.getParent() instanceof MethodDeclaration) {
+			elementAt = elementAt.getParent();
+		}
+
+		ITypeBinding[] returnTypes = null;
+		ITypeBinding[] typeParametersTypes = null;
+		IFunctionBinding resolvedBinding = null;
+		List<FormalParameter> formalParameters = null;
+
+		if (elementAt instanceof MethodDeclaration) {
+			MethodDeclaration methodDeclaration = (MethodDeclaration) elementAt;
+			resolvedBinding = methodDeclaration.resolveMethodBinding();
+			formalParameters = methodDeclaration.getFunction()
+					.formalParameters();
+		} else if (elementAt instanceof FunctionDeclaration) {
+			FunctionDeclaration functionDeclaration = (FunctionDeclaration) elementAt;
+			resolvedBinding = functionDeclaration.resolveFunctionBinding();
+			formalParameters = functionDeclaration.formalParameters();
+		}
+
+		if (formalParameters != null) {
+			// get parameter type
+			parameterTypes = new String[formalParameters.size()];
+			int i = 0;
+			for (ASTNode node : formalParameters) {
+				FormalParameter formalParameter = (FormalParameter) node;
+				Expression parameterType = formalParameter.getParameterType();
+				if (parameterType != null) {
+					String typeName = ((Identifier) parameterType).getName();
+					parameterTypes[i++] = typeName;
+				} else {
+					parameterTypes[i++] = "unknown_type";
+				}
+			}
+		}
+
+		StringBuilder returnTypeBuffer = new StringBuilder();
+		if (null != resolvedBinding) {
+			returnTypes = resolvedBinding.getReturnType();
+			if (null != returnTypes && returnTypes.length > 0) {
+				for (ITypeBinding returnType : returnTypes) {
+					if (returnType.isUnknown()) {
+						returnTypeBuffer.append("null").append("|");
+					} else if (returnType.isAmbiguous()) {
+						returnTypeBuffer.append("Ambiguous").append("|");
 					} else {
-						parameterTypes[i++] = null;
+						returnTypeBuffer.append(returnType.getName()).append(
+								"|");
 					}
+				}
+				if (returnTypeBuffer.length() > 0) {
+					retType = returnTypeBuffer.substring(0, returnTypeBuffer
+							.length() - 1);
 				}
 			}
 
-			StringBuilder returnTypeBuffer = new StringBuilder();
-			if (null != resolvedBinding) {
-				returnTypes = resolvedBinding.getReturnType();
-				if (null != returnTypes && returnTypes.length > 0) {
-					for (ITypeBinding returnType : returnTypes) {
-						if (returnType.isUnknown()) {
-							returnTypeBuffer.append("null").append("|");
-						} else if (returnType.isAmbiguous()) {
-							returnTypeBuffer.append("Ambiguous").append("|");
-						} else {
-							returnTypeBuffer.append(returnType.getName())
-									.append("|");
-						}
-					}
-					if (returnTypeBuffer.length() > 0) {
-						retType = returnTypeBuffer.substring(0,
-								returnTypeBuffer.length() - 1);
-					}
-				}
+			typeParametersTypes = resolvedBinding.getParameterTypes();
 
-				typeParametersTypes = resolvedBinding.getParameterTypes();
-
-				if (null != typeParametersTypes) {
-					int i = 0;
-					typeParameterNames = new String[typeParametersTypes.length];
-					for (ITypeBinding type : typeParametersTypes) {
-						typeParameterNames[i++] = type.getName();
-					}
+			if (null != typeParametersTypes) {
+				int i = 0;
+				typeParameterNames = new String[typeParametersTypes.length];
+				for (ITypeBinding type : typeParametersTypes) {
+					typeParameterNames[i++] = type.getName();
 				}
 			}
-
-		} catch (IOException e) {
-			Logger.logException(e);
 		}
 
 		String[] paramNames = method.getParameters();
