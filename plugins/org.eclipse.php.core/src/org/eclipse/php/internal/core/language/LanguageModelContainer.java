@@ -23,9 +23,8 @@ import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.php.core.language.ILanguageModelProvider;
 import org.eclipse.php.internal.core.Logger;
 
-
 public class LanguageModelContainer implements IBuildpathContainer {
-	
+
 	private IPath containerPath;
 	private IBuildpathEntry[] buildPathEntries;
 
@@ -37,27 +36,25 @@ public class LanguageModelContainer implements IBuildpathContainer {
 		if (buildPathEntries == null) {
 			try {
 				List<IBuildpathEntry> entries = new LinkedList<IBuildpathEntry>();
-				for (ILanguageModelProvider provider : LanguageModelInitializer.getContributedProviders()) {
+				for (ILanguageModelProvider provider : LanguageModelInitializer
+						.getContributedProviders()) {
 					IPath path = provider.getPath(project);
 					if (path != null) {
-						IEnvironment environment = EnvironmentManager.getEnvironment(project);
+						IEnvironment environment = EnvironmentManager
+								.getEnvironment(project);
 						if (environment != null) {
-							path = EnvironmentPathUtils.getFullPath(environment, path);
+							path = EnvironmentPathUtils.getFullPath(
+									environment, path);
 						}
-						entries.add(
-							DLTKCore.newLibraryEntry(
-								path,
+						entries.add(DLTKCore.newLibraryEntry(path,
 								BuildpathEntry.NO_ACCESS_RULES,
 								BuildpathEntry.NO_EXTRA_ATTRIBUTES,
 								BuildpathEntry.INCLUDE_ALL,
-								BuildpathEntry.EXCLUDE_NONE,
-								false,
-								true
-							)
-						);
+								BuildpathEntry.EXCLUDE_NONE, false, true));
 					}
 				}
-				buildPathEntries = (IBuildpathEntry[]) entries.toArray(new IBuildpathEntry[entries.size()]);
+				buildPathEntries = (IBuildpathEntry[]) entries
+						.toArray(new IBuildpathEntry[entries.size()]);
 			} catch (Exception e) {
 				Logger.logException(e);
 			}
@@ -79,5 +76,9 @@ public class LanguageModelContainer implements IBuildpathContainer {
 
 	public IPath getPath() {
 		return containerPath;
+	}
+
+	public IBuildpathEntry[] getRawBuildpathEntries(IScriptProject project) {
+		return getBuildpathEntries(project);
 	}
 }
