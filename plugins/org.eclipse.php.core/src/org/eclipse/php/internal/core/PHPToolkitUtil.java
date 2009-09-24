@@ -14,16 +14,16 @@ package org.eclipse.php.internal.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ZipArchiveFile;
-import org.eclipse.dltk.internal.core.util.Util;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharException;
@@ -85,37 +85,8 @@ public class PHPToolkitUtil {
 	}
 
 	public static boolean isPharFileName(String fileName) {
-		File localFile = null;
-		IPath path = new Path(fileName);
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-				.findMember(path);
-		if (resource != null) {
-			// internal resource
-			URI location;
-			if (resource.getType() != IResource.FILE
-					&& (location = resource.getLocationURI()) != null) {
-				try {
-					/*
-					 * no progress availaible
-					 */
-					localFile = Util.toLocalFile(location, null);
-				} catch (CoreException e) {
-				}
-			}
-		} else {
-			// external resource -> it is ok to use toFile()
-			if (EnvironmentPathUtils.isFull(path)) {
-				path = EnvironmentPathUtils.getLocalPath(path);
-			}
-			localFile = path.toFile();
-		}
-
-		if (localFile != null && localFile.exists() && localFile.isDirectory()) {
-			return false;
-		}
-
-		String extension = path.getFileExtension();
-		return isPharExtention(extension);
+		String extension = getExtention(fileName);
+		return extension != null && isPharExtention(extension);
 	}
 
 	public static boolean isPhpFile(final IFile file) {
