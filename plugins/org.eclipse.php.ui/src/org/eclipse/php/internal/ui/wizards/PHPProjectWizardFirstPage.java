@@ -858,8 +858,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fCustomValues.setLabelText(PHPUIMessages
 					.getString("VersionGroup_OptionBlock_fCustomValues"));//$NON-NLS-1$ 
 
-			fDefaultValues.setSelection(false);
-			fCustomValues.setSelection(true);
+			fDefaultValues.setSelection(true);
+			fCustomValues.setSelection(false);
 
 			fDefaultValues.doFillIntoGrid(group, numColumns);
 			fCustomValues.doFillIntoGrid(group, 2);
@@ -870,7 +870,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 						}
 					}, (IProject) null, null);
 			fConfigurationBlock.createContents(group);
-			fConfigurationBlock.setEnabled(true);
+			fConfigurationBlock.setEnabled(false);
 			// fPreferenceLink = new Link(fGroup, SWT.NONE);
 			// fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
 			// //fPreferenceLink.setLayoutData(new GridData(GridData.END,
