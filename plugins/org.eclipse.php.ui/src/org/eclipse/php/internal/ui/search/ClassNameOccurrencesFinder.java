@@ -19,21 +19,28 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  * Class names occurrences finder.
  * 
  * @author shalom
- *
+ * 
  */
 public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public static final String ID = "ClassNameOccurrencesFinder"; //$NON-NLS-1$
 	private String className;
+	private TypeDeclaration originalDeclarationNode;
 
 	/**
-	 * @param root the AST root
-	 * @param node the selected node (must be an {@link Identifier} instance)
+	 * @param root
+	 *            the AST root
+	 * @param node
+	 *            the selected node (must be an {@link Identifier} instance)
 	 * @return returns a message if there is a problem
 	 */
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			className = ((Identifier) node).getName();
+			ASTNode parent = node.getParent();
+			if (parent instanceof TypeDeclaration) {
+				originalDeclarationNode = (TypeDeclaration) parent;
+			}
 			return null;
 		}
 		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
@@ -42,7 +49,10 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
+	 * ()
 	 */
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, className);
@@ -82,13 +92,20 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(ClassDeclaration classDeclaration) {
-		checkIdentifier(classDeclaration.getName());
-		checkSuper(classDeclaration.getSuperClass(), classDeclaration.interfaces());
+		if (originalDeclarationNode == null
+				|| originalDeclarationNode == classDeclaration) {
+			checkIdentifier(classDeclaration.getName());
+		}
+		checkSuper(classDeclaration.getSuperClass(), classDeclaration
+				.interfaces());
 		return true;
 	}
 
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
-		checkIdentifier(interfaceDeclaration.getName());
+		if (originalDeclarationNode == null
+				|| originalDeclarationNode == interfaceDeclaration) {
+			checkIdentifier(interfaceDeclaration.getName());
+		}
 		checkSuper(null, interfaceDeclaration.interfaces());
 
 		return true;
@@ -115,11 +132,17 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		final ASTNode parent = methodDeclaration.getParent();
-		if (parent.getType() == ASTNode.BLOCK && parent.getParent().getType() == ASTNode.CLASS_DECLARATION) {
-			ClassDeclaration classDeclaration = (ClassDeclaration) parent.getParent();
-			final Identifier functionName = methodDeclaration.getFunction().getFunctionName();
-			if (checkForNameEquality(classDeclaration.getName()) && checkForNameEquality(functionName)) {
-				fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(methodDeclaration), fDescription));
+		if (parent.getType() == ASTNode.BLOCK
+				&& parent.getParent().getType() == ASTNode.CLASS_DECLARATION) {
+			ClassDeclaration classDeclaration = (ClassDeclaration) parent
+					.getParent();
+			final Identifier functionName = methodDeclaration.getFunction()
+					.getFunctionName();
+			if (checkForNameEquality(classDeclaration.getName())
+					&& checkForNameEquality(functionName)) {
+				fResult.add(new OccurrenceLocation(functionName.getStart(),
+						functionName.getLength(),
+						getOccurrenceType(methodDeclaration), fDescription));
 			}
 		}
 		return true;
@@ -127,6 +150,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/**
 	 * Checks if the supers are with the name of the class
+	 * 
 	 * @param superClass
 	 * @param interfaces
 	 */
@@ -147,26 +171,35 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	private void checkIdentifier(Identifier identifier) {
 		if (checkForNameEquality(identifier)) {
-			fResult.add(new OccurrenceLocation(identifier.getStart(), identifier.getLength(), getOccurrenceType(identifier), fDescription));
+			fResult.add(new OccurrenceLocation(identifier.getStart(),
+					identifier.getLength(), getOccurrenceType(identifier),
+					fDescription));
 		}
 	}
 
 	private boolean checkForNameEquality(Identifier identifier) {
-		return identifier != null && className != null && className.equalsIgnoreCase(identifier.getName());
+		return identifier != null && className != null
+				&& className.equalsIgnoreCase(identifier.getName());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * getOccurrenceReadWriteType
+	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	protected int getOccurrenceType(ASTNode node) {
-		// Default return is F_READ_OCCURRENCE, although the implementation of the Scalar visit might also use F_WRITE_OCCURRENCE
+		// Default return is F_READ_OCCURRENCE, although the implementation of
+		// the Scalar visit might also use F_WRITE_OCCURRENCE
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
 	public String getElementName() {
 		return className;
@@ -174,6 +207,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
 	public String getID() {
