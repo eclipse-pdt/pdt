@@ -330,7 +330,7 @@ public class Bindings {
 	 */
 	public static IMethodBinding findOverriddenMethod(IMethodBinding overriding, boolean testVisibility) {
 		int modifiers = overriding.getModifiers();
-		if (PHPFlags.isPrivate(modifiers) || PHPFlags.isStatic(modifiers)/* || overriding.isConstructor()*/) {
+		if (testVisibility && (PHPFlags.isPrivate(modifiers) || PHPFlags.isStatic(modifiers)/* || overriding.isConstructor()*/)) {
 			return null;
 		}
 
