@@ -325,6 +325,9 @@ public class InstalledPHPsBlock {
 		});
 		table.addKeyListener(new KeyAdapter() {
 			public void keyPressed(final KeyEvent event) {
+				if (fRemoveButton != null && !fRemoveButton.isDisposed() && !fRemoveButton.isEnabled()) {
+					return;
+				}
 				if (event.character == SWT.DEL && event.stateMask == 0)
 					removePHPexes();
 			}
