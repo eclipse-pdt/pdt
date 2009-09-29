@@ -503,14 +503,8 @@ public final class ASTProvider {
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			return null;
 
-		final ASTParser parser = ASTParser.newParser(SHARED_AST_LEVEL);
-//		parser.setResolveBindings(true);
-//		parser.setStatementsRecovery(SHARED_AST_STATEMENT_RECOVERY);
-//		parser.setBindingsRecovery(SHARED_BINDING_RECOVERY);
-		try {
-			parser.setSource(input);
-		} catch (Exception e) {
-			PHPUiPlugin.log(e);
+		final ASTParser parser = ASTParser.newParser(SHARED_AST_LEVEL, input);
+		if (parser == null) {
 			return null;
 		}
 
