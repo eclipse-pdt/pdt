@@ -419,7 +419,7 @@ public class ServersManager implements PropertyChangeListener,IAdaptable {
 			if (documentRoot != null && documentRoot.length() > 0) {
 				final Path path = new Path(documentRoot);
 				final IPath fullPath = project.getLocation();
-				if (path.isPrefixOf(fullPath)) {
+				if (fullPath != null && path.isPrefixOf(fullPath)) {
 					return server;
 				}
 			}
