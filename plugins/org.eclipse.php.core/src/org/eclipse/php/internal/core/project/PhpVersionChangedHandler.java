@@ -23,18 +23,20 @@ import org.eclipse.php.internal.core.preferences.*;
 public class PhpVersionChangedHandler implements IResourceChangeListener {
 
 	private static final String PHP_VERSION = "phpVersion";
-	
+
 	private HashMap<IProject, HashSet> projectListeners = new HashMap<IProject, HashSet>();
 	private HashMap<IProject, PreferencesPropagatorListener> preferencesPropagatorListeners = new HashMap<IProject, PreferencesPropagatorListener>();
 
 	private PreferencesPropagator preferencesPropagator;
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
-	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
-	
+	private static final Preferences store = PHPCorePlugin.getDefault()
+			.getPluginPreferences();
+
 	private static PhpVersionChangedHandler instance = new PhpVersionChangedHandler();
 
 	private PhpVersionChangedHandler() {
-		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER, store);
+		preferencesPropagator = PreferencePropagatorFactory
+				.getPreferencePropagator(NODES_QUALIFIER, store);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
@@ -42,17 +44,20 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 		return instance;
 	}
 
-	private void projectVersionChanged(IProject project, PreferencesPropagatorEvent event) {
+	private void projectVersionChanged(IProject project,
+			PreferencesPropagatorEvent event) {
 		HashSet listeners = projectListeners.get(project);
 		if (listeners != null) {
 			for (Iterator iter = listeners.iterator(); iter.hasNext();) {
-				IPreferencesPropagatorListener listener = (IPreferencesPropagatorListener) iter.next();
+				IPreferencesPropagatorListener listener = (IPreferencesPropagatorListener) iter
+						.next();
 				listener.preferencesEventOccured(event);
 			}
 		}
 	}
 
-	private class PreferencesPropagatorListener implements IPreferencesPropagatorListener {
+	private class PreferencesPropagatorListener implements
+			IPreferencesPropagatorListener {
 
 		private IProject project;
 
@@ -62,18 +67,27 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			if (event.getNewValue() == null) {
-				// We take the workspace settings since there was a move from project-specific to workspace setings.
-				String newValue = PreferencesSupport.getWorkspacePreferencesValue((String) event.getKey(), store);
+				// We take the workspace settings since there was a move from
+				// project-specific to workspace setings.
+				String newValue = PreferencesSupport
+						.getWorkspacePreferencesValue((String) event.getKey(),
+								store);
 				if (newValue == null || newValue.equals(event.getOldValue())) {
 					return; // No need to send a notification
 				}
-				event = new PreferencesPropagatorEvent(event.getSource(), event.getOldValue(), newValue, event.getKey());
+				event = new PreferencesPropagatorEvent(event.getSource(), event
+						.getOldValue(), newValue, event.getKey());
 			} else if (event.getOldValue() == null) {
-				// In this case there was a move from the workspace setting to a project-specific setting.
-				// At this stage the new value of the project-specific will always be as the workspace, so there is
+				// In this case there was a move from the workspace setting to a
+				// project-specific setting.
+				// At this stage the new value of the project-specific will
+				// always be as the workspace, so there is
 				// no need to send a notification.
-				String preferencesValue = PreferencesSupport.getWorkspacePreferencesValue((String) event.getKey(), store);
-				if (preferencesValue != null && preferencesValue.equals(event.getNewValue())) {
+				String preferencesValue = PreferencesSupport
+						.getWorkspacePreferencesValue((String) event.getKey(),
+								store);
+				if (preferencesValue != null
+						&& preferencesValue.equals(event.getNewValue())) {
 					return; // No need to send a notification
 				}
 			}
@@ -86,9 +100,11 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 
 	}
 
-	public void addPhpVersionChangedListener(IPreferencesPropagatorListener listener) {
+	public void addPhpVersionChangedListener(
+			IPreferencesPropagatorListener listener) {
 		IProject project = listener.getProject();
-		HashSet<IPreferencesPropagatorListener> listeners = projectListeners.get(project);
+		HashSet<IPreferencesPropagatorListener> listeners = projectListeners
+				.get(project);
 		if (listeners == null) {
 			projectAdded(project);
 			listeners = projectListeners.get(project);
@@ -96,8 +112,10 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 		listeners.add(listener);
 	}
 
-	public void removePhpVersionChangedListener(IPreferencesPropagatorListener listener) {
-		if (listener == null){//this was added since when working with RSE project model, listener was NULL
+	public void removePhpVersionChangedListener(
+			IPreferencesPropagatorListener listener) {
+		if (listener == null) {// this was added since when working with RSE
+			// project model, listener was NULL
 			return;
 		}
 		IProject project = listener.getProject();
@@ -106,21 +124,23 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 			listeners.remove(listener);
 		}
 	}
-	
+
 	public void projectAdded(IProject project) {
 		if (project == null || projectListeners.get(project) != null) {
 			return;
 		}
 		projectListeners.put(project, new HashSet());
 
-		//register as a listener to the PP on this project
-		PreferencesPropagatorListener listener = new PreferencesPropagatorListener(project);
+		// register as a listener to the PP on this project
+		PreferencesPropagatorListener listener = new PreferencesPropagatorListener(
+				project);
 		preferencesPropagatorListeners.put(project, listener);
 		preferencesPropagator.addPropagatorListener(listener, PHP_VERSION);
 	}
 
 	public void projectRemoved(IProject project) {
-		PreferencesPropagatorListener listener = preferencesPropagatorListeners.get(project);
+		PreferencesPropagatorListener listener = preferencesPropagatorListeners
+				.get(project);
 		if (listener == null) {
 			return;
 		}
@@ -130,27 +150,44 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 		projectListeners.remove(project);
 	}
 
-	public void resourceChanged(IResourceChangeEvent event) {
-		IResourceDelta resourceDelta = event.getDelta();
-		if (resourceDelta != null) {
-			IResourceDelta[] affectedChildren = resourceDelta.getAffectedChildren(IResourceDelta.CHANGED);
-			if (affectedChildren.length > 0) {
-				for (int i = 0; i < affectedChildren.length; i++) {
-					resourceDelta = affectedChildren[i];
-					IResource resource = resourceDelta.getResource();
-					if (resource instanceof IProject) {
-						IProject project = (IProject) resource;
-						int eventFlags = resourceDelta.getFlags();
-						if ((eventFlags & IResourceDelta.OPEN) != 0) {
-							if (project.isOpen()) {
-								projectAdded(project);
-							} else {
-								projectRemoved(project);
-							}
-						}
+	private void checkProjectsBeingAddedOrRemoved(IResourceDelta delta) {
+		IResource resource = delta.getResource();
+		IResourceDelta[] children = null;
+
+		switch (resource.getType()) {
+		case IResource.ROOT:
+			children = delta.getAffectedChildren();
+			break;
+		case IResource.PROJECT:
+			IProject project = (IProject) resource;
+			switch (delta.getKind()) {
+			case IResourceDelta.ADDED:
+				projectAdded(project);
+				break;
+			case IResourceDelta.CHANGED:
+				if ((delta.getFlags() & IResourceDelta.OPEN) != 0) {
+					// project opened or closed
+					if (project.isOpen()) {
+						projectAdded(project);
+					} else {
+						projectRemoved(project);
 					}
 				}
+				break;
+			case IResourceDelta.REMOVED:
+				projectRemoved(project);
+				break;
+			}
+			break;
+		}
+		if (children != null) {
+			for (int i = 0; i < children.length; i++) {
+				this.checkProjectsBeingAddedOrRemoved(children[i]);
 			}
 		}
+	}
+
+	public void resourceChanged(IResourceChangeEvent event) {
+		checkProjectsBeingAddedOrRemoved(event.getDelta());
 	}
 }
