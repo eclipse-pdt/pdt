@@ -95,9 +95,9 @@ public class TaskPatternsProvider {
 			TaskTag tag = workspaceTaskTags[i];
 			String tagString = tag.getTag();
 			if (caseSensitive) {
-				patterns[i] = Pattern.compile(tagString);
+				patterns[i] = Pattern.compile(tagString, Pattern.LITERAL);
 			} else {
-				patterns[i] = Pattern.compile(tagString, Pattern.CASE_INSENSITIVE);
+				patterns[i] = Pattern.compile(tagString, Pattern.CASE_INSENSITIVE | Pattern.LITERAL);
 			}
 		}
 
