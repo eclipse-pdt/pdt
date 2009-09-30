@@ -151,6 +151,9 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 	}
 
 	private void checkProjectsBeingAddedOrRemoved(IResourceDelta delta) {
+		if (delta == null) {
+			return;
+		}
 		IResource resource = delta.getResource();
 		IResourceDelta[] children = null;
 
