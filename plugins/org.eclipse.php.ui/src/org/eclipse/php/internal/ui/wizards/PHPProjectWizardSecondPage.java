@@ -242,6 +242,10 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			}
 
 			init(DLTKCore.create(getProject()), buildpathEntries, false);
+			
+			// setting PHP4/5 and ASP-Tags :
+			setPhpLangOptions();
+
 			configureScriptProject(new SubProgressMonitor(monitor, 30));
 
 			//checking and adding JS nature,libs, include path if needed
@@ -249,12 +253,10 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 				addJavaScriptNature(monitor);
 			}
 
-			// setting PHP4/5 and ASP-Tags :
-			setPhpLangOptions();
-
 			//adding build paths, and language-Container:
 			getScriptProject().setRawBuildpath(buildpathEntries, new NullProgressMonitor());
 			LanguageModelInitializer.enableLanguageModelFor(getScriptProject());
+			
 			//init, and adding include paths:
 			getBuildPathsBlock().init(getScriptProject(), new IBuildpathEntry[] {});
 			IncludePathManager.getInstance().setIncludePath(getProject(), includepathEntries);
