@@ -185,8 +185,8 @@ public class ContextManager {
 		String cwd = null;
 		String currentScript = null;
 
-		IStackFrame[] frames = new IStackFrame[((layers.length - 1) * 2) + 1];
-		int frameCt = ((layers.length - 1) * 2 + 1);
+		IStackFrame[] frames = new IStackFrame[layers.length];
+		int frameCt = layers.length;
 		for (int i = 1; i < layers.length; i++) {
 
 			String sName = layers[i].getCallerFileName();
@@ -209,23 +209,6 @@ public class ContextManager {
 					.getCallerFunctionName(),
 					layers[i].getCallerLineNumber() + 1, frameCt, rName,
 					layers[i - 1].getVariables());
-			frameCt--;
-
-			sName = layers[i].getCalledFileName();
-			rName = layers[i].getResolvedCalledFileName();
-			if (rName == null) {
-				rName = remoteDebugger
-						.convertToLocalFilename(sName, cwd, rName);
-				if (rName == null) {
-					rName = sName;
-				}
-				layers[i].setResolvedCalledFileName(rName);
-			}
-
-			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i]
-					.getCalledFunctionName(),
-					layers[i].getCalledLineNumber() + 1, frameCt, layers[i],
-					rName, layers[i].getVariables());
 			frameCt--;
 
 			if (!layers[i].getCalledFileName()
