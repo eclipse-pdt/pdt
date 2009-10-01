@@ -91,8 +91,13 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 			selectAndReveal(fLastPage.getScriptProject().getProject());
 
 			WizardModel model = fFirstPage.getWizardData();
-			Object eanblement = model
-					.getObject("REMOTE_GROUP_REMOTE_PROJECT_ENABLED");
+
+			Object eanblement = null;
+			if (model != null) {
+				eanblement = model
+						.getObject("REMOTE_GROUP_REMOTE_PROJECT_ENABLED");
+			}
+
 			if (model != null && eanblement != null && (Boolean) eanblement) {
 
 				model.putObject(SELECTED_PROJECT, fLastPage.getScriptProject()
