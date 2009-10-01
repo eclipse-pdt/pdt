@@ -78,8 +78,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	private IDebugHandler debugHandler;
 	private Map<String, String> resolvedFiles;
 	private int currentProtocolId = 0;
-	private String cachedCWD;
 	private int previousSuspendCount;
+	private String cachedCWD;
 	private PHPstack cachedStack;
 
 	/**
@@ -173,18 +173,23 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	public String getCWD() {
-		if (cachedCWD == null || !canDo(START_PROCESS_FILE_NOTIFICATION)) {
-			if (canDo(GET_CWD)) {
-				cachedCWD = getCWDNew();
-			} else {
-				cachedCWD = getCWDOld();
-			}
+		if (!this.isActive()) {
+			return null;
+		}
+
+		PHPDebugTarget debugTarget = getDebugHandler().getDebugTarget();
+		int suspendCount = debugTarget.getSuspendCount();
+		if (suspendCount == previousSuspendCount && cachedCWD != null) {
+			return cachedCWD;
+		}
+
+		System.out.println("GETCWD");
+		if (canDo(GET_CWD)) {
+			cachedCWD = getCWDNew();
+		} else {
+			cachedCWD = getCWDOld();
 		}
 		return cachedCWD;
-	}
-
-	public void removeCWDCache() {
-		cachedCWD = null;
 	}
 
 	/**
@@ -1033,24 +1038,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * information.
 	 */
 	public PHPstack getCallStack() {
-		return getCallStack(true);
-	}
-
-	/**
-	 * Synchronic getCallStack Returns the Stack layer including variables
-	 * information (if requested)
-	 */
-	public PHPstack getCallStack(boolean fetchVariables) {
-		if (!fetchVariables && canDo(GET_CALL_STACK_LITE)) {
-			return getCallStackLite();
-		}
-		return getCallStackHeavy();
-	}
-
-	/**
-	 * Synchronic getCallStack Returns the Stack layer.
-	 */
-	public PHPstack getCallStackHeavy() {
 		if (!this.isActive()) {
 			return null;
 		}
@@ -1060,6 +1047,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (suspendCount == previousSuspendCount && cachedStack != null) {
 			return cachedStack;
 		}
+
+		System.out.println("GET_CALLSTACK");
 
 		GetCallStackRequest request = new GetCallStackRequest();
 		PHPstack remoteStack = null;
@@ -1077,31 +1066,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 		previousSuspendCount = suspendCount;
 		cachedStack = remoteStack;
 
-		return remoteStack;
-	}
-
-	/**
-	 * Synchronic getCallStack Returns the Stack layer without function
-	 * parameters.
-	 * 
-	 * @deprecated
-	 */
-	public PHPstack getCallStackLite() {
-		if (!this.isActive()) {
-			return null;
-		}
-		GetCallStackLiteRequest request = new GetCallStackLiteRequest();
-		PHPstack remoteStack = null;
-		try {
-			GetCallStackLiteResponse response = (GetCallStackLiteResponse) connection
-					.sendRequest(request);
-			if (response != null) {
-				remoteStack = response.getPHPstack();
-			}
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-		convertToSystem(remoteStack);
 		return remoteStack;
 	}
 

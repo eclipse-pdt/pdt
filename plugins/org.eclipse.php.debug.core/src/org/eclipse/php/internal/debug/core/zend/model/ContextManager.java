@@ -27,8 +27,7 @@ public class ContextManager {
 
 	private PHPDebugTarget fTarget;
 	private IRemoteDebugger fDebugger;
-	private StackLayer[] fPreviousLayers;
-	private IStackFrame[] fPreviousFrames;
+	private IStackFrame[] fFrames;
 	private ILock fFramesInitLock = Job.getJobManager().newLock();
 
 	private int fSuspendCount;
@@ -55,12 +54,12 @@ public class ContextManager {
 	}
 
 	private void copyVariablesFromPreviousFrames(IStackFrame[] frames) {
-		if (fPreviousFrames != null) {
-			for (int i = frames.length - 1, c = fPreviousFrames.length - 1; i > 0
+		if (fFrames != null) {
+			for (int i = frames.length - 1, c = fFrames.length - 1; i > 0
 					&& c >= 0; --i, --c) {
 				if (((PHPStackFrame) frames[i]).getStackVariables().length == 0) {
 					((PHPStackFrame) frames[i])
-							.setStackVariables(((PHPStackFrame) fPreviousFrames[c])
+							.setStackVariables(((PHPStackFrame) fFrames[c])
 									.getStackVariables());
 				}
 			}
@@ -71,16 +70,17 @@ public class ContextManager {
 
 		// check to see if eclipse is getting the same stack frames again.
 		PHPstack stack = fDebugger.getCallStack();
-		PHPThread thread = (PHPThread) fTarget.getThreads()[0];
 		StackLayer[] layers = stack.getLayers();
+
+		PHPThread thread = (PHPThread) fTarget.getThreads()[0];
 
 		fFramesInitLock.acquire();
 		try {
-			if (fPreviousFrames == null) {
+			if (fFrames == null) {
 				IStackFrame[] newFrames = applyDebugFilters(createNewFrames(
 						layers, thread));
 				copyVariablesFromPreviousFrames(newFrames);
-				fPreviousFrames = newFrames;
+				fFrames = newFrames;
 
 				DefaultExpressionsManager expressionsManager = fTarget
 						.getExpressionManager();
@@ -88,18 +88,15 @@ public class ContextManager {
 					expressionsManager.clear();
 				}
 				fSuspendCount = fTarget.getSuspendCount();
-				return fPreviousFrames;
+				return fFrames;
 			}
 		} finally {
 			fFramesInitLock.release();
 		}
 
 		if (fSuspendCount == fTarget.getSuspendCount()) {
-			return fPreviousFrames;
+			return fFrames;
 		}
-
-		// check to see if layers are the same as the previous thread
-		fSuspendCount = fTarget.getSuspendCount();
 
 		if (layers.length == 1
 				&& layers[0].getCalledFileName().endsWith(DUMMY_PHP_FILE)) {
@@ -108,12 +105,12 @@ public class ContextManager {
 			IStackFrame[] newFrames = applyDebugFilters(createNewFrames(layers,
 					thread));
 			copyVariablesFromPreviousFrames(newFrames);
-			fPreviousFrames = newFrames;
-
-			fSuspendCount = fTarget.getSuspendCount();
+			fFrames = newFrames;
 		}
 
-		return fPreviousFrames;
+		fSuspendCount = fTarget.getSuspendCount();
+
+		return fFrames;
 	}
 
 	private IStackFrame[] applyDebugFilters(IStackFrame[] previousFrames) {
@@ -146,10 +143,10 @@ public class ContextManager {
 		return variables == null ? new IVariable[0] : variables;
 	}
 
-	public Expression[] getStackVariables(PHPStackFrame stack) {
+	public Expression[] getStackVariables(PHPStackFrame stackFrame) {
 		String functionName = "";
 		try {
-			functionName = stack.getName();
+			functionName = stackFrame.getName();
 		} catch (DebugException e) {
 			// PHPStack Doesn't throw exception, just log and ignore
 			Logger.logException("Problem getting name from stack", e);
@@ -159,19 +156,21 @@ public class ContextManager {
 		if (!functionName.equals("")) {
 			StackLayer stackLayer = null;
 			try {
-				for (int i = fPreviousLayers.length - 1; i >= 0; --i) {
-					StackLayer element = fPreviousLayers[i];
+				PHPstack stack = fDebugger.getCallStack();
+				StackLayer[] layers = stack.getLayers();
+
+				for (int i = layers.length - 1; i >= 0; --i) {
+					StackLayer element = layers[i];
 					if (element.getCalledFileName().equals(
-							stack.getAbsoluteFileName())
+							stackFrame.getAbsoluteFileName())
 							&& element.getCalledFunctionName().equals(
-									stack.getName())) {
+									stackFrame.getName())) {
 						stackLayer = element;
 						break;
 					}
 				}
 			} catch (DebugException e) {
 			}
-
 			if (stackLayer != null) {
 				variables = stackLayer.getVariables();
 			}
@@ -179,57 +178,20 @@ public class ContextManager {
 		return variables;
 	}
 
-	private boolean compareLayers(StackLayer[] layers, StackLayer[] prevLayers) {
-
-		if (layers.length != prevLayers.length)
-			return false;
-
-		for (int i = 0; i < layers.length; i++) {
-			if (!compareLayer(layers[i], prevLayers[i]))
-				return false;
-		}
-		return true;
-	}
-
-	private boolean compareLayer(StackLayer layer, StackLayer prevLayer) {
-		return layer.getCallerFileName().equals(prevLayer.getCallerFileName())
-				&& layer.getCallerFunctionName().equals(
-						prevLayer.getCallerFunctionName())
-				&& layer.getCallerLineNumber() == prevLayer
-						.getCallerLineNumber()
-				&& layer.getCalledFileName().equals(
-						prevLayer.getCalledFileName())
-				&& layer.getCalledFunctionName().equals(
-						prevLayer.getCalledFunctionName())
-				&& layer.getCalledLineNumber() == prevLayer
-						.getCalledLineNumber();
-	}
-
 	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread)
 			throws DebugException {
-
-		boolean layersSame = false;
-		if (fPreviousLayers != null) {
-			layersSame = compareLayers(layers, fPreviousLayers);
-		}
 
 		RemoteDebugger remoteDebugger = (RemoteDebugger) fDebugger;
 		String cwd = null;
 		String currentScript = null;
-
-		if (!layersSame) {
-			cwd = remoteDebugger.getCurrentWorkingDirectory();
-		}
 
 		IStackFrame[] frames = new IStackFrame[((layers.length - 1) * 2) + 1];
 		int frameCt = ((layers.length - 1) * 2 + 1);
 		for (int i = 1; i < layers.length; i++) {
 
 			String sName = layers[i].getCallerFileName();
-			String rName;
-			if (layersSame) {
-				rName = fPreviousLayers[i].getResolvedCallerFileName();
-			} else {
+			String rName = layers[i].getResolvedCallerFileName();
+			if (rName == null) {
 				rName = remoteDebugger
 						.convertToLocalFilename(
 								sName,
@@ -250,9 +212,8 @@ public class ContextManager {
 			frameCt--;
 
 			sName = layers[i].getCalledFileName();
-			if (layersSame) {
-				rName = fPreviousLayers[i].getResolvedCalledFileName();
-			} else {
+			rName = layers[i].getResolvedCalledFileName();
+			if (rName == null) {
 				rName = remoteDebugger
 						.convertToLocalFilename(sName, cwd, rName);
 				if (rName == null) {
@@ -282,7 +243,7 @@ public class ContextManager {
 				(layers.length == 1) ? "" : frames[1].getName(), fTarget
 						.getLastStop(), frameCt, resolvedFile,
 				getLocalVariables());
-		fPreviousLayers = layers;
+
 		return frames;
 	}
 
