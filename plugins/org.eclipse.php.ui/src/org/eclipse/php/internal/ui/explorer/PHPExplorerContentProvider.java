@@ -341,6 +341,35 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		public IAdaptable[] getChildren() {
 			return fIncludePath;
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = super.hashCode();
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + Arrays.hashCode(fIncludePath);
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			IncludePathContainer other = (IncludePathContainer) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (!Arrays.equals(fIncludePath, other.fIncludePath))
+				return false;
+			return true;
+		}
+
+		private PHPExplorerContentProvider getOuterType() {
+			return PHPExplorerContentProvider.this;
+		}
 	}
 
 	/**
