@@ -183,7 +183,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return cachedCWD;
 		}
 
-		System.out.println("GETCWD");
 		if (canDo(GET_CWD)) {
 			cachedCWD = getCWDNew();
 		} else {
@@ -1047,8 +1046,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (suspendCount == previousSuspendCount && cachedStack != null) {
 			return cachedStack;
 		}
-
-		System.out.println("GET_CALLSTACK");
 
 		GetCallStackRequest request = new GetCallStackRequest();
 		PHPstack remoteStack = null;
