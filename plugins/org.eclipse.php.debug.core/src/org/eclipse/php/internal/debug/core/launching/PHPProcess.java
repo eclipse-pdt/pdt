@@ -27,12 +27,13 @@ public class PHPProcess extends PlatformObject implements IProcess {
 
 	private ILaunch fLaunch;
 	private String fName;
-	private Map fAttributes;
+	private Map<String, String> fAttributes;
 	private boolean fTerminated;
 	private IConsole fConsole = null;
 	private PHPStreamsProxy fProxy;
 	private PHPHyperLink fPHPHyperLink;
 	private IDebugTarget fDebugTarget;
+	private int fExitValue;
 
 	public PHPProcess(ILaunch launch, String name) {
 		fLaunch = launch;
@@ -61,11 +62,11 @@ public class PHPProcess extends PlatformObject implements IProcess {
 
 	public void setAttribute(String key, String value) {
 		if (fAttributes == null) {
-			fAttributes = new HashMap(5);
+			fAttributes = new HashMap<String, String>(5);
 		}
 		Object origVal = fAttributes.get(key);
 		if (origVal != null && origVal.equals(value)) {
-			return; //nothing changed.
+			return; // nothing changed.
 		}
 
 		fAttributes.put(key, value);
@@ -78,8 +79,12 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		return (String) fAttributes.get(key);
 	}
 
+	public void setExitValue(int exitValue) {
+		this.fExitValue = exitValue;
+	}
+
 	public int getExitValue() throws DebugException {
-		return 0;
+		return fExitValue;
 	}
 
 	public Object getAdapter(Class adapter) {

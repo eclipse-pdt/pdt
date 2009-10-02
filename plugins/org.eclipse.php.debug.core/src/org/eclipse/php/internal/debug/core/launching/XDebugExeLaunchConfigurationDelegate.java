@@ -215,7 +215,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		// Launch the process
 		final Process phpExeProcess = DebugPlugin.exec(cmdLine, workingDir, envVarString);
 		// Attach a crash detector
-		new Thread(new ProcessCrashDetector(phpExeProcess)).start();
+		new Thread(new ProcessCrashDetector(launch, phpExeProcess)).start();
 
 		IProcess eclipseProcessWrapper = null;
 		if (phpExeProcess != null) {

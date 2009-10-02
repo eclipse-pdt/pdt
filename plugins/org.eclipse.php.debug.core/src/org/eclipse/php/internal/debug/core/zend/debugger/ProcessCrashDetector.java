@@ -16,9 +16,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
+import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -37,15 +41,18 @@ import org.eclipse.ui.console.IOConsoleOutputStream;
  */
 public class ProcessCrashDetector implements Runnable, IConsoleListener {
 
+	private ILaunch launch;
 	private Process process;
 	private ProcessConsole console;
 
 	/**
 	 * Constructs a process detector on a given {@link Process}.
 	 * 
-	 * @param p A {@link Process}.
+	 * @param launch {@link ILaunch}
+	 * @param p {@link Process}.
 	 */
-	public ProcessCrashDetector(Process p) {
+	public ProcessCrashDetector(ILaunch launch, Process p) {
+		this.launch = launch;
 		this.process = p;
 	}
 
@@ -64,9 +71,14 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 			inputGobbler.start();
 			
 			int exitValue = process.waitFor();
-			if (exitValue > 255 || exitValue < 0) {
-//				PHPLaunchUtilities.showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_General_Error, PHPDebugCoreMessages.Debugger_Error_Crash_Message);
+			IDebugTarget debugTarget = launch.getDebugTarget();
+			if (debugTarget != null) {
+				IProcess p = debugTarget.getProcess();
+				if (p instanceof PHPProcess) {
+					((PHPProcess)p).setExitValue(exitValue);
+				}
 			}
+			
 		} catch (Throwable t) {
 		} finally {
 			ConsolePlugin.getDefault().getConsoleManager().removeConsoleListener(this);
