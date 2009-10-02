@@ -24,6 +24,7 @@ import org.eclipse.dltk.ui.actions.GenerateActionGroup;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
@@ -36,7 +37,8 @@ import org.eclipse.wst.jsdt.ui.actions.OpenAction;
  * 
  */
 public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
-
+	private PHPRefactorActionGroup phpRefactorActionGroup;
+	
 	public PHPExplorerActionGroup(ScriptExplorerPart part) {
 		super(part);
 	}
@@ -55,7 +57,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 			}
 		}
 		
-		filtered.add(new PHPRefactorActionGroup(getPart()));
+		phpRefactorActionGroup = new PHPRefactorActionGroup(getPart());
+		filtered.add(phpRefactorActionGroup);
 		filtered.add(new GenerateIncludePathActionGroup(getPart()));
 		filtered.add(new NamespaceGroupingActionGroup(getPart().getTreeViewer()));
 		
@@ -86,5 +89,9 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 		super.handleOpen(event);
 		
 	}
-
+	@Override
+	protected void setGlobalActionHandlers(IActionBars actionBars) {
+		super.setGlobalActionHandlers(actionBars);
+		phpRefactorActionGroup.retargetFileMenuActions(actionBars);
+	}
 }
