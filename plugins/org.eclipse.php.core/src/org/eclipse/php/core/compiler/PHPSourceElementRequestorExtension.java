@@ -14,7 +14,7 @@ package org.eclipse.php.core.compiler;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.compiler.ISourceElementRequestor;
+import org.eclipse.dltk.compiler.IElementRequestor;
 import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.ISourceModule;
@@ -29,14 +29,14 @@ import org.eclipse.dltk.compiler.env.ISourceModule;
 public abstract class PHPSourceElementRequestorExtension extends ASTVisitor {
 
 	private ISourceModule fSourceModule;
-	protected ISourceElementRequestor fRequestor;
+	protected IElementRequestor fRequestor;
 
 	/**
 	 * Sets source element requestor
 	 * 
 	 * @param requesor
 	 */
-	public void setRequestor(ISourceElementRequestor requesor) {
+	public void setRequestor(IElementRequestor requesor) {
 		fRequestor = requesor;
 	}
 
@@ -45,7 +45,7 @@ public abstract class PHPSourceElementRequestorExtension extends ASTVisitor {
 	 * 
 	 * @return
 	 */
-	public ISourceElementRequestor getRequestor() {
+	public IElementRequestor getRequestor() {
 		return fRequestor;
 	}
 

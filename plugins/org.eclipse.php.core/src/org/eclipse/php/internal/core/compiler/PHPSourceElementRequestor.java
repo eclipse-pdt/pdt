@@ -29,6 +29,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.compiler.IElementRequestor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
@@ -97,7 +98,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						.size()]);
 	}
 
-	protected ISourceElementRequestor getRequestor() {
+	protected IElementRequestor getRequestor() {
 		return fRequestor;
 	}
 
