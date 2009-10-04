@@ -9589,20 +9589,6 @@ function is_writable($filename) {}
 function is_writeable($filename) {}
 
 /**
- * Clear last java extension 
- *
- * @return void
- */
-function java_last_exception_clear() {}
-
-/**
- * Get last Java exception 
- *
- * @return object
- */
-function java_last_exception_get() {}
-
-/**
  * Returns name or number of day of week from julian day count 
  *
  * @return mixed
@@ -15424,7 +15410,7 @@ function ncurses_wvline($window, $charattr, $n) {}
  * @param  snmp_session_*s struct
  * @param  *pass char
  */
-function netsnmp_session_gen_auth_key($snmp_session_*s, $*pass) {}
+function netsnmp_session_gen_auth_key($snmp_session_s, $pass) {}
 
 /**
  * Make key from pass phrase in the snmpv3 session 
@@ -15433,7 +15419,7 @@ function netsnmp_session_gen_auth_key($snmp_session_*s, $*pass) {}
  * @param  snmp_session_*s struct
  * @param  *pass u_char
  */
-function netsnmp_session_gen_sec_key($snmp_session_*s, $*pass) {}
+function netsnmp_session_gen_sec_key($snmp_session_s, $pass) {}
 
 /**
  * Set the authentication protocol in the snmpv3 session 
@@ -15442,7 +15428,7 @@ function netsnmp_session_gen_sec_key($snmp_session_*s, $*pass) {}
  * @param  snmp_session_*s struct
  * @param  *prot char
  */
-function netsnmp_session_set_auth_protocol($snmp_session_*s, $*prot) {}
+function netsnmp_session_set_auth_protocol($snmp_session_s, $prot) {}
 
 /**
  * Set the security level in the snmpv3 session 
@@ -15451,7 +15437,7 @@ function netsnmp_session_set_auth_protocol($snmp_session_*s, $*prot) {}
  * @param  snmp_session_*s struct
  * @param  *level char
  */
-function netsnmp_session_set_sec_level($snmp_session_*s, $*level) {}
+function netsnmp_session_set_sec_level($snmp_session_s, $level) {}
 
 /**
  * Set the security name in the snmpv3 session 
@@ -15460,7 +15446,7 @@ function netsnmp_session_set_sec_level($snmp_session_*s, $*level) {}
  * @param  snmp_session_*s struct
  * @param  *name char
  */
-function netsnmp_session_set_sec_name($snmp_session_*s, $*name) {}
+function netsnmp_session_set_sec_name($snmp_session_s, $name) {}
 
 /**
  * Set the security protocol in the snmpv3 session 
@@ -15469,7 +15455,7 @@ function netsnmp_session_set_sec_name($snmp_session_*s, $*name) {}
  * @param  snmp_session_*s struct
  * @param  *prot char
  */
-function netsnmp_session_set_sec_protocol($snmp_session_*s, $*prot) {}
+function netsnmp_session_set_sec_protocol($snmp_session_s, $prot) {}
 
 /**
  * Creates new xmldoc 
@@ -15520,7 +15506,7 @@ function nl_langinfo($item) {}
  * @param  **attributes zval
  * @param  node int
  */
-function node_attributes($**attributes, $node) {}
+function node_attributes($attributes, $node) {}
 
 /**
  * Returns list of children nodes 
@@ -29472,7 +29458,7 @@ define('JOB_QUEUE_SAVE_ENV', 128);
  * can be used to indicate an error in the script logic (e.g. database connection problem)
  * @param string $error_string the error string to display 
  */
-set_job_failed( $error_string );
+function set_job_failed( $error_string ) { }
 
 
 
@@ -29481,7 +29467,7 @@ set_job_failed( $error_string );
  * "license_ok" - whether license allows use of JobQueue
  * "expires" - license expiration date 
  */
-jobqueue_license_info();
+function jobqueue_license_info() { };
 
 
 class ZendAPI_Queue {
@@ -29870,7 +29856,7 @@ class ZendAPI_Job {
     function setJobDependency($job_id) {}
     function setScheduledTime($timestamp) {}
     function setRecurrenceData($interval, $end_time=null) {}
-    function setPreserved($preserved)
+    function setPreserved($preserved) { }
     
     /**
      * Get the job properties
@@ -29933,14 +29919,6 @@ class ZendAPI_Job {
 
 class stdClass {
 };
-
-/**
- * @return resource
- * @param  connection_string string
- * @param  connect_type int
- * @desc   Open a PostgreSQL connection 
- */
-function pg_connect($connection_string, $connect_type) {}
 
 /**
  * @return resource
