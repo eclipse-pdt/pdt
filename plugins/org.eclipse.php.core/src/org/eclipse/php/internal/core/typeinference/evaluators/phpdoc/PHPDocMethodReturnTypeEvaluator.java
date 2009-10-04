@@ -11,17 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators.phpdoc;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -31,12 +31,15 @@ import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractMethodReturnTypeEvaluator;
 
 /**
- * This Evaluator process the phpdoc of a method to determine its 
- * returned type(s)
- *   
- * @see the PHPCodumentor spec at {@link http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.return.pkg.html}  
+ * This Evaluator process the phpdoc of a method to determine its returned
+ * type(s)
+ * 
+ * @see the PHPCodumentor spec at {@link http
+ *      ://manual.phpdoc.org/HTMLSmartyConverter
+ *      /HandS/phpDocumentor/tutorial_tags.return.pkg.html}
  */
-public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator {
+public class PHPDocMethodReturnTypeEvaluator extends
+		AbstractMethodReturnTypeEvaluator {
 
 	/**
 	 * Used for splitting the data types list of the returned tag
@@ -53,26 +56,36 @@ public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEva
 	}
 
 	public IGoal[] init() {
-		Set<PHPDocBlock> docs = new HashSet<PHPDocBlock>();
 		for (IMethod method : getMethods()) {
 			PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
 			if (docBlock != null) {
-				docs.add(docBlock);
-			}
-		}
-
-		for (PHPDocBlock doc : docs) {
-			for (PHPDocTag tag : doc.getTags()) {
-				if (tag.getTagKind() == PHPDocTag.RETURN) {
-					// @return datatype1|datatype2|...
-					for (SimpleReference reference : tag.getReferences()) {
-						final String[] typesNames = PIPE_PATTERN.split(reference.getName());
-						for (String typeName : typesNames) {
-							IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
-							if (type == null) {
-								type = new PHPClassType(typeName);
+				IType currentNamespace = PHPModelUtils
+						.getCurrentNamespace(method);
+				for (PHPDocTag tag : docBlock.getTags()) {
+					if (tag.getTagKind() == PHPDocTag.RETURN) {
+						// @return datatype1|datatype2|...
+						for (SimpleReference reference : tag.getReferences()) {
+							final String[] typesNames = PIPE_PATTERN
+									.split(reference.getName());
+							for (String typeName : typesNames) {
+								IEvaluatedType type = PHPSimpleTypes
+										.fromString(typeName);
+								if (type == null) {
+									if (typeName
+											.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
+											|| currentNamespace == null) {
+										type = new PHPClassType(typeName);
+									} else if (currentNamespace != null) {
+										type = new PHPClassType(
+												currentNamespace
+														.getElementName(),
+												typeName);
+									}
+								}
+								if (type != null) {
+									evaluated.add(type);
+								}
 							}
-							evaluated.add(type);
 						}
 					}
 				}
