@@ -728,22 +728,25 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 <ST_PHP_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|([\"]{LABEL}[\"])){NEWLINE} {
     int bprefix = (yytext().charAt(0) != '<') ? 1 : 0;
     int startString=3+bprefix;
-    heredoc_len = yylength()-bprefix-3-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
+    
+    int hereOrNowDoc_len = yylength()-bprefix-3-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
     while ((yytext().charAt(startString) == ' ') || (yytext().charAt(startString) == '\t')) {
         startString++;
-        heredoc_len--;
+        hereOrNowDoc_len--;
     }
-    heredoc = yytext().substring(startString,heredoc_len+startString);
-    if (heredoc.charAt(0) == '\'') {
-    	heredoc = heredoc.substring(1, heredoc_len-1);
-    	heredoc_len -= 2;
+    String hereOrNowDoc = yytext().substring(startString,hereOrNowDoc_len+startString);
+    if (hereOrNowDoc.charAt(0) == '\'') {
+    	nowdoc = hereOrNowDoc.substring(1, hereOrNowDoc_len-1);
+    	nowdoc_len = hereOrNowDoc_len - 2;
     	yybegin(ST_PHP_NOWDOC);
     }
-    else if (heredoc.charAt(0) == '"') {
-    	heredoc = heredoc.substring(1, heredoc_len-1);
-    	heredoc_len -= 2;
+    else if (hereOrNowDoc.charAt(0) == '"') {
+    	heredoc = hereOrNowDoc.substring(1, hereOrNowDoc_len-1);
+    	heredoc_len = hereOrNowDoc_len - 2;
     	yybegin(ST_PHP_HEREDOC);
     } else {
+    	heredoc = hereOrNowDoc;
+    	heredoc_len = hereOrNowDoc_len;
     	yybegin(ST_PHP_HEREDOC);
     }
     return PHP_HEREDOC_TAG;
@@ -778,6 +781,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	   label_len--;
     }
     if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len,label_len).equals(heredoc)) {
+    	heredoc = null;
+    	heredoc_len = 0;
     	yypushback(1);
         yybegin(ST_PHP_END_HEREDOC);
     }
@@ -785,8 +790,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_END_HEREDOC>{ANY_CHAR} {
-    heredoc=null;
-    heredoc_len=0;
     yybegin(ST_PHP_IN_SCRIPTING);
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
@@ -798,9 +801,9 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	    label_len--;
     }
 
-    if (label_len==heredoc_len && yytext().substring(0,label_len).equals(heredoc)) {
-        heredoc=null;
-        heredoc_len=0;
+    if (label_len==nowdoc_len && yytext().substring(0,label_len).equals(nowdoc)) {
+        nowdoc=null;
+        nowdoc_len=0;
         yybegin(ST_PHP_IN_SCRIPTING);
         return PHP_HEREDOC_TAG;
     } else {
@@ -814,7 +817,9 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	if (yytext().charAt(label_len-1)==';') {
 	   label_len--;
     }
-    if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len,label_len).equals(heredoc)) {
+    if (label_len > nowdoc_len && yytext().substring(label_len - nowdoc_len,label_len).equals(nowdoc)) {
+    	nowdoc = null;
+    	nowdoc_len = 0;
 		yypushback(1);
 		yybegin(ST_PHP_END_HEREDOC);
 	}

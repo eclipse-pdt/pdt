@@ -57,6 +57,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 %{
 	private final LinkedList commentList = new LinkedList();
 	private String heredoc = null;
+	private String nowdoc = null;
     private boolean asp_tags = false;
     private boolean short_tags_allowed = true;
     private StateStack stack = new StateStack();
@@ -941,22 +942,27 @@ yybegin(ST_DOCBLOCK);
 
 <ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|([\"]{LABEL}[\"])){NEWLINE} {
     int removeChars = (yytext().charAt(0) == 'b') ? 4 : 3;
-    heredoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
-    int heredoc_len = heredoc.length();
-    if (heredoc.charAt(0) == '\'') {
-    	heredoc = heredoc.substring(1, heredoc_len-1);
+    String hereOrNowDoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
+    int heredoc_len = hereOrNowDoc.length();
+
+	Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
+
+    if (hereOrNowDoc.charAt(0) == '\'') {
+    	nowdoc = hereOrNowDoc.substring(1, heredoc_len-1);
+    	sym.value = nowdoc;
     	heredoc_len -= 2;
     	yybegin(ST_NOWDOC);
     }
-    else if (heredoc.charAt(0) == '"') {
+    else if (hereOrNowDoc.charAt(0) == '"') {
     	heredoc = heredoc.substring(1, heredoc_len-1);
+    	sym.value = heredoc;
     	heredoc_len -= 2;
     	yybegin(ST_HEREDOC);
     } else {
+    	heredoc = hereOrNowDoc;
+    	sym.value = heredoc;
     	yybegin(ST_HEREDOC);
     }
-    Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
-    sym.value = heredoc;
     return sym;
 }
 
@@ -980,7 +986,8 @@ yybegin(ST_DOCBLOCK);
         heredoc = null;
         yybegin(ST_IN_SCRIPTING);
         return createSymbol(ParserConstants.T_END_HEREDOC);
-    } else {
+    }
+    else {
     	yybegin(ST_HEREDOC);
     }
 }
@@ -1000,6 +1007,7 @@ yybegin(ST_DOCBLOCK);
 	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
 		yypushback(2);
         yybegin(ST_END_HEREDOC);
+        heredoc = null;
         // we need to remove the closing label from the symbol value.
         Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
         String value = (String)sym.value;
@@ -1007,11 +1015,9 @@ yybegin(ST_DOCBLOCK);
 	   	return sym;
 	}
 	yypushback(1);
-	
 }
 
 <ST_END_HEREDOC>{ANY_CHAR} {
-    heredoc = null;
 	yybegin(ST_IN_SCRIPTING);
 	return createSymbol(ParserConstants.T_END_HEREDOC);
 }
@@ -1027,11 +1033,12 @@ yybegin(ST_DOCBLOCK);
         text = text.substring(0, text.length() - 1);
         yypushback(1);
     }
-    if (text.equals(heredoc)) {
-        heredoc = null;
+    if (text.equals(nowdoc)) {
+    	nowdoc = null;
         yybegin(ST_IN_SCRIPTING);
         return createSymbol(ParserConstants.T_END_HEREDOC);
-    } else {
+    }
+    else {
     	yybegin(ST_HEREDOC);
     }
 }
@@ -1047,14 +1054,15 @@ yybegin(ST_DOCBLOCK);
     }
  
  	int textLength = text.length();
- 	int heredocLength = heredoc.length();
-	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
+ 	int nowdocLength = nowdoc.length();
+	if (textLength > nowdocLength && text.substring(textLength - nowdocLength, textLength).equals(nowdoc)) {
 		yypushback(2);
        	yybegin(ST_END_HEREDOC);
+       	nowdoc = null;
        	// we need to remove the closing label from the symbol value.
        	Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
        	String value = (String)sym.value;
-       	sym.value = value.substring(0, value.length() - heredocLength + 1);
+       	sym.value = value.substring(0, value.length() - nowdocLength + 1);
 	   	return sym;
 	}
 	yypushback(1);
