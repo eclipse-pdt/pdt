@@ -2003,9 +2003,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
 
-		resAction = new TextOperationAction(DLTKEditorMessages
-				.getBundleForConstructedKeys(),
-				"ShowOutline.", this, PHPStructuredTextViewer.SHOW_OUTLINE); //$NON-NLS-1$
+		resAction = new TextOperationAction(
+				DLTKEditorMessages.getBundleForConstructedKeys(),
+				"ShowOutline.", this, PHPStructuredTextViewer.SHOW_OUTLINE, true); //$NON-NLS-1$
 		resAction
 				.setActionDefinitionId(IScriptEditorActionDefinitionIds.SHOW_OUTLINE); //$NON-NLS-1$
 		setAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
