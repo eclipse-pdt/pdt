@@ -17,9 +17,10 @@ import org.eclipse.dltk.ast.references.VariableReference;
 public class VarComment extends Comment {
 
 	private VariableReference variableReference;
-	private TypeReference typeReference;
+	private TypeReference[] typeReference;
 
-	public VarComment(int start, int end, VariableReference variableReference, TypeReference typeReference) {
+	public VarComment(int start, int end, VariableReference variableReference,
+			TypeReference[] typeReference) {
 		super(start, end, Comment.TYPE_MULTILINE);
 		this.variableReference = variableReference;
 		this.typeReference = typeReference;
@@ -29,7 +30,7 @@ public class VarComment extends Comment {
 		return variableReference;
 	}
 
-	public TypeReference getTypeReference() {
+	public TypeReference[] getTypeReferences() {
 		return typeReference;
 	}
 }

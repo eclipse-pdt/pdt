@@ -869,7 +869,7 @@ NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\x7f-\xff\n\r]|({LABEL}([^a-zA-Z0-9_\x
 	} 
 }
 
-<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}("$"?){LABEL}{WHITESPACE}(("\\"?){LABEL})*{WHITESPACE}?"*/" {
+<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}("$"?){LABEL}{WHITESPACE}(("\\"|{LABEL}|"|")+)*{WHITESPACE}?"*/" {
     handleVarComment();
     //return createFullSymbol(ParserConstants.T_VAR_COMMENT);
 }

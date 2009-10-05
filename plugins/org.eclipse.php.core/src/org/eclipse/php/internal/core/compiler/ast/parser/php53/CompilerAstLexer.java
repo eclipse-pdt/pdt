@@ -12,23 +12,20 @@
 package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import java_cup.runtime.Symbol;
 
-import org.eclipse.dltk.ast.references.TypeReference;
-import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 
-public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer {
+public class CompilerAstLexer extends
+		org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer {
 
-	private static final Pattern VAR_COMMENT_PATTERN = Pattern.compile("(.*)(\\$[^\\s]+)(\\s+)([^\\s]+).*");
 	private PHPDocBlock latestDocBlock;
 
 	public CompilerAstLexer(InputStream in) {
@@ -41,29 +38,18 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 
 	protected void handleVarComment() {
 		String content = yytext();
-
-		Matcher m = VAR_COMMENT_PATTERN.matcher(content);
-		if (m.matches()) {
-			int start = getTokenStartPosition();
-			int end = start + getTokenLength();
-
-			int varStart = start + m.group(1).length();
-			String varName = m.group(2);
-			int varEnd = varStart + varName.length();
-			int typeStart = varEnd + m.group(3).length();
-			String typeName = m.group(4);
-			int typeEnd = typeStart + typeName.length();
-
-			VariableReference varReference = new VariableReference(varStart, varEnd, varName);
-			TypeReference typeReference = new TypeReference(typeStart, typeEnd, typeName);
-			VarComment varComment = new VarComment(start, end, varReference, typeReference);
+		int start = getTokenStartPosition();
+		int end = start + getTokenLength();
+		VarComment varComment = ASTUtils.parseVarComment(content, start, end);
+		if (varComment != null) {
 			getCommentList().add(varComment);
 		}
 	}
 
 	protected void addComment(int type) {
 		int leftPosition = getTokenStartPosition();
-		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), type);
+		Comment comment = new Comment(commentStartPosition, leftPosition
+				+ getTokenLength(), type);
 		getCommentList().add(comment);
 	}
 
@@ -87,19 +73,19 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 		Symbol symbol = super.createSymbol(symbolNumber);
 
 		switch (symbolNumber) {
-			case ParserConstants.T_FUNCTION:
-			case ParserConstants.T_CONST:
-			case ParserConstants.T_VAR:
-			case ParserConstants.T_CLASS:
-			case ParserConstants.T_INTERFACE:
-			case ParserConstants.T_STATIC:
-			case ParserConstants.T_ABSTRACT:
-			case ParserConstants.T_FINAL:
-			case ParserConstants.T_PRIVATE:
-			case ParserConstants.T_PROTECTED:
-			case ParserConstants.T_PUBLIC:
-				symbol.value = latestDocBlock;
-				break;
+		case ParserConstants.T_FUNCTION:
+		case ParserConstants.T_CONST:
+		case ParserConstants.T_VAR:
+		case ParserConstants.T_CLASS:
+		case ParserConstants.T_INTERFACE:
+		case ParserConstants.T_STATIC:
+		case ParserConstants.T_ABSTRACT:
+		case ParserConstants.T_FINAL:
+		case ParserConstants.T_PRIVATE:
+		case ParserConstants.T_PROTECTED:
+		case ParserConstants.T_PUBLIC:
+			symbol.value = latestDocBlock;
+			break;
 		}
 
 		latestDocBlock = null;

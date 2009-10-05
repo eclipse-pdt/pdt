@@ -14,6 +14,8 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -21,19 +23,72 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
+import org.eclipse.dltk.ast.references.TypeReference;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ASTError;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 
 public class ASTUtils {
+
+	private static final Pattern VAR_COMMENT_PATTERN = Pattern
+			.compile("(.*)(\\$[^\\s]+)(\\s+)([^\\s]+).*");
+
+	/**
+	 * Parses @@var comment using regular expressions
+	 * 
+	 * @param content
+	 *            Content of the @@var comment token
+	 * @param start
+	 *            Token start position
+	 * @param end
+	 *            Token end position
+	 * @return {@link VarComment}
+	 */
+	public static VarComment parseVarComment(String content, int start, int end) {
+		Matcher m = VAR_COMMENT_PATTERN.matcher(content);
+		if (m.matches()) {
+			int varStart = start + m.group(1).length();
+			String varName = m.group(2);
+			int varEnd = varStart + varName.length();
+
+			List<TypeReference> typeReferences = new LinkedList<TypeReference>();
+			int typeStart = varEnd + m.group(3).length();
+			String types = m.group(4);
+
+			int pipeIdx = types.indexOf('|');
+			while (pipeIdx >= 0) {
+				String typeName = types.substring(0, pipeIdx);
+				int typeEnd = typeStart + typeName.length();
+				if (typeName.length() > 0) {
+					typeReferences.add(new TypeReference(typeStart, typeEnd,
+							typeName));
+				}
+				types = types.substring(pipeIdx + 1);
+				typeStart += pipeIdx + 1;
+				pipeIdx = types.indexOf('|');
+			}
+			String typeName = types;
+			int typeEnd = typeStart + typeName.length();
+			if (typeName.length() > 0) {
+				typeReferences.add(new TypeReference(typeStart, typeEnd,
+						typeName));
+			}
+
+			VariableReference varReference = new VariableReference(varStart,
+					varEnd, varName);
+			VarComment varComment = new VarComment(start, end, varReference,
+					(TypeReference[]) typeReferences
+							.toArray(new TypeReference[typeReferences.size()]));
+			return varComment;
+		}
+		return null;
+	}
 
 	/**
 	 * Strips single or double quotes from the start and from the end of the

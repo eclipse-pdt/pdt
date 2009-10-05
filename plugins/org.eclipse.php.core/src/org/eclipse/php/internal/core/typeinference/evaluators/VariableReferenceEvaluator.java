@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
@@ -39,8 +40,9 @@ import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 
 /**
- * This evaluator finds all local variable declarations and produces the following sub-goals:
- *  {@link GlobalVariableReferencesGoal} or {@link VariableDeclarationGoal}
+ * This evaluator finds all local variable declarations and produces the
+ * following sub-goals: {@link GlobalVariableReferencesGoal} or
+ * {@link VariableDeclarationGoal}
  */
 public class VariableReferenceEvaluator extends GoalEvaluator {
 
@@ -51,7 +53,8 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] init() {
-		VariableReference variableReference = (VariableReference) ((ExpressionTypeGoal) goal).getExpression();
+		VariableReference variableReference = (VariableReference) ((ExpressionTypeGoal) goal)
+				.getExpression();
 		IContext context = goal.getContext();
 
 		// Handle $this variable reference
@@ -72,18 +75,26 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 			if (context instanceof ISourceModuleContext) {
 				ISourceModuleContext typedContext = (ISourceModuleContext) context;
 				ModuleDeclaration node = typedContext.getRootNode();
-				LocalReferenceDeclSearcher varDecSearcher = new LocalReferenceDeclSearcher(typedContext.getSourceModule(), variableReference);
+				LocalReferenceDeclSearcher varDecSearcher = new LocalReferenceDeclSearcher(
+						typedContext.getSourceModule(), variableReference);
 				node.traverse(varDecSearcher);
 
 				List<IGoal> subGoals = new LinkedList<IGoal>();
-				
-				List<VarComment> varComments = ((PHPModuleDeclaration)node).getVarComments();
+
+				List<VarComment> varComments = ((PHPModuleDeclaration) node)
+						.getVarComments();
 				for (VarComment varComment : varComments) {
-					if (varComment.sourceStart() > variableReference.sourceStart()) {
+					if (varComment.sourceStart() > variableReference
+							.sourceStart()) {
 						break;
 					}
-					if (varComment.getVariableReference().getName().equals(variableReference.getName())) {
-						return new IGoal[] { new ExpressionTypeGoal(context, varComment.getTypeReference()) };
+					if (varComment.getVariableReference().getName().equals(
+							variableReference.getName())) {
+						List<IGoal> goals = new LinkedList<IGoal>();
+						for (TypeReference ref : varComment.getTypeReferences()) {
+							goals.add(new ExpressionTypeGoal(context, ref));
+						}
+						return (IGoal[]) goals.toArray(new IGoal[goals.size()]);
 					}
 				}
 
@@ -96,16 +107,21 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					} else {
 						ASTNode declNode = decl.getNode();
 						if (declNode instanceof ForEachStatement) {
-							subGoals.add(new ForeachStatementGoal(context, ((ForEachStatement) declNode).getExpression()));
-						}
-						else {
-							subGoals.add(new ExpressionTypeGoal(context, declNode));
+							subGoals.add(new ForeachStatementGoal(context,
+									((ForEachStatement) declNode)
+											.getExpression()));
+						} else {
+							subGoals.add(new ExpressionTypeGoal(context,
+									declNode));
 						}
 					}
 				}
-				if (mergeWithGlobalScope || (decls.length == 0 && context.getClass() == FileContext.class)) {
-					// collect all global variables, and merge results with existing declarations
-					subGoals.add(new GlobalVariableReferencesGoal(context, variableReference.getName()));
+				if (mergeWithGlobalScope
+						|| (decls.length == 0 && context.getClass() == FileContext.class)) {
+					// collect all global variables, and merge results with
+					// existing declarations
+					subGoals.add(new GlobalVariableReferencesGoal(context,
+							variableReference.getName()));
 				}
 				return subGoals.toArray(new IGoal[subGoals.size()]);
 			}
@@ -129,24 +145,30 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	public static class LocalReferenceDeclSearcher extends org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher {
+	public static class LocalReferenceDeclSearcher
+			extends
+			org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher {
 
 		private final String variableName;
 		private final int variableOffset;
 		private IContext variableContext;
 		private int variableLevel;
 
-		public LocalReferenceDeclSearcher(ISourceModule sourceModule, VariableReference variableReference) {
+		public LocalReferenceDeclSearcher(ISourceModule sourceModule,
+				VariableReference variableReference) {
 			super(sourceModule);
 			variableName = variableReference.getName();
 			variableOffset = variableReference.sourceStart();
 		}
 
 		public Declaration[] getDeclarations() {
-			Declaration[] declarations = getScope(variableContext).getDeclarations(variableName);
+			Declaration[] declarations = getScope(variableContext)
+					.getDeclarations(variableName);
 			if (variableLevel > 0 && variableLevel < declarations.length) {
-				Declaration[] newDecls = new Declaration[declarations.length - variableLevel];
-				System.arraycopy(declarations, variableLevel, newDecls, 0, newDecls.length);
+				Declaration[] newDecls = new Declaration[declarations.length
+						- variableLevel];
+				System.arraycopy(declarations, variableLevel, newDecls, 0,
+						newDecls.length);
 				declarations = newDecls;
 			}
 			return declarations;
@@ -154,16 +176,18 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 
 		protected void postProcess(Expression node) {
 			if (node instanceof InstanceOfExpression) {
-				InstanceOfExpression expr = (InstanceOfExpression)node;
+				InstanceOfExpression expr = (InstanceOfExpression) node;
 				if (expr.getExpr() instanceof VariableReference) {
-					VariableReference varReference = (VariableReference)expr.getExpr();
+					VariableReference varReference = (VariableReference) expr
+							.getExpr();
 					if (variableName.equals(varReference.getName())) {
-						getScope().addDeclaration(variableName, expr.getClassName());
+						getScope().addDeclaration(variableName,
+								expr.getClassName());
 					}
 				}
 			}
 		}
-		
+
 		protected void postProcessGeneral(ASTNode node) {
 			if (node.sourceStart() == variableOffset) {
 				variableContext = contextStack.peek();
@@ -173,7 +197,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 
 		protected void postProcess(Statement node) {
 		}
-		
+
 		protected boolean isInteresting(ASTNode node) {
 			return node.sourceStart() <= variableOffset;
 		}
