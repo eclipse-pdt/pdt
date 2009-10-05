@@ -7,10 +7,10 @@ Test Commented Variable With 2 Global Class Types and spaces in PHPDoc
 	} 
 	
 	class Foobar2 {
-		public function nonsense1(){} 
+		public function nonsense2(){} 
 	} 
 	
-	/* @var $obj \Foobar1 | \Foobar2 */ 
+	/* @var $obj \Foobar1|\Foobar2 */ 
 	$obj = null; 
 	$obj->|
  ?>
