@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
@@ -365,12 +366,19 @@ public class PHPContentOutlineConfiguration extends
 
 		public String getText(Object element) {
 			if (element instanceof UseStatementsNode) {
-				return PHPUIMessages.getString("PHPContentOutlineConfiguration.2"); //$NON-NLS-1$
+				return PHPUIMessages
+						.getString("PHPContentOutlineConfiguration.2"); //$NON-NLS-1$
 			}
 			if (element instanceof UseStatementElement) {
-				return NLS.bind(PHPUIMessages.getString("PHPContentOutlineConfiguration.3"), super.getText(element), //$NON-NLS-1$
-						((UseStatementElement) element).getUsePart().getAlias()
-								.getName());
+				SimpleReference alias = ((UseStatementElement) element)
+						.getUsePart().getAlias();
+				if (alias != null) {
+					return NLS
+							.bind(
+									PHPUIMessages
+											.getString("PHPContentOutlineConfiguration.3"), super.getText(element), //$NON-NLS-1$
+									alias.getName());
+				}
 			}
 			return super.getText(element);
 		}
