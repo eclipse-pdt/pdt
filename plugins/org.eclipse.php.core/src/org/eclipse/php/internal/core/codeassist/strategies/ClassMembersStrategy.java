@@ -122,6 +122,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 */
 	protected boolean isFiltered(IMember member, ClassMemberContext context)
 			throws ModelException {
+
 		if (context.getPhpVersion() == PHPVersion.PHP4) {
 			if (!isVisible(member, context)) {
 				return true;
@@ -136,6 +137,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				return true;
 			}
 			return false;
+
 		} else if (context.getPhpVersion().isGreaterThan(PHPVersion.PHP4)) {
 			/* check 0 */
 			int flags = member.getFlags();
@@ -173,17 +175,9 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 								return true;// 2:4
 							}
 						} else if (PHPFlags.isPublic(flags)) {
-							if (isParent(context)) { // is Parent
-								return false; // 3:1, 4:1
-							} else if (isSelfKeyword(context)) {
-								return false;// 3:2, 4:2
-							} else if (isStaticAccessFromInsideClass(context)) {
-								return false;// 3:3, 4:3
-							} else if (isStaticAccessFromOutsideClass(context)
-									&& showStrictOptions()) {
-								return false;// 3:4, 4:4
-							}
+							return false;
 						}
+
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
 						if (PHPFlags.isPrivate(flags)) {
 							if (isThisKeyWord(context) && showStrictOptions()) {
