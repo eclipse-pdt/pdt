@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.ui.console.FileLink;
@@ -31,11 +32,11 @@ import org.eclipse.ui.ide.IDE;
 import com.ibm.icu.text.MessageFormat;
 
 /**
- *
+ * 
  * @author seva
- *
- * A version of {@link FileLink} which also supports external resources
- *
+ * 
+ *         A version of {@link FileLink} which also supports external resources
+ * 
  */
 public class PHPFileLink implements IHyperlink {
 
@@ -44,28 +45,38 @@ public class PHPFileLink implements IHyperlink {
 
 	/**
 	 * Constructs a hyperlink to the specified file.
-	 *
-	 * @param fileName The file name to open
-	 * @param lineNumber The line number to select
+	 * 
+	 * @param fileName
+	 *            The file name to open
+	 * @param lineNumber
+	 *            The line number to select
 	 */
 	public PHPFileLink(String fileName, int lineNumber) {
 		this.fileName = fileName;
 		this.lineNumber = lineNumber;
 	}
-	
+
 	public void linkActivated() {
 		Object element = findSourceModule(fileName);
-		if (element == null) {
-			// did not find source
-			MessageDialog.openInformation(PHPDebugUIPlugin.getActiveWorkbenchShell(), "Information", MessageFormat.format("Source not found for {0}", new Object[] { fileName }));
+		if (element != null) {
+			openElementInEditor(element);
 			return;
 		}
-		openElementInEditor(element);
+		try {
+			if (EditorUtility.openInEditor(fileName, lineNumber) != null) {
+				return;
+			}
+		} catch (CoreException e) {
+		}
+		// did not find source
+		MessageDialog.openInformation(PHPDebugUIPlugin
+				.getActiveWorkbenchShell(), "Information", MessageFormat
+				.format("Source not found for {0}", new Object[] { fileName }));
 	}
-	
+
 	protected void openElementInEditor(Object element) {
 		Assert.isNotNull(element);
-		
+
 		IEditorInput input = EditorUtility.getEditorInput(element);
 		if (input == null) {
 			return;
@@ -78,11 +89,12 @@ public class PHPFileLink implements IHyperlink {
 			EditorUtility.revealInEditor(editor, lineNumber);
 		} catch (PartInitException e) {
 			PHPDebugUIPlugin.log(e);
-		}	
+		}
 	}
 
 	/**
-	 * Finds {@link IFile} or {@link ISourceModule} matching the specified file name
+	 * Finds {@link IFile} or {@link ISourceModule} matching the specified file
+	 * name
 	 * 
 	 * @param fileName
 	 * @return
@@ -95,7 +107,8 @@ public class PHPFileLink implements IHyperlink {
 			return f;
 		}
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
-		PHPConsoleSourceModuleLookup lookup = new PHPConsoleSourceModuleLookup(toolkit);
+		PHPConsoleSourceModuleLookup lookup = new PHPConsoleSourceModuleLookup(
+				toolkit);
 		return lookup.findSourceModuleByLocalPath(path);
 	}
 
