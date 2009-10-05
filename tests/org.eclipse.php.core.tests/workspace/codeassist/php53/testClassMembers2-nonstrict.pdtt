@@ -24,6 +24,7 @@ class A {
 \NS\A::|
 ?>
 --EXPECT--
+field($staticField)
 field(CONSTANT_FIELD)
 method(defaultStaticFunction)
 method(publicStaticFunction)

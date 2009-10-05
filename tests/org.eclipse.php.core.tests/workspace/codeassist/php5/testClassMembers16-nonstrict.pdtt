@@ -61,6 +61,8 @@ A::|
 
 ?>
 --EXPECT--
+field($staticPublicField)
+field($staticDefaultField)
 field(CONSTANT_FIELD)
 method(defaultStaticFunction)
 method(publicStaticFunction)

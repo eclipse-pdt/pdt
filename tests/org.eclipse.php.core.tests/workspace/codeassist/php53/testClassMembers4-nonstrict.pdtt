@@ -24,4 +24,4 @@ class A {
 A::$|
 ?>
 --EXPECT--
-
+field($staticField)

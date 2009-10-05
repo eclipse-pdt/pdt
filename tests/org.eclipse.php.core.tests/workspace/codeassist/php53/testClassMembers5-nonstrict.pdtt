@@ -26,6 +26,7 @@ class B extends \NS\A {
 B::|
 ?>
 --EXPECT--
+field($staticField)
 field(CONSTANT_FIELD)
 method(defaultStaticFunction)
 method(publicStaticFunction)

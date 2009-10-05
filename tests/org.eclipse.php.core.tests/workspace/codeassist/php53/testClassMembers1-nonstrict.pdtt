@@ -27,6 +27,7 @@ use NS as Z;
 Z\A::|
 ?>
 --EXPECT--
+field($staticField)
 field(CONSTANT_FIELD)
 method(defaultStaticFunction)
 method(publicStaticFunction)
