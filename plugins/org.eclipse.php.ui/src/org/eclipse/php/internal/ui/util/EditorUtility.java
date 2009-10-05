@@ -55,28 +55,34 @@ import org.eclipse.ui.texteditor.TextEditorAction;
 public class EditorUtility {
 
 	/**
-	 * Appends to modifier string of the given SWT modifier bit
-	 * to the given modifierString.
-	 *
-	 * @param modifierString	the modifier string
-	 * @param modifier			an int with SWT modifier bit
+	 * Appends to modifier string of the given SWT modifier bit to the given
+	 * modifierString.
+	 * 
+	 * @param modifierString
+	 *            the modifier string
+	 * @param modifier
+	 *            an int with SWT modifier bit
 	 * @return the concatenated modifier string
 	 * @since 2.1.1
 	 */
-	private static String appendModifierString(String modifierString, final int modifier) {
+	private static String appendModifierString(String modifierString,
+			final int modifier) {
 		if (modifierString == null)
 			modifierString = ""; //$NON-NLS-1$
 		final String newModifierString = Action.findModifierString(modifier);
 		if (modifierString.length() == 0)
 			return newModifierString;
-		return NLS.bind(PHPUIMessages.getString("EditorUtility_concatModifierStrings"), modifierString, newModifierString);
+		return NLS.bind(PHPUIMessages
+				.getString("EditorUtility_concatModifierStrings"),
+				modifierString, newModifierString);
 	}
 
 	/**
-	 * Maps the localized modifier name to a code in the same
-	 * manner as #findModifier.
-	 *
-	 * @param modifierName the modifier name
+	 * Maps the localized modifier name to a code in the same manner as
+	 * #findModifier.
+	 * 
+	 * @param modifierName
+	 *            the modifier name
 	 * @return the SWT modifier bit, or <code>0</code> if no match was found
 	 * @since 2.1.1
 	 */
@@ -90,15 +96,16 @@ public class EditorUtility {
 			return SWT.SHIFT;
 		if (modifierName.equalsIgnoreCase(Action.findModifierString(SWT.ALT)))
 			return SWT.ALT;
-		if (modifierName.equalsIgnoreCase(Action.findModifierString(SWT.COMMAND)))
+		if (modifierName.equalsIgnoreCase(Action
+				.findModifierString(SWT.COMMAND)))
 			return SWT.COMMAND;
 
 		return 0;
 	}
 
 	/**
-	 * If the current active editor edits a php element return it, else
-	 * return null
+	 * If the current active editor edits a php element return it, else return
+	 * null
 	 */
 	public static IModelElement getActiveEditorPHPInput() {
 		final IWorkbenchPage page = PHPUiPlugin.getActivePage();
@@ -107,7 +114,8 @@ public class EditorUtility {
 			if (part != null) {
 				final IEditorInput editorInput = part.getEditorInput();
 				if (editorInput != null)
-					return (IModelElement) editorInput.getAdapter(IModelElement.class);
+					return (IModelElement) editorInput
+							.getAdapter(IModelElement.class);
 			}
 		}
 		return null;
@@ -120,7 +128,8 @@ public class EditorUtility {
 		InputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
-			return Platform.getContentTypeManager().findContentTypeFor(stream, file.getName());
+			return Platform.getContentTypeManager().findContentTypeFor(stream,
+					file.getName());
 		} catch (final IOException x) {
 			Logger.logException(x);
 			return null;
@@ -137,7 +146,8 @@ public class EditorUtility {
 	private static String getEditorId(final File file) {
 		final IWorkbench workbench = PHPUiPlugin.getDefault().getWorkbench();
 		final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
-		final IEditorDescriptor descriptor = editorRegistry.getDefaultEditor(file.getName(), getContentType(file));
+		final IEditorDescriptor descriptor = editorRegistry.getDefaultEditor(
+				file.getName(), getContentType(file));
 		if (descriptor != null)
 			return descriptor.getId();
 		return null;
@@ -148,7 +158,8 @@ public class EditorUtility {
 		try {
 			if (input instanceof LocalFileStorageEditorInput) {
 				final LocalFileStorageEditorInput localFileInput = (LocalFileStorageEditorInput) input;
-				final LocalFileStorage fileStorage = (LocalFileStorage) localFileInput.getStorage();
+				final LocalFileStorage fileStorage = (LocalFileStorage) localFileInput
+						.getStorage();
 				if (fileStorage != null) {
 					final File file = fileStorage.getFile();
 					if (file != null) {
@@ -183,7 +194,8 @@ public class EditorUtility {
 		return null;
 	}
 
-	private static IEditorInput getEditorInput(final IModelElement element, final IProject project, final String incDir) {
+	private static IEditorInput getEditorInput(final IModelElement element,
+			final IProject project, final String incDir) {
 		final IResource resource = element.getResource();
 		if (resource instanceof IFile)
 			return new FileEditorInput((IFile) resource);
@@ -192,7 +204,7 @@ public class EditorUtility {
 	}
 
 	private static IEditorInput getEditorInput(IModelElement element) {
-		// [Taken from:  org.eclipse.dltk.internal.ui.editor.EditorUtility]
+		// [Taken from: org.eclipse.dltk.internal.ui.editor.EditorUtility]
 		while (element != null) {
 			if (element instanceof IExternalSourceModule) {
 				ISourceModule unit = ((ISourceModule) element).getPrimary();
@@ -213,10 +225,10 @@ public class EditorUtility {
 	}
 
 	/**
-	 * Returns the modifier string for the given SWT modifier
-	 * modifier bits.
-	 *
-	 * @param stateMask	the SWT modifier bits
+	 * Returns the modifier string for the given SWT modifier modifier bits.
+	 * 
+	 * @param stateMask
+	 *            the SWT modifier bits
 	 * @return the modifier string
 	 * @since 2.1.1
 	 */
@@ -236,15 +248,21 @@ public class EditorUtility {
 
 	private static void initializeHighlightRange(final IEditorPart editorPart) {
 		if (editorPart instanceof ITextEditor) {
-			final IAction toggleAction = editorPart.getEditorSite().getActionBars().getGlobalActionHandler(ITextEditorActionDefinitionIds.TOGGLE_SHOW_SELECTED_ELEMENT_ONLY);
+			final IAction toggleAction = editorPart
+					.getEditorSite()
+					.getActionBars()
+					.getGlobalActionHandler(
+							ITextEditorActionDefinitionIds.TOGGLE_SHOW_SELECTED_ELEMENT_ONLY);
 			boolean enable = toggleAction != null;
-			enable = enable && toggleAction.isEnabled() && toggleAction.isChecked();
+			enable = enable && toggleAction.isEnabled()
+					&& toggleAction.isChecked();
 			if (enable)
 				if (toggleAction instanceof TextEditorAction) {
 					// Reset the action
 					((TextEditorAction) toggleAction).setEditor(null);
 					// Restore the action
-					((TextEditorAction) toggleAction).setEditor((ITextEditor) editorPart);
+					((TextEditorAction) toggleAction)
+							.setEditor((ITextEditor) editorPart);
 				} else {
 					// Un-check
 					toggleAction.run();
@@ -254,7 +272,8 @@ public class EditorUtility {
 		}
 	}
 
-	public static boolean isEditorInput(final Object element, final IEditorPart editor) {
+	public static boolean isEditorInput(final Object element,
+			final IEditorPart editor) {
 		if (editor != null)
 			return editor.getEditorInput().equals(getEditorInput(element));
 		return false;
@@ -262,7 +281,9 @@ public class EditorUtility {
 
 	/**
 	 * Tests if a CU is currently shown in an editor
-	 * @return the IEditorPart if shown, null if element is not open in an editor
+	 * 
+	 * @return the IEditorPart if shown, null if element is not open in an
+	 *         editor
 	 */
 	public static IEditorPart isOpenInEditor(final Object inputElement) {
 		IEditorInput input = null;
@@ -281,11 +302,14 @@ public class EditorUtility {
 		return null;
 	}
 
-	public static IEditorPart openInEditor(final IEditorInput input, final String editorID, final boolean activate) throws PartInitException {
+	public static IEditorPart openInEditor(final IEditorInput input,
+			final String editorID, final boolean activate)
+			throws PartInitException {
 		if (input != null) {
 			final IWorkbenchPage p = PHPUiPlugin.getActivePage();
 			if (p != null) {
-				final IEditorPart editorPart = p.openEditor(input, editorID, activate);
+				final IEditorPart editorPart = p.openEditor(input, editorID,
+						activate);
 				initializeHighlightRange(editorPart);
 				return editorPart;
 			}
@@ -293,11 +317,13 @@ public class EditorUtility {
 		return null;
 	}
 
-	public static IEditorPart openInEditor(final IFile file, final boolean activate) throws PartInitException {
+	public static IEditorPart openInEditor(final IFile file,
+			final boolean activate) throws PartInitException {
 		if (file != null) {
 			final IWorkbenchPage p = PHPUiPlugin.getActivePage();
 			if (p != null) {
-				final IEditorPart editorPart = IDE.openEditor(p, file, activate);
+				final IEditorPart editorPart = IDE
+						.openEditor(p, file, activate);
 				initializeHighlightRange(editorPart);
 				return editorPart;
 			}
@@ -306,19 +332,24 @@ public class EditorUtility {
 	}
 
 	/**
-	 * Opens a PHP editor for an element such as <code>IModelElement</code>, <code>IFile</code>, <code>IStorage</code> or <code>IEditorInput</code>.
+	 * Opens a PHP editor for an element such as <code>IModelElement</code>,
+	 * <code>IFile</code>, <code>IStorage</code> or <code>IEditorInput</code>.
 	 * The editor is activated by default.
+	 * 
 	 * @return the IEditorPart or null if wrong element type or opening failed
 	 */
-	public static IEditorPart openInEditor(final Object inputElement) throws PartInitException {
+	public static IEditorPart openInEditor(final Object inputElement)
+			throws PartInitException {
 		return openInEditor(inputElement, true);
 	}
 
 	/**
 	 * Opens a PHP editor for an element (IModelElement, IFile, IStorage...)
+	 * 
 	 * @return the IEditorPart or null if wrong element type or opening failed
 	 */
-	public static IEditorPart openInEditor(final Object inputElement, final boolean activate) throws PartInitException {
+	public static IEditorPart openInEditor(final Object inputElement,
+			final boolean activate) throws PartInitException {
 
 		if (inputElement instanceof IFile)
 			return openInEditor((IFile) inputElement, activate);
@@ -331,7 +362,8 @@ public class EditorUtility {
 
 		if (input != null) {
 			if (input instanceof NonExistingPHPFileEditorInput) {
-				return openInEditor(input, PHPUiConstants.PHP_EDITOR_ID, activate);
+				return openInEditor(input, PHPUiConstants.PHP_EDITOR_ID,
+						activate);
 			}
 			return openInEditor(input, getEditorID(input), activate);
 		}
@@ -346,8 +378,11 @@ public class EditorUtility {
 				// If a line number was given, go to it
 				try {
 					lineNumber = lineNumber - 1;
-					IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
-					textEditor.selectAndReveal(document.getLineOffset(lineNumber), document.getLineLength(lineNumber));
+					IDocument document = textEditor.getDocumentProvider()
+							.getDocument(textEditor.getEditorInput());
+					textEditor.selectAndReveal(document
+							.getLineOffset(lineNumber), document
+							.getLineLength(lineNumber));
 				} catch (BadLocationException e) {
 					// invalid text position -> do nothing
 				}
@@ -359,22 +394,27 @@ public class EditorUtility {
 	/**
 	 * Opens a PHP editor for file and line number
 	 * 
-	 * @throws CoreException 
+	 * @throws CoreException
 	 */
-	public static IEditorPart openInEditor(final String fileName, int lineNumber) throws CoreException {
+	public static IEditorPart openInEditor(final String fileName, int lineNumber)
+			throws CoreException {
 
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IWorkspaceRoot root = workspace.getRoot();
 
 		// TODO - check if no error occurs with untitled php files
-		//		try {
-		//			Path errorFilePath = new Path(fileName);
-		//			if (errorFilePath.segmentCount() > 1 && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
-		//				IEditorPart editor = openInEditor(new NonExistingPHPFileEditorInput(errorFilePath), PHPUiConstants.PHP_UNTITLED_EDITOR_ID, true);
-		//				return revealInEditor(editor, lineNumber);
-		//			}
-		//		} catch (RuntimeException e) { // if new Path() fails - do nothing
-		//		}
+		// try {
+		// Path errorFilePath = new Path(fileName);
+		// if (errorFilePath.segmentCount() > 1 &&
+		// errorFilePath.segment(errorFilePath.segmentCount() -
+		// 2).equalsIgnoreCase("Untitled_Documents")) {
+		// IEditorPart editor = openInEditor(new
+		// NonExistingPHPFileEditorInput(errorFilePath),
+		// PHPUiConstants.PHP_UNTITLED_EDITOR_ID, true);
+		// return revealInEditor(editor, lineNumber);
+		// }
+		// } catch (RuntimeException e) { // if new Path() fails - do nothing
+		// }
 
 		IPath path = new Path(fileName);
 		IFile file = root.getFileForLocation(path);
@@ -402,34 +442,19 @@ public class EditorUtility {
 		if (!file.exists()) {
 			File localFile = new File(fileName);
 			if (localFile.exists()) {
+
 				IEditorInput editorInput = null;
-
-				// If this file is external - put it into the external files registry
-				//				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-				//					IFile localIFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				//					if (!localIFile.exists()) {
-				//						IFile externalFile = ExternalFileWrapper.createFile(fileName);
-				//						ExternalFilesRegistry.getInstance().addFileEntry(fileName, externalFile);
-				//					}
-				//				}
-
-				// If this is external file:
-				//				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-				//					editorInput = new FileStoreEditorInput(new LocalFile(localFile));
-				//				} else {
 				LocalFileStorage fileStorage = new LocalFileStorage(localFile);
 				fileStorage.setProject(file.getProject());
 				editorInput = new LocalFileStorageEditorInput(fileStorage);
-				//				}
 
-				//				if (editorInput != null) {
 				final IWorkbenchPage p = PHPUiPlugin.getActivePage();
 				if (p != null) {
-					IEditorPart part = openInEditor(editorInput, getEditorID(editorInput), true);
+					IEditorPart part = openInEditor(editorInput,
+							getEditorID(editorInput), true);
 					return revealInEditor(part, lineNumber);
 				}
 				return null;
-				//				}
 			}
 		}
 
@@ -439,7 +464,8 @@ public class EditorUtility {
 
 		final IMarker marker = file.createMarker(IMarker.TEXT);
 		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-		//marker.setAttribute(IDE.EDITOR_ID_ATTR, PHPUiConstants.PHP_EDITOR_ID);
+		// marker.setAttribute(IDE.EDITOR_ID_ATTR,
+		// PHPUiConstants.PHP_EDITOR_ID);
 		final IWorkbenchPage p = PHPUiPlugin.getActivePage();
 
 		IEditorPart editor = null;
@@ -452,7 +478,8 @@ public class EditorUtility {
 	/**
 	 * Selects and reveals the given offset and length in the given editor part.
 	 */
-	public static void revealInEditor(final IEditorPart editor, final int offset, final int length) {
+	public static void revealInEditor(final IEditorPart editor,
+			final int offset, final int length) {
 		if (editor instanceof ITextEditor) {
 			((ITextEditor) editor).selectAndReveal(offset, length);
 			return;
@@ -464,12 +491,15 @@ public class EditorUtility {
 			if (input instanceof IFileEditorInput) {
 				final IGotoMarker gotoMarkerTarget = (IGotoMarker) editor;
 				final WorkspaceModifyOperation op = new WorkspaceModifyOperation() {
-					protected void execute(IProgressMonitor monitor) throws CoreException {
+					protected void execute(IProgressMonitor monitor)
+							throws CoreException {
 						IMarker marker = null;
 						try {
-							marker = ((IFileEditorInput) input).getFile().createMarker(IMarker.TEXT);
+							marker = ((IFileEditorInput) input).getFile()
+									.createMarker(IMarker.TEXT);
 							marker.setAttribute(IMarker.CHAR_START, offset);
-							marker.setAttribute(IMarker.CHAR_END, offset + length);
+							marker.setAttribute(IMarker.CHAR_END, offset
+									+ length);
 
 							gotoMarkerTarget.gotoMarker(marker);
 
@@ -491,12 +521,14 @@ public class EditorUtility {
 			return;
 		}
 
-		if (editor != null && editor.getEditorSite().getSelectionProvider() != null) {
+		if (editor != null
+				&& editor.getEditorSite().getSelectionProvider() != null) {
 			final IEditorSite site = editor.getEditorSite();
 			if (site == null)
 				return;
 
-			final ISelectionProvider provider = editor.getEditorSite().getSelectionProvider();
+			final ISelectionProvider provider = editor.getEditorSite()
+					.getSelectionProvider();
 			if (provider == null)
 				return;
 
@@ -507,25 +539,24 @@ public class EditorUtility {
 	/**
 	 * Selects and reveals the given region in the given editor part.
 	 */
-	public static void revealInEditor(final IEditorPart part, final IRegion region) {
+	public static void revealInEditor(final IEditorPart part,
+			final IRegion region) {
 		if (part != null && region != null)
 			revealInEditor(part, region.getOffset(), region.getLength());
 	}
 
 	/**
-	 * Selects a PHP Element in an editor
-	 * (based on DLTK model)
+	 * Selects a PHP Element in an editor (based on DLTK model)
 	 */
 	public static void revealInEditor(IEditorPart part, IModelElement element) {
 		if (element == null)
 			return;
-		/*		if (part instanceof ScriptEditor) {
-					((ScriptEditor) part).setSelection(element);
-					if (DLTKCore.DEBUG) {
-						System.err.println("Add revealInEditor set selection"); //$NON-NLS-1$
-					}
-					return;
-				}*/
+		/*
+		 * if (part instanceof ScriptEditor) { ((ScriptEditor)
+		 * part).setSelection(element); if (DLTKCore.DEBUG) {
+		 * System.err.println("Add revealInEditor set selection"); //$NON-NLS-1$
+		 * } return; }
+		 */
 		// Support for non-Script editor
 		try {
 			ISourceRange range = null;
@@ -555,38 +586,46 @@ public class EditorUtility {
 	 * Selects a PHP Element in an editor
 	 * 
 	 * @param editor
-	 * @return the php editor (if exists) from the given editor
-	 * NOTE: editors that wants to work with PHP editor actions must implement the getAdapter() method
-	 *       this way the actions pick the php editor...
+	 * @return the php editor (if exists) from the given editor NOTE: editors
+	 *         that wants to work with PHP editor actions must implement the
+	 *         getAdapter() method this way the actions pick the php editor...
 	 */
-	public static final PHPStructuredEditor getPHPStructuredEditor(final IWorkbenchPart editor) {
-		return editor != null ? (PHPStructuredEditor) editor.getAdapter(PHPStructuredEditor.class) : null;
+	public static final PHPStructuredEditor getPHPStructuredEditor(
+			final IWorkbenchPart editor) {
+		return editor != null ? (PHPStructuredEditor) editor
+				.getAdapter(PHPStructuredEditor.class) : null;
 	}
 
 	/**
 	 * Returns PHP editor which corresponds to ITextViewer
+	 * 
 	 * @return php editor, or <code>null</code> if no editor found
 	 */
-	public static final PHPStructuredEditor getPHPStructuredEditor(final ITextViewer textViewer) {
-		IWorkbenchPage workbenchpage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+	public static final PHPStructuredEditor getPHPStructuredEditor(
+			final ITextViewer textViewer) {
+		IWorkbenchPage workbenchpage = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage();
 
 		// Check active editor, first:
 		IEditorPart activeEditorPart = workbenchpage.getActiveEditor();
 		if (activeEditorPart instanceof PHPStructuredEditor) {
 			PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) activeEditorPart;
-			if (phpStructuredEditor.getTextViewer().getDocument() == textViewer.getDocument()) {
+			if (phpStructuredEditor.getTextViewer().getDocument() == textViewer
+					.getDocument()) {
 				return phpStructuredEditor;
 			}
 		}
 
 		// Check other editors:
-		IEditorReference[] editorReferences = workbenchpage.getEditorReferences();
+		IEditorReference[] editorReferences = workbenchpage
+				.getEditorReferences();
 		for (int i = 0; i < editorReferences.length; i++) {
 			IEditorReference editorReference = editorReferences[i];
 			IEditorPart editorpart = editorReference.getEditor(false);
 			if (editorpart instanceof PHPStructuredEditor) {
 				PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editorpart;
-				if (phpStructuredEditor.getTextViewer().getDocument() == textViewer.getDocument()) {
+				if (phpStructuredEditor.getTextViewer().getDocument() == textViewer
+						.getDocument()) {
 					return phpStructuredEditor;
 				}
 			}
@@ -596,11 +635,13 @@ public class EditorUtility {
 
 	/**
 	 * Gets a list of File full paths as strings and open them in the editor
-	 * works for both workspace and non- workspace files 
+	 * works for both workspace and non- workspace files
+	 * 
 	 * @param filesToOpen
 	 * @param window
 	 */
-	public static void openFilesInEditor(List<String> filesToOpen, IWorkbenchWindow window) {
+	public static void openFilesInEditor(List<String> filesToOpen,
+			IWorkbenchWindow window) {
 		PHPOpenExternalFileAction action = new PHPOpenExternalFileAction();
 		action.init(window);
 		action.run(filesToOpen);
@@ -611,16 +652,19 @@ public class EditorUtility {
 	 * @param filesToOpen
 	 */
 	public static void openFilesInEditor(List<String> filesToOpen) {
-		openFilesInEditor(filesToOpen, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+		openFilesInEditor(filesToOpen, PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow());
 	}
 
 	/**
 	 * Open a file by the given path at the line specified
+	 * 
 	 * @param filePath
 	 * @param lineNumber
 	 * @param window
 	 */
-	public static void openFileInEditor(String filePath, int lineNumber, IWorkbenchWindow window) {
+	public static void openFileInEditor(String filePath, int lineNumber,
+			IWorkbenchWindow window) {
 		PHPOpenExternalFileAction action = new PHPOpenExternalFileAction();
 		action.init(window);
 		action.run(filePath, lineNumber);
@@ -628,11 +672,13 @@ public class EditorUtility {
 
 	/**
 	 * Open a file by the given path at the line specified
+	 * 
 	 * @param filePath
 	 * @param lineNumber
 	 */
 	public static void openFileInEditor(String filePath, int lineNumber) {
-		openFileInEditor(filePath, lineNumber, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+		openFileInEditor(filePath, lineNumber, PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow());
 	}
 
 	public static IResource getResourceFromEditorInput(IEditorInput input) {
@@ -656,24 +702,33 @@ public class EditorUtility {
 			if (storage instanceof ZipEntryStorage) {
 				resource = ((ZipEntryStorage) storage).getProject();
 			} else if (storage instanceof LocalFileStorage) {
-				// don't create external resource, it's wrong! Include paths should not have a resource.
+				// don't create external resource, it's wrong! Include paths
+				// should not have a resource.
 			} else {
 				// This is, probably, a remote storage:
 				externalPath = storage.getFullPath();
-				//				resource = ExternalFileWrapper.createFile(externalPath.toOSString());
+				// resource =
+				// ExternalFileWrapper.createFile(externalPath.toOSString());
 			}
-		} else if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
-			// External file editor input. It's usually used when opening PHP file
+		} else if (input instanceof IURIEditorInput
+				|| input instanceof NonExistingPHPFileEditorInput) {
+			// External file editor input. It's usually used when opening PHP
+			// file
 			// via "File -> Open File" menu option, or using D&D:
-			//OR
-			// When we are dealing with an Untitled PHP document and the underlying PHP file
-			// does not really exist, but is still considered as an "External" file.
+			// OR
+			// When we are dealing with an Untitled PHP document and the
+			// underlying PHP file
+			// does not really exist, but is still considered as an "External"
+			// file.
 			if (input instanceof NonExistingPHPFileEditorInput) {
-				externalPath = ((NonExistingPHPFileEditorInput) input).getPath(input);
+				externalPath = ((NonExistingPHPFileEditorInput) input)
+						.getPath(input);
 			} else {
-				externalPath = URIUtil.toPath(((IURIEditorInput) input).getURI());
+				externalPath = URIUtil.toPath(((IURIEditorInput) input)
+						.getURI());
 			}
-			//			resource = ExternalFileWrapper.createFile(externalPath.toOSString());
+			// resource =
+			// ExternalFileWrapper.createFile(externalPath.toOSString());
 		}
 
 		return resource;
@@ -681,13 +736,18 @@ public class EditorUtility {
 
 	/**
 	 * Returns the given editor's input as PHP element.
-	 *
-	 * @param editor the editor
-	 * @param primaryOnly if <code>true</code> only primary working copies will be returned
-	 * @return the given editor's input as <code>ITypeRoot</code> or <code>null</code> if none
+	 * 
+	 * @param editor
+	 *            the editor
+	 * @param primaryOnly
+	 *            if <code>true</code> only primary working copies will be
+	 *            returned
+	 * @return the given editor's input as <code>ITypeRoot</code> or
+	 *         <code>null</code> if none
 	 * @since 3.2
 	 */
-	public static IModelElement getEditorInputPhpElement(IEditorPart editor, boolean primaryOnly) {
+	public static IModelElement getEditorInputPhpElement(IEditorPart editor,
+			boolean primaryOnly) {
 		Assert.isNotNull(editor);
 		IEditorInput editorInput = editor.getEditorInput();
 		if (editorInput == null)
@@ -697,7 +757,8 @@ public class EditorUtility {
 		if (je != null || primaryOnly)
 			return je;
 
-		return DLTKUIPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput, false);
+		return DLTKUIPlugin.getDefault().getWorkingCopyManager()
+				.getWorkingCopy(editorInput, false);
 	}
 
 }
