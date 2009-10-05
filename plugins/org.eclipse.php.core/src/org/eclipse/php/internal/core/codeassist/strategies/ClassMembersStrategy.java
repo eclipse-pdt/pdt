@@ -136,8 +136,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				return true;
 			}
 			return false;
-		} else
-		/* check 0 */if (context.getPhpVersion().isGreaterThan(PHPVersion.PHP4)) {
+		} else if (context.getPhpVersion().isGreaterThan(PHPVersion.PHP4)) {
+			/* check 0 */
 			int flags = member.getFlags();
 			if (PHPFlags.isConstant(member.getFlags())) {
 				if (context.getTriggerType() == Trigger.CLASS) {
@@ -145,10 +145,14 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				} else if (context.getTriggerType() == Trigger.OBJECT) {
 					return true;// 17:5-7
 				}
-				/* check 1 */} else if (PHPFlags.isStatic(flags)) {
-				/* check 2 */if (member instanceof IField) {
-					/* check 3 */if (context.getTriggerType() == Trigger.CLASS) {
-						/* check 5 */if (PHPFlags.isPrivate(flags)) {
+				/* check 1 */
+			} else if (PHPFlags.isStatic(flags)) {
+				/* check 2 */
+				if (member instanceof IField) {
+					/* check 3 */
+					if (context.getTriggerType() == Trigger.CLASS) {
+						/* check 5 */
+						if (PHPFlags.isPrivate(flags)) {
 							if (isParent(context)) { // is Parent
 								return true; // 1:1
 							} else if (isSelfKeyword(context)) {
