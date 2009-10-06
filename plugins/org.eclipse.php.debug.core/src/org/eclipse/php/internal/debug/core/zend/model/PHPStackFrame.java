@@ -347,6 +347,8 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		result = prime * result
 				+ ((fResName == null) ? 0 : fResName.hashCode());
 		result = prime * result + ((fThread == null) ? 0 : fThread.hashCode());
+		result = prime * result
+				+ ((fVariables == null) ? 0 : fVariables.hashCode());
 		return result;
 	}
 
@@ -377,6 +379,11 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 			if (other.fThread != null)
 				return false;
 		} else if (!fThread.equals(other.fThread))
+			return false;
+		if (fVariables == null) {
+			if (other.fVariables != null)
+				return false;
+		} else if (!fVariables.equals(other.fVariables))
 			return false;
 		return true;
 	}
