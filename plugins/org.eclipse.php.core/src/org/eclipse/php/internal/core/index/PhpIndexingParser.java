@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.index;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.index2.IIndexingParser;
@@ -24,10 +25,14 @@ public class PhpIndexingParser implements IIndexingParser {
 
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
 				.getModuleDeclaration(module);
-		try {
-			moduleDeclaration.traverse(new PhpIndexingVisitor(requestor));
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (moduleDeclaration != null) {
+			try {
+				moduleDeclaration.traverse(new PhpIndexingVisitor(requestor));
+			} catch (Exception e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
