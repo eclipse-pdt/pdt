@@ -18,7 +18,7 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 <!--
 div.whs1 { float:none; }
 p.whs2 { font-style:normal; }
-img_whs3 { border:none; width:353px; height:446px; float:none; border-style:none; }
+img_whs3 { border:none; border-style:none; width:628px; height:545px; float:none; }
 table.whs4 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs5 { width:7.093%; }
 col.whs6 { width:92.907%; }
@@ -119,7 +119,7 @@ if (window.writeIntopicBar)
 <p>The Code Assist 
  Preferences page is accessed from Window | Preferences | PHP | Editor 
  | Code Assist.</p>
-<p class=picture style="x-condition: PDT;"><img src="code_assist_preferences_pdt.png" x-maintain-ratio="TRUE" width="353px" height="446px" border="0" class="img_whs3"></p>
+<p class=picture style="x-condition: PDT;"><img src="code_assist_preferences_pdt.jpg" x-maintain-ratio="TRUE" alt="code assist preferences" width="628px" height="545px" border="0" class="img_whs3"></p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs4">
 <col class="whs5">
 <col class="whs6">
@@ -148,22 +148,21 @@ if (window.writeIntopicBar)
  assist suggestion will be inserted automatically. </p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Show variables from other 
  files - Shows variables which are in other files in the project.</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Determine object type 
- from other files - Shows objects from other files in the project.</p></li>
 </ul>
 <p class=Strong style="margin-left: 0px;">Filters</p>
-<ul><li class=p-ListBullet1><p class=ListBullet1>Show constants - Displays 
- constants in the code assist list.</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Case sensitive for constants 
- - Constants will be case sensitive.</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Show class names - Displays 
- class names in the code assist list.</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Show non-strict options 
- - Display options which go against PHP strict practice in the code assist 
- list.</p></li>
+<ul><li class=p-ListBullet1><p class=ListBullet1>Respect case sensitivity 
+ – Define statements are used to create global constants. One can “define(‘MY_CONST’, 
+ 5)”, and then use “MY_CONST” all over the application, this property is 
+ used to determine if “my_const” will also be suggested as usage of that 
+ constant.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Show strict options – 
+ PHP alerts users if they access static methods and fields from within 
+ an instance. &nbsp;Users can enable/disable this in the 
+ php.ini file for their php copy and hence can disable the code assist 
+ for these cases.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Group completion options 
  - Groups options according to element type.</p></li>
-</ul>
+	</ul>
 <p class=Strong style="margin-left: 0px;">Auto-activation</p>
 <ul><li class=p-ListBullet1><p class=ListBullet1>Enable auto activation 
  - The code assist list will automatically be displayed.</p></li>

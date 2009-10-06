@@ -1,0 +1,197 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Zend Server Tutorial Example Code 1</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style>
+<!--
+body { border-left-style:None; border-right-style:None; border-bottom-style:None; background-color:Transparent; border-top-style:None; }
+-->
+</style><style type="text/css">
+<!--
+h1.whs1 { color:#00709e; }
+p.whs2 { text-align:right; }
+div.whs3 { width:100%; }
+p.whs4 { text-align:right; x-condition:Product, Online; }
+p.whs5 { text-align:right; x-condition:Online; }
+p.whs6 { text-align:center; x-condition:PDT; text-decoration:underline; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	
+	}
+
+
+	if(1)
+	{
+	
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<h1 class="whs1">Zend Server Tutorial Example Code 1</h1>
+<p class=Note>Note:</p>
+<p class=NoteText>Remember to delete the PHP tags that are inserted by 
+ default when creating a new PHP file before pasting in the code.</p>
+<p>Copy this code into your editor to test Zend Server Event Profiling:</p>
+<p class=code>&lt;?php</p>
+<p class=code>/**</p>
+<p class=code>&nbsp;* Converts Fahrenheit to Celsius (and 
+ back again)</p>
+<p class=code>&nbsp;* </p>
+<p class=code>&nbsp;* This sample application takes a 
+ number of degrees entered by the user and </p>
+<p class=code>&nbsp;* converts them from Fahrenheit to 
+ Celsius or vice versa</p>
+<p class=code>&nbsp;* &nbsp;</p>
+<p class=code>&nbsp;*/</p>
+<p class=code>?&gt;</p>
+<p class=code>&lt;html&gt;</p>
+<p class=code>&lt;head&gt;</p>
+<p class=code>&lt;title&gt;Fahrenheit / Celsius PHP Convertor&lt;/title&gt;</p>
+<p class=code>&lt;/head&gt;</p>
+<p class=code>&lt;body&gt;</p>
+<p class=code>&lt;h1&gt;Fahrenheit / Celsius PHP Convertor&lt;/h1&gt;</p>
+<p class=code>&lt;form method=&quot;get&quot;&gt;</p>
+<p class=code>Enter number of degrees: &lt;input type=&quot;text&quot; 
+ name=&quot;degrees&quot; /&gt;&lt;br /&gt;</p>
+<p class=code>&lt;select name=&quot;conversion&quot;&gt;</p>
+<p class=code>&lt;option value=&quot;ctf&quot;&gt;Celsius to Fahrenheit&lt;/option&gt;</p>
+<p class=code>&lt;option value=&quot;ftc&quot;&gt;Fahrenheit to Celsius&lt;/option&gt;</p>
+<p class=code>&lt;/select&gt;</p>
+<p class=code>&lt;input type=&quot;submit&quot; value=&quot;Convert!&quot; 
+ /&gt;</p>
+<p class=code>&lt;/form&gt;</p>
+<p class=code>&lt;?php</p>
+<p class=code>function myFunction(){</p>
+<p class=code>$degrees = (int) $_GET['degrees'];</p>
+<p class=code>&nbsp;</p>
+<p class=code>switch($_GET['conversion']) {</p>
+<p class=code>&nbsp;</p>
+<p class=code>// Convert Celsius to Fahrenheit</p>
+<p class=code>case 'ctf': </p>
+<p class=code>convertCTF($degrees);</p>
+<p class=code>break;</p>
+<p class=code>// Convert Fahrenheit to Celcius</p>
+<p class=code>case 'ftc':</p>
+<p class=code>convertFTC($degrees);</p>
+<p class=code>break;</p>
+<p class=code>}</p>
+<p class=code>&nbsp;</p>
+<p class=code>&nbsp;</p>
+<p class=code>&nbsp;</p>
+<p class=code>//create a slow down in performance</p>
+<p class=code>for ($a=0 ; $a&lt;10000 ; $a++){</p>
+<p class=code>for ($b=0 ; $b&lt;1000 ; $b++){</p>
+<p class=code>$c++;</p>
+<p class=code>}</p>
+<p class=code>}</p>
+<p class=code>}</p>
+<p class=code>function convertCTF($degrees){</p>
+<p class=code>$result = sprintf(&quot;%0.2f&quot;, $degrees * 9 / 5 + 32);</p>
+<p class=code>$message = &quot;$degrees&amp;deg; Celsius is $result&amp;deg; 
+ Fahrenheit&quot;;</p>
+<p class=code>printMessage($message);</p>
+<p class=code>}</p>
+<p class=code>function convertFTC($degrees){</p>
+<p class=code>$result = sprintf(&quot;%0.2f&quot;, ($degrees - 32) * 5 
+ / 9);</p>
+<p class=code>$message = &quot;$degrees&amp;deg; Fahrenheit is $result&amp;deg; 
+ Celsius&quot;;</p>
+<p class=code>printMessage($message);</p>
+<p class=code>}</p>
+<p class=code>function printMessage($message){</p>
+<p class=code>echo &quot;&lt;hr /&gt;&lt;strong&gt;&lt;em&gt;$message&lt;/em&gt;&lt;/strong&gt;&lt;hr 
+ /&gt;&quot;;</p>
+<p class=code>}</p>
+<p class=code>if (isset($_GET['degrees']) &amp;&amp; isset($_GET['conversion'])) 
+ {</p>
+<p class=code>myFunction();</p>
+<p class=code>}</p>
+<p class=code>?&gt;</p>
+<p class=code>&lt;/body&gt;</p>
+<p class=code>&lt;/html&gt;</p>
+<p align="right" class="whs2"><a href="Working_with_Zend_Server.htm#Zend_Server_Profiling">Back 
+ to &quot;Working with Zend Server&quot;</a></p>
+<div placeholder id="footer" class="whs3">
+ <p align="right" class="whs4"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://www.zend.com/en/resources/zend-documentation/Zend-Studio/zend-studio.htm" 
+ style="color: #000000; x-condition: Product, Online;">Online Documentation</a> 
+ for the most up-to-date information.</p>
+ <p align="right" class="whs5"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs6">PHP Development 
+ Tools</p>
+ </div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+
+}
+//-->
+</script>
+</body>
+</html>
