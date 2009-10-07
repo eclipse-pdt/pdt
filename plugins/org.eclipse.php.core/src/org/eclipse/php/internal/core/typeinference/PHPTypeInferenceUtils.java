@@ -58,7 +58,7 @@ public class PHPTypeInferenceUtils {
 
 	public static IEvaluatedType combineTypes(
 			Collection<IEvaluatedType> evaluatedTypes) {
-		Set<IEvaluatedType> types = new HashSet<IEvaluatedType>(
+		Set<IEvaluatedType> types = new LinkedHashSet<IEvaluatedType>(
 				resolveAmbiguousTypes(evaluatedTypes));
 		if (types.contains(null)) {
 			types.remove(null);

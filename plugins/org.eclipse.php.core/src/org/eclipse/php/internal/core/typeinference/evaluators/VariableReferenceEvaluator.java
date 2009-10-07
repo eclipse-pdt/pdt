@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -74,14 +73,19 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		try {
 			if (context instanceof ISourceModuleContext) {
 				ISourceModuleContext typedContext = (ISourceModuleContext) context;
-				ModuleDeclaration node = typedContext.getRootNode();
+				ASTNode rootNode = typedContext.getRootNode();
+				ASTNode localScopeNode = rootNode;
+				if (context instanceof MethodContext) {
+					localScopeNode = ((MethodContext) context).getMethodNode();
+				}
 				LocalReferenceDeclSearcher varDecSearcher = new LocalReferenceDeclSearcher(
-						typedContext.getSourceModule(), variableReference);
-				node.traverse(varDecSearcher);
+						typedContext.getSourceModule(), variableReference,
+						localScopeNode);
+				rootNode.traverse(varDecSearcher);
 
 				List<IGoal> subGoals = new LinkedList<IGoal>();
 
-				List<VarComment> varComments = ((PHPModuleDeclaration) node)
+				List<VarComment> varComments = ((PHPModuleDeclaration) rootNode)
 						.getVarComments();
 				for (VarComment varComment : varComments) {
 					if (varComment.sourceStart() > variableReference
@@ -151,14 +155,16 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 
 		private final String variableName;
 		private final int variableOffset;
+		private final ASTNode localScopeNode;
 		private IContext variableContext;
 		private int variableLevel;
 
 		public LocalReferenceDeclSearcher(ISourceModule sourceModule,
-				VariableReference variableReference) {
+				VariableReference variableReference, ASTNode localScopeNode) {
 			super(sourceModule);
 			variableName = variableReference.getName();
 			variableOffset = variableReference.sourceStart();
+			this.localScopeNode = localScopeNode;
 		}
 
 		public Declaration[] getDeclarations() {
@@ -171,7 +177,15 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 						newDecls.length);
 				declarations = newDecls;
 			}
-			return declarations;
+
+			List<Declaration> filteredDecls = new LinkedList<Declaration>();
+			for (Declaration decl : declarations) {
+				if (decl.getNode().sourceStart() > localScopeNode.sourceStart()) {
+					filteredDecls.add(decl);
+				}
+			}
+			return (Declaration[]) filteredDecls
+					.toArray(new Declaration[filteredDecls.size()]);
 		}
 
 		protected void postProcess(Expression node) {

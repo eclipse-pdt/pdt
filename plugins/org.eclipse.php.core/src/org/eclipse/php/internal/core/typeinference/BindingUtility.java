@@ -32,6 +32,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.VariableReferenceEvaluator;
 
 /**
@@ -303,8 +304,13 @@ public class BindingUtility {
 		ASTNode node = contextFinder.getNode();
 
 		if (node instanceof VariableReference) {
+			ASTNode localScopeNode = rootNode;
+			IContext context = contextFinder.getContext();
+			if (context instanceof MethodContext) {
+				localScopeNode = ((MethodContext) context).getMethodNode();
+			}
 			VariableReferenceEvaluator.LocalReferenceDeclSearcher varDecSearcher = new VariableReferenceEvaluator.LocalReferenceDeclSearcher(
-					sourceModule, (VariableReference) node);
+					sourceModule, (VariableReference) node, localScopeNode);
 			rootNode.traverse(varDecSearcher);
 
 			Declaration[] decls = varDecSearcher.getDeclarations();
