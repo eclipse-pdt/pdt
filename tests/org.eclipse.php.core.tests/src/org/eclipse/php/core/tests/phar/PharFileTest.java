@@ -53,28 +53,27 @@ public class PharFileTest extends AbstractPDTTTest {
 
 	protected static IProject project;
 	protected static IFile testFile;
-	protected static final String Line_Seperator = System
-			.getProperty("line.separator");
+	protected static final String Line_Seperator = "\n";
 	protected static final String Index_Php = "index.php";
 	protected static final String Index_Php_Content = "<?php if (!file_exists(\"config.xml\")) {"
 			+ Line_Seperator
-			+ "include \"install.php\";"
+			+ "	include \"install.php\";"
 			+ Line_Seperator
-			+ "exit;"
+			+ "	exit;"
 			+ Line_Seperator
 			+ "}"
 			+ Line_Seperator
-			+ "var_dump(str_replace(\"\r\n\", \"\n\", file_get_contents(\"config.xml\")));"
+			+ "var_dump(str_replace(\"\\r\\n\", \"\\n\", file_get_contents(\"config.xml\")));"
 			+ Line_Seperator + "?>";
 	protected static final String Install_Php = "install.php";
-	protected static final String Install_Php_Content = "<?php echo \"install\n\"; ?>";
+	protected static final String Install_Php_Content = "<?php echo \"install\\n\"; ?>";
 	protected static final String Stub_Content = "<?php"
 			+ Line_Seperator
 			+ "Phar::interceptFileFuncs();"
 			+ Line_Seperator
 			+ "if(file_exists(dirname(__FILE__) . \"/files/config.xml\")) {"
 			+ Line_Seperator
-			+ "Phar::mount(\"config.xml\", dirname(__FILE__) . \"/files/config.xml\");"
+			+ "    Phar::mount(\"config.xml\", dirname(__FILE__) . \"/files/config.xml\");"
 			+ Line_Seperator + "}" + Line_Seperator
 			+ "Phar::webPhar(\"blog\", \"index.php\");" + Line_Seperator
 			+ "__HALT_COMPILER(); ?>" + Line_Seperator;
@@ -149,18 +148,17 @@ public class PharFileTest extends AbstractPDTTTest {
 		return setup;
 	}
 
-	public static void compareContent(Map<String, String> proposals,
-			PharFile pharFile) throws Exception {
+	public void compareContent(Map<String, String> proposals, PharFile pharFile)
+			throws Exception {
 		Map<String, PharEntry> pharEntryMap = pharFile.getPharEntryMap();
 		for (Iterator<String> iterator = proposals.keySet().iterator(); iterator
 				.hasNext();) {
 			String filename = iterator.next();
 			byte[] bytes = getBytes(pharFile.getInputStream(pharEntryMap
 					.get(filename)));
-			byte[] expected = proposals.get(filename).getBytes();
-			if (!byteArrayEquals(proposals.get(filename).getBytes(), bytes)) {
-				failNotEquals(null, expected, bytes);
-			}
+			String expected = proposals.get(filename);
+
+			assertContents(expected, new String(bytes));
 		}
 	}
 

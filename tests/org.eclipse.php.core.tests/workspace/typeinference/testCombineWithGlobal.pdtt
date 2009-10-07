@@ -12,4 +12,4 @@ function foo() {
 }
 ?>
 --EXPECT--
-Ambigous <A, B>
+Ambigous <B, A>
