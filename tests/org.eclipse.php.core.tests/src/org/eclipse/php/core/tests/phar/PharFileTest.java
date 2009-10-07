@@ -17,7 +17,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.phar.PharConstants;
 import org.eclipse.php.internal.core.phar.PharEntry;
 import org.eclipse.php.internal.core.phar.PharFile;
@@ -117,7 +119,9 @@ public class PharFileTest extends AbstractPDTTTest {
 		for (String testsDirectory : TESTS) {
 			for (final String fileName : getFiles(testsDirectory, ".phar")) {
 				try {
-					final PharFile pharFile = new PharFile(new File(fileName));
+					final PharFile pharFile = new PharFile(new File(FileLocator
+							.getBundleFile(PHPCoreTests.getDefault()
+									.getBundle()), fileName));
 					suite.addTest(new SamplePharTest(fileName, pharFile));
 				} catch (final Exception e) {
 					suite.addTest(new TestCase(fileName) { // dummy
