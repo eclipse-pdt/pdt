@@ -66,7 +66,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		fInitialName = ""; //$NON-NLS-1$
 	}
 
-	private static final String PAGE_NAME = NewWizardMessages.ScriptProjectWizardFirstPage_page_pageName;
+	private static final String PAGE_NAME = NewWizardMessages.ScriptProjectWizardFirstPage_page_title;
 	public static final String ERROR_MESSAGE = "ErrorMessage";
 
 	protected Validator fPdtValidator;
