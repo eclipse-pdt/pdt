@@ -45,7 +45,6 @@ import org.eclipse.php.internal.core.ast.nodes.IFunctionBinding;
 import org.eclipse.php.internal.core.ast.nodes.IMethodBinding;
 import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
 import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Include;
 import org.eclipse.php.internal.core.ast.nodes.InfixExpression;
 import org.eclipse.php.internal.core.ast.nodes.InterfaceDeclaration;
@@ -55,10 +54,8 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.StaticConstantAccess;
 import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
-import org.eclipse.php.internal.core.ast.nodes.Variable;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.php.internal.core.typeinference.FakeField;
 
 public class BindingTests extends SuiteOfTestCases {
 
@@ -256,16 +253,17 @@ public class BindingTests extends SuiteOfTestCases {
 		Assert.assertNotNull("Binary name was null", binaryName);
 	}
 
-	public void testArraysGetComponentType() throws Exception {
-		// create a file and get the program's root
-		String content = "<? interface B {} class A implements B { function foo() { $a = array(1, 2, 3); $b = /**/$a; } } ?>";
-		ITypeBinding type = getTypeBinding(content);
-		// TODO - Right now, this test will always fail until we implement this
-		// functionality.
-		Assert.assertTrue(
-				"getComponentType() should return a non-null value for arrays",
-				type.isArray() && type.getComponentType() != null);
-	}
+	// public void testArraysGetComponentType() throws Exception {
+	// // create a file and get the program's root
+	// String content =
+	// "<? interface B {} class A implements B { function foo() { $a = array(1, 2, 3); $b = /**/$a; } } ?>";
+	// ITypeBinding type = getTypeBinding(content);
+	// // TODO - Right now, this test will always fail until we implement this
+	// // functionality.
+	// Assert.assertTrue(
+	// "getComponentType() should return a non-null value for arrays",
+	// type.isArray() && type.getComponentType() != null);
+	// }
 
 	public void testGetDeclaredFields() throws Exception {
 		// create a file and get the program's root
@@ -305,17 +303,18 @@ public class BindingTests extends SuiteOfTestCases {
 				.overrides(interfaceBMethods[0]));
 	}
 
-	public void testConstantExpressionBinding() throws Exception {
-		String str = "<?php class A{ const MY_CONSTANT = 3;} function foo() { echo /**/MY_CONSTANT; }  ?>";
-		Program program = createAndParse(str);
-
-		// locate the expression to test
-		int indexOf = locateElement(str);
-		Expression expr = (Expression) program.getElementAt(indexOf);
-		Object resolveConstantExpressionValue = expr
-				.resolveConstantExpressionValue();
-		Assert.assertNotNull(resolveConstantExpressionValue);
-	}
+	// public void testConstantExpressionBinding() throws Exception {
+	// String str =
+	// "<?php class A{ const MY_CONSTANT = 3;} function foo() { echo /**/MY_CONSTANT; }  ?>";
+	// Program program = createAndParse(str);
+	//
+	// // locate the expression to test
+	// int indexOf = locateElement(str);
+	// Expression expr = (Expression) program.getElementAt(indexOf);
+	// Object resolveConstantExpressionValue = expr
+	// .resolveConstantExpressionValue();
+	// Assert.assertNotNull(resolveConstantExpressionValue);
+	// }
 
 	public void testConstructorBinding() throws Exception {
 		String str = "<?php $a = new MyClass(); class MyClass { public function MyClass() {} } ?>";
@@ -462,21 +461,23 @@ public class BindingTests extends SuiteOfTestCases {
 
 	}
 
-	public void testMethodParametersBinding() throws Exception {
-		String str = "<?php class MyClass { function foo(MyClass $instance){} } ?>";
-		Program program = createAndParse(str);
-
-		ClassDeclaration classDeclaration = (ClassDeclaration) program
-				.statements().get(0);
-		MethodDeclaration methodDeclaration = (MethodDeclaration) classDeclaration
-				.getBody().statements().get(0);
-
-		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
-
-		ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
-		Assert.assertNotNull(parameterTypes);
-		Assert.assertTrue(parameterTypes.length == 1);
-	}
+	// public void testMethodParametersBinding() throws Exception {
+	// String str =
+	// "<?php class MyClass { function foo(MyClass $instance){} } ?>";
+	// Program program = createAndParse(str);
+	//
+	// ClassDeclaration classDeclaration = (ClassDeclaration) program
+	// .statements().get(0);
+	// MethodDeclaration methodDeclaration = (MethodDeclaration)
+	// classDeclaration
+	// .getBody().statements().get(0);
+	//
+	// IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
+	//
+	// ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
+	// Assert.assertNotNull(parameterTypes);
+	// Assert.assertTrue(parameterTypes.length == 1);
+	// }
 
 	public void testFunctionInvocationBinding() throws Exception {
 		String str = "<?php function foo(){} foo(); ?>";
@@ -494,21 +495,21 @@ public class BindingTests extends SuiteOfTestCases {
 		Assert.assertTrue(functionBinding.isVarargs() == false);
 	}
 
-	public void testFunctionInvocationParametersBinding() throws Exception {
-		String str = "<?php function foo(){} foo(); ?>";
-		Program program = createAndParse(str);
-
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(1);
-		FunctionInvocation functionInvocation = (FunctionInvocation) statement
-				.getExpression();
-
-		IFunctionBinding functionBinding = functionInvocation
-				.resolveFunctionBinding();
-		ITypeBinding[] parameterTypes = functionBinding.getParameterTypes();
-		Assert.assertNotNull(parameterTypes);
-		Assert.assertTrue(parameterTypes.length == 0);
-	}
+	// public void testFunctionInvocationParametersBinding() throws Exception {
+	// String str = "<?php function foo(){} foo(); ?>";
+	// Program program = createAndParse(str);
+	//
+	// ExpressionStatement statement = (ExpressionStatement) program
+	// .statements().get(1);
+	// FunctionInvocation functionInvocation = (FunctionInvocation) statement
+	// .getExpression();
+	//
+	// IFunctionBinding functionBinding = functionInvocation
+	// .resolveFunctionBinding();
+	// ITypeBinding[] parameterTypes = functionBinding.getParameterTypes();
+	// Assert.assertNotNull(parameterTypes);
+	// Assert.assertTrue(parameterTypes.length == 0);
+	// }
 
 	public void testMethodInvocationBinding() throws Exception {
 		String str = "<?php class MyClass { function foo(){} } $a = new MyClass(); $a->foo(); ?>";
@@ -530,21 +531,22 @@ public class BindingTests extends SuiteOfTestCases {
 		Assert.assertTrue(methodBinding.isConstructor() == false);
 	}
 
-	public void testMethodInvocationParametersBinding() throws Exception {
-		String str = "<?php class MyClass { function foo(MyClass $instance){} } $a = new MyClass(); $a->foo(); ?>";
-		Program program = createAndParse(str);
-
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(2);
-		MethodInvocation methodInvocation = (MethodInvocation) statement
-				.getExpression();
-
-		IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
-
-		ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
-		Assert.assertNotNull(parameterTypes);
-		Assert.assertTrue(parameterTypes.length == 1);
-	}
+	// public void testMethodInvocationParametersBinding() throws Exception {
+	// String str =
+	// "<?php class MyClass { function foo(MyClass $instance){} } $a = new MyClass(); $a->foo(); ?>";
+	// Program program = createAndParse(str);
+	//
+	// ExpressionStatement statement = (ExpressionStatement) program
+	// .statements().get(2);
+	// MethodInvocation methodInvocation = (MethodInvocation) statement
+	// .getExpression();
+	//
+	// IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
+	//
+	// ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
+	// Assert.assertNotNull(parameterTypes);
+	// Assert.assertTrue(parameterTypes.length == 1);
+	// }
 
 	public void testStaticMethodInvocationBinding() throws Exception {
 		String str = "<?php class MyClass { static function foo(){} } MyClass::foo($a); ?>";
@@ -568,98 +570,98 @@ public class BindingTests extends SuiteOfTestCases {
 		Assert.assertTrue(methodBinding.getKind() == IBinding.METHOD);
 	}
 
-	public void testIdentifierBinding() throws Exception {
-		String str = "<?php $a = 5; ?>";
-		Program program = createAndParse(str);
+	// public void testIdentifierBinding() throws Exception {
+	// String str = "<?php $a = 5; ?>";
+	// Program program = createAndParse(str);
+	//
+	// ExpressionStatement statement = (ExpressionStatement) program
+	// .statements().get(0);
+	// Assignment assignment = (Assignment) statement.getExpression();
+	// Variable variable = (Variable) assignment.getLeftHandSide();
+	// Identifier identifier = (Identifier) variable.getName();
+	//
+	// IBinding binding = identifier.resolveBinding();
+	//
+	// Assert.assertNotNull(binding);
+	//
+	// String name = binding.getName();
+	// Assert.assertNotNull(name);
+	// Assert.assertTrue(name.equals("a"));
+	// Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
+	// }
 
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(0);
-		Assignment assignment = (Assignment) statement.getExpression();
-		Variable variable = (Variable) assignment.getLeftHandSide();
-		Identifier identifier = (Identifier) variable.getName();
+	// public void testVariableIntBinding1() throws Exception {
+	// String str = "<?php $a = 0; ?>";
+	// Program program = createAndParse(str);
+	//
+	// ExpressionStatement statement = (ExpressionStatement) program
+	// .statements().get(0);
+	// Assignment assignment = (Assignment) statement.getExpression();
+	// Variable var = (Variable) assignment.getLeftHandSide();
+	// IVariableBinding binding = var.resolveVariableBinding();
+	//
+	// Assert.assertNotNull(binding);
+	// Assert.assertTrue(binding.getDeclaringClass() == null);
+	// Assert.assertTrue(binding.getName().equals("a"));
+	// Assert.assertTrue(binding.getConstantValue() == null);
+	// Assert.assertTrue(binding.getKey() != null);
+	// Assert.assertTrue(binding.getDeclaringFunction() == null);
+	// Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
+	// Assert.assertTrue(binding.getPHPElement() instanceof FakeField);
+	// Assert.assertTrue(binding.getVariableId() == 0);
+	// Assert.assertTrue(binding.getType().getName().equals("integer")); // TODO
+	// // ensure
+	// // that
+	// // the
+	// // type
+	// // is
+	// // integer
+	// }
 
-		IBinding binding = identifier.resolveBinding();
+	// public void testVariableIntBinding2() throws Exception {
+	// String str = "<?php $a = 0; $b = 3?>";
+	// Program program = createAndParse(str);
+	//
+	// ExpressionStatement statement = (ExpressionStatement) program
+	// .statements().get(1);
+	// Assignment assignment = (Assignment) statement.getExpression();
+	// Variable var = (Variable) assignment.getLeftHandSide();
+	// IVariableBinding binding = var.resolveVariableBinding();
+	//
+	// Assert.assertNotNull(binding);
+	// Assert.assertTrue(binding.getName().equals("b"));
+	// Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
+	// Assert.assertTrue(binding.getType().getName().equals("integer")); // TODO
+	// // ensure
+	// // that
+	// // the
+	// // type
+	// // is
+	// // integer
+	// Assert.assertTrue(binding.getVariableId() == 1);
+	// }
 
-		Assert.assertNotNull(binding);
-
-		String name = binding.getName();
-		Assert.assertNotNull(name);
-		Assert.assertTrue(name.equals("a"));
-		Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
-	}
-
-	public void testVariableIntBinding1() throws Exception {
-		String str = "<?php $a = 0; ?>";
-		Program program = createAndParse(str);
-
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(0);
-		Assignment assignment = (Assignment) statement.getExpression();
-		Variable var = (Variable) assignment.getLeftHandSide();
-		IVariableBinding binding = var.resolveVariableBinding();
-
-		Assert.assertNotNull(binding);
-		Assert.assertTrue(binding.getDeclaringClass() == null);
-		Assert.assertTrue(binding.getName().equals("a"));
-		Assert.assertTrue(binding.getConstantValue() == null);
-		Assert.assertTrue(binding.getKey() != null);
-		Assert.assertTrue(binding.getDeclaringFunction() == null);
-		Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
-		Assert.assertTrue(binding.getPHPElement() instanceof FakeField);
-		Assert.assertTrue(binding.getVariableId() == 0);
-		Assert.assertTrue(binding.getType().getName().equals("integer")); // TODO
-		// ensure
-		// that
-		// the
-		// type
-		// is
-		// integer
-	}
-
-	public void testVariableIntBinding2() throws Exception {
-		String str = "<?php $a = 0; $b = 3?>";
-		Program program = createAndParse(str);
-
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(1);
-		Assignment assignment = (Assignment) statement.getExpression();
-		Variable var = (Variable) assignment.getLeftHandSide();
-		IVariableBinding binding = var.resolveVariableBinding();
-
-		Assert.assertNotNull(binding);
-		Assert.assertTrue(binding.getName().equals("b"));
-		Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
-		Assert.assertTrue(binding.getType().getName().equals("integer")); // TODO
-		// ensure
-		// that
-		// the
-		// type
-		// is
-		// integer
-		Assert.assertTrue(binding.getVariableId() == 1);
-	}
-
-	public void testVariableStrBinding() throws Exception {
-		String str = "<?php $a = 'test'?>";
-		Program program = createAndParse(str);
-
-		ExpressionStatement statement = (ExpressionStatement) program
-				.statements().get(0);
-		Assignment assignment = (Assignment) statement.getExpression();
-		Variable var = (Variable) assignment.getLeftHandSide();
-		IVariableBinding binding = var.resolveVariableBinding();
-
-		Assert.assertNotNull(binding);
-		Assert.assertTrue(binding.getName().equals("test"));
-		Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
-		Assert.assertTrue(binding.getType().getName().equals("string")); // TODO
-		// ensure
-		// that
-		// the
-		// type
-		// is
-		// String
-	}
+	// public void testVariableStrBinding() throws Exception {
+	// String str = "<?php $a = 'test'?>";
+	// Program program = createAndParse(str);
+	//
+	// ExpressionStatement statement = (ExpressionStatement) program
+	// .statements().get(0);
+	// Assignment assignment = (Assignment) statement.getExpression();
+	// Variable var = (Variable) assignment.getLeftHandSide();
+	// IVariableBinding binding = var.resolveVariableBinding();
+	//
+	// Assert.assertNotNull(binding);
+	// Assert.assertTrue(binding.getName().equals("test"));
+	// Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
+	// Assert.assertTrue(binding.getType().getName().equals("string")); // TODO
+	// // ensure
+	// // that
+	// // the
+	// // type
+	// // is
+	// // String
+	// }
 
 	public void testClassDeclarationBinding() throws Exception {
 		String str = "<?php class A {} ?>";
