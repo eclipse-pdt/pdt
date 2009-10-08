@@ -24,11 +24,6 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/pdt/updates/2.2/"/>
-      <discovery label="%updateSiteName" url="http://download.eclipse.org/tools/pdt/updates/2.2/"/>
-   </url>
-
    <requires>
       <import feature="org.eclipse.dltk.mylyn" version="1.0.0" match="compatible"/>
    </requires>
