@@ -7,7 +7,7 @@
 			class="org.eclipse.dltk.internal.mylyn.DLTKUiBridge"
 			contentType="java"
 			activeSearchIcon="icons/elcl16/edge-ref-java.gif"
-			activeSearchLabel="%DLTKUiBridge.activeSearch.label" />
+			activeSearchLabel="PHP Search" />
 		<preservedFilters
 			viewId="org.eclipse.php.ui.explorer">
 			<filter
@@ -34,11 +34,11 @@
 				enablesFor="*"
 				icon="icons/elcl16/focus.gif"
 				id="org.eclipse.mylyn.dltk.actions.focus.packageExplorer"
-				label="%FocusPackageExplorerAction.label"
+				label="%action.label"
 				menubarPath="mylyn"
 				style="toggle"
 				toolbarPath="mylyn"
-				tooltip="%FocusPackageExplorerAction.tooltip">
+				tooltip="%action.tooltip">
 				<enablement>
 					<systemProperty
 						name="org.eclipse.mylyn.context.core.context.active"
@@ -59,7 +59,7 @@
 				enablesFor="1"
 				icon="icons/etool16/browse-filtered.gif"
 				id="org.eclipse.dltk.mylyn.action.browse.filtered"
-				label="%ShowFilteredChildrenAction.label"
+				label="%action.label.0"
 				menubarPath="group.reorganize">
 			</action>
 			<visibility>
@@ -85,9 +85,9 @@
 		point="org.eclipse.dltk.ui.dltkElementFilters">
 		<filter
 			targetId="org.eclipse.php.ui.explorer"
-			name="%DLTKDeclarationsFilter.name"
+			name="%filter.name"
 			enabled="false"
-			description="%DLTKDeclarationsFilter.description"
+			description="%filter.description"
 			class="org.eclipse.dltk.internal.mylyn.DLTKDeclarationsFilter"
 			id="org.eclipse.dltk.mylyn.MembersFilter">
 		</filter>
