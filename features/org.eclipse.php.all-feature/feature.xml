@@ -24,11 +24,6 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/pdt/updates/2.2/"/>
-      <discovery label="%updateSiteName" url="http://download.eclipse.org/tools/pdt/updates/2.2/"/>
-   </url>
-
    <includes
          id="org.eclipse.php.sdk"
          version="0.0.0"/>
