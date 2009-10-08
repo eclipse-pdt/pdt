@@ -23,4 +23,4 @@ plugin@org.eclipse.php.core.tests=v20091007-2253,:pserver:anonymous@dev.eclipse.
 
 !*** Mylyn bridge
 feature@org.eclipse.php.mylyn=v20090811-1641,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.mylyn-feature
-plugin@org.eclipse.php.mylyn.ui=v20090811-1641,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.mylyn.ui
+plugin@org.eclipse.php.mylyn.ui=v20091008-1400,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.mylyn.ui
