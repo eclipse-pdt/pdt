@@ -41,34 +41,36 @@ public class PHPFunctionsContentProvider extends
 	public Object[] getChildren(Object element) {
 
 		// handle the project fragment used for containing the language model
-		if (element instanceof IProjectFragment) {
-			try {
-				List<Object> children = new ArrayList<Object>();
+		if (element instanceof IProjectFragment[]) {
+			IProjectFragment[] fragments = (IProjectFragment[]) element;
+			List<Object> children = new ArrayList<Object>();
 
-				// Create the constant node that will aggregate all of the PHP
-				// constants
-				ConstantNode constantNode = new ConstantNode();
-				children.add(constantNode);
+			// Create the constant node that will aggregate all of the
+			// PHP
+			// constants
+			ConstantNode constantNode = new ConstantNode();
+			children.add(constantNode);
 
-				Object[] projectFragmentContent = getProjectFragmentContent((IProjectFragment) element);
-				for (Object modelElement : projectFragmentContent) {
-					if (modelElement instanceof ExternalSourceModule) {
-						IModelElement[] externalSourceModuleChildren = ((ExternalSourceModule) modelElement)
-								.getChildren();
-						constantNode
-								.addSourceModuleChildren(externalSourceModuleChildren);
-						// filter the constants from the main view
-						IModelElement[] elements = filterConstants(externalSourceModuleChildren);
-						children.addAll(Arrays.asList(elements));
+			for (IProjectFragment fragment : fragments) {
+				try {
+					Object[] projectFragmentContent = getProjectFragmentContent(fragment);
+					for (Object modelElement : projectFragmentContent) {
+						if (modelElement instanceof ExternalSourceModule) {
+							IModelElement[] externalSourceModuleChildren = ((ExternalSourceModule) modelElement)
+									.getChildren();
+							constantNode
+									.addSourceModuleChildren(externalSourceModuleChildren);
+							// filter the constants from the main view
+							IModelElement[] elements = filterConstants(externalSourceModuleChildren);
+							children.addAll(Arrays.asList(elements));
+						}
 					}
+				} catch (ModelException e) {
+					Logger.logException(e);
 				}
-
-				Object[] array = children.toArray(new Object[children.size()]);
-				return array;
-
-			} catch (ModelException e) {
-				Logger.logException(e);
 			}
+			Object[] array = children.toArray(new Object[children.size()]);
+			return array;
 			// handle all method references
 		} else if (element instanceof ISourceReference) {
 			ISourceReference source = ((ISourceReference) element);
