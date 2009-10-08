@@ -25,11 +25,6 @@
       %license
    </license>
 
-   <url>
-      <update label="%updateSiteName" url="http://download.eclipse.org/tools/pdt/updates/2.2/"/>
-      <discovery label="%updateSiteName" url="http://download.eclipse.org/tools/pdt/updates/2.2/"/>
-   </url>
-
    <requires>
       <import feature="org.eclipse.dltk.core" version="2.0.0" match="compatible"/>
       <import feature="org.eclipse.wst.common.fproj" version="3.1.0" match="compatible"/>
