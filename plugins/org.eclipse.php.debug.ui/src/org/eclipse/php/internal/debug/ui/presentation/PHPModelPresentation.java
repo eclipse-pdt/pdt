@@ -14,33 +14,35 @@ package org.eclipse.php.internal.debug.ui.presentation;
 import java.io.File;
 
 import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IValue;
+import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.IValueDetailListener;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IFileHandle;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.internal.core.Openable;
+import org.eclipse.dltk.internal.core.util.HandleFactory;
+import org.eclipse.dltk.internal.debug.ui.ExternalFileEditorInput;
+import org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput;
+import org.eclipse.dltk.internal.ui.search.DLTKSearchScopeFactory;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.php.internal.core.containers.LocalFileStorage;
-import org.eclipse.php.internal.core.containers.ZipEntryStorage;
-import org.eclipse.php.internal.core.filesystem.FileStoreFactory;
-import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
-import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceNotFoundInput;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
-import org.eclipse.php.internal.debug.core.zend.model.PHPThread;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor;
-import org.eclipse.php.internal.debug.ui.sourcelookup.PHPSourceNotFoundEditorInput;
-import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
-import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorDescriptor;
@@ -56,15 +58,17 @@ import com.ibm.icu.text.MessageFormat;
 /**
  * Renders PHP debug elements
  */
-public class PHPModelPresentation extends LabelProvider implements IDebugModelPresentation {
+public class PHPModelPresentation extends LabelProvider implements
+		IDebugModelPresentation {
 
 	private ImageDescriptorRegistry fDebugImageRegistry;
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.String,
-	 *      java.lang.Object)
+	 * @see
+	 * org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.String
+	 * , java.lang.Object)
 	 */
 
 	public void setAttribute(String attribute, Object value) {
@@ -82,17 +86,26 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		return null;
 	}
 
-	// Returns the conditional breakpoint icon (enabled / disabled).
-	// In case the breakpoint is not conditional, return null and let the default breakpoint
-	// icon.
-	private Image getBreakpointImage(PHPConditionalBreakpoint breakpoint) {
+	/**
+	 * Returns the conditional breakpoint icon (enabled / disabled). In case the
+	 * breakpoint is not conditional, return null and let the default breakpoint
+	 * icon.
+	 */
+	protected Image getBreakpointImage(PHPConditionalBreakpoint breakpoint) {
 		try {
 			if (breakpoint.isConditionEnabled()) {
 				PHPBreakpointImageDescriptor descriptor;
 				if (breakpoint.isEnabled()) {
-					descriptor = new PHPBreakpointImageDescriptor(DebugUITools.getImageDescriptor(IDebugUIConstants.IMG_OBJS_BREAKPOINT), PHPBreakpointImageDescriptor.CONDITIONAL | PHPBreakpointImageDescriptor.ENABLED);
+					descriptor = new PHPBreakpointImageDescriptor(
+							DebugUITools
+									.getImageDescriptor(IDebugUIConstants.IMG_OBJS_BREAKPOINT),
+							PHPBreakpointImageDescriptor.CONDITIONAL
+									| PHPBreakpointImageDescriptor.ENABLED);
 				} else {
-					descriptor = new PHPBreakpointImageDescriptor(DebugUITools.getImageDescriptor(IDebugUIConstants.IMG_OBJS_BREAKPOINT_DISABLED), PHPBreakpointImageDescriptor.CONDITIONAL);
+					descriptor = new PHPBreakpointImageDescriptor(
+							DebugUITools
+									.getImageDescriptor(IDebugUIConstants.IMG_OBJS_BREAKPOINT_DISABLED),
+							PHPBreakpointImageDescriptor.CONDITIONAL);
 				}
 				return getDebugImageRegistry().get(descriptor);
 			}
@@ -115,48 +128,66 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
 	public String getText(Object element) {
-		if (element instanceof PHPDebugTarget) {
-			return getTargetText((PHPDebugTarget) element);
-		} else if (element instanceof PHPThread) {
-			return getThreadText((PHPThread) element);
-		} else if (element instanceof PHPStackFrame) {
-			return getStackFrameText((PHPStackFrame) element);
-		} else if (element instanceof PHPLineBreakpoint) {
-			PHPLineBreakpoint breakpoint = (PHPLineBreakpoint) element;
-			IMarker marker = breakpoint.getMarker();
-			IResource resource = marker.getResource();
-			if (resource instanceof IFile) {
-				return null;
-			} else if (resource instanceof IWorkspaceRoot) {
-				try {
-					String filename = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_FILE);
-					Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
-					return filename + " [line: " + lineNumber.toString() + "]";
-				} catch (CoreException e) {
-					Logger.logException("Unexpected error in PHPModelPresentation", e);
-				}
-			}
+		if (element instanceof IDebugTarget) {
+			return getTargetText((IDebugTarget) element);
+		} else if (element instanceof IThread) {
+			return getThreadText((IThread) element);
+		} else if (element instanceof IStackFrame) {
+			return getStackFrameText((IStackFrame) element);
+		} else if (element instanceof ILineBreakpoint) {
+			return getLineBreakpointText((ILineBreakpoint) element);
 		}
 		return null;
 
 	}
 
-	private String getTargetText(PHPDebugTarget target) {
+	protected String getLineBreakpointText(ILineBreakpoint breakpoint) {
+		IMarker marker = breakpoint.getMarker();
+		IResource resource = marker.getResource();
+		try {
+			Integer lineNumber = (Integer) marker
+					.getAttribute(IMarker.LINE_NUMBER);
+			String fileName = null;
+
+			if (resource instanceof IFile) {
+				fileName = resource.getFullPath().toString();
+			} else if (resource instanceof IWorkspaceRoot) {
+				fileName = (String) marker
+						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+
+				Path path = new Path(fileName);
+				if (EnvironmentPathUtils.isFull(path)) {
+					fileName = EnvironmentPathUtils.getLocalPathString(path);
+				}
+
+			}
+			if (fileName != null) {
+				return fileName + " [line: " + lineNumber.toString() + "]";
+			}
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+
+	protected String getTargetText(IDebugTarget target) {
 		String label = ""; //$NON-NLS-1$
 		if (target.isTerminated()) {
-			label = MessageFormat.format(PHPDebugUIMessages.MPresentation_Terminated_1, new Object[] {});
+			label = MessageFormat.format(
+					PHPDebugUIMessages.MPresentation_Terminated_1,
+					new Object[] {});
 		}
 		return label + PHPDebugUIMessages.MPresentation_PHP_APP_1;
 	}
 
-	private String getThreadText(PHPThread thread) {
-		PHPDebugTarget target = (PHPDebugTarget) thread.getDebugTarget();
+	protected String getThreadText(IThread thread) {
+		IDebugTarget target = (IDebugTarget) thread.getDebugTarget();
 		String label = "";
 		try {
 			label = target.getName();
-		} catch (DebugException e1) {
+		} catch (DebugException e) {
 			// Just log should never happen
-			Logger.logException("PHPModelPresentation error getting target name", e1);
+			Logger.logException(e);
 		}
 		if (thread.isStepping()) {
 			label += PHPDebugUIMessages.MPresentation_Stepping_1;
@@ -177,39 +208,34 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 		return label;
 	}
 
-	private String getStackFrameText(PHPStackFrame frame) {
-		try {
-			StringBuffer buffer = new StringBuffer();
-			String frameName = frame.getName();
-			if (frameName != null && frameName.length() > 0) {
-				buffer.append(frame.getName());
-				buffer.append("(): ");
-			}
-			buffer.append(frame.getSourceName());
-			buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1 + (frame.getLineNumber()));
-			return buffer.toString();
+	protected String getStackFrameText(IStackFrame frame) {
+		if (frame instanceof PHPStackFrame) {
+			PHPStackFrame phpStackFrame = (PHPStackFrame) frame;
+			try {
+				StringBuffer buffer = new StringBuffer();
+				String frameName = phpStackFrame.getName();
+				if (frameName != null && frameName.length() > 0) {
+					buffer.append(frameName);
+					buffer.append("(): ");
+				}
+				buffer.append(phpStackFrame.getSourceName());
+				buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1
+						+ (phpStackFrame.getLineNumber()));
+				return buffer.toString();
 
-		} catch (DebugException e) {
-			Logger.logException("Unexpected error in PHPModelPresentation", e);
-		} catch (NullPointerException npe) {
-			// This is here for debug purpose. Figure out why do we get nulls.
-			StringBuffer errorMessage = new StringBuffer("NPE in getStackFrameText(). Frame = ");
-			errorMessage.append(frame);
-			if (frame != null) {
-				errorMessage.append(", Thread = ");
-				errorMessage.append(frame.getThread());
+			} catch (DebugException e) {
+				Logger.logException(e);
 			}
-			Logger.logException(errorMessage.toString(), npe);
 		}
 		return ""; //$NON-NLS-1$
-
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse.debug.core.model.IValue,
-	 *      org.eclipse.debug.ui.IValueDetailListener)
+	 * @see
+	 * org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
+	 * .debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
 	 */
 	public void computeDetail(IValue value, IValueDetailListener listener) {
 		String detail = ""; //$NON-NLS-1$
@@ -223,65 +249,71 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.ui.ISourcePresentation#getEditorInput(java.lang.Object)
+	 * @see
+	 * org.eclipse.debug.ui.ISourcePresentation#getEditorInput(java.lang.Object)
 	 */
 	public IEditorInput getEditorInput(Object element) {
 		if (element instanceof IFile) {
 			return new FileEditorInput((IFile) element);
 		}
-		if (element instanceof PHPLineBreakpoint) {
-			PHPLineBreakpoint breakpoint = (PHPLineBreakpoint) element;
-			IMarker marker = breakpoint.getMarker();
-			IResource resource = marker.getResource();
-
-			if (resource instanceof IFile) {
-				return new FileEditorInput((IFile) resource);
-			}
-			// Breakpoints for external files are stored in workspace root:
-			else if (resource instanceof IWorkspaceRoot) {
-				try {
-					String filename = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_FILE);
-					String type = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_TYPE);
-
-					if (IPHPDebugConstants.STORAGE_TYPE_INCLUDE.equals(type)) {
-						String projectName = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_PROJECT, "");
-						IProject project = PHPDebugUIPlugin.getProject(projectName);
-						String includeBaseDir = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_INC_BASEDIR, "");
-						filename = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, filename);
-
-						File file = new File(filename);
-						LocalFileStorage lfs = new LocalFileStorage(file);
-						lfs.setProject(project);
-						lfs.setIncBaseDirName(includeBaseDir);
-						return new LocalFileStorageEditorInput(lfs);
-					} else if (IPHPDebugConstants.STORAGE_TYPE_EXTERNAL.equals(type) || IPHPDebugConstants.STORAGE_TYPE_REMOTE.equals(type)) {
-						File file = new File(filename);
-						return new FileStoreEditorInput(FileStoreFactory.createFileStore(file));
-					}
-				} catch (CoreException e) {
-					Logger.logException("Unexpected error in PHPModelPresentation", e);
-				}
-			}
+		if (element instanceof IFileHandle) {
+			return new ExternalFileEditorInput((IFileHandle) element);
 		}
-		if (element instanceof ZipEntryStorage) {
-			return new ZipEntryStorageEditorInput((ZipEntryStorage) element);
+		if (element instanceof ILineBreakpoint) {
+			return getLineBreakpointEditorInput(element);
 		}
-		if (element instanceof LocalFileStorage) {
-			return new LocalFileStorageEditorInput((LocalFileStorage) element);
-		}
-		if (element instanceof PHPSourceNotFoundInput) {
-			return new PHPSourceNotFoundEditorInput((PHPSourceNotFoundInput) element);
+		if (element instanceof IStorage) {
+			return new ExternalStorageEditorInput((IStorage) element);
 		}
 		if (element instanceof IFileStore) {
 			return new FileStoreEditorInput((IFileStore) element);
 		}
-		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: " + element.getClass().getName());
+		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: "
+				+ element.getClass().getName());
+		return null;
+	}
+
+	protected IEditorInput getLineBreakpointEditorInput(Object element) {
+		ILineBreakpoint bp = (ILineBreakpoint) element;
+		IMarker marker = bp.getMarker();
+		IResource resource = marker.getResource();
+		if (resource instanceof IFile) {
+			return new FileEditorInput((IFile) resource);
+		}
+		// else
+		try {
+			final String location = (String) marker
+					.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+			if (location == null) {
+				return null;
+			}
+			IPath path = Path.fromPortableString(location);
+
+			HandleFactory fac = new HandleFactory();
+			IDLTKSearchScope scope = DLTKSearchScopeFactory
+					.getInstance()
+					.createWorkspaceScope(true, PHPLanguageToolkit.getDefault());
+			Openable openable = fac.createOpenable(path.toString(), scope);
+
+			if (openable instanceof IStorage) {
+				return new ExternalStorageEditorInput((IStorage) openable);
+			}
+
+			// Support external files opened using File -> Open
+			File localFile = new File(location);
+			if (localFile.exists()) {
+				return new FileStoreEditorInput(new LocalFile(localFile));
+			}
+		} catch (CoreException e) {
+			DLTKUIPlugin.log(e);
+		}
 		return null;
 	}
 
 	public String getEditorId(IEditorInput input, Object inputObject) {
 		try {
-			IEditorDescriptor descriptor= IDE.getEditorDescriptor(input.getName());
+			IEditorDescriptor descriptor = IDE.getEditorDescriptor(input
+					.getName());
 			return descriptor.getId();
 		} catch (PartInitException e) {
 			return null;

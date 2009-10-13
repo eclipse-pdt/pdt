@@ -25,7 +25,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.ui.util.EditorUtility;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.console.IHyperlink;
 import org.eclipse.ui.ide.IDE;
 
@@ -57,16 +60,17 @@ public class PHPFileLink implements IHyperlink {
 	}
 
 	public void linkActivated() {
-		Object element = findSourceModule(fileName);
-		if (element != null) {
-			openElementInEditor(element);
-			return;
-		}
 		try {
-			if (EditorUtility.openInEditor(fileName, lineNumber) != null) {
+			Object element = findSourceModule(fileName);
+			if (element != null) {
+				openElementInEditor(element);
+				return;
+			}
+			if (EditorUtility.openLocalFile(fileName, lineNumber) != null) {
 				return;
 			}
 		} catch (CoreException e) {
+			PHPDebugUIPlugin.log(e);
 		}
 		// did not find source
 		MessageDialog.openInformation(PHPDebugUIPlugin
@@ -74,22 +78,19 @@ public class PHPFileLink implements IHyperlink {
 				.format("Source not found for {0}", new Object[] { fileName }));
 	}
 
-	protected void openElementInEditor(Object element) {
+	protected void openElementInEditor(Object element) throws CoreException {
 		Assert.isNotNull(element);
 
-		IEditorInput input = EditorUtility.getEditorInput(element);
+		IEditorInput input = org.eclipse.dltk.internal.ui.editor.EditorUtility
+				.getEditorInput(element);
 		if (input == null) {
 			return;
 		}
-		IEditorDescriptor descriptor;
-		try {
-			descriptor = IDE.getEditorDescriptor(input.getName());
-			IWorkbenchPage page = PHPDebugUIPlugin.getActivePage();
-			IEditorPart editor = page.openEditor(input, descriptor.getId());
-			EditorUtility.revealInEditor(editor, lineNumber);
-		} catch (PartInitException e) {
-			PHPDebugUIPlugin.log(e);
-		}
+		IEditorDescriptor descriptor = IDE.getEditorDescriptor(input.getName());
+		IWorkbenchPage page = PHPDebugUIPlugin.getActivePage();
+		IEditorPart editor = page.openEditor(input, descriptor.getId());
+		org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(
+				editor, lineNumber - 1);
 	}
 
 	/**

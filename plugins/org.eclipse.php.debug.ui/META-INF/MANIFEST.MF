@@ -25,7 +25,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.php.server.core,
  org.eclipse.core.expressions,
  org.eclipse.core.filesystem,
- com.ibm.icu;bundle-version="4.0.1"
+ com.ibm.icu;bundle-version="4.0.1",
+ org.eclipse.dltk.debug.ui;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.internal.debug.ui;x-internal:=true,
@@ -44,7 +45,6 @@ Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.internal.debug.ui.preferences.phps;x-internal:=true,
  org.eclipse.php.internal.debug.ui.preferences.stepFilter;x-internal:=true,
  org.eclipse.php.internal.debug.ui.presentation;x-internal:=true,
- org.eclipse.php.internal.debug.ui.sourcelookup;x-internal:=true,
  org.eclipse.php.internal.debug.ui.views;x-internal:=true,
  org.eclipse.php.internal.debug.ui.views.variables;x-internal:=true,
  org.eclipse.php.internal.debug.ui.watch;x-internal:=true,
