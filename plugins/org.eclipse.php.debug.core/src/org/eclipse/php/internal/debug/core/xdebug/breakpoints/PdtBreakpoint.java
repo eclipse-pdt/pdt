@@ -12,10 +12,8 @@
 package org.eclipse.php.internal.debug.core.xdebug.breakpoints;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
@@ -51,28 +49,35 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 		String fileName = "";
 		if (resource instanceof IWorkspaceRoot) {
-			//TODO: Improvement: Breakpoint: we need to handle this because PHPBreakpoint can be setup with this situation
-			try {
-				//String storageType = (String)marker.getAttribute(IPHPConstants.Include_Storage_type);
-				// storage types include
-				// IPHPConstants.Include_Storage_zip   - don't know how to handle this one
-				// IPHPConstants.Include_Storage_LFile - should be able to support
-				// IPHPConstants.Include_Storage_RFile - doubt if this one is ever used in current PHP IDE.
-				//
-				// Include_Storage_Project contains the project it is found in.
-				fileName = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_TYPE_INCLUDE);
-				fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName); // gets the full path.
+			// TODO: Improvement: Breakpoint: we need to handle this because
+			// PHPBreakpoint can be setup with this situation
 
-				// adding bps to these include files has strange affects. If one fails to add the first time it is because it removes one
-				// from elsewhere, then you find you can add it. Multiple breakpoints in multiple files is possible but you experience this
-				// problem. Will need to raise a defect on this at some point.
+			// String storageType =
+			// (String)marker.getAttribute(IPHPConstants.Include_Storage_type);
+			// storage types include
+			// IPHPConstants.Include_Storage_zip - don't know how to handle
+			// this one
+			// IPHPConstants.Include_Storage_LFile - should be able to
+			// support
+			// IPHPConstants.Include_Storage_RFile - doubt if this one is
+			// ever used in current PHP IDE.
+			//
+			// Include_Storage_Project contains the project it is found in.
+			fileName = marker.getAttribute(
+					StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
+					fileName); // gets the full path.
 
-				IResource res = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileName));
-				if (res instanceof IFile) {
-					workspaceFile = (IFile) res;
-				}
+			// adding bps to these include files has strange affects. If one
+			// fails to add the first time it is because it removes one
+			// from elsewhere, then you find you can add it. Multiple
+			// breakpoints in multiple files is possible but you experience
+			// this
+			// problem. Will need to raise a defect on this at some point.
 
-			} catch (CoreException e) {
+			IResource res = ResourcesPlugin.getWorkspace().getRoot()
+					.getFileForLocation(new Path(fileName));
+			if (res instanceof IFile) {
+				workspaceFile = (IFile) res;
 			}
 
 		} else {
@@ -91,6 +96,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#getBreakpoint()
 	 */
 	public IBreakpoint getBreakpoint() {
@@ -99,7 +105,10 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setBreakpoint(org.eclipse.debug.core.model.IBreakpoint)
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setBreakpoint(org.eclipse
+	 * .debug.core.model.IBreakpoint)
 	 */
 	public void setBreakpoint(IBreakpoint breakpoint) {
 		bp = (PHPLineBreakpoint) breakpoint;
@@ -107,6 +116,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#getID()
 	 */
 	public int getID() {
@@ -115,6 +125,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setID(int)
 	 */
 	public void setID(int id) {
@@ -123,6 +134,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#isConditionChanged()
 	 */
 	public boolean hasConditionChanged() {
@@ -131,7 +143,10 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setConditionChanged(boolean)
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#setConditionChanged(boolean
+	 * )
 	 */
 	public void resetConditionChanged() {
 		bp.setConditionChanged(false);
@@ -139,6 +154,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.xdebug.core.dbgp.DBGpBreakpoint#getIFile()
 	 */
 	public IFile getIFile() {
@@ -147,6 +163,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.xdebug.core.IDEBreakpoint#getFileName()
 	 */
 	public String getFileName() {
@@ -155,6 +172,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.xdebug.core.IDEBreakpoint#getLineNumber()
 	 */
 	public int getLineNumber() {
@@ -163,6 +181,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.xdebug.core.IDEBreakpoint#getExpression()
 	 */
 	public String getExpression() {

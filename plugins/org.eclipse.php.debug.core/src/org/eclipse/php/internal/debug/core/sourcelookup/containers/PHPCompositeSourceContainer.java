@@ -23,6 +23,8 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceContainerType;
 import org.eclipse.debug.core.sourcelookup.containers.CompositeSourceContainer;
+import org.eclipse.debug.core.sourcelookup.containers.DirectorySourceContainer;
+import org.eclipse.debug.core.sourcelookup.containers.ExternalArchiveSourceContainer;
 import org.eclipse.debug.core.sourcelookup.containers.ProjectSourceContainer;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -32,15 +34,17 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 
 	private IProject project;
 
-	public PHPCompositeSourceContainer(IProject project, ILaunchConfiguration configuration) {
-		//DBGpTarget passes null for the ILaunchConfiguration here.
+	public PHPCompositeSourceContainer(IProject project,
+			ILaunchConfiguration configuration) {
+		// DBGpTarget passes null for the ILaunchConfiguration here.
 		this.project = project;
 	}
 
 	protected ISourceContainer[] createSourceContainers() throws CoreException {
 		ArrayList<ISourceContainer> containers = new ArrayList<ISourceContainer>();
 
-		ISourceContainer projectContainer = new ProjectSourceContainer(project, false);
+		ISourceContainer projectContainer = new ProjectSourceContainer(project,
+				false);
 		containers.add(projectContainer);
 		IBuildpathEntry[] entries = DLTKCore.create(project).getRawBuildpath();
 		if (entries != null) {
@@ -49,20 +53,24 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 					IPath path = element.getPath();
 					File file = new File(path.toOSString());
 					if (element.getContentKind() == IProjectFragment.K_BINARY) {
-						containers.add(new PHPExternalArchiveSourceContainer(file.getAbsolutePath(), false, project));
+						containers.add(new ExternalArchiveSourceContainer(file
+								.getAbsolutePath(), false));
 					} else {
-						containers.add(new PHPDirectorySourceContainer(file, false, project));
+						containers
+								.add(new DirectorySourceContainer(file, false));
 					}
 				} else if (element.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-					IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(element.getPath().lastSegment());
+					IResource resource = ResourcesPlugin.getWorkspace()
+							.getRoot().findMember(
+									element.getPath().lastSegment());
 					if (resource instanceof IProject) {
 						IProject includeProject = (IProject) resource;
-						containers.add(new ProjectSourceContainer(includeProject, false));
+						containers.add(new ProjectSourceContainer(
+								includeProject, false));
 					}
-				}
-				else if (element.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+				} else if (element.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 					IPath path = element.getPath();
-					containers.add(new PHPVariableSourceContainer(path, project));
+					containers.add(new PHPVariableSourceContainer(path));
 				}
 			}
 		}
@@ -73,7 +81,8 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 	}
 
 	public Object[] findSourceElements(String name) throws CoreException {
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(name);
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+				.findMember(name);
 		if (resource != null) {
 			return new Object[] { resource };
 		}
@@ -82,7 +91,7 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 	}
 
 	public String getName() {
-		return "PHPComposite";
+		return null;
 	}
 
 	public ISourceContainerType getType() {

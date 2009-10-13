@@ -11,9 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.model;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -21,97 +22,102 @@ import org.eclipse.debug.core.model.LineBreakpoint;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
 /**
  * PHP line breakpoint
  */
 public class PHPLineBreakpoint extends LineBreakpoint {
 
-    protected org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint fBreakpoint;
-    protected boolean fConditionChanged = false;
+	public static final String MARKER_ID = "org.eclipse.php.debug.core.PHPConditionalBreakpointMarker"; //$NON-NLS-1$
+	protected org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint fBreakpoint;
+	protected boolean fConditionChanged = false;
 
-    public PHPLineBreakpoint() {
-    }
+	public PHPLineBreakpoint() {
+	}
 
-    /**
-     * Constructs a line breakpoint on the given resource at the given line
-     * number.
-     * 
-     * @param resource
-     *            file on which to set the breakpoint
-     * @param lineNumber
-     *            1-based line number of the breakpoint
-     * @throws CoreException
-     *             if unable to create the breakpoint
-     */
-    public PHPLineBreakpoint(final IResource resource, final int lineNumber) throws CoreException {
+	/**
+	 * Constructs a line breakpoint on the given resource at the given line
+	 * number.
+	 * 
+	 * @param resource
+	 *            file on which to set the breakpoint
+	 * @param lineNumber
+	 *            1-based line number of the breakpoint
+	 * @throws CoreException
+	 *             if unable to create the breakpoint
+	 */
+	public PHPLineBreakpoint(final IResource resource, final int lineNumber)
+			throws CoreException {
 
-        IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
-            public void run(IProgressMonitor monitor) throws CoreException {
-                IMarker marker = resource.createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker");
-                marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
-                marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-                marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
-                marker.setAttribute(IMarker.MESSAGE, NLS.bind(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { resource.getName(), Integer.toString(lineNumber) }));
-                setMarker(marker);
-                setEnabled(true);
-                register(true);
-            }
-        };
-        run(getMarkerRule(resource), runnable);
-    }
+		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException {
+				IMarker marker = resource.createMarker(MARKER_ID);
+				marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
+				marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+				marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
+				marker.setAttribute(IMarker.MESSAGE, NLS.bind(
+						PHPDebugCoreMessages.LineBreakPointMessage_1,
+						new String[] { resource.getName(),
+								Integer.toString(lineNumber) }));
+				setMarker(marker);
+				setEnabled(true);
+				register(true);
+			}
+		};
+		run(getMarkerRule(resource), runnable);
+	}
 
-    protected void register(boolean register) throws CoreException {
-        if (register) {
-            DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(this);
-        } else {
-            setRegistered(false);
-        }
-    }
+	protected void register(boolean register) throws CoreException {
+		if (register) {
+			DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(this);
+		} else {
+			setRegistered(false);
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.debug.core.model.IBreakpoint#getModelIdentifier()
-     */
-    public String getModelIdentifier() {
-        return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.core.model.IBreakpoint#getModelIdentifier()
+	 */
+	public String getModelIdentifier() {
+		return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
+	}
 
-    protected void createRuntimeBreakpoint(IMarker marker) throws CoreException {       
-        IResource resource = marker.getResource();       
-        String fileName = "";
-        if (resource instanceof IWorkspaceRoot) {
-            fileName = (String)marker.getAttribute(IPHPDebugConstants.STORAGE_FILE); 
-        }else {
-            IFile file = (IFile) resource;
-            IPath path = file.getFullPath();
-            fileName = path.lastSegment();
-        }
-        Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
-        fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(fileName, (lineNumber.intValue()));
-        fBreakpoint.setEnable(true);
-    }
+	protected void createRuntimeBreakpoint(IMarker marker) throws CoreException {
 
-    public org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint getRuntimeBreakpoint() {
-        return fBreakpoint;
-    }
+		String fileName = (String) marker
+				.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+		if (fileName == null) {
+			fileName = (String) marker.getAttribute(IMarker.LOCATION);
+		}
 
-    public void setMarker(IMarker marker) throws CoreException {
-        super.setMarker(marker);
-        createRuntimeBreakpoint(marker);
-    }
+		Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
+		fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(
+				fileName, (lineNumber.intValue()));
+		fBreakpoint.setEnable(true);
+	}
 
-    public void setEnabled(boolean enabled) throws CoreException {
-        super.setEnabled(enabled);
-    }
+	public org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint getRuntimeBreakpoint() {
+		return fBreakpoint;
+	}
 
-    public void setConditionChanged(boolean conditionChanged) {
-        fConditionChanged = conditionChanged;
-    }
+	public void setMarker(IMarker marker) throws CoreException {
+		super.setMarker(marker);
+		createRuntimeBreakpoint(marker);
+	}
 
-    public boolean isConditionChanged() {
-        return fConditionChanged;
-    }
+	public void setEnabled(boolean enabled) throws CoreException {
+		super.setEnabled(enabled);
+	}
+
+	public void setConditionChanged(boolean conditionChanged) {
+		fConditionChanged = conditionChanged;
+	}
+
+	public boolean isConditionChanged() {
+		return fConditionChanged;
+	}
 
 }

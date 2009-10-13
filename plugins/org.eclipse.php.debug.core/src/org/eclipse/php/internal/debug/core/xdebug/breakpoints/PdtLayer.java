@@ -22,14 +22,11 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
-import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.debug.internal.ui.views.launch.SourceNotFoundEditorInput;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
-import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceNotFoundInput;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
@@ -51,12 +48,13 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 	public Object sourceNotFound(Object debugElement) {
 		Object obj = null;
 		if (debugElement instanceof IStackFrame) {
-			obj = new PHPSourceNotFoundInput((IStackFrame) debugElement);
+			obj = new SourceNotFoundEditorInput((IStackFrame) debugElement);
 		}
 		return obj;
 	}
 
-	public ISourceContainer getSourceContainer(IProject resource, ILaunchConfiguration launchConfig) {
+	public ISourceContainer getSourceContainer(IProject resource,
+			ILaunchConfiguration launchConfig) {
 		return new PHPCompositeSourceContainer(resource, launchConfig);
 	}
 
@@ -66,7 +64,8 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 
 	public IBreakpoint findBreakpointHit(String filename, int lineno) {
 		IBreakpoint bpFound = null;
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(getBreakpointModelID());
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
+				.getBreakpointManager().getBreakpoints(getBreakpointModelID());
 		for (int i = 0; i < breakpoints.length; i++) {
 			IBreakpoint breakpoint = breakpoints[i];
 			if (supportsBreakpoint(breakpoint)) {
@@ -78,22 +77,30 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 					if (bLineNumber == lineno && bFileName.equals(filename)) {
 						bpFound = breakpoint;
 						if (DBGpLogger.debugBP()) {
-							DBGpLogger.debug("breakpoint at " + filename + "(" + lineno + ") found");
+							DBGpLogger.debug("breakpoint at " + filename + "("
+									+ lineno + ") found");
 						}
 
 					}
 
-					// remove all RunToLine breakpoints while we search through the
-					// list of all our breakpoints looking for the one that was hit
+					// remove all RunToLine breakpoints while we search through
+					// the
+					// list of all our breakpoints looking for the one that was
+					// hit
 					if (breakpoint instanceof PHPRunToLineBreakpoint) {
-						IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
+						IBreakpointManager bmgr = DebugPlugin.getDefault()
+								.getBreakpointManager();
 						try {
 							if (DBGpLogger.debugBP()) {
-								DBGpLogger.debug("removing runtoline breakpoint");
+								DBGpLogger
+										.debug("removing runtoline breakpoint");
 							}
 							bmgr.removeBreakpoint(breakpoint, true);
 						} catch (CoreException e) {
-							DBGpLogger.logException("Exception trying to remove a runtoline breakpoint", this, e);
+							DBGpLogger
+									.logException(
+											"Exception trying to remove a runtoline breakpoint",
+											this, e);
 						}
 					}
 				}
@@ -104,15 +111,18 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 
 	public boolean supportsBreakpoint(IBreakpoint bp) {
 		if (bp.getModelIdentifier().equals(getBreakpointModelID())) {
-			//TODO: Improvement: Breakpoint: better support for breakpoint rejection
-			//ok it is a PHP breakpoint, but are there any other restrictions we could impose ?
-			//look at BreakpointSet for more info on what PHPIDE does
+			// TODO: Improvement: Breakpoint: better support for breakpoint
+			// rejection
+			// ok it is a PHP breakpoint, but are there any other restrictions
+			// we could impose ?
+			// look at BreakpointSet for more info on what PHPIDE does
 			return true;
 		}
 		return false;
 	}
 
-	public IBreakpoint createRunToLineBreakpoint(IFile fileName, int lineNumber) throws DebugException {
+	public IBreakpoint createRunToLineBreakpoint(IFile fileName, int lineNumber)
+			throws DebugException {
 		return new PHPRunToLineBreakpoint(fileName, lineNumber);
 	}
 

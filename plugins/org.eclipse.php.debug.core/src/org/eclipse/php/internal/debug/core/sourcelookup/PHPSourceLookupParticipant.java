@@ -13,11 +13,19 @@ package org.eclipse.php.internal.debug.core.sourcelookup;
 
 import java.io.File;
 
+import org.eclipse.core.internal.filesystem.local.LocalFile;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
-import org.eclipse.php.internal.core.containers.LocalFileStorage;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.internal.core.Openable;
+import org.eclipse.dltk.internal.core.util.HandleFactory;
+import org.eclipse.dltk.internal.ui.search.DLTKSearchScopeFactory;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 
@@ -67,18 +75,26 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 			} else if (object instanceof DBGpStackFrame) {
 				fileName = ((DBGpStackFrame) object).getQualifiedFile();
 			}
+
 			if (fileName != null) {
-				File file = new File(fileName);
-				if (!file.exists()) {
-					return EMPTY;
+				HandleFactory fac = new HandleFactory();
+				IDLTKSearchScope scope = DLTKSearchScopeFactory.getInstance()
+						.createWorkspaceScope(true,
+								PHPLanguageToolkit.getDefault());
+				IPath localPath = EnvironmentPathUtils.getFile(
+						LocalEnvironment.getInstance(), new Path(fileName))
+						.getFullPath();
+				Openable openable = fac.createOpenable(localPath.toString(),
+						scope);
+				if (openable instanceof IStorage) {
+					return new Object[] { openable };
 				}
 
-				LocalFileStorage storage = new LocalFileStorage(file);
-				if (storage != null) {
-					return new Object[] { storage };
-				} else {
-					return EMPTY;
+				File file = new File(fileName);
+				if (file.exists()) {
+					return new Object[] { new LocalFile(file) };
 				}
+				return EMPTY;
 			}
 		}
 		return sourceElements;

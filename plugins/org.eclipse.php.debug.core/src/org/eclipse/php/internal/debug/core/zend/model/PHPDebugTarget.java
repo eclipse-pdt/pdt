@@ -16,7 +16,6 @@ import java.util.*;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.*;
@@ -610,74 +609,31 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 					fLastcmd = "breakpointAdded";
 					PHPLineBreakpoint bp = (PHPLineBreakpoint) breakpoint;
 					IMarker marker = bp.getMarker();
-					IResource resource = null;
+
+					String fileName = (String) marker
+							.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+
 					Breakpoint runtimeBreakpoint = bp.getRuntimeBreakpoint();
 					int lineNumber = runtimeBreakpoint.getLineNumber();
 					if (breakpoint instanceof PHPRunToLineBreakpoint) {
 						PHPRunToLineBreakpoint rtl = (PHPRunToLineBreakpoint) breakpoint;
-						resource = rtl.getSourceFile();
+						IResource resource = rtl.getSourceFile();
+						fileName = resource.getFullPath().toString();
 					} else {
-						resource = marker.getResource();
+						fileName = (String) marker
+								.getAttribute(IMarker.LOCATION);
 						lineNumber = marker
 								.getAttribute(IMarker.LINE_NUMBER, 0);
 						runtimeBreakpoint.setLineNumber(lineNumber);
 					}
-					String fileName;
-					if (!fIsPHPCGI) {
-						if (resource instanceof IWorkspaceRoot) {
-							if (IPHPDebugConstants.STORAGE_TYPE_REMOTE
-									.equals(marker
-											.getAttribute(IPHPDebugConstants.STORAGE_TYPE))) {
-								fileName = (String) marker
-										.getAttribute(IPHPDebugConstants.STORAGE_FILE);
-								fileName = marker
-										.getAttribute(
-												StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
-												fileName);
-							} else {
-								String includeFile = (String) marker
-										.getAttribute(IPHPDebugConstants.STORAGE_FILE);
-								if (IPHPDebugConstants.STORAGE_TYPE_INCLUDE
-										.equals(marker
-												.getAttribute(IPHPDebugConstants.STORAGE_TYPE))) {
-									includeFile = marker
-											.getAttribute(
-													StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
-													includeFile);
-								}
-								fileName = RemoteDebugger
-										.convertToRemoteFilename(includeFile,
-												this);
-							}
-						} else {
-							fileName = RemoteDebugger.convertToRemoteFilename(
-									resource.getFullPath().toString(), this);
-						}
-					} else {
-						if (resource instanceof IWorkspaceRoot) {
-							// If the breakpoint was set on a non-workspace
-							// file, make sure that the file name for the
-							// breakpoint
-							// is taken correctly.
-							fileName = (String) marker
-									.getAttribute(IPHPDebugConstants.STORAGE_FILE);
-							if (IPHPDebugConstants.STORAGE_TYPE_INCLUDE
-									.equals(marker
-											.getAttribute(IPHPDebugConstants.STORAGE_TYPE))) {
-								fileName = marker
-										.getAttribute(
-												StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
-												fileName);
-							}
-						} else {
-							IPath location = resource.getRawLocation();
-							if (location == null) {
-								fileName = resource.getFullPath().toOSString();
-							} else {
-								fileName = location.toOSString();
-							}
-						}
+
+					if (fileName == null) {
+						fileName = (String) marker
+								.getAttribute(IMarker.LOCATION);
 					}
+
+					fileName = RemoteDebugger.convertToRemoteFilename(fileName,
+							this);
 
 					runtimeBreakpoint.setFileName(fileName);
 					Logger

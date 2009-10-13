@@ -14,27 +14,31 @@ package org.eclipse.php.internal.debug.core.sourcelookup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupDirector;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
+import org.eclipse.debug.internal.ui.views.launch.SourceNotFoundEditorInput;
 
 /**
- * PHP source lookup director. For PHP source lookup there is one source
- * lookup participant. 
+ * PHP source lookup director. For PHP source lookup there is one source lookup
+ * participant.
  */
 public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
-    /* (non-Javadoc)
-     * @see org.eclipse.debug.internal.core.sourcelookup.ISourceLookupDirector#initializeParticipants()
-     */
-    public void initializeParticipants() {
-        addParticipants(new ISourceLookupParticipant[] { new PHPSourceLookupParticipant() });
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.debug.internal.core.sourcelookup.ISourceLookupDirector#
+	 * initializeParticipants()
+	 */
+	public void initializeParticipants() {
+		addParticipants(new ISourceLookupParticipant[] { new PHPSourceLookupParticipant() });
+	}
 
-    public Object getSourceElement(Object element) {
-        Object obj = super.getSourceElement(element);
-        if (obj == null) {
-            if (element instanceof IStackFrame) {
-                obj = new PHPSourceNotFoundInput((IStackFrame) element);
-            }
-        }
-        return obj;
-    }
+	public Object getSourceElement(Object element) {
+		Object obj = super.getSourceElement(element);
+		if (obj == null) {
+			if (element instanceof IStackFrame) {
+				obj = new SourceNotFoundEditorInput((IStackFrame) element);
+			}
+		}
+		return obj;
+	}
 
 }

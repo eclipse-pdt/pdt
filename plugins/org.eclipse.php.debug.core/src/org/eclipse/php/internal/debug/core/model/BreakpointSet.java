@@ -20,7 +20,6 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 
 public class BreakpointSet {
 
@@ -47,12 +46,15 @@ public class BreakpointSet {
 						File file = new File(path.toOSString());
 						fDirectories.add(file.getAbsolutePath());
 					} else if (element.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-						IResource includeResource = ResourcesPlugin.getWorkspace().getRoot().findMember(element.getPath().lastSegment());
+						IResource includeResource = ResourcesPlugin
+								.getWorkspace().getRoot().findMember(
+										element.getPath().lastSegment());
 						if (includeResource instanceof IProject) {
 							fProjects.add((IProject) includeResource);
 						}
 					} else if (element.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-						IPath path = DLTKCore.getResolvedVariablePath(element.getPath());
+						IPath path = DLTKCore.getResolvedVariablePath(element
+								.getPath());
 						File file = path.toFile();
 						if (file != null) {
 							if (file.isDirectory()) {
@@ -66,7 +68,6 @@ public class BreakpointSet {
 	}
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
-
 		// If no project, assume everything in the workspace
 		if (fProject == null)
 			return true;
@@ -81,19 +82,6 @@ public class BreakpointSet {
 		}
 
 		if (resource instanceof IWorkspaceRoot) {
-			String storageType = marker.getAttribute(IPHPDebugConstants.STORAGE_TYPE, "");
-
-			if (storageType.equals(IPHPDebugConstants.STORAGE_TYPE_INCLUDE)) {
-				String includeBasedir = marker.getAttribute(IPHPDebugConstants.STORAGE_INC_BASEDIR, "");
-				if (!"".equals(includeBasedir)) {
-					Object[] dirs = fDirectories.toArray();
-					for (Object element : dirs) {
-						if (includeBasedir.equals(element))
-							return true;
-					}
-					return false;
-				}
-			}
 			return true;
 		} else {
 			IProject project = resource.getProject();

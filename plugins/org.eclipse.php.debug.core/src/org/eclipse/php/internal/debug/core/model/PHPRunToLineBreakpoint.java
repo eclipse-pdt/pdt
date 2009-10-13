@@ -27,61 +27,64 @@ import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
  */
 public class PHPRunToLineBreakpoint extends PHPLineBreakpoint {
 
-    private IFile fSourceFile;
+	private IFile fSourceFile;
 
-    /**
-     * Constructs a run-to-line breakpoint in the given PHP program.
-     * 
-     * @param resource
-     *            PHP source file
-     * @param lineNumber
-     *            line to run to
-     * @exception DebugException
-     *                if unable to create the breakpoint
-     */
-    public PHPRunToLineBreakpoint(final IFile resource, final int lineNumber) throws DebugException {
-        IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
-            public void run(IProgressMonitor monitor) throws CoreException {
-                // associate with workspace root to avoid drawing in editor
-                // ruler
-                fSourceFile = resource;
-                IMarker marker = ResourcesPlugin.getWorkspace().getRoot().createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker");
-                marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
-                marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-                marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
-                setMarker(marker);
-                setRegistered(false);
-                setPersisted(false);
+	/**
+	 * Constructs a run-to-line breakpoint in the given PHP program.
+	 * 
+	 * @param resource
+	 *            PHP source file
+	 * @param lineNumber
+	 *            line to run to
+	 * @exception DebugException
+	 *                if unable to create the breakpoint
+	 */
+	public PHPRunToLineBreakpoint(final IFile resource, final int lineNumber)
+			throws DebugException {
+		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException {
+				// associate with workspace root to avoid drawing in editor
+				// ruler
+				fSourceFile = resource;
+				IMarker marker = ResourcesPlugin.getWorkspace().getRoot()
+						.createMarker(MARKER_ID);
+				marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
+				marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+				marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
+				setMarker(marker);
+				setRegistered(false);
+				setPersisted(false);
 
-            }
-        };
-        run(getMarkerRule(resource), runnable);
-    }
+			}
+		};
+		run(getMarkerRule(resource), runnable);
+	}
 
-    protected void createRuntimeBreakpoint(IMarker marker) throws CoreException {
-        IFile file = getSourceFile();
-        IPath path = file.getFullPath();
-        String fileName = path.lastSegment();
-        Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
-        fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(fileName, (lineNumber.intValue()/*-1*/));
-        fBreakpoint.setLifeTime(Breakpoint.ZEND_ONETIME_BREAKPOINT);
-    }
+	protected void createRuntimeBreakpoint(IMarker marker) throws CoreException {
+		IFile file = getSourceFile();
+		IPath path = file.getFullPath();
+		String fileName = path.lastSegment();
+		Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
+		fBreakpoint = new org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint(
+				fileName, (lineNumber.intValue()/*-1*/));
+		fBreakpoint.setLifeTime(Breakpoint.ZEND_ONETIME_BREAKPOINT);
+	}
 
-    /**
-     * Returns whether this breakpoint is a run-to-line breakpoint
-     * 
-     * @return whether this breakpoint is a run-to-line breakpoint
-     */
-    public boolean isRunToLineBreakpoint() {
-        return true;
-    }
+	/**
+	 * Returns whether this breakpoint is a run-to-line breakpoint
+	 * 
+	 * @return whether this breakpoint is a run-to-line breakpoint
+	 */
+	public boolean isRunToLineBreakpoint() {
+		return true;
+	}
 
-    /**
-     * Returns the source file this breakpoint is contained in.
-     * 
-     * @return the source file this breakpoint is contained in
-     */
-    public IFile getSourceFile() {
-        return fSourceFile;
-    }
+	/**
+	 * Returns the source file this breakpoint is contained in.
+	 * 
+	 * @return the source file this breakpoint is contained in
+	 */
+	public IFile getSourceFile() {
+		return fSourceFile;
+	}
 }

@@ -13,36 +13,31 @@ package org.eclipse.php.internal.debug.core.sourcelookup.containers;
 
 import java.io.File;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.sourcelookup.ISourceContainerType;
 import org.eclipse.debug.core.sourcelookup.containers.AbstractSourceContainer;
-import org.eclipse.php.internal.core.containers.LocalFileStorage;
+import org.eclipse.debug.core.sourcelookup.containers.LocalFileStorage;
 
 public class PHPFileSourceContainer extends AbstractSourceContainer {
 
-    private File fFile;
-    private LocalFileStorage fStorage;
-//    private IProject project;
+	private File fFile;
+	private LocalFileStorage fStorage;
 
-    public PHPFileSourceContainer(File file, IProject project) {
-        fFile = file;
-//        this.project = project;
-        fStorage = new LocalFileStorage(fFile);
-        fStorage.setProject(project);
-    }
+	public PHPFileSourceContainer(File file) {
+		fFile = file;
+		fStorage = new LocalFileStorage(fFile);
+	}
 
-    public Object[] findSourceElements(String name) throws CoreException {
-        return new Object[] { fStorage };
-    }
+	public Object[] findSourceElements(String name) throws CoreException {
+		return new Object[] { fStorage };
+	}
 
-    public String getName() {
-        return fFile.getName();
-    }
+	public String getName() {
+		return fFile.getName();
+	}
 
-    public ISourceContainerType getType() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public ISourceContainerType getType() {
+		return null;
+	}
 
 }

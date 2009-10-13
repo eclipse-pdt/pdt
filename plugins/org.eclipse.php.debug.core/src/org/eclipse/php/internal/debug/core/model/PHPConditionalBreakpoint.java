@@ -29,7 +29,6 @@ import com.ibm.icu.text.MessageFormat;
 public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 
     private boolean fConditionEnabled = false;
-
     private String fCondition = "";
 
     public PHPConditionalBreakpoint() {
@@ -49,7 +48,7 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
     public PHPConditionalBreakpoint(final IResource resource, final int lineNumber, final Map attributes) throws CoreException {
         IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
             public void run(IProgressMonitor monitor) throws CoreException {
-                IMarker marker = resource.createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker");
+                IMarker marker = resource.createMarker(MARKER_ID);
                 attributes.put(IBreakpoint.ENABLED, Boolean.TRUE);
                 attributes.put(IBreakpoint.ID, getModelIdentifier());
                 attributes.put(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { resource.getName(), Integer.toString(lineNumber) }));

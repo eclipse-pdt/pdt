@@ -24,6 +24,7 @@ import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
@@ -86,7 +87,7 @@ public class StartProcessFileNotificationHandler implements
 
 		String localPath = null;
 		if (isFirstFileToDebug) { // we suppose that we always get full path
-									// here
+			// here
 			if (isWebServerDebugger) {
 				PathEntry pathEntry = debugTarget
 						.mapFirstDebugFile(remoteFileName);
@@ -164,33 +165,46 @@ public class StartProcessFileNotificationHandler implements
 
 	protected IBreakpoint[] findBreakpoints(String localPath,
 			PHPDebugTarget debugTarget) {
+
 		IBreakpointManager breakpointManager = debugTarget
 				.getBreakpointManager();
 		if (!breakpointManager.isEnabled()) {
 			return new IBreakpoint[0];
 		}
+
 		IBreakpoint[] breakpoints = breakpointManager
 				.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		List<IBreakpoint> l = new LinkedList<IBreakpoint>();
+
 		for (IBreakpoint bp : breakpoints) {
+
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot()
 					.findMember(localPath);
-			if (bp.getMarker().getResource().equals(resource)) {
-				l.add(bp);
-			}
-			try {
-				Object secondaryId = bp
-						.getMarker()
-						.getAttribute(
-								StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
-				if (secondaryId != null) {
-					if (new VirtualPath(localPath).equals(new VirtualPath(
-							(String) secondaryId))) {
-						l.add(bp);
-					}
+
+			if (resource != null) {
+				if (bp.getMarker().getResource().equals(resource)) {
+					l.add(bp);
 				}
-			} catch (CoreException e) {
-				PHPDebugPlugin.log(e);
+			} else {
+				try {
+					String secondaryId = (String) bp
+							.getMarker()
+							.getAttribute(
+									StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+					if (secondaryId != null) {
+						Path secondaryIdPath = new Path(secondaryId);
+						if (EnvironmentPathUtils.isFull(secondaryIdPath)) {
+							secondaryId = EnvironmentPathUtils
+									.getLocalPathString(secondaryIdPath);
+						}
+						if (new VirtualPath(localPath).equals(new VirtualPath(
+								secondaryId))) {
+							l.add(bp);
+						}
+					}
+				} catch (Exception e) {
+					PHPDebugPlugin.log(e);
+				}
 			}
 		}
 		return l.toArray(new IBreakpoint[l.size()]);
