@@ -15,6 +15,7 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
@@ -30,27 +31,31 @@ public class FileDropEditorOpenAction extends FileDropAction {
 
 		if (!(targetEditor instanceof PHPStructuredEditor))
 			return super.run(event, targetEditor);
-		
+
 		final String[] fileNames = (String[]) event.data;
 		if (fileNames == null || fileNames.length == 0) {
 			return false;
 		}
-		
+
 		// default behavior
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				for (int i = 0; i < fileNames.length; ++i) {
-					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileNames[i]));
-					if (file != null) {
-						try {
-							EditorUtility.openInEditor(file, true);
-						} catch (PartInitException e) {
-							Logger.logException(e);
+					try {
+						IFile file = ResourcesPlugin.getWorkspace().getRoot()
+								.getFileForLocation(new Path(fileNames[i]));
+						if (file != null) {
+							org.eclipse.dltk.internal.ui.editor.EditorUtility
+									.openInEditor(file, true);
+						} else {
+							if (new File(fileNames[i]).exists()) {
+								EditorUtility.openLocalFile(fileNames[i], 0);
+							}
 						}
-					} else {
-						if (new File(fileNames[i]).exists()) {
-							EditorUtility.openFileInEditor(fileNames[i], 0);
-						}
+					} catch (PartInitException e) {
+						Logger.logException(e);
+					} catch (CoreException e) {
+						Logger.logException(e);
 					}
 				}
 			}

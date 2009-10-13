@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.ui.internal.debug.ManageBreakpointAction;
  * Manage breakpoint action that supports external files.
  * 
  * @author shalom
- *
+ * 
  */
 public class ManageExternalBreakpointAction extends ManageBreakpointAction {
 
@@ -31,22 +31,32 @@ public class ManageExternalBreakpointAction extends ManageBreakpointAction {
 	 * @param editor
 	 * @param rulerInfo
 	 */
-	public ManageExternalBreakpointAction(ITextEditor editor, IVerticalRuler rulerInfo) {
+	public ManageExternalBreakpointAction(ITextEditor editor,
+			IVerticalRuler rulerInfo) {
 		super(editor, rulerInfo);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
+	 * 
+	 * @see
+	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
 	 */
 	protected boolean hasMarkers() {
-		return ExternalBreakpointActionHelper.hasMarkers(getResource(), getDocument(), getAnnotationModel(), getRulerInfo());
+		return ExternalBreakpointActionHelper.hasMarkers(getTextEditor(),
+				getResource(), getDocument(), getAnnotationModel(),
+				getRulerInfo());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
 	 */
 	protected IMarker[] getMarkers() {
-		return ExternalBreakpointActionHelper.getMarkers(getResource(), getDocument(), getAnnotationModel(), getRulerInfo());
+		return ExternalBreakpointActionHelper.getMarkers(getTextEditor(),
+				getResource(), getDocument(), getAnnotationModel(),
+				getRulerInfo());
 	}
 }

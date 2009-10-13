@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.corext.SourceRange;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
@@ -35,7 +36,6 @@ import org.eclipse.php.internal.ui.folding.html.ProjectionModelNodeAdapterFactor
 import org.eclipse.php.internal.ui.folding.html.ProjectionModelNodeAdapterHTML;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
-import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.jsdt.core.IClassFile;
@@ -1197,7 +1197,7 @@ public class StructuredTextFoldingProviderPHP implements
 	private IModelElement getInputElement() {
 		if (fEditor == null)
 			return null;
-		return EditorUtility.getEditorInputPhpElement(fEditor, false);
+		return EditorUtility.getEditorInputModelElement(fEditor, false);
 	}
 
 	private void initializePreferences() {

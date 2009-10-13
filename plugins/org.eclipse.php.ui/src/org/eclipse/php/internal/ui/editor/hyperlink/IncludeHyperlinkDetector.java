@@ -35,7 +35,7 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 
-		PHPStructuredEditor editor = EditorUtility.getPHPStructuredEditor(textViewer);
+		PHPStructuredEditor editor = EditorUtility.getPHPEditor(textViewer);
 		if (editor == null) {
 			return null;
 		}

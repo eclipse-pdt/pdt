@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.ui.actions.ActionMessages;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
@@ -40,20 +39,23 @@ public class OpenAction extends SelectionDispatchAction {
 	private PHPStructuredEditor fEditor;
 
 	/**
-	 * Creates a new <code>OpenAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
+	 * Creates a new <code>OpenAction</code>. The action requires that the
+	 * selection provided by the site's selection provider is of type <code>
+	 * org.eclipse.jface.viewers.IStructuredSelection</code>
+	 * .
 	 * 
-	 * @param site the site providing context information for this action
+	 * @param site
+	 *            the site providing context information for this action
 	 */
 	public OpenAction(IWorkbenchSite site) {
 		super(site);
 		setText(PHPUIMessages.getString("OpenAction_label"));
 		setToolTipText(PHPUIMessages.getString("OpenAction_tooltip"));
 		setDescription(PHPUIMessages.getString("OpenAction_description"));
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.OPEN_RESOURCE_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+				IIDEHelpContextIds.OPEN_RESOURCE_ACTION);
 	}
-	
+
 	/**
 	 * Note: This constructor is for internal use only. Clients should not call
 	 * this constructor.
@@ -67,19 +69,20 @@ public class OpenAction extends SelectionDispatchAction {
 		setEnabled(EditorUtility.getEditorInputModelElement(fEditor, false) != null);
 	}
 
-	/* 
-	 * We override this function since we've changed isEnabled() to check its status according to the selection
+	/*
+	 * We override this function since we've changed isEnabled() to check its
+	 * status according to the selection
 	 */
 	public void selectionChanged(ITextSelection selection) {
 	}
 
-	/* 
-	 * We override this function since we've changed isEnabled() to check its status according to the selection
+	/*
+	 * We override this function since we've changed isEnabled() to check its
+	 * status according to the selection
 	 */
 	public void selectionChanged(IStructuredSelection selection) {
 	}
 
-	
 	public boolean isEnabled() {
 		ISelection selection = getSelection();
 		if (selection instanceof IStructuredSelection) {
@@ -105,13 +108,15 @@ public class OpenAction extends SelectionDispatchAction {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on SelectionDispatchAction.
+	/*
+	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void run(ITextSelection selection) {
 		if (!ActionUtils.isProcessable(getShell(), fEditor))
 			return;
-		// TODO open in a dialog ? with these parameters: getShell(), getDialogTitle(), PHPUIMessages.getString("OpenAction_select_element")
+		// TODO open in a dialog ? with these parameters: getShell(),
+		// getDialogTitle(),
+		// PHPUIMessages.getString("OpenAction_select_element")
 		IModelElement[] element = null;
 		try {
 			element = SelectionConverter.codeResolve(fEditor);
@@ -119,9 +124,12 @@ public class OpenAction extends SelectionDispatchAction {
 			Logger.logException(e);
 		}
 		if (element == null) {
-			IEditorStatusLine statusLine = (IEditorStatusLine) fEditor.getAdapter(IEditorStatusLine.class);
+			IEditorStatusLine statusLine = (IEditorStatusLine) fEditor
+					.getAdapter(IEditorStatusLine.class);
 			if (statusLine != null)
-				statusLine.setMessage(true, PHPUIMessages.getString("OpenAction_error_messageBadSelection"), null);
+				statusLine.setMessage(true, PHPUIMessages
+						.getString("OpenAction_error_messageBadSelection"),
+						null);
 			getShell().getDisplay().beep();
 			return;
 		}
@@ -129,19 +137,22 @@ public class OpenAction extends SelectionDispatchAction {
 		run(new Object[] { element }, null);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on SelectionDispatchAction.
+	/*
+	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void run(IStructuredSelection selection) {
 		if (!checkEnabled(selection))
 			return;
-		run(selection.toArray(), ((PHPTreeViewer) getSelectionProvider()).getTree().getSelection());
+		run(selection.toArray(), ((PHPTreeViewer) getSelectionProvider())
+				.getTree().getSelection());
 	}
 
 	/**
-	 * Note: this method is for internal use only. Clients should not call this method.
+	 * Note: this method is for internal use only. Clients should not call this
+	 * method.
 	 * 
-	 * @param elements the elements to process
+	 * @param elements
+	 *            the elements to process
 	 */
 	public void run(Object[] elements, Object[] treeNodes) {
 		if (elements == null)
@@ -150,23 +161,29 @@ public class OpenAction extends SelectionDispatchAction {
 			Object element = elements[i];
 			try {
 				element = getElementToOpen(element);
-				boolean activateOnOpen = fEditor != null ? true : OpenStrategy.activateOnOpen();
+				boolean activateOnOpen = fEditor != null ? true : OpenStrategy
+						.activateOnOpen();
 				if (element instanceof ISourceModule && treeNodes != null) {
 					OpenActionUtil.open(treeNodes[i], activateOnOpen);
 				} else {
 					OpenActionUtil.open(element, activateOnOpen);
 				}
 			} catch (PartInitException x) {
-				MessageDialog.openError(getShell(), PHPUIMessages.getString("OpenAction_error_messageProblems"), ""); //$NON-NLS-1$
-
+				MessageDialog.openError(getShell(), PHPUIMessages
+						.getString("OpenAction_error_messageProblems"), ""); //$NON-NLS-1$
+			} catch (ModelException e) {
+				MessageDialog.openError(getShell(), PHPUIMessages
+						.getString("OpenAction_error_messageProblems"), ""); //$NON-NLS-1$
 			}
 		}
 	}
 
 	/**
-	 * Note: this method is for internal use only. Clients should not call this method.
+	 * Note: this method is for internal use only. Clients should not call this
+	 * method.
 	 * 
-	 * @param object the element to open
+	 * @param object
+	 *            the element to open
 	 * @return the real element to open
 	 */
 	public Object getElementToOpen(Object object) {
@@ -176,5 +193,5 @@ public class OpenAction extends SelectionDispatchAction {
 	private String getDialogTitle() {
 		return PHPUIMessages.getString("OpenAction_error_title");
 	}
-	
+
 }

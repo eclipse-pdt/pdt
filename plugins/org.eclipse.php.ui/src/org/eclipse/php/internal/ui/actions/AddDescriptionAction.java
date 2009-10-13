@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
@@ -32,10 +33,8 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
-import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.ui.CodeGeneration;
 import org.eclipse.ui.*;
-import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -43,9 +42,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
-public class AddDescriptionAction extends Action implements IObjectActionDelegate {
-
-	private IEditorPart fEditorPart;
+public class AddDescriptionAction extends Action implements
+		IObjectActionDelegate {
 
 	private static final String PHP_COMMENT_BLOCK_END = " */";
 	private static final String PHP_COMMENT_BLOCK_MID = " *";
@@ -71,38 +69,59 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 
 		Arrays.sort(modelElement, new modelElementComparatorImplementation());
 
-		// iterating the functions that need to add 'PHP Doc' bottoms-up - to eliminate mutual interference
+		// iterating the functions that need to add 'PHP Doc' bottoms-up - to
+		// eliminate mutual interference
 		for (int i = modelElement.length - 1; i >= 0; i--) {
+
 			IModelElement modelElem = modelElement[i];
 			if (null == modelElem) {
 				continue; // if we got to null pointer, skipping it
 			}
-			IEditorInput input = EditorUtility.getEditorInput(modelElem);
-			IWorkbenchPage page = PHPUiPlugin.getActivePage();
+
+			IEditorInput input;
 			try {
-				fEditorPart = IDE.openEditor(page, input, PHPUiConstants.PHP_EDITOR_ID);
+				input = org.eclipse.php.internal.ui.util.EditorUtility
+						.getEditorInput(modelElem);
+			} catch (ModelException e) {
+				Logger.logException(e);
+				return;
+			}
+
+			IWorkbenchPage page = PHPUiPlugin.getActivePage();
+			IEditorPart editorPart;
+			try {
+				editorPart = IDE.openEditor(page, input,
+						PHPUiConstants.PHP_EDITOR_ID);
 			} catch (PartInitException e) {
 				Logger.logException(e);
 				return;
 			}
-			ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(fEditorPart);
-			IEditorInput editorInput = fEditorPart.getEditorInput();
-			IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
-			this.lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 
-			String docBlockText = handleElement(modelElem, document);
-			if (docBlockText == null) {
-				assert false;
-				return;
+			if (editorPart instanceof ITextEditor) {
+				ITextEditor textEditor = (ITextEditor) editorPart;
+				IEditorInput editorInput = editorPart.getEditorInput();
+				IDocument document = textEditor.getDocumentProvider()
+						.getDocument(editorInput);
+				this.lineDelim = TextUtilities
+						.getDefaultLineDelimiter(document);
+
+				String docBlockText = handleElement(textEditor, modelElem,
+						document);
+				if (docBlockText == null) {
+					return;
+				}
+
+				EditorUtility.revealInEditor(textEditor, startPosition,
+						docBlock.length());
 			}
-
-			EditorUtility.revealInEditor(textEditor, startPosition, docBlock.length());
 		}
 	}
 
-	public String handleElement(IModelElement modelElem, IDocument document) {
+	private String handleElement(ITextEditor textEditor,
+			IModelElement modelElem, IDocument document) {
 		if (modelElem instanceof ISourceModule) {
-			handleFileDocBlock((ISourceModule) modelElem, (IStructuredDocument) document);
+			handleFileDocBlock((ISourceModule) modelElem,
+					(IStructuredDocument) document);
 			return null;
 		}
 
@@ -122,30 +141,29 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 			return null;
 		}
 
-		// nirc
-		TextEditor textEditor = EditorUtility.getPHPStructuredEditor(fEditorPart);
 		if (!textEditor.isEditable()) {
 			return null;
 		}
 		int type = modelElem != null ? modelElem.getElementType() : -1;
-		if (type != IModelElement.METHOD && type != IModelElement.TYPE && type != IModelElement.FIELD) {
+		if (type != IModelElement.METHOD && type != IModelElement.TYPE
+				&& type != IModelElement.FIELD) {
 			assert false;
 			return null;
 		}
 		String comment = null;
 		try {
 			switch (type) {
-				case IModelElement.TYPE:
-					comment = createTypeComment((IType) modelElem, lineDelim);
-					break;
-				case IModelElement.FIELD:
-					comment = createFieldComment((IField) modelElem, lineDelim);
-					break;
-				case IModelElement.METHOD:
-					comment = createMethodComment((IMethod) modelElem, lineDelim);
-					break;
-				default:
-					comment = createDefaultComment(lineDelim);
+			case IModelElement.TYPE:
+				comment = createTypeComment((IType) modelElem, lineDelim);
+				break;
+			case IModelElement.FIELD:
+				comment = createFieldComment((IField) modelElem, lineDelim);
+				break;
+			case IModelElement.METHOD:
+				comment = createMethodComment((IMethod) modelElem, lineDelim);
+				break;
+			default:
+				comment = createDefaultComment(lineDelim);
 			}
 		} catch (CoreException e) {
 			comment = createDefaultComment(lineDelim);
@@ -154,96 +172,129 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 
 		docBlock = indentPattern(comment, indentString, lineDelim);
 
-		String docBlockText = insertDocBlock((IStructuredDocument) document, startPosition, docBlock);
+		String docBlockText = insertDocBlock((IStructuredDocument) document,
+				startPosition, docBlock);
 
 		return docBlockText;
 	}
 
-	private String indentPattern(String originalPattern, String indentation, String lineDelim) {
+	private String indentPattern(String originalPattern, String indentation,
+			String lineDelim) {
 		String delimPlusIndent = lineDelim + indentation;
-		String indentedPattern = originalPattern.replaceAll(lineDelim, delimPlusIndent) + delimPlusIndent;
+		String indentedPattern = originalPattern.replaceAll(lineDelim,
+				delimPlusIndent)
+				+ delimPlusIndent;
 
 		return indentedPattern;
 	}
 
 	private String createDefaultComment(String lineDelimiter) {
-		return PHP_COMMENT_BLOCK_START + lineDelimiter + PHP_COMMENT_BLOCK_MID + lineDelimiter + PHP_COMMENT_BLOCK_END;
+		return PHP_COMMENT_BLOCK_START + lineDelimiter + PHP_COMMENT_BLOCK_MID
+				+ lineDelimiter + PHP_COMMENT_BLOCK_END;
 	}
 
-	private String createTypeComment(IType type, String lineDelimiter) throws CoreException {
-		//String[] typeParameterNames= StubUtility.getTypeParameterNames(type.getFields());
+	private String createTypeComment(IType type, String lineDelimiter)
+			throws CoreException {
+		// String[] typeParameterNames=
+		// StubUtility.getTypeParameterNames(type.getFields());
 
-		return CodeGeneration.getTypeComment(type.getScriptProject(), type.getTypeQualifiedName(), /*typeParameterNames*/null, lineDelimiter);
+		return CodeGeneration.getTypeComment(type.getScriptProject(), type
+				.getTypeQualifiedName(), /* typeParameterNames */null,
+				lineDelimiter);
 	}
 
-	private String createMethodComment(IMethod meth, String lineDelimiter) throws CoreException {
+	private String createMethodComment(IMethod meth, String lineDelimiter)
+			throws CoreException {
 		IType declaringType = meth.getDeclaringType();
 		IMethod overridden = null;
 
 		if (!meth.isConstructor() && null != declaringType) {
-			ITypeHierarchy hierarchy = SuperTypeHierarchyCache.getTypeHierarchy(declaringType);
-			MethodOverrideTester tester = new MethodOverrideTester(declaringType, hierarchy);
+			ITypeHierarchy hierarchy = SuperTypeHierarchyCache
+					.getTypeHierarchy(declaringType);
+			MethodOverrideTester tester = new MethodOverrideTester(
+					declaringType, hierarchy);
 			overridden = tester.findOverriddenMethod(meth, true);
 		}
 		return CodeGeneration.getMethodComment(meth, overridden, lineDelimiter);
 	}
 
-	private String createFieldComment(IField field, String lineDelimiter) throws ModelException, CoreException {
-		return CodeGeneration.getFieldComment(field.getScriptProject(), field, lineDelimiter);
+	private String createFieldComment(IField field, String lineDelimiter)
+			throws ModelException, CoreException {
+		return CodeGeneration.getFieldComment(field.getScriptProject(), field,
+				lineDelimiter);
 	}
 
 	/**
-	 * Calculates and returns the desired docBlock surrounded by '<?php' and '?>' tags
-	 * (no indentation)
-	 *  
-	 * @param document - The IStructuredDocument that we are working on
+	 * Calculates and returns the desired docBlock surrounded by '<?php' and
+	 * '?>' tags (no indentation)
+	 * 
+	 * @param document
+	 *            - The IStructuredDocument that we are working on
 	 * 
 	 * @return String to be used as leading indentation
-	 * @throws CoreException 
+	 * @throws CoreException
 	 */
 	public String createPHPScopeFileDocBlock(IScriptProject scriptProject) {
 		String fileComment;
 		try {
-			fileComment = CodeGeneration.getFileComment(scriptProject, lineDelim);
+			fileComment = CodeGeneration.getFileComment(scriptProject,
+					lineDelim);
 		} catch (CoreException e) {
 			Logger.logException(e);
 			fileComment = createDefaultComment(lineDelim);
 		}
-		return PHP_BLOCK_OPEN_TAG + lineDelim + fileComment + PHP_BLOCK_CLOSE_TAG + lineDelim;
+		return PHP_BLOCK_OPEN_TAG + lineDelim + fileComment
+				+ PHP_BLOCK_CLOSE_TAG + lineDelim;
 	}
 
 	/**
-	 * Calculates the leading string to be used as indentation prefix 
-	 *  
-	 * @param document The IStructuredDocument that we are working on
-	 * @param modelElem	A PHPFileData that need to be documented
+	 * Calculates the leading string to be used as indentation prefix
+	 * 
+	 * @param document
+	 *            The IStructuredDocument that we are working on
+	 * @param modelElem
+	 *            A PHPFileData that need to be documented
 	 * 
 	 * @return String to be used as leading indentation
 	 */
-	private String getIndentString(IDocument document, IModelElement modelElem) throws BadLocationException {
+	private String getIndentString(IDocument document, IModelElement modelElem)
+			throws BadLocationException {
 		int elementOffset = 0;
 		String leadingString = null;
 		try {
 			elementOffset = getCodeDataOffset(modelElem);
-			int lineStartOffset = document.getLineInformationOfOffset(elementOffset).getOffset();
-			leadingString = document.get(lineStartOffset, elementOffset - lineStartOffset);
+			int lineStartOffset = document.getLineInformationOfOffset(
+					elementOffset).getOffset();
+			leadingString = document.get(lineStartOffset, elementOffset
+					- lineStartOffset);
 		} catch (ModelException e) {
 			Logger.logException(e);
 			return null;
 		}
-		// replacing all non-spaces/tabs to single-space, in order to get "char-clean" prefix
+		// replacing all non-spaces/tabs to single-space, in order to get
+		// "char-clean" prefix
 		leadingString = leadingString.replaceAll("[^\\s]", " ");
 
 		return leadingString;
 	}
 
-	private int getCodeDataOffset(IModelElement modelElem) throws ModelException {
+	private int getCodeDataOffset(IModelElement modelElem)
+			throws ModelException {
 		if (modelElem instanceof ISourceModule) {
-			ISourceReference primaryModelElem = (ISourceReference) (((ISourceModule) modelElem).getPrimaryElement());// .getPHPBlocks();
-			return primaryModelElem != null ? primaryModelElem.getSourceRange().getOffset() + primaryModelElem.getSourceRange().getLength()/*getPHPStartTag().getEndPosition() */: -1;
+			ISourceReference primaryModelElem = (ISourceReference) (((ISourceModule) modelElem)
+					.getPrimaryElement());// .getPHPBlocks();
+			return primaryModelElem != null ? primaryModelElem.getSourceRange()
+					.getOffset()
+					+ primaryModelElem.getSourceRange().getLength()/*
+																	 * getPHPStartTag(
+																	 * ).
+																	 * getEndPosition
+																	 * ()
+																	 */: -1;
 		}
 		if (modelElem instanceof ISourceReference) {
-			int dataOffset = ((ISourceReference) modelElem).getSourceRange().getOffset();
+			int dataOffset = ((ISourceReference) modelElem).getSourceRange()
+					.getOffset();
 			return dataOffset;
 		}
 		assert false;
@@ -266,17 +317,22 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	}
 
 	/**
-	 * Handle a situation where a file DocBlock is requested and there is an undocumented
-	 * class, function or define at the beginning of the document. 
-	 * In this case we auto-document the undocumented element to comply the DocBlock rules.
-	 *  
-	 * @param data	A PHPFileData that need to be documented
-	 * @param document The IStructuredDocument that we are working on
+	 * Handle a situation where a file DocBlock is requested and there is an
+	 * undocumented class, function or define at the beginning of the document.
+	 * In this case we auto-document the undocumented element to comply the
+	 * DocBlock rules.
+	 * 
+	 * @param data
+	 *            A PHPFileData that need to be documented
+	 * @param document
+	 *            The IStructuredDocument that we are working on
 	 */
-	private void handleFileDocBlock(ISourceModule data, IStructuredDocument document) {
+	private void handleFileDocBlock(ISourceModule data,
+			IStructuredDocument document) {
 
 		// Find the first PHP script region:
-		IStructuredDocumentRegion sdRegion = document.getFirstStructuredDocumentRegion();
+		IStructuredDocumentRegion sdRegion = document
+				.getFirstStructuredDocumentRegion();
 		IPhpScriptRegion phpScriptRegion = null;
 		ITextRegion textRegion = null;
 		String docBlock = null;
@@ -284,24 +340,30 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 			ITextRegion region = sdRegion.getFirstRegion();
 			if (region.getType() == PHPRegionContext.PHP_OPEN) {
 				// File's content starts with '<?PHP' tag
-				region = sdRegion.getRegionAtCharacterOffset(region.getEnd() + sdRegion.getStart());
-				if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
+				region = sdRegion.getRegionAtCharacterOffset(region.getEnd()
+						+ sdRegion.getStart());
+				if (region != null
+						&& region.getType() == PHPRegionContext.PHP_CONTENT) {
 					phpScriptRegion = (IPhpScriptRegion) region;
 					try {
-						docBlock = CodeGeneration.getFileComment(data.getScriptProject(), null);
+						docBlock = CodeGeneration.getFileComment(data
+								.getScriptProject(), null);
 					} catch (CoreException e) {
-						Logger.logException("Generating default phpdoc comment", e);
+						Logger.logException(
+								"Generating default phpdoc comment", e);
 						docBlock = createDefaultComment(null);
 					}
 					break;
 				}
 			} else if (region.getType() == DOMRegionContext.XML_DECLARATION_OPEN) {
 				// File's content starts with HTML code
-				region = sdRegion.getRegionAtCharacterOffset(region.getEnd() + sdRegion.getStart());
+				region = sdRegion.getRegionAtCharacterOffset(region.getEnd()
+						+ sdRegion.getStart());
 				if (region != null) {
 					phpScriptRegion = null;
 					textRegion = (ITextRegion) region;
-					docBlock = createPHPScopeFileDocBlock(data.getScriptProject());
+					docBlock = createPHPScopeFileDocBlock(data
+							.getScriptProject());
 					break;
 				}
 			}
@@ -318,10 +380,13 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 				} else if (phpScriptRegion != null) {
 					// File's content starts with '<?php' tag
 					textRegion = phpScriptRegion.getPhpToken(0);
-					int lineDelimiterLength = document.getLineDelimiter(document.getLineOfOffset(textRegion.getStart())).length();
-					offset = textRegion.getStart() + sdRegion.getStartOffset() + phpScriptRegion.getStart() + lineDelimiterLength;
+					int lineDelimiterLength = document.getLineDelimiter(
+							document.getLineOfOffset(textRegion.getStart()))
+							.length();
+					offset = textRegion.getStart() + sdRegion.getStartOffset()
+							+ phpScriptRegion.getStart() + lineDelimiterLength;
 				} else {
-					assert false;//we shouldn't get here ...
+					assert false;// we shouldn't get here ...
 				}
 
 				if (data instanceof AbstractSourceModule)
@@ -332,7 +397,8 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		}
 	}
 
-	private String insertDocBlock(IDocument document, int offset, String docBlock) {
+	private String insertDocBlock(IDocument document, int offset,
+			String docBlock) {
 		try {
 			document.replace(offset, 0, docBlock);
 		} catch (BadLocationException e) {
@@ -342,28 +408,37 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		return docBlock;
 	}
 
-	private final class modelElementComparatorImplementation implements Comparator<IModelElement> {
+	private final class modelElementComparatorImplementation implements
+			Comparator<IModelElement> {
 		public int compare(IModelElement object1, IModelElement object2) {
-			/* handling null-pointers on both levels (object=null or object1.getUserData()=null)
-			   'null' objects will be considered as 'bigger' and will be pushed to the end of the array 
+			/*
+			 * handling null-pointers on both levels (object=null or
+			 * object1.getUserData()=null) 'null' objects will be considered as
+			 * 'bigger' and will be pushed to the end of the array
 			 */
-			if (object1 instanceof ISourceReference && object2 instanceof ISourceReference) {
+			if (object1 instanceof ISourceReference
+					&& object2 instanceof ISourceReference) {
 				ISourceReference sourceReference1 = (ISourceReference) object1;
 				ISourceReference sourceReference2 = (ISourceReference) object2;
 
 				try {
-					if (sourceReference1 == null || sourceReference1.getSourceRange() == null) {
-						if (sourceReference2 == null || sourceReference2.getSourceRange() == null) {
+					if (sourceReference1 == null
+							|| sourceReference1.getSourceRange() == null) {
+						if (sourceReference2 == null
+								|| sourceReference2.getSourceRange() == null) {
 							return 0; // both null => equal
 						} else
-							return 1; // only object1 is null => object1 is bigger
+							return 1; // only object1 is null => object1 is
+						// bigger
 					}
 
-					if (sourceReference2 == null || sourceReference2.getSourceRange() == null) {
+					if (sourceReference2 == null
+							|| sourceReference2.getSourceRange() == null) {
 						return -1; // only object2 is null => object2 is bigger
 					}
 
-					return sourceReference1.getSourceRange().getOffset() - sourceReference2.getSourceRange().getOffset();
+					return sourceReference1.getSourceRange().getOffset()
+							- sourceReference2.getSourceRange().getOffset();
 
 				} catch (ModelException e) {
 					Logger.logException(e);
@@ -375,7 +450,8 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	}
 
 	/**
-	 * @param fmodelElement the fmodelElement to set
+	 * @param fmodelElement
+	 *            the fmodelElement to set
 	 */
 	public void setModelElement(IModelElement[] fmodelElement) {
 		this.fModelElement = fmodelElement;

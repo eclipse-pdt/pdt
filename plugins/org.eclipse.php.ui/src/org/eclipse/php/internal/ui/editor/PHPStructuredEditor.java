@@ -62,7 +62,6 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Variable;
-import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -76,7 +75,6 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
@@ -2231,17 +2229,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
 		} else if (input instanceof IStorageEditorInput) {
-			// This kind of editor input usually means non-workspace file, like
-			// PHP file which comes from include path, remote file which comes
-			// from
-			// Web server while debugging, file from ZIP archive, etc...
-
-			final IStorageEditorInput editorInput = (IStorageEditorInput) input;
-			final IStorage storage = editorInput.getStorage();
-
-			if (storage instanceof ZipEntryStorage) {
-				resource = ((ZipEntryStorage) storage).getProject();
-			}
+			// non-workspace file
 		}
 
 		if (resource instanceof IFile) {
@@ -2612,8 +2600,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 	@Override
 	public IDocumentProvider getDocumentProvider() {
-		if (getEditorInput() instanceof LocalFileStorageEditorInput
-				|| getEditorInput() instanceof ExternalStorageEditorInput) {
+		if (getEditorInput() instanceof ExternalStorageEditorInput) {
 			IDocumentProvider provider = LocalStorageModelProvider
 					.getInstance();
 			if (provider != null) {

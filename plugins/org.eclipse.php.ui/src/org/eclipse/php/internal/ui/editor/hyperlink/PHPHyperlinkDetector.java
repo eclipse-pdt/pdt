@@ -31,7 +31,7 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlinkDetector#detectHyperlinks(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion, boolean)
 	 */
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility.getPHPStructuredEditor(textViewer);
+		PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility.getPHPEditor(textViewer);
 		if (editor == null) {
 			return null;
 		}

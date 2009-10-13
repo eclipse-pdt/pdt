@@ -21,8 +21,9 @@ import org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction;
 
 /**
  * Edit breakpoint action that supports external files.
+ * 
  * @author shalom
- *
+ * 
  */
 public class EditExternalBreakpointAction extends EditBreakpointAction {
 
@@ -30,34 +31,43 @@ public class EditExternalBreakpointAction extends EditBreakpointAction {
 	 * @param editor
 	 * @param rulerInfo
 	 */
-	public EditExternalBreakpointAction(ITextEditor editor, IVerticalRuler rulerInfo) {
+	public EditExternalBreakpointAction(ITextEditor editor,
+			IVerticalRuler rulerInfo) {
 		super(editor, rulerInfo);
-		// TODO Auto-generated constructor stub
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
+	 * 
+	 * @see
+	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#hasMarkers()
 	 */
 	protected boolean hasMarkers() {
-		return ExternalBreakpointActionHelper.hasMarkers(getResource(), getDocument(), getAnnotationModel(), getRulerInfo());
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
-	 */
-	protected IMarker[] getMarkers() {
-		return ExternalBreakpointActionHelper.getMarkers(getResource(), getDocument(), getAnnotationModel(), getRulerInfo());
+		return ExternalBreakpointActionHelper.hasMarkers(getTextEditor(),
+				getResource(), getDocument(), getAnnotationModel(),
+				getRulerInfo());
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction#getMarkers()
+	 */
+	protected IMarker[] getMarkers() {
+		return ExternalBreakpointActionHelper.getMarkers(getTextEditor(),
+				getResource(), getDocument(), getAnnotationModel(),
+				getRulerInfo());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction#update()
 	 */
 	public void update() {
 		breakpoints = getBreakpoints(getMarkers());
 		boolean enableThisAction = hasMarkers() && breakpoints.length > 0;
 		setEnabled(enableThisAction);
-
 	}
 }

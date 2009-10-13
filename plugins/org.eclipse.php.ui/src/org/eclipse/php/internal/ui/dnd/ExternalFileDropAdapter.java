@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dnd;
 
-import java.util.Arrays;
-
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.ui.PlatformUI;
@@ -53,7 +53,14 @@ public class ExternalFileDropAdapter extends DropTargetAdapter {
 		if (event.data instanceof String[]) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					EditorUtility.openFilesInEditor(Arrays.asList((String[]) event.data));
+					String[] files = (String[]) event.data;
+					for (String file : files) {
+						try {
+							EditorUtility.openLocalFile(file, 0);
+						} catch (CoreException e) {
+							Logger.logException(e);
+						}
+					}
 				}
 			});
 		}
