@@ -1262,7 +1262,7 @@
 	<!--History & Others Working Set:-->
 	<extension point="org.eclipse.ui.workingSets">
 		<workingSet name="%PHPWorkingSetPage.name"
-			pageClass="org.eclipse.dltk.internal.ui.workingsets.ScriptWorkingSetPage"
+			pageClass="org.eclipse.php.internal.ui.workingset.PhpWorkingSetPage"
 			updaterClass="org.eclipse.dltk.internal.ui.workingsets.ScriptWorkingSetUpdater"
 			icon="icons/full/obj16/php_project_obj.gif" id="org.eclipse.php.ui.workingset.PHPWorkingSetPage" />
 	</extension>
