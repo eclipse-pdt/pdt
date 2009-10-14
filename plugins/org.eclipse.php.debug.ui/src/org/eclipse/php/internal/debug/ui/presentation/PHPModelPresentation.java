@@ -43,6 +43,8 @@ import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.breakpoint.PHPBreakpointImageDescriptor;
+import org.eclipse.php.internal.ui.editor.UntitledPHPEditor;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorDescriptor;
@@ -156,8 +158,15 @@ public class PHPModelPresentation extends LabelProvider implements
 						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 
 				Path path = new Path(fileName);
-				if (EnvironmentPathUtils.isFull(path)) {
-					fileName = EnvironmentPathUtils.getLocalPathString(path);
+				NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
+						.findEditorInput(path);
+				if (nonExistingEditorInput != null) {
+					fileName = nonExistingEditorInput.getName();
+				} else {
+					if (EnvironmentPathUtils.isFull(path)) {
+						fileName = EnvironmentPathUtils
+								.getLocalPathString(path);
+					}
 				}
 
 			}
@@ -180,32 +189,50 @@ public class PHPModelPresentation extends LabelProvider implements
 		return label + PHPDebugUIMessages.MPresentation_PHP_APP_1;
 	}
 
-	protected String getThreadText(IThread thread) {
-		IDebugTarget target = (IDebugTarget) thread.getDebugTarget();
-		String label = "";
+	private String resolveUntitledEditorName(String location) {
 		try {
-			label = target.getName();
+			NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
+					.findEditorInput(new Path(location));
+			if (nonExistingEditorInput != null) {
+				location = nonExistingEditorInput.getName();
+			}
+		} catch (Exception e) {
+		}
+		return location;
+	}
+
+	protected String getThreadText(IThread thread) {
+
+		StringBuilder buf = new StringBuilder();
+
+		IDebugTarget target = (IDebugTarget) thread.getDebugTarget();
+		try {
+			String targetName = target.getName();
+			targetName = resolveUntitledEditorName(targetName);
+			buf.append(targetName);
 		} catch (DebugException e) {
 			// Just log should never happen
 			Logger.logException(e);
 		}
+
 		if (thread.isStepping()) {
-			label += PHPDebugUIMessages.MPresentation_Stepping_1;
+			buf.append(PHPDebugUIMessages.MPresentation_Stepping_1);
 		} else if (thread.isSuspended()) {
 			IBreakpoint[] breakpoints = thread.getBreakpoints();
 			if (breakpoints.length == 0) {
-				label += PHPDebugUIMessages.MPresentation_Suspended_1;
+				buf.append(PHPDebugUIMessages.MPresentation_Suspended_1);
 			} else {
 				IBreakpoint breakpoint = breakpoints[0]; // there can only be
 				// one in PHP
 				if (breakpoint instanceof PHPLineBreakpoint) {
-					label += PHPDebugUIMessages.MPresentation_SLineBreakpoint_1;
+					buf
+							.append(PHPDebugUIMessages.MPresentation_SLineBreakpoint_1);
 				}
 			}
 		} else if (thread.isTerminated()) {
-			label = PHPDebugUIMessages.MPresentation_Terminated_1 + label; //$NON-NLS-1$
+			buf.append(PHPDebugUIMessages.MPresentation_Terminated_1); //$NON-NLS-1$
 		}
-		return label;
+		return buf.toString();
 	}
 
 	protected String getStackFrameText(IStackFrame frame) {
@@ -218,7 +245,11 @@ public class PHPModelPresentation extends LabelProvider implements
 					buffer.append(frameName);
 					buffer.append("(): ");
 				}
-				buffer.append(phpStackFrame.getSourceName());
+
+				String sourceName = phpStackFrame.getSourceName();
+				sourceName = resolveUntitledEditorName(sourceName);
+				buffer.append(sourceName);
+
 				buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1
 						+ (phpStackFrame.getLineNumber()));
 				return buffer.toString();
@@ -266,7 +297,14 @@ public class PHPModelPresentation extends LabelProvider implements
 			return new ExternalStorageEditorInput((IStorage) element);
 		}
 		if (element instanceof IFileStore) {
-			return new FileStoreEditorInput((IFileStore) element);
+			IFileStore fileStore = (IFileStore) element;
+			NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
+					.findEditorInput(new Path(fileStore.toURI().getPath()));
+			if (nonExistingEditorInput != null) {
+				return nonExistingEditorInput;
+			}
+
+			return new FileStoreEditorInput(fileStore);
 		}
 		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: "
 				+ element.getClass().getName());
@@ -288,6 +326,12 @@ public class PHPModelPresentation extends LabelProvider implements
 				return null;
 			}
 			IPath path = Path.fromPortableString(location);
+
+			NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
+					.findEditorInput(path);
+			if (nonExistingEditorInput != null) {
+				return nonExistingEditorInput;
+			}
 
 			HandleFactory fac = new HandleFactory();
 			IDLTKSearchScope scope = DLTKSearchScopeFactory
@@ -311,6 +355,9 @@ public class PHPModelPresentation extends LabelProvider implements
 	}
 
 	public String getEditorId(IEditorInput input, Object inputObject) {
+		if (input instanceof NonExistingPHPFileEditorInput) {
+			return UntitledPHPEditor.ID;
+		}
 		try {
 			IEditorDescriptor descriptor = IDE.getEditorDescriptor(input
 					.getName());

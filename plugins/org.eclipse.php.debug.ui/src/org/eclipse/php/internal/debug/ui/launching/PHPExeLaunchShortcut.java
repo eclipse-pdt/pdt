@@ -132,40 +132,6 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		}
 	}
 
-	// copy the given line breakpoints to the file of the given path
-	// private void copyBreakPoints(IPath newPath, int[] lineNumbers) throws
-	// CoreException {
-	// IResource resource =
-	// ResourcesPlugin.getWorkspace().getRoot().getFile(newPath);
-	// for (int i = 0; i < lineNumbers.length; i++) {
-	// DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(PHPDebugTarget.createBreakpoint(resource,
-	// lineNumbers[i]));
-	// }
-	// }
-
-	// reteive all the line numbers of breakpoints that exist within the file in
-	// the given path
-	// private int[] getBreakpointLines(IPath path) throws CoreException {
-	// IBreakpoint[] breakpoints =
-	// DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
-	// ArrayList<Integer> list = new ArrayList<Integer>();
-	// for (int i = 0; i < breakpoints.length; i++) {
-	// PHPConditionalBreakpoint breakPoint = (PHPConditionalBreakpoint)
-	// breakpoints[i];
-	// if
-	// (breakPoint.getRuntimeBreakpoint().getFileName().equals(path.toString()))
-	// {
-	// list.add(breakPoint.getLineNumber());
-	//
-	// }
-	// }
-	// int[] result = new int[list.size()];
-	// for (int i = 0; i < result.length; i++) {
-	// result[i] = list.get(i);
-	// }
-	// return result;
-	// }
-
 	protected ILaunchConfigurationType getPHPExeLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
 		return lm
@@ -424,6 +390,13 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		String configurationName = "New_configuration";
 		try {
 			IPath path = Path.fromOSString(fileName);
+
+			NonExistingPHPFileEditorInput editorInput = NonExistingPHPFileEditorInput
+					.findEditorInput(path);
+			if (editorInput != null) {
+				path = new Path(editorInput.getName());
+			}
+
 			String fileExtention = path.getFileExtension();
 			String lastSegment = path.lastSegment();
 			if (lastSegment != null) {
