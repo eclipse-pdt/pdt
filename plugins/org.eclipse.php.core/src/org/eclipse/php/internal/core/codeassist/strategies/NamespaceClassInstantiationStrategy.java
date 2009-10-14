@@ -25,12 +25,14 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
 
 /**
- * This strategy completes global classes after 'new' statement 
+ * This strategy completes global classes after 'new' statement
+ * 
  * @author michael
  */
 public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy {
-	
-	public NamespaceClassInstantiationStrategy(ICompletionContext context, IElementFilter elementFilter) {
+
+	public NamespaceClassInstantiationStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -39,14 +41,16 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		
+
 		ICompletionContext context = getContext();
 		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
-		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
-		
+		CompletionRequestor requestor = concreteContext
+				.getCompletionRequestor();
+
 		IType enclosingClass = null;
 		try {
-			IModelElement enclosingElement = concreteContext.getSourceModule().getElementAt(concreteContext.getOffset());
+			IModelElement enclosingElement = concreteContext.getSourceModule()
+					.getElementAt(concreteContext.getOffset());
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}
@@ -59,9 +63,9 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-		
+
 		SourceRange replaceRange = getReplacementRange(context);
-		
+
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
 			IMethod ctor = null;
@@ -77,13 +81,16 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 					PHPCorePlugin.log(e);
 				}
 			}
-			
+
 			String suffix = getSuffix(concreteContext);
 			try {
 				if (ctor != null) {
-					if (!PHPFlags.isPrivate(ctor.getFlags()) || type.equals(enclosingClass)) {
-						FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName()) {
-							public boolean isConstructor() throws ModelException {
+					if (!PHPFlags.isPrivate(ctor.getFlags())
+							|| type.equals(enclosingClass)) {
+						FakeMethod ctorMethod = new FakeMethod(
+								(ModelElement) type, type.getElementName()) {
+							public boolean isConstructor()
+									throws ModelException {
 								return true;
 							}
 						};
@@ -92,7 +99,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 					}
 				} else {
 					int flags = type.getFlags();
-					if (!PHPFlags.isInternal(flags) && PHPFlags.isClass(flags)) {
+					if (PHPFlags.isClass(flags)) {
 						reporter.reportType(type, suffix, replaceRange);
 					}
 				}

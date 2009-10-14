@@ -79,8 +79,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 				}
 				int flags = superMethod.getFlags();
 				if (!PHPFlags.isFinal(flags) && !PHPFlags.isPrivate(flags)
-						&& !PHPFlags.isStatic(flags)
-						&& !PHPFlags.isInternal(flags)) {
+						&& !PHPFlags.isStatic(flags)) {
 					reporter.reportMethod(superMethod, "()", replaceRange);
 				}
 			}

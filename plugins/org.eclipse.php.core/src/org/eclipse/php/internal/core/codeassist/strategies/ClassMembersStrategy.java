@@ -105,10 +105,9 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 		}
 		int flags = member.getFlags();
 		if (isParentCall(context)) {
-			return !PHPFlags.isInternal(flags) && !PHPFlags.isPrivate(flags);
+			return !PHPFlags.isPrivate(flags);
 		}
-		return !PHPFlags.isInternal(flags) && !PHPFlags.isPrivate(flags)
-				&& !PHPFlags.isProtected(flags);
+		return !PHPFlags.isPrivate(flags) && !PHPFlags.isProtected(flags);
 	}
 
 	/**

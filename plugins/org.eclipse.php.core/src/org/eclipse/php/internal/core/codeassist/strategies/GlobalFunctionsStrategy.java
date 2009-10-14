@@ -19,7 +19,6 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
@@ -56,8 +55,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		IDLTKSearchScope scope = createSearchScope();
 
 		IMethod[] functions = PhpModelAccess.getDefault().findMethods(prefix,
-				matchRule, Modifiers.AccGlobal, IPHPModifiers.Internal, scope,
-				null);
+				matchRule, Modifiers.AccGlobal, 0, scope, null);
 
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 		String suffix = getSuffix(abstractContext);

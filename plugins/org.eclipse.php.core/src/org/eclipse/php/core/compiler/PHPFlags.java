@@ -16,50 +16,65 @@ import org.eclipse.dltk.core.Flags;
 public class PHPFlags extends Flags implements IPHPModifiers {
 
 	/**
-	 * Returns whether the given integer includes the <code>default</code> modifier.
-	 * That usually means that the element has no 'public', 'protected' or 'private' modifiers at all.
+	 * Returns whether the given integer includes the <code>default</code>
+	 * modifier. That usually means that the element has no 'public',
+	 * 'protected' or 'private' modifiers at all.
 	 * 
-	 * @param flags the flags
-	 * @return <code>true</code> if the <code>default</code> modifier is included
+	 * @param flags
+	 *            the flags
+	 * @return <code>true</code> if the <code>default</code> modifier is
+	 *         included
 	 */
 	public static boolean isDefault(int flags) {
 		return !isPrivate(flags) && !isProtected(flags) && !isPublic(flags);
 	}
 
 	/**
-	 * Returns whether the given integer includes the <code>internal</code> modifier.
-	 *
-	 * @param flags the flags
-	 * @return <code>true</code> if the <code>internal</code> modifier is included
+	 * Returns whether the given integer includes the <code>internal</code>
+	 * modifier.
+	 * 
+	 * @param flags
+	 *            the flags
+	 * @return <code>true</code> if the <code>internal</code> modifier is
+	 *         included
+	 * @deprecated
 	 */
 	public static boolean isInternal(int flags) {
 		return (flags & Internal) != 0;
 	}
 
 	/**
-	 * Returns whether the given integer includes the <code>namespace</code> modifier.
-	 *
-	 * @param flags the flags
-	 * @return <code>true</code> if the <code>namespace</code> modifier is included
+	 * Returns whether the given integer includes the <code>namespace</code>
+	 * modifier.
+	 * 
+	 * @param flags
+	 *            the flags
+	 * @return <code>true</code> if the <code>namespace</code> modifier is
+	 *         included
 	 */
 	public static boolean isNamespace(int flags) {
 		return (flags & AccNameSpace) != 0;
 	}
 
 	/**
-	 * Returns whether the given integer includes the <code>constant</code> modifier.
-	 *
-	 * @param flags the flags
-	 * @return <code>true</code> if the <code>constant</code> modifier is included
+	 * Returns whether the given integer includes the <code>constant</code>
+	 * modifier.
+	 * 
+	 * @param flags
+	 *            the flags
+	 * @return <code>true</code> if the <code>constant</code> modifier is
+	 *         included
 	 */
 	public static boolean isConstant(int flags) {
 		return (flags & AccConstant) != 0;
 	}
 
 	/**
-	 * Returns whether the given integer includes the <code>class</code> modifier.
-	 *
-	 * @param flags the flags
+	 * Returns whether the given integer includes the <code>class</code>
+	 * modifier.
+	 * 
+	 * @param flags
+	 *            the flags
 	 * @return <code>true</code> if the <code>class</code> modifier is included
 	 */
 	public static boolean isClass(int flags) {
@@ -79,7 +94,7 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 			sb.append("private "); //$NON-NLS-1$
 		}
 
-		//Canonical order
+		// Canonical order
 		if ((mod & AccAbstract) != 0) {
 			sb.append("abstract "); //$NON-NLS-1$
 		}

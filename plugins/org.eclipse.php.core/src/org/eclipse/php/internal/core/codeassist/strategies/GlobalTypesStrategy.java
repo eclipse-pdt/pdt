@@ -25,7 +25,6 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -96,21 +95,18 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
 			return PhpModelAccess.getDefault().findTypes(prefix,
-					MatchRule.EXACT, trueFlag,
-					falseFlag | IPHPModifiers.Internal, scope, null);
+					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 
 		List<IType> result = new LinkedList<IType>();
 		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
 			// Search by camel-case
 			IType[] types = PhpModelAccess.getDefault().findTypes(prefix,
-					MatchRule.CAMEL_CASE, trueFlag,
-					falseFlag | IPHPModifiers.Internal, scope, null);
+					MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
 			result.addAll(Arrays.asList(types));
 		}
 		IType[] types = PhpModelAccess.getDefault().findTypes(prefix,
-				MatchRule.PREFIX, trueFlag, falseFlag | IPHPModifiers.Internal,
-				scope, null);
+				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
 		result.addAll(Arrays.asList(types));
 
 		return (IType[]) result.toArray(new IType[result.size()]);

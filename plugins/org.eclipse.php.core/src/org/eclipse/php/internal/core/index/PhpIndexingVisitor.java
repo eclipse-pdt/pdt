@@ -187,15 +187,6 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			modifiers |= IPHPModifiers.Constructor;
 		}
 
-		// Check whether this method is marked as @internal
-		if (method instanceof IPHPDocAwareDeclaration) {
-			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) method;
-			PHPDocBlock phpDoc = phpDocAwareDeclaration.getPHPDoc();
-			if (phpDoc != null && phpDoc.getTags(PHPDocTag.INTERNAL).length > 0) {
-				modifiers |= IPHPModifiers.Internal;
-			}
-		}
-
 		if (parentDeclaration == null
 				|| (parentDeclaration instanceof TypeDeclaration && parentDeclaration == fCurrentNamespace)) {
 			modifiers |= Modifiers.AccGlobal;
@@ -258,15 +249,6 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		}
 
 		int modifiers = type.getModifiers();
-
-		// Check whether this class is marked as @internal
-		if (type instanceof IPHPDocAwareDeclaration) {
-			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) type;
-			PHPDocBlock phpDoc = phpDocAwareDeclaration.getPHPDoc();
-			if (phpDoc != null && phpDoc.getTags(PHPDocTag.INTERNAL).length > 0) {
-				modifiers |= IPHPModifiers.Internal;
-			}
-		}
 
 		// check whether this is a namespace
 		if (isNamespace) {

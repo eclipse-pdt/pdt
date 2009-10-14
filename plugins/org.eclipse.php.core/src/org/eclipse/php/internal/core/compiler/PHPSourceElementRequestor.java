@@ -34,7 +34,6 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.ISourceModule;
-import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -203,15 +202,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						.equalsIgnoreCase(((ClassDeclaration) parentDeclaration)
 								.getName()));
 
-		// Check whether this method is marked as @internal
-		if (methodDeclaration instanceof IPHPDocAwareDeclaration) {
-			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) methodDeclaration;
-			PHPDocBlock phpDoc = phpDocAwareDeclaration.getPHPDoc();
-			if (phpDoc != null && phpDoc.getTags(PHPDocTag.INTERNAL).length > 0) {
-				mi.modifiers |= IPHPModifiers.Internal;
-			}
-		}
-
 		if (fCurrentClass == null || fCurrentClass == fLastNamespace) {
 			mi.modifiers |= Modifiers.AccGlobal;
 		}
@@ -281,15 +271,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	protected void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
-		// Check whether this class is marked as @internal
-		if (typeDeclaration instanceof IPHPDocAwareDeclaration) {
-			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) typeDeclaration;
-			PHPDocBlock phpDoc = phpDocAwareDeclaration.getPHPDoc();
-			if (phpDoc != null && phpDoc.getTags(PHPDocTag.INTERNAL).length > 0) {
-				ti.modifiers |= IPHPModifiers.Internal;
-			}
-		}
-
 		// check whether this is a namespace
 		if (typeDeclaration instanceof NamespaceDeclaration) {
 			ti.modifiers |= Modifiers.AccNameSpace;

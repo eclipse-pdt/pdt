@@ -17,7 +17,6 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
@@ -47,11 +46,9 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 		IDLTKSearchScope scope = createSearchScope();
 		if (context.getCompletionRequestor().isContextInformationMode()) {
 			return PhpModelAccess.getDefault().findTypes(null, prefix,
-					MatchRule.EXACT, trueFlag,
-					falseFlag | IPHPModifiers.Internal, scope, null);
+					MatchRule.EXACT, trueFlag, falseFlag, scope, null);
 		}
 		return PhpModelAccess.getDefault().findTypes(null, prefix,
-				MatchRule.PREFIX, trueFlag, falseFlag | IPHPModifiers.Internal,
-				scope, null);
+				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
 	}
 }

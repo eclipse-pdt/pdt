@@ -26,6 +26,8 @@ public interface IPHPModifiers extends Modifiers {
 
 	/**
 	 * Element that has "@internal" in its PHPDoc
+	 * 
+	 * @deprecated
 	 */
 	public static final int Internal = 1 << (Modifiers.USER_MODIFIER + 1);
 
