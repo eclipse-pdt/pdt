@@ -47,6 +47,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
  */
 public class UntitledPHPEditor extends PHPStructuredEditor {
 
+	public static final String ID = "org.eclipse.php.untitledPhpEditor"; //$NON-NLS-1$
+
 	/**
 	 * Overrides
 	 */
@@ -139,10 +141,11 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 	 * This method removes file created as an input for untitled php file, from
 	 * external storage
 	 * 
-	 * @param file
+	 * @param newFile
 	 *            New file in the workspace
 	 */
-	private void deleteUntitledStorageFile(IFile file) {
+	private void deleteUntitledStorageFile(IFile newFile) {
+		// delete temporary file
 		IPath oldPath = ((NonExistingPHPFileEditorInput) getEditorInput())
 				.getPath(getEditorInput());
 		File oldFile = new File(oldPath.toOSString());
@@ -153,25 +156,27 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 			}
 		}
 
+		// delete unneeded editor input:
+		NonExistingPHPFileEditorInput.dispose(oldPath);
+
 		// copy markers
-		if (file != null) {
-			IWorkspaceRoot resource = ResourcesPlugin.getWorkspace().getRoot();
-			try {
-				IMarker[] markers = resource.findMarkers(null, true,
-						IResource.DEPTH_ZERO);
-				final IBreakpointManager breakpointManager = DebugPlugin
-						.getDefault().getBreakpointManager();
-				for (IMarker marker : markers) {
-					String markerType = MarkerUtilities.getMarkerType(marker);
-					if (markerType != null) {
-						String fileName = (String) marker
-								.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
-						if (fileName != null
-								&& new File(fileName).equals(oldFile)) {
-							IBreakpoint breakpoint = breakpointManager
-									.getBreakpoint(marker);
-							if (breakpoint != null) {
-								IMarker createdMarker = file
+		IWorkspaceRoot resource = ResourcesPlugin.getWorkspace().getRoot();
+		try {
+			IMarker[] markers = resource.findMarkers(null, true,
+					IResource.DEPTH_ZERO);
+			final IBreakpointManager breakpointManager = DebugPlugin
+					.getDefault().getBreakpointManager();
+			for (IMarker marker : markers) {
+				String markerType = MarkerUtilities.getMarkerType(marker);
+				if (markerType != null) {
+					String fileName = (String) marker
+							.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+					if (fileName != null && new File(fileName).equals(oldFile)) {
+						IBreakpoint breakpoint = breakpointManager
+								.getBreakpoint(marker);
+						if (breakpoint != null) {
+							if (newFile != null) {
+								IMarker createdMarker = newFile
 										.createMarker(markerType);
 								createdMarker.setAttributes(breakpoint
 										.getMarker().getAttributes());
@@ -180,16 +185,21 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 								breakpoint.setMarker(createdMarker);
 								breakpointManager.addBreakpoint(breakpoint);
 							} else {
-								MarkerUtilities.createMarker(file, marker
+								breakpointManager.removeBreakpoint(breakpoint,
+										true);
+							}
+						} else {
+							if (newFile != null) {
+								MarkerUtilities.createMarker(newFile, marker
 										.getAttributes(), markerType);
 							}
 						}
 					}
-					marker.delete();
 				}
-			} catch (Exception e) {
-				Logger.logException(e);
+				marker.delete();
 			}
+		} catch (Exception e) {
+			Logger.logException(e);
 		}
 	}
 }

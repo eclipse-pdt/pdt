@@ -12,6 +12,9 @@
 package org.eclipse.php.internal.ui.editor.input;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.filesystem.URIUtil;
@@ -22,12 +25,18 @@ import org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput;
 
 /**
  * This Editor Input class should be used mainly for Untitled PHP Documents
+ * 
  * @see org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput
  */
-public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput implements ILocationProviderExtension {
+public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput
+		implements ILocationProviderExtension {
+
+	private static final Map<IPath, NonExistingPHPFileEditorInput> registry = Collections
+			.synchronizedMap(new HashMap<IPath, NonExistingPHPFileEditorInput>());
 
 	public NonExistingPHPFileEditorInput(IFileStore fileStore, String namePrefix) {
 		super(fileStore, namePrefix);
+		registry.put(getPath(this), this);
 	}
 
 	@Override
@@ -48,5 +57,27 @@ public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput im
 			return URIUtil.toURI(path);
 		}
 		return null;
+	}
+
+	/**
+	 * Finds non-existing PHP file editor input by the real path to the
+	 * temporary file.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public static NonExistingPHPFileEditorInput findEditorInput(IPath path) {
+		return registry.get(path);
+	}
+
+	/**
+	 * Destroys instance of non-existing PHP file editor input by the real path
+	 * to the temporary file.
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public static void dispose(IPath path) {
+		registry.remove(path);
 	}
 }
