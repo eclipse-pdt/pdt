@@ -610,18 +610,15 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 					PHPLineBreakpoint bp = (PHPLineBreakpoint) breakpoint;
 					IMarker marker = bp.getMarker();
 
-					String fileName = (String) marker
-							.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
-
 					Breakpoint runtimeBreakpoint = bp.getRuntimeBreakpoint();
 					int lineNumber = runtimeBreakpoint.getLineNumber();
+					String fileName = null;
+
 					if (breakpoint instanceof PHPRunToLineBreakpoint) {
 						PHPRunToLineBreakpoint rtl = (PHPRunToLineBreakpoint) breakpoint;
 						IResource resource = rtl.getSourceFile();
 						fileName = resource.getFullPath().toString();
 					} else {
-						fileName = (String) marker
-								.getAttribute(IMarker.LOCATION);
 						lineNumber = marker
 								.getAttribute(IMarker.LINE_NUMBER, 0);
 						runtimeBreakpoint.setLineNumber(lineNumber);
@@ -629,7 +626,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 
 					if (fileName == null) {
 						fileName = (String) marker
-								.getAttribute(IMarker.LOCATION);
+								.getAttribute(
+										StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
+										(String) marker
+												.getAttribute(IMarker.LOCATION));
 					}
 
 					fileName = RemoteDebugger.convertToRemoteFilename(fileName,
