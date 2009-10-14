@@ -1,0 +1,36 @@
+--TEST--
+Test Use Simple
+--FILE--
+<?php define ( 'RUNTIME_CONTEXT', 'TEST_ENGINE' ); function foo(){} ?> 
+--EXPECT--
+<Program start='0' length='70'>
+	<Statements>
+		<ExpressionStatement start='6' length='44'>
+			<FunctionInvocation start='6' length='43'>
+				<FunctionName start='6' length='6'>
+					<NamespaceName start='6' length='6' global='false' current='false'>
+						<Identifier start='6' length='6' name='define'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+					<Scalar start='15' length='17' type='string' value='&apos;RUNTIME_CONTEXT&apos;'/>
+					<Scalar start='34' length='13' type='string' value='&apos;TEST_ENGINE&apos;'/>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<FunctionDeclaration start='51' length='16' isReference='false'>
+			<FunctionName>
+				<Identifier start='60' length='3' name='foo'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='65' length='2' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<EmptyStatement start='68' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
