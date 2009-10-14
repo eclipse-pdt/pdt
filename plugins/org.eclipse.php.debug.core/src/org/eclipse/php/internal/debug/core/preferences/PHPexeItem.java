@@ -332,7 +332,7 @@ public class PHPexeItem {
 					sapiType = SAPI_CLI;
 				} else {
 					PHPDebugPlugin.logErrorMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
-					this.executable = null;
+//					this.executable = null;
 					return;
 				}
 
@@ -341,7 +341,7 @@ public class PHPexeItem {
 				}
 			} else {
 				PHPDebugPlugin.logErrorMessage("Can't determine version of the PHP executable"); //$NON-NLS-1$	
-				this.executable = null;
+//				this.executable = null;
 				return;
 			}
 
@@ -361,7 +361,7 @@ public class PHPexeItem {
 					}
 				} else {
 					PHPDebugPlugin.logErrorMessage("Can't determine PHP.ini location of the PHP executable"); //$NON-NLS-1$
-					this.executable = null;
+//					this.executable = null;
 					return;
 				}
 			}
