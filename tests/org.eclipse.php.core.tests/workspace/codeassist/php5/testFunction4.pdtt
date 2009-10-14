@@ -7,3 +7,4 @@ Test Internal Function
  */
 function myInternalFunction() {} myInter|?>
 --EXPECT--
+method(myInternalFunction)

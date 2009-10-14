@@ -7,3 +7,4 @@ Test Internal Class
  */
 class MyInternalClass {} 	MyInter| ?>
 --EXPECT--
+type(MyInternalClass)
