@@ -27,30 +27,33 @@ import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
  */
 public class PHPValue extends PHPDebugElement implements IValue {
 
-	private ExpressionValue fValue;
-	private boolean fHasChildren = false;
-	private IVariable[] fChildren = new IVariable[0];
-	private Expression fVariable;
-	private boolean fGlobal;
+	private static final String[] VARIABLE_TYPES = { "NULL", "INT", "STRING",
+			"BOOLEAN", "DOUBLE", "ARRAY", "OBJECT", "RESOURCE" };
 
-	private String[] types = { "NULL", "INT", "STRING", "BOOLEAN", "DOUBLE", "ARRAY", "OBJECT", "RESOURCE" };
+	private PHPDebugTarget fDebugTarget;
+	private Expression fVariable;
+	private ExpressionValue fValue;
+	private boolean fGlobal;
+	private IVariable[] fChildren;
 
 	public PHPValue(PHPDebugTarget target, Expression var) {
 		super(target);
+
+		fDebugTarget = target;
 		fValue = var.getValue();
 		fVariable = var;
 		fGlobal = false;
-		processChildren(fValue);
 
+		initChildren(fValue);
 	}
 
-	public PHPValue(PHPDebugTarget target, Expression var, boolean global) {
+	public PHPValue(PHPDebugTarget target, Expression variable, boolean global) {
 		super(target);
-		fValue = var.getValue();
-		fVariable = var;
+		fValue = variable.getValue();
+		fVariable = variable;
 		fGlobal = global;
-		processChildren(fValue);
 
+		initChildren(fValue);
 	}
 
 	/*
@@ -59,7 +62,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	 * @see org.eclipse.debug.core.model.IValue#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
-		return types[fValue.getType()];
+		return VARIABLE_TYPES[fValue.getType()];
 	}
 
 	/*
@@ -69,7 +72,8 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	 */
 	public String getValueString() throws DebugException {
 		StringBuffer string = new StringBuffer();
-		StringTokenizer tokenizer = new StringTokenizer(fValue.getValueAsString(), "\\", true);
+		StringTokenizer tokenizer = new StringTokenizer(fValue
+				.getValueAsString(), "\\", true);
 		String token;
 		while (tokenizer.hasMoreTokens()) {
 			token = tokenizer.nextToken();
@@ -84,7 +88,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 		String rString = string.toString();
 		return rString;
 	}
-	
+
 	public String getValue() throws DebugException {
 		return (String) (fValue.getValue());
 	}
@@ -104,19 +108,41 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	 * @see org.eclipse.debug.core.model.IValue#getVariables()
 	 */
 	public IVariable[] getVariables() throws DebugException {
-		if (fChildren.length == 0) {
-			PHPDebugTarget debugTarget = (PHPDebugTarget) getDebugTarget();
-			ExpressionsManager expressionManager = debugTarget.getExpressionManager();
-			Expression var = fVariable;
-			if (fGlobal) {
-				String exp = "$GLOBALS[\"" + fVariable.getFullName().substring(1) + "\"]";
-				var = new DefaultExpression(exp);
+		if (fChildren == null) {
+			requestVariables();
+			if (fChildren == null) {
+				fChildren = new IVariable[0];
 			}
-			expressionManager.update(var, 1);
-			fValue = var.getValue();
-			processChildren(fValue);
 		}
 		return fChildren;
+	}
+
+	private void requestVariables() {
+		PHPDebugTarget debugTarget = (PHPDebugTarget) getDebugTarget();
+		ExpressionsManager expressionManager = debugTarget
+				.getExpressionManager();
+		Expression variable = fVariable;
+		if (fGlobal) {
+			String exp = "$GLOBALS[\"" + fVariable.getFullName().substring(1)
+					+ "\"]";
+			variable = new DefaultExpression(exp);
+		}
+		expressionManager.update(variable, 1);
+		fValue = variable.getValue();
+
+		initChildren(fValue);
+	}
+
+	private void initChildren(ExpressionValue value) {
+		fChildren = null;
+		Expression[] children = value.getChildren();
+		if (children != null) {
+			fChildren = new PHPVariable[children.length];
+			for (int i = 0; i < children.length; i++) {
+				fChildren[i] = new PHPVariable(
+						(PHPDebugTarget) getDebugTarget(), children[i], fGlobal);
+			}
+		}
 	}
 
 	/*
@@ -125,112 +151,18 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
 	 */
 	public boolean hasVariables() throws DebugException {
-		return fHasChildren;
+		// if childVariables is null, we assume we do have
+		// some variables, it's just they need to be got.
+		boolean hasVars = (fChildren == null || fChildren.length > 0);
+		return hasVars;
 	}
 
 	public void updateValue(ExpressionValue value) {
 		fValue = value;
-		processChildren(fValue);
+		initChildren(fValue);
 	}
 
 	public boolean isPrimative() {
 		return fValue.isPrimitive();
-	}
-
-	private void processChildren(ExpressionValue value) {
-		Expression[] eChildren = value.getChildren();
-		if (eChildren == null)
-			return;
-		if (eChildren.length == 0) {
-			fHasChildren = true;
-			fChildren = new IVariable[0];
-			return;
-		}
-
-		fHasChildren = true;
-		fChildren = new PHPVariable[eChildren.length];
-		for (int i = 0; i < eChildren.length; i++) {
-			fChildren[i] = new PHPVariable((PHPDebugTarget) getDebugTarget(), eChildren[i], fGlobal);
-		}
-
-	}
-
-	public boolean equals(Object obj) {
-		// we restrict the recursion (checking descendants equality) to 5 levels 
-		// to avoid OutOfMemoryError caused endless loop when the following type of PHP code
-		// is used
-		//   class Parent { $child }
-		//   class Child { $parent}
-		// in which case the child->getChildVariables returns the parent as a variable) 
-		// [seva + almaz]
-		return equals(obj, 5);
-	}
-
-	protected boolean equals(Object obj, int recurseDepth) {
-		if (obj == this) {
-			return true;
-		}
-
-		if (!(obj instanceof PHPValue)) {
-			return false;
-		}
-
-		PHPValue otherValue = (PHPValue) obj;
-		// System.out.println("Compare " + fVariable.getFullName() + " with " + otherValue.fVariable.getFullName());
-
-		// the "other" values were NOT necessarily loaded yet (if that is the case then we have to load them - other.getVariables) 
-		boolean otherValueNull = otherValue.fValue.getValue() == null;
-
-		if (fVariable.getFullName().equals(otherValue.fVariable.getFullName()) && (otherValueNull || fValue.getValueAsString().equals(otherValue.fValue.getValueAsString()))) {
-			// if i don't have children means that I am a scalar
-			if (!fHasChildren) {
-				return !otherValue.fHasChildren;
-			}
-
-			// i have children but i did not retrieve them yet
-			if (fChildren.length == 0) {
-				try {
-					getVariables();
-				} catch (DebugException e) {
-				}
-			}
-
-			if (otherValue.fChildren.length == 0) {
-				try {
-					otherValue.getVariables();
-				} catch (DebugException e) {
-				}
-			}
-
-			if (fChildren.length != otherValue.fChildren.length) {
-				return false;
-			}
-
-			if (recurseDepth <= 0) {
-				return true;
-			}
-
-			try {
-				for (int i = 0; i < fChildren.length; i++) {
-					IVariable myChild = fChildren[i];
-					IVariable otherChild = otherValue.fChildren[i];
-
-					if (!((PHPValue) myChild.getValue()).equals(otherChild.getValue(), --recurseDepth)) {
-						return false;
-					}
-				}
-			} catch (DebugException e) {
-				return false;
-			} catch (NullPointerException npe) {
-				return false;
-			}
-			return true;
-		}
-		return false;
-	}
-
-	public int hashCode() {
-		//		return fVariable.getFullName().hashCode();
-		return super.hashCode(); // fVariable.getFullName().hashCode() + fValue.getValueAsString().hashCode();
 	}
 }
