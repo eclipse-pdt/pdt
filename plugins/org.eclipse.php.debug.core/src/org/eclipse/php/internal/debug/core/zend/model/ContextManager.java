@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IVariable;
-import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.model.ResolveBlackList.Type;
@@ -29,7 +28,6 @@ public class ContextManager {
 	private IRemoteDebugger fDebugger;
 	private IStackFrame[] fFrames;
 	private ILock fFramesInitLock = Job.getJobManager().newLock();
-
 	private int fSuspendCount;
 
 	private final static String DUMMY_PHP_FILE = "dummy.php";
@@ -57,11 +55,9 @@ public class ContextManager {
 		if (fFrames != null) {
 			for (int i = frames.length - 1, c = fFrames.length - 1; i > 0
 					&& c >= 0; --i, --c) {
-				if (((PHPStackFrame) frames[i]).getStackVariables().length == 0) {
-					((PHPStackFrame) frames[i])
-							.setStackVariables(((PHPStackFrame) fFrames[c])
-									.getStackVariables());
-				}
+				((PHPStackFrame) frames[i])
+						.setStackVariables(((PHPStackFrame) fFrames[c])
+								.getStackVariables());
 			}
 		}
 	}
@@ -127,41 +123,6 @@ public class ContextManager {
 		return variables == null ? new IVariable[0] : variables;
 	}
 
-	public Expression[] getStackVariables(PHPStackFrame stackFrame) {
-		String functionName = "";
-		try {
-			functionName = stackFrame.getName();
-		} catch (DebugException e) {
-			// PHPStack Doesn't throw exception, just log and ignore
-			Logger.logException("Problem getting name from stack", e);
-		}
-
-		Expression[] variables = new Expression[0];
-		if (!functionName.equals("")) {
-			StackLayer stackLayer = null;
-			try {
-				PHPstack stack = fDebugger.getCallStack();
-				StackLayer[] layers = stack.getLayers();
-
-				for (int i = layers.length - 1; i >= 0; --i) {
-					StackLayer element = layers[i];
-					if (element.getCalledFileName().equals(
-							stackFrame.getAbsoluteFileName())
-							&& element.getCalledFunctionName().equals(
-									stackFrame.getName())) {
-						stackLayer = element;
-						break;
-					}
-				}
-			} catch (DebugException e) {
-			}
-			if (stackLayer != null) {
-				variables = stackLayer.getVariables();
-			}
-		}
-		return variables;
-	}
-
 	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread)
 			throws DebugException {
 
@@ -189,9 +150,9 @@ public class ContextManager {
 				layers[i].setResolvedCallerFileName(rName);
 			}
 
-			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i]
-					.getCallerFunctionName(),
-					layers[i].getCallerLineNumber() + 1, frameCt, rName,
+			frames[frameCt - 1] = new PHPStackFrame(thread, sName, rName,
+					layers[i].getCallerFunctionName(), layers[i]
+							.getCallerLineNumber() + 1, layers[i].getDepth(),
 					layers[i - 1].getVariables());
 			frameCt--;
 
@@ -207,9 +168,8 @@ public class ContextManager {
 			resolvedFile = fTarget.getLastFileName();
 		}
 		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(),
-				(layers.length == 1) ? "" : frames[1].getName(), fTarget
-						.getLastStop(), frameCt, resolvedFile,
-				getLocalVariables());
+				resolvedFile, (layers.length == 1) ? "" : frames[1].getName(),
+				fTarget.getLastStop(), frameCt, getLocalVariables());
 
 		return frames;
 	}

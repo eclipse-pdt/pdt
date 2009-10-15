@@ -817,15 +817,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	}
 
 	/**
-	 * Returns the Parameter Stack for the Debug Target.
-	 * 
-	 * @return the Parameter Stack for the target
-	 */
-	public Expression[] getStackVariables(PHPStackFrame stack) {
-		return fContextManager.getStackVariables(stack);
-	}
-
-	/**
 	 * Step Return the debugger.
 	 * 
 	 * @throws DebugException

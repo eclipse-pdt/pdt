@@ -21,7 +21,6 @@ import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
-import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
 
 /**
  * PHP stack frame.
@@ -34,27 +33,42 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	private PHPThread fThread;
 	private String fFunctionName;
 	private String fFileName;
+	private String fResolvedFileName;
 	private int fLineNumber;
-	private int fId;
-	private String fResName;
-	private Expression[] fVariables;
+	private int fDepth;
+	private Expression[] fLocalVariables;
 
-	public PHPStackFrame(IThread thread, String fileName, String funcName,
-			int lineNumber, int id, String rName, Expression[] variables) {
+	/**
+	 * Create new PHP stack frame
+	 * 
+	 * @param thread
+	 *            Debug thread
+	 * @param fileName
+	 *            Current file name
+	 * @param funcName
+	 *            Current function name
+	 * @param lineNumber
+	 *            Current line number
+	 * @param depth
+	 *            Stack layer depth
+	 * @param resolvedFileName
+	 *            Resolved file name
+	 * @param localVariables
+	 *            All local function variables
+	 */
+	public PHPStackFrame(IThread thread, String fileName,
+			String resolvedFileName, String funcName, int lineNumber,
+			int depth, Expression[] localVariables) {
 		super((PHPDebugTarget) thread.getDebugTarget());
-		baseInit(thread, fileName, funcName, lineNumber, id, rName, variables);
+
+		baseInit(thread, fileName, resolvedFileName, funcName, lineNumber,
+				depth, localVariables);
 	}
 
-	public PHPStackFrame(IThread thread, String fileName, String funcName,
-			int lineNumber, int id, StackLayer layer, String rName,
-			Expression[] variables) {
-		super((PHPDebugTarget) thread.getDebugTarget());
-		baseInit(thread, fileName, funcName, lineNumber, id, rName, variables);
+	private void baseInit(IThread thread, String fileName,
+			String resolvedFileName, String funcName, int lineNumber,
+			int depth, Expression[] localVariables) {
 
-	}
-
-	private void baseInit(IThread thread, String fileName, String funcName,
-			int lineNumber, int id, String rName, Expression[] variables) {
 		Matcher matcher = LAMBDA_FUNC_PATTERN.matcher(fileName);
 		if (matcher.matches()) {
 			fileName = matcher.group(1);
@@ -63,17 +77,11 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
 		fFunctionName = funcName;
 		fFileName = fileName;
+		fResolvedFileName = resolvedFileName;
 		fLineNumber = lineNumber;
-		fId = id;
+		fDepth = depth;
 		fThread = (PHPThread) thread;
-		fResName = rName;
-		fVariables = variables;
-	}
-
-	public String createUID(int depth) {
-		return new StringBuilder(fFileName).append(':').append(fFunctionName)
-				.append(':').append(fLineNumber).append(':').append(depth)
-				.toString();
+		fLocalVariables = localVariables;
 	}
 
 	/*
@@ -91,10 +99,11 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
 	public IVariable[] getVariables() throws DebugException {
-		IVariable[] variables = new PHPVariable[fVariables.length];
-		for (int i = 0; i < fVariables.length; i++) {
+		Expression[] localVariables = fLocalVariables;
+		IVariable[] variables = new PHPVariable[localVariables.length];
+		for (int i = 0; i < localVariables.length; i++) {
 			variables[i] = new PHPVariable((PHPDebugTarget) fThread
-					.getDebugTarget(), fVariables[i]);
+					.getDebugTarget(), localVariables[i]);
 		}
 		return variables;
 	}
@@ -307,7 +316,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @return the name of the source file this stack frame is associated with
 	 */
 	public String getSourceName() {
-		return fResName;
+		return fResolvedFileName;
 	}
 
 	/**
@@ -325,15 +334,15 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @return this stack frame's unique identifier within its thread
 	 */
 	protected int getIdentifier() {
-		return fId;
+		return fDepth;
 	}
 
 	public Expression[] getStackVariables() {
-		return fVariables;
+		return fLocalVariables;
 	}
 
 	public void setStackVariables(Expression[] variables) {
-		fVariables = variables;
+		fLocalVariables = variables;
 	}
 
 	@Override
@@ -342,13 +351,15 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 		int result = 1;
 		result = prime * result
 				+ ((fFunctionName == null) ? 0 : fFunctionName.hashCode());
-		result = prime * result + fId;
+		result = prime * result + fDepth;
 		result = prime * result + fLineNumber;
-		result = prime * result
-				+ ((fResName == null) ? 0 : fResName.hashCode());
+		result = prime
+				* result
+				+ ((fResolvedFileName == null) ? 0 : fResolvedFileName
+						.hashCode());
 		result = prime * result + ((fThread == null) ? 0 : fThread.hashCode());
 		result = prime * result
-				+ ((fVariables == null) ? 0 : fVariables.hashCode());
+				+ ((fLocalVariables == null) ? 0 : fLocalVariables.hashCode());
 		return result;
 	}
 
@@ -366,24 +377,24 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 				return false;
 		} else if (!fFunctionName.equals(other.fFunctionName))
 			return false;
-		if (fId != other.fId)
+		if (fDepth != other.fDepth)
 			return false;
 		if (fLineNumber != other.fLineNumber)
 			return false;
-		if (fResName == null) {
-			if (other.fResName != null)
+		if (fResolvedFileName == null) {
+			if (other.fResolvedFileName != null)
 				return false;
-		} else if (!fResName.equals(other.fResName))
+		} else if (!fResolvedFileName.equals(other.fResolvedFileName))
 			return false;
 		if (fThread == null) {
 			if (other.fThread != null)
 				return false;
 		} else if (!fThread.equals(other.fThread))
 			return false;
-		if (fVariables == null) {
-			if (other.fVariables != null)
+		if (fLocalVariables == null) {
+			if (other.fLocalVariables != null)
 				return false;
-		} else if (!fVariables.equals(other.fVariables))
+		} else if (!fLocalVariables.equals(other.fLocalVariables))
 			return false;
 		return true;
 	}
