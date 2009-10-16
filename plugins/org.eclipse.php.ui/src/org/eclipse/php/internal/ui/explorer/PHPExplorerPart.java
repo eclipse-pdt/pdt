@@ -33,6 +33,7 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
+import org.eclipse.ui.views.navigator.NavigatorDragAdapter;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
 /**
