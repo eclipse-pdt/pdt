@@ -90,11 +90,10 @@ public class PHPSelectionTransferDropAdapter extends
 			InvocationTargetException, InterruptedException {
 		List elements = ((IStructuredSelection) getSelection()).toList();
 		IModelElement[] modelElements = ReorgUtils.getModelElements(elements);
-		IResource[] resources = getResources(modelElements);
 
 		ReorgMoveAction action = new ReorgMoveAction();
 		action.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-		StructuredSelection selection = new StructuredSelection(resources);
+		StructuredSelection selection = new StructuredSelection(target);
 		action.selectionChanged(null, selection);
 		action.run((Action) null);
 	}
