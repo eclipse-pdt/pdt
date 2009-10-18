@@ -14,7 +14,8 @@ package org.eclipse.php.internal.debug.daemon.startup;
 import org.eclipse.ui.IStartup;
 
 /**
- * This class is loaded when the UI is loading and starts the daemon that is defined as 'best match'.
+ * This class is loaded when the UI is loading and starts the daemon that is
+ * defined as 'best match'.
  */
 public class DaemonStartup implements IStartup {
 

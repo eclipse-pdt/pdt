@@ -18,9 +18,9 @@ import org.eclipse.php.internal.debug.daemon.communication.CommunicationDaemonRe
 import org.osgi.framework.BundleContext;
 
 /**
- * The main plug-in class to be used in the desktop.
- * Note that since PDT 1.0 the daemon plug-in waits for an outside invocation to start 
- * the daemons listening (See startDaemons()).
+ * The main plug-in class to be used in the desktop. Note that since PDT 1.0 the
+ * daemon plug-in waits for an outside invocation to start the daemons listening
+ * (See startDaemons()).
  * 
  * @author Shalom Gibly
  */
@@ -30,11 +30,12 @@ public class DaemonPlugin extends Plugin {
 	private static final int INTERNAL_ERROR = 10001;
 	public static final boolean isDebugMode;
 	static {
-		String value = Platform.getDebugOption("org.eclipse.php.debug.daemon/debug"); //$NON-NLS-1$
+		String value = Platform
+				.getDebugOption("org.eclipse.php.debug.daemon/debug"); //$NON-NLS-1$
 		isDebugMode = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
-	//The shared instance.
+	// The shared instance.
 	private static DaemonPlugin plugin;
 	// Hold an array of possible daemons.
 	private ICommunicationDaemon[] daemons;
@@ -55,7 +56,9 @@ public class DaemonPlugin extends Plugin {
 	}
 
 	/**
-	 * This method is used for later initialization. This trick should release plug-in start-up.
+	 * This method is used for later initialization. This trick should release
+	 * plug-in start-up.
+	 * 
 	 * @param context
 	 */
 	void initializeAfterStart(final BundleContext context) {
@@ -67,21 +70,25 @@ public class DaemonPlugin extends Plugin {
 		};
 		job.schedule(Job.LONG);
 	}
-	
+
 	/**
-	 * Initializes and starts the daemons that has the given daemonID.
-	 * In case that the give id is null, starts all the registered daemons.
+	 * Initializes and starts the daemons that has the given daemonID. In case
+	 * that the give id is null, starts all the registered daemons.
 	 * 
-	 * @param debuggerID The debugger id, or null.
+	 * @param debuggerID
+	 *            The debugger id, or null.
 	 * @since PDT 1.0
 	 */
 	public void startDaemons(String debuggerID) {
 		if (daemons == null) {
-			daemons = CommunicationDaemonRegistry.getBestMatchCommunicationDaemons();
+			daemons = CommunicationDaemonRegistry
+					.getBestMatchCommunicationDaemons();
 		}
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null || (daemons[i].isDebuggerDaemon() && debuggerID.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null
+						|| (daemons[i].isDebuggerDaemon() && debuggerID
+								.equals(daemons[i].getDebuggerID()))) {
 					daemons[i].init();
 					daemons[i].startListen();
 				}
@@ -90,16 +97,19 @@ public class DaemonPlugin extends Plugin {
 	}
 
 	/**
-	 * Stop the daemons that has the given daemonID.
-	 * In case that the give id is null, stop all the registered daemons.
+	 * Stop the daemons that has the given daemonID. In case that the give id is
+	 * null, stop all the registered daemons.
 	 * 
-	 * @param debuggerID The debugger id, or null.
+	 * @param debuggerID
+	 *            The debugger id, or null.
 	 * @since PDT 1.0
 	 */
 	public void stopDaemons(String debuggerID) {
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null || (daemons[i].isDebuggerDaemon() && debuggerID.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null
+						|| (daemons[i].isDebuggerDaemon() && debuggerID
+								.equals(daemons[i].getDebuggerID()))) {
 					daemons[i].stopListen();
 				}
 			}
@@ -117,25 +127,29 @@ public class DaemonPlugin extends Plugin {
 	}
 
 	/**
-	 * Make sure that the communication daemons are alive and listening. 
-	 * This method can be called before a communication session is requested in order
+	 * Make sure that the communication daemons are alive and listening. This
+	 * method can be called before a communication session is requested in order
 	 * to make sure that the requested communication daemon is up and running.
 	 * 
-	 * The method goes over the registered daemons and reset the socket for any communication 
-	 * daemon that is not listening.
+	 * The method goes over the registered daemons and reset the socket for any
+	 * communication daemon that is not listening.
 	 * 
-	 * The validation will be made on the daemons that have the given debuggerID or on all
-	 * the daemons in case the id is null.
+	 * The validation will be made on the daemons that have the given debuggerID
+	 * or on all the daemons in case the id is null.
 	 * 
-	 * @param debuggerID The debugger id, or null.
-	 * @return True, if all the communication daemons passed the validation; False, otherwise.
+	 * @param debuggerID
+	 *            The debugger id, or null.
+	 * @return True, if all the communication daemons passed the validation;
+	 *         False, otherwise.
 	 * @since PDT 1.0
 	 */
 	public boolean validateCommunicationDaemons(String debuggerID) {
 		boolean validated = true;
 		if (daemons != null) {
 			for (int i = 0; i < daemons.length; i++) {
-				if (debuggerID == null || (daemons[i].isDebuggerDaemon() && debuggerID.equals(daemons[i].getDebuggerID()))) {
+				if (debuggerID == null
+						|| (daemons[i].isDebuggerDaemon() && debuggerID
+								.equals(daemons[i].getDebuggerID()))) {
 					if (!daemons[i].isListening()) {
 						validated &= daemons[i].resetSocket();
 					}
@@ -164,7 +178,8 @@ public class DaemonPlugin extends Plugin {
 	}
 
 	public static void log(Throwable e) {
-		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, "Debug Daemon plugin internal error", e)); //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR,
+				"Debug Daemon plugin internal error", e)); //$NON-NLS-1$
 	}
 
 	public static void logErrorMessage(String message) {
