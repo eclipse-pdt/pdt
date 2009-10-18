@@ -43,7 +43,8 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
-public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlock {
+public class PHPServersConfigurationBlock implements
+		IPreferenceConfigurationBlock {
 
 	private static final int IDX_ADD = 0;
 	private static final int IDX_EDIT = 1;
@@ -54,7 +55,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	private ListDialogField fServersList;
 	private PreferencePage fMainPreferencePage;
 
-	public PHPServersConfigurationBlock(PreferencePage mainPreferencePage, OverlayPreferenceStore store) {
+	public PHPServersConfigurationBlock(PreferencePage mainPreferencePage,
+			OverlayPreferenceStore store) {
 		Assert.isNotNull(mainPreferencePage);
 		Assert.isNotNull(store);
 		fMainPreferencePage = mainPreferencePage;
@@ -63,8 +65,11 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	public Control createControl(Composite parent) {
 
 		ServerAdapter adapter = new ServerAdapter();
-		String buttons[] = new String[] { PHPServerUIMessages.getString("PHPServersConfigurationBlock.new"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.edit"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.remove"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.setDefault") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		fServersList = new ListDialogField(adapter, buttons, new PHPServersLabelProvider()) {
+		String buttons[] = new String[] {
+				PHPServerUIMessages
+						.getString("PHPServersConfigurationBlock.new"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.edit"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.remove"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.setDefault") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		fServersList = new ListDialogField(adapter, buttons,
+				new PHPServersLabelProvider()) {
 			protected boolean managedButtonPressed(int index) {
 				if (index == getRemoveButtonIndex()) {
 					handleRemoveServer();
@@ -75,9 +80,13 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		fServersList.setDialogFieldListener(adapter);
 		fServersList.setRemoveButtonIndex(IDX_REMOVE);
 
-		String[] columnsHeaders = new String[] { PHPServerUIMessages.getString("PHPServersConfigurationBlock.name"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.url") }; //$NON-NLS-1$ //$NON-NLS-2$
-		ColumnLayoutData[] layoutDatas = new ColumnLayoutData[] { new ColumnWeightData(40), new ColumnWeightData(40) };
-		fServersList.setTableColumns(new ListDialogField.ColumnsDescription(layoutDatas, columnsHeaders, true));
+		String[] columnsHeaders = new String[] {
+				PHPServerUIMessages
+						.getString("PHPServersConfigurationBlock.name"), PHPServerUIMessages.getString("PHPServersConfigurationBlock.url") }; //$NON-NLS-1$ //$NON-NLS-2$
+		ColumnLayoutData[] layoutDatas = new ColumnLayoutData[] {
+				new ColumnWeightData(40), new ColumnWeightData(40) };
+		fServersList.setTableColumns(new ListDialogField.ColumnsDescription(
+				layoutDatas, columnsHeaders, true));
 
 		if (fServersList.getSize() > 0) {
 			fServersList.selectFirstElement();
@@ -94,7 +103,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 
 		PixelConverter conv = new PixelConverter(parent);
 
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(parent, SWT.V_SCROLL | SWT.H_SCROLL);
+		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(
+				parent, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite composite = new Composite(scrolledCompositeImpl, SWT.NONE);
 		composite.setLayout(layout);
 		scrolledCompositeImpl.setContent(composite);
@@ -108,7 +118,9 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 		listControl.setLayoutData(data);
 
 		Control buttonsControl = fServersList.getButtonBox(composite);
-		buttonsControl.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING));
+		buttonsControl.setLayoutData(new GridData(
+				GridData.HORIZONTAL_ALIGN_FILL
+						| GridData.VERTICAL_ALIGN_BEGINNING));
 
 		addFiller(composite);
 
@@ -155,7 +167,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 	}
 
 	protected Server getServerFromWizard() {
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		Server theServer = null;
 		ServerWizard wizard = new ServerWizard();
@@ -164,13 +177,15 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			monitor.setCanceled(true);
 			return null;
 		}
-		theServer = (Server) wizard.getRootFragment().getWizardModel().getObject(WizardModel.SERVER);
+		theServer = (Server) wizard.getRootFragment().getWizardModel()
+				.getObject(WizardModel.SERVER);
 		return theServer;
 	}
 
 	protected void handleEditServerButtonSelected() {
 		Server server = (Server) fServersList.getSelectedElements().get(0);
-		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getShell();
 		NullProgressMonitor monitor = new NullProgressMonitor();
 		ServerEditDialog dialog = new ServerEditDialog(shell, server);
 		if (dialog.open() == Window.CANCEL) {
@@ -254,22 +269,26 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			List selectedElements = field.getSelectedElements();
 			field.enableButton(IDX_EDIT, hasActiveSelection(selectedElements));
 			// Do not allow the removal of the last element
-			field.enableButton(IDX_REMOVE, hasActiveSelection(selectedElements) && field.getElements().size() > 1);
+			field.enableButton(IDX_REMOVE, hasActiveSelection(selectedElements)
+					&& field.getElements().size() > 1);
 
-			//handle default button enablement
+			// handle default button enablement
 			if (selectedElements.size() == 1) {
-				field.enableButton(IDX_DEFAULT, !selectedElements.get(0).equals(ServersManager.getDefaultServer(null)));
+				field.enableButton(IDX_DEFAULT, !selectedElements.get(0)
+						.equals(ServersManager.getDefaultServer(null)));
 			} else {
 				field.enableButton(IDX_DEFAULT, false);
 			}
 		}
 	}
 
-	private class PHPServersLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
+	private class PHPServersLabelProvider extends LabelProvider implements
+			ITableLabelProvider, IFontProvider {
 
 		public Font getFont(Object element) {
 			if (isDefault((Server) element)) {
-				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
+				return JFaceResources.getFontRegistry().getBold(
+						JFaceResources.DIALOG_FONT);
 			}
 			return null;
 		}
@@ -291,7 +310,8 @@ public class PHPServersConfigurationBlock implements IPreferenceConfigurationBlo
 			if (columnIndex == 0) {
 				String serverName = server.getName();
 				if (isDefault((Server) element)) {
-					serverName += PHPServerUIMessages.getString("PHPServersConfigurationBlock.workspaceDefault"); //$NON-NLS-1$
+					serverName += PHPServerUIMessages
+							.getString("PHPServersConfigurationBlock.workspaceDefault"); //$NON-NLS-1$
 				}
 				return serverName;
 			} else if (columnIndex == 1) {

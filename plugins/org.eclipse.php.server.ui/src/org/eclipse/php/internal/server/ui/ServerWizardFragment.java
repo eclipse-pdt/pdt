@@ -25,11 +25,14 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 
 	private ServerCompositeFragment comp;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.server.ui.task.WizardFragment#createComposite()
 	 */
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		comp = new ServerCompositeFragment(parent, new WizardControlWrapper(wizard), false);
+		comp = new ServerCompositeFragment(parent, new WizardControlWrapper(
+				wizard), false);
 		return comp;
 	}
 
@@ -39,13 +42,15 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#enter()
 	 */
 	public void enter() {
 		if (comp != null) {
 			try {
 
-				Server server = (Server) getWizardModel().getObject(WizardModel.SERVER);
+				Server server = (Server) getWizardModel().getObject(
+						WizardModel.SERVER);
 				if (server == null) {
 					server = new Server();
 					comp.setData(server);
@@ -54,12 +59,15 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 				Logger.logException(e);
 			}
 		} else {
-			Logger.log(Logger.ERROR, "Could not display the Servers wizard (component is null)."); //$NON-NLS-1$
+			Logger
+					.log(Logger.ERROR,
+							"Could not display the Servers wizard (component is null)."); //$NON-NLS-1$
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#isComplete()
 	 */
 	public boolean isComplete() {
@@ -71,6 +79,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#exit()
 	 */
 	public void exit() {
@@ -82,7 +91,10 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.server.ui.wizard.WizardFragment#performFinish(org.eclipse.core.runtime.IProgressMonitor)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.server.ui.wizard.WizardFragment#performFinish
+	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void performFinish(IProgressMonitor monitor) throws CoreException {
 		super.performFinish(monitor);
@@ -93,7 +105,10 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.server.ui.wizard.WizardFragment#performCancel(org.eclipse.core.runtime.IProgressMonitor)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.server.ui.wizard.WizardFragment#performCancel
+	 * (org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void performCancel(IProgressMonitor monitor) throws CoreException {
 		super.performCancel(monitor);

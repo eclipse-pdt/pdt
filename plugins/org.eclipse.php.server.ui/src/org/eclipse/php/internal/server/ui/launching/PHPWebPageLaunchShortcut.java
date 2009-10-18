@@ -43,14 +43,15 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * A PHP web page launch shortcut.
- *
+ * 
  * @author Shalom Gibly
  */
 public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
-			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode, getPHPServerLaunchConfigType());
+			searchAndLaunch(((IStructuredSelection) selection).toArray(), mode,
+					getPHPServerLaunchConfigType());
 		}
 	}
 
@@ -58,23 +59,26 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		IEditorInput input = editor.getEditorInput();
 		IFile file = (IFile) input.getAdapter(IFile.class);
 		if (file != null) {
-			searchAndLaunch(new Object[] { file }, mode, getPHPServerLaunchConfigType());
+			searchAndLaunch(new Object[] { file }, mode,
+					getPHPServerLaunchConfigType());
 		}
 	}
 
 	private ILaunchConfigurationType getPHPServerLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-		return lm.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+		return lm
+				.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
 	}
 
-	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
+	public static void searchAndLaunch(Object[] search, String mode,
+			ILaunchConfigurationType configType) {
 		int entries = search == null ? 0 : search.length;
 		for (int i = 0; i < entries; i++) {
 			try {
 				String phpPathString = null;
 				IProject project = null;
 				Object obj = search[i];
-				
+
 				if (obj instanceof IModelElement) {
 					IModelElement elem = (IModelElement) obj;
 					IResource res = null;
@@ -88,12 +92,14 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 					if (res instanceof IFile) {
 						obj = (IFile) res;
 					}
-				}				
+				}
 
 				if (obj instanceof IFile) {
 					IFile file = (IFile) obj;
 					project = file.getProject();
-					IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+					IContentType contentType = Platform.getContentTypeManager()
+							.getContentType(
+									ContentTypeIdForPHP.ContentTypeID_PHP);
 					if (contentType.isAssociatedWith(file.getName())) {
 						phpPathString = file.getFullPath().toString();
 					}
@@ -105,15 +111,23 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 					defaultServer = ServersManager.getDefaultServer(project);
 					if (defaultServer == null) {
 						// Sould not happen
-						throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, "Could not create a defualt server for the launch.", null));
+						throw new CoreException(
+								new Status(
+										IStatus.ERROR,
+										PHPDebugUIPlugin.ID,
+										IStatus.OK,
+										"Could not create a defualt server for the launch.",
+										null));
 					}
 				}
-				
-				boolean breakAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+
+				boolean breakAtFirstLine = PHPProjectPreferences
+						.getStopAtFirstLine(project);
 				String selectedURL = null;
 				boolean showDebugDialog = true;
 				if (obj instanceof IScriptProject) {
-					final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(mode, (IScriptProject) obj);
+					final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(
+							mode, (IScriptProject) obj);
 					final int open = dialog.open();
 					if (open == PHPWebPageLaunchDialog.OK) {
 						defaultServer = dialog.getServer();
@@ -128,22 +142,35 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 
 				if (phpPathString == null) {
 					// Could not find target to launch
-					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_target, null));
+					throw new CoreException(new Status(IStatus.ERROR,
+							PHPDebugUIPlugin.ID, IStatus.OK,
+							PHPDebugUIMessages.launch_failure_no_target, null));
 				}
 
 				// Launch the app
-				ILaunchConfiguration config = findLaunchConfiguration(project, phpPathString, selectedURL, defaultServer, mode, configType, breakAtFirstLine, showDebugDialog);
+				ILaunchConfiguration config = findLaunchConfiguration(project,
+						phpPathString, selectedURL, defaultServer, mode,
+						configType, breakAtFirstLine, showDebugDialog);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
-					// Could not find launch configuration or the user cancelled.
-					// throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_config, null));
+					// Could not find launch configuration or the user
+					// cancelled.
+					// throw new CoreException(new Status(IStatus.ERROR,
+					// PHPDebugUIPlugin.ID, IStatus.OK,
+					// PHPDebugUIMessages.launch_failure_no_config, null));
 				}
 			} catch (CoreException ce) {
 				final IStatus stat = ce.getStatus();
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						ErrorDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_failure_msg_title, PHPDebugUIMessages.launch_failure_server_msg_text, stat);
+						ErrorDialog
+								.openError(
+										PHPDebugUIPlugin
+												.getActiveWorkbenchShell(),
+										PHPDebugUIMessages.launch_failure_msg_title,
+										PHPDebugUIMessages.launch_failure_server_msg_text,
+										stat);
 					}
 				});
 			}
@@ -151,30 +178,41 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 	}
 
 	/**
-	 * Locate a configuration to relaunch for the given type.  If one cannot be found, create one.
-	 * @param breakAtFirstLine 
-	 *
+	 * Locate a configuration to relaunch for the given type. If one cannot be
+	 * found, create one.
+	 * 
+	 * @param breakAtFirstLine
+	 * 
 	 * @return a re-useable config or <code>null</code> if none
 	 */
-	static ILaunchConfiguration findLaunchConfiguration(IProject project, String fileName, String selectedURL, Server server, String mode, ILaunchConfigurationType configType, boolean breakAtFirstLine, boolean showDebugDialog) {
+	static ILaunchConfiguration findLaunchConfiguration(IProject project,
+			String fileName, String selectedURL, Server server, String mode,
+			ILaunchConfigurationType configType, boolean breakAtFirstLine,
+			boolean showDebugDialog) {
 		ILaunchConfiguration config = null;
 
 		try {
-			ILaunchConfiguration[] configs = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurations(configType);
+			ILaunchConfiguration[] configs = DebugPlugin.getDefault()
+					.getLaunchManager().getLaunchConfigurations(configType);
 
 			int numConfigs = configs == null ? 0 : configs.length;
 			for (int i = 0; i < numConfigs; i++) {
-				String configuredServerName = configs[i].getAttribute(Server.NAME, (String) null);
-				String configuredFileName = configs[i].getAttribute(Server.FILE_NAME, (String) null);
+				String configuredServerName = configs[i].getAttribute(
+						Server.NAME, (String) null);
+				String configuredFileName = configs[i].getAttribute(
+						Server.FILE_NAME, (String) null);
 
-				if (configuredFileName.equals(fileName) && server.getName().equals(configuredServerName)) {
+				if (configuredFileName.equals(fileName)
+						&& server.getName().equals(configuredServerName)) {
 					config = configs[i].getWorkingCopy();
 					break;
 				}
 			}
 
 			if (config == null) {
-				config = createConfiguration(project, fileName, selectedURL, server, configType, mode, breakAtFirstLine, showDebugDialog);
+				config = createConfiguration(project, fileName, selectedURL,
+						server, configType, mode, breakAtFirstLine,
+						showDebugDialog);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -186,7 +224,8 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		String serverBaseURL = server.getBaseURL();
 		if (url.length() > serverBaseURL.length() + 1) {
 			url = url.substring(serverBaseURL.length() + 1);
-		} else if (url.length() == serverBaseURL.length() || url.length() == serverBaseURL.length() + 1) {
+		} else if (url.length() == serverBaseURL.length()
+				|| url.length() == serverBaseURL.length() + 1) {
 			return ""; //$NON-NLS-1$
 		}
 		// Remove the project name from the file name
@@ -207,7 +246,11 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		return url;
 	}
 
-	static ILaunchConfiguration createConfiguration(IProject project, String fileName, String selectedURL, Server server, ILaunchConfigurationType configType, String mode, boolean breakAtFirstLine, boolean showDebugDialog) throws CoreException {
+	static ILaunchConfiguration createConfiguration(IProject project,
+			String fileName, String selectedURL, Server server,
+			ILaunchConfigurationType configType, String mode,
+			boolean breakAtFirstLine, boolean showDebugDialog)
+			throws CoreException {
 		ILaunchConfiguration config = null;
 		if (!FileUtils.resourceExists(fileName)) {
 			return null;
@@ -219,26 +262,39 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		} else {
 			URL = server.getBaseURL() + new Path(fileName).toString();
 		}
-		
-		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(fileName));
 
-		// Set the debugger ID and the configuration delegate for this launch configuration
+		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
+				getNewConfigurationName(fileName));
+
+		// Set the debugger ID and the configuration delegate for this launch
+		// configuration
 		String debuggerID = PHPProjectPreferences.getDefaultDebuggerID(project);
-		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
-		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerID);
-		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getWebLaunchDelegateClass());
+		wc
+				.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+						debuggerID);
+		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
+				.getDebuggerConfiguration(debuggerID);
+		wc.setAttribute(
+				PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
+				debuggerConfiguration.getWebLaunchDelegateClass());
 
 		wc.setAttribute(Server.NAME, server.getName());
 		wc.setAttribute(Server.FILE_NAME, fileName);
 		wc.setAttribute(Server.BASE_URL, URL);
-		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
-		wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
-		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakAtFirstLine);
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin
+				.getDebugInfoOption());
+		wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin
+				.getOpenInBrowserOption());
+		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+				breakAtFirstLine);
 
 		// Display a dialog for selecting the URL.
 		if (showDebugDialog) {
-			String title = (ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page" : (ILaunchManager.PROFILE_MODE.equals(mode) ? "Profile PHP Web Page" : "Run PHP Web Page"));
-			PHPWebPageURLLaunchDialog launchDialog = new PHPWebPageURLLaunchDialog(wc, server, title);
+			String title = (ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page"
+					: (ILaunchManager.PROFILE_MODE.equals(mode) ? "Profile PHP Web Page"
+							: "Run PHP Web Page"));
+			PHPWebPageURLLaunchDialog launchDialog = new PHPWebPageURLLaunchDialog(
+					wc, server, title);
 			launchDialog.setBlockOnOpen(true);
 			if (launchDialog.open() == PHPWebPageURLLaunchDialog.CANCEL) {
 				return null;
@@ -247,14 +303,16 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		config = wc.doSave();
 		return config;
 	}
-	
-	
+
 	/**
-	 * Returns a name for a newly created launch configuration according to the given file name.
-	 * In case the name generation fails, return the "New_configuration" string.
-	 *
-	 * @param fileName	The original file name that this shortcut shoul execute.
-	 * @return The new configuration name, or "New_configuration" in case it fails for some reason.
+	 * Returns a name for a newly created launch configuration according to the
+	 * given file name. In case the name generation fails, return the
+	 * "New_configuration" string.
+	 * 
+	 * @param fileName
+	 *            The original file name that this shortcut shoul execute.
+	 * @return The new configuration name, or "New_configuration" in case it
+	 *         fails for some reason.
 	 */
 	protected static String getNewConfigurationName(String fileName) {
 		String configurationName = "New_configuration";
@@ -264,13 +322,17 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 			String lastSegment = path.lastSegment();
 			if (lastSegment != null) {
 				if (fileExtention != null) {
-					lastSegment = lastSegment.replaceFirst("." + fileExtention, "");
+					lastSegment = lastSegment.replaceFirst("." + fileExtention,
+							"");
 				}
 				configurationName = lastSegment;
 			}
 		} catch (Exception e) {
-			Logger.log(Logger.WARNING_DEBUG, "Could not generate configuration name for " + fileName + ".\nThe default name will be used.", e);
+			Logger.log(Logger.WARNING_DEBUG,
+					"Could not generate configuration name for " + fileName
+							+ ".\nThe default name will be used.", e);
 		}
-		return DebugPlugin.getDefault().getLaunchManager().generateUniqueLaunchConfigurationNameFrom(configurationName);
+		return DebugPlugin.getDefault().getLaunchManager()
+				.generateUniqueLaunchConfigurationNameFrom(configurationName);
 	}
 }

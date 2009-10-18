@@ -35,7 +35,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-public class ServerEditDialog extends TitleAreaDialog implements IControlHandler {
+public class ServerEditDialog extends TitleAreaDialog implements
+		IControlHandler {
 
 	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.server.ui.serverWizardAndComposite";
 	private Server server;
@@ -46,9 +47,11 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/**
 	 * Instantiate a new server edit dialog.
-	 *
-	 * @param parentShell the parent SWT shell
-	 * @param server An assigned IServer
+	 * 
+	 * @param parentShell
+	 *            the parent SWT shell
+	 * @param server
+	 *            An assigned IServer
 	 */
 	public ServerEditDialog(Shell parentShell, Server server) {
 		super(parentShell);
@@ -60,10 +63,13 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/**
 	 * Instantiate a new server edit dialog.
-	 *
-	 * @param parentShell the parent SWT shell
-	 * @param server An assigned IServer
-	 * @param init selected tabe ID.
+	 * 
+	 * @param parentShell
+	 *            the parent SWT shell
+	 * @param server
+	 *            An assigned IServer
+	 * @param init
+	 *            selected tabe ID.
 	 */
 	public ServerEditDialog(Shell parentShell, Server server, String tabID) {
 		this(parentShell, server);
@@ -73,7 +79,8 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
 		tabs = SWTUtil.createTabFolder(parent);
-		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories(FRAGMENT_GROUP_ID);
+		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry
+				.getFragmentsFactories(FRAGMENT_GROUP_ID);
 		for (ICompositeFragmentFactory element : factories) {
 			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
 			CompositeFragment fragment = element.createComposite(tabs, this);
@@ -84,13 +91,15 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 			runtimeComposites.add(fragment);
 		}
 
-		getShell().setText(PHPServerUIMessages.getString("ServerEditDialog.editServer")); //$NON-NLS-1$
-		getShell().setImage(ServersPluginImages.get(ServersPluginImages.IMG_SERVER));
+		getShell().setText(
+				PHPServerUIMessages.getString("ServerEditDialog.editServer")); //$NON-NLS-1$
+		getShell().setImage(
+				ServersPluginImages.get(ServersPluginImages.IMG_SERVER));
 
 		tabsListener = new TabsSelectionListener();
 		tabs.addSelectionListener(tabsListener);
 
-		//set the init selection of tabitem.
+		// set the init selection of tabitem.
 		if (tabID != null) {
 			setSelect(tabID);
 		}
@@ -109,7 +118,9 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#cancelPressed()
 	 */
 	protected void cancelPressed() {
@@ -120,7 +131,9 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 		super.cancelPressed();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 	 */
 	protected void okPressed() {
@@ -133,7 +146,10 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#setDescription(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.server.apache.ui.IControlHandler#setDescription
+	 * (java.lang.String)
 	 */
 	public void setDescription(String desc) {
 		super.setMessage(desc);
@@ -141,7 +157,10 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#setImageDescriptor(org.eclipse.jface.resource.ImageDescriptor)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.server.apache.ui.IControlHandler#setImageDescriptor
+	 * (org.eclipse.jface.resource.ImageDescriptor)
 	 */
 	public void setImageDescriptor(ImageDescriptor image) {
 		super.setTitleImage(image.createImage());
@@ -149,6 +168,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#update()
 	 */
 	public void update() {
@@ -167,11 +187,15 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#setMessage(java.lang.String, int)
+	 * 
+	 * @see
+	 * org.eclipse.jface.dialogs.TitleAreaDialog#setMessage(java.lang.String,
+	 * int)
 	 */
 	public void setMessage(String newMessage, int newType) {
 		// Override the WARNING with an INFORMATION.
-		// We have a bug that cause the warning to be displayed in all the tabs and not
+		// We have a bug that cause the warning to be displayed in all the tabs
+		// and not
 		// only in the selected one. (TODO - Fix this)
 		if (newType == IMessageProvider.WARNING) {
 			newType = IMessageProvider.INFORMATION;
@@ -181,7 +205,9 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#getServer()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.server.apache.ui.IControlHandler#getServer()
 	 */
 	public Server getServer() {
 		return server;
@@ -189,7 +215,10 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.server.apache.ui.IControlHandler#setServer(org.eclipse.wst.server.core.IServer)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.server.apache.ui.IControlHandler#setServer(org
+	 * .eclipse.wst.server.core.IServer)
 	 */
 	public void setServer(Server server) {
 		this.server = server;

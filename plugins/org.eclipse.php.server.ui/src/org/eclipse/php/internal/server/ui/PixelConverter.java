@@ -28,14 +28,16 @@ public class PixelConverter {
 	}
 
 	/**
-	 * see org.eclipse.jface.dialogs.DialogPage#convertHeightInCharsToPixels(int)
+	 * see
+	 * org.eclipse.jface.dialogs.DialogPage#convertHeightInCharsToPixels(int)
 	 */
 	public int convertHeightInCharsToPixels(int chars) {
 		return Dialog.convertHeightInCharsToPixels(fFontMetrics, chars);
 	}
 
 	/**
-	 * see org.eclipse.jface.dialogs.DialogPage#convertHorizontalDLUsToPixels(int)
+	 * see
+	 * org.eclipse.jface.dialogs.DialogPage#convertHorizontalDLUsToPixels(int)
 	 */
 	public int convertHorizontalDLUsToPixels(int dlus) {
 		return Dialog.convertHorizontalDLUsToPixels(fFontMetrics, dlus);

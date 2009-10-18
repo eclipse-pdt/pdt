@@ -23,7 +23,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.server.core.Server;
-import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.ModifyEvent;
@@ -35,7 +34,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * A PHPServerAdvancedTab for selecting advanced debug options, such as 'Debug all Pages', 'Start Debug from' etc.
+ * A PHPServerAdvancedTab for selecting advanced debug options, such as 'Debug
+ * all Pages', 'Start Debug from' etc.
  * 
  * @author shalom
  */
@@ -61,7 +61,10 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse.swt.widgets.Composite)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchConfigurationTab#createControl(org.eclipse
+	 * .swt.widgets.Composite)
 	 */
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -139,14 +142,16 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			public void widgetSelected(SelectionEvent e) {
 				if (launchConfiguration != null) {
 					try {
-						debugFromTxt.setText(launchConfiguration.getAttribute(Server.BASE_URL, ""));
+						debugFromTxt.setText(launchConfiguration.getAttribute(
+								Server.BASE_URL, ""));
 					} catch (CoreException e1) {
 					}
 				}
 			}
 		});
 
-		debugContinueBt = createCheckButton(group, "&Continue Debug from This Page");
+		debugContinueBt = createCheckButton(group,
+				"&Continue Debug from This Page");
 		data = (GridData) debugContinueBt.getLayoutData();
 		data.horizontalSpan = 3;
 		data.horizontalIndent = 40;
@@ -171,7 +176,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	private void enableSessionSettingButtons(boolean isOpenInBrowser) {
 		// also check for debug mode.
 		String mode = getLaunchConfigurationDialog().getMode();
-		isOpenInBrowser = isOpenInBrowser && ILaunchManager.DEBUG_MODE.equals(mode);
+		isOpenInBrowser = isOpenInBrowser
+				&& ILaunchManager.DEBUG_MODE.equals(mode);
 		debugFirstPageBt.setEnabled(isOpenInBrowser);
 		debugAllPagesBt.setEnabled(isOpenInBrowser);
 		debugStartFromBt.setEnabled(isOpenInBrowser);
@@ -191,6 +197,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
 	 */
 	public String getName() {
@@ -199,30 +206,41 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse.debug.core.ILaunchConfiguration)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse
+	 * .debug.core.ILaunchConfiguration)
 	 */
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		launchConfiguration = configuration;
 		try {
-			isOpenInBrowser = configuration.getAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
+			isOpenInBrowser = configuration.getAttribute(
+					IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin
+							.getOpenInBrowserOption());
 			openBrowser.setSelection(isOpenInBrowser);
-			String debugSetting = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+			String debugSetting = configuration.getAttribute(
+					IPHPDebugConstants.DEBUGGING_PAGES,
+					IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 			if (IPHPDebugConstants.DEBUGGING_ALL_PAGES.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(false);
 				debugAllPagesBt.setSelection(true);
 				debugStartFromBt.setSelection(false);
-			} else if (IPHPDebugConstants.DEBUGGING_FIRST_PAGE.equals(debugSetting)) {
+			} else if (IPHPDebugConstants.DEBUGGING_FIRST_PAGE
+					.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(true);
 				debugAllPagesBt.setSelection(false);
 				debugStartFromBt.setSelection(false);
-			} else if (IPHPDebugConstants.DEBUGGING_START_FROM.equals(debugSetting)) {
+			} else if (IPHPDebugConstants.DEBUGGING_START_FROM
+					.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(false);
 				debugAllPagesBt.setSelection(false);
 				debugStartFromBt.setSelection(true);
-				boolean shouldContinue = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE, false);
+				boolean shouldContinue = configuration.getAttribute(
+						IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE, false);
 				debugContinueBt.setSelection(shouldContinue);
 			}
-			String startFromURL = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_START_FROM_URL, "");
+			String startFromURL = configuration.getAttribute(
+					IPHPDebugConstants.DEBUGGING_START_FROM_URL, "");
 			debugFromTxt.setText(startFromURL);
 			updateDebugFrom();
 
@@ -234,24 +252,36 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse
+	 * .debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		launchConfiguration = configuration;
-		configuration.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, isOpenInBrowser);
+		configuration.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER,
+				isOpenInBrowser);
 		if (isOpenInBrowser) {
 			if (debugAllPagesBt.getSelection()) {
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
+						IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 			} else if (debugFirstPageBt.getSelection()) {
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
+						IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
 			} else {
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_START_FROM);
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE, debugContinueBt.getSelection());
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
+						IPHPDebugConstants.DEBUGGING_START_FROM);
+				configuration.setAttribute(
+						IPHPDebugConstants.DEBUGGING_START_FROM_URL,
+						debugFromTxt.getText());
+				configuration.setAttribute(
+						IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE,
+						debugContinueBt.getSelection());
 			}
 		} else {
 			// Allow only debug-first-page
-			configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
+			configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
+					IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
 		}
 		applyExtension(configuration);
 	}
@@ -267,17 +297,24 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchConfigurationTab#setDefaults(org.eclipse.
+	 * debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		launchConfiguration = configuration;
 		setErrorMessage(null);
-		configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+		configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
+				IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.AbstractLaunchConfigurationTab#isValid(org.eclipse.debug.core.ILaunchConfiguration)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.AbstractLaunchConfigurationTab#isValid(org.eclipse
+	 * .debug.core.ILaunchConfiguration)
 	 */
 	public boolean isValid(ILaunchConfiguration launchConfig) {
 		launchConfiguration = launchConfig;
@@ -308,29 +345,33 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		return true;
 	}
 
-	// Update the 'debug from' related widgets 
+	// Update the 'debug from' related widgets
 	private void updateDebugFrom() {
-		if (launchConfiguration != null && debugFromTxt.getText().trim().equals("")) {
+		if (launchConfiguration != null
+				&& debugFromTxt.getText().trim().equals("")) {
 			try {
-				debugFromTxt.setText(launchConfiguration.getAttribute(Server.BASE_URL, ""));
+				debugFromTxt.setText(launchConfiguration.getAttribute(
+						Server.BASE_URL, ""));
 			} catch (CoreException e) {
 			}
 		}
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				try {
-				boolean debugFromSelected = debugStartFromBt.getSelection();
-				debugFromTxt.setEnabled(debugFromSelected);
-				debugContinueBt.setEnabled(debugFromSelected);
-				resetBt.setEnabled(debugFromSelected);
+					boolean debugFromSelected = debugStartFromBt.getSelection();
+					debugFromTxt.setEnabled(debugFromSelected);
+					debugContinueBt.setEnabled(debugFromSelected);
+					resetBt.setEnabled(debugFromSelected);
 				} catch (SWTException se) {
-					// Just in case the widget was disposed (cases such as the configuration deletion).
+					// Just in case the widget was disposed (cases such as the
+					// configuration deletion).
 				}
 			}
 		});
 	}
 
-	protected class WidgetListener extends SelectionAdapter implements ModifyListener {
+	protected class WidgetListener extends SelectionAdapter implements
+			ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			updateLaunchConfigurationDialog();
 		}

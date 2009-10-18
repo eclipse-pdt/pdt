@@ -32,10 +32,12 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 
 	private PathMappingComposite pathMapperComposite;
 
-	public PathMapperCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
+	public PathMapperCompositeFragment(Composite parent,
+			IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
 		controlHandler.setTitle("Server Path Mapping");
-		controlHandler.setDescription("Specify mapping between server and local paths");
+		controlHandler
+				.setDescription("Specify mapping between server and local paths");
 		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
 		setDisplayName("Path Mapping");
 		setTitle("Edit Server Path Mapping");
@@ -50,7 +52,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	 * Create the page
 	 */
 	protected void createControl(boolean isForEditing) {
-		//set layout for this composite (whole page)
+		// set layout for this composite (whole page)
 		GridLayout pageLayout = new GridLayout();
 		setLayout(pageLayout);
 
@@ -108,12 +110,14 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 
 	/**
 	 * Override the super setData to handle only Server types.
-	 *
-	 * @throws IllegalArgumentException if the given object is not a {@link Server}
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the given object is not a {@link Server}
 	 */
 	public void setData(Object server) {
 		if (!(server instanceof Server)) {
-			throw new IllegalArgumentException("The given object is not a Server");
+			throw new IllegalArgumentException(
+					"The given object is not a Server");
 		}
 		super.setData(server);
 		init();
@@ -126,7 +130,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 
 	/**
 	 * Returns the Server that is attached to this fragment.
-	 *
+	 * 
 	 * @return The attached Server.
 	 */
 	public Server getServer() {

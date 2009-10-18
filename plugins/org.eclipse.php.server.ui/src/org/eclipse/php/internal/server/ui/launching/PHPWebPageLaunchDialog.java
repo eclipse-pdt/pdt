@@ -16,8 +16,6 @@ import java.net.URL;
 
 import org.eclipse.core.internal.content.ContentTypeManager;
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.ui.SWTFactory;
@@ -45,8 +43,8 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 
 /**
- *
- * Dialog for instant launch of PHP Web Page projects  
+ * 
+ * Dialog for instant launch of PHP Web Page projects
  */
 public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 
@@ -67,7 +65,8 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 
 	public PHPWebPageLaunchDialog(String mode, IScriptProject obj) {
 		super(PHPDebugUIPlugin.getActiveWorkbenchShell());
-		// , "Launch Web Page",  null, "", INFORMATION, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+		// , "Launch Web Page", null, "", INFORMATION, new String[] {
+		// IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		this.mode = mode;
 		this.project = obj;
 		this.server = ServersManager.getLocalServer(obj.getProject());
@@ -82,27 +81,28 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		setTitle(getActionTitle(this.mode));
 		setMessage(getActionMessage(this.mode));
 		setTitleImage(ServersPluginImages.DESC_WIZ_SERVER.createImage());
-		
+
 		Composite content = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, false);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		content.setLayout(layout);
 		content.setLayoutData(gd);
-		
+
 		createFileComponent(content);
 		createBreakControl(content);
 		createURLControl(content);
-		
+
 		initializeURLControl();
-		
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.DEBUGGING);
+
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.DEBUGGING);
 		return parent;
 	}
-	
+
 	@Override
 	protected Control createContents(Composite parent) {
 		final Control createContents = super.createContents(parent);
-		disableOkButton();		
+		disableOkButton();
 		return createContents;
 	}
 
@@ -114,7 +114,6 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		getButton(IDialogConstants.OK_ID).setEnabled(true);
 	}
 
-	
 	private String getActionMessage(String mode) {
 		if (ILaunchManager.DEBUG_MODE.equals(mode)) {
 			return PHPServerUIMessages.getString("PHPWebPageLaunchDialog.0"); //$NON-NLS-1$
@@ -137,29 +136,34 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		throw new IllegalArgumentException();
 	}
 
-	// In case this is a debug mode, display 'Break on first line' attribute checkbox.
+	// In case this is a debug mode, display 'Break on first line' attribute
+	// checkbox.
 	protected void createBreakControl(Composite parent) {
 		if (!ILaunchManager.DEBUG_MODE.equals(this.mode)) {
 			return;
 		}
-		
+
 		Group group = new Group(parent, SWT.NONE);
-		group.setText(PHPServerUIMessages.getString("PHPWebPageLaunchDialog.6")); //$NON-NLS-1$
+		group
+				.setText(PHPServerUIMessages
+						.getString("PHPWebPageLaunchDialog.6")); //$NON-NLS-1$
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayout(layout);
 		group.setLayoutData(gridData);
 
-		breakOnFirstLine = createCheckButton(group, PHPServerUIMessages.getString("PHPWebPageLaunchDialog.7")); //$NON-NLS-1$
+		breakOnFirstLine = createCheckButton(group, PHPServerUIMessages
+				.getString("PHPWebPageLaunchDialog.7")); //$NON-NLS-1$
 		breakOnFirstLine.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
-				PHPWebPageLaunchDialog.this.isBreakAtFirstLine = breakOnFirstLine.getSelection();
+				PHPWebPageLaunchDialog.this.isBreakAtFirstLine = breakOnFirstLine
+						.getSelection();
 				// updateLaunchConfigurationDialog();
 			}
 		});
-		
+
 	}
 
 	private Button createCheckButton(Group group, String string) {
@@ -168,7 +172,8 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 
 	protected void createFileComponent(Composite parent) {
 		Group group = new Group(parent, SWT.NONE);
-		String projectLabel = PHPServerUIMessages.getString("ServerTab.file_project"); //$NON-NLS-1$
+		String projectLabel = PHPServerUIMessages
+				.getString("ServerTab.file_project"); //$NON-NLS-1$
 		group.setText(projectLabel);
 		GridLayout layout = new GridLayout(3, false);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -178,16 +183,17 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		fFile = new Text(group, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
-		//gridData = new GridData();
-		//gridData.widthHint = IDialogConstants.ENTRY_FIELD_WIDTH;
+		// gridData = new GridData();
+		// gridData.widthHint = IDialogConstants.ENTRY_FIELD_WIDTH;
 		fFile.setLayoutData(gd);
 		fFile.addModifyListener(fListener);
-		fileButton = createPushButton(group, PHPServerUIMessages.getString("ServerTab.browse")); //$NON-NLS-1$
+		fileButton = createPushButton(group, PHPServerUIMessages
+				.getString("ServerTab.browse")); //$NON-NLS-1$
 		gd = (GridData) fileButton.getLayoutData();
 		gd.horizontalSpan = 1;
 		fileButton.addSelectionListener(fListener);
 	}
-	
+
 	public void createURLControl(Composite composite) {
 		Group group = new Group(composite, SWT.NONE);
 		String projectLabel = PHPServerUIMessages.getString("ServerTab.url"); //$NON-NLS-1$
@@ -199,7 +205,8 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		group.setLayoutData(gridData);
 
 		autoGeneratedURL = new Button(group, SWT.CHECK);
-		autoGeneratedURL.setText(PHPServerUIMessages.getString("ServerTab.autoGenerate")); //$NON-NLS-1$
+		autoGeneratedURL.setText(PHPServerUIMessages
+				.getString("ServerTab.autoGenerate")); //$NON-NLS-1$
 		autoGeneratedURL.setSelection(true);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = 2;
@@ -238,20 +245,18 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 			}
 		});
 	}
-	
-	
+
 	private Button createPushButton(Group group, String string) {
-		return SWTFactory.createPushButton(group, string, null);	
+		return SWTFactory.createPushButton(group, string, null);
 	}
 
 	/**
-	 * Override the okPressed to save the URL to the URLs history for this PHP IDE session.
-	 * Also, add the URL to the launch configuration attributes.
+	 * Override the okPressed to save the URL to the URLs history for this PHP
+	 * IDE session. Also, add the URL to the launch configuration attributes.
 	 */
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == OK) {
 
-		
 		}
 		super.buttonPressed(buttonId);
 	}
@@ -263,8 +268,9 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	public String getPhpPathString() {
 		return this.pathString;
 	}
-	
-	protected class WidgetListener extends SelectionAdapter implements ModifyListener {
+
+	protected class WidgetListener extends SelectionAdapter implements
+			ModifyListener {
 		public void modifyText(ModifyEvent e) {
 			initializeURLControl();
 			validate();
@@ -275,10 +281,10 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 			if (source == fileButton) {
 				handleFileButtonSelected();
 			}
-			validate();			
+			validate();
 		}
 	}
-	
+
 	protected void handleFileButtonSelected() {
 
 		IResource file = null;
@@ -294,12 +300,15 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 			updateURLComponents(computeURL(formatFileName(fName)));
 		}
 	}
-	
+
 	private IResource getFileFromDialog(IProject project) {
 		final String contenttypeidPhp = ContentTypeIdForPHP.ContentTypeID_PHP;
-		final IContentType contentType = ContentTypeManager.getInstance().getContentType(contenttypeidPhp);
-		final String[] fileSpecs = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-		return LaunchUtilities.getFileFromDialog(project, getShell(), fileSpecs , new String[] { PHPNature.ID } , false);
+		final IContentType contentType = ContentTypeManager.getInstance()
+				.getContentType(contenttypeidPhp);
+		final String[] fileSpecs = contentType
+				.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		return LaunchUtilities.getFileFromDialog(project, getShell(),
+				fileSpecs, new String[] { PHPNature.ID }, false);
 	}
 
 	protected void initializeURLControl() {
@@ -307,13 +316,16 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 			return;
 		}
 		String file;
-		file = autoGeneratedURL.getSelection() ? formatFileName(fFile.getText()) : fURLPath.getText();
+		file = autoGeneratedURL.getSelection() ? formatFileName(fFile.getText())
+				: fURLPath.getText();
 		fURLPath.setEnabled(!autoGeneratedURL.getSelection());
 		updateURLComponents(computeURL(file));
 	}
-	
+
 	/**
-	 * Constructs the URL string according to the given context root and the file name.
+	 * Constructs the URL string according to the given context root and the
+	 * file name.
+	 * 
 	 * @param fileName
 	 * @return
 	 */
@@ -332,7 +344,7 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		}
 		return url.toString();
 	}
-	
+
 	private String formatFileName(String fileName) {
 		String formatFile = null;
 
@@ -357,7 +369,8 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		try {
 			URL url = new URL(urlStr);
 			String port = url.getPort() == -1 ? "" : ":" + url.getPort();
-			fURLHost.setText(url.getProtocol() + "://" + url.getHost() + port + "/"); //$NON-NLS-1$ //$NON-NLS-2$
+			fURLHost.setText(url.getProtocol()
+					+ "://" + url.getHost() + port + "/"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (url.getQuery() != null) {
 				fURLPath.setText(url.getPath() + "?" + url.getQuery());
 			} else {
@@ -371,46 +384,48 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	public boolean isBreakAtFirstLine() {
 		return isBreakAtFirstLine;
 	}
-	
+
 	private boolean validate() {
 		String fileName = this.fFile.getText();
 		if (fileName == null || fileName.length() == 0) {
 			return false;
 		}
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fileName);
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+				.findMember(fileName);
 		if (!(resource instanceof IFile)) {
-			setErrorMessage(PHPServerUIMessages.getString("ServerTab.file_project_doesNotExist")); //$NON-NLS-1$
+			setErrorMessage(PHPServerUIMessages
+					.getString("ServerTab.file_project_doesNotExist")); //$NON-NLS-1$
 			return false;
 		}
 		setErrorMessage(null);
 		return true;
 	}
-	
+
 	@Override
 	public void setErrorMessage(String newErrorMessage) {
 		if (newErrorMessage != null) {
-			disableOkButton();	
+			disableOkButton();
 		} else {
 			enableOkButton();
 		}
 		super.setErrorMessage(newErrorMessage);
 	}
-	
+
 	@Override
 	protected void okPressed() {
 		String urlPath = fURLPath.getText().replace('\\', '/');
 		if (urlPath.startsWith("/")) {
 			urlPath = urlPath.substring(1);
 		}
-		this.pathString =  this.fURLHost.getText() + urlPath;
+		this.pathString = this.fURLHost.getText() + urlPath;
 		this.fileName = this.fFile.getText();
 
 		super.okPressed();
-		
+
 	}
 
 	public String getFilename() {
 		return this.fileName;
 	}
-	
+
 }

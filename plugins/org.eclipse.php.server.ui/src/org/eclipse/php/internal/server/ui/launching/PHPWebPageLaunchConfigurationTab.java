@@ -15,7 +15,6 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.ui.launching.LaunchUtil;
 import org.eclipse.php.internal.server.ui.ServerLaunchConfigurationTab;
 import org.eclipse.swt.widgets.Composite;
@@ -25,7 +24,8 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author Robert G., Shalom G.
  */
-public class PHPWebPageLaunchConfigurationTab extends ServerLaunchConfigurationTab {
+public class PHPWebPageLaunchConfigurationTab extends
+		ServerLaunchConfigurationTab {
 
 	public PHPWebPageLaunchConfigurationTab() {
 		super();
@@ -35,7 +35,12 @@ public class PHPWebPageLaunchConfigurationTab extends ServerLaunchConfigurationT
 	}
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true); // Always run with debug info
+		configuration
+				.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true); // Always
+																				// run
+																				// with
+																				// debug
+																				// info
 	}
 
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {

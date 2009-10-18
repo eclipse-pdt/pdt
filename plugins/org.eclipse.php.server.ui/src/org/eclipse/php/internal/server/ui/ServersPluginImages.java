@@ -32,10 +32,12 @@ public class ServersPluginImages {
 
 	private static URL fgIconBaseURL = null;
 
-	// Determine display depth. If depth > 4 then we use high color images. Otherwise low color
+	// Determine display depth. If depth > 4 then we use high color images.
+	// Otherwise low color
 	// images are used
 	static {
-		fgIconBaseURL = Activator.getDefault().getBundle().getEntry("/icons/full/"); //$NON-NLS-1$
+		fgIconBaseURL = Activator.getDefault().getBundle().getEntry(
+				"/icons/full/"); //$NON-NLS-1$
 	}
 
 	// The plug-in registry
@@ -48,13 +50,16 @@ public class ServersPluginImages {
 	public static final String IMG_SERVER = NAME_PREFIX + "server.gif"; //$NON-NLS-1$
 	public static final String IMG_WIZ_SERVER = NAME_PREFIX + "server_wiz.gif"; //$NON-NLS-1$
 
-	public static final ImageDescriptor DESC_SERVER = createManaged(T_OBJ, IMG_SERVER);
-	public static final ImageDescriptor DESC_WIZ_SERVER = createManaged(T_WIZBAN, IMG_WIZ_SERVER);
+	public static final ImageDescriptor DESC_SERVER = createManaged(T_OBJ,
+			IMG_SERVER);
+	public static final ImageDescriptor DESC_WIZ_SERVER = createManaged(
+			T_WIZBAN, IMG_WIZ_SERVER);
 
 	/**
 	 * Returns the image managed under the given key in this registry.
-	 *
-	 * @param key the image's key
+	 * 
+	 * @param key
+	 *            the image's key
 	 * @return the image managed under the given key
 	 */
 	public static Image get(String key) {
@@ -62,22 +67,26 @@ public class ServersPluginImages {
 	}
 
 	/**
-	 * Sets the three image descriptors for enabled, disabled, and hovered to an action. The actions
-	 * are retrieved from the *tool16 folders.
-	 *
-	 * @param action	the action
-	 * @param iconName	the icon name
+	 * Sets the three image descriptors for enabled, disabled, and hovered to an
+	 * action. The actions are retrieved from the *tool16 folders.
+	 * 
+	 * @param action
+	 *            the action
+	 * @param iconName
+	 *            the icon name
 	 */
 	public static void setToolImageDescriptors(IAction action, String iconName) {
 		setImageDescriptors(action, "tool16", iconName); //$NON-NLS-1$
 	}
 
 	/**
-	 * Sets the three image descriptors for enabled, disabled, and hovered to an action. The actions
-	 * are retrieved from the *lcl16 folders.
-	 *
-	 * @param action	the action
-	 * @param iconName	the icon name
+	 * Sets the three image descriptors for enabled, disabled, and hovered to an
+	 * action. The actions are retrieved from the *lcl16 folders.
+	 * 
+	 * @param action
+	 *            the action
+	 * @param iconName
+	 *            the icon name
 	 */
 	public static void setLocalImageDescriptors(IAction action, String iconName) {
 		setImageDescriptors(action, "lcl16", iconName); //$NON-NLS-1$
@@ -89,21 +98,26 @@ public class ServersPluginImages {
 	static ImageRegistry getImageRegistry() {
 		if (fgImageRegistry == null) {
 			fgImageRegistry = new ImageRegistry();
-			for (Iterator iter = fgAvoidSWTErrorMap.keySet().iterator(); iter.hasNext();) {
+			for (Iterator iter = fgAvoidSWTErrorMap.keySet().iterator(); iter
+					.hasNext();) {
 				String key = (String) iter.next();
-				fgImageRegistry.put(key, (ImageDescriptor) fgAvoidSWTErrorMap.get(key));
+				fgImageRegistry.put(key, (ImageDescriptor) fgAvoidSWTErrorMap
+						.get(key));
 			}
 			fgAvoidSWTErrorMap = null;
 		}
 		return fgImageRegistry;
 	}
 
-	//---- Helper methods to access icons on the file system --------------------------------------
+	// ---- Helper methods to access icons on the file system
+	// --------------------------------------
 
-	private static void setImageDescriptors(IAction action, String type, String relPath) {
+	private static void setImageDescriptors(IAction action, String type,
+			String relPath) {
 
 		try {
-			ImageDescriptor id = ImageDescriptor.createFromURL(makeIconFileURL("d" + type, relPath)); //$NON-NLS-1$
+			ImageDescriptor id = ImageDescriptor.createFromURL(makeIconFileURL(
+					"d" + type, relPath)); //$NON-NLS-1$
 			if (id != null)
 				action.setDisabledImageDescriptor(id);
 		} catch (MalformedURLException e) {
@@ -117,9 +131,12 @@ public class ServersPluginImages {
 		return createManaged(prefix, name, 0, null);
 	}
 
-	private static ImageDescriptor createManaged(String prefix, String name, int flags, Point size) {
+	private static ImageDescriptor createManaged(String prefix, String name,
+			int flags, Point size) {
 		try {
-			ImageDescriptor result = ImageDescriptor.createFromURL(makeIconFileURL(prefix, name.substring(NAME_PREFIX_LENGTH)));
+			ImageDescriptor result = ImageDescriptor
+					.createFromURL(makeIconFileURL(prefix, name
+							.substring(NAME_PREFIX_LENGTH)));
 			if (fgAvoidSWTErrorMap == null) {
 				fgAvoidSWTErrorMap = new HashMap();
 			}
@@ -141,7 +158,8 @@ public class ServersPluginImages {
 		}
 	}
 
-	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
+	private static URL makeIconFileURL(String prefix, String name)
+			throws MalformedURLException {
 		if (fgIconBaseURL == null)
 			throw new MalformedURLException();
 

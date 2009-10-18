@@ -32,7 +32,7 @@ import org.eclipse.ui.IWorkbench;
 public class ServerWizard extends FragmentedWizard implements INewWizard {
 
 	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.server.ui.serverWizardAndComposite";
-	
+
 	public ServerWizard() {
 		this(PHPServerUIMessages.getString("ServerWizard.serverCreation")); //$NON-NLS-1$
 	}
@@ -46,17 +46,18 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 		super(title, null);
 		setRootFragment(createRootFragment());
 	}
-	
+
 	private WizardFragment createRootFragment() {
 		WizardFragment fragment = new WizardFragment() {
 			private WizardFragment[] children;
-			
+
 			protected void createChildFragments(List list) {
 				if (children != null) {
 					loadChildren(children, list);
 					return;
 				}
-				ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories(FRAGMENT_GROUP_ID);
+				ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry
+						.getFragmentsFactories(FRAGMENT_GROUP_ID);
 				children = new WizardFragment[factories.length];
 				for (int i = 0; i < factories.length; i++) {
 					children[i] = factories[i].createWizardFragment();
@@ -66,16 +67,18 @@ public class ServerWizard extends FragmentedWizard implements INewWizard {
 		};
 		return fragment;
 	}
-	
+
 	private void loadChildren(WizardFragment[] children, List list) {
 		for (int i = 0; i < children.length; i++) {
 			list.add(children[i]);
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+	 * 
+	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+	 * org.eclipse.jface.viewers.IStructuredSelection)
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// Do nothing

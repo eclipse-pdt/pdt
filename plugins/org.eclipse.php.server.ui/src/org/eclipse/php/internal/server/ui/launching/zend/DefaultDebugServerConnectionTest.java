@@ -74,8 +74,8 @@ public class DefaultDebugServerConnectionTest implements
 					// Check existence of both web server and dummy.php
 					checkWebServerExistence();
 					if (monitor.isCanceled()) {// exit point from the runnable
-												// after clicking 'cancel'
-												// button
+						// after clicking 'cancel'
+						// button
 						return;
 					}
 
@@ -93,7 +93,7 @@ public class DefaultDebugServerConnectionTest implements
 						try {
 							activateTestDebug(monitor, clientHost, debugQuery);
 						} catch (SocketTimeoutException ste) {// debugger caused
-																// timeout
+							// timeout
 							if (!isFinished) {
 								String generalTimeout = NLS
 										.bind(
@@ -184,12 +184,12 @@ public class DefaultDebugServerConnectionTest implements
 					connection.setConnectTimeout(5000);
 					connection.setReadTimeout(DEFAULT_TIMEOUT);
 					inputStream = connection.getInputStream();// this will fail
-																// when host not
-																// found and/or
-																// dummy.php not
-																// found (2
-																// different
-																// exception
+					// when host not
+					// found and/or
+					// dummy.php not
+					// found (2
+					// different
+					// exception
 				} finally {
 					if (inputStream != null) {
 						inputStream.close();

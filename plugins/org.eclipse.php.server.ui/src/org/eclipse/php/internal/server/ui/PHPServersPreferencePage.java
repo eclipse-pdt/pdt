@@ -18,23 +18,26 @@ import org.eclipse.php.internal.ui.preferences.AbstractConfigurationBlockPrefere
 import org.eclipse.php.internal.ui.preferences.IPreferenceConfigurationBlock;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
-public class PHPServersPreferencePage extends AbstractConfigurationBlockPreferencePage {
+public class PHPServersPreferencePage extends
+		AbstractConfigurationBlockPreferencePage {
 
 	public PHPServersPreferencePage() {
 		noDefaultAndApplyButton();
 	}
 
-	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
+	protected IPreferenceConfigurationBlock createConfigurationBlock(
+			OverlayPreferenceStore overlayPreferenceStore) {
 		return new PHPServersConfigurationBlock(this, overlayPreferenceStore);
 	}
 
 	protected String getHelpId() {
-		//HELP
-		return  IPHPHelpContextIds.PHP_SERVERS_PREFERENCES;
+		// HELP
+		return IPHPHelpContextIds.PHP_SERVERS_PREFERENCES;
 	}
 
 	protected void setDescription() {
-		setDescription(PHPServerUIMessages.getString("PHPServersPreferencePage.removeLaunchNote")); //$NON-NLS-1$
+		setDescription(PHPServerUIMessages
+				.getString("PHPServersPreferencePage.removeLaunchNote")); //$NON-NLS-1$
 	}
 
 	protected void setPreferenceStore() {

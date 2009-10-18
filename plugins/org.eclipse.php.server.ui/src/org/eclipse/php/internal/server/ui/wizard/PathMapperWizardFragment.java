@@ -33,14 +33,16 @@ public class PathMapperWizardFragment extends CompositeWizardFragment {
 	}
 
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
-		compositeFragment = new PathMapperCompositeFragment(parent, new WizardControlWrapper(handle), false);
+		compositeFragment = new PathMapperCompositeFragment(parent,
+				new WizardControlWrapper(handle), false);
 		return compositeFragment;
 	}
 
 	public void enter() {
 		if (compositeFragment != null) {
 			try {
-				server = (Server) getWizardModel().getObject(WizardModel.SERVER);
+				server = (Server) getWizardModel()
+						.getObject(WizardModel.SERVER);
 				if (server != null) {
 					compositeFragment.setData(server);
 				}
@@ -48,7 +50,9 @@ public class PathMapperWizardFragment extends CompositeWizardFragment {
 				Logger.logException(e);
 			}
 		} else {
-			Logger.log(Logger.ERROR, "Could not display the Servers wizard (component is null)."); //$NON-NLS-1$
+			Logger
+					.log(Logger.ERROR,
+							"Could not display the Servers wizard (component is null)."); //$NON-NLS-1$
 		}
 	}
 
