@@ -21,19 +21,21 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
 /**
- * This class was created in order for HTMLFormatter to ignore php nodes when formatting html.
- * All the code is at HTMLFormatterNoPHPBase so that all the other formatters can access it too.
- * The interface IHTMLFormatterNoPHPWrapper was created in order for HTMLFormatterNoPHPBase to activate
- * protected methods inside the formatters
- *  
+ * This class was created in order for HTMLFormatter to ignore php nodes when
+ * formatting html. All the code is at HTMLFormatterNoPHPBase so that all the
+ * other formatters can access it too. The interface IHTMLFormatterNoPHPWrapper
+ * was created in order for HTMLFormatterNoPHPBase to activate protected methods
+ * inside the formatters
+ * 
  * @author guy.g
- *
+ * 
  */
 public class HTMLFormatterNoPHP extends HTMLFormatter {
-	
+
 	/**
 	 */
-	protected void formatChildNodes(IDOMNode node, HTMLFormatContraints contraints) {
+	protected void formatChildNodes(IDOMNode node,
+			HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (!node.hasChildNodes())
@@ -60,13 +62,14 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 				insertBreakBefore(child, contraints);
 			}
 
-			IStructuredFormatter formatter = HTMLFormatterNoPHPFactory.getInstance().createFormatter(child, getFormatPreferences());
+			IStructuredFormatter formatter = HTMLFormatterNoPHPFactory
+					.getInstance().createFormatter(child,
+							getFormatPreferences());
 			if (formatter != null) {
 				if (formatter instanceof HTMLFormatter) {
 					HTMLFormatterNoPHP htmlFormatter = (HTMLFormatterNoPHP) formatter;
 					htmlFormatter.formatNode(child, contraints);
-				}
-				else {
+				} else {
 					formatter.format(child);
 				}
 			}
@@ -74,8 +77,7 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 			if (canInsertBreakAfter(child)) {
 				insertBreakAfter(child, contraints);
 				insertBreak = false; // not to insert twice
-			}
-			else {
+			} else {
 				insertBreak = true;
 			}
 
@@ -88,7 +90,8 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 
 	/**
 	 */
-	protected void insertBreakAfter(IDOMNode node, HTMLFormatContraints contraints) {
+	protected void insertBreakAfter(IDOMNode node,
+			HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (node.getNodeType() == Node.TEXT_NODE)
@@ -102,19 +105,20 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 		if (next == null) { // last spaces
 			// use parent indent for the end tag
 			spaces = getBreakSpaces(parent);
-		}
-		else if (next.getNodeType() == Node.TEXT_NODE) {
+		} else if (next.getNodeType() == Node.TEXT_NODE) {
 			if (contraints != null && contraints.getFormatWithSiblingIndent()) {
 				IDOMNode text = (IDOMNode) next;
-				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory.getInstance().createFormatter(text, getFormatPreferences());
+				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory
+						.getInstance().createFormatter(text,
+								getFormatPreferences());
 				if (formatter instanceof HTMLTextFormatterNoPHP) {
 					HTMLTextFormatterNoPHP textFormatter = (HTMLTextFormatterNoPHP) formatter;
-					textFormatter.formatText(text, contraints, HTMLTextFormatter.FORMAT_HEAD);
+					textFormatter.formatText(text, contraints,
+							HTMLTextFormatter.FORMAT_HEAD);
 				}
 			}
 			return;
-		}
-		else {
+		} else {
 			spaces = getBreakSpaces(node);
 		}
 		if (spaces == null || spaces.length() == 0)
@@ -126,7 +130,8 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 
 	/**
 	 */
-	protected void insertBreakBefore(IDOMNode node, HTMLFormatContraints contraints) {
+	protected void insertBreakBefore(IDOMNode node,
+			HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (node.getNodeType() == Node.TEXT_NODE)
@@ -140,19 +145,22 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 		if (prev != null && prev.getNodeType() == Node.TEXT_NODE) {
 			if (contraints != null && contraints.getFormatWithSiblingIndent()) {
 				IDOMNode text = (IDOMNode) prev;
-				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory.getInstance().createFormatter(text, getFormatPreferences());
+				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory
+						.getInstance().createFormatter(text,
+								getFormatPreferences());
 				if (formatter instanceof HTMLTextFormatterNoPHP) {
 					HTMLTextFormatterNoPHP textFormatter = (HTMLTextFormatterNoPHP) formatter;
-					textFormatter.formatText(text, contraints, HTMLTextFormatter.FORMAT_TAIL);
+					textFormatter.formatText(text, contraints,
+							HTMLTextFormatter.FORMAT_TAIL);
 
 					if (node == null)
 						return;
 
 					if (node.hasChildNodes()) { // container
 						formatChildNodes(node, contraints);
-					}
-					else { // leaf
-						IStructuredDocumentRegion flatNode = node.getStartStructuredDocumentRegion();
+					} else { // leaf
+						IStructuredDocumentRegion flatNode = node
+								.getStartStructuredDocumentRegion();
 						if (flatNode != null) {
 							String source = flatNode.getText();
 							if (source != null && source.length() > 0) {
@@ -160,13 +168,11 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 							}
 						}
 					}
-					
-				
+
 				}
 			}
 			return;
-		}
-		else {
+		} else {
 			spaces = getBreakSpaces(node);
 		}
 		if (spaces == null || spaces.length() == 0)
@@ -176,13 +182,16 @@ public class HTMLFormatterNoPHP extends HTMLFormatter {
 		setWidth(contraints, spaces);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.html.core.internal.format.HTMLFormatter#formatNode(org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode, org.eclipse.wst.html.core.internal.provisional.HTMLFormatContraints)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.wst.html.core.internal.format.HTMLFormatter#formatNode(org
+	 * .eclipse.wst.xml.core.internal.provisional.document.IDOMNode,
+	 * org.eclipse.wst.html.core.internal.provisional.HTMLFormatContraints)
 	 */
 	public void formatNode(IDOMNode node, HTMLFormatContraints contraints) {
 		super.formatNode(node, contraints);
 	}
-	
-	
-	
+
 }

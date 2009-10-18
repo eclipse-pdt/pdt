@@ -17,11 +17,10 @@ import java.util.List;
 
 /**
  * A base class for all the preferences propagators.
- *
+ * 
  * @author shalom
  */
 public abstract class AbstractPreferencesPropagator {
-
 
 	protected HashMap listenersMap;
 	protected boolean isInstalled;
@@ -34,12 +33,16 @@ public abstract class AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Adds an IPreferencesPropagatorListener with a preferences key to listen to. 
-	 *  
-	 * @param listener			An IPreferencesPropagatorListener.
-	 * @param preferencesKey	The preferences key that will screen the relevant changes.
+	 * Adds an IPreferencesPropagatorListener with a preferences key to listen
+	 * to.
+	 * 
+	 * @param listener
+	 *            An IPreferencesPropagatorListener.
+	 * @param preferencesKey
+	 *            The preferences key that will screen the relevant changes.
 	 */
-	public void addPropagatorListener(IPreferencesPropagatorListener listener, String preferencesKey) {
+	public void addPropagatorListener(IPreferencesPropagatorListener listener,
+			String preferencesKey) {
 		List list = (List) listenersMap.get(preferencesKey);
 		if (list == null) {
 			list = new ArrayList(5);
@@ -51,12 +54,17 @@ public abstract class AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Removes an IPreferencesPropagatorListener that was assigned to listen to the given preferences key.
+	 * Removes an IPreferencesPropagatorListener that was assigned to listen to
+	 * the given preferences key.
 	 * 
-	 * @param listener			An IPreferencesPropagatorListener.
-	 * @param preferencesKey	The preferences key that is the screening key for the IPreferencesPropagatorListener.
+	 * @param listener
+	 *            An IPreferencesPropagatorListener.
+	 * @param preferencesKey
+	 *            The preferences key that is the screening key for the
+	 *            IPreferencesPropagatorListener.
 	 */
-	public void removePropagatorListener(IPreferencesPropagatorListener listener, String preferencesKey) {
+	public void removePropagatorListener(
+			IPreferencesPropagatorListener listener, String preferencesKey) {
 		List list = (List) listenersMap.get(preferencesKey);
 		if (list != null) {
 			list.remove(listener);
@@ -64,20 +72,26 @@ public abstract class AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Sets a list of listeners for the given preferences key.
-	 * This list will replace any previous list of listeners for the key.
+	 * Sets a list of listeners for the given preferences key. This list will
+	 * replace any previous list of listeners for the key.
 	 * 
-	 * @param listeners			A List of listeners.
-	 * @param preferencesKey	The preferences key that will screen the relevant changes. 
+	 * @param listeners
+	 *            A List of listeners.
+	 * @param preferencesKey
+	 *            The preferences key that will screen the relevant changes.
 	 */
 	public void setPropagatorListeners(List listeners, String preferencesKey) {
 		listenersMap.put(preferencesKey, listeners);
 	}
 
 	/**
-	 * Returns the list of listeners assigned to the preferences key, or null if non exists.
-	 * @param preferencesKey	The key that the listeners listen to.
-	 * @return The list of listeners assigned for the key, or null if non exists.
+	 * Returns the list of listeners assigned to the preferences key, or null if
+	 * non exists.
+	 * 
+	 * @param preferencesKey
+	 *            The key that the listeners listen to.
+	 * @return The list of listeners assigned for the key, or null if non
+	 *         exists.
 	 */
 	protected List getPropagatorListeners(String preferencesKey) {
 		synchronized (lock) {

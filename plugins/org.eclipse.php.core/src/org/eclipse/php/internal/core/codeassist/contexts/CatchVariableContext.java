@@ -14,19 +14,21 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 
-
 /**
- * This context represents state when staying in catch statement variable part.
- * <br/>Examples:
+ * This context represents state when staying in catch statement variable part. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. catch (Exception |) { }
  *  2. catch (Exception $a|) { }
  * </pre>
+ * 
  * @author michael
  */
 public class CatchVariableContext extends CatchContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

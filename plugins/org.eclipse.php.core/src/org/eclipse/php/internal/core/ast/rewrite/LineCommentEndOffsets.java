@@ -17,72 +17,77 @@ import java.util.List;
 import org.eclipse.php.internal.core.ast.nodes.Comment;
 
 public class LineCommentEndOffsets {
-	
+
 	private static final int[] EMPTY_INT_ARRAY = {};
 	private int[] offsets;
 	private final List commentList;
-	
+
 	public LineCommentEndOffsets(List commentList) {
-		this.commentList= commentList;
-		this.offsets= null; // create on demand
+		this.commentList = commentList;
+		this.offsets = null; // create on demand
 	}
-	
+
 	private int[] getOffsets() {
 		if (this.offsets == null) {
 			if (this.commentList != null) {
-				int nComments= this.commentList.size();
+				int nComments = this.commentList.size();
 				// count the number of line comments
-				int count= 0;
-				for (int i= 0; i < nComments; i++) {
-					Object curr= this.commentList.get(i);
+				int count = 0;
+				for (int i = 0; i < nComments; i++) {
+					Object curr = this.commentList.get(i);
 					if (isLineComment(curr)) {
 						count++;
 					}
 				}
 				// fill the offset table
-				this.offsets= new int[count];
-				for (int i= 0, k= 0; i < nComments; i++) {
-					Object curr= this.commentList.get(i);
+				this.offsets = new int[count];
+				for (int i = 0, k = 0; i < nComments; i++) {
+					Object curr = this.commentList.get(i);
 					if (isLineComment(curr)) {
-						Comment comment= (Comment) curr;
-						this.offsets[k++]= comment.getStart() + comment.getLength();
+						Comment comment = (Comment) curr;
+						this.offsets[k++] = comment.getStart()
+								+ comment.getLength();
 					}
 				}
 			} else {
-				this.offsets= EMPTY_INT_ARRAY;
+				this.offsets = EMPTY_INT_ARRAY;
 			}
 		}
 		return this.offsets;
 	}
 
 	private boolean isLineComment(Object curr) {
-		return curr instanceof Comment && ((Comment) curr).getCommentType() == Comment.TYPE_SINGLE_LINE;
+		return curr instanceof Comment
+				&& ((Comment) curr).getCommentType() == Comment.TYPE_SINGLE_LINE;
 	}
-	
+
 	public boolean isEndOfLineComment(int offset) {
 		return offset >= 0 && Arrays.binarySearch(getOffsets(), offset) >= 0;
 	}
-	
+
 	public boolean isEndOfLineComment(int offset, char[] content) {
-		if (offset < 0 || (offset < content.length && !IndentManipulation.isLineDelimiterChar(content[offset]))) {
+		if (offset < 0
+				|| (offset < content.length && !IndentManipulation
+						.isLineDelimiterChar(content[offset]))) {
 			return false;
 		}
 		return Arrays.binarySearch(getOffsets(), offset) >= 0;
 	}
-	
+
 	public boolean remove(int offset) {
-		int[] offsetArray= getOffsets(); // returns the shared array
-		int index= Arrays.binarySearch(offsetArray, offset);
+		int[] offsetArray = getOffsets(); // returns the shared array
+		int index = Arrays.binarySearch(offsetArray, offset);
 		if (index >= 0) {
 			if (index > 0) {
-				// shift from the beginning and insert -1 (smallest number) at the beginning
+				// shift from the beginning and insert -1 (smallest number) at
+				// the beginning
 				// 1, 2, 3, x, 4, 5 -> -1, 1, 2, 3, 4, 5
 				System.arraycopy(offsetArray, 0, offsetArray, 1, index);
 			}
-			offsetArray[0]= -1;
+			offsetArray[0] = -1;
 			return true;
 		}
 		return false;
 	}
-	
+
 }

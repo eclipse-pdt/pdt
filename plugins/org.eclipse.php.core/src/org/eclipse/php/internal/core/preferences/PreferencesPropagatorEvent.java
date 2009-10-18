@@ -14,8 +14,8 @@ package org.eclipse.php.internal.core.preferences;
 import java.util.EventObject;
 
 /**
- * A PreferencesPropagatorEvent is fired by the PreferencesEventsPropagator when propagating
- * evnets that arrive as a results of some preferences changes.
+ * A PreferencesPropagatorEvent is fired by the PreferencesEventsPropagator when
+ * propagating evnets that arrive as a results of some preferences changes.
  * 
  * @author shalom
  */
@@ -28,12 +28,17 @@ public class PreferencesPropagatorEvent extends EventObject {
 	/**
 	 * Constructs a new PreferencesPropagatorEvent.
 	 * 
-	 * @param source 	The event's source (can be IProject or IPreferenceStore)
-	 * @param oldValue	The preferences old value
-	 * @param newValue	The preferences new value
-	 * @param key		The preferences key
+	 * @param source
+	 *            The event's source (can be IProject or IPreferenceStore)
+	 * @param oldValue
+	 *            The preferences old value
+	 * @param newValue
+	 *            The preferences new value
+	 * @param key
+	 *            The preferences key
 	 */
-	public PreferencesPropagatorEvent(Object source, Object oldValue, Object newValue, Object key) {
+	public PreferencesPropagatorEvent(Object source, Object oldValue,
+			Object newValue, Object key) {
 		super(source);
 		this.oldValue = oldValue;
 		this.newValue = newValue;

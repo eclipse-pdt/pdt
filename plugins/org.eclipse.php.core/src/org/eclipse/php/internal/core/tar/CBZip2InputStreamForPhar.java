@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.tar;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class CBZip2InputStreamForPhar extends CBZip2InputStream{
+public class CBZip2InputStreamForPhar extends CBZip2InputStream {
 
 	public CBZip2InputStreamForPhar(InputStream in) throws IOException {
 		super(in);

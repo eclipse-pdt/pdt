@@ -17,7 +17,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
 /**
  * XML preferences writer for writing XML structures into the prefernces store.
@@ -46,19 +45,20 @@ public class XMLPreferencesWriter {
 	}
 
 	protected static String getReplacement(char c) {
-		// Encode special XML characters into the equivalent character references.
+		// Encode special XML characters into the equivalent character
+		// references.
 		// These five are defined by default for all XML documents.
 		switch (c) {
-			case '<':
-				return "lt"; //$NON-NLS-1$
-			case '>':
-				return "gt"; //$NON-NLS-1$
-			case '"':
-				return "quot"; //$NON-NLS-1$
-			case '\'':
-				return "apos"; //$NON-NLS-1$
-			case '&':
-				return "amp"; //$NON-NLS-1$
+		case '<':
+			return "lt"; //$NON-NLS-1$
+		case '>':
+			return "gt"; //$NON-NLS-1$
+		case '"':
+			return "quot"; //$NON-NLS-1$
+		case '\'':
+			return "apos"; //$NON-NLS-1$
+		case '&':
+			return "amp"; //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -87,38 +87,49 @@ public class XMLPreferencesWriter {
 	}
 
 	/**
-	 * Writes a group of IXMLPreferencesStorables to the given plugin preferences.
-	 * The caller to this method should also make sure that {@link Plugin#savePluginPreferences()} is called
-	 * in order to really store the changes.
-	 *
-	 * @param pluginPreferences A Preferences instance
-	 * @param prefsKey The key to store by.
-	 * @param objects The IXMLPreferencesStorables to store.
+	 * Writes a group of IXMLPreferencesStorables to the given plugin
+	 * preferences. The caller to this method should also make sure that
+	 * {@link Plugin#savePluginPreferences()} is called in order to really store
+	 * the changes.
+	 * 
+	 * @param pluginPreferences
+	 *            A Preferences instance
+	 * @param prefsKey
+	 *            The key to store by.
+	 * @param objects
+	 *            The IXMLPreferencesStorables to store.
 	 */
-	public static void write(Preferences pluginPreferences, String prefsKey, IXMLPreferencesStorable[] objects) {
+	public static void write(Preferences pluginPreferences, String prefsKey,
+			IXMLPreferencesStorable[] objects) {
 		StringBuffer sb = new StringBuffer();
 		appendDelimitedString(sb, objects);
 		pluginPreferences.setValue(prefsKey, sb.toString());
 	}
 
 	/**
-	 * Writes an IXMLPreferencesStorable to the given plugin preferences.
-	 * The caller to this method should also make sure that {@link Plugin#savePluginPreferences()} is called
-	 * in order to really store the changes.
-	 *
-	 * @param pluginPreferences A Preferences instance
-	 * @param prefsKey The key to store by.
-	 * @param object The IXMLPreferencesStorable to store.
+	 * Writes an IXMLPreferencesStorable to the given plugin preferences. The
+	 * caller to this method should also make sure that
+	 * {@link Plugin#savePluginPreferences()} is called in order to really store
+	 * the changes.
+	 * 
+	 * @param pluginPreferences
+	 *            A Preferences instance
+	 * @param prefsKey
+	 *            The key to store by.
+	 * @param object
+	 *            The IXMLPreferencesStorable to store.
 	 */
-	public static void write(Preferences pluginPreferences, String prefsKey, IXMLPreferencesStorable object) {
+	public static void write(Preferences pluginPreferences, String prefsKey,
+			IXMLPreferencesStorable object) {
 		StringBuffer sb = new StringBuffer();
 		write(sb, object.storeToMap());
 		pluginPreferences.setValue(prefsKey, sb.toString());
 	}
 
 	// Append the elements one by one into the given StringBuffer.
-	protected static void appendDelimitedString(StringBuffer buffer, IXMLPreferencesStorable[] elements) {
-		if (elements != null){
+	protected static void appendDelimitedString(StringBuffer buffer,
+			IXMLPreferencesStorable[] elements) {
+		if (elements != null) {
 			for (int i = 0; i < elements.length; ++i) {
 				write(buffer, elements[i].storeToMap());
 				if (i < elements.length - 1) {
@@ -128,7 +139,8 @@ public class XMLPreferencesWriter {
 		}
 	}
 
-	public static String storableElementsToString(IXMLPreferencesStorable[] elements){
+	public static String storableElementsToString(
+			IXMLPreferencesStorable[] elements) {
 		StringBuffer sb = new StringBuffer();
 		appendDelimitedString(sb, elements);
 		return sb.toString();

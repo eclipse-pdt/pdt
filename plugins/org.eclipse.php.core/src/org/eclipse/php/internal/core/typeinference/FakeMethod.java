@@ -20,7 +20,9 @@ import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.SourceRange;
 
 /**
- * This is a fake model element that can live independently from the DLTK model manager. 
+ * This is a fake model element that can live independently from the DLTK model
+ * manager.
+ * 
  * @author michael
  */
 public class FakeMethod extends SourceMethod {
@@ -48,13 +50,14 @@ public class FakeMethod extends SourceMethod {
 	public FakeMethod(ModelElement parent, String name) {
 		super(parent, name);
 	}
-	
+
 	public FakeMethod(ModelElement parent, String name, int modifiers) {
 		super(parent, name);
 		this.flags = modifiers;
 	}
 
-	public FakeMethod(ModelElement parent, String name, int offset, int length, int nameOffset, int nameLength) {
+	public FakeMethod(ModelElement parent, String name, int offset, int length,
+			int nameOffset, int nameLength) {
 		super(parent, name);
 		this.offset = offset;
 		this.length = length;
@@ -102,7 +105,7 @@ public class FakeMethod extends SourceMethod {
 	public String[] getParameters() throws ModelException {
 		return parameters;
 	}
-	
+
 	public void setConstructor(boolean isConstructor) {
 		this.isConstructor = isConstructor;
 	}

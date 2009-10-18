@@ -27,14 +27,16 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	private IType[] types;
 	private IEvaluatedType evaluatedType;
 
-	public AbstractMethodReturnTypeGoal(IContext context, IEvaluatedType evaluatedType, String methodName) {
+	public AbstractMethodReturnTypeGoal(IContext context,
+			IEvaluatedType evaluatedType, String methodName) {
 		super(context);
 		Assert.isNotNull(methodName);
 		this.methodName = methodName;
 		this.evaluatedType = evaluatedType;
 	}
 
-	public AbstractMethodReturnTypeGoal(IContext context, IType[] types, String methodName) {
+	public AbstractMethodReturnTypeGoal(IContext context, IType[] types,
+			String methodName) {
 		super(context);
 		Assert.isNotNull(methodName);
 		this.methodName = methodName;
@@ -48,7 +50,8 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	public IType[] getTypes() {
 		if (types == null) {
 			if (evaluatedType != null) {
-				types = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context);
+				types = PHPTypeInferenceUtils.getModelElements(evaluatedType,
+						(ISourceModuleContext) context);
 			}
 		}
 		return types;
@@ -61,8 +64,10 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((evaluatedType == null) ? 0 : evaluatedType.hashCode());
-		result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
+		result = prime * result
+				+ ((evaluatedType == null) ? 0 : evaluatedType.hashCode());
+		result = prime * result
+				+ ((methodName == null) ? 0 : methodName.hashCode());
 		result = prime * result + Arrays.hashCode(types);
 		return result;
 	}

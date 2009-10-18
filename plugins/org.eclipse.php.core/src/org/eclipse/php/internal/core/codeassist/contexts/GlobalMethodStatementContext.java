@@ -14,27 +14,30 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
-
 /**
- * This context represents state when staying in a method top level statement.
- * <br/>Examples:
+ * This context represents state when staying in a method top level statement. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. |
  *  2. pri|
  *  3. $v|
  *  etc...
  * </pre>
+ * 
  * @author michael
  */
-public final class GlobalMethodStatementContext extends AbstractGlobalStatementContext {
-	
+public final class GlobalMethodStatementContext extends
+		AbstractGlobalStatementContext {
+
 	private IMethod enclosingMethod;
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		// check whether enclosing element is a method
 		try {
 			IModelElement enclosingElement = sourceModule.getElementAt(offset);
@@ -42,10 +45,10 @@ public final class GlobalMethodStatementContext extends AbstractGlobalStatementC
 				enclosingElement = enclosingElement.getParent();
 			}
 			if (!(enclosingElement instanceof IMethod)) {
-				return false; 
+				return false;
 			}
 			enclosingMethod = (IMethod) enclosingElement;
-		
+
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}

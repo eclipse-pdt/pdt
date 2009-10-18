@@ -14,19 +14,22 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 
-
 /**
- * This context represents the state when staying after 'extends' keyword in an interface declaration.
- * <br/>Examples:
+ * This context represents the state when staying after 'extends' keyword in an
+ * interface declaration. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. interface A extends |
  *  2. interface A extends B|
  * </pre>
+ * 
  * @author michael
  */
 public class InterfaceExtendsContext extends InterfaceDeclarationContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

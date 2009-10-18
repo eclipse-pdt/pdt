@@ -18,9 +18,9 @@ public class CorePreferencesSupport extends PreferencesSupport {
 	private static CorePreferencesSupport corePreferencesSupport;
 
 	private CorePreferencesSupport() {
-		super(PHPCorePlugin.ID, PHPCorePlugin.getDefault() == null ? null : PHPCorePlugin.getDefault().getPluginPreferences());
+		super(PHPCorePlugin.ID, PHPCorePlugin.getDefault() == null ? null
+				: PHPCorePlugin.getDefault().getPluginPreferences());
 	}
-
 
 	public static CorePreferencesSupport getInstance() {
 		if (corePreferencesSupport == null) {

@@ -37,9 +37,10 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 	public PHPMatchLocatorParser(MatchLocator locator) {
 		super(locator);
 	}
-	
+
 	protected void visitTypeDeclaration(TypeDeclaration t) {
-		if (t instanceof NamespaceDeclaration && ((NamespaceDeclaration)t).isGlobal()) {
+		if (t instanceof NamespaceDeclaration
+				&& ((NamespaceDeclaration) t).isGlobal()) {
 			return;
 		}
 		super.visitTypeDeclaration(t);
@@ -48,123 +49,139 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 	protected void processStatement(ASTNode node, PatternLocator locator) {
 		if (node instanceof FieldDeclaration) {
 			locator.match((FieldDeclaration) node, getNodeSet());
-		}
-		else if (node instanceof ConstantDeclaration) {
+		} else if (node instanceof ConstantDeclaration) {
 			ConstantDeclaration constDecl = (ConstantDeclaration) node;
 			ConstantReference constantName = constDecl.getConstantName();
-			FieldDeclaration decl = new FieldDeclarationLocation(constantName.getName(), constantName.sourceStart(), constantName.sourceEnd(), constDecl.sourceStart(), constDecl.sourceEnd());
+			FieldDeclaration decl = new FieldDeclarationLocation(constantName
+					.getName(), constantName.sourceStart(), constantName
+					.sourceEnd(), constDecl.sourceStart(), constDecl
+					.sourceEnd());
 			decl.setModifiers(Modifiers.AccConstant);
 			locator.match(decl, getNodeSet());
-		}
-		else if (node instanceof FieldAccess) {
-			Expression field = ((FieldAccess)node).getField();
+		} else if (node instanceof FieldAccess) {
+			Expression field = ((FieldAccess) node).getField();
 			if (field instanceof SimpleReference) {
 				SimpleReference ref = (SimpleReference) field;
-				SimpleReferenceLocation refLoc = new SimpleReferenceLocation(ref.sourceStart(), ref.sourceEnd(), '$' + ref.getName()); 
+				SimpleReferenceLocation refLoc = new SimpleReferenceLocation(
+						ref.sourceStart(), ref.sourceEnd(), '$' + ref.getName());
 				locator.match(refLoc, getNodeSet());
 			}
-		}
-		else if (node instanceof StaticFieldAccess) {
-			Expression field = ((StaticFieldAccess)node).getField();
+		} else if (node instanceof StaticFieldAccess) {
+			Expression field = ((StaticFieldAccess) node).getField();
 			if (field instanceof SimpleReference) {
 				SimpleReference ref = (SimpleReference) field;
-				SimpleReferenceLocation refLoc = new SimpleReferenceLocation(ref.sourceStart(), ref.sourceEnd(), '$' + ref.getName()); 
+				SimpleReferenceLocation refLoc = new SimpleReferenceLocation(
+						ref.sourceStart(), ref.sourceEnd(), '$' + ref.getName());
 				locator.match(refLoc, getNodeSet());
 			}
-		}
-		else if (node instanceof StaticConstantAccess) {
-			ConstantReference constantRef = ((StaticConstantAccess)node).getConstant();
+		} else if (node instanceof StaticConstantAccess) {
+			ConstantReference constantRef = ((StaticConstantAccess) node)
+					.getConstant();
 			locator.match(constantRef, getNodeSet());
 		}
-		/*else if (node instanceof ConstantReference) {
-			locator.match((ConstantReference)node, getNodeSet());
-		}*/
-		else if(node instanceof Assignment){
-			Expression left = ((Assignment)node).getVariable();
+		/*
+		 * else if (node instanceof ConstantReference) {
+		 * locator.match((ConstantReference)node, getNodeSet()); }
+		 */
+		else if (node instanceof Assignment) {
+			Expression left = ((Assignment) node).getVariable();
 			if (left instanceof FieldAccess) { // class variable ($this->a = .)
 				FieldAccess fieldAccess = (FieldAccess) left;
 				Expression dispatcher = fieldAccess.getDispatcher();
-				if (dispatcher instanceof VariableReference){ // && "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
+				if (dispatcher instanceof VariableReference) { // && "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
 					Expression field = fieldAccess.getField();
 					if (field instanceof SimpleReference) {
 						SimpleReference ref = (SimpleReference) field;
-						FieldDeclaration decl = new FieldDeclarationLocation('$' + ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
+						FieldDeclaration decl = new FieldDeclarationLocation(
+								'$' + ref.getName(), ref.sourceStart(), ref
+										.sourceEnd(), node.sourceStart(), node
+										.sourceEnd());
 						locator.match(decl, getNodeSet());
 					}
 				}
 			} else if (left instanceof VariableReference) {
-				FieldDeclaration decl = new FieldDeclarationLocation(((VariableReference)left).getName(), left.sourceStart(), left.sourceEnd(), node.sourceStart(), node.sourceEnd());
+				FieldDeclaration decl = new FieldDeclarationLocation(
+						((VariableReference) left).getName(), left
+								.sourceStart(), left.sourceEnd(), node
+								.sourceStart(), node.sourceEnd());
 				locator.match(decl, getNodeSet());
 			}
-		}
-		else if (node instanceof ListVariable){
+		} else if (node instanceof ListVariable) {
 			recursiveListMatch(node, locator);
-		}
-		else if (node instanceof TypeReference) {
-			locator.match((TypeReference)node, getNodeSet());
-		}
-		else if (node instanceof VariableReference) {
-			locator.match((VariableReference)node, getNodeSet());
-		}
-		else if (node instanceof CallExpression) {
-			FieldDeclaration constantDecl = ASTUtils.getConstantDeclaration((CallExpression) node);
+		} else if (node instanceof TypeReference) {
+			locator.match((TypeReference) node, getNodeSet());
+		} else if (node instanceof VariableReference) {
+			locator.match((VariableReference) node, getNodeSet());
+		} else if (node instanceof CallExpression) {
+			FieldDeclaration constantDecl = ASTUtils
+					.getConstantDeclaration((CallExpression) node);
 			if (constantDecl != null) {
 				locator.match(constantDecl, getNodeSet());
 			} else {
-				locator.match((CallExpression)node, getNodeSet());
+				locator.match((CallExpression) node, getNodeSet());
 			}
-		}
-		else if (node instanceof Include) {
+		} else if (node instanceof Include) {
 			Include include = (Include) node;
 			if (include.getExpr() instanceof Scalar) {
 				Scalar filePath = (Scalar) include.getExpr();
-				CallExpression callExpression = new CallExpressionLocation(filePath.sourceStart(), filePath.sourceEnd(), null, "include", new CallArgumentsList());
+				CallExpression callExpression = new CallExpressionLocation(
+						filePath.sourceStart(), filePath.sourceEnd(), null,
+						"include", new CallArgumentsList());
 				locator.match(callExpression, getNodeSet());
 			}
-		}
-		else if (node instanceof Argument) {
-			SimpleReference ref = ((Argument)node).getRef();
-			FieldDeclaration decl = new FieldDeclarationLocation(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
+		} else if (node instanceof Argument) {
+			SimpleReference ref = ((Argument) node).getRef();
+			FieldDeclaration decl = new FieldDeclarationLocation(ref.getName(),
+					ref.sourceStart(), ref.sourceEnd(), node.sourceStart(),
+					node.sourceEnd());
 			locator.match(decl, getNodeSet());
-		}
-		else if (node instanceof ForEachStatement) {
-			Expression key = ((ForEachStatement)node).getKey();
-			Expression value = ((ForEachStatement)node).getValue();
+		} else if (node instanceof ForEachStatement) {
+			Expression key = ((ForEachStatement) node).getKey();
+			Expression value = ((ForEachStatement) node).getValue();
 			if (key instanceof SimpleReference) {
 				SimpleReference ref = (SimpleReference) key;
-				FieldDeclaration decl = new FieldDeclarationLocation(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
+				FieldDeclaration decl = new FieldDeclarationLocation(ref
+						.getName(), ref.sourceStart(), ref.sourceEnd(), node
+						.sourceStart(), node.sourceEnd());
 				locator.match(decl, getNodeSet());
 			}
 			if (value instanceof SimpleReference) {
 				SimpleReference ref = (SimpleReference) value;
-				FieldDeclaration decl = new FieldDeclarationLocation(ref.getName(), ref.sourceStart(), ref.sourceEnd(), ref.sourceStart(), ref.sourceEnd());
+				FieldDeclaration decl = new FieldDeclarationLocation(ref
+						.getName(), ref.sourceStart(), ref.sourceEnd(), ref
+						.sourceStart(), ref.sourceEnd());
 				locator.match(decl, getNodeSet());
 			}
-		}
-		else if (node instanceof CatchClause) {
+		} else if (node instanceof CatchClause) {
 			VariableReference ref = ((CatchClause) node).getVariable();
-			FieldDeclaration decl = new FieldDeclarationLocation(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
+			FieldDeclaration decl = new FieldDeclarationLocation(ref.getName(),
+					ref.sourceStart(), ref.sourceEnd(), node.sourceStart(),
+					node.sourceEnd());
 			locator.match(decl, getNodeSet());
 		}
 	}
 
 	private void recursiveListMatch(ASTNode node, PatternLocator locator) {
-		final Collection<? extends Expression> variables = ((ListVariable) node).getVariables();
+		final Collection<? extends Expression> variables = ((ListVariable) node)
+				.getVariables();
 		for (Expression expression : variables) {
 			if (expression instanceof ListVariable) {
 				recursiveListMatch(expression, locator);
 			} else if (expression instanceof VariableReference) {
-				FieldDeclaration decl = new FieldDeclarationLocation(((VariableReference)expression).getName(), expression.sourceStart(), expression.sourceEnd(), expression.sourceStart(), expression.sourceEnd());
+				FieldDeclaration decl = new FieldDeclarationLocation(
+						((VariableReference) expression).getName(), expression
+								.sourceStart(), expression.sourceEnd(),
+						expression.sourceStart(), expression.sourceEnd());
 				locator.match(decl, getNodeSet());
 			}
 		}
 	}
-	
+
 	public void parseBodies(ModuleDeclaration unit) {
 		unit.rebuild();
 		super.parseBodies(unit);
 	}
-	
+
 	static boolean locationEquals(ASTNode node, Object obj) {
 		if (obj == node)
 			return true;
@@ -173,10 +190,11 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 		}
 		return false;
 	}
-	
+
 	class FieldDeclarationLocation extends FieldDeclaration {
-		
-		public FieldDeclarationLocation(String name, int nameStart, int nameEnd, int declStart, int declEnd) {
+
+		public FieldDeclarationLocation(String name, int nameStart,
+				int nameEnd, int declStart, int declEnd) {
 			super(name, nameStart, nameEnd, declStart, declEnd);
 		}
 
@@ -188,9 +206,9 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			return this.sourceEnd() * 1001 + this.sourceEnd();
 		}
 	}
-	
+
 	private static final class SimpleReferenceLocation extends SimpleReference {
-		
+
 		private SimpleReferenceLocation(int start, int end, String name) {
 			super(start, end, name);
 		}
@@ -203,18 +221,21 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			return this.sourceEnd() * 1001 + this.sourceEnd();
 		}
 	}
-	
+
 	class CallExpressionLocation extends CallExpression {
 
-		public CallExpressionLocation(ASTNode receiver, String name, CallArgumentsList args) {
+		public CallExpressionLocation(ASTNode receiver, String name,
+				CallArgumentsList args) {
 			super(receiver, name, args);
 		}
 
-		public CallExpressionLocation(int start, int end, ASTNode receiver, SimpleReference name, CallArgumentsList args) {
+		public CallExpressionLocation(int start, int end, ASTNode receiver,
+				SimpleReference name, CallArgumentsList args) {
 			super(start, end, receiver, name, args);
 		}
 
-		public CallExpressionLocation(int start, int end, ASTNode receiver, String name, CallArgumentsList args) {
+		public CallExpressionLocation(int start, int end, ASTNode receiver,
+				String name, CallArgumentsList args) {
 			super(start, end, receiver, name, args);
 		}
 

@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 
 /**
  * Represents attributes implementation in php dom model
+ * 
  * @author Roy, 2007
  */
 public class AttrImplForPhp extends AttrImpl {
@@ -25,13 +26,13 @@ public class AttrImplForPhp extends AttrImpl {
 	protected boolean isNestedLanguageOpening(String regionType) {
 		return regionType == PHPRegionContext.PHP_OPEN;
 	}
-	
+
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
-	
+
 	protected void setName(String name) {
 		super.setName(name);
 	}
-	
+
 }

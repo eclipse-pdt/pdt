@@ -25,9 +25,9 @@ import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 /**
- * A task tags provider listens to any task-tags preferences changes and notify any listener
- * about the changes.
- *
+ * A task tags provider listens to any task-tags preferences changes and notify
+ * any listener about the changes.
+ * 
  * @author shalom
  */
 public class TaskTagsProvider {
@@ -40,7 +40,8 @@ public class TaskTagsProvider {
 	private PreferencesSupport preferencesSupport;
 	private PreferencesPropagator preferencesPropagator;
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
-	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
+	private static final Preferences store = PHPCorePlugin.getDefault()
+			.getPluginPreferences();
 
 	/**
 	 * Constructs a new TaskTagsProvider.
@@ -51,8 +52,8 @@ public class TaskTagsProvider {
 
 	/**
 	 * Returns a single instance of the TaskTagsProvider.
-	 *
-	 * @return	A TaskTagsProvider instance
+	 * 
+	 * @return A TaskTagsProvider instance
 	 */
 	public static TaskTagsProvider getInstance() {
 		if (instance == null) {
@@ -63,37 +64,47 @@ public class TaskTagsProvider {
 
 	/**
 	 * Returns the Workspace task tags.
-	 *
+	 * 
 	 * @return The task tags defined for the workspace preferences.
 	 */
 	public TaskTag[] getWorkspaceTaskTags() {
-		String priorities = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_PRIORITIES);
-		String tags = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_TAGS);
+		String priorities = preferencesSupport
+				.getWorkspacePreferencesValue(PHPCoreConstants.TASK_PRIORITIES);
+		String tags = preferencesSupport
+				.getWorkspacePreferencesValue(PHPCoreConstants.TASK_TAGS);
 		TaskTag[] workspaceTags = getTagsAndPropertiesFrom(tags, priorities);
 		return workspaceTags;
 	}
 
 	/**
 	 * Returns true if the defined workspace task tags are case sensitive.
-	 *
-	 * @return true if the defined workspace task tags are case sensitive; false otherwise.
+	 * 
+	 * @return true if the defined workspace task tags are case sensitive; false
+	 *         otherwise.
 	 */
 	public boolean isWorkspaceTagsCaseSensitive() {
-		String caseSensitive = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_CASE_SENSITIVE);
+		String caseSensitive = preferencesSupport
+				.getWorkspacePreferencesValue(PHPCoreConstants.TASK_CASE_SENSITIVE);
 		return PHPCoreConstants.ENABLED.equals(caseSensitive);
 	}
 
 	/**
-	 * Returns the IProject's task tags.
-	 * In case the given project does not have a specific task tags, null is returned (since the
-	 * project uses the workspace definitions).
-	 *
-	 * @param project An IProject reference.
-	 * @return The specific task tags for the given project, or null if the project uses the workspace defined tags.
+	 * Returns the IProject's task tags. In case the given project does not have
+	 * a specific task tags, null is returned (since the project uses the
+	 * workspace definitions).
+	 * 
+	 * @param project
+	 *            An IProject reference.
+	 * @return The specific task tags for the given project, or null if the
+	 *         project uses the workspace defined tags.
 	 */
 	public TaskTag[] getProjectTaskTags(IProject project) {
-		String priorities = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_PRIORITIES, null, project);
-		String projectTags = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_TAGS, null, project);
+		String priorities = preferencesSupport
+				.getProjectSpecificPreferencesValue(
+						PHPCoreConstants.TASK_PRIORITIES, null, project);
+		String projectTags = preferencesSupport
+				.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_TAGS,
+						null, project);
 		if (projectTags == null || priorities == null) {
 			return null;
 		}
@@ -102,15 +113,19 @@ public class TaskTagsProvider {
 	}
 
 	/**
-	 * Returns true if the defined project's task tags are case sensitive.
-	 * In case that the project does not have a specific settings, the return value is by
-	 * isWorkspaceTagsCaseSensitive.
-	 *
-	 * @param project  An IProject reference.
-	 * @return true if the defined project's task tags are case sensitive; false otherwise.
+	 * Returns true if the defined project's task tags are case sensitive. In
+	 * case that the project does not have a specific settings, the return value
+	 * is by isWorkspaceTagsCaseSensitive.
+	 * 
+	 * @param project
+	 *            An IProject reference.
+	 * @return true if the defined project's task tags are case sensitive; false
+	 *         otherwise.
 	 */
 	public boolean getProjectTagsCaseSensitive(IProject project) {
-		String caseSensitive = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_CASE_SENSITIVE, null, project);
+		String caseSensitive = preferencesSupport
+				.getProjectSpecificPreferencesValue(
+						PHPCoreConstants.TASK_CASE_SENSITIVE, null, project);
 		if (caseSensitive == null) {
 			return isWorkspaceTagsCaseSensitive();
 		}
@@ -119,9 +134,11 @@ public class TaskTagsProvider {
 
 	/**
 	 * Adds a TaskTagsListener.
-	 *
-	 * @param listener A TaskTagsListener.
-	 * @param project A related project.
+	 * 
+	 * @param listener
+	 *            A TaskTagsListener.
+	 * @param project
+	 *            A related project.
 	 */
 	public void addTaskTagsListener(ITaskTagsListener listener, IProject project) {
 		projectToTaskTagListener.put(project, listener);
@@ -130,32 +147,45 @@ public class TaskTagsProvider {
 
 	/**
 	 * Removes a TaskTagsListener.
-	 *
-	 * @param listener A TaskTagsListener.
-	 * @param project A related project.
+	 * 
+	 * @param listener
+	 *            A TaskTagsListener.
+	 * @param project
+	 *            A related project.
 	 */
-	public void removeTaskTagsListener(ITaskTagsListener listener, IProject project) {
+	public void removeTaskTagsListener(ITaskTagsListener listener,
+			IProject project) {
 		projectToTaskTagListener.remove(project);
 		uninstallPropagatorListeners(project);
 	}
 
 	// Install propagator listeners for the given project.
 	private void installPropagatorListeners(IProject project) {
-		IPreferencesPropagatorListener[] listeners = new IPreferencesPropagatorListener[] { new InnerTaskTagsListener(project), new InnerTaskPrioritiesListener(project), new InnerTaskCaseListener(project) };
-		preferencesPropagator.addPropagatorListener(listeners[0], PHPCoreConstants.TASK_TAGS);
-		preferencesPropagator.addPropagatorListener(listeners[1], PHPCoreConstants.TASK_PRIORITIES);
-		preferencesPropagator.addPropagatorListener(listeners[2], PHPCoreConstants.TASK_CASE_SENSITIVE);
+		IPreferencesPropagatorListener[] listeners = new IPreferencesPropagatorListener[] {
+				new InnerTaskTagsListener(project),
+				new InnerTaskPrioritiesListener(project),
+				new InnerTaskCaseListener(project) };
+		preferencesPropagator.addPropagatorListener(listeners[0],
+				PHPCoreConstants.TASK_TAGS);
+		preferencesPropagator.addPropagatorListener(listeners[1],
+				PHPCoreConstants.TASK_PRIORITIES);
+		preferencesPropagator.addPropagatorListener(listeners[2],
+				PHPCoreConstants.TASK_CASE_SENSITIVE);
 
 		projectToPropagatorListeners.put(project, listeners);
 	}
 
 	// Uninstall propagator listeners for the given project.
 	private void uninstallPropagatorListeners(IProject project) {
-		IPreferencesPropagatorListener[] listeners = (IPreferencesPropagatorListener[]) projectToPropagatorListeners.get(project);
+		IPreferencesPropagatorListener[] listeners = (IPreferencesPropagatorListener[]) projectToPropagatorListeners
+				.get(project);
 		if (listeners != null) {
-			preferencesPropagator.removePropagatorListener(listeners[0], PHPCoreConstants.TASK_TAGS);
-			preferencesPropagator.removePropagatorListener(listeners[1], PHPCoreConstants.TASK_PRIORITIES);
-			preferencesPropagator.removePropagatorListener(listeners[2], PHPCoreConstants.TASK_CASE_SENSITIVE);
+			preferencesPropagator.removePropagatorListener(listeners[0],
+					PHPCoreConstants.TASK_TAGS);
+			preferencesPropagator.removePropagatorListener(listeners[1],
+					PHPCoreConstants.TASK_PRIORITIES);
+			preferencesPropagator.removePropagatorListener(listeners[2],
+					PHPCoreConstants.TASK_CASE_SENSITIVE);
 		}
 		projectToPropagatorListeners.remove(project);
 	}
@@ -167,10 +197,12 @@ public class TaskTagsProvider {
 		if (isInstalled) {
 			return;
 		}
-		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, PHPCorePlugin.getDefault().getPluginPreferences());
+		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID,
+				PHPCorePlugin.getDefault().getPluginPreferences());
 		projectToTaskTagListener = new HashMap();
 		projectToPropagatorListeners = new HashMap();
-		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER, store);
+		preferencesPropagator = PreferencePropagatorFactory
+				.getPreferencePropagator(NODES_QUALIFIER, store);
 		isInstalled = true;
 	}
 
@@ -198,7 +230,8 @@ public class TaskTagsProvider {
 
 	// Notify a taskTagsChanged to all the listeners.
 	private void notifyTaskTagChange(TaskTagsEvent event) {
-		ITaskTagsListener[] allListeners = new ITaskTagsListener[projectToTaskTagListener.size()];
+		ITaskTagsListener[] allListeners = new ITaskTagsListener[projectToTaskTagListener
+				.size()];
 		projectToTaskTagListener.values().toArray(allListeners);
 		for (ITaskTagsListener element : allListeners) {
 			element.taskTagsChanged(event);
@@ -207,7 +240,8 @@ public class TaskTagsProvider {
 
 	// Notify a taskTagsChanged to all the listeners.
 	private void notifyTaskPriorityChange(TaskTagsEvent event) {
-		ITaskTagsListener[] allListeners = new ITaskTagsListener[projectToTaskTagListener.size()];
+		ITaskTagsListener[] allListeners = new ITaskTagsListener[projectToTaskTagListener
+				.size()];
 		projectToTaskTagListener.values().toArray(allListeners);
 		for (ITaskTagsListener element : allListeners) {
 			element.taskPrioritiesChanged(event);
@@ -216,7 +250,8 @@ public class TaskTagsProvider {
 
 	// Notify a taskTagsChanged to all the listeners.
 	private void notifyTaskCaseChange(TaskTagsEvent event) {
-		ITaskTagsListener[] allListeners = new ITaskTagsListener[projectToTaskTagListener.size()];
+		ITaskTagsListener[] allListeners = new ITaskTagsListener[projectToTaskTagListener
+				.size()];
 		projectToTaskTagListener.values().toArray(allListeners);
 		for (ITaskTagsListener element : allListeners) {
 			element.taskCaseChanged(event);
@@ -225,11 +260,13 @@ public class TaskTagsProvider {
 
 	/*
 	 * Returns the tags into the workspace tags list.
-	 *
+	 * 
 	 * @param tags
+	 * 
 	 * @param priorities
 	 */
-	private TaskTag[] getTagsAndPropertiesFrom(String tagString, String priorityString) {
+	private TaskTag[] getTagsAndPropertiesFrom(String tagString,
+			String priorityString) {
 		String[] tags = StringUtils.unpack(tagString);
 		String[] priorities = StringUtils.unpack(priorityString);
 		List list = new ArrayList();
@@ -248,18 +285,21 @@ public class TaskTagsProvider {
 		Integer[] allPriorities = new Integer[list.size()];
 		list.toArray(allPriorities);
 
-		TaskTag[] taskTags = new TaskTag[Math.min(tags.length, priorities.length)];
+		TaskTag[] taskTags = new TaskTag[Math.min(tags.length,
+				priorities.length)];
 		for (int i = 0; i < taskTags.length; i++) {
 			taskTags[i] = new TaskTag(tags[i], allPriorities[i].intValue());
 		}
 		return taskTags;
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////        IPreferencesPropagatorListeners        ////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////////////////////////
+	// ///////////////////// IPreferencesPropagatorListeners
+	// ////////////////////////
+	// ////////////////////////////////////////////////////////////////////////////////////////////
 
-	private abstract class AbstractTasksListener implements IPreferencesPropagatorListener {
+	private abstract class AbstractTasksListener implements
+			IPreferencesPropagatorListener {
 
 		private IProject project;
 
@@ -282,18 +322,29 @@ public class TaskTagsProvider {
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			String newValue = (String) event.getNewValue();
 			if (newValue == null) {
-				newValue = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_TAGS);
+				newValue = preferencesSupport
+						.getWorkspacePreferencesValue(PHPCoreConstants.TASK_TAGS);
 			}
 			// Check that the other value are synchronized at this stage and
 			// send an event only if they are.
-			String priorities = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_PRIORITIES, null, getProject());
+			String priorities = preferencesSupport
+					.getProjectSpecificPreferencesValue(
+							PHPCoreConstants.TASK_PRIORITIES, null,
+							getProject());
 			if (priorities == null) {
-				priorities = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_PRIORITIES);
+				priorities = preferencesSupport
+						.getWorkspacePreferencesValue(PHPCoreConstants.TASK_PRIORITIES);
 			}
-			if (StringUtils.occurrencesOf(priorities, ',') == StringUtils.occurrencesOf(newValue, ',')) {
-				TaskTag[] taskTags = getTagsAndPropertiesFrom(newValue, priorities);
-				IProject eventProject = (event.getSource()!= null && event.getSource() instanceof IProject) ? (IProject) event.getSource() : null;
-				TaskTagsEvent taskEvent = new TaskTagsEvent(TaskTagsProvider.this, eventProject, taskTags, getProjectTagsCaseSensitive(getProject()));
+			if (StringUtils.occurrencesOf(priorities, ',') == StringUtils
+					.occurrencesOf(newValue, ',')) {
+				TaskTag[] taskTags = getTagsAndPropertiesFrom(newValue,
+						priorities);
+				IProject eventProject = (event.getSource() != null && event
+						.getSource() instanceof IProject) ? (IProject) event
+						.getSource() : null;
+				TaskTagsEvent taskEvent = new TaskTagsEvent(
+						TaskTagsProvider.this, eventProject, taskTags,
+						getProjectTagsCaseSensitive(getProject()));
 				notifyTaskTagChange(taskEvent);
 			}
 		}
@@ -309,17 +360,24 @@ public class TaskTagsProvider {
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			String newValue = (String) event.getNewValue();
 			if (newValue == null) {
-				newValue = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_PRIORITIES);
+				newValue = preferencesSupport
+						.getWorkspacePreferencesValue(PHPCoreConstants.TASK_PRIORITIES);
 			}
 			// Check that the other value are synchronized at this stage and
 			// send an event only if they are.
-			String tags = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_TAGS, null, getProject());
+			String tags = preferencesSupport
+					.getProjectSpecificPreferencesValue(
+							PHPCoreConstants.TASK_TAGS, null, getProject());
 			if (tags == null) {
-				tags = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_TAGS);
+				tags = preferencesSupport
+						.getWorkspacePreferencesValue(PHPCoreConstants.TASK_TAGS);
 			}
-			if (StringUtils.occurrencesOf(tags, ',') == StringUtils.occurrencesOf(newValue, ',')) {
+			if (StringUtils.occurrencesOf(tags, ',') == StringUtils
+					.occurrencesOf(newValue, ',')) {
 				TaskTag[] taskTags = getTagsAndPropertiesFrom(tags, newValue);
-				TaskTagsEvent taskEvent = new TaskTagsEvent(TaskTagsProvider.this, getProject(), taskTags, getProjectTagsCaseSensitive(getProject()));
+				TaskTagsEvent taskEvent = new TaskTagsEvent(
+						TaskTagsProvider.this, getProject(), taskTags,
+						getProjectTagsCaseSensitive(getProject()));
 				notifyTaskPriorityChange(taskEvent);
 			}
 		}
@@ -333,25 +391,36 @@ public class TaskTagsProvider {
 		}
 
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-			String tags = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_TAGS, null, getProject());
+			String tags = preferencesSupport
+					.getProjectSpecificPreferencesValue(
+							PHPCoreConstants.TASK_TAGS, null, getProject());
 			String priorities = null;
 			if (tags == null) {
-				tags = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_TAGS);
-				priorities = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_PRIORITIES);
+				tags = preferencesSupport
+						.getWorkspacePreferencesValue(PHPCoreConstants.TASK_TAGS);
+				priorities = preferencesSupport
+						.getWorkspacePreferencesValue(PHPCoreConstants.TASK_PRIORITIES);
 			} else {
-				priorities = preferencesSupport.getProjectSpecificPreferencesValue(PHPCoreConstants.TASK_PRIORITIES, "", getProject());//$NON-NLS-1$
+				priorities = preferencesSupport
+						.getProjectSpecificPreferencesValue(
+								PHPCoreConstants.TASK_PRIORITIES,
+								"", getProject());//$NON-NLS-1$
 			}
-			if (StringUtils.occurrencesOf(priorities, ',') == StringUtils.occurrencesOf(tags, ',')) {
+			if (StringUtils.occurrencesOf(priorities, ',') == StringUtils
+					.occurrencesOf(tags, ',')) {
 				TaskTag[] taskTags = getTagsAndPropertiesFrom(tags, priorities);
 				TaskTagsEvent taskEvent = null;
 				String newValue = (String) event.getNewValue();
 				if (newValue == null) {
-					newValue = preferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.TASK_CASE_SENSITIVE);
+					newValue = preferencesSupport
+							.getWorkspacePreferencesValue(PHPCoreConstants.TASK_CASE_SENSITIVE);
 				}
 				if (PHPCoreConstants.ENABLED.equals(newValue)) {
-					taskEvent = new TaskTagsEvent(TaskTagsProvider.this, getProject(), taskTags, true);
+					taskEvent = new TaskTagsEvent(TaskTagsProvider.this,
+							getProject(), taskTags, true);
 				} else {
-					taskEvent = new TaskTagsEvent(TaskTagsProvider.this, getProject(), taskTags, false);
+					taskEvent = new TaskTagsEvent(TaskTagsProvider.this,
+							getProject(), taskTags, false);
 				}
 				notifyTaskCaseChange(taskEvent);
 			}

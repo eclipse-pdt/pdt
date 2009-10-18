@@ -14,8 +14,8 @@ package org.eclipse.php.internal.core.util;
 import java.util.ArrayList;
 
 /**
- * A BlockingQueue is a simple queue that blocks the thread that calls it
- * when trying to queue-out from an empty queue.
+ * A BlockingQueue is a simple queue that blocks the thread that calls it when
+ * trying to queue-out from an empty queue.
  */
 public class BlockingQueue {
 
@@ -48,7 +48,8 @@ public class BlockingQueue {
 		return queueOut(0);
 	}
 
-	public synchronized Object queueOut(long timeout) throws InterruptedException {
+	public synchronized Object queueOut(long timeout)
+			throws InterruptedException {
 		releaseFlag = false;
 		Object rv = emptyObject;
 		do {
@@ -59,14 +60,15 @@ public class BlockingQueue {
 				}
 			}
 			if (content.isEmpty()) {
-				//System.out.println("content is empty, i dont know why  " + Thread.currentThread());
+				// System.out.println("content is empty, i dont know why  " +
+				// Thread.currentThread());
 			} else {
 				rv = content.remove(0);
 			}
 		} while (rv == emptyObject);
 
 		if (rv == null) {
-			//System.out.println("returning null");
+			// System.out.println("returning null");
 		}
 		return rv;
 	}

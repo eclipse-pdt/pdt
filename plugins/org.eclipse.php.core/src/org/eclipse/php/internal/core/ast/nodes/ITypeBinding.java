@@ -13,7 +13,6 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 
 /**
  * A type binding represents fully-resolved type. There are a number of

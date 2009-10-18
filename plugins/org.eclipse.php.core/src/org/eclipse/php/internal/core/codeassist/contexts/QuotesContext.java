@@ -17,11 +17,13 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 
 /**
  * This context represents the state when staying in a single or double quotes.
+ * 
  * @author michael
  */
 public abstract class QuotesContext extends AbstractCompletionContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

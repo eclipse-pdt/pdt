@@ -14,13 +14,15 @@ package org.eclipse.php.internal.core.util.project.observer;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class CompositeProjectChangeObserver extends HashSet implements IProjectClosedObserver {
+public class CompositeProjectChangeObserver extends HashSet implements
+		IProjectClosedObserver {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	public void closed() {
 		for (Iterator iter = iterator(); iter.hasNext();) {
-			IProjectClosedObserver projectChangeObserver = (IProjectClosedObserver)iter.next();
+			IProjectClosedObserver projectChangeObserver = (IProjectClosedObserver) iter
+					.next();
 			projectChangeObserver.closed();
 		}
 	}

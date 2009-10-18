@@ -17,8 +17,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 
 /**
- * A TaskTagsEvent event gets delivered whenever a changes is made to the task tags list of the
- * workspace or the project.
+ * A TaskTagsEvent event gets delivered whenever a changes is made to the task
+ * tags list of the workspace or the project.
  * <P>
  * The event source is always the TaskTagsProvider reference.
  * 
@@ -29,17 +29,22 @@ public class TaskTagsEvent extends EventObject {
 	private TaskTag[] tags;
 	private IProject project;
 	private boolean isCaseSensitive;
-	
+
 	/**
 	 * Constructs a new TaskTagsEvent.
 	 * 
-	 * @param provider 	The source of the event (always a TaskTagsProvider)
-	 * @param project 	The project that is effected by the task tags change (null indicates that the 
-	 * 					change is in the workspace settings)
-	 * @param tags		The updated task tags.
-	 * @param isCaseSensitive	Indicate that the tags should be compiled as case-sensitive.
+	 * @param provider
+	 *            The source of the event (always a TaskTagsProvider)
+	 * @param project
+	 *            The project that is effected by the task tags change (null
+	 *            indicates that the change is in the workspace settings)
+	 * @param tags
+	 *            The updated task tags.
+	 * @param isCaseSensitive
+	 *            Indicate that the tags should be compiled as case-sensitive.
 	 */
-	public TaskTagsEvent(TaskTagsProvider provider, IProject project, TaskTag[] tags, boolean isCaseSensitive) {
+	public TaskTagsEvent(TaskTagsProvider provider, IProject project,
+			TaskTag[] tags, boolean isCaseSensitive) {
 		super(provider);
 		this.project = project;
 		this.tags = tags;
@@ -47,8 +52,9 @@ public class TaskTagsEvent extends EventObject {
 	}
 
 	/**
-	 * Returns the IProject that was effected by the task tags change. 
-	 * The method will return null to indicate that the change was made in the workspace settings.
+	 * Returns the IProject that was effected by the task tags change. The
+	 * method will return null to indicate that the change was made in the
+	 * workspace settings.
 	 * 
 	 * @return The effected IProject, or null if the effect is on the workspace.
 	 */
@@ -64,16 +70,17 @@ public class TaskTagsEvent extends EventObject {
 	public TaskTag[] getTaskTags() {
 		return tags;
 	}
-	
+
 	/**
 	 * Returns true if the task tags are case sensitive.
 	 * 
-	 * @return The case sensitivity state of the task tags for the defined IProject or workspace.
+	 * @return The case sensitivity state of the task tags for the defined
+	 *         IProject or workspace.
 	 */
 	public boolean isCaseSensitive() {
 		return isCaseSensitive;
 	}
-	
+
 	public String toString() {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("[TaskTagsEvent: project = ");//$NON-NLS-1$

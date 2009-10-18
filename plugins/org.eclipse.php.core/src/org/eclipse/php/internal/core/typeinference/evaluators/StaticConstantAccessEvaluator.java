@@ -33,12 +33,14 @@ public class StaticConstantAccessEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		StaticConstantAccess expr = (StaticConstantAccess) typedGoal.getExpression();
+		StaticConstantAccess expr = (StaticConstantAccess) typedGoal
+				.getExpression();
 
 		Expression dispatcher = expr.getDispatcher();
 		if (dispatcher instanceof TypeReference) {
 			TypeReference typeReference = (TypeReference) dispatcher;
-			return new IGoal[] { new ConstantDeclarationGoal(goal.getContext(), expr.getConstant().getName(), typeReference.getName()) };
+			return new IGoal[] { new ConstantDeclarationGoal(goal.getContext(),
+					expr.getConstant().getName(), typeReference.getName()) };
 		}
 		return IGoal.NO_GOALS;
 	}
@@ -48,7 +50,8 @@ public class StaticConstantAccessEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		if (state == GoalState.PRUNED || result == null || result == UnknownType.INSTANCE) {
+		if (state == GoalState.PRUNED || result == null
+				|| result == UnknownType.INSTANCE) {
 			evaluatedType = new SimpleType(SimpleType.TYPE_STRING);
 		} else {
 			evaluatedType = (IEvaluatedType) result;

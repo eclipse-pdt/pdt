@@ -12,39 +12,44 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
- * This context represents the state when staying before extends/implements block
- * for completion of 'extends' or 'implements' keywords.
- * <br/>Example:
+ * This context represents the state when staying before extends/implements
+ * block for completion of 'extends' or 'implements' keywords. <br/>
+ * Example:
+ * 
  * <pre>
  *  class A |
  * </pre>
+ * 
  * @author michael
  */
 public class ClassDeclarationKeywordContext extends ClassDeclarationContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 
 		TextSequence statementText = getStatementText();
-		statementText = statementText.subTextSequence(getTypeIdentifierEnd(), statementText.length());
+		statementText = statementText.subTextSequence(getTypeIdentifierEnd(),
+				statementText.length());
 
-		if (!hasExtends() && !hasImplements()) { // the cursor position is right after the class name 
+		if (!hasExtends() && !hasImplements()) { // the cursor position is right
+													// after the class name
 			return true;
 		}
 
 		if (!hasImplements()) { // check that the previous word is not a keyword
 			try {
 				String previousWord = getPreviousWord();
-				if (!"extends".equalsIgnoreCase(previousWord) && !"implements".equalsIgnoreCase(previousWord)) {
+				if (!"extends".equalsIgnoreCase(previousWord)
+						&& !"implements".equalsIgnoreCase(previousWord)) {
 					return true;
 				}
 			} catch (BadLocationException e) {

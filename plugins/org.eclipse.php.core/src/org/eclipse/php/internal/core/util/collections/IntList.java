@@ -26,7 +26,9 @@ public class IntList implements Cloneable {
 
 	/**
 	 * Construct a new IntList.
-	 * @param size The initial size of the list.
+	 * 
+	 * @param size
+	 *            The initial size of the list.
 	 */
 	public IntList(int size) {
 		data = new int[size];
@@ -36,7 +38,9 @@ public class IntList implements Cloneable {
 
 	/**
 	 * Construct a new IntList.
-	 * @param data The initial values of the list.
+	 * 
+	 * @param data
+	 *            The initial values of the list.
 	 */
 	public IntList(int[] data) {
 		this.data = data;
@@ -77,7 +81,8 @@ public class IntList implements Cloneable {
 	 */
 	public int remove(int index) {
 		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException("index must be at range 0.." + size + ". got index " + index); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new IndexOutOfBoundsException(
+					"index must be at range 0.." + size + ". got index " + index); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		int result = data[index];
 		for (int i = index; i < size; i++) {
@@ -102,7 +107,8 @@ public class IntList implements Cloneable {
 	 */
 	public void add(int index, int val) {
 		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException("index must be at range 0.." + size + ". got index " + index); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new IndexOutOfBoundsException(
+					"index must be at range 0.." + size + ". got index " + index); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		size++;
 		verifySizeBeforeAdding();
@@ -121,11 +127,13 @@ public class IntList implements Cloneable {
 
 	/**
 	 * return the item in the 'index' position
+	 * 
 	 * @throws IndexOutOfBoundsException
 	 */
 	public int get(int index) {
 		if (index < 0 || index > size) {
-			throw new IndexOutOfBoundsException("index must be at range 0.." + size + ". got index " + index); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new IndexOutOfBoundsException(
+					"index must be at range 0.." + size + ". got index " + index); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return this.data[index];
 	}

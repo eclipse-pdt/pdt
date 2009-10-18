@@ -16,28 +16,31 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
- * This context represents the state when staying in a function declaration.
- * <br/>Examples:
+ * This context represents the state when staying in a function declaration. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. function |
  *  2. function foo(|) {}
- *  etc... 
+ *  etc...
  * </pre>
+ * 
  * @author michael
  */
 public abstract class FunctionDeclarationContext extends DeclarationContext {
-	
+
 	private int functionEnd;
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		TextSequence statementText = getStatementText();
-		functionEnd = PHPTextSequenceUtilities.isInFunctionDeclaration(statementText);
+		functionEnd = PHPTextSequenceUtilities
+				.isInFunctionDeclaration(statementText);
 		if (functionEnd == -1) {
 			return false;
 		}
@@ -45,7 +48,9 @@ public abstract class FunctionDeclarationContext extends DeclarationContext {
 	}
 
 	/**
-	 * Returns the end offset of word 'function' in function declaration relative to the statement text.
+	 * Returns the end offset of word 'function' in function declaration
+	 * relative to the statement text.
+	 * 
 	 * @see #getStatementText()
 	 * @return
 	 */

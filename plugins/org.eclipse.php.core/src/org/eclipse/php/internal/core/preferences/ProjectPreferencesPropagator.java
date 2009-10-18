@@ -21,9 +21,10 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChange
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
 /**
- * ProjectPreferencesPropagator for propagation of preferences events that arrive as a result from changes
- * in the the project-specific preferences nodes.
- *
+ * ProjectPreferencesPropagator for propagation of preferences events that
+ * arrive as a result from changes in the the project-specific preferences
+ * nodes.
+ * 
  * @author shalom
  */
 public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator {
@@ -35,9 +36,11 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 
 	/**
 	 * Constructs a new ProjectPreferencesPropagator.
-	 *
-	 * @param project The project to monitor.
-	 * @param nodeQualifier The plugin identifier
+	 * 
+	 * @param project
+	 *            The project to monitor.
+	 * @param nodeQualifier
+	 *            The plugin identifier
 	 */
 	public ProjectPreferencesPropagator(IProject project, String nodeQualifier) {
 		this.project = project;
@@ -54,7 +57,8 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 		}
 		scope = new ProjectScope(project);
 		preferenceChangeListener = new InnerPreferenceChangeListener();
-		scope.getNode(nodeQualifier).addPreferenceChangeListener(preferenceChangeListener);
+		scope.getNode(nodeQualifier).addPreferenceChangeListener(
+				preferenceChangeListener);
 		super.install();
 	}
 
@@ -78,10 +82,13 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	}
 
 	/**
-	 * Removes and returns the list of listeners assigned to the preferences key, or null if non exists.
-	 *
-	 * @param preferencesKey	The key that the listeners listen to.
-	 * @return	The list of listeners assigned for the key, or null if non exists.
+	 * Removes and returns the list of listeners assigned to the preferences
+	 * key, or null if non exists.
+	 * 
+	 * @param preferencesKey
+	 *            The key that the listeners listen to.
+	 * @return The list of listeners assigned for the key, or null if non
+	 *         exists.
 	 */
 	public List removePropagatorListeners(String preferencesKey) {
 		return (List) listenersMap.remove(preferencesKey);
@@ -91,7 +98,8 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	 * Notify a PreferencesPropagatorEvent to all the relevant listeners.
 	 */
 	public void notifyPropagatorEvent(PreferencesPropagatorEvent event) {
-		notifyEvent((String) event.getKey(), event.getOldValue(), event.getNewValue());
+		notifyEvent((String) event.getKey(), event.getOldValue(), event
+				.getNewValue());
 	}
 
 	/*
@@ -104,9 +112,11 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	private void notifyEvent(String key, Object oldValue, Object newValue) {
 		List listeners = getPropagatorListeners(key);
 		if (listeners != null) {
-			// We assume that null value in the new-value means that the user selected and applied a move
+			// We assume that null value in the new-value means that the user
+			// selected and applied a move
 			// between the project-specific to the workspace preferences.
-			// In this case, we take the workspace preferences and compare with the old value. We notify the
+			// In this case, we take the workspace preferences and compare with
+			// the old value. We notify the
 			// event only if the values differ.
 			if (newValue == null) {
 				// Take the value from the workspace preferences store.
@@ -115,10 +125,12 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 					return;
 				}
 			}
-			PreferencesPropagatorEvent e = new PreferencesPropagatorEvent(project, oldValue, newValue, key);
+			PreferencesPropagatorEvent e = new PreferencesPropagatorEvent(
+					project, oldValue, newValue, key);
 
 			// Notify
-			IPreferencesPropagatorListener[] allListeners = new IPreferencesPropagatorListener[listeners.size()];
+			IPreferencesPropagatorListener[] allListeners = new IPreferencesPropagatorListener[listeners
+					.size()];
 			listeners.toArray(allListeners);
 			for (IPreferencesPropagatorListener element : allListeners) {
 				element.preferencesEventOccured(e);
@@ -127,9 +139,11 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	}
 
 	/*
-	 * Returns a property value defined under the PHPCorePlugin preferences store.
-	 *
-	 * @param id 	The property id.
+	 * Returns a property value defined under the PHPCorePlugin preferences
+	 * store.
+	 * 
+	 * @param id The property id.
+	 * 
 	 * @return The String value of the property.
 	 */
 	public String getWorkspaceProperty(String id) {
@@ -139,7 +153,8 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 	/*
 	 * Inner listener for the project scope preferences changes.
 	 */
-	private class InnerPreferenceChangeListener implements IPreferenceChangeListener {
+	private class InnerPreferenceChangeListener implements
+			IPreferenceChangeListener {
 
 		public void preferenceChange(PreferenceChangeEvent event) {
 			notifyPropagatorEvent(event);

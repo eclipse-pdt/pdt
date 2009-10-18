@@ -25,22 +25,26 @@ import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 
 /**
- * This class is used for resolving model elements by offset in file.
- * Results are filtered in terms of file network.
+ * This class is used for resolving model elements by offset in file. Results
+ * are filtered in terms of file network.
  */
 public class ModelElementResolver {
 
 	/**
-	 * Returns possible model elements which are placed under the given offset in the source module
+	 * Returns possible model elements which are placed under the given offset
+	 * in the source module
+	 * 
 	 * @param sourceModule
 	 * @param offset
-	 * @return model elements or <code>null</code> in case no element could be found
+	 * @return model elements or <code>null</code> in case no element could be
+	 *         found
 	 */
 	public static IModelElement[] resolve(ISourceModule sourceModule, int offset) {
 		IModelElement[] modelElements = null;
 
 		ContextFinder visitor = new ContextFinder(sourceModule, offset);
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
 		try {
 			moduleDeclaration.traverse(visitor);
 		} catch (Exception e) {
@@ -49,8 +53,11 @@ public class ModelElementResolver {
 
 		if (visitor.getNode() != null) {
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-			IEvaluatedType evaluatedType = typeInferencer.evaluateType(new ExpressionTypeGoal(visitor.getContext(), visitor.getNode()));
-			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (FileContext) visitor.getContext(), offset);
+			IEvaluatedType evaluatedType = typeInferencer
+					.evaluateType(new ExpressionTypeGoal(visitor.getContext(),
+							visitor.getNode()));
+			modelElements = PHPTypeInferenceUtils.getModelElements(
+					evaluatedType, (FileContext) visitor.getContext(), offset);
 		}
 
 		return modelElements;
@@ -59,7 +66,8 @@ public class ModelElementResolver {
 	/**
 	 * Finds binding context for the given AST node for internal usages only.
 	 */
-	private static class ContextFinder extends org.eclipse.php.internal.core.typeinference.context.ContextFinder {
+	private static class ContextFinder extends
+			org.eclipse.php.internal.core.typeinference.context.ContextFinder {
 
 		private IContext context;
 		private ASTNode node;
@@ -72,6 +80,7 @@ public class ModelElementResolver {
 
 		/**
 		 * Returns found context
+		 * 
 		 * @return found context
 		 */
 		public IContext getContext() {
@@ -80,6 +89,7 @@ public class ModelElementResolver {
 
 		/**
 		 * Returns found AST node
+		 * 
 		 * @return AST node
 		 */
 		public ASTNode getNode() {
@@ -90,7 +100,7 @@ public class ModelElementResolver {
 			if (node.sourceEnd() < offset || node.sourceStart() > offset) {
 				return false;
 			}
-			if (node.sourceStart() <= offset &&node.sourceEnd() >= offset) {
+			if (node.sourceStart() <= offset && node.sourceEnd() >= offset) {
 				if (!contextStack.isEmpty()) {
 					this.context = contextStack.peek();
 					this.node = node;

@@ -18,10 +18,13 @@ import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 /**
  * Helps finding an AST node for a specific offset
- * <pre>USAGE: 
+ * 
+ * <pre>
+ * USAGE: 
  *     Statement statement = NodeLocator.locateStatement(program, offset);
  * 	   ASTNode node = NodeLocator.locateNode(statement, offset).getLast();
- * </pre>   
+ * </pre>
+ * 
  * @author Roy, 2007
  */
 public class Locator extends ApplyAll {
@@ -30,7 +33,8 @@ public class Locator extends ApplyAll {
 	 * @param program
 	 * @param offset
 	 * @return the statement at offset or null if not found
-	 * @throws IllegalArgumentException if out of bound
+	 * @throws IllegalArgumentException
+	 *             if out of bound
 	 */
 	public static Statement locateStatement(Program program, int offset) {
 
@@ -53,10 +57,12 @@ public class Locator extends ApplyAll {
 
 	/**
 	 * returns the path to the needed node
+	 * 
 	 * @param program
 	 * @param offset
 	 * @return the statement at offset or null if not found
-	 * @throws IllegalArgumentException if out of bound
+	 * @throws IllegalArgumentException
+	 *             if out of bound
 	 */
 	public static synchronized ASTNode locateNode(Program program, int offset) {
 		// assert for validty
@@ -81,13 +87,14 @@ public class Locator extends ApplyAll {
 	}
 
 	private static final boolean inNode(final ASTNode node, final int offset) {
-		return offset >= node.getStart() && (node.getStart() + node.getLength() > offset);
+		return offset >= node.getStart()
+				&& (node.getStart() + node.getLength() > offset);
 	}
 
 	/**
-	 * @param ASTNode the node
-	 * Checks if the node is in the offset if true then assign 
-	 * the node to the children' nodes 
+	 * @param ASTNode
+	 *            the node Checks if the node is in the offset if true then
+	 *            assign the node to the children' nodes
 	 */
 	public boolean apply(ASTNode node) {
 		assert node != null;
@@ -96,7 +103,7 @@ public class Locator extends ApplyAll {
 			this.currentNode = node;
 			return true;
 		}
-		
+
 		return false;
 	}
 

@@ -39,8 +39,13 @@ public class ConditionalExpressionEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		ConditionalExpression conditionalExpression = (ConditionalExpression) typedGoal.getExpression();
-		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), conditionalExpression.getIfTrue()), new ExpressionTypeGoal(goal.getContext(), conditionalExpression.getIfFalse()) };
+		ConditionalExpression conditionalExpression = (ConditionalExpression) typedGoal
+				.getExpression();
+		return new IGoal[] {
+				new ExpressionTypeGoal(goal.getContext(), conditionalExpression
+						.getIfTrue()),
+				new ExpressionTypeGoal(goal.getContext(), conditionalExpression
+						.getIfFalse()) };
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {

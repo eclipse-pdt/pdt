@@ -17,11 +17,13 @@ import java.util.Map;
 import org.eclipse.core.resources.*;
 
 /**
- * The class is a utility class for attaching observers 2 the event of project closed.
+ * The class is a utility class for attaching observers 2 the event of project
+ * closed.
  * 
- * After a project is deleted and all the observers r notified, the observers r removed, because the project cannont be closed again.
- * Currently, there is no option 2 attach an observer 2 a closed project.
- * If an observer need 2 be attached, upon opening the project, attach the observer.
+ * After a project is deleted and all the observers r notified, the observers r
+ * removed, because the project cannont be closed again. Currently, there is no
+ * option 2 attach an observer 2 a closed project. If an observer need 2 be
+ * attached, upon opening the project, attach the observer.
  */
 public class ProjectRemovedObserversAttacher {
 
@@ -38,11 +40,14 @@ public class ProjectRemovedObserversAttacher {
 	}
 
 	/**
-	 * There is no need for a remove method because oll the observer automatically removed when a project is closed
+	 * There is no need for a remove method because oll the observer
+	 * automatically removed when a project is closed
+	 * 
 	 * @param project
 	 * @param projectChangeObserver
 	 */
-	public boolean addProjectClosedObserver(IProject project, IProjectClosedObserver projectChangeObserver) {
+	public boolean addProjectClosedObserver(IProject project,
+			IProjectClosedObserver projectChangeObserver) {
 		if (resourceChangeListener == null) {
 			resourceChangeListener = new IResourceChangeListener() {
 				public void resourceChanged(IResourceChangeEvent event) {
@@ -50,18 +55,21 @@ public class ProjectRemovedObserversAttacher {
 					if (resourceDelta == null) {
 						return;
 					}
-					//always the workspace so the children must be projects
-					IResourceDelta[] affectedChildren = resourceDelta.getAffectedChildren(IResourceDelta.CHANGED);
+					// always the workspace so the children must be projects
+					IResourceDelta[] affectedChildren = resourceDelta
+							.getAffectedChildren(IResourceDelta.CHANGED);
 					if (affectedChildren.length > 0) {
 						handleClosedProjects(affectedChildren);
 					} else {
-						affectedChildren = resourceDelta.getAffectedChildren(IResourceDelta.REMOVED);
+						affectedChildren = resourceDelta
+								.getAffectedChildren(IResourceDelta.REMOVED);
 						handleRemovedProjects(affectedChildren);
 					}
 				}
 			};
 		}
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(
+				resourceChangeListener);
 
 		if (project == null || !project.isAccessible()) {
 			return false;
@@ -92,7 +100,7 @@ public class ProjectRemovedObserversAttacher {
 			IProject project = (IProject) resource;
 			int eventFlags = resourceDelta.getFlags();
 			if ((eventFlags & IResourceDelta.OPEN) != 0) {
-				//could be an OPEN or CLOSE
+				// could be an OPEN or CLOSE
 				if (!project.isOpen()) {
 					this.notifyProjectClosed(project);
 				}
@@ -101,18 +109,22 @@ public class ProjectRemovedObserversAttacher {
 	}
 
 	private void removeCompositeProjectChangeObserver(IProject project) {
-		CompositeProjectChangeObserver compositeProjectChangeObserver = (CompositeProjectChangeObserver) project2CompositeProjectChangeObserver.remove(project);
+		CompositeProjectChangeObserver compositeProjectChangeObserver = (CompositeProjectChangeObserver) project2CompositeProjectChangeObserver
+				.remove(project);
 		compositeProjectChangeObserver.clear();
 		if (project2CompositeProjectChangeObserver.isEmpty()) {
-			ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(
+					resourceChangeListener);
 		}
 	}
 
-	private CompositeProjectChangeObserver getCompositeProjectChangeObserver(IProject project) {
+	private CompositeProjectChangeObserver getCompositeProjectChangeObserver(
+			IProject project) {
 		Object object = project2CompositeProjectChangeObserver.get(project);
 		if (object == null) {
 			CompositeProjectChangeObserver compositeProjectChangeObserver = new CompositeProjectChangeObserver();
-			project2CompositeProjectChangeObserver.put(project, compositeProjectChangeObserver);
+			project2CompositeProjectChangeObserver.put(project,
+					compositeProjectChangeObserver);
 			return compositeProjectChangeObserver;
 		}
 

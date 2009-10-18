@@ -32,15 +32,17 @@ public class PHPTypeInferencer extends DefaultTypeInferencer {
 
 	/**
 	 * Evaluates PHP Doc goal
+	 * 
 	 * @param goal
 	 * @return evaluated type
 	 */
 	public IEvaluatedType evaluateTypePHPDoc(AbstractTypeGoal goal, int timeout) {
 		return super.evaluateType(goal, new HeavyGoalsPruner(timeout));
 	}
-	
+
 	/**
 	 * Evaluates PHP Doc goal with default timeout (3000 ms)
+	 * 
 	 * @param goal
 	 * @return evaluated type
 	 */
@@ -63,7 +65,8 @@ public class PHPTypeInferencer extends DefaultTypeInferencer {
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are heavy goals pruned
-			if (goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal) {
+			if (goal instanceof MethodElementReturnTypeGoal
+					|| goal instanceof ClassVariableDeclarationGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);
@@ -81,7 +84,8 @@ public class PHPTypeInferencer extends DefaultTypeInferencer {
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are PHPDoc (liteweight) goals pruned
-			if (goal instanceof PHPDocMethodReturnTypeGoal || goal instanceof PHPDocClassVariableGoal) {
+			if (goal instanceof PHPDocMethodReturnTypeGoal
+					|| goal instanceof PHPDocClassVariableGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);

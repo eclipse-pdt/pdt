@@ -13,41 +13,47 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
- * This context represents the state when staying in a function parameter.
- * <br/>Examples:
+ * This context represents the state when staying in a function parameter. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. function foo(A|) {}
  *  2. function foo(A $|) {}
  *  3. function foo($a, |) {}
- *  etc... 
+ *  etc...
  * </pre>
+ * 
  * @author michael
  */
-public abstract class FunctionParameterContext extends FunctionDeclarationContext {
-	
+public abstract class FunctionParameterContext extends
+		FunctionDeclarationContext {
+
 	/**
-	 * Scans the function parameters from the end to the beginning, and looks for the special
-	 * character that determines what kind of code assist should we invoke:
+	 * Scans the function parameters from the end to the beginning, and looks
+	 * for the special character that determines what kind of code assist should
+	 * we invoke:
 	 * <ul>
 	 * <li>'$' means: variable code assist</li>
 	 * <li>'=' means: variable initializer code assist</li>
 	 * <li>',' or '(' means: variable type code assist</li>
 	 * </ul>
+	 * 
 	 * @return
 	 */
 	protected char getTriggerChar() {
-		
+
 		TextSequence statementText = getStatementText();
 		int functionEnd = getFunctionEnd();
-		
+
 		// are we inside parameters part in function declaration statement
-		for (int i = statementText.length() - 1; i >= functionEnd ; i--) {
+		for (int i = statementText.length() - 1; i >= functionEnd; i--) {
 			if (statementText.charAt(i) == '(') {
 				int j = statementText.length() - 1;
 				for (; j > i; j--) {
-					if (statementText.charAt(j) == '$' || statementText.charAt(j) == '=' || statementText.charAt(j) == ',') {
+					if (statementText.charAt(j) == '$'
+							|| statementText.charAt(j) == '='
+							|| statementText.charAt(j) == ',') {
 						return statementText.charAt(j);
 					}
 				}

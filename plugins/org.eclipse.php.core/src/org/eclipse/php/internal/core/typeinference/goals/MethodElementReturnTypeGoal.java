@@ -17,14 +17,16 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 public class MethodElementReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 
-	public MethodElementReturnTypeGoal(IContext context, IEvaluatedType evaluatedType, String methodName) {
+	public MethodElementReturnTypeGoal(IContext context,
+			IEvaluatedType evaluatedType, String methodName) {
 		super(context, evaluatedType, methodName);
 	}
 
-	public MethodElementReturnTypeGoal(IContext context, IType[] types, String methodName) {
+	public MethodElementReturnTypeGoal(IContext context, IType[] types,
+			String methodName) {
 		super(context, types, methodName);
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof MethodElementReturnTypeGoal)) {
 			return false;

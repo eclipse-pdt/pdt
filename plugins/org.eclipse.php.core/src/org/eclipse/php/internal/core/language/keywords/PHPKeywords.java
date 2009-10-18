@@ -18,7 +18,8 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
 /**
- * This class is used for retrieval PHP keywords information for the given PHP version 
+ * This class is used for retrieval PHP keywords information for the given PHP
+ * version
  */
 public class PHPKeywords {
 
@@ -39,6 +40,7 @@ public class PHPKeywords {
 
 		/**
 		 * Constructs keyword data with default context: {@link #GLOBAL}
+		 * 
 		 * @param name
 		 * @param suffix
 		 * @param suffixOffset
@@ -49,7 +51,8 @@ public class PHPKeywords {
 			this.suffixOffset = suffixOffset;
 		}
 
-		public KeywordData(String name, String suffix, int suffixOffset, int context) {
+		public KeywordData(String name, String suffix, int suffixOffset,
+				int context) {
 			this.name = name;
 			this.suffix = suffix;
 			this.suffixOffset = suffixOffset;
@@ -107,7 +110,8 @@ public class PHPKeywords {
 				} else if (PHPVersion.PHP5_3 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_3());
 				} else {
-					throw new IllegalArgumentException("No PHP version defined for project!");
+					throw new IllegalArgumentException(
+							"No PHP version defined for project!");
 				}
 				instances.put(version, instance);
 			}
@@ -117,6 +121,7 @@ public class PHPKeywords {
 
 	/**
 	 * Returns a list of keyword code assist auto-complete information by prefix
+	 * 
 	 * @param prefix
 	 * @return keywords info list
 	 */
@@ -132,6 +137,7 @@ public class PHPKeywords {
 
 	/**
 	 * Returns a list of keywords by prefix
+	 * 
 	 * @param prefix
 	 * @return keywords info list
 	 */

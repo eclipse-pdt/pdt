@@ -33,8 +33,11 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		ArrayVariableReference reference = (ArrayVariableReference) typedGoal.getExpression();
-		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), new VariableReference(reference.sourceStart(), reference.sourceEnd(), reference.getName())) };
+		ArrayVariableReference reference = (ArrayVariableReference) typedGoal
+				.getExpression();
+		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
+				new VariableReference(reference.sourceStart(), reference
+						.sourceEnd(), reference.getName())) };
 	}
 
 	public Object produceResult() {
@@ -46,7 +49,8 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 		if (result instanceof MultiTypeType) {
 			MultiTypeType multiTypeType = (MultiTypeType) result;
 			List<IEvaluatedType> types = multiTypeType.getTypes();
-			result = new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
+			result = new AmbiguousType(types.toArray(new IEvaluatedType[types
+					.size()]));
 		}
 		this.result = (IEvaluatedType) result;
 		return IGoal.NO_GOALS;

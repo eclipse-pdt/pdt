@@ -24,11 +24,13 @@ public final class TextSequenceUtilities {
 	private TextSequenceUtilities() {
 	}
 
-	public static TextSequence createTextSequence(IStructuredDocumentRegion source) {
+	public static TextSequence createTextSequence(
+			IStructuredDocumentRegion source) {
 		return createTextSequence(source, 0, source.getLength());
 	}
 
-	public static TextSequence createTextSequence(IStructuredDocumentRegion source, int startOffset, int length) {
+	public static TextSequence createTextSequence(
+			IStructuredDocumentRegion source, int startOffset, int length) {
 
 		String s = "";//$NON-NLS-1$
 		try {
@@ -36,7 +38,8 @@ public final class TextSequenceUtilities {
 		} catch (BadLocationException e) {
 		}
 		Segment segment = new Segment(s.toCharArray(), 0, s.length());
-		return new SimpleTextSequence(source, segment, 0, segment.count, startOffset);
+		return new SimpleTextSequence(source, segment, 0, segment.count,
+				startOffset);
 	}
 
 	public static String getType(TextSequence textSequence, int index) {
@@ -49,7 +52,8 @@ public final class TextSequenceUtilities {
 	 * @param sourceOffset
 	 * @return
 	 */
-	public static String getTypeByAbsoluteOffset(TextSequence textSequence, int sourceOffset) {
+	public static String getTypeByAbsoluteOffset(TextSequence textSequence,
+			int sourceOffset) {
 		IStructuredDocumentRegion source = textSequence.getSource();
 		if (source.getEndOffset() == sourceOffset && source.getEndOffset() > 0) {
 			sourceOffset--;
@@ -59,7 +63,9 @@ public final class TextSequenceUtilities {
 			return null;
 		if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 			try {
-				return ((IPhpScriptRegion) tRegion).getPhpTokenType(sourceOffset - source.getStart() - tRegion.getStart());
+				return ((IPhpScriptRegion) tRegion)
+						.getPhpTokenType(sourceOffset - source.getStart()
+								- tRegion.getStart());
 			} catch (BadLocationException e) {
 				assert false;
 				return null;
@@ -80,7 +86,8 @@ public final class TextSequenceUtilities {
 
 		int segmentOriginalStart;
 
-		protected AbstractTextSequence(IStructuredDocumentRegion source, Segment segment, int segmentOriginalStart) {
+		protected AbstractTextSequence(IStructuredDocumentRegion source,
+				Segment segment, int segmentOriginalStart) {
 			this.source = source;
 			this.segment = segment;
 			this.segmentOriginalStart = segmentOriginalStart;
@@ -104,13 +111,15 @@ public final class TextSequenceUtilities {
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 
-	private static class SimpleTextSequence extends AbstractTextSequence implements TextSequence {
+	private static class SimpleTextSequence extends AbstractTextSequence
+			implements TextSequence {
 
 		private final int offset;
 
 		private final int length;
 
-		SimpleTextSequence(IStructuredDocumentRegion source, Segment segment, int offset, int length, int segmentOriginalStart) {
+		SimpleTextSequence(IStructuredDocumentRegion source, Segment segment,
+				int offset, int length, int segmentOriginalStart) {
 			super(source, segment, segmentOriginalStart);
 			this.offset = offset;
 			this.length = length;
@@ -130,7 +139,8 @@ public final class TextSequenceUtilities {
 		}
 
 		public TextSequence subTextSequence(int start, int end) {
-			return new SimpleTextSequence(source, segment, offset + start, end - start, segmentOriginalStart);
+			return new SimpleTextSequence(source, segment, offset + start, end
+					- start, segmentOriginalStart);
 		}
 
 		public TextSequence cutTextSequence(int start, int end) {
@@ -141,8 +151,10 @@ public final class TextSequenceUtilities {
 				return subTextSequence(0, start);
 			}
 
-			int[] newIndexes = new int[] { offset, start, offset + end, length - end };
-			return new CompositeTextSequence(source, segment, newIndexes, segmentOriginalStart);
+			int[] newIndexes = new int[] { offset, start, offset + end,
+					length - end };
+			return new CompositeTextSequence(source, segment, newIndexes,
+					segmentOriginalStart);
 		}
 
 		@Override
@@ -154,13 +166,15 @@ public final class TextSequenceUtilities {
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 
-	private static class CompositeTextSequence extends AbstractTextSequence implements TextSequence {
+	private static class CompositeTextSequence extends AbstractTextSequence
+			implements TextSequence {
 
 		private final int[] indexes;
 
 		private int length = -1;
 
-		CompositeTextSequence(IStructuredDocumentRegion source, Segment segment, int[] indexes, int segmentOriginalStart) {
+		CompositeTextSequence(IStructuredDocumentRegion source,
+				Segment segment, int[] indexes, int segmentOriginalStart) {
 			super(source, segment, segmentOriginalStart);
 			this.indexes = indexes;
 		}
@@ -225,15 +239,18 @@ public final class TextSequenceUtilities {
 			}
 			int newNumberOfParts = endPart - startPart + 1;
 			if (newNumberOfParts == 1) {
-				int newStart = indexes[(startPart << 1)] + start - startPartLength;
+				int newStart = indexes[(startPart << 1)] + start
+						- startPartLength;
 				int newLength = end - start;
-				return new SimpleTextSequence(source, segment, newStart, newLength, segmentOriginalStart);
+				return new SimpleTextSequence(source, segment, newStart,
+						newLength, segmentOriginalStart);
 			}
 
 			int[] newIndexes = new int[newNumberOfParts << 1];
 			// set indexes at start Part
 			newIndexes[0] = indexes[(startPart << 1)] + start - startPartLength;
-			newIndexes[1] = indexes[(startPart << 1) + 1] - (start - startPartLength);
+			newIndexes[1] = indexes[(startPart << 1) + 1]
+					- (start - startPartLength);
 			// set indexes after start Part and before last part
 
 			for (int i = 2; i < newIndexes.length - 3; i++) {
@@ -245,7 +262,8 @@ public final class TextSequenceUtilities {
 			newIndexes[newIndexes.length - 2] = indexes[(endPart << 1)];
 			newIndexes[newIndexes.length - 1] = end - endPartLength;
 
-			return new CompositeTextSequence(source, segment, newIndexes, segmentOriginalStart);
+			return new CompositeTextSequence(source, segment, newIndexes,
+					segmentOriginalStart);
 		}
 
 		public TextSequence cutTextSequence(int start, int end) {
@@ -281,8 +299,10 @@ public final class TextSequenceUtilities {
 			newIndexes[(part << 1) + 1] = start - startPartLength;
 			// set indexes at end part
 			part++;
-			newIndexes[(part << 1)] = indexes[(endPart << 1)] + (end - endPartLength);
-			newIndexes[(part << 1) + 1] = indexes[(endPart << 1) + 1] - (end - endPartLength);
+			newIndexes[(part << 1)] = indexes[(endPart << 1)]
+					+ (end - endPartLength);
+			newIndexes[(part << 1) + 1] = indexes[(endPart << 1) + 1]
+					- (end - endPartLength);
 			// set indexes after end part
 			part++;
 			int diff = numberOfParts - newNumberOfParts;
@@ -291,14 +311,16 @@ public final class TextSequenceUtilities {
 				newIndexes[(part << 1) + 1] = indexes[((part + diff) << 1) + 1];
 			}
 
-			return new CompositeTextSequence(source, segment, newIndexes, segmentOriginalStart);
+			return new CompositeTextSequence(source, segment, newIndexes,
+					segmentOriginalStart);
 		}
 
 		@Override
 		public String toString() {
 			StringBuffer buffer = new StringBuffer(length());
 			for (int i = 0; i < indexes.length; i += 2) {
-				buffer.append(segment.array, segment.offset + indexes[i], indexes[i + 1]);
+				buffer.append(segment.array, segment.offset + indexes[i],
+						indexes[i + 1]);
 			}
 			return buffer.toString();
 		}

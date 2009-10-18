@@ -19,7 +19,8 @@ package org.eclipse.php.internal.core.documentModel.parser;
 
 /**
  * @author erez
- * @version A last in first out (LIFO) stack of integers that contains states pushed by the lexer.
+ * @version A last in first out (LIFO) stack of integers that contains states
+ *          pushed by the lexer.
  */
 public class StateStack implements Cloneable {
 

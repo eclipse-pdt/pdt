@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.util.project.observer;
 
-
 public interface IProjectClosedObserver {
 	public void closed();
 }

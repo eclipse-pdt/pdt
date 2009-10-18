@@ -17,23 +17,27 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
-
 /**
- * This context represents the state when staying after 'implements' keyword in a class declaration.
- * <br/>Examples:
+ * This context represents the state when staying after 'implements' keyword in
+ * a class declaration. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. class A implements |
  *  2. class A implements B|
  * </pre>
+ * 
  * @author michael
  */
 public class ClassImplementsContext extends ClassDeclarationContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		if (hasExtends() && hasImplements() && extendsMatcher.start() < implementsMatcher.start()) {
+		if (hasExtends() && hasImplements()
+				&& extendsMatcher.start() < implementsMatcher.start()) {
 			return true;
 		}
 		if (hasImplements()) {
@@ -41,11 +45,12 @@ public class ClassImplementsContext extends ClassDeclarationContext {
 		}
 		return false;
 	}
-	
+
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
 		if (getPhpVersion().isGreaterThan(PHPVersion.PHP5)) {
-			if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			if (prefix.length() > 0
+					&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 				prefix = prefix.substring(1);
 			}
 		}

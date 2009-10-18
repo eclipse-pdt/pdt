@@ -16,8 +16,9 @@ import java.util.EventListener;
 import org.eclipse.core.resources.IProject;
 
 /**
- * A listener for preferences events that are propagated by the PreferencesEventsPropagator.
- * When needed, the listener should also supply an IProject that is related to it.
+ * A listener for preferences events that are propagated by the
+ * PreferencesEventsPropagator. When needed, the listener should also supply an
+ * IProject that is related to it.
  * 
  * @author shalom
  */
@@ -26,12 +27,13 @@ public interface IPreferencesPropagatorListener extends EventListener {
 	/**
 	 * Fired when a PreferencesPropagatorEvent occures.
 	 * 
-	 * @param event The PreferencesPropagatorEvent
+	 * @param event
+	 *            The PreferencesPropagatorEvent
 	 */
 	public void preferencesEventOccured(PreferencesPropagatorEvent event);
-	
+
 	/**
-	 * Returns the IProject that is related to this listener. 
+	 * Returns the IProject that is related to this listener.
 	 * 
 	 * @return An IProject
 	 */

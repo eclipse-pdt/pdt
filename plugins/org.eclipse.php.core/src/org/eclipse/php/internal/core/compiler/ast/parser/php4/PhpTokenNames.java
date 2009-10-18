@@ -116,15 +116,18 @@ public abstract class PhpTokenNames {
 		token2Name.put(CompilerParserConstants.T_CURLY_CLOSE, "}"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_CURLY_OPEN, "{"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_DOUBLE_ARROW, "=>"); //$NON-NLS-1$
-		token2Name.put(CompilerParserConstants.T_DOLLAR_OPEN_CURLY_BRACES, "${"); //$NON-NLS-1$
+		token2Name
+				.put(CompilerParserConstants.T_DOLLAR_OPEN_CURLY_BRACES, "${"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_STRING, "identifier"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.T_VARIABLE, "variable"); //$NON-NLS-1$
 		token2Name.put(CompilerParserConstants.EOF, "EOF"); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * Returns token name by its number
-	 * @param token id
+	 * 
+	 * @param token
+	 *            id
 	 * @return token name
 	 */
 	public static String getName(int token) {

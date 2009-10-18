@@ -17,11 +17,13 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
 
 /**
  * This context represents state when staying in a PHP code (not PHPDoc)
+ * 
  * @author michael
  */
 public abstract class CodeContext extends AbstractCompletionContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

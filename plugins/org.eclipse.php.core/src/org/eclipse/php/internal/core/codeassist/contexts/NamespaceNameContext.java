@@ -19,7 +19,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 public class NamespaceNameContext extends StatementContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -48,7 +49,8 @@ public class NamespaceNameContext extends StatementContext {
 
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
-		if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (prefix.length() > 0
+				&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			return prefix.substring(1);
 		}
 		return prefix;

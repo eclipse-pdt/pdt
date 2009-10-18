@@ -19,31 +19,36 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
- * This is a context for PHP file (outside of classes or functions) 
+ * This is a context for PHP file (outside of classes or functions)
+ * 
  * @author michael
  */
 public class FileContext extends BasicContext implements INamespaceContext {
-	
+
 	private String namespaceName;
-	
+
 	/**
 	 * Creates file context where there's no declaring namespace
+	 * 
 	 * @param sourceModule
 	 * @param rootNode
 	 */
 	public FileContext(ISourceModule sourceModule, ModuleDeclaration rootNode) {
 		super(sourceModule, rootNode);
 	}
-	
+
 	/**
 	 * Creates a file context for the specific offset
+	 * 
 	 * @param sourceModule
 	 * @param rootNode
 	 * @param offset
 	 */
-	public FileContext(ISourceModule sourceModule, ModuleDeclaration rootNode, int offset) {
+	public FileContext(ISourceModule sourceModule, ModuleDeclaration rootNode,
+			int offset) {
 		super(sourceModule, rootNode);
-		IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+		IType currentNamespace = PHPModelUtils.getCurrentNamespace(
+				sourceModule, offset);
 		if (currentNamespace != null) {
 			this.namespaceName = currentNamespace.getElementName();
 		}
@@ -52,7 +57,7 @@ public class FileContext extends BasicContext implements INamespaceContext {
 	public FileContext(ISourceModuleContext parent) {
 		super(parent);
 		if (parent instanceof INamespaceContext) {
-			namespaceName = ((INamespaceContext)parent).getNamespace();
+			namespaceName = ((INamespaceContext) parent).getNamespace();
 		}
 	}
 
@@ -62,6 +67,7 @@ public class FileContext extends BasicContext implements INamespaceContext {
 
 	/**
 	 * Sets the current namespace name
+	 * 
 	 * @param namespaceName
 	 */
 	public void setNamespace(String namespaceName) {
@@ -71,7 +77,8 @@ public class FileContext extends BasicContext implements INamespaceContext {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((namespaceName == null) ? 0 : namespaceName.hashCode());
+		result = prime * result
+				+ ((namespaceName == null) ? 0 : namespaceName.hashCode());
 		return result;
 	}
 

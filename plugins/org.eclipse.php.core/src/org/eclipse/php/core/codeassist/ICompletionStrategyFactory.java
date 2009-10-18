@@ -11,17 +11,21 @@
  *******************************************************************************/
 package org.eclipse.php.core.codeassist;
 
-
 /**
- * This factory finds correct strategies according to the given completion context.
+ * This factory finds correct strategies according to the given completion
+ * context.
+ * 
  * @author michael
  */
 public interface ICompletionStrategyFactory {
 
 	/**
 	 * Creates completion strategies for the given context.
-	 * @param contexts Completion contexts list
-	 * @return completion strategies or empty list in case no strategy could be found for the given context
+	 * 
+	 * @param contexts
+	 *            Completion contexts list
+	 * @return completion strategies or empty list in case no strategy could be
+	 *         found for the given context
 	 */
 	public ICompletionStrategy[] create(ICompletionContext[] contexts);
 }

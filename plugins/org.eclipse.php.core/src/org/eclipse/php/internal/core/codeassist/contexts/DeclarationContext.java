@@ -11,17 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-
 /**
- * This context represents state when staying in a PHP element declaration.
- * <br/>Examples:
+ * This context represents state when staying in a PHP element declaration. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. function |
  *  2. function foo(|) {}
  *  3. class A |
  *  4. namespace |
- *  etc... 
+ *  etc...
  * </pre>
+ * 
  * @author michael
  */
 public abstract class DeclarationContext extends AbstractCompletionContext {

@@ -30,35 +30,37 @@ public class CastEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		CastExpression castExpression = (CastExpression) typedGoal.getExpression();
+		CastExpression castExpression = (CastExpression) typedGoal
+				.getExpression();
 		int operator = castExpression.getCastType();
 		switch (operator) {
-			case CastExpression.TYPE_INT:
-			case CastExpression.TYPE_REAL:
-				result = new SimpleType(SimpleType.TYPE_NUMBER);
-				break;
-			case CastExpression.TYPE_STRING:
-				result = new SimpleType(SimpleType.TYPE_STRING);
-				break;
-			case CastExpression.TYPE_ARRAY:
-				result = new SimpleType(SimpleType.TYPE_ARRAY);
-				break;
-			case CastExpression.TYPE_OBJECT:
-				return new IGoal[]{new ExpressionTypeGoal(typedGoal.getContext(), castExpression.getExpr())};
-			case CastExpression.TYPE_BOOL:
-				result = new SimpleType(SimpleType.TYPE_BOOLEAN);
-				break;
-			case CastExpression.TYPE_UNSET:
-				result = new SimpleType(SimpleType.TYPE_NULL);
-				break;
-			default:
-				throw new IllegalArgumentException();
+		case CastExpression.TYPE_INT:
+		case CastExpression.TYPE_REAL:
+			result = new SimpleType(SimpleType.TYPE_NUMBER);
+			break;
+		case CastExpression.TYPE_STRING:
+			result = new SimpleType(SimpleType.TYPE_STRING);
+			break;
+		case CastExpression.TYPE_ARRAY:
+			result = new SimpleType(SimpleType.TYPE_ARRAY);
+			break;
+		case CastExpression.TYPE_OBJECT:
+			return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(),
+					castExpression.getExpr()) };
+		case CastExpression.TYPE_BOOL:
+			result = new SimpleType(SimpleType.TYPE_BOOLEAN);
+			break;
+		case CastExpression.TYPE_UNSET:
+			result = new SimpleType(SimpleType.TYPE_NULL);
+			break;
+		default:
+			throw new IllegalArgumentException();
 		}
 		return IGoal.NO_GOALS;
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		if(result instanceof PHPClassType){
+		if (result instanceof PHPClassType) {
 			this.result = (PHPClassType) result;
 		} else {
 			this.result = new PHPClassType("StdClass");

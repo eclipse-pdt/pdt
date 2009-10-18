@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.tar;
 
-
 /**
  * A simple class the hold and calculate the CRC for sanity checking of the
  * data.
@@ -108,6 +107,5 @@ final class CRC {
 		this.globalCrc = globalCrcShadow;
 	}
 
-    int globalCrc;
+	int globalCrc;
 }
-

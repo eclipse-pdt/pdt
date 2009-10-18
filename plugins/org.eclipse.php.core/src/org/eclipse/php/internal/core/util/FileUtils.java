@@ -46,17 +46,18 @@ public class FileUtils {
 	}
 
 	/**
-	* Fetch the entire contents of a text file, and return it in a String.
-	* This style of implementation does not throw Exceptions to the caller.
-	*
-	* @param file is a file which already exists and can be read.
-	*/
+	 * Fetch the entire contents of a text file, and return it in a String. This
+	 * style of implementation does not throw Exceptions to the caller.
+	 * 
+	 * @param file
+	 *            is a file which already exists and can be read.
+	 */
 	static public String getContents(File file) throws IOException {
 		StringBuffer contents = new StringBuffer();
 
 		BufferedReader input = null;
 		try {
-			//FileReader always assumes default encoding is OK!
+			// FileReader always assumes default encoding is OK!
 			input = new BufferedReader(new FileReader(file));
 			String line = null;
 
@@ -81,33 +82,45 @@ public class FileUtils {
 	}
 
 	/**
-	* Change the contents of text file in its entirety, overwriting any
-	* existing text.
-	*
-	* This style of implementation throws all exceptions to the caller.
-	*
-	* @param file is an existing file which can be written to.
-	* @throws IllegalArgumentException if param does not comply.
-	* @throws FileNotFoundException if the file does not exist.
-	* @throws IOException if problem encountered during write.
-	*/
-	static public void setContents(File file, String contents) throws FileNotFoundException, IOException {
+	 * Change the contents of text file in its entirety, overwriting any
+	 * existing text.
+	 * 
+	 * This style of implementation throws all exceptions to the caller.
+	 * 
+	 * @param file
+	 *            is an existing file which can be written to.
+	 * @throws IllegalArgumentException
+	 *             if param does not comply.
+	 * @throws FileNotFoundException
+	 *             if the file does not exist.
+	 * @throws IOException
+	 *             if problem encountered during write.
+	 */
+	static public void setContents(File file, String contents)
+			throws FileNotFoundException, IOException {
 		if (file == null) {
-			throw new IllegalArgumentException(CoreMessages.getString("FileUtils_2"));
+			throw new IllegalArgumentException(CoreMessages
+					.getString("FileUtils_2"));
 		}
 		if (!file.exists()) {
-			throw new FileNotFoundException(CoreMessages.getString("FileUtils_3") + file);
+			throw new FileNotFoundException(CoreMessages
+					.getString("FileUtils_3")
+					+ file);
 		}
 		if (!file.isFile()) {
-			throw new IllegalArgumentException(CoreMessages.getString("FileUtils_4") + file);
+			throw new IllegalArgumentException(CoreMessages
+					.getString("FileUtils_4")
+					+ file);
 		}
 		if (!file.canWrite()) {
-			throw new IllegalArgumentException(CoreMessages.getString("FileUtils_5") + file);
+			throw new IllegalArgumentException(CoreMessages
+					.getString("FileUtils_5")
+					+ file);
 		}
 
 		Writer output = null;
 		try {
-			//FileWriter always assumes default encoding is OK!
+			// FileWriter always assumes default encoding is OK!
 			output = new BufferedWriter(new FileWriter(file));
 			output.write(contents);
 		} finally {
@@ -117,23 +130,30 @@ public class FileUtils {
 	}
 
 	/**
-	 * Checks if the first given path string is the container of the second given file's path
+	 * Checks if the first given path string is the container of the second
+	 * given file's path
+	 * 
 	 * @param containerPathString
 	 * @param filePathString
 	 * @return
 	 */
-	public static boolean checkIfContainerOfFile(String containerPathString, String filePathString) {
+	public static boolean checkIfContainerOfFile(String containerPathString,
+			String filePathString) {
 		Path containerFilterPath = new Path(containerPathString.toLowerCase());
 		Path filePath = new Path(filePathString.toLowerCase());
 		if (containerFilterPath.segmentCount() > filePath.segmentCount()) {
-			return false;//container has more segments than file itself
+			return false;// container has more segments than file itself
 		}
 
-		if (((containerFilterPath.getDevice() == null) && (filePath.getDevice() != null)) || ((containerFilterPath.getDevice() != null) && (filePath.getDevice() == null))) {
+		if (((containerFilterPath.getDevice() == null) && (filePath.getDevice() != null))
+				|| ((containerFilterPath.getDevice() != null) && (filePath
+						.getDevice() == null))) {
 			return false;
 		}
 
-		if ((containerFilterPath.getDevice() != null) && !containerFilterPath.getDevice().toLowerCase().equals(filePath.getDevice().toLowerCase())) {
+		if ((containerFilterPath.getDevice() != null)
+				&& !containerFilterPath.getDevice().toLowerCase().equals(
+						filePath.getDevice().toLowerCase())) {
 			return false;
 		}
 
@@ -146,23 +166,29 @@ public class FileUtils {
 	}
 
 	/**
-	 * Checks the 2 given files paths are equal using device and segments comparison
+	 * Checks the 2 given files paths are equal using device and segments
+	 * comparison
+	 * 
 	 * @param filePathStr1
 	 * @param filePathStr2
 	 * @return
 	 */
-	public static boolean checkIfEqualFilePaths(String filePathStr1, String filePathStr2) {
+	public static boolean checkIfEqualFilePaths(String filePathStr1,
+			String filePathStr2) {
 		Path filePath1 = new Path(filePathStr1.toLowerCase());
 		Path filePath2 = new Path(filePathStr2.toLowerCase());
 		if (filePath1.segmentCount() != filePath2.segmentCount()) {
-			return false;//container has more segments than file itself
+			return false;// container has more segments than file itself
 		}
 
-		if (((filePath1.getDevice() == null) && (filePath2.getDevice() != null)) || ((filePath1.getDevice() != null) && (filePath2.getDevice() == null))) {
+		if (((filePath1.getDevice() == null) && (filePath2.getDevice() != null))
+				|| ((filePath1.getDevice() != null) && (filePath2.getDevice() == null))) {
 			return false;
 		}
 
-		if ((filePath1.getDevice() != null) && !filePath1.getDevice().toLowerCase().equals(filePath2.getDevice().toLowerCase())) {
+		if ((filePath1.getDevice() != null)
+				&& !filePath1.getDevice().toLowerCase().equals(
+						filePath2.getDevice().toLowerCase())) {
 			return false;
 		}
 

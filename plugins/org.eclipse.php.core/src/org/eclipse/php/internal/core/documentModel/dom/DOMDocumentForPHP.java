@@ -14,11 +14,7 @@ package org.eclipse.php.internal.core.documentModel.dom;
 import org.eclipse.wst.html.core.internal.document.DocumentStyleImpl;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-import org.w3c.dom.Attr;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
+import org.w3c.dom.*;
 
 public class DOMDocumentForPHP extends DocumentStyleImpl {
 
@@ -36,7 +32,7 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 			cloned.importChildNodes(this, true);
 		return cloned;
 	}
-	
+
 	/**
 	 * createElement method
 	 * 
@@ -83,5 +79,5 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 
 	public void setModel(IDOMModel model) {
 		super.setModel(model);
-	}	
+	}
 }

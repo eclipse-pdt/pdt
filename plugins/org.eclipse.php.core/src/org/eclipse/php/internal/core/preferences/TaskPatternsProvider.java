@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 
 public class TaskPatternsProvider {
@@ -54,30 +53,33 @@ public class TaskPatternsProvider {
 	}
 
 	private void initPatternsDB() {
-		workspacePatterns = createPatterns(provider.getWorkspaceTaskTags(), provider.isWorkspaceTagsCaseSensitive());
-		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		
+		workspacePatterns = createPatterns(provider.getWorkspaceTaskTags(),
+				provider.isWorkspaceTagsCaseSensitive());
+		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+				.getProjects();
+
 		if (projects == null) {
 			return;
 		}
-		
+
 		for (int i = 0; i < projects.length; i++) {
 			IProject project = projects[i];
 			registerProject(project);
 		}
 	}
-	
-	
+
 	public Pattern[] getPetternsForWorkspace() {
 		return workspacePatterns;
 	}
-	
-	// If necessary, initialise the needed listeners on the given project and update its patterns. 
+
+	// If necessary, initialise the needed listeners on the given project and
+	// update its patterns.
 	private void registerProject(IProject project) {
 		if (projectToListener.get(project) == null) {
 			// Add to the project patterns
 			TaskTag[] tags = provider.getProjectTaskTags(project);
-			boolean caseSensitive = provider.getProjectTagsCaseSensitive(project);
+			boolean caseSensitive = provider
+					.getProjectTagsCaseSensitive(project);
 			if (tags != null) {
 				Pattern[] patterns = createPatterns(tags, caseSensitive);
 				projectsPatterns.put(project, patterns);
@@ -89,7 +91,8 @@ public class TaskPatternsProvider {
 		}
 	}
 
-	private Pattern[] createPatterns(TaskTag[] workspaceTaskTags, boolean caseSensitive) {
+	private Pattern[] createPatterns(TaskTag[] workspaceTaskTags,
+			boolean caseSensitive) {
 		Pattern[] patterns = new Pattern[workspaceTaskTags.length];
 		for (int i = 0; i < workspaceTaskTags.length; i++) {
 			TaskTag tag = workspaceTaskTags[i];
@@ -97,14 +100,16 @@ public class TaskPatternsProvider {
 			if (caseSensitive) {
 				patterns[i] = Pattern.compile(tagString, Pattern.LITERAL);
 			} else {
-				patterns[i] = Pattern.compile(tagString, Pattern.CASE_INSENSITIVE | Pattern.LITERAL);
+				patterns[i] = Pattern.compile(tagString,
+						Pattern.CASE_INSENSITIVE | Pattern.LITERAL);
 			}
 		}
 
 		return patterns;
 	}
 
-	private void taskTagsChanged(IProject project, TaskTag[] tags, boolean caseSensitive) {
+	private void taskTagsChanged(IProject project, TaskTag[] tags,
+			boolean caseSensitive) {
 		if (project == null) {
 			workspacePatterns = createPatterns(tags, caseSensitive);
 			return;
@@ -123,14 +128,16 @@ public class TaskPatternsProvider {
 	private class TaskTagsListener implements ITaskTagsListener {
 
 		public void taskTagsChanged(TaskTagsEvent event) {
-			TaskPatternsProvider.this.taskTagsChanged(event.getProject(), event.getTaskTags(), event.isCaseSensitive());
+			TaskPatternsProvider.this.taskTagsChanged(event.getProject(), event
+					.getTaskTags(), event.isCaseSensitive());
 		}
 
 		public void taskPrioritiesChanged(TaskTagsEvent event) {
 		}
 
 		public void taskCaseChanged(TaskTagsEvent event) {
-			TaskPatternsProvider.this.taskTagsChanged(event.getProject(), event.getTaskTags(), event.isCaseSensitive());
+			TaskPatternsProvider.this.taskTagsChanged(event.getProject(), event
+					.getTaskTags(), event.isCaseSensitive());
 		}
 
 	}

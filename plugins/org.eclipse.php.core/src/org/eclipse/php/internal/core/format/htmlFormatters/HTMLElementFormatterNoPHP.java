@@ -31,13 +31,14 @@ import org.w3c.dom.Node;
  * Look for documentation at HTMLFormatterNoPHP
  * 
  * @author guy.g
- *
+ * 
  */
 public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 
 	/**
 	 */
-	protected void formatChildNodes(IDOMNode node, HTMLFormatContraints contraints) {
+	protected void formatChildNodes(IDOMNode node,
+			HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (!node.hasChildNodes())
@@ -64,7 +65,9 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 				insertBreakBefore(child, contraints);
 			}
 
-			IStructuredFormatter formatter = HTMLFormatterNoPHPFactory.getInstance().createFormatter(child, getFormatPreferences());
+			IStructuredFormatter formatter = HTMLFormatterNoPHPFactory
+					.getInstance().createFormatter(child,
+							getFormatPreferences());
 			if (formatter != null) {
 				if (formatter instanceof HTMLFormatterNoPHP) {
 					HTMLFormatterNoPHP htmlFormatter = (HTMLFormatterNoPHP) formatter;
@@ -90,7 +93,8 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 
 	/**
 	 */
-	protected void insertBreakAfter(IDOMNode node, HTMLFormatContraints contraints) {
+	protected void insertBreakAfter(IDOMNode node,
+			HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (node.getNodeType() == Node.TEXT_NODE)
@@ -107,10 +111,13 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 		} else if (next.getNodeType() == Node.TEXT_NODE) {
 			if (contraints != null && contraints.getFormatWithSiblingIndent()) {
 				IDOMNode text = (IDOMNode) next;
-				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory.getInstance().createFormatter(text, getFormatPreferences());
+				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory
+						.getInstance().createFormatter(text,
+								getFormatPreferences());
 				if (formatter instanceof HTMLTextFormatter) {
 					HTMLTextFormatterNoPHP textFormatter = (HTMLTextFormatterNoPHP) formatter;
-					textFormatter.formatText(text, contraints, HTMLTextFormatter.FORMAT_HEAD);
+					textFormatter.formatText(text, contraints,
+							HTMLTextFormatter.FORMAT_HEAD);
 				}
 			}
 			return;
@@ -126,7 +133,8 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 
 	/**
 	 */
-	protected void insertBreakBefore(IDOMNode node, HTMLFormatContraints contraints) {
+	protected void insertBreakBefore(IDOMNode node,
+			HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (node.getNodeType() == Node.TEXT_NODE)
@@ -140,10 +148,13 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 		if (prev != null && prev.getNodeType() == Node.TEXT_NODE) {
 			if (contraints != null && contraints.getFormatWithSiblingIndent()) {
 				IDOMNode text = (IDOMNode) prev;
-				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory.getInstance().createFormatter(text, getFormatPreferences());
+				IStructuredFormatter formatter = HTMLFormatterNoPHPFactory
+						.getInstance().createFormatter(text,
+								getFormatPreferences());
 				if (formatter instanceof HTMLTextFormatter) {
 					HTMLTextFormatterNoPHP textFormatter = (HTMLTextFormatterNoPHP) formatter;
-					textFormatter.formatText(text, contraints, HTMLTextFormatter.FORMAT_TAIL);
+					textFormatter.formatText(text, contraints,
+							HTMLTextFormatter.FORMAT_TAIL);
 
 					if (node == null)
 						return;
@@ -151,7 +162,8 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 					if (node.hasChildNodes()) { // container
 						formatChildNodes(node, contraints);
 					} else { // leaf
-						IStructuredDocumentRegion flatNode = node.getStartStructuredDocumentRegion();
+						IStructuredDocumentRegion flatNode = node
+								.getStartStructuredDocumentRegion();
 						if (flatNode != null) {
 							String source = flatNode.getText();
 							if (source != null && source.length() > 0) {
@@ -174,14 +186,15 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 	}
 
 	protected void formatNode(IDOMNode node, HTMLFormatContraints contraints) {
-		// fixed bug 198901 - prevent the HTML formatter to format the value of style attribute
+		// fixed bug 198901 - prevent the HTML formatter to format the value of
+		// style attribute
 		// skip the format start tag and end tag
 		Attr attr = null;
 		if (node instanceof Element) {
-			attr = ((Element)node).getAttributeNode("style");//$NON-NLS-1$
+			attr = ((Element) node).getAttributeNode("style");//$NON-NLS-1$
 		}
 		if (attr == null || attr.getValue().indexOf("<?") == -1) { //$NON-NLS-1$
-			super.formatNode(node, contraints);	 
+			super.formatNode(node, contraints);
 		} else {
 			formatChildNodes(node, contraints);
 		}
@@ -200,8 +213,11 @@ public class HTMLElementFormatterNoPHP extends HTMLElementFormatter {
 				container = (ITextRegionContainer) attribute.getValueRegion();
 			}
 
-			if (container != null && container.getFirstRegion().getType().equals(PHPRegionContext.PHP_OPEN)) {
-				PhpFormatter phpFormatter = new PhpFormatter(attribute.getStartOffset(), attribute.getEndOffset());
+			if (container != null
+					&& container.getFirstRegion().getType().equals(
+							PHPRegionContext.PHP_OPEN)) {
+				PhpFormatter phpFormatter = new PhpFormatter(attribute
+						.getStartOffset(), attribute.getEndOffset());
 				phpFormatter.format(attribute, contraints);
 			}
 		}

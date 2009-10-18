@@ -39,11 +39,12 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	/**
 	 * Returns the string accumulated in the visit.
-	 *
-	 * @return the serialized 
+	 * 
+	 * @return the serialized
 	 */
 	public String getResult() {
-		// convert to a string, but lose any extra space in the string buffer by copying
+		// convert to a string, but lose any extra space in the string buffer by
+		// copying
 		return new String(this.result.toString());
 	}
 
@@ -55,10 +56,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	/**
-	 * Appends the text representation of the given modifier flags, followed by a single space.
+	 * Appends the text representation of the given modifier flags, followed by
+	 * a single space.
 	 * 
-	 * @param modifiers the modifiers
-	 * @param buf The <code>StringBuffer</code> to write the result to.
+	 * @param modifiers
+	 *            the modifiers
+	 * @param buf
+	 *            The <code>StringBuffer</code> to write the result to.
 	 */
 	public static void printModifiers(int modifiers, StringBuffer buf) {
 		if (PHPFlags.isPublic(modifiers)) {
@@ -81,7 +85,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 	}
 
-	protected List getChildList(ASTNode parent, StructuralPropertyDescriptor childProperty) {
+	protected List getChildList(ASTNode parent,
+			StructuralPropertyDescriptor childProperty) {
 		Object ret = getAttribute(parent, childProperty);
 		if (ret instanceof List) {
 			return (List) ret;
@@ -89,26 +94,31 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		return Collections.EMPTY_LIST;
 	}
 
-	protected ASTNode getChildNode(ASTNode parent, StructuralPropertyDescriptor childProperty) {
+	protected ASTNode getChildNode(ASTNode parent,
+			StructuralPropertyDescriptor childProperty) {
 		return (ASTNode) getAttribute(parent, childProperty);
 	}
 
-	protected int getIntAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
+	protected int getIntAttribute(ASTNode parent,
+			StructuralPropertyDescriptor childProperty) {
 		return ((Integer) getAttribute(parent, childProperty)).intValue();
 	}
 
-	protected boolean getBooleanAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
+	protected boolean getBooleanAttribute(ASTNode parent,
+			StructuralPropertyDescriptor childProperty) {
 		return ((Boolean) getAttribute(parent, childProperty)).booleanValue();
 	}
 
-	protected Object getAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
+	protected Object getAttribute(ASTNode parent,
+			StructuralPropertyDescriptor childProperty) {
 		if (store != null)
 			return this.store.getNewValue(parent, childProperty);
 
 		return null;
 	}
 
-	protected void visitList(ASTNode parent, StructuralPropertyDescriptor childProperty, String separator) {
+	protected void visitList(ASTNode parent,
+			StructuralPropertyDescriptor childProperty, String separator) {
 		List list = getChildList(parent, childProperty);
 		for (int i = 0; i < list.size(); i++) {
 			if (separator != null && i > 0) {
@@ -118,7 +128,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 	}
 
-	protected void visitList(ASTNode parent, StructuralPropertyDescriptor childProperty, String separator, String lead, String post) {
+	protected void visitList(ASTNode parent,
+			StructuralPropertyDescriptor childProperty, String separator,
+			String lead, String post) {
 		List list = getChildList(parent, childProperty);
 		if (!list.isEmpty()) {
 			this.result.append(lead);
@@ -132,8 +144,12 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ArrayAccess)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse
+	 * .php.internal.core.ast.nodes.ArrayAccess)
 	 */
 	public boolean visit(ArrayAccess arrayAccess) {
 		if (arrayAccess.getName() != null) {
@@ -184,7 +200,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(ASTError astError) {
-		// cant flatten, needs source		
+		// cant flatten, needs source
 		return false;
 	}
 
@@ -210,7 +226,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		if (block.isCurly()) {
 			result.append("}\n"); //$NON-NLS-1$
 		} else {
-			StructuralPropertyDescriptor locationInParent = block.getLocationInParent();
+			StructuralPropertyDescriptor locationInParent = block
+					.getLocationInParent();
 			if (locationInParent == IfStatement.TRUE_STATEMENT_PROPERTY) {
 				if (((IfStatement) block.getParent()).getFalseStatement() == null) {
 					// End the if statement
@@ -265,8 +282,10 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		result.append("const "); //$NON-NLS-1$
 		boolean isFirst = true;
-		Identifier[] variableNames = classConstantDeclaration.getVariableNames();
-		Expression[] constantValues = classConstantDeclaration.getConstantValues();
+		Identifier[] variableNames = classConstantDeclaration
+				.getVariableNames();
+		Expression[] constantValues = classConstantDeclaration
+				.getConstantValues();
 		for (int i = 0; i < variableNames.length; i++) {
 			if (!isFirst) {
 				result.append(", "); //$NON-NLS-1$
@@ -518,14 +537,14 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			}
 		}
 		Expression paramType = formalParameter.getParameterType();
-		if (paramType != null /*&& paramType.getLength() > 0*/) {
+		if (paramType != null /* && paramType.getLength() > 0 */) {
 			paramType.accept(this);
 			result.append(' ');
 		}
 
 		formalParameter.getParameterName().accept(this);
 		Expression defaultValue = formalParameter.getDefaultValue();
-		if (defaultValue != null /*&& defaultValue.getLength() > 0*/) {
+		if (defaultValue != null /* && defaultValue.getLength() > 0 */) {
 			result.append(" = ");
 			defaultValue.accept(this);
 		}
@@ -575,8 +594,10 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 		functionDeclaration.getFunctionName().accept(this);
 		result.append('(');
-		List<FormalParameter> formalParametersList = functionDeclaration.formalParameters();
-		FormalParameter[] formalParameters = formalParametersList.toArray(new FormalParameter[formalParametersList.size()]);
+		List<FormalParameter> formalParametersList = functionDeclaration
+				.formalParameters();
+		FormalParameter[] formalParameters = formalParametersList
+				.toArray(new FormalParameter[formalParametersList.size()]);
 		if (formalParameters.length != 0) {
 			formalParameters[0].accept(this);
 			for (int i = 1; i < formalParameters.length; i++) {
@@ -674,7 +695,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(InfixExpression infixExpression) {
 		infixExpression.getLeft().accept(this);
 		result.append(' ');
-		result.append(InfixExpression.getOperator(infixExpression.getOperator()));
+		result.append(InfixExpression
+				.getOperator(infixExpression.getOperator()));
 		result.append(' ');
 		infixExpression.getRight().accept(this);
 		return false;
@@ -730,7 +752,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			result.append('&');
 		}
 		result.append('(');
-		List<FormalParameter> formalParametersList = functionDeclaration.formalParameters();
+		List<FormalParameter> formalParametersList = functionDeclaration
+				.formalParameters();
 		Iterator<FormalParameter> paramIt = formalParametersList.iterator();
 		while (paramIt.hasNext()) {
 			paramIt.next().accept(this);
@@ -740,7 +763,8 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 		result.append(')');
 
-		List<Expression> lexicalVariables = functionDeclaration.lexicalVariables();
+		List<Expression> lexicalVariables = functionDeclaration
+				.lexicalVariables();
 		if (lexicalVariables.size() > 0) {
 			result.append(" use (");
 			Iterator<Expression> it = lexicalVariables.iterator();
@@ -788,13 +812,15 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(PostfixExpression postfixExpressions) {
 		postfixExpressions.getVariable().accept(this);
-		result.append(PostfixExpression.getOperator(postfixExpressions.getOperator()));
+		result.append(PostfixExpression.getOperator(postfixExpressions
+				.getOperator()));
 		return false;
 	}
 
 	public boolean visit(PrefixExpression prefixExpression) {
 		prefixExpression.getVariable().accept(this);
-		result.append(PrefixExpression.getOperator(prefixExpression.getOperator()));
+		result.append(PrefixExpression.getOperator(prefixExpression
+				.getOperator()));
 		return false;
 	}
 
@@ -840,20 +866,20 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(Quote quote) {
 		switch (quote.getQuoteType()) {
-			case 0:
-				result.append("\""); //$NON-NLS-1$
-				acceptQuoteExpression(quote.getExpressions());
-				result.append("\""); //$NON-NLS-1$
-				break;
-			case 1:
-				result.append("\'"); //$NON-NLS-1$
-				acceptQuoteExpression(quote.getExpressions());
-				result.append("\'"); //$NON-NLS-1$
-				break;
-			case 2:
-				result.append("<<<Heredoc\n"); //$NON-NLS-1$
-				acceptQuoteExpression(quote.getExpressions());
-				result.append("\nHeredoc"); //$NON-NLS-1$
+		case 0:
+			result.append("\""); //$NON-NLS-1$
+			acceptQuoteExpression(quote.getExpressions());
+			result.append("\""); //$NON-NLS-1$
+			break;
+		case 1:
+			result.append("\'"); //$NON-NLS-1$
+			acceptQuoteExpression(quote.getExpressions());
+			result.append("\'"); //$NON-NLS-1$
+			break;
+		case 2:
+			result.append("<<<Heredoc\n"); //$NON-NLS-1$
+			acceptQuoteExpression(quote.getExpressions());
+			result.append("\nHeredoc"); //$NON-NLS-1$
 		}
 		return false;
 	}

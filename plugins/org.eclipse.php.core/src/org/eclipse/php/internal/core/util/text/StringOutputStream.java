@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author seva, 2007
- * A hook to catch System.err and System.out
+ * @author seva, 2007 A hook to catch System.err and System.out
  */
 public class StringOutputStream extends OutputStream {
 

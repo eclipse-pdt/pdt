@@ -55,7 +55,8 @@ public class XMLPreferencesReader {
 			Node n = nl.item(i);
 			if (n.hasChildNodes()) {
 				if (n.getFirstChild().getNodeType() == Node.TEXT_NODE) {
-					map.put(n.getNodeName(), getUnEscaped(n.getFirstChild().getNodeValue()));
+					map.put(n.getNodeName(), getUnEscaped(n.getFirstChild()
+							.getNodeValue()));
 				} else {
 					map.put(n.getNodeName(), read(n.getChildNodes()));
 				}
@@ -66,10 +67,12 @@ public class XMLPreferencesReader {
 
 	protected static HashMap read(String str) {
 		try {
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
+					.newInstance();
 			// docBuilderFactory.setValidating(true);
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(new ByteArrayInputStream(str.getBytes()));
+			Document doc = docBuilder.parse(new ByteArrayInputStream(str
+					.getBytes()));
 
 			return read(doc.getChildNodes());
 
@@ -81,7 +84,7 @@ public class XMLPreferencesReader {
 
 	/**
 	 * Reads a map of elements from the Preferences by a given key.
-	 *
+	 * 
 	 * @param store
 	 * @param prefsKey
 	 * @return
@@ -91,10 +94,11 @@ public class XMLPreferencesReader {
 		return getHashFromStoredValue(storedValue);
 	}
 
-	public static HashMap[] getHashFromStoredValue(String storedValue){
+	public static HashMap[] getHashFromStoredValue(String storedValue) {
 
 		ArrayList maps = new ArrayList();
-		StringTokenizer st = new StringTokenizer(storedValue, new String(new char[] { DELIMITER }));
+		StringTokenizer st = new StringTokenizer(storedValue, new String(
+				new char[] { DELIMITER }));
 		while (st.hasMoreTokens()) {
 			maps.add(read(st.nextToken()));
 		}

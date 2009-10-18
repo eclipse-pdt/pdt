@@ -29,20 +29,22 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 /**
- * This abstract AST visitor finds type inference context 
+ * This abstract AST visitor finds type inference context
+ * 
  * @author michael
  */
 public abstract class ContextFinder extends ASTVisitor {
-	
+
 	protected Stack<IContext> contextStack = new Stack<IContext>();
 	private ISourceModule sourceModule;
-	
+
 	public ContextFinder(ISourceModule sourceModule) {
 		this.sourceModule = sourceModule;
 	}
 
 	/**
 	 * This method must return found context
+	 * 
 	 * @return
 	 */
 	public IContext getContext() {
@@ -51,7 +53,7 @@ public abstract class ContextFinder extends ASTVisitor {
 
 	public boolean visit(ModuleDeclaration node) throws Exception {
 		contextStack.push(new FileContext(sourceModule, node));
-		
+
 		boolean visitGeneral = visitGeneral(node);
 		if (!visitGeneral) {
 			contextStack.pop();
@@ -66,23 +68,27 @@ public abstract class ContextFinder extends ASTVisitor {
 				fileContext.setNamespace(node.getName());
 			}
 		} else {
-			ISourceModuleContext parentContext = (ISourceModuleContext) contextStack.peek();
+			ISourceModuleContext parentContext = (ISourceModuleContext) contextStack
+					.peek();
 			PHPClassType instanceType;
-			if (parentContext instanceof INamespaceContext && ((INamespaceContext)parentContext).getNamespace() != null) {
-				instanceType = new PHPClassType(((INamespaceContext)parentContext).getNamespace(), node.getName());
+			if (parentContext instanceof INamespaceContext
+					&& ((INamespaceContext) parentContext).getNamespace() != null) {
+				instanceType = new PHPClassType(
+						((INamespaceContext) parentContext).getNamespace(),
+						node.getName());
 			} else {
 				instanceType = new PHPClassType(node.getName());
 			}
-			
+
 			contextStack.push(new TypeContext(parentContext, instanceType));
-			
+
 			boolean visitGeneral = visitGeneral(node);
 			if (!visitGeneral) {
 				contextStack.pop();
 			}
 			return visitGeneral;
 		}
-		
+
 		return visitGeneral(node);
 	}
 
@@ -96,10 +102,13 @@ public abstract class ContextFinder extends ASTVisitor {
 			argTypes.add(UnknownType.INSTANCE);
 		}
 		IContext parent = contextStack.peek();
-		ModuleDeclaration rootNode = ((ISourceModuleContext) parent).getRootNode();
-		
-		contextStack.push(new MethodContext(parent, sourceModule, rootNode, node, argumentsList.toArray(new String[argumentsList.size()]), argTypes.toArray(new IEvaluatedType[argTypes.size()])));
-		
+		ModuleDeclaration rootNode = ((ISourceModuleContext) parent)
+				.getRootNode();
+
+		contextStack.push(new MethodContext(parent, sourceModule, rootNode,
+				node, argumentsList.toArray(new String[argumentsList.size()]),
+				argTypes.toArray(new IEvaluatedType[argTypes.size()])));
+
 		boolean visitGeneral = visitGeneral(node);
 		if (!visitGeneral) {
 			contextStack.pop();

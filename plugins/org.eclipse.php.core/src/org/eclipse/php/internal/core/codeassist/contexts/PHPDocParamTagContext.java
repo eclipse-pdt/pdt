@@ -15,19 +15,23 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 
 /**
- * This context represents the state when staying after 'param' tag in PHPDoc block
- * <br/>Examples:
+ * This context represents the state when staying after 'param' tag in PHPDoc
+ * block <br/>
+ * Examples:
+ * 
  * <pre>
  *   1. /**
  *       * @param |
  *   2. /**
  *       * @param $a|
  * </pre>
+ * 
  * @author michael
  */
 public class PHPDocParamTagContext extends PHPDocTagContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

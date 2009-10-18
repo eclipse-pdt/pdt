@@ -14,9 +14,10 @@ package org.eclipse.php.internal.core.ast.visitor;
 import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
- * Trivial (empty) implementation of {@link Visitor}
- * This visitor traverses over the AST by default 
- * @see Visitor 
+ * Trivial (empty) implementation of {@link Visitor} This visitor traverses over
+ * the AST by default
+ * 
+ * @see Visitor
  */
 public abstract class AbstractVisitor implements Visitor {
 
@@ -26,18 +27,18 @@ public abstract class AbstractVisitor implements Visitor {
 	public void preVisit(ASTNode node) {
 		// default implementation: do nothing
 	}
-	
+
 	/**
 	 *@see Visitor#postVisit(ASTNode)
 	 */
 	public void postVisit(ASTNode node) {
 		// default implementation: do nothing
 	}
-	
+
 	public boolean visit(ASTNode node) {
 		return true;
 	}
-	
+
 	public boolean visit(ArrayAccess arrayAccess) {
 		return true;
 	}
@@ -165,11 +166,11 @@ public abstract class AbstractVisitor implements Visitor {
 	public boolean visit(GlobalStatement globalStatement) {
 		return true;
 	}
-	
+
 	public boolean visit(GotoLabel gotoLabel) {
 		return true;
 	}
-	
+
 	public boolean visit(GotoStatement gotoStatement) {
 		return true;
 	}
@@ -205,7 +206,7 @@ public abstract class AbstractVisitor implements Visitor {
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		return true;
 	}
-	
+
 	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
 		return true;
 	}
@@ -269,7 +270,7 @@ public abstract class AbstractVisitor implements Visitor {
 	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
 		return true;
 	}
-	
+
 	public boolean visit(StaticConstantAccess classConstantAccess) {
 		return true;
 	}
@@ -444,7 +445,7 @@ public abstract class AbstractVisitor implements Visitor {
 
 	public void endVisit(InterfaceDeclaration interfaceDeclaration) {
 	}
-	
+
 	public void endVisit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
 	}
 
@@ -456,7 +457,7 @@ public abstract class AbstractVisitor implements Visitor {
 
 	public void endVisit(MethodInvocation methodInvocation) {
 	}
-	
+
 	public void endVisit(NamespaceDeclaration namespaceDeclaration) {
 	}
 
@@ -492,7 +493,7 @@ public abstract class AbstractVisitor implements Visitor {
 
 	public void endVisit(SingleFieldDeclaration singleFieldDeclaration) {
 	}
-	
+
 	public void endVisit(StaticConstantAccess staticConstantAccess) {
 	}
 
@@ -519,7 +520,7 @@ public abstract class AbstractVisitor implements Visitor {
 
 	public void endVisit(UnaryOperation unaryOperation) {
 	}
-	
+
 	public void endVisit(UseStatement useStatement) {
 	}
 

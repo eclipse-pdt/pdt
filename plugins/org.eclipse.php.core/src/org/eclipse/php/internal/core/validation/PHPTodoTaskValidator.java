@@ -38,30 +38,34 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 
 /**
- * This Validator creates (and removes) the task markers that will eventually show up in the task view 
- * @author Eden K.,2008 
- *
+ * This Validator creates (and removes) the task markers that will eventually
+ * show up in the task view
+ * 
+ * @author Eden K.,2008
+ * 
  */
 public class PHPTodoTaskValidator extends AbstractValidator {
 
 	protected TaskTag[] taskTags = null;
 
-	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
+	public ValidationResult validate(IResource resource, int kind,
+			ValidationState state, IProgressMonitor monitor) {
 		// process only PHP files
-		if (resource.getType() != IResource.FILE || !(PHPToolkitUtil.isPhpFile((IFile) resource))) {
+		if (resource.getType() != IResource.FILE
+				|| !(PHPToolkitUtil.isPhpFile((IFile) resource))) {
 			return null;
 		}
 
 		ValidationResult result = new ValidationResult();
 		IReporter reporter = result.getReporter(monitor);
 		validateFile(reporter, (IFile) resource, kind);
-		
-	
+
 		return result;
 	}
 
 	/**
-	 * Search for tasks in the validated file and create a marker for each task found 
+	 * Search for tasks in the validated file and create a marker for each task
+	 * found
 	 */
 	public void validateFile(IReporter reporter, IFile file, int kind) {
 
@@ -74,30 +78,38 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 		// remove the markers currently existing for this resource
 		// in case of project/folder, the markers are deleted recursively
 		try {
-			file.deleteMarkers(PHPCoreConstants.PHP_MARKER_TYPE, false, IResource.DEPTH_INFINITE);
+			file.deleteMarkers(PHPCoreConstants.PHP_MARKER_TYPE, false,
+					IResource.DEPTH_INFINITE);
 		} catch (CoreException e) {
 		}
 		IStructuredModel model = null;
 		try {
-			// desperately try to get the model :) In case it doesn't exist yet, create it
+			// desperately try to get the model :) In case it doesn't exist yet,
+			// create it
 			try {
-				model = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+				model = StructuredModelManager.getModelManager()
+						.getExistingModelForRead(file);
 			} catch (Exception e) {
-				model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+				model = StructuredModelManager.getModelManager()
+						.createUnManagedStructuredModelFor(file);
 			}
 			if (model == null) {
 				return;
 			}
-			//collect the tasks info and report 
-			IStructuredDocumentRegion[] sdRegions = model.getStructuredDocument().getStructuredDocumentRegions();
+			// collect the tasks info and report
+			IStructuredDocumentRegion[] sdRegions = model
+					.getStructuredDocument().getStructuredDocumentRegions();
 			for (IStructuredDocumentRegion structuredDocumentRegion : sdRegions) {
 
-				IStructuredDocument document = structuredDocumentRegion.getParentDocument();
+				IStructuredDocument document = structuredDocumentRegion
+						.getParentDocument();
 
-				ITextRegionList textRegions = structuredDocumentRegion.getRegions();
+				ITextRegionList textRegions = structuredDocumentRegion
+						.getRegions();
 				for (int i = 0; i < textRegions.size(); i++) {
 					ITextRegion textRegion = textRegions.get(i);
-					int regionStart = structuredDocumentRegion.getStartOffset(textRegion);
+					int regionStart = structuredDocumentRegion
+							.getStartOffset(textRegion);
 
 					// special handling for php tags inside html
 					if (textRegion instanceof ContextRegionContainer) {
@@ -109,33 +121,43 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 						PhpScriptRegion scriptRegion = (PhpScriptRegion) textRegion;
 						try {
 
-							//go over the text regions and look for the tasks
-							ITextRegion[] phpTokens = scriptRegion.getPhpTokens(0, textRegion.getLength());
+							// go over the text regions and look for the tasks
+							ITextRegion[] phpTokens = scriptRegion
+									.getPhpTokens(0, textRegion.getLength());
 							for (int j = 0; j < phpTokens.length; j++) {
 								ITextRegion phpToken = phpTokens[j];
-								if (phpToken.getType().equals(PHPRegionTypes.TASK)) {
-									// get the task information from the document 									
-									int offset = regionStart + phpToken.getStart();
+								if (phpToken.getType().equals(
+										PHPRegionTypes.TASK)) {
+									// get the task information from the
+									// document
+									int offset = regionStart
+											+ phpToken.getStart();
 									int length = phpToken.getLength();
 
-									String taskKeyword = document.get(offset, phpToken.getLength());
+									String taskKeyword = document.get(offset,
+											phpToken.getLength());
 									int priority = getTaskPriority(taskKeyword);
 
-									// get the actual message for this task - if any
+									// get the actual message for this task - if
+									// any
 									if (j + 1 < phpTokens.length) {
 										ITextRegion phpNextToken = phpTokens[j + 1];
-										length = length + phpNextToken.getLength();
+										length = length
+												+ phpNextToken.getLength();
 									}
 
 									try {
-										reportTask(document, file, reporter, offset, length, priority);
+										reportTask(document, file, reporter,
+												offset, length, priority);
 									} catch (CoreException e) {
-										Logger.logException("Failed creating task", e); //$NON-NLS-1$
+										Logger.logException(
+												"Failed creating task", e); //$NON-NLS-1$
 									}
 								}
 							}
 						} catch (BadLocationException e) {
-							Logger.logException(CoreMessages.getString("PHPTodoTaskAstParser_0"), e);
+							Logger.logException(CoreMessages
+									.getString("PHPTodoTaskAstParser_0"), e);
 						}
 					}
 				}
@@ -153,8 +175,8 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	}
 
 	/**
-	 * Get the project and populate the task tags list
-	 * from the preferences
+	 * Get the project and populate the task tags list from the preferences
+	 * 
 	 * @param helper
 	 */
 	private void populateTaskTags(IFile file) {
@@ -167,6 +189,7 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 
 	/**
 	 * Get the task tags from the preferences
+	 * 
 	 * @param project
 	 * @param taskTagsProvider
 	 */
@@ -183,12 +206,14 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	 * @return the IFile
 	 */
 	public IFile getFile(String delta) {
-		IResource res = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
+		IResource res = ResourcesPlugin.getWorkspace().getRoot().getFile(
+				new Path(delta));
 		return res instanceof IFile ? (IFile) res : null;
 	}
 
 	/**
 	 * Get the task priority according to the preferences
+	 * 
 	 * @return
 	 */
 	private int getTaskPriority(String taskStr) {
@@ -206,28 +231,32 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 
 	/**
 	 * Reports the task
+	 * 
 	 * @param document
 	 * @param taskReporter
 	 * @param offset
 	 * @param length
-	 * @param priority 
-	 * @throws BadLocationException 
-	 * @throws CoreException 
+	 * @param priority
+	 * @throws BadLocationException
+	 * @throws CoreException
 	 */
-	private void reportTask(IStructuredDocument document, IFile file, IReporter taskReporter, int offset, int length, int priority) throws BadLocationException, CoreException {
+	private void reportTask(IStructuredDocument document, IFile file,
+			IReporter taskReporter, int offset, int length, int priority)
+			throws BadLocationException, CoreException {
 		int lineNumber = document.getLineOfOffset(offset);
 
 		String taskStr = getTaskStr(document, lineNumber, offset, length);
 		// the end of the string to be highlighted
 		int charEnd = offset + taskStr.length();
 
-		// report the task		
+		// report the task
 		createMarker(file, taskStr, lineNumber, priority, offset, charEnd);
 
 	}
 
 	/**
 	 * Creates a PHP task marker based on the given information
+	 * 
 	 * @param file
 	 * @param taskStr
 	 * @param lineNumber
@@ -236,7 +265,8 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	 * @param charEnd
 	 * @throws CoreException
 	 */
-	private void createMarker(IFile file, String taskStr, int lineNumber, int priority, int offset, int charEnd) throws CoreException {
+	private void createMarker(IFile file, String taskStr, int lineNumber,
+			int priority, int offset, int charEnd) throws CoreException {
 		IMarker marker = file.createMarker(PHPCoreConstants.PHP_MARKER_TYPE);
 
 		marker.setAttribute(IMarker.TASK, true);
@@ -251,6 +281,7 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 
 	/**
 	 * Gets the Task message from the document
+	 * 
 	 * @param document
 	 * @param lineNumber
 	 * @param offset
@@ -258,13 +289,15 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	private String getTaskStr(IStructuredDocument document, int lineNumber, int offset, int length) throws BadLocationException {
-		//get line info to identify the end of the task
+	private String getTaskStr(IStructuredDocument document, int lineNumber,
+			int offset, int length) throws BadLocationException {
+		// get line info to identify the end of the task
 		IRegion lineInformation = document.getLineInformation(lineNumber);
 		int lineStart = lineInformation.getOffset();
 		int lineEnd = lineStart + lineInformation.getLength();
 
-		// identify the actual end of the task: either end of line or end of the token
+		// identify the actual end of the task: either end of line or end of the
+		// token
 		// we could have 2 tasks in the same line
 		int tokenEnd = offset + length;
 		int taskEnd = Math.min(tokenEnd, lineEnd);
@@ -277,9 +310,10 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	}
 
 	/**
-	 * Given a ContextRegionContainer, looks for the PHPScriptRegion in it
-	 * and return it. If the container does not contain a PHPScript region,
-	 * just return the given TextRegion
+	 * Given a ContextRegionContainer, looks for the PHPScriptRegion in it and
+	 * return it. If the container does not contain a PHPScript region, just
+	 * return the given TextRegion
+	 * 
 	 * @param textRegion
 	 * @return the PhpScript textRegion
 	 */

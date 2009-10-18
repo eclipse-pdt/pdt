@@ -23,7 +23,8 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
 
 /**
- * This evaluator determines types that array expression in foreach statement holds
+ * This evaluator determines types that array expression in foreach statement
+ * holds
  */
 public class ForeachStatementEvaluator extends GoalEvaluator {
 
@@ -35,14 +36,16 @@ public class ForeachStatementEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ForeachStatementGoal typedGoal = (ForeachStatementGoal) goal;
-		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), typedGoal.getExpression()) };
+		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
+				typedGoal.getExpression()) };
 	}
 
 	@SuppressWarnings("unchecked")
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (result instanceof MultiTypeType) {
 			List types = ((MultiTypeType) result).getTypes();
-			this.result = new AmbiguousType((IEvaluatedType[]) types.toArray(new IEvaluatedType[types.size()]));
+			this.result = new AmbiguousType((IEvaluatedType[]) types
+					.toArray(new IEvaluatedType[types.size()]));
 		}
 		return IGoal.NO_GOALS;
 	}

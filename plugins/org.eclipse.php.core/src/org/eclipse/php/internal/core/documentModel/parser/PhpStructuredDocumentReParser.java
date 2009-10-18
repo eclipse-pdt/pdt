@@ -19,16 +19,22 @@ import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 
 /**
  * Handles the php region when reparsing an XML/PHP structured document
+ * 
  * @author Roy, 2006
  */
-public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser {
+public class PhpStructuredDocumentReParser extends
+		XMLStructuredDocumentReParser {
 
 	public PhpStructuredDocumentReParser() {
 		super();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser#newInstance()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser
+	 * #newInstance()
 	 */
 	public IStructuredTextReParser newInstance() {
 		return new PhpStructuredDocumentReParser();
@@ -46,10 +52,12 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	}
 
 	/**
-	 * This function was added in order to support asp tags in PHP (bug fix #150363)
+	 * This function was added in order to support asp tags in PHP (bug fix
+	 * #150363)
 	 */
 	protected StructuredDocumentEvent checkForCrossStructuredDocumentRegionSyntax() {
-		StructuredDocumentEvent result = super.checkForCrossStructuredDocumentRegionSyntax();
+		StructuredDocumentEvent result = super
+				.checkForCrossStructuredDocumentRegionSyntax();
 		if (result == null) {
 			result = checkForCriticalKey("<%"); //$NON-NLS-1$
 			if (result == null)
@@ -62,21 +70,24 @@ public class PhpStructuredDocumentReParser extends XMLStructuredDocumentReParser
 	/**
 	 * Change PHP Script Regions nodes...
 	 */
-	protected StructuredDocumentEvent regionCheck(IStructuredDocumentRegion oldNode, IStructuredDocumentRegion newNode) {
-		final StructuredDocumentEvent event = super.regionCheck(oldNode, newNode);
-		
+	protected StructuredDocumentEvent regionCheck(
+			IStructuredDocumentRegion oldNode, IStructuredDocumentRegion newNode) {
+		final StructuredDocumentEvent event = super.regionCheck(oldNode,
+				newNode);
+
 		if (event instanceof RegionChangedEvent) {
 			RegionChangedEvent changedEvent = (RegionChangedEvent) event;
-			
+
 			if (changedEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
 				oldNode.setRegions(newNode.getRegions());
 			}
-		}		
+		}
 		return event;
 	}
 
 	/**
-	 * This implementation updates the php tokens model after updating WST editor model
+	 * This implementation updates the php tokens model after updating WST
+	 * editor model
 	 */
 	public StructuredDocumentEvent reparse() {
 		final StructuredDocumentEvent documentEvent = super.reparse();

@@ -22,7 +22,7 @@ import org.w3c.dom.Node;
  * Look for documentation at HTMLFormatterNoPHP
  * 
  * @author guy.g
- *
+ * 
  */
 public class HTMLFormatterNoPHPFactory {
 
@@ -38,29 +38,31 @@ public class HTMLFormatterNoPHPFactory {
 		return fInstance;
 	}
 
-	public IStructuredFormatter createFormatter(Node node, IStructuredFormatPreferences formatPreferences) {
+	public IStructuredFormatter createFormatter(Node node,
+			IStructuredFormatPreferences formatPreferences) {
 		IStructuredFormatter formatter = null;
 
 		switch (node.getNodeType()) {
-			case Node.ELEMENT_NODE:
-				if (node instanceof ElementImplForPhp && ((ElementImplForPhp) node).isPhpTag()) {
-					formatter = new PhpFormatter(start, length);
+		case Node.ELEMENT_NODE:
+			if (node instanceof ElementImplForPhp
+					&& ((ElementImplForPhp) node).isPhpTag()) {
+				formatter = new PhpFormatter(start, length);
 
-				} else {
-					formatter = new HTMLElementFormatterNoPHP();
-				}
+			} else {
+				formatter = new HTMLElementFormatterNoPHP();
+			}
 
-				break;
-			case Node.TEXT_NODE:
-				if (isEmbeddedCSS(node)) {
-					formatter = new EmbeddedCSSFormatterNoPHP();
-				} else {
-					formatter = new HTMLTextFormatterNoPHP();
-				}
-				break;
-			default:
-				formatter = new HTMLFormatterNoPHP();
-				break;
+			break;
+		case Node.TEXT_NODE:
+			if (isEmbeddedCSS(node)) {
+				formatter = new EmbeddedCSSFormatterNoPHP();
+			} else {
+				formatter = new HTMLTextFormatterNoPHP();
+			}
+			break;
+		default:
+			formatter = new HTMLFormatterNoPHP();
+			break;
 		}
 
 		// init FormatPreferences

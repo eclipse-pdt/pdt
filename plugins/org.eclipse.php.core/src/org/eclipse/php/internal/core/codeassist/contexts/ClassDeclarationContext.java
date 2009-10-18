@@ -15,30 +15,33 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
- * This context represents the class declaration state.
- * <br/>Examples:
+ * This context represents the class declaration state. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. class A implements |
  *  2. class A implements B|
  * </pre>
+ * 
  * @author michael
  */
 public abstract class ClassDeclarationContext extends TypeDeclarationContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 		int typeEnd = getTypeEnd();
 		if (typeEnd >= 6) {
 			TextSequence statementText = getStatementText();
-			String typeString = statementText.subSequence(typeEnd - 6, typeEnd - 1).toString();
+			String typeString = statementText.subSequence(typeEnd - 6,
+					typeEnd - 1).toString();
 			if ("class".equals(typeString)) {
 				return true;
 			}
-		}		
+		}
 		return false;
 	}
 }

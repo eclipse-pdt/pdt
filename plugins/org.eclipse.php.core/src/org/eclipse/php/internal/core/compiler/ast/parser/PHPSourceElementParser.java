@@ -22,7 +22,8 @@ public class PHPSourceElementParser extends AbstractSourceElementParser {
 
 	private ISourceModule fSourceModule;
 
-	public void parseSourceModule(ISourceModule module, ISourceModuleInfo astCache) {
+	public void parseSourceModule(ISourceModule module,
+			ISourceModuleInfo astCache) {
 		fSourceModule = module;
 		super.parseSourceModule(module, astCache);
 	}

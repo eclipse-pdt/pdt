@@ -29,7 +29,8 @@ public class AssignmentEvaluator extends GoalEvaluator {
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		Assignment expression = (Assignment) typedGoal.getExpression();
-		return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(), expression.getValue()) };
+		return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(),
+				expression.getValue()) };
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {

@@ -29,9 +29,10 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.NodeChangeEvent;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 
 /**
- * PreferencesPropagator for propagation of preferences events that arrive as a result from changes
- * in the workspace preferences store and in the project-specific preferences nodes.
- *
+ * PreferencesPropagator for propagation of preferences events that arrive as a
+ * result from changes in the workspace preferences store and in the
+ * project-specific preferences nodes.
+ * 
  * @author shalom
  */
 public class PreferencesPropagator extends AbstractPreferencesPropagator {
@@ -48,20 +49,26 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	/**
 	 * Constructs a new PreferencesPropagator.
 	 */
-	protected PreferencesPropagator(String nodeQualifier, Preferences preferenceStore) {
+	protected PreferencesPropagator(String nodeQualifier,
+			Preferences preferenceStore) {
 		this.nodeQualifier = nodeQualifier;
 		this.preferenceStore = preferenceStore;
 		install();
 	}
 
 	/**
-	 * Adds an IPreferencesPropagatorListener with a preferences key to listen to.
-	 *
-	 * @param listener			An IPreferencesPropagatorListener.
-	 * @param preferencesKey	The preferences key that will screen the relevant changes.
+	 * Adds an IPreferencesPropagatorListener with a preferences key to listen
+	 * to.
+	 * 
+	 * @param listener
+	 *            An IPreferencesPropagatorListener.
+	 * @param preferencesKey
+	 *            The preferences key that will screen the relevant changes.
 	 */
-	public void addPropagatorListener(IPreferencesPropagatorListener listener, String preferencesKey) {
-		addNodeListener(listener.getProject(), getProjectScope(listener.getProject()));
+	public void addPropagatorListener(IPreferencesPropagatorListener listener,
+			String preferencesKey) {
+		addNodeListener(listener.getProject(), getProjectScope(listener
+				.getProject()));
 		if (isProjectSpecific(listener.getProject(), preferencesKey)) {
 			addToProjectPropagator(listener, preferencesKey);
 		} else {
@@ -71,12 +78,17 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Removes an IPreferencesPropagatorListener that was assigned to listen to the given preferences key.
-	 *
-	 * @param listener			An IPreferencesPropagatorListener.
-	 * @param preferencesKey	The preferences key that is the screening key for the IPreferencesPropagatorListener.
+	 * Removes an IPreferencesPropagatorListener that was assigned to listen to
+	 * the given preferences key.
+	 * 
+	 * @param listener
+	 *            An IPreferencesPropagatorListener.
+	 * @param preferencesKey
+	 *            The preferences key that is the screening key for the
+	 *            IPreferencesPropagatorListener.
 	 */
-	public void removePropagatorListener(IPreferencesPropagatorListener listener, String preferencesKey) {
+	public void removePropagatorListener(
+			IPreferencesPropagatorListener listener, String preferencesKey) {
 		if (isProjectSpecific(listener.getProject(), preferencesKey)) {
 			removeFromProjectPropagator(listener, preferencesKey);
 		} else {
@@ -85,11 +97,14 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Sets a list of listeners for the given preferences key.
-	 * This list will replace any previous list of listeners for the key.
-	 *
-	 * @param listeners			A List of listeners that contains IPreferencesPropagatorListeners.
-	 * @param preferencesKey	The preferences key that will screen the relevant changes.
+	 * Sets a list of listeners for the given preferences key. This list will
+	 * replace any previous list of listeners for the key.
+	 * 
+	 * @param listeners
+	 *            A List of listeners that contains
+	 *            IPreferencesPropagatorListeners.
+	 * @param preferencesKey
+	 *            The preferences key that will screen the relevant changes.
 	 */
 	public void setPropagatorListeners(List listeners, String preferencesKey) {
 		super.setPropagatorListeners(listeners, preferencesKey);
@@ -126,7 +141,9 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 				ProjectScope scope = (ProjectScope) projectToScope.get(project);
 				IEclipsePreferences node = scope.getNode(nodeQualifier);
 				if (node != null) {
-					node.removeNodeChangeListener((INodeChangeListener) projectToNodeListener.get(project));
+					node
+							.removeNodeChangeListener((INodeChangeListener) projectToNodeListener
+									.get(project));
 				}
 			}
 		} catch (Exception e) {
@@ -137,7 +154,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 			((ProjectPreferencesPropagator) propagators.next()).uninstall();
 		}
 
-		preferenceChangeListeners = null; // TODO - remove the listening, if needed ???
+		preferenceChangeListeners = null; // TODO - remove the listening, if
+											// needed ???
 		projectToScope = null;
 		projectToPropagator = null;
 		projectToNodeListener = null;
@@ -145,37 +163,44 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/*
-	 * Add the listener to a ProjectPreferencesPropagator.
-	 * Create a new propagator if needed.
+	 * Add the listener to a ProjectPreferencesPropagator. Create a new
+	 * propagator if needed.
 	 */
-	private void addToProjectPropagator(IPreferencesPropagatorListener listener, String preferencesKey) {
-		ProjectPreferencesPropagator propagator = (ProjectPreferencesPropagator) projectToPropagator.get(listener.getProject());
+	private void addToProjectPropagator(
+			IPreferencesPropagatorListener listener, String preferencesKey) {
+		ProjectPreferencesPropagator propagator = (ProjectPreferencesPropagator) projectToPropagator
+				.get(listener.getProject());
 		if (propagator == null) {
-			propagator = new ProjectPreferencesPropagator(listener.getProject(), nodeQualifier);
+			propagator = new ProjectPreferencesPropagator(
+					listener.getProject(), nodeQualifier);
 			projectToPropagator.put(listener.getProject(), propagator);
 		}
 		propagator.addPropagatorListener(listener, preferencesKey);
 	}
 
 	/*
-	 * Removes a listener from a ProjectPreferencesPropagator.
-	 * If not ProjectPreferencesPropagator exists, nothing will happen.
+	 * Removes a listener from a ProjectPreferencesPropagator. If not
+	 * ProjectPreferencesPropagator exists, nothing will happen.
 	 */
-	private void removeFromProjectPropagator(IPreferencesPropagatorListener listener, String preferencesKey) {
-		ProjectPreferencesPropagator propagator = (ProjectPreferencesPropagator) projectToPropagator.get(listener.getProject());
+	private void removeFromProjectPropagator(
+			IPreferencesPropagatorListener listener, String preferencesKey) {
+		ProjectPreferencesPropagator propagator = (ProjectPreferencesPropagator) projectToPropagator
+				.get(listener.getProject());
 		if (propagator != null) {
 			propagator.removePropagatorListener(listener, preferencesKey);
 		}
 	}
 
 	/*
-	 * Returns true if the given project has a specific settings for the given key; false, otherwise.
+	 * Returns true if the given project has a specific settings for the given
+	 * key; false, otherwise.
 	 */
 	private boolean isProjectSpecific(IProject project, String preferencesKey) {
 		ProjectScope projectScope = getProjectScope(project);
 		IPath location = projectScope.getLocation();
 		if (location != null && new File(location.toOSString()).exists()) {
-			return projectScope.getNode(nodeQualifier).get(preferencesKey, null) != null;
+			return projectScope.getNode(nodeQualifier)
+					.get(preferencesKey, null) != null;
 		}
 		return false;
 	}
@@ -202,32 +227,40 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 		}
 		IEclipsePreferences node = projectScope.getNode(nodeQualifier);
 		if (node != null) {
-			IEclipsePreferences.INodeChangeListener nodeListener = new InnerNodeChangeListener(project);
-			((IEclipsePreferences) node.parent()).addNodeChangeListener(nodeListener);
+			IEclipsePreferences.INodeChangeListener nodeListener = new InnerNodeChangeListener(
+					project);
+			((IEclipsePreferences) node.parent())
+					.addNodeChangeListener(nodeListener);
 			projectToNodeListener.put(project, nodeListener);
 			if (!preferenceChangeListeners.containsValue(node)) {
-				IPreferenceChangeListener changeListener = new NodePreferenceChangeListener(project);
+				IPreferenceChangeListener changeListener = new NodePreferenceChangeListener(
+						project);
 				node.addPreferenceChangeListener(changeListener);
 				preferenceChangeListeners.put(changeListener, node);
 			}
 		}
 	}
 
-	private void notifyEvent(PreferencesPropagatorEvent event, String propertyKey, IProject project) {
+	private void notifyEvent(PreferencesPropagatorEvent event,
+			String propertyKey, IProject project) {
 		synchronized (lock) {
 			if (project != null) {
-				// The event arrived from the NodePreferenceChangeListener when we moved to a project-specific settings.
-				ProjectPreferencesPropagator ppp = (ProjectPreferencesPropagator) projectToPropagator.get(project);
+				// The event arrived from the NodePreferenceChangeListener when
+				// we moved to a project-specific settings.
+				ProjectPreferencesPropagator ppp = (ProjectPreferencesPropagator) projectToPropagator
+						.get(project);
 				if (ppp == null) {
-					ppp = new ProjectPreferencesPropagator(project, nodeQualifier);
+					ppp = new ProjectPreferencesPropagator(project,
+							nodeQualifier);
 					projectToPropagator.put(project, ppp);
 				}
 				ppp.notifyPropagatorEvent(event);
 			} else {
 				List list = getPropagatorListeners(propertyKey);
-				if (list==null)
+				if (list == null)
 					return;
-				IPreferencesPropagatorListener[] listeners = new IPreferencesPropagatorListener[list.size()];
+				IPreferencesPropagatorListener[] listeners = new IPreferencesPropagatorListener[list
+						.size()];
 				list.toArray(listeners);
 				for (IPreferencesPropagatorListener element : listeners) {
 					element.preferencesEventOccured(event);
@@ -237,10 +270,11 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/*
-	 * An inner node change listener that should listen to any change in the project-scope
-	 * parent node and should make all the needed listener swaps.
+	 * An inner node change listener that should listen to any change in the
+	 * project-scope parent node and should make all the needed listener swaps.
 	 */
-	private class InnerNodeChangeListener implements IEclipsePreferences.INodeChangeListener {
+	private class InnerNodeChangeListener implements
+			IEclipsePreferences.INodeChangeListener {
 
 		private IProject project;
 
@@ -249,8 +283,9 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 		}
 
 		/*
-		 * When a node is added, there is a move for a project-specific prefernces, thus, we should
-		 * divert all the listeners for the project to the ProjectPreferencesPropagator.
+		 * When a node is added, there is a move for a project-specific
+		 * prefernces, thus, we should divert all the listeners for the project
+		 * to the ProjectPreferencesPropagator.
 		 */
 		public void added(NodeChangeEvent event) {
 			IEclipsePreferences pNode = null;
@@ -260,15 +295,20 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 				return;
 			}
 			if (!preferenceChangeListeners.containsValue(pNode)) {
-				IPreferenceChangeListener changeListener = new NodePreferenceChangeListener(project);
+				IPreferenceChangeListener changeListener = new NodePreferenceChangeListener(
+						project);
 				pNode.addPreferenceChangeListener(changeListener);
 				preferenceChangeListeners.put(changeListener, pNode);
 			}
 		}
 
 		/*
-		 *  (non-Javadoc)
-		 * @see org.eclipse.core.runtime.preferences.IEclipsePreferences$INodeChangeListener#removed(org.eclipse.core.runtime.preferences.IEclipsePreferences.NodeChangeEvent)
+		 * (non-Javadoc)
+		 * 
+		 * @seeorg.eclipse.core.runtime.preferences.
+		 * IEclipsePreferences$INodeChangeListener
+		 * #removed(org.eclipse.core.runtime
+		 * .preferences.IEclipsePreferences.NodeChangeEvent)
 		 */
 		public void removed(NodeChangeEvent event) {
 
@@ -278,7 +318,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 				Iterator keys = preferenceChangeListeners.keySet().iterator();
 				while (keys.hasNext()) {
 					Object key = keys.next();
-					IEclipsePreferences aNode = (IEclipsePreferences) preferenceChangeListeners.get(key);
+					IEclipsePreferences aNode = (IEclipsePreferences) preferenceChangeListeners
+							.get(key);
 					if (aNode == childNode) {
 						preferenceChangeListeners.remove(key);
 						return;
@@ -291,7 +332,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	/*
 	 * An inner preferences node change listener
 	 */
-	public class NodePreferenceChangeListener implements IPreferenceChangeListener {
+	public class NodePreferenceChangeListener implements
+			IPreferenceChangeListener {
 
 		private IProject project;
 
@@ -306,10 +348,13 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 				// We are moving from the project scope to the workspace scope
 				removeFromProjectPropagator(key, project);
 			} else {
-				// We are moving from the workspace to the project specific preferences
+				// We are moving from the workspace to the project specific
+				// preferences
 				moveToProjectPropagator(key, project);
 			}
-			PreferencesPropagatorEvent e = new PreferencesPropagatorEvent(event.getSource(), event.getOldValue(), event.getNewValue(), event.getKey());
+			PreferencesPropagatorEvent e = new PreferencesPropagatorEvent(event
+					.getSource(), event.getOldValue(), event.getNewValue(),
+					event.getKey());
 			notifyEvent(e, key, (newValue == null) ? null : project);
 		}
 	}
@@ -330,7 +375,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 		}
 		for (IPreferencesPropagatorListener listener : listeners) {
 			if (project.equals(listener.getProject())) {
-				// Move the listener from this propagator to the project specific preferences propagator
+				// Move the listener from this propagator to the project
+				// specific preferences propagator
 				super.removePropagatorListener(listener, key);
 				addToProjectPropagator(listener, key);
 			}
@@ -342,14 +388,18 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	 */
 	private void removeFromProjectPropagator(String key, IProject project) {
 		synchronized (lock) {
-			ProjectPreferencesPropagator propagator = (ProjectPreferencesPropagator) projectToPropagator.get(project);
+			ProjectPreferencesPropagator propagator = (ProjectPreferencesPropagator) projectToPropagator
+					.get(project);
 			if (propagator != null) {
-				// Remove the listeners from the project propagator and place them in this propagator.
+				// Remove the listeners from the project propagator and place
+				// them in this propagator.
 				List listeners = propagator.removePropagatorListeners(key);
 				if (listeners != null && listeners.size() > 0) {
 					Iterator iter = listeners.iterator();
 					while (iter.hasNext()) {
-						addPropagatorListener((IPreferencesPropagatorListener) iter.next(), key);
+						addPropagatorListener(
+								(IPreferencesPropagatorListener) iter.next(),
+								key);
 					}
 				}
 			}
@@ -357,15 +407,19 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/*
-	 * An inner IPropertyChangeListener that listens to the workspace changes and notify all the
-	 * registered listeners.
+	 * An inner IPropertyChangeListener that listens to the workspace changes
+	 * and notify all the registered listeners.
 	 */
-	private class InnerPropertyChangeListener implements IPropertyChangeListener {
+	private class InnerPropertyChangeListener implements
+			IPropertyChangeListener {
 
 		public void propertyChange(PropertyChangeEvent event) {
-			// Collect and notify the listeners that are defined to listen to workspace preferences changes
+			// Collect and notify the listeners that are defined to listen to
+			// workspace preferences changes
 			// for the arrived event.
-			PreferencesPropagatorEvent e = new PreferencesPropagatorEvent(event.getSource(), event.getOldValue(), event.getNewValue(), event.getProperty());
+			PreferencesPropagatorEvent e = new PreferencesPropagatorEvent(event
+					.getSource(), event.getOldValue(), event.getNewValue(),
+					event.getProperty());
 			notifyEvent(e, event.getProperty(), null);
 		}
 	}

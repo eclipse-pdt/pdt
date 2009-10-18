@@ -14,19 +14,22 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 
-
 /**
- * This context represents the state when staying in a function parameter variable.
- * <br/>Examples:
+ * This context represents the state when staying in a function parameter
+ * variable. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. function foo($a|) {}
  *  2. function foo($|) {}
  * </pre>
+ * 
  * @author michael
  */
 public class FunctionParameterTypeContext extends FunctionParameterContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

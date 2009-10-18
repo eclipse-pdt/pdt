@@ -17,36 +17,40 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
- * This context represents the state when staying in a method declaration on the method name.
- * <br/>Examples:
+ * This context represents the state when staying in a method declaration on the
+ * method name. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. function |
  *  2. function foo|
- *  etc... 
+ *  etc...
  * </pre>
+ * 
  * @author michael
  */
 public class MethodNameContext extends FunctionDeclarationContext {
-	
+
 	private IType declaringClass;
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		TextSequence statementText = getStatementText();
 		int functionEnd = getFunctionEnd();
-		
+
 		for (int i = statementText.length() - 1; i >= functionEnd; i--) {
 			if (statementText.charAt(i) == '(') {
 				return false;
 			}
 		}
-		
-		declaringClass = PHPModelUtils.getCurrentType(getSourceModule(), statementText.getOriginalOffset(functionEnd));
+
+		declaringClass = PHPModelUtils.getCurrentType(getSourceModule(),
+				statementText.getOriginalOffset(functionEnd));
 		if (declaringClass == null) {
 			return false;
 		}
@@ -55,6 +59,7 @@ public class MethodNameContext extends FunctionDeclarationContext {
 
 	/**
 	 * Returns the method class
+	 * 
 	 * @return
 	 */
 	public IType getDeclaringClass() {

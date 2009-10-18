@@ -255,7 +255,8 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 
-	public boolean endvisit(ReflectionArrayVariableReference s) throws Exception {
+	public boolean endvisit(ReflectionArrayVariableReference s)
+			throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
@@ -265,7 +266,8 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 
-	public boolean endvisit(ReflectionStaticMethodInvocation s) throws Exception {
+	public boolean endvisit(ReflectionStaticMethodInvocation s)
+			throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
@@ -389,7 +391,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		endvisitGeneral(s);
 		return false;
 	}
-	
+
 	public boolean endvisit(LambdaFunctionDeclaration s) throws Exception {
 		endvisitGeneral(s);
 		return false;
@@ -687,7 +689,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	public boolean visit(GotoStatement s) throws Exception {
 		return visitGeneral(s);
 	}
-	
+
 	public boolean visit(LambdaFunctionDeclaration s) throws Exception {
 		return visitGeneral(s);
 	}

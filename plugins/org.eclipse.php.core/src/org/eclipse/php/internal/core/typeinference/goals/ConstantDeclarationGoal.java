@@ -19,7 +19,8 @@ public class ConstantDeclarationGoal extends AbstractGoal {
 	private String constantName;
 	private String typeName;
 
-	public ConstantDeclarationGoal(IContext context, String constantName, String typeName) {
+	public ConstantDeclarationGoal(IContext context, String constantName,
+			String typeName) {
 		super(context);
 		this.constantName = constantName;
 		this.typeName = typeName;
@@ -36,8 +37,10 @@ public class ConstantDeclarationGoal extends AbstractGoal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((constantName == null) ? 0 : constantName.hashCode());
-		result = prime * result + ((typeName == null) ? 0 : typeName.hashCode());
+		result = prime * result
+				+ ((constantName == null) ? 0 : constantName.hashCode());
+		result = prime * result
+				+ ((typeName == null) ? 0 : typeName.hashCode());
 		return result;
 	}
 

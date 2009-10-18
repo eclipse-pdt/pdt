@@ -12,29 +12,31 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
-
 /**
- * This context represents the state when staying in a use statement in a alias part.
- * <br/>Examples:
+ * This context represents the state when staying in a use statement in a alias
+ * part. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. use A as |
  *  2. use A as B|
- *  etc... 
+ *  etc...
  * </pre>
+ * 
  * @author michael
  */
 public class UseAliasContext extends UseStatementContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		try {
 			String previousWord = getPreviousWord();
 			if ("as".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$

@@ -20,7 +20,9 @@ public interface IArgumentsContext {
 
 	/**
 	 * Returns evaluated type of the method argument by its name
-	 * @param name Argument name
+	 * 
+	 * @param name
+	 *            Argument name
 	 * @return
 	 */
 	IEvaluatedType getArgumentType(String name);

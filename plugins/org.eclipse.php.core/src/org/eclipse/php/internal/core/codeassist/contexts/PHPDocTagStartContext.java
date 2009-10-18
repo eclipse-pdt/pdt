@@ -16,8 +16,9 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
- * This context represents the state when staying inside of a PHPDoc tag.
- * <br/>Examples:
+ * This context represents the state when staying inside of a PHPDoc tag. <br/>
+ * Examples:
+ * 
  * <pre>
  *   1. /**
  *       * @|
@@ -25,11 +26,13 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  *   2. /**
  *       * @t|
  * </pre>
+ * 
  * @author michael
  */
 public class PHPDocTagStartContext extends PHPDocTagContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

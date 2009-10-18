@@ -28,10 +28,14 @@ public class PrefixExpressionEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		PrefixExpression prefixExpression = (PrefixExpression) typedGoal.getExpression();
+		PrefixExpression prefixExpression = (PrefixExpression) typedGoal
+				.getExpression();
 
-		// XXX: actually, we have to check the contents of the variable here, since for example typeof(++"abc")=string, but typeof(++"123")=integer ...
-		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), prefixExpression.getVariable()) };
+		// XXX: actually, we have to check the contents of the variable here,
+		// since for example typeof(++"abc")=string, but typeof(++"123")=integer
+		// ...
+		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
+				prefixExpression.getVariable()) };
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {

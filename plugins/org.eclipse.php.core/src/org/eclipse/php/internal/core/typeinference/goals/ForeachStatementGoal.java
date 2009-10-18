@@ -32,7 +32,8 @@ public class ForeachStatementGoal extends AbstractGoal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((expression == null) ? 0 : expression.hashCode());
+		result = prime * result
+				+ ((expression == null) ? 0 : expression.hashCode());
 		return result;
 	}
 

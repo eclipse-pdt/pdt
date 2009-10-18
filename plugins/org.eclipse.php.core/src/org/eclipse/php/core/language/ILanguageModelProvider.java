@@ -16,16 +16,18 @@ import org.eclipse.dltk.core.IScriptProject;
 
 /**
  * Provides PHP stub files for buiding PHP Language Library.
+ * 
  * @author michael
- *
+ * 
  */
 public interface ILanguageModelProvider {
 
 	/**
-	 * Returns path to directory that contains PHP stubs
-	 * used for building PHP Language Library.
+	 * Returns path to directory that contains PHP stubs used for building PHP
+	 * Language Library.
 	 * 
-	 * @param project Script project
+	 * @param project
+	 *            Script project
 	 * @return
 	 */
 	public IPath getPath(IScriptProject project);

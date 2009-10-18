@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- *
- * @author  erez
+ * 
+ * @author erez
  * @version
  */
 public class CollectionDecorator implements Collection {
@@ -88,7 +88,5 @@ public class CollectionDecorator implements Collection {
 	protected Collection getInnerCollection() {
 		return innerCollection;
 	}
-	
-	
 
 }

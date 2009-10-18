@@ -31,10 +31,12 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		ClassInstanceCreation expression = (ClassInstanceCreation) typedGoal.getExpression();
+		ClassInstanceCreation expression = (ClassInstanceCreation) typedGoal
+				.getExpression();
 		Expression className = expression.getClassName();
 		if (className instanceof TypeReference) {
-			return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), className) };
+			return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
+					className) };
 		}
 		result = UnknownType.INSTANCE;
 		return IGoal.NO_GOALS;

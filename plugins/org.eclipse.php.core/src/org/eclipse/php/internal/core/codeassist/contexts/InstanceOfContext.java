@@ -12,28 +12,29 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
-
 /**
- * This context represents state when staying in a 'instanceof' statement.
- * <br/>Examples:
+ * This context represents state when staying in a 'instanceof' statement. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. $a instanceof A|
  *  2. $a instanceof |
  * </pre>
+ * 
  * @author michael
  */
 public class InstanceOfContext extends StatementContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		try {
 			String previousWord = getPreviousWord();
 			if ("instanceof".equalsIgnoreCase(previousWord)) {
@@ -42,7 +43,7 @@ public class InstanceOfContext extends StatementContext {
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
-		
+
 		return false;
 	}
 }

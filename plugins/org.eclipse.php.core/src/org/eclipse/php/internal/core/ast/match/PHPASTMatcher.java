@@ -14,13 +14,12 @@ package org.eclipse.php.internal.core.ast.match;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 
-
 public class PHPASTMatcher extends ASTMatcher {
-	
+
 	public static boolean doNodesMatch(ASTNode one, ASTNode other) {
 		Assert.isNotNull(one);
 		Assert.isNotNull(other);
-		
+
 		return one.subtreeMatch(new PHPASTMatcher(), other);
 	}
 }

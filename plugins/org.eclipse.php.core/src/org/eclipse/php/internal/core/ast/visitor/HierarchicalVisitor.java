@@ -14,33 +14,35 @@ package org.eclipse.php.internal.core.ast.visitor;
 import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
- * <p>This class provides a convenient behaviour-only 
- * extension mechanism for the ASTNode hierarchy.
- * If you feel like you would like to add a method to
- * the ASTNode hierarchy (or a subtree of the hierarchy),
- * and you want to have different implementations
- * of it at different points in the hierarchy,
- * simply create a HierarchicalASTVisitor representing
- * the new method and all its implementations,
- * locating each implementation within the right
- * visit(XX) method.  If you wanted to add a method implementation to abstract
- * class Foo, an ASTNode descendant, put your implementation in visit(Foo). 
- * This class will provide appropriate dispatch, just as if the method
- * implementations had been added to the ASTNode hierarchy.
+ * <p>
+ * This class provides a convenient behaviour-only extension mechanism for the
+ * ASTNode hierarchy. If you feel like you would like to add a method to the
+ * ASTNode hierarchy (or a subtree of the hierarchy), and you want to have
+ * different implementations of it at different points in the hierarchy, simply
+ * create a HierarchicalASTVisitor representing the new method and all its
+ * implementations, locating each implementation within the right visit(XX)
+ * method. If you wanted to add a method implementation to abstract class Foo,
+ * an ASTNode descendant, put your implementation in visit(Foo). This class will
+ * provide appropriate dispatch, just as if the method implementations had been
+ * added to the ASTNode hierarchy.
  * </p>
  * 
- * <p><b>Details:<b></p>
- * 
- * <p>This class has a visit(XX node) method for every for every 
- * class (concrete or abstract) XX in the ASTNode hierarchy. In this class'
- * default implementations of these methods, the method corresponding to a given
- * ASTNode descendant class will call (and return the return value of) the
- * visit(YY) method for it's superclass YY, with the exception of the
- * visit(ASTNode) method which simply returns true, since ASTNode doesn't have a
- * superclass that is within the ASTNode hierarchy.
+ * <p>
+ * <b>Details:<b>
  * </p>
  * 
- * <p>Because of this organization, when visit(XX) methods  are overridden in a
+ * <p>
+ * This class has a visit(XX node) method for every for every class (concrete or
+ * abstract) XX in the ASTNode hierarchy. In this class' default implementations
+ * of these methods, the method corresponding to a given ASTNode descendant
+ * class will call (and return the return value of) the visit(YY) method for
+ * it's superclass YY, with the exception of the visit(ASTNode) method which
+ * simply returns true, since ASTNode doesn't have a superclass that is within
+ * the ASTNode hierarchy.
+ * </p>
+ * 
+ * <p>
+ * Because of this organization, when visit(XX) methods are overridden in a
  * subclass, and the visitor is applied to a node, only the most specialized
  * overridden method implementation for the node's type will be called, unless
  * this most specialized method calls other visit methods (this is discouraged)
@@ -50,17 +52,18 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  * superclass, YY.
  * </p>
  * 
- * <p>Thus, the dispatching behaviour achieved when 
- * HierarchicalASTVisitors' visit(XX) methods, corresponding to a particular
- * concrete or abstract ASTNode descendant class, are overridden is exactly
- * analogous to the dispatching behaviour obtained when method implementations
- * are added to the same ASTNode descendant classes.
+ * <p>
+ * Thus, the dispatching behaviour achieved when HierarchicalASTVisitors'
+ * visit(XX) methods, corresponding to a particular concrete or abstract ASTNode
+ * descendant class, are overridden is exactly analogous to the dispatching
+ * behaviour obtained when method implementations are added to the same ASTNode
+ * descendant classes.
  * </p>
  */
 public class HierarchicalVisitor extends AbstractVisitor {
-	
+
 	/**
-	 * Abstract Nodes that we added to the abstract visitor 
+	 * Abstract Nodes that we added to the abstract visitor
 	 */
 	public boolean visit(ASTNode node) {
 		return true;
@@ -69,7 +72,7 @@ public class HierarchicalVisitor extends AbstractVisitor {
 	public boolean visit(Statement statement) {
 		return visit((ASTNode) statement);
 	}
-	
+
 	public boolean visit(Expression expression) {
 		return visit((ASTNode) expression);
 	}
@@ -81,23 +84,23 @@ public class HierarchicalVisitor extends AbstractVisitor {
 	public boolean visit(VariableBase variableBase) {
 		return visit((Expression) variableBase);
 	}
-	
+
 	public boolean visit(Dispatch dispatch) {
 		return visit((VariableBase) dispatch);
 	}
-	
+
 	public boolean visit(StaticDispatch staticDispatch) {
 		return visit((VariableBase) staticDispatch);
 	}
-	
+
 	public boolean visit(BodyDeclaration bodyDeclaration) {
 		return visit((Statement) bodyDeclaration);
 	}
-	
+
 	/**
 	 * Redirect to the hierarchical node
 	 */
-	
+
 	public boolean visit(ArrayAccess arrayAccess) {
 		return visit((Variable) arrayAccess);
 	}
@@ -306,10 +309,10 @@ public class HierarchicalVisitor extends AbstractVisitor {
 	public boolean visit(Scalar scalar) {
 		return visit((Expression) scalar);
 	}
-	
+
 	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
 		return visit((ASTNode) singleFieldDeclaration);
-	}	
+	}
 
 	public boolean visit(StaticConstantAccess classConstantAccess) {
 		return visit((StaticDispatch) classConstantAccess);

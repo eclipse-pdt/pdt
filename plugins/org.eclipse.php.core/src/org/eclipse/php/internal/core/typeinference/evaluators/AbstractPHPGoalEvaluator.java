@@ -15,11 +15,11 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 
 public abstract class AbstractPHPGoalEvaluator extends GoalEvaluator {
-	
+
 	protected IGoal goal;
 
 	public AbstractPHPGoalEvaluator(IGoal goal) {
 		super(goal);
-		this.goal = goal; 
+		this.goal = goal;
 	}
 }

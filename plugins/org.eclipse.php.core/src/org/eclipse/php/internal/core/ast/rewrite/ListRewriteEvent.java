@@ -20,63 +20,69 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
  *
  */
 public class ListRewriteEvent extends RewriteEvent {
-	
-	public final static int NEW= 1;
-	public final static int OLD= 2;
-	public final static int BOTH= NEW | OLD;
-	
+
+	public final static int NEW = 1;
+	public final static int OLD = 2;
+	public final static int BOTH = NEW | OLD;
+
 	/** original list of 'ASTNode' */
 	private List originalNodes;
 
 	/** list of type 'RewriteEvent' */
 	private List listEntries;
-	
+
 	/**
-	 * Creates a ListRewriteEvent from the original ASTNodes. The resulting event
-	 * represents the unmodified list.
-	 * @param originalNodes The original nodes (type ASTNode) 
+	 * Creates a ListRewriteEvent from the original ASTNodes. The resulting
+	 * event represents the unmodified list.
+	 * 
+	 * @param originalNodes
+	 *            The original nodes (type ASTNode)
 	 */
 	public ListRewriteEvent(List originalNodes) {
-		this.originalNodes= new ArrayList(originalNodes);
+		this.originalNodes = new ArrayList(originalNodes);
 	}
 
 	/**
 	 * Creates a ListRewriteEvent from existing rewrite events.
-	 * @param children The rewrite events for this list.
+	 * 
+	 * @param children
+	 *            The rewrite events for this list.
 	 */
 	public ListRewriteEvent(RewriteEvent[] children) {
-		this.listEntries= new ArrayList(children.length * 2);
-		this.originalNodes= new ArrayList(children.length * 2);
-		for (int i= 0; i < children.length; i++) {
-			RewriteEvent curr= children[i];
+		this.listEntries = new ArrayList(children.length * 2);
+		this.originalNodes = new ArrayList(children.length * 2);
+		for (int i = 0; i < children.length; i++) {
+			RewriteEvent curr = children[i];
 			this.listEntries.add(curr);
 			if (curr.getOriginalValue() != null) {
 				this.originalNodes.add(curr.getOriginalValue());
 			}
 		}
 	}
-	
+
 	private List getEntries() {
 		if (this.listEntries == null) {
 			// create if not yet existing
-			int nNodes= this.originalNodes.size();
-			this.listEntries= new ArrayList(nNodes * 2);
-			for (int i= 0; i < nNodes; i++) {
-				ASTNode node= (ASTNode) this.originalNodes.get(i);
+			int nNodes = this.originalNodes.size();
+			this.listEntries = new ArrayList(nNodes * 2);
+			for (int i = 0; i < nNodes; i++) {
+				ASTNode node = (ASTNode) this.originalNodes.get(i);
 				// all nodes unchanged
 				this.listEntries.add(new NodeRewriteEvent(node, node));
 			}
 		}
 		return this.listEntries;
 	}
-		
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.internal.corext.dom.ASTRewriteChange#getChangeKind()
 	 */
 	public int getChangeKind() {
 		if (this.listEntries != null) {
-			for (int i= 0; i < this.listEntries.size(); i++) {
-				RewriteEvent curr= (RewriteEvent) this.listEntries.get(i);
+			for (int i = 0; i < this.listEntries.size(); i++) {
+				RewriteEvent curr = (RewriteEvent) this.listEntries.get(i);
 				if (curr.getChangeKind() != UNCHANGED) {
 					return CHILDREN_CHANGED;
 				}
@@ -85,59 +91,68 @@ public class ListRewriteEvent extends RewriteEvent {
 		return UNCHANGED;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.internal.corext.dom.ASTRewriteChange#isListChange()
 	 */
 	public boolean isListRewrite() {
 		return true;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.internal.corext.dom.RewriteEvent#getChildren()
 	 */
 	public RewriteEvent[] getChildren() {
-		List entries= getEntries();
-		return (RewriteEvent[]) entries.toArray(new RewriteEvent[entries.size()]);
+		List entries = getEntries();
+		return (RewriteEvent[]) entries
+				.toArray(new RewriteEvent[entries.size()]);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.internal.corext.dom.RewriteEvent#getOriginalNode()
 	 */
 	public Object getOriginalValue() {
 		return this.originalNodes;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.internal.corext.dom.RewriteEvent#getNewValue()
 	 */
 	public Object getNewValue() {
-		List entries= getEntries();
-		ArrayList res= new ArrayList(entries.size());
-		for (int i= 0; i < entries.size(); i++) {
-			RewriteEvent curr= (RewriteEvent) entries.get(i);
-			Object newVal= curr.getNewValue();
+		List entries = getEntries();
+		ArrayList res = new ArrayList(entries.size());
+		for (int i = 0; i < entries.size(); i++) {
+			RewriteEvent curr = (RewriteEvent) entries.get(i);
+			Object newVal = curr.getNewValue();
 			if (newVal != null) {
 				res.add(newVal);
 			}
 		}
 		return res;
-	}	
-	
+	}
+
 	// API to modify the list nodes
-	
+
 	public RewriteEvent removeEntry(ASTNode originalEntry) {
 		return replaceEntry(originalEntry, null);
 	}
-	
+
 	public RewriteEvent replaceEntry(ASTNode originalEntry, ASTNode newEntry) {
 		if (originalEntry == null) {
 			throw new IllegalArgumentException();
 		}
-		
-		List entries= getEntries();
-		int nEntries= entries.size();
-		for (int i= 0; i < nEntries; i++) {
-			NodeRewriteEvent curr= (NodeRewriteEvent) entries.get(i);
+
+		List entries = getEntries();
+		int nEntries = entries.size();
+		for (int i = 0; i < nEntries; i++) {
+			NodeRewriteEvent curr = (NodeRewriteEvent) entries.get(i);
 			if (curr.getOriginalValue() == originalEntry) {
 				curr.setNewValue(newEntry);
 				return curr;
@@ -145,21 +160,21 @@ public class ListRewriteEvent extends RewriteEvent {
 		}
 		return null;
 	}
-	
+
 	public void revertChange(NodeRewriteEvent event) {
 		Object originalValue = event.getOriginalValue();
-		if(originalValue == null) {
-			List entries= getEntries();
+		if (originalValue == null) {
+			List entries = getEntries();
 			entries.remove(event);
 		} else {
 			event.setNewValue(originalValue);
 		}
 	}
-	
+
 	public int getIndex(ASTNode node, int kind) {
-		List entries= getEntries();
-		for (int i= entries.size() - 1; i >= 0; i--) {
-			RewriteEvent curr= (RewriteEvent) entries.get(i);
+		List entries = getEntries();
+		for (int i = entries.size() - 1; i >= 0; i--) {
+			RewriteEvent curr = (RewriteEvent) entries.get(i);
 			if (((kind & OLD) != 0) && (curr.getOriginalValue() == node)) {
 				return i;
 			}
@@ -169,9 +184,9 @@ public class ListRewriteEvent extends RewriteEvent {
 		}
 		return -1;
 	}
-		
+
 	public RewriteEvent insert(ASTNode insertedNode, int insertIndex) {
-		NodeRewriteEvent change= new NodeRewriteEvent(null, insertedNode);
+		NodeRewriteEvent change = new NodeRewriteEvent(null, insertedNode);
 		if (insertIndex != -1) {
 			getEntries().add(insertIndex, change);
 		} else {
@@ -179,25 +194,28 @@ public class ListRewriteEvent extends RewriteEvent {
 		}
 		return change;
 	}
-	
+
 	public void setNewValue(ASTNode newValue, int insertIndex) {
-		NodeRewriteEvent curr= (NodeRewriteEvent) getEntries().get(insertIndex);
+		NodeRewriteEvent curr = (NodeRewriteEvent) getEntries()
+				.get(insertIndex);
 		curr.setNewValue(newValue);
 	}
-	
+
 	public int getChangeKind(int index) {
 		return ((NodeRewriteEvent) getEntries().get(index)).getChangeKind();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		StringBuffer buf= new StringBuffer();
+		StringBuffer buf = new StringBuffer();
 		buf.append(" [list change\n\t"); //$NON-NLS-1$
-		
-		RewriteEvent[] events= getChildren();
-		for (int i= 0; i < events.length; i++) {
+
+		RewriteEvent[] events = getChildren();
+		for (int i = 0; i < events.length; i++) {
 			if (i != 0) {
 				buf.append("\n\t"); //$NON-NLS-1$
 			}
@@ -207,6 +225,4 @@ public class ListRewriteEvent extends RewriteEvent {
 		return buf.toString();
 	}
 
-
-	
 }

@@ -11,16 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-
 /**
- * This context represents state when staying in a regular (non-declaration) code statement.
- * <br/>Examples:
+ * This context represents state when staying in a regular (non-declaration)
+ * code statement. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. |
- *  2. $this->|
+ *  2. $this-&gt;|
  *  3. foo|
  *  etc...
  * </pre>
+ * 
  * @author michael
  */
 public abstract class StatementContext extends CodeContext {

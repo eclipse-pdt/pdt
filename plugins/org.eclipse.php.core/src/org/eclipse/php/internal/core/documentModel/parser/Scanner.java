@@ -34,13 +34,15 @@ public interface Scanner {
 
 	/**
 	 * lex to the EOF. and return the ending state.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public Object getEndingState() throws IOException;
 
 	/**
 	 * lex to the end of the stream.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public String lexToEnd() throws IOException;
 
@@ -56,14 +58,14 @@ public interface Scanner {
 	public void getText(int start, int length, Segment s);
 
 	/**
-	 * reset to a new segment. this do not change the state of the lexer.
-	 * This method is used to scan nore than one segment as if the are one segment.
+	 * reset to a new segment. this do not change the state of the lexer. This
+	 * method is used to scan nore than one segment as if the are one segment.
 	 */
 	public void reset(char array[], int offset, int length);
 
 	/**
-	 * reset to a new segment. this do not change the state of the lexer.
-	 * This method is used to scan nore than one segment as if the are one segment.
+	 * reset to a new segment. this do not change the state of the lexer. This
+	 * method is used to scan nore than one segment as if the are one segment.
 	 */
 	public void reset(Segment s);
 

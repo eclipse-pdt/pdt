@@ -33,35 +33,38 @@ public class ScalarEvaluator extends FixedAnswerEvaluator {
 
 		int simpleType = SimpleType.TYPE_NONE;
 		switch (scalarType) {
-			case Scalar.TYPE_INT:
-			case Scalar.TYPE_REAL:
-				simpleType = SimpleType.TYPE_NUMBER;
+		case Scalar.TYPE_INT:
+		case Scalar.TYPE_REAL:
+			simpleType = SimpleType.TYPE_NUMBER;
+			break;
+		case Scalar.TYPE_STRING:
+			if ("null".equalsIgnoreCase(scalar.getValue())) {
+				simpleType = SimpleType.TYPE_NULL;
 				break;
-			case Scalar.TYPE_STRING:
-				if ("null".equalsIgnoreCase(scalar.getValue())) {
-					simpleType = SimpleType.TYPE_NULL;
-					break;
-				}
-				// checking specific case for "return $this;" statement
-				if ("this".equalsIgnoreCase(scalar.getValue())) {
-					IContext context = goal.getContext();
-					if (context instanceof MethodContext) {
-						MethodDeclaration methodNode = ((MethodContext) context).getMethodNode();
-						if (methodNode != null) {
-							String declaringTypeName = methodNode.getDeclaringTypeName();
-							if (declaringTypeName != null) {
-								IEvaluatedType resolved = PHPSimpleTypes.fromString(declaringTypeName);
-								if (resolved == null) {
-									return new PHPClassType(declaringTypeName);
-								}
+			}
+			// checking specific case for "return $this;" statement
+			if ("this".equalsIgnoreCase(scalar.getValue())) {
+				IContext context = goal.getContext();
+				if (context instanceof MethodContext) {
+					MethodDeclaration methodNode = ((MethodContext) context)
+							.getMethodNode();
+					if (methodNode != null) {
+						String declaringTypeName = methodNode
+								.getDeclaringTypeName();
+						if (declaringTypeName != null) {
+							IEvaluatedType resolved = PHPSimpleTypes
+									.fromString(declaringTypeName);
+							if (resolved == null) {
+								return new PHPClassType(declaringTypeName);
 							}
 						}
 					}
 				}
+			}
 
-			case Scalar.TYPE_SYSTEM:
-				simpleType = SimpleType.TYPE_STRING;
-				break;
+		case Scalar.TYPE_SYSTEM:
+			simpleType = SimpleType.TYPE_STRING;
+			break;
 		}
 		return new SimpleType(simpleType);
 	}

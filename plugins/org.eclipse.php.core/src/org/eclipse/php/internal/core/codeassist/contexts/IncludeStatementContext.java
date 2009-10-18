@@ -18,8 +18,9 @@ import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
- * This context represents state when staying in an include statement.
- * <br/>Examples:
+ * This context represents state when staying in an include statement. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. include '|
  *  2. include 'ab|
@@ -30,7 +31,8 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 
 	private int variantLength = 0;
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -39,12 +41,16 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 		return isIncludeStatement(statementText);
 	}
 
-	private final boolean isIncludeStatement(TextSequence statementText, String variant) {
-		if (statementText.length() < variant.length() ) {
+	private final boolean isIncludeStatement(TextSequence statementText,
+			String variant) {
+		if (statementText.length() < variant.length()) {
 			return false;
 		}
 		final int length = variant.length();
-		if (variant.equalsIgnoreCase(statementText.subSequence(0, length).toString()) && Character.isWhitespace(statementText.subSequence(length, length + 1).charAt(0))) {
+		if (variant.equalsIgnoreCase(statementText.subSequence(0, length)
+				.toString())
+				&& Character.isWhitespace(statementText.subSequence(length,
+						length + 1).charAt(0))) {
 			this.variantLength = variant.length();
 			return true;
 		}
@@ -58,15 +64,18 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 	public boolean isExclusive() {
 		return true;
 	}
-	
+
 	public String getPrefix() throws BadLocationException {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$
 		}
 		TextSequence statementText = getStatementText();
-		int prefixEnd = statementText.length();		
-		final TextSequence cutTextSequence = statementText.cutTextSequence(0, this.variantLength);
-		int prefixStart = PHPTextSequenceUtilities.readForwardUntilDelim(cutTextSequence, 0, new char[] {'\'', '"'});
-		return statementText.subSequence(this.variantLength + prefixStart + 1, prefixEnd).toString();
+		int prefixEnd = statementText.length();
+		final TextSequence cutTextSequence = statementText.cutTextSequence(0,
+				this.variantLength);
+		int prefixStart = PHPTextSequenceUtilities.readForwardUntilDelim(
+				cutTextSequence, 0, new char[] { '\'', '"' });
+		return statementText.subSequence(this.variantLength + prefixStart + 1,
+				prefixEnd).toString();
 	}
 }

@@ -29,7 +29,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 public class PHPFileVisitor implements IResourceProxyVisitor {
 
 	protected List fFiles = new ArrayList();
-	//	    private IContentType fContentTypeJSP = null;
+	// private IContentType fContentTypeJSP = null;
 	protected IReporter fReporter = null;
 
 	public PHPFileVisitor(IReporter reporter) {
@@ -55,19 +55,24 @@ public class PHPFileVisitor implements IResourceProxyVisitor {
 		return true;
 	}
 
-	// Simple check for php file. When create PHP file wizard exist should be able 
-	// to do a context check on file. 
+	// Simple check for php file. When create PHP file wizard exist should be
+	// able
+	// to do a context check on file.
 
 	protected boolean canHandle(IFile file) {
 		boolean result = false;
 		if (file != null) {
 			try {
-				IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+				IContentTypeManager contentTypeManager = Platform
+						.getContentTypeManager();
 
-				IContentDescription contentDescription = file.getContentDescription();
-				IContentType phpContentType = contentTypeManager.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+				IContentDescription contentDescription = file
+						.getContentDescription();
+				IContentType phpContentType = contentTypeManager
+						.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 				if (contentDescription != null) {
-					IContentType fileContentType = contentDescription.getContentType();
+					IContentType fileContentType = contentDescription
+							.getContentType();
 
 					if (phpContentType != null) {
 						if (fileContentType.isKindOf(phpContentType)) {

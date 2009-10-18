@@ -27,9 +27,11 @@ import org.w3c.dom.Node;
 
 /**
  * Represents elements in the dom model {@link DOMModelForPHP}
+ * 
  * @author Roy, 2007
  */
-public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, IImplForPhp {
+public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
+		IImplForPhp {
 
 	private IModelElement modelElement;
 
@@ -57,16 +59,15 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, I
 	}
 
 	/**
-	 * @see ElementStyleImpl#setOwnerDocument(Document)
-	 * make this method package visible
+	 * @see ElementStyleImpl#setOwnerDocument(Document) make this method package
+	 *      visible
 	 */
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
 
 	/**
-	 * @see setTagName(String)
-	 * make this method package visible
+	 * @see setTagName(String) make this method package visible
 	 */
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
@@ -86,7 +87,8 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, I
 	public INodeAdapter getExistingAdapter(Object type) {
 
 		// no validation or validation propagation for PHP tags
-		if (isPhpTag() && ValidationAdapter.class.isAssignableFrom((Class) type)) {
+		if (isPhpTag()
+				&& ValidationAdapter.class.isAssignableFrom((Class) type)) {
 			return nullValidator;
 		}
 		return super.getExistingAdapter(type);
@@ -101,7 +103,7 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, I
 		}
 		return prefix;
 	}
-	
+
 	public IModelElement getModelElement() {
 		return modelElement;
 	}
@@ -109,7 +111,7 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, I
 	public void setModelElement(IModelElement modelElement) {
 		this.modelElement = modelElement;
 	}
-	
+
 	@Override
 	public boolean isStartTagClosed() {
 		return isPhpTag() ? true : super.isStartTagClosed();

@@ -20,12 +20,12 @@ import org.eclipse.dltk.core.IScriptProject;
 /**
  * Include path entry
  */
-public class IncludePath implements IAdaptable{
+public class IncludePath implements IAdaptable {
 
 	protected boolean isBuildpath;
 	private Object entry;
 	private IProject fProject;
-	
+
 	public IncludePath(Object entry, IProject project) {
 		isBuildpath = (entry instanceof IBuildpathEntry);
 		this.entry = entry;
@@ -33,18 +33,20 @@ public class IncludePath implements IAdaptable{
 	}
 
 	public IncludePath(Object entry, IScriptProject scriptProject) {
-		this( entry, scriptProject.getProject());
+		this(entry, scriptProject.getProject());
 	}
 
 	/**
-	 * @return Include path entry. It's either {@link IBuildpathEntry} or {@link IResource} depending on kind 
+	 * @return Include path entry. It's either {@link IBuildpathEntry} or
+	 *         {@link IResource} depending on kind
 	 */
 	public Object getEntry() {
 		return entry;
 	}
 
 	/**
-	 * Returns whether this include path entry represents {@link IBuildpathEntry}
+	 * Returns whether this include path entry represents
+	 * {@link IBuildpathEntry}
 	 */
 	public boolean isBuildpath() {
 		return isBuildpath;
@@ -83,7 +85,8 @@ public class IncludePath implements IAdaptable{
 	}
 
 	public String toString() {
-		return new StringBuilder("Include Path [").append(entry.toString()).append(']').toString();
+		return new StringBuilder("Include Path [").append(entry.toString())
+				.append(']').toString();
 	}
 
 	public Object getAdapter(Class adapter) {
@@ -91,14 +94,11 @@ public class IncludePath implements IAdaptable{
 		return null;
 	}
 
-
-
 	/**
 	 * @return the scriptProject
 	 */
 	public IProject getProject() {
 		return fProject;
 	}
-	
-	
+
 }

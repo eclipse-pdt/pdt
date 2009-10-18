@@ -23,9 +23,8 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 public class PHPModelHandler extends AbstractModelHandler {
 
 	/**
-	 * Needs to match what's in plugin registry. 
-	 * In fact, can be overwritten at run time with 
-	 * what's in registry! (so should never be 'final')
+	 * Needs to match what's in plugin registry. In fact, can be overwritten at
+	 * run time with what's in registry! (so should never be 'final')
 	 */
 	private static String ModelHandlerID = "org.eclipse.php.core.documentModel.handler"; //$NON-NLS-1$
 

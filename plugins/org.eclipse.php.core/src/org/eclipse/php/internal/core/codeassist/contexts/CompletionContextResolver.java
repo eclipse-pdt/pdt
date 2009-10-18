@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 
 /**
  * Default implementation of the {@link ICompletionContextResolver}
+ * 
  * @author michael
  */
 public class CompletionContextResolver implements ICompletionContextResolver {
@@ -39,70 +40,65 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 	}
 
 	/**
-	 * Returns active completion context resolver. By default returns this class instance,
-	 * but may be overriden using extension point.
+	 * Returns active completion context resolver. By default returns this class
+	 * instance, but may be overriden using extension point.
 	 * 
 	 * @return array of active {@link ICompletionContextResolver}'s
 	 */
 	public static ICompletionContextResolver[] getActive() {
-		if (instances == null) { // not synchronized since we don't care about creating multiple instances of resolvers in worst case
+		if (instances == null) { // not synchronized since we don't care about
+									// creating multiple instances of resolvers
+									// in worst case
 
 			List<ICompletionContextResolver> resolvers = new LinkedList<ICompletionContextResolver>();
-			IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.completionContextResolvers");
+			IConfigurationElement[] elements = Platform.getExtensionRegistry()
+					.getConfigurationElementsFor(
+							"org.eclipse.php.core.completionContextResolvers");
 			for (IConfigurationElement element : elements) {
 				if (element.getName().equals("resolver")) {
 					try {
-						resolvers.add((ICompletionContextResolver) element.createExecutableExtension("class"));
+						resolvers.add((ICompletionContextResolver) element
+								.createExecutableExtension("class"));
 					} catch (CoreException e) {
 						PHPCorePlugin.log(e);
 					}
 				}
 			}
 			resolvers.add(new CompletionContextResolver()); // add default
-			instances = (ICompletionContextResolver[]) resolvers.toArray(new ICompletionContextResolver[resolvers.size()]);
+			instances = (ICompletionContextResolver[]) resolvers
+					.toArray(new ICompletionContextResolver[resolvers.size()]);
 		}
 		return instances;
 	}
-	
+
 	public ICompletionContext[] createContexts() {
-		return new ICompletionContext[] {
-			new PHPDocTagStartContext(),
-			new PHPDocParamTagContext(),
-			new PHPDocReturnTagContext(),
-			new ArrayKeyContext(),
-			new CatchTypeContext(),
-			new CatchVariableContext(),
-			new ClassDeclarationKeywordContext(),
-			new ClassExtendsContext(),
-			new ClassImplementsContext(),
-			new ClassInstantiationContext(),
-			new ClassObjMemberContext(),
-			new ClassStatementContext(),
-			new ClassStaticMemberContext(),
-			new FunctionParameterTypeContext(),
-			new FunctionParameterValueContext(),
-			new FunctionParameterVariableContext(),
-			new MethodNameContext(),
-			new GlobalStatementContext(),
-			new GlobalMethodStatementContext(),
-			new InstanceOfContext(),
-			new InterfaceExtendsContext(),
-			new InterfaceDeclarationKeywordContext(),
-			new UseAliasContext(),
-			new UseNameContext(),
-			new NamespaceMemberContext(),
-			new NamespaceNameContext(),
-			new NamespaceDeclContext(),
-			new IncludeStatementContext(),
-		};
+		return new ICompletionContext[] { new PHPDocTagStartContext(),
+				new PHPDocParamTagContext(), new PHPDocReturnTagContext(),
+				new ArrayKeyContext(), new CatchTypeContext(),
+				new CatchVariableContext(),
+				new ClassDeclarationKeywordContext(),
+				new ClassExtendsContext(), new ClassImplementsContext(),
+				new ClassInstantiationContext(), new ClassObjMemberContext(),
+				new ClassStatementContext(), new ClassStaticMemberContext(),
+				new FunctionParameterTypeContext(),
+				new FunctionParameterValueContext(),
+				new FunctionParameterVariableContext(),
+				new MethodNameContext(), new GlobalStatementContext(),
+				new GlobalMethodStatementContext(), new InstanceOfContext(),
+				new InterfaceExtendsContext(),
+				new InterfaceDeclarationKeywordContext(),
+				new UseAliasContext(), new UseNameContext(),
+				new NamespaceMemberContext(), new NamespaceNameContext(),
+				new NamespaceDeclContext(), new IncludeStatementContext(), };
 	}
 
-	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor, CompletionCompanion companion) {
+	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor, CompletionCompanion companion) {
 		List<ICompletionContext> result = new LinkedList<ICompletionContext>();
 		// find correct completion contexts according to known information:
 		for (ICompletionContext context : createContexts()) {
 			context.init(companion);
-			
+
 			try {
 				if (context.isValid(sourceModule, offset, requestor)) {
 					result.add(context);
@@ -111,7 +107,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				PHPCorePlugin.log(e);
 			}
 		}
-		
+
 		// remove exclusive contexts:
 		if (result.size() > 1) {
 			List<ICompletionContext> filteredResult = new LinkedList<ICompletionContext>();
@@ -122,7 +118,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 			}
 			result = filteredResult;
 		}
-		
+
 		return result.toArray(new ICompletionContext[result.size()]);
 	}
 }

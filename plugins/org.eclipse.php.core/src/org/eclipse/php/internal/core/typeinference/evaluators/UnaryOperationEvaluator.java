@@ -31,15 +31,16 @@ public class UnaryOperationEvaluator extends GoalEvaluator {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		UnaryOperation unaryOp = (UnaryOperation) typedGoal.getExpression();
 		switch (unaryOp.getOperatorType()) {
-			case UnaryOperation.OP_MINUS:
-			case UnaryOperation.OP_PLUS:
-				result = new SimpleType(SimpleType.TYPE_NUMBER);
-				break;
-			case UnaryOperation.OP_TILDA:
-				return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), unaryOp.getExpr()) };
-			case UnaryOperation.OP_NOT:
-				result = new SimpleType(SimpleType.TYPE_BOOLEAN);
-				break;
+		case UnaryOperation.OP_MINUS:
+		case UnaryOperation.OP_PLUS:
+			result = new SimpleType(SimpleType.TYPE_NUMBER);
+			break;
+		case UnaryOperation.OP_TILDA:
+			return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
+					unaryOp.getExpr()) };
+		case UnaryOperation.OP_NOT:
+			result = new SimpleType(SimpleType.TYPE_BOOLEAN);
+			break;
 		}
 		return IGoal.NO_GOALS;
 	}

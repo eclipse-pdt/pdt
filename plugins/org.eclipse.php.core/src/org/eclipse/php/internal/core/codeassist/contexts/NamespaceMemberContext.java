@@ -24,14 +24,16 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 /**
- * This context represents state when staying in a namespace member completion.
- * <br/>Examples:
+ * This context represents state when staying in a namespace member completion. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. A\B\|
  *  2. A\fo|
  *  3. \fo|
  *  etc...
  * </pre>
+ * 
  * @author michael
  */
 public class NamespaceMemberContext extends StatementContext {
@@ -40,7 +42,8 @@ public class NamespaceMemberContext extends StatementContext {
 	private int elementStart;
 	private boolean isGlobal;
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -50,63 +53,76 @@ public class NamespaceMemberContext extends StatementContext {
 
 		TextSequence statementText = getStatementText();
 		int totalLength = statementText.length();
-		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength); // read whitespace
-		elementStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
+		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, totalLength); // read whitespace
+		elementStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+				statementText, endPosition, true);
 
-		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart);
-		if (elementStart < 1) { // there's no trigger of length less than 1 characters
+		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, elementStart);
+		if (elementStart < 1) { // there's no trigger of length less than 1
+								// characters
 			return false;
 		}
 
-		String triggerText = statementText.subSequence(elementStart - 1, elementStart).toString();
+		String triggerText = statementText.subSequence(elementStart - 1,
+				elementStart).toString();
 		if (!triggerText.equals("\\")) {
 			return false;
 		}
-		
+
 		isGlobal = false;
 		if (elementStart == 1) {
 			isGlobal = true;
 			return true;
 		}
-		
-		int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart - 1);
-		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace, false);
-		String nsName = statementText.subSequence(nsNameStart, elementStart).toString();
-		
+
+		int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, elementStart - 1);
+		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(
+				statementText, endNamespace, false);
+		String nsName = statementText.subSequence(nsNameStart, elementStart)
+				.toString();
+
 		namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule, offset);
 		return true;
 	}
-	
+
 	/**
-	 * Returns the start position of class/object element relative to the text sequence.
+	 * Returns the start position of class/object element relative to the text
+	 * sequence.
+	 * 
 	 * @see #getStatementText()
 	 */
 	public int getElementStart() {
 		return elementStart;
 	}
-	
+
 	/**
 	 * Returns the left hand side possible namespace elements.
 	 */
 	public IType[] getNamespaces() {
 		return namespaces;
 	}
-	
+
 	/**
-	 * Returns whether the namespace is global (only the '\' presents in the left side)
+	 * Returns whether the namespace is global (only the '\' presents in the
+	 * left side)
 	 */
 	public boolean isGlobal() {
 		return isGlobal;
 	}
-	
+
 	public String getPrefix() throws BadLocationException {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$
 		}
 		TextSequence statementText = getStatementText();
 		int statementLength = statementText.length();
-		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read whitespace
-		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, prefixEnd, true);
+		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, statementLength); // read whitespace
+		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+				statementText, prefixEnd, true);
 		return statementText.subSequence(prefixStart, prefixEnd).toString();
 	}
 
@@ -114,8 +130,10 @@ public class NamespaceMemberContext extends StatementContext {
 		ITextRegion phpToken = getPHPToken();
 		if (phpToken.getType() == PHPRegionTypes.PHP_NS_SEPARATOR) {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
-			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken.getEnd());
-			return getRegionCollection().getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
+					.getEnd());
+			return getRegionCollection().getStartOffset()
+					+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
 		}
 		return super.getPrefixEnd();
 	}

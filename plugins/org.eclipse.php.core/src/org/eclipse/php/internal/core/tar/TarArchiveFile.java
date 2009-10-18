@@ -24,6 +24,7 @@ public class TarArchiveFile implements IArchive {
 	private TarFile tarFile;
 	private boolean mapInited = false;
 	private Map<String, TarArchiveEntry> map = new HashMap<String, TarArchiveEntry>();
+
 	public TarArchiveFile(String filename) throws TarException, IOException {
 		tarFile = new TarFile(filename);
 	}
@@ -58,23 +59,22 @@ public class TarArchiveFile implements IArchive {
 	}
 
 	public IArchiveEntry getArchiveEntry(String name) {
-//		if (map.containsKey(name)) {
-//			return map.get(name);
-//		} else {
-			initMap();
-			return map.get(name);
-//		}
+		// if (map.containsKey(name)) {
+		// return map.get(name);
+		// } else {
+		initMap();
+		return map.get(name);
+		// }
 	}
 
 	private void initMap() {
 		// TODO Auto-generated method stub
-		
-		if(mapInited)
+
+		if (mapInited)
 			return;
 		Enumeration<? extends IArchiveEntry> e = getArchiveEntries();
 		while (e.hasMoreElements()) {
-			TarArchiveEntry tarArchiveEntry = (TarArchiveEntry) e
-					.nextElement();
+			TarArchiveEntry tarArchiveEntry = (TarArchiveEntry) e.nextElement();
 			// e.nextElement();
 			map.put(tarArchiveEntry.getName(), tarArchiveEntry);
 		}

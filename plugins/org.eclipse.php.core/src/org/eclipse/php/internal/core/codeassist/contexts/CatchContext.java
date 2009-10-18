@@ -18,24 +18,27 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
- * This context represents state when staying in a catch statement.
- * <br/>Examples:
+ * This context represents state when staying in a catch statement. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. catch (|) { }
  *  2. catch (Exception $|) { }
  *  3. catch (Ex|) { }
  * </pre>
+ * 
  * @author michael
  */
 public abstract class CatchContext extends StatementContext {
-	
-	protected static final Pattern CATCH_PATTERN = Pattern.compile("catch\\s[^{]*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+
+	protected static final Pattern CATCH_PATTERN = Pattern.compile(
+			"catch\\s[^{]*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
 	private int catchStart;
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -44,7 +47,8 @@ public abstract class CatchContext extends StatementContext {
 		catchStart = statementText.length();
 		while (matcher.find()) {
 			if (statementText.length() == matcher.end()) {
-				catchStart = matcher.start() + 1; // for the white space before the 'class'
+				catchStart = matcher.start() + 1; // for the white space before
+													// the 'class'
 				break;
 			}
 		}
@@ -55,7 +59,9 @@ public abstract class CatchContext extends StatementContext {
 	}
 
 	/**
-	 * Returns starting offset of the catch keyword relative to the current statement.
+	 * Returns starting offset of the catch keyword relative to the current
+	 * statement.
+	 * 
 	 * @see #getStatementText()
 	 * @return
 	 */

@@ -20,5 +20,5 @@ public interface PHPRegionContext {
 	public static final String PHP_SCRIPTLET_OPEN = "PHP_SCRIPTLET_OPEN"; //$NON-NLS-1$
 	public static final String XML_TAG_ATTRIBUTE_VALUE_DQUOTE = "XML_TAG_ATTRIBUTE_VALUE_DQUOTE"; //$NON-NLS-1$
 	public static final String XML_TAG_ATTRIBUTE_VALUE_SQUOTE = "XML_TAG_ATTRIBUTE_VALUE_SQUOTE"; //$NON-NLS-1$
-	
+
 }

@@ -21,11 +21,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
-import org.eclipse.php.internal.core.preferences.PreferencePropagatorFactory;
-import org.eclipse.php.internal.core.preferences.PreferencesPropagator;
-import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
-import org.eclipse.php.internal.core.preferences.PreferencesSupport;
+import org.eclipse.php.internal.core.preferences.*;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 
 /**

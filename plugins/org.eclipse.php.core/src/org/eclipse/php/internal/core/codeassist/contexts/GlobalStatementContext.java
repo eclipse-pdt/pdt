@@ -15,38 +15,43 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
-
 /**
- * This context represents state when staying in a top level statement.
- * <br/>Examples:
+ * This context represents state when staying in a top level statement. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. |
  *  2. pri|
  *  3. $v|
  *  etc...
  * </pre>
+ * 
  * @author michael
  */
-public final class GlobalStatementContext extends AbstractGlobalStatementContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+public final class GlobalStatementContext extends
+		AbstractGlobalStatementContext {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		// check whether enclosing element is not a class
 		try {
 			IModelElement enclosingElement = sourceModule.getElementAt(offset);
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}
-			if ((enclosingElement instanceof IMethod) || (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags()))) {
+			if ((enclosingElement instanceof IMethod)
+					|| (enclosingElement instanceof IType && !PHPFlags
+							.isNamespace(((IType) enclosingElement).getFlags()))) {
 				return false;
 			}
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-		
+
 		return true;
 	}
 }

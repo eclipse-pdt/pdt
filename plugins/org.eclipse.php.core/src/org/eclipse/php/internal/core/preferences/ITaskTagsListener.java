@@ -14,30 +14,36 @@ package org.eclipse.php.internal.core.preferences;
 import java.util.EventListener;
 
 /**
- * A TaskTagsEvent event gets fired whenever the task tags for the workspace or for the project are
- * modified.  
- * You can register an ITaskTagsListener to be notified of any task tags updates.
+ * A TaskTagsEvent event gets fired whenever the task tags for the workspace or
+ * for the project are modified. You can register an ITaskTagsListener to be
+ * notified of any task tags updates.
  * 
  * @author shalom
  */
-public interface ITaskTagsListener extends EventListener{
+public interface ITaskTagsListener extends EventListener {
 
 	/**
 	 * This method gets called when a task tags names are changed.
-	 * @param event A TaskTagsEvent object describing the change.
+	 * 
+	 * @param event
+	 *            A TaskTagsEvent object describing the change.
 	 */
 	public void taskTagsChanged(TaskTagsEvent event);
 
 	/**
 	 * This method gets called when a task tags priorities are changed.
-	 * @param event A TaskTagsEvent object describing the change.
+	 * 
+	 * @param event
+	 *            A TaskTagsEvent object describing the change.
 	 */
 	public void taskPrioritiesChanged(TaskTagsEvent event);
 
 	/**
 	 * This method gets called when a task tags case sensitivity is changed.
-	 * @param event A TaskTagsEvent object describing the change.
+	 * 
+	 * @param event
+	 *            A TaskTagsEvent object describing the change.
 	 */
 	public void taskCaseChanged(TaskTagsEvent event);
-	
+
 }

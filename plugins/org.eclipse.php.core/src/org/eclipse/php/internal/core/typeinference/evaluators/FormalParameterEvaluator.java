@@ -44,15 +44,18 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 			IContext context = typedGoal.getContext();
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
-				PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext.getMethodNode();
+				PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext
+						.getMethodNode();
 				PHPDocBlock docBlock = methodDeclaration.getPHPDoc();
 				if (docBlock != null) {
 					for (PHPDocTag tag : docBlock.getTags()) {
 						if (tag.getTagKind() == PHPDocTag.PARAM) {
 							SimpleReference[] references = tag.getReferences();
 							if (references.length == 2) {
-								if (references[0].getName().equals(parameter.getName())) {
-									result = PHPClassType.fromSimpleReference(references[1]);
+								if (references[0].getName().equals(
+										parameter.getName())) {
+									result = PHPClassType
+											.fromSimpleReference(references[1]);
 								}
 							}
 						}

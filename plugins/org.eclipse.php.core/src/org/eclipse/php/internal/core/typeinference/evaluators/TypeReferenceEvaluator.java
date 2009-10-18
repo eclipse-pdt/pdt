@@ -63,7 +63,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			if (context instanceof MethodContext) {
 				final MethodContext methodContext = (MethodContext) context;
 				ModuleDeclaration rootNode = methodContext.getRootNode();
-				final MethodDeclaration methodDecl = methodContext.getMethodNode();
+				final MethodDeclaration methodDecl = methodContext
+						.getMethodNode();
 
 				// Look for parent class types:
 				final List<IEvaluatedType> types = new LinkedList<IEvaluatedType>();
@@ -72,20 +73,27 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 						private TypeDeclaration currentType;
 						private boolean found;
 
-						public boolean visit(MethodDeclaration s) throws Exception {
-							if (s == methodDecl && currentType instanceof ClassDeclaration) {
+						public boolean visit(MethodDeclaration s)
+								throws Exception {
+							if (s == methodDecl
+									&& currentType instanceof ClassDeclaration) {
 								ClassDeclaration classDecl = (ClassDeclaration) currentType;
-								for (String superClass : classDecl.getSuperClassNames()) {
+								for (String superClass : classDecl
+										.getSuperClassNames()) {
 
 									String parentNamespace = null;
 									if (context instanceof INamespaceContext) {
-										parentNamespace = ((INamespaceContext) context).getNamespace();
+										parentNamespace = ((INamespaceContext) context)
+												.getNamespace();
 									}
 
-									if (superClass.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1 || parentNamespace == null) {
+									if (superClass
+											.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
+											|| parentNamespace == null) {
 										types.add(new PHPClassType(superClass));
 									} else if (parentNamespace != null) {
-										types.add(new PHPClassType(parentNamespace, superClass));
+										types.add(new PHPClassType(
+												parentNamespace, superClass));
 									}
 								}
 								found = true;
@@ -93,12 +101,14 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 							return !found;
 						}
 
-						public boolean visit(TypeDeclaration s) throws Exception {
+						public boolean visit(TypeDeclaration s)
+								throws Exception {
 							this.currentType = s;
 							return !found;
 						}
 
-						public boolean endvisit(TypeDeclaration s) throws Exception {
+						public boolean endvisit(TypeDeclaration s)
+								throws Exception {
 							this.currentType = null;
 							return super.endvisit(s);
 						}
@@ -116,7 +126,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				if (types.size() == 1) {
 					result = types.get(0);
 				} else if (types.size() > 1) {
-					result = new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
+					result = new AmbiguousType(types
+							.toArray(new IEvaluatedType[types.size()]));
 				}
 			}
 		} else {
@@ -129,10 +140,13 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 
 			// If the namespace was prefixed explicitly - use it:
 			if (typeReference instanceof FullyQualifiedReference) {
-				String fullyQualifiedName = ((FullyQualifiedReference) typeReference).getFullyQualifiedName();
-				ISourceModule sourceModule = ((ISourceModuleContext) context).getSourceModule();
+				String fullyQualifiedName = ((FullyQualifiedReference) typeReference)
+						.getFullyQualifiedName();
+				ISourceModule sourceModule = ((ISourceModuleContext) context)
+						.getSourceModule();
 				int offset = typeReference.sourceStart();
-				String extractedNamespace = PHPModelUtils.extractNamespaceName(fullyQualifiedName, sourceModule, offset);
+				String extractedNamespace = PHPModelUtils.extractNamespaceName(
+						fullyQualifiedName, sourceModule, offset);
 				if (extractedNamespace != null) {
 					parentNamespace = extractedNamespace;
 				}

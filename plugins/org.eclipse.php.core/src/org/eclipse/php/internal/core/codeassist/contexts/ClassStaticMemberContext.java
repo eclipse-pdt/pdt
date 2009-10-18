@@ -26,14 +26,17 @@ import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
- * This context represents state when staying in a class static member completion (after paamayim-nekudotaim)
- * <br/>Examples:
+ * This context represents state when staying in a class static member
+ * completion (after paamayim-nekudotaim) <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. A::|
  *  2. $lsb::|
  *  3. A::$|
  *  etc...
  * </pre>
+ * 
  * @author michael
  */
 public class ClassStaticMemberContext extends ClassMemberContext {
@@ -43,7 +46,8 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	private boolean isSelf;
 	private boolean isDirectSelf;
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -52,19 +56,25 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 		}
 
 		int elementStart = getElementStart();
-		int lhsIndex = elementStart - "parent".length() - getTriggerType().getName().length();
+		int lhsIndex = elementStart - "parent".length()
+				- getTriggerType().getName().length();
 		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
-			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length()).toString();
+			String parentText = statementText.subSequence(lhsIndex,
+					elementStart - getTriggerType().getName().length())
+					.toString();
 			if (parentText.equals("parent")) { //$NON-NLS-1$
 				isParent = isDirectParent = true;
 			}
 		}
 
-		lhsIndex = elementStart - "self".length() - getTriggerType().getName().length();
+		lhsIndex = elementStart - "self".length()
+				- getTriggerType().getName().length();
 		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
-			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length()).toString();
+			String parentText = statementText.subSequence(lhsIndex,
+					elementStart - getTriggerType().getName().length())
+					.toString();
 			if (parentText.equals("self")) { //$NON-NLS-1$
 				isSelf = isDirectSelf = true;
 			}
@@ -73,44 +83,60 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 		if (!isParent || !isSelf) {
 			IType[] types = getLhsTypes();
 			if (types != null && types.length > 0) {
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+				ModuleDeclaration moduleDeclaration = SourceParserUtil
+						.getModuleDeclaration(sourceModule);
 				if (moduleDeclaration != null) {
-					IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
+					IContext context = ASTUtils.findContext(sourceModule,
+							moduleDeclaration, offset);
 					if (context instanceof MethodContext) {
-						IEvaluatedType instanceType = ((MethodContext) context).getInstanceType();
+						IEvaluatedType instanceType = ((MethodContext) context)
+								.getInstanceType();
 						if (instanceType instanceof PHPClassType) {
 							PHPClassType classType = (PHPClassType) instanceType;
 							String typeName = classType.getTypeName();
 							String namespace = classType.getNamespace();
 							if (namespace != null && namespace.length() > 0) {
-								int i = typeName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+								int i = typeName
+										.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 								if (i != -1) {
 									typeName = typeName.substring(i + 1);
 								}
 								if (namespace.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 									namespace = namespace.substring(1);
 								}
-								IType currentNamespace = PHPModelUtils.getCurrentNamespace(types[0]);
+								IType currentNamespace = PHPModelUtils
+										.getCurrentNamespace(types[0]);
 								if (!isParent) {
-									if (currentNamespace != null && types.length >= 2) {
+									if (currentNamespace != null
+											&& types.length >= 2) {
 										IType parentType = types[1];
-										isParent = namespace.equals(currentNamespace.getElementName()) && typeName.equals(parentType.getElementName());
+										isParent = namespace
+												.equals(currentNamespace
+														.getElementName())
+												&& typeName.equals(parentType
+														.getElementName());
 									}
 								}
 								if (!isSelf) {
 									if (currentNamespace != null) {
-										isSelf = namespace.equals(currentNamespace.getElementName()) && typeName.equals(types[0].getElementName());
+										isSelf = namespace
+												.equals(currentNamespace
+														.getElementName())
+												&& typeName.equals(types[0]
+														.getElementName());
 									}
 								}
 							} else {
 								if (!isParent) {
 									if (types.length >= 2) {
 										IType parentType = types[1];
-										isParent = typeName.equals(parentType.getElementName());
+										isParent = typeName.equals(parentType
+												.getElementName());
 									}
 								}
 								if (!isSelf) {
-									isSelf = typeName.equals(types[0].getElementName());
+									isSelf = typeName.equals(types[0]
+											.getElementName());
 								}
 							}
 						}
@@ -123,7 +149,8 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	}
 
 	/**
-	 * Returns whether the left hand side expression has the type of parent class
+	 * Returns whether the left hand side expression has the type of parent
+	 * class
 	 */
 	public boolean isParent() {
 		return isParent;

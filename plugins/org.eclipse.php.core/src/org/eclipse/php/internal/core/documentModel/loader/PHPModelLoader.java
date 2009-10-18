@@ -34,11 +34,11 @@ public class PHPModelLoader extends HTMLModelLoader {
 
 	public List getAdapterFactories() {
 
-		//@GINO: Might want to add new adapter factories here
+		// @GINO: Might want to add new adapter factories here
 		return super.getAdapterFactories();
 	}
 
-	//Creating the PHPModel
+	// Creating the PHPModel
 	public IStructuredModel newModel() {
 		return new DOMModelForPHP();
 	}

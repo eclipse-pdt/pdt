@@ -15,19 +15,23 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 
 /**
- * This context represents the state when staying after 'return' tag in PHPDoc block
- * <br/>Examples:
+ * This context represents the state when staying after 'return' tag in PHPDoc
+ * block <br/>
+ * Examples:
+ * 
  * <pre>
  *   1. /**
  *       * @return |
  *   2. /**
  *       * @return Ty|
  * </pre>
+ * 
  * @author michael
  */
 public class PHPDocReturnTagContext extends PHPDocTagContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}

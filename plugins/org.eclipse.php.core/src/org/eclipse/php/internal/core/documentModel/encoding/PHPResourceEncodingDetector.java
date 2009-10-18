@@ -49,17 +49,17 @@ public class PHPResourceEncodingDetector implements IResourceCharsetDetector {
 	}
 
 	public void set(InputStream inputStream) {
-		//@GINO: Do nothing for now
+		// @GINO: Do nothing for now
 
 	}
 
 	public void set(Reader reader) {
-		//@GINO: Do nothing for now
+		// @GINO: Do nothing for now
 
 	}
 
 	public void set(IStorage iStorage) throws CoreException {
-		//@GINO: Do nothing for now
+		// @GINO: Do nothing for now
 
 	}
 

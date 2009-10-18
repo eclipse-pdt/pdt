@@ -916,7 +916,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		final int[] cftab = new int[257]; // 1028 byte
 		final char[] getAndMoveToFrontDecode_yy = new char[256]; // 512 byte
 		final char[][] temp_charArray2d = new char[N_GROUPS][MAX_ALPHA_SIZE]; // 3096
-																				// byte
+		// byte
 		final byte[] recvDecodingTables_pos = new byte[N_GROUPS]; // 6 byte
 		// ---------------
 		// 60798 byte
@@ -955,6 +955,5 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 			return ttShadow;
 		}
 
-    }
+	}
 }
-

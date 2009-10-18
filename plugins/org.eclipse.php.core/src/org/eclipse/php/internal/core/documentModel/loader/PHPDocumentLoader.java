@@ -35,9 +35,10 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 	protected IEncodedDocument newEncodedDocument() {
 		IEncodedDocument doc = super.newEncodedDocument();
 		assert doc instanceof BasicStructuredDocument;
-		((BasicStructuredDocument) doc).setReParser(new PhpStructuredDocumentReParser());
+		((BasicStructuredDocument) doc)
+				.setReParser(new PhpStructuredDocumentReParser());
 
-		//doc.setPreferredLineDelimiter( "\n" );
+		// doc.setPreferredLineDelimiter( "\n" );
 		return doc;
 	}
 
@@ -64,38 +65,48 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 		}
 		return fCodedReaderCreator;
 	}
-	
+
 	class PHPCodedReaderCreator extends CodedReaderCreator {
-		protected EncodingMemento createMemento(IContentDescription contentDescription) {
+		protected EncodingMemento createMemento(
+				IContentDescription contentDescription) {
 			EncodingMemento result;
-			String appropriateDefault = contentDescription.getContentType().getDefaultCharset();
-			String detectedCharset = (String) contentDescription.getProperty(IContentDescriptionExtended.DETECTED_CHARSET);
-			String unSupportedCharset = (String) contentDescription.getProperty(IContentDescriptionExtended.UNSUPPORTED_CHARSET);
+			String appropriateDefault = contentDescription.getContentType()
+					.getDefaultCharset();
+			String detectedCharset = (String) contentDescription
+					.getProperty(IContentDescriptionExtended.DETECTED_CHARSET);
+			String unSupportedCharset = (String) contentDescription
+					.getProperty(IContentDescriptionExtended.UNSUPPORTED_CHARSET);
 			String javaCharset = contentDescription.getCharset();
-			
+
 			// Set default workbench encoding:
 			if (detectedCharset == null && appropriateDefault == null) {
-				detectedCharset = javaCharset = appropriateDefault = ResourcesPlugin.getEncoding();
+				detectedCharset = javaCharset = appropriateDefault = ResourcesPlugin
+						.getEncoding();
 			}
-			
+
 			// integrity checks for debugging
 			if (javaCharset == null) {
 				Logger.log(Logger.INFO_DEBUG, "charset equaled null!"); //$NON-NLS-1$
 			} else if (javaCharset.length() == 0) {
 				Logger.log(Logger.INFO_DEBUG, "charset equaled emptyString!"); //$NON-NLS-1$
 			}
-			byte[] BOM = (byte[]) contentDescription.getProperty(IContentDescription.BYTE_ORDER_MARK);
-			//result = (EncodingMemento)
+			byte[] BOM = (byte[]) contentDescription
+					.getProperty(IContentDescription.BYTE_ORDER_MARK);
+			// result = (EncodingMemento)
 			// contentDescription.getProperty(IContentDescriptionExtended.ENCODING_MEMENTO);
-			result = createEncodingMemento(BOM, javaCharset, detectedCharset, unSupportedCharset, appropriateDefault, null);
+			result = createEncodingMemento(BOM, javaCharset, detectedCharset,
+					unSupportedCharset, appropriateDefault, null);
 			if (!result.isValid()) {
 				result.setAppropriateDefault(appropriateDefault);
 				// integrity check for debugging "invalid" cases.
 				// the apprriate default we have, should equal what's in the
 				// detected field. (not sure this is always required)
 				if (DEBUG) {
-					if (appropriateDefault != null && !appropriateDefault.equals(detectedCharset)) {
-						Logger.log(Logger.INFO_DEBUG, "appropriate did not equal detected, as expected for invalid charset case"); //$NON-NLS-1$
+					if (appropriateDefault != null
+							&& !appropriateDefault.equals(detectedCharset)) {
+						Logger
+								.log(Logger.INFO_DEBUG,
+										"appropriate did not equal detected, as expected for invalid charset case"); //$NON-NLS-1$
 					}
 				}
 			}

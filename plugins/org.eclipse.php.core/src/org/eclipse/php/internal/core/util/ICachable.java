@@ -14,18 +14,18 @@ package org.eclipse.php.internal.core.util;
 import java.io.Serializable;
 
 /**
- * An interface for any cachable php data. 
+ * An interface for any cachable php data.
  */
 public interface ICachable extends Serializable {
 
-    /**
-     * @return the object identifing this Cachable.
-     */
-    Object getIdentifier();
+	/**
+	 * @return the object identifing this Cachable.
+	 */
+	Object getIdentifier();
 
-    /**
-     * @return true if this Cachable is to be used, false if it has expired.
-     */
-    boolean isValid();
+	/**
+	 * @return true if this Cachable is to be used, false if it has expired.
+	 */
+	boolean isValid();
 
 }

@@ -159,7 +159,7 @@ public class BuildPathUtils {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Returns whether the include path is a part of build path
 	 * 
@@ -168,8 +168,8 @@ public class BuildPathUtils {
 	 * @param project
 	 * @return
 	 */
-	public static List<IBuildpathEntry> getContainedBuildpathes(IPath resourcePath,
-			IScriptProject project) {
+	public static List<IBuildpathEntry> getContainedBuildpathes(
+			IPath resourcePath, IScriptProject project) {
 		if (resourcePath == null) {
 			return Collections.EMPTY_LIST;
 		}

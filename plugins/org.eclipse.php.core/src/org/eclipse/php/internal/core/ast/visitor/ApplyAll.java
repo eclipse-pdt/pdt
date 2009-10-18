@@ -14,19 +14,21 @@ package org.eclipse.php.internal.core.ast.visitor;
 import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
- * Abstract visitor to apply a single method over all AST nodes
- * In order to continue the traverse, one should call node.childrenAccept();
+ * Abstract visitor to apply a single method over all AST nodes In order to
+ * continue the traverse, one should call node.childrenAccept();
  */
 public abstract class ApplyAll extends AbstractVisitor {
 
 	/**
 	 * Performs the apply method over each node
+	 * 
 	 * @param node
 	 */
 	protected abstract boolean apply(ASTNode node);
 
 	/**
 	 * Performs the end visit method over each node
+	 * 
 	 * @param node
 	 */
 	public void endVisitNode(ASTNode node) {
@@ -52,7 +54,6 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(BackTickExpression backTickExpression) {
 		return apply(backTickExpression);
 	}
-	
 
 	public boolean visit(InfixExpression binaryOperation) {
 		return apply(binaryOperation);
@@ -129,7 +130,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(DoStatement doStatement) {
 		return apply(doStatement);
 	}
-	
+
 	public boolean visit(EchoStatement echoStatement) {
 		return apply(echoStatement);
 	}
@@ -137,10 +138,10 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(EmptyStatement evalStatement) {
 		return apply(evalStatement);
 	}
-	
+
 	public boolean visit(ExpressionStatement expressionStatement) {
 		return apply(expressionStatement);
-	}	
+	}
 
 	public boolean visit(FieldAccess filedAccess) {
 		return apply(filedAccess);
@@ -213,16 +214,15 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(MethodDeclaration classMethodDeclaration) {
 		return apply(classMethodDeclaration);
 	}
-	
+
 	public boolean visit(MethodInvocation methodInvocation) {
 		return apply(methodInvocation);
-	}	
-	
+	}
+
 	public boolean visit(ParenthesisExpression parenthesisExpression) {
 		return apply(parenthesisExpression);
-	}	
-	
-	
+	}
+
 	public boolean visit(PostfixExpression postfixExpressions) {
 		return apply(postfixExpressions);
 	}
@@ -258,7 +258,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
 		return apply(singleFieldDeclaration);
 	}
-	
+
 	public boolean visit(StaticFieldAccess staticMember) {
 		return apply(staticMember);
 	}
@@ -322,7 +322,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(GotoStatement gotoStatement) {
 		return apply(gotoStatement);
 	}
-	
+
 	public void endVisit(ArrayAccess arrayAccess) {
 		endVisitNode(arrayAccess);
 	}
@@ -400,7 +400,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 	}
 
 	public void endVisit(EchoStatement echoStatement) {
-		endVisitNode(echoStatement);		
+		endVisitNode(echoStatement);
 	}
 
 	public void endVisit(EmptyStatement emptyStatement) {
@@ -526,10 +526,10 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public void endVisit(Scalar scalar) {
 		endVisitNode(scalar);
 	}
-	
+
 	public void endVisit(SingleFieldDeclaration singleFieldDeclaration) {
 		endVisitNode(singleFieldDeclaration);
-	}	
+	}
 
 	public void endVisit(StaticConstantAccess staticConstantAccess) {
 		endVisitNode(staticConstantAccess);

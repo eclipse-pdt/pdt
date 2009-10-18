@@ -19,7 +19,9 @@ import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceRange;
 
 /**
- * This is a fake model element that can live independently from the DLTK model manager. 
+ * This is a fake model element that can live independently from the DLTK model
+ * manager.
+ * 
  * @author michael
  */
 public class FakeField extends SourceField {
@@ -32,14 +34,15 @@ public class FakeField extends SourceField {
 		this.offset = offset;
 		this.length = length;
 	}
-	
-	public FakeField(ModelElement parent, String name, int offset, int length, int modifiers) {
+
+	public FakeField(ModelElement parent, String name, int offset, int length,
+			int modifiers) {
 		super(parent, name);
 		this.offset = offset;
 		this.length = length;
 		this.modifiers = modifiers;
 	}
-	
+
 	public FakeField(ModelElement parent, String name, int modifiers) {
 		super(parent, name);
 		this.modifiers = modifiers;
@@ -52,14 +55,14 @@ public class FakeField extends SourceField {
 	public ISourceRange getSourceRange() throws ModelException {
 		return new SourceRange(offset, length);
 	}
-	
+
 	public int getFlags() {
 		return modifiers;
 	}
 
 	public boolean equals(Object o) {
 		if (super.equals(o) && o instanceof FakeField) {
-			FakeField other = (FakeField)o;
+			FakeField other = (FakeField) o;
 			return other.offset == offset && other.length == length;
 		}
 		return false;

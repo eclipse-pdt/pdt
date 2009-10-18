@@ -15,11 +15,13 @@ import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 
 /**
- * Completion strategy resolves completion proposals according to completion context.
+ * Completion strategy resolves completion proposals according to completion
+ * context.
+ * 
  * @author michael
  */
 public interface ICompletionStrategy {
-	
+
 	/**
 	 * Initializes this completion strategy
 	 */
@@ -27,7 +29,9 @@ public interface ICompletionStrategy {
 
 	/**
 	 * Applies completion strategy for the given context
-	 * @param reporter Where model elements will be reported
+	 * 
+	 * @param reporter
+	 *            Where model elements will be reported
 	 * @throws Exception
 	 */
 	public void apply(ICompletionReporter reporter) throws Exception;

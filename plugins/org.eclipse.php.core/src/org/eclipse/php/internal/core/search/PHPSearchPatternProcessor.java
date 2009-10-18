@@ -15,7 +15,7 @@ import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.ISearchPatternProcessor;
 
 public class PHPSearchPatternProcessor implements ISearchPatternProcessor {
-	
+
 	private static final String TYPE_DELIMITER = "\\"; //$NON-NLS-1$
 	private static final String OBJ_CALL_DELIMITER = "->"; //$NON-NLS-1$
 	private static final String STATIC_CALL_DELIMITER = "::"; //$NON-NLS-1$
@@ -47,7 +47,8 @@ public class PHPSearchPatternProcessor implements ISearchPatternProcessor {
 		int pos2 = pattern.indexOf(STATIC_CALL_DELIMITER);
 		pos = pos == -1 ? pos2 : (pos2 == -1 ? pos : Math.min(pos, pos2));
 		if (pos != -1) {
-			final int begin = pos + 2; // method delimiter length (either -> or ::)
+			final int begin = pos + 2; // method delimiter length (either -> or
+										// ::)
 			if (begin < pattern.length()) {
 				final char[] result = new char[pattern.length() - begin];
 				pattern.getChars(begin, pattern.length(), result, 0);

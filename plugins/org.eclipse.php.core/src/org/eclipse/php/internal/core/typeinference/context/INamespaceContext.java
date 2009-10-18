@@ -11,15 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.context;
 
-
 /**
  * This context contains information about current namespace
+ * 
  * @author michael
  */
 public interface INamespaceContext {
 
 	/**
-	 * Returns current namespace name or <code>null</code> if the context is outside of any namespaces
+	 * Returns current namespace name or <code>null</code> if the context is
+	 * outside of any namespaces
+	 * 
 	 * @return namespace name
 	 */
 	public String getNamespace();

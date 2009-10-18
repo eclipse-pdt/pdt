@@ -15,26 +15,30 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
- * This context represents the interface declaration context.
- * <br/>Examples:
+ * This context represents the interface declaration context. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. interface A extends |
  *  2. interface A extends B|
  * </pre>
+ * 
  * @author michael
  */
-public abstract class InterfaceDeclarationContext extends TypeDeclarationContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+public abstract class InterfaceDeclarationContext extends
+		TypeDeclarationContext {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 		int typeEnd = getTypeEnd();
 		if (typeEnd >= 10) {
 			TextSequence statementText = getStatementText();
-			String typeString = statementText.subSequence(typeEnd - 10, typeEnd - 1).toString();
+			String typeString = statementText.subSequence(typeEnd - 10,
+					typeEnd - 1).toString();
 			if ("interface".equals(typeString)) {
 				return true;
 			}

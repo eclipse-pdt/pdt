@@ -15,12 +15,14 @@ import org.eclipse.core.resources.IProject;
 
 /**
  * A Listener class that is called when the include path property is updated
+ * 
  * @author Roy, 2008
  */
 public interface IIncludepathListener {
-	
+
 	/**
-	 * This call-back is fetched when the include path property is changed  
+	 * This call-back is fetched when the include path property is changed
+	 * 
 	 * @param project
 	 */
 	public void refresh(IProject project);

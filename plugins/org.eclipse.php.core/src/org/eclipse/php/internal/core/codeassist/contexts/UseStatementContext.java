@@ -15,30 +15,33 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
- * This context represents the state when staying in a use statement.
- * <br/>Examples:
+ * This context represents the state when staying in a use statement. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. use |
  *  2. use A\B| 
  *  3. use A as |
  *  4. use A as B|
- *  etc... 
+ *  etc...
  * </pre>
+ * 
  * @author michael
  */
 public abstract class UseStatementContext extends StatementContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		TextSequence statementText = getStatementText();
 		if (statementText.length() >= 4) {
-			if ("use".equals(statementText.subSequence(0, 3).toString()) && 
-					Character.isWhitespace(statementText.subSequence(3, 4).charAt(0))) {
+			if ("use".equals(statementText.subSequence(0, 3).toString())
+					&& Character.isWhitespace(statementText.subSequence(3, 4)
+							.charAt(0))) {
 				return true;
 			}
 		}

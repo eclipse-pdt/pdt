@@ -19,20 +19,25 @@ import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 /**
- * This is a factory for PHP simple types 
+ * This is a factory for PHP simple types
+ * 
  * @author michael
  */
 public class PHPSimpleTypes {
 
 	private static final Map<String, IEvaluatedType> SIMPLE_TYPES;
-	public static final IEvaluatedType NUMBER = new SimpleType(SimpleType.TYPE_NUMBER);
-	public static final IEvaluatedType BOOLEAN = new SimpleType(SimpleType.TYPE_BOOLEAN);
-	public static final IEvaluatedType STRING = new SimpleType(SimpleType.TYPE_STRING);
+	public static final IEvaluatedType NUMBER = new SimpleType(
+			SimpleType.TYPE_NUMBER);
+	public static final IEvaluatedType BOOLEAN = new SimpleType(
+			SimpleType.TYPE_BOOLEAN);
+	public static final IEvaluatedType STRING = new SimpleType(
+			SimpleType.TYPE_STRING);
 	public static final IEvaluatedType OBJECT = new PHPClassType("object");
 	public static final IEvaluatedType RESOURCE = new PHPClassType("resource");
 	public static final IEvaluatedType ARRAY = new MultiTypeType();
 	public static final IEvaluatedType VOID = new PHPClassType("void");
-	public static final IEvaluatedType NULL = new SimpleType(SimpleType.TYPE_NULL);
+	public static final IEvaluatedType NULL = new SimpleType(
+			SimpleType.TYPE_NULL);
 
 	static {
 		SIMPLE_TYPES = new HashMap<String, IEvaluatedType>();
@@ -53,6 +58,7 @@ public class PHPSimpleTypes {
 
 	/**
 	 * Returns {@link IEvaluatedType} for the PHP simple type name
+	 * 
 	 * @param type
 	 * @return
 	 */

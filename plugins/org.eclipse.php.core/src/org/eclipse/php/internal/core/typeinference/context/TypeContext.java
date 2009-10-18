@@ -17,17 +17,18 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 /**
  * This is a context for the PHP class or interface
+ * 
  * @author michael
  */
 public class TypeContext extends InstanceContext implements INamespaceContext {
-	
+
 	private String namespaceName;
 
 	public TypeContext(ISourceModuleContext parent, IEvaluatedType instanceType) {
 		super(parent, instanceType);
-		
+
 		if (parent instanceof INamespaceContext) {
-			this.namespaceName = ((INamespaceContext)parent).getNamespace();
+			this.namespaceName = ((INamespaceContext) parent).getNamespace();
 		}
 	}
 
@@ -38,7 +39,8 @@ public class TypeContext extends InstanceContext implements INamespaceContext {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((namespaceName == null) ? 0 : namespaceName.hashCode());
+		result = prime * result
+				+ ((namespaceName == null) ? 0 : namespaceName.hashCode());
 		return result;
 	}
 

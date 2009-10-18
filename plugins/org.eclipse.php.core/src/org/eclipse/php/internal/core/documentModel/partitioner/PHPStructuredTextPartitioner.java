@@ -17,9 +17,11 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
-public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHTML {
+public class PHPStructuredTextPartitioner extends
+		StructuredTextPartitionerForHTML {
 
-	public String getContentType(final int offset, final boolean preferOpenPartitions) {
+	public String getContentType(final int offset,
+			final boolean preferOpenPartitions) {
 		final ITypedRegion partition = getPartition(offset);
 		return partition == null ? null : partition.getType();
 	}
@@ -29,7 +31,7 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 		if (isPhpRegion(region.getType()))
 			return PHPPartitionTypes.PHP_DEFAULT;
 
-		// else do super 
+		// else do super
 		return super.getPartitionType(region, offset);
 	}
 
@@ -53,10 +55,16 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 	 * @return
 	 */
 	private static final boolean isPhpRegion(final String regionType) {
-		return regionType == PHPRegionContext.PHP_OPEN || regionType == PHPRegionContext.PHP_CLOSE || regionType == PHPRegionContext.PHP_CONTENT;
+		return regionType == PHPRegionContext.PHP_OPEN
+				|| regionType == PHPRegionContext.PHP_CLOSE
+				|| regionType == PHPRegionContext.PHP_CONTENT;
 	}
 
-	private final static String[] configuredContentTypes = new String[] { PHPPartitionTypes.PHP_DEFAULT, PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT, PHPPartitionTypes.PHP_MULTI_LINE_COMMENT, PHPPartitionTypes.PHP_DOC, PHPPartitionTypes.PHP_QUOTED_STRING };
+	private final static String[] configuredContentTypes = new String[] {
+			PHPPartitionTypes.PHP_DEFAULT,
+			PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT,
+			PHPPartitionTypes.PHP_MULTI_LINE_COMMENT,
+			PHPPartitionTypes.PHP_DOC, PHPPartitionTypes.PHP_QUOTED_STRING };
 
 	public static String[] getConfiguredContentTypes() {
 		return configuredContentTypes;

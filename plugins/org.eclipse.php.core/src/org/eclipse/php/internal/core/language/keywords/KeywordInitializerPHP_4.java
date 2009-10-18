@@ -27,7 +27,8 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("break", EMPTY_SUFFIX, 0));
 		list.add(new KeywordData("case", WHITESPACE_COLON_SUFFIX, 2));
 		list.add(new KeywordData("class", WHITESPACE_SUFFIX, 1));
-		list.add(new KeywordData("const", WHITESPACE_SUFFIX, 1, PHPKeywords.CLASS_BODY));
+		list.add(new KeywordData("const", WHITESPACE_SUFFIX, 1,
+				PHPKeywords.CLASS_BODY));
 		list.add(new KeywordData("continue", EMPTY_SUFFIX, 0));
 		list.add(new KeywordData("declare", PARENTESES_SUFFIX, 1));
 		list.add(new KeywordData("default", COLON_SUFFIX, 1));
@@ -49,10 +50,13 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("false", EMPTY_SUFFIX, 0));
 		list.add(new KeywordData("foreach", WHITESPACE_PARENTESES_SUFFIX, 2));
 		list.add(new KeywordData("for", WHITESPACE_PARENTESES_SUFFIX, 2));
-		list.add(new KeywordData("function", WHITESPACE_SUFFIX, 1, PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
+		list.add(new KeywordData("function", WHITESPACE_SUFFIX, 1,
+				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
 		list.add(new KeywordData("global", WHITESPACE_SUFFIX, 1));
 		list.add(new KeywordData("if", WHITESPACE_PARENTESES_SUFFIX, 2));
-		list.add(new KeywordData("include_once", WS_QUOTES_SEMICOLON_SUFFIX, 2));
+		list
+				.add(new KeywordData("include_once",
+						WS_QUOTES_SEMICOLON_SUFFIX, 2));
 		list.add(new KeywordData("include", WS_QUOTES_SEMICOLON_SUFFIX, 2));
 		list.add(new KeywordData("isset", PARENTESES_SUFFIX, 1));
 		list.add(new KeywordData("list", PARENTESES_SUFFIX, 1));
@@ -61,14 +65,18 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("or", WHITESPACE_SUFFIX, 1));
 		list.add(new KeywordData("parent", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2));
 		list.add(new KeywordData("print", WHITESPACE_SUFFIX, 1));
-		list.add(new KeywordData("require_once", WS_QUOTES_SEMICOLON_SUFFIX, 2));
+		list
+				.add(new KeywordData("require_once",
+						WS_QUOTES_SEMICOLON_SUFFIX, 2));
 		list.add(new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2));
 		list.add(new KeywordData("return", WHITESPACE_SUFFIX, 1));
-		list.add(new KeywordData("static", WHITESPACE_SUFFIX, 1, PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
+		list.add(new KeywordData("static", WHITESPACE_SUFFIX, 1,
+				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
 		list.add(new KeywordData("switch", WHITESPACE_PARENTESES_SUFFIX, 2));
 		list.add(new KeywordData("true", EMPTY_SUFFIX, 0));
 		list.add(new KeywordData("unset", PARENTESES_SUFFIX, 1));
-		list.add(new KeywordData("var", WHITESPACE_SUFFIX, 1, PHPKeywords.CLASS_BODY));
+		list.add(new KeywordData("var", WHITESPACE_SUFFIX, 1,
+				PHPKeywords.CLASS_BODY));
 		list.add(new KeywordData("while", WHITESPACE_PARENTESES_SUFFIX, 2));
 		list.add(new KeywordData("xor", WHITESPACE_SUFFIX, 1));
 	}

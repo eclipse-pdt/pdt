@@ -36,7 +36,8 @@ import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
-public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator {
+public class MethodReturnTypeEvaluator extends
+		AbstractMethodReturnTypeEvaluator {
 
 	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
@@ -50,8 +51,10 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 
-		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext()).getSourceModule();
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
+		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext())
+				.getSourceModule();
+		ModuleDeclaration module = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
 
 		for (IMethod method : getMethods()) {
 			MethodDeclaration decl = null;
@@ -63,7 +66,8 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 				}
 			}
 			if (decl != null) {
-				final IContext innerContext = ASTUtils.findContext(sourceModule, module, decl);
+				final IContext innerContext = ASTUtils.findContext(
+						sourceModule, module, decl);
 
 				ASTVisitor visitor = new ASTVisitor() {
 					public boolean visitGeneral(ASTNode node) throws Exception {
@@ -73,7 +77,8 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 							if (expr == null) {
 								evaluated.add(PHPSimpleTypes.VOID);
 							} else {
-								subGoals.add(new ExpressionTypeGoal(innerContext, expr));
+								subGoals.add(new ExpressionTypeGoal(
+										innerContext, expr));
 							}
 						}
 						return super.visitGeneral(node);
@@ -113,7 +118,8 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 				if (tagKind == PHPDocTag.METHOD) {
 					final String typeName = getTypeBinding(methodName, tag);
 					if (typeName != null) {
-						IEvaluatedType resolved = PHPSimpleTypes.fromString(typeName);
+						IEvaluatedType resolved = PHPSimpleTypes
+								.fromString(typeName);
 						if (resolved == null) {
 							resolved = new PHPClassType(typeName);
 						}
@@ -126,6 +132,7 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 
 	/**
 	 * Resolves the type from the @property tag
+	 * 
 	 * @param variableName
 	 * @param docTag
 	 * @return the type of the given variable
@@ -138,7 +145,8 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 		if (split[1].equals(methodName)) {
 			return split[0];
 		} else if (split[1].length() > 2 && split[1].endsWith("()")) {
-			final String substring = split[1].substring(0, split[1].length() - 2);
+			final String substring = split[1].substring(0,
+					split[1].length() - 2);
 			return substring.equals(methodName) ? split[0] : null;
 		}
 		return null;

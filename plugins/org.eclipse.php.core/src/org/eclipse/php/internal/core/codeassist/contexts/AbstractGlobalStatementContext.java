@@ -17,20 +17,20 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
- * This context represents state when staying in a global statement. That means we are going to complete:
- * keywords and all global elements in this context.
+ * This context represents state when staying in a global statement. That means
+ * we are going to complete: keywords and all global elements in this context.
  * 
  * @author michael
  */
 public abstract class AbstractGlobalStatementContext extends StatementContext {
-	
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		if (requestor instanceof IPHPCompletionRequestor) {
 			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
 			boolean isExplicit = phpCompletionRequestor.isExplicit();
@@ -41,7 +41,8 @@ public abstract class AbstractGlobalStatementContext extends StatementContext {
 						return false;
 					}
 					TextSequence statementText = getStatementText();
-					if (statementText.length() > 0 && statementText.charAt(statementText.length() - 1) == ':') {
+					if (statementText.length() > 0
+							&& statementText.charAt(statementText.length() - 1) == ':') {
 						return false;
 					}
 				} catch (BadLocationException e) {

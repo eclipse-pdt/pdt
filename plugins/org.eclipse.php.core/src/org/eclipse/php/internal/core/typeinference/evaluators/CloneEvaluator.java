@@ -28,8 +28,10 @@ public class CloneEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		CloneExpression cloneExpression = (CloneExpression) typedGoal.getExpression();
-		return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(), cloneExpression.getExpr()) };
+		CloneExpression cloneExpression = (CloneExpression) typedGoal
+				.getExpression();
+		return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(),
+				cloneExpression.getExpr()) };
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {

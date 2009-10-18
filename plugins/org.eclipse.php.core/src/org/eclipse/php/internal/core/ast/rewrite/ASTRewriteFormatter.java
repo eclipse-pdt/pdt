@@ -40,6 +40,7 @@ import org.eclipse.text.edits.*;
 	public static class NodeMarker extends Position {
 		public Object data;
 	}
+
 	private class ExtendedFlattener extends ASTRewriteFlattener {
 
 		private ArrayList<NodeMarker> positions;
@@ -49,7 +50,9 @@ import org.eclipse.text.edits.*;
 			this.positions = new ArrayList<NodeMarker>();
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.jdt.core.dom.ASTVisitor#preVisit(ASTNode)
 		 */
 		public void preVisit(ASTNode node) {
@@ -63,7 +66,9 @@ import org.eclipse.text.edits.*;
 			}
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.jdt.core.dom.ASTVisitor#postVisit(ASTNode)
 		 */
 		public void postVisit(ASTNode node) {
@@ -77,8 +82,12 @@ import org.eclipse.text.edits.*;
 			}
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jdt.internal.corext.dom.ASTRewriteFlattener#visit(org.eclipse.jdt.core.dom.Block)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jdt.internal.corext.dom.ASTRewriteFlattener#visit(org
+		 * .eclipse.jdt.core.dom.Block)
 		 */
 		public boolean visit(Block node) {
 			if (getPlaceholders().isCollapsed(node)) {
@@ -88,7 +97,8 @@ import org.eclipse.text.edits.*;
 			return super.visit(node);
 		}
 
-		private NodeMarker addMarker(Object annotation, int startOffset, int length) {
+		private NodeMarker addMarker(Object annotation, int startOffset,
+				int length) {
 			NodeMarker marker = new NodeMarker();
 			marker.offset = startOffset;
 			marker.length = length;
@@ -108,7 +118,8 @@ import org.eclipse.text.edits.*;
 		}
 
 		public NodeMarker[] getMarkers() {
-			return this.positions.toArray(new NodeMarker[this.positions.size()]);
+			return this.positions
+					.toArray(new NodeMarker[this.positions.size()]);
 		}
 	}
 
@@ -123,7 +134,9 @@ import org.eclipse.text.edits.*;
 	private IDocument document;
 	private PHPVersion phpVersion;
 
-	public ASTRewriteFormatter(IDocument document, NodeInfoStore placeholders, RewriteEventStore eventStore, Map options, String lineDelimiter, PHPVersion version) {
+	public ASTRewriteFormatter(IDocument document, NodeInfoStore placeholders,
+			RewriteEventStore eventStore, Map options, String lineDelimiter,
+			PHPVersion version) {
 		this.document = document;
 		this.placeholders = placeholders;
 		this.eventStore = eventStore;
@@ -131,7 +144,8 @@ import org.eclipse.text.edits.*;
 		if (options == null) {
 			options = PHPCorePlugin.getOptions();
 		}
-		//options.put(DefaultCodeFormatterConstants.FORMATTER_LINE_SPLIT, String.valueOf(9999));
+		// options.put(DefaultCodeFormatterConstants.FORMATTER_LINE_SPLIT,
+		// String.valueOf(9999));
 
 		this.options = options;
 		this.lineDelimiter = lineDelimiter;
@@ -162,15 +176,19 @@ import org.eclipse.text.edits.*;
 	}
 
 	/**
-	 * Returns the string accumulated in the visit formatted using the default formatter.
-	 * Updates the existing node's positions.
-	 *
-	 * @param node The node to flatten.
-	 * @param initialIndentationLevel The initial indentation level.
-	 * @param resultingMarkers Resulting the updated NodeMarkers.
+	 * Returns the string accumulated in the visit formatted using the default
+	 * formatter. Updates the existing node's positions.
+	 * 
+	 * @param node
+	 *            The node to flatten.
+	 * @param initialIndentationLevel
+	 *            The initial indentation level.
+	 * @param resultingMarkers
+	 *            Resulting the updated NodeMarkers.
 	 * @return Returns the serialized and formatted code.
 	 */
-	public String getFormattedResult(ASTNode node, int initialIndentationLevel, Collection<NodeMarker> resultingMarkers) {
+	public String getFormattedResult(ASTNode node, int initialIndentationLevel,
+			Collection<NodeMarker> resultingMarkers) {
 
 		ExtendedFlattener flattener = new ExtendedFlattener(this.eventStore);
 		node.accept(flattener);
@@ -186,7 +204,9 @@ import org.eclipse.text.edits.*;
 			if (initialIndentationLevel > 0) {
 				// at least correct the indent
 				String indentString = createIndentString(initialIndentationLevel);
-				ReplaceEdit[] edits = IndentManipulation.getChangeIndentEdits(unformatted, 0, this.tabWidth, this.indentWidth, indentString);
+				ReplaceEdit[] edits = IndentManipulation.getChangeIndentEdits(
+						unformatted, 0, this.tabWidth, this.indentWidth,
+						indentString);
 				edit = new MultiTextEdit();
 				edit.addChild(new InsertEdit(0, indentString));
 				edit.addChildren(edits);
@@ -199,7 +219,9 @@ import org.eclipse.text.edits.*;
 
 	public String createIndentString(int indentationUnits) {
 		try {
-			return createCodeFormatter(this.options, new Region(0, 0), createDocument("", null)).createIndentationString(indentationUnits);
+			return createCodeFormatter(this.options, new Region(0, 0),
+					createDocument("", null)).createIndentationString(
+					indentationUnits);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -207,46 +229,63 @@ import org.eclipse.text.edits.*;
 	}
 
 	public String getIndentString(String currentLine) {
-		return IndentManipulation.extractIndentString(currentLine, this.tabWidth, this.indentWidth);
+		return IndentManipulation.extractIndentString(currentLine,
+				this.tabWidth, this.indentWidth);
 	}
 
-	public String changeIndent(String code, int codeIndentLevel, String newIndent) {
-		return IndentManipulation.changeIndent(code, codeIndentLevel, this.tabWidth, this.indentWidth, newIndent, this.lineDelimiter);
+	public String changeIndent(String code, int codeIndentLevel,
+			String newIndent) {
+		return IndentManipulation.changeIndent(code, codeIndentLevel,
+				this.tabWidth, this.indentWidth, newIndent, this.lineDelimiter);
 	}
 
 	public int computeIndentUnits(String line) {
-		return IndentManipulation.measureIndentUnits(line, this.tabWidth, this.indentWidth);
+		return IndentManipulation.measureIndentUnits(line, this.tabWidth,
+				this.indentWidth);
 	}
 
 	/**
 	 * Evaluates the edit on the given string.
-	 * @param string The string to format
-	 * @param edit The edit resulted from the code formatter
-	 * @param positions Positions to update or <code>null</code>.
+	 * 
+	 * @param string
+	 *            The string to format
+	 * @param edit
+	 *            The edit resulted from the code formatter
+	 * @param positions
+	 *            Positions to update or <code>null</code>.
 	 * @return The formatted string
-	 * @throws IllegalArgumentException If the positions are not inside the string, a
-	 *  IllegalArgumentException is thrown.
+	 * @throws IllegalArgumentException
+	 *             If the positions are not inside the string, a
+	 *             IllegalArgumentException is thrown.
 	 */
-	public static String evaluateFormatterEdit(String string, TextEdit edit, Position[] positions) {
+	public static String evaluateFormatterEdit(String string, TextEdit edit,
+			Position[] positions) {
 		try {
 			Document doc = createDocument(string, positions);
 			edit.apply(doc, 0);
 			if (positions != null) {
 				for (int i = 0; i < positions.length; i++) {
-					Assert.isTrue(!positions[i].isDeleted, "Position got deleted"); //$NON-NLS-1$
+					Assert.isTrue(!positions[i].isDeleted,
+							"Position got deleted"); //$NON-NLS-1$
 				}
 			}
 			return doc.get();
 		} catch (BadLocationException e) {
-			//JavaPlugin.log(e); // bug in the formatter
-			Assert.isTrue(false, "Fromatter created edits with wrong positions: " + e.getMessage()); //$NON-NLS-1$
+			// JavaPlugin.log(e); // bug in the formatter
+			Assert
+					.isTrue(
+							false,
+							"Fromatter created edits with wrong positions: " + e.getMessage()); //$NON-NLS-1$
 		}
 		return null;
 	}
 
-	public TextEdit formatString(int kind, String string, int offset, int length, int indentationLevel) {
+	public TextEdit formatString(int kind, String string, int offset,
+			int length, int indentationLevel) {
 		try {
-			ICodeFormattingProcessor codeFormatter = createCodeFormatter(this.options, new Region(offset, length), createDocument(string, null));
+			ICodeFormattingProcessor codeFormatter = createCodeFormatter(
+					this.options, new Region(offset, length), createDocument(
+							string, null));
 			return codeFormatter.getTextEdits();
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -254,15 +293,18 @@ import org.eclipse.text.edits.*;
 		return new MultiTextEdit();
 	}
 
-	private ICodeFormattingProcessor createCodeFormatter(Map options, IRegion region, IDocument document) throws Exception {
+	private ICodeFormattingProcessor createCodeFormatter(Map options,
+			IRegion region, IDocument document) throws Exception {
 		if (getContentFomatter() != null) {
-			return contentFormatter.getCodeFormattingProcessor(document, phpVersion, region);
+			return contentFormatter.getCodeFormattingProcessor(document,
+					phpVersion, region);
 		}
 		return new NullCodeFormattingProcessor();
 	}
 
 	/*
-	 * Returns an instance of IFormatterProcessorFactory extracted from the extension point of the 'phpFormatterProcessor'
+	 * Returns an instance of IFormatterProcessorFactory extracted from the
+	 * extension point of the 'phpFormatterProcessor'
 	 */
 	private static IFormatterProcessorFactory getContentFomatter() {
 		if (contentFormatter != null) {
@@ -270,14 +312,16 @@ import org.eclipse.text.edits.*;
 		}
 
 		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(formatterExtensionName);
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (element.getName().equals("processor")) { //$NON-NLS-1$
 				final Object elementObject[] = new Object[1];
 				SafeRunner.run(new ISafeRunnable() {
 					public void run() throws Exception {
-						elementObject[0] = element.createExecutableExtension("class"); //$NON-NLS-1$
+						elementObject[0] = element
+								.createExecutableExtension("class"); //$NON-NLS-1$
 					}
 
 					public void handleException(Throwable exception) {
@@ -293,17 +337,24 @@ import org.eclipse.text.edits.*;
 	}
 
 	/**
-	 * Creates edits that describe how to format the given string. Returns <code>null</code> if the code could not be formatted for the given kind.
-	 * @param node Node describing the type of the string
-	 * @param str The unformatted string
-	 * @param indentationLevel 
+	 * Creates edits that describe how to format the given string. Returns
+	 * <code>null</code> if the code could not be formatted for the given kind.
+	 * 
+	 * @param node
+	 *            Node describing the type of the string
+	 * @param str
+	 *            The unformatted string
+	 * @param indentationLevel
 	 * @return Returns the edit representing the result of the formatter
-	 * @throws IllegalArgumentException If the offset and length are not inside the string, a
-	 *  IllegalArgumentException is thrown.
+	 * @throws IllegalArgumentException
+	 *             If the offset and length are not inside the string, a
+	 *             IllegalArgumentException is thrown.
 	 */
 	private TextEdit formatNode(ASTNode node, String str, int indentationLevel) {
-		// (shalom) We create chunk of php codes that we inject to the formatter.
-		// Every node is created with a <?php prefix and, optionally, some more prefix string that is needed for the formatting.
+		// (shalom) We create chunk of php codes that we inject to the
+		// formatter.
+		// Every node is created with a <?php prefix and, optionally, some more
+		// prefix string that is needed for the formatting.
 		int code;
 		String prefix = "<?php "; //$NON-NLS-1$
 		String suffix = ""; //$NON-NLS-1$
@@ -317,7 +368,8 @@ import org.eclipse.text.edits.*;
 				suffix = "}"; //$NON-NLS-1$
 			}
 
-		} else if (node instanceof Expression && node.getType() != ASTNode.SINGLE_FIELD_DECLARATION) {
+		} else if (node instanceof Expression
+				&& node.getType() != ASTNode.SINGLE_FIELD_DECLARATION) {
 		} else if (node instanceof BodyDeclaration) {
 		} else if (node instanceof Comment) {
 			prefix += "class x{";
@@ -329,7 +381,8 @@ import org.eclipse.text.edits.*;
 		}
 
 		String concatStr = prefix + str + suffix;
-		TextEdit edit = formatString(0, concatStr, prefix.length(), str.length(), indentationLevel);
+		TextEdit edit = formatString(0, concatStr, prefix.length(), str
+				.length(), indentationLevel);
 
 		if (prefix.length() > 0) {
 			edit = shifEdit(edit, prefix.length(), prefix);
@@ -343,9 +396,11 @@ import org.eclipse.text.edits.*;
 			ReplaceEdit edit = (ReplaceEdit) oldEdit;
 			int editOffset = edit.getOffset();
 			if (editOffset >= diff) {
-				newEdit = new ReplaceEdit(editOffset - diff, edit.getLength(), edit.getText());
+				newEdit = new ReplaceEdit(editOffset - diff, edit.getLength(),
+						edit.getText());
 			} else {
-				// The new edit is actually an insertion of whitespace and new lines characters.
+				// The new edit is actually an insertion of whitespace and new
+				// lines characters.
 				newEdit = getEndPrefixInsertion(edit.getText());
 			}
 		} else if (oldEdit instanceof InsertEdit) {
@@ -362,7 +417,8 @@ import org.eclipse.text.edits.*;
 			if (editOffset >= diff) {
 				newEdit = new DeleteEdit(editOffset - diff, edit.getLength());
 			} else {
-				newEdit = new DeleteEdit(0, edit.getLength() - (diff - editOffset));
+				newEdit = new DeleteEdit(0, edit.getLength()
+						- (diff - editOffset));
 			}
 		} else if (oldEdit instanceof MultiTextEdit) {
 			newEdit = new MultiTextEdit();
@@ -380,8 +436,9 @@ import org.eclipse.text.edits.*;
 	}
 
 	/*
-	 * Returns an InsertEdit edit for a situation where the edit was done also on the prefix string. 
-	 * In this case, the edit always start from offset 0 and the added string contains the new line and the whitespace characters.
+	 * Returns an InsertEdit edit for a situation where the edit was done also
+	 * on the prefix string. In this case, the edit always start from offset 0
+	 * and the added string contains the new line and the whitespace characters.
 	 */
 	private static InsertEdit getEndPrefixInsertion(String newPrefix) {
 		// collect the whitespace characters from the end of the new prefix
@@ -398,29 +455,39 @@ import org.eclipse.text.edits.*;
 		return new InsertEdit(0, newPrefixEnding.reverse().toString());
 	}
 
-	private static Document createDocument(String string, Position[] positions) throws IllegalArgumentException {
+	private static Document createDocument(String string, Position[] positions)
+			throws IllegalArgumentException {
 		Document doc = new Document(string);
 		try {
 			if (positions != null) {
 				final String POS_CATEGORY = "myCategory"; //$NON-NLS-1$
 
 				doc.addPositionCategory(POS_CATEGORY);
-				doc.addPositionUpdater(new DefaultPositionUpdater(POS_CATEGORY) {
-					protected boolean notDeleted() {
-						int start = this.fOffset;
-						int end = start + this.fLength;
-						if (start < this.fPosition.offset && (this.fPosition.offset + this.fPosition.length < end)) {
-							this.fPosition.offset = end; // deleted positions: set to end of remove
-							return false;
-						}
-						return true;
-					}
-				});
+				doc
+						.addPositionUpdater(new DefaultPositionUpdater(
+								POS_CATEGORY) {
+							protected boolean notDeleted() {
+								int start = this.fOffset;
+								int end = start + this.fLength;
+								if (start < this.fPosition.offset
+										&& (this.fPosition.offset
+												+ this.fPosition.length < end)) {
+									this.fPosition.offset = end; // deleted
+																	// positions:
+																	// set to
+																	// end of
+																	// remove
+									return false;
+								}
+								return true;
+							}
+						});
 				for (int i = 0; i < positions.length; i++) {
 					try {
 						doc.addPosition(POS_CATEGORY, positions[i]);
 					} catch (BadLocationException e) {
-						throw new IllegalArgumentException("Position outside of string. offset: " + positions[i].offset + ", length: " + positions[i].length + ", string size: " + string.length()); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+						throw new IllegalArgumentException(
+								"Position outside of string. offset: " + positions[i].offset + ", length: " + positions[i].length + ", string size: " + string.length()); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 					}
 				}
 			}
@@ -435,7 +502,8 @@ import org.eclipse.text.edits.*;
 	}
 
 	public static interface BlockContext {
-		String[] getPrefixAndSuffix(int indent, ASTNode node, RewriteEventStore events);
+		String[] getPrefixAndSuffix(int indent, ASTNode node,
+				RewriteEventStore events);
 	}
 
 	public static class ConstPrefix implements Prefix {
@@ -483,16 +551,21 @@ import org.eclipse.text.edits.*;
 			this.prefix = prefix;
 		}
 
-		public String[] getPrefixAndSuffix(int indent, ASTNode node, RewriteEventStore events) {
+		public String[] getPrefixAndSuffix(int indent, ASTNode node,
+				RewriteEventStore events) {
 			String nodeString = ASTRewriteFlattener.asString(node, events);
 			String str = this.prefix + nodeString;
-			Position pos = new Position(this.start, this.prefix.length() + 1 - this.start);
+			Position pos = new Position(this.start, this.prefix.length() + 1
+					- this.start);
 
-			TextEdit res = null; // formatString(CodeFormatter.K_STATEMENTS, str, 0, str.length(), indent);
+			TextEdit res = null; // formatString(CodeFormatter.K_STATEMENTS,
+									// str, 0, str.length(), indent);
 			if (res != null) {
 				str = evaluateFormatterEdit(str, res, new Position[] { pos });
 			}
-			return new String[] { str.substring(pos.offset + 1, pos.offset + pos.length - 1), "" }; //$NON-NLS-1$
+			return new String[] {
+					str.substring(pos.offset + 1, pos.offset + pos.length - 1),
+					"" }; //$NON-NLS-1$
 		}
 	}
 
@@ -501,13 +574,15 @@ import org.eclipse.text.edits.*;
 		private String suffix;
 		private int start;
 
-		public BlockFormattingPrefixSuffix(String prefix, String suffix, int start) {
+		public BlockFormattingPrefixSuffix(String prefix, String suffix,
+				int start) {
 			this.start = start;
 			this.suffix = suffix;
 			this.prefix = prefix;
 		}
 
-		public String[] getPrefixAndSuffix(int indent, ASTNode node, RewriteEventStore events) {
+		public String[] getPrefixAndSuffix(int indent, ASTNode node,
+				RewriteEventStore events) {
 			String nodeString = ASTRewriteFlattener.asString(node, events);
 			int nodeStart = this.prefix.length();
 			int nodeEnd = nodeStart + nodeString.length() - 1;
@@ -517,11 +592,17 @@ import org.eclipse.text.edits.*;
 			Position pos1 = new Position(this.start, nodeStart + 1 - this.start);
 			Position pos2 = new Position(nodeEnd, 2);
 
-			TextEdit res = null; // formatString(CodeFormatter.K_STATEMENTS, str, 0, str.length(), indent);
+			TextEdit res = null; // formatString(CodeFormatter.K_STATEMENTS,
+									// str, 0, str.length(), indent);
 			if (res != null) {
-				str = evaluateFormatterEdit(str, res, new Position[] { pos1, pos2 });
+				str = evaluateFormatterEdit(str, res, new Position[] { pos1,
+						pos2 });
 			}
-			return new String[] { str.substring(pos1.offset + 1, pos1.offset + pos1.length - 1), str.substring(pos2.offset + 1, pos2.offset + pos2.length - 1) };
+			return new String[] {
+					str.substring(pos1.offset + 1, pos1.offset + pos1.length
+							- 1),
+					str.substring(pos2.offset + 1, pos2.offset + pos2.length
+							- 1) };
 		}
 	}
 
@@ -543,13 +624,20 @@ import org.eclipse.text.edits.*;
 	//	public final Prefix ANNOTATION_SEPARATION= new FormattingPrefix("@A @B class C {}", "A @" , CodeFormatter.K_COMPILATION_UNIT); //$NON-NLS-1$ //$NON-NLS-2$
 	//	public final Prefix PARAM_ANNOTATION_SEPARATION= new FormattingPrefix("void foo(@A @B p) { }", "A @" , CodeFormatter.K_CLASS_BODY_DECLARATIONS); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public final BlockContext IF_BLOCK_WITH_ELSE = new BlockFormattingPrefixSuffix("if (true)", "else{}", 8); //$NON-NLS-1$ //$NON-NLS-2$
-	public final BlockContext IF_BLOCK_NO_ELSE = new BlockFormattingPrefix("if (true)", 8); //$NON-NLS-1$
-	public final BlockContext ELSE_AFTER_STATEMENT = new BlockFormattingPrefix("if (true) foo(); else ", 15); //$NON-NLS-1$
-	public final BlockContext ELSE_AFTER_BLOCK = new BlockFormattingPrefix("if (true) {} else ", 11); //$NON-NLS-1$
+	public final BlockContext IF_BLOCK_WITH_ELSE = new BlockFormattingPrefixSuffix(
+			"if (true)", "else{}", 8); //$NON-NLS-1$ //$NON-NLS-2$
+	public final BlockContext IF_BLOCK_NO_ELSE = new BlockFormattingPrefix(
+			"if (true)", 8); //$NON-NLS-1$
+	public final BlockContext ELSE_AFTER_STATEMENT = new BlockFormattingPrefix(
+			"if (true) foo(); else ", 15); //$NON-NLS-1$
+	public final BlockContext ELSE_AFTER_BLOCK = new BlockFormattingPrefix(
+			"if (true) {} else ", 11); //$NON-NLS-1$
 
-	public final BlockContext FOR_BLOCK = new BlockFormattingPrefix("for (;;) ", 7); //$NON-NLS-1$
-	public final BlockContext WHILE_BLOCK = new BlockFormattingPrefix("while (true)", 11); //$NON-NLS-1$
-	public final BlockContext DO_BLOCK = new BlockFormattingPrefixSuffix("do ", "while (true);", 1); //$NON-NLS-1$ //$NON-NLS-2$
+	public final BlockContext FOR_BLOCK = new BlockFormattingPrefix(
+			"for (;;) ", 7); //$NON-NLS-1$
+	public final BlockContext WHILE_BLOCK = new BlockFormattingPrefix(
+			"while (true)", 11); //$NON-NLS-1$
+	public final BlockContext DO_BLOCK = new BlockFormattingPrefixSuffix(
+			"do ", "while (true);", 1); //$NON-NLS-1$ //$NON-NLS-2$
 
 }

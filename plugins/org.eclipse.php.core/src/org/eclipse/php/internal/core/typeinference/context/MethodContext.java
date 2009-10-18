@@ -23,9 +23,11 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 /**
  * This is a PHP method or function context.
+ * 
  * @author michael
  */
-public class MethodContext implements IContext, INamespaceContext, IArgumentsContext, IInstanceContext, ISourceModuleContext {
+public class MethodContext implements IContext, INamespaceContext,
+		IArgumentsContext, IInstanceContext, ISourceModuleContext {
 
 	private final ISourceModule sourceModule;
 	private final ModuleDeclaration rootNode;
@@ -35,7 +37,9 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	private IEvaluatedType instanceType;
 	private String namespaceName;
 
-	public MethodContext(IContext parent, ISourceModule sourceModule, ModuleDeclaration rootNode, MethodDeclaration methodNode, String[] argNames, IEvaluatedType[] argTypes) {
+	public MethodContext(IContext parent, ISourceModule sourceModule,
+			ModuleDeclaration rootNode, MethodDeclaration methodNode,
+			String[] argNames, IEvaluatedType[] argTypes) {
 		this.sourceModule = sourceModule;
 		this.rootNode = rootNode;
 		this.methodNode = methodNode;
@@ -65,14 +69,16 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	}
 
 	/**
-	 * Returns {@link IEvaluatedType} for the declaring type or <code>null</code> if this is a function context 
+	 * Returns {@link IEvaluatedType} for the declaring type or
+	 * <code>null</code> if this is a function context
 	 */
 	public IEvaluatedType getInstanceType() {
 		return instanceType;
 	}
-	
+
 	/**
-	 * Returns namespace where the method was declared or <code>null</code> if this is a global scope method/function
+	 * Returns namespace where the method was declared or <code>null</code> if
+	 * this is a global scope method/function
 	 */
 	public String getNamespace() {
 		return namespaceName;
@@ -101,7 +107,8 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 
 	public String getLangNature() {
 		if (sourceModule != null) {
-			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(sourceModule);
+			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager
+					.getLanguageToolkit(sourceModule);
 			if (languageToolkit != null) {
 				return languageToolkit.getNatureId();
 			}
@@ -112,10 +119,14 @@ public class MethodContext implements IContext, INamespaceContext, IArgumentsCon
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((instanceType == null) ? 0 : instanceType.hashCode());
-		result = prime * result + ((methodNode == null) ? 0 : methodNode.hashCode());
-		result = prime * result + ((namespaceName == null) ? 0 : namespaceName.hashCode());
-		result = prime * result + ((sourceModule == null) ? 0 : sourceModule.hashCode());
+		result = prime * result
+				+ ((instanceType == null) ? 0 : instanceType.hashCode());
+		result = prime * result
+				+ ((methodNode == null) ? 0 : methodNode.hashCode());
+		result = prime * result
+				+ ((namespaceName == null) ? 0 : namespaceName.hashCode());
+		result = prime * result
+				+ ((sourceModule == null) ? 0 : sourceModule.hashCode());
 		return result;
 	}
 

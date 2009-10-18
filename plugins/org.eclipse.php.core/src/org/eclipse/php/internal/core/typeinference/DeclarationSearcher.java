@@ -25,7 +25,9 @@ import org.eclipse.dltk.core.ModelException;
 
 class DeclarationSearcher extends ASTVisitor {
 
-	enum DeclarationType { METHOD, CLASS, FIELD };
+	enum DeclarationType {
+		METHOD, CLASS, FIELD
+	};
 
 	private int bestScore = Integer.MAX_VALUE;
 	private int modelStart;
@@ -36,7 +38,9 @@ class DeclarationSearcher extends ASTVisitor {
 	private Declaration result;
 	private DeclarationType declarationType;
 
-	public DeclarationSearcher(ModuleDeclaration moduleDeclaration, IMember modelElement, DeclarationType declarationType) throws ModelException {
+	public DeclarationSearcher(ModuleDeclaration moduleDeclaration,
+			IMember modelElement, DeclarationType declarationType)
+			throws ModelException {
 		ISourceRange sourceRange = modelElement.getSourceRange();
 		modelStart = sourceRange.getOffset();
 		modelEnd = modelStart + sourceRange.getLength();
@@ -69,7 +73,8 @@ class DeclarationSearcher extends ASTVisitor {
 		if (s.sourceStart() < 0 || s.sourceEnd() < s.sourceStart()) {
 			return true;
 		}
-		if (modelCutoffEnd < s.sourceStart() || modelCutoffStart >= s.sourceEnd()) {
+		if (modelCutoffEnd < s.sourceStart()
+				|| modelCutoffStart >= s.sourceEnd()) {
 			return false;
 		}
 		return true;
@@ -81,13 +86,14 @@ class DeclarationSearcher extends ASTVisitor {
 		}
 		return true;
 	}
-	
+
 	public boolean visit(Statement s) throws Exception {
 		if (!interesting(s)) {
 			return false;
 		}
-		if (declarationType == DeclarationType.FIELD && s instanceof Declaration) {
-			checkElementDeclaration((Declaration)s);
+		if (declarationType == DeclarationType.FIELD
+				&& s instanceof Declaration) {
+			checkElementDeclaration((Declaration) s);
 		}
 		return true;
 	}

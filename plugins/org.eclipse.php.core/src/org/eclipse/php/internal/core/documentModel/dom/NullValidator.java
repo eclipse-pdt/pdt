@@ -16,8 +16,8 @@ import org.eclipse.wst.sse.core.internal.validate.ValidationReporter;
 import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 
 /**
- * NullValidator class is intended to be a replacement of null
- * for ValidationComponent type.
+ * NullValidator class is intended to be a replacement of null for
+ * ValidationComponent type.
  */
 public class NullValidator extends ValidationComponent {
 

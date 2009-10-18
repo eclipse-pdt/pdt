@@ -37,7 +37,8 @@ public class ArrayCreationEvaluator extends GoalEvaluator {
 
 		List<IGoal> subGoals = new LinkedList<IGoal>();
 		for (ArrayElement arrayElement : arrayCreation.getElements()) {
-			subGoals.add(new ExpressionTypeGoal(typedGoal.getContext(), arrayElement.getValue()));
+			subGoals.add(new ExpressionTypeGoal(typedGoal.getContext(),
+					arrayElement.getValue()));
 		}
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
@@ -48,7 +49,7 @@ public class ArrayCreationEvaluator extends GoalEvaluator {
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE) {
-			evaluated.add((IEvaluatedType)result);
+			evaluated.add((IEvaluatedType) result);
 		}
 		return IGoal.NO_GOALS;
 	}

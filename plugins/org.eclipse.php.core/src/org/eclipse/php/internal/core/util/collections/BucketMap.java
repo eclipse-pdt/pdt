@@ -49,7 +49,8 @@ public class BucketMap<K, V> {
 	private Set<V> createSet() {
 		if (defaultSet instanceof Cloneable) {
 			try {
-				Method method = defaultSet.getClass().getMethod("clone", (Class<?>) null); //$NON-NLS-1$
+				Method method = defaultSet.getClass().getMethod(
+						"clone", (Class<?>) null); //$NON-NLS-1$
 				return (Set<V>) method.invoke(defaultSet, new Object[] {});
 			} catch (Exception e) {
 			}

@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -20,17 +19,21 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 /**
- * This context represents the state when staying after 'extends' keyword in a class declaration.
- * <br/>Examples:
+ * This context represents the state when staying after 'extends' keyword in a
+ * class declaration. <br/>
+ * Examples:
+ * 
  * <pre>
  *  1. class A extends |
  *  2. class A extends B|
  * </pre>
+ * 
  * @author michael
  */
 public class ClassExtendsContext extends ClassDeclarationContext {
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -49,7 +52,8 @@ public class ClassExtendsContext extends ClassDeclarationContext {
 	public String getPrefix() throws BadLocationException {
 		String prefix = super.getPrefix();
 		if (getPhpVersion().isGreaterThan(PHPVersion.PHP5)) {
-			if (prefix.length() > 0 && prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			if (prefix.length() > 0
+					&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 				prefix = prefix.substring(1);
 			}
 		}

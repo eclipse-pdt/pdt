@@ -32,22 +32,27 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 abstract public class AbstractASTParser extends lr_parser {
 
-	private PHPModuleDeclaration program = new PHPModuleDeclaration(0, 0, new LinkedList<Statement>(), new LinkedList<ASTError>(), new LinkedList<VarComment>());
+	private PHPModuleDeclaration program = new PHPModuleDeclaration(0, 0,
+			new LinkedList<Statement>(), new LinkedList<ASTError>(),
+			new LinkedList<VarComment>());
 	private IProblemReporter problemReporter;
 	private String fileName;
-	
-	/** This is a place holder for statements that were found after unclosed classes */
+
+	/**
+	 * This is a place holder for statements that were found after unclosed
+	 * classes
+	 */
 	public Statement pendingStatement = null;
-	
+
 	/** This is a latest non-bracketed namespace declaration */
 	public NamespaceDeclaration currentNamespace = null;
-	
+
 	/** Whether we've met the unbracketed namespace declaration in this file */
 	public boolean metUnbracketedNSDecl;
-	
+
 	/** Whether we've met the bracketed namespace declaration in this file */
 	public boolean metBracketedNSDecl;
-	
+
 	/** Top declarations stack */
 	public Stack<Statement> declarations = new Stack<Statement>();
 
@@ -78,9 +83,12 @@ abstract public class AbstractASTParser extends lr_parser {
 	protected List<ASTError> getErrors() {
 		return program.getErrors();
 	}
-	
-	protected void reportError(IProblemReporter problemReporter, String fileName, int start, int end, int lineNumber, String message) {
-		DefaultProblem problem = new DefaultProblem(fileName, message, IProblem.Syntax, new String[0], ProblemSeverities.Error, start, end, lineNumber);
+
+	protected void reportError(IProblemReporter problemReporter,
+			String fileName, int start, int end, int lineNumber, String message) {
+		DefaultProblem problem = new DefaultProblem(fileName, message,
+				IProblem.Syntax, new String[0], ProblemSeverities.Error, start,
+				end, lineNumber);
 		problemReporter.reportProblem(problem);
 	}
 
@@ -90,31 +98,38 @@ abstract public class AbstractASTParser extends lr_parser {
 	public void reportError() {
 		program.setHasErrors(true);
 	}
-	
+
 	public void reportError(ASTError error) {
 		reportError(error, null);
 	}
 
 	/**
-	 * Reporting an error that cannot be added as a statement and has to be in a separated list.
+	 * Reporting an error that cannot be added as a statement and has to be in a
+	 * separated list.
+	 * 
 	 * @param error
 	 */
 	public void reportError(ASTError error, String message) {
 		getErrors().add(error);
 		reportError();
-		
+
 		if (message != null && problemReporter != null && fileName != null) {
 			int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
-			reportError(problemReporter, fileName, error.sourceStart(), error.sourceEnd(), lineNumber, message);
+			reportError(problemReporter, fileName, error.sourceStart(), error
+					.sourceEnd(), lineNumber, message);
 		}
 	}
 
 	public void addStatement(Statement s) {
 		int kind = s.getKind();
-		if (kind != ASTNodeKinds.EMPTY_STATEMENT && kind != ASTNodeKinds.DECLARE_STATEMENT && kind != ASTNodeKinds.NAMESPACE_DECLARATION && metBracketedNSDecl) {
-			reportError(new ASTError(s.sourceStart(), s.sourceEnd()), "No code may exist outside of namespace {}");
+		if (kind != ASTNodeKinds.EMPTY_STATEMENT
+				&& kind != ASTNodeKinds.DECLARE_STATEMENT
+				&& kind != ASTNodeKinds.NAMESPACE_DECLARATION
+				&& metBracketedNSDecl) {
+			reportError(new ASTError(s.sourceStart(), s.sourceEnd()),
+					"No code may exist outside of namespace {}");
 		}
-		
+
 		if (currentNamespace != null && currentNamespace != s) {
 			currentNamespace.addStatement(s);
 		} else {
@@ -129,7 +144,8 @@ abstract public class AbstractASTParser extends lr_parser {
 	public void report_error(String message, Object info) {
 		if (info instanceof Symbol) {
 			if (((Symbol) info).left != -1) {
-				ASTError error = new ASTError(((Symbol) info).left, ((Symbol) info).right);
+				ASTError error = new ASTError(((Symbol) info).left,
+						((Symbol) info).right);
 				reportError(error);
 			} else {
 				reportError(new ASTError(0, 1));
@@ -138,8 +154,9 @@ abstract public class AbstractASTParser extends lr_parser {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
-		//in case 
+	public void unrecovered_syntax_error(Symbol cur_token)
+			throws java.lang.Exception {
+		// in case
 		int start = 0;
 		int end = 0;
 		Object value = cur_token.value;
@@ -171,7 +188,7 @@ abstract public class AbstractASTParser extends lr_parser {
 
 	public void syntax_error(Symbol cur_token) {
 		super.syntax_error(cur_token);
-		
+
 		if (fileName == null || problemReporter == null) {
 			return;
 		}
@@ -184,20 +201,25 @@ abstract public class AbstractASTParser extends lr_parser {
 		int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
 
 		StringBuilder errorMessage = new StringBuilder("syntax error");
-		
-		// current token can be either null, string or phpdoc - according to this resolve:  
-		String currentText = cur_token.value instanceof String ? (String) cur_token.value : null;
+
+		// current token can be either null, string or phpdoc - according to
+		// this resolve:
+		String currentText = cur_token.value instanceof String ? (String) cur_token.value
+				: null;
 		if (currentText == null || currentText.length() == 0) {
 			currentText = getTokenName(cur_token.sym);
 		}
 		if (currentText != null && currentText.length() > 0) {
-			if (currentText.equals(";")) { // This means EOF, since it's substituted by the lexer explicitly.
+			if (currentText.equals(";")) { // This means EOF, since it's
+											// substituted by the lexer
+											// explicitly.
 				currentText = "EOF"; //$NON-NLS-1$
 			}
 			endPosition = startPosition + currentText.length();
-			errorMessage.append(", unexpected '").append(currentText).append('\'');
+			errorMessage.append(", unexpected '").append(currentText).append(
+					'\'');
 		}
-		
+
 		if (rowOfProbe.length <= 6) {
 			errorMessage.append(", expecting ");
 			boolean first = true;
@@ -212,39 +234,44 @@ abstract public class AbstractASTParser extends lr_parser {
 				}
 			}
 		}
-		
-		reportError(problemReporter, fileName, startPosition, endPosition, lineNumber, errorMessage.toString());
+
+		reportError(problemReporter, fileName, startPosition, endPosition,
+				lineNumber, errorMessage.toString());
 	}
 
 	protected abstract String getTokenName(int token);
 
-	public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+	public void report_fatal_error(String message, Object info)
+			throws java.lang.Exception {
 		/* stop parsing (not really necessary since we throw an exception, but) */
 		done_parsing();
 
 		/* use the normal error message reporting to put out the message */
 		// report_error(message, info);
-		
+
 		// throw new Exception("Can't recover from previous error(s)");
 	}
 
 	public void addDeclarationStatement(Statement s) {
 		if (declarations.isEmpty()) {
 			if (s.getKind() == ASTNodeKinds.NAMESPACE_DECLARATION) {
-				if (program.getStatements().size() > 0 && !metBracketedNSDecl && !metUnbracketedNSDecl) {
+				if (program.getStatements().size() > 0 && !metBracketedNSDecl
+						&& !metUnbracketedNSDecl) {
 					boolean justDeclarationNodes = true;
 					for (Object statement : program.getStatements()) {
-						if (((Statement)statement).getKind() != ASTNodeKinds.DECLARE_STATEMENT) {
+						if (((Statement) statement).getKind() != ASTNodeKinds.DECLARE_STATEMENT) {
 							justDeclarationNodes = false;
 							break;
 						}
 					}
 					if (!justDeclarationNodes) {
-						reportError(new ASTError(s.sourceStart(), s.sourceEnd()), "Namespace declaration statement has to be the very first statement in the script");
+						reportError(
+								new ASTError(s.sourceStart(), s.sourceEnd()),
+								"Namespace declaration statement has to be the very first statement in the script");
 					}
 				}
 			}
-			
+
 			// we don't add top level statements to the program node this way
 			return;
 		}

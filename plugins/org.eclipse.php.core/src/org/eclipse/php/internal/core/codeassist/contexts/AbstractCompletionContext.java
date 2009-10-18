@@ -16,7 +16,6 @@ import java.io.IOException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -38,7 +37,7 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyE
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 /**
- * This is an abstract completion context containing all common utilities. 
+ * This is an abstract completion context containing all common utilities.
  * 
  * @author michael
  */
@@ -54,16 +53,17 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	private ITextRegionCollection regionCollection;
 	private IPhpScriptRegion phpScriptRegion;
 	private String partitionType;
-	
+
 	public void init(CompletionCompanion companion) {
 		this.companion = companion;
 	}
-	
+
 	protected CompletionCompanion getCompanion() {
 		return companion;
 	}
 
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (sourceModule == null) {
 			throw new IllegalArgumentException();
 		}
@@ -71,22 +71,27 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		this.requestor = requestor;
 		this.sourceModule = sourceModule;
 		this.offset = offset;
-		this.phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
+		this.phpVersion = ProjectOptions.getPhpVersion(sourceModule
+				.getScriptProject().getProject());
 
 		try {
 			this.document = determineDocument(sourceModule, requestor);
 			if (this.document != null) {
 
-				structuredDocumentRegion = determineStructuredDocumentRegion(document, offset);
+				structuredDocumentRegion = determineStructuredDocumentRegion(
+						document, offset);
 				if (structuredDocumentRegion != null) {
 
-					regionCollection = determineRegionCollection(document, structuredDocumentRegion, offset);
+					regionCollection = determineRegionCollection(document,
+							structuredDocumentRegion, offset);
 					if (regionCollection != null) {
 
-						phpScriptRegion = determinePhpRegion(document, regionCollection, offset);
+						phpScriptRegion = determinePhpRegion(document,
+								regionCollection, offset);
 						if (phpScriptRegion != null) {
 
-							partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
+							partitionType = determinePartitionType(
+									regionCollection, phpScriptRegion, offset);
 							if (partitionType != null) {
 								return true;
 							}
@@ -100,16 +105,20 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		}
 		return false;
 	}
-	
+
 	public boolean isExclusive() {
 		return false;
 	}
 
 	/**
-	 * Determines the structured document region of the place in PHP code where completion was requested
-	 * @return structured document region or <code>null</code> in case it could not be determined
+	 * Determines the structured document region of the place in PHP code where
+	 * completion was requested
+	 * 
+	 * @return structured document region or <code>null</code> in case it could
+	 *         not be determined
 	 */
-	protected IStructuredDocumentRegion determineStructuredDocumentRegion(IStructuredDocument document, int offset) {
+	protected IStructuredDocumentRegion determineStructuredDocumentRegion(
+			IStructuredDocument document, int offset) {
 
 		IStructuredDocumentRegion sdRegion = null;
 
@@ -124,10 +133,15 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Determines the relevant region collection of the place in PHP code where completion was requested
-	 * @return text region collection or <code>null</code> in case it could not be determined
+	 * Determines the relevant region collection of the place in PHP code where
+	 * completion was requested
+	 * 
+	 * @return text region collection or <code>null</code> in case it could not
+	 *         be determined
 	 */
-	protected ITextRegionCollection determineRegionCollection(IStructuredDocument document, IStructuredDocumentRegion sdRegion, int offset) {
+	protected ITextRegionCollection determineRegionCollection(
+			IStructuredDocument document, IStructuredDocumentRegion sdRegion,
+			int offset) {
 		ITextRegionCollection regionCollection = sdRegion;
 
 		ITextRegion textRegion = determineTextRegion(document, sdRegion, offset);
@@ -139,10 +153,12 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	/**
 	 * Determines the text region from the text region collection and offset
+	 * 
 	 * @param regionCollection
-	 * @param offset 
+	 * @param offset
 	 */
-	protected ITextRegion determineTextRegion(IStructuredDocument document, ITextRegionCollection regionCollection, int offset) {
+	protected ITextRegion determineTextRegion(IStructuredDocument document,
+			ITextRegionCollection regionCollection, int offset) {
 		ITextRegion textRegion;
 		// in case we are at the end of the document, asking for completion
 		if (offset == document.getLength()) {
@@ -154,11 +170,16 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Determines the PHP script region of PHP code where completion was requested
-	 * @return php script region or <code>null</code> in case it could not be determined
+	 * Determines the PHP script region of PHP code where completion was
+	 * requested
+	 * 
+	 * @return php script region or <code>null</code> in case it could not be
+	 *         determined
 	 */
-	protected IPhpScriptRegion determinePhpRegion(IStructuredDocument document, ITextRegionCollection regionCollection, int offset) {
-		ITextRegion textRegion = determineTextRegion(document, regionCollection, offset);
+	protected IPhpScriptRegion determinePhpRegion(IStructuredDocument document,
+			ITextRegionCollection regionCollection, int offset) {
+		ITextRegion textRegion = determineTextRegion(document,
+				regionCollection, offset);
 		IPhpScriptRegion phpScriptRegion = null;
 
 		if (textRegion != null) {
@@ -166,7 +187,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				return null;
 			} else if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
 				if (regionCollection.getStartOffset(textRegion) == offset) {
-					textRegion = regionCollection.getRegionAtCharacterOffset(offset - 1);
+					textRegion = regionCollection
+							.getRegionAtCharacterOffset(offset - 1);
 				} else {
 					return null;
 				}
@@ -182,23 +204,35 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	/**
 	 * Determines the partition type of the code where cursor is located.
-	 * @param regionCollection Text region collection
-	 * @param phpScriptRegion PHP script region
+	 * 
+	 * @param regionCollection
+	 *            Text region collection
+	 * @param phpScriptRegion
+	 *            PHP script region
 	 * @param offset
 	 * @return partition type (see {@link PHPRegionTypes})
 	 * @throws BadLocationException
 	 */
-	protected String determinePartitionType(ITextRegionCollection regionCollection, IPhpScriptRegion phpScriptRegion, int offset) throws BadLocationException {
+	protected String determinePartitionType(
+			ITextRegionCollection regionCollection,
+			IPhpScriptRegion phpScriptRegion, int offset)
+			throws BadLocationException {
 
-		int internalOffset = offset - regionCollection.getStartOffset() - phpScriptRegion.getStart() - 1;
+		int internalOffset = offset - regionCollection.getStartOffset()
+				- phpScriptRegion.getStart() - 1;
 		String partitionType = phpScriptRegion.getPartition(internalOffset);
 
-		//if we are at the begining of multi-line comment or docBlock then we should get completion.
-		if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || partitionType == PHPPartitionTypes.PHP_DOC) {
-			String regionType = phpScriptRegion.getPhpToken(internalOffset).getType();
-			if (regionType == PHPRegionTypes.PHP_COMMENT_START || regionType == PHPRegionTypes.PHPDOC_COMMENT_START) {
+		// if we are at the begining of multi-line comment or docBlock then we
+		// should get completion.
+		if (partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT
+				|| partitionType == PHPPartitionTypes.PHP_DOC) {
+			String regionType = phpScriptRegion.getPhpToken(internalOffset)
+					.getType();
+			if (regionType == PHPRegionTypes.PHP_COMMENT_START
+					|| regionType == PHPRegionTypes.PHPDOC_COMMENT_START) {
 				if (phpScriptRegion.getPhpToken(internalOffset).getStart() == internalOffset) {
-					partitionType = phpScriptRegion.getPartition(internalOffset - 1);
+					partitionType = phpScriptRegion
+							.getPartition(internalOffset - 1);
 				}
 			}
 		}
@@ -206,15 +240,21 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Determines the document associated with the editor where code assist has been invoked.
-	 * @param module Source module ({@link ISourceModule})
-	 * @param requestor Completion requestor ({@link CompletionRequestor})
+	 * Determines the document associated with the editor where code assist has
+	 * been invoked.
+	 * 
+	 * @param module
+	 *            Source module ({@link ISourceModule})
+	 * @param requestor
+	 *            Completion requestor ({@link CompletionRequestor})
 	 * @return structured document or <code>null</code> if it couldn't be found
-	 * @throws CoreException 
-	 * @throws IOException 
-	 * @throws ResourceAlreadyExists 
+	 * @throws CoreException
+	 * @throws IOException
+	 * @throws ResourceAlreadyExists
 	 */
-	protected IStructuredDocument determineDocument(ISourceModule module, CompletionRequestor requestor) throws ResourceAlreadyExists, IOException, CoreException {
+	protected IStructuredDocument determineDocument(ISourceModule module,
+			CompletionRequestor requestor) throws ResourceAlreadyExists,
+			IOException, CoreException {
 		IStructuredDocument document = null;
 
 		if (requestor instanceof IPHPCompletionRequestor) {
@@ -229,14 +269,18 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 				IFile file = (IFile) module.getResource();
 				if (file != null) {
 					if (file.exists()) {
-						structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+						structuredModel = StructuredModelManager
+								.getModelManager()
+								.getExistingModelForRead(file);
 						if (structuredModel != null) {
 							document = structuredModel.getStructuredDocument();
 						} else {
-							document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
+							document = StructuredModelManager.getModelManager()
+									.createStructuredDocumentFor(file);
 						}
 					} else {
-						document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
+						document = StructuredModelManager.getModelManager()
+								.createNewStructuredDocumentFor(file);
 						document.set(module.getSource());
 					}
 				}
@@ -252,6 +296,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	/**
 	 * Returns PHP version of the file where code assist was requested
+	 * 
 	 * @return PHP version
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
@@ -261,6 +306,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	/**
 	 * Returns the file where code assist was requested
+	 * 
 	 * @return source module
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
@@ -269,7 +315,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns document associated with the editor where code assist was requested
+	 * Returns document associated with the editor where code assist was
+	 * requested
+	 * 
 	 * @return document
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
@@ -278,7 +326,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	/**
-	 * Returns the relevant region collection of the place in PHP code where completion was requested
+	 * Returns the relevant region collection of the place in PHP code where
+	 * completion was requested
+	 * 
 	 * @return text region collection
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
@@ -288,6 +338,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	/**
 	 * Returns the PHP script region of PHP code where completion was requested
+	 * 
 	 * @return php script region (see {@link IPhpScriptRegion})
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
@@ -297,6 +348,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	/**
 	 * Returns partition type of the code where cursor is located.
+	 * 
 	 * @return partition type (see {@link PHPRegionTypes})
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
@@ -306,83 +358,101 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	/**
 	 * Returns the statement text that is before the cursor
+	 * 
 	 * @return statement text
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
 	public TextSequence getStatementText() {
-		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
+		return PHPTextSequenceUtilities.getStatement(offset,
+				structuredDocumentRegion, true);
 	}
 
 	/**
-	 * Returns whether there are whitespace characters before the cursor where code assist was being invoked
-	 * @return <code>true</code> if there are whitespace characters before the cursor
+	 * Returns whether there are whitespace characters before the cursor where
+	 * code assist was being invoked
+	 * 
+	 * @return <code>true</code> if there are whitespace characters before the
+	 *         cursor
 	 */
 	public boolean hasWhitespaceBeforeCursor() {
 		TextSequence statementText = getStatementText();
-		
+
 		// determine whether there are whitespaces before the cursor
 		int statementLength = statementText.length();
-		int statementEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength);
+		int statementEnd = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, statementLength);
 		return statementLength != statementEnd;
 	}
 
 	/**
 	 * Returns completion requestor
+	 * 
 	 * @return completion requestor (see {@link CompletionRequestor})
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
 	public CompletionRequestor getCompletionRequestor() {
 		return requestor;
 	}
-	
+
 	/**
 	 * Returns offset of the cursor position when code assist was invoked
+	 * 
 	 * @return offset
 	 */
 	public int getOffset() {
 		return offset;
 	}
-	
+
 	/**
 	 * Returns previous word before the cursor position
-	 * @throws BadLocationException 
+	 * 
+	 * @throws BadLocationException
 	 */
 	public String getPreviousWord() throws BadLocationException {
 		TextSequence statementText = getStatementText();
-		
+
 		int statementLength = statementText.length();
-		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read whitespace
-		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, statementLength); // read whitespace
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+				phpVersion, statementText, wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 			return "";
 		}
-		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
-		
+		String previousWord = statementText.subSequence(wordStart, wordEnd)
+				.toString();
+
 		if (hasWhitespaceBeforeCursor()) {
 			return previousWord;
 		}
-		
-		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read whitespace
-		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+
+		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
+				wordStart - 1); // read whitespace
+		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+				phpVersion, statementText, wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 			return "";
 		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
-		
+
 		return previousWord;
 	}
-	
+
 	/**
 	 * Returns PHP token under offset
+	 * 
 	 * @return PHP token
-	 * @throws BadLocationException 
+	 * @throws BadLocationException
 	 */
 	public ITextRegion getPHPToken() throws BadLocationException {
-		return phpScriptRegion.getPhpToken(offset - regionCollection.getStartOffset() - phpScriptRegion.getStart() - 1);
+		return phpScriptRegion.getPhpToken(offset
+				- regionCollection.getStartOffset()
+				- phpScriptRegion.getStart() - 1);
 	}
-	
+
 	/**
 	 * Returns the word on which code assist was invoked
+	 * 
 	 * @return prefix
 	 * @throws BadLocationException
 	 */
@@ -392,19 +462,23 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		}
 		TextSequence statementText = getStatementText();
 		int statementLength = statementText.length();
-		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read whitespace
-		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, prefixEnd, true);
+		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, statementLength); // read whitespace
+		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+				phpVersion, statementText, prefixEnd, true);
 		return statementText.subSequence(prefixStart, prefixEnd).toString();
 	}
-	
+
 	/**
 	 * Returns the end of the word on which code assist was invoked
-	 * @return 
-	 * @throws BadLocationException 
+	 * 
+	 * @return
+	 * @throws BadLocationException
 	 */
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
-		int endOffset = regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getTextEnd();
+		int endOffset = regionCollection.getStartOffset()
+				+ phpScriptRegion.getStart() + phpToken.getTextEnd();
 		if (phpToken.getType() == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
 			--endOffset;
 		}
@@ -413,28 +487,32 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	/**
 	 * Returns next PHP token after offset
+	 * 
 	 * @return PHP token
-	 * @throws BadLocationException 
+	 * @throws BadLocationException
 	 */
 	public ITextRegion getNextPHPToken() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
 		do {
 			phpToken = phpScriptRegion.getPhpToken(phpToken.getEnd());
-			if (!PHPPartitionTypes.isPHPCommentState(phpToken.getType()) && phpToken.getType() != PHPRegionTypes.WHITESPACE) {
+			if (!PHPPartitionTypes.isPHPCommentState(phpToken.getType())
+					&& phpToken.getType() != PHPRegionTypes.WHITESPACE) {
 				break;
 			}
-		}
-		while (phpToken.getEnd() < phpScriptRegion.getLength());
-		
+		} while (phpToken.getEnd() < phpScriptRegion.getLength());
+
 		return phpToken;
 	}
-	
+
 	/**
 	 * Returns next word after the cursor position
-	 * @throws BadLocationException 
+	 * 
+	 * @throws BadLocationException
 	 */
 	public String getNextWord() throws BadLocationException {
 		ITextRegion nextPHPToken = getNextPHPToken();
-		return document.get(regionCollection.getStartOffset() + phpScriptRegion.getStart() + nextPHPToken.getStart(), nextPHPToken.getTextLength());
+		return document.get(regionCollection.getStartOffset()
+				+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
+				nextPHPToken.getTextLength());
 	}
 }

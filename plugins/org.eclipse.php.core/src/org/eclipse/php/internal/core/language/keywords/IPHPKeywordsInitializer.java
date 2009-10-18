@@ -16,10 +16,11 @@ import java.util.Collection;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
 /**
- * This interface initializes a PHP keywords database with keywords for specific PHP language  
+ * This interface initializes a PHP keywords database with keywords for specific
+ * PHP language
  */
 public interface IPHPKeywordsInitializer {
-	
+
 	public static final String OPEN_BLOCK_SUFFIX = " {";
 	public static final String PAAMAYIM_NEKUDOTAYIM_SUFFIX = "::";
 	public static final String WS_QUOTES_SEMICOLON_SUFFIX = " '';";
@@ -32,14 +33,16 @@ public interface IPHPKeywordsInitializer {
 	public static final String PARENTESES_SUFFIX = "()";
 
 	/**
-	 * Initialize the given list with keywords data compatible with this PHP version.
+	 * Initialize the given list with keywords data compatible with this PHP
+	 * version.
+	 * 
 	 * @param keywordData
 	 */
 	public void initialize(Collection<KeywordData> keywordData);
-	
+
 	/**
-	 * Initialize the given list with keywords data compatible with this PHP version,
-	 * and not compatible with greater version of PHP. 
+	 * Initialize the given list with keywords data compatible with this PHP
+	 * version, and not compatible with greater version of PHP.
 	 */
 	public void initializeSpecific(Collection<KeywordData> list);
 }
