@@ -42,7 +42,8 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 	protected static int count;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("ErrorReportingTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+				"ErrorReportingTests");
 		if (project.exists()) {
 			return;
 		}
@@ -54,15 +55,15 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
-		
+
 		for (PdttFile pdttFile : filesMap.keySet()) {
 			IFile file = createFile(pdttFile.getFile().trim());
 			filesMap.put(pdttFile, file);
 		}
-		
+
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		
+
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 	}
@@ -87,35 +88,48 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 				try {
 					final PdttFile pdttFile = new PdttFile(fileName);
 					filesMap.put(pdttFile, null);
-					
+
 					suite.addTest(new ErrorReportingTests("/" + fileName) {
 
 						protected void runTest() throws Throwable {
 							IFile file = filesMap.get(pdttFile);
-							
+
 							StringBuilder buf = new StringBuilder();
 
-							IMarker[] markers = file.findMarkers(DefaultProblem.MARKER_TYPE_PROBLEM, true, IResource.DEPTH_ZERO);
+							IMarker[] markers = file.findMarkers(
+									DefaultProblem.MARKER_TYPE_PROBLEM, true,
+									IResource.DEPTH_ZERO);
 							for (IMarker marker : markers) {
 								buf.append("\n[line=");
-								buf.append(marker.getAttribute(IMarker.LINE_NUMBER));
+								buf.append(marker
+										.getAttribute(IMarker.LINE_NUMBER));
 								buf.append(", start=");
-								buf.append(marker.getAttribute(IMarker.CHAR_START));
+								buf.append(marker
+										.getAttribute(IMarker.CHAR_START));
 								buf.append(", end=");
-								buf.append(marker.getAttribute(IMarker.CHAR_END));
+								buf.append(marker
+										.getAttribute(IMarker.CHAR_END));
 								buf.append("] ");
-								buf.append(marker.getAttribute(IMarker.MESSAGE)).append('\n');
+								buf
+										.append(
+												marker
+														.getAttribute(IMarker.MESSAGE))
+										.append('\n');
 							}
 
-							assertContents(pdttFile.getExpected(), buf.toString());
+							assertContents(pdttFile.getExpected(), buf
+									.toString());
 						}
 					});
 				} catch (final Exception e) {
-					suite.addTest(new TestCase(fileName) { // dummy test indicating PDTT file parsing failure
-							protected void runTest() throws Throwable {
-								throw e;
-							}
-						});
+					suite.addTest(new TestCase(fileName) { // dummy test
+															// indicating PDTT
+															// file parsing
+															// failure
+								protected void runTest() throws Throwable {
+									throw e;
+								}
+							});
 				}
 			}
 		}

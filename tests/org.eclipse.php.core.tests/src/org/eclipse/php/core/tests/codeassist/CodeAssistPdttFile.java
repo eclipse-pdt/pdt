@@ -19,8 +19,9 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.core.tests.PdttFile;
 
 /**
- * This is an extension of {@link PdttFile} that parses the --EXPECT--
- * section into expected proposals list. The format of this section must be as follows:
+ * This is an extension of {@link PdttFile} that parses the --EXPECT-- section
+ * into expected proposals list. The format of this section must be as follows:
+ * 
  * <pre>
  * type(A)
  * method(A)
@@ -28,7 +29,7 @@ import org.eclipse.php.core.tests.PdttFile;
  * </pre>
  */
 public class CodeAssistPdttFile extends PdttFile {
-	
+
 	static public class ExpectedProposal {
 		/** Element name: {@link IModelElement#getElementName()} */
 		public String name;
@@ -48,10 +49,10 @@ public class CodeAssistPdttFile extends PdttFile {
 
 	protected void parse(InputStream stream) throws Exception {
 		super.parse(stream);
-		
+
 		List<ExpectedProposal> expectedProposals = new LinkedList<ExpectedProposal>();
 		String[] lines = getExpected().split("\n");
-		for (String line: lines) {
+		for (String line : lines) {
 			int i = line.indexOf('(');
 			int j = line.indexOf(')');
 			if (i == -1 || j == -1) { // wrong format
@@ -59,7 +60,7 @@ public class CodeAssistPdttFile extends PdttFile {
 			}
 			String type = line.substring(0, i);
 			ExpectedProposal proposal = new ExpectedProposal();
-			proposal.name = line.substring(i+1, j);
+			proposal.name = line.substring(i + 1, j);
 			if ("type".equalsIgnoreCase(type)) {
 				proposal.type = IModelElement.TYPE;
 			} else if ("method".equalsIgnoreCase(type)) {
@@ -72,6 +73,7 @@ public class CodeAssistPdttFile extends PdttFile {
 			}
 			expectedProposals.add(proposal);
 		}
-		this.expectedProposals = (ExpectedProposal[]) expectedProposals.toArray(new ExpectedProposal[expectedProposals.size()]);
+		this.expectedProposals = (ExpectedProposal[]) expectedProposals
+				.toArray(new ExpectedProposal[expectedProposals.size()]);
 	}
 }

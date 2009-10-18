@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests;
 
-
 public interface IAssertion {
 
 	void check() throws Exception;

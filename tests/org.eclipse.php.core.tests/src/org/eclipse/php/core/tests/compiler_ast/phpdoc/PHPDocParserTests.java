@@ -41,7 +41,7 @@ public class PHPDocParserTests extends AbstractPDTTTest {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("PHPDoc Parser Tests");
-		
+
 		for (String testsDirectory : TEST_DIRS) {
 			for (final String fileName : getPDTTFiles(testsDirectory)) {
 				try {
@@ -51,10 +51,12 @@ public class PHPDocParserTests extends AbstractPDTTTest {
 						protected void runTest() throws Throwable {
 
 							byte[] code = pdttFile.getFile().trim().getBytes();
-							InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(code));
+							InputStreamReader reader = new InputStreamReader(
+									new ByteArrayInputStream(code));
 							DocumentorLexer lexer = new DocumentorLexer(reader);
 							PHPDocBlock phpDocBlock = lexer.parse();
-							assertContents(pdttFile.getExpected(), ASTPrintVisitor.toXMLString(phpDocBlock));
+							assertContents(pdttFile.getExpected(),
+									ASTPrintVisitor.toXMLString(phpDocBlock));
 						}
 					});
 				} catch (final Exception e) {

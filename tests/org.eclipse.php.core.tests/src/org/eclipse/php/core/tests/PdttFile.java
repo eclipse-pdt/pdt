@@ -35,6 +35,7 @@ import org.osgi.framework.Bundle;
  * Scripts are small units that provide a specific scenario to test
  * 
  * Example:
+ * 
  * <pre>
  * --TEST--
  * Tests a simple class name completion
@@ -43,7 +44,7 @@ import org.osgi.framework.Bundle;
  * --PREFERENCES--
  * Eclipse preference options to set before running this test
  * --FILE--
- * <? some PHP code ?>
+ * &lt;? some PHP code ?&gt;
  * --EXPECT--
  * Expected result
  * </pre>
@@ -52,7 +53,8 @@ public class PdttFile {
 
 	protected enum STATES {
 
-		TEST("--TEST--"), CONFIG("--CONFIG--"), PREFERENCES("--PREFERENCES--"), FILE("--FILE--"), EXPECT("--EXPECT--");
+		TEST("--TEST--"), CONFIG("--CONFIG--"), PREFERENCES("--PREFERENCES--"), FILE(
+				"--FILE--"), EXPECT("--EXPECT--");
 
 		private static class Names {
 			private static Map<String, STATES> map = new HashMap<String, STATES>();
@@ -84,6 +86,7 @@ public class PdttFile {
 
 	/**
 	 * Constructs new PdttFile using default bundle: {@link PHPCoreTests}
+	 * 
 	 * @param fileName
 	 * @throws Exception
 	 */
@@ -93,7 +96,9 @@ public class PdttFile {
 
 	/**
 	 * Constructs new PdttFile
-	 * @param testBundle The testing plug-in
+	 * 
+	 * @param testBundle
+	 *            The testing plug-in
 	 * @param fileName
 	 * @throws Exception
 	 */
@@ -112,46 +117,56 @@ public class PdttFile {
 
 	/**
 	 * Returns the test description (--TEST-- section contents)
+	 * 
 	 * @return
 	 */
 	public String getDescription() throws Exception {
-		Assert.assertNotNull("File: " + fileName + " doesn't contain --TEST-- section", description);
+		Assert.assertNotNull("File: " + fileName
+				+ " doesn't contain --TEST-- section", description);
 		return description;
 	}
 
 	/**
-	 * Returns the configuration entries (--CONFIG-- section contents in format key:value)
+	 * Returns the configuration entries (--CONFIG-- section contents in format
+	 * key:value)
+	 * 
 	 * @return
 	 */
 	public Map<String, String> getConfig() {
 		return config;
 	}
-	
+
 	/**
-	 * Applies Eclipse preferences specified in --PREFERENCES-- option. 
-	 * @throws CoreException 
+	 * Applies Eclipse preferences specified in --PREFERENCES-- option.
+	 * 
+	 * @throws CoreException
 	 */
 	public void applyPreferences() throws CoreException {
 		if (preferences != null) {
-			Platform.getPreferencesService().importPreferences(new ByteArrayInputStream(preferences.getBytes()));
+			Platform.getPreferencesService().importPreferences(
+					new ByteArrayInputStream(preferences.getBytes()));
 		}
 	}
 
 	/**
 	 * Returns the PHP file contents (--FILE-- section contents)
+	 * 
 	 * @return
 	 */
 	public String getFile() {
-		Assert.assertNotNull("File: " + fileName + " doesn't contain --FILE-- section", file);
+		Assert.assertNotNull("File: " + fileName
+				+ " doesn't contain --FILE-- section", file);
 		return file;
 	}
 
 	/**
 	 * Returns the expected result (--EXPECT-- section contents)
+	 * 
 	 * @return
 	 */
 	public String getExpected() {
-		Assert.assertNotNull("File: " + fileName + " doesn't contain --EXPECT-- section", expected);
+		Assert.assertNotNull("File: " + fileName
+				+ " doesn't contain --EXPECT-- section", expected);
 		return expected;
 	}
 
@@ -166,11 +181,13 @@ public class PdttFile {
 
 	/**
 	 * Internal method for parsing a .pdtt test file
+	 * 
 	 * @param inputStream
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	protected void parse(InputStream inputStream) throws Exception {
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream));
+		BufferedReader bReader = new BufferedReader(new InputStreamReader(
+				inputStream));
 
 		String line = bReader.readLine();
 		STATES state = null;
@@ -211,6 +228,7 @@ public class PdttFile {
 
 	/**
 	 * Dumps this file back to the disk
+	 * 
 	 * @throws Exception
 	 */
 	public void write() throws Exception {
@@ -242,50 +260,53 @@ public class PdttFile {
 
 	/**
 	 * Detects the state from the line
+	 * 
 	 * @param line
 	 * @return STATE
 	 */
 	protected STATES parseStateLine(String line) {
-		return STATES.byName(line); 
+		return STATES.byName(line);
 	}
 
 	/**
 	 * This callback is called while processing state section
+	 * 
 	 * @param state
 	 * @param line
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	protected void onState(STATES state, String line) throws Exception {
 		switch (state) {
-			case TEST:
-				this.description = line;
-				break;
-			case FILE:
-				this.file += (line + "\n");
-				break;
-			case EXPECT:
-				this.expected += (line + "\n");
-				break;
-			case CONFIG:
-				int i = line.indexOf(':');
-				if (i == -1) {
-					throw new Exception("Wrong option in " + STATES.CONFIG.getName() + " section: " + line);
+		case TEST:
+			this.description = line;
+			break;
+		case FILE:
+			this.file += (line + "\n");
+			break;
+		case EXPECT:
+			this.expected += (line + "\n");
+			break;
+		case CONFIG:
+			int i = line.indexOf(':');
+			if (i == -1) {
+				throw new Exception("Wrong option in "
+						+ STATES.CONFIG.getName() + " section: " + line);
+			}
+			String key = line.substring(0, i);
+			String value = line.substring(i + 1);
+			this.config.put(key.trim(), value.trim());
+			break;
+		case PREFERENCES:
+			if (line != null && line.length() > 0) {
+				if (preferences == null) {
+					this.preferences = (line + "\n");
+				} else {
+					this.preferences += (line + "\n");
 				}
-				String key = line.substring(0, i);
-				String value = line.substring(i + 1);
-				this.config.put(key.trim(), value.trim());
-				break;
-			case PREFERENCES:
-				if(line != null && line.length() > 0) {
-					if(preferences == null ) {
-						this.preferences = (line + "\n");
-					}else{
-						this.preferences += (line + "\n");
-					}
-				}
-				break;
-			default:
-				break;
+			}
+			break;
+		default:
+			break;
 		}
 	}
 }

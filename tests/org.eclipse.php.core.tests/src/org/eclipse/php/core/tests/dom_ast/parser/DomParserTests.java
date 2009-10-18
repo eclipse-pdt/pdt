@@ -30,9 +30,12 @@ public class DomParserTests extends AbstractPDTTTest {
 
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP4, new String[] { "/workspace/dom_parser/php4" });
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/dom_parser/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/dom_parser/php53" });
+		TESTS.put(PHPVersion.PHP4,
+				new String[] { "/workspace/dom_parser/php4" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/dom_parser/php5" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] { "/workspace/dom_parser/php53" });
 	};
 
 	public static void setUpSuite() throws Exception {
@@ -58,13 +61,18 @@ public class DomParserTests extends AbstractPDTTTest {
 				for (final String fileName : getPDTTFiles(testsDirectory)) {
 					try {
 						final PdttFile pdttFile = new PdttFile(fileName);
-						phpVerSuite.addTest(new DomParserTests(phpVersion.getAlias() + " - /" + fileName) {
+						phpVerSuite.addTest(new DomParserTests(phpVersion
+								.getAlias()
+								+ " - /" + fileName) {
 
 							protected void runTest() throws Throwable {
-								newParser.setSource(pdttFile.getFile().trim().toCharArray());
-								Program program = newParser.createAST(new NullProgressMonitor());
-								
-								assertContents(pdttFile.getExpected(), program.toString());
+								newParser.setSource(pdttFile.getFile().trim()
+										.toCharArray());
+								Program program = newParser
+										.createAST(new NullProgressMonitor());
+
+								assertContents(pdttFile.getExpected(), program
+										.toString());
 							}
 						});
 					} catch (final Exception e) {

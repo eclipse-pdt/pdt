@@ -30,9 +30,12 @@ public class DocumentLexerTests extends AbstractPDTTTest {
 
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP4, new String[] { "/workspace/document_lexer/php4" });
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/document_lexer/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/document_lexer/php53" });
+		TESTS.put(PHPVersion.PHP4,
+				new String[] { "/workspace/document_lexer/php4" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/document_lexer/php5" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] { "/workspace/document_lexer/php53" });
 	};
 
 	public static void setUpSuite() throws Exception {
@@ -51,28 +54,41 @@ public class DocumentLexerTests extends AbstractPDTTTest {
 
 		for (final PHPVersion phpVersion : TESTS.keySet()) {
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-			
+
 			for (String testsDirectory : TESTS.get(phpVersion)) {
 
 				for (final String fileName : getPDTTFiles(testsDirectory)) {
 					try {
 						final PdttFile pdttFile = new PdttFile(fileName);
-						phpVerSuite.addTest(new DocumentLexerTests(phpVersion.getAlias() + " - /" + fileName) {
+						phpVerSuite.addTest(new DocumentLexerTests(phpVersion
+								.getAlias()
+								+ " - /" + fileName) {
 
 							protected void runTest() throws Throwable {
-								
-								AbstractPhpLexer lexer = PhpLexerFactory.createLexer(new ByteArrayInputStream(pdttFile.getFile().trim().getBytes()), phpVersion);
-								int inScriptingState = lexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(lexer); // different lexers have different state codes
+
+								AbstractPhpLexer lexer = PhpLexerFactory
+										.createLexer(new ByteArrayInputStream(
+												pdttFile.getFile().trim()
+														.getBytes()),
+												phpVersion);
+								int inScriptingState = lexer.getClass()
+										.getField("ST_PHP_IN_SCRIPTING")
+										.getInt(lexer); // different lexers have
+														// different state codes
 								lexer.initialize(inScriptingState);
 
 								StringBuilder actualBuf = new StringBuilder();
 								String tokenType = lexer.yylex();
 								while (tokenType != null) {
-									actualBuf.append(tokenType).append('|').append(lexer.yytext()).append('|').append(lexer.yystate()).append('\n');
+									actualBuf.append(tokenType).append('|')
+											.append(lexer.yytext()).append('|')
+											.append(lexer.yystate()).append(
+													'\n');
 									tokenType = lexer.yylex();
 								}
-								
-								assertContents(pdttFile.getExpected(), actualBuf.toString());
+
+								assertContents(pdttFile.getExpected(),
+										actualBuf.toString());
 							}
 						});
 					} catch (final Exception e) {

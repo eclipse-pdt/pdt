@@ -46,14 +46,16 @@ public class ModelStructureTests extends AbstractPDTTTest {
 
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] { "/workspace/model_structure/php53" });
 	};
 
 	protected static IProject project;
 	protected static IFile testFile;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("ModelStructureTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+				"ModelStructureTests");
 		if (project.exists()) {
 			return;
 		}
@@ -83,16 +85,19 @@ public class ModelStructureTests extends AbstractPDTTTest {
 
 		for (final PHPVersion phpVersion : TESTS.keySet()) {
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-			
+
 			for (String testsDirectory : TESTS.get(phpVersion)) {
 
 				for (final String fileName : getPDTTFiles(testsDirectory)) {
 					try {
 						final PdttFile pdttFile = new PdttFile(fileName);
-						phpVerSuite.addTest(new ModelStructureTests(phpVersion.getAlias() + " - /" + fileName) {
+						phpVerSuite.addTest(new ModelStructureTests(phpVersion
+								.getAlias()
+								+ " - /" + fileName) {
 
 							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+								PHPCoreTests.setProjectPhpVersion(project,
+										phpVersion);
 							}
 
 							protected void tearDown() throws Exception {
@@ -103,22 +108,32 @@ public class ModelStructureTests extends AbstractPDTTTest {
 							}
 
 							protected void runTest() throws Throwable {
-								ISourceModule sourceModule = createFile(pdttFile.getFile());
-								
+								ISourceModule sourceModule = createFile(pdttFile
+										.getFile());
+
 								ByteArrayOutputStream stream = new ByteArrayOutputStream();
-								PrintStream printStream = new PrintStream(stream);
-								sourceModule.accept(new PrintVisitor(printStream));
+								PrintStream printStream = new PrintStream(
+										stream);
+								sourceModule.accept(new PrintVisitor(
+										printStream));
 								printStream.close();
-								
-								assertContents(pdttFile.getExpected(), stream.toString());
+
+								assertContents(pdttFile.getExpected(), stream
+										.toString());
 							}
 						});
 					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy test indicating PDTT file parsing failure
-								protected void runTest() throws Throwable {
-									throw e;
-								}
-							});
+						phpVerSuite.addTest(new TestCase(fileName) { // dummy
+																		// test
+																		// indicating
+																		// PDTT
+																		// file
+																		// parsing
+																		// failure
+									protected void runTest() throws Throwable {
+										throw e;
+									}
+								});
 					}
 				}
 			}
@@ -139,11 +154,12 @@ public class ModelStructureTests extends AbstractPDTTTest {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the offset at 
+	 * Creates test file with the specified content and calculates the offset at
 	 * OFFSET_CHAR. Offset character itself is stripped off.
 	 * 
-	 * @param data File data
-	 * @return offset where's the offset character set. 
+	 * @param data
+	 *            File data
+	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
 	protected static ISourceModule createFile(String data) throws Exception {
@@ -154,12 +170,12 @@ public class ModelStructureTests extends AbstractPDTTTest {
 
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
-		
+
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
 	class PrintVisitor implements IModelElementVisitor {
-		
+
 		private PrintStream stream;
 
 		public PrintVisitor(PrintStream stream) {
@@ -170,44 +186,40 @@ public class ModelStructureTests extends AbstractPDTTTest {
 			try {
 				String tabs = getTabs(element);
 				stream.print(tabs);
-				
+
 				if (element.getElementType() == IModelElement.TYPE) {
 					IType type = (IType) element;
-					
+
 					int flags = type.getFlags();
 					if ((flags & Modifiers.AccInterface) != 0) {
 						stream.print("INTERFACE: ");
-					}
-					else if ((flags & Modifiers.AccNameSpace) != 0) {
+					} else if ((flags & Modifiers.AccNameSpace) != 0) {
 						stream.print("NAMESPACE: ");
-					}
-					else {
+					} else {
 						stream.print("CLASS: ");
 					}
-				}
-				else if (element.getElementType() == IModelElement.METHOD) {
+				} else if (element.getElementType() == IModelElement.METHOD) {
 					IMethod method = (IMethod) element;
 					IType declaringType = method.getDeclaringType();
-					if (declaringType == null || (declaringType.getFlags() & Modifiers.AccNameSpace) != 0) {
+					if (declaringType == null
+							|| (declaringType.getFlags() & Modifiers.AccNameSpace) != 0) {
 						stream.print("FUNCTION: ");
 					} else {
 						stream.print("METHOD: ");
 					}
-				}
-				else if (element.getElementType() == IModelElement.FIELD) {
+				} else if (element.getElementType() == IModelElement.FIELD) {
 					stream.print("VARIABLE: ");
-				}
-				else if (element.getElementType() == IModelElement.SOURCE_MODULE) {
+				} else if (element.getElementType() == IModelElement.SOURCE_MODULE) {
 					stream.print("FILE: ");
 				}
-				
+
 				stream.println(element.getElementName());
-				
+
 			} catch (ModelException e) {
 			}
 			return true;
 		}
-		
+
 		protected String getTabs(IModelElement e) {
 			StringBuilder buf = new StringBuilder();
 			while (e.getElementType() != IModelElement.SOURCE_MODULE) {

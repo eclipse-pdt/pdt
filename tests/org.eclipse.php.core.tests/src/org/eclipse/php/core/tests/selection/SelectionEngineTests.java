@@ -166,12 +166,12 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 						});
 					} catch (final Exception e) {
 						phpVerSuite.addTest(new TestCase(fileName) { // dummy
-																		// test
-																		// indicating
-																		// PDTT
-																		// file
-																		// parsing
-																		// failure
+									// test
+									// indicating
+									// PDTT
+									// file
+									// parsing
+									// failure
 									protected void runTest() throws Throwable {
 										throw e;
 									}

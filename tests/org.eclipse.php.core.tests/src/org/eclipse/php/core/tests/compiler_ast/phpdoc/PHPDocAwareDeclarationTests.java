@@ -29,11 +29,11 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser;
 
 /**
- * These tests used for checking association between declaration AST node
- * and PHPDoc block assigned to it. 
+ * These tests used for checking association between declaration AST node and
+ * PHPDoc block assigned to it.
  */
 public class PHPDocAwareDeclarationTests extends TestSuite {
-	
+
 	public static Test suite() {
 		return new TestSuite(PHPDocAwareDeclarationTests.class);
 	}
@@ -210,39 +210,51 @@ public class PHPDocAwareDeclarationTests extends TestSuite {
 
 	private void parseAndTest(String str) throws Exception {
 		StringReader reader = new StringReader(str);
-		String declarationName = new Throwable().fillInStackTrace().getStackTrace()[1].getMethodName();
+		String declarationName = new Throwable().fillInStackTrace()
+				.getStackTrace()[1].getMethodName();
 		parseAndTest(reader, declarationName, str, true);
 	}
 
-	private void parseAndTest(String str, boolean positiveTest) throws Exception {
+	private void parseAndTest(String str, boolean positiveTest)
+			throws Exception {
 		StringReader reader = new StringReader(str);
-		String declarationName = new Throwable().fillInStackTrace().getStackTrace()[1].getMethodName();
+		String declarationName = new Throwable().fillInStackTrace()
+				.getStackTrace()[1].getMethodName();
 		parseAndTest(reader, declarationName, str, positiveTest);
 	}
 
 	/**
-	 *
-	 * @param reader stringReader of inputstream
+	 * 
+	 * @param reader
+	 *            stringReader of inputstream
 	 * @param declarationName
 	 * @param str
 	 * @throws Exception
 	 */
-	public void parseAndTest(Reader reader, String declarationName, String str, boolean positiveTest) throws Exception {
+	public void parseAndTest(Reader reader, String declarationName, String str,
+			boolean positiveTest) throws Exception {
 		ModuleDeclaration program = new PhpSourceParser().parse(reader, null);
 
 		DeclarationSearcher searcher = new DeclarationSearcher(declarationName);
 		program.traverse(searcher);
 		Declaration declaration = searcher.getResult();
 
-		Assert.assertNotNull("Can't find declaration AST node for: " + declarationName, declaration);
-		Assert.assertTrue("Declaration is not PHPDoc aware: " + declarationName, declaration instanceof IPHPDocAwareDeclaration);
-		PHPDocBlock phpDoc = ((IPHPDocAwareDeclaration) declaration).getPHPDoc();
+		Assert.assertNotNull("Can't find declaration AST node for: "
+				+ declarationName, declaration);
+		Assert.assertTrue(
+				"Declaration is not PHPDoc aware: " + declarationName,
+				declaration instanceof IPHPDocAwareDeclaration);
+		PHPDocBlock phpDoc = ((IPHPDocAwareDeclaration) declaration)
+				.getPHPDoc();
 
 		if (positiveTest) {
-			Assert.assertNotNull("No PHPDoc section found for:" + declarationName, phpDoc);
-			Assert.assertNotNull("PHPDoc doesn't contain short description: " + declarationName, phpDoc.getShortDescription());
+			Assert.assertNotNull("No PHPDoc section found for:"
+					+ declarationName, phpDoc);
+			Assert.assertNotNull("PHPDoc doesn't contain short description: "
+					+ declarationName, phpDoc.getShortDescription());
 		} else {
-			Assert.assertNull("Declaration node: " + declarationName + " must not contain PHPDoc section", phpDoc);
+			Assert.assertNull("Declaration node: " + declarationName
+					+ " must not contain PHPDoc section", phpDoc);
 		}
 	}
 

@@ -51,7 +51,7 @@ public class AbstractProjectSuite extends TestSuite {
 
 	public static final String WORKSPACE_BASE = "workspace";
 	private Bundle bundle;
-	
+
 	public AbstractProjectSuite(String name, Bundle bundle) {
 		super(name);
 		this.bundle = bundle;
@@ -61,31 +61,39 @@ public class AbstractProjectSuite extends TestSuite {
 		this(name, PHPCoreTests.getDefault().getBundle());
 	}
 
-	protected IProject setUpProject(final String projectName) throws CoreException, IOException {
+	protected IProject setUpProject(final String projectName)
+			throws CoreException, IOException {
 		// copy files in project from source workspace to target workspace
 		final File sourceWorkspacePath = getSourceWorkspacePath();
-		final File targetWorkspacePath = getWorkspaceRoot().getLocation().toFile();
-		copyDirectory(new File(sourceWorkspacePath, projectName), new File(targetWorkspacePath, projectName));
+		final File targetWorkspacePath = getWorkspaceRoot().getLocation()
+				.toFile();
+		copyDirectory(new File(sourceWorkspacePath, projectName), new File(
+				targetWorkspacePath, projectName));
 
 		return createProject(projectName);
 	}
 
-	protected IScriptProject setUpScriptProjectTo(final String projectName, final String fromName) throws CoreException, IOException {
+	protected IScriptProject setUpScriptProjectTo(final String projectName,
+			final String fromName) throws CoreException, IOException {
 		final IProject project = setUpProjectTo(projectName, fromName);
 		return DLTKCore.create(project);
 	}
 
-	protected IProject setUpProjectTo(final String projectName, final String fromName) throws CoreException, IOException {
+	protected IProject setUpProjectTo(final String projectName,
+			final String fromName) throws CoreException, IOException {
 		// copy files in project from source workspace to target workspace
 		final File sourceWorkspacePath = getSourceWorkspacePath();
-		final File targetWorkspacePath = getWorkspaceRoot().getLocation().toFile();
+		final File targetWorkspacePath = getWorkspaceRoot().getLocation()
+				.toFile();
 
-		copyDirectory(new File(sourceWorkspacePath, fromName), new File(targetWorkspacePath, projectName));
+		copyDirectory(new File(sourceWorkspacePath, fromName), new File(
+				targetWorkspacePath, projectName));
 
 		return createProject(projectName);
 	}
 
-	protected IScriptProject setUpScriptProject(final String projectName) throws CoreException, IOException {
+	protected IScriptProject setUpScriptProject(final String projectName)
+			throws CoreException, IOException {
 		final IProject project = setUpProject(projectName);
 		return DLTKCore.create(project);
 	}
@@ -94,16 +102,20 @@ public class AbstractProjectSuite extends TestSuite {
 	 * Returns the specified source module in the given project, root, and
 	 * folder or <code>null</code> if it does not exist.
 	 */
-	public ISourceModule getSourceModule(String projectName, String rootPath, IPath path) throws ModelException {
-		IScriptFolder folder = getScriptFolder(projectName, rootPath, path.removeLastSegments(1));
+	public ISourceModule getSourceModule(String projectName, String rootPath,
+			IPath path) throws ModelException {
+		IScriptFolder folder = getScriptFolder(projectName, rootPath, path
+				.removeLastSegments(1));
 		if (folder == null) {
 			return null;
 		}
 		return folder.getSourceModule(path.lastSegment());
 	}
 
-	public ISourceModule getSourceModule(String projectName, String rootPath, String path) throws ModelException {
-		IScriptFolder folder = getScriptFolder(projectName, rootPath, new Path(path).removeLastSegments(1));
+	public ISourceModule getSourceModule(String projectName, String rootPath,
+			String path) throws ModelException {
+		IScriptFolder folder = getScriptFolder(projectName, rootPath, new Path(
+				path).removeLastSegments(1));
 		if (folder == null) {
 			return null;
 		}
@@ -116,7 +128,8 @@ public class AbstractProjectSuite extends TestSuite {
 	 * a project relative path. The empty path refers to the default package
 	 * fragment.
 	 */
-	public IScriptFolder getScriptFolder(String projectName, String fragmentPath, IPath path) throws ModelException {
+	public IScriptFolder getScriptFolder(String projectName,
+			String fragmentPath, IPath path) throws ModelException {
 		IProjectFragment root = getProjectFragment(projectName, fragmentPath);
 		if (root == null) {
 			return null;
@@ -132,7 +145,8 @@ public class AbstractProjectSuite extends TestSuite {
 	 * rootPath refers to either an external zip, or a resource internal to the
 	 * workspace
 	 */
-	public IProjectFragment getProjectFragment(String projectName, String fragmentPath) throws ModelException {
+	public IProjectFragment getProjectFragment(String projectName,
+			String fragmentPath) throws ModelException {
 
 		IScriptProject project = getScriptProject(projectName);
 		if (project == null) {
@@ -140,7 +154,8 @@ public class AbstractProjectSuite extends TestSuite {
 		}
 		IPath path = new Path(fragmentPath);
 		if (path.isAbsolute()) {
-			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
+					.getRoot();
 			IResource resource = workspaceRoot.findMember(path);
 			IProjectFragment root;
 			// resource in the workspace
@@ -153,7 +168,8 @@ public class AbstractProjectSuite extends TestSuite {
 			}
 			for (int i = 0; i < roots.length; i++) {
 				IProjectFragment root = roots[i];
-				if (root.getUnderlyingResource().getProjectRelativePath().equals(path)) {
+				if (root.getUnderlyingResource().getProjectRelativePath()
+						.equals(path)) {
 					return root;
 				}
 			}
@@ -258,7 +274,8 @@ public class AbstractProjectSuite extends TestSuite {
 	/*
 	 * Create simple project.
 	 */
-	protected IProject createProject(final String projectName) throws CoreException {
+	protected IProject createProject(final String projectName)
+			throws CoreException {
 		final IProject project = getProject(projectName);
 		IWorkspaceRunnable create = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
@@ -274,7 +291,8 @@ public class AbstractProjectSuite extends TestSuite {
 	 * Creates a script project with the given source folders an output
 	 * location. Add those on the project's buildpath.
 	 */
-	protected IScriptProject createScriptProject(String projectName, String[] natures, String[] sourceFolders) throws CoreException {
+	protected IScriptProject createScriptProject(String projectName,
+			String[] natures, String[] sourceFolders) throws CoreException {
 		return createScriptProject(projectName, natures, sourceFolders, null);
 	}
 
@@ -282,7 +300,9 @@ public class AbstractProjectSuite extends TestSuite {
 	 * Creates a script project with the given source folders an output
 	 * location. Add those on the project's buildpath.
 	 */
-	protected IScriptProject createScriptProject(final String projectName, final String[] natures, final String[] sourceFolders, final String[] projects) throws CoreException {
+	protected IScriptProject createScriptProject(final String projectName,
+			final String[] natures, final String[] sourceFolders,
+			final String[] projects) throws CoreException {
 		final IScriptProject[] result = new IScriptProject[1];
 		IWorkspaceRunnable create = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
@@ -298,9 +318,11 @@ public class AbstractProjectSuite extends TestSuite {
 
 				// create buildpath entries
 				IPath projectPath = project.getFullPath();
-				int sourceLength = sourceFolders == null ? 0 : sourceFolders.length;
+				int sourceLength = sourceFolders == null ? 0
+						: sourceFolders.length;
 				int projectLength = projects == null ? 0 : projects.length;
-				IBuildpathEntry[] entries = new IBuildpathEntry[sourceLength + projectLength];
+				IBuildpathEntry[] entries = new IBuildpathEntry[sourceLength
+						+ projectLength];
 				for (int i = 0; i < sourceLength; i++) {
 					IPath sourcePath = new Path(sourceFolders[i]);
 					int segmentCount = sourcePath.segmentCount();
@@ -308,7 +330,8 @@ public class AbstractProjectSuite extends TestSuite {
 						// create folder and its parents
 						IContainer container = project;
 						for (int j = 0; j < segmentCount; j++) {
-							IFolder folder = container.getFolder(new Path(sourcePath.segment(j)));
+							IFolder folder = container.getFolder(new Path(
+									sourcePath.segment(j)));
 							if (!folder.exists()) {
 								folder.create(true, true, null);
 							}
@@ -316,7 +339,8 @@ public class AbstractProjectSuite extends TestSuite {
 						}
 					}
 					// create source entry
-					entries[i] = DLTKCore.newSourceEntry(projectPath.append(sourcePath));
+					entries[i] = DLTKCore.newSourceEntry(projectPath
+							.append(sourcePath));
 				}
 				for (int i = 0; i < projectLength; i++) {
 
@@ -328,7 +352,11 @@ public class AbstractProjectSuite extends TestSuite {
 					IPath[] nonAccessibleFiles;
 					nonAccessibleFiles = new IPath[0];
 
-					entries[sourceLength + i] = DLTKCore.newProjectEntry(new Path(projects[i]), BuildpathEntry.getAccessRules(accessibleFiles, nonAccessibleFiles), true, new IBuildpathAttribute[0], false);
+					entries[sourceLength + i] = DLTKCore.newProjectEntry(
+							new Path(projects[i]), BuildpathEntry
+									.getAccessRules(accessibleFiles,
+											nonAccessibleFiles), true,
+							new IBuildpathAttribute[0], false);
 				}
 				// set buildpath and output location
 				IScriptProject scriptProject = DLTKCore.create(project);
@@ -383,10 +411,12 @@ public class AbstractProjectSuite extends TestSuite {
 			} catch (CoreException e) {
 				lastException = e;
 				// just print for info
-				System.out.println("Retry " + retryCount + ": " + e.getMessage());
+				System.out.println("Retry " + retryCount + ": "
+						+ e.getMessage());
 			} catch (IllegalArgumentException iae) {
 				// just print for info
-				System.out.println("Retry " + retryCount + ": " + iae.getMessage());
+				System.out.println("Retry " + retryCount + ": "
+						+ iae.getMessage());
 			}
 		}
 		if (!resource.isAccessible())

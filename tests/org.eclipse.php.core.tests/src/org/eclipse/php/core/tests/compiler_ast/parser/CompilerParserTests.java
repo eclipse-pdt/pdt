@@ -33,9 +33,12 @@ public class CompilerParserTests extends AbstractPDTTTest {
 
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP4, new String[] { "/workspace/compiler_parser/php4" });
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/compiler_parser/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/compiler_parser/php53" });
+		TESTS.put(PHPVersion.PHP4,
+				new String[] { "/workspace/compiler_parser/php4" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/compiler_parser/php5" });
+		TESTS.put(PHPVersion.PHP5_3,
+				new String[] { "/workspace/compiler_parser/php53" });
 	};
 
 	public static void setUpSuite() throws Exception {
@@ -54,21 +57,28 @@ public class CompilerParserTests extends AbstractPDTTTest {
 
 		for (final PHPVersion phpVersion : TESTS.keySet()) {
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-			final AbstractPHPSourceParser parser = PHPSourceParserFactory.createParser(phpVersion);
-			
+			final AbstractPHPSourceParser parser = PHPSourceParserFactory
+					.createParser(phpVersion);
+
 			for (String testsDirectory : TESTS.get(phpVersion)) {
 
 				for (final String fileName : getPDTTFiles(testsDirectory)) {
 					try {
 						final PdttFile pdttFile = new PdttFile(fileName);
-						phpVerSuite.addTest(new CompilerParserTests(phpVersion.getAlias() + " - /" + fileName) {
+						phpVerSuite.addTest(new CompilerParserTests(phpVersion
+								.getAlias()
+								+ " - /" + fileName) {
 
 							protected void runTest() throws Throwable {
 
-								ByteArrayInputStream inputStream = new ByteArrayInputStream(pdttFile.getFile().trim().getBytes());
-								ModuleDeclaration moduleDeclaration = parser.parse(new InputStreamReader(inputStream), null);
+								ByteArrayInputStream inputStream = new ByteArrayInputStream(
+										pdttFile.getFile().trim().getBytes());
+								ModuleDeclaration moduleDeclaration = parser
+										.parse(new InputStreamReader(
+												inputStream), null);
 
-								String actual = ASTPrintVisitor.toXMLString(moduleDeclaration);
+								String actual = ASTPrintVisitor
+										.toXMLString(moduleDeclaration);
 								assertContents(pdttFile.getExpected(), actual);
 							}
 						});

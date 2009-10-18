@@ -29,15 +29,16 @@ import org.eclipse.php.internal.core.ast.nodes.Statement;
 import org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer;
 
 /**
- * Tests for {@link  DefaultCommentMapper}
+ * Tests for {@link DefaultCommentMapper}
+ * 
  * @author Roy, 2007
  */
 public class CommentMapperTests extends TestCase {
-	
+
 	public CommentMapperTests(String name) {
 		super(name);
 	}
-	
+
 	public static TestSuite suite() {
 		return new TestSuite(CommentMapperTests.class);
 	}
@@ -89,14 +90,16 @@ public class CommentMapperTests extends TestCase {
 
 	/**
 	 * 
-	 * @param reader stringReader of inputstream
-	 * @param str 
-	 * @throws Exception 
+	 * @param reader
+	 *            stringReader of inputstream
+	 * @param str
+	 * @throws Exception
 	 */
 	public void parseAndCompare(String programStr) throws Exception {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5).createAST(new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5)
+				.createAST(new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PhpAstLexer(reader));
 
@@ -107,18 +110,22 @@ public class CommentMapperTests extends TestCase {
 	}
 
 	/**
-	 * @param reader stringReader of inputstream
-	 * @param str 
-	 * @throws Exception 
+	 * @param reader
+	 *            stringReader of inputstream
+	 * @param str
+	 * @throws Exception
 	 */
-	public void parseAndCompareInner(String programStr, int index) throws Exception {
+	public void parseAndCompareInner(String programStr, int index)
+			throws Exception {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5).createAST(new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5)
+				.createAST(new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PhpAstLexer(reader));
 
-		final ClassDeclaration node = (ClassDeclaration) program.statements().get(0);
+		final ClassDeclaration node = (ClassDeclaration) program.statements()
+				.get(0);
 		final Statement statement = node.getBody().statements().get(index);
 
 		final int extendedLength = program.getExtendedLength(statement);

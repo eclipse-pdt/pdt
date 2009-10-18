@@ -50,11 +50,11 @@ public class CodeAssistProjectTests extends AbstractProjectSuite {
 		this.projectName = projectName;
 		this.phpVersion = phpVersion;
 	}
-	
+
 	public File getSourceWorkspacePath() {
 		return new File(super.getSourceWorkspacePath(), PROJECT_BASE);
 	}
-	
+
 	public void run(final TestResult result) {
 		Protectable p = new Protectable() {
 			public void protect() throws Exception {
@@ -75,56 +75,75 @@ public class CodeAssistProjectTests extends AbstractProjectSuite {
 	public void tearDownSuite() throws Exception {
 		deleteProject(projectName);
 	}
-	
+
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Code Assist Project Tests");
 		for (final String testProject : TEST_DIRS.keySet()) {
-			
+
 			PHPVersion phpVersion = TEST_DIRS.get(testProject);
-			final CodeAssistProjectTests projectTests = new CodeAssistProjectTests(testProject, phpVersion);
-			
-			for (final File file : new File(projectTests.getSourceWorkspacePath(), testProject).listFiles()) {
+			final CodeAssistProjectTests projectTests = new CodeAssistProjectTests(
+					testProject, phpVersion);
+
+			for (final File file : new File(projectTests
+					.getSourceWorkspacePath(), testProject).listFiles()) {
 				final String baseName = file.getName();
 				if (!baseName.toLowerCase().endsWith(".pdtt")) {
 					continue;
 				}
 				try {
-					projectTests.addTest(new TestCase("/" + testProject + "/" + baseName) {
+					projectTests.addTest(new TestCase("/" + testProject + "/"
+							+ baseName) {
 						protected void runTest() throws Throwable {
-							CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(file.getAbsolutePath());
+							CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
+									file.getAbsolutePath());
 
 							String data = pdttFile.getFile();
-							int offset = data.lastIndexOf(CodeAssistTests.OFFSET_CHAR);
+							int offset = data
+									.lastIndexOf(CodeAssistTests.OFFSET_CHAR);
 							if (offset == -1) {
-								throw new IllegalArgumentException("Offset character is not set");
+								throw new IllegalArgumentException(
+										"Offset character is not set");
 							}
 							// replace the offset character
-							data = data.substring(0, offset) + data.substring(offset + 1);
-							
-							IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testProject);
+							data = data.substring(0, offset)
+									+ data.substring(offset + 1);
+
+							IProject project = ResourcesPlugin.getWorkspace()
+									.getRoot().getProject(testProject);
 							IFile workspaceFile = project.getFile("test.php");
 							if (workspaceFile.exists()) {
-								workspaceFile.setContents(new ByteArrayInputStream(data.getBytes()), IResource.FORCE, null);
+								workspaceFile.setContents(
+										new ByteArrayInputStream(data
+												.getBytes()), IResource.FORCE,
+										null);
 							} else {
-								workspaceFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
+								workspaceFile.create(new ByteArrayInputStream(
+										data.getBytes()), true, null);
 							}
-							
+
 							waitUntilIndexesReady();
-							
-							ISourceModule sourceModule = (ISourceModule) DLTKCore.create(workspaceFile);
-							CompletionProposal[] proposals = CodeAssistTests.getProposals(sourceModule, offset);
-							CodeAssistTests.compareProposals(proposals, pdttFile);
+
+							ISourceModule sourceModule = (ISourceModule) DLTKCore
+									.create(workspaceFile);
+							CompletionProposal[] proposals = CodeAssistTests
+									.getProposals(sourceModule, offset);
+							CodeAssistTests.compareProposals(proposals,
+									pdttFile);
 						}
 					});
 				} catch (final Exception e) {
-					projectTests.addTest(new TestCase(baseName) { // dummy test indicating PDTT file parsing failure
-							protected void runTest() throws Throwable {
-								throw e;
-							}
-						});
+					projectTests.addTest(new TestCase(baseName) { // dummy test
+																	// indicating
+																	// PDTT file
+																	// parsing
+																	// failure
+								protected void runTest() throws Throwable {
+									throw e;
+								}
+							});
 				}
 			}
-			
+
 			suite.addTest(projectTests);
 		}
 		return suite;

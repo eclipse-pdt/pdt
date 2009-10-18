@@ -48,7 +48,8 @@ public class FormatterTests extends AbstractPDTTTest {
 	protected static int count;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("FormatterTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+				"FormatterTests");
 		if (project.exists()) {
 			return;
 		}
@@ -65,7 +66,7 @@ public class FormatterTests extends AbstractPDTTTest {
 			IFile file = createFile(pdttFile.getFile().trim());
 			filesMap.put(pdttFile, file);
 		}
-		
+
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
@@ -98,26 +99,33 @@ public class FormatterTests extends AbstractPDTTTest {
 						filesMap.put(pdttFile, null);
 
 						phpVerSuite.addTest(new FormatterTests("/" + fileName) {
-							
+
 							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+								PHPCoreTests.setProjectPhpVersion(project,
+										phpVersion);
 							}
 
 							protected void runTest() throws Throwable {
-								
+
 								IFile file = filesMap.get(pdttFile);
-								
-								IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(file);
+
+								IStructuredModel modelForEdit = StructuredModelManager
+										.getModelManager()
+										.getModelForEdit(file);
 								try {
-									IDocument document = modelForEdit.getStructuredDocument();
+									IDocument document = modelForEdit
+											.getStructuredDocument();
 									String beforeFormat = document.get();
 
 									PhpFormatProcessorImpl formatter = new PhpFormatProcessorImpl();
-									formatter.formatDocument(document, 0, document.getLength());
-									
-									assertContents(pdttFile.getExpected(), document.get());
+									formatter.formatDocument(document, 0,
+											document.getLength());
 
-									// change the document text as was before the formatting
+									assertContents(pdttFile.getExpected(),
+											document.get());
+
+									// change the document text as was before
+									// the formatting
 									document.set(beforeFormat);
 									modelForEdit.save();
 								} finally {
@@ -128,11 +136,17 @@ public class FormatterTests extends AbstractPDTTTest {
 							}
 						});
 					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy test indicating PDTT file parsing failure
-								protected void runTest() throws Throwable {
-									throw e;
-								}
-							});
+						phpVerSuite.addTest(new TestCase(fileName) { // dummy
+																		// test
+																		// indicating
+																		// PDTT
+																		// file
+																		// parsing
+																		// failure
+									protected void runTest() throws Throwable {
+										throw e;
+									}
+								});
 					}
 				}
 
