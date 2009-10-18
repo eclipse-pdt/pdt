@@ -19,9 +19,9 @@ import org.osgi.framework.BundleContext;
  */
 public class PHPIdePlugin extends Plugin {
 
-	//The shared instance.
+	// The shared instance.
 	private static PHPIdePlugin plugin;
-	
+
 	/**
 	 * The constructor.
 	 */
