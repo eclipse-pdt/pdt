@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
-
 /**
  * Constants for the PHP debugger.
  */

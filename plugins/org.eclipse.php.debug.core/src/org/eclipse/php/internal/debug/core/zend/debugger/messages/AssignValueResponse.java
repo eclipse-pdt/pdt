@@ -17,7 +17,8 @@ import java.io.IOException;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 
-public class AssignValueResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
+public class AssignValueResponse extends DebugMessageResponseImpl implements
+		IDebugResponseMessage {
 
 	private String variableValue = null;
 

@@ -19,32 +19,32 @@ import org.eclipse.debug.core.model.IStreamsProxy;
  */
 public class PHPStreamsProxy implements IStreamsProxy {
 
-    private DebugConsoleMonitor fConsoleMonitor = new DebugConsoleMonitor();
+	private DebugConsoleMonitor fConsoleMonitor = new DebugConsoleMonitor();
 
-    /**
-     * @see org.eclipse.debug.core.model.IStreamsProxy#getErrorStreamMonitor()
-     */
-    public IStreamMonitor getErrorStreamMonitor() {
-    	// TODO: re-implement ProcessCrashDetector using this method
-        return null;
-    }
+	/**
+	 * @see org.eclipse.debug.core.model.IStreamsProxy#getErrorStreamMonitor()
+	 */
+	public IStreamMonitor getErrorStreamMonitor() {
+		// TODO: re-implement ProcessCrashDetector using this method
+		return null;
+	}
 
-    /**
-     * @see org.eclipse.debug.core.model.IStreamsProxy#getErrorStreamMonitor()
-     */
-    public IStreamMonitor getOutputStreamMonitor() {
-    	// TODO: re-implement ProcessCrashDetector using this method
-        return null;
-    }
+	/**
+	 * @see org.eclipse.debug.core.model.IStreamsProxy#getErrorStreamMonitor()
+	 */
+	public IStreamMonitor getOutputStreamMonitor() {
+		// TODO: re-implement ProcessCrashDetector using this method
+		return null;
+	}
 
-    public IStreamMonitor getConsoleStreamMonitor() {
-        return fConsoleMonitor;
-    }
+	public IStreamMonitor getConsoleStreamMonitor() {
+		return fConsoleMonitor;
+	}
 
-    /**
-     * @see org.eclipse.debug.core.model.IStreamsProxy#write(java.lang.String)
-     */
-    public void write(String input) {
-    }
+	/**
+	 * @see org.eclipse.debug.core.model.IStreamsProxy#write(java.lang.String)
+	 */
+	public void write(String input) {
+	}
 
 }

@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.preferences;
 
 /**
  * A listener to events when adding/removing PHP Executables
+ * 
  * @author yaronm
  */
 public interface IPHPExesListener {

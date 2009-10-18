@@ -13,13 +13,15 @@ package org.eclipse.php.internal.debug.core.preferences.stepFilters;
 
 /**
  * Use this event class when the Debug Step Filter Preferences are changed
+ * 
  * @author yaronm
  */
 public class DebugStepFilterEvent {
 	private DebugStepFilter[] newFilters;
 	private boolean isDebugStepFilterEnabled;
 
-	public DebugStepFilterEvent(DebugStepFilter[] newFilters, boolean isDebugStepFilterEnabled) {
+	public DebugStepFilterEvent(DebugStepFilter[] newFilters,
+			boolean isDebugStepFilterEnabled) {
 		this.newFilters = newFilters;
 		this.isDebugStepFilterEnabled = isDebugStepFilterEnabled;
 	}

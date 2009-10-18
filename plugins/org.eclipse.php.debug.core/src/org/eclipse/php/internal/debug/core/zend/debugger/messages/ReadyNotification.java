@@ -26,7 +26,8 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class ReadyNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
+public class ReadyNotification extends DebugMessageNotificationImpl implements
+		IDebugNotificationMessage {
 
 	private String fileName;
 	private int lineNumber;
@@ -62,7 +63,8 @@ public class ReadyNotification extends DebugMessageNotificationImpl implements I
 	public void deserialize(DataInputStream in) throws IOException {
 		setFileName(CommunicationUtilities.readString(in));
 		setLineNumber(in.readInt());
-		in.readInt(); // read the 4 bytes of the watched-list length. this is 0 now.
+		in.readInt(); // read the 4 bytes of the watched-list length. this is 0
+						// now.
 	}
 
 	public int getType() {

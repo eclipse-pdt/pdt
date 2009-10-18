@@ -18,7 +18,8 @@ import java.io.IOException;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtilities;
 
-public class AssignValueRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
+public class AssignValueRequest extends DebugMessageRequestImpl implements
+		IDebugRequestMessage {
 
 	private String var;
 	private String value;
@@ -88,8 +89,10 @@ public class AssignValueRequest extends DebugMessageRequestImpl implements IDebu
 
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
-		setVar(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
-		setValue(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
+		setVar(CommunicationUtilities.readEncodedString(in,
+				getTransferEncoding()));
+		setValue(CommunicationUtilities.readEncodedString(in,
+				getTransferEncoding()));
 		setDepth(in.readInt());
 		int pathSize = in.readInt();
 		if (pathSize > 0) {
@@ -108,8 +111,10 @@ public class AssignValueRequest extends DebugMessageRequestImpl implements IDebu
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());
 		out.writeInt(getID());
-		CommunicationUtilities.writeEncodedString(out, getVar(), getTransferEncoding());
-		CommunicationUtilities.writeEncodedString(out, getValue(), getTransferEncoding());
+		CommunicationUtilities.writeEncodedString(out, getVar(),
+				getTransferEncoding());
+		CommunicationUtilities.writeEncodedString(out, getValue(),
+				getTransferEncoding());
 		out.writeInt(getDepth());
 		String[] path = getPath();
 		out.writeInt(path.length);

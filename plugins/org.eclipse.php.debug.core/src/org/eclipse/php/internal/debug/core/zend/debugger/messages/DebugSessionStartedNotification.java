@@ -27,7 +27,8 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class DebugSessionStartedNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
+public class DebugSessionStartedNotification extends
+		DebugMessageNotificationImpl implements IDebugNotificationMessage {
 
 	private String fileName = "";
 	private String uri = "";
@@ -106,10 +107,12 @@ public class DebugSessionStartedNotification extends DebugMessageNotificationImp
 	}
 
 	public void deserialize(DataInputStream in) throws IOException {
-		setServerProtocol(in.readInt()); // read the protocal id (For future use);
+		setServerProtocol(in.readInt()); // read the protocal id (For future
+											// use);
 		setFileName(CommunicationUtilities.readString(in));
 		setUri(CommunicationUtilities.readString(in));
-		setQuery(URLDecoder.decode(CommunicationUtilities.readString(in), "UTF-8"));
+		setQuery(URLDecoder.decode(CommunicationUtilities.readString(in),
+				"UTF-8"));
 		setOptions(CommunicationUtilities.readString(in));
 	}
 

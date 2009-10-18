@@ -50,7 +50,7 @@ import java.io.UnsupportedEncodingException;
 
 
  Borenstein & Freed                                             [Page 21]
- 
+
  RFC 1521                          MIME                    September 1993
 
 
@@ -106,7 +106,7 @@ import java.io.UnsupportedEncodingException;
 
 
  Borenstein & Freed                                             [Page 22]
- 
+
  RFC 1521                          MIME                    September 1993
 
 
@@ -152,14 +152,15 @@ public class Base64 {
 	private Base64() {
 
 	}
-	
-	//TODO: not a great way to do this, should work with chars not bytes.
-	//We convert utf-16 to ASCII and create conversion tables based on ASCII code points
+
+	// TODO: not a great way to do this, should work with chars not bytes.
+	// We convert utf-16 to ASCII and create conversion tables based on ASCII
+	// code points
 	private static final String INTERNAL_ENCODING = "ASCII";
 
 	private static String base64CharSetSequence = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
-	// Table to convert a number from 0-64 to an (Base64) ASCII byte equivalent 
+	// Table to convert a number from 0-64 to an (Base64) ASCII byte equivalent
 	private static byte[] valToBase64CharTable;
 
 	// Table to convert an ascii byte to the Base64 number equivalent
@@ -167,10 +168,11 @@ public class Base64 {
 
 	static {
 		try {
-			valToBase64CharTable = base64CharSetSequence.getBytes(INTERNAL_ENCODING);
+			valToBase64CharTable = base64CharSetSequence
+					.getBytes(INTERNAL_ENCODING);
 		} catch (UnsupportedEncodingException e) {
 		}
-		
+
 		base64ToValTable = new int[256];
 		for (int i = 0; i < 256; i++) {
 			base64ToValTable[i] = -1;
@@ -194,16 +196,17 @@ public class Base64 {
 		return result;
 
 	}
-	
+
 	public static String encode(byte[] input) {
-		byte[] result = encodeToBytes(input);;		
+		byte[] result = encodeToBytes(input);
+		;
 		String strResult = null;
 		try {
-			strResult = new String(result, INTERNAL_ENCODING);			
+			strResult = new String(result, INTERNAL_ENCODING);
 		} catch (UnsupportedEncodingException e) {
-			strResult = new String(result);			
+			strResult = new String(result);
 		}
-		return strResult;		
+		return strResult;
 	}
 
 	public static byte[] decode(String input) {
@@ -213,13 +216,10 @@ public class Base64 {
 		} catch (UnsupportedEncodingException e) {
 			byteInput = input.getBytes();
 		}
-		byte[] result = decode(byteInput);		
-		return result;		
+		byte[] result = decode(byteInput);
+		return result;
 	}
-	
-	
-	
-	
+
 	private static byte[] encodeToBytes(byte[] input) {
 		int outsize = input.length / 3 * 4;
 		if (input.length % 3 != 0) {
@@ -234,31 +234,31 @@ public class Base64 {
 		for (int i = 0; i < input.length; i += 3) {
 
 			switch (input.length - i) {
-				case 1:
-					// ok encode 1 byte into 2 and add '=='
-					int[] result = three2four(input[i], zero, zero);
-					data[0] = valToBase64CharTable[result[0]];
-					data[1] = valToBase64CharTable[result[1]];
-					data[2] = valToBase64CharTable[64];
-					data[3] = valToBase64CharTable[64];
+			case 1:
+				// ok encode 1 byte into 2 and add '=='
+				int[] result = three2four(input[i], zero, zero);
+				data[0] = valToBase64CharTable[result[0]];
+				data[1] = valToBase64CharTable[result[1]];
+				data[2] = valToBase64CharTable[64];
+				data[3] = valToBase64CharTable[64];
 
-					break;
-				case 2:
-					result = three2four(input[i], input[i + 1], zero);
-					data[0] = valToBase64CharTable[result[0]];
-					data[1] = valToBase64CharTable[result[1]];
-					data[2] = valToBase64CharTable[result[2]];
-					data[3] = valToBase64CharTable[64];
-					// ok encode 2 bytes into 3 and add '='
-					break;
-				default:
-					result = three2four(input[i], input[i + 1], input[i + 2]);
-					data[0] = valToBase64CharTable[result[0]];
-					data[1] = valToBase64CharTable[result[1]];
-					data[2] = valToBase64CharTable[result[2]];
-					data[3] = valToBase64CharTable[result[3]];
-					// ok encode 3 bytes into 4
-					break;
+				break;
+			case 2:
+				result = three2four(input[i], input[i + 1], zero);
+				data[0] = valToBase64CharTable[result[0]];
+				data[1] = valToBase64CharTable[result[1]];
+				data[2] = valToBase64CharTable[result[2]];
+				data[3] = valToBase64CharTable[64];
+				// ok encode 2 bytes into 3 and add '='
+				break;
+			default:
+				result = three2four(input[i], input[i + 1], input[i + 2]);
+				data[0] = valToBase64CharTable[result[0]];
+				data[1] = valToBase64CharTable[result[1]];
+				data[2] = valToBase64CharTable[result[2]];
+				data[3] = valToBase64CharTable[result[3]];
+				// ok encode 3 bytes into 4
+				break;
 			}
 			for (int j = 0; j < 4; j++) {
 				encoded[pos] = data[j];
@@ -267,7 +267,7 @@ public class Base64 {
 		}
 		return encoded;
 	}
-	
+
 	/**
 	 * decode a base64 stream.
 	 * 
@@ -283,16 +283,16 @@ public class Base64 {
 		// padding) will result in at most an extra 2 decoded
 		// bytes
 		int outsize = input.length / 4 * 3;
-		
+
 		// if we have a dodgy stream (ie not multiples of 4 bytes)
 		// we will attempt to cater for this.
 		if (input.length % 4 != 0) {
 			outsize += input.length % 4 - 1;
-		}
-		else {
+		} else {
 			// we have a proper base64 stream so we can adjust futher.
 			// note that if there are 2 pads at the end, reduce outsize by 2
-			// if there is 1 pad at end, reduce outsize by 1. Also need to handle
+			// if there is 1 pad at end, reduce outsize by 1. Also need to
+			// handle
 			// situation where we have added crlfs to the output.
 			// if (input[input.length - 1] == valToBase64CharTable[64]) {
 			// outsize--;
@@ -307,7 +307,6 @@ public class Base64 {
 			return new byte[0];
 		}
 
-
 		// outsize could be too large. Will reduce the size at the end.
 		byte[] decoded = new byte[outsize];
 		int[] base64set = new int[4];
@@ -315,8 +314,8 @@ public class Base64 {
 		int outputPos = 0;
 		int decodepos = 0;
 		for (int i = 0; i < input.length; i++) {
-	    	 // Get byte value and mask of any sign bit if byte > 0x7F
-	    	 int byteVal = (int) input[i] & 0xFF;			
+			// Get byte value and mask of any sign bit if byte > 0x7F
+			int byteVal = (int) input[i] & 0xFF;
 			if (base64ToValTable[byteVal] == -1) {
 				continue;
 			} else {
@@ -363,59 +362,63 @@ public class Base64 {
 		}
 
 		return finalDecoded;
-	}	
+	}
 
-//	private static byte[] decode(byte[] input) {
-//		int outsize = input.length;
-//		outsize = outsize / 4 * 3;
-//
-//		if (input[input.length - 1] == valToBase64CharTable[64]) {
-//			outsize--;
-//		}
-//		if (input[input.length - 2] == valToBase64CharTable[64]) {
-//			outsize--;
-//		}
-//
-//		// note that if there are 2 pads at the end, reduce outsize by 2
-//		// if there is 1 pad at end, reduce outsize by 1. Also need to handle
-//		// situation where we have added crlfs to the output.
-//
-//		if (input.length % 4 != 0) {
-//			// error, but need to handle 76 character lines where crlfs have been added
-//		}
-//
-//		byte[] decoded = new byte[outsize];
-//		for (int j = 0; j < outsize; j++) {
-//			decoded[j] = '?';
-//		}
-//		int[] base64set = new int[4];
-//
-//		int outputPos = 0;
-//		int decodepos = 0;
-//
-//		for (int i = 0; i < input.length; i++) {
-//	    	 // Get byte value and mask of any sign bit if byte > 0x7F
-//	    	 int byteVal = (int) input[i] & 0xFF;						
-//			if (base64ToValTable[byteVal] == -1) {
-//				continue;
-//			} else {
-//				base64set[decodepos] = base64ToValTable[byteVal];
-//				decodepos++;
-//
-//				// check to see if we have 4 entries now
-//				if (decodepos == 4) {
-//					decodepos = 0;
-//					decoded[outputPos] = (byte) ((base64set[0] << 2) | ((base64set[1] & 0x30) >>> 4));
-//					if (base64set[2] != 64) {
-//						decoded[outputPos + 1] = (byte) (((base64set[1] & 0x0f) << 4) | ((base64set[2] & 0x3c) >>> 2));
-//						if (base64set[3] != 64) {
-//							decoded[outputPos + 2] = (byte) (((base64set[2] & 0x03) << 6 | base64set[3]));
-//						}
-//					}
-//					outputPos += 3;
-//				}
-//			}
-//		}
-//		return decoded;
-//	}
+	// private static byte[] decode(byte[] input) {
+	// int outsize = input.length;
+	// outsize = outsize / 4 * 3;
+	//
+	// if (input[input.length - 1] == valToBase64CharTable[64]) {
+	// outsize--;
+	// }
+	// if (input[input.length - 2] == valToBase64CharTable[64]) {
+	// outsize--;
+	// }
+	//
+	// // note that if there are 2 pads at the end, reduce outsize by 2
+	// // if there is 1 pad at end, reduce outsize by 1. Also need to handle
+	// // situation where we have added crlfs to the output.
+	//
+	// if (input.length % 4 != 0) {
+	// // error, but need to handle 76 character lines where crlfs have been
+	// added
+	// }
+	//
+	// byte[] decoded = new byte[outsize];
+	// for (int j = 0; j < outsize; j++) {
+	// decoded[j] = '?';
+	// }
+	// int[] base64set = new int[4];
+	//
+	// int outputPos = 0;
+	// int decodepos = 0;
+	//
+	// for (int i = 0; i < input.length; i++) {
+	// // Get byte value and mask of any sign bit if byte > 0x7F
+	// int byteVal = (int) input[i] & 0xFF;
+	// if (base64ToValTable[byteVal] == -1) {
+	// continue;
+	// } else {
+	// base64set[decodepos] = base64ToValTable[byteVal];
+	// decodepos++;
+	//
+	// // check to see if we have 4 entries now
+	// if (decodepos == 4) {
+	// decodepos = 0;
+	// decoded[outputPos] = (byte) ((base64set[0] << 2) | ((base64set[1] & 0x30)
+	// >>> 4));
+	// if (base64set[2] != 64) {
+	// decoded[outputPos + 1] = (byte) (((base64set[1] & 0x0f) << 4) |
+	// ((base64set[2] & 0x3c) >>> 2));
+	// if (base64set[3] != 64) {
+	// decoded[outputPos + 2] = (byte) (((base64set[2] & 0x03) << 6 |
+	// base64set[3]));
+	// }
+	// }
+	// outputPos += 3;
+	// }
+	// }
+	// }
+	// return decoded;
+	// }
 }

@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.preferences.stepFilters;
 
 /**
  * Represents a listener to Debug Step Filter Preferences changes.
+ * 
  * @author yaronm
  */
 public interface IDebugStepFilterPrefListener {

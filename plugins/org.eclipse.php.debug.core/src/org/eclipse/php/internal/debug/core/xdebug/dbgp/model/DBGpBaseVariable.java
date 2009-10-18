@@ -22,7 +22,8 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 	private String fullName;
 	private String address;
 
-	public DBGpBaseVariable(IDebugTarget target, String stackLevel, String fullName) {
+	public DBGpBaseVariable(IDebugTarget target, String stackLevel,
+			String fullName) {
 		super(target);
 		this.stackLevel = stackLevel;
 		this.fullName = fullName;
@@ -35,6 +36,7 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IVariable#hasValueChanged()
 	 */
 	public boolean hasValueChanged() throws DebugException {
@@ -43,7 +45,10 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.core.model.IValueModification#supportsValueModification()
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.model.IValueModification#supportsValueModification
+	 * ()
 	 */
 	public boolean supportsValueModification() {
 		return false;
@@ -51,7 +56,10 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.core.model.IValueModification#verifyValue(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.model.IValueModification#verifyValue(java.lang
+	 * .String)
 	 */
 	public boolean verifyValue(String expression) throws DebugException {
 		return false;
@@ -59,7 +67,10 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.core.model.IValueModification#verifyValue(org.eclipse.debug.core.model.IValue)
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.model.IValueModification#verifyValue(org.eclipse
+	 * .debug.core.model.IValue)
 	 */
 	public boolean verifyValue(IValue value) throws DebugException {
 		return false;
@@ -67,14 +78,20 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.core.model.IValueModification#setValue(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.model.IValueModification#setValue(java.lang.String
+	 * )
 	 */
 	public void setValue(String expression) throws DebugException {
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.core.model.IValueModification#setValue(org.eclipse.debug.core.model.IValue)
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.model.IValueModification#setValue(org.eclipse.
+	 * debug.core.model.IValue)
 	 */
 	public void setValue(IValue value) throws DebugException {
 	}
@@ -88,6 +105,7 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 
 	/**
 	 * return the stack level of this variable
+	 * 
 	 * @return
 	 */
 	public String getStackLevel() {
@@ -96,12 +114,13 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 
 	/**
 	 * set the full name of this variable
+	 * 
 	 * @param fullName
 	 */
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
-	
+
 	public String getAddress() {
 		return address;
 	}
@@ -109,5 +128,5 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 }

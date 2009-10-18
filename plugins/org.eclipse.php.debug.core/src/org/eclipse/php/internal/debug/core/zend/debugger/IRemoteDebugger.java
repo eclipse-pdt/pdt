@@ -20,19 +20,20 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThr
 
 /**
  * @author michael
- *
+ * 
  */
-public interface IRemoteDebugger extends Debugger, CommunicationClient, CommunicationAdministrator, IDebugFeatures {
+public interface IRemoteDebugger extends Debugger, CommunicationClient,
+		CommunicationAdministrator, IDebugFeatures {
 
 	public DebugConnectionThread getConnectionThread();
 
-	public IDebugHandler getDebugHandler ();
+	public IDebugHandler getDebugHandler();
 
 	public boolean go(GoResponseHandler responseHandler);
 
 	public boolean isActive();
 
-    public void closeConnection();
+	public void closeConnection();
 
 	public void closeDebugSession();
 
@@ -40,7 +41,7 @@ public interface IRemoteDebugger extends Debugger, CommunicationClient, Communic
 
 	public boolean stepInto(StepIntoResponseHandler responseHandler);
 
-	public IDebugResponseMessage sendCustomRequest (IDebugRequestMessage request);
+	public IDebugResponseMessage sendCustomRequest(IDebugRequestMessage request);
 
 	/**
 	 * @return current protocol ID that is used in this debug session

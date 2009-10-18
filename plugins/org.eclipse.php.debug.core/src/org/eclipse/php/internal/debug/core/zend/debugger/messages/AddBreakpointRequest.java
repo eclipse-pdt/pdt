@@ -21,10 +21,11 @@ import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
 
 /**
  * Request to add a new break point.
- *
+ * 
  * @author guy
  */
-public class AddBreakpointRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
+public class AddBreakpointRequest extends DebugMessageRequestImpl implements
+		IDebugRequestMessage {
 
 	private Breakpoint breakPoint;
 

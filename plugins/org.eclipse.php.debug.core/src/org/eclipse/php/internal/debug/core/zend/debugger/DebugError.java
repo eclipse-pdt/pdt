@@ -39,12 +39,14 @@ public class DebugError implements Cloneable {
 
 	public static boolean isWarning(DebugError debugError) {
 		int errorIndex = getErrorIndex(debugError.getCode());
-		return errorIndex == 1 || errorIndex == 5 || errorIndex == 7 || errorIndex == 9;
+		return errorIndex == 1 || errorIndex == 5 || errorIndex == 7
+				|| errorIndex == 9;
 	}
 
 	public static boolean isError(DebugError debugError) {
 		int errorIndex = getErrorIndex(debugError.getCode());
-		return errorIndex == 0 || errorIndex == 2 || errorIndex == 4 || errorIndex == 6 || errorIndex == 8;
+		return errorIndex == 0 || errorIndex == 2 || errorIndex == 4
+				|| errorIndex == 6 || errorIndex == 8;
 	}
 
 	public static boolean isStrict(DebugError debugError) {
@@ -52,7 +54,10 @@ public class DebugError implements Cloneable {
 		return errorIndex == 11;
 	}
 
-	private static String codeToName[] = new String[] { "Debug Error", "Debug Warning", "Parsing Error", "Notice", "Fatal Error", "Core Warning", "Compile Error", "Compile Warning", "User Error", "User Warning", "User Notice", "Debug Strict (PHP 5)" };
+	private static String codeToName[] = new String[] { "Debug Error",
+			"Debug Warning", "Parsing Error", "Notice", "Fatal Error",
+			"Core Warning", "Compile Error", "Compile Warning", "User Error",
+			"User Warning", "User Notice", "Debug Strict (PHP 5)" };
 
 	private static int getErrorIndex(int code) {
 		int index = (int) (Math.log(code) / Math.log(2));
@@ -129,23 +134,25 @@ public class DebugError implements Cloneable {
 	}
 
 	/**
-	 * Returns the file display name.
-	 * Note : This name should not be used as the source file path to open the file
-	 *        Use getFullPathName() instead.
+	 * Returns the file display name. Note : This name should not be used as the
+	 * source file path to open the file Use getFullPathName() instead.
 	 */
 	public String getFileDisplayName() {
 		IPath filePath = new Path(fileName);
-		if (filePath.segmentCount() > 1 && filePath.segment(filePath.segmentCount() - 2).equals("Untitled_Documents")){
+		if (filePath.segmentCount() > 1
+				&& filePath.segment(filePath.segmentCount() - 2).equals(
+						"Untitled_Documents")) {
 			return filePath.lastSegment();
 		}
 		return fileName;
 	}
-	
+
 	/**
 	 * Returns the full path of the file
+	 * 
 	 * @return
 	 */
-	public String getFullPathName(){
+	public String getFullPathName() {
 		return fileName;
 	}
 
@@ -188,7 +195,7 @@ public class DebugError implements Cloneable {
 			buffer.append(": ");
 			buffer.append(getFileDisplayName());
 			buffer.append(" line ");
-			//            buffer.append(lineNumber + 1);
+			// buffer.append(lineNumber + 1);
 			buffer.append(lineNumber);
 		}
 		buffer.append(" - " + getErrorText());
@@ -203,7 +210,8 @@ public class DebugError implements Cloneable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
+		result = prime * result
+				+ ((fileName == null) ? 0 : fileName.hashCode());
 		result = prime * result + lineNumber;
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
 		return result;

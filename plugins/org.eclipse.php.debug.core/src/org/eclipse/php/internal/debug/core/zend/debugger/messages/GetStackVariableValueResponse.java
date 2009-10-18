@@ -26,7 +26,8 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class GetStackVariableValueResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
+public class GetStackVariableValueResponse extends DebugMessageResponseImpl
+		implements IDebugResponseMessage {
 
 	private byte[] varResult;
 

@@ -17,37 +17,38 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public interface IDebugHandler {
 
-    public void sessionStarted(String fileName, String uri, String query, String options);
+	public void sessionStarted(String fileName, String uri, String query,
+			String options);
 
-    public void sessionEnded();
+	public void sessionEnded();
 
-    public void connectionTimedout();
+	public void connectionTimedout();
 
-    public void multipleBindOccured();
+	public void multipleBindOccured();
 
-    public void handleScriptEnded();
+	public void handleScriptEnded();
 
-    public void connectionEstablished();
+	public void connectionEstablished();
 
-    public void connectionClosed();
+	public void connectionClosed();
 
-    public void newOutput(String output);
+	public void newOutput(String output);
 
-    public void newHeaderOutput(String output);
+	public void newHeaderOutput(String output);
 
-    public void parsingErrorOccured(DebugError debugError);
+	public void parsingErrorOccured(DebugError debugError);
 
-    public void wrongDebugServer();
+	public void wrongDebugServer();
 
-    public void ready(String fileName, int lineNumber);
+	public void ready(String fileName, int lineNumber);
 
-    public void debugChanged();
+	public void debugChanged();
 
-    public void debuggerErrorOccured(DebugError debugError);
+	public void debuggerErrorOccured(DebugError debugError);
 
-    public IRemoteDebugger getRemoteDebugger();
-    
-    public void setDebugTarget (PHPDebugTarget debugTarget);
-    
-    public PHPDebugTarget getDebugTarget();
+	public IRemoteDebugger getRemoteDebugger();
+
+	public void setDebugTarget(PHPDebugTarget debugTarget);
+
+	public PHPDebugTarget getDebugTarget();
 }

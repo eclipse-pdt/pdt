@@ -41,15 +41,19 @@ public class DebugHandlersRegistry {
 	private DebugHandlersRegistry() {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry
+				.getConfigurationElementsFor(PHPDebugPlugin.getID(),
+						EXTENSION_POINT_NAME);
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (HANDLER_TAG.equals(element.getName())) {
 
-				actions.put(element.getAttribute(ID_ATTRIBUTE), new DebugHandlerFactory(element));
+				actions.put(element.getAttribute(ID_ATTRIBUTE),
+						new DebugHandlerFactory(element));
 
-				String debugger = element.getAttribute(REMOTE_DEBUGGER_ATTRIBUTE);
+				String debugger = element
+						.getAttribute(REMOTE_DEBUGGER_ATTRIBUTE);
 				if (debugger != null) {
 					debuggers.put(element.getAttribute(ID_ATTRIBUTE), debugger);
 				}
@@ -70,18 +74,20 @@ public class DebugHandlersRegistry {
 
 	/**
 	 * Return debug handler according to its ID
-	 *
+	 * 
 	 * @return handler Debug handler
 	 */
 	public static IDebugHandler getHandler(String id) throws Exception {
-		return ((DebugHandlerFactory) getInstance().getHandlers().get(id)).createHandler();
+		return ((DebugHandlerFactory) getInstance().getHandlers().get(id))
+				.createHandler();
 	}
 
 	/**
 	 * Returns remote debugger ID by the Debug Handler ID
 	 * 
-	 * @param debug handler ID.
-	 * @return remote debugger ID. 
+	 * @param debug
+	 *            handler ID.
+	 * @return remote debugger ID.
 	 */
 	public static String getRemoteDebuggerID(String debugHandlerID) {
 		return (String) getInstance().debuggers.get(debugHandlerID);
@@ -100,11 +106,14 @@ public class DebugHandlersRegistry {
 		}
 
 		public IDebugHandler createHandler() {
-			Platform.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugHandlers") {
-				public void run() throws Exception {
-					handler = (IDebugHandler) element.createExecutableExtension(CLASS_ATTRIBUTE);
-				}
-			});
+			Platform
+					.run(new SafeRunnable(
+							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugHandlers") {
+						public void run() throws Exception {
+							handler = (IDebugHandler) element
+									.createExecutableExtension(CLASS_ATTRIBUTE);
+						}
+					});
 			return handler;
 		}
 	}

@@ -21,7 +21,7 @@ public class SimpleVariable extends DBGpElement implements IVariable {
 
 	String name;
 	IValue value;
-	
+
 	public SimpleVariable(String name, IValue value, IDebugTarget debugTarget) {
 		super(debugTarget);
 		this.name = name;
@@ -65,6 +65,5 @@ public class SimpleVariable extends DBGpElement implements IVariable {
 	public boolean verifyValue(IValue value) throws DebugException {
 		return true;
 	}
-	
 
 }

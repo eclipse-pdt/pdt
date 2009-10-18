@@ -13,8 +13,9 @@ package org.eclipse.php.internal.debug.core.preferences.stepFilters;
 
 /**
  * This file contains all the available types of the Debug Step Filters
+ * 
  * @author yaronm
- *
+ * 
  */
 public interface IStepFilterTypes {
 	/**
@@ -43,12 +44,14 @@ public interface IStepFilterTypes {
 	public final static int PHP_INCLUDE_PATH_VAR = 9005;
 
 	/**
-	 * A Filter Type representation of a File within a PHP Include Path Variable Entry 
+	 * A Filter Type representation of a File within a PHP Include Path Variable
+	 * Entry
 	 */
 	public final static int PHP_INCLUDE_PATH_VAR_FILE = 9006;
 
 	/**
-	 * A Filter Type representation of a Folder within PHP Include Path Variable Entry
+	 * A Filter Type representation of a Folder within PHP Include Path Variable
+	 * Entry
 	 */
 	public final static int PHP_INCLUDE_PATH_VAR_FOLDER = 9007;
 
@@ -58,7 +61,8 @@ public interface IStepFilterTypes {
 	public final static int PHP_INCLUDE_PATH_LIBRARY = 9008;
 
 	/**
-	 * A Filter Type representation of a Folder within a PHP Include Path Library Entry
+	 * A Filter Type representation of a Folder within a PHP Include Path
+	 * Library Entry
 	 */
 	public final static int PHP_INCLUDE_PATH_LIBRARY_FOLDER = 9009;
 

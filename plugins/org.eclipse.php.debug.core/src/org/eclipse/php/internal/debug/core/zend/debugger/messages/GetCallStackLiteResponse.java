@@ -26,13 +26,14 @@ import org.eclipse.php.internal.debug.core.zend.debugger.PHPstack;
 import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
 
 /**
- * This class is like {@link GetCallStackResponse}, with only difference: it doesn't contain
- * function parameters.
- *  
+ * This class is like {@link GetCallStackResponse}, with only difference: it
+ * doesn't contain function parameters.
+ * 
  * @author michael
- * @deprecated 
+ * @deprecated
  */
-public class GetCallStackLiteResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
+public class GetCallStackLiteResponse extends DebugMessageResponseImpl
+		implements IDebugResponseMessage {
 
 	private PHPstack stack;
 
@@ -55,7 +56,11 @@ public class GetCallStackLiteResponse extends DebugMessageResponseImpl implement
 		PHPstack stack = new PHPstack();
 		int depth = in.readInt();
 		for (int i = 0; i < depth; i++) {
-			StackLayer layer = new StackLayer(i, CommunicationUtilities.readString(in), in.readInt(), CommunicationUtilities.readString(in), CommunicationUtilities.readString(in), in.readInt(), CommunicationUtilities.readString(in), getTransferEncoding());
+			StackLayer layer = new StackLayer(i, CommunicationUtilities
+					.readString(in), in.readInt(), CommunicationUtilities
+					.readString(in), CommunicationUtilities.readString(in), in
+					.readInt(), CommunicationUtilities.readString(in),
+					getTransferEncoding());
 			stack.addLayer(layer);
 		}
 		setPHPstack(stack);

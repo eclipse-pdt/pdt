@@ -20,28 +20,28 @@ public class PHPHyperLink {
 
 	private List<HyperlinkEntry> fLinks;
 
-    public void addLink(IHyperlink link, String message, int length) {
-        if (fLinks == null) {
-            fLinks = new Vector<HyperlinkEntry>();
-        }
-        HyperlinkEntry hLink = new HyperlinkEntry(link, message, length);
-        fLinks.add(hLink);
-    }
+	public void addLink(IHyperlink link, String message, int length) {
+		if (fLinks == null) {
+			fLinks = new Vector<HyperlinkEntry>();
+		}
+		HyperlinkEntry hLink = new HyperlinkEntry(link, message, length);
+		fLinks.add(hLink);
+	}
 
-    public HyperlinkEntry getHyperlinkEntry(String message) {
-    	if (fLinks != null) {
-	        Object[] alinks = fLinks.toArray();
-	        for (Object element : alinks) {
-	            String linkMessage = ((HyperlinkEntry) element).getMessage();
-	            if ((linkMessage.trim()).startsWith(message.trim())) {
-	                return ((HyperlinkEntry) element);
-	            }
-	        }
-    	}
-        return null;
-    }
+	public HyperlinkEntry getHyperlinkEntry(String message) {
+		if (fLinks != null) {
+			Object[] alinks = fLinks.toArray();
+			for (Object element : alinks) {
+				String linkMessage = ((HyperlinkEntry) element).getMessage();
+				if ((linkMessage.trim()).startsWith(message.trim())) {
+					return ((HyperlinkEntry) element);
+				}
+			}
+		}
+		return null;
+	}
 
-    public void dispose() {
-        fLinks = null;
-    }
+	public void dispose() {
+		fLinks = null;
+	}
 }

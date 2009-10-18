@@ -20,18 +20,24 @@ public interface IPHPConsoleEventListener {
 
 	/**
 	 * Initialize this PHP console event listener
-	 * @param launch Current launch
-	 * @param consoleMonitor Console monitor
-	 * @param link Hyper link container
+	 * 
+	 * @param launch
+	 *            Current launch
+	 * @param consoleMonitor
+	 *            Console monitor
+	 * @param link
+	 *            Hyper link container
 	 */
-	public void init(ILaunch launch, DebugConsoleMonitor consoleMonitor, PHPHyperLink link);
+	public void init(ILaunch launch, DebugConsoleMonitor consoleMonitor,
+			PHPHyperLink link);
 
-    /**
-     * Notification the given event occurred in the target program
-     * being interpreted.
-     *
-     * @param event the event
-     */
-    public void handleEvent(DebugError debugError);
+	/**
+	 * Notification the given event occurred in the target program being
+	 * interpreted.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	public void handleEvent(DebugError debugError);
 
 }

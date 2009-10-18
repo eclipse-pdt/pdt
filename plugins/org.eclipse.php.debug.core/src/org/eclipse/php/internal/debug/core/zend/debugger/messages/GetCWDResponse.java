@@ -26,7 +26,8 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author michael
  */
-public class GetCWDResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
+public class GetCWDResponse extends DebugMessageResponseImpl implements
+		IDebugResponseMessage {
 
 	private String cwd;
 

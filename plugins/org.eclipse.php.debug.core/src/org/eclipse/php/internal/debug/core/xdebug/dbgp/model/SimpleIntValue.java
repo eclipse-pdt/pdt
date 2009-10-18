@@ -21,24 +21,25 @@ public class SimpleIntValue extends DBGpElement implements IValue {
 	private int currentValue;
 	private int wantedValue;
 	private IVariable[] vars = new IVariable[0];
-	
-	public SimpleIntValue(int currentValue, int wantedValue, IDebugTarget debugTarget) {
+
+	public SimpleIntValue(int currentValue, int wantedValue,
+			IDebugTarget debugTarget) {
 		super(debugTarget);
 		this.currentValue = currentValue;
 		this.wantedValue = wantedValue;
 	}
-	
+
 	public String getReferenceTypeName() throws DebugException {
 		return "int";
 	}
 
 	public String getValueString() throws DebugException {
-		//TODO: cache
+		// TODO: cache
 		if (currentValue == wantedValue) {
 			return Integer.toString(currentValue);
-		}
-		else {
-			return Integer.toString(currentValue) + " (" + Integer.toString(wantedValue)+ ")";
+		} else {
+			return Integer.toString(currentValue) + " ("
+					+ Integer.toString(wantedValue) + ")";
 		}
 	}
 

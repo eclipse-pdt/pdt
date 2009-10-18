@@ -14,6 +14,7 @@ package org.eclipse.php.internal.debug.core.zend.testConnection;
 /**
  * This represents an event which is created when a Debug Server Test completes.
  * Note : The result of event can be Success,Timeout OR Failure.
+ * 
  * @author yaronm
  */
 public class DebugServerTestEvent {
@@ -42,8 +43,8 @@ public class DebugServerTestEvent {
 	}
 
 	/**
-	 * Returns the event type.
-	 * See DebugServerTestEvent constants types
+	 * Returns the event type. See DebugServerTestEvent constants types
+	 * 
 	 * @return
 	 */
 	public int getEventType() {
@@ -52,6 +53,7 @@ public class DebugServerTestEvent {
 
 	/**
 	 * The URL string representation of the source of event
+	 * 
 	 * @return
 	 */
 	public String getSourceURL() {

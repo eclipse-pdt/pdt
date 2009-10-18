@@ -26,7 +26,8 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author erez
  */
-public class ParsingErrorNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
+public class ParsingErrorNotification extends DebugMessageNotificationImpl
+		implements IDebugNotificationMessage {
 
 	private int errorLevel = 0;
 	private String fileName;

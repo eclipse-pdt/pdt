@@ -8,15 +8,18 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.ui.actions.IWatchExpressionFactoryAdapter;
 
-public class WatchExpressionFactoryAdapter implements IWatchExpressionFactoryAdapter {
+public class WatchExpressionFactoryAdapter implements
+		IWatchExpressionFactoryAdapter {
 
 	private static final String TYPE_ARRAY = "ARRAY";
 	private static final String TYPE_OBJECT = "OBJECT";
 
-	public String createWatchExpression(IVariable variable) throws CoreException {
+	public String createWatchExpression(IVariable variable)
+			throws CoreException {
 		if (variable instanceof PHPVariable) {
 			PHPVariable phpVar = (PHPVariable) variable;
-			PHPDebugTarget debugTarget = (PHPDebugTarget) phpVar.getDebugTarget();
+			PHPDebugTarget debugTarget = (PHPDebugTarget) phpVar
+					.getDebugTarget();
 			IVariable[] variables = debugTarget.getVariables(null);
 			Stack<IVariable> stack = new Stack<IVariable>();
 			if (findVariable(phpVar, variables, stack)) {
@@ -26,7 +29,7 @@ public class WatchExpressionFactoryAdapter implements IWatchExpressionFactoryAda
 		return variable.getName();
 	}
 
-	private boolean findVariable( PHPVariable phpVar, IVariable[] variables,
+	private boolean findVariable(PHPVariable phpVar, IVariable[] variables,
 			Stack<IVariable> stack) throws DebugException {
 		for (IVariable variable : variables) {
 			if (variable.equals(phpVar)) {
@@ -45,7 +48,8 @@ public class WatchExpressionFactoryAdapter implements IWatchExpressionFactoryAda
 		return false;
 	}
 
-	private String createExpression(Stack<IVariable> stack) throws DebugException {
+	private String createExpression(Stack<IVariable> stack)
+			throws DebugException {
 		StringBuffer expr = new StringBuffer();
 		String parentType = "";
 		while (!stack.isEmpty()) {

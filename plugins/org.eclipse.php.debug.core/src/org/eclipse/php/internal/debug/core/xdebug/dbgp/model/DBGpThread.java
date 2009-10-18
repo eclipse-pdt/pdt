@@ -19,10 +19,9 @@ import org.eclipse.debug.core.model.IThread;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 
 /**
- * Currently this implementation is for a single threaded
- * language, so in the case of ITerminate, ISuspendResume, IStep 
- * we just ask what the debug target would do. IThread implementation
- * is provided here.
+ * Currently this implementation is for a single threaded language, so in the
+ * case of ITerminate, ISuspendResume, IStep we just ask what the debug target
+ * would do. IThread implementation is provided here.
  */
 public class DBGpThread extends DBGpElement implements IThread {
 
@@ -34,6 +33,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IThread#getName()
 	 */
 	public String getName() throws DebugException {
@@ -44,6 +44,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IThread#getPriority()
 	 */
 	public int getPriority() throws DebugException {
@@ -52,6 +53,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IThread#getBreakpoints()
 	 */
 	public IBreakpoint[] getBreakpoints() {
@@ -63,6 +65,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IThread#getStackFrames()
 	 */
 	public IStackFrame[] getStackFrames() throws DebugException {
@@ -75,6 +78,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IThread#getTopStackFrame()
 	 */
 	public IStackFrame getTopStackFrame() throws DebugException {
@@ -87,6 +91,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IThread#hasStackFrames()
 	 */
 	public boolean hasStackFrames() throws DebugException {
@@ -95,6 +100,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
 	 */
 	public boolean canResume() {
@@ -103,6 +109,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
 	 */
 	public boolean canSuspend() {
@@ -111,6 +118,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
 	 */
 	public boolean isSuspended() {
@@ -119,6 +127,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
 	public boolean canTerminate() {
@@ -127,6 +136,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
 	public boolean isTerminated() {
@@ -135,6 +145,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
 	 */
 	public boolean canStepInto() {
@@ -143,6 +154,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
 	 */
 	public boolean canStepOver() {
@@ -151,6 +163,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
 	 */
 	public boolean canStepReturn() {
@@ -159,6 +172,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#isStepping()
 	 */
 	public boolean isStepping() {
@@ -167,6 +181,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
 	 */
 	public void resume() throws DebugException {
@@ -175,6 +190,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
 	 */
 	public void suspend() throws DebugException {
@@ -183,6 +199,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepInto()
 	 */
 	public void stepInto() throws DebugException {
@@ -191,6 +208,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepOver()
 	 */
 	public void stepOver() throws DebugException {
@@ -199,6 +217,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
 	 */
 	public void stepReturn() throws DebugException {
@@ -207,6 +226,7 @@ public class DBGpThread extends DBGpElement implements IThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
 	public void terminate() throws DebugException {
@@ -214,8 +234,9 @@ public class DBGpThread extends DBGpElement implements IThread {
 	}
 
 	/**
-	 * Set the breakpoints that caused this thread to suspend.
-	 * The debug target provides this info.
+	 * Set the breakpoints that caused this thread to suspend. The debug target
+	 * provides this info.
+	 * 
 	 * @param breakpoints
 	 */
 	protected void setBreakpoints(IBreakpoint[] breakpoints) {

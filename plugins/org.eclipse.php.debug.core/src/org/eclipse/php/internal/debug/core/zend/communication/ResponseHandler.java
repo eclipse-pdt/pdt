@@ -18,12 +18,12 @@
 package org.eclipse.php.internal.debug.core.zend.communication;
 
 /**
- *
- * @author  eran
+ * 
+ * @author eran
  * @version
  */
 public interface ResponseHandler {
 
-    public void handleResponse(Object request, Object response);
+	public void handleResponse(Object request, Object response);
 
 }

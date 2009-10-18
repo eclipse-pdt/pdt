@@ -14,7 +14,8 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 public class TimedEvent {
 	private boolean raised = false;
 
-	public synchronized boolean waitForEvent(long timeout) throws InterruptedException {
+	public synchronized boolean waitForEvent(long timeout)
+			throws InterruptedException {
 		boolean timedOut = false;
 		if (!raised) {
 			wait(timeout);

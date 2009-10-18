@@ -14,26 +14,26 @@ package org.eclipse.php.internal.debug.core.launching;
 import org.eclipse.ui.console.IHyperlink;
 
 public class HyperlinkEntry {
-    private IHyperlink fLink;
-    private String fMessage;
-    private int fHyperLength;
+	private IHyperlink fLink;
+	private String fMessage;
+	private int fHyperLength;
 
-    public HyperlinkEntry(IHyperlink link, String message, int hyperLength) {
-        fLink = link;
-        fMessage = message;
-        fHyperLength = hyperLength;
-    }
+	public HyperlinkEntry(IHyperlink link, String message, int hyperLength) {
+		fLink = link;
+		fMessage = message;
+		fHyperLength = hyperLength;
+	}
 
-    public IHyperlink getLink() {
-        return fLink;
-    }
+	public IHyperlink getLink() {
+		return fLink;
+	}
 
-    public String getMessage() {
-        return fMessage;
-    }
-    
-    public int getHyperLength() {
-        return fHyperLength;
-    }
+	public String getMessage() {
+		return fMessage;
+	}
+
+	public int getHyperLength() {
+		return fHyperLength;
+	}
 
 }

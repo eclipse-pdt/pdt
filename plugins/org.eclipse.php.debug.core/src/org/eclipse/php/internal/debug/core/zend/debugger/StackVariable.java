@@ -13,6 +13,6 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 public interface StackVariable extends Expression {
 
-    public int getStackDepth();
+	public int getStackDepth();
 
 }

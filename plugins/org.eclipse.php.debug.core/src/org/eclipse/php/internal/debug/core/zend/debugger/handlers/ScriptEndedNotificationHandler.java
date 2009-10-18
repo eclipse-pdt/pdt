@@ -19,7 +19,8 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 public class ScriptEndedNotificationHandler implements IDebugMessageHandler {
 
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
-		IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();
+		IDebugHandler debugHandler = debugTarget.getRemoteDebugger()
+				.getDebugHandler();
 		debugHandler.handleScriptEnded();
 	}
 }

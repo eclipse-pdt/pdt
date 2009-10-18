@@ -20,10 +20,11 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 
 /**
  * This message is sent by Debugger when it starts processing a new file
- *
+ * 
  * @author michael
  */
-public class StartProcessFileNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
+public class StartProcessFileNotification extends DebugMessageNotificationImpl
+		implements IDebugNotificationMessage {
 
 	private String fileName;
 

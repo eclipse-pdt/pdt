@@ -14,9 +14,9 @@ package org.eclipse.php.internal.debug.core.preferences.stepFilters;
 import org.eclipse.php.internal.core.util.FileUtils;
 
 /**
- * This class represents a Debug Step Filter object.
- * A Debug Step filter handles filtering files when the debugger performs
- * a 'Step Into' action
+ * This class represents a Debug Step Filter object. A Debug Step filter handles
+ * filtering files when the debugger performs a 'Step Into' action
+ * 
  * @author yaronm
  */
 public class DebugStepFilter {
@@ -31,12 +31,19 @@ public class DebugStepFilter {
 
 	/**
 	 * Constructs a new Debug Step Filter
-	 * @param type - This Step Filter Type, use IStepFilterTypes constants
-	 * @param enabled - Whether this filter is enabled
-	 * @param isReadOnly - Whether this filter is built-in thus cannot be deleted
-	 * @param path - The path string representation (can have '*' as a prefix and/or postfix)
+	 * 
+	 * @param type
+	 *            - This Step Filter Type, use IStepFilterTypes constants
+	 * @param enabled
+	 *            - Whether this filter is enabled
+	 * @param isReadOnly
+	 *            - Whether this filter is built-in thus cannot be deleted
+	 * @param path
+	 *            - The path string representation (can have '*' as a prefix
+	 *            and/or postfix)
 	 */
-	public DebugStepFilter(int type, boolean enabled, boolean isReadOnly, String path) {
+	public DebugStepFilter(int type, boolean enabled, boolean isReadOnly,
+			String path) {
 		fPath = path;
 		fIsEnabled = enabled;
 		fType = type;
@@ -45,6 +52,7 @@ public class DebugStepFilter {
 
 	/**
 	 * Returns the Path string representation of this filter
+	 * 
 	 * @return
 	 */
 	public String getPath() {
@@ -52,7 +60,9 @@ public class DebugStepFilter {
 	}
 
 	/**
-	 * Sets the path string representation (can have '*' as a prefix and/or postfix)
+	 * Sets the path string representation (can have '*' as a prefix and/or
+	 * postfix)
+	 * 
 	 * @param path
 	 */
 	public void setPath(String path) {
@@ -61,6 +71,7 @@ public class DebugStepFilter {
 
 	/**
 	 * Denotes whether this filter is enabled
+	 * 
 	 * @return
 	 */
 	public boolean isEnabled() {
@@ -69,6 +80,7 @@ public class DebugStepFilter {
 
 	/**
 	 * Sets whether this filter is enabled
+	 * 
 	 * @param enabled
 	 */
 	public void setEnabled(boolean enabled) {
@@ -77,6 +89,7 @@ public class DebugStepFilter {
 
 	/**
 	 * Returns this filter's type.
+	 * 
 	 * @return - an IStepFilterTypes constants
 	 */
 	public int getType() {
@@ -87,7 +100,8 @@ public class DebugStepFilter {
 		if (o instanceof DebugStepFilter) {
 			DebugStepFilter other = (DebugStepFilter) o;
 
-			if ((FileUtils.checkIfEqualFilePaths(getPath(), other.getPath())) && (getType() == other.getType())) {
+			if ((FileUtils.checkIfEqualFilePaths(getPath(), other.getPath()))
+					&& (getType() == other.getType())) {
 				return true;
 			}
 		}
@@ -100,6 +114,7 @@ public class DebugStepFilter {
 
 	/**
 	 * Denotes whether this filter is a Read Only one
+	 * 
 	 * @return
 	 */
 	public boolean isReadOnly() {

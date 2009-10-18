@@ -15,31 +15,31 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Strings used by PHP Debugger Core
- *
+ * 
  */
 public class PHPDebugCoreMessages extends NLS {
-    private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.core.PHPDebugCoreMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.core.PHPDebugCoreMessages";//$NON-NLS-1$
 
-    public static String LineBreakPointMessage_1;
-    public static String ConditionalBreakPointMessage_1;
-    public static String ConditionalBreakPointMessage_2;
-    public static String DebuggerFileNotFound_1;
-    public static String DebuggerDebugPortInUse_1;
-    public static String DebuggerConnection_Problem_1;
-    public static String DebuggerConnection_Problem_2;
-    public static String DebuggerConnection_Problem_3;
-    public static String DebuggerConnection_Failed_1;
-    public static String Debugger_Unexpected_Error_1;
-    public static String Debugger_ResourceNotFound;
-    public static String Debugger_LaunchError_title;
-    public static String Debugger_InvalidDebugResource;
-    public static String Debugger_General_Error;
-    public static String Debugger_Launch_Error;
-    public static String Debugger_Error_Message;
-    public static String Debugger_Error_Message_2;
-    public static String Debugger_Error_Message_3;
-    public static String Debugger_Error_Crash_Message;
-    public static String Debugger_Incompatible_Protocol;
+	public static String LineBreakPointMessage_1;
+	public static String ConditionalBreakPointMessage_1;
+	public static String ConditionalBreakPointMessage_2;
+	public static String DebuggerFileNotFound_1;
+	public static String DebuggerDebugPortInUse_1;
+	public static String DebuggerConnection_Problem_1;
+	public static String DebuggerConnection_Problem_2;
+	public static String DebuggerConnection_Problem_3;
+	public static String DebuggerConnection_Failed_1;
+	public static String Debugger_Unexpected_Error_1;
+	public static String Debugger_ResourceNotFound;
+	public static String Debugger_LaunchError_title;
+	public static String Debugger_InvalidDebugResource;
+	public static String Debugger_General_Error;
+	public static String Debugger_Launch_Error;
+	public static String Debugger_Error_Message;
+	public static String Debugger_Error_Message_2;
+	public static String Debugger_Error_Message_3;
+	public static String Debugger_Error_Crash_Message;
+	public static String Debugger_Incompatible_Protocol;
 
 	public static String PHPLaunchUtilities_activeLaunchDetected;
 	public static String PHPLaunchUtilities_confirmation;
@@ -69,13 +69,13 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String ZendDebuggerConfigurationDialog_zendDebugger;
 	public static String ZendDebuggerConfigurationDialog_zendDebuggerSettings;
 
-	//title and groups
+	// title and groups
 	public static String XDebugConfigurationDialog_mainTitle;
 	public static String XDebugConfigurationDialog_generalGroup;
 	public static String XDebugConfigurationDialog_captureGroup;
 	public static String XDebugConfigurationDialog_proxyGroup;
-	
-	//general
+
+	// general
 	public static String XDebugConfigurationDialog_invalidTimeout;
 	public static String XDebugConfigurationDialog_invalidTimeoutValue;
 	public static String XDebugConfigurationDialog_maxArrayDepth;
@@ -83,35 +83,35 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugConfigurationDialog_showSuperGlobals;
 	public static String XDebugConfigurationDialog_invalidPortRange;
 	public static String XDebugConfigurationDialog_useMultisession;
-	public static String XDebugConfigurationDialog_remoteSession;	
+	public static String XDebugConfigurationDialog_remoteSession;
 	public static String XDebugConfigurationDialog_remoteSessionOption_off;
 	public static String XDebugConfigurationDialog_remoteSessionOption_localhost;
 	public static String XDebugConfigurationDialog_remoteSessionOption_any;
 	public static String XDebugConfigurationDialog_remoteSessionOption_prompt;
-	
-	//capture output
+
+	// capture output
 	public static String XDebugConfigurationDialog_captureStdout;
-	public static String XDebugConfigurationDialog_captureStderr;		
+	public static String XDebugConfigurationDialog_captureStderr;
 	public static String XDebugConfigurationDialog_capture_off;
 	public static String XDebugConfigurationDialog_capture_copy;
 	public static String XDebugConfigurationDialog_capture_redirect;
-	
-	//proxy
+
+	// proxy
 	public static String XDebugConfigurationDialog_useProxy;
 	public static String XDebugConfigurationDialog_idekey;
 	public static String XDebugConfigurationDialog_proxy;
 
-	//General XDebug messages
-	
-	//DBGpTarget messages
-	public static String XDebugMessage_debugError;	
+	// General XDebug messages
+
+	// DBGpTarget messages
+	public static String XDebugMessage_debugError;
 	public static String XDebugMessage_unexpectedTermination;
-	
-	//XDebug Communication Demon msgs
-	public static String XDebugMessage_remoteSessionTitle;	
+
+	// XDebug Communication Demon msgs
+	public static String XDebugMessage_remoteSessionTitle;
 	public static String XDebugMessage_remoteSessionPrompt;
-	
-	//proxy Handler
+
+	// proxy Handler
 	public static String XDebug_DBGpProxyHandler_0;
 	public static String XDebug_DBGpProxyHandler_1;
 	public static String XDebug_DBGpProxyHandler_2;
@@ -128,7 +128,7 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_WebLaunchConfigurationDelegate_2;
 	public static String XDebug_WebLaunchConfigurationDelegate_3;
 	public static String XDebug_WebLaunchConfigurationDelegate_4;
-	
+
 	public static String XDebug_DBGpTarget_0;
 	public static String XDebug_DBGpTarget_1;
 	public static String XDebug_DBGpTarget_2;
@@ -140,17 +140,14 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_DBGpVariable_0;
 	public static String XDebug_DBGpVariable_1;
 	public static String XDebug_IDBGpModelConstants_0;
-	public static String XDebug_IDBGpModelConstants_1;	
-	
+	public static String XDebug_IDBGpModelConstants_1;
 
-	
-	
-    static {
-        // load message values from bundle file
-        NLS.initializeMessages(BUNDLE_NAME, PHPDebugCoreMessages.class);
-    }
+	static {
+		// load message values from bundle file
+		NLS.initializeMessages(BUNDLE_NAME, PHPDebugCoreMessages.class);
+	}
 
-    private PHPDebugCoreMessages() {
-        // cannot create new instance
-    }
+	private PHPDebugCoreMessages() {
+		// cannot create new instance
+	}
 }

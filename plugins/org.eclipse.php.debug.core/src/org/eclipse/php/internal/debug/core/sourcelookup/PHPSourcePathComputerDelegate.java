@@ -26,19 +26,25 @@ import org.eclipse.php.internal.debug.core.sourcelookup.containers.WorkspaceRoot
  * Computes the default source lookup path for a PHP launch configuration. For
  * now just use a project name.
  */
-public class PHPSourcePathComputerDelegate implements ISourcePathComputerDelegate {
+public class PHPSourcePathComputerDelegate implements
+		ISourcePathComputerDelegate {
 
-    public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
-        ISourceContainer sourceContainer;
-        String projectName = configuration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
-        if (projectName != null) {
-        	IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-        	// Search in specific project only
-        	sourceContainer = new PHPCompositeSourceContainer(project, configuration);
-        } else {
-        	// Search in the Workspace Root
-            sourceContainer = new WorkspaceRootSourceContainer();
-        }
-        return new ISourceContainer[] { sourceContainer };
-    }
+	public ISourceContainer[] computeSourceContainers(
+			ILaunchConfiguration configuration, IProgressMonitor monitor)
+			throws CoreException {
+		ISourceContainer sourceContainer;
+		String projectName = configuration.getAttribute(
+				IPHPDebugConstants.PHP_Project, (String) null);
+		if (projectName != null) {
+			IProject project = ResourcesPlugin.getWorkspace().getRoot()
+					.getProject(projectName);
+			// Search in specific project only
+			sourceContainer = new PHPCompositeSourceContainer(project,
+					configuration);
+		} else {
+			// Search in the Workspace Root
+			sourceContainer = new WorkspaceRootSourceContainer();
+		}
+		return new ISourceContainer[] { sourceContainer };
+	}
 }

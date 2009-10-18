@@ -14,13 +14,14 @@ package org.eclipse.php.internal.debug.core.model;
 import org.eclipse.debug.core.model.IDebugTarget;
 
 /**
- * Interface which debug targets need to implement to 
- * allow access to shared facilities within PDT.
+ * Interface which debug targets need to implement to allow access to shared
+ * facilities within PDT.
  */
 public interface IPHPDebugTarget extends IDebugTarget {
-	
+
 	/**
 	 * return the Output Buffer containing the output from the debuggee
+	 * 
 	 * @return DebugOutput containing the output.
 	 */
 	public DebugOutput getOutputBuffer();

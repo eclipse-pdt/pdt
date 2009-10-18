@@ -13,7 +13,8 @@ package org.eclipse.php.internal.debug.core.zend.debugger.parameters;
 
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 
-public abstract class AbstractDebugParametersInitializer implements IDebugParametersInitializer {
+public abstract class AbstractDebugParametersInitializer implements
+		IDebugParametersInitializer {
 
 	// Parameters
 	public static final String START_DEBUG = "start_debug"; //$NON-NLS-1$
@@ -32,15 +33,21 @@ public abstract class AbstractDebugParametersInitializer implements IDebugParame
 
 	private String id = null;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.parameters.IDebugParametersInitializer#getDebugHandler()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.debug.core.debugger.parameters.
+	 * IDebugParametersInitializer#getDebugHandler()
 	 */
 	public String getDebugHandler() {
 		return id;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.parameters.IDebugParametersInitializer#setDebugHandler(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.debug.core.debugger.parameters.
+	 * IDebugParametersInitializer#setDebugHandler(java.lang.String)
 	 */
 	public void setDebugHandler(String id) {
 		this.id = id;

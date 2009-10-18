@@ -13,7 +13,7 @@ package org.eclipse.php.internal.debug.core.zend.model;
 
 public class StartLock {
 	private boolean fRunStart = false;
-    private boolean fStarted = false;
+	private boolean fStarted = false;
 
 	StartLock() {
 	}
@@ -25,12 +25,12 @@ public class StartLock {
 	public void setRunStart(boolean runStart) {
 		fRunStart = runStart;
 	}
-    
-    public boolean isStarted() {
-        return fStarted;
-    }
 
-    public void setStarted(boolean started) {
-        fStarted = started;
-    }
+	public boolean isStarted() {
+		return fStarted;
+	}
+
+	public void setStarted(boolean started) {
+		fStarted = started;
+	}
 }

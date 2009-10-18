@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.zend.testConnection;
 
 /**
  * A Listener to DebugServerTestEvent events
+ * 
  * @author yaronm
  */
 public interface IDebugServerTestListener {

@@ -12,13 +12,7 @@
 package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -39,15 +33,23 @@ public class PathMapper implements IXMLPreferencesStorable {
 
 	public synchronized void addEntry(String remoteFile, PathEntry entry) {
 		VirtualPath remotePath = new VirtualPath(remoteFile);
-		VirtualPath localPath = entry.getAbstractPath().clone(); // don't break original entry path
+		VirtualPath localPath = entry.getAbstractPath().clone(); // don't break
+																	// original
+																	// entry
+																	// path
 
 		// last segments must match!
-		if (!remotePath.getLastSegment().equalsIgnoreCase(localPath.getLastSegment())) {
+		if (!remotePath.getLastSegment().equalsIgnoreCase(
+				localPath.getLastSegment())) {
 			return;
 		}
 
-		while (remotePath.getSegmentsCount() > 0 && localPath.getSegmentsCount() > 1) { // local path is limited to have at least one segment
-			if (!remotePath.getLastSegment().equalsIgnoreCase(localPath.getLastSegment())) {
+		while (remotePath.getSegmentsCount() > 0
+				&& localPath.getSegmentsCount() > 1) { // local path is limited
+														// to have at least one
+														// segment
+			if (!remotePath.getLastSegment().equalsIgnoreCase(
+					localPath.getLastSegment())) {
 				break;
 			}
 			remotePath.removeLastSegment();
@@ -70,7 +72,9 @@ public class PathMapper implements IXMLPreferencesStorable {
 
 	/**
 	 * Returns exact mapping for the given remote path (if exists)
-	 * @param remoteFile Remote path
+	 * 
+	 * @param remoteFile
+	 *            Remote path
 	 * @return virtual path
 	 */
 	public VirtualPath getLocalPathMapping(VirtualPath remotePath) {
@@ -78,12 +82,14 @@ public class PathMapper implements IXMLPreferencesStorable {
 	}
 
 	public PathEntry getLocalFile(String remoteFile) {
-		VirtualPath path = getPath(remoteToLocalMap, new VirtualPath(remoteFile));
+		VirtualPath path = getPath(remoteToLocalMap,
+				new VirtualPath(remoteFile));
 		if (path != null) {
 			String localFile = path.toString();
 			Type type = getPathType(path);
 			if (type == Type.WORKSPACE) {
-				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(localFile);
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+						.findMember(localFile);
 				if (resource != null) {
 					return new PathEntry(path, type, resource.getParent());
 				}
@@ -100,7 +106,8 @@ public class PathMapper implements IXMLPreferencesStorable {
 		return null;
 	}
 
-	protected VirtualPath getPath(Map<VirtualPath, VirtualPath> map, VirtualPath path) {
+	protected VirtualPath getPath(Map<VirtualPath, VirtualPath> map,
+			VirtualPath path) {
 		path = path.clone();
 		VirtualPath mapPath = null;
 		List<String> strippedSegments = new LinkedList<String>();
@@ -122,7 +129,8 @@ public class PathMapper implements IXMLPreferencesStorable {
 		}
 		// Append all stripped segments to the result path:
 		if (mapPath != null) {
-			ListIterator<String> i = strippedSegments.listIterator(strippedSegments.size());
+			ListIterator<String> i = strippedSegments
+					.listIterator(strippedSegments.size());
 			while (i.hasPrevious()) {
 				mapPath.addLastSegment(i.previous());
 			}
@@ -165,7 +173,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 		localToRemoteMap.clear();
 		localToPathEntryType.clear();
 
-		for (Mapping mapping: mappings) {
+		for (Mapping mapping : mappings) {
 			localToRemoteMap.put(mapping.localPath, mapping.remotePath);
 			remoteToLocalMap.put(mapping.remotePath, mapping.localPath);
 			localToPathEntryType.put(mapping.localPath, mapping.type);
@@ -213,16 +221,20 @@ public class PathMapper implements IXMLPreferencesStorable {
 				return false;
 			}
 			Mapping other = (Mapping) obj;
-			return other.localPath.equals(localPath) && other.remotePath.equals(remotePath) && other.type == type;
+			return other.localPath.equals(localPath)
+					&& other.remotePath.equals(remotePath)
+					&& other.type == type;
 		}
 
 		public int hashCode() {
-			return localPath.hashCode() + 13 * remotePath.hashCode() + 31 * type.hashCode();
+			return localPath.hashCode() + 13 * remotePath.hashCode() + 31
+					* type.hashCode();
 		}
 
 		public String toString() {
 			StringBuilder buf = new StringBuilder("Mapping { ");
-			buf.append(localPath).append(", ").append(remotePath).append(", ").append(type);
+			buf.append(localPath).append(", ").append(remotePath).append(", ")
+					.append(type);
 			return buf.toString();
 		}
 	}
@@ -257,7 +269,7 @@ public class PathMapper implements IXMLPreferencesStorable {
 	public synchronized HashMap storeToMap() {
 		HashMap entries = new HashMap();
 		Iterator<VirtualPath> i = localToRemoteMap.keySet().iterator();
-		int c= 1;
+		int c = 1;
 		while (i.hasNext()) {
 			HashMap entry = new HashMap();
 			VirtualPath local = i.next();

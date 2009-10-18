@@ -13,14 +13,14 @@
 package org.eclipse.php.internal.debug.core.zend.communication;
 
 /**
- *
- * @author  eran
+ * 
+ * @author eran
  * @version
  */
 public interface CommunicationClient {
 
-    public void handlePeerResponseTimeout();
+	public void handlePeerResponseTimeout();
 
-    public void handleMultipleBindings();
+	public void handleMultipleBindings();
 
 }

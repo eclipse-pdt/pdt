@@ -11,11 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
-import java.util.Collection;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -50,7 +46,9 @@ public class DebugMessagesRegistry {
 	private DebugMessagesRegistry() {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry
+				.getConfigurationElementsFor(PHPDebugPlugin.getID(),
+						EXTENSION_POINT_NAME);
 
 		Map<String, IConfigurationElement> configElementsMap = new HashMap<String, IConfigurationElement>();
 		for (final IConfigurationElement element : elements) {
@@ -66,25 +64,34 @@ public class DebugMessagesRegistry {
 			}
 		}
 
-		Collection<IConfigurationElement> configElements = configElementsMap.values();
-		while (configElements.remove(null)); // remove null elements
+		Collection<IConfigurationElement> configElements = configElementsMap
+				.values();
+		while (configElements.remove(null))
+			; // remove null elements
 
 		for (final IConfigurationElement element : configElements) {
 			final IDebugMessage messages[] = new IDebugMessage[1];
 
-			SafeRunnable.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") {
-				public void run() throws Exception {
-					messages[0] = (IDebugMessage) element.createExecutableExtension(CLASS_ATTRIBUTE);
-				}
-			});
+			SafeRunnable
+					.run(new SafeRunnable(
+							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") {
+						public void run() throws Exception {
+							messages[0] = (IDebugMessage) element
+									.createExecutableExtension(CLASS_ATTRIBUTE);
+						}
+					});
 
-			if (messages[0] != null && !this.messagesHash.containsKey(messages[0].getType())) {
+			if (messages[0] != null
+					&& !this.messagesHash.containsKey(messages[0].getType())) {
 				messagesHash.put(messages[0].getType(), messages[0]);
-				messagesTypes.put(element.getAttribute(ID_ATTRIBUTE), new Integer(messages[0].getType()));
+				messagesTypes.put(element.getAttribute(ID_ATTRIBUTE),
+						new Integer(messages[0].getType()));
 
 				String handlerClass = element.getAttribute(HANDLER_ATTRIBUTE);
-				if (handlerClass != null && !handlers.containsKey(messages[0].getType())) {
-					handlers.put(messages[0].getType(), new DebugMessageHandlerFactory(element));
+				if (handlerClass != null
+						&& !handlers.containsKey(messages[0].getType())) {
+					handlers.put(messages[0].getType(),
+							new DebugMessageHandlerFactory(element));
 				}
 			}
 		}
@@ -111,6 +118,7 @@ public class DebugMessagesRegistry {
 
 	/**
 	 * Return message according to its type
+	 * 
 	 * @throws Exception
 	 */
 	public static IDebugMessage getMessage(int type) throws Exception {
@@ -118,7 +126,8 @@ public class DebugMessagesRegistry {
 		if (messages.containsKey(type)) {
 			return (IDebugMessage) messages.get(type).getClass().newInstance();
 		} else {
-			throw new Exception("Can't find message for ID = " + type + " in Debug messages registry!");
+			throw new Exception("Can't find message for ID = " + type
+					+ " in Debug messages registry!");
 		}
 	}
 
@@ -126,14 +135,17 @@ public class DebugMessagesRegistry {
 	 * Return message according to its ID
 	 */
 	public static IDebugMessage getMessage(String id) throws Exception {
-		return (IDebugMessage) getInstance().getMessages().get((getInstance().getMessagesTypes().get(id)).intValue()).getClass().newInstance();
+		return (IDebugMessage) getInstance().getMessages().get(
+				(getInstance().getMessagesTypes().get(id)).intValue())
+				.getClass().newInstance();
 	}
 
 	/**
 	 * Return handler according to the message
 	 */
 	public static IDebugMessageHandler getHandler(IDebugMessage message) {
-		DebugMessageHandlerFactory debugMessageHandlerFactory = ((DebugMessageHandlerFactory) getInstance().getHandlers().get(message.getType()));
+		DebugMessageHandlerFactory debugMessageHandlerFactory = ((DebugMessageHandlerFactory) getInstance()
+				.getHandlers().get(message.getType()));
 		if (debugMessageHandlerFactory != null) {
 			return debugMessageHandlerFactory.createHandler();
 		}
@@ -153,11 +165,14 @@ public class DebugMessagesRegistry {
 
 		public IDebugMessageHandler createHandler() {
 			final IDebugMessageHandler[] handler = new IDebugMessageHandler[1];
-			SafeRunnable.run(new SafeRunnable("Error creation handler for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") {
-				public void run() throws Exception {
-					handler[0] = (IDebugMessageHandler) element.createExecutableExtension(HANDLER_ATTRIBUTE);
-				}
-			});
+			SafeRunnable
+					.run(new SafeRunnable(
+							"Error creation handler for extension-point org.eclipse.php.internal.debug.core.phpDebugMessages") {
+						public void run() throws Exception {
+							handler[0] = (IDebugMessageHandler) element
+									.createExecutableExtension(HANDLER_ATTRIBUTE);
+						}
+					});
 			return handler[0];
 		}
 	}

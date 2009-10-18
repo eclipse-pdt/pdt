@@ -13,5 +13,6 @@ package org.eclipse.php.internal.debug.core.zend.debugger.messages;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 
-public abstract class DebugMessageNotificationImpl extends DebugMessageImpl implements IDebugNotificationMessage {
+public abstract class DebugMessageNotificationImpl extends DebugMessageImpl
+		implements IDebugNotificationMessage {
 }

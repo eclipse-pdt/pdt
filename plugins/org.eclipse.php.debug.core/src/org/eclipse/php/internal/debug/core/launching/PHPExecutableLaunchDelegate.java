@@ -54,36 +54,51 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	/**
 	 * Override the extended getLaunch to create a PHPLaunch.
 	 */
-	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode)
+			throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
 	}
 
-	public void debugPHPExecutable(ILaunch launch, String phpExe, String fileToDebug) throws DebugException {
+	public void debugPHPExecutable(ILaunch launch, String phpExe,
+			String fileToDebug) throws DebugException {
 		try {
-			launch.setAttribute(IDebugParametersKeys.EXECUTABLE_LAUNCH, Boolean.toString(true));
+			launch.setAttribute(IDebugParametersKeys.EXECUTABLE_LAUNCH, Boolean
+					.toString(true));
 
-			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
-			PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(launch);
+			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry
+					.getBestMatchDebugParametersInitializer(launch);
+			PHPExecutableDebuggerInitializer debuggerInitializer = new PHPExecutableDebuggerInitializer(
+					launch);
 
 			String phpExeString = new File(phpExe).getAbsolutePath();
 			String fileName = new File(fileToDebug).getAbsolutePath();
-			String query = PHPLaunchUtilities.generateQuery(launch, parametersInitializer);
-			String iniFileLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
-			String workingDir = new File(fileToDebug).getParentFile().getAbsolutePath();
+			String query = PHPLaunchUtilities.generateQuery(launch,
+					parametersInitializer);
+			String iniFileLocation = launch
+					.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
+			String workingDir = new File(fileToDebug).getParentFile()
+					.getAbsolutePath();
 
-			debuggerInitializer.initializeDebug(phpExeString, fileName, workingDir, query, envVariables, iniFileLocation);
+			debuggerInitializer.initializeDebug(phpExeString, fileName,
+					workingDir, query, envVariables, iniFileLocation);
 
 		} catch (java.io.IOException e1) {
-			Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e1);
+			Logger.logException(
+					"PHPDebugTarget: Debugger didn't find file to debug.", e1);
 			String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e1));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin
+					.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage,
+					e1));
 		}
 	}
 
-	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+	public void launch(ILaunchConfiguration configuration, String mode,
+			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		// Check that the debug daemon is functional
-		// DEBUGGER - Make sure that the active debugger id is indeed Zend's debugger
-		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+		// DEBUGGER - Make sure that the active debugger id is indeed Zend's
+		// debugger
+		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(
+				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
 			monitor.setCanceled(true);
 			monitor.done();
 			return;
@@ -100,23 +115,31 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			return;
 		}
 
-		String phpExeString = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-		String phpIniPath = configuration.getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
-		String fileName = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
-		boolean runWithDebugInfo = configuration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
-		
+		String phpExeString = configuration.getAttribute(
+				IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+		String phpIniPath = configuration.getAttribute(
+				IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
+		String fileName = configuration.getAttribute(
+				IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
+		boolean runWithDebugInfo = configuration.getAttribute(
+				IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+
 		IProject project = null;
-		String file = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
-		if (file != null) { 
-			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
+		String file = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE,
+				(String) null);
+		if (file != null) {
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+					.findMember(file);
 			if (resource != null) {
 				project = resource.getProject();
 			} else {
-				String projectName = configuration.getAttribute(IPHPDebugConstants.ATTR_PROJECT_NAME, (String) null);
+				String projectName = configuration.getAttribute(
+						IPHPDebugConstants.ATTR_PROJECT_NAME, (String) null);
 				if (projectName != null) {
-					IProject resolved = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+					IProject resolved = ResourcesPlugin.getWorkspace()
+							.getRoot().getProject(projectName);
 					if (resolved != null && resolved.isAccessible()) {
-						project = resolved;	
+						project = resolved;
 					}
 				}
 			}
@@ -138,14 +161,22 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
 
-		// Locate the php.ini by using the attribute. If the attribute was null, try to locate an php.ini that exists next to the executable.
-		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
-		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString, project);
-		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
+		// Locate the php.ini by using the attribute. If the attribute was null,
+		// try to locate an php.ini that exists next to the executable.
+		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(
+				phpIniPath)
+				: PHPINIUtil.findPHPIni(phpExeString);
+		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString,
+				project);
+		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni
+				.getAbsolutePath());
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
-			boolean stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
-			int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+			boolean stopAtFirstLine = configuration.getAttribute(
+					IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+					PHPProjectPreferences.getStopAtFirstLine(project));
+			int requestPort = PHPDebugPlugin
+					.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
 			ILaunchConfigurationWorkingCopy wc;
 			if (configuration.isWorkingCopy()) {
@@ -156,13 +187,17 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 			// Set Project Name
 			if (project != null) {
-				wc.setAttribute(IPHPDebugConstants.PHP_Project, project.getFullPath().toString());
+				wc.setAttribute(IPHPDebugConstants.PHP_Project, project
+						.getFullPath().toString());
 			}
 
 			// Set transfer encoding:
-			wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
-			wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(project));
-			wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE, IDebugParametersKeys.PHP_EXE_SCRIPT_DEBUG);
+			wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING,
+					PHPProjectPreferences.getTransferEncoding(project));
+			wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING,
+					PHPProjectPreferences.getOutputEncoding(project));
+			wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE,
+					IDebugParametersKeys.PHP_EXE_SCRIPT_DEBUG);
 			wc.doSave();
 
 			if (monitor.isCanceled()) {
@@ -174,20 +209,26 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			PHPSessionLaunchMapper.put(sessionID, launch);
 
 			// Define all needed debug attributes:
-			launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
-			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
-			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
+			launch.setAttribute(IDebugParametersKeys.PORT, Integer
+					.toString(requestPort));
+			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+					Boolean.toString(stopAtFirstLine));
+			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer
+					.toString(sessionID));
 
-			// Trigger the debug session by initiating a debug requset to the php.exe
+			// Trigger the debug session by initiating a debug requset to the
+			// php.exe
 			debugPHPExecutable(launch, phpExeString, fileName);
 
 		} else {
 			// resolve location
 			IPath phpExe = new Path(phpExeString);
 
-			String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
+			String[] envp = DebugPlugin.getDefault().getLaunchManager()
+					.getEnvironment(configuration);
 			File phpExeFile = new File(phpExeString);
-			String phpIniLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
+			String phpIniLocation = launch
+					.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
 
 			// Determine PHP configuration file location:
 			String phpConfigDir = phpExeFile.getParent();
@@ -205,13 +246,18 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				}
 			}
 
-			String[] args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
-			String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExeString, phpConfigDir, fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null);
+			String[] args = PHPLaunchUtilities.getProgramArguments(launch
+					.getLaunchConfiguration());
+			String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch
+					.getLaunchConfiguration(), phpExeString, phpConfigDir,
+					fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null);
 
 			// Set library search path:
-			String libPath = PHPLaunchUtilities.getLibrarySearchPathEnv(phpExeFile.getParentFile());
+			String libPath = PHPLaunchUtilities
+					.getLibrarySearchPathEnv(phpExeFile.getParentFile());
 			if (libPath != null) {
-				String[] envpNew = new String[envp == null ? 1 : envp.length + 1];
+				String[] envpNew = new String[envp == null ? 1
+						: envp.length + 1];
 				if (envp != null) {
 					System.arraycopy(envp, 0, envpNew, 0, envp.length);
 				}
@@ -224,7 +270,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 
 			File workingDir = new File(fileName).getParentFile();
-			Process p = workingDir.exists() ? DebugPlugin.exec(cmdLine, workingDir, envp) : DebugPlugin.exec(cmdLine, null, envp);
+			Process p = workingDir.exists() ? DebugPlugin.exec(cmdLine,
+					workingDir, envp) : DebugPlugin.exec(cmdLine, null, envp);
 
 			// Attach a crash detector
 			new Thread(new ProcessCrashDetector(launch, p)).start();
@@ -237,19 +284,27 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			String extension = phpExe.getFileExtension();
 
 			if (extension != null) {
-				programName = programName.substring(0, programName.length() - (extension.length() + 1));
+				programName = programName.substring(0, programName.length()
+						- (extension.length() + 1));
 			}
 
 			programName = programName.toLowerCase();
 			processAttributes.put(IProcess.ATTR_PROCESS_TYPE, programName);
 
 			if (p != null) {
-				subMonitor = new SubProgressMonitor(monitor, 80); // 10+80 of 100;
-				subMonitor.beginTask(MessageFormat.format("start launch", new Object[] { configuration.getName() }), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
-				process = DebugPlugin.newProcess(launch, p, phpExe.toOSString(), processAttributes);
+				subMonitor = new SubProgressMonitor(monitor, 80); // 10+80 of
+																	// 100;
+				subMonitor
+						.beginTask(
+								MessageFormat
+										.format(
+												"start launch", new Object[] { configuration.getName() }), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				process = DebugPlugin.newProcess(launch, p,
+						phpExe.toOSString(), processAttributes);
 				if (process == null) {
 					p.destroy();
-					throw new CoreException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), 0, null, null));
+					throw new CoreException(new Status(IStatus.ERROR,
+							PHPDebugPlugin.getID(), 0, null, null));
 				}
 				subMonitor.done();
 			}
@@ -258,10 +313,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			if (CommonTab.isLaunchInBackground(configuration)) {
 				// refresh resources after process finishes
 				/*
-				 if (RefreshTab.getRefreshScope(configuration) != null) {
-				 BackgroundResourceRefresher refresher = new BackgroundResourceRefresher(configuration, process);
-				 refresher.startBackgroundRefresh();
-				 }
+				 * if (RefreshTab.getRefreshScope(configuration) != null) {
+				 * BackgroundResourceRefresher refresher = new
+				 * BackgroundResourceRefresher(configuration, process);
+				 * refresher.startBackgroundRefresh(); }
 				 */
 			} else {
 				// wait for process to exit
@@ -277,7 +332,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				}
 
 				// refresh resources
-				subMonitor = new SubProgressMonitor(monitor, 10); // 10+80+10 of 100;
+				subMonitor = new SubProgressMonitor(monitor, 10); // 10+80+10 of
+																	// 100;
 				RefreshTab.refreshResources(configuration, subMonitor);
 			}
 		}
@@ -287,13 +343,17 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		final Display display = Display.getDefault();
 		display.asyncExec(new Runnable() {
 			public void run() {
-				MessageDialog.openError(display.getActiveShell(), PHPDebugCoreMessages.Debugger_LaunchError_title, message);
+				MessageDialog.openError(display.getActiveShell(),
+						PHPDebugCoreMessages.Debugger_LaunchError_title,
+						message);
 			}
 		});
 	}
 
-	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
-		String filePath = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, "");
+	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration,
+			String mode, IProgressMonitor monitor) throws CoreException {
+		String filePath = configuration.getAttribute(
+				IPHPDebugConstants.ATTR_FILE, "");
 		if ("".equals(filePath)) {
 			return super.saveBeforeLaunch(configuration, mode, monitor);
 		}

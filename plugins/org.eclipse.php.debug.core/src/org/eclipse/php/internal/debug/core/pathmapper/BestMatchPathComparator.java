@@ -13,11 +13,10 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.util.Comparator;
 
-
 /**
  * This comparator compares between two path entries in determines which of them
  * best matches the given path in terms of number of matching last segments.
- *
+ * 
  * @author michael
  */
 public class BestMatchPathComparator implements Comparator<PathEntry> {
@@ -26,7 +25,9 @@ public class BestMatchPathComparator implements Comparator<PathEntry> {
 
 	/**
 	 * Constructs new best match comparator
-	 * @param path Abstract path of the file model
+	 * 
+	 * @param path
+	 *            Abstract path of the file model
 	 */
 	public BestMatchPathComparator(VirtualPath path) {
 		this.segments = path.getSegments();
@@ -38,7 +39,8 @@ public class BestMatchPathComparator implements Comparator<PathEntry> {
 		int ns1 = 0;
 		int ns2 = 0;
 		boolean found = true;
-		for (int i = 0, j = 0, k = 0; found && i < segments.length && (j < s1.length || k < s2.length); ++i, ++j, ++k) {
+		for (int i = 0, j = 0, k = 0; found && i < segments.length
+				&& (j < s1.length || k < s2.length); ++i, ++j, ++k) {
 			found = false;
 			if (j < s1.length && s1[j].equals(segments[i])) {
 				ns1 = 0;

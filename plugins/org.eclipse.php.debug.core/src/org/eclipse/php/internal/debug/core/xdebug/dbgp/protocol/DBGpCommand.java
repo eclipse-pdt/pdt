@@ -22,16 +22,16 @@ public class DBGpCommand {
 
 	private static final String id = " -i ";
 
-	//-------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 	// status and feature management commands
-	//-------------------------------------------------------------------------      
+	// -------------------------------------------------------------------------
 	public static final String status = "status";
 	public static final String featureGet = "feature_get";
 	public static final String featureSet = "feature_set";
 
-	//-------------------------------------------------------------------------
-	// execution commands   "cmd -i id"
-	//-------------------------------------------------------------------------   
+	// -------------------------------------------------------------------------
+	// execution commands "cmd -i id"
+	// -------------------------------------------------------------------------
 	public static final String run = "run";
 	public static final String stepInto = "step_into";
 	public static final String stepOver = "step_over";
@@ -39,21 +39,21 @@ public class DBGpCommand {
 	public static final String stop = "stop";
 	public static final String detach = "detach";
 
-	//-------------------------------------------------------------------------   
+	// -------------------------------------------------------------------------
 	// breakpoint cmds
-	//-------------------------------------------------------------------------   
+	// -------------------------------------------------------------------------
 	// breakpoint_set -i id [arguments] -- base64(expression)
 	// arguments are:
-	//   -t type: line/call/return/conditional/exception/watch
-	//   -s state: enabled/disabled
-	//   -f filename
-	//   -n lineno
-	//   -m function
-	//   -x exception
-	//   -h hit_value
-	//   -o hit_condidtion
-	//   -r 0|1
-	//   expression in php for conditional breakpoints
+	// -t type: line/call/return/conditional/exception/watch
+	// -s state: enabled/disabled
+	// -f filename
+	// -n lineno
+	// -m function
+	// -x exception
+	// -h hit_value
+	// -o hit_condidtion
+	// -r 0|1
+	// expression in php for conditional breakpoints
 	public static final String breakPointSet = "breakpoint_set";
 
 	// breakpoint_get -i id -d bp_id (bp_id = breakpoint id);
@@ -72,27 +72,28 @@ public class DBGpCommand {
 	// breakpoint_list -i id
 	public static final String breakPointList = "breakpoint_list";
 
-	//-------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 	// stack commands
-	//-------------------------------------------------------------------------   
+	// -------------------------------------------------------------------------
 	// stack-depth -i id
 	public static final String stackDepth = "stack-depth";
 
 	// stack_get -i id -d depth (-d is optional)
 	public static final String stackGet = "stack_get";
 
-	//-------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 	// variable/streams management commands
-	//-------------------------------------------------------------------------
-	// property_set -i id -n property_long_name -d {NUM} -l data_length -- {DATA}
+	// -------------------------------------------------------------------------
+	// property_set -i id -n property_long_name -d {NUM} -l data_length --
+	// {DATA}
 	public static final String propSet = "property_set";
 
 	// property_get -i id -n property_long_name
 	public static final String propGet = "property_get";
 
 	// property_value -i id -n property_long_name
-	public static final String propValue = "property_value";	
-	
+	public static final String propValue = "property_value";
+
 	// context_get -i id -d depth
 	public static final String contextGet = "context_get";
 
@@ -122,21 +123,17 @@ public class DBGpCommand {
 	public DBGpCommand(Socket socket) {
 		this.socket = socket;
 		/*
-		try {
-		   outStream = new OutputStreamWriter(socket.getOutputStream(), ENCODING);
-		}
-		catch (UnsupportedEncodingException e) {
-		   DBGpLogger.logException(null, this, e);
-		   // do nothing until we actually try to send a command
-		}
-		catch (IOException e) {
-		   DBGpLogger.logException(null, this, e);
-		   // do nothing until we actually try to send a command         
-		}
-		*/
+		 * try { outStream = new OutputStreamWriter(socket.getOutputStream(),
+		 * ENCODING); } catch (UnsupportedEncodingException e) {
+		 * DBGpLogger.logException(null, this, e); // do nothing until we
+		 * actually try to send a command } catch (IOException e) {
+		 * DBGpLogger.logException(null, this, e); // do nothing until we
+		 * actually try to send a command }
+		 */
 	}
 
-	public int send(String command, String args, int cmdId, String encoding) throws IOException {
+	public int send(String command, String args, int cmdId, String encoding)
+			throws IOException {
 		try {
 			return writeToStream(command, args, cmdId, encoding);
 		} catch (IOException e) {
@@ -155,7 +152,8 @@ public class DBGpCommand {
 		return trId;
 	}
 
-	private int writeToStream(String command, String args, int cmdId, String encoding) throws IOException {
+	private int writeToStream(String command, String args, int cmdId,
+			String encoding) throws IOException {
 		String fullCmd = command + id + cmdId;
 		if (args != null) {
 			fullCmd = fullCmd + " " + args;
@@ -166,7 +164,7 @@ public class DBGpCommand {
 
 		synchronized (socket) {
 			OutputStream os = socket.getOutputStream();
-			// Bug: 226860			
+			// Bug: 226860
 			// Want to avoid 2 writes as some tcpip implementations
 			// may delay waiting for a response from the 1st write
 			// we could set the tcpNoDelay option on the socket
@@ -185,21 +183,15 @@ public class DBGpCommand {
 			lastCmdSent = fullCmd;
 
 			/*
-			System.out.print("streamed:");
-			System.out.write(fullCmd.getBytes(encoding));
-			System.out.write(0);
-			System.out.flush();
-			System.out.println();
-			
-			outStream.write(command);
-			outStream.write(id);
-			outStream.write(Integer.toString(cmdId));
-			if (args != null) {
-			   outStream.write(" " + args);
-			}
-			outStream.write(0);
-			outStream.flush();
-			*/
+			 * System.out.print("streamed:");
+			 * System.out.write(fullCmd.getBytes(encoding));
+			 * System.out.write(0); System.out.flush(); System.out.println();
+			 * 
+			 * outStream.write(command); outStream.write(id);
+			 * outStream.write(Integer.toString(cmdId)); if (args != null) {
+			 * outStream.write(" " + args); } outStream.write(0);
+			 * outStream.flush();
+			 */
 		}
 		return cmdId;
 	}
@@ -208,7 +200,7 @@ public class DBGpCommand {
 		int id;
 		// we need to synchronise on the socket to ensure that if we get called
 		// on a different thread, lastIdSent is at the latest value which occurs
-		// after the last part of the write and the update takes place and is 
+		// after the last part of the write and the update takes place and is
 		// controlled by the syncing of the socket.
 		synchronized (socket) {
 			id = lastIdSent;

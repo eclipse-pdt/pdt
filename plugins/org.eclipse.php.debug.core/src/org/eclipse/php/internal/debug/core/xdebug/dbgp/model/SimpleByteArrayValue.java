@@ -22,14 +22,15 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 	private int start;
 	private int end;
 	private IVariable[] elements;
-	
-	public SimpleByteArrayValue(byte[] value, int start, int end, IDebugTarget debugTarget) {
+
+	public SimpleByteArrayValue(byte[] value, int start, int end,
+			IDebugTarget debugTarget) {
 		super(debugTarget);
 		this.value = value;
 		this.start = start;
 		this.end = end;
 	}
-	
+
 	public String getReferenceTypeName() throws DebugException {
 		return "byte[]";
 	}
@@ -40,10 +41,11 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 
 	public IVariable[] getVariables() throws DebugException {
 		if (elements == null) {
-			elements = createVariables(value, start, end - start + 1, 0, getDebugTarget());
+			elements = createVariables(value, start, end - start + 1, 0,
+					getDebugTarget());
 		}
 		return elements;
-	} 
+	}
 
 	public boolean hasVariables() throws DebugException {
 		return true;
@@ -56,67 +58,77 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 	public ILaunch getLaunch() {
 		return getDebugTarget().getLaunch();
 	}
-	
+
 	/**
 	 * create variable entries for a byte array
-	 * @param bytes the byte array
-	 * @param bytePos offset within byte array to start
-	 * @param byteCount number of bytes to process
-	 * @param startOffset offset within the ivariable array to place the information. This allows the creation of ivariables
-	 * but to be able to place variable information before the result of this output
-	 * @param debugTarget the bebug target.
+	 * 
+	 * @param bytes
+	 *            the byte array
+	 * @param bytePos
+	 *            offset within byte array to start
+	 * @param byteCount
+	 *            number of bytes to process
+	 * @param startOffset
+	 *            offset within the ivariable array to place the information.
+	 *            This allows the creation of ivariables but to be able to place
+	 *            variable information before the result of this output
+	 * @param debugTarget
+	 *            the bebug target.
 	 * @return the variables to return.
 	 */
-	public static IVariable[] createVariables(byte[] bytes, int bytePos, int byteCount, int startOffset, IDebugTarget debugTarget) {
+	public static IVariable[] createVariables(byte[] bytes, int bytePos,
+			int byteCount, int startOffset, IDebugTarget debugTarget) {
 		final int childLimit = 100;
-		
-		
+
 		IVariable[] childVariables = null;
-		
-		//determine the number of variables to return
+
+		// determine the number of variables to return
 		if (byteCount > childLimit) {
-			
+
 			// more than one variable to be returned
 			int split = childLimit;
-			int children = byteCount/split;
-			if (byteCount % split !=0) {
+			int children = byteCount / split;
+			if (byteCount % split != 0) {
 				children++;
 			}
-			
+
 			while (children > childLimit) {
-				split*=10;
-				children = byteCount/split;
-				if (byteCount % split !=0) {
+				split *= 10;
+				children = byteCount / split;
+				if (byteCount % split != 0) {
 					children++;
 				}
 			}
-			
+
 			childVariables = new IVariable[children + startOffset];
-			
-			// now populate the variables 
+
+			// now populate the variables
 			int rangeStart = bytePos;
 			int rangeEnd = 0;
-			for (int j=0; j < children; j++) {
+			for (int j = 0; j < children; j++) {
 				if (j == children - 1) {
-					rangeEnd = bytePos + byteCount - 1; 
-				}
-				else {
+					rangeEnd = bytePos + byteCount - 1;
+				} else {
 					rangeEnd = rangeStart + split - 1;
 				}
 				if (rangeStart <= rangeEnd) {
-					IValue iv = new SimpleByteArrayValue(bytes, rangeStart, rangeEnd, debugTarget);
-					childVariables[j + startOffset] = new SimpleVariable("[" + rangeStart + ".." + rangeEnd + "]", iv, debugTarget);				
+					IValue iv = new SimpleByteArrayValue(bytes, rangeStart,
+							rangeEnd, debugTarget);
+					childVariables[j + startOffset] = new SimpleVariable("["
+							+ rangeStart + ".." + rangeEnd + "]", iv,
+							debugTarget);
 					rangeStart += split;
-					
+
 				}
-			}				
-		}
-		else {
+			}
+		} else {
 			childVariables = new IVariable[byteCount + startOffset];
 			// don't split out the data.
 			for (int i = 0; i < byteCount; i++) {
-				IValue iv2 = new SimpleByteValue(bytes[bytePos + i], debugTarget);
-				childVariables[i + startOffset] = new SimpleVariable(Integer.toString(bytePos + i), iv2, debugTarget);
+				IValue iv2 = new SimpleByteValue(bytes[bytePos + i],
+						debugTarget);
+				childVariables[i + startOffset] = new SimpleVariable(Integer
+						.toString(bytePos + i), iv2, debugTarget);
 			}
 		}
 		return childVariables;

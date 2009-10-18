@@ -106,8 +106,8 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	}
 
 	/**
-	 * Sets the breakpoints this thread is suspended at, or <code>null</code>
-	 * if none.
+	 * Sets the breakpoints this thread is suspended at, or <code>null</code> if
+	 * none.
 	 * 
 	 * @param breakpoints
 	 *            the breakpoints this thread is suspended at, or
@@ -277,7 +277,8 @@ public class PHPThread extends PHPDebugElement implements IThread {
 		if (frame == null) {
 			return NO_VARIABLES;
 		}
-		Expression[] stackVariables = ((PHPStackFrame) frame).getStackVariables();
+		Expression[] stackVariables = ((PHPStackFrame) frame)
+				.getStackVariables();
 		if (stackVariables == null) {
 			return NO_VARIABLES;
 		}

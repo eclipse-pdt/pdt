@@ -37,9 +37,9 @@ import org.eclipse.swt.widgets.Display;
 
 /**
  * A launch configuration delegate class for launching a PHP web page script.
- *
+ * 
  * @author shalom
- *
+ * 
  */
 public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
@@ -54,18 +54,27 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	/**
 	 * Override the extended getLaunch to create a PHPLaunch.
 	 */
-	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
+	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode)
+			throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.server.core.launch.IHTTPServerLaunch#launch(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.debug.core.ILaunch, org.eclipse.core.runtime.IProgressMonitor)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.server.core.launch.IHTTPServerLaunch#launch(
+	 * org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
+	 * org.eclipse.debug.core.ILaunch,
+	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+	public void launch(ILaunchConfiguration configuration, String mode,
+			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		// Check that the debug daemon is functional
-		// DEBUGGER - Make sure that the active debugger id is indeed Zend's debugger
-		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+		// DEBUGGER - Make sure that the active debugger id is indeed Zend's
+		// debugger
+		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(
+				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
 			monitor.setCanceled(true);
 			monitor.done();
 			return;
@@ -83,19 +92,23 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 		PHPLaunchUtilities.showDebugView();
 		this.launch = launch;
-		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, ""));
+		Server server = ServersManager.getServer(configuration.getAttribute(
+				Server.NAME, ""));
 		if (server == null) {
-			Logger.log(Logger.ERROR, "Launch configuration could not find server");
+			Logger.log(Logger.ERROR,
+					"Launch configuration could not find server");
 			terminated();
 			// throw CoreException();
 			return;
 		}
-		String fileName = configuration.getAttribute(Server.FILE_NAME, (String) null);
+		String fileName = configuration.getAttribute(Server.FILE_NAME,
+				(String) null);
 		// Get the project from the file name
 		IPath filePath = new Path(fileName);
 		IProject proj = null;
 		try {
-			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
+			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(
+					filePath.segment(0));
 		} catch (Throwable t) {
 		}
 
@@ -104,28 +117,39 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		wc.setAttribute(IPHPDebugConstants.PHP_Project, project);
 
 		// Set transfer encoding:
-		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
-		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(proj));
-		wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE, IDebugParametersKeys.PHP_WEB_PAGE_DEBUG);
+		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING,
+				PHPProjectPreferences.getTransferEncoding(proj));
+		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING,
+				PHPProjectPreferences.getOutputEncoding(proj));
+		wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE,
+				IDebugParametersKeys.PHP_WEB_PAGE_DEBUG);
 		wc.doSave();
 
-		String URL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
+		String URL = new String(configuration.getAttribute(Server.BASE_URL, "")
+				.getBytes());
 		boolean isDebugLaunch = mode.equals(ILaunchManager.DEBUG_MODE);
 		if (isDebugLaunch) {
-			boolean stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(proj));
-			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, Boolean.toString(stopAtFirstLine));
+			boolean stopAtFirstLine = wc.getAttribute(
+					IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+					PHPProjectPreferences.getStopAtFirstLine(proj));
+			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+					Boolean.toString(stopAtFirstLine));
 		}
-		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+		int requestPort = PHPDebugPlugin
+				.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
 		// Generate a session id for this launch and put it in the map
 		int sessionID = DebugSessionIdGenerator.generateSessionID();
 		PHPSessionLaunchMapper.put(sessionID, launch);
 
 		// Fill all rest of the attributes:
-		launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
-		launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean.toString(true));
+		launch.setAttribute(IDebugParametersKeys.PORT, Integer
+				.toString(requestPort));
+		launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean
+				.toString(true));
 		launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
-		launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
+		launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer
+				.toString(sessionID));
 
 		// Trigger the session by initiating a debug request to the debug server
 		runDispatch = new RunDispatchJobWebServer(launch);
@@ -133,20 +157,33 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	/*
-	 * Override the super preLaunchCheck to make sure that the server we are using is still valid.
-	 * If not, notify the user that a change should be made and open the launch configuration page to do so.
-	 *
-	 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#preLaunchCheck(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
+	 * Override the super preLaunchCheck to make sure that the server we are
+	 * using is still valid. If not, notify the user that a change should be
+	 * made and open the launch configuration page to do so.
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.model.LaunchConfigurationDelegate#preLaunchCheck
+	 * (org.eclipse.debug.core.ILaunchConfiguration, java.lang.String,
+	 * org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public boolean preLaunchCheck(final ILaunchConfiguration configuration, final String mode, IProgressMonitor monitor) throws CoreException {
+	public boolean preLaunchCheck(final ILaunchConfiguration configuration,
+			final String mode, IProgressMonitor monitor) throws CoreException {
 		// Check if the server exists
 		final String serverName = configuration.getAttribute(Server.NAME, "");
 		Server server = ServersManager.getServer(serverName);
 		if (server == null) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle, NLS.bind(PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound, new String[] { serverName }));
-					PHPLaunchUtilities.openLaunchConfigurationDialog(configuration, mode);
+					MessageDialog
+							.openWarning(
+									Display.getDefault().getActiveShell(),
+									PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
+									NLS
+											.bind(
+													PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound,
+													new String[] { serverName }));
+					PHPLaunchUtilities.openLaunchConfigurationDialog(
+							configuration, mode);
 				}
 			});
 			return false;
@@ -157,7 +194,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Initiate a debug session.
-	 *
+	 * 
 	 * @param launch
 	 */
 	protected void initiateDebug(ILaunch launch) {
@@ -167,7 +204,8 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			IStatus status = e.getStatus();
 			String errorMessage = null;
 			if (status == null) {
-				Logger.traceException("Unexpected Error return from debuggerInitializer ", e);
+				Logger.traceException(
+						"Unexpected Error return from debuggerInitializer ", e);
 				fireError(PHPDebugCoreMessages.Debugger_Unexpected_Error_1, e);
 				errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
 			} else {
@@ -180,7 +218,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Create an {@link IDebuggerInitializer}.
-	 *
+	 * 
 	 * @return An {@link IDebuggerInitializer} instance.
 	 */
 	protected IDebuggerInitializer createDebuggerInitilizer() {
@@ -189,20 +227,22 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Displays a dialod with an error message.
-	 *
-	 * @param message The error to display.
+	 * 
+	 * @param message
+	 *            The error to display.
 	 */
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				MessageDialog.openError(Display.getDefault().getActiveShell(), "Debug Error", message);
+				MessageDialog.openError(Display.getDefault().getActiveShell(),
+						"Debug Error", message);
 			}
 		});
 	}
 
 	/**
 	 * Throws a IStatus in a Debug Event
-	 *
+	 * 
 	 */
 	public void fireError(IStatus status) {
 		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
@@ -212,10 +252,11 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Throws a IStatus in a Debug Event
-	 *
+	 * 
 	 */
 	public void fireError(String errorMessage, Exception e) {
-		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e);
+		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+				IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e);
 		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
 		event.setData(status);
 		fireEvent(event);
@@ -227,8 +268,10 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	public void terminated() {
 		DebugEvent event = null;
 		if (launch.getDebugTarget() == null) {
-			// We have to force the termination of the ILaunch because at this stage there is no
-			// PHPDebugTarget, thus we create a dummy debug target to overcome this issue and terminate the launch.
+			// We have to force the termination of the ILaunch because at this
+			// stage there is no
+			// PHPDebugTarget, thus we create a dummy debug target to overcome
+			// this issue and terminate the launch.
 			IDebugTarget dummyDebugTarget = new DummyDebugTarget(launch);
 			event = new DebugEvent(dummyDebugTarget, DebugEvent.TERMINATE);
 			if (launch != null) {
@@ -243,8 +286,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Fires a debug event
-	 *
-	 * @param event 	The event to be fired
+	 * 
+	 * @param event
+	 *            The event to be fired
 	 */
 	public void fireEvent(DebugEvent event) {
 		DebugPlugin.getDefault().fireDebugEventSet(new DebugEvent[] { event });
@@ -264,7 +308,8 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 		protected IStatus run(IProgressMonitor monitor) {
 			initiateDebug(launch);
-			Logger.debugMSG("Terminating debug session: calling PHPDebugTarget.terminate()");
+			Logger
+					.debugMSG("Terminating debug session: calling PHPDebugTarget.terminate()");
 			terminated();
 			return Status.OK_STATUS;
 		}
@@ -368,7 +413,8 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			return false;
 		}
 
-		public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
+		public IMemoryBlock getMemoryBlock(long startAddress, long length)
+				throws DebugException {
 			return null;
 		}
 

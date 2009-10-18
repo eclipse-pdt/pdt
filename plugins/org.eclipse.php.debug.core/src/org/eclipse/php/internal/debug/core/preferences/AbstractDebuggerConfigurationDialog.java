@@ -22,13 +22,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * A basic abstract implementation of a debugger configuration dialog. 
- * Debugger configuration dialogs can extend this class and use its functionalities.
+ * A basic abstract implementation of a debugger configuration dialog. Debugger
+ * configuration dialogs can extend this class and use its functionalities.
  * 
  * @author Shalom Gibly
  * @since PDT 1.0
  */
-public abstract class AbstractDebuggerConfigurationDialog extends TitleAreaDialog {
+public abstract class AbstractDebuggerConfigurationDialog extends
+		TitleAreaDialog {
 
 	/**
 	 * Constructor.
@@ -39,7 +40,9 @@ public abstract class AbstractDebuggerConfigurationDialog extends TitleAreaDialo
 		super(parentShell);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#getInitialSize()
 	 */
 	protected Point getInitialSize() {
@@ -77,7 +80,8 @@ public abstract class AbstractDebuggerConfigurationDialog extends TitleAreaDialo
 	 * 
 	 * @param parent
 	 * @param label
-	 * @param key A preferences key that will be stored in the control's data.
+	 * @param key
+	 *            A preferences key that will be stored in the control's data.
 	 * @return
 	 */
 	protected Label addLabelControl(Composite parent, String label, String key) {
@@ -92,13 +96,15 @@ public abstract class AbstractDebuggerConfigurationDialog extends TitleAreaDialo
 	 * Adds a text field.
 	 * 
 	 * @param parent
-	 * @param key A preferences key that will be added to the control's data.
+	 * @param key
+	 *            A preferences key that will be added to the control's data.
 	 * @param textlimit
 	 * @param horizontalIndent
 	 * 
 	 * @return
 	 */
-	protected Text addTextField(Composite parent, String key, int textlimit, int horizontalIndent) {
+	protected Text addTextField(Composite parent, String key, int textlimit,
+			int horizontalIndent) {
 		Text textBox = new Text(parent, SWT.BORDER | SWT.SINGLE);
 		textBox.setData(key);
 
@@ -119,11 +125,13 @@ public abstract class AbstractDebuggerConfigurationDialog extends TitleAreaDialo
 	 * 
 	 * @param parent
 	 * @param label
-	 * @param prefKey A preferences key that will be stored in the control's data.
+	 * @param prefKey
+	 *            A preferences key that will be stored in the control's data.
 	 * @param horizontalIndent
 	 * @return
 	 */
-	protected Button addCheckBox(Composite parent, String label, String prefKey, int horizontalIndent) {
+	protected Button addCheckBox(Composite parent, String label,
+			String prefKey, int horizontalIndent) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 

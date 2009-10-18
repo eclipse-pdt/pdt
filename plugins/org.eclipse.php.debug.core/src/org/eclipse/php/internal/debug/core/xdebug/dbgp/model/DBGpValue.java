@@ -52,6 +52,7 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IValue#isAllocated()
 	 */
 	public boolean isAllocated() throws DebugException {
@@ -82,12 +83,12 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 		return variables;
 	}
 
-	//override this if necessary: Object, Array only
+	// override this if necessary: Object, Array only
 	public boolean hasVariables() throws DebugException {
 		return false;
 	}
 
-	// override this if modifiable 
+	// override this if modifiable
 	boolean verifyValue(String expression) throws DebugException {
 		return false;
 	}
@@ -104,8 +105,7 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 	 * This method extracts the information out of the CDATA section
 	 * 
 	 * <property name="1" fullname="$a[1]" address="10208616" type="float">
-	 *    <![CDATA[15.1]]>
-	 * </property>
+	 * <![CDATA[15.1]]> </property>
 	 */
 	void simpleParseNode(Node property) {
 		String data = null;
@@ -121,12 +121,13 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 		String resStr = valueData;
 		if (encoding != null && encoding.equalsIgnoreCase(ENCODING_BASE64)) {
 			if (valueData != null && valueData.trim().length() != 0) {
-				DBGpTarget target = (DBGpTarget)getDebugTarget();
+				DBGpTarget target = (DBGpTarget) getDebugTarget();
 				valueBytes = Base64.decode(valueData.trim());
 				try {
 					resStr = new String(valueBytes, target.getBinaryEncoding());
 				} catch (UnsupportedEncodingException e) {
-					DBGpLogger.logException("unexpected encoding problem", this, e);
+					DBGpLogger.logException("unexpected encoding problem",
+							this, e);
 					resStr = new String(valueBytes);
 				}
 			}
@@ -136,33 +137,20 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 
 	// override this definitely
 	abstract void genValueString(String data);
-	
-
-	
 
 	/*
-	// override these to enhance the way variables are displayed
-	// in the variable view, ie to reduce the refresh of all entities
-	// in there.
-	@Override
-	public boolean equals(Object obj) {
-		// should work for DBGpNullValue, DBGpNumValue
-		// DBGpResourceValue, DBGpUnInitValue, DBGpBoolValue
-		// but not container values.
-		if (!obj.getClass().isInstance(this)) {
-			return false;
-		}
-		DBGpValue value = (DBGpValue)obj;
-		if (!valueString.equals(value.valueString)) {
-			return false;
-		}
-		return true;
-	}
+	 * // override these to enhance the way variables are displayed // in the
+	 * variable view, ie to reduce the refresh of all entities // in there.
+	 * 
+	 * @Override public boolean equals(Object obj) { // should work for
+	 * DBGpNullValue, DBGpNumValue // DBGpResourceValue, DBGpUnInitValue,
+	 * DBGpBoolValue // but not container values. if
+	 * (!obj.getClass().isInstance(this)) { return false; } DBGpValue value =
+	 * (DBGpValue)obj; if (!valueString.equals(value.valueString)) { return
+	 * false; } return true; }
+	 * 
+	 * @Override public int hashCode() { return getClass().hashCode() +
+	 * valueString.hashCode(); }
+	 */
 
-	@Override
-	public int hashCode() {
-		return getClass().hashCode() + valueString.hashCode();
-	}
-	*/
-	
 }

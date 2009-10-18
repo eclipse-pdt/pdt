@@ -19,18 +19,18 @@ import org.eclipse.debug.core.model.IVariable;
 
 public class SimpleByteValue extends DBGpElement implements IValue {
 	private byte value;
-	
+
 	public SimpleByteValue(byte value, IDebugTarget debugTarget) {
 		super(debugTarget);
 		this.value = value;
 	}
-	
+
 	public String getReferenceTypeName() throws DebugException {
 		return "byte";
 	}
 
 	public String getValueString() throws DebugException {
-		//TODO: Cache ?
+		// TODO: Cache ?
 		String valStr = Integer.toHexString(value & 0xFF);
 		if (valStr.length() == 1) {
 			valStr = "0" + valStr;

@@ -26,7 +26,8 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class GetStackVariableValueRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
+public class GetStackVariableValueRequest extends DebugMessageRequestImpl
+		implements IDebugRequestMessage {
 
 	private String var;
 	private int depth;
@@ -97,7 +98,8 @@ public class GetStackVariableValueRequest extends DebugMessageRequestImpl implem
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setLayerDepth(in.readInt());
-		setVar(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
+		setVar(CommunicationUtilities.readEncodedString(in,
+				getTransferEncoding()));
 		setDepth(in.readInt());
 		int pathSize = in.readInt();
 		String[] path = new String[pathSize];
@@ -115,7 +117,8 @@ public class GetStackVariableValueRequest extends DebugMessageRequestImpl implem
 		out.writeShort(getType());
 		out.writeInt(getID());
 		out.writeInt(getLayerDepth());
-		CommunicationUtilities.writeEncodedString(out, getVar(), getTransferEncoding());
+		CommunicationUtilities.writeEncodedString(out, getVar(),
+				getTransferEncoding());
 		out.writeInt(getDepth());
 		String[] path = getPath();
 		out.writeInt(path.length);

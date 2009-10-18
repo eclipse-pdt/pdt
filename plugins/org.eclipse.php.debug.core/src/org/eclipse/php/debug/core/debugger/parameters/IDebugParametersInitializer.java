@@ -17,34 +17,38 @@ import java.util.Hashtable;
 import org.eclipse.debug.core.ILaunch;
 
 /**
- * A debug parameters initializer is used to generate debug query strings that will be delivered to the 
- * debug server when a debug session is initialized.
+ * A debug parameters initializer is used to generate debug query strings that
+ * will be delivered to the debug server when a debug session is initialized.
  */
 public interface IDebugParametersInitializer {
 
 	/**
-	 * Returns the request URL for the given launch. 
-	 * The request URL holds the URL's protocol, domain and path (without the query parameters).
+	 * Returns the request URL for the given launch. The request URL holds the
+	 * URL's protocol, domain and path (without the query parameters).
 	 * 
-	 * @param launch The {@link ILaunch}
-	 * @return	The request url (e.g. http://www.eclipse.org/pdt/main.php).
+	 * @param launch
+	 *            The {@link ILaunch}
+	 * @return The request url (e.g. http://www.eclipse.org/pdt/main.php).
 	 */
-	public URL getRequestURL(ILaunch launch) ;
-	
+	public URL getRequestURL(ILaunch launch);
+
 	/**
 	 * Generate and returns a debug query parameters
-	 * @param ILaunch launch
+	 * 
+	 * @param ILaunch
+	 *            launch
 	 * @return A hastable containing debug query parameters
 	 */
 	public Hashtable<String, String> getDebugParameters(ILaunch launch);
-	
+
 	/**
 	 * Returns ID of the corresponding Debug handler
 	 */
 	public String getDebugHandler();
-	
+
 	/**
 	 * Sets the ID of the corresponding Debug handler
+	 * 
 	 * @param id
 	 */
 	public void setDebugHandler(String id);

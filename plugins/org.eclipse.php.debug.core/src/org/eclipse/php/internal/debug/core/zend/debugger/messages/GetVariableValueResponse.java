@@ -26,7 +26,8 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class GetVariableValueResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
+public class GetVariableValueResponse extends DebugMessageResponseImpl
+		implements IDebugResponseMessage {
 
 	private byte[] variableValue = null;
 

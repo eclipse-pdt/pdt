@@ -40,7 +40,7 @@ public class DBGpSessionHandler {
 		}
 		return globalSessionHandler;
 	}
-	
+
 	/**
 	 * 
 	 * @param session
@@ -66,7 +66,9 @@ public class DBGpSessionHandler {
 			}
 		}
 		if (DBGpLogger.debugSession()) {
-			DBGpLogger.debug("session test:" + session.getIdeKey() + "=" + target.getIdeKey() + ", " + session.getSessionId() + "=" + target.getSessionID() + " == " + isCorrect);
+			DBGpLogger.debug("session test:" + session.getIdeKey() + "="
+					+ target.getIdeKey() + ", " + session.getSessionId() + "="
+					+ target.getSessionID() + " == " + isCorrect);
 		}
 		return isCorrect;
 	}
@@ -87,10 +89,11 @@ public class DBGpSessionHandler {
 	}
 
 	/**
-	 * we synchronize on this to stop the background thread from
-	 * being able to fire sessionAdded events until we know that
-	 * there isn't a session already waiting. At which point we
-	 * add a listener and the next fire will include this listener.
+	 * we synchronize on this to stop the background thread from being able to
+	 * fire sessionAdded events until we know that there isn't a session already
+	 * waiting. At which point we add a listener and the next fire will include
+	 * this listener.
+	 * 
 	 * @param l
 	 * @param ideKey
 	 * @param fileName
@@ -108,7 +111,8 @@ public class DBGpSessionHandler {
 		boolean allocated = false;
 		Object[] copiedListeners = listeners.getListeners();
 		if (DBGpLogger.debugSession()) {
-			DBGpLogger.debug("firing to " + copiedListeners.length + " active debug targets");
+			DBGpLogger.debug("firing to " + copiedListeners.length
+					+ " active debug targets");
 		}
 		for (int i = 0; i < copiedListeners.length && !allocated; i++) {
 			IDBGpSessionListener l = (IDBGpSessionListener) copiedListeners[i];

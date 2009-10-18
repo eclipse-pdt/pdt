@@ -18,7 +18,8 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
 public class WorkspaceRootSourceContainer extends ContainerSourceContainer {
 
-	public static final String TYPE_ID = PHPDebugPlugin.getID() + ".containerType.workspaceRoot"; //$NON-NLS-1$
+	public static final String TYPE_ID = PHPDebugPlugin.getID()
+			+ ".containerType.workspaceRoot"; //$NON-NLS-1$
 
 	public WorkspaceRootSourceContainer() {
 		super(ResourcesPlugin.getWorkspace().getRoot(), false);

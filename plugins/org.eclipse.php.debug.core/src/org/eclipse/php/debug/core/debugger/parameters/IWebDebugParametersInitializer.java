@@ -16,21 +16,24 @@ import java.util.Hashtable;
 import org.eclipse.debug.core.ILaunch;
 
 /**
- * This interface allows passing additional data to the
- * debug session, e.g: GET, POST, RAW data, COOKIES, HEADERS 
+ * This interface allows passing additional data to the debug session, e.g: GET,
+ * POST, RAW data, COOKIES, HEADERS
  */
-public interface IWebDebugParametersInitializer extends IDebugParametersInitializer {
+public interface IWebDebugParametersInitializer extends
+		IDebugParametersInitializer {
 
 	public static final String GET_METHOD = "GET"; //$NON-NLS-1$
 	public static final String POST_METHOD = "POST"; //$NON-NLS-1$
 
 	/**
-	 * This method returns request method ({@link #GET_METHOD}|{@link #POST_METHOD})
+	 * This method returns request method ({@link #GET_METHOD}|
+	 * {@link #POST_METHOD})
 	 */
 	public String getRequestMethod(ILaunch launch);
 
 	/**
-	 * This method returns additional GET or POST parameters to be passed to the debug session request.
+	 * This method returns additional GET or POST parameters to be passed to the
+	 * debug session request.
 	 */
 	public Hashtable<String, String> getRequestParameters(ILaunch launch);
 
@@ -45,8 +48,8 @@ public interface IWebDebugParametersInitializer extends IDebugParametersInitiali
 	public Hashtable<String, String> getRequestHeaders(ILaunch launch);
 
 	/**
-	 * This method returns additional RAW data. This data will not replace additional POST parameters -
-	 * it will be appended.
+	 * This method returns additional RAW data. This data will not replace
+	 * additional POST parameters - it will be appended.
 	 */
 	public String getRequestRawData(ILaunch launch);
 }

@@ -23,7 +23,9 @@ public class DBGpNullValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
 		return DBGpVariable.PHP_NULL;

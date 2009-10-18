@@ -26,7 +26,8 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
  * @author Shalom Gibly
  * @since PDT 1.0
  */
-public abstract class AbstractDebuggerConfiguration implements IDebuggerConfiguration {
+public abstract class AbstractDebuggerConfiguration implements
+		IDebuggerConfiguration {
 
 	protected Preferences preferences;
 	private HashMap<String, String> attributes;
@@ -44,8 +45,10 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	/**
 	 * Sets an attribute for this debugger.
 	 * 
-	 * @param id The ID.
-	 * @param value The value.
+	 * @param id
+	 *            The ID.
+	 * @param value
+	 *            The value.
 	 * @see #save()
 	 * @see #getAttribute(String)
 	 */
@@ -57,8 +60,11 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getAttribute(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 * getAttribute(java.lang.String)
 	 */
 	public String getAttribute(String id) {
 		String attribute = attributes.get(id);
@@ -77,8 +83,11 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 		attributes.put(DEBUGGER_ID, id);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getDebuggerId()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 * getDebuggerId()
 	 */
 	public String getDebuggerId() {
 		return getAttribute(DEBUGGER_ID);
@@ -93,8 +102,12 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 		attributes.put(DEBUGGER_NAME, name);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getName()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getName
+	 * ()
 	 */
 	public String getName() {
 		return getAttribute(DEBUGGER_NAME);
@@ -115,7 +128,8 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	public abstract int getPort();
 
 	/**
-	 * Returns the {@link ICommunicationDaemon} that is related to this debugger configuration.
+	 * Returns the {@link ICommunicationDaemon} that is related to this debugger
+	 * configuration.
 	 * 
 	 * @return the communicationDaemon (can be null)
 	 */
@@ -124,21 +138,23 @@ public abstract class AbstractDebuggerConfiguration implements IDebuggerConfigur
 	}
 
 	/**
-	 * Sets the {@link ICommunicationDaemon} that is related to this debugger configuration.
+	 * Sets the {@link ICommunicationDaemon} that is related to this debugger
+	 * configuration.
 	 * 
-	 * @param communicationDaemon the communicationDaemon to set
+	 * @param communicationDaemon
+	 *            the communicationDaemon to set
 	 */
 	public void setCommunicationDaemon(ICommunicationDaemon communicationDaemon) {
 		this.communicationDaemon = communicationDaemon;
 	}
 
 	/**
-	 * Save any plug-in preferences that needs to be saved. 
+	 * Save any plug-in preferences that needs to be saved.
 	 */
 	public void save() {
 		PHPDebugPlugin.getDefault().savePluginPreferences();
 	}
-	
+
 	/**
 	 * Apply the default values for this debugger configuration and save them.
 	 * Note that the changes affecting the PDT immediately.

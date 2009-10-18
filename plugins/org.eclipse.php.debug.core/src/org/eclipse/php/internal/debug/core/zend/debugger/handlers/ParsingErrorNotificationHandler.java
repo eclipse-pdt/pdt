@@ -23,12 +23,14 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public class ParsingErrorNotificationHandler implements IDebugMessageHandler {
 
-	private static final Pattern EVALD_CODE_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : eval\\(\\)'d code"); //$NON-NLS-1$
+	private static final Pattern EVALD_CODE_PATTERN = Pattern
+			.compile("(.*)\\((\\d+)\\) : eval\\(\\)'d code"); //$NON-NLS-1$
 
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		ParsingErrorNotification parseError = (ParsingErrorNotification) message;
 
-		IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();
+		IDebugHandler debugHandler = debugTarget.getRemoteDebugger()
+				.getDebugHandler();
 		String errorText = parseError.getErrorText();
 
 		int lineNumber = parseError.getLineNumber();
@@ -42,7 +44,8 @@ public class ParsingErrorNotificationHandler implements IDebugMessageHandler {
 			lineNumber = Integer.parseInt(m.group(2));
 		}
 
-		DebugError debugError = new DebugError(errorLevel, fileName, lineNumber, errorText);
+		DebugError debugError = new DebugError(errorLevel, fileName,
+				lineNumber, errorText);
 		debugHandler.parsingErrorOccured(debugError);
 	}
 }

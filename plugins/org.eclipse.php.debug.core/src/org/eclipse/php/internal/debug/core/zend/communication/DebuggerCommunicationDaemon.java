@@ -20,17 +20,18 @@ import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 
 /**
- * The debugger communication receiver holds a ServerSocket that remains open for the entire
- * Eclipse running session and accepts debug requests from remote or local debuggers.
- * Any changes in the preferences listening port definition is reflected in this listener by
- * re-initializing the ServerSocket to listen on the new port.
+ * The debugger communication receiver holds a ServerSocket that remains open
+ * for the entire Eclipse running session and accepts debug requests from remote
+ * or local debuggers. Any changes in the preferences listening port definition
+ * is reflected in this listener by re-initializing the ServerSocket to listen
+ * on the new port.
  * 
  * @author Shalom Gibly
  */
-public class DebuggerCommunicationDaemon extends AbstractDebuggerCommunicationDaemon implements ICommunicationDaemon {
+public class DebuggerCommunicationDaemon extends
+		AbstractDebuggerCommunicationDaemon implements ICommunicationDaemon {
 
 	public static final String ZEND_DEBUGGER_ID = "org.eclipse.php.debug.core.zendDebugger";
 	private IPropertyChangeListener portChangeListener;
@@ -42,8 +43,8 @@ public class DebuggerCommunicationDaemon extends AbstractDebuggerCommunicationDa
 	}
 
 	/**
-	 * Initializes the ServerSocket and starts a listen thread. Also, initialize a preferences
-	 * change listener for the port that is used by this daemon.
+	 * Initializes the ServerSocket and starts a listen thread. Also, initialize
+	 * a preferences change listener for the port that is used by this daemon.
 	 */
 	public void init() {
 		initDeamonChangeListener();
@@ -51,18 +52,21 @@ public class DebuggerCommunicationDaemon extends AbstractDebuggerCommunicationDa
 	}
 
 	/**
-	 * Initialize a daemon change listener 
+	 * Initialize a daemon change listener
 	 */
 	protected void initDeamonChangeListener() {
 		if (portChangeListener == null) {
-			Preferences preferences = PHPDebugPlugin.getDefault().getPluginPreferences();
+			Preferences preferences = PHPDebugPlugin.getDefault()
+					.getPluginPreferences();
 			portChangeListener = new PortChangeListener();
 			preferences.addPropertyChangeListener(portChangeListener);
 		}
 	}
 
 	/**
-	 * Returns the server socket port used for the debug requests listening thread. 
+	 * Returns the server socket port used for the debug requests listening
+	 * thread.
+	 * 
 	 * @return The port specified in the preferences.
 	 */
 	public int getReceiverPort() {
@@ -70,10 +74,10 @@ public class DebuggerCommunicationDaemon extends AbstractDebuggerCommunicationDa
 	}
 
 	/**
-	 * Starts a connection handling thread on the given Socket. 
-	 * This method can be overridden by extending classes to create a different debug connection threads.
-	 * The connection thread itself should execute itself in a different thread in order to 
-	 * release the current thread.
+	 * Starts a connection handling thread on the given Socket. This method can
+	 * be overridden by extending classes to create a different debug connection
+	 * threads. The connection thread itself should execute itself in a
+	 * different thread in order to release the current thread.
 	 * 
 	 * @param socket
 	 */
@@ -85,7 +89,8 @@ public class DebuggerCommunicationDaemon extends AbstractDebuggerCommunicationDa
 	// A port change listener
 	private class PortChangeListener implements IPropertyChangeListener {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)) {
+			if (event.getProperty().equals(
+					PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)) {
 				resetSocket();
 			}
 		}
@@ -94,7 +99,8 @@ public class DebuggerCommunicationDaemon extends AbstractDebuggerCommunicationDa
 	/**
 	 * Returns the Zend's debugger ID.
 	 * 
-	 * @return The debugger ID that is using this daemon (e.g. Zend debugger ID).
+	 * @return The debugger ID that is using this daemon (e.g. Zend debugger
+	 *         ID).
 	 * @since PDT 1.0
 	 */
 	public String getDebuggerID() {
@@ -103,7 +109,9 @@ public class DebuggerCommunicationDaemon extends AbstractDebuggerCommunicationDa
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.debug.daemon.communication.ICommunicationDaemon#isDebuggerDaemon()
+	 * 
+	 * @seeorg.eclipse.php.debug.daemon.communication.ICommunicationDaemon#
+	 * isDebuggerDaemon()
 	 */
 	public boolean isDebuggerDaemon() {
 		return true;

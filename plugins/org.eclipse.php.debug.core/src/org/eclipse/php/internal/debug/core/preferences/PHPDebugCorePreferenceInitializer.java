@@ -27,10 +27,12 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicat
 /**
  * Sets default values for PHP Debug preferences
  */
-public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitializer {
+public class PHPDebugCorePreferenceInitializer extends
+		AbstractPreferenceInitializer {
 
 	public void initializeDefaultPreferences() {
-		IEclipsePreferences node = new DefaultScope().getNode(PHPDebugPlugin.getDefault().getBundle().getSymbolicName());
+		IEclipsePreferences node = new DefaultScope().getNode(PHPDebugPlugin
+				.getDefault().getBundle().getSymbolicName());
 
 		// formatting preferences
 		node.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, true);
@@ -38,16 +40,23 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
 		node.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 10000);
-		node.putInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 50000); // 50 seconds
+		node.putInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 50000); // 50
+																				// seconds
 		node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "UTF-8");
 		node.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, "UTF-8");
-		node.put(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());
-		node.put(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID); // The default is Zend's debugger
-		node.put(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER, "org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
+		node.put(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
+				PHPExecutableLaunchDelegate.class.getName());
+		node.put(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID); // The default is
+																// Zend's
+																// debugger
+		node.put(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER,
+				"org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
 
 		try {
 			StringBuilder b = new StringBuilder();
-			Enumeration<NetworkInterface> ii = NetworkInterface.getNetworkInterfaces();
+			Enumeration<NetworkInterface> ii = NetworkInterface
+					.getNetworkInterfaces();
 			while (ii.hasMoreElements()) {
 				NetworkInterface i = ii.nextElement();
 				if (i.getDisplayName().contains("VMware")) {

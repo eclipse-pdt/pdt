@@ -13,16 +13,16 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 public interface Expression {
 
-    public String[] getName();
+	public String[] getName();
 
-    public String getLastName();
+	public String getLastName();
 
-    public String getFullName();
+	public String getFullName();
 
-    public void setValue(ExpressionValue value);
+	public void setValue(ExpressionValue value);
 
-    public ExpressionValue getValue();
+	public ExpressionValue getValue();
 
-    public Expression createChildExpression(String name, String representation);
+	public Expression createChildExpression(String name, String representation);
 
 }

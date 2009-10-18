@@ -17,37 +17,48 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugMessageRequestImpl;
 
-public class SetProtocolRequest extends DebugMessageRequestImpl implements IDebugRequestMessage {
-	
+public class SetProtocolRequest extends DebugMessageRequestImpl implements
+		IDebugRequestMessage {
+
 	private int fProtocolID;
-	
-	public void setProtocolID (int protocolID) {
+
+	public void setProtocolID(int protocolID) {
 		fProtocolID = protocolID;
 	}
-	
+
 	public int getProtocolID() {
 		return fProtocolID;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#deserialize(java.io.DataInputStream)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#
+	 * deserialize(java.io.DataInputStream)
 	 */
 	public void deserialize(DataInputStream in) throws IOException {
 		setID(in.readInt());
 		setProtocolID(in.readInt());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#getType()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#getType
+	 * ()
 	 */
 	public int getType() {
 		return 10000;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#serialize(java.io.DataOutputStream)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.messages.IDebugMessage#serialize
+	 * (java.io.DataOutputStream)
 	 */
 	public void serialize(DataOutputStream out) throws IOException {
 		out.writeShort(getType());

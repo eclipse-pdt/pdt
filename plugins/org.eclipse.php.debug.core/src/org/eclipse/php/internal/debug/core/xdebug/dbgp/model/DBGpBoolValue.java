@@ -25,7 +25,9 @@ public class DBGpBoolValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
 		return DBGpVariable.PHP_BOOL;
@@ -52,7 +54,10 @@ public class DBGpBoolValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.String
+	 * )
 	 */
 	public void setValue(String expression) throws DebugException {
 		String data;
@@ -68,7 +73,10 @@ public class DBGpBoolValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang
+	 * .String)
 	 */
 	boolean verifyValue(String expression) throws DebugException {
 		boolean allowed = false;

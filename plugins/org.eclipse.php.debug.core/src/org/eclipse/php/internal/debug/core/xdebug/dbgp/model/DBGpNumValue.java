@@ -18,7 +18,8 @@ public class DBGpNumValue extends DBGpValue {
 
 	private String numberType;
 
-	public DBGpNumValue(DBGpVariable owningVariable, Node property, String numType) {
+	public DBGpNumValue(DBGpVariable owningVariable, Node property,
+			String numType) {
 		super(owningVariable, property);
 		setModifiable(true);
 		numberType = numType;
@@ -26,7 +27,9 @@ public class DBGpNumValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
 		return numberType;
@@ -42,7 +45,10 @@ public class DBGpNumValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#setValue(java.lang.String
+	 * )
 	 */
 	public void setValue(String expression) throws DebugException {
 		genValueString(expression);
@@ -50,7 +56,10 @@ public class DBGpNumValue extends DBGpValue {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.php.xdebug.core.dbgp.model.DBGpValue#verifyValue(java.lang
+	 * .String)
 	 */
 	boolean verifyValue(String expression) throws DebugException {
 		try {

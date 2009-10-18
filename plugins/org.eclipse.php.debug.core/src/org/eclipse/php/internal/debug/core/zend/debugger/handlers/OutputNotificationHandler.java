@@ -22,7 +22,8 @@ public class OutputNotificationHandler implements IDebugMessageHandler {
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		String output = ((OutputNotification) message).getOutput();
 
-		IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();
+		IDebugHandler debugHandler = debugTarget.getRemoteDebugger()
+				.getDebugHandler();
 		debugHandler.newOutput(output);
 	}
 }

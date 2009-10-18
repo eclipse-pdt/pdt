@@ -13,19 +13,19 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 public interface ExpressionsManager {
 
-    public byte[] getExpressionValue(Expression expression, int depth);
+	public byte[] getExpressionValue(Expression expression, int depth);
 
-    public boolean assignValue(Expression expression, String value, int depth);
+	public boolean assignValue(Expression expression, String value, int depth);
 
-    public Expression[] getLocalVariables();
+	public Expression[] getLocalVariables();
 
-    public Expression[] getGlobalVariables();
+	public Expression[] getGlobalVariables();
 
-    public Expression[] getLocalVariables(int depth);
+	public Expression[] getLocalVariables(int depth);
 
-    public Expression[] getGlobalVariables(int depth);
+	public Expression[] getGlobalVariables(int depth);
 
-    public Expression buildExpression(String name);
+	public Expression buildExpression(String name);
 
-    public void update(Expression expression, int depth);
+	public void update(Expression expression, int depth);
 }

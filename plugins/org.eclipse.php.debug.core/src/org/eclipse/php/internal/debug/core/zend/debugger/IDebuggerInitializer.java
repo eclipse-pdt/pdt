@@ -15,8 +15,9 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 
 /**
- * An {@link IDebuggerInitializer} is the interface for all the debug initializers that handle debug 
- * requests and trigger a debug session by sending the correct information to the debug server.
+ * An {@link IDebuggerInitializer} is the interface for all the debug
+ * initializers that handle debug requests and trigger a debug session by
+ * sending the correct information to the debug server.
  * 
  * @author shalom
  */

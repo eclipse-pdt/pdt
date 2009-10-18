@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
 /**
- * A set of useful utilities 
+ * A set of useful utilities
  */
 public class DBGpLogger {
 
@@ -48,7 +48,9 @@ public class DBGpLogger {
 
 	/**
 	 * output a debug message
-	 * @param info the string to output
+	 * 
+	 * @param info
+	 *            the string to output
 	 */
 	public static void debug(String info) {
 		if (debugOn) {
@@ -58,7 +60,9 @@ public class DBGpLogger {
 
 	/**
 	 * output an exception, does not output embedded exceptions
-	 * @param exc the exception to output
+	 * 
+	 * @param exc
+	 *            the exception to output
 	 */
 	public static void debugException(Throwable exc) {
 		debug(exc.getClass().toString() + ":" + exc.getMessage());
@@ -85,33 +89,47 @@ public class DBGpLogger {
 			debugException(exc);
 		}
 		/*
-		IStatus stat = new Status(IStatus.ERROR, Activator.PLUGIN_ID, IStatus.ERROR, msg.toString(), exc);
-		theLog.log(stat);
-		*/
+		 * IStatus stat = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+		 * IStatus.ERROR, msg.toString(), exc); theLog.log(stat);
+		 */
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(bs);
 		exc.printStackTrace(ps);
-		IStatus stat = new Status(IStatus.ERROR, PHPDebugPlugin.ID, IStatus.ERROR, msg + "\n" + bs.toString(), null);
+		IStatus stat = new Status(IStatus.ERROR, PHPDebugPlugin.ID,
+				IStatus.ERROR, msg + "\n" + bs.toString(), null);
 		theLog.log(stat);
 	}
 
 	/**
 	 * Log an Error Message, message and exception sent to debug output as well.
-	 * @param pluginId symbolic string name of the plug-in id eg. "getDefault().getBundle().getSymbolicName()"
-	 * @param obj The object the exception occurred in (usually this)
-	 * @param info Additional message information
-	 * @param exc The exception
+	 * 
+	 * @param pluginId
+	 *            symbolic string name of the plug-in id eg.
+	 *            "getDefault().getBundle().getSymbolicName()"
+	 * @param obj
+	 *            The object the exception occurred in (usually this)
+	 * @param info
+	 *            Additional message information
+	 * @param exc
+	 *            The exception
 	 */
 	public static void logError(String info, Object obj, Throwable exc) {
 		doLog(info, obj, exc, IStatus.ERROR);
 	}
 
 	/**
-	 * Log a Warning Message, message and exception sent to debug output as well.
-	 * @param pluginId symbolic string name of the plug-in id eg. "getDefault().getBundle().getSymbolicName()"
-	 * @param obj The object the exception occurred in (usually this)
-	 * @param info Additional message information
-	 * @param exc The exception
+	 * Log a Warning Message, message and exception sent to debug output as
+	 * well.
+	 * 
+	 * @param pluginId
+	 *            symbolic string name of the plug-in id eg.
+	 *            "getDefault().getBundle().getSymbolicName()"
+	 * @param obj
+	 *            The object the exception occurred in (usually this)
+	 * @param info
+	 *            Additional message information
+	 * @param exc
+	 *            The exception
 	 */
 	public static void logWarning(String info, Object obj, Throwable exc) {
 		doLog(info, obj, exc, IStatus.WARNING);
@@ -119,9 +137,14 @@ public class DBGpLogger {
 
 	/**
 	 * Log an Information Message, message sent to debug output as well.
-	 * @param pluginId symbolic string name of the plug-in id eg. "getDefault().getBundle().getSymbolicName()"
-	 * @param obj The object the exception occurred in (usually this)
-	 * @param info Additional message information
+	 * 
+	 * @param pluginId
+	 *            symbolic string name of the plug-in id eg.
+	 *            "getDefault().getBundle().getSymbolicName()"
+	 * @param obj
+	 *            The object the exception occurred in (usually this)
+	 * @param info
+	 *            Additional message information
 	 */
 	public static void logInfo(String info, Object obj) {
 		doLog(info, obj, null, IStatus.INFO);
@@ -130,10 +153,15 @@ public class DBGpLogger {
 	/*
 	 * send the message to the Error log.
 	 * 
-	 * @param pluginId symbolic string name of the plug-in id eg. "getDefault().getBundle().getSymbolicName()"
+	 * @param pluginId symbolic string name of the plug-in id eg.
+	 * "getDefault().getBundle().getSymbolicName()"
+	 * 
 	 * @param obj The object the exception occurred in (usually this)
+	 * 
 	 * @param info Additional message information
+	 * 
 	 * @param exc The exception
+	 * 
 	 * @param type type of log message, ERROR, WARNING,INFO
 	 */
 	private static void doLog(String info, Object obj, Throwable exc, int type) {
@@ -152,7 +180,8 @@ public class DBGpLogger {
 			msg.append(" msg: ");
 			msg.append(exc.getMessage());
 		}
-		IStatus stat = new Status(type, PHPDebugPlugin.ID, type, msg.toString(), exc);
+		IStatus stat = new Status(type, PHPDebugPlugin.ID, type,
+				msg.toString(), exc);
 		debug(msg.toString());
 		if (exc != null) {
 			debugException(exc);

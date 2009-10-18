@@ -35,7 +35,8 @@ public class PHPProjectPreferences {
 
 	public static boolean getElementSettingsForProject(IProject project) {
 		IScopeContext pScope = getProjectScope(project);
-		return pScope.getNode(getPreferenceNodeQualifier()).getBoolean(getProjectSettingsKey(), false);
+		return pScope.getNode(getPreferenceNodeQualifier()).getBoolean(
+				getProjectSettingsKey(), false);
 	}
 
 	public static String getProjectSettingsKey() {
@@ -44,10 +45,13 @@ public class PHPProjectPreferences {
 
 	public static boolean getStopAtFirstLine(IProject project) {
 		Preferences prefs = getModelPreferences();
-		boolean stop = prefs.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
+		boolean stop = prefs
+				.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			stop = projectScope.getNode(getPreferenceNodeQualifier()).getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, stop);
+			stop = projectScope.getNode(getPreferenceNodeQualifier())
+					.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE,
+							stop);
 		}
 		return stop;
 
@@ -55,40 +59,50 @@ public class PHPProjectPreferences {
 
 	public static String getDefaultServerName(IProject project) {
 		Preferences prefs = getModelPreferences();
-		String serverName = prefs.getString(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
+		String serverName = prefs
+				.getString(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			serverName = projectScope.getNode(getPreferenceNodeQualifier()).get(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY, serverName);
+			serverName = projectScope.getNode(getPreferenceNodeQualifier())
+					.get(ServersManager.DEFAULT_SERVER_PREFERENCES_KEY,
+							serverName);
 		}
 		return serverName;
 	}
-	
+
 	public static String getDefaultDebuggerID(IProject project) {
 		Preferences prefs = getModelPreferences();
-		String debuggerID = prefs.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
+		String debuggerID = prefs
+				.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			debuggerID = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
+			debuggerID = projectScope.getNode(getPreferenceNodeQualifier())
+					.get(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+							debuggerID);
 		}
 		return debuggerID;
 	}
 
 	public static String getTransferEncoding(IProject project) {
 		Preferences prefs = getModelPreferences();
-		String encoding = prefs.getString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
+		String encoding = prefs
+				.getString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			encoding = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, encoding);
+			encoding = projectScope.getNode(getPreferenceNodeQualifier()).get(
+					PHPDebugCorePreferenceNames.TRANSFER_ENCODING, encoding);
 		}
 		return encoding;
 	}
 
 	public static String getOutputEncoding(IProject project) {
 		Preferences prefs = getModelPreferences();
-		String encoding = prefs.getString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
+		String encoding = prefs
+				.getString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
 		if (project != null && getElementSettingsForProject(project)) {
 			IScopeContext projectScope = getProjectScope(project);
-			encoding = projectScope.getNode(getPreferenceNodeQualifier()).get(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, encoding);
+			encoding = projectScope.getNode(getPreferenceNodeQualifier()).get(
+					PHPDebugCorePreferenceNames.OUTPUT_ENCODING, encoding);
 		}
 		return encoding;
 	}

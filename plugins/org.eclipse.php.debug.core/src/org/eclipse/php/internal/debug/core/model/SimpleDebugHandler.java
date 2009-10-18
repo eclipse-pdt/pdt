@@ -21,7 +21,8 @@ import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 public abstract class SimpleDebugHandler implements IDebugHandler {
 
 	public void ready(String fileName, int lineNumber) {
-		Logger.debugMSG("PHPSimpleDebugHandler: ready: " + fileName + " " + lineNumber);
+		Logger.debugMSG("PHPSimpleDebugHandler: ready: " + fileName + " "
+				+ lineNumber);
 	}
 
 	public void debugChanged() {
@@ -29,10 +30,12 @@ public abstract class SimpleDebugHandler implements IDebugHandler {
 	}
 
 	public void debuggerErrorOccured(DebugError debugError) {
-		Logger.debugMSG("PHPSimpleDebugHandler: debuggerErrorOccured: " + debugError);
+		Logger.debugMSG("PHPSimpleDebugHandler: debuggerErrorOccured: "
+				+ debugError);
 	}
 
-	public void sessionStarted(String remoteFile, String uri, String query, String options) {
+	public void sessionStarted(String remoteFile, String uri, String query,
+			String options) {
 		Logger.debugMSG("PHPSimpleDebugHandler: sessionStarted ");
 		Logger.debugMSG("                       fileName: " + remoteFile);
 		Logger.debugMSG("                       uri: " + uri);
@@ -73,7 +76,8 @@ public abstract class SimpleDebugHandler implements IDebugHandler {
 	}
 
 	public void parsingErrorOccured(DebugError debugError) {
-		Logger.debugMSG("PHPSimpleDebugHandler: parsingErrorOccured " + debugError);
+		Logger.debugMSG("PHPSimpleDebugHandler: parsingErrorOccured "
+				+ debugError);
 	}
 
 	public void wrongDebugServer() {

@@ -17,9 +17,11 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 public interface IDebugMessageHandler {
 	/**
 	 * Process the relevant message
-	 *
-	 * @param message debug message
-	 * @param debugTarget The {@link PHPDebugTarget}
+	 * 
+	 * @param message
+	 *            debug message
+	 * @param debugTarget
+	 *            The {@link PHPDebugTarget}
 	 */
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget);
 }

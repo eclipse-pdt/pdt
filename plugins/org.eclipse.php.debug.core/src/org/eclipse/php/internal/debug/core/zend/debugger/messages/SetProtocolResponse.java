@@ -17,13 +17,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugMessageResponseImpl;
 
-public class SetProtocolResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
+public class SetProtocolResponse extends DebugMessageResponseImpl implements
+		IDebugResponseMessage {
 
 	private int fProtocolID;
 
-	public void setProtocolID (int protocolID) {
+	public void setProtocolID(int protocolID) {
 		fProtocolID = protocolID;
 	}
 

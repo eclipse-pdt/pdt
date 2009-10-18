@@ -30,11 +30,12 @@ import org.eclipse.ui.console.IConsoleListener;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 
 /**
- * A process crash detector is a {@link Runnable} that hooks a PHP process error stream and blocks until the process terminates.
- * Then, the detector determines if the process terminated as a result of an abnormal crash, or as a result
- * of a normal termination or a PHP fatal termination.
- * The PHP termination codes are between 0 - 255, so any other exit value is considered as a program crash.
- * The crash detector displays a message to the user in case of a crash.
+ * A process crash detector is a {@link Runnable} that hooks a PHP process error
+ * stream and blocks until the process terminates. Then, the detector determines
+ * if the process terminated as a result of an abnormal crash, or as a result of
+ * a normal termination or a PHP fatal termination. The PHP termination codes
+ * are between 0 - 255, so any other exit value is considered as a program
+ * crash. The crash detector displays a message to the user in case of a crash.
  * 
  * @author shalom
  * @since PDT 1.0.1
@@ -48,8 +49,10 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 	/**
 	 * Constructs a process detector on a given {@link Process}.
 	 * 
-	 * @param launch {@link ILaunch}
-	 * @param p {@link Process}.
+	 * @param launch
+	 *            {@link ILaunch}
+	 * @param p
+	 *            {@link Process}.
 	 */
 	public ProcessCrashDetector(ILaunch launch, Process p) {
 		this.launch = launch;
@@ -58,30 +61,35 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
 		try {
-			StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), true);
-			StreamGobbler inputGobbler = new StreamGobbler(process.getInputStream(), false);
-			
-			ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(this);
-			
+			StreamGobbler errorGobbler = new StreamGobbler(process
+					.getErrorStream(), true);
+			StreamGobbler inputGobbler = new StreamGobbler(process
+					.getInputStream(), false);
+
+			ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(
+					this);
+
 			errorGobbler.start();
 			inputGobbler.start();
-			
+
 			int exitValue = process.waitFor();
 			IDebugTarget debugTarget = launch.getDebugTarget();
 			if (debugTarget != null) {
 				IProcess p = debugTarget.getProcess();
 				if (p instanceof PHPProcess) {
-					((PHPProcess)p).setExitValue(exitValue);
+					((PHPProcess) p).setExitValue(exitValue);
 				}
 			}
-			
+
 		} catch (Throwable t) {
 		} finally {
-			ConsolePlugin.getDefault().getConsoleManager().removeConsoleListener(this);
+			ConsolePlugin.getDefault().getConsoleManager()
+					.removeConsoleListener(this);
 		}
 	}
 
@@ -101,7 +109,7 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 			try {
 				InputStreamReader isr = new InputStreamReader(is);
 				BufferedReader br = new BufferedReader(isr);
-				
+
 				String line;
 				while ((line = br.readLine()) != null) {
 					if (!isError) {
@@ -113,7 +121,9 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 							if (isError) {
 								Display.getDefault().syncExec(new Runnable() {
 									public void run() {
-										os.setColor(DebugUIPlugin.getPreferenceColor(IDebugPreferenceConstants.CONSOLE_SYS_ERR_COLOR));
+										os
+												.setColor(DebugUIPlugin
+														.getPreferenceColor(IDebugPreferenceConstants.CONSOLE_SYS_ERR_COLOR));
 									}
 								});
 							}
@@ -126,13 +136,13 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 					}
 				}
 			} catch (IOException ioe) {
-//				PHPDebugPlugin.log(ioe);
+				// PHPDebugPlugin.log(ioe);
 			} finally {
 				if (os != null) {
 					try {
 						os.close();
 					} catch (IOException e) {
-//						PHPDebugPlugin.log(e);
+						// PHPDebugPlugin.log(e);
 					}
 				}
 			}

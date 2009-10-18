@@ -18,13 +18,13 @@
 package org.eclipse.php.internal.debug.core.zend.communication;
 
 /**
- *
- * @author  erez
+ * 
+ * @author erez
  * @version
  */
 public interface CommunicationAdministrator {
 
-    public void connectionEstablished();
+	public void connectionEstablished();
 
-    public void connectionClosed();
+	public void connectionClosed();
 }

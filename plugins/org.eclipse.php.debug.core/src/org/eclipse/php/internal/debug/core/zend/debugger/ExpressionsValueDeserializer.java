@@ -17,7 +17,7 @@ import java.io.UnsupportedEncodingException;
 public class ExpressionsValueDeserializer {
 
 	private String fEncoding;
-	
+
 	public ExpressionsValueDeserializer(String encoding) {
 		fEncoding = encoding;
 	}
@@ -25,45 +25,45 @@ public class ExpressionsValueDeserializer {
 	public ExpressionValue deserializer(Expression expression, byte[] value) {
 		if (value == null) {
 			// the expression is Illeagal.
-			value = new byte[] {'N'};
+			value = new byte[] { 'N' };
 		}
 		return build(expression, new VariableReader(value));
 	}
-	
-//    private byte[] getBytes(String text) {
-//    	try {
-//    		return text.getBytes(fEncoding);
-//    	} catch (UnsupportedEncodingException e) {
-//        }
-//    	return text.getBytes();
-//    }
-    
-    private String getText(byte[] buf) {
-    	try {
-    		return new String(buf, fEncoding);
-    	} catch (UnsupportedEncodingException e) {
-    	}
-    	return new String(buf);
-    }
+
+	// private byte[] getBytes(String text) {
+	// try {
+	// return text.getBytes(fEncoding);
+	// } catch (UnsupportedEncodingException e) {
+	// }
+	// return text.getBytes();
+	// }
+
+	private String getText(byte[] buf) {
+		try {
+			return new String(buf, fEncoding);
+		} catch (UnsupportedEncodingException e) {
+		}
+		return new String(buf);
+	}
 
 	private ExpressionValue build(Expression expression, VariableReader reader) {
 		char type = reader.readType();
 
 		switch (type) {
-			case 'i':
-				return buildIntType(reader);
-			case 'd':
-				return buildDoubleType(reader);
-			case 's':
-				return buildSringType(reader);
-			case 'b':
-				return buildBooleanType(reader);
-			case 'r':
-				return buildResourceType(reader);
-			case 'a':
-				return buildArrayType(expression, reader);
-			case 'O':
-				return buildObjectType(expression, reader);
+		case 'i':
+			return buildIntType(reader);
+		case 'd':
+			return buildDoubleType(reader);
+		case 's':
+			return buildSringType(reader);
+		case 'b':
+			return buildBooleanType(reader);
+		case 'r':
+			return buildResourceType(reader);
+		case 'a':
+			return buildArrayType(expression, reader);
+		case 'O':
+			return buildObjectType(expression, reader);
 		}
 		return ExpressionValue.NULL_VALUE;
 	}
@@ -71,25 +71,31 @@ public class ExpressionsValueDeserializer {
 	private ExpressionValue buildIntType(VariableReader reader) {
 		String value = reader.readToken();
 		String valueAsString = "(int) " + value;
-		return new ExpressionValue(ExpressionValue.INT_TYPE, value, valueAsString, null);
+		return new ExpressionValue(ExpressionValue.INT_TYPE, value,
+				valueAsString, null);
 	}
 
 	private ExpressionValue buildDoubleType(VariableReader reader) {
 		String value = reader.readToken();
 		String valueAsString = "(double) " + value;
-		return new ExpressionValue(ExpressionValue.DOUBLE_TYPE, value, valueAsString, null);
+		return new ExpressionValue(ExpressionValue.DOUBLE_TYPE, value,
+				valueAsString, null);
 	}
 
 	private ExpressionValue buildSringType(VariableReader reader) {
 		String value = reader.readString();
-		String valueAsString = "(string:" + value.length() + ") " + value.replaceAll("\\\\", "\\\\\\\\");
-		return new ExpressionValue(ExpressionValue.STRING_TYPE, value, valueAsString, null);
+		String valueAsString = "(string:" + value.length() + ") "
+				+ value.replaceAll("\\\\", "\\\\\\\\");
+		return new ExpressionValue(ExpressionValue.STRING_TYPE, value,
+				valueAsString, null);
 	}
 
 	private ExpressionValue buildBooleanType(VariableReader reader) {
 		String value = reader.readToken();
-		String valueAsString = "(boolean) " + ((value.equals("0")) ? "false" : "true");
-		return new ExpressionValue(ExpressionValue.BOOLEAN_TYPE, value, valueAsString, null);
+		String valueAsString = "(boolean) "
+				+ ((value.equals("0")) ? "false" : "true");
+		return new ExpressionValue(ExpressionValue.BOOLEAN_TYPE, value,
+				valueAsString, null);
 	}
 
 	private ExpressionValue buildResourceType(VariableReader reader) {
@@ -97,15 +103,18 @@ public class ExpressionsValueDeserializer {
 		reader.readInt();
 
 		String value = reader.readToken();
-		String valueAsString = "resource (" + resourceNumber + ") of type (" + value + ')';
-		return new ExpressionValue(ExpressionValue.RESOURCE_TYPE, value, valueAsString, null);
+		String valueAsString = "resource (" + resourceNumber + ") of type ("
+				+ value + ')';
+		return new ExpressionValue(ExpressionValue.RESOURCE_TYPE, value,
+				valueAsString, null);
 	}
 
-	private ExpressionValue buildArrayType(Expression expression, VariableReader reader) {
+	private ExpressionValue buildArrayType(Expression expression,
+			VariableReader reader) {
 		int objectLength = reader.readInt();
 		int originalLength = objectLength;
 
-		//System.out.println("objectLength " + objectLength);
+		// System.out.println("objectLength " + objectLength);
 		if (reader.isLastEnd()) {
 			objectLength = 0;
 		}
@@ -113,7 +122,7 @@ public class ExpressionsValueDeserializer {
 
 		for (int i = 0; i < objectLength; i++) {
 			char type = reader.readType();
-			//System.out.println("type " + type);
+			// System.out.println("type " + type);
 			String name;
 			if (type == 'i') {
 				name = Integer.toString(reader.readInt());
@@ -123,15 +132,18 @@ public class ExpressionsValueDeserializer {
 			if (expression == null) {
 				variableNodes[i] = createDefaultVariable(name);
 			} else {
-				variableNodes[i] = expression.createChildExpression(name, '[' + name + ']');
+				variableNodes[i] = expression.createChildExpression(name,
+						'[' + name + ']');
 			}
 			variableNodes[i].setValue(build(expression, reader));
 		}
 
-		return new ExpressionValue(ExpressionValue.ARRAY_TYPE, "Array", "Array [" + originalLength + ']', variableNodes);
+		return new ExpressionValue(ExpressionValue.ARRAY_TYPE, "Array",
+				"Array [" + originalLength + ']', variableNodes);
 	}
 
-	private ExpressionValue buildObjectType(Expression expression, VariableReader reader) {
+	private ExpressionValue buildObjectType(Expression expression,
+			VariableReader reader) {
 		String objectName = reader.readString();
 		int objectLength = reader.readInt();
 
@@ -143,7 +155,7 @@ public class ExpressionsValueDeserializer {
 
 		for (int i = 0; i < objectLength; i++) {
 			char type = reader.readType();
-			//System.out.println("type " + type);
+			// System.out.println("type " + type);
 			String name;
 			if (type == 'i') {
 				name = Integer.toString(reader.readInt());
@@ -154,22 +166,24 @@ public class ExpressionsValueDeserializer {
 			if (expression == null) {
 				expressionNodes[i] = createDefaultVariable(name);
 			} else {
-				expressionNodes[i] = expression.createChildExpression(name, "->" + name);
+				expressionNodes[i] = expression.createChildExpression(name,
+						"->" + name);
 			}
 			expressionNodes[i].setValue(build(expression, reader));
 		}
 		String valueAsString = "Object of: " + objectName;
 
-		return new ExpressionValue(ExpressionValue.OBJECT_TYPE, objectName, valueAsString, expressionNodes);
+		return new ExpressionValue(ExpressionValue.OBJECT_TYPE, objectName,
+				valueAsString, expressionNodes);
 	}
 
 	private Expression createDefaultVariable(String name) {
 		return new DefaultExpression('$' + name);
 	}
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// variable reader.
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	private class VariableReader extends ByteArrayInputStream {
 
 		private VariableReader(byte[] result) {

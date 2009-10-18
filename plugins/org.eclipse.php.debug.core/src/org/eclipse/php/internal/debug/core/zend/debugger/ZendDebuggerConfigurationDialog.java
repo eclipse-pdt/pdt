@@ -30,11 +30,12 @@ import org.eclipse.swt.widgets.*;
 
 /**
  * Zend debugger configuration class.
- *
+ * 
  * @author Shalom Gibly
  * @since PDT 1.0
  */
-public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurationDialog {
+public class ZendDebuggerConfigurationDialog extends
+		AbstractDebuggerConfigurationDialog {
 
 	protected Button fRunWithDebugInfo;
 	protected Text fDebugTextBox;
@@ -44,10 +45,13 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 
 	/**
 	 * Constructs a new Zend debugger configuration dialog.
+	 * 
 	 * @param zendDebuggerConfiguration
 	 * @param parentShell
 	 */
-	public ZendDebuggerConfigurationDialog(ZendDebuggerConfiguration zendDebuggerConfiguration, Shell parentShell) {
+	public ZendDebuggerConfigurationDialog(
+			ZendDebuggerConfiguration zendDebuggerConfiguration,
+			Shell parentShell) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		this.zendDebuggerConfiguration = zendDebuggerConfiguration;
@@ -59,26 +63,43 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 		parent = (Composite) super.createDialogArea(parent);
 		setTitle(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_zendDebuggerSettings);
 
-		Composite composite = createSubsection(parent, PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_zendDebugger);
+		Composite composite = createSubsection(
+				parent,
+				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_zendDebugger);
 
-		fRunWithDebugInfo = addCheckBox(composite, PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_runWithDebugInfo, PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, 0);
+		fRunWithDebugInfo = addCheckBox(
+				composite,
+				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_runWithDebugInfo,
+				PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, 0);
 
-		addLabelControl(composite, PHPDebugCoreMessages.DebuggerConfigurationDialog_debugPort, PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT);
-		fDebugTextBox = addTextField(composite, PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 6, 2);
-		GridData gridData = (GridData)fDebugTextBox.getLayoutData();
+		addLabelControl(composite,
+				PHPDebugCoreMessages.DebuggerConfigurationDialog_debugPort,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT);
+		fDebugTextBox = addTextField(composite,
+				PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 6, 2);
+		GridData gridData = (GridData) fDebugTextBox.getLayoutData();
 		gridData.widthHint = convertWidthInCharsToPixels(100);
 		fDebugTextBox.addModifyListener(new DebugPortValidateListener());
 
-		addLabelControl(composite, PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_client_host_ip, PHPDebugCorePreferenceNames.CLIENT_IP);
-		fClientIP = addTextField(composite, PHPDebugCorePreferenceNames.CLIENT_IP, 0, 2);
-		gridData = (GridData)fClientIP.getLayoutData();
+		addLabelControl(
+				composite,
+				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_client_host_ip,
+				PHPDebugCorePreferenceNames.CLIENT_IP);
+		fClientIP = addTextField(composite,
+				PHPDebugCorePreferenceNames.CLIENT_IP, 0, 2);
+		gridData = (GridData) fClientIP.getLayoutData();
 		gridData.widthHint = convertWidthInCharsToPixels(100);
-		
-		addLabelControl(composite, PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_debug_response_timeout, PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT);
-		fDebugResponseTimeout = addTextField(composite, PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 0, 2);
-		gridData = (GridData)fDebugResponseTimeout.getLayoutData();
+
+		addLabelControl(
+				composite,
+				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_debug_response_timeout,
+				PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT);
+		fDebugResponseTimeout = addTextField(composite,
+				PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 0, 2);
+		gridData = (GridData) fDebugResponseTimeout.getLayoutData();
 		gridData.widthHint = convertWidthInCharsToPixels(100);
-		fDebugResponseTimeout.addModifyListener(new DebugResponseTimeoutListener());
+		fDebugResponseTimeout
+				.addModifyListener(new DebugResponseTimeoutListener());
 
 		internalInitializeValues(); // Initialize the dialog's values.
 
@@ -87,18 +108,26 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 
 	private void internalInitializeValues() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		fRunWithDebugInfo.setSelection(prefs.getBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
-		fDebugTextBox.setText(Integer.toString(prefs.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)));
-		fClientIP.setText(prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP));
-		fDebugResponseTimeout.setText(Integer.toString(prefs.getInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT)));
+		fRunWithDebugInfo.setSelection(prefs
+				.getBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
+		fDebugTextBox.setText(Integer.toString(prefs
+				.getInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT)));
+		fClientIP.setText(prefs
+				.getString(PHPDebugCorePreferenceNames.CLIENT_IP));
+		fDebugResponseTimeout.setText(Integer.toString(prefs
+				.getInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT)));
 	}
 
 	protected void okPressed() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		prefs.setValue(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, fRunWithDebugInfo.getSelection());
-		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, fDebugTextBox.getText());
-		prefs.setValue(PHPDebugCorePreferenceNames.CLIENT_IP, fClientIP.getText());
-		prefs.setValue(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, Integer.parseInt(fDebugResponseTimeout.getText()));
+		prefs.setValue(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO,
+				fRunWithDebugInfo.getSelection());
+		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT,
+				fDebugTextBox.getText());
+		prefs.setValue(PHPDebugCorePreferenceNames.CLIENT_IP, fClientIP
+				.getText());
+		prefs.setValue(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT,
+				Integer.parseInt(fDebugResponseTimeout.getText()));
 		PHPDebugPlugin.getDefault().savePluginPreferences(); // save
 		super.okPressed();
 	}
@@ -131,7 +160,7 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 			}
 		}
 	}
-	
+
 	public class DebugResponseTimeoutListener implements ModifyListener {
 
 		public void modifyText(ModifyEvent e) {
@@ -143,7 +172,10 @@ public class ZendDebuggerConfigurationDialog extends AbstractDebuggerConfigurati
 				int i = iValue.intValue();
 				if (i < 5000) {
 					valid = false;
-					errorMessage = NLS.bind(PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_invalid_response_time, 5000);
+					errorMessage = NLS
+							.bind(
+									PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_invalid_response_time,
+									5000);
 				}
 			} catch (Exception exc) {
 				valid = false;

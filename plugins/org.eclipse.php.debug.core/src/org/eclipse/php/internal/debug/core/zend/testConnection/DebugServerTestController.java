@@ -15,13 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A singleton controller to be the central point to notify of Debug Server tests results.
+ * A singleton controller to be the central point to notify of Debug Server
+ * tests results.
+ * 
  * @author yaronm
  */
 public class DebugServerTestController {
 
 	private static DebugServerTestController instance = null;
-	private List<IDebugServerTestListener> listeners = new ArrayList<IDebugServerTestListener>(1);
+	private List<IDebugServerTestListener> listeners = new ArrayList<IDebugServerTestListener>(
+			1);
 
 	private DebugServerTestController() {
 	}

@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 
 /**
  * This class represents container for {@link PathMapper}
+ * 
  * @author michael
  */
 public class PathEntry {
@@ -21,13 +22,11 @@ public class PathEntry {
 	 * Type of the file that this entry contains
 	 */
 	public enum Type {
-		WORKSPACE("Workspace File"),
-		INCLUDE_VAR("Include Path Variable"),
-		INCLUDE_FOLDER("Include Path Folder"),
-		EXTERNAL("External File"),
-		;
+		WORKSPACE("Workspace File"), INCLUDE_VAR("Include Path Variable"), INCLUDE_FOLDER(
+				"Include Path Folder"), EXTERNAL("External File"), ;
 
 		private String name;
+
 		private Type(String name) {
 			this.name = name;
 		}
@@ -43,9 +42,14 @@ public class PathEntry {
 
 	/**
 	 * Constructs new path entry
-	 * @param path Path string
-	 * @param type Path entry type
-	 * @param container This path container. It can be either workspace resource, include path, or folder on file system
+	 * 
+	 * @param path
+	 *            Path string
+	 * @param type
+	 *            Path entry type
+	 * @param container
+	 *            This path container. It can be either workspace resource,
+	 *            include path, or folder on file system
 	 */
 	public PathEntry(String path, Type type, Object container) {
 		this(new VirtualPath(path), type, container);
@@ -53,9 +57,14 @@ public class PathEntry {
 
 	/**
 	 * Constructs new path entry
-	 * @param path Abstract path
-	 * @param type Path entry type
-	 * @param container This path container. It can be either workspace resource, include path, or folder on file system
+	 * 
+	 * @param path
+	 *            Abstract path
+	 * @param type
+	 *            Path entry type
+	 * @param container
+	 *            This path container. It can be either workspace resource,
+	 *            include path, or folder on file system
 	 */
 	public PathEntry(VirtualPath path, Type type, Object container) {
 		this.abstractPath = path;
@@ -65,6 +74,7 @@ public class PathEntry {
 
 	/**
 	 * Returns abstract path of this entry
+	 * 
 	 * @return abstract path
 	 */
 	public VirtualPath getAbstractPath() {
@@ -73,6 +83,7 @@ public class PathEntry {
 
 	/**
 	 * Returns type of file contained in this entry
+	 * 
 	 * @return file type
 	 */
 	public Type getType() {
@@ -80,7 +91,9 @@ public class PathEntry {
 	}
 
 	/**
-	 * Returns container of this file. It can be either workspace resource, include path, or folder on file system
+	 * Returns container of this file. It can be either workspace resource,
+	 * include path, or folder on file system
+	 * 
 	 * @return container
 	 */
 	public Object getContainer() {
@@ -88,8 +101,9 @@ public class PathEntry {
 	}
 
 	/**
-	 * Returns path string of this entry. It can be either a path to existing file, or path
-	 * that contains variable from Include Path.
+	 * Returns path string of this entry. It can be either a path to existing
+	 * file, or path that contains variable from Include Path.
+	 * 
 	 * @return path string
 	 */
 	public String getPath() {
@@ -97,15 +111,17 @@ public class PathEntry {
 	}
 
 	/**
-	 * Returns path to the file that this entry contains. If original path contained variables
-	 * from Include Path it will be resolved.
+	 * Returns path to the file that this entry contains. If original path
+	 * contained variables from Include Path it will be resolved.
+	 * 
 	 * @return resolved path
 	 */
 	public String getResolvedPath() {
-//		if (type == Type.INCLUDE_VAR) {
-//			IPath resolvedPath = IncludePathVariableManager.instance().resolveVariablePath(getPath());
-//			return resolvedPath.toOSString();
-//		}
+		// if (type == Type.INCLUDE_VAR) {
+		// IPath resolvedPath =
+		// IncludePathVariableManager.instance().resolveVariablePath(getPath());
+		// return resolvedPath.toOSString();
+		// }
 		return getPath();
 	}
 

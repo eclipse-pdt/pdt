@@ -26,7 +26,8 @@ import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtili
 /**
  * @author guy
  */
-public class EvalResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
+public class EvalResponse extends DebugMessageResponseImpl implements
+		IDebugResponseMessage {
 
 	private String result;
 

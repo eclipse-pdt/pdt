@@ -21,7 +21,8 @@ public class SessionStartedNotificationHandler implements IDebugMessageHandler {
 
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		DebugSessionStartedNotification notification = (DebugSessionStartedNotification) message;
-		IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();
+		IDebugHandler debugHandler = debugTarget.getRemoteDebugger()
+				.getDebugHandler();
 
 		String fileName = notification.getFileName();
 		String uri = notification.getUri();

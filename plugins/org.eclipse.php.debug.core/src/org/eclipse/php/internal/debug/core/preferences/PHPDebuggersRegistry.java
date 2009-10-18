@@ -30,9 +30,9 @@ import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
 
 /**
- * A registry class for all the PHP debuggers.
- * This registry class supplies the IDs and the names of all the registered PHP debuggers. 
- * The basic PDT supports Zend's debugger and XDebug debugger.
+ * A registry class for all the PHP debuggers. This registry class supplies the
+ * IDs and the names of all the registered PHP debuggers. The basic PDT supports
+ * Zend's debugger and XDebug debugger.
  * 
  * @author Shalom Gibly
  * @since PDT 1.0
@@ -45,7 +45,8 @@ public class PHPDebuggersRegistry {
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CONFIGURATION_CLASS_ATTRIBUTE = "debuggerConfiguration"; //$NON-NLS-1$
 
-	// Zend's debugger is the default for the PDT, however, this can be changed by calling the setDefaultDebuggerId() method.
+	// Zend's debugger is the default for the PDT, however, this can be changed
+	// by calling the setDefaultDebuggerId() method.
 	private static String DEFAULT_DEBUGGER_ID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 
 	private static PHPDebuggersRegistry instance;
@@ -77,9 +78,11 @@ public class PHPDebuggersRegistry {
 	 * Returns the debugger configuration for the given debugger id.
 	 * 
 	 * @param debuggerId
-	 * @return An AbstractDebuggerConfiguration, or null if no such debugger id exists.
+	 * @return An AbstractDebuggerConfiguration, or null if no such debugger id
+	 *         exists.
 	 */
-	public static AbstractDebuggerConfiguration getDebuggerConfiguration(String debuggerId) {
+	public static AbstractDebuggerConfiguration getDebuggerConfiguration(
+			String debuggerId) {
 		return getInstance().configurations.get(debuggerId);
 	}
 
@@ -89,8 +92,10 @@ public class PHPDebuggersRegistry {
 	 * @return An array of all the loaded AbstractDebuggerConfiguration.
 	 */
 	public static AbstractDebuggerConfiguration[] getDebuggersConfigurations() {
-		Collection<AbstractDebuggerConfiguration> values = getInstance().configurations.values();
-		AbstractDebuggerConfiguration[] configurations = new AbstractDebuggerConfiguration[values.size()];
+		Collection<AbstractDebuggerConfiguration> values = getInstance().configurations
+				.values();
+		AbstractDebuggerConfiguration[] configurations = new AbstractDebuggerConfiguration[values
+				.size()];
 		return values.toArray(configurations);
 	}
 
@@ -106,16 +111,21 @@ public class PHPDebuggersRegistry {
 	/**
 	 * Set the default debugger ID.
 	 * 
-	 * @param id The debugger id (must exist in the registered ids)
-	 * @throws IllegalArgumentException If the given id is not registered as part of the supported ids.
+	 * @param id
+	 *            The debugger id (must exist in the registered ids)
+	 * @throws IllegalArgumentException
+	 *             If the given id is not registered as part of the supported
+	 *             ids.
 	 * @see #getDefaultDebuggerId()
 	 * @see #getDebuggersIds()
 	 */
-	public static void setDefaultDebuggerId(String id) throws IllegalArgumentException {
+	public static void setDefaultDebuggerId(String id)
+			throws IllegalArgumentException {
 		if (getInstance().debuggers.containsKey(id)) {
 			DEFAULT_DEBUGGER_ID = id;
 		} else {
-			throw new IllegalArgumentException("No such debugger id was registered: " + id);
+			throw new IllegalArgumentException(
+					"No such debugger id was registered: " + id);
 		}
 	}
 
@@ -133,39 +143,54 @@ public class PHPDebuggersRegistry {
 	// Do this only once.
 	private void loadDebuggers() {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
-		final IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
-		//We use the following HashMap in order to accumulate non PDT debugger configurations.
-		//that are extension to point: org.eclipse.php.debug.core.phpDebuggers
+		final IConfigurationElement[] elements = registry
+				.getConfigurationElementsFor(PHPDebugPlugin.getID(),
+						EXTENSION_POINT_NAME);
+		// We use the following HashMap in order to accumulate non PDT debugger
+		// configurations.
+		// that are extension to point: org.eclipse.php.debug.core.phpDebuggers
 		HashMap<String, AbstractDebuggerConfiguration> nonPDTConfigurations = new HashMap<String, AbstractDebuggerConfiguration>();
 		for (final IConfigurationElement element : elements) {
 
 			if (DEBUGGER_TAG.equals(element.getName())) {
 				final String name = element.getAttribute(NAME_ATTRIBUTE);
 				final String id = element.getAttribute(ID_ATTRIBUTE);
-				boolean isPDT = element.getNamespaceIdentifier().startsWith("org.eclipse.php");
-				boolean filter = WorkbenchActivityHelper.filterItem(new IPluginContribution() {
-					public String getLocalId() {
-						return id;
-					}
+				boolean isPDT = element.getNamespaceIdentifier().startsWith(
+						"org.eclipse.php");
+				boolean filter = WorkbenchActivityHelper
+						.filterItem(new IPluginContribution() {
+							public String getLocalId() {
+								return id;
+							}
 
-					public String getPluginId() {
-						return element.getNamespaceIdentifier();
-					}
-				});
+							public String getPluginId() {
+								return element.getNamespaceIdentifier();
+							}
+						});
 				if (filter) {
 					continue;
 				}
 				debuggers.put(id, name);
 				try {
-					AbstractDebuggerConfiguration configuration = (AbstractDebuggerConfiguration) element.createExecutableExtension(CONFIGURATION_CLASS_ATTRIBUTE);
+					AbstractDebuggerConfiguration configuration = (AbstractDebuggerConfiguration) element
+							.createExecutableExtension(CONFIGURATION_CLASS_ATTRIBUTE);
 					configuration.setDebuggerId(id);
 					configuration.setName(name);
 					try {
-						ICommunicationDaemon[] daemons = CommunicationDaemonRegistry.getBestMatchCommunicationDaemons();
-						// find the daemon that fits this configuration (match by debugger-id)
+						ICommunicationDaemon[] daemons = CommunicationDaemonRegistry
+								.getBestMatchCommunicationDaemons();
+						// find the daemon that fits this configuration (match
+						// by debugger-id)
 						for (ICommunicationDaemon daemon : daemons) {
-							if (daemon.isDebuggerDaemon() && id.equals(daemon.getDebuggerID())) {
-								configuration.setCommunicationDaemon(daemon); // Attach the daemon reference to the configuration.
+							if (daemon.isDebuggerDaemon()
+									&& id.equals(daemon.getDebuggerID())) {
+								configuration.setCommunicationDaemon(daemon); // Attach
+																				// the
+																				// daemon
+																				// reference
+																				// to
+																				// the
+																				// configuration.
 								break;
 							}
 						}
@@ -181,12 +206,15 @@ public class PHPDebuggersRegistry {
 				}
 			}
 		}
-		// Override any PDT debugger settings with any extension of debugger configuration.
+		// Override any PDT debugger settings with any extension of debugger
+		// configuration.
 		Set<String> keySet = nonPDTConfigurations.keySet();
 		for (String key : keySet) {
-			AbstractDebuggerConfiguration configuration = nonPDTConfigurations.get(key);
+			AbstractDebuggerConfiguration configuration = nonPDTConfigurations
+					.get(key);
 			configurations.put(key, configuration);
-			debuggers.put(configuration.getDebuggerId(), configuration.getName());
+			debuggers.put(configuration.getDebuggerId(), configuration
+					.getName());
 		}
 	}
 

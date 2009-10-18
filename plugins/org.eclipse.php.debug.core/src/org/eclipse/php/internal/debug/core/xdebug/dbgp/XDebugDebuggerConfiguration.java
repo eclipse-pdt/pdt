@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
  * XDebug's debugger configuration class.
  * 
  * @author Shalom Gibly
- *	@since PDT 1.0
+ * @since PDT 1.0
  */
 public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
@@ -33,7 +33,9 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#openConfigurationDialog(org.eclipse.swt.widgets.Shell)
+	 * 
+	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 * openConfigurationDialog(org.eclipse.swt.widgets.Shell)
 	 */
 	public void openConfigurationDialog(final Shell parentShell) {
 		new XDebugConfigurationDialog(this, parentShell).open();
@@ -41,7 +43,10 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#getPort()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
+	 * #getPort()
 	 */
 	public int getPort() {
 		return XDebugPreferenceMgr.getPort(preferences);
@@ -49,28 +54,41 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#setPort(int)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
+	 * #setPort(int)
 	 */
 	public void setPort(int port) {
 		XDebugPreferenceMgr.setPort(preferences, port);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getScriptLaunchDelegateClass()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 * getScriptLaunchDelegateClass()
 	 */
 	public String getScriptLaunchDelegateClass() {
 		return XDebugExeLaunchConfigurationDelegate.class.getName();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#getWebLaunchDelegateClass()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration#
+	 * getWebLaunchDelegateClass()
 	 */
 	public String getWebLaunchDelegateClass() {
 		return XDebugWebLaunchConfigurationDelegate.class.getName();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#applyDefaults()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
+	 * #applyDefaults()
 	 */
 	public void applyDefaults() {
 		XDebugPreferenceMgr.applyDefaults(preferences);

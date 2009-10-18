@@ -27,7 +27,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
 /**
  * @author michael
- *
+ * 
  */
 public class DebugParametersInitializersRegistry {
 
@@ -53,17 +53,22 @@ public class DebugParametersInitializersRegistry {
 	private DebugParametersInitializersRegistry() {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry
+				.getConfigurationElementsFor(PHPDebugPlugin.getID(),
+						EXTENSION_POINT_NAME);
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (INITIALIZER_TAG.equals(element.getName())) {
 				if (RUN.equals(element.getAttribute(MODE_ATTRIBUTE))) {
-					runInitializers.put(element.getAttribute(ID_ATTRIBUTE), new DebugParametersInitializerFactory(element));
+					runInitializers.put(element.getAttribute(ID_ATTRIBUTE),
+							new DebugParametersInitializerFactory(element));
 				} else if (PROFILE.equals(element.getAttribute(MODE_ATTRIBUTE))) {
-					profileInitializers.put(element.getAttribute(ID_ATTRIBUTE), new DebugParametersInitializerFactory(element));
+					profileInitializers.put(element.getAttribute(ID_ATTRIBUTE),
+							new DebugParametersInitializerFactory(element));
 				} else {
-					debugInitializers.put(element.getAttribute(ID_ATTRIBUTE), new DebugParametersInitializerFactory(element));
+					debugInitializers.put(element.getAttribute(ID_ATTRIBUTE),
+							new DebugParametersInitializerFactory(element));
 				}
 			}
 		}
@@ -87,19 +92,24 @@ public class DebugParametersInitializersRegistry {
 	}
 
 	/**
-	 * Return debug parameters initializer according to its ID.
-	 * The returned IDebugParametersInitializer is always a new instance.
-	 *
-	 * @param id The debug parameters initializer ID
+	 * Return debug parameters initializer according to its ID. The returned
+	 * IDebugParametersInitializer is always a new instance.
+	 * 
+	 * @param id
+	 *            The debug parameters initializer ID
 	 * @return A new instance of an IDebugParametersInitializer
 	 */
-	public static IDebugParametersInitializer getParametersInitializer(String id) throws Exception {
-		DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) getInstance().getInitializersFactories(RUN).get(id);
+	public static IDebugParametersInitializer getParametersInitializer(String id)
+			throws Exception {
+		DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) getInstance()
+				.getInitializersFactories(RUN).get(id);
 		if (initializerFactory == null) {
-			initializerFactory = (DebugParametersInitializerFactory) getInstance().getInitializersFactories(PROFILE).get(id);
+			initializerFactory = (DebugParametersInitializerFactory) getInstance()
+					.getInitializersFactories(PROFILE).get(id);
 		}
 		if (initializerFactory == null) {
-			initializerFactory = (DebugParametersInitializerFactory) getInstance().getInitializersFactories(DEBUG).get(id);
+			initializerFactory = (DebugParametersInitializerFactory) getInstance()
+					.getInitializersFactories(DEBUG).get(id);
 		}
 		if (initializerFactory != null) {
 			return initializerFactory.createParametersInitializer();
@@ -108,14 +118,19 @@ public class DebugParametersInitializersRegistry {
 	}
 
 	/**
-	 * Returns the currently configured IDebugParametersInitializer.
-	 * The returned IDebugParametersInitializer is always a new instance.
-	 *
-	 * @return A new instance of the current IDebugParametersInitializer (according to the preferences).
+	 * Returns the currently configured IDebugParametersInitializer. The
+	 * returned IDebugParametersInitializer is always a new instance.
+	 * 
+	 * @return A new instance of the current IDebugParametersInitializer
+	 *         (according to the preferences).
 	 */
 	public static IDebugParametersInitializer getCurrentDebugParametersInitializer() {
 		try {
-			String id = PHPDebugPlugin.getDefault().getPluginPreferences().getString(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER);
+			String id = PHPDebugPlugin
+					.getDefault()
+					.getPluginPreferences()
+					.getString(
+							IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER);
 			return getParametersInitializer(id);
 		} catch (Exception e) {
 			PHPDebugPlugin.log(e);
@@ -124,36 +139,53 @@ public class DebugParametersInitializersRegistry {
 	}
 
 	/**
-	 * Return best matching debug parameters initializer according the the launch
-	 * The returned IDebugParametersInitializer is always a new instance.
+	 * Return best matching debug parameters initializer according the the
+	 * launch The returned IDebugParametersInitializer is always a new instance.
 	 * 
 	 * @param launch
 	 * @return A new instance of a best match IDebugParametersInitializer
 	 */
-	public static IDebugParametersInitializer getBestMatchDebugParametersInitializer(ILaunch launch) {
+	public static IDebugParametersInitializer getBestMatchDebugParametersInitializer(
+			ILaunch launch) {
 		try {
-			Dictionary factories = getInstance().getInitializersFactories(launch.getLaunchMode());
+			Dictionary factories = getInstance().getInitializersFactories(
+					launch.getLaunchMode());
 
 			// 1st try to get the one with matching configuration type
 			for (Enumeration e = factories.elements(); e.hasMoreElements();) {
-				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e.nextElement();
-				String configurationTypeId = initializerFactory.element.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
-				if (configurationTypeId != null && !"".equals(configurationTypeId) && configurationTypeId.equals(launch.getLaunchConfiguration().getType().getIdentifier())) {
+				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e
+						.nextElement();
+				String configurationTypeId = initializerFactory.element
+						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
+				if (configurationTypeId != null
+						&& !"".equals(configurationTypeId)
+						&& configurationTypeId.equals(launch
+								.getLaunchConfiguration().getType()
+								.getIdentifier())) {
 					return initializerFactory.createParametersInitializer();
 				}
 			}
-			// Then if not found try to get with empty configuration type and not a default one
+			// Then if not found try to get with empty configuration type and
+			// not a default one
 			for (Enumeration e = factories.elements(); e.hasMoreElements();) {
-				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e.nextElement();
-				String configurationTypeId = initializerFactory.element.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
-				if ((configurationTypeId == null || "".equals(configurationTypeId)) && !PHPDebugPlugin.getID().equals(initializerFactory.element.getNamespaceIdentifier())) {
+				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e
+						.nextElement();
+				String configurationTypeId = initializerFactory.element
+						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
+				if ((configurationTypeId == null || ""
+						.equals(configurationTypeId))
+						&& !PHPDebugPlugin.getID().equals(
+								initializerFactory.element
+										.getNamespaceIdentifier())) {
 					return initializerFactory.createParametersInitializer();
 				}
 			}
-			//	Last, if nothing found get the default
+			// Last, if nothing found get the default
 			for (Enumeration e = factories.elements(); e.hasMoreElements();) {
-				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e.nextElement();
-				if (PHPDebugPlugin.getID().equals(initializerFactory.element.getNamespaceIdentifier())) {
+				DebugParametersInitializerFactory initializerFactory = (DebugParametersInitializerFactory) e
+						.nextElement();
+				if (PHPDebugPlugin.getID().equals(
+						initializerFactory.element.getNamespaceIdentifier())) {
 					return initializerFactory.createParametersInitializer();
 				}
 			}
@@ -176,12 +208,16 @@ public class DebugParametersInitializersRegistry {
 		}
 
 		public IDebugParametersInitializer createParametersInitializer() {
-			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") {
-				public void run() throws Exception {
-					parametersInitializer = (IDebugParametersInitializer) element.createExecutableExtension(CLASS_ATTRIBUTE);
-				}
-			});
-			parametersInitializer.setDebugHandler(element.getAttribute(HANDLER_ATTRIBUTE));
+			SafeRunner
+					.run(new SafeRunnable(
+							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") {
+						public void run() throws Exception {
+							parametersInitializer = (IDebugParametersInitializer) element
+									.createExecutableExtension(CLASS_ATTRIBUTE);
+						}
+					});
+			parametersInitializer.setDebugHandler(element
+					.getAttribute(HANDLER_ATTRIBUTE));
 			return parametersInitializer;
 		}
 	}

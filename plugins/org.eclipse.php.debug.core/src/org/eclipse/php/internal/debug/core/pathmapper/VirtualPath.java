@@ -18,22 +18,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class represents path-style entities (file-system paths, URLs).
- * Paths are case insensitive.
- *
+ * This class represents path-style entities (file-system paths, URLs). Paths
+ * are case insensitive.
+ * 
  * @author michael
  */
 public class VirtualPath implements Cloneable {
 
-	private static final Pattern VOLNAME = Pattern.compile("([A-Za-z]:)[/\\\\](.*)");
-	private static final Pattern PROTOCOL = Pattern.compile("([A-Za-z]*://)(.*)");
+	private static final Pattern VOLNAME = Pattern
+			.compile("([A-Za-z]:)[/\\\\](.*)");
+	private static final Pattern PROTOCOL = Pattern
+			.compile("([A-Za-z]*://)(.*)");
 	private LinkedList<String> segments;
 	private String device;
 	private char sepChar;
 
 	/**
 	 * Constructs new abstract path instance
-	 * @param path Full path
+	 * 
+	 * @param path
+	 *            Full path
 	 */
 	public VirtualPath(String path) {
 		if (path == null) {
@@ -59,7 +63,8 @@ public class VirtualPath implements Cloneable {
 					device = m.group(1);
 					path = m.group(2);
 				} else {
-					throw new IllegalArgumentException("Illegal or not full path: " + path);
+					throw new IllegalArgumentException(
+							"Illegal or not full path: " + path);
 				}
 			}
 		}
@@ -76,14 +81,18 @@ public class VirtualPath implements Cloneable {
 
 	/**
 	 * Checks whether the given path is absolute
+	 * 
 	 * @param path
-	 * @return <code>true</code> if given path is the absolute one, otherwise <code>false</code>
+	 * @return <code>true</code> if given path is the absolute one, otherwise
+	 *         <code>false</code>
 	 */
 	public static boolean isAbsolute(String path) {
-		return (path.startsWith("\\\\") || VOLNAME.matcher(path).matches() || path.startsWith("/") || PROTOCOL.matcher(path).matches());
+		return (path.startsWith("\\\\") || VOLNAME.matcher(path).matches()
+				|| path.startsWith("/") || PROTOCOL.matcher(path).matches());
 	}
 
-	protected VirtualPath(String device, char sepChar, LinkedList<String> segments) {
+	protected VirtualPath(String device, char sepChar,
+			LinkedList<String> segments) {
 		this.device = device;
 		this.sepChar = sepChar;
 		this.segments = segments;
@@ -167,6 +176,7 @@ public class VirtualPath implements Cloneable {
 				segmentsEqual &= i.next().equalsIgnoreCase(j.next());
 			}
 		}
-		return other.device.equalsIgnoreCase(device) && segmentsEqual && other.sepChar == sepChar;
+		return other.device.equalsIgnoreCase(device) && segmentsEqual
+				&& other.sepChar == sepChar;
 	}
 }

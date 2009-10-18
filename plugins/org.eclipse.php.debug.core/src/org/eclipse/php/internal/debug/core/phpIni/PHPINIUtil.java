@@ -53,15 +53,18 @@ public class PHPINIUtil {
 		}
 	}
 
-	private static void modifyDebuggerExtensionPath(File phpIniFile, String extensionPath) {
+	private static void modifyDebuggerExtensionPath(File phpIniFile,
+			String extensionPath) {
 		try {
 			INIFileModifier m = new INIFileModifier(phpIniFile);
 			if (Platform.OS_WIN32.equals(Platform.getOS())) {
-				if (m.removeAllEntries(ZEND_EXTENSION_TS, ".*\\.\\\\ZendDebugger\\.dll.*")) { //$NON-NLS-1$
+				if (m.removeAllEntries(ZEND_EXTENSION_TS,
+						".*\\.\\\\ZendDebugger\\.dll.*")) { //$NON-NLS-1$
 					m.addEntry(ZEND_EXTENSION_TS, extensionPath);
 				}
 			} else {
-				if (m.removeAllEntries(ZEND_EXTENSION, ".*\\./ZendDebugger\\.so.*")) { //$NON-NLS-1$
+				if (m.removeAllEntries(ZEND_EXTENSION,
+						".*\\./ZendDebugger\\.so.*")) { //$NON-NLS-1$
 					m.addEntry(ZEND_EXTENSION, extensionPath);
 				}
 			}
@@ -81,30 +84,38 @@ public class PHPINIUtil {
 		}
 	}
 
-
 	/**
-	 * Adds/Creates the php ini file according to the project include path settings.
-	 * @param phpIniFile null or already existing ini file
+	 * Adds/Creates the php ini file according to the project include path
+	 * settings.
+	 * 
+	 * @param phpIniFile
+	 *            null or already existing ini file
 	 * @param project
 	 * @return the ini file
 	 */
 	public static File createPhpIniByProject(File phpIniFile, IProject project) {
-		
+
 		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
-		
+
 		// Modify include path:
 		if (project != null) {
 			IncludePath[] path = PHPSearchEngine.buildIncludePath(project);
 			List<String> includePath = new ArrayList<String>(path.length);
 			for (IncludePath pathObject : path) {
 				if (pathObject.isBuildpath()) {
-					IBuildpathEntry entry = (IBuildpathEntry) pathObject.getEntry();
+					IBuildpathEntry entry = (IBuildpathEntry) pathObject
+							.getEntry();
 					if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-						IPath entryPath = DLTKCore.getResolvedVariablePath(entry.getPath());
+						IPath entryPath = DLTKCore
+								.getResolvedVariablePath(entry.getPath());
 						includePath.add(entryPath.toFile().getAbsolutePath());
-					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT || entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE || entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-						IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
-						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
+					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT
+							|| entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE
+							|| entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+						IPath entryPath = EnvironmentPathUtils
+								.getLocalPath(entry.getPath());
+						IResource resource = ResourcesPlugin.getWorkspace()
+								.getRoot().findMember(entryPath);
 						if (resource != null) {
 							IPath location = resource.getLocation();
 							if (location != null) {
@@ -115,13 +126,19 @@ public class PHPINIUtil {
 						}
 					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 						try {
-							// Retries the local paths from the container  
-							final IScriptProject scriptProject = DLTKCore.create(project);
-							final IBuildpathContainer buildpathContainer = DLTKCore.getBuildpathContainer(entry.getPath(), scriptProject);
-							final IBuildpathEntry[] buildpathEntries = buildpathContainer.getBuildpathEntries(scriptProject);
+							// Retries the local paths from the container
+							final IScriptProject scriptProject = DLTKCore
+									.create(project);
+							final IBuildpathContainer buildpathContainer = DLTKCore
+									.getBuildpathContainer(entry.getPath(),
+											scriptProject);
+							final IBuildpathEntry[] buildpathEntries = buildpathContainer
+									.getBuildpathEntries(scriptProject);
 							if (buildpathEntries != null) {
 								for (IBuildpathEntry iBuildpathEntry : buildpathEntries) {
-									final IPath localPath = EnvironmentPathUtils.getLocalPath(iBuildpathEntry.getPath());
+									final IPath localPath = EnvironmentPathUtils
+											.getLocalPath(iBuildpathEntry
+													.getPath());
 									includePath.add(localPath.toOSString());
 								}
 
@@ -139,41 +156,51 @@ public class PHPINIUtil {
 					}
 				}
 			}
-			modifyIncludePath(tempIniFile, includePath.toArray(new String[includePath.size()]));
+			modifyIncludePath(tempIniFile, includePath
+					.toArray(new String[includePath.size()]));
 		}
 		return tempIniFile;
 	}
-	
+
 	/**
 	 * Make some preparations before debug session:
 	 * <ul>
-	 * 	<li>Adds include path
-	 * 	<li>Modifies Zend Debugger path in the PHP configuration file
+	 * <li>Adds include path
+	 * <li>Modifies Zend Debugger path in the PHP configuration file
 	 * </ul>
-	 *
-	 * @param phpIniFile PHP configuration file instance
-	 * @param phpExePath Path to the PHP executable
-	 * @param project Current project
+	 * 
+	 * @param phpIniFile
+	 *            PHP configuration file instance
+	 * @param phpExePath
+	 *            Path to the PHP executable
+	 * @param project
+	 *            Current project
 	 * @return created temporary PHP configuration file
 	 */
-	public static File prepareBeforeDebug(File phpIniFile, String phpExePath, IProject project) {
+	public static File prepareBeforeDebug(File phpIniFile, String phpExePath,
+			IProject project) {
 		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
 
 		tempIniFile = createPhpIniByProject(phpIniFile, project);
 
 		// Modify Zend Debugger extension entry:
 		if (phpIniFile != null) {
-			File debuggerFile = new File(phpIniFile.getParentFile(), Platform.OS_WIN32.equals(Platform.getOS()) ? "ZendDebugger.dll" : "ZendDebugger.so"); //$NON-NLS-1$ //$NON-NLS-2$
+			File debuggerFile = new File(
+					phpIniFile.getParentFile(),
+					Platform.OS_WIN32.equals(Platform.getOS()) ? "ZendDebugger.dll" : "ZendDebugger.so"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (debuggerFile.exists()) {
-				modifyDebuggerExtensionPath(tempIniFile, debuggerFile.getAbsolutePath());
+				modifyDebuggerExtensionPath(tempIniFile, debuggerFile
+						.getAbsolutePath());
 			}
-			modifyExtensionDir(tempIniFile, new File(debuggerFile.getParentFile(), "ext").getAbsolutePath());
+			modifyExtensionDir(tempIniFile, new File(debuggerFile
+					.getParentFile(), "ext").getAbsolutePath());
 		}
 
 		if (PHPDebugPlugin.DEBUG) {
 			System.out.println("\nPHP.ini contents:\n---------------------");
 			try {
-				BufferedReader r = new BufferedReader(new FileReader(tempIniFile));
+				BufferedReader r = new BufferedReader(new FileReader(
+						tempIniFile));
 				String line;
 				while ((line = r.readLine()) != null) {
 					System.out.println(line);
@@ -188,9 +215,10 @@ public class PHPINIUtil {
 	}
 
 	/**
-	 * Creates temporary PHP configuration file and returns its instance of <code>null</code> in case of error.
-	 * This file will be removed when the program exits.
-	 *
+	 * Creates temporary PHP configuration file and returns its instance of
+	 * <code>null</code> in case of error. This file will be removed when the
+	 * program exits.
+	 * 
 	 * @return temporary PHP configuration file instance
 	 */
 	public static File createTemporaryPHPINIFile() {
@@ -198,17 +226,21 @@ public class PHPINIUtil {
 	}
 
 	/**
-	 * Creates temporary PHP configuration file and returns its instance of <code>null</code> in case of error.
-	 * This file will be removed when the program exits.
-	 *
-	 * @param originalPHPIniFile If specified - its contents will be copied to the temporary file
+	 * Creates temporary PHP configuration file and returns its instance of
+	 * <code>null</code> in case of error. This file will be removed when the
+	 * program exits.
+	 * 
+	 * @param originalPHPIniFile
+	 *            If specified - its contents will be copied to the temporary
+	 *            file
 	 * @return temporary PHP configuration file instance
 	 */
 	public static File createTemporaryPHPINIFile(File originalPHPIniFile) {
 		File phpIniFile = null;
 		try {
 			// Create temporary directory:
-			File tempDir = new File(System.getProperty("java.io.tmpdir"), "zend_debug"); //$NON-NLS-1$ //$NON-NLS-2$
+			File tempDir = new File(
+					System.getProperty("java.io.tmpdir"), "zend_debug"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (!tempDir.exists()) {
 				tempDir.mkdir();
 				tempDir.deleteOnExit();
@@ -224,7 +256,9 @@ public class PHPINIUtil {
 			phpIniFile.deleteOnExit();
 
 			if (originalPHPIniFile != null && originalPHPIniFile.exists()) {
-				new LocalFile(originalPHPIniFile).copy(new LocalFile(phpIniFile), EFS.OVERWRITE, new NullProgressMonitor());
+				new LocalFile(originalPHPIniFile).copy(
+						new LocalFile(phpIniFile), EFS.OVERWRITE,
+						new NullProgressMonitor());
 			}
 		} catch (Exception e) {
 			PHPDebugPlugin.log(e);
@@ -233,11 +267,13 @@ public class PHPINIUtil {
 	}
 
 	/**
-	 * Locate and return a PHP configuration file path for the given PHP executable.
-	 * The locating is done by trying to return a PHP configuration file that is located next to the executable.
-	 * The return value can be null in case it fails to locate a valid file.
-	 *
-	 * @param phpExe The PHP executable path.
+	 * Locate and return a PHP configuration file path for the given PHP
+	 * executable. The locating is done by trying to return a PHP configuration
+	 * file that is located next to the executable. The return value can be null
+	 * in case it fails to locate a valid file.
+	 * 
+	 * @param phpExe
+	 *            The PHP executable path.
 	 * @return A PHP configuration file path, or <code>null</code> if it fails.
 	 */
 	public static File findPHPIni(String phpExe) {
@@ -247,8 +283,10 @@ public class PHPINIUtil {
 		if (!phpIniFile.exists() || !phpIniFile.canRead()) {
 			// Try to detect via library:
 			try {
-				Process p = Runtime.getRuntime().exec(new String[] { phpExeFile.getAbsolutePath(), "-i" });
-				BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				Process p = Runtime.getRuntime().exec(
+						new String[] { phpExeFile.getAbsolutePath(), "-i" });
+				BufferedReader r = new BufferedReader(new InputStreamReader(p
+						.getInputStream()));
 				String l;
 				while ((l = r.readLine()) != null) {
 					int i = l.indexOf(" => ");

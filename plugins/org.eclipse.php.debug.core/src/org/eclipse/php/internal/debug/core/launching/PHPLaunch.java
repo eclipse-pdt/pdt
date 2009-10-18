@@ -25,8 +25,7 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.ISourceLocator;
 
 /**
- * A PHP Launch.
- * This launch is more flexible in terms of terminating launches.
+ * A PHP Launch. This launch is more flexible in terms of terminating launches.
  * 
  * @author shalom
  */
@@ -34,25 +33,33 @@ public class PHPLaunch extends Launch {
 
 	/**
 	 * Constructs a launch with the specified attributes.
-	 *
-	 * @param launchConfiguration the configuration that was launched
-	 * @param mode the mode of this launch - run or debug (constants
-	 *  defined by <code>ILaunchManager</code>)
-	 * @param locator the source locator to use for this debug session, or
-	 * 	<code>null</code> if not supported
+	 * 
+	 * @param launchConfiguration
+	 *            the configuration that was launched
+	 * @param mode
+	 *            the mode of this launch - run or debug (constants defined by
+	 *            <code>ILaunchManager</code>)
+	 * @param locator
+	 *            the source locator to use for this debug session, or
+	 *            <code>null</code> if not supported
 	 */
-	public PHPLaunch(ILaunchConfiguration launchConfiguration, String mode, ISourceLocator locator) {
+	public PHPLaunch(ILaunchConfiguration launchConfiguration, String mode,
+			ISourceLocator locator) {
 		super(launchConfiguration, mode, locator);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.Launch#canTerminate()
 	 */
 	public boolean canTerminate() {
 		return !isTerminated();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.Launch#isTerminated()
 	 */
 	public boolean isTerminated() {

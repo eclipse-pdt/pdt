@@ -17,7 +17,8 @@ import java.io.IOException;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 
-public class DebugScriptEndedNotification extends DebugMessageNotificationImpl implements IDebugNotificationMessage {
+public class DebugScriptEndedNotification extends DebugMessageNotificationImpl
+		implements IDebugNotificationMessage {
 
 	private int status;
 
@@ -39,7 +40,7 @@ public class DebugScriptEndedNotification extends DebugMessageNotificationImpl i
 
 	/**
 	 * Sets the status
-	 *
+	 * 
 	 * @param status
 	 */
 	public void setStatus(int status) {

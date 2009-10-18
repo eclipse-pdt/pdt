@@ -20,9 +20,9 @@ import org.eclipse.php.internal.core.util.collections.IntMap.Entry;
 import org.eclipse.swt.browser.Browser;
 
 /**
- * This class is responsible for mapping debug session id's to the ILaunch that is responsible for
- * the session.
- *
+ * This class is responsible for mapping debug session id's to the ILaunch that
+ * is responsible for the session.
+ * 
  * @author Shalom Gibly
  */
 public class PHPSessionLaunchMapper implements ILaunchesListener {
@@ -38,14 +38,15 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	private static PHPSessionLaunchMapper getInstance() {
 		if (instance == null) {
 			instance = new PHPSessionLaunchMapper();
-			DebugPlugin.getDefault().getLaunchManager().addLaunchListener(instance);
+			DebugPlugin.getDefault().getLaunchManager().addLaunchListener(
+					instance);
 		}
 		return instance;
 	}
 
 	/**
 	 * Put a session Id mapping to an ILaunch.
-	 *
+	 * 
 	 * @param sessionID
 	 * @param launch
 	 */
@@ -54,22 +55,22 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	}
 
 	/**
-	 * Returns the ILaunch mapped to the given session ID.
-	 * In case there is no such map, null is returned.
-	 *
+	 * Returns the ILaunch mapped to the given session ID. In case there is no
+	 * such map, null is returned.
+	 * 
 	 * @param sessionID
-	 * @return	The mapped ILaunch, or null if non exists.
+	 * @return The mapped ILaunch, or null if non exists.
 	 */
 	public static ILaunch get(int sessionID) {
 		return (ILaunch) getInstance().map.get(sessionID);
 	}
 
 	/**
-	 * Removes the ILaunch mapped to the given sessionID and returns it.
-	 * Returns null if no such session ID was found in the mapper.
-	 *
+	 * Removes the ILaunch mapped to the given sessionID and returns it. Returns
+	 * null if no such session ID was found in the mapper.
+	 * 
 	 * @param sessionID
-	 * @return	The removed ILaunch, or null if non exists.
+	 * @return The removed ILaunch, or null if non exists.
 	 */
 	public static ILaunch remove(int sessionID) {
 		return (ILaunch) getInstance().map.remove(sessionID);
@@ -84,7 +85,8 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 	}
 
 	public void launchesRemoved(ILaunch[] launches) {
-		// Remove any launch mapping if the launch was removed and we are still mapping it.
+		// Remove any launch mapping if the launch was removed and we are still
+		// mapping it.
 		IntMap.Entry[] entries = new IntMap.Entry[map.size()];
 		map.entrySet().toArray(entries);
 		for (Entry entry : entries) {
@@ -96,7 +98,8 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 		}
 		updateSystemProperty(launches);
 		if (DebugPlugin.getDefault().getLaunchManager().getLaunches().length == 0) {
-			// In case we have no more launches, clear the browser's cache (cookies) to avoid any debug session trigger as a result
+			// In case we have no more launches, clear the browser's cache
+			// (cookies) to avoid any debug session trigger as a result
 			// of a remaining cookie.
 			Browser.clearSessions();
 		}
@@ -104,9 +107,9 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 
 	/**
 	 * Update the "org.eclipse.php.debug.ui.activeDebugging" system property.
-	 * This method is important for any action that is defined to be visible when a debug session is
-	 * active (such as the Run to Line action).
-	 *
+	 * This method is important for any action that is defined to be visible
+	 * when a debug session is active (such as the Run to Line action).
+	 * 
 	 * @param launches
 	 */
 	public static void updateSystemProperty(ILaunch[] launches) {
@@ -114,6 +117,7 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 		for (ILaunch launch : launches) {
 			hasActiveLaunch |= !launch.isTerminated();
 		}
-		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true" : "false");
+		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true"
+				: "false");
 	}
 }

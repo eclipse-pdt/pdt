@@ -22,16 +22,14 @@ import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 public class ResolveBlackList implements ILaunchesListener {
 
 	public enum Type {
-		FILE,
-		FOLDER,
-		RECURSIVE,
+		FILE, FOLDER, RECURSIVE,
 	}
 
 	private static Map<ILaunch, Map<VirtualPath, Type>> blackListMap;
 	private static ResolveBlackList instance = new ResolveBlackList();
 
 	private ResolveBlackList() {
-		blackListMap = new HashMap<ILaunch, Map<VirtualPath,Type>>();
+		blackListMap = new HashMap<ILaunch, Map<VirtualPath, Type>>();
 
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(this);
 	}
@@ -56,21 +54,19 @@ public class ResolveBlackList implements ILaunchesListener {
 			return false;
 		}
 		Map<VirtualPath, Type> map = getByLaunch(launch);
-		for (VirtualPath path: map.keySet()) {
+		for (VirtualPath path : map.keySet()) {
 			VirtualPath tmp = new VirtualPath(file);
 			Type type = map.get(path);
 			if (type == Type.FILE) {
 				if (path.equals(tmp)) {
 					return true;
 				}
-			}
-			else if (type == Type.FOLDER) {
+			} else if (type == Type.FOLDER) {
 				tmp.removeLastSegment();
 				if (path.equals(tmp)) {
 					return true;
 				}
-			}
-			else if (type == Type.RECURSIVE) {
+			} else if (type == Type.RECURSIVE) {
 				if (path.isPrefixOf(tmp)) {
 					return true;
 				}

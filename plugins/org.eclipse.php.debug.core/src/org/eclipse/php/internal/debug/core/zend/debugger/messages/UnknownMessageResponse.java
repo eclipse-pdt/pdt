@@ -17,18 +17,20 @@ import java.io.IOException;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 
-public class UnknownMessageResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
-	
+public class UnknownMessageResponse extends DebugMessageResponseImpl implements
+		IDebugResponseMessage {
+
 	int fOrigMessageType;
-	
+
 	/**
 	 * Returns original message type as received by profiler
+	 * 
 	 * @return int original message type
 	 */
 	public int getOriginalMessageType() {
 		return fOrigMessageType;
 	}
-	
+
 	private void setOriginalMessageType(int origMessageType) {
 		fOrigMessageType = origMessageType;
 	}

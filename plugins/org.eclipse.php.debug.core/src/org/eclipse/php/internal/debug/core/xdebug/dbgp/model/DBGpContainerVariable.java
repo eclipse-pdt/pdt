@@ -17,14 +17,16 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.w3c.dom.Node;
 
-public class DBGpContainerVariable extends DBGpBaseVariable implements IVariable {
+public class DBGpContainerVariable extends DBGpBaseVariable implements
+		IVariable {
 
 	private int page;
 	private int pageSize;
 	private int numChildren;
 	private DBGpContainerValue value;
 
-	public DBGpContainerVariable(IDebugTarget target, int page, int pageSize, int numChildren, Node property, String stackLevel, String fullName) {
+	public DBGpContainerVariable(IDebugTarget target, int page, int pageSize,
+			int numChildren, Node property, String stackLevel, String fullName) {
 		super(target, stackLevel, fullName);
 		this.page = page;
 		this.pageSize = pageSize;
@@ -38,6 +40,7 @@ public class DBGpContainerVariable extends DBGpBaseVariable implements IVariable
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IVariable#getName()
 	 */
 	public String getName() throws DebugException {
@@ -52,6 +55,7 @@ public class DBGpContainerVariable extends DBGpBaseVariable implements IVariable
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IVariable#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
@@ -60,6 +64,7 @@ public class DBGpContainerVariable extends DBGpBaseVariable implements IVariable
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IVariable#getValue()
 	 */
 	public IValue getValue() throws DebugException {
@@ -68,6 +73,7 @@ public class DBGpContainerVariable extends DBGpBaseVariable implements IVariable
 
 	/**
 	 * return the page reference
+	 * 
 	 * @return
 	 */
 	public int getPage() {
@@ -76,6 +82,7 @@ public class DBGpContainerVariable extends DBGpBaseVariable implements IVariable
 
 	/**
 	 * return the page size
+	 * 
 	 * @return
 	 */
 	public int getPageSize() {
