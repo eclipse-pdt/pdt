@@ -16,17 +16,18 @@ import java.util.EventObject;
 import org.eclipse.php.internal.server.core.Server;
 
 /**
- * A server manager event is triggered when a server is added, removed or modified.
+ * A server manager event is triggered when a server is added, removed or
+ * modified.
  * 
  * @author shalom
  */
 public class ServerManagerEvent extends EventObject {
 
-	/**Server added event type*/
+	/** Server added event type */
 	public static final int MANAGER_EVENT_ADDED = 0;
-	/**Server removed event type*/
+	/** Server removed event type */
 	public static final int MANAGER_EVENT_REMOVED = 2;
-	/**Server modified event type*/
+	/** Server modified event type */
 	public static final int MANAGER_EVENT_MODIFIED = 4;
 
 	private int type;
@@ -54,7 +55,8 @@ public class ServerManagerEvent extends EventObject {
 	 * @param server
 	 * @param modifiedAttribute
 	 */
-	public ServerManagerEvent(int type, Server server, String attributeKey, String oldAttribute, String newAttribute) {
+	public ServerManagerEvent(int type, Server server, String attributeKey,
+			String oldAttribute, String newAttribute) {
 		this(type, server);
 		this.attributeKey = attributeKey;
 		this.oldAttribute = oldAttribute;
@@ -80,10 +82,10 @@ public class ServerManagerEvent extends EventObject {
 	}
 
 	/**
-	 * Returns the modified attribute in case this event indicates a Server modification.
-	 * In any other event case, the returned value will be null.
+	 * Returns the modified attribute in case this event indicates a Server
+	 * modification. In any other event case, the returned value will be null.
 	 * 
-	 * @return The modified attribute 
+	 * @return The modified attribute
 	 */
 	public String getModifiedAttributeKey() {
 		return attributeKey;
@@ -91,7 +93,7 @@ public class ServerManagerEvent extends EventObject {
 
 	/**
 	 * Returns the old attribute value that was modified.
-	 *
+	 * 
 	 * @return
 	 */
 	public String getOldAttributeValue() {
@@ -99,9 +101,9 @@ public class ServerManagerEvent extends EventObject {
 	}
 
 	/**
-	 * Returns the new attribute value that was modified.
-	 * Return null if this event does not indicate a Server modification or when the notification
-	 * is for modification but the attribute was removed.
+	 * Returns the new attribute value that was modified. Return null if this
+	 * event does not indicate a Server modification or when the notification is
+	 * for modification but the attribute was removed.
 	 * 
 	 * @return
 	 */

@@ -15,12 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A deploy filter manage the resources names that will be filtered (ignored) in the deploy process. 
- * The initial state of this DeployFilter will filter .settings, .project, .projectOptions and .cache files. 
+ * A deploy filter manage the resources names that will be filtered (ignored) in
+ * the deploy process. The initial state of this DeployFilter will filter
+ * .settings, .project, .projectOptions and .cache files.
  */
 public class DeployFilter {
 
-	private static final String[] BASIC_FILTERS = new String[] { ".settings", ".project", ".cache", ".svn", "CVS" };
+	private static final String[] BASIC_FILTERS = new String[] { ".settings",
+			".project", ".cache", ".svn", "CVS" };
 	private static DeployFilter instance;
 	private Map filters;
 
@@ -39,10 +41,11 @@ public class DeployFilter {
 	}
 
 	/**
-	 * Returns a deploy filter map.
-	 * Note that the returned map is a copy of the actualy map that the DeployFilter instance is holding.
+	 * Returns a deploy filter map. Note that the returned map is a copy of the
+	 * actualy map that the DeployFilter instance is holding.
 	 * 
-	 * @return A Map that contains string keys and values of the resources that should be ignored in the deploy process.
+	 * @return A Map that contains string keys and values of the resources that
+	 *         should be ignored in the deploy process.
 	 */
 	public static Map getFilterMap() {
 		DeployFilter filter = getInstance();
@@ -69,8 +72,9 @@ public class DeployFilter {
 	}
 
 	/**
-	 * Reset the filter to its default initial state.
-	 * The initial state of this DeployFilter will filter .settings, .project, .projectOptions and .cache files. 
+	 * Reset the filter to its default initial state. The initial state of this
+	 * DeployFilter will filter .settings, .project, .projectOptions and .cache
+	 * files.
 	 */
 	public static void resetToDefault() {
 		DeployFilter filter = getInstance();

@@ -28,8 +28,9 @@ public class ProgressUtil {
 
 	/**
 	 * Return a valid progress monitor.
-	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
+	 * 
+	 * @param monitor
+	 *            org.eclipse.core.runtime.IProgressMonitor
 	 * @return org.eclipse.core.runtime.IProgressMonitor
 	 */
 	public static IProgressMonitor getMonitorFor(IProgressMonitor monitor) {
@@ -39,14 +40,17 @@ public class ProgressUtil {
 	}
 
 	/**
-	 * Return a sub-progress monitor with the given amount on the
-	 * current progress monitor.
-	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @param ticks int
+	 * Return a sub-progress monitor with the given amount on the current
+	 * progress monitor.
+	 * 
+	 * @param monitor
+	 *            org.eclipse.core.runtime.IProgressMonitor
+	 * @param ticks
+	 *            int
 	 * @return org.eclipse.core.runtime.IProgressMonitor
 	 */
-	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor, int ticks) {
+	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor,
+			int ticks) {
 		if (monitor == null)
 			return new NullProgressMonitor();
 		if (monitor instanceof NullProgressMonitor)
@@ -55,15 +59,19 @@ public class ProgressUtil {
 	}
 
 	/**
-	 * Return a sub-progress monitor with the given amount on the
-	 * current progress monitor.
-	 *
-	 * @param monitor org.eclipse.core.runtime.IProgressMonitor
-	 * @param ticks a number of ticks
-	 * @param style a style
+	 * Return a sub-progress monitor with the given amount on the current
+	 * progress monitor.
+	 * 
+	 * @param monitor
+	 *            org.eclipse.core.runtime.IProgressMonitor
+	 * @param ticks
+	 *            a number of ticks
+	 * @param style
+	 *            a style
 	 * @return org.eclipse.core.runtime.IProgressMonitor
 	 */
-	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor, int ticks, int style) {
+	public static IProgressMonitor getSubMonitorFor(IProgressMonitor monitor,
+			int ticks, int style) {
 		if (monitor == null)
 			return new NullProgressMonitor();
 		if (monitor instanceof NullProgressMonitor)

@@ -17,7 +17,8 @@ import java.util.ResourceBundle;
 public class PHPServerCoreMessages {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.server.core.PHPServerCoreMessages"; //$NON-NLS-1$
 
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+			.getBundle(BUNDLE_NAME);
 
 	private PHPServerCoreMessages() {
 	}

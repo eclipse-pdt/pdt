@@ -44,8 +44,9 @@ public class ServerHelper {
 
 	/**
 	 * Add a property change listener to this server.
-	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * 
+	 * @param listener
+	 *            java.beans.PropertyChangeListener
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		if (propertyListeners == null) {
@@ -56,8 +57,9 @@ public class ServerHelper {
 
 	/**
 	 * Remove a property change listener from this server.
-	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * 
+	 * @param listener
+	 *            java.beans.PropertyChangeListener
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		if (propertyListeners != null) {
@@ -68,23 +70,31 @@ public class ServerHelper {
 	/**
 	 * Fire a property change event.
 	 * 
-	 * @param propertyName a property name
-	 * @param oldValue the old value
-	 * @param newValue the new value
+	 * @param propertyName
+	 *            a property name
+	 * @param oldValue
+	 *            the old value
+	 * @param newValue
+	 *            the new value
 	 */
-	public void firePropertyChangeEvent(String propertyName, Object oldValue, Object newValue) {
+	public void firePropertyChangeEvent(String propertyName, Object oldValue,
+			Object newValue) {
 		if (propertyListeners == null)
 			return;
 
-		PropertyChangeEvent event = new PropertyChangeEvent(server, propertyName, oldValue, newValue);
+		PropertyChangeEvent event = new PropertyChangeEvent(server,
+				propertyName, oldValue, newValue);
 		try {
 			Iterator iterator = propertyListeners.iterator();
 			while (iterator.hasNext()) {
 				try {
-					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+					PropertyChangeListener listener = (PropertyChangeListener) iterator
+							.next();
 					listener.propertyChange(event);
 				} catch (Exception e) {
-					Logger.logException("Error firing property change event", e);
+					Logger
+							.logException("Error firing property change event",
+									e);
 				}
 			}
 		} catch (Exception e) {
@@ -103,7 +113,7 @@ public class ServerHelper {
 		}
 		return defaultValue;
 	}
-	
+
 	public void removeAttribute(String attributeName) {
 		map.remove(attributeName);
 	}

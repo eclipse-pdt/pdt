@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Bundle;
 
 /**
- * Small convenience class to log messages to plugin's log file and also, if desired,
- * the console. This class should only be used by classes in this plugin. Other
- * plugins should make their own copy, with appropriate ID.
+ * Small convenience class to log messages to plugin's log file and also, if
+ * desired, the console. This class should only be used by classes in this
+ * plugin. Other plugins should make their own copy, with appropriate ID.
  */
 
 public class Logger {
@@ -42,32 +42,39 @@ public class Logger {
 
 	/**
 	 * Adds message to log.
-	 * @param level severity level of the message (OK, INFO, WARNING, ERROR, OK_DEBUG, INFO_DEBUG, WARNING_DEBUG, ERROR_DEBUG)
-	 * @param message text to add to the log
-	 * @param exception exception thrown
+	 * 
+	 * @param level
+	 *            severity level of the message (OK, INFO, WARNING, ERROR,
+	 *            OK_DEBUG, INFO_DEBUG, WARNING_DEBUG, ERROR_DEBUG)
+	 * @param message
+	 *            text to add to the log
+	 * @param exception
+	 *            exception thrown
 	 */
 	protected static void _log(int level, String message, Throwable exception) {
-		if (level == OK_DEBUG || level == INFO_DEBUG || level == WARNING_DEBUG || level == ERROR_DEBUG) {
+		if (level == OK_DEBUG || level == INFO_DEBUG || level == WARNING_DEBUG
+				|| level == ERROR_DEBUG) {
 			if (!isDebugging())
 				return;
 		}
 
 		int severity = IStatus.OK;
 		switch (level) {
-			case INFO_DEBUG:
-			case INFO:
-				severity = IStatus.INFO;
-				break;
-			case WARNING_DEBUG:
-			case WARNING:
-				severity = IStatus.WARNING;
-				break;
-			case ERROR_DEBUG:
-			case ERROR:
-				severity = IStatus.ERROR;
+		case INFO_DEBUG:
+		case INFO:
+			severity = IStatus.INFO;
+			break;
+		case WARNING_DEBUG:
+		case WARNING:
+			severity = IStatus.WARNING;
+			break;
+		case ERROR_DEBUG:
+		case ERROR:
+			severity = IStatus.ERROR;
 		}
 		message = (message != null) ? message : "null";
-		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
+		Status statusObj = new Status(severity, PLUGIN_ID, severity, message,
+				exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
 		if (bundle != null)
 			Platform.getLog(bundle).log(statusObj);
@@ -77,13 +84,19 @@ public class Logger {
 
 	/**
 	 * Prints message to log if category matches /debug/tracefilter option.
-	 * @param message text to print
-	 * @param category category of the message, to be compared with /debug/tracefilter
+	 * 
+	 * @param message
+	 *            text to print
+	 * @param category
+	 *            category of the message, to be compared with
+	 *            /debug/tracefilter
 	 */
-	protected static void _trace(String category, String message, Throwable exception) {
+	protected static void _trace(String category, String message,
+			Throwable exception) {
 		if (isTracing(category)) {
 			message = (message != null) ? message : "null";
-			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, message, exception);
+			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK,
+					message, exception);
 			Bundle bundle = Platform.getBundle(PLUGIN_ID);
 			if (bundle != null)
 				Platform.getLog(bundle).log(statusObj);
@@ -99,6 +112,7 @@ public class Logger {
 
 	/**
 	 * Determines if currently tracing a category
+	 * 
 	 * @param category
 	 * @return true if tracing category, false otherwise
 	 */
@@ -106,7 +120,8 @@ public class Logger {
 		if (!isDebugging())
 			return false;
 
-		String traceFilter = Platform.getDebugOption(PLUGIN_ID + TRACEFILTER_LOCATION);
+		String traceFilter = Platform.getDebugOption(PLUGIN_ID
+				+ TRACEFILTER_LOCATION);
 		if (traceFilter != null) {
 			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ",");
 			while (tokenizer.hasMoreTokens()) {
@@ -135,7 +150,8 @@ public class Logger {
 		_log(ERROR, exception.getMessage(), exception);
 	}
 
-	public static void traceException(String category, String message, Throwable exception) {
+	public static void traceException(String category, String message,
+			Throwable exception) {
 		_trace(category, message, exception);
 	}
 
