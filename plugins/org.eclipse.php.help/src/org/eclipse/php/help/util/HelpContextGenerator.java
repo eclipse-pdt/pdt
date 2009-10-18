@@ -14,12 +14,7 @@
  */
 package org.eclipse.php.help.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -34,10 +29,10 @@ import org.eclipse.help.internal.Topic;
 import org.eclipse.help.internal.toc.TocFileProvider;
 
 /**
- * Generate the Help context.
- * Run this class as a JUnit4 Plug-in Test (in a head-less mode)
- * The class will generate a helpContexts.xml file and a help context Java interface
- * class to be placed in the appropriate plugins (e.g. org.eclipse.php.help and org.eclipse.php.ui).
+ * Generate the Help context. Run this class as a JUnit4 Plug-in Test (in a
+ * head-less mode) The class will generate a helpContexts.xml file and a help
+ * context Java interface class to be placed in the appropriate plugins (e.g.
+ * org.eclipse.php.help and org.eclipse.php.ui).
  * 
  * @author Shalom
  */
@@ -58,22 +53,25 @@ public class HelpContextGenerator {
 	private LinkedHashSet<String> topics = new LinkedHashSet<String>();
 
 	/*
-	 *@Test
-	 */ 
+	 * @Test
+	 */
 	public void run() {
 		TocFileProvider tocProvider = new TocFileProvider();
-		ITocContribution[] tocContributions = tocProvider.getTocContributions(null);
+		ITocContribution[] tocContributions = tocProvider
+				.getTocContributions(null);
 		ArrayList<ITocContribution> phpTocs = new ArrayList<ITocContribution>();
 		for (ITocContribution contribution : tocContributions) {
 			// Take only the non-primary TOC
-			if (!contribution.isPrimary() && PHP_CONTRIBUTOR_ID.equals(contribution.getContributorId())) {
+			if (!contribution.isPrimary()
+					&& PHP_CONTRIBUTOR_ID.equals(contribution
+							.getContributorId())) {
 				phpTocs.add(contribution);
 			}
 		}
 		try {
 			generateFiles(phpTocs);
 		} catch (Exception e) {
-			//Assert.assertFalse(true);
+			// Assert.assertFalse(true);
 		}
 	}
 
@@ -83,16 +81,20 @@ public class HelpContextGenerator {
 	 * @param phpTocs
 	 * @throws Exception
 	 */
-	private void generateFiles(ArrayList<ITocContribution> phpTocs) throws Exception {
+	private void generateFiles(ArrayList<ITocContribution> phpTocs)
+			throws Exception {
 		// Prepare the files
 		File javaTemplateFile = getJavaTemplateFile();
-		File helpContextFile = new File(javaTemplateFile.getParent(), HELP_CONTEXT_FILE);
-		File newJavaFile = new File(javaTemplateFile.getParent(), JAVA_HELP_CONTEXT_NAME);
-		StringBuilder helpContextBuilder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEW_LINE + "<!-- Auto generated using the HelpContextGenerator -->" + NEW_LINE + "<contexts>" + NEW_LINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		File helpContextFile = new File(javaTemplateFile.getParent(),
+				HELP_CONTEXT_FILE);
+		File newJavaFile = new File(javaTemplateFile.getParent(),
+				JAVA_HELP_CONTEXT_NAME);
+		StringBuilder helpContextBuilder = new StringBuilder(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEW_LINE + "<!-- Auto generated using the HelpContextGenerator -->" + NEW_LINE + "<contexts>" + NEW_LINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		StringBuilder newJavaFileBuilder = new StringBuilder();
 		loadJavaTemplate(newJavaFileBuilder, javaTemplateFile);
 
-		// Generate the code 
+		// Generate the code
 		for (ITocContribution tocContribution : phpTocs) {
 			IToc toc = tocContribution.getToc();
 			IUAElement[] children = toc.getChildren();
@@ -107,12 +109,18 @@ public class HelpContextGenerator {
 	}
 
 	/*
-	 * Recursive elements writer that writes the elements into the string builders.
+	 * Recursive elements writer that writes the elements into the string
+	 * builders.
+	 * 
 	 * @param children
+	 * 
 	 * @param helpContextBuilder
+	 * 
 	 * @param newJavaFileBuilder
 	 */
-	private void writeElements(IUAElement[] children, StringBuilder helpContextBuilder, StringBuilder newJavaFileBuilder, int tocLevel) {
+	private void writeElements(IUAElement[] children,
+			StringBuilder helpContextBuilder, StringBuilder newJavaFileBuilder,
+			int tocLevel) {
 		for (IUAElement child : children) {
 			if (child instanceof ITopic) {
 				ITopic topic = ((ITopic) child);
@@ -127,7 +135,8 @@ public class HelpContextGenerator {
 				if (topics.contains(labelAsModifier)) {
 					// append the parent topic name to this label
 					ITopic parent = (ITopic) ((Topic) topic).getParentElement();
-					String parentLabel = cleanLabel(parent.getLabel()).toLowerCase();
+					String parentLabel = cleanLabel(parent.getLabel())
+							.toLowerCase();
 					if (Character.isDigit(parentLabel.charAt(0))) {
 						parentLabel = '_' + parentLabel;
 					}
@@ -137,11 +146,17 @@ public class HelpContextGenerator {
 				for (int i = 0; i < tocLevel; i++) {
 					newJavaFileBuilder.append('\t');
 				}
-				newJavaFileBuilder.append(String.format(JAVA_CONSTANT_LINE, labelAsModifier.toUpperCase(), labelAsKey, href));
-				helpContextBuilder.append(String.format(CONTEXT_BLOCK, labelAsKey, label + DESCRIPTION_POSTFIX, href, label)); // id, description, href, label
+				newJavaFileBuilder.append(String.format(JAVA_CONSTANT_LINE,
+						labelAsModifier.toUpperCase(), labelAsKey, href));
+				helpContextBuilder.append(String.format(CONTEXT_BLOCK,
+						labelAsKey, label + DESCRIPTION_POSTFIX, href, label)); // id,
+																				// description,
+																				// href,
+																				// label
 				ITopic[] subtopics = topic.getSubtopics();
 				if (subtopics != null && subtopics.length > 0) {
-					writeElements(subtopics, helpContextBuilder, newJavaFileBuilder, tocLevel + 1);
+					writeElements(subtopics, helpContextBuilder,
+							newJavaFileBuilder, tocLevel + 1);
 				}
 			}
 		}
@@ -151,18 +166,24 @@ public class HelpContextGenerator {
 	 * Remove any non-letter, $ or digit from the name.
 	 */
 	private String cleanLabel(String labelAsKey) {
-		return labelAsKey.replaceAll(INVALID_LABEL_CHARS, INVALID_CHAR_REPLACEMENT);
+		return labelAsKey.replaceAll(INVALID_LABEL_CHARS,
+				INVALID_CHAR_REPLACEMENT);
 	}
 
 	/*
 	 * Reads the java file template contents into the string builder.
+	 * 
 	 * @param newJavaFileBuilder
+	 * 
 	 * @param javaTemplateFile
+	 * 
 	 * @throws IOException
 	 */
-	private void loadJavaTemplate(StringBuilder newJavaFileBuilder, File javaTemplateFile) throws IOException {
+	private void loadJavaTemplate(StringBuilder newJavaFileBuilder,
+			File javaTemplateFile) throws IOException {
 		String line = null;
-		BufferedReader reader = new BufferedReader(new FileReader(javaTemplateFile));
+		BufferedReader reader = new BufferedReader(new FileReader(
+				javaTemplateFile));
 		while ((line = reader.readLine()) != null) {
 			newJavaFileBuilder.append(line);
 			newJavaFileBuilder.append(NEW_LINE);
@@ -173,8 +194,10 @@ public class HelpContextGenerator {
 	 * Write the file content.
 	 * 
 	 * @param file
+	 * 
 	 * @param toWrite
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	private void writeFile(File file, String toWrite) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -192,19 +215,25 @@ public class HelpContextGenerator {
 	 * Returns the Java template file.
 	 * 
 	 * @return The Java template file.
+	 * 
 	 * @throws IOException
 	 */
 	private File getJavaTemplateFile() throws IOException {
 		URL url = getClass().getResource(JAVA_HELP_CONTEXT_TEMPLATE);
-		// try the naive search 
-		File javaTemplateFile = new File(URLDecoder.decode(url.getFile(), "UTF-8")); //$NON-NLS-1$
+		// try the naive search
+		File javaTemplateFile = new File(URLDecoder.decode(url.getFile(),
+				"UTF-8")); //$NON-NLS-1$
 		if (!javaTemplateFile.exists()) {
 			// try to locate file in more deep search methods
-			javaTemplateFile = new File(URLDecoder.decode(FileLocator.toFileURL(url).getFile(), "UTF-8")); //$NON-NLS-1$
+			javaTemplateFile = new File(URLDecoder.decode(FileLocator
+					.toFileURL(url).getFile(), "UTF-8")); //$NON-NLS-1$
 		}
-		String srcFilePath = javaTemplateFile.toString().replace(File.separatorChar + "bin" + File.separatorChar, File.separatorChar + "src" + File.separatorChar); //$NON-NLS-1$ //$NON-NLS-2$
+		String srcFilePath = javaTemplateFile
+				.toString()
+				.replace(
+						File.separatorChar + "bin" + File.separatorChar, File.separatorChar + "src" + File.separatorChar); //$NON-NLS-1$ //$NON-NLS-2$
 		javaTemplateFile = new File(srcFilePath);
-//		Assert.assertTrue("Could not locate the Java template file", javaTemplateFile.exists()); //$NON-NLS-1$
+		//		Assert.assertTrue("Could not locate the Java template file", javaTemplateFile.exists()); //$NON-NLS-1$
 		return javaTemplateFile;
 	}
 }
