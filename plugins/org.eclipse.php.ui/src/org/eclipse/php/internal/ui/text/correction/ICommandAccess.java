@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction;
 
+import org.eclipse.wst.jsdt.internal.ui.text.correction.CorrectionCommandInstaller;
+
 /**
  * Correction proposals implement this interface to by invokable by a command.
  * (e.g. keyboard shortcut)
@@ -19,8 +21,10 @@ public interface ICommandAccess {
 
 	/**
 	 * Returns the id of the command that should invoke this correction proposal
-	 * @return the id of the command. This id must start with {@link CorrectionCommandInstaller#COMMAND_PREFIX}
-	 * to be recognixes as correction command.
+	 * 
+	 * @return the id of the command. This id must start with
+	 *         {@link CorrectionCommandInstaller#COMMAND_PREFIX} to be
+	 *         recognixes as correction command.
 	 */
 	String getCommandId();
 

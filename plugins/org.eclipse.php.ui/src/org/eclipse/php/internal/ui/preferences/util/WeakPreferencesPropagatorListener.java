@@ -22,33 +22,40 @@ import org.eclipse.php.internal.core.util.WeakObject;
 
 /**
  * WeakPreferencesPropagatorListener
+ * 
  * @deprecated (Not effective - candidate for removal)
  */
-public class WeakPreferencesPropagatorListener extends WeakObject implements IPreferencesPropagatorListener {
+public class WeakPreferencesPropagatorListener extends WeakObject implements
+		IPreferencesPropagatorListener {
 
 	private Object target;
 	private String key;
 	private static ReferenceQueue q = new ReferenceQueue();
-	private static Class parameterTypes[] = new Class[] { IPreferencesPropagatorListener.class, String.class };
+	private static Class parameterTypes[] = new Class[] {
+			IPreferencesPropagatorListener.class, String.class };
 	private static Object parameterValues[] = new Object[] { null, null };
 	private static String removeListenerMethodName = "removePropagatorListener"; //$NON-NLS-1$
 
-	public static WeakPreferencesPropagatorListener create(IPreferencesPropagatorListener l, String key, Object target) {
+	public static WeakPreferencesPropagatorListener create(
+			IPreferencesPropagatorListener l, String key, Object target) {
 		removeRedundantReferences();
 		return new WeakPreferencesPropagatorListener(l, key, target);
 	}
 
 	public static void removeRedundantReferences() {
-		WeakPreferencesPropagatorListener r = (WeakPreferencesPropagatorListener) q.poll();
+		WeakPreferencesPropagatorListener r = (WeakPreferencesPropagatorListener) q
+				.poll();
 		while (r != null) {
 			removeRedundantReference(r);
 			r = (WeakPreferencesPropagatorListener) q.poll();
 		}
 	}
 
-	private static void removeRedundantReference(WeakPreferencesPropagatorListener listener) {
+	private static void removeRedundantReference(
+			WeakPreferencesPropagatorListener listener) {
 		try {
-			Method setMethod = listener.target.getClass().getMethod(removeListenerMethodName, parameterTypes);
+			Method setMethod = listener.target.getClass().getMethod(
+					removeListenerMethodName, parameterTypes);
 			parameterValues[0] = listener;
 			parameterValues[1] = listener.key;
 			setMethod.invoke(listener.target, parameterValues);
@@ -58,14 +65,16 @@ public class WeakPreferencesPropagatorListener extends WeakObject implements IPr
 	}
 
 	/** Creates new WeakPropertyChangeListener */
-	protected WeakPreferencesPropagatorListener(IPreferencesPropagatorListener l, String key, Object target) {
+	protected WeakPreferencesPropagatorListener(
+			IPreferencesPropagatorListener l, String key, Object target) {
 		super(l, q);
 		this.key = key;
 		this.target = target;
 	}
 
 	public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-		IPreferencesPropagatorListener l = (IPreferencesPropagatorListener) this.get();
+		IPreferencesPropagatorListener l = (IPreferencesPropagatorListener) this
+				.get();
 		if (l != null) {
 			l.preferencesEventOccured(event);
 		} else {
@@ -74,7 +83,8 @@ public class WeakPreferencesPropagatorListener extends WeakObject implements IPr
 	}
 
 	public IProject getProject() {
-		IPreferencesPropagatorListener l = (IPreferencesPropagatorListener) this.get();
+		IPreferencesPropagatorListener l = (IPreferencesPropagatorListener) this
+				.get();
 		if (l != null) {
 			return l.getProject();
 		} else {

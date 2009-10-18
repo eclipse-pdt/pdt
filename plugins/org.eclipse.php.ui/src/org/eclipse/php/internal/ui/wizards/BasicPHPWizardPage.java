@@ -35,7 +35,8 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		super(pageName);
 	}
 
-	protected Button createButton(Composite composite, int style, String message, GridData gd) {
+	protected Button createButton(Composite composite, int style,
+			String message, GridData gd) {
 		Button button = new Button(composite, style);
 		button.setText(message);
 		button.setLayoutData(gd);
@@ -77,14 +78,16 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		line.setLayoutData(gridData);
 	}
 
-	protected Label createLabel(Composite composite, int style, String message, GridData gd) {
+	protected Label createLabel(Composite composite, int style, String message,
+			GridData gd) {
 		Label label = new Label(composite, style);
 		label.setText(message);
 		label.setLayoutData(gd);
 		return label;
 	}
 
-	protected Text createText(Composite composite, int style, String message, GridData gd) {
+	protected Text createText(Composite composite, int style, String message,
+			GridData gd) {
 		Text text = new Text(composite, style);
 		if (message != null)
 			text.setText(message);
@@ -92,7 +95,8 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		return text;
 	}
 
-	protected Combo createCombo(Composite composite, int style, String message, GridData gd) {
+	protected Combo createCombo(Composite composite, int style, String message,
+			GridData gd) {
 		Combo combo = new Combo(composite, style);
 		if (message != null)
 			combo.setText(message);
@@ -100,7 +104,8 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		return combo;
 	}
 
-	protected void handleFileBrowseButtonPressed(Text text, String[] extensions, String title) {
+	protected void handleFileBrowseButtonPressed(Text text,
+			String[] extensions, String title) {
 		FileDialog dialog = new FileDialog(text.getShell());
 		dialog.setText(title);
 		dialog.setFilterExtensions(extensions);
@@ -116,7 +121,8 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 			text.setText(selectedDirectory);
 	}
 
-	protected void handleFileBrowseButtonPressed(Combo text, String[] extensions, String title) {
+	protected void handleFileBrowseButtonPressed(Combo text,
+			String[] extensions, String title) {
 		FileDialog dialog = new FileDialog(text.getShell());
 		dialog.setText(title);
 		dialog.setFilterExtensions(extensions);
@@ -128,14 +134,15 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 
 		}
 		String selectedDirectory = dialog.open();
-		if (selectedDirectory != null){
+		if (selectedDirectory != null) {
 			text.add(selectedDirectory);
 			text.select(text.indexOf(selectedDirectory));
 			text.notifyListeners(SWT.Modify, new Event());
 		}
 	}
-	
-	protected void handleFileBrowseButtonPressed(Combo text, String[] extensions, String title, String fileName) {
+
+	protected void handleFileBrowseButtonPressed(Combo text,
+			String[] extensions, String title, String fileName) {
 		FileDialog dialog = new FileDialog(text.getShell(), SWT.SAVE);
 		dialog.setText(title);
 		dialog.setFilterExtensions(extensions);
@@ -148,14 +155,15 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 
 		}
 		String selectedDirectory = dialog.open();
-		if (selectedDirectory != null){
+		if (selectedDirectory != null) {
 			text.add(selectedDirectory);
 			text.select(text.indexOf(selectedDirectory));
 			text.notifyListeners(SWT.Modify, new Event());
 		}
 	}
 
-	protected String handleFolderBrowseButtonPressed(String dir, String title, String message) {
+	protected String handleFolderBrowseButtonPressed(String dir, String title,
+			String message) {
 		DirectoryDialog dialog = new DirectoryDialog(getShell());
 		dialog.setFilterPath(dir);
 		dialog.setText(title);
@@ -172,7 +180,8 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 	/**
 	 * Updates the status line and the OK button according to the given status
 	 * 
-	 * @param status status to apply
+	 * @param status
+	 *            status to apply
 	 */
 	protected void updateStatus(IStatus status) {
 		fCurrStatus = status;
@@ -196,7 +205,7 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		}
 		updateStatus(fCurrStatus);
 	}
-	
+
 	public ArrayList setComboItems(Combo combo, ArrayList arrItems) {
 		arrItems.clear();
 		arrItems.add(combo.getText()); // must be first
@@ -231,11 +240,11 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 			validate();
 		}
 
-		//copied from  WizardNewProjectCreationPage
+		// copied from WizardNewProjectCreationPage
 		public void validate() {
 		}
 
-	} //end class EnableSelectionAdapter
+	} // end class EnableSelectionAdapter
 
 	protected static class ToggleSelectionAdapter extends SelectionAdapter {
 		Control[] controls;
@@ -256,6 +265,6 @@ public abstract class BasicPHPWizardPage extends WizardPage {
 		public void validate() {
 		}
 
-	} //end class ToggleSelection Adapter
+	} // end class ToggleSelection Adapter
 
 }

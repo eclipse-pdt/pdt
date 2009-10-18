@@ -43,7 +43,9 @@ public class LinkedProposalModelPresenter {
 	public LinkedProposalModelPresenter() {
 	}
 
-	public void enterLinkedMode(ITextViewer viewer, IEditorPart editor, LinkedProposalModel linkedProposalModel) throws BadLocationException {
+	public void enterLinkedMode(ITextViewer viewer, IEditorPart editor,
+			LinkedProposalModel linkedProposalModel)
+			throws BadLocationException {
 		IDocument document = viewer.getDocument();
 
 		LinkedModeModel model = new LinkedModeModel();
@@ -51,30 +53,38 @@ public class LinkedProposalModelPresenter {
 
 		Iterator iterator = linkedProposalModel.getPositionGroupIterator();
 		while (iterator.hasNext()) {
-			LinkedProposalPositionGroup curr = (LinkedProposalPositionGroup) iterator.next();
+			LinkedProposalPositionGroup curr = (LinkedProposalPositionGroup) iterator
+					.next();
 
 			LinkedPositionGroup group = new LinkedPositionGroup();
 
-			LinkedProposalPositionGroup.PositionInformation[] positions = curr.getPositions();
+			LinkedProposalPositionGroup.PositionInformation[] positions = curr
+					.getPositions();
 			if (positions.length > 0) {
-				LinkedProposalPositionGroup.Proposal[] linkedModeProposals = curr.getProposals();
+				LinkedProposalPositionGroup.Proposal[] linkedModeProposals = curr
+						.getProposals();
 				if (linkedModeProposals.length <= 1) {
 					for (int i = 0; i < positions.length; i++) {
 						LinkedProposalPositionGroup.PositionInformation pos = positions[i];
 						if (pos.getOffset() != -1) {
-							group.addPosition(new LinkedPosition(document, pos.getOffset(), pos.getLength(), pos.getSequenceRank()));
+							group.addPosition(new LinkedPosition(document, pos
+									.getOffset(), pos.getLength(), pos
+									.getSequenceRank()));
 						}
 					}
 				} else {
 					LinkedPositionProposalImpl[] proposalImpls = new LinkedPositionProposalImpl[linkedModeProposals.length];
 					for (int i = 0; i < linkedModeProposals.length; i++) {
-						proposalImpls[i] = new LinkedPositionProposalImpl(linkedModeProposals[i], model);
+						proposalImpls[i] = new LinkedPositionProposalImpl(
+								linkedModeProposals[i], model);
 					}
 
 					for (int i = 0; i < positions.length; i++) {
 						LinkedProposalPositionGroup.PositionInformation pos = positions[i];
 						if (pos.getOffset() != -1) {
-							group.addPosition(new ProposalPosition(document, pos.getOffset(), pos.getLength(), pos.getSequenceRank(), proposalImpls));
+							group.addPosition(new ProposalPosition(document,
+									pos.getOffset(), pos.getLength(), pos
+											.getSequenceRank(), proposalImpls));
 						}
 					}
 				}
@@ -86,18 +96,22 @@ public class LinkedProposalModelPresenter {
 		model.forceInstall();
 
 		if (editor instanceof PHPStructuredEditor) {
-			model.addLinkingListener(new EditorHighlightingSynchronizer((PHPStructuredEditor) editor));
+			model.addLinkingListener(new EditorHighlightingSynchronizer(
+					(PHPStructuredEditor) editor));
 		}
 
 		if (added) { // only set up UI if there are any positions set
 			LinkedModeUI ui = new EditorLinkedModeUI(model, viewer);
-			LinkedProposalPositionGroup.PositionInformation endPosition = linkedProposalModel.getEndPosition();
+			LinkedProposalPositionGroup.PositionInformation endPosition = linkedProposalModel
+					.getEndPosition();
 			if (endPosition != null && endPosition.getOffset() != -1) {
-				ui.setExitPosition(viewer, endPosition.getOffset() + endPosition.getLength(), 0, Integer.MAX_VALUE);
+				ui.setExitPosition(viewer, endPosition.getOffset()
+						+ endPosition.getLength(), 0, Integer.MAX_VALUE);
 			} else {
 				int cursorPosition = viewer.getSelectedRange().x;
 				if (cursorPosition != 0) {
-					ui.setExitPosition(viewer, cursorPosition, 0, Integer.MAX_VALUE);
+					ui.setExitPosition(viewer, cursorPosition, 0,
+							Integer.MAX_VALUE);
 				}
 			}
 			ui.setExitPolicy(new LinkedModeExitPolicy());
@@ -109,33 +123,48 @@ public class LinkedProposalModelPresenter {
 		}
 	}
 
-	private static class LinkedPositionProposalImpl implements ICompletionProposalExtension2, IScriptCompletionProposal {
+	private static class LinkedPositionProposalImpl implements
+			ICompletionProposalExtension2, IScriptCompletionProposal {
 
 		private final LinkedProposalPositionGroup.Proposal fProposal;
 		private final LinkedModeModel fLinkedPositionModel;
 
-		public LinkedPositionProposalImpl(LinkedProposalPositionGroup.Proposal proposal, LinkedModeModel model) {
+		public LinkedPositionProposalImpl(
+				LinkedProposalPositionGroup.Proposal proposal,
+				LinkedModeModel model) {
 			fProposal = proposal;
 			fLinkedPositionModel = model;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#apply(org.eclipse.jface.text.ITextViewer, char, int, int)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
+		 * #apply(org.eclipse.jface.text.ITextViewer, char, int, int)
 		 */
-		public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
+		public void apply(ITextViewer viewer, char trigger, int stateMask,
+				int offset) {
 			IDocument doc = viewer.getDocument();
-			LinkedPosition position = fLinkedPositionModel.findPosition(new LinkedPosition(doc, offset, 0));
+			LinkedPosition position = fLinkedPositionModel
+					.findPosition(new LinkedPosition(doc, offset, 0));
 			if (position != null) {
 				try {
 					try {
-						TextEdit edit = fProposal.computeEdits(offset, position, trigger, stateMask, fLinkedPositionModel);
+						TextEdit edit = fProposal.computeEdits(offset,
+								position, trigger, stateMask,
+								fLinkedPositionModel);
 						if (edit != null) {
 							edit.apply(position.getDocument(), 0);
 						}
 					} catch (MalformedTreeException e) {
-						throw new CoreException(new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.ERROR, "Unexpected exception applying edit", e)); //$NON-NLS-1$
+						throw new CoreException(new Status(IStatus.ERROR,
+								PHPUiPlugin.ID, IStatus.ERROR,
+								"Unexpected exception applying edit", e)); //$NON-NLS-1$
 					} catch (BadLocationException e) {
-						throw new CoreException(new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.ERROR, "Unexpected exception applying edit", e)); //$NON-NLS-1$
+						throw new CoreException(new Status(IStatus.ERROR,
+								PHPUiPlugin.ID, IStatus.ERROR,
+								"Unexpected exception applying edit", e)); //$NON-NLS-1$
 					}
 				} catch (CoreException e) {
 					PHPUiPlugin.log(e);
@@ -143,36 +172,53 @@ public class LinkedProposalModelPresenter {
 			}
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString()
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString
+		 * ()
 		 */
 		public String getDisplayString() {
 			return fProposal.getDisplayString();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getImage()
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.text.contentassist.ICompletionProposal#getImage()
 		 */
 		public Image getImage() {
 			return fProposal.getImage();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jdt.ui.text.java.IJavaCompletionProposal#getRelevance()
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jdt.ui.text.java.IJavaCompletionProposal#getRelevance()
 		 */
 		public int getRelevance() {
 			return fProposal.getRelevance();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org.eclipse.jface.text.IDocument)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org
+		 * .eclipse.jface.text.IDocument)
 		 */
 		public void apply(IDocument document) {
 			// not called
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo()
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seeorg.eclipse.jface.text.contentassist.ICompletionProposal#
+		 * getAdditionalProposalInfo()
 		 */
 		public String getAdditionalProposalInfo() {
 			return fProposal.getAdditionalProposalInfo();
@@ -193,14 +239,19 @@ public class LinkedProposalModelPresenter {
 		}
 
 		/*
-		 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#validate(org.eclipse.jface.text.IDocument, int, org.eclipse.jface.text.DocumentEvent)
+		 * @see
+		 * org.eclipse.jface.text.contentassist.ICompletionProposalExtension2
+		 * #validate(org.eclipse.jface.text.IDocument, int,
+		 * org.eclipse.jface.text.DocumentEvent)
 		 */
-		public boolean validate(IDocument document, int offset, DocumentEvent event) {
+		public boolean validate(IDocument document, int offset,
+				DocumentEvent event) {
 			// ignore event
 			String insert = getDisplayString();
 
 			int off;
-			LinkedPosition pos = fLinkedPositionModel.findPosition(new LinkedPosition(document, offset, 0));
+			LinkedPosition pos = fLinkedPositionModel
+					.findPosition(new LinkedPosition(document, offset, 0));
 			if (pos != null) {
 				off = pos.getOffset();
 			} else {
@@ -222,8 +273,10 @@ public class LinkedProposalModelPresenter {
 		}
 	}
 
-	private static class LinkedModeExitPolicy implements LinkedModeUI.IExitPolicy {
-		public ExitFlags doExit(LinkedModeModel model, VerifyEvent event, int offset, int length) {
+	private static class LinkedModeExitPolicy implements
+			LinkedModeUI.IExitPolicy {
+		public ExitFlags doExit(LinkedModeModel model, VerifyEvent event,
+				int offset, int length) {
 			if (event.character == '=') {
 				return new ExitFlags(ILinkedModeListener.EXIT_ALL, true);
 			}

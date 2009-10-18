@@ -24,18 +24,24 @@ public class PhpNewFileTemplateContextType extends ScriptTemplateContextType {
 	public static final String NEW_PHP_CONTEXT_TYPE_ID = "newPhp"; //$NON-NLS-1$
 
 	@Override
-	public ScriptTemplateContext createContext(IDocument document, int completionPosition, int length, ISourceModule sourceModule) {
-		return new PhpTemplateContext(this, document, completionPosition, length, sourceModule);
+	public ScriptTemplateContext createContext(IDocument document,
+			int completionPosition, int length, ISourceModule sourceModule) {
+		return new PhpTemplateContext(this, document, completionPosition,
+				length, sourceModule);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateContextType#addScriptResolvers()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.ui.templates.ScriptTemplateContextType#addScriptResolvers
+	 * ()
 	 */
 	@Override
 	protected void addScriptResolvers() {
 		super.addScriptResolvers();
-		
+
 		// empty constructor
 		// TODO : should add php specific resolvers?
-	}	
+	}
 }

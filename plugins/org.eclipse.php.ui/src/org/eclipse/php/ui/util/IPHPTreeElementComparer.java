@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.IElementComparer;
 /**
  * 
  * @author guy.g
- *
+ * 
  */
 public interface IPHPTreeElementComparer extends IElementComparer {
 

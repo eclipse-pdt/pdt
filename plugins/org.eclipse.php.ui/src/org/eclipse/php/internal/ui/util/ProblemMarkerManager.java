@@ -27,14 +27,16 @@ import org.eclipse.swt.widgets.Display;
 ;
 
 /**
- * Listens to resource deltas and filters for marker changes of type IMarker.PROBLEM
- * Viewers showing error ticks should register as listener to
+ * Listens to resource deltas and filters for marker changes of type
+ * IMarker.PROBLEM Viewers showing error ticks should register as listener to
  * this type.
  */
-public class ProblemMarkerManager implements IResourceChangeListener, IAnnotationModelListener, IAnnotationModelListenerExtension {
+public class ProblemMarkerManager implements IResourceChangeListener,
+		IAnnotationModelListener, IAnnotationModelListenerExtension {
 
 	/**
-	 * Visitors used to look if the element change delta containes a marker change.
+	 * Visitors used to look if the element change delta containes a marker
+	 * change.
 	 */
 	private static class ProjectErrorVisitor implements IResourceDeltaVisitor {
 
@@ -46,7 +48,8 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			IResource res = delta.getResource();
-			if (res instanceof IProject && delta.getKind() == IResourceDelta.CHANGED) {
+			if (res instanceof IProject
+					&& delta.getKind() == IResourceDelta.CHANGED) {
 				IProject project = (IProject) res;
 				if (!project.isAccessible()) {
 					// only track open PHP projects
@@ -59,9 +62,11 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 
 		private void checkInvalidate(IResourceDelta delta, IResource resource) {
 			int kind = delta.getKind();
-			if (kind == IResourceDelta.REMOVED || kind == IResourceDelta.ADDED || (kind == IResourceDelta.CHANGED && isErrorDelta(delta))) {
+			if (kind == IResourceDelta.REMOVED || kind == IResourceDelta.ADDED
+					|| (kind == IResourceDelta.CHANGED && isErrorDelta(delta))) {
 				// invalidate the resource and all parents
-				while (resource.getType() != IResource.ROOT && fChangedElements.add(resource)) {
+				while (resource.getType() != IResource.ROOT
+						&& fChangedElements.add(resource)) {
 					resource = resource.getParent();
 				}
 			}
@@ -73,10 +78,13 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 				for (int i = 0; i < markerDeltas.length; i++) {
 					if (markerDeltas[i].isSubtypeOf(IMarker.PROBLEM)) {
 						int kind = markerDeltas[i].getKind();
-						if (kind == IResourceDelta.ADDED || kind == IResourceDelta.REMOVED)
+						if (kind == IResourceDelta.ADDED
+								|| kind == IResourceDelta.REMOVED)
 							return true;
-						int severity = markerDeltas[i].getAttribute(IMarker.SEVERITY, -1);
-						int newSeverity = markerDeltas[i].getMarker().getAttribute(IMarker.SEVERITY, -1);
+						int severity = markerDeltas[i].getAttribute(
+								IMarker.SEVERITY, -1);
+						int newSeverity = markerDeltas[i].getMarker()
+								.getAttribute(IMarker.SEVERITY, -1);
 						if (newSeverity != severity)
 							return true;
 					}
@@ -107,19 +115,24 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 		}
 
 		if (!changedElements.isEmpty()) {
-			IResource[] changes = (IResource[]) changedElements.toArray(new IResource[changedElements.size()]);
+			IResource[] changes = (IResource[]) changedElements
+					.toArray(new IResource[changedElements.size()]);
 			fireChanges(changes, true);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see IAnnotationModelListener#modelChanged(IAnnotationModel)
 	 */
 	public void modelChanged(IAnnotationModel model) {
 		// no action
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see IAnnotationModelListenerExtension#modelChanged(AnnotationModelEvent)
 	 */
 	public void modelChanged(AnnotationModelEvent event) {
@@ -131,7 +144,7 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 	public void addListener(IProblemChangedListener listener) {
 		if (fListeners.isEmpty()) {
 			DLTKUIPlugin.getWorkspace().addResourceChangeListener(this);
-			//			PHPUiPlugin.getDefault().getCompilationUnitDocumentProvider().addGlobalAnnotationModelListener(this);
+			// PHPUiPlugin.getDefault().getCompilationUnitDocumentProvider().addGlobalAnnotationModelListener(this);
 		}
 		fListeners.add(listener);
 	}
@@ -143,11 +156,12 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 		fListeners.remove(listener);
 		if (fListeners.isEmpty()) {
 			PHPUiPlugin.getWorkspace().removeResourceChangeListener(this);
-			//			PHPUiPlugin.getDefault().getCompilationUnitDocumentProvider().removeGlobalAnnotationModelListener(this);
+			// PHPUiPlugin.getDefault().getCompilationUnitDocumentProvider().removeGlobalAnnotationModelListener(this);
 		}
 	}
 
-	private void fireChanges(final IResource[] changes, final boolean isMarkerChange) {
+	private void fireChanges(final IResource[] changes,
+			final boolean isMarkerChange) {
 		Display display = SWTUtil.getStandardDisplay();
 		if (display != null && !display.isDisposed()) {
 			display.asyncExec(new Runnable() {

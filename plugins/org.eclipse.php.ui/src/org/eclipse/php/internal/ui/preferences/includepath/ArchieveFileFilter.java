@@ -27,15 +27,18 @@ public class ArchieveFileFilter extends ViewerFilter {
 
 	private List fExcludes;
 	private boolean fRecursive;
-	private static String[] fFilterExtensions = {"*.zip", "*.jar"}; //defaults  //$NON-NLS-1$ //$NON-NLS-2$
+	private static String[] fFilterExtensions = { "*.zip", "*.jar" }; //defaults  //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
-	 * @param excludedFiles Excluded files will not pass the filter.
-	 * <code>null</code> is allowed if no files should be excluded. 
-	 * @param recusive Folders are only shown if, searched recursively, contain
-	 * an archive
+	 * @param excludedFiles
+	 *            Excluded files will not pass the filter. <code>null</code> is
+	 *            allowed if no files should be excluded.
+	 * @param recusive
+	 *            Folders are only shown if, searched recursively, contain an
+	 *            archive
 	 */
-	public ArchieveFileFilter(IFile[] excludedFiles, boolean recusive, String[] filterExtensions) {
+	public ArchieveFileFilter(IFile[] excludedFiles, boolean recusive,
+			String[] filterExtensions) {
 		if (excludedFiles != null) {
 			fExcludes = Arrays.asList(excludedFiles);
 		} else {
@@ -45,7 +48,8 @@ public class ArchieveFileFilter extends ViewerFilter {
 		fFilterExtensions = filterExtensions;
 	}
 
-	public ArchieveFileFilter(List excludedFiles, boolean recusive, String[] filterExtensions) {
+	public ArchieveFileFilter(List excludedFiles, boolean recusive,
+			String[] filterExtensions) {
 		fExcludes = excludedFiles;
 		fRecursive = recusive;
 		fFilterExtensions = filterExtensions;

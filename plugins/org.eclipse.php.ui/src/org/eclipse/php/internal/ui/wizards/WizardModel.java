@@ -15,13 +15,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A wizard model represents a model that can be shared between multiple
- * tasks in a common workflow.
+ * A wizard model represents a model that can be shared between multiple tasks
+ * in a common workflow.
  * <p>
  * The wizard model contains information about the overall task flow and allows
  * tasks to store and retreive data. Its usage allows mutliple tasks to be
- * chained together and share data from the output of one task to the input
- * of another.
+ * chained together and share data from the output of one task to the input of
+ * another.
  * </p>
  * 
  * [Copied from WST TaskModel)
@@ -41,13 +41,14 @@ public class WizardModel {
 	/**
 	 * Returns the object in the wizard model with the given id.
 	 * <p>
-	 * The id can be any of the predefined ids within WizardModel, or
-	 * any other key to retreive task-specific data.
+	 * The id can be any of the predefined ids within WizardModel, or any other
+	 * key to retreive task-specific data.
 	 * </p>
 	 * 
-	 * @param id an id for the object
-	 * @return the object with the given id, or <code>null</code>
-	 *    if no object could be found with that id
+	 * @param id
+	 *            an id for the object
+	 * @return the object with the given id, or <code>null</code> if no object
+	 *         could be found with that id
 	 */
 	public Object getObject(String id) {
 		try {
@@ -60,12 +61,14 @@ public class WizardModel {
 	/**
 	 * Put an object into the wizard model with the given id.
 	 * <p>
-	 * The id can be any of the predefined ids within WizardModel, or
-	 * any other key to store task-specific data. 
+	 * The id can be any of the predefined ids within WizardModel, or any other
+	 * key to store task-specific data.
 	 * </p>
 	 * 
-	 * @param id the id to associate the object with
-	 * @param obj an object, or <code>null</code> to reset (clear) the id
+	 * @param id
+	 *            the id to associate the object with
+	 * @param obj
+	 *            an object, or <code>null</code> to reset (clear) the id
 	 */
 	public void putObject(String id, Object obj) {
 		map.put(id, obj);

@@ -44,21 +44,28 @@ public class StringDialogField extends DialogField {
 	public void setContentAssistProcessor(IContentAssistProcessor processor) {
 		fContentAssistProcessor = processor;
 		if (fContentAssistProcessor != null && isOkToUse(fTextControl)) {
-			ContentAssistHandler.createHandlerForText(fTextControl, createPHPContentAssistant(fContentAssistProcessor));
+			ContentAssistHandler.createHandlerForText(fTextControl,
+					createPHPContentAssistant(fContentAssistProcessor));
 		}
 	}
 
-	public static SubjectControlContentAssistant createPHPContentAssistant(IContentAssistProcessor processor) {
+	public static SubjectControlContentAssistant createPHPContentAssistant(
+			IContentAssistProcessor processor) {
 		final SubjectControlContentAssistant contentAssistant = new SubjectControlContentAssistant();
 
-		contentAssistant.setContentAssistProcessor(processor, IDocument.DEFAULT_CONTENT_TYPE);
+		contentAssistant.setContentAssistProcessor(processor,
+				IDocument.DEFAULT_CONTENT_TYPE);
 
-		contentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
-		contentAssistant.setInformationControlCreator(new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true));
-			}
-		});
+		contentAssistant
+				.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
+		contentAssistant
+				.setInformationControlCreator(new IInformationControlCreator() {
+					public IInformationControl createInformationControl(
+							Shell parent) {
+						return new DefaultInformationControl(parent, SWT.NONE,
+								new HTMLTextPresenter(true));
+					}
+				});
 
 		return contentAssistant;
 	}
@@ -111,12 +118,14 @@ public class StringDialogField extends DialogField {
 		return true;
 	}
 
-	// ------- ui creation			
+	// ------- ui creation
 
 	/**
 	 * Creates or returns the created text control.
-	 * @param parent The parent composite or <code>null</code> when the widget has
-	 * already been created.
+	 * 
+	 * @param parent
+	 *            The parent composite or <code>null</code> when the widget has
+	 *            already been created.
 	 */
 	public Text getTextControl(Composite parent) {
 		if (fTextControl == null) {
@@ -135,7 +144,8 @@ public class StringDialogField extends DialogField {
 
 			fTextControl.setEnabled(isEnabled());
 			if (fContentAssistProcessor != null) {
-				ContentAssistHandler.createHandlerForText(fTextControl, createPHPContentAssistant(fContentAssistProcessor));
+				ContentAssistHandler.createHandlerForText(fTextControl,
+						createPHPContentAssistant(fContentAssistProcessor));
 			}
 		}
 		return fTextControl;
@@ -160,7 +170,7 @@ public class StringDialogField extends DialogField {
 		}
 	}
 
-	// ------ text access 
+	// ------ text access
 
 	/**
 	 * Gets the text. Can not be <code>null</code>
@@ -193,8 +203,11 @@ public class StringDialogField extends DialogField {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
 	 */
 	public void refresh() {
 		super.refresh();

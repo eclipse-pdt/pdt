@@ -19,14 +19,17 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 /**
  * 
  * @author guy.g
- *
+ * 
  */
-public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferencePage {
+public class PhpTypingPreferencePage extends
+		AbstractConfigurationBlockPreferencePage {
 
 	private TypingConfigurationBlock typingConfigurationBlock;
-	
-	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
-		typingConfigurationBlock = new TypingConfigurationBlock(this, overlayPreferenceStore);
+
+	protected IPreferenceConfigurationBlock createConfigurationBlock(
+			OverlayPreferenceStore overlayPreferenceStore) {
+		typingConfigurationBlock = new TypingConfigurationBlock(this,
+				overlayPreferenceStore);
 		return typingConfigurationBlock;
 	}
 
@@ -44,11 +47,11 @@ public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferenc
 	}
 
 	/**
-	 * This method overrides the default behavior in order to refresh 
-	 * values that are updated due to changes in other Preference pages
+	 * This method overrides the default behavior in order to refresh values
+	 * that are updated due to changes in other Preference pages
 	 */
 	public void setVisible(boolean visible) {
-		if(visible){
+		if (visible) {
 			typingConfigurationBlock.refreshValues();
 		}
 		super.setVisible(visible);

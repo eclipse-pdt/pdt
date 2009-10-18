@@ -15,7 +15,8 @@ import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.Transfer;
 
 /**
- * A special drop target listener which is typed with a <code>TransferData</code>.
+ * A special drop target listener which is typed with a
+ * <code>TransferData</code>.
  */
 public interface TransferDropTargetListener extends DropTargetListener {
 

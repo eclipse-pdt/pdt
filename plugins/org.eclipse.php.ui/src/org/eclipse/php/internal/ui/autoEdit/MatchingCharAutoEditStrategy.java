@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 /**
  * 
  * @author guy.g
- *
+ * 
  */
 
 public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy {
@@ -56,22 +56,22 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 
 	protected static char getMatchingChar(final char c) {
 		switch (c) {
-			case CURLY_OPEN:
-				return CURLY_CLOSE;
-			case CURLY_CLOSE:
-				return CURLY_OPEN;
-			case ROUND_OPEN:
-				return ROUND_CLOSE;
-			case ROUND_CLOSE:
-				return ROUND_OPEN;
-			case SQUARE_OPEN:
-				return SQUARE_CLOSE;
-			case SQUARE_CLOSE:
-				return SQUARE_OPEN;
-			case DOUBLE_QOUTES:
-			case SINGLE_QOUTE:
-			case BACK_QOUTE:
-				return c;
+		case CURLY_OPEN:
+			return CURLY_CLOSE;
+		case CURLY_CLOSE:
+			return CURLY_OPEN;
+		case ROUND_OPEN:
+			return ROUND_CLOSE;
+		case ROUND_CLOSE:
+			return ROUND_OPEN;
+		case SQUARE_OPEN:
+			return SQUARE_CLOSE;
+		case SQUARE_CLOSE:
+			return SQUARE_OPEN;
+		case DOUBLE_QOUTES:
+		case SINGLE_QOUTE:
+		case BACK_QOUTE:
+			return c;
 		}
 
 		return '-';
@@ -79,15 +79,19 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 
 	/**
 	 * returns true if the offset in the document is not to the left of text
-	 * excluding php closing tag (?>) and comments  
+	 * excluding php closing tag (?>) and comments
 	 */
-	protected boolean shouldAddClosingBracket(final IStructuredDocument document, final int offset, final boolean isQuote) throws BadLocationException {
+	protected boolean shouldAddClosingBracket(
+			final IStructuredDocument document, final int offset,
+			final boolean isQuote) throws BadLocationException {
 		// check the case of the end of the document
 		// if we are after close PHP tag, don't give auto completion
-		// otherwise, we could be typing our code without having a php close tag and we do need completion 
+		// otherwise, we could be typing our code without having a php close tag
+		// and we do need completion
 		// (can't check region type since it is wrong)
 		if (document.getLength() == offset) {
-			if (document.getChar(offset - 2) == '?' && document.getChar(offset - 1) == '>')
+			if (document.getChar(offset - 2) == '?'
+					&& document.getChar(offset - 1) == '>')
 				return false;
 			else
 				return true;
@@ -95,11 +99,12 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		if (document.getLength() == offset + 1) {
 			return true;
 		}
-		
+
 		final char currChar = document.getChar(offset);
 		final char nextChar = document.getChar(offset + 1);
 
-		if (Character.isWhitespace(currChar) || isClosingBracket(currChar) || isQuote && isQuote(currChar) || currChar == ';')
+		if (Character.isWhitespace(currChar) || isClosingBracket(currChar)
+				|| isQuote && isQuote(currChar) || currChar == ';')
 			return true;
 		if (offset + 1 >= document.getLength())
 			return false;
@@ -113,13 +118,18 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		if (currChar == '?' && nextChar == '>')
 			return true;
 		// in case of <<<
-		if (currChar == '<' && nextChar == '<' && offset + 2 < document.getLength() && document.getChar(offset + 2) == '<')
-		    return true;
+		if (currChar == '<' && nextChar == '<'
+				&& offset + 2 < document.getLength()
+				&& document.getChar(offset + 2) == '<')
+			return true;
 		return false;
 	}
 
-	protected static boolean isSpecialOpenCurlyInQuotes(final IStructuredDocument document, final int offset) throws BadLocationException {
-		final IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+	protected static boolean isSpecialOpenCurlyInQuotes(
+			final IStructuredDocument document, final int offset)
+			throws BadLocationException {
+		final IStructuredDocumentRegion sdRegion = document
+				.getRegionAtCharacterOffset(offset);
 		if (sdRegion == null)
 			return false;
 		final ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
@@ -127,7 +137,8 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		if (tRegion.getType() != PHPRegionTypes.PHP_ENCAPSED_AND_WHITESPACE)
 			return false;
 
-		final char firstChar = document.getChar(sdRegion.getStartOffset() + tRegion.getStart());
+		final char firstChar = document.getChar(sdRegion.getStartOffset()
+				+ tRegion.getStart());
 		if (firstChar != DOUBLE_QOUTES && firstChar != BACK_QOUTE)
 			return false;
 

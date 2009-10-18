@@ -24,34 +24,41 @@ import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 
 /**
  * @author seva
- *
- * Added to fix bug #141301. May be fixed in Eclipse in the future.
- *
+ * 
+ *         Added to fix bug #141301. May be fixed in Eclipse in the future.
+ * 
  */
 public class PHPTemplateStore extends ContributionTemplateStore {
 
-	public PHPTemplateStore(ContextTypeRegistry registry, IPreferenceStore store, String key) {
+	public PHPTemplateStore(ContextTypeRegistry registry,
+			IPreferenceStore store, String key) {
 		super(registry, store, key);
 	}
 
 	public void add(TemplatePersistenceData data) {
 		Template template = data.getTemplate();
 		if (template.getName().equals("")) { //$NON-NLS-1$
-			String title = PHPUIMessages.getString("PHPTemplateStore_error_title");
-			String message = PHPUIMessages.getString("PHPTemplateStore_error_message_nameEmpty");
-			MessageDialog.openError(Display.getCurrent().getActiveShell(), title, message);
+			String title = PHPUIMessages
+					.getString("PHPTemplateStore_error_title");
+			String message = PHPUIMessages
+					.getString("PHPTemplateStore_error_message_nameEmpty");
+			MessageDialog.openError(Display.getCurrent().getActiveShell(),
+					title, message);
 			return;
 		}
 
 		super.add(data);
 	}
 
-	public static CompiledTemplate compileTemplate(ContextTypeRegistry contextTypeRegistry, Template template) {
+	public static CompiledTemplate compileTemplate(
+			ContextTypeRegistry contextTypeRegistry, Template template) {
 		String string = null;
 		int offset = 0;
 		if (template != null) {
 			IDocument document = new Document();
-			TemplateContext context = new DocumentTemplateContext(contextTypeRegistry.getContextType(template.getContextTypeId()), document, 0, 0);
+			TemplateContext context = new DocumentTemplateContext(
+					contextTypeRegistry.getContextType(template
+							.getContextTypeId()), document, 0, 0);
 			try {
 				TemplateBuffer buffer = context.evaluate(template);
 				string = buffer.getString();
@@ -64,7 +71,8 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 				}
 
 			} catch (Exception e) {
-				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new PHP", e); //$NON-NLS-1$
+				Logger.log(Logger.WARNING_DEBUG,
+						"Could not create template for new PHP", e); //$NON-NLS-1$
 			}
 		}
 		return new CompiledTemplate(string, offset);

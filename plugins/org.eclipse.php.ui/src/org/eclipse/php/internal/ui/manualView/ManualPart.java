@@ -25,27 +25,29 @@ public class ManualPart extends ViewPart {
 	 */
 	private static boolean fgIsAvailable = false;
 	private static boolean fgAvailabilityChecked = false;
-	
+
 	public ManualPart() {
 	}
-	
+
 	/**
-	 * Tells whether the SWT Browser widget and hence this information
-	 * control is available.
-	 *
-	 * @param parent the parent component used for checking or <code>null</code> if none
+	 * Tells whether the SWT Browser widget and hence this information control
+	 * is available.
+	 * 
+	 * @param parent
+	 *            the parent component used for checking or <code>null</code> if
+	 *            none
 	 * @return <code>true</code> if this control is available
 	 */
 	public static boolean isAvailable(Composite parent) {
 		if (!fgAvailabilityChecked) {
 			try {
-				Browser browser= new Browser(parent, SWT.NONE);
+				Browser browser = new Browser(parent, SWT.NONE);
 				browser.dispose();
-				fgIsAvailable= true;
+				fgIsAvailable = true;
 			} catch (SWTError er) {
-				fgIsAvailable= false;
+				fgIsAvailable = false;
 			} finally {
-				fgAvailabilityChecked= true;
+				fgAvailabilityChecked = true;
 			}
 		}
 
@@ -53,13 +55,13 @@ public class ManualPart extends ViewPart {
 	}
 
 	public void createPartControl(Composite parent) {
-		Browser browser=new Browser(parent,SWT.NONE);
+		Browser browser = new Browser(parent, SWT.NONE);
 		browser.setUrl(PHPUIMessages.getString("ManualPart.URL")); //$NON-NLS-1$
 	}
 
 	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

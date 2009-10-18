@@ -32,24 +32,37 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 	private static IAutoEditStrategy docBlockAutoEditStrategy = new PhpDocAutoIndentStrategy();
 	private static IAutoEditStrategy tabAutoEditStrategy = new TabAutoEditStrategy();
 
-	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
+	public void customizeDocumentCommand(IDocument document,
+			DocumentCommand command) {
 		if (command.text == null) {
 			return;
 		}
-		String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) document, command.offset);
+		String partitionType = FormatterUtils.getPartitionType(
+				(IStructuredDocument) document, command.offset);
 
-		if (partitionType.equals(PHPPartitionTypes.PHP_DOC) || partitionType.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)) {
+		if (partitionType.equals(PHPPartitionTypes.PHP_DOC)
+				|| partitionType
+						.equals(PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)) {
 			// case of multi line comment or php doc
-			docBlockAutoEditStrategy.customizeDocumentCommand(document, command);
+			docBlockAutoEditStrategy
+					.customizeDocumentCommand(document, command);
 		} else if (partitionType.equals(PHPPartitionTypes.PHP_QUOTED_STRING)) {
-			indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
+			indentLineAutoEditStrategy.customizeDocumentCommand(document,
+					command);
 			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
-		} else if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT) || partitionType.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
-			caseDefaultAutoEditStrategy.customizeDocumentCommand(document, command);
-			matchingBracketAutoEditStrategy.customizeDocumentCommand(document, command);
-			curlyOpenAutoEditStrategy.customizeDocumentCommand(document, command);
-			curlyCloseAutoEditStrategy.customizeDocumentCommand(document, command);
-			indentLineAutoEditStrategy.customizeDocumentCommand(document, command);
+		} else if (partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)
+				|| partitionType
+						.equals(PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)) {
+			caseDefaultAutoEditStrategy.customizeDocumentCommand(document,
+					command);
+			matchingBracketAutoEditStrategy.customizeDocumentCommand(document,
+					command);
+			curlyOpenAutoEditStrategy.customizeDocumentCommand(document,
+					command);
+			curlyCloseAutoEditStrategy.customizeDocumentCommand(document,
+					command);
+			indentLineAutoEditStrategy.customizeDocumentCommand(document,
+					command);
 			tabAutoEditStrategy.customizeDocumentCommand(document, command);
 			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
 		}

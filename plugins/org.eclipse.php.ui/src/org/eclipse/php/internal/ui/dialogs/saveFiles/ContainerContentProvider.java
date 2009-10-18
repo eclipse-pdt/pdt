@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 /**
  * Provides content for a tree viewer that shows only containers.
+ * 
  * @see org.eclipse.ui.internal.ide.misc.ContainerContentProvider
  */
 public class ContainerContentProvider implements ITreeContentProvider {
@@ -36,19 +37,22 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	}
 
 	/**
-	 * The visual part that is using this content provider is about
-	 * to be disposed. Deallocate all allocated SWT resources.
+	 * The visual part that is using this content provider is about to be
+	 * disposed. Deallocate all allocated SWT resources.
 	 */
 	public void dispose() {
 	}
 
 	/*
-	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
+	 * @see
+	 * org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.
+	 * Object)
 	 */
 	public Object[] getChildren(Object element) {
 		if (element instanceof IWorkspace) {
 			// check if closed projects should be shown
-			IProject[] allProjects = ((IWorkspace) element).getRoot().getProjects();
+			IProject[] allProjects = ((IWorkspace) element).getRoot()
+					.getProjects();
 			if (showClosedProjects) {
 				return allProjects;
 			}
@@ -73,7 +77,8 @@ public class ContainerContentProvider implements ITreeContentProvider {
 					}
 					return children.toArray();
 				} catch (CoreException e) {
-					// this should never happen because we call #isAccessible before invoking #members
+					// this should never happen because we call #isAccessible
+					// before invoking #members
 				}
 			}
 		}
@@ -81,14 +86,18 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	}
 
 	/*
-	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+	 * @see
+	 * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
+	 * .lang.Object)
 	 */
 	public Object[] getElements(Object element) {
 		return getChildren(element);
 	}
 
 	/*
-	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+	 * @see
+	 * org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object
+	 * )
 	 */
 	public Object getParent(Object element) {
 		if (element instanceof IResource) {
@@ -98,7 +107,9 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	}
 
 	/*
-	 * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
+	 * @see
+	 * org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.
+	 * Object)
 	 */
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
@@ -111,10 +122,11 @@ public class ContainerContentProvider implements ITreeContentProvider {
 	}
 
 	/**
-	 * Specify whether or not to show closed projects in the tree 
-	 * viewer.  Default is to show closed projects.
+	 * Specify whether or not to show closed projects in the tree viewer.
+	 * Default is to show closed projects.
 	 * 
-	 * @param show boolean if false, do not show closed projects in the tree
+	 * @param show
+	 *            boolean if false, do not show closed projects in the tree
 	 */
 	public void showClosedProjects(boolean show) {
 		showClosedProjects = show;

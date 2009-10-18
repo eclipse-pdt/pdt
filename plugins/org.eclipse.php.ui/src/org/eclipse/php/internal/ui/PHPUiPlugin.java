@@ -66,7 +66,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	// The shared instance.
 	private static PHPUiPlugin plugin;
 
-	//the active formatter for this execution
+	// the active formatter for this execution
 	private IContentFormatter fActiveFormatter = null;
 
 	public static final String ID = "org.eclipse.php.ui"; //$NON-NLS-1$
@@ -76,7 +76,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
 
-	// the switch for creating a demo project is -pd. divide to chars for performance reasons
+	// the switch for creating a demo project is -pd. divide to chars for
+	// performance reasons
 	public static final char CREATE_TEST_PROJECT_SWITCH_FIRST_CHAR = '-'; //$NON-NLS-1$
 	public static final char CREATE_TEST_PROJECT_SWITCH_SECOND_CHAR = 'p'; //$NON-NLS-1$
 	public static final char CREATE_TEST_PROJECT_SWITCH_THIRD_CHAR = 'd'; //$NON-NLS-1$
@@ -97,6 +98,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * The AST provider.
+	 * 
 	 * @since 3.0
 	 */
 	private ASTProvider fASTProvider;
@@ -117,42 +119,51 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
+
 		initializeAfterStart(context);
 	}
-	
+
 	/**
-	 * This method is used for later initialization. This trick should release plug-in start-up.
+	 * This method is used for later initialization. This trick should release
+	 * plug-in start-up.
+	 * 
 	 * @param context
 	 */
 	void initializeAfterStart(final BundleContext context) {
 		Job job = new Job("") {
 			protected IStatus run(IProgressMonitor monitor) {
-				
-				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						DNDUtils.initEditorSiteExternalDrop();
-						processCommandLine(context);
-					}
-				});
-				
+
+				PlatformUI.getWorkbench().getDisplay().asyncExec(
+						new Runnable() {
+							public void run() {
+								DNDUtils.initEditorSiteExternalDrop();
+								processCommandLine(context);
+							}
+						});
+
 				if (PlatformUI.isWorkbenchRunning()) {
-					new InitializeAfterLoadJob().schedule(); // must be last call in start() method
+					new InitializeAfterLoadJob().schedule(); // must be last
+																// call in
+																// start()
+																// method
 				}
 				return Status.OK_STATUS;
 			}
 		};
 		job.schedule(Job.LONG);
 	}
-	
+
 	static void initializeAfterLoad(IProgressMonitor monitor) {
-		org.eclipse.dltk.internal.corext.util.OpenTypeHistory.getInstance(PHPUILanguageToolkit.getInstance()).checkConsistency(monitor);
+		org.eclipse.dltk.internal.corext.util.OpenTypeHistory.getInstance(
+				PHPUILanguageToolkit.getInstance()).checkConsistency(monitor);
 	}
 
 	private void processCommandLine(BundleContext context) {
-		ServiceTracker environmentTracker = new ServiceTracker(context, EnvironmentInfo.class.getName(), null);
+		ServiceTracker environmentTracker = new ServiceTracker(context,
+				EnvironmentInfo.class.getName(), null);
 		environmentTracker.open();
-		EnvironmentInfo environmentInfo = (EnvironmentInfo) environmentTracker.getService();
+		EnvironmentInfo environmentInfo = (EnvironmentInfo) environmentTracker
+				.getService();
 		environmentTracker.close();
 		if (environmentInfo == null) {
 			return;
@@ -162,13 +173,20 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			return;
 		}
 
-		// go over the program args. search backwards since the program parameters are at the end of the
+		// go over the program args. search backwards since the program
+		// parameters are at the end of the
 		// array
 		for (int i = args.length - 1; i >= 0; i--) {
 			// check if there is a flag for creating a test project
 			// evaluate each char and DONT use "String.equals" for performance
-			// even thought this takes place  asynchronously
-			if (args[i].length() == 3 && CREATE_TEST_PROJECT_SWITCH_FIRST_CHAR == (args[i].charAt(0)) && CREATE_TEST_PROJECT_SWITCH_SECOND_CHAR == (args[i].charAt(1)) && CREATE_TEST_PROJECT_SWITCH_THIRD_CHAR == (args[i].charAt(2))) {
+			// even thought this takes place asynchronously
+			if (args[i].length() == 3
+					&& CREATE_TEST_PROJECT_SWITCH_FIRST_CHAR == (args[i]
+							.charAt(0))
+					&& CREATE_TEST_PROJECT_SWITCH_SECOND_CHAR == (args[i]
+							.charAt(1))
+					&& CREATE_TEST_PROJECT_SWITCH_THIRD_CHAR == (args[i]
+							.charAt(2))) {
 				createTestProject();
 				return;
 			}
@@ -178,7 +196,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Create the php demo project and its files 
+	 * Create the php demo project and its files
 	 */
 	private void createTestProject() {
 		PhpDemoProject.run();
@@ -201,13 +219,16 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in relative path.
+	 * Returns an image descriptor for the image file at the given plug-in
+	 * relative path.
 	 * 
-	 * @param path the path
+	 * @param path
+	 *            the path
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.eclipse.php.ui", path); //$NON-NLS-1$
+		return AbstractUIPlugin.imageDescriptorFromPlugin(
+				"org.eclipse.php.ui", path); //$NON-NLS-1$
 	}
 
 	public static Shell getActiveWorkbenchShell() {
@@ -231,7 +252,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	public static void log(Throwable e) {
-		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, "PHP ui plugin internal error", e)); //$NON-NLS-1$
+		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR,
+				"PHP ui plugin internal error", e)); //$NON-NLS-1$
 	}
 
 	public static ImageDescriptorRegistry getImageDescriptorRegistry() {
@@ -294,7 +316,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public TemplateStore getTemplateStore() {
 		if (templateStore == null) {
-			templateStore = new PHPTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), PreferenceConstants.TEMPLATES_KEY);
+			templateStore = new PHPTemplateStore(getTemplateContextRegistry(),
+					getPreferenceStore(), PreferenceConstants.TEMPLATES_KEY);
 
 			try {
 				templateStore.load();
@@ -313,11 +336,13 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public ContextTypeRegistry getTemplateContextRegistry() {
 		if (contentTypeRegistry == null) {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
-			
+
 			registry.addContextType(PhpTemplateContextType.PHP_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpNewFileTemplateContextType.NEW_PHP_CONTEXT_TYPE_ID);
-			registry.addContextType(PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
-			
+			registry
+					.addContextType(PhpNewFileTemplateContextType.NEW_PHP_CONTEXT_TYPE_ID);
+			registry
+					.addContextType(PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
+
 			contentTypeRegistry = registry;
 		}
 
@@ -335,9 +360,12 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the registry of the extensions to the <code>org.eclipse.php.ui.phpFoldingStructureProvider</code> extension point.
+	 * Returns the registry of the extensions to the
+	 * <code>org.eclipse.php.ui.phpFoldingStructureProvider</code> extension
+	 * point.
 	 * 
-	 * @return the registry of contributed <code>IPHPFoldingStructureProvider</code>
+	 * @return the registry of contributed
+	 *         <code>IPHPFoldingStructureProvider</code>
 	 * @since 3.1
 	 */
 	public synchronized PHPFoldingStructureProviderRegistry getFoldingStructureProviderRegistry() {
@@ -354,20 +382,25 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public PHPEditorTextHoverDescriptor[] getPHPEditorTextHoverDescriptors() {
 		if (fPHPEditorTextHoverDescriptors == null) {
-			fPHPEditorTextHoverDescriptors = PHPEditorTextHoverDescriptor.getContributedHovers();
+			fPHPEditorTextHoverDescriptors = PHPEditorTextHoverDescriptor
+					.getContributedHovers();
 			ConfigurationElementSorter sorter = new ConfigurationElementSorter() {
 				/*
-				 * @see org.eclipse.ui.texteditor.ConfigurationElementSorter#getConfigurationElement(java.lang.Object)
+				 * @seeorg.eclipse.ui.texteditor.ConfigurationElementSorter#
+				 * getConfigurationElement(java.lang.Object)
 				 */
-				public IConfigurationElement getConfigurationElement(Object object) {
-					return ((PHPEditorTextHoverDescriptor) object).getConfigurationElement();
+				public IConfigurationElement getConfigurationElement(
+						Object object) {
+					return ((PHPEditorTextHoverDescriptor) object)
+							.getConfigurationElement();
 				}
 			};
 			sorter.sort(fPHPEditorTextHoverDescriptors);
 
 			// Move Best Match hover to front
 			for (int i = 0; i < fPHPEditorTextHoverDescriptors.length - 1; i++) {
-				if (PreferenceConstants.ID_BESTMATCH_HOVER.equals(fPHPEditorTextHoverDescriptors[i].getId())) {
+				if (PreferenceConstants.ID_BESTMATCH_HOVER
+						.equals(fPHPEditorTextHoverDescriptors[i].getId())) {
 					PHPEditorTextHoverDescriptor hoverDescriptor = fPHPEditorTextHoverDescriptors[i];
 					for (int j = i; j > 0; j--)
 						fPHPEditorTextHoverDescriptors[j] = fPHPEditorTextHoverDescriptors[j - 1];
@@ -384,7 +417,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Resets the PHP editor text hovers contributed to the workbench.
 	 * <p>
-	 * This will force a rebuild of the descriptors the next time a client asks for them.
+	 * This will force a rebuild of the descriptors the next time a client asks
+	 * for them.
 	 * </p>
 	 * 
 	 * @since 2.1
@@ -398,7 +432,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public PHPManualSiteDescriptor[] getPHPManualSiteDescriptors() {
 		if (fPHPManualSiteDescriptors == null) {
-			fPHPManualSiteDescriptors = PHPManualSiteDescriptor.getContributedSites();
+			fPHPManualSiteDescriptors = PHPManualSiteDescriptor
+					.getContributedSites();
 		}
 		return fPHPManualSiteDescriptors;
 	}
@@ -444,26 +479,30 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the {@link ITypeRoot} wrapped by the given editor input.
-	 *
-	 * @param editorInput the editor input
-	 * @return the {@link ITypeRoot} wrapped by <code>editorInput</code> or <code>null</code> if the editor input
-	 * does not stand for a ITypeRoot
+	 * 
+	 * @param editorInput
+	 *            the editor input
+	 * @return the {@link ITypeRoot} wrapped by <code>editorInput</code> or
+	 *         <code>null</code> if the editor input does not stand for a
+	 *         ITypeRoot
 	 * 
 	 * @since 3.4
 	 */
 	public static ISourceModule getEditorInputTypeRoot(IEditorInput editorInput) {
 		// Performance: check working copy manager first: this is faster
-		ISourceModule cu = DLTKUIPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
+		ISourceModule cu = DLTKUIPlugin.getDefault().getWorkingCopyManager()
+				.getWorkingCopy(editorInput);
 		if (cu != null)
 			return cu;
 
-		ISourceModule je = (ISourceModule) editorInput.getAdapter(ISourceModule.class);
+		ISourceModule je = (ISourceModule) editorInput
+				.getAdapter(ISourceModule.class);
 		return je;
 	}
 
 	/**
 	 * Returns the working copy manager for the Java UI plug-in.
-	 *
+	 * 
 	 * @return the working copy manager for the Java UI plug-in
 	 */
 	public static IWorkingCopyManager getWorkingCopyManager() {
@@ -472,22 +511,29 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the current active formatter
+	 * 
 	 * @return
 	 */
 	public IContentFormatter getActiveFormatter() {
 		if (fActiveFormatter == null) {
 			String formatterExtensionName = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
-			IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
+			IConfigurationElement[] elements = Platform.getExtensionRegistry()
+					.getConfigurationElementsFor(formatterExtensionName);
 			for (int i = 0; i < elements.length; i++) {
 				IConfigurationElement element = elements[i];
 				if (element.getName().equals("processor")) { //$NON-NLS-1$
-					ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
+					ElementCreationProxy ecProxy = new ElementCreationProxy(
+							element, formatterExtensionName);
 					fActiveFormatter = (IContentFormatter) ecProxy.getObject();
 				}
 			}
 			if (fActiveFormatter == null) {
-				fActiveFormatter = new MultiPassContentFormatter(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, IHTMLPartitions.HTML_DEFAULT);
-				((MultiPassContentFormatter) fActiveFormatter).setMasterStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()));
+				fActiveFormatter = new MultiPassContentFormatter(
+						IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
+						IHTMLPartitions.HTML_DEFAULT);
+				((MultiPassContentFormatter) fActiveFormatter)
+						.setMasterStrategy(new StructuredFormattingStrategy(
+								new PhpFormatProcessorImpl()));
 			}
 		}
 		return fActiveFormatter;

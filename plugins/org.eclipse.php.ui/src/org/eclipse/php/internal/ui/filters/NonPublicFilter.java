@@ -20,9 +20,11 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.internal.core.Logger;
 
 /**
- * This class filters out the non public elements of a PHP file (default access is considered as public)
+ * This class filters out the non public elements of a PHP file (default access
+ * is considered as public)
+ * 
  * @author Eden K., 2008
- *
+ * 
  */
 public class NonPublicFilter extends ViewerFilter {
 
@@ -30,7 +32,8 @@ public class NonPublicFilter extends ViewerFilter {
 		if (element instanceof IMethod) {
 			IMethod method = (IMethod) element;
 			try {
-				if ((method.getFlags() & Modifiers.AccPrivate) != 0 || (method.getFlags() & Modifiers.AccProtected) != 0) {
+				if ((method.getFlags() & Modifiers.AccPrivate) != 0
+						|| (method.getFlags() & Modifiers.AccProtected) != 0) {
 					return false;
 				}
 			} catch (ModelException e) {
@@ -39,7 +42,8 @@ public class NonPublicFilter extends ViewerFilter {
 		} else if (element instanceof IField) {
 			IField field = (IField) element;
 			try {
-				if ((field.getFlags() & Modifiers.AccPrivate) != 0 || (field.getFlags() & Modifiers.AccProtected) != 0) {
+				if ((field.getFlags() & Modifiers.AccPrivate) != 0
+						|| (field.getFlags() & Modifiers.AccProtected) != 0) {
 					return false;
 				}
 			} catch (ModelException e) {

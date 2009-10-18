@@ -12,7 +12,8 @@
 package org.eclipse.php.internal.ui.wizards.fields;
 
 /**
- * Change listener used by <code>ListDialogField</code> and <code>CheckedListDialogField</code>
+ * Change listener used by <code>ListDialogField</code> and
+ * <code>CheckedListDialogField</code>
  */
 public interface IListAdapter<E> {
 

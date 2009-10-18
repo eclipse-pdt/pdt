@@ -37,7 +37,9 @@ import org.eclipse.ui.IWorkingSet;
  * 
  * @see org.eclipse.jdt.ui.StandardJavaElementContentProvider
  */
-public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider implements ITreeContentProvider, IElementChangedListener, IPropertyChangeListener {
+public class ProjectOutlineContentProvider extends
+		ScriptExplorerContentProvider implements ITreeContentProvider,
+		IElementChangedListener, IPropertyChangeListener {
 
 	protected static final int ORIGINAL = 0;
 	protected static final int PARENT = 1 << 0;
@@ -141,7 +143,8 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		if (fInput == null) {
 			return false;
 		}
-		if (fInput instanceof IModelElement && ((IModelElement) fInput).exists()) {
+		if (fInput instanceof IModelElement
+				&& ((IModelElement) fInput).exists()) {
 			return false;
 		}
 		if (fInput instanceof IResource && ((IResource) fInput).exists()) {
@@ -154,7 +157,8 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=156239
 			return false;
 		}
-		postRefresh(fInput, ProjectOutlineContentProvider.ORIGINAL, fInput, runnables);
+		postRefresh(fInput, ProjectOutlineContentProvider.ORIGINAL, fInput,
+				runnables);
 		return true;
 	}
 
@@ -200,12 +204,15 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	/*
 	 * (non-Javadoc) Method declared on IContentProvider.
 	 */
-	public void inputChanged(final Viewer viewer, final Object oldInput, Object newInput) {
+	public void inputChanged(final Viewer viewer, final Object oldInput,
+			Object newInput) {
 		super.inputChanged(viewer, oldInput, newInput);
 		if (null != newInput && newInput instanceof Model) {
 			try {
-				IScriptProject[] scriptProjects = ((Model) newInput).getScriptProjects();
-				newInput = scriptProjects.length > 0 ? scriptProjects[0] : new Object[0];
+				IScriptProject[] scriptProjects = ((Model) newInput)
+						.getScriptProjects();
+				newInput = scriptProjects.length > 0 ? scriptProjects[0]
+						: new Object[0];
 			} catch (ModelException e) {
 				Logger.logException(e);
 			}
@@ -225,13 +232,15 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	 * @param delta
 	 *            the delta to process
 	 * @param runnables
-	 *            the resulting view changes as runnables (type {@link Runnable})
+	 *            the resulting view changes as runnables (type {@link Runnable}
+	 *            )
 	 * @return true is returned if the conclusion is to refresh a parent of an
 	 *         element. In that case no siblings need to be processed
 	 * @throws JavaModelException
 	 *             thrown when the access to an element failed
 	 */
-	private boolean processDelta(final IModelElementDelta delta, final Collection runnables) throws ModelException {
+	private boolean processDelta(final IModelElementDelta delta,
+			final Collection runnables) throws ModelException {
 
 		int kind = delta.getKind();
 		IModelElement element = delta.getElement();
@@ -239,45 +248,56 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 
 		if (kind == IModelElementDelta.ADDED) {
 
-			// if it is an IOpenable (source module and up) - refresh the view 
-			IModelElement refreshRoot = (element instanceof IOpenable) ? element.getScriptProject() : element.getParent();
+			// if it is an IOpenable (source module and up) - refresh the view
+			IModelElement refreshRoot = (element instanceof IOpenable) ? element
+					.getScriptProject()
+					: element.getParent();
 			if (null == parent) {
-				postRefresh(refreshRoot, ProjectOutlineContentProvider.ORIGINAL, element, runnables);
+				postRefresh(refreshRoot,
+						ProjectOutlineContentProvider.ORIGINAL, element,
+						runnables);
 				return false;
 			}
-			
-			// adding element if parent is not null 
+
+			// adding element if parent is not null
 			// (means it should be showed on the project outline view)
 			postAdd(parent, element, runnables);
-		
+
 		} else if (kind == IModelElementDelta.REMOVED) {
 
 			if (element instanceof IOpenable) {
 				IPath removedPath = element.getPath();
 				for (TreeItem node : fViewer.getTree().getItems()) {
-					//iterating on all 1st level (classes, constants, and functions)
+					// iterating on all 1st level (classes, constants, and
+					// functions)
 					TreeItem[] treeItems = node.getItems();
 					for (TreeItem treeItem : treeItems) {
 						// iterating on all 2nd level elements and checking :
-						// if item path is prefixed by the removed element - need to remove it.
-						if (removedPath.isPrefixOf(((IModelElement) treeItem.getData()).getPath())) {
-							postRemove((IModelElement) treeItem.getData(), runnables);
+						// if item path is prefixed by the removed element -
+						// need to remove it.
+						if (removedPath.isPrefixOf(((IModelElement) treeItem
+								.getData()).getPath())) {
+							postRemove((IModelElement) treeItem.getData(),
+									runnables);
 						}
 					}
 
 				}
 			} else {
-				//if element is not folder/project/SourceModule etc' - just need to remove it from the view
+				// if element is not folder/project/SourceModule etc' - just
+				// need to remove it from the view
 				postRemove(element, runnables);
-			} 
-			
+			}
+
 			return false;
 		}
 		handleAffectedChildren(delta, element, runnables);
 		return false;
 	}
 
-	/* package */void handleAffectedChildren(final IModelElementDelta delta, final IModelElement element, final Collection runnables) throws ModelException {
+	/* package */void handleAffectedChildren(final IModelElementDelta delta,
+			final IModelElement element, final Collection runnables)
+			throws ModelException {
 
 		IModelElementDelta[] affectedChildren = delta.getAffectedChildren();
 
@@ -285,12 +305,13 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 			int count = 0;
 			for (int i = 0; i < affectedChildren.length; i++) {
 
-				// if there is more than  
+				// if there is more than
 				if (affectedChildren[i].getElement() instanceof IOpenable) {
 					count++;
 				}
 				if (count > 1) {
-					postRefresh(fInput, ProjectOutlineContentProvider.ORIGINAL, element, runnables);
+					postRefresh(fInput, ProjectOutlineContentProvider.ORIGINAL,
+							element, runnables);
 					return;
 				}
 

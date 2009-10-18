@@ -18,13 +18,15 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Inofrmation contol for the PHP language
+ * 
  * @author Roy
- *
+ * 
  */
-public class PHPOutlineInformationControl extends ScriptOutlineInformationControl {
-	
-	
-	public PHPOutlineInformationControl(Shell parent, int shellStyle, int treeStyle, String commandId) {
+public class PHPOutlineInformationControl extends
+		ScriptOutlineInformationControl {
+
+	public PHPOutlineInformationControl(Shell parent, int shellStyle,
+			int treeStyle, String commandId) {
 		super(parent, shellStyle, treeStyle, commandId);
 	}
 

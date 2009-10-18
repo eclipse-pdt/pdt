@@ -16,18 +16,24 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 
-	private static final String TARGET_OF = PHPUIMessages.getString("BreakContinueTargetFinder.0"); //$NON-NLS-1$
+	private static final String TARGET_OF = PHPUIMessages
+			.getString("BreakContinueTargetFinder.0"); //$NON-NLS-1$
 	public static final String ID = "BreakContinueTargetFinder"; //$NON-NLS-1$
-	private static final int[] TARGETS = { ASTNode.FOR_STATEMENT, ASTNode.WHILE_STATEMENT, ASTNode.SWITCH_STATEMENT, ASTNode.FOR_EACH_STATEMENT, ASTNode.DO_STATEMENT };
-	private static final int[] STOPPERS = { ASTNode.PROGRAM, ASTNode.FUNCTION_DECLARATION };
+	private static final int[] TARGETS = { ASTNode.FOR_STATEMENT,
+			ASTNode.WHILE_STATEMENT, ASTNode.SWITCH_STATEMENT,
+			ASTNode.FOR_EACH_STATEMENT, ASTNode.DO_STATEMENT };
+	private static final int[] STOPPERS = { ASTNode.PROGRAM,
+			ASTNode.FUNCTION_DECLARATION };
 
 	private FunctionDeclaration fFunctionDeclaration;
 	private Statement statement;
 	private int nestingLevel;
 
 	/**
-	 * @param root the AST root
-	 * @param node the selected node
+	 * @param root
+	 *            the AST root
+	 * @param node
+	 *            the selected node
 	 * @return returns a message if there is a problem
 	 */
 	public String initialize(Program root, ASTNode node) {
@@ -52,14 +58,17 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	}
 
 	/*
-	 * Returns the nesting level of the expression.
-	 * Since the Break and the Continue can provide an optional nesting level to break or continue, the
-	 * expression attached to the statements hold this information.
-	 * In case the (optional) expression is null, this method returns a default value of 1.
-	 * Also note that the break argument accepts any expression, including a function result. But since this
-	 * result is dynamically determined at runtime, we return a nesting level of 0 in this case.
-	 * Zero nesting level will not mark any occurrence for the break or the continue.
+	 * Returns the nesting level of the expression. Since the Break and the
+	 * Continue can provide an optional nesting level to break or continue, the
+	 * expression attached to the statements hold this information. In case the
+	 * (optional) expression is null, this method returns a default value of 1.
+	 * Also note that the break argument accepts any expression, including a
+	 * function result. But since this result is dynamically determined at
+	 * runtime, we return a nesting level of 0 in this case. Zero nesting level
+	 * will not mark any occurrence for the break or the continue.
+	 * 
 	 * @param expression
+	 * 
 	 * @return The nesting level determined from the expression (>=0).
 	 */
 	protected final int getNestingLevel(Expression expression) {
@@ -94,7 +103,10 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
+	 * ()
 	 */
 	protected void findOccurrences() {
 		if (nestingLevel == 0) {
@@ -105,13 +117,18 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 		if (nestingLevel > 1) {
 			nestingStr = ' ' + Integer.toString(nestingLevel);
 		}
-		fDescription = Messages.format(TARGET_OF, (statement.getType() == ASTNode.BREAK_STATEMENT) ? "break" + nestingStr : "continue" + nestingStr); //$NON-NLS-1$ //$NON-NLS-2$
-		// No need for the visitor. Just traverse up the AST tree and locate the target.
+		fDescription = Messages
+				.format(
+						TARGET_OF,
+						(statement.getType() == ASTNode.BREAK_STATEMENT) ? "break" + nestingStr : "continue" + nestingStr); //$NON-NLS-1$ //$NON-NLS-2$
+		// No need for the visitor. Just traverse up the AST tree and locate the
+		// target.
 		addOccurrences();
 	}
 
 	/*
-	 * Traverse up the AST tree and locate the node to add as an occurrence target.
+	 * Traverse up the AST tree and locate the node to add as an occurrence
+	 * target.
 	 */
 	private void addOccurrences() {
 		boolean targetFound = false;
@@ -127,10 +144,14 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 				nestingCount++;
 				if (nestingCount == nestingLevel) {
 					// Found the target level
-					fResult.add(new OccurrenceLocation(parent.getStart(), getLength(parent), getOccurrenceType(null), fDescription));
-					// In cases where we have a block, mark the closing curly bracket
+					fResult.add(new OccurrenceLocation(parent.getStart(),
+							getLength(parent), getOccurrenceType(null),
+							fDescription));
+					// In cases where we have a block, mark the closing curly
+					// bracket
 					if (blockEnd > -1) {
-						fResult.add(new OccurrenceLocation(blockEnd - 1, 1, getOccurrenceType(null), fDescription));
+						fResult.add(new OccurrenceLocation(blockEnd - 1, 1,
+								getOccurrenceType(null), fDescription));
 					}
 					targetFound = true;
 				} else {
@@ -146,37 +167,42 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	}
 
 	/*
-	 * Returns the length of the target node start.
-	 * For example: A WhileStatement will return a length of 5, which is the length of the keyword 'while'.
+	 * Returns the length of the target node start. For example: A
+	 * WhileStatement will return a length of 5, which is the length of the
+	 * keyword 'while'.
 	 */
 	private int getLength(ASTNode parent) {
 		switch (parent.getType()) {
-			case ASTNode.FOR_STATEMENT:
-				return 3;
-			case ASTNode.WHILE_STATEMENT:
-				return 5;
-			case ASTNode.SWITCH_STATEMENT:
-				return 6;
-			case ASTNode.FOR_EACH_STATEMENT:
-				return 7;
-			case ASTNode.DO_STATEMENT:
-				return 2;
+		case ASTNode.FOR_STATEMENT:
+			return 3;
+		case ASTNode.WHILE_STATEMENT:
+			return 5;
+		case ASTNode.SWITCH_STATEMENT:
+			return 6;
+		case ASTNode.FOR_EACH_STATEMENT:
+			return 7;
+		case ASTNode.DO_STATEMENT:
+			return 2;
 		}
 		return 0;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * getOccurrenceReadWriteType
+	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	protected int getOccurrenceType(ASTNode node) {
 		return IOccurrencesFinder.K_EXIT_POINT_OCCURRENCE;
 	}
 
-	//	public boolean visit(ReturnStatement node) {
-	//		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fDescription));
-	//		return super.visit(node);
-	//	}
+	// public boolean visit(ReturnStatement node) {
+	// fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(),
+	// getOccurrenceType(null), fDescription));
+	// return super.visit(node);
+	// }
 
 	public Program getASTRoot() {
 		return fASTRoot;

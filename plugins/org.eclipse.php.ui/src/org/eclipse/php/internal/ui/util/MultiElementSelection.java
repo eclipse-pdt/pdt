@@ -26,7 +26,8 @@ public class MultiElementSelection extends StructuredSelection {
 	private TreePath[] fAllTreePaths;
 	private CustomHashtable fElement2TreePaths;
 
-	public MultiElementSelection(StructuredViewer viewer, List elements, TreePath[] treePaths) {
+	public MultiElementSelection(StructuredViewer viewer, List elements,
+			TreePath[] treePaths) {
 		super(elements);
 		fAllTreePaths = treePaths;
 		fElement2TreePaths = createTreePathMap(viewer.getComparer());

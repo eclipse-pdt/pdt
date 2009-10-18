@@ -17,13 +17,16 @@ import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 
 /**
  * Support for JavaScript editing in php source
- * @see issue #242015 
+ * 
+ * @see issue #242015
  */
-public class AdapterFactoryProviderForJSDT extends org.eclipse.wst.jsdt.web.ui.internal.registry.AdapterFactoryProviderForJSDT {
-	
+public class AdapterFactoryProviderForJSDT
+		extends
+		org.eclipse.wst.jsdt.web.ui.internal.registry.AdapterFactoryProviderForJSDT {
+
 	@Override
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
-		return contentTypeDescription  instanceof PHPModelHandler;
+		return contentTypeDescription instanceof PHPModelHandler;
 	}
 
 }

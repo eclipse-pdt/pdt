@@ -104,7 +104,8 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 
 	public void addPages() {
 		super.addPages();
-		pharPackageWizardPage = new PharPackageWizardPage(pharPackage, fSelection);
+		pharPackageWizardPage = new PharPackageWizardPage(pharPackage,
+				fSelection);
 		addPage(pharPackageWizardPage);
 	}
 

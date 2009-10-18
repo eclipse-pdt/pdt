@@ -15,19 +15,20 @@ import java.io.File;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 
-
 /**
  * <code>CodeTemplates</code> gives access to the available code templates.
+ * 
  * @since 3.0
- * @deprecated use {@link org.eclipse.jdt.internal.ui.JavaPlugin#getCodeTemplateStore()} instead 
+ * @deprecated use
+ *             {@link org.eclipse.jdt.internal.ui.JavaPlugin#getCodeTemplateStore()}
+ *             instead
  */
 public class CodeTemplates extends TemplateSet {
 
-	private static final String TEMPLATE_FILE= "codetemplates.xml"; //$NON-NLS-1$
+	private static final String TEMPLATE_FILE = "codetemplates.xml"; //$NON-NLS-1$
 
 	/** Singleton. */
 	private static CodeTemplates fgTemplates;
@@ -38,24 +39,26 @@ public class CodeTemplates extends TemplateSet {
 
 	/**
 	 * Returns an instance of templates.
+	 * 
 	 * @return an instance of templates
 	 */
 	public static CodeTemplates getInstance() {
 		if (fgTemplates == null)
-			fgTemplates= new CodeTemplates();
-		
+			fgTemplates = new CodeTemplates();
+
 		return fgTemplates;
 	}
-	
+
 	private CodeTemplates() {
-		super("codetemplate", PHPUiPlugin.getDefault().getTemplateContextRegistry()); //$NON-NLS-1$
+		super(
+				"codetemplate", PHPUiPlugin.getDefault().getTemplateContextRegistry()); //$NON-NLS-1$
 		create();
 	}
-	
+
 	private void create() {
-		
+
 		try {
-			File templateFile= getTemplateFile();
+			File templateFile = getTemplateFile();
 			if (templateFile.exists()) {
 				addFromFile(templateFile, false);
 			}
@@ -65,33 +68,36 @@ public class CodeTemplates extends TemplateSet {
 			clear();
 		}
 
-	}	
-	
+	}
+
 	/**
 	 * Resets the template set.
-	 * @throws CoreException 
+	 * 
+	 * @throws CoreException
 	 */
 	public void reset() throws CoreException {
 	}
 
 	/**
 	 * Resets the template set with the default templates.
-	 * @throws CoreException 
+	 * 
+	 * @throws CoreException
 	 */
 	public void restoreDefaults() throws CoreException {
 	}
 
 	/**
 	 * Saves the template set.
-	 * @throws CoreException 
+	 * 
+	 * @throws CoreException
 	 */
-	public void save() throws CoreException {					
+	public void save() throws CoreException {
 	}
 
 	private static File getTemplateFile() {
-		IPath path= PHPUiPlugin.getDefault().getStateLocation();
-		path= path.append(TEMPLATE_FILE);
-		
+		IPath path = PHPUiPlugin.getDefault().getStateLocation();
+		path = path.append(TEMPLATE_FILE);
+
 		return path.toFile();
 	}
 

@@ -21,11 +21,11 @@ import org.eclipse.jface.operation.ModalContext;
 import org.eclipse.swt.custom.BusyIndicator;
 
 /**
- * A runnable context that shows the busy cursor instead of a progress
- * monitor. Note, that the UI thread is blocked even if the runnable
- * is executed in a separate thread by passing <code>fork= true</code>
- * to the context's run method. Furthermore this context doesn't provide
- * any UI to cancel the operation.
+ * A runnable context that shows the busy cursor instead of a progress monitor.
+ * Note, that the UI thread is blocked even if the runnable is executed in a
+ * separate thread by passing <code>fork= true</code> to the context's run
+ * method. Furthermore this context doesn't provide any UI to cancel the
+ * operation.
  */
 public class BusyIndicatorRunnableContext implements IRunnableContext {
 
@@ -89,11 +89,14 @@ public class BusyIndicatorRunnableContext implements IRunnableContext {
 			}
 		}
 
-		private void internalRun(boolean fork, final IRunnableWithProgress runnable) throws InvocationTargetException, InterruptedException {
+		private void internalRun(boolean fork,
+				final IRunnableWithProgress runnable)
+				throws InvocationTargetException, InterruptedException {
 			Thread thread = Thread.currentThread();
 			// Do not spawn another thread if we are already in a modal context
 			// thread or inside a busy context thread.
-			if (thread instanceof ThreadContext || ModalContext.isModalContextThread(thread))
+			if (thread instanceof ThreadContext
+					|| ModalContext.isModalContextThread(thread))
 				fork = false;
 
 			if (fork) {
@@ -123,10 +126,12 @@ public class BusyIndicatorRunnableContext implements IRunnableContext {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on IRunnableContext.
+	/*
+	 * (non-Javadoc) Method declared on IRunnableContext.
 	 */
-	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InvocationTargetException, InterruptedException {
+	public void run(boolean fork, boolean cancelable,
+			IRunnableWithProgress runnable) throws InvocationTargetException,
+			InterruptedException {
 		BusyRunnable busyRunnable = new BusyRunnable(fork, runnable);
 		BusyIndicator.showWhile(null, busyRunnable);
 		Throwable throwable = busyRunnable.fThrowable;

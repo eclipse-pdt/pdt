@@ -24,8 +24,8 @@ import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.IEditorPart;
 
-
-public class AssistContext extends TextInvocationContext implements IInvocationContext {
+public class AssistContext extends TextInvocationContext implements
+		IInvocationContext {
 
 	private final ISourceModule fProgram;
 	private final IEditorPart fEditor;
@@ -33,37 +33,43 @@ public class AssistContext extends TextInvocationContext implements IInvocationC
 	private Program fASTRoot;
 	private final SharedASTProvider.WAIT_FLAG fWaitFlag;
 
+	/*
+	 * @since 3.5
+	 */
+	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer,
+			IEditorPart editor, int offset, int length,
+			SharedASTProvider.WAIT_FLAG waitFlag) {
+		super(sourceViewer, offset, length);
+		fProgram = cu;
+		fEditor = editor;
+		fASTRoot = null;
+		fWaitFlag = waitFlag;
+	}
 
 	/*
 	 * @since 3.5
 	 */
-	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer, IEditorPart editor, int offset, int length, SharedASTProvider.WAIT_FLAG waitFlag) {
-		super(sourceViewer, offset, length);
-		fProgram= cu;
-		fEditor= editor;
-		fASTRoot= null;
-		fWaitFlag= waitFlag;
-	}
-	
-	/*
-	 * @since 3.5
-	 */
-	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer, int offset, int length, SharedASTProvider.WAIT_FLAG waitFlag) {
+	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer,
+			int offset, int length, SharedASTProvider.WAIT_FLAG waitFlag) {
 		this(cu, sourceViewer, null, offset, length, waitFlag);
 	}
-	
+
 	/*
 	 * @since 3.5
 	 */
-	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer, IEditorPart editor, int offset, int length) {
-		this(cu, sourceViewer, editor, offset, length, SharedASTProvider.WAIT_YES);
+	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer,
+			IEditorPart editor, int offset, int length) {
+		this(cu, sourceViewer, editor, offset, length,
+				SharedASTProvider.WAIT_YES);
 	}
-	
+
 	/*
 	 * Constructor for CorrectionContext.
+	 * 
 	 * @since 3.4
 	 */
-	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer, int offset, int length) {
+	public AssistContext(ISourceModule cu, ISourceViewer sourceViewer,
+			int offset, int length) {
 		this(cu, sourceViewer, null, offset, length);
 	}
 
@@ -76,14 +82,16 @@ public class AssistContext extends TextInvocationContext implements IInvocationC
 
 	/**
 	 * Returns the compilation unit.
+	 * 
 	 * @return an <code>ISourceModule</code>
 	 */
 	public ISourceModule getCompilationUnit() {
 		return fProgram;
 	}
-	
+
 	/**
 	 * Returns the editor or <code>null</code> if none.
+	 * 
 	 * @return an <code>IEditorPart</code> or <code>null</code> if none
 	 * @since 3.5
 	 */
@@ -93,6 +101,7 @@ public class AssistContext extends TextInvocationContext implements IInvocationC
 
 	/**
 	 * Returns the length.
+	 * 
 	 * @return int
 	 */
 	public int getSelectionLength() {
@@ -101,6 +110,7 @@ public class AssistContext extends TextInvocationContext implements IInvocationC
 
 	/**
 	 * Returns the offset.
+	 * 
 	 * @return int
 	 */
 	public int getSelectionOffset() {
@@ -110,7 +120,7 @@ public class AssistContext extends TextInvocationContext implements IInvocationC
 	public Program getASTRoot() {
 		if (fASTRoot == null) {
 			try {
-				fASTRoot= SharedASTProvider.getAST(fProgram, fWaitFlag, null);
+				fASTRoot = SharedASTProvider.getAST(fProgram, fWaitFlag, null);
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
 			} catch (IOException e) {
@@ -118,34 +128,38 @@ public class AssistContext extends TextInvocationContext implements IInvocationC
 			}
 			if (fASTRoot == null) {
 				// see bug 63554
-//				fASTRoot= ASTResolving.createQuickFixAST(fProgram, null);
+				// fASTRoot= ASTResolving.createQuickFixAST(fProgram, null);
 			}
 		}
 		return fASTRoot;
 	}
 
-
 	/**
-	 * @param root The ASTRoot to set.
+	 * @param root
+	 *            The ASTRoot to set.
 	 */
 	public void setASTRoot(Program root) {
-		fASTRoot= root;
+		fASTRoot = root;
 	}
 
-	/*(non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.ui.text.java.IInvocationContext#getCoveringNode()
 	 */
 	public ASTNode getCoveringNode() {
-		NodeFinder finder= new NodeFinder(getOffset(), getLength());
+		NodeFinder finder = new NodeFinder(getOffset(), getLength());
 		getASTRoot().accept(finder);
 		return finder.getCoveringNode();
 	}
 
-	/*(non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.ui.text.java.IInvocationContext#getCoveredNode()
 	 */
 	public ASTNode getCoveredNode() {
-		NodeFinder finder= new NodeFinder(getOffset(), getLength());
+		NodeFinder finder = new NodeFinder(getOffset(), getLength());
 		getASTRoot().accept(finder);
 		return finder.getCoveredNode();
 	}

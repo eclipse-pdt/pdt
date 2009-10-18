@@ -32,32 +32,37 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 
 /**
- * A generic save files dialog. The bulk of the code
- * for this dialog was taken from the JDT refactoring
- * support in org.eclipse.jdt.internal.ui.refactoring.RefactoringSaveHelper.
- * This class is a good candidate for reuse amoung components.
+ * A generic save files dialog. The bulk of the code for this dialog was taken
+ * from the JDT refactoring support in
+ * org.eclipse.jdt.internal.ui.refactoring.RefactoringSaveHelper. This class is
+ * a good candidate for reuse amoung components.
  */
 public class SaveFilesDialog extends ListSelectionDialog {
 
 	boolean promptAutoSave;
 	SaveFilesResult result;
 
-	public SaveFilesDialog(Shell parent, List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
-		super(parent, dirtyEditors, new ListContentProvider(), new LabelProvider() {
-			public Image getImage(Object element) {
-				return ((IEditorPart) element).getTitleImage();
-			}
+	public SaveFilesDialog(Shell parent, List dirtyEditors,
+			SaveFilesResult result, boolean promptAutoSave) {
+		super(parent, dirtyEditors, new ListContentProvider(),
+				new LabelProvider() {
+					public Image getImage(Object element) {
+						return ((IEditorPart) element).getTitleImage();
+					}
 
-			public String getText(Object element) {
-				IEditorPart editor = (IEditorPart) element;
-				IFile file = (IFile) editor.getEditorInput().getAdapter(IResource.class);
-				String title = editor.getTitle();
-				if (file == null) {
-					return title;
-				}
-				return NLS.bind("{0} [{1}]", new String[] {title, file.getFullPath().toString()}); //$NON-NLS-1$
-			}
-		}, PHPUIMessages.getString("SaveFilesDialog.1")); //$NON-NLS-1$
+					public String getText(Object element) {
+						IEditorPart editor = (IEditorPart) element;
+						IFile file = (IFile) editor.getEditorInput()
+								.getAdapter(IResource.class);
+						String title = editor.getTitle();
+						if (file == null) {
+							return title;
+						}
+						return NLS
+								.bind(
+										"{0} [{1}]", new String[] { title, file.getFullPath().toString() }); //$NON-NLS-1$
+					}
+				}, PHPUIMessages.getString("SaveFilesDialog.1")); //$NON-NLS-1$
 		this.promptAutoSave = promptAutoSave;
 		this.result = result;
 		setTitle(PHPUIMessages.getString("SaveFilesDialog.2")); //$NON-NLS-1$

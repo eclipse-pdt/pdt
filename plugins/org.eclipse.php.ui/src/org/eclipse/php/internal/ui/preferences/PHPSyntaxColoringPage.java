@@ -215,7 +215,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		GridData linkData = new GridData(SWT.FILL, SWT.BEGINNING, true, false,
 				2, 1);
 		linkData.widthHint = 150; // only expand further if anyone else requires
-									// it
+		// it
 		link.setLayoutData(linkData);
 
 		new Label(pageComponent, SWT.NONE).setLayoutData(new GridData());

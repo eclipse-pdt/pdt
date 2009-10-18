@@ -17,23 +17,29 @@ import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.text.IDocument;
 
 /**
- * Context Type id for PHP 
+ * Context Type id for PHP
  */
 public class PhpTemplateContextType extends ScriptTemplateContextType {
-	
+
 	public static final String PHP_CONTEXT_TYPE_ID = "php"; //$NON-NLS-1$
-	
-	public ScriptTemplateContext createContext(IDocument document, int offset, int length, ISourceModule sourceModule) {
-		return new PhpTemplateContext(this, document, offset, length, sourceModule);
+
+	public ScriptTemplateContext createContext(IDocument document, int offset,
+			int length, ISourceModule sourceModule) {
+		return new PhpTemplateContext(this, document, offset, length,
+				sourceModule);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateContextType#addScriptResolvers()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.ui.templates.ScriptTemplateContextType#addScriptResolvers
+	 * ()
 	 */
 	@Override
 	protected void addScriptResolvers() {
 		super.addScriptResolvers();
-		
+
 		// empty constructor
 		// TODO should add php specific resolvers?
 	}

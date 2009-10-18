@@ -26,18 +26,23 @@ public class RSEProjectFilter extends ViewerFilter {
 
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		//This was added in order to hide the RSE Temp project from the PHP explorer view
+		// This was added in order to hide the RSE Temp project from the PHP
+		// explorer view
 		IProject proj = null;
 		if (element instanceof IProject) {
 			proj = (IProject) element;
-			
-		}else if(element instanceof IScriptProject) {
-			proj = ((IScriptProject)element).getProject();
+
+		} else if (element instanceof IScriptProject) {
+			proj = ((IScriptProject) element).getProject();
 		}
-		if(proj != null) {
+		if (proj != null) {
 			try {
-				//check if an RSE nature (project must be open) OR simply compare its name
-				if ((proj.isOpen() && proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) || proj.getName().equals(PHPUiConstants.RSE_TEMP_PROJECT_NAME)) {
+				// check if an RSE nature (project must be open) OR simply
+				// compare its name
+				if ((proj.isOpen() && proj
+						.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID))
+						|| proj.getName().equals(
+								PHPUiConstants.RSE_TEMP_PROJECT_NAME)) {
 					return false;
 				}
 			} catch (CoreException ce) {

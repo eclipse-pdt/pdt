@@ -1101,9 +1101,9 @@ public class PreferenceConstants {
 				MessageDialogWithToggle.PROMPT);
 
 		String mod1Name = Action.findModifierString(SWT.MOD1); // SWT.COMMAND on
-																// Mac;
-																// SWT.CONTROL
-																// elsewhere
+		// Mac;
+		// SWT.CONTROL
+		// elsewhere
 		store
 				.setDefault(
 						EDITOR_TEXT_HOVER_MODIFIERS,

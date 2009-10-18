@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.generic.filter;
 
-
 public class RunnableFilter extends FilterDecorator {
 
 	private IResultHandler resultHandler;
@@ -20,7 +19,7 @@ public class RunnableFilter extends FilterDecorator {
 		super(filter);
 		this.resultHandler = resultHandler;
 	}
-	
+
 	public Object[] filter(final Object[] elements) {
 		new Thread(new Runnable() {
 
@@ -28,9 +27,9 @@ public class RunnableFilter extends FilterDecorator {
 				Object[] result = getFilter().filter(elements);
 				resultHandler.handleResult(result);
 			}
-			
+
 		}).start();
-		
-		return new Object[]{};
+
+		return new Object[] {};
 	}
 }

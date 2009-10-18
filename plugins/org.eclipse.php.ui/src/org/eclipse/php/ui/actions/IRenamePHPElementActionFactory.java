@@ -11,15 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.ui.actions;
 
+import org.eclipse.php.internal.ui.actions.RenamePHPElementAction;
 import org.eclipse.ui.IActionDelegate;
 
 /**
- * Factory for {@link RenamePHPElementAction}
- * This Extension will enable rename php elements actions 
+ * Factory for {@link RenamePHPElementAction} This Extension will enable rename
+ * php elements actions
+ * 
  * @author Roy, 2007
  */
 public interface IRenamePHPElementActionFactory {
 
 	public abstract IActionDelegate createRenameAction();
-	
+
 }

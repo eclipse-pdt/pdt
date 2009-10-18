@@ -24,11 +24,13 @@ public class NavigateActionGroup extends ActionGroup {
 	private OpenViewActionGroup fOpenViewActionGroup;
 
 	/**
-	 * Creates a new <code>NavigateActionGroup</code>. The group requires
-	 * that the selection provided by the part's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
+	 * Creates a new <code>NavigateActionGroup</code>. The group requires that
+	 * the selection provided by the part's selection provider is of type <code>
+	 * org.eclipse.jface.viewers.IStructuredSelection</code>
+	 * .
 	 * 
-	 * @param part the view part that owns this action group
+	 * @param part
+	 *            the view part that owns this action group
 	 */
 	public NavigateActionGroup(IViewPart part) {
 		fOpenEditorActionGroup = new OpenEditorActionGroup(part);
@@ -36,17 +38,17 @@ public class NavigateActionGroup extends ActionGroup {
 	}
 
 	/**
-	 * Returns the open action managed by this action group. 
+	 * Returns the open action managed by this action group.
 	 * 
-	 * @return the open action. Returns <code>null</code> if the group
-	 * 	doesn't provide any open action
+	 * @return the open action. Returns <code>null</code> if the group doesn't
+	 *         provide any open action
 	 */
 	public IAction getOpenAction() {
 		return fOpenEditorActionGroup.getOpenAction();
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void dispose() {
 		super.dispose();
@@ -54,8 +56,8 @@ public class NavigateActionGroup extends ActionGroup {
 		fOpenViewActionGroup.dispose();
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
@@ -63,8 +65,8 @@ public class NavigateActionGroup extends ActionGroup {
 		fOpenViewActionGroup.fillActionBars(actionBars);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
@@ -73,8 +75,8 @@ public class NavigateActionGroup extends ActionGroup {
 		fOpenViewActionGroup.fillContextMenu(menu);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void setContext(ActionContext context) {
 		super.setContext(context);
@@ -82,8 +84,8 @@ public class NavigateActionGroup extends ActionGroup {
 		fOpenViewActionGroup.setContext(context);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void updateActionBars() {
 		super.updateActionBars();

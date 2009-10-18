@@ -21,7 +21,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author seva
- *
+ * 
  */
 public class StatusLineMessageTimerManager {
 	static String message;
@@ -29,7 +29,8 @@ public class StatusLineMessageTimerManager {
 	static IStatusLineManager statusLineManager = null;
 
 	static IStatusLineManager getStatusLineManager() {
-		return PHPUiPlugin.getActivePage().getActiveEditor().getEditorSite().getActionBars().getStatusLineManager();
+		return PHPUiPlugin.getActivePage().getActiveEditor().getEditorSite()
+				.getActionBars().getStatusLineManager();
 	}
 
 	static void setMessage(String newMessage, boolean newIsError) {
@@ -43,10 +44,12 @@ public class StatusLineMessageTimerManager {
 		}
 	}
 
-	public static void setErrorMessage(String message, long timeout, boolean isError) {
+	public static void setErrorMessage(String message, long timeout,
+			boolean isError) {
 		statusLineManager = getStatusLineManager();
 		setMessage(message, isError);
-		TimerTask task = new MessageTimerTask(statusLineManager, message, isError);
+		TimerTask task = new MessageTimerTask(statusLineManager, message,
+				isError);
 		(new Timer()).schedule(task, timeout);
 	}
 
@@ -55,7 +58,8 @@ public class StatusLineMessageTimerManager {
 		boolean isError;
 		IStatusLineManager statusLineManager;
 
-		public MessageTimerTask(IStatusLineManager statusLineManager, String message, boolean isError) {
+		public MessageTimerTask(IStatusLineManager statusLineManager,
+				String message, boolean isError) {
 			this.message = message;
 			this.isError = isError;
 			this.statusLineManager = statusLineManager;
@@ -65,11 +69,14 @@ public class StatusLineMessageTimerManager {
 			Display display = PlatformUI.getWorkbench().getDisplay();
 			display.asyncExec(new Runnable() {
 				public void run() {
-					if (StatusLineMessageTimerManager.statusLineManager == statusLineManager && message == StatusLineMessageTimerManager.message) {
+					if (StatusLineMessageTimerManager.statusLineManager == statusLineManager
+							&& message == StatusLineMessageTimerManager.message) {
 						if (isError) {
-							StatusLineMessageTimerManager.statusLineManager.setErrorMessage(""); //$NON-NLS-1$
+							StatusLineMessageTimerManager.statusLineManager
+									.setErrorMessage(""); //$NON-NLS-1$
 						} else {
-							StatusLineMessageTimerManager.statusLineManager.setMessage(""); //$NON-NLS-1$
+							StatusLineMessageTimerManager.statusLineManager
+									.setMessage(""); //$NON-NLS-1$
 						}
 					}
 				}

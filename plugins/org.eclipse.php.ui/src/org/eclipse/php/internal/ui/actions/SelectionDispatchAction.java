@@ -17,8 +17,10 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.wst.jsdt.ui.actions.ConvertingSelectionProvider;
 
-public abstract class SelectionDispatchAction extends Action implements ISelectionChangedListener {
+public abstract class SelectionDispatchAction extends Action implements
+		ISelectionChangedListener {
 
 	private IWorkbenchSite fSite;
 	private ISelectionProvider fSpecialSelectionProvider;
@@ -29,7 +31,8 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	 * Configure the action later using the set methods.
 	 * </p>
 	 * 
-	 * @param site the site this action is working on
+	 * @param site
+	 *            the site this action is working on
 	 */
 	protected SelectionDispatchAction(IWorkbenchSite site) {
 		Assert.isNotNull(site);
@@ -60,7 +63,7 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	/**
 	 * Returns the shell provided by the site owning this action.
 	 * 
-	 * @return the site's shell	
+	 * @return the site's shell
 	 */
 	public Shell getShell() {
 		return fSite.getShell();
@@ -69,7 +72,7 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	/**
 	 * Returns the selection provider managed by the site owning this action.
 	 * 
-	 * @return the site's selection provider	
+	 * @return the site's selection provider
 	 */
 	public ISelectionProvider getSelectionProvider() {
 		if (fSpecialSelectionProvider != null) {
@@ -79,84 +82,94 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	}
 
 	/**
-	 * Updates the action's enablement state according to the given selection. This
-	 * default implementation calls one of the <code>selectionChanged</code>
-	 * methods depending on the type of the passed selection.
+	 * Updates the action's enablement state according to the given selection.
+	 * This default implementation calls one of the
+	 * <code>selectionChanged</code> methods depending on the type of the passed
+	 * selection.
 	 * 
-	 * @param selection the selection this action is working on
+	 * @param selection
+	 *            the selection this action is working on
 	 */
 	public void update(ISelection selection) {
 		dispatchSelectionChanged(selection);
 	}
 
 	/**
-	 * Notifies this action that the given structured selection has changed. This default
-	 * implementation calls <code>selectionChanged(ISelection selection)</code>.
+	 * Notifies this action that the given structured selection has changed.
+	 * This default implementation calls
+	 * <code>selectionChanged(ISelection selection)</code>.
 	 * 
-	 * @param selection the new selection
+	 * @param selection
+	 *            the new selection
 	 */
 	public void selectionChanged(IStructuredSelection selection) {
 		selectionChanged((ISelection) selection);
 	}
 
 	/**
-	 * Executes this actions with the given structured selection. This default implementation
-	 * calls <code>run(ISelection selection)</code>.
+	 * Executes this actions with the given structured selection. This default
+	 * implementation calls <code>run(ISelection selection)</code>.
 	 * 
-	 * @param selection the selection
+	 * @param selection
+	 *            the selection
 	 */
 	public void run(IStructuredSelection selection) {
 		run((ISelection) selection);
 	}
 
 	/**
-	 * Notifies this action that the given text selection has changed.  This default
-	 * implementation calls <code>selectionChanged(ISelection selection)</code>.
+	 * Notifies this action that the given text selection has changed. This
+	 * default implementation calls
+	 * <code>selectionChanged(ISelection selection)</code>.
 	 * 
-	 * @param selection the new selection
+	 * @param selection
+	 *            the new selection
 	 */
 	public void selectionChanged(ITextSelection selection) {
 		selectionChanged((ISelection) selection);
 	}
 
 	/**
-	 * Executes this actions with the given text selection. This default implementation
-	 * calls <code>run(ISelection selection)</code>.
+	 * Executes this actions with the given text selection. This default
+	 * implementation calls <code>run(ISelection selection)</code>.
 	 * 
-	 * @param selection the selection
+	 * @param selection
+	 *            the selection
 	 */
 	public void run(ITextSelection selection) {
 		run((ISelection) selection);
 	}
 
 	/**
-	 * Notifies this action that the given selection has changed.  This default
+	 * Notifies this action that the given selection has changed. This default
 	 * implementation sets the action's enablement state to <code>false</code>.
 	 * 
-	 * @param selection the new selection
+	 * @param selection
+	 *            the new selection
 	 */
 	public void selectionChanged(ISelection selection) {
 		setEnabled(false);
 	}
 
 	/**
-	 * Executes this actions with the given selection. This default implementation
-	 * does nothing.
+	 * Executes this actions with the given selection. This default
+	 * implementation does nothing.
 	 * 
-	 * @param selection the selection
+	 * @param selection
+	 *            the selection
 	 */
 	public void run(ISelection selection) {
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on IAction.
+	/*
+	 * (non-Javadoc) Method declared on IAction.
 	 */
 	public void run() {
 		dispatchRun(getSelection());
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on ISelectionChangedListener.
+	/*
+	 * (non-Javadoc) Method declared on ISelectionChangedListener.
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
 		dispatchSelectionChanged(event.getSelection());
@@ -181,21 +194,25 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 			run(selection);
 		}
 	}
-	
+
 	/**
-	 * Sets a special selection provider which will be used instead of the site's selection provider.
-	 * This method should be used directly after constructing the action and before the action is
-	 * registered as a selection listener. The invocation will not a perform a selection change notification. 
+	 * Sets a special selection provider which will be used instead of the
+	 * site's selection provider. This method should be used directly after
+	 * constructing the action and before the action is registered as a
+	 * selection listener. The invocation will not a perform a selection change
+	 * notification.
 	 * 
-	 * @param provider a special selection provider which is used
-	 * instead of the site's selection provider or <code>null</code> to use the site's
-	 * selection provider. Clients can for example use a {@link ConvertingSelectionProvider}
-	 * to first convert a selection before passing it to the action.
+	 * @param provider
+	 *            a special selection provider which is used instead of the
+	 *            site's selection provider or <code>null</code> to use the
+	 *            site's selection provider. Clients can for example use a
+	 *            {@link ConvertingSelectionProvider} to first convert a
+	 *            selection before passing it to the action.
 	 * 
 	 * @since 3.2
 	 */
 	public void setSpecialSelectionProvider(ISelectionProvider provider) {
-		fSpecialSelectionProvider= provider;
+		fSpecialSelectionProvider = provider;
 	}
-	
+
 }

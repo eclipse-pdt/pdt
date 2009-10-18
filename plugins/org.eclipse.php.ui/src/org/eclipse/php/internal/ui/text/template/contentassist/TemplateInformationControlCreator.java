@@ -29,34 +29,41 @@ import org.eclipse.swt.widgets.Shell;
 //import org.eclipse.jdt.internal.ui.JavaPlugin;
 //import org.eclipse.jdt.internal.ui.text.java.hover.SourceViewerInformationControl;
 
-
-public final class TemplateInformationControlCreator implements IInformationControlCreator, IInformationControlCreatorExtension {
+public final class TemplateInformationControlCreator implements
+		IInformationControlCreator, IInformationControlCreatorExtension {
 
 	private PHPSourceViewerInformationControl fControl;
 
 	/**
-	 * The orientation to be used by this hover.
-	 * Allowed values are: SWT#RIGHT_TO_LEFT or SWT#LEFT_TO_RIGHT
+	 * The orientation to be used by this hover. Allowed values are:
+	 * SWT#RIGHT_TO_LEFT or SWT#LEFT_TO_RIGHT
+	 * 
 	 * @since 3.2
 	 */
 	private int fOrientation;
 
 	/**
-	 * @param orientation the orientation, allowed values are: SWT#RIGHT_TO_LEFT or SWT#LEFT_TO_RIGHT
+	 * @param orientation
+	 *            the orientation, allowed values are: SWT#RIGHT_TO_LEFT or
+	 *            SWT#LEFT_TO_RIGHT
 	 */
 	public TemplateInformationControlCreator(int orientation) {
-		Assert.isLegal(orientation == SWT.RIGHT_TO_LEFT || orientation == SWT.LEFT_TO_RIGHT);
-		fOrientation= orientation;
+		Assert.isLegal(orientation == SWT.RIGHT_TO_LEFT
+				|| orientation == SWT.LEFT_TO_RIGHT);
+		fOrientation = orientation;
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.IInformationControlCreator#createInformationControl(org.eclipse.swt.widgets.Shell)
+	 * @see
+	 * org.eclipse.jface.text.IInformationControlCreator#createInformationControl
+	 * (org.eclipse.swt.widgets.Shell)
 	 */
 	public IInformationControl createInformationControl(Shell parent) {
-		fControl= new PHPSourceViewerInformationControl(parent, fOrientation) {
+		fControl = new PHPSourceViewerInformationControl(parent, fOrientation) {
 			public void setInformation(String content) {
 				TextPresentation presentation = new TextPresentation();
-				HTML2TextReader reader = new HTML2TextReader(new StringReader(content), presentation);
+				HTML2TextReader reader = new HTML2TextReader(new StringReader(
+						content), presentation);
 				try {
 					super.setInformation(reader.getString());
 				} catch (IOException e) {
@@ -65,21 +72,25 @@ public final class TemplateInformationControlCreator implements IInformationCont
 		};
 		fControl.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
-				fControl= null;
+				fControl = null;
 			}
 		});
 		return fControl;
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.IInformationControlCreatorExtension#canReuse(org.eclipse.jface.text.IInformationControl)
+	 * @see
+	 * org.eclipse.jface.text.IInformationControlCreatorExtension#canReuse(org
+	 * .eclipse.jface.text.IInformationControl)
 	 */
 	public boolean canReuse(IInformationControl control) {
 		return fControl == control && fControl != null;
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.IInformationControlCreatorExtension#canReplace(org.eclipse.jface.text.IInformationControlCreator)
+	 * @see
+	 * org.eclipse.jface.text.IInformationControlCreatorExtension#canReplace
+	 * (org.eclipse.jface.text.IInformationControlCreator)
 	 */
 	public boolean canReplace(IInformationControlCreator creator) {
 		return (creator != null && getClass() == creator.getClass());

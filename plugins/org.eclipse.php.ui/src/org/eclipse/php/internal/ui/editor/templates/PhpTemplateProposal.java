@@ -19,9 +19,11 @@ import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
-public class PhpTemplateProposal extends TemplateProposal implements ICompletionProposalExtension4 {
+public class PhpTemplateProposal extends TemplateProposal implements
+		ICompletionProposalExtension4 {
 
-	public PhpTemplateProposal(Template template, TemplateContext context, IRegion region, Image image, int relevance) {
+	public PhpTemplateProposal(Template template, TemplateContext context,
+			IRegion region, Image image, int relevance) {
 		super(template, context, region, image, relevance);
 	}
 

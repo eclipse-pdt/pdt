@@ -88,12 +88,14 @@ public class StringButtonDialogField extends StringDialogField {
 		return gd;
 	}
 
-	// ------- ui creation	
+	// ------- ui creation
 
 	/**
 	 * Creates or returns the created buttom widget.
-	 * @param parent The parent composite or <code>null</code> if the widget has
-	 * already been created.
+	 * 
+	 * @param parent
+	 *            The parent composite or <code>null</code> if the widget has
+	 *            already been created.
 	 */
 	public Button getChangeControl(Composite parent) {
 		if (fBrowseButton == null) {

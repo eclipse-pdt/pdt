@@ -33,44 +33,50 @@ import org.eclipse.ui.texteditor.IEditorStatusLine;
 
 /**
  * Action to find all method exits for a given method.
- * <p> 
+ * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
  * 
  * @since 3.4
  */
-public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions.SelectionDispatchAction {
-	
+public class FindMethodExitOccurrencesAction extends
+		org.eclipse.dltk.ui.actions.SelectionDispatchAction {
+
 	private PHPStructuredEditor fEditor;
-	
+
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call
+	 * this constructor.
 	 * 
-	 * @param editor the Java editor
+	 * @param editor
+	 *            the Java editor
 	 */
 	public FindMethodExitOccurrencesAction(PHPStructuredEditor editor) {
 		this(editor.getEditorSite());
-		fEditor= editor;
+		fEditor = editor;
 		setEnabled(getEditorInput(editor) != null);
 	}
-	
+
 	/**
-	 * Creates a new {@link FindMethodExitOccurrencesAction}. The action 
-	 * requires that the selection provided by the site's selection provider is of type 
-	 * <code>IStructuredSelection</code>.
+	 * Creates a new {@link FindMethodExitOccurrencesAction}. The action
+	 * requires that the selection provided by the site's selection provider is
+	 * of type <code>IStructuredSelection</code>.
 	 * 
-	 * @param site the site providing context information for this action
+	 * @param site
+	 *            the site providing context information for this action
 	 */
 	public FindMethodExitOccurrencesAction(IWorkbenchSite site) {
 		super(site);
 		setText("ActionMessages.FindMethodExitOccurrencesAction_label");
 		setToolTipText("ActionMessages.FindMethodExitOccurrencesAction_tooltip");
 		// TODO: attach find method occurrences context
-		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.FIND_METHOD_EXIT_OCCURRENCES);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IJavaHelpContextIds.FIND_METHOD_EXIT_OCCURRENCES);
 	}
-	
-	//---- Text Selection ----------------------------------------------------------------------
-	
+
+	// ---- Text Selection
+	// ----------------------------------------------------------------------
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -85,13 +91,17 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 		try {
 			IModelElement resolveEnclosingElement;
 			resolveEnclosingElement = selection.resolveEnclosingElement();
-			Program astRoot = ASTProvider.getASTProvider().getAST((ISourceModule) resolveEnclosingElement, SharedASTProvider.WAIT_YES, null);
-			setEnabled(astRoot != null && new MethodExitsFinder().initialize(astRoot, selection.getOffset(), selection.getLength()) == null);
+			Program astRoot = ASTProvider.getASTProvider().getAST(
+					(ISourceModule) resolveEnclosingElement,
+					SharedASTProvider.WAIT_YES, null);
+			setEnabled(astRoot != null
+					&& new MethodExitsFinder().initialize(astRoot, selection
+							.getOffset(), selection.getLength()) == null);
 		} catch (ModelException e) {
 			PHPUiPlugin.log(e);
 		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -99,16 +109,17 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 		setEnabled(false);
 	}
 
-	/* (non-JavaDoc)
-	 * Method declared in SelectionDispatchAction.
+	/*
+	 * (non-JavaDoc) Method declared in SelectionDispatchAction.
 	 */
 	public final void run(ITextSelection ts) {
-		ISourceModule input= getEditorInput(fEditor);
+		ISourceModule input = getEditorInput(fEditor);
 		if (!ActionUtil.isProcessable(getShell(), input))
 			return;
-		FindOccurrencesEngine engine= FindOccurrencesEngine.create(new MethodExitsFinder());
+		FindOccurrencesEngine engine = FindOccurrencesEngine
+				.create(new MethodExitsFinder());
 		try {
-			String result= engine.run(input, ts.getOffset(), ts.getLength());
+			String result = engine.run(input, ts.getOffset(), ts.getLength());
 			if (result != null)
 				showMessage(getShell(), fEditor, result);
 		} catch (ModelException e) {
@@ -120,12 +131,14 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 
 	private static ISourceModule getEditorInput(PHPStructuredEditor editor) {
 		return PHPUiPlugin.getEditorInputTypeRoot(editor.getEditorInput());
-	} 
-		
-	private static void showMessage(Shell shell, PHPStructuredEditor  editor, String msg) {
-		IEditorStatusLine statusLine= (IEditorStatusLine) editor.getAdapter(IEditorStatusLine.class);
-		if (statusLine != null) 
-			statusLine.setMessage(true, msg, null); 
+	}
+
+	private static void showMessage(Shell shell, PHPStructuredEditor editor,
+			String msg) {
+		IEditorStatusLine statusLine = (IEditorStatusLine) editor
+				.getAdapter(IEditorStatusLine.class);
+		if (statusLine != null)
+			statusLine.setMessage(true, msg, null);
 		shell.getDisplay().beep();
 	}
 }

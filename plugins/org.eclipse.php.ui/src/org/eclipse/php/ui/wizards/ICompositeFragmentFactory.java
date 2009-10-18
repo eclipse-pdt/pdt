@@ -22,7 +22,8 @@ import org.eclipse.swt.widgets.Composite;
 public interface ICompositeFragmentFactory {
 
 	/**
-	 * Creates a WizardFragment used for any Wizard control that is related to the PHP servers infrastructure.
+	 * Creates a WizardFragment used for any Wizard control that is related to
+	 * the PHP servers infrastructure.
 	 * 
 	 * @param serverContainer
 	 * @return
@@ -30,11 +31,13 @@ public interface ICompositeFragmentFactory {
 	public WizardFragment createWizardFragment();
 
 	/**
-	 * Creates a CompositeFragment used for any composite that 
+	 * Creates a CompositeFragment used for any composite that
+	 * 
 	 * @param parent
 	 * @param controlHandler
 	 * @return
 	 */
-	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler);
+	public CompositeFragment createComposite(Composite parent,
+			IControlHandler controlHandler);
 
 }

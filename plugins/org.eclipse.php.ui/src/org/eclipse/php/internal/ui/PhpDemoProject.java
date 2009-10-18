@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -22,8 +21,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.project.PHPNature;
 
 /**
- * This is a factory project class for the PHP Demo 
- * use -pd for gettingthis  
+ * This is a factory project class for the PHP Demo use -pd for gettingthis
  */
 public class PhpDemoProject {
 
@@ -48,13 +46,14 @@ public class PhpDemoProject {
 
 	public static void run() {
 
-		final IProject testProject = ResourcesPlugin.getWorkspace().getRoot().getProject(TEST_PROJECT_NAME);
+		final IProject testProject = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(TEST_PROJECT_NAME);
 
 		if (testProject.exists()) {
 			return;
 		}
 		try {
-			//create Example project
+			// create Example project
 			testProject.create(null);
 			testProject.open(null);
 			providePhpNatureToProject(testProject);
@@ -78,8 +77,10 @@ public class PhpDemoProject {
 		}
 	}
 
-	private static IFile createFile(final IProject testProject, String filePath, String fileName) throws IOException, CoreException {
-		URL demoFileURL = FileLocator.find(Platform.getBundle(PHPUiPlugin.getPluginId()), new Path(filePath + fileName), null); 
+	private static IFile createFile(final IProject testProject,
+			String filePath, String fileName) throws IOException, CoreException {
+		URL demoFileURL = FileLocator.find(Platform.getBundle(PHPUiPlugin
+				.getPluginId()), new Path(filePath + fileName), null);
 		demoFileURL = FileLocator.resolve(demoFileURL);
 		IPath p = testProject.getFullPath();
 		p = p.append(fileName);
@@ -89,22 +90,27 @@ public class PhpDemoProject {
 		return file;
 	}
 
-	private static IFolder createFolder(final IProject testProject, String filePath, String folderName) throws IOException, CoreException {		
-		URL demoFileURL = FileLocator.find(Platform.getBundle(PHPUiPlugin.getPluginId()), new Path(filePath + folderName), null);
+	private static IFolder createFolder(final IProject testProject,
+			String filePath, String folderName) throws IOException,
+			CoreException {
+		URL demoFileURL = FileLocator.find(Platform.getBundle(PHPUiPlugin
+				.getPluginId()), new Path(filePath + folderName), null);
 		demoFileURL = FileLocator.resolve(demoFileURL);
 		IPath p = testProject.getFullPath();
 		p = p.append(folderName);
-		final IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(p);
+		final IFolder folder = ResourcesPlugin.getWorkspace().getRoot()
+				.getFolder(p);
 		folder.create(true, true, null);
 		return folder;
 	}
 
-	//this method provides a PHP nature to the created project that is given
-	private static void providePhpNatureToProject(IProject project) throws ExecutionException {
+	// this method provides a PHP nature to the created project that is given
+	private static void providePhpNatureToProject(IProject project)
+			throws ExecutionException {
 		try {
 			IProjectDescription desc = null;
 
-			//configure .project
+			// configure .project
 			String[] natureIds = new String[] { PHPNature.ID };
 			if (null != natureIds) {
 				desc = project.getDescription();

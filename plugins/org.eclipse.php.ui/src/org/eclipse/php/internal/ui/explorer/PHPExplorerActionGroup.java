@@ -31,52 +31,63 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.ui.actions.OpenAction;
 
 /**
- * @author nir.c
- * PHPExplorerActionGroup class extends DLTK's ScriptExplorerActionGroup, 
- * His purpose is to add "include path" actions to the popUp menu, similar to "build path" actions.
+ * @author nir.c PHPExplorerActionGroup class extends DLTK's
+ *         ScriptExplorerActionGroup, His purpose is to add "include path"
+ *         actions to the popUp menu, similar to "build path" actions.
  * 
  */
 public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	private PHPRefactorActionGroup phpRefactorActionGroup;
-	
+
 	public PHPExplorerActionGroup(ScriptExplorerPart part) {
 		super(part);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.ui.actions.CompositeActionGroup#setGroups(org.eclipse.ui.actions.ActionGroup[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.internal.ui.actions.CompositeActionGroup#setGroups(org
+	 * .eclipse.ui.actions.ActionGroup[])
 	 */
 	@Override
 	protected void setGroups(ActionGroup[] groups) {
 		// aggregate the PHP Explorer actions
-		final ArrayList<ActionGroup> filtered = new ArrayList<ActionGroup>(groups.length - 1);
+		final ArrayList<ActionGroup> filtered = new ArrayList<ActionGroup>(
+				groups.length - 1);
 		for (int i = 0; i < groups.length; i++) {
-			if (!(groups[i] instanceof LayoutActionGroup || groups[i] instanceof GenerateActionGroup
-					|| groups[i] instanceof RefactorActionGroup)) {
+			if (!(groups[i] instanceof LayoutActionGroup
+					|| groups[i] instanceof GenerateActionGroup || groups[i] instanceof RefactorActionGroup)) {
 				filtered.add(groups[i]);
 			}
 		}
-		
+
 		phpRefactorActionGroup = new PHPRefactorActionGroup(getPart());
 		filtered.add(phpRefactorActionGroup);
 		filtered.add(new GenerateIncludePathActionGroup(getPart()));
-		filtered.add(new NamespaceGroupingActionGroup(getPart().getTreeViewer()));
-		
+		filtered
+				.add(new NamespaceGroupingActionGroup(getPart().getTreeViewer()));
+
 		super.setGroups(filtered.toArray(new ActionGroup[filtered.size()]));
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup#handleOpen(org.eclipse.jface.viewers.OpenEvent)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup#handleOpen
+	 * (org.eclipse.jface.viewers.OpenEvent)
 	 */
 	@Override
 	protected void handleOpen(OpenEvent event) {
-		//this code dispatches the selection from javascript library to JS open action
+		// this code dispatches the selection from javascript library to JS open
+		// action
 		ISelection selection = event.getSelection();
-		if(selection instanceof ITreeSelection) {
+		if (selection instanceof ITreeSelection) {
 			ITreeSelection treeSelection = (ITreeSelection) selection;
 			Object firstElement = treeSelection.getFirstElement();
-			if(firstElement instanceof IJavaScriptElement) {
-				//it's JS element, follow opening JS editor
+			if (firstElement instanceof IJavaScriptElement) {
+				// it's JS element, follow opening JS editor
 				ScriptExplorerPart part = getPart();
 				IViewSite viewSite = part.getViewSite();
 				OpenAction openAction = new OpenAction(viewSite);
@@ -87,8 +98,9 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 			}
 		}
 		super.handleOpen(event);
-		
+
 	}
+
 	@Override
 	protected void setGlobalActionHandlers(IActionBars actionBars) {
 		super.setGlobalActionHandlers(actionBars);

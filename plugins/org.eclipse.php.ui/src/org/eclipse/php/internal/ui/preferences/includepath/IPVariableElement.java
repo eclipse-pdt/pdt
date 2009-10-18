@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences.includepath;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
 
 public class IPVariableElement {
 
@@ -31,6 +31,7 @@ public class IPVariableElement {
 
 	/**
 	 * Gets the path
+	 * 
 	 * @return Returns a IPath
 	 */
 	public IPath getPath() {
@@ -39,7 +40,9 @@ public class IPVariableElement {
 
 	/**
 	 * Sets the path
-	 * @param path The path to set
+	 * 
+	 * @param path
+	 *            The path to set
 	 */
 	public void setPath(IPath path) {
 		fPath = path;
@@ -47,6 +50,7 @@ public class IPVariableElement {
 
 	/**
 	 * Gets the name
+	 * 
 	 * @return Returns a String
 	 */
 	public String getName() {
@@ -55,7 +59,9 @@ public class IPVariableElement {
 
 	/**
 	 * Sets the name
-	 * @param name The name to set
+	 * 
+	 * @param name
+	 *            The name to set
 	 */
 	public void setName(String name) {
 		fName = name;
@@ -81,6 +87,7 @@ public class IPVariableElement {
 
 	/**
 	 * Returns true if variable is reserved
+	 * 
 	 * @return Returns a boolean
 	 */
 	public boolean isReserved() {
@@ -89,7 +96,9 @@ public class IPVariableElement {
 
 	/**
 	 * Sets the isReserved
-	 * @param isReserved The state to set
+	 * 
+	 * @param isReserved
+	 *            The state to set
 	 */
 	public void setReserved(boolean isReserved) {
 		fIsReserved = isReserved;

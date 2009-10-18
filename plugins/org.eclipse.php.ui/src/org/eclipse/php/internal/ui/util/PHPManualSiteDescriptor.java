@@ -14,10 +14,10 @@ package org.eclipse.php.internal.ui.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class PHPManualSiteDescriptor {
@@ -30,7 +30,8 @@ public class PHPManualSiteDescriptor {
 	private static final String DIRECTOR_ATTRIBUTE = "director"; //$NON-NLS-1$
 	private static final String EXTENSION_ATTRIBUTE = "extension"; //$NON-NLS-1$
 
-	public static final String DEFAULT_PHP_MANUAL_SITE = PHPUIMessages.getString("PHPManualSiteDescriptor.URL"); //$NON-NLS-1$
+	public static final String DEFAULT_PHP_MANUAL_SITE = PHPUIMessages
+			.getString("PHPManualSiteDescriptor.URL"); //$NON-NLS-1$
 
 	public static final String DEFAULT_PHP_MANUAL_EXTENSION = "php"; //$NON-NLS-1$
 
@@ -47,7 +48,8 @@ public class PHPManualSiteDescriptor {
 
 	public static PHPManualSiteDescriptor[] getContributedSites() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHP_MANUAL_SITES_EXTENSION_POINT);
+		IConfigurationElement[] elements = registry
+				.getConfigurationElementsFor(PHP_MANUAL_SITES_EXTENSION_POINT);
 		PHPManualSiteDescriptor[] manualDescs = createDescriptors(elements);
 		initializeFromPreferences(manualDescs);
 		return manualDescs;
@@ -81,18 +83,22 @@ public class PHPManualSiteDescriptor {
 		return fElement.getAttribute(ID_ATTRIBUTE);
 	}
 
-	private static PHPManualSiteDescriptor[] createDescriptors(IConfigurationElement[] elements) {
+	private static PHPManualSiteDescriptor[] createDescriptors(
+			IConfigurationElement[] elements) {
 		List result = new ArrayList(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (SITE_TAG.equals(element.getName())) {
-				PHPManualSiteDescriptor desc = new PHPManualSiteDescriptor(element);
+				PHPManualSiteDescriptor desc = new PHPManualSiteDescriptor(
+						element);
 				result.add(desc);
 			}
 		}
-		return (PHPManualSiteDescriptor[]) result.toArray(new PHPManualSiteDescriptor[result.size()]);
+		return (PHPManualSiteDescriptor[]) result
+				.toArray(new PHPManualSiteDescriptor[result.size()]);
 	}
 
-	private static void initializeFromPreferences(PHPManualSiteDescriptor[] manualDescs) {
+	private static void initializeFromPreferences(
+			PHPManualSiteDescriptor[] manualDescs) {
 	}
 }

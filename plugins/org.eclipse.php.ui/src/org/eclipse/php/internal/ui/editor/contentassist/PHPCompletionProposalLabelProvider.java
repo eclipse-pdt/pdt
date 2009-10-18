@@ -15,9 +15,11 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
-public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelProvider {
+public class PHPCompletionProposalLabelProvider extends
+		CompletionProposalLabelProvider {
 
-	private static final String ENCLOSING_TYPE_SEPARATOR = new String(new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); //$NON-NLS-1$
+	private static final String ENCLOSING_TYPE_SEPARATOR = new String(
+			new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); //$NON-NLS-1$
 
 	protected String createMethodProposalLabel(CompletionProposal methodProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
@@ -36,7 +38,8 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		IModelElement parent = method.getParent();
 		if (parent instanceof IType) {
 			IType type = (IType) parent;
-			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
+			nameBuffer.append(type
+					.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
 		} else {
 			nameBuffer.append(parent.getElementName());
 		}
@@ -44,7 +47,8 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		return nameBuffer.toString();
 	}
 
-	protected String createOverrideMethodProposalLabel(CompletionProposal methodProposal) {
+	protected String createOverrideMethodProposalLabel(
+			CompletionProposal methodProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
 
 		// method name
@@ -61,7 +65,8 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		IModelElement parent = method.getParent();
 		if (parent instanceof IType) {
 			IType type = (IType) parent;
-			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
+			nameBuffer.append(type
+					.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
 		} else {
 			nameBuffer.append(parent.getElementName());
 		}
@@ -82,11 +87,12 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		return nameBuffer.toString();
 	}
 
-	protected String createLabelWithTypeAndDeclaration(CompletionProposal proposal) {
+	protected String createLabelWithTypeAndDeclaration(
+			CompletionProposal proposal) {
 		StringBuffer nameBuffer = new StringBuffer();
-		
+
 		nameBuffer.append(proposal.getName());
-		
+
 		IField field = (IField) proposal.getModelElement();
 		nameBuffer.append(" - "); //$NON-NLS-1$
 		IModelElement parent = field.getParent();

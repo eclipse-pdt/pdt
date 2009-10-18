@@ -15,10 +15,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * A composite for use as fragments in Server editing dialogs.
- * This composite has an attached IControlHandler that allows interaction with other 
- * components.
- * This class is intended to be subclassed.
+ * A composite for use as fragments in Server editing dialogs. This composite
+ * has an attached IControlHandler that allows interaction with other
+ * components. This class is intended to be subclassed.
  */
 public abstract class CompositeFragment extends Composite {
 
@@ -36,9 +35,12 @@ public abstract class CompositeFragment extends Composite {
 	 * @param parent
 	 * @param style
 	 * @param handler
-	 * @param isForEditing Indicate if this composite will be used for server editing (as opposed to server Wizard)
+	 * @param isForEditing
+	 *            Indicate if this composite will be used for server editing (as
+	 *            opposed to server Wizard)
 	 */
-	public CompositeFragment(Composite parent, int style, IControlHandler handler, boolean isForEditing) {
+	public CompositeFragment(Composite parent, int style,
+			IControlHandler handler, boolean isForEditing) {
 		super(parent, style);
 		this.controlHandler = handler;
 		this.isForEditing = isForEditing;
@@ -49,9 +51,12 @@ public abstract class CompositeFragment extends Composite {
 	 * 
 	 * @param parent
 	 * @param handler
-	 * @param isForEditing Indicate if this composite will be used for server editing (as opposed to server Wizard)
+	 * @param isForEditing
+	 *            Indicate if this composite will be used for server editing (as
+	 *            opposed to server Wizard)
 	 */
-	public CompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
+	public CompositeFragment(Composite parent, IControlHandler handler,
+			boolean isForEditing) {
 		this(parent, SWT.NONE, handler, isForEditing);
 	}
 
@@ -85,7 +90,8 @@ public abstract class CompositeFragment extends Composite {
 	/**
 	 * Returns the name of this runtime composite.
 	 * 
-	 * @return The display name of the composite. The returned value should never be null.
+	 * @return The display name of the composite. The returned value should
+	 *         never be null.
 	 */
 	public String getDisplayName() {
 		if (name == null) {
@@ -133,19 +139,21 @@ public abstract class CompositeFragment extends Composite {
 	}
 
 	/**
-	 * Returns if this runtime composite was designated for editing mode.
-	 * When in editing, the behavior of the composite's creation and validation processes
-	 * might be different.
+	 * Returns if this runtime composite was designated for editing mode. When
+	 * in editing, the behavior of the composite's creation and validation
+	 * processes might be different.
 	 * 
-	 * @return True, iff the composite was created in editing mode; false otherwise. 
+	 * @return True, iff the composite was created in editing mode; false
+	 *         otherwise.
 	 */
 	public boolean isForEditing() {
 		return isForEditing;
 	}
 
 	/**
-	 * Returns a unique id of the CompositeFragment.
-	 * The user must re-implement this method to return a unique ID. 
+	 * Returns a unique id of the CompositeFragment. The user must re-implement
+	 * this method to return a unique ID.
+	 * 
 	 * @return returns the unique ID.
 	 */
 	public String getId() {
@@ -155,8 +163,8 @@ public abstract class CompositeFragment extends Composite {
 	/**
 	 * Performs special processing when the OK button has been pressed.
 	 * 
-	 * @return <code>false</code> to abort the container's OK
-	 *  processing and <code>true</code> to allow the OK to happen
+	 * @return <code>false</code> to abort the container's OK processing and
+	 *         <code>true</code> to allow the OK to happen
 	 */
 	public abstract boolean performOk();
 
@@ -173,18 +181,20 @@ public abstract class CompositeFragment extends Composite {
 		performOk();
 	}
 
-	/**	
-	 * Performs special processing when this runtime composite when Cancel button has
-	 * been pressed.
+	/**
+	 * Performs special processing when this runtime composite when Cancel
+	 * button has been pressed.
 	 * <p>
-	 * The default implementation of this method does nothing and returns <code>true</code>.
+	 * The default implementation of this method does nothing and returns
+	 * <code>true</code>.
 	 */
 	public boolean performCancel() {
 		return true;
 	}
 
 	/**
-	 * Returns if this composite processing has no errors and is defined as 'complete'.
+	 * Returns if this composite processing has no errors and is defined as
+	 * 'complete'.
 	 * 
 	 * @return The completeness state of this composite.
 	 */
@@ -194,6 +204,7 @@ public abstract class CompositeFragment extends Composite {
 
 	/**
 	 * Sets the completeness state of this composite.
+	 * 
 	 * @param isComplete
 	 */
 	protected void setComplete(boolean isComplete) {

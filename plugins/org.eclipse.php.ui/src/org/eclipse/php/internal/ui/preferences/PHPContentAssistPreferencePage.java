@@ -20,9 +20,10 @@ import org.eclipse.ui.PlatformUI;
 /**
  * 
  * @author guy.g
- *
+ * 
  */
-public class PHPContentAssistPreferencePage extends AbstractMultiBlockPreferencePage {
+public class PHPContentAssistPreferencePage extends
+		AbstractMultiBlockPreferencePage {
 
 	protected void setDescription() {
 		setDescription(""); //$NON-NLS-1$
@@ -35,10 +36,11 @@ public class PHPContentAssistPreferencePage extends AbstractMultiBlockPreference
 	protected String getPreferencePageID() {
 		return PHPUiConstants.CONTENT_ASSIST_PROFERENCE_PAGE;
 	}
-	
+
 	public void performHelp() {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.CODE_ASSIST_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				IPHPHelpContextIds.CODE_ASSIST_PREFERENCES);
 		getControl().notifyListeners(SWT.Help, new Event());
-    }
+	}
 
 }

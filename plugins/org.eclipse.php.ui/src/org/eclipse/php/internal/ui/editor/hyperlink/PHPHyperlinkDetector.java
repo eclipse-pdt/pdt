@@ -28,25 +28,35 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	/*
-	 * @see org.eclipse.jface.text.hyperlink.IHyperlinkDetector#detectHyperlinks(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion, boolean)
+	 * @see
+	 * org.eclipse.jface.text.hyperlink.IHyperlinkDetector#detectHyperlinks(
+	 * org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion,
+	 * boolean)
 	 */
-	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
-		PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility.getPHPEditor(textViewer);
+	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
+			IRegion region, boolean canShowMultipleHyperlinks) {
+		PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility
+				.getPHPEditor(textViewer);
 		if (editor == null) {
 			return null;
 		}
-		
+
 		if (region == null) {
 			return null;
 		}
 
-		IModelElement input = EditorUtility.getEditorInputModelElement(editor, false);
+		IModelElement input = EditorUtility.getEditorInputModelElement(editor,
+				false);
 		if (input == null) {
 			return null;
 		}
-		
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(input.getScriptProject().getProject());
-		boolean namespacesSupported = phpVersion.isGreaterThan(PHPVersion.PHP5); // PHP 5.3 and greater
+
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(input
+				.getScriptProject().getProject());
+		boolean namespacesSupported = phpVersion.isGreaterThan(PHPVersion.PHP5); // PHP
+																					// 5.3
+																					// and
+																					// greater
 
 		IDocument document = textViewer.getDocument();
 		int offset = region.getOffset();
@@ -56,13 +66,17 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 				return null;
 
 			IModelElement[] elements = null;
-			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(), wordRegion.getLength());
+			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(),
+					wordRegion.getLength());
 			if (elements != null && elements.length > 0) {
 				final IHyperlink link;
 				if (elements.length == 1) {
-					link = new ModelElementHyperlink(wordRegion, elements[0], new OpenAction(editor));
+					link = new ModelElementHyperlink(wordRegion, elements[0],
+							new OpenAction(editor));
 				} else {
-					link = new ModelElementHyperlink(wordRegion, new ModelElementArray(elements), new OpenAction(editor));
+					link = new ModelElementHyperlink(wordRegion,
+							new ModelElementArray(elements), new OpenAction(
+									editor));
 				}
 				return new IHyperlink[] { link };
 			}
@@ -73,7 +87,8 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 		return null;
 	}
 
-	public static IRegion findWord(IDocument document, int offset, boolean namespacesSupported) {
+	public static IRegion findWord(IDocument document, int offset,
+			boolean namespacesSupported) {
 
 		int start = -2;
 		int end = -1;
@@ -85,10 +100,12 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 			int rightmostNsSeparator = -1;
 			while (pos >= 0) {
 				c = document.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c) && (!namespacesSupported || c != '\\')) {
+				if (!Character.isJavaIdentifierPart(c)
+						&& (!namespacesSupported || c != '\\')) {
 					break;
 				}
-				if (namespacesSupported && c == '\\' && rightmostNsSeparator == -1) {
+				if (namespacesSupported && c == '\\'
+						&& rightmostNsSeparator == -1) {
 					rightmostNsSeparator = pos;
 				}
 				--pos;
@@ -97,10 +114,11 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
 			pos = offset;
 			int length = document.getLength();
-			
+
 			while (pos < length) {
 				c = document.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c) && (!namespacesSupported || c != '\\')) {
+				if (!Character.isJavaIdentifierPart(c)
+						&& (!namespacesSupported || c != '\\')) {
 					break;
 				}
 				if (namespacesSupported && c == '\\') {
@@ -109,12 +127,11 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 				++pos;
 			}
 			end = pos;
-			
+
 			if (rightmostNsSeparator != -1) {
 				if (rightmostNsSeparator > offset) {
 					end = rightmostNsSeparator;
-				}
-				else {
+				} else {
 					start = rightmostNsSeparator;
 				}
 			}
@@ -125,11 +142,9 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (start >= -1 && end > -1) {
 			if (start == offset && end == offset) {
 				return new Region(offset, 0);
-			}
-			else if (start == offset) {
+			} else if (start == offset) {
 				return new Region(start, end - start);
-			}
-			else {
+			} else {
 				return new Region(start + 1, end - start - 1);
 			}
 		}

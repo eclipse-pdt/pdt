@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -25,7 +26,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.dltk.ui.PreferenceConstants;
 
 public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 
@@ -33,13 +33,15 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 
 	public PHPAppearancePreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
-		setDescription(PHPUIMessages.getString("PHPAppearancePreferencePage_appearanceHeader")); //$NON-NLS-1$
+		setDescription(PHPUIMessages
+				.getString("PHPAppearancePreferencePage_appearanceHeader")); //$NON-NLS-1$
 	}
 
 	protected void initializeValues() {
 		super.initializeValues();
 		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
-		showReturnTypeCB.setSelection(store.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE));
+		showReturnTypeCB.setSelection(store
+				.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE));
 	}
 
 	private void createMainBlock(Composite parent) {
@@ -50,14 +52,16 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 		comp.setLayout(gridLayout);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		showReturnTypeCB = new Button(comp, SWT.CHECK);
-		showReturnTypeCB.setText(PHPUIMessages.getString("PHPAppearancePreferencePage_showMehodsReturnType")); //$NON-NLS-1$
+		showReturnTypeCB.setText(PHPUIMessages
+				.getString("PHPAppearancePreferencePage_showMehodsReturnType")); //$NON-NLS-1$
 		showReturnTypeCB.setLayoutData(gd);
 	}
 
 	protected Control createContents(Composite parent) {
 		createMainBlock(parent);
 		initializeValues();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.APPEARANCE_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.APPEARANCE_PREFERENCES);
 		return null;
 	}
 
@@ -94,7 +98,8 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 
 	public boolean performOk() {
 		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
-		store.setValue(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE, showReturnTypeCB.getSelection());
+		store.setValue(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE,
+				showReturnTypeCB.getSelection());
 		return super.performOk();
 	}
 

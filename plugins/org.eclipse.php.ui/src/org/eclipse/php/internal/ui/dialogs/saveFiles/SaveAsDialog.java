@@ -37,10 +37,11 @@ import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 
 /**
  * A "Save As" dialog which solicits a path from the user. The
- * <code>getResult</code> method returns the path. Note that the folder
- * at the specified path might not exist and might need to be created.
- * This dialog is also able to save a file in a new PHP project
- * @see org.eclipse.ui.dialogs.SaveAsDialog 
+ * <code>getResult</code> method returns the path. Note that the folder at the
+ * specified path might not exist and might need to be created. This dialog is
+ * also able to save a file in a new PHP project
+ * 
+ * @see org.eclipse.ui.dialogs.SaveAsDialog
  */
 public class SaveAsDialog extends TitleAreaDialog {
 
@@ -70,25 +71,27 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 	/**
 	 * Creates a new Save As dialog for no specific file.
-	 *
-	 * @param parentShell the parent shell
+	 * 
+	 * @param parentShell
+	 *            the parent shell
 	 */
 	public SaveAsDialog(Shell parentShell) {
 		super(parentShell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in Window.
+	/*
+	 * (non-Javadoc) Method declared in Window.
 	 */
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		shell.setText(""); //$NON-NLS-1$
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IIDEHelpContextIds.SAVE_AS_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell,
+				IIDEHelpContextIds.SAVE_AS_DIALOG);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in Window.
+	/*
+	 * (non-Javadoc) Method declared in Window.
 	 */
 	protected Control createContents(Composite parent) {
 		Control contents = super.createContents(parent);
@@ -97,14 +100,16 @@ public class SaveAsDialog extends TitleAreaDialog {
 		validatePage();
 		resourceGroup.setFocus();
 		setTitle(""); //$NON-NLS-1$
-		dlgTitleImage = IDEInternalWorkbenchImages.getImageDescriptor(IDEInternalWorkbenchImages.IMG_DLGBAN_SAVEAS_DLG).createImage();
-		setTitleImage(PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_WIZBAN_ADD_PHP_FILE));
+		dlgTitleImage = IDEInternalWorkbenchImages.getImageDescriptor(
+				IDEInternalWorkbenchImages.IMG_DLGBAN_SAVEAS_DLG).createImage();
+		setTitleImage(PHPUiPlugin.getImageDescriptorRegistry().get(
+				PHPPluginImages.DESC_WIZBAN_ADD_PHP_FILE));
 		setMessage(""); //$NON-NLS-1$
 
 		return contents;
 	}
 
-	/** 
+	/**
 	 * The <code>SaveAsDialog</code> implementation of this <code>Window</code>
 	 * method disposes of the banner image when the dialog is closed.
 	 */
@@ -115,20 +120,23 @@ public class SaveAsDialog extends TitleAreaDialog {
 		return super.close();
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on Dialog.
+	/*
+	 * (non-Javadoc) Method declared on Dialog.
 	 */
 	protected void createButtonsForButtonBar(Composite parent) {
 		GridLayout parentLayout = (GridLayout) parent.getLayout();
 		parentLayout.makeColumnsEqualWidth = false;
 
-		newProjectButton = createButton(parent, NEW_PROJ_ID, PHPUIMessages.getString("SaveAsDialog_createNewProject"), false); //$NON-NLS-1$
-		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		newProjectButton = createButton(parent, NEW_PROJ_ID, PHPUIMessages
+				.getString("SaveAsDialog_createNewProject"), false); //$NON-NLS-1$
+		okButton = createButton(parent, IDialogConstants.OK_ID,
+				IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,
+				IDialogConstants.CANCEL_LABEL, false);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on Dialog.
+	/*
+	 * (non-Javadoc) Method declared on Dialog.
 	 */
 	protected Control createDialogArea(Composite parent) {
 		// top level composite
@@ -151,7 +159,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 			}
 		};
 
-		resourceGroup = new ResourceAndContainerGroup(composite, listener, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		resourceGroup = new ResourceAndContainerGroup(composite, listener,
+				"", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		resourceGroup.setAllowExistingResources(true);
 
 		return parentComposite;
@@ -160,11 +169,11 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/**
 	 * Returns the full path entered by the user.
 	 * <p>
-	 * Note that the file and container might not exist and would need to be created.
-	 * See the <code>IFile.create</code> method and the 
+	 * Note that the file and container might not exist and would need to be
+	 * created. See the <code>IFile.create</code> method and the
 	 * <code>ContainerGenerator</code> class.
 	 * </p>
-	 *
+	 * 
 	 * @return the path, or <code>null</code> if Cancel was pressed
 	 */
 	public IPath getResult() {
@@ -176,7 +185,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 */
 	private void initializeControls() {
 		if (originalFile != null) {
-			resourceGroup.setContainerFullPath(originalFile.getParent().getFullPath());
+			resourceGroup.setContainerFullPath(originalFile.getParent()
+					.getFullPath());
 			resourceGroup.setResource(originalFile.getName());
 		} else if (originalName != null) {
 			resourceGroup.setResource(originalName);
@@ -184,15 +194,16 @@ public class SaveAsDialog extends TitleAreaDialog {
 		setDialogComplete(validatePage());
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on Dialog.
+	/*
+	 * (non-Javadoc) Method declared on Dialog.
 	 */
 	protected void okPressed() {
-		IPath path = resourceGroup.getContainerFullPath().append(resourceGroup.getResource());
+		IPath path = resourceGroup.getContainerFullPath().append(
+				resourceGroup.getResource());
 
-		//If the user does not supply a file extension and if the save 
-		//as dialog was provided a default file name append the extension 
-		//of the default filename to the new name
+		// If the user does not supply a file extension and if the save
+		// as dialog was provided a default file name append the extension
+		// of the default filename to the new name
 		if (path.getFileExtension() == null) {
 			if (originalFile != null && originalFile.getFileExtension() != null) {
 				path = path.addFileExtension(originalFile.getFileExtension());
@@ -207,19 +218,22 @@ public class SaveAsDialog extends TitleAreaDialog {
 		// If the path already exists then confirm overwrite.
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		if (file.exists()) {
-			String[] buttons = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
+			String[] buttons = new String[] { IDialogConstants.YES_LABEL,
+					IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
 			String question = "The file '" + file.getFullPath().toString() + "' already exists. Would you like to replace it ?"; //$NON-NLS-1$ //$NON-NLS-2$
-			MessageDialog d = new MessageDialog(getShell(), PHPUIMessages.getString("SaveAsDialog_saveFileMessage"), null, question, MessageDialog.QUESTION, buttons, 0); //$NON-NLS-1$
+			MessageDialog d = new MessageDialog(
+					getShell(),
+					PHPUIMessages.getString("SaveAsDialog_saveFileMessage"), null, question, MessageDialog.QUESTION, buttons, 0); //$NON-NLS-1$
 			int overwrite = d.open();
 			switch (overwrite) {
-				case 0: // Yes
-					break;
-				case 1: // No
-					return;
-				case 2: // Cancel
-				default:
-					cancelPressed();
-					return;
+			case 0: // Yes
+				break;
+			case 1: // No
+				return;
+			case 2: // Cancel
+			default:
+				cancelPressed();
+				return;
 			}
 		}
 
@@ -231,9 +245,10 @@ public class SaveAsDialog extends TitleAreaDialog {
 	/**
 	 * Sets the completion state of this dialog and adjusts the enable state of
 	 * the Ok button accordingly.
-	 *
-	 * @param value <code>true</code> if this dialog is compelete, and
-	 *  <code>false</code> otherwise
+	 * 
+	 * @param value
+	 *            <code>true</code> if this dialog is compelete, and
+	 *            <code>false</code> otherwise
 	 */
 	protected void setDialogComplete(boolean value) {
 		okButton.setEnabled(value);
@@ -241,19 +256,21 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 	/**
 	 * Sets the original file to use.
-	 *
-	 * @param originalFile the original file
+	 * 
+	 * @param originalFile
+	 *            the original file
 	 */
 	public void setOriginalFile(IFile originalFile) {
 		this.originalFile = originalFile;
 	}
 
 	/**
-	 * Set the original file name to use.
-	 * Used instead of <code>setOriginalFile</code>
-	 * when the original resource is not an IFile.
+	 * Set the original file name to use. Used instead of
+	 * <code>setOriginalFile</code> when the original resource is not an IFile.
 	 * Must be called before <code>create</code>.
-	 * @param originalName default file name
+	 * 
+	 * @param originalName
+	 *            default file name
 	 */
 	public void setOriginalName(String originalName) {
 		this.originalName = originalName;
@@ -261,7 +278,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 
 	/**
 	 * Returns whether this page's visual components all contain valid values.
-	 *
+	 * 
 	 * @return <code>true</code> if valid, and <code>false</code> otherwise
 	 */
 	private boolean validatePage() {
@@ -281,7 +298,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 		IPath fullPath = resourceGroup.getContainerFullPath();
 		if (fullPath != null) {
 			String projectName = fullPath.segment(0);
-			IStatus isValidProjectName = workspace.validateName(projectName, IResource.PROJECT);
+			IStatus isValidProjectName = workspace.validateName(projectName,
+					IResource.PROJECT);
 			if (isValidProjectName.isOK()) {
 				IProject project = workspace.getRoot().getProject(projectName);
 				if (!project.isOpen()) {
@@ -301,13 +319,16 @@ public class SaveAsDialog extends TitleAreaDialog {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.window.Dialog#getDialogBoundsSettings()
 	 * 
 	 * @since 3.2
 	 */
 	protected IDialogSettings getDialogBoundsSettings() {
-		IDialogSettings settings = IDEWorkbenchPlugin.getDefault().getDialogSettings();
+		IDialogSettings settings = IDEWorkbenchPlugin.getDefault()
+				.getDialogSettings();
 		IDialogSettings section = settings.getSection(DIALOG_SETTINGS_SECTION);
 		if (section == null) {
 			section = settings.addNewSection(DIALOG_SETTINGS_SECTION);
@@ -323,7 +344,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 			cancelPressed();
 		} else if (NEW_PROJ_ID == buttonId) {
 			newProjectWizard = new PHPProjectCreationWizard();
-			newProjectWizard.init(PlatformUI.getWorkbench(), StructuredSelection.EMPTY);
+			newProjectWizard.init(PlatformUI.getWorkbench(),
+					StructuredSelection.EMPTY);
 			WizardDialog dialog = new WizardDialog(getShell(), newProjectWizard);
 			if (dialog.open() == Window.OK) {
 				resourceGroup.refresh();

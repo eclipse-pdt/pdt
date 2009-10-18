@@ -36,11 +36,11 @@ public class Resources {
 	}
 
 	/**
-	 * This method is used to generate a list of local locations to
-	 * be used in DnD for file transfers.
+	 * This method is used to generate a list of local locations to be used in
+	 * DnD for file transfers.
 	 * 
-	 * @param resources the array of resources to get the local
-	 *  locations for
+	 * @param resources
+	 *            the array of resources to get the local locations for
 	 * @return the local locations
 	 */
 	public static String[] getLocationOSStrings(IResource[] resources) {
@@ -54,19 +54,22 @@ public class Resources {
 	}
 
 	/**
-	 * Returns the location of the given resource. For local 
-	 * resources this is the OS path in the local file system. For
-	 * remote resource this is the URI.
+	 * Returns the location of the given resource. For local resources this is
+	 * the OS path in the local file system. For remote resource this is the
+	 * URI.
 	 * 
-	 * @param resource the resource
-	 * @return the location string or <code>null</code> if the
-	 *  location URI of the resource is <code>null</code>
+	 * @param resource
+	 *            the resource
+	 * @return the location string or <code>null</code> if the location URI of
+	 *         the resource is <code>null</code>
 	 */
 	public static String getLocationString(IResource resource) {
 		URI uri = resource.getLocationURI();
 		if (uri == null)
 			return null;
-		return EFS.SCHEME_FILE.equalsIgnoreCase(uri.getScheme()) ? new File(uri).getAbsolutePath() : uri.toString();
+		return EFS.SCHEME_FILE.equalsIgnoreCase(uri.getScheme()) ? new File(uri)
+				.getAbsolutePath()
+				: uri.toString();
 	}
 
 }

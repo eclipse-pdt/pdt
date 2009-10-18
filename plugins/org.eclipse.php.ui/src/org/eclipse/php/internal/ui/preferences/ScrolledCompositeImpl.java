@@ -45,7 +45,9 @@ public class ScrolledCompositeImpl extends ScrolledComposite {
 		setContent(body);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.swt.widgets.Widget#dispose()
 	 */
 	public void dispose() {

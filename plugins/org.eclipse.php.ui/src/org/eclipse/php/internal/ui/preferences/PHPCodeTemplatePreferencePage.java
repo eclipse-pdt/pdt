@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.php.internal.ui.preferences.PHPCodeTemplateBlock;
 import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -31,60 +30,73 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 
-	public static final String PREF_ID= "org.eclipse.php.ui.preferences.PHPCodeTemplatePreferencePage"; //$NON-NLS-1$
-	public static final String PROP_ID= "org.eclipse.php.ui.propertyPages.PHPCodeTemplatePreferencePage"; //$NON-NLS-1$
-	
-	public static final String DATA_SELECT_TEMPLATE= "CodeTemplatePreferencePage.select_template"; //$NON-NLS-1$
-	
+	public static final String PREF_ID = "org.eclipse.php.ui.preferences.PHPCodeTemplatePreferencePage"; //$NON-NLS-1$
+	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPCodeTemplatePreferencePage"; //$NON-NLS-1$
+
+	public static final String DATA_SELECT_TEMPLATE = "CodeTemplatePreferencePage.select_template"; //$NON-NLS-1$
+
 	private PHPCodeTemplateBlock fCodeTemplateConfigurationBlock;
 
 	public PHPCodeTemplatePreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
-		setDescription(PHPUIMessages.getString("CodeTemplatesPreferencePage_title")); //$NON-NLS-1$
+		setDescription(PHPUIMessages
+				.getString("CodeTemplatesPreferencePage_title")); //$NON-NLS-1$
 
 		// only used when page is shown programatically
-		//TODO - setTitle(PreferencesMessages.CodeTemplatesPreferencePage_title);		 
+		// TODO -
+		// setTitle(PreferencesMessages.CodeTemplatesPreferencePage_title);
 	}
 
 	/*
 	 * @see PreferencePage#createControl(Composite)
 	 */
 	public void createControl(Composite parent) {
-		IWorkbenchPreferenceContainer container= (IWorkbenchPreferenceContainer) getContainer();
-		fCodeTemplateConfigurationBlock= new PHPCodeTemplateBlock(getNewStatusChangedListener(), getProject(), container);
-		
-		super.createControl(parent);
-		//FIXME - HELP - 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.TEMPLATES_PREFERENCES);
-	}	
+		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
+		fCodeTemplateConfigurationBlock = new PHPCodeTemplateBlock(
+				getNewStatusChangedListener(), getProject(), container);
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#createPreferenceContent(org.eclipse.swt.widgets.Composite)
+		super.createControl(parent);
+		// FIXME - HELP -
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				IPHPHelpContextIds.TEMPLATES_PREFERENCES);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
+	 * createPreferenceContent(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createPreferenceContent(Composite composite) {
 		return fCodeTemplateConfigurationBlock.createContents(composite);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#enableProjectSpecificSettings(boolean)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
+	 * enableProjectSpecificSettings(boolean)
 	 */
-	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
+	protected void enableProjectSpecificSettings(
+			boolean useProjectSpecificSettings) {
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 		if (fCodeTemplateConfigurationBlock != null) {
-			fCodeTemplateConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
+			fCodeTemplateConfigurationBlock
+					.useProjectSpecificSettings(useProjectSpecificSettings);
 		}
 	}
-	
+
 	/*
 	 * @see IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
 		if (fCodeTemplateConfigurationBlock != null) {
-			return fCodeTemplateConfigurationBlock.performOk(useProjectSettings());
+			return fCodeTemplateConfigurationBlock
+					.performOk(useProjectSettings());
 		}
 		return true;
 	}
-	
+
 	/*
 	 * @see PreferencePage#performDefaults()
 	 */
@@ -94,8 +106,10 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 			fCodeTemplateConfigurationBlock.performDefaults();
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.dialogs.DialogPage#dispose()
 	 */
 	public void dispose() {
@@ -104,16 +118,22 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 		}
 		super.dispose();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.wizards.IStatusChangeListener#statusChanged(org.eclipse.core.runtime.IStatus)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.wizards.IStatusChangeListener#statusChanged
+	 * (org.eclipse.core.runtime.IStatus)
 	 */
 	public void statusChanged(IStatus status) {
 		setValid(!status.matches(IStatus.ERROR));
-		StatusUtil.applyToStatusLine(this, status);		
+		StatusUtil.applyToStatusLine(this, status);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.IPreferencePage#performCancel()
 	 */
 	public boolean performCancel() {
@@ -123,43 +143,54 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 		return super.performCancel();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
+	 * hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
 	 */
 	protected boolean hasProjectSpecificOptions(IProject project) {
-		return fCodeTemplateConfigurationBlock.hasProjectSpecificOptions(project);
+		return fCodeTemplateConfigurationBlock
+				.hasProjectSpecificOptions(project);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#getPreferencePageID()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
+	 * getPreferencePageID()
 	 */
 	protected String getPreferencePageID() {
 		return PREF_ID;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#getPropertyPageID()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.preferences.PropertyAndPreferencePage#
+	 * getPropertyPageID()
 	 */
 	protected String getPropertyPageID() {
 		return PROP_ID;
 	}
 
 	/*
-	 * @see org.eclipse.jface.preference.PreferencePage#applyData(java.lang.Object)
+	 * @see
+	 * org.eclipse.jface.preference.PreferencePage#applyData(java.lang.Object)
 	 */
 	public void applyData(Object data) {
 		if (data instanceof Map) {
-			Object id= ((Map) data).get(DATA_SELECT_TEMPLATE);
+			Object id = ((Map) data).get(DATA_SELECT_TEMPLATE);
 			if (id instanceof String) {
-				//final TemplatePersistenceData[] templates= fCodeTemplateConfigurationBlock.fTemplateStore.getTemplateData();
-				TemplatePersistenceData template= null;
-			/*	for (int index= 0; index < templates.length; index++) {
-					template= templates[index];
-					if (template.getId().equals(id)) {
-						fCodeTemplateConfigurationBlock.postSetSelection(template);
-						break;
-					}
-				}*/
+				// final TemplatePersistenceData[] templates=
+				// fCodeTemplateConfigurationBlock.fTemplateStore.getTemplateData();
+				TemplatePersistenceData template = null;
+				/*
+				 * for (int index= 0; index < templates.length; index++) {
+				 * template= templates[index]; if (template.getId().equals(id))
+				 * { fCodeTemplateConfigurationBlock.postSetSelection(template);
+				 * break; } }
+				 */
 			}
 		}
 		super.applyData(data);

@@ -22,9 +22,10 @@ import org.eclipse.swt.widgets.Group;
 /**
  * 
  * @author guy.g
- *
+ * 
  */
-public abstract class AbstractPHPContentAssistPreferencePageBlock extends AbstractPHPPreferenceBlock {
+public abstract class AbstractPHPContentAssistPreferencePageBlock extends
+		AbstractPHPPreferenceBlock {
 
 	private IPreferenceStore preferenceStore;
 	protected PreferencePage preferencePage;

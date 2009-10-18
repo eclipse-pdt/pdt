@@ -1,10 +1,8 @@
 package org.eclipse.php.internal.ui.phar.wizard;
 
-import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.OutputStream;
 
-import org.eclipse.dltk.core.IArchiveEntry;
 import org.eclipse.php.internal.core.phar.IOutputArchiveEntry;
 import org.eclipse.php.internal.core.phar.IStub;
 
@@ -21,7 +19,7 @@ public class PharOutputStream extends FilterOutputStream {
 
 	public void putNextEntry(IOutputArchiveEntry newEntry) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

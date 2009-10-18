@@ -24,7 +24,7 @@ public class ValuedCombo extends Combo {
 
 	public ValuedCombo(Composite composite, int style, List entryList) {
 		super(composite, style);
-		
+
 		this.entryList = entryList;
 		retrieveViewedItemsAsArray();
 		this.setItems(viewedValues);
@@ -32,22 +32,24 @@ public class ValuedCombo extends Combo {
 			this.select(0);
 		}
 	}
-	
+
 	private void retrieveViewedItemsAsArray() {
 		viewedValues = new String[entryList.size()];
-		int i=0;
-		for (Iterator entryIterator = entryList.iterator(); entryIterator.hasNext() ; ++i) {
+		int i = 0;
+		for (Iterator entryIterator = entryList.iterator(); entryIterator
+				.hasNext(); ++i) {
 			Entry entry = (Entry) entryIterator.next();
 			viewedValues[i] = entry.getViewedValue();
 		}
 	}
 
 	public String getSelectionValue() {
-		return ((Entry)entryList.get(getSelectionIndex())).getValue();
+		return ((Entry) entryList.get(getSelectionIndex())).getValue();
 	}
-	
+
 	public void selectValue(String Value) {
-		for (Iterator entryIterator = entryList.iterator(); entryIterator.hasNext();) {
+		for (Iterator entryIterator = entryList.iterator(); entryIterator
+				.hasNext();) {
 			Entry entry = (Entry) entryIterator.next();
 			if (entry.getValue().equals(Value)) {
 				setText(entry.getViewedValue());
@@ -56,7 +58,7 @@ public class ValuedCombo extends Combo {
 		}
 	}
 
-	protected void checkSubclass () {
+	protected void checkSubclass() {
 	}
 
 	public static class Entry {
@@ -67,11 +69,11 @@ public class ValuedCombo extends Combo {
 			this.value = value;
 			this.viewedValue = viewedValue;
 		}
-		
+
 		public String getValue() {
 			return value;
 		}
-		
+
 		public String getViewedValue() {
 			return viewedValue;
 		}

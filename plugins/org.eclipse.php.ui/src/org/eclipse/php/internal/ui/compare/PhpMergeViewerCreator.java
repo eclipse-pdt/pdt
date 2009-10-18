@@ -17,19 +17,21 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Description: Creates the voewer for PHP  
+ * Description: Creates the voewer for PHP
+ * 
  * @author Roy, 2007
  */
-public class PhpMergeViewerCreator implements IViewerCreator  {
+public class PhpMergeViewerCreator implements IViewerCreator {
 
 	/*
-	 * @see org.eclipse.compare.IViewerCreator#createViewer(org.eclipse.swt.widgets.Composite, org.eclipse.compare.CompareConfiguration)
+	 * @see
+	 * org.eclipse.compare.IViewerCreator#createViewer(org.eclipse.swt.widgets
+	 * .Composite, org.eclipse.compare.CompareConfiguration)
 	 */
-	
+
 	public Viewer createViewer(Composite parent, CompareConfiguration config) {
 		// return new TextMergeViewer(parent, config);
 		return new PhpMergeViewer(parent, config);
 	}
 
-	
 }

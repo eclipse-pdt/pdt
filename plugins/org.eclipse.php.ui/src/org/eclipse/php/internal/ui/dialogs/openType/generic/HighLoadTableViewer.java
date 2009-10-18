@@ -50,7 +50,7 @@ public class HighLoadTableViewer extends Composite {
 	}
 
 	public void setElements(Object[] elements) {
-		//		stopTableUpdater();
+		// stopTableUpdater();
 		this.elements = elements;
 		sortedElements = sorter.sort(elements);
 		tableElements = compositeFilter.filter(sortedElements);
@@ -58,9 +58,9 @@ public class HighLoadTableViewer extends Composite {
 	}
 
 	public void setSorter(ISorter sorter) {
-		//assert sorter != null;
+		// assert sorter != null;
 
-		//		stopTableUpdater();
+		// stopTableUpdater();
 		this.sorter = sorter;
 		sortedElements = sorter.sort(elements);
 		tableElements = sorter.sort(tableElements);
@@ -73,7 +73,7 @@ public class HighLoadTableViewer extends Composite {
 	}
 
 	private void applyFilter2TableViewer() {
-		//		stopTableUpdater();
+		// stopTableUpdater();
 		tableElements = compositeFilter.filter(sortedElements);
 		addElementsToTableInNewThread();
 	}
@@ -81,7 +81,8 @@ public class HighLoadTableViewer extends Composite {
 	private void addElementsToTableInNewThread() {
 
 		if (elementAddition == null) {
-			elementAddition = new ElementAddition(tableViewer, defaultElementSelection);
+			elementAddition = new ElementAddition(tableViewer,
+					defaultElementSelection);
 			Thread tableUpdater = new Thread(elementAddition);
 			tableUpdater.start();
 		}

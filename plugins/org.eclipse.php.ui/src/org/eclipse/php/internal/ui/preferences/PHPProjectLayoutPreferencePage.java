@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.Messages;
 import org.eclipse.php.internal.ui.util.StatusInfo;
@@ -64,7 +63,7 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 
 		// only used when page is shown programatically
-		//setTitle(PHPUIMessages.getString("PHPBuildPreferencePage_title"));
+		// setTitle(PHPUIMessages.getString("PHPBuildPreferencePage_title"));
 		setDescription(PreferencesMessages.NewPHPProjectPreferencePage_description);
 
 		fRadioButtons = new ArrayList();
@@ -87,15 +86,15 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	}
 
 	/*
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+	 * @see
+	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
+	 * .Composite)
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.NEW_PROJECT_LAYOUT_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				IPHPHelpContextIds.NEW_PROJECT_LAYOUT_PREFERENCES);
 	}
-	
-	
-
 
 	private void controlModified(Widget widget) {
 		if (widget == fSrcFolderNameText || widget == fBinFolderNameText) {
@@ -103,8 +102,11 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#createPreferenceContent(org.eclipse.swt.widgets.Composite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
+	 * createPreferenceContent(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createPreferenceContent(Composite parent) {
 		initializeDialogUnits(parent);
@@ -126,34 +128,46 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		layout.numColumns = 2;
 		sourceFolderGroup.setLayout(layout);
 		sourceFolderGroup.setLayoutData(gd);
-		sourceFolderGroup.setText(PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_label);
+		sourceFolderGroup
+				.setText(PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_label);
 
 		int indent = 0;
 
-		fProjectAsSourceFolder = addRadioButton(sourceFolderGroup, PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_project, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.FALSE, indent);
+		fProjectAsSourceFolder = addRadioButton(
+				sourceFolderGroup,
+				PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_project,
+				SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.FALSE, indent);
 		fProjectAsSourceFolder.addSelectionListener(fSelectionListener);
 
-		fFoldersAsSourceFolder = addRadioButton(sourceFolderGroup, PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_folder, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.TRUE, indent);
+		fFoldersAsSourceFolder = addRadioButton(
+				sourceFolderGroup,
+				PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_folder,
+				SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.TRUE, indent);
 		fFoldersAsSourceFolder.addSelectionListener(fSelectionListener);
 
 		indent = convertWidthInCharsToPixels(4);
 
 		fSrcFolderNameLabel = new Label(sourceFolderGroup, SWT.NONE);
-		fSrcFolderNameLabel.setText(PreferencesMessages.NewPHPProjectPreferencePage_folders_src);
-		fSrcFolderNameText = addTextControl(sourceFolderGroup, fSrcFolderNameLabel, SRCBIN_SRCNAME, indent);
+		fSrcFolderNameLabel
+				.setText(PreferencesMessages.NewPHPProjectPreferencePage_folders_src);
+		fSrcFolderNameText = addTextControl(sourceFolderGroup,
+				fSrcFolderNameLabel, SRCBIN_SRCNAME, indent);
 		fSrcFolderNameText.addModifyListener(fModifyListener);
 
 		fBinFolderNameLabel = new Label(sourceFolderGroup, SWT.NONE);
-		fBinFolderNameLabel.setText(PreferencesMessages.NewPHPProjectPreferencePage_folders_public);
-		fBinFolderNameText = addTextControl(sourceFolderGroup, fBinFolderNameLabel, SRCBIN_BINNAME, indent);
+		fBinFolderNameLabel
+				.setText(PreferencesMessages.NewPHPProjectPreferencePage_folders_public);
+		fBinFolderNameText = addTextControl(sourceFolderGroup,
+				fBinFolderNameLabel, SRCBIN_BINNAME, indent);
 		fBinFolderNameText.addModifyListener(fModifyListener);
 
 		validateFolders();
-		
+
 		return result;
 	}
 
-	private Button addRadioButton(Composite parent, String label, String key, String value, int indent) {
+	private Button addRadioButton(Composite parent, String label, String key,
+			String value, int indent) {
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = 2;
 		gd.horizontalIndent = indent;
@@ -169,7 +183,8 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		return button;
 	}
 
-	private Text addTextControl(Composite parent, Label labelControl, String key, int indent) {
+	private Text addTextControl(Composite parent, Label labelControl,
+			String key, int indent) {
 		GridData gd = new GridData();
 		gd.horizontalIndent = indent;
 
@@ -198,7 +213,9 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 			String srcName = fSrcFolderNameText.getText();
 			String binName = fBinFolderNameText.getText();
 			if (srcName.length() + binName.length() == 0) {
-				updateStatus(new StatusInfo(IStatus.ERROR, PreferencesMessages.NewPHPProjectPreferencePage_folders_error_namesempty));
+				updateStatus(new StatusInfo(
+						IStatus.ERROR,
+						PreferencesMessages.NewPHPProjectPreferencePage_folders_error_namesempty));
 				return;
 			}
 			IWorkspace workspace = PHPUiPlugin.getWorkspace();
@@ -207,29 +224,39 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 			IStatus status;
 			IPath srcPath = dmy.getFullPath().append(srcName);
 			if (srcName.length() != 0) {
-				status = workspace.validatePath(srcPath.toString(), IResource.FOLDER);
+				status = workspace.validatePath(srcPath.toString(),
+						IResource.FOLDER);
 				if (!status.isOK()) {
-					String message = Messages.format(PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidsrcname, status.getMessage());
+					String message = Messages
+							.format(
+									PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidsrcname,
+									status.getMessage());
 					updateStatus(new StatusInfo(IStatus.ERROR, message));
 					return;
 				}
 			}
 			IPath binPath = dmy.getFullPath().append(binName);
 			if (binName.length() != 0) {
-				status = workspace.validatePath(binPath.toString(), IResource.FOLDER);
+				status = workspace.validatePath(binPath.toString(),
+						IResource.FOLDER);
 				if (!status.isOK()) {
-					String message = Messages.format(PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidbinname, status.getMessage());
+					String message = Messages
+							.format(
+									PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidbinname,
+									status.getMessage());
 					updateStatus(new StatusInfo(IStatus.ERROR, message));
 					return;
 				}
 			}
-			//			IClasspathEntry entry= JavaCore.newSourceEntry(srcPath);
-			//			status= JavaConventions.validateClasspath(JavaCore.create(dmy), new IClasspathEntry[] { entry }, binPath);
-			//			if (!status.isOK()) {
-			//				String message= PreferencesMessages.NewJavaProjectPreferencePage_folders_error_invalidcp;
-			//				updateStatus(new StatusInfo(IStatus.ERROR, message));
-			//				return;
-			//			}
+			// IClasspathEntry entry= JavaCore.newSourceEntry(srcPath);
+			// status= JavaConventions.validateClasspath(JavaCore.create(dmy),
+			// new IClasspathEntry[] { entry }, binPath);
+			// if (!status.isOK()) {
+			// String message=
+			// PreferencesMessages.NewJavaProjectPreferencePage_folders_error_invalidcp;
+			// updateStatus(new StatusInfo(IStatus.ERROR, message));
+			// return;
+			// }
 		}
 		updateStatus(new StatusInfo()); // set to OK
 	}
@@ -246,7 +273,8 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	}
 
 	private void controlChanged(Widget widget) {
-		if (widget == fFoldersAsSourceFolder || widget == fProjectAsSourceFolder) {
+		if (widget == fFoldersAsSourceFolder
+				|| widget == fProjectAsSourceFolder) {
 			validateFolders();
 		}
 	}
@@ -257,31 +285,44 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		store.setDefault(SRCBIN_BINNAME, "public"); //$NON-NLS-1$
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
+	 * hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
 	 */
 	protected boolean hasProjectSpecificOptions(IProject project) {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#getPreferencePageID()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
+	 * getPreferencePageID()
 	 */
 	protected String getPreferencePageID() {
 		return PREF_ID;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#getPropertyPageID()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
+	 * getPropertyPageID()
 	 */
 	protected String getPropertyPageID() {
 		return PROP_ID;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#enableProjectSpecificSettings(boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#
+	 * enableProjectSpecificSettings(boolean)
 	 */
-	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
+	protected void enableProjectSpecificSettings(
+			boolean useProjectSpecificSettings) {
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 	}
 
@@ -294,7 +335,9 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		for (int i = 0; i < fRadioButtons.size(); i++) {
 			Button button = (Button) fRadioButtons.get(i);
 			String[] info = (String[]) button.getData();
-			button.setSelection(info[1].equals(store.getDefaultString(info[0])));
+			button
+					.setSelection(info[1].equals(store
+							.getDefaultString(info[0])));
 		}
 		for (int i = 0; i < fTextControls.size(); i++) {
 			Text text = (Text) fTextControls.get(i);
@@ -337,8 +380,12 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 		performOk();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#setElement(org.eclipse.core.runtime.IAdaptable)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#setElement
+	 * (org.eclipse.core.runtime.IAdaptable)
 	 */
 	public void setElement(IAdaptable element) {
 		super.setElement(element);

@@ -18,12 +18,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 /**
- * @author seva
- * Dialog field describing a separator.
+ * @author seva Dialog field describing a separator.
  */
 public class Separator extends DialogField {
 
-	protected static GridData gridDataForSeperator(final int span, final int height) {
+	protected static GridData gridDataForSeperator(final int span,
+			final int height) {
 		final GridData gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
 		gd.verticalAlignment = GridData.BEGINNING;
@@ -43,8 +43,8 @@ public class Separator extends DialogField {
 	// ------- layout helpers
 
 	/**
-	 * @param style of the separator. See <code>Label</code> for possible
-	 * styles.
+	 * @param style
+	 *            of the separator. See <code>Label</code> for possible styles.
 	 */
 	public Separator(final int style) {
 		super();
@@ -60,9 +60,12 @@ public class Separator extends DialogField {
 
 	/**
 	 * Creates the separator and fills it in a MGridLayout.
-	 * @param height The height of the separator
+	 * 
+	 * @param height
+	 *            The height of the separator
 	 */
-	public Control[] doFillIntoGrid(final Composite parent, final int nColumns, final int height) {
+	public Control[] doFillIntoGrid(final Composite parent, final int nColumns,
+			final int height) {
 		assertEnoughColumns(nColumns);
 
 		final Control separator = getSeparator(parent);
@@ -78,12 +81,14 @@ public class Separator extends DialogField {
 		return 1;
 	}
 
-	// ------- ui creation	
+	// ------- ui creation
 
 	/**
 	 * Creates or returns the created separator.
-	 * @param parent The parent composite or <code>null</code> if the widget has
-	 * already been created.
+	 * 
+	 * @param parent
+	 *            The parent composite or <code>null</code> if the widget has
+	 *            already been created.
 	 */
 	public Control getSeparator(final Composite parent) {
 		if (fSeparator == null) {

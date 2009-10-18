@@ -59,7 +59,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
-public abstract class AbstractIncludepathsBlock extends BuildpathsBlock{
+public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	public static interface IRemoveOldBinariesQuery {
 		/**
 		 * Do the callback. Returns <code>true</code> if .class files should be
@@ -130,11 +130,11 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock{
 				NewWizardMessages.BuildPathsBlock_buildpath_uncheckall_button };
 		fBuildPathList = new ListDialogField(null, buttonLabels,
 				new PHPIPListLabelProvider());
-		//fBuildPathList.setDialogFieldListener(adapter);
+		// fBuildPathList.setDialogFieldListener(adapter);
 		fBuildPathList
 				.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
 		fBuildPathList.setUpButtonIndex(0);
-		fBuildPathList.setDownButtonIndex(1);		
+		fBuildPathList.setDownButtonIndex(1);
 		fBuildPathDialogField = new StringButtonDialogField(adapter);
 		fBuildPathDialogField
 				.setButtonLabel(NewWizardMessages.BuildPathsBlock_buildpath_button);
@@ -172,19 +172,20 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock{
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_source);
 		item.setImage(DLTKPluginImages
 				.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
-//		if (fUseNewPage) {
-//			fSourceContainerPage = new NewSourceContainerWorkbookPage(
-//					fBuildPathList, fRunnableContext, getPreferenceStore());
-//		} else {
-			fSourceContainerPage = new PHPSourceContainerWorkbookPage(
-					fBuildPathList);
-//		}
+		// if (fUseNewPage) {
+		// fSourceContainerPage = new NewSourceContainerWorkbookPage(
+		// fBuildPathList, fRunnableContext, getPreferenceStore());
+		// } else {
+		fSourceContainerPage = new PHPSourceContainerWorkbookPage(
+				fBuildPathList);
+		// }
 		item.setData(fSourceContainerPage);
 		item.setControl(fSourceContainerPage.getControl(folder));
 		IWorkbench workbench = DLTKUIPlugin.getDefault().getWorkbench();
 		Image projectImage = workbench.getSharedImages().getImage(
 				IDE.SharedImages.IMG_OBJ_PROJECT);
-		fProjectsPage = new PHPProjectsWorkbookPage(fBuildPathList, fPageContainer);
+		fProjectsPage = new PHPProjectsWorkbookPage(fBuildPathList,
+				fPageContainer);
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_projects);
 		item.setImage(projectImage);
@@ -280,7 +281,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock{
 		// inits the dialog field
 		fBuildPathDialogField.enableButton(project.exists());
 		fBuildPathList.setElements(newBuildpath);
-		//fBuildPathList.setCheckedElements(exportedEntries);
+		// fBuildPathList.setCheckedElements(exportedEntries);
 		initializeTimeStamps();
 		updateUI();
 	}
@@ -720,7 +721,6 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock{
 		}
 	}
 
-	
 	// ---------- util method ------------
 	private IContainer chooseContainer() {
 		Class[] acceptedClasses = new Class[] { IProject.class, IFolder.class };

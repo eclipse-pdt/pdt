@@ -23,11 +23,12 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 
 	private Map fPainters;
 	private boolean isWhitespaceShowing;
-	
+
 	public ShowWhitespaceAction(MergeSourceViewer[] viewers) {
-		super(CompareMessages.ShowWhitespaceAction_0, viewers, AbstractTextEditor.PREFERENCE_SHOW_WHITESPACE_CHARACTERS);
+		super(CompareMessages.ShowWhitespaceAction_0, viewers,
+				AbstractTextEditor.PREFERENCE_SHOW_WHITESPACE_CHARACTERS);
 	}
-	
+
 	protected void toggleState(boolean checked) {
 		if (checked) {
 			showWhitespace();
@@ -35,13 +36,13 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 			hideWhitespace();
 		}
 	}
-	
+
 	private synchronized Map getPainters() {
 		if (fPainters == null)
 			fPainters = new HashMap();
 		return fPainters;
 	}
-	
+
 	private void showWhitespace() {
 		if (isWhitespaceShowing)
 			return;
@@ -50,7 +51,8 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 			MergeSourceViewer[] viewers = getViewers();
 			for (int i = 0; i < viewers.length; i++) {
 				MergeSourceViewer viewer = viewers[i];
-				WhitespaceCharacterPainter painter= new WhitespaceCharacterPainter(viewer);
+				WhitespaceCharacterPainter painter = new WhitespaceCharacterPainter(
+						viewer);
 				viewer.addPainter(painter);
 				painters.put(viewer, painter);
 			}
@@ -58,19 +60,21 @@ public class ShowWhitespaceAction extends TextEditorPropertyAction {
 			isWhitespaceShowing = true;
 		}
 	}
-	
+
 	private void hideWhitespace() {
 		Map painters = getPainters();
-		for (Iterator iterator = painters.keySet().iterator(); iterator.hasNext();) {
+		for (Iterator iterator = painters.keySet().iterator(); iterator
+				.hasNext();) {
 			MergeSourceViewer viewer = (MergeSourceViewer) iterator.next();
-			WhitespaceCharacterPainter painter = (WhitespaceCharacterPainter)painters.get(viewer);
+			WhitespaceCharacterPainter painter = (WhitespaceCharacterPainter) painters
+					.get(viewer);
 			if (painter != null) {
 				viewer.removePainter(painter);
-				painter.deactivate(true);	
+				painter.deactivate(true);
 			}
 		}
 		painters.clear();
 		isWhitespaceShowing = false;
 	}
-		
+
 }

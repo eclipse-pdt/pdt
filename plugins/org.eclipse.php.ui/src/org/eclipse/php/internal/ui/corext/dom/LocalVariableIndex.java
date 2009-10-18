@@ -27,27 +27,28 @@ public class LocalVariableIndex extends AbstractVisitor {
 	private final Set<String> variablesSet = new HashSet<String>();
 
 	/**
-	 * Computes the maximum number of local variable declarations in the 
-	 * given body declaration.
-	 *  
-	 * @param node the body declaration. Must either be a method
-	 *  declaration or an initializer.
+	 * Computes the maximum number of local variable declarations in the given
+	 * body declaration.
+	 * 
+	 * @param node
+	 *            the body declaration. Must either be a method declaration or
+	 *            an initializer.
 	 * @return the maximum number of local variables
 	 */
 	public static int perform(ASTNode node) {
 		Assert.isTrue(node != null);
 		switch (node.getType()) {
-			case ASTNode.METHOD_DECLARATION:
-				isProgramScope = false;
-				return internalPerform(((MethodDeclaration) node).getFunction());
-			case ASTNode.FUNCTION_DECLARATION:
-				isProgramScope = false;
-				return internalPerform((FunctionDeclaration) node);
-			case ASTNode.PROGRAM:
-				isProgramScope = true;
-				return internalPerform((Program) node);
-			default:
-				Assert.isTrue(false);
+		case ASTNode.METHOD_DECLARATION:
+			isProgramScope = false;
+			return internalPerform(((MethodDeclaration) node).getFunction());
+		case ASTNode.FUNCTION_DECLARATION:
+			isProgramScope = false;
+			return internalPerform((FunctionDeclaration) node);
+		case ASTNode.PROGRAM:
+			isProgramScope = true;
+			return internalPerform((Program) node);
+		default:
+			Assert.isTrue(false);
 		}
 		return -1;
 	}
@@ -59,13 +60,15 @@ public class LocalVariableIndex extends AbstractVisitor {
 	}
 
 	/**
-	 * Insert to the variables Name set each variable that is first encountered in the flow
+	 * Insert to the variables Name set each variable that is first encountered
+	 * in the flow
 	 */
 	public boolean visit(Variable variable) {
 		Expression name = variable.getName();
 		if (variable.isDollared() && name.getType() == ASTNode.IDENTIFIER) {
 			String variableName = ((Identifier) name).getName();
-			if (! variableName.equalsIgnoreCase("this") && !variablesSet.contains(variableName)) {
+			if (!variableName.equalsIgnoreCase("this")
+					&& !variablesSet.contains(variableName)) {
 				variablesSet.add(variableName);
 				handleVariableBinding();
 			}
@@ -88,7 +91,7 @@ public class LocalVariableIndex extends AbstractVisitor {
 
 	private void handleVariableBinding() {
 		// TODO - check if the workaround works properly
-		//fTopIndex = Math.max(fTopIndex, binding.getVariableId());
+		// fTopIndex = Math.max(fTopIndex, binding.getVariableId());
 		fTopIndex = variablesSet.size();
 	}
 }

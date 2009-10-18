@@ -30,8 +30,10 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	private FunctionDeclaration fFunctionDeclaration;
 
 	/**
-	 * @param root the AST root
-	 * @param node the selected node (must be an {@link Identifier} instance)
+	 * @param root
+	 *            the AST root
+	 * @param node
+	 *            the selected node (must be an {@link Identifier} instance)
 	 * @return returns a message if there is a problem
 	 */
 	public String initialize(Program root, ASTNode node) {
@@ -62,21 +64,31 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
+	 * ()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages.format(PHPUIMessages.getString("LocalVariableOccurrencesFinder.1"), fIdentifier.getName()); //$NON-NLS-1$
+		fDescription = Messages
+				.format(
+						PHPUIMessages
+								.getString("LocalVariableOccurrencesFinder.1"), fIdentifier.getName()); //$NON-NLS-1$
 		fFunctionDeclaration.accept(this);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Variable)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse
+	 * .php.internal.core.ast.nodes.Variable)
 	 */
 	public boolean visit(Variable variable) {
 		Expression name = variable.getName();
 		if (name.getType() == ASTNode.IDENTIFIER && variable.isDollared()) {
-			if (((Identifier) name).getName().equals(this.fIdentifier.getName())) {
+			if (((Identifier) name).getName()
+					.equals(this.fIdentifier.getName())) {
 				addOccurrence(variable);
 			}
 		}
@@ -87,14 +99,19 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		int readWriteType = getOccurrenceType(node);
 		String desc = fDescription;
 		if (readWriteType == IOccurrencesFinder.F_WRITE_OCCURRENCE) {
-			desc = Messages.format(BASE_WRITE_DESCRIPTION, '$' + fIdentifier.getName());
+			desc = Messages.format(BASE_WRITE_DESCRIPTION, '$' + fIdentifier
+					.getName());
 		}
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), readWriteType, desc));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(),
+				readWriteType, desc));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * getOccurrenceReadWriteType
+	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	protected int getOccurrenceType(ASTNode node) {
 		Variable variable = (Variable) node;
@@ -121,22 +138,26 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				}
 			}
 		}
-		
-		if ((parentType == ASTNode.FOR_EACH_STATEMENT && node.getLocationInParent() != ForEachStatement.EXPRESSION_PROPERTY) || 
-				parentType == ASTNode.FORMAL_PARAMETER || 
-				parentType == ASTNode.CATCH_CLAUSE || 
-				parentType == ASTNode.PREFIX_EXPRESSION ||
-				parentType == ASTNode.REFERENCE && parent.getParent().getType() == ASTNode.FORMAL_PARAMETER ||
-				parentType == ASTNode.POSTFIX_EXPRESSION) {
+
+		if ((parentType == ASTNode.FOR_EACH_STATEMENT && node
+				.getLocationInParent() != ForEachStatement.EXPRESSION_PROPERTY)
+				|| parentType == ASTNode.FORMAL_PARAMETER
+				|| parentType == ASTNode.CATCH_CLAUSE
+				|| parentType == ASTNode.PREFIX_EXPRESSION
+				|| parentType == ASTNode.REFERENCE
+				&& parent.getParent().getType() == ASTNode.FORMAL_PARAMETER
+				|| parentType == ASTNode.POSTFIX_EXPRESSION) {
 			return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 		}
-		
+
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
 	public String getElementName() {
 		return fIdentifier.getName();
@@ -144,6 +165,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
 	public String getID() {

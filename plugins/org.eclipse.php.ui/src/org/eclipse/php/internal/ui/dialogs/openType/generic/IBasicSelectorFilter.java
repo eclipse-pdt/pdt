@@ -15,11 +15,15 @@ import java.util.List;
 
 import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.IFilterChangeListener;
 
-
 public interface IBasicSelectorFilter {
 
 	public boolean select(Object element);
 
-	public void addFilterChangeListener(IFilterChangeListener filterChangeListener);
-	public void removeFilterChangeListener(IFilterChangeListener filterChangeListener);
-	public List getFilterChangeListeners();}
+	public void addFilterChangeListener(
+			IFilterChangeListener filterChangeListener);
+
+	public void removeFilterChangeListener(
+			IFilterChangeListener filterChangeListener);
+
+	public List getFilterChangeListeners();
+}

@@ -18,24 +18,22 @@ import java.util.List;
 public class CompositeFilter extends SimpleFilter {
 
 	private List filters = new ArrayList();
-	
+
 	private IFilterChangeListener myFilterChangeListener = new IFilterChangeListener() {
 		public void notifyFilterChanged() {
 			CompositeFilter.this.notifyFilterChanged();
 		}
 	};
 
-
 	public Object[] filter(Object[] elements) {
 		for (Iterator iter = filters.iterator(); iter.hasNext();) {
 			IFilter filter = (IFilter) iter.next();
 			elements = filter.filter(elements);
 		}
-		
+
 		return elements;
 	}
 
-	
 	public void addFilter(IFilter filter) {
 		filters.add(filter);
 		filter.addFilterChangeListener(myFilterChangeListener);

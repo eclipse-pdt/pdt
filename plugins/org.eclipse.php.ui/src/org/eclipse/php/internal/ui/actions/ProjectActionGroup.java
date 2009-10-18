@@ -45,11 +45,13 @@ public class ProjectActionGroup extends ActionGroup {
 	private CloseResourceAction fCloseAction;
 
 	/**
-	 * Creates a new <code>ProjectActionGroup</code>. The group requires
-	 * that the selection provided by the site's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
+	 * Creates a new <code>ProjectActionGroup</code>. The group requires that
+	 * the selection provided by the site's selection provider is of type <code>
+	 * org.eclipse.jface.viewers.IStructuredSelection</code>
+	 * .
 	 * 
-	 * @param part the view part that owns this action group
+	 * @param part
+	 *            the view part that owns this action group
 	 */
 	public ProjectActionGroup(IViewPart part) {
 		fSite = part.getSite();
@@ -58,7 +60,8 @@ public class ProjectActionGroup extends ActionGroup {
 		ISelection selection = provider.getSelection();
 
 		fCloseAction = new CloseResourceAction(shell);
-		fCloseAction.setActionDefinitionId("org.eclipse.ui.project.closeProject"); //$NON-NLS-1$
+		fCloseAction
+				.setActionDefinitionId("org.eclipse.ui.project.closeProject"); //$NON-NLS-1$
 		fOpenAction = new OpenProjectAction(fSite);
 		fOpenAction.setActionDefinitionId("org.eclipse.ui.project.openProject"); //$NON-NLS-1$
 		if (selection instanceof IStructuredSelection) {
@@ -73,17 +76,19 @@ public class ProjectActionGroup extends ActionGroup {
 		workspace.addResourceChangeListener(fCloseAction);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
-		actionBars.setGlobalActionHandler(IDEActionFactory.CLOSE_PROJECT.getId(), fCloseAction);
-		actionBars.setGlobalActionHandler(IDEActionFactory.OPEN_PROJECT.getId(), fOpenAction);
+		actionBars.setGlobalActionHandler(IDEActionFactory.CLOSE_PROJECT
+				.getId(), fCloseAction);
+		actionBars.setGlobalActionHandler(
+				IDEActionFactory.OPEN_PROJECT.getId(), fOpenAction);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);

@@ -14,38 +14,43 @@ public class ContainerFilter extends ViewerFilter {
 
 	private boolean fFilterContainers;
 
-	public static boolean FILTER_CONTAINERS= true;
-	public static boolean FILTER_NON_CONTAINERS= false;
+	public static boolean FILTER_CONTAINERS = true;
+	public static boolean FILTER_NON_CONTAINERS = false;
 
 	public ContainerFilter(boolean filterContainers) {
-		fFilterContainers= filterContainers;
+		fFilterContainers = filterContainers;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers
+	 * .Viewer, java.lang.Object, java.lang.Object)
 	 */
 	public boolean select(Viewer viewer, Object parent, Object element) {
-		boolean isContainer= element instanceof IContainer;
+		boolean isContainer = element instanceof IContainer;
 		if (!isContainer && element instanceof IModelElement) {
-			int type= ((IModelElement)element).getElementType();
-			isContainer= type == IModelElement.PROJECT_FRAGMENT
-						|| type == IModelElement.SCRIPT_FOLDER
-						|| type == IModelElement.SCRIPT_PROJECT
-						/*|| type == IModelElement.SOURCE_MODULE*/;
+			int type = ((IModelElement) element).getElementType();
+			isContainer = type == IModelElement.PROJECT_FRAGMENT
+					|| type == IModelElement.SCRIPT_FOLDER
+					|| type == IModelElement.SCRIPT_PROJECT
+			/* || type == IModelElement.SOURCE_MODULE */;
 		}
-		
-		if(parent instanceof Model){
-			IProject project  = null;
-			if(element instanceof IScriptProject){
-				project = ((IScriptProject)element).getProject();
-			}else if(element instanceof IProject){
-				project = (IProject)element;
+
+		if (parent instanceof Model) {
+			IProject project = null;
+			if (element instanceof IScriptProject) {
+				project = ((IScriptProject) element).getProject();
+			} else if (element instanceof IProject) {
+				project = (IProject) element;
 			}
-			if(project != null){
+			if (project != null) {
 				try {
-					if(project.isAccessible() && project.hasNature(PHPNature.ID)){
+					if (project.isAccessible()
+							&& project.hasNature(PHPNature.ID)) {
 						return true;
-					}else{
+					} else {
 						return false;
 					}
 				} catch (CoreException e) {
@@ -54,6 +59,7 @@ public class ContainerFilter extends ViewerFilter {
 				}
 			}
 		}
-		return (fFilterContainers && !isContainer) || (!fFilterContainers && isContainer);
+		return (fFilterContainers && !isContainer)
+				|| (!fFilterContainers && isContainer);
 	}
 }

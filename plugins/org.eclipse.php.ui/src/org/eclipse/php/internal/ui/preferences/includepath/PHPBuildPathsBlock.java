@@ -41,10 +41,11 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 public class PHPBuildPathsBlock extends BuildpathsBlock {
 
 	/**
-	 * @author nir.c
-	 * Wrapper composite, that un/register itself to any buildpath changes
+	 * @author nir.c Wrapper composite, that un/register itself to any buildpath
+	 *         changes
 	 */
-	private final class BuildPathComposite extends Composite implements IElementChangedListener, IChangeListener {
+	private final class BuildPathComposite extends Composite implements
+			IElementChangedListener, IChangeListener {
 
 		private BuildPathComposite(Composite parent, int style) {
 			super(parent, style);
@@ -53,11 +54,11 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 
 		@Override
 		public void dispose() {
-			
-		if (fSourceContainerPage instanceof PHPBuildPathSourcePage) {
-			PHPBuildPathSourcePage page = (PHPBuildPathSourcePage) fSourceContainerPage;
-			page.unregisterRemovedElementListener(this);
-		}
+
+			if (fSourceContainerPage instanceof PHPBuildPathSourcePage) {
+				PHPBuildPathSourcePage page = (PHPBuildPathSourcePage) fSourceContainerPage;
+				page.unregisterRemovedElementListener(this);
+			}
 			DLTKCore.removeElementChangedListener(this);
 			super.dispose();
 		}
@@ -73,11 +74,14 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 			} catch (OperationCanceledException e) {
 				PHPCorePlugin.log(e);
 			} catch (CoreException e) {
-				PHPCorePlugin.log(e);			}			
+				PHPCorePlugin.log(e);
+			}
 		}
 	}
-	
-	public PHPBuildPathsBlock(IRunnableContext runnableContext, IStatusChangeListener context, int pageToShow, boolean useNewPage, IWorkbenchPreferenceContainer pageContainer) {
+
+	public PHPBuildPathsBlock(IRunnableContext runnableContext,
+			IStatusChangeListener context, int pageToShow, boolean useNewPage,
+			IWorkbenchPreferenceContainer pageContainer) {
 		super(runnableContext, context, pageToShow, useNewPage, pageContainer);
 	}
 
@@ -101,7 +105,8 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		container.setLayoutData(createGridData(GridData.FILL_BOTH, 1, 0));
 
 		fSourceContainerPage = new PHPBuildPathSourcePage(fBuildPathList);
-		((PHPBuildPathSourcePage)fSourceContainerPage).registerRemovedElementListener((IChangeListener)container);
+		((PHPBuildPathSourcePage) fSourceContainerPage)
+				.registerRemovedElementListener((IChangeListener) container);
 		Control control = fSourceContainerPage.getControl(container);
 		control.setLayoutData(createGridData(GridData.FILL_BOTH, 1, 0));
 
@@ -120,21 +125,26 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		return gd;
 	}
 
-	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+	public void configureScriptProject(IProgressMonitor monitor)
+			throws CoreException, OperationCanceledException {
 		removeEtnries();
 		adaptIncludePath();
 		flush(fBuildPathList.getElements(), getScriptProject(), monitor);
 		super.configureScriptProject(monitor);
 	}
-	
+
 	private void removeEtnries() {
 		PHPBuildPathSourcePage buildPathSourcePage = (PHPBuildPathSourcePage) fSourceContainerPage;
-		List<BPListElement> removedElements = buildPathSourcePage.getRemovedElements();
-		if(removedElements.size() > 0) {
+		List<BPListElement> removedElements = buildPathSourcePage
+				.getRemovedElements();
+		if (removedElements.size() > 0) {
 			for (BPListElement element : removedElements) {
 				try {
-					if(BuildPathUtils.isContainedInBuildpath(element.getBuildpathEntry().getPath(), fCurrScriptProject)) {
-						BuildPathUtils.removeEntryFromBuildPath(fCurrScriptProject, element.getBuildpathEntry());
+					if (BuildPathUtils.isContainedInBuildpath(element
+							.getBuildpathEntry().getPath(), fCurrScriptProject)) {
+						BuildPathUtils
+								.removeEntryFromBuildPath(fCurrScriptProject,
+										element.getBuildpathEntry());
 					}
 				} catch (ModelException e) {
 					PHPCorePlugin.log(e);
@@ -144,38 +154,45 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 	}
 
 	/**
-	 * The purpose of this method is to adapt the include path according to the entries removed from the build path.
-	 * If the user removed from the build path source folders that are in the include path,
-	 * he will not get code completion and other functionality for this sources.
-	 * The user is prompted and asked if he wants to remove the relevant sources from the include path as well
-	 * see bug#255930
+	 * The purpose of this method is to adapt the include path according to the
+	 * entries removed from the build path. If the user removed from the build
+	 * path source folders that are in the include path, he will not get code
+	 * completion and other functionality for this sources. The user is prompted
+	 * and asked if he wants to remove the relevant sources from the include
+	 * path as well see bug#255930
 	 */
 	private void adaptIncludePath() {
 		PHPBuildPathSourcePage buildPathSourcePage = (PHPBuildPathSourcePage) fSourceContainerPage;
 
-		boolean shouldRemoveFromIncludePath = buildPathSourcePage.shouldRemoveFromIncludePath();
+		boolean shouldRemoveFromIncludePath = buildPathSourcePage
+				.shouldRemoveFromIncludePath();
 
 		if (!shouldRemoveFromIncludePath) {
 			return;
 		}
 
 		// get the source elements that the user removed in the source tab
-		List<BPListElement> removedElements = buildPathSourcePage.getRemovedElements();
+		List<BPListElement> removedElements = buildPathSourcePage
+				.getRemovedElements();
 
 		List<IBuildpathEntry> buildPathEntries = new ArrayList<IBuildpathEntry>();
 		IProject project = fCurrScriptProject.getProject();
 
-		//in case there are any, the user is prompted with a question 
+		// in case there are any, the user is prompted with a question
 		if (removedElements.size() > 0) {
 			for (BPListElement listElement : removedElements) {
-				if(IncludePathManager.isInIncludePath(fCurrScriptProject.getProject(), listElement.getPath()) != null) {
+				if (IncludePathManager.isInIncludePath(fCurrScriptProject
+						.getProject(), listElement.getPath()) != null) {
 					buildPathEntries.add(listElement.getBuildpathEntry());
 				}
 			}
-			// if the user chose to, the relevant entries are removed from the include path 
+			// if the user chose to, the relevant entries are removed from the
+			// include path
 			try {
 				for (IBuildpathEntry buildpathEntry : buildPathEntries) {
-					IncludePathManager.getInstance().removeEntryFromIncludePath(project, buildpathEntry);
+					IncludePathManager
+							.getInstance()
+							.removeEntryFromIncludePath(project, buildpathEntry);
 				}
 			} catch (ModelException e) {
 				Logger.logException("Failed adding entries to build path", e); ////$NON-NLS-1$
@@ -189,10 +206,11 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		fBuildPathList.refresh();
 		if (fSourceContainerPage != null) {
 			fSourceContainerPage.init(fCurrScriptProject);
-			
+
 		}
 		doStatusLineUpdate();
 	}
+
 	// -------- verification -------------------------------
 	private void doStatusLineUpdate() {
 		if (Display.getCurrent() != null) {
@@ -200,10 +218,9 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 			fContext.statusChanged(res);
 		}
 	}
-	
+
 	private IStatus findMostSevereStatus() {
-		return StatusUtil.getMostSevere(new IStatus[] {
-				fPathStatus, fBuildPathStatus
-		});
+		return StatusUtil.getMostSevere(new IStatus[] { fPathStatus,
+				fBuildPathStatus });
 	}
 }

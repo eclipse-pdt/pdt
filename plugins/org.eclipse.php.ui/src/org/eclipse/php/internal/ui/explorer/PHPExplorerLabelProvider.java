@@ -18,10 +18,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
-import org.eclipse.dltk.internal.core.ProjectFragment;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
-import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -30,11 +28,12 @@ import org.eclipse.swt.graphics.Image;
 /**
  * 
  * @author apeled, nirc
- *
+ * 
  */
 public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
-	public PHPExplorerLabelProvider(ScriptExplorerContentProvider cp, IPreferenceStore store) {
+	public PHPExplorerLabelProvider(ScriptExplorerContentProvider cp,
+			IPreferenceStore store) {
 		super(cp, store);
 		super.setIsFlatLayout(false);
 	}
@@ -42,7 +41,7 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 	public void setIsFlatLayout(boolean state) {
 		super.setIsFlatLayout(false);
 	}
-	
+
 	@Override
 	public Image getImage(Object element) {
 		IModelElement modelElement = null;
@@ -57,27 +56,32 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			if (entry instanceof IBuildpathEntry) {
 				int entryKind = ((IBuildpathEntry) entry).getEntryKind();
 				if (entryKind == IBuildpathEntry.BPE_PROJECT) {
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_PROJECT);
+					return PHPPluginImages
+							.get(PHPPluginImages.IMG_OBJS_PHP_PROJECT);
 
 				}
 				// A library
-				if (entryKind == IBuildpathEntry.BPE_LIBRARY || entryKind == IBuildpathEntry.BPE_CONTAINER) {
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+				if (entryKind == IBuildpathEntry.BPE_LIBRARY
+						|| entryKind == IBuildpathEntry.BPE_CONTAINER) {
+					return PHPPluginImages
+							.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 				}
 			}
 
 			if (entry instanceof ExternalProjectFragment) {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 			}
-			
-			// Folder in the include path, should have same image as in the PHP Explorer .
+
+			// Folder in the include path, should have same image as in the PHP
+			// Explorer .
 			if (entry instanceof IFolder) {
-				IModelElement createdScriptFolder = DLTKCore.create((IFolder)entry);
+				IModelElement createdScriptFolder = DLTKCore
+						.create((IFolder) entry);
 				if (null == createdScriptFolder)
 					return getImage(entry);
-				return getImage(createdScriptFolder);	
+				return getImage(createdScriptFolder);
 			}
-			
+
 			if (entry instanceof IResource) {
 				return (getImage((IResource) entry));
 
@@ -93,14 +97,21 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 		if (modelElement != null) {
 			IScriptProject project = modelElement.getScriptProject();
-			if (!project.isOnBuildpath(modelElement)) {//not in build path, hence: hollow, non-pakg icons
+			if (!project.isOnBuildpath(modelElement)) {// not in build path,
+														// hence: hollow,
+														// non-pakg icons
 				if (modelElement.getElementType() == IModelElement.SOURCE_MODULE)
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_CUNIT_RESOURCE);
-				if (modelElement.getElementType() == IModelElement.PROJECT_FRAGMENT || modelElement.getElementType() == IModelElement.SCRIPT_FOLDER)
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FOLDER);
-			} else {//in build path ...
-				if (modelElement.getElementType() == IModelElement.SCRIPT_FOLDER || element instanceof IFolder)
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
+					return PHPPluginImages
+							.get(PHPPluginImages.IMG_OBJS_CUNIT_RESOURCE);
+				if (modelElement.getElementType() == IModelElement.PROJECT_FRAGMENT
+						|| modelElement.getElementType() == IModelElement.SCRIPT_FOLDER)
+					return PHPPluginImages
+							.get(PHPPluginImages.IMG_OBJS_PHP_FOLDER);
+			} else {// in build path ...
+				if (modelElement.getElementType() == IModelElement.SCRIPT_FOLDER
+						|| element instanceof IFolder)
+					return PHPPluginImages
+							.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
 			}
 		}
 
@@ -109,7 +120,10 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider#getText(java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider#getText
+	 * (java.lang.Object)
 	 * 
 	 * Override the default text - do not display a full path for a folder
 	 */
@@ -128,19 +142,23 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 				IBuildpathEntry iBuildpathEntry = (IBuildpathEntry) entry;
 				if (iBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 					return iBuildpathEntry.getPath().lastSegment();
-				} if (iBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+				}
+				if (iBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 					return getEntryDescription(element, iBuildpathEntry);
 				} else {
-					IPath localPath = EnvironmentPathUtils.getLocalPath(iBuildpathEntry.getPath());
+					IPath localPath = EnvironmentPathUtils
+							.getLocalPath(iBuildpathEntry.getPath());
 					return localPath.toOSString();
 				}
 			}
 			if (entry instanceof ExternalProjectFragment) {
-				return ((ExternalProjectFragment) entry).toStringWithAncestors();
+				return ((ExternalProjectFragment) entry)
+						.toStringWithAncestors();
 			}
 
 			if (entry instanceof IResource) {
-				return (((IResource) entry).getFullPath().toString()).substring(1);
+				return (((IResource) entry).getFullPath().toString())
+						.substring(1);
 			}
 
 			return null;
@@ -153,15 +171,17 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 	 * @param iBuildpathEntry
 	 * @return the name of the container description
 	 */
-	private String getEntryDescription(Object element, IBuildpathEntry iBuildpathEntry) {
+	private String getEntryDescription(Object element,
+			IBuildpathEntry iBuildpathEntry) {
 		IProject project = ((IncludePath) element).getProject();
 		IScriptProject scriptProject = DLTKCore.create(project);
 		IBuildpathContainer buildpathContainer = null;
 		try {
-			buildpathContainer = DLTKCore.getBuildpathContainer(iBuildpathEntry.getPath(), scriptProject);
+			buildpathContainer = DLTKCore.getBuildpathContainer(iBuildpathEntry
+					.getPath(), scriptProject);
 		} catch (ModelException e) {
 			// no matching container - return the path
-		} 
+		}
 		if (buildpathContainer != null) {
 			return buildpathContainer.getDescription(scriptProject);
 		}

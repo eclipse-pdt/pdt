@@ -30,7 +30,8 @@ class ProjectionAnnotationModelChanges {
 	private Map fAdditions;
 	private Annotation[] fModifications;
 
-	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications) {
+	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions,
+			Map additions, Annotation[] modifications) {
 		fNode = node;
 		fDeletions = deletions;
 		fAdditions = additions;

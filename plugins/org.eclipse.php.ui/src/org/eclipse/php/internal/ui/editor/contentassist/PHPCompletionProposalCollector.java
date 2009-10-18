@@ -21,63 +21,90 @@ import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
-public class PHPCompletionProposalCollector extends ScriptCompletionProposalCollector implements IPHPCompletionRequestor {
+public class PHPCompletionProposalCollector extends
+		ScriptCompletionProposalCollector implements IPHPCompletionRequestor {
 
 	private IDocument document;
 	private boolean explicit;
 
-	public PHPCompletionProposalCollector(IDocument document, ISourceModule cu, boolean explicit) {
+	public PHPCompletionProposalCollector(IDocument document, ISourceModule cu,
+			boolean explicit) {
 		super(cu);
 		this.document = document;
 		this.explicit = explicit;
 	}
 
-	protected ScriptCompletionProposal createOverrideCompletionProposal(IScriptProject scriptProject, ISourceModule compilationUnit, String name, String[] paramTypes, int start, int length, String label, String string) {
-		return new PHPOverrideCompletionProposal(scriptProject, compilationUnit, name, paramTypes, start, length, label, string);
+	protected ScriptCompletionProposal createOverrideCompletionProposal(
+			IScriptProject scriptProject, ISourceModule compilationUnit,
+			String name, String[] paramTypes, int start, int length,
+			String label, String string) {
+		return new PHPOverrideCompletionProposal(scriptProject,
+				compilationUnit, name, paramTypes, start, length, label, string);
 	}
 
-	protected ScriptCompletionProposal createScriptCompletionProposal(String completion, int replaceStart, int length, Image image, String displayString, int i) {
-		return new PHPCompletionProposal(completion, replaceStart, length, image, displayString, i);
+	protected ScriptCompletionProposal createScriptCompletionProposal(
+			String completion, int replaceStart, int length, Image image,
+			String displayString, int i) {
+		return new PHPCompletionProposal(completion, replaceStart, length,
+				image, displayString, i);
 	}
 
-	protected ScriptCompletionProposal createScriptCompletionProposal(String completion, int replaceStart, int length, Image image, String displayString, int i, boolean isInDoc) {
-		return new PHPCompletionProposal(completion, replaceStart, length, image, displayString, i, isInDoc);
+	protected ScriptCompletionProposal createScriptCompletionProposal(
+			String completion, int replaceStart, int length, Image image,
+			String displayString, int i, boolean isInDoc) {
+		return new PHPCompletionProposal(completion, replaceStart, length,
+				image, displayString, i, isInDoc);
 	}
-	
+
 	protected CompletionProposalLabelProvider createLabelProvider() {
 		return new PHPCompletionProposalLabelProvider();
 	}
-	
-	protected IScriptCompletionProposal createPackageProposal(CompletionProposal proposal) {
-		final AbstractScriptCompletionProposal scriptProposal = (AbstractScriptCompletionProposal) super.createPackageProposal(proposal);
-		final IModelElement modelElement = proposal.getModelElement();		
+
+	protected IScriptCompletionProposal createPackageProposal(
+			CompletionProposal proposal) {
+		final AbstractScriptCompletionProposal scriptProposal = (AbstractScriptCompletionProposal) super
+				.createPackageProposal(proposal);
+		final IModelElement modelElement = proposal.getModelElement();
 		if (modelElement != null) {
-			scriptProposal.setProposalInfo(new ProposalInfo(modelElement.getScriptProject(),
-					new String(proposal.getName())));
-		}
-		return scriptProposal;
-	}
-	
-	protected IScriptCompletionProposal createKeywordProposal(CompletionProposal proposal) {
-		AbstractScriptCompletionProposal scriptProposal = (AbstractScriptCompletionProposal) super.createKeywordProposal(proposal);
-		final IModelElement modelElement = proposal.getModelElement();		
-		if (modelElement != null && modelElement.getElementType() == IModelElement.SOURCE_MODULE) {
-			scriptProposal.setImage(PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FILE));
+			scriptProposal.setProposalInfo(new ProposalInfo(modelElement
+					.getScriptProject(), new String(proposal.getName())));
 		}
 		return scriptProposal;
 	}
 
-	protected IScriptCompletionProposal createScriptCompletionProposal(CompletionProposal proposal) {
-		ScriptCompletionProposal completionProposal = (ScriptCompletionProposal) super.createScriptCompletionProposal(proposal);
+	protected IScriptCompletionProposal createKeywordProposal(
+			CompletionProposal proposal) {
+		AbstractScriptCompletionProposal scriptProposal = (AbstractScriptCompletionProposal) super
+				.createKeywordProposal(proposal);
+		final IModelElement modelElement = proposal.getModelElement();
+		if (modelElement != null
+				&& modelElement.getElementType() == IModelElement.SOURCE_MODULE) {
+			scriptProposal.setImage(PHPPluginImages
+					.get(PHPPluginImages.IMG_OBJS_PHP_FILE));
+		}
+		return scriptProposal;
+	}
+
+	protected IScriptCompletionProposal createScriptCompletionProposal(
+			CompletionProposal proposal) {
+		ScriptCompletionProposal completionProposal = (ScriptCompletionProposal) super
+				.createScriptCompletionProposal(proposal);
 		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
 			IMethod method = (IMethod) proposal.getModelElement();
 			try {
 				if (method.isConstructor()) {
 					// replace method icon with class icon:
 					int flags = proposal.getFlags();
-					ImageDescriptor typeImageDescriptor = ScriptElementImageProvider.getTypeImageDescriptor(flags, false);
-					int adornmentFlags = ScriptElementImageProvider.computeAdornmentFlags(method.getDeclaringType(), ScriptElementImageProvider.SMALL_ICONS | ScriptElementImageProvider.OVERLAY_ICONS);
-					ScriptElementImageDescriptor descriptor = new ScriptElementImageDescriptor(typeImageDescriptor, adornmentFlags, ScriptElementImageProvider.SMALL_SIZE);
+					ImageDescriptor typeImageDescriptor = ScriptElementImageProvider
+							.getTypeImageDescriptor(flags, false);
+					int adornmentFlags = ScriptElementImageProvider
+							.computeAdornmentFlags(
+									method.getDeclaringType(),
+									ScriptElementImageProvider.SMALL_ICONS
+											| ScriptElementImageProvider.OVERLAY_ICONS);
+					ScriptElementImageDescriptor descriptor = new ScriptElementImageDescriptor(
+							typeImageDescriptor, adornmentFlags,
+							ScriptElementImageProvider.SMALL_SIZE);
 					completionProposal.setImage(getImage(descriptor));
 				}
 			} catch (ModelException e) {
@@ -90,7 +117,8 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 	}
 
 	protected char[] getVarTrigger() {
-		// variable proposal will be inserted automatically if one of these characters
+		// variable proposal will be inserted automatically if one of these
+		// characters
 		// is being typed in showing proposal time:
 		return null;
 	}

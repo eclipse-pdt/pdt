@@ -18,7 +18,8 @@ import org.eclipse.osgi.util.NLS;
  */
 final class TemplatePreferencesMessages extends NLS {
 
-	private static final String BUNDLE_NAME= TemplatePreferencesMessages.class.getName();
+	private static final String BUNDLE_NAME = TemplatePreferencesMessages.class
+			.getName();
 
 	private TemplatePreferencesMessages() {
 		// Do not instantiate

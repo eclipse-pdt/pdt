@@ -13,8 +13,6 @@ package org.eclipse.php.internal.ui.corext.dom.fragments;
 
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 
-
-
 /**
  * @see org.eclipse.jdt.internal.corext.dom.fragments.IASTFragment
  * @see org.eclipse.jdt.internal.corext.dom.fragments.ASTFragmentFactory
@@ -22,10 +20,8 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 abstract class ASTFragment implements IASTFragment {
 
 	/**
-	 * Tries to create or find as many fragments as possible
-	 * such that each fragment f matches
-	 * this fragment and f.getNode() is <code>node</code>
+	 * Tries to create or find as many fragments as possible such that each
+	 * fragment f matches this fragment and f.getNode() is <code>node</code>
 	 */
 	abstract IASTFragment[] getMatchingFragmentsWithNode(ASTNode node);
 }
-

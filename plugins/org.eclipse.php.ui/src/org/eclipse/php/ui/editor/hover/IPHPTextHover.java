@@ -14,7 +14,8 @@ package org.eclipse.php.ui.editor.hover;
 import org.eclipse.dltk.ui.text.hover.IScriptEditorTextHover;
 
 /**
- * An extention of the ITextHover which has the ability to attach an IEditorPart to the implementing class.
+ * An extention of the ITextHover which has the ability to attach an IEditorPart
+ * to the implementing class.
  * 
  * @author shalom
  */

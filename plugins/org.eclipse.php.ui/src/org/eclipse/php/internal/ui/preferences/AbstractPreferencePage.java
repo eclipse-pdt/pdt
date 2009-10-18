@@ -32,7 +32,8 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class AbstractPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class AbstractPreferencePage extends PreferencePage implements
+		IWorkbenchPreferencePage {
 
 	protected ArrayList buttons = new ArrayList();
 	protected ArrayList textBoxes = new ArrayList();
@@ -58,15 +59,15 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 		combos.add(valuedCombo);
 	}
 
-	//	protected void addControl(Control control) {
-	//		if (control instanceof Button) {
-	//			buttons.add(control);
-	//		} else if (control instanceof Text) {
-	//			textBoxes.add(control);
-	//		} else if (control instanceof Label) {
-	//			labels.add(control);
-	//		}
-	//	}
+	// protected void addControl(Control control) {
+	// if (control instanceof Button) {
+	// buttons.add(control);
+	// } else if (control instanceof Text) {
+	// textBoxes.add(control);
+	// } else if (control instanceof Label) {
+	// labels.add(control);
+	// }
+	// }
 
 	protected void restoreDefaultValues() {
 		restoreDefaultButtonValues();
@@ -75,11 +76,13 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 	}
 
 	protected void restoreDefaultComboTextValues() {
-		for (Iterator comboIterator = this.combos.iterator(); comboIterator.hasNext();) {
+		for (Iterator comboIterator = this.combos.iterator(); comboIterator
+				.hasNext();) {
 			ValuedCombo valuedCombo = (ValuedCombo) comboIterator.next();
 			Object data = valuedCombo.getData();
 			if (data != null) {
-				valuedCombo.selectValue(getPreferenceStore().getDefaultString((String) data));
+				valuedCombo.selectValue(getPreferenceStore().getDefaultString(
+						(String) data));
 			}
 		}
 	}
@@ -90,7 +93,8 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 			Text text = (Text) controlsArray[i];
 			Object data = text.getData();
 			if (data != null) {
-				text.setText(getPreferenceStore().getDefaultString((String) data));
+				text.setText(getPreferenceStore().getDefaultString(
+						(String) data));
 			}
 		}
 
@@ -102,7 +106,8 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 			Button button = (Button) controlsArray[i];
 			Object data = button.getData();
 			if (data != null) {
-				button.setSelection(getPreferenceStore().getDefaultBoolean((String) data));
+				button.setSelection(getPreferenceStore().getDefaultBoolean(
+						(String) data));
 			}
 		}
 	}
@@ -117,11 +122,13 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 	}
 
 	protected void initializeComboValues() {
-		for (Iterator comboIterator = this.combos.iterator(); comboIterator.hasNext();) {
+		for (Iterator comboIterator = this.combos.iterator(); comboIterator
+				.hasNext();) {
 			ValuedCombo valuedCombo = (ValuedCombo) comboIterator.next();
 			Object data = valuedCombo.getData();
 			if (data != null) {
-				valuedCombo.selectValue(getPreferenceStore().getString((String) data));
+				valuedCombo.selectValue(getPreferenceStore().getString(
+						(String) data));
 			}
 		}
 	}
@@ -143,7 +150,8 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 			Button button = (Button) controlsArray[i];
 			Object data = button.getData();
 			if (data != null) {
-				button.setSelection(getPreferenceStore().getBoolean((String) data));
+				button.setSelection(getPreferenceStore().getBoolean(
+						(String) data));
 			}
 		}
 	}
@@ -158,11 +166,13 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 	}
 
 	protected void storeCombosValues() {
-		for (Iterator comboIterator = this.combos.iterator(); comboIterator.hasNext();) {
+		for (Iterator comboIterator = this.combos.iterator(); comboIterator
+				.hasNext();) {
 			ValuedCombo valuedCombo = (ValuedCombo) comboIterator.next();
 			Object data = valuedCombo.getData();
 			if (data != null) {
-				getPreferenceStore().setValue((String) data, valuedCombo.getSelectionValue());
+				getPreferenceStore().setValue((String) data,
+						valuedCombo.getSelectionValue());
 			}
 		}
 	}
@@ -184,7 +194,8 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 			Button button = (Button) controlsArray[i];
 			Object data = button.getData();
 			if (data != null) {
-				getPreferenceStore().setValue((String) data, button.getSelection());
+				getPreferenceStore().setValue((String) data,
+						button.getSelection());
 			}
 		}
 
@@ -200,18 +211,18 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 		setControlsEnabled(combos, key, enabled);
 	}
 
-	private void setControlsEnabled(ArrayList controls, String key, boolean enabled) {
-		for (Iterator controlIterator = controls.iterator(); controlIterator.hasNext();) {
+	private void setControlsEnabled(ArrayList controls, String key,
+			boolean enabled) {
+		for (Iterator controlIterator = controls.iterator(); controlIterator
+				.hasNext();) {
 			Control control = (Control) controlIterator.next();
 			Object data = control.getData();
 			if (data != null && ((String) data).equals(key)) {
 				control.setEnabled(enabled);
 			}
 		}
-		
-	}
 
-	
+	}
 
 	/**
 	 * Creates font metrics
@@ -241,7 +252,8 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 	/**
 	 * Create new checkbox and associate a preference key with it
 	 */
-	protected Button addCheckBox(Composite parent, String label, String prefKey, int horizontalIndent) {
+	protected Button addCheckBox(Composite parent, String label,
+			String prefKey, int horizontalIndent) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 
@@ -264,7 +276,8 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 		}
 
 		public void modifyText(ModifyEvent e) {
-			ValidationStatus status = stringValidator.validate(((Text) e.widget).getText());
+			ValidationStatus status = stringValidator
+					.validate(((Text) e.widget).getText());
 			if (!status.isOK()) {
 				setErrorMessage(status.getError());
 				setValid(false);
@@ -278,7 +291,9 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 	/**
 	 * Add text box with label with input validator
 	 */
-	protected Text addLabelledTextField(Composite parent, String label, String key, int textlimit, int horizontalIndent, IStringValidator stringValidator) {
+	protected Text addLabelledTextField(Composite parent, String label,
+			String key, int textlimit, int horizontalIndent,
+			IStringValidator stringValidator) {
 		Label labelControl = new Label(parent, SWT.WRAP);
 		labelControl.setText(label);
 		labelControl.setData(key);
@@ -292,23 +307,27 @@ public class AbstractPreferencePage extends PreferencePage implements IWorkbench
 		data = new GridData();
 		if (textlimit != 0) {
 			textBox.setTextLimit(textlimit);
-			data.widthHint = Dialog.convertWidthInCharsToPixels(getFontMetrics(parent), textlimit + 1);
+			data.widthHint = Dialog.convertWidthInCharsToPixels(
+					getFontMetrics(parent), textlimit + 1);
 		}
 		data.horizontalSpan = 2;
 		textBox.setLayoutData(data);
 
 		if (stringValidator != null) {
-			textBox.addModifyListener(new TextFieldValidateListener(stringValidator));
+			textBox.addModifyListener(new TextFieldValidateListener(
+					stringValidator));
 		}
 		add(textBox);
 		return textBox;
 	}
-	
+
 	/**
 	 * Add text box with label
 	 */
-	protected Text addLabelledTextField(Composite parent, String label, String key, int textlimit, int horizontalIndent) {
-		return addLabelledTextField(parent, label, key, textlimit, horizontalIndent, null);
+	protected Text addLabelledTextField(Composite parent, String label,
+			String key, int textlimit, int horizontalIndent) {
+		return addLabelledTextField(parent, label, key, textlimit,
+				horizontalIndent, null);
 	}
 
 	protected Control createContents(Composite parent) {

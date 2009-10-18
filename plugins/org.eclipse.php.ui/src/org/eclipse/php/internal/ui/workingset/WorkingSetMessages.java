@@ -13,13 +13,12 @@ import org.eclipse.osgi.util.NLS;
 
 public final class WorkingSetMessages extends NLS {
 
-	private static final String BUNDLE_NAME= "org.eclipse.php.internal.ui.workingset.WorkingSetMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.workingset.WorkingSetMessages";//$NON-NLS-1$
 
 	private WorkingSetMessages() {
 		// Do not instantiate
 	}
 
-	
 	public static String PhpWorkingSetPage_title;
 	public static String PhpWorkingSetPage_workingSet_name;
 	public static String PhpWorkingSetPage_workingSet_description;
@@ -32,7 +31,6 @@ public final class WorkingSetMessages extends NLS {
 	public static String PhpWorkingSetPage_selectAll_toolTip;
 	public static String PhpWorkingSetPage_deselectAll_label;
 	public static String PhpWorkingSetPage_deselectAll_toolTip;
-	
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, WorkingSetMessages.class);

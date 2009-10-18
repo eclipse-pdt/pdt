@@ -47,10 +47,10 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 
 	/** Contains region to style mapping */
 	protected static final Map<String, String> fColorTypes = new HashMap<String, String>(); // String
-																							// (token
-																							// type),
-																							// String
-																							// (color)
+	// (token
+	// type),
+	// String
+	// (color)
 	static {
 		// Normal text:
 		fColorTypes.put(PHPRegionTypes.PHP_STRING,
@@ -654,52 +654,52 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 					int styleStart = regionStart + element.getStart();
 					int styleLength = element.getLength();
 					if (styleStart + styleLength < partitionStartOffset) { // if
-																			// the
-																			// range
-																			// ends
-																			// before
-																			// the
-																			// requested
-																			// starting
-																			// position
-																			// -
-																			// ignoring
-																			// it
+						// the
+						// range
+						// ends
+						// before
+						// the
+						// requested
+						// starting
+						// position
+						// -
+						// ignoring
+						// it
 						continue;
 					}
 					if (styleStart < partitionStartOffset) { // if the region
-																// starts before
-																// the requested
-																// starting
-																// position -
-																// adjusting the
-																// style start
-																// position
+						// starts before
+						// the requested
+						// starting
+						// position -
+						// adjusting the
+						// style start
+						// position
 						styleLength -= (partitionStartOffset - styleStart);
 						styleStart = partitionStartOffset;
 					}
 					if (styleStart + styleLength > partitionStartOffset
 							+ partitionLength) {// if the region ends after the
-												// requested end position -
-												// making it shorter
+						// requested end position -
+						// making it shorter
 						styleLength -= (styleStart + styleLength)
 								- (partitionStartOffset + partitionLength);
 					}
 					if (attr.getBackground() != null
 							&& element.getTextEnd() != element.getEnd()) {// in
-																			// case
-																			// of
-																			// background
-																			// color
-																			// make
-																			// sure
-																			// the
-																			// highlighting
-																			// will
-																			// not
-																			// paint
-																			// the
-																			// whitespaces
+						// case
+						// of
+						// background
+						// color
+						// make
+						// sure
+						// the
+						// highlighting
+						// will
+						// not
+						// paint
+						// the
+						// whitespaces
 						// applying style to the region w/o the whitespace
 						styleRange = new StyleRange(styleStart, styleLength
 								- (element.getEnd() - element.getTextEnd()),

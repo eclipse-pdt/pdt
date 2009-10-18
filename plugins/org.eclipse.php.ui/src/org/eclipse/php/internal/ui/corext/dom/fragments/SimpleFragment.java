@@ -31,17 +31,21 @@ class SimpleFragment extends ASTFragment {
 		if (!PHPASTMatcher.doNodesMatch(getAssociatedNode(), node))
 			return new IASTFragment[0];
 
-		IASTFragment match = ASTFragmentFactory.createFragmentForFullSubtree(node);
+		IASTFragment match = ASTFragmentFactory
+				.createFragmentForFullSubtree(node);
 		Assert.isTrue(match.matches(this) || this.matches(match));
 		return new IASTFragment[] { match };
 	}
 
 	public boolean matches(IASTFragment other) {
-		return other.getClass().equals(getClass()) && PHPASTMatcher.doNodesMatch(other.getAssociatedNode(), getAssociatedNode());
+		return other.getClass().equals(getClass())
+				&& PHPASTMatcher.doNodesMatch(other.getAssociatedNode(),
+						getAssociatedNode());
 	}
 
 	public IASTFragment[] getSubFragmentsMatching(IASTFragment toMatch) {
-		return ASTMatchingFragmentFinder.findMatchingFragments(getAssociatedNode(), (ASTFragment) toMatch);
+		return ASTMatchingFragmentFinder.findMatchingFragments(
+				getAssociatedNode(), (ASTFragment) toMatch);
 
 	}
 
@@ -57,8 +61,10 @@ class SimpleFragment extends ASTFragment {
 		return fNode;
 	}
 
-	public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup) {
-		if (replacement instanceof Identifier && fNode.getParent() instanceof ParenthesisExpression) {
+	public void replace(ASTRewrite rewrite, ASTNode replacement,
+			TextEditGroup textEditGroup) {
+		if (replacement instanceof Identifier
+				&& fNode.getParent() instanceof ParenthesisExpression) {
 			// replace including the parenthesized expression around it
 			rewrite.replace(fNode.getParent(), replacement, textEditGroup);
 		} else {

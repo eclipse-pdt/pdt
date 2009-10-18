@@ -17,8 +17,9 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.dltk.core.IModelElement;
 
 /**
- * Handler class for the add description action, 
- * It acts as a delegate to the AddDescription action 
+ * Handler class for the add description action, It acts as a delegate to the
+ * AddDescription action
+ * 
  * @author Roy, 2008
  */
 public class AddDescriptionHandler extends SelectionHandler implements IHandler {
@@ -28,10 +29,11 @@ public class AddDescriptionHandler extends SelectionHandler implements IHandler 
 		final IModelElement element = getCurrentModelElement(event);
 		if (element != null) {
 			final AddDescriptionAction addDescriptionAction = new AddDescriptionAction();
-			addDescriptionAction.setModelElement(new IModelElement[] { element } );
+			addDescriptionAction
+					.setModelElement(new IModelElement[] { element });
 			addDescriptionAction.run(null);
 		}
-		
+
 		return null;
 	}
 }

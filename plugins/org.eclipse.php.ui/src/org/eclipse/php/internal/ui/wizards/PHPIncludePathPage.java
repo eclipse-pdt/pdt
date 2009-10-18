@@ -28,7 +28,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 
-public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimpleWebModuleCreationDataModelProperties,*/IStatusChangeListener {
+public class PHPIncludePathPage extends DataModelWizardPage implements
+		/* ISimpleWebModuleCreationDataModelProperties, */IStatusChangeListener {
 
 	protected PHPBuildPathsBlock fIncludePathsBlock;
 
@@ -42,12 +43,14 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 	}
 
 	protected void createIncludePathsBlock() {
-		fIncludePathsBlock = new PHPBuildPathsBlock(new BusyIndicatorRunnableContext(), this, 1, false, null);
+		fIncludePathsBlock = new PHPBuildPathsBlock(
+				new BusyIndicatorRunnableContext(), this, 1, false, null);
 		fIncludePathsBlock.init(getDummyProject(), null);
 	}
 
 	public IScriptProject getDummyProject() {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project"); //$NON-NLS-1$
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+				"DUMMY______________Project"); //$NON-NLS-1$
 		return DLTKCore.create(project);
 	}
 
@@ -58,7 +61,8 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 			// set scrollbar composite's min size so page is expandable but has
 			// scrollbars when needed
 			if (composite.getParent() instanceof ScrolledComposite) {
-				ScrolledComposite sc1 = (ScrolledComposite) composite.getParent();
+				ScrolledComposite sc1 = (ScrolledComposite) composite
+						.getParent();
 				sc1.setMinSize(minSize);
 				sc1.setExpandHorizontal(true);
 				sc1.setExpandVertical(true);
@@ -68,8 +72,9 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.jem.util.ui.wizard.WTPWizardPage#getValidationPropertyNames()
+	 * 
+	 * @see
+	 * org.eclipse.jem.util.ui.wizard.WTPWizardPage#getValidationPropertyNames()
 	 */
 	protected String[] getValidationPropertyNames() {
 		return new String[] {};
@@ -77,8 +82,10 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.jem.util.ui.wizard.WTPWizardPage#createTopLevelComposite(org.eclipse.swt.widgets.Composite)
+	 * 
+	 * @see
+	 * org.eclipse.jem.util.ui.wizard.WTPWizardPage#createTopLevelComposite(
+	 * org.eclipse.swt.widgets.Composite)
 	 */
 	protected Composite createTopLevelComposite(Composite parent) {
 		Composite top = new Composite(parent, SWT.NONE);
@@ -97,7 +104,8 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 
 	/**
 	 * Set the Help context throw here
-	 * @param parent 
+	 * 
+	 * @param parent
 	 */
 	protected void setHelpContext(Composite parent) {
 	}

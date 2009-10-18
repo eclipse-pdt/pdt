@@ -44,21 +44,24 @@ public class RefactorActionGroup extends ActionGroup {
 	public static final String MENU_ID = "org.eclipse.php.ui.refactoring.menu"; //$NON-NLS-1$
 
 	/**
-	 * Pop-up menu: id of the reorg group of the refactor sub menu (value <code>reorgGroup</code>).
+	 * Pop-up menu: id of the reorg group of the refactor sub menu (value
+	 * <code>reorgGroup</code>).
 	 * 
 	 * @since 2.1
 	 */
 	public static final String GROUP_REORG = "reorgGroup"; //$NON-NLS-1$
 
 	/**
-	 * Pop-up menu: id of the type group of the refactor sub menu (value <code>typeGroup</code>).
+	 * Pop-up menu: id of the type group of the refactor sub menu (value
+	 * <code>typeGroup</code>).
 	 * 
 	 * @since 2.1
 	 */
 	public static final String GROUP_TYPE = "typeGroup"; //$NON-NLS-1$
 
 	/**
-	 * Pop-up menu: id of the coding group of the refactor sub menu (value <code>codingGroup</code>).
+	 * Pop-up menu: id of the coding group of the refactor sub menu (value
+	 * <code>codingGroup</code>).
 	 * 
 	 * @since 2.1
 	 */
@@ -67,7 +70,8 @@ public class RefactorActionGroup extends ActionGroup {
 	private String fGroupName = IContextMenuConstants.GROUP_REORGANIZE;
 
 	private org.eclipse.dltk.ui.actions.SelectionDispatchAction fMoveAction;
-//	private org.eclipse.dltk.ui.actions.SelectionDispatchAction fRenameAction;
+	// private org.eclipse.dltk.ui.actions.SelectionDispatchAction
+	// fRenameAction;
 
 	private UndoRedoActionGroup fUndoRedoActionGroup;
 
@@ -78,42 +82,52 @@ public class RefactorActionGroup extends ActionGroup {
 	private static class NoActionAvailable extends Action {
 		public NoActionAvailable() {
 			setEnabled(false);
-			setText(PHPUIMessages.getString("RefactorActionGroup_no_refactoring_available"));
+			setText(PHPUIMessages
+					.getString("RefactorActionGroup_no_refactoring_available"));
 		}
 	}
 
 	private Action fNoActionAvailable = new NoActionAvailable();
 
 	/**
-	 * Creates a new <code>RefactorActionGroup</code>. The group requires that the selection provided by the part's
-	 * selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
+	 * Creates a new <code>RefactorActionGroup</code>. The group requires that
+	 * the selection provided by the part's selection provider is of type <code>
+	 * org.eclipse.jface.viewers.IStructuredSelection</code>
+	 * .
 	 * 
-	 * @param part the view part that owns this action group
+	 * @param part
+	 *            the view part that owns this action group
 	 */
 	public RefactorActionGroup(IViewPart part) {
 		this(part.getSite(), part.getSite().getKeyBindingService());
 
-		IUndoContext workspaceContext = (IUndoContext) ResourcesPlugin.getWorkspace().getAdapter(IUndoContext.class);
-		fUndoRedoActionGroup = new UndoRedoActionGroup(part.getViewSite(), workspaceContext, true);
+		IUndoContext workspaceContext = (IUndoContext) ResourcesPlugin
+				.getWorkspace().getAdapter(IUndoContext.class);
+		fUndoRedoActionGroup = new UndoRedoActionGroup(part.getViewSite(),
+				workspaceContext, true);
 	}
 
 	/**
-	 * Creates a new <code>RefactorActionGroup</code>. The action requires that the selection provided by the page's
-	 * selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
+	 * Creates a new <code>RefactorActionGroup</code>. The action requires that
+	 * the selection provided by the page's selection provider is of type <code>
+	 * org.eclipse.jface.viewers.IStructuredSelection</code>
+	 * .
 	 * 
-	 * @param page the page that owns this action group
+	 * @param page
+	 *            the page that owns this action group
 	 */
 	public RefactorActionGroup(Page page) {
 		this(page.getSite(), null);
 	}
 
 	/**
-	 * Note: This constructor is for internal use only. Clients should not call this constructor.
+	 * Note: This constructor is for internal use only. Clients should not call
+	 * this constructor.
 	 * 
-	 * @param editor the compilation unit editor
-	 * @param groupName the group name to add the actions to
+	 * @param editor
+	 *            the compilation unit editor
+	 * @param groupName
+	 *            the group name to add the actions to
 	 */
 	public RefactorActionGroup(PHPStructuredEditor editor, String groupName) {
 
@@ -124,8 +138,10 @@ public class RefactorActionGroup extends ActionGroup {
 		ISelection selection = provider.getSelection();
 		fEditorActions = new ArrayList();
 
-		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(editor.getEditorSite());
-		fMoveAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
+		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(
+				editor.getEditorSite());
+		fMoveAction
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		fMoveAction.update(selection);
 		initAction(fMoveAction, provider, selection);
 		editor.setAction("MoveElement", fMoveAction); //$NON-NLS-1$
@@ -134,21 +150,24 @@ public class RefactorActionGroup extends ActionGroup {
 		fKeyBindingService = editor.getEditorSite().getKeyBindingService();
 	}
 
-	private RefactorActionGroup(IWorkbenchSite site, IKeyBindingService keyBindingService) {
+	private RefactorActionGroup(IWorkbenchSite site,
+			IKeyBindingService keyBindingService) {
 
 		fSite = site;
 		ISelectionProvider provider = fSite.getSelectionProvider();
 		ISelection selection = provider.getSelection();
 
-		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(site);
-		fMoveAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
+		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(
+				site);
+		fMoveAction
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		initAction(fMoveAction, provider, selection);
 
 		fKeyBindingService = keyBindingService;
 	}
 
-
-	private static void initAction(SelectionDispatchAction action, ISelectionProvider provider, ISelection selection) {
+	private static void initAction(SelectionDispatchAction action,
+			ISelectionProvider provider, ISelection selection) {
 		action.update(selection);
 		provider.addSelectionChangedListener(action);
 	}
@@ -167,10 +186,12 @@ public class RefactorActionGroup extends ActionGroup {
 	/**
 	 * Retargets the File actions with the corresponding refactoring actions.
 	 * 
-	 * @param actionBars the action bar to register the move and rename action with
+	 * @param actionBars
+	 *            the action bar to register the move and rename action with
 	 */
 	public void retargetFileMenuActions(IActionBars actionBars) {
-		actionBars.setGlobalActionHandler(ActionFactory.MOVE.getId(), fMoveAction);
+		actionBars.setGlobalActionHandler(ActionFactory.MOVE.getId(),
+				fMoveAction);
 	}
 
 	/*
@@ -193,7 +214,8 @@ public class RefactorActionGroup extends ActionGroup {
 		super.dispose();
 	}
 
-	private void disposeAction(ISelectionChangedListener action, ISelectionProvider provider) {
+	private void disposeAction(ISelectionChangedListener action,
+			ISelectionProvider provider) {
 		if (action != null)
 			provider.removeSelectionChangedListener(action);
 	}
@@ -252,18 +274,22 @@ public class RefactorActionGroup extends ActionGroup {
 				refactorMenuHidden(refactorSubmenu);
 			}
 		});
-		ITextSelection textSelection = (ITextSelection) fEditor.getSelectionProvider().getSelection();
+		ITextSelection textSelection = (ITextSelection) fEditor
+				.getSelectionProvider().getSelection();
 
 		for (Iterator iter = fEditorActions.iterator(); iter.hasNext();) {
-			SelectionDispatchAction action = (SelectionDispatchAction) iter.next();
+			SelectionDispatchAction action = (SelectionDispatchAction) iter
+					.next();
 			action.update(textSelection);
 		}
 	}
 
 	private void refactorMenuHidden(IMenuManager manager) {
-		ITextSelection textSelection = (ITextSelection) fEditor.getSelectionProvider().getSelection();
+		ITextSelection textSelection = (ITextSelection) fEditor
+				.getSelectionProvider().getSelection();
 		for (Iterator iter = fEditorActions.iterator(); iter.hasNext();) {
-			SelectionDispatchAction action = (SelectionDispatchAction) iter.next();
+			SelectionDispatchAction action = (SelectionDispatchAction) iter
+					.next();
 			action.update(textSelection);
 		}
 	}

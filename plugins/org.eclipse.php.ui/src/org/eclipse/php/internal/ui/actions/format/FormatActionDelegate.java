@@ -27,22 +27,27 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
- * @author nir.c
- * FormatActionDelegate class extends WST's 'FormatActionDelegate', 
- * and actually "translates" the DLTK model based selection in the PHP explorer,
- * to an Eclipse-based (IModelElement -> IResource).
+ * @author nir.c FormatActionDelegate class extends WST's
+ *         'FormatActionDelegate', and actually "translates" the DLTK model
+ *         based selection in the PHP explorer, to an Eclipse-based
+ *         (IModelElement -> IResource).
  */
-public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.actions.FormatActionDelegate {
+public class FormatActionDelegate extends
+		org.eclipse.wst.sse.ui.internal.actions.FormatActionDelegate {
 	private IWorkbenchSiteProgressService getActiveProgressService() {
 		IWorkbenchSiteProgressService service = null;
 		if (PlatformUI.isWorkbenchRunning()) {
-			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+			IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow();
 			if (activeWorkbenchWindow != null) {
-				IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+				IWorkbenchPage activePage = activeWorkbenchWindow
+						.getActivePage();
 				if (activePage != null) {
 					IWorkbenchPart activePart = activePage.getActivePart();
 					if (activePart != null) {
-						service = (IWorkbenchSiteProgressService) activePart.getSite().getAdapter(IWorkbenchSiteProgressService.class);
+						service = (IWorkbenchSiteProgressService) activePart
+								.getSite().getAdapter(
+										IWorkbenchSiteProgressService.class);
 					}
 				}
 			}
@@ -63,7 +68,8 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 			monitor.beginTask("", elements.length); //$NON-NLS-1$
 			for (int i = 0; i < elements.length; i++) {
 				if (elements[i] instanceof IModelElement) {
-					process(new SubProgressMonitor(monitor, 1), ((IModelElement) elements[i]).getResource());
+					process(new SubProgressMonitor(monitor, 1),
+							((IModelElement) elements[i]).getResource());
 				} else {
 					monitor.worked(1);
 				}
@@ -72,7 +78,9 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 
 			if (fErrorStatus.getChildren().length > 0) {
 				status = fErrorStatus;
-				fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, SSEUIMessages.FormatActionDelegate_errorStatusMessage, null); //$NON-NLS-1$
+				fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR,
+						SSEUIMessages.FormatActionDelegate_errorStatusMessage,
+						null); //$NON-NLS-1$
 			}
 
 			return status;
@@ -80,26 +88,29 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 
 	}
 
-	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, SSEUIMessages.FormatActionDelegate_errorStatusMessage, null); //$NON-NLS-1$
+	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID,
+			IStatus.ERROR,
+			SSEUIMessages.FormatActionDelegate_errorStatusMessage, null); //$NON-NLS-1$
 
 	protected Job getJob() {
 		return new FormatJob(SSEUIMessages.FormatActionDelegate_jobName); //$NON-NLS-1$
 	}
 
-//	@Override
-//	public void run(IAction action) {
-//		if (fSelection != null && !fSelection.isEmpty()) {
-//			Job job = getJob();
-//			if (job != null) {
-//				IWorkbenchSiteProgressService progressService = getActiveProgressService();
-//				if (progressService != null) {
-//					progressService.schedule(job);
-//				} else {
-//					job.schedule();
-//				}
-//			}
-//		}
-//	}
+	// @Override
+	// public void run(IAction action) {
+	// if (fSelection != null && !fSelection.isEmpty()) {
+	// Job job = getJob();
+	// if (job != null) {
+	// IWorkbenchSiteProgressService progressService =
+	// getActiveProgressService();
+	// if (progressService != null) {
+	// progressService.schedule(job);
+	// } else {
+	// job.schedule();
+	// }
+	// }
+	// }
+	// }
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -110,8 +121,10 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 			Object[] elements = fSelection.toArray();
 			for (int i = 0; i < elements.length; i++) {
 				if (elements[i] instanceof IModelElement) {
-					IResource resource = ((IModelElement) elements[i]).getResource();			
-					available = (null != resource) ?  processorAvailable(resource) : false;
+					IResource resource = ((IModelElement) elements[i])
+							.getResource();
+					available = (null != resource) ? processorAvailable(resource)
+							: false;
 
 					if (available)
 						break;

@@ -29,19 +29,21 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 /**
  * 
  * @author guy.g
- *
+ * 
  */
 
 public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 
-	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
+	public void customizeDocumentCommand(IDocument document,
+			DocumentCommand command) {
 		if (TypingPreferences.closeQuotes && command.text != null) {
 			int length = command.text.length();
 			if (length == 0 && command.length == 1) {
 				try {
 					char removedChar = document.getChar(command.offset);
 					if (isQuote(removedChar)) {
-						deleteQuote((IStructuredDocument) document, command, removedChar);
+						deleteQuote((IStructuredDocument) document, command,
+								removedChar);
 					}
 
 				} catch (BadLocationException e) {
@@ -57,15 +59,20 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		}
 	}
 
-	private void autoAddPairQuote(IStructuredDocument document, DocumentCommand command, char insertedChar) {
+	private void autoAddPairQuote(IStructuredDocument document,
+			DocumentCommand command, char insertedChar) {
 		int startOffset = command.offset;
 		int endOffset = startOffset + command.length;
 
 		try {
-			String startState = FormatterUtils.getPartitionType(document, startOffset, true);
-			String endState = FormatterUtils.getPartitionType(document, endOffset, true);
-			if (startState == PHPPartitionTypes.PHP_QUOTED_STRING || endState == PHPPartitionTypes.PHP_QUOTED_STRING) {
-				if (endOffset < document.getLength() && startOffset == endOffset) {
+			String startState = FormatterUtils.getPartitionType(document,
+					startOffset, true);
+			String endState = FormatterUtils.getPartitionType(document,
+					endOffset, true);
+			if (startState == PHPPartitionTypes.PHP_QUOTED_STRING
+					|| endState == PHPPartitionTypes.PHP_QUOTED_STRING) {
+				if (endOffset < document.getLength()
+						&& startOffset == endOffset) {
 					char nextChar = document.getChar(endOffset);
 					if (insertedChar == nextChar) {
 						char prevChar = document.getChar(startOffset - 1);
@@ -78,21 +85,33 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 							}
 						}
 					} else {
-						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(startOffset);
-						ITextRegion tRegion = getPhpRegion(sdRegion, startOffset);
-						// adding a specific char to close the qoute in case the 2 following conditions fulfilled:
+						IStructuredDocumentRegion sdRegion = document
+								.getRegionAtCharacterOffset(startOffset);
+						ITextRegion tRegion = getPhpRegion(sdRegion,
+								startOffset);
+						// adding a specific char to close the qoute in case the
+						// 2 following conditions fulfilled:
 						// 1. The region ends with whitespace.
-						// 2. The command offest is located at the end of the region(include the region whitespace)
+						// 2. The command offest is located at the end of the
+						// region(include the region whitespace)
 						int regionLength = tRegion.getLength();
 						int regionTextLength = tRegion.getTextLength();
-						if (regionTextLength != regionLength && startOffset > getRegionStart(sdRegion, startOffset) + regionTextLength && shouldAddClosingBracket(document, endOffset, true)) {
+						if (regionTextLength != regionLength
+								&& startOffset > getRegionStart(sdRegion,
+										startOffset)
+										+ regionTextLength
+								&& shouldAddClosingBracket(document, endOffset,
+										true)) {
 							command.text = command.text + insertedChar;
-							//making the change in the documet ourselfs and consuming the original command
-							document.replace(command.offset, command.length, command.text);
+							// making the change in the documet ourselfs and
+							// consuming the original command
+							document.replace(command.offset, command.length,
+									command.text);
 							document.getUndoManager().disableUndoManagement();
 							document.replace(command.offset + 1, 0, ""); //$NON-NLS-1$
 							document.getUndoManager().enableUndoManagement();
-							command.offset++; //this will cause the caret to be set between the quotes.
+							command.offset++; // this will cause the caret to be
+												// set between the quotes.
 							command.length = 0;
 							command.text = ""; //$NON-NLS-1$
 						}
@@ -102,15 +121,19 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			}
 			if (isQuoteAllowed(startState, insertedChar)) {
 				if ((shouldAddClosingBracket(document, endOffset, true))) {
-					int result = isMatchingCharNeeded(document, endOffset, insertedChar);
+					int result = isMatchingCharNeeded(document, endOffset,
+							insertedChar);
 					if (result == MATCHING_BRACKET_NEEDED) {
 						command.text = command.text + insertedChar;
-						//making the change in ther documet ourselfs and consuming the original command
-						document.replace(command.offset, command.length, command.text);
+						// making the change in ther documet ourselfs and
+						// consuming the original command
+						document.replace(command.offset, command.length,
+								command.text);
 						document.getUndoManager().disableUndoManagement();
 						document.replace(command.offset + 1, 0, ""); //$NON-NLS-1$
 						document.getUndoManager().enableUndoManagement();
-						command.offset++; //this will cause the caret to be set between the quotes.
+						command.offset++; // this will cause the caret to be set
+											// between the quotes.
 						command.length = 0;
 						command.text = ""; //$NON-NLS-1$
 					}
@@ -126,7 +149,8 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 	/*
 	 * get php region by given IStructuredDocumentRegion and offset
 	 */
-	private ITextRegion getPhpRegion(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
+	private ITextRegion getPhpRegion(IStructuredDocumentRegion sdRegion,
+			int offset) throws BadLocationException {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 
 		if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
@@ -153,7 +177,8 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 	/*
 	 * get php region by given IStructuredDocumentRegion and offset
 	 */
-	private int getRegionStart(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
+	private int getRegionStart(IStructuredDocumentRegion sdRegion, int offset)
+			throws BadLocationException {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 
 		if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
@@ -180,25 +205,36 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 	 * returns true if the lexical state demands qoute balance
 	 */
 	private boolean isQuoteAllowed(String state, char quote) {
-		return (state == PHPPartitionTypes.PHP_DEFAULT) || (state == PHPRegionTypes.PHP_OPENTAG) || (state == PHPRegionTypes.PHP_CLOSETAG);
+		return (state == PHPPartitionTypes.PHP_DEFAULT)
+				|| (state == PHPRegionTypes.PHP_OPENTAG)
+				|| (state == PHPRegionTypes.PHP_CLOSETAG);
 	}
 
-	public int isMatchingCharNeeded(IStructuredDocument document, int offset, char quoteChar) {
+	public int isMatchingCharNeeded(IStructuredDocument document, int offset,
+			char quoteChar) {
 		try {
-			String postCharState = FormatterUtils.getPartitionType(document, offset, true);
-			if (!(postCharState == PHPPartitionTypes.PHP_DEFAULT || postCharState == PHPRegionTypes.PHP_OPENTAG || postCharState == PHPRegionTypes.PHP_CLOSETAG)) {
+			String postCharState = FormatterUtils.getPartitionType(document,
+					offset, true);
+			if (!(postCharState == PHPPartitionTypes.PHP_DEFAULT
+					|| postCharState == PHPRegionTypes.PHP_OPENTAG || postCharState == PHPRegionTypes.PHP_CLOSETAG)) {
 				if (isSpecialOpenCurlyInQuotes(document, offset)) {
-					postCharState = FormatterUtils.getPartitionType(document, offset + 1);
+					postCharState = FormatterUtils.getPartitionType(document,
+							offset + 1);
 				}
 			}
 
-			if (postCharState != PHPPartitionTypes.PHP_DEFAULT && postCharState != PHPRegionTypes.PHP_OPENTAG && postCharState != PHPRegionTypes.PHP_CLOSETAG) {
+			if (postCharState != PHPPartitionTypes.PHP_DEFAULT
+					&& postCharState != PHPRegionTypes.PHP_OPENTAG
+					&& postCharState != PHPRegionTypes.PHP_CLOSETAG) {
 				return SEARCH_NOT_VALID;
 			}
-			if (FormatterUtils.getPartitionType(document, document.getLength() - 1) == PHPPartitionTypes.PHP_QUOTED_STRING) {
-				IStructuredDocumentRegion sdRegion = document.getLastStructuredDocumentRegion();
+			if (FormatterUtils.getPartitionType(document,
+					document.getLength() - 1) == PHPPartitionTypes.PHP_QUOTED_STRING) {
+				IStructuredDocumentRegion sdRegion = document
+						.getLastStructuredDocumentRegion();
 				ITextRegion tRegion = sdRegion.getLastRegion();
-				char lastChar = document.getChar(sdRegion.getStartOffset() + tRegion.getTextEnd() - 1);
+				char lastChar = document.getChar(sdRegion.getStartOffset()
+						+ tRegion.getTextEnd() - 1);
 				if (lastChar != quoteChar) {
 					return MATCHING_BRACKET_NOT_NEEDED;
 				}
@@ -210,11 +246,14 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		return MATCHING_BRACKET_NEEDED;
 	}
 
-	private void deleteQuote(IStructuredDocument document, DocumentCommand command, char removedChar) {
+	private void deleteQuote(IStructuredDocument document,
+			DocumentCommand command, char removedChar) {
 		int offset = command.offset;
 
-		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
-		if (sdRegion == null || sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
+		IStructuredDocumentRegion sdRegion = document
+				.getRegionAtCharacterOffset(offset);
+		if (sdRegion == null
+				|| sdRegion.getType() != PHPRegionTypes.PHP_CONTENT) {
 			return;
 		}
 		try {
@@ -231,12 +270,16 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				tRegion = scriptRegion.getPhpToken(offset - regionStart);
 
-				if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+				if (tRegion == null
+						|| tRegion.getType() != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
 					return;
 				}
 
-				if (offset != tRegion.getStart() + regionStart || (tRegion.getTextLength() != 2 && !isBetweenBackquotes(sdRegion, offset))) {
-					//looking only for the cases where the user is trying to remove the first quote out of two coupled ones.
+				if (offset != tRegion.getStart() + regionStart
+						|| (tRegion.getTextLength() != 2 && !isBetweenBackquotes(
+								sdRegion, offset))) {
+					// looking only for the cases where the user is trying to
+					// remove the first quote out of two coupled ones.
 					return;
 				}
 
@@ -250,8 +293,10 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		}
 	}
 
-	// fixed bug 172149 - The offset changed according to the PHP script region offset
-	private boolean isBetweenBackquotes(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
+	// fixed bug 172149 - The offset changed according to the PHP script region
+	// offset
+	private boolean isBetweenBackquotes(IStructuredDocumentRegion sdRegion,
+			int offset) throws BadLocationException {
 		if (sdRegion.getParentDocument().getLength() <= offset) {
 			return false;
 		}
@@ -271,7 +316,8 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		}
 
 		// fixed bug 197412
-		if (sdRegion.getFullText().charAt(offset + 1 - sdRegion.getStartOffset()) != BACK_QOUTE) {
+		if (sdRegion.getFullText().charAt(
+				offset + 1 - sdRegion.getStartOffset()) != BACK_QOUTE) {
 			return false;
 		}
 		return true;

@@ -23,7 +23,8 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Node;
 
-public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactory {
+public class ProjectionModelNodeAdapterFactoryHTML extends
+		AbstractAdapterFactory {
 	// copies of this class located in:
 	// org.eclipse.wst.html.ui.internal.projection
 	// org.eclipse.jst.jsp.ui.internal.projection
@@ -34,7 +35,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 */
 	private HashMap fProjectionViewers;
 
-	public ProjectionModelNodeAdapterFactoryHTML(Object adapterKey, boolean registerAdapters) {
+	public ProjectionModelNodeAdapterFactoryHTML(Object adapterKey,
+			boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
 	}
 
@@ -51,7 +53,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * "adapt-able" node
 	 */
 	protected INodeAdapter createAdapter(INodeNotifier target) {
-		if ((isActive()) && (target instanceof Node) && ((Node) target).getNodeType() == Node.ELEMENT_NODE) {
+		if ((isActive()) && (target instanceof Node)
+				&& ((Node) target).getNodeType() == Node.ELEMENT_NODE) {
 			Node node = (Node) target;
 			if (isNodeProjectable(node)) {
 
@@ -60,7 +63,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 				Node parent = node.getParentNode();
 				if (parent instanceof INodeNotifier) {
 					INodeNotifier parentNotifier = (INodeNotifier) parent;
-					ProjectionModelNodeAdapterHTML parentAdapter = (ProjectionModelNodeAdapterHTML) parentNotifier.getExistingAdapter(ProjectionModelNodeAdapterHTML.class);
+					ProjectionModelNodeAdapterHTML parentAdapter = (ProjectionModelNodeAdapterHTML) parentNotifier
+							.getExistingAdapter(ProjectionModelNodeAdapterHTML.class);
 					if (parentAdapter == null) {
 						// create a new adapter for parent
 						parentAdapter = new ProjectionModelNodeAdapterHTML(this);
@@ -87,7 +91,19 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 			String tagName = node.getNodeName();
 			// node is only projectable if it is head, body, script, style,
 			// table, ul, ol, and div tags
-			if (HTML40Namespace.ElementName.HEAD.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.BODY.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.SCRIPT.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.STYLE.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.TABLE.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.UL.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.OL.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.DIV.equalsIgnoreCase(tagName))
+			if (HTML40Namespace.ElementName.HEAD.equalsIgnoreCase(tagName)
+					|| HTML40Namespace.ElementName.BODY
+							.equalsIgnoreCase(tagName)
+					|| HTML40Namespace.ElementName.SCRIPT
+							.equalsIgnoreCase(tagName)
+					|| HTML40Namespace.ElementName.STYLE
+							.equalsIgnoreCase(tagName)
+					|| HTML40Namespace.ElementName.TABLE
+							.equalsIgnoreCase(tagName)
+					|| HTML40Namespace.ElementName.UL.equalsIgnoreCase(tagName)
+					|| HTML40Namespace.ElementName.OL.equalsIgnoreCase(tagName)
+					|| HTML40Namespace.ElementName.DIV
+							.equalsIgnoreCase(tagName))
 				return true;
 		}
 		return false;
@@ -111,8 +127,10 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * @param additions
 	 * @param modifications
 	 */
-	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications) {
-		queueAnnotationModelChanges(node, deletions, additions, modifications, null);
+	void queueAnnotationModelChanges(Node node, Annotation[] deletions,
+			Map additions, Annotation[] modifications) {
+		queueAnnotationModelChanges(node, deletions, additions, modifications,
+				null);
 	}
 
 	/**
@@ -126,20 +144,23 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * @param modifications
 	 * @param viewer
 	 */
-	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications, ProjectionViewer viewer) {
+	void queueAnnotationModelChanges(Node node, Annotation[] deletions,
+			Map additions, Annotation[] modifications, ProjectionViewer viewer) {
 		// create a change object for latest change and add to queue
-		ProjectionAnnotationModelChanges newChange = new ProjectionAnnotationModelChanges(node, deletions, additions, modifications);
+		ProjectionAnnotationModelChanges newChange = new ProjectionAnnotationModelChanges(
+				node, deletions, additions, modifications);
 		if (fProjectionViewers != null) {
 			if (viewer != null) {
-				ProjectionViewerInformation info = (ProjectionViewerInformation) fProjectionViewers.get(viewer);
+				ProjectionViewerInformation info = (ProjectionViewerInformation) fProjectionViewers
+						.get(viewer);
 				if (info != null) {
 					info.queueAnnotationModelChanges(newChange);
 				}
-			}
-			else {
+			} else {
 				Iterator infos = fProjectionViewers.values().iterator();
 				while (infos.hasNext()) {
-					ProjectionViewerInformation info = (ProjectionViewerInformation) infos.next();
+					ProjectionViewerInformation info = (ProjectionViewerInformation) infos
+							.next();
 					info.queueAnnotationModelChanges(newChange);
 				}
 			}
@@ -152,7 +173,8 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 		if (fProjectionViewers != null) {
 			Iterator infos = fProjectionViewers.values().iterator();
 			while (infos.hasNext()) {
-				ProjectionViewerInformation info = (ProjectionViewerInformation) infos.next();
+				ProjectionViewerInformation info = (ProjectionViewerInformation) infos
+						.next();
 				info.dispose();
 				infos.remove();
 			}
@@ -162,11 +184,10 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	}
 
 	/**
-	 * Adds viewer to list of projection viewers this factory is associated
-	 * with
+	 * Adds viewer to list of projection viewers this factory is associated with
 	 * 
-	 * @param viewer -
-	 *            assumes viewer's document and projection annotation model
+	 * @param viewer
+	 *            - assumes viewer's document and projection annotation model
 	 *            are not null
 	 */
 	public void addProjectionViewer(ProjectionViewer viewer) {
@@ -178,21 +199,23 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 		}
 
 		// create new object containing projection viewer and its info
-		ProjectionViewerInformation info = new ProjectionViewerInformation(viewer);
+		ProjectionViewerInformation info = new ProjectionViewerInformation(
+				viewer);
 		fProjectionViewers.put(viewer, info);
 		info.initialize();
 	}
 
 	/**
-	 * Removes the given viewer from the list of projection viewers this
-	 * factor is associated with
+	 * Removes the given viewer from the list of projection viewers this factor
+	 * is associated with
 	 * 
 	 * @param viewer
 	 */
 	public void removeProjectionViewer(ProjectionViewer viewer) {
 		if (fProjectionViewers != null) {
 			// remove entry from list of viewers
-			ProjectionViewerInformation info = (ProjectionViewerInformation) fProjectionViewers.remove(viewer);
+			ProjectionViewerInformation info = (ProjectionViewerInformation) fProjectionViewers
+					.remove(viewer);
 			if (info != null) {
 				info.dispose();
 			}

@@ -15,14 +15,19 @@ import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
 import org.eclipse.php.internal.ui.PHPUILanguageToolkit;
 
 /**
- * Open type in hierarchy action. 
+ * Open type in hierarchy action.
  * 
  * @author Roy, 2008
  */
-public class OpenMethodAction extends org.eclipse.dltk.ui.actions.OpenMethodAction {
+public class OpenMethodAction extends
+		org.eclipse.dltk.ui.actions.OpenMethodAction {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction#getLanguageToolkit()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.ui.actions.OpenTypeInHierarchyAction#getLanguageToolkit
+	 * ()
 	 */
 
 	@Override

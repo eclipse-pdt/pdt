@@ -21,9 +21,11 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
 
 /**
- * This Node is shown in the first level of the PHP Functions view. It aggregates all of the PHP constants   
+ * This Node is shown in the first level of the PHP Functions view. It
+ * aggregates all of the PHP constants
+ * 
  * @author Eden K., 2008
- *
+ * 
  */
 public class ConstantNode {
 
@@ -45,7 +47,8 @@ public class ConstantNode {
 		return children.toArray(new Object[children.size()]);
 	}
 
-	public void addSourceModuleChildren(IModelElement[] externalSourceModuleChildren) {
+	public void addSourceModuleChildren(
+			IModelElement[] externalSourceModuleChildren) {
 		modules.addAll(Arrays.asList(externalSourceModuleChildren));
 
 	}
@@ -56,6 +59,7 @@ public class ConstantNode {
 
 	/**
 	 * Gets a model element and verifies if it is a constant
+	 * 
 	 * @param element
 	 * @return whether the element is a constant or not
 	 */

@@ -18,24 +18,21 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
-import org.eclipse.dltk.internal.ui.wizards.buildpath.BuildPathSupport;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
-import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.preferences.includepath.PHPBuildPathsBlock;
 import org.eclipse.php.internal.ui.util.BusyIndicatorRunnableContext;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * New PHP Project Wizard - 3rd page - Build Paths configuration
- * Consists of the 2nd page (IncludePath) most functionality
+ * New PHP Project Wizard - 3rd page - Build Paths configuration Consists of the
+ * 2nd page (IncludePath) most functionality
+ * 
  * @author nir.c
- *
+ * 
  */
 public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 
@@ -48,8 +45,11 @@ public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 	}
 
 	@Override
-	protected BuildpathsBlock createBuildpathBlock(IStatusChangeListener listener) {
-		PHPBuildPathsBlock buildPathsBlock = new PHPBuildPathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
+	protected BuildpathsBlock createBuildpathBlock(
+			IStatusChangeListener listener) {
+		PHPBuildPathsBlock buildPathsBlock = new PHPBuildPathsBlock(
+				new BusyIndicatorRunnableContext(), listener, 0,
+				useNewSourcePage(), null);
 		return buildPathsBlock;
 	}
 
@@ -66,7 +66,8 @@ public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 	}
 
 	@Override
-	protected void updateProject(IProgressMonitor monitor) throws CoreException, InterruptedException {
+	protected void updateProject(IProgressMonitor monitor)
+			throws CoreException, InterruptedException {
 		IProject projectHandle = fFirstPage.getProjectHandle();
 		IScriptProject scriptProject = DLTKCore.create(projectHandle);
 		if (scriptProject != null) {
@@ -81,7 +82,8 @@ public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 	}
 
 	@Override
-	public void performFinish(IProgressMonitor monitor) throws CoreException, InterruptedException {
+	public void performFinish(IProgressMonitor monitor) throws CoreException,
+			InterruptedException {
 		if (getContainer().getCurrentPage() == this) {
 			BuildpathsBlock fBuildPathsBlock = getBuildPathsBlock();
 			if (fBuildPathsBlock.hasChangesInDialog()) {
@@ -92,7 +94,8 @@ public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 
 	@Override
 	protected void setHelpContext(Control control) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,  IPHPHelpContextIds.CONFIGURING_BUILD_PATHS);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,
+				IPHPHelpContextIds.CONFIGURING_BUILD_PATHS);
 	}
 
 }

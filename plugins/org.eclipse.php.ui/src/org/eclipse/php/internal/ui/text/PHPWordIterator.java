@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.Assert;
 
 import com.ibm.icu.text.BreakIterator;
 
-
 /**
  * Breaks php text into word starts, also stops at line start and end. No
  * direction dependency.
@@ -36,7 +35,7 @@ public class PHPWordIterator extends BreakIterator {
 	 * Creates a new word iterator.
 	 */
 	public PHPWordIterator() {
-		fIterator= new PHPBreakIterator();
+		fIterator = new PHPBreakIterator();
 		first();
 	}
 
@@ -44,7 +43,7 @@ public class PHPWordIterator extends BreakIterator {
 	 * @see java.text.BreakIterator#first()
 	 */
 	public int first() {
-		fIndex= fIterator.first();
+		fIndex = fIterator.first();
 		return fIndex;
 	}
 
@@ -52,7 +51,7 @@ public class PHPWordIterator extends BreakIterator {
 	 * @see java.text.BreakIterator#last()
 	 */
 	public int last() {
-		fIndex= fIterator.last();
+		fIndex = fIterator.last();
 		return fIndex;
 	}
 
@@ -60,9 +59,9 @@ public class PHPWordIterator extends BreakIterator {
 	 * @see java.text.BreakIterator#next(int)
 	 */
 	public int next(int n) {
-		int next= 0;
+		int next = 0;
 		while (--n > 0 && next != DONE) {
-			next= next();
+			next = next();
 		}
 		return next;
 	}
@@ -71,7 +70,7 @@ public class PHPWordIterator extends BreakIterator {
 	 * @see java.text.BreakIterator#next()
 	 */
 	public int next() {
-		fIndex= following(fIndex);
+		fIndex = following(fIndex);
 		return fIndex;
 	}
 
@@ -79,18 +78,17 @@ public class PHPWordIterator extends BreakIterator {
 	 * @see java.text.BreakIterator#previous()
 	 */
 	public int previous() {
-		fIndex= preceding(fIndex);
+		fIndex = preceding(fIndex);
 		return fIndex;
 	}
-
 
 	/*
 	 * @see java.text.BreakIterator#preceding(int)
 	 */
 	public int preceding(int offset) {
-		int first= fIterator.preceding(offset);
+		int first = fIterator.preceding(offset);
 		if (isWhitespace(first, offset)) {
-			int second= fIterator.preceding(first);
+			int second = fIterator.preceding(first);
 			if (second != DONE && !isDelimiter(second, first))
 				return second;
 		}
@@ -101,9 +99,9 @@ public class PHPWordIterator extends BreakIterator {
 	 * @see java.text.BreakIterator#following(int)
 	 */
 	public int following(int offset) {
-		int first= fIterator.following(offset);
+		int first = fIterator.following(offset);
 		if (eatFollowingWhitespace(offset, first)) {
-			int second= fIterator.following(first);
+			int second = fIterator.following(first);
 			if (isWhitespace(first, second))
 				return second;
 		}
@@ -125,9 +123,11 @@ public class PHPWordIterator extends BreakIterator {
 	/**
 	 * Returns <code>true</code> if the given sequence into the underlying text
 	 * represents a delimiter, <code>false</code> otherwise.
-	 *
-	 * @param offset the offset
-	 * @param exclusiveEnd the end offset
+	 * 
+	 * @param offset
+	 *            the offset
+	 * @param exclusiveEnd
+	 *            the end offset
 	 * @return <code>true</code> if the given range is a delimiter
 	 */
 	private boolean isDelimiter(int offset, int exclusiveEnd) {
@@ -138,10 +138,10 @@ public class PHPWordIterator extends BreakIterator {
 		Assert.isTrue(exclusiveEnd <= getText().getEndIndex());
 		Assert.isTrue(exclusiveEnd > offset);
 
-		CharSequence seq= fIterator.fText;
+		CharSequence seq = fIterator.fText;
 
 		while (offset < exclusiveEnd) {
-			char ch= seq.charAt(offset);
+			char ch = seq.charAt(offset);
 			if (ch != '\n' && ch != '\r')
 				return false;
 			offset++;
@@ -153,9 +153,11 @@ public class PHPWordIterator extends BreakIterator {
 	/**
 	 * Returns <code>true</code> if the given sequence into the underlying text
 	 * represents whitespace, but not a delimiter, <code>false</code> otherwise.
-	 *
-	 * @param offset the offset
-	 * @param exclusiveEnd the end offset
+	 * 
+	 * @param offset
+	 *            the offset
+	 * @param exclusiveEnd
+	 *            the end offset
 	 * @return <code>true</code> if the given range is whitespace
 	 */
 	private boolean isWhitespace(int offset, int exclusiveEnd) {
@@ -166,10 +168,10 @@ public class PHPWordIterator extends BreakIterator {
 		Assert.isTrue(exclusiveEnd <= getText().getEndIndex());
 		Assert.isTrue(exclusiveEnd > offset);
 
-		CharSequence seq= fIterator.fText;
+		CharSequence seq = fIterator.fText;
 
 		while (offset < exclusiveEnd) {
-			char ch= seq.charAt(offset);
+			char ch = seq.charAt(offset);
 			if (!Character.isWhitespace(ch))
 				return false;
 			if (ch == '\n' || ch == '\r')
@@ -195,13 +197,15 @@ public class PHPWordIterator extends BreakIterator {
 	}
 
 	/**
-     * Sets the text as <code>CharSequence</code>.
-     * @param newText the new text
-     */
-    public void setText(CharSequence newText) {
-        fIterator.setText(newText);
-        first();
-    }
+	 * Sets the text as <code>CharSequence</code>.
+	 * 
+	 * @param newText
+	 *            the new text
+	 */
+	public void setText(CharSequence newText) {
+		fIterator.setText(newText);
+		first();
+	}
 
 	/*
 	 * @see java.text.BreakIterator#setText(java.text.CharacterIterator)

@@ -24,8 +24,8 @@ public class ElementAddition implements Runnable {
 
 	private TableViewer tableViewer;
 	private boolean defaultElementSelection;
-	private Object[] tableElements = new Object[]{};
-	private Object changeTableElements = new Object(); 
+	private Object[] tableElements = new Object[] {};
+	private Object changeTableElements = new Object();
 	private boolean continueAddingElements = false;
 	private boolean exit = false;
 	private boolean elementsChanged = false;
@@ -44,7 +44,8 @@ public class ElementAddition implements Runnable {
 					if (!continueAddingElements) {
 						return;
 					}
-					tableViewer.setContentProvider(new SimpleListContentProvider());
+					tableViewer
+							.setContentProvider(new SimpleListContentProvider());
 					tableViewer.setInput(null);
 				}
 			});
@@ -53,7 +54,7 @@ public class ElementAddition implements Runnable {
 			synchronized (changeTableElements) {
 				elementsLength = tableElements.length;
 			}
-			for (int i = 0 ; continueAddingElements && i < elementsLength ; i++) {
+			for (int i = 0; continueAddingElements && i < elementsLength; i++) {
 				final Object element;
 				synchronized (changeTableElements) {
 					if (!continueAddingElements) {
@@ -78,33 +79,34 @@ public class ElementAddition implements Runnable {
 							if (!continueAddingElements) {
 								return;
 							}
-							tableViewer.setSelection(new IStructuredSelection() {
-								public Object getFirstElement() {
-									return element;
-								}
+							tableViewer
+									.setSelection(new IStructuredSelection() {
+										public Object getFirstElement() {
+											return element;
+										}
 
-								public Iterator iterator() {
-									return toList().iterator();
-								}
+										public Iterator iterator() {
+											return toList().iterator();
+										}
 
-								public int size() {
-									return 1;
-								}
+										public int size() {
+											return 1;
+										}
 
-								public Object[] toArray() {
-									return new Object[] { element };
-								}
+										public Object[] toArray() {
+											return new Object[] { element };
+										}
 
-								public List toList() {
-									ArrayList arrayList = new ArrayList();
-									arrayList.add(element);
-									return arrayList;
-								}
+										public List toList() {
+											ArrayList arrayList = new ArrayList();
+											arrayList.add(element);
+											return arrayList;
+										}
 
-								public boolean isEmpty() {
-									return false;
-								}
-							});
+										public boolean isEmpty() {
+											return false;
+										}
+									});
 						}
 					});
 				}

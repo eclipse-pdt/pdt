@@ -21,10 +21,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
  * @author guy.g
- *
+ * 
  */
 
-public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy implements IAutoEditStrategy {
+public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
+		implements IAutoEditStrategy {
 
 	private final CurlyCloseAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
 
@@ -32,7 +33,8 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 
 	IAfterNewLineAutoEditStrategy pairCurlyBracketAutoEditStrategy = new PairCurlyBracketAutoEditStrategy();
 
-	private void autoIndentAfterNewLine(final IStructuredDocument document, final DocumentCommand command) {
+	private void autoIndentAfterNewLine(final IStructuredDocument document,
+			final DocumentCommand command) {
 		try {
 			helpBuffer.setLength(0);
 			helpBuffer.append(command.text);
@@ -46,9 +48,11 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 			int futureCaretPosition = -1;
 
 			if (currentOffset > 0) {
-				final IAfterNewLineAutoEditStrategy autoEditStrategy = getAfterNewLineAutoEditStrategy(document, command);
+				final IAfterNewLineAutoEditStrategy autoEditStrategy = getAfterNewLineAutoEditStrategy(
+						document, command);
 				if (autoEditStrategy != null)
-					futureCaretPosition = autoEditStrategy.autoEditAfterNewLine(document, command, helpBuffer);
+					futureCaretPosition = autoEditStrategy
+							.autoEditAfterNewLine(document, command, helpBuffer);
 			}
 
 			final IRegion lineInfo = document.getLineInformation(lineNumber);
@@ -60,28 +64,32 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 
 			// find the first non blank char of the element.
 			int i;
-			for (i = 0; i < length && (lineText.charAt(i) == ' ' || lineText.charAt(i) == '\t'); i++)
+			for (i = 0; i < length
+					&& (lineText.charAt(i) == ' ' || lineText.charAt(i) == '\t'); i++)
 				;
 
-			// if we are in the blaks at the start of the element then select them
+			// if we are in the blaks at the start of the element then select
+			// them
 			// so they will be replaced with the MatchingBlanks.
 			if (currentOffset < startOffset + i) {
-				//if (command.length != 0) { // comment out in order to fix bug # 139437
+				// if (command.length != 0) { // comment out in order to fix bug
+				// # 139437
 				command.offset = Math.min(command.offset, startOffset);
-				//}
+				// }
 				command.length = Math.max(i, command.length);
 			}
 			command.text = helpBuffer.toString();
 
-			//if we need to put the caret at a position differnt then the end of the text
+			// if we need to put the caret at a position differnt then the end
+			// of the text
 			if (futureCaretPosition != -1) {
-				//runing the command ourselfs
+				// runing the command ourselfs
 				document.replace(command.offset, command.length, command.text);
-				//consuming the command
+				// consuming the command
 				command.length = 0;
 				command.text = ""; //$NON-NLS-1$
 				command.offset = futureCaretPosition;
-				//moving the caret position
+				// moving the caret position
 				document.getUndoManager().disableUndoManagement();
 				document.replace(command.offset, command.length, command.text);
 				document.getUndoManager().enableUndoManagement();
@@ -91,20 +99,26 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 		}
 	}
 
-	public void customizeDocumentCommand(final IDocument document, final DocumentCommand command) {
-		if (command.text != null && TextUtilities.endsWith(document.getLegalLineDelimiters(), command.text) != -1)
+	public void customizeDocumentCommand(final IDocument document,
+			final DocumentCommand command) {
+		if (command.text != null
+				&& TextUtilities.endsWith(document.getLegalLineDelimiters(),
+						command.text) != -1)
 			autoIndentAfterNewLine((IStructuredDocument) document, command);
 	}
 
-	private IAfterNewLineAutoEditStrategy getAfterNewLineAutoEditStrategy(final IStructuredDocument document, final DocumentCommand command) throws BadLocationException {
+	private IAfterNewLineAutoEditStrategy getAfterNewLineAutoEditStrategy(
+			final IStructuredDocument document, final DocumentCommand command)
+			throws BadLocationException {
 		if (command.length > 0)
 			return null;
 		final int offset = command.offset;
 
-		String currentState = FormatterUtils.getPartitionType(document, offset, true);
+		String currentState = FormatterUtils.getPartitionType(document, offset,
+				true);
 
 		// fixed bug 186710
-		// scan for the first char that not equals to space or tab 
+		// scan for the first char that not equals to space or tab
 		int charPosition = offset;
 		char prevChar = '\0';
 		while (charPosition-- >= 0) {
@@ -113,11 +127,12 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 				break;
 			}
 		}
-		
+
 		if (TypingPreferences.closeCurlyBracket && prevChar == '{') {
 			if (currentState != PHPPartitionTypes.PHP_DEFAULT)
 				if (document.getLength() == offset)
-					currentState = FormatterUtils.getPartitionType(document, offset - 1);
+					currentState = FormatterUtils.getPartitionType(document,
+							offset - 1);
 			if (currentState == PHPPartitionTypes.PHP_DEFAULT)
 				return pairCurlyBracketAutoEditStrategy;
 
@@ -125,26 +140,33 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy imple
 		return null;
 	}
 
-	private IIndentationStrategy getAutoEditStrategy(final char insertionStrtegyKey) {
+	private IIndentationStrategy getAutoEditStrategy(
+			final char insertionStrtegyKey) {
 		switch (insertionStrtegyKey) {
-			case '}':
-				return curlyCloseAutoEditStrategy;
-			default:
-				return this;
+		case '}':
+			return curlyCloseAutoEditStrategy;
+		default:
+			return this;
 		}
 	}
 
-	public void placeMatchingBlanks(final IStructuredDocument document, final StringBuffer result, final int lineNumber, final DocumentCommand command) throws BadLocationException {
+	public void placeMatchingBlanks(final IStructuredDocument document,
+			final StringBuffer result, final int lineNumber,
+			final DocumentCommand command) throws BadLocationException {
 		final int forOffset = command.offset;
 		final IRegion lineInfo = document.getLineInformation(lineNumber);
 		// read the rest of the line
-		final String lineText = document.get(forOffset + command.length, lineInfo.getOffset() + lineInfo.getLength() - (forOffset + command.length));
+		final String lineText = document.get(forOffset + command.length,
+				lineInfo.getOffset() + lineInfo.getLength()
+						- (forOffset + command.length));
 		final String trimedText = lineText.trim();
 
-		final char insertionStrategyKey = trimedText.length() == 0 ? '{' : trimedText.charAt(0);
+		final char insertionStrategyKey = trimedText.length() == 0 ? '{'
+				: trimedText.charAt(0);
 		final IIndentationStrategy indentationStrategy = getAutoEditStrategy(insertionStrategyKey);
 
-		indentationStrategy.placeMatchingBlanks(document, result, lineNumber, forOffset);
+		indentationStrategy.placeMatchingBlanks(document, result, lineNumber,
+				forOffset);
 	}
 
 }

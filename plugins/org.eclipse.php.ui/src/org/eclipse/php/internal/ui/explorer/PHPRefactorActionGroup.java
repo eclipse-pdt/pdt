@@ -18,22 +18,27 @@ public class PHPRefactorActionGroup extends RefactorActionGroup {
 
 	public PHPRefactorActionGroup(IViewPart part) {
 		super(part);
-		
-		IPHPActionDelegator renamePHPElement = PHPActionDelegatorRegistry.getActionDelegator("org.eclipse.php.ui.actions.RenameElement");
-		
-		if(renamePHPElement!=null){
-			fRenameAction = new SelectionDispatchActionDelegate(part.getSite(), renamePHPElement);
+
+		IPHPActionDelegator renamePHPElement = PHPActionDelegatorRegistry
+				.getActionDelegator("org.eclipse.php.ui.actions.RenameElement");
+
+		if (renamePHPElement != null) {
+			fRenameAction = new SelectionDispatchActionDelegate(part.getSite(),
+					renamePHPElement);
 			fRenameAction.setText("Rename...");
-			fRenameAction.setActionDefinitionId("org.eclipse.php.ui.edit.text.rename.element");
+			fRenameAction
+					.setActionDefinitionId("org.eclipse.php.ui.edit.text.rename.element");
 		}
-		
-		
-		IPHPActionDelegator movePHPElement = PHPActionDelegatorRegistry.getActionDelegator("org.eclipse.php.ui.actions.Move");
-		
-		if(movePHPElement!=null){
-			fMoveAction = new SelectionDispatchActionDelegate(part.getSite(), movePHPElement);
+
+		IPHPActionDelegator movePHPElement = PHPActionDelegatorRegistry
+				.getActionDelegator("org.eclipse.php.ui.actions.Move");
+
+		if (movePHPElement != null) {
+			fMoveAction = new SelectionDispatchActionDelegate(part.getSite(),
+					movePHPElement);
 			fMoveAction.setText("Move...");
-			fMoveAction.setActionDefinitionId("org.eclipse.php.ui.edit.text.move.element");
+			fMoveAction
+					.setActionDefinitionId("org.eclipse.php.ui.edit.text.move.element");
 		}
 
 	}

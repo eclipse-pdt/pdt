@@ -47,22 +47,26 @@ public class PHPNewWizardMenu extends ContributionItem {
 	};
 
 	/**
-	 * Create a new wizard shortcut menu.  
+	 * Create a new wizard shortcut menu.
 	 * <p>
-	 * If the menu will appear on a semi-permanent basis, for instance within
-	 * a toolbar or menubar, the value passed for <code>register</code> should be true.
-	 * If set, the menu will listen to perspective activation and update itself
-	 * to suit.  In this case clients are expected to call <code>deregister</code> 
-	 * when the menu is no longer needed.  This will unhook any perspective
-	 * listeners.
+	 * If the menu will appear on a semi-permanent basis, for instance within a
+	 * toolbar or menubar, the value passed for <code>register</code> should be
+	 * true. If set, the menu will listen to perspective activation and update
+	 * itself to suit. In this case clients are expected to call
+	 * <code>deregister</code> when the menu is no longer needed. This will
+	 * unhook any perspective listeners.
 	 * </p>
-	 *
-	 * @param innerMgr the location for the shortcut menu contents
-	 * @param window the window containing the menu
-	 * @param register if <code>true</code> the menu listens to perspective changes in
-	 * 		the window
+	 * 
+	 * @param innerMgr
+	 *            the location for the shortcut menu contents
+	 * @param window
+	 *            the window containing the menu
+	 * @param register
+	 *            if <code>true</code> the menu listens to perspective changes
+	 *            in the window
 	 */
-	public PHPNewWizardMenu(IMenuManager innerMgr, IWorkbenchWindow window, boolean register) {
+	public PHPNewWizardMenu(IMenuManager innerMgr, IWorkbenchWindow window,
+			boolean register) {
 		this(window);
 		fillMenu(innerMgr);
 		// Must be done after constructor to ensure field initialization.
@@ -76,8 +80,8 @@ public class PHPNewWizardMenu extends ContributionItem {
 		newExampleAction = new NewExampleAction(window);
 	}
 
-	/* (non-Javadoc)
-	 * Fills the menu with New Wizards.
+	/*
+	 * (non-Javadoc) Fills the menu with New Wizards.
 	 */
 	private void fillMenu(IContributionManager innerMgr) {
 		// Remove all.
@@ -108,7 +112,7 @@ public class PHPNewWizardMenu extends ContributionItem {
 			}
 
 			if (hasExamples()) {
-				//Add examples ..
+				// Add examples ..
 				innerMgr.add(new Separator());
 				innerMgr.add(newExampleAction);
 			}
@@ -119,42 +123,47 @@ public class PHPNewWizardMenu extends ContributionItem {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * Returns the action for the given wizard id, or null if not found.
+	/*
+	 * (non-Javadoc) Returns the action for the given wizard id, or null if not
+	 * found.
 	 */
 	private IAction getAction(String id) {
 		// Keep a cache, rather than creating a new action each time,
 		// so that image caching in ActionContributionItem works.
 		IAction action = (IAction) actions.get(id);
 		if (action == null) {
-			IWizardDescriptor wizardDesc = WorkbenchPlugin.getDefault().getNewWizardRegistry().findWizard(id);
+			IWizardDescriptor wizardDesc = WorkbenchPlugin.getDefault()
+					.getNewWizardRegistry().findWizard(id);
 			if (wizardDesc != null) {
 				action = new NewWizardShortcutAction(window, wizardDesc);
 				actions.put(id, action);
-				IConfigurationElement element = (IConfigurationElement) wizardDesc.getAdapter(IConfigurationElement.class);
+				IConfigurationElement element = (IConfigurationElement) wizardDesc
+						.getAdapter(IConfigurationElement.class);
 				if (element != null)
-					window.getExtensionTracker().registerObject(element.getDeclaringExtension(), action, IExtensionTracker.REF_WEAK);
+					window.getExtensionTracker().registerObject(
+							element.getDeclaringExtension(), action,
+							IExtensionTracker.REF_WEAK);
 			}
 		}
 		return action;
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on IContributionItem.
+	/*
+	 * (non-Javadoc) Method declared on IContributionItem.
 	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on IContributionItem.
+	/*
+	 * (non-Javadoc) Method declared on IContributionItem.
 	 */
 	public boolean isDynamic() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on IContributionItem.
+	/*
+	 * (non-Javadoc) Method declared on IContributionItem.
 	 */
 	public boolean isDirty() {
 		return dirty;
@@ -163,8 +172,8 @@ public class PHPNewWizardMenu extends ContributionItem {
 	/**
 	 * Sets the enabled state of the receiver.
 	 * 
-	 * @param enabledValue if <code>true</code> the menu is enabled; else
-	 * 		it is disabled
+	 * @param enabledValue
+	 *            if <code>true</code> the menu is enabled; else it is disabled
 	 */
 	public void setEnabled(boolean enabledValue) {
 		this.enabled = enabledValue;
@@ -173,8 +182,8 @@ public class PHPNewWizardMenu extends ContributionItem {
 	/**
 	 * Removes all listeners from the containing workbench window.
 	 * <p>
-	 * This method should only be called if the shortcut menu is created
-	 * with <code>register = true</code>.
+	 * This method should only be called if the shortcut menu is created with
+	 * <code>register = true</code>.
 	 * </p>
 	 * 
 	 * @deprecated
@@ -182,8 +191,8 @@ public class PHPNewWizardMenu extends ContributionItem {
 	public void deregisterListeners() {
 	}
 
-	/* (non-Javadoc)
-	 * Method declared on IContributionItem.
+	/*
+	 * (non-Javadoc) Method declared on IContributionItem.
 	 */
 	public void fill(Menu menu, int index) {
 		if (getParent() instanceof MenuManager)
@@ -202,7 +211,8 @@ public class PHPNewWizardMenu extends ContributionItem {
 	}
 
 	protected boolean registryHasCategory(String categoryId) {
-		return WorkbenchPlugin.getDefault().getNewWizardRegistry().findCategory(categoryId) != null;
+		return WorkbenchPlugin.getDefault().getNewWizardRegistry()
+				.findCategory(categoryId) != null;
 	}
 
 	private boolean hasExamples() {

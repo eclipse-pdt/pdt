@@ -21,14 +21,16 @@ public class PHPViewerDragAdapter extends DelegatingDragAdapter {
 
 	private StructuredViewer fViewer;
 
-	public PHPViewerDragAdapter(StructuredViewer viewer, TransferDragSourceListener[] listeners) {
+	public PHPViewerDragAdapter(StructuredViewer viewer,
+			TransferDragSourceListener[] listeners) {
 		super(listeners);
 		Assert.isNotNull(viewer);
 		fViewer = viewer;
 	}
 
 	public void dragStart(DragSourceEvent event) {
-		IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) fViewer
+				.getSelection();
 		if (selection.isEmpty()) {
 			event.doit = false;
 			return;

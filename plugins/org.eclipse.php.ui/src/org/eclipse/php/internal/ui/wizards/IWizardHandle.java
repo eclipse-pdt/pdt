@@ -18,8 +18,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
- * A wizard handle.
- * [Copied from WST)
+ * A wizard handle. [Copied from WST)
  */
 public interface IWizardHandle extends IMessageProvider {
 	/**
@@ -29,43 +28,55 @@ public interface IWizardHandle extends IMessageProvider {
 
 	/**
 	 * Sets the title of this wizard page.
-	 *  
-	 * @param title the title of the wizard page
+	 * 
+	 * @param title
+	 *            the title of the wizard page
 	 */
 	public void setTitle(String title);
 
 	/**
 	 * The page's description.
 	 * 
-	 * @param desc the page's description
+	 * @param desc
+	 *            the page's description
 	 */
 	public void setDescription(String desc);
 
 	/**
 	 * The page's image descriptor.
 	 * 
-	 * @param image the page's image descriptor
+	 * @param image
+	 *            the page's image descriptor
 	 */
 	public void setImageDescriptor(ImageDescriptor image);
 
 	/**
 	 * Set an error or warning message.
 	 * 
-	 * @param newMessage the new message
-	 * @param newType the new type, from IStatus
+	 * @param newMessage
+	 *            the new message
+	 * @param newType
+	 *            the new type, from IStatus
 	 */
 	public void setMessage(String newMessage, int newType);
 
 	/**
 	 * Execute a runnable within the context of the wizard. This will typically
 	 * disable the wizard while the runnable is running, and provide a progress
-	 * monitor for the user.  
+	 * monitor for the user.
 	 * 
-	 * @param fork true if a separate thread should be used
-	 * @param cancelable true if it should be cancelable
-	 * @param runnable the runnable
-	 * @throws InterruptedException thrown if it is interrupted
-	 * @throws InvocationTargetException thrown if there is an error
+	 * @param fork
+	 *            true if a separate thread should be used
+	 * @param cancelable
+	 *            true if it should be cancelable
+	 * @param runnable
+	 *            the runnable
+	 * @throws InterruptedException
+	 *             thrown if it is interrupted
+	 * @throws InvocationTargetException
+	 *             thrown if there is an error
 	 */
-	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InterruptedException, InvocationTargetException;
+	public void run(boolean fork, boolean cancelable,
+			IRunnableWithProgress runnable) throws InterruptedException,
+			InvocationTargetException;
 }

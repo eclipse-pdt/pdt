@@ -51,9 +51,9 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	protected Text fileText;
 	private ISelection selection;
 	protected IProject project;
-	//	private Combo templatesCombo;
-	//	private Combo encodingCombo;
-	//	EncodingSettings encodingSettings;
+	// private Combo templatesCombo;
+	// private Combo encodingCombo;
+	// EncodingSettings encodingSettings;
 
 	protected static final String UTF_8 = "UTF 8"; //$NON-NLS-1$
 	protected static final String NO_TEMPLATE = "-- none -- "; //$NON-NLS-1$
@@ -61,6 +61,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 
 	/**
 	 * Constructor for SampleNewWizardPage.
+	 * 
 	 * @param pageName
 	 */
 	public PHPFileCreationWizardPage(final ISelection selection) {
@@ -102,13 +103,14 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		});
 
 		targetResourceLabel = new Label(container, SWT.NULL);
-		targetResourceLabel.setText(PHPUIMessages.getString("PHPFileCreationWizardPage.7")); //$NON-NLS-1$
+		targetResourceLabel.setText(PHPUIMessages
+				.getString("PHPFileCreationWizardPage.7")); //$NON-NLS-1$
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		fileText.setFocus();
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
-		//gd.widthHint = 300;
+		// gd.widthHint = 300;
 		fileText.setLayoutData(gd);
 		fileText.addModifyListener(new ModifyListener() {
 			public void modifyText(final ModifyEvent e) {
@@ -116,56 +118,57 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			}
 		});
 
-		//		label = new Label(container, SWT.NULL);
-		//		label.setText("Templates :");
+		// label = new Label(container, SWT.NULL);
+		// label.setText("Templates :");
 		//
-		//		templatesCombo = new Combo(container, SWT.READ_ONLY);
-		//		templatesCombo.setItems(new String[] { NO_TEMPLATE });
-		//		templatesCombo.setText(NO_TEMPLATE);
-		//		gd = new GridData();
-		//		gd.horizontalSpan = 2;
-		//		gd.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-		//		templatesCombo.setLayoutData(gd);
-		//		templatesCombo.addModifyListener(new ModifyListener() {
-		//			public void modifyText(ModifyEvent e) {
-		//				dialogChanged();
-		//			}
-		//		});
+		// templatesCombo = new Combo(container, SWT.READ_ONLY);
+		// templatesCombo.setItems(new String[] { NO_TEMPLATE });
+		// templatesCombo.setText(NO_TEMPLATE);
+		// gd = new GridData();
+		// gd.horizontalSpan = 2;
+		// gd.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
+		// templatesCombo.setLayoutData(gd);
+		// templatesCombo.addModifyListener(new ModifyListener() {
+		// public void modifyText(ModifyEvent e) {
+		// dialogChanged();
+		// }
+		// });
 
-		//		label = new Label(container, SWT.NULL);
-		//		label.setText("Encoding :");
+		// label = new Label(container, SWT.NULL);
+		// label.setText("Encoding :");
 
-		//		encodingSettings = new PhpEncodingSettings(container, "Encoding");
-		//		gd = new GridData(GridData.FILL_HORIZONTAL);
-		//		gd.horizontalSpan = 3;
-		//		encodingSettings.setLayoutData(gd);
-		//		encodingSettings.setEncoding();
+		// encodingSettings = new PhpEncodingSettings(container, "Encoding");
+		// gd = new GridData(GridData.FILL_HORIZONTAL);
+		// gd.horizontalSpan = 3;
+		// encodingSettings.setLayoutData(gd);
+		// encodingSettings.setEncoding();
 
-		//		encodingCombo = new Combo(container, SWT.READ_ONLY);
-		//		encodingCombo.setItems(new String[]{UTF_8});
-		//		encodingCombo.setText(UTF_8);
-		//		gd = new GridData();
-		//		gd.horizontalSpan = 2;
-		//		gd.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
-		//		templatesCombo.setLayoutData(gd);
-		//		templatesCombo.addModifyListener(new ModifyListener() {
-		//			public void modifyText(ModifyEvent e) {
-		//				dialogChanged();
-		//			}
-		//		});
+		// encodingCombo = new Combo(container, SWT.READ_ONLY);
+		// encodingCombo.setItems(new String[]{UTF_8});
+		// encodingCombo.setText(UTF_8);
+		// gd = new GridData();
+		// gd.horizontalSpan = 2;
+		// gd.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
+		// templatesCombo.setLayoutData(gd);
+		// templatesCombo.addModifyListener(new ModifyListener() {
+		// public void modifyText(ModifyEvent e) {
+		// dialogChanged();
+		// }
+		// });
 
 		initialize();
 		dialogChanged();
 		setControl(container);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
 	}
 
 	/**
-	 * Tests if the current workbench selection is a suitable
-	 * container to use.
+	 * Tests if the current workbench selection is a suitable container to use.
 	 */
 	private void initialize() {
-		if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
+		if (selection != null && selection.isEmpty() == false
+				&& selection instanceof IStructuredSelection) {
 			final IStructuredSelection ssel = (IStructuredSelection) selection;
 			if (ssel.size() > 1) {
 				return;
@@ -173,7 +176,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 
 			Object obj = ssel.getFirstElement();
 			if (obj instanceof IAdaptable) {
-				obj = ((IAdaptable)obj).getAdapter(IResource.class);
+				obj = ((IAdaptable) obj).getAdapter(IResource.class);
 			}
 
 			IContainer container = null;
@@ -184,13 +187,14 @@ public class PHPFileCreationWizardPage extends WizardPage {
 					container = ((IResource) obj).getParent();
 				}
 			}
-			
+
 			if (container != null) {
 				containerText.setText(container.getFullPath().toString());
 				this.project = container.getProject();
 			}
 		}
-		setInitialFileName(PHPUIMessages.getString("PHPFileCreationWizardPage.8")); //$NON-NLS-1$
+		setInitialFileName(PHPUIMessages
+				.getString("PHPFileCreationWizardPage.8")); //$NON-NLS-1$
 	}
 
 	protected void setInitialFileName(final String fileName) {
@@ -200,12 +204,14 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	}
 
 	/**
-	 * Uses the standard container selection dialog to
-	 * choose the new value for the container field.
+	 * Uses the standard container selection dialog to choose the new value for
+	 * the container field.
 	 */
 
 	private void handleBrowse() {
-		final ContainerSelectionDialog dialog = new ContainerSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, PHPUIMessages.getString("PHPFileCreationWizardPage.9")); //$NON-NLS-1$
+		final ContainerSelectionDialog dialog = new ContainerSelectionDialog(
+				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
+				PHPUIMessages.getString("PHPFileCreationWizardPage.9")); //$NON-NLS-1$
 		dialog.showClosedProjects(false);
 		if (dialog.open() == Window.OK) {
 			final Object[] result = dialog.getResult();
@@ -222,26 +228,32 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		final String fileName = getFileName();
 
 		if (container.length() == 0) {
-			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.10")); //$NON-NLS-1$
+			updateStatus(PHPUIMessages
+					.getString("PHPFileCreationWizardPage.10")); //$NON-NLS-1$
 			return;
 		}
 		final IContainer containerFolder = getContainer(container);
 		if (containerFolder == null || !containerFolder.exists()) {
-			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.11")); //$NON-NLS-1$
+			updateStatus(PHPUIMessages
+					.getString("PHPFileCreationWizardPage.11")); //$NON-NLS-1$
 			return;
 		}
 		if (!containerFolder.getProject().isOpen()) {
-			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.12")); //$NON-NLS-1$
+			updateStatus(PHPUIMessages
+					.getString("PHPFileCreationWizardPage.12")); //$NON-NLS-1$
 			return;
 		}
-		if (fileName != null && !fileName.equals("") && containerFolder.getFile(new Path(fileName)).exists()) { //$NON-NLS-1$
-			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.14")); //$NON-NLS-1$
+		if (fileName != null
+				&& !fileName.equals("") && containerFolder.getFile(new Path(fileName)).exists()) { //$NON-NLS-1$
+			updateStatus(PHPUIMessages
+					.getString("PHPFileCreationWizardPage.14")); //$NON-NLS-1$
 			return;
 		}
 
 		int dotIndex = fileName.lastIndexOf('.');
 		if (fileName.length() == 0 || dotIndex == 0) {
-			updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.15")); //$NON-NLS-1$
+			updateStatus(PHPUIMessages
+					.getString("PHPFileCreationWizardPage.15")); //$NON-NLS-1$
 			return;
 		}
 
@@ -250,18 +262,22 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			for (int i = 0; i < fileNameWithoutExtention.length(); i++) {
 				char ch = fileNameWithoutExtention.charAt(i);
 				if (!(Character.isJavaIdentifierPart(ch) || ch == '.' || ch == '-')) {
-					updateStatus(PHPUIMessages.getString("PHPFileCreationWizardPage.16")); //$NON-NLS-1$
+					updateStatus(PHPUIMessages
+							.getString("PHPFileCreationWizardPage.16")); //$NON-NLS-1$
 					return;
 				}
 			}
 		}
 
-		final IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+		final IContentType contentType = Platform.getContentTypeManager()
+				.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 		if (!contentType.isAssociatedWith(fileName)) {
 			// fixed bug 195274
 			// get the extensions from content type
-			final String[] fileExtensions = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-			StringBuffer buffer = new StringBuffer(PHPUIMessages.getString("PHPFileCreationWizardPage.17")); //$NON-NLS-1$
+			final String[] fileExtensions = contentType
+					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+			StringBuffer buffer = new StringBuffer(PHPUIMessages
+					.getString("PHPFileCreationWizardPage.17")); //$NON-NLS-1$
 			buffer.append(fileExtensions[0]);
 			for (String extension : fileExtensions) {
 				buffer.append(", ").append(extension); //$NON-NLS-1$
@@ -277,7 +293,8 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	protected IContainer getContainer(final String text) {
 		final Path path = new Path(text);
 
-		final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+		final IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+				.findMember(path);
 		return resource instanceof IContainer ? (IContainer) resource : null;
 
 	}
@@ -290,7 +307,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	public String getContainerName() {
 		return containerText.getText();
 	}
-	
+
 	public void setContainerName(String containerPath) {
 		containerText.setText(containerPath);
 	}

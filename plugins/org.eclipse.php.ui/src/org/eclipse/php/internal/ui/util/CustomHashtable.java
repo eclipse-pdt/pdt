@@ -19,7 +19,8 @@ import org.eclipse.jface.viewers.IElementComparer;
 final class CustomHashtable {
 
 	/**
-	 * HashMapEntry is an internal class which is used to hold the entries of a Hashtable.
+	 * HashMapEntry is an internal class which is used to hold the entries of a
+	 * Hashtable.
 	 */
 	private static class HashMapEntry {
 		Object key, value;
@@ -97,18 +98,18 @@ final class CustomHashtable {
 	public static final int DEFAULT_CAPACITY = 13;
 
 	/**
-	 * Constructs a new Hashtable using the default capacity
-	 * and load factor.
+	 * Constructs a new Hashtable using the default capacity and load factor.
 	 */
 	public CustomHashtable() {
 		this(13);
 	}
 
 	/**
-	 * Constructs a new Hashtable using the specified capacity
-	 * and the default load factor.
-	 *
-	 * @param capacity the initial capacity
+	 * Constructs a new Hashtable using the specified capacity and the default
+	 * load factor.
+	 * 
+	 * @param capacity
+	 *            the initial capacity
 	 */
 	public CustomHashtable(int capacity) {
 		this(capacity, null);
@@ -117,24 +118,27 @@ final class CustomHashtable {
 	/**
 	 * Constructs a new hash table with the default capacity and the given
 	 * element comparer.
-	 *
-	 * @param comparer the element comparer to use to compare keys and obtain
-	 *   hash codes for keys, or <code>null</code>  to use the normal 
-	 *   <code>equals</code> and <code>hashCode</code> methods
+	 * 
+	 * @param comparer
+	 *            the element comparer to use to compare keys and obtain hash
+	 *            codes for keys, or <code>null</code> to use the normal
+	 *            <code>equals</code> and <code>hashCode</code> methods
 	 */
 	public CustomHashtable(IElementComparer comparer) {
 		this(DEFAULT_CAPACITY, comparer);
 	}
 
 	/**
-	 * Constructs a new hash table with the given capacity and the given
-	 * element comparer.
+	 * Constructs a new hash table with the given capacity and the given element
+	 * comparer.
 	 * 
-	 * @param capacity the maximum number of elements that can be added without
-	 *   rehashing
-	 * @param comparer the element comparer to use to compare keys and obtain
-	 *   hash codes for keys, or <code>null</code>  to use the normal 
-	 *   <code>equals</code> and <code>hashCode</code> methods
+	 * @param capacity
+	 *            the maximum number of elements that can be added without
+	 *            rehashing
+	 * @param comparer
+	 *            the element comparer to use to compare keys and obtain hash
+	 *            codes for keys, or <code>null</code> to use the normal
+	 *            <code>equals</code> and <code>hashCode</code> methods
 	 */
 	public CustomHashtable(int capacity, IElementComparer comparer) {
 		if (capacity >= 0) {
@@ -153,10 +157,12 @@ final class CustomHashtable {
 	 * given hash table, then adds all key/value pairs in the given hash table
 	 * to the new one, using the given element comparer.
 	 * 
-	 * @param table the hash table to add from
-	 * @param comparer the element comparer to use to compare keys and obtain
-	 *   hash codes for keys, or <code>null</code>  to use the normal 
-	 *   <code>equals</code> and <code>hashCode</code> methods
+	 * @param table
+	 *            the hash table to add from
+	 * @param comparer
+	 *            the element comparer to use to compare keys and obtain hash
+	 *            codes for keys, or <code>null</code> to use the normal
+	 *            <code>equals</code> and <code>hashCode</code> methods
 	 */
 	public CustomHashtable(CustomHashtable table, IElementComparer comparer) {
 		this(table.size() * 2, comparer);
@@ -174,22 +180,23 @@ final class CustomHashtable {
 	}
 
 	/**
-	 * Answers if this Hashtable contains the specified object as a key
-	 * of one of the key/value pairs.
-	 *
-	 * @param		key	the object to look for as a key in this Hashtable
-	 * @return		true if object is a key in this Hashtable, false otherwise
+	 * Answers if this Hashtable contains the specified object as a key of one
+	 * of the key/value pairs.
+	 * 
+	 * @param key
+	 *            the object to look for as a key in this Hashtable
+	 * @return true if object is a key in this Hashtable, false otherwise
 	 */
 	public boolean containsKey(Object key) {
 		return getEntry(key) != null;
 	}
 
 	/**
-	 * Answers an Enumeration on the values of this Hashtable. The
-	 * results of the Enumeration may be affected if the contents
-	 * of this Hashtable are modified.
-	 *
-	 * @return		an Enumeration of the values of this Hashtable
+	 * Answers an Enumeration on the values of this Hashtable. The results of
+	 * the Enumeration may be affected if the contents of this Hashtable are
+	 * modified.
+	 * 
+	 * @return an Enumeration of the values of this Hashtable
 	 */
 	public Enumeration elements() {
 		if (elementCount == 0)
@@ -198,12 +205,12 @@ final class CustomHashtable {
 	}
 
 	/**
-	 * Answers the value associated with the specified key in
-	 * this Hashtable.
-	 *
-	 * @param		key	the key of the value returned
-	 * @return		the value associated with the specified key, null if the specified key
-	 *				does not exist
+	 * Answers the value associated with the specified key in this Hashtable.
+	 * 
+	 * @param key
+	 *            the key of the value returned
+	 * @return the value associated with the specified key, null if the
+	 *         specified key does not exist
 	 */
 	public Object get(Object key) {
 		int index = (hashCode(key) & 0x7FFFFFFF) % elementData.length;
@@ -248,11 +255,11 @@ final class CustomHashtable {
 	}
 
 	/**
-	 * Answers an Enumeration on the keys of this Hashtable. The
-	 * results of the Enumeration may be affected if the contents
-	 * of this Hashtable are modified.
-	 *
-	 * @return		an Enumeration of the keys of this Hashtable
+	 * Answers an Enumeration on the keys of this Hashtable. The results of the
+	 * Enumeration may be affected if the contents of this Hashtable are
+	 * modified.
+	 * 
+	 * @return an Enumeration of the keys of this Hashtable
 	 */
 	public Enumeration keys() {
 		if (elementCount == 0)
@@ -264,11 +271,13 @@ final class CustomHashtable {
 	 * Associate the specified value with the specified key in this Hashtable.
 	 * If the key already exists, the old value is replaced. The key and value
 	 * cannot be null.
-	 *
-	 * @param		key	the key to add
-	 * @param		value	the value to add
-	 * @return		the old value associated with the specified key, null if the key did
-	 *				not exist
+	 * 
+	 * @param key
+	 *            the key to add
+	 * @param value
+	 *            the value to add
+	 * @return the old value associated with the specified key, null if the key
+	 *         did not exist
 	 */
 	public Object put(Object key, Object value) {
 		if (key != null && value != null) {
@@ -299,8 +308,8 @@ final class CustomHashtable {
 	}
 
 	/**
-	 * Increases the capacity of this Hashtable. This method is sent when
-	 * the size of this Hashtable exceeds the load factor.
+	 * Increases the capacity of this Hashtable. This method is sent when the
+	 * size of this Hashtable exceeds the load factor.
 	 */
 	private void rehash() {
 		int length = elementData.length << 1;
@@ -329,10 +338,11 @@ final class CustomHashtable {
 
 	/**
 	 * Remove the key/value pair with the specified key from this Hashtable.
-	 *
-	 * @param		key	the key to remove
-	 * @return		the value associated with the specified key, null if the specified key
-	 *				did not exist
+	 * 
+	 * @param key
+	 *            the key to remove
+	 * @return the value associated with the specified key, null if the
+	 *         specified key did not exist
 	 */
 	public Object remove(Object key) {
 		HashMapEntry last = null;
@@ -355,8 +365,8 @@ final class CustomHashtable {
 
 	/**
 	 * Answers the number of key/value pairs in this Hashtable.
-	 *
-	 * @return		the number of key/value pairs in this Hashtable
+	 * 
+	 * @return the number of key/value pairs in this Hashtable
 	 */
 	public int size() {
 		return elementCount;
@@ -364,8 +374,8 @@ final class CustomHashtable {
 
 	/**
 	 * Answers the string representation of this Hashtable.
-	 *
-	 * @return		the string representation of this Hashtable
+	 * 
+	 * @return the string representation of this Hashtable
 	 */
 	public String toString() {
 		if (size() == 0)

@@ -23,11 +23,13 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 /**
  * Abstract preference page which is used to wrap a
- * {@link org.eclipse.php.internal.ui.preferences.IPreferenceConfigurationBlock}.
+ * {@link org.eclipse.php.internal.ui.preferences.IPreferenceConfigurationBlock}
+ * .
  * 
  * @since 3.0
  */
-public abstract class AbstractConfigurationBlockPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public abstract class AbstractConfigurationBlockPreferencePage extends
+		PreferencePage implements IWorkbenchPreferencePage {
 
 	private IPreferenceConfigurationBlock fConfigurationBlock;
 	private OverlayPreferenceStore fOverlayStore;
@@ -38,11 +40,13 @@ public abstract class AbstractConfigurationBlockPreferencePage extends Preferenc
 	public AbstractConfigurationBlockPreferencePage() {
 		setDescription();
 		setPreferenceStore();
-		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), new OverlayPreferenceStore.OverlayKey[] {});
+		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(),
+				new OverlayPreferenceStore.OverlayKey[] {});
 		fConfigurationBlock = createConfigurationBlock(fOverlayStore);
 	}
 
-	protected abstract IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore);
+	protected abstract IPreferenceConfigurationBlock createConfigurationBlock(
+			OverlayPreferenceStore overlayPreferenceStore);
 
 	protected abstract String getHelpId();
 
@@ -61,7 +65,8 @@ public abstract class AbstractConfigurationBlockPreferencePage extends Preferenc
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), getHelpId());
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				getHelpId());
 	}
 
 	/*

@@ -53,7 +53,8 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 /**
  * Base for project property and preference pages
  */
-public abstract class PropertyAndPreferencePage extends PreferencePage implements IWorkbenchPreferencePage, IWorkbenchPropertyPage {
+public abstract class PropertyAndPreferencePage extends PreferencePage
+		implements IWorkbenchPreferencePage, IWorkbenchPropertyPage {
 
 	protected Control fConfigurationBlockControl;
 	private ControlEnableState fBlockEnableState;
@@ -100,40 +101,57 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 			layout.marginWidth = 0;
 			layout.numColumns = 2;
 			composite.setLayout(layout);
-			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+					false));
 
 			IDialogFieldListener listener = new IDialogFieldListener() {
 				public void dialogFieldChanged(DialogField field) {
-					enableProjectSpecificSettings(((SelectionButtonDialogField) field).isSelected());
+					enableProjectSpecificSettings(((SelectionButtonDialogField) field)
+							.isSelected());
 				}
 			};
 
 			fUseProjectSettings = new SelectionButtonDialogField(SWT.CHECK);
 			fUseProjectSettings.setDialogFieldListener(listener);
-			fUseProjectSettings.setLabelText(PHPUIMessages.getString("PropertyAndPreferencePage_useprojectsettings_label"));
+			fUseProjectSettings
+					.setLabelText(PHPUIMessages
+							.getString("PropertyAndPreferencePage_useprojectsettings_label"));
 			fUseProjectSettings.doFillIntoGrid(composite, 1);
-			LayoutUtil.setHorizontalGrabbing(fUseProjectSettings.getSelectionButton(null));
+			LayoutUtil.setHorizontalGrabbing(fUseProjectSettings
+					.getSelectionButton(null));
 
 			if (offerLink()) {
-				fChangeWorkspaceSettings = createLink(composite, PHPUIMessages.getString("PropertyAndPreferencePage_useworkspacesettings_change"));
-				fChangeWorkspaceSettings.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
+				fChangeWorkspaceSettings = createLink(
+						composite,
+						PHPUIMessages
+								.getString("PropertyAndPreferencePage_useworkspacesettings_change"));
+				fChangeWorkspaceSettings.setLayoutData(new GridData(SWT.END,
+						SWT.CENTER, false, false));
 			} else {
-				LayoutUtil.setHorizontalSpan(fUseProjectSettings.getSelectionButton(null), 2);
+				LayoutUtil.setHorizontalSpan(fUseProjectSettings
+						.getSelectionButton(null), 2);
 			}
 
-			Label horizontalLine = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
-			horizontalLine.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 2, 1));
+			Label horizontalLine = new Label(composite, SWT.SEPARATOR
+					| SWT.HORIZONTAL);
+			horizontalLine.setLayoutData(new GridData(GridData.FILL,
+					GridData.FILL, true, false, 2, 1));
 			horizontalLine.setFont(composite.getFont());
 		} else if (supportsProjectSpecificOptions() && offerLink()) {
-			fChangeWorkspaceSettings = createLink(parent, PHPUIMessages.getString("PropertyAndPreferencePage_showprojectspecificsettings_label"));
-			fChangeWorkspaceSettings.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false));
+			fChangeWorkspaceSettings = createLink(
+					parent,
+					PHPUIMessages
+							.getString("PropertyAndPreferencePage_showprojectspecificsettings_label"));
+			fChangeWorkspaceSettings.setLayoutData(new GridData(SWT.END,
+					SWT.CENTER, true, false));
 		}
 
 		return super.createDescriptionLabel(parent);
 	}
 
 	/*
-	 * @see org.eclipse.jface.preference.IPreferencePage#createContents(Composite)
+	 * @see
+	 * org.eclipse.jface.preference.IPreferencePage#createContents(Composite)
 	 */
 	protected Control createContents(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -174,7 +192,8 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 	}
 
 	protected boolean useProjectSettings() {
-		return isProjectPreferencePage() && fUseProjectSettings != null && fUseProjectSettings.isSelected();
+		return isProjectPreferencePage() && fUseProjectSettings != null
+				&& fUseProjectSettings.isSelected();
 	}
 
 	protected boolean isProjectPreferencePage() {
@@ -198,16 +217,18 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 				IProject[] projects = workspace.getRoot().getProjects();
 				for (int i = 0; i < projects.length; i++) {
 					IProject curr = projects[i];
-					if (curr.hasNature(PHPNature.ID) && hasProjectSpecificOptions(curr.getProject())) {
+					if (curr.hasNature(PHPNature.ID)
+							&& hasProjectSpecificOptions(curr.getProject())) {
 						projectsWithSpecifics.add(curr);
 					}
 				}
 			} catch (CoreException e) {
 				// ignore
 			}
-			ProjectSelectionDialog dialog = new ProjectSelectionDialog(getShell(), projectsWithSpecifics);
+			ProjectSelectionDialog dialog = new ProjectSelectionDialog(
+					getShell(), projectsWithSpecifics);
 			if (dialog.open() == Window.OK) {
-				ScriptProject result = (ScriptProject) dialog.getFirstResult();				
+				ScriptProject result = (ScriptProject) dialog.getFirstResult();
 				openProjectProperties(result.getProject(), data);
 			}
 		}
@@ -215,17 +236,20 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 
 	protected final void openWorkspacePreferences(Object data) {
 		String id = getPreferencePageID();
-		PreferencesUtil.createPreferenceDialogOn(getShell(), id, new String[] { id }, data).open();
+		PreferencesUtil.createPreferenceDialogOn(getShell(), id,
+				new String[] { id }, data).open();
 	}
 
 	protected final void openProjectProperties(IProject project, Object data) {
 		String id = getPropertyPageID();
 		if (id != null) {
-			PreferencesUtil.createPropertyDialogOn(getShell(), project, id, new String[] { id }, data).open();
+			PreferencesUtil.createPropertyDialogOn(getShell(), project, id,
+					new String[] { id }, data).open();
 		}
 	}
 
-	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
+	protected void enableProjectSpecificSettings(
+			boolean useProjectSpecificSettings) {
 		fUseProjectSettings.setSelection(useProjectSpecificSettings);
 		enablePreferenceContent(useProjectSpecificSettings);
 		updateLinkVisibility();
@@ -233,7 +257,8 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 	}
 
 	private void updateLinkVisibility() {
-		if (fChangeWorkspaceSettings == null || fChangeWorkspaceSettings.isDisposed()) {
+		if (fChangeWorkspaceSettings == null
+				|| fChangeWorkspaceSettings.isDisposed()) {
 			return;
 		}
 
@@ -248,8 +273,9 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 	}
 
 	/**
-	 * Returns a new status change listener that calls {@link #setPreferenceContentStatus(IStatus)}
-	 * when the status has changed
+	 * Returns a new status change listener that calls
+	 * {@link #setPreferenceContentStatus(IStatus)} when the status has changed
+	 * 
 	 * @return The new listener
 	 */
 	protected IStatusChangeListener getNewStatusChangedListener() {
@@ -280,7 +306,8 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 			}
 		} else {
 			if (fBlockEnableState == null) {
-				fBlockEnableState = ControlEnableState.disable(fConfigurationBlockControl);
+				fBlockEnableState = ControlEnableState
+						.disable(fConfigurationBlockControl);
 			}
 		}
 	}
@@ -300,28 +327,40 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 		StatusUtil.applyToStatusLine(this, status);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPropertyPage#getElement()
 	 */
 	public IAdaptable getElement() {
 		return fProject;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPropertyPage#setElement(org.eclipse.core.runtime.IAdaptable)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPropertyPage#setElement(org.eclipse.core.runtime
+	 * .IAdaptable)
 	 */
 	public void setElement(IAdaptable element) {
 		fProject = (IProject) element.getAdapter(IResource.class);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#applyData(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.preference.PreferencePage#applyData(java.lang.Object)
 	 */
 	public void applyData(Object data) {
 		if (data instanceof Map) {

@@ -22,7 +22,8 @@ import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerC
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Description: The viewer enables the file comparing with syntax coloring  
+ * Description: The viewer enables the file comparing with syntax coloring
+ * 
  * @author Roy, 2007
  */
 public class PhpMergeViewer extends TextMergeViewer {
@@ -33,19 +34,24 @@ public class PhpMergeViewer extends TextMergeViewer {
 		super(parent, configuration);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.compare.contentmergeviewer.TextMergeViewer#configureTextViewer(org.eclipse.jface.text.TextViewer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.compare.contentmergeviewer.TextMergeViewer#configureTextViewer
+	 * (org.eclipse.jface.text.TextViewer)
 	 */
 	protected void configureTextViewer(TextViewer textViewer) {
 		if (textViewer instanceof SourceViewer) {
 			if (fSourceViewer == null)
 				fSourceViewer = new ArrayList();
 			fSourceViewer.add(textViewer);
-			
-			((SourceViewer) textViewer).configure(new PHPStructuredTextViewerConfiguration());
+
+			((SourceViewer) textViewer)
+					.configure(new PHPStructuredTextViewerConfiguration());
 		}
 	}
-	
+
 	public IDocumentPartitioner getDocumentPartitioner() {
 		return new PHPStructuredTextPartitioner();
 	}

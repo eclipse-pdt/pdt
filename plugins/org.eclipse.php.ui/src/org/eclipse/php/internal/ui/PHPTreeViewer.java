@@ -39,8 +39,12 @@ public class PHPTreeViewer extends TreeViewer {
 		return storedSelection;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.StructuredViewer#setSelection(org.eclipse.jface.viewers.ISelection, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.StructuredViewer#setSelection(org.eclipse.jface
+	 * .viewers.ISelection, boolean)
 	 */
 	public void setSelection(ISelection selection, boolean reveal) {
 		storedSelection = selection;

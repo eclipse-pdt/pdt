@@ -22,7 +22,8 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.ui.wizards.ICompositeFragmentFactory;
 
 /**
- * Server wizard fragments registry for all the wizardAndCompositeFragments extentions. 
+ * Server wizard fragments registry for all the wizardAndCompositeFragments
+ * extentions.
  */
 public class WizardFragmentsFactoryRegistry {
 
@@ -33,28 +34,33 @@ public class WizardFragmentsFactoryRegistry {
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String PLACE_AFTER_ATTRIBUTE = "placeAfter"; //$NON-NLS-1$
 
-	// Hold a Dictionary of Lists that contains the factories used for the creation of the fragments.
-	// This structure will be deleted from the memory once all the factories were created.
+	// Hold a Dictionary of Lists that contains the factories used for the
+	// creation of the fragments.
+	// This structure will be deleted from the memory once all the factories
+	// were created.
 	private HashMap fragments;
 
 	private static WizardFragmentsFactoryRegistry instance;
 
 	private HashMap factories;
 
-	//	private ICompositeFragmentFactory[] factories;
+	// private ICompositeFragmentFactory[] factories;
 
 	/**
-	 * Returns an array on newly initialized WizardFragments that complies to the given server type 
-	 * id.
-	 * The returned fragments array contains a union of the server specific fragments and the global
-	 * fragments that can be defined by adding a fragments extention with a visibility of 'Always'.
+	 * Returns an array on newly initialized WizardFragments that complies to
+	 * the given server type id. The returned fragments array contains a union
+	 * of the server specific fragments and the global fragments that can be
+	 * defined by adding a fragments extention with a visibility of 'Always'.
 	 * 
-	 * @param serverType	The id of the server.
-	 * @return	An array of ICompositeFragmentFactory.
+	 * @param serverType
+	 *            The id of the server.
+	 * @return An array of ICompositeFragmentFactory.
 	 */
-	public static ICompositeFragmentFactory[] getFragmentsFactories(String fragmentsGroupID) {
+	public static ICompositeFragmentFactory[] getFragmentsFactories(
+			String fragmentsGroupID) {
 		WizardFragmentsFactoryRegistry registry = getInstance();
-		ICompositeFragmentFactory[] factories = (ICompositeFragmentFactory[]) registry.factories.get(fragmentsGroupID);
+		ICompositeFragmentFactory[] factories = (ICompositeFragmentFactory[]) registry.factories
+				.get(fragmentsGroupID);
 		if (factories == null) {
 			List fragments = (List) registry.fragments.get(fragmentsGroupID);
 			List factoriesList = new ArrayList();
@@ -75,7 +81,9 @@ public class WizardFragmentsFactoryRegistry {
 		factories = new HashMap(4);
 		fragments = new HashMap(5);
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPUiPlugin.ID, EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry
+				.getConfigurationElementsFor(PHPUiPlugin.ID,
+						EXTENSION_POINT_NAME);
 
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
@@ -89,7 +97,8 @@ public class WizardFragmentsFactoryRegistry {
 					fragments.put(groupID, list);
 				}
 				if (element.getNamespaceIdentifier().equals(PHPUiPlugin.ID)) {
-					// Make sure that extentions that exists in this plugin will appear ahead of all others
+					// Make sure that extentions that exists in this plugin will
+					// appear ahead of all others
 					// when the user-class calls for getFragmentsFactories().
 					list.add(0, new FragmentsFactory(element, id, placeAfter));
 				} else {
@@ -106,13 +115,15 @@ public class WizardFragmentsFactoryRegistry {
 
 	// Sort the fragments according to the 'place-after' attribute
 	private void sortFragmentsByPlace(ArrayList fragments) {
-		// Scan the fragments and separate the fragments that lacks the place-after property from
+		// Scan the fragments and separate the fragments that lacks the
+		// place-after property from
 		// those that have it.
 		ArrayList rootsFragments = new ArrayList(fragments.size());
 		ArrayList nonRootFragments = new ArrayList(fragments.size());
 		for (int i = 0; i < fragments.size(); i++) {
 			FragmentsFactory factory = (FragmentsFactory) fragments.get(i);
-			if (factory.getPlaceAfter() == null || factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
+			if (factory.getPlaceAfter() == null
+					|| factory.getPlaceAfter().equals("")) { //$NON-NLS-1$
 				addAsList(rootsFragments, factory);
 			} else {
 				addAsList(nonRootFragments, factory);
@@ -125,18 +136,27 @@ public class WizardFragmentsFactoryRegistry {
 			// try to move it to the roots fragments first (order is important).
 			boolean moved = placeFragment(rootsFragments, fragmentsGroup);
 			if (!moved) {
-				// in case we can't find it there, try to move it inside the non-roots fragments.
+				// in case we can't find it there, try to move it inside the
+				// non-roots fragments.
 				moved = placeFragment(nonRootFragments, fragmentsGroup);
 			}
 			if (!moved) {
-				// move it to the roots anyway, since there is an error in the extention definitions.
-				FragmentsFactory invalidFactory = getFactory(nonRootFragments, i);
+				// move it to the roots anyway, since there is an error in the
+				// extention definitions.
+				FragmentsFactory invalidFactory = getFactory(nonRootFragments,
+						i);
 				addAsList(rootsFragments, invalidFactory);
-				PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.ID, 0, "Invalid 'placeAfter' id (" + invalidFactory.getPlaceAfter() + ')', null)); //$NON-NLS-1$
+				PHPUiPlugin
+						.log(new Status(
+								IStatus.WARNING,
+								PHPUiPlugin.ID,
+								0,
+								"Invalid 'placeAfter' id (" + invalidFactory.getPlaceAfter() + ')', null)); //$NON-NLS-1$
 			}
 		}
 
-		// At this stage, the root fragments should hold all the fragments sorted.
+		// At this stage, the root fragments should hold all the fragments
+		// sorted.
 		fragments.clear();
 		for (int i = 0; i < rootsFragments.size(); i++) {
 			List list = (List) rootsFragments.get(i);
@@ -158,7 +178,7 @@ public class WizardFragmentsFactoryRegistry {
 				FragmentsFactory nextFactory = (FragmentsFactory) list.get(j);
 				if (nextFactory.getID().equals(placeAfter)) {
 					// This list is the list we should add to
-					if (list.size() > j + 1){
+					if (list.size() > j + 1) {
 						list.addAll(j + 1, factoriesGroup);
 					} else {
 						// add it to the end
@@ -197,18 +217,22 @@ public class WizardFragmentsFactoryRegistry {
 		private String id;
 		private String placeAfter;
 
-		public FragmentsFactory(IConfigurationElement element, String id, String placeAfter) {
+		public FragmentsFactory(IConfigurationElement element, String id,
+				String placeAfter) {
 			this.element = element;
 			this.id = id;
 			this.placeAfter = placeAfter;
 		}
 
 		public ICompositeFragmentFactory createFragmentFactory() {
-			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.server.ui.wizardAndCompositeFragments") { //$NON-NLS-1$
-					public void run() throws Exception {
-						factory = (ICompositeFragmentFactory) element.createExecutableExtension(CLASS_ATTRIBUTE);
-					}
-				});
+			SafeRunner
+					.run(new SafeRunnable(
+							"Error creation extension for extension-point org.eclipse.php.server.ui.wizardAndCompositeFragments") { //$NON-NLS-1$
+						public void run() throws Exception {
+							factory = (ICompositeFragmentFactory) element
+									.createExecutableExtension(CLASS_ATTRIBUTE);
+						}
+					});
 			return factory;
 		}
 

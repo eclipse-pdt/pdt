@@ -27,7 +27,8 @@ public abstract class CompositeWizardFragment extends WizardFragment {
 	}
 
 	/*
-	 *  (non-Javadoc)
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.server.ui.wizard.WizardFragment#hasComposite()
 	 */
 	public boolean hasComposite() {
@@ -36,6 +37,7 @@ public abstract class CompositeWizardFragment extends WizardFragment {
 
 	/**
 	 * Returns the composite that was last created by this fragment.
+	 * 
 	 * @return A Composite (Null if the createComposite was not called yet)
 	 */
 	public abstract Composite getComposite();

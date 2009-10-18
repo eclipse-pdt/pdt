@@ -21,31 +21,36 @@ package org.eclipse.php.internal.ui.editor;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.texteditor.IAnnotationImageProvider;
 
-
 /**
- * Image provider for {@link org.eclipse.php.internal.ui.editor.OverrideIndicatorManager.OverrideIndicator} annotations.
- *
+ * Image provider for
+ * {@link org.eclipse.php.internal.ui.editor.OverrideIndicatorManager.OverrideIndicator}
+ * annotations.
+ * 
  */
 public class OverrideIndicatorImageProvider implements IAnnotationImageProvider {
 
 	/*
-	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getManagedImage(org.eclipse.jface.text.source.Annotation)
+	 * @see
+	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getManagedImage(org
+	 * .eclipse.jface.text.source.Annotation)
 	 */
-	private static final String OVERRIDE_IMG_DESC_ID= "PHPPluginImages.DESC_OBJ_OVERRIDES"; //$NON-NLS-1$
-	private static final String OVERWRITE_IMG_DESC_ID= "PHPPluginImages.DESC_OBJ_IMPLEMENTS"; //$NON-NLS-1$
+	private static final String OVERRIDE_IMG_DESC_ID = "PHPPluginImages.DESC_OBJ_OVERRIDES"; //$NON-NLS-1$
+	private static final String OVERWRITE_IMG_DESC_ID = "PHPPluginImages.DESC_OBJ_IMPLEMENTS"; //$NON-NLS-1$
+
 	public Image getManagedImage(Annotation annotation) {
 		return null;
 	}
 
 	/*
-	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptorId(org.eclipse.jface.text.source.Annotation)
+	 * @see
+	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptorId
+	 * (org.eclipse.jface.text.source.Annotation)
 	 */
 	public String getImageDescriptorId(Annotation annotation) {
 		if (!isImageProviderFor(annotation))
@@ -58,7 +63,9 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider 
 	}
 
 	/*
-	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptor(java.lang.String)
+	 * @see
+	 * org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptor
+	 * (java.lang.String)
 	 */
 	public ImageDescriptor getImageDescriptor(String imageDescritporId) {
 		if (OVERWRITE_IMG_DESC_ID.equals(imageDescritporId))
@@ -70,10 +77,13 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider 
 	}
 
 	private boolean isImageProviderFor(Annotation annotation) {
-		return annotation != null && OverrideIndicatorManager.ANNOTATION_TYPE.equals(annotation.getType());
+		return annotation != null
+				&& OverrideIndicatorManager.ANNOTATION_TYPE.equals(annotation
+						.getType());
 	}
 
 	private boolean isOverwriting(Annotation annotation) {
-		return ((OverrideIndicatorManager.OverrideIndicator)annotation).isOverwriteIndicator();
+		return ((OverrideIndicatorManager.OverrideIndicator) annotation)
+				.isOverwriteIndicator();
 	}
 }

@@ -22,30 +22,35 @@ public interface IControlHandler {
 
 	/**
 	 * Sets the title of this control (if exists).
-	 *  
-	 * @param title the title of the control
+	 * 
+	 * @param title
+	 *            the title of the control
 	 */
 	public void setTitle(String title);
 
 	/**
 	 * Sets the control's description (if exists).
 	 * 
-	 * @param desc the control's description
+	 * @param desc
+	 *            the control's description
 	 */
 	public void setDescription(String desc);
 
 	/**
 	 * The control's image descriptor.
 	 * 
-	 * @param image the control's image descriptor
+	 * @param image
+	 *            the control's image descriptor
 	 */
 	public void setImageDescriptor(ImageDescriptor image);
 
 	/**
 	 * Set an error or warning message.
 	 * 
-	 * @param newMessage the new message
-	 * @param newType the new type, from IStatus
+	 * @param newMessage
+	 *            the new message
+	 * @param newType
+	 *            the new type, from IStatus
 	 */
 	public void setMessage(String newMessage, int newType);
 }

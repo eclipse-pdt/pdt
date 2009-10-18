@@ -25,11 +25,13 @@ import org.eclipse.ui.IEditorPart;
 public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 
 	protected PHPContextInformationValidator contextInformationValidator = new PHPContextInformationValidator();
-	protected static final char[] contextInformationActivationChars = { '(', ',' };
+	protected static final char[] contextInformationActivationChars = { '(',
+			',' };
 	protected static final char[] completionAutoActivationChars = { '>', ':' };
 	private boolean explicit;
 
-	public PHPCompletionProcessor(IEditorPart editor, ContentAssistant assistant, String partition) {
+	public PHPCompletionProcessor(IEditorPart editor,
+			ContentAssistant assistant, String partition) {
 		super(editor, assistant, partition);
 		setCompletionProposalAutoActivationCharacters(getAutoactivationTriggers());
 	}
@@ -53,17 +55,19 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 	public char[] getContextInformationAutoActivationCharacters() {
 		return contextInformationActivationChars;
 	}
-	
+
 	protected static char[] getAutoactivationTriggers() {
 		return completionAutoActivationChars;
 	}
 
-	protected ContentAssistInvocationContext createContext(ITextViewer viewer, int offset) {
-		
+	protected ContentAssistInvocationContext createContext(ITextViewer viewer,
+			int offset) {
+
 		boolean oldExplicitValue = explicit;
 		explicit = false;
-		
-		return new PHPContentAssistInvocationContext(viewer, offset, fEditor, getNatureId(), oldExplicitValue) {
+
+		return new PHPContentAssistInvocationContext(viewer, offset, fEditor,
+				getNatureId(), oldExplicitValue) {
 			protected CompletionProposalLabelProvider createLabelProvider() {
 				return getProposalLabelProvider();
 			}
@@ -73,7 +77,7 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 	public void setExplicit(boolean explicit) {
 		this.explicit = explicit;
 	}
-	
+
 	public boolean isExplicit() {
 		return explicit;
 	}

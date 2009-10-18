@@ -15,7 +15,6 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.text.templates.TemplateVariableType;
 import org.eclipse.php.internal.ui.text.template.contentassist.MultiVariable;
 
-
 public final class PhpVariable extends MultiVariable {
 	private String fParamType;
 
@@ -24,7 +23,10 @@ public final class PhpVariable extends MultiVariable {
 	}
 
 	/*
-	 * @see org.eclipse.jdt.internal.ui.text.template.contentassist.MultiVariable#toString(java.lang.Object)
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.template.contentassist.MultiVariable
+	 * #toString(java.lang.Object)
+	 * 
 	 * @since 3.3
 	 */
 	public String toString(Object object) {
@@ -41,12 +43,13 @@ public final class PhpVariable extends MultiVariable {
 	public String getParamType() {
 		return fParamType;
 	}
-	
+
 	/**
-	 * @param paramType the paramType
+	 * @param paramType
+	 *            the paramType
 	 * @since 3.3
 	 */
 	public void setParamType(String paramType) {
-		fParamType= paramType;
+		fParamType = paramType;
 	}
 }

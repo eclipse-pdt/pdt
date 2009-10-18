@@ -292,7 +292,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 					.findView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
 			if (result != null) {
 				result.clearNeededRefresh(); // avoid refresh of old hierarchy
-												// on 'becomes visible'
+				// on 'becomes visible'
 			}
 			result = (TypeHierarchyViewPart) page
 					.showView(DLTKUIPlugin.ID_TYPE_HIERARCHY);

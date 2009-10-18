@@ -46,10 +46,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 /**
  * Source viewer based implementation of <code>IInformationControl</code>.
  * Displays information in a source viewer.
- *
+ * 
  * @since 3.0
  */
-public class PHPSourceViewerInformationControl implements IInformationControl, IInformationControlExtension, DisposeListener {
+public class PHPSourceViewerInformationControl implements IInformationControl,
+		IInformationControlExtension, DisposeListener {
 
 	/** Border thickness in pixels. */
 	private static final int BORDER = 1;
@@ -61,29 +62,31 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 	private SourceViewer fViewer;
 	/**
 	 * The optional status field.
-	 *
+	 * 
 	 * @since 3.0
 	 */
 	private Label fStatusField;
 	/**
 	 * The separator for the optional status field.
-	 *
+	 * 
 	 * @since 3.0
 	 */
 	private Label fSeparator;
 	/**
 	 * The font of the optional status text label.
-	 *
+	 * 
 	 * @since 3.0
 	 */
 	private Font fStatusTextFont;
 	/**
 	 * The width size constraint.
+	 * 
 	 * @since 3.2
 	 */
 	private int fMaxWidth = SWT.DEFAULT;
 	/**
 	 * The height size constraint.
+	 * 
 	 * @since 3.2
 	 */
 	private int fMaxHeight = SWT.DEFAULT;
@@ -121,7 +124,8 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 	}
 
 	public TextAttribute getAttribute(String namedStyle) {
-		TextAttribute ta = new TextAttribute(fText.getBackground(), fText.getForeground(), SWT.NORMAL);
+		TextAttribute ta = new TextAttribute(fText.getBackground(), fText
+				.getForeground(), SWT.NORMAL);
 		if (namedStyle != null && styleProvider != null) {
 			ta = styleProvider.getTextAttributeForColor(namedStyle);
 		}
@@ -129,14 +133,15 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 	}
 
 	public void applyStyles() {
-		if (fText == null || fText.isDisposed() || fInput == null || fInput.length() == 0) {
+		if (fText == null || fText.isDisposed() || fInput == null
+				|| fInput.length() == 0) {
 			return;
 		}
 		IStructuredDocumentRegion node = fNodes;
 		final LineStyleProviderForPhp styler = new LineStyleProviderForPhp();
 		final Collection holdResults = new ArrayList();
 		styler.prepareTextRegions(node, 0, fNodes.getEnd(), holdResults);
-		
+
 		for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
 			StyleRange element = (StyleRange) iter.next();
 			fText.setStyleRange(element);
@@ -145,40 +150,53 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 
 	public void initColorsMap() {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
-		setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
+		setParser(mmanager.createStructuredDocumentFor(
+				ContentTypeIdForPHP.ContentTypeID_PHP).getParser());
 
 		styleProvider = new LineStyleProviderForPhp();
-		Dictionary contextStyleMap = new Hashtable(styleProvider.getColorTypesMap());
+		Dictionary contextStyleMap = new Hashtable(styleProvider
+				.getColorTypesMap());
 
 		setContextStyleMap(contextStyleMap);
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The given
-	 * information presenter is used to process the information to be displayed. The given
-	 * styles are applied to the created styled text widget.
-	 *
-	 * @param parent the parent shell
-	 * @param shellStyle the additional styles for the shell
-	 * @param style the additional styles for the styled text widget
+	 * Creates a default information control with the given shell as parent. The
+	 * given information presenter is used to process the information to be
+	 * displayed. The given styles are applied to the created styled text
+	 * widget.
+	 * 
+	 * @param parent
+	 *            the parent shell
+	 * @param shellStyle
+	 *            the additional styles for the shell
+	 * @param style
+	 *            the additional styles for the styled text widget
 	 */
-	public PHPSourceViewerInformationControl(Shell parent, int shellStyle, int style) {
+	public PHPSourceViewerInformationControl(Shell parent, int shellStyle,
+			int style) {
 		this(parent, shellStyle, style, null);
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The given
-	 * information presenter is used to process the information to be displayed. The given
-	 * styles are applied to the created styled text widget.
-	 *
-	 * @param parent the parent shell
-	 * @param shellStyle the additional styles for the shell
-	 * @param style the additional styles for the styled text widget
-	 * @param statusFieldText the text to be used in the optional status field
-	 *                         or <code>null</code> if the status field should be hidden
+	 * Creates a default information control with the given shell as parent. The
+	 * given information presenter is used to process the information to be
+	 * displayed. The given styles are applied to the created styled text
+	 * widget.
+	 * 
+	 * @param parent
+	 *            the parent shell
+	 * @param shellStyle
+	 *            the additional styles for the shell
+	 * @param style
+	 *            the additional styles for the styled text widget
+	 * @param statusFieldText
+	 *            the text to be used in the optional status field or
+	 *            <code>null</code> if the status field should be hidden
 	 * @since 3.0
 	 */
-	public PHPSourceViewerInformationControl(Shell parent, int shellStyle, int style, String statusFieldText) {
+	public PHPSourceViewerInformationControl(Shell parent, int shellStyle,
+			int style, String statusFieldText) {
 		GridLayout layout;
 		GridData gd;
 
@@ -203,8 +221,10 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 			composite.setLayout(layout);
 			gd = new GridData(GridData.FILL_BOTH);
 			composite.setLayoutData(gd);
-			composite.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-			composite.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			composite.setForeground(display
+					.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+			composite.setBackground(display
+					.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
 
 		// Source viewer
@@ -214,8 +234,10 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 		fText = fViewer.getTextWidget();
 		gd = new GridData(GridData.BEGINNING | GridData.FILL_BOTH);
 		fText.setLayoutData(gd);
-		fText.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_FOREGROUND));
-		fText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+		fText.setForeground(parent.getDisplay().getSystemColor(
+				SWT.COLOR_INFO_FOREGROUND));
+		fText.setBackground(parent.getDisplay().getSystemColor(
+				SWT.COLOR_INFO_BACKGROUND));
 
 		initializeFont();
 
@@ -234,7 +256,8 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 		if (statusFieldText != null) {
 
 			// Horizontal separator line
-			fSeparator = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL | SWT.LINE_DOT);
+			fSeparator = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL
+					| SWT.LINE_DOT);
 			fSeparator.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			// Status field label
@@ -246,13 +269,18 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 				fontDatas[i].setHeight(fontDatas[i].getHeight() * 9 / 10);
 			fStatusTextFont = new Font(fStatusField.getDisplay(), fontDatas);
 			fStatusField.setFont(fStatusTextFont);
-			GridData gd2 = new GridData(GridData.FILL_VERTICAL | GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
+			GridData gd2 = new GridData(GridData.FILL_VERTICAL
+					| GridData.FILL_HORIZONTAL
+					| GridData.HORIZONTAL_ALIGN_BEGINNING
+					| GridData.VERTICAL_ALIGN_BEGINNING);
 			fStatusField.setLayoutData(gd2);
 
 			// Regarding the color see bug 41128
-			fStatusField.setForeground(display.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+			fStatusField.setForeground(display
+					.getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 
-			fStatusField.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+			fStatusField.setBackground(display
+					.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
 		}
 
 		initColorsMap();
@@ -260,54 +288,66 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The given
-	 * information presenter is used to process the information to be displayed. The given
-	 * styles are applied to the created styled text widget.
-	 *
-	 * @param parent the parent shell
-	 * @param style the additional styles for the styled text widget
+	 * Creates a default information control with the given shell as parent. The
+	 * given information presenter is used to process the information to be
+	 * displayed. The given styles are applied to the created styled text
+	 * widget.
+	 * 
+	 * @param parent
+	 *            the parent shell
+	 * @param style
+	 *            the additional styles for the styled text widget
 	 */
 	public PHPSourceViewerInformationControl(Shell parent, int style) {
 		this(parent, SWT.NO_TRIM | SWT.TOOL, style);
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The given
-	 * information presenter is used to process the information to be displayed. The given
-	 * styles are applied to the created styled text widget.
-	 *
-	 * @param parent the parent shell
-	 * @param style the additional styles for the styled text widget
-	 * @param statusFieldText the text to be used in the optional status field
-	 *                         or <code>null</code> if the status field should be hidden
+	 * Creates a default information control with the given shell as parent. The
+	 * given information presenter is used to process the information to be
+	 * displayed. The given styles are applied to the created styled text
+	 * widget.
+	 * 
+	 * @param parent
+	 *            the parent shell
+	 * @param style
+	 *            the additional styles for the styled text widget
+	 * @param statusFieldText
+	 *            the text to be used in the optional status field or
+	 *            <code>null</code> if the status field should be hidden
 	 * @since 3.0
 	 */
-	public PHPSourceViewerInformationControl(Shell parent, int style, String statusFieldText) {
+	public PHPSourceViewerInformationControl(Shell parent, int style,
+			String statusFieldText) {
 		this(parent, SWT.NO_TRIM | SWT.TOOL, style, statusFieldText);
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent.
-	 * No information presenter is used to process the information
-	 * to be displayed. No additional styles are applied to the styled text widget.
-	 *
-	 * @param parent the parent shell
+	 * Creates a default information control with the given shell as parent. No
+	 * information presenter is used to process the information to be displayed.
+	 * No additional styles are applied to the styled text widget.
+	 * 
+	 * @param parent
+	 *            the parent shell
 	 */
 	public PHPSourceViewerInformationControl(Shell parent) {
 		this(parent, SWT.NONE);
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent.
-	 * No information presenter is used to process the information
-	 * to be displayed. No additional styles are applied to the styled text widget.
-	 *
-	 * @param parent the parent shell
-	 * @param statusFieldText the text to be used in the optional status field
-	 *                         or <code>null</code> if the status field should be hidden
+	 * Creates a default information control with the given shell as parent. No
+	 * information presenter is used to process the information to be displayed.
+	 * No additional styles are applied to the styled text widget.
+	 * 
+	 * @param parent
+	 *            the parent shell
+	 * @param statusFieldText
+	 *            the text to be used in the optional status field or
+	 *            <code>null</code> if the status field should be hidden
 	 * @since 3.0
 	 */
-	public PHPSourceViewerInformationControl(Shell parent, String statusFieldText) {
+	public PHPSourceViewerInformationControl(Shell parent,
+			String statusFieldText) {
 		this(parent, SWT.NONE, statusFieldText);
 	}
 
@@ -317,13 +357,16 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 	 * @since 3.2
 	 */
 	private void initializeFont() {
-		Font font = JFaceResources.getFont("org.eclipse.jdt.ui.editors.textfont"); //$NON-NLS-1$
+		Font font = JFaceResources
+				.getFont("org.eclipse.jdt.ui.editors.textfont"); //$NON-NLS-1$
 		StyledText styledText = getViewer().getTextWidget();
 		styledText.setFont(font);
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.IInformationControlExtension2#setInput(java.lang.Object)
+	 * @see
+	 * org.eclipse.jface.text.IInformationControlExtension2#setInput(java.lang
+	 * .Object)
 	 */
 	public void setInput(Object input) {
 		if (input instanceof String) {
@@ -347,25 +390,27 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 		buf.append("<?"); //$NON-NLS-1$
 		buf.append(content);
 		buf.append("?>"); //$NON-NLS-1$
-		
+
 		IDocument doc = new Document(buf.toString());
 		DocumentReader docReader = new DocumentReader(doc);
 		getParser().reset(docReader);
 		IStructuredDocumentRegion sdRegion = getParser().getDocumentRegions();
-		
-		// This hack is needed in order to remove the open and close PHP tags we added before.
+
+		// This hack is needed in order to remove the open and close PHP tags we
+		// added before.
 		ITextRegionList phpRegionsList = sdRegion.getRegions();
 		phpRegionsList.remove(0); // remove open PHP tag
-		phpRegionsList.remove(phpRegionsList.size() - 1); // remove close PHP tag
-		
+		phpRegionsList.remove(phpRegionsList.size() - 1); // remove close PHP
+															// tag
+
 		// Update starting location of PHP token regions:
 		Iterator i = phpRegionsList.iterator();
 		while (i.hasNext()) {
-			ITextRegion tokenRegion = (ITextRegion)i.next();
+			ITextRegion tokenRegion = (ITextRegion) i.next();
 			tokenRegion.adjustStart(-2);
 		}
 		sdRegion.setRegions(phpRegionsList);
-		
+
 		fInput = content;
 		fNodes = sdRegion;
 
@@ -384,6 +429,7 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @since 3.0
 	 */
 	public void widgetDisposed(DisposeEvent event) {
@@ -412,8 +458,10 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 
 		if (fStatusField != null) {
 			GridData gd = (GridData) fViewer.getTextWidget().getLayoutData();
-			Point statusSize = fStatusField.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-			Point separatorSize = fSeparator.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+			Point statusSize = fStatusField.computeSize(SWT.DEFAULT,
+					SWT.DEFAULT, true);
+			Point separatorSize = fSeparator.computeSize(SWT.DEFAULT,
+					SWT.DEFAULT, true);
 			gd.heightHint = height - statusSize.y - separatorSize.y;
 		}
 		fShell.setSize(width, height);
@@ -450,7 +498,8 @@ public class PHPSourceViewerInformationControl implements IInformationControl, I
 		if (size.y > fMaxHeight)
 			y = fMaxHeight;
 
-		// recompute using the constraints if the preferred size is larger than the constraints
+		// recompute using the constraints if the preferred size is larger than
+		// the constraints
 		if (x != SWT.DEFAULT || y != SWT.DEFAULT)
 			size = fShell.computeSize(x, y, false);
 

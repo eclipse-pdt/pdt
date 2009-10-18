@@ -26,29 +26,35 @@ public abstract class RunWizardAction extends Action {
 
 	/**
 	 * Return Wizard ID
+	 * 
 	 * @return ID
 	 */
 	public abstract String getWizardId();
 
 	/**
-	 * Return registry that holds this wizard (NewWizardRegistry, ImportWizardRegistry, etc..)
+	 * Return registry that holds this wizard (NewWizardRegistry,
+	 * ImportWizardRegistry, etc..)
+	 * 
 	 * @return wizard registry
 	 */
 	public abstract IWizardRegistry getWizardRegistry();
 
 	public void run() {
 		try {
-			IWizardDescriptor wizardDescriptor = getWizardRegistry().findWizard(getWizardId());
+			IWizardDescriptor wizardDescriptor = getWizardRegistry()
+					.findWizard(getWizardId());
 
 			IWorkbenchWizard wizard = wizardDescriptor.createWizard();
 			wizard.init(PlatformUI.getWorkbench(), StructuredSelection.EMPTY);
 
-			if (wizardDescriptor.canFinishEarly() && !wizardDescriptor.hasPages()) {
+			if (wizardDescriptor.canFinishEarly()
+					&& !wizardDescriptor.hasPages()) {
 				wizard.performFinish();
 				return;
 			}
 
-			Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getShell();
 			WizardDialog dialog = new WizardDialog(parent, wizard);
 			dialog.create();
 			dialog.open();

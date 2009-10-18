@@ -22,15 +22,16 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author shachar
- *
+ * 
  */
-public class PasswordDialogField  extends StringDialogField {
+public class PasswordDialogField extends StringDialogField {
 
-	
 	/**
 	 * Creates or returns the created text control.
-	 * @param parent The parent composite or <code>null</code> when the widget has
-	 * already been created.
+	 * 
+	 * @param parent
+	 *            The parent composite or <code>null</code> when the widget has
+	 *            already been created.
 	 */
 	public Text getTextControl(Composite parent) {
 		if (fTextControl == null) {
@@ -41,7 +42,8 @@ public class PasswordDialogField  extends StringDialogField {
 				}
 			};
 
-			fTextControl = new Text(parent, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD);
+			fTextControl = new Text(parent, SWT.SINGLE | SWT.BORDER
+					| SWT.PASSWORD);
 			// moved up due to 1GEUNW2
 			fTextControl.setText(fText);
 			fTextControl.setFont(parent.getFont());
@@ -51,7 +53,5 @@ public class PasswordDialogField  extends StringDialogField {
 		}
 		return fTextControl;
 	}
-
-	
 
 }

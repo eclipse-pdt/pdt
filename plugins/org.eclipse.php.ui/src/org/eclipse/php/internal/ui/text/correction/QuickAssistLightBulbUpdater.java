@@ -46,18 +46,23 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class QuickAssistLightBulbUpdater {
 
-	public static class AssistAnnotation extends Annotation implements IAnnotationPresentation {
+	public static class AssistAnnotation extends Annotation implements
+			IAnnotationPresentation {
 
-		//XXX: To be fully correct this should be a non-static fields in QuickAssistLightBulbUpdater
+		// XXX: To be fully correct this should be a non-static fields in
+		// QuickAssistLightBulbUpdater
 		private static final int LAYER;
 
 		static {
-			Annotation annotation= new Annotation("org.eclipse.dltk.ui.warning", false, null); //$NON-NLS-1$
-			AnnotationPreference preference= EditorsUI.getAnnotationPreferenceLookup().getAnnotationPreference(annotation);
+			Annotation annotation = new Annotation(
+					"org.eclipse.dltk.ui.warning", false, null); //$NON-NLS-1$
+			AnnotationPreference preference = EditorsUI
+					.getAnnotationPreferenceLookup().getAnnotationPreference(
+							annotation);
 			if (preference != null)
-				LAYER= preference.getPresentationLayer() - 1;
+				LAYER = preference.getPresentationLayer() - 1;
 			else
-				LAYER= IAnnotationAccessExtension.DEFAULT_LAYER;
+				LAYER = IAnnotationAccessExtension.DEFAULT_LAYER;
 
 		}
 
@@ -75,16 +80,23 @@ public class QuickAssistLightBulbUpdater {
 
 		private Image getImage() {
 			if (fImage == null) {
-				fImage = DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_QUICK_ASSIST);
+				fImage = DLTKPluginImages
+						.get(DLTKPluginImages.IMG_OBJS_QUICK_ASSIST);
 			}
 			return fImage;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.text.source.Annotation#paint(org.eclipse.swt.graphics.GC, org.eclipse.swt.widgets.Canvas, org.eclipse.swt.graphics.Rectangle)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.text.source.Annotation#paint(org.eclipse.swt.graphics
+		 * .GC, org.eclipse.swt.widgets.Canvas,
+		 * org.eclipse.swt.graphics.Rectangle)
 		 */
 		public void paint(GC gc, Canvas canvas, Rectangle r) {
-			ImageUtilities.drawImage(getImage(), gc, canvas, r, SWT.CENTER, SWT.TOP);
+			ImageUtilities.drawImage(getImage(), gc, canvas, r, SWT.CENTER,
+					SWT.TOP);
 		}
 
 	}
@@ -98,34 +110,39 @@ public class QuickAssistLightBulbUpdater {
 	private IPropertyChangeListener fPropertyChangeListener;
 
 	public QuickAssistLightBulbUpdater(ITextEditor part, ITextViewer viewer) {
-		fEditor= part;
-		fViewer= viewer;
-		fAnnotation= new AssistAnnotation();
-		fIsAnnotationShown= false;
-		fPropertyChangeListener= null;
+		fEditor = part;
+		fViewer = viewer;
+		fAnnotation = new AssistAnnotation();
+		fIsAnnotationShown = false;
+		fPropertyChangeListener = null;
 	}
 
 	public boolean isSetInPreferences() {
-		return PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
+		return PreferenceConstants.getPreferenceStore().getBoolean(
+				PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
 	}
 
 	private void installSelectionListener() {
-		fListener= new ISelectionListenerWithAST() {
-			public void selectionChanged(IEditorPart part, ITextSelection selection, Program astRoot) {
-				doSelectionChanged(selection.getOffset(), selection.getLength(), astRoot);
+		fListener = new ISelectionListenerWithAST() {
+			public void selectionChanged(IEditorPart part,
+					ITextSelection selection, Program astRoot) {
+				doSelectionChanged(selection.getOffset(),
+						selection.getLength(), astRoot);
 			}
 		};
 		if (fEditor != null) {
-			SelectionListenerWithASTManager.getDefault().addListener(fEditor, fListener);
+			SelectionListenerWithASTManager.getDefault().addListener(fEditor,
+					fListener);
 		}
 	}
 
 	private void uninstallSelectionListener() {
-		if (fListener != null && fEditor!=null) {
-			SelectionListenerWithASTManager.getDefault().removeListener(fEditor, fListener);
-			fListener= null;
+		if (fListener != null && fEditor != null) {
+			SelectionListenerWithASTManager.getDefault().removeListener(
+					fEditor, fListener);
+			fListener = null;
 		}
-		IAnnotationModel model= getAnnotationModel();
+		IAnnotationModel model = getAnnotationModel();
 		if (model != null) {
 			removeLightBulb(model);
 		}
@@ -136,33 +153,36 @@ public class QuickAssistLightBulbUpdater {
 			installSelectionListener();
 		}
 		if (fPropertyChangeListener == null) {
-			fPropertyChangeListener= new IPropertyChangeListener() {
+			fPropertyChangeListener = new IPropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent event) {
 					doPropertyChanged(event.getProperty());
 				}
 			};
-			PreferenceConstants.getPreferenceStore().addPropertyChangeListener(fPropertyChangeListener);
+			PreferenceConstants.getPreferenceStore().addPropertyChangeListener(
+					fPropertyChangeListener);
 		}
 	}
 
 	public void uninstall() {
 		uninstallSelectionListener();
 		if (fPropertyChangeListener != null) {
-			PreferenceConstants.getPreferenceStore().removePropertyChangeListener(fPropertyChangeListener);
-			fPropertyChangeListener= null;
+			PreferenceConstants.getPreferenceStore()
+					.removePropertyChangeListener(fPropertyChangeListener);
+			fPropertyChangeListener = null;
 		}
 	}
 
 	protected void doPropertyChanged(String property) {
 		if (property.equals(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB)) {
 			if (isSetInPreferences()) {
-				ISourceModule cu= getCompilationUnit();
+				ISourceModule cu = getCompilationUnit();
 				if (cu != null) {
 					installSelectionListener();
-					Point point= fViewer.getSelectedRange();
+					Point point = fViewer.getSelectedRange();
 					Program astRoot = null;
 					try {
-						astRoot = SharedASTProvider.getAST(cu, SharedASTProvider.WAIT_ACTIVE_ONLY, null);
+						astRoot = SharedASTProvider.getAST(cu,
+								SharedASTProvider.WAIT_ACTIVE_ONLY, null);
 					} catch (ModelException e) {
 						PHPUiPlugin.log(e);
 					} catch (IOException e) {
@@ -180,7 +200,8 @@ public class QuickAssistLightBulbUpdater {
 
 	private ISourceModule getCompilationUnit() {
 		if (fEditor != null) {
-			ISourceModule elem = DLTKUIPlugin.getEditorInputModelElement(fEditor.getEditorInput());
+			ISourceModule elem = DLTKUIPlugin
+					.getEditorInputModelElement(fEditor.getEditorInput());
 			if (elem instanceof ISourceModule) {
 				return (ISourceModule) elem;
 			}
@@ -190,7 +211,8 @@ public class QuickAssistLightBulbUpdater {
 
 	private IAnnotationModel getAnnotationModel() {
 		if (fEditor != null) {
-			return DLTKUIPlugin.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
+			return DLTKUIPlugin.getDocumentProvider().getAnnotationModel(
+					fEditor.getEditorInput());
 		} else {
 			if (fViewer instanceof MergeSourceViewer) {
 				return ((MergeSourceViewer) fViewer).getAnnotationModel();
@@ -201,7 +223,8 @@ public class QuickAssistLightBulbUpdater {
 
 	private IDocument getDocument() {
 		if (fEditor != null) {
-			return DLTKUIPlugin.getDocumentProvider().getDocument(fEditor.getEditorInput());
+			return DLTKUIPlugin.getDocumentProvider().getDocument(
+					fEditor.getEditorInput());
 		} else {
 			if (fViewer instanceof MergeSourceViewer) {
 				return ((MergeSourceViewer) fViewer).getDocument();
@@ -212,19 +235,21 @@ public class QuickAssistLightBulbUpdater {
 
 	private void doSelectionChanged(int offset, int length, Program astRoot) {
 
-		final IAnnotationModel model= getAnnotationModel();
-		final ISourceModule cu= getCompilationUnit();
+		final IAnnotationModel model = getAnnotationModel();
+		final ISourceModule cu = getCompilationUnit();
 		if (model == null || cu == null) {
 			return;
 		}
 
-		final AssistContext context= new AssistContext(cu, offset, length);
+		final AssistContext context = new AssistContext(cu, offset, length);
 		context.setASTRoot(astRoot);
 
-		boolean hasQuickFix= hasQuickFixLightBulb(model, context.getSelectionOffset());
+		boolean hasQuickFix = hasQuickFixLightBulb(model, context
+				.getSelectionOffset());
 		if (hasQuickFix) {
 			removeLightBulb(model);
-			return; // there is already a quick fix light bulb at the new location
+			return; // there is already a quick fix light bulb at the new
+					// location
 		}
 
 		calculateLightBulb(model, context);
@@ -233,22 +258,24 @@ public class QuickAssistLightBulbUpdater {
 	/*
 	 * Needs to be called synchronized
 	 */
-	private void calculateLightBulb(IAnnotationModel model, IInvocationContext context) {
-		boolean needsAnnotation= PHPCorrectionProcessor.hasAssists(context);
+	private void calculateLightBulb(IAnnotationModel model,
+			IInvocationContext context) {
+		boolean needsAnnotation = PHPCorrectionProcessor.hasAssists(context);
 		if (fIsAnnotationShown) {
 			model.removeAnnotation(fAnnotation);
 		}
 		if (needsAnnotation) {
-			model.addAnnotation(fAnnotation, new Position(context.getSelectionOffset(), context.getSelectionLength()));
+			model.addAnnotation(fAnnotation, new Position(context
+					.getSelectionOffset(), context.getSelectionLength()));
 		}
-		fIsAnnotationShown= needsAnnotation;
+		fIsAnnotationShown = needsAnnotation;
 	}
 
 	private void removeLightBulb(IAnnotationModel model) {
 		synchronized (this) {
 			if (fIsAnnotationShown) {
 				model.removeAnnotation(fAnnotation);
-				fIsAnnotationShown= false;
+				fIsAnnotationShown = false;
 			}
 		}
 	}
@@ -258,7 +285,7 @@ public class QuickAssistLightBulbUpdater {
 	 */
 	private boolean hasQuickFixLightBulb(IAnnotationModel model, int offset) {
 		try {
-			IDocument document= getDocument();
+			IDocument document = getDocument();
 			if (document == null) {
 				return false;
 			}
@@ -267,20 +294,26 @@ public class QuickAssistLightBulbUpdater {
 			// since these are only read accesses, we won't hurt anyone else if
 			// this goes boink
 
-			// may throw an IndexOutOfBoundsException upon concurrent document modification
-			int currLine= document.getLineOfOffset(offset);
+			// may throw an IndexOutOfBoundsException upon concurrent document
+			// modification
+			int currLine = document.getLineOfOffset(offset);
 
-			// this iterator is not protected, it may throw ConcurrentModificationExceptions
-			Iterator iter= model.getAnnotationIterator();
+			// this iterator is not protected, it may throw
+			// ConcurrentModificationExceptions
+			Iterator iter = model.getAnnotationIterator();
 			while (iter.hasNext()) {
-				Annotation annot= (Annotation) iter.next();
+				Annotation annot = (Annotation) iter.next();
 				if (PHPCorrectionProcessor.isQuickFixableType(annot)) {
-					// may throw an IndexOutOfBoundsException upon concurrent annotation model changes
-					Position pos= model.getPosition(annot);
+					// may throw an IndexOutOfBoundsException upon concurrent
+					// annotation model changes
+					Position pos = model.getPosition(annot);
 					if (pos != null) {
-						// may throw an IndexOutOfBoundsException upon concurrent document modification
-						int startLine= document.getLineOfOffset(pos.getOffset());
-						if (startLine == currLine && PHPCorrectionProcessor.hasCorrections(annot)) {
+						// may throw an IndexOutOfBoundsException upon
+						// concurrent document modification
+						int startLine = document.getLineOfOffset(pos
+								.getOffset());
+						if (startLine == currLine
+								&& PHPCorrectionProcessor.hasCorrections(annot)) {
 							return true;
 						}
 					}
@@ -295,6 +328,5 @@ public class QuickAssistLightBulbUpdater {
 		}
 		return false;
 	}
-
 
 }

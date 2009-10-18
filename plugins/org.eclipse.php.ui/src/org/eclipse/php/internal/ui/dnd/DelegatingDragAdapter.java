@@ -20,9 +20,10 @@ import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.swt.dnd.*;
 
 /**
- * A delegating drag adapter negotiates between a set of <code>TransferDragSourceListener</code>s
- * On <code>dragStart</code> the adapter determines the listener to be used for any further
- * <code>drag*</code> callback.
+ * A delegating drag adapter negotiates between a set of
+ * <code>TransferDragSourceListener</code>s On <code>dragStart</code> the
+ * adapter determines the listener to be used for any further <code>drag*</code>
+ * callback.
  */
 public class DelegatingDragAdapter implements DragSourceListener {
 
@@ -36,11 +37,15 @@ public class DelegatingDragAdapter implements DragSourceListener {
 
 	protected void setPossibleListeners(TransferDragSourceListener[] listeners) {
 		Assert.isNotNull(listeners);
-		Assert.isTrue(fActiveListeners == null, "Can only set possible listeners before drag operation has started"); //$NON-NLS-1$
+		Assert
+				.isTrue(fActiveListeners == null,
+						"Can only set possible listeners before drag operation has started"); //$NON-NLS-1$
 		fPossibleListeners = listeners;
 	}
 
-	/* non Java-doc
+	/*
+	 * non Java-doc
+	 * 
 	 * @see DragSourceListener
 	 */
 	public void dragStart(DragSourceEvent event) {
@@ -62,13 +67,16 @@ public class DelegatingDragAdapter implements DragSourceListener {
 			doIt = doIt || event.doit;
 		}
 		if (doIt) {
-			((DragSource) event.widget).setTransfer((Transfer[]) transfers.toArray(new Transfer[transfers.size()]));
+			((DragSource) event.widget).setTransfer((Transfer[]) transfers
+					.toArray(new Transfer[transfers.size()]));
 		}
 		event.data = saveData;
 		event.doit = doIt;
 	}
 
-	/* non Java-doc
+	/*
+	 * non Java-doc
+	 * 
 	 * @see DragSourceListener
 	 */
 	public void dragSetData(DragSourceEvent event) {
@@ -77,7 +85,9 @@ public class DelegatingDragAdapter implements DragSourceListener {
 			fFinishListener.dragSetData(event);
 	}
 
-	/* non Java-doc
+	/*
+	 * non Java-doc
+	 * 
 	 * @see DragSourceListener
 	 */
 	public void dragFinished(DragSourceEvent event) {
@@ -102,7 +112,8 @@ public class DelegatingDragAdapter implements DragSourceListener {
 			return null;
 
 		for (Iterator iter = fActiveListeners.iterator(); iter.hasNext();) {
-			TransferDragSourceListener listener = (TransferDragSourceListener) iter.next();
+			TransferDragSourceListener listener = (TransferDragSourceListener) iter
+					.next();
 			if (listener.getTransfer().isSupportedType(type)) {
 				return listener;
 			}

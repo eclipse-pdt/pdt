@@ -21,16 +21,21 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
 /**
  * @author seva
- *
+ * 
  */
-public class CustomFilterElementTreeSelectionDialog extends ElementTreeSelectionDialog {
+public class CustomFilterElementTreeSelectionDialog extends
+		ElementTreeSelectionDialog {
 
 	private String preferenceId;
-	public CustomFilterElementTreeSelectionDialog(final Shell parent, final ILabelProvider labelProvider, final ITreeContentProvider contentProvider, final String preferenceId) {
+
+	public CustomFilterElementTreeSelectionDialog(final Shell parent,
+			final ILabelProvider labelProvider,
+			final ITreeContentProvider contentProvider,
+			final String preferenceId) {
 		super(parent, labelProvider, contentProvider);
 		this.preferenceId = preferenceId;
 	}
-	
+
 	protected TreeViewer createTreeViewer(final Composite parent) {
 		final TreeViewer viewer = super.createTreeViewer(parent);
 		new CustomFiltersActionGroup(preferenceId, viewer);

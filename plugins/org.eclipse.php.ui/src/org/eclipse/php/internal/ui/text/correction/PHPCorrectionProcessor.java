@@ -48,7 +48,9 @@ import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 
-public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassist.IQuickAssistProcessor, IScriptCorrectionProcessor {
+public class PHPCorrectionProcessor implements
+		org.eclipse.jface.text.quickassist.IQuickAssistProcessor,
+		IScriptCorrectionProcessor {
 
 	private static final String QUICKFIX_PROCESSOR_CONTRIBUTION_ID = "quickFixProcessors"; //$NON-NLS-1$
 	private static final String QUICKASSIST_PROCESSOR_CONTRIBUTION_ID = "quickAssistProcessors"; //$NON-NLS-1$
@@ -56,12 +58,15 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 	private static ContributedProcessorDescriptor[] fgContributedAssistProcessors = null;
 	private static ContributedProcessorDescriptor[] fgContributedCorrectionProcessors = null;
 
-	private static ContributedProcessorDescriptor[] getProcessorDescriptors(String contributionId, boolean testMarkerTypes) {
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPUiPlugin.ID, contributionId);
+	private static ContributedProcessorDescriptor[] getProcessorDescriptors(
+			String contributionId, boolean testMarkerTypes) {
+		IConfigurationElement[] elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(PHPUiPlugin.ID, contributionId);
 		ArrayList res = new ArrayList(elements.length);
 
 		for (int i = 0; i < elements.length; i++) {
-			ContributedProcessorDescriptor desc = new ContributedProcessorDescriptor(elements[i], testMarkerTypes);
+			ContributedProcessorDescriptor desc = new ContributedProcessorDescriptor(
+					elements[i], testMarkerTypes);
 			IStatus status = desc.checkSyntax();
 			if (status.isOK()) {
 				res.add(desc);
@@ -69,24 +74,28 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 				PHPUiPlugin.log(status);
 			}
 		}
-		return (ContributedProcessorDescriptor[]) res.toArray(new ContributedProcessorDescriptor[res.size()]);
+		return (ContributedProcessorDescriptor[]) res
+				.toArray(new ContributedProcessorDescriptor[res.size()]);
 	}
 
 	private static ContributedProcessorDescriptor[] getCorrectionProcessors() {
 		if (fgContributedCorrectionProcessors == null) {
-			fgContributedCorrectionProcessors = getProcessorDescriptors(QUICKFIX_PROCESSOR_CONTRIBUTION_ID, true);
+			fgContributedCorrectionProcessors = getProcessorDescriptors(
+					QUICKFIX_PROCESSOR_CONTRIBUTION_ID, true);
 		}
 		return fgContributedCorrectionProcessors;
 	}
 
 	private static ContributedProcessorDescriptor[] getAssistProcessors() {
 		if (fgContributedAssistProcessors == null) {
-			fgContributedAssistProcessors = getProcessorDescriptors(QUICKASSIST_PROCESSOR_CONTRIBUTION_ID, false);
+			fgContributedAssistProcessors = getProcessorDescriptors(
+					QUICKASSIST_PROCESSOR_CONTRIBUTION_ID, false);
 		}
 		return fgContributedAssistProcessors;
 	}
 
-	public static boolean hasCorrections(ISourceModule cu, int problemId, String markerType) {
+	public static boolean hasCorrections(ISourceModule cu, int problemId,
+			String markerType) {
 		ContributedProcessorDescriptor[] processors = getCorrectionProcessors();
 		SafeHasCorrections collector = new SafeHasCorrections(cu, problemId);
 		for (int i = 0; i < processors.length; i++) {
@@ -101,7 +110,8 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 	}
 
 	public static boolean isQuickFixableType(Annotation annotation) {
-		return (annotation instanceof IScriptAnnotation || annotation instanceof SimpleMarkerAnnotation) && !annotation.isMarkedDeleted();
+		return (annotation instanceof IScriptAnnotation || annotation instanceof SimpleMarkerAnnotation)
+				&& !annotation.isMarkedDeleted();
 	}
 
 	public static boolean hasCorrections(Annotation annotation) {
@@ -111,12 +121,14 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 			if (problemId != -1) {
 				ISourceModule cu = javaAnnotation.getSourceModule();
 				if (cu != null) {
-					return hasCorrections(cu, problemId, javaAnnotation.getMarkerType());
+					return hasCorrections(cu, problemId, javaAnnotation
+							.getMarkerType());
 				}
 			}
 		}
 		if (annotation instanceof SimpleMarkerAnnotation) {
-			return hasCorrections(((SimpleMarkerAnnotation) annotation).getMarker());
+			return hasCorrections(((SimpleMarkerAnnotation) annotation)
+					.getMarker());
 		}
 		return false;
 	}
@@ -156,7 +168,8 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 			return;
 		}
 
-		fAssistant = (PHPCorrectionAssistant) textViewer.getQuickAssistAssistant();
+		fAssistant = (PHPCorrectionAssistant) textViewer
+				.getQuickAssistAssistant();
 
 		fAssistant.addCompletionListener(new ICompletionListener() {
 
@@ -169,7 +182,8 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 				fAssistant.setStatusMessage(getJumpHintStatusLineMessage());
 			}
 
-			public void selectionChanged(ICompletionProposal proposal, boolean smartToggle) {
+			public void selectionChanged(ICompletionProposal proposal,
+					boolean smartToggle) {
 				if (proposal instanceof IStatusLineProposal) {
 					IStatusLineProposal statusLineProposal = (IStatusLineProposal) proposal;
 					String message = statusLineProposal.getStatusMessage();
@@ -187,20 +201,28 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 					if (key == null)
 						return CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_menu;
 					else
-						return NLS.bind(CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_key, key);
+						return NLS
+								.bind(
+										CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_key,
+										key);
 				} else if (fAssistant.isProblemLocationAvailable()) {
 					String key = getQuickAssistBinding();
 					if (key == null)
 						return CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_menu;
 					else
-						return NLS.bind(CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_key, key);
+						return NLS
+								.bind(
+										CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_key,
+										key);
 				} else
 					return ""; //$NON-NLS-1$
 			}
 
 			private String getQuickAssistBinding() {
-				final IBindingService bindingSvc = (IBindingService) PlatformUI.getWorkbench().getAdapter(IBindingService.class);
-				return bindingSvc.getBestActiveBindingFormattedFor(ITextEditorActionDefinitionIds.QUICK_ASSIST);
+				final IBindingService bindingSvc = (IBindingService) PlatformUI
+						.getWorkbench().getAdapter(IBindingService.class);
+				return bindingSvc
+						.getBestActiveBindingFormattedFor(ITextEditorActionDefinitionIds.QUICK_ASSIST);
 			}
 		});
 	}
@@ -208,7 +230,8 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 	/*
 	 * @see IContentAssistProcessor#computeCompletionProposals(ITextViewer, int)
 	 */
-	public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext quickAssistContext) {
+	public ICompletionProposal[] computeQuickAssistProposals(
+			IQuickAssistInvocationContext quickAssistContext) {
 
 		ICompletionProposal[] res = null;
 
@@ -222,19 +245,24 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 
 			IEditorPart part = fAssistant.getEditor();
 
-			ISourceModule cu = DLTKUIPlugin.getEditorInputModelElement(part.getEditorInput());
-			IAnnotationModel model = DLTKUIPlugin.getDocumentProvider().getAnnotationModel(part.getEditorInput());
+			ISourceModule cu = DLTKUIPlugin.getEditorInputModelElement(part
+					.getEditorInput());
+			IAnnotationModel model = DLTKUIPlugin.getDocumentProvider()
+					.getAnnotationModel(part.getEditorInput());
 
 			int length = viewer != null ? viewer.getSelectedRange().y : 0;
-			AssistContext context = new AssistContext(cu, viewer, part, documentOffset, length, SharedASTProvider.WAIT_YES);
+			AssistContext context = new AssistContext(cu, viewer, part,
+					documentOffset, length, SharedASTProvider.WAIT_YES);
 
 			Annotation[] annotations = fAssistant.getAnnotationsAtOffset();
 
 			fErrorMessage = null;
 			if (model != null && annotations != null) {
 				ArrayList proposals = new ArrayList(10);
-				IStatus status = collectProposals(context, model, annotations, true, !fAssistant.isUpdatedOffset(), proposals);
-				res = (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
+				IStatus status = collectProposals(context, model, annotations,
+						true, !fAssistant.isUpdatedOffset(), proposals);
+				res = (ICompletionProposal[]) proposals
+						.toArray(new ICompletionProposal[proposals.size()]);
 				if (!status.isOK()) {
 					fErrorMessage = status.getMessage();
 					PHPUiPlugin.log(status);
@@ -243,7 +271,9 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 		}
 
 		if (res == null || res.length == 0) {
-			return new ICompletionProposal[] { new ChangeCorrectionProposal(CorrectionMessages.NoCorrectionProposal_description, new NullChange(""), 0, null) }; //$NON-NLS-1$
+			return new ICompletionProposal[] { new ChangeCorrectionProposal(
+					CorrectionMessages.NoCorrectionProposal_description,
+					new NullChange(""), 0, null) }; //$NON-NLS-1$
 		}
 		if (res.length > 1) {
 			Arrays.sort(res, new CompletionProposalComparator());
@@ -251,7 +281,9 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 		return res;
 	}
 
-	public static IStatus collectProposals(IInvocationContext context, IAnnotationModel model, Annotation[] annotations, boolean addQuickFixes, boolean addQuickAssists, Collection proposals) {
+	public static IStatus collectProposals(IInvocationContext context,
+			IAnnotationModel model, Annotation[] annotations,
+			boolean addQuickFixes, boolean addQuickAssists, Collection proposals) {
 		ArrayList problems = new ArrayList();
 
 		// collect problem locations and corrections from marker annotations
@@ -259,30 +291,43 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 			Annotation curr = annotations[i];
 			ProblemLocation problemLocation = null;
 			if (curr instanceof IScriptAnnotation) {
-				problemLocation = getProblemLocation((IScriptAnnotation) curr, model);
+				problemLocation = getProblemLocation((IScriptAnnotation) curr,
+						model);
 				if (problemLocation != null) {
 					problems.add(problemLocation);
 				}
 			}
-			if (problemLocation == null && addQuickFixes && curr instanceof SimpleMarkerAnnotation) {
+			if (problemLocation == null && addQuickFixes
+					&& curr instanceof SimpleMarkerAnnotation) {
 				collectMarkerProposals((SimpleMarkerAnnotation) curr, proposals);
 			}
 		}
 		MultiStatus resStatus = null;
 
-		IProblemLocation[] problemLocations = (IProblemLocation[]) problems.toArray(new IProblemLocation[problems.size()]);
+		IProblemLocation[] problemLocations = (IProblemLocation[]) problems
+				.toArray(new IProblemLocation[problems.size()]);
 		if (addQuickFixes) {
-			IStatus status = collectCorrections(context, problemLocations, proposals);
+			IStatus status = collectCorrections(context, problemLocations,
+					proposals);
 			if (!status.isOK()) {
-				resStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR, CorrectionMessages.JavaCorrectionProcessor_error_quickfix_message, null);
+				resStatus = new MultiStatus(
+						PHPUiPlugin.ID,
+						IStatus.ERROR,
+						CorrectionMessages.JavaCorrectionProcessor_error_quickfix_message,
+						null);
 				resStatus.add(status);
 			}
 		}
 		if (addQuickAssists) {
-			IStatus status = collectAssists(context, problemLocations, proposals);
+			IStatus status = collectAssists(context, problemLocations,
+					proposals);
 			if (!status.isOK()) {
 				if (resStatus == null) {
-					resStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR, CorrectionMessages.JavaCorrectionProcessor_error_quickassist_message, null);
+					resStatus = new MultiStatus(
+							PHPUiPlugin.ID,
+							IStatus.ERROR,
+							CorrectionMessages.JavaCorrectionProcessor_error_quickassist_message,
+							null);
 				}
 				resStatus.add(status);
 			}
@@ -293,20 +338,25 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 		return Status.OK_STATUS;
 	}
 
-	private static ProblemLocation getProblemLocation(IScriptAnnotation javaAnnotation, IAnnotationModel model) {
+	private static ProblemLocation getProblemLocation(
+			IScriptAnnotation javaAnnotation, IAnnotationModel model) {
 		int problemId = javaAnnotation.getId();
 		if (problemId != -1) {
 			Position pos = model.getPosition((Annotation) javaAnnotation);
 			if (pos != null) {
-				return new ProblemLocation(pos.getOffset(), pos.getLength(), javaAnnotation); // java problems all handled by the quick assist processors
+				return new ProblemLocation(pos.getOffset(), pos.getLength(),
+						javaAnnotation); // java problems all handled by the
+											// quick assist processors
 			}
 		}
 		return null;
 	}
 
-	private static void collectMarkerProposals(SimpleMarkerAnnotation annotation, Collection proposals) {
+	private static void collectMarkerProposals(
+			SimpleMarkerAnnotation annotation, Collection proposals) {
 		IMarker marker = annotation.getMarker();
-		IMarkerResolution[] res = IDE.getMarkerHelpRegistry().getResolutions(marker);
+		IMarkerResolution[] res = IDE.getMarkerHelpRegistry().getResolutions(
+				marker);
 		if (res.length > 0) {
 			for (int i = 0; i < res.length; i++) {
 				proposals.add(new MarkerResolutionProposal(res[i], marker));
@@ -314,7 +364,8 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 		}
 	}
 
-	private static abstract class SafeCorrectionProcessorAccess implements ISafeRunnable {
+	private static abstract class SafeCorrectionProcessorAccess implements
+			ISafeRunnable {
 		private MultiStatus fMulti = null;
 		private ContributedProcessorDescriptor fDescriptor;
 
@@ -334,13 +385,21 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 			safeRun(fDescriptor);
 		}
 
-		protected abstract void safeRun(ContributedProcessorDescriptor processor) throws Exception;
+		protected abstract void safeRun(ContributedProcessorDescriptor processor)
+				throws Exception;
 
 		public void handleException(Throwable exception) {
 			if (fMulti == null) {
-				fMulti = new MultiStatus(PHPUiPlugin.ID, IStatus.OK, CorrectionMessages.JavaCorrectionProcessor_error_status, null);
+				fMulti = new MultiStatus(
+						PHPUiPlugin.ID,
+						IStatus.OK,
+						CorrectionMessages.JavaCorrectionProcessor_error_status,
+						null);
 			}
-			fMulti.merge(new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.ERROR, CorrectionMessages.JavaCorrectionProcessor_error_status, exception));
+			fMulti.merge(new Status(IStatus.ERROR, PHPUiPlugin.ID,
+					IStatus.ERROR,
+					CorrectionMessages.JavaCorrectionProcessor_error_status,
+					exception));
 		}
 
 		public IStatus getStatus() {
@@ -352,12 +411,14 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 
 	}
 
-	private static class SafeCorrectionCollector extends SafeCorrectionProcessorAccess {
+	private static class SafeCorrectionCollector extends
+			SafeCorrectionProcessorAccess {
 		private final IInvocationContext fContext;
 		private final Collection fProposals;
 		private IProblemLocation[] fLocations;
 
-		public SafeCorrectionCollector(IInvocationContext context, Collection proposals) {
+		public SafeCorrectionCollector(IInvocationContext context,
+				Collection proposals) {
 			fContext = context;
 			fProposals = proposals;
 		}
@@ -366,10 +427,13 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 			fLocations = locations;
 		}
 
-		public void safeRun(ContributedProcessorDescriptor desc) throws Exception {
-			IQuickFixProcessor curr = (IQuickFixProcessor) desc.getProcessor(fContext.getCompilationUnit(), IQuickFixProcessor.class);
+		public void safeRun(ContributedProcessorDescriptor desc)
+				throws Exception {
+			IQuickFixProcessor curr = (IQuickFixProcessor) desc.getProcessor(
+					fContext.getCompilationUnit(), IQuickFixProcessor.class);
 			if (curr != null) {
-				IScriptCompletionProposal[] res = curr.getCorrections(fContext, fLocations);
+				IScriptCompletionProposal[] res = curr.getCorrections(fContext,
+						fLocations);
 				if (res != null) {
 					for (int k = 0; k < res.length; k++) {
 						fProposals.add(res[k]);
@@ -379,21 +443,27 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 		}
 	}
 
-	private static class SafeAssistCollector extends SafeCorrectionProcessorAccess {
+	private static class SafeAssistCollector extends
+			SafeCorrectionProcessorAccess {
 		private final IInvocationContext fContext;
 		private final IProblemLocation[] fLocations;
 		private final Collection fProposals;
 
-		public SafeAssistCollector(IInvocationContext context, IProblemLocation[] locations, Collection proposals) {
+		public SafeAssistCollector(IInvocationContext context,
+				IProblemLocation[] locations, Collection proposals) {
 			fContext = context;
 			fLocations = locations;
 			fProposals = proposals;
 		}
 
-		public void safeRun(ContributedProcessorDescriptor desc) throws Exception {
-			IQuickAssistProcessor curr = (IQuickAssistProcessor) desc.getProcessor(fContext.getCompilationUnit(), IQuickAssistProcessor.class);
+		public void safeRun(ContributedProcessorDescriptor desc)
+				throws Exception {
+			IQuickAssistProcessor curr = (IQuickAssistProcessor) desc
+					.getProcessor(fContext.getCompilationUnit(),
+							IQuickAssistProcessor.class);
 			if (curr != null) {
-				IScriptCompletionProposal[] res = curr.getAssists(fContext, fLocations);
+				IScriptCompletionProposal[] res = curr.getAssists(fContext,
+						fLocations);
 				if (res != null) {
 					for (int k = 0; k < res.length; k++) {
 						fProposals.add(res[k]);
@@ -416,15 +486,19 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 			return fHasAssists;
 		}
 
-		public void safeRun(ContributedProcessorDescriptor desc) throws Exception {
-			IQuickAssistProcessor processor = (IQuickAssistProcessor) desc.getProcessor(fContext.getCompilationUnit(), IQuickAssistProcessor.class);
+		public void safeRun(ContributedProcessorDescriptor desc)
+				throws Exception {
+			IQuickAssistProcessor processor = (IQuickAssistProcessor) desc
+					.getProcessor(fContext.getCompilationUnit(),
+							IQuickAssistProcessor.class);
 			if (processor != null && processor.hasAssists(fContext)) {
 				fHasAssists = true;
 			}
 		}
 	}
 
-	private static class SafeHasCorrections extends SafeCorrectionProcessorAccess {
+	private static class SafeHasCorrections extends
+			SafeCorrectionProcessorAccess {
 		private final ISourceModule fCu;
 		private final int fProblemId;
 		private boolean fHasCorrections;
@@ -439,17 +513,21 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 			return fHasCorrections;
 		}
 
-		public void safeRun(ContributedProcessorDescriptor desc) throws Exception {
-			IQuickFixProcessor processor = (IQuickFixProcessor) desc.getProcessor(fCu, IQuickFixProcessor.class);
+		public void safeRun(ContributedProcessorDescriptor desc)
+				throws Exception {
+			IQuickFixProcessor processor = (IQuickFixProcessor) desc
+					.getProcessor(fCu, IQuickFixProcessor.class);
 			if (processor != null && processor.hasCorrections(fCu, fProblemId)) {
 				fHasCorrections = true;
 			}
 		}
 	}
 
-	public static IStatus collectCorrections(IInvocationContext context, IProblemLocation[] locations, Collection proposals) {
+	public static IStatus collectCorrections(IInvocationContext context,
+			IProblemLocation[] locations, Collection proposals) {
 		ContributedProcessorDescriptor[] processors = getCorrectionProcessors();
-		SafeCorrectionCollector collector = new SafeCorrectionCollector(context, proposals);
+		SafeCorrectionCollector collector = new SafeCorrectionCollector(
+				context, proposals);
 		for (int i = 0; i < processors.length; i++) {
 			ContributedProcessorDescriptor curr = processors[i];
 			IProblemLocation[] handled = getHandledProblems(locations, curr);
@@ -461,7 +539,9 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 		return collector.getStatus();
 	}
 
-	private static IProblemLocation[] getHandledProblems(IProblemLocation[] locations, ContributedProcessorDescriptor processor) {
+	private static IProblemLocation[] getHandledProblems(
+			IProblemLocation[] locations,
+			ContributedProcessorDescriptor processor) {
 		// implementation tries to avoid creating a new array
 		boolean allHandled = true;
 		ArrayList res = null;
@@ -490,12 +570,15 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 		if (res == null) {
 			return null;
 		}
-		return (IProblemLocation[]) res.toArray(new IProblemLocation[res.size()]);
+		return (IProblemLocation[]) res
+				.toArray(new IProblemLocation[res.size()]);
 	}
 
-	public static IStatus collectAssists(IInvocationContext context, IProblemLocation[] locations, Collection proposals) {
+	public static IStatus collectAssists(IInvocationContext context,
+			IProblemLocation[] locations, Collection proposals) {
 		ContributedProcessorDescriptor[] processors = getAssistProcessors();
-		SafeAssistCollector collector = new SafeAssistCollector(context, locations, proposals);
+		SafeAssistCollector collector = new SafeAssistCollector(context,
+				locations, proposals);
 		collector.process(processors);
 
 		return collector.getStatus();
@@ -509,7 +592,10 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.quickassist.IQuickAssistProcessor#canFix(org.eclipse.jface.text.source.Annotation)
+	 * @see
+	 * org.eclipse.jface.text.quickassist.IQuickAssistProcessor#canFix(org.eclipse
+	 * .jface.text.source.Annotation)
+	 * 
 	 * @since 3.2
 	 */
 	public boolean canFix(Annotation annotation) {
@@ -517,7 +603,10 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.quickassist.IQuickAssistProcessor#canAssist(org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext)
+	 * @see
+	 * org.eclipse.jface.text.quickassist.IQuickAssistProcessor#canAssist(org
+	 * .eclipse.jface.text.quickassist.IQuickAssistInvocationContext)
+	 * 
 	 * @since 3.2
 	 */
 	public boolean canAssist(IQuickAssistInvocationContext invocationContext) {
@@ -537,9 +626,11 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 		return false;
 	}
 
-	public void computeQuickAssistProposals(IScriptAnnotation annotation, IScriptCorrectionContext context) {
+	public void computeQuickAssistProposals(IScriptAnnotation annotation,
+			IScriptCorrectionContext context) {
 	}
 
-	public void computeQuickAssistProposals(IMarker marker, IScriptCorrectionContext context) {
+	public void computeQuickAssistProposals(IMarker marker,
+			IScriptCorrectionContext context) {
 	}
 }

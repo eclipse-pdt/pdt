@@ -13,13 +13,7 @@ package org.eclipse.php.internal.ui.editor.hover;
 
 import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
-import org.eclipse.jface.text.AbstractReusableInformationControlCreator;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHoverExtension;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -27,7 +21,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
 
-public class ProblemHover extends AbstractScriptEditorTextHover implements IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
+public class ProblemHover extends AbstractScriptEditorTextHover implements
+		IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
 
 	private static final AnnotationHoverProcessor annotationHover = new AnnotationHoverProcessor();
 
@@ -37,7 +32,7 @@ public class ProblemHover extends AbstractScriptEditorTextHover implements IPHPT
 	 * @since 3.2
 	 */
 	private IInformationControlCreator fHoverControlCreator;
-	
+
 	/**
 	 * The presentation control creator.
 	 * 
@@ -46,19 +41,24 @@ public class ProblemHover extends AbstractScriptEditorTextHover implements IPHPT
 	private IInformationControlCreator fPresenterControlCreator;
 
 	/*
-	 * @see IInformationProviderExtension2#getInformationPresenterControlCreator()
-	 * @since 3.1
-	 * This is the format of the window on focus 
+	 * @see
+	 * IInformationProviderExtension2#getInformationPresenterControlCreator()
+	 * 
+	 * @since 3.1 This is the format of the window on focus
 	 */
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		if (fPresenterControlCreator == null) {
 			fPresenterControlCreator = new AbstractReusableInformationControlCreator() {
 
 				/*
-				 * @see org.eclipse.jdt.internal.ui.text.java.hover.AbstractReusableInformationControlCreator#doCreateInformationControl(org.eclipse.swt.widgets.Shell)
+				 * @seeorg.eclipse.jdt.internal.ui.text.java.hover.
+				 * AbstractReusableInformationControlCreator
+				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
-				public IInformationControl doCreateInformationControl(Shell parent) {
-					return new DefaultInformationControl(parent, new HTMLTextPresenter(false));
+				public IInformationControl doCreateInformationControl(
+						Shell parent) {
+					return new DefaultInformationControl(parent,
+							new HTMLTextPresenter(false));
 				}
 			};
 		}
@@ -67,16 +67,22 @@ public class ProblemHover extends AbstractScriptEditorTextHover implements IPHPT
 
 	/*
 	 * @see ITextHoverExtension#getHoverControlCreator()
+	 * 
 	 * @since 3.2 - This is the format of the window on hover
 	 */
 	public IInformationControlCreator getHoverControlCreator() {
 		if (fHoverControlCreator == null) {
 			fHoverControlCreator = new AbstractReusableInformationControlCreator() {
 				/*
-				 * @see org.eclipse.jdt.internal.ui.text.java.hover.AbstractReusableInformationControlCreator#doCreateInformationControl(org.eclipse.swt.widgets.Shell)
+				 * @seeorg.eclipse.jdt.internal.ui.text.java.hover.
+				 * AbstractReusableInformationControlCreator
+				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
-				public IInformationControl doCreateInformationControl(Shell parent) {
-					return new DefaultInformationControl(parent, EditorsUI.getTooltipAffordanceString(), new HTMLTextPresenter(true));
+				public IInformationControl doCreateInformationControl(
+						Shell parent) {
+					return new DefaultInformationControl(parent, EditorsUI
+							.getTooltipAffordanceString(),
+							new HTMLTextPresenter(true));
 				}
 			};
 		}

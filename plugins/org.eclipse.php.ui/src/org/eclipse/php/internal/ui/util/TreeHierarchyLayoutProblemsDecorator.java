@@ -21,9 +21,9 @@ import org.eclipse.dltk.ui.ProblemsLabelDecorator;
  * It only decorates php folders which are not covered by the
  * <code>ProblemsLabelDecorator</code>.
  * </p>
-
  */
-public class TreeHierarchyLayoutProblemsDecorator extends ProblemsLabelDecorator {
+public class TreeHierarchyLayoutProblemsDecorator extends
+		ProblemsLabelDecorator {
 
 	private boolean fIsFlatLayout;
 

@@ -29,11 +29,13 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 /**
- * Handler class for the Comment Handlers 
+ * Handler class for the Comment Handlers
+ * 
  * @author NirC, 2008
  */
 
-public abstract class CommentHandler extends AbstractHandler implements IHandler {
+public abstract class CommentHandler extends AbstractHandler implements
+		IHandler {
 	static final String SINGLE_LINE_COMMENT = "//"; //$NON-NLS-1$
 	static final String OPEN_COMMENT = "/*"; //$NON-NLS-1$
 	static final String CLOSE_COMMENT = "*/"; //$NON-NLS-1$
@@ -53,7 +55,8 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 				textEditor = (ITextEditor) o;
 		}
 		if (textEditor != null) {
-			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+			IDocument document = textEditor.getDocumentProvider().getDocument(
+					textEditor.getEditorInput());
 			if (document != null) {
 				// get current text selection
 				ITextSelection textSelection = getCurrentSelection(textEditor);
@@ -79,11 +82,13 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 		return TextSelection.emptySelection();
 	}
 
-	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
+	void processAction(ITextEditor textEditor, IDocument document,
+			ITextSelection textSelection) {
 		// Implementations to override.
 	}
 
-	protected void removeOpenCloseComments(IDocument document, int offset, int endOffset) {
+	protected void removeOpenCloseComments(IDocument document, int offset,
+			int endOffset) {
 		try {
 			int adjusted_length = endOffset - offset;
 
@@ -115,8 +120,12 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 
 		try {
 			IRegion region = document.getLineInformation(line);
-			String string = document.get(region.getOffset(), region.getLength()).trim();
-			isComment = (string.length() >= OPEN_COMMENT.length() && string.startsWith(OPEN_COMMENT)) || (string.length() >= SINGLE_LINE_COMMENT.length() && string.startsWith(SINGLE_LINE_COMMENT));
+			String string = document
+					.get(region.getOffset(), region.getLength()).trim();
+			isComment = (string.length() >= OPEN_COMMENT.length() && string
+					.startsWith(OPEN_COMMENT))
+					|| (string.length() >= SINGLE_LINE_COMMENT.length() && string
+							.startsWith(SINGLE_LINE_COMMENT));
 		} catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
@@ -133,13 +142,15 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 
 	protected void uncommentSingleLine(IDocument document, int openCommentOffset) {
 		try {
-			document.replace(openCommentOffset, SINGLE_LINE_COMMENT.length(), ""); //$NON-NLS-1$
+			document.replace(openCommentOffset, SINGLE_LINE_COMMENT.length(),
+					""); //$NON-NLS-1$
 		} catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 	}
 
-	protected boolean isMoreThanOneContextBlockSelected(IDocument document, ITextSelection textSelection) {
+	protected boolean isMoreThanOneContextBlockSelected(IDocument document,
+			ITextSelection textSelection) {
 		if (document == null) {
 			assert false;
 			return true;
@@ -151,19 +162,25 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 			return true;
 		}
 
-		IStructuredDocumentRegion[] structuredDocumentRegions = structuredDocument.getStructuredDocumentRegions(textSelection.getOffset(), textSelection.getLength());
-		if (structuredDocumentRegions == null || structuredDocumentRegions.length == 0) {
+		IStructuredDocumentRegion[] structuredDocumentRegions = structuredDocument
+				.getStructuredDocumentRegions(textSelection.getOffset(),
+						textSelection.getLength());
+		if (structuredDocumentRegions == null
+				|| structuredDocumentRegions.length == 0) {
 			assert false;
 			return true;
 		}
 
-		if (structuredDocumentRegions.length == 1 && isPhpDocumentRegion(structuredDocumentRegions[0])) {
-			//single PHP element and the selection is inside the element boundaries
+		if (structuredDocumentRegions.length == 1
+				&& isPhpDocumentRegion(structuredDocumentRegions[0])) {
+			// single PHP element and the selection is inside the element
+			// boundaries
 			return false;
 		}
 
 		// Handling case there is more then 1 region within the selection,
-		// if we encounter PHP open/close Tag - it means we are not only within HTML context
+		// if we encounter PHP open/close Tag - it means we are not only within
+		// HTML context
 		for (IStructuredDocumentRegion structuredDocumentRegion : structuredDocumentRegions) {
 			if (isPhpDocumentRegion(structuredDocumentRegion)) {
 				return true;
@@ -174,11 +191,15 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 		return false;
 	}
 
-	private boolean isPhpDocumentRegion(IStructuredDocumentRegion structuredDocumentRegion) {
+	private boolean isPhpDocumentRegion(
+			IStructuredDocumentRegion structuredDocumentRegion) {
 		return structuredDocumentRegion.getFirstRegion().getType() == PHPRegionContext.PHP_OPEN;
 	}
 
 	protected void displayCommentActinosErrorDialog(IEditorPart editor) {
-		MessageDialog.openError(editor.getSite().getShell(), PHPUIMessages.getString("AddBlockComment_error_title"), PHPUIMessages.getString("AddBlockComment_error_messageBadSelection")); //$NON-NLS-1$
+		MessageDialog
+				.openError(
+						editor.getSite().getShell(),
+						PHPUIMessages.getString("AddBlockComment_error_title"), PHPUIMessages.getString("AddBlockComment_error_messageBadSelection")); //$NON-NLS-1$
 	}
 }

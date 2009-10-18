@@ -36,20 +36,20 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
 
 /**
  * A PHPEditorActionBarContributor, which is a simple extension for
- * BasicTextEditorActionContributor.
- * This class should not be used inside multi page editor's
- * ActionBarContributor, since cascaded init() call from the
+ * BasicTextEditorActionContributor. This class should not be used inside multi
+ * page editor's ActionBarContributor, since cascaded init() call from the
  * ActionBarContributor will causes exception and it leads to lose whole
  * toolbars.
  * 
- * Instead, use SourcePageActionContributor for source page contributor of
- * multi page editor.
+ * Instead, use SourcePageActionContributor for source page contributor of multi
+ * page editor.
  * 
  * Note that this class is still valid for single page editor.
  */
 public class ActionContributorForPhp extends ActionContributorHTML {
 
-	private static final String[] EDITOR_IDS = { "org.eclipse.php.core.phpsource", "org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] EDITOR_IDS = {
+			"org.eclipse.php.core.phpsource", "org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private RetargetAction fRetargetShowPHPDoc;
 	private List<RetargetAction> fPartListeners = new ArrayList<RetargetAction>();
@@ -76,40 +76,59 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	public ActionContributorForPhp() {
 		super();
 
-		ResourceBundle resourceBundle = DLTKEditorMessages.getBundleForConstructedKeys();
+		ResourceBundle resourceBundle = DLTKEditorMessages
+				.getBundleForConstructedKeys();
 
-		fRetargetShowPHPDoc = new RetargetAction(PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages.getString("ShowPHPDoc_label"));
-		fRetargetShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
+		fRetargetShowPHPDoc = new RetargetAction(
+				PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages
+						.getString("ShowPHPDoc_label"));
+		fRetargetShowPHPDoc
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		fPartListeners.add(fRetargetShowPHPDoc);
 
-		fShowPHPDoc = new RetargetTextEditorAction(resourceBundle, "ShowPHPDoc."); //$NON-NLS-1$
-		fShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
+		fShowPHPDoc = new RetargetTextEditorAction(resourceBundle,
+				"ShowPHPDoc."); //$NON-NLS-1$
+		fShowPHPDoc
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 
 		//fAddDescription = new RetargetTextEditorAction(resourceBundle, PHPActionConstants.ADD_DESCRIPTION_NAME + "_"); //$NON-NLS-1$
-		//fAddDescription.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION);
+		// fAddDescription.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION);
 
-		fGotoMatchingBracket = new RetargetTextEditorAction(resourceBundle, "GotoMatchingBracket."); //$NON-NLS-1$
-		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
+		fGotoMatchingBracket = new RetargetTextEditorAction(resourceBundle,
+				"GotoMatchingBracket."); //$NON-NLS-1$
+		fGotoMatchingBracket
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 
-		fOpenDeclaration = new RetargetTextEditorAction(resourceBundle, "OpenAction_declaration_"); //$NON-NLS-1$
-		fOpenDeclaration.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
-		
-		fOpenTypeHierarchy = new RetargetTextEditorAction(resourceBundle, "OpenTypeHierarchy"); //$NON-NLS-1$
-		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+		fOpenDeclaration = new RetargetTextEditorAction(resourceBundle,
+				"OpenAction_declaration_"); //$NON-NLS-1$
+		fOpenDeclaration
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
 
-		fOpenCallHierarchy = new RetargetTextEditorAction(resourceBundle, "OpenCallHierarchy"); //$NON-NLS-1$
-		fOpenCallHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+		fOpenTypeHierarchy = new RetargetTextEditorAction(resourceBundle,
+				"OpenTypeHierarchy"); //$NON-NLS-1$
+		fOpenTypeHierarchy
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 
-		fOpenHierarchy = new RetargetTextEditorAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy."); //$NON-NLS-1$
-		fOpenHierarchy.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
+		fOpenCallHierarchy = new RetargetTextEditorAction(resourceBundle,
+				"OpenCallHierarchy"); //$NON-NLS-1$
+		fOpenCallHierarchy
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+
+		fOpenHierarchy = new RetargetTextEditorAction(DLTKEditorMessages
+				.getBundleForConstructedKeys(), "OpenHierarchy."); //$NON-NLS-1$
+		fOpenHierarchy
+				.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
 
 		// source commands
 		fToggleComment = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
-		fToggleComment.setActionDefinitionId(IPHPEditorActionDefinitionIds.TOGGLE_COMMENT);
+		fToggleComment
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.TOGGLE_COMMENT);
 		fAddBlockComment = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
-		fAddBlockComment.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_BLOCK_COMMENT);
+		fAddBlockComment
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_BLOCK_COMMENT);
 		fRemoveBlockComment = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
-		fRemoveBlockComment.setActionDefinitionId(IPHPEditorActionDefinitionIds.REMOVE_BLOCK_COMMENT);
+		fRemoveBlockComment
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.REMOVE_BLOCK_COMMENT);
 
 		fMarkOccurrencesAction = new ToggleMarkOccurrencesAction(resourceBundle);
 	}
@@ -129,7 +148,9 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	}
 
 	/*
-	 * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToMenu(org.eclipse.jface.action.IMenuManager)
+	 * @see
+	 * org.eclipse.ui.part.EditorActionBarContributor#contributeToMenu(org.eclipse
+	 * .jface.action.IMenuManager)
 	 */
 	public void contributeToMenu(IMenuManager menu) {
 		super.contributeToMenu(menu);
@@ -139,15 +160,20 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 			gotoMenu.add(new Separator("additions2")); //$NON-NLS-1$
 			gotoMenu.appendToGroup("additions2", fGotoMatchingBracket); //$NON-NLS-1$
 		}
-		IMenuManager navigateMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
+		IMenuManager navigateMenu = menu
+				.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
 		if (navigateMenu != null) {
-			navigateMenu.appendToGroup(IWorkbenchActionConstants.OPEN_EXT, fOpenDeclaration);
-			navigateMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT, fOpenHierarchy);
-			
-			//Work around for Bug 251074
-			// The SSE's action contributor append the fOpentFileAction with the same name "Open Declaration".
-			//Do we really want to extends from SSE's action contributor? 
-			IContributionItem item = navigateMenu.remove(new ActionContributionItem(fOpenFileAction));
+			navigateMenu.appendToGroup(IWorkbenchActionConstants.OPEN_EXT,
+					fOpenDeclaration);
+			navigateMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT,
+					fOpenHierarchy);
+
+			// Work around for Bug 251074
+			// The SSE's action contributor append the fOpentFileAction with the
+			// same name "Open Declaration".
+			// Do we really want to extends from SSE's action contributor?
+			IContributionItem item = navigateMenu
+					.remove(new ActionContributionItem(fOpenFileAction));
 		}
 	}
 
@@ -155,7 +181,9 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	public void init(IActionBars bars, IWorkbenchPage page) {
 		super.init(bars, page);
 
-		bars.setGlobalActionHandler(IPHPEditorActionDefinitionIds.TOGGLE_MARK_OCCURRENCES, fMarkOccurrencesAction);
+		bars.setGlobalActionHandler(
+				IPHPEditorActionDefinitionIds.TOGGLE_MARK_OCCURRENCES,
+				fMarkOccurrencesAction);
 	}
 
 	/*
@@ -171,15 +199,29 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		fMarkOccurrencesAction.setEditor(editor);
 
 		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc")); //$NON-NLS-1$
-		fGotoMatchingBracket.setAction(getAction(editor, GotoMatchingBracketAction.GOTO_MATCHING_BRACKET));
-		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
-		fOpenTypeHierarchy.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
-		fOpenHierarchy.setAction(getAction(editor, IScriptEditorActionDefinitionIds.OPEN_HIERARCHY));
-		fOpenTypeHierarchy.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
+		fGotoMatchingBracket.setAction(getAction(editor,
+				GotoMatchingBracketAction.GOTO_MATCHING_BRACKET));
+		fOpenDeclaration.setAction(getAction(editor,
+				IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
+		fOpenTypeHierarchy.setAction(getAction(editor,
+				IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
+		fOpenHierarchy.setAction(getAction(editor,
+				IScriptEditorActionDefinitionIds.OPEN_HIERARCHY));
+		fOpenTypeHierarchy.setAction(getAction(editor,
+				IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
 
-		fToggleComment.setAction(getAction(editor, StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT));
-		fAddBlockComment.setAction(getAction(editor, StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT));
-		fRemoveBlockComment.setAction(getAction(editor, StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT));
+		fToggleComment
+				.setAction(getAction(
+						editor,
+						StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT));
+		fAddBlockComment
+				.setAction(getAction(
+						editor,
+						StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT));
+		fRemoveBlockComment
+				.setAction(getAction(
+						editor,
+						StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT));
 		fToggleComment.setEnabled(editor != null && editor.isEditable());
 		fAddBlockComment.setEnabled(editor != null && editor.isEditable());
 		fRemoveBlockComment.setEnabled(editor != null && editor.isEditable());

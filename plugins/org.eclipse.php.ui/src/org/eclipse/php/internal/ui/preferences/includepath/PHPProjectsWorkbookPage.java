@@ -79,7 +79,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 	public void init(IScriptProject jproject) {
 		updateProjectsList(jproject);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

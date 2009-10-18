@@ -26,48 +26,72 @@ import org.eclipse.swt.widgets.Text;
 /**
  * 
  * @author guy.g
- *
+ * 
  */
-public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPHPContentAssistPreferencePageBlock {
+public class PHPContentAssistAutoActivationConfigurationBlock extends
+		AbstractPHPContentAssistPreferencePageBlock {
 
 	protected Button autoActivationCheckBox;
 	protected Text autoActivationDelay;
 
 	public void setCompositeAddon(Composite parent) {
-		Composite composite = createSubsection(parent, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationSectionLabel"));
-		autoActivationCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_enableAutoActivation"), PHPCoreConstants.CODEASSIST_AUTOACTIVATION, 0);
+		Composite composite = createSubsection(
+				parent,
+				PHPUIMessages
+						.getString("CodeAssistPreferencePage_autoActivationSectionLabel"));
+		autoActivationCheckBox = addCheckBox(composite, PHPUIMessages
+				.getString("CodeAssistPreferencePage_enableAutoActivation"),
+				PHPCoreConstants.CODEASSIST_AUTOACTIVATION, 0);
 		autoActivationCheckBox.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				widgetSelected(e);
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				boolean autoActivateSectionEnabled = ((Button) e.widget).getSelection();
-				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, autoActivateSectionEnabled);
+				boolean autoActivateSectionEnabled = ((Button) e.widget)
+						.getSelection();
+				setControlsEnabled(
+						PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY,
+						autoActivateSectionEnabled);
 			}
 		});
-		
-		autoActivationDelay = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelay"), PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 4, 20, new PositiveIntegerStringValidator(PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"),
-			PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"), PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayPositive")));
-		
+
+		autoActivationDelay = addLabelledTextField(
+				composite,
+				PHPUIMessages
+						.getString("CodeAssistPreferencePage_autoActivationDelay"),
+				PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY,
+				4,
+				20,
+				new PositiveIntegerStringValidator(
+						PHPUIMessages
+								.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"),
+						PHPUIMessages
+								.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"),
+						PHPUIMessages
+								.getString("CodeAssistPreferencePage_autoActivationDelayPositive")));
+
 		setControlsEnablement();
 	}
-	
+
 	protected void setControlsEnablement() {
-		boolean autoActivateSectionEnabled = getPreferenceStore().getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION);
-		setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, autoActivateSectionEnabled);
+		boolean autoActivateSectionEnabled = getPreferenceStore().getBoolean(
+				PHPCoreConstants.CODEASSIST_AUTOACTIVATION);
+		setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY,
+				autoActivateSectionEnabled);
 	}
-	
+
 	protected IPreferenceStore getPreferenceStore() {
-		return new PreferencesAdapter(PHPCorePlugin.getDefault().getPluginPreferences());
+		return new PreferencesAdapter(PHPCorePlugin.getDefault()
+				.getPluginPreferences());
 	}
-	
+
 	protected void storeValues() {
 		super.storeValues();
 		PHPCorePlugin.getDefault().savePluginPreferences();
 	}
 
-	// restore text boxes enablement according to the checkbox 
+	// restore text boxes enablement according to the checkbox
 	protected void restoreDefaultTextValues() {
 		super.restoreDefaultTextValues();
 		setControlsEnablement();

@@ -35,14 +35,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
-public class ConfigurePHPIncludePathAction extends Action implements ISelectionChangedListener {
+public class ConfigurePHPIncludePathAction extends Action implements
+		ISelectionChangedListener {
 
 	private final IWorkbenchSite fSite;
 	private IProject fProject;
 
 	public ConfigurePHPIncludePathAction(IWorkbenchSite site) {
-		super(PHPUIMessages.getString("ConfigureIncludePathAction_label"), DLTKPluginImages.DESC_ELCL_CONFIGURE_BUILDPATH);
-		setToolTipText(PHPUIMessages.getString("ConfigureIncludePathAction_tooltip"));
+		super(PHPUIMessages.getString("ConfigureIncludePathAction_label"),
+				DLTKPluginImages.DESC_ELCL_CONFIGURE_BUILDPATH);
+		setToolTipText(PHPUIMessages
+				.getString("ConfigureIncludePathAction_tooltip"));
 		setDisabledImageDescriptor(DLTKPluginImages.DESC_DLCL_CONFIGURE_BUILDPATH);
 		fSite = site;
 	}
@@ -54,16 +57,19 @@ public class ConfigurePHPIncludePathAction extends Action implements ISelectionC
 	public void run() {
 		if (fProject != null) {
 			// TODO retrieve the page id via project nature
-			PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(getShell(), fProject, null, null, null);
+			PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn(
+					getShell(), fProject, null, null, null);
 			// search for the language specific page
-			final List elements = dialog.getPreferenceManager().getElements(PreferenceManager.PRE_ORDER);
+			final List elements = dialog.getPreferenceManager().getElements(
+					PreferenceManager.PRE_ORDER);
 			for (Iterator i = elements.iterator(); i.hasNext();) {
 				final IPreferenceNode node = (IPreferenceNode) i.next();
 				final String nodeId = node.getId();
 				if (nodeId.endsWith("IncludepathProperties")) { //$NON-NLS-1$
 					// recreate dialog and select page found
 					dialog.close();
-					dialog = PreferencesUtil.createPropertyDialogOn(getShell(), fProject, nodeId, null, null);
+					dialog = PreferencesUtil.createPropertyDialogOn(getShell(),
+							fProject, nodeId, null, null);
 					break;
 				}
 			}
@@ -108,9 +114,11 @@ public class ConfigurePHPIncludePathAction extends Action implements ISelectionC
 		} else if (firstElement instanceof IncludePath) {
 			return ((IncludePath) firstElement).getProject();
 		} else if (firstElement instanceof IncludePathContainer) {
-			return ((BuildPathContainer) firstElement).getScriptProject().getProject();
+			return ((BuildPathContainer) firstElement).getScriptProject()
+					.getProject();
 		} else if (firstElement instanceof IAdaptable) {
-			IResource res = (IResource) ((IAdaptable) firstElement).getAdapter(IResource.class);
+			IResource res = (IResource) ((IAdaptable) firstElement)
+					.getAdapter(IResource.class);
 			if (res != null) {
 				return res.getProject();
 			}

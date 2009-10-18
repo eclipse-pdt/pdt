@@ -33,71 +33,92 @@ public class ProblemLocation implements IProblemLocation {
 	private final String fMarkerType;
 
 	public ProblemLocation(int offset, int length, IScriptAnnotation annotation) {
-		fId= annotation.getId();
-		fArguments= annotation.getArguments();
-		fOffset= offset;
-		fLength= length;
-		fIsError= ScriptMarkerAnnotation.ERROR_ANNOTATION_TYPE.equals(annotation.getType());
+		fId = annotation.getId();
+		fArguments = annotation.getArguments();
+		fOffset = offset;
+		fLength = length;
+		fIsError = ScriptMarkerAnnotation.ERROR_ANNOTATION_TYPE
+				.equals(annotation.getType());
 
-		String markerType= annotation.getMarkerType();
-		fMarkerType= markerType != null ? markerType : IScriptModelMarker.DLTK_MODEL_PROBLEM_MARKER;
+		String markerType = annotation.getMarkerType();
+		fMarkerType = markerType != null ? markerType
+				: IScriptModelMarker.DLTK_MODEL_PROBLEM_MARKER;
 	}
 
-	public ProblemLocation(int offset, int length, int id, String[] arguments, boolean isError, String markerType) {
-		fId= id;
-		fArguments= arguments;
-		fOffset= offset;
-		fLength= length;
-		fIsError= isError;
-		fMarkerType= markerType;
+	public ProblemLocation(int offset, int length, int id, String[] arguments,
+			boolean isError, String markerType) {
+		fId = id;
+		fArguments = arguments;
+		fOffset = offset;
+		fLength = length;
+		fIsError = isError;
+		fMarkerType = markerType;
 	}
 
 	public ProblemLocation(IProblem problem) {
-		fId= problem.getID();
-		fArguments= problem.getArguments();
-		fOffset= problem.getSourceStart();
-		fLength= problem.getSourceEnd() - fOffset + 1;
-		fIsError= problem.isError();
-		fMarkerType= problem instanceof CategorizedProblem ? ((CategorizedProblem) problem).getMarkerType() : IScriptModelMarker.DLTK_MODEL_PROBLEM_MARKER;
+		fId = problem.getID();
+		fArguments = problem.getArguments();
+		fOffset = problem.getSourceStart();
+		fLength = problem.getSourceEnd() - fOffset + 1;
+		fIsError = problem.isError();
+		fMarkerType = problem instanceof CategorizedProblem ? ((CategorizedProblem) problem)
+				.getMarkerType()
+				: IScriptModelMarker.DLTK_MODEL_PROBLEM_MARKER;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getProblemId()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getProblemId
+	 * ()
 	 */
 	public int getProblemId() {
 		return fId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getProblemArguments()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jdt.internal.ui.text.correction.IProblemLocation#
+	 * getProblemArguments()
 	 */
 	public String[] getProblemArguments() {
 		return fArguments;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getLength()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getLength()
 	 */
 	public int getLength() {
 		return fLength;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getOffset()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getOffset()
 	 */
 	public int getOffset() {
 		return fOffset;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.ui.text.java.IProblemLocation#isError()
 	 */
 	public boolean isError() {
 		return fIsError;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.ui.text.java.IProblemLocation#getMarkerType()
 	 */
 	public String getMarkerType() {
@@ -106,31 +127,38 @@ public class ProblemLocation implements IProblemLocation {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getCoveringNode(org.eclipse.jdt.core.dom.CompilationUnit)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getCoveringNode
+	 * (org.eclipse.jdt.core.dom.CompilationUnit)
 	 */
 	public ASTNode getCoveringNode(Program astRoot) {
-		NodeFinder finder= new NodeFinder(fOffset, fLength);
+		NodeFinder finder = new NodeFinder(fOffset, fLength);
 		astRoot.accept(finder);
 		return finder.getCoveringNode();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getCoveredNode(org.eclipse.jdt.core.dom.CompilationUnit)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.correction.IProblemLocation#getCoveredNode
+	 * (org.eclipse.jdt.core.dom.CompilationUnit)
 	 */
 	public ASTNode getCoveredNode(Program astRoot) {
-		NodeFinder finder= new NodeFinder(fOffset, fLength);
+		NodeFinder finder = new NodeFinder(fOffset, fLength);
 		astRoot.accept(finder);
 		return finder.getCoveredNode();
 	}
 
 	public String toString() {
-		StringBuffer buf= new StringBuffer();
+		StringBuffer buf = new StringBuffer();
 		buf.append("Id: ").append(getErrorCode(fId)).append('\n'); //$NON-NLS-1$
-		buf.append('[').append(fOffset).append(", ").append(fLength).append(']').append('\n'); //$NON-NLS-1$
-		String[] arg= fArguments;
+		buf.append('[').append(fOffset)
+				.append(", ").append(fLength).append(']').append('\n'); //$NON-NLS-1$
+		String[] arg = fArguments;
 		if (arg != null) {
-			for (int i= 0; i < arg.length; i++) {
+			for (int i = 0; i < arg.length; i++) {
 				buf.append(arg[i]);
 				buf.append('\n');
 			}
@@ -139,7 +167,7 @@ public class ProblemLocation implements IProblemLocation {
 	}
 
 	private String getErrorCode(int code) {
-		StringBuffer buf= new StringBuffer();
+		StringBuffer buf = new StringBuffer();
 
 		if ((code & IProblem.TypeRelated) != 0) {
 			buf.append("TypeRelated + "); //$NON-NLS-1$
@@ -169,6 +197,5 @@ public class ProblemLocation implements IProblemLocation {
 
 		return buf.toString();
 	}
-
 
 }

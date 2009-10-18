@@ -33,21 +33,25 @@ public class PhpTemplateAccess extends ScriptTemplateAccess {
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getPreferenceStore()
+	 * @see
+	 * org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getPreferenceStore()
 	 */
 	protected IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getContextTypeId()
+	 * @see
+	 * org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getContextTypeId()
 	 */
 	protected String getContextTypeId() {
 		return PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
 	}
 
 	/*
-	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getCustomTemplatesKey()
+	 * @see
+	 * org.eclipse.dltk.ui.templates.ScriptTemplateAccess#getCustomTemplatesKey
+	 * ()
 	 */
 	protected String getCustomTemplatesKey() {
 		return CUSTOM_TEMPLATES_KEY;

@@ -27,8 +27,11 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	private boolean isGlobalScope;
 
 	/**
-	 * @param root the AST root
-	 * @param node the selected node (must be an {@link Identifier} or {@link Scalar} instance)
+	 * @param root
+	 *            the AST root
+	 * @param node
+	 *            the selected node (must be an {@link Identifier} or
+	 *            {@link Scalar} instance)
 	 * @return returns a message if there is a problem
 	 */
 	public String initialize(Program root, ASTNode node) {
@@ -53,7 +56,10 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences
+	 * ()
 	 */
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, '$' + globalName);
@@ -107,7 +113,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Visit $a on global references: $a = 5;
 	 */
 	public boolean visit(Variable variable) {
-		if (variable.isDollared() && variable.getName().getType() == ASTNode.IDENTIFIER) {
+		if (variable.isDollared()
+				&& variable.getName().getType() == ASTNode.IDENTIFIER) {
 			Identifier identifier = (Identifier) variable.getName();
 			if (isGlobalScope && globalName.equals(identifier.getName())) {
 				addOccurrence(variable);
@@ -117,7 +124,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/**
-	 * Make sure we mark the occurrences when selecting a scalar inside a GLOBALS array access.
+	 * Make sure we mark the occurrences when selecting a scalar inside a
+	 * GLOBALS array access.
 	 */
 	public boolean visit(Scalar scalar) {
 		String stringValue = scalar.getStringValue();
@@ -131,7 +139,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				if (variableName.getType() == ASTNode.VARIABLE) {
 					final Variable var = (Variable) variableName;
 					Expression varName = var.getName();
-					if (var.isDollared() && varName.getType() == ASTNode.IDENTIFIER) {
+					if (var.isDollared()
+							&& varName.getType() == ASTNode.IDENTIFIER) {
 						final String name = ((Identifier) varName).getName();
 						if ("GLOBALS".equals(name) || "_GLOBALS".equals(name)) { //$NON-NLS-1$
 							addOccurrence(scalar);
@@ -144,7 +153,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/**
-	 * Visit $a on global references (on function/methods) : ...global $a;$a = 5;...
+	 * Visit $a on global references (on function/methods) : ...global $a;$a =
+	 * 5;...
 	 */
 	public boolean visit(GlobalStatement globalStatement) {
 		final List<Variable> variables = globalStatement.variables();
@@ -177,7 +187,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 						Scalar scalar = (Scalar) index;
 						final String stringValue = scalar.getStringValue();
 						if (stringValue.length() > 2 && isQuated(stringValue)) {
-							if (globalName.equals(stringValue.substring(1, stringValue.length() - 1))) {
+							if (globalName.equals(stringValue.substring(1,
+									stringValue.length() - 1))) {
 								addOccurrence(scalar);
 							}
 						}
@@ -200,12 +211,16 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (readWriteType == IOccurrencesFinder.F_WRITE_OCCURRENCE) {
 			desc = Messages.format(BASE_WRITE_DESCRIPTION, '$' + globalName);
 		}
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), readWriteType, desc));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(),
+				readWriteType, desc));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * getOccurrenceReadWriteType
+	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	protected int getOccurrenceType(ASTNode node) {
 		if (node.getType() == ASTNode.VARIABLE) {
@@ -217,7 +232,9 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				if (assignment.getLeftHandSide() == node) {
 					return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 				}
-			} else if (parentType == ASTNode.POSTFIX_EXPRESSION || parentType == ASTNode.PREFIX_EXPRESSION || parentType == ASTNode.CATCH_CLAUSE) {
+			} else if (parentType == ASTNode.POSTFIX_EXPRESSION
+					|| parentType == ASTNode.PREFIX_EXPRESSION
+					|| parentType == ASTNode.CATCH_CLAUSE) {
 				return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 			} else if (parentType == ASTNode.FOR_EACH_STATEMENT) {
 				if (variable.getLocationInParent() != ForEachStatement.EXPRESSION_PROPERTY) {
@@ -230,7 +247,9 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
 	 */
 	public String getElementName() {
 		return globalName;
@@ -238,6 +257,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
 	 */
 	public String getID() {
@@ -245,7 +265,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/**
-	 * @param isGlobalScope the isGlobalScope to set
+	 * @param isGlobalScope
+	 *            the isGlobalScope to set
 	 */
 	public void setGlobalScope(boolean isGlobalScope) {
 		this.isGlobalScope = isGlobalScope;

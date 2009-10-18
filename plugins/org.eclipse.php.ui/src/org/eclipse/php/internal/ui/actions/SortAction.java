@@ -33,13 +33,16 @@ public class SortAction extends Action {
 		super();
 
 		this.treeViewer = treeViewer;
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OUTLINE_VIEW);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+				IPHPHelpContextIds.OUTLINE_VIEW);
 		setText(PHPUIMessages.getString("PHPOutlinePage_Sort_label"));
 		PHPPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.gif"); //$NON-NLS-1$
 		setToolTipText(PHPUIMessages.getString("PHPOutlinePage_Sort_tooltip"));
-		setDescription(PHPUIMessages.getString("PHPOutlinePage_Sort_description"));
+		setDescription(PHPUIMessages
+				.getString("PHPOutlinePage_Sort_description"));
 
-		boolean checked = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_IS_SORTED); //$NON-NLS-1$
+		boolean checked = PHPUiPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PREF_IS_SORTED); //$NON-NLS-1$
 		valueChanged(checked, false);
 	}
 
@@ -49,19 +52,21 @@ public class SortAction extends Action {
 
 	private void valueChanged(final boolean on, boolean store) {
 		setChecked(on);
-		BusyIndicator.showWhile(treeViewer.getControl().getDisplay(), new Runnable() {
-			public void run() {
-				if (on) {
-					treeViewer.setComparator(fComparator);
-					//							fDropSupport.setFeedbackEnabled(false);
-				} else {
-					treeViewer.setComparator(fSourcePositonComparator);
-					//							fDropSupport.setFeedbackEnabled(true);
-				}
-			}
-		});
+		BusyIndicator.showWhile(treeViewer.getControl().getDisplay(),
+				new Runnable() {
+					public void run() {
+						if (on) {
+							treeViewer.setComparator(fComparator);
+							// fDropSupport.setFeedbackEnabled(false);
+						} else {
+							treeViewer.setComparator(fSourcePositonComparator);
+							// fDropSupport.setFeedbackEnabled(true);
+						}
+					}
+				});
 
 		if (store)
-			PHPUiPlugin.getDefault().getPreferenceStore().setValue(PREF_IS_SORTED, on); //$NON-NLS-1$
+			PHPUiPlugin.getDefault().getPreferenceStore().setValue(
+					PREF_IS_SORTED, on); //$NON-NLS-1$
 	}
 }

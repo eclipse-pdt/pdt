@@ -31,10 +31,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
- * A list with a button bar.
- * Typical buttons are 'Add', 'Remove', 'Up' and 'Down'.
- * List model is independend of widget creation.
- * DialogFields controls are: Label, List and Composite containing buttons.
+ * A list with a button bar. Typical buttons are 'Add', 'Remove', 'Up' and
+ * 'Down'. List model is independend of widget creation. DialogFields controls
+ * are: Label, List and Composite containing buttons.
  */
 public class ListDialogField<E> extends DialogField {
 
@@ -43,7 +42,8 @@ public class ListDialogField<E> extends DialogField {
 		private String[] headers;
 		private boolean drawLines;
 
-		public ColumnsDescription(ColumnLayoutData[] columns, String[] headers, boolean drawLines) {
+		public ColumnsDescription(ColumnLayoutData[] columns, String[] headers,
+				boolean drawLines) {
 			this.columns = columns;
 			this.headers = headers;
 			this.drawLines = drawLines;
@@ -95,13 +95,18 @@ public class ListDialogField<E> extends DialogField {
 
 	/**
 	 * Creates the <code>ListDialogField</code>.
-	 * @param adapter A listener for button invocation, selection changes. Can
-	 * be <code>null</code>.
-	 * @param buttonLabels The labels of all buttons: <code>null</code> is a valid array entry and
-	 * marks a separator.
-	 * @param lprovider The label provider to render the table entries
+	 * 
+	 * @param adapter
+	 *            A listener for button invocation, selection changes. Can be
+	 *            <code>null</code>.
+	 * @param buttonLabels
+	 *            The labels of all buttons: <code>null</code> is a valid array
+	 *            entry and marks a separator.
+	 * @param lprovider
+	 *            The label provider to render the table entries
 	 */
-	public ListDialogField(IListAdapter adapter, String[] buttonLabels, ILabelProvider lprovider) {
+	public ListDialogField(IListAdapter adapter, String[] buttonLabels,
+			ILabelProvider lprovider) {
 		super();
 		fListAdapter = adapter;
 
@@ -131,9 +136,11 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Sets the index of the 'remove' button in the button label array passed in the constructor.
-	 * The behaviour of the button marked as the 'remove' button will then be handled internally.
-	 * (enable state, button invocation behaviour)
+	 * Sets the index of the 'remove' button in the button label array passed in
+	 * the constructor. The behaviour of the button marked as the 'remove'
+	 * button will then be handled internally. (enable state, button invocation
+	 * behaviour)
+	 * 
 	 * @see #getRemoveButtonIndex()
 	 */
 	public void setRemoveButtonIndex(int removeButtonIndex) {
@@ -142,7 +149,9 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Returns the index of the 'remove' button defined by {@link #setRemoveButtonIndex(int)}.
+	 * Returns the index of the 'remove' button defined by
+	 * {@link #setRemoveButtonIndex(int)}.
+	 * 
 	 * @return The 'remove' button index.
 	 * @see #setRemoveButtonIndex(int)
 	 */
@@ -151,9 +160,9 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Sets the index of the 'up' button in the button label array passed in the constructor.
-	 * The behaviour of the button marked as the 'up' button will then be handled internally.
-	 * (enable state, button invocation behaviour)
+	 * Sets the index of the 'up' button in the button label array passed in the
+	 * constructor. The behaviour of the button marked as the 'up' button will
+	 * then be handled internally. (enable state, button invocation behaviour)
 	 */
 	public void setUpButtonIndex(int upButtonIndex) {
 		Assert.isTrue(upButtonIndex < fButtonLabels.length);
@@ -161,9 +170,10 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Sets the index of the 'down' button in the button label array passed in the constructor.
-	 * The behaviour of the button marked as the 'down' button will then be handled internally.
-	 * (enable state, button invocation behaviour)
+	 * Sets the index of the 'down' button in the button label array passed in
+	 * the constructor. The behaviour of the button marked as the 'down' button
+	 * will then be handled internally. (enable state, button invocation
+	 * behaviour)
 	 */
 	public void setDownButtonIndex(int downButtonIndex) {
 		Assert.isTrue(downButtonIndex < fButtonLabels.length);
@@ -172,7 +182,9 @@ public class ListDialogField<E> extends DialogField {
 
 	/**
 	 * Sets the viewerSorter.
-	 * @param viewerSorter The viewerSorter to set
+	 * 
+	 * @param viewerSorter
+	 *            The viewerSorter to set
 	 */
 	public void setViewerSorter(ViewerSorter viewerSorter) {
 		fViewerSorter = viewerSorter;
@@ -192,6 +204,7 @@ public class ListDialogField<E> extends DialogField {
 
 	/**
 	 * Checks if the button pressed is handled internally
+	 * 
 	 * @return Returns true if button has been handled.
 	 */
 	protected boolean managedButtonPressed(int index) {
@@ -260,7 +273,8 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Sets the minimal width of the buttons. Must be called after widget creation.
+	 * Sets the minimal width of the buttons. Must be called after widget
+	 * creation.
 	 */
 	public void setButtonsMinWidth(int minWidth) {
 		if (fLastSeparator != null) {
@@ -271,9 +285,12 @@ public class ListDialogField<E> extends DialogField {
 	// ------ ui creation
 
 	/**
-	 * Returns the list control. When called the first time, the control will be created.
-	 * @param parent The parent composite when called the first time, or <code>null</code>
-	 * after.
+	 * Returns the list control. When called the first time, the control will be
+	 * created.
+	 * 
+	 * @param parent
+	 *            The parent composite when called the first time, or
+	 *            <code>null</code> after.
 	 */
 	public Control getListControl(Composite parent) {
 		if (fTableControl == null) {
@@ -286,7 +303,8 @@ public class ListDialogField<E> extends DialogField {
 				fTableControl = tableControl;
 				tableControl.setLayout(new TableLayout());
 			} else {
-				TableLayoutComposite composite = new TableLayoutComposite(parent, SWT.NONE);
+				TableLayoutComposite composite = new TableLayoutComposite(
+						parent, SWT.NONE);
 				composite.setFont(parent.getFont());
 				fTableControl = composite;
 
@@ -299,7 +317,7 @@ public class ListDialogField<E> extends DialogField {
 				for (int i = 0; i < columns.length; i++) {
 					composite.addColumnData(columns[i]);
 					TableColumn column = new TableColumn(tableControl, SWT.NONE);
-					//tableLayout.addColumnData(columns[i]);
+					// tableLayout.addColumnData(columns[i]);
 					if (fTableColumns.headers != null) {
 						column.setText(fTableColumns.headers[i]);
 					}
@@ -312,7 +330,7 @@ public class ListDialogField<E> extends DialogField {
 				}
 			});
 
-			//fTableControl.setLayout(tableLayout);
+			// fTableControl.setLayout(tableLayout);
 
 			fTable.setContentProvider(fListViewerAdapter);
 			fTable.setLabelProvider(fLabelProvider);
@@ -357,7 +375,8 @@ public class ListDialogField<E> extends DialogField {
 		return new TableViewer(table);
 	}
 
-	protected Button createButton(Composite parent, String label, SelectionListener listener) {
+	protected Button createButton(Composite parent, String label,
+			SelectionListener listener) {
 		Button button = new Button(parent, SWT.PUSH);
 		button.setFont(parent.getFont());
 		button.setText(label);
@@ -386,10 +405,12 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Returns the composite containing the buttons. When called the first time, the control
-	 * will be created.
-	 * @param parent The parent composite when called the first time, or <code>null</code>
-	 * after.
+	 * Returns the composite containing the buttons. When called the first time,
+	 * the control will be created.
+	 * 
+	 * @param parent
+	 *            The parent composite when called the first time, or
+	 *            <code>null</code> after.
 	 */
 	public Composite getButtonBox(Composite parent) {
 		if (fButtonsControl == null) {
@@ -417,8 +438,10 @@ public class ListDialogField<E> extends DialogField {
 				for (int i = 0; i < fButtonLabels.length; i++) {
 					String currLabel = fButtonLabels[i];
 					if (currLabel != null) {
-						fButtonControls[i] = createButton(contents, currLabel, listener);
-						fButtonControls[i].setEnabled(isEnabled() && fButtonsEnabled[i]);
+						fButtonControls[i] = createButton(contents, currLabel,
+								listener);
+						fButtonControls[i].setEnabled(isEnabled()
+								&& fButtonsEnabled[i]);
 					} else {
 						fButtonControls[i] = null;
 						createSeparator(contents);
@@ -447,12 +470,14 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Handles key events in the table viewer. Specifically
-	 * when the delete key is pressed.
+	 * Handles key events in the table viewer. Specifically when the delete key
+	 * is pressed.
 	 */
 	protected void handleKeyPressed(KeyEvent event) {
 		if (event.character == SWT.DEL && event.stateMask == 0) {
-			if (fRemoveButtonIndex != -1 && isButtonEnabled(fTable.getSelection(), fRemoveButtonIndex)) {
+			if (fRemoveButtonIndex != -1
+					&& isButtonEnabled(fTable.getSelection(),
+							fRemoveButtonIndex)) {
 				managedButtonPressed(fRemoveButtonIndex);
 			}
 		}
@@ -543,8 +568,8 @@ public class ListDialogField<E> extends DialogField {
 	}
 
 	/**
-	 * Gets the elements shown in the list.
-	 * The list returned is a copy, so it can be modified by the user.
+	 * Gets the elements shown in the list. The list returned is a copy, so it
+	 * can be modified by the user.
 	 */
 	public List<E> getElements() {
 		return new ArrayList<E>(fElements);
@@ -567,7 +592,8 @@ public class ListDialogField<E> extends DialogField {
 	/**
 	 * Replaces an element.
 	 */
-	public void replaceElement(E oldElement, E newElement) throws IllegalArgumentException {
+	public void replaceElement(E oldElement, E newElement)
+			throws IllegalArgumentException {
 		int idx = fElements.indexOf(oldElement);
 		if (idx != -1) {
 			fElements.set(idx, newElement);
@@ -829,7 +855,8 @@ public class ListDialogField<E> extends DialogField {
 		if (isOkToUse(fTableControl)) {
 			ISelection selection = fTable.getSelection();
 			if (selection instanceof IStructuredSelection) {
-				Iterator<E> iter = ((IStructuredSelection) selection).iterator();
+				Iterator<E> iter = ((IStructuredSelection) selection)
+						.iterator();
 				while (iter.hasNext()) {
 					result.add(iter.next());
 				}
@@ -840,7 +867,8 @@ public class ListDialogField<E> extends DialogField {
 
 	// ------- ListViewerAdapter
 
-	private class ListViewerAdapter implements IStructuredContentProvider, ISelectionChangedListener, IDoubleClickListener {
+	private class ListViewerAdapter implements IStructuredContentProvider,
+			ISelectionChangedListener, IDoubleClickListener {
 
 		// ------- ITableContentProvider Interface ------------
 
@@ -865,8 +893,12 @@ public class ListDialogField<E> extends DialogField {
 			doListSelected(event);
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse
+		 * .jface.viewers.DoubleClickEvent)
 		 */
 		public void doubleClick(DoubleClickEvent event) {
 			doDoubleClick(event);

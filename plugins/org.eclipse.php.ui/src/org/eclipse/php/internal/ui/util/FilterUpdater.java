@@ -27,15 +27,20 @@ public class FilterUpdater implements IResourceChangeListener {
 		fViewer = viewer;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org
+	 * .eclipse.core.resources.IResourceChangeEvent)
 	 */
 	public void resourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
 		if (delta == null)
 			return;
 
-		IResourceDelta[] projDeltas = delta.getAffectedChildren(IResourceDelta.CHANGED);
+		IResourceDelta[] projDeltas = delta
+				.getAffectedChildren(IResourceDelta.CHANGED);
 		for (int i = 0; i < projDeltas.length; i++) {
 			IResourceDelta pDelta = projDeltas[i];
 			if ((pDelta.getFlags() & IResourceDelta.DESCRIPTION) != 0) {

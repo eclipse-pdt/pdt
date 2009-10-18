@@ -35,16 +35,20 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 
 /**
- * Project Outline for the php perspective, it is based on the {@link ScriptExplorerPart} 
- * Registration to the page part (editor) is done to change the project context  
+ * Project Outline for the php perspective, it is based on the
+ * {@link ScriptExplorerPart} Registration to the page part (editor) is done to
+ * change the project context
+ * 
  * @author Roy, 2008
  * @version 2.0 (by NirC, 2008)
  */
-public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListener {
+public class ProjectOutlinePart extends ScriptExplorerPart implements
+		IPartListener {
 
 	@Override
 	public ProjectOutlineContentProvider createContentProvider() {
-		boolean showCUChildren = DLTKUIPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
+		boolean showCUChildren = DLTKUIPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
 
 		return new ProjectOutlineContentProvider(showCUChildren) {
 			protected IPreferenceStore getPreferenceStore() {
@@ -61,19 +65,24 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 	@Override
 	protected ScriptExplorerLabelProvider createLabelProvider() {
-		final IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
+		final IPreferenceStore store = DLTKUIPlugin.getDefault()
+				.getPreferenceStore();
 
 		return new ProjectOutlineLabelProvider(getContentProvider(), store);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#createPartControl(org.eclipse.swt.widgets.Composite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#createPartControl
+	 * (org.eclipse.swt.widgets.Composite)
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
 
-		// register this view to the page 
+		// register this view to the page
 		getSite().getPage().addPartListener(this);
 
 		selectProject(null);
@@ -81,27 +90,62 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 	@Override
 	protected void setComparator() {
-		getTreeViewer().setComparator(new ModelElementSorter()/*new ViewerSorter(){
-					@Override
-					public int compare(Viewer viewer, Object object1, Object object2) {
-						if (object1 instanceof IModelElement && object2 instanceof IModelElement) {
-							IModelElement left = (IModelElement) object1;
-							IModelElement right = (IModelElement) object2;
-							int result = left.getElementName().compareToIgnoreCase(right.getElementName());
-							if (result != 0)
-								return result;
-							return (left.getPath() + left.getElementName()).compareToIgnoreCase(right.getPath() + right.getElementName());
-						}
-						return super.compare(viewer, object1, object2);
-					}
-					
-				}*/);
+		getTreeViewer().setComparator(new ModelElementSorter()/*
+															 * new
+															 * ViewerSorter(){
+															 * 
+															 * @Override public
+															 * int
+															 * compare(Viewer
+															 * viewer, Object
+															 * object1, Object
+															 * object2) { if
+															 * (object1
+															 * instanceof
+															 * IModelElement &&
+															 * object2
+															 * instanceof
+															 * IModelElement) {
+															 * IModelElement
+															 * left =
+															 * (IModelElement)
+															 * object1;
+															 * IModelElement
+															 * right =
+															 * (IModelElement)
+															 * object2; int
+															 * result =
+															 * left.getElementName
+															 * (
+															 * ).compareToIgnoreCase
+															 * (
+															 * right.getElementName
+															 * ()); if (result
+															 * != 0) return
+															 * result; return
+															 * (left.getPath() +
+															 * left
+															 * .getElementName
+															 * ())
+															 * .compareToIgnoreCase
+															 * (right.getPath()
+															 * +
+															 * right.getElementName
+															 * ()); } return
+															 * super
+															 * .compare(viewer,
+															 * object1,
+															 * object2); }
+															 * 
+															 * }
+															 */);
 
 	}
 
 	private void setInputAsEditor(IScriptProject scriptProject) {
 		final TreeViewer treeViewer = getTreeViewer();
-		if (null == treeViewer.getInput() || !treeViewer.getInput().equals(scriptProject)) {
+		if (null == treeViewer.getInput()
+				|| !treeViewer.getInput().equals(scriptProject)) {
 			treeViewer.setInput(scriptProject);
 		}
 	}
@@ -110,7 +154,9 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 		setInputAsEditor((IScriptProject) getInput(editor));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#dispose()
 	 */
 	@Override
@@ -149,16 +195,20 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	}
 
 	private void setInputAsExplorerProject(IWorkbenchPart part) {
-		final TreeSelection input = (TreeSelection) ((ScriptExplorerPart) part).getTreeViewer().getSelection();
+		final TreeSelection input = (TreeSelection) ((ScriptExplorerPart) part)
+				.getTreeViewer().getSelection();
 		IScriptProject scriptProject = null;
-		//getting selected project (from ScriptExplorerPart selection.
+		// getting selected project (from ScriptExplorerPart selection.
 		if (input.getFirstElement() instanceof IModelElement) {
-			scriptProject = (IScriptProject) ((IModelElement) input.getFirstElement()).getAncestor(IModelElement.SCRIPT_PROJECT);
+			scriptProject = (IScriptProject) ((IModelElement) input
+					.getFirstElement())
+					.getAncestor(IModelElement.SCRIPT_PROJECT);
 		}
 
 		if (null == scriptProject) {
 			// If no project is selected - choosing the first project
-			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+					.getProjects();
 			if (null != projects && projects.length != 0) {
 				scriptProject = DLTKCore.create(projects[0]);
 			}
@@ -182,22 +232,23 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 		selectProject(part);
 	}
 
-	
 	/**
 	 * Enable lazy loading for group elements
 	 */
 	protected ProblemTreeViewer createViewer(Composite composite) {
-		return new ProjectOutlineProblemTreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		return new ProjectOutlineProblemTreeViewer(composite, SWT.MULTI
+				| SWT.H_SCROLL | SWT.V_SCROLL);
 	}
 
-	protected class ProjectOutlineProblemTreeViewer extends PackageExplorerProblemTreeViewer {
+	protected class ProjectOutlineProblemTreeViewer extends
+			PackageExplorerProblemTreeViewer {
 
 		public ProjectOutlineProblemTreeViewer(Composite parent, int style) {
 			super(parent, style);
 		}
 
 		/**
-		 * Always return true for elements to reduce model queries 
+		 * Always return true for elements to reduce model queries
 		 */
 		protected boolean evaluateExpandableWithFilters(Object parent) {
 			return false;

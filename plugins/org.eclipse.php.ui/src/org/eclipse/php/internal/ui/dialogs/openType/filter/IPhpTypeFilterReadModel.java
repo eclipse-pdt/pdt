@@ -11,9 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.filter;
 
-
 public interface IPhpTypeFilterReadModel {
 	public boolean getSelectClasss();
+
 	public boolean getSelectFunctions();
+
 	public boolean getSelectConstants();
 }

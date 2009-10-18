@@ -28,11 +28,13 @@ public class ConvertProjectActionGroup extends ActionGroup {
 	private ConvertToPDTProjectAction fConvertToPDTProjectAction;
 
 	/**
-	 * Creates a new <code>ConfigureBuildPathActionGroup</code>. The group requires
-	 * that the selection provided by the part's selection provider is of type <code>
+	 * Creates a new <code>ConfigureBuildPathActionGroup</code>. The group
+	 * requires that the selection provided by the part's selection provider is
+	 * of type <code>
 	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
 	 * 
-	 * @param part the view part that owns this action group
+	 * @param part
+	 *            the view part that owns this action group
 	 */
 	public ConvertProjectActionGroup(IViewPart part) {
 		fSite = part.getSite();
@@ -41,10 +43,10 @@ public class ConvertProjectActionGroup extends ActionGroup {
 	}
 
 	/**
-	 * Returns the open action managed by this action group. 
+	 * Returns the open action managed by this action group.
 	 * 
-	 * @return the open action. Returns <code>null</code> if the group
-	 * 	doesn't provide any open action
+	 * @return the open action. Returns <code>null</code> if the group doesn't
+	 *         provide any open action
 	 */
 	public IAction getOpenAction() {
 		return fConvertToPDTProjectAction;
@@ -58,15 +60,15 @@ public class ConvertProjectActionGroup extends ActionGroup {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillActionBars(IActionBars actionBar) {
 		super.fillActionBars(actionBar);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);

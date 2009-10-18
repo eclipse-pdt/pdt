@@ -17,8 +17,8 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Helper class to manage images that should be disposed when a control is disposed
- * contol.addWidgetListener(new ImageDisposer(myImage));
+ * Helper class to manage images that should be disposed when a control is
+ * disposed contol.addWidgetListener(new ImageDisposer(myImage));
  */
 public class ImageDisposer implements DisposeListener {
 

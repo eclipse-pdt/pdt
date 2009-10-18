@@ -33,9 +33,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
-public class PHPEditorHoverConfigurationBlock implements IPreferenceConfigurationBlock {
+public class PHPEditorHoverConfigurationBlock implements
+		IPreferenceConfigurationBlock {
 
-	private static final String DELIMITER = PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_delimiter");
+	private static final String DELIMITER = PHPUIMessages
+			.getString("PHPEditorHoverConfigurationBlock_delimiter");
 	private static final int ENABLED_PROP = 0;
 	private static final int MODIFIER_PROP = 1;
 
@@ -53,7 +55,8 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		}
 	}
 
-	private class PHPEditorTextHoverDescriptorLabelProvider implements ITableLabelProvider {
+	private class PHPEditorTextHoverDescriptorLabelProvider implements
+			ITableLabelProvider {
 
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
@@ -61,16 +64,17 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 		public String getColumnText(Object element, int columnIndex) {
 			switch (columnIndex) {
-				case ENABLED_PROP:
-					return ((PHPEditorTextHoverDescriptor) element).getLabel();
+			case ENABLED_PROP:
+				return ((PHPEditorTextHoverDescriptor) element).getLabel();
 
-				case MODIFIER_PROP:
-					TableItem item = (TableItem) fHoverTableViewer.testFindItem(element);
-					int index = fHoverTable.indexOf(item);
-					return fHoverConfigs[index].fModifierString;
+			case MODIFIER_PROP:
+				TableItem item = (TableItem) fHoverTableViewer
+						.testFindItem(element);
+				int index = fHoverTable.indexOf(item);
+				return fHoverConfigs[index].fModifierString;
 
-				default:
-					break;
+			default:
+				break;
 			}
 
 			return null;
@@ -90,7 +94,8 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		}
 	}
 
-	private class PHPEditorTextHoverDescriptorContentProvider implements IStructuredContentProvider {
+	private class PHPEditorTextHoverDescriptorContentProvider implements
+			IStructuredContentProvider {
 
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			// Do nothing since the viewer listens to resource deltas
@@ -115,8 +120,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	private TableViewer fHoverTableViewer;
 	private TableColumn fNameColumn;
 	private TableColumn fModifierColumn;
-	private Text fDescription;	
-	
+	private Text fDescription;
 
 	private PreferencePage fMainPreferencePage;
 
@@ -126,16 +130,19 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
+			fStore.setValue((String) fCheckBoxes.get(button), button
+					.getSelection());
 		}
 
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button), button.getSelection());
+			fStore.setValue((String) fCheckBoxes.get(button), button
+					.getSelection());
 		}
 	};
 
-	public PHPEditorHoverConfigurationBlock(PreferencePage mainPreferencePage, OverlayPreferenceStore store) {
+	public PHPEditorHoverConfigurationBlock(PreferencePage mainPreferencePage,
+			OverlayPreferenceStore store) {
 		Assert.isNotNull(mainPreferencePage);
 		Assert.isNotNull(store);
 		fMainPreferencePage = mainPreferencePage;
@@ -147,11 +154,18 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 		ArrayList overlayKeys = new ArrayList();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.BOOLEAN,
+				PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.STRING,
+				PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.STRING,
+				PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS));
 
-		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
+		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
+				.size()];
 		overlayKeys.toArray(keys);
 		return keys;
 	}
@@ -159,7 +173,8 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	/**
 	 * Creates page for hover preferences.
 	 * 
-	 * @param parent the parent composite
+	 * @param parent
+	 *            the parent composite
 	 * @return the control for the preference page
 	 */
 	public Control createControl(Composite parent) {
@@ -169,32 +184,36 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		layout.numColumns = 2;
 		hoverComposite.setLayout(layout);
 
-		
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalIndent = 0;
 		gd.horizontalSpan = 2;
-		
+
 		addFiller(hoverComposite);
 
 		Label label = new Label(hoverComposite, SWT.NONE);
-		label.setText(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_hoverPreferences"));
+		label
+				.setText(PHPUIMessages
+						.getString("PHPEditorHoverConfigurationBlock_hoverPreferences"));
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalAlignment = GridData.BEGINNING;
 		gd.horizontalSpan = 2;
 		label.setLayoutData(gd);
 
-		TableLayoutComposite layouter = new TableLayoutComposite(hoverComposite, SWT.NONE);
+		TableLayoutComposite layouter = new TableLayoutComposite(
+				hoverComposite, SWT.NONE);
 		addColumnLayoutData(layouter);
 
 		// Hover table
-		fHoverTable = new Table(layouter, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION | SWT.CHECK);
+		fHoverTable = new Table(layouter, SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.SINGLE | SWT.BORDER | SWT.FULL_SELECTION | SWT.CHECK);
 		fHoverTable.setHeaderVisible(true);
 		fHoverTable.setLinesVisible(true);
 
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.heightHint = SWTUtil.getTableHeightHint(fHoverTable, 10);
 		gd.horizontalSpan = 2;
-		gd.widthHint = new PixelConverter(parent).convertWidthInCharsToPixels(30);
+		gd.widthHint = new PixelConverter(parent)
+				.convertWidthInCharsToPixels(30);
 		layouter.setLayoutData(gd);
 
 		fHoverTable.addSelectionListener(new SelectionListener() {
@@ -210,46 +229,58 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		fHoverTable.setLayout(tableLayout);
 
 		fNameColumn = new TableColumn(fHoverTable, SWT.NONE);
-		fNameColumn.setText(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_nameColumnTitle"));
+		fNameColumn.setText(PHPUIMessages
+				.getString("PHPEditorHoverConfigurationBlock_nameColumnTitle"));
 		fNameColumn.setResizable(true);
 
 		fModifierColumn = new TableColumn(fHoverTable, SWT.NONE);
-		fModifierColumn.setText(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_modifierColumnTitle"));
+		fModifierColumn
+				.setText(PHPUIMessages
+						.getString("PHPEditorHoverConfigurationBlock_modifierColumnTitle"));
 		fModifierColumn.setResizable(true);
 
 		fHoverTableViewer = new CheckboxTableViewer(fHoverTable);
 		fHoverTableViewer.setUseHashlookup(true);
-		fHoverTableViewer.setContentProvider(new PHPEditorTextHoverDescriptorContentProvider());
-		fHoverTableViewer.setLabelProvider(new PHPEditorTextHoverDescriptorLabelProvider());
+		fHoverTableViewer
+				.setContentProvider(new PHPEditorTextHoverDescriptorContentProvider());
+		fHoverTableViewer
+				.setLabelProvider(new PHPEditorTextHoverDescriptorLabelProvider());
 
-		((CheckboxTableViewer) fHoverTableViewer).addCheckStateListener(new ICheckStateListener() {
-			/*
-			 * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
-			 */
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				String id = ((PHPEditorTextHoverDescriptor) event.getElement()).getId();
-				if (id == null)
-					return;
-				PHPEditorTextHoverDescriptor[] descriptors = getContributedHovers();
-				HoverConfig hoverConfig = null;
-				int i = 0, length = fHoverConfigs.length;
-				while (i < length) {
-					if (id.equals(descriptors[i].getId())) {
-						hoverConfig = fHoverConfigs[i];
-						hoverConfig.fIsEnabled = event.getChecked();
-						fModifierEditor.setEnabled(event.getChecked());
-						fHoverTableViewer.setSelection(new StructuredSelection(descriptors[i]));
+		((CheckboxTableViewer) fHoverTableViewer)
+				.addCheckStateListener(new ICheckStateListener() {
+					/*
+					 * @seeorg.eclipse.jface.viewers.ICheckStateListener#
+					 * checkStateChanged
+					 * (org.eclipse.jface.viewers.CheckStateChangedEvent)
+					 */
+					public void checkStateChanged(CheckStateChangedEvent event) {
+						String id = ((PHPEditorTextHoverDescriptor) event
+								.getElement()).getId();
+						if (id == null)
+							return;
+						PHPEditorTextHoverDescriptor[] descriptors = getContributedHovers();
+						HoverConfig hoverConfig = null;
+						int i = 0, length = fHoverConfigs.length;
+						while (i < length) {
+							if (id.equals(descriptors[i].getId())) {
+								hoverConfig = fHoverConfigs[i];
+								hoverConfig.fIsEnabled = event.getChecked();
+								fModifierEditor.setEnabled(event.getChecked());
+								fHoverTableViewer
+										.setSelection(new StructuredSelection(
+												descriptors[i]));
+							}
+							i++;
+						}
+						handleHoverListSelection();
+						updateStatus(hoverConfig);
 					}
-					i++;
-				}
-				handleHoverListSelection();
-				updateStatus(hoverConfig);
-			}
-		});
+				});
 
 		// Text field for modifier string
 		label = new Label(hoverComposite, SWT.LEFT);
-		label.setText(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_keyModifier"));
+		label.setText(PHPUIMessages
+				.getString("PHPEditorHoverConfigurationBlock_keyModifier"));
 		fModifierEditor = new Text(hoverComposite, SWT.BORDER);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		fModifierEditor.setLayoutData(gd);
@@ -258,33 +289,60 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			private boolean isModifierCandidate;
 
 			public void keyPressed(KeyEvent e) {
-				isModifierCandidate = e.keyCode > 0 && e.character == 0 && e.stateMask == 0;
+				isModifierCandidate = e.keyCode > 0 && e.character == 0
+						&& e.stateMask == 0;
 			}
 
 			public void keyReleased(KeyEvent e) {
-				if (isModifierCandidate && e.stateMask > 0 && e.stateMask == e.stateMask && e.character == 0) {// && e.time -time < 1000) {
+				if (isModifierCandidate && e.stateMask > 0
+						&& e.stateMask == e.stateMask && e.character == 0) {// &&
+																			// e.time
+																			// -time
+																			// <
+																			// 1000)
+																			// {
 					String text = fModifierEditor.getText();
 					Point selection = fModifierEditor.getSelection();
 					int i = selection.x - 1;
 					while (i > -1 && Character.isWhitespace(text.charAt(i))) {
 						i--;
 					}
-					boolean needsPrefixDelimiter = i > -1 && !String.valueOf(text.charAt(i)).equals(DELIMITER);
+					boolean needsPrefixDelimiter = i > -1
+							&& !String.valueOf(text.charAt(i))
+									.equals(DELIMITER);
 
 					i = selection.y;
-					while (i < text.length() && Character.isWhitespace(text.charAt(i))) {
+					while (i < text.length()
+							&& Character.isWhitespace(text.charAt(i))) {
 						i++;
 					}
-					boolean needsPostfixDelimiter = i < text.length() && !String.valueOf(text.charAt(i)).equals(DELIMITER);
+					boolean needsPostfixDelimiter = i < text.length()
+							&& !String.valueOf(text.charAt(i))
+									.equals(DELIMITER);
 
 					String insertString;
 
 					if (needsPrefixDelimiter && needsPostfixDelimiter)
-						insertString = NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_insertDelimiterAndModifierAndDelimiter"), new String[] { Action.findModifierString(e.stateMask) });
+						insertString = NLS
+								.bind(
+										PHPUIMessages
+												.getString("PHPEditorHoverConfigurationBlock_insertDelimiterAndModifierAndDelimiter"),
+										new String[] { Action
+												.findModifierString(e.stateMask) });
 					else if (needsPrefixDelimiter)
-						insertString = NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_insertDelimiterAndModifier"), new String[] { Action.findModifierString(e.stateMask) });
+						insertString = NLS
+								.bind(
+										PHPUIMessages
+												.getString("PHPEditorHoverConfigurationBlock_insertDelimiterAndModifier"),
+										new String[] { Action
+												.findModifierString(e.stateMask) });
 					else if (needsPostfixDelimiter)
-						insertString = NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_insertModifierAndDelimiter"), new String[] { Action.findModifierString(e.stateMask) });
+						insertString = NLS
+								.bind(
+										PHPUIMessages
+												.getString("PHPEditorHoverConfigurationBlock_insertModifierAndDelimiter"),
+										new String[] { Action
+												.findModifierString(e.stateMask) });
 					else
 						insertString = Action.findModifierString(e.stateMask);
 
@@ -302,11 +360,13 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 		// Description
 		Label descriptionLabel = new Label(hoverComposite, SWT.LEFT);
-		descriptionLabel.setText(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_description"));
+		descriptionLabel.setText(PHPUIMessages
+				.getString("PHPEditorHoverConfigurationBlock_description"));
 		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 2;
 		descriptionLabel.setLayoutData(gd);
-		fDescription = new Text(hoverComposite, SWT.LEFT | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.BORDER);
+		fDescription = new Text(hoverComposite, SWT.LEFT | SWT.WRAP | SWT.MULTI
+				| SWT.READ_ONLY | SWT.BORDER);
 		gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
 		fDescription.setLayoutData(gd);
@@ -330,7 +390,9 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		PHPEditorTextHoverDescriptor[] hoverDescs = getContributedHovers();
 		fHoverConfigs = new HoverConfig[hoverDescs.length];
 		for (int i = 0; i < hoverDescs.length; i++)
-			fHoverConfigs[i] = new HoverConfig(hoverDescs[i].getModifierString(), hoverDescs[i].getStateMask(), hoverDescs[i].isEnabled());
+			fHoverConfigs[i] = new HoverConfig(hoverDescs[i]
+					.getModifierString(), hoverDescs[i].getStateMask(),
+					hoverDescs[i].isEnabled());
 
 		fHoverTableViewer.setInput(hoverDescs);
 
@@ -372,8 +434,10 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 			maskBuf.append(fHoverConfigs[i].fStateMask);
 			maskBuf.append(PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
 		}
-		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS, buf.toString());
-		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS, maskBuf.toString());		
+		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS, buf
+				.toString());
+		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS,
+				maskBuf.toString());
 
 		PHPUiPlugin.getDefault().resetPHPEditorTextHoverDescriptors();
 	}
@@ -384,11 +448,14 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		updateStatus(null);
 	}
 
-	private void restoreFromPreferences() {	
+	private void restoreFromPreferences() {
 
-		String compiledTextHoverModifiers = fStore.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
+		String compiledTextHoverModifiers = fStore
+				.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
 
-		StringTokenizer tokenizer = new StringTokenizer(compiledTextHoverModifiers, PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
+		StringTokenizer tokenizer = new StringTokenizer(
+				compiledTextHoverModifiers,
+				PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
 		HashMap idToModifier = new HashMap(tokenizer.countTokens() / 2);
 
 		while (tokenizer.hasMoreTokens()) {
@@ -397,9 +464,12 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 				idToModifier.put(id, tokenizer.nextToken());
 		}
 
-		String compiledTextHoverModifierMasks = PHPUiPlugin.getDefault().getPreferenceStore().getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
+		String compiledTextHoverModifierMasks = PHPUiPlugin.getDefault()
+				.getPreferenceStore().getString(
+						PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS);
 
-		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks, PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
+		tokenizer = new StringTokenizer(compiledTextHoverModifierMasks,
+				PHPEditorTextHoverDescriptor.VALUE_SEPARATOR);
 		HashMap idToModifierMask = new HashMap(tokenizer.countTokens() / 2);
 
 		while (tokenizer.hasMoreTokens()) {
@@ -409,12 +479,14 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		}
 
 		for (int i = 0; i < fHoverConfigs.length; i++) {
-			String modifierString = (String) idToModifier.get(getContributedHovers()[i].getId());
+			String modifierString = (String) idToModifier
+					.get(getContributedHovers()[i].getId());
 			boolean enabled = true;
 			if (modifierString == null)
 				modifierString = PHPEditorTextHoverDescriptor.DISABLED_TAG;
 
-			if (modifierString.startsWith(PHPEditorTextHoverDescriptor.DISABLED_TAG)) {
+			if (modifierString
+					.startsWith(PHPEditorTextHoverDescriptor.DISABLED_TAG)) {
 				enabled = false;
 				modifierString = modifierString.substring(1);
 			}
@@ -424,11 +496,14 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 			fHoverConfigs[i].fModifierString = modifierString;
 			fHoverConfigs[i].fIsEnabled = enabled;
-			fHoverConfigs[i].fStateMask = PHPEditorTextHoverDescriptor.computeStateMask(modifierString);
+			fHoverConfigs[i].fStateMask = PHPEditorTextHoverDescriptor
+					.computeStateMask(modifierString);
 
 			if (fHoverConfigs[i].fStateMask == -1) {
 				try {
-					fHoverConfigs[i].fStateMask = Integer.parseInt((String) idToModifierMask.get(getContributedHovers()[i].getId()));
+					fHoverConfigs[i].fStateMask = Integer
+							.parseInt((String) idToModifierMask
+									.get(getContributedHovers()[i].getId()));
 				} catch (NumberFormatException ex) {
 					fHoverConfigs[i].fStateMask = -1;
 				}
@@ -443,7 +518,8 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 		String modifiers = fModifierEditor.getText();
 		fHoverConfigs[i].fModifierString = modifiers;
-		fHoverConfigs[i].fStateMask = PHPEditorTextHoverDescriptor.computeStateMask(modifiers);
+		fHoverConfigs[i].fStateMask = PHPEditorTextHoverDescriptor
+				.computeStateMask(modifiers);
 
 		// update table
 		fHoverTableViewer.refresh(getContributedHovers()[i]);
@@ -476,8 +552,15 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	}
 
 	private void updateStatus(HoverConfig hoverConfig) {
-		if (hoverConfig != null && hoverConfig.fIsEnabled && hoverConfig.fStateMask == -1)
-			fStatus = new StatusInfo(IStatus.ERROR, NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_modifierIsNotValid"), new Object[] { hoverConfig.fModifierString }));
+		if (hoverConfig != null && hoverConfig.fIsEnabled
+				&& hoverConfig.fStateMask == -1)
+			fStatus = new StatusInfo(
+					IStatus.ERROR,
+					NLS
+							.bind(
+									PHPUIMessages
+											.getString("PHPEditorHoverConfigurationBlock_modifierIsNotValid"),
+									new Object[] { hoverConfig.fModifierString }));
 		else
 			fStatus = new StatusInfo();
 
@@ -488,9 +571,26 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 				String label = getContributedHovers()[i].getLabel();
 				Integer stateMask = new Integer(fHoverConfigs[i].fStateMask);
 				if (fHoverConfigs[i].fStateMask == -1)
-					fStatus = new StatusInfo(IStatus.ERROR, NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_modifierIsNotValidForHover"), new String[] { fHoverConfigs[i].fModifierString, label }));
+					fStatus = new StatusInfo(
+							IStatus.ERROR,
+							NLS
+									.bind(
+											PHPUIMessages
+													.getString("PHPEditorHoverConfigurationBlock_modifierIsNotValidForHover"),
+											new String[] {
+													fHoverConfigs[i].fModifierString,
+													label }));
 				else if (stateMasks.containsKey(stateMask))
-					fStatus = new StatusInfo(IStatus.ERROR, NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_duplicateModifier"), new String[] { label, (String) stateMasks.get(stateMask) }));
+					fStatus = new StatusInfo(
+							IStatus.ERROR,
+							NLS
+									.bind(
+											PHPUIMessages
+													.getString("PHPEditorHoverConfigurationBlock_duplicateModifier"),
+											new String[] {
+													label,
+													(String) stateMasks
+															.get(stateMask) }));
 				else
 					stateMasks.put(stateMask, label);
 			}
@@ -501,7 +601,8 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		StatusUtil.applyToStatusLine(fMainPreferencePage, fStatus);
 	}
 
-	private Button addCheckBox(Composite parent, String label, String key, int indentation) {
+	private Button addCheckBox(Composite parent, String label, String key,
+			int indentation) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 

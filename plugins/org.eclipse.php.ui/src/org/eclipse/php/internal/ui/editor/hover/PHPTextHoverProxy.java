@@ -23,12 +23,14 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.ui.IEditorPart;
 
-public class PHPTextHoverProxy extends AbstractScriptEditorTextHover implements IPHPTextHover, ITextHoverExtension, IInformationProviderExtension2 {
+public class PHPTextHoverProxy extends AbstractScriptEditorTextHover implements
+		IPHPTextHover, ITextHoverExtension, IInformationProviderExtension2 {
 
 	private PHPEditorTextHoverDescriptor fHoverDescriptor;
 	private IPHPTextHover fHover;
 
-	public PHPTextHoverProxy(PHPEditorTextHoverDescriptor descriptor, IEditorPart editor, IPreferenceStore store) {
+	public PHPTextHoverProxy(PHPEditorTextHoverDescriptor descriptor,
+			IEditorPart editor, IPreferenceStore store) {
 		fHoverDescriptor = descriptor;
 		setEditor(editor);
 		setPreferenceStore(store);
@@ -93,6 +95,7 @@ public class PHPTextHoverProxy extends AbstractScriptEditorTextHover implements 
 
 	/*
 	 * @see org.eclipse.jface.text.ITextHoverExtension#getHoverControlCreator()
+	 * 
 	 * @since 3.0
 	 */
 	public IInformationControlCreator getHoverControlCreator() {
@@ -103,14 +106,20 @@ public class PHPTextHoverProxy extends AbstractScriptEditorTextHover implements 
 	}
 
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (ensureHoverCreated() && (fHover instanceof IInformationProviderExtension2))
-			return ((IInformationProviderExtension2) fHover).getInformationPresenterControlCreator();
+		if (ensureHoverCreated()
+				&& (fHover instanceof IInformationProviderExtension2))
+			return ((IInformationProviderExtension2) fHover)
+					.getInformationPresenterControlCreator();
 
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.editor.hover.IPHPTextHover#getMessageDecorator()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.editor.hover.IPHPTextHover#getMessageDecorator
+	 * ()
 	 */
 	public IHoverMessageDecorator getMessageDecorator() {
 		return fHover.getMessageDecorator();

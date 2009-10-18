@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.generic;
 
-
 public interface ISorter {
 
 	public Object[] sort(Object[] elements);

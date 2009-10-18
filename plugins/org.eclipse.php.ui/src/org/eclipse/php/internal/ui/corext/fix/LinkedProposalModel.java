@@ -18,10 +18,9 @@ import java.util.Map;
 import org.eclipse.php.internal.core.ast.rewrite.ITrackedNodePosition;
 import org.eclipse.php.internal.ui.corext.fix.LinkedProposalPositionGroup.PositionInformation;
 
-
 public class LinkedProposalModel {
 
-	private Map/*<String, PositionGroup>*/ fPositionGroups;
+	private Map/* <String, PositionGroup> */fPositionGroups;
 	private LinkedProposalPositionGroup.PositionInformation fEndPosition;
 
 	public void addPositionGroup(LinkedProposalPositionGroup positionGroup) {
@@ -30,15 +29,18 @@ public class LinkedProposalModel {
 		}
 
 		if (fPositionGroups == null) {
-			fPositionGroups= new HashMap();
+			fPositionGroups = new HashMap();
 		}
 		fPositionGroups.put(positionGroup.getGroupId(), positionGroup);
 	}
 
-	public LinkedProposalPositionGroup getPositionGroup(String groupId, boolean createIfNotExisting) {
-		LinkedProposalPositionGroup group= fPositionGroups != null ? (LinkedProposalPositionGroup) fPositionGroups.get(groupId) : null;
+	public LinkedProposalPositionGroup getPositionGroup(String groupId,
+			boolean createIfNotExisting) {
+		LinkedProposalPositionGroup group = fPositionGroups != null ? (LinkedProposalPositionGroup) fPositionGroups
+				.get(groupId)
+				: null;
 		if (createIfNotExisting && group == null) {
-			group= new LinkedProposalPositionGroup(groupId);
+			group = new LinkedProposalPositionGroup(groupId);
 			addPositionGroup(group);
 		}
 		return group;
@@ -47,25 +49,35 @@ public class LinkedProposalModel {
 	public Iterator getPositionGroupIterator() {
 		if (fPositionGroups == null) {
 			return new Iterator() {
-				public boolean hasNext() {return false;}
-				public Object next() {return null;}
-				public void remove() {}
+				public boolean hasNext() {
+					return false;
+				}
+
+				public Object next() {
+					return null;
+				}
+
+				public void remove() {
+				}
 			};
 		}
 		return fPositionGroups.values().iterator();
 	}
 
-
 	/**
 	 * Sets the end position of the linked mode to the end of the passed range.
-	 * @param position The position that describes the end position of the linked mode.
+	 * 
+	 * @param position
+	 *            The position that describes the end position of the linked
+	 *            mode.
 	 */
 	public void setEndPosition(PositionInformation position) {
-		fEndPosition= position;
+		fEndPosition = position;
 	}
 
 	public void setEndPosition(ITrackedNodePosition position) {
-		setEndPosition(LinkedProposalPositionGroup.createPositionInformation(position, false));
+		setEndPosition(LinkedProposalPositionGroup.createPositionInformation(
+				position, false));
 	}
 
 	public PositionInformation getEndPosition() {
@@ -77,8 +89,8 @@ public class LinkedProposalModel {
 	}
 
 	public void clear() {
-		fPositionGroups= null;
-		fEndPosition= null;
+		fPositionGroups = null;
+		fEndPosition = null;
 	}
 
 }

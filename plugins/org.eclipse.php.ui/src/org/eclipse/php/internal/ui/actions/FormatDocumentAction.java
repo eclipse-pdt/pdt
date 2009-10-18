@@ -15,10 +15,10 @@ import org.eclipse.php.internal.ui.actions.format.FormatActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class FormatDocumentAction  implements IWorkbenchWindowActionDelegate {
+public class FormatDocumentAction implements IWorkbenchWindowActionDelegate {
 
 	FormatActionDelegate action = new FormatActionDelegate();
-	
+
 	public void dispose() {
 	}
 

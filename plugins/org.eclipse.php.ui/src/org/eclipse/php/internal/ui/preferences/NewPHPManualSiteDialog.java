@@ -39,10 +39,12 @@ import org.eclipse.swt.widgets.*;
 public class NewPHPManualSiteDialog extends StatusDialog {
 
 	private static final String[] FILE_EXT = { "php", "htm", "html" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	private static final boolean isWindows = System.getProperty("os.name").startsWith("Windows"); //$NON-NLS-1$ //$NON-NLS-2$
+	private static final boolean isWindows = System
+			.getProperty("os.name").startsWith("Windows"); //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String FILE_PROTO = "file://"; //$NON-NLS-1$
 	private static final String CHM_PROTO = "mk:@MSITStore:"; //$NON-NLS-1$
-	private static final Pattern LANG_DETECT_PATTERN = Pattern.compile("/([a-z_]*)/function\\."); //$NON-NLS-1$
+	private static final Pattern LANG_DETECT_PATTERN = Pattern
+			.compile("/([a-z_]*)/function\\."); //$NON-NLS-1$
 
 	protected Text name;
 	protected Text url;
@@ -61,7 +63,8 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 	private Label fileExtLabel;
 	private Combo fileExtCombo;
 
-	public NewPHPManualSiteDialog(Shell parentShell, PHPManualConfig edited, List configs) {
+	public NewPHPManualSiteDialog(Shell parentShell, PHPManualConfig edited,
+			List configs) {
 		super(parentShell);
 
 		this.configs = new ArrayList(configs.size());
@@ -74,7 +77,8 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		this.edited = edited;
 
 		if (edited != null) {
-			setTitle(PHPUIMessages.getString("NewPHPManualSiteDialog_updateTitle"));
+			setTitle(PHPUIMessages
+					.getString("NewPHPManualSiteDialog_updateTitle"));
 		} else {
 			setTitle(PHPUIMessages.getString("NewPHPManualSiteDialog_newTitle"));
 		}
@@ -89,9 +93,11 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 	}
 
 	protected void createButtonsForButtonBar(Composite parent) {
-		//super.createButtonBar(parent);
-		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		// super.createButtonBar(parent);
+		okButton = createButton(parent, IDialogConstants.OK_ID,
+				IDialogConstants.OK_LABEL, true);
+		createButton(parent, IDialogConstants.CANCEL_ID,
+				IDialogConstants.CANCEL_LABEL, false);
 
 		okButton.setEnabled(enableOK);
 	}
@@ -133,7 +139,8 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 
 		// --------- Remote Site: ---------------------
 		remoteSiteBtn = new Button(composite, SWT.RADIO);
-		remoteSiteBtn.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_remoteSiteURL")); //$NON-NLS-1$
+		remoteSiteBtn.setText(PHPUIMessages
+				.getString("NewPHPManualSiteDialog_remoteSiteURL")); //$NON-NLS-1$
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		remoteSiteBtn.setLayoutData(data);
@@ -160,7 +167,8 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 
 		// --------- Local Directory: ---------------------
 		localDirectoryBtn = new Button(composite, SWT.RADIO);
-		localDirectoryBtn.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_localDirectory")); //$NON-NLS-1$
+		localDirectoryBtn.setText(PHPUIMessages
+				.getString("NewPHPManualSiteDialog_localDirectory")); //$NON-NLS-1$
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
 		localDirectoryBtn.setLayoutData(data);
@@ -194,8 +202,11 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		dirBrowseButton.setAlignment(SWT.CENTER);
 		dirBrowseButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
-				DirectoryDialog dialog = new DirectoryDialog(PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
-				dialog.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_chooseDir"));
+				DirectoryDialog dialog = new DirectoryDialog(PHPUiPlugin
+						.getDefault().getWorkbench().getActiveWorkbenchWindow()
+						.getShell(), SWT.OPEN);
+				dialog.setText(PHPUIMessages
+						.getString("NewPHPManualSiteDialog_chooseDir"));
 				String directoryAsString = dialog.open();
 				if (directoryAsString == null) {
 					return;
@@ -207,7 +218,8 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		// --------- Site Name: ---------------------
 		if (isWindows) {
 			chmFileBtn = new Button(composite, SWT.RADIO);
-			chmFileBtn.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_windowsCHMFile")); //$NON-NLS-1$
+			chmFileBtn.setText(PHPUIMessages
+					.getString("NewPHPManualSiteDialog_windowsCHMFile")); //$NON-NLS-1$
 			data = new GridData(GridData.FILL_HORIZONTAL);
 			data.horizontalSpan = 2;
 			chmFileBtn.setLayoutData(data);
@@ -241,8 +253,11 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			chmBrowseButton.setAlignment(SWT.CENTER);
 			chmBrowseButton.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
-					FileDialog dialog = new FileDialog(PHPUiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
-					dialog.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_chooseCHMFile")); //$NON-NLS-1$
+					FileDialog dialog = new FileDialog(PHPUiPlugin.getDefault()
+							.getWorkbench().getActiveWorkbenchWindow()
+							.getShell(), SWT.OPEN);
+					dialog.setText(PHPUIMessages
+							.getString("NewPHPManualSiteDialog_chooseCHMFile")); //$NON-NLS-1$
 					dialog.setFilterExtensions(new String[] { "*.chm" }); //$NON-NLS-1$
 					String fileAsString = dialog.open();
 					if (fileAsString == null) {
@@ -265,7 +280,8 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		fileExtLabel = new Label(fileExtGroup, SWT.NONE);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		fileExtLabel.setLayoutData(data);
-		fileExtLabel.setText(PHPUIMessages.getString("NewPHPManualSiteDialog_fileExtension")); //$NON-NLS-1$
+		fileExtLabel.setText(PHPUIMessages
+				.getString("NewPHPManualSiteDialog_fileExtension")); //$NON-NLS-1$
 		fileExtCombo = new Combo(fileExtGroup, SWT.READ_ONLY);
 		fileExtCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -320,7 +336,14 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 
 		if (name.getText().trim().length() == 0) {
 			okButton.setEnabled(false);
-			this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_siteNotSpecified"), null));
+			this
+					.updateStatus(new Status(
+							IStatus.ERROR,
+							PHPUiPlugin.getPluginId(),
+							IStatus.OK,
+							PHPUIMessages
+									.getString("NewPHPManualSiteDialog_siteNotSpecified"),
+							null));
 			return;
 		}
 
@@ -328,35 +351,59 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 			return;
 		} else {
 			okButton.setEnabled(true);
-			this.updateStatus(new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK, "", null)); //$NON-NLS-1$
+			this.updateStatus(new Status(IStatus.OK, PHPUiPlugin.getPluginId(),
+					IStatus.OK, "", null)); //$NON-NLS-1$
 		}
 
 		if (remoteSiteBtn.getSelection()) {
 			try {
 				String urlStr = url.getText().trim();
 				new URL(URLDecoder.decode(urlStr, "UTF-8")); //$NON-NLS-1$
-				result = new PHPManualConfig(name.getText(), urlStr, fileExtCombo.getText(), false);
+				result = new PHPManualConfig(name.getText(), urlStr,
+						fileExtCombo.getText(), false);
 			} catch (Exception e) {
 				okButton.setEnabled(false);
-				this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_incorrectUrl"), null));
+				this
+						.updateStatus(new Status(
+								IStatus.ERROR,
+								PHPUiPlugin.getPluginId(),
+								IStatus.OK,
+								PHPUIMessages
+										.getString("NewPHPManualSiteDialog_incorrectUrl"),
+								null));
 				return;
 			}
 		} else if (localDirectoryBtn.getSelection()) {
 			String localDirStr = localDir.getText().trim();
 			if (!new File(localDirStr).isDirectory()) {
 				okButton.setEnabled(false);
-				this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_dirDoesntExist"), null)); //$NON-NLS-1$
+				this
+						.updateStatus(new Status(
+								IStatus.ERROR,
+								PHPUiPlugin.getPluginId(),
+								IStatus.OK,
+								PHPUIMessages
+										.getString("NewPHPManualSiteDialog_dirDoesntExist"), null)); //$NON-NLS-1$
 				return;
 			}
-			result = new PHPManualConfig(name.getText(), FILE_PROTO + localDirStr, fileExtCombo.getText(), false);
+			result = new PHPManualConfig(name.getText(), FILE_PROTO
+					+ localDirStr, fileExtCombo.getText(), false);
 		} else if (isWindows) {
 			String chmFileStr = chmFile.getText().trim();
 			if (!new File(chmFileStr).isFile()) {
 				okButton.setEnabled(false);
-				this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_fileDoesntExist"), null)); //$NON-NLS-1$
+				this
+						.updateStatus(new Status(
+								IStatus.ERROR,
+								PHPUiPlugin.getPluginId(),
+								IStatus.OK,
+								PHPUIMessages
+										.getString("NewPHPManualSiteDialog_fileDoesntExist"), null)); //$NON-NLS-1$
 				return;
 			}
-			result = new PHPManualConfig(name.getText(), CHM_PROTO + chmFileStr + detectCHMLanguageSuffix(chmFileStr), fileExtCombo.getText(), false); //$NON-NLS-1$
+			result = new PHPManualConfig(name.getText(), CHM_PROTO + chmFileStr
+					+ detectCHMLanguageSuffix(chmFileStr), fileExtCombo
+					.getText(), false); //$NON-NLS-1$
 		}
 	}
 
@@ -369,7 +416,14 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 				PHPManualConfig config = (PHPManualConfig) configs.get(i);
 				if (config.getLabel().equals(name.getText().trim())) {
 					okButton.setEnabled(false);
-					this.updateStatus(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IStatus.OK, PHPUIMessages.getString("NewPHPManualSiteDialog_nameAlreadyInUse"), null));
+					this
+							.updateStatus(new Status(
+									IStatus.ERROR,
+									PHPUiPlugin.getPluginId(),
+									IStatus.OK,
+									PHPUIMessages
+											.getString("NewPHPManualSiteDialog_nameAlreadyInUse"),
+									null));
 					return true;
 				}
 			}
@@ -382,7 +436,8 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 	}
 
 	protected void updateButtonsEnableState(IStatus status) {
-		if (okButton != null && !okButton.isDisposed() && name.getText().trim().length() != 0)
+		if (okButton != null && !okButton.isDisposed()
+				&& name.getText().trim().length() != 0)
 			okButton.setEnabled(!status.matches(IStatus.ERROR));
 	}
 

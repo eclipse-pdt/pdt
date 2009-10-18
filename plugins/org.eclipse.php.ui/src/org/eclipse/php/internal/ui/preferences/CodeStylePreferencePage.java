@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-public class CodeStylePreferencePage extends PropertyAndPreferencePage implements
-		IWorkbenchPreferencePage {
+public class CodeStylePreferencePage extends PropertyAndPreferencePage
+		implements IWorkbenchPreferencePage {
 
 	public CodeStylePreferencePage() {
 		super();

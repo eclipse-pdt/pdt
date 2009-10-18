@@ -11,27 +11,28 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.Action;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 
 /**
- * This Action is in charge of activating the Goto Mathing Bracket function
- * of the PHP editor
+ * This Action is in charge of activating the Goto Mathing Bracket function of
+ * the PHP editor
+ * 
  * @author yaronm
- *
+ * 
  */
 public class GotoMatchingBracketAction extends Action {
 
-	public final static String GOTO_MATCHING_BRACKET= "GotoMatchingBracket"; //$NON-NLS-1$
+	public final static String GOTO_MATCHING_BRACKET = "GotoMatchingBracket"; //$NON-NLS-1$
 
 	private final PHPStructuredEditor fEditor;
-	
+
 	public GotoMatchingBracketAction(PHPStructuredEditor editor) {
 		super(PHPUIMessages.getString("GotoMatchingBracket_label"));
 		Assert.isNotNull(editor);
-		fEditor= editor;
+		fEditor = editor;
 		setEnabled(true);
 	}
 

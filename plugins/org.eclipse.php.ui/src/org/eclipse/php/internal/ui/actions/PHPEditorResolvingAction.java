@@ -25,9 +25,11 @@ import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.xml.core.internal.Logger;
 
-public abstract class PHPEditorResolvingAction extends TextEditorAction implements IUpdate {
+public abstract class PHPEditorResolvingAction extends TextEditorAction
+		implements IUpdate {
 
-	public PHPEditorResolvingAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
+	public PHPEditorResolvingAction(ResourceBundle bundle, String prefix,
+			ITextEditor editor) {
 		super(bundle, prefix, editor);
 		setEnabled(true);
 	}
@@ -52,39 +54,43 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction implemen
 	}
 
 	public void update() {
-		setEnabled(getTextEditor() != null/* && isValid(getSelectedElement())*/);
+		setEnabled(getTextEditor() != null/* && isValid(getSelectedElement()) */);
 	}
 
 	protected IModelElement getSelectedElement() {
 
 		ITextEditor editor = getTextEditor();
-		ITextSelection textSelection = (ITextSelection) editor.getSelectionProvider().getSelection();
+		ITextSelection textSelection = (ITextSelection) editor
+				.getSelectionProvider().getSelection();
 		int offset = textSelection.getOffset();
 
-		IModelElement input = EditorUtility.getEditorInputModelElement(editor, false);
+		IModelElement input = EditorUtility.getEditorInputModelElement(editor,
+				false);
 		if (input == null) {
 			return null;
 		}
 
 		try {
-			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+			IDocument document = editor.getDocumentProvider().getDocument(
+					editor.getEditorInput());
 			IRegion wordRegion = ScriptWordFinder.findWord(document, offset);
 			if (wordRegion == null)
 				return null;
-			
+
 			if (wordRegion.getOffset() < 0 || wordRegion.getLength() < 0) {
 				return null;
 			}
 
 			IModelElement[] elements = null;
-			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(), wordRegion.getLength());
+			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(),
+					wordRegion.getLength());
 			if (elements != null && elements.length > 0) {
 				return elements[0];
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
-		
+
 		return null;
 	}
 }

@@ -23,12 +23,17 @@ import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 ;
 
 /**
- * PHPUILabelProvider that respects settings from the Appearance preference page.
- * Triggers a viewer update when a preference changes.
+ * PHPUILabelProvider that respects settings from the Appearance preference
+ * page. Triggers a viewer update when a preference changes.
  */
-public class AppearanceAwareLabelProvider extends ScriptUILabelProvider implements IPropertyChangeListener {
+public class AppearanceAwareLabelProvider extends ScriptUILabelProvider
+		implements IPropertyChangeListener {
 
-	public final static long DEFAULT_TEXTFLAGS = ScriptElementLabels.ROOT_VARIABLE | ScriptElementLabels.M_PARAMETER_TYPES  | ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.REFERENCED_ROOT_POST_QUALIFIED;
+	public final static long DEFAULT_TEXTFLAGS = ScriptElementLabels.ROOT_VARIABLE
+			| ScriptElementLabels.M_PARAMETER_TYPES
+			| ScriptElementLabels.M_PARAMETER_NAMES
+			| ScriptElementLabels.M_APP_RETURNTYPE
+			| ScriptElementLabels.REFERENCED_ROOT_POST_QUALIFIED;
 	public final static int DEFAULT_IMAGEFLAGS = ScriptElementImageProvider.OVERLAY_ICONS;
 
 	private int fTextFlagMask;
@@ -40,7 +45,8 @@ public class AppearanceAwareLabelProvider extends ScriptUILabelProvider implemen
 	public AppearanceAwareLabelProvider(long textFlags, int imageFlags) {
 		super(textFlags, imageFlags);
 		initMasks();
-		PreferenceConstants.getPreferenceStore().addPropertyChangeListener(this);
+		PreferenceConstants.getPreferenceStore()
+				.addPropertyChangeListener(this);
 	}
 
 	/**
@@ -67,7 +73,8 @@ public class AppearanceAwareLabelProvider extends ScriptUILabelProvider implemen
 		String property = event.getProperty();
 		if (property.equals(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE)) {
 			initMasks();
-			LabelProviderChangedEvent lpEvent = new LabelProviderChangedEvent(this, null); // refresh all
+			LabelProviderChangedEvent lpEvent = new LabelProviderChangedEvent(
+					this, null); // refresh all
 			fireLabelProviderChanged(lpEvent);
 		}
 	}
@@ -76,7 +83,8 @@ public class AppearanceAwareLabelProvider extends ScriptUILabelProvider implemen
 	 * @see IBaseLabelProvider#dispose()
 	 */
 	public void dispose() {
-		PreferenceConstants.getPreferenceStore().removePropertyChangeListener(this);
+		PreferenceConstants.getPreferenceStore().removePropertyChangeListener(
+				this);
 		super.dispose();
 	}
 

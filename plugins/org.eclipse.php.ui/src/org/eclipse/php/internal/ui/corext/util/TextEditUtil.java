@@ -23,10 +23,13 @@ public class TextEditUtil {
 
 	/**
 	 * Inserts the <code>edit</code> into <code>parent</code>.
-	 *
-	 * @param parent the target of the operation
-	 * @param edit the edit to insert into parent
-	 * @throws MalformedTreeException is edit can't be inserted int parent
+	 * 
+	 * @param parent
+	 *            the target of the operation
+	 * @param edit
+	 *            the edit to insert into parent
+	 * @throws MalformedTreeException
+	 *             is edit can't be inserted int parent
 	 */
 	public static void insert(TextEdit parent, TextEdit edit) {
 		TextChangeCompatibility.insert(parent, edit);
@@ -39,15 +42,16 @@ public class TextEditUtil {
 	 * <ul>
 	 * <li><b>true</b> if <code>edit</code> is a leaf</li>
 	 * <li>if <code>edit</code> is a inner node then <b>true</b> if
-	 *   <ul>
-	 *   <li><code>edit</code> has same size as all its children</li>
-	 *   <li><code>isPacked</code> is <b>true</b> for all children</li>
-	 *   </ul>
+	 * <ul>
+	 * <li><code>edit</code> has same size as all its children</li>
+	 * <li><code>isPacked</code> is <b>true</b> for all children</li>
+	 * </ul>
 	 * </li>
 	 * </ul>
 	 * </p>
-	 *
-	 * @param edit the edit to verify
+	 * 
+	 * @param edit
+	 *            the edit to verify
 	 * @return true if edit is minimal
 	 * @since 3.4
 	 */
@@ -58,14 +62,15 @@ public class TextEditUtil {
 		if (!edit.hasChildren())
 			return true;
 
-		TextEdit[] children= edit.getChildren();
+		TextEdit[] children = edit.getChildren();
 		if (edit.getOffset() != children[0].getOffset())
 			return false;
 
-		if (edit.getExclusiveEnd() != children[children.length - 1].getExclusiveEnd())
+		if (edit.getExclusiveEnd() != children[children.length - 1]
+				.getExclusiveEnd())
 			return false;
 
-		for (int i= 0; i < children.length; i++) {
+		for (int i = 0; i < children.length; i++) {
 			if (!isPacked(children[i]))
 				return false;
 		}
@@ -77,13 +82,14 @@ public class TextEditUtil {
 	 * Degenerates the given edit tree into a list.<br>
 	 * All nodes of the result are leafs.<br>
 	 * <strong>The given edit is modified and can no longer be used.</strong>
-	 *
-	 * @param edit the edit tree to flatten
+	 * 
+	 * @param edit
+	 *            the edit tree to flatten
 	 * @return a list of edits
 	 * @since 3.4
 	 */
 	public static MultiTextEdit flatten(TextEdit edit) {
-		MultiTextEdit result= new MultiTextEdit();
+		MultiTextEdit result = new MultiTextEdit();
 		flatten(edit, result);
 		return result;
 	}
@@ -92,9 +98,9 @@ public class TextEditUtil {
 		if (!edit.hasChildren()) {
 			result.addChild(edit);
 		} else {
-			TextEdit[] children= edit.getChildren();
-			for (int i= 0; i < children.length; i++) {
-				TextEdit child= children[i];
+			TextEdit[] children = edit.getChildren();
+			for (int i = 0; i < children.length; i++) {
+				TextEdit child = children[i];
 				child.getParent().removeChild(0);
 				flatten(child, result);
 			}
@@ -102,37 +108,43 @@ public class TextEditUtil {
 	}
 
 	/**
-	 * Does any node in <code>edit1</code> overlap with any other node
-	 * in <code>edit2</code>.
-	 * <p>If this returns true then the two edit trees can be merged into one.</p>
-	 *
-	 * @param edit1 the edit to compare against edit2
-	 * @param edit2 the edit to compare against edit1
+	 * Does any node in <code>edit1</code> overlap with any other node in
+	 * <code>edit2</code>.
+	 * <p>
+	 * If this returns true then the two edit trees can be merged into one.
+	 * </p>
+	 * 
+	 * @param edit1
+	 *            the edit to compare against edit2
+	 * @param edit2
+	 *            the edit to compare against edit1
 	 * @return true of no node overlaps with any other node
 	 * @since 3.4
 	 */
 	public static boolean overlaps(TextEdit edit1, TextEdit edit2) {
 		if (edit1 instanceof MultiTextEdit && edit2 instanceof MultiTextEdit) {
-			MultiTextEdit multiTextEdit1= (MultiTextEdit)edit1;
+			MultiTextEdit multiTextEdit1 = (MultiTextEdit) edit1;
 			if (!multiTextEdit1.hasChildren())
 				return false;
 
-			MultiTextEdit multiTextEdit2= (MultiTextEdit)edit2;
+			MultiTextEdit multiTextEdit2 = (MultiTextEdit) edit2;
 			if (!multiTextEdit2.hasChildren())
 				return false;
 
-			TextEdit[] children1= multiTextEdit1.getChildren();
-			TextEdit[] children2= multiTextEdit2.getChildren();
+			TextEdit[] children1 = multiTextEdit1.getChildren();
+			TextEdit[] children2 = multiTextEdit2.getChildren();
 
-			int i1= 0;
-			int i2= 0;
+			int i1 = 0;
+			int i2 = 0;
 			while (i1 < children1.length && i2 < children2.length) {
-				while (children1[i1].getExclusiveEnd() < children2[i2].getOffset()) {
+				while (children1[i1].getExclusiveEnd() < children2[i2]
+						.getOffset()) {
 					i1++;
 					if (i1 >= children1.length)
 						return false;
 				}
-				while (children2[i2].getExclusiveEnd() < children1[i1].getOffset()) {
+				while (children2[i2].getExclusiveEnd() < children1[i1]
+						.getOffset()) {
 					i2++;
 					if (i2 >= children2.length)
 						return false;
@@ -144,48 +156,49 @@ public class TextEditUtil {
 				if (overlaps(children1[i1], children2[i2]))
 					return true;
 
-				int mergeEnd= Math.max(children1[i1].getExclusiveEnd(), children2[i2].getExclusiveEnd());
+				int mergeEnd = Math.max(children1[i1].getExclusiveEnd(),
+						children2[i2].getExclusiveEnd());
 
 				i1++;
 				i2++;
 
-				if (i1 < children1.length && children1[i1].getOffset() < mergeEnd) {
+				if (i1 < children1.length
+						&& children1[i1].getOffset() < mergeEnd) {
 					return true;
 				}
-				if (i2 < children2.length && children2[i2].getOffset() < mergeEnd) {
+				if (i2 < children2.length
+						&& children2[i2].getOffset() < mergeEnd) {
 					return true;
 				}
 			}
 
 			return false;
 		} else if (edit1 instanceof MultiTextEdit) {
-			MultiTextEdit multiTextEdit1= (MultiTextEdit)edit1;
+			MultiTextEdit multiTextEdit1 = (MultiTextEdit) edit1;
 			if (!multiTextEdit1.hasChildren())
 				return false;
 
-			TextEdit[] children= multiTextEdit1.getChildren();
+			TextEdit[] children = multiTextEdit1.getChildren();
 
-			int i= 0;
+			int i = 0;
 			while (children[i].getExclusiveEnd() < edit2.getOffset()) {
 				i++;
 				if (i >= children.length)
 					return false;
 			}
 
-
-
 			if (overlaps(children[i], edit2))
 				return true;
 
 			return false;
 		} else if (edit2 instanceof MultiTextEdit) {
-			MultiTextEdit multiTextEdit2= (MultiTextEdit)edit2;
+			MultiTextEdit multiTextEdit2 = (MultiTextEdit) edit2;
 			if (!multiTextEdit2.hasChildren())
 				return false;
 
-			TextEdit[] children= multiTextEdit2.getChildren();
+			TextEdit[] children = multiTextEdit2.getChildren();
 
-			int i= 0;
+			int i = 0;
 			while (children[i].getExclusiveEnd() < edit1.getOffset()) {
 				i++;
 				if (i >= children.length)
@@ -197,10 +210,10 @@ public class TextEditUtil {
 
 			return false;
 		} else {
-			int start1= edit1.getOffset();
-			int end1= start1 + edit1.getLength();
-			int start2= edit2.getOffset();
-			int end2= start2 + edit2.getLength();
+			int start1 = edit1.getOffset();
+			int end1 = start1 + edit1.getLength();
+			int start2 = edit2.getOffset();
+			int end2 = start2 + edit2.getLength();
 
 			if (start1 > end2)
 				return false;
@@ -214,13 +227,22 @@ public class TextEditUtil {
 
 	/**
 	 * Create an edit which contains <code>edit1</code> and <code>edit2</code>
-	 * <p>If <code>edit1</code> overlaps <code>edit2</code> this method fails with a {@link MalformedTreeException}</p>
-	 * <p><strong>The given edits are modified and they can no longer be used.</strong></p>
-	 *
-	 * @param edit1 the edit to merge with edit2
-	 * @param edit2 the edit to merge with edit1
+	 * <p>
+	 * If <code>edit1</code> overlaps <code>edit2</code> this method fails with
+	 * a {@link MalformedTreeException}
+	 * </p>
+	 * <p>
+	 * <strong>The given edits are modified and they can no longer be
+	 * used.</strong>
+	 * </p>
+	 * 
+	 * @param edit1
+	 *            the edit to merge with edit2
+	 * @param edit2
+	 *            the edit to merge with edit1
 	 * @return the merged tree
-	 * @throws MalformedTreeException if {@link #overlaps(TextEdit, TextEdit)} returns <b>true</b>
+	 * @throws MalformedTreeException
+	 *             if {@link #overlaps(TextEdit, TextEdit)} returns <b>true</b>
 	 * @see #overlaps(TextEdit, TextEdit)
 	 * @since 3.4
 	 */
@@ -233,33 +255,36 @@ public class TextEditUtil {
 			return edit1;
 		}
 
-		MultiTextEdit result= new MultiTextEdit();
+		MultiTextEdit result = new MultiTextEdit();
 		merge(edit1, edit2, result);
 		return result;
 	}
 
-	private static void merge(TextEdit edit1, TextEdit edit2, MultiTextEdit result) {
+	private static void merge(TextEdit edit1, TextEdit edit2,
+			MultiTextEdit result) {
 		if (edit1 instanceof MultiTextEdit && edit2 instanceof MultiTextEdit) {
-			MultiTextEdit multiTextEdit1= (MultiTextEdit)edit1;
+			MultiTextEdit multiTextEdit1 = (MultiTextEdit) edit1;
 			if (!multiTextEdit1.hasChildren()) {
 				result.addChild(edit2);
 				return;
 			}
 
-			MultiTextEdit multiTextEdit2= (MultiTextEdit) edit2;
+			MultiTextEdit multiTextEdit2 = (MultiTextEdit) edit2;
 			if (!multiTextEdit2.hasChildren()) {
 				result.addChild(edit1);
 				return;
 			}
 
-			TextEdit[] children1= multiTextEdit1.getChildren();
-			TextEdit[] children2= multiTextEdit2.getChildren();
+			TextEdit[] children1 = multiTextEdit1.getChildren();
+			TextEdit[] children2 = multiTextEdit2.getChildren();
 
-			int i1= 0;
-			int i2= 0;
+			int i1 = 0;
+			int i2 = 0;
 			while (i1 < children1.length && i2 < children2.length) {
 
-				while (i1 < children1.length && children1[i1].getExclusiveEnd() < children2[i2].getOffset()) {
+				while (i1 < children1.length
+						&& children1[i1].getExclusiveEnd() < children2[i2]
+								.getOffset()) {
 					edit1.removeChild(0);
 					result.addChild(children1[i1]);
 					i1++;
@@ -267,7 +292,9 @@ public class TextEditUtil {
 				if (i1 >= children1.length)
 					break;
 
-				while (i2 < children2.length && children2[i2].getExclusiveEnd() < children1[i1].getOffset()) {
+				while (i2 < children2.length
+						&& children2[i2].getExclusiveEnd() < children1[i1]
+								.getOffset()) {
 					edit2.removeChild(0);
 					result.addChild(children2[i2]);
 					i2++;
@@ -298,9 +325,9 @@ public class TextEditUtil {
 				i2++;
 			}
 		} else if (edit1 instanceof MultiTextEdit) {
-			TextEdit[] children= edit1.getChildren();
+			TextEdit[] children = edit1.getChildren();
 
-			int i= 0;
+			int i = 0;
 			while (children[i].getExclusiveEnd() < edit2.getOffset()) {
 				edit1.removeChild(0);
 				result.addChild(children[i]);
@@ -319,9 +346,9 @@ public class TextEditUtil {
 				i++;
 			}
 		} else if (edit2 instanceof MultiTextEdit) {
-			TextEdit[] children= edit2.getChildren();
+			TextEdit[] children = edit2.getChildren();
 
-			int i= 0;
+			int i = 0;
 			while (children[i].getExclusiveEnd() < edit1.getOffset()) {
 				edit2.removeChild(0);
 				result.addChild(children[i]);

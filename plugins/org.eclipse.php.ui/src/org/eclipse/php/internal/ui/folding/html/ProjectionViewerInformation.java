@@ -23,8 +23,8 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.wst.html.ui.internal.Logger;
 
 /**
- * Contains information about a projection viewer and also manages updating
- * the viewer's projection annotation model
+ * Contains information about a projection viewer and also manages updating the
+ * viewer's projection annotation model
  */
 class ProjectionViewerInformation {
 	// copies of this class located in:
@@ -56,9 +56,12 @@ class ProjectionViewerInformation {
 			// annotation model will be updated after all documentChanged
 			// listeners have been notified
 			IDocument document = event.getDocument();
-			if (document instanceof IDocumentExtension && fInfo.getDocument() == document) {
+			if (document instanceof IDocumentExtension
+					&& fInfo.getDocument() == document) {
 				if (fInfo.hasChangesQueued())
-					((IDocumentExtension) document).registerPostNotificationReplace(this, new PostDocumentChangedListener(fInfo));
+					((IDocumentExtension) document)
+							.registerPostNotificationReplace(this,
+									new PostDocumentChangedListener(fInfo));
 			}
 		}
 	}
@@ -67,7 +70,8 @@ class ProjectionViewerInformation {
 	 * Essentially a post document changed listener because it is called after
 	 * documentchanged has been fired.
 	 */
-	private class PostDocumentChangedListener implements IDocumentExtension.IReplace {
+	private class PostDocumentChangedListener implements
+			IDocumentExtension.IReplace {
 		private ProjectionViewerInformation fInfo;
 
 		public PostDocumentChangedListener(ProjectionViewerInformation info) {
@@ -127,8 +131,8 @@ class ProjectionViewerInformation {
 	}
 
 	/**
-	 * Applies the pending projection annotation model changes to the
-	 * projection annotation model.
+	 * Applies the pending projection annotation model changes to the projection
+	 * annotation model.
 	 */
 	void applyAnnotationModelChanges() {
 		List queuedChanges = getQueuedAnnotationChanges();
@@ -136,11 +140,13 @@ class ProjectionViewerInformation {
 		// them to
 		// the projection annotation model
 		while (!queuedChanges.isEmpty()) {
-			ProjectionAnnotationModelChanges changes = (ProjectionAnnotationModelChanges) queuedChanges.remove(0);
+			ProjectionAnnotationModelChanges changes = (ProjectionAnnotationModelChanges) queuedChanges
+					.remove(0);
 			try {
-				fProjectionAnnotationModel.modifyAnnotations(changes.getDeletions(), changes.getAdditions(), changes.getModifications());
-			}
-			catch (Exception e) {
+				fProjectionAnnotationModel.modifyAnnotations(changes
+						.getDeletions(), changes.getAdditions(), changes
+						.getModifications());
+			} catch (Exception e) {
 				// if anything goes wrong, log it and continue
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 			}
@@ -160,10 +166,11 @@ class ProjectionViewerInformation {
 	 * Updates projection annotation model if document is not in flux.
 	 * Otherwise, queues up the changes to be applied when document is ready.
 	 */
-	public void queueAnnotationModelChanges(ProjectionAnnotationModelChanges newChange) {
+	public void queueAnnotationModelChanges(
+			ProjectionAnnotationModelChanges newChange) {
 		/*
-		 * future_TODO: maybe improve by checking if annotation projection
-		 * model change already exists for node. if so, throw out old change.
+		 * future_TODO: maybe improve by checking if annotation projection model
+		 * change already exists for node. if so, throw out old change.
 		 */
 		getQueuedAnnotationChanges().add(newChange);
 

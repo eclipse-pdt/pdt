@@ -13,9 +13,11 @@ package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
-public class PHPFoldingPreferencePage extends AbstractConfigurationBlockPreferencePage {
+public class PHPFoldingPreferencePage extends
+		AbstractConfigurationBlockPreferencePage {
 
-	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
+	protected IPreferenceConfigurationBlock createConfigurationBlock(
+			OverlayPreferenceStore overlayPreferenceStore) {
 		return new FoldingConfigurationBlock(overlayPreferenceStore);
 	}
 

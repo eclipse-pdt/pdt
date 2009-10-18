@@ -20,15 +20,16 @@ import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 
 public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 
-	
 	public PHPTemplatesPreferencePage() {
 		setPreferenceStore(PreferenceConstants.getPreferenceStore());
 		setTemplateStore(PHPUiPlugin.getDefault().getTemplateStore());
-		setContextTypeRegistry(PHPUiPlugin.getDefault().getTemplateContextRegistry());
+		setContextTypeRegistry(PHPUiPlugin.getDefault()
+				.getTemplateContextRegistry());
 	}
-	
+
 	public void performHelp() {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.TEMPLATES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				IPHPHelpContextIds.TEMPLATES_PREFERENCES);
 		getControl().notifyListeners(SWT.Help, new Event());
-    }
+	}
 }

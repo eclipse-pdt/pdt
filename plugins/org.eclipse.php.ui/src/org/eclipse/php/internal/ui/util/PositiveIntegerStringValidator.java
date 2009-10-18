@@ -11,10 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-public class PositiveIntegerStringValidator extends IntegerStringValidator implements IStringValidator {
+public class PositiveIntegerStringValidator extends IntegerStringValidator
+		implements IStringValidator {
 	private String notPositiveError;
 
-	public PositiveIntegerStringValidator(String zeroLengthError, String notIntegerError, String notPositiveError) {
+	public PositiveIntegerStringValidator(String zeroLengthError,
+			String notIntegerError, String notPositiveError) {
 		super(zeroLengthError, notIntegerError);
 		this.notPositiveError = notPositiveError;
 	}

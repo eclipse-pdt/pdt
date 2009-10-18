@@ -25,11 +25,14 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
 
 /**
- * A toolbar action which toggles the {@linkplain org.eclipse.php.internal.ui.preferences.PreferenceConstants#EDITOR_MARK_OCCURRENCES mark occurrences preference}.
- *
+ * A toolbar action which toggles the
+ * {@linkplain org.eclipse.php.internal.ui.preferences.PreferenceConstants#EDITOR_MARK_OCCURRENCES
+ * mark occurrences preference}.
+ * 
  * @since 3.0
  */
-public class ToggleMarkOccurrencesAction extends TextEditorAction implements IPropertyChangeListener {
+public class ToggleMarkOccurrencesAction extends TextEditorAction implements
+		IPropertyChangeListener {
 
 	private IPreferenceStore fStore;
 
@@ -37,9 +40,12 @@ public class ToggleMarkOccurrencesAction extends TextEditorAction implements IPr
 	 * Constructs and updates the action.
 	 */
 	public ToggleMarkOccurrencesAction(ResourceBundle resourceBundle) {
-		super(resourceBundle, "ToggleMarkOccurrencesAction.", null, IAction.AS_CHECK_BOX); //$NON-NLS-1$
+		super(resourceBundle,
+				"ToggleMarkOccurrencesAction.", null, IAction.AS_CHECK_BOX); //$NON-NLS-1$
 		PHPPluginImages.setToolImageDescriptors(this, "mark_occurrences.gif"); //$NON-NLS-1$
-		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.TOGGLE_MARK_OCCURRENCES_ACTION); // TODO - Add Help
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IPHPHelpContextIds.TOGGLE_MARK_OCCURRENCES_ACTION); // TODO - Add
+		// Help
 		update();
 	}
 
@@ -47,7 +53,8 @@ public class ToggleMarkOccurrencesAction extends TextEditorAction implements IPr
 	 * @see IAction#actionPerformed
 	 */
 	public void run() {
-		fStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES, isChecked());
+		fStore.setValue(PreferenceConstants.EDITOR_MARK_OCCURRENCES,
+				isChecked());
 	}
 
 	/*
@@ -85,7 +92,9 @@ public class ToggleMarkOccurrencesAction extends TextEditorAction implements IPr
 	 * @see IPropertyChangeListener#propertyChange(PropertyChangeEvent)
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(PreferenceConstants.EDITOR_MARK_OCCURRENCES))
-			setChecked(Boolean.valueOf(event.getNewValue().toString()).booleanValue());
+		if (event.getProperty().equals(
+				PreferenceConstants.EDITOR_MARK_OCCURRENCES))
+			setChecked(Boolean.valueOf(event.getNewValue().toString())
+					.booleanValue());
 	}
 }

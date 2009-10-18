@@ -47,22 +47,27 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 	public void createControl(Composite parent) {
 		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
 		fConfigurationBlock = getFormatterPreferencesBlock();
-		fConfigurationBlock.init(getNewStatusChangedListener(), getProject(), container);
+		fConfigurationBlock.init(getNewStatusChangedListener(), getProject(),
+				container);
 		setDescription(fConfigurationBlock.getDescription());
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.FORMATTER_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.FORMATTER_PREFERENCES);
 	}
 
 	private IPHPFormatterConfigurationBlockWrapper getFormatterPreferencesBlock() {
 		IPHPFormatterConfigurationBlockWrapper prefBlock = null;
 
 		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterPrefBlock"; //$NON-NLS-1$
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(formatterExtensionName);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals("block")) { //$NON-NLS-1$
-				ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
-				prefBlock = (IPHPFormatterConfigurationBlockWrapper) ecProxy.getObject();
+				ElementCreationProxy ecProxy = new ElementCreationProxy(
+						element, formatterExtensionName);
+				prefBlock = (IPHPFormatterConfigurationBlockWrapper) ecProxy
+						.getObject();
 			}
 		}
 
@@ -83,7 +88,8 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 	protected Control createContents(Composite parent) {
 		Control control = super.createContents(parent);
 		if (!hasExtensionsForPDT) {
-			GridData data = new GridData(GridData.FILL, GridData.FILL, true, false);
+			GridData data = new GridData(GridData.FILL, GridData.FILL, true,
+					false);
 			super.fConfigurationBlockControl.setLayoutData(data);
 		}
 		return control;
@@ -101,9 +107,11 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		return PROP_ID;
 	}
 
-	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
+	protected void enableProjectSpecificSettings(
+			boolean useProjectSpecificSettings) {
 		if (fConfigurationBlock != null) {
-			fConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
+			fConfigurationBlock
+					.useProjectSpecificSettings(useProjectSpecificSettings);
 		}
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 	}

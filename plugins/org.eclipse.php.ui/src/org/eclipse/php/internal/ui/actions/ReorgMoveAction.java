@@ -41,11 +41,13 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 		}
 	}
 
-	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
+	private SelectionListenerAction createWorkbenchAction(
+			IStructuredSelection selection) {
 		List<?> list = selection.toList();
 		SelectionListenerAction action = null;
-		if(fShell==null){
-			fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		if (fShell == null) {
+			fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getShell();
 		}
 
 		if (list.size() == 0 || list.get(0) instanceof IProject) {
@@ -65,7 +67,7 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 				moveActionDelegate.setActiveEditor(action, targetEditor);
 			} else {
 				IEditorInput editorInput = targetEditor.getEditorInput();
-				if (editorInput instanceof IFileEditorInput ) {
+				if (editorInput instanceof IFileEditorInput) {
 					IFileEditorInput input = (IFileEditorInput) editorInput;
 					IFile file = input.getFile();
 					selectedResources = new StructuredSelection(file);
@@ -87,7 +89,7 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 		if (moveActionDelegate != null) {
 			moveActionDelegate.selectionChanged(action, selection);
 		} else {
-			if (selection instanceof IStructuredSelection){
+			if (selection instanceof IStructuredSelection) {
 				selectedResources = (IStructuredSelection) selection;
 			}
 		}
@@ -99,7 +101,8 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 
 	public void init(IWorkbenchWindow window) {
 		fShell = window.getShell();
-		moveActionDelegate = PHPActionDelegatorRegistry.getActionDelegator(MOVE_ELEMENT_ACTION_ID);
+		moveActionDelegate = PHPActionDelegatorRegistry
+				.getActionDelegator(MOVE_ELEMENT_ACTION_ID);
 	}
 
 }

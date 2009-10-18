@@ -17,14 +17,17 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 /**
  * 
  * @author guy.g
- *
+ * 
  */
 
 public interface IAfterNewLineAutoEditStrategy {
 	/**
 	 * Appending to the buffer the text required
-	 * @return the position the caret should be at in the end of the command execution. return -1 if no need to change the caret location 
+	 * 
+	 * @return the position the caret should be at in the end of the command
+	 *         execution. return -1 if no need to change the caret location
 	 */
-	public int autoEditAfterNewLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer);
+	public int autoEditAfterNewLine(IStructuredDocument document,
+			DocumentCommand command, StringBuffer buffer);
 
 }

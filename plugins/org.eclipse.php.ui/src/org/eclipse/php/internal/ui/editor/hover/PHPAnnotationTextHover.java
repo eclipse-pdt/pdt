@@ -15,7 +15,8 @@ import org.eclipse.dltk.internal.ui.text.hover.AbstractAnnotationHover;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 
-public class PHPAnnotationTextHover extends AbstractAnnotationHover implements IPHPTextHover {
+public class PHPAnnotationTextHover extends AbstractAnnotationHover implements
+		IPHPTextHover {
 
 	public PHPAnnotationTextHover() {
 		super(true);

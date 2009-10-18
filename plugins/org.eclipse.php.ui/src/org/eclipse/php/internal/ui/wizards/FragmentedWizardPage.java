@@ -44,7 +44,8 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 		try {
 			comp = fragment.createComposite(parentComp, this);
 		} catch (Exception e) {
-			PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.ID, 0, "Could not create wizard page composite", e)); //$NON-NLS-1$
+			PHPUiPlugin.log(new Status(IStatus.WARNING, PHPUiPlugin.ID, 0,
+					"Could not create wizard page composite", e)); //$NON-NLS-1$
 		}
 		if (comp == null) {
 			comp = new Composite(parentComp, SWT.NONE);
@@ -54,29 +55,29 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 		}
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = convertHorizontalDLUsToPixels(150);
-		//data.heightHint = convertVerticalDLUsToPixels(350);
+		// data.heightHint = convertVerticalDLUsToPixels(350);
 		comp.setLayoutData(data);
 		setControl(comp);
 	}
 
 	public boolean isPageComplete() {
-		//if (isEmptyError)
-		//	return false;
+		// if (isEmptyError)
+		// return false;
 		try {
 			if (!fragment.isComplete())
 				return false;
 		} catch (Exception e) {
 			return false;
 		}
-		//return (getMessage() == null || getMessageType() != ERROR);
+		// return (getMessage() == null || getMessageType() != ERROR);
 		return true;
 	}
 
 	public boolean canFlipToNextPage() {
 		if (getNextPage() == null)
 			return false;
-		//if (isEmptyError)
-		//	return false;
+		// if (isEmptyError)
+		// return false;
 		try {
 			if (!fragment.isComplete())
 				return false;
@@ -84,7 +85,7 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 			return false;
 		}
 		return true;
-		//return (getMessage() == null || getMessageType() != ERROR);
+		// return (getMessage() == null || getMessageType() != ERROR);
 	}
 
 	public void setVisible(boolean visible) {
@@ -106,13 +107,16 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 		} else
 			isEmptyError = false;
 		super.setMessage(message, type);
-		WizardFragment frag = ((FragmentedWizard) getWizard()).getCurrentWizardFragment();
+		WizardFragment frag = ((FragmentedWizard) getWizard())
+				.getCurrentWizardFragment();
 		if (!fragment.equals(frag))
 			return;
 		getContainer().updateButtons();
 	}
 
-	public void run(boolean fork, boolean cancelable, IRunnableWithProgress runnable) throws InterruptedException, InvocationTargetException {
+	public void run(boolean fork, boolean cancelable,
+			IRunnableWithProgress runnable) throws InterruptedException,
+			InvocationTargetException {
 		getWizard().getContainer().run(fork, cancelable, runnable);
 	}
 

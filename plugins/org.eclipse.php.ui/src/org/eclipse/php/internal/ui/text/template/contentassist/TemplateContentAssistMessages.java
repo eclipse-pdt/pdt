@@ -18,7 +18,8 @@ import org.eclipse.osgi.util.NLS;
  */
 final class TemplateContentAssistMessages extends NLS {
 
-	private static final String BUNDLE_NAME= TemplateContentAssistMessages.class.getName();
+	private static final String BUNDLE_NAME = TemplateContentAssistMessages.class
+			.getName();
 
 	private TemplateContentAssistMessages() {
 		// Do not instantiate
@@ -28,6 +29,8 @@ final class TemplateContentAssistMessages extends NLS {
 	public static String TemplateEvaluator_error_title;
 
 	static {
-		NLS.initializeMessages(BUNDLE_NAME, TemplateContentAssistMessages.class);
+		NLS
+				.initializeMessages(BUNDLE_NAME,
+						TemplateContentAssistMessages.class);
 	}
 }

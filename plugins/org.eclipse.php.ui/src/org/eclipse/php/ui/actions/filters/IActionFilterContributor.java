@@ -14,7 +14,8 @@ package org.eclipse.php.ui.actions.filters;
 import org.eclipse.ui.IActionFilter;
 
 /**
- * Contributor to the IActionFilter for more complicated tests  
+ * Contributor to the IActionFilter for more complicated tests
+ * 
  * @author michael
  */
 public interface IActionFilterContributor extends IActionFilter {

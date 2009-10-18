@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -49,6 +49,7 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 
 	/**
 	 * Flag to render the 'deprecated' adornment.
+	 * 
 	 * @since 3.0
 	 */
 	public final static int DEPRECATED = 0x400;
@@ -61,14 +62,18 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 
 	/**
 	 * Creates a new PHPElementImageDescriptor.
-	 *
-	 * @param baseImage an image descriptor used as the base image
-	 * @param flags flags indicating which adornments are to be rendered. See <code>setAdornments</code>
-	 * 	for valid values.
-	 * @param size the size of the resulting image
+	 * 
+	 * @param baseImage
+	 *            an image descriptor used as the base image
+	 * @param flags
+	 *            flags indicating which adornments are to be rendered. See
+	 *            <code>setAdornments</code> for valid values.
+	 * @param size
+	 *            the size of the resulting image
 	 * @see #setAdornments(int)
 	 */
-	public PHPElementImageDescriptor(ImageDescriptor baseImage, int flags, Point size) {
+	public PHPElementImageDescriptor(ImageDescriptor baseImage, int flags,
+			Point size) {
 		fBaseImage = baseImage;
 		Assert.isNotNull(fBaseImage);
 		fFlags = flags;
@@ -78,12 +83,15 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	/**
-	 * Sets the descriptors adornments. Valid values are: <code>ABSTRACT</code>, <code>FINAL</code>,
-	 * </code>STATIC<code>, </code>RUNNABLE<code>, </code>WARNING<code>,
-	 * </code>ERROR<code>, </code>OVERRIDDES<code>, <code>CONSTRUCTOR</code>,
-	 * <code>DEPRECATED</code>,  or any combination of those.
-	 *
-	 * @param adornments the image descriptors adornments
+	 * Sets the descriptors adornments. Valid values are: <code>ABSTRACT</code>,
+	 * <code>FINAL</code>, </code>STATIC<code>, </code>RUNNABLE<code>, </code>
+	 * WARNING<code>,
+	 * </code>ERROR<code>, </code>OVERRIDDES
+	 * <code>, <code>CONSTRUCTOR</code>, <code>DEPRECATED</code>, or any
+	 * combination of those.
+	 * 
+	 * @param adornments
+	 *            the image descriptors adornments
 	 */
 	public void setAdornments(int adornments) {
 		Assert.isTrue(adornments >= 0);
@@ -92,7 +100,7 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 
 	/**
 	 * Returns the current adornments.
-	 *
+	 * 
 	 * @return the current adornments
 	 */
 	public int getAdronments() {
@@ -101,8 +109,10 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 
 	/**
 	 * Sets the size of the image created by calling <code>createImage()</code>.
-	 *
-	 * @param size the size of the image returned from calling <code>createImage()</code>
+	 * 
+	 * @param size
+	 *            the size of the image returned from calling
+	 *            <code>createImage()</code>
 	 * @see ImageDescriptor#createImage()
 	 */
 	public void setImageSize(Point size) {
@@ -112,9 +122,11 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	/**
-	 * Returns the size of the image created by calling <code>createImage()</code>.
-	 *
-	 * @return the size of the image created by calling <code>createImage()</code>
+	 * Returns the size of the image created by calling
+	 * <code>createImage()</code>.
+	 * 
+	 * @return the size of the image created by calling
+	 *         <code>createImage()</code>
 	 * @see ImageDescriptor#createImage()
 	 */
 	public Point getImageSize() {
@@ -126,11 +138,13 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	public boolean equals(Object object) {
-		if (object == null || !PHPElementImageDescriptor.class.equals(object.getClass()))
+		if (object == null
+				|| !PHPElementImageDescriptor.class.equals(object.getClass()))
 			return false;
 
 		PHPElementImageDescriptor other = (PHPElementImageDescriptor) object;
-		return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags && fSize.equals(other.fSize));
+		return (fBaseImage.equals(other.fBaseImage) && fFlags == other.fFlags && fSize
+				.equals(other.fSize));
 	}
 
 	public int hashCode() {
@@ -157,7 +171,8 @@ public class PHPElementImageDescriptor extends CompositeImageDescriptor {
 		ImageData data = descriptor.getImageData();
 		if (data == null) {
 			data = DEFAULT_IMAGE_DATA;
-			PHPUiPlugin.logErrorMessage("Image data not available: " + descriptor.toString()); //$NON-NLS-1$
+			PHPUiPlugin
+					.logErrorMessage("Image data not available: " + descriptor.toString()); //$NON-NLS-1$
 		}
 		return data;
 	}

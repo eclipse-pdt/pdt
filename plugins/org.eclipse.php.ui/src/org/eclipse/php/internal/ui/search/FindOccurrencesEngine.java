@@ -10,6 +10,7 @@
  *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.search;
+
 import java.io.IOException;
 
 import org.eclipse.dltk.core.ISourceModule;
@@ -23,37 +24,41 @@ public final class FindOccurrencesEngine {
 	public static FindOccurrencesEngine create(IOccurrencesFinder finder) {
 		return new FindOccurrencesEngine(finder);
 	}
-	
+
 	private IOccurrencesFinder fFinder;
-		
+
 	private FindOccurrencesEngine(IOccurrencesFinder finder) {
 		if (finder == null)
 			throw new IllegalArgumentException();
-		fFinder= finder;
+		fFinder = finder;
 	}
-	
+
 	private String run(Program astRoot, int offset, int length) {
-		String message= fFinder.initialize(astRoot, offset, length);
+		String message = fFinder.initialize(astRoot, offset, length);
 		if (message != null)
 			return message;
 
 		performNewSearch(fFinder, astRoot.getSourceModule());
 		return null;
 	}
-	
-	public String run(ISourceModule input, int offset, int length) throws ModelException, IOException {
+
+	public String run(ISourceModule input, int offset, int length)
+			throws ModelException, IOException {
 		if (input.getSourceRange() == null) {
-			return "SearchMessages.FindOccurrencesEngine_noSource_text";  //$NON-NLS-1$
+			return "SearchMessages.FindOccurrencesEngine_noSource_text"; //$NON-NLS-1$
 		}
-		
-		final Program root= SharedASTProvider.getAST(input, SharedASTProvider.WAIT_YES, null);
+
+		final Program root = SharedASTProvider.getAST(input,
+				SharedASTProvider.WAIT_YES, null);
 		if (root == null) {
-			return "SearchMessages.FindOccurrencesEngine_cannotParse_text";  //$NON-NLS-1$
+			return "SearchMessages.FindOccurrencesEngine_cannotParse_text"; //$NON-NLS-1$
 		}
 		return run(root, offset, length);
 	}
-	
-	private void performNewSearch(IOccurrencesFinder finder, ISourceModule element) {
-		NewSearchUI.runQueryInBackground(new OccurrencesSearchQuery(finder, element));
+
+	private void performNewSearch(IOccurrencesFinder finder,
+			ISourceModule element) {
+		NewSearchUI.runQueryInBackground(new OccurrencesSearchQuery(finder,
+				element));
 	}
 }

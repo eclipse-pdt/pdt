@@ -22,41 +22,49 @@ import org.eclipse.php.internal.core.documentModel.parser.php5.PhpLexer;
 import org.eclipse.php.internal.ui.corext.SourceRange;
 
 /**
- * This class houses a collection of static methods which do not refer to,
- * or otherwise depend on, other classes in this package.  Each 
- * package-visible method is called by more than one other class in this
- * package.  Since they do not depend on other classes in this package, 
- * they could be moved to some less specialized package.
+ * This class houses a collection of static methods which do not refer to, or
+ * otherwise depend on, other classes in this package. Each package-visible
+ * method is called by more than one other class in this package. Since they do
+ * not depend on other classes in this package, they could be moved to some less
+ * specialized package.
  */
 class Util {
-	
-	static boolean rangeIncludesNonWhitespaceOutsideRange(SourceRange selection, SourceRange nodes, IDocument document) throws BadLocationException {
-		if(!selection.covers(nodes))
+
+	static boolean rangeIncludesNonWhitespaceOutsideRange(
+			SourceRange selection, SourceRange nodes, IDocument document)
+			throws BadLocationException {
+		if (!selection.covers(nodes))
 			return false;
 
-		//TODO: skip leading comments. Consider that leading line comment must be followed by newline!
+		// TODO: skip leading comments. Consider that leading line comment must
+		// be followed by newline!
 
-		// check the start of the nodes and the selection 
-		if(!isJustWhitespace(selection.getOffset(), nodes.getOffset(), document))
+		// check the start of the nodes and the selection
+		if (!isJustWhitespace(selection.getOffset(), nodes.getOffset(),
+				document))
 			return true;
-		
+
 		// check the end of the nodes and the selection
-		if(!isJustWhitespaceOrComment(nodes.getOffset() + nodes.getLength(), selection.getOffset() + selection.getLength(), document))				
+		if (!isJustWhitespaceOrComment(nodes.getOffset() + nodes.getLength(),
+				selection.getOffset() + selection.getLength(), document))
 			return true;
-		return false;		
+		return false;
 	}
-	private static boolean isJustWhitespace(int start, int end, IDocument buffer) throws BadLocationException {
+
+	private static boolean isJustWhitespace(int start, int end, IDocument buffer)
+			throws BadLocationException {
 		if (start == end)
 			return true;
 		Assert.isTrue(start <= end);
 		return 0 == buffer.get(start, end - start).trim().length();
 	}
-	 
-	private static boolean isJustWhitespaceOrComment(int start, int end, IDocument document) {
+
+	private static boolean isJustWhitespaceOrComment(int start, int end,
+			IDocument document) {
 		if (start == end)
 			return true;
 		Assert.isTrue(start <= end);
-					
+
 		// gets the new text from the document
 		String trimmedText;
 		try {
@@ -64,8 +72,8 @@ class Util {
 		} catch (BadLocationException e1) {
 			return false;
 		}
-		
-		// if there are no tokens in the trimmed text return true 
+
+		// if there are no tokens in the trimmed text return true
 		if (0 == trimmedText.length()) {
 			return true;
 		} else {

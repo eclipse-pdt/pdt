@@ -23,22 +23,25 @@ public class EditorHighlightingSynchronizer implements ILinkedModeListener {
 
 	/**
 	 * Creates a new synchronizer.
-	 *
-	 * @param editor the java editor the occurrences markers of which will be
-	 *        synchronized with the linked mode
-	 *
+	 * 
+	 * @param editor
+	 *            the java editor the occurrences markers of which will be
+	 *            synchronized with the linked mode
+	 * 
 	 */
 	public EditorHighlightingSynchronizer(PHPStructuredEditor editor) {
 		Assert.isLegal(editor != null);
-		fEditor= editor;
-		fWasOccurrencesOn= fEditor.isMarkingOccurrences();
+		fEditor = editor;
+		fWasOccurrencesOn = fEditor.isMarkingOccurrences();
 
 		if (fWasOccurrencesOn && !isEditorDisposed())
 			fEditor.uninstallOccurrencesFinder();
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.link.ILinkedModeListener#left(org.eclipse.jface.text.link.LinkedModeModel, int)
+	 * @see
+	 * org.eclipse.jface.text.link.ILinkedModeListener#left(org.eclipse.jface
+	 * .text.link.LinkedModeModel, int)
 	 */
 	public void left(LinkedModeModel environment, int flags) {
 		if (fWasOccurrencesOn && !isEditorDisposed())
@@ -53,13 +56,17 @@ public class EditorHighlightingSynchronizer implements ILinkedModeListener {
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.link.ILinkedModeListener#suspend(org.eclipse.jface.text.link.LinkedModeModel)
+	 * @see
+	 * org.eclipse.jface.text.link.ILinkedModeListener#suspend(org.eclipse.jface
+	 * .text.link.LinkedModeModel)
 	 */
 	public void suspend(LinkedModeModel environment) {
 	}
 
 	/*
-	 * @see org.eclipse.jface.text.link.ILinkedModeListener#resume(org.eclipse.jface.text.link.LinkedModeModel, int)
+	 * @see
+	 * org.eclipse.jface.text.link.ILinkedModeListener#resume(org.eclipse.jface
+	 * .text.link.LinkedModeModel, int)
 	 */
 	public void resume(LinkedModeModel environment, int flags) {
 	}

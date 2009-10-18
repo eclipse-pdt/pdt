@@ -21,9 +21,11 @@ import org.eclipse.php.internal.core.util.WeakObject;
 
 /**
  * WeakPreferencesPropagatorListener
+ * 
  * @deprecated (Not effective - candidate for removal)
  */
-public class WeakPropertyChangeListener extends WeakObject implements IPropertyChangeListener {
+public class WeakPropertyChangeListener extends WeakObject implements
+		IPropertyChangeListener {
 
 	private Object target;
 	private static ReferenceQueue q = new ReferenceQueue();
@@ -31,7 +33,8 @@ public class WeakPropertyChangeListener extends WeakObject implements IPropertyC
 	private static Object parameterValues[] = new Object[] { null };
 	private static String removeListenerMethodName = "removePropertyChangeListener"; //$NON-NLS-1$
 
-	public static WeakPropertyChangeListener create(IPropertyChangeListener l, Object target) {
+	public static WeakPropertyChangeListener create(IPropertyChangeListener l,
+			Object target) {
 		removeRedundantReferences();
 		return new WeakPropertyChangeListener(l, target);
 	}
@@ -44,9 +47,11 @@ public class WeakPropertyChangeListener extends WeakObject implements IPropertyC
 		}
 	}
 
-	private static void removeRedundantReference(WeakPropertyChangeListener listener) {
+	private static void removeRedundantReference(
+			WeakPropertyChangeListener listener) {
 		try {
-			Method setMethod = listener.target.getClass().getMethod(removeListenerMethodName, parameterTypes);
+			Method setMethod = listener.target.getClass().getMethod(
+					removeListenerMethodName, parameterTypes);
 			parameterValues[0] = listener;
 			setMethod.invoke(listener.target, parameterValues);
 		} catch (Exception exc) {
@@ -55,7 +60,8 @@ public class WeakPropertyChangeListener extends WeakObject implements IPropertyC
 	}
 
 	/** Creates new WeakPropertyChangeListener */
-	protected WeakPropertyChangeListener(IPropertyChangeListener l, Object target) {
+	protected WeakPropertyChangeListener(IPropertyChangeListener l,
+			Object target) {
 		super(l, q);
 		this.target = target;
 	}
@@ -63,7 +69,7 @@ public class WeakPropertyChangeListener extends WeakObject implements IPropertyC
 	public void propertyChange(PropertyChangeEvent event) {
 		IPropertyChangeListener l = (IPropertyChangeListener) this.get();
 		if (l != null) {
-			l.propertyChange (event);
+			l.propertyChange(event);
 		} else {
 			removeRedundantReference(this);
 		}

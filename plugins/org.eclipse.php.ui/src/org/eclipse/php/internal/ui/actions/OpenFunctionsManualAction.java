@@ -19,11 +19,13 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.PHPManualFactory;
 import org.eclipse.ui.texteditor.IUpdate;
 
-public class OpenFunctionsManualAction extends PHPEditorResolvingAction implements IUpdate {
-	
+public class OpenFunctionsManualAction extends PHPEditorResolvingAction
+		implements IUpdate {
+
 	private String url;
 
-	public OpenFunctionsManualAction(ResourceBundle resourceBundle, PHPStructuredEditor editor) {
+	public OpenFunctionsManualAction(ResourceBundle resourceBundle,
+			PHPStructuredEditor editor) {
 		super(resourceBundle, "OpenFunctionsManualAction_", editor); //$NON-NLS-1$
 	}
 
@@ -32,11 +34,12 @@ public class OpenFunctionsManualAction extends PHPEditorResolvingAction implemen
 			PHPManualFactory.getManual().showFunctionHelp(url);
 		}
 	}
-	
+
 	protected boolean isValid(IModelElement modelElement) {
 		if (super.isValid(modelElement)) {
 			if (LanguageModelInitializer.isLanguageModelElement(modelElement)) {
-				url = PHPManualFactory.getManual().getURLForManual(modelElement);
+				url = PHPManualFactory.getManual()
+						.getURLForManual(modelElement);
 				return url != null;
 			}
 		}

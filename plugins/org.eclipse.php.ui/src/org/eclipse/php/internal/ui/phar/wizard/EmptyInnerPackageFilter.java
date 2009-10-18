@@ -15,7 +15,8 @@ public class EmptyInnerPackageFilter extends ViewerFilter {
 			try {
 				if (pkg.isRootFolder())
 					return pkg.hasChildren();
-				return !pkg.hasSubfolders() || pkg.hasChildren() || (pkg.getForeignResources().length > 0);
+				return !pkg.hasSubfolders() || pkg.hasChildren()
+						|| (pkg.getForeignResources().length > 0);
 			} catch (ModelException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

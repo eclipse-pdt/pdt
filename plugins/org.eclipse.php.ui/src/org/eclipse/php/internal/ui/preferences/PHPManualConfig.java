@@ -14,8 +14,7 @@ package org.eclipse.php.internal.ui.preferences;
 import org.eclipse.php.internal.ui.util.PHPManualSite;
 
 /**
- * @author seva
- * Stores meta data for {@link PHPManualSite}
+ * @author seva Stores meta data for {@link PHPManualSite}
  */
 public class PHPManualConfig {
 	private String label;
@@ -23,7 +22,8 @@ public class PHPManualConfig {
 	private String extension;
 	private boolean contributed;
 
-	public PHPManualConfig(String label, String url, String extension, boolean contributed) {
+	public PHPManualConfig(String label, String url, String extension,
+			boolean contributed) {
 		this.label = label;
 		this.url = url;
 		this.contributed = contributed;
@@ -46,7 +46,9 @@ public class PHPManualConfig {
 		return extension;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {

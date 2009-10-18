@@ -33,11 +33,12 @@ import org.eclipse.ui.part.ResourceTransfer;
 
 /**
  * A drag adapter that transfers the current selection as </code>
- * IResource</code>. Only those elements in the selection are part
- * of the transfer which can be converted into an <code>IResource
+ * IResource</code>. Only those elements in the selection are part of the
+ * transfer which can be converted into an <code>IResource
  * </code>.
  */
-public class ResourceTransferDragAdapter extends DragSourceAdapter implements TransferDragSourceListener {
+public class ResourceTransferDragAdapter extends DragSourceAdapter implements
+		TransferDragSourceListener {
 
 	private ISelectionProvider fProvider;
 
@@ -46,8 +47,9 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 	/**
 	 * Creates a new ResourceTransferDragAdapter for the given selection
 	 * provider.
-	 *
-	 * @param provider the selection provider to access the viewer's selection
+	 * 
+	 * @param provider
+	 *            the selection provider to access the viewer's selection
 	 */
 	public ResourceTransferDragAdapter(ISelectionProvider provider) {
 		fProvider = provider;
@@ -86,7 +88,8 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 			Object element = iter.next();
 			if (element instanceof IAdaptable) {
 				IAdaptable adaptable = (IAdaptable) element;
-				IResource resource = (IResource) adaptable.getAdapter(IResource.class);
+				IResource resource = (IResource) adaptable
+						.getAdapter(IResource.class);
 				if (resource != null)
 					result.add(resource);
 			}
@@ -95,8 +98,9 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 	}
 
 	private void handleFinishedDropMove(DragSourceEvent event) {
-		MultiStatus status = new MultiStatus(PHPUiPlugin.ID, PHPUiPlugin.INTERNAL_ERROR, "Cannot delete resources", //$NON-NLS-1$
-			null);
+		MultiStatus status = new MultiStatus(PHPUiPlugin.ID,
+				PHPUiPlugin.INTERNAL_ERROR, "Cannot delete resources", //$NON-NLS-1$
+				null);
 		List resources = convertSelection();
 		for (Iterator iter = resources.iterator(); iter.hasNext();) {
 			IResource resource = (IResource) iter.next();
@@ -108,9 +112,10 @@ public class ResourceTransferDragAdapter extends DragSourceAdapter implements Tr
 		}
 		if (status.getChildren().length > 0) {
 			Shell parent = SWTUtil.getShell(event.widget);
-			ErrorDialog error = new ErrorDialog(parent, "Moving Resources with Drag and Drop", //$NON-NLS-1$
-				"Cannot delete the following file(s)", //$NON-NLS-1$
-				status, IStatus.ERROR);
+			ErrorDialog error = new ErrorDialog(parent,
+					"Moving Resources with Drag and Drop", //$NON-NLS-1$
+					"Cannot delete the following file(s)", //$NON-NLS-1$
+					status, IStatus.ERROR);
 			error.open();
 		}
 	}

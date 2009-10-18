@@ -52,7 +52,8 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 public class PHPManual {
 
 	private static final String BROWSER_ID = "PHPManual.browser"; //$NON-NLS-1$
-	private static final Pattern HTTP_URL_PATTERN = Pattern.compile("http://[^\\s]*"); //$NON-NLS-1$
+	private static final Pattern HTTP_URL_PATTERN = Pattern
+			.compile("http://[^\\s]*"); //$NON-NLS-1$
 	private static int browserCount = 0;
 
 	private PHPManualSite site;
@@ -73,15 +74,18 @@ public class PHPManual {
 	private synchronized Map<String, String> getPHPEntityPathMap() {
 		if (phpEntityPathMap == null) {
 			phpEntityPathMap = new HashMap<String, String>();
-			URL url = FileLocator.find(Platform.getBundle(PHPUiPlugin.getPluginId()), new Path("phpdoc.mapping"), null); //$NON-NLS-1$
+			URL url = FileLocator.find(Platform.getBundle(PHPUiPlugin
+					.getPluginId()), new Path("phpdoc.mapping"), null); //$NON-NLS-1$
 			if (url != null) {
 				try {
-					BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream()));
+					BufferedReader r = new BufferedReader(
+							new InputStreamReader(url.openStream()));
 					String line;
 					while ((line = r.readLine()) != null) {
 						int sepIdx = line.indexOf('=');
 						if (sepIdx != -1) {
-							phpEntityPathMap.put(line.substring(0, sepIdx).toLowerCase(), line.substring(sepIdx + 1));
+							phpEntityPathMap.put(line.substring(0, sepIdx)
+									.toLowerCase(), line.substring(sepIdx + 1));
 						}
 					}
 				} catch (IOException e) {
@@ -92,10 +96,11 @@ public class PHPManual {
 	}
 
 	/**
-	 * XXX: support manual for keywords
-	 * This method tries to determine PHP manual URL for the specified PHP element
+	 * XXX: support manual for keywords This method tries to determine PHP
+	 * manual URL for the specified PHP element
 	 * 
-	 * @param codeData PHP element code data
+	 * @param codeData
+	 *            PHP element code data
 	 * @return URL for the manual page
 	 */
 	public String getURLForManual(IModelElement modelElement) {
@@ -106,9 +111,11 @@ public class PHPManual {
 		String path = null;
 		if (modelElement instanceof IMethod) {
 			try {
-				IModelElement ancestor = ((IMethod) modelElement).getAncestor(IModelElement.TYPE);
+				IModelElement ancestor = ((IMethod) modelElement)
+						.getAncestor(IModelElement.TYPE);
 				if (null != ancestor) {
-					// if this is actually a method (not function), checking for declaring class manual
+					// if this is actually a method (not function), checking for
+					// declaring class manual
 					path = buildPathForClass((IType) ancestor);
 				} else {
 					path = buildPathForMethod((IMethod) modelElement);
@@ -146,7 +153,8 @@ public class PHPManual {
 			PHPDocBlock docBlock = phpDocDeclaration.getPHPDoc();
 			if (docBlock != null) {
 				for (PHPDocTag docTag : docBlock.getTags(PHPDocTagKinds.LINK)) {
-					Matcher m = HTTP_URL_PATTERN.matcher(docTag.getValue().trim());
+					Matcher m = HTTP_URL_PATTERN.matcher(docTag.getValue()
+							.trim());
 					if (m.find()) {
 						try {
 							URL url = new URL(m.group());
@@ -169,14 +177,17 @@ public class PHPManual {
 		String path = null;
 		if (type != null) {
 			ISourceModule sourceModule = type.getSourceModule();
-			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-			TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
+			ModuleDeclaration moduleDeclaration = SourceParserUtil
+					.getModuleDeclaration(sourceModule);
+			TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(
+					moduleDeclaration, type);
 			path = getPHPDocLink(typeDeclaration);
 
 			if (path == null) {
 
 				String className = type.getElementName(); //$NON-NLS-1$
-				path = (String) getPHPEntityPathMap().get(className.toLowerCase());
+				path = (String) getPHPEntityPathMap().get(
+						className.toLowerCase());
 				if (path == null) {
 					path = buildPathForClass(type.getElementName());
 				}
@@ -197,10 +208,12 @@ public class PHPManual {
 	protected String buildPathForMethod(IMethod method) {
 
 		ISourceModule sourceModule = method.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
 		MethodDeclaration methodDeclaration;
 		try {
-			methodDeclaration = PHPModelUtils.getNodeByMethod(moduleDeclaration, method);
+			methodDeclaration = PHPModelUtils.getNodeByMethod(
+					moduleDeclaration, method);
 		} catch (ModelException e) {
 			return null;
 		}
@@ -209,13 +222,17 @@ public class PHPManual {
 		if (path == null) {
 			IType declaringType = method.getDeclaringType();
 			if (declaringType != null) {
-				String functionName = declaringType.getElementName() + "::" + method.getElementName(); //$NON-NLS-1$
-				path = (String) getPHPEntityPathMap().get(functionName.toLowerCase());
+				String functionName = declaringType.getElementName()
+						+ "::" + method.getElementName(); //$NON-NLS-1$
+				path = (String) getPHPEntityPathMap().get(
+						functionName.toLowerCase());
 				if (path == null) {
-					path = buildPathForMethod(declaringType.getElementName(), method.getElementName());
+					path = buildPathForMethod(declaringType.getElementName(),
+							method.getElementName());
 				}
 			} else {
-				path = (String) getPHPEntityPathMap().get(method.getElementName().toLowerCase());
+				path = (String) getPHPEntityPathMap().get(
+						method.getElementName().toLowerCase());
 				if (path == null) {
 					path = buildPathForMethod(null, method.getElementName());
 				}
@@ -231,20 +248,27 @@ public class PHPManual {
 			buf.append(className);
 			buf.append("-"); //$NON-NLS-1$
 		}
-		buf.append(Pattern.compile("([A-Z])").matcher(methodName).replaceAll("-$1").replaceAll("_", "-")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$)
+		buf
+				.append(Pattern
+						.compile("([A-Z])").matcher(methodName).replaceAll("-$1").replaceAll("_", "-")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$)
 		return buf.toString().toLowerCase().replaceAll("-+", "-"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
-	 * This function launches browser and shows PHP manual page for the specified URL
+	 * This function launches browser and shows PHP manual page for the
+	 * specified URL
 	 */
 	public void showFunctionHelp(String url) {
-		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
+		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench()
+				.getBrowserSupport();
 		IWebBrowser browser;
 		try {
-			IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
-			if (store.getBoolean(PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER)) {
-				browser = browserSupport.createBrowser(BROWSER_ID + ++browserCount);
+			IPreferenceStore store = PHPUiPlugin.getDefault()
+					.getPreferenceStore();
+			if (store
+					.getBoolean(PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER)) {
+				browser = browserSupport.createBrowser(BROWSER_ID
+						+ ++browserCount);
 			} else {
 				browser = browserSupport.createBrowser(BROWSER_ID);
 			}
@@ -255,10 +279,14 @@ public class PHPManual {
 				URL url2 = validateUrlExists(url);
 				if (null == url2) {
 
-					//need to open some kind of err dialog and return
-					MessageDialog d = new MessageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), PHPUIMessages.getString("PHPManual_title"), null, //$NON-NLS-1$
-						PHPUIMessages.getString("PHPManual_noManual_msg"), //$NON-NLS-1$
-						MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0);
+					// need to open some kind of err dialog and return
+					MessageDialog d = new MessageDialog(PlatformUI
+							.getWorkbench().getActiveWorkbenchWindow()
+							.getShell(), PHPUIMessages
+							.getString("PHPManual_title"), null, //$NON-NLS-1$
+							PHPUIMessages.getString("PHPManual_noManual_msg"), //$NON-NLS-1$
+							MessageDialog.INFORMATION,
+							new String[] { IDialogConstants.OK_LABEL }, 0);
 					d.open();
 					return;
 				}
@@ -278,8 +306,8 @@ public class PHPManual {
 			return validateFileUrlExists(url, url2);
 		}
 		//		else if ("http".equals(url2.getProtocol())){//$NON-NLS-1$
-		//			return validateHttpUrlExists(url, url2);
-		//		}
+		// return validateHttpUrlExists(url, url2);
+		// }
 		return url2;
 	}
 

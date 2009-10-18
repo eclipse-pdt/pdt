@@ -21,10 +21,11 @@ import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * Label provider for the PHP Functions view. Inherits all its behavior from the ScriptUILabelProvider
- * but adds special handling for the Constants Node 
+ * Label provider for the PHP Functions view. Inherits all its behavior from the
+ * ScriptUILabelProvider but adds special handling for the Constants Node
+ * 
  * @author Eden K., 2008
- *
+ * 
  */
 public class PHPFunctionsLabelProvider extends ScriptUILabelProvider {
 
@@ -32,7 +33,8 @@ public class PHPFunctionsLabelProvider extends ScriptUILabelProvider {
 	 * Creates a new label provider with default flags.
 	 */
 	public PHPFunctionsLabelProvider() {
-		this(ScriptElementLabels.ALL_DEFAULT, ScriptElementImageProvider.OVERLAY_ICONS);
+		this(ScriptElementLabels.ALL_DEFAULT,
+				ScriptElementImageProvider.OVERLAY_ICONS);
 	}
 
 	/**
@@ -55,7 +57,9 @@ public class PHPFunctionsLabelProvider extends ScriptUILabelProvider {
 
 	public Image getImage(Object element) {
 		if (element instanceof ConstantNode) {
-			ImageDescriptor descriptor = new ScriptElementImageDescriptor(PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP, 0, ScriptElementImageProvider.BIG_SIZE);
+			ImageDescriptor descriptor = new ScriptElementImageDescriptor(
+					PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP, 0,
+					ScriptElementImageProvider.BIG_SIZE);
 			return DLTKUIPlugin.getImageDescriptorRegistry().get(descriptor);
 		} else {
 			return super.getImage(element);

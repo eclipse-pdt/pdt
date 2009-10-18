@@ -24,9 +24,10 @@ public class PhpCodeDataAdapterFactory implements IAdapterFactory {
 	static {
 		adapterType2Object.put(IActionFilter.class, new GenericActionFilter());
 	}
-	
-	public PhpCodeDataAdapterFactory() {}
-	
+
+	public PhpCodeDataAdapterFactory() {
+	}
+
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		return adapterType2Object.get(adapterType);
 	}

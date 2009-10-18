@@ -124,8 +124,8 @@ public class PlainPharBuilder extends PharBuilder {
 
 				fileExporter.finished();
 			} catch (IOException ex) {
-				throw PharUIUtil
-						.createCoreException(ex.getLocalizedMessage(), ex);
+				throw PharUIUtil.createCoreException(ex.getLocalizedMessage(),
+						ex);
 			}
 		}
 	}
@@ -138,8 +138,8 @@ public class PlainPharBuilder extends PharBuilder {
 				fileExporter.writeSignature();
 				// }
 			} catch (IOException ex) {
-				throw PharUIUtil
-						.createCoreException(ex.getLocalizedMessage(), ex);
+				throw PharUIUtil.createCoreException(ex.getLocalizedMessage(),
+						ex);
 			}
 		}
 

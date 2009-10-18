@@ -24,7 +24,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-public class IncludePathVarsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class IncludePathVarsPreferencePage extends PreferencePage implements
+		IWorkbenchPreferencePage {
 
 	public static final String ID = "org.eclipse.php.ui.preferences.IncludePathVariables"; //$NON-NLS-1$
 
@@ -40,18 +41,24 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 		fStoredSettings = null;
 
 		// title only used when page is shown programatically
-		setTitle(PHPUIMessages.getString("IncludePathVariablesPreferencePage_title"));
-		setDescription(PHPUIMessages.getString("IncludePathVariablesPreferencePage_description"));
+		setTitle(PHPUIMessages
+				.getString("IncludePathVariablesPreferencePage_title"));
+		setDescription(PHPUIMessages
+				.getString("IncludePathVariablesPreferencePage_description"));
 		noDefaultAndApplyButton();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+	 * 
+	 * @see
+	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
+	 * .Composite)
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(),
+				IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
 	}
 
 	/*
@@ -60,7 +67,8 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	protected Control createContents(Composite parent) {
 		Control result = fVariableBlock.createContents(parent);
 		Dialog.applyDialogFont(result);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
 		return result;
 	}
 
@@ -86,19 +94,24 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 		return fVariableBlock.performOk();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.dialogs.IDialogPage#setVisible(boolean)
 	 */
 	public void setVisible(boolean visible) {
 		// check if the stored settings have changed
 		if (visible) {
-			if (fStoredSettings != null && !fStoredSettings.equals(getCurrentSettings())) {
+			if (fStoredSettings != null
+					&& !fStoredSettings.equals(getCurrentSettings())) {
 				fVariableBlock.refresh(null);
 			}
 		} else {
 			if (fVariableBlock.hasChanges()) {
-				String title = PHPUIMessages.getString("IncludePathVariablesPreferencePage_savechanges_title");
-				String message = PHPUIMessages.getString("IncludePathVariablesPreferencePage_savechanges_message");
+				String title = PHPUIMessages
+						.getString("IncludePathVariablesPreferencePage_savechanges_title");
+				String message = PHPUIMessages
+						.getString("IncludePathVariablesPreferencePage_savechanges_message");
 				if (MessageDialog.openQuestion(getShell(), title, message)) {
 					performOk();
 				}
@@ -111,11 +124,12 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 
 	/**
 	 * TODO should adapt this mechaism into DLTK
+	 * 
 	 * @return
 	 */
 	private String getCurrentSettings() {
 		StringBuffer buf = new StringBuffer();
-		String[] names = { };
+		String[] names = {};
 		for (int i = 0; i < names.length; i++) {
 			String curr = names[i];
 			buf.append(curr).append('\0');

@@ -23,44 +23,43 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
 /**
- * A drag and drop adapter to be used together with structured viewers.
- * The adapater delegates the <code>dragEnter</code>, <code>dragOperationChanged
- * </code>, <code>dragOver</code> and <code>dropAccept</code> method to the
- * <code>validateDrop</code> method. Furthermore it adds location feedback.
+ * A drag and drop adapter to be used together with structured viewers. The
+ * adapater delegates the <code>dragEnter</code>, <code>dragOperationChanged
+ * </code>, <code>dragOver</code>
+ * and <code>dropAccept</code> method to the <code>validateDrop</code> method.
+ * Furthermore it adds location feedback.
  */
 public class PHPViewerDropAdapter implements DropTargetListener {
 
 	/**
-	 * Constant describing the position of the mouse cursor relative
-	 * to the target object.  This means the mouse is positioned
-	 * slightly before the target.
+	 * Constant describing the position of the mouse cursor relative to the
+	 * target object. This means the mouse is positioned slightly before the
+	 * target.
 	 */
 	protected static final int LOCATION_BEFORE = 1;
 
 	/**
-	 * Constant describing the position of the mouse cursor relative
-	 * to the target object.  This means the mouse is positioned
-	 * slightly after the target.
+	 * Constant describing the position of the mouse cursor relative to the
+	 * target object. This means the mouse is positioned slightly after the
+	 * target.
 	 */
 	protected static final int LOCATION_AFTER = 2;
 
 	/**
-	 * Constant describing the position of the mouse cursor relative
-	 * to the target object.  This means the mouse is positioned
-	 * directly on the target.
+	 * Constant describing the position of the mouse cursor relative to the
+	 * target object. This means the mouse is positioned directly on the target.
 	 */
 	protected static final int LOCATION_ON = 3;
 
 	/**
-	 * Constant describing the position of the mouse cursor relative
-	 * to the target object.  This means the mouse is not positioned
-	 * over or near any valid target.
+	 * Constant describing the position of the mouse cursor relative to the
+	 * target object. This means the mouse is not positioned over or near any
+	 * valid target.
 	 */
 	protected static final int LOCATION_NONE = 4;
 
 	/**
-	 * The threshold used to determine if the mouse is before or after
-	 * an item.
+	 * The threshold used to determine if the mouse is before or after an item.
 	 */
 	private static final int LOCATION_EPSILON = 5;
 
@@ -86,9 +85,10 @@ public class PHPViewerDropAdapter implements DropTargetListener {
 
 	/**
 	 * Controls whether the drop adapter shows insertion feedback or not.
-	 *
-	 * @param showInsertionFeedback <code>true</code> if the drop adapter is supposed
-	 *	to show insertion feedback. Otherwise <code>false</code>
+	 * 
+	 * @param showInsertionFeedback
+	 *            <code>true</code> if the drop adapter is supposed to show
+	 *            insertion feedback. Otherwise <code>false</code>
 	 */
 	public void showInsertionFeedback(boolean showInsertionFeedback) {
 		fShowInsertionFeedback = showInsertionFeedback;
@@ -101,11 +101,14 @@ public class PHPViewerDropAdapter implements DropTargetListener {
 		return fViewer;
 	}
 
-	//---- Hooks to override -----------------------------------------------------
+	// ---- Hooks to override
+	// -----------------------------------------------------
 
 	/**
-	 * The actual drop has occurred. Calls <code>drop(Object target, DropTargetEvent event)
+	 * The actual drop has occurred. Calls
+	 * <code>drop(Object target, DropTargetEvent event)
 	 * </code>.
+	 * 
 	 * @see DropTargetListener#drop(org.eclipse.swt.dnd.DropTargetEvent)
 	 */
 	public void drop(DropTargetEvent event) {
@@ -114,8 +117,11 @@ public class PHPViewerDropAdapter implements DropTargetListener {
 
 	/**
 	 * The actual drop has occurred.
-	 * @param target the drop target in form of a domain element.
-	 * @param event the drop traget event
+	 * 
+	 * @param target
+	 *            the drop target in form of a domain element.
+	 * @param event
+	 *            the drop traget event
 	 */
 	public void drop(Object target, DropTargetEvent event) {
 	}
@@ -123,20 +129,25 @@ public class PHPViewerDropAdapter implements DropTargetListener {
 	/**
 	 * Checks if the drop is valid. The method calls <code>validateDrop
 	 * (Object target, DropTargetEvent event). Implementors can alter the
-	 * <code>currentDataType</code> field and the <code>detail</code> field
-	 * to give feedback about drop acceptence.
+	 * <code>currentDataType</code> field and the <code>detail</code> field to
+	 * give feedback about drop acceptence.
 	 */
 	public void validateDrop(DropTargetEvent event) {
 		validateDrop(fTarget, event, fRequestedOperation);
 	}
 
 	/**
-	 * Checks if the drop on the current target is valid. The method
-	 * can alter the <code>currentDataType</code> field and the <code>
-	 * detail</code> field to give feedback about drop acceptence.
-	 * @param target the drop target in form of a domain element.
-	 * @param event the drop traget event
-	 * @param operation the operation requested by the user.
+	 * Checks if the drop on the current target is valid. The method can alter
+	 * the <code>currentDataType</code> field and the <code>
+	 * detail</code> field to
+	 * give feedback about drop acceptence.
+	 * 
+	 * @param target
+	 *            the drop target in form of a domain element.
+	 * @param event
+	 *            the drop traget event
+	 * @param operation
+	 *            the operation requested by the user.
 	 */
 	public void validateDrop(Object target, DropTargetEvent event, int operation) {
 	}
@@ -163,10 +174,11 @@ public class PHPViewerDropAdapter implements DropTargetListener {
 		Object oldTarget = fTarget;
 		fTarget = computeTarget(event);
 
-		//set the location feedback
+		// set the location feedback
 		int oldLocation = fLocation;
 		fLocation = computeLocation(event);
-		if (oldLocation != fLocation || oldTarget != fTarget || fLastOperation != event.detail) {
+		if (oldLocation != fLocation || oldTarget != fTarget
+				|| fLastOperation != event.detail) {
 			validateDrop(event);
 			fLastOperation = event.detail;
 		} else {
@@ -182,25 +194,26 @@ public class PHPViewerDropAdapter implements DropTargetListener {
 	}
 
 	/**
-	 * Returns the data held by <code>event.item</code>. Inside a viewer
-	 * this corresponds to the items data model element.
+	 * Returns the data held by <code>event.item</code>. Inside a viewer this
+	 * corresponds to the items data model element.
 	 */
 	protected Object computeTarget(DropTargetEvent event) {
 		return event.item == null ? null : event.item.getData();
 	}
 
 	/**
-	 * Returns the position of the given coordinates relative to the given target.
-	 * The position is determined to be before, after, or on the item, based on
-	 * some threshold value. The return value is one of the LOCATION_* constants
-	 * defined in this class.
+	 * Returns the position of the given coordinates relative to the given
+	 * target. The position is determined to be before, after, or on the item,
+	 * based on some threshold value. The return value is one of the LOCATION_*
+	 * constants defined in this class.
 	 */
 	final protected int computeLocation(DropTargetEvent event) {
 		if (!(event.item instanceof Item))
 			return LOCATION_NONE;
 
 		Item item = (Item) event.item;
-		Point coordinates = fViewer.getControl().toControl(new Point(event.x, event.y));
+		Point coordinates = fViewer.getControl().toControl(
+				new Point(event.x, event.y));
 		Rectangle bounds = getBounds(item);
 		if (bounds == null) {
 			return LOCATION_NONE;
@@ -229,8 +242,8 @@ public class PHPViewerDropAdapter implements DropTargetListener {
 	}
 
 	/**
-	 * Sets the drag under feedback corresponding to the value of <code>fLocation</code>
-	 * and the <code>INSERTION_FEEDBACK</code> style bit.
+	 * Sets the drag under feedback corresponding to the value of
+	 * <code>fLocation</code> and the <code>INSERTION_FEEDBACK</code> style bit.
 	 */
 	protected void computeFeedback(DropTargetEvent event) {
 		if (!fShowInsertionFeedback && fLocation != LOCATION_NONE) {

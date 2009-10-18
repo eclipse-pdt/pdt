@@ -15,7 +15,8 @@ import org.eclipse.php.internal.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.nodes.ParenthesisExpression;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 
-class SimpleExpressionFragment extends SimpleFragment implements IExpressionFragment {
+class SimpleExpressionFragment extends SimpleFragment implements
+		IExpressionFragment {
 	SimpleExpressionFragment(Expression node) {
 		super(node);
 	}
@@ -24,9 +25,11 @@ class SimpleExpressionFragment extends SimpleFragment implements IExpressionFrag
 		return (Expression) getAssociatedNode();
 	}
 
-	public Expression createCopyTarget(ASTRewrite rewrite, boolean removeSurroundingParenthesis) {
+	public Expression createCopyTarget(ASTRewrite rewrite,
+			boolean removeSurroundingParenthesis) {
 		Expression node = getAssociatedExpression();
-		if (removeSurroundingParenthesis && node instanceof ParenthesisExpression) {
+		if (removeSurroundingParenthesis
+				&& node instanceof ParenthesisExpression) {
 			node = ((ParenthesisExpression) node).getExpression();
 		}
 		return (Expression) rewrite.createCopyTarget(node);

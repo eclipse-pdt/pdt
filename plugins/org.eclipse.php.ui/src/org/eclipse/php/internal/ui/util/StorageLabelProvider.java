@@ -25,16 +25,19 @@ import org.eclipse.ui.IFileEditorMapping;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Standard label provider for IStorage objects.
- * Use this class when you want to present IStorage objects in a viewer.
+ * Standard label provider for IStorage objects. Use this class when you want to
+ * present IStorage objects in a viewer.
  */
 public class StorageLabelProvider extends LabelProvider {
 
-	private IEditorRegistry fEditorRegistry = PlatformUI.getWorkbench().getEditorRegistry();
+	private IEditorRegistry fEditorRegistry = PlatformUI.getWorkbench()
+			.getEditorRegistry();
 	private Map fJarImageMap = new HashMap(10);
 	private Image fDefaultImage;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ILabelProvider#getImage
 	 */
 	public Image getImage(Object element) {
@@ -44,7 +47,9 @@ public class StorageLabelProvider extends LabelProvider {
 		return super.getImage(element);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ILabelProvider#getText
 	 */
 	public String getText(Object element) {
@@ -54,8 +59,9 @@ public class StorageLabelProvider extends LabelProvider {
 		return super.getText(element);
 	}
 
-	/* (non-Javadoc)
-	 *
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see IBaseLabelProvider#dispose
 	 */
 	public void dispose() {
@@ -73,8 +79,8 @@ public class StorageLabelProvider extends LabelProvider {
 	}
 
 	/*
-	 * Gets and caches an image for a JarEntryFile.
-	 * The image for a JarEntryFile is retrieved from the EditorRegistry.
+	 * Gets and caches an image for a JarEntryFile. The image for a JarEntryFile
+	 * is retrieved from the EditorRegistry.
 	 */
 	private Image getImageForJarEntry(IStorage element) {
 		if (fJarImageMap == null)
@@ -120,7 +126,8 @@ public class StorageLabelProvider extends LabelProvider {
 
 	private Image getDefaultImage() {
 		if (fDefaultImage == null)
-			fDefaultImage = fEditorRegistry.getImageDescriptor(null, null).createImage();
+			fDefaultImage = fEditorRegistry.getImageDescriptor(null, null)
+					.createImage();
 		return fDefaultImage;
 	}
 }

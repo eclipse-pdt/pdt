@@ -39,11 +39,14 @@ public class AdapterFactoryProviderForPhp implements AdapterFactoryProvider {
 
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
-		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
+		Assert
+				.isNotNull(factoryRegistry,
+						"Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
 		factory = factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		if (factory == null) {
-			factory = new JFaceNodeAdapterFactoryForHTML(IJFaceNodeAdapter.class, true);
+			factory = new JFaceNodeAdapterFactoryForHTML(
+					IJFaceNodeAdapter.class, true);
 			factoryRegistry.addFactory(factory);
 		}
 	}
@@ -53,7 +56,8 @@ public class AdapterFactoryProviderForPhp implements AdapterFactoryProvider {
 		if (structuredModel instanceof IDOMModel) {
 			IDOMModel xmlModel = (IDOMModel) structuredModel;
 			IDOMDocument document = xmlModel.getDocument();
-			PropagatingAdapter propagatingAdapter = (PropagatingAdapter) document.getAdapterFor(PropagatingAdapter.class);
+			PropagatingAdapter propagatingAdapter = (PropagatingAdapter) document
+					.getAdapterFor(PropagatingAdapter.class);
 			if (propagatingAdapter != null) {
 				// what to do?
 			}

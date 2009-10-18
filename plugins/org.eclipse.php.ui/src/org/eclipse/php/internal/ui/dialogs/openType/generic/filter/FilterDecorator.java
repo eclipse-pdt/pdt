@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType.generic.filter;
 
-
 public class FilterDecorator extends SimpleFilter {
 
 	private IFilter filter;

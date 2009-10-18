@@ -45,109 +45,134 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.jsdt.internal.corext.refactoring.changes.CompilationUnitChange;
 
 /**
- * A proposal for quick fixes and quick assist that work on a single compilation unit.
- * Either a {@link TextChange text change} is directly passed in the constructor or method
- * {@link #addEdits(IDocument, TextEdit)} is overridden to provide the text edits that are
- * applied to the document when the proposal is evaluated.
+ * A proposal for quick fixes and quick assist that work on a single compilation
+ * unit. Either a {@link TextChange text change} is directly passed in the
+ * constructor or method {@link #addEdits(IDocument, TextEdit)} is overridden to
+ * provide the text edits that are applied to the document when the proposal is
+ * evaluated.
  * <p>
- * The proposal takes care of the preview of the changes as proposal information.
+ * The proposal takes care of the preview of the changes as proposal
+ * information.
  * </p>
+ * 
  * @since 3.2
  */
-public class CUCorrectionProposal extends ChangeCorrectionProposal  {
+public class CUCorrectionProposal extends ChangeCorrectionProposal {
 
 	private ISourceModule fCompilationUnit;
 	private LinkedProposalModel fLinkedProposalModel;
 
-
 	/**
-	 * Constructs a correction proposal working on a compilation unit with a given text change
-	 *
-	 * @param name the name that is displayed in the proposal selection dialog.
-	 * @param cu the compilation unit on that the change works.
-	 * @param change the change that is executed when the proposal is applied or <code>null</code>
-	 * if implementors override {@link #addEdits(IDocument, TextEdit)} to provide
-	 * the text edits or {@link #createTextChange()} to provide a text change.
-	 * @param relevance the relevance of this proposal.
-	 * @param image the image that is displayed for this proposal or <code>null</code> if no
-	 * image is desired.
+	 * Constructs a correction proposal working on a compilation unit with a
+	 * given text change
+	 * 
+	 * @param name
+	 *            the name that is displayed in the proposal selection dialog.
+	 * @param cu
+	 *            the compilation unit on that the change works.
+	 * @param change
+	 *            the change that is executed when the proposal is applied or
+	 *            <code>null</code> if implementors override
+	 *            {@link #addEdits(IDocument, TextEdit)} to provide the text
+	 *            edits or {@link #createTextChange()} to provide a text change.
+	 * @param relevance
+	 *            the relevance of this proposal.
+	 * @param image
+	 *            the image that is displayed for this proposal or
+	 *            <code>null</code> if no image is desired.
 	 */
-	public CUCorrectionProposal(String name, ISourceModule cu, TextChange change, int relevance, Image image) {
+	public CUCorrectionProposal(String name, ISourceModule cu,
+			TextChange change, int relevance, Image image) {
 		super(name, change, relevance, image);
 		if (cu == null) {
-			throw new IllegalArgumentException("Compilation unit must not be null"); //$NON-NLS-1$
+			throw new IllegalArgumentException(
+					"Compilation unit must not be null"); //$NON-NLS-1$
 		}
-		fCompilationUnit= cu;
-		fLinkedProposalModel= null;
+		fCompilationUnit = cu;
+		fLinkedProposalModel = null;
 	}
 
 	/**
 	 * Constructs a correction proposal working on a compilation unit.
-	 * <p>Users have to override {@link #addEdits(IDocument, TextEdit)} to provide
+	 * <p>
+	 * Users have to override {@link #addEdits(IDocument, TextEdit)} to provide
 	 * the text edits or {@link #createTextChange()} to provide a text change.
 	 * </p>
-	 *
-	 * @param name The name that is displayed in the proposal selection dialog.
-	 * @param cu The compilation unit on that the change works.
-	 * @param relevance The relevance of this proposal.
-	 * @param image The image that is displayed for this proposal or <code>null</code> if no
-	 * image is desired.
+	 * 
+	 * @param name
+	 *            The name that is displayed in the proposal selection dialog.
+	 * @param cu
+	 *            The compilation unit on that the change works.
+	 * @param relevance
+	 *            The relevance of this proposal.
+	 * @param image
+	 *            The image that is displayed for this proposal or
+	 *            <code>null</code> if no image is desired.
 	 */
-	protected CUCorrectionProposal(String name, ISourceModule cu, int relevance, Image image) {
+	protected CUCorrectionProposal(String name, ISourceModule cu,
+			int relevance, Image image) {
 		this(name, cu, null, relevance, image);
 	}
 
 	/**
-	 * Called when the {@link CompilationUnitChange} is initialized. Subclasses can override to
-	 * add text edits to the root edit of the change. Implementors must not access the proposal,
-	 * e.g getting the change.
-	 * <p>The default implementation does not add any edits</p>
-	 *
-	 * @param document content of the underlying compilation unit. To be accessed read only.
-	 * @param editRoot The root edit to add all edits to
-	 * @throws CoreException can be thrown if adding the edits is failing.
+	 * Called when the {@link CompilationUnitChange} is initialized. Subclasses
+	 * can override to add text edits to the root edit of the change.
+	 * Implementors must not access the proposal, e.g getting the change.
+	 * <p>
+	 * The default implementation does not add any edits
+	 * </p>
+	 * 
+	 * @param document
+	 *            content of the underlying compilation unit. To be accessed
+	 *            read only.
+	 * @param editRoot
+	 *            The root edit to add all edits to
+	 * @throws CoreException
+	 *             can be thrown if adding the edits is failing.
 	 */
-	protected void addEdits(IDocument document, TextEdit editRoot) throws CoreException {
+	protected void addEdits(IDocument document, TextEdit editRoot)
+			throws CoreException {
 	}
 
 	protected LinkedProposalModel getLinkedProposalModel() {
 		if (fLinkedProposalModel == null) {
-			fLinkedProposalModel= new LinkedProposalModel();
+			fLinkedProposalModel = new LinkedProposalModel();
 		}
 		return fLinkedProposalModel;
 	}
 
 	public void setLinkedProposalModel(LinkedProposalModel model) {
-		fLinkedProposalModel= model;
+		fLinkedProposalModel = model;
 	}
 
 	public Object getAdditionalProposalInfo(IProgressMonitor monitor) {
 
-		final StringBuffer buf= new StringBuffer();
+		final StringBuffer buf = new StringBuffer();
 
 		try {
-			final TextChange change= getTextChange();
+			final TextChange change = getTextChange();
 
 			change.setKeepPreviewEdits(true);
-			final IDocument previewContent= change.getPreviewDocument(monitor);
-			final TextEdit rootEdit= change.getPreviewEdit(change.getEdit());
+			final IDocument previewContent = change.getPreviewDocument(monitor);
+			final TextEdit rootEdit = change.getPreviewEdit(change.getEdit());
 
 			class EditAnnotator extends TextEditVisitor {
 				private int fWrittenToPos = 0;
 
 				public void unchangedUntil(int pos) {
 					if (pos > fWrittenToPos) {
-						appendContent(previewContent, fWrittenToPos, pos, buf, true);
+						appendContent(previewContent, fWrittenToPos, pos, buf,
+								true);
 						fWrittenToPos = pos;
 					}
 				}
 
 				public boolean visit(MoveTargetEdit edit) {
-					return true; //rangeAdded(edit);
+					return true; // rangeAdded(edit);
 				}
 
 				public boolean visit(CopyTargetEdit edit) {
-					return true; //return rangeAdded(edit);
+					return true; // return rangeAdded(edit);
 				}
 
 				public boolean visit(InsertEdit edit) {
@@ -176,7 +201,8 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 				private boolean rangeAdded(TextEdit edit) {
 					unchangedUntil(edit.getOffset());
 					buf.append("<b>"); //$NON-NLS-1$
-					appendContent(previewContent, edit.getOffset(), edit.getExclusiveEnd(), buf, false);
+					appendContent(previewContent, edit.getOffset(), edit
+							.getExclusiveEnd(), buf, false);
 					buf.append("</b>"); //$NON-NLS-1$
 					fWrittenToPos = edit.getExclusiveEnd();
 					return false;
@@ -193,45 +219,52 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 		return buf.toString();
 	}
 
-	private final int surroundLines= 1;
+	private final int surroundLines = 1;
 
-	private void appendContent(IDocument text, int startOffset, int endOffset, StringBuffer buf, boolean surroundLinesOnly) {
+	private void appendContent(IDocument text, int startOffset, int endOffset,
+			StringBuffer buf, boolean surroundLinesOnly) {
 		try {
-			int startLine= text.getLineOfOffset(startOffset);
-			int endLine= text.getLineOfOffset(endOffset);
+			int startLine = text.getLineOfOffset(startOffset);
+			int endLine = text.getLineOfOffset(endOffset);
 
-			boolean dotsAdded= false;
-			if (surroundLinesOnly && startOffset == 0) { // no surround lines for the top no-change range
-				startLine= Math.max(endLine - surroundLines, 0);
+			boolean dotsAdded = false;
+			if (surroundLinesOnly && startOffset == 0) { // no surround lines
+															// for the top
+															// no-change range
+				startLine = Math.max(endLine - surroundLines, 0);
 				buf.append("...<br>"); //$NON-NLS-1$
-				dotsAdded= true;
+				dotsAdded = true;
 			}
 
-			for (int i= startLine; i <= endLine; i++) {
+			for (int i = startLine; i <= endLine; i++) {
 				if (surroundLinesOnly) {
-					if ((i - startLine > surroundLines) && (endLine - i > surroundLines)) {
+					if ((i - startLine > surroundLines)
+							&& (endLine - i > surroundLines)) {
 						if (!dotsAdded) {
 							buf.append("...<br>"); //$NON-NLS-1$
-							dotsAdded= true;
+							dotsAdded = true;
 						} else if (endOffset == text.getLength()) {
-							return; // no surround lines for the bottom no-change range
+							return; // no surround lines for the bottom
+									// no-change range
 						}
 						continue;
 					}
 				}
 
-				IRegion lineInfo= text.getLineInformation(i);
-				int start= lineInfo.getOffset();
-				int end= start + lineInfo.getLength();
+				IRegion lineInfo = text.getLineInformation(i);
+				int start = lineInfo.getOffset();
+				int end = start + lineInfo.getLength();
 
-				int from= Math.max(start, startOffset);
-				int to= Math.min(end, endOffset);
-				String content= text.get(from, to - from);
-				if (surroundLinesOnly && (from == start) && Strings.containsOnlyWhitespaces(content)) {
-					continue; // ignore empty lines except when range started in the middle of a line
+				int from = Math.max(start, startOffset);
+				int to = Math.min(end, endOffset);
+				String content = text.get(from, to - from);
+				if (surroundLinesOnly && (from == start)
+						&& Strings.containsOnlyWhitespaces(content)) {
+					continue; // ignore empty lines except when range started in
+								// the middle of a line
 				}
-				for (int k= 0; k < content.length(); k++) {
-					char ch= content.charAt(k);
+				for (int k = 0; k < content.length(); k++) {
+					char ch = content.charAt(k);
 					if (ch == '<') {
 						buf.append("&lt;"); //$NON-NLS-1$
 					} else if (ch == '>') {
@@ -240,7 +273,9 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 						buf.append(ch);
 					}
 				}
-				if (to == end && to != endOffset) { // new line when at the end of the line, and not end of range
+				if (to == end && to != endOffset) { // new line when at the end
+													// of the line, and not end
+													// of range
 					buf.append("<br>"); //$NON-NLS-1$
 				}
 			}
@@ -249,26 +284,31 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org.eclipse.jface.text.IDocument)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.text.contentassist.ICompletionProposal#apply(org.eclipse
+	 * .jface.text.IDocument)
 	 */
 	public void apply(IDocument document) {
 		try {
-			ISourceModule unit= getCompilationUnit();
-			IEditorPart part= null;
+			ISourceModule unit = getCompilationUnit();
+			IEditorPart part = null;
 			if (unit.getResource().exists()) {
-				boolean canEdit= performValidateEdit(unit);
+				boolean canEdit = performValidateEdit(unit);
 				if (!canEdit) {
 					return;
 				}
-				part= EditorUtility.isOpenInEditor(unit);
+				part = EditorUtility.isOpenInEditor(unit);
 				if (part == null) {
-					part= DLTKUIPlugin.openInEditor(unit);
+					part = DLTKUIPlugin.openInEditor(unit);
 					if (part != null) {
-						document= DLTKUIPlugin.getDocumentProvider().getDocument(part.getEditorInput());
+						document = DLTKUIPlugin.getDocumentProvider()
+								.getDocument(part.getEditorInput());
 					}
 				}
-				IWorkbenchPage page= DLTKUIPlugin.getActivePage();
+				IWorkbenchPage page = DLTKUIPlugin.getActivePage();
 				if (page != null && part != null) {
 					page.bringToTop(part);
 				}
@@ -278,25 +318,35 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 			}
 			performChange(part, document);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, CorrectionMessages.CUCorrectionProposal_error_title, CorrectionMessages.CUCorrectionProposal_error_message);
+			ExceptionHandler.handle(e,
+					CorrectionMessages.CUCorrectionProposal_error_title,
+					CorrectionMessages.CUCorrectionProposal_error_message);
 		}
 	}
 
 	private boolean performValidateEdit(ISourceModule unit) {
-		IStatus status= Resources.makeCommittable(unit.getResource(), DLTKUIPlugin.getActiveWorkbenchShell());
+		IStatus status = Resources.makeCommittable(unit.getResource(),
+				DLTKUIPlugin.getActiveWorkbenchShell());
 		if (!status.isOK()) {
-			String label= CorrectionMessages.CUCorrectionProposal_error_title;
-			String message= CorrectionMessages.CUCorrectionProposal_error_message;
-			ErrorDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(), label, message, status);
+			String label = CorrectionMessages.CUCorrectionProposal_error_title;
+			String message = CorrectionMessages.CUCorrectionProposal_error_message;
+			ErrorDialog.openError(DLTKUIPlugin.getActiveWorkbenchShell(),
+					label, message, status);
 			return false;
 		}
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#performChange(org.eclipse.jface.text.IDocument, org.eclipse.ui.IEditorPart)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#
+	 * performChange(org.eclipse.jface.text.IDocument,
+	 * org.eclipse.ui.IEditorPart)
 	 */
-	protected void performChange(IEditorPart part, IDocument document) throws CoreException {
+	protected void performChange(IEditorPart part, IDocument document)
+			throws CoreException {
 		try {
 			super.performChange(part, document);
 			if (part == null) {
@@ -304,15 +354,20 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 			}
 
 			if (fLinkedProposalModel != null) {
-				if (fLinkedProposalModel.hasLinkedPositions() && part instanceof PHPStructuredEditor) {
+				if (fLinkedProposalModel.hasLinkedPositions()
+						&& part instanceof PHPStructuredEditor) {
 					// enter linked mode
-					ITextViewer viewer= ((PHPStructuredEditor) part).getViewer();
-					new LinkedProposalModelPresenter().enterLinkedMode(viewer, part, fLinkedProposalModel);
+					ITextViewer viewer = ((PHPStructuredEditor) part)
+							.getViewer();
+					new LinkedProposalModelPresenter().enterLinkedMode(viewer,
+							part, fLinkedProposalModel);
 				} else if (part instanceof ITextEditor) {
-					LinkedProposalPositionGroup.PositionInformation endPosition= fLinkedProposalModel.getEndPosition();
+					LinkedProposalPositionGroup.PositionInformation endPosition = fLinkedProposalModel
+							.getEndPosition();
 					if (endPosition != null) {
 						// select a result
-						int pos= endPosition.getOffset() + endPosition.getLength();
+						int pos = endPosition.getOffset()
+								+ endPosition.getLength();
 						((ITextEditor) part).selectAndReveal(pos, 0);
 					}
 				}
@@ -323,55 +378,65 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 	}
 
 	/**
-	 * Creates the text change for this proposal.
-	 * This method is only called once and only when no text change has been passed in
-	 * {@link #CUCorrectionProposal(String, ISourceModule, TextChange, int, Image)}.
-	 *
+	 * Creates the text change for this proposal. This method is only called
+	 * once and only when no text change has been passed in
+	 * {@link #CUCorrectionProposal(String, ISourceModule, TextChange, int, Image)}
+	 * .
+	 * 
 	 * @return returns the created text change.
-	 * @throws CoreException thrown if the creation of the text change failed.
+	 * @throws CoreException
+	 *             thrown if the creation of the text change failed.
 	 */
 	protected TextChange createTextChange() throws CoreException {
-		ISourceModule cu= getCompilationUnit();
-		String name= getName();
+		ISourceModule cu = getCompilationUnit();
+		String name = getName();
 		TextChange change;
 		if (!cu.getResource().exists()) {
 			String source;
 			try {
-				source= cu.getSource();
+				source = cu.getSource();
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
-				source= new String(); // empty
+				source = new String(); // empty
 			}
-			Document document= new Document(source);
-			document.setInitialLineDelimiter(StubUtility.getLineDelimiterUsed(cu.getScriptProject()));
-			change= new DocumentChange(name, document);
+			Document document = new Document(source);
+			document.setInitialLineDelimiter(StubUtility
+					.getLineDelimiterUsed(cu.getScriptProject()));
+			change = new DocumentChange(name, document);
 		} else {
 			SourceModuleChange cuChange = new SourceModuleChange(name, cu);
 			cuChange.setSaveMode(TextFileChange.LEAVE_DIRTY);
-			change= cuChange;
+			change = cuChange;
 		}
-		TextEdit rootEdit= new MultiTextEdit();
+		TextEdit rootEdit = new MultiTextEdit();
 		change.setEdit(rootEdit);
 
 		// initialize text change
-		IDocument document= change.getCurrentDocument(new NullProgressMonitor());
+		IDocument document = change
+				.getCurrentDocument(new NullProgressMonitor());
 		addEdits(document, rootEdit);
 		return change;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#createChange()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.text.correction.ChangeCorrectionProposal#
+	 * createChange()
 	 */
 	protected final Change createChange() throws CoreException {
-		return createTextChange(); // make sure that only text changes are allowed here
+		return createTextChange(); // make sure that only text changes are
+									// allowed here
 	}
 
 	/**
 	 * Gets the text change that is invoked when the change is applied.
-	 *
-	 * @return returns the text change that is invoked when the change is applied.
-	 * @throws CoreException throws an exception if accessing the change failed
+	 * 
+	 * @return returns the text change that is invoked when the change is
+	 *         applied.
+	 * @throws CoreException
+	 *             throws an exception if accessing the change failed
 	 */
 	public final TextChange getTextChange() throws CoreException {
 		return (TextChange) getChange();
@@ -379,7 +444,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 
 	/**
 	 * The compilation unit on that the change works.
-	 *
+	 * 
 	 * @return the compilation unit on that the change works.
 	 */
 	public final ISourceModule getCompilationUnit() {
@@ -387,16 +452,20 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal  {
 	}
 
 	/**
-	 * Creates a preview of the content of the compilation unit after applying the change.
-	 *
+	 * Creates a preview of the content of the compilation unit after applying
+	 * the change.
+	 * 
 	 * @return returns the preview of the changed compilation unit.
-	 * @throws CoreException thrown if the creation of the change failed.
+	 * @throws CoreException
+	 *             thrown if the creation of the change failed.
 	 */
 	public String getPreviewContent() throws CoreException {
 		return getTextChange().getPreviewContent(new NullProgressMonitor());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {

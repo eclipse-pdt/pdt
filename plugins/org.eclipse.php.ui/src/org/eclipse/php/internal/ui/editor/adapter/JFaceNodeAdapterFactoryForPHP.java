@@ -19,11 +19,12 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 
 /**
- * This class is the same as org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML
- * Its perpose is to enable the change in JFaceNodeAdapterForPHP
+ * This class is the same as
+ * org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML Its
+ * perpose is to enable the change in JFaceNodeAdapterForPHP
  * 
  * @author guy.g
- *
+ * 
  */
 public class JFaceNodeAdapterFactoryForPHP extends JFaceNodeAdapterFactory {
 
@@ -31,7 +32,8 @@ public class JFaceNodeAdapterFactoryForPHP extends JFaceNodeAdapterFactory {
 		this(IJFaceNodeAdapter.class, true);
 	}
 
-	public JFaceNodeAdapterFactoryForPHP(Object adapterKey, boolean registerAdapters) {
+	public JFaceNodeAdapterFactoryForPHP(Object adapterKey,
+			boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
 	}
 
@@ -45,6 +47,7 @@ public class JFaceNodeAdapterFactoryForPHP extends JFaceNodeAdapterFactory {
 	}
 
 	public INodeAdapterFactory copy() {
-		return new JFaceNodeAdapterFactoryForPHP(getAdapterKey(), isShouldRegisterAdapter());
+		return new JFaceNodeAdapterFactoryForPHP(getAdapterKey(),
+				isShouldRegisterAdapter());
 	}
 }

@@ -21,7 +21,8 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 
-	private static final String INCLUDE_POINT_OF = PHPUIMessages.getString("IncludeOccurrencesFinder.0"); //$NON-NLS-1$
+	private static final String INCLUDE_POINT_OF = PHPUIMessages
+			.getString("IncludeOccurrencesFinder.0"); //$NON-NLS-1$
 	public static final String ID = "RequireFinder"; //$NON-NLS-1$
 	private IModelElement source;
 	private IBinding binding;
@@ -30,8 +31,10 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 	private IMethod[] methods;
 
 	/**
-	 * @param root the AST root
-	 * @param node the selected node
+	 * @param root
+	 *            the AST root
+	 * @param node
+	 *            the selected node
 	 * @return returns a message if there is a problem
 	 */
 	public String initialize(Program root, ASTNode node) {
@@ -67,23 +70,29 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 			return (Include) node;
 		}
 		ASTNode parent = ASTNodes.getParent(node, Include.class);
-		return (parent != null && parent.getType() == ASTNode.INCLUDE) ? (Include) parent : null;
+		return (parent != null && parent.getType() == ASTNode.INCLUDE) ? (Include) parent
+				: null;
 	}
 
 	protected void findOccurrences() {
 		if (source == null) {
 			return;
 		}
-		fDescription = Messages.format(INCLUDE_POINT_OF, this.source.getElementName());
+		fDescription = Messages.format(INCLUDE_POINT_OF, this.source
+				.getElementName());
 		getASTRoot().accept(this);
 		int offset = includeNode.getStart();
 		int length = includeNode.getLength();
-		fResult.add(new OccurrenceLocation(offset, length, getOccurrenceType(null), fDescription));
+		fResult.add(new OccurrenceLocation(offset, length,
+				getOccurrenceType(null), fDescription));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#
+	 * getOccurrenceReadWriteType
+	 * (org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
 	protected int getOccurrenceType(ASTNode node) {
 		return IOccurrencesFinder.K_OCCURRENCE;
@@ -121,7 +130,9 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 			String name = id.getName();
 			for (IType type : types) {
 				if (type.getElementName().equals(name))
-					fResult.add(new OccurrenceLocation(className.getStart(), className.getLength(), getOccurrenceType(null), fDescription));
+					fResult.add(new OccurrenceLocation(className.getStart(),
+							className.getLength(), getOccurrenceType(null),
+							fDescription));
 			}
 		}
 		return false;
@@ -129,28 +140,35 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	@Override
 	public boolean visit(Identifier className) {
-		final StructuralPropertyDescriptor location = className.getLocationInParent();
-		if (location == ClassDeclaration.SUPER_CLASS_PROPERTY || location == ClassDeclaration.INTERFACES_PROPERTY || location == StaticMethodInvocation.CLASS_NAME_PROPERTY || location == FormalParameter.PARAMETER_TYPE_PROPERTY) {
+		final StructuralPropertyDescriptor location = className
+				.getLocationInParent();
+		if (location == ClassDeclaration.SUPER_CLASS_PROPERTY
+				|| location == ClassDeclaration.INTERFACES_PROPERTY
+				|| location == StaticMethodInvocation.CLASS_NAME_PROPERTY
+				|| location == FormalParameter.PARAMETER_TYPE_PROPERTY) {
 			String name = className.getName();
 			for (IType type : types) {
 				if (type.getElementName().equals(name))
-					fResult.add(new OccurrenceLocation(className.getStart(), className.getLength(), getOccurrenceType(null), fDescription));
+					fResult.add(new OccurrenceLocation(className.getStart(),
+							className.getLength(), getOccurrenceType(null),
+							fDescription));
 			}
 		}
 		return false;
 	}
-	
-	
 
 	@Override
 	public boolean visit(FunctionInvocation functionInvocation) {
-		Expression functionName2 = functionInvocation.getFunctionName().getName();
+		Expression functionName2 = functionInvocation.getFunctionName()
+				.getName();
 		if (functionName2.getType() == ASTNode.IDENTIFIER) {
 			Identifier id = (Identifier) functionName2;
 			String name = id.getName();
 			for (IMethod method : methods) {
 				if (method.getElementName().equals(name))
-					fResult.add(new OccurrenceLocation(functionInvocation.getStart(), functionInvocation.getLength(), getOccurrenceType(null), fDescription));
+					fResult.add(new OccurrenceLocation(functionInvocation
+							.getStart(), functionInvocation.getLength(),
+							getOccurrenceType(null), fDescription));
 			}
 		}
 		return true;

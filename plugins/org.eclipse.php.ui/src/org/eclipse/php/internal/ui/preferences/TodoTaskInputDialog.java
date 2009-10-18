@@ -62,20 +62,26 @@ public class TodoTaskInputDialog extends StatusDialog {
 		CompilerTodoTaskInputAdapter adapter = new CompilerTodoTaskInputAdapter();
 
 		fNameDialogField = new StringDialogField();
-		fNameDialogField.setLabelText(PHPUIMessages.getString("TodoTaskInputDialog_name_label"));
+		fNameDialogField.setLabelText(PHPUIMessages
+				.getString("TodoTaskInputDialog_name_label"));
 		fNameDialogField.setDialogFieldListener(adapter);
 
 		fNameDialogField.setText((task != null) ? task.name : ""); //$NON-NLS-1$
 
-		String[] items = new String[] { PHPUIMessages.getString("TodoTaskInputDialog_priority_high"), PHPUIMessages.getString("TodoTaskInputDialog_priority_normal"), PHPUIMessages.getString("TodoTaskInputDialog_priority_low") };
+		String[] items = new String[] {
+				PHPUIMessages.getString("TodoTaskInputDialog_priority_high"),
+				PHPUIMessages.getString("TodoTaskInputDialog_priority_normal"),
+				PHPUIMessages.getString("TodoTaskInputDialog_priority_low") };
 
 		fPriorityDialogField = new ComboDialogField(SWT.READ_ONLY);
-		fPriorityDialogField.setLabelText(PHPUIMessages.getString("TodoTaskInputDialog_priority_label"));
+		fPriorityDialogField.setLabelText(PHPUIMessages
+				.getString("TodoTaskInputDialog_priority_label"));
 		fPriorityDialogField.setItems(items);
 		if (task != null) {
 			if (PHPCoreConstants.TASK_PRIORITY_HIGH.equals(task.priority)) {
 				fPriorityDialogField.selectItem(0);
-			} else if (PHPCoreConstants.TASK_PRIORITY_NORMAL.equals(task.priority)) {
+			} else if (PHPCoreConstants.TASK_PRIORITY_NORMAL
+					.equals(task.priority)) {
 				fPriorityDialogField.selectItem(1);
 			} else {
 				fPriorityDialogField.selectItem(2);
@@ -89,15 +95,15 @@ public class TodoTaskInputDialog extends StatusDialog {
 		TodoTask task = new TodoTask();
 		task.name = fNameDialogField.getText().trim();
 		switch (fPriorityDialogField.getSelectionIndex()) {
-			case 0:
-				task.priority = PHPCoreConstants.TASK_PRIORITY_HIGH;
-				break;
-			case 1:
-				task.priority = PHPCoreConstants.TASK_PRIORITY_NORMAL;
-				break;
-			default:
-				task.priority = PHPCoreConstants.TASK_PRIORITY_LOW;
-				break;
+		case 0:
+			task.priority = PHPCoreConstants.TASK_PRIORITY_HIGH;
+			break;
+		case 1:
+			task.priority = PHPCoreConstants.TASK_PRIORITY_NORMAL;
+			break;
+		default:
+			task.priority = PHPCoreConstants.TASK_PRIORITY_LOW;
+			break;
 		}
 		return task;
 	}
@@ -116,7 +122,8 @@ public class TodoTaskInputDialog extends StatusDialog {
 		fPriorityDialogField.doFillIntoGrid(inner, 2);
 
 		LayoutUtil.setHorizontalGrabbing(fNameDialogField.getTextControl(null));
-		LayoutUtil.setWidthHint(fNameDialogField.getTextControl(null), convertWidthInCharsToPixels(45));
+		LayoutUtil.setWidthHint(fNameDialogField.getTextControl(null),
+				convertWidthInCharsToPixels(45));
 
 		fNameDialogField.postSetFocusOnDialogField(parent.getDisplay());
 
@@ -128,14 +135,20 @@ public class TodoTaskInputDialog extends StatusDialog {
 		StatusInfo status = new StatusInfo();
 		String newText = fNameDialogField.getText();
 		if (newText.length() == 0) {
-			status.setError(PHPUIMessages.getString("TodoTaskInputDialog_error_enterName"));
+			status.setError(PHPUIMessages
+					.getString("TodoTaskInputDialog_error_enterName"));
 		} else {
 			if (newText.indexOf(',') != -1) {
-				status.setError(PHPUIMessages.getString("TodoTaskInputDialog_error_comma"));
+				status.setError(PHPUIMessages
+						.getString("TodoTaskInputDialog_error_comma"));
 			} else if (fExistingNames.contains(newText)) {
-				status.setError(PHPUIMessages.getString("TodoTaskInputDialog_error_entryExists"));
-			} else if (Character.isWhitespace(newText.charAt(0)) || Character.isWhitespace(newText.charAt(newText.length() - 1))) {
-				status.setError(PHPUIMessages.getString("TodoTaskInputDialog_error_noSpace"));
+				status.setError(PHPUIMessages
+						.getString("TodoTaskInputDialog_error_entryExists"));
+			} else if (Character.isWhitespace(newText.charAt(0))
+					|| Character.isWhitespace(newText
+							.charAt(newText.length() - 1))) {
+				status.setError(PHPUIMessages
+						.getString("TodoTaskInputDialog_error_noSpace"));
 			}
 		}
 		updateStatus(status);
@@ -147,6 +160,7 @@ public class TodoTaskInputDialog extends StatusDialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 		// TODO - Add the Help contex id
-		//		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.TODO_TASK_INPUT_DIALOG);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
+		// IPHPHelpContextIds.TODO_TASK_INPUT_DIALOG);
 	}
 }

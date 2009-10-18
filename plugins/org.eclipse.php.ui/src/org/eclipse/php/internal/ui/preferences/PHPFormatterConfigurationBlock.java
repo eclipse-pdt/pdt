@@ -29,9 +29,11 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  * @author guy.g
- *
+ * 
  */
-public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationBlock implements ModifyListener, SelectionListener {
+public class PHPFormatterConfigurationBlock extends
+		PHPCoreOptionsConfigurationBlock implements ModifyListener,
+		SelectionListener {
 
 	public static final Key PREF_FORMATTER_USE_TABS = getPHPCoreKey(PHPCoreConstants.FORMATTER_USE_TABS);
 	public static final Key PREF_FORMATTER_INDENTATION_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
@@ -44,7 +46,8 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 	private Combo tabPolicyCombo;
 	private Text indentSizeTxt;
 
-	public PHPFormatterConfigurationBlock(IStatusChangeListener context, IProject project, IWorkbenchPreferenceContainer container) {
+	public PHPFormatterConfigurationBlock(IStatusChangeListener context,
+			IProject project, IWorkbenchPreferenceContainer container) {
 		super(context, project, getKeys(), container);
 
 		fFormatterStatus = new StatusInfo();
@@ -62,10 +65,14 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 
 	private Composite createFormaterContent(Composite parent) {
 		Group formattingComposite = createComposite(parent, 2);
-		final String[] tabPolicyLabels = new String[] { PHPUIMessages.getString("PHPFormatterConfigurationBlock_tabsLabel"), PHPUIMessages.getString("PHPFormatterConfigurationBlock_spacesLabel") }; //$NON-NLS-1$ //$NON-NLS-2$
+		final String[] tabPolicyLabels = new String[] {
+				PHPUIMessages
+						.getString("PHPFormatterConfigurationBlock_tabsLabel"), PHPUIMessages.getString("PHPFormatterConfigurationBlock_spacesLabel") }; //$NON-NLS-1$ //$NON-NLS-2$
 		Label indentTabsLabel = new Label(formattingComposite, SWT.NULL);
-		indentTabsLabel.setText(PHPUIMessages.getString("PHPFormatterConfigurationBlock_tabPolicyLabel")); //$NON-NLS-1$
-		tabPolicyCombo = new Combo(formattingComposite, SWT.NULL | SWT.READ_ONLY);
+		indentTabsLabel.setText(PHPUIMessages
+				.getString("PHPFormatterConfigurationBlock_tabPolicyLabel")); //$NON-NLS-1$
+		tabPolicyCombo = new Combo(formattingComposite, SWT.NULL
+				| SWT.READ_ONLY);
 		tabPolicyCombo.setItems(tabPolicyLabels);
 		tabPolicyCombo.select(0);
 
@@ -73,7 +80,8 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 		gd.widthHint = 20;
 
 		Label indentSizeLabel = new Label(formattingComposite, SWT.NULL);
-		indentSizeLabel.setText(PHPUIMessages.getString("PHPFormatterConfigurationBlock_indentSizeLabel")); //$NON-NLS-1$
+		indentSizeLabel.setText(PHPUIMessages
+				.getString("PHPFormatterConfigurationBlock_indentSizeLabel")); //$NON-NLS-1$
 		indentSizeTxt = new Text(formattingComposite, SWT.BORDER);
 		indentSizeTxt.setTextLimit(2);
 		indentSizeTxt.setLayoutData(gd);
@@ -88,9 +96,9 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 			public void widgetSelected(SelectionEvent e) {
 				Combo source = (Combo) e.getSource();
 				int selectIndex = source.getSelectionIndex();
-				if (selectIndex == 1) { //select 'Spaces'
+				if (selectIndex == 1) { // select 'Spaces'
 					indentSizeTxt.setEnabled(true);
-				} else {//select 'Tabs'
+				} else {// select 'Tabs'
 					indentSizeTxt.setEnabled(false);
 					indentSizeTxt.setText("1"); //$NON-NLS-1$
 				}
@@ -106,19 +114,28 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 		return formattingComposite;
 	}
 
-	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
+	protected void validateSettings(Key changedKey, String oldValue,
+			String newValue) {
 		if (changedKey != null) {
 			if (PREF_FORMATTER_INDENTATION_SIZE.equals(changedKey)) {
 				try {
 					fIndentationSize = Integer.valueOf(newValue);
-					if (fIndentationSize < MIN_INDENT_SIZE || fIndentationSize > MAX_INDENT_SIZE) {
-						fFormatterStatus = new StatusInfo(IStatus.ERROR, PHPUIMessages.getString("PHPFormatterConfigurationBlock_indentSizeErrorMessage")); //$NON-NLS-1$
+					if (fIndentationSize < MIN_INDENT_SIZE
+							|| fIndentationSize > MAX_INDENT_SIZE) {
+						fFormatterStatus = new StatusInfo(
+								IStatus.ERROR,
+								PHPUIMessages
+										.getString("PHPFormatterConfigurationBlock_indentSizeErrorMessage")); //$NON-NLS-1$
 					} else {
-						setValue(PREF_FORMATTER_INDENTATION_SIZE, String.valueOf(fIndentationSize));
+						setValue(PREF_FORMATTER_INDENTATION_SIZE, String
+								.valueOf(fIndentationSize));
 						fFormatterStatus = new StatusInfo();
 					}
 				} catch (NumberFormatException nfe) {
-					fFormatterStatus = new StatusInfo(IStatus.ERROR, PHPUIMessages.getString("PHPFormatterConfigurationBlock_indentSizeErrorMessage")); //$NON-NLS-1$
+					fFormatterStatus = new StatusInfo(
+							IStatus.ERROR,
+							PHPUIMessages
+									.getString("PHPFormatterConfigurationBlock_indentSizeErrorMessage")); //$NON-NLS-1$
 				}
 			} else {
 				return;
@@ -136,14 +153,16 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 	}
 
 	private static Key[] getKeys() {
-		return new Key[] { PREF_FORMATTER_USE_TABS, PREF_FORMATTER_INDENTATION_SIZE };
+		return new Key[] { PREF_FORMATTER_USE_TABS,
+				PREF_FORMATTER_INDENTATION_SIZE };
 	}
 
 	private Group createComposite(Composite parent, int numColumns) {
 		Group group = new Group(parent, SWT.NONE);
-		group.setText(PHPUIMessages.getString("PHPFormatterConfigurationBlock.0")); //$NON-NLS-1$
+		group.setText(PHPUIMessages
+				.getString("PHPFormatterConfigurationBlock.0")); //$NON-NLS-1$
 
-		//GridLayout
+		// GridLayout
 		GridLayout layout = new GridLayout();
 		layout.numColumns = numColumns;
 		layout.marginTop = 5;
@@ -151,7 +170,7 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 
 		group.setLayout(layout);
 
-		//GridData
+		// GridData
 		GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
 
 		group.setLayoutData(data);
@@ -173,7 +192,8 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 	protected void validateValues(Widget w) {
 		Text c = (Text) w;
 		String textFieldStr = c.getText();
-		validateSettings(PREF_FORMATTER_INDENTATION_SIZE, new Integer(fIndentationSize).toString(), textFieldStr);
+		validateSettings(PREF_FORMATTER_INDENTATION_SIZE, new Integer(
+				fIndentationSize).toString(), textFieldStr);
 
 	}
 

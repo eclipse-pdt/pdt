@@ -18,7 +18,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
- * Description:   
+ * Description:
+ * 
  * @author moshe, 2007
  */
 public interface IPHPFormatterConfigurationBlockWrapper {
@@ -37,11 +38,12 @@ public interface IPHPFormatterConfigurationBlockWrapper {
 
 	void dispose();
 
-	void init(IStatusChangeListener statusChangedListener, IProject project, IWorkbenchPreferenceContainer container);
+	void init(IStatusChangeListener statusChangedListener, IProject project,
+			IWorkbenchPreferenceContainer container);
 
 	/**
-	 * The Description for this configuration block that will be presented
-	 * in the dialog
+	 * The Description for this configuration block that will be presented in
+	 * the dialog
 	 */
 	String getDescription();
 }

@@ -31,41 +31,45 @@ public class NamespaceGroupingActionGroup extends ActionGroup {
 		fViewer = viewer;
 		fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 	}
-	
-    public void fillActionBars(IActionBars actionBar) {
-        super.fillActionBars(actionBar);
-        fillViewMenu(actionBar.getMenuManager());
-    }
 
-    private void fillViewMenu(IMenuManager viewMenu) {
-        viewMenu.add(new Separator("namespaces")); //$NON-NLS-1$
-        viewMenu.add(new GroupByNamespacesAction());
-    }
-    
+	public void fillActionBars(IActionBars actionBar) {
+		super.fillActionBars(actionBar);
+		fillViewMenu(actionBar.getMenuManager());
+	}
+
+	private void fillViewMenu(IMenuManager viewMenu) {
+		viewMenu.add(new Separator("namespaces")); //$NON-NLS-1$
+		viewMenu.add(new GroupByNamespacesAction());
+	}
+
 	class GroupByNamespacesAction extends Action {
-		
+
 		public GroupByNamespacesAction() {
 			super("Group by &namespaces", AS_CHECK_BOX);
 			setDescription("Groups PHP elements by namespaces");
 			setToolTipText("Groups PHP elements by namespaces");
 
-			//PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IStudioHelpContextIds.EXECUTION_STATISTICS_VIEW);
+			// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+			// IStudioHelpContextIds.EXECUTION_STATISTICS_VIEW);
 			// TODO : add help context
-			
-			setChecked(fStore.getBoolean(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES));
+
+			setChecked(fStore
+					.getBoolean(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES));
 		}
 
 		public void run() {
 			final boolean on = isChecked();
-			fStore.setValue(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES, on);
-			
-			BusyIndicator.showWhile(fViewer.getControl().getDisplay(), new Runnable() {
-				public void run() {
-					fViewer.getControl().setRedraw(false);
-					fViewer.refresh();
-					fViewer.getControl().setRedraw(true);
-				}
-			});
+			fStore.setValue(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES,
+					on);
+
+			BusyIndicator.showWhile(fViewer.getControl().getDisplay(),
+					new Runnable() {
+						public void run() {
+							fViewer.getControl().setRedraw(false);
+							fViewer.refresh();
+							fViewer.getControl().setRedraw(true);
+						}
+					});
 		}
 	}
 }

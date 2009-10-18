@@ -63,7 +63,8 @@ public class DNDUtils {
 	};
 
 	public static void initEditorSiteExternalDrop() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow();
 		if (window != null)
 			windowEnableExternalDrop(window);
 
@@ -84,7 +85,8 @@ public class DNDUtils {
 	 * @param activePage
 	 */
 	public static void pageEnableExternalDrop(IWorkbenchPage activePage) {
-		Control[] children = ((WorkbenchPage) activePage).getClientComposite().getChildren();
+		Control[] children = ((WorkbenchPage) activePage).getClientComposite()
+				.getChildren();
 		for (int i = 0; i < children.length; i++) {
 			if (children[i] instanceof Composite) {
 				Control[] subChildren = ((Composite) children[i]).getChildren();
@@ -108,8 +110,10 @@ public class DNDUtils {
 		if (control.getData(DROP_TARGET_ID) != null)
 			return; // already assigned
 		DropTarget target = new DropTarget(control, DND.DROP_COPY);
-		ExternalFileDropAdapter transferDropAdapter = ExternalFileDropAdapter.getInstance();
-		target.setTransfer(new Transfer[] { transferDropAdapter.getTransfer() });
+		ExternalFileDropAdapter transferDropAdapter = ExternalFileDropAdapter
+				.getInstance();
+		target
+				.setTransfer(new Transfer[] { transferDropAdapter.getTransfer() });
 		target.addDropListener(transferDropAdapter);
 		target.addListener(SWT.Dispose, new Listener() {
 			public void handleEvent(Event event) {

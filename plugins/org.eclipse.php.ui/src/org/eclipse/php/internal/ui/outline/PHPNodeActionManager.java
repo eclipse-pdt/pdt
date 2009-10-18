@@ -32,7 +32,8 @@ public class PHPNodeActionManager extends HTMLNodeActionManager {
 	}
 
 	public void fillContextMenu(IMenuManager menuManager, ISelection selection) {
-		// check the selection type - only if the underlying resource is a ModelElement 
+		// check the selection type - only if the underlying resource is a
+		// ModelElement
 		// the standard options are propagated
 		if (selection instanceof TreeSelection) {
 			Object firstElement = ((TreeSelection) selection).getFirstElement();

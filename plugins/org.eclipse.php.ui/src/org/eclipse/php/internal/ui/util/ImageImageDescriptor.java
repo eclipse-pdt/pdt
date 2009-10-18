@@ -29,21 +29,28 @@ public class ImageImageDescriptor extends ImageDescriptor {
 		fImage = image;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ImageDescriptor#getImageData()
 	 */
 	public ImageData getImageData() {
 		return fImage.getImageData();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see Object#equals(Object)
 	 */
 	public boolean equals(Object obj) {
-		return (obj != null) && getClass().equals(obj.getClass()) && fImage.equals(((ImageImageDescriptor) obj).fImage);
+		return (obj != null) && getClass().equals(obj.getClass())
+				&& fImage.equals(((ImageImageDescriptor) obj).fImage);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see Object#hashCode()
 	 */
 	public int hashCode() {

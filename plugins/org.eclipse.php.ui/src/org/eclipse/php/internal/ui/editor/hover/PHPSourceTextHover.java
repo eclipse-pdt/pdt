@@ -23,7 +23,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
 
-public class PHPSourceTextHover extends ScriptSourceHover implements IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
+public class PHPSourceTextHover extends ScriptSourceHover implements
+		IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
 
 	/**
 	 * The hover control creator.
@@ -40,21 +41,26 @@ public class PHPSourceTextHover extends ScriptSourceHover implements IPHPTextHov
 	private IInformationControlCreator fPresenterControlCreator;
 
 	/*
-	 * @see IInformationProviderExtension2#getInformationPresenterControlCreator()
-	 * @since 3.1
-	 * This is the format of the window on focus 
+	 * @see
+	 * IInformationProviderExtension2#getInformationPresenterControlCreator()
+	 * 
+	 * @since 3.1 This is the format of the window on focus
 	 */
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		if (fPresenterControlCreator == null) {
 			fPresenterControlCreator = new AbstractReusableInformationControlCreator() {
 
 				/*
-				 * @see org.eclipse.jdt.internal.ui.text.java.hover.AbstractReusableInformationControlCreator#doCreateInformationControl(org.eclipse.swt.widgets.Shell)
+				 * @seeorg.eclipse.jdt.internal.ui.text.java.hover.
+				 * AbstractReusableInformationControlCreator
+				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
-				public IInformationControl doCreateInformationControl(Shell parent) {
+				public IInformationControl doCreateInformationControl(
+						Shell parent) {
 					int shellStyle = SWT.RESIZE | SWT.TOOL;
 					int style = SWT.V_SCROLL | SWT.H_SCROLL;
-					return new PHPSourceViewerInformationControl(parent, shellStyle, style);
+					return new PHPSourceViewerInformationControl(parent,
+							shellStyle, style);
 				}
 			};
 		}
@@ -63,16 +69,21 @@ public class PHPSourceTextHover extends ScriptSourceHover implements IPHPTextHov
 
 	/*
 	 * @see ITextHoverExtension#getHoverControlCreator()
+	 * 
 	 * @since 3.2 - This is the format of the window on hover
 	 */
 	public IInformationControlCreator getHoverControlCreator() {
 		if (fHoverControlCreator == null) {
 			fHoverControlCreator = new AbstractReusableInformationControlCreator() {
 				/*
-				 * @see org.eclipse.jdt.internal.ui.text.java.hover.AbstractReusableInformationControlCreator#doCreateInformationControl(org.eclipse.swt.widgets.Shell)
+				 * @seeorg.eclipse.jdt.internal.ui.text.java.hover.
+				 * AbstractReusableInformationControlCreator
+				 * #doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
-				public IInformationControl doCreateInformationControl(Shell parent) {
-					return new PHPSourceViewerInformationControl(parent, SWT.NONE, EditorsUI.getTooltipAffordanceString());
+				public IInformationControl doCreateInformationControl(
+						Shell parent) {
+					return new PHPSourceViewerInformationControl(parent,
+							SWT.NONE, EditorsUI.getTooltipAffordanceString());
 				}
 			};
 		}

@@ -19,8 +19,9 @@ import org.eclipse.php.internal.ui.Logger;
 public class OutlineUtils {
 
 	protected static boolean isConstant(IModelElement modelElement) {
-		
-		if (modelElement instanceof IField && modelElement.getParent() instanceof ISourceModule) {
+
+		if (modelElement instanceof IField
+				&& modelElement.getParent() instanceof ISourceModule) {
 			int flags = 0;
 			try {
 				flags = ((IField) modelElement).getFlags();
@@ -35,7 +36,9 @@ public class OutlineUtils {
 
 	protected static boolean isGlobalClass(IModelElement modelElement) {
 		try {
-			if (modelElement instanceof IType && !PHPFlags.isNamespace(((IType)modelElement).getFlags()) && modelElement.getParent() instanceof ISourceModule) {
+			if (modelElement instanceof IType
+					&& !PHPFlags.isNamespace(((IType) modelElement).getFlags())
+					&& modelElement.getParent() instanceof ISourceModule) {
 				return true;
 			}
 		} catch (ModelException e) {
@@ -44,7 +47,8 @@ public class OutlineUtils {
 	}
 
 	protected static boolean isGlobalFunction(IModelElement modelElement) {
-		if (modelElement instanceof IMethod && modelElement.getParent() instanceof ISourceModule) {
+		if (modelElement instanceof IMethod
+				&& modelElement.getParent() instanceof ISourceModule) {
 			return true;
 		}
 		return false;

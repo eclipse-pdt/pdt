@@ -17,7 +17,11 @@ public interface IFilter {
 
 	public Object[] filter(Object[] elements);
 
-	public void addFilterChangeListener(IFilterChangeListener filterChangeListener);
-	public void removeFilterChangeListener(IFilterChangeListener filterChangeListener);
+	public void addFilterChangeListener(
+			IFilterChangeListener filterChangeListener);
+
+	public void removeFilterChangeListener(
+			IFilterChangeListener filterChangeListener);
+
 	public List getFilterChangeListeners();
 }

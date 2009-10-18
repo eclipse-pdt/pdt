@@ -23,9 +23,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 
 /**
- * A list with checkboxes and a button bar. Typical buttons are 'Check All' and 'Uncheck All'.
- * List model is independend of widget creation.
- * DialogFields controls are: Label, List and Composite containing buttons.
+ * A list with checkboxes and a button bar. Typical buttons are 'Check All' and
+ * 'Uncheck All'. List model is independend of widget creation. DialogFields
+ * controls are: Label, List and Composite containing buttons.
  */
 public class CheckedListDialogField extends ListDialogField {
 
@@ -34,7 +34,8 @@ public class CheckedListDialogField extends ListDialogField {
 
 	private List fCheckElements;
 
-	public CheckedListDialogField(IListAdapter adapter, String[] customButtonLabels, ILabelProvider lprovider) {
+	public CheckedListDialogField(IListAdapter adapter,
+			String[] customButtonLabels, ILabelProvider lprovider) {
 		super(adapter, customButtonLabels, lprovider);
 		fCheckElements = new ArrayList();
 
@@ -43,9 +44,10 @@ public class CheckedListDialogField extends ListDialogField {
 	}
 
 	/**
-	 * Sets the index of the 'check' button in the button label array passed in the constructor.
-	 * The behaviour of the button marked as the check button will then be handled internally.
-	 * (enable state, button invocation behaviour)
+	 * Sets the index of the 'check' button in the button label array passed in
+	 * the constructor. The behaviour of the button marked as the check button
+	 * will then be handled internally. (enable state, button invocation
+	 * behaviour)
 	 */
 	public void setCheckAllButtonIndex(int checkButtonIndex) {
 		Assert.isTrue(checkButtonIndex < fButtonLabels.length);
@@ -53,9 +55,10 @@ public class CheckedListDialogField extends ListDialogField {
 	}
 
 	/**
-	 * Sets the index of the 'uncheck' button in the button label array passed in the constructor.
-	 * The behaviour of the button marked as the uncheck button will then be handled internally.
-	 * (enable state, button invocation behaviour)
+	 * Sets the index of the 'uncheck' button in the button label array passed
+	 * in the constructor. The behaviour of the button marked as the uncheck
+	 * button will then be handled internally. (enable state, button invocation
+	 * behaviour)
 	 */
 	public void setUncheckAllButtonIndex(int uncheckButtonIndex) {
 		Assert.isTrue(uncheckButtonIndex < fButtonLabels.length);
@@ -83,14 +86,15 @@ public class CheckedListDialogField extends ListDialogField {
 	public Control getListControl(Composite parent) {
 		Control control = super.getListControl(parent);
 		if (parent != null) {
-			((CheckboxTableViewer) fTable).setCheckedElements(fCheckElements.toArray());
+			((CheckboxTableViewer) fTable).setCheckedElements(fCheckElements
+					.toArray());
 		}
 		return control;
 	}
 
 	/*
-	 * @see DialogField#dialogFieldChanged
-	 * Hooks in to get element changes to update check model.
+	 * @see DialogField#dialogFieldChanged Hooks in to get element changes to
+	 * update check model.
 	 */
 	public void dialogFieldChanged() {
 		for (int i = fCheckElements.size() - 1; i >= 0; i--) {
@@ -102,7 +106,7 @@ public class CheckedListDialogField extends ListDialogField {
 	}
 
 	private void checkStateChanged() {
-		//call super and do not update check model
+		// call super and do not update check model
 		super.dialogFieldChanged();
 	}
 
@@ -112,7 +116,8 @@ public class CheckedListDialogField extends ListDialogField {
 	public List getCheckedElements() {
 		if (isOkToUse(fTableControl)) {
 			// workaround for bug 53853
-			Object[] checked = ((CheckboxTableViewer) fTable).getCheckedElements();
+			Object[] checked = ((CheckboxTableViewer) fTable)
+					.getCheckedElements();
 			ArrayList res = new ArrayList(checked.length);
 			for (int i = 0; i < checked.length; i++) {
 				res.add(checked[i]);
@@ -161,7 +166,8 @@ public class CheckedListDialogField extends ListDialogField {
 	}
 
 	/**
-	 * Sets the checked state of an element. No dialog changed listener is informed.
+	 * Sets the checked state of an element. No dialog changed listener is
+	 * informed.
 	 */
 	public void setCheckedWithoutUpdate(Object object, boolean state) {
 		if (state) {
@@ -200,10 +206,14 @@ public class CheckedListDialogField extends ListDialogField {
 		checkStateChanged();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField#replaceElement(java.lang.Object, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField#
+	 * replaceElement(java.lang.Object, java.lang.Object)
 	 */
-	public void replaceElement(Object oldElement, Object newElement) throws IllegalArgumentException {
+	public void replaceElement(Object oldElement, Object newElement)
+			throws IllegalArgumentException {
 		boolean wasChecked = isChecked(oldElement);
 		super.replaceElement(oldElement, newElement);
 		setChecked(newElement, wasChecked);

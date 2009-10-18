@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.doubleclick;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -28,13 +31,14 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.w3c.dom.Node;
 
 /**
- * This class was added in order to solve the problem of selecting variable name in the editor.
- * The default behaviour when double-clicking a variable, for instance $myVar, is to make only myVar selected - without the dollar sign.
- * This class also fixes selection of PHPdoc tags.
- * This class fixes this behaviour.
+ * This class was added in order to solve the problem of selecting variable name
+ * in the editor. The default behaviour when double-clicking a variable, for
+ * instance $myVar, is to make only myVar selected - without the dollar sign.
+ * This class also fixes selection of PHPdoc tags. This class fixes this
+ * behaviour.
  * 
  * @author guy.g
- *
+ * 
  */
 public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 
@@ -44,37 +48,63 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 			StructuredTextViewer structuredTextViewer = (StructuredTextViewer) textViewer;
 			IStructuredModel structuredModel = null;
 			try {
-				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(structuredTextViewer.getDocument());
+				structuredModel = StructuredModelManager.getModelManager()
+						.getExistingModelForRead(
+								structuredTextViewer.getDocument());
 				if (structuredModel != null) {
 					int caretPosition = textViewer.getSelectedRange().x;
 					if (caretPosition > 0) {
-						Node node = (Node) structuredModel.getIndexedRegion(caretPosition);
+						Node node = (Node) structuredModel
+								.getIndexedRegion(caretPosition);
 						if (node != null) {
-							IStructuredDocumentRegion sdRegion = structuredModel.getStructuredDocument().getRegionAtCharacterOffset(caretPosition);
+							IStructuredDocumentRegion sdRegion = structuredModel
+									.getStructuredDocument()
+									.getRegionAtCharacterOffset(caretPosition);
 							if (sdRegion != null) {
-								ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(caretPosition);
+								ITextRegion tRegion = sdRegion
+										.getRegionAtCharacterOffset(caretPosition);
 
 								ITextRegionCollection container = sdRegion;
 								if (tRegion instanceof ITextRegionContainer) {
 									container = (ITextRegionContainer) tRegion;
-									tRegion = container.getRegionAtCharacterOffset(caretPosition);
+									tRegion = container
+											.getRegionAtCharacterOffset(caretPosition);
 								}
 
 								// We should always hit the PhpScriptRegion:
-								if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+								if (tRegion != null
+										&& tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 									IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
-									tRegion = phpScriptRegion.getPhpToken(caretPosition - container.getStartOffset() - phpScriptRegion.getStart());
+									tRegion = phpScriptRegion
+											.getPhpToken(caretPosition
+													- container
+															.getStartOffset()
+													- phpScriptRegion
+															.getStart());
 
 									// Handle double-click on PHPDoc tags:
-									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE || PHPPartitionTypes.isPHPDocTagState(tRegion.getType())) {
-										structuredTextViewer.setSelectedRange(container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart(), tRegion.getTextLength());
+									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE
+											|| PHPPartitionTypes
+													.isPHPDocTagState(tRegion
+															.getType())) {
+										structuredTextViewer.setSelectedRange(
+												container.getStartOffset()
+														+ phpScriptRegion
+																.getStart()
+														+ tRegion.getStart(),
+												tRegion.getTextLength());
 										return; // Stop processing
 									}
 
-									// check if the user double clicked on a variable in the PHPDoc block
+									// check if the user double clicked on a
+									// variable in the PHPDoc block
 									// fix bug#201079
-									if (tRegion.getType() == PHPRegionTypes.PHPDOC_COMMENT || tRegion.getType() == PHPRegionTypes.PHP_LINE_COMMENT || tRegion.getType() == PHPRegionTypes.PHP_COMMENT) {
-										resetVariableSelectionRangeInComments(textViewer, structuredTextViewer);
+									if (tRegion.getType() == PHPRegionTypes.PHPDOC_COMMENT
+											|| tRegion.getType() == PHPRegionTypes.PHP_LINE_COMMENT
+											|| tRegion.getType() == PHPRegionTypes.PHP_COMMENT) {
+										resetVariableSelectionRangeInComments(
+												textViewer,
+												structuredTextViewer);
 										return;
 									}
 
@@ -92,18 +122,22 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 			}
 		}
 
-		// We reach here only if there was an error or one of conditions hasn't met our requirements:
+		// We reach here only if there was an error or one of conditions hasn't
+		// met our requirements:
 		super.doubleClicked(textViewer);
 	}
 
 	/**
-	 * When the user double click on a variable in a comment, include the preceding $ sign in the selection
-	 * (bug#201079)
+	 * When the user double click on a variable in a comment, include the
+	 * preceding $ sign in the selection (bug#201079)
+	 * 
 	 * @param textViewer
 	 * @param structuredTextViewer
 	 * @throws BadLocationException
 	 */
-	private void resetVariableSelectionRangeInComments(ITextViewer textViewer, StructuredTextViewer structuredTextViewer) throws BadLocationException {
+	private void resetVariableSelectionRangeInComments(ITextViewer textViewer,
+			StructuredTextViewer structuredTextViewer)
+			throws BadLocationException {
 		super.doubleClicked(textViewer);
 		Point selectedRange = structuredTextViewer.getSelectedRange();
 		int offset = selectedRange.x;
@@ -112,10 +146,13 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 			IDocument document = structuredTextViewer.getDocument();
 			char previousChar = document.getChar(offset - 1);
 			if (previousChar == '$') {
-				structuredTextViewer.setSelectedRange(offset - 1, selectedRange.y + 1);
-				// handle one letter variable name selection (the default just selectes the $ sign)
-			} else if(selectedRange.y == 1 && document.getChar(offset) == '$'){				
-				structuredTextViewer.setSelectedRange(offset, selectedRange.y + 1);
+				structuredTextViewer.setSelectedRange(offset - 1,
+						selectedRange.y + 1);
+				// handle one letter variable name selection (the default just
+				// selectes the $ sign)
+			} else if (selectedRange.y == 1 && document.getChar(offset) == '$') {
+				structuredTextViewer.setSelectedRange(offset,
+						selectedRange.y + 1);
 			}
 		}
 	}

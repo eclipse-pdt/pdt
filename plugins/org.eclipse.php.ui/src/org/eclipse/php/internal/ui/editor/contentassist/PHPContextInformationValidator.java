@@ -20,7 +20,8 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 
-public class PHPContextInformationValidator implements IContextInformationValidator, IContextInformationPresenter {
+public class PHPContextInformationValidator implements
+		IContextInformationValidator, IContextInformationPresenter {
 
 	private IContextInformation fInformation;
 	private ITextViewer fViewer;
@@ -31,14 +32,16 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		fInformation = info;
 		fViewer = viewer;
 		if (info instanceof IContextInformationExtension) {
-			fPosition = ((IContextInformationExtension) info).getContextInformationPosition();
+			fPosition = ((IContextInformationExtension) info)
+					.getContextInformationPosition();
 		} else {
 			fPosition = offset - 1;
 		}
 		fCurrentParameter = -1;
 	}
 
-	private int getCommentEnd(IDocument d, int pos, int end) throws BadLocationException {
+	private int getCommentEnd(IDocument d, int pos, int end)
+			throws BadLocationException {
 		while (pos < end) {
 			char curr = d.getChar(pos);
 			pos++;
@@ -51,7 +54,8 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		return end;
 	}
 
-	private int getStringEnd(IDocument d, int pos, int end, char ch) throws BadLocationException {
+	private int getStringEnd(IDocument d, int pos, int end, char ch)
+			throws BadLocationException {
 		while (pos < end) {
 			char curr = d.getChar(pos);
 			pos++;
@@ -65,61 +69,64 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		return end;
 	}
 
-	private int getCharCount(IDocument document, int start, int end, String increments, String decrements, boolean considerNesting) throws BadLocationException {
+	private int getCharCount(IDocument document, int start, int end,
+			String increments, String decrements, boolean considerNesting)
+			throws BadLocationException {
 
-		Assert.isTrue((increments.length() != 0 || decrements.length() != 0) && !increments.equals(decrements));
+		Assert.isTrue((increments.length() != 0 || decrements.length() != 0)
+				&& !increments.equals(decrements));
 
 		int nestingLevel = 0;
 		int charCount = 0;
 		while (start < end) {
 			char curr = document.getChar(start++);
 			switch (curr) {
-				case '/':
-					if (start < end) {
-						char next = document.getChar(start);
-						if (next == '*') {
-							// a comment starts, advance to the comment end
-							start = getCommentEnd(document, start + 1, end);
-						} else if (next == '/') {
-							// '//'-comment: nothing to do anymore on this line
-							start = end;
-						}
+			case '/':
+				if (start < end) {
+					char next = document.getChar(start);
+					if (next == '*') {
+						// a comment starts, advance to the comment end
+						start = getCommentEnd(document, start + 1, end);
+					} else if (next == '/') {
+						// '//'-comment: nothing to do anymore on this line
+						start = end;
 					}
-					break;
-				case '*':
-					if (start < end) {
-						char next = document.getChar(start);
-						if (next == '/') {
-							// we have been in a comment: forget what we read before
-							charCount = 0;
-							++start;
-						}
+				}
+				break;
+			case '*':
+				if (start < end) {
+					char next = document.getChar(start);
+					if (next == '/') {
+						// we have been in a comment: forget what we read before
+						charCount = 0;
+						++start;
 					}
-					break;
-				case '"':
-				case '\'':
-					start = getStringEnd(document, start, end, curr);
-					break;
-				default:
+				}
+				break;
+			case '"':
+			case '\'':
+				start = getStringEnd(document, start, end, curr);
+				break;
+			default:
 
-					if (considerNesting) {
+				if (considerNesting) {
 
-						if ('(' == curr)
-							++nestingLevel;
-						else if (')' == curr)
-							--nestingLevel;
+					if ('(' == curr)
+						++nestingLevel;
+					else if (')' == curr)
+						--nestingLevel;
 
-						if (nestingLevel != 0)
-							break;
-					}
+					if (nestingLevel != 0)
+						break;
+				}
 
-					if (increments.indexOf(curr) >= 0) {
-						++charCount;
-					}
+				if (increments.indexOf(curr) >= 0) {
+					++charCount;
+				}
 
-					if (decrements.indexOf(curr) >= 0) {
-						--charCount;
-					}
+				if (decrements.indexOf(curr) >= 0) {
+					--charCount;
+				}
 			}
 		}
 
@@ -146,9 +153,9 @@ public class PHPContextInformationValidator implements IContextInformationValida
 
 	public boolean updatePresentation(int offset, TextPresentation presentation) {
 		int currentParameter = -1;
-		
+
 		IDocument document = fViewer.getDocument();
-		
+
 		int parameterStartPosition = fPosition;
 		try {
 			for (; parameterStartPosition < offset; ++parameterStartPosition) {
@@ -159,9 +166,10 @@ public class PHPContextInformationValidator implements IContextInformationValida
 			}
 		} catch (BadLocationException x) {
 		}
-		
+
 		try {
-			currentParameter = getCharCount(document, parameterStartPosition, offset, ",", "", true); //$NON-NLS-1$//$NON-NLS-2$
+			currentParameter = getCharCount(document, parameterStartPosition,
+					offset, ",", "", true); //$NON-NLS-1$//$NON-NLS-2$
 		} catch (BadLocationException x) {
 			return false;
 		}
@@ -174,7 +182,8 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		presentation.clear();
 		fCurrentParameter = currentParameter;
 
-		// this check was added in order to workaround bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=191849
+		// this check was added in order to workaround bug
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=191849
 		// when it will be resolved this check can be removed.
 		if (fInformation == null) {
 			return false;
@@ -191,7 +200,8 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		}
 
 		if (occurrences < fCurrentParameter) {
-			presentation.addStyleRange(new StyleRange(0, s.length(), null, null, SWT.NORMAL));
+			presentation.addStyleRange(new StyleRange(0, s.length(), null,
+					null, SWT.NORMAL));
 			return true;
 		}
 
@@ -203,13 +213,16 @@ public class PHPContextInformationValidator implements IContextInformationValida
 			end = s.length();
 
 		if (start > 0)
-			presentation.addStyleRange(new StyleRange(0, start, null, null, SWT.NORMAL));
+			presentation.addStyleRange(new StyleRange(0, start, null, null,
+					SWT.NORMAL));
 
 		if (end > start)
-			presentation.addStyleRange(new StyleRange(start, end - start, null, null, SWT.BOLD));
+			presentation.addStyleRange(new StyleRange(start, end - start, null,
+					null, SWT.BOLD));
 
 		if (end < s.length())
-			presentation.addStyleRange(new StyleRange(end, s.length() - end, null, null, SWT.NORMAL));
+			presentation.addStyleRange(new StyleRange(end, s.length() - end,
+					null, null, SWT.NORMAL));
 
 		return true;
 	}

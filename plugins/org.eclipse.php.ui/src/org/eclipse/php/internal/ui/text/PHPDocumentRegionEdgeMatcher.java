@@ -34,7 +34,10 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 	 * @param nextMatcher
 	 */
 	public PHPDocumentRegionEdgeMatcher() {
-		super(new String[] { DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_COMMENT_TEXT, DOMRegionContext.XML_CDATA_TEXT, DOMRegionContext.XML_PI_OPEN, DOMRegionContext.XML_PI_CONTENT }, new PHPPairMatcher(BRACKETS));
+		super(new String[] { DOMRegionContext.XML_TAG_NAME,
+				DOMRegionContext.XML_COMMENT_TEXT,
+				DOMRegionContext.XML_CDATA_TEXT, DOMRegionContext.XML_PI_OPEN,
+				DOMRegionContext.XML_PI_CONTENT }, new PHPPairMatcher(BRACKETS));
 	}
 
 	public IRegion match(IDocument document, int offset) {
@@ -43,24 +46,34 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 
 		IRegion match = null;
 		if (!fRegionTypes.isEmpty() && document instanceof IStructuredDocument) {
-			IStructuredDocumentRegion docRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(offset);
+			IStructuredDocumentRegion docRegion = ((IStructuredDocument) document)
+					.getRegionAtCharacterOffset(offset);
 			if (docRegion != null) {
 				// look at the previous document region first since its end ==
 				// this one's start
-				if (docRegion.getPrevious() != null && docRegion.getPrevious().getEndOffset() == offset && fRegionTypes.contains(docRegion.getPrevious().getType())) {
+				if (docRegion.getPrevious() != null
+						&& docRegion.getPrevious().getEndOffset() == offset
+						&& fRegionTypes.contains(docRegion.getPrevious()
+								.getType())) {
 					fAnchor = ICharacterPairMatcher.RIGHT;
-					match = new Region(docRegion.getPrevious().getStartOffset(), 1);
+					match = new Region(
+							docRegion.getPrevious().getStartOffset(), 1);
 				}
 				// check for offset in the last text region for a match to
 				// document region start offset
-				else if (fRegionTypes.contains(docRegion.getType()) && docRegion.getStartOffset(docRegion.getLastRegion()) <= offset && offset <= docRegion.getEndOffset(docRegion.getLastRegion())) {
+				else if (fRegionTypes.contains(docRegion.getType())
+						&& docRegion.getStartOffset(docRegion.getLastRegion()) <= offset
+						&& offset <= docRegion.getEndOffset(docRegion
+								.getLastRegion())) {
 					fAnchor = ICharacterPairMatcher.RIGHT;
 					match = new Region(docRegion.getStartOffset(), 1);
 				}
 				// check for offset in the first text region for a match to
 				// document region end offset
 				else if (fRegionTypes.contains(docRegion.getType())) {
-					if (docRegion.getStartOffset(docRegion.getFirstRegion()) <= offset && offset <= docRegion.getEndOffset(docRegion.getFirstRegion())) {
+					if (docRegion.getStartOffset(docRegion.getFirstRegion()) <= offset
+							&& offset <= docRegion.getEndOffset(docRegion
+									.getFirstRegion())) {
 						fAnchor = ICharacterPairMatcher.LEFT;
 						match = new Region(docRegion.getEndOffset() - 1, 1);
 					}
@@ -68,39 +81,52 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 
 				if (match == null) {
 					/* Now check the text region */
-					ITextRegion currentTextRegion = docRegion.getRegionAtCharacterOffset(offset);
+					ITextRegion currentTextRegion = docRegion
+							.getRegionAtCharacterOffset(offset);
 
-					// in case of container we have the extract the PhpScriptRegion
+					// in case of container we have the extract the
+					// PhpScriptRegion
 					if (currentTextRegion instanceof ITextRegionContainer) {
 						ITextRegionContainer container = (ITextRegionContainer) currentTextRegion;
-						currentTextRegion = container.getRegionAtCharacterOffset(offset);
+						currentTextRegion = container
+								.getRegionAtCharacterOffset(offset);
 					}
 					if (currentTextRegion instanceof IPhpScriptRegion) {
 						IPhpScriptRegion scriptRegion = (IPhpScriptRegion) currentTextRegion;
 						try {
-							currentTextRegion = scriptRegion.getPhpToken(offset - docRegion.getStartOffset(scriptRegion));
+							currentTextRegion = scriptRegion.getPhpToken(offset
+									- docRegion.getStartOffset(scriptRegion));
 
-							if (currentTextRegion != null && currentTextRegion.getTextLength() > 1) {
+							if (currentTextRegion != null
+									&& currentTextRegion.getTextLength() > 1) {
 								int offsetAtNearEdge = offset;
-								if (offset == docRegion.getTextEndOffset(currentTextRegion)) {
+								if (offset == docRegion
+										.getTextEndOffset(currentTextRegion)) {
 									offsetAtNearEdge = offset - 1;
-								} else if (offset == docRegion.getStartOffset(currentTextRegion) + 1) {
+								} else if (offset == docRegion
+										.getStartOffset(currentTextRegion) + 1) {
 									offsetAtNearEdge = offset - 1;
 								}
 
-								if (offsetAtNearEdge == docRegion.getStartOffset(currentTextRegion)) {
-									int end = docRegion.getTextEndOffset(currentTextRegion);
+								if (offsetAtNearEdge == docRegion
+										.getStartOffset(currentTextRegion)) {
+									int end = docRegion
+											.getTextEndOffset(currentTextRegion);
 									try {
-										if (document.getChar(offsetAtNearEdge) == document.getChar(end - 1)) {
+										if (document.getChar(offsetAtNearEdge) == document
+												.getChar(end - 1)) {
 											fAnchor = ICharacterPairMatcher.LEFT;
 											match = new Region(end - 1, 1);
 										}
 									} catch (BadLocationException e) {
 										// nothing, not important enough
 									}
-								} else if (offsetAtNearEdge == docRegion.getTextEndOffset(currentTextRegion) - 1) {
-									int start = docRegion.getStartOffset(currentTextRegion);
-									if (document.getChar(offsetAtNearEdge) == document.getChar(start)) {
+								} else if (offsetAtNearEdge == docRegion
+										.getTextEndOffset(currentTextRegion) - 1) {
+									int start = docRegion
+											.getStartOffset(currentTextRegion);
+									if (document.getChar(offsetAtNearEdge) == document
+											.getChar(start)) {
 										fAnchor = ICharacterPairMatcher.RIGHT;
 										match = new Region(start, 1);
 									}

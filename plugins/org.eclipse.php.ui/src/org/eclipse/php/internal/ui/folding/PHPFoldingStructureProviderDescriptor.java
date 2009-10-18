@@ -43,8 +43,9 @@ public final class PHPFoldingStructureProviderDescriptor {
 
 	/**
 	 * Creates a new descriptor.
-	 *
-	 * @param element the configuration element to read
+	 * 
+	 * @param element
+	 *            the configuration element to read
 	 */
 	PHPFoldingStructureProviderDescriptor(IConfigurationElement element) {
 		fElement = element;
@@ -63,35 +64,40 @@ public final class PHPFoldingStructureProviderDescriptor {
 
 	/**
 	 * Creates a folding provider as described in the extension's xml.
-	 *
+	 * 
 	 * @return a new instance of the folding provider described by this
 	 *         descriptor
-	 * @throws CoreException if creation fails
+	 * @throws CoreException
+	 *             if creation fails
 	 */
 	public IStructuredTextFoldingProvider createProvider() throws CoreException {
-		IStructuredTextFoldingProvider prov = (IStructuredTextFoldingProvider) fElement.createExecutableExtension(CLASS);
+		IStructuredTextFoldingProvider prov = (IStructuredTextFoldingProvider) fElement
+				.createExecutableExtension(CLASS);
 		return prov;
 	}
 
 	/**
 	 * Creates a preferences object as described in the extension's xml.
-	 *
+	 * 
 	 * @return a new instance of the reference provider described by this
 	 *         descriptor
-	 * @throws CoreException if creation fails
+	 * @throws CoreException
+	 *             if creation fails
 	 */
 	public IPHPFoldingPreferenceBlock createPreferences() throws CoreException {
 		if (fHasPreferences) {
-			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) fElement.createExecutableExtension(PREFERENCES_CLASS);
+			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) fElement
+					.createExecutableExtension(PREFERENCES_CLASS);
 			return prefs;
 		} else {
-			throw new IllegalStateException(PHPUIMessages.getString("PHPFoldingStructureProviderDescriptor.0")); //$NON-NLS-1$
+			throw new IllegalStateException(PHPUIMessages
+					.getString("PHPFoldingStructureProviderDescriptor.0")); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * Returns the identifier of the described extension.
-	 *
+	 * 
 	 * @return Returns the id
 	 */
 	public String getId() {
@@ -100,7 +106,7 @@ public final class PHPFoldingStructureProviderDescriptor {
 
 	/**
 	 * Returns the name of the described extension.
-	 *
+	 * 
 	 * @return Returns the name
 	 */
 	public String getName() {

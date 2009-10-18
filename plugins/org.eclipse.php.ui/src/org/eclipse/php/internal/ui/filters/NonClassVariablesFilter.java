@@ -20,7 +20,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
- * This class used for filtering non-class variable declarations, like: in method, in function parameters, global variables, etc... 
+ * This class used for filtering non-class variable declarations, like: in
+ * method, in function parameters, global variables, etc...
  */
 public class NonClassVariablesFilter extends ViewerFilter {
 

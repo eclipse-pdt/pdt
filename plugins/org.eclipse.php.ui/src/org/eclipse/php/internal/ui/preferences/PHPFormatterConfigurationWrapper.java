@@ -18,22 +18,26 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
- * Description:   
+ * Description:
+ * 
  * @author moshe, 2007
  */
-public class PHPFormatterConfigurationWrapper implements IPHPFormatterConfigurationBlockWrapper{
+public class PHPFormatterConfigurationWrapper implements
+		IPHPFormatterConfigurationBlockWrapper {
 	private PHPFormatterConfigurationBlock pConfigurationBlock;
-	
-	public void init(IStatusChangeListener context, IProject project, IWorkbenchPreferenceContainer container) {
-		pConfigurationBlock = new PHPFormatterConfigurationBlock(context, project, container);
+
+	public void init(IStatusChangeListener context, IProject project,
+			IWorkbenchPreferenceContainer container) {
+		pConfigurationBlock = new PHPFormatterConfigurationBlock(context,
+				project, container);
 	}
-	
+
 	public Control createContents(Composite composite) {
 		return pConfigurationBlock.createContents(composite);
 	}
 
 	public void dispose() {
-		pConfigurationBlock.dispose();		
+		pConfigurationBlock.dispose();
 	}
 
 	public boolean hasProjectSpecificOptions(IProject project) {
@@ -41,7 +45,7 @@ public class PHPFormatterConfigurationWrapper implements IPHPFormatterConfigurat
 	}
 
 	public void performApply() {
-		pConfigurationBlock.performApply();		
+		pConfigurationBlock.performApply();
 	}
 
 	public void performDefaults() {
@@ -53,7 +57,8 @@ public class PHPFormatterConfigurationWrapper implements IPHPFormatterConfigurat
 	}
 
 	public void useProjectSpecificSettings(boolean useProjectSpecificSettings) {
-		pConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
+		pConfigurationBlock
+				.useProjectSpecificSettings(useProjectSpecificSettings);
 	}
 
 	public String getDescription() {

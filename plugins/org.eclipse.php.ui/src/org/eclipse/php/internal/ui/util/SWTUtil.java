@@ -35,9 +35,9 @@ import org.eclipse.ui.PlatformUI;
 public class SWTUtil {
 
 	/**
-	 * Returns the standard display to be used. The method first checks, if
-	 * the thread calling this method has an associated disaply. If so, this
-	 * display is returned. Otherwise the method returns the default display.
+	 * Returns the standard display to be used. The method first checks, if the
+	 * thread calling this method has an associated disaply. If so, this display
+	 * is returned. Otherwise the method returns the default display.
 	 */
 	public static Display getStandardDisplay() {
 		Display display;
@@ -48,9 +48,9 @@ public class SWTUtil {
 	}
 
 	/**
-	 * Returns the shell for the given widget. If the widget doesn't represent
-	 * a SWT object that manage a shell, <code>null</code> is returned.
-	 *
+	 * Returns the shell for the given widget. If the widget doesn't represent a
+	 * SWT object that manage a shell, <code>null</code> is returned.
+	 * 
 	 * @return the shell for the given widget
 	 */
 	public static Shell getShell(Widget widget) {
@@ -81,80 +81,98 @@ public class SWTUtil {
 
 	/**
 	 * Creates the tab folder for displaying the composite fragments
+	 * 
 	 * @param parent
 	 */
 	public static CTabFolder createTabFolder(Composite parent) {
 		Display display = getStandardDisplay();
-		Color c1 = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND), c2 = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
-		CTabFolder tabs = new CTabFolder(parent, SWT.NO_REDRAW_RESIZE | SWT.NO_TRIM | SWT.FLAT);
+		Color c1 = display.getSystemColor(SWT.COLOR_TITLE_BACKGROUND), c2 = display
+				.getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+		CTabFolder tabs = new CTabFolder(parent, SWT.NO_REDRAW_RESIZE
+				| SWT.NO_TRIM | SWT.FLAT);
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.horizontalSpan = 2;
-		tabs.setSelectionBackground(new Color[] { c1, c2 }, new int[] { 100 }, true);
-		tabs.setSelectionForeground(getStandardDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND));
-		tabs.setSimple(PlatformUI.getPreferenceStore().getBoolean(IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS));
+		tabs.setSelectionBackground(new Color[] { c1, c2 }, new int[] { 100 },
+				true);
+		tabs.setSelectionForeground(getStandardDisplay().getSystemColor(
+				SWT.COLOR_TITLE_FOREGROUND));
+		tabs.setSimple(PlatformUI.getPreferenceStore().getBoolean(
+				IWorkbenchPreferenceConstants.SHOW_TRADITIONAL_STYLE_TABS));
 		tabs.setLayoutData(gd);
 		tabs.setBorderVisible(true);
 		tabs.setFont(parent.getFont());
 		return tabs;
 	}
+
 	/**
-	 * This method allows us to open the preference dialog on the specific page, in this case the perspective page
-	 * @param id the id of pref page to show
-	 * @param page the actual page to show
-	 * Copied from org.eclipse.debug.internal.ui.SWTUtil
+	 * This method allows us to open the preference dialog on the specific page,
+	 * in this case the perspective page
+	 * 
+	 * @param id
+	 *            the id of pref page to show
+	 * @param page
+	 *            the actual page to show Copied from
+	 *            org.eclipse.debug.internal.ui.SWTUtil
 	 */
 	public static void showPreferencePage(String id, IPreferencePage page) {
 		final IPreferenceNode targetNode = new PreferenceNode(id, page);
 		PreferenceManager manager = new PreferenceManager();
 		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(DebugUIPlugin.getShell(), manager);
-		BusyIndicator.showWhile(DebugUIPlugin.getStandardDisplay(), new Runnable() {
-			public void run() {
-				dialog.create();
-				dialog.setMessage(targetNode.getLabelText());
-				dialog.open();
-			}
-		});		
+		final PreferenceDialog dialog = new PreferenceDialog(DebugUIPlugin
+				.getShell(), manager);
+		BusyIndicator.showWhile(DebugUIPlugin.getStandardDisplay(),
+				new Runnable() {
+					public void run() {
+						dialog.create();
+						dialog.setMessage(targetNode.getLabelText());
+						dialog.open();
+					}
+				});
 	}
-	
+
 	/**
 	 * Returns a width hint for a button control.
 	 */
 	public static int getButtonWidthHint(Button button) {
 		button.setFont(JFaceResources.getDialogFont());
-		PixelConverter converter= new PixelConverter(button);
-		int widthHint= converter.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
-		return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
+		PixelConverter converter = new PixelConverter(button);
+		int widthHint = converter
+				.convertHorizontalDLUsToPixels(IDialogConstants.BUTTON_WIDTH);
+		return Math.max(widthHint, button.computeSize(SWT.DEFAULT, SWT.DEFAULT,
+				true).x);
 	}
-	
+
 	/**
-	 * Sets width and height hint for the button control.
-	 * <b>Note:</b> This is a NOP if the button's layout data is not
-	 * an instance of <code>GridData</code>.
+	 * Sets width and height hint for the button control. <b>Note:</b> This is a
+	 * NOP if the button's layout data is not an instance of
+	 * <code>GridData</code>.
 	 * 
-	 * @param	the button for which to set the dimension hint
-	 */		
+	 * @param the
+	 *            button for which to set the dimension hint
+	 */
 	public static void setButtonDimensionHint(Button button) {
 		Assert.isNotNull(button);
-		Object gd= button.getLayoutData();
+		Object gd = button.getLayoutData();
 		if (gd instanceof GridData) {
-			((GridData)gd).widthHint= getButtonWidthHint(button);	
-			((GridData)gd).horizontalAlignment = GridData.FILL;	 
+			((GridData) gd).widthHint = getButtonWidthHint(button);
+			((GridData) gd).horizontalAlignment = GridData.FILL;
 		}
-	}		
-	
-	
+	}
+
 	/**
-	 * Creates and returns a new push button with the given
-	 * label and/or image.
+	 * Creates and returns a new push button with the given label and/or image.
 	 * 
-	 * @param parent parent control
-	 * @param label button label or <code>null</code>
-	 * @param image image of <code>null</code>
+	 * @param parent
+	 *            parent control
+	 * @param label
+	 *            button label or <code>null</code>
+	 * @param image
+	 *            image of <code>null</code>
 	 * 
 	 * @return a new push button
 	 */
-	public static Button createPushButton(Composite parent, String label, Image image) {
+	public static Button createPushButton(Composite parent, String label,
+			Image image) {
 		Button button = new Button(parent, SWT.PUSH);
 		button.setFont(parent.getFont());
 		if (image != null) {
@@ -164,17 +182,18 @@ public class SWTUtil {
 			button.setText(label);
 		}
 		GridData gd = new GridData();
-		button.setLayoutData(gd);	
+		button.setLayoutData(gd);
 		SWTUtil.setButtonDimensionHint(button);
-		return button;	
-	}	
+		return button;
+	}
 
 	/**
-	 * Creates and returns a new radio button with the given
-	 * label.
+	 * Creates and returns a new radio button with the given label.
 	 * 
-	 * @param parent parent control
-	 * @param label button label or <code>null</code>
+	 * @param parent
+	 *            parent control
+	 * @param label
+	 *            button label or <code>null</code>
 	 * 
 	 * @return a new radio button
 	 */
@@ -185,16 +204,20 @@ public class SWTUtil {
 			button.setText(label);
 		}
 		GridData gd = new GridData();
-		button.setLayoutData(gd);	
+		button.setLayoutData(gd);
 		SWTUtil.setButtonDimensionHint(button);
-		return button;	
-	}	
-	
+		return button;
+	}
+
 	/**
 	 * Creates a new label widget
-	 * @param parent the parent composite to add this label widget to
-	 * @param text the text for the label
-	 * @param hspan the horizontal span to take up in the parent composite
+	 * 
+	 * @param parent
+	 *            the parent composite to add this label widget to
+	 * @param text
+	 *            the text for the label
+	 * @param hspan
+	 *            the horizontal span to take up in the parent composite
 	 * @return the new label
 	 * @since 3.2
 	 * 
@@ -208,43 +231,53 @@ public class SWTUtil {
 		l.setLayoutData(gd);
 		return l;
 	}
-	
+
 	/**
-	 * Creates a new text widget 
-	 * @param parent the parent composite to add this text widget to
-	 * @param hspan the horizontal span to take up on the parent composite
+	 * Creates a new text widget
+	 * 
+	 * @param parent
+	 *            the parent composite to add this text widget to
+	 * @param hspan
+	 *            the horizontal span to take up on the parent composite
 	 * @return the new text widget
 	 * @since 3.2
 	 * 
 	 */
 	public static Text createSingleText(Composite parent, int hspan) {
-    	Text t = new Text(parent, SWT.SINGLE | SWT.BORDER);
-    	t.setFont(parent.getFont());
-    	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-    	gd.horizontalSpan = hspan;
-    	t.setLayoutData(gd);
-    	return t;
-    }
-	
+		Text t = new Text(parent, SWT.SINGLE | SWT.BORDER);
+		t.setFont(parent.getFont());
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = hspan;
+		t.setLayoutData(gd);
+		return t;
+	}
+
 	/**
 	 * Creates a Group widget
-	 * @param parent the parent composite to add this group to
-	 * @param text the text for the heading of the group
-	 * @param columns the number of columns within the group
-	 * @param hspan the horizontal span the group should take up on the parent
-	 * @param fill the style for how this composite should fill into its parent
+	 * 
+	 * @param parent
+	 *            the parent composite to add this group to
+	 * @param text
+	 *            the text for the heading of the group
+	 * @param columns
+	 *            the number of columns within the group
+	 * @param hspan
+	 *            the horizontal span the group should take up on the parent
+	 * @param fill
+	 *            the style for how this composite should fill into its parent
 	 * @return the new group
 	 * @since 3.2
 	 * 
 	 */
-	public static Group createGroup(Composite parent, String text, int columns, int hspan, int fill) {
-    	Group g = new Group(parent, SWT.NONE);
-    	g.setLayout(new GridLayout(columns, false));
-    	g.setText(text);
-    	g.setFont(parent.getFont());
-    	GridData gd = new GridData(fill);
+	public static Group createGroup(Composite parent, String text, int columns,
+			int hspan, int fill) {
+		Group g = new Group(parent, SWT.NONE);
+		g.setLayout(new GridLayout(columns, false));
+		g.setText(text);
+		g.setFont(parent.getFont());
+		GridData gd = new GridData(fill);
 		gd.horizontalSpan = hspan;
-    	g.setLayoutData(gd);
-    	return g;
-    }
+		g.setLayoutData(gd);
+		return g;
+	}
 }

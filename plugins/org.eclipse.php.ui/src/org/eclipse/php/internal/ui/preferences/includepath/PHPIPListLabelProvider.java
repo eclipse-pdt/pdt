@@ -29,12 +29,15 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 	protected ImageDescriptor getCPListElementBaseImage(BPListElement cpentry) {
 
 		if (cpentry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-			return DLTKPluginImages.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY);
+			return DLTKPluginImages
+					.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY);
 		} else if (cpentry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-			//handling Folder special case - need to decide if it's in the build path or not.
-			ImageDescriptor folderBaseImage = getFolderBaseImage(cpentry.getResource());
-			if(null != folderBaseImage)
-				return folderBaseImage ;
+			// handling Folder special case - need to decide if it's in the
+			// build path or not.
+			ImageDescriptor folderBaseImage = getFolderBaseImage(cpentry
+					.getResource());
+			if (null != folderBaseImage)
+				return folderBaseImage;
 		}
 		return super.getCPListElementBaseImage(cpentry);
 
@@ -46,9 +49,9 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 		if (null != modelElement) {
 			if (modelElement instanceof IScriptFolder)
 				return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;
-		}else{
-			return PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
-		        ISharedImages.IMG_OBJ_FOLDER); 
+		} else {
+			return PlatformUI.getWorkbench().getSharedImages()
+					.getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER);
 		}
 		return null;
 	}

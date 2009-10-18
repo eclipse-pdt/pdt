@@ -82,7 +82,7 @@ public abstract class OptionsConfigurationBlock {
 				}
 			}
 			return fValues.length - 1; // assume the last option is the least
-										// severe
+			// severe
 		}
 	}
 
@@ -111,7 +111,8 @@ public abstract class OptionsConfigurationBlock {
 	public boolean hasChanges = false;
 
 	private Map fDisabledProjectSettings; // null when project specific settings
-											// are turned off
+
+	// are turned off
 
 	public OptionsConfigurationBlock(IStatusChangeListener context,
 			IProject project, Key[] allKeys,
@@ -426,7 +427,7 @@ public abstract class OptionsConfigurationBlock {
 					.get(i);
 			if (settings == null) {
 				excomposite.setExpanded(i == 0); // only expand the first node
-													// by default
+				// by default
 			} else {
 				excomposite.setExpanded(settings.getBoolean(SETTINGS_EXPANDED
 						+ String.valueOf(i)));
@@ -586,8 +587,8 @@ public abstract class OptionsConfigurationBlock {
 							false, fManager);
 					fDisabledProjectSettings.put(curr, oldSetting);
 					curr.setStoredValue(fLookupOrder[0], null, fManager); // clear
-																			// project
-																			// settings
+					// project
+					// settings
 				}
 			}
 		}

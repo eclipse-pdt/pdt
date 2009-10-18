@@ -129,14 +129,14 @@ public class EditorUtility {
 				if (lineNumber >= 0) {
 					org.eclipse.dltk.internal.ui.editor.EditorUtility
 							.revealInEditor(editorPart, lineNumber - 1); // XXX:
-																			// look
-																			// why
-																			// we
-																			// have
-																			// to
-																			// provide
-																			// lineNumber
-																			// -1
+					// look
+					// why
+					// we
+					// have
+					// to
+					// provide
+					// lineNumber
+					// -1
 				}
 				return editorPart;
 

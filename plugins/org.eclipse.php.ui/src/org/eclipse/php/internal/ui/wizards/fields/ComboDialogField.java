@@ -84,12 +84,14 @@ public class ComboDialogField extends DialogField {
 		return true;
 	}
 
-	// ------- ui creation			
+	// ------- ui creation
 
 	/**
 	 * Creates or returns the created combo control.
-	 * @param parent The parent composite or <code>null</code> when the widget has
-	 * already been created.
+	 * 
+	 * @param parent
+	 *            The parent composite or <code>null</code> when the widget has
+	 *            already been created.
 	 */
 	public Combo getComboControl(Composite parent) {
 		if (fComboControl == null) {
@@ -153,7 +155,7 @@ public class ComboDialogField extends DialogField {
 		}
 	}
 
-	// ------ text access 
+	// ------ text access
 
 	/**
 	 * Gets the combo items.
@@ -241,8 +243,11 @@ public class ComboDialogField extends DialogField {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField#refresh()
 	 */
 	public void refresh() {
 		super.refresh();

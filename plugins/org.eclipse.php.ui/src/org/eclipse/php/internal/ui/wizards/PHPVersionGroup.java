@@ -55,15 +55,20 @@ public class PHPVersionGroup implements SelectionListener {
 		fGroup.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		fGroup.setLayoutData(data);
-		fGroup.setText(PHPUIMessages.getString("PHPVersionGroup_OptionBlockTitle"));
+		fGroup.setText(PHPUIMessages
+				.getString("PHPVersionGroup_OptionBlockTitle"));
 
 		Composite checkLinkComposite = new Composite(fGroup, SWT.NONE);
-		checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+				true, false));
 		checkLinkComposite.setLayout(new GridLayout(2, false));
 
-		fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK | SWT.RIGHT);
-		fEnableProjectSettings.setText(PHPUIMessages.getString("PHPVersionGroup_EnableProjectSettings"));
-		fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+		fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK
+				| SWT.RIGHT);
+		fEnableProjectSettings.setText(PHPUIMessages
+				.getString("PHPVersionGroup_EnableProjectSettings"));
+		fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING,
+				SWT.CENTER, false, false));
 
 		fEnableProjectSettings.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -73,15 +78,19 @@ public class PHPVersionGroup implements SelectionListener {
 
 		fPreferenceLink = new Link(checkLinkComposite, SWT.NONE);
 		fPreferenceLink.setFont(fGroup.getFont());
-		fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
-		fPreferenceLink.setText(PHPUIMessages.getString("PHPVersionGroup_ConfigWorkspaceSettings"));
+		fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
+				true, false));
+		fPreferenceLink.setText(PHPUIMessages
+				.getString("PHPVersionGroup_ConfigWorkspaceSettings"));
 		fPreferenceLink.addSelectionListener(this);
 
 		Composite versionComposite = new Composite(fGroup, SWT.NONE);
-		versionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		versionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false));
 		versionComposite.setLayout(new GridLayout(2, false));
 
-		fConfigurationBlock = createConfigurationBlock(getNewStatusChangedListener(), getProject(), null);
+		fConfigurationBlock = createConfigurationBlock(
+				getNewStatusChangedListener(), getProject(), null);
 		fConfigurationBlock.createContents(versionComposite);
 		fConfigurationBlock.setEnabled(false);
 	}
@@ -102,14 +111,16 @@ public class PHPVersionGroup implements SelectionListener {
 	public void widgetDefaultSelected(SelectionEvent e) {
 		String prefID = PHPInterpreterPreferencePage.PREF_ID;
 		Map data = null;
-		PreferencesUtil.createPreferenceDialogOn(fPage.getShell(), prefID, new String[] { prefID }, data).open();
+		PreferencesUtil.createPreferenceDialogOn(fPage.getShell(), prefID,
+				new String[] { prefID }, data).open();
 		if (!fEnableProjectSettings.getSelection()) {
 			fConfigurationBlock.performRevert();
 		}
 	}
 
 	protected IProject getProject() {
-		return ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project"); //$NON-NLS-1$
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(
+				"DUMMY______________Project"); //$NON-NLS-1$
 	}
 
 	protected IStatusChangeListener getNewStatusChangedListener() {
@@ -119,7 +130,7 @@ public class PHPVersionGroup implements SelectionListener {
 		};
 	}
 
-	//FIXME : remove this redundant method
+	// FIXME : remove this redundant method
 	public void setPropertiesInDataModel(IDataModel dataModel) {
 		if (fEnableProjectSettings.getSelection()) {
 			PHPVersion version = fConfigurationBlock.getPHPVersionValue();
@@ -128,19 +139,22 @@ public class PHPVersionGroup implements SelectionListener {
 			dataModel.setStringProperty(Keys.PHP_VERSION, version.getAlias());
 		}
 	}
-	
+
 	public void setPropertiesInDataModel(IProject project) {
 		if (fEnableProjectSettings.getSelection()) {
 			PHPVersion version = fConfigurationBlock.getPHPVersionValue();
 			boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
 
-//FIXME : update project with values
-//			dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS, useASPTags);
-//			dataModel.setStringProperty(Keys.PHP_VERSION, version);
+			// FIXME : update project with values
+			// dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS,
+			// useASPTags);
+			// dataModel.setStringProperty(Keys.PHP_VERSION, version);
 		}
 	}
 
-	protected PHPVersionConfigurationBlock createConfigurationBlock(IStatusChangeListener listener, IProject project, IWorkbenchPreferenceContainer container) {
+	protected PHPVersionConfigurationBlock createConfigurationBlock(
+			IStatusChangeListener listener, IProject project,
+			IWorkbenchPreferenceContainer container) {
 		return new PHPVersionConfigurationBlock(listener, project, container);
 	}
 

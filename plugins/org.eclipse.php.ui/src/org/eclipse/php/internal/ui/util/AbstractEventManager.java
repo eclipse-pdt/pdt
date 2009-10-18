@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-
 import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;

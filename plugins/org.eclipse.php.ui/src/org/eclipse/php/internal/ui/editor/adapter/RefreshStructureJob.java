@@ -35,9 +35,10 @@ import org.w3c.dom.Node;
  * triggered by model changes, and the model may be visible in more than one
  * viewer.
  * 
- * NOTICE: This class is exactly the same as org.eclipse.wst.xml.ui.internal.contentoutline.RefreshStructureJob
- * The difference is in the function doRefresh - the explanation is provided there.
- *  
+ * NOTICE: This class is exactly the same as
+ * org.eclipse.wst.xml.ui.internal.contentoutline.RefreshStructureJob The
+ * difference is in the function doRefresh - the explanation is provided there.
+ * 
  * @author guy.g
  */
 class RefreshStructureJob extends Job {
@@ -46,7 +47,8 @@ class RefreshStructureJob extends Job {
 	static final boolean DEBUG;
 	private static final long UPDATE_DELAY = 250;
 	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/refreshStructure"); //$NON-NLS-1$
+		String value = Platform
+				.getDebugOption("org.eclipse.wst.sse.ui/debug/refreshStructure"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	/** List of refresh requests (Nodes) */
@@ -66,8 +68,8 @@ class RefreshStructureJob extends Job {
 		if (size > 0) {
 			for (int i = 0; i < size; i++) {
 				/*
-				 * If we already have a request which contains the new
-				 * request, discard the new request
+				 * If we already have a request which contains the new request,
+				 * discard the new request
 				 */
 				Node node2 = (Node) fRequests.get(i);
 				if (contains(node2, node))
@@ -95,14 +97,17 @@ class RefreshStructureJob extends Job {
 	/**
 	 * @param root
 	 * @param possible
-	 * @return if the root is parent of possible, return true, otherwise
-	 *         return false
+	 * @return if the root is parent of possible, return true, otherwise return
+	 *         false
 	 */
 	private boolean contains(Node root, Node possible) {
 		if (DEBUG) {
-			System.out.println("=============================================================================================================="); //$NON-NLS-1$
-			System.out.println("recursive call w/ root: " + root.getNodeName() + " and possible: " + possible); //$NON-NLS-1$ //$NON-NLS-2$
-			System.out.println("--------------------------------------------------------------------------------------------------------------"); //$NON-NLS-1$
+			System.out
+					.println("=============================================================================================================="); //$NON-NLS-1$
+			System.out
+					.println("recursive call w/ root: " + root.getNodeName() + " and possible: " + possible); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out
+					.println("--------------------------------------------------------------------------------------------------------------"); //$NON-NLS-1$
 		}
 
 		// the following checks are important
@@ -117,7 +122,8 @@ class RefreshStructureJob extends Job {
 		// nothing can be parent of Document node
 		if (possible instanceof Document) {
 			if (DEBUG)
-				System.out.println("returning false: possible is Document node"); //$NON-NLS-1$
+				System.out
+						.println("returning false: possible is Document node"); //$NON-NLS-1$
 			return false;
 		}
 		// document contains everything
@@ -132,11 +138,13 @@ class RefreshStructureJob extends Job {
 		// loop siblings
 		while (current != null) {
 			if (DEBUG)
-				System.out.println("   -> iterating sibling (" + current.getNodeName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out
+						.println("   -> iterating sibling (" + current.getNodeName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			// found it
 			if (possible.equals(current)) {
 				if (DEBUG)
-					System.out.println("   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out
+							.println("   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
 				return true;
 			}
 			// drop one level deeper if necessary
@@ -152,10 +160,11 @@ class RefreshStructureJob extends Job {
 	/**
 	 * Refresh must be on UI thread because it's on a SWT widget.
 	 * 
-	 * The deferance in the functionallty is this: 
-	 * If we are refreshing the outline when its in PHPOutlineContentProvider.MODE_PHP mode then
-	 * it doesn't metter which node was changed (unless is not php node) - we need to refresh the whole tree.
-	 * otherwise - (using the default behaivor) refreshing only the relevent items in the tree. 
+	 * The deferance in the functionallty is this: If we are refreshing the
+	 * outline when its in PHPOutlineContentProvider.MODE_PHP mode then it
+	 * doesn't metter which node was changed (unless is not php node) - we need
+	 * to refresh the whole tree. otherwise - (using the default behaivor)
+	 * refreshing only the relevent items in the tree.
 	 * 
 	 * @param node
 	 */
@@ -164,21 +173,52 @@ class RefreshStructureJob extends Job {
 		display.asyncExec(new Runnable() {
 			public void run() {
 				if (DEBUG)
-					System.out.println("refresh on: [" + node.getNodeName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out
+							.println("refresh on: [" + node.getNodeName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
 				for (int i = 0; i < viewers.length; i++) {
 					if (!viewers[i].getControl().isDisposed()) {
 						StructuredViewer viewer = viewers[i];
-						if (node.getNodeType() == Node.DOCUMENT_NODE || // this was the original condition
-							((node.getNodeType() == Node.ELEMENT_NODE) && (((IDOMNode) node).getFirstStructuredDocumentRegion().getType() == PHPRegionTypes.PHP_CONTENT) && (viewer.getContentProvider() instanceof PHPOutlineContentProvider) /*&& (((PHPOutlineContentProvider) viewer
-								.getContentProvider()).getMode() == PHPOutlineContentProvider.MODE_PHP)*/)) {
+						if (node.getNodeType() == Node.DOCUMENT_NODE || // this
+																		// was
+																		// the
+																		// original
+																		// condition
+								((node.getNodeType() == Node.ELEMENT_NODE)
+										&& (((IDOMNode) node)
+												.getFirstStructuredDocumentRegion()
+												.getType() == PHPRegionTypes.PHP_CONTENT) && (viewer
+										.getContentProvider() instanceof PHPOutlineContentProvider) /*
+																									 * &&
+																									 * (
+																									 * (
+																									 * (
+																									 * PHPOutlineContentProvider
+																									 * )
+																									 * viewer
+																									 * .
+																									 * getContentProvider
+																									 * (
+																									 * )
+																									 * )
+																									 * .
+																									 * getMode
+																									 * (
+																									 * )
+																									 * ==
+																									 * PHPOutlineContentProvider
+																									 * .
+																									 * MODE_PHP
+																									 * )
+																									 */)) {
 							viewers[i].refresh(true);
 						} else {
 							viewers[i].refresh(node, true);
 						}
 					} else {
 						if (DEBUG)
-							System.out.println("   !!! skipped refreshing disposed viewer: " + viewers[i]); //$NON-NLS-1$
+							System.out
+									.println("   !!! skipped refreshing disposed viewer: " + viewers[i]); //$NON-NLS-1$
 					}
 				}
 			}
@@ -186,17 +226,19 @@ class RefreshStructureJob extends Job {
 	}
 
 	/**
-	 * This method also synchronized because it accesses the fRequests queue
-	 * and fViewers list
+	 * This method also synchronized because it accesses the fRequests queue and
+	 * fViewers list
 	 * 
-	 * @return an array containing and array of the currently requested Nodes
-	 *         to refresh and the viewers in which to refresh them
+	 * @return an array containing and array of the currently requested Nodes to
+	 *         refresh and the viewers in which to refresh them
 	 */
 	private synchronized Object[] getRequests() {
-		Node[] toRefresh = (Node[]) fRequests.toArray(new Node[fRequests.size()]);
+		Node[] toRefresh = (Node[]) fRequests
+				.toArray(new Node[fRequests.size()]);
 		fRequests.clear();
 
-		StructuredViewer[] viewers = (StructuredViewer[]) fViewers.toArray(new StructuredViewer[fViewers.size()]);
+		StructuredViewer[] viewers = (StructuredViewer[]) fViewers
+				.toArray(new StructuredViewer[fViewers.size()]);
 		fViewers.clear();
 
 		return new Object[] { toRefresh, viewers };

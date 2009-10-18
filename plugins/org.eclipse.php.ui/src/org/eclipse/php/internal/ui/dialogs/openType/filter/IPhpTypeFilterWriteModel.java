@@ -13,6 +13,8 @@ package org.eclipse.php.internal.ui.dialogs.openType.filter;
 
 public interface IPhpTypeFilterWriteModel {
 	public void setSelectClasses(boolean select);
+
 	public void setSelectFunctions(boolean select);
+
 	public void setSelectConstants(boolean select);
 }

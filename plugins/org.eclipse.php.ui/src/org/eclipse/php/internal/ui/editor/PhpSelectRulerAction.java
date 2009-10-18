@@ -21,13 +21,17 @@ import org.eclipse.ui.texteditor.AbstractRulerActionDelegate;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
- * PHP select ruler action that generates a PhpSelectAnnotationRulerAction for the annotations selection.
+ * PHP select ruler action that generates a PhpSelectAnnotationRulerAction for
+ * the annotations selection.
  * 
  * @author Shalom
  */
 public class PhpSelectRulerAction extends AbstractRulerActionDelegate {
 
-	protected IAction createAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
-		return new PhpSelectAnnotationRulerAction(PHPUIMessages.getResourceBundle(), "PhpSelectAnnotationRulerAction.", editor, rulerInfo); //$NON-NLS-1$
+	protected IAction createAction(ITextEditor editor,
+			IVerticalRulerInfo rulerInfo) {
+		return new PhpSelectAnnotationRulerAction(PHPUIMessages
+				.getResourceBundle(),
+				"PhpSelectAnnotationRulerAction.", editor, rulerInfo); //$NON-NLS-1$
 	}
 }

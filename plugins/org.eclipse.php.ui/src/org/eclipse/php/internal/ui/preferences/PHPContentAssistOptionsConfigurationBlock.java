@@ -25,9 +25,10 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * 
  * @author guy.g
- *
+ * 
  */
-public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPContentAssistPreferencePageBlock {
+public class PHPContentAssistOptionsConfigurationBlock extends
+		AbstractPHPContentAssistPreferencePageBlock {
 
 	protected Button completionInsertRadioButton;
 	protected Button completionOverrideRadioButton;
@@ -35,7 +36,8 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 	protected Button showVariableFromOtherFilesCheckBox;
 
 	public void setCompositeAddon(Composite parent) {
-		Composite composite = createSubsection(parent, PHPUIMessages.getString("CodeAssistPreferencePage_optionsSectionLabel"));
+		Composite composite = createSubsection(parent, PHPUIMessages
+				.getString("CodeAssistPreferencePage_optionsSectionLabel"));
 		Composite radioButtonsComposite = new Composite(composite, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.marginWidth = 0;
@@ -45,35 +47,49 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 		radioButtonsComposite.setLayout(gridLayout);
 		radioButtonsComposite.setLayoutData(gridData);
 
-		completionInsertRadioButton = new Button(radioButtonsComposite, SWT.RADIO | SWT.LEFT);
-		completionInsertRadioButton.setText(PHPUIMessages.getString("CodeAssistPreferencePage_completionInserts"));
+		completionInsertRadioButton = new Button(radioButtonsComposite,
+				SWT.RADIO | SWT.LEFT);
+		completionInsertRadioButton.setText(PHPUIMessages
+				.getString("CodeAssistPreferencePage_completionInserts"));
 		completionInsertRadioButton.setLayoutData(new GridData());
-		completionInsertRadioButton.setData(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
+		completionInsertRadioButton
+				.setData(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
 		add(completionInsertRadioButton);
 
-		completionOverrideRadioButton = new Button(radioButtonsComposite, SWT.RADIO | SWT.LEFT);
-		completionOverrideRadioButton.setText(PHPUIMessages.getString("CodeAssistPreferencePage_completionOverwrites"));
+		completionOverrideRadioButton = new Button(radioButtonsComposite,
+				SWT.RADIO | SWT.LEFT);
+		completionOverrideRadioButton.setText(PHPUIMessages
+				.getString("CodeAssistPreferencePage_completionOverwrites"));
 		completionOverrideRadioButton.setLayoutData(new GridData());
 
 		add(completionOverrideRadioButton);
 
-		insertSingleproposalsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_insertSignleProposals"), PHPCoreConstants.CODEASSIST_AUTOINSERT, 0);
-		showVariableFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showVariablesFromOtherFiles"), PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
+		insertSingleproposalsCheckBox = addCheckBox(composite, PHPUIMessages
+				.getString("CodeAssistPreferencePage_insertSignleProposals"),
+				PHPCoreConstants.CODEASSIST_AUTOINSERT, 0);
+		showVariableFromOtherFilesCheckBox = addCheckBox(
+				composite,
+				PHPUIMessages
+						.getString("CodeAssistPreferencePage_showVariablesFromOtherFiles"),
+				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
 	}
 
 	protected void initializeValues() {
 		super.initializeValues();
-		completionOverrideRadioButton.setSelection(!completionInsertRadioButton.getSelection());
+		completionOverrideRadioButton.setSelection(!completionInsertRadioButton
+				.getSelection());
 	}
 
 	@Override
 	protected void restoreDefaultButtonValues() {
 		super.restoreDefaultButtonValues();
-		completionOverrideRadioButton.setSelection(!completionInsertRadioButton.getSelection());
+		completionOverrideRadioButton.setSelection(!completionInsertRadioButton
+				.getSelection());
 	}
-	
+
 	protected IPreferenceStore getPreferenceStore() {
-		return new PreferencesAdapter(PHPCorePlugin.getDefault().getPluginPreferences());
+		return new PreferencesAdapter(PHPCorePlugin.getDefault()
+				.getPluginPreferences());
 	}
 
 	protected void storeValues() {

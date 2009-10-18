@@ -22,21 +22,21 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
  * An implementation of IDLTKUILanguageToolkit for PHP
  */
 public class PHPUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
-	
+
 	private static PHPUILanguageToolkit sToolkit = new PHPUILanguageToolkit();
 
 	public static IDLTKUILanguageToolkit getInstance() {
 		return sToolkit;
 	}
-	
+
 	public IDLTKLanguageToolkit getCoreToolkit() {
 		return PHPLanguageToolkit.getDefault();
 	}
-	
+
 	public IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
-	
+
 	public String getPartitioningId() {
 		return PHPPartitionTypes.PHP_DEFAULT;
 	}

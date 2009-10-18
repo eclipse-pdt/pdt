@@ -19,8 +19,9 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.dltk.core.*;
-
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.ICopyPolicy;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.IMovePolicy;
@@ -115,9 +116,8 @@ public class PHPSelectionTransferDropAdapter extends
 		if (starter != null)
 			starter.run(this.getViewer().getControl().getShell());
 	}
-	
-	
-	public  IResource[] getResources(IModelElement[] elements) {
+
+	public IResource[] getResources(IModelElement[] elements) {
 		List resultArray = new ArrayList();
 		for (int i = 0; i < elements.length; i++) {
 			IResource res = getResource(elements[i]);
@@ -128,14 +128,13 @@ public class PHPSelectionTransferDropAdapter extends
 		return (IResource[]) resultArray.toArray(new IResource[resultArray
 				.size()]);
 	}
-	
-	public  IResource getResource(IModelElement element) {
+
+	public IResource getResource(IModelElement element) {
 		if (element instanceof ISourceModule)
 			return ((ISourceModule) element).getPrimary().getResource();
 		else
 			return element.getResource();
 	}
-
 
 	private List fElements;
 	private ScriptMoveProcessor fMoveProcessor;
@@ -224,14 +223,15 @@ public class PHPSelectionTransferDropAdapter extends
 			if (contains(javaElements, target))
 				return DND.DROP_NONE;
 
-			
 			if (contains(resources, target))
 				return DND.DROP_NONE;
 		}
 
-		if(target instanceof IModelElement){
-			IResource targetResource = ReorgUtils.getResource((IModelElement) target);
-			if((targetResource instanceof IContainer)&& isParentOfAny((IContainer) targetResource,resources)){
+		if (target instanceof IModelElement) {
+			IResource targetResource = ReorgUtils
+					.getResource((IModelElement) target);
+			if ((targetResource instanceof IContainer)
+					&& isParentOfAny((IContainer) targetResource, resources)) {
 				return DND.DROP_NONE;
 			}
 
@@ -254,12 +254,10 @@ public class PHPSelectionTransferDropAdapter extends
 
 		return DND.DROP_NONE;
 	}
-	
-	private static boolean isParentOfAny(IContainer container,
-			IResource[] roots) {
+
+	private static boolean isParentOfAny(IContainer container, IResource[] roots) {
 		for (int i = 0; i < roots.length; i++) {
-			if (ReorgUtils.isParentInWorkspaceOrOnDisk(roots[i],
-					container))
+			if (ReorgUtils.isParentInWorkspaceOrOnDisk(roots[i], container))
 				return true;
 		}
 		return false;
@@ -269,11 +267,11 @@ public class PHPSelectionTransferDropAdapter extends
 		List resources = new ArrayList(elements.size());
 		for (Iterator iter = elements.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element instanceof IResource){
+			if (element instanceof IResource) {
 				resources.add(element);
 			}
-			if(element instanceof IModelElement){
-				resources.add(((IModelElement)element).getResource());
+			if (element instanceof IModelElement) {
+				resources.add(((IModelElement) element).getResource());
 			}
 		}
 		return (IResource[]) resources.toArray(new IResource[resources.size()]);
@@ -327,8 +325,9 @@ public class PHPSelectionTransferDropAdapter extends
 
 	private int handleValidateMove(Object target) throws ModelException {
 		if (fMoveProcessor == null) {
-			IMovePolicy policy = ReorgPolicyFactory.createMovePolicy(getResources(fElements), ReorgUtils
-					.getModelElements(fElements));
+			IMovePolicy policy = ReorgPolicyFactory.createMovePolicy(
+					getResources(fElements), ReorgUtils
+							.getModelElements(fElements));
 			if (policy.canEnable())
 				fMoveProcessor = new ScriptMoveProcessor(policy);
 		}

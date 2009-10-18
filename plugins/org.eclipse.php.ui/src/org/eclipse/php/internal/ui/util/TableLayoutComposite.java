@@ -28,14 +28,14 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
- * A special composite to layout columns inside a table. The composite is needed since we have
- * to layout the columns "before" the actual table gets layouted. Hence we can't use a normal
- * layout manager.
+ * A special composite to layout columns inside a table. The composite is needed
+ * since we have to layout the columns "before" the actual table gets layouted.
+ * Hence we can't use a normal layout manager.
  */
 public class TableLayoutComposite extends Composite {
 
 	/**
-	 * The number of extra pixels taken as horizontal trim by the table column. 
+	 * The number of extra pixels taken as horizontal trim by the table column.
 	 * To ensure there are N pixels available for the content of the column,
 	 * assign N+COLUMN_TRIM for the column width.
 	 * 
@@ -69,14 +69,16 @@ public class TableLayoutComposite extends Composite {
 
 	/**
 	 * Adds a new column of data to this table layout.
-	 *
-	 * @param data the column layout data
+	 * 
+	 * @param data
+	 *            the column layout data
 	 */
 	public void addColumnData(ColumnLayoutData data) {
 		columns.add(data);
 	}
 
-	//---- Helpers -------------------------------------------------------------------------------------
+	// ---- Helpers
+	// -------------------------------------------------------------------------------------
 
 	private Point computeTableSize(Table table) {
 		Point result = table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
@@ -103,7 +105,8 @@ public class TableLayoutComposite extends Composite {
 		return result;
 	}
 
-	private void layoutTable(Table table, int width, Rectangle area, boolean increase) {
+	private void layoutTable(Table table, int width, Rectangle area,
+			boolean increase) {
 		// XXX: Layout is being called with an invalid value the first time
 		// it is being called on Linux. This method resets the
 		// Layout to null so we make sure we run it only when
@@ -132,8 +135,10 @@ public class TableLayoutComposite extends Composite {
 			} else if (col instanceof ColumnWeightData) {
 				ColumnWeightData cw = (ColumnWeightData) col;
 				numberOfWeightColumns++;
-				// first time, use the weight specified by the column data, otherwise use the actual width as the weight
-				// int weight = firstTime ? cw.weight : tableColumns[i].getWidth();
+				// first time, use the weight specified by the column data,
+				// otherwise use the actual width as the weight
+				// int weight = firstTime ? cw.weight :
+				// tableColumns[i].getWidth();
 				int weight = cw.weight;
 				totalWeight += weight;
 			} else {
@@ -151,9 +156,11 @@ public class TableLayoutComposite extends Composite {
 				if (col instanceof ColumnWeightData) {
 					ColumnWeightData cw = (ColumnWeightData) col;
 					// calculate weight as above
-					// int weight = firstTime ? cw.weight : tableColumns[i].getWidth();
+					// int weight = firstTime ? cw.weight :
+					// tableColumns[i].getWidth();
 					int weight = cw.weight;
-					int pixels = totalWeight == 0 ? 0 : weight * rest / totalWeight;
+					int pixels = totalWeight == 0 ? 0 : weight * rest
+							/ totalWeight;
 					if (pixels < cw.minimumWidth)
 						pixels = cw.minimumWidth;
 					totalDistributed += pixels;

@@ -142,7 +142,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 
 		createOptionsGroup(composite);
 
-		createLabel(composite,
+		createLabel(
+				composite,
 				PharPackagerMessages.JarManifestWizardPage_manifestSource_label,
 				false);
 		createManifestGroup(composite);

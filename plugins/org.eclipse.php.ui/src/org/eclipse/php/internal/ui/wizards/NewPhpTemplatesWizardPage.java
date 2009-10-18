@@ -20,10 +20,14 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.templates.PhpNewFileTemplateContextType;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 
-public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage {
-	
+public class NewPhpTemplatesWizardPage extends
+		NewGenericFileTemplatesWizardPage {
+
 	public NewPhpTemplatesWizardPage() {
-		super(PHPUIMessages.getString("newPhpFile_wizard_templatePage_title"), PHPUIMessages.getString("newPhpFile_wizard_templatePage_description"));
+		super(
+				PHPUIMessages.getString("newPhpFile_wizard_templatePage_title"),
+				PHPUIMessages
+						.getString("newPhpFile_wizard_templatePage_description"));
 	}
 
 	protected String getTemplateContextTypeId() {
@@ -31,18 +35,24 @@ public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage
 	}
 
 	protected String getUseTemplateMessage() {
-		return PHPUIMessages.getString("newPhpFile_wizard_templatePage_usePhpTemplate");
+		return PHPUIMessages
+				.getString("newPhpFile_wizard_templatePage_usePhpTemplate");
 	}
-	
+
 	protected ContextTypeRegistry getTemplatesContextTypeRegistry() {
 		return PHPUiPlugin.getDefault().getTemplateContextRegistry();
 	}
 
 	protected String getTemplatesLocationMessage() {
 		ContextTypeRegistry templateContextRegistry = getTemplatesContextTypeRegistry();
-		TemplateContextType templateContextType = templateContextRegistry.getContextType(getTemplateContextTypeId());
+		TemplateContextType templateContextType = templateContextRegistry
+				.getContextType(getTemplateContextTypeId());
 		String name = templateContextType.getName();
-		return NLS.bind(PHPUIMessages.getString("newPhpFile_wizard_templatePage_phpTemplatesLocation"), name);
+		return NLS
+				.bind(
+						PHPUIMessages
+								.getString("newPhpFile_wizard_templatePage_phpTemplatesLocation"),
+						name);
 	}
 
 	protected String getPreferencePageId() {

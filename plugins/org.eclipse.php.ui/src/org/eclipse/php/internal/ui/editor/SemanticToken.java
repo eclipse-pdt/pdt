@@ -12,11 +12,11 @@
 
 package org.eclipse.php.internal.ui.editor;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.wst.jsdt.core.dom.SimpleName;
 
 /**
  * Semantic token
@@ -30,22 +30,22 @@ public final class SemanticToken {
 	/** Binding */
 	private IBinding fBinding;
 	/** Is the binding resolved? */
-	private boolean fIsBindingResolved= false;
+	private boolean fIsBindingResolved = false;
 
 	/** AST root */
 	private Program fRoot;
-	private boolean fIsRootResolved= false;
+	private boolean fIsRootResolved = false;
 
 	/**
 	 * @return Returns the binding, can be <code>null</code>.
 	 */
 	public IBinding getBinding() {
 		if (!fIsBindingResolved) {
-			fIsBindingResolved= true;
+			fIsBindingResolved = true;
 			if (fNode != null)
-				fBinding= fNode.resolveBinding();
+				fBinding = fNode.resolveBinding();
 		}
-		
+
 		return fBinding;
 	}
 
@@ -55,9 +55,10 @@ public final class SemanticToken {
 	public Identifier getNode() {
 		return fNode;
 	}
-	
+
 	/**
-	 * @return the AST node (a <code>Boolean-, Character- or NumberLiteral</code>)
+	 * @return the AST node (a
+	 *         <code>Boolean-, Character- or NumberLiteral</code>)
 	 */
 	public Expression getLiteral() {
 		return fLiteral;
@@ -68,8 +69,8 @@ public final class SemanticToken {
 	 */
 	public Program getRoot() {
 		if (!fIsRootResolved) {
-			fIsRootResolved= true;
-			fRoot= (Program) (fNode != null ? fNode : fLiteral).getRoot();
+			fIsRootResolved = true;
+			fRoot = (Program) (fNode != null ? fNode : fLiteral).getRoot();
 		}
 
 		return fRoot;
@@ -80,12 +81,13 @@ public final class SemanticToken {
 	 * <p>
 	 * NOTE: Allowed to be used by {@link SemanticHighlightingReconciler} only.
 	 * </p>
-	 *
-	 * @param node the AST simple name
+	 * 
+	 * @param node
+	 *            the AST simple name
 	 */
 	void update(Identifier node) {
 		clear();
-		fNode= node;
+		fNode = node;
 	}
 
 	/**
@@ -93,12 +95,13 @@ public final class SemanticToken {
 	 * <p>
 	 * NOTE: Allowed to be used by {@link SemanticHighlightingReconciler} only.
 	 * </p>
-	 *
-	 * @param literal the AST literal
+	 * 
+	 * @param literal
+	 *            the AST literal
 	 */
 	void update(Expression literal) {
 		clear();
-		fLiteral= literal;
+		fLiteral = literal;
 	}
 
 	/**
@@ -108,11 +111,11 @@ public final class SemanticToken {
 	 * </p>
 	 */
 	void clear() {
-		fNode= null;
-		fLiteral= null;
-		fBinding= null;
-		fIsBindingResolved= false;
-		fRoot= null;
-		fIsRootResolved= false;
+		fNode = null;
+		fLiteral = null;
+		fBinding = null;
+		fIsBindingResolved = false;
+		fRoot = null;
+		fIsRootResolved = false;
 	}
 }

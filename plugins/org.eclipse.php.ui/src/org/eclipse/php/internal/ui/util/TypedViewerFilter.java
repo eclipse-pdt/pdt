@@ -25,7 +25,9 @@ public class TypedViewerFilter extends ViewerFilter {
 
 	/**
 	 * Creates a filter that only allows elements of gives types.
-	 * @param acceptedTypes The types of accepted elements
+	 * 
+	 * @param acceptedTypes
+	 *            The types of accepted elements
 	 */
 	public TypedViewerFilter(Class[] acceptedTypes) {
 		this(acceptedTypes, null);
@@ -34,9 +36,11 @@ public class TypedViewerFilter extends ViewerFilter {
 	/**
 	 * Creates a filter that only allows elements of gives types, but not from a
 	 * list of rejected elements.
-	 * @param acceptedTypes Accepted elements must be of this types
-	 * @param rejectedElements Element equals to the rejected elements are
-	 * filtered out
+	 * 
+	 * @param acceptedTypes
+	 *            Accepted elements must be of this types
+	 * @param rejectedElements
+	 *            Element equals to the rejected elements are filtered out
 	 */
 	public TypedViewerFilter(Class[] acceptedTypes, Class[] rejectedElements) {
 		Assert.isNotNull(acceptedTypes);
@@ -45,7 +49,8 @@ public class TypedViewerFilter extends ViewerFilter {
 	}
 
 	/**
-	 * @see ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	 * @see ViewerFilter#select(org.eclipse.jface.viewers.Viewer,
+	 *      java.lang.Object, java.lang.Object)
 	 */
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if (fRejectedElements != null) {
@@ -55,7 +60,7 @@ public class TypedViewerFilter extends ViewerFilter {
 				}
 			}
 		}
-		if(fAcceptedTypes != null) {
+		if (fAcceptedTypes != null) {
 			for (int i = 0; i < fAcceptedTypes.length; i++) {
 				if (fAcceptedTypes[i].isInstance(element)) {
 					return true;

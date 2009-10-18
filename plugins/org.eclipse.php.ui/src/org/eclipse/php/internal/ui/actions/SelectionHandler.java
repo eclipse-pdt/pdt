@@ -26,7 +26,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
- * Selection based action handler 
+ * Selection based action handler
+ * 
  * @author Roy
  */
 public abstract class SelectionHandler extends AbstractHandler {
@@ -36,13 +37,15 @@ public abstract class SelectionHandler extends AbstractHandler {
 	}
 
 	/**
-	 * Returns the current model element from the PHP editor 
+	 * Returns the current model element from the PHP editor
+	 * 
 	 * @param event
 	 * @return
 	 * @throws ModelException
 	 */
-	protected IModelElement getCurrentModelElement(ExecutionEvent event) throws ExecutionException {
-		IEditorPart editorPart = HandlerUtil.getActiveEditor(event); 
+	protected IModelElement getCurrentModelElement(ExecutionEvent event)
+			throws ExecutionException {
+		IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
 		PHPStructuredEditor textEditor = null;
 		if (editorPart instanceof PHPStructuredEditor)
 			textEditor = (PHPStructuredEditor) editorPart;
@@ -53,7 +56,8 @@ public abstract class SelectionHandler extends AbstractHandler {
 		}
 		final IModelElement modelElement = textEditor.getModelElement();
 		if (textEditor != null && modelElement != null) {
-			final ISelectionProvider selectionProvider = textEditor.getSelectionProvider();
+			final ISelectionProvider selectionProvider = textEditor
+					.getSelectionProvider();
 			final ISelection selection = selectionProvider.getSelection();
 			if (selection instanceof TextSelection) {
 				TextSelection textSelection = (TextSelection) selection;
@@ -63,7 +67,8 @@ public abstract class SelectionHandler extends AbstractHandler {
 					try {
 						return module.getElementAt(offset);
 					} catch (ModelException e) {
-						throw new ExecutionException("Error trying to resolve document's element", e); //$NON-NLS-1 
+						throw new ExecutionException(
+								"Error trying to resolve document's element", e); //$NON-NLS-1 
 					}
 				}
 			}

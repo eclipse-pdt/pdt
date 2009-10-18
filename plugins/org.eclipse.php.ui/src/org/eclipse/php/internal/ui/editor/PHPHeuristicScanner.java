@@ -26,12 +26,12 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 
 /**
- * Utility methods for heuristic based Java manipulations in an incomplete
- * Java source file.
+ * Utility methods for heuristic based Java manipulations in an incomplete Java
+ * source file.
  * 
  * <p>
- * An instance holds some internal position in the document and is therefore
- * not threadsafe.
+ * An instance holds some internal position in the document and is therefore not
+ * threadsafe.
  * </p>
  * 
  * @see Eclipse 3.0
@@ -65,8 +65,8 @@ final class PHPHeuristicScanner implements Symbols {
 	private static final char RANGLE = '>';
 
 	/**
-	 * Specifies the stop condition, upon which the <code>scanXXX</code>
-	 * methods will decide whether to keep scanning or not. This interface may
+	 * Specifies the stop condition, upon which the <code>scanXXX</code> methods
+	 * will decide whether to keep scanning or not. This interface may
 	 * implemented by clients.
 	 */
 	private static abstract class StopCondition {
@@ -84,8 +84,8 @@ final class PHPHeuristicScanner implements Symbols {
 		public abstract boolean stop(char ch, int position, boolean forward);
 
 		/**
-		 * Asks the condition to return the next position to query. The
-		 * default is to return the next/previous position.
+		 * Asks the condition to return the next position to query. The default
+		 * is to return the next/previous position.
 		 * 
 		 * @return the next position to scan
 		 */
@@ -100,7 +100,9 @@ final class PHPHeuristicScanner implements Symbols {
 	 */
 	private static class NonWhitespace extends StopCondition {
 		/*
-		 * @see org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition#stop(char)
+		 * @see
+		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
+		 * #stop(char)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
 			return !Character.isWhitespace(ch);
@@ -114,15 +116,19 @@ final class PHPHeuristicScanner implements Symbols {
 	 */
 	private final class NonWhitespaceDefaultPartition extends NonWhitespace {
 		/*
-		 * @see org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition#stop(char)
+		 * @see
+		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
+		 * #stop(char)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
-			return super.stop(ch, position, true) && isDefaultPartition(position);
+			return super.stop(ch, position, true)
+					&& isDefaultPartition(position);
 		}
 
 		/*
-		 * @see org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition#nextPosition(int,
-		 *      boolean)
+		 * @see
+		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
+		 * #nextPosition(int, boolean)
 		 */
 		public int nextPosition(int position, boolean forward) {
 			ITypedRegion partition = getPartition(position);
@@ -148,7 +154,9 @@ final class PHPHeuristicScanner implements Symbols {
 	 */
 	private static class NonJavaIdentifierPart extends StopCondition {
 		/*
-		 * @see org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition#stop(char)
+		 * @see
+		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
+		 * #stop(char)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
 			return !Character.isJavaIdentifierPart(ch);
@@ -160,17 +168,22 @@ final class PHPHeuristicScanner implements Symbols {
 	 * 
 	 * @see NonJavaIdentifierPart
 	 */
-	private final class NonJavaIdentifierPartDefaultPartition extends NonJavaIdentifierPart {
+	private final class NonJavaIdentifierPartDefaultPartition extends
+			NonJavaIdentifierPart {
 		/*
-		 * @see org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition#stop(char)
+		 * @see
+		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
+		 * #stop(char)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
-			return super.stop(ch, position, true) || !isDefaultPartition(position);
+			return super.stop(ch, position, true)
+					|| !isDefaultPartition(position);
 		}
 
 		/*
-		 * @see org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition#nextPosition(int,
-		 *      boolean)
+		 * @see
+		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
+		 * #nextPosition(int, boolean)
 		 */
 		public int nextPosition(int position, boolean forward) {
 			ITypedRegion partition = getPartition(position);
@@ -221,16 +234,19 @@ final class PHPHeuristicScanner implements Symbols {
 		}
 
 		/*
-		 * @see org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition#stop(char,
-		 *      int)
+		 * @see
+		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
+		 * #stop(char, int)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
-			return Arrays.binarySearch(fChars, ch) >= 0 && isDefaultPartition(position);
+			return Arrays.binarySearch(fChars, ch) >= 0
+					&& isDefaultPartition(position);
 		}
 
 		/*
-		 * @see org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition#nextPosition(int,
-		 *      boolean)
+		 * @see
+		 * org.eclipse.jdt.internal.ui.text.JavaHeuristicScanner.StopCondition
+		 * #nextPosition(int, boolean)
 		 */
 		public int nextPosition(int position, boolean forward) {
 			ITypedRegion partition = getPartition(position);
@@ -279,7 +295,8 @@ final class PHPHeuristicScanner implements Symbols {
 	 * @param partition
 	 *            the partition to scan in
 	 */
-	public PHPHeuristicScanner(IDocument document, String partitioning, String partition) {
+	public PHPHeuristicScanner(IDocument document, String partitioning,
+			String partition) {
 		Assert.isNotNull(document);
 		Assert.isNotNull(partitioning);
 		Assert.isNotNull(partition);
@@ -290,30 +307,38 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Calls
-	 * <code>this(document, IPhpPartitions.JAVA_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE)</code>.
+	 * <code>this(document, IPhpPartitions.JAVA_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE)</code>
+	 * .
 	 * 
 	 * @param document
 	 *            the document to scan.
 	 */
 	public PHPHeuristicScanner(IDocument document) {
-		this(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE);
+		this(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
+				IDocument.DEFAULT_CONTENT_TYPE);
 	}
 
 	/**
-	 * Creates a PHPHeuristicScanner with a default partition type set to - PHPPartitionTypes.PHP_COMMENT, PHPPartitionTypes.PHP_QUOTED_STRING or 
-	 * PHPPartitionTypes.PHP_DEFAULT.
-	 * Matching open/close symbol will only be looked for in the same partition type, so that for example a closing bracket in a commented line 
-	 * will not match an opening bracket in the code. 
+	 * Creates a PHPHeuristicScanner with a default partition type set to -
+	 * PHPPartitionTypes.PHP_COMMENT, PHPPartitionTypes.PHP_QUOTED_STRING or
+	 * PHPPartitionTypes.PHP_DEFAULT. Matching open/close symbol will only be
+	 * looked for in the same partition type, so that for example a closing
+	 * bracket in a commented line will not match an opening bracket in the
+	 * code.
 	 * 
-	 * @param document the document to scan
-	 * @param offset the offset in the document
+	 * @param document
+	 *            the document to scan
+	 * @param offset
+	 *            the offset in the document
 	 * @return the PHPHeuristicScanner for the given document and offset
-	 * @throws BadLocationException 
+	 * @throws BadLocationException
 	 */
-	public static PHPHeuristicScanner createHeuristicScanner(IDocument document, int offset) throws BadLocationException {
+	public static PHPHeuristicScanner createHeuristicScanner(
+			IDocument document, int offset) throws BadLocationException {
 		// Create a scanner with default values
 		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document);
-		// Calculate the partition in the given offset and classify it accordingly
+		// Calculate the partition in the given offset and classify it
+		// accordingly
 		ITypedRegion partition = scanner.getPartition(offset);
 		// Update the default partition in the scanner
 		scanner.fPartition = partition.getType();
@@ -332,11 +357,10 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Returns the next token in forward direction, starting at
-	 * <code>start</code>, and not extending further than
-	 * <code>bound</code>. The return value is one of the constants defined
-	 * in {@link Symbols}. After a call, {@link #getPosition()} will return
-	 * the position just after the scanned token (i.e. the next position that
-	 * will be scanned).
+	 * <code>start</code>, and not extending further than <code>bound</code>.
+	 * The return value is one of the constants defined in {@link Symbols}.
+	 * After a call, {@link #getPosition()} will return the position just after
+	 * the scanned token (i.e. the next position that will be scanned).
 	 * 
 	 * @param start
 	 *            the first character position in the document to consider
@@ -352,30 +376,30 @@ final class PHPHeuristicScanner implements Symbols {
 		fPos++;
 
 		switch (fChar) {
-			case LBRACE:
-				return TokenLBRACE;
-			case RBRACE:
-				return TokenRBRACE;
-			case LBRACKET:
-				return TokenLBRACKET;
-			case RBRACKET:
-				return TokenRBRACKET;
-			case LPAREN:
-				return TokenLPAREN;
-			case RPAREN:
-				return TokenRPAREN;
-			case SEMICOLON:
-				return TokenSEMICOLON;
-			case COMMA:
-				return TokenCOMMA;
-			case QUESTIONMARK:
-				return TokenQUESTIONMARK;
-			case EQUAL:
-				return TokenEQUAL;
-			case LANGLE:
-				return TokenLESSTHAN;
-			case RANGLE:
-				return TokenGREATERTHAN;
+		case LBRACE:
+			return TokenLBRACE;
+		case RBRACE:
+			return TokenRBRACE;
+		case LBRACKET:
+			return TokenLBRACKET;
+		case RBRACKET:
+			return TokenRBRACKET;
+		case LPAREN:
+			return TokenLPAREN;
+		case RPAREN:
+			return TokenRPAREN;
+		case SEMICOLON:
+			return TokenSEMICOLON;
+		case COMMA:
+			return TokenCOMMA;
+		case QUESTIONMARK:
+			return TokenQUESTIONMARK;
+		case EQUAL:
+			return TokenEQUAL;
+		case LANGLE:
+			return TokenLESSTHAN;
+		case RANGLE:
+			return TokenGREATERTHAN;
 		}
 
 		// else
@@ -404,11 +428,10 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Returns the next token in backward direction, starting at
-	 * <code>start</code>, and not extending further than
-	 * <code>bound</code>. The return value is one of the constants defined
-	 * in {@link Symbols}. After a call, {@link #getPosition()} will return
-	 * the position just before the scanned token starts (i.e. the next
-	 * position that will be scanned).
+	 * <code>start</code>, and not extending further than <code>bound</code>.
+	 * The return value is one of the constants defined in {@link Symbols}.
+	 * After a call, {@link #getPosition()} will return the position just before
+	 * the scanned token starts (i.e. the next position that will be scanned).
 	 * 
 	 * @param start
 	 *            the first character position in the document to consider
@@ -424,32 +447,32 @@ final class PHPHeuristicScanner implements Symbols {
 		fPos--;
 
 		switch (fChar) {
-			case LBRACE:
-				return TokenLBRACE;
-			case RBRACE:
-				return TokenRBRACE;
-			case LBRACKET:
-				return TokenLBRACKET;
-			case RBRACKET:
-				return TokenRBRACKET;
-			case LPAREN:
-				return TokenLPAREN;
-			case RPAREN:
-				return TokenRPAREN;
-			case SEMICOLON:
-				return TokenSEMICOLON;
-			case COLON:
-				return TokenCOLON;
-			case COMMA:
-				return TokenCOMMA;
-			case QUESTIONMARK:
-				return TokenQUESTIONMARK;
-			case EQUAL:
-				return TokenEQUAL;
-			case LANGLE:
-				return TokenLESSTHAN;
-			case RANGLE:
-				return TokenGREATERTHAN;
+		case LBRACE:
+			return TokenLBRACE;
+		case RBRACE:
+			return TokenRBRACE;
+		case LBRACKET:
+			return TokenLBRACKET;
+		case RBRACKET:
+			return TokenRBRACKET;
+		case LPAREN:
+			return TokenLPAREN;
+		case RPAREN:
+			return TokenRPAREN;
+		case SEMICOLON:
+			return TokenSEMICOLON;
+		case COLON:
+			return TokenCOLON;
+		case COMMA:
+			return TokenCOMMA;
+		case QUESTIONMARK:
+			return TokenQUESTIONMARK;
+		case EQUAL:
+			return TokenEQUAL;
+		case LANGLE:
+			return TokenLESSTHAN;
+		case RANGLE:
+			return TokenGREATERTHAN;
 		}
 
 		// else
@@ -488,74 +511,74 @@ final class PHPHeuristicScanner implements Symbols {
 		Assert.isNotNull(s);
 
 		switch (s.length()) {
-			case 2:
-				if ("if".equals(s)) //$NON-NLS-1$
-					return TokenIF;
-				if ("do".equals(s)) //$NON-NLS-1$
-					return TokenDO;
-				break;
-			case 3:
-				if ("for".equals(s)) //$NON-NLS-1$
-					return TokenFOR;
-				if ("try".equals(s)) //$NON-NLS-1$
-					return TokenTRY;
-				if ("new".equals(s)) //$NON-NLS-1$
-					return TokenNEW;
-				break;
-			case 4:
-				if ("case".equals(s)) //$NON-NLS-1$
-					return TokenCASE;
-				if ("else".equals(s)) //$NON-NLS-1$
-					return TokenELSE;
-				if ("enum".equals(s)) //$NON-NLS-1$
-					return TokenENUM;
-				if ("goto".equals(s)) //$NON-NLS-1$
-					return TokenGOTO;
-				break;
-			case 5:
-				if ("break".equals(s)) //$NON-NLS-1$
-					return TokenBREAK;
-				if ("catch".equals(s)) //$NON-NLS-1$
-					return TokenCATCH;
-				if ("class".equals(s)) //$NON-NLS-1$
-					return TokenCLASS;
-				if ("while".equals(s)) //$NON-NLS-1$
-					return TokenWHILE;
-				break;
-			case 6:
-				if ("return".equals(s)) //$NON-NLS-1$
-					return TokenRETURN;
-				if ("static".equals(s)) //$NON-NLS-1$
-					return TokenSTATIC;
-				if ("switch".equals(s)) //$NON-NLS-1$
-					return TokenSWITCH;
-				break;
-			case 7:
-				if ("default".equals(s)) //$NON-NLS-1$
-					return TokenDEFAULT;
-				if ("finally".equals(s)) //$NON-NLS-1$
-					return TokenFINALLY;
-				break;
-			case 9:
-				if ("interface".equals(s)) //$NON-NLS-1$
-					return TokenINTERFACE;
-				break;
-			case 12:
-				if ("synchronized".equals(s)) //$NON-NLS-1$
-					return TokenSYNCHRONIZED;
-				break;
+		case 2:
+			if ("if".equals(s)) //$NON-NLS-1$
+				return TokenIF;
+			if ("do".equals(s)) //$NON-NLS-1$
+				return TokenDO;
+			break;
+		case 3:
+			if ("for".equals(s)) //$NON-NLS-1$
+				return TokenFOR;
+			if ("try".equals(s)) //$NON-NLS-1$
+				return TokenTRY;
+			if ("new".equals(s)) //$NON-NLS-1$
+				return TokenNEW;
+			break;
+		case 4:
+			if ("case".equals(s)) //$NON-NLS-1$
+				return TokenCASE;
+			if ("else".equals(s)) //$NON-NLS-1$
+				return TokenELSE;
+			if ("enum".equals(s)) //$NON-NLS-1$
+				return TokenENUM;
+			if ("goto".equals(s)) //$NON-NLS-1$
+				return TokenGOTO;
+			break;
+		case 5:
+			if ("break".equals(s)) //$NON-NLS-1$
+				return TokenBREAK;
+			if ("catch".equals(s)) //$NON-NLS-1$
+				return TokenCATCH;
+			if ("class".equals(s)) //$NON-NLS-1$
+				return TokenCLASS;
+			if ("while".equals(s)) //$NON-NLS-1$
+				return TokenWHILE;
+			break;
+		case 6:
+			if ("return".equals(s)) //$NON-NLS-1$
+				return TokenRETURN;
+			if ("static".equals(s)) //$NON-NLS-1$
+				return TokenSTATIC;
+			if ("switch".equals(s)) //$NON-NLS-1$
+				return TokenSWITCH;
+			break;
+		case 7:
+			if ("default".equals(s)) //$NON-NLS-1$
+				return TokenDEFAULT;
+			if ("finally".equals(s)) //$NON-NLS-1$
+				return TokenFINALLY;
+			break;
+		case 9:
+			if ("interface".equals(s)) //$NON-NLS-1$
+				return TokenINTERFACE;
+			break;
+		case 12:
+			if ("synchronized".equals(s)) //$NON-NLS-1$
+				return TokenSYNCHRONIZED;
+			break;
 		}
 		return TokenIDENT;
 	}
 
 	/**
-	 * Returns the position of the closing peer character (forward search).
-	 * Any scopes introduced by opening peers are skipped. All peers accounted
-	 * for must reside in the default partition.
+	 * Returns the position of the closing peer character (forward search). Any
+	 * scopes introduced by opening peers are skipped. All peers accounted for
+	 * must reside in the default partition.
 	 * 
 	 * <p>
-	 * Note that <code>start</code> must not point to the opening peer, but
-	 * to the first character being searched.
+	 * Note that <code>start</code> must not point to the opening peer, but to
+	 * the first character being searched.
 	 * </p>
 	 * 
 	 * @param start
@@ -566,7 +589,8 @@ final class PHPHeuristicScanner implements Symbols {
 	 *            the closing peer character (e.g. '}')
 	 * @return the matching peer character position, or <code>NOT_FOUND</code>
 	 */
-	public int findClosingPeer(int start, final char openingPeer, final char closingPeer) {
+	public int findClosingPeer(int start, final char openingPeer,
+			final char closingPeer) {
 		Assert.isNotNull(fDocument);
 		Assert.isTrue(start >= 0);
 
@@ -574,7 +598,8 @@ final class PHPHeuristicScanner implements Symbols {
 			int depth = 1;
 			start -= 1;
 			while (true) {
-				start = scanForward(start + 1, UNBOUND, new CharacterMatch(new char[] { openingPeer, closingPeer }));
+				start = scanForward(start + 1, UNBOUND, new CharacterMatch(
+						new char[] { openingPeer, closingPeer }));
 				if (start == NOT_FOUND)
 					return NOT_FOUND;
 
@@ -593,13 +618,13 @@ final class PHPHeuristicScanner implements Symbols {
 	}
 
 	/**
-	 * Returns the position of the opening peer character (backward search).
-	 * Any scopes introduced by closing peers are skipped. All peers accounted
-	 * for must reside in the default partition.
+	 * Returns the position of the opening peer character (backward search). Any
+	 * scopes introduced by closing peers are skipped. All peers accounted for
+	 * must reside in the default partition.
 	 * 
 	 * <p>
-	 * Note that <code>start</code> must not point to the closing peer, but
-	 * to the first character being searched.
+	 * Note that <code>start</code> must not point to the closing peer, but to
+	 * the first character being searched.
 	 * </p>
 	 * 
 	 * @param start
@@ -617,7 +642,8 @@ final class PHPHeuristicScanner implements Symbols {
 			int depth = 1;
 			start += 1;
 			while (true) {
-				start = scanBackward(start - 1, UNBOUND, new CharacterMatch(new char[] { openingPeer, closingPeer }));
+				start = scanBackward(start - 1, UNBOUND, new CharacterMatch(
+						new char[] { openingPeer, closingPeer }));
 				if (start == NOT_FOUND)
 					return NOT_FOUND;
 
@@ -636,10 +662,10 @@ final class PHPHeuristicScanner implements Symbols {
 	}
 
 	/**
-	 * Computes the surrounding block around <code>offset</code>. The
-	 * search is started at the beginning of <code>offset</code>, i.e. an
-	 * opening brace at <code>offset</code> will not be part of the
-	 * surrounding block, but a closing brace will.
+	 * Computes the surrounding block around <code>offset</code>. The search is
+	 * started at the beginning of <code>offset</code>, i.e. an opening brace at
+	 * <code>offset</code> will not be part of the surrounding block, but a
+	 * closing brace will.
 	 * 
 	 * @param offset
 	 *            the offset for which the surrounding block is computed
@@ -659,21 +685,20 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Finds the smallest position in <code>fDocument</code> such that the
-	 * position is &gt;= <code>position</code> and &lt; <code>bound</code>
-	 * and <code>Character.isWhitespace(fDocument.getChar(pos))</code>
-	 * evaluates to <code>false</code> and the position is in the default
-	 * partition.
+	 * position is &gt;= <code>position</code> and &lt; <code>bound</code> and
+	 * <code>Character.isWhitespace(fDocument.getChar(pos))</code> evaluates to
+	 * <code>false</code> and the position is in the default partition.
 	 * 
 	 * @param position
-	 *            the first character position in <code>fDocument</code> to
-	 *            be considered
+	 *            the first character position in <code>fDocument</code> to be
+	 *            considered
 	 * @param bound
-	 *            the first position in <code>fDocument</code> to not
-	 *            consider any more, with <code>bound</code> &gt;
-	 *            <code>position</code>, or <code>UNBOUND</code>
-	 * @return the smallest position of a non-whitespace character in [<code>position</code>,
-	 *         <code>bound</code>) that resides in a Java partition, or
-	 *         <code>NOT_FOUND</code> if none can be found
+	 *            the first position in <code>fDocument</code> to not consider
+	 *            any more, with <code>bound</code> &gt; <code>position</code>,
+	 *            or <code>UNBOUND</code>
+	 * @return the smallest position of a non-whitespace character in [
+	 *         <code>position</code>, <code>bound</code>) that resides in a Java
+	 *         partition, or <code>NOT_FOUND</code> if none can be found
 	 */
 	public int findNonWhitespaceForward(int position, int bound) {
 		return scanForward(position, bound, fNonWSDefaultPart);
@@ -681,20 +706,20 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Finds the smallest position in <code>fDocument</code> such that the
-	 * position is &gt;= <code>position</code> and &lt; <code>bound</code>
-	 * and <code>Character.isWhitespace(fDocument.getChar(pos))</code>
-	 * evaluates to <code>false</code>.
+	 * position is &gt;= <code>position</code> and &lt; <code>bound</code> and
+	 * <code>Character.isWhitespace(fDocument.getChar(pos))</code> evaluates to
+	 * <code>false</code>.
 	 * 
 	 * @param position
-	 *            the first character position in <code>fDocument</code> to
-	 *            be considered
+	 *            the first character position in <code>fDocument</code> to be
+	 *            considered
 	 * @param bound
-	 *            the first position in <code>fDocument</code> to not
-	 *            consider any more, with <code>bound</code> &gt;
-	 *            <code>position</code>, or <code>UNBOUND</code>
-	 * @return the smallest position of a non-whitespace character in [<code>position</code>,
-	 *         <code>bound</code>), or <code>NOT_FOUND</code> if none can
-	 *         be found
+	 *            the first position in <code>fDocument</code> to not consider
+	 *            any more, with <code>bound</code> &gt; <code>position</code>,
+	 *            or <code>UNBOUND</code>
+	 * @return the smallest position of a non-whitespace character in [
+	 *         <code>position</code>, <code>bound</code>), or
+	 *         <code>NOT_FOUND</code> if none can be found
 	 */
 	public int findNonWhitespaceForwardInAnyPartition(int position, int bound) {
 		return scanForward(position, bound, fNonWS);
@@ -702,44 +727,43 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Finds the highest position in <code>fDocument</code> such that the
-	 * position is &lt;= <code>position</code> and &gt; <code>bound</code>
-	 * and <code>Character.isWhitespace(fDocument.getChar(pos))</code>
-	 * evaluates to <code>false</code> and the position is in the default
-	 * partition.
+	 * position is &lt;= <code>position</code> and &gt; <code>bound</code> and
+	 * <code>Character.isWhitespace(fDocument.getChar(pos))</code> evaluates to
+	 * <code>false</code> and the position is in the default partition.
 	 * 
 	 * @param position
-	 *            the first character position in <code>fDocument</code> to
-	 *            be considered
+	 *            the first character position in <code>fDocument</code> to be
+	 *            considered
 	 * @param bound
-	 *            the first position in <code>fDocument</code> to not
-	 *            consider any more, with <code>bound</code> &lt;
-	 *            <code>position</code>, or <code>UNBOUND</code>
-	 * @return the highest position of a non-whitespace character in (<code>bound</code>,
-	 *         <code>position</code>] that resides in a Java partition, or
-	 *         <code>NOT_FOUND</code> if none can be found
+	 *            the first position in <code>fDocument</code> to not consider
+	 *            any more, with <code>bound</code> &lt; <code>position</code>,
+	 *            or <code>UNBOUND</code>
+	 * @return the highest position of a non-whitespace character in (
+	 *         <code>bound</code>, <code>position</code>] that resides in a Java
+	 *         partition, or <code>NOT_FOUND</code> if none can be found
 	 */
 	public int findNonWhitespaceBackward(int position, int bound) {
 		return scanBackward(position, bound, fNonWSDefaultPart);
 	}
 
 	/**
-	 * Finds the lowest position <code>p</code> in <code>fDocument</code>
-	 * such that <code>start</code> &lt;= p &lt; <code>bound</code> and
+	 * Finds the lowest position <code>p</code> in <code>fDocument</code> such
+	 * that <code>start</code> &lt;= p &lt; <code>bound</code> and
 	 * <code>condition.stop(fDocument.getChar(p), p)</code> evaluates to
 	 * <code>true</code>.
 	 * 
 	 * @param start
-	 *            the first character position in <code>fDocument</code> to
-	 *            be considered
+	 *            the first character position in <code>fDocument</code> to be
+	 *            considered
 	 * @param bound
-	 *            the first position in <code>fDocument</code> to not
-	 *            consider any more, with <code>bound</code> &gt;
-	 *            <code>start</code>, or <code>UNBOUND</code>
+	 *            the first position in <code>fDocument</code> to not consider
+	 *            any more, with <code>bound</code> &gt; <code>start</code>, or
+	 *            <code>UNBOUND</code>
 	 * @param condition
 	 *            the <code>StopCondition</code> to check
-	 * @return the lowest position in [<code>start</code>,
-	 *         <code>bound</code>) for which <code>condition</code>
-	 *         holds, or <code>NOT_FOUND</code> if none can be found
+	 * @return the lowest position in [<code>start</code>, <code>bound</code>)
+	 *         for which <code>condition</code> holds, or <code>NOT_FOUND</code>
+	 *         if none can be found
 	 */
 	public int scanForward(int start, int bound, StopCondition condition) {
 		Assert.isTrue(start >= 0);
@@ -766,17 +790,17 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Finds the lowest position in <code>fDocument</code> such that the
-	 * position is &gt;= <code>position</code> and &lt; <code>bound</code>
-	 * and <code>fDocument.getChar(position) == ch</code> evaluates to
+	 * position is &gt;= <code>position</code> and &lt; <code>bound</code> and
+	 * <code>fDocument.getChar(position) == ch</code> evaluates to
 	 * <code>true</code> and the position is in the default partition.
 	 * 
 	 * @param position
-	 *            the first character position in <code>fDocument</code> to
-	 *            be considered
+	 *            the first character position in <code>fDocument</code> to be
+	 *            considered
 	 * @param bound
-	 *            the first position in <code>fDocument</code> to not
-	 *            consider any more, with <code>bound</code> &gt;
-	 *            <code>position</code>, or <code>UNBOUND</code>
+	 *            the first position in <code>fDocument</code> to not consider
+	 *            any more, with <code>bound</code> &gt; <code>position</code>,
+	 *            or <code>UNBOUND</code>
 	 * @param ch
 	 *            the <code>char</code> to search for
 	 * @return the lowest position of <code>ch</code> in (<code>bound</code>,
@@ -789,47 +813,46 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Finds the lowest position in <code>fDocument</code> such that the
-	 * position is &gt;= <code>position</code> and &lt; <code>bound</code>
-	 * and <code>fDocument.getChar(position) == ch</code> evaluates to
+	 * position is &gt;= <code>position</code> and &lt; <code>bound</code> and
+	 * <code>fDocument.getChar(position) == ch</code> evaluates to
 	 * <code>true</code> for at least one ch in <code>chars</code> and the
 	 * position is in the default partition.
 	 * 
 	 * @param position
-	 *            the first character position in <code>fDocument</code> to
-	 *            be considered
+	 *            the first character position in <code>fDocument</code> to be
+	 *            considered
 	 * @param bound
-	 *            the first position in <code>fDocument</code> to not
-	 *            consider any more, with <code>bound</code> &gt;
-	 *            <code>position</code>, or <code>UNBOUND</code>
+	 *            the first position in <code>fDocument</code> to not consider
+	 *            any more, with <code>bound</code> &gt; <code>position</code>,
+	 *            or <code>UNBOUND</code>
 	 * @param chars
 	 *            an array of <code>char</code> to search for
-	 * @return the lowest position of a non-whitespace character in [<code>position</code>,
-	 *         <code>bound</code>) that resides in a Java partition, or
-	 *         <code>NOT_FOUND</code> if none can be found
+	 * @return the lowest position of a non-whitespace character in [
+	 *         <code>position</code>, <code>bound</code>) that resides in a Java
+	 *         partition, or <code>NOT_FOUND</code> if none can be found
 	 */
 	public int scanForward(int position, int bound, char[] chars) {
 		return scanForward(position, bound, new CharacterMatch(chars));
 	}
 
 	/**
-	 * Finds the highest position <code>p</code> in <code>fDocument</code>
-	 * such that <code>bound</code> &lt; <code>p</code> &lt;=
-	 * <code>start</code> and
+	 * Finds the highest position <code>p</code> in <code>fDocument</code> such
+	 * that <code>bound</code> &lt; <code>p</code> &lt;= <code>start</code> and
 	 * <code>condition.stop(fDocument.getChar(p), p)</code> evaluates to
 	 * <code>true</code>.
 	 * 
 	 * @param start
-	 *            the first character position in <code>fDocument</code> to
-	 *            be considered
+	 *            the first character position in <code>fDocument</code> to be
+	 *            considered
 	 * @param bound
-	 *            the first position in <code>fDocument</code> to not
-	 *            consider any more, with <code>bound</code> &lt;
-	 *            <code>start</code>, or <code>UNBOUND</code>
+	 *            the first position in <code>fDocument</code> to not consider
+	 *            any more, with <code>bound</code> &lt; <code>start</code>, or
+	 *            <code>UNBOUND</code>
 	 * @param condition
 	 *            the <code>StopCondition</code> to check
-	 * @return the highest position in (<code>bound</code>,
-	 *         <code>start</code> for which <code>condition</code> holds,
-	 *         or <code>NOT_FOUND</code> if none can be found
+	 * @return the highest position in (<code>bound</code>, <code>start</code>
+	 *         for which <code>condition</code> holds, or <code>NOT_FOUND</code>
+	 *         if none can be found
 	 */
 	public int scanBackward(int start, int bound, StopCondition condition) {
 		if (bound == UNBOUND)
@@ -855,23 +878,23 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Finds the highest position in <code>fDocument</code> such that the
-	 * position is &lt;= <code>position</code> and &gt; <code>bound</code>
-	 * and <code>fDocument.getChar(position) == ch</code> evaluates to
+	 * position is &lt;= <code>position</code> and &gt; <code>bound</code> and
+	 * <code>fDocument.getChar(position) == ch</code> evaluates to
 	 * <code>true</code> for at least one ch in <code>chars</code> and the
 	 * position is in the default partition.
 	 * 
 	 * @param position
-	 *            the first character position in <code>fDocument</code> to
-	 *            be considered
+	 *            the first character position in <code>fDocument</code> to be
+	 *            considered
 	 * @param bound
-	 *            the first position in <code>fDocument</code> to not
-	 *            consider any more, with <code>bound</code> &lt;
-	 *            <code>position</code>, or <code>UNBOUND</code>
+	 *            the first position in <code>fDocument</code> to not consider
+	 *            any more, with <code>bound</code> &lt; <code>position</code>,
+	 *            or <code>UNBOUND</code>
 	 * @param ch
 	 *            the <code>char</code> to search for
-	 * @return the highest position of one element in <code>chars</code> in (<code>bound</code>,
-	 *         <code>position</code>] that resides in a Java partition, or
-	 *         <code>NOT_FOUND</code> if none can be found
+	 * @return the highest position of one element in <code>chars</code> in (
+	 *         <code>bound</code>, <code>position</code>] that resides in a Java
+	 *         partition, or <code>NOT_FOUND</code> if none can be found
 	 */
 	public int scanBackward(int position, int bound, char ch) {
 		return scanBackward(position, bound, new CharacterMatch(ch));
@@ -879,23 +902,23 @@ final class PHPHeuristicScanner implements Symbols {
 
 	/**
 	 * Finds the highest position in <code>fDocument</code> such that the
-	 * position is &lt;= <code>position</code> and &gt; <code>bound</code>
-	 * and <code>fDocument.getChar(position) == ch</code> evaluates to
+	 * position is &lt;= <code>position</code> and &gt; <code>bound</code> and
+	 * <code>fDocument.getChar(position) == ch</code> evaluates to
 	 * <code>true</code> for at least one ch in <code>chars</code> and the
 	 * position is in the default partition.
 	 * 
 	 * @param position
-	 *            the first character position in <code>fDocument</code> to
-	 *            be considered
+	 *            the first character position in <code>fDocument</code> to be
+	 *            considered
 	 * @param bound
-	 *            the first position in <code>fDocument</code> to not
-	 *            consider any more, with <code>bound</code> &lt;
-	 *            <code>position</code>, or <code>UNBOUND</code>
+	 *            the first position in <code>fDocument</code> to not consider
+	 *            any more, with <code>bound</code> &lt; <code>position</code>,
+	 *            or <code>UNBOUND</code>
 	 * @param chars
 	 *            an array of <code>char</code> to search for
-	 * @return the highest position of one element in <code>chars</code> in (<code>bound</code>,
-	 *         <code>position</code>] that resides in a Java partition, or
-	 *         <code>NOT_FOUND</code> if none can be found
+	 * @return the highest position of one element in <code>chars</code> in (
+	 *         <code>bound</code>, <code>position</code>] that resides in a Java
+	 *         partition, or <code>NOT_FOUND</code> if none can be found
 	 */
 	public int scanBackward(int position, int bound, char[] chars) {
 		return scanBackward(position, bound, new CharacterMatch(chars));
@@ -907,9 +930,8 @@ final class PHPHeuristicScanner implements Symbols {
 	 * 
 	 * @param position
 	 *            the position to be checked
-	 * @return <code>true</code> if <code>position</code> is in the
-	 *         default partition of <code>fDocument</code>,
-	 *         <code>false</code> otherwise
+	 * @return <code>true</code> if <code>position</code> is in the default
+	 *         partition of <code>fDocument</code>, <code>false</code> otherwise
 	 */
 	public boolean isDefaultPartition(int position) {
 		Assert.isTrue(position >= 0);
@@ -919,10 +941,12 @@ final class PHPHeuristicScanner implements Symbols {
 	}
 
 	/**
-	 * Returns the partition at <code>position</code>.
-	 * Classify the partition as - PHPPartitionTypes.PHP_COMMENT, PHPPartitionTypes.PHP_QUOTED_STRING or PHPPartitionTypes.PHP_DEFAULT.
-	 * Matching open/close symbol will only be looked for in the same partition type, so that for example a closing bracket in a commented line 
-	 * will not match an opening bracket in the code. 
+	 * Returns the partition at <code>position</code>. Classify the partition as
+	 * - PHPPartitionTypes.PHP_COMMENT, PHPPartitionTypes.PHP_QUOTED_STRING or
+	 * PHPPartitionTypes.PHP_DEFAULT. Matching open/close symbol will only be
+	 * looked for in the same partition type, so that for example a closing
+	 * bracket in a commented line will not match an opening bracket in the
+	 * code.
 	 * 
 	 * @param position
 	 *            the position to get the partition for
@@ -934,29 +958,41 @@ final class PHPHeuristicScanner implements Symbols {
 		Assert.isTrue(position <= fDocument.getLength());
 
 		try {
-			// If we have a structured document - extract the text region from the document and classify it
+			// If we have a structured document - extract the text region from
+			// the document and classify it
 			if (fDocument instanceof BasicStructuredDocument) {
-				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument).getRegionAtCharacterOffset(position);
-				ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(position);
+				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument)
+						.getRegionAtCharacterOffset(position);
+				ITextRegion textRegion = sdRegion
+						.getRegionAtCharacterOffset(position);
 				if (textRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-					textRegion = phpScriptRegion.getPhpToken(position - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+					textRegion = phpScriptRegion.getPhpToken(position
+							- sdRegion.getStartOffset()
+							- phpScriptRegion.getStart());
 					// handle comments
-					if (PHPPartitionTypes.isPHPCommentState(textRegion.getType())) {
-						return new TypedRegion(position, 0, PHPPartitionTypes.PHP_COMMENT);
+					if (PHPPartitionTypes.isPHPCommentState(textRegion
+							.getType())) {
+						return new TypedRegion(position, 0,
+								PHPPartitionTypes.PHP_COMMENT);
 					}
 					// handle strings
-					else if (PHPPartitionTypes.isPHPQuotesState(textRegion.getType())) {
-						return new TypedRegion(position, 0, PHPPartitionTypes.PHP_QUOTED_STRING);
+					else if (PHPPartitionTypes.isPHPQuotesState(textRegion
+							.getType())) {
+						return new TypedRegion(position, 0,
+								PHPPartitionTypes.PHP_QUOTED_STRING);
 					}
 					// handle the rest
-					else if (PHPPartitionTypes.isPHPRegularState(textRegion.getType())) {
-						return new TypedRegion(position, 0, PHPPartitionTypes.PHP_DEFAULT);
+					else if (PHPPartitionTypes.isPHPRegularState(textRegion
+							.getType())) {
+						return new TypedRegion(position, 0,
+								PHPPartitionTypes.PHP_DEFAULT);
 					}
 				}
 			}
 
-			return TextUtilities.getPartition(fDocument, fPartitioning, position, false);
+			return TextUtilities.getPartition(fDocument, fPartitioning,
+					position, false);
 		} catch (BadLocationException e) {
 			return new TypedRegion(position, 0, "__no_partition_at_all"); //$NON-NLS-1$
 		}
@@ -964,9 +1000,9 @@ final class PHPHeuristicScanner implements Symbols {
 	}
 
 	/**
-	 * Checks if the line seems to be an open condition not followed by a
-	 * block (i.e. an if, while, or for statement with just one following
-	 * statement, see example below).
+	 * Checks if the line seems to be an open condition not followed by a block
+	 * (i.e. an if, while, or for statement with just one following statement,
+	 * see example below).
 	 * 
 	 * <pre>
 	 * if (condition)
@@ -975,35 +1011,35 @@ final class PHPHeuristicScanner implements Symbols {
 	 * 
 	 * <p>
 	 * Algorithm: if the last non-WS, non-Comment code on the line is an if
-	 * (condition), while (condition), for( expression), do, else, and there
-	 * is no statement after that
+	 * (condition), while (condition), for( expression), do, else, and there is
+	 * no statement after that
 	 * </p>
 	 * 
 	 * @param position
 	 *            the insert position of the new character
 	 * @param bound
 	 *            the lowest position to consider
-	 * @return <code>true</code> if the code is a conditional statement or
-	 *         loop without a block, <code>false</code> otherwise
+	 * @return <code>true</code> if the code is a conditional statement or loop
+	 *         without a block, <code>false</code> otherwise
 	 */
 	public boolean isBracelessBlockStart(int position, int bound) {
 		if (position < 1)
 			return false;
 
 		switch (previousToken(position, bound)) {
-			case TokenDO:
-			case TokenELSE:
-				return true;
-			case TokenRPAREN:
-				position = findOpeningPeer(fPos, LPAREN, RPAREN);
-				if (position > 0) {
-					switch (previousToken(position - 1, bound)) {
-						case TokenIF:
-						case TokenFOR:
-						case TokenWHILE:
-							return true;
-					}
+		case TokenDO:
+		case TokenELSE:
+			return true;
+		case TokenRPAREN:
+			position = findOpeningPeer(fPos, LPAREN, RPAREN);
+			if (position > 0) {
+				switch (previousToken(position - 1, bound)) {
+				case TokenIF:
+				case TokenFOR:
+				case TokenWHILE:
+					return true;
 				}
+			}
 		}
 
 		return false;

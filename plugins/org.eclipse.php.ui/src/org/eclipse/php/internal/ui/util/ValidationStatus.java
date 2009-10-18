@@ -14,20 +14,20 @@ package org.eclipse.php.internal.ui.util;
 public class ValidationStatus {
 	public final static int OK = 0;
 	public final static int FAILURE = 1;
-	
+
 	protected String error;
 	protected int status;
-	
-	public ValidationStatus () {
+
+	public ValidationStatus() {
 		this.status = OK;
 	}
-	
-	public ValidationStatus (String error) {
+
+	public ValidationStatus(String error) {
 		this.status = FAILURE;
 		this.error = error;
 	}
-	
-	public void setError (String error) {
+
+	public void setError(String error) {
 		if (error == null) {
 			this.status = OK;
 			this.error = null;
@@ -36,11 +36,11 @@ public class ValidationStatus {
 			this.error = error;
 		}
 	}
-	
-	public String getError () {
+
+	public String getError() {
 		return error;
 	}
-	
+
 	public boolean isOK() {
 		return status == OK;
 	}

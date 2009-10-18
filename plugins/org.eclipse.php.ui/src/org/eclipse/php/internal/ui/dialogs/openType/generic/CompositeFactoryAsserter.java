@@ -23,7 +23,7 @@ public class CompositeFactoryAsserter implements CompositeFactory {
 
 	public Composite createComposite(Composite parent) {
 		Composite composite = innerCompositeFactory.createComposite(parent);
-		//assert composite != null;
+		// assert composite != null;
 
 		return composite;
 	}

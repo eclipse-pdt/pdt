@@ -26,7 +26,8 @@ import org.eclipse.ui.IEditorPart;
 /**
  * Provides a PHP element to be displayed in by an information presenter.
  */
-public class PHPElementProvider implements IInformationProvider, IInformationProviderExtension {
+public class PHPElementProvider implements IInformationProvider,
+		IInformationProviderExtension {
 
 	private PHPStructuredEditor fEditor;
 
@@ -40,7 +41,8 @@ public class PHPElementProvider implements IInformationProvider, IInformationPro
 	 */
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 		if (textViewer != null && fEditor != null) {
-			IRegion region = ScriptWordFinder.findWord(textViewer.getDocument(), offset);
+			IRegion region = ScriptWordFinder.findWord(
+					textViewer.getDocument(), offset);
 			if (region != null)
 				return region;
 			else
@@ -65,7 +67,8 @@ public class PHPElementProvider implements IInformationProvider, IInformationPro
 		}
 
 		try {
-			IModelElement element = SelectionConverter.getElementAtOffset(fEditor);
+			IModelElement element = SelectionConverter
+					.getElementAtOffset(fEditor);
 			if (element != null) {
 				return element;
 			}

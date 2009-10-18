@@ -15,12 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -42,20 +37,19 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * Infrastructure to share an AST for editor post selection listeners.
  */
 public class SelectionListenerWithASTManager {
-	
+
 	private static SelectionListenerWithASTManager fgDefault;
-	
+
 	/**
 	 * @return Returns the default manager instance.
 	 */
 	public static SelectionListenerWithASTManager getDefault() {
 		if (fgDefault == null) {
-			fgDefault= new SelectionListenerWithASTManager();
+			fgDefault = new SelectionListenerWithASTManager();
 		}
 		return fgDefault;
 	}
-	
-	
+
 	private final static class PartListenerGroup {
 		private ITextEditor fPart;
 		private ISelectionListener fPostSelectionListener;
@@ -63,27 +57,29 @@ public class SelectionListenerWithASTManager {
 		private Job fCurrentJob;
 		private ListenerList fAstListeners;
 		/**
-		 * Lock to avoid having more than one calculateAndInform job in parallel.
-		 * Only jobs may synchronize on this as otherwise deadlocks are possible.
+		 * Lock to avoid having more than one calculateAndInform job in
+		 * parallel. Only jobs may synchronize on this as otherwise deadlocks
+		 * are possible.
 		 */
-		private final Object fJobLock= new Object();
-		
+		private final Object fJobLock = new Object();
+
 		public PartListenerGroup(ITextEditor editorPart) {
-			fPart= editorPart;
-			fCurrentJob= null;
-			fAstListeners= new ListenerList(ListenerList.IDENTITY);
-			
-			fSelectionListener= new ISelectionChangedListener() {
+			fPart = editorPart;
+			fCurrentJob = null;
+			fAstListeners = new ListenerList(ListenerList.IDENTITY);
+
+			fSelectionListener = new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
-					ISelection selection= event.getSelection();
+					ISelection selection = event.getSelection();
 					if (selection instanceof ITextSelection) {
 						fireSelectionChanged((ITextSelection) selection);
 					}
 				}
 			};
-			
-			fPostSelectionListener= new ISelectionListener() {
-				public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+
+			fPostSelectionListener = new ISelectionListener() {
+				public void selectionChanged(IWorkbenchPart part,
+						ISelection selection) {
 					if (part == fPart && selection instanceof ITextSelection)
 						firePostSelectionChanged((ITextSelection) selection);
 				}
@@ -96,58 +92,67 @@ public class SelectionListenerWithASTManager {
 
 		public void install(ISelectionListenerWithAST listener) {
 			if (isEmpty()) {
-				fPart.getEditorSite().getPage().addPostSelectionListener(fPostSelectionListener);
-				ISelectionProvider selectionProvider= fPart.getSelectionProvider();
+				fPart.getEditorSite().getPage().addPostSelectionListener(
+						fPostSelectionListener);
+				ISelectionProvider selectionProvider = fPart
+						.getSelectionProvider();
 				if (selectionProvider != null)
-						selectionProvider.addSelectionChangedListener(fSelectionListener);
+					selectionProvider
+							.addSelectionChangedListener(fSelectionListener);
 			}
 			fAstListeners.add(listener);
 		}
-		
+
 		public void uninstall(ISelectionListenerWithAST listener) {
 			fAstListeners.remove(listener);
 			if (isEmpty()) {
-				fPart.getEditorSite().getPage().removePostSelectionListener(fPostSelectionListener);
-				ISelectionProvider selectionProvider= fPart.getSelectionProvider();
+				fPart.getEditorSite().getPage().removePostSelectionListener(
+						fPostSelectionListener);
+				ISelectionProvider selectionProvider = fPart
+						.getSelectionProvider();
 				if (selectionProvider != null)
-					selectionProvider.removeSelectionChangedListener(fSelectionListener);
+					selectionProvider
+							.removeSelectionChangedListener(fSelectionListener);
 			}
 		}
-		
+
 		/**
 		 * A selection event has occurred.
 		 * 
-		 * @param selection the selection
+		 * @param selection
+		 *            the selection
 		 */
 		public void fireSelectionChanged(final ITextSelection selection) {
 			if (fCurrentJob != null) {
 				fCurrentJob.cancel();
 			}
 		}
-		
+
 		/**
 		 * A post selection event has occurred.
 		 * 
-		 * @param selection the selection
+		 * @param selection
+		 *            the selection
 		 */
 		public void firePostSelectionChanged(final ITextSelection selection) {
 			if (fCurrentJob != null) {
 				fCurrentJob.cancel();
 			}
-			IModelElement input= EditorUtility.getEditorInputModelElement(fPart, false);
+			IModelElement input = EditorUtility.getEditorInputModelElement(
+					fPart, false);
 			if (!(input instanceof ISourceModule)) {
 				return;
 			}
-			final ISourceModule typeRoot= (ISourceModule) input;
-			
-			
-			fCurrentJob= new Job("Selection Job titile") {   
+			final ISourceModule typeRoot = (ISourceModule) input;
+
+			fCurrentJob = new Job("Selection Job titile") {
 				public IStatus run(IProgressMonitor monitor) {
 					if (monitor == null) {
-						monitor= new NullProgressMonitor();
+						monitor = new NullProgressMonitor();
 					}
 					synchronized (fJobLock) {
-						return calculateASTandInform(typeRoot, selection, monitor);
+						return calculateASTandInform(typeRoot, selection,
+								monitor);
 					}
 				}
 			};
@@ -155,22 +160,25 @@ public class SelectionListenerWithASTManager {
 			fCurrentJob.setSystem(true);
 			fCurrentJob.schedule();
 		}
-		
-		protected final IStatus calculateASTandInform(ISourceModule input, ITextSelection selection, IProgressMonitor monitor) {
+
+		protected final IStatus calculateASTandInform(ISourceModule input,
+				ITextSelection selection, IProgressMonitor monitor) {
 			if (monitor.isCanceled()) {
 				return Status.CANCEL_STATUS;
 			}
 			// create AST
 			try {
-				Program astRoot= SharedASTProvider.getAST(input, SharedASTProvider.WAIT_ACTIVE_ONLY, monitor);
-			
+				Program astRoot = SharedASTProvider.getAST(input,
+						SharedASTProvider.WAIT_ACTIVE_ONLY, monitor);
+
 				if (astRoot != null && !monitor.isCanceled()) {
 					Object[] listeners;
 					synchronized (PartListenerGroup.this) {
-						listeners= fAstListeners.getListeners();
+						listeners = fAstListeners.getListeners();
 					}
-					for (int i= 0; i < listeners.length; i++) {
-						((ISelectionListenerWithAST) listeners[i]).selectionChanged(fPart, selection, astRoot);
+					for (int i = 0; i < listeners.length; i++) {
+						((ISelectionListenerWithAST) listeners[i])
+								.selectionChanged(fPart, selection, astRoot);
 						if (monitor.isCanceled()) {
 							return Status.CANCEL_STATUS;
 						}
@@ -180,31 +188,35 @@ public class SelectionListenerWithASTManager {
 			} catch (OperationCanceledException e) {
 				// thrown when canceling the AST creation
 			} catch (ModelException e) {
-				new Status(Status.ERROR, PHPUiPlugin.ID, "error retrieving AST from Provider"); 
+				new Status(Status.ERROR, PHPUiPlugin.ID,
+						"error retrieving AST from Provider");
 			} catch (IOException e) {
-				new Status(Status.ERROR, PHPUiPlugin.ID, "error retrieving AST from Provider");				
+				new Status(Status.ERROR, PHPUiPlugin.ID,
+						"error retrieving AST from Provider");
 			}
 			return Status.CANCEL_STATUS;
 		}
 	}
-	
-		
+
 	private Map<ITextEditor, PartListenerGroup> fListenerGroups;
-	
+
 	private SelectionListenerWithASTManager() {
-		fListenerGroups= new HashMap<ITextEditor, PartListenerGroup>();
+		fListenerGroups = new HashMap<ITextEditor, PartListenerGroup>();
 	}
-	
+
 	/**
 	 * Registers a selection listener for the given editor part.
-	 * @param part The editor part to listen to.
-	 * @param listener The listener to register.
+	 * 
+	 * @param part
+	 *            The editor part to listen to.
+	 * @param listener
+	 *            The listener to register.
 	 */
 	public void addListener(ITextEditor part, ISelectionListenerWithAST listener) {
 		synchronized (this) {
-			PartListenerGroup partListener= fListenerGroups.get(part);
+			PartListenerGroup partListener = fListenerGroups.get(part);
 			if (partListener == null) {
-				partListener= new PartListenerGroup(part);
+				partListener = new PartListenerGroup(part);
 				fListenerGroups.put(part, partListener);
 			}
 			partListener.install(listener);
@@ -213,12 +225,16 @@ public class SelectionListenerWithASTManager {
 
 	/**
 	 * Unregisters a selection listener.
-	 * @param part The editor part the listener was registered.
-	 * @param listener The listener to unregister.
+	 * 
+	 * @param part
+	 *            The editor part the listener was registered.
+	 * @param listener
+	 *            The listener to unregister.
 	 */
-	public void removeListener(ITextEditor part, ISelectionListenerWithAST listener) {
+	public void removeListener(ITextEditor part,
+			ISelectionListenerWithAST listener) {
 		synchronized (this) {
-			PartListenerGroup partListener= fListenerGroups.get(part);
+			PartListenerGroup partListener = fListenerGroups.get(part);
 			if (partListener != null) {
 				partListener.uninstall(listener);
 				if (partListener.isEmpty()) {

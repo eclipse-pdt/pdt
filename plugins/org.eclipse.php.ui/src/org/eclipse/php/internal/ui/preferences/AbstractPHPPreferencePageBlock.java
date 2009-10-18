@@ -30,12 +30,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
- * An AbstractPHPPreferencePageBlock supplies some of the basic functionalities to ease up the 
- * creation of subclassing {@link IPHPPreferencePageBlock}.
+ * An AbstractPHPPreferencePageBlock supplies some of the basic functionalities
+ * to ease up the creation of subclassing {@link IPHPPreferencePageBlock}.
  * 
  * @author shalom
  */
-public abstract class AbstractPHPPreferencePageBlock implements IPHPPreferencePageBlock {
+public abstract class AbstractPHPPreferencePageBlock implements
+		IPHPPreferencePageBlock {
 
 	private String comparableName;
 
@@ -58,7 +59,8 @@ public abstract class AbstractPHPPreferencePageBlock implements IPHPPreferencePa
 		return group;
 	}
 
-	protected Button addCheckBox(Composite parent, String label, String prefKey, int horizontalIndent) {
+	protected Button addCheckBox(Composite parent, String label,
+			String prefKey, int horizontalIndent) {
 		Button checkBox = new Button(parent, SWT.CHECK);
 		checkBox.setText(label);
 
@@ -82,7 +84,8 @@ public abstract class AbstractPHPPreferencePageBlock implements IPHPPreferencePa
 	protected IScopeContext[] createPreferenceScopes(PreferencePage propertyPage) {
 		IProject project = getProject(propertyPage);
 		if (project != null) {
-			return new IScopeContext[] { new ProjectScope(project), new InstanceScope(), new DefaultScope() };
+			return new IScopeContext[] { new ProjectScope(project),
+					new InstanceScope(), new DefaultScope() };
 		}
 		return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
 	}

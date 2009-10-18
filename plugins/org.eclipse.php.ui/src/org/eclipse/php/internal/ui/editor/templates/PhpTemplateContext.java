@@ -17,13 +17,14 @@ import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.text.IDocument;
 
 /**
- * The template's context 
+ * The template's context
  */
 public class PhpTemplateContext extends ScriptTemplateContext {
 
-
-	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType, IDocument document, int offset, int length, ISourceModule sourceModule) {
+	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType,
+			IDocument document, int offset, int length,
+			ISourceModule sourceModule) {
 		super(phpTemplateContextType, document, offset, length, sourceModule);
 	}
-	
+
 }

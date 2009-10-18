@@ -33,15 +33,15 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
-import org.eclipse.ui.views.navigator.NavigatorDragAdapter;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
 /**
- * PHP Explorer view part to display the projects, contained files and referenced folders/libraries.
- * The view displays those in a "file-system oriented" manner, and not in a "model oriented" manner.
+ * PHP Explorer view part to display the projects, contained files and
+ * referenced folders/libraries. The view displays those in a
+ * "file-system oriented" manner, and not in a "model oriented" manner.
  * 
  * @author apeled, ncohen
- *
+ * 
  */
 public class PHPExplorerPart extends ScriptExplorerPart {
 
@@ -60,11 +60,12 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 			if (e1 instanceof IncludePath || e2 instanceof IncludePath) {
 				return -1;
 			}
-			
+
 			if (e1 instanceof NamespaceNode && e2 instanceof NamespaceNode) {
-				return ((NamespaceNode)e1).getElementName().compareTo(((NamespaceNode)e2).getElementName());
+				return ((NamespaceNode) e1).getElementName().compareTo(
+						((NamespaceNode) e2).getElementName());
 			}
-			
+
 			// Fix #256585 - sort by resource name
 			Object c1 = e1;
 			if (e1 instanceof ISourceModule) {
@@ -81,9 +82,8 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		}
 	}
 
-	
-	
-	protected class PHPExplorerWorkingSetAwareModelElementSorter extends PHPExplorerElementSorter {
+	protected class PHPExplorerWorkingSetAwareModelElementSorter extends
+			PHPExplorerElementSorter {
 
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof IWorkingSet || e2 instanceof IWorkingSet)
@@ -95,7 +95,10 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#setFlatLayout(boolean)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#setFlatLayout
+	 * (boolean)
 	 * 
 	 * Always displays in hierarchical mode, never flat.
 	 */
@@ -106,11 +109,14 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#createContentProvider()
+	 * 
+	 * @seeorg.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#
+	 * createContentProvider()
 	 */
 	@Override
 	public ScriptExplorerContentProvider createContentProvider() {
-		boolean showCUChildren = DLTKUIPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
+		boolean showCUChildren = DLTKUIPlugin.getDefault().getPreferenceStore()
+				.getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
 		if (getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS) {
 			return new PHPExplorerContentProvider(showCUChildren) {
 				protected IPreferenceStore getPreferenceStore() {
@@ -118,7 +124,8 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 				}
 			};
 		} else {
-			return new WorkingSetAwarePHPExplorerContentProvider(showCUChildren, getWorkingSetModel()) {
+			return new WorkingSetAwarePHPExplorerContentProvider(
+					showCUChildren, getWorkingSetModel()) {
 				protected IPreferenceStore getPreferenceStore() {
 					return DLTKUIPlugin.getDefault().getPreferenceStore();
 				}
@@ -128,16 +135,20 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#createLabelProvider()
+	 * 
+	 * @seeorg.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart#
+	 * createLabelProvider()
 	 */
 	@Override
 	protected ScriptExplorerLabelProvider createLabelProvider() {
-		final IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
+		final IPreferenceStore store = DLTKUIPlugin.getDefault()
+				.getPreferenceStore();
 		return new PHPExplorerLabelProvider(getContentProvider(), store);
 	}
 
 	/**
-	 * Overriding DTLK original setComerator, and setting "includePathContainer - aware" comparators
+	 * Overriding DTLK original setComerator, and setting
+	 * "includePathContainer - aware" comparators
 	 */
 	@Override
 	protected void setComparator() {
@@ -155,35 +166,36 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	@Override
 	protected ScriptExplorerActionGroup getActionGroup() {
 		/*
-		 * setting our own PDT action group, based on DLTK's ScriptExplorer action-group,
-		 * but also adding "include path" actions
+		 * setting our own PDT action group, based on DLTK's ScriptExplorer
+		 * action-group, but also adding "include path" actions
 		 */
 		return new PHPExplorerActionGroup(this);
 	}
+
 	@Override
 	public void createPartControl(Composite parent) {
 		// TODO Auto-generated method stub
 		super.createPartControl(parent);
-//		initDragAndDrop();
+		// initDragAndDrop();
 		activateContext();
 	}
-	
-	private void initDragAndDrop() {
-		int ops= DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT;
 
-		Transfer[] transfers= new Transfer[] {
-			LocalSelectionTransfer.getInstance(),
-			FileTransfer.getInstance(),
-			PluginTransfer.getInstance()};
-		
+	private void initDragAndDrop() {
+		int ops = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK
+				| DND.DROP_DEFAULT;
+
+		Transfer[] transfers = new Transfer[] {
+				LocalSelectionTransfer.getInstance(),
+				FileTransfer.getInstance(), PluginTransfer.getInstance() };
+
 		TreeViewer viewer = getTreeViewer();
-//		viewer.addDragSupport(ops, transfers, new NavigatorDragAdapter(viewer));
+		// viewer.addDragSupport(ops, transfers, new
+		// NavigatorDragAdapter(viewer));
 		NavigatorDropAdapter adapter = new PHPNavigatorDropAdapter(viewer);
 		adapter.setFeedbackEnabled(true);
-		viewer.addDropSupport(ops , transfers, adapter);
+		viewer.addDropSupport(ops, transfers, adapter);
 	}
 
-	
 	/**
 	 * Activate a context that this view uses. It will be tied to this view
 	 * activation events and will be removed when the view is disposed.
@@ -193,10 +205,10 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 				.getService(IContextService.class);
 		contextService.activateContext("org.eclipse.php.ui.contexts.window");
 	}
-	
-	
+
 	protected void initDrop() {
-		PHPViewerDropSupport dropSupport = new PHPViewerDropSupport(getTreeViewer());
+		PHPViewerDropSupport dropSupport = new PHPViewerDropSupport(
+				getTreeViewer());
 		dropSupport.addDropTargetListener(new WorkingSetDropAdapter(this));
 		dropSupport.start();
 	}

@@ -26,13 +26,16 @@ public class InitializeAfterLoadJob extends UIJob {
 		protected IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("", 10); //$NON-NLS-1$
 			try {
-				PHPCorePlugin.initializeAfterLoad(new SubProgressMonitor(monitor, 6));
-				PHPUiPlugin.initializeAfterLoad(new SubProgressMonitor(monitor, 4));
+				PHPCorePlugin.initializeAfterLoad(new SubProgressMonitor(
+						monitor, 6));
+				PHPUiPlugin.initializeAfterLoad(new SubProgressMonitor(monitor,
+						4));
 			} catch (CoreException e) {
 				PHPCorePlugin.log(e);
 				return e.getStatus();
 			}
-			return new Status(IStatus.OK, PHPCorePlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
+			return new Status(IStatus.OK, PHPCorePlugin.getPluginId(),
+					IStatus.OK, "", null); //$NON-NLS-1$
 		}
 
 		public boolean belongsTo(Object family) {
@@ -46,9 +49,11 @@ public class InitializeAfterLoadJob extends UIJob {
 	}
 
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		Job job = new RealJob(PHPUIMessages.getString("InitializeAfterLoadJob_1")); //$NON-NLS-1$
+		Job job = new RealJob(PHPUIMessages
+				.getString("InitializeAfterLoadJob_1")); //$NON-NLS-1$
 		job.setPriority(Job.SHORT);
 		job.schedule();
-		return new Status(IStatus.OK, PHPCorePlugin.getPluginId(), IStatus.OK, "", null); //$NON-NLS-1$
+		return new Status(IStatus.OK, PHPCorePlugin.getPluginId(), IStatus.OK,
+				"", null); //$NON-NLS-1$
 	}
 }

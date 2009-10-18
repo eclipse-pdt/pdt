@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.preferences.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
@@ -27,14 +28,15 @@ public class XMLPreferencesReaderUI extends XMLPreferencesReader {
 
 	/**
 	 * Reads a map of elements from the IPreferenceStore by a given key.
-	 *
+	 * 
 	 * @param store
 	 * @param prefsKey
 	 * @return
 	 */
 	public static HashMap[] read(IPreferenceStore store, String prefsKey) {
 		ArrayList maps = new ArrayList();
-		StringTokenizer st = new StringTokenizer(store.getString(prefsKey), new String(new char[] { DELIMITER }));
+		StringTokenizer st = new StringTokenizer(store.getString(prefsKey),
+				new String(new char[] { DELIMITER }));
 		while (st.hasMoreTokens()) {
 			maps.add(read(st.nextToken()));
 		}
@@ -43,15 +45,19 @@ public class XMLPreferencesReaderUI extends XMLPreferencesReader {
 
 	/**
 	 * Reads a map of elements from the project Properties by a given key.
-	 *
-	 * @param prefsKey The key to store by.
-	 * @param projectScope The context for the project Scope
+	 * 
+	 * @param prefsKey
+	 *            The key to store by.
+	 * @param projectScope
+	 *            The context for the project Scope
 	 * @param workingCopyManager
 	 * @return
 	 */
-	public static HashMap[] read(Key prefKey, ProjectScope projectScope, IWorkingCopyManager workingCopyManager){
+	public static HashMap[] read(Key prefKey, ProjectScope projectScope,
+			IWorkingCopyManager workingCopyManager) {
 
-		String storedValue = prefKey.getStoredValue(projectScope, workingCopyManager);
+		String storedValue = prefKey.getStoredValue(projectScope,
+				workingCopyManager);
 		if (storedValue == null)
 			storedValue = STRING_DEFAULT;
 		return getHashFromStoredValue(storedValue);

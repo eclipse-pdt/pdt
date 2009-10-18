@@ -37,7 +37,8 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		setEnabled(SelectionConverter.canOperateOn(fEditor));
 	}
 
-	//---- Structured selection ------------------------------------------------
+	// ---- Structured selection
+	// ------------------------------------------------
 
 	public void selectionChanged(IStructuredSelection selection) {
 		try {
@@ -51,7 +52,8 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		setEnabled(false);
 	}
 
-	private static boolean canEnable(IStructuredSelection selection) throws CoreException {
+	private static boolean canEnable(IStructuredSelection selection)
+			throws CoreException {
 		IModelElement element = getPHPElement(selection);
 		if (element == null)
 			return false;
@@ -76,11 +78,14 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		try {
 			run(element);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_exception"));
+			ExceptionHandler.handle(e, PHPUIMessages
+					.getString("RenamePHPElementAction_name"), PHPUIMessages
+					.getString("RenamePHPElementAction_exception"));
 		}
 	}
 
-	//---- text selection ------------------------------------------------------------
+	// ---- text selection
+	// ------------------------------------------------------------
 
 	public void selectionChanged(ITextSelection selection) {
 		setEnabled(true);
@@ -94,9 +99,13 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 				return;
 			}
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_exception"));
+			ExceptionHandler.handle(e, PHPUIMessages
+					.getString("RenamePHPElementAction_name"), PHPUIMessages
+					.getString("RenamePHPElementAction_exception"));
 		}
-		MessageDialog.openInformation(getShell(), PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_not_available"));
+		MessageDialog.openInformation(getShell(), PHPUIMessages
+				.getString("RenamePHPElementAction_name"), PHPUIMessages
+				.getString("RenamePHPElementAction_not_available"));
 	}
 
 	public boolean canRun() throws ModelException {
@@ -118,15 +127,18 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		return elements[0];
 	}
 
-	//---- helper methods -------------------------------------------------------------------
+	// ---- helper methods
+	// -------------------------------------------------------------------
 
 	private void run(IModelElement element) throws CoreException {
 		if (!ActionUtils.isProcessable(getShell(), element))
 			return;
-		throw new RuntimeException(PHPUIMessages.getString("RenamePHPElementAction.0")); //$NON-NLS-1$
+		throw new RuntimeException(PHPUIMessages
+				.getString("RenamePHPElementAction.0")); //$NON-NLS-1$
 	}
 
-	private static boolean isRenameAvailable(IModelElement element) throws CoreException {
+	private static boolean isRenameAvailable(IModelElement element)
+			throws CoreException {
 		// TODO do something here
 		return false;
 	}

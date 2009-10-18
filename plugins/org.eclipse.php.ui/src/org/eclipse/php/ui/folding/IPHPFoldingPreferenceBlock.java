@@ -15,22 +15,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 /**
- * Contributors to the <code>org.eclipse.php.ui.foldingStructureProvider</code> extension point
- * can specify an implementation of this interface to be displayed on the PHP &gt; Editor &gt; Folding
- * preference page.
+ * Contributors to the <code>org.eclipse.php.ui.foldingStructureProvider</code>
+ * extension point can specify an implementation of this interface to be
+ * displayed on the PHP &gt; Editor &gt; Folding preference page.
  * <p>
  * Clients may implement this interface.
  * </p>
- *
+ * 
  * @since 3.1
  */
 public interface IPHPFoldingPreferenceBlock {
 
 	/**
-	 * Creates the control that will be displayed on the PHP &gt; Editor &gt; Folding
-	 * preference page.
-	 *
-	 * @param parent the parent composite to which to add the preferences control
+	 * Creates the control that will be displayed on the PHP &gt; Editor &gt;
+	 * Folding preference page.
+	 * 
+	 * @param parent
+	 *            the parent composite to which to add the preferences control
 	 * @return the control that was added to <code>parent</code>
 	 */
 	Control createControl(Composite parent);
@@ -42,16 +43,16 @@ public interface IPHPFoldingPreferenceBlock {
 	void initialize();
 
 	/**
-	 * Called when the <code>OK</code> button is pressed on the preference
-	 * page. Implementations should commit the configured preference settings
-	 * into their form of preference storage.
+	 * Called when the <code>OK</code> button is pressed on the preference page.
+	 * Implementations should commit the configured preference settings into
+	 * their form of preference storage.
 	 */
 	void performOk();
 
 	/**
-	 * Called when the <code>Defaults</code> button is pressed on the
-	 * preference page. Implementation should reset any preference settings to
-	 * their default values and adjust the controls accordingly.
+	 * Called when the <code>Defaults</code> button is pressed on the preference
+	 * page. Implementation should reset any preference settings to their
+	 * default values and adjust the controls accordingly.
 	 */
 	void performDefaults();
 

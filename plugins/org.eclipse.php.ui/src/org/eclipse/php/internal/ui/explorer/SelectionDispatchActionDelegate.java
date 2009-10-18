@@ -9,10 +9,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
 
-import org.eclipse.dltk.internal.ui.actions.ActionUtil;
-import org.eclipse.dltk.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.dltk.ui.actions.SelectionDispatchAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -24,7 +21,8 @@ public class SelectionDispatchActionDelegate extends SelectionDispatchAction {
 
 	private IPHPActionDelegator action;
 
-	protected SelectionDispatchActionDelegate(IWorkbenchSite site, IPHPActionDelegator action) {
+	protected SelectionDispatchActionDelegate(IWorkbenchSite site,
+			IPHPActionDelegator action) {
 		super(site);
 		this.action = action;
 	}
@@ -42,16 +40,24 @@ public class SelectionDispatchActionDelegate extends SelectionDispatchAction {
 	public void update(ISelection selection) {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.ui.actions.SelectionDispatchAction#run(org.eclipse.jface.viewers.IStructuredSelection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.ui.actions.SelectionDispatchAction#run(org.eclipse.jface
+	 * .viewers.IStructuredSelection)
 	 */
 	public void run(IStructuredSelection selection) {
 		action.selectionChanged(null, selection);
 		action.run(null);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.ui.actions.SelectionDispatchAction#run(org.eclipse.jface.text.ITextSelection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.ui.actions.SelectionDispatchAction#run(org.eclipse.jface
+	 * .text.ITextSelection)
 	 */
 	public void run(ITextSelection selection) {
 		action.selectionChanged(null, selection);

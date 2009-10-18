@@ -9,36 +9,41 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.jsdt.internal.ui.IJavaStatusConstants;
 
-public abstract class PharBuilder implements IPharBuilder{
+public abstract class PharBuilder implements IPharBuilder {
 
 	private MultiStatus fStatus;
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void open(PharPackage jarPackage, Shell shell, MultiStatus status) throws CoreException {
-		fStatus= status;
+	public void open(PharPackage jarPackage, Shell shell, MultiStatus status)
+			throws CoreException {
+		fStatus = status;
 	}
 
-	//some methods for convenience
+	// some methods for convenience
 	protected final void addInfo(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.INFO, PHPUiPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message, error));
+		fStatus.add(new Status(IStatus.INFO, PHPUiPlugin.getPluginId(),
+				IJavaStatusConstants.INTERNAL_ERROR, message, error));
 	}
 
 	protected final void addWarning(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message, error));
+		fStatus.add(new Status(IStatus.WARNING, PHPUiPlugin.getPluginId(),
+				IJavaStatusConstants.INTERNAL_ERROR, message, error));
 	}
 
 	protected final void addError(String message, Throwable error) {
-		fStatus.add(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(), IJavaStatusConstants.INTERNAL_ERROR, message, error));
+		fStatus.add(new Status(IStatus.ERROR, PHPUiPlugin.getPluginId(),
+				IJavaStatusConstants.INTERNAL_ERROR, message, error));
 	}
 
 	protected final void addToStatus(CoreException ex) {
-		IStatus status= ex.getStatus();
-		String message= ex.getLocalizedMessage();
+		IStatus status = ex.getStatus();
+		String message = ex.getLocalizedMessage();
 		if (message == null || message.length() < 1) {
-			message= "";
-			status= new Status(status.getSeverity(), status.getPlugin(), status.getCode(), message, ex);
+			message = "";
+			status = new Status(status.getSeverity(), status.getPlugin(),
+					status.getCode(), message, ex);
 		}
 		fStatus.add(status);
 	}

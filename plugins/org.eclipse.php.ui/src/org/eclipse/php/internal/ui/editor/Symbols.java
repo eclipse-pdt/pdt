@@ -11,6 +11,7 @@
  *******************************************************************************/
 
 package org.eclipse.php.internal.ui.editor;
+
 // taken from package org.eclipse.jdt.ui.text;
 
 /**
@@ -56,4 +57,3 @@ interface Symbols {
 	int TokenENUM = 1028;
 	int TokenIDENT = 2000;
 }
-

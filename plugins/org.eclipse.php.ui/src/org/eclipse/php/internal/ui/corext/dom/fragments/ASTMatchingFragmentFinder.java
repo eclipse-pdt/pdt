@@ -20,37 +20,42 @@ import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 class ASTMatchingFragmentFinder extends ApplyAll {
 
 	private static boolean isProgramScope = false;
-	
-	public static IASTFragment[] findMatchingFragments(ASTNode scope, ASTFragment toMatch) {
+
+	public static IASTFragment[] findMatchingFragments(ASTNode scope,
+			ASTFragment toMatch) {
 		isProgramScope = scope.getType() == ASTNode.PROGRAM ? true : false;
-		
-		return new ASTMatchingFragmentFinder(toMatch).findMatches(scope);		
+
+		return new ASTMatchingFragmentFinder(toMatch).findMatches(scope);
 	}
 
 	private ASTFragment fFragmentToMatch;
-	private Set<IASTFragment> fMatches= new HashSet<IASTFragment>();
+	private Set<IASTFragment> fMatches = new HashSet<IASTFragment>();
 
 	private ASTMatchingFragmentFinder(ASTFragment toMatch) {
-		fFragmentToMatch= toMatch;	
+		fFragmentToMatch = toMatch;
 	}
+
 	private IASTFragment[] findMatches(ASTNode scope) {
 		fMatches.clear();
 		scope.accept(this);
 		return getMatches();
 	}
-	
+
 	private IASTFragment[] getMatches() {
-		return (IASTFragment[]) fMatches.toArray(new IASTFragment[fMatches.size()]);
-	}	
-	
+		return (IASTFragment[]) fMatches.toArray(new IASTFragment[fMatches
+				.size()]);
+	}
+
 	protected boolean apply(ASTNode node) {
-		// if the change scope is the program scope, we don't want it to affect the function scope
-		if(node.getType() == ASTNode.FUNCTION_DECLARATION && isProgramScope)
+		// if the change scope is the program scope, we don't want it to affect
+		// the function scope
+		if (node.getType() == ASTNode.FUNCTION_DECLARATION && isProgramScope)
 			return false;
-		
-		IASTFragment[] localMatches= fFragmentToMatch.getMatchingFragmentsWithNode(node);
-		for(int i= 0; i < localMatches.length; i++) {
-			fMatches.add(localMatches[i]);	
+
+		IASTFragment[] localMatches = fFragmentToMatch
+				.getMatchingFragmentsWithNode(node);
+		for (int i = 0; i < localMatches.length; i++) {
+			fMatches.add(localMatches[i]);
 		}
 		return true;
 	}

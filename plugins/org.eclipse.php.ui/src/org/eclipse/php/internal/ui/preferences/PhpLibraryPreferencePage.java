@@ -16,7 +16,7 @@ import org.eclipse.dltk.ui.preferences.UserLibraryPreferencePage;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 
 /**
- * Preference page for user libraries 
+ * Preference page for user libraries
  */
 public class PhpLibraryPreferencePage extends UserLibraryPreferencePage {
 

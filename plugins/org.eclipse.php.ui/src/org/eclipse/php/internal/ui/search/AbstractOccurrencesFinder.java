@@ -30,10 +30,13 @@ import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
  * 
  * @author shalom
  */
-public abstract class AbstractOccurrencesFinder extends AbstractVisitor implements IOccurrencesFinder {
+public abstract class AbstractOccurrencesFinder extends AbstractVisitor
+		implements IOccurrencesFinder {
 
-	protected static final String BASE_DESCRIPTION = PHPUIMessages.getString("AbstractOccurrencesFinder.0"); //$NON-NLS-1$
-	protected static final String BASE_WRITE_DESCRIPTION = PHPUIMessages.getString("AbstractOccurrencesFinder.1"); //$NON-NLS-1$
+	protected static final String BASE_DESCRIPTION = PHPUIMessages
+			.getString("AbstractOccurrencesFinder.0"); //$NON-NLS-1$
+	protected static final String BASE_WRITE_DESCRIPTION = PHPUIMessages
+			.getString("AbstractOccurrencesFinder.1"); //$NON-NLS-1$
 	protected static final String BRACKETS = "()";
 
 	protected List<OccurrenceLocation> fResult;
@@ -61,7 +64,10 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#initialize(org.eclipse.php.internal.core.ast.nodes.Program, int, int)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#initialize(org.
+	 * eclipse.php.internal.core.ast.nodes.Program, int, int)
 	 */
 	public String initialize(Program root, int offset, int length) {
 		return initialize(root, NodeFinder.perform(root, offset, length));
@@ -69,7 +75,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getOccurrences()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getOccurrences()
 	 */
 	public OccurrenceLocation[] getOccurrences() {
 		fResult = new ArrayList<OccurrenceLocation>();
@@ -81,7 +89,8 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	}
 
 	/**
-	 * Returns all problems in this program 
+	 * Returns all problems in this program
+	 * 
 	 * @param node
 	 * @return
 	 */
@@ -90,17 +99,18 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 			if (node.getSourceModule() == null) {
 				return null;
 			}
-			
+
 			IResource resource = node.getSourceModule().getUnderlyingResource();
 			if (resource != null) {
-				IMarker[] markers = resource.findMarkers(DefaultProblem.MARKER_TYPE_PROBLEM, true, IResource.DEPTH_ONE);
+				IMarker[] markers = resource.findMarkers(
+						DefaultProblem.MARKER_TYPE_PROBLEM, true,
+						IResource.DEPTH_ONE);
 				ProblemDesc[] problems = new ProblemDesc[markers.length];
 				for (int i = 0; i < markers.length; ++i) {
-					problems[i] = new ProblemDesc(
-						markers[i].getAttribute("id", 0), 
-						markers[i].getAttribute(IMarker.CHAR_START, 0), 
-						markers[i].getAttribute(IMarker.CHAR_END, 0), 
-						markers[i].getAttribute(IMarker.SEVERITY, 0));
+					problems[i] = new ProblemDesc(markers[i].getAttribute("id",
+							0), markers[i].getAttribute(IMarker.CHAR_START, 0),
+							markers[i].getAttribute(IMarker.CHAR_END, 0),
+							markers[i].getAttribute(IMarker.SEVERITY, 0));
 				}
 				return problems;
 			}
@@ -111,6 +121,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 
 	/**
 	 * Whether the specified source range contains error
+	 * 
 	 * @param offset
 	 * @param end
 	 * @return
@@ -129,18 +140,21 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 
 	/**
 	 * Adds occurrence to results list in case there's no error in this position
-	 * @param location Occurrence location
+	 * 
+	 * @param location
+	 *            Occurrence location
 	 */
 	protected void addOccurrence(OccurrenceLocation location) {
-		if (!hasProblems(location.getOffset(), location.getOffset() + location.getLength())) {
+		if (!hasProblems(location.getOffset(), location.getOffset()
+				+ location.getLength())) {
 			fResult.add(location);
 		}
 	}
 
 	/**
-	 * Find and add all the occurrences.
-	 * Extending finders must implement this method to fill the results list.
-	 * Note that this method should not be called directly. It is being called by the {@link #getOccurrences()}.
+	 * Find and add all the occurrences. Extending finders must implement this
+	 * method to fill the results list. Note that this method should not be
+	 * called directly. It is being called by the {@link #getOccurrences()}.
 	 * 
 	 * @see #getOccurrences()
 	 */
@@ -149,14 +163,17 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	/**
 	 * Returns the type of this occurrence.
 	 * 
-	 * @param node The {@link ASTNode} to check.
-	 * @return The occurrence type (one of {@link IOccurrencesFinder} type constants)
+	 * @param node
+	 *            The {@link ASTNode} to check.
+	 * @return The occurrence type (one of {@link IOccurrencesFinder} type
+	 *         constants)
 	 * @see IOccurrencesFinder
 	 */
 	protected abstract int getOccurrenceType(ASTNode node);
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getASTRoot()
 	 */
 	public Program getASTRoot() {
@@ -165,6 +182,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getJobLabel()
 	 */
 	public String getJobLabel() {
@@ -173,7 +191,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getSearchKind()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.ui.search.IOccurrencesFinder#getSearchKind()
 	 */
 	public int getSearchKind() {
 		return IOccurrencesFinder.K_OCCURRENCE;
@@ -181,7 +201,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getUnformattedPluralLabel()
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.search.IOccurrencesFinder#
+	 * getUnformattedPluralLabel()
 	 */
 	public String getUnformattedPluralLabel() {
 		return "OccurrencesFinder_label_plural"; //$NON-NLS-1$
@@ -189,7 +211,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getUnformattedSingularLabel()
+	 * 
+	 * @seeorg.eclipse.php.internal.ui.search.IOccurrencesFinder#
+	 * getUnformattedSingularLabel()
 	 */
 	public String getUnformattedSingularLabel() {
 		return "OccurrencesFinder_label_singular"; //$NON-NLS-1$

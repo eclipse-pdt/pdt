@@ -23,11 +23,13 @@ public class SimpleFilter implements IFilter {
 		return elements;
 	}
 
-	public void addFilterChangeListener(IFilterChangeListener filterChangeListener) {
+	public void addFilterChangeListener(
+			IFilterChangeListener filterChangeListener) {
 		filterChangeListeners.add(filterChangeListener);
 	}
 
-	public void removeFilterChangeListener(IFilterChangeListener filterChangeListener) {
+	public void removeFilterChangeListener(
+			IFilterChangeListener filterChangeListener) {
 		filterChangeListeners.remove(filterChangeListener);
 	}
 
@@ -36,10 +38,12 @@ public class SimpleFilter implements IFilter {
 	}
 
 	protected void notifyFilterChanged() {
-		for (Iterator filterChangeListenerIterator = getFilterChangeListeners().iterator(); filterChangeListenerIterator.hasNext();) {
-			IFilterChangeListener filterChangeListener = (IFilterChangeListener) filterChangeListenerIterator.next();
+		for (Iterator filterChangeListenerIterator = getFilterChangeListeners()
+				.iterator(); filterChangeListenerIterator.hasNext();) {
+			IFilterChangeListener filterChangeListener = (IFilterChangeListener) filterChangeListenerIterator
+					.next();
 			filterChangeListener.notifyFilterChanged();
-			
+
 		}
 	}
 }

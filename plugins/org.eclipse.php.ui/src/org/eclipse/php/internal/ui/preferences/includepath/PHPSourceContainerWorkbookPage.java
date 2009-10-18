@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.*;
@@ -36,8 +35,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -138,8 +135,9 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	private final int IDX_ADD_LINK = 1;
 	private final int IDX_EDIT = 3;
 	private final int IDX_REMOVE = 4;
-	
-	protected List<IChangeListener> addedElementListeners = new ArrayList<IChangeListener>(1);
+
+	protected List<IChangeListener> addedElementListeners = new ArrayList<IChangeListener>(
+			1);
 
 	protected int getIDX_ADD() {
 		return IDX_ADD;

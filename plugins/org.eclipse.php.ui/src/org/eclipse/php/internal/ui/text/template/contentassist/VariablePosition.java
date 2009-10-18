@@ -12,12 +12,10 @@
 package org.eclipse.php.internal.ui.text.template.contentassist;
 
 import org.eclipse.core.runtime.Assert;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.LinkedPositionGroup;
 import org.eclipse.jface.text.link.ProposalPosition;
-
 
 /**
  *
@@ -27,21 +25,24 @@ public class VariablePosition extends ProposalPosition {
 	private MultiVariableGuess fGuess;
 	private MultiVariable fVariable;
 
-	public VariablePosition(IDocument document, int offset, int length, MultiVariableGuess guess, MultiVariable variable) {
-		this(document, offset, length, LinkedPositionGroup.NO_STOP, guess, variable);
+	public VariablePosition(IDocument document, int offset, int length,
+			MultiVariableGuess guess, MultiVariable variable) {
+		this(document, offset, length, LinkedPositionGroup.NO_STOP, guess,
+				variable);
 	}
 
-	public VariablePosition(IDocument document, int offset, int length, int sequence, MultiVariableGuess guess, MultiVariable variable) {
+	public VariablePosition(IDocument document, int offset, int length,
+			int sequence, MultiVariableGuess guess, MultiVariable variable) {
 		super(document, offset, length, sequence, null);
 		Assert.isNotNull(guess);
 		Assert.isNotNull(variable);
-		fVariable= variable;
-		fGuess= guess;
+		fVariable = variable;
+		fGuess = guess;
 	}
 
-
 	/*
-	 * @see org.eclipse.jface.text.link.ProposalPosition#equals(java.lang.Object)
+	 * @see
+	 * org.eclipse.jface.text.link.ProposalPosition#equals(java.lang.Object)
 	 */
 	public boolean equals(Object o) {
 		if (o instanceof VariablePosition && super.equals(o)) {

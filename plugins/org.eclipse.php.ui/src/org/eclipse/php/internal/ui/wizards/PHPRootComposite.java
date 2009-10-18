@@ -48,13 +48,15 @@ public class PHPRootComposite extends Composite {
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		setLayout(layout);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.GRAB_HORIZONTAL);
 		data.horizontalSpan = 2;
 		setLayoutData(data);
 
 		// New Context Root Label
 		Label contextRootLabel = new Label(this, SWT.CHECK);
-		contextRootLabel.setText(ResourceHandler.bind("StaticContextRootComposite.Context_Root_Label",null)); //$NON-NLS-1$
+		contextRootLabel.setText(ResourceHandler.bind(
+				"StaticContextRootComposite.Context_Root_Label", null)); //$NON-NLS-1$
 
 		// New Context Root Entryfield
 		contextRootField = new Text(this, SWT.BORDER);

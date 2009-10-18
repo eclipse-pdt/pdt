@@ -33,7 +33,8 @@ public final class Key {
 		return fKey;
 	}
 
-	private IEclipsePreferences getNode(IScopeContext context, IWorkingCopyManager manager) {
+	private IEclipsePreferences getNode(IScopeContext context,
+			IWorkingCopyManager manager) {
 		IEclipsePreferences node = context.getNode(fQualifier);
 		if (manager != null) {
 			return manager.getWorkingCopy(node);
@@ -41,7 +42,8 @@ public final class Key {
 		return node;
 	}
 
-	public String getStoredValue(IScopeContext context, IWorkingCopyManager manager) {
+	public String getStoredValue(IScopeContext context,
+			IWorkingCopyManager manager) {
 		// fixed bug 197125
 		// check if the node preferences existence before get its keys
 		IEclipsePreferences node = getNode(context, manager);
@@ -54,7 +56,8 @@ public final class Key {
 		return null;
 	}
 
-	public String getStoredValue(IScopeContext[] lookupOrder, boolean ignoreTopScope, IWorkingCopyManager manager) {
+	public String getStoredValue(IScopeContext[] lookupOrder,
+			boolean ignoreTopScope, IWorkingCopyManager manager) {
 		for (int i = ignoreTopScope ? 1 : 0; i < lookupOrder.length; i++) {
 			String value = getStoredValue(lookupOrder[i], manager);
 			if (value != null) {
@@ -64,7 +67,8 @@ public final class Key {
 		return null;
 	}
 
-	public void setStoredValue(IScopeContext context, String value, IWorkingCopyManager manager) {
+	public void setStoredValue(IScopeContext context, String value,
+			IWorkingCopyManager manager) {
 		if (value != null) {
 			getNode(context, manager).put(fKey, value);
 		} else {
@@ -72,14 +76,18 @@ public final class Key {
 		}
 	}
 
-	public void setStoredValue(IScopeContext[] context, String value, IWorkingCopyManager manager) {
+	public void setStoredValue(IScopeContext[] context, String value,
+			IWorkingCopyManager manager) {
 		if (value != null) {
 			getNode(context[0], manager).put(fKey, value);
 		} else {
 			getNode(context[0], manager).remove(fKey);
 		}
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {

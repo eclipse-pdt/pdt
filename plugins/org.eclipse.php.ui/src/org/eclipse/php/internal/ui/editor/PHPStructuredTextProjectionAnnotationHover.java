@@ -26,14 +26,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 
 /**
- * @author seva, 2007
- * Copies behavior of ProjectionAnnotationHover for PHPStructuredTextViewer,
- * but replacing control creater to return PHPSourceViewerInformationControl.
- *
+ * @author seva, 2007 Copies behavior of ProjectionAnnotationHover for
+ *         PHPStructuredTextViewer, but replacing control creater to return
+ *         PHPSourceViewerInformationControl.
+ * 
  */
-public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAnnotationHover implements IAnnotationHoverExtension {
+public class PHPStructuredTextProjectionAnnotationHover extends
+		StructuredTextAnnotationHover implements IAnnotationHoverExtension {
 
-	/** (non-Javadoc)
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#canHandleMouseCursor()
 	 */
 	public boolean canHandleMouseCursor() {
@@ -43,7 +46,9 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 
 	private IInformationControlCreator fInformationControlCreator;
 
-	/** (non-Javadoc)
+	/**
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverControlCreator()
 	 */
 	public IInformationControlCreator getHoverControlCreator() {
@@ -57,22 +62,30 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 		return fInformationControlCreator;
 	}
 
-	/** (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverInfo(org.eclipse.jface.text.source.ISourceViewer, org.eclipse.jface.text.source.ILineRange, int)
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverInfo(org.eclipse.jface.text.source.ISourceViewer,
+	 *      org.eclipse.jface.text.source.ILineRange, int)
 	 */
-	public Object getHoverInfo(ISourceViewer sourceViewer, ILineRange lineRange, int visibleLines) {
-		return getProjectionTextAtLine(sourceViewer, lineRange.getStartLine(), visibleLines);
+	public Object getHoverInfo(ISourceViewer sourceViewer,
+			ILineRange lineRange, int visibleLines) {
+		return getProjectionTextAtLine(sourceViewer, lineRange.getStartLine(),
+				visibleLines);
 	}
 
-	private String getProjectionTextAtLine(ISourceViewer viewer, int line, int visibleLines) {
+	private String getProjectionTextAtLine(ISourceViewer viewer, int line,
+			int visibleLines) {
 
 		IAnnotationModel model = null;
 		if (viewer instanceof ISourceViewerExtension2) {
 			ISourceViewerExtension2 viewerExtension = (ISourceViewerExtension2) viewer;
-			IAnnotationModel visual = viewerExtension.getVisualAnnotationModel();
+			IAnnotationModel visual = viewerExtension
+					.getVisualAnnotationModel();
 			if (visual instanceof IAnnotationModelExtension) {
 				IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) visual;
-				model = modelExtension.getAnnotationModel(ProjectionSupport.PROJECTION);
+				model = modelExtension
+						.getAnnotationModel(ProjectionSupport.PROJECTION);
 			}
 		}
 
@@ -81,7 +94,8 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 				IDocument document = viewer.getDocument();
 				Iterator e = model.getAnnotationIterator();
 				while (e.hasNext()) {
-					ProjectionAnnotation annotation = (ProjectionAnnotation) e.next();
+					ProjectionAnnotation annotation = (ProjectionAnnotation) e
+							.next();
 					if (!annotation.isCollapsed())
 						continue;
 
@@ -90,7 +104,8 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 						continue;
 
 					if (isCaptionLine(annotation, position, document, line))
-						return getText(document, position.getOffset(), position.getLength(), visibleLines);
+						return getText(document, position.getOffset(), position
+								.getLength(), visibleLines);
 
 				}
 			} catch (BadLocationException x) {
@@ -100,28 +115,34 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 		return null;
 	}
 
-	private String getText(IDocument document, int offset, int length, int numberOfLines) throws BadLocationException {
+	private String getText(IDocument document, int offset, int length,
+			int numberOfLines) throws BadLocationException {
 		int endOffset = offset + length;
 
 		try {
-			int endLine = document.getLineOfOffset(offset) + Math.max(0, numberOfLines - 1);
+			int endLine = document.getLineOfOffset(offset)
+					+ Math.max(0, numberOfLines - 1);
 			IRegion lineInfo = document.getLineInformation(endLine);
-			endOffset = Math.min(endOffset, lineInfo.getOffset() + lineInfo.getLength());
+			endOffset = Math.min(endOffset, lineInfo.getOffset()
+					+ lineInfo.getLength());
 		} catch (BadLocationException x) {
 		}
 
 		return document.get(offset, endOffset - offset);
 	}
 
-	private boolean isCaptionLine(ProjectionAnnotation annotation, Position position, IDocument document, int line) {
+	private boolean isCaptionLine(ProjectionAnnotation annotation,
+			Position position, IDocument document, int line) {
 		if (position.getOffset() > -1 && position.getLength() > -1) {
 			try {
 				int captionOffset;
 				if (position instanceof IProjectionPosition)
-					captionOffset = ((IProjectionPosition) position).computeCaptionOffset(document);
+					captionOffset = ((IProjectionPosition) position)
+							.computeCaptionOffset(document);
 				else
 					captionOffset = 0;
-				int startLine = document.getLineOfOffset(position.getOffset() + captionOffset);
+				int startLine = document.getLineOfOffset(position.getOffset()
+						+ captionOffset);
 				return line == startLine;
 			} catch (BadLocationException x) {
 			}
@@ -129,8 +150,11 @@ public class PHPStructuredTextProjectionAnnotationHover extends StructuredTextAn
 		return false;
 	}
 
-	/** (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverLineRange(org.eclipse.jface.text.source.ISourceViewer, int)
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.source.IAnnotationHoverExtension#getHoverLineRange(org.eclipse.jface.text.source.ISourceViewer,
+	 *      int)
 	 */
 	public ILineRange getHoverLineRange(ISourceViewer viewer, int lineNumber) {
 		return new LineRange(lineNumber, 1);
