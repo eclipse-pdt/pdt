@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.breakpoint;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
@@ -38,8 +38,10 @@ public class PHPBreakpointImageDescriptor extends CompositeImageDescriptor {
 	/**
 	 * Constructs a new PHPBreakpointImageDescriptor.
 	 * 
-	 * @param baseImage an image descriptor used as the base image.
-	 * @param flags flags indicating which adornments are to be rendered.
+	 * @param baseImage
+	 *            an image descriptor used as the base image.
+	 * @param flags
+	 *            flags indicating which adornments are to be rendered.
 	 * @see #ENABLED
 	 * @see #CONDITIONAL
 	 */
@@ -59,7 +61,8 @@ public class PHPBreakpointImageDescriptor extends CompositeImageDescriptor {
 		}
 
 		PHPBreakpointImageDescriptor other = (PHPBreakpointImageDescriptor) object;
-		return (getBaseImage().equals(other.getBaseImage()) && getFlags() == other.getFlags());
+		return (getBaseImage().equals(other.getBaseImage()) && getFlags() == other
+				.getFlags());
 	}
 
 	/**
@@ -96,7 +99,8 @@ public class PHPBreakpointImageDescriptor extends CompositeImageDescriptor {
 	}
 
 	private ImageData getImageData(String imageDescriptorKey) {
-		return PHPDebugUIImages.getImageDescriptor(imageDescriptorKey).getImageData();
+		return PHPDebugUIImages.getImageDescriptor(imageDescriptorKey)
+				.getImageData();
 	}
 
 	protected Point getSize() {

@@ -28,54 +28,74 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class PHPVariableValueEditor implements IVariableValueEditor {
 
-    /**
-     * Creates a new editor for a variable with the given signature
-     * @param signature the signature of the primitive to be edited
-     */
-    public PHPVariableValueEditor() {
+	/**
+	 * Creates a new editor for a variable with the given signature
+	 * 
+	 * @param signature
+	 *            the signature of the primitive to be edited
+	 */
+	public PHPVariableValueEditor() {
 
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.debug.ui.actions.IVariableValueEditor#editVariable(org.eclipse.debug.core.model.IVariable, org.eclipse.swt.widgets.Shell)
-     */
-    public boolean editVariable(IVariable variable, Shell shell) {
-        try {
-            String name = variable.getName();
-            String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0; //$NON-NLS-1$
-            String message = NLS.bind(PHPDebugUIMessages.PHPPrimitiveValueEditor_1, new String[] { name }); //$NON-NLS-1$
-            PHPValue value = (PHPValue) variable.getValue();
-            String initialValue = value.getValue();
-            PrimitiveValidator validator = new PrimitiveValidator();
-            InputDialog dialog = new InputDialog(shell, title, message, initialValue, validator);
-            if (dialog.open() == Window.OK) {
-                String stringValue = dialog.getValue();
-                variable.setValue(stringValue);
-            }
-        } catch (DebugException e) {
-            DebugUIPlugin.errorDialog(shell, PHPDebugUIMessages.PHPPrimitiveValueEditor_2, PHPDebugUIMessages.PHPPrimitiveValueEditor_3, e); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return true;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.actions.IVariableValueEditor#editVariable(org.eclipse
+	 * .debug.core.model.IVariable, org.eclipse.swt.widgets.Shell)
+	 */
+	public boolean editVariable(IVariable variable, Shell shell) {
+		try {
+			String name = variable.getName();
+			String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0; //$NON-NLS-1$
+			String message = NLS.bind(
+					PHPDebugUIMessages.PHPPrimitiveValueEditor_1,
+					new String[] { name }); //$NON-NLS-1$
+			PHPValue value = (PHPValue) variable.getValue();
+			String initialValue = value.getValue();
+			PrimitiveValidator validator = new PrimitiveValidator();
+			InputDialog dialog = new InputDialog(shell, title, message,
+					initialValue, validator);
+			if (dialog.open() == Window.OK) {
+				String stringValue = dialog.getValue();
+				variable.setValue(stringValue);
+			}
+		} catch (DebugException e) {
+			DebugUIPlugin.errorDialog(shell,
+					PHPDebugUIMessages.PHPPrimitiveValueEditor_2,
+					PHPDebugUIMessages.PHPPrimitiveValueEditor_3, e); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return true;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.debug.ui.actions.IVariableValueEditor#saveVariable(org.eclipse.debug.core.model.IVariable, java.lang.String, org.eclipse.swt.widgets.Shell)
-     */
-    public boolean saveVariable(IVariable variable, String expression, Shell shell) {
-        return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.actions.IVariableValueEditor#saveVariable(org.eclipse
+	 * .debug.core.model.IVariable, java.lang.String,
+	 * org.eclipse.swt.widgets.Shell)
+	 */
+	public boolean saveVariable(IVariable variable, String expression,
+			Shell shell) {
+		return false;
+	}
 
-    /**
-     * Input validator for primitive types
-     */
-    protected class PrimitiveValidator implements IInputValidator {
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
-         */
-        public String isValid(String newText) {
-            // TODO Add some error checking code
-            return null;
-        }
-    }
+	/**
+	 * Input validator for primitive types
+	 */
+	protected class PrimitiveValidator implements IInputValidator {
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
+		 */
+		public String isValid(String newText) {
+			// TODO Add some error checking code
+			return null;
+		}
+	}
 
 }

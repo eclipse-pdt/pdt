@@ -25,8 +25,8 @@ import org.eclipse.ui.ide.IDE;
 
 /**
  * @author Adam Peller (IBM)
- *
- * Dialog to select a Project from the Workspace
+ * 
+ *         Dialog to select a Project from the Workspace
  */
 public class ProjectSelectionDialog extends ElementListSelectionDialog {
 
@@ -36,10 +36,12 @@ public class ProjectSelectionDialog extends ElementListSelectionDialog {
 	 * @param parent
 	 * @param renderer
 	 */
-	public ProjectSelectionDialog(Shell parent, String[] requiredNatures, String title, String message) {
+	public ProjectSelectionDialog(Shell parent, String[] requiredNatures,
+			String title, String message) {
 		super(parent, new ProjectLabelProvider());
 		this.requiredNatures = requiredNatures;
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+				.getProjects();
 		if (requiredNatures != null && requiredNatures.length > 0) {
 			Vector filteredProjects = new Vector();
 			int numProjects = projects == null ? 0 : projects.length;
@@ -61,7 +63,8 @@ public class ProjectSelectionDialog extends ElementListSelectionDialog {
 
 	}
 
-	private boolean projectHasRequiredNatures(IProject project) throws CoreException {
+	private boolean projectHasRequiredNatures(IProject project)
+			throws CoreException {
 		if (requiredNatures != null) {
 			for (int i = 0; i < requiredNatures.length; i++) {
 				if (!project.hasNature(requiredNatures[i]))
@@ -75,19 +78,25 @@ public class ProjectSelectionDialog extends ElementListSelectionDialog {
 
 class ProjectLabelProvider extends LabelProvider {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 	 */
 	public Image getImage(Object element) {
 		if (element instanceof IProject) {
 			IProject proj = (IProject) element;
-			String imgDesc = proj.isOpen() ? IDE.SharedImages.IMG_OBJ_PROJECT : IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED;
-			return PlatformUI.getWorkbench().getSharedImages().getImage(imgDesc);
+			String imgDesc = proj.isOpen() ? IDE.SharedImages.IMG_OBJ_PROJECT
+					: IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED;
+			return PlatformUI.getWorkbench().getSharedImages()
+					.getImage(imgDesc);
 		}
 		return super.getImage(element);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
 	public String getText(Object element) {

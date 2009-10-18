@@ -15,13 +15,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.core.DLTKLanguageManager;
-import org.eclipse.dltk.core.IDLTKLanguageToolkit;
-import org.eclipse.dltk.core.IProjectFragment;
-import org.eclipse.dltk.core.IScriptFolder;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
@@ -57,18 +51,21 @@ public class PHPConsoleSourceModuleLookup {
 	public ISourceModule findSourceModuleByLocalPath(final IPath path) {
 		final boolean isFullPath = EnvironmentPathUtils.isFull(path);
 		final IProject[] projects = getAllProjects();
-		final IPath[] enclosingProjectsAndZips = scope.enclosingProjectsAndZips();
+		final IPath[] enclosingProjectsAndZips = scope
+				.enclosingProjectsAndZips();
 		for (int i = 0, max = projects.length; i < max; i++) {
 			try {
 				final IProject project = projects[i];
 				if (!checkScope(project, enclosingProjectsAndZips)) {
 					continue;
 				}
-				if (!project.isAccessible() || !DLTKLanguageManager.hasScriptNature(project))
+				if (!project.isAccessible()
+						|| !DLTKLanguageManager.hasScriptNature(project))
 					continue;
 
 				IScriptProject scriptProject = model.getScriptProject(project);
-				final ISourceModule module = findInProject(scriptProject, path, isFullPath);
+				final ISourceModule module = findInProject(scriptProject, path,
+						isFullPath);
 				if (module != null) {
 					return module.exists() ? module : null;
 				}
@@ -83,7 +80,8 @@ public class PHPConsoleSourceModuleLookup {
 		return null;
 	}
 
-	private ISourceModule findInProject(IScriptProject scriptProject, IPath path, boolean isFullPath) throws ModelException {
+	private ISourceModule findInProject(IScriptProject scriptProject,
+			IPath path, boolean isFullPath) throws ModelException {
 		IProjectFragment[] roots = scriptProject.getProjectFragments();
 		for (int j = 0, rootCount = roots.length; j < rootCount; j++) {
 			final ProjectFragment root = (ProjectFragment) roots[j];
@@ -91,12 +89,16 @@ public class PHPConsoleSourceModuleLookup {
 			if (!isFullPath) {
 				rootPath = EnvironmentPathUtils.getLocalPath(rootPath);
 			}
-			if (rootPath.isPrefixOf(path) && !Util.isExcluded(path, root.fullInclusionPatternChars(), root.fullExclusionPatternChars(), false)) {
-				IPath localPath = path.setDevice(null).removeFirstSegments(rootPath.segmentCount());
+			if (rootPath.isPrefixOf(path)
+					&& !Util.isExcluded(path, root.fullInclusionPatternChars(),
+							root.fullExclusionPatternChars(), false)) {
+				IPath localPath = path.setDevice(null).removeFirstSegments(
+						rootPath.segmentCount());
 				if (localPath.segmentCount() >= 1) {
 					final IScriptFolder folder;
 					if (localPath.segmentCount() > 1) {
-						folder = root.getScriptFolder(localPath.removeLastSegments(1));
+						folder = root.getScriptFolder(localPath
+								.removeLastSegments(1));
 					} else {
 						folder = root.getScriptFolder(""); //$NON-NLS-1$
 					}

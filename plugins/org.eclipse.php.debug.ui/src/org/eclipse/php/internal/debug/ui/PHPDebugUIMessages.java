@@ -174,7 +174,7 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String WorkbenchOptionsBlock_workbench_options;
 	public static String WorkingDirectory;
-	
+
 	public static String XDebugWatch_failed;
 	public static String XDebugHover_empty;
 	public static String XDebugPresentation_line;

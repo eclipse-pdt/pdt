@@ -37,21 +37,29 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	private static final String PROPERTY = "launchablePHP"; //$NON-NLS-1$
 
 	/**
-	 * Executes the property test determined by the parameter <code>property</code>. 
+	 * Executes the property test determined by the parameter
+	 * <code>property</code>.
 	 * 
-	 * @param receiver the receiver of the property test
-	 * @param property the property to test
-	 * @param args additional arguments to evaluate the property. If no arguments
-	 *  are specified in the <code>test</code> expression an array of length 0
-	 *  is passed
-	 * @param expectedValue the expected value of the property. The value is either 
-	 *  of type <code>java.lang.String</code> or a boxed base type. If no value was
-	 *  specified in the <code>test</code> expressions then <code>null</code> is passed
+	 * @param receiver
+	 *            the receiver of the property test
+	 * @param property
+	 *            the property to test
+	 * @param args
+	 *            additional arguments to evaluate the property. If no arguments
+	 *            are specified in the <code>test</code> expression an array of
+	 *            length 0 is passed
+	 * @param expectedValue
+	 *            the expected value of the property. The value is either of
+	 *            type <code>java.lang.String</code> or a boxed base type. If no
+	 *            value was specified in the <code>test</code> expressions then
+	 *            <code>null</code> is passed
 	 * 
-	 * @return returns <code>true<code> if the property is equal to the expected value; 
+	 * @return returns
+	 *         <code>true<code> if the property is equal to the expected value; 
 	 *  otherwise <code>false</code> is returned
 	 */
-	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
+	public boolean test(Object receiver, String property, Object[] args,
+			Object expectedValue) {
 		if (receiver instanceof List<?>) {
 			List<?> list = (List<?>) receiver;
 			if (list.size() > 0) {
@@ -59,15 +67,18 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 
 				if (PROPERTY.equals(property)) {
 					if (obj instanceof IEditorInput) {
-						return test(DLTKUIPlugin.getEditorInputModelElement((IEditorInput) obj));
-					}
-					else if (obj instanceof IAdaptable) {
+						return test(DLTKUIPlugin
+								.getEditorInputModelElement((IEditorInput) obj));
+					} else if (obj instanceof IAdaptable) {
 						IResource resource = getResource((IAdaptable) obj);
-						if (resource != null && resource.getType() == IResource.FILE) {
+						if (resource != null
+								&& resource.getType() == IResource.FILE) {
 							return PHPToolkitUtil.isPhpFile((IFile) resource);
 						}
-						if (resource != null && resource.getType() == IResource.PROJECT) {
-							return isWebPageProjectLaunch(args, (IProject) resource);
+						if (resource != null
+								&& resource.getType() == IResource.PROJECT) {
+							return isWebPageProjectLaunch(args,
+									(IProject) resource);
 						}
 					}
 				}
@@ -75,9 +86,10 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 		}
 		return false;
 	}
-	
+
 	private IResource getResource(IAdaptable obj) {
-		IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
+		IModelElement modelElement = (IModelElement) ((IAdaptable) obj)
+				.getAdapter(IModelElement.class);
 		if (modelElement != null) {
 			return modelElement.getResource();
 		} else {
@@ -86,13 +98,15 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	}
 
 	private boolean test(IModelElement modelElement) {
-		return modelElement != null && modelElement.getElementType() == IModelElement.SOURCE_MODULE && PHPToolkitUtil.isPhpElement(modelElement);
+		return modelElement != null
+				&& modelElement.getElementType() == IModelElement.SOURCE_MODULE
+				&& PHPToolkitUtil.isPhpElement(modelElement);
 	}
 
 	/**
 	 * @param args
 	 * @param resource
-	 * @return true if this is a webpage project 
+	 * @return true if this is a webpage project
 	 */
 	private boolean isWebPageProjectLaunch(Object[] args, IProject resource) {
 		try {
@@ -100,8 +114,9 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 			if (localServer == null) {
 				return false;
 			}
-			return PHPToolkitUtil.isPhpProject((IProject) resource) && args.length > 0 && "webPage".equals(args[0]) ;
-			
+			return PHPToolkitUtil.isPhpProject((IProject) resource)
+					&& args.length > 0 && "webPage".equals(args[0]);
+
 		} catch (CoreException e) {
 			PHPDebugUIPlugin.log(e);
 			return false;

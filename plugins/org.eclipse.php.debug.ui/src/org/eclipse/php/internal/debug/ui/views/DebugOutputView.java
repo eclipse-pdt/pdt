@@ -43,44 +43,54 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 /**
  * View of the PHP parameter stack
  */
-public class DebugOutputView extends AbstractDebugView implements ISelectionListener {
+public class DebugOutputView extends AbstractDebugView implements
+		ISelectionListener {
 
-    private IPHPDebugTarget fTarget;
-    private int fUpdateCount;
-    private IDebugEventSetListener terminateListener;
-    private DebugViewHelper debugViewHelper;
+	private IPHPDebugTarget fTarget;
+	private int fUpdateCount;
+	private IDebugEventSetListener terminateListener;
+	private DebugViewHelper debugViewHelper;
 	private StructuredTextViewer fSourceViewer;
 
-    public DebugOutputView() {
-        super();
-    }
+	public DebugOutputView() {
+		super();
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.debug.ui.AbstractDebugView#createViewer(org.eclipse.swt.widgets.Composite)
-     */
-    protected Viewer createViewer(Composite parent) {
-        
-    	int styles= SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION;
-        fSourceViewer= new StructuredTextViewer(parent, null, null, false, styles);
-        fSourceViewer.setEditable(false);
-        getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
-        getSite().setSelectionProvider(fSourceViewer.getSelectionProvider());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.AbstractDebugView#createViewer(org.eclipse.swt.widgets
+	 * .Composite)
+	 */
+	protected Viewer createViewer(Composite parent) {
 
-        terminateListener = new IDebugEventSetListener() {
-        	PHPDebugTarget target;
+		int styles = SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI
+				| SWT.FULL_SELECTION;
+		fSourceViewer = new StructuredTextViewer(parent, null, null, false,
+				styles);
+		fSourceViewer.setEditable(false);
+		getSite().getWorkbenchWindow().getSelectionService()
+				.addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		getSite().setSelectionProvider(fSourceViewer.getSelectionProvider());
+
+		terminateListener = new IDebugEventSetListener() {
+			PHPDebugTarget target;
+
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
 
-						if(!(obj instanceof PHPDebugTarget))
+						if (!(obj instanceof PHPDebugTarget))
 							continue;
 
-						if ( events[i].getKind() == DebugEvent.TERMINATE) {
-							target = (PHPDebugTarget)obj;
+						if (events[i].getKind() == DebugEvent.TERMINATE) {
+							target = (PHPDebugTarget) obj;
 							Job job = new UIJob("debug output") {
-								public IStatus runInUIThread(IProgressMonitor monitor) {
+								public IStatus runInUIThread(
+										IProgressMonitor monitor) {
 									update(target);
 									return Status.OK_STATUS;
 								}
@@ -95,104 +105,126 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
 
 		debugViewHelper = new DebugViewHelper();
 
-        return fSourceViewer;
-    }
+		return fSourceViewer;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.debug.ui.AbstractDebugView#getHelpContextId()
-     */
-    protected String getHelpContextId() {
-    	return IPHPHelpContextIds.DEBUG_OUTPUT_VIEW;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.ui.AbstractDebugView#getHelpContextId()
+	 */
+	protected String getHelpContextId() {
+		return IPHPHelpContextIds.DEBUG_OUTPUT_VIEW;
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.debug.ui.AbstractDebugView#configureToolBar(org.eclipse.jface.action.IToolBarManager)
-     */
-    protected void configureToolBar(IToolBarManager tbm) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.AbstractDebugView#configureToolBar(org.eclipse.jface
+	 * .action.IToolBarManager)
+	 */
+	protected void configureToolBar(IToolBarManager tbm) {
 
-    }
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IWorkbenchPart#dispose()
-     */
-    public void dispose() {
-        getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
-        DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
-        //       fTarget = null;
-        super.dispose();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IWorkbenchPart#dispose()
+	 */
+	public void dispose() {
+		getSite().getWorkbenchWindow().getSelectionService()
+				.removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
+		// fTarget = null;
+		super.dispose();
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
-     */
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+	 */
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
-    	IPHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
-        update(target);
-    }
+		IPHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
+		update(target);
+	}
 
-    private synchronized void update(IPHPDebugTarget target) {
-        IPHPDebugTarget oldTarget = fTarget;
-        int oldcount = fUpdateCount;
-        fTarget = target;
-        HTMLDocumentLoader ss = new HTMLDocumentLoader();
-        BasicStructuredDocument dd = (BasicStructuredDocument)ss.createNewStructuredDocument();
-        Object input = dd;
-        if (fTarget != null) {
-        	if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
-	        	DebugOutput outputBuffer = fTarget.getOutputBuffer();
-	        	fUpdateCount = outputBuffer.getUpdateCount();
+	private synchronized void update(IPHPDebugTarget target) {
+		IPHPDebugTarget oldTarget = fTarget;
+		int oldcount = fUpdateCount;
+		fTarget = target;
+		HTMLDocumentLoader ss = new HTMLDocumentLoader();
+		BasicStructuredDocument dd = (BasicStructuredDocument) ss
+				.createNewStructuredDocument();
+		Object input = dd;
+		if (fTarget != null) {
+			if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
+				DebugOutput outputBuffer = fTarget.getOutputBuffer();
+				fUpdateCount = outputBuffer.getUpdateCount();
 
-	        	// check if output hasn't been updated
-	        	if (fTarget == oldTarget && fUpdateCount == oldcount) return;
+				// check if output hasn't been updated
+				if (fTarget == oldTarget && fUpdateCount == oldcount)
+					return;
 
-	            String output = outputBuffer.toString();
-	            dd.setText(this, output);
-        	} else {
-        		// Not Suspended or Terminated
+				String output = outputBuffer.toString();
+				dd.setText(this, output);
+			} else {
+				// Not Suspended or Terminated
 
-        		//the following is a fix for bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=205688
-        		//if the target is not suspended or terminated fTarget should get back its old value
-        		//so that in the next time the function is called it will not consider this target
-        		//as it was already set to the view
-        		fTarget = oldTarget;
-        		return;
-        	}
-        }
-        try {
-	        fSourceViewer.setInput(input);
-        } catch (Exception e) {
-        	// Don't handle - it may be NPE in LineStyleProviderForEmbeddedCSS
-        }
-        fSourceViewer.configure(new StructuredTextViewerConfigurationHTML());
-        fSourceViewer.refresh();
-    }
+				// the following is a fix for bug
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=205688
+				// if the target is not suspended or terminated fTarget should
+				// get back its old value
+				// so that in the next time the function is called it will not
+				// consider this target
+				// as it was already set to the view
+				fTarget = oldTarget;
+				return;
+			}
+		}
+		try {
+			fSourceViewer.setInput(input);
+		} catch (Exception e) {
+			// Don't handle - it may be NPE in LineStyleProviderForEmbeddedCSS
+		}
+		fSourceViewer.configure(new StructuredTextViewerConfigurationHTML());
+		fSourceViewer.refresh();
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.debug.ui.AbstractDebugView#createActions()
-     */
-    protected void createActions() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.debug.ui.AbstractDebugView#createActions()
+	 */
+	protected void createActions() {
 
+	}
 
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.AbstractDebugView#fillContextMenu(org.eclipse.jface
+	 * .action.IMenuManager)
+	 */
+	protected void fillContextMenu(IMenuManager menu) {
+		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
-    /* (non-Javadoc)
-     * @see org.eclipse.debug.ui.AbstractDebugView#fillContextMenu(org.eclipse.jface.action.IMenuManager)
-     */
-    protected void fillContextMenu(IMenuManager menu) {
-        menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	}
 
-    }
+	public void updateObjects() {
+		super.updateObjects();
+		// update();
 
-    public void updateObjects() {
-        super.updateObjects();
-//        update();
+	}
 
-    }
-
-    protected void becomesVisible() {
-        super.becomesVisible();
-        IPHPDebugTarget target = debugViewHelper.getSelectionElement(null);
-        update(target);
-    }
+	protected void becomesVisible() {
+		super.becomesVisible();
+		IPHPDebugTarget target = debugViewHelper.getSelectionElement(null);
+		update(target);
+	}
 }

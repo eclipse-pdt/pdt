@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Shell;
 public class LaunchUtilities {
 
 	/**
-	 * Returns the standard display to be used. The method first checks, if
-	 * the thread calling this method has an associated display. If so, this
-	 * display is returned. Otherwise the method returns the default display.
+	 * Returns the standard display to be used. The method first checks, if the
+	 * thread calling this method has an associated display. If so, this display
+	 * is returned. Otherwise the method returns the default display.
 	 * 
 	 * @return the display
 	 */
@@ -40,7 +40,7 @@ public class LaunchUtilities {
 
 	/**
 	 * Return a shell for the workbench.
-	 *
+	 * 
 	 * @return org.eclipse.swt.widgets.Shell
 	 */
 	public static Shell getShell() {
@@ -49,56 +49,72 @@ public class LaunchUtilities {
 
 	/**
 	 * Open a dialog window.
-	 *
-	 * @param message java.lang.String
+	 * 
+	 * @param message
+	 *            java.lang.String
 	 */
 	public static void openError(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = getShell();
-				MessageDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message);
+				MessageDialog.openError(shell,
+						PHPDebugUIMessages.LaunchUtilities_error, message);
 			}
 		});
 	}
 
 	/**
 	 * Open a dialog window.
-	 *
-	 * @param message java.lang.String
-	 * @param status IStatus
+	 * 
+	 * @param message
+	 *            java.lang.String
+	 * @param status
+	 *            IStatus
 	 */
 	public static void openError(final String message, final IStatus status) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = getShell();
-				ErrorDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message, status); //$NON-NLS-1$
+				ErrorDialog.openError(shell,
+						PHPDebugUIMessages.LaunchUtilities_error, message,
+						status); //$NON-NLS-1$
 			}
 		});
 	}
 
 	/**
 	 * Open a dialog window.
-	 *
-	 * @param shell the shell
-	 * @param message the message
+	 * 
+	 * @param shell
+	 *            the shell
+	 * @param message
+	 *            the message
 	 */
 	public static void openError(Shell shell, String message) {
-		MessageDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message); //$NON-NLS-1$
+		MessageDialog.openError(shell,
+				PHPDebugUIMessages.LaunchUtilities_error, message); //$NON-NLS-1$
 	}
 
 	/**
 	 * Open a dialog window.
-	 *
-	 * @param shell a shell
-	 * @param message a message
-	 * @param status a status
+	 * 
+	 * @param shell
+	 *            a shell
+	 * @param message
+	 *            a message
+	 * @param status
+	 *            a status
 	 */
 	public static void openError(Shell shell, String message, IStatus status) {
-		ErrorDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error, message, status); //$NON-NLS-1$
+		ErrorDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error,
+				message, status); //$NON-NLS-1$
 	}
 
-	public static String getProjectFromDialog(Shell shell, String[] requiredNatures) {
-		ProjectSelectionDialog dialog = new ProjectSelectionDialog(shell, requiredNatures, PHPDebugUIMessages.LaunchUtilities_projects, PHPDebugUIMessages.LaunchUtilities_selectProject);
+	public static String getProjectFromDialog(Shell shell,
+			String[] requiredNatures) {
+		ProjectSelectionDialog dialog = new ProjectSelectionDialog(shell,
+				requiredNatures, PHPDebugUIMessages.LaunchUtilities_projects,
+				PHPDebugUIMessages.LaunchUtilities_selectProject);
 		dialog.open();
 		Object[] resource = dialog.getResult();
 		String text = null;
@@ -118,19 +134,31 @@ public class LaunchUtilities {
 	}
 
 	/**
-	 * Returns a selected {@link IResource} from a user dialog. 
+	 * Returns a selected {@link IResource} from a user dialog.
 	 * 
-	 * @param project The project to display
-	 * @param shell A Shell
-	 * @param fileExtensions	The required file extension
-	 * @param requiredNatures	The required nature
-	 * @param allowExternalFiles Allow selection from an external files that are currently opened in the editor
+	 * @param project
+	 *            The project to display
+	 * @param shell
+	 *            A Shell
+	 * @param fileExtensions
+	 *            The required file extension
+	 * @param requiredNatures
+	 *            The required nature
+	 * @param allowExternalFiles
+	 *            Allow selection from an external files that are currently
+	 *            opened in the editor
 	 * @return A selected IResource
 	 */
-	public static IResource getFileFromDialog(IProject project, Shell shell, String[] fileExtensions, String[] requiredNatures, boolean allowExternalFiles) {
+	public static IResource getFileFromDialog(IProject project, Shell shell,
+			String[] fileExtensions, String[] requiredNatures,
+			boolean allowExternalFiles) {
 		LaunchUtilities inst = new LaunchUtilities();
 
-		ApplicationFileSelectionDialog d = new ApplicationFileSelectionDialog(shell, inst.new WebLaunchLabelProvider(), PHPDebugUIMessages.LaunchUtilities_selectFile, PHPDebugUIMessages.LaunchUtilities_selectProjectFile, fileExtensions, requiredNatures, false, allowExternalFiles);
+		ApplicationFileSelectionDialog d = new ApplicationFileSelectionDialog(
+				shell, inst.new WebLaunchLabelProvider(),
+				PHPDebugUIMessages.LaunchUtilities_selectFile,
+				PHPDebugUIMessages.LaunchUtilities_selectProjectFile,
+				fileExtensions, requiredNatures, false, allowExternalFiles);
 
 		if (project != null) {
 			d.setInput(project);
@@ -155,7 +183,8 @@ public class LaunchUtilities {
 		return null;
 	}
 
-	private class WebLaunchLabelProvider extends org.eclipse.ui.model.WorkbenchLabelProvider {
+	private class WebLaunchLabelProvider extends
+			org.eclipse.ui.model.WorkbenchLabelProvider {
 
 		protected String decorateText(String input, Object element) {
 			if (element instanceof IFile) {

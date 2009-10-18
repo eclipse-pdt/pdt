@@ -22,7 +22,8 @@ import org.eclipse.php.internal.ui.wizards.WizardControlWrapper;
 import org.eclipse.php.internal.ui.wizards.WizardModel;
 import org.eclipse.swt.widgets.Composite;
 
-public class PHPExeWizardFragment extends CompositeWizardFragment implements IPHPExeCompositeFragment {
+public class PHPExeWizardFragment extends CompositeWizardFragment implements
+		IPHPExeCompositeFragment {
 
 	private PHPExeCompositeFragment compositeFragment;
 	private PHPexeItem phpExeItem;
@@ -33,14 +34,16 @@ public class PHPExeWizardFragment extends CompositeWizardFragment implements IPH
 	}
 
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
-		compositeFragment = new PHPExeCompositeFragment(parent, new WizardControlWrapper(handle), false);
+		compositeFragment = new PHPExeCompositeFragment(parent,
+				new WizardControlWrapper(handle), false);
 		return compositeFragment;
 	}
 
 	public void enter() {
 		if (compositeFragment != null) {
 			try {
-				phpExeItem = (PHPexeItem) getWizardModel().getObject(PHPExeWizard.MODEL);
+				phpExeItem = (PHPexeItem) getWizardModel().getObject(
+						PHPExeWizard.MODEL);
 				if (phpExeItem == null) {
 					phpExeItem = new PHPexeItem();
 				}
@@ -50,7 +53,9 @@ public class PHPExeWizardFragment extends CompositeWizardFragment implements IPH
 				Logger.logException(e);
 			}
 		} else {
-			Logger.log(Logger.ERROR, "Could not display the PHPExeItems wizard (component is null)."); //$NON-NLS-1$
+			Logger
+					.log(Logger.ERROR,
+							"Could not display the PHPExeItems wizard (component is null)."); //$NON-NLS-1$
 		}
 	}
 
@@ -64,7 +69,8 @@ public class PHPExeWizardFragment extends CompositeWizardFragment implements IPH
 	public void exit() {
 		if (compositeFragment != null) {
 			WizardModel model = getWizardModel();
-			model.putObject(PHPExeWizard.MODEL, compositeFragment.getPHPExeItem());
+			model.putObject(PHPExeWizard.MODEL, compositeFragment
+					.getPHPExeItem());
 		}
 	}
 

@@ -44,11 +44,14 @@ public class PHPModelPresentationRegistry {
 
 	private PHPModelPresentationRegistry() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugUIPlugin.getID(), EXTENSION_POINT_NAME);
+		IConfigurationElement[] elements = registry
+				.getConfigurationElementsFor(PHPDebugUIPlugin.getID(),
+						EXTENSION_POINT_NAME);
 		for (int i = 0; i < elements.length; i++) {
 			final IConfigurationElement element = elements[i];
 			if (MODEL_PRESENTATION_TAG.equals(element.getName())) {
-				debugModelPresentations.put(element.getAttribute(ID_ATTRIBUTE), new DebugModelPresentationFactory(element));
+				debugModelPresentations.put(element.getAttribute(ID_ATTRIBUTE),
+						new DebugModelPresentationFactory(element));
 			}
 		}
 	}
@@ -62,6 +65,7 @@ public class PHPModelPresentationRegistry {
 
 	/**
 	 * Returns the best match IDebugModelPresentation.
+	 * 
 	 * @return An IDebugModelPresentation.
 	 */
 	public static IDebugModelPresentation getBestMatchPresentation() {
@@ -74,16 +78,21 @@ public class PHPModelPresentationRegistry {
 			Dictionary presentations = registry.debugModelPresentations;
 			Enumeration e = presentations.elements();
 			while (e.hasMoreElements()) {
-				DebugModelPresentationFactory modelPresentationFactory = (DebugModelPresentationFactory) e.nextElement();
-				if (PHPDebugUIPlugin.getID().equals(modelPresentationFactory.element.getNamespaceIdentifier())) {
+				DebugModelPresentationFactory modelPresentationFactory = (DebugModelPresentationFactory) e
+						.nextElement();
+				if (PHPDebugUIPlugin.getID().equals(
+						modelPresentationFactory.element
+								.getNamespaceIdentifier())) {
 					bestModelPresentationFactory = modelPresentationFactory;
 				} else {
-					registry.bestMatchPresentation = modelPresentationFactory.createParametersInitializer();
+					registry.bestMatchPresentation = modelPresentationFactory
+							.createParametersInitializer();
 					return registry.bestMatchPresentation;
 				}
 			}
 			if (bestModelPresentationFactory != null) {
-				registry.bestMatchPresentation = bestModelPresentationFactory.createParametersInitializer();
+				registry.bestMatchPresentation = bestModelPresentationFactory
+						.createParametersInitializer();
 				return registry.bestMatchPresentation;
 			}
 		} catch (Exception e) {
@@ -103,11 +112,14 @@ public class PHPModelPresentationRegistry {
 
 		public IDebugModelPresentation createParametersInitializer() {
 
-			SafeRunner.run(new SafeRunnable("Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") {
-				public void run() throws Exception {
-					modelPresentation = (IDebugModelPresentation) element.createExecutableExtension(CLASS_ATTRIBUTE);
-				}
-			});
+			SafeRunner
+					.run(new SafeRunnable(
+							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") {
+						public void run() throws Exception {
+							modelPresentation = (IDebugModelPresentation) element
+									.createExecutableExtension(CLASS_ATTRIBUTE);
+						}
+					});
 			return modelPresentation;
 		}
 	}

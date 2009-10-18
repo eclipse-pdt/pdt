@@ -18,19 +18,21 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 
 /**
- * An ExtendedWorkbenchContentProvider provides the base content, plus any external (non-workspace) PHP files
- * that are opened in the editor.
- * This class can be used when presenting dialogs for selecting PHP files. 
+ * An ExtendedWorkbenchContentProvider provides the base content, plus any
+ * external (non-workspace) PHP files that are opened in the editor. This class
+ * can be used when presenting dialogs for selecting PHP files.
  * 
  * @author shalom
  */
-public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvider {
+public class ExtendedWorkbenchContentProvider extends
+		BaseWorkbenchContentProvider {
 
 	private boolean isProvidingExternals;
 
 	/**
-	 * Constructs a new ExtendedWorkbenchContentProvider.
-	 * By default, the provider provides the external files when the {@link #getChildren(Object)} method is called.
+	 * Constructs a new ExtendedWorkbenchContentProvider. By default, the
+	 * provider provides the external files when the
+	 * {@link #getChildren(Object)} method is called.
 	 */
 	public ExtendedWorkbenchContentProvider() {
 		super();
@@ -40,7 +42,9 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 	/**
 	 * Constructs a new ExtendedWorkbenchContentProvider.
 	 * 
-	 * @param provideExternalFiles Set the content provider to provide external files when the {@link #getChildren(Object)} is called.
+	 * @param provideExternalFiles
+	 *            Set the content provider to provide external files when the
+	 *            {@link #getChildren(Object)} is called.
 	 */
 	public ExtendedWorkbenchContentProvider(boolean provideExternalFiles) {
 		super();
@@ -48,7 +52,8 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 	}
 
 	/**
-	 * Set the content provider to provide external files when the {@link #getChildren(Object)} is called.
+	 * Set the content provider to provide external files when the
+	 * {@link #getChildren(Object)} is called.
 	 * 
 	 * @param provide
 	 */
@@ -57,15 +62,21 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 	}
 
 	/**
-	 * Returns if this provider provides external files when the {@link #getChildren(Object)} method is called.
+	 * Returns if this provider provides external files when the
+	 * {@link #getChildren(Object)} method is called.
+	 * 
 	 * @return
 	 */
 	public boolean isProvidingExternalFiles() {
 		return isProvidingExternals;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.model.BaseWorkbenchContentProvider#getChildren(java.lang
+	 * .Object)
 	 */
 	public Object[] getChildren(Object element) {
 		Object[] children = super.getChildren(element);

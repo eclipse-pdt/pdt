@@ -28,10 +28,11 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * The main PHP | Debug preferences page.
- *
+ * 
  * @author Shalom Gibly
  */
-public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferencePage {
+public class PHPDebugPropertyPreferencePage extends
+		AbstractPHPPropertyPreferencePage {
 
 	private PHPDebugPreferencesBlock debugPreferencesBlock;
 	protected Label fDefaultURLLabel;
@@ -75,7 +76,8 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 		debugPreferencesBlock.setCompositeAddon(comp);
 		debugPreferencesBlock.initializeValues(this);
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.DEBUG_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.DEBUG_PREFERENCES);
 		return comp;
 	}
 
@@ -98,7 +100,8 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 	@Override
 	public boolean performOk() {
 		boolean res = super.performOk();
-		boolean res2 = debugPreferencesBlock.performOK(isElementSettingsEnabled());
+		boolean res2 = debugPreferencesBlock
+				.performOK(isElementSettingsEnabled());
 		return res && res2;
 	}
 }

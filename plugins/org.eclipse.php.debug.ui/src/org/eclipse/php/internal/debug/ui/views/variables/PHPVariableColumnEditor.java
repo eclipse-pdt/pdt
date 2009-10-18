@@ -22,7 +22,8 @@ import org.eclipse.jface.viewers.ICellModifier;
  */
 public class PHPVariableColumnEditor extends VariableEditor {
 
-	public ICellModifier getCellModifier(IPresentationContext context, Object element) {
+	public ICellModifier getCellModifier(IPresentationContext context,
+			Object element) {
 		return new PHPVariableCellModifier();
 	}
 }

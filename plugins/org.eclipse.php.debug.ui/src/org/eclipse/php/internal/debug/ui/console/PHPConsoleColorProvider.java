@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.console;
 
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,9 +36,11 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.swt.graphics.Color;
 
 /**
- *
- * The default behavior of mapping stdin/stdout to the console doesn't apply to PHP, since the process in the debug target is
- * generally a web browser, and a output view.  Instead, create IStreamMonitors onto which we will map parser errors.
+ * 
+ * The default behavior of mapping stdin/stdout to the console doesn't apply to
+ * PHP, since the process in the debug target is generally a web browser, and a
+ * output view. Instead, create IStreamMonitors onto which we will map parser
+ * errors.
  */
 public class PHPConsoleColorProvider extends ConsoleColorProvider {
 
@@ -48,10 +49,15 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	private IConsole fConsole;
 	private ILaunch fLaunch;
 	private PHPHyperLink fPHPHyperLink;
-	private final static String PHP_DEBUG_STREAM = PHPDebugUIPlugin.getID() + ".PHP_CONSOLE_STREAM"; //$NON-NLS-1$
+	private final static String PHP_DEBUG_STREAM = PHPDebugUIPlugin.getID()
+			+ ".PHP_CONSOLE_STREAM"; //$NON-NLS-1$
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.console.IConsoleColorProvider#connect(org.eclipse.debug.core.model.IProcess, org.eclipse.debug.ui.console.IConsole)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.console.IConsoleColorProvider#connect(org.eclipse
+	 * .debug.core.model.IProcess, org.eclipse.debug.ui.console.IConsole)
 	 */
 	public void connect(IProcess process, IConsole console) {
 		fConsole = console;
@@ -66,7 +72,8 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 			return;
 		}
 
-		DebugConsoleMonitor debugMonitor = (DebugConsoleMonitor) proxy.getConsoleStreamMonitor();
+		DebugConsoleMonitor debugMonitor = (DebugConsoleMonitor) proxy
+				.getConsoleStreamMonitor();
 		if (proxy != null) {
 			fConsole.connect(debugMonitor, PHP_DEBUG_STREAM);
 		}
@@ -91,20 +98,26 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 		if (fConsoleEventListeners == null) {
 			Map<String, IPHPConsoleEventListener> listeners = new HashMap<String, IPHPConsoleEventListener>();
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugUIPlugin.getID(), "phpConsoleListeners"); //$NON-NLS-1$
+			IConfigurationElement[] elements = registry
+					.getConfigurationElementsFor(PHPDebugUIPlugin.getID(),
+							"phpConsoleListeners"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
 				if ("listener".equals(element.getName())) { //$NON-NLS-1$
 					String id = element.getAttribute("id"); //$NON-NLS-1$
 					if (!listeners.containsKey(id)) {
-						String overridesIds = element.getAttribute("overridesId");
+						String overridesIds = element
+								.getAttribute("overridesId");
 						if (overridesIds != null) {
-							StringTokenizer st = new StringTokenizer(overridesIds, ", "); //$NON-NLS-1$
+							StringTokenizer st = new StringTokenizer(
+									overridesIds, ", "); //$NON-NLS-1$
 							while (st.hasMoreTokens()) {
 								listeners.put(st.nextToken(), null);
 							}
 						}
 						try {
-							listeners.put(id, (IPHPConsoleEventListener) element.createExecutableExtension("class")); //$NON-NLS-1$
+							listeners
+									.put(id, (IPHPConsoleEventListener) element
+											.createExecutableExtension("class")); //$NON-NLS-1$
 						} catch (CoreException e) {
 							PHPDebugUIPlugin.log(e);
 						}
@@ -112,13 +125,17 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 				}
 			}
 			Collection<IPHPConsoleEventListener> l = listeners.values();
-			while (l.remove(null)); // remove null elements
-			fConsoleEventListeners = l.toArray(new IPHPConsoleEventListener[listeners.size()]);
+			while (l.remove(null))
+				; // remove null elements
+			fConsoleEventListeners = l
+					.toArray(new IPHPConsoleEventListener[listeners.size()]);
 		}
 		return fConsoleEventListeners;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.ui.console.IConsoleColorProvider#disconnect()
 	 */
 	public void disconnect() {
@@ -126,20 +143,27 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 		fProcess = null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.ui.console.IConsoleColorProvider#isReadOnly()
 	 */
 	public boolean isReadOnly() {
-		return true/*fProcess == null || fProcess.isTerminated()*/;
+		return true/* fProcess == null || fProcess.isTerminated() */;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.console.IConsoleColorProvider#getColor(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.console.IConsoleColorProvider#getColor(java.lang
+	 * .String)
 	 */
 	public Color getColor(String streamIdentifer) {
 		if (PHP_DEBUG_STREAM.equals(streamIdentifer)) {
 			// TODO: fix to use own preferences.
-			return DebugUIPlugin.getPreferenceColor(IDebugPreferenceConstants.CONSOLE_SYS_ERR_COLOR);
+			return DebugUIPlugin
+					.getPreferenceColor(IDebugPreferenceConstants.CONSOLE_SYS_ERR_COLOR);
 		}
 		return null;
 	}
@@ -147,9 +171,9 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	/**
 	 * Returns the process this color provider is providing color for, or
 	 * <code>null</code> if none.
-	 *
+	 * 
 	 * @return the process this color provider is providing color for, or
-	 * <code>null</code> if none
+	 *         <code>null</code> if none
 	 */
 	protected IProcess getProcess() {
 		return fProcess;
@@ -158,9 +182,9 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 	/**
 	 * Returns the console this color provider is connected to, or
 	 * <code>null</code> if none.
-	 *
+	 * 
 	 * @return IConsole the console this color provider is connected to, or
-	 * <code>null</code> if none
+	 *         <code>null</code> if none
 	 */
 	protected IConsole getConsole() {
 		return fConsole;

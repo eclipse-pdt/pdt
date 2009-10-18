@@ -36,7 +36,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
-public class DebugBrowserView extends ViewPart implements ISelectionListener{
+public class DebugBrowserView extends ViewPart implements ISelectionListener {
 
 	private Browser swtBrowser;
 
@@ -44,61 +44,70 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 	private int fUpdateCount;
 	private IDebugEventSetListener terminateListener;
 	private DebugViewHelper debugViewHelper;
-    private DebugViewPartListener fPartListener;
+	private DebugViewPartListener fPartListener;
+
 	/**
 	 *
 	 */
 	public DebugBrowserView() {
 		super();
 	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets
+	 * .Composite)
 	 */
 	public void createPartControl(Composite parent) {
-	    Composite container = new Composite(parent,SWT.NONE);
+		Composite container = new Composite(parent, SWT.NONE);
 
-	    GridLayout layout = new GridLayout();
-	    layout.numColumns=1;
-	    layout.makeColumnsEqualWidth=true;
-	    layout.marginHeight = 0;
-	    layout.marginWidth = 0;
-	    container.setLayout(layout);
-	    RowLayout rowLayout =new RowLayout();
-	    rowLayout.spacing=1;
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		layout.makeColumnsEqualWidth = true;
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		container.setLayout(layout);
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.spacing = 1;
 
-	    GridData gridData=new GridData();
-		gridData.grabExcessHorizontalSpace=true;
-		gridData.grabExcessVerticalSpace=true;
-		gridData.horizontalAlignment=SWT.FILL;
-		gridData.verticalAlignment=SWT.FILL;
+		GridData gridData = new GridData();
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.verticalAlignment = SWT.FILL;
 
-	    try {
-	    	swtBrowser = new Browser(container,SWT.NONE);
-	    	swtBrowser.setLayoutData(gridData);
-	    } catch (SWTError error) {
-	    	swtBrowser = null;
-	    	Label label = new Label(container, SWT.WRAP);
-	    	label.setText(PHPDebugUIMessages.DebugBrowserView_swtBrowserNotAvailable0);
-	    	label.setLayoutData(gridData);
-	    }
+		try {
+			swtBrowser = new Browser(container, SWT.NONE);
+			swtBrowser.setLayoutData(gridData);
+		} catch (SWTError error) {
+			swtBrowser = null;
+			Label label = new Label(container, SWT.WRAP);
+			label
+					.setText(PHPDebugUIMessages.DebugBrowserView_swtBrowserNotAvailable0);
+			label.setLayoutData(gridData);
+		}
 
 		debugViewHelper = new DebugViewHelper();
 
-        terminateListener = new IDebugEventSetListener() {
-        	IPHPDebugTarget target;
+		terminateListener = new IDebugEventSetListener() {
+			IPHPDebugTarget target;
+
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
 
-						if(!(obj instanceof IPHPDebugTarget))
+						if (!(obj instanceof IPHPDebugTarget))
 							continue;
 
-						if ( events[i].getKind() == DebugEvent.TERMINATE) {
-							target = (IPHPDebugTarget)obj;
+						if (events[i].getKind() == DebugEvent.TERMINATE) {
+							target = (IPHPDebugTarget) obj;
 							Job job = new UIJob("debug output") { //$NON-NLS-1$
-								public IStatus runInUIThread(IProgressMonitor monitor) {
+								public IStatus runInUIThread(
+										IProgressMonitor monitor) {
 									update(target);
 									return Status.OK_STATUS;
 								}
@@ -111,145 +120,162 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 		};
 
 		DebugPlugin.getDefault().addDebugEventListener(terminateListener);
-		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		getSite().getWorkbenchWindow().getSelectionService()
+				.addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
 
-        if (fPartListener == null) {
-            fPartListener= new DebugViewPartListener();
-            getSite().getPage().addPartListener(fPartListener);
-        }
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.BROWSER_OUTPUT_VIEW);
+		if (fPartListener == null) {
+			fPartListener = new DebugViewPartListener();
+			getSite().getPage().addPartListener(fPartListener);
+		}
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.BROWSER_OUTPUT_VIEW);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
 	 */
 	public void setFocus() {
 	}
 
-    public void dispose() {
-        getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
-        DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
+	public void dispose() {
+		getSite().getWorkbenchWindow().getSelectionService()
+				.removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
+		DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
 
-        if (swtBrowser != null && !swtBrowser.isDisposed()) {
-        	swtBrowser.dispose();
-        }
-        super.dispose();
-    }
+		if (swtBrowser != null && !swtBrowser.isDisposed()) {
+			swtBrowser.dispose();
+		}
+		super.dispose();
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
-     */
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-    	IPHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
-        update(target);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+	 */
+	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+		IPHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
+		update(target);
+	}
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
-     */
-    public void update(IPHPDebugTarget target) {
-    	if (swtBrowser != null && !swtBrowser.isDisposed()) {
-	        IPHPDebugTarget oldTarget = fTarget;
-	        int oldcount = fUpdateCount;
-	        fTarget = target;
-	        
-	        DebugOutput debugOutput = null;
-	        if (fTarget != null ) {
-	           	if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
-	           		debugOutput = fTarget.getOutputBuffer();
-	           		fUpdateCount = debugOutput.getUpdateCount();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+	 * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+	 */
+	public void update(IPHPDebugTarget target) {
+		if (swtBrowser != null && !swtBrowser.isDisposed()) {
+			IPHPDebugTarget oldTarget = fTarget;
+			int oldcount = fUpdateCount;
+			fTarget = target;
 
-	           		// check if output hasn't been updated
-	           		if (fTarget == oldTarget && fUpdateCount == oldcount) {
-	           			return;
-	           		}
-	           	} else {
-	           		// Not Suspended or Terminated
+			DebugOutput debugOutput = null;
+			if (fTarget != null) {
+				if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
+					debugOutput = fTarget.getOutputBuffer();
+					fUpdateCount = debugOutput.getUpdateCount();
 
-	        		//the following is a fix for bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=205688
-	        		//if the target is not suspended or terminated fTarget should get back its old value
-	        		//so that in the next time the function is called it will not consider this target
-	        		//as it was already set to the view
-	           		fTarget = oldTarget;
-	           		return;
-	           	}
-	        }
-	        
-	        if (debugOutput != null) {
-	        	String contentType = debugOutput.getContentType();
-	        	if (contentType != null && !contentType.startsWith("text")) {
-	        		return; // we don't show garbage anymore
-	        	}
-	        	String output = debugOutput.toString();
-		        // Skip headers
-		        int startIdx = output.indexOf("\r\n\r\n"); //$NON-NLS-1$
-		        if (startIdx == -1) {
-		        	startIdx = output.indexOf("\r\n"); //$NON-NLS-1$
-		        }
-		        if (startIdx != -1) {
-		        	output = output.substring(startIdx + 2);
-		        }
-		        swtBrowser.setText(output);
-	        }
-        }
-    }
+					// check if output hasn't been updated
+					if (fTarget == oldTarget && fUpdateCount == oldcount) {
+						return;
+					}
+				} else {
+					// Not Suspended or Terminated
 
-    /**
-     * Part listener that reenables updating when the view appears.
-     */
-    private class DebugViewPartListener implements IPartListener2 {
-        /**
-         *
-         * @see org.eclipse.ui.IPartListener2#partVisible(IWorkbenchPartReference)
-         */
-        public void partVisible(IWorkbenchPartReference ref) {
-            IWorkbenchPart part= ref.getPart(false);
-            if (part == DebugBrowserView.this) {
-                IPHPDebugTarget target = debugViewHelper.getSelectionElement(null);
-                update(target);
-            }
-        }
-        /**
-         * @see org.eclipse.ui.IPartListener2#partHidden(IWorkbenchPartReference)
-         */
-        public void partHidden(IWorkbenchPartReference ref) {
+					// the following is a fix for bug
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=205688
+					// if the target is not suspended or terminated fTarget
+					// should get back its old value
+					// so that in the next time the function is called it will
+					// not consider this target
+					// as it was already set to the view
+					fTarget = oldTarget;
+					return;
+				}
+			}
 
-        }
-        /**
-         * @see org.eclipse.ui.IPartListener2#partActivated(IWorkbenchPartReference)
-         */
-        public void partActivated(IWorkbenchPartReference ref) {
-        }
+			if (debugOutput != null) {
+				String contentType = debugOutput.getContentType();
+				if (contentType != null && !contentType.startsWith("text")) {
+					return; // we don't show garbage anymore
+				}
+				String output = debugOutput.toString();
+				// Skip headers
+				int startIdx = output.indexOf("\r\n\r\n"); //$NON-NLS-1$
+				if (startIdx == -1) {
+					startIdx = output.indexOf("\r\n"); //$NON-NLS-1$
+				}
+				if (startIdx != -1) {
+					output = output.substring(startIdx + 2);
+				}
+				swtBrowser.setText(output);
+			}
+		}
+	}
 
-        /**
-         * @see org.eclipse.ui.IPartListener2#partBroughtToTop(IWorkbenchPartReference)
-         */
-        public void partBroughtToTop(IWorkbenchPartReference ref) {
-        }
+	/**
+	 * Part listener that reenables updating when the view appears.
+	 */
+	private class DebugViewPartListener implements IPartListener2 {
+		/**
+		 * 
+		 * @see org.eclipse.ui.IPartListener2#partVisible(IWorkbenchPartReference)
+		 */
+		public void partVisible(IWorkbenchPartReference ref) {
+			IWorkbenchPart part = ref.getPart(false);
+			if (part == DebugBrowserView.this) {
+				IPHPDebugTarget target = debugViewHelper
+						.getSelectionElement(null);
+				update(target);
+			}
+		}
 
-        /**
-         * @see org.eclipse.ui.IPartListener2#partClosed(IWorkbenchPartReference)
-         */
-        public void partClosed(IWorkbenchPartReference ref) {
-        }
+		/**
+		 * @see org.eclipse.ui.IPartListener2#partHidden(IWorkbenchPartReference)
+		 */
+		public void partHidden(IWorkbenchPartReference ref) {
 
-        /**
-         * @see org.eclipse.ui.IPartListener2#partDeactivated(IWorkbenchPartReference)
-         */
-        public void partDeactivated(IWorkbenchPartReference ref) {
-        }
+		}
 
-        /**
-         * @see org.eclipse.ui.IPartListener2#partOpened(IWorkbenchPartReference)
-         */
-        public void partOpened(IWorkbenchPartReference ref) {
-        }
+		/**
+		 * @see org.eclipse.ui.IPartListener2#partActivated(IWorkbenchPartReference)
+		 */
+		public void partActivated(IWorkbenchPartReference ref) {
+		}
 
-        /**
-         * @see org.eclipse.ui.IPartListener2#partInputChanged(IWorkbenchPartReference)
-         */
-        public void partInputChanged(IWorkbenchPartReference ref){
-        }
+		/**
+		 * @see org.eclipse.ui.IPartListener2#partBroughtToTop(IWorkbenchPartReference)
+		 */
+		public void partBroughtToTop(IWorkbenchPartReference ref) {
+		}
 
-    }
+		/**
+		 * @see org.eclipse.ui.IPartListener2#partClosed(IWorkbenchPartReference)
+		 */
+		public void partClosed(IWorkbenchPartReference ref) {
+		}
+
+		/**
+		 * @see org.eclipse.ui.IPartListener2#partDeactivated(IWorkbenchPartReference)
+		 */
+		public void partDeactivated(IWorkbenchPartReference ref) {
+		}
+
+		/**
+		 * @see org.eclipse.ui.IPartListener2#partOpened(IWorkbenchPartReference)
+		 */
+		public void partOpened(IWorkbenchPartReference ref) {
+		}
+
+		/**
+		 * @see org.eclipse.ui.IPartListener2#partInputChanged(IWorkbenchPartReference)
+		 */
+		public void partInputChanged(IWorkbenchPartReference ref) {
+		}
+
+	}
 }

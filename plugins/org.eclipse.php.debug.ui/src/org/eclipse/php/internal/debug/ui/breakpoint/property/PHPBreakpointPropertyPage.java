@@ -26,7 +26,8 @@ import org.eclipse.ui.dialogs.PropertyPage;
 
 import com.ibm.icu.text.MessageFormat;
 
-public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
+public class PHPBreakpointPropertyPage extends PropertyPage implements
+		IWorkbenchPropertyPage {
 
 	private boolean conditionEnabled;
 	private Text text;
@@ -37,9 +38,11 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenc
 	}
 
 	protected Control createContents(Composite parent) {
-		breakpoint = (PHPConditionalBreakpoint) getElement().getAdapter(PHPConditionalBreakpoint.class);
+		breakpoint = (PHPConditionalBreakpoint) getElement().getAdapter(
+				PHPConditionalBreakpoint.class);
 		if (breakpoint == null) {
-			Logger.log(Logger.ERROR, "Could not adapt to PHPConditionalBreakpoint");
+			Logger.log(Logger.ERROR,
+					"Could not adapt to PHPConditionalBreakpoint");
 			return null;
 		}
 		conditionEnabled = breakpoint.isConditionEnabled();
@@ -48,20 +51,26 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenc
 			conditionEnabled = true;
 		}
 		Label label = new Label(parent, SWT.WRAP);
-		label.setText(MessageFormat.format(PHPDebugUIMessages.EnterCondition_1, new Object[] {}));
-		GridData data = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER);
+		label.setText(MessageFormat.format(PHPDebugUIMessages.EnterCondition_1,
+				new Object[] {}));
+		GridData data = new GridData(GridData.GRAB_HORIZONTAL
+				| GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.VERTICAL_ALIGN_CENTER);
 		data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
 		label.setLayoutData(data);
 		label.setFont(parent.getFont());
 		text = new Text(parent, SWT.SINGLE | SWT.BORDER);
-		text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
+		text.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL
+				| GridData.HORIZONTAL_ALIGN_FILL));
 		text.setText(currentCondition);
 		final Button checkbox = new Button(parent, SWT.CHECK);
-		data = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
+		data = new GridData(GridData.GRAB_HORIZONTAL
+				| GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
 		checkbox.setLayoutData(data);
 		checkbox.setFont(parent.getFont());
-		checkbox.setText(MessageFormat.format(PHPDebugUIMessages.EnableSetCondition_1, new Object[] {}));
+		checkbox.setText(MessageFormat.format(
+				PHPDebugUIMessages.EnableSetCondition_1, new Object[] {}));
 		checkbox.setSelection(conditionEnabled);
 		text.setEnabled(conditionEnabled);
 
@@ -75,13 +84,15 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenc
 			}
 
 		});
-		//HELP - waiting for keren
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IStudioHelpContextIds.???);
+		// HELP - waiting for keren
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+		// IStudioHelpContextIds.???);
 		return parent;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
 	 */
 	public boolean performOk() {

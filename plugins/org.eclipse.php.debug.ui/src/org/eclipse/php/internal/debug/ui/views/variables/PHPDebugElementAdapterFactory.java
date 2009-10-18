@@ -16,8 +16,9 @@ import org.eclipse.debug.internal.ui.views.launch.DebugElementAdapterFactory;
 import org.eclipse.php.internal.debug.core.zend.model.PHPVariable;
 
 /**
- * The PHPDebugElementAdapterFactory is designed to replace the default DebugElementAdapterFactory that is initialized
- * by the DebugUIPlugin
+ * The PHPDebugElementAdapterFactory is designed to replace the default
+ * DebugElementAdapterFactory that is initialized by the DebugUIPlugin
+ * 
  * @author shalom
  */
 public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
@@ -25,7 +26,8 @@ public class PHPDebugElementAdapterFactory extends DebugElementAdapterFactory {
 	private static IElementEditor fElementEditor = new PHPVariableColumnEditor();
 
 	/**
-	 * Override the default getAdapter to provide PHPVariable special variable column factory adapter.
+	 * Override the default getAdapter to provide PHPVariable special variable
+	 * column factory adapter.
 	 */
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adapterType.equals(IElementEditor.class)) {

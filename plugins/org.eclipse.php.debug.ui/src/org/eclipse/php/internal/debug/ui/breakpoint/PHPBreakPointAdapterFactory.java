@@ -14,8 +14,12 @@ import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 
 public class PHPBreakPointAdapterFactory implements IAdapterFactory {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object,
+	 * java.lang.Class)
 	 */
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adapterType == IToggleBreakpointsTarget.class) {
@@ -24,7 +28,9 @@ public class PHPBreakPointAdapterFactory implements IAdapterFactory {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
 	 */
 	public Class[] getAdapterList() {

@@ -15,19 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -37,14 +25,15 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.views.navigator.ResourceSorter;
 
 /**
- * This class was derived from org.eclipse.ui.internal.misc.CheckboxTreeAndListGroup
- *
+ * This class was derived from
+ * org.eclipse.ui.internal.misc.CheckboxTreeAndListGroup
+ * 
  */
 public class TreeAndListGroup implements ISelectionChangedListener {
 	private Object root;
 	private Object currentTreeSelection;
 	private List selectionChangedListeners = new ArrayList();
-	private List doubleClickListeners= new ArrayList();
+	private List doubleClickListeners = new ArrayList();
 
 	private ITreeContentProvider treeContentProvider;
 	private IStructuredContentProvider listContentProvider;
@@ -54,37 +43,49 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	// widgets
 	private TreeViewer treeViewer;
 	private TableViewer listViewer;
-	private boolean allowMultiselection= false;
+	private boolean allowMultiselection = false;
 
 	/**
-	 *	Create an instance of this class.  Use this constructor if you wish to specify
-	 *	the width and/or height of the combined widget (to only hardcode one of the
-	 *	sizing dimensions, specify the other dimension's value as -1)
-	 *
-	 *	@param parent org.eclipse.swt.widgets.Composite
-	 *	@param style int
-	 *  @param rootObject java.lang.Object
-	 *	@param width int
-	 *	@param height int
-	 *  @param allowMultiselection Whether to allow multi-selection in the list viewer.
+	 * Create an instance of this class. Use this constructor if you wish to
+	 * specify the width and/or height of the combined widget (to only hardcode
+	 * one of the sizing dimensions, specify the other dimension's value as -1)
+	 * 
+	 * @param parent
+	 *            org.eclipse.swt.widgets.Composite
+	 * @param style
+	 *            int
+	 * @param rootObject
+	 *            java.lang.Object
+	 * @param width
+	 *            int
+	 * @param height
+	 *            int
+	 * @param allowMultiselection
+	 *            Whether to allow multi-selection in the list viewer.
 	 */
-	public TreeAndListGroup(Composite parent, Object rootObject, ITreeContentProvider treeContentProvider, ILabelProvider treeLabelProvider, IStructuredContentProvider listContentProvider, ILabelProvider listLabelProvider, int style, int width, int height, boolean allowMultiselection) {
+	public TreeAndListGroup(Composite parent, Object rootObject,
+			ITreeContentProvider treeContentProvider,
+			ILabelProvider treeLabelProvider,
+			IStructuredContentProvider listContentProvider,
+			ILabelProvider listLabelProvider, int style, int width, int height,
+			boolean allowMultiselection) {
 
 		root = rootObject;
 		this.treeContentProvider = treeContentProvider;
 		this.listContentProvider = listContentProvider;
 		this.treeLabelProvider = treeLabelProvider;
 		this.listLabelProvider = listLabelProvider;
-		this.allowMultiselection= allowMultiselection;
+		this.allowMultiselection = allowMultiselection;
 		createContents(parent, width, height, style);
 	}
+
 	/**
 	 * This method must be called just before this window becomes visible.
 	 */
 	public void aboutToOpen() {
 		currentTreeSelection = null;
 
-		//select the first element in the list
+		// select the first element in the list
 		Object[] elements = treeContentProvider.getElements(root);
 		Object primary = elements.length > 0 ? elements[0] : null;
 		if (primary != null) {
@@ -92,21 +93,24 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 		}
 		treeViewer.getControl().setFocus();
 	}
+
 	/**
-	 *	Add the passed listener to collection of clients
-	 *	that listen for changes to list viewer selection state
-	 *
-	 *	@param listener ISelectionChangedListener
+	 * Add the passed listener to collection of clients that listen for changes
+	 * to list viewer selection state
+	 * 
+	 * @param listener
+	 *            ISelectionChangedListener
 	 */
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 		selectionChangedListeners.add(listener);
 	}
-	
+
 	/**
 	 * Add the given listener to the collection of clients that listen to
 	 * double-click events in the list viewer
 	 * 
-	 * @param listener IDoubleClickListener
+	 * @param listener
+	 *            IDoubleClickListener
 	 */
 	public void addDoubleClickListener(IDoubleClickListener listener) {
 		doubleClickListeners.add(listener);
@@ -119,29 +123,33 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	protected void notifySelectionListeners(SelectionChangedEvent event) {
 		Iterator iter = selectionChangedListeners.iterator();
 		while (iter.hasNext()) {
-			 ((ISelectionChangedListener) iter.next()).selectionChanged(event);
+			((ISelectionChangedListener) iter.next()).selectionChanged(event);
 		}
 	}
-	
+
 	/**
 	 * Notify all double click listeners that a double click event has occurred
 	 * in the list viewer
 	 */
 	protected void notifyDoubleClickListeners(DoubleClickEvent event) {
-		Iterator iter= doubleClickListeners.iterator();
+		Iterator iter = doubleClickListeners.iterator();
 		while (iter.hasNext()) {
 			((IDoubleClickListener) iter.next()).doubleClick(event);
 		}
 	}
 
 	/**
-	 *	Lay out and initialize self's visual components.
-	 *
-	 *	@param parent org.eclipse.swt.widgets.Composite
-	 *	@param width int
-	 *	@param height int
+	 * Lay out and initialize self's visual components.
+	 * 
+	 * @param parent
+	 *            org.eclipse.swt.widgets.Composite
+	 * @param width
+	 *            int
+	 * @param height
+	 *            int
 	 */
-	protected void createContents(Composite parent, int width, int height, int style) {
+	protected void createContents(Composite parent, int width, int height,
+			int style) {
 		// group pane
 		Composite composite = new Composite(parent, style);
 		composite.setFont(parent.getFont());
@@ -158,15 +166,16 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 
 		initialize();
 	}
+
 	/**
-	 *	Create this group's list viewer.
+	 * Create this group's list viewer.
 	 */
 	protected void createListViewer(Composite parent, int width, int height) {
 		int style;
 		if (allowMultiselection) {
-			style= SWT.MULTI;
+			style = SWT.MULTI;
 		} else {
-			style= SWT.SINGLE;
+			style = SWT.SINGLE;
 		}
 		listViewer = new TableViewer(parent, SWT.BORDER | style);
 		GridData data = new GridData(GridData.FILL_BOTH);
@@ -190,8 +199,9 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 			}
 		});
 	}
+
 	/**
-	 *	Create this group's tree viewer.
+	 * Create this group's tree viewer.
 	 */
 	protected void createTreeViewer(Composite parent, int width, int height) {
 		Tree tree = new Tree(parent, SWT.BORDER);
@@ -207,30 +217,30 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 		treeViewer.setSorter(new ResourceSorter(ResourceSorter.NAME));
 		treeViewer.addSelectionChangedListener(this);
 	}
-	
+
 	public Table getListTable() {
 		return listViewer.getTable();
 	}
-	
+
 	public IStructuredSelection getListTableSelection() {
-		ISelection selection=  this.listViewer.getSelection();
+		ISelection selection = this.listViewer.getSelection();
 		if (selection instanceof IStructuredSelection) {
-			return (IStructuredSelection)selection;
-		} 
+			return (IStructuredSelection) selection;
+		}
 		return StructuredSelection.EMPTY;
 	}
-	
+
 	protected void initialListItem(Object element) {
 		Object parent = treeContentProvider.getParent(element);
 		selectAndRevealFolder(parent);
 	}
-	
+
 	public void selectAndRevealFolder(Object treeElement) {
 		treeViewer.reveal(treeElement);
 		IStructuredSelection selection = new StructuredSelection(treeElement);
 		treeViewer.setSelection(selection);
 	}
-	
+
 	public void selectAndRevealFile(Object treeElement) {
 		listViewer.reveal(treeElement);
 		IStructuredSelection selection = new StructuredSelection(treeElement);
@@ -238,17 +248,22 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	}
 
 	/**
-	 *	Initialize this group's viewers after they have been laid out.
+	 * Initialize this group's viewers after they have been laid out.
 	 */
 	protected void initialize() {
 		treeViewer.setInput(root);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
+	 * org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
-		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) event
+				.getSelection();
 		Object selectedElement = selection.getFirstElement();
 		if (selectedElement == null) {
 			currentTreeSelection = null;
@@ -263,25 +278,32 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 
 		currentTreeSelection = selectedElement;
 	}
+
 	/**
-	 *	Set the list viewer's providers to those passed
-	 *
-	 *	@param contentProvider ITreeContentProvider
-	 *	@param labelProvider ILabelProvider
+	 * Set the list viewer's providers to those passed
+	 * 
+	 * @param contentProvider
+	 *            ITreeContentProvider
+	 * @param labelProvider
+	 *            ILabelProvider
 	 */
-	public void setListProviders(IStructuredContentProvider contentProvider, ILabelProvider labelProvider) {
+	public void setListProviders(IStructuredContentProvider contentProvider,
+			ILabelProvider labelProvider) {
 		listViewer.setContentProvider(contentProvider);
 		listViewer.setLabelProvider(labelProvider);
 	}
+
 	/**
-	 *	Set the sorter that is to be applied to self's list viewer
+	 * Set the sorter that is to be applied to self's list viewer
 	 */
 	public void setListSorter(ViewerSorter sorter) {
 		listViewer.setSorter(sorter);
 	}
+
 	/**
-	 * Set the root of the widget to be new Root. Regenerate all of the tables and lists from this
-	 * value.
+	 * Set the root of the widget to be new Root. Regenerate all of the tables
+	 * and lists from this value.
+	 * 
 	 * @param newRoot
 	 */
 	public void setRoot(Object newRoot) {
@@ -290,17 +312,21 @@ public class TreeAndListGroup implements ISelectionChangedListener {
 	}
 
 	/**
-	 *	Set the tree viewer's providers to those passed
-	 *
-	 *	@param contentProvider ITreeContentProvider
-	 *	@param labelProvider ILabelProvider
+	 * Set the tree viewer's providers to those passed
+	 * 
+	 * @param contentProvider
+	 *            ITreeContentProvider
+	 * @param labelProvider
+	 *            ILabelProvider
 	 */
-	public void setTreeProviders(ITreeContentProvider contentProvider, ILabelProvider labelProvider) {
+	public void setTreeProviders(ITreeContentProvider contentProvider,
+			ILabelProvider labelProvider) {
 		treeViewer.setContentProvider(contentProvider);
 		treeViewer.setLabelProvider(labelProvider);
 	}
+
 	/**
-	 *	Set the sorter that is to be applied to self's tree viewer
+	 * Set the sorter that is to be applied to self's tree viewer
 	 */
 	public void setTreeSorter(ViewerSorter sorter) {
 		treeViewer.setSorter(sorter);

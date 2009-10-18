@@ -32,11 +32,14 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 
 	private PathMappingComposite pathMapperComposite;
 
-	public PathMapperCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
+	public PathMapperCompositeFragment(Composite parent,
+			IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
 		controlHandler.setTitle("PHP Executable Path Mapping");
-		controlHandler.setDescription("Specify mapping between PHP executable relative and local paths");
-		controlHandler.setImageDescriptor(PHPDebugUIImages.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
+		controlHandler
+				.setDescription("Specify mapping between PHP executable relative and local paths");
+		controlHandler.setImageDescriptor(PHPDebugUIImages
+				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
 		setDisplayName("Path Mapping");
 		setTitle("Edit PHP Executable Path Mapping");
 		setDescription("Configure PHP Executable Path Mapping");
@@ -50,7 +53,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	 * Create the page
 	 */
 	protected void createControl(boolean isForEditing) {
-		//set layout for this composite (whole page)
+		// set layout for this composite (whole page)
 		GridLayout pageLayout = new GridLayout();
 		setLayout(pageLayout);
 
@@ -107,7 +110,8 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 
 	public void setData(Object phpExeItem) {
 		if (phpExeItem != null && !(phpExeItem instanceof PHPexeItem)) {
-			throw new IllegalArgumentException("The given object is not a PHPExeItem");
+			throw new IllegalArgumentException(
+					"The given object is not a PHPExeItem");
 		}
 		super.setData(phpExeItem);
 		init();

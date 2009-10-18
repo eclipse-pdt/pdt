@@ -23,7 +23,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
-public class InstalledDebuggersPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+public class InstalledDebuggersPreferencePage extends PreferencePage implements
+		IWorkbenchPreferencePage {
 
 	private PHPDebuggersTable table;
 
@@ -41,15 +42,16 @@ public class InstalledDebuggersPreferencePage extends PreferencePage implements 
 		// Add the debuggers table
 		createDebuggersTable(comp);
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.INSTALLED_DEBUGGERS);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.INSTALLED_DEBUGGERS);
 		return comp;
 	}
 
 	/**
-	 * Creates the debuggers table.
-	 * The created table allows only viewing and modifying any existing debugger that is
-	 * registered thought the phpDebuggers extension point.
-	 *
+	 * Creates the debuggers table. The created table allows only viewing and
+	 * modifying any existing debugger that is registered thought the
+	 * phpDebuggers extension point.
+	 * 
 	 * @param composite
 	 */
 	protected void createDebuggersTable(Composite composite) {
@@ -61,8 +63,8 @@ public class InstalledDebuggersPreferencePage extends PreferencePage implements 
 	}
 
 	/**
-	 * Overrides the super preformDefaults to make sure that the debuggers table also gets updated
-	 * to its default values.
+	 * Overrides the super preformDefaults to make sure that the debuggers table
+	 * also gets updated to its default values.
 	 */
 	public void performDefaults() {
 		table.performDefaults();

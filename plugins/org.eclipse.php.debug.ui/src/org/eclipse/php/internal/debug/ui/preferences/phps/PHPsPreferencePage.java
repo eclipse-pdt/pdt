@@ -35,10 +35,11 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * The Installed PHPs preference page.
- *
+ * 
  * @since 3.0
  */
-public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkbenchPreferencePage {
+public class PHPsPreferencePage extends AbstractPreferencePage implements
+		IWorkbenchPreferencePage {
 
 	public static String ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage";
 	// PHP Block
@@ -48,13 +49,16 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		super();
 
 		// only used when page is shown programatically
-		setTitle(PHPDebugUIMessages.PHPsPreferencePage_1); 
+		setTitle(PHPDebugUIMessages.PHPsPreferencePage_1);
 
-		setDescription(PHPDebugUIMessages.PHPsPreferencePage_2); 
+		setDescription(PHPDebugUIMessages.PHPsPreferencePage_2);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
@@ -63,8 +67,12 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		return PHPProjectPreferences.getModelPreferences();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
+	 * .swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite ancestor) {
 		initializeDialogUnits(ancestor);
@@ -84,34 +92,42 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		data.horizontalSpan = 1;
 		control.setLayoutData(data);
 
-		fPHPBlock.restoreColumnSettings(PHPDebugUIPlugin.getDefault().getDialogSettings(), PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
+		fPHPBlock.restoreColumnSettings(PHPDebugUIPlugin.getDefault()
+				.getDialogSettings(),
+				PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
 
 		initDefaultPHP();
-		//		fPHPBlock.addSelectionChangedListener(new ISelectionChangedListener() {
-		//			public void selectionChanged(SelectionChangedEvent event) {
-		//				PHPexeItem phpexe = getCurrentDefaultPHP();
-		//				if (phpexe == null) {
-		//					setValid(false);
+		// fPHPBlock.addSelectionChangedListener(new ISelectionChangedListener()
+		// {
+		// public void selectionChanged(SelectionChangedEvent event) {
+		// PHPexeItem phpexe = getCurrentDefaultPHP();
+		// if (phpexe == null) {
+		// setValid(false);
 		//					setErrorMessage(PHPDebugUIMessages.PHPsPreferencePage_13); //$NON-NLS-1$
-		//				} else {
-		//					setValid(true);
-		//					setErrorMessage(null);
-		//				}
-		//			}
-		//		});
+		// } else {
+		// setValid(true);
+		// setErrorMessage(null);
+		// }
+		// }
+		// });
 		applyDialogFont(ancestor);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor, IPHPHelpContextIds.PHP_EXECUTABLES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor,
+				IPHPHelpContextIds.PHP_EXECUTABLES_PREFERENCES);
 		return ancestor;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
 
 		// save column widths
-		IDialogSettings settings = PHPDebugUIPlugin.getDefault().getDialogSettings();
-		fPHPBlock.saveColumnSettings(settings, PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
+		IDialogSettings settings = PHPDebugUIPlugin.getDefault()
+				.getDialogSettings();
+		fPHPBlock.saveColumnSettings(settings,
+				PHPDebugCorePreferenceNames.DIALOG_COLUMN_WIDTH);
 
 		fPHPBlock.commitChanges();
 		return super.performOk();
@@ -120,18 +136,30 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 	private void verifyDefaultPHP(PHPexeItem php) {
 		if (php != null) {
 			boolean exist = php.getExecutable().exists();
-			// If all library locations exist, check the corresponding entry in the list,
+			// If all library locations exist, check the corresponding entry in
+			// the list,
 			// otherwise remove the PHP setting
 			if (!exist) {
 				fPHPBlock.removePHPs(new PHPexeItem[] { php });
-				ErrorDialog.openError(getControl().getShell(), PHPDebugUIMessages.PHPsPreferencePage_1, PHPDebugUIMessages.PHPsPreferencePage_10, new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, PHPDebugUIPlugin.INTERNAL_ERROR, PHPDebugUIMessages.PHPsPreferencePage_11, null)); 
+				ErrorDialog
+						.openError(
+								getControl().getShell(),
+								PHPDebugUIMessages.PHPsPreferencePage_1,
+								PHPDebugUIMessages.PHPsPreferencePage_10,
+								new Status(
+										IStatus.ERROR,
+										PHPDebugUIPlugin.ID,
+										PHPDebugUIPlugin.INTERNAL_ERROR,
+										PHPDebugUIMessages.PHPsPreferencePage_11,
+										null));
 				return;
 			}
 		}
 	}
 
 	private void initDefaultPHP() {
-		PHPexeItem realDefault = PHPexes.getInstance().getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
+		PHPexeItem realDefault = PHPexes.getInstance().getDefaultItem(
+				PHPDebugPlugin.getCurrentDebuggerId());
 		if (realDefault != null) {
 			PHPexeItem[] phps = fPHPBlock.getPHPs();
 			for (PHPexeItem fakePHP : phps) {

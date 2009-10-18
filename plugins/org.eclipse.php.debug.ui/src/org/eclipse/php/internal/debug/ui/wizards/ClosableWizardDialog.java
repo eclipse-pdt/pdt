@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 public class ClosableWizardDialog extends WizardDialog {
 	/**
 	 * Constructor for ClosableWizardDialog.
+	 * 
 	 * @param shell
 	 * @param wizard
 	 */

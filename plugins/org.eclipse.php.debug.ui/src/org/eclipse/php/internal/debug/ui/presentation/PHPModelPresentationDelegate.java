@@ -19,18 +19,21 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 
 /**
- * A delegate class for all IDebugModelPresentation that are registereed to the phpDebugModelPresentation
- * extention point.
+ * A delegate class for all IDebugModelPresentation that are registereed to the
+ * phpDebugModelPresentation extention point.
  * 
  * @author shalom
  */
 public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	private IDebugModelPresentation bestMatchPresentation;
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse.debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.IDebugModelPresentation#computeDetail(org.eclipse
+	 * .debug.core.model.IValue, org.eclipse.debug.ui.IValueDetailListener)
 	 */
 	public void computeDetail(IValue value, IValueDetailListener listener) {
 		getPresentation().computeDetail(value, listener);
@@ -38,7 +41,9 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.IDebugModelPresentation#getImage(java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.IDebugModelPresentation#getImage(java.lang.Object)
 	 */
 	public Image getImage(Object element) {
 		return getPresentation().getImage(element);
@@ -46,7 +51,9 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.IDebugModelPresentation#getText(java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.IDebugModelPresentation#getText(java.lang.Object)
 	 */
 	public String getText(Object element) {
 		return getPresentation().getText(element);
@@ -54,7 +61,10 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.String, java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.IDebugModelPresentation#setAttribute(java.lang.String
+	 * , java.lang.Object)
 	 */
 	public void setAttribute(String attribute, Object value) {
 		getPresentation().setAttribute(attribute, value);
@@ -62,7 +72,10 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.
+	 * jface.viewers.ILabelProviderListener)
 	 */
 	public void addListener(ILabelProviderListener listener) {
 		getPresentation().addListener(listener);
@@ -70,6 +83,7 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
 	 */
 	public void dispose() {
@@ -79,7 +93,10 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang
+	 * .Object, java.lang.String)
 	 */
 	public boolean isLabelProperty(Object element, String property) {
 		return getPresentation().isLabelProperty(element, property);
@@ -87,7 +104,10 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse
+	 * .jface.viewers.ILabelProviderListener)
 	 */
 	public void removeListener(ILabelProviderListener listener) {
 		getPresentation().removeListener(listener);
@@ -95,7 +115,9 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ISourcePresentation#getEditorId(org.eclipse.ui.IEditorInput, java.lang.Object)
+	 * 
+	 * @seeorg.eclipse.debug.ui.ISourcePresentation#getEditorId(org.eclipse.ui.
+	 * IEditorInput, java.lang.Object)
 	 */
 	public String getEditorId(IEditorInput input, Object element) {
 		return getPresentation().getEditorId(input, element);
@@ -103,7 +125,9 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ISourcePresentation#getEditorInput(java.lang.Object)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ISourcePresentation#getEditorInput(java.lang.Object)
 	 */
 	public IEditorInput getEditorInput(Object element) {
 		return getPresentation().getEditorInput(element);
@@ -112,7 +136,8 @@ public class PHPModelPresentationDelegate implements IDebugModelPresentation {
 	// Returns the best match presentation.
 	private IDebugModelPresentation getPresentation() {
 		if (bestMatchPresentation == null) {
-		   bestMatchPresentation = PHPModelPresentationRegistry.getBestMatchPresentation();
+			bestMatchPresentation = PHPModelPresentationRegistry
+					.getBestMatchPresentation();
 		}
 		return bestMatchPresentation;
 	}

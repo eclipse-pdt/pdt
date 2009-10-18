@@ -33,7 +33,8 @@ public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 		this(existingItems, "Add new PHP Executable");
 	}
 
-	public PHPExeWizard(PHPexeItem[] existingItems, String title, WizardModel taskModel) {
+	public PHPExeWizard(PHPexeItem[] existingItems, String title,
+			WizardModel taskModel) {
 		super(title, null, taskModel);
 		this.existingItems = existingItems;
 		setRootFragment(createRootFragment());
@@ -55,12 +56,14 @@ public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 					loadChildren(children, list);
 					return;
 				}
-				ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories(FRAGMENT_GROUP_ID);
+				ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry
+						.getFragmentsFactories(FRAGMENT_GROUP_ID);
 				children = new WizardFragment[factories.length];
 				for (int i = 0; i < factories.length; i++) {
 					children[i] = factories[i].createWizardFragment();
 					if (children[i] instanceof IPHPExeCompositeFragment) {
-						((IPHPExeCompositeFragment)children[i]).setExistingItems(existingItems);
+						((IPHPExeCompositeFragment) children[i])
+								.setExistingItems(existingItems);
 					}
 				}
 				loadChildren(children, list);
@@ -78,7 +81,9 @@ public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
+	 * 
+	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+	 * org.eclipse.jface.viewers.IStructuredSelection)
 	 */
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		// Do nothing

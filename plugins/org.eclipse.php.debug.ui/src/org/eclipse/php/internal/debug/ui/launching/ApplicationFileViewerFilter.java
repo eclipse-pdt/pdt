@@ -23,13 +23,18 @@ public class ApplicationFileViewerFilter extends ViewerFilter {
 	protected String[] validExtensions;
 	protected String[] requiredNatures;
 
-	public ApplicationFileViewerFilter(String[] requiredNatures, String[] validExtensions) {
+	public ApplicationFileViewerFilter(String[] requiredNatures,
+			String[] validExtensions) {
 		this.requiredNatures = requiredNatures;
 		this.validExtensions = validExtensions;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers
+	 * .Viewer, java.lang.Object, java.lang.Object)
 	 */
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		return isValid(element);
@@ -59,12 +64,14 @@ public class ApplicationFileViewerFilter extends ViewerFilter {
 
 	/**
 	 * Returns boolean indicating whether the specified IContainer is valid.
+	 * 
 	 * @param container
 	 * @return
 	 */
 	public boolean isValidDirectory(IContainer container) {
 		try {
-			if (projectHasRequiredNatures(container.getProject()) && !container.getName().startsWith(".")) { //$NON-NLS-1$
+			if (projectHasRequiredNatures(container.getProject())
+					&& !container.getName().startsWith(".")) { //$NON-NLS-1$
 				return true;
 			}
 			return false;
@@ -74,7 +81,8 @@ public class ApplicationFileViewerFilter extends ViewerFilter {
 
 	}
 
-	private boolean projectHasRequiredNatures(IProject project) throws CoreException {
+	private boolean projectHasRequiredNatures(IProject project)
+			throws CoreException {
 		if (requiredNatures != null) {
 			for (int i = 0; i < requiredNatures.length; i++) {
 				if (!project.hasNature(requiredNatures[i]))

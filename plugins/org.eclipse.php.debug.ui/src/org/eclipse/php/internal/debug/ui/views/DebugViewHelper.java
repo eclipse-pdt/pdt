@@ -23,68 +23,73 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpModelConstants;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 public class DebugViewHelper {
-	
-	   public IPHPDebugTarget getSelectionElement(ISelection selection) {
-	    	IDebugElement element = getAdaptableElement();
-	    	if (element == null){
-                if (selection != null){
-    	        	if (selection instanceof StructuredSelection){
-    	        		StructuredSelection sSelection = (StructuredSelection)selection;
-    	        		if (!sSelection.isEmpty()) {
-    	        			Object first = sSelection.getFirstElement();
-    	        			if (first instanceof IDebugElement) 
-    	        			element = (IDebugElement)first;
-    	        		}      		
-    	        	}
-                }
-	    	}
-	    	IPHPDebugTarget target = getDebugTarget(element);
-            // If target is null try to get target from the last debug process to run
-            if (target == null) {
-                IProcess process = DebugUITools.getCurrentProcess(); 
-                if (process != null){
-                    if (process instanceof PHPProcess){
-                        target = (IPHPDebugTarget)((PHPProcess)process).getDebugTarget();
-                    }
-                }
-            }
-            
-	        return target;
-	    }
-	    
-	    private IDebugElement getAdaptableElement () {
-	    	IDebugElement element = null;
-	        IAdaptable adaptable = DebugUITools.getDebugContext();
-	        if (adaptable != null) {
-	            element = (IDebugElement) adaptable.getAdapter(IDebugElement.class);
-	        }
-	        if (element == null){
-	        	if (adaptable instanceof PHPProcess) {
-	        		element = (IDebugElement) ((PHPProcess)adaptable).getDebugTarget();
-	        	} else if (adaptable instanceof ILaunch){
-	        		IDebugTarget[] targets = ((ILaunch)(adaptable)).getDebugTargets();
-	        		for (int i = 0; i < targets.length; i++) {
-	        			if (targets[i] instanceof IPHPDebugTarget) {
-	        				element = (IDebugElement)targets[i];
-	        			}
-	        		}          	       	
-	        	}
-	        }
-	        return element;
-	    }
-	    
-	    private IPHPDebugTarget getDebugTarget (IDebugElement element){
-	    	IPHPDebugTarget target = null;
-	    	if (element != null) {
-	            if (element.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE) || 
-	            	element.getModelIdentifier().equals(IDBGpModelConstants.DBGP_MODEL_ID)) {
-	                target = (IPHPDebugTarget) element.getDebugTarget();
-	            }     	
-	        }
-	    	return target;
-	    }
+
+	public IPHPDebugTarget getSelectionElement(ISelection selection) {
+		IDebugElement element = getAdaptableElement();
+		if (element == null) {
+			if (selection != null) {
+				if (selection instanceof StructuredSelection) {
+					StructuredSelection sSelection = (StructuredSelection) selection;
+					if (!sSelection.isEmpty()) {
+						Object first = sSelection.getFirstElement();
+						if (first instanceof IDebugElement)
+							element = (IDebugElement) first;
+					}
+				}
+			}
+		}
+		IPHPDebugTarget target = getDebugTarget(element);
+		// If target is null try to get target from the last debug process to
+		// run
+		if (target == null) {
+			IProcess process = DebugUITools.getCurrentProcess();
+			if (process != null) {
+				if (process instanceof PHPProcess) {
+					target = (IPHPDebugTarget) ((PHPProcess) process)
+							.getDebugTarget();
+				}
+			}
+		}
+
+		return target;
+	}
+
+	private IDebugElement getAdaptableElement() {
+		IDebugElement element = null;
+		IAdaptable adaptable = DebugUITools.getDebugContext();
+		if (adaptable != null) {
+			element = (IDebugElement) adaptable.getAdapter(IDebugElement.class);
+		}
+		if (element == null) {
+			if (adaptable instanceof PHPProcess) {
+				element = (IDebugElement) ((PHPProcess) adaptable)
+						.getDebugTarget();
+			} else if (adaptable instanceof ILaunch) {
+				IDebugTarget[] targets = ((ILaunch) (adaptable))
+						.getDebugTargets();
+				for (int i = 0; i < targets.length; i++) {
+					if (targets[i] instanceof IPHPDebugTarget) {
+						element = (IDebugElement) targets[i];
+					}
+				}
+			}
+		}
+		return element;
+	}
+
+	private IPHPDebugTarget getDebugTarget(IDebugElement element) {
+		IPHPDebugTarget target = null;
+		if (element != null) {
+			if (element.getModelIdentifier().equals(
+					IPHPDebugConstants.ID_PHP_DEBUG_CORE)
+					|| element.getModelIdentifier().equals(
+							IDBGpModelConstants.DBGP_MODEL_ID)) {
+				target = (IPHPDebugTarget) element.getDebugTarget();
+			}
+		}
+		return target;
+	}
 
 }

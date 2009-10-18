@@ -30,17 +30,15 @@ import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.w3c.dom.Node;
 
-public class XDebugTextHover extends AbstractScriptEditorTextHover implements IPHPTextHover {
+public class XDebugTextHover extends AbstractScriptEditorTextHover implements
+		IPHPTextHover {
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		if (hoverRegion == null || textViewer == null || textViewer.getDocument() == null) {
+		if (hoverRegion == null || textViewer == null
+				|| textViewer.getDocument() == null) {
 			return null;
 		}
 
@@ -49,7 +47,8 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 			DBGpStackFrame context = (DBGpStackFrame) adaptable;
 
 			int offset = hoverRegion.getOffset();
-			IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument()).getRegionAtCharacterOffset(offset);
+			IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer
+					.getDocument()).getRegionAtCharacterOffset(offset);
 			ITextRegion region = null;
 			if (flatNode != null) {
 				region = flatNode.getRegionAtCharacterOffset(offset);
@@ -64,7 +63,8 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 			if (region.getType() == PHPRegionContext.PHP_CONTENT) {
 				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 				try {
-					region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
+					region = phpScriptRegion.getPhpToken(offset
+							- container.getStartOffset() - region.getStart());
 				} catch (BadLocationException e) {
 					region = null;
 				}
@@ -74,13 +74,16 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 					if (regionType == PHPRegionTypes.PHP_VARIABLE) {
 						String variable = null;
 						try {
-							variable = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
+							variable = textViewer.getDocument().get(
+									hoverRegion.getOffset(),
+									hoverRegion.getLength());
 							if (variable != null) {
 								variable = variable.trim();
 								variable = "<B>" + variable + " = </B>" + getPropertyValue(context, variable); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						} catch (BadLocationException e) {
-							Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
+							Logger.logException(
+									"Error retrieving the value\n", e); //$NON-NLS-1$
 						}
 						return variable;
 					}
@@ -93,12 +96,14 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 	/**
 	 * Returns the variable value.
 	 * 
-	 * @param variable The variable name
+	 * @param variable
+	 *            The variable name
 	 * @return
 	 */
 	protected String getValueByEval(DBGpTarget debugTarget, String variable) {
 		String value = null;
-		Node resp = debugTarget.eval(variable); // note this is a synchronous call
+		Node resp = debugTarget.eval(variable); // note this is a synchronous
+												// call
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}
@@ -129,7 +134,8 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 	protected String getPropertyValue(DBGpStackFrame context, String variable) {
 		String value = null;
 		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
-		Node resp = debugTarget.getProperty(variable, context.getStackLevel(), 0);
+		Node resp = debugTarget.getProperty(variable, context.getStackLevel(),
+				0);
 		if (resp == null) {
 			return ""; //$NON-NLS-1$
 		}

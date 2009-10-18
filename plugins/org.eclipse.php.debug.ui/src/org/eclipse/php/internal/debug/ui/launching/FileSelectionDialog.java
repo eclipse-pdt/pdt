@@ -21,12 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -55,9 +50,10 @@ public class FileSelectionDialog extends MessageDialog {
 	 */
 	private IStructuredSelection result = null;
 
-	private boolean allowMultiselection= false;
+	private boolean allowMultiselection = false;
 
-    private Pattern fPattern;
+	private Pattern fPattern;
+
 	/**
 	 * Creates a resource selection dialog rooted at the given element.
 	 * 
@@ -69,51 +65,55 @@ public class FileSelectionDialog extends MessageDialog {
 	 *            the message to be displayed at the top of this dialog, or
 	 *            <code>null</code> to display a default message
 	 */
-	public FileSelectionDialog(Shell parentShell, IAdaptable rootElement, String message) {
-		super(parentShell, "Choose Location", null, message, MessageDialog.NONE, new String[] { "OK", "Cancel"}, 0); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	public FileSelectionDialog(Shell parentShell, IAdaptable rootElement,
+			String message) {
+		super(
+				parentShell,
+				"Choose Location", null, message, MessageDialog.NONE, new String[] { "OK", "Cancel" }, 0); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		root = rootElement;
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}
-	
+
 	/**
 	 * Limits the files displayed in this dialog to files matching the given
 	 * pattern. The string can be a filename or a regular expression containing
 	 * '*' for any series of characters or '?' for any single character.
 	 * 
 	 * @param pattern
-	 *            a pattern used to filter the displayed files or <code>null</code>
-	 *            to display all files. If a pattern is supplied, only files
-	 *            whose names match the given pattern will be available for
-	 *            selection.
+	 *            a pattern used to filter the displayed files or
+	 *            <code>null</code> to display all files. If a pattern is
+	 *            supplied, only files whose names match the given pattern will
+	 *            be available for selection.
 	 * @param ignoreCase
-	 *            if true, case is ignored. If the pattern argument is <code>null</code>,
-	 *            this argument is ignored.
+	 *            if true, case is ignored. If the pattern argument is
+	 *            <code>null</code>, this argument is ignored.
 	 */
 	public void setFileFilter(String pattern, boolean ignoreCase) {
-	    if (pattern != null) {
-	        if (ignoreCase) {
-	            fPattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-	        } else {
-	            fPattern = Pattern.compile(pattern);
-	        }
-	    } else {
-	        fPattern = null;
-	    }
+		if (pattern != null) {
+			if (ignoreCase) {
+				fPattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+			} else {
+				fPattern = Pattern.compile(pattern);
+			}
+		} else {
+			fPattern = null;
+		}
 	}
-	
+
 	/*
 	 * (non-Javadoc) Method declared in Window.
 	 */
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IExternalToolsHelpContextIds.FILE_SELECTION_DIALOG);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(shell,
+		// IExternalToolsHelpContextIds.FILE_SELECTION_DIALOG);
 	}
 
 	protected void createButtonsForButtonBar(Composite parent) {
 		super.createButtonsForButtonBar(parent);
 		initializeDialog();
 	}
-	
+
 	/*
 	 * (non-Javadoc) Method declared on Dialog.
 	 */
@@ -121,14 +121,11 @@ public class FileSelectionDialog extends MessageDialog {
 		// page group
 		Composite composite = (Composite) super.createDialogArea(parent);
 
-		//create the input element, which has the root resource
-		//as its only child
-		selectionGroup =
-			new TreeAndListGroup(
-				composite,
-				root,
-				getResourceProvider(
-					IResource.FOLDER | IResource.PROJECT | IResource.ROOT),
+		// create the input element, which has the root resource
+		// as its only child
+		selectionGroup = new TreeAndListGroup(composite, root,
+				getResourceProvider(IResource.FOLDER | IResource.PROJECT
+						| IResource.ROOT),
 				new WorkbenchLabelProvider(),
 				getResourceProvider(IResource.FILE),
 				new WorkbenchLabelProvider(),
@@ -138,14 +135,15 @@ public class FileSelectionDialog extends MessageDialog {
 				// size, otherwise it will open too small
 				SIZING_SELECTION_WIDGET_WIDTH, SIZING_SELECTION_WIDGET_HEIGHT,
 				allowMultiselection);
-		
+
 		composite.addControlListener(new ControlListener() {
 			public void controlMoved(ControlEvent e) {
 			}
+
 			public void controlResized(ControlEvent e) {
-				//Also try and reset the size of the columns as appropriate
-				TableColumn[] columns =
-					selectionGroup.getListTable().getColumns();
+				// Also try and reset the size of the columns as appropriate
+				TableColumn[] columns = selectionGroup.getListTable()
+						.getColumns();
 				for (int i = 0; i < columns.length; i++) {
 					columns[i].pack();
 				}
@@ -154,9 +152,10 @@ public class FileSelectionDialog extends MessageDialog {
 
 		return composite;
 	}
+
 	/**
-	 * Returns a content provider for <code>IResource</code> s that returns
-	 * only children of the given resource type.
+	 * Returns a content provider for <code>IResource</code> s that returns only
+	 * children of the given resource type.
 	 */
 	private ITreeContentProvider getResourceProvider(final int resourceType) {
 		return new WorkbenchContentProvider() {
@@ -172,23 +171,23 @@ public class FileSelectionDialog extends MessageDialog {
 								accessibleMembers.add(resource);
 							}
 						}
-						members =
-							(IResource[]) accessibleMembers.toArray(
-								new IResource[accessibleMembers.size()]);
+						members = (IResource[]) accessibleMembers
+								.toArray(new IResource[accessibleMembers.size()]);
 					} catch (CoreException e) {
-						//just return an empty set of children
+						// just return an empty set of children
 						return new Object[0];
 					}
 
-					//filter out the desired resource types
+					// filter out the desired resource types
 					ArrayList results = new ArrayList();
 					for (int i = 0; i < members.length; i++) {
-						//And the test bits with the resource types to see if
+						// And the test bits with the resource types to see if
 						// they are what we want
 						if ((members[i].getType() & resourceType) > 0) {
 							if (members[i].getType() == IResource.FILE
-								&& fPattern != null
-								&& !fPattern.matcher(members[i].getName()).find()) {
+									&& fPattern != null
+									&& !fPattern.matcher(members[i].getName())
+											.find()) {
 								continue;
 							}
 							results.add(members[i]);
@@ -196,22 +195,24 @@ public class FileSelectionDialog extends MessageDialog {
 					}
 					return results.toArray();
 				}
-				
+
 				return new Object[0];
 			}
 		};
 	}
+
 	/**
 	 * Initializes this dialog's controls.
 	 */
 	private void initializeDialog() {
 		selectionGroup
-			.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				getButton(IDialogConstants.OK_ID).setEnabled(
-					!selectionGroup.getListTableSelection().isEmpty());
-			}
-		});
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent event) {
+						getButton(IDialogConstants.OK_ID).setEnabled(
+								!selectionGroup.getListTableSelection()
+										.isEmpty());
+					}
+				});
 		selectionGroup.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				buttonPressed(IDialogConstants.OK_ID);
@@ -230,17 +231,19 @@ public class FileSelectionDialog extends MessageDialog {
 
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
-			result= selectionGroup.getListTableSelection();
+			result = selectionGroup.getListTableSelection();
 		}
 		super.buttonPressed(buttonId);
 	}
+
 	/**
-	 * Sets whether this dialog will allow multi-selection.
-	 * Must be called before <code>open</code>
-	 * @param allowMultiselection whether to allow multi-selection in the dialog
+	 * Sets whether this dialog will allow multi-selection. Must be called
+	 * before <code>open</code>
+	 * 
+	 * @param allowMultiselection
+	 *            whether to allow multi-selection in the dialog
 	 */
 	public void setAllowMultiselection(boolean allowMultiselection) {
-		this.allowMultiselection= allowMultiselection;
+		this.allowMultiselection = allowMultiselection;
 	}
 }
-

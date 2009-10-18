@@ -50,7 +50,8 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 	public void lineAppended(IRegion line) {
 		String message = "";
 		try {
-			message = fConsole.getDocument().get(line.getOffset(), line.getLength());
+			message = fConsole.getDocument().get(line.getOffset(),
+					line.getLength());
 		} catch (BadLocationException e) {
 			Logger.logException("PHPLineTracker error getting message", e);
 			return;
@@ -59,7 +60,8 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 		if (hyperLink != null) {
 			IHyperlink link = hyperLink.getLink();
 			if (link != null) {
-				fConsole.addLink(link, line.getOffset(), hyperLink.getHyperLength());
+				fConsole.addLink(link, line.getOffset(), hyperLink
+						.getHyperLength());
 			}
 		}
 	}
@@ -72,8 +74,11 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 		fPHPHyperLink = null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.console.IConsoleLineTrackerExtension#consoleClosed()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.console.IConsoleLineTrackerExtension#consoleClosed()
 	 */
 	public void consoleClosed() {
 		fPHPHyperLink.dispose();

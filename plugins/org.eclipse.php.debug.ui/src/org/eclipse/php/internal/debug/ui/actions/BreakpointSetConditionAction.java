@@ -45,147 +45,159 @@ import com.ibm.icu.text.MessageFormat;
 
 public class BreakpointSetConditionAction implements IObjectActionDelegate {
 
-    IWorkbenchPart fPart = null;
+	IWorkbenchPart fPart = null;
 
-    /**
-     * A dialog that sets the focus to the text area.
-     */
-    class SetConditionDialog extends InputDialog {
+	/**
+	 * A dialog that sets the focus to the text area.
+	 */
+	class SetConditionDialog extends InputDialog {
 
-        private boolean fSetConditionEnabled;
+		private boolean fSetConditionEnabled;
 
-        protected SetConditionDialog(Shell parentShell, String dialogTitle, String dialogMessage, String initialValue, boolean enableCondition, IInputValidator validator) {
-            super(parentShell, dialogTitle, dialogMessage, initialValue, validator);
-            fSetConditionEnabled = enableCondition;
-        }
+		protected SetConditionDialog(Shell parentShell, String dialogTitle,
+				String dialogMessage, String initialValue,
+				boolean enableCondition, IInputValidator validator) {
+			super(parentShell, dialogTitle, dialogMessage, initialValue,
+					validator);
+			fSetConditionEnabled = enableCondition;
+		}
 
-        /**
-         * @see Dialog#createDialogArea(Composite)
-         */
-        protected Control createDialogArea(Composite parent) {
-            Composite area = (Composite) super.createDialogArea(parent);
+		/**
+		 * @see Dialog#createDialogArea(Composite)
+		 */
+		protected Control createDialogArea(Composite parent) {
+			Composite area = (Composite) super.createDialogArea(parent);
 
-            final Button checkbox = new Button(area, SWT.CHECK);
-            GridData data = new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL);
-            data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
-            checkbox.setLayoutData(data);
-            checkbox.setFont(parent.getFont());
-            checkbox.setText(MessageFormat.format(PHPDebugUIMessages.EnableSetCondition_1, new Object[] {}));
-            checkbox.setSelection(fSetConditionEnabled);
-            getText().setEnabled(fSetConditionEnabled);
+			final Button checkbox = new Button(area, SWT.CHECK);
+			GridData data = new GridData(GridData.GRAB_HORIZONTAL
+					| GridData.HORIZONTAL_ALIGN_FILL);
+			data.widthHint = convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH);
+			checkbox.setLayoutData(data);
+			checkbox.setFont(parent.getFont());
+			checkbox.setText(MessageFormat.format(
+					PHPDebugUIMessages.EnableSetCondition_1, new Object[] {}));
+			checkbox.setSelection(fSetConditionEnabled);
+			getText().setEnabled(fSetConditionEnabled);
 
-            checkbox.addSelectionListener(new SelectionListener() {
-                public void widgetSelected(SelectionEvent e) {
-                    fSetConditionEnabled = checkbox.getSelection();
-                    getText().setEnabled(fSetConditionEnabled);
-                    getOkButton().setEnabled(true);
-                }
+			checkbox.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent e) {
+					fSetConditionEnabled = checkbox.getSelection();
+					getText().setEnabled(fSetConditionEnabled);
+					getOkButton().setEnabled(true);
+				}
 
-                public void widgetDefaultSelected(SelectionEvent e) {
+				public void widgetDefaultSelected(SelectionEvent e) {
 
-                }
+				}
 
-            });
+			});
 
-            getText().addKeyListener(new org.eclipse.swt.events.KeyListener() {
+			getText().addKeyListener(new org.eclipse.swt.events.KeyListener() {
 
-                public void keyPressed(KeyEvent e) {
-                    getOkButton().setEnabled(true);
+				public void keyPressed(KeyEvent e) {
+					getOkButton().setEnabled(true);
 
-                }
+				}
 
-                public void keyReleased(KeyEvent e) {
-                    getOkButton().setEnabled(true);
+				public void keyReleased(KeyEvent e) {
+					getOkButton().setEnabled(true);
 
-                }
+				}
 
-            });
+			});
 
-            return area;
-        }
+			return area;
+		}
 
-        protected boolean isSetConditionEnabled() {
-            return fSetConditionEnabled;
-        }
+		protected boolean isSetConditionEnabled() {
+			return fSetConditionEnabled;
+		}
 
-    }
+	}
 
-    /**
-     * @see IActionDelegate#run(IAction)
-     */
-    public void run(IAction action) {
-        IStructuredSelection selection = getCurrentSelection();
-        if (selection == null) {
-            return;
-        }
-        Iterator itr = selection.iterator();
-        if (!itr.hasNext()) {
-            return;
-        }
+	/**
+	 * @see IActionDelegate#run(IAction)
+	 */
+	public void run(IAction action) {
+		IStructuredSelection selection = getCurrentSelection();
+		if (selection == null) {
+			return;
+		}
+		Iterator itr = selection.iterator();
+		if (!itr.hasNext()) {
+			return;
+		}
 
-        while (itr.hasNext()) {
-            IBreakpoint breakpoint = (IBreakpoint) itr.next();
-            if (breakpoint instanceof PHPConditionalBreakpoint) {
-                String condition = "";
-                try {
-                    ConditionDialog((PHPConditionalBreakpoint) breakpoint, condition);
-                } catch (CoreException ce) {
-                    // ConditionDialog doesn't throw CoreException. Just Log
-                    Logger.logException("PHP: Exception setting condition in breakpoint" , ce );
-                }
-            }
-        }
-    }
+		while (itr.hasNext()) {
+			IBreakpoint breakpoint = (IBreakpoint) itr.next();
+			if (breakpoint instanceof PHPConditionalBreakpoint) {
+				String condition = "";
+				try {
+					ConditionDialog((PHPConditionalBreakpoint) breakpoint,
+							condition);
+				} catch (CoreException ce) {
+					// ConditionDialog doesn't throw CoreException. Just Log
+					Logger.logException(
+							"PHP: Exception setting condition in breakpoint",
+							ce);
+				}
+			}
+		}
+	}
 
-    protected boolean ConditionDialog(PHPConditionalBreakpoint breakpoint, String condition) throws CoreException {
-        IInputValidator validator = new IInputValidator() {
-            public String isValid(String value) {
-                return value;
-            }
-        };
+	protected boolean ConditionDialog(PHPConditionalBreakpoint breakpoint,
+			String condition) throws CoreException {
+		IInputValidator validator = new IInputValidator() {
+			public String isValid(String value) {
+				return value;
+			}
+		};
 
-        String currentCondition = breakpoint.getCondition();
-        condition = currentCondition;
-        boolean enableCondition = breakpoint.isConditionEnabled();
-        if (currentCondition.equals(""))
-            enableCondition = true;
+		String currentCondition = breakpoint.getCondition();
+		condition = currentCondition;
+		boolean enableCondition = breakpoint.isConditionEnabled();
+		if (currentCondition.equals(""))
+			enableCondition = true;
 
-        Shell activeShell = PHPDebugUIPlugin.getActiveWorkbenchShell();
-        String title = MessageFormat.format(PHPDebugUIMessages.SetCondition_1, new Object[] {});
-        String message = MessageFormat.format(PHPDebugUIMessages.EnterCondition_1, new Object[] {});
-        SetConditionDialog dialog = new SetConditionDialog(activeShell, title, message, currentCondition, enableCondition, validator);
-        if (dialog.open() != Window.OK) {
-            return false;
-        }
-        condition = dialog.getValue();
-        enableCondition = dialog.isSetConditionEnabled();
-        if (condition.equals(""))
-            enableCondition = false;
-        breakpoint.setConditionWithEnable(enableCondition, condition);
-        return true;
-    }
+		Shell activeShell = PHPDebugUIPlugin.getActiveWorkbenchShell();
+		String title = MessageFormat.format(PHPDebugUIMessages.SetCondition_1,
+				new Object[] {});
+		String message = MessageFormat.format(
+				PHPDebugUIMessages.EnterCondition_1, new Object[] {});
+		SetConditionDialog dialog = new SetConditionDialog(activeShell, title,
+				message, currentCondition, enableCondition, validator);
+		if (dialog.open() != Window.OK) {
+			return false;
+		}
+		condition = dialog.getValue();
+		enableCondition = dialog.isSetConditionEnabled();
+		if (condition.equals(""))
+			enableCondition = false;
+		breakpoint.setConditionWithEnable(enableCondition, condition);
+		return true;
+	}
 
-    protected IStructuredSelection getCurrentSelection() {
-        IWorkbenchPage page = PHPDebugUIPlugin.getActivePage();
-        if (page != null) {
-            ISelection selection = page.getSelection();
-            if (selection instanceof IStructuredSelection) {
-                return (IStructuredSelection) selection;
-            }
-        }
-        return null;
-    }
+	protected IStructuredSelection getCurrentSelection() {
+		IWorkbenchPage page = PHPDebugUIPlugin.getActivePage();
+		if (page != null) {
+			ISelection selection = page.getSelection();
+			if (selection instanceof IStructuredSelection) {
+				return (IStructuredSelection) selection;
+			}
+		}
+		return null;
+	}
 
-    /**
-     * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-     */
-    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        fPart = targetPart;
-    }
+	/**
+	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
+	 */
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+		fPart = targetPart;
+	}
 
-    /**
-     * @see IActionDelegate#selectionChanged(IAction, ISelection)
-     */
-    public void selectionChanged(IAction action, ISelection sel) {
-    }
+	/**
+	 * @see IActionDelegate#selectionChanged(IAction, ISelection)
+	 */
+	public void selectionChanged(IAction action, ISelection sel) {
+	}
 }

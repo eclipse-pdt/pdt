@@ -20,6 +20,7 @@ import org.eclipse.ui.model.WorkbenchViewerComparator;
 
 /**
  * A comperator for Debug Step Filter objects
+ * 
  * @author yaronm
  */
 public class FilterViewerComparator extends WorkbenchViewerComparator {
@@ -27,15 +28,18 @@ public class FilterViewerComparator extends WorkbenchViewerComparator {
 		DebugStepFilter f1 = (DebugStepFilter) e1;
 		DebugStepFilter f2 = (DebugStepFilter) e2;
 
-		if ((f1.getType() == IStepFilterTypes.PHP_PROJECT) && (f2.getType() != (IStepFilterTypes.PHP_PROJECT))) {
+		if ((f1.getType() == IStepFilterTypes.PHP_PROJECT)
+				&& (f2.getType() != (IStepFilterTypes.PHP_PROJECT))) {
 			return 1;
 		}
 
-		if ((f1.getType() != IStepFilterTypes.PHP_PROJECT) && (f2.getType() == IStepFilterTypes.PHP_PROJECT)) {
+		if ((f1.getType() != IStepFilterTypes.PHP_PROJECT)
+				&& (f2.getType() == IStepFilterTypes.PHP_PROJECT)) {
 			return 1;
 		}
 
-		ILabelProvider lprov = (ILabelProvider) ((ContentViewer) viewer).getLabelProvider();
+		ILabelProvider lprov = (ILabelProvider) ((ContentViewer) viewer)
+				.getLabelProvider();
 		String name1 = lprov.getText(e1);
 		String name2 = lprov.getText(e2);
 		if (name1 == null) {

@@ -22,9 +22,11 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Label provider for Debug Step Filter objects
+ * 
  * @author yaronm
  */
-public class FilterLabelProvider extends LabelProvider implements ITableLabelProvider {
+public class FilterLabelProvider extends LabelProvider implements
+		ITableLabelProvider {
 
 	/**
 	 * @see ITableLabelProvider#getColumnText(Object, int)
@@ -61,22 +63,22 @@ public class FilterLabelProvider extends LabelProvider implements ITableLabelPro
 	public Image getColumnImage(Object object, int column) {
 		DebugStepFilter filter = (DebugStepFilter) object;
 		switch (filter.getType()) {
-			case IStepFilterTypes.PHP_PROJECT:
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_PROJECT);
-			case IStepFilterTypes.PHP_PROJECT_FOLDER:
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FOLDER);
-			case IStepFilterTypes.PHP_PROJECT_FILE:
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FILE);
+		case IStepFilterTypes.PHP_PROJECT:
+			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_PROJECT);
+		case IStepFilterTypes.PHP_PROJECT_FOLDER:
+			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FOLDER);
+		case IStepFilterTypes.PHP_PROJECT_FILE:
+			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FILE);
 
-			case IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY:
-			case IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY_FILE:
-			case IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY_FOLDER:
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+		case IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY:
+		case IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY_FILE:
+		case IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY_FOLDER:
+			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 
-			case IStepFilterTypes.PHP_INCLUDE_PATH_VAR:
-			case IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FILE:
-			case IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FOLDER:
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
+		case IStepFilterTypes.PHP_INCLUDE_PATH_VAR:
+		case IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FILE:
+		case IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FOLDER:
+			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 		}
 		return null;
 	}

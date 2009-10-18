@@ -57,10 +57,12 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#canToggleLineBreakpoints(org.eclipse.ui.IWorkbenchPart,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * @seeorg.eclipse.debug.ui.actions.IToggleBreakpointsTarget#
+	 * canToggleLineBreakpoints(org.eclipse.ui.IWorkbenchPart,
+	 * org.eclipse.jface.viewers.ISelection)
 	 */
-	public boolean canToggleLineBreakpoints(IWorkbenchPart part, ISelection selection) {
+	public boolean canToggleLineBreakpoints(IWorkbenchPart part,
+			ISelection selection) {
 		PHPStructuredEditor textEditor = getEditor(part);
 
 		if (textEditor != null) {
@@ -73,49 +75,60 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#canToggleMethodBreakpoints(org.eclipse.ui.IWorkbenchPart,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * @seeorg.eclipse.debug.ui.actions.IToggleBreakpointsTarget#
+	 * canToggleMethodBreakpoints(org.eclipse.ui.IWorkbenchPart,
+	 * org.eclipse.jface.viewers.ISelection)
 	 */
-	public boolean canToggleMethodBreakpoints(IWorkbenchPart part, ISelection selection) {
+	public boolean canToggleMethodBreakpoints(IWorkbenchPart part,
+			ISelection selection) {
 		return false;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#canToggleWatchpoints(org.eclipse.ui.IWorkbenchPart,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * @see
+	 * org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#canToggleWatchpoints
+	 * (org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
-	public boolean canToggleWatchpoints(IWorkbenchPart part, ISelection selection) {
+	public boolean canToggleWatchpoints(IWorkbenchPart part,
+			ISelection selection) {
 		return false;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#toggleLineBreakpoints(org.eclipse.ui.IWorkbenchPart,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * @see
+	 * org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#toggleLineBreakpoints
+	 * (org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
-	public void toggleLineBreakpoints(IWorkbenchPart part, ISelection selection) throws CoreException {
+	public void toggleLineBreakpoints(IWorkbenchPart part, ISelection selection)
+			throws CoreException {
 		ITextEditor editor = (ITextEditor) part.getAdapter(ITextEditor.class);
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
-			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+			IDocument document = editor.getDocumentProvider().getDocument(
+					editor.getEditorInput());
 			int lineNumber = -1;
 			try {
-				lineNumber = document.getLineOfOffset(textSelection.getOffset());
+				lineNumber = document
+						.getLineOfOffset(textSelection.getOffset());
 			} catch (BadLocationException e) {
 			}
 			if (lineNumber >= 0) {
 
 				IResource resource = getResource(editor.getEditorInput());
 				AbstractMarkerAnnotationModel model = getAnnotationModel(editor);
-				IBreakpoint[] breakpoints = getBreakpoints(resource, document, model, lineNumber);
+				IBreakpoint[] breakpoints = getBreakpoints(resource, document,
+						model, lineNumber);
 				if (breakpoints.length > 0) {
-					IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
+					IBreakpointManager breakpointManager = DebugPlugin
+							.getDefault().getBreakpointManager();
 					for (int i = 0; i < breakpoints.length; i++) {
 						breakpoints[i].getMarker().delete();
-						breakpointManager.removeBreakpoint(breakpoints[i], true);
+						breakpointManager
+								.removeBreakpoint(breakpoints[i], true);
 					}
 				} else {
 					createBreakpoints(editor, lineNumber + 1);
@@ -133,7 +146,8 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		IDocumentProvider provider = editor.getDocumentProvider();
 		if (provider instanceof IDocumentProviderExtension4) {
 			try {
-				IContentType type = ((IDocumentProviderExtension4) provider).getContentType(editor.getEditorInput());
+				IContentType type = ((IDocumentProviderExtension4) provider)
+						.getContentType(editor.getEditorInput());
 				if (type != null)
 					contentType = type.getId();
 			} catch (CoreException e) {
@@ -186,8 +200,8 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		/*
 		 * Note: we'll always allow processing to continue, even for a "read
 		 * only" IStorageEditorInput, for the ActiveScript debugger. But this
-		 * means sometimes the ActiveScript provider might get an input from
-		 * CVS or something that is not related to debugging.
+		 * means sometimes the ActiveScript provider might get an input from CVS
+		 * or something that is not related to debugging.
 		 */
 
 		IEditorInput input = editor.getEditorInput();
@@ -196,10 +210,13 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 			return false;
 
 		String contentType = getContentType(editor, document);
-		IBreakpointProvider[] providers = BreakpointProviderBuilder.getInstance().getBreakpointProviders(editor, contentType, getFileExtension(input));
+		IBreakpointProvider[] providers = BreakpointProviderBuilder
+				.getInstance().getBreakpointProviders(editor, contentType,
+						getFileExtension(input));
 
 		int pos = -1;
-		ISourceEditingTextTools tools = (ISourceEditingTextTools) editor.getAdapter(ISourceEditingTextTools.class);
+		ISourceEditingTextTools tools = (ISourceEditingTextTools) editor
+				.getAdapter(ISourceEditingTextTools.class);
 		if (tools != null) {
 			pos = tools.getCaretOffset();
 		}
@@ -209,8 +226,10 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		for (int i = 0; i < n; i++) {
 			try {
 				if (Debug.debugBreakpoints)
-					System.out.println(providers[i].getClass().getName() + " adding breakpoint to line " + lineNumber); //$NON-NLS-1$
-				IStatus status = providers[i].addBreakpoint(document, input, lineNumber, pos);
+					System.out.println(providers[i].getClass().getName()
+							+ " adding breakpoint to line " + lineNumber); //$NON-NLS-1$
+				IStatus status = providers[i].addBreakpoint(document, input,
+						lineNumber, pos);
 				if (status != null && !status.isOK()) {
 					errors.add(status);
 				}
@@ -225,19 +244,27 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 		if (errors.size() > 0) {
 			Shell shell = editor.getSite().getShell();
 			if (errors.size() > 1) {
-				status = new MultiStatus(SSEUIPlugin.ID, IStatus.OK, (IStatus[]) errors.toArray(new IStatus[0]), SSEUIMessages.ManageBreakpoints_error_adding_message1, null); //$NON-NLS-1$
+				status = new MultiStatus(SSEUIPlugin.ID, IStatus.OK,
+						(IStatus[]) errors.toArray(new IStatus[0]),
+						SSEUIMessages.ManageBreakpoints_error_adding_message1,
+						null); //$NON-NLS-1$
 			} else {
 				status = (IStatus) errors.get(0);
 			}
-			if ((status.getSeverity() > IStatus.INFO) || (Platform.inDebugMode() && !status.isOK())) {
-				Platform.getLog(SSEUIPlugin.getDefault().getBundle()).log(status);
+			if ((status.getSeverity() > IStatus.INFO)
+					|| (Platform.inDebugMode() && !status.isOK())) {
+				Platform.getLog(SSEUIPlugin.getDefault().getBundle()).log(
+						status);
 			}
 			/*
-			 * Show for conditions more severe than INFO or when no
-			 * breakpoints were created
+			 * Show for conditions more severe than INFO or when no breakpoints
+			 * were created
 			 */
-			if (status.getSeverity() > IStatus.INFO || getBreakpoints(getMarkers(editor)).length < 1) {
-				ErrorDialog.openError(shell, SSEUIMessages.ManageBreakpoints_error_adding_title1, status.getMessage(), status); //$NON-NLS-1$ //$NON-NLS-2$
+			if (status.getSeverity() > IStatus.INFO
+					|| getBreakpoints(getMarkers(editor)).length < 1) {
+				ErrorDialog.openError(shell,
+						SSEUIMessages.ManageBreakpoints_error_adding_title1,
+						status.getMessage(), status); //$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			}
 		}
@@ -246,7 +273,8 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	}
 
 	protected IBreakpoint[] getBreakpoints(IMarker[] markers) {
-		IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
+		IBreakpointManager manager = DebugPlugin.getDefault()
+				.getBreakpointManager();
 		List breakpoints = new ArrayList(markers.length);
 		for (int i = 0; i < markers.length; i++) {
 			IBreakpoint breakpoint = manager.getBreakpoint(markers[i]);
@@ -281,10 +309,13 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 
 		if (resource != null && annotationModel != null && resource.exists()) {
 			try {
-				IMarker[] allMarkers = resource.findMarkers(IBreakpoint.BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
+				IMarker[] allMarkers = resource.findMarkers(
+						IBreakpoint.BREAKPOINT_MARKER, true,
+						IResource.DEPTH_ZERO);
 				if (allMarkers != null) {
 					for (int i = 0; i < allMarkers.length; i++) {
-						if (includesRulerLine(editor, annotationModel.getMarkerPosition(allMarkers[i]), document)) {
+						if (includesRulerLine(editor, annotationModel
+								.getMarkerPosition(allMarkers[i]), document)) {
 							markers.add(allMarkers[i]);
 						}
 					}
@@ -299,30 +330,36 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 
 	/**
 	 * Checks whether a position includes the ruler's line of activity.
-	 * @param editor 
+	 * 
+	 * @param editor
 	 * 
 	 * @param position
 	 *            the position to be checked
 	 * @param document
 	 *            the document the position refers to
-	 * @return <code>true</code> if the line is included by the given
-	 *         position
+	 * @return <code>true</code> if the line is included by the given position
 	 */
-	protected boolean includesRulerLine(ITextEditor editor, Position position, IDocument document) {
+	protected boolean includesRulerLine(ITextEditor editor, Position position,
+			IDocument document) {
 		return false;
 	}
 
-	private IBreakpoint[] getBreakpoints(IResource resource, IDocument document, AbstractMarkerAnnotationModel model, int lineNumber) {
+	private IBreakpoint[] getBreakpoints(IResource resource,
+			IDocument document, AbstractMarkerAnnotationModel model,
+			int lineNumber) {
 		List markers = new ArrayList();
 		if (resource != null && model != null && resource.exists()) {
 			try {
-				IMarker[] allMarkers = resource.findMarkers(IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
+				IMarker[] allMarkers = resource.findMarkers(
+						IBreakpoint.LINE_BREAKPOINT_MARKER, true,
+						IResource.DEPTH_ZERO);
 				if (allMarkers != null) {
 					for (int i = 0; i < allMarkers.length; i++) {
 						Position p = model.getMarkerPosition(allMarkers[i]);
 						int markerLine = -1;
 						try {
-							markerLine = document.getLineOfOffset(p.getOffset());
+							markerLine = document
+									.getLineOfOffset(p.getOffset());
 						} catch (BadLocationException e1) {
 						}
 						if (markerLine == lineNumber) {
@@ -333,10 +370,12 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 			} catch (CoreException x) {
 			}
 		}
-		IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
+		IBreakpointManager manager = DebugPlugin.getDefault()
+				.getBreakpointManager();
 		List breakpoints = new ArrayList(markers.size());
 		for (int i = 0; i < markers.size(); i++) {
-			IBreakpoint breakpoint = manager.getBreakpoint((IMarker) markers.get(i));
+			IBreakpoint breakpoint = manager.getBreakpoint((IMarker) markers
+					.get(i));
 			if (breakpoint != null) {
 				breakpoints.add(breakpoint);
 			}
@@ -345,15 +384,18 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	}
 
 	/**
-	 * Returns the <code>AbstractMarkerAnnotationModel</code> of the
-	 * editor's input.
-	 * @param editor 
+	 * Returns the <code>AbstractMarkerAnnotationModel</code> of the editor's
+	 * input.
+	 * 
+	 * @param editor
 	 * 
 	 * @return the marker annotation model
 	 */
-	protected AbstractMarkerAnnotationModel getAnnotationModel(ITextEditor editor) {
+	protected AbstractMarkerAnnotationModel getAnnotationModel(
+			ITextEditor editor) {
 		IDocumentProvider provider = editor.getDocumentProvider();
-		IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
+		IAnnotationModel model = provider.getAnnotationModel(editor
+				.getEditorInput());
 		if (model instanceof AbstractMarkerAnnotationModel)
 			return (AbstractMarkerAnnotationModel) model;
 		return null;
@@ -362,20 +404,24 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#toggleMethodBreakpoints(org.eclipse.ui.IWorkbenchPart,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * @see
+	 * org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#toggleMethodBreakpoints
+	 * (org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
-	public void toggleMethodBreakpoints(IWorkbenchPart part, ISelection selection) throws CoreException {
+	public void toggleMethodBreakpoints(IWorkbenchPart part,
+			ISelection selection) throws CoreException {
 		// don't support
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#toggleWatchpoints(org.eclipse.ui.IWorkbenchPart,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * @see
+	 * org.eclipse.debug.ui.actions.IToggleBreakpointsTarget#toggleWatchpoints
+	 * (org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
-	public void toggleWatchpoints(IWorkbenchPart part, ISelection selection) throws CoreException {
+	public void toggleWatchpoints(IWorkbenchPart part, ISelection selection)
+			throws CoreException {
 		// don't support
 	}
 
@@ -415,19 +461,37 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 										textEditor = (ITextEditor) editorPart;
 									}
 									if (textEditor == null) {
-										textEditor = (ITextEditor) editorPart.getAdapter(ITextEditor.class);
+										textEditor = (ITextEditor) editorPart
+												.getAdapter(ITextEditor.class);
 									}
 									if (textEditor != null) {
-										IDocument textDocument = textEditor.getDocumentProvider().getDocument(input);
-										model = StructuredModelManager.getModelManager().getExistingModelForRead(textDocument);
+										IDocument textDocument = textEditor
+												.getDocumentProvider()
+												.getDocument(input);
+										model = StructuredModelManager
+												.getModelManager()
+												.getExistingModelForRead(
+														textDocument);
 										if (model != null) {
-											resource = BreakpointProviderBuilder.getInstance().getResource(input, model.getContentTypeIdentifier(), getFileExtension(input));
+											resource = BreakpointProviderBuilder
+													.getInstance()
+													.getResource(
+															input,
+															model
+																	.getContentTypeIdentifier(),
+															getFileExtension(input));
 										}
 									}
 									if (resource == null) {
-										IBreakpointProvider[] providers = BreakpointProviderBuilder.getInstance().getBreakpointProviders(editorPart, null, getFileExtension(input));
-										for (int i = 0; i < providers.length && resource == null; i++) {
-											resource = providers[i].getResource(input);
+										IBreakpointProvider[] providers = BreakpointProviderBuilder
+												.getInstance()
+												.getBreakpointProviders(
+														editorPart, null,
+														getFileExtension(input));
+										for (int i = 0; i < providers.length
+												&& resource == null; i++) {
+											resource = providers[i]
+													.getResource(input);
 										}
 									}
 								} catch (Exception e) {

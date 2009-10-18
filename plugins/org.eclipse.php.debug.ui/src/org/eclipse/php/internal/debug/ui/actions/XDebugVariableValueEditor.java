@@ -37,34 +37,44 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 
 	/**
 	 * Creates a new editor for a variable with the given signature
-	 * @param signature the signature of the primitive to be edited
+	 * 
+	 * @param signature
+	 *            the signature of the primitive to be edited
 	 */
 	public XDebugVariableValueEditor() {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.actions.IVariableValueEditor#editVariable(org.eclipse.debug.core.model.IVariable, org.eclipse.swt.widgets.Shell)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.actions.IVariableValueEditor#editVariable(org.eclipse
+	 * .debug.core.model.IVariable, org.eclipse.swt.widgets.Shell)
 	 */
 	public boolean editVariable(IVariable variable, Shell shell) {
 		try {
 			String name = variable.getName();
 			String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0;
-			String message = MessageFormat.format(PHPDebugUIMessages.PHPPrimitiveValueEditor_1, new Object[] { name }); //$NON-NLS-1$
+			String message = MessageFormat.format(
+					PHPDebugUIMessages.PHPPrimitiveValueEditor_1,
+					new Object[] { name }); //$NON-NLS-1$
 			String initialValue = getValueString(variable);
-			
+
 			PrimitiveValidator validator = new PrimitiveValidator(variable);
-			ChangeVariableValueInputDialog dialog = new ChangeVariableValueInputDialog(shell, title, message, initialValue, validator);
+			ChangeVariableValueInputDialog dialog = new ChangeVariableValueInputDialog(
+					shell, title, message, initialValue, validator);
 			if (dialog.open() == Window.OK) {
 				String stringValue = dialog.getValue();
 				variable.setValue(stringValue);
-			}
-			else {
-				
+			} else {
+
 			}
 		} catch (DebugException e) {
 			IStatus status = e.getStatus();
-			ErrorDialog.openError(shell, PHPDebugUIMessages.PHPPrimitiveValueEditor_2, PHPDebugUIMessages.PHPPrimitiveValueEditor_3, status);
+			ErrorDialog.openError(shell,
+					PHPDebugUIMessages.PHPPrimitiveValueEditor_2,
+					PHPDebugUIMessages.PHPPrimitiveValueEditor_3, status);
 		}
 		return true;
 	}
@@ -72,22 +82,24 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 	private String getValueString(IVariable variable) throws DebugException {
 		IValue value = variable.getValue();
 		String initialValue = value.getValueString();
-		
+
 		if (value instanceof DBGpStringValue) {
-			DBGpStringValue strValue = (DBGpStringValue)value;
+			DBGpStringValue strValue = (DBGpStringValue) value;
 			if (strValue.isComplete() == false) {
-				DBGpTarget target = (DBGpTarget)value.getDebugTarget();
-				DBGpVariable dbgpVar = (DBGpVariable)variable;
+				DBGpTarget target = (DBGpTarget) value.getDebugTarget();
+				DBGpVariable dbgpVar = (DBGpVariable) variable;
 				String stackLevel = dbgpVar.getStackLevel();
-				Node result = target.getCompleteString(dbgpVar.getFullName(), stackLevel, strValue.getRequiredBytes());
+				Node result = target.getCompleteString(dbgpVar.getFullName(),
+						stackLevel, strValue.getRequiredBytes());
 				if (result != null) {
-					IVariable tempVar = new DBGpVariable(target, result, stackLevel);
+					IVariable tempVar = new DBGpVariable(target, result,
+							stackLevel);
 					IValue valRes = null;
 					try {
 						valRes = tempVar.getValue();
 						if (valRes != null) {
 							// update the variable with the latest value.
-							((DBGpVariable)variable).replaceValue(valRes);
+							((DBGpVariable) variable).replaceValue(valRes);
 							initialValue = valRes.getValueString();
 						}
 					} catch (Exception e) {
@@ -98,10 +110,16 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 		return initialValue;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.actions.IVariableValueEditor#saveVariable(org.eclipse.debug.core.model.IVariable, java.lang.String, org.eclipse.swt.widgets.Shell)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.actions.IVariableValueEditor#saveVariable(org.eclipse
+	 * .debug.core.model.IVariable, java.lang.String,
+	 * org.eclipse.swt.widgets.Shell)
 	 */
-	public boolean saveVariable(IVariable variable, String expression, Shell shell) {
+	public boolean saveVariable(IVariable variable, String expression,
+			Shell shell) {
 		return false;
 	}
 
@@ -116,8 +134,11 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 			this.var = var;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
 		 */
 		public String isValid(String newText) {
 			String errorMsg = null;

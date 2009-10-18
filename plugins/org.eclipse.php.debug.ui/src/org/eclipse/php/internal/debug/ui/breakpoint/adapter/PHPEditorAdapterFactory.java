@@ -25,19 +25,22 @@ public class PHPEditorAdapterFactory implements IAdapterFactory {
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		ITextEditor editorPart = (ITextEditor) adaptableObject;
-		
+
 		boolean isPHPFile = false;
-		
+
 		if (editorPart instanceof PHPStructuredEditor) {
-			IModelElement modelElement = ((PHPStructuredEditor)editorPart).getModelElement();
-			isPHPFile = modelElement != null && PHPToolkitUtil.isPhpElement(modelElement);
+			IModelElement modelElement = ((PHPStructuredEditor) editorPart)
+					.getModelElement();
+			isPHPFile = modelElement != null
+					&& PHPToolkitUtil.isPhpElement(modelElement);
 		} else {
-			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
+			IResource resource = (IResource) editorPart.getEditorInput()
+					.getAdapter(IResource.class);
 			if (resource instanceof IFile) {
 				isPHPFile = PHPToolkitUtil.isPhpFile((IFile) resource);
 			}
 		}
-		
+
 		if (isPHPFile && adapterType == IRunToLineTarget.class) {
 			return new PHPRunToLineAdapter();
 		}

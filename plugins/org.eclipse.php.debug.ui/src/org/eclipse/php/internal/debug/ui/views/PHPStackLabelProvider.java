@@ -20,45 +20,45 @@ import org.eclipse.swt.graphics.Image;
 
 public class PHPStackLabelProvider implements ILabelProvider {
 
-    private Image image = null;
-    
-    public PHPStackLabelProvider() {
-        super();
-        image = DebugPluginImages.getImage(IDebugUIConstants.IMG_OBJS_VARIABLE);
-        
-    }
+	private Image image = null;
 
-    public Image getImage(Object element) {
-        // TODO Auto-generated method stub
-        return image;
-    }
+	public PHPStackLabelProvider() {
+		super();
+		image = DebugPluginImages.getImage(IDebugUIConstants.IMG_OBJS_VARIABLE);
 
-    public String getText(Object element) {
-        if (element instanceof Expression) {
-            return "$" + ((Expression)element).toString();
-            
-        }
-        return null;
-    }
+	}
 
-    public void addListener(ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
+	public Image getImage(Object element) {
+		// TODO Auto-generated method stub
+		return image;
+	}
 
-    }
+	public String getText(Object element) {
+		if (element instanceof Expression) {
+			return "$" + ((Expression) element).toString();
 
-    public void dispose() {
-        // TODO Auto-generated method stub
+		}
+		return null;
+	}
 
-    }
+	public void addListener(ILabelProviderListener listener) {
+		// TODO Auto-generated method stub
 
-    public boolean isLabelProperty(Object element, String property) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	}
 
-    public void removeListener(ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
+	public void dispose() {
+		// TODO Auto-generated method stub
 
-    }
+	}
+
+	public boolean isLabelProperty(Object element, String property) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void removeListener(ILabelProviderListener listener) {
+		// TODO Auto-generated method stub
+
+	}
 
 }

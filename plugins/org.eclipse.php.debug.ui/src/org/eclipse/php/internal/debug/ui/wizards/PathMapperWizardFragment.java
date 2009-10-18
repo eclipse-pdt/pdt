@@ -28,14 +28,16 @@ public class PathMapperWizardFragment extends CompositeWizardFragment {
 	}
 
 	public Composite createComposite(Composite parent, IWizardHandle handle) {
-		compositeFragment = new PathMapperCompositeFragment(parent, new WizardControlWrapper(handle), false);
+		compositeFragment = new PathMapperCompositeFragment(parent,
+				new WizardControlWrapper(handle), false);
 		return compositeFragment;
 	}
 
 	public void enter() {
 		if (compositeFragment != null) {
 			try {
-				phpExeItem = (PHPexeItem) getWizardModel().getObject(PHPExeWizard.MODEL);
+				phpExeItem = (PHPexeItem) getWizardModel().getObject(
+						PHPExeWizard.MODEL);
 				if (phpExeItem != null) {
 					compositeFragment.setData(phpExeItem);
 				}
@@ -43,7 +45,9 @@ public class PathMapperWizardFragment extends CompositeWizardFragment {
 				Logger.logException(e);
 			}
 		} else {
-			Logger.log(Logger.ERROR, "Could not display the PHPExeItems wizard (component is null)."); //$NON-NLS-1$
+			Logger
+					.log(Logger.ERROR,
+							"Could not display the PHPExeItems wizard (component is null)."); //$NON-NLS-1$
 		}
 	}
 

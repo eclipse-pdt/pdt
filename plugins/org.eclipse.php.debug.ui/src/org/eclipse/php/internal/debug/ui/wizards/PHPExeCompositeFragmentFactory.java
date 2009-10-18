@@ -17,9 +17,11 @@ import org.eclipse.php.internal.ui.wizards.WizardFragment;
 import org.eclipse.php.ui.wizards.ICompositeFragmentFactory;
 import org.eclipse.swt.widgets.Composite;
 
-public class PHPExeCompositeFragmentFactory implements ICompositeFragmentFactory {
+public class PHPExeCompositeFragmentFactory implements
+		ICompositeFragmentFactory {
 
-	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler) {
+	public CompositeFragment createComposite(Composite parent,
+			IControlHandler controlHandler) {
 		return new PHPExeCompositeFragment(parent, controlHandler, true);
 	}
 

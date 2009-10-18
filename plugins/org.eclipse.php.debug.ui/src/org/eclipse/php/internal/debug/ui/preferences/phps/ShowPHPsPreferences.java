@@ -11,13 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.preferences.phps;
 
-
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.jface.preference.IPreferenceNode;
-import org.eclipse.jface.preference.IPreferencePage;
-import org.eclipse.jface.preference.PreferenceDialog;
-import org.eclipse.jface.preference.PreferenceManager;
-import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.preference.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
@@ -25,10 +20,10 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.IMarkerResolution;
 
 /**
- * Quick fix to define a new system library (none were found). 
+ * Quick fix to define a new system library (none were found).
  */
 public class ShowPHPsPreferences implements IMarkerResolution {
-	
+
 	public ShowPHPsPreferences() {
 		super();
 	}
@@ -38,9 +33,9 @@ public class ShowPHPsPreferences implements IMarkerResolution {
 	 */
 	public void run(IMarker marker) {
 		IPreferencePage page = new PHPsPreferencePage();
-		showPreferencePage(PHPsPreferencePage.ID, page);	 //$NON-NLS-1$
+		showPreferencePage(PHPsPreferencePage.ID, page); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * @see org.eclipse.ui.IMarkerResolution#getLabel()
 	 */
@@ -50,17 +45,19 @@ public class ShowPHPsPreferences implements IMarkerResolution {
 
 	protected void showPreferencePage(String id, IPreferencePage page) {
 		final IPreferenceNode targetNode = new PreferenceNode(id, page);
-		
+
 		PreferenceManager manager = new PreferenceManager();
 		manager.addToRoot(targetNode);
-		final PreferenceDialog dialog = new PreferenceDialog(PHPDebugUIPlugin.getActiveWorkbenchShell(), manager);
-		final boolean [] result = new boolean[] { false };
-		BusyIndicator.showWhile(PHPDebugUIPlugin.getStandardDisplay(), new Runnable() {
-			public void run() {
-				dialog.create();
-				dialog.setMessage(targetNode.getLabelText());
-				result[0]= (dialog.open() == Window.OK);
-			}
-		});		
+		final PreferenceDialog dialog = new PreferenceDialog(PHPDebugUIPlugin
+				.getActiveWorkbenchShell(), manager);
+		final boolean[] result = new boolean[] { false };
+		BusyIndicator.showWhile(PHPDebugUIPlugin.getStandardDisplay(),
+				new Runnable() {
+					public void run() {
+						dialog.create();
+						dialog.setMessage(targetNode.getLabelText());
+						result[0] = (dialog.open() == Window.OK);
+					}
+				});
 	}
 }

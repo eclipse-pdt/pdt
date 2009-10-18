@@ -24,7 +24,8 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 	protected DebugConsoleMonitor fConsoleMonitor;
 	protected PHPHyperLink fPHPHyperLink;
 
-	public void init(ILaunch launch, DebugConsoleMonitor consoleMonitor, PHPHyperLink link) {
+	public void init(ILaunch launch, DebugConsoleMonitor consoleMonitor,
+			PHPHyperLink link) {
 		fLaunch = launch;
 		fConsoleMonitor = consoleMonitor;
 		fPHPHyperLink = link;
@@ -33,7 +34,8 @@ public class PHPConsoleListener implements IPHPConsoleEventListener {
 	public void handleEvent(DebugError debugError) {
 		IHyperlink link = createLink(debugError);
 		String message = debugError.toString().trim();
-		fPHPHyperLink.addLink(link, message, message.length() - debugError.getErrorTextLength());
+		fPHPHyperLink.addLink(link, message, message.length()
+				- debugError.getErrorTextLength());
 		fConsoleMonitor.append(debugError.toString() + '\n');
 	}
 

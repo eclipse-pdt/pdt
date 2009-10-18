@@ -37,6 +37,7 @@ import org.eclipse.ui.PlatformUI;
  * <p>
  * This class may be instantiated. This class is not intended to be subclassed.
  * </p>
+ * 
  * @since PDT 1.0
  */
 public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
@@ -46,7 +47,7 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 	protected Text fPrgmArgumentsText;
 
 	// Working directory
-	//protected WorkingDirectoryBlock fWorkingDirectoryBlock;
+	// protected WorkingDirectoryBlock fWorkingDirectoryBlock;
 
 	protected static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
@@ -63,7 +64,7 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		comp.setLayoutData(gd);
 		setControl(comp);
-		//setHelpContextId();
+		// setHelpContextId();
 
 		Group group = new Group(comp, SWT.NONE);
 		group.setFont(font);
@@ -74,7 +75,8 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 		String controlName = PHPDebugUIMessages.DebugPHPArgumentsTab_scriptArguments;
 		group.setText(controlName);
 
-		fPrgmArgumentsText = new Text(group, SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.V_SCROLL);
+		fPrgmArgumentsText = new Text(group, SWT.MULTI | SWT.WRAP | SWT.BORDER
+				| SWT.V_SCROLL);
 		gd = new GridData(GridData.FILL_BOTH);
 		gd.heightHint = 40;
 		gd.widthHint = 100;
@@ -85,14 +87,18 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 				updateLaunchConfigurationDialog();
 			}
 		});
-		ControlAccessibleListener.addListener(fPrgmArgumentsText, group.getText());
+		ControlAccessibleListener.addListener(fPrgmArgumentsText, group
+				.getText());
 
 		String buttonLabel = PHPDebugUIMessages.DebugPHPArgumentsTab_variables;
-		Button pgrmArgVariableButton = createPushButton(group, buttonLabel, null);
-		pgrmArgVariableButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_END));
+		Button pgrmArgVariableButton = createPushButton(group, buttonLabel,
+				null);
+		pgrmArgVariableButton.setLayoutData(new GridData(
+				GridData.HORIZONTAL_ALIGN_END));
 		pgrmArgVariableButton.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
-				StringVariableSelectionDialog dialog = new StringVariableSelectionDialog(getShell());
+				StringVariableSelectionDialog dialog = new StringVariableSelectionDialog(
+						getShell());
 				dialog.open();
 				String variable = dialog.getVariableExpression();
 				if (variable != null) {
@@ -104,8 +110,9 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 			}
 
 		});
-		//HELP
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.LOCALLY_DEBUGGING_A_PHP_SCRIPT);
+		// HELP
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.LOCALLY_DEBUGGING_A_PHP_SCRIPT);
 
 	}
 
@@ -130,7 +137,8 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 	 */
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy config) {
-		config.setAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, (String) null);
+		config.setAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS,
+				(String) null);
 	}
 
 	/**
@@ -138,7 +146,8 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
-			fPrgmArgumentsText.setText(configuration.getAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, "")); //$NON-NLS-1$
+			fPrgmArgumentsText.setText(configuration.getAttribute(
+					IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, "")); //$NON-NLS-1$
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -148,7 +157,9 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(ILaunchConfigurationWorkingCopy)
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS, getAttributeValueFrom(fPrgmArgumentsText));
+		configuration.setAttribute(
+				IDebugParametersKeys.EXE_CONFIG_PROGRAM_ARGUMENTS,
+				getAttributeValueFrom(fPrgmArgumentsText));
 	}
 
 	/**
@@ -176,7 +187,7 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void setLaunchConfigurationDialog(ILaunchConfigurationDialog dialog) {
 		super.setLaunchConfigurationDialog(dialog);
-		//fWorkingDirectoryBlock.setLaunchConfigurationDialog(dialog);
+		// fWorkingDirectoryBlock.setLaunchConfigurationDialog(dialog);
 	}
 
 	/**
@@ -193,15 +204,23 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 		return super.getMessage();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#activated(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchConfigurationTab#activated(org.eclipse.debug
+	 * .core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void activated(ILaunchConfigurationWorkingCopy workingCopy) {
-		//fWorkingDirectoryBlock.initializeFrom(workingCopy);
+		// fWorkingDirectoryBlock.initializeFrom(workingCopy);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#deactivated(org.eclipse.debug.core.ILaunchConfigurationWorkingCopy)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchConfigurationTab#deactivated(org.eclipse.
+	 * debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void deactivated(ILaunchConfigurationWorkingCopy workingCopy) {
 		// do nothing when deactivated

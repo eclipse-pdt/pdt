@@ -42,15 +42,25 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	/**
 	 * FilteredFileSelectionDialog constructor comment.
 	 * 
-	 * @param parent Shell
-	 * @param title String
-	 * @param message String
+	 * @param parent
+	 *            Shell
+	 * @param title
+	 *            String
+	 * @param message
+	 *            String
 	 * @parent extensions String[]
-	 * @param allowMultiple boolean
-	 * @param allowExternalFiles Allows selection from an external files that are currently opened in the editor
+	 * @param allowMultiple
+	 *            boolean
+	 * @param allowExternalFiles
+	 *            Allows selection from an external files that are currently
+	 *            opened in the editor
 	 */
-	public ApplicationFileSelectionDialog(Shell parent, ILabelProvider labelProvider, String title, String message, String[] extensions, String[] requiredNatures, boolean allowMultiple, boolean allowExternalFiles) {
-		super(parent, labelProvider, new ExtendedWorkbenchContentProvider(allowExternalFiles));
+	public ApplicationFileSelectionDialog(Shell parent,
+			ILabelProvider labelProvider, String title, String message,
+			String[] extensions, String[] requiredNatures,
+			boolean allowMultiple, boolean allowExternalFiles) {
+		super(parent, labelProvider, new ExtendedWorkbenchContentProvider(
+				allowExternalFiles));
 		this.fAllowExternalFiles = allowExternalFiles;
 		setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 		setTitle(title);
@@ -62,7 +72,8 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 		setAllowMultiple(allowMultiple);
 
 		if (extensions != null) {
-			addFilter(new ApplicationFileViewerFilter(requiredNatures, extensions));
+			addFilter(new ApplicationFileViewerFilter(requiredNatures,
+					extensions));
 		}
 		PHPDebugUIPlugin debugPlugin = PHPDebugUIPlugin.getDefault();
 		if (debugPlugin != null) {
@@ -88,8 +99,12 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 		fExtensions = extensions;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.dialogs.ElementTreeSelectionDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.dialogs.ElementTreeSelectionDialog#createDialogArea(org
+	 * .eclipse.swt.widgets.Composite)
 	 */
 	protected Control createDialogArea(Composite parent) {
 		if (!fAllowExternalFiles) {
@@ -139,12 +154,14 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.dialogs.SelectionStatusDialog#okPressed()
 	 */
 	protected void okPressed() {
 		// Save the external files visibility state into the preferences.
 		if (fExternalFilesBt != null) {
-			fStore.setValue(SHOW_EXTERNAL_FILES, Boolean.toString(fExternalFilesBt.getSelection()));
+			fStore.setValue(SHOW_EXTERNAL_FILES, Boolean
+					.toString(fExternalFilesBt.getSelection()));
 		}
 		super.okPressed();
 	}
@@ -153,7 +170,9 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 	 * Update the tree view.
 	 */
 	private void updateView(boolean showExternalFiles) {
-		((ExtendedWorkbenchContentProvider) getTreeViewer().getContentProvider()).setProvideExternalFiles(showExternalFiles);
+		((ExtendedWorkbenchContentProvider) getTreeViewer()
+				.getContentProvider())
+				.setProvideExternalFiles(showExternalFiles);
 		getTreeViewer().refresh();
 	}
 }

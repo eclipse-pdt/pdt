@@ -34,9 +34,11 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 	private Job evalJob;
 
 	/**
-	 * @see org.eclipse.debug.core.model.IWatchExpressionDelegate#getValue(java.lang.String, org.eclipse.debug.core.model.IDebugElement)
+	 * @see org.eclipse.debug.core.model.IWatchExpressionDelegate#getValue(java.lang.String,
+	 *      org.eclipse.debug.core.model.IDebugElement)
 	 */
-	public void evaluateExpression(String expression, IDebugElement context, IWatchExpressionListener listener) {
+	public void evaluateExpression(String expression, IDebugElement context,
+			IWatchExpressionListener listener) {
 		expressionText = expression;
 		watchListener = listener;
 		IDebugTarget target = context.getDebugTarget();
@@ -49,8 +51,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 				evalJob = new EvaluationRunnable();
 				evalJob.schedule();
 			}
-		}
-		else {
+		} else {
 			watchListener.watchEvaluationFinished(null);
 		}
 	}
@@ -88,25 +89,23 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 		}
 
 		public void evaluate() {
-			//         Logger.debug("getValue() for: " + expressionText);
+			// Logger.debug("getValue() for: " + expressionText);
 			String stackLevel = "0"; //$NON-NLS-1$
 			String testExp = expressionText.trim();
 			Node result = null;
 
 			// disable this performance enhancement as it requires
-			// better determination of whether we have a variable 
+			// better determination of whether we have a variable
 			// or an expression.
 			/*
-			if (testExp.startsWith("$") && testExp.substring(1).indexOf(" ") == -1) {
-			   result = debugTarget.getProperty(testExp, stackLevel, 0);
-			}
-			else {
-			   result = debugTarget.eval(testExp);
-			}
-			*/
+			 * if (testExp.startsWith("$") && testExp.substring(1).indexOf(" ")
+			 * == -1) { result = debugTarget.getProperty(testExp, stackLevel,
+			 * 0); } else { result = debugTarget.eval(testExp); }
+			 */
 			result = debugTarget.eval(testExp);
 			if (result != null) {
-				IVariable tempVar = new DBGpVariable(debugTarget, result, stackLevel);
+				IVariable tempVar = new DBGpVariable(debugTarget, result,
+						stackLevel);
 				evalResult = null;
 				try {
 					evalResult = tempVar.getValue();
@@ -116,8 +115,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 				} catch (Exception e) {
 					hasErrors = true;
 				}
-			}
-			else {
+			} else {
 				hasErrors = true;
 			}
 		}

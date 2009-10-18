@@ -35,14 +35,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler {
+public class PHPExeEditDialog extends TitleAreaDialog implements
+		IControlHandler {
 
 	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.debug.ui.phpExeWizardCompositeFragment";
 	private List<CompositeFragment> runtimeComposites;
 	private PHPexeItem phpExeItem;
 	private PHPexeItem[] existingItems;
 
-	public PHPExeEditDialog(Shell shell, PHPexeItem phpExeItem, PHPexeItem[] existingItems) {
+	public PHPExeEditDialog(Shell shell, PHPexeItem phpExeItem,
+			PHPexeItem[] existingItems) {
 		super(shell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 
@@ -74,13 +76,15 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
 		CTabFolder tabs = SWTUtil.createTabFolder(parent);
-		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories(FRAGMENT_GROUP_ID);
+		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry
+				.getFragmentsFactories(FRAGMENT_GROUP_ID);
 		for (ICompositeFragmentFactory element : factories) {
 			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
 			CompositeFragment fragment = element.createComposite(tabs, this);
 			fragment.setData(phpExeItem);
 			if (fragment instanceof IPHPExeCompositeFragment) {
-				((IPHPExeCompositeFragment)fragment).setExistingItems(existingItems);
+				((IPHPExeCompositeFragment) fragment)
+						.setExistingItems(existingItems);
 			}
 			tabItem.setText(fragment.getDisplayName());
 			tabItem.setControl(fragment);
@@ -90,7 +94,8 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 		tabs.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				CTabItem item = (CTabItem) e.item;
-				CompositeFragment fragment = (CompositeFragment) item.getControl();
+				CompositeFragment fragment = (CompositeFragment) item
+						.getControl();
 				setTitle(fragment.getTitle());
 				setDescription(fragment.getDescription());
 			}
@@ -117,7 +122,8 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 	public void update() {
 		Button button = getButton(IDialogConstants.OK_ID);
 		if (button != null) {
-			Iterator<CompositeFragment> composites = runtimeComposites.iterator();
+			Iterator<CompositeFragment> composites = runtimeComposites
+					.iterator();
 			while (composites.hasNext()) {
 				if (!composites.next().isComplete()) {
 					button.setEnabled(false);
@@ -130,7 +136,8 @@ public class PHPExeEditDialog extends TitleAreaDialog implements IControlHandler
 
 	public void setMessage(String newMessage, int newType) {
 		// Override the WARNING with an INFORMATION.
-		// We have a bug that cause the warning to be displayed in all the tabs and not
+		// We have a bug that cause the warning to be displayed in all the tabs
+		// and not
 		// only in the selected one. (TODO - Fix this)
 		if (newType == IMessageProvider.WARNING) {
 			newType = IMessageProvider.INFORMATION;

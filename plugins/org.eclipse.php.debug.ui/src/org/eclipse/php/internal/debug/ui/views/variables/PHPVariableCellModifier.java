@@ -21,14 +21,16 @@ import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 
 /**
  * PHPVariableCellModifier is the cell modifier for the PHPVariables.
+ * 
  * @author shalom
- *
+ * 
  */
-public class PHPVariableCellModifier extends DefaultVariableCellModifier implements ICellModifier {
+public class PHPVariableCellModifier extends DefaultVariableCellModifier
+		implements ICellModifier {
 
 	/**
-	 * Overrides the default cell modifier to support PHPVariables. 
-	 * (The method returns the PHPValue.getValue() instead of getValueString()).
+	 * Overrides the default cell modifier to support PHPVariables. (The method
+	 * returns the PHPValue.getValue() instead of getValueString()).
 	 */
 	public Object getValue(Object element, String property) {
 		if (VariableColumnPresentation.COLUMN_VARIABLE_VALUE.equals(property)) {
