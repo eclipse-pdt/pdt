@@ -15,7 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.PlatformObject;
+import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
@@ -41,6 +43,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		fTerminated = false;
 		launch.addProcess(this);
 		fProxy = new PHPStreamsProxy();
+		fireCreationEvent();
 	}
 
 	public String getLabel() {
@@ -68,8 +71,8 @@ public class PHPProcess extends PlatformObject implements IProcess {
 		if (origVal != null && origVal.equals(value)) {
 			return; // nothing changed.
 		}
-
 		fAttributes.put(key, value);
+		fireChangeEvent();
 	}
 
 	public String getAttribute(String key) {
@@ -118,6 +121,7 @@ public class PHPProcess extends PlatformObject implements IProcess {
 	public void terminate() throws DebugException {
 		// fLaunch.terminate(); // No need starting from Eclipse 3.3
 		fTerminated = true;
+		fireTerminateEvent();
 	}
 
 	public void setPHPHyperLink(PHPHyperLink pLink) {
@@ -142,5 +146,39 @@ public class PHPProcess extends PlatformObject implements IProcess {
 
 	public void setDebugTarget(IDebugTarget target) {
 		fDebugTarget = target;
+	}
+
+	/**
+	 * Fires a creation event.
+	 */
+	protected void fireCreationEvent() {
+		fireEvent(new DebugEvent(this, DebugEvent.CREATE));
+	}
+
+	/**
+	 * Fires the given debug event.
+	 * 
+	 * @param event
+	 *            debug event to fire
+	 */
+	protected void fireEvent(DebugEvent event) {
+		DebugPlugin manager = DebugPlugin.getDefault();
+		if (manager != null) {
+			manager.fireDebugEventSet(new DebugEvent[] { event });
+		}
+	}
+
+	/**
+	 * Fires a terminate event.
+	 */
+	protected void fireTerminateEvent() {
+		fireEvent(new DebugEvent(this, DebugEvent.TERMINATE));
+	}
+
+	/**
+	 * Fires a change event.
+	 */
+	protected void fireChangeEvent() {
+		fireEvent(new DebugEvent(this, DebugEvent.CHANGE));
 	}
 }
