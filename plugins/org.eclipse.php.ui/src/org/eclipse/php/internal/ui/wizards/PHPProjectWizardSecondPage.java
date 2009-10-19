@@ -515,7 +515,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 					.beginTask(
 							NewWizardMessages.ScriptProjectWizardSecondPage_operation_create,
 							3);
-			if (getScriptProject() == null) {
+			if (getProject() == null || !getProject().exists()) {
 				updateProject(new SubProgressMonitor(monitor, 1));
 			}
 
