@@ -30,7 +30,6 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	private static final String[] VARIABLE_TYPES = { "NULL", "INT", "STRING",
 			"BOOLEAN", "DOUBLE", "ARRAY", "OBJECT", "RESOURCE" };
 
-	private PHPDebugTarget fDebugTarget;
 	private Expression fVariable;
 	private ExpressionValue fValue;
 	private boolean fGlobal;
@@ -39,21 +38,17 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	public PHPValue(PHPDebugTarget target, Expression var) {
 		super(target);
 
-		fDebugTarget = target;
 		fValue = var.getValue();
 		fVariable = var;
 		fGlobal = false;
-
-		initChildren(fValue);
 	}
 
 	public PHPValue(PHPDebugTarget target, Expression variable, boolean global) {
 		super(target);
+
 		fValue = variable.getValue();
 		fVariable = variable;
 		fGlobal = global;
-
-		initChildren(fValue);
 	}
 
 	/*
@@ -151,6 +146,11 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
 	 */
 	public boolean hasVariables() throws DebugException {
+		boolean isArrayOrObject = fValue.getType() == 5
+				|| fValue.getType() == 6;
+		if (!isArrayOrObject) {
+			return false;
+		}
 		// if childVariables is null, we assume we do have
 		// some variables, it's just they need to be got.
 		boolean hasVars = (fChildren == null || fChildren.length > 0);
