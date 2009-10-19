@@ -100,7 +100,11 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		if (parentElement instanceof IncludePath) {
 			final Object entry = ((IncludePath) parentElement).getEntry();
 			if (entry instanceof IBuildpathEntry) {
-				return getBuildPathEntryChildren(parentElement, entry);
+				int entryKind = ((IBuildpathEntry) entry).getEntryKind();
+				if (entryKind == IBuildpathEntry.BPE_CONTAINER
+						|| entryKind == IBuildpathEntry.BPE_LIBRARY) {
+					return getBuildPathEntryChildren(parentElement, entry);
+				}
 			}
 		}
 
