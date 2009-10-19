@@ -146,10 +146,15 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	 * @see org.eclipse.debug.core.model.IValue#hasVariables()
 	 */
 	public boolean hasVariables() throws DebugException {
+		boolean isArrayOrObject = fValue.getType() == 5
+				|| fValue.getType() == 6;
+		if (!isArrayOrObject) {
+			return false;
+		}
 		// if childVariables is null, we assume we do have
 		// some variables, it's just they need to be got.
-		// boolean hasVars = (fChildren == null || fChildren.length > 0);
-		return true; // hasVars;
+		boolean hasVars = (fChildren == null || fChildren.length > 0);
+		return hasVars;
 	}
 
 	public void updateValue(ExpressionValue value) {
