@@ -35,7 +35,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
-		if (node.getType() == ASTNode.IDENTIFIER) {
+		if (node instanceof Identifier) {
 			className = ((Identifier) node).getName();
 			ASTNode parent = node.getParent();
 			if (parent instanceof TypeDeclaration) {
@@ -84,7 +84,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(ClassName className) {
-		if (className.getName().getType() == ASTNode.IDENTIFIER) {
+		if (className.getName() instanceof Identifier) {
 			Identifier identifier = (Identifier) className.getName();
 			checkIdentifier(identifier);
 		}

@@ -58,10 +58,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.ast.nodes.Variable;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -2859,14 +2856,14 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		if (selectedNode != null && selectedNode.getType() == ASTNode.VARIABLE) {
 			final Expression name = ((Variable) selectedNode).getName();
-			if (name.getType() == ASTNode.IDENTIFIER) {
+			if (name instanceof Identifier) {
 				selectedNode = name;
 			}
 		}
 
 		if (locations == null
 				&& selectedNode != null
-				&& (selectedNode.getType() == ASTNode.IDENTIFIER || (isScalarButNotInString(selectedNode)))) {
+				&& (selectedNode instanceof Identifier || (isScalarButNotInString(selectedNode)))) {
 			int type = PhpElementConciliator.concile(selectedNode);
 			if (markOccurrencesOfType(type)) {
 				IOccurrencesFinder finder = OccurrencesFinderFactory
