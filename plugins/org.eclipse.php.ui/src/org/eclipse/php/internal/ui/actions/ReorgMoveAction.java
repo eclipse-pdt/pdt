@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.actions;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
@@ -29,7 +30,8 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 	private static final String MOVE_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.Move";
 	private IStructuredSelection selectedResources;
 	private Shell fShell;
-	private IPHPActionDelegator moveActionDelegate;
+	private AbstractMoveDelegator moveActionDelegate;
+	private IContainer target;
 
 	public void run(IStructuredSelection selection) {
 		if (ActionUtils.containsOnlyProjects(selection.toList())) {
@@ -79,6 +81,9 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 
 	public void run(IAction action) {
 		if (moveActionDelegate != null) {
+			if (target != null) {
+				moveActionDelegate.setTarget(target);
+			}
 			moveActionDelegate.run(action);
 		} else {
 			run(selectedResources);
@@ -99,9 +104,13 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 
 	}
 
+	public void setTarget(IContainer target) {
+		this.target = target;
+	}
+
 	public void init(IWorkbenchWindow window) {
 		fShell = window.getShell();
-		moveActionDelegate = PHPActionDelegatorRegistry
+		moveActionDelegate = (AbstractMoveDelegator) PHPActionDelegatorRegistry
 				.getActionDelegator(MOVE_ELEMENT_ACTION_ID);
 	}
 

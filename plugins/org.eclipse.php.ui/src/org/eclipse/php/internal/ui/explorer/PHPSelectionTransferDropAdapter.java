@@ -89,13 +89,23 @@ public class PHPSelectionTransferDropAdapter extends
 
 	private void handleDropMove(final Object target) throws ModelException,
 			InvocationTargetException, InterruptedException {
-		List elements = ((IStructuredSelection) getSelection()).toList();
-		IModelElement[] modelElements = ReorgUtils.getModelElements(elements);
+		List<?> elements = ((IStructuredSelection) getSelection()).toList();
+		IResource[] resources = getResources(elements);
 
 		ReorgMoveAction action = new ReorgMoveAction();
 		action.init(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-		StructuredSelection selection = new StructuredSelection(target);
+		StructuredSelection selection = new StructuredSelection(resources);
 		action.selectionChanged(null, selection);
+		Object targetContainer = target;
+		if (targetContainer instanceof IModelElement) {
+			targetContainer = getResource((IModelElement) target);
+		}
+
+		if (targetContainer instanceof IContainer) {
+			action.setTarget((IContainer) targetContainer);
+		} else if (targetContainer instanceof IResource) {
+			action.setTarget(((IResource) targetContainer).getParent());
+		}
 		action.run((Action) null);
 	}
 
