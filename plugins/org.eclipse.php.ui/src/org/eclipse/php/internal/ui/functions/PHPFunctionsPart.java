@@ -272,7 +272,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		PatternFilter patternFilter = new PatternFilter();
 		// patternFilter.setIncludeLeadingWildcard(true);
 		FilteredTree filteredTree = new FilteredTree(composite, SWT.SINGLE
-				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter);
+				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter, true);
 		return filteredTree.getViewer();
 	}
 
