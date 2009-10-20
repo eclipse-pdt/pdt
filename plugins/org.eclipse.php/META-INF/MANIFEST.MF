@@ -2,9 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.php; singleton:=true
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 2.2.0.qualifier
 Bundle-Activator: org.eclipse.php.PHPIdePlugin
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %pluginProvider
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
