@@ -25,7 +25,7 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 
-public class ReorgMoveAction implements IPHPActionDelegator {
+public class ReorgMoveAction extends AbstractMoveDelegator {
 
 	private static final String MOVE_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.Move";
 	private IStructuredSelection selectedResources;
@@ -110,8 +110,13 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 
 	public void init(IWorkbenchWindow window) {
 		fShell = window.getShell();
-		moveActionDelegate = (AbstractMoveDelegator) PHPActionDelegatorRegistry
+
+		IPHPActionDelegator action = PHPActionDelegatorRegistry
 				.getActionDelegator(MOVE_ELEMENT_ACTION_ID);
+
+		if (action instanceof AbstractMoveDelegator) {
+			moveActionDelegate = (AbstractMoveDelegator) action;
+		}
 	}
 
 }
