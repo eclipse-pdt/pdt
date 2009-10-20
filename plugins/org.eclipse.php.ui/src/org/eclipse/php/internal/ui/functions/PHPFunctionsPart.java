@@ -20,6 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.ui.viewsupport.StatusBarUpdater;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -191,7 +192,8 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 				try {
 					// retrieves the project and the content
 					IScriptProject scriptProject = getCurrentScriptProject();
-					if (scriptProject == null) {
+					if (scriptProject == null
+							|| !(scriptProject instanceof ScriptProject)) {
 						return Status.CANCEL_STATUS;
 					}
 
@@ -206,9 +208,9 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 								.getBuildpathEntries(scriptProject);
 						List<IProjectFragment> fragments = new LinkedList<IProjectFragment>();
 						for (IBuildpathEntry buildpathEntry : buildpathEntries) {
-							IProjectFragment fragment = scriptProject
+							IProjectFragment fragment = ((ScriptProject) scriptProject)
 									.getProjectFragment(buildpathEntry
-											.getPath().toString());
+											.getPath());
 							if (fragment != null) {
 								fragments.add(fragment);
 							}
