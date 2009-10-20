@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.ui.search;
 
 import java.util.List;
@@ -31,7 +42,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 			}
 			return null;
 		}
-		fDescription = "OccurrencesFinder_occurrence_description";
+		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
 		return fDescription;
 	}
 
@@ -50,21 +61,24 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(Scalar scalar) {
 		String scalarValue = scalar.getStringValue();
 		if (scalar.getScalarType() == Scalar.TYPE_STRING && scalarValue != null) {
-			if (!isQuoted(scalarValue)) {
+			// disregard strings
+			if (!isQuoted(scalarValue) && (scalar.getParent().getType() != ASTNode.QUOTE)) {
 				if (checkEquality(scalarValue)) {
 					// Usage of the scalar
 					fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceType(scalar), fDescription));
 				}
 			} else {
 				// The scalar is quoted, so it might be in a 'define' or a 'constant' call.
-				scalarValue = scalarValue.substring(1, scalarValue.length() - 1);
+				if (isQuoted(scalarValue)) {
+					scalarValue = scalarValue.substring(1, scalarValue.length() - 1);
+				}
 				if (checkEquality(scalarValue)) {
 					ASTNode parent = scalar.getParent();
 					if (parent.getType() == ASTNode.FUNCTION_INVOCATION) {
 						// Check if this is the definition function of the scalar (define).
 						FunctionInvocation functionInvocation = (FunctionInvocation) parent;
 						Expression name = functionInvocation.getFunctionName().getName();
-						if (name.getType() == ASTNode.IDENTIFIER) {
+						if (name instanceof Identifier) {
 							String functionName = ((Identifier) name).getName();
 							if ("define".equalsIgnoreCase(functionName)) {//$NON-NLS-1$
 								defineFound = true;
@@ -97,7 +111,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * False, in case that the parameters contain a 'false' case parameter.
 	 */
 	private boolean isCaseSensitiveDefined(List<Expression> parameters) {
-		if (parameters.size() == 2 || parameters.size() > 3) {
+		if (parameters.size() != 3) {
 			// default behavior is case sensitive.
 			return true;
 		}
@@ -105,7 +119,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (expression.getType() == ASTNode.SCALAR) {
 			Scalar scalar = (Scalar) expression;
 			String value = scalar.getStringValue();
-			return "true".equalsIgnoreCase(value);
+			return "true".equalsIgnoreCase(value); //$NON-NLS-1$
 		}
 		return false;
 	}
