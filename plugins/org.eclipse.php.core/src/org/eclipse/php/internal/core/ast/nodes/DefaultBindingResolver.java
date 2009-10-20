@@ -433,7 +433,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (member.getType() == ASTNode.VARIABLE) {
 			Variable var = (Variable) member;
 			if (!var.isDollared()
-					&& var.getName().getType() == ASTNode.IDENTIFIER) {
+					&& var.getName() instanceof Identifier) {
 				Identifier id = (Identifier) var.getName();
 				final String fieldName = "$" + id.getName();
 				final ITypeBinding type = fieldAccess.getDispatcher()
@@ -472,7 +472,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (member.getType() == ASTNode.VARIABLE) {
 			Variable var = (Variable) member;
 			if (var.isDollared()
-					&& var.getName().getType() == ASTNode.IDENTIFIER) {
+					&& var.getName() instanceof Identifier) {
 				Identifier id = (Identifier) var.getName();
 				final String fieldName = "$" + id.getName();
 				final ITypeBinding type = fieldAccess.getClassName()
@@ -750,7 +750,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		 */
 		public boolean visit(Variable variable) {
 			Expression name = variable.getName();
-			if (variable.isDollared() && name.getType() == ASTNode.IDENTIFIER) {
+			if (variable.isDollared() && name instanceof Identifier) {
 				String variableName = ((Identifier) name).getName();
 				if (!variableName.equalsIgnoreCase("this")
 						&& !variablesSet.contains(variableName)) {

@@ -66,7 +66,7 @@ public class PhpElementConciliator {
 		ASTNode parent = null;
 		// check if it is an identifier
 		final int type = locateNode.getType();
-		if (type == ASTNode.IDENTIFIER
+		if (locateNode instanceof Identifier
 				&& ((Identifier) locateNode).getParent() instanceof Variable) {
 			parent = (Variable) ((Identifier) locateNode).getParent();
 			parent = parent.getParent();
@@ -134,7 +134,7 @@ public class PhpElementConciliator {
 		Scalar scalar = null;
 		// check if it is an identifier
 		if (locateNode.getType() != ASTNode.SCALAR) {
-			if (locateNode.getType() == ASTNode.IDENTIFIER
+			if ((locateNode instanceof Identifier)
 					&& "define".equals(((Identifier) locateNode).getName())) {
 				FunctionInvocation inv = (FunctionInvocation) locateNode
 						.getParent().getParent();
@@ -223,7 +223,7 @@ public class PhpElementConciliator {
 		assert locateNode != null;
 		Variable parent = null;
 		// check if it is an identifier
-		if (locateNode.getType() == ASTNode.IDENTIFIER
+		if (locateNode instanceof Identifier
 				&& ((Identifier) locateNode).getParent() instanceof Variable) {
 			parent = (Variable) ((Identifier) locateNode).getParent();
 		} else if (locateNode.getType() == ASTNode.VARIABLE) {
@@ -257,7 +257,7 @@ public class PhpElementConciliator {
 
 	private final static boolean isThisVariable(Variable variable) {
 		return (variable.isDollared()
-				&& variable.getName().getType() == ASTNode.IDENTIFIER && THIS
+				&& variable.getName() instanceof Identifier && THIS
 				.equalsIgnoreCase(((Identifier) variable.getName()).getName()));
 	}
 
@@ -390,8 +390,7 @@ public class PhpElementConciliator {
 			final Expression variableName = arrayAccess.getName();
 			if (variableName.getType() == ASTNode.VARIABLE) {
 				Variable var = (Variable) variableName;
-				if (var.isDollared()
-						&& var.getName().getType() == ASTNode.IDENTIFIER) {
+				if (var.isDollared() && var.getName() instanceof Identifier) {
 					final Identifier id = (Identifier) var.getName();
 					return id.getName().equals("_GLOBALS")
 							|| id.getName().equals("GLOBALS");
@@ -412,7 +411,7 @@ public class PhpElementConciliator {
 			final GlobalStatement globalStatement) {
 		final List<Variable> variables = globalStatement.variables();
 		for (final Variable current : variables) {
-			assert current.getName().getType() == ASTNode.IDENTIFIER;
+			assert current.getName() instanceof Identifier;
 			Identifier id = (Identifier) current.getName();
 
 			// variables are case sensative
@@ -444,10 +443,13 @@ public class PhpElementConciliator {
 			parent = ((FunctionDeclaration) locateNode);
 			targetIdentifier = ((FunctionDeclaration) locateNode)
 					.getFunctionName();
-		} else if (locateNode.getType() == ASTNode.IDENTIFIER
+		} else if (locateNode instanceof Identifier
 				&& !"define".equals(((Identifier) locateNode).getName())) {
 			targetIdentifier = (Identifier) locateNode;
 			parent = targetIdentifier.getParent();
+			if (parent.getType() == ASTNode.NAMESPACE_NAME) {
+				parent = targetIdentifier.getParent().getParent();
+			}
 		} else {
 			return false;
 		}
@@ -671,7 +673,7 @@ public class PhpElementConciliator {
 			if (node.getType() == ASTNode.VARIABLE) {
 				Variable variable = (Variable) node;
 				if (variable.isDollared()) {
-					assert variable.getName().getType() == ASTNode.IDENTIFIER;
+					assert variable.getName() instanceof Identifier;
 					Identifier identifier = (Identifier) variable.getName();
 					if (identifier.getName().equals(name)) {
 						exists = true;
@@ -742,7 +744,7 @@ public class PhpElementConciliator {
 			if (exists)
 				return false;
 
-			if (node.getType() == ASTNode.IDENTIFIER) {
+			if (node instanceof Identifier) {
 				final Identifier id = (Identifier) node;
 				if (name.equals(id.getName())
 						&& id.getParent().getType() == type) {
@@ -818,7 +820,7 @@ public class PhpElementConciliator {
 				node.childrenAccept(this);
 				isGlobalScope = true;
 				return false;
-			} else if (node.getType() == ASTNode.IDENTIFIER) {
+			} else if (node instanceof Identifier) {
 				Identifier identifier = (Identifier) node;
 				if (identifier.getParent().getType() == ASTNode.VARIABLE) {
 					Variable variable = (Variable) identifier.getParent();
@@ -833,7 +835,7 @@ public class PhpElementConciliator {
 				for (final Variable variable : variables) {
 					final Expression variableName = variable.getName();
 					if (variable.isDollared()
-							&& variableName.getType() == ASTNode.IDENTIFIER) {
+							&& variableName instanceof Identifier) {
 						Identifier identifier = (Identifier) variableName;
 						if (name.equals(identifier.getName())) {
 							exists = true;
