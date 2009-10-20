@@ -1,23 +1,26 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.locator;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 /**
- * Conciles the php element from a given path
- * NOTE: use the {@link #concile(LinkedList)} method, to identifiy the path element
+ * Conciles the php element from a given path NOTE: use the
+ * {@link #concile(LinkedList)} method, to identifiy the path element
+ * 
  * @author Roy, 2007
  */
 public class PhpElementConciliator {
@@ -36,7 +39,7 @@ public class PhpElementConciliator {
 	public static int concile(ASTNode locateNode) {
 		if (locateNode == null || isProgram(locateNode)) {
 			return CONCILIATOR_PROGRAM;
-		}else if (isGlobalVariable(locateNode)) {
+		} else if (isGlobalVariable(locateNode)) {
 			return CONCILIATOR_GLOBAL_VARIABLE;
 		} else if (isFunction(locateNode)) {
 			return CONCILIATOR_FUNCTION;
@@ -54,17 +57,26 @@ public class PhpElementConciliator {
 
 	/**
 	 * Identifies a dispatch usage
+	 * 
 	 * @param locateNode
 	 */
-	private static boolean isDispatch(ASTNode node) {
-		assert node != null;
+	private static boolean isDispatch(ASTNode locateNode) {
+		assert locateNode != null;
 
+		ASTNode parent = null;
 		// check if it is an identifier
-		if (node.getType() != ASTNode.IDENTIFIER) {
-			return false;
+		final int type = locateNode.getType();
+		if (locateNode instanceof Identifier
+				&& ((Identifier) locateNode).getParent() instanceof Variable) {
+			parent = (Variable) ((Identifier) locateNode).getParent();
+			parent = parent.getParent();
+		} else if (type == ASTNode.SINGLE_FIELD_DECLARATION
+				|| type == ASTNode.FIELD_DECLARATION
+				|| type == ASTNode.METHOD_DECLARATION) {
+			parent = locateNode;
+		} else {
+			parent = locateNode.getParent();
 		}
-
-		ASTNode parent = node.getParent();
 
 		// check if it is a method declaration
 		if (parent.getType() == ASTNode.FUNCTION_DECLARATION) {
@@ -78,22 +90,27 @@ public class PhpElementConciliator {
 			return false;
 		}
 
-		if (parent.getType() == ASTNode.VARIABLE) {
-
+		if (parent.getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 			// check for $this variable
-			final Identifier id = (Identifier) node;
-			final Variable variable = (Variable) parent;
-
-			if (id.getName().equals(THIS) && variable.isDollared()) {
-				return false;
-			}
-
-			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION || parent.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
+			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION
+					|| parent.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 				return true;
 			}
 		}
 
-		if(parent.getType() == ASTNode.CLASS_CONSTANT_DECLARATION)
+		if (parent.getType() == ASTNode.FIELD_DECLARATION
+				|| parent.getType() == ASTNode.METHOD_DECLARATION) {
+			return true;
+		}
+
+		if (parent.getType() == ASTNode.VARIABLE) {
+			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION
+					|| parent.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
+				return true;
+			}
+		}
+
+		if (parent.getType() == ASTNode.CONSTANT_DECLARATION)
 			return true;
 
 		// check if it is a dispatch
@@ -108,20 +125,33 @@ public class PhpElementConciliator {
 
 	/**
 	 * Identifies a constant use
+	 * 
 	 * @param locateNode
 	 * @return
 	 */
 	private static boolean isConstant(ASTNode locateNode) {
 		assert locateNode != null;
-
+		Scalar scalar = null;
 		// check if it is an identifier
 		if (locateNode.getType() != ASTNode.SCALAR) {
-			return false;
+			if ((locateNode instanceof Identifier)
+					&& "define".equals(((Identifier) locateNode).getName())) {
+				FunctionInvocation inv = (FunctionInvocation) locateNode
+						.getParent().getParent();
+				List<Expression> parameters = inv.parameters();
+				if (parameters != null && parameters.size() > 0) {
+					scalar = (Scalar) parameters.get(0);
+				}
+			} else {
+				return false;
+			}
+		} else {
+			scalar = (Scalar) locateNode;
 		}
-		final Scalar scalar = (Scalar) locateNode;
 
 		// if it is not a dollared variable - it is not a global one
-		if (scalar.getScalarType() != Scalar.TYPE_STRING || scalar.getStringValue() == null) {
+		if (scalar.getScalarType() != Scalar.TYPE_STRING
+				|| scalar.getStringValue() == null) {
 			return false;
 		}
 
@@ -133,7 +163,11 @@ public class PhpElementConciliator {
 		}
 
 		// check if it is part of define
-		final ASTNode previous = locateNode.getParent();
+		ASTNode previous = locateNode.getParent();
+		if (previous.getType() == ASTNode.FUNCTION_NAME) {
+			previous = previous.getParent();
+		}
+
 		if (previous.getType() != ASTNode.FUNCTION_INVOCATION) {
 			return false;
 		}
@@ -143,7 +177,8 @@ public class PhpElementConciliator {
 			return false;
 		}
 
-		final Identifier identifier = (Identifier) functionInvocation.getFunctionName().getName();
+		final Identifier identifier = (Identifier) functionInvocation
+				.getFunctionName().getName();
 		return "define".equalsIgnoreCase(identifier.getName()) || "constant".equalsIgnoreCase(identifier.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -154,18 +189,28 @@ public class PhpElementConciliator {
 	private static boolean isClassName(ASTNode locateNode) {
 		assert locateNode != null;
 
-		// check if it is an identifier
-		if (locateNode.getType() != ASTNode.IDENTIFIER) {
+		ASTNode parent = null;
+		if (locateNode.getType() == ASTNode.CLASS_DECLARATION
+				|| locateNode.getType() == ASTNode.INTERFACE_DECLARATION) {
+			parent = locateNode;
+		} else if (locateNode.getType() == ASTNode.IDENTIFIER) {
+			parent = locateNode.getParent();
+		} else {
 			return false;
 		}
 
-		ASTNode parent = locateNode.getParent();
 		final int parentType = parent.getType();
-		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.CLASS_DECLARATION || parentType == ASTNode.INTERFACE_DECLARATION || parentType == ASTNode.CATCH_CLAUSE || parentType == ASTNode.FORMAL_PARAMETER) {
+		if (parentType == ASTNode.CLASS_NAME
+				|| parentType == ASTNode.CLASS_DECLARATION
+				|| parentType == ASTNode.INTERFACE_DECLARATION
+				|| parentType == ASTNode.CATCH_CLAUSE
+				|| parentType == ASTNode.FORMAL_PARAMETER) {
 			return true;
 		}
 
-		if (parentType == ASTNode.STATIC_METHOD_INVOCATION || parentType == ASTNode.STATIC_FIELD_ACCESS || parentType == ASTNode.STATIC_CONSTANT_ACCESS) {
+		if (parentType == ASTNode.STATIC_METHOD_INVOCATION
+				|| parentType == ASTNode.STATIC_FIELD_ACCESS
+				|| parentType == ASTNode.STATIC_CONSTANT_ACCESS) {
 			StaticDispatch staticDispatch = (StaticDispatch) parent;
 			if (staticDispatch.getClassName() == locateNode) {
 				return true;
@@ -176,28 +221,28 @@ public class PhpElementConciliator {
 
 	private static boolean isLocalVariable(ASTNode locateNode) {
 		assert locateNode != null;
+		Variable parent = null;
 		// check if it is an identifier
-		if (locateNode.getType() != ASTNode.IDENTIFIER) {
+		if (locateNode instanceof Identifier
+				&& ((Identifier) locateNode).getParent() instanceof Variable) {
+			parent = (Variable) ((Identifier) locateNode).getParent();
+		} else if (locateNode.getType() == ASTNode.VARIABLE) {
+			parent = (Variable) locateNode;
+		} else {
 			return false;
 		}
-		final Identifier targetIdentifier = (Identifier) locateNode;
-
-		if (targetIdentifier.getParent().getType() != ASTNode.VARIABLE) {
-			return false;
-		}
-
-		Variable parent = (Variable) targetIdentifier.getParent();
 
 		// check for not variables / or $this / or field declaration
-		if (!parent.isDollared() || targetIdentifier.getName().equals(THIS) || parent.getType() == ASTNode.FIELD_DECLARATION) {
+		if (!parent.isDollared() || isThisVariable(parent)
+				|| parent.getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
-		
+
 		// check for static variables
-		if (parent.isDollared() && parent.getParent() != null && parent.getParent().getType() == ASTNode.STATIC_FIELD_ACCESS) {
+		if (parent.isDollared() && parent.getParent() != null
+				&& parent.getParent().getType() == ASTNode.STATIC_FIELD_ACCESS) {
 			return false;
 		}
-		
 
 		ASTNode node = parent;
 		while (node != null) {
@@ -210,6 +255,12 @@ public class PhpElementConciliator {
 		return false;
 	}
 
+	private final static boolean isThisVariable(Variable variable) {
+		return (variable.isDollared()
+				&& variable.getName() instanceof Identifier && THIS
+				.equalsIgnoreCase(((Identifier) variable.getName()).getName()));
+	}
+
 	/**
 	 * @param locateNode
 	 * @return true if the given path indicates a global variable
@@ -217,6 +268,17 @@ public class PhpElementConciliator {
 	private static boolean isGlobalVariable(ASTNode locateNode) {
 		assert locateNode != null;
 
+		// if user full selected the $a variable
+		if (locateNode.getType() == ASTNode.VARIABLE) {
+			return checkGlobalVariable((Variable) locateNode);
+		}
+
+		// if the cursor is in the scope of a variable identifier
+		return checkGlobalIdentifier(locateNode);
+
+	}
+
+	private static boolean checkGlobalIdentifier(ASTNode locateNode) {
 		// check if it is a GLOBALS['a'] direction
 		if (locateNode.getType() == ASTNode.SCALAR) {
 			Scalar scalar = (Scalar) locateNode;
@@ -227,7 +289,8 @@ public class PhpElementConciliator {
 		if (locateNode.getType() != ASTNode.IDENTIFIER) {
 			return false;
 		}
-		final Identifier targetIdentifier = (Identifier) locateNode;
+
+		final Identifier targetIdentifier = ((Identifier) locateNode);
 
 		ASTNode parent = locateNode.getParent();
 		if (parent.getType() != ASTNode.VARIABLE) {
@@ -236,18 +299,20 @@ public class PhpElementConciliator {
 
 		final Variable variable = (Variable) parent;
 		// if it is not a dollared variable - it is not a global one
-		if (!variable.isDollared() || variable.getParent().getType() == ASTNode.FIELD_DECLARATION) {
+		if (!variable.isDollared()
+				|| variable.getParent().getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
 
 		// ignore static memeber call
 		if (parent.getParent().getType() == ASTNode.STATIC_FIELD_ACCESS) {
-			final StaticFieldAccess staticFieldAccess = (StaticFieldAccess) parent.getParent();
+			final StaticFieldAccess staticFieldAccess = (StaticFieldAccess) parent
+					.getParent();
 			if (staticFieldAccess.getMember() == variable) {
 				return false;
 			}
 		}
-		
+
 		if (parent.getParent().getLocationInParent() == FieldsDeclaration.FIELDS_PROPERTY) {
 			return false;
 		}
@@ -285,13 +350,32 @@ public class PhpElementConciliator {
 		return parent == null;
 	}
 
+	private static boolean checkGlobalVariable(Variable locateNode) {
+		assert locateNode.getType() == ASTNode.VARIABLE;
+
+		if (locateNode.getParent().getType() == ASTNode.STATIC_FIELD_ACCESS) {
+			return false;
+		}
+		return locateNode.getParent().getType() == ASTNode.GLOBAL_STATEMENT // Global
+				// $a
+				// case
+				|| (locateNode.getEnclosingBodyNode() != null && locateNode
+						.getEnclosingBodyNode().getType() == ASTNode.PROGRAM); // $a
+		// declared
+		// in
+		// global
+		// scope
+		// case
+	}
+
 	/**
 	 * @param scalar
 	 * @return true if the scalar is defines as $GLOBALS call
 	 */
 	private static boolean checkGLOBALS(Scalar scalar) {
 		final String stringValue = scalar.getStringValue();
-		if (scalar.getScalarType() != Scalar.TYPE_STRING || stringValue.length() < 3) {
+		if (scalar.getScalarType() != Scalar.TYPE_STRING
+				|| stringValue.length() < 3) {
 			return false;
 		}
 		final char charAtZero = stringValue.charAt(0);
@@ -303,14 +387,13 @@ public class PhpElementConciliator {
 
 		if (scalar.getParent().getType() == ASTNode.ARRAY_ACCESS) {
 			ArrayAccess arrayAccess = (ArrayAccess) scalar.getParent();
-			final Expression variableName = arrayAccess.getVariableName();
+			final Expression variableName = arrayAccess.getName();
 			if (variableName.getType() == ASTNode.VARIABLE) {
 				Variable var = (Variable) variableName;
-				if (var.isDollared() && var.getVariableName().getType() == ASTNode.IDENTIFIER) {
-					final Identifier id = (Identifier) var.getVariableName();
-					if (id.getName().equals("GLOBALS")) { //$NON-NLS-1$
-						return true;
-					}
+				if (var.isDollared() && var.getName() instanceof Identifier) {
+					final Identifier id = (Identifier) var.getName();
+					return id.getName().equals("_GLOBALS")
+							|| id.getName().equals("GLOBALS");
 				}
 			}
 		}
@@ -324,11 +407,12 @@ public class PhpElementConciliator {
 	 * @param globalStatement
 	 * @return true is the
 	 */
-	private static boolean checkGlobal(Identifier targetIdentifier, final GlobalStatement globalStatement) {
-		final Variable[] variables = globalStatement.getVariables();
+	private static boolean checkGlobal(Identifier targetIdentifier,
+			final GlobalStatement globalStatement) {
+		final List<Variable> variables = globalStatement.variables();
 		for (final Variable current : variables) {
-			assert current.getVariableName().getType() == ASTNode.IDENTIFIER;
-			Identifier id = (Identifier) current.getVariableName();
+			assert current.getName().getType() == ASTNode.IDENTIFIER;
+			Identifier id = (Identifier) current.getName();
 
 			// variables are case sensative
 			if (id.getName().equals(targetIdentifier.getName())) {
@@ -352,24 +436,38 @@ public class PhpElementConciliator {
 	 */
 	private static boolean isFunction(ASTNode locateNode) {
 		assert locateNode != null;
+		ASTNode parent = null;
+		Identifier targetIdentifier = null;
 
-		// check if it is an identifier
-		if (locateNode.getType() != ASTNode.IDENTIFIER) {
+		if (locateNode.getType() == ASTNode.FUNCTION_DECLARATION) {
+			parent = ((FunctionDeclaration) locateNode);
+			targetIdentifier = ((FunctionDeclaration) locateNode)
+					.getFunctionName();
+		} else if (locateNode instanceof Identifier
+				&& !"define".equals(((Identifier) locateNode).getName())) {
+			targetIdentifier = (Identifier) locateNode;
+			parent = targetIdentifier.getParent();
+			if (parent.getType() == ASTNode.NAMESPACE_NAME) {
+				parent = targetIdentifier.getParent().getParent();
+			}
+		} else {
 			return false;
 		}
-		final Identifier targetIdentifier = (Identifier) locateNode;
 
 		// check if it is a function
-		final ASTNode parent = targetIdentifier.getParent();
-		if (parent.getType() != ASTNode.FUNCTION_DECLARATION && parent.getType() != ASTNode.FUNCTION_NAME) {
+		if (parent.getType() != ASTNode.FUNCTION_DECLARATION
+				&& parent.getType() != ASTNode.FUNCTION_NAME
+				|| parent.getParent().getType() == ASTNode.METHOD_DECLARATION) {
 			return false;
 		}
 
 		// check if it is a method
 		final int type = parent.getParent().getType();
 		if (type == ASTNode.FUNCTION_INVOCATION) {
-			final int parentParentType = parent.getParent().getParent().getType();
-			if (parentParentType == ASTNode.METHOD_DECLARATION || parentParentType == ASTNode.STATIC_METHOD_INVOCATION) {
+			final int parentParentType = parent.getParent().getParent()
+					.getType();
+			if (parentParentType == ASTNode.METHOD_DECLARATION
+					|| parentParentType == ASTNode.STATIC_METHOD_INVOCATION) {
 				return false;
 			}
 		} else if (type == ASTNode.METHOD_DECLARATION) {
@@ -391,12 +489,13 @@ public class PhpElementConciliator {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param program
 	 * @param name
 	 * @return true - if the program has this constant already
 	 */
-	public static boolean constantAlreadyExists(Program program, final String name) {
+	public static boolean constantAlreadyExists(Program program,
+			final String name) {
 		assert program != null && name != null;
 
 		final DefinedSearcher checkConstantVisitor = new DefinedSearcher(name);
@@ -406,12 +505,13 @@ public class PhpElementConciliator {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param program
 	 * @param name
 	 * @return true - if the program has a class name already
 	 */
-	public static boolean classNameAlreadyExists(Program program, final String name) {
+	public static boolean classNameAlreadyExists(Program program,
+			final String name) {
 		assert program != null && name != null;
 
 		final ClassSearcher checkClassVisitor = new ClassSearcher(name);
@@ -421,13 +521,36 @@ public class PhpElementConciliator {
 	}
 
 	/**
+	 * 
+	 * @param typeDeclaration
+	 *            the search scope.
+	 * @param name
+	 *            name to be searched.
+	 * @param type
+	 *            the ASTNode type.
+	 * @return true - if the TypeDeclaration has a class member already.
+	 */
+	public static boolean classMemeberAlreadyExists(
+			TypeDeclaration typeDeclaration, final String name, int type) {
+		assert typeDeclaration != null && name != null;
+
+		final ClassMemberSearcher checkClassVisitor = new ClassMemberSearcher(
+				name, type);
+		typeDeclaration.accept(checkClassVisitor);
+
+		return checkClassVisitor.classMemberAlreadyExists();
+	}
+
+	/**
 	 * @param path
 	 * @return true if the given path indicates a global variable
 	 */
-	public static boolean localVariableAlreadyExists(FunctionDeclaration functionDeclaration, final String name) {
+	public static boolean localVariableAlreadyExists(
+			FunctionDeclaration functionDeclaration, final String name) {
 		assert functionDeclaration != null && name != null;
 
-		final LocalVariableSearcher checkLocalVariable = new LocalVariableSearcher(name);
+		final LocalVariableSearcher checkLocalVariable = new LocalVariableSearcher(
+				name);
 		functionDeclaration.accept(checkLocalVariable);
 
 		return checkLocalVariable.localVariableAlreadyExists();
@@ -437,7 +560,8 @@ public class PhpElementConciliator {
 	 * @param path
 	 * @return true if the given path indicates a global variable
 	 */
-	public static boolean functionAlreadyExists(Program program, final String name) {
+	public static boolean functionAlreadyExists(Program program,
+			final String name) {
 		assert program != null && name != null;
 
 		final FunctionSearcher checkFunctionVisitor = new FunctionSearcher(name);
@@ -450,10 +574,12 @@ public class PhpElementConciliator {
 	 * @param path
 	 * @return true if the given path indicates a global variable
 	 */
-	public static boolean globalVariableAlreadyExists(Program program, final String name) {
+	public static boolean globalVariableAlreadyExists(Program program,
+			final String name) {
 		assert program != null && name != null;
 
-		final GlobalVariableSearcher checkGlobalVisitor = new GlobalVariableSearcher(name);
+		final GlobalVariableSearcher checkGlobalVisitor = new GlobalVariableSearcher(
+				name);
 		program.accept(checkGlobalVisitor);
 
 		return checkGlobalVisitor.globalVariableAlreadyExists();
@@ -480,28 +606,33 @@ public class PhpElementConciliator {
 				final Scalar scalar = (Scalar) node;
 
 				final String stringValue = scalar.getStringValue();
-				if (scalar.getScalarType() != Scalar.TYPE_STRING || stringValue == null) {
+				if (scalar.getScalarType() != Scalar.TYPE_STRING
+						|| stringValue == null) {
 					return false;
 				}
 
 				final int length = stringValue.length() - 1;
-				if (stringValue.charAt(0) != '"' && stringValue.charAt(length) != '"' && stringValue.equals(name)) {
+				if (stringValue.charAt(0) != '"'
+						&& stringValue.charAt(length) != '"'
+						&& stringValue.equals(name)) {
 					exists = true;
 				}
 			} else if (node.getType() == ASTNode.FUNCTION_INVOCATION) {
 				FunctionInvocation functionInvocation = (FunctionInvocation) node;
-				final Expression functionName = functionInvocation.getFunctionName().getFunctionName();
+				final Expression functionName = functionInvocation
+						.getFunctionName().getName();
 				if (functionName.getType() != ASTNode.IDENTIFIER) {
 					return false;
 				}
 
 				final Identifier identifier = (Identifier) functionName;
-				final Expression[] parameters = functionInvocation.getParameters();
-				if (!"define".equalsIgnoreCase(identifier.getName()) || parameters == null || parameters.length == 0) { //$NON-NLS-1$
+				final List<Expression> parameters = functionInvocation
+						.parameters();
+				if (!"define".equalsIgnoreCase(identifier.getName()) || parameters == null || parameters.size() == 0) { //$NON-NLS-1$
 					return false;
 				}
 
-				final Expression expression = parameters[0];
+				final Expression expression = parameters.get(0);
 				if (expression.getType() != ASTNode.SCALAR) {
 					return false;
 				}
@@ -511,8 +642,9 @@ public class PhpElementConciliator {
 				if (stringValue.length() < 2 || stringValue.charAt(0) != '"') {
 					return false;
 				}
-				exists = name.equals(stringValue.substring(1, stringValue.length() - 1));
-			} 
+				exists = name.equals(stringValue.substring(1, stringValue
+						.length() - 1));
+			}
 			return true;
 		}
 
@@ -541,13 +673,13 @@ public class PhpElementConciliator {
 			if (node.getType() == ASTNode.VARIABLE) {
 				Variable variable = (Variable) node;
 				if (variable.isDollared()) {
-					assert variable.getVariableName().getType() == ASTNode.IDENTIFIER;
-					Identifier identifier = (Identifier) variable.getVariableName();
+					assert variable.getName().getType() == ASTNode.IDENTIFIER;
+					Identifier identifier = (Identifier) variable.getName();
 					if (identifier.getName().equals(name)) {
 						exists = true;
 					}
 				}
-			} 
+			}
 			return true;
 		}
 
@@ -573,17 +705,57 @@ public class PhpElementConciliator {
 			if (exists)
 				return false;
 
-			if (node.getType() == ASTNode.CLASS_DECLARATION || node.getType() == ASTNode.INTERFACE_DECLARATION) {
+			if (node.getType() == ASTNode.CLASS_DECLARATION
+					|| node.getType() == ASTNode.INTERFACE_DECLARATION) {
 				TypeDeclaration typeDeclaration = (TypeDeclaration) node;
 				if (typeDeclaration.getName().getName().equals(name)) {
 					exists = true;
 				}
-			} 
+			}
 
 			return true;
 		}
 
 		public boolean classNameAlreadyExists() {
+			return exists;
+		}
+	}
+
+	/**
+	 * Searches for class member with a given name and type, stops when found
+	 */
+	private static class ClassMemberSearcher extends ApplyAll {
+
+		private boolean exists = false;
+		private final String name;
+		private int type;
+
+		public ClassMemberSearcher(String name, int type) {
+			if (name == null) {
+				throw new IllegalArgumentException(
+						"member name should not be null"); ////$NON-NLS-1$
+			}
+			this.name = name;
+			this.type = type;
+		}
+
+		public boolean apply(ASTNode node) {
+			// stops when found - that's the reason to use ApplyAll
+			if (exists)
+				return false;
+
+			if (node instanceof Identifier) {
+				final Identifier id = (Identifier) node;
+				if (name.equals(id.getName())
+						&& id.getParent().getType() == type) {
+					exists = true;
+				}
+			}
+
+			return true;
+		}
+
+		public boolean classMemberAlreadyExists() {
 			return exists;
 		}
 	}
@@ -613,7 +785,7 @@ public class PhpElementConciliator {
 				if (identifier.getName().equalsIgnoreCase(name)) {
 					exists = true;
 				}
-			} 
+			}
 
 			return true;
 		}
@@ -642,32 +814,35 @@ public class PhpElementConciliator {
 			if (exists)
 				return false;
 
-			if (node.getType() == ASTNode.CLASS_DECLARATION || node.getType() == ASTNode.FUNCTION_DECLARATION) {
+			if (node.getType() == ASTNode.CLASS_DECLARATION
+					|| node.getType() == ASTNode.FUNCTION_DECLARATION) {
 				isGlobalScope = false;
 				node.childrenAccept(this);
 				isGlobalScope = true;
 				return false;
-			} else if (node.getType() == ASTNode.IDENTIFIER) {
+			} else if (node instanceof Identifier) {
 				Identifier identifier = (Identifier) node;
 				if (identifier.getParent().getType() == ASTNode.VARIABLE) {
 					Variable variable = (Variable) identifier.getParent();
-					if (variable.isDollared() && isGlobalScope && name.equals(identifier.getName())) {
+					if (variable.isDollared() && isGlobalScope
+							&& name.equals(identifier.getName())) {
 						exists = true;
 					}
 				}
 			} else if (node.getType() == ASTNode.GLOBAL_STATEMENT) {
 				GlobalStatement globalStatement = (GlobalStatement) node;
-				final Variable[] variables = globalStatement.getVariables();
+				final List<Variable> variables = globalStatement.variables();
 				for (final Variable variable : variables) {
-					final Expression variableName = variable.getVariableName();
-					if (variable.isDollared() && variableName.getType() == ASTNode.IDENTIFIER) {
+					final Expression variableName = variable.getName();
+					if (variable.isDollared()
+							&& variableName instanceof Identifier) {
 						Identifier identifier = (Identifier) variableName;
 						if (name.equals(identifier.getName())) {
 							exists = true;
 						}
 					}
 				}
-			} 
+			}
 
 			return true;
 		}
@@ -676,5 +851,4 @@ public class PhpElementConciliator {
 			return exists;
 		}
 	}
-
 }
