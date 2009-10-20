@@ -839,7 +839,8 @@ public class ReorgPolicyFactory {
 			if (modelElement instanceof IScriptModel)
 				return RefactoringStatus
 						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_jmodel);
-			if (!(modelElement instanceof IScriptProject || modelElement instanceof IProjectFragment))
+			if (!(modelElement instanceof IScriptProject
+					|| modelElement instanceof IProjectFragment || modelElement instanceof IScriptFolder))
 				return RefactoringStatus
 						.createFatalErrorStatus(RefactoringCoreMessages.ReorgPolicyFactory_src2proj);
 			if (modelElement.isReadOnly())
