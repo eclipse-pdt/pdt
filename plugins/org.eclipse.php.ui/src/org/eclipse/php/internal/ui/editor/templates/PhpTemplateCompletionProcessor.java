@@ -58,7 +58,7 @@ public class PhpTemplateCompletionProcessor extends
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
-		if (isInDocOrComment(viewer, offset)) {
+		if (isInDocOrCommentOrString(viewer, offset)) {
 			return EMPTY;
 		}
 		ICompletionProposal[] completionProposals = super
@@ -70,7 +70,7 @@ public class PhpTemplateCompletionProcessor extends
 				offset));
 	}
 
-	private boolean isInDocOrComment(ITextViewer viewer, int offset) {
+	private boolean isInDocOrCommentOrString(ITextViewer viewer, int offset) {
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		if (modelManager != null) {
 			IStructuredModel structuredModel = null;
@@ -113,7 +113,8 @@ public class PhpTemplateCompletionProcessor extends
 									.isPHPMultiLineCommentState(type)
 									|| PHPPartitionTypes.isPHPDocState(type)
 									|| PHPPartitionTypes
-											.isPHPLineCommentState(type)) {
+											.isPHPLineCommentState(type)
+									|| PHPPartitionTypes.isPHPQuotesState(type)) {
 								return true;
 							}
 						}
@@ -131,7 +132,7 @@ public class PhpTemplateCompletionProcessor extends
 	private ICompletionProposal[] filterUsingPrefix(
 			ICompletionProposal[] completionProposals, String prefix) {
 		if (prefix.length() == 0) { // no templats should be offered if there is
-									// no prefix.
+			// no prefix.
 			return EMPTY_ICOMPLETION_PROPOSAL;
 		}
 		List<PhpTemplateProposal> matches = new ArrayList<PhpTemplateProposal>();
