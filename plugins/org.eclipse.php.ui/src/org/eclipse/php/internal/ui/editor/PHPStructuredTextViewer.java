@@ -231,6 +231,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 						// run the JSDT action for adding the JS nature
 						if (addJavaScriptSupport == 0 && project != null) {
 							SetupProjectsWizzard wiz = new SetupProjectsWizzard();
+							wiz.setActivePart(null, this.getTextEditor());
 							wiz.selectionChanged(null, new StructuredSelection(
 									project));
 							wiz.run(null);
