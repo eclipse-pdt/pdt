@@ -24,6 +24,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -35,9 +36,6 @@ import org.osgi.framework.BundleContext;
  */
 public class PHPCorePlugin extends Plugin {
 
-	// listener used for converting 1.0.x projects into 2.0.x projects
-	private ProjectConversionListener fProjectConvertListener = new ProjectConversionListener();
-
 	public static final String ID = "org.eclipse.php.core"; //$NON-NLS-1$
 
 	public static final int INTERNAL_ERROR = 10001;
@@ -45,7 +43,11 @@ public class PHPCorePlugin extends Plugin {
 	// The shared instance.
 	private static PHPCorePlugin plugin;
 
+	/** Whether the "PHP Toolkit" is initialized */
 	public static transient boolean toolkitInitialized;
+	private final ListenerList shutdownListeners = new ListenerList();
+	private ProjectConversionListener projectConvertListener = new ProjectConversionListener();
+	private ReindexOperationListener reindexOperationListener = new ReindexOperationListener();
 
 	/**
 	 * The constructor.
@@ -77,16 +79,17 @@ public class PHPCorePlugin extends Plugin {
 
 				// register the listener in charge of converting the projects -
 				// applies for projects being opened during work
-				ResourcesPlugin.getWorkspace()
-						.addResourceChangeListener(fProjectConvertListener,
-								IResourceChangeEvent.PRE_BUILD);
+				ResourcesPlugin.getWorkspace().addResourceChangeListener(
+						projectConvertListener, IResourceChangeEvent.PRE_BUILD);
+
+				ResourcesPlugin.getWorkspace().addResourceChangeListener(
+						reindexOperationListener,
+						IResourceChangeEvent.PRE_BUILD);
 
 				// run the conversion over all the projects in the workspace -
 				// all open projects will be converted
 				try {
 					convertProjects();
-				} catch (ModelException e) {
-					log(e);
 				} catch (CoreException e) {
 					log(e);
 				}
@@ -97,7 +100,7 @@ public class PHPCorePlugin extends Plugin {
 		job.schedule(Job.LONG);
 	}
 
-	/*
+	/**
 	 * Listener on changed projects, used for converting them into PDT 2.0.x
 	 * projects if needed
 	 */
@@ -123,16 +126,59 @@ public class PHPCorePlugin extends Plugin {
 
 			try {
 				processProjects(projects);
-			} catch (ModelException e) {
-				Logger.logException(e);
 			} catch (CoreException e) {
 				Logger.logException(e);
 			}
 		}
-
 	}
 
-	/*
+	/**
+	 * This listener used for invoking re-index opeartion before project clean
+	 */
+	private class ReindexOperationListener implements IResourceChangeListener {
+
+		public void resourceChanged(IResourceChangeEvent event) {
+			if (event.getBuildKind() == IncrementalProjectBuilder.CLEAN_BUILD) {
+				Object source = event.getSource();
+				try {
+					if (source instanceof IProject) {
+						IProject project = (IProject) source;
+						ProjectIndexerManager.removeProject(project
+								.getFullPath());
+						ProjectIndexerManager.indexProject(project);
+
+					} else if (source instanceof IWorkspace) {
+						IWorkspace workspace = (IWorkspace) source;
+						IProject[] projects = workspace.getRoot().getProjects();
+
+						// remove from index:
+						for (IProject project : projects) {
+							IScriptProject scriptProject = DLTKCore
+									.create(project);
+							IProjectFragment[] projectFragments = scriptProject
+									.getProjectFragments();
+							for (IProjectFragment projectFragment : projectFragments) {
+								ProjectIndexerManager.removeProjectFragment(
+										scriptProject, projectFragment
+												.getPath());
+							}
+							ProjectIndexerManager.removeProject(project
+									.getFullPath());
+						}
+
+						// add to index:
+						for (IProject project : projects) {
+							ProjectIndexerManager.indexProject(project);
+						}
+					}
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Gathers all the projects in the workspace and sends them to the
 	 * conversion method
 	 */
@@ -142,7 +188,7 @@ public class PHPCorePlugin extends Plugin {
 		processProjects(projects);
 	}
 
-	/*
+	/**
 	 * Goes over the given projects and converts them
 	 */
 	private void processProjects(final IProject[] projects)
@@ -203,8 +249,11 @@ public class PHPCorePlugin extends Plugin {
 				new NullProgressMonitor());
 	}
 
-	private final ListenerList shutdownListeners = new ListenerList();
-
+	/**
+	 * Add listener that will be notified when this plug-in is going to shutdown
+	 * 
+	 * @param listener
+	 */
 	public void addShutdownListener(IShutdownListener listener) {
 		shutdownListeners.add(listener);
 	}
@@ -221,8 +270,13 @@ public class PHPCorePlugin extends Plugin {
 		shutdownListeners.clear();
 
 		super.stop(context);
+
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(
-				fProjectConvertListener);
+				projectConvertListener);
+
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(
+				reindexOperationListener);
+
 		plugin = null;
 	}
 
