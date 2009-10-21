@@ -213,6 +213,10 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			}
 		}
 
+		if (!(fEditor instanceof PHPStructuredEditor)) {
+			return;
+		}
+
 		final IModelElement modelElement = ((PHPStructuredEditor) fEditor)
 				.getModelElement();
 		if (modelElement instanceof ISourceModule) {
