@@ -290,7 +290,8 @@ public class PHPTextSequenceUtilities {
 			int startPosition, boolean includeDollar) {
 		boolean onBackslash = false;
 		boolean onWhitespace = false;
-
+		int oldStartPosition = startPosition;
+		
 		while (startPosition > 0) {
 			char ch = textSequence.charAt(startPosition - 1);
 			if (!Character.isLetterOrDigit(ch) && ch != '_') {
@@ -319,8 +320,13 @@ public class PHPTextSequenceUtilities {
 				&& textSequence.charAt(startPosition - 1) == '$') {
 			startPosition--;
 		}
-		return startPosition >= 0 ? readForwardSpaces(textSequence,
+		startPosition = startPosition >= 0 ? readForwardSpaces(textSequence,
 				startPosition) : startPosition;
+		//FIXME bug 291970 i do not know if this is right or not
+		if(startPosition > oldStartPosition){
+			startPosition = oldStartPosition;
+		}
+		return startPosition;
 	}
 
 	public static int readNamespaceEndIndex(CharSequence textSequence,
@@ -396,19 +402,12 @@ public class PHPTextSequenceUtilities {
 
 	public static int readIdentifierStartIndex(PHPVersion phpVersion,
 			CharSequence textSequence, int startPosition, boolean includeDollar) {
-		int result = 0;
 		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
-			result = PHPTextSequenceUtilities.readIdentifierStartIndex(
+			return PHPTextSequenceUtilities.readIdentifierStartIndex(
 					textSequence, startPosition, includeDollar);
-		}else{
-			result = PHPTextSequenceUtilities.readNamespaceStartIndex(textSequence,
-					startPosition, includeDollar);
 		}
-		//FIXME bug 291970 i do not know if this is right or not
-		if(result > startPosition){
-			result = startPosition;
-		}
-		return result;
+		return PHPTextSequenceUtilities.readNamespaceStartIndex(textSequence,
+				startPosition, includeDollar);
 	}
 
 	public static int readIdentifierEndIndex(PHPVersion phpVersion,
