@@ -396,12 +396,19 @@ public class PHPTextSequenceUtilities {
 
 	public static int readIdentifierStartIndex(PHPVersion phpVersion,
 			CharSequence textSequence, int startPosition, boolean includeDollar) {
+		int result = 0;
 		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
-			return PHPTextSequenceUtilities.readIdentifierStartIndex(
+			result = PHPTextSequenceUtilities.readIdentifierStartIndex(
 					textSequence, startPosition, includeDollar);
+		}else{
+			result = PHPTextSequenceUtilities.readNamespaceStartIndex(textSequence,
+					startPosition, includeDollar);
 		}
-		return PHPTextSequenceUtilities.readNamespaceStartIndex(textSequence,
-				startPosition, includeDollar);
+		//FIXME bug 291970 i do not know if this is right or not
+		if(result > startPosition){
+			result = startPosition;
+		}
+		return result;
 	}
 
 	public static int readIdentifierEndIndex(PHPVersion phpVersion,
