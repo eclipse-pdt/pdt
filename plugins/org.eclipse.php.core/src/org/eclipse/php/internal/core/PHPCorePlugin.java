@@ -388,7 +388,7 @@ public class PHPCorePlugin extends Plugin {
 		try {
 			if (monitor != null) {
 				monitor.beginTask(
-						CoreMessages.PHPCorePlugin_initializingPHPToolkit, 100);
+						CoreMessages.PHPCorePlugin_initializingPHPToolkit, 125);
 			}
 			// dummy query for waiting until the indexes are ready
 			IDLTKSearchScope scope = SearchEngine
@@ -400,22 +400,26 @@ public class PHPCorePlugin extends Plugin {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault()
-						.findMethods("!@#$%^&", MatchRule.EXACT,
-								Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault().findMethods("", MatchRule.PREFIX,
+						Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault()
-						.findTypes("!@#$%^&", MatchRule.EXACT,
-								Modifiers.AccGlobal, 0, scope, monitor);
+				PhpModelAccess.getDefault().findTypes("", MatchRule.PREFIX,
+						Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findIncludes("!@#$%^&",
-						MatchRule.EXACT, scope, monitor);
+				PhpModelAccess.getDefault().findFields("", MatchRule.PREFIX,
+						Modifiers.AccGlobal, 0, scope, monitor);
+				if (monitor != null) {
+					monitor.worked(25);
+				}
+
+				PhpModelAccess.getDefault().findIncludes("", MatchRule.PREFIX,
+						scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
