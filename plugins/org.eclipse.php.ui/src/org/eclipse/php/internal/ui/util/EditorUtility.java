@@ -13,6 +13,9 @@ package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -109,6 +112,16 @@ public class EditorUtility {
 	 */
 	public static IEditorPart openLocalFile(String filePath, int lineNumber)
 			throws CoreException {
+
+		IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember(
+				filePath);
+		if (member instanceof IFile) {
+			IEditorPart editor = org.eclipse.dltk.internal.ui.editor.EditorUtility
+					.openInEditor(member, true);
+			org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(
+					editor, lineNumber);
+			return editor;
+		}
 
 		IPath path = new Path(filePath);
 		String parentPath = path.removeLastSegments(1).toOSString();
