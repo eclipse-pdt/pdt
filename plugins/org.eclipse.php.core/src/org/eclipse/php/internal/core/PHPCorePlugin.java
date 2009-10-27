@@ -153,6 +153,9 @@ public class PHPCorePlugin extends Plugin {
 
 						// remove from index:
 						for (IProject project : projects) {
+							if (!project.isAccessible()) {
+								continue;
+							}
 							IScriptProject scriptProject = DLTKCore
 									.create(project);
 							IProjectFragment[] projectFragments = scriptProject
