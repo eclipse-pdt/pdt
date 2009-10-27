@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.core.filenetwork;
 
 import java.util.*;
@@ -7,33 +18,45 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.*;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.internal.core.ExternalSourceModule;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
-import org.eclipse.php.internal.core.mixin.IncludeField;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
+import org.eclipse.php.internal.core.model.IncludeField;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
-import org.eclipse.php.internal.core.util.PHPSearchEngine.*;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 
 /**
  * This utility is used for resolving reference dependencies between files.
  * Usage examples:
- * <p>I. Filter model elements that accessible from current source module:
+ * <p>
+ * I. Filter model elements that accessible from current source module:
+ * 
  * <pre>
  * ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(currentSourceModule, null);
- * List&lt;IModelElement&gt; filteredElements = new LinkedList&lt;IModelElement&gt();
+ * List&lt;IModelElement&gt; filteredElements = new LinkedList&lt;IModelElement&amp;gt();
  * for (IModelElement element : elements) {
  *   if (referenceTree.find(element.getSourceModule()) {
  *     filteredElements.add(element);
  *   }
  * }
  * </pre>
+ * 
  * </p>
- * <p>II. Find all files that reference current file and rebuild them
+ * <p>
+ * II. Find all files that reference current file and rebuild them
+ * 
  * <pre>
  * ReferenceTree referenceTree = FileNetworkUtility.buildReferencingFilesTree(currentSourceModule, null);
- * LinkedList&lt;Node&gt; nodesQ = new  LinkedList&lt;Node&gt();
+ * LinkedList&lt;Node&gt; nodesQ = new  LinkedList&lt;Node&amp;gt();
  * nodesQ.addFirst(referenceTree.getRoot());
  * while (!nodesQ.isEmpty()) {
  *   Node node = nodesQ.removeLast();
@@ -45,64 +68,145 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.*;
  *   }
  * }
  * </pre>
+ * 
  * </p>
  */
 public class FileNetworkUtility {
 
 	/**
-	 * Analyzes file dependences, and builds tree of all source modules that reference the given source module.
-	 * @param file Source module
-	 * @param monitor Progress monitor
+	 * Analyzes file dependences, and builds tree of all source modules that
+	 * reference the given source module.
+	 * 
+	 * @param file
+	 *            Source module
+	 * @param monitor
+	 *            Progress monitor
 	 * @return reference tree
 	 */
-	public static ReferenceTree buildReferencingFilesTree(ISourceModule file, IProgressMonitor monitor) {
+	public static ReferenceTree buildReferencingFilesTree(ISourceModule file,
+			IProgressMonitor monitor) {
 
 		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
 		processedFiles.add(file);
 
 		Node root = new Node(file);
-		internalBuildReferencingFilesTree(root, processedFiles, monitor);
+
+		internalBuildReferencingFilesTree(root, processedFiles,
+				new HashMap<IModelElement, IField[]>(), monitor);
 
 		return new ReferenceTree(root);
 	}
 
-	private static void internalBuildReferencingFilesTree(Node root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) {
+	private static IDLTKSearchScope createSearchScope(ISourceModule file) {
+		if (LanguageModelInitializer.isLanguageModelElement(file)) {
+			return null;
+		}
+		if (file instanceof ExternalSourceModule) {
+			try {
+				IProjectFragment fileFragment = ((ExternalSourceModule) file)
+						.getProjectFragment();
+				List<IModelElement> scopeElements = new LinkedList<IModelElement>();
+				scopeElements.add(fileFragment);
+
+				IScriptProject[] scriptProjects = ModelManager
+						.getModelManager().getModel().getScriptProjects();
+				for (IScriptProject scriptProject : scriptProjects) {
+					for (IProjectFragment fragment : scriptProject
+							.getProjectFragments()) {
+						if (fragment.equals(fileFragment)) {
+							scopeElements.add(scriptProject);
+						}
+					}
+				}
+				return SearchEngine.createSearchScope(scopeElements
+						.toArray(new IModelElement[scopeElements.size()]),
+						IDLTKSearchScope.SOURCES, PHPLanguageToolkit
+								.getDefault());
+			} catch (ModelException e) {
+				return null;
+			}
+		}
+		return SearchEngine.createSearchScope(file.getScriptProject(),
+				IDLTKSearchScope.SOURCES);
+	}
+
+	private static void internalBuildReferencingFilesTree(Node root,
+			Set<ISourceModule> processedFiles,
+			Map<IModelElement, IField[]> includesCache, IProgressMonitor monitor) {
+
+		if (monitor != null && monitor.isCanceled()) {
+			return;
+		}
 
 		ISourceModule file = root.getFile();
+		IDLTKSearchScope scope = createSearchScope(file);
+		if (scope == null) {
+			return;
+		}
 
-		// Find all includes to the current source module in mixin:
-		IModelElement[] includes = PHPMixinModel.getInstance().getInclude(file.getPath().lastSegment());
-		for (IModelElement e : includes) {
-			IncludeField include = (IncludeField) e;
+		IModelElement parentElement = (file instanceof ExternalSourceModule) ? ((ExternalSourceModule) file)
+				.getProjectFragment()
+				: file.getScriptProject();
+
+		IField[] includes = includesCache.get(parentElement);
+		if (includes == null) {
+			includes = PhpModelAccess.getDefault().findIncludes(null,
+					MatchRule.PREFIX, scope, monitor);
+			includesCache.put(parentElement, includes);
+		}
+
+		for (IField include : includes) {
+			if (monitor != null && monitor.isCanceled()) {
+				return;
+			}
+			String filePath = ((IncludeField) include).getFilePath();
+			String lastSegment = filePath;
+			int i = Math.max(filePath.lastIndexOf('/'), filePath
+					.lastIndexOf('\\'));
+			if (i > 0) {
+				lastSegment = lastSegment.substring(i + 1);
+			}
+			if (!lastSegment.equals(file.getElementName())) {
+				continue;
+			}
 
 			// Candidate that includes the original source module:
 			ISourceModule referencingFile = include.getSourceModule();
 
 			// Try to resolve include:
-			ISourceModule testFile = findSourceModule(referencingFile, include.getFilePath());
+			ISourceModule testFile = findSourceModule(referencingFile, filePath);
 
-			// If this is the correct include (that means that included file is the original file):
-			if (file.equals(testFile) && !processedFiles.contains(referencingFile)) {
+			// If this is the correct include (that means that included file is
+			// the original file):
+			if (file.equals(testFile)
+					&& !processedFiles.contains(referencingFile)) {
 				processedFiles.add(referencingFile);
-				root.addChild(new Node(referencingFile));
+				Node node = new Node(referencingFile);
+				root.addChild(node);
 			}
 		}
 
 		Collection<Node> children = root.getChildren();
 		if (children != null) {
 			for (Node child : children) {
-				internalBuildReferencingFilesTree(child, processedFiles, monitor);
+				internalBuildReferencingFilesTree(child, processedFiles,
+						includesCache, monitor);
 			}
 		}
 	}
 
 	/**
-	 * Analyzes file dependences, and builds tree of all source modules, which are referenced by the given source module.
-	 * @param file Source module
-	 * @param monitor Progress monitor
+	 * Analyzes file dependences, and builds tree of all source modules, which
+	 * are referenced by the given source module.
+	 * 
+	 * @param file
+	 *            Source module
+	 * @param monitor
+	 *            Progress monitor
 	 * @return reference tree
 	 */
-	public static ReferenceTree buildReferencedFilesTree(ISourceModule file, IProgressMonitor monitor) {
+	public static ReferenceTree buildReferencedFilesTree(ISourceModule file,
+			IProgressMonitor monitor) {
 		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
 		processedFiles.add(file);
 
@@ -116,25 +220,16 @@ public class FileNetworkUtility {
 		return new ReferenceTree(root);
 	}
 
-	private static void internalBuildReferencedFilesTree(Node root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) throws CoreException {
+	private static void internalBuildReferencedFilesTree(final Node root,
+			Set<ISourceModule> processedFiles, IProgressMonitor monitor)
+			throws CoreException {
 		ISourceModule sourceModule = root.getFile();
+		IField[] includes = PhpModelAccess.getDefault().findIncludes(null,
+				MatchRule.PREFIX, SearchEngine.createSearchScope(sourceModule),
+				monitor);
 
-		final List<String> includes = new LinkedList<String>();
-		final IBuffer buffer = sourceModule.getBuffer();
-
-		if (buffer != null) {
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule);
-			SearchEngine engine = new SearchEngine();
-			SearchPattern pattern = SearchPattern.createPattern("include", IDLTKSearchConstants.METHOD, IDLTKSearchConstants.REFERENCES, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-			engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					String text = buffer.getText(match.getOffset(), match.getLength());
-					includes.add(stripQuotes(text));
-				}
-			}, monitor);
-		}
-
-		for (String filePath : includes) {
+		for (IField include : includes) {
+			String filePath = ((IncludeField) include).getFilePath();
 			ISourceModule testFile = findSourceModule(sourceModule, filePath);
 			if (testFile != null && !processedFiles.contains(testFile)) {
 				processedFiles.add(testFile);
@@ -155,31 +250,42 @@ public class FileNetworkUtility {
 
 		IProject currentProject = from.getScriptProject().getProject();
 		String currentScriptDir = from.getParent().getPath().toString();
-		String currentWorkingDir = currentProject.getFullPath().toString();
-		Result<?, ?> result = PHPSearchEngine.find(path, currentWorkingDir, currentScriptDir, currentProject);
+		String currentWorkingDir = currentScriptDir; // currentProject.getFullPath().toString();
+		Result<?, ?> result = PHPSearchEngine.find(path, currentWorkingDir,
+				currentScriptDir, currentProject);
 
 		if (result instanceof ResourceResult) {
 			// workspace file
 			ResourceResult resResult = (ResourceResult) result;
 			IResource resource = resResult.getFile();
 			sourceModule = (ISourceModule) DLTKCore.create(resource);
+		} else if (result instanceof IncludedFileResult) {
+			IncludedFileResult incResult = (IncludedFileResult) result;
+			IProjectFragment[] projectFragments = incResult
+					.getProjectFragments();
+			if (projectFragments != null) {
+				String folderPath = ""; //$NON-NLS-1$
+				String moduleName = path;
+				int i = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+				if (i != -1) {
+					folderPath = path.substring(0, i);
+					moduleName = path.substring(i + 1);
+				}
+				for (IProjectFragment projectFragment : projectFragments) {
+					IScriptFolder scriptFolder = projectFragment
+							.getScriptFolder(folderPath);
+					if (scriptFolder != null) {
+						sourceModule = scriptFolder.getSourceModule(moduleName);
+						if (sourceModule != null) {
+							break;
+						}
+					}
+				}
+			}
 		} else {
 			// XXX: add support for external files
 		}
 
 		return sourceModule;
-	}
-
-	/**
-	 * Strips single or double quotes from the start and from the end of the given string
-	 * @param name String
-	 * @return
-	 */
-	private static String stripQuotes(String name) {
-		int len = name.length();
-		if (len > 1 && (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
-			name = name.substring(1, len - 1);
-		}
-		return name;
 	}
 }
