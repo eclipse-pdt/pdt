@@ -171,6 +171,9 @@ public class PHPCorePlugin extends Plugin {
 
 						// add to index:
 						for (IProject project : projects) {
+							if (!project.isAccessible()) {
+								continue;
+							}
 							ProjectIndexerManager.indexProject(project);
 						}
 					}
