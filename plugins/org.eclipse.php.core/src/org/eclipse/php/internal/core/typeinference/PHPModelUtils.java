@@ -142,11 +142,30 @@ public class PHPModelUtils {
 	 * Filters model elements using file network.
 	 * 
 	 * @param sourceModule
+	 *            Source module
 	 * @param elements
+	 *            Model elements to filter
 	 * @return
 	 */
-	private static <T extends IModelElement> Collection<T> fileNetworkFilter(
+	public static <T extends IModelElement> Collection<T> fileNetworkFilter(
 			ISourceModule sourceModule, Collection<T> elements) {
+		return fileNetworkFilter(sourceModule, elements, null);
+	}
+
+	/**
+	 * Filters model elements using file network.
+	 * 
+	 * @param sourceModule
+	 *            Source module
+	 * @param elements
+	 *            Model elements to filter
+	 * @param referenceTree
+	 *            Cached instance of file hierarchy
+	 * @return
+	 */
+	public static <T extends IModelElement> Collection<T> fileNetworkFilter(
+			ISourceModule sourceModule, Collection<T> elements,
+			ReferenceTree referenceTree) {
 
 		if (elements != null && elements.size() > 0) {
 			List<T> filteredElements = new LinkedList<T>();
@@ -159,8 +178,10 @@ public class PHPModelUtils {
 			}
 			if (filteredElements.size() == 0) {
 				// Filter by includes network
-				ReferenceTree referenceTree = FileNetworkUtility
-						.buildReferencedFilesTree(sourceModule, null);
+				if (referenceTree == null) {
+					referenceTree = FileNetworkUtility
+							.buildReferencedFilesTree(sourceModule, null);
+				}
 				for (T element : elements) {
 					if (LanguageModelInitializer
 							.isLanguageModelElement(element)
@@ -178,6 +199,33 @@ public class PHPModelUtils {
 	}
 
 	/**
+	 * Determine whether givent elements represent the same type and name, but
+	 * declared in different files (determine whether file network filtering can
+	 * be used)
+	 * 
+	 * @param elements
+	 *            Model elements list
+	 * @return
+	 */
+	private static <T extends IModelElement> boolean canUseFileNetworkFilter(
+			Collection<T> elements) {
+		int elementType = 0;
+		String elementName = null;
+		for (T element : elements) {
+			if (elementName == null) {
+				elementType = element.getElementType();
+				elementName = element.getElementName();
+				continue;
+			}
+			if (!elementName.equalsIgnoreCase(element.getElementName())
+					|| elementType != element.getElementType()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Leaves most 'suitable' for current source module elements
 	 * 
 	 * @param sourceModule
@@ -189,27 +237,7 @@ public class PHPModelUtils {
 		if (elements == null) {
 			return null;
 		}
-
-		// Determine whether givent elements represent the same type and name,
-		// but declared in different files (determine whether filtering is
-		// needed):
-		int elementType = 0;
-		String elementName = null;
-		boolean fileNetworkFilter = true;
-		for (T element : elements) {
-			if (elementName == null) {
-				elementType = element.getElementType();
-				elementName = element.getElementName();
-				continue;
-			}
-			if (!elementName.equalsIgnoreCase(element.getElementName())
-					|| elementType != element.getElementType()) {
-				fileNetworkFilter = false;
-				break;
-			}
-		}
-
-		if (fileNetworkFilter) {
+		if (canUseFileNetworkFilter(elements)) {
 			return fileNetworkFilter(sourceModule, elements);
 		}
 		return elements;
