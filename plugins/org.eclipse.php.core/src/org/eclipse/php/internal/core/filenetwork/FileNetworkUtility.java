@@ -17,9 +17,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -28,9 +25,6 @@ import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.IncludeField;
@@ -230,33 +224,12 @@ public class FileNetworkUtility {
 			Set<ISourceModule> processedFiles, IProgressMonitor monitor)
 			throws CoreException {
 		ISourceModule sourceModule = root.getFile();
+		IField[] includes = PhpModelAccess.getDefault().findIncludes(null,
+				MatchRule.PREFIX, SearchEngine.createSearchScope(sourceModule),
+				monitor);
 
-		final List<String> includes = new LinkedList<String>();
-
-		ModuleDeclaration moduleDeclaration = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
-
-		ASTVisitor visitor = new ASTVisitor() {
-			public boolean visit(Expression expr) throws ModelException {
-				if (expr instanceof Include) {
-					Expression fileExpr = ((Include) expr).getExpr();
-					if (fileExpr instanceof Scalar) {
-						String fileName = ASTUtils
-								.stripQuotes(((Scalar) fileExpr).getValue());
-						includes.add(fileName);
-					}
-				}
-				return true;
-			}
-		};
-
-		try {
-			moduleDeclaration.traverse(visitor);
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-
-		for (String filePath : includes) {
+		for (IField include : includes) {
+			String filePath = ((IncludeField) include).getFilePath();
 			ISourceModule testFile = findSourceModule(sourceModule, filePath);
 			if (testFile != null && !processedFiles.contains(testFile)) {
 				processedFiles.add(testFile);
