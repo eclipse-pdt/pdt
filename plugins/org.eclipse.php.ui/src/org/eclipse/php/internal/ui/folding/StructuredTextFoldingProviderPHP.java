@@ -1441,10 +1441,6 @@ public class StructuredTextFoldingProviderPHP implements
 			if (!SourceRange.isAvailable(range))
 				return new IRegion[0];
 
-			String contents = reference.getSource();
-			if (contents == null)
-				return new IRegion[0];
-
 			List<IRegion> regions = new ArrayList<IRegion>();
 			if (!ctx.isHeaderChecked()) {
 				ctx.setHeaderChecked();
