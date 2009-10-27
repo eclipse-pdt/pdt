@@ -1363,11 +1363,31 @@ public class PHPModelUtils {
 	public static IMethod[] getUnimplementedMethods(IType type,
 			IProgressMonitor monitor) throws ModelException {
 
+		return getUnimplementedMethods(type, null, monitor);
+	}
+
+	/**
+	 * Returns methods that must be overridden in first non-abstract class in
+	 * hierarchy.
+	 * 
+	 * @param type
+	 *            Type to start the search from
+	 * @param referenceTree
+	 *            Cached instance of file hierarchy
+	 * @param monitor
+	 *            Progress monitor
+	 * @return unimplemented methods
+	 * @throws ModelException
+	 */
+	public static IMethod[] getUnimplementedMethods(IType type,
+			ReferenceTree referenceTree, IProgressMonitor monitor)
+			throws ModelException {
+
 		HashMap<String, IMethod> abstractMethods = new HashMap<String, IMethod>();
 		HashSet<String> nonAbstractMethods = new HashSet<String>();
 
 		internalGetUnimplementedMethods(type, nonAbstractMethods,
-				abstractMethods, new HashSet<String>(), monitor);
+				abstractMethods, new HashSet<String>(), referenceTree, monitor);
 
 		for (String methodName : nonAbstractMethods) {
 			abstractMethods.remove(methodName);
@@ -1381,8 +1401,8 @@ public class PHPModelUtils {
 	private static void internalGetUnimplementedMethods(IType type,
 			HashSet<String> nonAbstractMethods,
 			HashMap<String, IMethod> abstractMethods,
-			Set<String> processedTypes, IProgressMonitor monitor)
-			throws ModelException {
+			Set<String> processedTypes, ReferenceTree referenceTree,
+			IProgressMonitor monitor) throws ModelException {
 
 		int typeFlags = type.getFlags();
 		for (IMethod method : type.getMethods()) {
@@ -1409,12 +1429,13 @@ public class PHPModelUtils {
 				IType[] superTypes = PhpModelAccess.getDefault().findTypes(
 						superClass, MatchRule.EXACT, 0, Modifiers.AccNameSpace,
 						scope, null);
-				Collection<IType> filteredTypes = PHPModelUtils.filterElements(
-						type.getSourceModule(), Arrays.asList(superTypes));
+				Collection<IType> filteredTypes = fileNetworkFilter(type
+						.getSourceModule(), Arrays.asList(superTypes),
+						referenceTree);
 				for (IType superType : filteredTypes) {
 					internalGetUnimplementedMethods(superType,
 							nonAbstractMethods, abstractMethods,
-							processedTypes, monitor);
+							processedTypes, referenceTree, monitor);
 				}
 			}
 		}
