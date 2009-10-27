@@ -1306,10 +1306,6 @@ public class StructuredTextFoldingProviderPHP implements
 		try {
 			if (!(fInput instanceof ISourceReference))
 				return;
-			String source = ((ISourceReference) fInput).getSource();
-			if (source == null)
-				return;
-
 			computeFoldingStructure(parent.getChildren(), ctx);
 		} catch (ModelException x) {
 		}
