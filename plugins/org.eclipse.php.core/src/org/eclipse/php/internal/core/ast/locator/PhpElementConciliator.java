@@ -448,7 +448,7 @@ public class PhpElementConciliator {
 			targetIdentifier = (Identifier) locateNode;
 			parent = targetIdentifier.getParent();
 			if (parent.getType() == ASTNode.NAMESPACE_NAME) {
-				parent = targetIdentifier.getParent().getParent();
+				parent = targetIdentifier.getParent();
 			}
 		} else {
 			return false;
