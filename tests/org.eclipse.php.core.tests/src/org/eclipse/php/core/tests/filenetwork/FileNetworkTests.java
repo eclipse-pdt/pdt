@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import junit.framework.Assert;
 import junit.framework.Test;
@@ -29,6 +30,7 @@ import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
+import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class FileNetworkTests extends AbstractModelTests {
@@ -118,6 +120,17 @@ public class FileNetworkTests extends AbstractModelTests {
 		ISourceModule sourceModule = getSourceModule(getFilePath("test2/a.php"));
 		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(
 				sourceModule, null);
+		assertContents(getSavedHierarchy("test2"), tree.toString());
+	}
+
+	public void testCachedReferencedFiles() throws Exception {
+		ISourceModule sourceModule = getSourceModule(getFilePath("test2/a.php"));
+		HashMap<ISourceModule, Node> cache = new HashMap<ISourceModule, Node>();
+
+		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(
+				sourceModule, cache, null);
+		tree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, cache,
+				null);
 		assertContents(getSavedHierarchy("test2"), tree.toString());
 	}
 
