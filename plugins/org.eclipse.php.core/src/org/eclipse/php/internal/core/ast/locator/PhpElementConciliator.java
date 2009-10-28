@@ -357,15 +357,15 @@ public class PhpElementConciliator {
 			return false;
 		}
 		return locateNode.getParent().getType() == ASTNode.GLOBAL_STATEMENT // Global
-																			// $a
-																			// case
+				// $a
+				// case
 				|| (locateNode.getEnclosingBodyNode() != null && locateNode
 						.getEnclosingBodyNode().getType() == ASTNode.PROGRAM); // $a
-																				// declared
-																				// in
-																				// global
-																				// scope
-																				// case
+		// declared
+		// in
+		// global
+		// scope
+		// case
 	}
 
 	/**
@@ -448,7 +448,7 @@ public class PhpElementConciliator {
 			targetIdentifier = (Identifier) locateNode;
 			parent = targetIdentifier.getParent();
 			if (parent.getType() == ASTNode.NAMESPACE_NAME) {
-				parent = targetIdentifier.getParent().getParent();
+				parent = targetIdentifier.getParent();
 			}
 		} else {
 			return false;
