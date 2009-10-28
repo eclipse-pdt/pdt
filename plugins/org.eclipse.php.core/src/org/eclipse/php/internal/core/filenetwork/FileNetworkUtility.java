@@ -207,41 +207,80 @@ public class FileNetworkUtility {
 	 */
 	public static ReferenceTree buildReferencedFilesTree(ISourceModule file,
 			IProgressMonitor monitor) {
+
+		return buildReferencedFilesTree(file, null, monitor);
+	}
+
+	/**
+	 * Analyzes file dependences, and builds tree of all source modules, which
+	 * are referenced by the given source module.
+	 * 
+	 * @param file
+	 *            Source module
+	 * @param cachedTrees
+	 *            Cached reference trees from previous invocations
+	 * @param monitor
+	 *            Progress monitor
+	 * @return reference tree
+	 */
+	public static ReferenceTree buildReferencedFilesTree(ISourceModule file,
+			Map<ISourceModule, Node> cachedTrees, IProgressMonitor monitor) {
+
 		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
 		processedFiles.add(file);
 
-		Node root = new Node(file);
-		try {
-			internalBuildReferencedFilesTree(root, processedFiles, monitor);
-		} catch (CoreException e) {
-			Logger.logException(e);
+		Node root;
+		if (cachedTrees == null || (root = cachedTrees.get(file)) == null) {
+			root = new Node(file);
+			try {
+				internalBuildReferencedFilesTree(root, processedFiles,
+						cachedTrees, monitor);
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
 		}
-
 		return new ReferenceTree(root);
 	}
 
 	private static void internalBuildReferencedFilesTree(final Node root,
-			Set<ISourceModule> processedFiles, IProgressMonitor monitor)
+			Set<ISourceModule> processedFiles,
+			Map<ISourceModule, Node> cachedTrees, IProgressMonitor monitor)
 			throws CoreException {
+
 		ISourceModule sourceModule = root.getFile();
 		IField[] includes = PhpModelAccess.getDefault().findIncludes(null,
 				MatchRule.PREFIX, SearchEngine.createSearchScope(sourceModule),
 				monitor);
 
+		List<Node> nodesToBuild = new LinkedList<Node>();
 		for (IField include : includes) {
 			String filePath = ((IncludeField) include).getFilePath();
 			ISourceModule testFile = findSourceModule(sourceModule, filePath);
 			if (testFile != null && !processedFiles.contains(testFile)) {
 				processedFiles.add(testFile);
-				root.addChild(new Node(testFile));
+
+				if (cachedTrees != null) {
+					// use cached nodes from other trees:
+					Node child = cachedTrees.get(testFile);
+					if (child != null) {
+						root.addChild(child);
+						continue;
+					}
+				}
+				Node child = new Node(testFile);
+				nodesToBuild.add(child);
+				root.addChild(child);
+
+				if (cachedTrees != null) {
+					// cache this tree node:
+					cachedTrees.put(testFile, child);
+				}
 			}
 		}
 
-		Collection<Node> children = root.getChildren();
-		if (children != null) {
-			for (Node child : children) {
-				internalBuildReferencedFilesTree(child, processedFiles, monitor);
-			}
+		for (Node child : nodesToBuild) {
+			internalBuildReferencedFilesTree(child, processedFiles,
+					cachedTrees, monitor);
 		}
 	}
 
