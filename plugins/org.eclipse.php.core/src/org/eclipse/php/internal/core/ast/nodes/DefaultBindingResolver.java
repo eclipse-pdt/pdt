@@ -86,7 +86,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		this.bindingTables = new BindingTables();
 	}
 
-	private ITypeBinding getTypeBinding(IEvaluatedType type,
+	private ITypeBinding internalGetTypeBinding(IEvaluatedType type,
 			IModelElement modelElement) {
 		String key = IModelElement.TYPE + ":" + type.getTypeName();
 		IBinding binding = bindingTables.bindingKeysToBindings.get(key);
@@ -97,7 +97,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		return (ITypeBinding) binding;
 	}
 
-	private ITypeBinding getTypeBinding(IEvaluatedType type,
+	private ITypeBinding internalGetTypeBinding(IEvaluatedType type,
 			IModelElement[] modelElements) {
 		String key = IModelElement.TYPE + ":" + type.getTypeName();
 		IBinding binding = bindingTables.bindingKeysToBindings.get(key);
@@ -122,7 +122,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	ITypeBinding getTypeBinding(IType type) {
 		if (type != null) {
-			return getTypeBinding(PHPClassType.fromIType(type), type);
+			return internalGetTypeBinding(PHPClassType.fromIType(type), type);
 		}
 		return null;
 	}
@@ -137,7 +137,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	@Override
 	ITypeBinding getTypeBinding(IType[] types) {
 		if (types != null && types.length > 0) {
-			return getTypeBinding(PHPClassType.fromIType(types[0]), types);
+			return internalGetTypeBinding(PHPClassType.fromIType(types[0]),
+					types);
 		}
 		return null;
 	}
@@ -295,7 +296,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		int length = expression.getLength();
 		IEvaluatedType type = getEvaluatedType(start, length);
 		IModelElement[] modelElements = getModelElements(start, length, false);
-		return getTypeBinding(type, modelElements);
+		return internalGetTypeBinding(type, modelElements);
 	}
 
 	/*
@@ -377,7 +378,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding,
 			ISourceModule sourceModule) {
 		if (referenceBinding != null) {
-			return getTypeBinding(referenceBinding, sourceModule);
+			return internalGetTypeBinding(referenceBinding, sourceModule);
 		}
 		return null;
 	}
