@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
@@ -31,6 +32,7 @@ public class TypeBinding implements ITypeBinding {
 	private IEvaluatedType type;
 	private IModelElement[] elements;
 	private BindingResolver resolver;
+	private IType[] superTypes;
 	private ITypeBinding superClass;
 	private ITypeBinding[] interfaces;
 	private IVariableBinding[] fields;
@@ -334,41 +336,21 @@ public class TypeBinding implements ITypeBinding {
 		}
 
 		if (this.interfaces == null) {
-			final ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
-			for (IModelElement element : elements) {
-				IType type = (IType) element;
+			IType[] types = getSuperTypes();
+			List<ITypeBinding> interfaces = new LinkedList<ITypeBinding>();
+			for (IType type : types) {
 				try {
-					IDLTKSearchScope scope = SearchEngine
-							.createSearchScope(type.getScriptProject());
-
-					String[] superClassNames = type.getSuperClasses();
-
-					if (superClassNames != null) {
-						StringBuilder buf = new StringBuilder();
-						for (int i = 0; i < superClassNames.length; ++i) {
-							if (i > 0) {
-								buf.append(',');
-							}
-							buf.append(superClassNames[i]);
-						}
-						if (buf.length() > 0) {
-							IType[] types = PhpModelAccess.getDefault()
-									.findTypes(buf.toString(), MatchRule.SET,
-											Modifiers.AccInterface, 0, scope,
-											null);
-							for (IType t : types) {
-								interfaces.add(resolver.getTypeBinding(t));
-							}
-						}
+					if (PHPFlags.isInterface(type.getFlags())) {
+						interfaces.add(resolver.getTypeBinding(type));
 					}
-				} catch (CoreException e) {
+				} catch (ModelException e) {
 					if (DLTKCore.DEBUG) {
 						e.printStackTrace();
 					}
 				}
 			}
-			this.interfaces = interfaces.toArray(new ITypeBinding[interfaces
-					.size()]);
+			this.interfaces = (ITypeBinding[]) interfaces
+					.toArray(new ITypeBinding[interfaces.size()]);
 		}
 		return this.interfaces;
 	}
@@ -418,6 +400,46 @@ public class TypeBinding implements ITypeBinding {
 		return isUnknown() ? null : this.type.getTypeName();
 	}
 
+	protected IType[] getSuperTypes() {
+		if (superTypes == null) {
+			if (elements != null && elements.length > 0) {
+				IDLTKSearchScope scope = SearchEngine
+						.createSearchScope(elements[0].getScriptProject());
+
+				Set<String> superTypeNames = new HashSet<String>();
+				for (IModelElement element : elements) {
+					IType type = (IType) element;
+					try {
+						String[] superClassNames = type.getSuperClasses();
+						if (superClassNames != null) {
+							superTypeNames.addAll(Arrays
+									.asList(superClassNames));
+						}
+					} catch (CoreException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
+						}
+					}
+				}
+				StringBuilder buf = new StringBuilder();
+				for (String superTypeName : superTypeNames) {
+					if (buf.length() > 0) {
+						buf.append(',');
+					}
+					buf.append(superTypeName);
+				}
+				if (buf.length() > 0) {
+					superTypes = PhpModelAccess.getDefault().findTypes(
+							buf.toString(), MatchRule.SET, 0,
+							Modifiers.AccNameSpace, scope, null);
+				} else {
+					superTypes = new IType[0];
+				}
+			}
+		}
+		return superTypes;
+	}
+
 	/**
 	 * Returns the type binding for the superclass of the type represented by
 	 * this class binding.
@@ -447,38 +469,15 @@ public class TypeBinding implements ITypeBinding {
 		if (isUnknown()) {
 			return null;
 		}
-
 		if (superClass == null) {
-			final List<IType> superClasses = new ArrayList<IType>(
-					elements.length);
-			for (IModelElement element : elements) {
-				IType type = (IType) element;
+			IType[] types = getSuperTypes();
+			List<IType> superClasses = new LinkedList<IType>();
+			for (IType type : types) {
 				try {
-					IDLTKSearchScope scope = SearchEngine
-							.createSearchScope(type.getScriptProject());
-					String[] superClassNames = type.getSuperClasses();
-
-					if (superClassNames != null) {
-						StringBuilder buf = new StringBuilder();
-						for (int i = 0; i < superClassNames.length; ++i) {
-							if (i > 0) {
-								buf.append(',');
-							}
-							buf.append(superClassNames[i]);
-						}
-						if (buf.length() > 0) {
-							IType[] types = PhpModelAccess.getDefault()
-									.findTypes(
-											buf.toString(),
-											MatchRule.SET,
-											0,
-											Modifiers.AccInterface
-													| Modifiers.AccNameSpace,
-											scope, null);
-							superClasses.addAll(Arrays.asList(types));
-						}
+					if (!PHPFlags.isInterface(type.getFlags())) {
+						superClasses.add(type);
 					}
-				} catch (CoreException e) {
+				} catch (ModelException e) {
 					if (DLTKCore.DEBUG) {
 						e.printStackTrace();
 					}
