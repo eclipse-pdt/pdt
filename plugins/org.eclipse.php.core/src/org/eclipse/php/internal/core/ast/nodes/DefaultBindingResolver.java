@@ -14,10 +14,7 @@
  */
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -89,6 +86,28 @@ public class DefaultBindingResolver extends BindingResolver {
 		this.bindingTables = new BindingTables();
 	}
 
+	private ITypeBinding getTypeBinding(IEvaluatedType type,
+			IModelElement modelElement) {
+		String key = IModelElement.TYPE + ":" + type.getTypeName();
+		IBinding binding = bindingTables.bindingKeysToBindings.get(key);
+		if (binding == null) {
+			binding = new TypeBinding(this, type, modelElement);
+			bindingTables.bindingKeysToBindings.put(key, binding);
+		}
+		return (ITypeBinding) binding;
+	}
+
+	private ITypeBinding getTypeBinding(IEvaluatedType type,
+			IModelElement[] modelElements) {
+		String key = IModelElement.TYPE + ":" + type.getTypeName();
+		IBinding binding = bindingTables.bindingKeysToBindings.get(key);
+		if (binding == null) {
+			binding = new TypeBinding(this, type, modelElements);
+			bindingTables.bindingKeysToBindings.put(key, binding);
+		}
+		return (ITypeBinding) binding;
+	}
+
 	/**
 	 * Returns the new type binding corresponding to the given type.
 	 * 
@@ -103,7 +122,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	ITypeBinding getTypeBinding(IType type) {
 		if (type != null) {
-			return new TypeBinding(this, PHPClassType.fromIType(type), type);
+			return getTypeBinding(PHPClassType.fromIType(type), type);
 		}
 		return null;
 	}
@@ -118,8 +137,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	@Override
 	ITypeBinding getTypeBinding(IType[] types) {
 		if (types != null && types.length > 0) {
-			return new TypeBinding(this, PHPClassType.fromIType(types[0]),
-					types);
+			return getTypeBinding(PHPClassType.fromIType(types[0]), types);
 		}
 		return null;
 	}
@@ -276,9 +294,8 @@ public class DefaultBindingResolver extends BindingResolver {
 		int start = expression.getStart();
 		int length = expression.getLength();
 		IEvaluatedType type = getEvaluatedType(start, length);
-		IModelElement[] modelElement = getModelElements(start, length, false);
-		return new TypeBinding(this, type, modelElement);
-
+		IModelElement[] modelElements = getModelElements(start, length, false);
+		return getTypeBinding(type, modelElements);
 	}
 
 	/*
@@ -336,12 +353,14 @@ public class DefaultBindingResolver extends BindingResolver {
 			return null;
 		}
 
-		if (modelElements.length > 0) {
-			for (IModelElement type : modelElements) {
-				if (type.getElementType() == IModelElement.TYPE) {
-					return new TypeBinding(this, PHPClassType
-							.fromIType((IType) type), modelElements);
+		if (modelElements != null && modelElements.length > 0) {
+			if (modelElements[0].getElementType() == IModelElement.TYPE) {
+				List<IType> types = new ArrayList<IType>(modelElements.length);
+				for (IModelElement elem : modelElements) {
+					types.add((IType) elem);
 				}
+				return getTypeBinding((IType[]) types.toArray(new IType[types
+						.size()]));
 			}
 		}
 		return super.getTypeBinding(fieldDeclaration);
@@ -358,7 +377,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding,
 			ISourceModule sourceModule) {
 		if (referenceBinding != null) {
-			return new TypeBinding(this, referenceBinding, sourceModule);
+			return getTypeBinding(referenceBinding, sourceModule);
 		}
 		return null;
 	}
@@ -613,11 +632,13 @@ public class DefaultBindingResolver extends BindingResolver {
 		}
 
 		if (modelElements != null && modelElements.length > 0) {
-			for (IModelElement element : modelElements) {
-				if (element.getElementType() == IModelElement.TYPE) {
-					return new TypeBinding(this, PHPClassType
-							.fromIType((IType) element), modelElements);
+			if (modelElements[0].getElementType() == IModelElement.TYPE) {
+				List<IType> types = new ArrayList<IType>(modelElements.length);
+				for (IModelElement elem : modelElements) {
+					types.add((IType) elem);
 				}
+				return getTypeBinding((IType[]) types.toArray(new IType[types
+						.size()]));
 			}
 		}
 		return super.resolveType(type);
