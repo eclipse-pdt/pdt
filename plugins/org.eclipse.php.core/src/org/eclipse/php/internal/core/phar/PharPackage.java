@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.phar;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -44,14 +45,9 @@ public class PharPackage {
 	// Add directory entries to the jar
 	private boolean fIncludeDirectoryEntries;
 	private boolean stubGenerated = true;
-	private boolean useSignature = false;
 
 	public boolean isUseSignature() {
-		return useSignature;
-	}
-
-	public void setUseSignature(boolean useSignature) {
-		this.useSignature = useSignature;
+		return true;
 	}
 
 	public void setStubGenerated(boolean stubGenerated) {
@@ -83,14 +79,21 @@ public class PharPackage {
 	}
 
 	public IPath getAbsolutePharLocation() {
-		if (!fPharLocation.isAbsolute() && fPharLocation.segmentCount() >= 2) {
-			// reverse of
-			// AbstractJarDestinationWizardPage#handleDestinationBrowseButtonPressed()
-			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(
-					fPharLocation);
-			IPath absolutePath = file.getLocation();
-			if (absolutePath != null)
-				return absolutePath;
+		if (!fPharLocation.isAbsolute()) {
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			if (fPharLocation.segmentCount() >= 2) {
+				// reverse of
+				// AbstractJarDestinationWizardPage#handleDestinationBrowseButtonPressed()
+				IFile file = root.getFile(fPharLocation);
+				IPath absolutePath = file.getLocation();
+				if (absolutePath != null) {
+					return absolutePath;
+				}
+			}
+			// The path does not exist in the workspace (e.g. because there's no
+			// such project).
+			// Fallback is to just append the path to the workspace root.
+			return root.getLocation().append(fPharLocation);
 		}
 		return fPharLocation;
 	}

@@ -28,6 +28,7 @@ public class PharConstants {
 	public static final byte[] GBMB = "GBMB".getBytes();
 	public static final byte[] Default_Entry_Bitmap = { -74, 1, 0, 0 };
 	public static final byte[] Default_Global_Bitmap = { 0, 0, 0, 0 };
+	public static final String PHAR_PREFIX = "phar:";
 	public static final String STUB_PATH = ".phar/stub.php";
 	public static final String SIGNATURE_PATH = ".phar/signature.php";
 

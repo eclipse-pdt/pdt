@@ -25,7 +25,7 @@ import org.eclipse.dltk.core.IArchiveEntry;
 public class PharArchiveFile implements IArchive {
 
 	private PharFile pharFile;
-
+	private File file;
 	/**
 	 * Cache of phar files, so we don't create phar files representation every
 	 * call
@@ -37,19 +37,38 @@ public class PharArchiveFile implements IArchive {
 	}
 
 	public PharArchiveFile(File file) throws IOException, PharException {
-		String key = file.getAbsolutePath() + file.lastModified();
+		this.file = file;
+		String key = getFileKey(file);
 		if (!pharFiles.containsKey(key)) {
 			pharFiles.put(key, new WeakReference<PharFile>(new PharFile(file)));
 		}
 		final WeakReference<PharFile> weakReference = pharFiles.get(key);
 		pharFile = weakReference.get();
+		// maybe the phar is collected by gc
+		makeSureInit(file);
+	}
+
+	private void makeSureInit(File file) throws IOException, PharException {
+		if (pharFile == null) {
+			String key = getFileKey(file);
+			pharFiles.put(key, new WeakReference<PharFile>(new PharFile(file)));
+			final WeakReference<PharFile> weakReference = pharFiles.get(key);
+			pharFile = weakReference.get();
+		}
+	}
+
+	private String getFileKey(File file) {
+		String key = file.getAbsolutePath() + file.lastModified();
+		return key;
 	}
 
 	public void close() throws IOException {
-		pharFile.close();
+		if (pharFile != null)
+			pharFile.close();
 	}
 
 	public Enumeration<? extends IArchiveEntry> getArchiveEntries() {
+		init();
 		List<PharEntry> pharEntryList = pharFile.getPharEntryList();
 		final Iterator<PharEntry> it = pharEntryList.iterator();
 
@@ -67,15 +86,25 @@ public class PharArchiveFile implements IArchive {
 	}
 
 	public IArchiveEntry getArchiveEntry(String name) {
+		init();
 		return new PharArchiveEntry(pharFile.getEntry(name));
 	}
 
 	public InputStream getInputStream(IArchiveEntry entry) throws IOException {
+		init();
 		if (entry instanceof PharArchiveEntry) {
 			PharArchiveEntry pharArchiveEntry = (PharArchiveEntry) entry;
 			return pharFile.getInputStream(pharArchiveEntry.getPharEntry());
 		}
 		return null;
+	}
+
+	private void init() {
+		try {
+			makeSureInit(file);
+		} catch (IOException e) {
+		} catch (PharException e) {
+		}
 	}
 
 	public String getName() {

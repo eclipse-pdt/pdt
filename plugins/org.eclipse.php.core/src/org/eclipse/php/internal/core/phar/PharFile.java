@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Zhao - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.core.phar;
 
 import java.io.*;
@@ -78,7 +88,6 @@ public class PharFile {
 
 	protected void getEntries() throws IOException, PharException {
 		byte[] buffer;
-		// PharEntry[] entries = new PharEntry[ fileNumber];
 
 		for (int j = 0; j < fileNumber; j++) {
 			buffer = new byte[4];
@@ -99,7 +108,6 @@ public class PharFile {
 			read(bis, buffer);
 			pharEntry.setSizeByte(buffer);
 
-			// read(bis, buffer);
 			pharEntry.setSize(getInt(buffer));
 
 			read(bis, buffer);
@@ -152,65 +160,69 @@ public class PharFile {
 		pharEntryList.add(stubEntry);
 		pharEntryMap.put(stubEntry.getName(), stubEntry);
 
-		signatureEntry = new PharEntry();
-		signatureEntry.setName(PharConstants.SIGNATURE_PATH);
-		// pharEntry.setSizeByte(buffer);
+		if (hasSignature) {
+			signatureEntry = new PharEntry();
+			signatureEntry.setName(PharConstants.SIGNATURE_PATH);
+			signatureEntry.setBitMappedFlag(PharConstants.Default_Entry_Bitmap);
 
-		// pharEntry.setCrcByte(buffer);
-		signatureEntry.setBitMappedFlag(PharConstants.Default_Entry_Bitmap);
+			int signatureLength = bis.available();
+			if (fileNumber == 0) {// no file,so the manifest's end is the
+				// signature's begin
+				signatureEntry.setPosition(currentIndex);
 
-		int signatureLength = bis.available();
-		if (fileNumber == 0) {// no file,so the manifest's end is the
-			// signature's begin
-			signatureEntry.setPosition(currentIndex);
+			} else {
+				signatureEntry.setPosition(pharEntryList.get(fileNumber - 1)
+						.getEnd());
+				PharUtil.skip(bis, pharEntryList.get(fileNumber - 1).getEnd()
+						- currentIndex);
+				signatureLength = bis.available();
+			}
+			if (signatureLength <= 4) {
+				signatureEntry = null;
+				return;
+			}
+			signatureEntry.setSize(signatureLength);
+			signatureEntry.setCsize(signatureLength);
+			if (signatureLength < 24) {
+				// TODO corrupted signature
+				throw new PharException(Messages.Phar_Signature_Corrupted);
+			} else {
 
-		} else {
-			signatureEntry.setPosition(pharEntryList.get(fileNumber - 1)
-					.getEnd());
-			PharUtil.skip(bis, pharEntryList.get(fileNumber - 1).getEnd()
-					- currentIndex);
-			signatureLength = bis.available();
-		}
-		signatureEntry.setSize(signatureLength);
-		signatureEntry.setCsize(signatureLength);
-		if (signatureLength < 24) {
-			// TODO crupt signature
-			throw new PharException(Messages.Phar_Signature_Corrupted);
-		} else {
+				bis.skip(signatureLength - 8);
+				buffer = new byte[4];
+				read(bis, buffer);
+				boolean found = false;
+				for (Iterator<Digest> iterator = Digest.DIGEST_MAP.values()
+						.iterator(); iterator.hasNext();) {
+					Digest digest = iterator.next();
+					if (PharUtil.byteArrayEquals(digest.getBitMap(), buffer)) {
+						if (digest.getDigest().digest().length != signatureLength - 8
+								|| !PharUtil.checkSignature(file, digest,
+										signatureEntry.getPosition())) {
+							// TODO corrupted signature
+							throw new PharException(
+									Messages.Phar_Signature_Corrupted);
+						} else {
+							found = true;
+							break;
+						}
 
-			bis.skip(signatureLength - 8);
-			buffer = new byte[4];
-			read(bis, buffer);
-			boolean found = false;
-			for (Iterator<Digest> iterator = Digest.DIGEST_MAP.values()
-					.iterator(); iterator.hasNext();) {
-				Digest digest = iterator.next();
-				if (PharUtil.byteArrayEquals(digest.getBitMap(), buffer)) {
-					if (digest.getDigest().digest().length != signatureLength - 8
-							|| !PharUtil.checkSignature(file, digest,
-									signatureEntry.getPosition())) {
-						// TODO crupt signature
-						throw new PharException(
-								Messages.Phar_Signature_Corrupted);
-					} else {
-						found = true;
-						break;
 					}
-
+				}
+				if (!found) {
+					// TODO corrupted signature
+					throw new PharException(Messages.Phar_Signature_Unsupported);
+				}
+				read(bis, buffer);
+				if (!PharUtil.byteArrayEquals(PharConstants.GBMB, buffer)) {
+					// TODO corrupted signature
+					throw new PharException(Messages.Phar_Signature_End);
 				}
 			}
-			if (!found) {
-				// TODO crupt signature
-				throw new PharException(Messages.Phar_Signature_Unsupported);
-			}
-			read(bis, buffer);
-			if (!PharUtil.byteArrayEquals(PharConstants.GBMB, buffer)) {
-				// TODO crupt signature
-				throw new PharException(Messages.Phar_Signature_End);
-			}
+			pharEntryList.add(signatureEntry);
+			pharEntryMap.put(signatureEntry.getName(), signatureEntry);
 		}
-		pharEntryList.add(signatureEntry);
-		pharEntryMap.put(signatureEntry.getName(), signatureEntry);
+
 	}
 
 	protected void getManifest() throws IOException, PharException {
@@ -244,13 +256,13 @@ public class PharFile {
 
 		buffer = new byte[4];
 		read(bis, buffer);
-		if ((buffer[1] & 1) != 0) {
+		if ((buffer[2] & 1) != 0) {
 			hasSignature = true;
 		}
-		if ((buffer[2] & 1) != 0) {
+		if ((buffer[1] & 16) != 0) {
 			hasZlibcompression = true;
 		}
-		if ((buffer[2] & 2) != 0) {
+		if ((buffer[1] & 32) != 0) {
 			hasBzipcompression = true;
 		}
 

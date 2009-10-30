@@ -16,9 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Digest {
-	public static final Digest MD5 = new Digest("MD5",
+	public static final String MD5_TYPE = "MD5";
+	public static final String SHA1_TYPE = "SHA1";
+	public static final Digest MD5 = new Digest(MD5_TYPE,
 			new byte[] { 1, 0, 0, 0 });
-	public static final Digest SHA1 = new Digest("SHA1", new byte[] { 2, 0, 0,
+	public static final Digest SHA1 = new Digest(SHA1_TYPE, new byte[] { 2, 0, 0,
 			0 });
 	// public static final Digest SHA256 = new Digest("SHA256","0004");
 	// public static final Digest SHA512 = new Digest("SHA512 ","0008");
