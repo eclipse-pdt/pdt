@@ -80,7 +80,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 	private IStructuredSelection fInitialSelection;
 	private CheckboxTreeAndListGroup fInputGroup;
 
-	private Button fUseSignatureCheckbox;
+	// private Button fUseSignatureCheckbox;
 
 	private Button fOverwriteCheckbox;
 	private boolean fInitiallySelecting = true;
@@ -165,20 +165,20 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 	}
 
 	private void createSignatureGroup(Composite parent) {
-		Composite signatureGroup = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.marginHeight = 0;
-		signatureGroup.setLayout(layout);
+		// Composite signatureGroup = new Composite(parent, SWT.NONE);
+		// GridLayout layout = new GridLayout();
+		// layout.marginHeight = 0;
+		// signatureGroup.setLayout(layout);
 
-		fUseSignatureCheckbox = new Button(signatureGroup, SWT.CHECK | SWT.LEFT);
-		fUseSignatureCheckbox.setText("Use signature");
-		fUseSignatureCheckbox.addListener(SWT.Selection, this);
+		// fUseSignatureCheckbox = new Button(signatureGroup, SWT.CHECK |
+		// SWT.LEFT);
+		// fUseSignatureCheckbox.setText("Use signature");
+		// fUseSignatureCheckbox.addListener(SWT.Selection, this);
 
 		{
 
-			Composite signatureTypeGroup = new Composite(signatureGroup,
-					SWT.NONE);
-			layout = new GridLayout();
+			Composite signatureTypeGroup = new Composite(parent, SWT.NONE);
+			GridLayout layout = new GridLayout();
 			layout.horizontalSpacing = 0;
 			layout.marginWidth = 0;
 			layout.marginHeight = 0;
@@ -186,7 +186,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			signatureTypeGroup.setLayout(layout);
 
 			Label label = new Label(signatureTypeGroup, SWT.NONE);
-			label.setText("signature type");
+			label.setText("Signature Type");
 			label.setLayoutData(new GridData(
 					GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.CENTER,
 					false, false, Digest.DIGEST_MAP.size(), 1));
@@ -252,8 +252,14 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 					.setStubGenerated(settings.getBoolean(STORE_STUB_GENERATED));
 			pharData.setStubLocation(Path.fromOSString(settings
 					.get(STORE_STUB_PATH)));
-			pharData.setUseSignature(settings.getBoolean(USE_SIGNATURE));
-			pharData.setSignature(settings.get(SIGNATURE_TYPE));
+			// pharData.setUseSignature(settings.getBoolean(USE_SIGNATURE));
+			String signatureType = settings.get(SIGNATURE_TYPE);
+			if (signatureType != null && signatureType.trim().length() > 0) {
+				pharData.setSignature(signatureType);
+			} else {
+				pharData.setSignature(Digest.MD5_TYPE);
+			}
+
 		}
 	}
 
@@ -296,7 +302,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			fManifestFileText.setText(pharData.getStubLocation().toString());
 		}
 
-		fUseSignatureCheckbox.setSelection(pharData.isUseSignature());
+		// fUseSignatureCheckbox.setSelection(pharData.isUseSignature());
 		if (pharData.getSignature() != null) {
 			for (Iterator<Button> iterator = signatureButtons.iterator(); iterator
 					.hasNext();) {
@@ -601,7 +607,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			exportTypeGroup.setLayout(layout);
 
 			Label label = new Label(exportTypeGroup, SWT.NONE);
-			label.setText("export type");
+			label.setText("Export Type");
 			label.setLayoutData(new GridData(
 					GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.CENTER,
 					false, false, 3, 1));
@@ -633,7 +639,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			compressTypeGroup.setLayout(layout);
 
 			Label label = new Label(exportTypeGroup, SWT.NONE);
-			label.setText("compress type");
+			label.setText("Compress Type");
 			label.setLayoutData(new GridData(
 					GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.CENTER,
 					false, false, 3, 1));
@@ -681,7 +687,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		destinationSelectionGroup.setLayoutData(new GridData(
 				GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
 
-		String label = "Destination Label";
+		String label = "PHAR file";
 		if (label != null) {
 			new Label(destinationSelectionGroup, SWT.NONE).setText(label);
 		} else {
@@ -732,7 +738,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		FileDialog dialog = new FileDialog(getContainer().getShell(), SWT.SAVE);
 		dialog.setFilterExtensions(new String[] {});
 
-		String currentSourceString = "Destination Value";
+		String currentSourceString = getDestinationValue();
 		int lastSeparatorIndex = currentSourceString
 				.lastIndexOf(File.separator);
 		if (lastSeparatorIndex != -1) {
@@ -750,8 +756,43 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 				selectedFileName = findContainersForLocation[0].getFullPath()
 						.makeRelative().toString();
 			}
-			fDestinationNamesCombo.setText(selectedFileName);
+			fDestinationNamesCombo.setText(toLegalPharPath(selectedFileName)
+					.toString());
 		}
+	}
+
+	private IPath toLegalPharPath(String selectedFileName) {
+		// TODO Auto-generated method stub
+		IPath path = new Path(selectedFileName);
+		if (path.segmentCount() > 0 && ensureTargetFileIsValid(path.toFile())
+				&& path.getFileExtension() == null) {
+			if (pharCompressRadio.getSelection()) {
+				if (!"phar".equals(path.getFileExtension())) {
+					path = path.addFileExtension("phar");
+				}
+			} else if (zipCompressRadio.getSelection()) {
+				if (!"zip".equals(path.getFileExtension())) {
+					path = path.addFileExtension("zip");
+				}
+			} else if (tarCompressRadio.getSelection()) {
+				String fileName = path.lastSegment();
+				if (noneCompressTypePhar.getSelection()) {
+					if (!"tar".equals(path.getFileExtension())) {
+						path = path.addFileExtension("tar");
+					}
+				} else if (zlibCompressTypePhar.getSelection()) {
+					if (!fileName.endsWith(".tar.gz")) {
+						path = path.addFileExtension("tar.gz");
+					}
+				} else if (bzipCompressTypePhar.getSelection()) {
+					if (!fileName.endsWith(".tar.bz2")) {
+						path = path.addFileExtension("tar.bz2");
+					}
+				}
+
+			}
+		}
+		return path;
 	}
 
 	/**
@@ -812,6 +853,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 	 */
 	protected String getDestinationValue() {
 		String destinationText = fDestinationNamesCombo.getText().trim();
+		// if (destinationText.indexOf('.') < 0)
+		// destinationText+= getOutputSuffix();
+		destinationText = toLegalPharPath(destinationText).toString();
 		return destinationText;
 	}
 
@@ -861,7 +905,10 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		String currentMessage = getMessage();
 		if (!(new File(fDestinationNamesCombo.getText()).isAbsolute())) {
 			if (currentMessage == null)
-				setMessage(currentMessage, IMessageProvider.INFORMATION);
+				if (currentMessage == null)
+					setMessage(
+							PharPackagerMessages.JarPackageWizardPage_info_relativeExportDestination,
+							IMessageProvider.INFORMATION);
 		} else {
 			if (currentMessage != null)
 				setMessage(currentMessage);
@@ -884,36 +931,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		pharData.setElements(getSelectedElements());
 		// destination
 		String comboText = fDestinationNamesCombo.getText();
-		IPath path = Path.fromOSString(comboText);
-		// add surfix
-		if (path.segmentCount() > 0 && ensureTargetFileIsValid(path.toFile())
-				&& path.getFileExtension() == null) {
-			if (pharCompressRadio.getSelection()) {
-				if (!"phar".equals(path.getFileExtension())) {
-					path = path.addFileExtension("phar");
-				}
-			} else if (zipCompressRadio.getSelection()) {
-				if (!"zip".equals(path.getFileExtension())) {
-					path = path.addFileExtension("zip");
-				}
-			} else if (tarCompressRadio.getSelection()) {
-				String fileName = path.lastSegment();
-				if (noneCompressTypePhar.getSelection()) {
-					if (!"tar".equals(path.getFileExtension())) {
-						path = path.addFileExtension("tar");
-					}
-				} else if (zlibCompressTypePhar.getSelection()) {
-					if (!fileName.endsWith(".tar.gz")) {
-						path = path.addFileExtension("tar.gz");
-					}
-				} else if (bzipCompressTypePhar.getSelection()) {
-					if (!fileName.endsWith(".tar.bz2")) {
-						path = path.addFileExtension("tar.bz2");
-					}
-				}
 
-			}
-		}
+		IPath path = toLegalPharPath(comboText);
+		// add surfix
 
 		pharData.setPharLocation(path);
 		pharData.setOverwrite(fOverwriteCheckbox.getSelection());
@@ -966,7 +986,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			pharData.setCompressType(PharConstants.BZ2_COMPRESSED);
 		}
 
-		pharData.setUseSignature(fUseSignatureCheckbox.getSelection());
+		// pharData.setUseSignature(fUseSignatureCheckbox.getSelection());
 	}
 
 	/**
@@ -1008,12 +1028,13 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		fManifestFileLabel.setEnabled(!generate);
 		fManifestFileBrowseButton.setEnabled(!generate);
 
-		boolean useSignature = fUseSignatureCheckbox.getSelection();
-		for (Iterator<Button> iterator = signatureButtons.iterator(); iterator
-				.hasNext();) {
-			Button button = iterator.next();
-			button.setEnabled(useSignature);
-		}
+		// boolean useSignature = fUseSignatureCheckbox.getSelection();
+		// for (Iterator<Button> iterator = signatureButtons.iterator();
+		// iterator
+		// .hasNext();) {
+		// Button button = iterator.next();
+		// button.setEnabled(useSignature);
+		// }
 	}
 
 	protected void updatePageCompletion() {

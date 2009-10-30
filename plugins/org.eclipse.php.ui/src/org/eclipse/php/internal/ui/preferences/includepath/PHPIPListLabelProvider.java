@@ -19,12 +19,26 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListLabelProvider;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
+import org.eclipse.dltk.ui.ScriptElementImageProvider;
+import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.internal.ui.phar.wizard.PharUIUtil;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 public class PHPIPListLabelProvider extends BPListLabelProvider {
+	private String fInvalidLabel;
+	private ImageDescriptorRegistry fRegistry;
+
+	public PHPIPListLabelProvider() {
+		super();
+		fInvalidLabel = IncludePathMessages.CPListLabelProvider_invalid;
+		fRegistry = DLTKUIPlugin.getImageDescriptorRegistry();
+	}
 
 	protected ImageDescriptor getCPListElementBaseImage(BPListElement cpentry) {
 
@@ -41,6 +55,33 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 		}
 		return super.getCPListElementBaseImage(cpentry);
 
+	}
+
+	@Override
+	public Image getImage(Object element) {
+		if (element instanceof BPListElement) {
+			BPListElement cpentry = (BPListElement) element;
+			ImageDescriptor imageDescriptor = getCPListElementBaseImage(cpentry);
+			if (imageDescriptor != null) {
+				if (PharUIUtil.isInvalidPharBuildEntry(cpentry)) {
+					imageDescriptor = new ScriptElementImageDescriptor(
+							imageDescriptor,
+							ScriptElementImageDescriptor.ERROR,
+							ScriptElementImageProvider.SMALL_SIZE);
+				}
+				return fRegistry.get(imageDescriptor);
+			}
+		}
+		return super.getImage(element);
+	}
+
+	@Override
+	public String getCPListElementText(BPListElement cpentry) {
+		String result = super.getCPListElementText(cpentry);
+		if (PharUIUtil.isInvalidPharBuildEntry(cpentry)) {
+			result = result + fInvalidLabel;
+		}
+		return result;
 	}
 
 	private static ImageDescriptor getFolderBaseImage(IResource resource) {

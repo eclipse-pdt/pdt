@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.ui.phar.wizard.PharUIUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -460,6 +461,10 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		List elements = fBuildPathList.getElements();
 		BPListElement entryMissing = null;
 		int nEntriesMissing = 0;
+
+		BPListElement entryInvalid = null;
+		int nEntriesInvalid = 0;
+
 		IBuildpathEntry[] entries = new IBuildpathEntry[elements.size()];
 		for (int i = elements.size() - 1; i >= 0; i--) {
 			BPListElement currElement = (BPListElement) elements.get(i);
@@ -470,7 +475,13 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 				if (entryMissing == null) {
 					entryMissing = currElement;
 				}
+			} else if (PharUIUtil.isInvalidPharBuildEntry(currElement)) {
+				nEntriesInvalid++;
+				if (entryInvalid == null) {
+					entryInvalid = currElement;
+				}
 			}
+
 		}
 		if (nEntriesMissing > 0) {
 			if (nEntriesMissing == 1) {
@@ -483,6 +494,21 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 								.format(
 										NewWizardMessages.BuildPathsBlock_warning_EntriesMissing,
 										String.valueOf(nEntriesMissing)));
+			}
+		}
+		if (nEntriesInvalid > 0) {
+			if (nEntriesInvalid == 1) {
+				fPathStatus
+						.setError(Messages
+								.format(
+										IncludePathMessages.BuildPathsBlock_warning_EntryInvalid,
+										entryInvalid.getPath().toString()));
+			} else {
+				fPathStatus
+						.setError(Messages
+								.format(
+										IncludePathMessages.BuildPathsBlock_warning_EntriesInvalid,
+										String.valueOf(nEntriesInvalid)));
 			}
 		}
 

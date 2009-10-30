@@ -66,9 +66,9 @@ public class PHPBuildpathDialogAccess {
 		dialog.setHelpAvailable(false);
 		dialog.setValidator(validator);
 		dialog
-				.setTitle(Messages.BuildPathDialogAccess_ZIPArchiveDialog_new_title);
+				.setTitle(IncludePathMessages.BuildPathDialogAccess_ZIPArchiveDialog_new_title);
 		dialog
-				.setMessage(Messages.BuildPathDialogAccess_ZIPArchiveDialog_new_description);
+				.setMessage(IncludePathMessages.BuildPathDialogAccess_ZIPArchiveDialog_new_description);
 		dialog.addFilter(new PHPArchiveFileFilter(usedPhars, true));
 		dialog.setInput(root);
 		dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
@@ -131,9 +131,9 @@ public class PHPBuildpathDialogAccess {
 				new WorkbenchContentProvider());
 		dialog.setValidator(validator);
 		dialog
-				.setTitle(Messages.BuildPathDialogAccess_ZIPArchiveDialog_edit_title);
+				.setTitle(IncludePathMessages.BuildPathDialogAccess_ZIPArchiveDialog_edit_title);
 		dialog
-				.setMessage(Messages.BuildPathDialogAccess_ZIPArchiveDialog_edit_description);
+				.setMessage(IncludePathMessages.BuildPathDialogAccess_ZIPArchiveDialog_edit_description);
 		dialog.addFilter(new PHPArchiveFileFilter(usedJars, true));
 		dialog.setInput(root);
 		dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
@@ -165,7 +165,7 @@ public class PHPBuildpathDialogAccess {
 		}
 		FileDialog dialog = new FileDialog(shell, SWT.MULTI);
 		dialog
-				.setText(Messages.BuildPathDialogAccess_ExtZIPArchiveDialog_new_title);
+				.setText(IncludePathMessages.BuildPathDialogAccess_ExtZIPArchiveDialog_new_title);
 		dialog.setFilterExtensions(PHPArchiveFileFilter.FILTER_EXTENSIONS);
 		dialog.setFilterPath(lastUsedPath);
 		// IEnvironmentUI ui = (IEnvironmentUI) environment
@@ -215,7 +215,7 @@ public class PHPBuildpathDialogAccess {
 
 		FileDialog dialog = new FileDialog(shell, SWT.SINGLE);
 		dialog
-				.setText(Messages.BuildPathDialogAccess_ExtZIPArchiveDialog_edit_title);
+				.setText(IncludePathMessages.BuildPathDialogAccess_ExtZIPArchiveDialog_edit_title);
 		dialog.setFilterExtensions(PHPArchiveFileFilter.FILTER_EXTENSIONS);
 		dialog.setFilterPath(lastUsedPath);
 		dialog.setFileName(initialEntry.lastSegment());

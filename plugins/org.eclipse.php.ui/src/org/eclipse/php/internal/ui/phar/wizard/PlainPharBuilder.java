@@ -3,10 +3,10 @@ package org.eclipse.php.internal.ui.phar.wizard;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.phar.*;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
 public class PlainPharBuilder extends PharBuilder {
@@ -123,9 +123,33 @@ public class PlainPharBuilder extends PharBuilder {
 			try {
 
 				fileExporter.finished();
+				registerInWorkspaceIfNeeded();
 			} catch (IOException ex) {
 				throw PharUIUtil.createCoreException(ex.getLocalizedMessage(),
 						ex);
+			}
+		}
+	}
+	private void registerInWorkspaceIfNeeded() {
+		IPath jarPath= fJarPackage.getAbsolutePharLocation();
+		IProject[] projects= ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		for (int i= 0; i < projects.length; i++) {
+			IProject project= projects[i];
+			// The Jar is always put into the local file system. So it can only be
+			// part of a project if the project is local as well. So using getLocation
+			// is currently save here.
+			IPath projectLocation= project.getLocation();
+			if (projectLocation != null && projectLocation.isPrefixOf(jarPath)) {
+				try {
+					jarPath= jarPath.removeFirstSegments(projectLocation.segmentCount());
+					jarPath= jarPath.removeLastSegments(1);
+					IResource containingFolder= project.findMember(jarPath);
+					if (containingFolder != null && containingFolder.isAccessible())
+						containingFolder.refreshLocal(IResource.DEPTH_ONE, null);
+				} catch (CoreException ex) {
+					// don't refresh the folder but log the problem
+					PHPUiPlugin.log(ex);
+				}
 			}
 		}
 	}

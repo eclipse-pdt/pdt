@@ -81,8 +81,8 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	protected void initContainerElements() {
 
 		String[] buttonLabelsWith = new String[] {
-				Messages.LibrariesWorkbookPage_libraries_addzip_button,
-				Messages.LibrariesWorkbookPage_libraries_addextzip_button,
+				IncludePathMessages.LibrariesWorkbookPage_libraries_addzip_button,
+				IncludePathMessages.LibrariesWorkbookPage_libraries_addextzip_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_addlibrary_button,
 				// NewWizardMessages.LibrariesWorkbookPage_libraries_add_source_folder_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_add_external_source_folder_button,
@@ -90,7 +90,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 				NewWizardMessages.LibrariesWorkbookPage_libraries_edit_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_remove_button,
 				/* */null,
-				Messages.LibrariesWorkbookPage_libraries_replace_button };
+				IncludePathMessages.LibrariesWorkbookPage_libraries_replace_button };
 		String[] buttonLabelsWithout = new String[] {
 				NewWizardMessages.LibrariesWorkbookPage_libraries_addlibrary_button,
 				// NewWizardMessages.LibrariesWorkbookPage_libraries_add_source_folder_button,
