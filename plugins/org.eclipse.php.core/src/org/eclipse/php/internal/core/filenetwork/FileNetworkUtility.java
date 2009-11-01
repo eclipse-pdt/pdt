@@ -156,9 +156,6 @@ public class FileNetworkUtility {
 		}
 
 		for (IField include : includes) {
-			if (monitor != null && monitor.isCanceled()) {
-				return;
-			}
 			String filePath = ((IncludeField) include).getFilePath();
 			String lastSegment = filePath;
 			int i = Math.max(filePath.lastIndexOf('/'), filePath
