@@ -114,8 +114,9 @@ public class DebugSearchEngine {
 			if (project != null && currentWorkingDir != null
 					&& currentScriptDir != null) {
 				// This is not a full path, search using PHP Search Engine:
-				Result<?, ?> result = PHPSearchEngine.find(remoteFile,
-						currentWorkingDir, currentScriptDir, project);
+				Result<?, ?> result = PHPSearchEngine.getInstance().find(
+						remoteFile, currentWorkingDir, currentScriptDir,
+						project);
 				if (result instanceof ExternalFileResult) {
 					ExternalFileResult extFileResult = (ExternalFileResult) result;
 					return new PathEntry(extFileResult.getFile()
@@ -191,7 +192,7 @@ public class DebugSearchEngine {
 
 				IncludePath[] includePaths;
 				if (currentProject != null) {
-					includePaths = PHPSearchEngine
+					includePaths = PHPSearchEngine.getInstance()
 							.buildIncludePath(currentProject);
 				} else {
 					// Search in the whole workspace:
@@ -200,7 +201,8 @@ public class DebugSearchEngine {
 							.getRoot().getProjects();
 					for (IProject project : projects) {
 						if (project.isOpen() && project.isAccessible()) {
-							PHPSearchEngine.buildIncludePath(project, s);
+							PHPSearchEngine.getInstance().buildIncludePath(
+									project, s);
 						}
 					}
 					includePaths = s.toArray(new IncludePath[s.size()]);
