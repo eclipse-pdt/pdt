@@ -1,0 +1,21 @@
+--TEST--
+Test Do While Statement
+--FILE--
+<?php do { echo $i;} while ($i > 0); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="40">
+	<DoStatement start="6" end="36">
+		<EchoStatement start="11" end="19">
+			<VariableReference start="16" end="18" name="$i">
+			</VariableReference>
+		</EchoStatement>
+		<InfixExpression start="28" end="34" operator="&gt;">
+			<VariableReference start="28" end="30" name="$i">
+			</VariableReference>
+			<Scalar start="33" end="34" type="int" value="0">
+			</Scalar>
+		</InfixExpression>
+	</DoStatement>
+	<EmptyStatement start="37" end="39">
+	</EmptyStatement>
+</ModuleDeclaration>
