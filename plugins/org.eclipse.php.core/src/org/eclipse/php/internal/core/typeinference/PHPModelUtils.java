@@ -910,6 +910,21 @@ public class PHPModelUtils {
 	}
 
 	/**
+	 * Returns all super classes filtered using file hierarchy
+	 * 
+	 * @throws ModelException
+	 */
+	public static IType[] getSuperClasses(IType type, ITypeHierarchy hierarchy)
+			throws ModelException {
+		if (hierarchy == null) {
+			hierarchy = type.newSupertypeHierarchy(null);
+		}
+		Collection<IType> filtered = filterElements(type.getSourceModule(),
+				Arrays.asList(hierarchy.getAllSuperclasses(type)));
+		return (IType[]) filtered.toArray(new IType[filtered.size()]);
+	}
+
+	/**
 	 * Finds field in the super class hierarchy
 	 * 
 	 * @param type
@@ -944,10 +959,7 @@ public class PHPModelUtils {
 			ITypeHierarchy hierarchy, String prefix, boolean exactName,
 			IProgressMonitor monitor) throws CoreException {
 
-		if (hierarchy == null) {
-			hierarchy = type.newSupertypeHierarchy(null);
-		}
-		IType[] allSuperclasses = hierarchy.getAllSuperclasses(type);
+		IType[] allSuperclasses = getSuperClasses(type, hierarchy);
 		return getTypesField(allSuperclasses, prefix, exactName);
 	}
 
@@ -986,10 +998,7 @@ public class PHPModelUtils {
 			ITypeHierarchy hierarchy, String prefix, boolean exactName,
 			IProgressMonitor monitor) throws CoreException {
 
-		if (hierarchy == null) {
-			hierarchy = type.newSupertypeHierarchy(null);
-		}
-		IType[] allSuperclasses = hierarchy.getAllSuperclasses(type);
+		IType[] allSuperclasses = getSuperClasses(type, hierarchy);
 		return getTypesMethod(allSuperclasses, prefix, exactName);
 	}
 

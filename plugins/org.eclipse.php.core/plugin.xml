@@ -222,6 +222,7 @@
 		</selectionEngine>
 	</extension>
 
+<!--
 	<extension
 		point="org.eclipse.dltk.core.fileHierarchyResolvers">
 		<fileHierarchyResolver
@@ -230,6 +231,7 @@
 			priority="0">
 		</fileHierarchyResolver>
 	</extension>
+-->
 
 	<!-- TASK validation -->
 	<extension
