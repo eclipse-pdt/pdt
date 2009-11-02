@@ -199,6 +199,11 @@ public class PhpElementConciliator {
 			return false;
 		}
 
+		if (parent.getType() == ASTNode.NAMESPACE_NAME) {
+			locateNode = parent;
+			parent = parent.getParent();
+		}
+
 		final int parentType = parent.getType();
 		if (parentType == ASTNode.CLASS_NAME
 				|| parentType == ASTNode.CLASS_DECLARATION
