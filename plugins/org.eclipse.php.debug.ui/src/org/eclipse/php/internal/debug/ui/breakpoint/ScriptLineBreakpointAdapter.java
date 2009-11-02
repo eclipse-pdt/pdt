@@ -348,7 +348,8 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 			IDocument document, AbstractMarkerAnnotationModel model,
 			int lineNumber) {
 		List markers = new ArrayList();
-		if (resource != null && model != null && resource.exists()) {
+		if (document != null && resource != null && model != null
+				&& resource.exists()) {
 			try {
 				IMarker[] allMarkers = resource.findMarkers(
 						IBreakpoint.LINE_BREAKPOINT_MARKER, true,
