@@ -287,8 +287,8 @@ public class FileNetworkUtility {
 		IProject currentProject = from.getScriptProject().getProject();
 		String currentScriptDir = from.getParent().getPath().toString();
 		String currentWorkingDir = currentScriptDir; // currentProject.getFullPath().toString();
-		Result<?, ?> result = PHPSearchEngine.find(path, currentWorkingDir,
-				currentScriptDir, currentProject);
+		Result<?, ?> result = PHPSearchEngine.getInstance().find(path,
+				currentWorkingDir, currentScriptDir, currentProject);
 
 		if (result instanceof ResourceResult) {
 			// workspace file
