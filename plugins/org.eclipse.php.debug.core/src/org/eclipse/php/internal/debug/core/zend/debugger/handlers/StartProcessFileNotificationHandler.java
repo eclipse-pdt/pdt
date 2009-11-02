@@ -197,8 +197,9 @@ public class StartProcessFileNotificationHandler implements
 							secondaryId = EnvironmentPathUtils
 									.getLocalPathString(secondaryIdPath);
 						}
-						if (new VirtualPath(localPath).equals(new VirtualPath(
-								secondaryId))) {
+						if (VirtualPath.isAbsolute(localPath)
+								&& new VirtualPath(localPath)
+										.equals(new VirtualPath(secondaryId))) {
 							l.add(bp);
 						}
 					}
