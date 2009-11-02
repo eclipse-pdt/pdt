@@ -12,9 +12,7 @@
 package org.eclipse.php.internal.core.util;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.*;
@@ -23,6 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 
@@ -41,10 +40,22 @@ import org.eclipse.php.internal.core.includepath.IncludePathManager;
  * 
  * @author michael
  */
-public class PHPSearchEngine {
+public class PHPSearchEngine implements IIncludepathListener {
 
 	private static Pattern RELATIVE_PATH_PATTERN = Pattern
 			.compile("\\.\\.?[/\\\\].*");
+
+	private Map<IProject, IncludePath[]> projectIncludePaths;
+	private static PHPSearchEngine instance = new PHPSearchEngine();
+
+	private PHPSearchEngine() {
+		projectIncludePaths = new HashMap<IProject, IncludePath[]>();
+		IncludePathManager.getInstance().registerIncludepathListener(this);
+	}
+
+	public static PHPSearchEngine getInstance() {
+		return instance;
+	}
 
 	/**
 	 * Searches for the given path using internal PHP mechanism
@@ -61,7 +72,7 @@ public class PHPSearchEngine {
 	 *            Current project to which current script belongs
 	 * @return resolved path, or <code>null</code> in case of failure
 	 */
-	public static Result<?, ?> find(String path, String currentWorkingDir,
+	public Result<?, ?> find(String path, String currentWorkingDir,
 			String currentScriptDir, IProject currentProject) {
 		if (path == null || currentWorkingDir == null
 				|| currentScriptDir == null || currentProject == null) {
@@ -74,9 +85,9 @@ public class PHPSearchEngine {
 			return searchExternalOrWorkspaceFile(file);
 		}
 		if (RELATIVE_PATH_PATTERN.matcher(path).matches()) { // check whether
-																// the path
-																// starts with
-																// ./ or ../
+			// the path
+			// starts with
+			// ./ or ../
 			return searchExternalOrWorkspaceFile(currentWorkingDir, path);
 		}
 
@@ -215,7 +226,7 @@ public class PHPSearchEngine {
 	 * @return array of include path objects (it can be one of: IContainer,
 	 *         IncludePathEntry)
 	 */
-	public static IncludePath[] buildIncludePath(IProject project) {
+	public IncludePath[] buildIncludePath(IProject project) {
 		Set<IncludePath> results = new LinkedHashSet<IncludePath>();
 		buildIncludePath(project, results);
 		return results.toArray(new IncludePath[results.size()]);
@@ -232,8 +243,7 @@ public class PHPSearchEngine {
 	 *            Array of include path objects (it can be one of: IContainer,
 	 *            IncludePathEntry)
 	 */
-	public static void buildIncludePath(IProject project,
-			Set<IncludePath> results) {
+	public void buildIncludePath(IProject project, Set<IncludePath> results) {
 		if (results.contains(project)) {
 			return;
 		}
@@ -241,8 +251,23 @@ public class PHPSearchEngine {
 			return;
 		}
 		// Collect include paths:
-		results.addAll(Arrays.asList(IncludePathManager.getInstance()
-				.getIncludePaths(project)));
+		results.addAll(Arrays.asList(getProjectIncludePath(project)));
+	}
+
+	private IncludePath[] getProjectIncludePath(IProject project) {
+		IncludePath[] includePaths = projectIncludePaths.get(project);
+		if (includePaths == null) {
+			includePaths = IncludePathManager.getInstance().getIncludePaths(
+					project);
+			projectIncludePaths.put(project, includePaths);
+		}
+		return includePaths;
+	}
+
+	public void refresh(IProject project) {
+		IncludePath[] includePaths = IncludePathManager.getInstance()
+				.getIncludePaths(project);
+		projectIncludePaths.put(project, includePaths);
 	}
 
 	/**
