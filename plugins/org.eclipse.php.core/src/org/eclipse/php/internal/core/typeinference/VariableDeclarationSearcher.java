@@ -216,7 +216,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 
 			Expression value = foreachStatement.getValue();
 			if (value instanceof ReferenceExpression) { // foreach ( $array as
-														// &$value )
+				// &$value )
 				value = ((ReferenceExpression) value).getVariable();
 			}
 
@@ -282,10 +282,16 @@ public class VariableDeclarationSearcher extends ContextFinder {
 	 * @return
 	 */
 	protected boolean isConditional(ASTNode node) {
-		return node instanceof CatchClause || node instanceof IfStatement
-				|| node instanceof ForStatement
-				|| node instanceof ForEachStatement
-				|| node instanceof SwitchCase || node instanceof WhileStatement;
+		if (node instanceof Statement) {
+			int kind = ((Statement) node).getKind();
+			return kind == ASTNodeKinds.CATCH_CLAUSE
+					|| kind == ASTNodeKinds.IF_STATEMENT
+					|| kind == ASTNodeKinds.FOR_STATEMENT
+					|| kind == ASTNodeKinds.FOR_EACH_STATEMENT
+					|| kind == ASTNodeKinds.SWITCH_CASE
+					|| kind == ASTNodeKinds.WHILE_STATEMENT;
+		}
+		return false;
 	}
 
 	/**
