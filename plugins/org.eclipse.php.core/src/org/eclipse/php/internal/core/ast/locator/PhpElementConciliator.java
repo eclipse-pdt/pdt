@@ -199,6 +199,11 @@ public class PhpElementConciliator {
 			return false;
 		}
 
+		if (parent.getType() == ASTNode.NAMESPACE_NAME) {
+			locateNode = parent;
+			parent = parent.getParent();
+		}
+
 		final int parentType = parent.getType();
 		if (parentType == ASTNode.CLASS_NAME
 				|| parentType == ASTNode.CLASS_DECLARATION
@@ -411,7 +416,7 @@ public class PhpElementConciliator {
 			final GlobalStatement globalStatement) {
 		final List<Variable> variables = globalStatement.variables();
 		for (final Variable current : variables) {
-			assert current.getName() instanceof Identifier;
+			assert current.getName().getType() == ASTNode.IDENTIFIER;
 			Identifier id = (Identifier) current.getName();
 
 			// variables are case sensative
@@ -673,7 +678,7 @@ public class PhpElementConciliator {
 			if (node.getType() == ASTNode.VARIABLE) {
 				Variable variable = (Variable) node;
 				if (variable.isDollared()) {
-					assert variable.getName() instanceof Identifier;
+					assert variable.getName().getType() == ASTNode.IDENTIFIER;
 					Identifier identifier = (Identifier) variable.getName();
 					if (identifier.getName().equals(name)) {
 						exists = true;
