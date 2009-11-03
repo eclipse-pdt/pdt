@@ -93,6 +93,14 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 							partitionType = determinePartitionType(
 									regionCollection, phpScriptRegion, offset);
 							if (partitionType != null) {
+
+								String prefix = getPrefix();
+								if (prefix.length() > 0
+										&& !Character
+												.isJavaIdentifierStart(prefix
+														.charAt(0))) {
+									return false;
+								}
 								return true;
 							}
 						}
