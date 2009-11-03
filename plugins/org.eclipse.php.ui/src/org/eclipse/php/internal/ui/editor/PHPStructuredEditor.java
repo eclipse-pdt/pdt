@@ -21,7 +21,9 @@ import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.manipulation.MultiTextEditWithProgress;
 import org.eclipse.core.filebuffers.manipulation.RemoveTrailingWhitespaceOperation;
 import org.eclipse.core.internal.filebuffers.Progress;
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -378,7 +380,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	 */
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 	private IPreferencesPropagatorListener fPhpVersionListener;
-	private IResourceChangeListener fResourceChangeListener;
 	private IPreferenceChangeListener fPreferencesListener;
 
 	private void doSelectionChanged(ISelection selection) {
@@ -1092,28 +1093,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				.addPreferenceChangeListener(fPreferencesListener);
 	}
 
-	private void initResourceChangeListener() {
-		if (fResourceChangeListener != null) {
-			return;
-		}
-		fResourceChangeListener = new IResourceChangeListener() {
-
-			public void resourceChanged(IResourceChangeEvent event) {
-				try {
-					if (getSite().getPage().getActiveEditor().equals(
-							PHPStructuredEditor.this)
-							&& event.getType() == IResourceChangeEvent.POST_CHANGE
-							&& event.getDelta() != null) {
-						refreshViewer();
-					}
-				} catch (NullPointerException e) {
-				}
-			}
-		};
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(
-				fResourceChangeListener);
-	}
-
 	/**
 	 * iterate over regions in case of PhpScriptRegion reparse the region. in
 	 * case of region contaioner iterate over the container regions.
@@ -1232,11 +1211,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		if (fInformationPresenter != null) {
 			fInformationPresenter.dispose();
 			fInformationPresenter = null;
-		}
-		if (fResourceChangeListener != null) {
-			ResourcesPlugin.getWorkspace().removeResourceChangeListener(
-					fResourceChangeListener);
-			fResourceChangeListener = null;
 		}
 		if (fPhpVersionListener != null) {
 			PhpVersionChangedHandler.getInstance()
@@ -2195,9 +2169,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			}
 
 		});
-
-		// bug fix - #156810
-		initResourceChangeListener();
 
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
