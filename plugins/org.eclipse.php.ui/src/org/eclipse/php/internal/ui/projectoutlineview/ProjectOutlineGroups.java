@@ -13,7 +13,11 @@ package org.eclipse.php.internal.ui.projectoutlineview;
 
 import java.util.*;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -21,6 +25,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.explorer.NamespaceNode;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -64,6 +69,17 @@ public enum ProjectOutlineGroups {
 	protected Object[] getChildren() {
 		if (ProjectOutlineContentProvider.scripProject != null) {
 
+			IProject project = ProjectOutlineContentProvider.scripProject
+					.getProject();
+			try {
+				if (!project.isAccessible() || !project.hasNature(PHPNature.ID)) {
+					return NO_CHILDREN;
+				}
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(
 					ProjectOutlineContentProvider.scripProject,
 					IDLTKSearchScope.SOURCES);
@@ -96,14 +112,16 @@ public enum ProjectOutlineGroups {
 						null, MatchRule.PREFIX, Modifiers.AccNameSpace, 0,
 						scope, null);
 				Map<String, List<IType>> nsByName = new HashMap<String, List<IType>>();
-				for (IType namespace : namespaces) {
-					String namespaceName = namespace.getElementName();
-					List<IType> nsList = nsByName.get(namespaceName);
-					if (nsList == null) {
-						nsList = new LinkedList<IType>();
-						nsByName.put(namespaceName, nsList);
+				if (namespaces != null) {
+					for (IType namespace : namespaces) {
+						String namespaceName = namespace.getElementName();
+						List<IType> nsList = nsByName.get(namespaceName);
+						if (nsList == null) {
+							nsList = new LinkedList<IType>();
+							nsByName.put(namespaceName, nsList);
+						}
+						nsList.add(namespace);
 					}
-					nsList.add(namespace);
 				}
 				for (String namespaceName : nsByName.keySet()) {
 					List<IType> nsList = nsByName.get(namespaceName);
@@ -112,25 +130,35 @@ public enum ProjectOutlineGroups {
 							namespaceName, nsList.toArray(new IType[nsList
 									.size()])));
 				}
+
 				break;
 
 			case GROUP_CLASSES:
-				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
-						.findTypes(null, MatchRule.PREFIX, 0,
-								Modifiers.AccNameSpace, scope, null)));
+				IType[] findTypes = PhpModelAccess.getDefault().findTypes(null,
+						MatchRule.PREFIX, 0, Modifiers.AccNameSpace, scope,
+						null);
+				if (findTypes != null) {
+					childrenList.addAll(Arrays.asList(findTypes));
+				}
 				break;
 
 			case GROUP_FUNCTIONS:
-				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
+				IMethod[] findMethods = PhpModelAccess.getDefault()
 						.findMethods(null, MatchRule.PREFIX,
-								Modifiers.AccGlobal, 0, scope, null)));
+								Modifiers.AccGlobal, 0, scope, null);
+				if (findMethods != null) {
+					childrenList.addAll(Arrays.asList(findMethods));
+				}
 				break;
 
 			case GROUP_CONSTANTS:
-				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
-						.findFields(null, MatchRule.PREFIX,
-								Modifiers.AccConstant | Modifiers.AccGlobal, 0,
-								scope, null)));
+				IField[] findFields = PhpModelAccess.getDefault().findFields(
+						null, MatchRule.PREFIX,
+						Modifiers.AccConstant | Modifiers.AccGlobal, 0, scope,
+						null);
+				if (findFields != null) {
+					childrenList.addAll(Arrays.asList(findFields));
+				}
 				break;
 			}
 			return childrenList.toArray();
