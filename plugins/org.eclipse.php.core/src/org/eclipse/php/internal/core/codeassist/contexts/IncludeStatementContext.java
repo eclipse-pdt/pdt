@@ -75,7 +75,10 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 				this.variantLength);
 		int prefixStart = PHPTextSequenceUtilities.readForwardUntilDelim(
 				cutTextSequence, 0, new char[] { '\'', '"' });
-		return statementText.subSequence(this.variantLength + prefixStart + 1,
-				prefixEnd).toString();
+		int i = this.variantLength + prefixStart + 1;
+		if (i <= prefixEnd) {
+			return statementText.subSequence(i, prefixEnd).toString();
+		}
+		return super.getPrefix();
 	}
 }
