@@ -33,7 +33,8 @@ public class PHPHyperLink {
 			Object[] alinks = fLinks.toArray();
 			for (Object element : alinks) {
 				String linkMessage = ((HyperlinkEntry) element).getMessage();
-				if ((linkMessage.trim()).startsWith(message.trim())) {
+				if (message != null && message.length() > 0
+						&& (linkMessage.trim()).startsWith(message.trim())) {
 					return ((HyperlinkEntry) element);
 				}
 			}
