@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences.includepath;
 
+import static org.eclipse.dltk.core.IScriptProjectFilenames.BUILDPATH_FILENAME;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -222,5 +224,43 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 	private IStatus findMostSevereStatus() {
 		return StatusUtil.getMostSevere(new IStatus[] { fPathStatus,
 				fBuildPathStatus });
+	}
+
+	public void init(IScriptProject jproject, IBuildpathEntry[] buildpathEntries) {
+		fCurrScriptProject = jproject;
+		boolean projectExists = false;
+		IProject project = fCurrScriptProject.getProject();
+		projectExists = project.exists()
+				&& project.getFile(BUILDPATH_FILENAME).exists();
+		if (projectExists) {
+			if (buildpathEntries == null) {
+				buildpathEntries = fCurrScriptProject.readRawBuildpath();
+			}
+		}
+
+		List<BPListElement> exportedEntries = new ArrayList<BPListElement>();
+		List<BPListElement> allEntries = new ArrayList<BPListElement>();
+		for (int i = 0; i < buildpathEntries.length; i++) {
+			IBuildpathEntry curr = buildpathEntries[i];
+			BPListElement listElement = BPListElement.createFromExisting(curr,
+					fCurrScriptProject);
+			if (curr.isExported()
+					|| curr.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+				exportedEntries.add(listElement);
+			}
+			allEntries.add(listElement);
+		}
+		// inits the dialog field
+		fBuildPathDialogField.enableButton(project.exists());
+		fBuildPathList.setElements(allEntries);
+		fBuildPathList.setCheckedElements(exportedEntries);
+
+		fBuildPathList.selectFirstElement();
+		if (fSourceContainerPage != null) {
+			fSourceContainerPage.init(fCurrScriptProject);
+		}
+
+		initializeTimeStamps();
+		updateUI();
 	}
 }

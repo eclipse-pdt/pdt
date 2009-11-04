@@ -36,10 +36,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 
-	@Override
-	public void initPage() {
-	}
-
 	public PHPProjectWizardThirdPage(PHPProjectWizardFirstPage mainPage) {
 		super(mainPage);
 	}
