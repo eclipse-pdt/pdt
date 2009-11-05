@@ -126,8 +126,20 @@ public class FileNetworkUtility {
 				return null;
 			}
 		}
-		return SearchEngine.createSearchScope(file.getScriptProject(),
-				IDLTKSearchScope.SOURCES);
+
+		IScriptProject scriptProject = file.getScriptProject();
+		IProject[] referencingProjects = scriptProject.getProject()
+				.getReferencingProjects();
+		ArrayList<IScriptProject> scopeProjects = new ArrayList<IScriptProject>();
+		scopeProjects.add(scriptProject);
+		for (IProject referencingProject : referencingProjects) {
+			if (referencingProject.isAccessible()) {
+				scopeProjects.add(DLTKCore.create(referencingProject));
+			}
+		}
+		return SearchEngine.createSearchScope((IScriptProject[]) scopeProjects
+				.toArray(new IScriptProject[scopeProjects.size()]),
+				IDLTKSearchScope.SOURCES, PHPLanguageToolkit.getDefault());
 	}
 
 	private static void internalBuildReferencingFilesTree(Node root,
