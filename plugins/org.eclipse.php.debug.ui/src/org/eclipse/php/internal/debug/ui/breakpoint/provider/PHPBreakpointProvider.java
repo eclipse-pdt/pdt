@@ -29,7 +29,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
@@ -80,8 +80,8 @@ public class PHPBreakpointProvider implements IBreakpointProvider,
 						.toString());
 			}
 
+			// Calculate secondary ID
 			String secondaryId = null;
-
 			if (input instanceof IFileEditorInput) {
 
 			} else if (input instanceof IURIEditorInput
@@ -114,16 +114,13 @@ public class PHPBreakpointProvider implements IBreakpointProvider,
 								secondaryId);
 			}
 
-			if (!checkBreakpointExists(secondaryId, resource, lineNumber)) {
-				point = PHPDebugTarget.createBreakpoint(resource, lineNumber,
-						attributes);
+			if (findBreakpointMarker(secondaryId, resource, lineNumber) == null) {
+				point = createBreakpoint(resource, lineNumber, attributes);
 			}
 		}
-		if (point == null) {
-			// hide message after one second:
-			StatusLineMessageTimerManager.setErrorMessage(
-					PHPDebugUIMessages.ErrorCreatingBreakpoint_1, 1000, true);
-		}
+
+		showErrorMessage(point);
+
 		if (status == null) {
 			status = new Status(IStatus.OK, PHPDebugUIPlugin.getID(),
 					IStatus.OK, MessageFormat.format(
@@ -133,7 +130,13 @@ public class PHPBreakpointProvider implements IBreakpointProvider,
 		return status;
 	}
 
-	protected boolean checkBreakpointExists(String secondaryId,
+	protected void showErrorMessage(IBreakpoint point) {
+		// hide message after one second:
+		StatusLineMessageTimerManager.setErrorMessage(
+				PHPDebugUIMessages.ErrorCreatingBreakpoint_1, 1000, true);
+	}
+
+	protected IMarker findBreakpointMarker(String secondaryId,
 			IResource resource, int lineNumber) throws CoreException {
 		IMarker[] breakpoints = resource.findMarkers(
 				IBreakpoint.LINE_BREAKPOINT_MARKER, true, IResource.DEPTH_ZERO);
@@ -143,10 +146,15 @@ public class PHPBreakpointProvider implements IBreakpointProvider,
 					&& (secondaryId == null || secondaryId
 							.equals(breakpoint
 									.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY)))) {
-				return true;
+				return breakpoint;
 			}
 		}
-		return false;
+		return null;
+	}
+
+	protected IBreakpoint createBreakpoint(IResource resource, int lineNumber,
+			Map<String, String> attributes) throws CoreException {
+		return new PHPConditionalBreakpoint(resource, lineNumber, attributes);
 	}
 
 	public IResource getResource(IEditorInput input) {
