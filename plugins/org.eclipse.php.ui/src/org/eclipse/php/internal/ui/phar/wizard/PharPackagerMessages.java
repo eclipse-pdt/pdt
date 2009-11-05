@@ -346,6 +346,47 @@ public final class PharPackagerMessages extends NLS {
 
 	public static String OpenJarPackageWizardDelegate_onlyJardesc;
 
+	public static String JarPackageWizardPage_Export_Type;
+
+	public static String JarPackageWizardPage_Export_Type_phar;
+
+	public static String JarPackageWizardPage_Export_Type_zip;
+
+	public static String JarPackageWizardPage_Export_Type_tar;
+
+	public static String JarPackageWizardPage_Compress_Type;
+
+	public static String JarPackageWizardPage_Compress_Type_none;
+
+	public static String JarPackageWizardPage_Compress_Type_bz2;
+
+	public static String JarPackageWizardPage_Compress_Type_gz;
+
+	public static String JarPackageWizardPage_Compress_Type_zip;
+
+	public static String JarPackageWizardPage_PHAR_file;
+
+	public static String JarPackageWizardPage_PHAR_file_extension_tar1;
+
+	public static String JarPackageWizardPage_PHAR_file_extension_tar2;
+
+	public static String JarPackageWizardPage_PHAR_file_extension_tar3;
+
+	public static String JarPackageWizardPage_PHAR_file_extension_tar4;
+
+	public static String JarPackageWizardPage_error_exportPharnameMustBeSet;
+	
+	public static String JarPackageWizardPage_Signature_Type;
+	
+	public static String JarPackageWizardPage_Title;
+	
+	public static String JarPackageWizardPage_no;
+	
+	public static String JarPackageWizardPage_yes;
+
+	public static String JarPackageWizardPage_error_cantExportPHARIntoItself;
+	
+	public static String JarPackageWizardPage_error_StubFileNull;
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PharPackagerMessages.class);
 	}

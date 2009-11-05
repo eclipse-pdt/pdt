@@ -83,7 +83,12 @@ public class PharUIUtil {
 
 	public static boolean isInvalidPharBuildEntry(BPListElement cpentry) {
 		IBuildpathEntry entry = cpentry.getBuildpathEntry();
-		if (PHPToolkitUtil.isPharFileName(entry.getPath().toString())) {
+		return isInvalidPharBuildEntry(entry);
+		
+	}
+
+	public static boolean isInvalidPharBuildEntry(IBuildpathEntry entry) {
+		if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY && PHPToolkitUtil.isPharFileName(entry.getPath().toString())) {
 			try {
 				File pharFile = null;
 				IPath path = entry.getPath();
@@ -108,11 +113,11 @@ public class PharUIUtil {
 					return false;
 				new PharArchiveFile(pharFile);
 			} catch (IOException e) {
-				return false;
+				return true;
 			} catch (PharException e) {
 				return true;
 			} catch (CoreException e) {
-				return false;
+				return true;
 			}
 		}
 		return false;

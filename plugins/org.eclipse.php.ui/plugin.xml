@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?><!--
+<?eclipse version="3.0"?>
+<!--
     Copyright (c) 2009 IBM Corporation and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
@@ -1498,6 +1499,17 @@
 			state="true">
 			<enablement>
 				<objectClass name="org.eclipse.core.resources.IResource">
+				</objectClass>
+			</enablement>
+		</decorator>
+	</extension>
+	<extension point="org.eclipse.ui.decorators">
+		<decorator adaptable="true"
+			class="org.eclipse.php.ui.PHPIncludePathProblemsLabelDecorator" id="org.eclipse.php.ui.includepath.problemsDecorator"
+			label="%decorator.label.0" lightweight="true" location="BOTTOM_LEFT"
+			state="true">
+			<enablement>
+				<objectClass name="org.eclipse.php.internal.core.includepath.IncludePath">
 				</objectClass>
 			</enablement>
 		</decorator>
