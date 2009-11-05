@@ -20,10 +20,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
+import org.eclipse.php.internal.core.phar.PharConstants;
+import org.eclipse.php.internal.core.phar.PharPath;
 
 /**
  * This utility implements internal PHP mechanism for searching included files.
@@ -120,6 +123,63 @@ public class PHPSearchEngine implements IIncludepathListener {
 		IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
 
 		if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+			IScriptProject scriptProject = DLTKCore.create(currentProject);
+			IProjectFragment[] projectFragments = scriptProject
+					.findProjectFragments(entry);
+
+			if (projectFragments != null && projectFragments.length > 0) {
+				if (projectFragments[0] instanceof ArchiveProjectFragment) {
+					ArchiveProjectFragment apf = (ArchiveProjectFragment) projectFragments[0];
+					boolean external = false;
+					IPath apfp = apf.getPath();
+					if (EnvironmentPathUtils.isFull(apfp)) {
+						apfp = EnvironmentPathUtils.getLocalPath(apfp);
+						external = true;
+					}
+					PharPath pharPath = PharPath.getPharPath(new Path(path));
+					if (pharPath != null) {
+						if (external
+								&& apfp
+										.equals(new Path(pharPath.getPharName()))
+								|| !external
+								&& apfp.lastSegment().equals(
+										new Path(pharPath.getPharName())
+												.lastSegment())) {
+							if (pharPath.isPhar()) {
+								final String stubName = PharConstants.STUB_PATH;
+								pharPath.setFolder(new Path(stubName)
+										.removeLastSegments(1).toString());
+								pharPath.setFile(new Path(stubName)
+										.lastSegment());
+							}
+							IScriptFolder scriptFolder = apf
+									.getScriptFolder(new Path(pharPath
+											.getFolder()));
+							try {
+								IModelElement[] children = scriptFolder
+										.getChildren();
+								if (children != null && children.length > 0) {
+									for (int i = 0; i < children.length; i++) {
+										if (((ISourceModule) children[i])
+												.getElementName().equals(
+														pharPath.getFile())) {
+											return new IncludedPharFileResult(
+													scriptFolder,
+													(ISourceModule) children[i]);
+										}
+									}
+
+								}
+							} catch (ModelException e) {
+								PHPCorePlugin.log(e);
+								return null;
+							}
+						}
+					}
+				}
+
+			}
+
 			File entryDir = entryPath.toFile();
 			File file = new File(entryDir, path);
 			if (file.exists()) {
@@ -325,6 +385,17 @@ public class PHPSearchEngine implements IIncludepathListener {
 
 		public IProjectFragment[] getProjectFragments() {
 			return projectFragments;
+		}
+	}
+
+	/**
+	 * Result for included file (from Include Path)
+	 */
+	public static class IncludedPharFileResult extends
+			Result<IScriptFolder, ISourceModule> {
+		public IncludedPharFileResult(IScriptFolder container,
+				ISourceModule file) {
+			super(container, file);
 		}
 	}
 
