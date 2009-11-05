@@ -268,11 +268,9 @@ public class PharUtil {
 	// if the length is too length,it will not skip that long
 	public static void skip(BufferedInputStream bis, long length)
 			throws IOException {
-		// TODO Auto-generated method stub
 		long n;
 		while ((n = bis.skip(length)) != 0) {
 			length = length - n;
 		}
 	}
-
 }

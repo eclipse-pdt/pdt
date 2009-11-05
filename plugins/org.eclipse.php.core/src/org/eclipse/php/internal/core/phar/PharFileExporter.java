@@ -10,14 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phar;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -25,42 +21,61 @@ import org.eclipse.core.runtime.CoreException;
 
 public class PharFileExporter extends AbstractFileExporter {
 	PharBufferedOutputStream outputStream;
-	// PharData pharData;
-	Set<IResource> exportedField;
+	Set<File> exportedField;
 
 	public PharFileExporter(PharPackage pharPackage) throws IOException {
 		super(pharPackage);
 		outputStream = new PharBufferedOutputStream(fileContentStream,
 				pharPackage);
-		exportedField = new HashSet<IResource>();
+		exportedField = new HashSet<File>();
 	}
 
 	public void finished() throws IOException {
-
 		outputStream.close();
-		// super.finished();
 	}
 
 	/**
-	 * Write the contents of the file to the tar archive.
+	 * Write the passed resource to the current archive.
 	 * 
-	 * @param entry
-	 * @param contents
+	 * @param resource
+	 *            org.eclipse.core.resources.IFile
+	 * @param destinationPath
+	 *            java.lang.String
 	 * @exception java.io.IOException
 	 * @exception org.eclipse.core.runtime.CoreException
 	 */
-	private void write(PharAchiveOutputEntry entry, IFile contents)
+	public void write(IFile resource, String destinationPath)
 			throws IOException, CoreException {
-		if (exportedField.contains(contents))
-			return;
-		exportedField.add(contents);
-		final URI location = contents.getLocationURI();
-		if (location == null) {
-			throw new FileNotFoundException(contents.getFullPath().toOSString());
+
+		write(resource.getLocation().toFile(), destinationPath);
+	}
+
+	public void write(File file, String destinationPath) throws IOException,
+			CoreException {
+
+		PharAchiveOutputEntry newEntry = new PharAchiveOutputEntry(
+				destinationPath);
+		newEntry.setMethod(pharPackage.getCompressType());
+		if (file.lastModified() != IResource.NULL_STAMP) {
+			newEntry.setTime(file.lastModified() / 1000);
 		}
 
-		InputStream contentStream = contents.getContents(false);
-		entry.setSize(EFS.getStore(location).fetchInfo().getLength());
+		write(newEntry, file);
+	}
+
+	private void write(PharAchiveOutputEntry entry, File file)
+			throws IOException, CoreException {
+		if (exportedField.contains(file))
+			return;
+		exportedField.add(file);
+		// final URI location = contents.getLocationURI();
+		if (!file.exists()) {
+			throw new FileNotFoundException(file.getAbsolutePath());
+		}
+
+		InputStream contentStream = new BufferedInputStream(
+				new FileInputStream(file));
+		entry.setSize(file.length());
 		outputStream.putNextEntry(entry);
 		try {
 			int n;
@@ -77,29 +92,6 @@ public class PharFileExporter extends AbstractFileExporter {
 		outputStream.closeEntry();
 	}
 
-	/**
-	 * Write the passed resource to the current archive.
-	 * 
-	 * @param resource
-	 *            org.eclipse.core.resources.IFile
-	 * @param destinationPath
-	 *            java.lang.String
-	 * @exception java.io.IOException
-	 * @exception org.eclipse.core.runtime.CoreException
-	 */
-	public void write(IFile resource, String destinationPath)
-			throws IOException, CoreException {
-
-		PharAchiveOutputEntry newEntry = new PharAchiveOutputEntry(
-				destinationPath);
-		newEntry.setMethod(pharPackage.getCompressType());
-		if (resource.getLocalTimeStamp() != IResource.NULL_STAMP) {
-			newEntry.setTime(resource.getLocalTimeStamp() / 1000);
-		}
-
-		write(newEntry, resource);
-	}
-
 	public void writeStub(IStub stub) throws IOException, CoreException {
 		outputStream.writeStub(stub);
 	}
@@ -107,30 +99,7 @@ public class PharFileExporter extends AbstractFileExporter {
 	public void write(IFolder resource, String destinationPath)
 			throws IOException, CoreException {
 
-		PharAchiveOutputEntry newEntry = new PharAchiveOutputEntry(
-				destinationPath);
-		newEntry.setMethod(pharPackage.getCompressType());
-		if (resource.getLocalTimeStamp() != IResource.NULL_STAMP) {
-			newEntry.setTime(resource.getLocalTimeStamp() / 1000);
-		}
-
-		write(newEntry, resource);
-	}
-
-	private void write(PharAchiveOutputEntry entry, IFolder contents)
-			throws IOException {
-		if (exportedField.contains(contents))
-			return;
-		exportedField.add(contents);
-		final URI location = contents.getLocationURI();
-		if (location == null) {
-			throw new FileNotFoundException(contents.getFullPath().toOSString());
-		}
-
-		entry.setSize(0);
-		outputStream.putNextEntry(entry);
-
-		outputStream.closeEntry();
+		write(resource.getLocation().toFile(), destinationPath);
 	}
 
 	public void writeSignature() throws IOException {

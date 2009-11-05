@@ -30,9 +30,23 @@ public class PharConstants {
 	public static final byte[] Default_Global_Bitmap = { 0, 0, 0, 0 };
 	public static final String PHAR_PREFIX = "phar:";
 	public static final String STUB_PATH = ".phar/stub.php";
+	public static final String STUB_NAME = "stub.php";
 	public static final String SIGNATURE_PATH = ".phar/signature.php";
 
 	public static final byte R = '\r';
 	public static final byte N = '\n';
 	public static final byte Underline = '_';
+	
+	public static final String EMPTY_STRING = "";
+	public static final String DOT = ".";
+	public static final String SPLASH = "/";
+	public static final String DOUBLE_SPLASH = "//";
+	public static final String PHAR_EXTENSION = "phar";
+	public static final String PHAR_EXTENSION_WITH_DOT = ".phar";
+	public static final String PHAR_EXTENSION_ZIP = "zip";
+	public static final String PHAR_EXTENSION_TAR1 = "tar";
+	public static final String PHAR_EXTENSION_TAR2 = ".tar.gz";
+	public static final String PHAR_EXTENSION_TAR3 = "tar.gz";
+	public static final String PHAR_EXTENSION_TAR4 = ".tar.bz2";
+	public static final String PHAR_EXTENSION_TAR5 = "tar.bz2";
 }

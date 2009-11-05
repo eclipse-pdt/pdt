@@ -16,7 +16,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ArchiveFolder;
+import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.internal.core.ScriptFolder;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -27,6 +29,8 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.IncludeStatementContext;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
+import org.eclipse.php.internal.core.phar.PharConstants;
+import org.eclipse.php.internal.core.phar.PharPath;
 
 /**
  * This strategy completes resources (both folders and files) that are available
@@ -103,7 +107,8 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 			throws ModelException {
 		switch (((IBuildpathEntry) entry).getEntryKind()) {
 		case IBuildpathEntry.BPE_CONTAINER:
-				final IProjectFragment[] findProjectFragments = project.findProjectFragments((IBuildpathEntry) entry);
+			final IProjectFragment[] findProjectFragments = project
+					.findProjectFragments((IBuildpathEntry) entry);
 			for (IProjectFragment projectFragment : findProjectFragments) {
 
 				// add folders
@@ -153,39 +158,123 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 			final IProjectFragment[] findProjectFragments1 = project
 					.findProjectFragments((IBuildpathEntry) entry);
 			for (IProjectFragment projectFragment : findProjectFragments1) {
+				if (projectFragment instanceof ArchiveProjectFragment) {
+					ArchiveProjectFragment apf = (ArchiveProjectFragment) projectFragment;
+					IPath path = apf.getPath();
+					boolean external = false;
+					if (EnvironmentPathUtils.isFull(path)) {
+						path = EnvironmentPathUtils.getLocalPath(path);
+						external = true;
+					}
 
-				// add folders
-				IModelElement[] children = projectFragment.getChildren();
-				for (IModelElement element : children) {
-					if (element instanceof ArchiveFolder) {
-						final IPath relative = ((ArchiveFolder) element)
-								.getRelativePath();
-						if (relative.segmentCount() != 0
-								&& !relative.toString().equals(".phar")//exclude the .phar folder
-								&& isLastSegmantPrefix(lastSegmant, relative)
-								&& isPathPrefix(prefixPathFolder, relative)) {
+					IPath pharPath = null;
+					if (external) {
+						pharPath = new Path(PharConstants.PHAR_PREFIX
+								+ PharConstants.DOUBLE_SPLASH + path.toString());
+					} else {
+						pharPath = new Path(PharConstants.PHAR_PREFIX
+								+ PharConstants.SPLASH + path.toString());
+					}
+
+					// pharPath = transferToRelativePath(pharPath);
+					if (prefixPathFolder.segmentCount() == 0) {
+						// if a phar is not external(in workspace)
+						// it will not shown in the code assist
+						// if want to show it remove the if condition below
+						if (external) {
+							reporter.reportResource(apf, pharPath,
+									PharConstants.EMPTY_STRING, replaceRange);
+						}
+
+					} else {
+						if (!PharConstants.PHAR_PREFIX.equals(prefixPathFolder
+								.getDevice())) {
+							continue;
+						}
+						if (external) {
+							if (!pharPath.isPrefixOf(prefixPathFolder
+									.append(lastSegmant))) {
+								continue;
+							}
+						} else {
+							PharPath pp = PharPath.getPharPath(prefixPathFolder
+									.append(lastSegmant));
+							if (pp == null
+									|| !new Path(pp.getPharName())
+											.lastSegment().equals(
+													pharPath.lastSegment())) {
+								continue;
+							} else {
+								// if the current phar's name equals to the
+								// phar's name in the
+								// prefix(equals to
+								// prefixPathFolder+lastSegmant)
+								int index = prefixPathFolder
+										.append(lastSegmant).toString()
+										.indexOf(pharPath.lastSegment());
+								// adjust pharPath to right path according to
+								// prefix(equals to
+								// prefixPathFolder+lastSegmant)
+								pharPath = new Path(prefixPathFolder.append(
+										lastSegmant).toString()
+										.substring(
+												0,
+												index
+														+ pharPath
+																.lastSegment()
+																.length()));
+							}
+						}
+
+						// add folders
+						IModelElement[] children = projectFragment
+								.getChildren();
+						for (IModelElement element : children) {
+							if (element instanceof ArchiveFolder) {
+								final IPath relative = ((ArchiveFolder) element)
+										.getRelativePath();
+								IPath tempPrefixPathFolder = prefixPathFolder;
+								boolean isLastSegmantPrefix = isLastSegmantPrefix(
+										lastSegmant, relative);
+								if (lastSegmant.toString().endsWith(
+										PharConstants.PHAR_EXTENSION_WITH_DOT)) {
+									isLastSegmantPrefix = true;
+									tempPrefixPathFolder = prefixPathFolder
+											.append(lastSegmant);
+								}
+								IPath fullPath = pharPath.append(relative);
+								if (relative.segmentCount() != 0
+										&& !relative
+												.toString()
+												.equals(
+														PharConstants.PHAR_EXTENSION_WITH_DOT)
+										&& isLastSegmantPrefix
+										&& isPathPrefix(tempPrefixPathFolder,
+												fullPath)) {
+									reporter.reportResource(element, fullPath,
+											PharConstants.SPLASH, replaceRange);
+								}
+							}
+						}
+						IPath tempPrefixPathFolder = prefixPathFolder
+								.append(lastSegmant);
+						// }
+						// add files
+						final IScriptFolder scriptFolder = projectFragment
+								.getScriptFolder(tempPrefixPathFolder
+										.removeFirstSegments(
+												pharPath.segmentCount())
+										.setDevice(null));
+						children = scriptFolder.getChildren();
+						for (IModelElement element : children) {
+							final IPath relative = tempPrefixPathFolder
+									.append(element.getElementName());
 							reporter.reportResource(element, relative,
 									getSuffix(element), replaceRange);
 						}
 					}
 				}
 
-				// add files
-				final IScriptFolder scriptFolder = projectFragment
-						.getScriptFolder(prefixPathFolder);
-				children = scriptFolder.getChildren();
-				for (IModelElement element : children) {
-					// final IPath relative = new
-					// Path(element.getElementName());
-					final IPath relative = prefixPathFolder.append(element
-							.getElementName());
-					if (/*
-						 * relative.segmentCount() != 0 &&
-						 */isLastSegmantPrefix(lastSegmant, relative)) {
-						reporter.reportResource(element, relative,
-								getSuffix(element), replaceRange);
-					}
-				}
 			}
 			break;
 		default:

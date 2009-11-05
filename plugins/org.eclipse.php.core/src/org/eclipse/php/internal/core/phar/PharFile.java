@@ -184,7 +184,6 @@ public class PharFile {
 			signatureEntry.setSize(signatureLength);
 			signatureEntry.setCsize(signatureLength);
 			if (signatureLength < 24) {
-				// TODO corrupted signature
 				throw new PharException(Messages.Phar_Signature_Corrupted);
 			} else {
 
@@ -199,7 +198,6 @@ public class PharFile {
 						if (digest.getDigest().digest().length != signatureLength - 8
 								|| !PharUtil.checkSignature(file, digest,
 										signatureEntry.getPosition())) {
-							// TODO corrupted signature
 							throw new PharException(
 									Messages.Phar_Signature_Corrupted);
 						} else {
@@ -210,12 +208,10 @@ public class PharFile {
 					}
 				}
 				if (!found) {
-					// TODO corrupted signature
 					throw new PharException(Messages.Phar_Signature_Unsupported);
 				}
 				read(bis, buffer);
 				if (!PharUtil.byteArrayEquals(PharConstants.GBMB, buffer)) {
-					// TODO corrupted signature
 					throw new PharException(Messages.Phar_Signature_End);
 				}
 			}

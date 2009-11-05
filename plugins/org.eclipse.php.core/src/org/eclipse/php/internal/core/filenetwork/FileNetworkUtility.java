@@ -31,6 +31,7 @@ import org.eclipse.php.internal.core.model.IncludeField;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedPharFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 
@@ -330,6 +331,8 @@ public class FileNetworkUtility {
 					}
 				}
 			}
+		} else if (result instanceof IncludedPharFileResult) {
+			sourceModule = ((IncludedPharFileResult)result).getFile();
 		} else {
 			// XXX: add support for external files
 		}

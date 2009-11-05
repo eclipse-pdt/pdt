@@ -16,6 +16,8 @@ import java.util.zip.CRC32;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
+import org.eclipse.php.internal.core.phar.PharEntryBufferedRandomInputStream;
+
 /**
  * This class implements a stream filter for reading compressed data in the GZIP
  * file format.
@@ -105,8 +107,16 @@ public class GZIPInputStreamForPhar extends InflaterInputStream {
 		ensureOpen();
 		if (eos) {
 			return -1;
+		} 
+		//if reach the end and still read here will throw an exception
+		//nomally this will not happen,but it happens when run unit tests
+		//so add an isEnd method to class PharEntryBufferedRandomInputStream
+		if(in instanceof PharEntryBufferedRandomInputStream
+				&& ((PharEntryBufferedRandomInputStream)in).isEnd()){
+				len = -1;
+		}else{
+			len = super.read(buf, off, len);
 		}
-		len = super.read(buf, off, len);
 		if (len == -1) {
 			// readTrailer();
 			eos = true;

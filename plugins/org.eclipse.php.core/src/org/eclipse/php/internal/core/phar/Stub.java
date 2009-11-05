@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phar;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 
 public class Stub implements IStub {
@@ -37,8 +36,7 @@ public class Stub implements IStub {
 			os.write(PharConstants.R);
 			os.write(PharConstants.N);
 		} else {
-			InputStream contentStream = jarPackage.getStubFile().getContents(
-					false);
+			InputStream contentStream = getStubInputStream();
 			try {
 				PharUtil.checkStubVilidaty(contentStream);
 			} finally {
@@ -46,8 +44,7 @@ public class Stub implements IStub {
 					contentStream.close();
 				}
 			}
-
-			contentStream = jarPackage.getStubFile().getContents(false);
+			contentStream = getStubInputStream();
 			try {
 				int n;
 				byte[] readBuffer = new byte[4096];
@@ -61,5 +58,18 @@ public class Stub implements IStub {
 			}
 		}
 
+	}
+
+	private InputStream getStubInputStream() throws CoreException,
+			FileNotFoundException {
+		InputStream contentStream = null;
+		IFile stubFile = jarPackage.getStubFile();
+		if (stubFile.exists()) {
+			contentStream = stubFile.getContents(false);
+		} else {
+			contentStream = new BufferedInputStream(new FileInputStream(
+					jarPackage.getStubLocation().toFile()));
+		}
+		return contentStream;
 	}
 }

@@ -16,6 +16,12 @@ import java.io.InputStream;
 
 import org.eclipse.core.internal.registry.BufferedRandomInputStream;
 
+/**
+ * Wrapper for phar input tream
+ * 
+ * @author Zhao
+ * 
+ */
 public class PharEntryBufferedRandomInputStream extends InputStream {
 
 	private PharEntry pharEntry;
@@ -66,11 +72,22 @@ public class PharEntryBufferedRandomInputStream extends InputStream {
 			readLength = len;
 		}
 		currentIndex = currentIndex + readLength;
-		return bufferedRandomInputStream.read(b, off, len);
+		int result = bufferedRandomInputStream.read(b, off, len);
+		return result;
 	}
 
 	@Override
 	public void close() throws IOException {
 		bufferedRandomInputStream.close();
+	}
+
+	/**
+	 * this method is called in GZIPInputStreamForPhar see
+	 * GZIPInputStreamForPhar
+	 * 
+	 * @return
+	 */
+	public boolean isEnd() {
+		return totalLength == currentIndex;
 	}
 }
