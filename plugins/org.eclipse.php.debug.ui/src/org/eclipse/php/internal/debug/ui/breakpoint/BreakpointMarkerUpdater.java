@@ -17,7 +17,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.ui.Logger;
-import org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider;
+import org.eclipse.php.internal.debug.ui.breakpoint.provider.DefaultPHPBreakpointProvider;
 import org.eclipse.ui.texteditor.IMarkerUpdater;
 
 import com.ibm.icu.text.MessageFormat;
@@ -63,8 +63,8 @@ public class BreakpointMarkerUpdater implements IMarkerUpdater {
 		}
 		try {
 			int newLine = document.getLineOfOffset(position.offset) + 1;
-			int offset = PHPBreakpointProvider.getValidPosition(document,
-					newLine);
+			int offset = DefaultPHPBreakpointProvider.getValidPosition(
+					document, newLine);
 			// offset equals -1 means there is no valid position for this
 			// breakpoint marker
 			// and the breakpoint will delete.

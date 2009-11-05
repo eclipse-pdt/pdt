@@ -20,6 +20,7 @@
 		schema="schema/phpConsoleListeners.exsd" />
 	<extension-point id="debugServerConnectionTest" name="Debug Server Connection Test"
 		schema="schema/debugServerConnectionTest.exsd" />
+ <extension-point id="phpBreakpointProviders" name="PHP Breakpoint Provider" schema="schema/phpBreakpointProviders.exsd"/>
 	
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.eclipse.debug.ui.category.run"

@@ -31,7 +31,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
-import org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider;
+import org.eclipse.php.internal.debug.ui.breakpoint.provider.DefaultPHPBreakpointProvider;
 import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -75,15 +75,15 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				}
 				// Figure out if the selected line is a valid line to place a
 				// temporary breakpoint for the run-to-line
-				int validLinePosition = PHPBreakpointProvider.getValidPosition(
-						document, lineNumber);
+				int validLinePosition = DefaultPHPBreakpointProvider
+						.getValidPosition(document, lineNumber);
 				if (validLinePosition < 0) {
 					StatusLineMessageTimerManager.setErrorMessage(
 							PHPDebugUIMessages.CannotRunToLine, 1000, true); // hide
-																				// message
-																				// after
-																				// 1
-																				// second
+					// message
+					// after
+					// 1
+					// second
 					return;
 				} else {
 					int validLineNumber = 0;
@@ -99,10 +99,10 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 					} catch (BadLocationException ble) {
 						StatusLineMessageTimerManager.setErrorMessage(
 								PHPDebugUIMessages.CannotRunToLine, 1000, true); // hide
-																					// message
-																					// after
-																					// 1
-																					// second
+						// message
+						// after
+						// 1
+						// second
 						return;
 					}
 				}
