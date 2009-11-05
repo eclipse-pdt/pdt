@@ -103,7 +103,6 @@ public class PharUtil {
 				}
 
 				if (match) {
-					// i = i + ENDS.length;
 					if (bis.available() > 0) {
 						j = 0;
 						match = false;
@@ -119,9 +118,7 @@ public class PharUtil {
 						}
 						if (bis.available() == 0) {
 							stubHasBeenFound = match;
-						} else if (bis.available() == 2
-								&& bis.read() == PharConstants.R
-								&& bis.read() == PharConstants.N) {
+						} else if (isEndOfLine(bis)) {
 							stubHasBeenFound = match;
 						}
 					} else {
@@ -135,6 +132,21 @@ public class PharUtil {
 			PharUtil.throwIOException(Messages.Stub_Invalid);
 		}
 
+	}
+
+	private static boolean isEndOfLine(InputStream bis) throws IOException {
+		final int available = bis.available();
+		if (available == 1) {
+			final int first = bis.read();
+			return first == PharConstants.R || first == PharConstants.N;
+		}
+		if (available == 2) {
+			final int first = bis.read();
+			final int second = bis.read();
+			return first == PharConstants.R && second == PharConstants.N
+					|| first == PharConstants.N && second == PharConstants.R;
+		}
+		return false;
 	}
 
 	private static void throwIOException(String string) throws IOException {

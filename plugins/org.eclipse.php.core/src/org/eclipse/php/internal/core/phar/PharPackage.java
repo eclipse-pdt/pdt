@@ -99,15 +99,8 @@ public class PharPackage {
 	}
 
 	public boolean isStubGenerated() {
-		// if(stubLocation == null || !stubLocation.toFile().exists())
-		// return true;
-		// return false;
 		return stubGenerated;
 	}
-
-	// public boolean isStubSaved() {
-	// return false;
-	// }
 
 	public int getExportType() {
 		return exportType;
