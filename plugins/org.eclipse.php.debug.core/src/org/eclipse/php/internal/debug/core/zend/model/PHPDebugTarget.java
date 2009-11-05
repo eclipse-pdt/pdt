@@ -552,49 +552,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		suspended(detail);
 	}
 
-	/**
-	 * Creates a breakpoint
-	 * 
-	 * @param resource
-	 *            File resource to add breakpoint
-	 * @param lineNumber
-	 *            Line Number to add breakpoint
-	 * 
-	 */
-	public static IBreakpoint createBreakpoint(IResource resource,
-			int lineNumber) throws CoreException {
-
-		return createBreakpoint(resource, lineNumber,
-				new HashMap<String, String>(10));
-	}
-
-	/**
-	 * Creates a breakpoint
-	 * 
-	 * @param resource
-	 *            File resource to add breakpoint
-	 * @param lineNumber
-	 *            Line Number to add breakpoint
-	 * @param attributes
-	 *            java.util.Map of attributes to add to breakpoint
-	 * 
-	 */
-	public static IBreakpoint createBreakpoint(IResource resource,
-			int lineNumber, Map<String, String> attributes)
-			throws CoreException {
-		IBreakpoint point = null;
-		try {
-			point = new PHPConditionalBreakpoint(resource, lineNumber,
-					attributes);
-		} catch (CoreException e1) {
-			Logger
-					.logException("PHPDebugTarget: error creating breakpoint",
-							e1);
-			throw e1;
-		}
-		return point;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
