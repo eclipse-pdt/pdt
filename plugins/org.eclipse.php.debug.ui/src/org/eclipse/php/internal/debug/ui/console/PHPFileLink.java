@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.ui.console.FileLink;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
@@ -81,8 +82,13 @@ public class PHPFileLink implements IHyperlink {
 	protected void openElementInEditor(Object element) throws CoreException {
 		Assert.isNotNull(element);
 
-		IEditorInput input = org.eclipse.dltk.internal.ui.editor.EditorUtility
-				.getEditorInput(element);
+		IEditorInput input = null;
+		if (element instanceof IModelElement) {
+			input = EditorUtility.getEditorInput((IModelElement) element);
+		} else {
+			input = org.eclipse.dltk.internal.ui.editor.EditorUtility
+					.getEditorInput(element);
+		}
 		if (input == null) {
 			return;
 		}

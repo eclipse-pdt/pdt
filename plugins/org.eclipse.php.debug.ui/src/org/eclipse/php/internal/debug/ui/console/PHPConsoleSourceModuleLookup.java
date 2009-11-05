@@ -23,6 +23,11 @@ import org.eclipse.dltk.internal.core.Model;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.ProjectFragment;
 import org.eclipse.dltk.internal.core.util.Util;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 
 public class PHPConsoleSourceModuleLookup {
 
@@ -49,6 +54,21 @@ public class PHPConsoleSourceModuleLookup {
 	}
 
 	public ISourceModule findSourceModuleByLocalPath(final IPath path) {
+		NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
+				.findEditorInput(path);
+		if (nonExistingEditorInput != null) {
+			IWorkbenchPage activePage = PHPUiPlugin.getActivePage();
+			if (activePage != null) {
+				IEditorPart editor = activePage
+						.findEditor(nonExistingEditorInput);
+				if (editor instanceof PHPStructuredEditor) {
+					return (ISourceModule) ((PHPStructuredEditor) editor)
+							.getModelElement();
+				}
+			}
+			return null;
+		}
+
 		final boolean isFullPath = EnvironmentPathUtils.isFull(path);
 		final IProject[] projects = getAllProjects();
 		final IPath[] enclosingProjectsAndZips = scope
