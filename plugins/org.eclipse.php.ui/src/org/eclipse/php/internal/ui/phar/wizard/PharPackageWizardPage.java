@@ -62,7 +62,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 
 	private UntypedListener fUntypedListener = new UntypedListener();
 
-	private static final String PAGE_NAME = "PharPackageWizardPage"; //$NON-NLS-1$
+	private static final String SPLASH1 = "/"; //$NON-NLS-1$
+	private static final String SPLASH2 = "\\"; //$NON-NLS-1$
+	private static final String PAGE_NAME = PharPackagerMessages.JarPackageWizardPage_Title; //$NON-NLS-1$
 	private static final String STORE_EXPORT_TYPE = PAGE_NAME + ".EXPORT_TYPE"; //$NON-NLS-1$
 	private static final String STORE_COMPRESS_TYPE = PAGE_NAME
 			+ ".COMPRESS_TYPE"; //$NON-NLS-1$
@@ -76,7 +78,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			+ ".INCLUDE_DIRECTORY_ENTRIES"; //$NON-NLS-1$
 	private final String fStoreDestinationNamesId = PAGE_NAME
 			+ ".DESTINATION_NAMES_ID"; //$NON-NLS-1$
-
+	private final String EMPTYSTRING = ""; //$NON-NLS-1$
 	private IStructuredSelection fInitialSelection;
 	private CheckboxTreeAndListGroup fInputGroup;
 
@@ -186,7 +188,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			signatureTypeGroup.setLayout(layout);
 
 			Label label = new Label(signatureTypeGroup, SWT.NONE);
-			label.setText("Signature Type");
+			label.setText(PharPackagerMessages.JarPackageWizardPage_Signature_Type);
 			label.setLayoutData(new GridData(
 					GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.CENTER,
 					false, false, Digest.DIGEST_MAP.size(), 1));
@@ -323,8 +325,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 	}
 
 	private void setZipExportType() {
-		noneCompressTypePhar.setText("no");
-		zlibCompressTypePhar.setText("yes");
+		noneCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_no);
+		zlibCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_yes);
 		bzipCompressTypePhar.setVisible(false);
 	}
 
@@ -443,6 +445,10 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 				setErrorMessage(PharPackagerMessages.JarManifestWizardPage_error_onlyOneManifestMustBeSelected);
 			else {
 				//				setErrorMessage(""); //$NON-NLS-1$
+				if(resources[0] instanceof ISourceModule){
+					ISourceModule sm = (ISourceModule)resources[0];
+					resources[0] = sm.getResource();
+				}
 				pharData.setStubLocation(((IResource) resources[0])
 						.getFullPath());
 				fManifestFileText
@@ -477,10 +483,10 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			public IStatus validate(Object[] selection) {
 				StatusInfo res = new StatusInfo();
 				// only single selection
-				if (selection.length == 1 && (selection[0] instanceof IFile))
+				if (selection.length == 1 && (selection[0] instanceof IFile || selection[0] instanceof ISourceModule))
 					res.setOK();
-				else
-					res.setError(""); //$NON-NLS-1$
+//				else
+//					res.setError(""); //$NON-NLS-1$
 				return res;
 			}
 		});
@@ -572,8 +578,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		fInputGroup.getTree().addListener(SWT.MouseUp, this);
 		fInputGroup.getTable().addListener(SWT.MouseUp, this);
 
-		setAccessibilityText(fInputGroup.getTree(), "");
-		setAccessibilityText(fInputGroup.getTable(), "");
+//		setAccessibilityText(fInputGroup.getTree(), "");
+//		setAccessibilityText(fInputGroup.getTable(), "");
 
 		ICheckStateListener listener = new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -607,23 +613,23 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			exportTypeGroup.setLayout(layout);
 
 			Label label = new Label(exportTypeGroup, SWT.NONE);
-			label.setText("Export Type");
+			label.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type);
 			label.setLayoutData(new GridData(
 					GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.CENTER,
 					false, false, 3, 1));
 
 			pharCompressRadio = new Button(exportTypeGroup, SWT.RADIO
 					| SWT.LEFT);
-			pharCompressRadio.setText("phar");
+			pharCompressRadio.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type_phar);
 			// pharCompressRadio.setSelection(true);
 			pharCompressRadio.addListener(SWT.Selection, this);
 
 			zipCompressRadio = new Button(exportTypeGroup, SWT.RADIO | SWT.LEFT);
-			zipCompressRadio.setText("zip");
+			zipCompressRadio.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type_zip);
 			zipCompressRadio.addListener(SWT.Selection, this);
 
 			tarCompressRadio = new Button(exportTypeGroup, SWT.RADIO | SWT.LEFT);
-			tarCompressRadio.setText("tar");
+			tarCompressRadio.setText(PharPackagerMessages.JarPackageWizardPage_Export_Type_tar);
 			tarCompressRadio.addListener(SWT.Selection, this);
 
 		}
@@ -639,25 +645,25 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			compressTypeGroup.setLayout(layout);
 
 			Label label = new Label(exportTypeGroup, SWT.NONE);
-			label.setText("Compress Type");
+			label.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type);
 			label.setLayoutData(new GridData(
 					GridData.HORIZONTAL_ALIGN_BEGINNING, GridData.CENTER,
 					false, false, 3, 1));
 
 			noneCompressTypePhar = new Button(compressTypeGroup, SWT.RADIO
 					| SWT.LEFT);
-			noneCompressTypePhar.setText("none");
+			noneCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_none);
 			// noneCompressTypePhar.setSelection(true);
 			noneCompressTypePhar.addListener(SWT.Selection, this);
 
 			bzipCompressTypePhar = new Button(compressTypeGroup, SWT.RADIO
 					| SWT.LEFT);
-			bzipCompressTypePhar.setText("bz2");
+			bzipCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_bz2);
 			bzipCompressTypePhar.addListener(SWT.Selection, this);
 
 			zlibCompressTypePhar = new Button(compressTypeGroup, SWT.RADIO
 					| SWT.LEFT);
-			zlibCompressTypePhar.setText("yes");
+			zlibCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_yes);
 			zlibCompressTypePhar.addListener(SWT.Selection, this);
 			zlibCompressTypePhar.setLayoutData(new GridData(
 					GridData.FILL_HORIZONTAL, GridData.CENTER, true, false, 1,
@@ -665,7 +671,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		}
 
 		fOverwriteCheckbox = new Button(optionsGroup, SWT.CHECK | SWT.LEFT);
-		fOverwriteCheckbox.setText("Overwrite existing files without warning");
+		fOverwriteCheckbox.setText(PharPackagerMessages.JarPackageWizardPage_overwrite_text);
 		fOverwriteCheckbox.addListener(SWT.Selection, this);
 
 		// fIncludeDirectoryEntriesCheckbox = new Button(optionsGroup, SWT.CHECK
@@ -687,13 +693,13 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		destinationSelectionGroup.setLayoutData(new GridData(
 				GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL));
 
-		String label = "PHAR file";
-		if (label != null) {
+		String label = PharPackagerMessages.JarPackageWizardPage_PHAR_file;
+//		if (label != null) {
 			new Label(destinationSelectionGroup, SWT.NONE).setText(label);
-		} else {
-			layout.marginWidth = 0;
-			layout.marginHeight = 0;
-		}
+//		} else {
+//			layout.marginWidth = 0;
+//			layout.marginHeight = 0;
+//		}
 
 		// destination name entry field
 		fDestinationNamesCombo = new Combo(destinationSelectionGroup,
@@ -704,12 +710,12 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
 				| GridData.GRAB_HORIZONTAL);
 		data.widthHint = SIZING_TEXT_FIELD_WIDTH;
-		data.horizontalSpan = label == null ? 2 : 1;
+//		data.horizontalSpan = label == null ? 2 : 1;
 		fDestinationNamesCombo.setLayoutData(data);
 
-		if (label == null) {
-			setAccessibilityText(fDestinationNamesCombo, "");
-		}
+//		if (label == null) {
+//			setAccessibilityText(fDestinationNamesCombo, "");
+//		}
 
 		// destination browse button
 		fDestinationBrowseButton = new Button(destinationSelectionGroup,
@@ -767,26 +773,26 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 		if (path.segmentCount() > 0 && ensureTargetFileIsValid(path.toFile())
 				&& path.getFileExtension() == null) {
 			if (pharCompressRadio.getSelection()) {
-				if (!"phar".equals(path.getFileExtension())) {
-					path = path.addFileExtension("phar");
+				if (!PharConstants.PHAR_EXTENSION.equals(path.getFileExtension())) {
+					path = path.addFileExtension(PharConstants.PHAR_EXTENSION);
 				}
 			} else if (zipCompressRadio.getSelection()) {
-				if (!"zip".equals(path.getFileExtension())) {
-					path = path.addFileExtension("zip");
+				if (!PharConstants.PHAR_EXTENSION_ZIP.equals(path.getFileExtension())) {
+					path = path.addFileExtension(PharConstants.PHAR_EXTENSION_ZIP);
 				}
 			} else if (tarCompressRadio.getSelection()) {
 				String fileName = path.lastSegment();
 				if (noneCompressTypePhar.getSelection()) {
-					if (!"tar".equals(path.getFileExtension())) {
-						path = path.addFileExtension("tar");
+					if (!PharConstants.PHAR_EXTENSION_TAR1.equals(path.getFileExtension())) {
+						path = path.addFileExtension(PharConstants.PHAR_EXTENSION_TAR1);
 					}
 				} else if (zlibCompressTypePhar.getSelection()) {
-					if (!fileName.endsWith(".tar.gz")) {
-						path = path.addFileExtension("tar.gz");
+					if (!fileName.endsWith(PharConstants.PHAR_EXTENSION_TAR2)) {
+						path = path.addFileExtension(PharConstants.PHAR_EXTENSION_TAR3);
 					}
 				} else if (bzipCompressTypePhar.getSelection()) {
-					if (!fileName.endsWith(".tar.bz2")) {
-						path = path.addFileExtension("tar.bz2");
+					if (!fileName.endsWith(PharConstants.PHAR_EXTENSION_TAR4)) {
+						path = path.addFileExtension(PharConstants.PHAR_EXTENSION_TAR5);
 					}
 				}
 
@@ -871,8 +877,9 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 				setMessage(null);
 			return false;
 		}
-		if (pharData.getAbsolutePharLocation().toString().endsWith("/")) { //$NON-NLS-1$
-			setErrorMessage("the name of the phar must be set");
+		if (pharData.getAbsolutePharLocation().toString().endsWith(SPLASH1)
+				|| pharData.getAbsolutePharLocation().toString().endsWith(SPLASH2)) { //$NON-NLS-1$
+			setErrorMessage(PharPackagerMessages.JarPackageWizardPage_error_exportDestinationMustNotBeDirectory);
 			fDestinationNamesCombo.setFocus();
 			return false;
 		}
@@ -896,7 +903,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 				// test if included
 				if (contains(asResources(pharData.getElements()),
 						(IFile) resource)) {
-					setErrorMessage("the phar should not be include in the resource that will be exported");
+					setErrorMessage(PharPackagerMessages.JarPackageWizardPage_error_cantExportPHARIntoItself);
 					return false;
 				}
 			}
@@ -948,13 +955,13 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 				pharData.setStubLocation(new Path(fManifestFileText.getText()));
 			} else {
 				pharData.setStubLocation(new Path(""));
-				setErrorMessage("Manifest file must not be null");
+				setErrorMessage(PharPackagerMessages.JarPackageWizardPage_error_StubFileNull);
 			}
 		}
 
 		if (pharCompressRadio.getSelection()) {
-			noneCompressTypePhar.setText("none");
-			zlibCompressTypePhar.setText("gz");
+			noneCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_none);
+			zlibCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_gz);
 			bzipCompressTypePhar.setVisible(true);
 
 			pharData.setExportType(PharConstants.PHAR);
@@ -970,8 +977,8 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			}
 
 		} else if (tarCompressRadio.getSelection()) {
-			noneCompressTypePhar.setText("none");
-			zlibCompressTypePhar.setText("gz");
+			noneCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_none);
+			zlibCompressTypePhar.setText(PharPackagerMessages.JarPackageWizardPage_Compress_Type_gz);
 			bzipCompressTypePhar.setVisible(true);
 
 			pharData.setExportType(PharConstants.TAR);
@@ -1000,13 +1007,13 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 	protected boolean ensureTargetFileIsValid(File targetFile) {
 		if (targetFile.exists() && targetFile.isDirectory()
 				&& fDestinationNamesCombo.getText().length() > 0) {
-			setErrorMessage("target File should not be a directory");
+			setErrorMessage(PharPackagerMessages.JarPackageWizardPage_error_exportDestinationMustNotBeDirectory);
 			fDestinationNamesCombo.setFocus();
 			return false;
 		}
 		if (targetFile.exists()) {
 			if (!targetFile.canWrite()) {
-				setErrorMessage("target File can not be overwrited");
+				setErrorMessage(PharPackagerMessages.JarPackageWizardPage_error_jarFileExistsAndNotWritable);
 				fDestinationNamesCombo.setFocus();
 				return false;
 			}
