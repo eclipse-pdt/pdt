@@ -1,105 +1,122 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.console;
 
-import java.io.File;
-
-import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.ui.console.FileLink;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.filesystem.FileStoreFactory;
-import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
-import org.eclipse.php.internal.debug.ui.Logger;
-import org.eclipse.php.internal.ui.PHPUiConstants;
-import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
+import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.console.IHyperlink;
-import org.eclipse.ui.ide.FileStoreEditorInput;
-import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.ui.ide.IDE;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
- *
+ * 
  * @author seva
- *
- * A version of {@link FileLink} which also supports external resources
- *
+ * 
+ *         A version of {@link FileLink} which also supports external resources
+ * 
  */
 public class PHPFileLink implements IHyperlink {
 
-	private Object fFile;
-	private int fFileOffset;
-	private int fFileLength;
-	private int fFileLineNumber;
+	protected String fileName;
+	protected int lineNumber;
 
 	/**
 	 * Constructs a hyperlink to the specified file.
-	 *
-	 * @param file the file to open when activated
-	 * <code>null</code> if the default editor should be used
-	 * @param fileOffset the offset in the file to select when activated, or -1
-	 * @param fileLength the length of text to select in the file when activated
-	 * or -1
-	 * @param fileLineNumber the line number to select in the file when
-	 * activated, or -1
+	 * 
+	 * @param fileName
+	 *            The file name to open
+	 * @param lineNumber
+	 *            The line number to select
 	 */
-	public PHPFileLink(Object file, int fileOffset, int fileLength, int fileLineNumber) {
-		fFile = file;
-		fFileOffset = fileOffset;
-		fFileLength = fileLength;
-		fFileLineNumber = fileLineNumber;
+	public PHPFileLink(String fileName, int lineNumber) {
+		this.fileName = fileName;
+		this.lineNumber = lineNumber;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.debug.ui.console.IConsoleHyperlink#linkActivated()
-	 */
 	public void linkActivated() {
-		IEditorPart editorPart = null;
-		DOMModelForPHP domModel = null;
 		try {
-			if (fFile instanceof File) {
-				FileStoreEditorInput editorInput = new FileStoreEditorInput(new LocalFile((File) fFile));
-				editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_EDITOR_ID, false);
-			} else if (fFile instanceof ExternalFileWrapper) {
-				ExternalFileWrapper externalFile = (ExternalFileWrapper) fFile;
-				IPath externalPath = externalFile.getFullPath();
-				if (externalPath.segmentCount() > 1 && externalPath.segment(externalPath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
-					NonExistingPHPFileEditorInput editorInput = new NonExistingPHPFileEditorInput(externalPath);
-					editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_UNTITLED_EDITOR_ID, false);
-				} else {
-					FileStoreEditorInput editorInput = new FileStoreEditorInput(FileStoreFactory.createFileStore(new File(externalFile.getFullPath().toOSString())));
-					editorPart = EditorUtility.openInEditor(editorInput, PHPUiConstants.PHP_EDITOR_ID, false);
-				}
-			} else if (fFile instanceof IFile) {
-				editorPart = EditorUtility.openInEditor(new FileEditorInput((IFile) fFile), PHPUiConstants.PHP_EDITOR_ID, false);
-			} else {
-				editorPart = EditorUtility.openInEditor(fFile, false);
+			Object element = findSourceModule(fileName);
+			if (element != null) {
+				openElementInEditor(element);
+				return;
 			}
-			if (editorPart != null && fFileLineNumber > 0 && editorPart instanceof StructuredTextEditor) {
-				if (fFileOffset < 0) {
-					IRegion region = ((StructuredTextEditor) editorPart).getTextViewer().getDocument().getLineInformation(fFileLineNumber - 1);
-					fFileOffset = region.getOffset();
-					fFileLength = region.getLength();
-				}
+			if (EditorUtility.openLocalFile(fileName, lineNumber) != null) {
+				return;
 			}
-		} catch (PartInitException e) {
-			Logger.logException(e);
-		} catch (BadLocationException e) {
-			Logger.logException(e);
-		} catch (NullPointerException npe) {
-			Logger.logException(npe);
-		} finally {
-			if (editorPart != null) {
-				EditorUtility.revealInEditor(editorPart, fFileOffset, fFileLength);
-				if (domModel != null) {
-					domModel.releaseFromRead();
-				}
-			}
+		} catch (CoreException e) {
+			PHPDebugUIPlugin.log(e);
 		}
+		// did not find source
+		MessageDialog.openInformation(PHPDebugUIPlugin
+				.getActiveWorkbenchShell(), "Information", MessageFormat
+				.format("Source not found for {0}", new Object[] { fileName }));
+	}
+
+	protected void openElementInEditor(Object element) throws CoreException {
+		Assert.isNotNull(element);
+
+		IEditorInput input = null;
+		if (element instanceof IModelElement) {
+			input = EditorUtility.getEditorInput((IModelElement) element);
+		} else {
+			input = org.eclipse.dltk.internal.ui.editor.EditorUtility
+					.getEditorInput(element);
+		}
+		if (input == null) {
+			return;
+		}
+		IEditorDescriptor descriptor = IDE.getEditorDescriptor(input.getName());
+		IWorkbenchPage page = PHPDebugUIPlugin.getActivePage();
+		IEditorPart editor = page.openEditor(input, descriptor.getId());
+		org.eclipse.dltk.internal.ui.editor.EditorUtility.revealInEditor(
+				editor, lineNumber - 1);
+	}
+
+	/**
+	 * Finds {@link IFile} or {@link ISourceModule} matching the specified file
+	 * name
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	public static Object findSourceModule(String fileName) {
+		IPath path = Path.fromOSString(fileName);
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IFile f = root.getFileForLocation(path);
+		if (f != null) {
+			return f;
+		}
+		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
+		PHPConsoleSourceModuleLookup lookup = new PHPConsoleSourceModuleLookup(
+				toolkit);
+		return lookup.findSourceModuleByLocalPath(path);
 	}
 
 	public void linkEntered() {
