@@ -88,7 +88,11 @@ public class DefaultBindingResolver extends BindingResolver {
 
 	private ITypeBinding internalGetTypeBinding(IEvaluatedType type,
 			IModelElement modelElement) {
-		String key = IModelElement.TYPE + ":" + type.getTypeName();
+		String typeName = type.getTypeName();
+		if (typeName == null) {
+			return null;
+		}
+		String key = IModelElement.TYPE + ":" + typeName;
 		IBinding binding = bindingTables.bindingKeysToBindings.get(key);
 		if (binding == null) {
 			binding = new TypeBinding(this, type, modelElement);
@@ -99,7 +103,11 @@ public class DefaultBindingResolver extends BindingResolver {
 
 	private ITypeBinding internalGetTypeBinding(IEvaluatedType type,
 			IModelElement[] modelElements) {
-		String key = IModelElement.TYPE + ":" + type.getTypeName();
+		String typeName = type.getTypeName();
+		if (typeName == null) {
+			return null;
+		}
+		String key = IModelElement.TYPE + ":" + typeName;
 		IBinding binding = bindingTables.bindingKeysToBindings.get(key);
 		if (binding == null) {
 			binding = new TypeBinding(this, type, modelElements);
