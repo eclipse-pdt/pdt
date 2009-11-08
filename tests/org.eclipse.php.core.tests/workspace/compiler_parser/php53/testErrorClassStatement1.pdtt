@@ -4,7 +4,7 @@ Test Error Class Statement1
 <?php class A function f(){} } ?>
 --EXPECT--
 <ModuleDeclaration start="6" end="22">
-	<ClassDeclaration start="6" end="13" modifiers="" name="A">
+	<ClassDeclaration start="6" end="22" modifiers="" name="A">
 	</ClassDeclaration>
 	<Errors>
 		<ASTError start="14" end="22">
