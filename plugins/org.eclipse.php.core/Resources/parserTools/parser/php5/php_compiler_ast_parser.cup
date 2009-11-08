@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.30 2009/07/29 14:00:18 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.31 2009/11/08 13:51:40 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -771,6 +771,7 @@ unticked_class_declaration_statement ::=
 class_entry_type:modifier T_STRING:className
 {:
 	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,classNameright, classNameleft, classNameright, modifier.modifier, className, null, null, new Block(classNameright,classNameright,null), modifier.doc);
+	classDeclaration.setRecovered(true);
 	parser.addDeclarationStatement(classDeclaration);
 	parser.declarations.push(classDeclaration);
 :}
@@ -795,6 +796,7 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 	}
 
 	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.pop();
+	classDeclaration.setRecovered(false);
 	classDeclaration.setEnd(blockEndright);
 	classDeclaration.getBody().setStart(blockStartleft);
 	classDeclaration.getBody().setEnd(blockEndright);
@@ -806,6 +808,7 @@ interface_entry:start T_STRING:className
 interface_extends_list:interfaces
 {:
 	InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(startleft ,interfacesright, classNameleft, classNameright, className, interfaces, new Block(interfacesright,interfacesright,null), start);
+	interfaceDeclaration.setRecovered(true);
 	parser.declarations.push(interfaceDeclaration);
 :}
 T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
@@ -816,6 +819,7 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 	}
 
 	InterfaceDeclaration interfaceDeclaration = (InterfaceDeclaration)parser.declarations.pop();
+	interfaceDeclaration.setRecovered(false);
 	interfaceDeclaration.setEnd(blockEndright);
 	interfaceDeclaration.getBody().setStart(blockStartleft);
 	interfaceDeclaration.getBody().setEnd(blockEndright);

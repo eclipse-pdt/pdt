@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php4;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.23 2009/07/29 14:01:04 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.24 2009/11/08 13:51:41 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -643,6 +643,7 @@ unticked_class_declaration_statement ::=
 T_CLASS:modifier T_STRING:className
 {:
 	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,classNameright, classNameleft, classNameright, 0, className, null, null, new Block(classNameright,classNameright,null), modifier);
+	classDeclaration.setRecovered(true);
 	parser.addDeclarationStatement(classDeclaration);
 	parser.declarations.push(classDeclaration);
 :}
@@ -655,6 +656,7 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 	}
 
 	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.pop();
+	classDeclaration.setRecovered(false);
 	classDeclaration.setEnd(blockEndright);
 	classDeclaration.getBody().setStart(blockStartleft);
 	classDeclaration.getBody().setEnd(blockEndright);
@@ -663,6 +665,7 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 | T_CLASS:modifier T_STRING:className
 {:
 	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,classNameright, classNameleft, classNameright, 0, className, null, null, new Block(classNameright,classNameright,null), modifier);
+	classDeclaration.setRecovered(true);
 	parser.addDeclarationStatement(classDeclaration);
 	parser.declarations.push(classDeclaration);
 :}
@@ -684,6 +687,7 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 	}
 
 	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.pop();
+	classDeclaration.setRecovered(false);
 	classDeclaration.setEnd(blockEndright);
 	classDeclaration.getBody().setStart(blockStartleft);
 	classDeclaration.getBody().setEnd(blockEndright);

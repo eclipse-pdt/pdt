@@ -183,6 +183,17 @@ abstract public class AbstractASTParser extends lr_parser {
 		program.setStart(start);
 		program.setEnd(end);
 
+		// Set end offset of recovered class/interface node to the end of file
+		if (statements.size() > 0) {
+			Statement lastStatement = statements.get(statements.size() - 1);
+			if (lastStatement instanceof IRecoverable) {
+				IRecoverable recoverable = (IRecoverable) lastStatement;
+				if (recoverable.isRecovered()) {
+					lastStatement.setEnd(end);
+				}
+			}
+		}
+
 		super.unrecovered_syntax_error(cur_token);
 	}
 
@@ -211,8 +222,8 @@ abstract public class AbstractASTParser extends lr_parser {
 		}
 		if (currentText != null && currentText.length() > 0) {
 			if (currentText.equals(";")) { // This means EOF, since it's
-											// substituted by the lexer
-											// explicitly.
+				// substituted by the lexer
+				// explicitly.
 				currentText = "EOF"; //$NON-NLS-1$
 			}
 			endPosition = startPosition + currentText.length();
