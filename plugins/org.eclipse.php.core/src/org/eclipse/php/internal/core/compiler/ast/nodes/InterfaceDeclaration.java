@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import java.util.List;
@@ -12,31 +23,42 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents an interface declaration
+ * 
  * <pre>
- * <pre>e.g.<pre>
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
  * interface MyInterface { },
  * interface MyInterface extends Interface1, Interface2 {
- *	 const MY_CONSTANT = 3;
- *	 public function myFunction($a);
+ *  const MY_CONSTANT = 3;
+ *  public function myFunction($a);
  * }
  */
-public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration {
+public class InterfaceDeclaration extends TypeDeclaration implements
+		IPHPDocAwareDeclaration, IRecoverable {
 
 	private PHPDocBlock phpDoc;
+	private boolean isRecovered;
 
-	public InterfaceDeclaration(int start, int end, int nameStart, int nameEnd, String interfaceName, List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
+	public InterfaceDeclaration(int start, int end, int nameStart, int nameEnd,
+			String interfaceName, List<TypeReference> interfaces, Block body,
+			PHPDocBlock phpDoc) {
 		super(interfaceName, nameStart, nameEnd, start, end);
 
 		this.phpDoc = phpDoc;
 
-		ASTListNode parentsList = new ASTListNode();
-		for (TypeReference intface: interfaces) {
+		ASTListNode parentsList = new ASTListNode(start, end);
+		for (TypeReference intface : interfaces) {
 			parentsList.addNode(intface);
 		}
-		setSuperClasses(parentsList);
+
+		if (parentsList.getChilds().size() > 0) {
+			setSuperClasses(parentsList);
+		}
 
 		setBody(body);
-		
+
 		setModifier(Modifiers.AccInterface);
 	}
 
@@ -46,6 +68,14 @@ public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 
 	public int getKind() {
 		return ASTNodeKinds.INTERFACE_DECLARATION;
+	}
+
+	public boolean isRecovered() {
+		return isRecovered;
+	}
+
+	public void setRecovered(boolean isRecovered) {
+		this.isRecovered = isRecovered;
 	}
 
 	/**
