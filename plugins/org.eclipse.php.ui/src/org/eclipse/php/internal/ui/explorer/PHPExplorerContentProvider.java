@@ -141,7 +141,18 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					|| !(parentElement instanceof IOpenable)
 					|| parentElement instanceof ExternalProjectFragment) {
 				if (parentElement instanceof IFolder) {
-					return ((IFolder) parentElement).members();
+					IResource[] members = ((IFolder) parentElement).members();
+					ArrayList<Object> returnChlidren = new ArrayList<Object>();
+					for (IResource iResource : members) {
+						IModelElement modelElement = DLTKCore.create(iResource);
+						if (modelElement != null) {
+							returnChlidren.add(modelElement);
+						} else {
+							returnChlidren.add(iResource);
+						}
+					}
+					return (Object[]) returnChlidren
+							.toArray(new Object[returnChlidren.size()]);
 				}
 				return super.getChildren(parentElement);
 			}
