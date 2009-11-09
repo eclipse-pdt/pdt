@@ -226,6 +226,12 @@ public class CodeAssistTests extends AbstractPDTTTest {
 									expectedProposal.name)) {
 						found = true;
 						break;
+					} else if (modelElement.getElementType() == expectedProposal.type
+							&& new String(proposal.getName())
+									.equalsIgnoreCase(expectedProposal.name)) {
+						// for phar include
+						found = true;
+						break;
 					}
 				}
 				if (!found) {

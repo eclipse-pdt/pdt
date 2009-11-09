@@ -1,0 +1,9 @@
+--TEST--
+Must complete a file from the phar files
+--FILE--
+<?php
+include "phar://pear2coverage.phar/pear2coverage/SourceFile/|";
+
+?>
+--EXPECT--
+sourceModule(phar://pear2coverage.phar/pear2coverage/SourceFile/PerTest.php)

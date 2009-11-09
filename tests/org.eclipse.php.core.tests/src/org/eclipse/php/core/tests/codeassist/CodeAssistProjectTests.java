@@ -40,6 +40,7 @@ public class CodeAssistProjectTests extends AbstractProjectSuite {
 	protected static final Map<String, PHPVersion> TEST_DIRS = new HashMap<String, PHPVersion>();
 	static {
 		TEST_DIRS.put("php5", PHPVersion.PHP5);
+		TEST_DIRS.put("php53", PHPVersion.PHP5_3);
 	}
 
 	private String projectName;
@@ -133,10 +134,10 @@ public class CodeAssistProjectTests extends AbstractProjectSuite {
 					});
 				} catch (final Exception e) {
 					projectTests.addTest(new TestCase(baseName) { // dummy test
-																	// indicating
-																	// PDTT file
-																	// parsing
-																	// failure
+								// indicating
+								// PDTT file
+								// parsing
+								// failure
 								protected void runTest() throws Throwable {
 									throw e;
 								}

@@ -67,6 +67,10 @@ public class CodeAssistPdttFile extends PdttFile {
 				proposal.type = IModelElement.METHOD;
 			} else if ("field".equalsIgnoreCase(type)) {
 				proposal.type = IModelElement.FIELD;
+			} else if ("sourceModule".equalsIgnoreCase(type)) {
+				proposal.type = IModelElement.SOURCE_MODULE;
+			} else if ("archiveFolder".equalsIgnoreCase(type)) {
+				proposal.type = IModelElement.SCRIPT_FOLDER;
 			} else if ("keyword".equalsIgnoreCase(type)) {
 			} else { // wrong format
 				continue;
