@@ -1,0 +1,9 @@
+--TEST--
+Must complete archive folder from attached phar files
+--FILE--
+<?php
+include "phar://pear2coverage.phar|";
+
+?>
+--EXPECT--
+archiveFolder(phar://pear2coverage.phar/pear2coverage)
