@@ -78,8 +78,10 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 
 	protected void finishPage(IProgressMonitor monitor)
 			throws InterruptedException, CoreException {
-		fSecondPage.performFinish(monitor); // use the full progress monitor
-		fThirdPage.performFinish(monitor); // use the full progress monitor
+		if (fSecondPage != null)
+			fSecondPage.performFinish(monitor); // use the full progress monitor
+		if (fThirdPage != null)
+			fThirdPage.performFinish(monitor); // use the full progress monitor
 	}
 
 	public boolean performFinish() {
