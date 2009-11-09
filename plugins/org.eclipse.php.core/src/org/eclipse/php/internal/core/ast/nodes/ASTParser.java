@@ -202,22 +202,37 @@ public class ASTParser {
 	 * NOT THREAD SAFE IMPLEMENTATION STARTS HERE
 	 *********************************************************************************/
 	// php 5.3 analysis
-	private static final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer PHP_AST_LEXER5_3 = new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer(
-			ASTParser.EMPTY_STRING_READER);
-	private static final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser PHP_AST_PARSER5_3 = new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser(
-			PHP_AST_LEXER5_3);
+	private static org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer createEmptyLexer_53() {
+		return new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer(
+				ASTParser.EMPTY_STRING_READER);
+	}
+
+	private static org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser createEmptyParser_53() {
+		return new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser(
+				createEmptyLexer_53());
+	}
 
 	// php 5 analysis
-	private static final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer PHP_AST_LEXER5 = new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer(
-			ASTParser.EMPTY_STRING_READER);
-	private static final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser PHP_AST_PARSER5 = new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser(
-			PHP_AST_LEXER5);
+	private static org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer createEmptyLexer_5() {
+		return new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer(
+				ASTParser.EMPTY_STRING_READER);
+	}
+
+	private static org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser createEmptyParser_5() {
+		return new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser(
+				createEmptyLexer_5());
+	}
 
 	// php 4 analysis
-	private static final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer PHP_AST_LEXER4 = new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer(
-			ASTParser.EMPTY_STRING_READER);
-	private static final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser PHP_AST_PARSER4 = new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser(
-			PHP_AST_LEXER4);
+	private static org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer createEmptyLexer_4() {
+		return new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer(
+				ASTParser.EMPTY_STRING_READER);
+	}
+
+	private static org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser createEmptyParser_4() {
+		return new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser(
+				createEmptyLexer_4());
+	}
 
 	/**
 	 * @param phpCode
@@ -371,14 +386,17 @@ public class ASTParser {
 	private static lr_parser getParser(PHPVersion phpVersion, AST ast)
 			throws IOException {
 		if (PHPVersion.PHP4 == phpVersion) {
-			PHP_AST_PARSER4.setAST(ast);
-			return PHP_AST_PARSER4;
+			org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser parser = createEmptyParser_4();
+			parser.setAST(ast);
+			return parser;
 		} else if (PHPVersion.PHP5 == phpVersion) {
-			PHP_AST_PARSER5.setAST(ast);
-			return PHP_AST_PARSER5;
+			org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser parser = createEmptyParser_5();
+			parser.setAST(ast);
+			return parser;
 		} else if (PHPVersion.PHP5_3 == phpVersion) {
-			PHP_AST_PARSER5_3.setAST(ast);
-			return PHP_AST_PARSER5_3;
+			org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser parser = createEmptyParser_53();
+			parser.setAST(ast);
+			return parser;
 		} else {
 			throw new IllegalArgumentException(CoreMessages
 					.getString("ASTParser_1")
@@ -394,7 +412,7 @@ public class ASTParser {
 	 */
 	private static org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer getLexer53(
 			Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer phpAstLexer53 = ASTParser.PHP_AST_LEXER5_3;
+		final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer phpAstLexer53 = createEmptyLexer_53();
 		phpAstLexer53.yyreset(reader);
 		phpAstLexer53.resetCommentList();
 		return phpAstLexer53;
@@ -407,7 +425,7 @@ public class ASTParser {
 	 */
 	private static org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer getLexer5(
 			Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer phpAstLexer5 = ASTParser.PHP_AST_LEXER5;
+		final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer phpAstLexer5 = createEmptyLexer_5();
 		phpAstLexer5.yyreset(reader);
 		phpAstLexer5.resetCommentList();
 		return phpAstLexer5;
@@ -420,7 +438,7 @@ public class ASTParser {
 	 */
 	private static org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer getLexer4(
 			Reader reader) throws IOException {
-		final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer phpAstLexer4 = ASTParser.PHP_AST_LEXER4;
+		final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer phpAstLexer4 = createEmptyLexer_4();
 		phpAstLexer4.yyreset(reader);
 		phpAstLexer4.resetCommentList();
 		return phpAstLexer4;
