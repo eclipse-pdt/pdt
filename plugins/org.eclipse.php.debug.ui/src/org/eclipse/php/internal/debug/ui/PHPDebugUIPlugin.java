@@ -11,16 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.internal.runtime.AdapterManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -30,10 +29,13 @@ import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.internal.ui.viewers.model.InternalTreeModelViewer;
 import org.eclipse.debug.internal.ui.views.launch.LaunchView;
 import org.eclipse.debug.ui.IDebugUIConstants;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
@@ -108,6 +110,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			list.remove(propertiesFactory);
 			list.add(0, propertiesFactory);
 		}
+		// Perform a clean on the secured storage, which might contain SSH tunnels passwords that no longer being used by any of the defined launch configurations.
+		cleanSecuredStorage();
 	}
 
 	/**
@@ -253,6 +257,97 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			}
 		}
 		return project;
+	}
+
+	/*
+	 * Clean the secure storage from any SSH Tunnel definitions that are no
+	 * longer used by any of the launch configuration definitions.
+	 */
+	private void cleanSecuredStorage() {
+		Job cleanStorageJob = new Job("Cleans the PHP Tunnels Storage") {
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					// First, collect all the tunnel definitions in the launch
+					// configurations.
+					HashMap<String, List<String>> hostToUsers = new HashMap<String, List<String>>();
+					ILaunchManager launchManager = DebugPlugin.getDefault()
+							.getLaunchManager();
+					ILaunchConfigurationType configurationType = launchManager
+							.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+					ILaunchConfiguration[] configs = launchManager
+							.getLaunchConfigurations(configurationType);
+					for (ILaunchConfiguration configuration : configs) {
+						addTunnelConfiguration(configuration, hostToUsers);
+					}
+					// Then, check with the secure-storage node and remove
+					// anything that should not be there.
+					ISecurePreferences root = SecurePreferencesFactory
+							.getDefault();
+					ISecurePreferences node = root
+							.node(IPHPDebugConstants.SSH_TUNNEL_SECURE_PREF_NODE);
+					String[] listedHosts = node.childrenNames();
+					// For each host that we have in the secured storage, check
+					// that it's existing in the launch configurations and that
+					// it contains
+					// only the user names that are defined.
+					// In any other case, remove the item from the storage (a
+					// host node, or a user node).
+					for (String host : listedHosts) {
+						if (!hostToUsers.containsKey(host)) {
+							ISecurePreferences hostNode = node.node(host);
+							hostNode.removeNode();
+						} else {
+							if (node.nodeExists(host)) {
+								ISecurePreferences hostNode = node.node(host);
+								// holds the user names field in the secure
+								// preference
+								String[] usersKeys = hostNode.keys();
+								List<String> usersList = hostToUsers.get(host);
+								for (String userNode : usersKeys) {
+									if (!usersList.contains(userNode)) {
+										hostNode.remove(userNode);
+									}
+								}
+							}
+						}
+					}
+				} catch (Exception e) {
+					Logger
+							.logException(
+									"Error while cleaning up the php debug tunnels credentials from the secured storage",
+									e);
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		cleanStorageJob.setSystem(true);
+		cleanStorageJob.setPriority(Job.LONG);
+		// No rush. We can schedule it to run a few seconds after the loading.
+		cleanStorageJob.schedule(30000L);
+	}
+
+	/*
+	 * Potentially, add a tunnel configuration that exists in the given launch
+	 * configuration. If non exists, nothing is added.
+	 */
+	private void addTunnelConfiguration(ILaunchConfiguration configuration,
+			HashMap<String, List<String>> hostToUsers) throws CoreException {
+		boolean isUsingTunnel = configuration.getAttribute(
+				IPHPDebugConstants.USE_SSH_TUNNEL, false);
+		if (isUsingTunnel) {
+			String userName = configuration.getAttribute(
+					IPHPDebugConstants.SSH_TUNNEL_USER_NAME, "");
+			if (userName.length() > 0) {
+				String debugHost = PHPLaunchUtilities
+						.getDebugHost(configuration);
+				List<String> users = hostToUsers.get(debugHost);
+				if (users == null) {
+					users = new ArrayList<String>(3);
+					hostToUsers.put(debugHost, users);
+				}
+				users.add(userName);
+			}
+		}
 	}
 
 	private static class ShowViewListener implements IDebugEventSetListener {
