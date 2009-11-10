@@ -46,6 +46,15 @@ public interface IPHPDebugConstants {
 	public static final String Default_Server_Name = "Default PHP Web Server";
 	public static final String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType";
 	public static final String PHPServerLaunchType = "org.eclipse.php.debug.core.launching.webPageLaunch";
+	// public static final String USE_INTERNAL_BROWSER = ID_PHP_DEBUG_CORE
+	// + ".UseExternalBrowser";
+	public static final String USE_SSH_TUNNEL = ID_PHP_DEBUG_CORE
+			+ ".UseSSHTunnel";//$NON-NLS-1$
+	public static final String SSH_TUNNEL_USER_NAME = ID_PHP_DEBUG_CORE
+			+ ".SSHTunnelUserName";//$NON-NLS-1$
+	public static final String SSH_TUNNEL_PASSWORD = ID_PHP_DEBUG_CORE
+			+ ".SSHTunnelPassword";//$NON-NLS-1$
+	public static final String SSH_TUNNEL_SECURE_PREF_NODE = "/org.eclipse.php/DEBUG"; //$NON-NLS-1$
 
 	/**
 	 * Status code indicating an unexpected internal error (value

@@ -39,6 +39,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicat
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
@@ -131,6 +132,7 @@ public class XDebugWebLaunchConfigurationDelegate extends
 		String baseURL = new String(configuration.getAttribute(Server.BASE_URL,
 				"").getBytes()); //$NON-NLS-1$
 		IDBGpDebugTarget target = null;
+		SSHTunnel tunnel = null;
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			String sessionId = DBGpSessionHandler.getInstance()
@@ -153,6 +155,10 @@ public class XDebugWebLaunchConfigurationDelegate extends
 			String launchScript = configuration.getAttribute(Server.FILE_NAME,
 					(String) null);
 
+			// Check if a tunneled connection is needed and create request for a
+			// tunnel if needed.
+			tunnel = PHPLaunchUtilities.getSSHTunnel(configuration);
+
 			// determine if we should use the multisession manager or the single
 			// session manager
 			if (XDebugPreferenceMgr.useMultiSession() == true) {
@@ -172,16 +178,22 @@ public class XDebugWebLaunchConfigurationDelegate extends
 			startStopURLs = new String[] { baseURL, null };
 		}
 		final String startURL = startStopURLs[0];
+		final SSHTunnel sshTunnel = tunnel;
 
 		// load the URL into the appropriate web browser
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
 		subMonitor.beginTask(
-				PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_3,
-				10); //$NON-NLS-1$
+				PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_3, 
+				10);
 
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				try {
+					// establish a secured tunnel connection in case it's
+					// defined in the configuration dialog
+					if (sshTunnel != null) {
+						sshTunnel.connect();
+					}
 					if (openExternal) {
 						browser[0].openURL(new URL(startURL));
 					} else {
@@ -229,9 +241,8 @@ public class XDebugWebLaunchConfigurationDelegate extends
 
 	/**
 	 * Displays a dialog with an error message.
-	 * 
-	 * @param message
-	 *            The error to display.
+	 *
+	 * @param message The error to display.
 	 */
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
@@ -244,7 +255,7 @@ public class XDebugWebLaunchConfigurationDelegate extends
 
 	/**
 	 * determine whether an external browser is going to be opened
-	 * 
+	 *
 	 * @return true if external browser is required
 	 */
 	private boolean openExternal() {
@@ -253,15 +264,10 @@ public class XDebugWebLaunchConfigurationDelegate extends
 	}
 
 	/**
-	 * generate the URLS that start the debug environment and stop the debug
-	 * environment.
-	 * 
-	 * @param baseURL
-	 *            the base URL
-	 * @param sessionId
-	 *            the DBGp session Id
-	 * @param ideKey
-	 *            the DBGp IDE Key
+	 * generate the URLS that start the debug environment and stop the debug environment.
+	 * @param baseURL the base URL
+	 * @param sessionId the DBGp session Id
+	 * @param ideKey the DBGp IDE Key
 	 * @return start and stop queries
 	 */
 	public String[] generateStartStopDebugURLs(String baseURL,

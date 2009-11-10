@@ -33,6 +33,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.PHPWebServerDebuggerIni
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -199,6 +200,14 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	protected void initiateDebug(ILaunch launch) {
 		try {
+			// Initiate a debug tunnel in case needed.
+			if (!ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
+				SSHTunnel tunnel = PHPLaunchUtilities.getSSHTunnel(launch
+						.getLaunchConfiguration());
+				if (tunnel != null) {
+					tunnel.connect();
+				}
+			}
 			debuggerInitializer.debug(launch);
 		} catch (DebugException e) {
 			IStatus status = e.getStatus();

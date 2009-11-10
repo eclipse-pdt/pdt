@@ -8,11 +8,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Aptana Inc.
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -26,6 +29,9 @@ import org.eclipse.debug.core.*;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchGroup;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -42,10 +48,15 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.tunneling.SSHTunnel;
+import org.eclipse.php.internal.server.core.tunneling.SSHTunnelFactory;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
@@ -997,5 +1008,110 @@ public class PHPLaunchUtilities {
 			}
 		}
 		return buf.toString();
+	}
+
+	/*
+	 * Tunneling functionality
+	 */
+
+	/**
+	 * Returns a SSHTunnel instance in case defined in the given launch
+	 * configuration. The returned SSHTunnel may be null in case the given
+	 * configuration is not defined to use one. Also, the returned instance
+	 * might be shared between other launches as well, and might already be in a
+	 * connected state.
+	 * 
+	 * @param configuration
+	 * @return An SSHTunnel instance; Null, in case the configuration does not
+	 *         need one.
+	 */
+	public static SSHTunnel getSSHTunnel(ILaunchConfiguration configuration) {
+		try {
+			if (configuration.getAttribute(IPHPDebugConstants.USE_SSH_TUNNEL,
+					false)) {
+				String remoteHost = PHPLaunchUtilities
+						.getDebugHost(configuration);
+				int port = PHPLaunchUtilities.getDebugPort(configuration);
+				if (remoteHost != null && remoteHost.length() > 0 && port > -1) {
+					String userName = configuration.getAttribute(
+							IPHPDebugConstants.SSH_TUNNEL_USER_NAME, "");//$NON-NLS-1$
+					String password = PHPLaunchUtilities.getSecurePreferences(
+							remoteHost).get(userName, "");//$NON-NLS-1$
+					return SSHTunnelFactory.getSSHTunnel(remoteHost, userName,
+							password, port, port);
+				}
+			}
+		} catch (CoreException e) {
+			Logger.logException("Error obtaining an SSHTunnel instance", e);//$NON-NLS-1$
+		} catch (StorageException e) {
+			Logger
+					.logException(
+							"Error accessing the secured storage for the debug SSH tunnel",//$NON-NLS-1$
+							e);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the port that is associated to the debugger that is involved in
+	 * the given launch configuration.
+	 * 
+	 * @return The port in use. -1, in case of an error.
+	 */
+	public static int getDebugPort(ILaunchConfiguration launchConfiguration) {
+		try {
+			String debuggerID = launchConfiguration.getAttribute(
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin
+							.getCurrentDebuggerId());
+			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
+					.getDebuggerConfiguration(debuggerID);
+			return debuggerConfiguration.getPort();
+		} catch (Exception e) {
+			Logger.logException(
+					"Could not retrieve the debugger's port number", e);//$NON-NLS-1$
+		}
+		return -1;
+	}
+
+	/**
+	 * Returns the host that is associated with the given launch configuration.
+	 * The returned host can be null in case of an error or a missing host
+	 * setting.
+	 * 
+	 * @return The host address, or null.
+	 */
+	public static String getDebugHost(ILaunchConfiguration launchConfiguration) {
+		try {
+			String url = launchConfiguration.getAttribute(
+					Server.BASE_URL, "");//$NON-NLS-1$
+			if (url == null || url.length() == 0) {
+				return null;
+			}
+			return new URL(url).getHost();
+		} catch (CoreException e) {
+			Logger.logException("Could not retrieve the host name", e);//$NON-NLS-1$
+		} catch (MalformedURLException e) {
+			Logger.logException("Could not retrieve the host name", e);//$NON-NLS-1$
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the secure storage node for the tunnel connections that are set
+	 * on the given host.
+	 * 
+	 * @param host
+	 * 
+	 * @return An ISecurePreferences for the php debug secured node.
+	 */
+	public static ISecurePreferences getSecurePreferences(String host) {
+		String hostPath = "";//$NON-NLS-1$
+		if (host != null) {
+			hostPath = '/' + host;
+		}
+		ISecurePreferences root = SecurePreferencesFactory.getDefault();
+		ISecurePreferences node = root
+				.node(IPHPDebugConstants.SSH_TUNNEL_SECURE_PREF_NODE + hostPath);
+		return node;
 	}
 }
