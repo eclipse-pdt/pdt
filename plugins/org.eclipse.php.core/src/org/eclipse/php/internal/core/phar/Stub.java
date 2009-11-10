@@ -27,14 +27,12 @@ public class Stub implements IStub {
 		if (jarPackage.isStubGenerated()) {
 			os.write(PharConstants.PHP_START);
 
-			os.write(PharConstants.R);
-			os.write(PharConstants.N);
+			os.write(PharConstants.Line_Seperator);
 
 			os.write(PharConstants.STUB_ENDS);
 			os.write(PharConstants.STUB_TAIL);
 
-			os.write(PharConstants.R);
-			os.write(PharConstants.N);
+			os.write(PharConstants.Line_Seperator);
 		} else {
 			InputStream contentStream = getStubInputStream();
 			try {

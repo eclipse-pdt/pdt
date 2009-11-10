@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phar;
 
-public class PharConstants {
+import org.eclipse.core.runtime.Platform;
 
+public class PharConstants {
+	public static final boolean WINDOWS = Platform.getOS() == Platform.WS_WIN32;
 	public static final int PHAR = 0;
 	public static final int TAR = 1;
 	public static final int ZIP = 2;
@@ -35,8 +37,10 @@ public class PharConstants {
 
 	public static final byte R = '\r';
 	public static final byte N = '\n';
+	public static final byte[] Line_Seperator = System.getProperty(
+			"line.separator").getBytes();
 	public static final byte Underline = '_';
-	
+
 	public static final String EMPTY_STRING = "";
 	public static final String DOT = ".";
 	public static final String SPLASH = "/";
