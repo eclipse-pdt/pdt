@@ -8,12 +8,16 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Aptana Inc.
  *******************************************************************************/
 package org.eclipse.php.internal.server.core;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.jsch.core.IJSchService;
+import org.eclipse.php.internal.server.core.tunneling.SSHTunnelSession;
 import org.osgi.framework.BundleContext;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -33,6 +37,8 @@ public class Activator extends Plugin {
 	// The shared instance
 	private static Activator plugin;
 
+	private ServiceTracker tracker;
+
 	/**
 	 * The constructor
 	 */
@@ -48,6 +54,9 @@ public class Activator extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		tracker = new ServiceTracker(getBundle().getBundleContext(),
+				IJSchService.class.getName(), null);
+		tracker.open();
 	}
 
 	/*
@@ -59,6 +68,8 @@ public class Activator extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+		SSHTunnelSession.shutdown();
+		tracker.close();
 	}
 
 	/**
@@ -70,4 +81,12 @@ public class Activator extends Plugin {
 		return plugin;
 	}
 
+	/**
+	 * Returns an IJSchService
+	 * 
+	 * @return IJSchService
+	 */
+	public IJSchService getJSchService() {
+		return (IJSchService) tracker.getService();
+	}
 }
