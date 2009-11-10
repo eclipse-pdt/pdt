@@ -222,12 +222,22 @@ public class PharFile {
 	}
 
 	protected void getManifest() throws IOException, PharException {
-		bytesAfterStub.add(Integer.valueOf(read(bis)));
-		bytesAfterStub.add(Integer.valueOf(read(bis)));
-		if (bytesAfterStub.get(0).intValue() == PharConstants.R
-				&& bytesAfterStub.get(1).intValue() == PharConstants.N) {
-			bytesAfterStub = bytesAfterStub.subList(2, bytesAfterStub.size());
-		}
+        int lineSeparatorLength = 0;
+        bytesAfterStub.add(Integer.valueOf(read(bis)));
+        bytesAfterStub.add(Integer.valueOf(read(bis)));
+        if (bytesAfterStub.get(0).intValue() == PharConstants.R) {
+            lineSeparatorLength++;
+            if (bytesAfterStub.get(1).intValue() == PharConstants.N) {
+                lineSeparatorLength++;
+            }
+
+        } else if (bytesAfterStub.get(0).intValue() == PharConstants.N) {
+            if (bytesAfterStub.get(1).intValue() == PharConstants.R) {
+                lineSeparatorLength++;
+            }
+        }
+        bytesAfterStub = bytesAfterStub.subList(lineSeparatorLength,
+                bytesAfterStub.size());
 		stubLength = currentIndex - bytesAfterStub.size();
 		// read(bis);
 		// read(bis);

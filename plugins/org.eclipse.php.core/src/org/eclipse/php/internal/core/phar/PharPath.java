@@ -44,15 +44,27 @@ public class PharPath {
 		String pharName;
 		String folder = PharConstants.EMPTY_STRING;
 		String file = PharConstants.EMPTY_STRING;
-		if (!PharConstants.PHAR_PREFIX.equals(path.getDevice())) {
+		if (!path.toString().startsWith(PharConstants.PHAR_PREFIX)) {
 			return null;
 		}
-		path = path.setDevice(null);
+		if (PharConstants.WINDOWS) {
+			path = path.setDevice(null);
+		} else {
+			path = new Path(path.toString().substring(
+					PharConstants.PHAR_PREFIX.length()));
+		}
+
 		String pathString = path.toString();
 		int index = pathString.indexOf(PharConstants.PHAR_EXTENSION_WITH_DOT);
 		if (index >= 0) {
 			index += PharConstants.PHAR_EXTENSION_WITH_DOT.length();
-			pharName = pathString.substring(1, index);
+			if (PharConstants.WINDOWS
+					&& pathString.startsWith(PharConstants.SPLASH)) {
+				pharName = pathString.substring(1, index);
+			} else {
+				pharName = pathString.substring(0, index);
+			}
+
 			pathString = pathString.substring(index);
 			path = new Path(pathString);
 			if (path.segmentCount() > 0) {
