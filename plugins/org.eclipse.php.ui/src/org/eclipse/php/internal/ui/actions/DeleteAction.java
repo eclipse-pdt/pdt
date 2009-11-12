@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringAvailabilityTester;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.dltk.internal.ui.refactoring.RefactoringMessages;
+import org.eclipse.dltk.internal.ui.refactoring.reorg.ReorgMessages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.actions.SelectionDispatchAction;
 import org.eclipse.dltk.ui.util.ExceptionHandler;
@@ -32,8 +33,8 @@ public class DeleteAction extends SelectionDispatchAction {
 
 	public DeleteAction(IWorkbenchSite site) {
 		super(site);
-		setText("DeleteAction_3");
-		setDescription("DeleteAction_4");
+		setText(ReorgMessages.DeleteAction_3);
+		setDescription(ReorgMessages.DeleteAction_4);
 		ISharedImages workbenchImages = DLTKUIPlugin.getDefault()
 				.getWorkbench().getSharedImages();
 		setDisabledImageDescriptor(workbenchImages
