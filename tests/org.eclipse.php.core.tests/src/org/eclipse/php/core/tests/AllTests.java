@@ -14,7 +14,6 @@ package org.eclipse.php.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.php.core.tests.codeassist.CodeAssistProjectTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.CompilerParserTests;
 import org.eclipse.php.core.tests.compiler_ast.phpdoc.PHPDocAwareDeclarationTests;
@@ -72,7 +71,6 @@ public class AllTests {
 		suite.addTest(PHPPartitionerTests.suite());
 		// add by zhaozw
 		suite.addTest(PharFileTest.suite());
-		suite.addTest(CodeAssistProjectTests.suite());
 		// $JUnit-END$
 
 		return suite;
