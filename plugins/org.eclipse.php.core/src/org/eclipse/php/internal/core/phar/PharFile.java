@@ -222,22 +222,23 @@ public class PharFile {
 	}
 
 	protected void getManifest() throws IOException, PharException {
-        int lineSeparatorLength = 0;
-        bytesAfterStub.add(Integer.valueOf(read(bis)));
-        bytesAfterStub.add(Integer.valueOf(read(bis)));
-        if (bytesAfterStub.get(0).intValue() == PharConstants.R) {
-            lineSeparatorLength++;
-            if (bytesAfterStub.get(1).intValue() == PharConstants.N) {
-                lineSeparatorLength++;
-            }
+		int lineSeparatorLength = 0;
+		bytesAfterStub.add(Integer.valueOf(read(bis)));
+		bytesAfterStub.add(Integer.valueOf(read(bis)));
+		if (bytesAfterStub.get(0).intValue() == PharConstants.R) {
+			lineSeparatorLength++;
+			if (bytesAfterStub.get(1).intValue() == PharConstants.N) {
+				lineSeparatorLength++;
+			}
 
-        } else if (bytesAfterStub.get(0).intValue() == PharConstants.N) {
-            if (bytesAfterStub.get(1).intValue() == PharConstants.R) {
-                lineSeparatorLength++;
-            }
-        }
-        bytesAfterStub = bytesAfterStub.subList(lineSeparatorLength,
-                bytesAfterStub.size());
+		} else if (bytesAfterStub.get(0).intValue() == PharConstants.N) {
+			lineSeparatorLength++;
+			if (bytesAfterStub.get(1).intValue() == PharConstants.R) {
+				lineSeparatorLength++;
+			}
+		}
+		bytesAfterStub = bytesAfterStub.subList(lineSeparatorLength,
+				bytesAfterStub.size());
 		stubLength = currentIndex - bytesAfterStub.size();
 		// read(bis);
 		// read(bis);
