@@ -56,7 +56,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 		IncludePathManager.getInstance().registerIncludepathListener(this);
 	}
 
-	public static PHPSearchEngine getInstance() {
+	private static PHPSearchEngine getInstance() {
 		return instance;
 	}
 
@@ -75,7 +75,13 @@ public class PHPSearchEngine implements IIncludepathListener {
 	 *            Current project to which current script belongs
 	 * @return resolved path, or <code>null</code> in case of failure
 	 */
-	public Result<?, ?> find(String path, String currentWorkingDir,
+	public static Result<?, ?> find(String path, String currentWorkingDir,
+			String currentScriptDir, IProject currentProject) {
+		return getInstance().internalFind(path, currentWorkingDir,
+				currentScriptDir, currentProject);
+	}
+
+	private Result<?, ?> internalFind(String path, String currentWorkingDir,
 			String currentScriptDir, IProject currentProject) {
 		if (path == null || currentWorkingDir == null
 				|| currentScriptDir == null || currentProject == null) {
@@ -286,7 +292,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 	 * @return array of include path objects (it can be one of: IContainer,
 	 *         IncludePathEntry)
 	 */
-	public IncludePath[] buildIncludePath(IProject project) {
+	public static IncludePath[] buildIncludePath(IProject project) {
 		Set<IncludePath> results = new LinkedHashSet<IncludePath>();
 		buildIncludePath(project, results);
 		return results.toArray(new IncludePath[results.size()]);
@@ -303,7 +309,8 @@ public class PHPSearchEngine implements IIncludepathListener {
 	 *            Array of include path objects (it can be one of: IContainer,
 	 *            IncludePathEntry)
 	 */
-	public void buildIncludePath(IProject project, Set<IncludePath> results) {
+	public static void buildIncludePath(IProject project,
+			Set<IncludePath> results) {
 		if (results.contains(project)) {
 			return;
 		}
@@ -311,7 +318,8 @@ public class PHPSearchEngine implements IIncludepathListener {
 			return;
 		}
 		// Collect include paths:
-		results.addAll(Arrays.asList(getProjectIncludePath(project)));
+		results.addAll(Arrays.asList(getInstance().getProjectIncludePath(
+				project)));
 	}
 
 	private IncludePath[] getProjectIncludePath(IProject project) {
