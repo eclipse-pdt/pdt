@@ -99,8 +99,7 @@ public class PHPINIUtil {
 
 		// Modify include path:
 		if (project != null) {
-			IncludePath[] path = PHPSearchEngine.getInstance()
-					.buildIncludePath(project);
+			IncludePath[] path = PHPSearchEngine.buildIncludePath(project);
 			List<String> includePath = new ArrayList<String>(path.length);
 			for (IncludePath pathObject : path) {
 				if (pathObject.isBuildpath()) {
