@@ -416,13 +416,16 @@ public class PhpElementConciliator {
 			final GlobalStatement globalStatement) {
 		final List<Variable> variables = globalStatement.variables();
 		for (final Variable current : variables) {
-			assert current.getName().getType() == ASTNode.IDENTIFIER;
-			Identifier id = (Identifier) current.getName();
+			// if the variable is reflection (eg. global $$var) skip
+			if (current.getName().getType() == ASTNode.IDENTIFIER) {
+				Identifier id = (Identifier) current.getName();
 
-			// variables are case sensative
-			if (id.getName().equals(targetIdentifier.getName())) {
-				return true;
+				// variables are case sensative
+				if (id.getName().equals(targetIdentifier.getName())) {
+					return true;
+				}
 			}
+
 		}
 		return false;
 	}
