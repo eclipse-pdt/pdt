@@ -303,8 +303,13 @@ public class DefaultBindingResolver extends BindingResolver {
 		int start = expression.getStart();
 		int length = expression.getLength();
 		IEvaluatedType type = getEvaluatedType(start, length);
-		IModelElement[] modelElements = getModelElements(start, length, false);
-		return internalGetTypeBinding(type, modelElements);
+		if (type != null) {
+			IModelElement[] modelElements = getModelElements(start, length,
+					false);
+			return internalGetTypeBinding(type, modelElements);
+		} else {
+			return null;
+		}
 	}
 
 	/*
