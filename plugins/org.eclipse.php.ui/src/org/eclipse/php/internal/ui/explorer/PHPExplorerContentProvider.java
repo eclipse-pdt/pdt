@@ -191,7 +191,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						for (IResource resource2 : resChildren) {
 							IModelElement modelElement = DLTKCore
 									.create(resource2);
-							if (modelElement != null) {
+							if (modelElement != null
+									&& isInSourceFolder(modelElement)) {
 								returnChlidren.add(modelElement);
 							} else {
 								returnChlidren.add(resource2);
@@ -242,6 +243,43 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			return super.getChildren(parentElement);
 		}
 		return NO_CHILDREN;
+	}
+
+	private boolean isInSourceFolder(IModelElement modelElement) {
+		ScriptProject project = (ScriptProject) modelElement.getScriptProject();
+		IBuildpathEntry[] buildpath = null;
+		try {
+			buildpath = project.getResolvedBuildpath();
+		} catch (ModelException e) {
+
+		}
+		if (buildpath == null) {
+			return false;
+		}
+		for (int j = 0, buildpathLength = buildpath.length; j < buildpathLength; j++) {
+			IBuildpathEntry entry = buildpath[j];
+			// root path
+			IPath path = entry.getPath();
+			if (isInPath(path, modelElement.getResource())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/*
+	 * Finds the root info this path is included in. Returns null if not found.
+	 */
+	private boolean isInPath(IPath parentPath, IResource resouce) {
+		IPath path = resouce.getFullPath();
+		while (path != null && path.segmentCount() > 0) {
+			if (path.equals(parentPath)) {
+				return true;
+			}
+			path = path.removeLastSegments(1);
+		}
+		return false;
 	}
 
 	protected boolean supportsNamespaces(IScriptProject project) {
