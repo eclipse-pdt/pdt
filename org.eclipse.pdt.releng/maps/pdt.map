@@ -1,0 +1,29 @@
+!***************  PROJECT CONTRIBUTION  ******************************************************** 
+
+!*** Special entries from eclipse
+plugin@org.eclipse.test=v20081002,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
+fragment@org.eclipse.ant.optional.junit=v20080717,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.test.performance=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
+fragment@org.eclipse.test.performance.win32=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
+
+!*** Project's plugins, features and fragments
+feature@org.eclipse.php=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php-feature
+feature@org.eclipse.php.sdk=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.sdk-feature
+feature@org.eclipse.php.all=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.all-feature
+feature@org.eclipse.php.test=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.test-feature
+plugin@org.eclipse.php=v20090811-1641,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php
+plugin@org.eclipse.php.core=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.core
+plugin@org.eclipse.php.core.parser=v20090811-1641,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.core.parser
+plugin@org.eclipse.php.debug.core=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.debug.core
+plugin@org.eclipse.php.debug.daemon=v20090811-1641,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.debug.daemon
+plugin@org.eclipse.php.debug.ui=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.debug.ui
+plugin@org.eclipse.php.server.core=v20091005-1758,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.server.core
+plugin@org.eclipse.php.server.ui=v20091005-1758,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.server.ui
+plugin@org.eclipse.php.ui=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.ui
+plugin@org.eclipse.php.help=v20091007-1923,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.help
+plugin@org.eclipse.php.core.tests=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/tests/org.eclipse.php.core.tests
+plugin@org.eclipse.php.core.performance.tests=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/tests/org.eclipse.php.core.performance.tests
+
+!*** Mylyn bridge
+feature@org.eclipse.php.mylyn=v20091014-1958,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.mylyn-feature
+plugin@org.eclipse.php.mylyn.ui=v20091008-1400,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.mylyn.ui
