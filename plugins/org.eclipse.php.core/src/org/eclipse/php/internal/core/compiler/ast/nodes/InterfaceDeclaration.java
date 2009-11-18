@@ -48,9 +48,13 @@ public class InterfaceDeclaration extends TypeDeclaration implements
 
 		this.phpDoc = phpDoc;
 
-		ASTListNode parentsList = new ASTListNode(start, end);
+		int nodesStart = body.sourceStart() - 1;
+		ASTListNode parentsList = new ASTListNode(nodesStart, nodesStart);
 		for (TypeReference intface : interfaces) {
 			parentsList.addNode(intface);
+			if (parentsList.sourceStart() > intface.sourceStart()) {
+				parentsList.setStart(intface.sourceStart());
+			}
 		}
 
 		if (parentsList.getChilds().size() > 0) {
