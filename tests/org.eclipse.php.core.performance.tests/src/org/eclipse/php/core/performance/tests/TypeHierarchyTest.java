@@ -2,7 +2,6 @@ package org.eclipse.php.core.performance.tests;
 
 import junit.framework.Assert;
 
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.SearchEngine;
@@ -21,7 +20,7 @@ public class TypeHierarchyTest extends PerformanceTestCase {
 		exceptionType = PhpModelAccess.getDefault().findTypes(
 				"Zend_Exception",
 				MatchRule.EXACT,
-				Modifiers.AccInterface,
+				0,
 				0,
 				SearchEngine.createWorkspaceScope(PHPLanguageToolkit
 						.getDefault()), null);
