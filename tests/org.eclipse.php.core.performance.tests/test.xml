@@ -40,8 +40,7 @@
   <!-- This target defines the performance tests that need to be run. -->
   <target name="performance-suite">
     <property name="php-core-perf-folder" value="${perfs-wksp}"/>
-  	<property name="env.COMPUTERNAME" value="${env.HOSTNAME}"/>
-    <property name="extraVMargs" value="-Xmx256M -Xms256M -Dcompliance=1.5 -DlogDir=${php-core-perf-folder}/results -Declipse.perf.config=build=${buildId};host=${env.COMPUTERNAME}"/>
+    <property name="extraVMargs" value="-Xmx256M -Xms256M -Dcompliance=1.5"/>
 
   	<!--
     <delete dir="${php-core-perf-folder}" quiet="true"/>
