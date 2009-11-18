@@ -54,8 +54,7 @@ public class AllTests {
 
 			Util
 					.downloadAndExtract(
-							// "http://framework.zend.com/releases/ZendFramework-1.9.5/ZendFramework-1.9.5.zip",
-							"file:////il-storage//studio_packaging/hudson/cache/ZendFramework-1.9.5.zip",
+							"http://framework.zend.com/releases/ZendFramework-1.9.5/ZendFramework-1.9.5.zip",
 							scriptProject.getProject().getLocation().toString());
 
 			System.out.println("Building " + PROJECT + " project");

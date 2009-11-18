@@ -80,6 +80,7 @@ public class Util {
 
 		File cachedFile = new File(cacheDir, fileName);
 		if (!cachedFile.exists()) {
+			cachedFile.getParentFile().mkdirs();
 
 			URLConnection urlConnection = url.openConnection();
 			InputStream inputStream = new BufferedInputStream(urlConnection
