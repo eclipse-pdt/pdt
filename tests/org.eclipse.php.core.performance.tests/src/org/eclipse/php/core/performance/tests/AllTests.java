@@ -31,6 +31,7 @@ public class AllTests {
 		suite.addTestSuite(SetupEnvironment.class);
 
 		suite.addTestSuite(PHPModelAccessTest.class);
+		suite.addTestSuite(TypeHierarchyTest.class);
 
 		suite.addTestSuite(CleanupEnvironment.class);
 		// $JUnit-END$

@@ -67,7 +67,7 @@ public class Util {
 
 		System.out.println("Retrieving: " + fileURL);
 
-		String cacheDir = System.getProperty("cacheDir");
+		String cacheDir = System.getProperty("cacheDirectory");
 		if (cacheDir == null) {
 			cacheDir = System.getProperty("java.io.tmpdir") + File.separator
 					+ "pdt-test-cache";

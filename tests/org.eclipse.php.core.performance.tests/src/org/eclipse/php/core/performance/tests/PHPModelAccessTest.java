@@ -17,10 +17,6 @@ public class PHPModelAccessTest extends PerformanceTestCase {
 		modelAccess = PhpModelAccess.getDefault();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	public void testSearchAllTypes() {
 		tagAsSummary("Search All Types", Dimension.CPU_TIME);
 		for (int i = 0; i < 10; i++) {
