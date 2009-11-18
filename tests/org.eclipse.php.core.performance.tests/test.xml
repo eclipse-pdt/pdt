@@ -39,7 +39,7 @@
 
   <!-- This target defines the performance tests that need to be run. -->
   <target name="performance-suite">
-    <property name="php-core-perf-folder" value="${perfs-wksp}"/>
+    <property name="php-core-perf-folder" value="php_perf_folder"/>
     <property name="extraVMargs" value="-Xmx256M -Xms256M -Dcompliance=1.5"/>
 
   	<!--
