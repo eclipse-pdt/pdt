@@ -204,7 +204,11 @@ public double getDeviation() {
  * @return The value of the standard deviation
  */
 public double getDeviation(int dim_id) {
-	return this.stddev[getDimIndex(dim_id)];
+	int dimIndex = getDimIndex(dim_id);
+	if (dimIndex == -1) {
+		return -1;
+	}
+	return this.stddev[dimIndex];
 }
 
 /**
