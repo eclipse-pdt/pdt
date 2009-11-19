@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.core.performance.tests;
+package org.eclipse.php.core.tests.performance;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.php.internal.core.PHPCorePlugin;

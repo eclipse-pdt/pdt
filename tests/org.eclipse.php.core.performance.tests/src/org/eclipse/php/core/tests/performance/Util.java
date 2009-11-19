@@ -1,4 +1,4 @@
-package org.eclipse.php.core.performance.tests;
+package org.eclipse.php.core.tests.performance;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

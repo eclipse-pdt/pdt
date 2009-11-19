@@ -1,4 +1,4 @@
-package org.eclipse.php.core.performance.tests;
+package org.eclipse.php.core.tests.performance;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
