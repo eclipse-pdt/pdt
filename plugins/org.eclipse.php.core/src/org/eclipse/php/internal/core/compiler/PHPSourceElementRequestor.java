@@ -452,9 +452,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			if (args != null && args.getChilds() != null) {
 				argsCount = args.getChilds().size();
 			}
-			fRequestor.acceptMethodReference(call.getName().toCharArray(),
-					argsCount, call.getCallName().sourceStart(), call
-							.getCallName().sourceEnd());
+			fRequestor.acceptMethodReference(call.getName(), argsCount, call
+					.getCallName().sourceStart(), call.getCallName()
+					.sourceEnd());
 		}
 		return true;
 	}
@@ -464,8 +464,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		// information in order to access it quickly:
 		if (include.getExpr() instanceof Scalar) {
 			Scalar filePath = (Scalar) include.getExpr();
-			fRequestor.acceptMethodReference("include".toCharArray(), 0,
-					filePath.sourceStart(), filePath.sourceEnd());
+			fRequestor.acceptMethodReference("include", 0, filePath
+					.sourceStart(), filePath.sourceEnd());
 		}
 		return true;
 	}
