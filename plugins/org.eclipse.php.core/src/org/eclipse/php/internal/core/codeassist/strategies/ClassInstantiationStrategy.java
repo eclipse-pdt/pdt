@@ -39,8 +39,6 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 
 		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
-		CompletionRequestor requestor = concreteContext
-				.getCompletionRequestor();
 
 		IType enclosingClass = null;
 		try {
@@ -66,42 +64,35 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 		for (IType type : types) {
 
 			IMethod ctor = null;
-			if (requestor.isContextInformationMode()) {
-				try {
-					for (IMethod method : type.getMethods()) {
-						if (method.isConstructor()) {
-							ctor = method;
+			try {
+				for (IMethod method : type.getMethods()) {
+					if (method.isConstructor()) {
+						ctor = method;
+						if (!PHPFlags.isPrivate(ctor.getFlags())
+								|| type.equals(enclosingClass)) {
+							ISourceRange sourceRange = type.getSourceRange();
+							FakeMethod ctorMethod = new FakeConstructor(
+									(ModelElement) type, type.getElementName(),
+									sourceRange.getOffset(), sourceRange
+											.getLength(), sourceRange
+											.getOffset(), sourceRange
+											.getLength(), ctor) {
+
+							};
+							ctorMethod.setParameters(ctor.getParameters());
+							ctorMethod.setParameterInitializers(ctor
+									.getParameterInitializers());
+							reporter.reportMethod(ctorMethod, suffix,
+									replaceRange);
 							break;
 						}
 					}
-				} catch (ModelException e) {
-					PHPCorePlugin.log(e);
-				}
-			}
-
-			try {
-				if (ctor != null) {
-					if (!PHPFlags.isPrivate(ctor.getFlags())
-							|| type.equals(enclosingClass)) {
-						ISourceRange sourceRange = type.getSourceRange();
-						FakeMethod ctorMethod = new FakeMethod(
-								(ModelElement) type, type.getElementName(),
-								sourceRange.getOffset(), sourceRange
-										.getLength(), sourceRange.getOffset(),
-								sourceRange.getLength()) {
-							public boolean isConstructor()
-									throws ModelException {
-								return true;
-							}
-						};
-						ctorMethod.setParameters(ctor.getParameters());
-						reporter.reportMethod(ctorMethod, suffix, replaceRange);
-					}
-				} else {
-					reporter.reportType(type, suffix, replaceRange);
 				}
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
+			}
+			if (ctor == null) {
+				reporter.reportType(type, suffix, replaceRange);
 			}
 		}
 
@@ -116,5 +107,28 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 			PHPCorePlugin.log(e);
 		}
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+
+	class FakeConstructor extends FakeMethod {
+		private IMethod ctor;
+
+		public FakeConstructor(ModelElement parent, String name, int offset,
+				int length, int nameOffset, int nameLength, IMethod ctor) {
+			super(parent, name, offset, length, nameOffset, nameLength);
+			this.ctor = ctor;
+		}
+
+		public boolean isConstructor() throws ModelException {
+			return true;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof FakeConstructor) {
+				FakeConstructor fakeConstructor = (FakeConstructor) o;
+				return this.ctor == fakeConstructor.ctor;
+			}
+			return false;
+		}
 	}
 }
