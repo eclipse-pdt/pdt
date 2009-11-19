@@ -188,6 +188,12 @@ public static String getBuildDate(String buildName) {
  * @return The date as a string.
  */
 public static String getBuildDate(String buildName, String baselinePrefix) {
+	
+	try {
+		Util.DATE_FORMAT.parse(buildName);
+		return buildName;
+	} catch (ParseException e) {
+	}
 
 	// Baseline name
 	if (baselinePrefix != null && buildName.startsWith(baselinePrefix)) {
@@ -212,6 +218,7 @@ public static String getBuildDate(String buildName, String baselinePrefix) {
 			// skip
 		}
 	}
+	
 	return null;
 }
 
