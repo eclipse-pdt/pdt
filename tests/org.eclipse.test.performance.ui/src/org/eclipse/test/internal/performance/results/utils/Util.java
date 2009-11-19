@@ -219,6 +219,8 @@ public static String getBuildDate(String buildName, String baselinePrefix) {
 		}
 	}
 	
+	System.err.println("Can't determine build date for: " + buildName);
+	
 	return null;
 }
 
