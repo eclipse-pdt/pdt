@@ -49,7 +49,7 @@
 		<!-- Use a subdir 'data' so that the JCL jars are put in php-core-perf-folder and are deleted at the end of the tests. -->
 		<property name="data-dir" value="${php-core-perf-folder}/data"/>
 		<property name="plugin-name" value="${plugin-name}"/>
-		<property name="classname" value="org.eclipse.php.core.performance.tests.AllTests"/>
+		<property name="classname" value="org.eclipse.php.core.tests.performance.AllTests"/>
     </ant>
   </target>
 
