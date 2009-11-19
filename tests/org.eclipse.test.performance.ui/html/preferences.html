@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>Preferences</title>
+</head>
+
+<body>
+<h1>Preferences</h1>
+<p>
+The tool have some preferences which may be configured by advanced users.
+This must be done carefully otherwise, either no data could be read by the tool
+and/or generated results could be puzzled.
+</p><p>
+Here's what the page looks like:
+<p><img src="images/preferences.png" alt="Preferences"/></p>
+
+<h2>Database</h2>
+<p>
+By default the tool does not connect to any performance results database as common
+users might not have enough rights to access it. However, users having these
+rights may want to look at the database contents and update the local data files
+with it. Hence, it is possible to configure the tool to connect to a database
+which may be either local or on the releng server (<code><b>trelenggtk</b></code>).
+</p>
+
+<h2>Milestones</h2>
+<p>
+These are the list of the version milestones. Each milestone is a date string
+using the <b>yyyymmddHHMM</b> format. When a new milestone is shipped, then a new
+date must be added to this preference to let the tool to identify it in the builds
+list and emphasize it...
+</p>
+
+<h2>Default dimension</h2>
+<p>
+This is the dimension used to compute delta and make the verification. Currently
+this is the <b>Elapsed Process Time</b> dimension.
+</p><p>
+<i>Note that the default dimension must belong to the <b>Results dimensions</b>
+described below, hence a new selected dimensions will always be automatically
+added to the list...</i>
+</p>
+
+<h2>Results dimensions</h2>
+<p>
+These are dimensions displayed in the scenario data HTML pages. Currently there
+are the <b>Elapsed Process Time</b> and the <b>CPU Time</b>. Having these dimensions
+configurable may be interesting to display others dimensions and see whether their
+numbers may be relevant or not (e.g. <b>Used Hava Heap</b>).
+</p><p>
+<i>Note that the default dimension described above must belong to the selected
+dimensions, hence it will always be automatically added to the new selected list...</i>
+</p>
+</body>
+</html>
