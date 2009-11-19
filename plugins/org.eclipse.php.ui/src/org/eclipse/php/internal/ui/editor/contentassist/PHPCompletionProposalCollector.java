@@ -26,7 +26,6 @@ public class PHPCompletionProposalCollector extends
 
 	private IDocument document;
 	private boolean explicit;
-
 	public PHPCompletionProposalCollector(IDocument document, ISourceModule cu,
 			boolean explicit) {
 		super(cu);
@@ -87,8 +86,13 @@ public class PHPCompletionProposalCollector extends
 
 	protected IScriptCompletionProposal createScriptCompletionProposal(
 			CompletionProposal proposal) {
-		ScriptCompletionProposal completionProposal = (ScriptCompletionProposal) super
-				.createScriptCompletionProposal(proposal);
+		ScriptCompletionProposal completionProposal;
+		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
+			completionProposal = createMethodDeclarationProposal(proposal);
+		}else{
+			completionProposal = (ScriptCompletionProposal) super
+			.createScriptCompletionProposal(proposal);
+		}
 		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
 			IMethod method = (IMethod) proposal.getModelElement();
 			try {
@@ -130,4 +134,41 @@ public class PHPCompletionProposalCollector extends
 	public boolean isExplicit() {
 		return explicit;
 	}
+	private ScriptCompletionProposal createMethodDeclarationProposal(
+			CompletionProposal proposal) {
+		if (getSourceModule() == null || getSourceModule().getScriptProject() == null) {
+			return null;
+		}
+
+		String name = String.valueOf(proposal.getName());
+
+		String[] paramTypes;
+
+		paramTypes = new String[0];
+
+		int start = proposal.getReplaceStart();
+		int length = getLength(proposal);
+		String label = ((PHPCompletionProposalLabelProvider)getLabelProvider()).createOverrideMethodProposalLabel(
+				proposal);
+		ScriptCompletionProposal scriptProposal = createParameterGuessingProposal(proposal,
+				getSourceModule().getScriptProject(), getSourceModule(), name, paramTypes, start, length,
+				label, String.valueOf(proposal.getCompletion()));
+		scriptProposal.setImage(getImage(getLabelProvider()
+				.createMethodImageDescriptor(proposal)));
+
+		ProposalInfo info = new MethodProposalInfo(getSourceModule().getScriptProject(), proposal);
+		scriptProposal.setProposalInfo(info);
+
+		scriptProposal.setRelevance(computeRelevance(proposal));
+		return scriptProposal;
+	}
+
+	private ScriptCompletionProposal createParameterGuessingProposal(
+			CompletionProposal proposal, IScriptProject scriptProject, ISourceModule sourceModule,
+			String name, String[] paramTypes, int start, int length,
+			String label, String string) {
+		return new ParameterGuessingProposal(proposal, scriptProject,
+				sourceModule, name, paramTypes, start, length, label, string,false);
+	}
+
 }
