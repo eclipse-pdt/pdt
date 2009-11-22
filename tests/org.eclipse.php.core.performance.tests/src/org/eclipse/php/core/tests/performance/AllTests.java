@@ -14,14 +14,12 @@ package org.eclipse.php.core.tests.performance;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.tests.model.AbstractModelTests;
-import org.eclipse.php.core.tests.PHPCoreTests;
 
 public class AllTests {
 
-	private static final String PROJECT = "ZendFramework";
+	public static final String PROJECT = "ZendFramework";
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
@@ -30,8 +28,10 @@ public class AllTests {
 		// $JUnit-BEGIN$
 		suite.addTestSuite(SetupEnvironment.class);
 
+		suite.addTestSuite(BuildProjectTest.class);
 		suite.addTestSuite(PHPModelAccessTest.class);
 		suite.addTestSuite(TypeHierarchyTest.class);
+		suite.addTestSuite(CodeAssistAccessTest.class);
 
 		suite.addTestSuite(CleanupEnvironment.class);
 		// $JUnit-END$
@@ -56,12 +56,6 @@ public class AllTests {
 					.downloadAndExtract(
 							"http://framework.zend.com/releases/ZendFramework-1.9.5/ZendFramework-1.9.5.zip",
 							scriptProject.getProject().getLocation().toString());
-
-			System.out.println("Building " + PROJECT + " project");
-			scriptProject.getProject().refreshLocal(IResource.DEPTH_INFINITE,
-					null);
-
-			PHPCoreTests.waitForIndexer();
 		}
 	}
 

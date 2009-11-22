@@ -12,6 +12,7 @@ import org.eclipse.test.performance.PerformanceTestCase;
 
 public class TypeHierarchyTest extends PerformanceTestCase {
 
+	private static final int TESTS_NUM = 20;
 	private IType[] exceptionType;
 
 	protected void setUp() throws Exception {
@@ -33,7 +34,7 @@ public class TypeHierarchyTest extends PerformanceTestCase {
 
 		tagAsSummary("Building Super Type Hierarchy for 'Zend_Exception'",
 				Dimension.CPU_TIME);
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < TESTS_NUM; i++) {
 			startMeasuring();
 			exceptionType[0].newSupertypeHierarchy(null);
 			stopMeasuring();
@@ -46,7 +47,7 @@ public class TypeHierarchyTest extends PerformanceTestCase {
 
 		tagAsSummary("Building Type Hierarchy for 'Zend_Exception'",
 				Dimension.CPU_TIME);
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < TESTS_NUM; i++) {
 			startMeasuring();
 			exceptionType[0].newTypeHierarchy(null);
 			stopMeasuring();
