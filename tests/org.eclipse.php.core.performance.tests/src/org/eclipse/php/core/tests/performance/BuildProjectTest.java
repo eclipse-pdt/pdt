@@ -9,9 +9,11 @@ import org.eclipse.test.performance.PerformanceTestCase;
 
 public class BuildProjectTest extends PerformanceTestCase {
 
+	private static final Dimension[] dimensions = new Dimension[] {
+			Dimension.CPU_TIME, Dimension.USED_JAVA_HEAP };
+
 	public void testBuildProject() throws Exception {
-		tagAsSummary("Build '" + AllTests.PROJECT + "' project",
-				Dimension.CPU_TIME);
+		tagAsSummary("Build '" + AllTests.PROJECT + "' project", dimensions);
 
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
 				AllTests.PROJECT);
