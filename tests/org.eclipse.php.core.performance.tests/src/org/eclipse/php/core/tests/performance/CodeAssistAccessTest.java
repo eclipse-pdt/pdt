@@ -27,7 +27,7 @@ public class CodeAssistAccessTest extends PerformanceTestCase {
 	}
 
 	public void testCodeAssist() throws Exception {
-		tagAsSummary("Code assist in global scope", Dimension.CPU_TIME);
+		tagAsGlobalSummary("Code assist in global scope", Dimension.CPU_TIME);
 		for (int i = 0; i < TESTS_NUM; i++) {
 			startMeasuring();
 			sourceModule.codeComplete(offset, new CompletionRequestor() {

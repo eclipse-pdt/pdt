@@ -25,7 +25,7 @@ public class PHPModelAccessTest extends PerformanceTestCase {
 	}
 
 	public void testSearchAllTypes() {
-		tagAsSummary("Search all types", dimensions);
+		tagAsGlobalSummary("Search all types", dimensions);
 		for (int i = 0; i < TESTS_NUM; i++) {
 			startMeasuring();
 			modelAccess.findTypes("", MatchRule.PREFIX, 0, 0, scope, null);
@@ -36,7 +36,7 @@ public class PHPModelAccessTest extends PerformanceTestCase {
 	}
 
 	public void testSearchAllFunctions() {
-		tagAsSummary("Search all functions", dimensions);
+		tagAsGlobalSummary("Search all functions", dimensions);
 		for (int i = 0; i < TESTS_NUM; i++) {
 			startMeasuring();
 			modelAccess.findMethods("", MatchRule.PREFIX, Modifiers.AccGlobal,
@@ -48,7 +48,7 @@ public class PHPModelAccessTest extends PerformanceTestCase {
 	}
 
 	public void testSearchGlobalVariables() {
-		tagAsSummary("Search all global variables", dimensions);
+		tagAsGlobalSummary("Search all global variables", dimensions);
 		for (int i = 0; i < TESTS_NUM; i++) {
 			startMeasuring();
 			modelAccess.findFields("", MatchRule.PREFIX, Modifiers.AccGlobal,
@@ -60,7 +60,7 @@ public class PHPModelAccessTest extends PerformanceTestCase {
 	}
 
 	public void testSearchIncludeStatements() {
-		tagAsSummary("Search all include statements", dimensions);
+		tagAsGlobalSummary("Search all include statements", dimensions);
 		for (int i = 0; i < TESTS_NUM; i++) {
 			startMeasuring();
 			modelAccess.findIncludes("", MatchRule.PREFIX, scope, null);

@@ -32,7 +32,8 @@ public class TypeHierarchyTest extends PerformanceTestCase {
 
 	public void testSuperTypeHierarchy() throws Exception {
 
-		tagAsSummary("Building Super Type Hierarchy for 'Zend_Exception'",
+		tagAsGlobalSummary(
+				"Building Super Type Hierarchy for 'Zend_Exception'",
 				Dimension.CPU_TIME);
 		for (int i = 0; i < TESTS_NUM; i++) {
 			startMeasuring();
@@ -45,7 +46,7 @@ public class TypeHierarchyTest extends PerformanceTestCase {
 
 	public void testTypeHierarchy() throws Exception {
 
-		tagAsSummary("Building Type Hierarchy for 'Zend_Exception'",
+		tagAsGlobalSummary("Building Type Hierarchy for 'Zend_Exception'",
 				Dimension.CPU_TIME);
 		for (int i = 0; i < TESTS_NUM; i++) {
 			startMeasuring();
