@@ -1274,15 +1274,16 @@ public class PHPModelUtils {
 				.getScriptProject());
 		IType[] types = PhpModelAccess.getDefault().findTypes(typeName,
 				MatchRule.EXACT, 0, 0, scope, null);
+		if (types == null) {
+			return null;
+		}
 
-		List<IType> result = null;
-		if (types != null) {
-			result = new ArrayList<IType>(types.length);
-			for (IType type : types) {
-				if (getCurrentNamespace(type) == null) {
-					result.add(type);
-				}
+		List<IType> result = new ArrayList<IType>(types.length);
+		for (IType type : types) {
+			if (getCurrentNamespace(type) == null) {
+				result.add(type);
 			}
+
 		}
 
 		Collection<IType> filteredElements = filterElements(sourceModule,
