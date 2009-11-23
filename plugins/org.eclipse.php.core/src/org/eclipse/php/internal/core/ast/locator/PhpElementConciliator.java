@@ -135,7 +135,8 @@ public class PhpElementConciliator {
 		// check if it is an identifier
 		if (locateNode.getType() != ASTNode.SCALAR) {
 			if ((locateNode instanceof Identifier)
-					&& "define".equals(((Identifier) locateNode).getName())) {
+					&& "define".equals(((Identifier) locateNode).getName())
+					&& locateNode.getParent().getParent() instanceof FunctionInvocation) {
 				ASTNode parent = locateNode.getParent();
 				FunctionInvocation inv = null;
 				if (parent instanceof NamespaceName) {
@@ -183,7 +184,7 @@ public class PhpElementConciliator {
 		}
 
 		final FunctionInvocation functionInvocation = (FunctionInvocation) previous;
-		if (!(functionInvocation.getFunctionName().getName()instanceof Identifier)) {
+		if (!(functionInvocation.getFunctionName().getName() instanceof Identifier)) {
 			return false;
 		}
 
