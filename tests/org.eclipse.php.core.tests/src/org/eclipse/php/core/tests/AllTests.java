@@ -71,6 +71,11 @@ public class AllTests {
 		suite.addTest(PHPPartitionerTests.suite());
 		// add by zhaozw
 		suite.addTest(PharFileTest.suite());
+
+		// PHPElementConciliator test cases
+		// added by qwang.
+		suite
+				.addTestSuite(org.eclipse.php.internal.core.ast.locator.AllTests.class);
 		// $JUnit-END$
 
 		return suite;
