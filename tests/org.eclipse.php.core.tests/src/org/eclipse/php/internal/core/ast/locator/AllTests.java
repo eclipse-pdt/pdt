@@ -8,9 +8,10 @@ public class AllTests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
 				"Test for org.eclipse.php.internal.core.ast.locator");
-		//$JUnit-BEGIN$
+		// $JUnit-BEGIN$
 		suite.addTestSuite(PhpElementConciliatorTest.class);
-		//$JUnit-END$
+		suite.addTestSuite(PhpElementConciliatorV5_3Test.class);
+		// $JUnit-END$
 		return suite;
 	}
 
