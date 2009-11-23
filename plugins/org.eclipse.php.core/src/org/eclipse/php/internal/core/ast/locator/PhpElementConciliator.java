@@ -136,8 +136,15 @@ public class PhpElementConciliator {
 		if (locateNode.getType() != ASTNode.SCALAR) {
 			if ((locateNode instanceof Identifier)
 					&& "define".equals(((Identifier) locateNode).getName())) {
-				FunctionInvocation inv = (FunctionInvocation) locateNode
-						.getParent().getParent();
+				ASTNode parent = locateNode.getParent();
+				FunctionInvocation inv = null;
+				if (parent instanceof NamespaceName) {
+					inv = (FunctionInvocation) locateNode.getParent()
+							.getParent().getParent();
+				} else {
+					inv = (FunctionInvocation) locateNode.getParent()
+							.getParent();
+				}
 				List<Expression> parameters = inv.parameters();
 				if (parameters != null && parameters.size() > 0) {
 					scalar = (Scalar) parameters.get(0);
@@ -164,6 +171,9 @@ public class PhpElementConciliator {
 
 		// check if it is part of define
 		ASTNode previous = locateNode.getParent();
+		if (previous instanceof NamespaceName) {
+			previous = previous.getParent();
+		}
 		if (previous.getType() == ASTNode.FUNCTION_NAME) {
 			previous = previous.getParent();
 		}
@@ -173,7 +183,7 @@ public class PhpElementConciliator {
 		}
 
 		final FunctionInvocation functionInvocation = (FunctionInvocation) previous;
-		if (functionInvocation.getFunctionName().getName().getType() != ASTNode.IDENTIFIER) {
+		if (!(functionInvocation.getFunctionName().getName()instanceof Identifier)) {
 			return false;
 		}
 
@@ -456,7 +466,7 @@ public class PhpElementConciliator {
 			targetIdentifier = (Identifier) locateNode;
 			parent = targetIdentifier.getParent();
 			if (parent.getType() == ASTNode.NAMESPACE_NAME) {
-				parent = targetIdentifier.getParent();
+				parent = targetIdentifier.getParent().getParent();
 			}
 		} else {
 			return false;
