@@ -3,27 +3,15 @@ package org.eclipse.php.internal.core.ast.locator;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import junit.framework.TestCase;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.tests.PHPCoreTests;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 
-public class PhpElementConciliatorTest extends TestCase {
+public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
 	private IProject project1;
 
@@ -310,6 +298,228 @@ public class PhpElementConciliatorTest extends TestCase {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
+	public void testConcileFunc1() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?php function a($n){return ($n * $n);}echo a(5);?>");
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 45;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_FUNCTION,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
+	public void testConcileMethod1() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?class foo {public static function bar(){return 'bar in a class called';}}$strFN2 = foo::bar;echo bar();?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 91;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
+	public void testConcileMethod2() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?class foo {public function bar(){return 'bar in a class called';}}$strFN2 = new foo(); $strFN2->bar()?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 99;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
+	public void testConcileMethod3() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 96;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
+	public void testConcileField1() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?class foo {var $f; public function f(){$this->$f;}}?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// 
+		int start = 14;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+
+		start = 45;
+		selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+
+	}
+
+	public void testConcileField2() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?class foo {var $f; public function f(){$this->$f;}} $cls= new foo(); $cls->f;?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		//
+		int start = 78;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
+	public void testConcileStaticField1() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?class foo {public static $my_static = 'foo';} echo Foo::$my_static; echo $foo->my_static?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		//
+		int start = 28;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+
+		start = 59;
+		selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+
+		start = 82;
+		selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+
+	}
+
+	public void testLocalVar() {
+		IFile file = null;
+		try {
+			file = setFileContent("<? $x = 4; function assignx () {$x = 0; echo $x;} ?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select 'echo $x'
+		int start = 46;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE,
+				PhpElementConciliator.concile(selectedNode));
+
+		// declaration
+		start = 33;
+		selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
 	public void testConcileConstant() {
 		IFile file = null;
 		try {
@@ -353,100 +563,6 @@ public class PhpElementConciliatorTest extends TestCase {
 		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
 				PhpElementConciliator.concile(selectedNode));
 
-	}
-
-	protected Program createProgram(IFile file) {
-		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
-		Program program = null;
-		try {
-			program = createProgramFromSource(sourceModule);
-
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-		return program;
-	}
-
-	public Program createProgramFromSource(IFile file) throws Exception {
-		ISourceModule source = DLTKCore.createSourceModuleFrom(file);
-		return createProgramFromSource(source);
-	}
-
-	public Program createProgramFromSource(ISourceModule source)
-			throws Exception {
-		IResource resource = source.getResource();
-		IProject project = null;
-		if (resource instanceof IFile) {
-			project = ((IFile) resource).getProject();
-		}
-		PHPVersion version;
-		if (project != null) {
-			version = ProjectOptions.getPhpVersion(project);
-		} else {
-			version = ProjectOptions.getDefaultPhpVersion();
-		}
-		ASTParser newParser = ASTParser.newParser(version,
-				(ISourceModule) source);
-		return newParser.createAST(null);
-	}
-
-	protected ASTNode locateNode(Program program, int start, int end) {
-		ASTNode locateNode = NodeFinder.perform(program, start, end);
-		return locateNode;
-	}
-
-	public IProject createProject(String name) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				name);
-		if (project.exists()) {
-			return project;
-		}
-		try {
-			project.create(null);
-
-			project.open(IResource.BACKGROUND_REFRESH,
-					new NullProgressMonitor());
-			IProjectDescription desc = project.getDescription();
-			desc.setNatureIds(new String[] { PHPNature.ID });
-			project.setDescription(desc, null);
-
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
-		return project;
-	}
-
-	public IProject createProject(String name, PHPVersion version) {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				name);
-		if (project.exists()) {
-			return project;
-		}
-		try {
-			project.create(null);
-
-			project.open(IResource.BACKGROUND_REFRESH,
-					new NullProgressMonitor());
-			IProjectDescription desc = project.getDescription();
-			desc.setNatureIds(new String[] { PHPNature.ID });
-			project.setDescription(desc, null);
-
-			ProjectOptions.setPhpVersion(version, project);
-
-			project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
-		return project;
 	}
 
 }
