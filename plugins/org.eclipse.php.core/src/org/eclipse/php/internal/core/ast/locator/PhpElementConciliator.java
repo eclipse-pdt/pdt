@@ -135,7 +135,8 @@ public class PhpElementConciliator {
 		// check if it is an identifier
 		if (locateNode.getType() != ASTNode.SCALAR) {
 			if ((locateNode instanceof Identifier)
-					&& "define".equals(((Identifier) locateNode).getName())) {
+					&& "define".equals(((Identifier) locateNode).getName())
+					&& locateNode.getParent().getParent() instanceof FunctionInvocation) {
 				FunctionInvocation inv = (FunctionInvocation) locateNode
 						.getParent().getParent();
 				List<Expression> parameters = inv.parameters();
