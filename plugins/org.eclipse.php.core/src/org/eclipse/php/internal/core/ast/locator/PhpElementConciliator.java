@@ -134,18 +134,20 @@ public class PhpElementConciliator {
 		Scalar scalar = null;
 		// check if it is an identifier
 		if (locateNode.getType() != ASTNode.SCALAR) {
+			ASTNode parent = locateNode.getParent();
+			ASTNode node = null;
+			// php 5.3, the parent is NamespaceName
+			if (parent instanceof NamespaceName) {
+				node = parent.getParent().getParent();
+			} else { // non-php 5.3
+				node = parent.getParent();
+			}
+
+			// check if the node is 'define'
 			if ((locateNode instanceof Identifier)
 					&& "define".equals(((Identifier) locateNode).getName())
-					&& locateNode.getParent().getParent() instanceof FunctionInvocation) {
-				ASTNode parent = locateNode.getParent();
-				FunctionInvocation inv = null;
-				if (parent instanceof NamespaceName) {
-					inv = (FunctionInvocation) locateNode.getParent()
-							.getParent().getParent();
-				} else {
-					inv = (FunctionInvocation) locateNode.getParent()
-							.getParent();
-				}
+					&& node instanceof FunctionInvocation) {
+				FunctionInvocation inv = (FunctionInvocation) node;
 				List<Expression> parameters = inv.parameters();
 				if (parameters != null && parameters.size() > 0) {
 					scalar = (Scalar) parameters.get(0);
