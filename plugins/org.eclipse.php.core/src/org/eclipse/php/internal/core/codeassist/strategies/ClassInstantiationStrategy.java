@@ -66,7 +66,9 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 			IMethod ctor = null;
 			try {
 				for (IMethod method : type.getMethods()) {
-					if (method.isConstructor()) {
+					if (method.isConstructor()
+							&& method.getParameters() != null
+							&& method.getParameters().length > 0) {
 						ctor = method;
 						if (!PHPFlags.isPrivate(ctor.getFlags())
 								|| type.equals(enclosingClass)) {
