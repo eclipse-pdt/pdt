@@ -9,7 +9,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.ast.nodes.TypeDeclaration;
 
 public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 
@@ -267,6 +269,32 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
+	public void testConcileGlobalVar2() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?php $a = 1;  function test(){  global $a; echo $a;} ?>");
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the variable declaration.
+		int start = 41;
+
+		ASTNode selectedNode = locateNode(program, start, 0);
+		selectedNode = selectedNode.getParent();
+
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
 	public void testConcileFunc() {
 		IFile file = null;
 		try {
@@ -393,6 +421,30 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
+	public void testConcileMethod4() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 30;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
 	public void testConcileField1() {
 		IFile file = null;
 		try {
@@ -443,6 +495,31 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 		//
 		int start = 78;
 		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
+	public void testConcileField3() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?class foo {var $f; public function f(){$this->$f;}} $cls= new foo(); $cls->f;?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		//
+		int start = 18;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		selectedNode = selectedNode.getParent();
 		assertNotNull(selectedNode);
 
 		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
@@ -520,10 +597,36 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
+	public void testLocalVar1() {
+		IFile file = null;
+		try {
+			file = setFileContent("<? $x = 4; function assignx () {$x = 0; echo $x;} ?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select 'echo $x'
+		int start = 33;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		selectedNode = selectedNode.getParent();
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE,
+				PhpElementConciliator.concile(selectedNode));
+
+	}
+
 	public void testConcileConstant() {
 		IFile file = null;
 		try {
-			file = setFileContent("<?php define('CONSTANT', 'Hello world.'); echo CONSTANT; echo Constant; ?>");
+			file = setFileContent("<?php define(\"CONSTANT\", \"Hello world.\"); echo CONSTANT; echo Constant; ?>");
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
@@ -563,6 +666,152 @@ public class PhpElementConciliatorTest extends AbstraceConciliatorTest {
 		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
 				PhpElementConciliator.concile(selectedNode));
 
+	}
+
+	public void testConcileConstant1() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?php define (\"TEST\", 1234);");
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 6;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
+	public void testConcileConstantExists() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?php define (\"TEST\", 1234);");
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		assertTrue(PhpElementConciliator.constantAlreadyExists(program, "TEST"));
+	}
+
+	public void testConcileClsMemberExists() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?class foo {public static function bar(){return 'bar in a class called';}}$strFN2 = foo::bar;echo bar();?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 8;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		selectedNode = selectedNode.getParent();
+		assertNotNull(selectedNode);
+
+		assertTrue(selectedNode instanceof TypeDeclaration);
+
+		assertTrue(PhpElementConciliator.classMemeberAlreadyExists(
+				(TypeDeclaration) selectedNode, "bar",
+				ASTNode.FUNCTION_DECLARATION));
+	}
+
+	public void testConcileClassNameExists() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?php class TestRenameClass{}?>");
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		PhpElementConciliator
+				.classNameAlreadyExists(program, "TestRenameClass");
+	}
+
+	public void testLocalVarExists() {
+		IFile file = null;
+		try {
+			file = setFileContent("<? $x = 4; function assignx () {$x = 0; echo $x;} ?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		int start = 21;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		selectedNode = selectedNode.getParent();
+		assertNotNull(selectedNode);
+
+		PhpElementConciliator.localVariableAlreadyExists(
+				(FunctionDeclaration) selectedNode, "x");
+	}
+
+	public void testFunExists1() {
+		IFile file = null;
+		try {
+			file = setFileContent("<? $x = 4; function assignx () {$x = 0; echo $x;} ?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		PhpElementConciliator.functionAlreadyExists(program, "assignx");
+	}
+
+	public void testConcileGlobalExists() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?php $a = 1;  function test(){ echo $GLOBALS['a'];} ?>");
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		assertTrue(PhpElementConciliator.globalVariableAlreadyExists(program,
+				"a"));
 	}
 
 }

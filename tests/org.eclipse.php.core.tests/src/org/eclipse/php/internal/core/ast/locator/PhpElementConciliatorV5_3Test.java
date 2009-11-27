@@ -22,7 +22,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 
-		project1 = createProject("project1", PHPVersion.PHP5_3);
+		project1 = createProject("project53", PHPVersion.PHP5_3);
 
 	}
 
@@ -44,7 +44,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 	public void testConcileClassName() {
 		IFile file = null;
 		try {
-			file = setFileContent("<?php namespace my\name; class TestRenameClass{}?>");
+			file = setFileContent("<?php namespace my\name; class TestRenameClass{} new TestRenameClass(); ?>");
 		} catch (CoreException e) {
 			fail(e.getMessage());
 		}
@@ -56,7 +56,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		assertNotNull(program);
 
 		// select the class name.
-		int start = 32;
+		int start = 54;
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
 
@@ -394,6 +394,30 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 				PhpElementConciliator.concile(selectedNode));
 	}
 
+	public void testConcileMethod4() {
+		IFile file = null;
+		try {
+			file = setFileContent("<? namespace my\name;class foo {public function bar(){return 'bar in a class called';} public function f(){$this->bar();}}?>");
+
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 50;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CLASS_MEMBER,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
 	public void testConcileField1() {
 		IFile file = null;
 		try {
@@ -566,4 +590,49 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 	}
 
+	public void testConcileConstant1() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?php namespace my\name; define ('TEST', 1234); ?>");
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 26;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
+	public void testConcileConstant2() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?php namespace my\name; define ('TEST', 1234); ?>");
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 27;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
+				PhpElementConciliator.concile(selectedNode));
+	}
 }
