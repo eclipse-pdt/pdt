@@ -43,11 +43,11 @@ function bar() {}
 				</FunctionDeclaration>
 			</Block>
 		</NamespaceDeclaration>
-		<NamespaceDeclaration start='53' length='49' isBracketed='true'>
+		<NamespaceDeclaration start='53' length='46' isBracketed='true'>
 			<NamespaceName start='63' length='3' global='false' current='false'>
 				<Identifier start='63' length='3' name='NS2'/>
 			</NamespaceName>
-			<Block start='67' length='36' isCurly='true'>
+			<Block start='67' length='32' isCurly='true'>
 				<ClassDeclaration start='69' length='10' modifier=''>
 					<ClassName>
 						<Identifier start='75' length='1' name='A'/>
@@ -70,10 +70,11 @@ function bar() {}
 						</Block>
 					</FunctionBody>
 				</FunctionDeclaration>
-				<EmptyStatement start='100' length='2'/>
 			</Block>
 		</NamespaceDeclaration>
+		<EmptyStatement start='100' length='2'/>
 	</Statements>
 	<Comments>
 	</Comments>
 </Program>
+

@@ -43,8 +43,8 @@ function bar() {}
 				</FunctionDeclaration>
 			</Block>
 		</NamespaceDeclaration>
-		<NamespaceDeclaration start='53' length='45' isBracketed='true'>
-			<Block start='63' length='36' isCurly='true'>
+		<NamespaceDeclaration start='53' length='42' isBracketed='true'>
+			<Block start='63' length='32' isCurly='true'>
 				<ClassDeclaration start='65' length='10' modifier=''>
 					<ClassName>
 						<Identifier start='71' length='1' name='A'/>
@@ -67,9 +67,9 @@ function bar() {}
 						</Block>
 					</FunctionBody>
 				</FunctionDeclaration>
-				<EmptyStatement start='96' length='2'/>
 			</Block>
 		</NamespaceDeclaration>
+		<EmptyStatement start='96' length='2'/>
 	</Statements>
 	<Comments>
 	</Comments>
