@@ -33,7 +33,6 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 					.getType() == ASTNode.NAMESPACE_NAME)
 					&& invocationParent != ASTNode.STATIC_METHOD_INVOCATION) {
 				if (functionName instanceof Identifier) {
-					String name = ((Identifier) functionName).getName();
 					if (isInternalFunction(functionInvocation.getFunctionName())) {
 						highlight(functionName);
 					}
@@ -66,7 +65,8 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setDefaultTextColor(new RGB(0, 0, 192));
+		getStyle().setEnabledByDefault(false).setDefaultTextColor(
+				new RGB(0, 0, 192));
 	}
 
 	public String getDisplayName() {

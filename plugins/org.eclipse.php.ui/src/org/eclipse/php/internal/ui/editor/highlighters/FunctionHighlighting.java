@@ -65,7 +65,7 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setItalicByDefault(true);
+		getStyle().setEnabledByDefault(false).setItalicByDefault(true);
 	}
 
 	public String getDisplayName() {

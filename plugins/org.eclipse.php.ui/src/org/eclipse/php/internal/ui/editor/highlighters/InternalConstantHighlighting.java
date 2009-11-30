@@ -34,8 +34,8 @@ public class InternalConstantHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setItalicByDefault(true).setBoldByDefault(true)
-				.setDefaultTextColor(0, 0, 192);
+		getStyle().setEnabledByDefault(false).setItalicByDefault(true)
+				.setBoldByDefault(true).setDefaultTextColor(0, 0, 192);
 	}
 
 	public String getDisplayName() {
