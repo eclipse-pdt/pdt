@@ -262,6 +262,10 @@ public class FileNetworkUtility {
 				MatchRule.PREFIX, SearchEngine.createSearchScope(sourceModule),
 				monitor);
 
+		if (includes == null) {
+			return;
+		}
+
 		List<Node> nodesToBuild = new LinkedList<Node>();
 		for (IField include : includes) {
 			String filePath = ((IncludeField) include).getFilePath();
