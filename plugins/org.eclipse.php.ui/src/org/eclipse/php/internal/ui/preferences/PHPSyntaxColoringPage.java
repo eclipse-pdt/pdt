@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
+ *     Zend Technologies - initial API and implementation
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
@@ -31,6 +30,8 @@ import org.eclipse.php.internal.core.documentModel.provisional.contenttype.Conte
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
+import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
@@ -72,7 +73,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	private Label fForegroundLabel;
 	private Label fBackgroundLabel;
 	private Button fClearStyle;
-	private Map fContextToStyleMap;
+	private Map<String, String> fContextToStyleMap;
 	private Color fDefaultForeground = null;
 	private Color fDefaultBackground = null;
 	private IStructuredDocument fDocument;
@@ -81,12 +82,13 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	private Button fItalic;
 	private OverlayPreferenceStore fOverlayStore;
 	private Button fStrike;
-	private Collection fStylePreferenceKeys;
+	private Collection<String> fStylePreferenceKeys;
 	private StructuredViewer fStylesViewer = null;
-	private Map fStyleToDescriptionMap;
+	private Map<String, String> fStyleToDescriptionMap;
 	private StyledText fText;
 	private Button fUnderline;
 	private final LineStyleProviderForPhp fStyleProvider;
+	private Button fEnabler;
 
 	public PHPSyntaxColoringPage() {
 		fStyleProvider = new LineStyleProviderForPhp();
@@ -97,6 +99,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		Color foreground = fDefaultForeground;
 		Color background = fDefaultBackground;
 		if (namedStyle == null) {
+			fEnabler.setEnabled(false);
 			fClearStyle.setEnabled(false);
 			fBold.setEnabled(false);
 			fItalic.setEnabled(false);
@@ -112,15 +115,24 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			fUnderline.setSelection(false);
 		} else {
 			TextAttribute attribute = getAttributeFor(namedStyle);
-			fClearStyle.setEnabled(true);
-			fBold.setEnabled(true);
-			fItalic.setEnabled(true);
-			fStrike.setEnabled(true);
-			fUnderline.setEnabled(true);
-			fForegroundLabel.setEnabled(true);
-			fBackgroundLabel.setEnabled(true);
-			fForegroundColorEditor.setEnabled(true);
-			fBackgroundColorEditor.setEnabled(true);
+			AbstractSemanticHighlighting semanticType = SemanticHighlightingManager
+					.getInstance().getSemanticHighlightings().get(namedStyle);
+			boolean enabled = true;
+			if (semanticType != null) {
+				enabled = getOverlayStore().getBoolean(
+						semanticType.getEnabledPreferenceKey());
+			}
+			fEnabler.setSelection(enabled);
+			fEnabler.setEnabled(true);
+			fClearStyle.setEnabled(enabled);
+			fBold.setEnabled(enabled);
+			fItalic.setEnabled(enabled);
+			fStrike.setEnabled(enabled);
+			fUnderline.setEnabled(enabled);
+			fForegroundLabel.setEnabled(enabled);
+			fBackgroundLabel.setEnabled(enabled);
+			fForegroundColorEditor.setEnabled(enabled);
+			fBackgroundColorEditor.setEnabled(enabled);
 			fBold.setSelection((attribute.getStyle() & SWT.BOLD) != 0);
 			fItalic.setSelection((attribute.getStyle() & SWT.ITALIC) != 0);
 			fStrike
@@ -137,6 +149,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 
 		fForegroundColorEditor.setColorValue(foreground.getRGB());
 		fBackgroundColorEditor.setColorValue(background.getRGB());
+
 	}
 
 	/**
@@ -151,12 +164,14 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		IStructuredDocumentRegion documentRegion = fDocument
 				.getFirstStructuredDocumentRegion();
 		while (documentRegion != null) {
-			final Collection holdResults = new ArrayList();
+			final Collection<StyleRange> holdResults = new ArrayList<StyleRange>();
 			fStyleProvider.prepareTextRegions(documentRegion, 0, documentRegion
 					.getEnd(), holdResults);
 
-			for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
-				StyleRange element = (StyleRange) iter.next();
+			for (Iterator<StyleRange> iter = holdResults.iterator(); iter
+					.hasNext();) {
+				StyleRange element = iter.next();
+
 				fText.setStyleRange(element);
 			}
 			documentRegion = documentRegion.getNext();
@@ -233,7 +248,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		fStylesViewer = createStylesViewer(styleEditor);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData.horizontalIndent = 0;
-		Iterator iterator = fStyleToDescriptionMap.values().iterator();
+		Iterator<String> iterator = fStyleToDescriptionMap.values().iterator();
 		while (iterator.hasNext()) {
 			gridData.widthHint = Math.max(gridData.widthHint,
 					convertWidthInCharsToPixels(iterator.next().toString()
@@ -245,10 +260,11 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		Composite editingComposite = createComposite(top, 1);
 		((GridLayout) styleEditor.getLayout()).marginLeft = 5;
 		createLabel(editingComposite, ""); //$NON-NLS-1$
-		Button enabler = createCheckbox(editingComposite,
+
+		fEnabler = createCheckbox(editingComposite,
 				XMLUIMessages.SyntaxColoringPage_2);
-		enabler.setEnabled(false);
-		enabler.setSelection(true);
+		fEnabler.setEnabled(false);
+
 		Composite editControls = createComposite(editingComposite, 2);
 		((GridLayout) editControls.getLayout()).marginLeft = 20;
 
@@ -353,6 +369,28 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 					Object o = ((IStructuredSelection) fStylesViewer
 							.getSelection()).getFirstElement();
 					String namedStyle = o.toString();
+
+					if (SemanticHighlightingManager.getInstance()
+							.getSemanticHighlightings().containsKey(namedStyle)) {
+						AbstractSemanticHighlighting semanticHighlighting = SemanticHighlightingManager
+								.getInstance().getSemanticHighlightings().get(
+										namedStyle);
+						String oldValue = getOverlayStore().getString(
+								semanticHighlighting.getColorPreferenceKey());
+						String newValue = ColorHelper
+								.toRGBString(fForegroundColorEditor
+										.getColorValue());
+
+						if (!newValue.equals(oldValue)) {
+							getOverlayStore().setValue(
+									semanticHighlighting
+											.getColorPreferenceKey(), newValue);
+							// applyStyles();
+							// fText.redraw();
+						}
+						return;
+					}
+
 					String prefString = getOverlayStore().getString(namedStyle);
 					String[] stylePrefs = ColorHelper
 							.unpackStylePreferences(prefString);
@@ -416,6 +454,26 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 				Object o = ((IStructuredSelection) fStylesViewer.getSelection())
 						.getFirstElement();
 				String namedStyle = o.toString();
+
+				if (SemanticHighlightingManager.getInstance()
+						.getSemanticHighlightings().containsKey(namedStyle)) {
+					AbstractSemanticHighlighting semanticHighlighting = SemanticHighlightingManager
+							.getInstance().getSemanticHighlightings().get(
+									namedStyle);
+					String oldValue = getOverlayStore().getString(
+							semanticHighlighting.getBoldPreferenceKey());
+					String newValue = String.valueOf(fBold.getSelection());
+
+					if (!newValue.equals(oldValue)) {
+						getOverlayStore().setValue(
+								semanticHighlighting.getBoldPreferenceKey(),
+								newValue);
+						// applyStyles();
+						// fText.redraw();
+					}
+					return;
+				}
+
 				String prefString = getOverlayStore().getString(namedStyle);
 				String[] stylePrefs = ColorHelper
 						.unpackStylePreferences(prefString);
@@ -442,6 +500,24 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 				Object o = ((IStructuredSelection) fStylesViewer.getSelection())
 						.getFirstElement();
 				String namedStyle = o.toString();
+				if (SemanticHighlightingManager.getInstance()
+						.getSemanticHighlightings().containsKey(namedStyle)) {
+					AbstractSemanticHighlighting semanticHighlightingType = SemanticHighlightingManager
+							.getInstance().getSemanticHighlightings().get(
+									namedStyle);
+					String oldValue = getOverlayStore().getString(
+							semanticHighlightingType.getItalicPreferenceKey());
+					String newValue = String.valueOf(fItalic.getSelection());
+
+					if (!newValue.equals(oldValue)) {
+						getOverlayStore().setValue(
+								semanticHighlightingType
+										.getItalicPreferenceKey(), newValue);
+						// applyStyles();
+						// fText.redraw();
+					}
+					return;
+				}
 				String prefString = getOverlayStore().getString(namedStyle);
 				String[] stylePrefs = ColorHelper
 						.unpackStylePreferences(prefString);
@@ -468,6 +544,26 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 				Object o = ((IStructuredSelection) fStylesViewer.getSelection())
 						.getFirstElement();
 				String namedStyle = o.toString();
+				if (SemanticHighlightingManager.getInstance()
+						.getSemanticHighlightings().containsKey(namedStyle)) {
+					AbstractSemanticHighlighting semanticHighlighting = SemanticHighlightingManager
+							.getInstance().getSemanticHighlightings().get(
+									namedStyle);
+					String oldValue = getOverlayStore().getString(
+							semanticHighlighting
+									.getStrikethroughPreferenceKey());
+					String newValue = String.valueOf(fStrike.getSelection());
+
+					if (!newValue.equals(oldValue)) {
+						getOverlayStore().setValue(
+								semanticHighlighting
+										.getStrikethroughPreferenceKey(),
+								newValue);
+						// applyStyles();
+						// fText.redraw();
+					}
+					return;
+				}
 				String prefString = getOverlayStore().getString(namedStyle);
 				String[] stylePrefs = ColorHelper
 						.unpackStylePreferences(prefString);
@@ -494,6 +590,26 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 				Object o = ((IStructuredSelection) fStylesViewer.getSelection())
 						.getFirstElement();
 				String namedStyle = o.toString();
+
+				if (SemanticHighlightingManager.getInstance()
+						.getSemanticHighlightings().containsKey(namedStyle)) {
+					AbstractSemanticHighlighting semanticHighlighting = SemanticHighlightingManager
+							.getInstance().getSemanticHighlightings().get(
+									namedStyle);
+					String oldValue = getOverlayStore().getString(
+							semanticHighlighting.getUnderlinePreferenceKey());
+					String newValue = String.valueOf(fUnderline.getSelection());
+
+					if (!newValue.equals(oldValue)) {
+						getOverlayStore().setValue(
+								semanticHighlighting
+										.getUnderlinePreferenceKey(), newValue);
+						// applyStyles();
+						// fText.redraw();
+					}
+					return;
+				}
+
 				String prefString = getOverlayStore().getString(namedStyle);
 				String[] stylePrefs = ColorHelper
 						.unpackStylePreferences(prefString);
@@ -526,6 +642,31 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			}
 		});
 
+		fEnabler.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent e) {
+				// get current (newly old) style
+				Object o = ((IStructuredSelection) fStylesViewer.getSelection())
+						.getFirstElement();
+				String namedStyle = o.toString();
+
+				Map<String, AbstractSemanticHighlighting> highlightingMap = SemanticHighlightingManager
+						.getInstance().getSemanticHighlightings();
+				if (highlightingMap.containsKey(namedStyle)) {
+					AbstractSemanticHighlighting semantic = highlightingMap
+							.get(namedStyle);
+					boolean enablement = fEnabler.getSelection();
+					semantic.getStyle().setEnabledByDefault(enablement);
+					switchEnablement(enablement);
+					getOverlayStore().setValue(
+							semantic.getEnabledPreferenceKey(), enablement);
+
+				}
+			}
+
+		});
+
+		switchEnablement(true);
 		return pageComponent;
 	}
 
@@ -546,16 +687,41 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	 * Set up all the style preference keys in the overlay store
 	 */
 	private OverlayKey[] createOverlayStoreKeys() {
-		List overlayKeys = new ArrayList();
+		List<OverlayKey> overlayKeys = new ArrayList<OverlayKey>();
 
-		Iterator i = getStylePreferenceKeys().iterator();
+		Iterator<String> i = getStylePreferenceKeys().iterator();
 		while (i.hasNext()) {
 			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-					OverlayPreferenceStore.STRING, (String) i.next()));
+					OverlayPreferenceStore.STRING, i.next()));
+		}
+
+		for (AbstractSemanticHighlighting rule : SemanticHighlightingManager
+				.getInstance().getSemanticHighlightings().values()) {
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+					OverlayPreferenceStore.STRING, rule
+							.getEnabledPreferenceKey()));
+			overlayKeys
+					.add(new OverlayPreferenceStore.OverlayKey(
+							OverlayPreferenceStore.STRING, rule
+									.getColorPreferenceKey()));
+			overlayKeys
+					.add(new OverlayPreferenceStore.OverlayKey(
+							OverlayPreferenceStore.STRING, rule
+									.getBoldPreferenceKey()));
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+					OverlayPreferenceStore.STRING, rule
+							.getItalicPreferenceKey()));
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+					OverlayPreferenceStore.STRING, rule
+							.getStrikethroughPreferenceKey()));
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+					OverlayPreferenceStore.STRING, rule
+							.getUnderlinePreferenceKey()));
 		}
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
 				.size()];
+
 		overlayKeys.toArray(keys);
 		return keys;
 	}
@@ -578,6 +744,13 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 				Object description = fStyleToDescriptionMap.get(element);
 				if (description != null)
 					return description.toString();
+				else if (SemanticHighlightingManager.getInstance()
+						.getSemanticHighlightings().containsKey(element)) {
+					AbstractSemanticHighlighting semanticHighlighting = SemanticHighlightingManager
+							.getInstance().getSemanticHighlightings().get(
+									element);
+					return semanticHighlighting.getDisplayName();
+				}
 				return super.getText(element);
 			}
 		});
@@ -626,6 +799,43 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 				fDefaultBackground, SWT.NORMAL);
 
 		if (namedStyle != null && fOverlayStore != null) {
+
+			if (SemanticHighlightingManager.getInstance()
+					.getSemanticHighlightings().containsKey(namedStyle)) {
+				AbstractSemanticHighlighting semanticHighlightingType = SemanticHighlightingManager
+						.getInstance().getSemanticHighlightings().get(
+								namedStyle);
+
+				int fontModifier = SWT.NORMAL;
+				boolean on = getOverlayStore().getBoolean(
+						semanticHighlightingType.getBoldPreferenceKey());
+				if (on)
+					fontModifier = fontModifier | SWT.BOLD;
+
+				on = getOverlayStore().getBoolean(
+						semanticHighlightingType.getItalicPreferenceKey());
+				if (on)
+					fontModifier = fontModifier | SWT.ITALIC;
+
+				on = getOverlayStore().getBoolean(
+						semanticHighlightingType
+								.getStrikethroughPreferenceKey());
+				if (on)
+					fontModifier = fontModifier | TextAttribute.STRIKETHROUGH;
+
+				on = getOverlayStore().getBoolean(
+						semanticHighlightingType.getUnderlinePreferenceKey());
+				if (on)
+					fontModifier = fontModifier | TextAttribute.UNDERLINE;
+
+				String color = getOverlayStore().getString(
+						semanticHighlightingType.getColorPreferenceKey());
+				RGB foreground = ColorHelper.toRGB(color);
+				ta = new TextAttribute((foreground != null) ? EditorUtility
+						.getColor(foreground) : null, null, fontModifier);
+				return ta;
+			}
+
 			// note: "namedStyle" *is* the preference key
 			String prefString = getOverlayStore().getString(namedStyle);
 			String[] stylePrefs = ColorHelper
@@ -716,7 +926,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 
 			// find the named style (internal/selectable name) for that
 			// context
-			String namedStyle = (String) fContextToStyleMap.get(regionContext);
+			String namedStyle = fContextToStyleMap.get(regionContext);
 			return namedStyle;
 		}
 		return null;
@@ -726,9 +936,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		return fOverlayStore;
 	}
 
-	private Collection getStylePreferenceKeys() {
+	private Collection<String> getStylePreferenceKeys() {
 		if (fStylePreferenceKeys == null) {
-			List styles = new ArrayList();
+			List<String> styles = new ArrayList<String>();
 			styles.add(PreferenceConstants.EDITOR_NORMAL_COLOR);
 			styles.add(PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR);
 			styles.add(PreferenceConstants.EDITOR_KEYWORD_COLOR);
@@ -737,8 +947,14 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			styles.add(PreferenceConstants.EDITOR_NUMBER_COLOR);
 			styles.add(PreferenceConstants.EDITOR_HEREDOC_COLOR);
 			styles.add(PreferenceConstants.EDITOR_COMMENT_COLOR);
+			styles.add(PreferenceConstants.EDITOR_LINE_COMMENT_COLOR);
+			styles.add(PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
 			styles.add(PreferenceConstants.EDITOR_PHPDOC_COLOR);
 			styles.add(PreferenceConstants.EDITOR_TASK_COLOR);
+
+			styles.addAll(SemanticHighlightingManager.getInstance()
+					.getSemanticHighlightings().keySet());
+
 			fStylePreferenceKeys = styles;
 		}
 		return fStylePreferenceKeys;
@@ -815,8 +1031,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	public void init(IWorkbench workbench) {
 		setDescription(SSEUIMessages.SyntaxColoring_Description);
 
-		fStyleToDescriptionMap = new HashMap();
-		fContextToStyleMap = new HashMap();
+		fStyleToDescriptionMap = new HashMap<String, String>();
+		fContextToStyleMap = new HashMap<String, String>();
 
 		initStyleToDescriptionMap();
 		initRegionContextToStyleMap();
@@ -851,6 +1067,12 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 				PHPUIMessages.getString("ColorPage_Heredoc"));
 		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_COMMENT_COLOR,
 				PHPUIMessages.getString("ColorPage_Comment"));
+		fStyleToDescriptionMap.put(
+				PreferenceConstants.EDITOR_LINE_COMMENT_COLOR, PHPUIMessages
+						.getString("ColorPage_LineComment"));
+		fStyleToDescriptionMap.put(
+				PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR, PHPUIMessages
+						.getString("ColorPage_PHPDOCComment"));
 		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_PHPDOC_COLOR,
 				PHPUIMessages.getString("ColorPage_Phpdoc"));
 		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_TASK_COLOR,
@@ -870,7 +1092,6 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	@Override
 	public boolean performOk() {
 		getOverlayStore().propagate();
-
 		PHPUiPlugin.getDefault().savePluginPreferences();
 		return true;
 	}
@@ -900,5 +1121,14 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 					e.result = n;
 			}
 		});
+	}
+
+	private void switchEnablement(boolean b) {
+		fBold.setEnabled(b);
+		fItalic.setEnabled(b);
+		fUnderline.setEnabled(b);
+		fStrike.setEnabled(b);
+		fBackgroundColorEditor.setEnabled(b);
+		fForegroundColorEditor.setEnabled(b);
 	}
 }

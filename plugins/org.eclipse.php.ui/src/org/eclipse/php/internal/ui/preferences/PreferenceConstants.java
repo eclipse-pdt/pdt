@@ -6,8 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
+ *     Zend Technologies - initial API and implementation
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
@@ -20,7 +19,7 @@ import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.SemanticHighlightings;
+import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.swt.SWT;
@@ -196,7 +195,41 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_COMMENT_DEFAULT_COLOR = ColorHelper
-			.getColorString(128, 128, 128);
+			.getColorString(85, 127, 95);
+
+	/**
+	 * A named preference that holds the color for the PHP comments
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String EDITOR_LINE_COMMENT_COLOR = "editorColorLineComment"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for the PHP comments
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String EDITOR_LINE_COMMENT_DEFAULT_COLOR = ColorHelper
+			.getColorString(85, 127, 95);
+
+	/**
+	 * A named preference that holds the color for the PHP comments
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String EDITOR_PHPDOC_COMMENT_COLOR = "editorColorPHPDocComment"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for the PHP comments
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR = ColorHelper
+			.getColorString(63, 85, 191);
 
 	/**
 	 * A named preference that holds the color for the TASK tag inside the
@@ -259,7 +292,8 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_KEYWORD_DEFAULT_COLOR = ColorHelper
-			.getColorString(0, 0, 255);
+			.packStylePreferences(new String[] {
+					ColorHelper.getColorString(127, 0, 85), null, "true" });
 
 	/**
 	 * A named preference that holds the color for the normal PHP text
@@ -293,7 +327,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_NUMBER_DEFAULT_COLOR = ColorHelper
-			.getColorString(255, 0, 0);
+			.getColorString(0, 0, 0);
 
 	/**
 	 * A named preference that holds the color for the PHPDoc comments
@@ -308,9 +342,11 @@ public class PreferenceConstants {
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
+	 * 
+	 * @return Foo
 	 */
 	public static final String EDITOR_PHPDOC_DEFAULT_COLOR = ColorHelper
-			.getColorString(128, 128, 128)
+			.getColorString(127, 159, 191)
 			+ " | | true"; //$NON-NLS-1$
 
 	/**
@@ -328,7 +364,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_STRING_DEFAULT_COLOR = ColorHelper
-			.getColorString(0, 130, 0);
+			.getColorString(0, 0, 192);
 
 	/**
 	 * A named preference that controls whether the outline view selection
@@ -354,7 +390,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_VARIABLE_DEFAULT_COLOR = ColorHelper
-			.getColorString(102, 0, 0);
+			.getColorString(0, 0, 0);
 
 	/**
 	 * A named preference that controls the smart tab behavior.
@@ -516,7 +552,7 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 * @deprecated As of 3.1, this preference is not used or set any longer; see
-	 *             {@link SemanticHighlightings#affectsEnablement(IPreferenceStore, org.eclipse.jface.util.PropertyChangeEvent)}
+	 *             {@link SemanticHighlightingManager#affectsEnablement(IPreferenceStore, org.eclipse.jface.util.PropertyChangeEvent)}
 	 */
 	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED = EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
 			+ "enabled"; //$NON-NLS-1$
@@ -1068,6 +1104,10 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_NUMBER_COLOR, EDITOR_NUMBER_DEFAULT_COLOR);
 		store.setDefault(EDITOR_HEREDOC_COLOR, EDITOR_HEREDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_COMMENT_COLOR, EDITOR_COMMENT_DEFAULT_COLOR);
+		store.setDefault(EDITOR_LINE_COMMENT_COLOR,
+				EDITOR_LINE_COMMENT_DEFAULT_COLOR);
+		store.setDefault(EDITOR_PHPDOC_COMMENT_COLOR,
+				EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR);
 		store.setDefault(EDITOR_PHPDOC_COLOR, EDITOR_PHPDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_TASK_COLOR, EDITOR_TASK_DEFAULT_COLOR);
 
@@ -1147,6 +1187,9 @@ public class PreferenceConstants {
 				PHPContentOutlineConfiguration.MODE_PHP);
 
 		store.setDefault(EXPLORER_GROUP_BY_NAMESPACES, false);
+
+		// PHP Semantic Highlighting
+		SemanticHighlightingManager.getInstance().initDefaults(store);
 
 		// do more complicated stuff
 		PHPProjectLayoutPreferencePage.initDefaults(store);

@@ -205,6 +205,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_CONST,
 				PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_KEYWORD,
+				PreferenceConstants.EDITOR_KEYWORD_COLOR);
 
 		// Variables
 		fColorTypes.put(PHPRegionTypes.PHP_VARIABLE,
@@ -224,7 +226,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		fColorTypes.put(PHPRegionTypes.PHP_COMMENT_END,
 				PreferenceConstants.EDITOR_COMMENT_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_LINE_COMMENT,
-				PreferenceConstants.EDITOR_COMMENT_COLOR);
+				PreferenceConstants.EDITOR_LINE_COMMENT_COLOR);
 
 		// Numbers
 		fColorTypes.put(PHPRegionTypes.PHP_NUMBER,
@@ -305,11 +307,11 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				PreferenceConstants.EDITOR_PHPDOC_COLOR);
 
 		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT,
-				PreferenceConstants.EDITOR_COMMENT_COLOR);
+				PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT_START,
-				PreferenceConstants.EDITOR_COMMENT_COLOR);
+				PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_COMMENT_END,
-				PreferenceConstants.EDITOR_COMMENT_COLOR);
+				PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
 
 		fColorTypes.put(PHPRegionTypes.TASK,
 				PreferenceConstants.EDITOR_TASK_COLOR);
@@ -765,6 +767,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		addTextAttribute(PreferenceConstants.EDITOR_VARIABLE_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_STRING_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_COMMENT_COLOR);
+		addTextAttribute(PreferenceConstants.EDITOR_LINE_COMMENT_COLOR);
+		addTextAttribute(PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_NUMBER_COLOR);
 		addTextAttribute(PreferenceConstants.EDITOR_HEREDOC_COLOR);
@@ -814,6 +818,10 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 							.equals(prefKey)
 					|| PreferenceConstants.EDITOR_STRING_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_COMMENT_COLOR.equals(prefKey)
+					|| PreferenceConstants.EDITOR_LINE_COMMENT_COLOR
+							.equals(prefKey)
+					|| PreferenceConstants.EDITOR_PHPDOC_COMMENT_COLOR
+							.equals(prefKey)
 					|| PreferenceConstants.EDITOR_PHPDOC_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_NUMBER_COLOR.equals(prefKey)
 					|| PreferenceConstants.EDITOR_HEREDOC_COLOR.equals(prefKey)
