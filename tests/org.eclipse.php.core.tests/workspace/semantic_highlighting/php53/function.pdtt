@@ -1,0 +1,16 @@
+--TEST--
+Test Function Semantic highlighting
+--FILE--
+<?php
+function test(){
+	return false;
+}
+test();
+Foo::test();
+B\test();
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.FunctionHighlighting:
+highlight(test)
+highlight(test)
+highlight(test)

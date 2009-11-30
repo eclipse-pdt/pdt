@@ -1,0 +1,23 @@
+--TEST--
+Test Internal Constant Semantic highlighting
+--FILE--
+<?php
+echo __LINE__;
+echo __FILE__;
+echo __DIR__;
+echo __FUNCTION__;
+echo __CLASS__;
+echo __METHOD__;
+echo __NAMESPACE__;
+echo __FILE__;
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.InternalConstantHighlighting:
+highlight(__LINE__)
+highlight(__FILE__)
+highlight(__DIR__)
+highlight(__FUNCTION__)
+highlight(__CLASS__)
+highlight(__METHOD__)
+highlight(__NAMESPACE__)
+highlight(__FILE__)

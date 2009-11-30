@@ -1,0 +1,44 @@
+--TEST--
+Test Deprecated Semantic highlighting
+--FILE--
+<?php
+/**
+ * @deprecated
+ */
+class Foo {
+  /**
+   * @deprecated
+   */
+  public $attr;
+  
+  /**
+   * @deprecated
+   */
+  public function test(){
+  	return false;
+  }
+}
+
+$foo = new Foo();
+echo $foo->attr;
+$foo->test();
+
+/**
+ * @deprecated
+ */
+function test()
+{
+	return false;
+}
+test();
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
+highlight(Foo)
+highlight($attr)
+highlight(test)
+highlight(test)
+highlight(Foo)
+highlight(attr)
+highlight(test)
+highlight(test)
