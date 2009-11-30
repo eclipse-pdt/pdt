@@ -1442,6 +1442,9 @@ public class PHPModelUtils {
 				IType[] superTypes = PhpModelAccess.getDefault().findTypes(
 						superClass, MatchRule.EXACT, 0, Modifiers.AccNameSpace,
 						scope, null);
+				if (superTypes == null) {
+					continue;
+				}
 				Collection<IType> filteredTypes = fileNetworkFilter(type
 						.getSourceModule(), Arrays.asList(superTypes),
 						referenceTree);
