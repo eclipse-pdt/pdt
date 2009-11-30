@@ -30,6 +30,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -394,7 +395,7 @@ public class PHPModelUtils {
 			}
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 		return null;
@@ -422,7 +423,7 @@ public class PHPModelUtils {
 			}
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 		return null;
@@ -449,7 +450,7 @@ public class PHPModelUtils {
 			}
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 		return null;
@@ -602,7 +603,7 @@ public class PHPModelUtils {
 				null);
 
 		Collection<IMethod> filteredElements = filterElements(sourceModule,
-				Arrays.asList(functions));
+				Arrays.asList(functions == null ? new IMethod[0] : functions));
 		return (IMethod[]) filteredElements
 				.toArray(new IMethod[filteredElements.size()]);
 	};
@@ -845,9 +846,11 @@ public class PHPModelUtils {
 				monitor);
 
 		List<IType> result = new LinkedList<IType>();
-		for (IType ns : namespaces) {
-			result.addAll(Arrays.asList(PHPModelUtils.getTypeType(ns, prefix,
-					exactName)));
+		if (namespaces != null) {
+			for (IType ns : namespaces) {
+				result.addAll(Arrays.asList(PHPModelUtils.getTypeType(ns,
+						prefix, exactName)));
+			}
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
 	}
@@ -860,7 +863,7 @@ public class PHPModelUtils {
 			rootNode.traverse(visitor);
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 		return (TypeDeclaration) visitor.getResult();
@@ -889,7 +892,7 @@ public class PHPModelUtils {
 			rootNode.traverse(visitor);
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 		return (ASTNode) visitor.getResult();
@@ -903,7 +906,7 @@ public class PHPModelUtils {
 			rootNode.traverse(visitor);
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 		return (MethodDeclaration) visitor.getResult();
@@ -1278,10 +1281,13 @@ public class PHPModelUtils {
 			return null;
 		}
 
-		List<IType> result = new ArrayList<IType>(types.length);
-		for (IType type : types) {
-			if (getCurrentNamespace(type) == null) {
-				result.add(type);
+		List<IType> result = new ArrayList<IType>(types != null ? types.length
+				: 0);
+		if (types != null) {
+			for (IType type : types) {
+				if (getCurrentNamespace(type) == null) {
+					result.add(type);
+				}
 			}
 		}
 
@@ -1441,9 +1447,6 @@ public class PHPModelUtils {
 				IType[] superTypes = PhpModelAccess.getDefault().findTypes(
 						superClass, MatchRule.EXACT, 0, Modifiers.AccNameSpace,
 						scope, null);
-				if (superTypes == null) {
-					continue;
-				}
 				Collection<IType> filteredTypes = fileNetworkFilter(type
 						.getSourceModule(), Arrays.asList(superTypes),
 						referenceTree);

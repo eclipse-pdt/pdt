@@ -534,6 +534,10 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     return PHP__FILE__;
 }
 
+<ST_PHP_IN_SCRIPTING>"$this" {
+    return PHP_KEYWORD;
+}
+
 <ST_PHP_IN_SCRIPTING>"$"{LABEL} {
     return PHP_VARIABLE;
 }
@@ -566,6 +570,10 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 	yypushback(1);
 	popState();
 	return PHP_ENCAPSED_AND_WHITESPACE;
+}
+
+<ST_PHP_IN_SCRIPTING,ST_PHP_VAR_OFFSET>"null" {
+    return  PHP_KEYWORD;
 }
 
 <ST_PHP_IN_SCRIPTING,ST_PHP_VAR_OFFSET>{LABEL} {

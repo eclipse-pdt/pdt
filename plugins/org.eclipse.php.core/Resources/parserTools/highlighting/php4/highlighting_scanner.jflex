@@ -454,6 +454,10 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     return PHP__FILE__;
 }
 
+<ST_PHP_IN_SCRIPTING>"$this" {
+    return PHP_KEYWORD;
+}
+
 <ST_PHP_IN_SCRIPTING>"$"{LABEL} {
     return PHP_VARIABLE;
 }
@@ -461,6 +465,10 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"$"{LABEL} {
     pushState(ST_PHP_QUOTES_AFTER_VARIABLE);
     return PHP_VARIABLE;
+}
+
+<ST_PHP_IN_SCRIPTING,ST_PHP_VAR_OFFSET>"null" {
+    return  PHP_KEYWORD;
 }
 
 <ST_PHP_IN_SCRIPTING>{LABEL} {

@@ -12,6 +12,9 @@
 package org.eclipse.php.internal.core.documentModel.parser.regions;
 
 public interface PHPRegionTypes {
+
+	static final String PHP_KEYWORD = "PHP_KEYWORD"; //$NON-NLS-1$
+
 	static final String PHP_OPENTAG = "PHP_OPENTAG"; //$NON-NLS-1$
 
 	static final String PHP_CLOSETAG = "PHP_CLOSETAG"; //$NON-NLS-1$
