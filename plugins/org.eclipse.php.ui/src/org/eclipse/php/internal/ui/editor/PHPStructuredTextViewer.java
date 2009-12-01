@@ -133,7 +133,12 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 						cursorPosition, selectionLength);
 
 				// format the whole document !
-				IRegion region = new Region(0, getDocument().getLength());
+				IRegion region;
+				if (selectionLength != 0) {
+					region = new Region(cursorPosition, selectionLength);
+				} else {
+					region = new Region(0, getDocument().getLength());
+				}
 				if (fContentFormatter instanceof IContentFormatterExtension) {
 					IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
 					IFormattingContext context = new FormattingContext();
