@@ -2249,8 +2249,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			// Set the outline page input only if it is different than the
 			// current one
 			IModelElement modelElement = getModelElement();
-			outlinePage.setInput(modelElement);
-			fModelElement = modelElement;
+			if (((modelElement == null) && (fModelElement != null))
+					|| ((modelElement != null) && !modelElement
+							.equals(fModelElement))) {
+				outlinePage.setInput(modelElement);
+				fModelElement = modelElement;
+			}
 		}
 		return adapter;
 	}
