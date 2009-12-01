@@ -467,7 +467,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     return PHP_VARIABLE;
 }
 
-<ST_PHP_IN_SCRIPTING,ST_PHP_VAR_OFFSET>"null" {
+<ST_PHP_IN_SCRIPTING>"null" {
     return  PHP_KEYWORD;
 }
 
