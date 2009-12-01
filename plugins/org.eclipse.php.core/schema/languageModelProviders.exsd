@@ -71,6 +71,14 @@
       </documentation>
    </annotation>
 
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         Please read external &lt;a href=&quot;http://wiki.eclipse.org/Extending_PDT_2.2#Language_library_contributions&quot;&gt;documentation&lt;/a&gt;.
+      </documentation>
+   </annotation>
 
 
 

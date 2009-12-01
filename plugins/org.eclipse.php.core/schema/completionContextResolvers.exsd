@@ -52,7 +52,7 @@
          <attribute name="class" type="string">
             <annotation>
                <documentation>
-                  
+                  Implementation class
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.php.core.codeassist.ICompletionContextResolver"/>
@@ -76,11 +76,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;extension point=&quot;org.eclipse.php.core.completionContextResolvers&quot;&gt;
-  &lt;factory
-       class=&quot;com.my.xxx.MyCompletionContextResolver&quot;
-  &lt;/factory&gt;
-&lt;/extension&gt;
+         Please read external &lt;a href=&quot;http://wiki.eclipse.org/Extending_PDT_2.2#Code_assist_strategies&quot;&gt;documentation&lt;/a&gt;.
       </documentation>
    </annotation>
 

@@ -81,6 +81,14 @@ This model consists only from top level elements, like: IType, IMethod, IField. 
       </documentation>
    </annotation>
 
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         Please read external &lt;a href=&quot;http://wiki.eclipse.org/Extending_PDT_2.2#Contributing_to_the_structured_model&quot;&gt;documentation&lt;/a&gt;.
+      </documentation>
+   </annotation>
 
    <annotation>
       <appInfo>

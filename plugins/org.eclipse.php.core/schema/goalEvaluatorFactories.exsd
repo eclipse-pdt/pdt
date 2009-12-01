@@ -2,9 +2,9 @@
 <!-- Schema file written by PDE -->
 <schema targetNamespace="org.eclipse.php.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
+      <appInfo>
          <meta.schema plugin="org.eclipse.php.core" id="goalEvaluatorFactories" name="PHP Evaluator Factory"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          This extension point allows providing additional goal evaluator factories (IGoalEvaluatorFactory) thus overriding default PHP goal evaluator factory. Goal evaluator factory is a part of DLTK type inference engine, and it is used for creating evaluators that correspond to goals (see &lt;a href=&quot;http://lexspoon.org/ti/&quot;&gt;DDP&lt;/a&gt; algorithm for more information).
       </documentation>
@@ -12,9 +12,9 @@
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence minOccurs="0" maxOccurs="unbounded">
@@ -39,9 +39,9 @@
                <documentation>
                   
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -52,59 +52,54 @@
          <attribute name="priority" type="string" use="default" value="0">
             <annotation>
                <documentation>
-                  
+                  Priority is used for determining the order in which goal evaluator factories are polled. The less is the number the higher is the priority.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Goal evaluator factory implementation
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.dltk.ti.IGoalEvaluatorFactory"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          2.0
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
-         &lt;extension point=&quot;org.eclipse.php.core.goalEvaluatorFactories&quot;&gt;
-  &lt;factory
-       class=&quot;org.eclipse.apdt.core.APDTEvaluatorFactory&quot;
-       priority=&quot;10&quot;&gt;
-  &lt;/factory&gt;
-&lt;/extension&gt;
+         Please read external &lt;a href=&quot;http://wiki.eclipse.org/Extending_PDT_2.2#Type_inference_hinting&quot;&gt;documentation&lt;/a&gt;.
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiInfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          Extension classes must implement &lt;code&gt;IGoalEvaluatorFactory&lt;/code&gt;.
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="implementation"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          No supplied implementation at this point.
       </documentation>
