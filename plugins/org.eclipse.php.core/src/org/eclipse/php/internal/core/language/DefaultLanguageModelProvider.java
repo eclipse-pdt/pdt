@@ -11,14 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.language;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.core.language.ILanguageModelProvider;
 import org.eclipse.php.internal.core.Logger;
@@ -38,8 +33,8 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 
 	public IPath getPath(IScriptProject project) {
 		try {
-			return getContainerPath(project, ProjectOptions
-					.getPhpVersion(project));
+			return new Path(getLanguageLibraryPath(project, ProjectOptions
+					.getPhpVersion(project)));
 		} catch (Exception e) {
 			Logger.logException(e);
 			return null;
@@ -57,16 +52,7 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 		return LANGUAGE_LIBRARY_PATH + "5.3";
 	}
 
-	private IPath getContainerPath(IScriptProject project, PHPVersion phpVersion)
-			throws IOException {
-		String libraryPath = getLanguageLibraryPath(project, phpVersion);
-
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("$nl$", Platform.getNL());
-
-		URL url = FileLocator.find(PHPCorePlugin.getDefault().getBundle(),
-				new Path(libraryPath), map);
-		URL resolved = FileLocator.resolve(url);
-		return Path.fromOSString(resolved.getFile());
+	public Plugin getPlugin() {
+		return PHPCorePlugin.getDefault();
 	}
 }

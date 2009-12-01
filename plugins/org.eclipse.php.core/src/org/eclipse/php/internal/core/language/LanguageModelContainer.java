@@ -11,10 +11,19 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.language;
 
+import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileInfo;
+import org.eclipse.core.internal.filesystem.local.LocalFile;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
@@ -36,10 +45,15 @@ public class LanguageModelContainer implements IBuildpathContainer {
 		if (buildPathEntries == null) {
 			try {
 				List<IBuildpathEntry> entries = new LinkedList<IBuildpathEntry>();
+
 				for (ILanguageModelProvider provider : LanguageModelInitializer
 						.getContributedProviders()) {
+
 					IPath path = provider.getPath(project);
 					if (path != null) {
+
+						path = copyToInstanceLocation(provider, path, project);
+
 						IEnvironment environment = EnvironmentManager
 								.getEnvironment(project);
 						if (environment != null) {
@@ -60,6 +74,41 @@ public class LanguageModelContainer implements IBuildpathContainer {
 			}
 		}
 		return buildPathEntries;
+	}
+
+	protected IPath copyToInstanceLocation(ILanguageModelProvider provider,
+			IPath path, IScriptProject project) {
+
+		IPath targetPath = LanguageModelInitializer.getTargetLocation(provider,
+				project);
+
+		LocalFile targetDir = new LocalFile(targetPath.toFile());
+
+		try {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("$nl$", Platform.getNL()); //$NON-NLS-1$
+			URL url = FileLocator.find(provider.getPlugin().getBundle(),
+					provider.getPath(project), map);
+			LocalFile sourceDir = new LocalFile(new File(FileLocator.toFileURL(
+					url).getPath()));
+
+			IFileInfo targetInfo = targetDir.fetchInfo();
+			boolean update = !targetInfo.exists();
+			if (!update) {
+				IFileInfo sourceInfo = sourceDir.fetchInfo();
+				update = targetInfo.getLastModified() < sourceInfo
+						.getLastModified();
+			}
+
+			if (update) {
+				targetDir.delete(EFS.NONE, new NullProgressMonitor());
+				sourceDir.copy(targetDir, EFS.NONE, new NullProgressMonitor());
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+
+		return targetPath;
 	}
 
 	public IBuiltinModuleProvider getBuiltinProvider(IScriptProject project) {

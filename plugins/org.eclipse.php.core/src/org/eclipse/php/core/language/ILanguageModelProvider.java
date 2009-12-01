@@ -12,6 +12,7 @@
 package org.eclipse.php.core.language;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.dltk.core.IScriptProject;
 
 /**
@@ -23,12 +24,19 @@ import org.eclipse.dltk.core.IScriptProject;
 public interface ILanguageModelProvider {
 
 	/**
-	 * Returns path to directory that contains PHP stubs used for building PHP
-	 * Language Library.
+	 * Returns path to the directory that contains PHP stubs used for building
+	 * PHP Language Library. The path is relative to the plug-in location.
 	 * 
 	 * @param project
 	 *            Script project
 	 * @return
 	 */
 	public IPath getPath(IScriptProject project);
+
+	/**
+	 * Returns this language model provider plugin.
+	 * 
+	 * @return plug-in
+	 */
+	public Plugin getPlugin();
 }

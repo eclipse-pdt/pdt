@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 
@@ -204,11 +205,17 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	private static IPath[] getContainerPaths(IScriptProject project) {
 		List<IPath> paths = new LinkedList<IPath>();
 		for (ILanguageModelProvider provider : getContributedProviders()) {
-			IPath path = provider.getPath(project);
+			IPath path = getTargetLocation(provider, project);
 			if (path != null) {
 				paths.add(path);
 			}
 		}
 		return (IPath[]) paths.toArray(new IPath[paths.size()]);
+	}
+
+	static IPath getTargetLocation(ILanguageModelProvider provider,
+			IScriptProject project) {
+		return provider.getPlugin().getStateLocation().append("language")
+				.append(ProjectOptions.getPhpVersion(project).getAlias());
 	}
 }
