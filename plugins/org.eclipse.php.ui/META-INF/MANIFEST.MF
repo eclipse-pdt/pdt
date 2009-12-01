@@ -102,6 +102,7 @@ Export-Package: org.eclipse.php.internal.ui;x-internal:=true,
  org.eclipse.php.ui.editor,
  org.eclipse.php.ui.editor.hover,
  org.eclipse.php.ui.folding,
+ org.eclipse.php.ui.format,
  org.eclipse.php.ui.preferences,
  org.eclipse.php.ui.util,
  org.eclipse.php.ui.wizards

@@ -33,7 +33,7 @@
 	<!--PHP formatter processoer registration, for PHP Content:-->
 	<extension point="org.eclipse.wst.sse.core.formatProcessors">
 		<processor
-			class="org.eclipse.php.internal.core.format.PhpFormatProcessorImpl"
+			class="org.eclipse.php.ui.format.PHPFormatProcessorProxy"
 			contentTypeId="org.eclipse.php.core.phpsource ">
 		</processor>
 	</extension>
