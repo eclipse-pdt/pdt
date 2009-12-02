@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.20 2009/11/30 12:34:32 vpunski Exp $
+////    $Id: php_ast_parser.cup,v 1.21 2009/12/02 13:58:45 vpunski Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -368,7 +368,7 @@ top_statement_list:sList top_statement:statement
 	if(statement != null) {
 		if (!(statement instanceof NamespaceDeclaration) && sList.size() > 0) {
 			Statement lastStatement = (Statement) ((LinkedList) sList).getLast();
-			if (lastStatement instanceof NamespaceDeclaration && !((NamespaceDeclaration)lastStatement).isBracketed()) {
+			if (!(statement instanceof EmptyStatement) && lastStatement instanceof NamespaceDeclaration && !((NamespaceDeclaration)lastStatement).isBracketed()) {
 				((NamespaceDeclaration)lastStatement).addStatement(statement);
 			} else {
 				sList.add(statement);
