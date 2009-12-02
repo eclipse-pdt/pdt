@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions.format;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
@@ -67,12 +68,18 @@ public class FormatActionDelegate extends
 			Object[] elements = fSelection.toArray();
 			monitor.beginTask("", elements.length); //$NON-NLS-1$
 			for (int i = 0; i < elements.length; i++) {
+				IResource resource = null;
 				if (elements[i] instanceof IModelElement) {
-					process(new SubProgressMonitor(monitor, 1),
-							((IModelElement) elements[i]).getResource());
-				} else {
+					resource = ((IModelElement) elements[i]).getResource();
+
+				} else if (elements[i] instanceof IResource) {
+					resource = (IResource) elements[i];
 					monitor.worked(1);
 				}
+				if (resource != null) {
+					process(new SubProgressMonitor(monitor, 1), resource);
+				}
+				monitor.worked(1);
 			}
 			monitor.done();
 
@@ -120,6 +127,14 @@ public class FormatActionDelegate extends
 
 			Object[] elements = fSelection.toArray();
 			for (int i = 0; i < elements.length; i++) {
+				if (elements[i] instanceof IResource) {
+					IResource resource = (IResource) elements[i];
+					available = (null != resource) ? processorAvailable(resource)
+							: false;
+
+					if (available)
+						break;
+				}
 				if (elements[i] instanceof IModelElement) {
 					IResource resource = ((IModelElement) elements[i])
 							.getResource();
