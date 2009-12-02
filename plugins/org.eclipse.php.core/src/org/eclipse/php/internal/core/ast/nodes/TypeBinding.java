@@ -619,7 +619,7 @@ public class TypeBinding implements ITypeBinding {
 			return false;
 		}
 
-		int compatible = 0;
+		boolean isSubTypeCompatible = false;
 		for (IModelElement element : elements) {
 			IType type = (IType) element;
 			try {
@@ -640,7 +640,8 @@ public class TypeBinding implements ITypeBinding {
 						if (modelElement instanceof IType
 								&& supertypeHierarchy
 										.contains((IType) modelElement)) {
-							compatible++;
+							isSubTypeCompatible = true;
+							break;
 						}
 					}
 				}
@@ -650,9 +651,7 @@ public class TypeBinding implements ITypeBinding {
 				}
 			}
 		}
-
-		// all resolved types were compatible with this type
-		return compatible == elements.length;
+		return isSubTypeCompatible;
 	}
 
 	/**
