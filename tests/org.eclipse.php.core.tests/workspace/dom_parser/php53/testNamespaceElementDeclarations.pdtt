@@ -5,11 +5,11 @@ Test Namespace Element Declarations
 --EXPECT--
 <Program start='0' length='34'>
 	<Statements>
-		<NamespaceDeclaration start='6' length='28' isBracketed='false'>
+		<NamespaceDeclaration start='6' length='25' isBracketed='false'>
 			<NamespaceName start='16' length='1' global='false' current='false'>
 				<Identifier start='16' length='1' name='A'/>
 			</NamespaceName>
-			<Block start='19' length='16' isCurly='false'>
+			<Block start='19' length='13' isCurly='false'>
 				<ConstantDeclaration start='19' length='12'>
 					<VariableName>
 						<Identifier start='25' length='1' name='C'/>
@@ -18,9 +18,9 @@ Test Namespace Element Declarations
 						<Scalar start='29' length='1' type='int' value='5'/>
 					</InitialValue>
 				</ConstantDeclaration>
-				<EmptyStatement start='32' length='2'/>
 			</Block>
 		</NamespaceDeclaration>
+		<EmptyStatement start='32' length='2'/>
 	</Statements>
 	<Comments>
 	</Comments>
