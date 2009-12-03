@@ -33,7 +33,6 @@ import org.eclipse.php.core.tests.includepath.IncludePathManagerTests;
 import org.eclipse.php.core.tests.model_structure.ModelStructureTests;
 import org.eclipse.php.core.tests.phar.PharFileTest;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
-import org.eclipse.php.core.tests.semantic_highlighter.SemanticHighlightingTests;
 import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
 
 public class AllTests {
@@ -73,9 +72,6 @@ public class AllTests {
 
 		// phar file support tests
 		suite.addTest(PharFileTest.suite());
-
-		// Semantic highlighter tests
-		suite.addTest(SemanticHighlightingTests.suite());
 
 		// PHPElementConciliator test cases
 		// added by qwang.
