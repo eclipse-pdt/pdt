@@ -1,0 +1,24 @@
+--TEST--
+Test Parameter variable Semantic highlighting
+--FILE--
+<?php
+class Test{
+	public function foo($test){
+		$bar = 4;
+		return $test+$bar;
+	}	
+}
+$bar = new Test();
+$bar->foo();
+
+function test($test){
+	return $test;
+}
+$foo = test("test");
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.ParameterVariableHighlighting:
+highlight($test)
+highlight($test)
+highlight($test)
+highlight($test)

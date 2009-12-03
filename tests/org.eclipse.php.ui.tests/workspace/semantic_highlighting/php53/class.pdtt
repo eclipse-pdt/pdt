@@ -1,0 +1,23 @@
+--TEST--
+Test Class Semantic highlighting
+--FILE--
+<?php
+class Test extends Foo\Bar implements Foo\IBar{}
+class Foo extends Bar implements IBar{}
+$foo = new Foo();
+$bar = new Bar();
+function foo(Foo $foo){ return false; }
+function bar(Bar $bar){ return false; }
+function test(int $bar){ return false; }
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.ClassHighlighting:
+highlight(Test)
+highlight(Bar)
+highlight(Foo)
+highlight(Bar)
+highlight(Foo)
+highlight(Bar)
+highlight(Foo)
+highlight(Bar)
+highlight(int)

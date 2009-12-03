@@ -1,0 +1,28 @@
+--TEST--
+Test Field Semantic highlighting
+--FILE--
+<?php
+class Foo {
+
+  var $test;
+  
+  public function test(){
+  	return $this->test;
+  }
+}
+
+$foo = new Foo();
+$foo->test();
+$foo->$foo;
+$foo->bar['test'];
+$foo->$bar['test'];
+echo $foo->test;
+echo $bar->test;
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.FieldHighlighting:
+highlight($test)
+highlight(test)
+highlight(bar)
+highlight(test)
+highlight(test)

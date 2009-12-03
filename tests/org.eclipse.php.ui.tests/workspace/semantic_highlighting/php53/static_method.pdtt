@@ -1,0 +1,18 @@
+--TEST--
+Test Static method Semantic highlighting
+--FILE--
+<?php
+class Test{
+	public static function foo(){
+		return false;
+	}	
+}
+Test::foo();
+Foo::test();
+test();
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.StaticMethodHighlighting:
+highlight(foo)
+highlight(foo)
+highlight(test)

@@ -1,0 +1,27 @@
+--TEST--
+Test super global Semantic highlighting
+--FILE--
+<?php
+echo $GLOBALS['test'];
+echo $_SERVER['test'];
+echo $_GET['test'];
+echo $_POST['test'];
+echo $_FILES['test'];
+echo $_COOKIE['test'];
+echo $_SESSION['test'];
+echo $_REQUEST['test'];
+echo $_ENV['test'];
+echo $foo['test'];
+echo $_Test['test'];
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting:
+highlight($GLOBALS)
+highlight($_SERVER)
+highlight($_GET)
+highlight($_POST)
+highlight($_FILES)
+highlight($_COOKIE)
+highlight($_SESSION)
+highlight($_REQUEST)
+highlight($_ENV)

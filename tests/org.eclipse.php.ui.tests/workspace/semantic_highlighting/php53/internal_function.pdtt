@@ -1,0 +1,15 @@
+--TEST--
+Test Internal function Semantic highlighting
+--FILE--
+<?php
+strlen("test");
+echo time();
+
+function A\time(){
+	return 0;
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.InternalFunctionHighlighting:
+highlight(strlen)
+highlight(time)

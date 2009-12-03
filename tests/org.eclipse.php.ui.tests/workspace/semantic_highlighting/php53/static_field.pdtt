@@ -1,0 +1,19 @@
+--TEST--
+Test Static Field Semantic highlighting
+--FILE--
+<?php
+class Test{
+	public static $foo;
+	const FOO = 3;
+}
+Test::$foo;
+Test::FOO;
+Foo::$test;
+test();
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.StaticFieldHighlighting:
+highlight($foo)
+highlight($foo)
+highlight(FOO)
+highlight($test)

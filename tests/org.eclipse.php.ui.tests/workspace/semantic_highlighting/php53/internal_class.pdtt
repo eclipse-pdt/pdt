@@ -1,0 +1,14 @@
+--TEST--
+Test Internal Class Semantic highlighting
+--FILE--
+<?php
+class Test{}
+class AnnotatedReflectionClass extends ReflectionClass{}
+$class = new ReflectionClass();
+$test = new Test();
+$aclass = new AnnotatedReflectionClass();
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.InternalClassHighlighting:
+highlight(ReflectionClass)
+highlight(ReflectionClass)

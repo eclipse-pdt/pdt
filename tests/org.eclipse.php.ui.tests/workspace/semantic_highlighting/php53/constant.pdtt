@@ -1,0 +1,28 @@
+--TEST--
+Test Constant Semantic highlighting
+--FILE--
+<?php
+namespace A\B\C;
+const E_ERROR = 45;
+class Test {
+	const PI = 3.14;
+}
+echo E_ERROR, "\n";
+echo A\B\C\E_ERROR, "\n";
+Test::PI;
+echo FOO;
+echo __FILE__;
+echo $foo[TEST];
+echo B\BAR;
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.ConstantHighlighting:
+highlight(E_ERROR)
+highlight(PI)
+highlight(E_ERROR)
+highlight(E_ERROR)
+highlight(PI)
+highlight(FOO)
+highlight(__FILE__)
+highlight(TEST)
+highlight(BAR)
