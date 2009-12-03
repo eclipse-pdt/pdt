@@ -1,0 +1,20 @@
+--TEST--
+Test Namespace Declaration
+--FILE--
+<?php namespace A; ?> 
+--EXPECT--
+<Program start='0' length='21'>
+	<Statements>
+		<NamespaceDeclaration start='6' length='12' isBracketed='false'>
+			<NamespaceName start='16' length='1' global='false' current='false'>
+				<Identifier start='16' length='1' name='A'/>
+			</NamespaceName>
+			<Block start='19' length='0' isCurly='false'>
+			</Block>
+		</NamespaceDeclaration>
+		<EmptyStatement start='19' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
+

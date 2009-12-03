@@ -1,0 +1,21 @@
+--TEST--
+Test Sub Namespace Declaration
+--FILE--
+<?php namespace A\B\C; ?> 
+--EXPECT--
+<Program start='0' length='25'>
+	<Statements>
+		<NamespaceDeclaration start='6' length='16' isBracketed='false'>
+			<NamespaceName start='16' length='5' global='false' current='false'>
+				<Identifier start='16' length='1' name='A'/>
+				<Identifier start='18' length='1' name='B'/>
+				<Identifier start='20' length='1' name='C'/>
+			</NamespaceName>
+			<Block start='23' length='0' isCurly='false'>
+			</Block>
+		</NamespaceDeclaration>
+		<EmptyStatement start='23' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
