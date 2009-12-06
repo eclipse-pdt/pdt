@@ -26,7 +26,7 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 			Expression superClass = clazz.getSuperClass();
 			if (superClass instanceof NamespaceName) {
 				highlightNamespaceType((NamespaceName) superClass);
-			} else {
+			} else if (superClass != null) {
 				highlight(superClass);
 			}
 			return true;

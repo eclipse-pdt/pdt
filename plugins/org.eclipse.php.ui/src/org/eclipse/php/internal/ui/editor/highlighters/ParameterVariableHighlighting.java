@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
-import org.eclipse.swt.graphics.RGB;
 
 public class ParameterVariableHighlighting extends AbstractSemanticHighlighting {
 
@@ -55,8 +54,7 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setEnabledByDefault(false).setUnderlineByDefault(true)
-				.setDefaultTextColor(new RGB(102, 0, 0));
+		getStyle().setEnabledByDefault(false).setUnderlineByDefault(true);
 	}
 
 	public String getDisplayName() {

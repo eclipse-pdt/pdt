@@ -11,7 +11,6 @@
         IBM Corporation - initial API and implementation
         Zend Technologies
  -->
-
 <plugin>
 	<extension-point id="phpElementFilters" name="PHP Element Filter" schema="schema/phpElementFilters.exsd" />
 	<extension-point id="foldingStructureProviders" name="Folding Structure Providers" schema="schema/foldingStructureProviders.exsd" />
@@ -1762,7 +1761,7 @@
             class="org.eclipse.php.internal.ui.editor.highlighters.InternalConstantHighlighting"
             target="org.eclipse.php.core.phpsource">
         </highlighting>
-    </extension>  
+    </extension>
 
     <extension point="org.eclipse.wst.sse.ui.semanticHighlighting">
         <highlighting

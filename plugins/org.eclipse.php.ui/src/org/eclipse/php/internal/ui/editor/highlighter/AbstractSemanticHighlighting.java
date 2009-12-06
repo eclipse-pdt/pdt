@@ -55,12 +55,6 @@ public abstract class AbstractSemanticHighlighting implements
 		return style;
 	}
 
-	public AbstractSemanticHighlighting setSourceModule(
-			ISourceModule sourceModule) {
-		this.sourceModule = sourceModule;
-		return this;
-	}
-
 	public ISourceModule getSourceModule() {
 		if (sourceModule == null) {
 			throw new IllegalStateException("Source module cannot be null");
@@ -69,10 +63,16 @@ public abstract class AbstractSemanticHighlighting implements
 	}
 
 	protected AbstractSemanticHighlighting highlight(ISourceRange range) {
+		if (range == null) {
+			throw new IllegalArgumentException("Range cannot be null");
+		}
 		return highlight(range.getOffset(), range.getLength());
 	}
 
 	protected AbstractSemanticHighlighting highlight(ASTNode node) {
+		if (node == null) {
+			throw new IllegalArgumentException("Node cannot be null");
+		}
 		return highlight(node.getStart(), node.getLength());
 	}
 
@@ -89,6 +89,7 @@ public abstract class AbstractSemanticHighlighting implements
 		if (program != null) {
 			list = new ArrayList<Position>();
 			AbstractSemanticApply apply = getSemanticApply();
+			sourceModule = program.getSourceModule();
 			program.accept(apply);
 			return list.toArray(new Position[list.size()]);
 		}

@@ -10,16 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
-import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.core.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.ast.nodes.SingleFieldDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.Variable;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 
 public class FieldHighlighting extends AbstractSemanticHighlighting {
 
 	protected class FielApply extends AbstractSemanticApply {
+
+		private int visitField = 0;
+
 		@Override
 		public boolean visit(SingleFieldDeclaration fieldDecl) {
 			highlight(fieldDecl.getName());
@@ -27,20 +27,40 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 		}
 
 		@Override
-		public boolean visit(FieldAccess fieldAccess) {
-			if (!fieldAccess.getField().isDollared()) {
-				Expression expr = fieldAccess.getField().getName();
-				if (expr instanceof Variable) {
-					Variable var = (Variable) expr;
-					if (!var.isDollared()) {
-						highlight(var);
-					}
-				} else {
-					highlight(expr);
+		public boolean visit(FunctionInvocation method) {
+			boolean visit = !(visitField > 0);
+			if (!visit) {
+				for (Expression parameter : method.parameters()) {
+					parameter.accept(this);
 				}
+			}
+			return visit;
+		}
 
+		@Override
+		public boolean visit(FieldAccess fieldAccess) {
+			visitField++;
+			return true;
+		}
+
+		public boolean visit(Variable var) {
+			if (visitField > 0 && !var.isDollared()) {
+				highlight(var);
 			}
 			return true;
+		}
+
+		@Override
+		public void endVisit(FieldAccess fieldAccess) {
+			visitField--;
+		}
+
+		@Override
+		public void endVisit(Program program) {
+			if (visitField < 0) {
+				throw new IllegalStateException("visitField is negative: "
+						+ visitField);
+			}
 		}
 	}
 
