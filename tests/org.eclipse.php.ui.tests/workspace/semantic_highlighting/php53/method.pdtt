@@ -10,10 +10,16 @@ class Test{
 $test = new Test();
 $test->foo();
 $bar->foo();
+$bar->foo()->test->foo();
+$bar->foo()->test->foo()->test;
 foo();
 ?>
 --EXPECT--
 org.eclipse.php.internal.ui.editor.highlighters.MethodHighlighting:
+highlight(foo)
+highlight(foo)
+highlight(foo)
+highlight(foo)
 highlight(foo)
 highlight(foo)
 highlight(foo)

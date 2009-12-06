@@ -54,11 +54,14 @@ import org.eclipse.php.internal.ui.editor.highlighters.StaticFieldHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighters.StaticMethodHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighters.SuperGlobalHighlighting;
 import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.php.ui.tests.PHPUiTests;
 
+@SuppressWarnings("restriction")
 public class SemanticHighlightingTests extends AbstractPDTTTest {
 
 	protected static IProject project;
 	protected static IFile testFile;
+	protected static PHPVersion phpVersion;
 	protected static final Map<PHPVersion, String> TESTS = new LinkedHashMap<PHPVersion, String>();
 	static {
 		TESTS.put(PHPVersion.PHP4, "/workspace/semantic_highlighting/php4");
@@ -66,7 +69,6 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_3, "/workspace/semantic_highlighting/php53");
 	};
 
-	@SuppressWarnings("restriction")
 	private static Map<String, AbstractSemanticHighlighting> highlighters = new HashMap<String, AbstractSemanticHighlighting>();
 
 	static {
@@ -118,10 +120,11 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 
 		TestSuite suite = new TestSuite("Semantic Highlighting Tests");
 		for (Entry<PHPVersion, String> pair : TESTS.entrySet()) {
-			PHPVersion phpVersion = pair.getKey();
+			phpVersion = pair.getKey();
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
 
-			String[] files = getPDTTFiles(pair.getValue());
+			String[] files = getPDTTFiles(pair.getValue(), PHPUiTests
+					.getDefault().getBundle());
 
 			for (final String fileName : files) {
 				try {
@@ -141,7 +144,6 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 							}
 						}
 
-						@SuppressWarnings("restriction")
 						protected void runTest() throws Throwable {
 							;
 							String result = "";
@@ -156,9 +158,12 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 							AbstractSemanticHighlighting highlighter = highlighters
 									.get(index);
 							assertNotNull(highlighter);
-							highlighter.setSourceModule(module);
+							Program program = getProgram(module);
+							highlighter.initDefaultPreferences();
 							Position[] positions = highlighter
-									.consumes(getProgram(module));
+									.consumes(program);
+							assertNoDuplicates(highlighter.getDisplayName(),
+									positions);
 							result += highlighter.getClass().getName() + ":\n";
 							for (Position position : positions) {
 								result += "highlight("
@@ -168,9 +173,17 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 														+ position.getLength())
 										+ ")\n";
 							}
-
-							// System.err.println(result);
 							assertEquals(pdttFile.getExpected(), result);
+							// We check the other highlighters for failure
+							for (AbstractSemanticHighlighting h : highlighters
+									.values()) {
+								if (h != highlighter) {
+									h.initDefaultPreferences();
+									positions = h.consumes(program);
+									assertNoDuplicates(highlighter
+											.getDisplayName(), positions);
+								}
+							}
 						}
 
 						private Program getProgram(ISourceModule module)
@@ -202,6 +215,18 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 			}
 		};
 		return setup;
+	}
+
+	protected void assertNoDuplicates(String highlighter, Position[] positions) {
+		for (Position p1 : positions) {
+			for (Position p2 : positions) {
+				if (p1 != p2 && p1.equals(p2)) {
+					throw new IllegalStateException(
+							"Found duplicate position in " + highlighter + ": "
+									+ p1);
+				}
+			}
+		}
 	}
 
 	protected static void createFile(InputStream inputStream) throws Exception {
