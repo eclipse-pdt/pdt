@@ -117,4 +117,29 @@ public class ServerHelper {
 	public void removeAttribute(String attributeName) {
 		map.remove(attributeName);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((server == null) ? 0 : server.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ServerHelper other = (ServerHelper) obj;
+		if (server == null) {
+			if (other.server != null)
+				return false;
+		} else if (!server.equals(other.server))
+			return false;
+		return true;
+	}
 }
