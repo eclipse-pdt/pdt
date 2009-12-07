@@ -84,6 +84,7 @@ public class ServerWizardFragment extends CompositeWizardFragment {
 	 */
 	public void exit() {
 		if (comp != null) {
+			comp.performApply();
 			WizardModel model = getWizardModel();
 			model.putObject(WizardModel.SERVER, comp.getServer());
 		}
