@@ -1,22 +1,23 @@
-package org.eclipse.php.internal.core.ast.scanner;
+package org.eclipse.php.internal.core.ast.scanner.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.10 2008/04/30 15:41:35 ggurfinke Exp $
+////    $Id: php_ast_parser.cup,v 1.14.8.1 2009/12/08 11:48:33 vpunski Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 import java.util.*;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.dltk.ast.Modifiers;
 
 parser code {:
-	protected final static Integer PUBLIC = new Integer(BodyDeclaration.Modifier.PUBLIC);
-	protected final static Integer PRIVATE = new Integer(BodyDeclaration.Modifier.PRIVATE);
-	protected final static Integer PROTECTED = new Integer(BodyDeclaration.Modifier.PROTECTED);
-	protected final static Integer ABSTRACT = new Integer(BodyDeclaration.Modifier.ABSTRACT);
-	protected final static Integer FINAL = new Integer(BodyDeclaration.Modifier.FINAL);
-	protected final static Integer STATIC = new Integer(BodyDeclaration.Modifier.STATIC);
+	protected final static Integer PUBLIC = new Integer(Modifiers.AccPublic);
+	protected final static Integer PRIVATE = new Integer(Modifiers.AccPrivate);
+	protected final static Integer PROTECTED = new Integer(Modifiers.AccProtected);
+	protected final static Integer ABSTRACT = new Integer(Modifiers.AccAbstract);
+	protected final static Integer FINAL = new Integer(Modifiers.AccFinal);
+	protected final static Integer STATIC = new Integer(Modifiers.AccStatic);
 	
 	AST ast;
   
@@ -319,8 +320,8 @@ precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC
 thestart ::=
 top_statement_list:statementList
 {:
-	PhpAstLexer5 phpAstLexer5 = (PhpAstLexer5) parser.getScanner();
-	List commentList = phpAstLexer5.getCommentList();
+	PhpAstLexer phpAstLexer = (PhpAstLexer) parser.getScanner();
+	List commentList = phpAstLexer.getCommentList();
 	Program program = new Program(statementListleft, statementListright, parser.ast, statementList, commentList);
 	RESULT = program; 
 :}
@@ -615,9 +616,9 @@ T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchB
 	RESULT = error;	
 :}
 
-| T_VAR_COMMENT:varComment
+| T_VAR_COMMENT:varComment unticked_statement:statement
 {:
-	// TODO: var comment should be added as parser.ast node
+	RESULT = statement;
 :}
 ;
 
@@ -863,9 +864,9 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDFOR T_SEMICOLON
+| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDFOR:end
 {:
-	Block block = new Block(startleft, statementListright, parser.ast, statementList, false);
+	Block block = new Block(startleft, endright, parser.ast, statementList, false);
 	RESULT = block;
 :}
 ;
@@ -876,9 +877,9 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDFOREACH T_SEMICOLON
+| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDFOREACH:end
 {:
-	Block block = new Block(startleft, statementListright, parser.ast, statementList, false);
+	Block block = new Block(startleft, endright, parser.ast, statementList, false);
 	RESULT = block;
 :}
 ;
@@ -889,9 +890,9 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDDECLARE T_SEMICOLON
+| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDDECLARE:end
 {:
-	Block block = new Block(startleft, statementListright, parser.ast, statementList, false);
+	Block block = new Block(startleft, endright, parser.ast, statementList, false);
 	RESULT = block;
 :}
 ;
@@ -933,13 +934,13 @@ T_CURLY_OPEN:start case_list:caseList T_CURLY_CLOSE:end
 	RESULT = block; 
 :}
 
-| T_NEKUDOTAIM:start case_list:caseList T_ENDSWITCH T_SEMICOLON:end
+| T_NEKUDOTAIM:start case_list:caseList T_ENDSWITCH:end
 {:
 	Block block = new Block(startleft, endright, parser.ast, caseList, false);	
 	RESULT = block; 
 :}
 
-| T_NEKUDOTAIM:start T_SEMICOLON case_list:caseList T_ENDSWITCH T_SEMICOLON:end
+| T_NEKUDOTAIM:start T_SEMICOLON case_list:caseList T_ENDSWITCH:end
 {:
 	Block block = new Block(startleft, endright, parser.ast, caseList, false);	
 	RESULT = block; 
@@ -985,9 +986,9 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_NEKUDOTAIM:colon inner_statement_list:statementList T_ENDWHILE T_SEMICOLON
+| T_NEKUDOTAIM:colon inner_statement_list:statementList T_ENDWHILE:end
 {:
-	Block block = new Block(colonleft, statementListright, parser.ast, statementList, false);
+	Block block = new Block(colonleft, endright, parser.ast, statementList, false);
 	RESULT = block;
 :}
 ;
@@ -1292,7 +1293,7 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
 
 | class_constant_declaration:list T_SEMICOLON:end
 {:
-	ClassConstantDeclaration classConstantDeclaration = new ClassConstantDeclaration(listleft, endright, parser.ast, list);
+	ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(listleft, endright, parser.ast, list);
 	RESULT = classConstantDeclaration;
 :}
 
@@ -1301,16 +1302,16 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 method_body:body
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
-	modifier = modifier == null ? PhpAstParser5.PUBLIC : modifier;
+	modifier = modifier == null ? PhpAstParser.PUBLIC : modifier;
 	Identifier functionId = new Identifier(functionNameleft, functionNameright, parser.ast, functionName);
 	FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, bodyright, parser.ast, functionId, paramList, body, isReference.booleanValue());
 	MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, bodyright, parser.ast, modifier.intValue(), functionDeclaration, true);
 	RESULT = methodDeclaration;
 :}
 
-| T_VAR_COMMENT:varComment
+| T_VAR_COMMENT:varComment unticked_statement:statement
 {:
-
+	RESULT = statement;
 :}
 ;
 
@@ -1340,7 +1341,7 @@ non_empty_member_modifiers:list
 
 | T_VAR
 {:
-	RESULT = PhpAstParser5.PUBLIC;
+	RESULT = PhpAstParser.PUBLIC;
 :}
 ;
 
@@ -1379,32 +1380,32 @@ member_modifier:modifier
 member_modifier ::=
 T_PUBLIC
 {:
-	RESULT = PhpAstParser5.PUBLIC;
+	RESULT = PhpAstParser.PUBLIC;
 :}
 
 | T_PROTECTED
 {:
-	RESULT = PhpAstParser5.PROTECTED;
+	RESULT = PhpAstParser.PROTECTED;
 :}
 
 | T_PRIVATE
 {:
-	RESULT = PhpAstParser5.PRIVATE;
+	RESULT = PhpAstParser.PRIVATE;
 :}
 
 | T_STATIC
 {:
-	RESULT = PhpAstParser5.STATIC;
+	RESULT = PhpAstParser.STATIC;
 :}
 
 | T_ABSTRACT
 {:
-	RESULT = PhpAstParser5.ABSTRACT;
+	RESULT = PhpAstParser.ABSTRACT;
 :}
 
 | T_FINAL
 {:
-	RESULT = PhpAstParser5.FINAL;
+	RESULT = PhpAstParser.FINAL;
 :}
 ;
 
