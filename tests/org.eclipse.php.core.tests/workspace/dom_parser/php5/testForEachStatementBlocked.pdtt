@@ -5,7 +5,7 @@ Test For Each Statement Blocked
 --EXPECT--
 <Program start='0' length='67'>
 	<Statements>
-		<ForEachStatement start='6' length='58'>
+		<ForEachStatement start='6' length='57'>
 			<Expression>
 				<Variable start='15' length='4' isDollared='true'>
 					<Identifier start='16' length='3' name='arr'/>
@@ -20,7 +20,7 @@ Test For Each Statement Blocked
 					</Variable>
 				</Reference>
 			</Value>
-			<Block start='31' length='22' isCurly='false'>
+			<Block start='31' length='32' isCurly='false'>
 				<ExpressionStatement start='33' length='20'>
 					<Assignment start='33' length='19' operator='='>
 						<Variable start='33' length='6' isDollared='true'>
@@ -38,6 +38,7 @@ Test For Each Statement Blocked
 				</ExpressionStatement>
 			</Block>
 		</ForEachStatement>
+		<EmptyStatement start='63' length='1'/>
 		<EmptyStatement start='65' length='2'/>
 	</Statements>
 	<Comments>
