@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.14 2009/05/06 14:31:22 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.15 2009/12/08 11:48:32 vpunski Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -864,9 +864,9 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDFOR T_SEMICOLON
+| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDFOR:end
 {:
-	Block block = new Block(startleft, statementListright, parser.ast, statementList, false);
+	Block block = new Block(startleft, endright, parser.ast, statementList, false);
 	RESULT = block;
 :}
 ;
@@ -877,9 +877,9 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDFOREACH T_SEMICOLON
+| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDFOREACH:end
 {:
-	Block block = new Block(startleft, statementListright, parser.ast, statementList, false);
+	Block block = new Block(startleft, endright, parser.ast, statementList, false);
 	RESULT = block;
 :}
 ;
@@ -890,9 +890,9 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDDECLARE T_SEMICOLON
+| T_NEKUDOTAIM:start inner_statement_list:statementList T_ENDDECLARE:end
 {:
-	Block block = new Block(startleft, statementListright, parser.ast, statementList, false);
+	Block block = new Block(startleft, endright, parser.ast, statementList, false);
 	RESULT = block;
 :}
 ;
@@ -934,13 +934,13 @@ T_CURLY_OPEN:start case_list:caseList T_CURLY_CLOSE:end
 	RESULT = block; 
 :}
 
-| T_NEKUDOTAIM:start case_list:caseList T_ENDSWITCH T_SEMICOLON:end
+| T_NEKUDOTAIM:start case_list:caseList T_ENDSWITCH:end
 {:
 	Block block = new Block(startleft, endright, parser.ast, caseList, false);	
 	RESULT = block; 
 :}
 
-| T_NEKUDOTAIM:start T_SEMICOLON case_list:caseList T_ENDSWITCH T_SEMICOLON:end
+| T_NEKUDOTAIM:start T_SEMICOLON case_list:caseList T_ENDSWITCH:end
 {:
 	Block block = new Block(startleft, endright, parser.ast, caseList, false);	
 	RESULT = block; 
@@ -986,9 +986,9 @@ statement:statement
 	RESULT = statement;
 :}
 
-| T_NEKUDOTAIM:colon inner_statement_list:statementList T_ENDWHILE T_SEMICOLON
+| T_NEKUDOTAIM:colon inner_statement_list:statementList T_ENDWHILE:end
 {:
-	Block block = new Block(colonleft, statementListright, parser.ast, statementList, false);
+	Block block = new Block(colonleft, endright, parser.ast, statementList, false);
 	RESULT = block;
 :}
 ;

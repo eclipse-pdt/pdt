@@ -278,18 +278,18 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					this.content)) {
 				if (!insertString.startsWith(getLineDelimiter())) {
 					TextEdit edit = new InsertEdit(offset, getLineDelimiter()); // add
-																				// a
-																				// line
-																				// delimiter
+					// a
+					// line
+					// delimiter
 					addEdit(edit);
 					if (editGroup != null) {
 						addEditGroup(editGroup, edit);
 					}
 				}
 				this.lineCommentEndOffsets.remove(offset); // only one line
-															// delimiter per
-															// line comment
-															// required
+				// delimiter per
+				// line comment
+				// required
 			}
 			TextEdit edit = new InsertEdit(offset, insertString);
 			addEdit(edit);
@@ -522,17 +522,17 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 			if (currPos == -1) { // only inserts
 				if (keyword.length() > 0) { // creating a new list -> insert
-											// keyword first (e.g. " throws ")
+					// keyword first (e.g. " throws ")
 					TextEditGroup editGroup = getEditGroup(this.list[0]); // first
-																			// node
-																			// is
-																			// insert
+					// node
+					// is
+					// insert
 					doTextInsert(offset, keyword, editGroup);
 				}
 				currPos = offset;
 			}
 			if (lastNonDelete == -1) { // all removed, set back to start so the
-										// keyword is removed as well
+				// keyword is removed as well
 				currPos = offset;
 			}
 
@@ -551,7 +551,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					ASTNode node = (ASTNode) currEvent.getNewValue();
 
 					if (separatorState == NONE) { // element after last existing
-													// element (but not first)
+						// element (but not first)
 						doTextInsert(currPos, getSeparatorString(i - 1),
 								editGroup); // insert separator
 						separatorState = NEW;
@@ -583,7 +583,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 						// is last, remove previous separator: split delete to
 						// allow range copies
 						doTextRemove(prevEnd, currPos - prevEnd, editGroup); // remove
-																				// separator
+						// separator
 						doTextRemoveAndVisit(currPos, currEnd - currPos, node,
 								editGroup); // remove node
 						currPos = currEnd;
@@ -591,12 +591,12 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					} else {
 						// remove element and next separator
 						int end = getStartOfNextNode(nextIndex, currEnd); // start
-																			// of
-																			// next
+						// of
+						// next
 						doTextRemoveAndVisit(currPos, currEnd - currPos, node,
 								getEditGroup(currEvent)); // remove node
 						doTextRemove(currEnd, end - currEnd, editGroup); // remove
-																			// separator
+						// separator
 						currPos = end;
 						prevEnd = currEnd;
 						separatorState = NEW;
@@ -619,7 +619,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 						voidVisit(node);
 					}
 					if (i == lastNonInsert) { // last node or next nodes are all
-												// inserts
+						// inserts
 						separatorState = NONE;
 						if (currMark == RewriteEvent.UNCHANGED) {
 							ASTNode node = (ASTNode) currEvent
@@ -635,8 +635,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 							prevEnd = getEndOfNode(node);
 						}
 						currPos = getStartOfNextNode(nextIndex, prevEnd); // start
-																			// of
-																			// next
+						// of
+						// next
 						separatorState = EXISTING;
 					}
 				}
@@ -988,9 +988,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 						RewriteEvent.INSERTED);
 				if (isAllInserted && adjustOnNext) {
 					pos = getScanner().getNextStartOffset(pos/* , false */); // adjust
-																			// on
-																			// next
-																			// element
+					// on
+					// next
+					// element
 				}
 				boolean isAllRemoved = !isAllInserted
 						&& isAllOfKind(children, RewriteEvent.REMOVED);
@@ -1008,13 +1008,13 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				pos = new ListRewriter().rewriteList(parent, property, pos,
 						String.valueOf('<'), ", "); //$NON-NLS-1$
 				if (isAllRemoved) { // all removed: remove right and space up to
-									// next element
+					// next element
 					int endPos = getScanner().getTokenEndOffset(
 							SymbolsProvider.getSymbol(
 									SymbolsProvider.GREATER_ID, scanner
 											.getPHPVersion()), pos); // set pos
-																		// to
-																		// '>'
+					// to
+					// '>'
 					endPos = getScanner()
 							.getNextStartOffset(endPos/* , false */);
 					String replacement = needsSpaceOnRemoveAll ? String
@@ -1034,7 +1034,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			pos = doVisit(parent, property, pos);
 		}
 		if (pos != offset) { // list contained some type -> parse after closing
-								// bracket
+			// bracket
 			try {
 				return getScanner().getTokenEndOffset(
 						SymbolsProvider.getSymbol(SymbolsProvider.GREATER_ID,
@@ -1179,9 +1179,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			if (offset != currPos) {
 				String insertStr = formatted.substring(currPos, offset);
 				doTextInsert(insertOffset, insertStr, editGroup); // insert
-																	// until the
-																	// marker's
-																	// begin
+				// until the
+				// marker's
+				// begin
 			}
 
 			Object data = curr.data;
@@ -1207,7 +1207,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				String destIndentString = this.formatter
 						.getIndentString(getCurrentLine(formatted, offset));
 				if (data instanceof CopyPlaceholderData) { // replace with a
-															// copy/move target
+					// copy/move target
 					CopySourceInfo copySource = ((CopyPlaceholderData) data).copySource;
 					int srcIndentLevel = getIndent(copySource.getNode()
 							.getStart());
@@ -1215,21 +1215,21 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					doTextCopy(sourceEdit, insertOffset, srcIndentLevel,
 							destIndentString, editGroup);
 					currPos = offset + curr.length; // continue to insert after
-													// the replaced string
+					// the replaced string
 					if (needsNewLineForLineComment(copySource.getNode(),
 							formatted, currPos)) {
 						doTextInsert(insertOffset, getLineDelimiter(),
 								editGroup);
 					}
 				} else if (data instanceof StringPlaceholderData) { // replace
-																	// with a
-																	// placeholder
+					// with a
+					// placeholder
 					String code = ((StringPlaceholderData) data).code;
 					String str = this.formatter.changeIndent(code, 0,
 							destIndentString);
 					doTextInsert(insertOffset, str, editGroup);
 					currPos = offset + curr.length; // continue to insert after
-													// the replaced string
+					// the replaced string
 				}
 			}
 
@@ -1291,7 +1291,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			loop: while (true) {
 				if (TokenScanner.isComment(tok)) {
 					tok = scanner.readNext(/* true */); // next non-comment
-															// token
+					// token
 				}
 				boolean keep = true;
 				if (tok == null) {
@@ -1526,8 +1526,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			return doVisitUnchangedChildren(node);
 		}
 		int pos = content.length; // TODO - Check if this is right (using 0
-									// cause for the code to be inserted before
-									// the <?php section).
+		// cause for the code to be inserted before
+		// the <?php section).
 		rewriteNodeList(node, Program.STATEMENTS_PROPERTY, pos, "", "");
 		// int startPos = rewriteNode(node, Program.PACKAGE_PROPERTY, 0,
 		// ASTRewriteFormatter.NONE);
@@ -1745,7 +1745,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	private void rewriteBlock(Block node, TextEditGroup editGroup,
 			boolean shouldBeCurly, String keyword, Symbol keywordSymbol) {
 		int blockStart = node.getStart();
-		int blockEnd = node.getEnd() - 1;
+		int blockEnd = node.getEnd();
+		// if (getContent()[blockEnd] != '}') {
+		// blockEnd++;
+		// }
 		if (shouldBeCurly) {
 			// Change the if's open block char to the opening brace char
 			doTextReplace(blockStart, 1, "{", editGroup);
@@ -1772,7 +1775,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		} else {
 			doTextReplace(blockStart, 1, ":", editGroup);
 			// In case that we don't have a false statement, add the keyword
-			doTextReplace(blockEnd, 1, keyword + ';', editGroup);
+			doTextReplace(blockEnd - 1, 1, keyword + ';', editGroup);
 		}
 	}
 
@@ -2013,8 +2016,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ConditionalExpression)
 	 */
 	public boolean visit(ConditionalExpression node) { // expression ?
-														// thenExpression :
-														// elseExpression
+		// thenExpression :
+		// elseExpression
 		return rewriteRequiredNodeVisit(node,
 				ConditionalExpression.CONDITION_PROPERTY,
 				ConditionalExpression.IF_TRUE_PROPERTY,
@@ -2036,7 +2039,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 							scanner.getPHPVersion()), node.getStart());
 			rewriteNode(node, ContinueStatement.EXPRESSION_PROPERTY, offset,
 					ASTRewriteFormatter.SPACE); // space between continue and
-												// label
+			// label
 		} catch (CoreException e) {
 			handleException(e);
 		}
@@ -2270,8 +2273,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				pos = getScanner().getTokenEndOffset(
 						SymbolsProvider.getSymbol(SymbolsProvider.RPAREN_ID,
 								scanner.getPHPVersion()), pos); // after the
-																// closing
-																// parent
+				// closing
+				// parent
 				int indent = getIndent(node.getStart());
 
 				int endPos = -1;
@@ -2285,7 +2288,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 									scanner.getPHPVersion()),
 							thenStatement.getStart()
 									+ thenStatement.getLength()); // else
-																	// keyword
+					// keyword
 				}
 				if (elseStatement == null
 						|| elseChange != RewriteEvent.UNCHANGED) {
@@ -3130,10 +3133,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			// name and then place a blank or an &.
 			int nameStart = functionDeclaration.getFunctionName().getStart();
 			int startDeletionFrom = functionDeclaration.getStart() + 8; // 8 is
-																		// the
-																		// 'function'
-																		// keyword
-																		// length
+			// the
+			// 'function'
+			// keyword
+			// length
 			doTextRemove(startDeletionFrom, nameStart - startDeletionFrom,
 					editGroup);
 			if (isReference) {
@@ -3665,11 +3668,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				// the start of the function's
 				// name and then place a blank or an &.
 				int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8; // 8
-																					// is
-																					// the
-																					// 'function'
-																					// keyword
-																					// length
+				// is
+				// the
+				// 'function'
+				// keyword
+				// length
 				int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
 				doTextRemove(startDeletionFrom,
 						startOffset - startDeletionFrom, editGroup);
@@ -3689,11 +3692,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				LambdaFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY)) {
 			try {
 				int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8; // 8
-																					// is
-																					// the
-																					// 'function'
-																					// keyword
-																					// length
+				// is
+				// the
+				// 'function'
+				// keyword
+				// length
 				int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
 				rewriteNodeList(lambdaFunctionDeclaration,
 						LambdaFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY,
@@ -3711,11 +3714,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				LambdaFunctionDeclaration.LEXICAL_VARIABLES_PROPERTY)) {
 			try {
 				int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8; // 8
-																					// is
-																					// the
-																					// 'function'
-																					// keyword
-																					// length
+				// is
+				// the
+				// 'function'
+				// keyword
+				// length
 				int startOffset = getRightBraceStartPosition(startDeletionFrom) + 1;
 				rewriteNodeList(lambdaFunctionDeclaration,
 						LambdaFunctionDeclaration.LEXICAL_VARIABLES_PROPERTY,
