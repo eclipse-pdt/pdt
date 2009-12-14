@@ -325,8 +325,10 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 		for (int i = 0; i < children.length; i++) {
 			if (fTree.getGrayed(children[i]))
 				findCheckedElements(checkedResources, children[i]);
-			else if (fTree.getChecked(children[i]))
+			else if (fTree.getChecked(children[i])) {
 				checkedResources.add(children[i]);
+				findCheckedElements(checkedResources, children[i]);
+			}
 		}
 	}
 
@@ -338,9 +340,9 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				fTree.setGrayed(element, false);
 				if (isExpandable(element))
 					setSubtreeChecked(element, state, state); // only check
-																// subtree if
-																// state is set
-																// to true
+				// subtree if
+				// state is set
+				// to true
 
 				updateParentState(element, state);
 				validateInput();
