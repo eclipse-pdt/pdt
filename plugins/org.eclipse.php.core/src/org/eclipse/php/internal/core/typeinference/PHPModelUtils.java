@@ -528,10 +528,14 @@ public class PHPModelUtils {
 		IField[] fields = PhpModelAccess.getDefault().findFields(fieldName,
 				MatchRule.EXACT, Modifiers.AccGlobal, 0, scope, null);
 
-		Collection<IField> filteredElements = filterElements(sourceModule,
-				Arrays.asList(fields));
-		return (IField[]) filteredElements.toArray(new IField[filteredElements
-				.size()]);
+		Collection<IField> filteredElements = null;
+		if (fields != null) {
+			filteredElements = filterElements(sourceModule, Arrays
+					.asList(fields));
+			return (IField[]) filteredElements
+					.toArray(new IField[filteredElements.size()]);
+		}
+		return null;
 	}
 
 	/**
