@@ -68,33 +68,10 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 			IMethod ctor = null;
 			if (requestor.isContextInformationMode()) {
 				try {
-					IMethod[] methods = type.getMethods();
-					if (methods != null && methods.length > 0) {
-						for (IMethod method : methods) {
-							if (method.isConstructor()) {
-								ctor = method;
-								break;
-							}
-						}
-					}
-					// try to find constructor in super classes
-					if (ctor == null) {
-						ITypeHierarchy newSupertypeHierarchy = type
-								.newSupertypeHierarchy(null);
-						IType[] allSuperclasses = newSupertypeHierarchy
-								.getAllSuperclasses(type);
-						if (allSuperclasses != null
-								&& allSuperclasses.length > 0) {
-							exitloop: for (IType superClass : allSuperclasses) {
-								methods = superClass.getMethods();
-								//find first constructor and exit
-								for (IMethod method : methods) {
-									if (method.isConstructor()) {
-										ctor = method;
-										break exitloop;
-									}
-								}
-							}
+					for (IMethod method : type.getMethods()) {
+						if (method.isConstructor()) {
+							ctor = method;
+							break;
 						}
 					}
 				} catch (ModelException e) {
