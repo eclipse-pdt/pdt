@@ -65,31 +65,57 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 
 			IMethod ctor = null;
 			try {
-				for (IMethod method : type.getMethods()) {
-					if (method.isConstructor()
-							&& method.getParameters() != null
-							&& method.getParameters().length > 0) {
-						ctor = method;
-						if (!PHPFlags.isPrivate(ctor.getFlags())
-								|| type.equals(enclosingClass)) {
-							ISourceRange sourceRange = type.getSourceRange();
-							FakeMethod ctorMethod = new FakeConstructor(
-									(ModelElement) type, type.getElementName(),
-									sourceRange.getOffset(), sourceRange
-											.getLength(), sourceRange
-											.getOffset(), sourceRange
-											.getLength(), ctor) {
-
-							};
-							ctorMethod.setParameters(ctor.getParameters());
-							ctorMethod.setParameterInitializers(ctor
-									.getParameterInitializers());
-							reporter.reportMethod(ctorMethod, suffix,
-									replaceRange);
-							break;
+				IMethod[] methods = type.getMethods();
+				if (methods != null && methods.length > 0) {
+					for (IMethod method : methods) {
+						if (method.isConstructor()
+								&& method.getParameters() != null
+								&& method.getParameters().length > 0) {
+							ctor = method;
+							if (!PHPFlags.isPrivate(ctor.getFlags())
+									|| type.equals(enclosingClass)) {
+								IMethod ctorMethod = createFakeMethod(ctor,
+										type);
+								reporter.reportMethod(ctorMethod, suffix,
+										replaceRange);
+								break;
+							}
 						}
 					}
 				}
+
+				// try to find constructor in super classes
+				if (ctor == null) {
+					ITypeHierarchy newSupertypeHierarchy = type
+							.newSupertypeHierarchy(null);
+					IType[] allSuperclasses = newSupertypeHierarchy
+							.getAllSuperclasses(type);
+					if (allSuperclasses != null && allSuperclasses.length > 0) {
+						for (IType superClass : allSuperclasses) {
+							methods = superClass.getMethods();
+							// find first constructor and exit
+							if (methods != null && methods.length > 0) {
+								for (IMethod method : methods) {
+									if (method.isConstructor()
+											&& method.getParameters() != null
+											&& method.getParameters().length > 0) {
+										ctor = method;
+										if (!PHPFlags
+												.isPrivate(ctor.getFlags())
+												|| type.equals(enclosingClass)) {
+											IMethod ctorMethod = createFakeMethod(
+													ctor, type);
+											reporter.reportMethod(ctorMethod,
+													suffix, replaceRange);
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
@@ -132,5 +158,26 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 			}
 			return false;
 		}
+	}
+
+	private FakeMethod createFakeMethod(IMethod ctor, IType type) {
+		ISourceRange sourceRange;
+		try {
+			sourceRange = type.getSourceRange();
+			FakeMethod ctorMethod = new FakeConstructor((ModelElement) type,
+					type.getElementName(), sourceRange.getOffset(), sourceRange
+							.getLength(), sourceRange.getOffset(), sourceRange
+							.getLength(), ctor) {
+
+			};
+			ctorMethod.setParameters(ctor.getParameters());
+			ctorMethod
+					.setParameterInitializers(ctor.getParameterInitializers());
+			return ctorMethod;
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
