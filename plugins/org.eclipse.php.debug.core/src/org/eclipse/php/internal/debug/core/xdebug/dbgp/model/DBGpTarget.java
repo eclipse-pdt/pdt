@@ -591,7 +591,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			// we are suspended, so we can send the stop request to do a clean
 			// termination
 			synchronized (sessionMutex) {
-				if (session != null) {
+				if (session != null && session.isActive()) {
 					setState(STATE_TERMINATING);
 					session.sendAsyncCmd(DBGpCommand.stop);
 					// we don't terminateDebugTarget here, we wait for the
@@ -646,57 +646,63 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * attached.
 	 */
 	public void sessionEnded() {
+		boolean unexpectedTermination = false;
+
 		synchronized (sessionMutex) {
 			session = null;
-		}
-		if (STATE_TERMINATING == targetState) {
-			// we are terminating, if we are a web launch, we need to issue the
-			// stop URL, then terminate the debug target.
-			if (isWebLaunch()) {
-				sendStopDebugURL();
-			}
-			terminateDebugTarget(true);
-		} else {
-
-			// need to save the suspended state as state is changed in the
-			// next section of code.
-			boolean savedSuspended = isSuspended();
-
-			// we were not terminating and the session ended. If we are a web
-			// launch, then we need to wait for the next session. Otherwise we
-			// terminate the debug target.
-			if (isWebLaunch()) {
-				if (isSuspended()) {
-					// if we are suspended, then inform eclipse we have resumed
-					// so all the user can do is terminate or disconnect while
-					// waiting for the next session.
-					fireResumeEvent(DebugEvent.RESUME);
-					langThread.fireResumeEvent(DebugEvent.RESUME);
+			if (STATE_TERMINATING == targetState) {
+				// we are terminating, if we are a web launch, we need to issue
+				// the
+				// stop URL, then terminate the debug target.
+				if (isWebLaunch()) {
+					sendStopDebugURL();
 				}
-				stepping = false;
-				setState(STATE_STARTED_SESSION_WAIT);
-				langThread.setBreakpoints(null);
-			} else {
 				terminateDebugTarget(true);
-			}
-			if (savedSuspended) {
-				// we were suspended at the time and not terminating so we have
-				// received an unexpected termination from the server side
-				final String errorMessage = PHPDebugCoreMessages.XDebugMessage_unexpectedTermination;
-				Status status = new Status(IStatus.ERROR, PHPDebugPlugin
-						.getID(), IPHPDebugConstants.INTERNAL_ERROR,
-						errorMessage, null);
-				DebugPlugin.log(status);
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						MessageDialog.openError(Display.getDefault()
-								.getActiveShell(),
-								PHPDebugCoreMessages.XDebugMessage_debugError,
-								errorMessage);
-					}
-				});
+			} else {
 
+				// if we were suspended and we are now terminating then
+				// something
+				// has caused debug to end, most likely a bad eval.
+				unexpectedTermination = isSuspended();
+
+				// we were not terminating and the session ended. If we are a
+				// web
+				// launch, then we need to wait for the next session. Otherwise
+				// we
+				// terminate the debug target.
+				if (isWebLaunch()) {
+					if (isSuspended()) {
+						// if we are suspended, then inform eclipse we have
+						// resumed
+						// so all the user can do is terminate or disconnect
+						// while
+						// waiting for the next session.
+						fireResumeEvent(DebugEvent.RESUME);
+						langThread.fireResumeEvent(DebugEvent.RESUME);
+					}
+					stepping = false;
+					setState(STATE_STARTED_SESSION_WAIT);
+					langThread.setBreakpoints(null);
+				} else {
+					terminateDebugTarget(true);
+				}
 			}
+		}
+
+		if (unexpectedTermination) {
+			// an unexpected termination occurred, so put out a message.
+			final String errorMessage = PHPDebugCoreMessages.XDebugMessage_unexpectedTermination;
+			Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+					IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null);
+			DebugPlugin.log(status);
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialog.openError(Display.getDefault()
+							.getActiveShell(),
+							PHPDebugCoreMessages.XDebugMessage_debugError,
+							errorMessage);
+				}
+			});
 
 		}
 	}
@@ -891,8 +897,10 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		// bug in eclipse 3.2. When I issue a resume when a disconnect
 		// is done, the resume button can still be pressed which
 		// wouldn't work as the session has gone.
-		if (session != null) {
-			session.sendAsyncCmd(DBGpCommand.run);
+		synchronized (sessionMutex) {
+			if (session != null && session.isActive()) {
+				session.sendAsyncCmd(DBGpCommand.run);
+			}
 		}
 	}
 
@@ -902,7 +910,11 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
 	 */
 	public void suspend() throws DebugException {
-		session.sendAsyncCmd(DBGpCommand.suspend);
+		synchronized (sessionMutex) {
+			if (session != null && session.isActive()) {
+				session.sendAsyncCmd(DBGpCommand.suspend);
+			}
+		}
 	}
 
 	/*
@@ -930,6 +942,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			// we are in the middle of a debug session, single or multi
 			// makes no difference, we should stop it
 			setState(STATE_DISCONNECTED);
+			// TODO: May need to synchronize
 			if (session != null) {
 				if (!isWebLaunch()) {
 					// not a web launch, but could be multi session so we
@@ -1090,16 +1103,6 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		resp = session.sendSyncCmd(DBGpCommand.featureSet,
 				"-n max_children -v " + getMaxChildren()); //$NON-NLS-1$
 		DBGpUtils.isGoodDBGpResponse(this, resp);
-
-		/*
-		 * resp = session.sendSyncCmd(DBGpCommand.featureGet,
-		 * "-n max_children"); if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
-		 * Node child = resp.getParentNode().getFirstChild(); if (child != null)
-		 * { String data = child.getNodeValue(); try { maxChildren =
-		 * Integer.parseInt(data); } catch (NumberFormatException nfe) {
-		 * maxChildren = -1; } } }
-		 */
-
 		resp = session.sendSyncCmd(DBGpCommand.featureGet, "-n encoding"); //$NON-NLS-1$
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 			Node child = resp.getParentNode().getFirstChild();
@@ -1118,10 +1121,14 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		asyncSupported = false;
 		resp = session.sendSyncCmd(DBGpCommand.featureGet, "-n supports_async"); //$NON-NLS-1$
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+			// TODO: could check the supported atttribute ?
+			//String supportedAttr = DBGpResponse.getAttribute(resp, "supported"); //$NON-NLS-1$
 			Node child = resp.getParentNode().getFirstChild();
-			String supported = DBGpResponse.getAttribute(child, "supported"); //$NON-NLS-1$
-			if (supported != null && supported.equals("1")) { //$NON-NLS-1$
-				asyncSupported = true;
+			if (child != null) {
+				String supported = child.getNodeValue();
+				if (supported != null && supported.equals("1")) { //$NON-NLS-1$
+					asyncSupported = true;
+				}
 			}
 		}
 
@@ -1156,20 +1163,25 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		// doing this at the same time on will be getting the data and the other
 		// will not and returning null as the data is not yet ready.
 		if (stackFrames == null) {
-			DBGpResponse resp = session.sendSyncCmd(DBGpCommand.stackGet);
-			if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
-				Node parent = resp.getParentNode();
-				NodeList stackNodes = parent.getChildNodes(); // <stack>
-				// entries
-				stackFrames = new IStackFrame[stackNodes.getLength()];
-				for (int i = 0; i < stackNodes.getLength(); i++) {
-					Node stackNode = stackNodes.item(i);
-					stackFrames[i] = new DBGpStackFrame(langThread, stackNode);
+			currentStackLevel = 0;
+			stackFrames = new IStackFrame[0];
+			synchronized (sessionMutex) {
+				if (session != null && session.isActive()) {
+					DBGpResponse resp = session
+							.sendSyncCmd(DBGpCommand.stackGet);
+					if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+						Node parent = resp.getParentNode();
+						NodeList stackNodes = parent.getChildNodes(); // <stack>
+						// entries
+						stackFrames = new IStackFrame[stackNodes.getLength()];
+						for (int i = 0; i < stackNodes.getLength(); i++) {
+							Node stackNode = stackNodes.item(i);
+							stackFrames[i] = new DBGpStackFrame(langThread,
+									stackNode);
+						}
+						currentStackLevel = stackNodes.getLength() - 1;
+					}
 				}
-				currentStackLevel = stackNodes.getLength() - 1;
-			} else {
-				currentStackLevel = 0;
-				stackFrames = new IStackFrame[0];
 			}
 		}
 		return stackFrames;
@@ -1215,21 +1227,27 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 * @return
 	 */
 	public IVariable[] getVariables(String level) {
-		if (level.equals("0")) { //$NON-NLS-1$
-			// level "0" is the current stack frame
-			// TODO: we could cache previous level stack frames as well for
-			// performance in stackframe switching in the future.
-			// TODO: see if preferences have changed about superglobals
-			if (currentVariables == null) {
-				currentVariables = getContextAtLevel(level);
-				return currentVariables;
+		synchronized (sessionMutex) {
+			if (session != null && session.isActive()) {
+				if (level.equals("0")) { //$NON-NLS-1$
+					// level "0" is the current stack frame
+					// TODO: we could cache previous level stack frames as well
+					// for
+					// performance in stackframe switching in the future.
+					// TODO: see if preferences have changed about superglobals
+					if (currentVariables == null) {
+						currentVariables = getContextAtLevel(level);
+						return currentVariables;
+					}
+					DBGpLogger
+							.debug("getVariables: returning cached variables"); //$NON-NLS-1$
+					return currentVariables;
+				} else {
+					return getContextAtLevel(level);
+				}
 			}
-			DBGpLogger.debug("getVariables: returning cached variables"); //$NON-NLS-1$
-			return currentVariables;
-		} else {
-			return getContextAtLevel(level);
+			return new IVariable[0];
 		}
-
 	}
 
 	private IVariable[] getContextAtLevel(String level) {
@@ -1412,12 +1430,17 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		// Convert to session encoding bytes 1st before converting to Base64
 		String encoded = Base64.encode(getSessionEncodingBytes(toEval));
 		String args = "-- " + encoded; //$NON-NLS-1$
-		DBGpResponse resp = session.sendSyncCmd(DBGpCommand.eval, args);
-		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
-			return resp.getParentNode().getFirstChild();
-		} else {
-			return null;
+
+		Node response = null;
+		synchronized (sessionMutex) {
+			if (session != null && session.isActive()) {
+				DBGpResponse resp = session.sendSyncCmd(DBGpCommand.eval, args);
+				if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+					response = resp.getParentNode().getFirstChild();
+				}
+			}
 		}
+		return response;
 	}
 
 	/**
@@ -2150,22 +2173,15 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 					// if we are in initial session wait, fire the event to
 					// unblock if we haven't even got that far, fire the event
-					// so that
-					// when we do enter initial session wait, we just go
-					// straight
-					// through.
+					// so that when we do enter initial session wait, we
+					// just go straight through.
 					te.signalEvent();
 				} else {
 					initiateSession();
 				}
 			} else {
-				// it was for me but I am currently processing a session, or
-				// terminating, so end it. In fact we could just return false
-				// here as well.
-				// session.endSession();
 				// well it is mine, but I am already handling a session so so it
-				// isn't mine and it
-				// will be terminated.
+				// isn't mine and it will be terminated.
 				isMine = false;
 			}
 		}
@@ -2300,8 +2316,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		try {
 			result = toConvert.getBytes(getSessionEncoding());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DBGpLogger.logException("unexpected encoding problem", this, e); //$NON-NLS-1$
 		}
 		return result;
 	}

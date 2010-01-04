@@ -288,15 +288,16 @@ public class DBGpSession {
 							.logException(
 									"Unexpected exception. Terminating the debug session",
 									this, t);
-					endSession(); // end the session to exit the response loop.
 
 					// send a dummy response back to unblock the target. It will
 					// know that the session has
 					// ended, but the dummy response will allow it to exit its
 					// current method.
-					DBGpResponse dummy = new DBGpResponse();
-					dummy.parseResponse(null);
-					unblockSyncCaller(dummy);
+					// TODO: cleanup commented out code: may not be needed
+					// anymore
+					// unblockAllCallers(null);
+					// endSession(); // end the session to exit the response
+					// loop.
 				}
 			}
 
@@ -349,27 +350,6 @@ public class DBGpSession {
 			}
 		}
 
-		private void postAndSignalCaller(Integer idObj,
-				DBGpResponse parsedResponse) {
-			Object responder = savedResponses.get(idObj);
-			if (responder instanceof Event) {
-				// we have an event for the id so we need to respond
-				// and unblock the caller, otherwise it has already
-				// been done (maybe from unblockAllCallers)
-				Event idev = (Event) responder;
-				savedResponses.put(idObj, parsedResponse);
-				idev.signalEvent();
-			}
-		}
-
-		private void unblockAllCallers(DBGpResponse parsedResponse) {
-			Set keys = savedResponses.keySet();
-			for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
-				Integer idObj = (Integer) iterator.next();
-				postAndSignalCaller(idObj, parsedResponse);
-			}
-		}
-
 		/**
 		 * This has yet to be implemented.
 		 * 
@@ -416,8 +396,8 @@ public class DBGpSession {
 		 * 
 		 */
 		private void handleStopStatus(DBGpResponse parsedResponse) {
-			endSession();
 			unblockAllCallers(parsedResponse);
+			endSession();
 		}
 
 		/**
@@ -505,6 +485,31 @@ public class DBGpSession {
 					}
 				}
 			}
+		}
+	}
+
+	private void unblockAllCallers(DBGpResponse parsedResponse) {
+		if (parsedResponse == null) {
+			// if null passed in, create a dummy response.
+			parsedResponse = new DBGpResponse();
+			parsedResponse.parseResponse(null);
+		}
+		Set keys = savedResponses.keySet();
+		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
+			Integer idObj = (Integer) iterator.next();
+			postAndSignalCaller(idObj, parsedResponse);
+		}
+	}
+
+	private void postAndSignalCaller(Integer idObj, DBGpResponse parsedResponse) {
+		Object responder = savedResponses.get(idObj);
+		if (responder instanceof Event) {
+			// we have an event for the id so we need to respond
+			// and unblock the caller, otherwise it has already
+			// been done (maybe from unblockAllCallers)
+			Event idev = (Event) responder;
+			savedResponses.put(idObj, parsedResponse);
+			idev.signalEvent();
 		}
 	}
 
@@ -626,6 +631,11 @@ public class DBGpSession {
 	 * 
 	 */
 	public synchronized void endSession() {
+
+		// we are ending the session so ensure anything that is waiting for a
+		// response
+		// is unblocked.
+		unblockAllCallers(null);
 		if (sessionActive) {
 			sessionActive = false;
 			try {
@@ -671,7 +681,7 @@ public class DBGpSession {
 		return sessionId;
 	}
 
-	public boolean isActive() {
+	public synchronized boolean isActive() {
 		return sessionActive;
 	}
 
