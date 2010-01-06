@@ -367,6 +367,26 @@ public class BindingTests extends SuiteOfTestCases {
 		Assert.assertTrue(variableBinding.getKind() == IBinding.VARIABLE);
 	}
 
+	public void testThisFieldAccessBinding() throws Exception {
+		String str = "<?php class MyClass { public $myvar = \"test\"; public function mymethod(){ return $this->myvar; }} $a = new MyClass(); $a->mymethod();?>";
+		Program program = createAndParse(str);
+
+		ExpressionStatement statement = (ExpressionStatement) program
+				.statements().get(2);
+		MethodInvocation methodInvocation = (MethodInvocation) statement
+				.getExpression();
+		IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
+
+		Assert.assertNotNull(methodBinding);
+		Assert.assertTrue(methodBinding.getName().equals("mymethod"));
+		Assert.assertNotNull(methodBinding.getDeclaringClass());
+		Assert.assertTrue(methodBinding.getDeclaringClass().getName().equals(
+				"MyClass"));
+		Assert.assertTrue(methodBinding.isConstructor() == false);
+		Assert.assertTrue(methodBinding.getReturnType()[0].getName().equals(
+				"string"));
+	}
+
 	public void testStaticFieldAccessBinding() throws Exception {
 		String str = "<?php class MyClass { public static $a = 4; } ; /**/MyClass::$a;?>";
 		Program program = createAndParse(str);
