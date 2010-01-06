@@ -1,148 +1,131 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.dltk.core.ICodeAssist;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.internal.ui.actions.ActionMessages;
+import org.eclipse.dltk.internal.ui.actions.OpenActionUtil;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
+import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
-import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.util.CodeDataResolver;
-import org.eclipse.php.internal.ui.Logger;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.Logger;
 
-public abstract class PHPEditorResolvingAction extends TextEditorAction {
+public abstract class PHPEditorResolvingAction extends TextEditorAction
+		implements IUpdate {
 
-	private CodeData[] fCodeDatas;
-
-	public PHPEditorResolvingAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
+	public PHPEditorResolvingAction(ResourceBundle bundle, String prefix,
+			ITextEditor editor) {
 		super(bundle, prefix, editor);
 		setEnabled(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
 	public void run() {
-		if (isValid()) {
-			doRun();
+		IModelElement[] modelElement = getSelectedElement();
+		IModelElement selected = null;
+		if (modelElement != null) {
+			if (modelElement.length > 1) {
+				IModelElement[] filteredElements = filterElements(modelElement);
+				selected = OpenActionUtil.selectModelElement(filteredElements,
+						getTextEditor().getSite().getShell(),
+						ActionMessages.OpenAction_error_title,
+						ActionMessages.OpenAction_select_element);
+				if (selected == null)
+					return;
+			} else {
+				selected = modelElement[0];
+			}
+			doRun(selected);
 		}
 	}
 
 	/**
 	 * run the action
 	 */
-	abstract protected void doRun();
+	abstract protected void doRun(IModelElement modelElement);
 
 	/**
-	 * @return text selection in the editor
+	 * @return is action valid and can be run
 	 */
-	protected ITextSelection getCurrentSelection() {
+	protected boolean isValid(IModelElement modelElement) {
+		return modelElement != null;
+	}
+
+	public void update() {
+		setEnabled(getTextEditor() != null/* && isValid(getSelectedElement()) */);
+	}
+
+	protected IModelElement[] getSelectedElement() {
+
 		ITextEditor editor = getTextEditor();
-		if (editor == null) {
+		ITextSelection textSelection = (ITextSelection) editor
+				.getSelectionProvider().getSelection();
+		int offset = textSelection.getOffset();
+
+		IModelElement input = EditorUtility.getEditorInputModelElement(editor,
+				false);
+		if (input == null) {
 			return null;
 		}
-		ISelectionProvider provider = editor.getSelectionProvider();
-		if (provider == null) {
-			return null;
-		}
-		ISelection selection = provider.getSelection();
-		if (selection instanceof ITextSelection) {
-			return (ITextSelection) selection;
+
+		try {
+			IDocument document = editor.getDocumentProvider().getDocument(
+					editor.getEditorInput());
+			IRegion wordRegion = ScriptWordFinder.findWord(document, offset);
+			if (wordRegion == null)
+				return null;
+
+			if (wordRegion.getOffset() < 0 || wordRegion.getLength() < 0) {
+				return null;
+			}
+
+			IModelElement[] elements = null;
+			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(),
+					wordRegion.getLength());
+			if (elements != null && elements.length > 0) {
+				return elements;
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
 		}
 
 		return null;
 	}
 
-	/**
-	 * @return is action valid and can be run
-	 */
-	protected boolean isValid() {
-		ITextEditor editor = getTextEditor();
-		if (editor == null) {
-			return false;
-		}
+	private IModelElement[] filterElements(IModelElement[] elements) {
+		if (elements == null)
+			return null;
 
-		IDocumentProvider docProvider = editor.getDocumentProvider();
-		IEditorInput input = editor.getEditorInput();
-		if (docProvider == null || input == null) {
-			return false;
-		}
-
-		IDocument document = docProvider.getDocument(input);
-		if (document == null) {
-			return false;
-		}
-
-		if (!(document instanceof IStructuredDocument)) {
-			return false;
-		}
-
-		ITextSelection currentSelection = getCurrentSelection();
-		int offset = currentSelection.getOffset();
-		IStructuredDocument structuredDocument = (IStructuredDocument) document;
-		String partitionType;
-		try {
-			partitionType = structuredDocument.getPartition(offset).getType();
-		} catch (BadLocationException e1) {
-			Logger.logException(e1);
-			return false;
-		}
-		if (!partitionType.equals(PHPPartitionTypes.PHP_DEFAULT)) {
-			return false;
-		}
-
-		IStructuredDocumentRegion structuredDocumentRegion = structuredDocument.getRegionAtCharacterOffset(offset);
-		ITextRegion textRegion = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
-		if (textRegion == null) {
-			return false;
-		}
-
-		if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
-			try {
-				textRegion = phpScriptRegion.getPhpToken(offset - structuredDocumentRegion.getStartOffset() - phpScriptRegion.getStart());
-			} catch (BadLocationException e) {
-				textRegion = null;
+		Map<IModelElement, IModelElement> uniqueElements = new HashMap<IModelElement, IModelElement>();
+		for (int i = 0; i < elements.length; i++) {
+			IModelElement element = elements[i];
+			IModelElement module = element
+					.getAncestor(IModelElement.SOURCE_MODULE);
+			if (module != null) {
+				if (!uniqueElements.containsKey(module)) {
+					uniqueElements.put(module, element);
+				}
 			}
 		}
-		if (textRegion == null) {
-			return false;
-		}
-
-		CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(structuredDocument, offset);
-
-		fCodeDatas = filterCodeDatas(codeDatas);
-
-		if (fCodeDatas.length > 0) {
-			return true;
-		}
-
-		return false;
+		return uniqueElements.values().toArray(
+				new IModelElement[uniqueElements.size()]);
 	}
-
-	/**
-	 * @param codeDatas elements to filter
-	 * @return array of filtered elements
-	 */
-	abstract protected CodeData[] filterCodeDatas(CodeData[] codeDatas);
-
-	/**
-	 * @return resolved elements
-	 */
-	protected CodeData[] getCodeDatas() {
-		return fCodeDatas;
-	}
-
 }
