@@ -482,10 +482,22 @@ public class BindingUtility {
 		}
 
 		for (Expression expr : returnExpressions) {
-			IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
-					.resolveExpression(sourceModule, sourceModuleDeclaration,
-							fileContext, expr);
-			evaluated.add(resolvedExpression);
+			SourceRange sourceRange = new SourceRange(expr);
+			try {
+				ContextFinder contextFinder = getContext(sourceRange);
+				IContext context = contextFinder.getContext();
+				IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
+						.resolveExpression(sourceModule,
+								sourceModuleDeclaration, context, expr);
+				if (resolvedExpression != null) {
+					evaluated.add(resolvedExpression);
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+				continue;
+			}
 		}
 		return (IEvaluatedType[]) evaluated
 				.toArray(new IEvaluatedType[evaluated.size()]);

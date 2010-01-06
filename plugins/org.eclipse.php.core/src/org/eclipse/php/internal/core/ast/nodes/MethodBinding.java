@@ -149,7 +149,9 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 				for (IEvaluatedType currentEvaluatedType : evaluatedFunctionReturnTypes) {
 					ITypeBinding typeBinding = this.resolver.getTypeBinding(
 							currentEvaluatedType, sourceModule);
-					result.add(typeBinding);
+					if (typeBinding != null) {
+						result.add(typeBinding);
+					}
 				}
 			} else {
 				IModelElement parentElement = modelElement.getParent();
@@ -163,7 +165,9 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 					for (IType currentEvaluatedType : functionReturnTypes) {
 						ITypeBinding typeBinding = this.resolver
 								.getTypeBinding(currentEvaluatedType);
-						result.add(typeBinding);
+						if (typeBinding != null) {
+							result.add(typeBinding);
+						}
 					}
 				}
 			}
