@@ -1492,12 +1492,24 @@
 			label="%themeElementCategory.label.0" />
 	</extension>
 	<extension point="org.eclipse.ui.decorators">
-		<decorator adaptable="true"
+		<decorator
 			class="org.eclipse.dltk.ui.ProblemsLabelDecorator" id="org.eclipse.php.ui.problemsDecorator"
 			label="%decorator.label.0" lightweight="true" location="BOTTOM_LEFT"
 			state="true">
 			<enablement>
 				<objectClass name="org.eclipse.core.resources.IResource">
+				</objectClass>
+			</enablement>
+		</decorator>
+	</extension>
+	
+	<extension point="org.eclipse.ui.decorators">
+		<decorator adaptable="true"
+			class="org.eclipse.dltk.ui.ProblemsLabelDecorator" id="org.eclipse.php.ui.problemsDecoratorForIModelElement"
+			label="%decorator.label.0" lightweight="true" location="BOTTOM_LEFT"
+			state="true">
+			<enablement>
+				<objectClass name="org.eclipse.dltk.core.IModelElement">
 				</objectClass>
 			</enablement>
 		</decorator>
