@@ -461,7 +461,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
 		IContentAssistant newPHPAssistant = phpConfiguration
-				.getPHPContentAssistant(this, true);
+				.getPHPContentAssistant(this/*, true*/);
 
 		// Uninstall content assistant created in super:
 		if (fContentAssistant != null) {

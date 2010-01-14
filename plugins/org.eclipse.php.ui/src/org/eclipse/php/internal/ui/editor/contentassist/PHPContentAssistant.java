@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.eclipse.dltk.ui.text.completion.IScriptContentAssistExtension;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextUtilities;
@@ -28,12 +29,16 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 
-public class PHPContentAssistant extends StructuredContentAssistant {
+public class PHPContentAssistant extends StructuredContentAssistant implements
+		IScriptContentAssistExtension {
 
 	private static final int DEFAULT_AUTO_ACTIVATION_DELAY = 500;
 	private int fAutoActivationDelay = DEFAULT_AUTO_ACTIVATION_DELAY;
 
 	private ITextViewer fViewer;
+
+	public PHPContentAssistant() {
+	}
 
 	protected AutoAssistListener createAutoAssistListener() {
 		return new AutoAssistListener2();
@@ -223,5 +228,9 @@ public class PHPContentAssistant extends StructuredContentAssistant {
 			declaredMethod.setAccessible(true);
 			return declaredMethod;
 		}
+	}
+
+	public boolean provide(IContentAssistProcessor processor) {
+		return true;
 	}
 }

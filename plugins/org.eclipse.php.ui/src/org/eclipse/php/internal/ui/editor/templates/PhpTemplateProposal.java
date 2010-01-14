@@ -40,4 +40,18 @@ public class PhpTemplateProposal extends TemplateProposal implements
 		return getTemplate().isAutoInsertable();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		if(!(obj instanceof PhpTemplateProposal))
+			return false;
+		PhpTemplateProposal newTemplateProposal = (PhpTemplateProposal)obj;
+		return getTemplate().equals(newTemplateProposal.getTemplate());
+	}
+	
+	@Override
+	public int hashCode() {
+		return getTemplate().hashCode();
+	}
 }
