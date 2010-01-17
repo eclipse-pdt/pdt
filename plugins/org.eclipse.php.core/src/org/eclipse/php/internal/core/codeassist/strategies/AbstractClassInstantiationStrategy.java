@@ -21,7 +21,8 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  * @author vadim.p
  * 
  */
-public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStrategy {
+public abstract class AbstractClassInstantiationStrategy extends
+		GlobalTypesStrategy {
 
 	public AbstractClassInstantiationStrategy(ICompletionContext context,
 			int trueFlag, int falseFlag) {
@@ -120,8 +121,6 @@ public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStra
 				reporter.reportType(type, suffix, replaceRange);
 			}
 		}
-
-		// addSelf(concreteContext, reporter);
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {
