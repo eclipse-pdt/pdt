@@ -25,42 +25,39 @@
    </launcher>
 
    <plugins>
-      <plugin id="org.eclipse.ant.core"/>
-      <plugin id="org.eclipse.core.commands"/>
-      <plugin id="org.eclipse.core.expressions"/>
-      <plugin id="org.eclipse.core.resources"/>
-      <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
-      <plugin id="org.eclipse.core.resources.linux" fragment=""/>
-      <plugin id="org.eclipse.core.runtime"/>
-      <plugin id="org.eclipse.core.runtime.compatibility"/>
-      <plugin id="org.eclipse.core.variables"/>
-      <plugin id="org.eclipse.help"/>
-      <plugin id="org.eclipse.jface"/>
-      <plugin id="org.eclipse.osgi"/>
-      <plugin id="org.eclipse.php"/>
-      <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.gtk.linux.x86" fragment=""/>
-      <plugin id="org.eclipse.ui"/>
-      <plugin id="org.eclipse.ui.forms"/>
-      <plugin id="org.eclipse.ui.ide"/>
-      <plugin id="org.eclipse.ui.views"/>
-      <plugin id="org.eclipse.ui.workbench"/>
-      <plugin id="org.eclipse.update.configurator"/>
-      <plugin id="org.eclipse.update.core"/>
-      <plugin id="org.eclipse.update.core.linux" fragment=""/>
-      <plugin id="org.eclipse.update.ui"/>
    </plugins>
 
    <features>
-      <feature id="org.eclipse.emf"/>
+      <feature id="org.eclipse.dltk.core"/>
+      <feature id="org.eclipse.dltk.core.index"/>
+      <feature id="org.eclipse.dltk.rse"/>
       <feature id="org.eclipse.php"/>
+      <feature id="org.eclipse.equinox.p2.user.ui"/>
       <feature id="org.eclipse.platform"/>
-      <feature id="org.eclipse.wst"/>
+      <feature id="org.eclipse.wst.common.fproj"/>
+      <feature id="org.eclipse.wst.jsdt.feature"/>
+      <feature id="org.eclipse.wst.xml_ui.feature"/>
+      <feature id="org.eclipse.wst.web_ui.feature"/>
+      <feature id="org.eclipse.wst.xsl.feature"/>
+      <feature id="org.eclipse.emf"/>
       <feature id="org.eclipse.xsd"/>
-      <feature id="org.eclipse.datatools.connectivity.feature"/>
-      <feature id="org.eclipse.datatools.enablement.feature"/>
-      <feature id="org.eclipse.datatools.modelbase.feature"/>
-      <feature id="org.eclipse.datatools.sqldevtools.feature"/>
+      <feature id="org.eclipse.xsd.edit"/>
+      <feature id="org.eclipse.gef"/>
+      <feature id="org.eclipse.rse"/>
+      <feature id="org.eclipse.cvs"/>
+      <feature id="org.eclipse.help"/>
+      <feature id="org.eclipse.jdt"/>
+      <feature id="org.eclipse.mylyn.ide_feature"/>
+      <feature id="org.eclipse.mylyn.bugzilla_feature"/>
+      <feature id="org.eclipse.mylyn.context_feature"/>
+      <feature id="org.eclipse.mylyn_feature"/>
+      <feature id="org.eclipse.mylyn.wikitext_feature"/>
+      <feature id="org.eclipse.mylyn.team_feature"/>
+      <feature id="org.eclipse.dltk.mylyn"/>
+      <feature id="org.eclipse.php.mylyn"/>
+      <feature id="org.eclipse.wst.xml_core.feature"/>
+      <feature id="org.eclipse.rse.ftp"/>
+      <feature id="org.eclipse.rse.ssh"/>
    </features>
 
 
