@@ -150,6 +150,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == InstanceOfContext.class) {
 			return new ICompletionStrategy[] { new InstanceOfStrategy(context) };
 		}
+		if (contextClass == ExceptionClassInstantiationContext.class) {
+			return new ICompletionStrategy[] { new ExceptionClassInstantiationStrategy(context) };	
+		}
 		if (contextClass == ClassStaticMemberContext.class
 				|| contextClass == ClassObjMemberContext.class) {
 			return new ICompletionStrategy[] {

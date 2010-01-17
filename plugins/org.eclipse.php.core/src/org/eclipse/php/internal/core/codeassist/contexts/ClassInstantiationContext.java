@@ -39,9 +39,10 @@ public class ClassInstantiationContext extends StatementContext {
 
 		try {
 			String previousWord = getPreviousWord();
-			if ("new".equalsIgnoreCase(previousWord)) {
-				return true;
-			}
+			String previous2Word = getPreviousWord(2);
+			if ("new".equalsIgnoreCase(previousWord) && !"throw".equalsIgnoreCase(previous2Word)) {
+ 				return true;
+ 			}
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
