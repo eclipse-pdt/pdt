@@ -121,6 +121,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			if (semanticType != null) {
 				enabled = getOverlayStore().getBoolean(
 						semanticType.getEnabledPreferenceKey());
+			}else{
+				enabled = getOverlayStore().getBoolean(PreferenceConstants.getEnabledPreferenceKey(namedStyle));
 			}
 			fEnabler.setSelection(enabled);
 			fEnabler.setEnabled(true);
@@ -661,6 +663,10 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 					getOverlayStore().setValue(
 							semantic.getEnabledPreferenceKey(), enablement);
 
+				}else if(getStylePreferenceKeys().contains(namedStyle)){
+					boolean enablement = fEnabler.getSelection();
+					switchEnablement(enablement);
+					getOverlayStore().setValue(PreferenceConstants.getEnabledPreferenceKey(namedStyle),enablement);
 				}
 			}
 
@@ -691,8 +697,11 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 
 		Iterator<String> i = getStylePreferenceKeys().iterator();
 		while (i.hasNext()) {
+			String key = i.next();
 			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-					OverlayPreferenceStore.STRING, i.next()));
+					OverlayPreferenceStore.STRING, key));
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+					OverlayPreferenceStore.BOOLEAN, PreferenceConstants.getEnabledPreferenceKey(key)));
 		}
 
 		for (AbstractSemanticHighlighting rule : SemanticHighlightingManager

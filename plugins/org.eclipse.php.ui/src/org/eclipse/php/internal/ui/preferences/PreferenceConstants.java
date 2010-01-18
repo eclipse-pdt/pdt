@@ -1110,7 +1110,20 @@ public class PreferenceConstants {
 				EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR);
 		store.setDefault(EDITOR_PHPDOC_COLOR, EDITOR_PHPDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_TASK_COLOR, EDITOR_TASK_DEFAULT_COLOR);
-
+		
+		// SyntaxColoringPage enable
+		store.setDefault(getEnabledPreferenceKey(EDITOR_NORMAL_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_BOUNDARYMARKER_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_VARIABLE_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_STRING_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_NUMBER_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_HEREDOC_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_COMMENT_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_LINE_COMMENT_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COMMENT_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_TASK_COLOR), true);
 		// PHP options
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION,
 				PHPVersion.PHP5.toString());
@@ -1193,6 +1206,12 @@ public class PreferenceConstants {
 
 		// do more complicated stuff
 		PHPProjectLayoutPreferencePage.initDefaults(store);
+	}
+
+	public static String getEnabledPreferenceKey(String preferenceKey) {
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
+				+ preferenceKey
+				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED_SUFFIX;
 	}
 
 	// Don't instantiate
