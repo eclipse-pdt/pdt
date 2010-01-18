@@ -28,6 +28,7 @@
    </plugins>
 
    <features>
+      <feature id="org.eclipse.platform"/>
       <feature id="org.eclipse.dltk.core"/>
       <feature id="org.eclipse.dltk.core.index"/>
       <feature id="org.eclipse.php"/>
