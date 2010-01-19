@@ -1151,6 +1151,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	@Override
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
+		if (input instanceof IFileEditorInput) {
+			// This is the existing workspace file
+			final IFileEditorInput fileInput = (IFileEditorInput) input;
+			input = new RefactorableFileEditorInput(fileInput);
+		}
 		super.init(site, input);
 	}
 
@@ -2199,6 +2204,14 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
+			if(getRefactorableFileEditorInput() != null && ((RefactorableFileEditorInput)getRefactorableFileEditorInput()).isRefactor()){
+				getRefactorableFileEditorInput().setRefactor(false);
+				getRefactorableFileEditorInput().setInnerEidtorInput(fileInput);
+				input = getRefactorableFileEditorInput();
+			}else{
+				input = new RefactorableFileEditorInput(fileInput);
+			}
+			
 		} else if (input instanceof IStorageEditorInput) {
 			// non-workspace file
 		}
@@ -2228,6 +2241,20 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		if (isShowingOverrideIndicators()) {
 			installOverrideIndicator(true);
 		}
+	}
+	@Override
+	protected boolean canHandleMove(IEditorInput originalElement,
+			IEditorInput movedElement) {
+		if(getRefactorableFileEditorInput() != null){
+			getRefactorableFileEditorInput().setRefactor(true);
+		}
+		return super.canHandleMove(originalElement, movedElement);
+	}
+	private RefactorableFileEditorInput getRefactorableFileEditorInput() {
+		if(getEditorInput() instanceof RefactorableFileEditorInput){
+			return (RefactorableFileEditorInput)getEditorInput();
+		}
+		return null;
 	}
 
 	OutlineSelectionChangedListener fPHPOutlinePageListener;
@@ -3296,5 +3323,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 	public ISourceViewer getViewer() {
 		return super.getSourceViewer();
+	}
+	
+	public void update() {
+		super.update();
+		if (fPHPOutlinePage != null && fPHPOutlinePage instanceof ConfigurableContentOutlinePage) {
+			((ConfigurableContentOutlinePage) fPHPOutlinePage).setInput(getModelElement());
+		}
 	}
 }
