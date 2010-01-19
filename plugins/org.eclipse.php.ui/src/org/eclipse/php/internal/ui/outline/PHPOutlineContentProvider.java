@@ -333,6 +333,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		public IModelElement[] getChildren() throws ModelException {
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
 					.getModuleDeclaration(sourceModule);
+			if(moduleDeclaration == null)
+				return new IModelElement[0];
 			UseStatement[] useStatements = ASTUtils.getUseStatements(
 					moduleDeclaration, moduleDeclaration.sourceEnd());
 			List<UseStatementElement> elements = new LinkedList<UseStatementElement>();
