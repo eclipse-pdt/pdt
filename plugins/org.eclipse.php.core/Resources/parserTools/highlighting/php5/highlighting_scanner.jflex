@@ -763,17 +763,22 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 	   label_len--;
     }
     if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len,label_len).equals(heredoc)) {
-    	   yypushback(1);
+    	if ((label_len - heredoc_len-2) >= 0 && yytext().charAt(label_len - heredoc_len-2)=='\r') {
+        	label_len = label_len-2;
+    	} else {
+        	label_len--;
+    	}
+    	yypushback(heredoc_len + (yylength() - label_len));
         yybegin(ST_PHP_END_HEREDOC);
     }
         return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_END_HEREDOC>{ANY_CHAR} {
+<ST_PHP_END_HEREDOC>{NEWLINE}{LABEL}";"?[\n\r] {
     heredoc=null;
     heredoc_len=0;
     yybegin(ST_PHP_IN_SCRIPTING);
-    return PHP_CONSTANT_ENCAPSED_STRING;
+    return PHP_HEREDOC_TAG;
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {
