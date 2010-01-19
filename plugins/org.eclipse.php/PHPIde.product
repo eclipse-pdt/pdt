@@ -13,6 +13,10 @@
    </configIni>
 
    <launcherArgs>
+      <programArgs>--launcher.XXMaxPermSize 256m</programArgs>
+      <vmArgs>-Xms128M -Xmx512M</vmArgs>
+      <vmArgsMac>-Djava.awt.headless=true -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Xdock:icon=../Resources/
+mac.icns</vmArgsMac>
    </launcherArgs>
 
    <windowImages/>
@@ -23,6 +27,9 @@
          <bmp/>
       </win>
    </launcher>
+
+   <vm>
+   </vm>
 
    <plugins>
    </plugins>
