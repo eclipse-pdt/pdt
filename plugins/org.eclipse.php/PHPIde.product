@@ -45,8 +45,11 @@
       <feature id="org.eclipse.wst.xsl.feature"/>
       <feature id="org.eclipse.wst.common.fproj"/>
       <feature id="org.eclipse.wst.xml_ui.feature"/>
+      <feature id="org.eclipse.emf"/>
+      <feature id="org.eclipse.xsd"/>
       <feature id="org.eclipse.xsd.edit"/>
       <feature id="org.eclipse.mylyn.context_feature"/>
+      <feature id="org.eclipse.mylyn_feature"/>
       <feature id="org.eclipse.mylyn.ide_feature"/>
       <feature id="org.eclipse.mylyn.team_feature"/>
    </features>
