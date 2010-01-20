@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -307,8 +308,21 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 		if (!(sel instanceof IStructuredSelection))
 			return false;
 		IStructuredSelection selection = (IStructuredSelection) sel;
+
+		if (selection.isEmpty()) {
+			return false;
+		}
+
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object element = iter.next();
+
+			if (element instanceof IProject) {
+				IProject project = (IProject) element;
+				if (!project.isAccessible()) {
+					return false;
+				}
+			}
+
 			if (element instanceof IWorkingSet)
 				return false;
 		}
