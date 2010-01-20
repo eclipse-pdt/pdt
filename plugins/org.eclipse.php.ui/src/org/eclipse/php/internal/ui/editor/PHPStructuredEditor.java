@@ -1154,7 +1154,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		if (input instanceof IFileEditorInput) {
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
-			input = new RefactorableFileEditorInput(fileInput);
+			input = new RefactorableFileEditorInput(fileInput.getFile());
 		}
 		super.init(site, input);
 	}
@@ -2206,10 +2206,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			resource = fileInput.getFile();
 			if(getRefactorableFileEditorInput() != null && ((RefactorableFileEditorInput)getRefactorableFileEditorInput()).isRefactor()){
 				getRefactorableFileEditorInput().setRefactor(false);
-				getRefactorableFileEditorInput().setInnerEidtorInput(fileInput);
+				getRefactorableFileEditorInput().setFile(fileInput.getFile());
 				input = getRefactorableFileEditorInput();
 			}else{
-				input = new RefactorableFileEditorInput(fileInput);
+				input = new RefactorableFileEditorInput(fileInput.getFile());
 			}
 			
 		} else if (input instanceof IStorageEditorInput) {

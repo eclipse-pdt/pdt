@@ -1,21 +1,68 @@
 package org.eclipse.php.internal.ui.editor;
 
+import java.net.URI;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.*;
+import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.part.FileEditorInputFactory;
 
-public class RefactorableFileEditorInput implements IFileEditorInput{
+public class RefactorableFileEditorInput implements IFileEditorInput, IPathEditorInput, IURIEditorInput,
+IPersistableElement {
 	private boolean isRefactor = false;
-	private IFileEditorInput innerEidtorInput;
-	public RefactorableFileEditorInput(IFileEditorInput innerEidtorInput) {
-		this.innerEidtorInput = innerEidtorInput;
+	private FileEditorInput innerEidtorInput;
+	public RefactorableFileEditorInput(IFile file) {
+		this.innerEidtorInput = new FileEditorInput(file);
 	}
 
-	public void setInnerEidtorInput(IFileEditorInput innerEidtorInput) {
-		this.innerEidtorInput = innerEidtorInput;
+	/* (non-Javadoc)
+	 * Method declared on IPersistableElement.
+	 */
+	public String getFactoryId() {
+		return FileEditorInputFactory.getFactoryId();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IPathEditorInput#getPath()
+	 */
+	public IPath getPath() {
+		return innerEidtorInput.getPath();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IURIEditorInput#getURI()
+	 */
+	public URI getURI() {
+		return innerEidtorInput.getURI();
+	}
+
+	/* (non-Javadoc)
+	 * Method declared on Object.
+	 */
+	public int hashCode() {
+		return innerEidtorInput.hashCode();
+	}
+
+	/* (non-Javadoc)
+	 * Method declared on IPersistableElement.
+	 */
+	public void saveState(IMemento memento) {
+		FileEditorInputFactory.saveState(memento, innerEidtorInput);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return innerEidtorInput.toString(); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	public void setFile(IFile file) {
+		this.innerEidtorInput = new FileEditorInput(file);
 	}
 	public boolean isRefactor() {
 		return isRefactor;
