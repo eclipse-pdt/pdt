@@ -74,7 +74,7 @@ public abstract class ClassMemberContext extends StatementContext {
 		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(
 				statementText, elementStart);
 		if (elementStart <= 2) { // there's no trigger of length less than 2
-									// characters
+			// characters
 			return false;
 		}
 
@@ -132,9 +132,16 @@ public abstract class ClassMemberContext extends StatementContext {
 			IPhpScriptRegion phpScriptRegion = getPhpScriptRegion();
 			ITextRegion nextRegion = phpScriptRegion.getPhpToken(phpToken
 					.getEnd());
+
 			if (phpToken.getTextLength() == phpToken.getLength()) {
+				int addOffset = 0;
+				if (nextRegion.getType() == PHPRegionTypes.PHP_TOKEN) {
+					addOffset = phpToken.getEnd();
+				} else {
+					addOffset = nextRegion.getTextEnd();
+				}
 				return getRegionCollection().getStartOffset()
-						+ phpScriptRegion.getStart() + nextRegion.getTextEnd();
+						+ phpScriptRegion.getStart() + addOffset;
 			}
 		}
 		return super.getPrefixEnd();
