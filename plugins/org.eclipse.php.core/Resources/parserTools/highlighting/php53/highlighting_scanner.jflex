@@ -38,7 +38,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 %state ST_PHP_DOC_COMMENT
 %state ST_PHP_LINE_COMMENT
 %state ST_PHP_HIGHLIGHTING_ERROR
-
+%state ST_PHP_END_NOWDOC
 
 %{
     public PhpLexer(int state){
@@ -69,7 +69,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     }
 
     protected boolean isHeredocState(int state){
-    	    	return state == ST_PHP_HEREDOC || state == ST_PHP_END_HEREDOC || state == ST_PHP_NOWDOC;
+    	    	return state == ST_PHP_HEREDOC || state == ST_PHP_END_HEREDOC || state == ST_PHP_NOWDOC || state == ST_PHP_END_NOWDOC;
     }
     
     public int[] getParamenters(){
@@ -833,12 +833,28 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	   label_len--;
     }
     if (label_len > nowdoc_len && yytext().substring(label_len - nowdoc_len,label_len).equals(nowdoc)) {
-    	nowdoc = null;
-    	nowdoc_len = 0;
-		yypushback(1);
-		yybegin(ST_PHP_END_HEREDOC);
+    	//nowdoc = null;
+    	//nowdoc_len = 0;
+		//yypushback(1);
+		//yybegin(ST_PHP_END_NOWDOC);
+		
+    	if ((label_len - nowdoc_len-2) >= 0 && yytext().charAt(label_len - nowdoc_len-2)=='\r') {
+        	label_len = label_len-2;
+    	} else {
+        	label_len--;
+    	}
+    	yypushback(nowdoc_len + (yylength() - label_len));
+    	
+        yybegin(ST_PHP_END_NOWDOC);
 	}
 	return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_END_NOWDOC>{NEWLINE}{LABEL}";"?[\n\r] {
+	nowdoc = null;
+	nowdoc_len = 0;
+    yybegin(ST_PHP_IN_SCRIPTING);
+    return PHP_HEREDOC_TAG;
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {
@@ -921,7 +937,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
    This rule must be the last in the section!!
    it should contain all the states.
    ============================================ */
-<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_END_HEREDOC,ST_PHP_NOWDOC>. {
+<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_END_HEREDOC,ST_PHP_END_NOWDOC,ST_PHP_NOWDOC>. {
     yypushback(1);
     pushState(ST_PHP_HIGHLIGHTING_ERROR);
 }
