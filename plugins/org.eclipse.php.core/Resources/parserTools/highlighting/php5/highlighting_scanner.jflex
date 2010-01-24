@@ -755,22 +755,17 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 	   label_len--;
     }
     if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len,label_len).equals(heredoc)) {
-    	if ((label_len - heredoc_len-2) >= 0 && yytext().charAt(label_len - heredoc_len-2)=='\r') {
-        	label_len = label_len-2;
-    	} else {
-        	label_len--;
-    	}
-    	yypushback(heredoc_len + (yylength() - label_len));
+    	   yypushback(1);
         yybegin(ST_PHP_END_HEREDOC);
     }
         return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_END_HEREDOC>{NEWLINE}{LABEL}";"?[\n\r] {
+<ST_PHP_END_HEREDOC>{ANY_CHAR} {
     heredoc=null;
     heredoc_len=0;
     yybegin(ST_PHP_IN_SCRIPTING);
-    return PHP_HEREDOC_TAG;
+    return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {
