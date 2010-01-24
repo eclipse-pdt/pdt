@@ -55,6 +55,16 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		this(context, 0, 0);
 	}
 
+	public SourceRange getReplacementRange(ICompletionContext context)
+			throws BadLocationException {
+		SourceRange replacementRange = super.getReplacementRange(context);
+		if (replacementRange.getLength() > 0) {
+			return new SourceRange(replacementRange.getOffset(),
+					replacementRange.getLength() - 1);
+		}
+		return replacementRange;
+	}
+
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		ICompletionContext context = getContext();
