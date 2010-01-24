@@ -58,9 +58,15 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				.getCompletionRequestor();
 
 		String prefix = concreteContext.getPrefix();
-		SourceRange replaceRange = getReplacementRange(concreteContext);
 		boolean isParentCall = isParentCall(concreteContext);
 		String suffix = getSuffix(concreteContext);
+
+		SourceRange replaceRange = null;
+		if (suffix.equals("")) {
+			replaceRange = getReplacementRange(concreteContext);
+		} else {
+			replaceRange = getReplacementRangeWithBraces(concreteContext);
+		}
 
 		PHPVersion phpVersion = concreteContext.getPhpVersion();
 		Set<String> magicMethods = new HashSet<String>();

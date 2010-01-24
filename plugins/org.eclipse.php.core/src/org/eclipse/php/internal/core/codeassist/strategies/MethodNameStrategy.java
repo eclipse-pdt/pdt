@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.MethodNameContext;
 import org.eclipse.php.internal.core.language.PHPMagicMethods;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
@@ -41,6 +42,8 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * @author michael
  */
 public class MethodNameStrategy extends AbstractCompletionStrategy {
+
+	private static String CONSTRUCTOR_SUFFIX = "()";
 
 	public MethodNameStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
@@ -64,7 +67,14 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		String prefix = concreteContext.getPrefix();
 		boolean exactName = requestor.isContextInformationMode();
 		IType declaringClass = concreteContext.getDeclaringClass();
-		SourceRange replaceRange = getReplacementRange(concreteContext);
+
+		String suffix = getSuffix(concreteContext);
+		SourceRange replaceRange = null;
+		if (suffix.equals("")) {
+			replaceRange = getReplacementRange(concreteContext);
+		} else {
+			replaceRange = getReplacementRangeWithBraces(concreteContext);
+		}
 
 		try {
 			ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(
@@ -80,7 +90,8 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 				int flags = superMethod.getFlags();
 				if (!PHPFlags.isFinal(flags) && !PHPFlags.isPrivate(flags)
 						&& !PHPFlags.isStatic(flags)) {
-					reporter.reportMethod(superMethod, "()", replaceRange);
+					reporter.reportMethod(superMethod, CONSTRUCTOR_SUFFIX,
+							replaceRange);
 				}
 			}
 		} catch (CoreException e) {
@@ -106,9 +117,22 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 						|| function.length() == prefix.length()) {
 					FakeMethod fakeMethod = new FakeMethod(
 							(ModelElement) declaringClass, function);
-					reporter.reportMethod(fakeMethod, "()", replaceRange);
+					if (function.equals("__construct")) {
+						fakeMethod.setConstructor(true);
+					}
+					reporter.reportMethod(fakeMethod, suffix, replaceRange);
 				}
 			}
 		}
+	}
+
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		String nextWord = null;
+		try {
+			nextWord = abstractContext.getNextWord();
+		} catch (BadLocationException e) {
+			PHPCorePlugin.log(e);
+		}
+		return "(".equals(nextWord) ? "" : CONSTRUCTOR_SUFFIX; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

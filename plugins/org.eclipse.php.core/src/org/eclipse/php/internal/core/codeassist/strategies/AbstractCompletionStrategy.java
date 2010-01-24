@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
  * This strategy contains common utilities of all completion strategies.
@@ -83,6 +84,36 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		}
 
 		SourceRange replacementRange = new SourceRange(start, length);
+		return replacementRange;
+	}
+
+	public SourceRange getReplacementRangeWithBraces(ICompletionContext context)
+			throws BadLocationException {
+
+		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
+
+		int length = completionContext.getPrefix().length();
+		int start = completionContext.getOffset() - length;
+		int prefixEnd = completionContext.getPrefixEnd();
+
+		if (start + length < prefixEnd) {
+			length = prefixEnd - start;
+		}
+
+		IStructuredDocument document = completionContext.getDocument();
+
+		int endOfReplacement = start + length;
+		if (document.getLength() == start) {
+			endOfReplacement = start;
+		} else if (start < document.getLength() - 2) {
+			if (document.getChar(endOfReplacement) == '('
+					&& document.getChar(endOfReplacement + 1) == ')') {
+				endOfReplacement += 2;
+			}
+		}
+
+		SourceRange replacementRange = new SourceRange(start, endOfReplacement
+				- start);
 		return replacementRange;
 	}
 
