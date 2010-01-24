@@ -35,20 +35,16 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	private boolean fGlobal;
 	private IVariable[] fChildren;
 
-	public PHPValue(PHPDebugTarget target, Expression var) {
-		super(target);
-
-		fValue = var.getValue();
-		fVariable = var;
-		fGlobal = false;
-	}
-
 	public PHPValue(PHPDebugTarget target, Expression variable, boolean global) {
 		super(target);
 
 		fValue = variable.getValue();
 		fVariable = variable;
 		fGlobal = global;
+	}
+
+	public PHPValue(PHPDebugTarget target, Expression variable) {
+		this(target, variable, false);
 	}
 
 	/*
@@ -164,5 +160,9 @@ public class PHPValue extends PHPDebugElement implements IValue {
 
 	public boolean isPrimative() {
 		return fValue.isPrimitive();
+	}
+
+	public Expression getVariable() {
+		return fVariable;
 	}
 }
