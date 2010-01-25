@@ -183,7 +183,7 @@ ${cursor}</template>
 	id="org.eclipse.php.ui.editor.templates.php.foreach"
 	context="php"
 	enabled="true" 
-	autoinsert="false">foreach (${dollar}${array_variable} as ${dollar}${variable}) {
+	autoinsert="false">foreach (${dollar}${array_expression} as ${dollar}${value}) {
 	${cursor};
 }
 </template>
@@ -194,7 +194,7 @@ ${cursor}</template>
 	id="org.eclipse.php.ui.editor.templates.php.foreachkey"
 	context="php"
 	enabled="true" 
-	autoinsert="false">foreach (${dollar}${array_variable} as ${dollar}${number_variable} => ${dollar}${variable}) {
+	autoinsert="false">foreach (${dollar}${array_expression} as ${dollar}${key} => ${dollar}${value}) {
 	${cursor};
 }
 </template>
