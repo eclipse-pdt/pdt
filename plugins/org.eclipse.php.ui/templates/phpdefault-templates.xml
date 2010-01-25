@@ -1,16 +1,93 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?><!--
+    Copyright (c) 2009 IBM Corporation and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+    
+    Contributors:
+        IBM Corporation - initial API and implementation
+        Zend Technologies
+ -->
+
 <templates>
+<!-- Code templates : -->
 
+<template name="gettercomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.gettercomment" description="%CodeTemplates.gettercomment" context="phpcomment" enabled="true">/**
+ * @return %CodeTemplates.gettercomment.returntagcontent
+ */</template>
 
-	<!--  php templates -->
+<template name="settercomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.settercomment" description="%CodeTemplates.settercomment" context="phpcomment" enabled="true">/**
+ * @param ${param} %CodeTemplates.settercomment.paramtagcontent
+ */</template>
 
+<template name="constructorcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.constructorcomment" description="%CodeTemplates.constructorcomment" context="phpcomment" enabled="true">/**
+ * ${tags}
+ */</template>
+
+<template name="filecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.filecomment" description="%CodeTemplates.filecomment" context="phpcomment" enabled="true">/**
+ * 
+ */</template>
+
+<template name="typecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.typecomment" description="%CodeTemplates.typecomment" context="phpcomment" enabled="true">/**
+ * @author ${user}
+ *
+ * ${tags}
+ */</template>
+ 
+<template name="fieldcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.fieldcomment" description="%CodeTemplates.fieldcomment" context="phpcomment" enabled="true">/**
+ * @var ${field_type}
+ */</template>
+ 
+<template name="varcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.varcomment" description="%CodeTemplates.varcomment" context="phpcomment" enabled="true">/* @var ${field} ${field_type} */</template>
+ 
+<template name="methodcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.methodcomment" description="%CodeTemplates.nonoverridingcomment" context="phpcomment" enabled="true">/**
+ * ${cursor}${tags}
+ */</template>
+
+<template name="overridecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.overridecomment" description="%CodeTemplates.overridecomment" context="phpcomment" enabled="true">/* %CodeTemplates.overridecomment.nonjd
+ * ${see_to_overridden}
+ */</template>
+
+<template name="delegatecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.delegatecomment" description="%CodeTemplates.delegatecomment" context="phpcomment" enabled="true">/**
+ * ${tags}
+ * ${see_to_target}
+ */</template>
+
+<template name="newtype" id="org.eclipse.php.ui.editor.templates.php.codetemplates.newtype" description="%CodeTemplates.newfile" context="newtype_context" enabled="true">${filecomment}
+${package_declaration}
+
+${typecomment}
+${type_declaration}</template>
+
+<template name="classbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.classbody" description="%CodeTemplates.classbody" context="classbody_context" enabled="true" autoinsert="false">
+</template>
+
+<template name="interfacebody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.interfacebody" description="%CodeTemplates.interfacebody" context="interfacebody_context" enabled="true" autoinsert="false">
+</template>
+
+<template name="catchblock" id="org.eclipse.php.ui.editor.templates.php.codetemplates.catchblock" description="%CodeTemplates.catchblock" context="catchblock_context" enabled="true">// ${todo} %CodeTemplates.catchblock.tododesc
+${exception_var}.printStackTrace();</template>
+
+<template name="methodbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.methodbody" description="%CodeTemplates.methodstub" context="methodbody_context" enabled="true">// ${todo} %CodeTemplates.methodstub.tododesc
+${body_statement}</template>
+
+<template name="constructorbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.constructorbody" description="%CodeTemplates.constructorstub" context="constructorbody_context" enabled="true">${body_statement}
+// ${todo} %CodeTemplates.constructorstub.tododesc</template>
+
+<template name="getterbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.getterbody" description="%CodeTemplates.getterstub" context="gettercomment_context" enabled="true">return ${field};</template>
+
+<template name="setterbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.setterbody" description="%CodeTemplates.setterstub" context="settercomment_context" enabled="true">${field} = ${param};</template>
+
+<!--  php templates -->
 
 <template
 	name="pr"
 	description="%description.php.print"
 	id="org.eclipse.php.ui.editor.templates.php.print"
 	context="php"
-	enabled="true">print ${};
+	enabled="true" 
+	autoinsert="false">print ${};
 ${cursor}</template>
 
 <template
@@ -18,7 +95,8 @@ ${cursor}</template>
 	description="%description.php.print.string"
 	id="org.eclipse.php.ui.editor.templates.php.print.string"
 	context="php"
-	enabled="true">print "${}";
+	enabled="true"
+	autoinsert="false">print "${}";
 ${cursor}</template>
 
 <template
@@ -26,7 +104,8 @@ ${cursor}</template>
 	description="%description.php.print.newline"
 	id="org.eclipse.php.ui.editor.templates.php.print.newline"
 	context="php"
-	enabled="true">print ${}."\n";
+	enabled="true"
+	autoinsert="false">print ${}."\n";
 ${cursor}</template>
 
 <template
@@ -34,7 +113,8 @@ ${cursor}</template>
 	description="%description.php.print.variable"
 	id="org.eclipse.php.ui.editor.templates.php.print.variable"
 	context="php"
-	enabled="true">print("\${dollar}${variable} = ". ${dollar}${variable});
+	enabled="true"
+	autoinsert="false">print("\${dollar}${variable} = ". ${dollar}${variable});
 ${cursor}</template>
 
 <template
@@ -42,7 +122,8 @@ ${cursor}</template>
 	description="%description.php.print.functionName"
 	id="org.eclipse.php.ui.editor.templates.php.print.functionName"
 	context="php"
-	enabled="true">print("${function_container}");
+	enabled="true"
+	autoinsert="false">print("${function_container}");
 ${cursor}</template>
 
 <template
@@ -50,7 +131,8 @@ ${cursor}</template>
 	description="%description.php.print.className"
 	id="org.eclipse.php.ui.editor.templates.php.print.className"
 	context="php"
-	enabled="true">print("${class_container}");
+	enabled="true"
+	autoinsert="false">print("${class_container}");
 ${cursor}</template>
 
 <template
@@ -58,7 +140,8 @@ ${cursor}</template>
 	description="%description.php.echo"
 	id="org.eclipse.php.ui.editor.templates.php.echo"
 	context="php"
-	enabled="true">echo("${}");
+	enabled="true"
+	autoinsert="false">echo("${}");
 ${cursor}</template>
 
 <template
@@ -66,7 +149,8 @@ ${cursor}</template>
 	description="%description.php.arrayIterator"
 	id="org.eclipse.php.ui.editor.templates.php.arrayIterator"
 	context="php"
-	enabled="true">for (${dollar}${number_variable} = 0 ; ${dollar}${number_variable} &lt; count(${dollar}${array_variable}) ; ${dollar}${number_variable}++) {
+	enabled="true"
+	autoinsert="false">for (${dollar}${number_variable} = 0 ; ${dollar}${number_variable} &lt; count(${dollar}${array_variable}) ; ${dollar}${number_variable}++) {
 	${cursor};
 }
 </template>
@@ -76,17 +160,30 @@ ${cursor}</template>
 	description="%description.php.instanceof"
 	id="org.eclipse.php.ui.editor.templates.php.instanceof"
 	context="php"
-	enabled="true">if (${dollar}${variable} instanceof ${class}) {
+	enabled="true"
+	autoinsert="false">if (${dollar}${variable} instanceof ${class}) {
 	${cursor};
 }
 </template>
+
+<template 
+	name="for" 
+	description="%description.php.for"
+	id="org.eclipse.jdt.ui.templates.for" 
+	context="php" 
+	enabled="true" 
+	autoinsert="false">for (${dollar}${index} = 0; ${dollar}${index} &lt; ${number_variable}; ${dollar}${index}++) {
+	${line_selection}${cursor}
+}</template>
+
 
 <template
 	name="fore"
 	description="%description.php.foreach"
 	id="org.eclipse.php.ui.editor.templates.php.foreach"
 	context="php"
-	enabled="true">foreach (${dollar}${array_variable} as ${dollar}${variable}) {
+	enabled="true" 
+	autoinsert="false">foreach (${dollar}${array_expression} as ${dollar}${value}) {
 	${cursor};
 }
 </template>
@@ -96,7 +193,8 @@ ${cursor}</template>
 	description="%description.php.foreachkey"
 	id="org.eclipse.php.ui.editor.templates.php.foreachkey"
 	context="php"
-	enabled="true">foreach (${dollar}${array_variable} as ${dollar}${number_variable} => ${dollar}${variable}) {
+	enabled="true" 
+	autoinsert="false">foreach (${dollar}${array_expression} as ${dollar}${key} => ${dollar}${value}) {
 	${cursor};
 }
 </template>
@@ -106,7 +204,8 @@ ${cursor}</template>
 	description="%description.php.switch"
 	id="org.eclipse.php.ui.editor.templates.php.switch"
 	context="php"
-	enabled="true">switch (${dollar}${variable}) {
+	enabled="true"
+	autoinsert="false">switch (${dollar}${variable}) {
 	case ${value}:
 	${cursor};
 	break;
@@ -122,7 +221,8 @@ ${cursor}</template>
 	description="%description.php.functionStatement"
 	id="org.eclipse.php.ui.editor.templates.php.fnc"
 	context="php"
-	enabled="true">function ${function_name}() {
+	enabled="true"
+	autoinsert="false">function ${function_name}() {
 	${cursor};
 }
 </template>
@@ -132,7 +232,30 @@ ${cursor}</template>
 	description="%description.php.functionStatement"
 	id="org.eclipse.php.ui.editor.templates.php.function"
 	context="php"
-	enabled="true">function ${function_name}() {
+	enabled="true"
+	autoinsert="false">function ${function_name}() {
+	${cursor};
+}
+</template>
+
+<template
+	name="lambda"
+	description="%description.php.lambdaStatement"
+	id="org.eclipse.php.ui.editor.templates.php.lambda"
+	context="php"
+	enabled="true"
+	autoinsert="false">function (${parameters}) use (${lexical_variables}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="closure"
+	description="%description.php.lambdaStatement"
+	id="org.eclipse.php.ui.editor.templates.php.closure"
+	context="php"
+	enabled="true"
+	autoinsert="false">function (${parameters}) use (${lexical_variables}) {
 	${cursor};
 }
 </template>
@@ -142,7 +265,8 @@ ${cursor}</template>
 	description="%description.php.class"
 	id="org.eclipse.php.ui.editor.templates.php.cls"
 	context="php"
-	enabled="true">class ${class_name} {
+	enabled="true"
+	autoinsert="false">class ${class_name} {
 	function ${function_name}() {
 		${cursor};
 	}
@@ -154,7 +278,8 @@ ${cursor}</template>
 	description="%description.php.class"
 	id="org.eclipse.php.ui.editor.templates.php.class"
 	context="php"
-	enabled="true">class ${class_name} {
+	enabled="true"
+	autoinsert="false">class ${class_name} {
 	function ${function_name}() {
 		${cursor};
 	}
@@ -166,7 +291,8 @@ ${cursor}</template>
 	description="%description.php.if"
 	id="org.eclipse.php.ui.editor.templates.php.if"
 	context="php"
-	enabled="true">if (${condition}) {
+	enabled="true"
+	autoinsert="false">if (${condition}) {
 	${cursor};
 }
 </template>
@@ -176,7 +302,8 @@ ${cursor}</template>
 	description="%description.php.else"
 	id="org.eclipse.php.ui.editor.templates.php.else"
 	context="php"
-	enabled="true">else {
+	enabled="true"
+	autoinsert="false">else {
 	${cursor};
 }
 </template>
@@ -186,8 +313,21 @@ ${cursor}</template>
 	description="%description.php.elif"
 	id="org.eclipse.php.ui.editor.templates.php.elif"
 	context="php"
-	enabled="true">elseif (${condition}) {
+	enabled="true"
+	autoinsert="false">elseif (${condition}) {
 	${cursor};
+}
+</template>
+
+<template
+	name="try"
+	description="%description.php.try"
+	id="org.eclipse.php.ui.editor.templates.php.try"
+	context="php"
+	enabled="true"
+	autoinsert="false">try {
+	${cursor}
+} catch (${Exception} ${dollar}e) {
 }
 </template>
 
@@ -196,7 +336,8 @@ ${cursor}</template>
 	description="%description.php.while"
 	id="org.eclipse.php.ui.editor.templates.php.while"
 	context="php"
-	enabled="true">while (${condition}) {
+	enabled="true"
+	autoinsert="false">while (${condition}) {
 	${cursor};
 }
 </template>
@@ -206,7 +347,8 @@ ${cursor}</template>
 	description="%description.php.itdir"
 	id="org.eclipse.php.ui.editor.templates.php.itdir"
 	context="php"
-	enabled="true">${dollar}${dirh} = opendir(${dirname});
+	enabled="true"
+	autoinsert="false">${dollar}${dirh} = opendir(${dirname});
 if (${dollar}${dirh}) {
 	while (${dollar}${dir_element} = readdir(${dollar}${dirh})) {
 		${cursor};
@@ -221,7 +363,8 @@ if (${dollar}${dirh}) {
 	description="%description.php.mySql.fr"
 	id="org.eclipse.php.ui.editor.templates.php.mySql.fr"
 	context="php"
-	enabled="true">while (${dollar}${row} = mysql_fetch_row(${dollar}${query})) {
+	enabled="true"
+	autoinsert="false">while (${dollar}${row} = mysql_fetch_row(${dollar}${query})) {
 	${cursor};
 }
 </template>
@@ -231,7 +374,8 @@ if (${dollar}${dirh}) {
 	description="%description.php.mySql.fa"
 	id="org.eclipse.php.ui.editor.templates.php.mySql.fa"
 	context="php"
-	enabled="true">while (${dollar}${row} = mysql_fetch_array(${dollar}${query})) {
+	enabled="true"
+	autoinsert="false">while (${dollar}${row} = mysql_fetch_array(${dollar}${query})) {
 	${cursor};
 }
 </template>
@@ -241,7 +385,8 @@ if (${dollar}${dirh}) {
 	description="%description.php.mySql.fo"
 	id="org.eclipse.php.ui.editor.templates.php.mySql.fo"
 	context="php"
-	enabled="true">while (${dollar}${row} = mysql_fetch_object(${dollar}${query})) {
+	enabled="true"
+	autoinsert="false">while (${dollar}${row} = mysql_fetch_object(${dollar}${query})) {
 	${cursor};
 }
 </template>
@@ -251,7 +396,8 @@ if (${dollar}${dirh}) {
 	description="%description.php.my_gc"
 	id="org.eclipse.php.ui.editor.templates.php.my_gc"
 	context="php"
-	enabled="true">ob_start();
+	enabled="true"
+	autoinsert="false">ob_start();
 	
 ${cursor};
 
@@ -264,7 +410,8 @@ ob_end_clean();
 	description="%description.php.cln"
 	id="org.eclipse.php.ui.editor.templates.php.cln"
 	context="php"
-	enabled="true">${dollar}${new_obj} = clone ${dollar}${variable};
+	enabled="true"
+	autoinsert="false">${dollar}${new_obj} = clone ${dollar}${variable};
 ${cursor}</template>
 
 <template
@@ -272,7 +419,8 @@ ${cursor}</template>
 	description="%description.php.pcon"
 	id="org.eclipse.php.ui.editor.templates.php.pcon"
 	context="php"
-	enabled="true">parent::__construct();
+	enabled="true"
+	autoinsert="false">parent::__construct();
 ${cursor}</template>
 
 <template
@@ -280,13 +428,27 @@ ${cursor}</template>
 	description="%description.php.pclon"
 	id="org.eclipse.php.ui.editor.templates.php.pclon"
 	context="php"
-	enabled="true">parent::__clone();
+	enabled="true"
+	autoinsert="false">parent::__clone();
 </template>
 
+<template
+	name="use"
+	description="%description.php.use"
+	id="org.eclipse.php.ui.editor.templates.php.use"
+	context="php"
+	enabled="true"
+	autoinsert="false">use ${namespace} as ${alias};</template>
 
+<template
+	name="ns"
+	description="%description.php.ns"
+	id="org.eclipse.php.ui.editor.templates.php.ns"
+	context="php"
+	enabled="true"
+	autoinsert="false">namespace ${name};</template>
 
-	<!--  php doc templates -->
-
+<!--  php doc templates -->
 
 <template
 	name="author"
@@ -304,8 +466,7 @@ ${cursor}</template>
 	id="org.eclipse.php.ui.editor.templates.newPhp.author"
 	context="newPhp"
 	enabled="true">&lt;?php
-${cursor}
-?&gt;</template>
+${cursor}</template>
 
 <template
 	name="New PHP file - HTML frameset"
