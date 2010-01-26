@@ -1,0 +1,88 @@
+--TEST--
+Test DocBlock Templates
+--FILE--
+<?php
+class Bob
+{
+	// beginning of docblock template area
+	/**#@+
+	* @access private
+	* @var string
+	*/
+	var $_var1 = 'hello';
+	var $_var2 = 'my';
+	var $_var3 = 'name';
+	var $_var4 = 'is';
+	var $_var5 = 'Bob';
+	var $_var6 = 'and';
+	var $_var7 = 'I';
+
+	/**
+	 * Two words
+	 */
+	var $_var8 = 'like strings';
+	/**#@-*/
+	var $publicvar = 'Lookee me!';
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="352">
+	<ClassDeclaration start="6" end="348" modifiers="" name="Bob">
+		<PHPFieldDeclaration start="109" end="125" modifiers="public">
+			<SimpleReference start="109" end="115" name="$_var1">
+			</SimpleReference>
+			<Scalar start="118" end="125" type="string" value="&apos;hello&apos;">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="132" end="145" modifiers="public">
+			<SimpleReference start="132" end="138" name="$_var2">
+			</SimpleReference>
+			<Scalar start="141" end="145" type="string" value="&apos;my&apos;">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="152" end="167" modifiers="public">
+			<SimpleReference start="152" end="158" name="$_var3">
+			</SimpleReference>
+			<Scalar start="161" end="167" type="string" value="&apos;name&apos;">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="174" end="187" modifiers="public">
+			<SimpleReference start="174" end="180" name="$_var4">
+			</SimpleReference>
+			<Scalar start="183" end="187" type="string" value="&apos;is&apos;">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="194" end="208" modifiers="public">
+			<SimpleReference start="194" end="200" name="$_var5">
+			</SimpleReference>
+			<Scalar start="203" end="208" type="string" value="&apos;Bob&apos;">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="215" end="229" modifiers="public">
+			<SimpleReference start="215" end="221" name="$_var6">
+			</SimpleReference>
+			<Scalar start="224" end="229" type="string" value="&apos;and&apos;">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="236" end="248" modifiers="public">
+			<SimpleReference start="236" end="242" name="$_var7">
+			</SimpleReference>
+			<Scalar start="245" end="248" type="string" value="&apos;I&apos;">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="280" end="303" modifiers="public">
+			<SimpleReference start="280" end="286" name="$_var8">
+			</SimpleReference>
+			<Scalar start="289" end="303" type="string" value="&apos;like strings&apos;">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="320" end="345" modifiers="public">
+			<SimpleReference start="320" end="330" name="$publicvar">
+			</SimpleReference>
+			<Scalar start="333" end="345" type="string" value="&apos;Lookee me!&apos;">
+			</Scalar>
+		</PHPFieldDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="349" end="351">
+	</EmptyStatement>
+</ModuleDeclaration>
