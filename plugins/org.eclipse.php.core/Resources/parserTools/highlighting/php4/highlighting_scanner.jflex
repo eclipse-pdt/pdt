@@ -9,14 +9,14 @@
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
 
-package org.eclipse.php.internal.core.documentModel.parser.php53;
+package org.eclipse.php.internal.core.documentModel.parser.php4;
 
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 %%
 
-%public
 %class PhpLexer
+%public
 %extends org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer
 %type String
 %unicode
@@ -24,16 +24,13 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 
 
-
 %state ST_PHP_IN_SCRIPTING
 %state ST_PHP_DOUBLE_QUOTES
+%state ST_PHP_SINGLE_QUOTE
 %state ST_PHP_BACKQUOTE
 %state ST_PHP_QUOTES_AFTER_VARIABLE
 %state ST_PHP_HEREDOC
-%state ST_PHP_NOWDOC
-%state ST_PHP_END_HEREDOC
 %state ST_PHP_LOOKING_FOR_PROPERTY
-%state ST_PHP_VAR_OFFSET
 %state ST_PHP_COMMENT
 %state ST_PHP_DOC_COMMENT
 %state ST_PHP_LINE_COMMENT
@@ -69,7 +66,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     }
 
     protected boolean isHeredocState(int state){
-    	    	return state == ST_PHP_HEREDOC || state == ST_PHP_END_HEREDOC || state == ST_PHP_NOWDOC;
+    	return state == ST_PHP_HEREDOC;
     }
     
     public int[] getParamenters(){
@@ -91,7 +88,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     public char[] getZZBuffer() {
         return zzBuffer;
     }
-    
+
     protected int getZZStartRead() {
     	return this.zzStartRead;
     }
@@ -99,7 +96,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     protected int getZZPushBackPosition() {
     	return this.zzPushbackPos;
     }
-
+    
 	protected void pushBack(int i) {
 		yypushback(i);
 	}
@@ -112,10 +109,10 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 	}
 
  // End user code
-%}
 
+%}
 LNUM=[0-9]+
-DNUM=([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
+DNUM=([0-9]*[\.][0-9]+)|([0-9]+[\.][0-9]*)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+
 LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
@@ -123,22 +120,16 @@ WHITESPACE=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
 TOKENS=[:,.\[\]()|\^&+-//*=%!~$<>?@]
 CLOSE_EXPRESSION=[;]
-ANY_CHAR=[^]
+ENCAPSED_TOKENS=[\[\]{}$]
+ESCAPED_AND_WHITESPACE=[\n\t\r #'.:;,()|\^&+-//*=%!~<>?@]+
+ANY_CHAR=(.|[\n])
 NEWLINE=("\r"|"\n"|"\r\n")
-DOUBLE_QUOTES_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$\"\\{]|("\\"{ANY_CHAR})))
-BACKQUOTE_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$`\\{]|("\\"{ANY_CHAR})))
-HEREDOC_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$\n\r\\{]|("\\"[^\n\r])))
-HEREDOC_NEWLINE=((({LABEL}";"?((("{"+|"$"+)"\\"?)|"\\"))|(("{"*|"$"*)"\\"?)){NEWLINE})
-HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR=(("{"+[^$\n\r\\{])|("{"*"\\"[^\n\r])|{HEREDOC_LITERAL_DOLLAR})
-HEREDOC_NON_LABEL=([^a-zA-Z_\x7f-\xff$\n\r\\{]|{HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR})
-HEREDOC_LABEL_NO_NEWLINE=({LABEL}([^a-zA-Z0-9_\x7f-\xff;$\n\r\\{]|(";"[^$\n\r\\{])|(";"?{HEREDOC_CURLY_OR_ESCAPE_OR_DOLLAR})))
-DOUBLE_QUOTES_CHARS=("{"*([^$\"\\{]|("\\"{ANY_CHAR}))|{DOUBLE_QUOTES_LITERAL_DOLLAR})
-BACKQUOTE_CHARS=("{"*([^$`\\{]|("\\"{ANY_CHAR}))|{BACKQUOTE_LITERAL_DOLLAR})
-HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDOC_NEWLINE}+({HEREDOC_NON_LABEL}|{HEREDOC_LABEL_NO_NEWLINE})))
-NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\x7f-\xff\n\r]|({LABEL}([^a-zA-Z0-9_\x7f-\xff;\n\r]|(";"[^\n\r])))))
-PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|"/="|".="|"%="|"<<="|">>="|"&="|"|="|"^="|"||"|"&&"|"OR"|"AND"|"XOR"|"<<"|">>"
+
+PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|"/="|".="|"%="|"<<="|">>="|"&="|"|="|"^="|"||"|"&&"|"OR"|"AND"|"XOR"|"<<"|">>"
+
 
 %%
+
 
 /***********************************************************************************************
 **************************************** P  H  P ***********************************************
@@ -156,24 +147,20 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_FUNCTION;
 }
 
+<ST_PHP_IN_SCRIPTING>"old_function" { /* guy - support old versions */
+    return PHP_FUNCTION;
+}
+
+<ST_PHP_IN_SCRIPTING>"cfunction" { /* guy - support old versions */
+    return PHP_FUNCTION;
+}
+
 <ST_PHP_IN_SCRIPTING>"const" {
     return PHP_CONST;
 }
 
 <ST_PHP_IN_SCRIPTING>"return" {
     return PHP_RETURN;
-}
-
-<ST_PHP_IN_SCRIPTING>"try" {
-    return PHP_TRY;
-}
-
-<ST_PHP_IN_SCRIPTING>"catch" {
-    return PHP_CATCH;
-}
-
-<ST_PHP_IN_SCRIPTING>"throw" {
-    return PHP_THROW;
 }
 
 <ST_PHP_IN_SCRIPTING>"if" {
@@ -228,10 +215,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_ENDDECLARE;
 }
 
-<ST_PHP_IN_SCRIPTING>"instanceof" {
-    return PHP_INSTANCEOF;
-}
-
 <ST_PHP_IN_SCRIPTING>"as" {
     return PHP_AS;
 }
@@ -264,10 +247,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_ECHO;
 }
 
-<ST_PHP_IN_SCRIPTING>"goto" {
- 	return PHP_GOTO;
-}
-
 <ST_PHP_IN_SCRIPTING>"print" {
     return PHP_PRINT;
 }
@@ -276,45 +255,25 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_CLASS;
 }
 
-<ST_PHP_IN_SCRIPTING>"interface" {
-    return PHP_INTERFACE;
-}
-
 <ST_PHP_IN_SCRIPTING>"extends" {
     return PHP_EXTENDS;
 }
 
-<ST_PHP_IN_SCRIPTING>"implements" {
-    return PHP_IMPLEMENTS;
-}
-
-<ST_PHP_IN_SCRIPTING>"self" {
-    return PHP_SELF;
-}
-
 <ST_PHP_IN_SCRIPTING>"->" {
     pushState(ST_PHP_LOOKING_FOR_PROPERTY);
-    return PHP_OBJECT_OPERATOR;
+    return PHP_OPERATOR;
 }
 
 <ST_PHP_QUOTES_AFTER_VARIABLE> {
     "->" {
     popState();
     pushState(ST_PHP_LOOKING_FOR_PROPERTY);
-    return PHP_OBJECT_OPERATOR;
+    return PHP_OPERATOR;
     }
     {ANY_CHAR} {
         yypushback(1);
         popState();
     }
-}
-
-<ST_PHP_IN_SCRIPTING,ST_PHP_LOOKING_FOR_PROPERTY>{WHITESPACE}+ {
-	return WHITESPACE;
-}
-
-<ST_PHP_LOOKING_FOR_PROPERTY>"->" {
-	return PHP_OBJECT_OPERATOR;
 }
 
 <ST_PHP_LOOKING_FOR_PROPERTY>{LABEL} {
@@ -331,16 +290,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_PAAMAYIM_NEKUDOTAYIM;
 }
 
-<ST_PHP_IN_SCRIPTING>"\\" {
-	return PHP_NS_SEPARATOR;
-}
-
 <ST_PHP_IN_SCRIPTING>"new" {
     return PHP_NEW;
-}
-
-<ST_PHP_IN_SCRIPTING>"clone" {
-    return PHP_CLONE;
 }
 
 <ST_PHP_IN_SCRIPTING>"var" {
@@ -357,10 +308,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 
 <ST_PHP_IN_SCRIPTING>"("{TABS_AND_SPACES}"string"{TABS_AND_SPACES}")" {
     return PHP_CASTING;
-}
-
-<ST_PHP_IN_SCRIPTING>"("{TABS_AND_SPACES}"binary"{TABS_AND_SPACES}")" {
-	return PHP_CASTING;
 }
 
 <ST_PHP_IN_SCRIPTING>"("{TABS_AND_SPACES}"array"{TABS_AND_SPACES}")" {
@@ -399,10 +346,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_REQUIRE_ONCE;
 }
 
-<ST_PHP_IN_SCRIPTING>"namespace" {
- 	return PHP_NAMESPACE;
-}
-
 <ST_PHP_IN_SCRIPTING>"use" {
     return PHP_USE;
 }
@@ -419,32 +362,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_EMPTY;
 }
 
-<ST_PHP_IN_SCRIPTING>"__halt_compiler" {
-	return PHP_HALT_COMPILER;
-}
-
 <ST_PHP_IN_SCRIPTING>"static" {
     return PHP_STATIC;
-}
-
-<ST_PHP_IN_SCRIPTING>"abstract" {
-    return PHP_ABSTRACT;
-}
-
-<ST_PHP_IN_SCRIPTING>"final" {
-    return PHP_FINAL;
-}
-
-<ST_PHP_IN_SCRIPTING>"private" {
-    return PHP_PRIVATE;
-}
-
-<ST_PHP_IN_SCRIPTING>"protected" {
-    return PHP_PROTECTED;
-}
-
-<ST_PHP_IN_SCRIPTING>"public" {
-    return PHP_PUBLIC;
 }
 
 <ST_PHP_IN_SCRIPTING>"unset" {
@@ -500,7 +419,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     if (!phpStack.isEmpty()) {
         popState();
     }
-    return  PHP_CURLY_CLOSE;
+	return  PHP_CURLY_CLOSE;
 }
 
 <ST_PHP_IN_SCRIPTING>{LNUM} {
@@ -511,12 +430,8 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_NUMBER;
 }
 
-<ST_PHP_VAR_OFFSET>[0]|([1-9][0-9]*) { /* Offset could be treated as a long */
-	return PHP_NUMBER;
-}
-
-<ST_PHP_VAR_OFFSET>{LNUM}|{HNUM} {
-	return PHP_NUMBER;
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>{LNUM}|{HNUM} {
+    return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_IN_SCRIPTING>{DNUM}|{EXPONENT_DNUM} {
@@ -531,10 +446,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP__FUNCTION__;
 }
 
-<ST_PHP_IN_SCRIPTING>"__METHOD__" {
-    return PHP__METHOD__;
-}
-
 <ST_PHP_IN_SCRIPTING>"__LINE__" {
     return PHP__LINE__;
 }
@@ -543,50 +454,21 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP__FILE__;
 }
 
-<ST_PHP_IN_SCRIPTING>"__DIR__" {
- 	return PHP__DIR__;
-}
-
-<ST_PHP_IN_SCRIPTING>"__NAMESPACE__" {
-	return PHP__NAMESPACE__;
-}
-
 <ST_PHP_IN_SCRIPTING>"$"{LABEL} {
     return PHP_VARIABLE;
 }
 
-<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_VAR_OFFSET>"$"{LABEL} {
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"$"{LABEL} {
     pushState(ST_PHP_QUOTES_AFTER_VARIABLE);
     return PHP_VARIABLE;
 }
 
-<ST_PHP_DOUBLE_QUOTES,ST_PHP_HEREDOC,ST_PHP_BACKQUOTE>"$"{LABEL}"[" {
-	yypushback(1);
-	pushState(ST_PHP_VAR_OFFSET);
-	return PHP_VARIABLE;
-}
-
-<ST_PHP_VAR_OFFSET>"]" {
-	popState();
-	return PHP_TOKEN;
-}
-
-<ST_PHP_VAR_OFFSET>"[" { 
-	return PHP_TOKEN;
-}
-
-<ST_PHP_VAR_OFFSET>{TOKENS}|[;{}\"`] {//the difference from the original rules comes from the fact that we took ';' out out of tokens 
-	return UNKNOWN_TOKEN;
-}
-
-<ST_PHP_VAR_OFFSET>[ \n\r\t\\'#] {
-	yypushback(1);
-	popState();
-	return PHP_ENCAPSED_AND_WHITESPACE;
-}
-
-<ST_PHP_IN_SCRIPTING,ST_PHP_VAR_OFFSET>{LABEL} {
+<ST_PHP_IN_SCRIPTING>{LABEL} {
     return  PHP_STRING;
+}
+
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>{LABEL} {
+	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_IN_SCRIPTING>{WHITESPACE} {
@@ -603,7 +485,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 }
 
 <ST_PHP_LINE_COMMENT>[^\n\r?%>]*{ANY_CHAR} {
-	String yytext = yytext();
+   	String yytext = yytext();
 	switch (yytext.charAt(yytext.length() - 1)) {
 		case '?':
 		case '%':
@@ -613,14 +495,13 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 		default:
 			popState();
 	}
-	 return PHP_LINE_COMMENT;
+	return PHP_LINE_COMMENT;
 }
 
 <ST_PHP_LINE_COMMENT>{NEWLINE} {
     popState();
     return PHP_LINE_COMMENT;
 }
-
 
 <ST_PHP_IN_SCRIPTING>"/**"(#@\+)?{WHITESPACE} {
     pushState(ST_PHP_DOC_COMMENT);
@@ -690,7 +571,6 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_COMMENT;
 }
 
-
 <ST_PHP_IN_SCRIPTING,ST_PHP_LINE_COMMENT>"?>"{WHITESPACE}? {
 	return PHP_CLOSETAG;
 }
@@ -712,43 +592,28 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	return PHP_LINE_COMMENT;
 }
 
-<ST_PHP_IN_SCRIPTING>(b?[\"]{DOUBLE_QUOTES_CHARS}*("{"*|"$"*)[\"]) {
+<ST_PHP_IN_SCRIPTING>([\"]([^$\"\\]|("\\".))*[\"]) {
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_IN_SCRIPTING>(b?[']([^'\\]|("\\"{ANY_CHAR}))*[']) {
+<ST_PHP_IN_SCRIPTING>([']([^'\\]|("\\".))*[']) {
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_IN_SCRIPTING>b?[\"] {
+<ST_PHP_IN_SCRIPTING>[\"] {
     pushState(ST_PHP_DOUBLE_QUOTES);
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|([\"]{LABEL}[\"])){NEWLINE} {
-    int bprefix = (yytext().charAt(0) != '<') ? 1 : 0;
-    int startString=3+bprefix;
-    
-    int hereOrNowDoc_len = yylength()-bprefix-3-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
+<ST_PHP_IN_SCRIPTING>"<<<"{TABS_AND_SPACES}{LABEL}{NEWLINE} {
+    int startString=3;
+    heredoc_len = yylength()-3-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
     while ((yytext().charAt(startString) == ' ') || (yytext().charAt(startString) == '\t')) {
         startString++;
-        hereOrNowDoc_len--;
+        heredoc_len--;
     }
-    String hereOrNowDoc = yytext().substring(startString,hereOrNowDoc_len+startString);
-    if (hereOrNowDoc.charAt(0) == '\'') {
-    	nowdoc = hereOrNowDoc.substring(1, hereOrNowDoc_len-1);
-    	nowdoc_len = hereOrNowDoc_len - 2;
-    	yybegin(ST_PHP_NOWDOC);
-    }
-    else if (hereOrNowDoc.charAt(0) == '"') {
-    	heredoc = hereOrNowDoc.substring(1, hereOrNowDoc_len-1);
-    	heredoc_len = hereOrNowDoc_len - 2;
-    	yybegin(ST_PHP_HEREDOC);
-    } else {
-    	heredoc = hereOrNowDoc;
-    	heredoc_len = hereOrNowDoc_len;
-    	yybegin(ST_PHP_HEREDOC);
-    }
+    heredoc = yytext().substring(startString,heredoc_len+startString);
+    pushState(ST_PHP_HEREDOC);
     return PHP_HEREDOC_TAG;
 }
 
@@ -757,8 +622,19 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_HEREDOC>{LABEL}";"?[\n\r] {
-    int label_len = yylength() - 1;
+<ST_PHP_IN_SCRIPTING>['] {
+    pushState(ST_PHP_SINGLE_QUOTE);
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_HEREDOC>^{LABEL}(";")?{NEWLINE} {
+    int label_len;
+    int length=yylength();
+    if (yytext().charAt(length-2)=='\r') {
+        label_len = length-2;
+    } else {
+        label_len = length-1;
+    }
 
     if (yytext().charAt(label_len-1)==';') {
 	    label_len--;
@@ -767,63 +643,38 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     if (label_len==heredoc_len && yytext().substring(0,label_len).equals(heredoc)) {
         heredoc=null;
         heredoc_len=0;
-        yybegin(ST_PHP_IN_SCRIPTING);
-        return PHP_HEREDOC_TAG;
+        popState();
+        return  PHP_HEREDOC_TAG;
     } else {
-        return PHP_CONSTANT_ENCAPSED_STRING;
+        return  PHP_CONSTANT_ENCAPSED_STRING;
     }
 }
 
-<ST_PHP_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
-    int label_len = yylength() - 1;
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>{ESCAPED_AND_WHITESPACE} {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
 
-    if (yytext().charAt(label_len-1)==';') {
-	   label_len--;
-    }
-    if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len,label_len).equals(heredoc)) {
-    	heredoc = null;
-    	heredoc_len = 0;
-    	yypushback(1);
-        yybegin(ST_PHP_END_HEREDOC);
+<ST_PHP_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_DOUBLE_QUOTES>[`]+ {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_BACKQUOTE>[\"]+ {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"$"[^a-zA-Z_\x7f-\xff{] {
+    if (yylength() == 2) {
+        yypushback(1);
     }
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_END_HEREDOC>{ANY_CHAR} {
-    yybegin(ST_PHP_IN_SCRIPTING);
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>{ENCAPSED_TOKENS} {
     return PHP_CONSTANT_ENCAPSED_STRING;
-}
-
-<ST_PHP_NOWDOC>{LABEL}";"?[\n\r] {
-    int label_len = yylength() - 1;
-
-    if (yytext().charAt(label_len-1)==';') {
-	    label_len--;
-    }
-
-    if (label_len==nowdoc_len && yytext().substring(0,label_len).equals(nowdoc)) {
-        nowdoc=null;
-        nowdoc_len=0;
-        yybegin(ST_PHP_IN_SCRIPTING);
-        return PHP_HEREDOC_TAG;
-    } else {
-        return PHP_CONSTANT_ENCAPSED_STRING;
-    }
-}
-
-<ST_PHP_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
-	int label_len = yylength() - 1;
-
-	if (yytext().charAt(label_len-1)==';') {
-	   label_len--;
-    }
-    if (label_len > nowdoc_len && yytext().substring(label_len - nowdoc_len,label_len).equals(nowdoc)) {
-    	nowdoc = null;
-    	nowdoc_len = 0;
-		yypushback(1);
-		yybegin(ST_PHP_END_HEREDOC);
-	}
-	return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {
@@ -832,47 +683,36 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_CURLY_OPEN;
 }
 
-<ST_PHP_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}+ {
-	return PHP_ENCAPSED_AND_WHITESPACE;
+<ST_PHP_SINGLE_QUOTE>"\\'" {
+    return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-/*
-The original parsing rule was {DOUBLE_QUOTES_CHARS}*("{"{2,}|"$"{2,}|(("{"+|"$"+)[\"]))
-but jflex doesn't support a{n,} so we changed a{2,} to aa+
-*/
-<ST_PHP_DOUBLE_QUOTES>{DOUBLE_QUOTES_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[\"])) {
-    yypushback(1);
+<ST_PHP_SINGLE_QUOTE>"\\\\" {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_DOUBLE_QUOTES>"\\\"" {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_BACKQUOTE>"\\`" {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"\\"[0-7]{1,3} {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"\\x"[0-9A-Fa-f]{1,2} {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>"\\"{ANY_CHAR} {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_HEREDOC>[\"'`]+ {
     return PHP_ENCAPSED_AND_WHITESPACE;
-}
-
-<ST_PHP_BACKQUOTE>{BACKQUOTE_CHARS}+ {
-    return PHP_ENCAPSED_AND_WHITESPACE;
-}
-
-/*
-The original parsing rule was {BACKQUOTE_CHARS}*("{"{2,}|"$"{2,}|(("{"+|"$"+)[`]))
-but jflex doesn't support a{n,} so we changed a{2,} to aa+
-*/
-<ST_PHP_BACKQUOTE>{BACKQUOTE_CHARS}*("{""{"+|"$""$"+|(("{"+|"$"+)[`])) {
-	yypushback(1);
-	return PHP_ENCAPSED_AND_WHITESPACE;
-}
-
-<ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-	return PHP_ENCAPSED_AND_WHITESPACE;
-}
-
-/*
-The original parsing rule was {HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{"{2,}|"$"{2,})
-but jflex doesn't support a{n,} so we changed a{2,} to aa+
-*/
-<ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)?("{""{"+|"$""$"+) {
-    yypushback(1);
-    return PHP_ENCAPSED_AND_WHITESPACE;
-}
-
-<ST_PHP_NOWDOC>{NOWDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
 <ST_PHP_DOUBLE_QUOTES>[\"] {
@@ -885,11 +725,20 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
+<ST_PHP_SINGLE_QUOTE>['] {
+    popState();
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
 <ST_PHP_DOUBLE_QUOTES>. {
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_BACKQUOTE>. {
+    return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_SINGLE_QUOTE>. {
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
@@ -906,7 +755,8 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
    This rule must be the last in the section!!
    it should contain all the states.
    ============================================ */
-<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_END_HEREDOC,ST_PHP_NOWDOC>. {
+<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_SINGLE_QUOTE,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC>. {
     yypushback(1);
     pushState(ST_PHP_HIGHLIGHTING_ERROR);
 }
+
