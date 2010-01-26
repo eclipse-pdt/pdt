@@ -21,15 +21,21 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
 
 /**
- * This strategy completes PHPDoc tag names. 
+ * This strategy completes PHPDoc tag names.
+ * 
  * @author michael
  */
 public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 
-	public static final String[] PHPDOC_TAGS = { "abstract", "access", "author", "category", "copyright", "deprecated", "example", "final", "filesource", "global", "ignore", "internal", "license", "link", "method", "name", "package", "param", "property", "return", "see", "since", "static",
-		"staticvar", "subpackage", "todo", "tutorial", "uses", "var", "version" };
-	
-	public PHPDocTagStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public static final String[] PHPDOC_TAGS = { "abstract", "access",
+			"author", "category", "copyright", "deprecated", "example",
+			"final", "filesource", "global", "ignore", "internal", "license",
+			"link", "method", "name", "package", "param", "property", "return",
+			"see", "since", "static", "staticvar", "subpackage", "todo",
+			"throws", "tutorial", "uses", "var", "version" };
+
+	public PHPDocTagStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -51,7 +57,8 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 
 		for (String nextTag : PHPDOC_TAGS) {
 			if (CodeAssistUtils.startsWithIgnoreCase(nextTag, tagName)) {
-				if (!requestor.isContextInformationMode() || nextTag.length() == tagName.length()) {
+				if (!requestor.isContextInformationMode()
+						|| nextTag.length() == tagName.length()) {
 
 					// Tags are reported like keywords:
 					reporter.reportKeyword(nextTag, suffix, replaceRange);
