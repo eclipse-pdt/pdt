@@ -45,6 +45,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	private boolean isDirectParent;
 	private boolean isSelf;
 	private boolean isDirectSelf;
+	private boolean isFunctionParameterContext = false;
 
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
@@ -53,6 +54,13 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 		}
 		if (getTriggerType() != Trigger.CLASS) {
 			return false;
+		}
+
+		// if method parameter context, return false
+		FunctionParameterDefaultValueContext parameterDefaultValueContext = new FunctionParameterDefaultValueContext();
+		if (parameterDefaultValueContext.isValid(sourceModule, offset,
+				requestor)) {
+			this.isFunctionParameterContext = true;
 		}
 
 		int elementStart = getElementStart();
@@ -175,5 +183,12 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	 */
 	public boolean isDirectSelf() {
 		return isDirectSelf;
+	}
+
+	/**
+	 * @return Returns whether the self:: is in function parameter
+	 */
+	public boolean isFunctionParameterContext() {
+		return isFunctionParameterContext;
 	}
 }

@@ -18,8 +18,10 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.language.PHPVariables;
 import org.eclipse.php.internal.core.typeinference.FakeField;
@@ -52,7 +54,15 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		CompletionRequestor requestor = concreteContext
 				.getCompletionRequestor();
 		String prefix = concreteContext.getPrefix();
-		SourceRange replaceRange = getReplacementRange(context);
+
+		String suffix = getSuffix(concreteContext);
+		SourceRange replaceRange = null;
+		if (suffix.equals("")) {
+			replaceRange = getReplacementRange(concreteContext);
+		} else {
+			replaceRange = getReplacementRangeWithBraces(concreteContext);
+		}
+		replaceRange = getReplacementRange(context);
 
 		IMethod enclosingMethod = concreteContext.getEnclosingMethod();
 
@@ -61,9 +71,10 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 			IType declaringType = enclosingMethod.getDeclaringType();
 			if (declaringType != null) {
 				if ("$this".startsWith(prefix)) { //$NON-NLS-1$
-					reporter.reportField(
-							new FakeField((ModelElement) declaringType,
-									"$this", 0, 0), "->", replaceRange, false); //NON-NLS-1 //$NON-NLS-2$
+					reporter
+							.reportField(
+									new FakeField((ModelElement) declaringType,
+											"$this", 0, 0), suffix, replaceRange, false); //NON-NLS-1 //$NON-NLS-2$
 				}
 			}
 		}
@@ -85,5 +96,15 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 				}
 			}
 		}
+	}
+
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		String nextWord = null;
+		try {
+			nextWord = abstractContext.getNextWord();
+		} catch (BadLocationException e) {
+			PHPCorePlugin.log(e);
+		}
+		return "->".equals(nextWord) ? "" : "->"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

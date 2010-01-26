@@ -63,7 +63,8 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("new", WHITESPACE_SUFFIX, 1));
 		list.add(new KeywordData("null", EMPTY_SUFFIX, 0));
 		list.add(new KeywordData("or", WHITESPACE_SUFFIX, 1));
-		list.add(new KeywordData("parent", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2));
+		list.add(new KeywordData("parent", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2,
+				PHPKeywords.METHOD_BODY | PHPKeywords.METHOD_PARAM));
 		list.add(new KeywordData("print", WHITESPACE_SUFFIX, 1));
 		list
 				.add(new KeywordData("require_once",

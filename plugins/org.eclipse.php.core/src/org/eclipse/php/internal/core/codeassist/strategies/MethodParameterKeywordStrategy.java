@@ -17,23 +17,41 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
 /**
- * This strategy completes keywords that can be shown in a class body
+ * This strategy completes keywords that can be shown in a method parameters
+ * completion context
  * 
- * @author michael
+ * @author vadim.p
+ * 
  */
-public class GlobalKeywordsStrategy extends KeywordsStrategy {
+public class MethodParameterKeywordStrategy extends KeywordsStrategy {
 
-	public GlobalKeywordsStrategy(ICompletionContext context,
+	/**
+	 * @param context
+	 * @param elementFilter
+	 */
+	public MethodParameterKeywordStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
-	public GlobalKeywordsStrategy(ICompletionContext context) {
+	/**
+	 * @param context
+	 */
+	public MethodParameterKeywordStrategy(ICompletionContext context) {
 		super(context);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.codeassist.strategies.KeywordsStrategy#
+	 * filterKeyword
+	 * (org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData)
+	 */
+	@Override
 	protected boolean filterKeyword(KeywordData keyword) {
-		return (keyword.context & PHPKeywords.GLOBAL) == 0;
+		return (keyword.context & PHPKeywords.METHOD_PARAM) == 0;
 	}
 
 }

@@ -12,17 +12,18 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
@@ -57,18 +58,69 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		if (requestor.isContextInformationMode()) {
 			matchRule = MatchRule.EXACT;
 		}
-		IDLTKSearchScope scope = createSearchScope();
-		IModelElement[] constants = PhpModelAccess.getDefault().findFields(
-				prefix, matchRule, Modifiers.AccGlobal | Modifiers.AccConstant,
-				0, scope, null);
+
+		ISourceModule sourceModule = abstractContext.getSourceModule();
+
+		// find all constants in current class and global scope
+		IType enclosingType = null;
+
+		// check whether enclosing element is a method
+		try {
+			IModelElement enclosingElement = sourceModule
+					.getElementAt(abstractContext.getOffset());
+
+			// find the most outer enclosing type if exists
+			while (enclosingElement != null
+					&& !((enclosingElement instanceof IType) && (enclosingElement
+							.getParent() instanceof ISourceModule))) {
+				enclosingElement = enclosingElement.getParent();
+			}
+			if (enclosingElement instanceof IType)
+				enclosingType = (IType) enclosingElement;
+
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		}
+
+		IDLTKSearchScope scope = null;
+		IModelElement[] enclosingTypeConstants = null;
+		if (enclosingType != null) {
+			scope = SearchEngine.createSearchScope(enclosingType);
+		} else {
+			scope = getSearchScope(abstractContext);
+		}
+		enclosingTypeConstants = PhpModelAccess.getDefault().findFields(prefix,
+				matchRule, Modifiers.AccConstant, 0, scope, null);
 
 		if (isCaseSensitive()) {
-			constants = filterByCase(constants, prefix);
+			enclosingTypeConstants = filterByCase(enclosingTypeConstants,
+					prefix);
 		}
 
 		SourceRange replaceRange = getReplacementRange(abstractContext);
-		for (IModelElement constant : constants) {
+		for (IModelElement constant : enclosingTypeConstants) {
 			reporter.reportField((IField) constant, "", replaceRange, false);
 		}
+
 	}
+
+	private IDLTKSearchScope getSearchScope(
+			AbstractCompletionContext abstractContext) {
+
+		IDLTKSearchScope scope = null;
+		IType enclosingType = null;
+
+		if (abstractContext instanceof GlobalMethodStatementContext) {
+			GlobalMethodStatementContext globalMethodStatementContext = (GlobalMethodStatementContext) abstractContext;
+			enclosingType = globalMethodStatementContext.getEnclosingType();
+		}
+
+		if (enclosingType != null) {
+			scope = SearchEngine.createSearchScope(enclosingType);
+		} else {
+			scope = createSearchScope();
+		}
+		return scope;
+	}
+
 }

@@ -31,6 +31,7 @@ public final class GlobalMethodStatementContext extends
 		AbstractGlobalStatementContext {
 
 	private IMethod enclosingMethod;
+	private IType enclosingType;
 
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
@@ -47,7 +48,15 @@ public final class GlobalMethodStatementContext extends
 			if (!(enclosingElement instanceof IMethod)) {
 				return false;
 			}
-			enclosingMethod = (IMethod) enclosingElement;
+			enclosingElement = enclosingMethod = (IMethod) enclosingElement;
+
+			// find the most outer enclosing type if exists
+			while (enclosingElement != null
+					&& !(enclosingElement instanceof IType && enclosingElement
+							.getParent() instanceof ISourceModule)) {
+				enclosingElement = enclosingElement.getParent();
+			}
+			enclosingType = (IType) enclosingElement;
 
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
@@ -57,5 +66,9 @@ public final class GlobalMethodStatementContext extends
 
 	public IMethod getEnclosingMethod() {
 		return enclosingMethod;
+	}
+
+	public IType getEnclosingType() {
+		return enclosingType;
 	}
 }

@@ -121,8 +121,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					context) };
 		}
 		if (contextClass == FunctionParameterValueContext.class) {
-			return new ICompletionStrategy[] { new GlobalConstantsStrategy(
-					context) };
+			return new ICompletionStrategy[] {
+					new GlobalConstantsStrategy(context),
+					new MethodParameterKeywordStrategy(context) };
 		}
 		if (contextClass == MethodNameContext.class) {
 			return new ICompletionStrategy[] { new MethodNameStrategy(context) };
@@ -151,7 +152,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new InstanceOfStrategy(context) };
 		}
 		if (contextClass == ExceptionClassInstantiationContext.class) {
-			return new ICompletionStrategy[] { new ExceptionClassInstantiationStrategy(context) };	
+			return new ICompletionStrategy[] { new ExceptionClassInstantiationStrategy(
+					context) };
 		}
 		if (contextClass == ClassStaticMemberContext.class
 				|| contextClass == ClassObjMemberContext.class) {

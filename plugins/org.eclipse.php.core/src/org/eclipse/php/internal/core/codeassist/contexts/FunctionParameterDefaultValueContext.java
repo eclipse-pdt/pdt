@@ -11,38 +11,38 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
- * This context represents the state when staying in a function parameter. <br/>
+ * This context represents the state when staying in a function parameter
+ * initial value. <br/>
  * Examples:
  * 
  * <pre>
- *  1. function foo(A|) {}
- *  2. function foo(A $|) {}
- *  3. function foo($a, |) {}
- *  etc...
+ * 
+ *  function foo($a = self::DEFAULT_VALUE) {}, where self:DEFAULT_VALUE is a class constant
  * </pre>
  * 
- * @author michael
+ * @author vadim.p
  */
-public abstract class FunctionParameterContext extends
-		FunctionDeclarationContext {
+public class FunctionParameterDefaultValueContext extends
+		FunctionParameterContext {
 
-	/**
-	 * Scans the function parameters from the end to the beginning, and looks
-	 * for the special character that determines what kind of code assist should
-	 * we invoke:
-	 * <ul>
-	 * <li>'$' means: variable code assist</li>
-	 * <li>'=' means: variable initializer code assist</li>
-	 * <li>',' or '(' means: variable type code assist</li>
-	 * </ul>
-	 * 
-	 * @return
-	 */
+	@Override
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
+
+		if (!super.isValid(sourceModule, offset, requestor)) {
+			return false;
+		}
+
+		return getTriggerChar() == ':';
+	}
+
+	@Override
 	protected char getTriggerChar() {
-
 		TextSequence statementText = getStatementText();
 		int functionEnd = getFunctionEnd();
 
@@ -56,8 +56,7 @@ public abstract class FunctionParameterContext extends
 					if (j > i + 1) {
 						charAtBefore = statementText.charAt(j);
 					}
-					if (charAt == '$' || charAt == '=' || charAt == ','
-							|| (charAt == ':' && charAtBefore == ':')) {
+					if (charAt == ':' && charAtBefore == ':') {
 						return charAt;
 					}
 				}

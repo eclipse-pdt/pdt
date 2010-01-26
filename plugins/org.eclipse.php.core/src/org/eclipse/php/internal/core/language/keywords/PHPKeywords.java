@@ -26,8 +26,14 @@ public class PHPKeywords {
 	/** Keyword may be used in class body */
 	public static final int CLASS_BODY = (1 << 0);
 
+	/** Keyword may be used in method parameters context */
+	public static final int METHOD_BODY = (1 << 1);
+
 	/** Keyword may be used in global context */
-	public static final int GLOBAL = (1 << 1);
+	public static final int GLOBAL = (1 << 2);
+
+	/** Keyword may be used in method parameters context */
+	public static final int METHOD_PARAM = (1 << 3);
 
 	/**
 	 * This class contains code assist auto-complete information about keyword

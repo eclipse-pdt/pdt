@@ -36,6 +36,9 @@ import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trig
  */
 public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 
+	ClassStaticMemberContext staticMemberContext;
+	boolean isFunctionParameterContext = false;
+
 	public ClassMembersStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
 		super(context, elementFilter);
@@ -43,6 +46,12 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 
 	public ClassMembersStrategy(ICompletionContext context) {
 		super(context);
+		if (context instanceof ClassStaticMemberContext) {
+			staticMemberContext = (ClassStaticMemberContext) context;
+			isFunctionParameterContext = staticMemberContext
+					.isFunctionParameterContext();
+		}
+
 	}
 
 	protected boolean showStaticMembers(ClassMemberContext context) {
@@ -151,7 +160,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				/* check 2 */
 				if (member instanceof IField) {
 					/* check 3 */
-					if (context.getTriggerType() == Trigger.CLASS) {
+					if (context.getTriggerType() == Trigger.CLASS
+							&& !isFunctionParameterContext) {
 						/* check 5 */
 						if (PHPFlags.isPrivate(flags)) {
 							if (isParent(context)) { // is Parent
@@ -209,7 +219,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					}
 
 				} else if (member instanceof IMethod) {
-					if (context.getTriggerType() == Trigger.CLASS) {
+					if (context.getTriggerType() == Trigger.CLASS
+							&& !isFunctionParameterContext) {
 						if (PHPFlags.isPrivate(flags)) {
 							if (isParent(context)) {
 								return true; // 5:1
@@ -304,7 +315,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			} else {
 				// not static
 				if (member instanceof IField) {
-					if (context.getTriggerType() == Trigger.CLASS) {
+					if (context.getTriggerType() == Trigger.CLASS
+							&& !isFunctionParameterContext) {
 						return true; // 9:1 - 12:4
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
 						if (PHPFlags.isPrivate(flags)) {
@@ -335,7 +347,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					}
 
 				} else if (member instanceof IMethod) {
-					if (context.getTriggerType() == Trigger.CLASS) {
+					if (context.getTriggerType() == Trigger.CLASS
+							&& !isFunctionParameterContext) {
 						if (PHPFlags.isPrivate(flags)) {
 							if (isParent(context)) {
 								return true; // 13:1

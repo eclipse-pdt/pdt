@@ -20,12 +20,14 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 
 /**
  * This composite contains strategies that complete elements inside method
+ * 
  * @author michael
  */
-public class LocalMethodElementsCompositeStrategy extends AbstractCompletionStrategy {
+public class LocalMethodElementsCompositeStrategy extends
+		AbstractCompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
-	
+
 	public LocalMethodElementsCompositeStrategy(ICompletionContext context) {
 		super(context);
 		strategies.add(new GlobalTypesStrategy(context));
@@ -33,6 +35,8 @@ public class LocalMethodElementsCompositeStrategy extends AbstractCompletionStra
 		strategies.add(new LocalMethodVariablesStrategy(context));
 		strategies.add(new GlobalConstantsStrategy(context));
 		strategies.add(new GlobalKeywordsStrategy(context));
+		strategies.add(new ClassKeywordsStrategy(context));
+		strategies.add(new MethodKeywordStrategy(context));
 	}
 
 	public void apply(ICompletionReporter reporter) throws Exception {

@@ -38,7 +38,8 @@ public class KeywordInitializerPHP_5 extends KeywordInitializerPHP_4 {
 				PHPKeywords.CLASS_BODY));
 		list.add(new KeywordData("public", WHITESPACE_SUFFIX, 1,
 				PHPKeywords.CLASS_BODY));
-		list.add(new KeywordData("self", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2));
+		list.add(new KeywordData("self", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2,
+				PHPKeywords.METHOD_BODY | PHPKeywords.METHOD_PARAM));
 		list.add(new KeywordData("throw", WHITESPACE_SUFFIX, 1));
 		list.add(new KeywordData("try", OPEN_BLOCK_SUFFIX, 2));
 	}
