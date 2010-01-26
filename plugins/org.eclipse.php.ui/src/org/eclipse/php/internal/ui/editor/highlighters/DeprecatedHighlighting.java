@@ -52,10 +52,12 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 				try {
 					IType[] types = PHPModelUtils.getTypes(className,
 							getSourceModule(), classConst.getStart(), null);
-					for (IType type : types) {
-						if (ModelUtils.isDeprecated(type)) {
-							highlight(classConst);
-							break;
+					if (types != null) {
+						for (IType type : types) {
+							if (ModelUtils.isDeprecated(type)) {
+								highlight(classConst);
+								break;
+							}
 						}
 					}
 				} catch (ModelException e) {
