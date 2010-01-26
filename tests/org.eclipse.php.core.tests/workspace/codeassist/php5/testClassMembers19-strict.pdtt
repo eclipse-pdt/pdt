@@ -1,0 +1,11 @@
+--TEST--
+Show own class members
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<? class MyClass { function foo() { sel|} } ?> 
+--EXPECT--
+keyword(self)
+
+
+
