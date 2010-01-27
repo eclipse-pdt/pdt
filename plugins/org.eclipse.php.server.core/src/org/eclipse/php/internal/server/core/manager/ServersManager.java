@@ -149,10 +149,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			return null;
 		}
 		if (removedServer == null) {
-			// Should not happen
-			Logger
-					.log(IStatus.ERROR,
-							"The requested server could not be found, thus, will not be removed.");
+			// if the name is not existing, just quit.
 			return null;
 		}
 

@@ -66,10 +66,10 @@ public class Activator extends Plugin {
 	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
 		SSHTunnelSession.shutdown();
 		tracker.close();
+		plugin = null;
+		super.stop(context);
 	}
 
 	/**
