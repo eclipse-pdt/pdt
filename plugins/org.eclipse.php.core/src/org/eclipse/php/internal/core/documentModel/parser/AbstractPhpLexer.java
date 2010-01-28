@@ -309,15 +309,18 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 								- startPosition, startIndex - startPosition);
 				result.add(tRegion);
 			}
-			tRegion = new ContextRegion(PHPRegionTypes.TASK, commentStart
-					+ startIndex, endIndex - startIndex, endIndex - startIndex);
+			tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO,
+					commentStart + startIndex, endIndex - startIndex, endIndex
+							- startIndex);
 			result.add(tRegion);
 			startPosition = endIndex;
 			matcher = getMinimalMatcher(matchers, startPosition);
 		}
 		final int length = commentLength - startPosition;
-		result.add(new ContextRegion(token, commentStart + startPosition,
-				length, length));
+		if (length != 0) {
+			result.add(new ContextRegion(token, commentStart + startPosition,
+					length, length));
+		}
 	}
 
 	private ArrayList<Matcher> createMatcherList(String content) {

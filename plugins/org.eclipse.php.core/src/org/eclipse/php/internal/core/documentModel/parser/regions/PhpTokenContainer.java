@@ -29,11 +29,11 @@ public class PhpTokenContainer {
 
 	// holds PHP tokens
 	protected final LinkedList<ContextRegion> phpTokens = new LinkedList<ContextRegion>(); // of
-																							// ITextRegion
+	// ITextRegion
 
 	// holds the location and state, where the lexical anlyzer state was changed
 	protected final LinkedList<LexerStateChange> lexerStateChanges = new LinkedList<LexerStateChange>(); // of
-																											// LexerStateChanged
+	// LexerStateChanged
 
 	// holds the iterator for the php tokens linked list
 	// this iterator follows the localization principle
@@ -66,7 +66,7 @@ public class PhpTokenContainer {
 		}
 
 		if (offset >= result.getEnd()) { // if the offset is beyond - go fetch
-											// from next
+			// from next
 			while (tokensIterator.hasNext() && !isInside(result, offset)) {
 				result = tokensIterator.next();
 			}
@@ -87,7 +87,7 @@ public class PhpTokenContainer {
 			final int length) throws BadLocationException {
 		assert length >= 0;
 		List<ITextRegion> result = new ArrayList<ITextRegion>(); // list of
-																	// ITextRegion
+		// ITextRegion
 
 		ITextRegion token = getToken(offset);
 		result.add(token);
@@ -145,9 +145,7 @@ public class PhpTokenContainer {
 			return PHPPartitionTypes.PHP_DOC;
 		else if (PHPPartitionTypes.isPHPQuotesState(type))
 			return PHPPartitionTypes.PHP_QUOTED_STRING;
-		else if (PHPRegionTypes.TASK == type) {
-			return getPartitionType(offset - 1);
-		} else {
+		else {
 			return PHPPartitionTypes.PHP_DEFAULT;
 		}
 	}
@@ -174,7 +172,7 @@ public class PhpTokenContainer {
 		final Iterator<LexerStateChange> newIterator = newContainer.lexerStateChanges
 				.iterator();
 		newIterator.next(); // ignore the first state change (it is identical to
-							// the original one)
+		// the original one)
 
 		// goto the previous before adding
 		setIterator(oldIterator, fromOffset, toOffset);

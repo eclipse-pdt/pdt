@@ -439,5 +439,5 @@ public interface PHPRegionTypes {
 
 	static final String PHP_FALSE = "PHP_FALSE"; //$NON-NLS-1$
 
-	static final String TASK = "TASK"; //$NON-NLS-1$
+	//	static final String TASK = "TASK"; //$NON-NLS-1$
 }

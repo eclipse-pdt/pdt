@@ -127,7 +127,7 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 							for (int j = 0; j < phpTokens.length; j++) {
 								ITextRegion phpToken = phpTokens[j];
 								if (phpToken.getType().equals(
-										PHPRegionTypes.TASK)) {
+										PHPRegionTypes.PHPDOC_TODO)) {
 									// get the task information from the
 									// document
 									int offset = regionStart
