@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,8 +22,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContextType;
@@ -405,17 +408,9 @@ public class EditTemplateDialog extends StatusDialog {
 	private SourceViewer createEditor(Composite parent) {
 		String prefix = getPrefix();
 		IDocument document = new Document(prefix + fTemplate.getPattern());
-		// JavaTextTools tools= JavaPlugin.getDefault().getJavaTextTools();
-		// tools.setupJavaDocumentPartitioner(document,
-		// IJavaPartitions.JAVA_PARTITIONING);
-		// IPreferenceStore store=
-		// JavaPlugin.getDefault().getCombinedPreferenceStore();
-		SourceViewer viewer = new SourceViewer(parent, null, null, false,
-				SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		// CodeTemplateSourceViewerConfiguration configuration= new
-		// CodeTemplateSourceViewerConfiguration(tools.getColorManager(), store,
-		// null, fTemplateProcessor);
-		// viewer.configure(configuration);
+
+		SourceViewer viewer = createViewer(parent);
+
 		viewer.setEditable(true);
 		viewer.setDocument(document, prefix.length(), document.getLength()
 				- prefix.length());
@@ -451,6 +446,33 @@ public class EditTemplateDialog extends StatusDialog {
 			}
 		});
 
+		return viewer;
+	}
+
+	/**
+	 * Creates the viewer to be used to display the pattern. Subclasses may
+	 * override.
+	 * 
+	 * @param parent
+	 *            the parent composite of the viewer
+	 * @return a configured <code>SourceViewer</code>
+	 */
+	protected SourceViewer createViewer(Composite parent) {
+		SourceViewer viewer = new SourceViewer(parent, null, null, false,
+				SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		SourceViewerConfiguration configuration = new SourceViewerConfiguration() {
+			public IContentAssistant getContentAssistant(
+					ISourceViewer sourceViewer) {
+
+				ContentAssistant assistant = new ContentAssistant();
+				assistant.enableAutoActivation(true);
+				assistant.enableAutoInsert(true);
+				assistant.setContentAssistProcessor(fTemplateProcessor,
+						IDocument.DEFAULT_CONTENT_TYPE);
+				return assistant;
+			}
+		};
+		viewer.configure(configuration);
 		return viewer;
 	}
 
