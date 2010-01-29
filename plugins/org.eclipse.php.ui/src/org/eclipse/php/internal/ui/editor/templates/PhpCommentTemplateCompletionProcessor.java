@@ -42,16 +42,16 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
-public class PhpTemplateCompletionProcessor extends
+public class PhpCommentTemplateCompletionProcessor extends
 		ScriptTemplateCompletionProcessor {
 
 	private static final ICompletionProposal[] EMPTY_ICOMPLETION_PROPOSAL = new ICompletionProposal[0];
 	private static final ICompletionProposal[] EMPTY = {};
-	private String contextTypeId = PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
+	private String contextTypeId = PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID;
 
 	private static char[] IGNORE = new char[] { '.', ':', '@', '$' };
 
-	public PhpTemplateCompletionProcessor(
+	public PhpCommentTemplateCompletionProcessor(
 			ScriptContentAssistInvocationContext context) {
 		super(context);
 	}
@@ -59,15 +59,16 @@ public class PhpTemplateCompletionProcessor extends
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
 		if (isInDocOrCommentOrString(viewer, offset)) {
-			return EMPTY;
+
+			ICompletionProposal[] completionProposals = super
+					.computeCompletionProposals(viewer, offset);
+			if (completionProposals == null) {
+				return EMPTY;
+			}
+			return filterUsingPrefix(completionProposals, extractPrefix(viewer,
+					offset));
 		}
-		ICompletionProposal[] completionProposals = super
-				.computeCompletionProposals(viewer, offset);
-		if (completionProposals == null) {
-			return EMPTY;
-		}
-		return filterUsingPrefix(completionProposals, extractPrefix(viewer,
-				offset));
+		return EMPTY;
 	}
 
 	private boolean isInDocOrCommentOrString(ITextViewer viewer, int offset) {
