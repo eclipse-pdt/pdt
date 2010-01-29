@@ -1623,6 +1623,17 @@
 			</partition>
 		</scriptCompletionProposalComputer>
 	</extension>
+	
+	<extension id="PHPTemplateCompletionProposalComputer"
+		point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
+		<scriptCompletionProposalComputer
+			categoryId="org.eclipse.dltk.ui.commentTemplateProposalCategory"
+			class="org.eclipse.php.internal.ui.editor.contentassist.PHPCommentTemplateCompletionProposalComputer"
+			toolkitId="org.eclipse.php.core.PHPNature">
+			<partition type="org.eclipse.php.PHP_DEFAULT">
+			</partition>
+		</scriptCompletionProposalComputer>
+	</extension>
 
 	<extension point="org.eclipse.dltk.ui.language">
 		<language class="org.eclipse.php.internal.ui.PHPUILanguageToolkit"
