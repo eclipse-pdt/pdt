@@ -77,11 +77,18 @@ public class PHPResourceMarkerAnnotationModel extends
 			return super.isAcceptable(marker);
 
 		String secondaryId = marker.getAttribute(SECONDARY_ID_KEY, ""); //$NON-NLS-1$
-		IPath localPath = EnvironmentPathUtils.getLocalPath(new Path(
-				secondaryId));
+		IPath path = new Path(secondaryId);
+		if (path.getDevice() == null) {
+			String fullPathString = path.toString();
+			String absolutePath = fullPathString.substring(fullPathString
+					.indexOf(':') + 1);
+			path = new Path(absolutePath);
+		} else {
+			path = EnvironmentPathUtils.getLocalPath(path);
+		}
 
 		boolean isSameFile = new Path(fSecondaryMarkerAttributeValue)
-				.equals(localPath);
+				.equals(path);
 
 		return marker != null && getResource().equals(marker.getResource())
 				&& isSameFile;
