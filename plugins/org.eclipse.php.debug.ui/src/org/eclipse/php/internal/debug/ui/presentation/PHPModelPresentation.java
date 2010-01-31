@@ -12,6 +12,9 @@
 package org.eclipse.php.internal.debug.ui.presentation;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
@@ -26,6 +29,7 @@ import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.IValueDetailListener;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.Openable;
@@ -157,7 +161,18 @@ public class PHPModelPresentation extends LabelProvider implements
 				fileName = (String) marker
 						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 
-				Path path = new Path(fileName);
+				IPath path = new Path(fileName);
+
+				if (path.getDevice() == null) {
+					String fullPathString = path.toString();
+					String absolutePath = fullPathString
+							.substring(fullPathString.indexOf(':') + 1);
+					path = new Path(absolutePath);
+				} else {
+					path = EnvironmentPathUtils.getLocalPath(path);
+				}
+
+
 				NonExistingPHPFileEditorInput nonExistingEditorInput = NonExistingPHPFileEditorInput
 						.findEditorInput(path);
 				if (nonExistingEditorInput != null) {
@@ -166,6 +181,9 @@ public class PHPModelPresentation extends LabelProvider implements
 					if (EnvironmentPathUtils.isFull(path)) {
 						fileName = EnvironmentPathUtils
 								.getLocalPathString(path);
+					} else {
+						File file = path.toFile();
+						fileName = file.getAbsolutePath();
 					}
 				}
 
