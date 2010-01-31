@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -192,11 +193,18 @@ public class StartProcessFileNotificationHandler implements
 							.getAttribute(
 									StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 					if (secondaryId != null) {
-						Path secondaryIdPath = new Path(secondaryId);
-						if (EnvironmentPathUtils.isFull(secondaryIdPath)) {
-							secondaryId = EnvironmentPathUtils
-									.getLocalPathString(secondaryIdPath);
+
+						IPath path = new Path(secondaryId);
+						if (path.getDevice() == null) {
+							String fullPathString = path.toString();
+							String absolutePath = fullPathString
+									.substring(fullPathString.indexOf(':') + 1);
+							path = new Path(absolutePath);
+						} else {
+							path = EnvironmentPathUtils.getLocalPath(path);
 						}
+
+						secondaryId = path.toString();
 						if (VirtualPath.isAbsolute(localPath)
 								&& new VirtualPath(localPath)
 										.equals(new VirtualPath(secondaryId))) {
