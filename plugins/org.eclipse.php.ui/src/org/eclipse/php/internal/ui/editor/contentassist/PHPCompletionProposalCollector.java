@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
@@ -26,6 +27,7 @@ public class PHPCompletionProposalCollector extends
 
 	private IDocument document;
 	private boolean explicit;
+
 	public PHPCompletionProposalCollector(IDocument document, ISourceModule cu,
 			boolean explicit) {
 		super(cu);
@@ -56,7 +58,17 @@ public class PHPCompletionProposalCollector extends
 	}
 
 	protected CompletionProposalLabelProvider createLabelProvider() {
-		return new PHPCompletionProposalLabelProvider();
+		CompletionProposalLabelProvider labelProvider = new PHPCompletionProposalLabelProvider();
+
+		// check if there are any adapters extending basic label provider
+		CompletionProposalLabelProvider extended = (CompletionProposalLabelProvider) Platform
+				.getAdapterManager().getAdapter(labelProvider,
+						CompletionProposalLabelProvider.class);
+
+		if (extended != null)
+			return extended;
+
+		return labelProvider;
 	}
 
 	protected IScriptCompletionProposal createPackageProposal(
@@ -89,9 +101,9 @@ public class PHPCompletionProposalCollector extends
 		ScriptCompletionProposal completionProposal;
 		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
 			completionProposal = createMethodDeclarationProposal(proposal);
-		}else{
+		} else {
 			completionProposal = (ScriptCompletionProposal) super
-			.createScriptCompletionProposal(proposal);
+					.createScriptCompletionProposal(proposal);
 		}
 		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
 			IMethod method = (IMethod) proposal.getModelElement();
@@ -134,6 +146,7 @@ public class PHPCompletionProposalCollector extends
 	public boolean isExplicit() {
 		return explicit;
 	}
+
 	private ScriptCompletionProposal createMethodDeclarationProposal(
 			CompletionProposal proposal) {
 		if (getSourceModule() == null || getSourceModule().getScriptProject() == null) {
