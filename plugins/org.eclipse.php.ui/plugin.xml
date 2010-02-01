@@ -1562,6 +1562,15 @@
 			</dropAction>
 		</dropTargetContribution>
 	</extension>
+	<extension point="org.eclipse.wst.sse.ui.dropTargetTransfers">
+		<dropTargetContribution targetID="org.eclipse.php.editor"
+			id="org.eclipse.php.editor.dropTargetContribution.include">
+			<dropAction class="org.eclipse.php.internal.ui.FileDropEditorIncludeAction"
+			priority="high"
+				transferID="org.eclipse.swt.dnd.FileTransfer" id="org.eclipse.php.internal.ui.FileDropEditorIncludeAction">
+			</dropAction>
+		</dropTargetContribution>
+	</extension>
 	<extension point="org.eclipse.compare.contentMergeViewers">
 		<viewer id="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator"
 			class="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator"
