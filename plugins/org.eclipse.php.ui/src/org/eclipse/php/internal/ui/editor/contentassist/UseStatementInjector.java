@@ -253,7 +253,9 @@ public class UseStatementInjector {
 								// update replacement string: add namespace
 								// alias prefix
 								String alias;
-								if (usePart != null) {
+								if (usePart != null
+										&& usePart.getAlias() != null
+										&& usePart.getAlias().getName() != null) {
 									alias = usePart.getAlias().getName();
 								} else {
 									int i = namespaceName
