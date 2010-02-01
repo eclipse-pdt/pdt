@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -150,7 +150,12 @@ public class PhpElementConciliator {
 				FunctionInvocation inv = (FunctionInvocation) node;
 				List<Expression> parameters = inv.parameters();
 				if (parameters != null && parameters.size() > 0) {
-					scalar = (Scalar) parameters.get(0);
+					Expression param = parameters.get(0);
+					if (param instanceof Scalar) {
+						scalar = (Scalar) param;
+					} else {
+						return false;
+					}
 				}
 			} else {
 				return false;
