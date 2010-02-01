@@ -1612,7 +1612,7 @@
 		</scriptCompletionProposalComputer>
 	</extension>
 	
-	<extension id="PHPTemplateCompletionProposalComputer"
+	<extension id="PHPDocTemplateCompletionProposalComputer"
 		point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
 		<scriptCompletionProposalComputer
 			categoryId="org.eclipse.dltk.ui.commentTemplateProposalCategory"
