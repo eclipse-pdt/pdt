@@ -18,25 +18,45 @@ import org.eclipse.jface.text.templates.*;
 public class CodeTemplateContextType extends TemplateContextType {
 
 	/* context types */
-	public static final String CATCHBLOCK_CONTEXTTYPE = "catchblock_context"; //$NON-NLS-1$
-	public static final String METHODBODY_CONTEXTTYPE = "methodbody_context"; //$NON-NLS-1$
-	public static final String CONSTRUCTORBODY_CONTEXTTYPE = "constructorbody_context"; //$NON-NLS-1$
-	public static final String GETTERBODY_CONTEXTTYPE = "getterbody_context"; //$NON-NLS-1$
-	public static final String SETTERBODY_CONTEXTTYPE = "setterbody_context"; //$NON-NLS-1$
-	public static final String NEWTYPE_CONTEXTTYPE = "newtype_context"; //$NON-NLS-1$
-	public static final String CLASSBODY_CONTEXTTYPE = "classbody_context"; //$NON-NLS-1$
-	public static final String INTERFACEBODY_CONTEXTTYPE = "interfacebody_context"; //$NON-NLS-1$
-	public static final String ENUMBODY_CONTEXTTYPE = "enumbody_context"; //$NON-NLS-1$
-	public static final String ANNOTATIONBODY_CONTEXTTYPE = "annotationbody_context"; //$NON-NLS-1$
-	public static final String FILECOMMENT_CONTEXTTYPE = "filecomment_context"; //$NON-NLS-1$
-	public static final String TYPECOMMENT_CONTEXTTYPE = "typecomment_context"; //$NON-NLS-1$
-	public static final String FIELDCOMMENT_CONTEXTTYPE = "fieldcomment_context"; //$NON-NLS-1$
-	public static final String METHODCOMMENT_CONTEXTTYPE = "methodcomment_context"; //$NON-NLS-1$
-	public static final String CONSTRUCTORCOMMENT_CONTEXTTYPE = "constructorcomment_context"; //$NON-NLS-1$
-	public static final String OVERRIDECOMMENT_CONTEXTTYPE = "overridecomment_context"; //$NON-NLS-1$
-	public static final String DELEGATECOMMENT_CONTEXTTYPE = "delegatecomment_context"; //$NON-NLS-1$
-	public static final String GETTERCOMMENT_CONTEXTTYPE = "gettercomment_context"; //$NON-NLS-1$
-	public static final String SETTERCOMMENT_CONTEXTTYPE = "settercomment_context"; //$NON-NLS-1$
+	public static final String PHP_PREFIX = "php_"; //$NON-NLS-1$
+	public static final String CATCHBLOCK_CONTEXTTYPE = PHP_PREFIX
+			+ "catchblock_context"; //$NON-NLS-1$
+	public static final String METHODBODY_CONTEXTTYPE = PHP_PREFIX
+			+ "methodbody_context"; //$NON-NLS-1$
+	public static final String CONSTRUCTORBODY_CONTEXTTYPE = PHP_PREFIX
+			+ "constructorbody_context"; //$NON-NLS-1$
+	public static final String GETTERBODY_CONTEXTTYPE = PHP_PREFIX
+			+ "getterbody_context"; //$NON-NLS-1$
+	public static final String SETTERBODY_CONTEXTTYPE = PHP_PREFIX
+			+ "setterbody_context"; //$NON-NLS-1$
+	public static final String NEWTYPE_CONTEXTTYPE = PHP_PREFIX
+			+ "newtype_context"; //$NON-NLS-1$
+	public static final String CLASSBODY_CONTEXTTYPE = PHP_PREFIX
+			+ "classbody_context"; //$NON-NLS-1$
+	public static final String INTERFACEBODY_CONTEXTTYPE = PHP_PREFIX
+			+ "interfacebody_context"; //$NON-NLS-1$
+	public static final String ENUMBODY_CONTEXTTYPE = PHP_PREFIX
+			+ "enumbody_context"; //$NON-NLS-1$
+	public static final String ANNOTATIONBODY_CONTEXTTYPE = PHP_PREFIX
+			+ "annotationbody_context"; //$NON-NLS-1$
+	public static final String FILECOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "filecomment_context"; //$NON-NLS-1$
+	public static final String TYPECOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "typecomment_context"; //$NON-NLS-1$
+	public static final String FIELDCOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "fieldcomment_context"; //$NON-NLS-1$
+	public static final String METHODCOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "methodcomment_context"; //$NON-NLS-1$
+	public static final String CONSTRUCTORCOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "constructorcomment_context"; //$NON-NLS-1$
+	public static final String OVERRIDECOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "overridecomment_context"; //$NON-NLS-1$
+	public static final String DELEGATECOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "delegatecomment_context"; //$NON-NLS-1$
+	public static final String GETTERCOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "gettercomment_context"; //$NON-NLS-1$
+	public static final String SETTERCOMMENT_CONTEXTTYPE = PHP_PREFIX
+			+ "settercomment_context"; //$NON-NLS-1$
 
 	/* templates */
 
