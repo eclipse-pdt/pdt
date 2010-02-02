@@ -72,6 +72,11 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 				variableName, MatchRule.EXACT, Modifiers.AccGlobal,
 				Modifiers.AccConstant, scope, null);
 
+		// if no element found, return empty array.
+		if (elements == null) {
+			return new IGoal[] {};
+		}
+
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
 
 		Comparator<ISourceRange> sourceRangeComparator = new Comparator<ISourceRange>() {
