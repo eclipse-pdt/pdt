@@ -30,7 +30,7 @@ public class OpenFunctionsManualAction extends PHPEditorResolvingAction
 	}
 
 	protected void doRun(IModelElement modelElement) {
-		if (url != null) {
+		if (isValid(modelElement)) {
 			PHPManualFactory.getManual().showFunctionHelp(url);
 		}
 	}
