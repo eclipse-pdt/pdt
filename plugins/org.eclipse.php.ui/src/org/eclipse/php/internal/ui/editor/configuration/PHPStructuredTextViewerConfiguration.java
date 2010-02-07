@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.configuration;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -87,6 +84,7 @@ public class PHPStructuredTextViewerConfiguration extends
 	private StructuredContentAssistant fContentAssistant;
 	private IQuickAssistAssistant fQuickAssistant;
 	private PHPCompletionProcessor phpCompletionProcessor;
+	Map<String, IContentAssistProcessor[]> processorMap = new HashMap<String, IContentAssistProcessor[]>();
 
 	public PHPStructuredTextViewerConfiguration() {
 	}
@@ -159,6 +157,7 @@ public class PHPStructuredTextViewerConfiguration extends
 			} else {
 				IContentAssistProcessor[] superProcessors = super
 						.getContentAssistProcessors(sourceViewer, partitionType);
+				processorMap.put(partitionType, superProcessors);
 				if (superProcessors != null) {
 					processors = new IContentAssistProcessor[superProcessors.length + 1];
 					System.arraycopy(superProcessors, 0, processors, 0,
@@ -548,5 +547,9 @@ public class PHPStructuredTextViewerConfiguration extends
 			fQuickAssistant = assistant;
 		}
 		return fQuickAssistant;
+	}
+
+	public Map<String, IContentAssistProcessor[]> getProcessorMap() {
+		return processorMap;
 	}
 }

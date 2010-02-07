@@ -619,4 +619,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			super.selectionChanged(offset, length);
 		}
 	}
+	
+	public SourceViewerConfiguration getViewerConfiguration() {
+		return fViewerConfiguration;
+	}
 }

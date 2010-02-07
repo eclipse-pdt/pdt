@@ -22,6 +22,8 @@ import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
+import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.KeyEvent;
@@ -127,11 +129,32 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 						getDocumentPartitioning(), pos, true);
 				boolean activated = true;
 				if (type != PHPPartitionTypes.PHP_DEFAULT) {
-					IContentAssistProcessor processor = getContentAssistProcessor(type);
-					if (computeAllAutoActivationTriggers(processor).indexOf(
-							e.character) < 0) {
-						stop();
-						return;
+					if (fViewer instanceof PHPStructuredTextViewer) {
+						PHPStructuredTextViewer phpViewer = (PHPStructuredTextViewer) fViewer;
+						if (phpViewer.getViewerConfiguration() instanceof PHPStructuredTextViewerConfiguration) {
+							PHPStructuredTextViewerConfiguration viewerConfiguration = (PHPStructuredTextViewerConfiguration) phpViewer
+									.getViewerConfiguration();
+							IContentAssistProcessor[] processors = viewerConfiguration
+									.getProcessorMap().get(type);
+							if (processors != null) {
+								StringBuffer sb = new StringBuffer();
+								for (int i = 0; i < processors.length; i++) {
+									sb
+											.append(computeAllAutoActivationTriggers(processors[i]));
+								}
+								if (sb.toString().indexOf(e.character) < 0) {
+									stop();
+									return;
+								}
+							} else {
+								IContentAssistProcessor processor = getContentAssistProcessor(type);
+								if (computeAllAutoActivationTriggers(processor)
+										.indexOf(e.character) < 0) {
+									stop();
+									return;
+								}
+							}
+						}
 					}
 					char[] activation;
 					activation = (char[]) evaluatePrivateMemberMethod(
