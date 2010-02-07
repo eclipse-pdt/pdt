@@ -73,6 +73,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 
 	public ICompletionContext[] createContexts() {
 		return new ICompletionContext[] { new PHPDocTagStartContext(),
+				new PHPDocVarStartContext(),new PHPDocThrowsStartContext(),
 				new PHPDocParamTagContext(), new PHPDocReturnTagContext(),
 				new ArrayKeyContext(), new CatchTypeContext(),
 				new CatchVariableContext(),

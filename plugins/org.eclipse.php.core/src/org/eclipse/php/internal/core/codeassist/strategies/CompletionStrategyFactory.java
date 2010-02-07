@@ -95,6 +95,12 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == PHPDocTagStartContext.class) {
 			return new ICompletionStrategy[] { new PHPDocTagStrategy(context) };
 		}
+		if (contextClass == PHPDocVarStartContext.class) {
+			return new ICompletionStrategy[] { new GlobalClassesStrategy(context) };
+		}
+		if (contextClass == PHPDocThrowsStartContext.class) {
+			return new ICompletionStrategy[] { new ExceptionClassStrategy(context) };
+		}
 		if (contextClass == PHPDocParamTagContext.class) {
 			return new ICompletionStrategy[] { new PHPDocParamVariableStrategy(
 					context) };
