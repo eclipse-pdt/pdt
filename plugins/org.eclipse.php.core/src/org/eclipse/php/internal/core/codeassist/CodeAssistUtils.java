@@ -1,377 +1,218 @@
-package org.eclipse.php.core.codeassist;
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
+package org.eclipse.php.internal.core.codeassist;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.compiler.env.ISourceModule;
-import org.eclipse.dltk.core.IDLTKLanguageToolkit;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ITypeHierarchy;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.SourceParserUtil;
-import org.eclipse.dltk.core.search.IDLTKSearchConstants;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.core.search.SearchMatch;
-import org.eclipse.dltk.core.search.SearchParticipant;
-import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.core.search.SearchRequestor;
-import org.eclipse.dltk.internal.core.SourceModule;
-import org.eclipse.dltk.ti.BasicContext;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
+import org.eclipse.php.internal.core.typeinference.context.FileContext;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
+import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
+/**
+ * This is a common utility used by completion and selection engines for PHP
+ * elements retrieval.
+ * 
+ * @author michael
+ */
 public class CodeAssistUtils {
 
-	private static final String SELF = "self"; //$NON-NLS-1$
+	/**
+	 * Whether to use PHPDoc in type inference
+	 */
+	public static final int USE_PHPDOC = 1 << 5;
+
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
-	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
-	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
+	private static final Pattern globalPattern = Pattern
+			.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
+
+	private static final IType[] EMPTY_TYPES = new IType[0];
 
 	public static boolean startsWithIgnoreCase(String word, String prefix) {
 		return word.toLowerCase().startsWith(prefix.toLowerCase());
 	}
 
 	/**
-	 * This method finds all ancestor methods that match the given prefix.
-	 * @param type
-	 * @param prefix
-	 * @param exactName
-	 * @return
-	 */
-	public static IMethod[] getSuperClassMethods(IType type, String prefix, boolean exactName) {
-		final Set<IMethod> methods = new LinkedHashSet<IMethod>();
-		try {
-			if (type.getSuperClasses() != null) {
-				if (prefix.length() == 0) {
-					ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
-					IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
-					for (IType superClass : allSuperclasses) {
-						for (IMethod method : superClass.getMethods()) {
-							methods.add(method);
-						}
-					}
-				} else {
-					SearchEngine searchEngine = new SearchEngine();
-					IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-
-					int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
-					SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-
-					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-						public void acceptSearchMatch(SearchMatch match) throws CoreException {
-							methods.add((IMethod) match.getElement());
-						}
-					}, null);
-				}
-			}
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return methods.toArray(new IMethod[methods.size()]);
-	}
-
-	/**
-	 * This method finds all class methods that match the given prefix.
-	 * @param type
-	 * @param prefix
-	 * @param exactName
-	 * @return
-	 */
-	public static IMethod[] getClassMethods(IType type, String prefix, boolean exactName) {
-		final Set<IMethod> methods = new LinkedHashSet<IMethod>();
-		try {
-			methods.addAll(Arrays.asList(getSuperClassMethods(type, prefix, exactName)));
-
-			IMethod[] typeMethods = type.getMethods();
-			for (IMethod typeMethod : typeMethods) {
-				String methodName = typeMethod.getElementName();
-				if ((exactName && methodName.equalsIgnoreCase(prefix)) || startsWithIgnoreCase(methodName, prefix)) {
-					methods.add(typeMethod);
-				}
-			}
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return methods.toArray(new IMethod[methods.size()]);
-	}
-
-	/**
-	 * This method finds all class fields that match the given prefix.
-	 * @param type
-	 * @param prefix
-	 * @param exactName
-	 * @param searchConstants
-	 * @return
-	 */
-	public static IField[] getClassFields(IType type, String prefix, boolean exactName, boolean searchConstants) {
-		final Set<IField> fields = new LinkedHashSet<IField>();
-		try {
-			List<IType> searchTypes = new LinkedList<IType>();
-			searchTypes.add(type);
-			
-			if (prefix.length() == 0) {
-				ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
-				IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
-				searchTypes.addAll(Arrays.asList(allSuperclasses));
-			} else {
-				SearchEngine searchEngine = new SearchEngine();
-				IDLTKSearchScope scope;
-				SearchPattern pattern;
-				int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
-
-				if (type.getSuperClasses() != null) {
-					scope = SearchEngine.createHierarchyScope(type);
-
-					if (searchConstants) {
-						// search for constants in hierarchy
-						pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-
-						searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-							public void acceptSearchMatch(SearchMatch match) throws CoreException {
-								fields.add((IField) match.getElement());
-							}
-						}, null);
-					}
-
-					// search for variables in hierarchy
-					pattern = SearchPattern.createPattern(DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-
-					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-						public void acceptSearchMatch(SearchMatch match) throws CoreException {
-							fields.add((IField) match.getElement());
-						}
-					}, null);
-				}
-			}
-			
-			for (IType searchType : searchTypes) {
-				IField[] typeFields = searchType.getFields();
-				for (IField typeField : typeFields) {
-
-					String elementName = typeField.getElementName();
-
-					int flags = typeField.getFlags();
-					if ((flags & Modifiers.AccConstant) != 0) {
-						if (exactName && elementName.equals(prefix) || elementName.startsWith(prefix)) {
-							fields.add(typeField);
-						}
-					} else { // variable
-						String tmp = prefix;
-						if (!tmp.startsWith(DOLLAR)) {
-							tmp = DOLLAR + tmp;
-						}
-						if (exactName && elementName.equals(tmp) || elementName.startsWith(tmp)) {
-							fields.add(typeField);
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return fields.toArray(new IField[fields.size()]);
-	}
-
-	/**
 	 * Returns type of a class field defined by name.
+	 * 
 	 * @param types
 	 * @param propertyName
 	 * @param offset
-	 * @param line
-	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
-	public static IType[] getVariableType(IType[] types, String propertyName, int offset, int line, boolean determineObjectFromOtherFile) {
-		for (IType type : types) {
-			IField[] fields = getClassFields(type, propertyName, true, false);
+	public static IType[] getVariableType(IType[] types, String propertyName,
+			int offset) {
+		if (types != null) {
+			for (IType type : types) {
+				PHPClassType classType = PHPClassType.fromIType(type);
 
-			Set<String> processedFields = new HashSet<String>();
-			for (IField field : fields) {
-				if (processedFields.contains(field.getElementName())) {
-					continue;
-				}
-				processedFields.add(field.getElementName());
-
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(field.getSourceModule(), null);
-				BasicContext sourceModuleContext = new BasicContext(field.getSourceModule(), moduleDeclaration);
-				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(sourceModuleContext, types, field.getElementName());
+				ModuleDeclaration moduleDeclaration = SourceParserUtil
+						.getModuleDeclaration(type.getSourceModule(), null);
+				FileContext fileContext = new FileContext(type
+						.getSourceModule(), moduleDeclaration, offset);
+				TypeContext typeContext = new TypeContext(fileContext,
+						classType);
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-				IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
 
-				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+				if (!propertyName.startsWith(DOLLAR)) {
+					propertyName = DOLLAR + propertyName;
+				}
+				PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(
+						typeContext, propertyName);
+				IEvaluatedType evaluatedType = typeInferencer
+						.evaluateTypePHPDoc(phpDocGoal, 3000);
+
+				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
+						evaluatedType, fileContext, offset);
 				if (modelElements != null) {
-					return modelElementsToTypes(modelElements);
+					return modelElements;
+				}
+
+				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(
+						typeContext, types, propertyName);
+				evaluatedType = typeInferencer.evaluateType(goal);
+
+				modelElements = PHPTypeInferenceUtils.getModelElements(
+						evaluatedType, fileContext, offset);
+				if (modelElements != null) {
+					return modelElements;
 				}
 			}
 		}
-		return null;
+		return EMPTY_TYPES;
 	}
 
 	/**
 	 * Returns type of a variable defined by name.
+	 * 
 	 * @param sourceModule
 	 * @param variableName
 	 * @param position
-	 * @param line
-	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
-	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position, int line, boolean determineObjectFromOtherFile) {
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((SourceModule) sourceModule, null);
-		IContext context = ASTUtils.findContext((SourceModule) sourceModule, moduleDeclaration, position);
+	public static IType[] getVariableType(ISourceModule sourceModule,
+			String variableName, int position) {
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule,
+				moduleDeclaration, position);
 		if (context != null) {
-			VariableReference varReference = new VariableReference(position, position + variableName.length(), variableName);
-			ExpressionTypeGoal goal = new ExpressionTypeGoal(context, varReference);
+			VariableReference varReference = new VariableReference(position,
+					position + variableName.length(), variableName);
+			ExpressionTypeGoal goal = new ExpressionTypeGoal(context,
+					varReference);
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
 
-			IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context, !determineObjectFromOtherFile);
+			IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
+					evaluatedType, (ISourceModuleContext) context, position);
 			if (modelElements != null) {
-				return modelElementsToTypes(modelElements);
+				return modelElements;
 			}
 		}
-		return null;
-	}
-
-	/**
-	 * Converts model elements array to IType elements array
-	 * @param elements
-	 * @return
-	 */
-	public static IType[] modelElementsToTypes(IModelElement[] elements) {
-		List<IType> types = new ArrayList<IType>(elements.length);
-		for (IModelElement element : elements) {
-			types.add((IType) element);
-		}
-		return types.toArray(new IType[types.size()]);
-	}
-
-	/**
-	 * Determines the return type of the method defined by type element and method name.
-	 * @param type
-	 * @param functionName
-	 * @param determineObjectFromOtherFile
-	 * @return
-	 */
-	public static IType[] getFunctionReturnType(IType type, String functionName, boolean determineObjectFromOtherFile) {
-		IMethod[] classMethod = getClassMethods(type, functionName, true);
-		if (classMethod.length > 0) {
-			return getFunctionReturnType(classMethod[0], determineObjectFromOtherFile);
-		}
-		return null;
+		return EMPTY_TYPES;
 	}
 
 	/**
 	 * Determines the return type of the given method element.
+	 * 
 	 * @param method
-	 * @param determineObjectFromOtherFile
+	 * @param function
+	 * @param offset
 	 * @return
 	 */
-	public static IType[] getFunctionReturnType(IMethod method, boolean determineObjectFromOtherFile) {
+	public static IType[] getFunctionReturnType(IType[] types, String method,
+			org.eclipse.dltk.core.ISourceModule sourceModule, int offset) {
+		return getFunctionReturnType(types, method, USE_PHPDOC, sourceModule,
+				offset);
+	}
+
+	/**
+	 * Determines the return type of the given method element.
+	 * 
+	 * @param method
+	 * @param mask
+	 * @param offset
+	 * @return
+	 */
+	public static IType[] getFunctionReturnType(IType[] types, String method,
+			int mask, org.eclipse.dltk.core.ISourceModule sourceModule,
+			int offset) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule,
+				moduleDeclaration, offset);
 
-		IEvaluatedType classType = null;
-		if (method.getDeclaringType() != null) {
-			classType = new PHPClassType(method.getDeclaringType().getElementName());
+		IEvaluatedType evaluatedType;
+		IType[] modelElements;
+		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
+		if (usePhpDoc) {
+			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
+					context, types, method);
+			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
+
+			modelElements = PHPTypeInferenceUtils.getModelElements(
+					evaluatedType, (ISourceModuleContext) context, offset);
+			if (modelElements != null) {
+				return modelElements;
+			}
 		}
-		org.eclipse.dltk.core.ISourceModule sourceModule = method.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-		BasicContext sourceModuleContext = new BasicContext(sourceModule, moduleDeclaration);
 
-		InstanceContext instanceContext = new InstanceContext(sourceModuleContext, classType);
-		PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(instanceContext, method.getElementName());
-		IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
-
-		IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
-		if (modelElements != null) {
-			return modelElementsToTypes(modelElements);
-		}
-
-		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(method);
+		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
+				context, types, method);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
-		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType,
+				(ISourceModuleContext) context, offset);
 		if (modelElements != null) {
-			return modelElementsToTypes(modelElements);
+			return modelElements;
 		}
-		return null;
+		return EMPTY_TYPES;
 	}
 
 	/**
-	 * Returns enclosing class for the given offset.
-	 * @param sourceModule
-	 * @param offset
-	 * @return
+	 * this function searches the sequence from the right closing bracket ")"
+	 * and finding the position of the left "(" the offset has to be the offset
+	 * of the "("
 	 */
-	public static IType getContainerClassData(ISourceModule sourceModule, int offset) {
-		IModelElement type = null;
-		try {
-			type = ((SourceModule) sourceModule).getElementAt(offset);
-			while (type != null && !(type instanceof IType)) {
-				type = type.getParent();
-			}
-		} catch (ModelException e) {
-			Logger.logException(e);
-		}
-		return (IType) type;
-	}
-
-	/**
-	 * Returns enclosing function or method for the given offset.
-	 * @param sourceModule
-	 * @param offset
-	 * @return
-	 */
-	public static IMethod getContainerMethodData(ISourceModule sourceModule, int offset) {
-		try {
-			IModelElement method = ((SourceModule) sourceModule).getElementAt(offset);
-			if (method instanceof IMethod) {
-				return (IMethod) method;
-			}
-		} catch (ModelException e) {
-			Logger.logException(e);
-		}
-		return null;
-	}
-
-	/**
-	 * this function searches the sequence from the right closing bracket ")" and finding
-	 * the position of the left "("
-	 * the offset has to be the offset of the "("
-	 */
-	public static int getFunctionNameEndOffset(TextSequence statementText, int offset) {
+	public static int getFunctionNameEndOffset(TextSequence statementText,
+			int offset) {
 		if (statementText.charAt(offset) != ')') {
 			return 0;
 		}
@@ -384,7 +225,8 @@ public class CodeAssistUtils {
 			final char charAt = statementText.charAt(currChar);
 			// if it is string close / open - update state
 			if (charAt == '\'' || charAt == '"') {
-				inStringMode = inStringMode == 0 ? charAt : inStringMode == charAt ? 0 : inStringMode;
+				inStringMode = inStringMode == 0 ? charAt
+						: inStringMode == charAt ? 0 : inStringMode;
 			}
 
 			if (inStringMode != 0)
@@ -402,24 +244,25 @@ public class CodeAssistUtils {
 	/**
 	 * The "self" function needs to be added only if we are in a class method
 	 * and it is not an abstract class or an interface
+	 * 
 	 * @param fileData
-	 * @param offset 
-	 * @return the self class data or null in case not found 
+	 * @param offset
+	 * @return the self class data or null in case not found
 	 */
 	public static IType getSelfClassData(ISourceModule sourceModule, int offset) {
 
-		IType type = getContainerClassData(sourceModule, offset);
-		IMethod method = getContainerMethodData(sourceModule, offset);
+		IType type = PHPModelUtils.getCurrentType(sourceModule, offset);
+		IMethod method = PHPModelUtils.getCurrentMethod(sourceModule, offset);
 
 		if (type != null && method != null) {
-			int modifiers;
 			try {
-				modifiers = type.getFlags();
-				if ((modifiers & Modifiers.AccAbstract) == 0 && (modifiers & Modifiers.AccInterface) == 0) {
+				int flags = type.getFlags();
+				if (!PHPFlags.isAbstract(flags) && !PHPFlags.isInterface(flags)
+						&& !PHPFlags.isInterface(flags)) {
 					return type;
 				}
 			} catch (ModelException e) {
-				Logger.logException(e);
+				PHPCorePlugin.log(e);
 			}
 		}
 
@@ -427,108 +270,66 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * Checks whether function with given name exists.
-	 * @param functionName
-	 * @return
-	 */
-	public static boolean isFunctionCall(String functionName) {
-		IModelElement[] functions = PHPMixinModel.getInstance().getFunction(functionName);
-		return functions.length > 0;
-	}
-
-	/**
-	 * Retrieves all classes from the global scope by the given prefix.
-	 * @param prefix
-	 * @param exactName
-	 * @return
-	 */
-	public static IType[] getOnlyClasses(String prefix, boolean exactName) {
-		IModelElement[] classes = getWorkspaceClasses(prefix, exactName);
-		List<IType> onlyClasses = new LinkedList<IType>();
-		for (IModelElement c : classes) {
-			IType type = (IType) c;
-			try {
-				if ((type.getFlags() & Modifiers.AccInterface) == 0) {
-					onlyClasses.add(type);
-				}
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
-		}
-		return onlyClasses.toArray(new IType[onlyClasses.size()]);
-	}
-
-	/**
-	 * Retrieves all interfaces from the global scope by the given prefix.
-	 * @param prefix
-	 * @param exactName
-	 * @return
-	 */
-	public static IType[] getOnlyInterfaces(String prefix, boolean exactName) {
-		IModelElement[] classes = getWorkspaceClasses(prefix, exactName);
-		List<IType> onlyInterfaces = new LinkedList<IType>();
-		for (IModelElement i : classes) {
-			IType type = (IType) i;
-			try {
-				if ((type.getFlags() & Modifiers.AccInterface) != 0) {
-					onlyInterfaces.add(type);
-				}
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
-		}
-		return onlyInterfaces.toArray(new IType[onlyInterfaces.size()]);
-	}
-
-	/**
 	 * This method finds types for the receiver in the statement text.
+	 * 
 	 * @param sourceModule
 	 * @param statementText
 	 * @param endPosition
 	 * @param offset
-	 * @param line
-	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
-	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition, int offset, int line, boolean determineObjectFromOtherFile) {
-		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read whitespace
+	public static IType[] getTypesFor(ISourceModule sourceModule,
+			TextSequence statementText, int endPosition, int offset) {
+		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, endPosition); // read whitespace
 
 		boolean isClassTriger = false;
 
-		String triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
+		if (endPosition < 2) {
+			return EMPTY_TYPES;
+		}
+
+		String triggerText = statementText.subSequence(endPosition - 2,
+				endPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
-		} else if (triggerText.equals(CLASS_FUNCTIONS_TRIGGER)) {
+		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
 			isClassTriger = true;
 		} else {
-			return null;
+			return EMPTY_TYPES;
 		}
 
-		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition - 2);
-		int lastObjectOperator = PHPTextSequenceUtilities.getPrivousTriggerIndex(statementText, propertyEndPosition);
+		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, endPosition - triggerText.length());
+		int lastObjectOperator = PHPTextSequenceUtilities
+				.getPrivousTriggerIndex(statementText, propertyEndPosition);
 
 		if (lastObjectOperator == -1) {
-			// if there is no "->" or "::" in the left sequence then we need to calc the object type
-			return innerGetClassName(sourceModule, statementText, propertyEndPosition, isClassTriger, offset, line, determineObjectFromOtherFile);
+			// if there is no "->" or "::" in the left sequence then we need to
+			// calc the object type
+			return innerGetClassName(sourceModule, statementText,
+					propertyEndPosition, isClassTriger, offset);
 		}
 
-		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText, lastObjectOperator + 2);
-		String propertyName = statementText.subSequence(propertyStartPosition, propertyEndPosition).toString();
-		IType[] types = getTypesFor(sourceModule, statementText, propertyStartPosition, offset, line, determineObjectFromOtherFile);
+		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(
+				statementText, lastObjectOperator + triggerText.length());
+		String propertyName = statementText.subSequence(propertyStartPosition,
+				propertyEndPosition).toString();
+		IType[] types = getTypesFor(sourceModule, statementText,
+				propertyStartPosition, offset);
 
 		int bracketIndex = propertyName.indexOf('(');
 
 		if (bracketIndex == -1) {
 			// meaning its a class variable and not a function
-			return getVariableType(types, propertyName, offset, line, determineObjectFromOtherFile);
+			return getVariableType(types, propertyName, offset);
 		}
 
 		String functionName = propertyName.substring(0, bracketIndex).trim();
 		Set<IType> result = new LinkedHashSet<IType>();
-		for (IType type : types) {
-			IType[] returnTypes = getFunctionReturnType(type, functionName, determineObjectFromOtherFile);
-			if (returnTypes != null) {
-				result.addAll(Arrays.asList(returnTypes));
-			}
+		IType[] returnTypes = getFunctionReturnType(types, functionName,
+				sourceModule, offset);
+		if (returnTypes != null) {
+			result.addAll(Arrays.asList(returnTypes));
 		}
 		return result.toArray(new IType[result.size()]);
 	}
@@ -536,144 +337,116 @@ public class CodeAssistUtils {
 	/**
 	 * Getting an instance and finding its type.
 	 */
-	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line, boolean determineObjectFromOtherFile) {
+	private static IType[] innerGetClassName(ISourceModule sourceModule,
+			TextSequence statementText, int propertyEndPosition,
+			boolean isClassTriger, int offset) {
 
-		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, propertyEndPosition, true);
-		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
-		if (isClassTriger) {
-			if (className.equals(SELF)) { //$NON-NLS-1$
-				IType classData = getContainerClassData(sourceModule, offset - 6); //the offset before self::
-				if (classData != null) {
-					return new IType[] { classData };
-				}
-			} else if (className.equals("parent")) { //$NON-NLS-1$
-				IType classData = getContainerClassData(sourceModule, offset - 8); //the offset before parent::
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule
+				.getScriptProject().getProject());
+
+		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+				phpVersion, statementText, propertyEndPosition, true);
+		String className = statementText.subSequence(classNameStart,
+				propertyEndPosition).toString();
+		if (isClassTriger && className != null && className.length() != 0) {
+			if ("self".equals(className)
+					|| "parent".equals(className)
+					|| (phpVersion.isGreaterThan(PHPVersion.PHP5) && "static"
+							.equals(className))) {
+				IType classData = PHPModelUtils.getCurrentType(sourceModule,
+						offset - className.length() - 2); // the offset before
+				// "self::",
+				// "parent::" or
+				// "static::"
 				if (classData != null) {
 					return new IType[] { classData };
 				}
 			}
-
 			if (className.length() > 0) {
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((SourceModule) sourceModule, null);
-				BasicContext context = new BasicContext((SourceModule) sourceModule, moduleDeclaration);
-				IEvaluatedType type = new PHPClassType(className);
-				return modelElementsToTypes(PHPTypeInferenceUtils.getModelElements(type, context, !determineObjectFromOtherFile));
+				ModuleDeclaration moduleDeclaration = SourceParserUtil
+						.getModuleDeclaration(sourceModule, null);
+				FileContext context = new FileContext(sourceModule,
+						moduleDeclaration, offset);
+				IEvaluatedType type = PHPClassType.fromTypeName(className,
+						sourceModule, offset);
+				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
+						type, context, offset);
+				if (modelElements != null) {
+					return modelElements;
+				}
+				return EMPTY_TYPES;
 			}
 		}
-		//check for $GLOBALS['myVar'] scenario
+		// check for $GLOBALS['myVar'] scenario
 		if (className.length() == 0) {
-			//this can happen if the first char before the property is ']'
-			String testedVar = statementText.subSequence(0, propertyEndPosition).toString().trim();
-			Matcher m = globalPattern.matcher(testedVar);
-			if (m.matches()) {
-				// $GLOBALS['myVar'] => 'myVar'
-				String quotedVarName = testedVar.substring(testedVar.indexOf('[') + 1, testedVar.indexOf(']')).trim();
-				// 'myVar' => $myVar
-				className = DOLLAR + quotedVarName.substring(1, quotedVarName.length() - 1); //$NON-NLS-1$
+			// this can happen if the first char before the property is ']'
+			String testedVar = statementText
+					.subSequence(0, propertyEndPosition).toString().trim();
+			if (testedVar != null && testedVar.length() != 0) {
+				Matcher m = globalPattern.matcher(testedVar);
+				if (m.matches()) {
+					// $GLOBALS['myVar'] => 'myVar'
+					String quotedVarName = testedVar.substring(
+							testedVar.indexOf('[') + 1, testedVar.indexOf(']'))
+							.trim();
+					// 'myVar' => $myVar
+					className = DOLLAR
+							+ quotedVarName.substring(1,
+									quotedVarName.length() - 1); //$NON-NLS-1$
+				}
 			}
 		}
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
 			int statementStart = offset - statementText.length();
-			return getVariableType(sourceModule, className, statementStart, line, determineObjectFromOtherFile);
+			return getVariableType(sourceModule, className, statementStart);
 		}
 		// if its function call calc the return type.
-		if (statementText.charAt(propertyEndPosition - 1) == ')') {
-			int functionNameEnd = getFunctionNameEndOffset(statementText, propertyEndPosition - 1);
-			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, functionNameEnd, false);
+		if (propertyEndPosition > 0
+				&& statementText.charAt(propertyEndPosition - 1) == ')') {
+			int functionNameEnd = getFunctionNameEndOffset(statementText,
+					propertyEndPosition - 1);
+			int functionNameStart = PHPTextSequenceUtilities
+					.readIdentifierStartIndex(phpVersion, statementText,
+							functionNameEnd, false);
 
-			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
-			IType classData = getContainerClassData(sourceModule, offset);
-			if (classData != null) { //if its a clss function
-				return getFunctionReturnType(classData, functionName, determineObjectFromOtherFile);
-			}
-
+			String functionName = statementText.subSequence(functionNameStart,
+					functionNameEnd).toString();
 			// if its a non class function
 			Set<IType> returnTypes = new LinkedHashSet<IType>();
-			IModelElement[] functions = getWorkspaceMethods(functionName, true);
-			for (IModelElement function : functions) {
-				IType[] types = getFunctionReturnType((IMethod) function, determineObjectFromOtherFile);
-				if (types != null) {
-					returnTypes.addAll(Arrays.asList(types));
-				}
+			IType[] types = getFunctionReturnType(null, functionName,
+					sourceModule, offset);
+			if (types != null) {
+				returnTypes.addAll(Arrays.asList(types));
 			}
 			return returnTypes.toArray(new IType[returnTypes.size()]);
 		}
-		return null;
+		return EMPTY_TYPES;
 	}
 
 	/**
-	 * This method checks whether the specified function name refers to existing method in the given list of classes.
+	 * This method checks whether the specified function name refers to existing
+	 * method in the given list of classes.
+	 * 
 	 * @param sourceModule
 	 * @param className
 	 * @param functionName
 	 * @return
 	 */
-	public static boolean isClassFunctionCall(ISourceModule sourceModule, IType[] className, String functionName) {
+	public static boolean isClassFunctionCall(ISourceModule sourceModule,
+			IType[] className, String functionName) {
 		for (IType type : className) {
 			IMethod[] classMethod;
 			try {
-				classMethod = PHPModelUtils.getClassMethod(type, functionName, null);
+				classMethod = PHPModelUtils.getTypeHierarchyMethod(type,
+						functionName, true, null);
 				if (classMethod != null) {
 					return true;
 				}
 			} catch (CoreException e) {
-				Logger.logException(e);
+				PHPCorePlugin.log(e);
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * This method searches for all classes in the workspace scope that match the given prefix
-	 * @param prefix Class name
-	 * @param exactName Whether the prefix is an exact name of a class
-	 */
-	public static IModelElement[] getWorkspaceClasses(String prefix, boolean exactName) {
-		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.TYPE);
-	}
-
-	/**
-	 * This method searches for all methods in the workspace scope that match the given prefix
-	 * @param prefix Class name
-	 * @param exactName Whether the prefix is an exact name of a class
-	 */
-	public static IModelElement[] getWorkspaceMethods(String prefix, boolean exactName) {
-		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.METHOD);
-	}
-
-	/**
-	 * This method searches for all fields in the workspace scope that match the given prefix
-	 * @param prefix Class name
-	 * @param exactName Whether the prefix is an exact name of a class
-	 */
-	public static IModelElement[] getWorkspaceFields(String prefix, boolean exactName) {
-		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.FIELD);
-	}
-
-	private static IModelElement[] getWorkspaceElements(String prefix, boolean exactName, int elementType) {
-		SearchEngine searchEngine = new SearchEngine();
-		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
-		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(toolkit);
-
-		int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
-
-		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
-
-		final List<IModelElement> elements = new LinkedList<IModelElement>();
-		try {
-			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					IModelElement element = (IModelElement) match.getElement();
-					// Global scope elements in PHP are those, which are not defined in class body:
-					if (!(element.getParent() instanceof IType)) {
-						elements.add(element);
-					}
-				}
-			}, null);
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
-		return elements.toArray(new IModelElement[elements.size()]);
 	}
 }
