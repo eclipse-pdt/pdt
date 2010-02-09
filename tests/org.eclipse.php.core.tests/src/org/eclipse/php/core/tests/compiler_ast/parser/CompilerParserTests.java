@@ -21,7 +21,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -73,12 +74,12 @@ public class CompilerParserTests extends AbstractPDTTTest {
 
 								ByteArrayInputStream inputStream = new ByteArrayInputStream(
 										pdttFile.getFile().trim().getBytes());
-								ModuleDeclaration moduleDeclaration = parser
+								IModuleDeclaration moduleDeclaration = parser
 										.parse(new InputStreamReader(
 												inputStream), null);
 
 								String actual = ASTPrintVisitor
-										.toXMLString(moduleDeclaration);
+										.toXMLString((ASTNode) moduleDeclaration);
 								assertContents(pdttFile.getExpected(), actual);
 							}
 						});

@@ -21,11 +21,12 @@ import junit.framework.TestSuite;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser;
 
 /**
@@ -233,10 +234,9 @@ public class PHPDocAwareDeclarationTests extends TestSuite {
 	 */
 	public void parseAndTest(Reader reader, String declarationName, String str,
 			boolean positiveTest) throws Exception {
-		ModuleDeclaration program = new PhpSourceParser().parse(reader, null);
-
+		IModuleDeclaration program = new PhpSourceParser().parse(reader, null);
 		DeclarationSearcher searcher = new DeclarationSearcher(declarationName);
-		program.traverse(searcher);
+		((PHPModuleDeclaration) program).traverse(searcher);
 		Declaration declaration = searcher.getResult();
 
 		Assert.assertNotNull("Can't find declaration AST node for: "
