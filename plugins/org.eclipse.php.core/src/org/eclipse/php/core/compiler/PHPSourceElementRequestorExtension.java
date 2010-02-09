@@ -17,7 +17,7 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.compiler.IElementRequestor;
 import org.eclipse.dltk.compiler.IElementRequestor.MethodInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 
 /**
  * This class provides last chance for modifying or adding new elements when
@@ -28,7 +28,7 @@ import org.eclipse.dltk.compiler.env.ISourceModule;
  */
 public abstract class PHPSourceElementRequestorExtension extends ASTVisitor {
 
-	private ISourceModule fSourceModule;
+	private IModuleSource fSourceModule;
 	protected IElementRequestor fRequestor;
 
 	/**
@@ -54,7 +54,7 @@ public abstract class PHPSourceElementRequestorExtension extends ASTVisitor {
 	 * 
 	 * @param sourceModule
 	 */
-	public void setSourceModule(ISourceModule sourceModule) {
+	public void setSourceModule(IModuleSource sourceModule) {
 		fSourceModule = sourceModule;
 	}
 
@@ -63,7 +63,7 @@ public abstract class PHPSourceElementRequestorExtension extends ASTVisitor {
 	 * 
 	 * @return
 	 */
-	public ISourceModule getSourceModule() {
+	public IModuleSource getSourceModule() {
 		return fSourceModule;
 	}
 

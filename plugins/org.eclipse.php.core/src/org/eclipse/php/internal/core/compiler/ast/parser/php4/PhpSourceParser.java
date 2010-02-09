@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php4;
 
 import java.io.Reader;
 
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.php.internal.core.compiler.ast.parser.AbstractPHPSourceParser;
 
@@ -27,7 +27,7 @@ public class PhpSourceParser extends AbstractPHPSourceParser {
 		super(fileName);
 	}
 
-	public ModuleDeclaration parse(Reader in, IProblemReporter reporter)
+	public IModuleDeclaration parse(Reader in, IProblemReporter reporter)
 			throws Exception {
 		CompilerAstLexer lexer = new CompilerAstLexer(in);
 		CompilerAstParser parser = new CompilerAstParser(lexer);

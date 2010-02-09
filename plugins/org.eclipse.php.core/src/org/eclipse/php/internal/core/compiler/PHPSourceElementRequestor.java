@@ -33,7 +33,7 @@ import org.eclipse.dltk.compiler.IElementRequestor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -72,7 +72,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	protected NamespaceDeclaration fLastNamespace;
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor,
-			ISourceModule sourceModule) {
+			IModuleSource sourceModule) {
 		super(requestor);
 
 		// Load PHP source element requester extensions

@@ -12,20 +12,18 @@
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.AbstractSourceElementParser;
-import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
 import org.eclipse.php.internal.core.compiler.PHPSourceElementRequestor;
 import org.eclipse.php.internal.core.project.PHPNature;
 
 public class PHPSourceElementParser extends AbstractSourceElementParser {
 
-	private ISourceModule fSourceModule;
+	private IModuleSource fSourceModule;
 
-	public void parseSourceModule(ISourceModule module,
-			ISourceModuleInfo astCache) {
+	public void parseSourceModule(IModuleSource module) {
 		fSourceModule = module;
-		super.parseSourceModule(module, astCache);
+		super.parseSourceModule(module);
 	}
 
 	protected SourceElementRequestVisitor createVisitor() {

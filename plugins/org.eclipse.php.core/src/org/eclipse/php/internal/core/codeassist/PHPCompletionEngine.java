@@ -17,7 +17,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
-import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.SourceRange;
@@ -48,7 +48,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	private Set<? super Object> processedElements = new HashSet<Object>();
 	private Set<? super Object> processedPaths = new HashSet<Object>();
 
-	public void complete(ISourceModule module, int position, int i) {
+	public void complete(IModuleSource module, int position, int i) {
 
 		if (!PHPCorePlugin.toolkitInitialized) {
 			return;

@@ -11,10 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.AbstractSourceParser;
+import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.parser.ISourceParserFactory;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
@@ -26,10 +27,18 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements
 		return this;
 	}
 
-	public ModuleDeclaration parse(char[] fileName, char[] source,
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.dltk.ast.parser.ISourceParser#parse(org.eclipse.dltk.compiler
+	 * .env.IModuleSource, org.eclipse.dltk.compiler.problem.IProblemReporter)
+	 */
+	public IModuleDeclaration parse(IModuleSource module,
 			IProblemReporter reporter) {
-		AbstractPHPSourceParser parser = createParser(new String(fileName));
-		return parser.parse(fileName, source, reporter);
+		final String fileName = module.getFileName();
+		AbstractPHPSourceParser parser = createParser(fileName);
+		return parser.parse(module, reporter);
 	}
 
 	protected AbstractPHPSourceParser createParser(String fileName) {

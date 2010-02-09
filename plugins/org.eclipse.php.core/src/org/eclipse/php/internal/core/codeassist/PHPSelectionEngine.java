@@ -27,6 +27,7 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -81,9 +82,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		return null;
 	}
 
-	public IModelElement[] select(
-			org.eclipse.dltk.compiler.env.ISourceModule sourceUnit, int offset,
-			int end) {
+	public IModelElement[] select(IModuleSource sourceUnit, int offset, int end) {
 
 		if (!PHPCorePlugin.toolkitInitialized) {
 			return EMPTY;

@@ -16,7 +16,9 @@ import java.io.Reader;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.parser.AbstractSourceParser;
+import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 
 public abstract class AbstractPHPSourceParser extends AbstractSourceParser
@@ -32,25 +34,31 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 		this(null);
 	}
 
-	public ModuleDeclaration parse(char[] fileName, char[] source,
+	public IModuleDeclaration parse(IModuleSource input,
 			IProblemReporter reporter) {
 		try {
-			return parse(new CharArrayReader(source), reporter);
-
+			return parse(new CharArrayReader(input.getContentsAsCharArray()),
+					reporter);
 		} catch (Exception e) {
 			e.printStackTrace();
 			// XXX: add recovery
-			return new ModuleDeclaration(source.length);
+			return new ModuleDeclaration(0);
 		}
+
 	}
 
-	public abstract ModuleDeclaration parse(Reader in, IProblemReporter reporter)
-			throws Exception;
+	public abstract IModuleDeclaration parse(Reader in,
+			IProblemReporter reporter) throws Exception;
 
-	protected ModuleDeclaration parse(AbstractASTParser parser)
-			throws Exception {
+	protected IModuleDeclaration parse(AbstractASTParser parser) {
 		parser.setFileName(fileName);
-		parser.parse();
+		try {
+			parser.parse();
+		} catch (Exception e) {
+			e.printStackTrace();
+			// XXX: add recovery
+			return new ModuleDeclaration(0);
+		}
 		return parser.getModuleDeclaration();
 	}
 
