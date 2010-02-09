@@ -348,7 +348,7 @@ public class CodeAssistUtils {
 				phpVersion, statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart,
 				propertyEndPosition).toString();
-		if (isClassTriger) {
+		if (isClassTriger && className != null && className.length() != 0) {
 			if ("self".equals(className)
 					|| "parent".equals(className)
 					|| (phpVersion.isGreaterThan(PHPVersion.PHP5) && "static"
@@ -382,16 +382,18 @@ public class CodeAssistUtils {
 			// this can happen if the first char before the property is ']'
 			String testedVar = statementText
 					.subSequence(0, propertyEndPosition).toString().trim();
-			Matcher m = globalPattern.matcher(testedVar);
-			if (m.matches()) {
-				// $GLOBALS['myVar'] => 'myVar'
-				String quotedVarName = testedVar.substring(
-						testedVar.indexOf('[') + 1, testedVar.indexOf(']'))
-						.trim();
-				// 'myVar' => $myVar
-				className = DOLLAR
-						+ quotedVarName
-								.substring(1, quotedVarName.length() - 1); //$NON-NLS-1$
+			if (testedVar != null && testedVar.length() != 0) {
+				Matcher m = globalPattern.matcher(testedVar);
+				if (m.matches()) {
+					// $GLOBALS['myVar'] => 'myVar'
+					String quotedVarName = testedVar.substring(
+							testedVar.indexOf('[') + 1, testedVar.indexOf(']'))
+							.trim();
+					// 'myVar' => $myVar
+					className = DOLLAR
+							+ quotedVarName.substring(1,
+									quotedVarName.length() - 1); //$NON-NLS-1$
+				}
 			}
 		}
 		// if its object call calc the object type.
@@ -400,7 +402,8 @@ public class CodeAssistUtils {
 			return getVariableType(sourceModule, className, statementStart);
 		}
 		// if its function call calc the return type.
-		if (statementText.charAt(propertyEndPosition - 1) == ')') {
+		if (propertyEndPosition > 0
+				&& statementText.charAt(propertyEndPosition - 1) == ')') {
 			int functionNameEnd = getFunctionNameEndOffset(statementText,
 					propertyEndPosition - 1);
 			int functionNameStart = PHPTextSequenceUtilities
