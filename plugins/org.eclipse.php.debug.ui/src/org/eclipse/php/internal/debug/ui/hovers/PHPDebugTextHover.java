@@ -14,10 +14,7 @@ package org.eclipse.php.internal.debug.ui.hovers;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -63,9 +60,9 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 			container = (ITextRegionContainer) region;
 			region = container.getRegionAtCharacterOffset(offset);
 		}
-
+		IPhpScriptRegion phpScriptRegion = null;
 		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
+			phpScriptRegion = (IPhpScriptRegion) region;
 			try {
 				region = phpScriptRegion.getPhpToken(offset
 						- container.getStartOffset() - region.getStart());
@@ -79,8 +76,25 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 
 				String regionType = region.getType();
 				if (regionType == PHPRegionTypes.PHP_VARIABLE) {
+					IDocument doc = textViewer.getDocument();
 					varOffset = hoverRegion.getOffset();
 					varLength = hoverRegion.getLength();
+					try {
+						if (doc.getChar(varOffset - 1) == ':'
+								&& doc.getChar(varOffset - 2) == ':') {
+							if (phpScriptRegion != null) {
+
+								ITextRegion prevPhpToken = phpScriptRegion
+										.getPhpToken(varOffset - 2);
+								if (prevPhpToken != null) {
+									varOffset = prevPhpToken.getStart() - 1;
+									varLength += prevPhpToken.getLength() + 1;
+								}
+							}
+						}
+					} catch (BadLocationException e) {
+						Logger.logException("Error retrieving the value\n", e);
+					}
 				} else if (regionType == PHPRegionTypes.PHP_STRING) {
 					try {
 						ITextRegion nextRegion = phpScriptRegion
@@ -106,6 +120,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 							}
 						}
 					} catch (BadLocationException e) {
+						Logger.logException("Error retrieving the value\n", e);
 					}
 				}
 
