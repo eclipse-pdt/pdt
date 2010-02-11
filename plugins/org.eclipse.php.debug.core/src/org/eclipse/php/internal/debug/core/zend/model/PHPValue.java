@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
-import java.util.StringTokenizer;
-
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
@@ -62,22 +60,7 @@ public class PHPValue extends PHPDebugElement implements IValue {
 	 * @see org.eclipse.debug.core.model.IValue#getValueString()
 	 */
 	public String getValueString() throws DebugException {
-		StringBuffer string = new StringBuffer();
-		StringTokenizer tokenizer = new StringTokenizer(fValue
-				.getValueAsString(), "\\", true);
-		String token;
-		while (tokenizer.hasMoreTokens()) {
-			token = tokenizer.nextToken();
-			if (token.length() > 1) {
-				string.append(token);
-			} else {
-				string.append(token);
-				if (tokenizer.hasMoreTokens())
-					tokenizer.nextToken();
-			}
-		}
-		String rString = string.toString();
-		return rString;
+		return fValue.getValueAsString();
 	}
 
 	public String getValue() throws DebugException {
