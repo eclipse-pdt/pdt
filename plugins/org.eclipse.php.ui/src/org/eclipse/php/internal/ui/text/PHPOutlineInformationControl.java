@@ -12,14 +12,13 @@
 package org.eclipse.php.internal.ui.text;
 
 import org.eclipse.dltk.ui.text.ScriptOutlineInformationControl;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * Inofrmation contol for the PHP language
+ * Information control for the PHP language
  * 
- * @author Roy
+ * @author Roy, 2009
  * 
  */
 public class PHPOutlineInformationControl extends
@@ -27,10 +26,7 @@ public class PHPOutlineInformationControl extends
 
 	public PHPOutlineInformationControl(Shell parent, int shellStyle,
 			int treeStyle, String commandId) {
-		super(parent, shellStyle, treeStyle, commandId);
-	}
-
-	protected IPreferenceStore getPreferenceStore() {
-		return PHPUiPlugin.getDefault().getPreferenceStore();
+		super(parent, shellStyle, treeStyle, commandId, PHPUiPlugin
+				.getDefault().getPreferenceStore());
 	}
 }
