@@ -135,7 +135,8 @@ public abstract class ClassMemberContext extends StatementContext {
 
 			if (phpToken.getTextLength() == phpToken.getLength()) {
 				int addOffset = 0;
-				if (nextRegion.getType() == PHPRegionTypes.PHP_TOKEN) {
+				if (nextRegion.getType() == PHPRegionTypes.PHP_TOKEN
+						|| nextRegion.getType() == PHPRegionTypes.PHP_SEMICOLON) {
 					addOffset = phpToken.getEnd();
 				} else {
 					addOffset = nextRegion.getTextEnd();
