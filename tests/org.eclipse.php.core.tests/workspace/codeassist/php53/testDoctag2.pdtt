@@ -1,0 +1,16 @@
+--TEST--
+Test throws
+--FILE--
+<?
+class MyException extends Exception{
+}
+/**
+ * 
+ * @author douya
+ * @throws MyE|
+ */
+class SomeClass {
+}
+?>
+--EXPECT--
+type(MyException)
