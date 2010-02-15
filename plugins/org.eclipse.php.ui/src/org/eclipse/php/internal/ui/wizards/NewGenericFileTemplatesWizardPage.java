@@ -422,6 +422,14 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 				getTemplatesContextTypeRegistry(), template);
 	}
 
+	public CompiledTemplate compileTemplate(String containerName,
+			String fileName) {
+		Template template = getSelectedTemplate();
+		return PHPTemplateStore.compileTemplate(
+				getTemplatesContextTypeRegistry(), template, containerName,
+				fileName);
+	}
+
 	public TemplateProposal createTemplateProposal() {
 		TemplateProposal proposal = null;
 		Template template = getSelectedTemplate();

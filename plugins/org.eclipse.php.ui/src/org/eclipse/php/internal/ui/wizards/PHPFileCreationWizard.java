@@ -69,7 +69,8 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				.getContainerName();
 		final String fileName = phpFileCreationWizardPage.getFileName();
 		final PHPTemplateStore.CompiledTemplate template = this.newPhpTemplatesWizardPage
-				.compileTemplate();
+				.compileTemplate(containerName, fileName);
+
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor)
 					throws InvocationTargetException {

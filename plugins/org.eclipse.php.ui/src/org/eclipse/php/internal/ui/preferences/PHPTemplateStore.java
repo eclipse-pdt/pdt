@@ -11,6 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Document;
@@ -51,14 +57,14 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 	}
 
 	public static CompiledTemplate compileTemplate(
-			ContextTypeRegistry contextTypeRegistry, Template template) {
+			ContextTypeRegistry contextTypeRegistry, Template template,
+			String containerName, String fileName) {
 		String string = null;
 		int offset = 0;
 		if (template != null) {
 			IDocument document = new Document();
-			TemplateContext context = new DocumentTemplateContext(
-					contextTypeRegistry.getContextType(template
-							.getContextTypeId()), document, 0, 0);
+			DocumentTemplateContext context = getContext(contextTypeRegistry,
+					template, containerName, fileName, document);
 			try {
 				TemplateBuffer buffer = context.evaluate(template);
 				string = buffer.getString();
@@ -76,6 +82,39 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 			}
 		}
 		return new CompiledTemplate(string, offset);
+	}
+
+	public static CompiledTemplate compileTemplate(
+			ContextTypeRegistry contextTypeRegistry, Template template) {
+		return compileTemplate(contextTypeRegistry, template, null, null);
+	}
+
+	/**
+	 * @param contextTypeRegistry
+	 * @param template
+	 * @param containerName
+	 * @param fileName
+	 * @param document
+	 * @return
+	 */
+	private static DocumentTemplateContext getContext(
+			ContextTypeRegistry contextTypeRegistry, Template template,
+			String containerName, String fileName, IDocument document) {
+
+		if (fileName == null) {
+			return new DocumentTemplateContext(contextTypeRegistry
+					.getContextType(template.getContextTypeId()), document, 0,
+					0);
+
+		}
+
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(
+				new Path(containerName + "/" + fileName));
+		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
+		TemplateContextType type = contextTypeRegistry.getContextType(template
+				.getContextTypeId());
+		return ((ScriptTemplateContextType) type).createContext(document, 0, 0,
+				sourceModule);
 	}
 
 	public static class CompiledTemplate {
