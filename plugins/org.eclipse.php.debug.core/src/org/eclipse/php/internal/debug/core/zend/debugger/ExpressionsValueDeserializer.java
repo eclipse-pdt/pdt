@@ -84,8 +84,7 @@ public class ExpressionsValueDeserializer {
 
 	private ExpressionValue buildSringType(VariableReader reader) {
 		String value = reader.readString();
-		String valueAsString = "(string:" + value.length() + ") "
-				+ value.replaceAll("\\\\", "\\\\\\\\");
+		String valueAsString = "(string:" + value.length() + ") " + value;
 		return new ExpressionValue(ExpressionValue.STRING_TYPE, value,
 				valueAsString, null);
 	}
