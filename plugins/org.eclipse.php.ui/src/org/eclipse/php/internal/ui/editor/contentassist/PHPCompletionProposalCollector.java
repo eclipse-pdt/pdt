@@ -101,6 +101,8 @@ public class PHPCompletionProposalCollector extends
 		ScriptCompletionProposal completionProposal;
 		if (proposal.getKind() == CompletionProposal.METHOD_DECLARATION) {
 			completionProposal = createMethodDeclarationProposal(proposal);
+		} else if (proposal.getKind() == CompletionProposal.TYPE_REF) {
+			completionProposal = (ScriptCompletionProposal) createTypeProposal(proposal);
 		} else {
 			completionProposal = (ScriptCompletionProposal) super
 					.createScriptCompletionProposal(proposal);
@@ -149,7 +151,8 @@ public class PHPCompletionProposalCollector extends
 
 	private ScriptCompletionProposal createMethodDeclarationProposal(
 			CompletionProposal proposal) {
-		if (getSourceModule() == null || getSourceModule().getScriptProject() == null) {
+		if (getSourceModule() == null
+				|| getSourceModule().getScriptProject() == null) {
 			return null;
 		}
 
@@ -161,15 +164,17 @@ public class PHPCompletionProposalCollector extends
 
 		int start = proposal.getReplaceStart();
 		int length = getLength(proposal);
-		String label = ((PHPCompletionProposalLabelProvider)getLabelProvider()).createOverrideMethodProposalLabel(
-				proposal);
-		ScriptCompletionProposal scriptProposal = createParameterGuessingProposal(proposal,
-				getSourceModule().getScriptProject(), getSourceModule(), name, paramTypes, start, length,
-				label, String.valueOf(proposal.getCompletion()));
+		String label = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createOverrideMethodProposalLabel(proposal);
+		ScriptCompletionProposal scriptProposal = createParameterGuessingProposal(
+				proposal, getSourceModule().getScriptProject(),
+				getSourceModule(), name, paramTypes, start, length, label,
+				String.valueOf(proposal.getCompletion()));
 		scriptProposal.setImage(getImage(getLabelProvider()
 				.createMethodImageDescriptor(proposal)));
 
-		ProposalInfo info = new MethodProposalInfo(getSourceModule().getScriptProject(), proposal);
+		ProposalInfo info = new MethodProposalInfo(getSourceModule()
+				.getScriptProject(), proposal);
 		scriptProposal.setProposalInfo(info);
 
 		scriptProposal.setRelevance(computeRelevance(proposal));
@@ -177,11 +182,36 @@ public class PHPCompletionProposalCollector extends
 	}
 
 	private ScriptCompletionProposal createParameterGuessingProposal(
-			CompletionProposal proposal, IScriptProject scriptProject, ISourceModule sourceModule,
-			String name, String[] paramTypes, int start, int length,
-			String label, String string) {
+			CompletionProposal proposal, IScriptProject scriptProject,
+			ISourceModule sourceModule, String name, String[] paramTypes,
+			int start, int length, String label, String string) {
 		return new ParameterGuessingProposal(proposal, scriptProject,
-				sourceModule, name, paramTypes, start, length, label, string,false);
+				sourceModule, name, paramTypes, start, length, label, string,
+				false);
+	}
+
+	private IScriptCompletionProposal createTypeProposal(
+			CompletionProposal typeProposal) {
+
+		String completion = new String(typeProposal.getCompletion());
+		int replaceStart = typeProposal.getReplaceStart();
+		// int length = typeProposal.getReplaceEnd()
+		// - typeProposal.getReplaceStart() + 1;
+		int length = getLength(typeProposal);
+		Image image = getImage(((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createTypeImageDescriptor(typeProposal));
+
+		String displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createTypeProposalLabel(typeProposal);
+
+		ScriptCompletionProposal scriptProposal = createScriptCompletionProposal(
+				completion, replaceStart, length, image, displayString, 0);
+
+		scriptProposal.setRelevance(computeRelevance(typeProposal));
+		scriptProposal.setProposalInfo(new TypeProposalInfo(getSourceModule()
+				.getScriptProject(), typeProposal));
+		return scriptProposal;
+
 	}
 
 }

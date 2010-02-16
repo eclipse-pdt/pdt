@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 public class PHPCompletionProposalLabelProvider extends
@@ -99,5 +100,16 @@ public class PHPCompletionProposalLabelProvider extends
 		nameBuffer.append(parent.getElementName());
 
 		return nameBuffer.toString();
+	}
+
+	@Override
+	protected ImageDescriptor createTypeImageDescriptor(
+			CompletionProposal proposal) {
+		return super.createTypeImageDescriptor(proposal);
+	}
+
+	@Override
+	protected String createTypeProposalLabel(char[] fullName) {
+		return super.createTypeProposalLabel(fullName);
 	}
 }
