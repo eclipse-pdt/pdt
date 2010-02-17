@@ -11,14 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
@@ -78,23 +81,33 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 							if (s == methodDecl
 									&& currentType instanceof ClassDeclaration) {
 								ClassDeclaration classDecl = (ClassDeclaration) currentType;
-								for (String superClass : classDecl
-										.getSuperClassNames()) {
 
-									String parentNamespace = null;
-									if (context instanceof INamespaceContext) {
-										parentNamespace = ((INamespaceContext) context)
-												.getNamespace();
+								ASTListNode superClasses = classDecl
+										.getSuperClasses();
+								List childs = superClasses.getChilds();
+								for (Iterator iterator = childs.iterator(); iterator
+										.hasNext();) {
+									ASTNode node = (ASTNode) iterator.next();
+									NamespaceReference namespace = null;
+									SimpleReference reference = null;
+									if (node instanceof SimpleReference) {
+										reference = (SimpleReference) node;
+										if (reference instanceof FullyQualifiedReference) {
+											FullyQualifiedReference ref = (FullyQualifiedReference) node;
+											namespace = ref.getNamespace();
+										}
+									}
+									if (namespace == null
+											|| namespace.getName().equals("")) {
+										types.add(new PHPClassType(reference
+												.getName()));
+									} else {
+										types
+												.add(new PHPClassType(namespace
+														.getName(), reference
+														.getName()));
 									}
 
-									if (superClass
-											.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
-											|| parentNamespace == null) {
-										types.add(new PHPClassType(superClass));
-									} else if (parentNamespace != null) {
-										types.add(new PHPClassType(
-												parentNamespace, superClass));
-									}
 								}
 								found = true;
 							}
