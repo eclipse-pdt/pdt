@@ -1,0 +1,31 @@
+--TEST--
+Test new exception in try/catch throw 
+--FILE--
+<?php class A{ function foo() { try {} catch (Exception $e) { throw  new |; }}} ?> 
+--EXPECT--
+method(SQLiteException)
+method(OutOfRangeException)
+method(BadFunctionCallException)
+method(DOMException)
+method(ImagickPixelIteratorException)
+method(RuntimeException)
+method(Exception)
+method(OutOfBoundsException)
+method(ErrorException)
+method(UnexpectedValueException)
+method(SoapFault)
+method(ReflectionException)
+method(RangeException)
+method(ImagickDrawException)
+method(ImagickException)
+method(ImagickPixelException)
+method(LogicException)
+method(LengthException)
+method(BadMethodCallException)
+method(UnderflowException)
+method(DomainException)
+method(PDOException)
+method(OverflowException)
+method(PharException)
+method(mysqli_sql_exception)
+method(InvalidArgumentException)
