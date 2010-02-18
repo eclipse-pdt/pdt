@@ -190,20 +190,40 @@ public class DebugSearchEngine {
 				LinkedList<PathEntry> results = new LinkedList<PathEntry>();
 
 				IncludePath[] includePaths;
+				IBuildpathEntry[] buildPaths = null;
 				if (currentProject != null) {
 					includePaths = PHPSearchEngine
 							.buildIncludePath(currentProject);
 				} else {
 					// Search in the whole workspace:
 					Set<IncludePath> s = new LinkedHashSet<IncludePath>();
+					Set<IBuildpathEntry> b = new LinkedHashSet<IBuildpathEntry>();
 					IProject[] projects = ResourcesPlugin.getWorkspace()
 							.getRoot().getProjects();
 					for (IProject project : projects) {
 						if (project.isOpen() && project.isAccessible()) {
+							// get include paths of all projects
 							PHPSearchEngine.buildIncludePath(project, s);
+
+							// get build paths of all projects
+							IScriptProject scriptProject = DLTKCore
+									.create(project);
+							if (scriptProject != null) {
+								try {
+									IBuildpathEntry[] rawBuildpath = scriptProject
+											.getRawBuildpath();
+									for (IBuildpathEntry pathEntry : rawBuildpath) {
+										b.add(pathEntry);
+									}
+								} catch (ModelException e) {
+									PHPDebugPlugin.log(e);
+								}
+
+							}
 						}
 					}
 					includePaths = s.toArray(new IncludePath[s.size()]);
+					buildPaths = b.toArray(new IBuildpathEntry[b.size()]);
 				}
 
 				// Try to find this file in the Workspace:
@@ -259,6 +279,80 @@ public class DebugSearchEngine {
 							}
 						}
 					}
+
+					// try to find in build paths
+					if (buildPaths != null) {
+						for (IBuildpathEntry entry : buildPaths) {
+
+							IPath entryPath = entry.getPath();
+							if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+								// We don't support lookup in archive
+								File entryDir = entryPath.toFile();
+								find(entryDir, abstractPath, entry, results);
+							} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT
+									|| entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+								IResource res = ResourcesPlugin.getWorkspace()
+										.getRoot().findMember(
+												entry.getPath().lastSegment());
+								if (res instanceof IProject) {
+									IProject project = (IProject) res;
+									if (project.isOpen()
+											&& project.isAccessible()) {
+										try {
+											find(project, abstractPath, results);
+										} catch (InterruptedException e) {
+											PHPDebugPlugin.log(e);
+										}
+									}
+								}
+							} else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+								entryPath = DLTKCore
+										.getResolvedVariablePath(entryPath);
+								if (entryPath != null) {
+									File entryDir = entryPath.toFile();
+									find(entryDir, abstractPath, entry, results);
+								}
+							} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+
+								// TODO fix the CONTAINER case
+								IResource res = ResourcesPlugin.getWorkspace()
+										.getRoot().findMember(
+												entry.getPath().lastSegment());
+
+								if (res == null) {
+									continue;
+								}
+								IProject project = res.getProject();
+
+								IScriptProject scriptProject = DLTKCore
+										.create(project);
+
+								try {
+									IBuildpathContainer buildpathContainer = DLTKCore
+											.getBuildpathContainer(entry
+													.getPath(), scriptProject);
+									if (buildpathContainer != null) {
+										IBuildpathEntry[] buildpathEntries = buildpathContainer
+												.getBuildpathEntries(scriptProject);
+										if (buildpathEntries != null
+												&& buildpathEntries.length > 0) {
+											entryPath = EnvironmentPathUtils
+													.getLocalPath(buildpathEntries[0]
+															.getPath());
+											if (entryPath != null) {
+												find(entryPath.toFile(),
+														abstractPath, entry,
+														results);
+											}
+										}
+									}
+								} catch (ModelException e) {
+									PHPDebugPlugin.log(e);
+								}
+
+							}
+						}
+					}
 				}
 
 				// Iterate over all include path, and search for a requested
@@ -270,64 +364,6 @@ public class DebugSearchEngine {
 									abstractPath, results);
 						} catch (InterruptedException e) {
 							PHPDebugPlugin.log(e);
-						}
-					} else if (includePath.getEntry() instanceof IBuildpathEntry) {
-						IBuildpathEntry entry = (IBuildpathEntry) includePath
-								.getEntry();
-						IPath entryPath = entry.getPath();
-						if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-							// We don't support lookup in archive
-							File entryDir = entryPath.toFile();
-							find(entryDir, abstractPath, entry, results);
-						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-							IResource res = ResourcesPlugin.getWorkspace()
-									.getRoot().findMember(
-											entry.getPath().lastSegment());
-							if (res instanceof IProject) {
-								IProject project = (IProject) res;
-								if (project.isOpen() && project.isAccessible()) {
-									try {
-										find(project, abstractPath, results);
-									} catch (InterruptedException e) {
-										PHPDebugPlugin.log(e);
-									}
-								}
-							}
-						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-							entryPath = DLTKCore
-									.getResolvedVariablePath(entryPath);
-							if (entryPath != null) {
-								File entryDir = entryPath.toFile();
-								find(entryDir, abstractPath, entry, results);
-							}
-						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
-							IScriptProject project = DLTKCore
-									.create(currentProject == null ? includePath
-											.getProject()
-											: currentProject);
-							try {
-								IBuildpathContainer buildpathContainer = DLTKCore
-										.getBuildpathContainer(entry.getPath(),
-												project);
-								if (buildpathContainer != null) {
-									IBuildpathEntry[] buildpathEntries = buildpathContainer
-											.getBuildpathEntries(project);
-									if (buildpathEntries != null
-											&& buildpathEntries.length > 0) {
-										entryPath = EnvironmentPathUtils
-												.getLocalPath(buildpathEntries[0]
-														.getPath());
-										if (entryPath != null) {
-											find(entryPath.toFile(),
-													abstractPath, entry,
-													results);
-										}
-									}
-								}
-							} catch (ModelException e) {
-								PHPDebugPlugin.log(e);
-							}
-
 						}
 					}
 				}
