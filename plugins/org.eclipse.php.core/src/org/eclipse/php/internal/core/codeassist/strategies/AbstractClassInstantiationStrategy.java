@@ -167,8 +167,8 @@ public abstract class AbstractClassInstantiationStrategy extends
 
 			};
 			ctorMethod.setParameters(ctor.getParameters());
-			ctorMethod
-					.setParameterInitializers(ctor.getParameterInitializers());
+			// ctorMethod
+			// .setParameterInitializers(ctor.getParameterInitializers());
 			return ctorMethod;
 		} catch (ModelException e) {
 			// TODO Auto-generated catch block

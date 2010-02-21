@@ -14,10 +14,7 @@ package org.eclipse.php.internal.core.index;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.internal.core.*;
 import org.eclipse.php.core.compiler.IPHPModifiers;
@@ -110,17 +107,25 @@ public class PhpElementResolver implements IElementResolver {
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;
-		private String[] parameters;
+		private IParameter[] parameters;
 
 		public IndexMethod(ModelElement parent, String name, int flags,
 				int offset, int length, int nameOffset, int nameLength,
-				String[] parameters) {
+				String[] parameterNames) {
 
 			super(parent, name);
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
 			this.nameRange = new SourceRange(nameOffset, nameLength);
-			this.parameters = parameters;
+			// MethodParameterInfo
+			this.parameters = new IParameter[0];
+			if (parameterNames != null) {
+				this.parameters = new IParameter[parameterNames.length];
+				for (int i = 0; i < parameterNames.length; i++) {
+					this.parameters[i] = new MethodParameterInfo(
+							parameterNames[i]);
+				}
+			}
 		}
 
 		public int getFlags() throws ModelException {
@@ -135,7 +140,7 @@ public class PhpElementResolver implements IElementResolver {
 			return sourceRange;
 		}
 
-		public String[] getParameters() throws ModelException {
+		public IParameter[] getParameters() throws ModelException {
 			return parameters;
 		}
 

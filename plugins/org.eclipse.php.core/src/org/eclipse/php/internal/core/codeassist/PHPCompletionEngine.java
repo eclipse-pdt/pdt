@@ -233,7 +233,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			// show method parameter names:
 			String[] params = null;
 			try {
-				params = method.getParameters();
+				params = method.getParameterNames();
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
@@ -296,7 +296,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				try {
 					for (IMethod method : type.getMethods()) {
 						if (method.isConstructor()) {
-							String[] params = method.getParameters();
+							String[] params = method.getParameterNames();
 							if (params != null && params.length > 0) {
 								char[][] args = new char[params.length][];
 								for (int i = 0; i < params.length; ++i) {

@@ -12,11 +12,13 @@
 package org.eclipse.php.internal.core.typeinference;
 
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.core.IParameter;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceMethod;
+import org.eclipse.dltk.internal.core.SourceMethodUtils;
 import org.eclipse.dltk.internal.core.SourceRange;
 
 /**
@@ -27,10 +29,10 @@ import org.eclipse.dltk.internal.core.SourceRange;
  */
 public class FakeMethod extends SourceMethod {
 
-	private static final String[] NO_STRINGS = new String[0];
+	// private static final String[] NO_STRINGS = new String[0];
 	private String receiver;
-	private String[] parameters = NO_STRINGS;
-	private String[] parameterInitializers = null;
+	private IParameter[] parameters = SourceMethodUtils.NO_PARAMETERS;
+	// private String[] parameterInitializers = null;
 	private int flags = Modifiers.AccPublic;
 	private int offset;
 	private int length;
@@ -90,19 +92,11 @@ public class FakeMethod extends SourceMethod {
 		this.flags = flags;
 	}
 
-	public void setParameterInitializers(String[] parameterInitializers) {
-		this.parameterInitializers = parameterInitializers;
-	}
-
-	public void setParameters(String[] parameters) {
+	public void setParameters(IParameter[] parameters) {
 		this.parameters = parameters;
 	}
 
-	public String[] getParameterInitializers() throws ModelException {
-		return parameterInitializers;
-	}
-
-	public String[] getParameters() throws ModelException {
+	public IParameter[] getParameters() throws ModelException {
 		return parameters;
 	}
 
