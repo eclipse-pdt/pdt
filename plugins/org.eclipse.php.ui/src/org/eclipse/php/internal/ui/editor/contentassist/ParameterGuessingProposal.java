@@ -57,7 +57,7 @@ public final class ParameterGuessingProposal extends
 	}
 
 	private ICompletionProposal[][] fChoices; // initialized by
-												// guessParameters()
+	// guessParameters()
 	private Position[] fPositions; // initialized by guessParameters()
 
 	private IRegion fSelectedRegion; // initialized by apply()
@@ -234,14 +234,15 @@ public final class ParameterGuessingProposal extends
 		fPositions = new Position[count];
 		fChoices = new ICompletionProposal[count][];
 
-		String[] initializers = method.getParameterInitializers();
+		IParameter[] parameters = method.getParameters();
 
 		for (int i = count - 1; i >= 0; i--) {
 			String paramName = new String(parameterNames[i]);
 			Position position = new Position(0, 0);
 
 			ICompletionProposal[] argumentProposals = parameterProposals(
-					initializers[i], paramName, position, fFillBestGuess);
+					parameters[i].getDefaultValue(), paramName, position,
+					fFillBestGuess);
 
 			fPositions[i] = position;
 			fChoices[i] = argumentProposals;

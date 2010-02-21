@@ -334,7 +334,7 @@ public class StubUtility {
 		}
 
 		// fall back code. Not good for generic methods!
-		String[] paramTypes = overridden.getParameters();
+		String[] paramTypes = overridden.getParameterNames();
 		String[] paramTypeNames = new String[paramTypes.length];
 		for (int i = 0; i < paramTypes.length; i++) {
 			paramTypeNames[i] = Signature.toString(Signature

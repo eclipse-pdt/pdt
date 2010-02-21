@@ -615,7 +615,7 @@ public class CodeGeneration {
 			}
 		}
 
-		String[] paramNames = method.getParameters();
+		String[] paramNames = method.getParameterNames();
 		// add parameter type before parameter name
 		for (int i = 0; i < paramNames.length; i++) {
 			if (null != parameterTypes && null != parameterTypes[i]) {

@@ -67,7 +67,7 @@ public class PHPOverrideCompletionProposal extends
 				if (modelElement.getElementType() == IModelElement.METHOD) {
 					IMethod method = (IMethod) modelElement;
 					try {
-						String[] parameters = method.getParameters();
+						String[] parameters = method.getParameterNames();
 						if (parameters != null && parameters.length > 0) {
 							hasArguments = true;
 						}
