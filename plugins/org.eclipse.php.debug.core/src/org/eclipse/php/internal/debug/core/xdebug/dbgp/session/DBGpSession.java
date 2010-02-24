@@ -341,11 +341,11 @@ public class DBGpSession {
 		private void handleStoppingStatus(DBGpResponse parsedResponse) {
 			//For the moment we will ignore the reason and just stop.
 			DBGpResponse stoppedResponse = sendSyncCmdOnResponseThread(DBGpCommand.stop, null);
-			if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
+			if (stoppedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
 				handleStopStatus(stoppedResponse);
 			}
 			else {
-				// log a problem but still stop
+				// TODO: log a problem but still stop
 				handleStopStatus(stoppedResponse);				
 			}
 		}
@@ -604,7 +604,11 @@ public class DBGpSession {
 		return sessionId;
 	}
 
-	public synchronized boolean isActive() {
+	/**
+	 * returns whether the session is still active or not.
+	 * @return
+	 */
+	public boolean isActive() {
 		return sessionActive;
 	}
 
