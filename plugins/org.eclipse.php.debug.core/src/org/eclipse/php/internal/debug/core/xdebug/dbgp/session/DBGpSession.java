@@ -383,7 +383,7 @@ public class DBGpSession {
 			// For the moment we will ignore the reason and just stop.
 			DBGpResponse stoppedResponse = sendSyncCmdOnResponseThread(
 					DBGpCommand.stop, null);
-			if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
+			if (stoppedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
 				handleStopStatus(stoppedResponse);
 			} else {
 				// log a problem but still stop
@@ -681,7 +681,7 @@ public class DBGpSession {
 		return sessionId;
 	}
 
-	public synchronized boolean isActive() {
+	public boolean isActive() {
 		return sessionActive;
 	}
 
