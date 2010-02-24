@@ -4,7 +4,7 @@
 
 /**
  * Opens a bzip2 compressed file
- * @link http://php.net/manual/en/function.bzopen.php
+ * @link http://www.php.net/manual/en/function.bzopen.php
  * @param filename string <p>
  * The name of the file to open.
  * </p>
@@ -20,7 +20,7 @@ function bzopen ($filename, $mode) {}
 
 /**
  * Binary safe bzip2 file read
- * @link http://php.net/manual/en/function.bzread.php
+ * @link http://www.php.net/manual/en/function.bzread.php
  * @param bz resource <p>
  * The file pointer. It must be valid and must point to a file 
  * successfully opened by bzopen.
@@ -35,7 +35,7 @@ function bzread ($bz, $length = null) {}
 
 /**
  * Binary safe bzip2 file write
- * @link http://php.net/manual/en/function.bzwrite.php
+ * @link http://www.php.net/manual/en/function.bzwrite.php
  * @param bz resource <p>
  * The file pointer. It must be valid and must point to a file 
  * successfully opened by bzopen.
@@ -54,7 +54,7 @@ function bzwrite ($bz, $data, $length = null) {}
 
 /**
  * Force a write of all buffered data
- * @link http://php.net/manual/en/function.bzflush.php
+ * @link http://www.php.net/manual/en/function.bzflush.php
  * @param bz resource <p>
  * The file pointer. It must be valid and must point to a file 
  * successfully opened by bzopen.
@@ -65,7 +65,7 @@ function bzflush ($bz) {}
 
 /**
  * Close a bzip2 file
- * @link http://php.net/manual/en/function.bzclose.php
+ * @link http://www.php.net/manual/en/function.bzclose.php
  * @param bz resource <p>
  * The file pointer. It must be valid and must point to a file 
  * successfully opened by bzopen.
@@ -76,7 +76,7 @@ function bzclose ($bz) {}
 
 /**
  * Returns a bzip2 error number
- * @link http://php.net/manual/en/function.bzerrno.php
+ * @link http://www.php.net/manual/en/function.bzerrno.php
  * @param bz resource <p>
  * The file pointer. It must be valid and must point to a file 
  * successfully opened by bzopen.
@@ -87,7 +87,7 @@ function bzerrno ($bz) {}
 
 /**
  * Returns a bzip2 error string
- * @link http://php.net/manual/en/function.bzerrstr.php
+ * @link http://www.php.net/manual/en/function.bzerrstr.php
  * @param bz resource <p>
  * The file pointer. It must be valid and must point to a file 
  * successfully opened by bzopen.
@@ -98,7 +98,7 @@ function bzerrstr ($bz) {}
 
 /**
  * Returns the bzip2 error number and error string in an array
- * @link http://php.net/manual/en/function.bzerror.php
+ * @link http://www.php.net/manual/en/function.bzerror.php
  * @param bz resource <p>
  * The file pointer. It must be valid and must point to a file 
  * successfully opened by bzopen.
@@ -111,19 +111,19 @@ function bzerror ($bz) {}
 
 /**
  * Compress a string into bzip2 encoded data
- * @link http://php.net/manual/en/function.bzcompress.php
+ * @link http://www.php.net/manual/en/function.bzcompress.php
  * @param source string <p>
  * The string to compress.
  * </p>
  * @param blocksize int[optional] <p>
  * Specifies the blocksize used during compression and should be a number 
  * from 1 to 9 with 9 giving the best compression, but using more 
- * resources to do so. blocksize defaults to 4.
+ * resources to do so.
  * </p>
  * @param workfactor int[optional] <p>
  * Controls how the compression phase behaves when presented with worst
  * case, highly repetitive, input data. The value can be between 0 and
- * 250 with 0 being a special case and the default value. 
+ * 250 with 0 being a special case. 
  * </p>
  * <p>
  * Regardless of the workfactor, the generated 
@@ -135,7 +135,7 @@ function bzcompress ($source, $blocksize = null, $workfactor = null) {}
 
 /**
  * Decompresses bzip2 encoded data
- * @link http://php.net/manual/en/function.bzdecompress.php
+ * @link http://www.php.net/manual/en/function.bzdecompress.php
  * @param source string <p>
  * The string to decompress.
  * </p>

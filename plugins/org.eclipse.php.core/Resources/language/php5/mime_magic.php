@@ -4,7 +4,7 @@
 
 /**
  * Detect MIME Content-type for a file (deprecated)
- * @link http://php.net/manual/en/function.mime-content-type.php
+ * @link http://www.php.net/manual/en/function.mime-content-type.php
  * @param filename string <p>
  * Path to the tested file.
  * </p>

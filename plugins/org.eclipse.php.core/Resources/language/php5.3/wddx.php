@@ -4,7 +4,7 @@
 
 /**
  * Serialize a single value into a WDDX packet
- * @link http://php.net/manual/en/function.wddx-serialize-value.php
+ * @link http://www.php.net/manual/en/function.wddx-serialize-value.php
  * @param var mixed <p>
  * The value to be serialized
  * </p>
@@ -17,7 +17,7 @@ function wddx_serialize_value ($var, $comment = null) {}
 
 /**
  * Serialize variables into a WDDX packet
- * @link http://php.net/manual/en/function.wddx-serialize-vars.php
+ * @link http://www.php.net/manual/en/function.wddx-serialize-vars.php
  * @param var_name mixed <p>
  * Can be either a string naming a variable or an array containing
  * strings naming the variables or another array, etc.
@@ -29,7 +29,7 @@ function wddx_serialize_vars ($var_name, $_ = null) {}
 
 /**
  * Starts a new WDDX packet with structure inside it
- * @link http://php.net/manual/en/function.wddx-packet-start.php
+ * @link http://www.php.net/manual/en/function.wddx-packet-start.php
  * @param comment string[optional] <p>
  * An optional comment string.
  * </p>
@@ -39,7 +39,7 @@ function wddx_packet_start ($comment = null) {}
 
 /**
  * Ends a WDDX packet with the specified ID
- * @link http://php.net/manual/en/function.wddx-packet-end.php
+ * @link http://www.php.net/manual/en/function.wddx-packet-end.php
  * @param packet_id resource <p>
  * A WDDX packet, returned by wddx_packet_start.
  * </p>
@@ -49,7 +49,7 @@ function wddx_packet_end ($packet_id) {}
 
 /**
  * Add variables to a WDDX packet with the specified ID
- * @link http://php.net/manual/en/function.wddx-add-vars.php
+ * @link http://www.php.net/manual/en/function.wddx-add-vars.php
  * @param packet_id resource <p>
  * A WDDX packet, returned by wddx_packet_start.
  * </p>
@@ -64,7 +64,7 @@ function wddx_add_vars ($packet_id, $var_name, $_ = null) {}
 
 /**
  * &Alias; <function>wddx_unserialize</function>
- * @link http://php.net/manual/en/function.wddx-deserialize.php
+ * @link http://www.php.net/manual/en/function.wddx-deserialize.php
  * @param packet
  */
 function wddx_deserialize ($packet) {}

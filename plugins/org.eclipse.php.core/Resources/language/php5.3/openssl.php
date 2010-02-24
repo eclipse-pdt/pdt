@@ -4,7 +4,7 @@
 
 /**
  * Frees a private key
- * @link http://php.net/manual/en/function.openssl-pkey-free.php
+ * @link http://www.php.net/manual/en/function.openssl-pkey-free.php
  * @param key resource <p>
  * Resource holding the key.
  * </p>
@@ -14,7 +14,7 @@ function openssl_pkey_free ($key) {}
 
 /**
  * Generates a new private key
- * @link http://php.net/manual/en/function.openssl-pkey-new.php
+ * @link http://www.php.net/manual/en/function.openssl-pkey-new.php
  * @param configargs array[optional] <p>
  * You can finetune the key generation (such as specifying the number of
  * bits) using configargs. See
@@ -28,7 +28,7 @@ function openssl_pkey_new (array $configargs = null) {}
 
 /**
  * Gets an exportable representation of a key into a string
- * @link http://php.net/manual/en/function.openssl-pkey-export.php
+ * @link http://www.php.net/manual/en/function.openssl-pkey-export.php
  * @param key mixed <p>
  * </p>
  * @param out string <p>
@@ -48,7 +48,7 @@ function openssl_pkey_export ($key, &$out, $passphrase = null, array $configargs
 
 /**
  * Gets an exportable representation of a key into a file
- * @link http://php.net/manual/en/function.openssl-pkey-export-to-file.php
+ * @link http://www.php.net/manual/en/function.openssl-pkey-export-to-file.php
  * @param key mixed <p>
  * </p>
  * @param outfilename string <p>
@@ -70,7 +70,7 @@ function openssl_pkey_export_to_file ($key, $outfilename, $passphrase = null, ar
 
 /**
  * Get a private key
- * @link http://php.net/manual/en/function.openssl-pkey-get-private.php
+ * @link http://www.php.net/manual/en/function.openssl-pkey-get-private.php
  * @param key mixed <p>
  * key can be one of the following:
  * a string having the format
@@ -86,7 +86,7 @@ function openssl_pkey_get_private ($key, $passphrase = null) {}
 
 /**
  * Extract public key from certificate and prepare it for use
- * @link http://php.net/manual/en/function.openssl-pkey-get-public.php
+ * @link http://www.php.net/manual/en/function.openssl-pkey-get-public.php
  * @param certificate mixed <p>
  * certificate can be one of the following:
  * an X.509 certificate resource
@@ -96,7 +96,7 @@ function openssl_pkey_get_public ($certificate) {}
 
 /**
  * Returns an array with the key details
- * @link http://php.net/manual/en/function.openssl-pkey-get-details.php
+ * @link http://www.php.net/manual/en/function.openssl-pkey-get-details.php
  * @param key resource <p>
  * Resource holding the key.
  * </p>
@@ -113,7 +113,7 @@ function openssl_pkey_get_details ($key) {}
 
 /**
  * Free key resource
- * @link http://php.net/manual/en/function.openssl-free-key.php
+ * @link http://www.php.net/manual/en/function.openssl-free-key.php
  * @param key_identifier resource <p>
  * </p>
  * @return void 
@@ -122,29 +122,29 @@ function openssl_free_key ($key_identifier) {}
 
 /**
  * &Alias; <function>openssl_pkey_get_private</function>
- * @link http://php.net/manual/en/function.openssl-get-privatekey.php
+ * @link http://www.php.net/manual/en/function.openssl-get-privatekey.php
  */
 function openssl_get_privatekey () {}
 
 /**
  * &Alias; <function>openssl_pkey_get_public</function>
- * @link http://php.net/manual/en/function.openssl-get-publickey.php
+ * @link http://www.php.net/manual/en/function.openssl-get-publickey.php
  */
 function openssl_get_publickey () {}
 
 /**
  * Parse an X.509 certificate and return a resource identifier for
   it
- * @link http://php.net/manual/en/function.openssl-x509-read.php
+ * @link http://www.php.net/manual/en/function.openssl-x509-read.php
  * @param x509certdata mixed <p>
  * </p>
- * @return resource a resource identifier on success, or false on failure.
+ * @return resource a resource identifier on success&return.falseforfailure;.
  */
 function openssl_x509_read ($x509certdata) {}
 
 /**
  * Free certificate resource
- * @link http://php.net/manual/en/function.openssl-x509-free.php
+ * @link http://www.php.net/manual/en/function.openssl-x509-free.php
  * @param x509cert resource <p>
  * </p>
  * @return void 
@@ -153,7 +153,7 @@ function openssl_x509_free ($x509cert) {}
 
 /**
  * Parse an X509 certificate and return the information as an array
- * @link http://php.net/manual/en/function.openssl-x509-parse.php
+ * @link http://www.php.net/manual/en/function.openssl-x509-parse.php
  * @param x509cert mixed <p>
  * </p>
  * @param shortnames bool[optional] <p>
@@ -169,7 +169,7 @@ function openssl_x509_parse ($x509cert, $shortnames = null) {}
 
 /**
  * Verifies if a certificate can be used for a particular purpose
- * @link http://php.net/manual/en/function.openssl-x509-checkpurpose.php
+ * @link http://www.php.net/manual/en/function.openssl-x509-checkpurpose.php
  * @param x509cert mixed <p>
  * The examined certificate.
  * </p>
@@ -217,7 +217,7 @@ function openssl_x509_parse ($x509cert, $shortnames = null) {}
  * @param cainfo array[optional] <p>
  * cainfo should be an array of trusted CA files/dirs
  * as described in Certificate
- * Verification. It defaults to an empty array.
+ * Verification.
  * </p>
  * @param untrustedfile string[optional] <p>
  * If specified, this should be the name of a PEM encoded file holding
@@ -231,7 +231,7 @@ function openssl_x509_checkpurpose ($x509cert, $purpose, array $cainfo = null, $
 
 /**
  * Checks if a private key corresponds to a certificate
- * @link http://php.net/manual/en/function.openssl-x509-check-private-key.php
+ * @link http://www.php.net/manual/en/function.openssl-x509-check-private-key.php
  * @param cert mixed <p>
  * The certificate.
  * </p>
@@ -245,7 +245,7 @@ function openssl_x509_check_private_key ($cert, $key) {}
 
 /**
  * Exports a certificate as a string
- * @link http://php.net/manual/en/function.openssl-x509-export.php
+ * @link http://www.php.net/manual/en/function.openssl-x509-export.php
  * @param x509 mixed <p>
  * </p>
  * @param output string <p>
@@ -258,7 +258,7 @@ function openssl_x509_export ($x509, &$output, $notext = null) {}
 
 /**
  * Exports a certificate to file
- * @link http://php.net/manual/en/function.openssl-x509-export-to-file.php
+ * @link http://www.php.net/manual/en/function.openssl-x509-export-to-file.php
  * @param x509 mixed <p>
  * </p>
  * @param outfilename string <p>
@@ -271,7 +271,7 @@ function openssl_x509_export_to_file ($x509, $outfilename, $notext = null) {}
 
 /**
  * Exports a PKCS#12 Compatible Certificate Store File to variable.
- * @link http://php.net/manual/en/function.openssl-pkcs12-export.php
+ * @link http://www.php.net/manual/en/function.openssl-pkcs12-export.php
  * @param x509 mixed <p>
  * </p>
  * @param out string <p>
@@ -291,7 +291,7 @@ function openssl_pkcs12_export ($x509, &$out, $priv_key, $pass, array $args = nu
 
 /**
  * Exports a PKCS#12 Compatible Certificate Store File
- * @link http://php.net/manual/en/function.openssl-pkcs12-export-to-file.php
+ * @link http://www.php.net/manual/en/function.openssl-pkcs12-export-to-file.php
  * @param x509 mixed <p>
  * </p>
  * @param filename string <p>
@@ -311,7 +311,7 @@ function openssl_pkcs12_export_to_file ($x509, $filename, $priv_key, $pass, arra
 
 /**
  * Parse a PKCS#12 Certificate Store into an array
- * @link http://php.net/manual/en/function.openssl-pkcs12-read.php
+ * @link http://www.php.net/manual/en/function.openssl-pkcs12-read.php
  * @param pkcs12 string <p>
  * </p>
  * @param certs array <p>
@@ -326,7 +326,7 @@ function openssl_pkcs12_read ($pkcs12, array &$certs, $pass) {}
 
 /**
  * Generates a CSR
- * @link http://php.net/manual/en/function.openssl-csr-new.php
+ * @link http://www.php.net/manual/en/function.openssl-csr-new.php
  * @param dn array <p>
  * The Distinguished Name to be used in the certificate.
  * </p>
@@ -413,7 +413,7 @@ function openssl_csr_new (array $dn, &$privkey, array $configargs = null, array 
 
 /**
  * Exports a CSR as a string
- * @link http://php.net/manual/en/function.openssl-csr-export.php
+ * @link http://www.php.net/manual/en/function.openssl-csr-export.php
  * @param csr resource <p>
  * </p>
  * @param out string <p>
@@ -425,7 +425,7 @@ function openssl_csr_export ($csr, &$out, $notext = null) {}
 
 /**
  * Exports a CSR to a file
- * @link http://php.net/manual/en/function.openssl-csr-export-to-file.php
+ * @link http://www.php.net/manual/en/function.openssl-csr-export-to-file.php
  * @param csr resource <p>
  * </p>
  * @param outfilename string <p>
@@ -438,7 +438,7 @@ function openssl_csr_export_to_file ($csr, $outfilename, $notext = null) {}
 
 /**
  * Sign a CSR with another certificate (or itself) and generate a certificate
- * @link http://php.net/manual/en/function.openssl-csr-sign.php
+ * @link http://www.php.net/manual/en/function.openssl-csr-sign.php
  * @param csr mixed <p>
  * A CSR previously generated by openssl_csr_new.
  * It can also be the path to a PEM encoded CSR when specified as
@@ -473,7 +473,7 @@ function openssl_csr_sign ($csr, $cacert, $priv_key, $days, array $configargs = 
 
 /**
  * Returns the subject of a CERT
- * @link http://php.net/manual/en/function.openssl-csr-get-subject.php
+ * @link http://www.php.net/manual/en/function.openssl-csr-get-subject.php
  * @param csr mixed 
  * @param use_shortnames bool[optional] 
  * @return array 
@@ -482,7 +482,7 @@ function openssl_csr_get_subject ($csr, $use_shortnames = null) {}
 
 /**
  * Returns the public key of a CERT
- * @link http://php.net/manual/en/function.openssl-csr-get-public-key.php
+ * @link http://www.php.net/manual/en/function.openssl-csr-get-public-key.php
  * @param csr mixed 
  * @param use_shortnames bool[optional] 
  * @return resource 
@@ -491,7 +491,7 @@ function openssl_csr_get_public_key ($csr, $use_shortnames = null) {}
 
 /**
  * Computes a digest
- * @link http://php.net/manual/en/function.openssl-digest.php
+ * @link http://www.php.net/manual/en/function.openssl-digest.php
  * @param data string <p>
  * The data.
  * </p>
@@ -502,13 +502,13 @@ function openssl_csr_get_public_key ($csr, $use_shortnames = null) {}
  * Setting to true will return as raw output data, otherwise the return
  * value is binhex encoded.
  * </p>
- * @return string the digested hash value on success, or false on failure.
+ * @return string the digested hash value on success&return.falseforfailure;.
  */
 function openssl_digest ($data, $method, $raw_output = null) {}
 
 /**
  * Encrypts data
- * @link http://php.net/manual/en/function.openssl-encrypt.php
+ * @link http://www.php.net/manual/en/function.openssl-encrypt.php
  * @param data string <p>
  * The data.
  * </p>
@@ -522,13 +522,13 @@ function openssl_digest ($data, $method, $raw_output = null) {}
  * Setting to true will return as raw output data, otherwise the return
  * value is base64 encoded.
  * </p>
- * @return string the encrypted string on success, or false on failure.
+ * @return string the encrypted string on success&return.falseforfailure;.
  */
 function openssl_encrypt ($data, $method, $password, $raw_output = null) {}
 
 /**
  * Decrypts data
- * @link http://php.net/manual/en/function.openssl-decrypt.php
+ * @link http://www.php.net/manual/en/function.openssl-decrypt.php
  * @param data string <p>
  * The data.
  * </p>
@@ -543,13 +543,13 @@ function openssl_encrypt ($data, $method, $password, $raw_output = null) {}
  * otherwise a base64 string is assumed for the
  * data parameter.
  * </p>
- * @return string The decrypted string on success, or false on failure.
+ * @return string The decrypted string on success&return.falseforfailure;.
  */
 function openssl_decrypt ($data, $method, $password, $raw_input = null) {}
 
 /**
  * Generate signature
- * @link http://php.net/manual/en/function.openssl-sign.php
+ * @link http://www.php.net/manual/en/function.openssl-sign.php
  * @param data string <p>
  * </p>
  * @param signature string <p>
@@ -559,8 +559,7 @@ function openssl_decrypt ($data, $method, $password, $raw_input = null) {}
  * @param priv_key_id mixed <p>
  * </p>
  * @param signature_alg int[optional] <p>
- * Defaults to OPENSSL_ALGO_SHA1. For more
- * information see the list of Signature Algorithms.
+ * For more information see the list of Signature Algorithms.
  * </p>
  * @return bool Returns true on success or false on failure.
  */
@@ -568,7 +567,7 @@ function openssl_sign ($data, &$signature, $priv_key_id, $signature_alg = null) 
 
 /**
  * Verify signature
- * @link http://php.net/manual/en/function.openssl-verify.php
+ * @link http://www.php.net/manual/en/function.openssl-verify.php
  * @param data string <p>
  * </p>
  * @param signature string <p>
@@ -576,8 +575,7 @@ function openssl_sign ($data, &$signature, $priv_key_id, $signature_alg = null) 
  * @param pub_key_id mixed <p>
  * </p>
  * @param signature_alg int[optional] <p>
- * Defaults to OPENSSL_ALGO_SHA1. For more
- * information see the list of Signature Algorithms.
+ * For more information see the list of Signature Algorithms.
  * </p>
  * @return int 1 if the signature is correct, 0 if it is incorrect, and
  * -1 on error.
@@ -586,7 +584,7 @@ function openssl_verify ($data, $signature, $pub_key_id, $signature_alg = null) 
 
 /**
  * Seal (encrypt) data
- * @link http://php.net/manual/en/function.openssl-seal.php
+ * @link http://www.php.net/manual/en/function.openssl-seal.php
  * @param data string <p>
  * </p>
  * @param sealed_data string <p>
@@ -604,7 +602,7 @@ function openssl_seal ($data, &$sealed_data, array &$env_keys, array $pub_key_id
 
 /**
  * Open sealed data
- * @link http://php.net/manual/en/function.openssl-open.php
+ * @link http://www.php.net/manual/en/function.openssl-open.php
  * @param sealed_data string <p>
  * </p>
  * @param open_data string <p>
@@ -621,7 +619,7 @@ function openssl_open ($sealed_data, &$open_data, $env_key, $priv_key_id) {}
 
 /**
  * Verifies the signature of an S/MIME signed message
- * @link http://php.net/manual/en/function.openssl-pkcs7-verify.php
+ * @link http://www.php.net/manual/en/function.openssl-pkcs7-verify.php
  * @param filename string <p>
  * Path to the message.
  * </p>
@@ -658,7 +656,7 @@ function openssl_pkcs7_verify ($filename, $flags, $outfilename = null, array $ca
 
 /**
  * Decrypts an S/MIME encrypted message
- * @link http://php.net/manual/en/function.openssl-pkcs7-decrypt.php
+ * @link http://www.php.net/manual/en/function.openssl-pkcs7-decrypt.php
  * @param infilename string <p>
  * </p>
  * @param outfilename string <p>
@@ -675,7 +673,7 @@ function openssl_pkcs7_decrypt ($infilename, $outfilename, $recipcert, $recipkey
 
 /**
  * Sign an S/MIME message
- * @link http://php.net/manual/en/function.openssl-pkcs7-sign.php
+ * @link http://www.php.net/manual/en/function.openssl-pkcs7-sign.php
  * @param infilename string <p>
  * </p>
  * @param outfilename string <p>
@@ -688,11 +686,10 @@ function openssl_pkcs7_decrypt ($infilename, $outfilename, $recipcert, $recipkey
  * headers is an array of headers that
  * will be prepended to the data after it has been signed (see
  * openssl_pkcs7_encrypt for more information about
- * the format of this parameter.
+ * the format of this parameter).
  * </p>
  * @param flags int[optional] <p>
- * flags can be used to alter the output - see PKCS7 constants - if not specified,
- * it defaults to PKCS7_DETACHED.
+ * flags can be used to alter the output - see PKCS7 constants.
  * </p>
  * @param extracerts string[optional] <p>
  * extracerts specifies the name of a file containing
@@ -705,7 +702,7 @@ function openssl_pkcs7_sign ($infilename, $outfilename, $signcert, $privkey, arr
 
 /**
  * Encrypt an S/MIME message
- * @link http://php.net/manual/en/function.openssl-pkcs7-encrypt.php
+ * @link http://www.php.net/manual/en/function.openssl-pkcs7-encrypt.php
  * @param infile string <p>
  * </p>
  * @param outfile string <p>
@@ -736,7 +733,7 @@ function openssl_pkcs7_encrypt ($infile, $outfile, $recipcerts, array $headers, 
 
 /**
  * Encrypts data with private key
- * @link http://php.net/manual/en/function.openssl-private-encrypt.php
+ * @link http://www.php.net/manual/en/function.openssl-private-encrypt.php
  * @param data string <p>
  * </p>
  * @param crypted string <p>
@@ -744,8 +741,8 @@ function openssl_pkcs7_encrypt ($infile, $outfile, $recipcerts, array $headers, 
  * @param key mixed <p>
  * </p>
  * @param padding int[optional] <p>
- * padding defaults to 
- * OPENSSL_PKCS1_PADDING, but can also be
+ * padding can be one of
+ * OPENSSL_PKCS1_PADDING,
  * OPENSSL_NO_PADDING.
  * </p>
  * @return bool Returns true on success or false on failure.
@@ -754,7 +751,7 @@ function openssl_private_encrypt ($data, &$crypted, $key, $padding = null) {}
 
 /**
  * Decrypts data with private key
- * @link http://php.net/manual/en/function.openssl-private-decrypt.php
+ * @link http://www.php.net/manual/en/function.openssl-private-decrypt.php
  * @param data string <p>
  * </p>
  * @param decrypted string <p>
@@ -764,8 +761,8 @@ function openssl_private_encrypt ($data, &$crypted, $key, $padding = null) {}
  * was used to encrypt the data. 
  * </p>
  * @param padding int[optional] <p>
- * padding defaults to
- * OPENSSL_PKCS1_PADDING, but can also be one of
+ * padding can be one of
+ * OPENSSL_PKCS1_PADDING,
  * OPENSSL_SSLV23_PADDING,
  * OPENSSL_PKCS1_OAEP_PADDING,
  * OPENSSL_NO_PADDING.
@@ -776,7 +773,7 @@ function openssl_private_decrypt ($data, &$decrypted, $key, $padding = null) {}
 
 /**
  * Encrypts data with public key
- * @link http://php.net/manual/en/function.openssl-public-encrypt.php
+ * @link http://www.php.net/manual/en/function.openssl-public-encrypt.php
  * @param data string <p>
  * </p>
  * @param crypted string <p>
@@ -786,8 +783,8 @@ function openssl_private_decrypt ($data, &$decrypted, $key, $padding = null) {}
  * The public key.
  * </p>
  * @param padding int[optional] <p>
- * padding defaults to 
- * OPENSSL_PKCS1_PADDING, but can also be one of 
+ * padding can be one of
+ * OPENSSL_PKCS1_PADDING,
  * OPENSSL_SSLV23_PADDING,
  * OPENSSL_PKCS1_OAEP_PADDING,
  * OPENSSL_NO_PADDING.
@@ -798,7 +795,7 @@ function openssl_public_encrypt ($data, &$crypted, $key, $padding = null) {}
 
 /**
  * Decrypts data with public key
- * @link http://php.net/manual/en/function.openssl-public-decrypt.php
+ * @link http://www.php.net/manual/en/function.openssl-public-decrypt.php
  * @param data string <p>
  * </p>
  * @param decrypted string <p>
@@ -808,8 +805,8 @@ function openssl_public_encrypt ($data, &$crypted, $key, $padding = null) {}
  * was used to encrypt the data. 
  * </p>
  * @param padding int[optional] <p>
- * padding defaults to
- * OPENSSL_PKCS1_PADDING, but can also be
+ * padding can be one of
+ * OPENSSL_PKCS1_PADDING,
  * OPENSSL_NO_PADDING.
  * </p>
  * @return bool Returns true on success or false on failure.
@@ -818,7 +815,7 @@ function openssl_public_decrypt ($data, &$decrypted, $key, $padding = null) {}
 
 /**
  * Gets available digest methods
- * @link http://php.net/manual/en/function.openssl-get-md-methods.php
+ * @link http://www.php.net/manual/en/function.openssl-get-md-methods.php
  * @param aliases bool[optional] <p>
  * Set to true if digest aliases should be included within the
  * returned array.
@@ -829,7 +826,7 @@ function openssl_get_md_methods ($aliases = null) {}
 
 /**
  * Gets available cipher methods
- * @link http://php.net/manual/en/function.openssl-get-cipher-methods.php
+ * @link http://www.php.net/manual/en/function.openssl-get-cipher-methods.php
  * @param aliases bool[optional] <p>
  * Set to true if cipher aliases should be included within the
  * returned array.
@@ -840,20 +837,20 @@ function openssl_get_cipher_methods ($aliases = null) {}
 
 /**
  * Computes shared secret for public value of remote DH key and local DH key
- * @link http://php.net/manual/en/function.openssl-dh-compute-key.php
+ * @link http://www.php.net/manual/en/function.openssl-dh-compute-key.php
  * @param pub_key string <p>
  * Public key
  * </p>
  * @param dh_key resource <p>
  * DH key
  * </p>
- * @return string computed key on success or false on failure.
+ * @return string computed key on success&return.falseforfailure;.
  */
 function openssl_dh_compute_key ($pub_key, $dh_key) {}
 
 /**
  * Generate a pseudo-random string
- * @link http://php.net/manual/en/function.openssl-random-pseudo-bytes.php
+ * @link http://www.php.net/manual/en/function.openssl-random-pseudo-bytes.php
  * @param length string <p>
  * The length of the desired string. Must be a positive integer. PHP will
  * try to cast this parameter to a non-null integer to use it. 
@@ -862,20 +859,20 @@ function openssl_dh_compute_key ($pub_key, $dh_key) {}
  * If a strong algorithm was used, or not, as a boolean.
  * This parameter will be &null; if an error occurrs.
  * </p>
- * @return bool the generated &string; in cas of success, or false in case of error.
+ * @return string the generated &string; in case of success, &return.falseforfailure;.
  */
 function openssl_random_pseudo_bytes ($length, $strong) {}
 
 /**
  * Return openSSL error message
- * @link http://php.net/manual/en/function.openssl-error-string.php
+ * @link http://www.php.net/manual/en/function.openssl-error-string.php
  * @return string an error message string, or false if there are no more error
  * messages to return.
  */
 function openssl_error_string () {}
 
-define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8k 25 Mar 2009");
-define ('OPENSSL_VERSION_NUMBER', 9470143);
+define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8d 28 Sep 2006");
+define ('OPENSSL_VERSION_NUMBER', 9470031);
 define ('X509_PURPOSE_SSL_CLIENT', 1);
 define ('X509_PURPOSE_SSL_SERVER', 2);
 define ('X509_PURPOSE_NS_SSL_SERVER', 3);
@@ -883,98 +880,19 @@ define ('X509_PURPOSE_SMIME_SIGN', 4);
 define ('X509_PURPOSE_SMIME_ENCRYPT', 5);
 define ('X509_PURPOSE_CRL_SIGN', 6);
 define ('X509_PURPOSE_ANY', 7);
-
-/**
- * Used as default algorithm by openssl_sign and
- * openssl_verify.
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('OPENSSL_ALGO_SHA1', 1);
 define ('OPENSSL_ALGO_MD5', 2);
 define ('OPENSSL_ALGO_MD4', 3);
 define ('OPENSSL_ALGO_MD2', 4);
 define ('OPENSSL_ALGO_DSS1', 5);
-
-/**
- * When signing a message, use cleartext signing with the MIME
- * type "multipart/signed". This is the default
- * if you do not specify any flags to
- * openssl_pkcs7_sign.
- * If you turn this option off, the message will be signed using
- * opaque signing, which is more resistant to translation by mail relays
- * but cannot be read by mail agents that do not support S/MIME.
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('PKCS7_DETACHED', 64);
-
-/**
- * Adds text/plain content type headers to encrypted/signed
- * message. If decrypting or verifying, it strips those headers from
- * the output - if the decrypted or verified message is not of MIME type
- * text/plain then an error will occur.
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('PKCS7_TEXT', 1);
-
-/**
- * When verifying a message, certificates (if
- * any) included in the message are normally searched for the
- * signing certificate. With this option only the
- * certificates specified in the extracerts
- * parameter of openssl_pkcs7_verify are
- * used. The supplied certificates can still be used as
- * untrusted CAs however.
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('PKCS7_NOINTERN', 16);
-
-/**
- * Do not verify the signers certificate of a signed
- * message.
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('PKCS7_NOVERIFY', 32);
-
-/**
- * Do not chain verification of signers certificates: that is
- * don't use the certificates in the signed message as untrusted CAs.
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('PKCS7_NOCHAIN', 8);
-
-/**
- * When signing a message the signer's certificate is normally
- * included - with this option it is excluded. This will reduce the
- * size of the signed message but the verifier must have a copy of the
- * signers certificate available locally (passed using the
- * extracerts to
- * openssl_pkcs7_verify for example).
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('PKCS7_NOCERTS', 2);
-
-/**
- * Normally when a message is signed, a set of attributes are
- * included which include the signing time and the supported symmetric
- * algorithms. With this option they are not included.
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('PKCS7_NOATTR', 256);
-
-/**
- * Normally the input message is converted to "canonical" format
- * which is effectively using CR and LF
- * as end of line: as required by the S/MIME specification. When this
- * options is present, no translation occurs. This is useful when
- * handling binary data which may not be in MIME format.
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('PKCS7_BINARY', 128);
-
-/**
- * Don't try and verify the signatures on a message
- * @link http://php.net/manual/en/openssl.constants.php
- */
 define ('PKCS7_NOSIGS', 4);
 define ('OPENSSL_PKCS1_PADDING', 1);
 define ('OPENSSL_SSLV23_PADDING', 2);

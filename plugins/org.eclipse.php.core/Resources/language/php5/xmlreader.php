@@ -29,14 +29,14 @@ class XMLReader  {
 
 	/**
 	 * Close the XMLReader input
-	 * @link http://php.net/manual/en/xmlreader.close.php
+	 * @link http://www.php.net/manual/en/xmlreader.close.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function close () {}
 
 	/**
 	 * Get the value of a named attribute
-	 * @link http://php.net/manual/en/xmlreader.getattribute.php
+	 * @link http://www.php.net/manual/en/xmlreader.getattribute.php
 	 * @param name string <p>
 	 * The name of the attribute.
 	 * </p>
@@ -47,7 +47,7 @@ class XMLReader  {
 
 	/**
 	 * Get the value of an attribute by index
-	 * @link http://php.net/manual/en/xmlreader.getattributeno.php
+	 * @link http://www.php.net/manual/en/xmlreader.getattributeno.php
 	 * @param index int <p>
 	 * The position of the attribute.
 	 * </p>
@@ -58,7 +58,7 @@ class XMLReader  {
 
 	/**
 	 * Get the value of an attribute by localname and URI
-	 * @link http://php.net/manual/en/xmlreader.getattributens.php
+	 * @link http://www.php.net/manual/en/xmlreader.getattributens.php
 	 * @param localName string <p>
 	 * The local name.
 	 * </p>
@@ -73,7 +73,7 @@ class XMLReader  {
 
 	/**
 	 * Indicates if specified property has been set
-	 * @link http://php.net/manual/en/xmlreader.getparserproperty.php
+	 * @link http://www.php.net/manual/en/xmlreader.getparserproperty.php
 	 * @param property int <p>
 	 * One of the parser option 
 	 * constants.
@@ -84,14 +84,14 @@ class XMLReader  {
 
 	/**
 	 * Indicates if the parsed document is valid
-	 * @link http://php.net/manual/en/xmlreader.isvalid.php
+	 * @link http://www.php.net/manual/en/xmlreader.isvalid.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function isValid () {}
 
 	/**
 	 * Lookup namespace for a prefix
-	 * @link http://php.net/manual/en/xmlreader.lookupnamespace.php
+	 * @link http://www.php.net/manual/en/xmlreader.lookupnamespace.php
 	 * @param prefix string <p>
 	 * String containing the prefix.
 	 * </p>
@@ -101,7 +101,7 @@ class XMLReader  {
 
 	/**
 	 * Move cursor to an attribute by index
-	 * @link http://php.net/manual/en/xmlreader.movetoattributeno.php
+	 * @link http://www.php.net/manual/en/xmlreader.movetoattributeno.php
 	 * @param index int <p>
 	 * The position of the attribute.
 	 * </p>
@@ -111,7 +111,7 @@ class XMLReader  {
 
 	/**
 	 * Move cursor to a named attribute
-	 * @link http://php.net/manual/en/xmlreader.movetoattribute.php
+	 * @link http://www.php.net/manual/en/xmlreader.movetoattribute.php
 	 * @param name string <p>
 	 * The name of the attribute.
 	 * </p>
@@ -121,7 +121,7 @@ class XMLReader  {
 
 	/**
 	 * Move cursor to a named attribute
-	 * @link http://php.net/manual/en/xmlreader.movetoattributens.php
+	 * @link http://www.php.net/manual/en/xmlreader.movetoattributens.php
 	 * @param localName string <p>
 	 * The local name.
 	 * </p>
@@ -134,7 +134,7 @@ class XMLReader  {
 
 	/**
 	 * Position cursor on the parent Element of current Attribute
-	 * @link http://php.net/manual/en/xmlreader.movetoelement.php
+	 * @link http://www.php.net/manual/en/xmlreader.movetoelement.php
 	 * @return bool true if successful and false if it fails or not positioned on 
 	 * Attribute when this method is called.
 	 */
@@ -142,21 +142,21 @@ class XMLReader  {
 
 	/**
 	 * Position cursor on the first Attribute
-	 * @link http://php.net/manual/en/xmlreader.movetofirstattribute.php
+	 * @link http://www.php.net/manual/en/xmlreader.movetofirstattribute.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function moveToFirstAttribute () {}
 
 	/**
 	 * Position cursor on the next Attribute
-	 * @link http://php.net/manual/en/xmlreader.movetonextattribute.php
+	 * @link http://www.php.net/manual/en/xmlreader.movetonextattribute.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function moveToNextAttribute () {}
 
 	/**
 	 * Set the URI containing the XML to parse
-	 * @link http://php.net/manual/en/xmlreader.open.php
+	 * @link http://www.php.net/manual/en/xmlreader.open.php
 	 * @param URI string <p>
 	 * URI pointing to the document.
 	 * </p>
@@ -173,14 +173,14 @@ class XMLReader  {
 
 	/**
 	 * Move to next node in document
-	 * @link http://php.net/manual/en/xmlreader.read.php
+	 * @link http://www.php.net/manual/en/xmlreader.read.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function read () {}
 
 	/**
 	 * Move cursor to next node skipping all subtrees
-	 * @link http://php.net/manual/en/xmlreader.next.php
+	 * @link http://www.php.net/manual/en/xmlreader.next.php
 	 * @param localname string[optional] <p>
 	 * The name of the next node to move to.
 	 * </p>
@@ -190,21 +190,21 @@ class XMLReader  {
 
 	/**
 	 * Retrieve XML from current node
-	 * @link http://php.net/manual/en/xmlreader.readinnerxml.php
+	 * @link http://www.php.net/manual/en/xmlreader.readinnerxml.php
 	 * @return string the contents of the current node as a string. Empty string on failure.
 	 */
 	public function readInnerXml () {}
 
 	/**
 	 * Retrieve XML from current node, including it self
-	 * @link http://php.net/manual/en/xmlreader.readouterxml.php
+	 * @link http://www.php.net/manual/en/xmlreader.readouterxml.php
 	 * @return string the contents of current node, including itself, as a string. Empty string on failure.
 	 */
 	public function readOuterXml () {}
 
 	/**
 	 * Reads the contents of the current node as an string
-	 * @link http://php.net/manual/en/xmlreader.readstring.php
+	 * @link http://www.php.net/manual/en/xmlreader.readstring.php
 	 * @return string the content of the current node as a string. Empty string on
 	 * failure.
 	 */
@@ -212,7 +212,7 @@ class XMLReader  {
 
 	/**
 	 * Validate document against XSD
-	 * @link http://php.net/manual/en/xmlreader.setschema.php
+	 * @link http://www.php.net/manual/en/xmlreader.setschema.php
 	 * @param filename string <p>
 	 * The filename of the XSD schema.
 	 * </p>
@@ -222,7 +222,7 @@ class XMLReader  {
 
 	/**
 	 * Set or Unset parser options
-	 * @link http://php.net/manual/en/xmlreader.setparserproperty.php
+	 * @link http://www.php.net/manual/en/xmlreader.setparserproperty.php
 	 * @param property int <p>
 	 * One of the parser option 
 	 * constants.
@@ -237,7 +237,7 @@ class XMLReader  {
 
 	/**
 	 * Set the filename or URI for a RelaxNG Schema
-	 * @link http://php.net/manual/en/xmlreader.setrelaxngschema.php
+	 * @link http://www.php.net/manual/en/xmlreader.setrelaxngschema.php
 	 * @param filename string <p>
 	 * filename or URI pointing to a RelaxNG Schema.
 	 * </p>
@@ -247,7 +247,7 @@ class XMLReader  {
 
 	/**
 	 * Set the data containing a RelaxNG Schema
-	 * @link http://php.net/manual/en/xmlreader.setrelaxngschemasource.php
+	 * @link http://www.php.net/manual/en/xmlreader.setrelaxngschemasource.php
 	 * @param source string <p>
 	 * String containing the RelaxNG Schema.
 	 * </p>
@@ -257,7 +257,7 @@ class XMLReader  {
 
 	/**
 	 * Set the data containing the XML to parse
-	 * @link http://php.net/manual/en/xmlreader.xml.php
+	 * @link http://www.php.net/manual/en/xmlreader.xml.php
 	 * @param source string <p>
 	 * String containing the XML to be parsed.
 	 * </p>
@@ -274,7 +274,7 @@ class XMLReader  {
 
 	/**
 	 * Returns a copy of the current node as a DOM object
-	 * @link http://php.net/manual/en/xmlreader.expand.php
+	 * @link http://www.php.net/manual/en/xmlreader.expand.php
 	 * @return DOMNode The resulting DOMNode or false on error.
 	 */
 	public function expand () {}

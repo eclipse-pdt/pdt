@@ -6,17 +6,18 @@ class XSLTProcessor  {
 
 	/**
 	 * Import stylesheet
-	 * @link http://php.net/manual/en/xsltprocessor.importstylesheet.php
-	 * @param stylesheet DOMDocument <p>
-	 * The imported style sheet as a DOMDocument object.
+	 * @link http://www.php.net/manual/en/xsltprocessor.importstylesheet.php
+	 * @param stylesheet object <p>
+	 * The imported style sheet as a DOMDocument or
+	 * SimpleXMLElement object.
 	 * </p>
 	 * @return void 
 	 */
-	public function importStylesheet (DOMDocument $stylesheet) {}
+	public function importStylesheet ($stylesheet) {}
 
 	/**
 	 * Transform to a DOMDocument
-	 * @link http://php.net/manual/en/xsltprocessor.transformtodoc.php
+	 * @link http://www.php.net/manual/en/xsltprocessor.transformtodoc.php
 	 * @param doc DOMNode <p>
 	 * The node to be transformed.
 	 * </p>
@@ -26,7 +27,7 @@ class XSLTProcessor  {
 
 	/**
 	 * Transform to URI
-	 * @link http://php.net/manual/en/xsltprocessor.transformtouri.php
+	 * @link http://www.php.net/manual/en/xsltprocessor.transformtouri.php
 	 * @param doc DOMDocument <p>
 	 * The transformed document.
 	 * </p>
@@ -38,7 +39,7 @@ class XSLTProcessor  {
 
 	/**
 	 * Transform to XML
-	 * @link http://php.net/manual/en/xsltprocessor.transformtoxml.php
+	 * @link http://www.php.net/manual/en/xsltprocessor.transformtoxml.php
 	 * @param doc DOMDocument <p>
 	 * The transformed document.
 	 * </p>
@@ -48,7 +49,7 @@ class XSLTProcessor  {
 
 	/**
 	 * Set value for a parameter
-	 * @link http://php.net/manual/en/xsltprocessor.setparameter.php
+	 * @link http://www.php.net/manual/en/xsltprocessor.setparameter.php
 	 * @param namespace string <p>
 	 * The namespace URI of the XSLT parameter.
 	 * </p>
@@ -62,7 +63,7 @@ class XSLTProcessor  {
 
 	/**
 	 * Get value of a parameter
-	 * @link http://php.net/manual/en/xsltprocessor.getparameter.php
+	 * @link http://www.php.net/manual/en/xsltprocessor.getparameter.php
 	 * @param namespaceURI string <p>
 	 * The namespace URI of the XSLT parameter.
 	 * </p>
@@ -75,7 +76,7 @@ class XSLTProcessor  {
 
 	/**
 	 * Remove parameter
-	 * @link http://php.net/manual/en/xsltprocessor.removeparameter.php
+	 * @link http://www.php.net/manual/en/xsltprocessor.removeparameter.php
 	 * @param namespaceURI string <p>
 	 * The namespace URI of the XSLT parameter.
 	 * </p>
@@ -88,14 +89,14 @@ class XSLTProcessor  {
 
 	/**
 	 * Determine if PHP has EXSLT support
-	 * @link http://php.net/manual/en/xsltprocessor.hasexsltsupport.php
+	 * @link http://www.php.net/manual/en/xsltprocessor.hasexsltsupport.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function hasExsltSupport () {}
 
 	/**
 	 * Enables the ability to use PHP functions as XSLT functions
-	 * @link http://php.net/manual/en/xsltprocessor.registerphpfunctions.php
+	 * @link http://www.php.net/manual/en/xsltprocessor.registerphpfunctions.php
 	 * @param restrict mixed[optional] <p>
 	 * Use this parameter to only allow certain functions to be called from 
 	 * XSLT.
@@ -110,7 +111,7 @@ class XSLTProcessor  {
 
 	/**
 	 * Sets profiling output file
-	 * @link http://php.net/manual/en/xsltprocessor.setprofiling.php
+	 * @link http://www.php.net/manual/en/xsltprocessor.setprofiling.php
 	 * @param filename string <p>
 	 * Path to the file to dump profiling information.
 	 * </p>
@@ -122,30 +123,10 @@ class XSLTProcessor  {
 define ('XSL_CLONE_AUTO', 0);
 define ('XSL_CLONE_NEVER', -1);
 define ('XSL_CLONE_ALWAYS', 1);
-
-/**
- * libxslt version like 10117. Available as of PHP 5.1.2.
- * @link http://php.net/manual/en/xsl.constants.php
- */
-define ('LIBXSLT_VERSION', 10123);
-
-/**
- * libxslt version like 1.1.17. Available as of PHP 5.1.2.
- * @link http://php.net/manual/en/xsl.constants.php
- */
-define ('LIBXSLT_DOTTED_VERSION', "1.1.23");
-
-/**
- * libexslt version like 813. Available as of PHP 5.1.2.
- * @link http://php.net/manual/en/xsl.constants.php
- */
+define ('LIBXSLT_VERSION', 10124);
+define ('LIBXSLT_DOTTED_VERSION', "1.1.24");
 define ('LIBEXSLT_VERSION', 813);
-
-/**
- * libexslt version like 1.1.17. Available as of PHP 5.1.2.
- * @link http://php.net/manual/en/xsl.constants.php
- */
-define ('LIBEXSLT_DOTTED_VERSION', "1.1.23");
+define ('LIBEXSLT_DOTTED_VERSION', "0.8.13");
 
 // End of xsl v.0.1
 ?>

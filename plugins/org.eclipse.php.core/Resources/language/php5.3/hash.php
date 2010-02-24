@@ -4,7 +4,7 @@
 
 /**
  * Generate a hash value (message digest)
- * @link http://php.net/manual/en/function.hash.php
+ * @link http://www.php.net/manual/en/function.hash.php
  * @param algo string <p>
  * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
  * </p>
@@ -13,7 +13,7 @@
  * </p>
  * @param raw_output bool[optional] <p>
  * When set to true, outputs raw binary data.
- * Default value (false) outputs lowercase hexits.
+ * false outputs lowercase hexits.
  * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
@@ -23,7 +23,7 @@ function hash ($algo, $data, $raw_output = null) {}
 
 /**
  * Generate a hash value using the contents of a given file
- * @link http://php.net/manual/en/function.hash-file.php
+ * @link http://www.php.net/manual/en/function.hash-file.php
  * @param algo string <p>
  * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
  * </p>
@@ -32,7 +32,7 @@ function hash ($algo, $data, $raw_output = null) {}
  * </p>
  * @param raw_output bool[optional] <p>
  * When set to true, outputs raw binary data.
- * Default value (false) outputs lowercase hexits.
+ * false outputs lowercase hexits.
  * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
@@ -42,9 +42,9 @@ function hash_file ($algo, $filename, $raw_output = null) {}
 
 /**
  * Generate a keyed hash value using the HMAC method
- * @link http://php.net/manual/en/function.hash-hmac.php
+ * @link http://www.php.net/manual/en/function.hash-hmac.php
  * @param algo string <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
  * </p>
  * @param data string <p>
  * Message to be hashed.
@@ -54,7 +54,7 @@ function hash_file ($algo, $filename, $raw_output = null) {}
  * </p>
  * @param raw_output bool[optional] <p>
  * When set to true, outputs raw binary data.
- * Default value (false) outputs lowercase hexits.
+ * false outputs lowercase hexits.
  * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
@@ -64,9 +64,9 @@ function hash_hmac ($algo, $data, $key, $raw_output = null) {}
 
 /**
  * Generate a keyed hash value using the HMAC method and the contents of a given file
- * @link http://php.net/manual/en/function.hash-hmac-file.php
+ * @link http://www.php.net/manual/en/function.hash-hmac-file.php
  * @param algo string <p>
- * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
+ * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..) See hash_algos for a list of supported algorithms.
  * </p>
  * @param filename string <p>
  * URL describing location of file to be hashed; Supports fopen wrappers.
@@ -76,7 +76,7 @@ function hash_hmac ($algo, $data, $key, $raw_output = null) {}
  * </p>
  * @param raw_output bool[optional] <p>
  * When set to true, outputs raw binary data.
- * Default value (false) outputs lowercase hexits.
+ * false outputs lowercase hexits.
  * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
@@ -86,7 +86,7 @@ function hash_hmac_file ($algo, $filename, $key, $raw_output = null) {}
 
 /**
  * Initialize an incremental hashing context
- * @link http://php.net/manual/en/function.hash-init.php
+ * @link http://www.php.net/manual/en/function.hash-init.php
  * @param algo string <p>
  * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
  * </p>
@@ -108,7 +108,7 @@ function hash_init ($algo, $options = null, $key = null) {}
 
 /**
  * Pump data into an active hashing context
- * @link http://php.net/manual/en/function.hash-update.php
+ * @link http://www.php.net/manual/en/function.hash-update.php
  * @param context resource <p>
  * Hashing context returned by hash_init.
  * </p>
@@ -121,7 +121,7 @@ function hash_update ($context, $data) {}
 
 /**
  * Pump data into an active hashing context from an open stream
- * @link http://php.net/manual/en/function.hash-update-stream.php
+ * @link http://www.php.net/manual/en/function.hash-update-stream.php
  * @param context resource <p>
  * Hashing context returned by hash_init.
  * </p>
@@ -138,7 +138,7 @@ function hash_update_stream ($context, $handle, $length = null) {}
 
 /**
  * Pump data into an active hashing context from a file
- * @link http://php.net/manual/en/function.hash-update-file.php
+ * @link http://www.php.net/manual/en/function.hash-update-file.php
  * @param context resource <p>
  * Stream context as returned by stream_context_create.
  * </p>
@@ -152,13 +152,13 @@ function hash_update_file ($context, $filename, $context = null) {}
 
 /**
  * Finalize an incremental hash and return resulting digest
- * @link http://php.net/manual/en/function.hash-final.php
+ * @link http://www.php.net/manual/en/function.hash-final.php
  * @param context resource <p>
  * Hashing context returned by hash_init.
  * </p>
  * @param raw_output bool[optional] <p>
  * When set to true, outputs raw binary data.
- * Default value (false) outputs lowercase hexits.
+ * false outputs lowercase hexits.
  * </p>
  * @return string a string containing the calculated message digest as lowercase hexits
  * unless raw_output is set to true in which case the raw
@@ -168,7 +168,7 @@ function hash_final ($context, $raw_output = null) {}
 
 /**
  * Copy hashing context
- * @link http://php.net/manual/en/function.hash-copy.php
+ * @link http://www.php.net/manual/en/function.hash-copy.php
  * @param context resource <p>
  * Hashing context returned by hash_init.
  * </p>
@@ -178,19 +178,12 @@ function hash_copy ($context) {}
 
 /**
  * Return a list of registered hashing algorithms
- * @link http://php.net/manual/en/function.hash-algos.php
+ * @link http://www.php.net/manual/en/function.hash-algos.php
  * @return array a numerically indexed array containing the list of supported
  * hashing algorithms.
  */
 function hash_algos () {}
 
-
-/**
- * Optional flag for hash_init.
- * Indicates that the HMAC digest-keying algorithm should be
- * applied to the current hashing context.
- * @link http://php.net/manual/en/hash.constants.php
- */
 define ('HASH_HMAC', 1);
 
 // End of hash v.1.0

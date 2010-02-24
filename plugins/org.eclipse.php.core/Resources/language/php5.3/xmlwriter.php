@@ -6,7 +6,7 @@ class XMLWriter  {
 
 	/**
 	 * Create new xmlwriter using source uri for output
-	 * @link http://php.net/manual/en/function.xmlwriter-open-uri.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-open-uri.php
 	 * @param uri string <p>
 	 * The URI of the resource for the output.
 	 * </p>
@@ -20,7 +20,7 @@ class XMLWriter  {
 
 	/**
 	 * Create new xmlwriter using memory for string output
-	 * @link http://php.net/manual/en/function.xmlwriter-open-memory.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-open-memory.php
 	 * @return bool &style.oop;: Returns true on success or false on failure.
 	 * </p>
 	 * <p>
@@ -31,9 +31,9 @@ class XMLWriter  {
 
 	/**
 	 * Toggle indentation on/off
-	 * @link http://php.net/manual/en/function.xmlwriter-set-indent.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-set-indent.php
 	 * @param indent bool <p>
-	 * Whether indentation is enabled. Defaults to false.
+	 * Whether indentation is enabled.
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 */
@@ -41,7 +41,7 @@ class XMLWriter  {
 
 	/**
 	 * Set string used for indenting
-	 * @link http://php.net/manual/en/function.xmlwriter-set-indent-string.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-set-indent-string.php
 	 * @param indentString string <p>
 	 * The indentation string.
 	 * </p>
@@ -51,21 +51,21 @@ class XMLWriter  {
 
 	/**
 	 * Create start comment
-	 * @link http://php.net/manual/en/function.xmlwriter-start-comment.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-comment.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function startComment () {}
 
 	/**
 	 * Create end comment
-	 * @link http://php.net/manual/en/function.xmlwriter-end-comment.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-comment.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endComment () {}
 
 	/**
 	 * Create start attribute
-	 * @link http://php.net/manual/en/function.xmlwriter-start-attribute.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-attribute.php
 	 * @param name string <p>
 	 * The attribute name.
 	 * </p>
@@ -75,14 +75,14 @@ class XMLWriter  {
 
 	/**
 	 * End attribute
-	 * @link http://php.net/manual/en/function.xmlwriter-end-attribute.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-attribute.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endAttribute () {}
 
 	/**
 	 * Write full attribute
-	 * @link http://php.net/manual/en/function.xmlwriter-write-attribute.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-attribute.php
 	 * @param name string <p>
 	 * The name of the attribute.
 	 * </p>
@@ -95,7 +95,7 @@ class XMLWriter  {
 
 	/**
 	 * Create start namespaced attribute
-	 * @link http://php.net/manual/en/function.xmlwriter-start-attribute-ns.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-attribute-ns.php
 	 * @param prefix string <p>
 	 * The namespace prefix.
 	 * </p>
@@ -111,7 +111,7 @@ class XMLWriter  {
 
 	/**
 	 * Write full namespaced attribute
-	 * @link http://php.net/manual/en/function.xmlwriter-write-attribute-ns.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-attribute-ns.php
 	 * @param prefix string <p>
 	 * The namespace prefix.
 	 * </p>
@@ -130,7 +130,7 @@ class XMLWriter  {
 
 	/**
 	 * Create start element tag
-	 * @link http://php.net/manual/en/function.xmlwriter-start-element.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-element.php
 	 * @param name string <p>
 	 * The element name.
 	 * </p>
@@ -140,21 +140,21 @@ class XMLWriter  {
 
 	/**
 	 * End current element
-	 * @link http://php.net/manual/en/function.xmlwriter-end-element.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-element.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endElement () {}
 
 	/**
 	 * End current element
-	 * @link http://php.net/manual/en/function.xmlwriter-full-end-element.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-full-end-element.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function fullEndElement () {}
 
 	/**
 	 * Create start namespaced element tag
-	 * @link http://php.net/manual/en/function.xmlwriter-start-element-ns.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-element-ns.php
 	 * @param prefix string <p>
 	 * The namespace prefix.
 	 * </p>
@@ -170,7 +170,7 @@ class XMLWriter  {
 
 	/**
 	 * Write full element tag
-	 * @link http://php.net/manual/en/function.xmlwriter-write-element.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-element.php
 	 * @param name string <p>
 	 * The element name.
 	 * </p>
@@ -183,7 +183,7 @@ class XMLWriter  {
 
 	/**
 	 * Write full namespaced element tag
-	 * @link http://php.net/manual/en/function.xmlwriter-write-element-ns.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-element-ns.php
 	 * @param prefix string <p>
 	 * The namespace prefix.
 	 * </p>
@@ -202,7 +202,7 @@ class XMLWriter  {
 
 	/**
 	 * Create start PI tag
-	 * @link http://php.net/manual/en/function.xmlwriter-start-pi.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-pi.php
 	 * @param target string <p>
 	 * The target of the processing instruction.
 	 * </p>
@@ -212,14 +212,14 @@ class XMLWriter  {
 
 	/**
 	 * End current PI
-	 * @link http://php.net/manual/en/function.xmlwriter-end-pi.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-pi.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endPi () {}
 
 	/**
 	 * Writes a PI
-	 * @link http://php.net/manual/en/function.xmlwriter-write-pi.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-pi.php
 	 * @param target string <p>
 	 * The target of the processing instruction.
 	 * </p>
@@ -232,21 +232,21 @@ class XMLWriter  {
 
 	/**
 	 * Create start CDATA tag
-	 * @link http://php.net/manual/en/function.xmlwriter-start-cdata.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-cdata.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function startCdata () {}
 
 	/**
 	 * End current CDATA
-	 * @link http://php.net/manual/en/function.xmlwriter-end-cdata.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-cdata.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endCdata () {}
 
 	/**
 	 * Write full CDATA tag
-	 * @link http://php.net/manual/en/function.xmlwriter-write-cdata.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-cdata.php
 	 * @param content string <p>
 	 * The contents of the CDATA.
 	 * </p>
@@ -256,7 +256,7 @@ class XMLWriter  {
 
 	/**
 	 * Write text
-	 * @link http://php.net/manual/en/function.xmlwriter-text.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-text.php
 	 * @param content string <p>
 	 * The contents of the text.
 	 * </p>
@@ -266,7 +266,7 @@ class XMLWriter  {
 
 	/**
 	 * Write a raw XML text
-	 * @link http://php.net/manual/en/function.xmlwriter-write-raw.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-raw.php
 	 * @param content string <p>
 	 * The text string to write.
 	 * </p>
@@ -276,7 +276,7 @@ class XMLWriter  {
 
 	/**
 	 * Create document tag
-	 * @link http://php.net/manual/en/function.xmlwriter-start-document.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-document.php
 	 * @param version string[optional] <p>
 	 * The version number of the document as part of the XML declaration. 
 	 * Defaults to 1.0.
@@ -287,7 +287,6 @@ class XMLWriter  {
 	 * </p>
 	 * @param standalone string[optional] <p>
 	 * yes or no.
-	 * &null; by default.
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 */
@@ -295,14 +294,14 @@ class XMLWriter  {
 
 	/**
 	 * End current document
-	 * @link http://php.net/manual/en/function.xmlwriter-end-document.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-document.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endDocument () {}
 
 	/**
 	 * Write full comment tag
-	 * @link http://php.net/manual/en/function.xmlwriter-write-comment.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-comment.php
 	 * @param content string <p>
 	 * The contents of the comment.
 	 * </p>
@@ -312,7 +311,7 @@ class XMLWriter  {
 
 	/**
 	 * Create start DTD tag
-	 * @link http://php.net/manual/en/function.xmlwriter-start-dtd.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd.php
 	 * @param qualifiedName string <p>
 	 * The qualified name of the document type to create.
 	 * </p>
@@ -328,14 +327,14 @@ class XMLWriter  {
 
 	/**
 	 * End current DTD
-	 * @link http://php.net/manual/en/function.xmlwriter-end-dtd.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-dtd.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endDtd () {}
 
 	/**
 	 * Write full DTD tag
-	 * @link http://php.net/manual/en/function.xmlwriter-write-dtd.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd.php
 	 * @param name string <p>
 	 * The DTD name.
 	 * </p>
@@ -354,7 +353,7 @@ class XMLWriter  {
 
 	/**
 	 * Create start DTD element
-	 * @link http://php.net/manual/en/function.xmlwriter-start-dtd-element.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd-element.php
 	 * @param qualifiedName string <p>
 	 * The qualified name of the document type to create.
 	 * </p>
@@ -364,14 +363,14 @@ class XMLWriter  {
 
 	/**
 	 * End current DTD element
-	 * @link http://php.net/manual/en/function.xmlwriter-end-dtd-element.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-dtd-element.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endDtdElement () {}
 
 	/**
 	 * Write full DTD element tag
-	 * @link http://php.net/manual/en/function.xmlwriter-write-dtd-element.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd-element.php
 	 * @param name string <p>
 	 * The name of the DTD element.
 	 * </p>
@@ -384,7 +383,7 @@ class XMLWriter  {
 
 	/**
 	 * Create start DTD AttList
-	 * @link http://php.net/manual/en/function.xmlwriter-start-dtd-attlist.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd-attlist.php
 	 * @param name string <p>
 	 * The attribute list name.
 	 * </p>
@@ -394,14 +393,14 @@ class XMLWriter  {
 
 	/**
 	 * End current DTD AttList
-	 * @link http://php.net/manual/en/function.xmlwriter-end-dtd-attlist.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-dtd-attlist.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endDtdAttlist () {}
 
 	/**
 	 * Write full DTD AttList tag
-	 * @link http://php.net/manual/en/function.xmlwriter-write-dtd-attlist.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd-attlist.php
 	 * @param name string <p>
 	 * The name of the DTD attribute list.
 	 * </p>
@@ -414,7 +413,7 @@ class XMLWriter  {
 
 	/**
 	 * Create start DTD Entity
-	 * @link http://php.net/manual/en/function.xmlwriter-start-dtd-entity.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd-entity.php
 	 * @param name string <p>
 	 * The name of the entity.
 	 * </p>
@@ -426,14 +425,14 @@ class XMLWriter  {
 
 	/**
 	 * End current DTD Entity
-	 * @link http://php.net/manual/en/function.xmlwriter-end-dtd-entity.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-end-dtd-entity.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function endDtdEntity () {}
 
 	/**
 	 * Write full DTD Entity tag
-	 * @link http://php.net/manual/en/function.xmlwriter-write-dtd-entity.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd-entity.php
 	 * @param name string <p>
 	 * The name of the entity.
 	 * </p>
@@ -450,7 +449,7 @@ class XMLWriter  {
 
 	/**
 	 * Returns current buffer
-	 * @link http://php.net/manual/en/function.xmlwriter-output-memory.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-output-memory.php
 	 * @param flush bool[optional] <p>
 	 * Whether to flush the output buffer or no. Default is true.
 	 * </p>
@@ -460,7 +459,7 @@ class XMLWriter  {
 
 	/**
 	 * Flush current buffer
-	 * @link http://php.net/manual/en/function.xmlwriter-flush.php
+	 * @link http://www.php.net/manual/en/function.xmlwriter-flush.php
 	 * @param empty bool[optional] <p>
 	 * Whether to empty the buffer or no. Default is true.
 	 * </p>
@@ -474,7 +473,7 @@ class XMLWriter  {
 
 /**
  * Create new xmlwriter using source uri for output
- * @link http://php.net/manual/en/function.xmlwriter-open-uri.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-open-uri.php
  * @param uri string <p>
  * The URI of the resource for the output.
  * </p>
@@ -488,7 +487,7 @@ function xmlwriter_open_uri ($uri) {}
 
 /**
  * Create new xmlwriter using memory for string output
- * @link http://php.net/manual/en/function.xmlwriter-open-memory.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-open-memory.php
  * @return bool &style.oop;: Returns true on success or false on failure.
  * </p>
  * <p>
@@ -499,9 +498,9 @@ function xmlwriter_open_memory () {}
 
 /**
  * Toggle indentation on/off
- * @link http://php.net/manual/en/function.xmlwriter-set-indent.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-set-indent.php
  * @param indent bool <p>
- * Whether indentation is enabled. Defaults to false.
+ * Whether indentation is enabled.
  * </p>
  * @return bool Returns true on success or false on failure.
  */
@@ -509,7 +508,7 @@ function xmlwriter_set_indent ($indent) {}
 
 /**
  * Set string used for indenting
- * @link http://php.net/manual/en/function.xmlwriter-set-indent-string.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-set-indent-string.php
  * @param indentString string <p>
  * The indentation string.
  * </p>
@@ -519,7 +518,7 @@ function xmlwriter_set_indent_string ($indentString) {}
 
 /**
  * Create start comment
- * @link http://php.net/manual/en/function.xmlwriter-start-comment.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-comment.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -527,7 +526,7 @@ function xmlwriter_start_comment ($xmlwriter) {}
 
 /**
  * Create end comment
- * @link http://php.net/manual/en/function.xmlwriter-end-comment.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-comment.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -535,7 +534,7 @@ function xmlwriter_end_comment ($xmlwriter) {}
 
 /**
  * Create start attribute
- * @link http://php.net/manual/en/function.xmlwriter-start-attribute.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-attribute.php
  * @param name string <p>
  * The attribute name.
  * </p>
@@ -545,7 +544,7 @@ function xmlwriter_start_attribute ($name) {}
 
 /**
  * End attribute
- * @link http://php.net/manual/en/function.xmlwriter-end-attribute.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-attribute.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -553,7 +552,7 @@ function xmlwriter_end_attribute ($xmlwriter) {}
 
 /**
  * Write full attribute
- * @link http://php.net/manual/en/function.xmlwriter-write-attribute.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-attribute.php
  * @param name string <p>
  * The name of the attribute.
  * </p>
@@ -566,7 +565,7 @@ function xmlwriter_write_attribute ($name, $value) {}
 
 /**
  * Create start namespaced attribute
- * @link http://php.net/manual/en/function.xmlwriter-start-attribute-ns.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-attribute-ns.php
  * @param prefix string <p>
  * The namespace prefix.
  * </p>
@@ -582,7 +581,7 @@ function xmlwriter_start_attribute_ns ($prefix, $name, $uri) {}
 
 /**
  * Write full namespaced attribute
- * @link http://php.net/manual/en/function.xmlwriter-write-attribute-ns.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-attribute-ns.php
  * @param prefix string <p>
  * The namespace prefix.
  * </p>
@@ -601,7 +600,7 @@ function xmlwriter_write_attribute_ns ($prefix, $name, $uri, $content) {}
 
 /**
  * Create start element tag
- * @link http://php.net/manual/en/function.xmlwriter-start-element.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-element.php
  * @param name string <p>
  * The element name.
  * </p>
@@ -611,7 +610,7 @@ function xmlwriter_start_element ($name) {}
 
 /**
  * End current element
- * @link http://php.net/manual/en/function.xmlwriter-end-element.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-element.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -619,7 +618,7 @@ function xmlwriter_end_element ($xmlwriter) {}
 
 /**
  * End current element
- * @link http://php.net/manual/en/function.xmlwriter-full-end-element.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-full-end-element.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -627,7 +626,7 @@ function xmlwriter_full_end_element ($xmlwriter) {}
 
 /**
  * Create start namespaced element tag
- * @link http://php.net/manual/en/function.xmlwriter-start-element-ns.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-element-ns.php
  * @param prefix string <p>
  * The namespace prefix.
  * </p>
@@ -643,7 +642,7 @@ function xmlwriter_start_element_ns ($prefix, $name, $uri) {}
 
 /**
  * Write full element tag
- * @link http://php.net/manual/en/function.xmlwriter-write-element.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-element.php
  * @param name string <p>
  * The element name.
  * </p>
@@ -656,7 +655,7 @@ function xmlwriter_write_element ($name, $content = null) {}
 
 /**
  * Write full namespaced element tag
- * @link http://php.net/manual/en/function.xmlwriter-write-element-ns.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-element-ns.php
  * @param prefix string <p>
  * The namespace prefix.
  * </p>
@@ -675,7 +674,7 @@ function xmlwriter_write_element_ns ($prefix, $name, $uri, $content = null) {}
 
 /**
  * Create start PI tag
- * @link http://php.net/manual/en/function.xmlwriter-start-pi.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-pi.php
  * @param target string <p>
  * The target of the processing instruction.
  * </p>
@@ -685,7 +684,7 @@ function xmlwriter_start_pi ($target) {}
 
 /**
  * End current PI
- * @link http://php.net/manual/en/function.xmlwriter-end-pi.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-pi.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -693,7 +692,7 @@ function xmlwriter_end_pi ($xmlwriter) {}
 
 /**
  * Writes a PI
- * @link http://php.net/manual/en/function.xmlwriter-write-pi.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-pi.php
  * @param target string <p>
  * The target of the processing instruction.
  * </p>
@@ -706,7 +705,7 @@ function xmlwriter_write_pi ($target, $content) {}
 
 /**
  * Create start CDATA tag
- * @link http://php.net/manual/en/function.xmlwriter-start-cdata.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-cdata.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -714,7 +713,7 @@ function xmlwriter_start_cdata ($xmlwriter) {}
 
 /**
  * End current CDATA
- * @link http://php.net/manual/en/function.xmlwriter-end-cdata.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-cdata.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -722,7 +721,7 @@ function xmlwriter_end_cdata ($xmlwriter) {}
 
 /**
  * Write full CDATA tag
- * @link http://php.net/manual/en/function.xmlwriter-write-cdata.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-cdata.php
  * @param content string <p>
  * The contents of the CDATA.
  * </p>
@@ -732,7 +731,7 @@ function xmlwriter_write_cdata ($content) {}
 
 /**
  * Write text
- * @link http://php.net/manual/en/function.xmlwriter-text.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-text.php
  * @param content string <p>
  * The contents of the text.
  * </p>
@@ -742,7 +741,7 @@ function xmlwriter_text ($content) {}
 
 /**
  * Write a raw XML text
- * @link http://php.net/manual/en/function.xmlwriter-write-raw.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-raw.php
  * @param content string <p>
  * The text string to write.
  * </p>
@@ -752,7 +751,7 @@ function xmlwriter_write_raw ($content) {}
 
 /**
  * Create document tag
- * @link http://php.net/manual/en/function.xmlwriter-start-document.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-document.php
  * @param version string[optional] <p>
  * The version number of the document as part of the XML declaration. 
  * Defaults to 1.0.
@@ -763,7 +762,6 @@ function xmlwriter_write_raw ($content) {}
  * </p>
  * @param standalone string[optional] <p>
  * yes or no.
- * &null; by default.
  * </p>
  * @return bool Returns true on success or false on failure.
  */
@@ -771,7 +769,7 @@ function xmlwriter_start_document ($version = null, $encoding = null, $standalon
 
 /**
  * End current document
- * @link http://php.net/manual/en/function.xmlwriter-end-document.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-document.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -779,7 +777,7 @@ function xmlwriter_end_document ($xmlwriter) {}
 
 /**
  * Write full comment tag
- * @link http://php.net/manual/en/function.xmlwriter-write-comment.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-comment.php
  * @param content string <p>
  * The contents of the comment.
  * </p>
@@ -789,7 +787,7 @@ function xmlwriter_write_comment ($content) {}
 
 /**
  * Create start DTD tag
- * @link http://php.net/manual/en/function.xmlwriter-start-dtd.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd.php
  * @param qualifiedName string <p>
  * The qualified name of the document type to create.
  * </p>
@@ -805,7 +803,7 @@ function xmlwriter_start_dtd ($qualifiedName, $publicId = null, $systemId = null
 
 /**
  * End current DTD
- * @link http://php.net/manual/en/function.xmlwriter-end-dtd.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-dtd.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -813,7 +811,7 @@ function xmlwriter_end_dtd ($xmlwriter) {}
 
 /**
  * Write full DTD tag
- * @link http://php.net/manual/en/function.xmlwriter-write-dtd.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd.php
  * @param name string <p>
  * The DTD name.
  * </p>
@@ -832,7 +830,7 @@ function xmlwriter_write_dtd ($name, $publicId = null, $systemId = null, $subset
 
 /**
  * Create start DTD element
- * @link http://php.net/manual/en/function.xmlwriter-start-dtd-element.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd-element.php
  * @param qualifiedName string <p>
  * The qualified name of the document type to create.
  * </p>
@@ -842,7 +840,7 @@ function xmlwriter_start_dtd_element ($qualifiedName) {}
 
 /**
  * End current DTD element
- * @link http://php.net/manual/en/function.xmlwriter-end-dtd-element.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-dtd-element.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -850,7 +848,7 @@ function xmlwriter_end_dtd_element ($xmlwriter) {}
 
 /**
  * Write full DTD element tag
- * @link http://php.net/manual/en/function.xmlwriter-write-dtd-element.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd-element.php
  * @param name string <p>
  * The name of the DTD element.
  * </p>
@@ -863,7 +861,7 @@ function xmlwriter_write_dtd_element ($name, $content) {}
 
 /**
  * Create start DTD AttList
- * @link http://php.net/manual/en/function.xmlwriter-start-dtd-attlist.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd-attlist.php
  * @param name string <p>
  * The attribute list name.
  * </p>
@@ -873,7 +871,7 @@ function xmlwriter_start_dtd_attlist ($name) {}
 
 /**
  * End current DTD AttList
- * @link http://php.net/manual/en/function.xmlwriter-end-dtd-attlist.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-dtd-attlist.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -881,7 +879,7 @@ function xmlwriter_end_dtd_attlist ($xmlwriter) {}
 
 /**
  * Write full DTD AttList tag
- * @link http://php.net/manual/en/function.xmlwriter-write-dtd-attlist.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd-attlist.php
  * @param name string <p>
  * The name of the DTD attribute list.
  * </p>
@@ -894,7 +892,7 @@ function xmlwriter_write_dtd_attlist ($name, $content) {}
 
 /**
  * Create start DTD Entity
- * @link http://php.net/manual/en/function.xmlwriter-start-dtd-entity.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-start-dtd-entity.php
  * @param name string <p>
  * The name of the entity.
  * </p>
@@ -906,7 +904,7 @@ function xmlwriter_start_dtd_entity ($name, $isparam) {}
 
 /**
  * End current DTD Entity
- * @link http://php.net/manual/en/function.xmlwriter-end-dtd-entity.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-end-dtd-entity.php
  * @param xmlwriter
  * @return bool Returns true on success or false on failure.
  */
@@ -914,7 +912,7 @@ function xmlwriter_end_dtd_entity ($xmlwriter) {}
 
 /**
  * Write full DTD Entity tag
- * @link http://php.net/manual/en/function.xmlwriter-write-dtd-entity.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-write-dtd-entity.php
  * @param name string <p>
  * The name of the entity.
  * </p>
@@ -931,7 +929,7 @@ function xmlwriter_write_dtd_entity ($name, $content, $pe, $pubid, $sysid, $ndat
 
 /**
  * Returns current buffer
- * @link http://php.net/manual/en/function.xmlwriter-output-memory.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-output-memory.php
  * @param flush bool[optional] <p>
  * Whether to flush the output buffer or no. Default is true.
  * </p>
@@ -941,7 +939,7 @@ function xmlwriter_output_memory ($flush = null) {}
 
 /**
  * Flush current buffer
- * @link http://php.net/manual/en/function.xmlwriter-flush.php
+ * @link http://www.php.net/manual/en/function.xmlwriter-flush.php
  * @param empty bool[optional] <p>
  * Whether to empty the buffer or no. Default is true.
  * </p>

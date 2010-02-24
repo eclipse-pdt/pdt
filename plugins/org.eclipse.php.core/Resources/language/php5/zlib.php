@@ -4,7 +4,7 @@
 
 /**
  * Output a gz-file
- * @link http://php.net/manual/en/function.readgzfile.php
+ * @link http://www.php.net/manual/en/function.readgzfile.php
  * @param filename string <p>
  * The file name. This file will be opened from the filesystem and its
  * contents written to standard output.
@@ -22,7 +22,7 @@ function readgzfile ($filename, $use_include_path = null) {}
 
 /**
  * Rewind the position of a gz-file pointer
- * @link http://php.net/manual/en/function.gzrewind.php
+ * @link http://www.php.net/manual/en/function.gzrewind.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -33,7 +33,7 @@ function gzrewind ($zp) {}
 
 /**
  * Close an open gz-file pointer
- * @link http://php.net/manual/en/function.gzclose.php
+ * @link http://www.php.net/manual/en/function.gzclose.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -44,7 +44,7 @@ function gzclose ($zp) {}
 
 /**
  * Test for <acronym>EOF</acronym> on a gz-file pointer
- * @link http://php.net/manual/en/function.gzeof.php
+ * @link http://www.php.net/manual/en/function.gzeof.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -56,7 +56,7 @@ function gzeof ($zp) {}
 
 /**
  * Get character from gz-file pointer
- * @link http://php.net/manual/en/function.gzgetc.php
+ * @link http://www.php.net/manual/en/function.gzgetc.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -67,7 +67,7 @@ function gzgetc ($zp) {}
 
 /**
  * Get line from file pointer
- * @link http://php.net/manual/en/function.gzgets.php
+ * @link http://www.php.net/manual/en/function.gzgets.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -81,7 +81,7 @@ function gzgets ($zp, $length) {}
 
 /**
  * Get line from gz-file pointer and strip HTML tags
- * @link http://php.net/manual/en/function.gzgetss.php
+ * @link http://www.php.net/manual/en/function.gzgetss.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -99,7 +99,7 @@ function gzgetss ($zp, $length, $allowable_tags = null) {}
 
 /**
  * Binary-safe gz-file read
- * @link http://php.net/manual/en/function.gzread.php
+ * @link http://www.php.net/manual/en/function.gzread.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -113,7 +113,7 @@ function gzread ($zp, $length) {}
 
 /**
  * Open gz-file
- * @link http://php.net/manual/en/function.gzopen.php
+ * @link http://www.php.net/manual/en/function.gzopen.php
  * @param filename string <p>
  * The file name.
  * </p>
@@ -142,7 +142,7 @@ function gzopen ($filename, $mode, $use_include_path = null) {}
 
 /**
  * Output all remaining data on a gz-file pointer
- * @link http://php.net/manual/en/function.gzpassthru.php
+ * @link http://www.php.net/manual/en/function.gzpassthru.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -154,7 +154,7 @@ function gzpassthru ($zp) {}
 
 /**
  * Seek on a gz-file pointer
- * @link http://php.net/manual/en/function.gzseek.php
+ * @link http://www.php.net/manual/en/function.gzseek.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -178,7 +178,7 @@ function gzseek ($zp, $offset, $whence = null) {}
 
 /**
  * Tell gz-file pointer read/write position
- * @link http://php.net/manual/en/function.gztell.php
+ * @link http://www.php.net/manual/en/function.gztell.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -189,7 +189,7 @@ function gztell ($zp) {}
 
 /**
  * Binary-safe gz-file write
- * @link http://php.net/manual/en/function.gzwrite.php
+ * @link http://www.php.net/manual/en/function.gzwrite.php
  * @param zp resource <p>
  * The gz-file pointer. It must be valid, and must point to a file
  * successfully opened by gzopen.
@@ -216,13 +216,13 @@ function gzwrite ($zp, $string, $length = null) {}
 
 /**
  * &Alias; <function>gzwrite</function>
- * @link http://php.net/manual/en/function.gzputs.php
+ * @link http://www.php.net/manual/en/function.gzputs.php
  */
 function gzputs () {}
 
 /**
  * Read entire gz-file into an array
- * @link http://php.net/manual/en/function.gzfile.php
+ * @link http://www.php.net/manual/en/function.gzfile.php
  * @param filename string <p>
  * The file name.
  * </p>
@@ -236,7 +236,7 @@ function gzfile ($filename, $use_include_path = null) {}
 
 /**
  * Compress a string
- * @link http://php.net/manual/en/function.gzcompress.php
+ * @link http://www.php.net/manual/en/function.gzcompress.php
  * @param data string <p>
  * The data to compress.
  * </p>
@@ -250,7 +250,7 @@ function gzcompress ($data, $level = null) {}
 
 /**
  * Uncompress a compressed string
- * @link http://php.net/manual/en/function.gzuncompress.php
+ * @link http://www.php.net/manual/en/function.gzuncompress.php
  * @param data string <p>
  * The data compressed by gzcompress.
  * </p>
@@ -268,7 +268,7 @@ function gzuncompress ($data, $length = null) {}
 
 /**
  * Deflate a string
- * @link http://php.net/manual/en/function.gzdeflate.php
+ * @link http://www.php.net/manual/en/function.gzdeflate.php
  * @param data string <p>
  * The data to deflate.
  * </p>
@@ -283,7 +283,7 @@ function gzdeflate ($data, $level = null) {}
 
 /**
  * Inflate a deflated string
- * @link http://php.net/manual/en/function.gzinflate.php
+ * @link http://www.php.net/manual/en/function.gzinflate.php
  * @param data string <p>
  * The data compressed by gzdeflate.
  * </p>
@@ -301,7 +301,7 @@ function gzinflate ($data, $length = null) {}
 
 /**
  * Create a gzip compressed string
- * @link http://php.net/manual/en/function.gzencode.php
+ * @link http://www.php.net/manual/en/function.gzencode.php
  * @param data string <p>
  * The data to encode.
  * </p>
@@ -325,7 +325,7 @@ function gzencode ($data, $level = null, $encoding_mode = null) {}
 
 /**
  * ob_start callback function to gzip output buffer
- * @link http://php.net/manual/en/function.ob-gzhandler.php
+ * @link http://www.php.net/manual/en/function.ob-gzhandler.php
  * @param buffer string <p>
  * </p>
  * @param mode int <p>
@@ -336,7 +336,7 @@ function ob_gzhandler ($buffer, $mode) {}
 
 /**
  * Returns the coding type used for output compression
- * @link http://php.net/manual/en/function.zlib-get-coding-type.php
+ * @link http://www.php.net/manual/en/function.zlib-get-coding-type.php
  * @return string Possible return values are gzip, deflate,
  * or false.
  */

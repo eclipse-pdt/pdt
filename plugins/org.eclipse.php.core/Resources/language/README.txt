@@ -2,24 +2,21 @@ This document explains how to rebuild Language Model files for PHP5.
 
 I. Installing environment:
 
-	1. Download latest PHPDoc:
+	1. Create empty PHP project, put this file into it /org.eclipse.php.core/Resources/language/generate.php
+	
+	2. Export latest PHPDoc into created PHP project using svn export, or using CLI:
 
-		cvs -d :pserver:cvsread@cvs.php.net:/repository checkout phpdoc
-
-	2. Install latest Zend CE containing all extensions and PHP-cli binary:
-
-		apt-get install zend-ce php5-extra-extensions-zend-ce php-dev-zend-ce
-
+		svn export http://svn.php.net/repository/phpdoc/en/trunk php-doc
 
 II. Generating Language Model:
 
-	1. Update PHPDoc checkout:
+	1. Create launch configuration, provide arguments to the script php-doc, path of documentation directory
+		
+	   Or using CLI:
 
-		cvs -d :pserver:cvsread@cvs.php.net:/repository update phpdoc
+		path_to_bin/php -q generate.php php-doc
 
-	2. Run:
-
-		/usr/local/zend/bin/php -q generate.php phpdoc
-
-	3. Look for updated PHP files in php5/ directory.
+	3. Look for updated PHP files in php5 directory.
+	
+	4. Go over II.1-3 using PHP 5.3
 

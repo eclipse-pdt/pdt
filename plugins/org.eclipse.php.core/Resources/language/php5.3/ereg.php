@@ -4,7 +4,7 @@
 
 /**
  * Regular expression match
- * @link http://php.net/manual/en/function.ereg.php
+ * @link http://www.php.net/manual/en/function.ereg.php
  * @param pattern string <p>
  * Case sensitive regular expression.
  * </p>
@@ -36,7 +36,7 @@ function ereg ($pattern, $string, array &$regs = null) {}
 
 /**
  * Replace regular expression
- * @link http://php.net/manual/en/function.ereg-replace.php
+ * @link http://www.php.net/manual/en/function.ereg-replace.php
  * @param pattern string <p>
  * A POSIX extended regular expression.
  * </p>
@@ -59,7 +59,7 @@ function ereg_replace ($pattern, $replacement, $string) {}
 
 /**
  * Case insensitive regular expression match
- * @link http://php.net/manual/en/function.eregi.php
+ * @link http://www.php.net/manual/en/function.eregi.php
  * @param pattern string <p>
  * Case insensitive regular expression.
  * </p>
@@ -90,7 +90,7 @@ function eregi ($pattern, $string, array &$regs = null) {}
 
 /**
  * Replace regular expression case insensitive
- * @link http://php.net/manual/en/function.eregi-replace.php
+ * @link http://www.php.net/manual/en/function.eregi-replace.php
  * @param pattern string <p>
  * A POSIX extended regular expression.
  * </p>
@@ -113,7 +113,7 @@ function eregi_replace ($pattern, $replacement, $string) {}
 
 /**
  * Split string into array by regular expression
- * @link http://php.net/manual/en/function.split.php
+ * @link http://www.php.net/manual/en/function.split.php
  * @param pattern string <p>
  * Case sensitive regular expression.
  * </p>
@@ -153,7 +153,7 @@ function split ($pattern, $string, $limit = null) {}
 
 /**
  * Split string into array by regular expression case insensitive
- * @link http://php.net/manual/en/function.spliti.php
+ * @link http://www.php.net/manual/en/function.spliti.php
  * @param pattern string <p>
  * Case insensitive regular expression.
  * </p>
@@ -193,7 +193,7 @@ function spliti ($pattern, $string, $limit = null) {}
 
 /**
  * Make regular expression for case insensitive match
- * @link http://php.net/manual/en/function.sql-regcase.php
+ * @link http://www.php.net/manual/en/function.sql-regcase.php
  * @param string string <p>
  * The input string.
  * </p>

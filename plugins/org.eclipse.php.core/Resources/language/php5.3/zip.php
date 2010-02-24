@@ -50,7 +50,7 @@ class ZipArchive  {
 
 	/**
 	 * Open a ZIP file archive
-	 * @link http://php.net/manual/en/function.ziparchive-open.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-open.php
 	 * @param filename string <p>
 	 * The file name of the ZIP archive to open.
 	 * </p>
@@ -95,21 +95,21 @@ class ZipArchive  {
 
 	/**
 	 * Close the active archive (opened or newly created)
-	 * @link http://php.net/manual/en/function.ziparchive-close.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-close.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function close () {}
 
 	/**
 	 * Returns the status error message, system and/or zip messages.
-	 * @link http://php.net/manual/en/function.ziparchive-getstatusstring.php
-	 * @return string a file pointer (resource) on success or false on failure.
+	 * @link http://www.php.net/manual/en/function.ziparchive-getstatusstring.php
+	 * @return string a file pointer (resource) on success&return.falseforfailure;.
 	 */
 	public function getStatusString () {}
 
 	/**
 	 * Add a new directory
-	 * @link http://php.net/manual/en/function.ziparchive-addemptydir.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-addemptydir.php
 	 * @param dirname string <p>
 	 * The directory to add.
 	 * </p>
@@ -119,7 +119,7 @@ class ZipArchive  {
 
 	/**
 	 * Add a file to a ZIP archive using its contents
-	 * @link http://php.net/manual/en/function.ziparchive-addfromstring.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-addfromstring.php
 	 * @param localname string <p>
 	 * The name of the entry to create.
 	 * </p>
@@ -133,7 +133,7 @@ class ZipArchive  {
 
 	/**
 	 * Adds a file to a ZIP archive from the given path
-	 * @link http://php.net/manual/en/function.ziparchive-addfile.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-addfile.php
 	 * @param filename string <p>
 	 * The path to the file to add.
 	 * </p>
@@ -150,7 +150,7 @@ class ZipArchive  {
 
 	/**
 	 * Renames an entry defined by its index
-	 * @link http://php.net/manual/en/function.ziparchive-renameindex.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-renameindex.php
 	 * @param index int <p>
 	 * Index of the entry to rename.
 	 * </p>
@@ -163,7 +163,7 @@ class ZipArchive  {
 
 	/**
 	 * Renames an entry defined by its name
-	 * @link http://php.net/manual/en/function.ziparchive-renamename.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-renamename.php
 	 * @param name string <p>
 	 * Name of the entry to rename.
 	 * </p>
@@ -176,7 +176,7 @@ class ZipArchive  {
 
 	/**
 	 * Set the comment of a ZIP archive
-	 * @link http://php.net/manual/en/function.ziparchive-setarchivecomment.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-setarchivecomment.php
 	 * @param comment string <p>
 	 * The contents of the comment.
 	 * </p>
@@ -186,14 +186,14 @@ class ZipArchive  {
 
 	/**
 	 * Returns the Zip archive comment
-	 * @link http://php.net/manual/en/function.ziparchive-getarchivecomment.php
-	 * @return string the Zip archive comment or false on failure.
+	 * @link http://www.php.net/manual/en/function.ziparchive-getarchivecomment.php
+	 * @return string the Zip archive comment&return.falseforfailure;.
 	 */
 	public function getArchiveComment () {}
 
 	/**
 	 * Set the comment of an entry defined by its index
-	 * @link http://php.net/manual/en/function.ziparchive-setcommentindex.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-setcommentindex.php
 	 * @param index int <p>
 	 * Index of the entry.
 	 * </p>
@@ -206,7 +206,7 @@ class ZipArchive  {
 
 	/**
 	 * Set the comment of an entry defined by its name
-	 * @link http://php.net/manual/en/function.ziparchive-setCommentName.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-setCommentName.php
 	 * @param name string <p>
 	 * Name of the entry.
 	 * </p>
@@ -219,7 +219,7 @@ class ZipArchive  {
 
 	/**
 	 * Returns the comment of an entry using the entry index
-	 * @link http://php.net/manual/en/function.ziparchive-getcommentindex.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-getcommentindex.php
 	 * @param index int <p>
 	 * Index of the entry
 	 * </p>
@@ -227,13 +227,13 @@ class ZipArchive  {
 	 * If flags is set to ZIPARCHIVE::FL_UNCHANGED, the original unchanged
 	 * comment is returned.
 	 * </p>
-	 * @return string the comment on success or false on failure.
+	 * @return string the comment on success&return.falseforfailure;.
 	 */
 	public function getCommentIndex ($index, $flags = null) {}
 
 	/**
 	 * Returns the comment of an entry using the entry name
-	 * @link http://php.net/manual/en/function.ziparchive-getcommentname.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-getcommentname.php
 	 * @param name string <p>
 	 * Name of the entry
 	 * </p>
@@ -241,13 +241,13 @@ class ZipArchive  {
 	 * If flags is set to ZIPARCHIVE::FL_UNCHANGED, the original unchanged
 	 * comment is returned.
 	 * </p>
-	 * @return string the comment on success or false on failure.
+	 * @return string the comment on success&return.falseforfailure;.
 	 */
 	public function getCommentName ($name, $flags = null) {}
 
 	/**
 	 * delete an entry in the archive using its index
-	 * @link http://php.net/manual/en/function.ziparchive-deleteindex.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-deleteindex.php
 	 * @param index int <p>
 	 * Index of the entry to delete.
 	 * </p>
@@ -257,7 +257,7 @@ class ZipArchive  {
 
 	/**
 	 * delete an entry in the archive using its name
-	 * @link http://php.net/manual/en/function.ziparchive-deletename.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-deletename.php
 	 * @param name string <p>
 	 * Name of the entry to delete.
 	 * </p>
@@ -267,7 +267,7 @@ class ZipArchive  {
 
 	/**
 	 * Get the details of an entry defined by its name.
-	 * @link http://php.net/manual/en/function.ziparchive-statname.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-statname.php
 	 * @param name name <p>
 	 * Name of the entry
 	 * </p>
@@ -279,13 +279,13 @@ class ZipArchive  {
 	 * <p>
 	 * ZIPARCHIVE::FL_NOCASE
 	 * </p>
-	 * @return mixed an array containing the entry details or false on failure.
+	 * @return mixed an array containing the entry details &return.falseforfailure;.
 	 */
 	public function statName ($name, $flags = null) {}
 
 	/**
 	 * Get the details of an entry defined by its index.
-	 * @link http://php.net/manual/en/function.ziparchive-statindex.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-statindex.php
 	 * @param index int <p>
 	 * Index of the entry
 	 * </p>
@@ -294,13 +294,13 @@ class ZipArchive  {
 	 * information about the original file in the archive,
 	 * ignoring any changes made.
 	 * </p>
-	 * @return mixed an array containing the entry details or false on failure.
+	 * @return mixed an array containing the entry details&return.falseforfailure;.
 	 */
 	public function statIndex ($index, $flags = null) {}
 
 	/**
 	 * Returns the index of the entry in the archive
-	 * @link http://php.net/manual/en/function.ziparchive-locatename.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-locatename.php
 	 * @param name string <p>
 	 * The name of the entry to look up
 	 * </p>
@@ -310,37 +310,37 @@ class ZipArchive  {
 	 * <p>
 	 * ZIPARCHIVE::FL_NOCASE
 	 * </p>
-	 * @return mixed the index of the entry on success or false on failure.
+	 * @return mixed the index of the entry on success&return.falseforfailure;.
 	 */
 	public function locateName ($name, $flags = null) {}
 
 	/**
 	 * Returns the name of an entry using its index
-	 * @link http://php.net/manual/en/function.ziparchive-getnameindex.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-getnameindex.php
 	 * @param index int <p>
 	 * Index of the entry.
 	 * </p>
-	 * @return string the name on success or false on failure.
+	 * @return string the name on success&return.falseforfailure;.
 	 */
 	public function getNameIndex ($index) {}
 
 	/**
 	 * Revert all global changes done in the archive.
-	 * @link http://php.net/manual/en/function.ziparchive-unchangearchive.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-unchangearchive.php
 	 * @return mixed Returns true on success or false on failure.
 	 */
 	public function unchangeArchive () {}
 
 	/**
 	 * Undo all changes done in the archive.
-	 * @link http://php.net/manual/en/function.ziparchive-unchangeall.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-unchangeall.php
 	 * @return mixed Returns true on success or false on failure.
 	 */
 	public function unchangeAll () {}
 
 	/**
 	 * Revert all changes done to an entry at the given index.
-	 * @link http://php.net/manual/en/function.ziparchive-unchangeindex.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-unchangeindex.php
 	 * @param index int <p>
 	 * Index of the entry.
 	 * </p>
@@ -350,7 +350,7 @@ class ZipArchive  {
 
 	/**
 	 * Revert all changes done to an entry with the given name.
-	 * @link http://php.net/manual/en/function.ziparchive-unchangename.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-unchangename.php
 	 * @param name string <p>
 	 * Name of the entry.
 	 * </p>
@@ -360,7 +360,7 @@ class ZipArchive  {
 
 	/**
 	 * Extract the archive contents
-	 * @link http://php.net/manual/en/function.ziparchive-extractto.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-extractto.php
 	 * @param destination string <p>
 	 * Location where to extract the files.
 	 * </p>
@@ -374,7 +374,7 @@ class ZipArchive  {
 
 	/**
 	 * Returns the entry contents using its name.
-	 * @link http://php.net/manual/en/function.ziparchive-getfromname.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-getfromname.php
 	 * @param name string <p>
 	 * Name of the entry
 	 * </p>
@@ -384,13 +384,13 @@ class ZipArchive  {
 	 * <p>
 	 * ZIPARCHIVE::FL_UNCHANGED
 	 * </p>
-	 * @return mixed the contents of the entry on success or false on failure.
+	 * @return mixed the contents of the entry on success&return.falseforfailure;.
 	 */
 	public function getFromName ($name, $flags = null) {}
 
 	/**
 	 * Returns the entry contents using its index.
-	 * @link http://php.net/manual/en/function.ziparchive-getfromindex.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-getfromindex.php
 	 * @param index int <p>
 	 * Index of the entry
 	 * </p>
@@ -400,17 +400,17 @@ class ZipArchive  {
 	 * <p>
 	 * ZIPARCHIVE::FL_UNCHANGED
 	 * </p>
-	 * @return mixed the contents of the entry on success or false on failure.
+	 * @return mixed the contents of the entry on success&return.falseforfailure;.
 	 */
 	public function getFromIndex ($index, $flags = null) {}
 
 	/**
 	 * Get a file handler to the entry defined by its name (read only).
-	 * @link http://php.net/manual/en/function.ziparchive-getstream.php
+	 * @link http://www.php.net/manual/en/function.ziparchive-getstream.php
 	 * @param name string <p>
 	 * The name of the entry to use.
 	 * </p>
-	 * @return resource a file pointer (resource) on success or false on failure.
+	 * @return resource a file pointer (resource) on success&return.falseforfailure;.
 	 */
 	public function getStream ($name) {}
 
@@ -418,7 +418,7 @@ class ZipArchive  {
 
 /**
  * Open a ZIP file archive
- * @link http://php.net/manual/en/function.zip-open.php
+ * @link http://www.php.net/manual/en/function.zip-open.php
  * @param filename string <p>
  * The file name of the ZIP archive to open.
  * </p>
@@ -431,7 +431,7 @@ function zip_open ($filename) {}
 
 /**
  * Close a ZIP file archive
- * @link http://php.net/manual/en/function.zip-close.php
+ * @link http://www.php.net/manual/en/function.zip-close.php
  * @param zip resource <p>
  * A ZIP file previously opened with zip_open.
  * </p>
@@ -441,7 +441,7 @@ function zip_close ($zip) {}
 
 /**
  * Read next entry in a ZIP file archive
- * @link http://php.net/manual/en/function.zip-read.php
+ * @link http://www.php.net/manual/en/function.zip-read.php
  * @param zip resource <p>
  * A ZIP file previously opened with zip_open.
  * </p>
@@ -453,7 +453,7 @@ function zip_read ($zip) {}
 
 /**
  * Open a directory entry for reading
- * @link http://php.net/manual/en/function.zip-entry-open.php
+ * @link http://www.php.net/manual/en/function.zip-entry-open.php
  * @param zip resource <p>
  * A valid resource handle returned by zip_open.
  * </p>
@@ -481,7 +481,7 @@ function zip_entry_open ($zip, $zip_entry, $mode = null) {}
 
 /**
  * Close a directory entry
- * @link http://php.net/manual/en/function.zip-entry-close.php
+ * @link http://www.php.net/manual/en/function.zip-entry-close.php
  * @param zip_entry resource <p>
  * A directory entry previously opened zip_entry_open.
  * </p>
@@ -491,7 +491,7 @@ function zip_entry_close ($zip_entry) {}
 
 /**
  * Read from an open directory entry
- * @link http://php.net/manual/en/function.zip-entry-read.php
+ * @link http://www.php.net/manual/en/function.zip-entry-read.php
  * @param zip_entry resource <p>
  * A directory entry returned by zip_read.
  * </p>
@@ -509,7 +509,7 @@ function zip_entry_read ($zip_entry, $length = null) {}
 
 /**
  * Retrieve the actual file size of a directory entry
- * @link http://php.net/manual/en/function.zip-entry-filesize.php
+ * @link http://www.php.net/manual/en/function.zip-entry-filesize.php
  * @param zip_entry resource <p>
  * A directory entry returned by zip_read.
  * </p>
@@ -519,7 +519,7 @@ function zip_entry_filesize ($zip_entry) {}
 
 /**
  * Retrieve the name of a directory entry
- * @link http://php.net/manual/en/function.zip-entry-name.php
+ * @link http://www.php.net/manual/en/function.zip-entry-name.php
  * @param zip_entry resource <p>
  * A directory entry returned by zip_read.
  * </p>
@@ -529,7 +529,7 @@ function zip_entry_name ($zip_entry) {}
 
 /**
  * Retrieve the compressed size of a directory entry
- * @link http://php.net/manual/en/function.zip-entry-compressedsize.php
+ * @link http://www.php.net/manual/en/function.zip-entry-compressedsize.php
  * @param zip_entry resource <p>
  * A directory entry returned by zip_read.
  * </p>
@@ -539,7 +539,7 @@ function zip_entry_compressedsize ($zip_entry) {}
 
 /**
  * Retrieve the compression method of a directory entry
- * @link http://php.net/manual/en/function.zip-entry-compressionmethod.php
+ * @link http://www.php.net/manual/en/function.zip-entry-compressionmethod.php
  * @param zip_entry resource <p>
  * A directory entry returned by zip_read.
  * </p>

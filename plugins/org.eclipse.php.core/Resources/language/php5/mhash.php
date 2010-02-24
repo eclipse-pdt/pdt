@@ -4,7 +4,7 @@
 
 /**
  * Get the block size of the specified hash
- * @link http://php.net/manual/en/function.mhash-get-block-size.php
+ * @link http://www.php.net/manual/en/function.mhash-get-block-size.php
  * @param hash int <p>
  * The hash id. One of the MHASH_XXX constants.
  * </p>
@@ -15,7 +15,7 @@ function mhash_get_block_size ($hash) {}
 
 /**
  * Get the name of the specified hash
- * @link http://php.net/manual/en/function.mhash-get-hash-name.php
+ * @link http://www.php.net/manual/en/function.mhash-get-hash-name.php
  * @param hash int <p>
  * The hash id. One of the MHASH_XXX constants.
  * </p>
@@ -25,7 +25,7 @@ function mhash_get_hash_name ($hash) {}
 
 /**
  * Generates a key
- * @link http://php.net/manual/en/function.mhash-keygen-s2k.php
+ * @link http://www.php.net/manual/en/function.mhash-keygen-s2k.php
  * @param hash int <p>
  * The hash id used to create the key.
  * One of the MHASH_XXX constants.
@@ -49,7 +49,7 @@ function mhash_keygen_s2k ($hash, $password, $salt, $bytes) {}
 
 /**
  * Get the highest available hash id
- * @link http://php.net/manual/en/function.mhash-count.php
+ * @link http://www.php.net/manual/en/function.mhash-count.php
  * @return int the highest available hash id. Hashes are numbered from 0 to this
  * hash id.
  */
@@ -57,7 +57,7 @@ function mhash_count () {}
 
 /**
  * Compute hash
- * @link http://php.net/manual/en/function.mhash.php
+ * @link http://www.php.net/manual/en/function.mhash.php
  * @param hash int <p>
  * The hash id. One of the MHASH_XXX constants.
  * </p>
@@ -90,18 +90,10 @@ define ('MHASH_HAVAL128', 13);
 define ('MHASH_TIGER128', 14);
 define ('MHASH_TIGER160', 15);
 define ('MHASH_MD4', 16);
-define ('MHASH_SHA256', 17);
 define ('MHASH_ADLER32', 18);
-define ('MHASH_SHA224', 19);
-define ('MHASH_SHA512', 20);
-define ('MHASH_SHA384', 21);
-define ('MHASH_WHIRLPOOL', 22);
 define ('MHASH_RIPEMD128', 23);
 define ('MHASH_RIPEMD256', 24);
 define ('MHASH_RIPEMD320', 25);
-define ('MHASH_SNEFRU128', 26);
-define ('MHASH_SNEFRU256', 27);
-define ('MHASH_MD2', 28);
 
 // End of mhash v.
 ?>

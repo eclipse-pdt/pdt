@@ -4,7 +4,7 @@
 
 /**
  * Get and/or set the current session name
- * @link http://php.net/manual/en/function.session-name.php
+ * @link http://www.php.net/manual/en/function.session-name.php
  * @param name string[optional] <p>
  * The session name references the session id in cookies and URLs. It
  * should contain only alphanumeric characters; it should be short and
@@ -24,7 +24,7 @@ function session_name ($name = null) {}
 
 /**
  * Get and/or set the current session module
- * @link http://php.net/manual/en/function.session-module-name.php
+ * @link http://www.php.net/manual/en/function.session-module-name.php
  * @param module string[optional] <p>
  * If module is specified, that module will be
  * used instead.
@@ -35,7 +35,7 @@ function session_module_name ($module = null) {}
 
 /**
  * Get and/or set the current session save path
- * @link http://php.net/manual/en/function.session-save-path.php
+ * @link http://www.php.net/manual/en/function.session-save-path.php
  * @param path string[optional] <p>
  * Session data path. If specified, the path to which data is saved will
  * be changed. session_save_path needs to be called
@@ -54,7 +54,7 @@ function session_save_path ($path = null) {}
 
 /**
  * Get and/or set the current session id
- * @link http://php.net/manual/en/function.session-id.php
+ * @link http://www.php.net/manual/en/function.session-id.php
  * @param id string[optional] <p>
  * If id is specified, it will replace the current
  * session id. session_id needs to be called before
@@ -75,10 +75,9 @@ function session_id ($id = null) {}
 
 /**
  * Update the current session id with a newly generated one
- * @link http://php.net/manual/en/function.session-regenerate-id.php
+ * @link http://www.php.net/manual/en/function.session-regenerate-id.php
  * @param delete_old_session bool[optional] <p>
- * Whether to delete the old associated session file or not. Defaults to
- * false.
+ * Whether to delete the old associated session file or not.
  * </p>
  * @return bool Returns true on success or false on failure.
  */
@@ -86,7 +85,7 @@ function session_regenerate_id ($delete_old_session = null) {}
 
 /**
  * Decodes session data from a string
- * @link http://php.net/manual/en/function.session-decode.php
+ * @link http://www.php.net/manual/en/function.session-decode.php
  * @param data string <p>
  * The encoded data to be stored.
  * </p>
@@ -96,7 +95,7 @@ function session_decode ($data) {}
 
 /**
  * Register one or more global variables with the current session
- * @link http://php.net/manual/en/function.session-register.php
+ * @link http://www.php.net/manual/en/function.session-register.php
  * @param name mixed <p>
  * A string holding the name of a variable or an array consisting of
  * variable names or other arrays.
@@ -108,7 +107,7 @@ function session_register ($name, $_ = null) {}
 
 /**
  * Unregister a global variable from the current session
- * @link http://php.net/manual/en/function.session-unregister.php
+ * @link http://www.php.net/manual/en/function.session-unregister.php
  * @param name string <p>
  * The variable name.
  * </p>
@@ -118,7 +117,7 @@ function session_unregister ($name) {}
 
 /**
  * Find out whether a global variable is registered in a session
- * @link http://php.net/manual/en/function.session-is-registered.php
+ * @link http://www.php.net/manual/en/function.session-is-registered.php
  * @param name string <p>
  * The variable name.
  * </p>
@@ -130,35 +129,36 @@ function session_is_registered ($name) {}
 
 /**
  * Encodes the current session data as a string
- * @link http://php.net/manual/en/function.session-encode.php
+ * @link http://www.php.net/manual/en/function.session-encode.php
  * @return string the contents of the current session encoded.
  */
 function session_encode () {}
 
 /**
  * Initialize session data
- * @link http://php.net/manual/en/function.session-start.php
- * @return bool This function returns true if session was started with success otherwise false.
+ * @link http://www.php.net/manual/en/function.session-start.php
+ * @return bool This function returns true if a session was successfully started,
+ * otherwise false.
  */
 function session_start () {}
 
 /**
  * Destroys all data registered to a session
- * @link http://php.net/manual/en/function.session-destroy.php
+ * @link http://www.php.net/manual/en/function.session-destroy.php
  * @return bool Returns true on success or false on failure.
  */
 function session_destroy () {}
 
 /**
  * Free all session variables
- * @link http://php.net/manual/en/function.session-unset.php
+ * @link http://www.php.net/manual/en/function.session-unset.php
  * @return void 
  */
 function session_unset () {}
 
 /**
  * Sets user-level session storage functions
- * @link http://php.net/manual/en/function.session-set-save-handler.php
+ * @link http://www.php.net/manual/en/function.session-set-save-handler.php
  * @param open callback <p>
  * Open function, this works like a constructor in classes and is 
  * executed when the session is being opened. The open function 
@@ -199,7 +199,7 @@ function session_set_save_handler ($open, $close, $read, $write, $destroy, $gc) 
 
 /**
  * Get and/or set the current cache limiter
- * @link http://php.net/manual/en/function.session-cache-limiter.php
+ * @link http://www.php.net/manual/en/function.session-cache-limiter.php
  * @param cache_limiter string[optional] <p>
  * If cache_limiter is specified, the name of the
  * current cache limiter is changed to the new value.
@@ -237,7 +237,7 @@ function session_cache_limiter ($cache_limiter = null) {}
 
 /**
  * Return current cache expire
- * @link http://php.net/manual/en/function.session-cache-expire.php
+ * @link http://www.php.net/manual/en/function.session-cache-expire.php
  * @param new_cache_expire string[optional] <p>
  * If new_cache_expire is given, the current cache
  * expire is replaced with new_cache_expire.
@@ -254,7 +254,7 @@ function session_cache_expire ($new_cache_expire = null) {}
 
 /**
  * Set the session cookie parameters
- * @link http://php.net/manual/en/function.session-set-cookie-params.php
+ * @link http://www.php.net/manual/en/function.session-set-cookie-params.php
  * @param lifetime int <p>
  * Lifetime of the
  * session cookie, defined in seconds.
@@ -284,7 +284,7 @@ function session_set_cookie_params ($lifetime, $path = null, $domain = null, $se
 
 /**
  * Get the session cookie parameters
- * @link http://php.net/manual/en/function.session-get-cookie-params.php
+ * @link http://www.php.net/manual/en/function.session-get-cookie-params.php
  * @return array an array with the current session cookie information, the array
  * contains the following items:
  * "lifetime" - The
@@ -302,14 +302,14 @@ function session_get_cookie_params () {}
 
 /**
  * Write session data and end session
- * @link http://php.net/manual/en/function.session-write-close.php
+ * @link http://www.php.net/manual/en/function.session-write-close.php
  * @return void 
  */
 function session_write_close () {}
 
 /**
  * &Alias; <function>session_write_close</function>
- * @link http://php.net/manual/en/function.session-commit.php
+ * @link http://www.php.net/manual/en/function.session-commit.php
  */
 function session_commit () {}
 

@@ -3,7 +3,7 @@
 // Start of SQLite v.2.0-dev
 
 /**
- * @link http://php.net/manual/en/ref.sqlite.php
+ * @link http://www.php.net/manual/en/class.sqlitedatabase.php
  */
 class SQLiteDatabase  {
 
@@ -83,7 +83,7 @@ class SQLiteDatabase  {
 }
 
 /**
- * @link http://php.net/manual/en/ref.sqlite.php
+ * @link http://www.php.net/manual/en/class.sqliteresult.php
  */
 final class SQLiteResult implements Iterator, Traversable, Countable {
 
@@ -154,7 +154,7 @@ final class SQLiteResult implements Iterator, Traversable, Countable {
 }
 
 /**
- * @link http://php.net/manual/en/ref.sqlite.php
+ * @link http://www.php.net/manual/en/class.sqliteunbuffered.php
  */
 final class SQLiteUnbuffered  {
 
@@ -243,7 +243,7 @@ final class SQLiteException extends RuntimeException  {
 
 /**
  * Opens a SQLite database and create the database if it does not exist
- * @link http://php.net/manual/en/function.sqlite-open.php
+ * @link http://www.php.net/manual/en/function.sqlite-open.php
  * @param filename string <p>
  * The filename of the SQLite database. If the file does not exist, SQLite
  * will attempt to create it. PHP must have write permissions to the file
@@ -266,7 +266,7 @@ function sqlite_open ($filename, $mode = null, &$error_message = null) {}
 
 /**
  * Opens a persistent handle to an SQLite database and create the database if it does not exist
- * @link http://php.net/manual/en/function.sqlite-popen.php
+ * @link http://www.php.net/manual/en/function.sqlite-popen.php
  * @param filename string <p>
  * The filename of the SQLite database. If the file does not exist, SQLite
  * will attempt to create it. PHP must have write permissions to the file
@@ -289,7 +289,7 @@ function sqlite_popen ($filename, $mode = null, &$error_message = null) {}
 
 /**
  * Closes an open SQLite database
- * @link http://php.net/manual/en/function.sqlite-close.php
+ * @link http://www.php.net/manual/en/function.sqlite-close.php
  * @param dbhandle resource <p>
  * The SQLite Database resource; returned from sqlite_open
  * when used procedurally.
@@ -300,7 +300,7 @@ function sqlite_close ($dbhandle) {}
 
 /**
  * Executes a query against a given database and returns a result handle
- * @link http://php.net/manual/en/function.sqlite-query.php
+ * @link http://www.php.net/manual/en/function.sqlite-query.php
  * @param query string <p>
  * The query to be executed.
  * </p>
@@ -313,7 +313,7 @@ function sqlite_close ($dbhandle) {}
  * specially important because SQL syntax errors can't be fetched using
  * the sqlite_last_error function.
  * </p>
- * @return SQLiteResult This function will return a result handle or false on failure.
+ * @return SQLiteResult This function will return a result handle&return.falseforfailure;.
  * For queries that return rows, the result handle can then be used with
  * functions such as sqlite_fetch_array and
  * sqlite_seek.
@@ -335,7 +335,7 @@ function sqlite_query ($query, $result_type = null, &$error_msg = null) {}
 
 /**
  * Executes a result-less query against a given database
- * @link http://php.net/manual/en/function.sqlite-exec.php
+ * @link http://www.php.net/manual/en/function.sqlite-exec.php
  * @param query string <p>
  * The query to be executed.
  * </p>
@@ -354,7 +354,7 @@ function sqlite_exec ($query, &$error_msg = null) {}
 
 /**
  * Execute a query against a given database and returns an array
- * @link http://php.net/manual/en/function.sqlite-array-query.php
+ * @link http://www.php.net/manual/en/function.sqlite-array-query.php
  * @param query string <p>
  * The query to be executed.
  * </p>
@@ -369,7 +369,7 @@ function sqlite_array_query ($query, $result_type = null, $decode_binary = null)
 
 /**
  * Executes a query and returns either an array for one single column or the value of the first row
- * @link http://php.net/manual/en/function.sqlite-single-query.php
+ * @link http://www.php.net/manual/en/function.sqlite-single-query.php
  * @param query string 
  * @param first_row_only bool[optional] 
  * @param decode_binary bool[optional] 
@@ -379,7 +379,7 @@ function sqlite_single_query ($query, $first_row_only = null, $decode_binary = n
 
 /**
  * Fetches the next row from a result set as an array
- * @link http://php.net/manual/en/function.sqlite-fetch-array.php
+ * @link http://www.php.net/manual/en/function.sqlite-fetch-array.php
  * @param result_type int[optional] &sqlite.result-type;
  * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return array an array of the next row from a result set; false if the
@@ -389,7 +389,7 @@ function sqlite_fetch_array ($result_type = null, $decode_binary = null) {}
 
 /**
  * Fetches the next row from a result set as an object
- * @link http://php.net/manual/en/function.sqlite-fetch-object.php
+ * @link http://www.php.net/manual/en/function.sqlite-fetch-object.php
  * @param class_name string[optional] 
  * @param ctor_params array[optional] 
  * @param decode_binary bool[optional] 
@@ -399,7 +399,7 @@ function sqlite_fetch_object ($class_name = null, array $ctor_params = null, $de
 
 /**
  * Fetches the first column of a result set as a string
- * @link http://php.net/manual/en/function.sqlite-fetch-single.php
+ * @link http://www.php.net/manual/en/function.sqlite-fetch-single.php
  * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return string the first column value, as a string.
  */
@@ -407,7 +407,7 @@ function sqlite_fetch_single ($decode_binary = null) {}
 
 /**
  * &Alias; <function>sqlite_fetch_single</function>
- * @link http://php.net/manual/en/function.sqlite-fetch-string.php
+ * @link http://www.php.net/manual/en/function.sqlite-fetch-string.php
  * @param result
  * @param decode_binary[optional]
  */
@@ -415,7 +415,7 @@ function sqlite_fetch_string ($result, $decode_binary) {}
 
 /**
  * Fetches all rows from a result set as an array of arrays
- * @link http://php.net/manual/en/function.sqlite-fetch-all.php
+ * @link http://www.php.net/manual/en/function.sqlite-fetch-all.php
  * @param result_type int[optional] &sqlite.result-type;
  * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return array an array of the remaining rows in a result set. If called right
@@ -427,7 +427,7 @@ function sqlite_fetch_all ($result_type = null, $decode_binary = null) {}
 
 /**
  * Fetches the current row from a result set as an array
- * @link http://php.net/manual/en/function.sqlite-current.php
+ * @link http://www.php.net/manual/en/function.sqlite-current.php
  * @param result_type int[optional] &sqlite.result-type;
  * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return array an array of the current row from a result set; false if the
@@ -437,7 +437,7 @@ function sqlite_current ($result_type = null, $decode_binary = null) {}
 
 /**
  * Fetches a column from the current row of a result set
- * @link http://php.net/manual/en/function.sqlite-column.php
+ * @link http://www.php.net/manual/en/function.sqlite-column.php
  * @param index_or_name mixed <p>
  * The column index or name to fetch.
  * </p>
@@ -448,14 +448,14 @@ function sqlite_column ($index_or_name, $decode_binary = null) {}
 
 /**
  * Returns the version of the linked SQLite library
- * @link http://php.net/manual/en/function.sqlite-libversion.php
+ * @link http://www.php.net/manual/en/function.sqlite-libversion.php
  * @return string the librart version, as a string.
  */
 function sqlite_libversion () {}
 
 /**
  * Returns the encoding of the linked SQLite library
- * @link http://php.net/manual/en/function.sqlite-libencoding.php
+ * @link http://www.php.net/manual/en/function.sqlite-libencoding.php
  * @return string the library encoding.
  */
 function sqlite_libencoding () {}
@@ -463,7 +463,7 @@ function sqlite_libencoding () {}
 /**
  * Returns the number of rows that were changed by the most
    recent SQL statement
- * @link http://php.net/manual/en/function.sqlite-changes.php
+ * @link http://www.php.net/manual/en/function.sqlite-changes.php
  * @param db
  * @return int the number of changed rows.
  */
@@ -471,7 +471,7 @@ function sqlite_changes ($db) {}
 
 /**
  * Returns the rowid of the most recently inserted row
- * @link http://php.net/manual/en/function.sqlite-last-insert-rowid.php
+ * @link http://www.php.net/manual/en/function.sqlite-last-insert-rowid.php
  * @param db
  * @return int the row id, as an integer.
  */
@@ -479,7 +479,7 @@ function sqlite_last_insert_rowid ($db) {}
 
 /**
  * Returns the number of rows in a buffered result set
- * @link http://php.net/manual/en/function.sqlite-num-rows.php
+ * @link http://www.php.net/manual/en/function.sqlite-num-rows.php
  * @param result
  * @return int the number of rows, as an integer.
  */
@@ -487,7 +487,7 @@ function sqlite_num_rows ($result) {}
 
 /**
  * Returns the number of fields in a result set
- * @link http://php.net/manual/en/function.sqlite-num-fields.php
+ * @link http://www.php.net/manual/en/function.sqlite-num-fields.php
  * @param result
  * @return int the number of fields, as an integer.
  */
@@ -495,7 +495,7 @@ function sqlite_num_fields ($result) {}
 
 /**
  * Returns the name of a particular field
- * @link http://php.net/manual/en/function.sqlite-field-name.php
+ * @link http://www.php.net/manual/en/function.sqlite-field-name.php
  * @param field_index int <p>
  * The ordinal column number in the result set.
  * </p>
@@ -506,7 +506,7 @@ function sqlite_field_name ($field_index) {}
 
 /**
  * Seek to a particular row number of a buffered result set
- * @link http://php.net/manual/en/function.sqlite-seek.php
+ * @link http://www.php.net/manual/en/function.sqlite-seek.php
  * @param rownum int <p>
  * The ordinal row number to seek to. The row number is zero-based (0 is
  * the first row).
@@ -518,7 +518,7 @@ function sqlite_seek ($rownum) {}
 
 /**
  * Seek to the first row number
- * @link http://php.net/manual/en/function.sqlite-rewind.php
+ * @link http://www.php.net/manual/en/function.sqlite-rewind.php
  * @param result
  * @return bool false if there are no rows in the result set, true otherwise.
  */
@@ -526,7 +526,7 @@ function sqlite_rewind ($result) {}
 
 /**
  * Seek to the next row number
- * @link http://php.net/manual/en/function.sqlite-next.php
+ * @link http://www.php.net/manual/en/function.sqlite-next.php
  * @param result
  * @return bool true on success, or false if there are no more rows.
  */
@@ -534,7 +534,7 @@ function sqlite_next ($result) {}
 
 /**
  * Seek to the previous row number of a result set
- * @link http://php.net/manual/en/function.sqlite-prev.php
+ * @link http://www.php.net/manual/en/function.sqlite-prev.php
  * @param result
  * @return bool true on success, or false if there are no more previous rows.
  */
@@ -542,7 +542,7 @@ function sqlite_prev ($result) {}
 
 /**
  * Returns whether more rows are available
- * @link http://php.net/manual/en/function.sqlite-valid.php
+ * @link http://www.php.net/manual/en/function.sqlite-valid.php
  * @param result
  * @return bool true if there are more rows available from the
  * result handle, or false otherwise.
@@ -551,7 +551,7 @@ function sqlite_valid ($result) {}
 
 /**
  * Finds whether or not more rows are available
- * @link http://php.net/manual/en/function.sqlite-has-more.php
+ * @link http://www.php.net/manual/en/function.sqlite-has-more.php
  * @param result resource <p>
  * The SQLite result resource.
  * </p>
@@ -562,7 +562,7 @@ function sqlite_has_more ($result) {}
 
 /**
  * Returns whether or not a previous row is available
- * @link http://php.net/manual/en/function.sqlite-has-prev.php
+ * @link http://www.php.net/manual/en/function.sqlite-has-prev.php
  * @param result
  * @return bool true if there are more previous rows available from the
  * result handle, or false otherwise.
@@ -571,7 +571,7 @@ function sqlite_has_prev ($result) {}
 
 /**
  * Escapes a string for use as a query parameter
- * @link http://php.net/manual/en/function.sqlite-escape-string.php
+ * @link http://www.php.net/manual/en/function.sqlite-escape-string.php
  * @param item string <p>
  * The string being quoted.
  * </p>
@@ -587,7 +587,7 @@ function sqlite_escape_string ($item) {}
 
 /**
  * Set busy timeout duration, or disable busy handlers
- * @link http://php.net/manual/en/function.sqlite-busy-timeout.php
+ * @link http://www.php.net/manual/en/function.sqlite-busy-timeout.php
  * @param milliseconds int <p>
  * The number of milliseconds. When set to
  * 0, busy handlers will be disabled and SQLite will
@@ -607,7 +607,7 @@ function sqlite_busy_timeout ($milliseconds) {}
 
 /**
  * Returns the error code of the last error for a database
- * @link http://php.net/manual/en/function.sqlite-last-error.php
+ * @link http://www.php.net/manual/en/function.sqlite-last-error.php
  * @param db
  * @return int an error code, or 0 if no error occurred.
  */
@@ -615,7 +615,7 @@ function sqlite_last_error ($db) {}
 
 /**
  * Returns the textual description of an error code
- * @link http://php.net/manual/en/function.sqlite-error-string.php
+ * @link http://www.php.net/manual/en/function.sqlite-error-string.php
  * @param error_code int <p>
  * The error code being used, which might be passed in from
  * sqlite_last_error.
@@ -627,7 +627,7 @@ function sqlite_error_string ($error_code) {}
 
 /**
  * Execute a query that does not prefetch and buffer all data
- * @link http://php.net/manual/en/function.sqlite-unbuffered-query.php
+ * @link http://www.php.net/manual/en/function.sqlite-unbuffered-query.php
  * @param query string <p>
  * The query to be executed.
  * </p>
@@ -640,7 +640,7 @@ function sqlite_error_string ($error_code) {}
  * specially important because SQL syntax errors can't be fetched using
  * the sqlite_last_error function.
  * </p>
- * @return SQLiteUnbuffered a result handle or false on failure.
+ * @return SQLiteUnbuffered a result handle&return.falseforfailure;.
  * </p>
  * <p>
  * sqlite_unbuffered_query returns a sequential
@@ -651,7 +651,7 @@ function sqlite_unbuffered_query ($query, $result_type = null, &$error_msg = nul
 
 /**
  * Register an aggregating UDF for use in SQL statements
- * @link http://php.net/manual/en/function.sqlite-create-aggregate.php
+ * @link http://www.php.net/manual/en/function.sqlite-create-aggregate.php
  * @param function_name string <p>
  * The name of the function used in SQL statements.
  * </p>
@@ -671,7 +671,7 @@ function sqlite_create_aggregate ($function_name, $step_func, $finalize_func, $n
 
 /**
  * Registers a "regular" User Defined Function for use in SQL statements
- * @link http://php.net/manual/en/function.sqlite-create-function.php
+ * @link http://www.php.net/manual/en/function.sqlite-create-function.php
  * @param function_name string <p>
  * The name of the function used in SQL statements.
  * </p>
@@ -690,7 +690,7 @@ function sqlite_create_function ($function_name, $callback, $num_args = null) {}
 
 /**
  * Opens a SQLite database and returns a SQLiteDatabase object
- * @link http://php.net/manual/en/function.sqlite-factory.php
+ * @link http://www.php.net/manual/en/function.sqlite-factory.php
  * @param filename string <p>
  * The filename of the SQLite database.
  * </p>
@@ -710,7 +710,7 @@ function sqlite_factory ($filename, $mode = null, &$error_message = null) {}
 
 /**
  * Encode binary data before returning it from an UDF
- * @link http://php.net/manual/en/function.sqlite-udf-encode-binary.php
+ * @link http://www.php.net/manual/en/function.sqlite-udf-encode-binary.php
  * @param data string <p>
  * The string being encoded.
  * </p>
@@ -720,7 +720,7 @@ function sqlite_udf_encode_binary ($data) {}
 
 /**
  * Decode binary data passed as parameters to an <acronym>UDF</acronym>
- * @link http://php.net/manual/en/function.sqlite-udf-decode-binary.php
+ * @link http://www.php.net/manual/en/function.sqlite-udf-decode-binary.php
  * @param data string <p>
  * The encoded data that will be decoded, data that was applied by either
  * sqlite_udf_encode_binary or
@@ -732,7 +732,7 @@ function sqlite_udf_decode_binary ($data) {}
 
 /**
  * Return an array of column types from a particular table
- * @link http://php.net/manual/en/function.sqlite-fetch-column-types.php
+ * @link http://www.php.net/manual/en/function.sqlite-fetch-column-types.php
  * @param table_name string <p>
  * The table name to query.
  * </p>
@@ -750,194 +750,36 @@ function sqlite_udf_decode_binary ($data) {}
  */
 function sqlite_fetch_column_types ($table_name, $result_type = null) {}
 
-
-/**
- * Columns are returned into the array having both a numerical index
- * and the field name as the array index.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_BOTH', 3);
-
-/**
- * Columns are returned into the array having a numerical index to the
- * fields. This index starts with 0, the first field in the result.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_NUM', 2);
-
-/**
- * Columns are returned into the array having the field name as the array
- * index.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_ASSOC', 1);
-
-/**
- * Successful result.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_OK', 0);
-
-/**
- * SQL error or missing database.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_ERROR', 1);
-
-/**
- * An internal logic error in SQLite.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_INTERNAL', 2);
-
-/**
- * Access permission denied.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_PERM', 3);
-
-/**
- * Callback routine requested an abort.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_ABORT', 4);
-
-/**
- * The database file is locked.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_BUSY', 5);
-
-/**
- * A table in the database is locked.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_LOCKED', 6);
-
-/**
- * Memory allocation failed.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_NOMEM', 7);
-
-/**
- * Attempt to write a readonly database.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_READONLY', 8);
-
-/**
- * Operation terminated internally.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_INTERRUPT', 9);
-
-/**
- * Disk I/O error occurred.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_IOERR', 10);
-
-/**
- * The database disk image is malformed.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_CORRUPT', 11);
-
-/**
- * (Internal) Table or record not found.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_NOTFOUND', 12);
-
-/**
- * Insertion failed because database is full.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_FULL', 13);
-
-/**
- * Unable to open the database file.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_CANTOPEN', 14);
-
-/**
- * Database lock protocol error.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_PROTOCOL', 15);
-
-/**
- * (Internal) Database table is empty.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_EMPTY', 16);
-
-/**
- * The database schema changed.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_SCHEMA', 17);
-
-/**
- * Too much data for one row of a table.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_TOOBIG', 18);
-
-/**
- * Abort due to constraint violation.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_CONSTRAINT', 19);
-
-/**
- * Data type mismatch.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_MISMATCH', 20);
-
-/**
- * Library used incorrectly.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_MISUSE', 21);
-
-/**
- * Uses of OS features not supported on host.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_NOLFS', 22);
-
-/**
- * Authorized failed.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_AUTH', 23);
-
-/**
- * File opened that is not a database file.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_NOTADB', 26);
-
-/**
- * Auxiliary database format error.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_FORMAT', 24);
-
-/**
- * Internal process has another row ready.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_ROW', 100);
-
-/**
- * Internal process has finished executing.
- * @link http://php.net/manual/en/sqlite.constants.php
- */
 define ('SQLITE_DONE', 101);
 
 // End of SQLite v.2.0-dev

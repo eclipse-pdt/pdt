@@ -158,7 +158,7 @@ function make_funckey_from_ref ($ref) {
  */
 function parse_phpdoc_functions ($phpdocDir) {
 	$xml_files = array_merge (
-		glob ("{$phpdocDir}/en/reference/*/*/*.xml")
+		glob ("{$phpdocDir}/reference/*/*/*.xml")
 	);
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
@@ -245,11 +245,14 @@ function parse_phpdoc_functions ($phpdocDir) {
  */
 function parse_phpdoc_classes ($phpdocDir) {
 	$xml_files = array_merge (
-		glob ("{$phpdocDir}/en/reference/*/reference.xml"),
-		glob ("{$phpdocDir}/en/reference/*/classes.xml"),
-		glob ("{$phpdocDir}/en/language/*/*.xml"),
-		glob ("{$phpdocDir}/en/language/*.xml")
+		glob ("{$phpdocDir}/reference/*/reference.xml"),
+		glob ("{$phpdocDir}/reference/*/classes.xml"),
+		glob ("{$phpdocDir}/language/*/*.xml"),
+		glob ("{$phpdocDir}/language/*.xml")
 	);
+	
+	global $fields_doc;
+	
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
 		if (preg_match ('@xml:id=["\'](.*?)["\']@', $xml, $match)) {
@@ -264,6 +267,66 @@ function parse_phpdoc_classes ($phpdocDir) {
 					if (preg_match ("@<title><classname>{$class}</classname></title>\s*<para>(.*?)</para>@s", $xml, $match2)) {
 						$classesDoc[$refname]['doc'] = xml_to_phpdoc($match2[1]);
 					}
+					
+					//pass over class fields here
+					$fields_xml_file = array_merge (
+						glob ("{$phpdocDir}/reference/*/" . $refname . ".xml")
+					);
+	
+					if($fields_xml_file[0] != null) {
+						$xml_field_data = file_get_contents ($fields_xml_file[0]);
+						if($xml_field_data != null) {
+							
+							if(preg_match_all ('@<fieldsynopsis>((\w|\W|\s)*?)</fieldsynopsis>@', $xml_field_data, $fieldsynopsis_list)) {
+								foreach ($fieldsynopsis_list[1] as $fieldsynopsis) {
+									
+									if(preg_match_all("@<varname\s*linkend=\"{$refname}.props.(.*?)\">(.*?)</varname>@", $fieldsynopsis, $varname)) {
+										$field_name = $varname[2][0];
+										$fields_doc[$refname][$field_name]['name'] = $field_name;
+									}
+									
+									
+//									    <varlistentry xml:id="domdocument.props.formatoutput">
+//									     <term><varname>formatOutput</varname></term>
+//									     <listitem>
+//									      <para>Nicely formats output with indentation and extra space.</para>
+//									     </listitem>
+//									    </varlistentry>
+									if (preg_match ("@<varlistentry.*?<term><varname>{$field_name}</varname></term>.*?<para>(.*?)</para>@s", $xml_field_data, $doc)) {
+										if(preg_match ("@<emphasis>Deprecated</emphasis>@s", $doc[1], $deprecated)) {
+											$fields_doc[$refname][$field_name]['deprecated'] = true;
+										}else {
+											$fields_doc[$refname][$field_name]['deprecated'] = false;
+										}
+										$fields_doc[$refname][$field_name]['doc'] = xml_to_phpdoc($doc[1]);
+									}
+									
+									if(preg_match_all("@<modifier>(.*?)</modifier>@", $fieldsynopsis, $modifier_list)) {
+										foreach ($modifier_list[1] as $current_modifier) {
+											if($current_modifier == "readonly") {
+												continue;
+											}else {
+												$modifier = $current_modifier;
+												break;
+											}
+										}
+										
+										//go to the next field if not public ???
+										if($modifier == "private") {
+											continue;
+										}	
+										$fields_doc[$refname][$field_name]['modifier'] = $modifier;
+									}
+									
+									if(preg_match_all("@<type>(.*?)</type>@", $fieldsynopsis, $type)) {
+										$field_type = $type[1][0]; 
+										$fields_doc[$refname][$field_name]['type'] = $field_type;
+									}
+								}
+							}
+						}
+					}
+					
 				}
 			}
 		}
@@ -382,13 +445,65 @@ function print_class ($classRef, $tabs = 0) {
 		print "\n";
 	}
 
+	global $classesDoc;
+	
+	
 	// process properties
 	$propertiesRef = $classRef->getProperties();
 	if (count ($propertiesRef) > 0) {
 		foreach ($propertiesRef as $propertyRef) {
 			print_property ($propertyRef, $tabs + 1);
+			$printedFields[$propertyRef->getName()] = true;
 		}
 		print "\n";
+	}
+	
+		
+	$className = strtolower($classRef->getName());
+	if($className == "DomDocument") {
+		echo "DomDocument";
+	}
+	
+	global $fields_doc;
+	if (@$fields_doc[$className]) {
+		$fields = @$fields_doc[$className];
+		foreach ($fields as $field) {
+			if(!$printedFields[$field['name']]) {
+				
+				//print doc here
+				print("\n");
+				$doc = $field['doc'];
+				if ($doc) {
+					print_tabs ($tabs + 1);
+					print "/**\n";
+					print_tabs ($tabs + 1);
+					print " * ".newline_to_phpdoc($doc, $tabs + 1)."\n";
+					print_tabs ($tabs + 1);
+					print " * @var ".$field['type']."\n";
+					if($field['deprecated'] == true) {
+						print_tabs ($tabs + 1);
+						print " * @deprecated "."\n";
+					}
+					
+					
+					print_Tabs ($tabs + 1);
+					// http://www.php.net/manual/en/class.domdocument.php#domdocument.props.actualencoding
+					$refname = strtolower($classRef->getName());
+					$class_url = make_url ("class." . $refname);
+					$field_name = strtolower($field['name']);
+					$field_url = $class_url . '#' . $className . ".props." . $field_name;
+					print " * @link {$field_url}\n";
+					
+					print_tabs ($tabs + 1);
+					print " */\n";
+				}
+				
+				print_tabs ($tabs + 1);
+				print implode(' ', array($field['modifier']));
+				print " ";
+				print "\${$field['name']};\n";
+			}
+		}
 	}
 
 	// process methods
@@ -597,7 +712,7 @@ function print_modifiers ($ref) {
  * @return URL
  */
 function make_url ($id) {
-	return "http://php.net/manual/en/{$id}.php";
+	return "http://www.php.net/manual/en/{$id}.php";
 }
 
 /**
@@ -627,7 +742,7 @@ function print_doccomment ($ref, $tabs = 0) {
 			}
 			if (@$classesDoc[$refname]['id']) {
 				print_Tabs ($tabs);
-				$url = make_url ($classesDoc[$refname]['id']);
+				$url = make_url ("class." . $refname);
 				print " * @link {$url}\n";
 			}
 			print_tabs ($tabs);
@@ -691,6 +806,8 @@ function print_doccomment ($ref, $tabs = 0) {
 			print_tabs ($tabs);
 			print " */\n";
 		}
+	} else if ($ref instanceof ReflectionProperty) {
+		//TODO complete phpdoc for fields detected by reflection
 	}
 }
 

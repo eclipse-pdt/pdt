@@ -4,7 +4,7 @@
 
 /**
  * Split given source into PHP tokens
- * @link http://php.net/manual/en/function.token-get-all.php
+ * @link http://www.php.net/manual/en/function.token-get-all.php
  * @param source string <p>
  * The PHP source to parse.
  * </p>
@@ -18,7 +18,7 @@ function token_get_all ($source) {}
 
 /**
  * Get the symbolic name of a given PHP token
- * @link http://php.net/manual/en/function.token-name.php
+ * @link http://www.php.net/manual/en/function.token-name.php
  * @param token int <p>
  * The token value.
  * </p>

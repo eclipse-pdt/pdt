@@ -6,13 +6,13 @@ class SimpleXMLElement implements Traversable {
 
 	/**
 	 * Creates a new SimpleXMLElement object
-	 * @link http://php.net/manual/en/simplexmlelement.construct.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.construct.php
 	 */
 	final public function __construct () {}
 
 	/**
 	 * Return a well-formed XML string based on SimpleXML element
-	 * @link http://php.net/manual/en/simplexmlelement.asXML.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.asXML.php
 	 * @param filename string[optional] <p>
 	 * If specified, the function writes the data to the file rather than
 	 * returning it.
@@ -28,7 +28,7 @@ class SimpleXMLElement implements Traversable {
 
 	/**
 	 * Runs XPath query on XML data
-	 * @link http://php.net/manual/en/simplexmlelement.xpath.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.xpath.php
 	 * @param path string <p>
 	 * An XPath path
 	 * </p>
@@ -39,7 +39,7 @@ class SimpleXMLElement implements Traversable {
 
 	/**
 	 * Creates a prefix/ns context for the next XPath query
-	 * @link http://php.net/manual/en/simplexmlelement.registerXPathNamespace.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.registerXPathNamespace.php
 	 * @param prefix string <p>
 	 * The namespace prefix to use in the XPath query for the namespace given in 
 	 * ns.
@@ -55,7 +55,7 @@ class SimpleXMLElement implements Traversable {
 
 	/**
 	 * Identifies an element's attributes
-	 * @link http://php.net/manual/en/simplexmlelement.attributes.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.attributes.php
 	 * @param ns string[optional] <p>
 	 * An optional namespace for the retrieved attributes
 	 * </p>
@@ -68,19 +68,20 @@ class SimpleXMLElement implements Traversable {
 
 	/**
 	 * Finds children of given node
-	 * @link http://php.net/manual/en/simplexmlelement.children.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.children.php
 	 * @param ns string[optional] <p>
 	 * </p>
 	 * @param is_prefix bool[optional] <p>
 	 * Default to false
 	 * </p>
-	 * @return SimpleXMLElement 
+	 * @return SimpleXMLElement a SimpleXMLElement element, whether the node 
+	 * have children or not.
 	 */
 	public function children ($ns = null, $is_prefix = null) {}
 
 	/**
 	 * Returns namespaces used in document
-	 * @link http://php.net/manual/en/simplexmlelement.getNamespaces.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.getNamespaces.php
 	 * @param recursive bool[optional] <p>
 	 * If specified, returns all namespaces used in parent and child nodes. 
 	 * Otherwise, returns only namespaces used in root node.
@@ -92,7 +93,7 @@ class SimpleXMLElement implements Traversable {
 
 	/**
 	 * Returns namespaces declared in document
-	 * @link http://php.net/manual/en/simplexmlelement.getDocNamespaces.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.getDocNamespaces.php
 	 * @param recursive bool[optional] <p>
 	 * If specified, returns all namespaces declared in parent and child nodes. 
 	 * Otherwise, returns only namespaces declared in root node.
@@ -104,7 +105,7 @@ class SimpleXMLElement implements Traversable {
 
 	/**
 	 * Gets the name of the XML element
-	 * @link http://php.net/manual/en/simplexmlelement.getName.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.getName.php
 	 * @return string The getName method returns as a string the 
 	 * name of the XML tag referenced by the SimpleXMLElement object.
 	 */
@@ -112,7 +113,7 @@ class SimpleXMLElement implements Traversable {
 
 	/**
 	 * Adds a child element to the XML node
-	 * @link http://php.net/manual/en/simplexmlelement.addChild.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.addChild.php
 	 * @param name string <p>
 	 * The name of the child element to add.
 	 * </p>
@@ -129,7 +130,7 @@ class SimpleXMLElement implements Traversable {
 
 	/**
 	 * Adds an attribute to the SimpleXML element
-	 * @link http://php.net/manual/en/simplexmlelement.addAttribute.php
+	 * @link http://www.php.net/manual/en/simplexmlelement.addAttribute.php
 	 * @param name string <p>
 	 * The name of the attribute to add.
 	 * </p>
@@ -147,7 +148,7 @@ class SimpleXMLElement implements Traversable {
 
 /**
  * Interprets an XML file into an object
- * @link http://php.net/manual/en/function.simplexml-load-file.php
+ * @link http://www.php.net/manual/en/function.simplexml-load-file.php
  * @param filename string <p>
  * Path to the XML file
  * </p>
@@ -181,7 +182,7 @@ function simplexml_load_file ($filename, $class_name = null, $options = null, $n
 
 /**
  * Interprets a string of XML into an object
- * @link http://php.net/manual/en/function.simplexml-load-string.php
+ * @link http://www.php.net/manual/en/function.simplexml-load-string.php
  * @param data string <p>
  * A well-formed XML string
  * </p>
@@ -207,7 +208,7 @@ function simplexml_load_string ($data, $class_name = null, $options = null, $ns 
 
 /**
  * Get a <literal>SimpleXMLElement</literal> object from a DOM node.
- * @link http://php.net/manual/en/function.simplexml-import-dom.php
+ * @link http://www.php.net/manual/en/function.simplexml-import-dom.php
  * @param node DOMNode <p>
  * A DOM Element node
  * </p>
@@ -217,7 +218,7 @@ function simplexml_load_string ($data, $class_name = null, $options = null, $ns 
  * the specified class. That class should extend the 
  * SimpleXMLElement class.
  * </p>
- * @return SimpleXMLElement a SimpleXMLElement or false on failure.
+ * @return SimpleXMLElement a SimpleXMLElement&return.falseforfailure;.
  */
 function simplexml_import_dom (DOMNode $node, $class_name = null) {}
 

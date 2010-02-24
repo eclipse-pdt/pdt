@@ -31,14 +31,14 @@ class Collator  {
 
 	/**
 	 * Create a collator
-	 * @link http://php.net/manual/en/collator.construct.php
+	 * @link http://www.php.net/manual/en/collator.construct.php
 	 * @param arg1
 	 */
 	public function __construct ($arg1) {}
 
 	/**
 	 * Create a collator
-	 * @link http://php.net/manual/en/collator.create.php
+	 * @link http://www.php.net/manual/en/collator.create.php
 	 * @param locale string <p>
 	 * The locale containing the required collation rules. Special values for
 	 * locales can be passed in - if null is passed for the locale, the
@@ -52,7 +52,7 @@ class Collator  {
 
 	/**
 	 * Compare two Unicode strings
-	 * @link http://php.net/manual/en/collator.compare.php
+	 * @link http://www.php.net/manual/en/collator.compare.php
 	 * @param str1 string <p>
 	 * The first string to compare.
 	 * </p>
@@ -82,7 +82,7 @@ class Collator  {
 
 	/**
 	 * Sort array using specified collator
-	 * @link http://php.net/manual/en/collator.sort.php
+	 * @link http://www.php.net/manual/en/collator.sort.php
 	 * @param arr array <p>
 	 * Array of strings to sort.
 	 * </p>
@@ -100,7 +100,7 @@ class Collator  {
 
 	/**
 	 * Sort array using specified collator and sort keys
-	 * @link http://php.net/manual/en/collator.sortwithsortkeys.php
+	 * @link http://www.php.net/manual/en/collator.sortwithsortkeys.php
 	 * @param arr array <p>Array of strings to sort</p>
 	 * @return bool Returns true on success or false on failure.
 	 */
@@ -108,7 +108,7 @@ class Collator  {
 
 	/**
 	 * Sort array maintaining index association
-	 * @link http://php.net/manual/en/collator.asort.php
+	 * @link http://www.php.net/manual/en/collator.asort.php
 	 * @param arr array <p>Array of strings to sort.</p>
 	 * @param sort_flag int[optional] <p>
 	 * Optional sorting type, one of the following:
@@ -122,7 +122,7 @@ class Collator  {
 
 	/**
 	 * Get collation attribute value
-	 * @link http://php.net/manual/en/collator.getattribute.php
+	 * @link http://www.php.net/manual/en/collator.getattribute.php
 	 * @param attr int <p>
 	 * Attribute to get value for.
 	 * </p>
@@ -132,7 +132,7 @@ class Collator  {
 
 	/**
 	 * Set collation attribute
-	 * @link http://php.net/manual/en/collator.setattribute.php
+	 * @link http://www.php.net/manual/en/collator.setattribute.php
 	 * @param attr int <p>Attribute.</p>
 	 * @param val int <p>
 	 * Attribute value.
@@ -143,14 +143,14 @@ class Collator  {
 
 	/**
 	 * Get current collation strength
-	 * @link http://php.net/manual/en/collator.getstrength.php
+	 * @link http://www.php.net/manual/en/collator.getstrength.php
 	 * @return int current collation strength, or boolean false on error.
 	 */
 	public function getStrength () {}
 
 	/**
 	 * Set collation strength
-	 * @link http://php.net/manual/en/collator.setstrength.php
+	 * @link http://www.php.net/manual/en/collator.setstrength.php
 	 * @param strength int <p>Strength to set.</p>
 	 * <p>
 	 * Possible values are:
@@ -163,7 +163,7 @@ class Collator  {
 
 	/**
 	 * Get the locale name of the collator
-	 * @link http://php.net/manual/en/collator.getlocale.php
+	 * @link http://www.php.net/manual/en/collator.getlocale.php
 	 * @param type int[optional] <p>
 	 * You can choose between valid and actual locale (
 	 * Locale::VALID_LOCALE and 
@@ -178,14 +178,14 @@ class Collator  {
 
 	/**
 	 * Get collator's last error code
-	 * @link http://php.net/manual/en/collator.geterrorcode.php
+	 * @link http://www.php.net/manual/en/collator.geterrorcode.php
 	 * @return int Error code returned by the last Collator API function call.
 	 */
 	public function getErrorCode () {}
 
 	/**
 	 * Get text for collator's last error code
-	 * @link http://php.net/manual/en/collator.geterrormessage.php
+	 * @link http://www.php.net/manual/en/collator.geterrormessage.php
 	 * @return string Description of an error occurred in the last Collator API function call.
 	 */
 	public function getErrorMessage () {}
@@ -277,7 +277,7 @@ class NumberFormatter  {
 
 	/**
 	 * Create a number formatter
-	 * @link http://php.net/manual/en/numberformatter.create.php
+	 * @link http://www.php.net/manual/en/numberformatter.create.php
 	 * @param locale string <p>
 	 * Locale in which the number would be formatted (locale name, e.g. en_CA).
 	 * </p>
@@ -302,7 +302,7 @@ class NumberFormatter  {
 
 	/**
 	 * Format a number
-	 * @link http://php.net/manual/en/numberformatter.format.php
+	 * @link http://www.php.net/manual/en/numberformatter.format.php
 	 * @param value number <p>
 	 * The value to format. Can be integer or double,
 	 * other values will be converted to a numeric value.
@@ -317,7 +317,7 @@ class NumberFormatter  {
 
 	/**
 	 * Parse a number
-	 * @link http://php.net/manual/en/numberformatter.parse.php
+	 * @link http://www.php.net/manual/en/numberformatter.parse.php
 	 * @param value string 
 	 * @param type int[optional] <p>
 	 * The
@@ -334,7 +334,7 @@ class NumberFormatter  {
 
 	/**
 	 * Format a currency value
-	 * @link http://php.net/manual/en/numberformatter.formatcurrency.php
+	 * @link http://www.php.net/manual/en/numberformatter.formatcurrency.php
 	 * @param value float <p>
 	 * The numeric currency value.
 	 * </p>
@@ -347,7 +347,7 @@ class NumberFormatter  {
 
 	/**
 	 * Parse a currency number
-	 * @link http://php.net/manual/en/numberformatter.parsecurrency.php
+	 * @link http://www.php.net/manual/en/numberformatter.parsecurrency.php
 	 * @param value string 
 	 * @param currency string <p>
 	 * Parameter to receive the currency name (3-letter ISO 4217 currency
@@ -363,7 +363,7 @@ class NumberFormatter  {
 
 	/**
 	 * Set an attribute
-	 * @link http://php.net/manual/en/numberformatter.setattribute.php
+	 * @link http://www.php.net/manual/en/numberformatter.setattribute.php
 	 * @param attr int <p>
 	 * Attribute specifier - one of the
 	 * numeric attribute constants.
@@ -377,7 +377,7 @@ class NumberFormatter  {
 
 	/**
 	 * Get an attribute
-	 * @link http://php.net/manual/en/numberformatter.getattribute.php
+	 * @link http://www.php.net/manual/en/numberformatter.getattribute.php
 	 * @param attr int <p>
 	 * Attribute specifier - one of the
 	 * numeric attribute constants.
@@ -388,7 +388,7 @@ class NumberFormatter  {
 
 	/**
 	 * Set a text attribute
-	 * @link http://php.net/manual/en/numberformatter.settextattribute.php
+	 * @link http://www.php.net/manual/en/numberformatter.settextattribute.php
 	 * @param attr int <p>
 	 * Attribute specifier - one of the
 	 * text attribute
@@ -403,7 +403,7 @@ class NumberFormatter  {
 
 	/**
 	 * Get a text attribute
-	 * @link http://php.net/manual/en/numberformatter.gettextattribute.php
+	 * @link http://www.php.net/manual/en/numberformatter.gettextattribute.php
 	 * @param attr int <p>
 	 * Attribute specifier - one of the
 	 * text attribute constants.
@@ -414,7 +414,7 @@ class NumberFormatter  {
 
 	/**
 	 * Set a symbol value
-	 * @link http://php.net/manual/en/numberformatter.setsymbol.php
+	 * @link http://www.php.net/manual/en/numberformatter.setsymbol.php
 	 * @param attr int <p>
 	 * Symbol specifier, one of the
 	 * format symbol constants.
@@ -428,7 +428,7 @@ class NumberFormatter  {
 
 	/**
 	 * Get a symbol value
-	 * @link http://php.net/manual/en/numberformatter.getsymbol.php
+	 * @link http://www.php.net/manual/en/numberformatter.getsymbol.php
 	 * @param attr int <p>
 	 * Symbol specifier, one of the
 	 * format symbol constants.
@@ -439,7 +439,7 @@ class NumberFormatter  {
 
 	/**
 	 * Set formatter pattern
-	 * @link http://php.net/manual/en/numberformatter.setpattern.php
+	 * @link http://www.php.net/manual/en/numberformatter.setpattern.php
 	 * @param pattern string <p>
 	 * Pattern in syntax described in
 	 * ICU DecimalFormat
@@ -451,14 +451,14 @@ class NumberFormatter  {
 
 	/**
 	 * Get formatter pattern
-	 * @link http://php.net/manual/en/numberformatter.getpattern.php
+	 * @link http://www.php.net/manual/en/numberformatter.getpattern.php
 	 * @return string Pattern string that is used by the formatter, or false if an error happens.
 	 */
 	public function getPattern () {}
 
 	/**
 	 * Get formatter locale
-	 * @link http://php.net/manual/en/numberformatter.getlocale.php
+	 * @link http://www.php.net/manual/en/numberformatter.getlocale.php
 	 * @param type int[optional] <p>
 	 * You can choose between valid and actual locale (
 	 * Locale::VALID_LOCALE,
@@ -471,14 +471,14 @@ class NumberFormatter  {
 
 	/**
 	 * Get formatter's last error code.
-	 * @link http://php.net/manual/en/numberformatter.geterrorcode.php
+	 * @link http://www.php.net/manual/en/numberformatter.geterrorcode.php
 	 * @return int error code from last formatter call.
 	 */
 	public function getErrorCode () {}
 
 	/**
 	 * Get formatter's last error message.
-	 * @link http://php.net/manual/en/numberformatter.geterrormessage.php
+	 * @link http://www.php.net/manual/en/numberformatter.geterrormessage.php
 	 * @return string error message from last formatter call.
 	 */
 	public function getErrorMessage () {}
@@ -499,10 +499,9 @@ class Normalizer  {
 
 	/**
 	 * Normalizes the input provided and returns the normalized string
-	 * @link http://php.net/manual/en/normalizer.normalize.php
+	 * @link http://www.php.net/manual/en/normalizer.normalize.php
 	 * @param input string <p>The input string to normalize</p>
-	 * @param form string[optional] <p>One of the normalization forms. If not provided the default is
-	 * Normalizer::FORM_C.</p>
+	 * @param form string[optional] <p>One of the normalization forms.</p>
 	 * @return string The normalized string or &null; if an error occurred.
 	 */
 	public static function normalize ($input, $form = null) {}
@@ -510,10 +509,11 @@ class Normalizer  {
 	/**
 	 * Checks if the provided string is already in the specified normalization
    form.
-	 * @link http://php.net/manual/en/normalizer.isnormalized.php
+	 * @link http://www.php.net/manual/en/normalizer.isnormalized.php
 	 * @param input string <p>The input string to normalize</p>
-	 * @param form string[optional] <p>One of the normalization forms.
-	 * Defaults to Normalizer::FORM_C.</p>
+	 * @param form string[optional] <p>
+	 * One of the normalization forms.
+	 * </p>
 	 * @return bool true if normalized, false otherwise or if there an error
 	 */
 	public static function isNormalized ($input, $form = null) {}
@@ -535,14 +535,14 @@ class Locale  {
 
 	/**
 	 * Gets the default locale value from the INTL global 'default_locale'
-	 * @link http://php.net/manual/en/locale.getdefault.php
+	 * @link http://www.php.net/manual/en/locale.getdefault.php
 	 * @return string The current runtime locale
 	 */
 	public static function getDefault () {}
 
 	/**
 	 * sets the default runtime locale
-	 * @link http://php.net/manual/en/locale.setdefault.php
+	 * @link http://www.php.net/manual/en/locale.setdefault.php
 	 * @param locale string <p>
 	 * Is a BCP 47 compliant language tag containing the
 	 * </p>
@@ -552,7 +552,7 @@ class Locale  {
 
 	/**
 	 * Gets the primary language for the input locale
-	 * @link http://php.net/manual/en/locale.getprimarylanguage.php
+	 * @link http://www.php.net/manual/en/locale.getprimarylanguage.php
 	 * @param locale string <p>
 	 * The locale to extract the primary language code from
 	 * </p>
@@ -562,7 +562,7 @@ class Locale  {
 
 	/**
 	 * Gets the script for the input locale
-	 * @link http://php.net/manual/en/locale.getscript.php
+	 * @link http://www.php.net/manual/en/locale.getscript.php
 	 * @param locale string <p>
 	 * The locale to extract the script code from
 	 * </p>
@@ -572,7 +572,7 @@ class Locale  {
 
 	/**
 	 * Gets the region for the input locale
-	 * @link http://php.net/manual/en/locale.getregion.php
+	 * @link http://www.php.net/manual/en/locale.getregion.php
 	 * @param locale string <p>
 	 * The locale to extract the region code from
 	 * </p>
@@ -582,7 +582,7 @@ class Locale  {
 
 	/**
 	 * Gets the keywords for the input locale
-	 * @link http://php.net/manual/en/locale.getkeywords.php
+	 * @link http://www.php.net/manual/en/locale.getkeywords.php
 	 * @param locale string <p>
 	 * The locale to extract the keywords from
 	 * </p>
@@ -592,7 +592,7 @@ class Locale  {
 
 	/**
 	 * Returns an appropriately localized display name for script of the input locale
-	 * @link http://php.net/manual/en/locale.getdisplayscript.php
+	 * @link http://www.php.net/manual/en/locale.getdisplayscript.php
 	 * @param locale string <p>
 	 * The locale to return a display script for
 	 * </p>
@@ -606,7 +606,7 @@ class Locale  {
 
 	/**
 	 * Returns an appropriately localized display name for region of the input locale
-	 * @link http://php.net/manual/en/locale.getdisplayregion.php
+	 * @link http://www.php.net/manual/en/locale.getdisplayregion.php
 	 * @param locale string <p>
 	 * The locale to return a display region for.
 	 * </p>
@@ -620,7 +620,7 @@ class Locale  {
 
 	/**
 	 * Returns an appropriately localized display name for the input locale
-	 * @link http://php.net/manual/en/locale.getdisplayname.php
+	 * @link http://www.php.net/manual/en/locale.getdisplayname.php
 	 * @param locale string <p>
 	 * The locale to return a display name for.
 	 * </p>
@@ -631,7 +631,7 @@ class Locale  {
 
 	/**
 	 * Returns an appropriately localized display name for language of the inputlocale
-	 * @link http://php.net/manual/en/locale.getdisplaylanguage.php
+	 * @link http://www.php.net/manual/en/locale.getdisplaylanguage.php
 	 * @param locale string <p>
 	 * The locale to return a display language for
 	 * </p>
@@ -645,7 +645,7 @@ class Locale  {
 
 	/**
 	 * Returns an appropriately localized display name for variants of the input locale
-	 * @link http://php.net/manual/en/locale.getdisplayvariant.php
+	 * @link http://www.php.net/manual/en/locale.getdisplayvariant.php
 	 * @param locale string <p>
 	 * The locale to return a display variant for
 	 * </p>
@@ -659,7 +659,7 @@ class Locale  {
 
 	/**
 	 * Returns a correctly ordered and delimited locale ID
-	 * @link http://php.net/manual/en/locale.composelocale.php
+	 * @link http://www.php.net/manual/en/locale.composelocale.php
 	 * @param subtags array <p>
 	 * an array containing a list of key-value pairs, where the keys identify
 	 * the particular locale ID subtags, and the values are the associated
@@ -672,11 +672,11 @@ class Locale  {
 	 * the subtag is ordered by suffix resulting in variant0 followed by
 	 * variant1 followed by variant2 and so on.
 	 * </p>
-	 * 	<p>
-	 * 	The 'variant', 'private' and 'extlang' multiple values can be specified both
-	 * 	as array under specific key (e.g. 'variant') and as multiple numbered keys
-	 * 	(e.g. 'variant0', 'variant1', etc.).
-	 * 	</p>
+	 * <p>
+	 * The 'variant', 'private' and 'extlang' multiple values can be specified both
+	 * as array under specific key (e.g. 'variant') and as multiple numbered keys
+	 * (e.g. 'variant0', 'variant1', etc.).
+	 * </p>
 	 * </p>
 	 * @return string The corresponding locale identifier.
 	 */
@@ -684,7 +684,7 @@ class Locale  {
 
 	/**
 	 * Returns a key-value array of locale ID subtag elements.
-	 * @link http://php.net/manual/en/locale.parselocale.php
+	 * @link http://www.php.net/manual/en/locale.parselocale.php
 	 * @param locale string <p>
 	 * The locale to extract the subtag array from. Note: The 'variant' and
 	 * 'private' subtags can take maximum 15 values whereas 'extlang' can take
@@ -701,7 +701,7 @@ class Locale  {
 
 	/**
 	 * Gets the variants for the input locale
-	 * @link http://php.net/manual/en/locale.getallvariants.php
+	 * @link http://www.php.net/manual/en/locale.getallvariants.php
 	 * @param locale string <p>
 	 * The locale to extract the variants from
 	 * </p>
@@ -712,7 +712,7 @@ class Locale  {
 
 	/**
 	 * Checks if a language tag filter matches with locale
-	 * @link http://php.net/manual/en/locale.filtermatches.php
+	 * @link http://www.php.net/manual/en/locale.filtermatches.php
 	 * @param langtag string <p>
 	 * The language tag to check
 	 * </p>
@@ -729,7 +729,7 @@ class Locale  {
 
 	/**
 	 * Searches the language tag list for the best match to the language
-	 * @link http://php.net/manual/en/locale.lookup.php
+	 * @link http://www.php.net/manual/en/locale.lookup.php
 	 * @param langtag array <p>
 	 * An array containing a list of language tags to compare to 
 	 * locale. Maximum 100 items allowed.
@@ -755,7 +755,7 @@ class Locale  {
 
 	/**
 	 * Tries to find out best available locale based on HTTP "Accept-Language" header
-	 * @link http://php.net/manual/en/locale.acceptfromhttp.php
+	 * @link http://www.php.net/manual/en/locale.acceptfromhttp.php
 	 * @param header string <p>
 	 * The string containing the "Accept-Language" header according to format in RFC 2616.
 	 * </p>
@@ -775,7 +775,7 @@ class MessageFormatter  {
 
 	/**
 	 * Constructs a new Message Formatter
-	 * @link http://php.net/manual/en/messageformatter.create.php
+	 * @link http://www.php.net/manual/en/messageformatter.create.php
 	 * @param locale string <p>
 	 * The locale to use when formatting arguments
 	 * </p>
@@ -791,7 +791,7 @@ class MessageFormatter  {
 
 	/**
 	 * Format the message
-	 * @link http://php.net/manual/en/messageformatter.format.php
+	 * @link http://www.php.net/manual/en/messageformatter.format.php
 	 * @param args array <p>
 	 * Arguments to insert into the format string
 	 * </p>
@@ -801,7 +801,7 @@ class MessageFormatter  {
 
 	/**
 	 * Quick format message
-	 * @link http://php.net/manual/en/messageformatter.formatmessage.php
+	 * @link http://www.php.net/manual/en/messageformatter.formatmessage.php
 	 * @param locale string <p>
 	 * The locale to use for formatting locale-dependent parts
 	 * </p>
@@ -820,7 +820,7 @@ class MessageFormatter  {
 
 	/**
 	 * Parse input string according to pattern
-	 * @link http://php.net/manual/en/messageformatter.parse.php
+	 * @link http://www.php.net/manual/en/messageformatter.parse.php
 	 * @param value string <p>
 	 * The string to parse
 	 * </p>
@@ -830,7 +830,7 @@ class MessageFormatter  {
 
 	/**
 	 * Quick parse input string
-	 * @link http://php.net/manual/en/messageformatter.parsemessage.php
+	 * @link http://www.php.net/manual/en/messageformatter.parsemessage.php
 	 * @param locale string <p>
 	 * The locale to use for parsing locale-dependent parts
 	 * </p>
@@ -843,7 +843,7 @@ class MessageFormatter  {
 
 	/**
 	 * Set the pattern used by the formatter
-	 * @link http://php.net/manual/en/messageformatter.setpattern.php
+	 * @link http://www.php.net/manual/en/messageformatter.setpattern.php
 	 * @param pattern string <p>
 	 * The pattern string to use in this message formatter.
 	 * The pattern uses an 'apostrophe-friendly' syntax; it is run through
@@ -856,28 +856,28 @@ class MessageFormatter  {
 
 	/**
 	 * Get the pattern used by the formatter
-	 * @link http://php.net/manual/en/messageformatter.getpattern.php
+	 * @link http://www.php.net/manual/en/messageformatter.getpattern.php
 	 * @return string The pattern string for this message formatter
 	 */
 	public function getPattern () {}
 
 	/**
 	 * Get the locale for which the formatter was created.
-	 * @link http://php.net/manual/en/messageformatter.getlocale.php
+	 * @link http://www.php.net/manual/en/messageformatter.getlocale.php
 	 * @return string The locale name
 	 */
 	public function getLocale () {}
 
 	/**
 	 * Get the error code from last operation
-	 * @link http://php.net/manual/en/messageformatter.geterrorcode.php
+	 * @link http://www.php.net/manual/en/messageformatter.geterrorcode.php
 	 * @return int The error code, one of UErrorCode values. Initial value is U_ZERO_ERROR.
 	 */
 	public function getErrorCode () {}
 
 	/**
 	 * Get the error text from the last operation
-	 * @link http://php.net/manual/en/messageformatter.geterrormessage.php
+	 * @link http://www.php.net/manual/en/messageformatter.geterrormessage.php
 	 * @return string Description of the last error.
 	 */
 	public function getErrorMessage () {}
@@ -906,7 +906,7 @@ class IntlDateFormatter  {
 
 	/**
 	 * Create a date formatter
-	 * @link http://php.net/manual/en/intldateformatter.create.php
+	 * @link http://www.php.net/manual/en/intldateformatter.create.php
 	 * @param locale string <p>
 	 * Locale to use when formatting or parsing.
 	 * </p>
@@ -933,7 +933,8 @@ class IntlDateFormatter  {
 	 * IntlDateFormatter calendar constants.
 	 * </p>
 	 * @param pattern string[optional] <p>
-	 * Optional pattern to use when formatting or parsing 
+	 * Optional pattern to use when formatting or parsing.
+	 * Possible patterns are documented at &url.icu.datepattern;.
 	 * </p>
 	 * @return IntlDateFormatter 
 	 */
@@ -941,31 +942,31 @@ class IntlDateFormatter  {
 
 	/**
 	 * Get the datetype used for the IntlDateFormatter
-	 * @link http://php.net/manual/en/intldateformatter.getdatetype.php
+	 * @link http://www.php.net/manual/en/intldateformatter.getdatetype.php
 	 * @return int The current date type value of the formatter.
 	 */
 	public function getDateType () {}
 
 	/**
 	 * Get the timetype used for the IntlDateFormatter
-	 * @link http://php.net/manual/en/intldateformatter.gettimetype.php
+	 * @link http://www.php.net/manual/en/intldateformatter.gettimetype.php
 	 * @return int The current date type value of the formatter.
 	 */
 	public function getTimeType () {}
 
 	/**
 	 * Get the calendar used for the IntlDateFormatter
-	 * @link http://php.net/manual/en/intldateformatter.getcalendar.php
+	 * @link http://www.php.net/manual/en/intldateformatter.getcalendar.php
 	 * @return int The calendar being used by the formatter.
 	 */
 	public function getCalendar () {}
 
 	/**
 	 * sets the calendar used to the appropriate calendar, which must be
-	 * @link http://php.net/manual/en/intldateformatter.setcalendar.php
+	 * @link http://www.php.net/manual/en/intldateformatter.setcalendar.php
 	 * @param which int <p>
-	 *  The calendar to use.
-	 *  Default is IntlDateFormatter::GREGORIAN.
+	 * The calendar to use.
+	 * Default is IntlDateFormatter::GREGORIAN.
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 */
@@ -973,17 +974,17 @@ class IntlDateFormatter  {
 
 	/**
 	 * Get the timezone-id used for the IntlDateFormatter
-	 * @link http://php.net/manual/en/intldateformatter.gettimezoneid.php
+	 * @link http://www.php.net/manual/en/intldateformatter.gettimezoneid.php
 	 * @return string ID string for the time zone used by this formatter.
 	 */
 	public function getTimeZoneId () {}
 
 	/**
 	 * Sets the time zone to use
-	 * @link http://php.net/manual/en/intldateformatter.settimezoneid.php
+	 * @link http://www.php.net/manual/en/intldateformatter.settimezoneid.php
 	 * @param zone string <p>
-	 * The time zone ID string of the time zone to use. 
-	 * If &null; or the empty string, the default time zone for the runtime is used. 
+	 * The time zone ID string of the time zone to use.
+	 * If &null; or the empty string, the default time zone for the runtime is used.
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 */
@@ -991,9 +992,10 @@ class IntlDateFormatter  {
 
 	/**
 	 * Set the pattern used for the IntlDateFormatter
-	 * @link http://php.net/manual/en/intldateformatter.setpattern.php
+	 * @link http://www.php.net/manual/en/intldateformatter.setpattern.php
 	 * @param pattern string <p>
-	 *  New pattern string to use.
+	 * New pattern string to use.
+	 * Possible patterns are documented at &url.icu.datepattern;.
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 * Bad formatstrings are usually the cause of the failure.
@@ -1002,14 +1004,14 @@ class IntlDateFormatter  {
 
 	/**
 	 * Get the pattern used for the IntlDateFormatter
-	 * @link http://php.net/manual/en/intldateformatter.getpattern.php
+	 * @link http://www.php.net/manual/en/intldateformatter.getpattern.php
 	 * @return string The pattern string being used to format/parse.
 	 */
 	public function getPattern () {}
 
 	/**
 	 * Get the locale used by formatter
-	 * @link http://php.net/manual/en/intldateformatter.getlocale.php
+	 * @link http://www.php.net/manual/en/intldateformatter.getlocale.php
 	 * @param which int[optional] 
 	 * @return string the locale of this formatter or 'false' if error
 	 */
@@ -1017,9 +1019,9 @@ class IntlDateFormatter  {
 
 	/**
 	 * Set the leniency of the parser
-	 * @link http://php.net/manual/en/intldateformatter.setlenient.php
+	 * @link http://www.php.net/manual/en/intldateformatter.setlenient.php
 	 * @param lenient bool <p>
-	 *  Sets whether the parser is lenient or not, default is false (strict).
+	 * Sets whether the parser is lenient or not, default is false (strict).
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 */
@@ -1027,16 +1029,16 @@ class IntlDateFormatter  {
 
 	/**
 	 * Get the lenient used for the IntlDateFormatter
-	 * @link http://php.net/manual/en/intldateformatter.islenient.php
+	 * @link http://www.php.net/manual/en/intldateformatter.islenient.php
 	 * @return bool true if parser is lenient, false if parser is strict. By default the parser is strict.
 	 */
 	public function isLenient () {}
 
 	/**
 	 * Format the date/time value as a string
-	 * @link http://php.net/manual/en/intldateformatter.format.php
+	 * @link http://www.php.net/manual/en/intldateformatter.format.php
 	 * @param value mixed <p>
-	 *  Value to format. Can be integer for an Unix timestamp value (seconds since epoch, UTC) or 
+	 * Value to format. Can be integer for an Unix timestamp value (seconds since epoch, UTC) or 
 	 * array for a localtime array.
 	 * </p>
 	 * @return string The formatted string or, if an error occurred, false.
@@ -1045,16 +1047,16 @@ class IntlDateFormatter  {
 
 	/**
 	 * Parse string to a timestamp value
-	 * @link http://php.net/manual/en/intldateformatter.parse.php
+	 * @link http://www.php.net/manual/en/intldateformatter.parse.php
 	 * @param value string <p>
-	 *  string to convert to a time 
+	 * string to convert to a time 
 	 * </p>
 	 * @param position int[optional] <p>
-	 *  Position at which to start the parsing in $value (zero-based).
-	 *  If no error occurs before $value is consumed, $parse_pos will contain -1
+	 * Position at which to start the parsing in $value (zero-based).
+	 * If no error occurs before $value is consumed, $parse_pos will contain -1
 	 * otherwise it will contain the position at which parsing ended (and the error occurred).
 	 * This variable will contain the end position if the parse fails.
-	 *  If $parse_pos > strlen($value), the parse fails immediately. 
+	 * If $parse_pos > strlen($value), the parse fails immediately. 
 	 * </p>
 	 * @return int timestamp parsed value
 	 */
@@ -1062,9 +1064,9 @@ class IntlDateFormatter  {
 
 	/**
 	 * Parse string to a field-based time value
-	 * @link http://php.net/manual/en/intldateformatter.localtime.php
+	 * @link http://www.php.net/manual/en/intldateformatter.localtime.php
 	 * @param value string <p>
-	 *  string to convert to a time 
+	 * string to convert to a time 
 	 * </p>
 	 * @param position int[optional] <p>
 	 * Position at which to start the parsing in $value (zero-based).
@@ -1078,14 +1080,14 @@ class IntlDateFormatter  {
 
 	/**
 	 * Get the error code from last operation
-	 * @link http://php.net/manual/en/intldateformatter.geterrorcode.php
+	 * @link http://www.php.net/manual/en/intldateformatter.geterrorcode.php
 	 * @return int The error code, one of UErrorCode values. Initial value is U_ZERO_ERROR.
 	 */
 	public function getErrorCode () {}
 
 	/**
 	 * Get the error text from the last operation.
-	 * @link http://php.net/manual/en/intldateformatter.geterrormessage.php
+	 * @link http://www.php.net/manual/en/intldateformatter.geterrormessage.php
 	 * @return string Description of the last error.
 	 */
 	public function getErrorMessage () {}
@@ -1282,14 +1284,14 @@ function normalizer_is_normalized ($input, $form) {}
 
 /**
  * Get the default Locale
- * @link http://php.net/manual/en/function.locale-get-default.php
+ * @link http://www.php.net/manual/en/function.locale-get-default.php
  * @return string a string with the current Locale.
  */
 function locale_get_default () {}
 
 /**
  * Set the default Locale
- * @link http://php.net/manual/en/function.locale-set-default.php
+ * @link http://www.php.net/manual/en/function.locale-set-default.php
  * @param name string <p>
  * The new Locale name. A comprehensive list of the supported locales is
  * available at .
@@ -1545,7 +1547,7 @@ function datefmt_get_error_message ($coll) {}
 
 /**
  * Get string length in grapheme units
- * @link http://php.net/manual/en/function.grapheme-strlen.php
+ * @link http://www.php.net/manual/en/function.grapheme-strlen.php
  * @param input string <p>
  * The string being measured for length. It must be a valid UTF-8 string.
  * </p>
@@ -1555,7 +1557,7 @@ function grapheme_strlen ($input) {}
 
 /**
  * Find position (in grapheme units) of first occurrence of a string
- * @link http://php.net/manual/en/function.grapheme-strpos.php
+ * @link http://www.php.net/manual/en/function.grapheme-strpos.php
  * @param haystack string <p>
  * The string to look in. Must be valid UTF-8.
  * </p>
@@ -1564,7 +1566,7 @@ function grapheme_strlen ($input) {}
  * </p>
  * @param offset int[optional] <p>
  * The optional $offset parameter allows you to specify where in $haystack to
- * start searching as an offset in grapheme units (not bytes or characters). If not given, the default is zero. 
+ * start searching as an offset in grapheme units (not bytes or characters).
  * The position returned is still relative to the beginning of haystack
  * regardless of the value of $offset.
  * </p>
@@ -1574,16 +1576,16 @@ function grapheme_strpos ($haystack, $needle, $offset = null) {}
 
 /**
  * Find position (in grapheme units) of first occurrence of a case-insensitive string
- * @link http://php.net/manual/en/function.grapheme-stripos.php
+ * @link http://www.php.net/manual/en/function.grapheme-stripos.php
  * @param haystack string <p>
- *  The string to look in. Must be valid UTF-8.
+ * The string to look in. Must be valid UTF-8.
  * </p>
  * @param needle string <p>
- *  The string to look for. Must be valid UTF-8. 
+ * The string to look for. Must be valid UTF-8. 
  * </p>
  * @param offset int[optional] <p>
  * The optional $offset parameter allows you to specify where in haystack to
- * start searching as an offset in grapheme units (not bytes or characters). If not given, the default is zero. 
+ * start searching as an offset in grapheme units (not bytes or characters).
  * The position returned is still relative to the beginning of haystack
  * regardless of the value of $offset.
  * </p>
@@ -1593,7 +1595,7 @@ function grapheme_stripos ($haystack, $needle, $offset = null) {}
 
 /**
  * Find position (in grapheme units) of last occurrence of a string
- * @link http://php.net/manual/en/function.grapheme-strrpos.php
+ * @link http://www.php.net/manual/en/function.grapheme-strrpos.php
  * @param haystack string <p>
  * The string to look in. Must be valid UTF-8.
  * </p>
@@ -1602,7 +1604,7 @@ function grapheme_stripos ($haystack, $needle, $offset = null) {}
  * </p>
  * @param offset int[optional] <p>
  * The optional $offset parameter allows you to specify where in $haystack to
- * start searching as an offset in grapheme units (not bytes or characters). If not given, the default is zero. 
+ * start searching as an offset in grapheme units (not bytes or characters).
  * The position returned is still relative to the beginning of haystack
  * regardless of the value of $offset.
  * </p>
@@ -1612,7 +1614,7 @@ function grapheme_strrpos ($haystack, $needle, $offset = null) {}
 
 /**
  * Find position (in grapheme units) of last occurrence of a case-insensitive string
- * @link http://php.net/manual/en/function.grapheme-strripos.php
+ * @link http://www.php.net/manual/en/function.grapheme-strripos.php
  * @param haystack string <p>
  * The string to look in. Must be valid UTF-8.
  * </p>
@@ -1621,7 +1623,7 @@ function grapheme_strrpos ($haystack, $needle, $offset = null) {}
  * </p>
  * @param offset int[optional] <p>
  * The optional $offset parameter allows you to specify where in $haystack to
- * start searching as an offset in grapheme units (not bytes or characters). If not given, the default is zero. 
+ * start searching as an offset in grapheme units (not bytes or characters).
  * The position returned is still relative to the beginning of haystack
  * regardless of the value of $offset.
  * </p>
@@ -1631,20 +1633,20 @@ function grapheme_strripos ($haystack, $needle, $offset = null) {}
 
 /**
  * Return part of a string
- * @link http://php.net/manual/en/function.grapheme-substr.php
+ * @link http://www.php.net/manual/en/function.grapheme-substr.php
  * @param string string <p>
  * The input string. Must be valid UTF-8. 
  * </p>
  * @param start int <p>
  * Start position in default grapheme units.
- * If $start is non-negative, the returned string will start at the	 
+ * If $start is non-negative, the returned string will start at the
  * $start'th position in $string, counting from zero. If $start is negative,
  * the returned string will start at the $start'th grapheme unit from the 
  * end of string.
  * </p>
  * @param length int[optional] <p>
  * Length in grapheme units.
- * If $length is given and is positive, the string returned will contain	 						
+ * If $length is given and is positive, the string returned will contain
  * at most $length grapheme units beginning from $start (depending on the 
  * length of string). If $string is less than or equal to $start grapheme
  * units long, FALSE will be returned. If $length is given and is negative, then
@@ -1658,7 +1660,7 @@ function grapheme_substr ($string, $start, $length = null) {}
 
 /**
  * Returns part of haystack string from the first occurrence of needle to the end of haystack.
- * @link http://php.net/manual/en/function.grapheme-strstr.php
+ * @link http://www.php.net/manual/en/function.grapheme-strstr.php
  * @param haystack string <p>
  * The input string. Must be valid UTF-8. 
  * </p>
@@ -1666,7 +1668,7 @@ function grapheme_substr ($string, $start, $length = null) {}
  * The string to look for. Must be valid UTF-8. 
  * </p>
  * @param before_needle bool[optional] <p>
- * If TRUE (the default is FALSE), grapheme_strstr() returns the part of the	 
+ * If true, grapheme_strstr() returns the part of the
  * haystack before the first occurrence of the needle.
  * </p>
  * @return string the portion of string, or FALSE if needle is not found.
@@ -1675,7 +1677,7 @@ function grapheme_strstr ($haystack, $needle, $before_needle = null) {}
 
 /**
  * Returns part of haystack string from the first occurrence of case-insensitive needle to the end of haystack.
- * @link http://php.net/manual/en/function.grapheme-stristr.php
+ * @link http://www.php.net/manual/en/function.grapheme-stristr.php
  * @param haystack string <p>
  * The input string. Must be valid UTF-8.
  * </p>
@@ -1683,7 +1685,7 @@ function grapheme_strstr ($haystack, $needle, $before_needle = null) {}
  * The string to look for. Must be valid UTF-8.
  * </p>
  * @param before_needle bool[optional] <p>
- * If TRUE (the default is FALSE), grapheme_strstr() returns the part of the	 
+ * If true, grapheme_strstr() returns the part of the
  * haystack before the first occurrence of the needle.
  * </p>
  * @return string the portion of $haystack, or FALSE if $needle is not found.
@@ -1692,7 +1694,7 @@ function grapheme_stristr ($haystack, $needle, $before_needle = null) {}
 
 /**
  * Function to extract a sequence of default grapheme clusters from a text buffer, which must be encoded in UTF-8.
- * @link http://php.net/manual/en/function.grapheme-extract.php
+ * @link http://www.php.net/manual/en/function.grapheme-extract.php
  * @param haystack string <p>
  * String to search.
  * </p>
@@ -1713,7 +1715,7 @@ function grapheme_stristr ($haystack, $needle, $before_needle = null) {}
  * @param start int[optional] <p>
  * Starting position in $haystack in bytes - if given, it must be zero or a
  * positive value that is less than or equal to the length of $haystack in
- * bytes. The default is zero. If $start does not point to the first byte of a UTF-8
+ * bytes. If $start does not point to the first byte of a UTF-8
  * character, the start position is moved to the next character boundary.
  * </p>
  * @param next int[optional] <p>
@@ -1727,21 +1729,21 @@ function grapheme_extract ($haystack, $size, $extract_type = null, $start = null
 
 /**
  * Get the last error code
- * @link http://php.net/manual/en/function.intl-get-error-code.php
+ * @link http://www.php.net/manual/en/function.intl-get-error-code.php
  * @return int Error code returned by the last API function call.
  */
 function intl_get_error_code () {}
 
 /**
  * Get description of the last error
- * @link http://php.net/manual/en/function.intl-get-error-message.php
+ * @link http://www.php.net/manual/en/function.intl-get-error-message.php
  * @return string Description of an error occurred in the last API function call.
  */
 function intl_get_error_message () {}
 
 /**
  * Check whether the given error code indicates failure
- * @link http://php.net/manual/en/function.intl-is-failure.php
+ * @link http://www.php.net/manual/en/function.intl-is-failure.php
  * @param error_code int <p>
  * is a value that returned by functions:
  * intl_get_error_code,
@@ -1754,7 +1756,7 @@ function intl_is_failure ($error_code) {}
 
 /**
  * Get symbolic name for a given error code
- * @link http://php.net/manual/en/function.intl-error-name.php
+ * @link http://www.php.net/manual/en/function.intl-error-name.php
  * @param error_code int <p>
  * ICU error code.
  * </p>
@@ -1763,12 +1765,6 @@ function intl_is_failure ($error_code) {}
  */
 function intl_error_name ($error_code) {}
 
-
-/**
- * Limit on locale length, set to 64 in PHP code. Locale names longer 
- * than this limit will not be accepted.
- * @link http://php.net/manual/en/intl.constants.php
- */
 define ('INTL_MAX_LOCALE_LEN', 80);
 define ('ULOC_ACTUAL_LOCALE', 0);
 define ('ULOC_VALID_LOCALE', 1);

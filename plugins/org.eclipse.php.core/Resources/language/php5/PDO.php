@@ -117,7 +117,7 @@ class PDO  {
 
 	/**
 	 * Creates a PDO instance representing a connection to a database
-	 * @link http://php.net/manual/en/pdo.construct.php
+	 * @link http://www.php.net/manual/en/pdo.construct.php
 	 * @param dsn
 	 * @param username
 	 * @param passwd
@@ -127,7 +127,7 @@ class PDO  {
 
 	/**
 	 * Prepares a statement for execution and returns a statement object
-	 * @link http://php.net/manual/en/pdo.prepare.php
+	 * @link http://www.php.net/manual/en/pdo.prepare.php
 	 * @param statement string <p>
 	 * This must be a valid SQL statement for the target database server.
 	 * </p>
@@ -144,7 +144,8 @@ class PDO  {
 	 * PDO::prepare returns a
 	 * PDOStatement object.
 	 * If the database server cannot successfully prepare the statement,
-	 * PDO::prepare emits PDOException.
+	 * PDO::prepare returns false or emits
+	 * PDOException (depending on error handling).
 	 * </p>
 	 * <p>
 	 * Emulated prepared statements does not communicate with the database server
@@ -154,28 +155,28 @@ class PDO  {
 
 	/**
 	 * Initiates a transaction
-	 * @link http://php.net/manual/en/pdo.begintransaction.php
+	 * @link http://www.php.net/manual/en/pdo.begintransaction.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function beginTransaction () {}
 
 	/**
 	 * Commits a transaction
-	 * @link http://php.net/manual/en/pdo.commit.php
+	 * @link http://www.php.net/manual/en/pdo.commit.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function commit () {}
 
 	/**
 	 * Rolls back a transaction
-	 * @link http://php.net/manual/en/pdo.rollback.php
+	 * @link http://www.php.net/manual/en/pdo.rollback.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function rollBack () {}
 
 	/**
 	 * Set an attribute
-	 * @link http://php.net/manual/en/pdo.setattribute.php
+	 * @link http://www.php.net/manual/en/pdo.setattribute.php
 	 * @param attribute int 
 	 * @param value mixed 
 	 * @return bool Returns true on success or false on failure.
@@ -184,7 +185,7 @@ class PDO  {
 
 	/**
 	 * Execute an SQL statement and return the number of affected rows
-	 * @link http://php.net/manual/en/pdo.exec.php
+	 * @link http://www.php.net/manual/en/pdo.exec.php
 	 * @param statement string <p>
 	 * The SQL statement to prepare and execute.
 	 * </p>
@@ -208,20 +209,21 @@ class PDO  {
 
 	/**
 	 * Executes an SQL statement, returning a result set as a PDOStatement object
-	 * @link http://php.net/manual/en/pdo.query.php
+	 * @link http://www.php.net/manual/en/pdo.query.php
 	 * @param statement string <p>
 	 * The SQL statement to prepare and execute.
 	 * </p>
 	 * <p>
 	 * Data inside the query should be properly escaped.
 	 * </p>
-	 * @return PDOStatement PDO::query returns a PDOStatement object.
+	 * @return PDOStatement PDO::query returns a PDOStatement object, or false
+	 * on failure.
 	 */
 	public function query ($statement) {}
 
 	/**
 	 * Returns the ID of the last inserted row or sequence value
-	 * @link http://php.net/manual/en/pdo.lastinsertid.php
+	 * @link http://www.php.net/manual/en/pdo.lastinsertid.php
 	 * @param name string[optional] <p>
 	 * Name of the sequence object from which the ID should be returned.
 	 * </p>
@@ -245,7 +247,7 @@ class PDO  {
 
 	/**
 	 * Fetch the SQLSTATE associated with the last operation on the database handle
-	 * @link http://php.net/manual/en/pdo.errorcode.php
+	 * @link http://www.php.net/manual/en/pdo.errorcode.php
 	 * @return mixed a SQLSTATE, a five characters alphanumeric identifier defined in
 	 * the ANSI SQL-92 standard. Briefly, an SQLSTATE consists of a
 	 * two characters class value followed by a three characters subclass value. A
@@ -272,7 +274,7 @@ class PDO  {
 
 	/**
 	 * Fetch extended error information associated with the last operation on the database handle
-	 * @link http://php.net/manual/en/pdo.errorinfo.php
+	 * @link http://www.php.net/manual/en/pdo.errorinfo.php
 	 * @return array PDO::errorInfo returns an array of error information
 	 * about the last operation performed by this database handle. The array
 	 * consists of the following fields:
@@ -312,7 +314,7 @@ class PDO  {
 
 	/**
 	 * Retrieve a database connection attribute
-	 * @link http://php.net/manual/en/pdo.getattribute.php
+	 * @link http://www.php.net/manual/en/pdo.getattribute.php
 	 * @param attribute int <p>
 	 * One of the PDO::ATTR_* constants. The constants that
 	 * apply to database connections are as follows:
@@ -336,13 +338,12 @@ class PDO  {
 
 	/**
 	 * Quotes a string for use in a query.
-	 * @link http://php.net/manual/en/pdo.quote.php
+	 * @link http://www.php.net/manual/en/pdo.quote.php
 	 * @param string string <p>
 	 * The string to be quoted.
 	 * </p>
 	 * @param parameter_type int[optional] <p>
 	 * Provides a data type hint for drivers that have alternate quoting styles.
-	 * The default value is PDO::PARAM_STR.
 	 * </p>
 	 * @return string a quoted string that is theoretically safe to pass into an
 	 * SQL statement. Returns false if the driver does not support quoting in
@@ -356,7 +357,7 @@ class PDO  {
 
 	/**
 	 * Return an array of available PDO drivers
-	 * @link http://php.net/manual/en/pdo.getavailabledrivers.php
+	 * @link http://www.php.net/manual/en/pdo.getavailabledrivers.php
 	 * @return array PDO::getAvailableDrivers returns an array of PDO driver names. If
 	 * no drivers are available, it returns an empty array.
 	 */
@@ -370,10 +371,11 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Executes a prepared statement
-	 * @link http://php.net/manual/en/pdostatement.execute.php
+	 * @link http://www.php.net/manual/en/pdostatement.execute.php
 	 * @param input_parameters array[optional] <p>
 	 * An array of values with as many elements as there are bound
 	 * parameters in the SQL statement being executed.
+	 * All values are treated as PDO::PARAM_STR.
 	 * </p>
 	 * <p>
 	 * You cannot bind multiple values to a single parameter; for example,
@@ -386,7 +388,7 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Fetches the next row from a result set
-	 * @link http://php.net/manual/en/pdostatement.fetch.php
+	 * @link http://www.php.net/manual/en/pdostatement.fetch.php
 	 * @param fetch_style int[optional] <p>
 	 * Controls how the next row will be returned to the caller. This value
 	 * must be one of the PDO::FETCH_* constants,
@@ -413,7 +415,7 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Binds a parameter to the specified variable name
-	 * @link http://php.net/manual/en/pdostatement.bindparam.php
+	 * @link http://www.php.net/manual/en/pdostatement.bindparam.php
 	 * @param parameter mixed <p>
 	 * Parameter identifier. For a prepared statement using named
 	 * placeholders, this will be a parameter name of the form
@@ -427,7 +429,6 @@ class PDOStatement implements Traversable {
 	 * @param data_type int[optional] <p>
 	 * Explicit data type for the parameter using the PDO::PARAM_*
 	 * constants.
-	 * Defaults to PDO::PARAM_STR.
 	 * To return an INOUT parameter from a stored procedure, 
 	 * use the bitwise OR operator to set the PDO::PARAM_INPUT_OUTPUT bits
 	 * for the data_type parameter.
@@ -445,7 +446,7 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Bind a column to a PHP variable
-	 * @link http://php.net/manual/en/pdostatement.bindcolumn.php
+	 * @link http://www.php.net/manual/en/pdostatement.bindcolumn.php
 	 * @param column mixed <p>
 	 * Number of the column (1-indexed) or name of the column in the result set.
 	 * If using the column name, be aware that the name should match the
@@ -469,7 +470,7 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Binds a value to a parameter
-	 * @link http://php.net/manual/en/pdostatement.bindvalue.php
+	 * @link http://www.php.net/manual/en/pdostatement.bindvalue.php
 	 * @param parameter mixed <p>
 	 * Parameter identifier. For a prepared statement using named
 	 * placeholders, this will be a parameter name of the form
@@ -483,7 +484,6 @@ class PDOStatement implements Traversable {
 	 * @param data_type int[optional] <p>
 	 * Explicit data type for the parameter using the PDO::PARAM_*
 	 * constants.
-	 * Defaults to PDO::PARAM_STR.
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 */
@@ -491,14 +491,14 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Returns the number of rows affected by the last SQL statement
-	 * @link http://php.net/manual/en/pdostatement.rowcount.php
+	 * @link http://www.php.net/manual/en/pdostatement.rowcount.php
 	 * @return int the number of rows.
 	 */
 	public function rowCount () {}
 
 	/**
 	 * Returns a single column from the next row of a result set
-	 * @link http://php.net/manual/en/pdostatement.fetchcolumn.php
+	 * @link http://www.php.net/manual/en/pdostatement.fetchcolumn.php
 	 * @param column_number int[optional] <p>
 	 * 0-indexed number of the column you wish to retrieve from the row. If
 	 * no value is supplied, PDOStatement::fetchColumn
@@ -515,11 +515,10 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Returns an array containing all of the result set rows
-	 * @link http://php.net/manual/en/pdostatement.fetchall.php
+	 * @link http://www.php.net/manual/en/pdostatement.fetchall.php
 	 * @param fetch_style int[optional] <p>
 	 * Controls the contents of the returned array as documented in
-	 * PDOStatement::fetch. Defaults to
-	 * PDO::FETCH_BOTH.
+	 * PDOStatement::fetch.
 	 * </p>
 	 * <p>
 	 * To return an array consisting of all values of a single column from
@@ -540,7 +539,7 @@ class PDOStatement implements Traversable {
 	 * @param column_index int[optional] <p>
 	 * Returns the indicated 0-indexed column when the value of
 	 * fetch_style is
-	 * PDO::FETCH_COLUMN. Defaults to 0.
+	 * PDO::FETCH_COLUMN.
 	 * </p>
 	 * @param ctor_args array[optional] <p>
 	 * Arguments of custom class constructor.
@@ -562,21 +561,21 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Fetches the next row and returns it as an object.
-	 * @link http://php.net/manual/en/pdostatement.fetchobject.php
+	 * @link http://www.php.net/manual/en/pdostatement.fetchobject.php
 	 * @param class_name string[optional] <p>
-	 * Name of the created class, defaults to stdClass.
+	 * Name of the created class.
 	 * </p>
 	 * @param ctor_args array[optional] <p>
 	 * Elements of this array are passed to the constructor.
 	 * </p>
 	 * @return mixed an instance of the required class with property names that
-	 * correspond to the column names or false in case of an error.
+	 * correspond to the column names &return.falseforfailure;.
 	 */
 	public function fetchObject ($class_name = null, array $ctor_args = null) {}
 
 	/**
 	 * Fetch the SQLSTATE associated with the last operation on the statement handle
-	 * @link http://php.net/manual/en/pdostatement.errorcode.php
+	 * @link http://www.php.net/manual/en/pdostatement.errorcode.php
 	 * @return string Identical to PDO::errorCode, except that 
 	 * PDOStatement::errorCode only retrieves error codes
 	 * for operations performed with PDOStatement objects.
@@ -585,7 +584,7 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Fetch extended error information associated with the last operation on the statement handle
-	 * @link http://php.net/manual/en/pdostatement.errorinfo.php
+	 * @link http://www.php.net/manual/en/pdostatement.errorinfo.php
 	 * @return array PDOStatement::errorInfo returns an array of
 	 * error information about the last operation performed by this
 	 * statement handle. The array consists of the following fields:
@@ -611,7 +610,7 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Set a statement attribute
-	 * @link http://php.net/manual/en/pdostatement.setattribute.php
+	 * @link http://www.php.net/manual/en/pdostatement.setattribute.php
 	 * @param attribute int 
 	 * @param value mixed 
 	 * @return bool Returns true on success or false on failure.
@@ -620,7 +619,7 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Retrieve a statement attribute
-	 * @link http://php.net/manual/en/pdostatement.getattribute.php
+	 * @link http://www.php.net/manual/en/pdostatement.getattribute.php
 	 * @param attribute int 
 	 * @return mixed the attribute value.
 	 */
@@ -628,7 +627,7 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Returns the number of columns in the result set
-	 * @link http://php.net/manual/en/pdostatement.columncount.php
+	 * @link http://www.php.net/manual/en/pdostatement.columncount.php
 	 * @return int the number of columns in the result set represented by the
 	 * PDOStatement object. If there is no result set,
 	 * PDOStatement::columnCount returns 0.
@@ -637,7 +636,7 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Returns metadata for a column in a result set
-	 * @link http://php.net/manual/en/pdostatement.getcolumnmeta.php
+	 * @link http://www.php.net/manual/en/pdostatement.getcolumnmeta.php
 	 * @param column int <p>
 	 * The 0-indexed column in the result set.
 	 * </p>
@@ -698,31 +697,31 @@ class PDOStatement implements Traversable {
 
 	/**
 	 * Set the default fetch mode for this statement
-	 * @link http://php.net/manual/en/pdostatement.setfetchmode.php
+	 * @link http://www.php.net/manual/en/pdostatement.setfetchmode.php
 	 * @param mode int <p>
 	 * The fetch mode must be one of the PDO::FETCH_* constants.
 	 * </p>
-	 * @return bool 1 on success or false on failure.
+	 * @return bool 1 on success&return.falseforfailure;.
 	 */
 	public function setFetchMode ($mode) {}
 
 	/**
 	 * Advances to the next rowset in a multi-rowset statement handle
-	 * @link http://php.net/manual/en/pdostatement.nextrowset.php
+	 * @link http://www.php.net/manual/en/pdostatement.nextrowset.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function nextRowset () {}
 
 	/**
 	 * Closes the cursor, enabling the statement to be executed again.
-	 * @link http://php.net/manual/en/pdostatement.closecursor.php
+	 * @link http://www.php.net/manual/en/pdostatement.closecursor.php
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function closeCursor () {}
 
 	/**
 	 * Dump a SQL prepared command
-	 * @link http://php.net/manual/en/pdostatement.debugdumpparams.php
+	 * @link http://www.php.net/manual/en/pdostatement.debugdumpparams.php
 	 * @return bool 
 	 */
 	public function debugDumpParams () {}
