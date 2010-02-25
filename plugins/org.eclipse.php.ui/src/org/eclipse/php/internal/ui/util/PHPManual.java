@@ -275,6 +275,13 @@ public class PHPManual {
 
 			if (url.startsWith("mk:")) { //$NON-NLS-1$
 				browser.openURL(new URL(null, url, new MkHandler()));
+			} else if (url.startsWith("help://")) { //$NON-NLS-1$
+				// convert to help system URL
+				String helpURL = url.substring("help://".length());
+				// open in Help System
+				PlatformUI.getWorkbench().getHelpSystem().displayHelpResource(
+						helpURL);
+
 			} else {
 				URL url2 = validateUrlExists(url);
 				if (null == url2) {
