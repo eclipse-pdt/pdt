@@ -2204,16 +2204,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
-			if(getRefactorableFileEditorInput() != null && ((RefactorableFileEditorInput)getRefactorableFileEditorInput()).isRefactor()){
+			if (getRefactorableFileEditorInput() != null
+					&& ((RefactorableFileEditorInput) getRefactorableFileEditorInput())
+							.isRefactor()) {
 				getRefactorableFileEditorInput().setRefactor(false);
 				getRefactorableFileEditorInput().setFile(fileInput.getFile());
 				input = getRefactorableFileEditorInput();
-			}else{
+			} else {
 				input = new RefactorableFileEditorInput(fileInput.getFile());
 			}
-			
-		} else if (input instanceof IStorageEditorInput) {
-			// non-workspace file
 		}
 
 		if (resource instanceof IFile) {
@@ -2242,17 +2241,19 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			installOverrideIndicator(true);
 		}
 	}
+
 	@Override
 	protected boolean canHandleMove(IEditorInput originalElement,
 			IEditorInput movedElement) {
-		if(getRefactorableFileEditorInput() != null){
+		if (getRefactorableFileEditorInput() != null) {
 			getRefactorableFileEditorInput().setRefactor(true);
 		}
 		return super.canHandleMove(originalElement, movedElement);
 	}
+
 	private RefactorableFileEditorInput getRefactorableFileEditorInput() {
-		if(getEditorInput() instanceof RefactorableFileEditorInput){
-			return (RefactorableFileEditorInput)getEditorInput();
+		if (getEditorInput() instanceof RefactorableFileEditorInput) {
+			return (RefactorableFileEditorInput) getEditorInput();
 		}
 		return null;
 	}
@@ -3324,11 +3325,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	public ISourceViewer getViewer() {
 		return super.getSourceViewer();
 	}
-	
+
 	public void update() {
 		super.update();
-		if (fPHPOutlinePage != null && fPHPOutlinePage instanceof ConfigurableContentOutlinePage) {
-			((ConfigurableContentOutlinePage) fPHPOutlinePage).setInput(getModelElement());
+		if (fPHPOutlinePage != null
+				&& fPHPOutlinePage instanceof ConfigurableContentOutlinePage) {
+			((ConfigurableContentOutlinePage) fPHPOutlinePage)
+					.setInput(getModelElement());
 		}
 	}
 }
