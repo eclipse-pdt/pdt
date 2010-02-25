@@ -2213,8 +2213,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				input = new RefactorableFileEditorInput(fileInput.getFile());
 			}
 
-		} else if (input instanceof IStorageEditorInput) {
-			// non-workspace file
 		}
 
 		if (resource instanceof IFile) {
@@ -2243,6 +2241,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			installOverrideIndicator(true);
 		}
 	}
+
 	@Override
 	protected boolean canHandleMove(IEditorInput originalElement,
 			IEditorInput movedElement) {
