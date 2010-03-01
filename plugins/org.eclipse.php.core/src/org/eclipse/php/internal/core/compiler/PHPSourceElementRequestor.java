@@ -580,8 +580,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(TypeReference reference) throws Exception {
-		fRequestor.acceptTypeReference(reference.getName().toCharArray(),
-				reference.sourceStart());
+		fRequestor.acceptTypeReference(reference.getName(), reference
+				.sourceStart());
 		return true;
 	}
 
