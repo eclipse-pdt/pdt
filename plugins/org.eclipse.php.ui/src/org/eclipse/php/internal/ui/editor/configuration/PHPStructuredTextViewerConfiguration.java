@@ -146,10 +146,10 @@ public class PHPStructuredTextViewerConfiguration extends
 			ITextEditor textEditor = ((PHPStructuredTextViewer) sourceViewer)
 					.getTextEditor();
 			if (phpCompletionProcessor == null) {
-				phpCompletionProcessor = new PHPCompletionProcessor(
-						textEditor,
-						(ContentAssistant) getPHPContentAssistant(sourceViewer),
-						PHPPartitionTypes.PHP_DEFAULT);
+				ContentAssistant phpContentAssistant = (ContentAssistant) getPHPContentAssistant(sourceViewer);
+				phpCompletionProcessor = new PHPCompletionProcessor(textEditor,
+						phpContentAssistant, PHPPartitionTypes.PHP_DEFAULT);
+				addContentAssistProcessors(sourceViewer);
 			}
 
 			if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
@@ -205,24 +205,30 @@ public class PHPStructuredTextViewerConfiguration extends
 					PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOINSERT,
 					false, null));
 
-			// add content assist processors for each partition type
-			String[] types = getConfiguredContentTypes(sourceViewer);
-			for (int i = 0; i < types.length; i++) {
-				String type = types[i];
-
-				// add all content assist processors for current partiton type
-				IContentAssistProcessor[] processors = getContentAssistProcessors(
-						sourceViewer, type);
-				if (processors != null) {
-					for (int j = 0; j < processors.length; j++) {
-						fContentAssistant.setContentAssistProcessor(
-								processors[j], type);
-					}
-				}
-			}
 		}
 
 		return fContentAssistant;
+	}
+
+	/**
+	 * @param sourceViewer
+	 */
+	private void addContentAssistProcessors(ISourceViewer sourceViewer) {
+		// add content assist processors for each partition type
+		String[] types = getConfiguredContentTypes(sourceViewer);
+		for (int i = 0; i < types.length; i++) {
+			String type = types[i];
+
+			// add all content assist processors for current partiton type
+			IContentAssistProcessor[] processors = getContentAssistProcessors(
+					sourceViewer, type);
+			if (processors != null) {
+				for (int j = 0; j < processors.length; j++) {
+					fContentAssistant.setContentAssistProcessor(processors[j],
+							type);
+				}
+			}
+		}
 	}
 
 	@Override
