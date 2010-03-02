@@ -606,8 +606,12 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 										&& elementName.charAt(0) != '$') { //$NON-NLS-1$
 									List<IModelElement> fields = new LinkedList<IModelElement>();
 									for (IType t : types) {
-										return PHPModelUtils.getTypeField(t,
-												elementName, true);
+										IField[] typeFields = PHPModelUtils
+												.getTypeField(t, elementName,
+														true);
+										for (IField currentField : typeFields) {
+											fields.add(currentField);
+										}
 									}
 									return fields
 											.toArray(new IModelElement[fields
@@ -617,23 +621,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 							// What can it be? Only class variables:
 							Set<IModelElement> fields = new TreeSet<IModelElement>(
-									new Comparator<IModelElement>() {
-										public int compare(IModelElement o1,
-												IModelElement o2) {
-											try {
-												ISourceRange r1 = ((SourceRefElement) o1)
-														.getSourceRange();
-												ISourceRange r2 = ((SourceRefElement) o2)
-														.getSourceRange();
-												return (int) Math.signum(r1
-														.getOffset()
-														- r2.getOffset());
-											} catch (ModelException e) {
-												PHPCorePlugin.log(e);
-											}
-											return 0;
-										}
-									});
+									new SourceFieldComparator());
 							for (IType t : types) {
 								fields.addAll(Arrays.asList(PHPModelUtils
 										.getTypeHierarchyField(t, elementName,
@@ -780,5 +768,24 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			PHPCorePlugin.log(e);
 		}
 		return PHPModelUtils.getFields(prefix, sourceModule, offset, null);
+	}
+
+	private class SourceFieldComparator implements Comparator<IModelElement> {
+		public int compare(IModelElement o1, IModelElement o2) {
+			try {
+				SourceRefElement e1 = (SourceRefElement) o1;
+				SourceRefElement e2 = (SourceRefElement) o2;
+				if (e1.getSourceModule() == e2.getSourceModule()) {
+					ISourceRange r1 = e1.getSourceRange();
+					ISourceRange r2 = e2.getSourceRange();
+					return (int) Math.signum(r1.getOffset() - r2.getOffset());
+				} else {
+					return -1;
+				}
+			} catch (ModelException e) {
+				PHPCorePlugin.log(e);
+			}
+			return 0;
+		}
 	}
 }
