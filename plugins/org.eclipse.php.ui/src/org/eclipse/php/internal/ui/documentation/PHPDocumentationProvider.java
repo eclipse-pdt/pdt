@@ -26,15 +26,13 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
+	private static final String VALUE = "Value";
 	protected static final String DL_END = "</dl>"; //$NON-NLS-1$
 	protected static final String DL_START = "<dl>"; //$NON-NLS-1$
 	protected static final String DD_END = "</dd>"; //$NON-NLS-1$
@@ -230,6 +228,13 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 		if (!(node instanceof IPHPDocAwareDeclaration)) {
 			return;
+		}
+		if (node instanceof ConstantDeclaration) {
+			ConstantDeclaration constantDeclaration = (ConstantDeclaration) node;
+			if (constantDeclaration.getConstantValue() instanceof Scalar) {
+				Scalar scalar = (Scalar) constantDeclaration.getConstantValue();
+				appendDefinitionRow(VALUE, scalar.getValue(), buf);
+			}
 		}
 		PHPDocBlock doc = ((IPHPDocAwareDeclaration) node).getPHPDoc();
 		if (doc == null) {
