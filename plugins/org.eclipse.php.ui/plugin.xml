@@ -12,19 +12,19 @@
         Zend Technologies
  -->
 <plugin>
-	<extension-point id="phpElementFilters" name="PHP Element Filter" schema="schema/phpElementFilters.exsd" />
-	<extension-point id="foldingStructureProviders" name="Folding Structure Providers" schema="schema/foldingStructureProviders.exsd" />
-	<extension-point id="phpEditorTextHovers" name="PHP Editor Text Hover" schema="schema/phpEditorTextHovers.exsd" />
-	<extension-point id="phpTreeContentProviders" name="PHP Tree Content Provider" schema="schema/phpTreeContentProviders.exsd" />
-	<extension-point id="phpManualSites" name="PHP Manual URL" schema="schema/phpManualSites.exsd" />
-	<extension-point id="phpTreeElementComparers" name="PHP Tree Element Comparer" schema="schema/phpTreeElementComparers.exsd" />
-	<extension-point id="actionFilterContributors" name="PHP Action Filter Contributor" schema="schema/actionFilterContributors.exsd" />
-	<extension-point id="phpWizardPages" name="PHP Wizard Page" schema="schema/phpWizardPages.exsd" />
-	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlocks.exsd" />
-	<extension-point id="wizardAndCompositeFragments" name="Wizard and Composite Fragments" schema="schema/wizardAndCompositeFragments.exsd" />
-	<extension-point id="phpActionDelegator" name="PHP Action Delegator" schema="schema/phpActionDelegator.exsd" />
-	<extension-point id="phpFormatterProcessor" name="PHP Formatter Processor" schema="schema/phpFormatterProcessor.exsd" />
-	<extension-point id="phpFormatterPrefBlock" name="PHP Formatter Preferences Block" schema="schema/phpFormatterPrefBlock.exsd" />
+	<extension-point id="phpElementFilters" name="%extension-point.name.0" schema="schema/phpElementFilters.exsd" />
+	<extension-point id="foldingStructureProviders" name="%extension-point.name.1" schema="schema/foldingStructureProviders.exsd" />
+	<extension-point id="phpEditorTextHovers" name="%extension-point.name.2" schema="schema/phpEditorTextHovers.exsd" />
+	<extension-point id="phpTreeContentProviders" name="%extension-point.name.3" schema="schema/phpTreeContentProviders.exsd" />
+	<extension-point id="phpManualSites" name="%extension-point.name.4" schema="schema/phpManualSites.exsd" />
+	<extension-point id="phpTreeElementComparers" name="%extension-point.name.5" schema="schema/phpTreeElementComparers.exsd" />
+	<extension-point id="actionFilterContributors" name="%extension-point.name.6" schema="schema/actionFilterContributors.exsd" />
+	<extension-point id="phpWizardPages" name="%extension-point.name.7" schema="schema/phpWizardPages.exsd" />
+	<extension-point id="phpPreferencePageBlocks" name="%extension-point.name.8" schema="schema/phpPreferencePageBlocks.exsd" />
+	<extension-point id="wizardAndCompositeFragments" name="%extension-point.name.9" schema="schema/wizardAndCompositeFragments.exsd" />
+	<extension-point id="phpActionDelegator" name="%extension-point.name.10" schema="schema/phpActionDelegator.exsd" />
+	<extension-point id="phpFormatterProcessor" name="%extension-point.name.11" schema="schema/phpFormatterProcessor.exsd" />
+	<extension-point id="phpFormatterPrefBlock" name="%extension-point.name.12" schema="schema/phpFormatterPrefBlock.exsd" />
 	<extension-point id="quickFixProcessors" name="%quickFixProcessorExtensionPoint" schema="schema/quickFixProcessors.exsd"/>
 	<extension-point id="quickAssistProcessors" name="%quickAssistProcessorExtensionPoint" schema="schema/quickAssistProcessors.exsd"/>
 	
@@ -308,7 +308,7 @@
 		add the content type as a parameter to HTMLValidator, so that it will be added 
 		in setInitializationData() and html markers will be added for php files 
 	-->
-	<extension id="HTMLValidatorForPHP" name="HTML Syntax Validator (for PHP Files)"
+	<extension id="HTMLValidatorForPHP" name="%extension.name"
 		point="org.eclipse.wst.validation.validatorV2">
 		<validator build="true"
 			class="org.eclipse.wst.html.internal.validation.HTMLValidator:org.eclipse.php.core.phpsource"
@@ -1636,7 +1636,7 @@
 	<extension id="PHPDocTemplateCompletionProposalComputer"
 		point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
 		<scriptCompletionProposalComputer
-			categoryId="org.eclipse.dltk.ui.commentTemplateProposalCategory"
+			categoryId="org.eclipse.php.ui.commentTemplateProposalCategory"
 			class="org.eclipse.php.internal.ui.editor.contentassist.PHPCommentTemplateCompletionProposalComputer"
 			toolkitId="org.eclipse.php.core.PHPNature">
 			<partition type="org.eclipse.php.PHP_DEFAULT">
@@ -1694,7 +1694,7 @@
          point="org.eclipse.ui.exportWizards"> 
       <wizard 
             id="org.eclipse.php.ui.export" 
-            name="Phar Export"
+            name="%wizard.name"
             class="org.eclipse.php.internal.ui.phar.wizard.PharPackageWizard" 
             icon="$nl$/icons/full/etool16/exportjar_wiz.gif"
             category="org.eclipse.php.ui.PHP">
@@ -1709,7 +1709,7 @@
    <extension
          point="org.eclipse.ui.importWizards">
       <wizard
-            name="Phar File"
+            name="%wizard.name.1"
             icon="$nl$/icons/full/etool16/exportjar_wiz.gif"
             category="org.eclipse.php.ui.PHP"            
             class="org.eclipse.php.internal.ui.phar.wizard.PharFileImportWizard"
@@ -1811,5 +1811,12 @@
             class="org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting"
             target="org.eclipse.php.core.phpsource">
         </highlighting>
+    </extension>
+    <extension
+          id="commentTemplateProposalCategory"
+          name="%extension.name.0"
+          point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
+       <proposalCategory
+             icon="icons/full/elcl16/phpdocprop_co.gif"></proposalCategory>
     </extension>     
 </plugin>
