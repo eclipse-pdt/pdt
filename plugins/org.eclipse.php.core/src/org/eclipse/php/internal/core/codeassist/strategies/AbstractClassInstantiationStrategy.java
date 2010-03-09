@@ -56,7 +56,8 @@ public abstract class AbstractClassInstantiationStrategy extends
 		}
 
 		SourceRange replaceRange = getReplacementRange(context);
-		String suffix = getSuffix(concreteContext);
+		String suffix = getSuffix(concreteContext, replaceRange.getOffset()
+				+ replaceRange.getLength());
 
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
@@ -123,14 +124,15 @@ public abstract class AbstractClassInstantiationStrategy extends
 		}
 	}
 
-	public String getSuffix(AbstractCompletionContext abstractContext) {
-		String nextWord = null;
+	public String getSuffix(AbstractCompletionContext abstractContext,
+			int currentPosition) {
+		char nextWord = ' ';
 		try {
-			nextWord = abstractContext.getNextWord();
+			nextWord = abstractContext.getNextChar();
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
-		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return '(' == nextWord ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	class FakeConstructor extends FakeMethod {

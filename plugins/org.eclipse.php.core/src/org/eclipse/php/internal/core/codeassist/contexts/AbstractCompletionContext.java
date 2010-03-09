@@ -448,39 +448,48 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	/**
 	 * Returns previous word before the cursor position
-	 * @throws BadLocationException 
+	 * 
+	 * @throws BadLocationException
 	 */
 	public String getPreviousWord(int times) throws BadLocationException {
 		TextSequence statementText = getStatementText();
-		
+
 		int statementLength = statementText.length();
-		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read whitespace
-		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		
+		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, statementLength); // read whitespace
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+				phpVersion, statementText, wordEnd, true);
+
 		for (int i = 0; i < times - 1; i++) {
 			statementLength = wordStart;
-			wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read whitespace
-			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-			
+			wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(
+					statementText, statementLength); // read whitespace
+			wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+					phpVersion, statementText, wordEnd, true);
+
 		}
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 			return "";
 		}
-		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
-		
+		String previousWord = statementText.subSequence(wordStart, wordEnd)
+				.toString();
+
 		if (hasWhitespaceBeforeCursor()) {
 			return previousWord;
 		}
-		
-		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read whitespace
-		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+
+		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText,
+				wordStart - 1); // read whitespace
+		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+				phpVersion, statementText, wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 			return "";
 		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
-		
+
 		return previousWord;
 	}
+
 	/**
 	 * Returns PHP token under offset
 	 * 
@@ -557,5 +566,15 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return document.get(regionCollection.getStartOffset()
 				+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
 				nextPHPToken.getTextLength());
+	}
+
+	/**
+	 * Returns next word after the cursor position
+	 * 
+	 * @throws BadLocationException
+	 */
+	public char getNextChar() throws BadLocationException {
+		// ITextRegion nextPHPToken = getNextPHPToken();
+		return document.getChar(offset);
 	}
 }
