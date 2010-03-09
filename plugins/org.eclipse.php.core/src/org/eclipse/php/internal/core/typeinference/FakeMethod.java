@@ -100,6 +100,11 @@ public class FakeMethod extends SourceMethod {
 		return parameters;
 	}
 
+	@Override
+	public String[] getParameterNames() throws ModelException {
+		return SourceMethodUtils.getParameterNames(parameters);
+	}
+
 	public void setConstructor(boolean isConstructor) {
 		this.isConstructor = isConstructor;
 	}
