@@ -37,6 +37,10 @@ public class PHPContextInformationValidator implements
 		} else {
 			fPosition = offset - 1;
 		}
+
+		// Work around for bug 253901.
+		fPosition++;
+
 		fCurrentParameter = -1;
 	}
 
