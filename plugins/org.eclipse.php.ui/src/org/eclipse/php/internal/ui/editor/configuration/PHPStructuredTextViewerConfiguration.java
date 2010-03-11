@@ -178,10 +178,13 @@ public class PHPStructuredTextViewerConfiguration extends
 	}
 
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer,
-			boolean reCreate) {
-		if (fContentAssistant == null || reCreate) {
-			fContentAssistant = new PHPContentAssistant();
-
+			boolean reSet) {
+		if (fContentAssistant == null || reSet) {
+			if (fContentAssistant == null) {
+				fContentAssistant = new PHPContentAssistant();
+			} else {
+				fContentAssistant.uninstall();
+			}
 			// content assistant configurations
 			fContentAssistant
 					.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
@@ -205,6 +208,7 @@ public class PHPStructuredTextViewerConfiguration extends
 					PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOINSERT,
 					false, null));
 
+			addContentAssistProcessors(sourceViewer);
 		}
 
 		return fContentAssistant;
