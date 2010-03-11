@@ -139,6 +139,17 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 				}
 			}
 		}
+		try {
+			// blank char
+			if (match != null && match.getLength() == 1) {
+				char currChar = document.getChar(match.getOffset());
+				// System.out.println((int) currChar);
+				if (currChar == 32 || currChar == 9) {
+					match = null;
+				}
+			}
+		} catch (BadLocationException e) {
+		}
 		if (match == null && fNextMatcher != null) {
 			fAnchor = -1;
 			match = fNextMatcher.match(document, offset);
