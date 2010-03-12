@@ -20,7 +20,6 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.text.IProblemRequestorExtension;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -28,6 +27,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener;
@@ -152,7 +152,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 				if (createdAST != null && document != null) {
 					createdAST.setSourceModule(unit);
 					createdAST.setSourceRange(0, document.getLength());
-					createdAST.setLineEndTable(lineEndTable(document));
+					createdAST.setLineEndTable(Util.lineEndTable(document));
 				}
 				return createdAST;
 			}
@@ -173,28 +173,6 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		}
 
 		return null;
-	}
-
-	private int[] lineEndTable(IDocument document) {
-		int numberOfLines = document.getNumberOfLines();
-		int[] result = new int[numberOfLines];
-		int i = 0;
-		while (i < numberOfLines) {
-			try {
-				String lineDelimiter = (i == numberOfLines - 1 ? "" : document
-						.getLineDelimiter(i));
-				IRegion lineInformation = document.getLineInformation(i);
-				result[i] = lineInformation.getOffset()
-						+ lineInformation.getLength() + lineDelimiter.length();
-			} catch (BadLocationException e) {
-				assert false;
-				throw new IllegalStateException(
-						"PhpReconcilingStrategy#lineEndTable(document");
-			}
-			i++;
-		}
-		// take care for the last line
-		return result;
 	}
 
 	public void validate(IValidationContext helper, IReporter reporter)

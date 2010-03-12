@@ -2498,7 +2498,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	}
 
 	public IDocument getDocument() {
-		return getSourceViewer().getDocument();
+		if (getSourceViewer() != null) {
+			return getSourceViewer().getDocument();
+		}
+		return null;
 	}
 
 	/**

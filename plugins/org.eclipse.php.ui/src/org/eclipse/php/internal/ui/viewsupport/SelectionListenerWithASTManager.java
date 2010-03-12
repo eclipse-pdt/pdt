@@ -21,13 +21,16 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -170,6 +173,17 @@ public class SelectionListenerWithASTManager {
 			try {
 				Program astRoot = SharedASTProvider.getAST(input,
 						SharedASTProvider.WAIT_ACTIVE_ONLY, monitor);
+
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=291569
+				IDocument document = ((PHPStructuredEditor) fPart)
+						.getDocument();
+
+				if (astRoot != null && document != null) {
+					astRoot.setSourceModule(input);
+					astRoot.setSourceRange(0, document.getLength());
+					astRoot.setLineEndTable(Util.lineEndTable(document));
+				}
+				// end
 
 				if (astRoot != null && !monitor.isCanceled()) {
 					Object[] listeners;
