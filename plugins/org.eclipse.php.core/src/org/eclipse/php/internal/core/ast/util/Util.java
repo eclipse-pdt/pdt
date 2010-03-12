@@ -39,6 +39,8 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -794,10 +796,10 @@ public class Util {
 						.getAllContentTypes();
 				for (int i = 0, length = contentTypes.length; i < length; i++) {
 					if (contentTypes[i].isKindOf(javaContentType)) { // note
-																		// that
-																		// javaContentType.isKindOf(javaContentType)
-																		// ==
-																		// true
+						// that
+						// javaContentType.isKindOf(javaContentType)
+						// ==
+						// true
 						String[] fileExtension = contentTypes[i]
 								.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 						for (int j = 0, length2 = fileExtension.length; j < length2; j++) {
@@ -810,7 +812,7 @@ public class Util {
 				// JDT Core's plugin.xml
 				char[][] extensions = new char[length][];
 				extensions[0] = "php".toCharArray(); // ensure that "java" is
-														// first
+				// first
 				int index = 1;
 				Iterator iterator = fileExtensions.iterator();
 				while (iterator.hasNext()) {
@@ -1297,7 +1299,7 @@ public class Util {
 					.getResourceAttributes();
 			if (resourceAttributes == null)
 				return false; // not supported on this platform for this
-								// resource
+			// resource
 			return resourceAttributes.isReadOnly();
 		}
 		return false;
@@ -3054,7 +3056,7 @@ public class Util {
 			case Signature.C_CAPTURE:
 			default:
 				throw new IllegalArgumentException(); // a var args is an array
-														// type
+				// type
 			}
 		} else {
 			switch (c) {
@@ -3251,4 +3253,25 @@ public class Util {
 		return start;
 	}
 
+	public static int[] lineEndTable(IDocument document) {
+		int numberOfLines = document.getNumberOfLines();
+		int[] result = new int[numberOfLines];
+		int i = 0;
+		while (i < numberOfLines) {
+			try {
+				String lineDelimiter = (i == numberOfLines - 1 ? "" : document
+						.getLineDelimiter(i));
+				IRegion lineInformation = document.getLineInformation(i);
+				result[i] = lineInformation.getOffset()
+						+ lineInformation.getLength() + lineDelimiter.length();
+			} catch (BadLocationException e) {
+				assert false;
+				throw new IllegalStateException(
+						"PhpReconcilingStrategy#lineEndTable(document");
+			}
+			i++;
+		}
+		// take care for the last line
+		return result;
+	}
 }
