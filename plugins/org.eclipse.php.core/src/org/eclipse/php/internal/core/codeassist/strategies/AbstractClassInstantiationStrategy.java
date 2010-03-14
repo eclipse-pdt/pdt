@@ -21,7 +21,8 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  * @author vadim.p
  * 
  */
-public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStrategy {
+public abstract class AbstractClassInstantiationStrategy extends
+		GlobalTypesStrategy {
 
 	public AbstractClassInstantiationStrategy(ICompletionContext context,
 			int trueFlag, int falseFlag) {
@@ -81,38 +82,6 @@ public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStra
 					}
 				}
 
-				// try to find constructor in super classes
-				if (ctor == null) {
-					ITypeHierarchy newSupertypeHierarchy = type
-							.newSupertypeHierarchy(null);
-					IType[] allSuperclasses = newSupertypeHierarchy
-							.getAllSuperclasses(type);
-					if (allSuperclasses != null && allSuperclasses.length > 0) {
-						for (IType superClass : allSuperclasses) {
-							methods = superClass.getMethods();
-							// find first constructor and exit
-							if (methods != null && methods.length > 0) {
-								for (IMethod method : methods) {
-									if (method.isConstructor()
-											&& method.getParameters() != null
-											&& method.getParameters().length > 0) {
-										ctor = method;
-										if (!PHPFlags
-												.isPrivate(ctor.getFlags())
-												|| type.equals(enclosingClass)) {
-											IMethod ctorMethod = createFakeMethod(
-													ctor, type);
-											reporter.reportMethod(ctorMethod,
-													suffix, replaceRange);
-											break;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
@@ -120,8 +89,6 @@ public abstract class AbstractClassInstantiationStrategy extends GlobalTypesStra
 				reporter.reportType(type, suffix, replaceRange);
 			}
 		}
-
-		// addSelf(concreteContext, reporter);
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {
