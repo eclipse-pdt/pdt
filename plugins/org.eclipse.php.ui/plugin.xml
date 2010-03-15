@@ -1119,10 +1119,10 @@
 		<key sequence="M2+F2" commandId="org.eclipse.php.ui.edit.text.php.open.manual"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M3+H"
-			commandId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"
+			commandId="org.eclipse.dltk.ui.edit.text.script.open.call.hierarchy"
 			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M3+H"
-			commandId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"
+			commandId="org.eclipse.dltk.ui.edit.text.script.open.call.hierarchy"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="F4"
 			commandId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
