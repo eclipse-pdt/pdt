@@ -223,6 +223,8 @@ public class PathMapperEntryDialog extends StatusDialog {
 		applyDialogFont(parent);
 		initializeValues();
 
+		validate();
+
 		return parent;
 	}
 
@@ -410,8 +412,8 @@ public class PathMapperEntryDialog extends StatusDialog {
 							if (member instanceof IContainer
 									&& member.isAccessible()) {
 								if (member instanceof IProject) { // show only
-																	// PHP
-																	// projects
+									// PHP
+									// projects
 									IProject project = (IProject) member;
 									if (project.hasNature(PHPNature.ID)) {
 										r.add(member);
