@@ -67,4 +67,14 @@ public class FakeField extends SourceField {
 		}
 		return false;
 	}
+
+	@Override
+	public Object getElementInfo() throws ModelException {
+		// return null instead of throwing ModelException
+		// It sounds making sense, as the Fake field don't have element info at
+		// all.
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=297579
+		return null;
+	}
+
 }
