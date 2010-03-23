@@ -8,7 +8,6 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
-import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
@@ -60,34 +59,7 @@ public abstract class AbstractClassInstantiationStrategy extends
 
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
-
-			IMethod ctor = null;
-			try {
-				IMethod[] methods = type.getMethods();
-				if (methods != null && methods.length > 0) {
-					for (IMethod method : methods) {
-						if (method.isConstructor()
-								&& method.getParameters() != null
-								&& method.getParameters().length > 0) {
-							ctor = method;
-							if (!PHPFlags.isPrivate(ctor.getFlags())
-									|| type.equals(enclosingClass)) {
-								IMethod ctorMethod = createFakeMethod(ctor,
-										type);
-								reporter.reportMethod(ctorMethod, suffix,
-										replaceRange);
-								break;
-							}
-						}
-					}
-				}
-
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-			}
-			if (ctor == null) {
-				reporter.reportType(type, suffix, replaceRange);
-			}
+			reporter.reportType(type, suffix, replaceRange);
 		}
 	}
 
