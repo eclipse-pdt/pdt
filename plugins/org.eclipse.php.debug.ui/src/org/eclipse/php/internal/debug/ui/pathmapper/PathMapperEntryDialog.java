@@ -30,6 +30,7 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.StatusDialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
@@ -55,7 +56,7 @@ import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
-public class PathMapperEntryDialog extends StatusDialog {
+public class PathMapperEntryDialog extends TitleAreaDialog {
 
 	private Mapping fEditData;
 	private Text fRemotePathText;
@@ -86,24 +87,30 @@ public class PathMapperEntryDialog extends StatusDialog {
 
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
-		PixelConverter pixelConverter = new PixelConverter(parent);
+
+		Composite mainComp = new Composite(parent, SWT.None);
+		mainComp.setLayout(new GridLayout());
+		mainComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		PixelConverter pixelConverter = new PixelConverter(mainComp);
 
 		// Remote path text field:
-		Label label = new Label(parent, SWT.NONE);
+		Label label = new Label(mainComp, SWT.NONE);
 		label.setText("Path on Server:");
 
-		fRemotePathText = new Text(parent, SWT.BORDER);
+		fRemotePathText = new Text(mainComp, SWT.BORDER);
 		fRemotePathText.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				validate();
 			}
 		});
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
-		layoutData.widthHint = pixelConverter.convertWidthInCharsToPixels(50);
+		// layoutData.widthHint =
+		// pixelConverter.convertWidthInCharsToPixels(90);
 		fRemotePathText.setLayoutData(layoutData);
 
 		// Radio buttons group:
-		Composite typeSelectionGroup = new Composite(parent, SWT.NONE);
+		Composite typeSelectionGroup = new Composite(mainComp, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		typeSelectionGroup.setLayout(layout);
@@ -220,10 +227,16 @@ public class PathMapperEntryDialog extends StatusDialog {
 			}
 		});
 
-		applyDialogFont(parent);
+		applyDialogFont(mainComp);
 		initializeValues();
 
 		validate();
+
+		if (fEditData != null) {
+			setMessage("Edit server path mapping.");
+		} else {
+			setMessage("Add new server path mapping.");
+		}
 
 		return parent;
 	}
@@ -249,7 +262,8 @@ public class PathMapperEntryDialog extends StatusDialog {
 	}
 
 	protected void setError(String error) {
-		updateStatus(new StatusInfo(IStatus.ERROR, error));
+		// updateStatus(new StatusInfo(IStatus.ERROR, error));
+		setErrorMessage(error);
 	}
 
 	protected void validate() {
@@ -317,7 +331,8 @@ public class PathMapperEntryDialog extends StatusDialog {
 
 		fEditData = mapping;
 
-		updateStatus(Status.OK_STATUS);
+		// updateStatus(Status.OK_STATUS);
+		setErrorMessage(null);
 	}
 
 	class WorkspaceBrowseDialog extends StatusDialog {
