@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -144,10 +144,23 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			}
 
 			// get the region to re-parse
-			final ITextRegion tokenStart = tokensContaier
-					.getToken(offset == 0 ? 0 : offset - 1);
-			final int oldEndOffset = offset + lengthToReplace;
-			final ITextRegion tokenEnd = tokensContaier.getToken(oldEndOffset);
+			ITextRegion tokenStart = tokensContaier.getToken(offset == 0 ? 0
+					: offset - 1);
+			ITextRegion tokenEnd = tokensContaier.getToken(offset
+					+ lengthToReplace);
+
+			// make sure, region to re-parse doesn't start with unknown token
+			while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenStart.getType())
+					&& (tokenStart.getStart() > 0)) {
+				tokenStart = tokensContaier.getToken(tokenStart.getStart() - 1);
+			}
+
+			// move sure, region to re-parse doesn't end with unknown token
+			while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenEnd.getType())
+					&& (tokensContaier.getLastToken() != tokenEnd)) {
+				tokenEnd = tokensContaier.getToken(tokenEnd.getEnd() + 1);
+			}
+
 			int newTokenOffset = tokenStart.getStart();
 
 			if (isHereDoc(tokenStart)) {
