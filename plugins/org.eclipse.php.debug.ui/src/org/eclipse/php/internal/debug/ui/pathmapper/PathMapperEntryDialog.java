@@ -75,9 +75,9 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		super(parent);
 		if (editData != null) {
 			fEditData = editData.clone();
-			setTitle("Edit Path Mapping");
+			setTitle(Messages.PathMapperEntryDialog_0);
 		} else {
-			setTitle("Add new Path Mapping");
+			setTitle(Messages.PathMapperEntryDialog_1);
 		}
 	}
 
@@ -96,7 +96,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 		// Remote path text field:
 		Label label = new Label(mainComp, SWT.NONE);
-		label.setText("Path on Server:");
+		label.setText(Messages.PathMapperEntryDialog_2);
 
 		fRemotePathText = new Text(mainComp, SWT.BORDER);
 		fRemotePathText.addModifyListener(new ModifyListener() {
@@ -121,7 +121,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 2;
 		fWorkspacePathBtn.setLayoutData(layoutData);
-		fWorkspacePathBtn.setText("Path in &Workspace");
+		fWorkspacePathBtn.setText(Messages.PathMapperEntryDialog_3);
 		fWorkspacePathBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = fWorkspacePathBtn.getSelection();
@@ -129,6 +129,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				fWorkspacePathBrowseBtn.setEnabled(enabled);
 				fExternalPathText.setEnabled(!enabled);
 				fExternalPathBrowseBtn.setEnabled(!enabled);
+				validate();
 			}
 		});
 
@@ -144,7 +145,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		});
 
 		fWorkspacePathBrowseBtn = new Button(typeSelectionGroup, SWT.NONE);
-		fWorkspacePathBrowseBtn.setText("&Browse");
+		fWorkspacePathBrowseBtn.setText(Messages.PathMapperEntryDialog_4);
 		fWorkspacePathBrowseBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				WorkspaceBrowseDialog dialog = new WorkspaceBrowseDialog(
@@ -193,7 +194,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 2;
 		fExternalPathBtn.setLayoutData(layoutData);
-		fExternalPathBtn.setText("Path in &File System");
+		fExternalPathBtn.setText(Messages.PathMapperEntryDialog_5);
 		fExternalPathBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				boolean enabled = fExternalPathBtn.getSelection();
@@ -201,6 +202,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				fExternalPathBrowseBtn.setEnabled(enabled);
 				fWorkspacePathText.setEnabled(!enabled);
 				fWorkspacePathBrowseBtn.setEnabled(!enabled);
+				validate();
 			}
 		});
 
@@ -216,7 +218,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		});
 
 		fExternalPathBrowseBtn = new Button(typeSelectionGroup, SWT.NONE);
-		fExternalPathBrowseBtn.setText("&Browse");
+		fExternalPathBrowseBtn.setText(Messages.PathMapperEntryDialog_6);
 		fExternalPathBrowseBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				DirectoryDialog dialog = new DirectoryDialog(getShell());
@@ -233,9 +235,9 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		validate();
 
 		if (fEditData != null) {
-			setMessage("Edit server path mapping.");
+			setMessage(Messages.PathMapperEntryDialog_7);
 		} else {
-			setMessage("Add new server path mapping.");
+			setMessage(Messages.PathMapperEntryDialog_8);
 		}
 
 		return parent;
@@ -271,13 +273,13 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 		String remotePathStr = fRemotePathText.getText().trim();
 		if (remotePathStr.length() == 0) {
-			setError("Path on server must not be empty!");
+			setError(Messages.PathMapperEntryDialog_9);
 			return;
 		}
 		try {
 			mapping.remotePath = new VirtualPath(remotePathStr);
 		} catch (IllegalArgumentException e) {
-			setError("Path on server is illegal or not absolute!");
+			setError(Messages.PathMapperEntryDialog_10);
 			return;
 		}
 
@@ -285,7 +287,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		if (fWorkspacePathBtn.getSelection()) {
 			String workspacePath = fWorkspacePathText.getText().trim();
 			if (workspacePath.length() == 0) {
-				setError("Path in workspace must not be empty!");
+				setError(Messages.PathMapperEntryDialog_11);
 				return;
 			}
 
@@ -299,24 +301,24 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 						.getRoot().findMember(workspacePath) != null);
 			}
 			if (!pathExistsInWorkspace) {
-				setError(NLS.bind("Path ''{0}'' doesn't exist in workspace!",
+				setError(NLS.bind(Messages.PathMapperEntryDialog_12,
 						workspacePath));
 				return;
 			}
 			try {
 				mapping.localPath = new VirtualPath(workspacePath);
 			} catch (IllegalArgumentException e) {
-				setError("Path in workspace is illegal or not absolute!");
+				setError(Messages.PathMapperEntryDialog_13);
 				return;
 			}
 		} else { // External file:
 			String externalPath = fExternalPathText.getText().trim();
 			if (externalPath.length() == 0) {
-				setError("Path in file system must not be empty!");
+				setError(Messages.PathMapperEntryDialog_14);
 				return;
 			}
 			if (!new File(externalPath).exists()) {
-				setError(NLS.bind("Path ''{0}'' doesn't exist in file system!",
+				setError(NLS.bind(Messages.PathMapperEntryDialog_15,
 						externalPath));
 				return;
 			}
@@ -324,7 +326,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				mapping.type = Type.EXTERNAL;
 				mapping.localPath = new VirtualPath(externalPath);
 			} catch (IllegalArgumentException e) {
-				setError("Path in file system is illegal or not absolute!");
+				setError(Messages.PathMapperEntryDialog_16);
 				return;
 			}
 		}
@@ -341,7 +343,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 		public WorkspaceBrowseDialog(Shell parent) {
 			super(parent);
-			setTitle("Select Workspace Resource");
+			setTitle(Messages.PathMapperEntryDialog_17);
 		}
 
 		public Object getSelectedElement() {
@@ -384,7 +386,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 			Object element = selection.getFirstElement();
 			// TODO: buildpath entry selection
 			if (element == null/* || element instanceof IncludeNode */) {
-				updateStatus(new StatusInfo(IStatus.ERROR, ""));
+				updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$
 				return;
 			}
 			selectedElement = element;
