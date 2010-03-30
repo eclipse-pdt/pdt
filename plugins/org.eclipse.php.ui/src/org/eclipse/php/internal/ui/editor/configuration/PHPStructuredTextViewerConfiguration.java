@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.configuration;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -87,6 +84,7 @@ public class PHPStructuredTextViewerConfiguration extends
 	private StructuredContentAssistant fContentAssistant;
 	private IQuickAssistAssistant fQuickAssistant;
 	private PHPCompletionProcessor phpCompletionProcessor;
+	Map<String, IContentAssistProcessor[]> processorMap = new HashMap<String, IContentAssistProcessor[]>();
 
 	public PHPStructuredTextViewerConfiguration() {
 	}
@@ -152,7 +150,7 @@ public class PHPStructuredTextViewerConfiguration extends
 				final ContentAssistant phpContentAssistant = (ContentAssistant) getPHPContentAssistant(sourceViewer);
 				phpCompletionProcessor = new PHPCompletionProcessor(textEditor,
 						phpContentAssistant, PHPPartitionTypes.PHP_DEFAULT);
-				addProcessorsForTypes(sourceViewer);
+				addContentAssistProcessors(sourceViewer);
 			}
 
 			if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
@@ -160,6 +158,7 @@ public class PHPStructuredTextViewerConfiguration extends
 			} else {
 				IContentAssistProcessor[] superProcessors = super
 						.getContentAssistProcessors(sourceViewer, partitionType);
+				processorMap.put(partitionType, superProcessors);
 				if (superProcessors != null) {
 					processors = new IContentAssistProcessor[superProcessors.length + 1];
 					System.arraycopy(superProcessors, 0, processors, 0,
@@ -180,10 +179,13 @@ public class PHPStructuredTextViewerConfiguration extends
 	}
 
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer,
-			boolean reCreate) {
-		if (fContentAssistant == null || reCreate) {
-			fContentAssistant = new PHPContentAssistant();
-
+			boolean reSet) {
+		if (fContentAssistant == null || reSet) {
+			if (fContentAssistant == null) {
+				fContentAssistant = new PHPContentAssistant();
+			} else {
+				fContentAssistant.uninstall();
+			}
 			// content assistant configurations
 			fContentAssistant
 					.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
@@ -206,6 +208,8 @@ public class PHPStructuredTextViewerConfiguration extends
 			fContentAssistant.enableAutoInsert(preferencesService.getBoolean(
 					PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOINSERT,
 					false, null));
+
+			addContentAssistProcessors(sourceViewer);
 		}
 
 		return fContentAssistant;
@@ -214,7 +218,7 @@ public class PHPStructuredTextViewerConfiguration extends
 	/**
 	 * @param sourceViewer
 	 */
-	private void addProcessorsForTypes(ISourceViewer sourceViewer) {
+	private void addContentAssistProcessors(ISourceViewer sourceViewer) {
 		// add content assist processors for each partition type
 		String[] types = getConfiguredContentTypes(sourceViewer);
 		for (int i = 0; i < types.length; i++) {
@@ -554,5 +558,9 @@ public class PHPStructuredTextViewerConfiguration extends
 			fQuickAssistant = assistant;
 		}
 		return fQuickAssistant;
+	}
+
+	public Map<String, IContentAssistProcessor[]> getProcessorMap() {
+		return processorMap;
 	}
 }

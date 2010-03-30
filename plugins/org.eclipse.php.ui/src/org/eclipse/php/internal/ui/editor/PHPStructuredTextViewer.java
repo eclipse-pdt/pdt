@@ -461,7 +461,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
 		IContentAssistant newPHPAssistant = phpConfiguration
-				.getPHPContentAssistant(this);
+				.getPHPContentAssistant(this, true);
 
 		// Uninstall content assistant created in super:
 		if (fContentAssistant != null) {
@@ -618,5 +618,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		if (fFireSelectionChanged) {
 			super.selectionChanged(offset, length);
 		}
+	}
+	
+	public SourceViewerConfiguration getViewerConfiguration() {
+		return fViewerConfiguration;
 	}
 }

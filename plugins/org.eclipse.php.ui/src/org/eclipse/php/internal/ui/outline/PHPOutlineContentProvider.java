@@ -331,6 +331,14 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 
 		public IModelElement[] getChildren() throws ModelException {
+			// when rename a php file,we should return a empty array for the old
+			// sourceModule,or execute SourceParserUtil.getModuleDeclaration()
+			// will cache wrong ModuleDeclaration for the non-exist
+			// sourceModule,so when we rename the php file back to its original
+			// name will get the wrong ModuleDeclaration
+			if (!sourceModule.exists()) {
+				return new IModelElement[0];
+			}
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
 					.getModuleDeclaration(sourceModule);
 			if(moduleDeclaration == null)
