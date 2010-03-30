@@ -47,6 +47,11 @@ public class VirtualPath implements Cloneable {
 			sepChar = '\\';
 			device = "\\\\";
 			path = path.substring(2);
+		}
+		if (path.startsWith("\\")) {
+			sepChar = '\\';
+			device = "\\";
+			path = path.substring(1);
 		} else {
 			Matcher m = VOLNAME.matcher(path);
 			if (m.matches()) { // Windows path
