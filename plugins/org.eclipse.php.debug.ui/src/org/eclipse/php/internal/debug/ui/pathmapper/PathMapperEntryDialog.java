@@ -29,6 +29,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.*;
@@ -232,8 +233,6 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		applyDialogFont(mainComp);
 		initializeValues();
 
-		validate();
-
 		if (fEditData != null) {
 			setMessage(Messages.PathMapperEntryDialog_7);
 		} else {
@@ -241,6 +240,21 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 		}
 
 		return parent;
+	}
+
+	@Override
+	protected Control createContents(Composite parent) {
+		Control control = super.createContents(parent);
+
+		if (fEditData != null) {
+			getShell().setText(Messages.PathMapperEntryDialog_0);
+		} else {
+			getShell().setText(Messages.PathMapperEntryDialog_1);
+		}
+
+		validate();
+
+		return control;
 	}
 
 	protected void initializeValues() {
@@ -264,8 +278,26 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 	}
 
 	protected void setError(String error) {
-		// updateStatus(new StatusInfo(IStatus.ERROR, error));
+		if (error == null) {
+			enableOkButton();
+		} else {
+			disableOkButton();
+		}
 		setErrorMessage(error);
+	}
+
+	private void enableOkButton() {
+		Button btn = getButton(IDialogConstants.OK_ID);
+		if (btn != null) {
+			btn.setEnabled(true);
+		}
+	}
+
+	private void disableOkButton() {
+		Button btn = getButton(IDialogConstants.OK_ID);
+		if (btn != null) {
+			btn.setEnabled(false);
+		}
 	}
 
 	protected void validate() {
@@ -333,8 +365,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 		fEditData = mapping;
 
-		// updateStatus(Status.OK_STATUS);
-		setErrorMessage(null);
+		setError(null);
 	}
 
 	class WorkspaceBrowseDialog extends StatusDialog {
