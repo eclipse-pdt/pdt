@@ -108,6 +108,13 @@ public class PathMappingComposite extends Composite {
 		}
 	}
 
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		fMapList.setEnabled(enabled);
+
+	}
+
 	@SuppressWarnings("unchecked")
 	protected void handleEdit() {
 		List l = fMapList.getSelectedElements();
