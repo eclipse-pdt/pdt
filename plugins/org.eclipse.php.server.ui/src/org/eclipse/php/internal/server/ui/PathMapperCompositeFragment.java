@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.server.ui;
 
@@ -31,10 +32,12 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 
 	private PathMappingComposite pathMapperComposite;
 
-	public PathMapperCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
+	public PathMapperCompositeFragment(Composite parent,
+			IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
 		controlHandler.setTitle("Server Path Mapping");
-		controlHandler.setDescription("Specify mapping between server and local paths");
+		controlHandler
+				.setDescription("Specify mapping between server and local paths");
 		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
 		setDisplayName("Path Mapping");
 		setTitle("Edit Server Path Mapping");
@@ -49,14 +52,14 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	 * Create the page
 	 */
 	protected void createControl(boolean isForEditing) {
-		//set layout for this composite (whole page)
+		// set layout for this composite (whole page)
 		GridLayout pageLayout = new GridLayout();
 		setLayout(pageLayout);
 
 		Composite composite = new Composite(this, SWT.NONE);
 		pageLayout.numColumns = 1;
 		composite.setLayout(pageLayout);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		GridData data = new GridData(GridData.FILL_BOTH);
 		composite.setLayoutData(data);
 
 		pathMapperComposite = new PathMappingComposite(composite, SWT.NONE);
@@ -107,12 +110,14 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 
 	/**
 	 * Override the super setData to handle only Server types.
-	 *
-	 * @throws IllegalArgumentException if the given object is not a {@link Server}
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the given object is not a {@link Server}
 	 */
 	public void setData(Object server) {
 		if (!(server instanceof Server)) {
-			throw new IllegalArgumentException("The given object is not a Server");
+			throw new IllegalArgumentException(
+					"The given object is not a Server");
 		}
 		super.setData(server);
 		init();
@@ -125,10 +130,16 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 
 	/**
 	 * Returns the Server that is attached to this fragment.
-	 *
+	 * 
 	 * @return The attached Server.
 	 */
 	public Server getServer() {
 		return (Server) getData();
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		pathMapperComposite.setEnabled(enabled);
 	}
 }
