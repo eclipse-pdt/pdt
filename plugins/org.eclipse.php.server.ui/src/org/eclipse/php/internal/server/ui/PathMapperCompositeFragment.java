@@ -59,7 +59,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 		Composite composite = new Composite(this, SWT.NONE);
 		pageLayout.numColumns = 1;
 		composite.setLayout(pageLayout);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		GridData data = new GridData(GridData.FILL_BOTH);
 		composite.setLayoutData(data);
 
 		pathMapperComposite = new PathMappingComposite(composite, SWT.NONE);
@@ -135,5 +135,11 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	 */
 	public Server getServer() {
 		return (Server) getData();
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		pathMapperComposite.setEnabled(enabled);
 	}
 }
