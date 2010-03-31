@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.pathmapper;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -24,7 +26,6 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
 import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.wizards.fields.IListAdapter;
 import org.eclipse.php.internal.ui.wizards.fields.ListDialogField;
@@ -44,8 +45,10 @@ public class PathMappingComposite extends Composite {
 	private static final int IDX_EDIT = 1;
 	private static final int IDX_REMOVE = 2;
 	private static final String[] buttonLabels = { "&Add", "&Edit", "&Remove" };
-	private static final String[] columnHeaders = { "Path on server", "Local path" };
-	private static final ColumnLayoutData[] columnLayoutDatas = new ColumnLayoutData[] { new ColumnWeightData(50), new ColumnWeightData(50) };
+	private static final String[] columnHeaders = { "Path on server",
+			"Local path" };
+	private static final ColumnLayoutData[] columnLayoutDatas = new ColumnLayoutData[] {
+			new ColumnWeightData(50), new ColumnWeightData(50) };
 
 	private ListDialogField fMapList;
 
@@ -55,9 +58,11 @@ public class PathMappingComposite extends Composite {
 	}
 
 	protected void initializeControls() {
-		fMapList = new ListDialogField(new ListAdapter(), buttonLabels, new LabelProvider());
+		fMapList = new ListDialogField(new ListAdapter(), buttonLabels,
+				new LabelProvider());
 		fMapList.setRemoveButtonIndex(IDX_REMOVE);
-		fMapList.setTableColumns(new ListDialogField.ColumnsDescription(columnLayoutDatas, columnHeaders, true));
+		fMapList.setTableColumns(new ListDialogField.ColumnsDescription(
+				columnLayoutDatas, columnHeaders, true));
 
 		GridLayout layout = new GridLayout();
 		setLayout(layout);
@@ -65,7 +70,8 @@ public class PathMappingComposite extends Composite {
 
 		PixelConverter conv = new PixelConverter(this);
 
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(this, SWT.V_SCROLL | SWT.H_SCROLL);
+		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(
+				this, SWT.V_SCROLL | SWT.H_SCROLL);
 		scrolledCompositeImpl.setLayout(layout);
 		scrolledCompositeImpl.setLayoutData(new GridData(GridData.FILL_BOTH));
 
@@ -84,7 +90,9 @@ public class PathMappingComposite extends Composite {
 		listControl.setLayoutData(data);
 
 		Control buttonsControl = fMapList.getButtonBox(composite);
-		buttonsControl.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING));
+		buttonsControl.setLayoutData(new GridData(
+				GridData.HORIZONTAL_ALIGN_FILL
+						| GridData.VERTICAL_ALIGN_BEGINNING));
 
 		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		scrolledCompositeImpl.setMinSize(size.x, size.y);
@@ -100,12 +108,20 @@ public class PathMappingComposite extends Composite {
 		}
 	}
 
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		fMapList.setEnabled(enabled);
+
+	}
+
 	@SuppressWarnings("unchecked")
 	protected void handleEdit() {
 		List l = fMapList.getSelectedElements();
 		if (l.size() == 1) {
 			Mapping oldElement = (Mapping) l.get(0);
-			PathMapperEntryDialog dialog = new PathMapperEntryDialog(getShell(), oldElement);
+			PathMapperEntryDialog dialog = new PathMapperEntryDialog(
+					getShell(), oldElement);
 			if (dialog.open() == Window.OK) {
 				Mapping newElement = dialog.getResult();
 				fMapList.replaceElement(oldElement, newElement);
@@ -123,7 +139,8 @@ public class PathMappingComposite extends Composite {
 	 */
 	public void setData(Object data) {
 		if (!(data instanceof Mapping[])) {
-			throw new IllegalArgumentException("Data must be instance of Mapping[]");
+			throw new IllegalArgumentException(
+					"Data must be instance of Mapping[]");
 		}
 		Mapping[] mappings = (Mapping[]) data;
 		fMapList.setElements(Arrays.asList(mappings));
@@ -145,15 +162,15 @@ public class PathMappingComposite extends Composite {
 	class ListAdapter implements IListAdapter {
 		public void customButtonPressed(ListDialogField field, int index) {
 			switch (index) {
-				case IDX_ADD:
-					handleAdd();
-					break;
-				case IDX_EDIT:
-					handleEdit();
-					break;
-				case IDX_REMOVE:
-					handleRemove();
-					break;
+			case IDX_ADD:
+				handleAdd();
+				break;
+			case IDX_EDIT:
+				handleEdit();
+				break;
+			case IDX_REMOVE:
+				handleRemove();
+				break;
 			}
 		}
 
@@ -166,22 +183,27 @@ public class PathMappingComposite extends Composite {
 		}
 	}
 
-	class LabelProvider extends org.eclipse.jface.viewers.LabelProvider implements ITableLabelProvider {
-		private PHPUILabelProvider phpLabelProvider = new PHPUILabelProvider();
+	class LabelProvider extends org.eclipse.jface.viewers.LabelProvider
+			implements ITableLabelProvider {
+		private ScriptUILabelProvider phpLabelProvider = new ScriptUILabelProvider();
 
 		public Image getColumnImage(Object element, int columnIndex) {
 			if (columnIndex == 1) { // local path
 				PathMapper.Mapping mapping = (PathMapper.Mapping) element;
 				if (mapping.type == Type.EXTERNAL) {
-					return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+					return PlatformUI.getWorkbench().getSharedImages()
+							.getImage(ISharedImages.IMG_OBJ_FOLDER);
 				}
 				if (mapping.type == Type.INCLUDE_VAR) {
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
+					return PHPPluginImages
+							.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 				}
 				if (mapping.type == Type.INCLUDE_FOLDER) {
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+					return PHPPluginImages
+							.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 				}
-				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(mapping.localPath.toString());
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+						.findMember(mapping.localPath.toString());
 				if (resource != null) {
 					return phpLabelProvider.getImage(resource);
 				}
@@ -192,10 +214,10 @@ public class PathMappingComposite extends Composite {
 		public String getColumnText(Object element, int columnIndex) {
 			PathMapper.Mapping mapping = (PathMapper.Mapping) element;
 			switch (columnIndex) {
-				case 0:
-					return mapping.remotePath.toString();
-				case 1:
-					return mapping.localPath.toString();
+			case 0:
+				return mapping.remotePath.toString();
+			case 1:
+				return mapping.localPath.toString();
 			}
 			return null;
 		}
