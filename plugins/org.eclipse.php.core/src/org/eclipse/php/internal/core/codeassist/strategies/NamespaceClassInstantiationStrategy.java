@@ -102,10 +102,9 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 					int flags = type.getFlags();
 					if (PHPFlags.isClass(flags)) {
 						//here we use fake method,and do the real work in class ParameterGuessingProposal
-						IMethod ctorMethod = FakeConstructor.createFakeMethod(null,type,type.equals(enclosingClass));
+						IMethod ctorMethod = FakeConstructor.createFakeConstructor(null,type,type.equals(enclosingClass));
 						reporter.reportMethod(ctorMethod, suffix,
 								replaceRange);
-//						reporter.reportType(type, suffix, replaceRange);
 					}
 				}
 			} catch (ModelException e) {

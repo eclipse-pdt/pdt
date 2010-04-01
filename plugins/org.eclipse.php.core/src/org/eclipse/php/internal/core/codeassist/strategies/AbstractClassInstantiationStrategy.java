@@ -61,70 +61,20 @@ public abstract class AbstractClassInstantiationStrategy extends
 		for (IType type : types) {
 			if(!concreteContext.getCompletionRequestor().isContextInformationMode()){
 				//here we use fake method,and do the real work in class ParameterGuessingProposal
-				IMethod ctorMethod = FakeConstructor.createFakeMethod(null,type,type.equals(enclosingClass));
+				IMethod ctorMethod = FakeConstructor.createFakeConstructor(null,type,type.equals(enclosingClass));
 				reporter.reportMethod(ctorMethod, suffix,
 						replaceRange);
 			}else{
 				//if this is context information mode,we use this,
 				//because the number of types' length is very small 
-				IMethod ctor = null;
-				try {
-					IMethod[] methods = type.getMethods();
-					if (methods != null && methods.length > 0) {
-						for (IMethod method : methods) {
-							if (method.isConstructor()
-									&& method.getParameters() != null
-									&& method.getParameters().length > 0) {
-								ctor = method;
-								if (!PHPFlags.isPrivate(ctor.getFlags())
-										|| type.equals(enclosingClass)) {
-									IMethod ctorMethod = FakeConstructor.createFakeMethod(ctor,type,
-											true);
-									reporter.reportMethod(ctorMethod, suffix,
-											replaceRange);
-									break;
-								}
-							}
-						}
+				IMethod[] ctors = FakeConstructor.getConstructors(type, type.equals(enclosingClass));
+				if (ctors != null && ctors.length == 2) {
+					if(ctors[1] != null){
+						reporter.reportMethod(ctors[1], suffix,
+								replaceRange);
+					}else if (ctors[0] == null) {
+						reporter.reportType(type, suffix, replaceRange);
 					}
-	
-					// try to find constructor in super classes
-					if (ctor == null) {
-						ITypeHierarchy newSupertypeHierarchy = type
-								.newSupertypeHierarchy(null);
-						IType[] allSuperclasses = newSupertypeHierarchy
-								.getAllSuperclasses(type);
-						if (allSuperclasses != null && allSuperclasses.length > 0) {
-							for (IType superClass : allSuperclasses) {
-								methods = superClass.getMethods();
-								// find first constructor and exit
-								if (methods != null && methods.length > 0) {
-									for (IMethod method : methods) {
-										if (method.isConstructor()
-												&& method.getParameters() != null
-												&& method.getParameters().length > 0) {
-											ctor = method;
-											if (!PHPFlags
-													.isPrivate(ctor.getFlags())
-													|| type.equals(enclosingClass)) {
-												IMethod ctorMethod = FakeConstructor.createFakeMethod(
-														ctor, type,true);
-												reporter.reportMethod(ctorMethod,
-														suffix, replaceRange);
-												break;
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-	
-				} catch (ModelException e) {
-					PHPCorePlugin.log(e);
-				}
-				if (ctor == null) {
-					reporter.reportType(type, suffix, replaceRange);
 				}
 			}
 
