@@ -21,6 +21,8 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
 import org.eclipse.swt.graphics.Point;
@@ -52,8 +54,70 @@ public final class ParameterGuessingProposal extends
 		super(jproject, cu, methodName, paramTypes, start, length, displayName,
 				completionProposal);
 		this.fProposal = proposal;
-		method = (IMethod) fProposal.getModelElement();
+		method = getProperMethod((IMethod) fProposal.getModelElement());
 		this.fFillBestGuess = fillBestGuess;
+	}
+	/**
+	 * if modelElement is an instance of FakeConstructor,
+	 * we need to get the real constructor
+	 * @param modelElement
+	 * @return
+	 */
+	private IMethod getProperMethod(IMethod modelElement) {
+		if (modelElement instanceof FakeConstructor) {
+			FakeConstructor fc = (FakeConstructor) modelElement;
+			IType type = modelElement.getDeclaringType();
+			IMethod ctor = null;
+			try {
+				IMethod[] methods = type.getMethods();
+				if (methods != null && methods.length > 0) {
+					for (IMethod method : methods) {
+						if (method.isConstructor()
+								&& method.getParameters() != null
+								&& method.getParameters().length > 0) {
+							ctor = method;
+							if (!PHPFlags.isPrivate(ctor.getFlags())
+									|| fc.isEnclosingClass()) {
+								return ctor;
+							}
+						}
+					}
+				}
+
+				// try to find constructor in super classes
+//				if (ctor == null) {
+					ITypeHierarchy newSupertypeHierarchy = type
+							.newSupertypeHierarchy(null);
+					IType[] allSuperclasses = newSupertypeHierarchy
+							.getAllSuperclasses(type);
+					if (allSuperclasses != null && allSuperclasses.length > 0) {
+						for (IType superClass : allSuperclasses) {
+							methods = superClass.getMethods();
+							// find first constructor and exit
+							if (methods != null && methods.length > 0) {
+								for (IMethod method : methods) {
+									if (method.isConstructor()
+											&& method.getParameters() != null
+											&& method.getParameters().length > 0) {
+										ctor = method;
+										if (!PHPFlags
+												.isPrivate(ctor.getFlags())
+												|| fc.isEnclosingClass()) {
+											return ctor;
+										}
+									}
+								}
+							}
+						}
+					}
+//				}
+
+			} catch (ModelException e) {
+				PHPUiPlugin.log(e);
+			}
+		}
+		
+		return modelElement;
 	}
 
 	private ICompletionProposal[][] fChoices; // initialized by
@@ -168,8 +232,23 @@ public final class ParameterGuessingProposal extends
 		appendMethodNameReplacement(buffer);
 
 		setCursorPosition(buffer.length());
-
+		// show method parameter names:
 		char[][] parameterNames = fProposal.findParameterNames(null);
+		if (parameterNames == null) {
+			parameterNames = new char[0][0];
+			String[] params = null;
+			try {
+				params = method.getParameterNames();
+			} catch (ModelException e) {
+				PHPUiPlugin.log(e);
+			}
+			if (params != null && params.length > 0) {
+				parameterNames = new char[params.length][];
+				for (int i = 0; i < params.length; ++i) {
+					parameterNames[i] = params[i].toCharArray();
+				}
+			}
+		}
 
 		fChoices = guessParameters(parameterNames);
 		int count = fChoices.length;
