@@ -22,6 +22,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
+import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
 
 /**
@@ -100,7 +101,11 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 				} else {
 					int flags = type.getFlags();
 					if (PHPFlags.isClass(flags)) {
-						reporter.reportType(type, suffix, replaceRange);
+						//here we use fake method,and do the real work in class ParameterGuessingProposal
+						IMethod ctorMethod = FakeConstructor.createFakeMethod(null,type,type.equals(enclosingClass));
+						reporter.reportMethod(ctorMethod, suffix,
+								replaceRange);
+//						reporter.reportType(type, suffix, replaceRange);
 					}
 				}
 			} catch (ModelException e) {
