@@ -1246,6 +1246,20 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		uninstallOccurrencesFinder();
 		uninstallOverrideIndicator();
 
+		//remove the listener we added in createAction method
+		
+		if (getSelectionProvider() instanceof IPostSelectionProvider) {
+			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
+			IAction action = getAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+			if (action instanceof ISelectionChangedListener) {
+				psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
+			}
+			action = getAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+			if (action instanceof ISelectionChangedListener) {
+				psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
+			}
+		}
+		
 		super.dispose();
 	}
 
@@ -1950,6 +1964,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		setAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, action);
 		markAsCursorDependentAction(
 				IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, true);
+		//add selection changed listener for updating enabled status
+		if (getSelectionProvider() instanceof IPostSelectionProvider) {
+			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
+			psp.addPostSelectionChangedListener((OpenTypeHierarchyAction)action);
+		}
 
 		action = new OpenCallHierarchyAction(this);
 		action
@@ -1957,6 +1976,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		setAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, action);
 		markAsCursorDependentAction(
 				IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, true);
+		//add selection changed listener for updating enabled status
+		if (getSelectionProvider() instanceof IPostSelectionProvider) {
+			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
+			psp.addPostSelectionChangedListener((OpenCallHierarchyAction)action);
+		}
 
 		action = new TextOperationAction(
 				DLTKEditorMessages.getBundleForConstructedKeys(),

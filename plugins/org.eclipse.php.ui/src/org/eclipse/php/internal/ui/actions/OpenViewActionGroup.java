@@ -180,6 +180,9 @@ public class OpenViewActionGroup extends ActionGroup {
 	}
 
 	private IStructuredSelection getStructuredSelection() {
+		if(getContext() == null){
+			return null;
+		}
 		ISelection selection = getContext().getSelection();
 		if (selection instanceof IStructuredSelection)
 			return (IStructuredSelection) selection;

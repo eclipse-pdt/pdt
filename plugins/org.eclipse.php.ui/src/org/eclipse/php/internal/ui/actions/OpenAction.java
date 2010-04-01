@@ -24,10 +24,11 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.Logger;
-import org.eclipse.php.internal.ui.PHPTreeViewer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -143,7 +144,7 @@ public class OpenAction extends SelectionDispatchAction {
 	public void run(IStructuredSelection selection) {
 		if (!checkEnabled(selection))
 			return;
-		run(selection.toArray(), ((PHPTreeViewer) getSelectionProvider())
+		run(selection.toArray(), ((TreeViewer) getSelectionProvider())
 				.getTree().getSelection());
 	}
 
@@ -164,7 +165,12 @@ public class OpenAction extends SelectionDispatchAction {
 				boolean activateOnOpen = fEditor != null ? true : OpenStrategy
 						.activateOnOpen();
 				if (element instanceof ISourceModule && treeNodes != null) {
-					OpenActionUtil.open(treeNodes[i], activateOnOpen);
+					Object o = treeNodes[i];
+					if (o instanceof TreeItem) {
+						TreeItem item = (TreeItem) o;
+						o = item.getData();
+					}
+					OpenActionUtil.open(o, activateOnOpen);
 				} else {
 					OpenActionUtil.open(element, activateOnOpen);
 				}

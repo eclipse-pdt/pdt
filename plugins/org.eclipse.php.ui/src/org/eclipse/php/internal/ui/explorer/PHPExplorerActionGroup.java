@@ -16,17 +16,26 @@ package org.eclipse.php.internal.ui.explorer;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.core.IOpenable;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.actions.CCPActionGroup;
+import org.eclipse.dltk.internal.ui.actions.OpenProjectAction;
 import org.eclipse.dltk.internal.ui.actions.refactoring.RefactorActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.LayoutActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.actions.GenerateActionGroup;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ITreeSelection;
-import org.eclipse.jface.viewers.OpenEvent;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.util.OpenStrategy;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.ui.actions.NavigateActionGroup;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.ui.actions.OpenAction;
@@ -39,7 +48,7 @@ import org.eclipse.wst.jsdt.ui.actions.OpenAction;
  */
 public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	private PHPRefactorActionGroup phpRefactorActionGroup;
-
+	private NavigateActionGroup fNavigateActionGroup;
 	public PHPExplorerActionGroup(ScriptExplorerPart part) {
 		super(part);
 	}
@@ -60,10 +69,15 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 			if (!(groups[i] instanceof LayoutActionGroup
 					|| groups[i] instanceof GenerateActionGroup
 					|| groups[i] instanceof RefactorActionGroup || groups[i] instanceof CCPActionGroup)) {
+				//use pdt's NavigateActionGroup instead of dltk's
+				if (groups[i] instanceof org.eclipse.dltk.internal.ui.actions.NavigateActionGroup) {
+					groups[i].dispose();
+					fNavigateActionGroup = new NavigateActionGroup(getPart());
+					groups[i] = fNavigateActionGroup;
+				}
 				filtered.add(groups[i]);
 			}
 		}
-
 		phpRefactorActionGroup = new PHPRefactorActionGroup(getPart());
 		filtered.add(phpRefactorActionGroup);
 		filtered.add(new GenerateIncludePathActionGroup(getPart()));
@@ -100,7 +114,12 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 				}
 			}
 		}
-		super.handleOpen(event);
+		//use our action to do the open operation
+		IAction openAction= fNavigateActionGroup.getOpenAction();
+		if (openAction != null && openAction.isEnabled()) {
+			openAction.run();
+			return;
+		}
 
 	}
 
@@ -108,5 +127,43 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	protected void setGlobalActionHandlers(IActionBars actionBars) {
 		super.setGlobalActionHandlers(actionBars);
 		phpRefactorActionGroup.retargetFileMenuActions(actionBars);
+	}
+
+	//---- Key board and mouse handling ------------------------------------------------------------
+
+	/**
+	 * this method call ScriptExplorerActionGroup.handleDoubleClick(event) at most cases,
+	 * except fNavigateActionGroup relative operation
+	 */
+	protected void handleDoubleClick(DoubleClickEvent event) {
+		TreeViewer viewer= getPart().getTreeViewer();
+		IStructuredSelection selection= (IStructuredSelection)event.getSelection();
+		Object element= selection.getFirstElement();
+		if (viewer.isExpandable(element)) {
+			if (doubleClickGoesInto()) {
+				super.handleDoubleClick(event);
+			} else {
+				IAction openAction= fNavigateActionGroup.getOpenAction();
+				if (openAction != null && openAction.isEnabled() && OpenStrategy.getOpenMethod() == OpenStrategy.DOUBLE_CLICK)
+					return;
+				if (selection instanceof ITreeSelection) {
+					TreePath[] paths= ((ITreeSelection)selection).getPathsFor(element);
+					for (int i= 0; i < paths.length; i++) {
+						viewer.setExpandedState(paths[i], !viewer.getExpandedState(paths[i]));
+					}
+				} else {
+					viewer.setExpandedState(element, !viewer.getExpandedState(element));
+				}
+			}
+		} else {
+			super.handleDoubleClick(event);
+		}
+	}
+	/**
+	 * copy from ScriptExplorerActionGroup
+	 * @return
+	 */
+	private boolean doubleClickGoesInto() {
+		return PreferenceConstants.DOUBLE_CLICK_GOES_INTO.equals(DLTKUIPlugin.getDefault().getPreferenceStore().getString(PreferenceConstants.DOUBLE_CLICK));
 	}
 }

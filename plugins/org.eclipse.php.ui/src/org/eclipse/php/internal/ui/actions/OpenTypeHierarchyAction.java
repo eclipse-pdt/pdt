@@ -21,13 +21,21 @@ package org.eclipse.php.internal.ui.actions;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.ui.DLTKUIMessages;
 import org.eclipse.dltk.internal.ui.actions.ActionMessages;
 import org.eclipse.dltk.internal.ui.actions.ActionUtil;
 import org.eclipse.dltk.internal.ui.actions.OpenActionUtil;
+import org.eclipse.dltk.internal.ui.browsing.LogicalPackage;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.typehierarchy.TypeHierarchyViewPart;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -218,36 +226,58 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			if (selection.size() != 1)
 				return;
 			Object input = selection.getFirstElement();
+
+			if (input instanceof LogicalPackage) {
+				IScriptFolder[] fragments = ((LogicalPackage) input).getFragments();
+				if (fragments.length == 0)
+					return;
+				input = fragments[0];
+			}
+
 			// || firstElement instanceof PHPSuperClassNameData || firstElement
 			// instanceof PHPInterfaceNameData
-			if (!(input instanceof ISourceModule)) {
+			if (!(input instanceof IModelElement)) {
 				IStatus status = createStatus("A PHP element must be selected.");
 				ErrorDialog.openError(getShell(), getDialogTitle(),
-						"Cannot create type hierarchy", status);
+						ActionMessages.OpenTypeHierarchyAction_messages_title, status);
 				return;
 			}
-			ISourceModule sourceModule = (ISourceModule) input;
-			String fileName = sourceModule.getElementName();
-			IModelElement element = DLTKCore.create(ResourcesPlugin
-					.getWorkspace().getRoot().getFile(
-							Path.fromOSString(fileName)));
-			if (element instanceof ISourceModule) {
-				int offset = 0;
-				try {
-					offset = sourceModule.getSourceRange().getOffset();
-				} catch (ModelException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				IModelElement modelElement = getSelectionModelElement(offset,
-						1, (ISourceModule) element);
-				if (modelElement != null) {
-					if (!ActionUtil.isProcessable(getShell(), modelElement)) {
-						return;
-					}
-					run(new IModelElement[] { modelElement });
-				}
+			IModelElement element = (IModelElement) input;
+			if (!ActionUtil.isProcessable(getShell(), element))
+				return;
+
+			List result = new ArrayList(1);
+			IStatus status = compileCandidates(result, element);
+			if (status.isOK()) {
+				run((IModelElement[]) result.toArray(new IModelElement[result
+						.size()]));
+			} else {
+				ErrorDialog.openError(getShell(), getDialogTitle(),
+						ActionMessages.OpenTypeHierarchyAction_messages_title,
+						status);
 			}
+//			ISourceModule sourceModule = (ISourceModule) input;
+//			String fileName = sourceModule.getElementName();
+//			IModelElement element = DLTKCore.create(ResourcesPlugin
+//					.getWorkspace().getRoot().getFile(
+//							Path.fromOSString(fileName)));
+//			if (element instanceof ISourceModule) {
+//				int offset = 0;
+//				try {
+//					offset = sourceModule.getSourceRange().getOffset();
+//				} catch (ModelException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				IModelElement modelElement = getSelectionModelElement(offset,
+//						1, (ISourceModule) element);
+//				if (modelElement != null) {
+//					if (!ActionUtil.isProcessable(getShell(), modelElement)) {
+//						return;
+//					}
+//					run(new IModelElement[] { modelElement });
+//				}
+//			}
 		}
 	}
 
@@ -335,5 +365,59 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			return (ITextSelection) selection;
 		}
 		return null;
+	}
+
+	private static IStatus compileCandidates(List result, IModelElement elem) {
+		IStatus ok = new Status(IStatus.OK, PHPUiPlugin.getPluginId(), 0,
+				"", null); //$NON-NLS-1$		
+		try {
+			switch (elem.getElementType()) {
+			// case IModelElement.INITIALIZER:
+			case IModelElement.METHOD:
+			case IModelElement.FIELD:
+			case IModelElement.TYPE:
+			case IModelElement.PROJECT_FRAGMENT:
+			case IModelElement.SCRIPT_PROJECT:
+				result.add(elem);
+				return ok;
+			case IModelElement.SCRIPT_FOLDER:
+				if (((IScriptFolder) elem).containsScriptResources()) {
+					result.add(elem);
+					return ok;
+				}
+				return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_script_resources);
+			case IModelElement.PACKAGE_DECLARATION:
+				result.add(elem.getAncestor(IModelElement.SCRIPT_FOLDER));
+				return ok;
+				// case IModelElement.IMPORT_DECLARATION:
+				// IImportDeclaration decl= (IImportDeclaration) elem;
+				// if (decl.isOnDemand()) {
+				// elem= JavaModelUtil.findTypeContainer(elem.getJavaProject(),
+				// Signature.getQualifier(elem.getElementName()));
+				// } else {
+				// elem= elem.getJavaProject().findType(elem.getElementName());
+				// }
+				// if (elem != null) {
+				// result.add(elem);
+				// return ok;
+				// }
+				// return createStatus(ActionMessages.
+				// OpenTypeHierarchyAction_messages_unknown_import_decl);
+				// case IJavaElement.CLASS_FILE:
+				// result.add(((IClassFile)elem).getType());
+				// return ok;
+			case IModelElement.SOURCE_MODULE:
+				AbstractSourceModule cu = (AbstractSourceModule) elem;
+				IType[] types = cu.getTypes();
+				if (types.length > 0) {
+					result.addAll(Arrays.asList(types));
+					return ok;
+				}
+				return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_types);
+			}
+		} catch (ModelException e) {
+			return e.getStatus();
+		}
+		return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_valid_script_element);
 	}
 }

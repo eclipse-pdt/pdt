@@ -110,14 +110,18 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void selectionChanged(ITextSelection selection) {
-		// Do nothing
+		setEnabled(isEnabled(selection));
 	}
 
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void selectionChanged(IStructuredSelection selection) {
-		setEnabled(isEnabled(selection));
+		if (selection instanceof ITextSelection) {
+			selectionChanged((ITextSelection) selection);
+		}else{
+			setEnabled(isEnabled(selection));
+		}
 	}
 
 	private boolean isEnabled(IStructuredSelection selection) {
@@ -128,12 +132,38 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			input = ((IAdaptable) input).getAdapter(IModelElement.class);
 		if (!(input instanceof IModelElement))
 			return false;
+		
 		switch (((IModelElement) input).getElementType()) {
 		case IModelElement.METHOD:
 			return true;
 		default:
 			return false;
 		}
+	}
+
+	/**
+	 * Returns true if the given selection is for an {@link IModelElement} that
+	 * is a TYPE (e.g. Class or Interface).
+	 */
+	private boolean isEnabled(ITextSelection selection) {
+		if (fEditor == null || selection == null)
+			return false;
+		if (fEditor.getModelElement() instanceof ISourceModule) {
+			ISourceModule sourceModule = (ISourceModule) fEditor
+					.getModelElement();
+			IModelElement element = getSelectionModelElement(selection
+					.getOffset(), selection.getLength(), sourceModule);
+			if (element == null) {
+				return false;
+			}
+			switch (element.getElementType()) {
+			case IModelElement.METHOD:
+				return true;
+			default:
+				return false;
+			}
+		}
+		return false;
 	}
 
 	/*
@@ -258,28 +288,38 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 								status);
 				return;
 			}
-			ISourceModule sourceModule = (ISourceModule) input;
-			String fileName = sourceModule.getElementName();
-			IModelElement element = DLTKCore.create(ResourcesPlugin
-					.getWorkspace().getRoot().getFile(
-							Path.fromOSString(fileName)));
-			if (element instanceof ISourceModule) {
-				int offset = 0;
-				try {
-					offset = sourceModule.getSourceRange().getOffset();
-				} catch (ModelException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}// getUserData().getStopPosition();
-				IModelElement modelElement = getSelectionModelElement(offset,
-						1, (ISourceModule) element);
-				if (modelElement != null) {
-					if (!ActionUtil.isProcessable(getShell(), modelElement)) {
-						return;
-					}
-					run(new IModelElement[] { modelElement });
-				}
-			}
+			IModelElement element= (IModelElement) input;
+	        if (!ActionUtil.isProcessable(getShell(), element))
+	            return;
+	        List result= new ArrayList(1);
+	        IStatus status= compileCandidates(result, element);
+	        if (status.isOK()) {
+	            run((IModelElement[]) result.toArray(new IModelElement[result.size()]));
+	        } else {
+	            openErrorDialog(status);
+	        }
+//			ISourceModule sourceModule = (ISourceModule) input;
+//			String fileName = sourceModule.getElementName();
+//			IModelElement element = DLTKCore.create(ResourcesPlugin
+//					.getWorkspace().getRoot().getFile(
+//							Path.fromOSString(fileName)));
+//			if (element instanceof ISourceModule) {
+//				int offset = 0;
+//				try {
+//					offset = sourceModule.getSourceRange().getOffset();
+//				} catch (ModelException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}// getUserData().getStopPosition();
+//				IModelElement modelElement = getSelectionModelElement(offset,
+//						1, (ISourceModule) element);
+//				if (modelElement != null) {
+//					if (!ActionUtil.isProcessable(getShell(), modelElement)) {
+//						return;
+//					}
+//					run(new IModelElement[] { modelElement });
+//				}
+//			}
 		}
 	}
 

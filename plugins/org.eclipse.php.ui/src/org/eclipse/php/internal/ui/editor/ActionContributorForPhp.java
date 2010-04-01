@@ -205,9 +205,13 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 				IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
 		fOpenTypeHierarchy.setAction(getAction(editor,
 				IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
+		getActionBars().setGlobalActionHandler(PHPActionConstants.OPEN_TYPE_HIERARCHY, getAction(editor,
+				IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
 		fOpenHierarchy.setAction(getAction(editor,
 				IScriptEditorActionDefinitionIds.OPEN_HIERARCHY));
-		fOpenTypeHierarchy.setAction(getAction(editor,
+		fOpenCallHierarchy.setAction(getAction(editor,
+				IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
+		getActionBars().setGlobalActionHandler(PHPActionConstants.OPEN_CALL_HIERARCHY, getAction(editor,
 				IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
 
 		fToggleComment

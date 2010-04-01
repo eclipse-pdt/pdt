@@ -544,8 +544,9 @@
 			targetID="org.eclipse.ui.edit.text.actionSet.presentation">
 			<part id="org.eclipse.php.ui.explorer" />
 		</actionSetPartAssociation>
-		<actionSetPartAssociation targetID="org.eclipse.dltk.ui.A_OpenActionSet">
+		<actionSetPartAssociation targetID="org.eclipse.php.ui.A_OpenActionSet">
 			<part id="org.eclipse.php.ui.explorer" />
+			<part id="org.eclipse.php.editor" />
 		</actionSetPartAssociation>
 	</extension>
 
