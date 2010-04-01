@@ -13,4 +13,4 @@ namespace OtherNS;
 $a = new \NS\AA|
 ?>
 --EXPECT--
-type(AAAA)
+method(AAAA)

@@ -11,4 +11,4 @@ const AAAA = 5;
 $a = new namespace\|
 ?>
 --EXPECT--
-type(AAAA)
+method(AAAA)

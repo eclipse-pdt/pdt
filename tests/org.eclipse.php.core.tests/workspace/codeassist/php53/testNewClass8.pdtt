@@ -12,4 +12,4 @@ use NS as Z;
 $a = new Z\AA|
 ?>
 --EXPECT--
-type(AAAA)
+method(AAAA)

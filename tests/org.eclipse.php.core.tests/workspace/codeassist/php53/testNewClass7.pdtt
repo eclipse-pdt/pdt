@@ -11,4 +11,4 @@ class MyClass {
 }
 ?>
 --EXPECT--
-type(MyClass)
+method(MyClass)

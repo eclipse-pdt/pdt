@@ -14,4 +14,4 @@ namespace NS {
 	}
 }
 --EXPECT--
-type(GlobalClass)
+method(GlobalClass)

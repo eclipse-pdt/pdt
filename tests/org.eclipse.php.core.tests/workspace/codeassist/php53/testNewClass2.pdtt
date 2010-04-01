@@ -11,4 +11,4 @@ const AAAA = 5;
 $a = new \NS\AA|
 ?>
 --EXPECT--
-type(AAAA)
+method(AAAA)

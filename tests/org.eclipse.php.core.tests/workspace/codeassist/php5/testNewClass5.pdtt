@@ -10,5 +10,5 @@ class myclass3 {
 }
 $a = new myclass|
 --EXPECT--
-type(myclass2)
-type(myclass3)
+method(myclass2)
+method(myclass3)
