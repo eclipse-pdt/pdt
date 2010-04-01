@@ -154,11 +154,11 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	protected void setComparator() {
 		if (showWorkingSets()) {
 			PHPExplorerWorkingSetAwareModelElementSorter comparator = new PHPExplorerWorkingSetAwareModelElementSorter();
-			comparator.setInnerElements(false);
+//			comparator.setInnerElements(false);
 			getTreeViewer().setComparator(comparator);
 		} else {
 			ModelElementSorter comparator = new PHPExplorerElementSorter();
-			comparator.setInnerElements(false);
+//			comparator.setInnerElements(false);
 			getTreeViewer().setComparator(comparator);
 		}
 	}
