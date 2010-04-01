@@ -5,14 +5,21 @@ import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 
 public class FakeConstructor extends FakeMethod {
-//	private IMethod ctor;
+	/**
+	 * the code assist if happens in the class itself
+	 * for example 
+	 * class Foo{
+	 * 		function Foo($name){}
+	 * 		function clone(){return new Foo("foo")}
+	 * }
+	 */
 	private boolean isEnclosingClass;
 	public FakeConstructor(ModelElement parent, String name, int offset,
-			int length, int nameOffset, int nameLength/*, IMethod ctor*/, boolean isEnclosingClass) {
+			int length, int nameOffset, int nameLength, boolean isEnclosingClass) {
 		super(parent, name, offset, length, nameOffset, nameLength);
-//		this.ctor = ctor;
 		this.isEnclosingClass = isEnclosingClass;
 	}
 
@@ -35,26 +42,15 @@ public class FakeConstructor extends FakeMethod {
 			FakeMethod ctorMethod = new FakeConstructor((ModelElement) type,
 					type.getElementName(), sourceRange.getOffset(), sourceRange
 							.getLength(), sourceRange.getOffset(), sourceRange
-							.getLength(),isEnclosingClass/*, ctor*/) {
-
-			};
+							.getLength(),isEnclosingClass);
 			if(ctor != null){
 				ctorMethod.setParameters(ctor.getParameters());
 			}
 
 			return ctorMethod;
 		} catch (ModelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PHPCorePlugin.log(e);
 		}
 		return null;
 	}
-//	@Override
-//	public boolean equals(Object o) {
-//		if (o instanceof FakeConstructor) {
-//			FakeConstructor fakeConstructor = (FakeConstructor) o;
-////			return this.ctor == fakeConstructor.ctor;
-//		}
-//		return false;
-//	}
 }
