@@ -67,53 +67,11 @@ public final class ParameterGuessingProposal extends
 		if (modelElement instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) modelElement;
 			IType type = modelElement.getDeclaringType();
-			IMethod ctor = null;
-			try {
-				IMethod[] methods = type.getMethods();
-				if (methods != null && methods.length > 0) {
-					for (IMethod method : methods) {
-						if (method.isConstructor()
-								&& method.getParameters() != null
-								&& method.getParameters().length > 0) {
-							ctor = method;
-							if (!PHPFlags.isPrivate(ctor.getFlags())
-									|| fc.isEnclosingClass()) {
-								return ctor;
-							}
-						}
-					}
-				}
-
-				// try to find constructor in super classes
-//				if (ctor == null) {
-					ITypeHierarchy newSupertypeHierarchy = type
-							.newSupertypeHierarchy(null);
-					IType[] allSuperclasses = newSupertypeHierarchy
-							.getAllSuperclasses(type);
-					if (allSuperclasses != null && allSuperclasses.length > 0) {
-						for (IType superClass : allSuperclasses) {
-							methods = superClass.getMethods();
-							// find first constructor and exit
-							if (methods != null && methods.length > 0) {
-								for (IMethod method : methods) {
-									if (method.isConstructor()
-											&& method.getParameters() != null
-											&& method.getParameters().length > 0) {
-										ctor = method;
-										if (!PHPFlags
-												.isPrivate(ctor.getFlags())
-												|| fc.isEnclosingClass()) {
-											return ctor;
-										}
-									}
-								}
-							}
-						}
-					}
-//				}
-
-			} catch (ModelException e) {
-				PHPUiPlugin.log(e);
+			IMethod[] ctors = FakeConstructor.getConstructors(type, fc.isEnclosingClass());
+			//here we must make sure ctors[1] != null,
+			//it means there is an available FakeConstructor for ctors[0]
+			if(ctors != null && ctors.length == 2 && ctors[0] != null && ctors[1] != null){
+				return ctors[0];
 			}
 		}
 		
