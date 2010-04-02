@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.preferences.includepath;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.dltk.core.*;
@@ -26,6 +27,8 @@ import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -272,6 +275,17 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 			fProjectsList.refresh();
 			fBuildpathList.dialogFieldChanged(); // validate
 		} else {
+
+			// also remove library entry from build path
+			for (Iterator iterator = selElements.iterator(); iterator.hasNext();) {
+				BPListElement entry = (BPListElement) iterator.next();
+				try {
+					BuildPathUtils.removeEntryFromBuildPath(fCurrJProject,
+							entry.getBuildpathEntry());
+				} catch (ModelException e) {
+					PHPCorePlugin.log(e);
+				}
+			}
 			fProjectsList.removeElements(selElements);
 		}
 	}
