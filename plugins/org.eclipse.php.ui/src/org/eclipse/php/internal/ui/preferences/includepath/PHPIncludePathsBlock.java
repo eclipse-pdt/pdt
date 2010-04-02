@@ -317,6 +317,11 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 				newIncludePathEntries.add(entry.getBuildpathEntry());
 				if (entry.getEntryKind() != IBuildpathEntry.BPE_SOURCE) {
 					newBuildPathEntries.add(entry.getBuildpathEntry());
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=307982
+					// Add project in build path,press ok,then edit the
+					// project's access rules will throw exception.
+					BuildPathUtils.removeEntryFromBuildPath(javaProject, entry
+							.getBuildpathEntry());
 				}
 
 				IResource res = entry.getResource();
@@ -329,6 +334,8 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 				}
 			}
 			if (newBuildPathEntries.size() > 0) {
+				// BuildPathUtils.removeEntryFromBuildPath(scriptProject,
+				// buildpathEntry)
 				BuildPathUtils.addEntriesToBuildPath(javaProject,
 						newBuildPathEntries);
 			}
