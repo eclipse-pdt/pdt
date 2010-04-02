@@ -36,7 +36,7 @@ public abstract class AbstractClassInstantiationStrategy extends
 
 		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
-		
+
 		IType enclosingClass = null;
 		try {
 			IModelElement enclosingElement = concreteContext.getSourceModule()
@@ -59,20 +59,22 @@ public abstract class AbstractClassInstantiationStrategy extends
 
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
-			if(!concreteContext.getCompletionRequestor().isContextInformationMode()){
-				//here we use fake method,and do the real work in class ParameterGuessingProposal
-				IMethod ctorMethod = FakeConstructor.createFakeConstructor(null,type,type.equals(enclosingClass));
-				reporter.reportMethod(ctorMethod, suffix,
-						replaceRange);
-			}else{
-				//if this is context information mode,we use this,
-				//because the number of types' length is very small 
-				IMethod[] ctors = FakeConstructor.getConstructors(type, type.equals(enclosingClass));
+			if (!concreteContext.getCompletionRequestor()
+					.isContextInformationMode()) {
+				// here we use fake method,and do the real work in class
+				// ParameterGuessingProposal
+				IMethod ctorMethod = FakeConstructor.createFakeConstructor(
+						null, type, type.equals(enclosingClass));
+				reporter.reportMethod(ctorMethod, suffix, replaceRange);
+			} else {
+				// if this is context information mode,we use this,
+				// because the number of types' length is very small
+				IMethod[] ctors = FakeConstructor.getConstructors(type, type
+						.equals(enclosingClass));
 				if (ctors != null && ctors.length == 2) {
-					if(ctors[1] != null){
-						reporter.reportMethod(ctors[1], suffix,
-								replaceRange);
-					}else if (ctors[0] == null) {
+					if (ctors[1] != null) {
+						reporter.reportMethod(ctors[1], suffix, replaceRange);
+					} else if (ctors[0] == null) {
 						reporter.reportType(type, suffix, replaceRange);
 					}
 				}
@@ -90,6 +92,5 @@ public abstract class AbstractClassInstantiationStrategy extends
 		}
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
-
 
 }
