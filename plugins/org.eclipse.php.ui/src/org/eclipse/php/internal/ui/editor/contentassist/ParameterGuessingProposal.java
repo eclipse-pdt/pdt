@@ -21,7 +21,6 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
-import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
