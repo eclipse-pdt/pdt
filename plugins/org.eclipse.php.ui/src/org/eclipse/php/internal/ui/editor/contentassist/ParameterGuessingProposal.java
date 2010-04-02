@@ -57,9 +57,11 @@ public final class ParameterGuessingProposal extends
 		method = getProperMethod((IMethod) fProposal.getModelElement());
 		this.fFillBestGuess = fillBestGuess;
 	}
+
 	/**
-	 * if modelElement is an instance of FakeConstructor,
-	 * we need to get the real constructor
+	 * if modelElement is an instance of FakeConstructor, we need to get the
+	 * real constructor
+	 * 
 	 * @param modelElement
 	 * @return
 	 */
@@ -67,14 +69,16 @@ public final class ParameterGuessingProposal extends
 		if (modelElement instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) modelElement;
 			IType type = modelElement.getDeclaringType();
-			IMethod[] ctors = FakeConstructor.getConstructors(type, fc.isEnclosingClass());
-			//here we must make sure ctors[1] != null,
-			//it means there is an available FakeConstructor for ctors[0]
-			if(ctors != null && ctors.length == 2 && ctors[0] != null && ctors[1] != null){
+			IMethod[] ctors = FakeConstructor.getConstructors(type, fc
+					.isEnclosingClass());
+			// here we must make sure ctors[1] != null,
+			// it means there is an available FakeConstructor for ctors[0]
+			if (ctors != null && ctors.length == 2 && ctors[0] != null
+					&& ctors[1] != null) {
 				return ctors[0];
 			}
 		}
-		
+
 		return modelElement;
 	}
 
