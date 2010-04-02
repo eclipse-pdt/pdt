@@ -53,7 +53,7 @@ public final class ParameterGuessingProposal extends
 		super(jproject, cu, methodName, paramTypes, start, length, displayName,
 				completionProposal);
 		this.fProposal = proposal;
-		method = getProperMethod((IMethod) fProposal.getModelElement());
+		method = (IMethod) fProposal.getModelElement();
 		this.fFillBestGuess = fillBestGuess;
 	}
 
@@ -165,6 +165,8 @@ public final class ParameterGuessingProposal extends
 	private String computeReplacementString() {
 		fReplacementStringComputed = true;
 		try {
+			// we should get the real constructor here
+			method = getProperMethod(method);
 			if (hasParameters()) {
 				return computeGuessingCompletion();
 			}
