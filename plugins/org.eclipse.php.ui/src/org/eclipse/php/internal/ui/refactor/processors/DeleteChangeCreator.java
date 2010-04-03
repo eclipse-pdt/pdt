@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.refactor.processors;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,12 +25,18 @@ import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.changes.*;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.dltk.internal.corext.refactoring.util.TextChangeManager;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.NullChange;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.MultiTextEdit;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 class DeleteChangeCreator {
 	private DeleteChangeCreator() {
@@ -116,8 +123,12 @@ class DeleteChangeCreator {
 					sourceRange = type.getSourceRange();
 				}
 				if (sourceRange != null) {
+					IStructuredDocument document = determineDocument(cu);
+					int suffixLength = getSuffixLength(document, sourceRange
+							.getOffset()
+							+ sourceRange.getLength(), ';');
 					DeleteEdit edit = new DeleteEdit(sourceRange.getOffset(),
-							sourceRange.getLength());
+							sourceRange.getLength() + suffixLength);
 
 					fileChangeRootEdit.addChild(edit);
 					if (cu.isWorkingCopy()) {
@@ -131,6 +142,61 @@ class DeleteChangeCreator {
 		// ASTNodeDeleteUtil.markAsDeleted(elements, rewriter, null);
 		// return addTextEditFromRewrite(manager, cu, rewriter.getASTRewrite());
 		return textFileChange;
+	}
+
+	private static int getSuffixLength(IStructuredDocument document,
+			int offset, char endChar) {
+		try {
+			int length = document.getLength();
+			for (int rv = 0; rv < length; rv++) {
+				char c = document.getChar(rv + offset);
+				if (Character.isWhitespace(c)) {
+					continue;
+				} else if (endChar == c) {
+					return rv + 1;
+				}
+				return 0;
+			}
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+
+	protected static IStructuredDocument determineDocument(ISourceModule module) {
+		IStructuredDocument document = null;
+		IStructuredModel structuredModel = null;
+		try {
+			IFile file = (IFile) module.getResource();
+			if (file != null) {
+				if (file.exists()) {
+					structuredModel = StructuredModelManager.getModelManager()
+							.getExistingModelForRead(file);
+					if (structuredModel != null) {
+						document = structuredModel.getStructuredDocument();
+					} else {
+						document = StructuredModelManager.getModelManager()
+								.createStructuredDocumentFor(file);
+					}
+				} else {
+					document = StructuredModelManager.getModelManager()
+							.createNewStructuredDocumentFor(file);
+					document.set(module.getSource());
+				}
+			}
+		} catch (IOException e) {
+			PHPUiPlugin.log(e);
+		} catch (CoreException e) {
+			PHPUiPlugin.log(e);
+		} catch (ResourceAlreadyExists e) {
+			PHPUiPlugin.log(e);
+		} finally {
+			if (structuredModel != null) {
+				structuredModel.releaseFromRead();
+			}
+		}
+		return document;
 	}
 
 	// private static TextChange addTextEditFromRewrite(TextChangeManager
