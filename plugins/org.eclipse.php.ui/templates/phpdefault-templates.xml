@@ -22,27 +22,27 @@
  */</template>
 
 <template name="constructorcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.constructorcomment" description="%CodeTemplates.constructorcomment" context="phpcomment" enabled="true">/**
- * ${tags}
+ * Enter description here ... * ${tags}
  */</template>
 
 <template name="filecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.filecomment" description="%CodeTemplates.filecomment" context="phpcomment" enabled="true">/**
- * 
+ * Enter description here ... * 
  */</template>
 
-<template name="typecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.typecomment" description="%CodeTemplates.typecomment" context="phpcomment" enabled="true">/**
+<template name="typecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.typecomment" description="%CodeTemplates.typecomment" context="phpcomment" enabled="true">/** * Enter description here ...
  * @author ${user}
  *
  * ${tags}
  */</template>
  
 <template name="fieldcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.fieldcomment" description="%CodeTemplates.fieldcomment" context="phpcomment" enabled="true">/**
- * @var ${field_type}
+ * Enter description here ... * @var ${field_type}
  */</template>
  
 <template name="varcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.varcomment" description="%CodeTemplates.varcomment" context="phpcomment" enabled="true">/* @var ${field} ${field_type} */</template>
  
 <template name="methodcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.methodcomment" description="%CodeTemplates.nonoverridingcomment" context="phpcomment" enabled="true">/**
- * ${cursor}${tags}
+ * Enter description here ... * ${cursor}${tags}
  */</template>
 
 <template name="overridecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.overridecomment" description="%CodeTemplates.overridecomment" context="phpcomment" enabled="true">/* %CodeTemplates.overridecomment.nonjd
