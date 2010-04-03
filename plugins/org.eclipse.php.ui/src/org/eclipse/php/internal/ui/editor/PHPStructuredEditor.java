@@ -1115,8 +1115,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			}
 			if (region instanceof IPhpScriptRegion) {
 				final IPhpScriptRegion phpRegion = (IPhpScriptRegion) region;
-				phpRegion.completeReparse(doc, offset + region.getStart(),
-						region.getLength());
+				try {
+					phpRegion.completeReparse(doc, offset + region.getStart(),
+							region.getLength());
+				} catch (Error e) {
+					// catch Error from PhpLexer.zzScanError
+					// without doing this,the editor will behavior unnormal
+					PHPUiPlugin.log(e);
+				}
+
 			}
 		}
 	}
@@ -1246,20 +1253,22 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		uninstallOccurrencesFinder();
 		uninstallOverrideIndicator();
 
-		//remove the listener we added in createAction method
-		
+		// remove the listener we added in createAction method
+
 		if (getSelectionProvider() instanceof IPostSelectionProvider) {
 			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
 			IAction action = getAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 			if (action instanceof ISelectionChangedListener) {
-				psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
+				psp
+						.removePostSelectionChangedListener((ISelectionChangedListener) action);
 			}
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 			if (action instanceof ISelectionChangedListener) {
-				psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
+				psp
+						.removePostSelectionChangedListener((ISelectionChangedListener) action);
 			}
 		}
-		
+
 		super.dispose();
 	}
 
@@ -1964,10 +1973,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		setAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, action);
 		markAsCursorDependentAction(
 				IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, true);
-		//add selection changed listener for updating enabled status
+		// add selection changed listener for updating enabled status
 		if (getSelectionProvider() instanceof IPostSelectionProvider) {
 			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
-			psp.addPostSelectionChangedListener((OpenTypeHierarchyAction)action);
+			psp
+					.addPostSelectionChangedListener((OpenTypeHierarchyAction) action);
 		}
 
 		action = new OpenCallHierarchyAction(this);
@@ -1976,10 +1986,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		setAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, action);
 		markAsCursorDependentAction(
 				IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, true);
-		//add selection changed listener for updating enabled status
+		// add selection changed listener for updating enabled status
 		if (getSelectionProvider() instanceof IPostSelectionProvider) {
 			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
-			psp.addPostSelectionChangedListener((OpenCallHierarchyAction)action);
+			psp
+					.addPostSelectionChangedListener((OpenCallHierarchyAction) action);
 		}
 
 		action = new TextOperationAction(
