@@ -16,6 +16,8 @@ import java.util.List;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -52,7 +54,10 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 					.getShell();
 		}
 
-		if (list.size() == 0 || list.get(0) instanceof IProject) {
+		if (list.size() == 0
+				|| list.get(0) instanceof IProject
+				|| (list.get(0) instanceof IAdaptable && ((IAdaptable) list
+						.get(0)).getAdapter(IResource.class) instanceof IProject)) {
 			action = new PHPMoveProjectAction(fShell);
 			action.selectionChanged(selection);
 		} else if (selectedResources != null) {
