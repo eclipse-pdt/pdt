@@ -243,26 +243,29 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * .eclipse.php.internal.core.ast.nodes.Identifier)
 	 */
 	IBinding resolveName(Identifier name) {
-		if (name.getParent() instanceof Variable) {
-			// workaround for bug 253193's "ctrl+T not functional on methods"
-			if (name.getParent().getParent() instanceof FunctionName
-					&& name.getParent().getParent().getParent() instanceof FunctionInvocation) {
-				return resolveFunction((FunctionInvocation) name.getParent()
-						.getParent().getParent());
-
-			}
-			// end
-			return resolveVariable((Variable) name.getParent());
-		}
 		// workaround for bug 253193's "ctrl+T not functional on methods"
-		if (name.getParent() instanceof FunctionName
-				&& name.getParent().getParent() instanceof FunctionInvocation) {
-			return resolveFunction((FunctionInvocation) name.getParent()
+		FunctionName functionName = getFunctionName(name);
+		if (functionName != null
+				&& functionName.getParent() instanceof FunctionInvocation) {
+			return resolveFunction((FunctionInvocation) functionName
 					.getParent());
-
 		}
 		// end
+		if (name.getParent() instanceof Variable) {
+			return resolveVariable((Variable) name.getParent());
+		}
 		return resolveExpressionType(name);
+	}
+
+	private FunctionName getFunctionName(Identifier name) {
+		ASTNode node = name.getParent();
+		while (node != null) {
+			if (node instanceof FunctionName) {
+				return (FunctionName) node;
+			}
+			node = node.getParent();
+		}
+		return null;
 	}
 
 	/**
