@@ -267,6 +267,14 @@ public class PhpElementConciliator {
 			return false;
 		}
 
+		// check for static array variables
+		if (parent.isDollared()
+				&& parent.getParent() != null
+				&& parent.getParent().getType() == ASTNode.ARRAY_ACCESS
+				&& parent != ((ArrayAccess) parent.getParent()).getIndex()
+				&& parent.getParent().getParent().getType() == ASTNode.STATIC_FIELD_ACCESS) {
+			return false;
+		}
 		ASTNode node = parent;
 		while (node != null) {
 			final int type = node.getType();
