@@ -11,15 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.doubleclick;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPPairMatcher;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -41,6 +39,10 @@ import org.w3c.dom.Node;
  * 
  */
 public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
+
+	protected final static char[] BRACKETS = { '{', '}', '(', ')', '[', ']' };
+
+	protected PHPPairMatcher fPairMatcher = new PHPPairMatcher(BRACKETS);
 
 	@Override
 	public void doubleClicked(ITextViewer textViewer) {
@@ -125,6 +127,14 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		// We reach here only if there was an error or one of conditions hasn't
 		// met our requirements:
 		super.doubleClicked(textViewer);
+	}
+
+	protected IRegion findExtendedDoubleClickSelection(IDocument document,
+			int offset) {
+		IRegion match = fPairMatcher.match(document, offset);
+		if (match != null && match.getLength() >= 2)
+			return new Region(match.getOffset() + 1, match.getLength() - 2);
+		return findWord(document, offset);
 	}
 
 	/**
