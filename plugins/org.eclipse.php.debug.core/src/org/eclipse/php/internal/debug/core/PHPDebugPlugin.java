@@ -11,7 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
@@ -22,18 +28,20 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -369,5 +377,71 @@ public class PHPDebugPlugin extends Plugin {
 				}
 			}
 		}
+	}
+
+	public static String getCurrentDebuggerId(IProject project) {
+		if (project != null) {
+			PHPVersion phpVersion = PHPVersion.byAlias(new Key(
+					PHPCorePlugin.ID, Keys.PHP_VERSION).getStoredValue(
+					createPreferenceScopes(project), false, null));
+			if (phpVersion != null) {
+				PHPexeItem item = PHPexes.getInstance()
+						.getDefaultItemForPHPVersion(phpVersion);
+				if (item != null) {
+					return item.getDebuggerID();
+				}
+			}
+		}
+
+		return getCurrentDebuggerId();
+	}
+
+	// public static PHPexeItem getPHPexeItem(IProject project) {
+	//		
+	// }
+	public static PHPexeItem getPHPexeItem(IProject project) {
+		if (project != null) {
+
+			IEclipsePreferences node = createPreferenceScopes(project)[0]
+					.getNode(PHPProjectPreferences.getPreferenceNodeQualifier());
+			if (node != null) {
+				// Replace the workspace defaults with the project-specific
+				// settings.
+				String phpDebuggerId = node.get(
+						PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, null);
+				String phpExe = node.get(
+						PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
+				if (phpDebuggerId != null && phpExe != null) {
+					return PHPexes.getInstance().getItem(phpDebuggerId, phpExe);
+				}
+			}
+			PHPVersion phpVersion = PHPVersion.byAlias(new Key(
+					PHPCorePlugin.ID, Keys.PHP_VERSION).getStoredValue(
+					createPreferenceScopes(project), false, null));
+			if (phpVersion != null) {
+				PHPexeItem item = PHPexes.getInstance()
+						.getDefaultItemForPHPVersion(phpVersion);
+				if (item != null) {
+					return item;
+				}
+			}
+		}
+
+		return getWorkspaceDefaultExe();
+	}
+
+	public static PHPexeItem getWorkspaceDefaultExe() {
+		String phpDebuggerId = PHPDebugPlugin.getCurrentDebuggerId();
+		return PHPexes.getInstance().getDefaultItem(phpDebuggerId);
+	}
+
+	// Creates a preferences scope for the given project.
+	// This scope will be used to search for preferences values.
+	public static IScopeContext[] createPreferenceScopes(IProject project) {
+		if (project != null) {
+			return new IScopeContext[] { new ProjectScope(project),
+					new InstanceScope(), new DefaultScope() };
+		}
+		return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
 	}
 }

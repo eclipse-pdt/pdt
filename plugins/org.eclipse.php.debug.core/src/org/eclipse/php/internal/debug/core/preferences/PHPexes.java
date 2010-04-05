@@ -20,6 +20,7 @@ import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.runtime.*;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
@@ -34,6 +35,8 @@ import org.eclipse.ui.activities.WorkbenchActivityHelper;
  */
 public class PHPexes {
 
+	private static final String NULL_PLACE_HOLDER = "null";
+	private static final String SEPARATOR_FOR_PHPVERSION = "/";
 	private static final String DEFAULT_ATTRIBUTE = "default"; //$NON-NLS-1$
 	private static final String EXTENSION_POINT_NAME = "phpExe"; //$NON-NLS-1$
 	private static final String LOCATION_ATTRIBUTE = "location"; //$NON-NLS-1$
@@ -52,7 +55,8 @@ public class PHPexes {
 	private HashMap<String, HashMap<String, PHPexeItem>> items = new HashMap<String, HashMap<String, PHPexeItem>>();
 	// Hold a mapping to each debugger default PHPExeItem.
 	private HashMap<String, PHPexeItem> defaultItems = new HashMap<String, PHPexeItem>();
-
+	// Hold a mapping to each php version default PHPExeItem.
+	private HashMap<PHPVersion, PHPexeItem> defaultItemsForPHPVersion = new HashMap<PHPVersion, PHPexeItem>();
 	private final LinkedList<IPHPExesListener> listeners = new LinkedList<IPHPExesListener>();
 
 	/**
@@ -63,7 +67,10 @@ public class PHPexes {
 	public static PHPexes getInstance() {
 		synchronized (lock) {
 			if (instance == null) {
+				long start = System.currentTimeMillis();
 				instance = new PHPexes();
+				System.out.println("time : "
+						+ (System.currentTimeMillis() - start));
 			}
 			return instance;
 		}
@@ -326,12 +333,40 @@ public class PHPexes {
 				.split(SEPARATOR)
 				: new String[0];
 
+		// Load the PHP Versions array
+		String defaultItemForPHPVersionString = prefs
+				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_DEFAULT_FOR_VERSIONS);
+		if (defaultItemForPHPVersionString == null) {
+			defaultItemForPHPVersionString = "";
+		}
+		final String[] defaultItemForPHPVersions = defaultItemForPHPVersionString
+				.length() > 0 ? defaultItemForPHPVersionString.split(SEPARATOR)
+				: new String[0];
+
 		// Add the executable items
 		assert names.length == phpExecutablesLocations.length;
 		for (int i = 0; i < phpExecutablesLocations.length; i++) {
-			String iniLocation = "null".equals(phpIniLocations[i]) ? null : phpIniLocations[i]; //$NON-NLS-1$
+			String iniLocation = NULL_PLACE_HOLDER.equals(phpIniLocations[i]) ? null
+					: phpIniLocations[i]; //$NON-NLS-1$
 			final PHPexeItem item = new PHPexeItem(names[i],
 					phpExecutablesLocations[i], iniLocation, debuggers[i]);
+			// the size of defaultItemForPHPVersions may be 0 when you use this
+			// first time
+			if (defaultItemForPHPVersions.length == phpExecutablesLocations.length) {
+				if (!NULL_PLACE_HOLDER.equals(defaultItemForPHPVersions[i])) {
+					final String[] phpVersions = defaultItemForPHPVersions[i]
+							.length() > 0 ? defaultItemForPHPVersions[i]
+							.split(SEPARATOR_FOR_PHPVERSION) : new String[0];
+					for (int j = 0; j < phpVersions.length; j++) {
+						PHPVersion phpVersion = PHPVersion
+								.byAlias(phpVersions[j]);
+						if (phpVersion != null) {
+							item.addPHPVersionToDefaultList(phpVersion);
+							defaultItemsForPHPVersion.put(phpVersion, item);
+						}
+					}
+				}
+			}
 			if (item.getExecutable() != null) {
 				boolean filterItem = WorkbenchActivityHelper
 						.filterItem(new IPluginContribution() {
@@ -427,7 +462,7 @@ public class PHPexes {
 							if (null == newItem
 									|| null == newItem.getExecutable())
 								continue; // not adding "problematic"
-											// executables
+							// executables
 							newItem.setVersion(version);
 							addItem(newItem);
 							if (isDefault) {
@@ -530,6 +565,7 @@ public class PHPexes {
 		final StringBuffer inisString = new StringBuffer();
 		final StringBuffer namesString = new StringBuffer();
 		final StringBuffer debuggersString = new StringBuffer();
+		final StringBuffer defaultItemForPHPVersionString = new StringBuffer();
 		for (int i = 0; i < phpItems.length; i++) {
 			final PHPexeItem item = phpItems[i];
 			if (i > 0) {
@@ -537,12 +573,26 @@ public class PHPexes {
 				inisString.append(SEPARATOR);
 				namesString.append(SEPARATOR);
 				debuggersString.append(SEPARATOR);
+				defaultItemForPHPVersionString.append(SEPARATOR);
 			}
 			locationsString.append(item.getExecutable().toString());
 			inisString.append(item.getINILocation() != null ? item
-					.getINILocation().toString() : "null"); //$NON-NLS-1$
+					.getINILocation().toString() : NULL_PLACE_HOLDER); //$NON-NLS-1$
 			namesString.append(item.getName());
 			debuggersString.append(item.getDebuggerID());
+			if (item.geDefaultForPHPVersionSize() > 0) {
+				for (int j = 0; j < item.geDefaultForPHPVersionSize(); j++) {
+					if (j > 0) {
+						defaultItemForPHPVersionString
+								.append(SEPARATOR_FOR_PHPVERSION);
+					}
+					defaultItemForPHPVersionString.append(item
+							.getPHPVersionAtDefaultList(j).getAlias());
+				}
+			} else {
+				defaultItemForPHPVersionString.append(NULL_PLACE_HOLDER);
+			}
+
 		}
 		prefs.setValue(PHPDebugCorePreferenceNames.INSTALLED_PHP_NAMES,
 				namesString.toString());
@@ -552,7 +602,9 @@ public class PHPexes {
 				inisString.toString());
 		prefs.setValue(PHPDebugCorePreferenceNames.INSTALLED_PHP_DEBUGGERS,
 				debuggersString.toString());
-
+		prefs.setValue(
+				PHPDebugCorePreferenceNames.INSTALLED_PHP_DEFAULT_FOR_VERSIONS,
+				defaultItemForPHPVersionString.toString());
 		// save the default executables per debugger id
 		final StringBuffer defaultsString = new StringBuffer();
 		Iterator<PHPexeItem> iterator = defaultItems.values().iterator();
@@ -577,5 +629,23 @@ public class PHPexes {
 
 	public void removePHPExesListener(IPHPExesListener listener) {
 		listeners.remove(listener);
+	}
+
+	public void setItemDefaultForPHPVersion(PHPexeItem phPexeItem,
+			PHPVersion phpVersion) {
+		PHPexeItem oldItem = defaultItemsForPHPVersion.get(phpVersion);
+		if (oldItem != null) {
+			oldItem.removePHPVersionToDefaultList(phpVersion);
+		}
+		phPexeItem.addPHPVersionToDefaultList(phpVersion);
+		defaultItemsForPHPVersion.put(phpVersion, phPexeItem);
+	}
+
+	public PHPexeItem getDefaultItemForPHPVersion(PHPVersion phpVersion) {
+		return defaultItemsForPHPVersion.get(phpVersion);
+	}
+
+	public HashMap<PHPVersion, PHPexeItem> getDefaultItemsForPHPVersion() {
+		return defaultItemsForPHPVersion;
 	}
 }

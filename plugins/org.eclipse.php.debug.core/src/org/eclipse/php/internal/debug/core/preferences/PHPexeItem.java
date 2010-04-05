@@ -15,11 +15,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
@@ -52,6 +55,10 @@ public class PHPexeItem {
 	private boolean editable = true;
 	private String debuggerID;
 	private boolean isDefault;
+	/**
+	 * store the php version list that use this PHPexeItem as default PHPexeItem
+	 */
+	private List<PHPVersion> defaultForPHPVersionList = new ArrayList<PHPVersion>();
 
 	/**
 	 * Constructs a new PHP executable item.
@@ -329,6 +336,27 @@ public class PHPexeItem {
 		this.isDefault = isDefault;
 	}
 
+	public void setDefaultForPHPVersion(PHPexes phpexes, PHPVersion phpVersion) {
+		phpexes.setItemDefaultForPHPVersion(this, phpVersion);
+	}
+
+	void addPHPVersionToDefaultList(PHPVersion phpVersion) {
+		defaultForPHPVersionList.add(phpVersion);
+	}
+
+	void removePHPVersionToDefaultList(PHPVersion phpVersion) {
+		defaultForPHPVersionList.remove(phpVersion);
+	}
+
+	public int geDefaultForPHPVersionSize() {
+		return defaultForPHPVersionList.size();
+	}
+
+	public PHPVersion getPHPVersionAtDefaultList(int index) {
+		assert geDefaultForPHPVersionSize() > index;
+		return defaultForPHPVersionList.get(index);
+	}
+
 	/**
 	 * Detects various things like: type, version, default configuration file,
 	 * etc. from the PHP binary
@@ -455,4 +483,5 @@ public class PHPexeItem {
 
 		return status;
 	}
+
 }

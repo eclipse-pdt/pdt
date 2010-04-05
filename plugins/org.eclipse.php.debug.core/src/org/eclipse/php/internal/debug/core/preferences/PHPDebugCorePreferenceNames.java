@@ -59,4 +59,7 @@ public class PHPDebugCorePreferenceNames {
 			+ "configuration_delegate_class";//$NON-NLS-1$
 
 	public static final String PHP_DEBUGGER_ID = Debug_ID + "php_debugger_id";//$NON-NLS-1$
+
+	public static final String INSTALLED_PHP_DEFAULT_FOR_VERSIONS = Debug_ID
+			+ "php_versions";//$NON-NLS-1$
 }
