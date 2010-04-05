@@ -85,11 +85,10 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		String serverName = ServersManager.getDefaultServer(null).getName();
 		PHPexes exes = PHPexes.getInstance();
 		String phpExeName = PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined;
-		if (exes.hasItems(PHPDebugPlugin.getCurrentDebuggerId())) {
-			String name = exes.getDefaultItem(
-					PHPDebugPlugin.getCurrentDebuggerId()).getName();
-			if (null != name)
-				phpExeName = name;
+		IProject project = getProject(propertyPage);
+		PHPexeItem item = PHPDebugPlugin.getPHPexeItem(project);
+		if (item != null && item.getName() != null) {
+			phpExeName = item.getName();
 		}
 		String transferEncoding = prefs
 				.getString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
@@ -102,13 +101,12 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		if (preferenceScopes[0] instanceof ProjectScope) {
 			IEclipsePreferences node = preferenceScopes[0]
 					.getNode(getPreferenceNodeQualifier());
-			if (node != null && getProject(propertyPage) != null) {
+			if (node != null && project != null) {
 				String projectServerName = ServersManager.getDefaultServer(
-						getProject(propertyPage)).getName();
+						project).getName();
 				if (!projectServerName.equals("")) { //$NON-NLS-1$
-					String debuggerId = node.get(
-							PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-							PHPDebugPlugin.getCurrentDebuggerId());
+					String debuggerId = item != null ? item.getDebuggerID()
+							: PHPDebugPlugin.getCurrentDebuggerId();
 					debuggerName = PHPDebuggersRegistry
 							.getDebuggerName(debuggerId);
 					serverName = projectServerName;
@@ -121,9 +119,6 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 					outputEncoding = node.get(
 							PHPDebugCorePreferenceNames.OUTPUT_ENCODING,
 							outputEncoding); //$NON-NLS-1$
-					phpExeName = node
-							.get(PHPDebugCorePreferenceNames.DEFAULT_PHP,
-									phpExeName);
 					// Check that if the project had a non-defined exe, and now
 					// there is one that is valid. we set
 					// it with the new valid default exe.
@@ -142,7 +137,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 					}
 					loadPHPExes(fDefaultPHPExe, exes.getItems(node.get(
 							PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-							PHPDebugPlugin.getCurrentDebuggerId())));
+							debuggerId)));
 					exeLoaded = true;
 				}
 			}
@@ -180,7 +175,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		loadDebuggers(fDefaultDebugger);
 		loadServers(fDefaultServer);
 		loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getItems(
-				PHPDebugPlugin.getCurrentDebuggerId()));
+				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID));
 		fDebugEncodingSettings
 				.setText(prefs
 						.getDefaultString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING));

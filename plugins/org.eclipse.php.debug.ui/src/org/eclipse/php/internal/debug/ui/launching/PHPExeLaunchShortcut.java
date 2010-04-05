@@ -19,7 +19,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.*;
@@ -254,35 +253,49 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	// workspace default.
 	private static PHPexeItem getDefaultPHPExe(IProject project) {
 		// Take the default workspace item for the debugger's id.
+		// TODO get phpDebuggerId according to project's version
+		PHPexeItem defaultItem = PHPDebugPlugin.getPHPexeItem(project);
+		if (defaultItem != null) {
+			return defaultItem;
+		}
 		String phpDebuggerId = PHPDebugPlugin.getCurrentDebuggerId();
-		PHPexeItem defaultItem = PHPexes.getInstance().getDefaultItem(
-				phpDebuggerId);
-		if (defaultItem == null) {
-			// We have no executable defined for this debugger.
-			return null;
-		}
-		String phpExe = defaultItem.getName();
-		if (project != null) {
-			// In case that the project is not null, check that we have
-			// project-specific settings for it.
-			// Otherwise, map it to the workspace default server.
-			IScopeContext[] preferenceScopes = createPreferenceScopes(project);
-			if (preferenceScopes[0] instanceof ProjectScope) {
-				IEclipsePreferences node = preferenceScopes[0]
-						.getNode(PHPProjectPreferences
-								.getPreferenceNodeQualifier());
-				if (node != null) {
-					// Replace the workspace defaults with the project-specific
-					// settings.
-					phpDebuggerId = node.get(
-							PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-							phpDebuggerId);
-					phpExe = node.get(PHPDebugCorePreferenceNames.DEFAULT_PHP,
-							phpExe);
-				}
-			}
-		}
-		return PHPexes.getInstance().getItem(phpDebuggerId, phpExe);
+		defaultItem = PHPexes.getInstance().getDefaultItem(phpDebuggerId);
+		return defaultItem;
+		// if (defaultItem == null) {
+		// // We have no executable defined for this debugger.
+		// return null;
+		// }
+		// String phpExe = defaultItem.getName();
+		// if (project != null) {
+		// // In case that the project is not null, check that we have
+		// // project-specific settings for it.
+		// // Otherwise, map it to the workspace default server.
+		// IScopeContext[] preferenceScopes = createPreferenceScopes(project);
+		// PHPVersion phpVersion = PHPVersion.byAlias(new Key(
+		// PHPCorePlugin.ID, Keys.PHP_VERSION).getStoredValue(
+		// preferenceScopes, false, null));
+		// // phpDebuggerId = new Key(PHPDebugPlugin.ID,
+		// // PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID)
+		// // .getStoredValue(preferenceScopes, false, null);
+		// // phpExe = new Key(PHPDebugPlugin.ID,
+		// // PHPDebugCorePreferenceNames.DEFAULT_PHP).getStoredValue(
+		// // preferenceScopes, false, null);
+		// if (preferenceScopes[0] instanceof ProjectScope) {
+		// IEclipsePreferences node = preferenceScopes[0]
+		// .getNode(PHPProjectPreferences
+		// .getPreferenceNodeQualifier());
+		// if (node != null) {
+		// // Replace the workspace defaults with the project-specific
+		// // settings.
+		// phpDebuggerId = node.get(
+		// PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+		// phpDebuggerId);
+		// phpExe = node.get(PHPDebugCorePreferenceNames.DEFAULT_PHP,
+		// phpExe);
+		// }
+		// }
+		// }
+		// return PHPexes.getInstance().getItem(phpDebuggerId, phpExe);
 	}
 
 	// Creates a preferences scope for the given project.

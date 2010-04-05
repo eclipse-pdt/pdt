@@ -373,6 +373,13 @@
 			id="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage">
 			<keywordReference id="org.eclipse.php.debug.ui.phpExecutables" />
 		</page>
+		<page
+            category="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"
+            class="org.eclipse.php.internal.debug.ui.preferences.phps.PHPInterpreterExecutionPreferencePage"
+            id="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"
+            name="%executionEnvironmentsPageName">
+            <keywordReference id="org.eclipse.php.debug.ui.phpInterpreterExecution" />
+      </page>
 		<page category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
 			class="org.eclipse.php.internal.debug.ui.preferences.stepFilter.PHPDebugStepFilterPreferencePage"
 			id="org.eclipse.php.internal.debug.ui.preferences.stepFilter.PHPDebugStepFilterPreferencePage"
@@ -407,6 +414,8 @@
 			label="workbench open browser perspective switch debug multiple debug sessions">
 		</keyword>
 		<keyword id="org.eclipse.php.debug.ui.phpExecutables" label="PHP exe executable binary debug">
+		</keyword>
+		<keyword id="org.eclipse.php.debug.ui.phpInterpreterExecution" label="PHP Execution Environments">
 		</keyword>
 	</extension>
 	
