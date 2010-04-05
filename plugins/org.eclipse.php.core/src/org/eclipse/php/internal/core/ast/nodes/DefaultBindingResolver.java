@@ -244,8 +244,24 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	IBinding resolveName(Identifier name) {
 		if (name.getParent() instanceof Variable) {
+			// workaround for bug 253193's "ctrl+T not functional on methods"
+			if (name.getParent().getParent() instanceof FunctionName
+					&& name.getParent().getParent().getParent() instanceof FunctionInvocation) {
+				return resolveFunction((FunctionInvocation) name.getParent()
+						.getParent().getParent());
+
+			}
+			// end
 			return resolveVariable((Variable) name.getParent());
 		}
+		// workaround for bug 253193's "ctrl+T not functional on methods"
+		if (name.getParent() instanceof FunctionName
+				&& name.getParent().getParent() instanceof FunctionInvocation) {
+			return resolveFunction((FunctionInvocation) name.getParent()
+					.getParent());
+
+		}
+		// end
 		return resolveExpressionType(name);
 	}
 
