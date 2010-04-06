@@ -176,7 +176,15 @@ public class UseStatementInjector {
 					&& PHPFlags.isNamespace(((IType) modelElement).getFlags())) {
 				return offset;
 			}
+			// quanlified namespace should return offset directly
+			if (offset - proposal.getReplacementLength() > 0
+					&& document.getChar(offset
+							- proposal.getReplacementLength() - 1) == '\\') {
+				return offset;
+			}
 		} catch (ModelException e) {
+			Logger.logException(e);
+		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
 
