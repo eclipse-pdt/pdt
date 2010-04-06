@@ -512,7 +512,7 @@
 		</filter>
 		<filter name="%HideNonScriptProjects.label" enabled="false"
 			description="%HideNonScriptProjects.description"
-			class="org.eclipse.dltk.internal.ui.filters.NonScriptProjectsFilter"
+			class="org.eclipse.php.internal.ui.filters.NonPHPProjectsFilter"
 			id="org.eclipse.php.ui.explorer.NonScriptProjectsFilter">
 		</filter>
 		<filter name="%HideNonSharedProjects.label" enabled="false"
