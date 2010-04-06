@@ -15,6 +15,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
+import org.eclipse.dltk.internal.ui.filters.FilterMessages;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
@@ -23,6 +24,7 @@ import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.DecoratingModelLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -39,6 +41,11 @@ import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.UseStatementsNode;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -53,6 +60,7 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 public class PHPContentOutlineConfiguration extends
 		HTMLContentOutlineConfiguration {
 
+	private static final String OUTLINE_PAGE = "org.eclipse.php.ui.OutlinePage";
 	public static final int MODE_PHP = 1;
 	public static final int MODE_HTML = 2;
 
@@ -70,6 +78,7 @@ public class PHPContentOutlineConfiguration extends
 	private boolean fShowAttributes = false;
 	protected IPreferenceStore fStore = DLTKUIPlugin.getDefault()
 			.getPreferenceStore();
+	private CustomFiltersActionGroup fCustomFiltersActionGroup;
 
 	/** See {@link #MODE_PHP}, {@link #MODE_HTML} */
 	private int mode;
@@ -116,14 +125,27 @@ public class PHPContentOutlineConfiguration extends
 
 		final IContributionItem showHTMLItem = new ActionContributionItem(
 				changeOutlineModeActionHTML);
+
+		// Custom filter group
+		if (fCustomFiltersActionGroup == null) {
+			fCustomFiltersActionGroup = new CustomFiltersActionGroup(
+					OUTLINE_PAGE, viewer); //$NON-NLS-1$
+		}
+
+		final IContributionItem filtersItem = new FilterActionGroupContributionItem(
+				fCustomFiltersActionGroup);
+
 		items = super.createMenuContributions(viewer);
+
 		if (items == null)
-			items = new IContributionItem[] { showPHPItem, showHTMLItem };
+			items = new IContributionItem[] { showPHPItem, showHTMLItem,
+					filtersItem };
 		else {
-			final IContributionItem[] combinedItems = new IContributionItem[items.length + 2];
+			final IContributionItem[] combinedItems = new IContributionItem[items.length + 3];
 			System.arraycopy(items, 0, combinedItems, 0, items.length);
 			combinedItems[items.length] = showPHPItem;
 			combinedItems[items.length + 1] = showHTMLItem;
+			combinedItems[items.length + 2] = filtersItem;
 			items = combinedItems;
 		}
 		if (changeOutlineModeActionHTML.isChecked()) {
@@ -384,4 +406,61 @@ public class PHPContentOutlineConfiguration extends
 			return super.getText(element);
 		}
 	}
+
+	/**
+	 * Menu contribution item which shows and lets check and uncheck filters.
+	 * 
+	 * 
+	 */
+	class FilterActionGroupContributionItem extends ContributionItem {
+
+		// private boolean fState;
+		private CustomFiltersActionGroup fActionGroup;
+
+		/**
+		 * Constructor for FilterActionMenuContributionItem.
+		 * 
+		 * @param actionGroup
+		 *            the action group
+		 * @param filterId
+		 *            the id of the filter
+		 * @param filterName
+		 *            the name of the filter
+		 * @param state
+		 *            the initial state of the filter
+		 * @param itemNumber
+		 *            the menu item index
+		 */
+		public FilterActionGroupContributionItem(
+				CustomFiltersActionGroup actionGroup) {
+			super("filters");
+			fActionGroup = actionGroup;
+			// fState= state;
+		}
+
+		/*
+		 * Overrides method from ContributionItem.
+		 */
+		public void fill(Menu menu, int index) {
+			new MenuItem(menu, SWT.SEPARATOR, index);
+			MenuItem mi = new MenuItem(menu, SWT.CHECK, index + 1);
+			mi.setText(FilterMessages.OpenCustomFiltersDialogAction_text); //$NON-NLS-1$
+			mi.setImage(DLTKPluginImages.DESC_ELCL_FILTER.createImage());
+
+			mi.setEnabled(getMode() == MODE_PHP);
+			mi.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					fActionGroup.new ShowFilterDialogAction().run();
+				}
+			});
+		}
+
+		/*
+		 * @see org.eclipse.jface.action.IContributionItem#isDynamic()
+		 */
+		public boolean isDynamic() {
+			return true;
+		}
+	}
+
 }

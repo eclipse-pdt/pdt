@@ -538,6 +538,19 @@
 			description="%HideRSETempProject.description" enabled="true"
 			id="org.eclipse.php.ui.explorer.RSEProjectFilter" name="%HideRSETempProject.label" />
 	</extension>
+	
+	<extension point="org.eclipse.dltk.ui.dltkElementFilters">
+		<!-- Outline View -->
+		<filter name="%HideFields.label" enabled="false"
+			description="%HideFields.description" class="org.eclipse.dltk.internal.ui.filters.FieldsFilter"
+			id="org.eclipse.php.ui.OutlinePage.FieldsFilter"
+			targetId="org.eclipse.php.ui.OutlinePage">
+		</filter>
+		<filter name="%HideNonPublic.label" enabled="false"
+			description="%HideNonPublic.description" class="org.eclipse.php.internal.ui.filters.NonPublicFilter"
+			id="org.eclipse.php.ui.OutlinePage.NonPublicFilter" 
+			targetId="org.eclipse.php.ui.OutlinePage"/>
+	</extension>
 
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
 		<actionSetPartAssociation
