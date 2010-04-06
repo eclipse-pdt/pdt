@@ -39,6 +39,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This visitor builds DLTK structured model elements.
@@ -48,6 +49,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	private static final String CONSTRUCTOR_NAME = "__construct";
+	private static final String VOID_RETURN_TYPE = "void";
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");;
 
 	/**
@@ -206,10 +208,55 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			mi.modifiers |= Modifiers.AccGlobal;
 		}
 
+		mi.parameterTypes = processParamterTypes(methodDeclaration);
+		mi.returnType = processReturnType(methodDeclaration);
+
 		// modify method info if needed by extensions
 		for (PHPSourceElementRequestorExtension extension : extensions) {
 			extension.modifyMethodInfo(methodDeclaration, mi);
 		}
+	}
+
+	private String[] processParamterTypes(MethodDeclaration methodDeclaration) {
+		List args = methodDeclaration.getArguments();
+		PHPDocBlock docBlock = ((PHPMethodDeclaration) methodDeclaration)
+				.getPHPDoc();
+		String[] parameterType = new String[args.size()];
+		for (int a = 0; a < args.size(); a++) {
+			Argument arg = (Argument) args.get(a);
+			if (arg instanceof FormalParameter) {
+				SimpleReference type = ((FormalParameter) arg)
+						.getParameterType();
+				if (type != null) {
+					parameterType[a] = type.getName();
+				} else if (docBlock != null) {
+					for (PHPDocTag tag : docBlock.getTags(PHPDocTag.PARAM)) {
+						SimpleReference[] refs = tag.getReferences();
+						if (refs.length == 2) {
+							if (refs[0].getName().equals(arg.getName())) {
+								parameterType[a] = refs[1].getName();
+							}
+						}
+					}
+				}
+			}
+		}
+		return parameterType;
+	}
+
+	private String processReturnType(MethodDeclaration methodDeclaration) {
+		PHPDocBlock docBlock = ((PHPMethodDeclaration) methodDeclaration)
+				.getPHPDoc();
+		String type = VOID_RETURN_TYPE;
+		if (docBlock != null) {
+			for (PHPDocTag tag : docBlock.getTags(PHPDocTag.RETURN)) {
+				for (SimpleReference reference : tag.getReferences()) {
+					return PHPModelUtils
+							.extractElementName(reference.getName());
+				}
+			}
+		}
+		return type;
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {
@@ -378,6 +425,13 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		info.nameSourceEnd = var.sourceEnd() - 1;
 		info.nameSourceStart = var.sourceStart();
 		info.declarationStart = declaration.getDeclarationStart();
+		PHPDocBlock doc = declaration.getPHPDoc();
+		if (doc != null) {
+			for (PHPDocTag tag : doc.getTags(PHPDocTag.VAR)) {
+				info.type = PHPModelUtils.extractElementName(tag
+						.getReferences()[0].getName());
+			}
+		}
 		fRequestor.enterField(info);
 		return true;
 	}
