@@ -16,6 +16,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
@@ -67,7 +68,7 @@ public class PHPContentOutlineConfiguration extends
 	private ScriptUILabelProvider fSimpleLabelProvider;
 	// private ShowGroupsAction fShowGroupsAction;
 	private boolean fShowAttributes = false;
-	protected IPreferenceStore fStore = PHPUiPlugin.getDefault()
+	protected IPreferenceStore fStore = DLTKUIPlugin.getDefault()
 			.getPreferenceStore();
 
 	/** See {@link #MODE_PHP}, {@link #MODE_HTML} */
