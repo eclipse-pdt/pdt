@@ -24,7 +24,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.includepath.IncludePath;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -142,7 +141,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	 */
 	@Override
 	protected ScriptExplorerLabelProvider createLabelProvider() {
-		final IPreferenceStore store = PHPUiPlugin.getDefault()
+		final IPreferenceStore store = DLTKUIPlugin.getDefault()
 				.getPreferenceStore();
 		return new PHPExplorerLabelProvider(getContentProvider(), store);
 	}
