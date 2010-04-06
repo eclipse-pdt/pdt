@@ -24,6 +24,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -141,7 +142,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	 */
 	@Override
 	protected ScriptExplorerLabelProvider createLabelProvider() {
-		final IPreferenceStore store = DLTKUIPlugin.getDefault()
+		final IPreferenceStore store = PHPUiPlugin.getDefault()
 				.getPreferenceStore();
 		return new PHPExplorerLabelProvider(getContentProvider(), store);
 	}
@@ -154,11 +155,9 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	protected void setComparator() {
 		if (showWorkingSets()) {
 			PHPExplorerWorkingSetAwareModelElementSorter comparator = new PHPExplorerWorkingSetAwareModelElementSorter();
-//			comparator.setInnerElements(false);
 			getTreeViewer().setComparator(comparator);
 		} else {
 			ModelElementSorter comparator = new PHPExplorerElementSorter();
-//			comparator.setInnerElements(false);
 			getTreeViewer().setComparator(comparator);
 		}
 	}
