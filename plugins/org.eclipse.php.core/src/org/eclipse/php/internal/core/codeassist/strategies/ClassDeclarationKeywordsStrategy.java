@@ -22,12 +22,20 @@ import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionConte
 import org.eclipse.php.internal.core.codeassist.contexts.ClassDeclarationKeywordContext;
 
 /**
- * This strategy completes keywords that can be shown in a class body 
+ * This strategy completes keywords that can be shown in a class body
+ * 
  * @author michael
  */
-public class ClassDeclarationKeywordsStrategy extends AbstractCompletionStrategy {
+public class ClassDeclarationKeywordsStrategy extends
+		AbstractCompletionStrategy {
 
-	public ClassDeclarationKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	private static final String IMPLEMENTS_WITH_BLANK = " implements ";
+	private static final String EXTENDS_WITH_BLANK = " extends ";
+	private static final String IMPLEMENTS = "implements";
+	private static final String EXTENDS = "extends";
+
+	public ClassDeclarationKeywordsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -44,15 +52,21 @@ public class ClassDeclarationKeywordsStrategy extends AbstractCompletionStrategy
 		ClassDeclarationKeywordContext concreteContext = (ClassDeclarationKeywordContext) context;
 		SourceRange replaceRange = getReplacementRange(concreteContext);
 		String prefix = concreteContext.getPrefix();
-
-		if (CodeAssistUtils.startsWithIgnoreCase("extends", prefix)) {
-			reporter.reportKeyword("extends", getSuffix(concreteContext), replaceRange);
+		String statementText = concreteContext.getStatementText().toString();
+		if (CodeAssistUtils.startsWithIgnoreCase(EXTENDS, prefix)
+				&& statementText.indexOf(EXTENDS_WITH_BLANK) < 0) {
+			reporter.reportKeyword(EXTENDS, getSuffix(concreteContext),
+					replaceRange);
 		}
-		if (CodeAssistUtils.startsWithIgnoreCase("implements", prefix) && concreteContext.getPhpVersion().isGreaterThan(PHPVersion.PHP4)) {
-			reporter.reportKeyword("implements", getSuffix(concreteContext), replaceRange);
+		if (CodeAssistUtils.startsWithIgnoreCase(IMPLEMENTS, prefix)
+				&& concreteContext.getPhpVersion().isGreaterThan(
+						PHPVersion.PHP4)
+				&& statementText.indexOf(IMPLEMENTS_WITH_BLANK) < 0) {
+			reporter.reportKeyword(IMPLEMENTS, getSuffix(concreteContext),
+					replaceRange);
 		}
 	}
-	
+
 	public String getSuffix(AbstractCompletionContext context) {
 		return context.hasWhitespaceBeforeCursor() ? " " : "";
 	}
