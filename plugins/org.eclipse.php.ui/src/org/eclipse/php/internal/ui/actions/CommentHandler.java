@@ -149,6 +149,51 @@ public abstract class CommentHandler extends AbstractHandler implements
 		}
 	}
 
+	protected void commentMultiLine(IDocument document, int selectionStartLine,
+			int selectionEndLine) {
+		StringBuffer sb = new StringBuffer(SINGLE_LINE_COMMENT);
+		try {
+			for (int i = selectionStartLine; i < selectionEndLine; i++) {
+				if (document.getLineLength(i) > 0) {
+					int openCommentOffset = document.getLineOffset(i);
+					int nextLineOffset = document.getLineOffset(i + 1);
+					sb.append(
+							document.get(openCommentOffset, nextLineOffset
+									- openCommentOffset)).append(
+							SINGLE_LINE_COMMENT);
+				}
+			}
+			document.replace(document.getLineOffset(selectionStartLine),
+					document.getLineOffset(selectionEndLine)
+							- document.getLineOffset(selectionStartLine), sb
+							.toString());
+		} catch (BadLocationException e) {
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+		}
+	}
+
+	protected void uncommentMultiLine(IDocument document,
+			int selectionStartLine, int selectionEndLine) {
+		StringBuffer sb = new StringBuffer();
+		try {
+			for (int i = selectionStartLine; i < selectionEndLine; i++) {
+				if (document.getLineLength(i) > 0) {
+					int openCommentOffset = document.getLineOffset(i);
+					int nextLineOffset = document.getLineOffset(i + 1);
+					sb.append(document.get(openCommentOffset,
+							nextLineOffset - openCommentOffset).substring(2));
+				}
+			}
+			document.replace(document.getLineOffset(selectionStartLine),
+					document.getLineOffset(selectionEndLine)
+							+ SINGLE_LINE_COMMENT.length()
+							- document.getLineOffset(selectionStartLine), sb
+							.toString());
+		} catch (BadLocationException e) {
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+		}
+	}
+
 	protected boolean isMoreThanOneContextBlockSelected(IDocument document,
 			ITextSelection textSelection) {
 		if (document == null) {

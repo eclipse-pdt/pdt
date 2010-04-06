@@ -178,33 +178,11 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 
 				// If all lines are commented, uncomment all lines:
 				if (allLinesCommented) {
-					for (int i = selectionStartLine; i <= selectionEndLine; i++) {
-						try {
-							if (document.getLineLength(i) > 0) {
-								int lineOffset = document.getLineOffset(i);
-								IRegion region = document.getLineInformation(i);
-								String string = document.get(
-										region.getOffset(), region.getLength());
-								int openCommentOffset = lineOffset
-										+ string.indexOf(SINGLE_LINE_COMMENT);
-								uncommentSingleLine(document, openCommentOffset);
-							}
-						} catch (BadLocationException e) {
-							Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
-						}
-					}
+					uncommentMultiLine(document, selectionStartLine,
+							selectionEndLine);
 				} else { // comment all lines
-					for (int i = selectionStartLine; i <= selectionEndLine; i++) {
-						try {
-							if (document.getLineLength(i) > 0) {
-								int openCommentOffset = document
-										.getLineOffset(i);
-								commentSingleLine(document, openCommentOffset);
-							}
-						} catch (BadLocationException e) {
-							Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
-						}
-					}
+					commentMultiLine(document, selectionStartLine,
+							selectionEndLine);
 				}
 			} finally {
 				model.changedModel();
