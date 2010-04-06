@@ -120,16 +120,6 @@ public class PHPInterpreterExecutionConfigurationBlock {
 	 * .swt.widgets.Composite)
 	 */
 	protected Control createControl(Composite ancestor) {
-
-		// final Composite parent = new Composite(ancestor, SWT.NULL);
-		// GridLayout layout = new GridLayout();
-		// layout.numColumns = 2;
-		// layout.marginHeight = 0;
-		// layout.marginWidth = 0;
-		// parent.setLayout(layout);
-		// final Font font = ancestor.getFont();
-		// parent.setFont(font);
-		// fControl = parent;
 		fControl = ancestor;
 		Composite container = new Composite(ancestor, SWT.NONE);
 		GridLayout layout = new GridLayout();
@@ -181,7 +171,6 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		fJREsViewer.setContentProvider(new ArrayContentProvider());
 		fJREsViewer.setLabelProvider(new PHPExeLabelProvider());
 		fJREsViewer.setInput(new PHPexeItem[0]);
-		// fJREsViewer.setComparator(new JREsEnvironmentComparator());
 
 		fProfilesViewer
 				.addSelectionChangedListener(new ISelectionChangedListener() {
