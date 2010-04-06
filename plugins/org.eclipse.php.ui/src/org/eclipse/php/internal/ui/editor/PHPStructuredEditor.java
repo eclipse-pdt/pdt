@@ -92,6 +92,7 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
+import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -103,6 +104,7 @@ import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
+import org.eclipse.ui.dnd.IDragAndDropService;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -289,6 +291,21 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	 * Stores the current IModelElement used as the outline input.
 	 */
 	private IModelElement fModelElement;
+
+	/**
+	 * Tells whether text drag and drop has been installed on the control.
+	 * 
+	 * @since 3.3
+	 */
+	private boolean fIsTextDragAndDropInstalled = false;
+
+	/**
+	 * Helper token to decide whether drag and drop happens inside the same
+	 * editor.
+	 * 
+	 * @since 3.3
+	 */
+	private Object fTextDragAndDropToken;
 
 	/**
 	 * Internal implementation class for a change listener.
@@ -3375,5 +3392,268 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			((ConfigurableContentOutlinePage) fPHPOutlinePage)
 					.setInput(getModelElement());
 		}
+	}
+
+	/**
+	 * Initializes the drag and drop support for the given viewer based on
+	 * provided editor adapter for drop target listeners.
+	 * 
+	 * @param viewer
+	 *            the viewer
+	 * @since 3.0
+	 */
+	protected void initializeDragAndDrop(ISourceViewer viewer) {
+		IDragAndDropService dndService = (IDragAndDropService) getSite()
+				.getService(IDragAndDropService.class);
+		if (dndService == null)
+			return;
+
+		ITextEditorDropTargetListener listener = (ITextEditorDropTargetListener) getAdapter(ITextEditorDropTargetListener.class);
+
+		if (listener == null) {
+			Object object = Platform.getAdapterManager().loadAdapter(this,
+					"org.eclipse.ui.texteditor.ITextEditorDropTargetListener"); //$NON-NLS-1$
+			if (object instanceof ITextEditorDropTargetListener)
+				listener = (ITextEditorDropTargetListener) object;
+		}
+
+		if (listener != null)
+			dndService.addMergedDropTarget(viewer.getTextWidget(),
+					DND.DROP_MOVE | DND.DROP_COPY, listener.getTransfers(),
+					listener);
+
+		IPreferenceStore store = getPreferenceStore();
+		if (store != null
+				&& store.getBoolean(PREFERENCE_TEXT_DRAG_AND_DROP_ENABLED))
+			installTextDragAndDrop(viewer);
+
+	}
+
+	/**
+	 * Installs text drag and drop on the given source viewer.
+	 * 
+	 * @param viewer
+	 *            the viewer
+	 * @since 3.3
+	 */
+	protected void installTextDragAndDrop(final ISourceViewer viewer) {
+		if (viewer == null || fIsTextDragAndDropInstalled)
+			return;
+
+		final IDragAndDropService dndService = (IDragAndDropService) getSite()
+				.getService(IDragAndDropService.class);
+		if (dndService == null)
+			return;
+
+		final StyledText st = viewer.getTextWidget();
+
+		// Install drag source
+		final ISelectionProvider selectionProvider = viewer
+				.getSelectionProvider();
+		final DragSource source = new DragSource(st, DND.DROP_COPY
+				| DND.DROP_MOVE);
+		source.setTransfer(new Transfer[] { TextTransfer.getInstance() });
+		source.addDragListener(new DragSourceAdapter() {
+			String fSelectedText;
+			Point fSelection;
+
+			public void dragStart(DragSourceEvent event) {
+				fTextDragAndDropToken = null;
+				try {
+					fSelection = st.getSelection();
+					event.doit = isLocationSelected(new Point(event.x, event.y));
+
+					ISelection selection = selectionProvider.getSelection();
+					if (selection instanceof ITextSelection)
+						fSelectedText = ((ITextSelection) selection).getText();
+					else
+						// fallback to widget
+						fSelectedText = st.getSelectionText();
+				} catch (IllegalArgumentException ex) {
+					event.doit = false;
+				}
+			}
+
+			private boolean isLocationSelected(Point point) {
+				// FIXME: https://bugs.eclipse.org/bugs/show_bug.cgi?id=260922
+				if (isBlockSelectionModeEnabled())
+					return false;
+
+				int offset = st.getOffsetAtLocation(point);
+				Point p = st.getLocationAtOffset(offset);
+				if (p.x > point.x)
+					offset--;
+				return offset >= fSelection.x && offset < fSelection.y;
+			}
+
+			public void dragSetData(DragSourceEvent event) {
+				event.data = fSelectedText;
+				fTextDragAndDropToken = this; // Can be any non-null object
+			}
+
+			public void dragFinished(DragSourceEvent event) {
+				try {
+					if (event.detail == DND.DROP_MOVE
+							&& validateEditorInputState()) {
+						Point newSelection = st.getSelection();
+						int length = fSelection.y - fSelection.x;
+						int delta = 0;
+						if (newSelection.x < fSelection.x)
+							delta = length;
+						st.replaceTextRange(fSelection.x + delta, length, ""); //$NON-NLS-1$
+
+						if (fTextDragAndDropToken == null) {
+							// Move in same editor - end compound change
+							IRewriteTarget target = (IRewriteTarget) getAdapter(IRewriteTarget.class);
+							if (target != null)
+								target.endCompoundChange();
+						}
+
+					}
+				} finally {
+					fTextDragAndDropToken = null;
+				}
+			}
+		});
+
+		// Install drag target
+		DropTargetListener dropTargetListener = new DropTargetAdapter() {
+
+			private Point fSelection;
+
+			public void dragEnter(DropTargetEvent event) {
+				fTextDragAndDropToken = null;
+				fSelection = st.getSelection();
+				if (event.detail == DND.DROP_DEFAULT) {
+					if ((event.operations & DND.DROP_MOVE) != 0) {
+						event.detail = DND.DROP_MOVE;
+					} else if ((event.operations & DND.DROP_COPY) != 0) {
+						event.detail = DND.DROP_COPY;
+					} else {
+						event.detail = DND.DROP_NONE;
+					}
+				}
+			}
+
+			public void dragOperationChanged(DropTargetEvent event) {
+				if (event.detail == DND.DROP_DEFAULT) {
+					if ((event.operations & DND.DROP_MOVE) != 0) {
+						event.detail = DND.DROP_MOVE;
+					} else if ((event.operations & DND.DROP_COPY) != 0) {
+						event.detail = DND.DROP_COPY;
+					} else {
+						event.detail = DND.DROP_NONE;
+					}
+				}
+			}
+
+			public void dragOver(DropTargetEvent event) {
+				event.feedback |= DND.FEEDBACK_SCROLL;
+			}
+
+			public void drop(DropTargetEvent event) {
+				try {
+					if (fTextDragAndDropToken != null
+							&& event.detail == DND.DROP_MOVE) {
+						// Move in same editor
+						int caretOffset = st.getCaretOffset();
+						if (fSelection.x <= caretOffset
+								&& caretOffset <= fSelection.y) {
+							event.detail = DND.DROP_NONE;
+							return;
+						}
+
+						// Start compound change
+						IRewriteTarget target = (IRewriteTarget) getAdapter(IRewriteTarget.class);
+						if (target != null)
+							target.beginCompoundChange();
+					}
+
+					if (!validateEditorInputState()) {
+						event.detail = DND.DROP_NONE;
+						return;
+					}
+
+					String text = (String) event.data;
+					if (isBlockSelectionModeEnabled()) {
+						// FIXME fix block selection and DND
+						// if (fTextDNDColumnSelection != null &&
+						// fTextDragAndDropToken != null && event.detail ==
+						// DND.DROP_MOVE) {
+						// // DND_MOVE within same editor - remove origin before
+						// inserting
+						// Rectangle newSelection= st.getColumnSelection();
+						//							st.replaceColumnSelection(fTextDNDColumnSelection, ""); //$NON-NLS-1$
+						// st.replaceColumnSelection(newSelection, text);
+						// st.setColumnSelection(newSelection.x, newSelection.y,
+						// newSelection.x + fTextDNDColumnSelection.width -
+						// fTextDNDColumnSelection.x, newSelection.y +
+						// fTextDNDColumnSelection.height -
+						// fTextDNDColumnSelection.y);
+						// } else {
+						// Point newSelection= st.getSelection();
+						// st.insert(text);
+						// IDocument document=
+						// getDocumentProvider().getDocument(getEditorInput());
+						// int startLine= st.getLineAtOffset(newSelection.x);
+						// int startColumn= newSelection.x -
+						// st.getOffsetAtLine(startLine);
+						// int endLine= startLine +
+						// document.computeNumberOfLines(text);
+						// int endColumn= startColumn +
+						// TextUtilities.indexOf(document.getLegalLineDelimiters(),
+						// text, 0)[0];
+						// st.setColumnSelection(startColumn, startLine,
+						// endColumn, endLine);
+						// }
+					} else {
+						Point newSelection = st.getSelection();
+						try {
+							int modelOffset = widgetOffset2ModelOffset(viewer,
+									newSelection.x);
+							viewer.getDocument().replace(modelOffset, 0, text);
+						} catch (BadLocationException e) {
+							return;
+						}
+						st.setSelectionRange(newSelection.x, text.length());
+					}
+				} finally {
+					fTextDragAndDropToken = null;
+				}
+			}
+		};
+		dndService.addMergedDropTarget(st, DND.DROP_MOVE | DND.DROP_COPY,
+				new Transfer[] { TextTransfer.getInstance() },
+				dropTargetListener);
+
+		fIsTextDragAndDropInstalled = true;
+	}
+
+	/**
+	 * Uninstalls text drag and drop from the given source viewer.
+	 * 
+	 * @param viewer
+	 *            the viewer
+	 * @since 3.3
+	 */
+	protected void uninstallTextDragAndDrop(ISourceViewer viewer) {
+		if (viewer == null || !fIsTextDragAndDropInstalled)
+			return;
+
+		final IDragAndDropService dndService = (IDragAndDropService) getSite()
+				.getService(IDragAndDropService.class);
+		if (dndService == null)
+			return;
+
+		StyledText st = viewer.getTextWidget();
+		dndService.removeMergedDropTarget(st);
+
+		DragSource dragSource = (DragSource) st.getData(DND.DRAG_SOURCE_KEY);
+		if (dragSource != null) {
+			dragSource.dispose();
+			st.setData(DND.DRAG_SOURCE_KEY, null);
+		}
+
+		fIsTextDragAndDropInstalled = false;
 	}
 }
