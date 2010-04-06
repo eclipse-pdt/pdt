@@ -54,6 +54,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			return;
 		}
 
+		if (requestor instanceof IPHPCompletionRequestor) {
+			((IPHPCompletionRequestor) requestor).setOffset(offset);
+
+		}
 		ModelManager.getModelManager().getIndexManager().waitUntilReady();
 
 		relevanceKeyword = RELEVANCE_KEYWORD;

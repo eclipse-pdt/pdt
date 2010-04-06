@@ -37,4 +37,18 @@ public interface IPHPCompletionRequestor {
 	 * @return whether code assist invoked explicitly
 	 */
 	public boolean isExplicit();
+
+	/**
+	 * Returns offset of the document where code assist was invoked
+	 * 
+	 * @return document offset
+	 */
+	public int getOffset();
+
+	/**
+	 * Returns offset of the document where code assist was invoked
+	 * 
+	 * @return document offset
+	 */
+	public void setOffset(int offset);
 }

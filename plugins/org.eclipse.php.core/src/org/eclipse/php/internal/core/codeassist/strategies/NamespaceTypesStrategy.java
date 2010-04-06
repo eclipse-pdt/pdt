@@ -49,7 +49,8 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 		}
 
 		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
-		String suffix = getSuffix(concreteContext);
+		// now we compute type suffix in PHPCompletionProposalCollector
+		String suffix = "";//$NON-NLS-1$ 
 		SourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType type : getTypes(concreteContext)) {

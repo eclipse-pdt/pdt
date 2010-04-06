@@ -144,6 +144,11 @@ public class PhpElementResolver implements IElementResolver {
 			return parameters;
 		}
 
+		@Override
+		public String[] getParameterNames() throws ModelException {
+			return SourceMethodUtils.getParameterNames(parameters);
+		}
+
 		public boolean isConstructor() throws ModelException {
 			return (flags & IPHPModifiers.Constructor) != 0;
 		}

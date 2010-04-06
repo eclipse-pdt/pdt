@@ -72,7 +72,8 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
-		String suffix = getSuffix(abstractContext);
+		// now we compute type suffix in PHPCompletionProposalCollector
+		String suffix = "";//$NON-NLS-1$ 
 		String nsSuffix = getNSSuffix(abstractContext);
 
 		for (IType type : types) {

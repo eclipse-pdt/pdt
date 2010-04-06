@@ -1462,4 +1462,43 @@ public class PHPModelUtils {
 			}
 		}
 	}
+
+	/**
+	 * 
+	 * @param type
+	 *            the given type
+	 * @return if the given type has static member
+	 */
+	public static boolean hasStaticMember(IType type) {
+		try {
+			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
+			IModelElement[] members = PHPModelUtils.getTypeHierarchyField(type,hierarchy, "",true, null);
+			if(hasStaticElement(members)){
+				return true;
+			}
+			members = PHPModelUtils.getTypeHierarchyMethod(type,hierarchy, "",true, null);
+			if(hasStaticElement(members)){
+				return true;
+			}
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		} catch (CoreException e) {
+			PHPCorePlugin.log(e);
+		}
+		return false;
+	}
+
+	public static boolean hasStaticElement(IModelElement[] elements) throws ModelException {
+		for (int i = 0; i < elements.length; i++) {
+			IModelElement modelElement = elements[i];
+			if (modelElement instanceof IMember) {
+				IMember member = (IMember) modelElement;
+				if (Flags.isStatic(member.getFlags())) {
+					return true;
+				}
+
+			}
+		}
+		return false;
+	}
 }
