@@ -182,6 +182,15 @@ public class UseStatementInjector {
 							- proposal.getReplacementLength() - 1) == '\\') {
 				return offset;
 			}
+			// class members should return offset directly
+			if (modelElement.getElementType() != IModelElement.TYPE) {
+				IModelElement type = modelElement
+						.getAncestor(IModelElement.TYPE);
+				if (type != null
+						&& !PHPFlags.isNamespace(((IType) type).getFlags())) {
+					return offset;
+				}
+			}
 		} catch (ModelException e) {
 			Logger.logException(e);
 		} catch (BadLocationException e) {

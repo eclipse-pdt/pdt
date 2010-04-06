@@ -17,16 +17,22 @@ import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.text.completion.*;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
 public class PHPCompletionProposalCollector extends
 		ScriptCompletionProposalCollector implements IPHPCompletionRequestor {
 
+	private static final String DOUBLE_COLON = "::";//$NON-NLS-1$
+	private static final String EMPTY_STRING = "";//$NON-NLS-1$
 	private IDocument document;
 	private boolean explicit;
+	private int offset;
 
 	public PHPCompletionProposalCollector(IDocument document, ISourceModule cu,
 			boolean explicit) {
@@ -191,7 +197,7 @@ public class PHPCompletionProposalCollector extends
 	}
 
 	private IScriptCompletionProposal createTypeProposal(
-			CompletionProposal typeProposal) {
+			final CompletionProposal typeProposal) {
 
 		String completion = new String(typeProposal.getCompletion());
 		int replaceStart = typeProposal.getReplaceStart();
@@ -204,14 +210,54 @@ public class PHPCompletionProposalCollector extends
 		String displayString = ((PHPCompletionProposalLabelProvider) getLabelProvider())
 				.createTypeProposalLabel(typeProposal);
 
-		ScriptCompletionProposal scriptProposal = createScriptCompletionProposal(
-				completion, replaceStart, length, image, displayString, 0);
+		// return new PHPCompletionProposal(completion, replaceStart, length,
+		// image, displayString, 0);
+		ScriptCompletionProposal scriptProposal = new PHPCompletionProposal(
+				completion, replaceStart, length, image, displayString, 0) {
+			private boolean fReplacementStringComputed = false;
+
+			public String getReplacementString() {
+				if (!fReplacementStringComputed)
+					setReplacementString(computeReplacementString());
+				return super.getReplacementString();
+			}
+
+			private String computeReplacementString() {
+				fReplacementStringComputed = true;
+				String suffix = getSuffix((IType) typeProposal
+						.getModelElement());
+				return super.getReplacementString() + suffix;
+			}
+
+			public String getSuffix(IType type) {
+				String defaultResult = EMPTY_STRING;
+				if (!PHPModelUtils.hasStaticMember(type)) {
+					return defaultResult;
+				}
+				String nextWord = null;
+				try {
+					nextWord = document.get(offset, 2);// "::".length()
+				} catch (BadLocationException e) {
+					PHPUiPlugin.log(e);
+				}
+				return DOUBLE_COLON.equals(nextWord) ? defaultResult
+						: DOUBLE_COLON;
+			}
+		};
 
 		scriptProposal.setRelevance(computeRelevance(typeProposal));
 		scriptProposal.setProposalInfo(new TypeProposalInfo(getSourceModule()
 				.getScriptProject(), typeProposal));
 		return scriptProposal;
 
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 
 }
