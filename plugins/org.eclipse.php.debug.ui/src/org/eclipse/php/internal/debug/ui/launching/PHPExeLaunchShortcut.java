@@ -195,9 +195,6 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				}
 
 				PHPexeItem defaultEXE = getDefaultPHPExe(project);
-				if (defaultEXE == null) {
-					defaultEXE = getWorkspaceDefaultExe();
-				}
 				String phpExeName = (defaultEXE != null) ? defaultEXE
 						.getExecutable().getAbsolutePath().toString() : null;
 
@@ -243,24 +240,15 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		}
 	}
 
-	private static PHPexeItem getWorkspaceDefaultExe() {
-		String phpDebuggerId = PHPDebugPlugin.getCurrentDebuggerId();
-		return PHPexes.getInstance().getDefaultItem(phpDebuggerId);
-	}
-
 	// Returns the default php executable name for the current project.
 	// In case the project does not have any special settings, return the
 	// workspace default.
 	private static PHPexeItem getDefaultPHPExe(IProject project) {
-		// Take the default workspace item for the debugger's id.
-		// TODO get phpDebuggerId according to project's version
 		PHPexeItem defaultItem = PHPDebugPlugin.getPHPexeItem(project);
 		if (defaultItem != null) {
 			return defaultItem;
 		}
-		String phpDebuggerId = PHPDebugPlugin.getCurrentDebuggerId();
-		defaultItem = PHPexes.getInstance().getDefaultItem(phpDebuggerId);
-		return defaultItem;
+		return PHPDebugPlugin.getWorkspaceDefaultExe();
 	}
 
 	// Creates a preferences scope for the given project.
