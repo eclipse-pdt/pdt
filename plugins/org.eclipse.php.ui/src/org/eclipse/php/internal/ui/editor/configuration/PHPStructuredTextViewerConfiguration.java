@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
+import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -71,7 +72,6 @@ public class PHPStructuredTextViewerConfiguration extends
 		StructuredTextViewerConfigurationHTML {
 
 	private static final String FORMATTER_PROCESSOR_EXT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
-	private static final String SHOW_OUTLINE_PREF_KEY = "org.eclipse.php.ui.edit.text.php.show.outline"; //$NON-NLS-1$
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String[] DEFAULT_PREFIXES = new String[] {
 			"//", "#", EMPTY }; //$NON-NLS-1$
@@ -455,9 +455,11 @@ public class PHPStructuredTextViewerConfiguration extends
 	public IInformationPresenter getOutlinePresenter(ISourceViewer sourceViewer) {
 		InformationPresenter presenter = null;
 		if (sourceViewer instanceof PHPStructuredTextViewer) {
+			// set the right commandid,after doing this you can make double
+			// clicking on Ctrl+O enable
 			presenter = new InformationPresenter(
 					getOutlinePresenterControlCreator(sourceViewer,
-							SHOW_OUTLINE_PREF_KEY)); //$NON-NLS-1$
+							IScriptEditorActionDefinitionIds.SHOW_OUTLINE));
 			presenter
 					.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 			presenter
