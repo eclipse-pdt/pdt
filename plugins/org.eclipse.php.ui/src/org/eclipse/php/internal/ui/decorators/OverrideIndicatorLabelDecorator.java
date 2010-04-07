@@ -40,6 +40,8 @@ import org.eclipse.swt.graphics.Rectangle;
 public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 		ILightweightLabelDecorator {
 
+	public static final String ID = "org.eclipse.php.ui.override.decorator";
+
 	private ImageDescriptorRegistry fRegistry;
 	private boolean fUseNewRegistry = false;
 

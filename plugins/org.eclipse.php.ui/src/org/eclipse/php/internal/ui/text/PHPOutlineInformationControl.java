@@ -12,8 +12,14 @@
 package org.eclipse.php.internal.ui.text;
 
 import org.eclipse.dltk.ui.text.ScriptOutlineInformationControl;
+import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.decorators.OverrideIndicatorLabelDecorator;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IDecoratorManager;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Information control for the PHP language
@@ -28,5 +34,17 @@ public class PHPOutlineInformationControl extends
 			int treeStyle, String commandId) {
 		super(parent, shellStyle, treeStyle, commandId, PHPUiPlugin
 				.getDefault().getPreferenceStore());
+	}
+
+	protected TreeViewer createTreeViewer(Composite parent, int style) {
+		TreeViewer viewer = super.createTreeViewer(parent, style);
+
+		IDecoratorManager decoratorMgr = PlatformUI.getWorkbench()
+				.getDecoratorManager();
+		if (decoratorMgr.getEnabled(OverrideIndicatorLabelDecorator.ID)) {//$NON-NLS-1$
+			((ScriptUILabelProvider) viewer.getLabelProvider())
+					.addLabelDecorator(new OverrideIndicatorLabelDecorator());
+		}
+		return viewer;
 	}
 }
