@@ -90,11 +90,11 @@ public class WorkbenchOptionsBlock extends AbstractPHPPreferencePageBlock {
 
 		fAllowMultipleLnchField.setPreferenceStore(PHPUiPlugin.getDefault()
 				.getPreferenceStore());
-		fAllowMultipleLnchField.load();
+		fAllowMultipleLnchField.loadDefault();
 
 		fSwitchPerspField.setPreferenceStore(PHPUiPlugin.getDefault()
 				.getPreferenceStore());
-		fSwitchPerspField.load();
+		fSwitchPerspField.loadDefault();
 	}
 
 	private void addWorkspacePreferenceSubsection(Composite composite) {

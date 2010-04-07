@@ -19,6 +19,7 @@ import java.util.StringTokenizer;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.internal.core.StepFilterManager;
 import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -452,7 +453,8 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 	 * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
 	 */
 	protected void performDefaults() {
-		boolean stepenabled = DebugUITools.isUseStepFilters();
+		boolean stepenabled = DebugPlugin.getDefault().getPluginPreferences()
+				.getDefaultBoolean(StepFilterManager.PREF_USE_STEP_FILTERS);
 		fUseStepFiltersButton.setSelection(stepenabled);
 		setPageEnablement(stepenabled);
 		DebugStepFilter[] filters = getAllFiltersFromTable();
