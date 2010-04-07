@@ -4,6 +4,7 @@ import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 
 public class EmptyInnerPackageFilter extends ViewerFilter {
 
@@ -15,11 +16,10 @@ public class EmptyInnerPackageFilter extends ViewerFilter {
 			try {
 				if (pkg.isRootFolder())
 					return pkg.hasChildren();
-				return !pkg.hasSubfolders() || pkg.hasChildren()
+				return pkg.hasSubfolders() || pkg.hasChildren()
 						|| (pkg.getForeignResources().length > 0);
 			} catch (ModelException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				PHPUiPlugin.log(e);
 			}
 		}
 
