@@ -208,6 +208,8 @@ public class PHPPluginImages {
 			"error_co.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_OVERRIDES = create(T_OVR,
 			"over_co.gif"); //$NON-NLS-1$
+	public static final ImageDescriptor DESC_OVR_IMPLEMENTS = create(T_OVR,
+			"implm_co.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_CONSTRUCTOR = create(T_OVR,
 			"constr_ovr.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_DEPRECATED = create(T_OVR,

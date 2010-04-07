@@ -19,9 +19,9 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
-import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.ui.providers.OverridenScriptExplorerLabelProvider;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -30,7 +30,8 @@ import org.eclipse.swt.graphics.Image;
  * @author apeled, nirc
  * 
  */
-public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
+public class PHPExplorerLabelProvider extends
+		OverridenScriptExplorerLabelProvider {
 
 	public PHPExplorerLabelProvider(ScriptExplorerContentProvider cp,
 			IPreferenceStore store) {
@@ -98,8 +99,8 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 		if (modelElement != null) {
 			IScriptProject project = modelElement.getScriptProject();
 			if (!project.isOnBuildpath(modelElement)) {// not in build path,
-														// hence: hollow,
-														// non-pakg icons
+				// hence: hollow,
+				// non-pakg icons
 				if (modelElement.getElementType() == IModelElement.SOURCE_MODULE)
 					return PHPPluginImages
 							.get(PHPPluginImages.IMG_OBJS_CUNIT_RESOURCE);

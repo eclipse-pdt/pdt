@@ -41,9 +41,11 @@ import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.UseStatementsNode;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.providers.PHPElementImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorPart;
@@ -371,6 +373,20 @@ public class PHPContentOutlineConfiguration extends
 				return DLTKPluginImages.DESC_OBJS_IMPCONT;
 			}
 			return super.getBaseImageDescriptor(element, renderFlags);
+		}
+
+		@Override
+		public ImageDescriptor getScriptImageDescriptor(IModelElement element,
+				int flags) {
+			int adornmentFlags = computeAdornmentFlags(element, flags);
+			Point size = useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
+			ImageDescriptor descr = getBaseImageDescriptor(element, flags);
+			if (descr != null) {
+				return new PHPElementImageDescriptor(descr,
+						adornmentFlags, size);
+			} else {
+				return null;
+			}
 		}
 	}
 

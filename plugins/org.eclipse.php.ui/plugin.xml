@@ -1515,6 +1515,19 @@
 				</objectClass>
 			</enablement>
 		</decorator>
+		<decorator
+			label="%OverrideIndicatorLabelDecorator.label"
+			lightweight="true"
+			location="BOTTOM_RIGHT"		
+			state="true"
+			class="org.eclipse.php.internal.ui.decorators.OverrideIndicatorLabelDecorator"
+			id="org.eclipse.php.ui.override.decorator">
+		<enablement>
+			<objectClass
+				name="org.eclipse.dltk.core.IMethod">
+			</objectClass>
+		</enablement>
+	</decorator>
 	</extension>
 	
 	<extension point="org.eclipse.ui.decorators">
