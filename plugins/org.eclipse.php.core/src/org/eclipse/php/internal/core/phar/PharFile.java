@@ -409,7 +409,7 @@ public class PharFile {
 	}
 
 	public String getName() {
-		return file.getName();
+		return file.getPath();
 	}
 
 	public List<PharEntry> getPharEntryList() {
