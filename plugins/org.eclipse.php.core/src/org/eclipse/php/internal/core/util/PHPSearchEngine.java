@@ -225,7 +225,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 						entry.getPath(), scriptProject);
 				if (container != null) {
 					IBuildpathEntry[] buildpathEntries = container
-							.getBuildpathEntries(scriptProject);
+							.getBuildpathEntries();
 					if (buildpathEntries != null) {
 						for (IBuildpathEntry buildpathEntry : buildpathEntries) {
 							Result<?, ?> result = searchInBuildpathEntry(path,

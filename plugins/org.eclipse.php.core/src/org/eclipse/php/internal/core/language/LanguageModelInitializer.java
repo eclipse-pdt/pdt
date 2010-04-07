@@ -101,7 +101,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 									containerPath,
 									new IScriptProject[] { scriptProject },
 									new IBuildpathContainer[] { new LanguageModelContainer(
-											containerPath) }, null);
+											containerPath, scriptProject) },
+									null);
 					initializeListener(containerPath, scriptProject);
 				}
 			} catch (Exception e) {

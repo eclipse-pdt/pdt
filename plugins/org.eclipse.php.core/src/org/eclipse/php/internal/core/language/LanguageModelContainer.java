@@ -24,7 +24,10 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuildpathContainer;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -36,9 +39,11 @@ public class LanguageModelContainer implements IBuildpathContainer {
 
 	private IPath containerPath;
 	private IBuildpathEntry[] buildPathEntries;
+	private IScriptProject fProject;
 
-	public LanguageModelContainer(IPath containerPath) {
+	public LanguageModelContainer(IPath containerPath, IScriptProject project) {
 		this.containerPath = containerPath;
+		this.fProject = project;
 	}
 
 	public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
@@ -111,11 +116,7 @@ public class LanguageModelContainer implements IBuildpathContainer {
 		return targetPath;
 	}
 
-	public IBuiltinModuleProvider getBuiltinProvider(IScriptProject project) {
-		return null;
-	}
-
-	public String getDescription(IScriptProject project) {
+	public String getDescription() {
 		return LanguageModelInitializer.PHP_LANGUAGE_LIBRARY;
 	}
 
@@ -127,7 +128,7 @@ public class LanguageModelContainer implements IBuildpathContainer {
 		return containerPath;
 	}
 
-	public IBuildpathEntry[] getRawBuildpathEntries(IScriptProject project) {
-		return getBuildpathEntries(project);
+	public IBuildpathEntry[] getBuildpathEntries() {
+		return getBuildpathEntries(fProject);
 	}
 }
