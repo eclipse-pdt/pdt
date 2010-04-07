@@ -421,17 +421,16 @@ public class TypeBinding implements ITypeBinding {
 						}
 					}
 				}
-				StringBuilder buf = new StringBuilder();
+				List<IType> typeList = new ArrayList<IType>();
 				for (String superTypeName : superTypeNames) {
-					if (buf.length() > 0) {
-						buf.append(',');
-					}
-					buf.append(superTypeName);
-				}
-				if (buf.length() > 0) {
-					superTypes = PhpModelAccess.getDefault().findTypes(
-							buf.toString(), MatchRule.SET, 0,
+					IType[] types = PhpModelAccess.getDefault().findTypes(
+							superTypeName, MatchRule.EXACT, 0,
 							Modifiers.AccNameSpace, scope, null);
+					typeList.addAll(Arrays.asList(types));
+
+				}
+				if (typeList.size() > 0) {
+					superTypes = typeList.toArray(new IType[typeList.size()]);
 				} else {
 					superTypes = new IType[0];
 				}
