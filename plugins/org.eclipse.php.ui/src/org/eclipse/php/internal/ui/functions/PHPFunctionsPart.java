@@ -205,7 +205,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 												LanguageModelInitializer.CONTAINER_PATH),
 										scriptProject);
 						IBuildpathEntry[] buildpathEntries = languageContainer
-								.getBuildpathEntries(scriptProject);
+								.getBuildpathEntries();
 						List<IProjectFragment> fragments = new LinkedList<IProjectFragment>();
 						for (IBuildpathEntry buildpathEntry : buildpathEntries) {
 							IProjectFragment fragment = ((ScriptProject) scriptProject)

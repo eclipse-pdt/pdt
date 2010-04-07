@@ -184,7 +184,7 @@ public class PHPExplorerLabelProvider extends
 			// no matching container - return the path
 		}
 		if (buildpathContainer != null) {
-			return buildpathContainer.getDescription(scriptProject);
+			return buildpathContainer.getDescription();
 		}
 		return iBuildpathEntry.getPath().toOSString();
 	}
