@@ -108,7 +108,7 @@
 			class="org.eclipse.php.internal.debug.ui.launching.PHPExeLaunchShortcut"
 			description="%ScriptLaunch.description" icon="icon/full/obj16/php_exec.gif"
 			id="org.eclipse.php.deubg.ui.phpexeShortcut" label="%phpexeApplicationShortcut.label"
-			modes="run, debug, profile">
+			modes="run, debug">
 			
 			<description description="%runPHPExecutable.description" mode="run" />
     		<description description="%debugPHPExecutable.description" mode="debug" />
