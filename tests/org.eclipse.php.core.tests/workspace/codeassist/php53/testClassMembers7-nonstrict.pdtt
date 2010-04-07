@@ -5,7 +5,7 @@ org.eclipse.php.core/contentAssistShowStrictOptions=false
 <? namespace NS;
    interface A { function a(); }
    namespace OtherNS;
-   interface B extends NS\A { function b(); }
+   interface B extends \NS\A { function b(); }
    function check(B $b) {
        $b->|
    }
