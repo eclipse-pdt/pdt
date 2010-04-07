@@ -66,19 +66,23 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 				if (expr.sourceStart() < offset && expr.sourceEnd() > offset) {
 					if (expr instanceof Include) {
 						Expression fileExpr = ((Include) expr).getExpr();
-						if(fileExpr instanceof InfixExpression) {
-							InfixExpression ie = (InfixExpression)fileExpr;
-							if(ie.getRight() instanceof Scalar) {
+						if (fileExpr instanceof InfixExpression) {
+							InfixExpression ie = (InfixExpression) fileExpr;
+							if (ie.getRight() instanceof Scalar) {
 								fileExpr = ie.getRight();
 							}
 						}
 						if (fileExpr instanceof Scalar) {
-							file[0] = ASTUtils.stripQuotes(((Scalar) fileExpr)
-									.getValue());
-							selectRegion[0] = new Region(
-									fileExpr.sourceStart(), fileExpr
-											.sourceEnd()
-											- fileExpr.sourceStart());
+							String value = ((Scalar) fileExpr).getValue();
+							file[0] = ASTUtils.stripQuotes(value);
+							file[0] = file[0].trim();
+
+							// only select file, without quotes or surrounding
+							// whitespaces
+							int startIdx = fileExpr.sourceStart()
+									+ value.indexOf(file[0]);
+							int length = file[0].length();
+							selectRegion[0] = new Region(startIdx, length);
 						}
 						found = true;
 						return false;
@@ -99,6 +103,9 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 		}
 
 		if (file[0] != null) {
+			if (!inclusive(region, selectRegion[0]))
+				return null;
+
 			ISourceModule includedSourceModule = FileNetworkUtility
 					.findSourceModule(sourceModule, file[0]);
 			if (includedSourceModule != null) {
@@ -108,5 +115,15 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @return true if region1 is included in region2
+	 */
+	private boolean inclusive(IRegion region1, Region region2) {
+		return (region1.getOffset() >= region2.getOffset())
+				&& (region1.getOffset() + region1.getLength() <= region2
+						.getOffset()
+						+ region2.getLength());
 	}
 }
