@@ -21,7 +21,6 @@ import org.eclipse.dltk.core.BuildpathContainerInitializer;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathContainer;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IBuiltinModuleProvider;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
@@ -52,7 +51,8 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 			if (i != -1) {
 				String library = segment.substring(i + LIBRARY.length());
 				BuildpathContainer container = new BuildpathContainer(library
-						+ " Library", containerPath, "libraries/" + library);
+						+ " Library", containerPath, "libraries/" + library,
+						project);
 				DLTKCore.setBuildpathContainer(containerPath,
 						new IScriptProject[] { project },
 						new IBuildpathContainer[] { container }, null);
@@ -66,12 +66,14 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 		private IPath containerPath;
 		private String libraryPath;
 		private IBuildpathEntry[] buildPathEntries;
+		private IScriptProject fProject;
 
 		public BuildpathContainer(String description, IPath containerPath,
-				String libraryPath) {
+				String libraryPath, IScriptProject project) {
 			this.description = description;
 			this.containerPath = containerPath;
 			this.libraryPath = libraryPath;
+			this.fProject = project;
 		}
 
 		public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
@@ -100,11 +102,7 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 			return buildPathEntries;
 		}
 
-		public IBuiltinModuleProvider getBuiltinProvider(IScriptProject project) {
-			return null;
-		}
-
-		public String getDescription(IScriptProject project) {
+		public String getDescription() {
 			return description;
 		}
 
@@ -116,8 +114,8 @@ public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 			return containerPath;
 		}
 
-		public IBuildpathEntry[] getRawBuildpathEntries(IScriptProject project) {
-			return getBuildpathEntries(project);
+		public IBuildpathEntry[] getBuildpathEntries() {
+			return getBuildpathEntries(fProject);
 		}
 	}
 }
