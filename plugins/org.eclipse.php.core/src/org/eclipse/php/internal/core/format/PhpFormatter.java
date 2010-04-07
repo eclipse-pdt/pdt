@@ -316,14 +316,14 @@ public class PhpFormatter implements IStructuredFormatter {
 		// start checking from left and right to the center
 		int leftNonWhitespaceChar = 0;
 		int rightNonWhitespaceChar = lineText.length() - 1;
-		final byte[] bytes = lineText.getBytes();
+		final char[] chars = lineText.toCharArray();
 		boolean keepSearching = true;
 
 		while (keepSearching) {
-			final boolean leftIsWhiteSpace = bytes[leftNonWhitespaceChar] == CHAR_SPACE
-					|| bytes[leftNonWhitespaceChar] == CHAR_TAB;
-			final boolean rightIsWhiteSpace = bytes[rightNonWhitespaceChar] == CHAR_SPACE
-					|| bytes[rightNonWhitespaceChar] == CHAR_TAB;
+			final boolean leftIsWhiteSpace = chars[leftNonWhitespaceChar] == CHAR_SPACE
+					|| chars[leftNonWhitespaceChar] == CHAR_TAB;
+			final boolean rightIsWhiteSpace = chars[rightNonWhitespaceChar] == CHAR_SPACE
+					|| chars[rightNonWhitespaceChar] == CHAR_TAB;
 			if (leftIsWhiteSpace)
 				leftNonWhitespaceChar++;
 			if (rightIsWhiteSpace)
