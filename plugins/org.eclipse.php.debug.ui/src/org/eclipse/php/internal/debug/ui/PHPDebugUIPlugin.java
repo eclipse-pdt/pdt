@@ -37,6 +37,7 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.views.variables.PHPDebugElementAdapterFactory;
@@ -413,6 +414,16 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		 * Handle only the termination events.
 		 */
 		public void launchesTerminated(ILaunch[] launches) {
+			boolean isPHPLaunch = false;
+			for (ILaunch launch : launches) {
+				if (launch instanceof PHPLaunch) {
+					isPHPLaunch = true;
+					break;
+				}
+			}
+			if (!isPHPLaunch) {
+				return;
+			}
 			// In case we have an active debug launches, we can terminate the
 			// event handling because there is no need to switch perspective.
 			Display.getDefault().asyncExec(new Runnable() {
