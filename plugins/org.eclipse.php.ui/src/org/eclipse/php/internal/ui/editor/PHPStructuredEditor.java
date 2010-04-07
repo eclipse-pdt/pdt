@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChang
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.actions.CompositeActionGroup;
+import org.eclipse.dltk.internal.ui.actions.FoldingMessages;
 import org.eclipse.dltk.internal.ui.editor.*;
 import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
@@ -54,6 +55,7 @@ import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.text.source.ImageUtilities;
+import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -106,6 +108,7 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.dnd.IDragAndDropService;
 import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.editors.text.IFoldingCommandIds;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -2035,6 +2038,20 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		resAction
 				.setActionDefinitionId(IScriptEditorActionDefinitionIds.SHOW_OUTLINE); //$NON-NLS-1$
 		setAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
+
+		resAction = new TextOperationAction(
+				FoldingMessages.getResourceBundle(),
+				"Projection.Expand.", this, ProjectionViewer.EXPAND, true); //$NON-NLS-1$
+		resAction.setActionDefinitionId(IFoldingCommandIds.FOLDING_EXPAND);
+		setAction("FoldingExpand", resAction); //$NON-NLS-1$
+		resAction.setEnabled(true);
+
+		resAction = new TextOperationAction(
+				FoldingMessages.getResourceBundle(),
+				"Projection.Collapse.", this, ProjectionViewer.COLLAPSE, true); //$NON-NLS-1$
+		resAction.setActionDefinitionId(IFoldingCommandIds.FOLDING_COLLAPSE);
+		setAction("FoldingCollapse", resAction); //$NON-NLS-1$
+		resAction.setEnabled(true);
 
 		if (isExternal) {
 			// Override the way breakpoints are set on external files.
