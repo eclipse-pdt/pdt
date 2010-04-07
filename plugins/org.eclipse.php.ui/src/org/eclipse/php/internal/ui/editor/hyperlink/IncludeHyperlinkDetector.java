@@ -27,6 +27,7 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
+import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
@@ -65,6 +66,12 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 				if (expr.sourceStart() < offset && expr.sourceEnd() > offset) {
 					if (expr instanceof Include) {
 						Expression fileExpr = ((Include) expr).getExpr();
+						if(fileExpr instanceof InfixExpression) {
+							InfixExpression ie = (InfixExpression)fileExpr;
+							if(ie.getRight() instanceof Scalar) {
+								fileExpr = ie.getRight();
+							}
+						}
 						if (fileExpr instanceof Scalar) {
 							file[0] = ASTUtils.stripQuotes(((Scalar) fileExpr)
 									.getValue());
