@@ -15,14 +15,15 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.OpenStrategy;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.Logger;
@@ -82,31 +83,35 @@ public class OpenAction extends SelectionDispatchAction {
 	 * status according to the selection
 	 */
 	public void selectionChanged(IStructuredSelection selection) {
-	}
-
-	public boolean isEnabled() {
-		ISelection selection = getSelection();
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-			return checkEnabled(structuredSelection);
-		}
-		return true;
+		setEnabled(checkEnabled(selection));
 	}
 
 	private boolean checkEnabled(IStructuredSelection selection) {
 		if (selection.isEmpty())
 			return false;
-		for (Iterator iter = selection.iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element instanceof ISourceModule)
-				continue;
-			if (element instanceof IFile)
-				continue;
-			if (element instanceof IStorage)
-				continue;
-			return false;
+			if (!checkElement(element)) {
+				return false;
+			}
 		}
 		return true;
+	}
+
+	protected boolean checkElement(Object element) {
+		if ((element instanceof ISourceReference)
+				|| ((element instanceof IAdaptable) && (((IAdaptable) element)
+						.getAdapter(ISourceReference.class) != null)))
+			return true;
+		if ((element instanceof IFile)
+				|| ((element instanceof IAdaptable) && (((IAdaptable) element)
+						.getAdapter(IFile.class) != null)))
+			return true;
+		if ((element instanceof IStorage)
+				|| ((element instanceof IAdaptable) && (((IAdaptable) element)
+						.getAdapter(IStorage.class) != null)))
+			return true;
+		return false;
 	}
 
 	/*
