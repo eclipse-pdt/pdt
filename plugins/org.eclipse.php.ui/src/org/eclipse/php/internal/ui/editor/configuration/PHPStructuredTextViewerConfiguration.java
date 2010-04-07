@@ -27,9 +27,7 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.information.IInformationPresenter;
-import org.eclipse.jface.text.information.IInformationProvider;
-import org.eclipse.jface.text.information.InformationPresenter;
+import org.eclipse.jface.text.information.*;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -47,6 +45,7 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistant;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
+import org.eclipse.php.internal.ui.editor.hover.BestMatchHover;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
 import org.eclipse.php.internal.ui.text.PHPInformationHierarchyProvider;
@@ -563,5 +562,46 @@ public class PHPStructuredTextViewerConfiguration extends
 
 	public Map<String, IContentAssistProcessor[]> getProcessorMap() {
 		return processorMap;
+	}
+
+	@Override
+	protected IInformationProvider getInformationProvider(
+			ISourceViewer sourceViewer, String partitionType) {
+		if (!(sourceViewer instanceof PHPStructuredTextViewer))
+			return super.getInformationProvider(sourceViewer, partitionType);
+		ITextHover bestMatchHover = new BestMatchHover(
+				((PHPStructuredTextViewer) sourceViewer).getTextEditor(),
+				PHPUiPlugin.getDefault().getPreferenceStore());
+
+		return new TextHoverInformationProvider(bestMatchHover);
+	}
+
+	class TextHoverInformationProvider implements IInformationProvider,
+			IInformationProviderExtension, IInformationProviderExtension2 {
+		private ITextHover fTextHover;
+
+		public TextHoverInformationProvider(ITextHover hover) {
+			fTextHover = hover;
+		}
+
+		public String getInformation(ITextViewer textViewer, IRegion subject) {
+			return (String) getInformation2(textViewer, subject);
+		}
+
+		public Object getInformation2(ITextViewer textViewer, IRegion subject) {
+			return fTextHover.getHoverInfo(textViewer, subject);
+		}
+
+		public IInformationControlCreator getInformationPresenterControlCreator() {
+			if (fTextHover instanceof IInformationProviderExtension2)
+				return ((IInformationProviderExtension2) fTextHover)
+						.getInformationPresenterControlCreator();
+
+			return null;
+		}
+
+		public IRegion getSubject(ITextViewer textViewer, int offset) {
+			return fTextHover.getHoverRegion(textViewer, offset);
+		}
 	}
 }
