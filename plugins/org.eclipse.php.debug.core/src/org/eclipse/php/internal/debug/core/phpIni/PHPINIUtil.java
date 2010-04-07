@@ -133,7 +133,7 @@ public class PHPINIUtil {
 									.getBuildpathContainer(entry.getPath(),
 											scriptProject);
 							final IBuildpathEntry[] buildpathEntries = buildpathContainer
-									.getBuildpathEntries(scriptProject);
+									.getBuildpathEntries();
 							if (buildpathEntries != null) {
 								for (IBuildpathEntry iBuildpathEntry : buildpathEntries) {
 									final IPath localPath = EnvironmentPathUtils

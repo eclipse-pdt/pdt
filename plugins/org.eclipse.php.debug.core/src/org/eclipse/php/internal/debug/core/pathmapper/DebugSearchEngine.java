@@ -333,7 +333,7 @@ public class DebugSearchEngine {
 													.getPath(), scriptProject);
 									if (buildpathContainer != null) {
 										IBuildpathEntry[] buildpathEntries = buildpathContainer
-												.getBuildpathEntries(scriptProject);
+												.getBuildpathEntries();
 										if (buildpathEntries != null
 												&& buildpathEntries.length > 0) {
 											entryPath = EnvironmentPathUtils
