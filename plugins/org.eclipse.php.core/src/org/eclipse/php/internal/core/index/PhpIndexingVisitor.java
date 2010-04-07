@@ -80,6 +80,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					PHPCorePlugin.ID, EXTENSION_POINT);
 
 	protected NamespaceDeclaration fCurrentNamespace;
+	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();;
 	protected String fCurrentQualifier;
 	protected String fCurrentParent;
 	protected Stack<ASTNode> fNodes = new Stack<ASTNode>();
@@ -134,6 +135,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
 			fCurrentNamespace = null; // there are no nested namespaces
 			fCurrentQualifier = null;
+			fLastUseParts.clear();
 			if (namespaceDecl.isGlobal()) {
 				return visitGeneral(type);
 			}
@@ -226,6 +228,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
 			fCurrentNamespace = namespaceDecl;
+			fLastUseParts.clear();
 			if (namespaceDecl.isGlobal()) {
 				return visitGeneral(type);
 			}
@@ -298,6 +301,24 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				FullyQualifiedReference fullyQualifiedName = (FullyQualifiedReference) nameNode;
 				name = fullyQualifiedName.getFullyQualifiedName();
 				if (fullyQualifiedName.getNamespace() != null) {
+					String namespace = fullyQualifiedName.getNamespace()
+							.getName();
+					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+						name = name.substring(1);
+					} else if (fLastUseParts.containsKey(namespace)) {
+						name = new StringBuilder(fLastUseParts.get(namespace)
+								.getNamespace().getFullyQualifiedName())
+								.append(NamespaceReference.NAMESPACE_SEPARATOR)
+								.append(fullyQualifiedName.getName())
+								.toString();
+					} else if (fCurrentNamespace != null) {
+						name = new StringBuilder(fCurrentNamespace.getName())
+								.append(NamespaceReference.NAMESPACE_SEPARATOR)
+								.append(name).toString();
+					}
+				} else if (fLastUseParts.containsKey(name)) {
+					name = fLastUseParts.get(name).getNamespace()
+							.getFullyQualifiedName();
 					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 						name = name.substring(1);
 					}
@@ -373,6 +394,20 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		final String name = split[1];
 		return name.endsWith("()") ? name.substring(0, name.length() - 2)
 				: name;
+	}
+
+	public boolean visit(UseStatement declaration) throws Exception {
+		Collection<UsePart> parts = declaration.getParts();
+		for (UsePart part : parts) {
+			String name = null;
+			if (part.getAlias() != null) {
+				name = part.getAlias().getName();
+			} else {
+				name = part.getNamespace().getName();
+			}
+			fLastUseParts.put(name, part);
+		}
+		return visitGeneral(declaration);
 	}
 
 	public boolean visit(FieldDeclaration decl) throws Exception {
@@ -567,7 +602,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		if (node instanceof GlobalStatement) {
 			return visit((GlobalStatement) node);
 		}
-
+		if (node instanceof UseStatement) {
+			return visit((UseStatement) node);
+		}
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.visit(node);
 		}
@@ -643,6 +680,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			visitor.endvisit(declaration);
 		}
 
+		fLastUseParts.clear();
 		endvisitGeneral(declaration);
 		return true;
 	}

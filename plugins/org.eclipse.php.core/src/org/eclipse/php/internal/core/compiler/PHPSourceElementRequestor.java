@@ -72,6 +72,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
 
 	protected NamespaceDeclaration fLastNamespace;
+	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();;
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor,
 			IModuleSource sourceModule) {
@@ -263,6 +264,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
 			fLastNamespace = namespaceDecl;
+			fLastUseParts.clear();
 			if (namespaceDecl.isGlobal()) {
 				return true;
 			}
@@ -299,6 +301,24 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				FullyQualifiedReference fullyQualifiedName = (FullyQualifiedReference) nameNode;
 				name = fullyQualifiedName.getFullyQualifiedName();
 				if (fullyQualifiedName.getNamespace() != null) {
+					String namespace = fullyQualifiedName.getNamespace()
+							.getName();
+					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+						name = name.substring(1);
+					} else if (fLastUseParts.containsKey(namespace)) {
+						name = new StringBuilder(fLastUseParts.get(namespace)
+								.getNamespace().getFullyQualifiedName())
+								.append(NamespaceReference.NAMESPACE_SEPARATOR)
+								.append(fullyQualifiedName.getName())
+								.toString();
+					} else if (fLastNamespace != null) {
+						name = new StringBuilder(fLastNamespace.getName())
+								.append(NamespaceReference.NAMESPACE_SEPARATOR)
+								.append(name).toString();
+					}
+				} else if (fLastUseParts.containsKey(name)) {
+					name = fLastUseParts.get(name).getNamespace()
+							.getFullyQualifiedName();
 					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 						name = name.substring(1);
 					}
@@ -594,6 +614,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	public boolean visit(UseStatement declaration) throws Exception {
+		Collection<UsePart> parts = declaration.getParts();
+		for (UsePart part : parts) {
+			String name = null;
+			if (part.getAlias() != null) {
+				name = part.getAlias().getName();
+			} else {
+				name = part.getNamespace().getName();
+			}
+			fLastUseParts.put(name, part);
+		}
+		return true;
+	}
+
 	public boolean visit(ListVariable listVariable) throws Exception {
 		final Collection<? extends Expression> variables = ((ListVariable) listVariable)
 				.getVariables();
@@ -660,6 +694,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (node instanceof GlobalStatement) {
 			return visit((GlobalStatement) node);
+		}
+		if (node instanceof UseStatement) {
+			return visit((UseStatement) node);
 		}
 		return true;
 	}
@@ -735,6 +772,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				deferred.traverse(this);
 			}
 		}
+		fLastUseParts.clear();
 		return super.endvisit(declaration);
 	}
 }
