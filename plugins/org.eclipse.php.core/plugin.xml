@@ -69,7 +69,7 @@
 			base-type="org.eclipse.core.runtime.text"
 			file-extensions="ini,cfg"
 			id="org.eclipse.ui.texteditor"
-			name="Configurataion Files"
+			name="Configuration Files"
 			priority="high">
 		</content-type>
 	</extension>
