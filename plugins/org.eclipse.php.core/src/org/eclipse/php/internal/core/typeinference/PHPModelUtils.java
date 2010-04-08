@@ -41,6 +41,9 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
 
 public class PHPModelUtils {
+	public static final IType[] NULL_TYPES = new IType[0];
+	public static final IMethod[] NULL_METHODS = new IMethod[0];
+	public static final IField[] NULL_FIELDS = new IField[0];
 
 	/**
 	 * Extracts the element name from the given fully qualified name
@@ -477,7 +480,7 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, int offset, IProgressMonitor monitor)
 			throws ModelException {
 		if (fieldName == null || fieldName.length() == 0) {
-			return null;
+			return NULL_FIELDS;
 		}
 		if (!fieldName.startsWith("$")) { // variables are not supported by
 			// namespaces in PHP 5.3
@@ -491,7 +494,7 @@ public class PHPModelUtils {
 					if (fields.length > 0) {
 						return fields;
 					}
-					return null;
+					return NULL_FIELDS;
 				}
 				// it's a global reference: \C
 			} else {
@@ -535,7 +538,7 @@ public class PHPModelUtils {
 			return (IField[]) filteredElements
 					.toArray(new IField[filteredElements.size()]);
 		}
-		return null;
+		return NULL_FIELDS;
 	}
 
 	/**
@@ -559,7 +562,7 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, int offset, IProgressMonitor monitor)
 			throws ModelException {
 		if (functionName == null || functionName.length() == 0) {
-			return null;
+			return NULL_METHODS;
 		}
 		String namespace = extractNamespaceName(functionName, sourceModule,
 				offset);
@@ -571,7 +574,7 @@ public class PHPModelUtils {
 				if (functions.length > 0) {
 					return functions;
 				}
-				return null;
+				return NULL_METHODS;
 			}
 			// it's a global reference: \foo()
 		} else {
@@ -819,7 +822,7 @@ public class PHPModelUtils {
 			return PhpModelAccess.getDefault().findTypes(null, namespace,
 					MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, null);
 		}
-		return null;
+		return NULL_TYPES;
 	}
 
 	/**
@@ -1248,8 +1251,9 @@ public class PHPModelUtils {
 	 */
 	public static IType[] getTypes(String typeName, ISourceModule sourceModule,
 			int offset, IProgressMonitor monitor) throws ModelException {
+
 		if (typeName == null || typeName.length() == 0) {
-			return null;
+			return NULL_TYPES;
 		}
 
 		String namespace = extractNamespaceName(typeName, sourceModule, offset);
@@ -1261,7 +1265,7 @@ public class PHPModelUtils {
 				if (types.length > 0) {
 					return types;
 				}
-				return null;
+				return NULL_TYPES;
 			}
 			// it's a global reference: \A
 		} else {
@@ -1282,16 +1286,13 @@ public class PHPModelUtils {
 		IType[] types = PhpModelAccess.getDefault().findTypes(typeName,
 				MatchRule.EXACT, 0, 0, scope, null);
 		if (types == null) {
-			return null;
+			return NULL_TYPES;
 		}
 
-		List<IType> result = new ArrayList<IType>(types != null ? types.length
-				: 0);
-		if (types != null) {
-			for (IType type : types) {
-				if (getCurrentNamespace(type) == null) {
-					result.add(type);
-				}
+		List<IType> result = new ArrayList<IType>(types.length);
+		for (IType type : types) {
+			if (getCurrentNamespace(type) == null) {
+				result.add(type);
 			}
 		}
 
@@ -1472,12 +1473,14 @@ public class PHPModelUtils {
 	public static boolean hasStaticMember(IType type) {
 		try {
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
-			IModelElement[] members = PHPModelUtils.getTypeHierarchyField(type,hierarchy, "",true, null);
-			if(hasStaticElement(members)){
+			IModelElement[] members = PHPModelUtils.getTypeHierarchyField(type,
+					hierarchy, "", true, null);
+			if (hasStaticElement(members)) {
 				return true;
 			}
-			members = PHPModelUtils.getTypeHierarchyMethod(type,hierarchy, "",true, null);
-			if(hasStaticElement(members)){
+			members = PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, "",
+					true, null);
+			if (hasStaticElement(members)) {
 				return true;
 			}
 		} catch (ModelException e) {
@@ -1488,7 +1491,8 @@ public class PHPModelUtils {
 		return false;
 	}
 
-	public static boolean hasStaticElement(IModelElement[] elements) throws ModelException {
+	public static boolean hasStaticElement(IModelElement[] elements)
+			throws ModelException {
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement modelElement = elements[i];
 			if (modelElement instanceof IMember) {
