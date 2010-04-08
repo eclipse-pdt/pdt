@@ -41,9 +41,6 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
 
 public class PHPModelUtils {
-	public static final IType[] NULL_TYPES = new IType[0];
-	public static final IMethod[] NULL_METHODS = new IMethod[0];
-	public static final IField[] NULL_FIELDS = new IField[0];
 
 	/**
 	 * Extracts the element name from the given fully qualified name
@@ -480,7 +477,7 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, int offset, IProgressMonitor monitor)
 			throws ModelException {
 		if (fieldName == null || fieldName.length() == 0) {
-			return NULL_FIELDS;
+			return PhpModelAccess.NULL_FIELDS;
 		}
 		if (!fieldName.startsWith("$")) { // variables are not supported by
 			// namespaces in PHP 5.3
@@ -494,7 +491,7 @@ public class PHPModelUtils {
 					if (fields.length > 0) {
 						return fields;
 					}
-					return NULL_FIELDS;
+					return PhpModelAccess.NULL_FIELDS;
 				}
 				// it's a global reference: \C
 			} else {
@@ -538,7 +535,7 @@ public class PHPModelUtils {
 			return (IField[]) filteredElements
 					.toArray(new IField[filteredElements.size()]);
 		}
-		return NULL_FIELDS;
+		return PhpModelAccess.NULL_FIELDS;
 	}
 
 	/**
@@ -562,7 +559,7 @@ public class PHPModelUtils {
 			ISourceModule sourceModule, int offset, IProgressMonitor monitor)
 			throws ModelException {
 		if (functionName == null || functionName.length() == 0) {
-			return NULL_METHODS;
+			return PhpModelAccess.NULL_METHODS;
 		}
 		String namespace = extractNamespaceName(functionName, sourceModule,
 				offset);
@@ -574,7 +571,7 @@ public class PHPModelUtils {
 				if (functions.length > 0) {
 					return functions;
 				}
-				return NULL_METHODS;
+				return PhpModelAccess.NULL_METHODS;
 			}
 			// it's a global reference: \foo()
 		} else {
@@ -822,7 +819,7 @@ public class PHPModelUtils {
 			return PhpModelAccess.getDefault().findTypes(null, namespace,
 					MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, null);
 		}
-		return NULL_TYPES;
+		return PhpModelAccess.NULL_TYPES;
 	}
 
 	/**
@@ -1253,7 +1250,7 @@ public class PHPModelUtils {
 			int offset, IProgressMonitor monitor) throws ModelException {
 
 		if (typeName == null || typeName.length() == 0) {
-			return NULL_TYPES;
+			return PhpModelAccess.NULL_TYPES;
 		}
 
 		String namespace = extractNamespaceName(typeName, sourceModule, offset);
@@ -1265,7 +1262,7 @@ public class PHPModelUtils {
 				if (types.length > 0) {
 					return types;
 				}
-				return NULL_TYPES;
+				return PhpModelAccess.NULL_TYPES;
 			}
 			// it's a global reference: \A
 		} else {
@@ -1286,7 +1283,7 @@ public class PHPModelUtils {
 		IType[] types = PhpModelAccess.getDefault().findTypes(typeName,
 				MatchRule.EXACT, 0, 0, scope, null);
 		if (types == null) {
-			return NULL_TYPES;
+			return PhpModelAccess.NULL_TYPES;
 		}
 
 		List<IType> result = new ArrayList<IType>(types.length);
