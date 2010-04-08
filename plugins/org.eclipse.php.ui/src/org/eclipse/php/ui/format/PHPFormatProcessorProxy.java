@@ -1,6 +1,13 @@
-/**
+/*******************************************************************************
+ * Copyright (c) 2009, 2010 Zend Technologies Ltd. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
- */
+ * Contributors:
+ *     Zend Technologies Ltd. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.php.ui.format;
 
 import java.io.IOException;
@@ -101,7 +108,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 			if (file != null) {
 				if (file.exists()) {
 					structuredModel = StructuredModelManager.getModelManager()
-							.getExistingModelForRead(file);
+							.getModelForRead(file);
 					if (structuredModel != null) {
 						document = structuredModel.getStructuredDocument();
 					} else {
@@ -110,18 +117,21 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 					}
 				}
 			}
+
+			if (document != null) {
+				Region region = new Region(0, document.getLength());
+				IContentFormatter formatter = getFormatter();
+				if (formatter != null)
+					formatter.format(document, region);
+			}
+
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 		} finally {
+			// release model after formatting
 			if (structuredModel != null) {
 				structuredModel.releaseFromRead();
 			}
-		}
-		if (document != null) {
-			Region region = new Region(0, document.getLength());
-			IContentFormatter formatter = getFormatter();
-			if (formatter != null)
-				formatter.format(document, region);
 		}
 	}
 
