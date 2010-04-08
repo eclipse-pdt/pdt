@@ -2039,6 +2039,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				.setActionDefinitionId(IScriptEditorActionDefinitionIds.SHOW_OUTLINE); //$NON-NLS-1$
 		setAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
 
+		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=305786
+		// collapse by shortcut does not work
 		resAction = new TextOperationAction(
 				FoldingMessages.getResourceBundle(),
 				"Projection.Expand.", this, ProjectionViewer.EXPAND, true); //$NON-NLS-1$
@@ -2052,6 +2054,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		resAction.setActionDefinitionId(IFoldingCommandIds.FOLDING_COLLAPSE);
 		setAction("FoldingCollapse", resAction); //$NON-NLS-1$
 		resAction.setEnabled(true);
+		// workaround end
 
 		if (isExternal) {
 			// Override the way breakpoints are set on external files.
