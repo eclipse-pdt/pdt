@@ -67,10 +67,7 @@ public class PHPexes {
 	public static PHPexes getInstance() {
 		synchronized (lock) {
 			if (instance == null) {
-				long start = System.currentTimeMillis();
 				instance = new PHPexes();
-				System.out.println("time : "
-						+ (System.currentTimeMillis() - start));
 			}
 			return instance;
 		}
