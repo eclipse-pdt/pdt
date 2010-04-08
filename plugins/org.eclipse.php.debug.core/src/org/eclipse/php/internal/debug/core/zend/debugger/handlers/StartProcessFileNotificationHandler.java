@@ -210,6 +210,8 @@ public class StartProcessFileNotificationHandler implements
 										.equals(new VirtualPath(secondaryId))) {
 							l.add(bp);
 						}
+					} else {
+						l.add(bp);
 					}
 				} catch (Exception e) {
 					PHPDebugPlugin.log(e);
