@@ -161,6 +161,15 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				tokenEnd = tokensContaier.getToken(tokenEnd.getEnd() + 1);
 			}
 
+			boolean shouldDeprecatedKeyword = false;
+			int previousIndex = tokensContaier.phpTokens.indexOf(tokenStart) - 1;
+			if (previousIndex >= 0
+					&& PhpTokenContainer
+							.deprecatedKeywordAfter(tokensContaier.phpTokens
+									.get(previousIndex).getType())) {
+				shouldDeprecatedKeyword = true;
+			}
+
 			int newTokenOffset = tokenStart.getStart();
 
 			if (isHereDoc(tokenStart)) {
@@ -181,6 +190,10 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			Object state = startState;
 			try {
 				String yylex = phpLexer.getNextToken();
+				if (shouldDeprecatedKeyword
+						&& PhpTokenContainer.isKeyword(yylex)) {
+					yylex = PHPRegionTypes.PHP_STRING;
+				}
 				int yylength;
 				final int toOffset = offset + length;
 				while (yylex != null && newTokenOffset <= toOffset
@@ -221,8 +234,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			final ListIterator oldIterator = tokensContaier
 					.removeTokensSubList(tokenStart, tokenEnd);
 			ITextRegion[] newTokens = newContainer.getPhpTokens(); // now, add
-																	// the new
-																	// ones
+			// the new
+			// ones
 			for (int i = 0; i < newTokens.length; i++) {
 				oldIterator.add(newTokens[i]);
 			}

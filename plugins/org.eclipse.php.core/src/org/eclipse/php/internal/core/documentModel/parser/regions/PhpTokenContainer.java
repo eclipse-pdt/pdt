@@ -297,6 +297,15 @@ public class PhpTokenContainer {
 		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start)
 				&& tokensIterator == null;
 
+		if (phpTokens.size() > 0) {
+			ContextRegion lastContextRegion = (ContextRegion) phpTokens
+					.get(phpTokens.size() - 1);
+			if (deprecatedKeywordAfter(lastContextRegion.getType())) {
+				if (isKeyword(yylex)) {
+					yylex = PHPRegionTypes.PHP_STRING;
+				}
+			}
+		}
 		// if state was change - we add a new token and add state
 		if (lexerStateChanges.size() == 0
 				|| !getLastChange().state.equals(lexerState)) {
@@ -321,6 +330,33 @@ public class PhpTokenContainer {
 					yylengthLength, yylength);
 			phpTokens.addLast(contextRegion);
 		}
+	}
+
+	/**
+	 * if the keyword could be use as identifier
+	 * 
+	 * @param yylex
+	 * @return if yylex is one of the keywords that could be use as identifier
+	 */
+	public static boolean isKeyword(String yylex) {
+		if (PHPRegionTypes.PHP_FROM.equals(yylex)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * if the keyword should be a normal identifier after special type
+	 * 
+	 * @param yylex
+	 * @return if the keyword should be a normal identifier after yylex
+	 */
+	public static boolean deprecatedKeywordAfter(String yylex) {
+		if (PHPRegionTypes.PHP_FUNCTION.equals(yylex)
+				|| PHPRegionTypes.PHP_CONST.equals(yylex)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
