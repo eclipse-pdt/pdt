@@ -259,8 +259,13 @@ public class XDebugWebLaunchConfigurationDelegate extends
 	 * @return true if external browser is required
 	 */
 	private boolean openExternal() {
-		return (WebBrowserPreference.EXTERNAL == WebBrowserPreference
-				.getBrowserChoice());
+		final int[] choice = new int[1];
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				choice[0] = WebBrowserPreference.getBrowserChoice();
+			}
+		});
+		return WebBrowserPreference.EXTERNAL == choice[0];
 	}
 
 	/**
