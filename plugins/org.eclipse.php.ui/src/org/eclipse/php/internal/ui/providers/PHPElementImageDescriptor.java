@@ -7,8 +7,7 @@ import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 
-public class PHPElementImageDescriptor extends
-		ScriptElementImageDescriptor {
+public class PHPElementImageDescriptor extends ScriptElementImageDescriptor {
 	/** Flag to render the 'override' adornment. */
 	public final static int OVERRIDES = 0x080;
 
@@ -81,9 +80,7 @@ public class PHPElementImageDescriptor extends
 			addTopRightImage(DLTKPluginImages.DESC_OVR_CONSTRUCTOR, pos);
 		}
 		if ((fFlags & FINAL) != 0) {
-			// TODO change DLTKPluginImages.DESC_OVR_FINAL to
-			// PHPPluginImages.DESC_CONSTANT when there is a red "C" image
-			addTopRightImage(DLTKPluginImages.DESC_OVR_FINAL, pos);
+			addTopRightImage(PHPPluginImages.DESC_OVR_CONSTANT, pos);
 		}
 		if ((fFlags & STATIC) != 0) {
 			addTopRightImage(DLTKPluginImages.DESC_OVR_STATIC, pos);
