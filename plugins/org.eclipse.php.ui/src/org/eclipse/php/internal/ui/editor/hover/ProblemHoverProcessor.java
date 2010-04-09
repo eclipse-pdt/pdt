@@ -21,7 +21,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -31,7 +30,7 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.taginfo.AbstractHoverProcessor;
+import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
 
 /**
  * Hover help that displays annotations shown in text of editor. Currently, this
@@ -42,7 +41,7 @@ import org.eclipse.wst.sse.ui.internal.taginfo.AbstractHoverProcessor;
  * 
  * @author zhaozw
  */
-public class ProblemHoverProcessor extends AbstractHoverProcessor {
+public class ProblemHoverProcessor extends AnnotationHoverProcessor {
 	private final static String LIST_BEGIN = "<ul>"; //$NON-NLS-1$
 	private final static String LIST_ELEMENT = "<li>"; //$NON-NLS-1$
 	private final static String PARAGRAPH_END = "</p>"; //$NON-NLS-1$
@@ -150,37 +149,6 @@ public class ProblemHoverProcessor extends AbstractHoverProcessor {
 			}
 		}
 		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.text.ITextHover#getHoverRegion(org.eclipse.jface.text
-	 * .ITextViewer, int)
-	 */
-	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
-		IAnnotationModel model = ((SourceViewer) textViewer)
-				.getAnnotationModel();
-		Region hoverRegion = null;
-
-		if (model != null) {
-			Iterator e = model.getAnnotationIterator();
-			while (e.hasNext()) {
-				Annotation a = (Annotation) e.next();
-				if (!isAnnotationValid(a))
-					continue;
-				Position p = model.getPosition(a);
-				if (p != null && p.includes(offset)) {
-					// find the smallest region containing offset
-					if ((hoverRegion == null)
-							|| (hoverRegion.getLength() > p.getLength())) {
-						hoverRegion = new Region(p.getOffset(), p.getLength());
-					}
-				}
-			}
-		}
-		return hoverRegion;
 	}
 
 	/**
