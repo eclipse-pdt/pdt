@@ -12,6 +12,9 @@
 
 package org.eclipse.php.internal.core.documentModel.dom;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.IModelElement;
@@ -40,6 +43,14 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
 	}
 
 	public Object getAdapter(Class adapter) {
+		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=302926
+		if (IResource.class == adapter) {
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
+					.getRoot();
+			return workspaceRoot.findMember(getModel().getBaseLocation());
+
+		}
+		// end
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
