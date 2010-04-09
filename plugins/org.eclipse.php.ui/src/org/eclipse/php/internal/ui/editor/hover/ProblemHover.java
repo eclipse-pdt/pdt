@@ -19,12 +19,11 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
 
 public class ProblemHover extends AbstractScriptEditorTextHover implements
 		IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
 
-	private static final AnnotationHoverProcessor annotationHover = new AnnotationHoverProcessor();
+	private static final ProblemHoverProcessor annotationHover = new ProblemHoverProcessor();
 
 	/**
 	 * The hover control creator.
