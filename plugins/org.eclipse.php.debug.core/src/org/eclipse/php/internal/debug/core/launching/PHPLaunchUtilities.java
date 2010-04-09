@@ -954,8 +954,10 @@ public class PHPLaunchUtilities {
 		if (arguments == null || arguments.trim().equals("")) { //$NON-NLS-1$
 			return new String[0];
 		}
-		return VariablesPlugin.getDefault().getStringVariableManager()
-				.performStringSubstitution(arguments).split(" "); //$NON-NLS-1$
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=298606
+		return DebugPlugin.parseArguments(VariablesPlugin.getDefault()
+				.getStringVariableManager()
+				.performStringSubstitution(arguments));
 	}
 
 	/**
@@ -1082,8 +1084,7 @@ public class PHPLaunchUtilities {
 	 */
 	public static String getDebugHost(ILaunchConfiguration launchConfiguration) {
 		try {
-			String url = launchConfiguration.getAttribute(
-					Server.BASE_URL, "");//$NON-NLS-1$
+			String url = launchConfiguration.getAttribute(Server.BASE_URL, "");//$NON-NLS-1$
 			if (url == null || url.length() == 0) {
 				return null;
 			}
