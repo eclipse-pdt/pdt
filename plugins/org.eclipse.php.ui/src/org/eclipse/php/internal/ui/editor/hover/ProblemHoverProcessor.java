@@ -125,9 +125,9 @@ public class ProblemHoverProcessor extends AnnotationHoverProcessor {
 						.getLength())) {
 					String msg = a.getText();
 					if ((msg != null) && msg.trim().length() > 0) {
-						// it is possible for temporary annotations to
-						// duplicate other annotations so make sure not to add
-						// dups
+						// now we only consider ProblemAnnotation,and sometime
+						// we have duplicate ProblemAnnotation for the same
+						// problem,so we filter the duplicate one(s)
 						if (a instanceof ProblemAnnotation) {
 							boolean duplicated = false;
 							int j = 0;
