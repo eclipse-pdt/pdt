@@ -42,6 +42,7 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.UseStatementsNode;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.providers.PHPElementImageDescriptor;
+import org.eclipse.php.internal.ui.providers.PHPElementImageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -316,7 +317,7 @@ public class PHPContentOutlineConfiguration extends
 
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
 		if (fSimpleLabelProvider == null) {
-			fSimpleLabelProvider = new ScriptUILabelProvider();
+			fSimpleLabelProvider = new OutlineLabelProvider();
 			fSimpleLabelProvider
 					.setTextFlags(ScriptElementLabels.DEFAULT_QUALIFIED
 							| ScriptElementLabels.ROOT_POST_QUALIFIED
@@ -382,8 +383,8 @@ public class PHPContentOutlineConfiguration extends
 			Point size = useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
 			ImageDescriptor descr = getBaseImageDescriptor(element, flags);
 			if (descr != null) {
-				return new PHPElementImageDescriptor(descr,
-						adornmentFlags, size);
+				return new PHPElementImageDescriptor(descr, adornmentFlags,
+						size, element);
 			} else {
 				return null;
 			}
@@ -479,4 +480,13 @@ public class PHPContentOutlineConfiguration extends
 		}
 	}
 
+	class OutlineLabelProvider extends ScriptUILabelProvider {
+
+		public OutlineLabelProvider() {
+			super();
+			fImageLabelProvider.dispose();
+			fImageLabelProvider = new PHPElementImageProvider();
+		}
+
+	}
 }

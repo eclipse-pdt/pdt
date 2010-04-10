@@ -1,5 +1,7 @@
 package org.eclipse.php.internal.ui.providers;
 
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -16,12 +18,14 @@ public class PHPElementImageDescriptor extends ScriptElementImageDescriptor {
 
 	ImageDescriptor fBaseImage;
 	private int fFlags;
+	private IModelElement fElement;
 
 	public PHPElementImageDescriptor(ImageDescriptor baseImageDescriptor,
-			int flags, Point size) {
+			int flags, Point size, IModelElement element) {
 		super(baseImageDescriptor, flags, size);
 		fBaseImage = baseImageDescriptor;
 		fFlags = flags;
+		fElement = element;
 	}
 
 	private ImageData getImageData(ImageDescriptor descriptor) {
@@ -80,7 +84,11 @@ public class PHPElementImageDescriptor extends ScriptElementImageDescriptor {
 			addTopRightImage(DLTKPluginImages.DESC_OVR_CONSTRUCTOR, pos);
 		}
 		if ((fFlags & FINAL) != 0) {
-			addTopRightImage(PHPPluginImages.DESC_OVR_CONSTANT, pos);
+			ImageDescriptor imageDescriptor = PHPPluginImages.DESC_OVR_CONSTANT;
+			if (fElement instanceof IType) {
+				imageDescriptor = DLTKPluginImages.DESC_OVR_FINAL;
+			}
+			addTopRightImage(imageDescriptor, pos);
 		}
 		if ((fFlags & STATIC) != 0) {
 			addTopRightImage(DLTKPluginImages.DESC_OVR_STATIC, pos);
@@ -120,4 +128,5 @@ public class PHPElementImageDescriptor extends ScriptElementImageDescriptor {
 			pos.x = x;
 		}
 	}
+
 }

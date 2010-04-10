@@ -13,8 +13,8 @@ public class PHPElementImageProvider extends ScriptElementImageProvider {
 		Point size = useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
 		ImageDescriptor descr = getBaseImageDescriptor(element, flags);
 		if (descr != null) {
-			return new PHPElementImageDescriptor(descr, adornmentFlags,
-					size);
+			return new PHPElementImageDescriptor(descr, adornmentFlags, size,
+					element);
 		} else {
 			return null;
 		}
