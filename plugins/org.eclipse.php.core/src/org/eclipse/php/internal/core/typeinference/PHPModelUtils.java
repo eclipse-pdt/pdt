@@ -1471,12 +1471,12 @@ public class PHPModelUtils {
 		try {
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
 			IModelElement[] members = PHPModelUtils.getTypeHierarchyField(type,
-					hierarchy, "", true, null);
+					hierarchy, "", false, null);
 			if (hasStaticElement(members)) {
 				return true;
 			}
 			members = PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, "",
-					true, null);
+					false, null);
 			if (hasStaticElement(members)) {
 				return true;
 			}
