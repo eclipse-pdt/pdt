@@ -146,9 +146,14 @@ public class PHPStructuredTextViewerConfiguration extends
 					.getTextEditor();
 			if (phpCompletionProcessor == null) {
 				ContentAssistant phpContentAssistant = (ContentAssistant) getPHPContentAssistant(sourceViewer);
-				phpCompletionProcessor = new PHPCompletionProcessor(textEditor,
-						phpContentAssistant, PHPPartitionTypes.PHP_DEFAULT);
-				addContentAssistProcessors(sourceViewer);
+				// phpCompletionProcessor may be initialized in
+				// getPHPContentAssistant call
+				if (phpCompletionProcessor == null) {
+					phpCompletionProcessor = new PHPCompletionProcessor(
+							textEditor, phpContentAssistant,
+							PHPPartitionTypes.PHP_DEFAULT);
+					addContentAssistProcessors(sourceViewer);
+				}
 			}
 
 			if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
