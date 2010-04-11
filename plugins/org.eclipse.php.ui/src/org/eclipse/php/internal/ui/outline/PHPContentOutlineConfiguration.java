@@ -41,12 +41,9 @@ import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.UseStatementsNode;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.php.internal.ui.providers.PHPElementImageDescriptor;
-import org.eclipse.php.internal.ui.providers.PHPElementImageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorPart;
@@ -317,7 +314,7 @@ public class PHPContentOutlineConfiguration extends
 
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
 		if (fSimpleLabelProvider == null) {
-			fSimpleLabelProvider = new OutlineLabelProvider();
+			fSimpleLabelProvider = new ScriptUILabelProvider();
 			fSimpleLabelProvider
 					.setTextFlags(ScriptElementLabels.DEFAULT_QUALIFIED
 							| ScriptElementLabels.ROOT_POST_QUALIFIED
@@ -374,20 +371,6 @@ public class PHPContentOutlineConfiguration extends
 				return DLTKPluginImages.DESC_OBJS_IMPCONT;
 			}
 			return super.getBaseImageDescriptor(element, renderFlags);
-		}
-
-		@Override
-		public ImageDescriptor getScriptImageDescriptor(IModelElement element,
-				int flags) {
-			int adornmentFlags = computeAdornmentFlags(element, flags);
-			Point size = useSmallSize(flags) ? SMALL_SIZE : BIG_SIZE;
-			ImageDescriptor descr = getBaseImageDescriptor(element, flags);
-			if (descr != null) {
-				return new PHPElementImageDescriptor(descr, adornmentFlags,
-						size, element);
-			} else {
-				return null;
-			}
 		}
 	}
 
@@ -478,15 +461,5 @@ public class PHPContentOutlineConfiguration extends
 		public boolean isDynamic() {
 			return true;
 		}
-	}
-
-	class OutlineLabelProvider extends ScriptUILabelProvider {
-
-		public OutlineLabelProvider() {
-			super();
-			fImageLabelProvider.dispose();
-			fImageLabelProvider = new PHPElementImageProvider();
-		}
-
 	}
 }

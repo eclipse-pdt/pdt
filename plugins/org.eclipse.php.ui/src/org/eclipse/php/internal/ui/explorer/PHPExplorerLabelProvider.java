@@ -19,9 +19,9 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
+import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.includepath.IncludePath;
-import org.eclipse.php.internal.ui.providers.OverridenScriptExplorerLabelProvider;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -30,8 +30,7 @@ import org.eclipse.swt.graphics.Image;
  * @author apeled, nirc
  * 
  */
-public class PHPExplorerLabelProvider extends
-		OverridenScriptExplorerLabelProvider {
+public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 	public PHPExplorerLabelProvider(ScriptExplorerContentProvider cp,
 			IPreferenceStore store) {
