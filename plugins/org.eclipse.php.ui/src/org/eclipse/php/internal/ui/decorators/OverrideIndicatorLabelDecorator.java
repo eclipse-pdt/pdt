@@ -100,6 +100,9 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 
 		int adornmentFlags = computeAdornmentFlags(element);
 		if (adornmentFlags != 0) {
+			// since adornmentFlags != 0 then method is IMethod
+			assert element instanceof IMethod;
+
 			ImageDescriptor baseImage = new ImageImageDescriptor(image);
 			Rectangle bounds = image.getBounds();
 			return getRegistry().get(
