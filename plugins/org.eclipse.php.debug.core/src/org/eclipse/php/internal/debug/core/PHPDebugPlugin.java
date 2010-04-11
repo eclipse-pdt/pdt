@@ -31,6 +31,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
@@ -415,9 +416,7 @@ public class PHPDebugPlugin extends Plugin {
 					return PHPexes.getInstance().getItem(phpDebuggerId, phpExe);
 				}
 			}
-			PHPVersion phpVersion = PHPVersion.byAlias(new Key(
-					PHPCorePlugin.ID, Keys.PHP_VERSION).getStoredValue(
-					createPreferenceScopes(project), false, null));
+			PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
 			if (phpVersion != null) {
 				PHPexeItem item = PHPexes.getInstance()
 						.getDefaultItemForPHPVersion(phpVersion);
