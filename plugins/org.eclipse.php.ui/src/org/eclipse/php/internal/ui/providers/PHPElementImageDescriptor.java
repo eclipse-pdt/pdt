@@ -1,7 +1,7 @@
 package org.eclipse.php.internal.ui.providers;
 
+import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -84,9 +84,9 @@ public class PHPElementImageDescriptor extends ScriptElementImageDescriptor {
 			addTopRightImage(DLTKPluginImages.DESC_OVR_CONSTRUCTOR, pos);
 		}
 		if ((fFlags & FINAL) != 0) {
-			ImageDescriptor imageDescriptor = PHPPluginImages.DESC_OVR_CONSTANT;
-			if (fElement instanceof IType) {
-				imageDescriptor = DLTKPluginImages.DESC_OVR_FINAL;
+			ImageDescriptor imageDescriptor = DLTKPluginImages.DESC_OVR_FINAL;
+			if (fElement instanceof IField) {
+				imageDescriptor = PHPPluginImages.DESC_OVR_CONSTANT;
 			}
 			addTopRightImage(imageDescriptor, pos);
 		}
