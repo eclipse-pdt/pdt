@@ -104,7 +104,8 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 			Rectangle bounds = image.getBounds();
 			return getRegistry().get(
 					new PHPElementImageDescriptor(baseImage, adornmentFlags,
-							new Point(bounds.width, bounds.height)));
+							new Point(bounds.width, bounds.height),
+							(IMethod) element));
 		}
 		return image;
 	}
