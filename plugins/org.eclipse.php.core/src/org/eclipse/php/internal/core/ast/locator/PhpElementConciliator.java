@@ -165,7 +165,7 @@ public class PhpElementConciliator {
 		}
 
 		// if it is not a dollared variable - it is not a global one
-		if (scalar.getScalarType() != Scalar.TYPE_STRING
+		if (scalar == null || scalar.getScalarType() != Scalar.TYPE_STRING
 				|| scalar.getStringValue() == null) {
 			return false;
 		}
