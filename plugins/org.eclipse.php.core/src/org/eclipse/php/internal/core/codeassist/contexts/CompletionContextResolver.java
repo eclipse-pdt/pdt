@@ -92,8 +92,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				new UseAliasContext(), new UseNameContext(),
 				new NamespaceMemberContext(), new NamespaceNameContext(),
 				new NamespaceDeclContext(), new IncludeStatementContext(),
-				new ExceptionClassInstantiationContext(),
-		/* new FunctionCreationContext() */};
+				new ExceptionClassInstantiationContext(), };
 	}
 
 	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset,
