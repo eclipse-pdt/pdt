@@ -143,7 +143,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new ClassKeywordsStrategy(
 					context) };
 		}
-		// must before GlobalStatementContext
+		// Context for template
 		if (contextClass == GlobalStatementContextForTemplate.class) {
 			return new ICompletionStrategy[] { new GlobalVariablesStrategy(
 					context, true) };
@@ -152,7 +152,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(
 					context, true) };
 		}
-		// must before GlobalMethodStatementContext
+		// Context for template
 		if (contextClass == GlobalMethodStatementContextForTemplate.class) {
 			return new ICompletionStrategy[] { new LocalMethodVariablesStrategyForTemplate(
 					context) };
