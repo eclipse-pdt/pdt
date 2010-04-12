@@ -28,8 +28,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  * 
  * @author michael
  */
-public final class GlobalStatementContext extends
-		AbstractGlobalStatementContext {
+public class GlobalStatementContext extends AbstractGlobalStatementContext {
 
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {

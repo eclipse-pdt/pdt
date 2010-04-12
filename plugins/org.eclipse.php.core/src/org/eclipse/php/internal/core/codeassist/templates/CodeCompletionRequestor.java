@@ -19,6 +19,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CompletionRequestorExtension;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
 import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalMethodStatementContextForTemplate;
+import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalStatementContextForTemplate;
 
 public class CodeCompletionRequestor extends CompletionRequestor implements
 		CompletionRequestorExtension {
@@ -61,6 +62,7 @@ public class CodeCompletionRequestor extends CompletionRequestor implements
 
 	public ICompletionContext[] createContexts() {
 		return new ICompletionContext[] { new ClassObjMemberContext(),
-				new GlobalMethodStatementContextForTemplate() };
+				new GlobalMethodStatementContextForTemplate(),
+				new GlobalStatementContextForTemplate(), };
 	}
 }

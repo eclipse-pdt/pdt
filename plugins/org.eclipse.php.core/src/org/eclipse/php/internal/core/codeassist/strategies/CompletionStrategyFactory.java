@@ -26,6 +26,7 @@ import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.*;
 import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalMethodStatementContextForTemplate;
+import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalStatementContextForTemplate;
 import org.eclipse.php.internal.core.codeassist.templates.strategies.LocalMethodVariablesStrategyForTemplate;
 
 /**
@@ -98,10 +99,12 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new PHPDocTagStrategy(context) };
 		}
 		if (contextClass == PHPDocVarStartContext.class) {
-			return new ICompletionStrategy[] { new GlobalClassesStrategy(context) };
+			return new ICompletionStrategy[] { new GlobalClassesStrategy(
+					context) };
 		}
 		if (contextClass == PHPDocThrowsStartContext.class) {
-			return new ICompletionStrategy[] { new ExceptionClassStrategy(context) };
+			return new ICompletionStrategy[] { new ExceptionClassStrategy(
+					context) };
 		}
 		if (contextClass == PHPDocParamTagContext.class) {
 			return new ICompletionStrategy[] { new PHPDocParamVariableStrategy(
@@ -139,6 +142,11 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == ClassStatementContext.class) {
 			return new ICompletionStrategy[] { new ClassKeywordsStrategy(
 					context) };
+		}
+		// must before GlobalStatementContext
+		if (contextClass == GlobalStatementContextForTemplate.class) {
+			return new ICompletionStrategy[] { new GlobalVariablesStrategy(
+					context, true) };
 		}
 		if (contextClass == GlobalStatementContext.class) {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(
