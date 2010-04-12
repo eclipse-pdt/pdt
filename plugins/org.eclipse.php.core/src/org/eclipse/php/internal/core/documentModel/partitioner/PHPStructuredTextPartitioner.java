@@ -92,4 +92,14 @@ public class PHPStructuredTextPartitioner extends
 		return super.getPartition(offset);
 	}
 
+	@Override
+	public ITypedRegion[] computePartitioning(int offset, int length) {
+		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=268930
+		ITypedRegion[] result = new ITypedRegion[0];
+		try {
+			result = super.computePartitioning(offset, length);
+		} catch (NullPointerException e) {
+		}
+		return result;
+	}
 }
