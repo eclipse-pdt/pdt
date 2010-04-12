@@ -27,7 +27,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  * 
  * @author michael
  */
-public final class GlobalMethodStatementContext extends
+public class GlobalMethodStatementContext extends
 		AbstractGlobalStatementContext {
 
 	private IMethod enclosingMethod;

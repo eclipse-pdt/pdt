@@ -23,6 +23,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
+import org.eclipse.php.internal.core.codeassist.CompletionRequestorExtension;
 
 /**
  * Default implementation of the {@link ICompletionContextResolver}
@@ -47,8 +48,8 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 	 */
 	public static ICompletionContextResolver[] getActive() {
 		if (instances == null) { // not synchronized since we don't care about
-									// creating multiple instances of resolvers
-									// in worst case
+			// creating multiple instances of resolvers
+			// in worst case
 
 			List<ICompletionContextResolver> resolvers = new LinkedList<ICompletionContextResolver>();
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
@@ -73,7 +74,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 
 	public ICompletionContext[] createContexts() {
 		return new ICompletionContext[] { new PHPDocTagStartContext(),
-				new PHPDocVarStartContext(),new PHPDocThrowsStartContext(),
+				new PHPDocVarStartContext(), new PHPDocThrowsStartContext(),
 				new PHPDocParamTagContext(), new PHPDocReturnTagContext(),
 				new ArrayKeyContext(), new CatchTypeContext(),
 				new CatchVariableContext(),
@@ -91,14 +92,22 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				new UseAliasContext(), new UseNameContext(),
 				new NamespaceMemberContext(), new NamespaceNameContext(),
 				new NamespaceDeclContext(), new IncludeStatementContext(),
-				new ExceptionClassInstantiationContext()};
+				new ExceptionClassInstantiationContext(),
+		/* new FunctionCreationContext() */};
 	}
 
 	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor, CompletionCompanion companion) {
 		List<ICompletionContext> result = new LinkedList<ICompletionContext>();
+		ICompletionContext[] contexts;
+		if (requestor instanceof CompletionRequestorExtension) {
+			contexts = ((CompletionRequestorExtension) requestor)
+					.createContexts();
+		} else {
+			contexts = createContexts();
+		}
 		// find correct completion contexts according to known information:
-		for (ICompletionContext context : createContexts()) {
+		for (ICompletionContext context : contexts) {
 			context.init(companion);
 
 			try {

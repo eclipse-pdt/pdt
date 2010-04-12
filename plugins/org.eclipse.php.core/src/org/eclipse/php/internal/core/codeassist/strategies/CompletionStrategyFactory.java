@@ -25,6 +25,8 @@ import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.*;
+import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalMethodStatementContextForTemplate;
+import org.eclipse.php.internal.core.codeassist.templates.strategies.LocalMethodVariablesStrategyForTemplate;
 
 /**
  * Default implementation of the {@link ICompletionStrategyFactory}
@@ -141,6 +143,11 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == GlobalStatementContext.class) {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(
 					context, true) };
+		}
+		// must before GlobalMethodStatementContext
+		if (contextClass == GlobalMethodStatementContextForTemplate.class) {
+			return new ICompletionStrategy[] { new LocalMethodVariablesStrategyForTemplate(
+					context) };
 		}
 		if (contextClass == GlobalMethodStatementContext.class) {
 			return new ICompletionStrategy[] { new LocalMethodElementsCompositeStrategy(
