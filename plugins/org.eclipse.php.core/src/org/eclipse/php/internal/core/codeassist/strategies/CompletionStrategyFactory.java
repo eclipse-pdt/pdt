@@ -143,19 +143,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new ClassKeywordsStrategy(
 					context) };
 		}
-		// Context for template
-		if (contextClass == GlobalStatementContextForTemplate.class) {
-			return new ICompletionStrategy[] { new GlobalVariablesStrategy(
-					context, true) };
-		}
 		if (contextClass == GlobalStatementContext.class) {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(
 					context, true) };
-		}
-		// Context for template
-		if (contextClass == GlobalMethodStatementContextForTemplate.class) {
-			return new ICompletionStrategy[] { new LocalMethodVariablesStrategyForTemplate(
-					context) };
 		}
 		if (contextClass == GlobalMethodStatementContext.class) {
 			return new ICompletionStrategy[] { new LocalMethodElementsCompositeStrategy(
@@ -215,7 +205,15 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new IncludeStatementStrategy(
 					context) };
 		}
-
+		// Context for template
+		if (contextClass == GlobalStatementContextForTemplate.class) {
+			return new ICompletionStrategy[] { new GlobalVariablesStrategy(
+					context, true) };
+		}
+		if (contextClass == GlobalMethodStatementContextForTemplate.class) {
+			return new ICompletionStrategy[] { new LocalMethodVariablesStrategyForTemplate(
+					context) };
+		}
 		return new ICompletionStrategy[] {};
 	}
 
