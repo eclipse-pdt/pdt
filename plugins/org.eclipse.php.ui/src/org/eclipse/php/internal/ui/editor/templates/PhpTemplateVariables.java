@@ -119,7 +119,7 @@ public class PhpTemplateVariables {
 					.getCompletionOffset();
 			CodeCompletionRequestor requestor = new CodeCompletionRequestor();
 			try {
-				module.codeComplete(offset, requestor, 10000);
+				module.codeComplete(offset, requestor, 1000);
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
 			}
