@@ -1388,7 +1388,7 @@ public class StructuredTextFoldingProviderPHP implements
 						if (i == 0
 								&& (regions.length > 2 || ctx
 										.hasHeaderComment())
-								&& element == ctx.getFirstType()) {
+						/* && element == ctx.getFirstType() */) {
 							commentCollapse = ctx.collapseHeaderComments();
 						} else {
 							commentCollapse = ctx.collapseJavadoc();
