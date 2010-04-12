@@ -42,7 +42,11 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 		super.addScriptResolvers();
 		removeResolver(new ScriptTemplateVariables.Interpreter());
 
-		// empty constructor
-		// TODO should add php specific resolvers?
+		addResolver(new PhpTemplateVariables.Encoding());
+		addResolver(new PhpTemplateVariables.ClassContainer());
+		addResolver(new PhpTemplateVariables.FunctionContainer());
+		addResolver(new PhpTemplateVariables.Variable());
+		addResolver(new PhpTemplateVariables.Index());
+		addResolver(new PhpTemplateVariables.NewVariable());
 	}
 }

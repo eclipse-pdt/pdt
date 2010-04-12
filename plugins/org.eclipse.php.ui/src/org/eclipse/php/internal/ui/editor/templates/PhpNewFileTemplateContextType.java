@@ -43,7 +43,6 @@ public class PhpNewFileTemplateContextType extends ScriptTemplateContextType {
 		super.addScriptResolvers();
 		removeResolver(new ScriptTemplateVariables.Interpreter());
 
-		// empty constructor
-		// TODO : should add php specific resolvers?
+		addResolver(new PhpTemplateVariables.Encoding());
 	}
 }
