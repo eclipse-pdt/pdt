@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.core.search;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
@@ -25,10 +24,7 @@ import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.compiler.util.HashtableOfIntValues;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchMatch;
-import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
 import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
@@ -108,11 +104,6 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 	}
 
-	public PHPMatchLocator(SearchPattern pattern, SearchRequestor requestor,
-			IDLTKSearchScope scope, IProgressMonitor progressMonitor) {
-		super(pattern, requestor, scope, progressMonitor);
-	}
-
 	protected void reportMatching(ModuleDeclaration module,
 			MethodDeclaration method, IModelElement parent, int accuracy,
 			MatchingNodeSet nodeSet) throws CoreException {
@@ -124,7 +115,7 @@ public class PHPMatchLocator extends MatchLocator {
 			enclosingElement = createMethodHandle(method.getName());
 		}
 		if (accuracy > -1 && enclosingElement != null) { // skip if unable to
-															// find method
+			// find method
 			if (encloses(enclosingElement)) {
 				SearchMatch match = null;
 				if (DLTKCore.DEBUG) {
@@ -186,7 +177,7 @@ public class PHPMatchLocator extends MatchLocator {
 			throws CoreException {
 		IModelElement enclosingElement = createHandle(method, parent);
 		if (accuracy > -1 && enclosingElement != null) { // skip if unable to
-															// find method
+			// find method
 			if (encloses(enclosingElement)) {
 				SearchMatch match = null;
 				if (DLTKCore.DEBUG) {
