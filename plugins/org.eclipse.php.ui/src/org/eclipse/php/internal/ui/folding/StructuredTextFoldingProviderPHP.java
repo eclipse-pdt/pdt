@@ -74,7 +74,7 @@ public class StructuredTextFoldingProviderPHP implements
 
 		private final boolean fAllowCollapsing;
 
-		private IType fFirstType;
+		private IModelElement fFirstElement;
 		private boolean fHasHeaderComment;
 		private LinkedHashMap<Object, Position> fMap = new LinkedHashMap<Object, Position>();
 		private ICommentScanner fScanner;
@@ -89,18 +89,18 @@ public class StructuredTextFoldingProviderPHP implements
 			fAllowCollapsing = allowCollapsing;
 		}
 
-		private void setFirstType(IType type) {
-			if (hasFirstType())
+		private void setFirstElement(IModelElement element) {
+			if (hasFirstElement())
 				throw new IllegalStateException();
-			fFirstType = type;
+			fFirstElement = element;
 		}
 
-		boolean hasFirstType() {
-			return fFirstType != null;
+		boolean hasFirstElement() {
+			return fFirstElement != null;
 		}
 
-		private IType getFirstType() {
-			return fFirstType;
+		private IModelElement getFirstElement() {
+			return fFirstElement;
 		}
 
 		private boolean hasHeaderComment() {
@@ -1379,16 +1379,22 @@ public class StructuredTextFoldingProviderPHP implements
 				ctx);
 		if (regions.length > 0) {
 			// comments
+			// use the set to filter the duplicate comment IRegion,or sometimes
+			// you will see the header comment is collapsed but with a expanded
+			// iamge,this is because there are two ProjectionAnnotations for one
+			// comment,and the second ProjectionAnnotation's image overide the
+			// header one
+			Set<IRegion> regionSet = new HashSet<IRegion>();
 			for (int i = 0; i < regions.length - 1; i++) {
 				IRegion normalized = alignRegion(regions[i], ctx);
-				if (normalized != null) {
+				if (normalized != null && regionSet.add(normalized)) {
 					Position position = createCommentPosition(normalized);
 					if (position != null) {
 						boolean commentCollapse;
 						if (i == 0
 								&& (regions.length > 2 || ctx
 										.hasHeaderComment())
-						/* && element == ctx.getFirstType() */) {
+								&& element == ctx.getFirstElement()) {
 							commentCollapse = ctx.collapseHeaderComments();
 						} else {
 							commentCollapse = ctx.collapseJavadoc();
@@ -1436,10 +1442,11 @@ public class StructuredTextFoldingProviderPHP implements
 			ISourceRange range = reference.getSourceRange();
 			if (!SourceRange.isAvailable(range))
 				return new IRegion[0];
-
 			List<IRegion> regions = new ArrayList<IRegion>();
-			if (!ctx.isHeaderChecked()) {
+			if (!ctx.isHeaderChecked() && reference instanceof IModelElement) {
+				ctx.setFirstElement((IModelElement) reference);
 				ctx.setHeaderChecked();
+
 				IRegion headerComment = computeHeaderComment(ctx);
 				if (headerComment != null) {
 					regions.add(headerComment);
