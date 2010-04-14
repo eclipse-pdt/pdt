@@ -175,7 +175,9 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 			Server server = (Server) i.next();
 			PathMapper pathMapper = serverPathMapper.get(server);
 			entry.put("server", server.getName()); //$NON-NLS-1$
-			entry.put("mapper", pathMapper.storeToMap()); //$NON-NLS-1$
+			if (pathMapper != null) {
+				entry.put("mapper", pathMapper.storeToMap()); //$NON-NLS-1$
+			}
 			elements.put("item" + (c++), entry); //$NON-NLS-1$
 		}
 		i = phpExePathMapper.keySet().iterator();
