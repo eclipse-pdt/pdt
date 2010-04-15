@@ -261,10 +261,6 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 				|| fChangeWorkspaceSettings.isDisposed()) {
 			return;
 		}
-
-		if (isProjectPreferencePage()) {
-			fChangeWorkspaceSettings.setEnabled(!useProjectSettings());
-		}
 	}
 
 	protected void setPreferenceContentStatus(IStatus status) {
