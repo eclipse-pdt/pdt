@@ -21,6 +21,7 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
@@ -39,7 +40,7 @@ public final class ParameterGuessingProposal extends
 	private static final char[] NO_TRIGGERS = new char[0];
 	protected static final String LPAREN = "("; //$NON-NLS-1$
 	protected static final String RPAREN = ")"; //$NON-NLS-1$
-	protected static final String COMMA = ","; //$NON-NLS-1$
+	protected static final String COMMA = ", "; //$NON-NLS-1$
 	protected static final String SPACE = " "; //$NON-NLS-1$
 	private CompletionProposal fProposal;
 	private IMethod method;
@@ -165,6 +166,7 @@ public final class ParameterGuessingProposal extends
 	private String computeReplacementString() {
 		fReplacementStringComputed = true;
 		try {
+			CodeAssistUtils.resolveLazyMember(method);
 			// we should get the real constructor here
 			method = getProperMethod(method);
 			if (hasParameters()) {
@@ -196,22 +198,35 @@ public final class ParameterGuessingProposal extends
 
 		setCursorPosition(buffer.length());
 		// show method parameter names:
-		char[][] parameterNames = fProposal.findParameterNames(null);
-		if (parameterNames == null) {
-			parameterNames = new char[0][0];
-			String[] params = null;
-			try {
-				params = method.getParameterNames();
-			} catch (ModelException e) {
-				PHPUiPlugin.log(e);
-			}
-			if (params != null && params.length > 0) {
-				parameterNames = new char[params.length][];
-				for (int i = 0; i < params.length; ++i) {
-					parameterNames[i] = params[i].toCharArray();
+		IParameter[] parameters = method.getParameters();
+		List<String> paramList = new ArrayList<String>();
+		if (parameters != null) {
+			for (int i = 0; i < parameters.length; i++) {
+				IParameter parameter = parameters[i];
+				if (parameter.getDefaultValue() == null) {
+					paramList.add(parameter.getName());
 				}
 			}
 		}
+		char[][] parameterNames = new char[paramList.size()][];
+		for (int i = 0; i < paramList.size(); ++i) {
+			parameterNames[i] = paramList.get(i).toCharArray();
+		}
+		// if (parameterNames == null) {
+		// parameterNames = new char[0][0];
+		// String[] params = null;
+		// try {
+		// params = method.getParameterNames();
+		// } catch (ModelException e) {
+		// PHPUiPlugin.log(e);
+		// }
+		// if (params != null && params.length > 0) {
+		// parameterNames = new char[params.length][];
+		// for (int i = 0; i < params.length; ++i) {
+		// parameterNames[i] = params[i].toCharArray();
+		// }
+		// }
+		// }
 
 		fChoices = guessParameters(parameterNames);
 		int count = fChoices.length;
