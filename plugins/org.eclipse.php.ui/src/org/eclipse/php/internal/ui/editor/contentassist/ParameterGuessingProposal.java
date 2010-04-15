@@ -21,7 +21,6 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
@@ -166,7 +165,6 @@ public final class ParameterGuessingProposal extends
 	private String computeReplacementString() {
 		fReplacementStringComputed = true;
 		try {
-			CodeAssistUtils.resolveLazyMember(method);
 			// we should get the real constructor here
 			method = getProperMethod(method);
 			if (hasParameters()) {
