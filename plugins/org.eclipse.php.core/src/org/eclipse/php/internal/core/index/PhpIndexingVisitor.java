@@ -24,6 +24,7 @@ import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.expressions.Literal;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -52,7 +53,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
 	private static final String EXTENSION_POINT = "phpIndexingVisitors"; //$NON-NLS-1$
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
-
+	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
+	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
 	 * since in php the type declarations can be nested.
@@ -200,7 +202,30 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			Iterator<Argument> i = arguments.iterator();
 			while (i.hasNext()) {
 				Argument arg = (Argument) i.next();
+
+				String type = NULL_VALUE;
+				if (arg instanceof FormalParameter) {
+					FormalParameter fp = (FormalParameter) arg;
+					if (fp.getParameterType() != null) {
+						if (fp.getParameterType().getName() != null) {
+							type = fp.getParameterType().getName();
+						}
+					}
+
+				}
+
+				metadata.append(type);
+				metadata.append(PARAMETER_SEPERATOR);
 				metadata.append(arg.getName());
+				metadata.append(PARAMETER_SEPERATOR);
+				String defaultValue = NULL_VALUE;
+				if (arg.getInitialization() != null) {
+					if (arg.getInitialization() instanceof Literal) {
+						Literal scalar = (Literal) arg.getInitialization();
+						defaultValue = scalar.getValue();
+					}
+				}
+				metadata.append(defaultValue);
 				if (i.hasNext()) {
 					metadata.append(",");
 				}

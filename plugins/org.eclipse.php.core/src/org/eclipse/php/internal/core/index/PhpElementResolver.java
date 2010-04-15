@@ -122,8 +122,24 @@ public class PhpElementResolver implements IElementResolver {
 			if (parameterNames != null) {
 				this.parameters = new IParameter[parameterNames.length];
 				for (int i = 0; i < parameterNames.length; i++) {
-					this.parameters[i] = new MethodParameterInfo(
-							parameterNames[i]);
+					String[] values = parameterNames[i].split("\\"
+							+ PhpIndexingVisitor.PARAMETER_SEPERATOR);
+					if (values.length == 1) {
+						this.parameters[i] = new MethodParameterInfo(values[0]);
+					} else {
+						String type = values[0];
+						if (PhpIndexingVisitor.NULL_VALUE.equals(type)) {
+							type = null;
+						}
+						String param = values[1];
+
+						String defaultValue = values[2];
+						if (PhpIndexingVisitor.NULL_VALUE.equals(defaultValue)) {
+							defaultValue = null;
+						}
+						this.parameters[i] = new MethodParameterInfo(param,
+								type, defaultValue);
+					}
 				}
 			}
 		}
