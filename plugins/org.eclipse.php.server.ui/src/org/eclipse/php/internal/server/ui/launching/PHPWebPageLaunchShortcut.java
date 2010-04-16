@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.DebugUITools;
-import org.eclipse.debug.ui.ILaunchShortcut;
+import org.eclipse.debug.ui.ILaunchShortcut2;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -46,7 +46,7 @@ import org.eclipse.ui.IEditorPart;
  * 
  * @author Shalom Gibly
  */
-public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
+public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
@@ -78,10 +78,10 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 				String phpPathString = null;
 				IProject project = null;
 				Object obj = search[i];
-
+				IResource res = null;
 				if (obj instanceof IModelElement) {
 					IModelElement elem = (IModelElement) obj;
-					IResource res = null;
+
 					if (elem instanceof ISourceModule) {
 						res = ((ISourceModule) elem).getCorrespondingResource();
 					} else if (elem instanceof IType) {
@@ -96,6 +96,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 
 				if (obj instanceof IFile) {
 					IFile file = (IFile) obj;
+					res = file;
 					project = file.getProject();
 					IContentType contentType = Platform.getContentTypeManager()
 							.getContentType(
@@ -150,7 +151,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 				// Launch the app
 				ILaunchConfiguration config = findLaunchConfiguration(project,
 						phpPathString, selectedURL, defaultServer, mode,
-						configType, breakAtFirstLine, showDebugDialog);
+						configType, breakAtFirstLine, showDebugDialog, res);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
@@ -182,13 +183,14 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 	 * found, create one.
 	 * 
 	 * @param breakAtFirstLine
+	 * @param res
 	 * 
 	 * @return a re-useable config or <code>null</code> if none
 	 */
 	static ILaunchConfiguration findLaunchConfiguration(IProject project,
 			String fileName, String selectedURL, Server server, String mode,
 			ILaunchConfigurationType configType, boolean breakAtFirstLine,
-			boolean showDebugDialog) {
+			boolean showDebugDialog, IResource res) {
 		ILaunchConfiguration config = null;
 
 		try {
@@ -212,7 +214,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 			if (config == null) {
 				config = createConfiguration(project, fileName, selectedURL,
 						server, configType, mode, breakAtFirstLine,
-						showDebugDialog);
+						showDebugDialog, res);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -249,7 +251,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 	static ILaunchConfiguration createConfiguration(IProject project,
 			String fileName, String selectedURL, Server server,
 			ILaunchConfigurationType configType, String mode,
-			boolean breakAtFirstLine, boolean showDebugDialog)
+			boolean breakAtFirstLine, boolean showDebugDialog, IResource res)
 			throws CoreException {
 		ILaunchConfiguration config = null;
 		if (!FileUtils.resourceExists(fileName)) {
@@ -287,7 +289,9 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 				.getOpenInBrowserOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 				breakAtFirstLine);
-
+		if (res != null) {
+			wc.setMappedResources(new IResource[] { res });
+		}
 		// Display a dialog for selecting the URL.
 		if (showDebugDialog) {
 			String title = (ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page"
@@ -334,5 +338,61 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		}
 		return DebugPlugin.getDefault().getLaunchManager()
 				.generateUniqueLaunchConfigurationNameFrom(configurationName);
+	}
+
+	public ILaunchConfiguration[] getLaunchConfigurations(ISelection selection) {
+		return null;
+	}
+
+	public ILaunchConfiguration[] getLaunchConfigurations(IEditorPart editorpart) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
+	 * .ui.IEditorPart)
+	 */
+	public IResource getLaunchableResource(IEditorPart editorpart) {
+		return getLaunchableResource(editorpart.getEditorInput());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
+	 * .jface.viewers.ISelection)
+	 */
+	public IResource getLaunchableResource(ISelection selection) {
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection ss = (IStructuredSelection) selection;
+			if (ss.size() == 1) {
+				Object element = ss.getFirstElement();
+				if (element instanceof IAdaptable) {
+					return getLaunchableResource((IAdaptable) element);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the resource containing the Java element associated with the
+	 * given adaptable, or <code>null</code>.
+	 * 
+	 * @param adaptable
+	 *            adaptable object
+	 * @return containing resource or <code>null</code>
+	 */
+	private IResource getLaunchableResource(IAdaptable adaptable) {
+		IModelElement je = (IModelElement) adaptable
+				.getAdapter(IModelElement.class);
+		if (je != null) {
+			return je.getResource();
+		}
+		return null;
 	}
 }
