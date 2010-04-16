@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.DebugUITools;
-import org.eclipse.debug.ui.ILaunchShortcut;
+import org.eclipse.debug.ui.ILaunchShortcut2;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -52,7 +52,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class PHPExeLaunchShortcut implements ILaunchShortcut {
+public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 
 	/**
 	 * PHPExeLaunchShortcut constructor.
@@ -146,10 +146,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				String phpFileLocation = null;
 				IProject project = null;
 				Object obj = search[i];
-
+				IResource res = null;
 				if (obj instanceof IModelElement) {
 					IModelElement elem = (IModelElement) obj;
-					IResource res = null;
+
 					if (elem instanceof ISourceModule) {
 						res = ((ISourceModule) elem).getCorrespondingResource();
 					} else if (elem instanceof IType) {
@@ -163,6 +163,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				}
 				if (obj instanceof IFile) {
 					IFile file = (IFile) obj;
+					res = file;
 					project = file.getProject();
 					IContentType contentType = Platform.getContentTypeManager()
 							.getContentType(
@@ -214,7 +215,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				// Launch the app
 				ILaunchConfiguration config = findLaunchConfiguration(project,
 						phpPathString, phpFileLocation, defaultEXE, mode,
-						configType);
+						configType, res);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
@@ -265,12 +266,14 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	 * Locate a configuration to relaunch for the given type. If one cannot be
 	 * found, create one.
 	 * 
+	 * @param res
+	 * 
 	 * @return a re-useable config or <code>null</code> if none
 	 */
 	protected static ILaunchConfiguration findLaunchConfiguration(
 			IProject phpProject, String phpPathString,
 			String phpFileFullLocation, PHPexeItem defaultEXE, String mode,
-			ILaunchConfigurationType configType) {
+			ILaunchConfigurationType configType, IResource res) {
 		ILaunchConfiguration config = null;
 
 		try {
@@ -297,7 +300,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 			if (config == null) {
 				config = createConfiguration(phpProject, phpPathString,
-						phpFileFullLocation, defaultEXE, configType);
+						phpFileFullLocation, defaultEXE, configType, res);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -307,11 +310,14 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 	/**
 	 * Create & return a new configuration
+	 * 
+	 * @param res
 	 */
 	protected static ILaunchConfiguration createConfiguration(
 			IProject phpProject, String phpPathString,
 			String phpFileFullLocation, PHPexeItem defaultEXE,
-			ILaunchConfigurationType configType) throws CoreException {
+			ILaunchConfigurationType configType, IResource res)
+			throws CoreException {
 		ILaunchConfiguration config = null;
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
 				getNewConfigurationName(phpPathString));
@@ -336,7 +342,9 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 				PHPProjectPreferences.getStopAtFirstLine(phpProject));
-
+		if (res != null) {
+			wc.setMappedResources(new IResource[] { res });
+		}
 		config = wc.doSave();
 
 		return config;
@@ -379,5 +387,61 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		}
 		return DebugPlugin.getDefault().getLaunchManager()
 				.generateUniqueLaunchConfigurationNameFrom(configurationName);
+	}
+
+	public ILaunchConfiguration[] getLaunchConfigurations(ISelection selection) {
+		return null;
+	}
+
+	public ILaunchConfiguration[] getLaunchConfigurations(IEditorPart editorpart) {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
+	 * .ui.IEditorPart)
+	 */
+	public IResource getLaunchableResource(IEditorPart editorpart) {
+		return getLaunchableResource(editorpart.getEditorInput());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.debug.ui.ILaunchShortcut2#getLaunchableResource(org.eclipse
+	 * .jface.viewers.ISelection)
+	 */
+	public IResource getLaunchableResource(ISelection selection) {
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection ss = (IStructuredSelection) selection;
+			if (ss.size() == 1) {
+				Object element = ss.getFirstElement();
+				if (element instanceof IAdaptable) {
+					return getLaunchableResource((IAdaptable) element);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the resource containing the Java element associated with the
+	 * given adaptable, or <code>null</code>.
+	 * 
+	 * @param adaptable
+	 *            adaptable object
+	 * @return containing resource or <code>null</code>
+	 */
+	private IResource getLaunchableResource(IAdaptable adaptable) {
+		IModelElement je = (IModelElement) adaptable
+				.getAdapter(IModelElement.class);
+		if (je != null) {
+			return je.getResource();
+		}
+		return null;
 	}
 }
