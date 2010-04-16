@@ -16,12 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -38,6 +35,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
@@ -119,7 +117,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	public void selectionChanged(IStructuredSelection selection) {
 		if (selection instanceof ITextSelection) {
 			selectionChanged((ITextSelection) selection);
-		}else{
+		} else {
 			setEnabled(isEnabled(selection));
 		}
 	}
@@ -132,7 +130,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			input = ((IAdaptable) input).getAdapter(IModelElement.class);
 		if (!(input instanceof IModelElement))
 			return false;
-		
+
 		switch (((IModelElement) input).getElementType()) {
 		case IModelElement.METHOD:
 			return true;
@@ -251,8 +249,11 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 			if (ast != null) {
 				ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
 				if (selectedNode.getType() == ASTNode.IDENTIFIER) {
-					element = ((Identifier) selectedNode).resolveBinding()
-							.getPHPElement();
+					IBinding binding = ((Identifier) selectedNode)
+							.resolveBinding();
+					if (binding != null) {
+						element = binding.getPHPElement();
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -288,38 +289,39 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 								status);
 				return;
 			}
-			IModelElement element= (IModelElement) input;
-	        if (!ActionUtil.isProcessable(getShell(), element))
-	            return;
-	        List result= new ArrayList(1);
-	        IStatus status= compileCandidates(result, element);
-	        if (status.isOK()) {
-	            run((IModelElement[]) result.toArray(new IModelElement[result.size()]));
-	        } else {
-	            openErrorDialog(status);
-	        }
-//			ISourceModule sourceModule = (ISourceModule) input;
-//			String fileName = sourceModule.getElementName();
-//			IModelElement element = DLTKCore.create(ResourcesPlugin
-//					.getWorkspace().getRoot().getFile(
-//							Path.fromOSString(fileName)));
-//			if (element instanceof ISourceModule) {
-//				int offset = 0;
-//				try {
-//					offset = sourceModule.getSourceRange().getOffset();
-//				} catch (ModelException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}// getUserData().getStopPosition();
-//				IModelElement modelElement = getSelectionModelElement(offset,
-//						1, (ISourceModule) element);
-//				if (modelElement != null) {
-//					if (!ActionUtil.isProcessable(getShell(), modelElement)) {
-//						return;
-//					}
-//					run(new IModelElement[] { modelElement });
-//				}
-//			}
+			IModelElement element = (IModelElement) input;
+			if (!ActionUtil.isProcessable(getShell(), element))
+				return;
+			List result = new ArrayList(1);
+			IStatus status = compileCandidates(result, element);
+			if (status.isOK()) {
+				run((IModelElement[]) result.toArray(new IModelElement[result
+						.size()]));
+			} else {
+				openErrorDialog(status);
+			}
+			// ISourceModule sourceModule = (ISourceModule) input;
+			// String fileName = sourceModule.getElementName();
+			// IModelElement element = DLTKCore.create(ResourcesPlugin
+			// .getWorkspace().getRoot().getFile(
+			// Path.fromOSString(fileName)));
+			// if (element instanceof ISourceModule) {
+			// int offset = 0;
+			// try {
+			// offset = sourceModule.getSourceRange().getOffset();
+			// } catch (ModelException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }// getUserData().getStopPosition();
+			// IModelElement modelElement = getSelectionModelElement(offset,
+			// 1, (ISourceModule) element);
+			// if (modelElement != null) {
+			// if (!ActionUtil.isProcessable(getShell(), modelElement)) {
+			// return;
+			// }
+			// run(new IModelElement[] { modelElement });
+			// }
+			// }
 		}
 	}
 
