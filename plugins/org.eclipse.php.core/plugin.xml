@@ -173,11 +173,15 @@
 
 	<extension
 		point="org.eclipse.dltk.core.search">
-		<seachFactory
+		<searchFactory
 			class="org.eclipse.php.internal.core.search.PHPSearchFactory"
 			nature="org.eclipse.php.core.PHPNature"
 			priority="0">
-		</seachFactory>
+		</searchFactory>
+		<matchLocator
+			class="org.eclipse.php.internal.core.search.PHPMatchLocator"
+			nature="org.eclipse.php.core.PHPNature">
+		</matchLocator>
 	</extension>
 
 	<extension
