@@ -17,10 +17,15 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.util.StatusInfo;
@@ -32,7 +37,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
+import org.osgi.service.prefs.BackingStoreException;
 
 import com.ibm.icu.text.MessageFormat;
 
@@ -309,7 +318,7 @@ public class TodoTaskConfigurationBlock extends
 			fTaskTagsStatus = validateTaskTags();
 		}
 		IStatus status = fTaskTagsStatus; // StatusUtil.getMostSevere(new
-											// IStatus[] { fTaskTagsStatus });
+		// IStatus[] { fTaskTagsStatus });
 		fContext.statusChanged(status);
 	}
 
@@ -408,4 +417,41 @@ public class TodoTaskConfigurationBlock extends
 		}
 	}
 
+	@Override
+	protected void prepareForBuild() {
+		try {
+			fManager.applyChanges();
+		} catch (BackingStoreException e) {
+			PHPUiPlugin.log(e);
+			return;
+		}
+		IEditorReference[] editors = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage()
+				.getEditorReferences();
+		for (int i = 0; i < editors.length; i++) {
+			IEditorReference editorReference = editors[i];
+			IEditorPart editor = editorReference.getEditor(false);
+			if (editor instanceof PHPStructuredEditor) {
+				PHPStructuredEditor phpEditor = (PHPStructuredEditor) editor;
+				boolean isDirty = phpEditor.isDirty();
+				if (phpEditor.getTextViewer() instanceof PHPStructuredTextViewer) {
+					PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) phpEditor
+							.getTextViewer();
+					IDocumentAdapter documentAdapter = textViewer
+							.getDocumentAdapter();
+					IDocument document = phpEditor.getDocument();
+					String content = document.get();
+					if (documentAdapter != null) {
+						documentAdapter.replaceTextRange(0, content.length(),
+								"");
+						documentAdapter.replaceTextRange(0, 0, content);
+					}
+
+				}
+				if (!isDirty) {
+					phpEditor.doSave(null);
+				}
+			}
+		}
+	}
 }

@@ -92,6 +92,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private IAnnotationHover fProjectionAnnotationHover;
 	private boolean fFireSelectionChanged = true;
 
+	private IDocumentAdapter documentAdapter;
+
 	public PHPStructuredTextViewer(Composite parent,
 			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
 			boolean showAnnotationsOverview, int styles) {
@@ -376,7 +378,13 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	@Override
 	protected IDocumentAdapter createDocumentAdapter() {
-		return new StructuredDocumentToTextAdapterForPhp(getTextWidget());
+		documentAdapter = new StructuredDocumentToTextAdapterForPhp(
+				getTextWidget());
+		return documentAdapter;
+	}
+
+	public IDocumentAdapter getDocumentAdapter() {
+		return documentAdapter;
 	}
 
 	/**
@@ -619,7 +627,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			super.selectionChanged(offset, length);
 		}
 	}
-	
+
 	public SourceViewerConfiguration getViewerConfiguration() {
 		return fViewerConfiguration;
 	}

@@ -105,7 +105,7 @@ public abstract class OptionsConfigurationBlock {
 
 	private Shell fShell;
 
-	private final IWorkingCopyManager fManager;
+	protected final IWorkingCopyManager fManager;
 	private IWorkbenchPreferenceContainer fContainer;
 
 	public boolean hasChanges = false;
