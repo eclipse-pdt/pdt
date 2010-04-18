@@ -248,7 +248,8 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 					SharedASTProvider.WAIT_NO, null);
 			if (ast != null) {
 				ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
-				if (selectedNode.getType() == ASTNode.IDENTIFIER) {
+				if (selectedNode != null
+						&& selectedNode.getType() == ASTNode.IDENTIFIER) {
 					IBinding binding = ((Identifier) selectedNode)
 							.resolveBinding();
 					if (binding != null) {
