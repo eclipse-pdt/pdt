@@ -23,6 +23,8 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.ISourceViewerExtension2;
+import org.eclipse.jface.text.source.projection.AnnotationBag;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -290,35 +292,59 @@ public class PHPStructuredTextAnnotationHover extends
 	private List<String> getMarkerMessages(ISourceViewer viewer, int line) {
 
 		IDocument document = viewer.getDocument();
-		IAnnotationModel model = viewer.getAnnotationModel();
-
+		IAnnotationModel model = getAnnotationModel(viewer);
 		List<String> messages = new ArrayList<String>();
 
 		if (model == null) {
 			return messages;
 		}
-
+		HashMap messagesAtPosition = new HashMap();
 		Iterator e = model.getAnnotationIterator();
 		while (e.hasNext()) {
 			Object o = e.next();
 			if (o instanceof Annotation) {
 				Annotation a = (Annotation) o;
 				if (compareRulerLine(model.getPosition(a), document, line) == 1) {
-					String text = null;
-					if (a instanceof MarkerAnnotation) {
-						IMarker marker = ((MarkerAnnotation) a).getMarker();
-						text = marker.getAttribute(IMarker.MESSAGE,
-								(String) null);
+					if (a instanceof AnnotationBag) {
+						AnnotationBag bag = (AnnotationBag) a;
+						Iterator iterator = bag.iterator();
+						while (iterator.hasNext()) {
+							Annotation annotation = (Annotation) iterator
+									.next();
+							addText(model, annotation, messages,
+									messagesAtPosition);
+						}
 					} else {
-						text = a.getText();
+						addText(model, a, messages, messagesAtPosition);
 					}
-					if (text != null) {
-						messages.add(text);
-					}
+
 				}
 			}
 		}
 		return messages;
+	}
+
+	private void addText(IAnnotationModel model, Annotation annotation,
+			List<String> messages, HashMap messagesAtPosition) {
+		Position position = model.getPosition(annotation);
+		if (position != null
+				&& includeAnnotation(annotation, position, messagesAtPosition)) {
+			String text = getText(annotation);
+			if (text != null) {
+				messages.add(text);
+			}
+		}
+	}
+
+	private String getText(Annotation a) {
+		String text = null;
+		if (a instanceof MarkerAnnotation) {
+			IMarker marker = ((MarkerAnnotation) a).getMarker();
+			text = marker.getAttribute(IMarker.MESSAGE, (String) null);
+		} else {
+			text = a.getText();
+		}
+		return text;
 	}
 
 	/**
@@ -352,4 +378,56 @@ public class PHPStructuredTextAnnotationHover extends
 
 		return annotations;
 	}
+
+	/**
+	 * Copy from DefaultAnnotationHover
+	 */
+	private boolean includeAnnotation(Annotation annotation, Position position,
+			HashMap messagesAtPosition) {
+		if (!isIncluded(annotation))
+			return false;
+
+		String text = annotation.getText();
+		return (text != null && !isDuplicateAnnotation(messagesAtPosition,
+				position, text));
+	}
+
+	/**
+	 * Copy from DefaultAnnotationHover
+	 */
+	private boolean isDuplicateAnnotation(Map messagesAtPosition,
+			Position position, String message) {
+		if (messagesAtPosition.containsKey(position)) {
+			Object value = messagesAtPosition.get(position);
+			if (message.equals(value))
+				return true;
+
+			if (value instanceof List) {
+				List messages = (List) value;
+				if (messages.contains(message))
+					return true;
+
+				messages.add(message);
+			} else {
+				ArrayList messages = new ArrayList();
+				messages.add(value);
+				messages.add(message);
+				messagesAtPosition.put(position, messages);
+			}
+		} else
+			messagesAtPosition.put(position, message);
+		return false;
+	}
+
+	/**
+	 * Copy from DefaultAnnotationHover
+	 */
+	private IAnnotationModel getAnnotationModel(ISourceViewer viewer) {
+		if (viewer instanceof ISourceViewerExtension2) {
+			ISourceViewerExtension2 extension = (ISourceViewerExtension2) viewer;
+			return extension.getVisualAnnotationModel();
+		}
+		return viewer.getAnnotationModel();
+	}
+
 }
