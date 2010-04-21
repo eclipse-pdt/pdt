@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
@@ -392,10 +391,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	protected String processTypeName(IType type, String token) {
 		return type.getElementName();
-	}
-
-	public IAssistParser getParser() {
-		return null;
 	}
 
 }
