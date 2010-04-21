@@ -25,7 +25,6 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
@@ -77,10 +76,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final String FUNCTION = "function"; //$NON-NLS-1$
 	private static final IModelElement[] EMPTY = {};
 	private PHPVersion phpVersion;
-
-	public IAssistParser getParser() {
-		return null;
-	}
 
 	public IModelElement[] select(IModuleSource sourceUnit, int offset, int end) {
 
