@@ -99,11 +99,11 @@ public class SuperTypeHierarchyCache {
 		}
 		if (test == null) {
 			ITypeHierarchy hierarchy = getTypeHierarchy(type); // don't nest the
-																// locks
+			// locks
 			synchronized (fgMethodOverrideTesterCache) {
 				test = (MethodOverrideTester) fgMethodOverrideTesterCache
 						.get(type); // test again after waiting a long time for
-									// 'getTypeHierarchy'
+				// 'getTypeHierarchy'
 				if (test == null) {
 					test = new MethodOverrideTester(type, hierarchy);
 					fgMethodOverrideTesterCache.put(type, test);
@@ -130,6 +130,9 @@ public class SuperTypeHierarchyCache {
 	 */
 	public static ITypeHierarchy getTypeHierarchy(IType type,
 			IProgressMonitor progressMonitor) throws ModelException {
+		if (type == null) {
+			return null;
+		}
 		ITypeHierarchy hierarchy = findTypeHierarchyInCache(type);
 		if (hierarchy == null) {
 			fgCacheMisses++;
@@ -189,17 +192,19 @@ public class SuperTypeHierarchyCache {
 	}
 
 	private static ITypeHierarchy findTypeHierarchyInCache(IType type) {
-		synchronized (fgHierarchyCache) {
-			for (int i = fgHierarchyCache.size() - 1; i >= 0; i--) {
-				HierarchyCacheEntry curr = (HierarchyCacheEntry) fgHierarchyCache
-						.get(i);
-				ITypeHierarchy hierarchy = curr.getTypeHierarchy();
-				if (!hierarchy.exists()) {
-					removeHierarchyEntryFromCache(curr);
-				} else {
-					if (hierarchy.contains(type)) {
-						curr.markAsAccessed();
-						return hierarchy;
+		if (type != null) {
+			synchronized (fgHierarchyCache) {
+				for (int i = fgHierarchyCache.size() - 1; i >= 0; i--) {
+					HierarchyCacheEntry curr = (HierarchyCacheEntry) fgHierarchyCache
+							.get(i);
+					ITypeHierarchy hierarchy = curr.getTypeHierarchy();
+					if (!hierarchy.exists()) {
+						removeHierarchyEntryFromCache(curr);
+					} else {
+						if (hierarchy.contains(type)) {
+							curr.markAsAccessed();
+							return hierarchy;
+						}
 					}
 				}
 			}
