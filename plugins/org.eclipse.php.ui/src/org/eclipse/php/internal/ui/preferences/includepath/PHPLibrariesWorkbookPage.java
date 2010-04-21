@@ -54,8 +54,9 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	private final int IDX_ADDZIP = 0;
 	private final int IDX_ADDEXT = 1;
 	private final int IDX_ADDLIB = 2;
-	private final int IDX_ADDFOL = 4;
+	// private final int IDX_ADDFOL = 3;
 	private final int IDX_ADDEXTFOL = 3;
+	private final int IDX_ADDVAR = 4;
 	private final int IDX_EDIT = 5;
 	private final int IDX_REMOVE = 6;
 	private final int IDX_REPLACE = 8;
@@ -87,8 +88,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 				NewWizardMessages.LibrariesWorkbookPage_libraries_addlibrary_button,
 				// NewWizardMessages.LibrariesWorkbookPage_libraries_add_source_folder_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_add_external_source_folder_button,
-				// /* */null,
-				"Add Variables...",
+				IncludePathMessages.LibrariesWorkbookPage_libraries_addvariables_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_edit_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_remove_button,
 				/* */null,
@@ -97,8 +97,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 				NewWizardMessages.LibrariesWorkbookPage_libraries_addlibrary_button,
 				// NewWizardMessages.LibrariesWorkbookPage_libraries_add_source_folder_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_add_external_source_folder_button,
-				// /* */null,
-				"Add Variables...",
+				IncludePathMessages.LibrariesWorkbookPage_libraries_addvariables_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_edit_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_remove_button };
 		String[] buttonLabels;
@@ -253,7 +252,10 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		case IDX_ADDEXTFOL: /* add folder */
 			libentries = opensExtSourceFolderDialog(null, environment);
 			break;
-		case IDX_ADDFOL: /* add variables */
+		// case IDX_ADDFOL: /* add folder */
+		// libentries = opensSourceFolderDialog(null);
+		// break;
+		case IDX_ADDVAR: /* add variables */
 			libentries = addVariablesDialog(null, environment);
 			break;
 		case IDX_EDIT: /* edit */
@@ -615,7 +617,8 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			fLibrariesList.enableButton(IDX_REPLACE + IDX_ADD,
 					getSelectedProjectFragment() != null);
 		}
-		fLibrariesList.enableButton(IDX_ADDFOL + IDX_ADD, noAttributes);
+		// fLibrariesList.enableButton(IDX_ADDFOL+IDX_ADD, noAttributes);
+		fLibrariesList.enableButton(IDX_ADDVAR + IDX_ADD, noAttributes);
 		fLibrariesList.enableButton(IDX_ADDLIB + IDX_ADD, noAttributes);
 	}
 

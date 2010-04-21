@@ -18,6 +18,7 @@ public class IncludePathMessages extends NLS {
 	public static String LibrariesWorkbookPage_libraries_addzip_button;
 	public static String LibrariesWorkbookPage_libraries_addextzip_button;
 	public static String LibrariesWorkbookPage_libraries_replace_button;
+	public static String LibrariesWorkbookPage_libraries_addvariables_button;
 
 	public static String BuildPathsBlock_warning_EntryInvalid;
 
