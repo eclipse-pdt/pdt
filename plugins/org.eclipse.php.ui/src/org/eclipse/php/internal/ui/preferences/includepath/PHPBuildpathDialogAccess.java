@@ -230,4 +230,26 @@ public class PHPBuildpathDialogAccess {
 		return Path.fromOSString(res).makeAbsolute();
 	}
 
+	/**
+	 * Shows the UI for selecting new variable classpath entries. See {@link IClasspathEntry#CPE_VARIABLE} for
+	 * details about variable classpath entries.
+	 * The dialog returns an array of the selected variable entries or <code>null</code> if the dialog has
+	 * been canceled. The dialog does not apply any changes.
+	 *
+	 * @param shell The parent shell for the dialog.
+	 * @param existingPaths An array of paths that are already on the classpath and therefore should not be
+	 * selected again.
+	 * @return Returns an non empty array of the selected variable entries or <code>null</code> if the dialog has
+	 * been canceled.
+	 */
+	public static IPath[] chooseVariableEntries(Shell shell, IEnvironment environment) {
+//		if (existingPaths == null) {
+//			throw new IllegalArgumentException();
+//		}
+		NewVariableEntryDialog dialog= new NewVariableEntryDialog(shell,environment);
+		if (dialog.open() == Window.OK) {
+			return dialog.getResult();
+		}
+		return null;
+	}
 }

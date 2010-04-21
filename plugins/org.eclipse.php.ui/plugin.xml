@@ -1219,6 +1219,12 @@
 			id="org.eclipse.php.ui.preferences.MarkOccurrencesPreferencePage"
 			name="%editorMarkOccurrencesPageName">
 		</page>
+		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+			class="org.eclipse.dltk.ui.preferences.BuildpathVariablesPreferencePage"
+			id="org.eclipse.dltk.ui.preferences.BuildpathVariablesPreferencePage"
+			name="%includePathVariables">
+			<keywordReference id="org.eclipse.php.ui.buildpathVariables" />
+		</page>
 		<!-- Disabled for now. Bug #237211
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.includepath.IncludePathVarsPreferencePage"
@@ -1270,7 +1276,8 @@
 		<keyword label="%preferenceKeywords.editor" id="org.eclipse.php.ui.editor" />
 		<keyword label="%preferenceKeywords.general" id="org.eclipse.php.ui.general" />
 		<keyword label="%preferenceKeywords.functionsManual" id="org.eclipse.php.ui.functionsManual" />
-		<keyword label="%preferenceKeywords.todo" id="org.eclipse.php.ui.todo" />		
+		<keyword label="%preferenceKeywords.todo" id="org.eclipse.php.ui.todo" />	
+		<keyword label="%includePathVariables" id="org.eclipse.php.ui.buildpathVariables"/>
 	</extension>
 
 	<!--History & Others Working Set:-->

@@ -135,6 +135,7 @@ public class PHPPluginImages {
 			+ "library_obj.gif"; //$NON-NLS-1$
 
 	public static final String IMG_TEMPLATE = NAME_PREFIX + "phptpldata16.gif"; //$NON-NLS-1$
+	public static final String IMG_OBJS_EXTJAR = NAME_PREFIX + "jar_l_obj.gif"; //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_MISC_PUBLIC = createManaged(T_OBJ,
 			IMG_MISC_PUBLIC);
@@ -268,6 +269,8 @@ public class PHPPluginImages {
 
 	public static final ImageDescriptor DESC_TEMPLATE = createManaged(
 			CLASS_BROWSER, IMG_TEMPLATE);//$NON-NLS-1$
+	public static final ImageDescriptor DESC_OBJS_EXTJAR = createManaged(T_OBJ,
+			IMG_OBJS_EXTJAR);
 
 	/**
 	 * Returns the image managed under the given key in this registry.

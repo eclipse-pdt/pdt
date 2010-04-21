@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.compiler.util.Util;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathDialogAccess;
@@ -53,7 +54,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	private final int IDX_ADDZIP = 0;
 	private final int IDX_ADDEXT = 1;
 	private final int IDX_ADDLIB = 2;
-	// private final int IDX_ADDFOL = 3;
+	private final int IDX_ADDFOL = 4;
 	private final int IDX_ADDEXTFOL = 3;
 	private final int IDX_EDIT = 5;
 	private final int IDX_REMOVE = 6;
@@ -86,7 +87,8 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 				NewWizardMessages.LibrariesWorkbookPage_libraries_addlibrary_button,
 				// NewWizardMessages.LibrariesWorkbookPage_libraries_add_source_folder_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_add_external_source_folder_button,
-				/* */null,
+				// /* */null,
+				"Add Variables...",
 				NewWizardMessages.LibrariesWorkbookPage_libraries_edit_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_remove_button,
 				/* */null,
@@ -95,7 +97,8 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 				NewWizardMessages.LibrariesWorkbookPage_libraries_addlibrary_button,
 				// NewWizardMessages.LibrariesWorkbookPage_libraries_add_source_folder_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_add_external_source_folder_button,
-				/* */null,
+				// /* */null,
+				"Add Variables...",
 				NewWizardMessages.LibrariesWorkbookPage_libraries_edit_button,
 				NewWizardMessages.LibrariesWorkbookPage_libraries_remove_button };
 		String[] buttonLabels;
@@ -250,9 +253,9 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		case IDX_ADDEXTFOL: /* add folder */
 			libentries = opensExtSourceFolderDialog(null, environment);
 			break;
-		// case IDX_ADDFOL: /* add folder */
-		// libentries = opensSourceFolderDialog(null);
-		// break;
+		case IDX_ADDFOL: /* add variables */
+			libentries = addVariablesDialog(null, environment);
+			break;
 		case IDX_EDIT: /* edit */
 			editEntry();
 			return;
@@ -284,6 +287,29 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			fLibrariesList
 					.postSetSelection(new StructuredSelection(libentries));
 		}
+	}
+
+	private BPListElement[] addVariablesDialog(BPListElement existing,
+			IEnvironment environment) {
+		if (existing == null) {
+			IPath[] selected = PHPBuildpathDialogAccess.chooseVariableEntries(
+					getShell(), environment);
+			if (selected != null) {
+				ArrayList res = new ArrayList();
+				for (int i = 0; i < selected.length; i++) {
+					IPath path = EnvironmentPathUtils.getFullPath(
+							environment,
+							DLTKCore.getBuildpathVariable(selected[i]
+									.segment(0).toString())).append(
+							selected[i].removeFirstSegments(1));
+					res.add(new BPListElement(fCurrJProject,
+							IBuildpathEntry.BPE_LIBRARY, path, null, true));
+				}
+				return (BPListElement[]) res.toArray(new BPListElement[res
+						.size()]);
+			}
+		}
+		return null;
 	}
 
 	public void addElement(BPListElement element) {
@@ -589,7 +615,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 			fLibrariesList.enableButton(IDX_REPLACE + IDX_ADD,
 					getSelectedProjectFragment() != null);
 		}
-		// fLibrariesList.enableButton(IDX_ADDFOL+IDX_ADD, noAttributes);
+		fLibrariesList.enableButton(IDX_ADDFOL + IDX_ADD, noAttributes);
 		fLibrariesList.enableButton(IDX_ADDLIB + IDX_ADD, noAttributes);
 	}
 
