@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -154,12 +155,21 @@ public class AddDescriptionAction extends Action implements
 		try {
 			switch (type) {
 			case IModelElement.TYPE:
+				if (PHPModelUtils.getDocBlock((IType) modelElem) != null) {
+					return null;
+				}
 				comment = createTypeComment((IType) modelElem, lineDelim);
 				break;
 			case IModelElement.FIELD:
+				if (PHPModelUtils.getDocBlock((IField) modelElem) != null) {
+					return null;
+				}
 				comment = createFieldComment((IField) modelElem, lineDelim);
 				break;
 			case IModelElement.METHOD:
+				if (PHPModelUtils.getDocBlock((IMethod) modelElem) != null) {
+					return null;
+				}
 				comment = createMethodComment((IMethod) modelElem, lineDelim);
 				break;
 			default:
