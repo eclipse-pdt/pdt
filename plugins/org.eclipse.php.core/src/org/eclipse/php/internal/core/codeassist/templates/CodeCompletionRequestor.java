@@ -36,8 +36,8 @@ public class CodeCompletionRequestor extends CompletionRequestor implements
 		if (isIgnored(proposal.getKind()))
 			return;
 
-		char[] completion = proposal.getCompletion(); // cut starting dollar
-		String name = String.valueOf(completion, 1, completion.length - 1);
+		String completion = proposal.getCompletion(); // cut starting dollar
+		String name = completion.substring(1);
 
 		switch (proposal.getKind()) {
 		case CompletionProposal.LOCAL_VARIABLE_REF:

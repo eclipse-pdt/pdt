@@ -167,13 +167,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 			CompletionProposal proposal = createProposal(
 					CompletionProposal.FIELD_REF, actualCompletionPosition);
-			proposal.setName(field.getElementName().toCharArray());
+			proposal.setName(field.getElementName());
 
 			String completion = field.getElementName() + suffix;
 			if (removeDollar && completion.startsWith("$")) {
 				completion = completion.substring(1);
 			}
-			proposal.setCompletion(completion.toCharArray());
+			proposal.setCompletion(completion);
 
 			proposal.setModelElement(field);
 			proposal.setFlags(flags);
@@ -203,8 +203,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 			CompletionProposal proposal = createProposal(
 					CompletionProposal.KEYWORD, actualCompletionPosition);
-			proposal.setName(keyword.toCharArray());
-			proposal.setCompletion((keyword + suffix).toCharArray());
+			proposal.setName(keyword);
+			proposal.setCompletion(keyword + suffix);
 			proposal.setRelevance(nextKeywordRelevance());
 			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange
 					.getOffset()
@@ -241,21 +241,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				PHPCorePlugin.log(e);
 			}
 			if (params != null && params.length > 0) {
-				char[][] args = new char[params.length][];
-				for (int i = 0; i < params.length; ++i) {
-					args[i] = params[i].toCharArray();
-				}
-				proposal.setParameterNames(args);
+				proposal.setParameterNames(params);
 			}
 
 			String elementName = method.getElementName();
 			String completionName = elementName;
 
 			proposal.setModelElement(method);
-			proposal.setName(elementName.toCharArray());
+			proposal.setName(elementName);
 
 			int relevance = nextMethodRelevance();
-			proposal.setCompletion((completionName + suffix).toCharArray());
+			proposal.setCompletion((completionName + suffix));
 
 			try {
 				proposal.setIsConstructor(elementName.equals("__construct")
@@ -301,11 +297,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 						if (method.isConstructor()) {
 							String[] params = method.getParameterNames();
 							if (params != null && params.length > 0) {
-								char[][] args = new char[params.length][];
-								for (int i = 0; i < params.length; ++i) {
-									args[i] = params[i].toCharArray();
-								}
-								proposal.setParameterNames(args);
+								proposal.setParameterNames(params);
 							}
 							break;
 						}
@@ -319,10 +311,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			String completionName = elementName;
 
 			proposal.setModelElement(type);
-			proposal.setName(elementName.toCharArray());
+			proposal.setName(elementName);
 
 			int relevance = nextClassRelevance();
-			proposal.setCompletion((completionName + suffix).toCharArray());
+			proposal.setCompletion(completionName + suffix);
 
 			try {
 				proposal.setFlags(type.getFlags());
@@ -363,8 +355,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 					actualCompletionPosition);
 		}
 
-		proposal.setName(relative.toString().toCharArray());
-		proposal.setCompletion((relative.toString() + suffix).toCharArray());
+		proposal.setName(relative.toString());
+		proposal.setCompletion((relative.toString() + suffix));
 		proposal.setRelevance(nextKeywordRelevance());
 		proposal.setReplaceRange(replaceRange.getOffset(), replaceRange
 				.getOffset()
@@ -379,10 +371,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	protected int getEndOfEmptyToken() {
 		return 0;
-	}
-
-	protected String processFieldName(IField field, String token) {
-		return field.getElementName();
 	}
 
 	protected String processMethodName(IMethod method, String token) {
