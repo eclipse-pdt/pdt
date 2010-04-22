@@ -60,17 +60,17 @@ public class PHPCompletionProposalLabelProvider extends
 		appendUnboundedParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')'); //$NON-NLS-1$
 
-		IMethod method = (IMethod) methodProposal.getModelElement();
-		nameBuffer.append(" - "); //$NON-NLS-1$
-
-		IModelElement parent = method.getParent();
-		if (parent instanceof IType) {
-			IType type = (IType) parent;
-			nameBuffer.append(type
-					.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
-		} else {
-			nameBuffer.append(parent.getElementName());
-		}
+		// IMethod method = (IMethod) methodProposal.getModelElement();
+		//		nameBuffer.append(" - "); //$NON-NLS-1$
+		//
+		// IModelElement parent = method.getParent();
+		// if (parent instanceof IType) {
+		// IType type = (IType) parent;
+		// nameBuffer.append(type
+		//					.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
+		// } else {
+		// nameBuffer.append(parent.getElementName());
+		// }
 
 		return nameBuffer.toString();
 	}
@@ -81,9 +81,11 @@ public class PHPCompletionProposalLabelProvider extends
 		nameBuffer.append(typeProposal.getName());
 
 		IType type = (IType) typeProposal.getModelElement();
-		nameBuffer.append(" - "); //$NON-NLS-1$
-		IModelElement parent = type.getParent();
-		nameBuffer.append(parent.getElementName());
+		if (type.getParent() != null) {
+			nameBuffer.append(" - "); //$NON-NLS-1$
+			IModelElement parent = type.getParent();
+			nameBuffer.append(parent.getElementName());
+		}
 
 		return nameBuffer.toString();
 	}
@@ -93,11 +95,13 @@ public class PHPCompletionProposalLabelProvider extends
 		StringBuffer nameBuffer = new StringBuffer();
 
 		nameBuffer.append(proposal.getName());
-
 		IField field = (IField) proposal.getModelElement();
-		nameBuffer.append(" - "); //$NON-NLS-1$
-		IModelElement parent = field.getParent();
-		nameBuffer.append(parent.getElementName());
+		if (field.getParent() != null) {
+
+			nameBuffer.append(" - "); //$NON-NLS-1$
+			IModelElement parent = field.getParent();
+			nameBuffer.append(parent.getElementName());
+		}
 
 		return nameBuffer.toString();
 	}
@@ -109,7 +113,7 @@ public class PHPCompletionProposalLabelProvider extends
 	}
 
 	@Override
-	protected String createTypeProposalLabel(char[] fullName) {
+	protected String createTypeProposalLabel(String fullName) {
 		return super.createTypeProposalLabel(fullName);
 	}
 }
