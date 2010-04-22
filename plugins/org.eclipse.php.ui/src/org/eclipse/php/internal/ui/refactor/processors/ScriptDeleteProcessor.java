@@ -25,7 +25,6 @@ import org.eclipse.dltk.internal.corext.refactoring.RefactoringAvailabilityTeste
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.participants.ResourceProcessors;
 import org.eclipse.dltk.internal.corext.refactoring.participants.ScriptProcessors;
-import org.eclipse.dltk.internal.corext.refactoring.reorg.DeleteModifications;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IConfirmQuery;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgQueries;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ParentChecker;
