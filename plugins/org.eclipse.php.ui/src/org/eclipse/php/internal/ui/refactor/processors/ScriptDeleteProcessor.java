@@ -25,7 +25,10 @@ import org.eclipse.dltk.internal.corext.refactoring.RefactoringAvailabilityTeste
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.participants.ResourceProcessors;
 import org.eclipse.dltk.internal.corext.refactoring.participants.ScriptProcessors;
-import org.eclipse.dltk.internal.corext.refactoring.reorg.*;
+import org.eclipse.dltk.internal.corext.refactoring.reorg.DeleteModifications;
+import org.eclipse.dltk.internal.corext.refactoring.reorg.IConfirmQuery;
+import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgQueries;
+import org.eclipse.dltk.internal.corext.refactoring.reorg.ParentChecker;
 import org.eclipse.dltk.internal.corext.refactoring.tagging.ICommentProvider;
 import org.eclipse.dltk.internal.corext.refactoring.util.ModelElementUtil;
 import org.eclipse.dltk.internal.corext.refactoring.util.ResourceUtil;
@@ -140,7 +143,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 					IScriptFolder scriptFolder = (IScriptFolder) fScriptElements[i];
 					if (scriptFolder.isRootFolder())
 						continue; // see bug 132576 (can remove this if(..)
-									// continue; statement when bug is fixed)
+					// continue; statement when bug is fixed)
 					if (scriptFolder.hasSubfolders())
 						return true;
 				}
@@ -178,7 +181,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm)
 			throws CoreException {
 		Assert.isNotNull(fDeleteQueries);// must be set before checking
-											// activation
+		// activation
 		RefactoringStatus result = new RefactoringStatus();
 		result.merge(RefactoringStatus.create(Resources.checkInSync(ReorgUtils
 				.getNotLinked(fResources))));
@@ -213,15 +216,17 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 
 			recalculateElementsToDelete();
 
-			TextChangeManager manager = new TextChangeManager();
-			fDeleteChange = DeleteChangeCreator.createDeleteChange(manager,
-					fResources, fScriptElements, getProcessorName());
 			checkDirtySourceModules(result);
 			checkDirtyResources(result);
 			fDeleteModifications = new DeleteModifications();
 			fDeleteModifications.delete(fResources);
 			fDeleteModifications.delete(fScriptElements);
-			fDeleteModifications.postProcess();
+			List packageDeletes = fDeleteModifications.postProcess();
+
+			TextChangeManager manager = new TextChangeManager();
+			fDeleteChange = DeleteChangeCreator.createDeleteChange(manager,
+					fResources, fScriptElements, getProcessorName(),
+					packageDeletes);
 
 			ResourceChangeChecker checker = (ResourceChangeChecker) context
 					.getChecker(ResourceChangeChecker.class);
@@ -706,8 +711,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 		if (!ReadOnlyResourceFinder.confirmDeleteOfReadOnlyElements(
 				fScriptElements, fResources, fDeleteQueries))
 			throw new OperationCanceledException(); // saying 'no' to this one
-													// is like cancelling the
-													// whole operation
+		// is like cancelling the
+		// whole operation
 	}
 
 	// ----------- empty source modules related method

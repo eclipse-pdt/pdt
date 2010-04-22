@@ -18,7 +18,6 @@ import java.util.Map;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.corext.refactoring.Checks;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
@@ -45,14 +44,20 @@ class DeleteChangeCreator {
 
 	static Change createDeleteChange(TextChangeManager manager,
 			IResource[] resources, IModelElement[] modelElements,
-			String changeName) throws CoreException {
-		final DynamicValidationStateChange result = new DynamicValidationStateChange(
-				changeName) {
-			public Change perform(IProgressMonitor pm) throws CoreException {
-				super.perform(pm);
-				return null;
-			}
-		};
+			String changeName, List packageDeletes) throws CoreException {
+		// final DynamicValidationStateChange result= new
+		// DynamicValidationStateChange(changeName) {
+		// public Change perform(IProgressMonitor pm) throws CoreException {
+		// super.perform(pm);
+		// return null;
+		// }
+		// };
+		DynamicValidationStateChange result;
+		if (packageDeletes.size() > 0) {
+			result = new UndoablePackageDeleteChange(changeName, packageDeletes);
+		} else {
+			result = new DynamicValidationStateChange(changeName);
+		}
 		for (int i = 0; i < modelElements.length; i++) {
 			IModelElement element = modelElements[i];
 			if (!ReorgUtils.isInsideSourceModule(element))
@@ -83,8 +88,8 @@ class DeleteChangeCreator {
 	private static Change createDeleteChange(IResource resource) {
 		Assert.isTrue(!(resource instanceof IWorkspaceRoot));// cannot be done
 		Assert.isTrue(!(resource instanceof IProject)); // project deletion is
-														// handled by the
-														// workbench
+		// handled by the
+		// workbench
 		if (resource instanceof IFile)
 			return new DeleteFileChange((IFile) resource, true);
 		if (resource instanceof IFolder)
@@ -294,7 +299,7 @@ class DeleteChangeCreator {
 
 			composite.add(new DeleteFromBuildpathChange(root));
 			Assert.isTrue(!Checks.isBuildpathDelete(root));// checked in
-															// preconditions
+			// preconditions
 			composite.add(createDeleteChange(resource));
 
 			return composite;
