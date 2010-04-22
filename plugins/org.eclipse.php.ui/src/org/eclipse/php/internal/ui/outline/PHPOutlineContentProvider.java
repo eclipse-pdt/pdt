@@ -359,5 +359,10 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		public boolean hasChildren() throws ModelException {
 			return getChildren().length > 0;
 		}
+
+		@Override
+		public Object getElementInfo() throws ModelException {
+			return null;
+		}
 	}
 }
