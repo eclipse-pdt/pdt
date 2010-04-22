@@ -17,6 +17,8 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.*;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.dnd.DragSource;
@@ -279,5 +281,21 @@ public class SWTUtil {
 		gd.horizontalSpan = hspan;
 		g.setLayoutData(gd);
 		return g;
+	}
+
+	/**
+	 * Adds an accessibility listener returning the given fixed name.
+	 * 
+	 * @param control
+	 *            the control to add the accessibility support to
+	 * @param text
+	 *            the name
+	 */
+	public static void setAccessibilityText(Control control, final String text) {
+		control.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			public void getName(AccessibleEvent e) {
+				e.result = text;
+			}
+		});
 	}
 }
