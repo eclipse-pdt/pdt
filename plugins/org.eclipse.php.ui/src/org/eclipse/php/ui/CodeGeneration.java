@@ -12,12 +12,15 @@
 package org.eclipse.php.ui;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
@@ -427,11 +430,10 @@ public class CodeGeneration {
 	public static String getMethodComment(IScriptProject sp,
 			String declaringTypeName, String methodName, String[] paramNames,
 			String[] excTypeSig, String retTypeSig, IMethod overridden,
-			String lineDelimiter) throws CoreException {
-		return StubUtility
-				.getMethodComment(sp, declaringTypeName, methodName,
-						paramNames, retTypeSig, EMPTY, overridden, false,
-						lineDelimiter);
+			String lineDelimiter, Set<String> exceptions) throws CoreException {
+		return StubUtility.getMethodComment(sp, declaringTypeName, methodName,
+				paramNames, retTypeSig, EMPTY, overridden, false,
+				lineDelimiter, exceptions);
 	}
 
 	/**
@@ -482,10 +484,10 @@ public class CodeGeneration {
 			String declaringTypeName, String methodName, String[] paramNames,
 			String[] excTypeSig, String retTypeSig,
 			String[] typeParameterNames, IMethod overridden,
-			String lineDelimiter) throws CoreException {
+			String lineDelimiter, Set<String> exceptions) throws CoreException {
 		return StubUtility.getMethodComment(sp, declaringTypeName, methodName,
 				paramNames, retTypeSig, typeParameterNames, overridden, false,
-				lineDelimiter);
+				lineDelimiter, exceptions);
 	}
 
 	/**
@@ -567,7 +569,21 @@ public class CodeGeneration {
 			resolvedBinding = functionDeclaration.resolveFunctionBinding();
 			formalParameters = functionDeclaration.formalParameters();
 		}
-
+		final Set<String> exceptions = new HashSet<String>();
+		elementAt.accept(new AbstractVisitor() {
+			public boolean visit(ThrowStatement throwStatement) {
+				if (throwStatement.getExpression() instanceof ClassInstanceCreation) {
+					ClassInstanceCreation cic = (ClassInstanceCreation) throwStatement
+							.getExpression();
+					if (cic.getClassName().getName() instanceof Identifier) {
+						Identifier name = (Identifier) cic.getClassName()
+								.getName();
+						exceptions.add(name.getName());
+					}
+				}
+				return true;
+			}
+		});
 		if (formalParameters != null) {
 			// get parameter type
 			parameterTypes = new String[formalParameters.size()];
@@ -633,11 +649,12 @@ public class CodeGeneration {
 			return StubUtility.getMethodComment(method.getScriptProject(),
 					declaringType.getElementName(), method.getElementName(),
 					paramNames, retType, typeParameterNames, overridden, false,
-					lineDelimiter);
+					lineDelimiter, exceptions);
 		}
 		return StubUtility.getMethodComment(method.getScriptProject(), null,
 				method.getElementName(), paramNames, retType,
-				typeParameterNames, overridden, false, lineDelimiter);
+				typeParameterNames, overridden, false, lineDelimiter,
+				exceptions);
 	}
 
 	// /**
