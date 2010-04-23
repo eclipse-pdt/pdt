@@ -1138,6 +1138,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	}
 
 	public boolean supportsStepFilters() {
-		return true;
+		return isStepFiltersEnabled;
 	}
 }
