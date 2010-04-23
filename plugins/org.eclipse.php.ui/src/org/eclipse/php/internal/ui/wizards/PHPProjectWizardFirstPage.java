@@ -83,7 +83,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		initializeDialogUnits(parent);
 		final Composite composite = new Composite(parent, SWT.NULL);
 		composite.setFont(parent.getFont());
-		composite.setLayout(initGridLayout(new GridLayout(1, false), true));
+		composite.setLayout(initGridLayout(new GridLayout(1, false), false));
 		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		// create UI elements
 		fNameGroup = new NameGroup(composite, fInitialName);
@@ -185,7 +185,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	 */
 	public GridLayout initGridLayout(GridLayout layout, boolean margins) {
 		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
 		if (margins) {
 			layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
 			layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
@@ -479,7 +478,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					true));
+					false));
 			fGroup.setText(PHPUIMessages
 					.getString("JavaScriptSupportGroup_OptionBlockTitle")); //$NON-NLS-1$
 
@@ -540,7 +539,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fGroup.setFont(composite.getFont());
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					true));
+					false));
 			fGroup.setText(PHPUIMessages
 					.getString("LayoutGroup_OptionBlock_Title")); //$NON-NLS-1$
 
@@ -652,10 +651,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 
 		public LocationGroup(Composite composite) {
 			final int numColumns = 3;
-			final Group group = new Group(composite, SWT.NONE);
+			final Group group = new Group(composite, SWT.None);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					true));
+					false));
 			group
 					.setText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_title);
 			fWorkspaceRadio = new SelectionButtonDialogField(SWT.RADIO);
@@ -859,7 +858,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					true));
+					false));
 			group.setText(PHPUIMessages
 					.getString("VersionGroup_OptionBlock_Title"));//$NON-NLS-1$ 
 			fDefaultValues = new SelectionButtonDialogField(SWT.RADIO);

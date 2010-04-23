@@ -72,7 +72,10 @@ public class PHPVersionConfigurationBlock extends
 	public Control createContents(Composite parent) {
 		setShell(parent.getShell());
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout());
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		composite.setLayout(layout);
 		createVersionContent(composite);
 		// createUseAspTagsContent(composite);
 		unpackPHPVersion();
