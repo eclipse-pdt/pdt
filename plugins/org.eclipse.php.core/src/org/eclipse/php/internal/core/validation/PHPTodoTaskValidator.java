@@ -140,7 +140,11 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 
 									// get the actual message for this task - if
 									// any
-									if (j + 1 < phpTokens.length) {
+									if (j + 1 < phpTokens.length
+											&& !phpTokens[j + 1]
+													.getType()
+													.equals(
+															PHPRegionTypes.PHPDOC_TODO)) {
 										ITextRegion phpNextToken = phpTokens[j + 1];
 										length = length
 												+ phpNextToken.getLength();
