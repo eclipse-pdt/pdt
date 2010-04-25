@@ -44,9 +44,15 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 		fASTRoot = root;
 		if (isIdendifier(node)) {
 			fIdentifier = (Identifier) node;
-			StructuralPropertyDescriptor locationInParent = fIdentifier
-					.getLocationInParent();
-			if (locationInParent != ClassDeclaration.SUPER_CLASS_PROPERTY
+			StructuralPropertyDescriptor locationInParent;
+			if (fIdentifier.getParent() instanceof NamespaceName) {
+				locationInParent = fIdentifier.getParent()
+						.getLocationInParent();
+			} else {
+				locationInParent = fIdentifier.getLocationInParent();
+			}
+			if (locationInParent != NamespaceDeclaration.NAME_PROPERTY
+					&& locationInParent != ClassDeclaration.SUPER_CLASS_PROPERTY
 					&& locationInParent != ClassDeclaration.INTERFACES_PROPERTY
 					&& locationInParent != InterfaceDeclaration.INTERFACES_PROPERTY) {
 				return "ImplementOccurrencesFinder_invalidTarget"; //$NON-NLS-1$
@@ -58,7 +64,12 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 			} else {
 				fBinding = (ITypeBinding) resolvedBinding;
 			}
-			fTypeDeclaration = (TypeDeclaration) fIdentifier.getParent();
+			if (fIdentifier.getParent() instanceof NamespaceName) {
+				fTypeDeclaration = (TypeDeclaration) fIdentifier.getParent()
+						.getParent();
+			} else {
+				fTypeDeclaration = (TypeDeclaration) fIdentifier.getParent();
+			}
 			return null;
 		}
 		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
