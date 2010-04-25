@@ -37,6 +37,7 @@ import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -537,7 +538,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	public boolean visit(ConstantDeclaration declaration) throws Exception {
 		int modifiers = Modifiers.AccConstant | Modifiers.AccPublic
 				| Modifiers.AccFinal;
-
+		if (fCurrentParent != null) {
+			modifiers = modifiers | PHPCoreConstants.AccClassField;
+		}
 		ConstantReference constantName = declaration.getConstantName();
 		int offset = constantName.sourceStart();
 		int length = constantName.sourceEnd();

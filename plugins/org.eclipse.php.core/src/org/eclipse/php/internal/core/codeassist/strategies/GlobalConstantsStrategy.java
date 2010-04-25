@@ -23,7 +23,7 @@ import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
-import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
@@ -114,9 +114,8 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		List<IModelElement> result = new ArrayList<IModelElement>(
 				elements.length);
 		for (IModelElement element : elements) {
-			IType type = (IType) element.getAncestor(IModelElement.TYPE);
 			try {
-				if (type == null || PHPFlags.isNamespace(type.getFlags())) {
+				if ((((IField) element).getFlags() & PHPCoreConstants.AccClassField) == 0) {
 					result.add(element);
 				}
 			} catch (ModelException e) {

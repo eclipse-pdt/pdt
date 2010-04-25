@@ -173,4 +173,6 @@ public interface PHPCoreConstants {
 	 */
 	public static final String PHP_MARKER_TYPE = "org.eclipse.php.core.phpTaskMarker"; //$NON-NLS-1$
 
+	public static final int AccClassField = (1 << 10);
+
 }
