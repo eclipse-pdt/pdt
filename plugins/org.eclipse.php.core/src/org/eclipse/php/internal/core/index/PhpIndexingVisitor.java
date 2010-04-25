@@ -429,6 +429,11 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				name = part.getAlias().getName();
 			} else {
 				name = part.getNamespace().getName();
+				int index = name
+						.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+				if (index >= 0) {
+					name = name.substring(index + 1);
+				}
 			}
 			fLastUseParts.put(name, part);
 		}
