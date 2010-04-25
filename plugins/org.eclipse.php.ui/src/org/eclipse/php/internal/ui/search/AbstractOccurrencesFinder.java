@@ -257,7 +257,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 	public static String getFullName(Identifier identifier,
 			Map<String, UseStatementPart> lastUseParts,
 			NamespaceDeclaration currentNamespace) {
-		return getFullName(identifier, lastUseParts, currentNamespace);
+		return getFullName(identifier.getName(), lastUseParts, currentNamespace);
 	}
 
 	public static String getFullName(String fullName,
