@@ -11,6 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.search;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
@@ -23,6 +27,10 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	public static final String ID = "FunctionOccurrencesFinder"; //$NON-NLS-1$
 	private String functionName;
 	private ASTNode erroneousNode;
+	private Identifier nameNode;
+	private Map<Identifier, String> nodeToFullName = new HashMap<Identifier, String>();
+
+	// private String nameSpace;
 
 	/**
 	 * @param root
@@ -36,8 +44,12 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 		fProblems = getProblems(root);
 
 		if (node.getType() == ASTNode.IDENTIFIER) {
-			functionName = ((Identifier) node).getName();
-
+			nameNode = (Identifier) node;
+			if (nameNode.getParent() instanceof NamespaceName) {
+				nameNode = (NamespaceName) nameNode.getParent();
+			}
+			functionName = ((Identifier) nameNode).getName();
+			// functionName = getFullName(root, identifier);
 			if (hasProblems(node.getStart(), node.getEnd())) {
 				erroneousNode = node;
 			}
@@ -46,6 +58,13 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
 		return fDescription;
 	}
+
+	// public static String getFullName(final Program root,
+	// final Identifier identifier) {
+	// FullNameSearcher visitor = new FunctionFullNameSearcher(identifier);
+	// root.accept(visitor);
+	// return visitor.getFullName();
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -64,6 +83,18 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 					getOccurrenceType(erroneousNode), fDescription));
 		} else {
 			fASTRoot.accept(this);
+			if (nodeToFullName.containsKey(nameNode)) {
+				String fullName = nodeToFullName.get(nameNode);
+				for (Iterator<Identifier> iterator = nodeToFullName.keySet()
+						.iterator(); iterator.hasNext();) {
+					Identifier nameNode = iterator.next();
+					if (nodeToFullName.get(nameNode).equals(fullName)) {
+						fResult.add(new OccurrenceLocation(nameNode.getStart(),
+								nameNode.getLength(),
+								getOccurrenceType(nameNode), fDescription));
+					}
+				}
+			}
 		}
 	}
 
@@ -81,10 +112,13 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (parent.getType() != ASTNode.METHOD_DECLARATION) {
 			// check the function name
 			Identifier name = functionDeclaration.getFunctionName();
-			if (functionName.equalsIgnoreCase(name.getName())) {
-				fResult.add(new OccurrenceLocation(name.getStart(), name
-						.getLength(), getOccurrenceType(name), fDescription));
-			}
+			String fullName = getFullName(name, fLastUseParts,
+					fCurrentNamespace);
+			nodeToFullName.put(name, fullName);
+			// if (this.functionName.equalsIgnoreCase(fullName)) {
+			// fResult.add(new OccurrenceLocation(name.getStart(), name
+			// .getLength(), getOccurrenceType(name), fDescription));
+			// }
 		}
 		return true;
 	}
@@ -96,15 +130,19 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 		final Expression functionName = functionInvocation.getFunctionName()
 				.getName();
 		final int invocationParent = functionInvocation.getParent().getType();
-		if (functionName.getType() == ASTNode.IDENTIFIER
+		if ((functionName.getType() == ASTNode.IDENTIFIER || functionName
+				.getType() == ASTNode.NAMESPACE_NAME)
 				&& invocationParent != ASTNode.METHOD_INVOCATION
 				&& invocationParent != ASTNode.STATIC_METHOD_INVOCATION) {
 			final Identifier identifier = (Identifier) functionName;
-			if (this.functionName.equalsIgnoreCase(identifier.getName())) {
-				fResult.add(new OccurrenceLocation(functionName.getStart(),
-						functionName.getLength(),
-						getOccurrenceType(functionName), fDescription));
-			}
+			String fullName = getFullName(identifier, fLastUseParts,
+					fCurrentNamespace);
+			nodeToFullName.put(identifier, fullName);
+			// if (this.functionName.equalsIgnoreCase(fullName)) {
+			// fResult.add(new OccurrenceLocation(functionName.getStart(),
+			// functionName.getLength(),
+			// getOccurrenceType(functionName), fDescription));
+			// }
 		}
 		return true;
 	}

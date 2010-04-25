@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.search;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
 
@@ -25,6 +28,8 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public static final String ID = "ClassNameOccurrencesFinder"; //$NON-NLS-1$
 	private String className;
 	private TypeDeclaration originalDeclarationNode;
+	private Identifier nameNode;
+	private Map<Identifier, String> nodeToFullName = new HashMap<Identifier, String>();
 
 	/**
 	 * @param root
@@ -36,7 +41,11 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
 		if (node instanceof Identifier) {
-			className = ((Identifier) node).getName();
+			nameNode = (Identifier) node;
+			className = nameNode.getName();
+			if (nameNode.getParent() instanceof NamespaceName) {
+				nameNode = (NamespaceName) nameNode.getParent();
+			}
 			ASTNode parent = node.getParent();
 			if (parent instanceof TypeDeclaration) {
 				originalDeclarationNode = (TypeDeclaration) parent;
@@ -57,12 +66,24 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, className);
 		fASTRoot.accept(this);
+		if (nodeToFullName.containsKey(nameNode)) {
+			String fullName = nodeToFullName.get(nameNode);
+			for (Iterator<Identifier> iterator = nodeToFullName.keySet()
+					.iterator(); iterator.hasNext();) {
+				Identifier nameNode = iterator.next();
+				if (nodeToFullName.get(nameNode).equals(fullName)) {
+					fResult.add(new OccurrenceLocation(nameNode.getStart(),
+							nameNode.getLength(), getOccurrenceType(nameNode),
+							fDescription));
+				}
+			}
+		}
 	}
 
 	public boolean visit(StaticConstantAccess staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		if (className instanceof Identifier) {
-			checkIdentifier((Identifier) className);
+			dealIdentifier((Identifier) className);
 		}
 		return false;
 	}
@@ -70,7 +91,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(StaticFieldAccess staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		if (className instanceof Identifier) {
-			checkIdentifier((Identifier) className);
+			dealIdentifier((Identifier) className);
 		}
 		return false;
 	}
@@ -78,7 +99,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(StaticMethodInvocation staticDispatch) {
 		Expression className = staticDispatch.getClassName();
 		if (className instanceof Identifier) {
-			checkIdentifier((Identifier) className);
+			dealIdentifier((Identifier) className);
 		}
 		return false;
 	}
@@ -86,7 +107,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(ClassName className) {
 		if (className.getName() instanceof Identifier) {
 			Identifier identifier = (Identifier) className.getName();
-			checkIdentifier(identifier);
+			dealIdentifier(identifier);
 		}
 		return false;
 	}
@@ -94,7 +115,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(ClassDeclaration classDeclaration) {
 		if (originalDeclarationNode == null
 				|| originalDeclarationNode == classDeclaration) {
-			checkIdentifier(classDeclaration.getName());
+			dealIdentifier(classDeclaration.getName());
 		}
 		checkSuper(classDeclaration.getSuperClass(), classDeclaration
 				.interfaces());
@@ -104,7 +125,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		if (originalDeclarationNode == null
 				|| originalDeclarationNode == interfaceDeclaration) {
-			checkIdentifier(interfaceDeclaration.getName());
+			dealIdentifier(interfaceDeclaration.getName());
 		}
 		checkSuper(null, interfaceDeclaration.interfaces());
 
@@ -114,7 +135,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(CatchClause catchStatement) {
 		Expression className = catchStatement.getClassName();
 		if (className instanceof Identifier) {
-			checkIdentifier((Identifier) className);
+			dealIdentifier((Identifier) className);
 		}
 		return true;
 	}
@@ -122,7 +143,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(FormalParameter formalParameter) {
 		Expression className = formalParameter.getParameterType();
 		if (className instanceof Identifier) {
-			checkIdentifier((Identifier) className);
+			dealIdentifier((Identifier) className);
 		}
 		return true;
 	}
@@ -138,11 +159,10 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 					.getParent();
 			final Identifier functionName = methodDeclaration.getFunction()
 					.getFunctionName();
-			if (checkForNameEquality(classDeclaration.getName())
-					&& checkForNameEquality(functionName)) {
-				fResult.add(new OccurrenceLocation(functionName.getStart(),
-						functionName.getLength(),
-						getOccurrenceType(methodDeclaration), fDescription));
+			if (checkForNameEquality(functionName)) {
+				String fullName = getFullName(classDeclaration.getName(),
+						fLastUseParts, fCurrentNamespace);
+				nodeToFullName.put(functionName, fullName);
 			}
 		}
 		return true;
@@ -156,12 +176,12 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	private void checkSuper(Expression superClass, List<Identifier> interfaces) {
 		if (superClass instanceof Identifier) {
-			checkIdentifier((Identifier) superClass);
+			dealIdentifier((Identifier) superClass);
 		}
 
 		if (interfaces != null) {
 			for (Identifier identifier : interfaces) {
-				checkIdentifier(identifier);
+				dealIdentifier(identifier);
 			}
 		}
 	}
@@ -169,12 +189,10 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * @param identifier
 	 */
-	private void checkIdentifier(Identifier identifier) {
-		if (checkForNameEquality(identifier)) {
-			fResult.add(new OccurrenceLocation(identifier.getStart(),
-					identifier.getLength(), getOccurrenceType(identifier),
-					fDescription));
-		}
+	private void dealIdentifier(Identifier identifier) {
+		String fullName = getFullName(identifier, fLastUseParts,
+				fCurrentNamespace);
+		nodeToFullName.put(identifier, fullName);
 	}
 
 	private boolean checkForNameEquality(Identifier identifier) {

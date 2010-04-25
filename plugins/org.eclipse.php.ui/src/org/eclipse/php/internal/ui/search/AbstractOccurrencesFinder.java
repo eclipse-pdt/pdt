@@ -12,16 +12,18 @@
 package org.eclipse.php.internal.ui.search;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 
@@ -43,6 +45,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 	protected String fDescription;
 	protected Program fASTRoot;
 	protected ProblemDesc[] fProblems;
+
+	protected NamespaceDeclaration fCurrentNamespace;
+	protected Map<String, UseStatementPart> fLastUseParts = new HashMap<String, UseStatementPart>();
 
 	static class ProblemDesc {
 		int kind;
@@ -217,5 +222,70 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 	 */
 	public String getUnformattedSingularLabel() {
 		return "OccurrencesFinder_label_singular"; //$NON-NLS-1$
+	}
+
+	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
+		fCurrentNamespace = namespaceDeclaration;
+		fLastUseParts.clear();
+		return true;
+	}
+
+	public void endVisit(NamespaceDeclaration namespaceDeclaration) {
+		fCurrentNamespace = null;
+		fLastUseParts.clear();
+	}
+
+	public boolean visit(UseStatement useStatement) {
+		List<UseStatementPart> useParts = useStatement.parts();
+		for (UseStatementPart part : useParts) {
+			String name = null;
+			if (part.getAlias() != null) {
+				name = part.getAlias().getName();
+			} else {
+				name = part.getName().getName();
+				int index = name
+						.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+				if (index >= 0) {
+					name = name.substring(index + 1);
+				}
+			}
+			fLastUseParts.put(name, part);
+		}
+		return true;
+	}
+
+	public static String getFullName(Identifier identifier,
+			Map<String, UseStatementPart> lastUseParts,
+			NamespaceDeclaration currentNamespace) {
+		return getFullName(identifier, lastUseParts, currentNamespace);
+	}
+
+	public static String getFullName(String fullName,
+			Map<String, UseStatementPart> lastUseParts,
+			NamespaceDeclaration currentNamespace) {
+		if (fullName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+			int index = fullName
+					.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+			if (index >= 0) {
+				String namespace = fullName.substring(0, index);
+				if (lastUseParts.containsKey(namespace)) {
+					fullName = new StringBuilder(lastUseParts.get(namespace)
+							.getName().getName()).append(
+							NamespaceReference.NAMESPACE_SEPARATOR).append(
+							fullName.substring(index + 1)).toString();
+				}
+			} else {
+				if (currentNamespace != null) {
+					fullName = new StringBuilder(currentNamespace.getName()
+							.getName()).append(
+							NamespaceReference.NAMESPACE_SEPARATOR).append(
+							fullName).toString();
+				}
+			}
+		}
+		if (fullName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			fullName = fullName.substring(1);
+		}
+		return fullName;
 	}
 }
