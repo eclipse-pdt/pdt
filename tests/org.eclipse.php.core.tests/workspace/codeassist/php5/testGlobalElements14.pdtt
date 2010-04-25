@@ -1,0 +1,12 @@
+--TEST--
+Test Variable Inside String
+--FILE--
+<? 
+define('TEST1', 0);
+class A {
+	const TEST2 = 'test';
+}
+TEST|
+?>
+--EXPECT--
+field(TEST1)
