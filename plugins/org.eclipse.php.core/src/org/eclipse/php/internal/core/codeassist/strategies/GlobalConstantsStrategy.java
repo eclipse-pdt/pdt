@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -20,6 +23,7 @@ import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
@@ -96,12 +100,31 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			enclosingTypeConstants = filterByCase(enclosingTypeConstants,
 					prefix);
 		}
-
+		// workaround for https://bugs.eclipse.org/bugs/show_bug.cgi?id=310383
+		enclosingTypeConstants = filterClassConstants(enclosingTypeConstants);
+		// workaround end
 		SourceRange replaceRange = getReplacementRange(abstractContext);
 		for (IModelElement constant : enclosingTypeConstants) {
 			reporter.reportField((IField) constant, "", replaceRange, false);
 		}
 
+	}
+
+	private IModelElement[] filterClassConstants(IModelElement[] elements) {
+		List<IModelElement> result = new ArrayList<IModelElement>(
+				elements.length);
+		for (IModelElement element : elements) {
+			IType type = (IType) element.getAncestor(IModelElement.TYPE);
+			try {
+				if (type == null || PHPFlags.isNamespace(type.getFlags())) {
+					result.add(element);
+				}
+			} catch (ModelException e) {
+				PHPCorePlugin.log(e);
+			}
+		}
+		return (IModelElement[]) result
+				.toArray(new IModelElement[result.size()]);
 	}
 
 	private IDLTKSearchScope getSearchScope(
