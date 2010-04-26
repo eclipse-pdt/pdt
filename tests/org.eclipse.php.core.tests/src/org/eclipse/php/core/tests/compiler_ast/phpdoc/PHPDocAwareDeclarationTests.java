@@ -16,6 +16,7 @@ import java.io.StringReader;
 
 import junit.framework.Assert;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -33,7 +34,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser;
  * These tests used for checking association between declaration AST node and
  * PHPDoc block assigned to it.
  */
-public class PHPDocAwareDeclarationTests extends TestSuite {
+public class PHPDocAwareDeclarationTests extends TestCase {
 
 	public static Test suite() {
 		return new TestSuite(PHPDocAwareDeclarationTests.class);
