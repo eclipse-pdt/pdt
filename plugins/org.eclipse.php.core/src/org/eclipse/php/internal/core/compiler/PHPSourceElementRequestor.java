@@ -32,6 +32,7 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.IElementRequestor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
+import org.eclipse.dltk.compiler.IElementRequestor.ImportInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
@@ -50,7 +51,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	private static final String CONSTRUCTOR_NAME = "__construct";
 	private static final String VOID_RETURN_TYPE = "void";
-	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");;
+	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
+	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace";
 
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
@@ -628,6 +630,18 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					name = name.substring(index + 1);
 				}
 			}
+			ImportInfo info = new ImportInfo();
+			String containerName;
+			if (fLastNamespace == null) {
+				containerName = GLOBAL_NAMESPACE_CONTAINER_NAME;
+			} else {
+				containerName = fLastNamespace.getName();
+			}
+			info.containerName = containerName;
+			info.name = part.getNamespace().getFullyQualifiedName();
+			info.sourceStart = part.getNamespace().sourceStart();
+			info.sourceEnd = part.getNamespace().sourceEnd();
+			fRequestor.acceptImport(info);
 			fLastUseParts.put(name, part);
 		}
 		return true;
