@@ -1354,9 +1354,9 @@ public class StructuredTextFoldingProviderPHP implements
 		switch (element.getElementType()) {
 
 		// TODO : ask DLTK to have include container
-		// case IModelElement.IMPORT_CONTAINER:
-		// collapse= ctx.collapseImportContainer();
-		// break;
+		case IModelElement.IMPORT_CONTAINER:
+			collapse = ctx.collapseImportContainer();
+			break;
 		case IModelElement.TYPE:
 			collapse = ctx.collapseTypes();
 			break;

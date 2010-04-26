@@ -201,6 +201,9 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				return (parent.getElementType() == IModelElement.METHOD);
 			}
 		}
+		if (element.getElementType() == IModelElement.IMPORT_CONTAINER) {
+			return true;
+		}
 		return false;
 	}
 
@@ -341,7 +344,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			}
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
 					.getModuleDeclaration(sourceModule);
-			if(moduleDeclaration == null)
+			if (moduleDeclaration == null)
 				return new IModelElement[0];
 			UseStatement[] useStatements = ASTUtils.getUseStatements(
 					moduleDeclaration, moduleDeclaration.sourceEnd());

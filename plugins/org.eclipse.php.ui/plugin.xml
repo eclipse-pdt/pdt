@@ -528,6 +528,10 @@
 			description="%HideFields.description" class="org.eclipse.dltk.internal.ui.filters.FieldsFilter"
 			id="org.eclipse.php.ui.explorer.FieldsFilter">
 		</filter>
+		<filter name="%HideUseStatements.label" enabled="true"
+			description="%HideUseStatements.description" class="org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter"
+			id="org.eclipse.php.ui.explorer.UseStatementFilter">
+		</filter>
 		<filter name="%HideNonPublic.label" enabled="false"
 			description="%HideNonPublic.description" class="org.eclipse.php.internal.ui.filters.NonPublicFilter"
 			id="org.eclipse.php.ui.explorer.NonPublicFilter" />
