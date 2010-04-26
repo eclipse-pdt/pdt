@@ -355,8 +355,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	 * updateControls()
 	 */
 	protected void updateControls() {
-		// fGenerateComments.setSelection(getBooleanValue(PREF_GENERATE_COMMENTS));
-		fGenerateComments.setSelection(false);
+		fGenerateComments.setSelection(getBooleanValue(PREF_GENERATE_COMMENTS));
 	}
 
 	private SourceViewer createViewer(Composite parent, int nColumns) {
