@@ -48,7 +48,7 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
 				PHPCoreConstants.DEFAULT_INDENTATION_SIZE);
-		node.putBoolean(PHPCoreConstants.CODEGEN_ADD_COMMENTS, true);
+		node.putBoolean(PHPCoreConstants.CODEGEN_ADD_COMMENTS, false);
 		node.put(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, ULocale
 				.getDefault().toString());
 		node.put(PHPCoreConstants.WORKSPACE_LOCALE, ULocale.getDefault()
