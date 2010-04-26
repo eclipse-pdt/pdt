@@ -15,13 +15,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 /**
  * The PHPFoldingStructureProviderRegistry is defined as
@@ -86,19 +83,15 @@ public class PHPFoldingStructureProviderRegistry {
 	 * 
 	 * @return the current provider according to the preferences
 	 */
-	public IStructuredTextFoldingProvider getCurrentFoldingProvider() {
-		String id = PreferenceConstants.getPreferenceStore().getString(
-				PreferenceConstants.EDITOR_FOLDING_PROVIDER);
-		PHPFoldingStructureProviderDescriptor desc = getFoldingProviderDescriptor(id);
-		if (desc != null) {
-			try {
-				return desc.createProvider();
-			} catch (CoreException e) {
-				PHPUiPlugin.log(e);
-			}
-		}
-		return null;
-	}
+	/*
+	 * public IStructuredTextFoldingProvider getCurrentFoldingProvider() {
+	 * String id = PreferenceConstants.getPreferenceStore().getString(
+	 * PreferenceConstants.EDITOR_FOLDING_PROVIDER);
+	 * PHPFoldingStructureProviderDescriptor desc =
+	 * getFoldingProviderDescriptor(id); if (desc != null) { try { return
+	 * desc.createProvider(); } catch (CoreException e) { PHPUiPlugin.log(e); }
+	 * } return null; }
+	 */
 
 	/**
 	 * Ensures that the extensions are read and stored in

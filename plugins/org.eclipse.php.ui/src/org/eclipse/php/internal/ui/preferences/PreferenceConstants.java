@@ -28,7 +28,6 @@ import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.spelling.SpellingService;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 public class PreferenceConstants {
 
@@ -764,7 +763,7 @@ public class PreferenceConstants {
 	 * @see IStructuredTextFoldingProvider#FOLDING_ENABLED
 	 */
 	//	public static final String EDITOR_FOLDING_ENABLED= "editor_folding_enabled"; //$NON-NLS-1$
-	public static final String EDITOR_FOLDING_ENABLED = IStructuredTextFoldingProvider.FOLDING_ENABLED;
+	public static final String EDITOR_FOLDING_ENABLED = "foldingEnabled"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that stores the configured folding provider.
@@ -1036,9 +1035,7 @@ public class PreferenceConstants {
 		// mark occurrences
 		store.setDefault(PreferenceConstants.EDITOR_MARK_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_STICKY_OCCURRENCES, true);
-		store
-				.setDefault(PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES,
-						true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES,
 				true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES,
@@ -1073,10 +1070,9 @@ public class PreferenceConstants {
 		store.setDefault(APPEARANCE_MEMBER_SORT_ORDER, "I,S,T,C,SV,SF,V,F"); //$NON-NLS-1$
 
 		store.setDefault(EDITOR_CORRECTION_INDICATION, true);
-		store
-				.setDefault(
-						org.eclipse.dltk.ui.PreferenceConstants.EDITOR_CORRECTION_INDICATION,
-						true);
+		store.setDefault(
+				org.eclipse.dltk.ui.PreferenceConstants.EDITOR_CORRECTION_INDICATION,
+				true);
 		store.setDefault(EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE, true);
 		store.setDefault(EDITOR_ANNOTATION_ROLL_OVER, false);
 
@@ -1110,18 +1106,21 @@ public class PreferenceConstants {
 				EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR);
 		store.setDefault(EDITOR_PHPDOC_COLOR, EDITOR_PHPDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_TASK_COLOR, EDITOR_TASK_DEFAULT_COLOR);
-		
+
 		// SyntaxColoringPage enable
 		store.setDefault(getEnabledPreferenceKey(EDITOR_NORMAL_COLOR), true);
-		store.setDefault(getEnabledPreferenceKey(EDITOR_BOUNDARYMARKER_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_BOUNDARYMARKER_COLOR),
+				true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_VARIABLE_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_STRING_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_NUMBER_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_HEREDOC_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_COMMENT_COLOR), true);
-		store.setDefault(getEnabledPreferenceKey(EDITOR_LINE_COMMENT_COLOR), true);
-		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COMMENT_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_LINE_COMMENT_COLOR),
+				true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COMMENT_COLOR),
+				true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COLOR), true);
 		store.setDefault(getEnabledPreferenceKey(EDITOR_TASK_COLOR), true);
 		// PHP options
@@ -1157,14 +1156,12 @@ public class PreferenceConstants {
 		// Mac;
 		// SWT.CONTROL
 		// elsewhere
-		store
-				.setDefault(
-						EDITOR_TEXT_HOVER_MODIFIERS,
-						"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
-		store
-				.setDefault(
-						EDITOR_TEXT_HOVER_MODIFIER_MASKS,
-						"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$		
+		store.setDefault(
+				EDITOR_TEXT_HOVER_MODIFIERS,
+				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
+		store.setDefault(
+				EDITOR_TEXT_HOVER_MODIFIER_MASKS,
+				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$		
 
 		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer
 				.toString(new PHPManualConfig(
@@ -1191,9 +1188,7 @@ public class PreferenceConstants {
 		// save actions
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES, false);
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_ALL, true);
-		store
-				.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY,
-						false);
+		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, false);
 
 		// default php outline mode
 		store.setDefault(PREF_OUTLINEMODE,

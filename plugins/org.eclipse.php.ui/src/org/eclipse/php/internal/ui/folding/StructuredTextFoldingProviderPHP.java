@@ -50,7 +50,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Node;
@@ -58,8 +57,8 @@ import org.w3c.dom.Node;
 /**
  * Updates the projection model of a structured model for JSP.
  */
-public class StructuredTextFoldingProviderPHP implements
-		IStructuredTextFoldingProvider {
+public class StructuredTextFoldingProviderPHP
+/* implements IStructuredTextFoldingProvider */{
 
 	/**
 	 * A context that contains the information needed to compute the folding

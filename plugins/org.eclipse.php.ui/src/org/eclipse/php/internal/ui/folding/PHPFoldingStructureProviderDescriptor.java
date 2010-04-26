@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 /**
  * Describes a contribution to the folding provider extension point.
@@ -70,11 +69,12 @@ public final class PHPFoldingStructureProviderDescriptor {
 	 * @throws CoreException
 	 *             if creation fails
 	 */
-	public IStructuredTextFoldingProvider createProvider() throws CoreException {
-		IStructuredTextFoldingProvider prov = (IStructuredTextFoldingProvider) fElement
-				.createExecutableExtension(CLASS);
-		return prov;
-	}
+	/*
+	 * public IStructuredTextFoldingProvider createProvider() throws
+	 * CoreException { IStructuredTextFoldingProvider prov =
+	 * (IStructuredTextFoldingProvider) fElement
+	 * .createExecutableExtension(CLASS); return prov; }
+	 */
 
 	/**
 	 * Creates a preferences object as described in the extension's xml.

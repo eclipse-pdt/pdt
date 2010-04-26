@@ -169,9 +169,9 @@
 		<provisionalConfiguration type="characterpairmatcher"
 			class="org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher"
 			target="org.eclipse.php.core.phpsource" />
-		<provisionalConfiguration type="structuredtextfoldingprovider"
+		<!-- <provisionalConfiguration type="structuredtextfoldingprovider"
 			class="org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderProxy"
-			target="org.eclipse.php.core.phpsource" />
+			target="org.eclipse.php.core.phpsource" /> -->
 		<provisionalDefinition type="spellingregions"
 			value="XML_COMMENT_TEXT, PHP_CONTENT, XML_CONTENT" target="org.eclipse.php.core.phpsource" />
 		<provisionalDefinition type="activecontexts"
