@@ -330,7 +330,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				}
 			}
 		}
-		if (node.getType() == ASTNode.VARIABLE) {
+		if (node.getType() == ASTNode.VARIABLE
+				&& node.getParent().getType() != ASTNode.FUNCTION_NAME) {
 			Variable id = (Variable) node;
 			checkDispatch(id.getName());
 		}
