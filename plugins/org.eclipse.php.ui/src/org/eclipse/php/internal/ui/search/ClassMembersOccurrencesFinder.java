@@ -190,7 +190,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			parent = parent.getParent();
 		}
 		if (typeDeclaration != null) {
-			if (namespaceDeclaration != null) {
+			if (namespaceDeclaration != null
+					&& namespaceDeclaration.getName() != null) {
 				final ISourceModule source = namespaceDeclaration
 						.getProgramRoot().getSourceModule();
 				types[0] = source != null ? source.getType(namespaceDeclaration
