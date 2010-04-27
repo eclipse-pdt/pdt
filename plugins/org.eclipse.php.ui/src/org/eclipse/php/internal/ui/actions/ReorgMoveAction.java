@@ -70,7 +70,12 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		if (targetEditor != null) {
-			if (moveActionDelegate != null) {
+			if (moveActionDelegate == null) {
+				init(targetEditor.getSite().getWorkbenchWindow());
+			}
+
+			if (moveActionDelegate != null
+					&& !(moveActionDelegate instanceof ReorgMoveAction)) {
 				moveActionDelegate.setActiveEditor(action, targetEditor);
 			} else {
 				IEditorInput editorInput = targetEditor.getEditorInput();
