@@ -162,7 +162,7 @@ public class PHPContextInformationValidator implements
 
 		int parameterStartPosition = fPosition;
 		try {
-			for (; parameterStartPosition < offset; ++parameterStartPosition) {
+			for (int i = parameterStartPosition; i < offset; i++) {
 				if (document.getChar(parameterStartPosition) == '(') {
 					++parameterStartPosition;
 					break;
