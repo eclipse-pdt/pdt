@@ -128,7 +128,8 @@ public class SemanticHighlightingTests extends AbstractPDTTTest {
 
 			for (final String fileName : files) {
 				try {
-					final PdttFile pdttFile = new PdttFile(fileName);
+					final PdttFile pdttFile = new PdttFile(PHPUiTests
+							.getDefault().getBundle(), fileName);
 					phpVerSuite.addTest(new SemanticHighlightingTests(
 							phpVersion.getAlias() + " - /" + fileName) {
 
