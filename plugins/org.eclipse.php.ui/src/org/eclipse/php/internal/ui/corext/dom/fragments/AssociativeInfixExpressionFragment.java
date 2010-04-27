@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.ast.match.PHPASTMatcher;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
-import org.eclipse.php.internal.ui.corext.SourceRange;
+import org.eclipse.php.internal.core.corext.SourceRange;
 import org.eclipse.text.edits.TextEditGroup;
 
 public class AssociativeInfixExpressionFragment extends ASTFragment implements

@@ -18,7 +18,7 @@ import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.editor.ScriptMarkerAnnotation;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
+import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 
 /**
  *

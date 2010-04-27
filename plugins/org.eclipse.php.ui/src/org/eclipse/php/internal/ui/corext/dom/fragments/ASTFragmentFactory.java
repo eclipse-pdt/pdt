@@ -18,9 +18,9 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.nodes.InfixExpression;
 import org.eclipse.php.internal.core.ast.visitor.HierarchicalVisitor;
-import org.eclipse.php.internal.ui.corext.SourceRange;
-import org.eclipse.php.internal.ui.corext.dom.Selection;
-import org.eclipse.php.internal.ui.corext.dom.SelectionAnalyzer;
+import org.eclipse.php.internal.core.corext.SourceRange;
+import org.eclipse.php.internal.core.corext.dom.Selection;
+import org.eclipse.php.internal.core.corext.dom.SelectionAnalyzer;
 
 /**
  * Creates various differing kinds of IASTFragments, all through a very narrow

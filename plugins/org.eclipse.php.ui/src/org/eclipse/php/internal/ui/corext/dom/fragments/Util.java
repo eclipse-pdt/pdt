@@ -17,9 +17,9 @@ import java.io.StringReader;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.corext.SourceRange;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner;
 import org.eclipse.php.internal.core.documentModel.parser.php5.PhpLexer;
-import org.eclipse.php.internal.ui.corext.SourceRange;
 
 /**
  * This class houses a collection of static methods which do not refer to, or

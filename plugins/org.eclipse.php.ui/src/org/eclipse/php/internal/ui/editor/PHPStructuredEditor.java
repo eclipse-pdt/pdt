@@ -26,10 +26,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.dltk.internal.ui.actions.FoldingMessages;
@@ -63,6 +63,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -71,19 +72,18 @@ import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
+import org.eclipse.php.internal.core.search.IOccurrencesFinder;
+import org.eclipse.php.internal.core.search.OccurrencesFinderFactory;
+import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
 import org.eclipse.php.internal.ui.explorer.PHPSearchActionGroup;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.php.internal.ui.search.IOccurrencesFinder;
-import org.eclipse.php.internal.ui.search.IOccurrencesFinder.OccurrenceLocation;
-import org.eclipse.php.internal.ui.search.OccurrencesFinderFactory;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
 import org.eclipse.php.internal.ui.text.PHPWordIterator;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -1270,11 +1270,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
 			IAction action = getAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 			if (action instanceof ISelectionChangedListener) {
-				psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
+				psp
+						.removePostSelectionChangedListener((ISelectionChangedListener) action);
 			}
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 			if (action instanceof ISelectionChangedListener) {
-				psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
+				psp
+						.removePostSelectionChangedListener((ISelectionChangedListener) action);
 			}
 		}
 
@@ -1336,7 +1338,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		setAction(ITextEditorActionDefinitionIds.LINE_START, action);
 
 		action = new SmartLineStartAction(textWidget, true);
-		action.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_LINE_START);
+		action
+				.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_LINE_START);
 		setAction(ITextEditorActionDefinitionIds.SELECT_LINE_START, action);
 
 		action = new SmartLineEndAction(textWidget, false);
@@ -1344,11 +1347,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		setAction(ITextEditorActionDefinitionIds.LINE_END, action);
 
 		action = new SmartLineEndAction(textWidget, true);
-		action.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_LINE_END);
+		action
+				.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_LINE_END);
 		setAction(ITextEditorActionDefinitionIds.SELECT_LINE_END, action);
 
 		action = new NavigatePreviousSubWordAction();
-		action.setActionDefinitionId(ITextEditorActionDefinitionIds.WORD_PREVIOUS);
+		action
+				.setActionDefinitionId(ITextEditorActionDefinitionIds.WORD_PREVIOUS);
 		setAction(ITextEditorActionDefinitionIds.WORD_PREVIOUS, action);
 		textWidget.setKeyBinding(SWT.CTRL | SWT.ARROW_LEFT, SWT.NULL);
 
@@ -1358,13 +1363,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		textWidget.setKeyBinding(SWT.CTRL | SWT.ARROW_RIGHT, SWT.NULL);
 
 		action = new SelectPreviousSubWordAction();
-		action.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_WORD_PREVIOUS);
+		action
+				.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_WORD_PREVIOUS);
 		setAction(ITextEditorActionDefinitionIds.SELECT_WORD_PREVIOUS, action);
 		textWidget.setKeyBinding(SWT.CTRL | SWT.SHIFT | SWT.ARROW_LEFT,
 				SWT.NULL);
 
 		action = new SelectNextSubWordAction();
-		action.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_WORD_NEXT);
+		action
+				.setActionDefinitionId(ITextEditorActionDefinitionIds.SELECT_WORD_NEXT);
 		setAction(ITextEditorActionDefinitionIds.SELECT_WORD_NEXT, action);
 		textWidget.setKeyBinding(SWT.CTRL | SWT.SHIFT | SWT.ARROW_RIGHT,
 				SWT.NULL);
@@ -1952,48 +1959,56 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		final ResourceBundle resourceBundle = PHPUIMessages.getResourceBundle();
 
 		Action action = new GotoMatchingBracketAction(this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
+		action
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action);
 
 		action = new OpenFunctionsManualAction(resourceBundle, this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_PHP_MANUAL); //$NON-NLS-1$
+		action
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_PHP_MANUAL); //$NON-NLS-1$
 		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION,
 				action);
 		markAsCursorDependentAction(
 				ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, true);
 
 		action = new OpenDeclarationAction(resourceBundle, this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); //$NON-NLS-1$
+		action
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action);
 		markAsCursorDependentAction(
 				IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true);
 
 		action = new OpenTypeHierarchyAction(this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY); //$NON-NLS-1$
+		action
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, action);
 		markAsCursorDependentAction(
 				IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, true);
 		// add selection changed listener for updating enabled status
 		if (getSelectionProvider() instanceof IPostSelectionProvider) {
 			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
-			psp.addPostSelectionChangedListener((OpenTypeHierarchyAction) action);
+			psp
+					.addPostSelectionChangedListener((OpenTypeHierarchyAction) action);
 		}
 
 		action = new OpenCallHierarchyAction(this);
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY); //$NON-NLS-1$
+		action
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, action);
 		markAsCursorDependentAction(
 				IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, true);
 		// add selection changed listener for updating enabled status
 		if (getSelectionProvider() instanceof IPostSelectionProvider) {
 			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
-			psp.addPostSelectionChangedListener((OpenCallHierarchyAction) action);
+			psp
+					.addPostSelectionChangedListener((OpenCallHierarchyAction) action);
 		}
 
 		action = new TextOperationAction(
 				DLTKEditorMessages.getBundleForConstructedKeys(),
 				"OpenHierarchy.", this, PHPStructuredTextViewer.SHOW_HIERARCHY, true); //$NON-NLS-1$
-		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
+		action
+				.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
 		setAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, action);
 		markAsCursorDependentAction(
 				IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, true);
@@ -3063,7 +3078,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	public boolean isMarkingOccurrences() {
 		IPreferenceStore store = getPreferenceStore();
 		return store != null
-				&& store.getBoolean(PreferenceConstants.EDITOR_MARK_OCCURRENCES);
+				&& store
+						.getBoolean(PreferenceConstants.EDITOR_MARK_OCCURRENCES);
 	}
 
 	/**

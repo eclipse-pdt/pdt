@@ -16,6 +16,7 @@ import java.util.Arrays;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.php.internal.core.search.Messages;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.NewSearchUI;
