@@ -47,10 +47,11 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.IWorkbenchPage;
@@ -180,8 +181,11 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 				ASTNode selectedNode = NodeFinder.perform(ast, offset, length);
 				if (selectedNode != null
 						&& selectedNode.getType() == ASTNode.IDENTIFIER) {
-					element = ((Identifier) selectedNode).resolveBinding()
-							.getPHPElement();
+					IBinding binding = ((Identifier) selectedNode)
+							.resolveBinding();
+					if (binding != null) {
+						element = binding.getPHPElement();
+					}
 				}
 			}
 		} catch (Exception e) {

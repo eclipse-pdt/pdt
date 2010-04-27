@@ -87,7 +87,8 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 					if (textRegion instanceof ForeignRegion) {
 						isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
 					}
-					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT
+					if (textRegion == null
+							|| textRegion.getType() == PHPRegionContext.PHP_CONTENT
 							|| isJavaScriptRegion) {
 						processAction(textEditor, document, textSelection);
 					} else {
