@@ -50,8 +50,8 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.IWorkbenchPage;
@@ -232,7 +232,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			Object input = selection.getFirstElement();
 
 			if (input instanceof LogicalPackage) {
-				IScriptFolder[] fragments = ((LogicalPackage) input).getFragments();
+				IScriptFolder[] fragments = ((LogicalPackage) input)
+						.getFragments();
 				if (fragments.length == 0)
 					return;
 				input = fragments[0];
@@ -243,7 +244,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			if (!(input instanceof IModelElement)) {
 				IStatus status = createStatus("A PHP element must be selected.");
 				ErrorDialog.openError(getShell(), getDialogTitle(),
-						ActionMessages.OpenTypeHierarchyAction_messages_title, status);
+						ActionMessages.OpenTypeHierarchyAction_messages_title,
+						status);
 				return;
 			}
 			IModelElement element = (IModelElement) input;
@@ -260,28 +262,28 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 						ActionMessages.OpenTypeHierarchyAction_messages_title,
 						status);
 			}
-//			ISourceModule sourceModule = (ISourceModule) input;
-//			String fileName = sourceModule.getElementName();
-//			IModelElement element = DLTKCore.create(ResourcesPlugin
-//					.getWorkspace().getRoot().getFile(
-//							Path.fromOSString(fileName)));
-//			if (element instanceof ISourceModule) {
-//				int offset = 0;
-//				try {
-//					offset = sourceModule.getSourceRange().getOffset();
-//				} catch (ModelException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				IModelElement modelElement = getSelectionModelElement(offset,
-//						1, (ISourceModule) element);
-//				if (modelElement != null) {
-//					if (!ActionUtil.isProcessable(getShell(), modelElement)) {
-//						return;
-//					}
-//					run(new IModelElement[] { modelElement });
-//				}
-//			}
+			// ISourceModule sourceModule = (ISourceModule) input;
+			// String fileName = sourceModule.getElementName();
+			// IModelElement element = DLTKCore.create(ResourcesPlugin
+			// .getWorkspace().getRoot().getFile(
+			// Path.fromOSString(fileName)));
+			// if (element instanceof ISourceModule) {
+			// int offset = 0;
+			// try {
+			// offset = sourceModule.getSourceRange().getOffset();
+			// } catch (ModelException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+			// IModelElement modelElement = getSelectionModelElement(offset,
+			// 1, (ISourceModule) element);
+			// if (modelElement != null) {
+			// if (!ActionUtil.isProcessable(getShell(), modelElement)) {
+			// return;
+			// }
+			// run(new IModelElement[] { modelElement });
+			// }
+			// }
 		}
 	}
 
