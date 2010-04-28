@@ -1873,4 +1873,50 @@
        <proposalCategory
              icon="icons/full/elcl16/phpdocprop_co.gif"></proposalCategory>
     </extension>     
+
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTags"
+          class="org.eclipse.wst.html.ui.internal.contentassist.HTMLTagsCompletionProposalComputer"
+          id="org.eclipse.wst.html.ui.proposalComputer.htmlTags">
+       <contentType
+             id="org.eclipse.php.core.phpsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTemplates"
+          class="org.eclipse.wst.html.ui.internal.contentassist.HTMLTemplatesCompletionProposalComputer"
+          id="org.eclipse.wst.html.ui.proposalComputer.htmlTemplates">
+       <contentType
+             id="org.eclipse.php.core.phpsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+       </contentType>
+    </proposalComputer>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.css.ui.proposalComputer.css">
+       <contentType
+             id="org.eclipse.php.core.phpsource">
+          <partitionType
+                id="org.eclipse.wst.css.STYLE">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.css.ui.proposalComputer.cssTemplates">
+       <contentType
+             id="org.eclipse.php.core.phpsource">
+          <partitionType
+                id="org.eclipse.wst.css.STYLE">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+ </extension>
 </plugin>

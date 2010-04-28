@@ -609,4 +609,11 @@ public class PHPStructuredTextViewerConfiguration extends
 			return fTextHover.getHoverRegion(textViewer, offset);
 		}
 	}
+
+	/**
+	 * @return the associated content assistnat
+	 */
+	protected StructuredContentAssistant getContentAssistant() {
+		return this.fContentAssistant;
+	}
 }
