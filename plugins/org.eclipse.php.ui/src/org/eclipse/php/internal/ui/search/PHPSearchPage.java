@@ -16,6 +16,7 @@ import org.eclipse.dltk.ui.search.ScriptSearchPage;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 
 public class PHPSearchPage extends ScriptSearchPage {
+	public static final String ID = "org.eclipse.php.ui.PHPSearchPage"; //$NON-NLS-1$
 
 	@Override
 	protected IDLTKLanguageToolkit getLanguageToolkit() {

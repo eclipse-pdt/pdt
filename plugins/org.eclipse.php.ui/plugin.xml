@@ -565,6 +565,24 @@
 			<part id="org.eclipse.php.ui.explorer" />
 			<part id="org.eclipse.php.editor" />
 		</actionSetPartAssociation>
+      <actionSetPartAssociation
+            targetID="org.eclipse.php.ui.SearchActionSet">
+         <part
+               id="org.eclipse.php.ui.explorer">
+         </part>
+         <part
+               id="org.eclipse.dltk.callhierarchy.view">
+         </part>
+         <part
+               id="org.eclipse.dltk.ui.TypeHierarchy">
+         </part>
+         <part
+               id="org.eclipse.php.editor">
+         </part>
+         <part
+               id="org.eclipse.search.SearchResultView">
+         </part>
+      </actionSetPartAssociation>
 	</extension>
 
 	<!-- Set up a definition for PHP Content Types -->
@@ -814,6 +832,15 @@
 				<separator name="occurencesActionsGroup" />
 				<separator name="extraSearchGroup" />
 			</menu>
+			<!-- dialog group  -->
+	        <action
+				label="%openPHPSearchPageAction.label"
+				icon="$nl$/icons/full/obj16/php_search_obj.gif"
+				helpContextId="org.eclipse.pdt.ui.php_search_action_context"
+				class="org.eclipse.php.internal.ui.search.OpenPHPSearchPageAction"
+				menubarPath="org.eclipse.search.menu/dialogGroup"
+				id="org.eclipse.pdt.ui.actions.OpenPHPSearchPage">
+	        </action>
 			<action definitionId="org.eclipse.php.ui.edit.text.search.method.exits"
 				label="%action.label" retarget="true"
 				id="org.eclipse.php.ui.actions.MethodExitOccurrences" />
