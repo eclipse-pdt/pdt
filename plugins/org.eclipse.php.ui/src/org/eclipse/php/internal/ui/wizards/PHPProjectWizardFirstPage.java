@@ -317,7 +317,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			final Composite nameComposite = new Composite(composite, SWT.NONE);
 			nameComposite.setFont(composite.getFont());
 			nameComposite.setLayout(initGridLayout(new GridLayout(2, false),
-					false));
+					true));
 			nameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			// text field for project name
 			fNameField = new StringDialogField();
@@ -478,7 +478,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					false));
+					true));
 			fGroup.setText(PHPUIMessages
 					.getString("JavaScriptSupportGroup_OptionBlockTitle")); //$NON-NLS-1$
 
@@ -539,7 +539,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fGroup.setFont(composite.getFont());
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					false));
+					true));
 			fGroup.setText(PHPUIMessages
 					.getString("LayoutGroup_OptionBlock_Title")); //$NON-NLS-1$
 
@@ -654,7 +654,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			final Group group = new Group(composite, SWT.None);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					false));
+					true));
 			group
 					.setText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_title);
 			fWorkspaceRadio = new SelectionButtonDialogField(SWT.RADIO);
@@ -858,7 +858,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					false));
+					true));
 			group.setText(PHPUIMessages
 					.getString("VersionGroup_OptionBlock_Title"));//$NON-NLS-1$ 
 			fDefaultValues = new SelectionButtonDialogField(SWT.RADIO);
