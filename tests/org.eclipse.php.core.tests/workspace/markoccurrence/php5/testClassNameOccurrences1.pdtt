@@ -1,0 +1,9 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+class %Foo% {
+}
+$a = new %Foo%|();
+?>
+--EXPECT--

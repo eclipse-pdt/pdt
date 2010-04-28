@@ -1,0 +1,12 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+$foo = "";
+function foo(%$foo%){
+	%$foo%|;
+}
+
+
+?>
+--EXPECT--

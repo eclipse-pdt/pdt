@@ -1,0 +1,18 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+namespace My\aa\bb;
+$foo = "";
+function foo($foo){
+	$foo;
+}
+
+namespace My\aa\cc;
+$foo = "";
+function foo(%$foo%){
+	%$foo%|;
+}
+
+?>
+--EXPECT--

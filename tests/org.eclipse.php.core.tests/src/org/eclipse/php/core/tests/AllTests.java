@@ -30,6 +30,7 @@ import org.eclipse.php.core.tests.errors.ErrorReportingTests;
 import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
 import org.eclipse.php.core.tests.formatter.FormatterTests;
 import org.eclipse.php.core.tests.includepath.IncludePathManagerTests;
+import org.eclipse.php.core.tests.markoccurrence.MarkOccurrenceTests;
 import org.eclipse.php.core.tests.model_structure.ModelStructureTests;
 import org.eclipse.php.core.tests.phar.PharFileTest;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
@@ -77,6 +78,8 @@ public class AllTests {
 		// added by qwang.
 		suite.addTest(org.eclipse.php.internal.core.ast.locator.AllTests
 				.suite());
+		// added by zhaozw.
+		suite.addTest(MarkOccurrenceTests.suite());
 		// $JUnit-END$
 
 		return suite;

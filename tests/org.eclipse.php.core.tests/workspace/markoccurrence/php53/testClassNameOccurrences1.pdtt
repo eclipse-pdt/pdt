@@ -1,0 +1,32 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+namespace My\aa\bb;
+class %Foo% {
+   public static $d="";
+   public function %Foo%(){
+   }
+}
+class Bar extends %Foo%{
+}
+function Foo() {
+}
+
+namespace My\aa\cc;
+class Foo {
+   public static $d="";
+   public function Foo(){
+   }
+}
+function Foo() {
+}
+use My\aa\bb;
+Foo::$d;
+$a= new Foo();
+$a= new \My\aa\cc\Foo();
+%bb\Foo%::$d;
+$a= new \%My\aa\bb\Foo%();
+$a= new %bb\Foo%|();
+?>
+--EXPECT--

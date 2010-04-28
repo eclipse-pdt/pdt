@@ -1,0 +1,8 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+define(%'TEST1'%, 0);
+%TEST1%|;
+?>
+--EXPECT--
