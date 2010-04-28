@@ -322,9 +322,17 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			if (id.getName().equalsIgnoreCase(classMemberName)) {
 				if (dispatcherType != null) {
 					if (isDispatcherTypeEquals(id)) {
-						addOccurrence(new OccurrenceLocation(node.getStart(),
-								node.getLength(), getOccurrenceType(node),
-								fDescription));
+						if (id.getParent() instanceof Variable
+								&& id.getParent().getParent().getType() != ASTNode.FUNCTION_NAME) {
+							addOccurrence(new OccurrenceLocation(node
+									.getStart() - 1, node.getLength() + 1,
+									getOccurrenceType(node), fDescription));
+						} else {
+							addOccurrence(new OccurrenceLocation(node
+									.getStart(), node.getLength(),
+									getOccurrenceType(node), fDescription));
+						}
+
 					}
 				} else {
 					addOccurrence(new OccurrenceLocation(node.getStart(), node
