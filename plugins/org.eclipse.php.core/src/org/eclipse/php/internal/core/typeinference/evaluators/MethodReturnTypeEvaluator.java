@@ -27,6 +27,7 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
@@ -103,12 +104,14 @@ public class MethodReturnTypeEvaluator extends
 				resolveMagicMethodDeclaration(method, methodName);
 			}
 			// if we can not get the return type,we resolve the method
-			if (subGoals.isEmpty() && evaluated.isEmpty()) {
-				try {
+			// if the method is abstract,it will make the call in deadloop.
+			try {
+				if (subGoals.isEmpty() && evaluated.isEmpty()
+						&& !PHPFlags.isAbstract(method.getFlags())) {
 					resolveReturnType(method);
-				} catch (ModelException e) {
-					PHPCorePlugin.log(e);
 				}
+			} catch (ModelException e) {
+				PHPCorePlugin.log(e);
 			}
 		}
 
