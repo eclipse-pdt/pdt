@@ -424,13 +424,13 @@ public class StubUtility {
 			String[] typeParameterNames, IMethod target, boolean delegate,
 			String lineDelimiter, Set<String> exceptions) throws CoreException {
 		String templateName = CodeTemplateContextType.METHODCOMMENT_ID;
-		if (retTypeSig == null) {
-			templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
-		} else if (target != null) {
+		if (target != null) {
 			if (delegate)
 				templateName = CodeTemplateContextType.DELEGATECOMMENT_ID;
 			else
 				templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
+		} else if (retTypeSig == null) {
+			templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
 		}
 		Template template = getCodeTemplate(templateName, sp);
 		if (template == null) {
