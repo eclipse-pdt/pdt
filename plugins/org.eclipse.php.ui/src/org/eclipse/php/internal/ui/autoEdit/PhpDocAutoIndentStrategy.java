@@ -718,20 +718,18 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * on "offset" The method search until EOF or another comment block begins
 	 * 
 	 * @return the closing bracket offset, or negative number if no relevant
-	 *         closing bracket was found
+	 *         closing bracket was found TODO when there are // at the end of
+	 *         line this method will throw BadLocationException
 	 */
 
 	private int getCommentEnd(IDocument d, int offset)
 			throws BadLocationException {
 		int endOfDoc = d.getLength();
-		while (offset < endOfDoc) {
-			if (offset + 1 <= endOfDoc) {
-				if (d.getChar(offset) == '*' && d.getChar(offset + 1) == '/') {
-					return offset + 1;
-				} else if (d.getChar(offset) == '/'
-						&& d.getChar(offset + 1) == '*') {
-					return -1;
-				}
+		while (offset + 1 < endOfDoc) {
+			if (d.getChar(offset) == '*' && d.getChar(offset + 1) == '/') {
+				return offset + 1;
+			} else if (d.getChar(offset) == '/' && d.getChar(offset + 1) == '*') {
+				return -1;
 			}
 			offset++;
 		}
@@ -812,8 +810,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			return primaryModelElem != null ? primaryModelElem.getSourceRange()
 					.getOffset()
 					+ primaryModelElem.getSourceRange().getLength()/*
-																	 * getPHPStartTag(
-																	 * ).
+																	 * getPHPStartTag
+																	 * ( ).
 																	 * getEndPosition
 																	 * ()
 																	 */: -1;
