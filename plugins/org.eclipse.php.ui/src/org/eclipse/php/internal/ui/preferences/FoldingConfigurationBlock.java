@@ -39,7 +39,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
+import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 
 /**
  * Configures PHP Editor folding preferences.
@@ -361,6 +363,13 @@ class FoldingConfigurationBlock implements IPreferenceConfigurationBlock {
 					.next();
 			prefs.performOk();
 		}
+		// TODO - Might need a fix after the WST will support code folding
+		// officially.
+		boolean foldingEnabled = fStore
+				.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
+		SSEUIPlugin.getDefault().getPreferenceStore().setValue(
+				AbstractStructuredFoldingStrategy.FOLDING_ENABLED,
+				foldingEnabled);
 	}
 
 	public void performDefaults() {

@@ -57,8 +57,8 @@ import org.w3c.dom.Node;
 /**
  * Updates the projection model of a structured model for JSP.
  */
-public class StructuredTextFoldingProviderPHP
-/* implements IStructuredTextFoldingProvider */{
+public class StructuredTextFoldingProviderPHP implements IProjectionListener,
+		IStructuredTextFoldingProvider {
 
 	/**
 	 * A context that contains the information needed to compute the folding
@@ -1895,5 +1895,25 @@ public class StructuredTextFoldingProviderPHP
 
 		model.modifyAnnotations(null, null, modified
 				.toArray(new Annotation[modified.size()]));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.source.projection.IProjectionListener#
+	 * projectionDisabled()
+	 */
+	public void projectionDisabled() {
+		handleProjectionDisabled();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.source.projection.IProjectionListener#
+	 * projectionEnabled()
+	 */
+	public void projectionEnabled() {
+		handleProjectionEnabled();
 	}
 }

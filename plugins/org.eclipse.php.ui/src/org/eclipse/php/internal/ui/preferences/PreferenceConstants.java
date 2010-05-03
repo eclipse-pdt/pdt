@@ -28,6 +28,7 @@ import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.spelling.SpellingService;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
+import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 
 public class PreferenceConstants {
 
@@ -763,7 +764,7 @@ public class PreferenceConstants {
 	 * @see IStructuredTextFoldingProvider#FOLDING_ENABLED
 	 */
 	//	public static final String EDITOR_FOLDING_ENABLED= "editor_folding_enabled"; //$NON-NLS-1$
-	public static final String EDITOR_FOLDING_ENABLED = "foldingEnabled"; //$NON-NLS-1$
+	public static final String EDITOR_FOLDING_ENABLED = AbstractStructuredFoldingStrategy.FOLDING_ENABLED;
 
 	/**
 	 * A named preference that stores the configured folding provider.
