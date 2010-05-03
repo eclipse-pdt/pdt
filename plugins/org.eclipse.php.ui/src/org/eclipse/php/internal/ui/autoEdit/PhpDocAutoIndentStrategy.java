@@ -751,11 +751,16 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		IMethod overridden = null;
 
 		if (!meth.isConstructor() && null != declaringType) {
-			ITypeHierarchy hierarchy = SuperTypeHierarchyCache
-					.getTypeHierarchy(declaringType);
-			MethodOverrideTester tester = new MethodOverrideTester(
-					declaringType, hierarchy);
-			overridden = tester.findOverriddenMethod(meth, true);
+			try {
+				ITypeHierarchy hierarchy = SuperTypeHierarchyCache
+						.getTypeHierarchy(declaringType);
+				MethodOverrideTester tester = new MethodOverrideTester(
+						declaringType, hierarchy);
+				overridden = tester.findOverriddenMethod(meth, true);
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+
 		}
 		return CodeGeneration.getMethodComment(meth, overridden, lineDelimiter);
 	}
