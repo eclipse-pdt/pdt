@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
@@ -28,9 +29,9 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	private boolean defineFound;
 	private boolean isCaseSensitiveConstant = true; // The default is true
 	private String constantName;
-	private Scalar nameNode;
-	private Map<Scalar, String> nodeToFullName = new HashMap<Scalar, String>();
-	private Map<Scalar, OccurrenceLocation> nodeToOccurrence = new HashMap<Scalar, OccurrenceLocation>();
+	private ASTNode nameNode;
+	private Map<ASTNode, String> nodeToFullName = new HashMap<ASTNode, String>();
+	private Map<ASTNode, OccurrenceLocation> nodeToOccurrence = new HashMap<ASTNode, OccurrenceLocation>();
 
 	/**
 	 * @param root
@@ -45,11 +46,16 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 		isCaseSensitiveConstant = true;
 		if (node.getType() == ASTNode.SCALAR) {
 			nameNode = (Scalar) node;
-			constantName = nameNode.getStringValue();
+			constantName = ((Scalar) nameNode).getStringValue();
 			if (isQuoted(constantName)) {
 				constantName = constantName.substring(1,
 						constantName.length() - 1);
 			}
+			return null;
+		} else if (node.getType() == ASTNode.IDENTIFIER
+				&& node.getParent().getType() == ASTNode.NAMESPACE_NAME) {
+			nameNode = node;
+			constantName = ((Identifier) node).getName();
 			return null;
 		}
 		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
@@ -68,14 +74,26 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 		fASTRoot.accept(this);
 		if (nodeToFullName.containsKey(nameNode)) {
 			String fullName = nodeToFullName.get(nameNode);
-			for (Iterator<Scalar> iterator = nodeToFullName.keySet().iterator(); iterator
-					.hasNext();) {
-				Scalar nameNode = iterator.next();
-				if (nodeToFullName.get(nameNode).equals(fullName)) {
+			for (Iterator<ASTNode> iterator = nodeToFullName.keySet()
+					.iterator(); iterator.hasNext();) {
+				ASTNode nameNode = iterator.next();
+				if (nodeToFullName.get(nameNode).equalsIgnoreCase(fullName)) {
 					fResult.add(nodeToOccurrence.get(nameNode));
 				}
 			}
 		}
+	}
+
+	public boolean visit(Identifier identifier) {
+		if (checkEquality(identifier.getName())
+				&& PhpElementConciliator.isGlobalConstant(identifier)) {
+			nodeToFullName.put(identifier, getFullName((Identifier) identifier
+					.getParent(), fLastUseParts, fCurrentNamespace));
+			nodeToOccurrence.put(identifier, new OccurrenceLocation(identifier
+					.getStart(), identifier.getLength(),
+					getOccurrenceType(identifier), fDescription));
+		}
+		return true;
 	}
 
 	/**
