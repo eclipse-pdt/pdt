@@ -113,7 +113,8 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Visit $a on global references: $a = 5;
 	 */
 	public boolean visit(Variable variable) {
-		if (variable.isDollared()
+		if (!(variable.getParent() instanceof StaticDispatch)
+				&& variable.isDollared()
 				&& variable.getName().getType() == ASTNode.IDENTIFIER) {
 			Identifier identifier = (Identifier) variable.getName();
 			if (isGlobalScope && globalName.equals(identifier.getName())) {
