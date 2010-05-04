@@ -22,6 +22,7 @@ import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -131,7 +132,14 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 	public String getText(Object element) {
 
 		if (element instanceof ExternalProjectFragment) {
-			return ((ExternalProjectFragment) element).toStringWithAncestors();
+			ExternalProjectFragment fragment = (ExternalProjectFragment) element;
+			String name = LanguageModelInitializer
+					.getPathName(EnvironmentPathUtils.getLocalPath(fragment
+							.getPath()));
+			if (name != null) {
+				return name;
+			}
+			return fragment.toStringWithAncestors();
 		}
 
 		if (element instanceof IncludePath) {
