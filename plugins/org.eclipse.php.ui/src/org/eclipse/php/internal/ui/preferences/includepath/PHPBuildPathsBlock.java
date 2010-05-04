@@ -240,16 +240,19 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 
 		List<BPListElement> exportedEntries = new ArrayList<BPListElement>();
 		List<BPListElement> allEntries = new ArrayList<BPListElement>();
-		for (int i = 0; i < buildpathEntries.length; i++) {
-			IBuildpathEntry curr = buildpathEntries[i];
-			BPListElement listElement = BPListElement.createFromExisting(curr,
-					fCurrScriptProject);
-			if (curr.isExported()
-					|| curr.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-				exportedEntries.add(listElement);
+		if (buildpathEntries != null) {
+			for (int i = 0; i < buildpathEntries.length; i++) {
+				IBuildpathEntry curr = buildpathEntries[i];
+				BPListElement listElement = BPListElement.createFromExisting(
+						curr, fCurrScriptProject);
+				if (curr.isExported()
+						|| curr.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+					exportedEntries.add(listElement);
+				}
+				allEntries.add(listElement);
 			}
-			allEntries.add(listElement);
 		}
+
 		// inits the dialog field
 		fBuildPathDialogField.enableButton(project.exists());
 		fBuildPathList.setElements(allEntries);
