@@ -45,7 +45,7 @@
 			class="org.eclipse.php.internal.server.ui.launching.PHPWebPageLaunchShortcut"
 			description="%WebLaunch.description" icon="icons/full/obj16/server_run.gif"
 			id="org.eclipse.php.server.ui.phpServerShortcut" label="%phpServerShortcut.label"
-			modes="run, debug, profile">
+			modes="run, debug">
 			<contextualLaunch>
 				<contextLabel mode="run" label="%phpServerShortcut.label" />
 				<contextLabel mode="debug" label="%phpServerShortcut.label" />
