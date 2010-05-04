@@ -433,7 +433,7 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 
 		assertNotNull(program);
 
-		// 
+		//
 		int start = 33;
 		ASTNode selectedNode = locateNode(program, start, 0);
 		assertNotNull(selectedNode);
@@ -635,4 +635,49 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
 				PhpElementConciliator.concile(selectedNode));
 	}
+
+	public void testConcileConstant3() {
+		IFile file = null;
+		try {
+			file = setFileContent("<?php namespace NS;define(\"CONSTANT\", \"Hello world.\"); echo \\NS\\CONSTANT;?>");
+		} catch (CoreException e) {
+			fail(e.getMessage());
+		}
+
+		assertNotNull(file);
+
+		Program program = createProgram(file);
+
+		assertNotNull(program);
+
+		// select the function declaration.
+		int start = 20;
+		ASTNode selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
+				PhpElementConciliator.concile(selectedNode));
+
+		start = 28;
+		selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
+				PhpElementConciliator.concile(selectedNode));
+
+		start = 51;
+		selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
+				PhpElementConciliator.concile(selectedNode));
+
+		start = 64;
+		selectedNode = locateNode(program, start, 0);
+		assertNotNull(selectedNode);
+
+		assertEquals(PhpElementConciliator.CONCILIATOR_CONSTANT,
+				PhpElementConciliator.concile(selectedNode));
+	}
+
 }
