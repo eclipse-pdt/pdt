@@ -51,8 +51,36 @@ public class PhpElementConciliator {
 			return CONCILIATOR_LOCAL_VARIABLE;
 		} else if (isDispatch(locateNode)) {
 			return CONCILIATOR_CLASS_MEMBER;
+		} else if (isGlobalConstant(locateNode)) {
+			return CONCILIATOR_CONSTANT;
 		}
 		return CONCILIATOR_UNKNOWN;
+	}
+
+	public static boolean isGlobalConstant(ASTNode locateNode) {
+		assert locateNode != null;
+
+		// check if it is an identifier
+		if (locateNode.getType() != ASTNode.IDENTIFIER) {
+			return false;
+		}
+
+		ASTNode parent = locateNode.getParent();
+		if (parent.getType() != ASTNode.NAMESPACE_NAME) {
+			return false;
+		}
+
+		final NamespaceName namespaceName = (NamespaceName) parent;
+		parent = namespaceName.getParent();
+		if (parent.getType() == ASTNode.FUNCTION_NAME
+				|| parent.getType() == ASTNode.CLASS_NAME
+				|| parent.getType() == ASTNode.NAMESPACE
+				|| parent.getType() == ASTNode.USE_STATEMENT_PART) {
+			return false;
+		}
+
+		return true;
+
 	}
 
 	/**
