@@ -41,6 +41,10 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 		}
 	}
 
+	public String getName() {
+		return "Core API";
+	}
+
 	private String getLanguageLibraryPath(IScriptProject project,
 			PHPVersion phpVersion) {
 		if (phpVersion == PHPVersion.PHP4) {

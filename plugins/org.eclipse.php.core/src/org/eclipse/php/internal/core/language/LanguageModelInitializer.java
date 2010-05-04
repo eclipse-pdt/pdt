@@ -16,7 +16,6 @@ import java.util.*;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.core.language.ILanguageModelProvider;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -24,7 +23,6 @@ import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 
@@ -48,6 +46,27 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 * Language model paths initializers
 	 */
 	private static ILanguageModelProvider[] providers;
+
+	/**
+	 * Holds nice names for the language model paths
+	 */
+	private static Map<IPath, String> pathToName = Collections
+			.synchronizedMap(new HashMap<IPath, String>());
+
+	static void addPathName(IPath path, String name) {
+		pathToName.put(path, name);
+	}
+
+	/**
+	 * Returns nice name for this language model path provided by the
+	 * {@link ILanguageModelProvider}. If the path doesn't refer to the language
+	 * model path - <code>null</code> is returned.
+	 * 
+	 * @return
+	 */
+	public static String getPathName(IPath path) {
+		return pathToName.get(path);
+	}
 
 	/**
 	 * Initialize version change listener for the given project
@@ -126,16 +145,16 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	}
 
 	public static boolean isLanguageModelElement(IModelElement element) {
-		IProjectFragment fragment = (IProjectFragment) element
-				.getAncestor(IModelElement.PROJECT_FRAGMENT);
-		if (fragment != null) {
-			IScriptProject project = element.getScriptProject();
-			if (project != null) {
-				for (IPath path : getContainerPaths(project)) {
-					if (EnvironmentPathUtils.getLocalPath(fragment.getPath())
-							.equals(path)) {
-						return true;
-					}
+		if (element != null) {
+			IProjectFragment fragment = (IProjectFragment) element
+					.getAncestor(IModelElement.PROJECT_FRAGMENT);
+			if (fragment != null && fragment.isExternal()) {
+				IPath path = fragment.getPath();
+
+				// see getTargetLocation() below for description:
+				if (path.segmentCount() > 2) {
+					return "__language__".equals(path.segment(path
+							.segmentCount() - 2));
 				}
 			}
 		}
@@ -203,20 +222,13 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		return LanguageModelInitializer.providers;
 	}
 
-	private static IPath[] getContainerPaths(IScriptProject project) {
-		List<IPath> paths = new LinkedList<IPath>();
-		for (ILanguageModelProvider provider : getContributedProviders()) {
-			IPath path = getTargetLocation(provider, project);
-			if (path != null) {
-				paths.add(path);
-			}
-		}
-		return (IPath[]) paths.toArray(new IPath[paths.size()]);
-	}
-
 	static IPath getTargetLocation(ILanguageModelProvider provider,
-			IScriptProject project) {
-		return provider.getPlugin().getStateLocation().append("language")
-				.append(ProjectOptions.getPhpVersion(project).getAlias());
+			IPath sourcePath, IScriptProject project) {
+
+		return provider
+				.getPlugin()
+				.getStateLocation()
+				.append("__language__")
+				.append(Integer.toHexString(sourcePath.toOSString().hashCode()));
 	}
 }

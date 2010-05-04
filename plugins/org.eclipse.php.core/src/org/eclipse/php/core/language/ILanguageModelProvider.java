@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.dltk.core.IScriptProject;
 
 /**
- * Provides PHP stub files for buiding PHP Language Library.
+ * Provides PHP stub files for building PHP Language Library.
  * 
  * @author michael
  * 
@@ -34,6 +34,11 @@ public interface ILanguageModelProvider {
 	 * @return
 	 */
 	public IPath getPath(IScriptProject project);
+
+	/**
+	 * Returns nice name of this language model provider
+	 */
+	public String getName();
 
 	/**
 	 * Returns this language model provider plugin.

@@ -20,10 +20,7 @@ import java.util.List;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileInfo;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathContainer;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -54,22 +51,32 @@ public class LanguageModelContainer implements IBuildpathContainer {
 				for (ILanguageModelProvider provider : LanguageModelInitializer
 						.getContributedProviders()) {
 
+					// Get the location where language model files reside
+					// in provider's plug-in:
 					IPath path = provider.getPath(project);
 					if (path != null) {
 
+						// Copy files (if target directory is older) to the
+						// plug-in state
+						// location:
 						path = copyToInstanceLocation(provider, path, project);
+						if (path != null) {
 
-						IEnvironment environment = EnvironmentManager
-								.getEnvironment(project);
-						if (environment != null) {
-							path = EnvironmentPathUtils.getFullPath(
-									environment, path);
+							LanguageModelInitializer.addPathName(path, provider
+									.getName());
+
+							IEnvironment environment = EnvironmentManager
+									.getEnvironment(project);
+							if (environment != null) {
+								path = EnvironmentPathUtils.getFullPath(
+										environment, path);
+							}
+							entries.add(DLTKCore.newLibraryEntry(path,
+									BuildpathEntry.NO_ACCESS_RULES,
+									BuildpathEntry.NO_EXTRA_ATTRIBUTES,
+									BuildpathEntry.INCLUDE_ALL,
+									BuildpathEntry.EXCLUDE_NONE, false, true));
 						}
-						entries.add(DLTKCore.newLibraryEntry(path,
-								BuildpathEntry.NO_ACCESS_RULES,
-								BuildpathEntry.NO_EXTRA_ATTRIBUTES,
-								BuildpathEntry.INCLUDE_ALL,
-								BuildpathEntry.EXCLUDE_NONE, false, true));
 					}
 				}
 				buildPathEntries = (IBuildpathEntry[]) entries
@@ -84,18 +91,18 @@ public class LanguageModelContainer implements IBuildpathContainer {
 	protected IPath copyToInstanceLocation(ILanguageModelProvider provider,
 			IPath path, IScriptProject project) {
 
-		IPath targetPath = LanguageModelInitializer.getTargetLocation(provider,
-				project);
-
-		LocalFile targetDir = new LocalFile(targetPath.toFile());
-
 		try {
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("$nl$", Platform.getNL()); //$NON-NLS-1$
 			URL url = FileLocator.find(provider.getPlugin().getBundle(),
 					provider.getPath(project), map);
-			LocalFile sourceDir = new LocalFile(new File(FileLocator.toFileURL(
-					url).getPath()));
+			File sourceFile = new File(FileLocator.toFileURL(url).getPath());
+			LocalFile sourceDir = new LocalFile(sourceFile);
+
+			IPath targetPath = LanguageModelInitializer.getTargetLocation(
+					provider, Path.fromOSString(sourceFile.getAbsolutePath()),
+					project);
+			LocalFile targetDir = new LocalFile(targetPath.toFile());
 
 			IFileInfo targetInfo = targetDir.fetchInfo();
 			boolean update = !targetInfo.exists();
@@ -109,11 +116,14 @@ public class LanguageModelContainer implements IBuildpathContainer {
 				targetDir.delete(EFS.NONE, new NullProgressMonitor());
 				sourceDir.copy(targetDir, EFS.NONE, new NullProgressMonitor());
 			}
+
+			return targetPath;
+
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
 
-		return targetPath;
+		return null;
 	}
 
 	public String getDescription() {
