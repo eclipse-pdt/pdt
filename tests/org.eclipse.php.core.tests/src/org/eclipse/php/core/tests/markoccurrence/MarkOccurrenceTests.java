@@ -45,8 +45,8 @@ import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
-import org.eclipse.php.internal.core.search.OccurrencesFinderFactory;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
+import org.eclipse.php.internal.core.search.OccurrencesFinderFactory;
 
 public class MarkOccurrenceTests extends AbstractPDTTTest {
 
@@ -167,6 +167,10 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 	 */
 	protected static void compareProposals(String data) throws Exception {
 
+		int offset = data.lastIndexOf(OFFSET_CHAR);
+		if (offset == -1) {
+			throw new IllegalArgumentException("Offset character is not set");
+		}
 		List<Integer> starts = new ArrayList<Integer>();
 		int startIndex = -1;
 		while ((startIndex = data.indexOf('%', startIndex + 1)) >= 0) {
@@ -177,15 +181,16 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 		}
 		List<Integer> newStarts = new ArrayList<Integer>();
 		for (int i = 0; i < starts.size(); i++) {
-			newStarts.add(starts.get(i) - i);
+			int oldstart = starts.get(i) - i;
+			if (oldstart > offset) {
+				oldstart--;
+			}
+			newStarts.add(oldstart);
 		}
 		// replace the offset character
 		data = data.replaceAll("%", "");
 
-		int offset = data.lastIndexOf(OFFSET_CHAR);
-		if (offset == -1) {
-			throw new IllegalArgumentException("Offset character is not set");
-		}
+		offset = data.lastIndexOf(OFFSET_CHAR);
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
 
@@ -296,15 +301,13 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 
 		if (!proposalsEqual) {
 			StringBuilder errorBuf = new StringBuilder();
-			errorBuf
-					.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
+			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
 			for (int i = 0; i < starts.size() / 2; i++) {
 				errorBuf.append('[').append(starts.get(i * 2)).append(',')
 						.append(starts.get(i * 2 + 1) - starts.get(i * 2))
 						.append(']').append("\n");
 			}
-			errorBuf
-					.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
+			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
 			for (OccurrenceLocation p : proposals) {
 				errorBuf.append('[').append(p.getOffset()).append(',').append(
 						p.getLength()).append(']').append("\n");
@@ -332,34 +335,4 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 		});
 		return result.toArray(new OccurrenceLocation[result.size()]);
 	}
-
-	// public static void compareProposals(OccurrenceLocation[] proposals,
-	// PdttFile pdttFile) throws Exception {
-	// String[] lines = pdttFile.getExpected().split("\n");
-	//
-	// boolean proposalsEqual = true;
-	// if (proposals.length == lines.length) {
-	// for (int i = 0; i < proposals.length; i++) {
-	// if (!("" + proposals[i].getFlags()).equals(lines[i])) {
-	// proposalsEqual = false;
-	// break;
-	// }
-	// }
-	// } else {
-	// proposalsEqual = false;
-	// }
-	//
-	// if (!proposalsEqual) {
-	// StringBuilder errorBuf = new StringBuilder();
-	// errorBuf
-	// .append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
-	// errorBuf.append(pdttFile.getExpected());
-	// errorBuf
-	// .append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
-	// for (OccurrenceLocation p : proposals) {
-	// errorBuf.append(p.getFlags()).append("\n");
-	// }
-	// fail(errorBuf.toString());
-	// }
-	// }
 }

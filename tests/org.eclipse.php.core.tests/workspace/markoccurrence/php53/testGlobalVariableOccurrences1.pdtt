@@ -1,0 +1,24 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+namespace My\aa\bb;
+class Foo {
+   public static $bar="";
+   public function Foo($bar){
+   }
+}
+%$bar% = "";
+
+namespace My\aa\cc;
+class Foo {
+   public static $bar="";
+   public function Foo($bar){
+   }
+}
+%$bar% = "";
+use My\aa\bb;
+Foo::$bar;
+%$bar%| = "";
+?>
+--EXPECT--
