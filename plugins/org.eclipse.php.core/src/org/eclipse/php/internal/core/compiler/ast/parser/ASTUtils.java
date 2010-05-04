@@ -23,6 +23,7 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
+import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
@@ -143,8 +144,15 @@ public class ASTUtils {
 				if (realStart <= start && realEnd >= end) {
 					if (result != null) {
 						if ((s.sourceStart() >= result.sourceStart())
-								&& (s.sourceEnd() <= result.sourceEnd()))
+								&& (s.sourceEnd() <= result.sourceEnd())) {
+							// now we could not handle ConstantReference in
+							// StaticConstantAccess
+							if (s instanceof ConstantReference
+									&& (result instanceof StaticConstantAccess)) {
+								return false;
+							}
 							result = s;
+						}
 					} else {
 						result = s;
 					}
