@@ -60,8 +60,10 @@ public class PHPToolkitUtil {
 				}
 				IContentDescription contentDescription = ((IFile) resource)
 						.getContentDescription();
-				return ContentTypeIdForPHP.ContentTypeID_PHP
-						.equals(contentDescription.getContentType().getId());
+				if (contentDescription != null) {
+					return ContentTypeIdForPHP.ContentTypeID_PHP
+							.equals(contentDescription.getContentType().getId());
+				}
 			}
 		} catch (CoreException e) {
 		}
