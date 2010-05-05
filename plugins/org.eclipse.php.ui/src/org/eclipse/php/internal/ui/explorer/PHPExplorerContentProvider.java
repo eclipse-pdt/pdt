@@ -144,12 +144,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					IResource[] members = ((IFolder) parentElement).members();
 					ArrayList<Object> returnChlidren = new ArrayList<Object>();
 					for (IResource iResource : members) {
-						IModelElement modelElement = DLTKCore.create(iResource);
-						if (modelElement != null) {
-							returnChlidren.add(modelElement);
-						} else {
-							returnChlidren.add(iResource);
-						}
+						returnChlidren.add(iResource);
 					}
 					return (Object[]) returnChlidren
 							.toArray(new Object[returnChlidren.size()]);
