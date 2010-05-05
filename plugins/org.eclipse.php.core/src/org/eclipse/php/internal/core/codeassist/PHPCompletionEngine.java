@@ -350,6 +350,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				&& !requestor.isIgnored(CompletionProposal.PACKAGE_REF)) {
 			proposal = createProposal(CompletionProposal.PACKAGE_REF,
 					actualCompletionPosition);
+		} else if (model.getElementType() == IModelElement.PROJECT_FRAGMENT) {
+			proposal = createProposal(CompletionProposal.PACKAGE_REF,
+					actualCompletionPosition);
 		} else if (!requestor.isIgnored(CompletionProposal.KEYWORD)) {
 			proposal = createProposal(CompletionProposal.KEYWORD,
 					actualCompletionPosition);
