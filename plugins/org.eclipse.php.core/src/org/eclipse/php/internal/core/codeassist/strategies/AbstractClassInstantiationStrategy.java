@@ -83,13 +83,13 @@ public abstract class AbstractClassInstantiationStrategy extends
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {
-		String nextWord = null;
+		char nextChar = ' ';
 		try {
-			nextWord = abstractContext.getNextWord();
+			nextChar = abstractContext.getNextChar();
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
-		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return '(' == nextChar ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 }
