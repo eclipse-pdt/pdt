@@ -12,6 +12,8 @@
 package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
+import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
@@ -115,5 +117,13 @@ public class PHPCompletionProposalLabelProvider extends
 	@Override
 	protected String createTypeProposalLabel(String fullName) {
 		return super.createTypeProposalLabel(fullName);
+	}
+
+	@Override
+	public ImageDescriptor createImageDescriptor(CompletionProposal proposal) {
+		if (proposal.getModelElement() instanceof ArchiveProjectFragment) {
+			return DLTKPluginImages.DESC_OBJS_JAR;
+		}
+		return super.createImageDescriptor(proposal);
 	}
 }
