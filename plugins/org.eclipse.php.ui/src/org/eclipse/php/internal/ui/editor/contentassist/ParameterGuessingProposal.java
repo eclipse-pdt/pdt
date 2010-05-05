@@ -210,21 +210,6 @@ public final class ParameterGuessingProposal extends
 		for (int i = 0; i < paramList.size(); ++i) {
 			parameterNames[i] = paramList.get(i).toCharArray();
 		}
-		// if (parameterNames == null) {
-		// parameterNames = new char[0][0];
-		// String[] params = null;
-		// try {
-		// params = method.getParameterNames();
-		// } catch (ModelException e) {
-		// PHPUiPlugin.log(e);
-		// }
-		// if (params != null && params.length > 0) {
-		// parameterNames = new char[params.length][];
-		// for (int i = 0; i < params.length; ++i) {
-		// parameterNames[i] = params[i].toCharArray();
-		// }
-		// }
-		// }
 
 		fChoices = guessParameters(parameterNames);
 		int count = fChoices.length;
