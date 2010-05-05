@@ -239,6 +239,12 @@ final class PHPHeuristicScanner implements Symbols {
 		 * #stop(char, int)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
+			// not sure if we need move the if block to isDefaultPartition
+			// method
+			if (fTextRegion != null
+					&& !fTextRegion.equals(getTextRegion(position))) {
+				return false;
+			}
 			return Arrays.binarySearch(fChars, ch) >= 0
 					&& isDefaultPartition(position);
 		}
@@ -273,6 +279,12 @@ final class PHPHeuristicScanner implements Symbols {
 	/** The partition to scan in. */
 	private String fPartition;
 
+	/**
+	 * this is only not null for PHPPartitionTypes.PHP_QUOTED_STRING
+	 * fPartition,to judge if the to be matched and the matched result in the
+	 * same region.https://bugs.eclipse.org/bugs/show_bug.cgi?id=280133
+	 */
+	private ITextRegion fTextRegion;
 	/* internal scan state */
 
 	/** the most recently read character. */
@@ -342,7 +354,9 @@ final class PHPHeuristicScanner implements Symbols {
 		ITypedRegion partition = scanner.getPartition(offset);
 		// Update the default partition in the scanner
 		scanner.fPartition = partition.getType();
-
+		if (PHPPartitionTypes.PHP_QUOTED_STRING.equals(scanner.fPartition)) {
+			scanner.fTextRegion = scanner.getTextRegion(offset);
+		}
 		return scanner;
 	}
 
@@ -995,6 +1009,33 @@ final class PHPHeuristicScanner implements Symbols {
 					position, false);
 		} catch (BadLocationException e) {
 			return new TypedRegion(position, 0, "__no_partition_at_all"); //$NON-NLS-1$
+		}
+
+	}
+
+	private ITextRegion getTextRegion(int position) {
+		Assert.isTrue(position >= 0);
+		Assert.isTrue(position <= fDocument.getLength());
+		try {
+			// If we have a structured document - extract the text region from
+			// the document and classify it
+			if (fDocument instanceof BasicStructuredDocument) {
+				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument)
+						.getRegionAtCharacterOffset(position);
+				ITextRegion textRegion = sdRegion
+						.getRegionAtCharacterOffset(position);
+				if (textRegion instanceof IPhpScriptRegion) {
+					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+					textRegion = phpScriptRegion.getPhpToken(position
+							- sdRegion.getStartOffset()
+							- phpScriptRegion.getStart());
+					return textRegion;
+				}
+			}
+
+			return null;
+		} catch (BadLocationException e) {
+			return null; //$NON-NLS-1$
 		}
 
 	}
