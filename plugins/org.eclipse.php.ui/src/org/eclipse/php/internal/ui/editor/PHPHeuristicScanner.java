@@ -239,12 +239,6 @@ final class PHPHeuristicScanner implements Symbols {
 		 * #stop(char, int)
 		 */
 		public boolean stop(char ch, int position, boolean forward) {
-			// not sure if we need move the if block to isDefaultPartition
-			// method
-			if (fTextRegion != null
-					&& !fTextRegion.equals(getTextRegion(position))) {
-				return false;
-			}
 			return Arrays.binarySearch(fChars, ch) >= 0
 					&& isDefaultPartition(position);
 		}
@@ -255,6 +249,15 @@ final class PHPHeuristicScanner implements Symbols {
 		 * #nextPosition(int, boolean)
 		 */
 		public int nextPosition(int position, boolean forward) {
+			// only match char in the same string
+			if (fTextRegion != null
+					&& !fTextRegion.equals(getTextRegion(position))) {
+				if (forward) {
+					return fDocument.getLength();
+				} else {
+					return -1;
+				}
+			}
 			ITypedRegion partition = getPartition(position);
 			if (fPartition.equals(partition.getType()))
 				return super.nextPosition(position, forward);
