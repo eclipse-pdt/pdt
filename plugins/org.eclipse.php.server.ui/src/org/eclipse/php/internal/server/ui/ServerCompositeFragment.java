@@ -298,6 +298,12 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 */
 	public boolean performOk() {
 		try {
+			Server defaultServer = ServersManager.getDefaultServer(null);
+			boolean isDefault = false;
+			isDefault = defaultServer != null
+					&& defaultServer.getName().equals(
+							originalValuesCache.serverName);
+
 			Server server = getServer();
 			// Save any modification logged into the modified value cache
 			// object.
@@ -312,8 +318,12 @@ public class ServerCompositeFragment extends CompositeFragment {
 					!originalValuesCache.serverName
 							.equals(modifiedValuesCache.serverName)) {
 				// Update the ServerManager with the new server name
+
 				ServersManager.removeServer(originalValuesCache.serverName);
 				ServersManager.addServer(server);
+				if (isDefault) {
+					ServersManager.setDefaultServer(null, server);
+				}
 			}
 		} catch (Throwable e) {
 			Logger.logException("Error while saving the server settings", e); //$NON-NLS-1$
