@@ -64,11 +64,15 @@ public class IncludePathManager {
 						boolean changed = false;
 
 						// Calculate added entries:
+						Set<IPath> addedModels = new HashSet<IPath>();
+						getAddedModels(delta, addedModels);
 						for (IBuildpathEntry entry : rawBuildpath) {
-							boolean added = true;
+							boolean added = false;
 							for (IncludePath includePath : includePathEntries) {
 								if (includePath.isBuildpath()
-										&& entry.equals(includePath.getEntry())) {
+										&& entry.equals(includePath.getEntry())
+										|| !addedModels.contains(entry
+												.getPath())) {
 									added = false;
 									break;
 								}
@@ -127,6 +131,17 @@ public class IncludePathManager {
 					if (DLTKCore.DEBUG) {
 						e.printStackTrace();
 					}
+				}
+			}
+
+			private void getAddedModels(IModelElementDelta delta,
+					Set<IPath> addedModels) {
+				for (int i = 0; i < delta.getAddedChildren().length; i++) {
+					addedModels.add(delta.getAddedChildren()[i].getElement()
+							.getPath());
+				}
+				for (int i = 0; i < delta.getAffectedChildren().length; i++) {
+					getAddedModels(delta.getAffectedChildren()[i], addedModels);
 				}
 			}
 		});
