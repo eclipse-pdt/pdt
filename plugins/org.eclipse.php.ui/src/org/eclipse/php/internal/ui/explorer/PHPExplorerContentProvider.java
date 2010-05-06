@@ -91,7 +91,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					try {
 						return scriptProject.getAllProjectFragments();
 					} catch (ModelException e) {
-						e.printStackTrace();
+						Logger.logException(e);
 					}
 				}
 			}
