@@ -291,7 +291,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 			container = container.getFolder(prefixPathFolder);
 		}
 
-		if (!container.exists()) {
+		if (!container.isAccessible()) {
 			return;
 		}
 
