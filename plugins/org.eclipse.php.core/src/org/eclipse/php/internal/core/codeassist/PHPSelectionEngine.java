@@ -191,15 +191,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									if (element instanceof IType) {
 										IType type = (IType) element;
 										try {
-											methods
-													.addAll(Arrays
-															.asList(PHPModelUtils
-																	.getTypeHierarchyMethod(
-																			type,
-																			callExpression
-																					.getName(),
-																			true,
-																			null)));
+											IMethod[] method = PHPModelUtils
+													.getFirstTypeHierarchyMethod(
+															type, null,
+															callExpression
+																	.getName(),
+															true, null);
+											methods.addAll(Arrays
+													.asList(method));
 										} catch (CoreException e) {
 											PHPCorePlugin.log(e);
 										}

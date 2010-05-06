@@ -669,8 +669,7 @@ public class PHPModelUtils {
 												&& varName
 														.toLowerCase()
 														.startsWith(
-																prefix
-																		.toLowerCase()))) {
+																prefix.toLowerCase()))) {
 									elements.add(new FakeField(
 											(ModelElement) method, varName, e
 													.sourceStart(), e
@@ -1139,14 +1138,96 @@ public class PHPModelUtils {
 			ITypeHierarchy hierarchy, String prefix, boolean exactName,
 			IProgressMonitor monitor) throws CoreException {
 
+		return getTypeHierarchyMethod(type, hierarchy, prefix, exactName,
+				monitor, false);
+	}
+
+	/**
+	 * Finds method by name in the class hierarchy (including the class itself)
+	 * 
+	 * @param type
+	 *            Class element
+	 * @param hierarchy
+	 *            Cached type hierarchy
+	 * @param prefix
+	 *            Method name or prefix
+	 * @param exactName
+	 *            Whether the name is exact or it is prefix
+	 * @param monitor
+	 *            Progress monitor
+	 * @throws CoreException
+	 */
+	public static IMethod[] getTypeHierarchyMethod(IType type,
+			ITypeHierarchy hierarchy, String prefix, boolean exactName,
+			IProgressMonitor monitor, boolean returnFirst) throws CoreException {
+
 		if (prefix == null) {
 			throw new NullPointerException();
 		}
 		final List<IMethod> methods = new LinkedList<IMethod>();
 		methods.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
-		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
+
+		boolean ignoreSuper = methods.size() > 0 && returnFirst;
+
+		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0
+				&& !ignoreSuper) {
 			methods.addAll(Arrays.asList(getSuperTypeHierarchyMethod(type,
-					hierarchy, prefix, exactName, monitor)));
+					hierarchy, prefix, exactName, monitor, returnFirst)));
+		}
+		return methods.toArray(new IMethod[methods.size()]);
+	}
+
+	private static IMethod[] getSuperTypeHierarchyMethod(IType type,
+			ITypeHierarchy hierarchy, String prefix, boolean exactName,
+			IProgressMonitor monitor, boolean returnFirst) throws CoreException {
+		IType[] superClasses = getSuperClasses(type, hierarchy);
+
+		for (IType superClass : superClasses) {
+			IMethod[] methods = getTypeMethod(superClass, prefix, exactName);
+			if (methods.length > 0) {
+				return methods;
+			}
+		}
+
+		return new IMethod[0];
+	}
+
+	/**
+	 * Finds the first method by name in the class hierarchy (including the
+	 * class itself)
+	 * 
+	 * @param type
+	 *            Class element
+	 * @param hierarchy
+	 *            Cached type hierarchy
+	 * @param prefix
+	 *            Method name or prefix
+	 * @param exactName
+	 *            Whether the name is exact or it is prefix
+	 * @param monitor
+	 *            Progress monitor
+	 * @throws CoreException
+	 */
+	public static IMethod[] getFirstTypeHierarchyMethod(IType type,
+			ITypeHierarchy hierarchy, String prefix, boolean exactName,
+			IProgressMonitor monitor) throws CoreException {
+
+		if (prefix == null) {
+			throw new NullPointerException();
+		}
+		final List<IMethod> methods = new LinkedList<IMethod>();
+		methods.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
+		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0
+				&& methods.size() == 0) {
+			IType[] allSuperclasses = getSuperClasses(type, hierarchy);
+			for (IType superClass : allSuperclasses) {
+				IMethod[] method = getTypeMethod(superClass, prefix, exactName);
+				if (method != null) {
+					methods.addAll(Arrays.asList(method));
+					break;
+				}
+			}
+
 		}
 		return methods.toArray(new IMethod[methods.size()]);
 	}
@@ -1166,7 +1247,8 @@ public class PHPModelUtils {
 	 */
 	public static IMethod[] getTypeHierarchyMethod(IType type, String prefix,
 			boolean exactName, IProgressMonitor monitor) throws CoreException {
-		return getTypeHierarchyMethod(type, null, prefix, exactName, monitor);
+		return getTypeHierarchyMethod(type, null, prefix, exactName, monitor,
+				true);
 	}
 
 	/**
@@ -1334,9 +1416,7 @@ public class PHPModelUtils {
 			boolean exactName) throws ModelException {
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType type : types) {
-			result
-					.addAll(Arrays
-							.asList(getTypeMethod(type, prefix, exactName)));
+			result.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
 		}
 		return (IMethod[]) result.toArray(new IMethod[result.size()]);
 	}
