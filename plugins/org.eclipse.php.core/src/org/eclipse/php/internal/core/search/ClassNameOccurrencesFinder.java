@@ -169,6 +169,14 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 		return true;
 	}
 
+	public boolean visit(UseStatementPart part) {
+		NamespaceName namespace = part.getName();
+		if (namespace instanceof Identifier) {
+			dealIdentifier(namespace);
+		}
+		return false;
+	}
+
 	/**
 	 * Checks if the supers are with the name of the class
 	 * 

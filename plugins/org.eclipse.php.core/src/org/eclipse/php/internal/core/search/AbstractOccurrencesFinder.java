@@ -274,6 +274,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 							NamespaceReference.NAMESPACE_SEPARATOR).append(
 							fullName.substring(index + 1)).toString();
 				}
+			} else if (lastUseParts.containsKey(fullName)) {
+				fullName = new StringBuilder(lastUseParts.get(fullName)
+						.getName().getName()).toString();
 			} else {
 				if (currentNamespace != null
 						&& currentNamespace.getName() != null) {

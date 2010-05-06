@@ -255,7 +255,8 @@ public class PhpElementConciliator {
 				|| parentType == ASTNode.CLASS_DECLARATION
 				|| parentType == ASTNode.INTERFACE_DECLARATION
 				|| parentType == ASTNode.CATCH_CLAUSE
-				|| parentType == ASTNode.FORMAL_PARAMETER) {
+				|| parentType == ASTNode.FORMAL_PARAMETER
+				|| parentType == ASTNode.USE_STATEMENT_PART) {
 			return true;
 		}
 
