@@ -412,8 +412,11 @@ public class TypeBinding implements ITypeBinding {
 					try {
 						String[] superClassNames = type.getSuperClasses();
 						if (superClassNames != null) {
-							superTypeNames.addAll(Arrays
-									.asList(superClassNames));
+							for (String name : superClassNames) {
+								if (!superTypeNames.contains(name)) {
+									superTypeNames.add(name);
+								}
+							}
 						}
 					} catch (CoreException e) {
 						if (DLTKCore.DEBUG) {
@@ -422,12 +425,17 @@ public class TypeBinding implements ITypeBinding {
 					}
 				}
 				List<IType> typeList = new ArrayList<IType>();
+				List<IModelElement> elementList = Arrays.asList(elements);
 				for (String superTypeName : superTypeNames) {
 					IType[] types = PhpModelAccess.getDefault().findTypes(
 							superTypeName, MatchRule.EXACT, 0,
 							Modifiers.AccNameSpace, scope, null);
-					typeList.addAll(Arrays.asList(types));
-
+					for (IType type : types) {
+						if (!elementList.contains(type)) {
+							typeList.add(type);
+						}
+					}
+					// typeList.addAll(Arrays.asList(types));
 				}
 				if (typeList.size() > 0) {
 					superTypes = typeList.toArray(new IType[typeList.size()]);
