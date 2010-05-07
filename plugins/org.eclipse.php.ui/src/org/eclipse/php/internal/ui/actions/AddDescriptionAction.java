@@ -176,8 +176,11 @@ public class AddDescriptionAction extends Action implements
 				comment = createDefaultComment(lineDelim);
 			}
 		} catch (CoreException e) {
-			comment = createDefaultComment(lineDelim);
 			Logger.logException(e);
+		}
+
+		if (comment == null) {
+			comment = createDefaultComment(lineDelim);
 		}
 
 		docBlock = indentPattern(comment, indentString, lineDelim);
@@ -296,8 +299,8 @@ public class AddDescriptionAction extends Action implements
 			return primaryModelElem != null ? primaryModelElem.getSourceRange()
 					.getOffset()
 					+ primaryModelElem.getSourceRange().getLength()/*
-																	 * getPHPStartTag(
-																	 * ).
+																	 * getPHPStartTag
+																	 * ( ).
 																	 * getEndPosition
 																	 * ()
 																	 */: -1;
