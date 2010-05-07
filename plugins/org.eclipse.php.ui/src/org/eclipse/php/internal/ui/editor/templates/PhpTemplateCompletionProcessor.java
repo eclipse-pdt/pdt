@@ -58,6 +58,16 @@ public class PhpTemplateCompletionProcessor extends
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
+		IDocument document = viewer.getDocument();
+		try {
+			String type = TextUtilities.getContentType(document,
+					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
+					offset, true);
+			if (!PHPPartitionTypes.PHP_DEFAULT.equals(type)) {
+				return EMPTY;
+			}
+		} catch (BadLocationException e) {
+		}
 		if (isInDocOrCommentOrString(viewer, offset)) {
 			return EMPTY;
 		}
