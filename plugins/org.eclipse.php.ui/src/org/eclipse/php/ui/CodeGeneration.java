@@ -12,6 +12,7 @@
 package org.eclipse.php.ui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -604,7 +605,8 @@ public class CodeGeneration {
 		if (null != resolvedBinding) {
 			returnTypes = resolvedBinding.getReturnType();
 			if (null != returnTypes && returnTypes.length > 0) {
-				for (ITypeBinding returnType : returnTypes) {
+				List<ITypeBinding> returnTypesList = removeDuplicateTypes(returnTypes);
+				for (ITypeBinding returnType : returnTypesList) {
 					if (returnType.isUnknown()) {
 						returnTypeBuffer.append("null").append("|");
 					} else if (returnType.isAmbiguous()) {
@@ -655,6 +657,19 @@ public class CodeGeneration {
 				method.getElementName(), paramNames, retType,
 				typeParameterNames, overridden, false, lineDelimiter,
 				exceptions);
+	}
+
+	private static List<ITypeBinding> removeDuplicateTypes(
+			ITypeBinding[] returnTypes) {
+
+		List<ITypeBinding> types = new ArrayList<ITypeBinding>();
+
+		for (ITypeBinding type : returnTypes) {
+			if (!types.contains(type)) {
+				types.add(type);
+			}
+		}
+		return types;
 	}
 
 	// /**
