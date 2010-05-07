@@ -1138,58 +1138,16 @@ public class PHPModelUtils {
 			ITypeHierarchy hierarchy, String prefix, boolean exactName,
 			IProgressMonitor monitor) throws CoreException {
 
-		return getTypeHierarchyMethod(type, hierarchy, prefix, exactName,
-				monitor, false);
-	}
-
-	/**
-	 * Finds method by name in the class hierarchy (including the class itself)
-	 * 
-	 * @param type
-	 *            Class element
-	 * @param hierarchy
-	 *            Cached type hierarchy
-	 * @param prefix
-	 *            Method name or prefix
-	 * @param exactName
-	 *            Whether the name is exact or it is prefix
-	 * @param monitor
-	 *            Progress monitor
-	 * @throws CoreException
-	 */
-	public static IMethod[] getTypeHierarchyMethod(IType type,
-			ITypeHierarchy hierarchy, String prefix, boolean exactName,
-			IProgressMonitor monitor, boolean returnFirst) throws CoreException {
-
 		if (prefix == null) {
 			throw new NullPointerException();
 		}
 		final List<IMethod> methods = new LinkedList<IMethod>();
 		methods.addAll(Arrays.asList(getTypeMethod(type, prefix, exactName)));
-
-		boolean ignoreSuper = methods.size() > 0 && returnFirst;
-
-		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0
-				&& !ignoreSuper) {
+		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
 			methods.addAll(Arrays.asList(getSuperTypeHierarchyMethod(type,
-					hierarchy, prefix, exactName, monitor, returnFirst)));
+					hierarchy, prefix, exactName, monitor)));
 		}
 		return methods.toArray(new IMethod[methods.size()]);
-	}
-
-	private static IMethod[] getSuperTypeHierarchyMethod(IType type,
-			ITypeHierarchy hierarchy, String prefix, boolean exactName,
-			IProgressMonitor monitor, boolean returnFirst) throws CoreException {
-		IType[] superClasses = getSuperClasses(type, hierarchy);
-
-		for (IType superClass : superClasses) {
-			IMethod[] methods = getTypeMethod(superClass, prefix, exactName);
-			if (methods.length > 0) {
-				return methods;
-			}
-		}
-
-		return new IMethod[0];
 	}
 
 	/**
@@ -1247,8 +1205,7 @@ public class PHPModelUtils {
 	 */
 	public static IMethod[] getTypeHierarchyMethod(IType type, String prefix,
 			boolean exactName, IProgressMonitor monitor) throws CoreException {
-		return getTypeHierarchyMethod(type, null, prefix, exactName, monitor,
-				true);
+		return getTypeHierarchyMethod(type, null, prefix, exactName, monitor);
 	}
 
 	/**
