@@ -38,12 +38,12 @@ public class ScalarEvaluator extends FixedAnswerEvaluator {
 			simpleType = SimpleType.TYPE_NUMBER;
 			break;
 		case Scalar.TYPE_STRING:
-			if ("null".equalsIgnoreCase(scalar.getValue())) {
+			if ("null".equalsIgnoreCase(scalar.getValue())) { //$NON-NLS-1$
 				simpleType = SimpleType.TYPE_NULL;
 				break;
 			}
 			// checking specific case for "return $this;" statement
-			if ("this".equalsIgnoreCase(scalar.getValue())) {
+			if ("this".equalsIgnoreCase(scalar.getValue())) { //$NON-NLS-1$
 				IContext context = goal.getContext();
 				if (context instanceof MethodContext) {
 					MethodDeclaration methodNode = ((MethodContext) context)
@@ -63,7 +63,13 @@ public class ScalarEvaluator extends FixedAnswerEvaluator {
 			}
 
 		case Scalar.TYPE_SYSTEM:
-			simpleType = SimpleType.TYPE_STRING;
+			String value = scalar.getValue();
+			if ("true".equalsIgnoreCase(value) //$NON-NLS-1$
+					|| "false".equalsIgnoreCase(value)) { //$NON-NLS-1$
+				simpleType = SimpleType.TYPE_BOOLEAN;
+			} else {
+				simpleType = SimpleType.TYPE_STRING;
+			}
 			break;
 		}
 		return new SimpleType(simpleType);

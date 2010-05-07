@@ -172,8 +172,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 				}
 			}
 		} catch (ModelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		}
 
 		return (ITypeBinding[]) result.toArray(new ITypeBinding[result.size()]);
