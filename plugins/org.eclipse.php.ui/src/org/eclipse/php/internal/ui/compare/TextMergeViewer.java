@@ -243,7 +243,6 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 	private CompareHandlerService fHandlerService;
 
 	private boolean fSynchronizedScrolling = true;
-	private boolean fShowMoreInfo = false;
 
 	private MergeSourceViewer fFocusPart;
 
@@ -1375,8 +1374,6 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 					"LEFT_IS_LOCAL", false); //$NON-NLS-1$
 			fSynchronizedScrolling = fPreferenceStore
 					.getBoolean(ComparePreferencePage.SYNCHRONIZE_SCROLLING);
-			fShowMoreInfo = fPreferenceStore
-					.getBoolean(ComparePreferencePage.SHOW_MORE_INFO);
 			fShowPseudoConflicts = fPreferenceStore
 					.getBoolean(ComparePreferencePage.SHOW_PSEUDO_CONFLICTS);
 			// fUseSplines=
@@ -3165,9 +3162,6 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 
 	private void updateStatus(Diff diff) {
 
-		if (!fShowMoreInfo)
-			return;
-
 		String diffDescription;
 
 		if (diff == null) {
@@ -3504,18 +3498,6 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 			boolean b = fPreferenceStore
 					.getBoolean(ComparePreferencePage.SYNCHRONIZE_SCROLLING);
 			setSyncScrolling(b);
-
-		} else if (key.equals(ComparePreferencePage.SHOW_MORE_INFO)) {
-
-			boolean b = fPreferenceStore
-					.getBoolean(ComparePreferencePage.SHOW_MORE_INFO);
-			if (b != fShowMoreInfo) {
-				fShowMoreInfo = b;
-				if (fShowMoreInfo)
-					updateStatus(fCurrentDiff);
-				else
-					clearStatus();
-			}
 
 		} else {
 			super.handlePropertyChangeEvent(event);
