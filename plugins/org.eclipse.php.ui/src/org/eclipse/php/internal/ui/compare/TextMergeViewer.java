@@ -37,6 +37,7 @@ import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.*;
@@ -1435,14 +1436,20 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 
 	private void checkForColorUpdate(Display display) {
 		if (fPollSystemForeground) {
-			RGB fg = display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB();
+//			RGB fg = display.getSystemColor(SWT.COLOR_LIST_FOREGROUND).getRGB();
+			RGB fg = fPreferenceStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT) ? null : 
+				new Color(display, PreferenceConverter.getColor(fPreferenceStore, 
+						AbstractTextEditor.PREFERENCE_COLOR_FOREGROUND_SYSTEM_DEFAULT)).getRGB();
 			if (fForeground == null || !fg.equals(fForeground)) {
 				fForeground = fg;
 				updateColors(display);
 			}
 		}
 		if (fPollSystemBackground) {
-			RGB bg = display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB();
+//			RGB bg = display.getSystemColor(SWT.COLOR_LIST_BACKGROUND).getRGB();
+			RGB bg = fPreferenceStore.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT) ? null : 
+				new Color(display, PreferenceConverter.getColor(fPreferenceStore, 
+						AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT)).getRGB();
 			if (fBackground == null || !bg.equals(fBackground)) {
 				fBackground = bg;
 				updateColors(display);
