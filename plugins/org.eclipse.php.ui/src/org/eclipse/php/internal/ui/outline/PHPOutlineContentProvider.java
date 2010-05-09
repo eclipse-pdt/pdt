@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -94,7 +92,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		if (parent instanceof IParent) {
 			IParent c = (IParent) parent;
 			try {
-				return filter(c.getChildren());
+				return filterDuplicateVars(parent, filter(c.getChildren()));
 			} catch (ModelException x) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=38341
 				// don't log NotExist exceptions as this is a valid case
@@ -106,6 +104,32 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			}
 		}
 		return PHPContentOutlineConfiguration.NO_CHILDREN;
+	}
+
+	private IModelElement[] filterDuplicateVars(Object parent,
+			IModelElement[] children) {
+		// public variables can only exist in ISourceModule
+		if (!(parent instanceof ISourceModule)) {
+			return children;
+		}
+		Set<IModelElement> result = new TreeSet<IModelElement>(
+				new Comparator<IModelElement>() {
+					public int compare(IModelElement o1, IModelElement o2) {
+						// filter duplications of variables
+						if (o1 instanceof IField
+								&& o2 instanceof IField
+								&& o1.getElementName().equals(
+										o2.getElementName())
+								&& o1.getParent().equals(o2.getParent())) {
+							return 0;
+						}
+						return 1;
+					}
+				});
+		for (int i = 0; i < children.length; i++) {
+			result.add(children[i]);
+		}
+		return result.toArray(new IModelElement[result.size()]);
 	}
 
 	private boolean isNamespaceSupported(IModelElement modelElement) {
