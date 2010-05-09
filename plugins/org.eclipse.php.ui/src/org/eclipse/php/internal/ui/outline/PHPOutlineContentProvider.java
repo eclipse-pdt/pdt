@@ -11,9 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeType;
 import org.eclipse.php.internal.core.typeinference.UseStatementElement;
+import org.eclipse.php.internal.core.util.OutlineFilter;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Control;
@@ -62,37 +63,12 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 	}
 
-	protected IModelElement[] filter(IModelElement[] children) {
-		boolean initializers = false;
-		for (int i = 0; i < children.length; i++) {
-			if (matches(children[i])) {
-				initializers = true;
-				break;
-			}
-		}
-
-		if (!initializers) {
-			return children;
-		}
-
-		Vector<IModelElement> v = new Vector<IModelElement>();
-		for (int i = 0; i < children.length; i++) {
-			if (matches(children[i])) {
-				continue;
-			}
-			v.addElement(children[i]);
-		}
-
-		IModelElement[] result = new IModelElement[v.size()];
-		v.copyInto(result);
-		return result;
-	}
-
 	public Object[] getChildren(Object parent) {
 		if (parent instanceof IParent) {
 			IParent c = (IParent) parent;
 			try {
-				return filterDuplicateVars(parent, filter(c.getChildren()));
+				return OutlineFilter.filterChildrenForOutline(parent, c
+						.getChildren());
 			} catch (ModelException x) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=38341
 				// don't log NotExist exceptions as this is a valid case
@@ -104,32 +80,6 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			}
 		}
 		return PHPContentOutlineConfiguration.NO_CHILDREN;
-	}
-
-	private IModelElement[] filterDuplicateVars(Object parent,
-			IModelElement[] children) {
-		// public variables can only exist in ISourceModule
-		if (!(parent instanceof ISourceModule)) {
-			return children;
-		}
-		Set<IModelElement> result = new TreeSet<IModelElement>(
-				new Comparator<IModelElement>() {
-					public int compare(IModelElement o1, IModelElement o2) {
-						// filter duplications of variables
-						if (o1 instanceof IField
-								&& o2 instanceof IField
-								&& o1.getElementName().equals(
-										o2.getElementName())
-								&& o1.getParent().equals(o2.getParent())) {
-							return 0;
-						}
-						return 1;
-					}
-				});
-		for (int i = 0; i < children.length; i++) {
-			result.add(children[i]);
-		}
-		return result.toArray(new IModelElement[result.size()]);
 	}
 
 	private boolean isNamespaceSupported(IModelElement modelElement) {
@@ -167,7 +117,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		if (parent instanceof IParent) {
 			IParent c = (IParent) parent;
 			try {
-				IModelElement[] children = filter(c.getChildren());
+				IModelElement[] children = OutlineFilter
+						.filter(c.getChildren());
 				return (children != null && children.length > 0);
 			} catch (ModelException x) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=38341
@@ -202,32 +153,6 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	}
 
 	public boolean isDeleted(Object o) {
-		return false;
-	}
-
-	protected boolean matches(IModelElement element) {
-		if (element.getElementType() == IModelElement.METHOD) {
-			String name = element.getElementName();
-			return (name != null && name.indexOf('<') >= 0);
-		}
-		// Filter out non-class variables:
-		if (element.getElementType() == IModelElement.FIELD) {
-			IField field = (IField) element;
-			try {
-				if ((field.getFlags() & Modifiers.AccConstant) != 0
-						|| (field instanceof UseStatement)) {
-					return false;
-				}
-			} catch (ModelException e) {
-			}
-			IModelElement parent = element.getParent();
-			if (parent != null) {
-				return (parent.getElementType() == IModelElement.METHOD);
-			}
-		}
-		if (element.getElementType() == IModelElement.IMPORT_CONTAINER) {
-			return true;
-		}
 		return false;
 	}
 
