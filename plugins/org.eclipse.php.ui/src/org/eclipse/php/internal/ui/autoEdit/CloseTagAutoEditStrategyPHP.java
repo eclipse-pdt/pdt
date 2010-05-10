@@ -27,8 +27,12 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
- * Auto Strategy for <?php ?> insertion code when the user enters "<?" in
- * non-PHP region he gets back "php ?>"
+ * 1.when user check both "Use short tags" and "close PHP Tag",people type "<?"
+ * then get "<? ?>". 2.when user uncheck "Use short tags" and check
+ * "close PHP Tag",people type "<?" then get "<?php ?>". 3.when user check
+ * "Use short tags" and uncheck "close PHP Tag",no completion at all. 4.when
+ * user uncheck both "Use short tags" and "close PHP Tag",people type "<?" then
+ * get "<?php"
  * 
  * @author Roy, 2007
  */
@@ -36,40 +40,58 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 
 	public void customizeDocumentCommand(IDocument document,
 			DocumentCommand command) {
-		// if the user wants to automatic close php tags
-		if (TypingPreferences.addPhpCloseTag) {
+		if (!TypingPreferences.addPhpCloseTag && TypingPreferences.useShortTags) {
+			return;
+		}
 
-			Object textEditor = getActiveTextEditor();
-			if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor)
-					.getInsertMode() == ITextEditorExtension3.SMART_INSERT))
-				return;
+		Object textEditor = getActiveTextEditor();
+		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor)
+				.getInsertMode() == ITextEditorExtension3.SMART_INSERT))
+			return;
 
-			IStructuredModel model = null;
-			try {
-				model = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(document);
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager()
+					.getExistingModelForRead(document);
 
-				if (model != null) {
-					if (command.text != null) {
-						if (command.text.equals("?")) { //$NON-NLS-1$
-							// scriptlet - add end ?>
-							IDOMNode node = (IDOMNode) model
-									.getIndexedRegion(command.offset - 1);
-							if (node != null
-									&& prefixedWith(document, command.offset,
-											"<") && !closeTagAppears(node.getSource(), command.offset)) { //$NON-NLS-1$ //$NON-NLS-2$
-								command.text += "php ?>"; //$NON-NLS-1$
+			if (model != null) {
+				if (command.text != null) {
+					if (command.text.equals("?")) { //$NON-NLS-1$
+						IDOMNode node = (IDOMNode) model
+								.getIndexedRegion(command.offset - 1);
+						if (node != null
+								&& prefixedWith(document, command.offset, "<")) { //$NON-NLS-1$ //$NON-NLS-2$
+							if (!TypingPreferences.addPhpCloseTag
+									&& !TypingPreferences.useShortTags) {
+								command.text += "php "; //$NON-NLS-1$
 								command.shiftsCaret = false;
 								command.caretOffset = command.offset + 5;
 								command.doit = false;
+							} else if (TypingPreferences.addPhpCloseTag
+									&& TypingPreferences.useShortTags) {
+								if (!closeTagAppears(node.getSource(),
+										command.offset)) {
+									command.text += " ?>"; //$NON-NLS-1$
+									command.shiftsCaret = false;
+									command.doit = false;
+								}
+							} else if (TypingPreferences.addPhpCloseTag
+									&& !TypingPreferences.useShortTags) {
+								if (!closeTagAppears(node.getSource(),
+										command.offset)) {
+									command.text += "php ?>"; //$NON-NLS-1$
+									command.shiftsCaret = false;
+									command.caretOffset = command.offset + 5;
+									command.doit = false;
+								}
 							}
 						}
 					}
 				}
-			} finally {
-				if (model != null)
-					model.releaseFromRead();
 			}
+		} finally {
+			if (model != null)
+				model.releaseFromRead();
 		}
 	}
 

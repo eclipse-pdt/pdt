@@ -20,6 +20,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
+import org.eclipse.php.internal.ui.folding.IStructuredTextFoldingProvider;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.swt.SWT;
@@ -179,6 +180,15 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public final static String EDITOR_ADD_PHPCLOSE_TAGS = "autoAddPhpCloseTags"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that controls whether the 'use short tags' feature is
+	 * enabled.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 */
+	public final static String EDITOR_USE_SHORT_TAGS = "useShortTags"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP comments
@@ -1032,6 +1042,7 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_CLOSE_PHPDOCS_AND_COMMENTS, true);
 		store.setDefault(EDITOR_ADD_PHPDOC_TAGS, true);
 		store.setDefault(EDITOR_ADD_PHPCLOSE_TAGS, true);
+		store.setDefault(EDITOR_USE_SHORT_TAGS, false);
 
 		// mark occurrences
 		store.setDefault(PreferenceConstants.EDITOR_MARK_OCCURRENCES, true);

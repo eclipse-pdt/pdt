@@ -29,7 +29,7 @@ public class TypingPreferences {
 	static boolean closePhpdoc;
 	static boolean addDocTags;
 	static boolean addPhpCloseTag;
-
+	static boolean useShortTags;
 	static {
 		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
 
@@ -45,7 +45,8 @@ public class TypingPreferences {
 				.getBoolean(PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS);
 		addPhpCloseTag = store
 				.getBoolean(PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS);
-
+		useShortTags = store
+				.getBoolean(PreferenceConstants.EDITOR_USE_SHORT_TAGS);
 		store.addPropertyChangeListener(new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
@@ -78,6 +79,12 @@ public class TypingPreferences {
 				if (property == PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS) {
 					addPhpCloseTag = Boolean.valueOf(
 							(String) event.getNewValue()).booleanValue();
+					return;
+				}
+				if (property == PreferenceConstants.EDITOR_USE_SHORT_TAGS) {
+					useShortTags = Boolean
+							.valueOf((String) event.getNewValue())
+							.booleanValue();
 					return;
 				}
 			}
