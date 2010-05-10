@@ -31,11 +31,9 @@ import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.osgi.service.environment.EnvironmentInfo;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
+import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.dnd.DNDUtils;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
-import org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType;
-import org.eclipse.php.internal.ui.editor.templates.PhpNewFileTemplateContextType;
-import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -337,11 +335,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 		if (contentTypeRegistry == null) {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
 
-			registry.addContextType(PhpTemplateContextType.PHP_CONTEXT_TYPE_ID);
-			registry
-					.addContextType(PhpNewFileTemplateContextType.NEW_PHP_CONTEXT_TYPE_ID);
-			registry
-					.addContextType(PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
+			CodeTemplateContextType.registerContextTypes(registry);
 
 			contentTypeRegistry = registry;
 		}
