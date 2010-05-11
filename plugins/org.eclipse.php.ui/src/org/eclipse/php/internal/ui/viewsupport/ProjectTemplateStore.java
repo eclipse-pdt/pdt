@@ -26,6 +26,7 @@ import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.jface.text.templates.persistence.TemplateReaderWriter;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 /**
@@ -33,13 +34,13 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public final class ProjectTemplateStore {
 
-	private static final String KEY = "org.eclipse.php.ui.text.custom_code_templates"; //$NON-NLS-1$
+	private static final String KEY = PreferenceConstants.CODE_TEMPLATES_KEY; //$NON-NLS-1$
 
 	private final TemplateStore fInstanceStore;
 	private final TemplateStore fProjectStore;
 
 	public ProjectTemplateStore(IProject project) {
-		fInstanceStore = PHPUiPlugin.getDefault().getTemplateStore();
+		fInstanceStore = PHPUiPlugin.getDefault().getCodeTemplateStore();
 		if (project == null) {
 			fProjectStore = null;
 		} else {

@@ -17,7 +17,7 @@ import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.templates.PhpNewFileTemplateContextType;
+import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 
 public class NewPhpTemplatesWizardPage extends
@@ -31,7 +31,7 @@ public class NewPhpTemplatesWizardPage extends
 	}
 
 	protected String getTemplateContextTypeId() {
-		return PhpNewFileTemplateContextType.NEW_PHP_CONTEXT_TYPE_ID;
+		return CodeTemplateContextType.NEW_FILE_CONTEXTTYPE;
 	}
 
 	protected String getUseTemplateMessage() {
@@ -40,7 +40,7 @@ public class NewPhpTemplatesWizardPage extends
 	}
 
 	protected ContextTypeRegistry getTemplatesContextTypeRegistry() {
-		return PHPUiPlugin.getDefault().getTemplateContextRegistry();
+		return PHPUiPlugin.getDefault().getCodeTemplateContextRegistry();
 	}
 
 	protected String getTemplatesLocationMessage() {

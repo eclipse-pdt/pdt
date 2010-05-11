@@ -30,8 +30,8 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -288,7 +288,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		// create viewer that displays currently selected template's contents
 		fPatternViewer = doCreateViewer(parent);
 
-		fTemplateStore = PHPUiPlugin.getDefault().getTemplateStore();
+		fTemplateStore = PHPUiPlugin.getDefault().getCodeTemplateStore();
 		fTableViewer.setInput(fTemplateStore);
 
 		configureTableResizing(innerParent, table, column1, column2);

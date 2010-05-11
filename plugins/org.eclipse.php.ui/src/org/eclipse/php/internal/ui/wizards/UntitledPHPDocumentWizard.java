@@ -27,8 +27,8 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.*;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -95,7 +95,7 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 				return true;
 			}
 			TemplateStore templateStore = PHPUiPlugin.getDefault()
-					.getTemplateStore();
+					.getCodeTemplateStore();
 			Template template = templateStore.findTemplate(templateName);
 			if (template == null) {
 				return true;
@@ -103,7 +103,7 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 			// compile the template and insert the text into the new document
 			CompiledTemplate compiledTemplate = PHPTemplateStore
 					.compileTemplate(PHPUiPlugin.getDefault()
-							.getTemplateContextRegistry(), template);
+							.getCodeTemplateContextRegistry(), template);
 			IDocumentProvider documentProvider = textEditor
 					.getDocumentProvider();
 			IDocument document = textEditor.getDocumentProvider().getDocument(

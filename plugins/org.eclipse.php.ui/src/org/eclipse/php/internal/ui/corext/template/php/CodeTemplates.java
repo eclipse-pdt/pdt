@@ -51,7 +51,7 @@ public class CodeTemplates extends TemplateSet {
 
 	private CodeTemplates() {
 		super(
-				"codetemplate", PHPUiPlugin.getDefault().getTemplateContextRegistry()); //$NON-NLS-1$
+				"codetemplate", PHPUiPlugin.getDefault().getCodeTemplateContextRegistry()); //$NON-NLS-1$
 		create();
 	}
 

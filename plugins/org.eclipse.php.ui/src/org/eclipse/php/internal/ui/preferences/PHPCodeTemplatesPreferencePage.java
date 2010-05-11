@@ -22,9 +22,9 @@ public class PHPCodeTemplatesPreferencePage extends TemplatePreferencePage {
 
 	public PHPCodeTemplatesPreferencePage() {
 		setPreferenceStore(PreferenceConstants.getPreferenceStore());
-		setTemplateStore(PHPUiPlugin.getDefault().getTemplateStore());
+		setTemplateStore(PHPUiPlugin.getDefault().getCodeTemplateStore());
 		setContextTypeRegistry(PHPUiPlugin.getDefault()
-				.getTemplateContextRegistry());
+				.getCodeTemplateContextRegistry());
 	}
 
 	public void performHelp() {

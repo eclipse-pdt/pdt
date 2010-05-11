@@ -472,7 +472,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 					.get(0);
 			Template template = data.getTemplate();
 			TemplateContextType type = PHPUiPlugin.getDefault()
-					.getTemplateContextRegistry().getContextType(
+					.getCodeTemplateContextRegistry().getContextType(
 							template.getContextTypeId());
 			fTemplateProcessor.setContextType(type);
 			fPatternViewer.getDocument().set(template.getPattern());
@@ -497,7 +497,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		Template newTemplate = new Template(data.getTemplate());
 		EditTemplateDialog dialog = new EditTemplateDialog(getShell(),
 				newTemplate, true, false, PHPUiPlugin.getDefault()
-						.getTemplateContextRegistry());
+						.getCodeTemplateContextRegistry());
 		if (dialog.open() == Window.OK) {
 			// changed
 			data.setTemplate(dialog.getTemplate());

@@ -11,11 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.corext.template.php;
 
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
+import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.*;
+import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
+import org.eclipse.php.internal.ui.editor.templates.PhpTemplateVariables;
 
 /**
   */
-public class CodeTemplateContextType extends TemplateContextType {
+public class CodeTemplateContextType extends ScriptTemplateContextType {
 
 	/* context types */
 	public static final String PHP_PREFIX = "php_"; //$NON-NLS-1$
@@ -58,11 +64,19 @@ public class CodeTemplateContextType extends TemplateContextType {
 	public static final String SETTERCOMMENT_CONTEXTTYPE = PHP_PREFIX
 			+ "settercomment_context"; //$NON-NLS-1$
 
+	public static final String NEW_FILE_CONTEXTTYPE = PHP_PREFIX
+			+ "new_file_context"; //$NON-NLS-1$
+	public static final String NEW_HTMLFILE_CONTEXTTYPE = PHP_PREFIX
+			+ "new_htmlfile_context"; //$NON-NLS-1$
+
 	/* templates */
 
 	private static final String CODETEMPLATES_PREFIX = "org.eclipse.php.ui.editor.templates.php.codetemplates."; //$NON-NLS-1$
 	public static final String COMMENT_SUFFIX = "comment"; //$NON-NLS-1$
 
+	public static final String NEWFILE_ID = CODETEMPLATES_PREFIX + "author"; //$NON-NLS-1$
+	public static final String NEWHTMLFILE_ID = CODETEMPLATES_PREFIX
+			+ "html.frameset"; //$NON-NLS-1$
 	public static final String CATCHBLOCK_ID = CODETEMPLATES_PREFIX
 			+ "catchblock"; //$NON-NLS-1$
 	public static final String METHODSTUB_ID = CODETEMPLATES_PREFIX
@@ -385,6 +399,10 @@ public class CodeTemplateContextType extends TemplateContextType {
 					PhpTemplateMessages.CodeTemplateContextType_variable_description_barefieldname));
 			addCompilationUnitVariables();
 			fIsComment = true;
+		} else if (NEW_FILE_CONTEXTTYPE.equals(contextName)) {
+			addResolver(new PhpTemplateVariables.Encoding());
+		} else if (NEW_HTMLFILE_CONTEXTTYPE.equals(contextName)) {
+			addResolver(new PhpTemplateVariables.Encoding());
 		}
 	}
 
@@ -421,15 +439,6 @@ public class CodeTemplateContextType extends TemplateContextType {
 	 * CodeTemplateContextType_validate_missingvariable, missing)); }
 	 * super.validateVariables(variables); }
 	 */
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jdt.internal.corext.template.ContextType#createContext()
-	 */
-	public TemplateContext createContext() {
-		return null;
-	}
 
 	public static void registerContextTypes(ContextTypeRegistry registry) {
 		registry.addContextType(new CodeTemplateContextType(
@@ -471,6 +480,14 @@ public class CodeTemplateContextType extends TemplateContextType {
 				CodeTemplateContextType.GETTERCOMMENT_CONTEXTTYPE));
 		registry.addContextType(new CodeTemplateContextType(
 				CodeTemplateContextType.SETTERCOMMENT_CONTEXTTYPE));
+		registry.addContextType(new CodeTemplateContextType(
+				CodeTemplateContextType.SETTERCOMMENT_CONTEXTTYPE));
+
+		registry.addContextType(new CodeTemplateContextType(
+				CodeTemplateContextType.NEW_FILE_CONTEXTTYPE));
+		registry.addContextType(new CodeTemplateContextType(
+				CodeTemplateContextType.NEW_HTMLFILE_CONTEXTTYPE));
+
 	}
 
 	/*
@@ -488,6 +505,13 @@ public class CodeTemplateContextType extends TemplateContextType {
 			 * .CodeTemplateContextType_validate_invalidcomment); }
 			 */
 		}
+	}
+
+	@Override
+	public ScriptTemplateContext createContext(IDocument document, int offset,
+			int length, ISourceModule sourceModule) {
+		return new PhpTemplateContext(this, document, offset, length,
+				sourceModule);
 	}
 
 	/*

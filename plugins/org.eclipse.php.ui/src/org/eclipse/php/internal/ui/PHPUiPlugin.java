@@ -34,6 +34,8 @@ import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.dnd.DNDUtils;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
+import org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType;
+import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -88,7 +90,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private ImageDescriptorRegistry fImageDescriptorRegistry;
 	private ProblemMarkerManager fProblemMarkerManager;
 	protected TemplateStore templateStore = null;
-	protected ContextTypeRegistry contentTypeRegistry = null;
+	protected ContextTypeRegistry codeTypeRegistry = null;
 	private MembersOrderPreferenceCache fMembersOrderPreferenceCache;
 	private PHPFoldingStructureProviderRegistry fFoldingStructureProviderRegistry;
 	private PHPEditorTextHoverDescriptor[] fPHPEditorTextHoverDescriptors;
@@ -104,6 +106,10 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private ColorManager fColorManager;
 
 	private PHPTextTools fTextTools;
+
+	private ContributionContextTypeRegistry fContextTypeRegistry;
+
+	private PHPTemplateStore fCodeTemplateStore;
 
 	/**
 	 * The constructor.
@@ -327,20 +333,62 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 
 	/**
+	 * Returns the template store for the code generation templates.
+	 * 
+	 * @return the template store for the code generation templates
+	 * @since 3.0
+	 */
+	public TemplateStore getCodeTemplateStore() {
+		if (fCodeTemplateStore == null) {
+
+			fCodeTemplateStore = new PHPTemplateStore(
+					getCodeTemplateContextRegistry(), getPreferenceStore(),
+					PreferenceConstants.CODE_TEMPLATES_KEY);
+
+			try {
+				fCodeTemplateStore.load();
+			} catch (IOException e) {
+				Logger.logException(e);
+			}
+		}
+
+		return fCodeTemplateStore;
+	}
+
+	/**
 	 * Returns the template context type registry for the xml plugin.
 	 * 
 	 * @return the template context type registry for the xml plugin
 	 */
-	public ContextTypeRegistry getTemplateContextRegistry() {
-		if (contentTypeRegistry == null) {
+	public ContextTypeRegistry getCodeTemplateContextRegistry() {
+		if (codeTypeRegistry == null) {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
 
 			CodeTemplateContextType.registerContextTypes(registry);
 
-			contentTypeRegistry = registry;
+			codeTypeRegistry = registry;
 		}
 
-		return contentTypeRegistry;
+		return codeTypeRegistry;
+	}
+
+	/**
+	 * Returns the template context type registry for the java plug-in.
+	 * 
+	 * @return the template context type registry for the java plug-in
+	 * @since 3.0
+	 */
+	public synchronized ContextTypeRegistry getTemplateContextRegistry() {
+		if (fContextTypeRegistry == null) {
+			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
+
+			registry.addContextType(PhpTemplateContextType.PHP_CONTEXT_TYPE_ID);
+			registry.addContextType(PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
+
+			fContextTypeRegistry = registry;
+		}
+
+		return fContextTypeRegistry;
 	}
 
 	public synchronized MembersOrderPreferenceCache getMemberOrderPreferenceCache() {

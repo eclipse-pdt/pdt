@@ -794,6 +794,8 @@ public class PreferenceConstants {
 
 	public static final String TEMPLATES_KEY = "org.eclipse.php.ui.editor.templates"; //$NON-NLS-1$
 
+	public static final String CODE_TEMPLATES_KEY = "org.eclipse.php.ui.text.custom_code_templates"; //$NON-NLS-1$
+
 	public static final String NEW_PHP_FILE_TEMPLATE = "newFileTemplateName"; //$NON-NLS-1$
 
 	public static final String ALLOW_MULTIPLE_LAUNCHES = "allowMultipleLaunches"; //$NON-NLS-1$

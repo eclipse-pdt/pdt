@@ -36,7 +36,7 @@ public class CodeTemplateContext extends TemplateContext {
 	}
 
 	protected static ContextTypeRegistry getTemplateContextRegistry() {
-		return PHPUiPlugin.getDefault().getTemplateContextRegistry();
+		return PHPUiPlugin.getDefault().getCodeTemplateContextRegistry();
 	}
 
 	public IScriptProject getJavaProject() {

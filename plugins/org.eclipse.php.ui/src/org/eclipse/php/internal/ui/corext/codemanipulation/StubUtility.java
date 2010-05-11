@@ -170,9 +170,7 @@ public class StubUtility {
 				enclosingMethod);
 		context.setVariable(CodeTemplateContextType.EXCEPTION_TYPE,
 				exceptionType);
-		context
-				.setVariable(CodeTemplateContextType.EXCEPTION_VAR,
-						variableName);
+		context.setVariable(CodeTemplateContextType.EXCEPTION_VAR, variableName);
 		return evaluateTemplate(context, template);
 	}
 
@@ -444,9 +442,7 @@ public class StubUtility {
 				methodName);
 
 		if (retTypeSig != null) {
-			context
-					.setVariable(CodeTemplateContextType.RETURN_TYPE,
-							retTypeSig);
+			context.setVariable(CodeTemplateContextType.RETURN_TYPE, retTypeSig);
 		}
 		if (target != null) {
 			String targetTypeName = target.getDeclaringType()
@@ -776,8 +772,7 @@ public class StubUtility {
 				if (buf.length() > 0) {
 					buf.append(lineDelimiter).append(lineStart);
 				}
-				buf
-						.append("@param <").append(typeParameterNames[i]).append('>'); //$NON-NLS-1$
+				buf.append("@param <").append(typeParameterNames[i]).append('>'); //$NON-NLS-1$
 			}
 		}
 		for (int i = 0; i < paramNames.length; i++) {
@@ -958,7 +953,7 @@ public class StubUtility {
 	public static void setCodeTemplate(String templateId, String pattern,
 			IScriptProject project) {
 		TemplateStore codeTemplateStore = PHPUiPlugin.getDefault()
-				.getTemplateStore();
+				.getCodeTemplateStore();
 		TemplatePersistenceData data = codeTemplateStore
 				.getTemplateData(templateId);
 		Template orig = data.getTemplate();
@@ -969,7 +964,7 @@ public class StubUtility {
 
 	private static Template getCodeTemplate(String id, IScriptProject sp) {
 		if (sp == null)
-			return PHPUiPlugin.getDefault().getTemplateStore()
+			return PHPUiPlugin.getDefault().getCodeTemplateStore()
 					.findTemplateById(id);
 		ProjectTemplateStore projectStore = new ProjectTemplateStore(sp
 				.getProject());
