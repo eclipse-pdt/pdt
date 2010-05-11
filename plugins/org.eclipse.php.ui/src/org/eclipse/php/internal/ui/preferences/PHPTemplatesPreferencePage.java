@@ -32,4 +32,9 @@ public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 				IPHPHelpContextIds.TEMPLATES_PREFERENCES);
 		getControl().notifyListeners(SWT.Help, new Event());
 	}
+
+	@Override
+	protected boolean isShowFormatterSetting() {
+		return false;
+	}
 }
