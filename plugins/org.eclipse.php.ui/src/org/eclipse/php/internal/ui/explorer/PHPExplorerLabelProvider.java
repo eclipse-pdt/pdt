@@ -141,7 +141,12 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			}
 			return fragment.toStringWithAncestors();
 		}
-
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=295256
+		if (element instanceof IProjectFragment) {
+			IProjectFragment fragment = (IProjectFragment) element;
+			return fragment.getElementName();
+		}
+		// end
 		if (element instanceof IncludePath) {
 			Object entry = ((IncludePath) element).getEntry();
 
