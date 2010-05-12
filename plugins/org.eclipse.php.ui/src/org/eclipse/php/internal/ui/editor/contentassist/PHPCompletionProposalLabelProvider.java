@@ -32,7 +32,7 @@ public class PHPCompletionProposalLabelProvider extends
 
 		// parameters
 		nameBuffer.append('(');
-		appendUnboundedParameterList(nameBuffer, methodProposal);
+		appendParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')');
 
 		IMethod method = (IMethod) methodProposal.getModelElement();
@@ -59,7 +59,7 @@ public class PHPCompletionProposalLabelProvider extends
 
 		// parameters
 		nameBuffer.append('(');
-		appendUnboundedParameterList(nameBuffer, methodProposal);
+		appendParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')'); //$NON-NLS-1$
 
 		// IMethod method = (IMethod) methodProposal.getModelElement();

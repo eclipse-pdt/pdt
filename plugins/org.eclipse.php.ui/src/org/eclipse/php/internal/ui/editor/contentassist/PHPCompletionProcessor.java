@@ -11,15 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.dltk.ui.text.completion.ContentAssistInvocationContext;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProcessor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.ui.IEditorPart;
 
 public class PHPCompletionProcessor extends ScriptCompletionProcessor {
@@ -38,14 +35,6 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 
 	protected String getNatureId() {
 		return PHPNature.ID;
-	}
-
-	protected CompletionProposalLabelProvider getProposalLabelProvider() {
-		return new PHPCompletionProposalLabelProvider();
-	}
-
-	protected IPreferenceStore getPreferenceStore() {
-		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
 
 	public IContextInformationValidator getContextInformationValidator() {
@@ -67,11 +56,7 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 		explicit = false;
 
 		return new PHPContentAssistInvocationContext(viewer, offset, fEditor,
-				getNatureId(), oldExplicitValue) {
-			protected CompletionProposalLabelProvider createLabelProvider() {
-				return getProposalLabelProvider();
-			}
-		};
+				getNatureId(), oldExplicitValue);
 	}
 
 	public void setExplicit(boolean explicit) {

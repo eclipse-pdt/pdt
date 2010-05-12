@@ -15,7 +15,7 @@ import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.ui.IEditorPart;
 
-public abstract class PHPContentAssistInvocationContext extends
+public class PHPContentAssistInvocationContext extends
 		ScriptContentAssistInvocationContext {
 
 	private boolean explicit;

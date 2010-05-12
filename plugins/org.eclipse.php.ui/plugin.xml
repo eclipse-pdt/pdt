@@ -1872,7 +1872,10 @@
        <proposalCategory
              icon="icons/full/elcl16/phpdocprop_co.gif"></proposalCategory>
     </extension>     
-
+    <extension point="org.eclipse.dltk.ui.completion">
+       <proposalLabelProvider nature="org.eclipse.php.core.PHPNature"
+             class="org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalLabelProvider"/>
+    </extension>     
  <extension
        point="org.eclipse.wst.sse.ui.completionProposal">
     <proposalComputerExtendedActivation

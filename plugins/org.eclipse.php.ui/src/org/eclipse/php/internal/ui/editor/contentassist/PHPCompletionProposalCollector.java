@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
@@ -20,6 +19,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -63,19 +63,21 @@ public class PHPCompletionProposalCollector extends
 				image, displayString, i, isInDoc);
 	}
 
-	protected CompletionProposalLabelProvider createLabelProvider() {
-		CompletionProposalLabelProvider labelProvider = new PHPCompletionProposalLabelProvider();
-
-		// check if there are any adapters extending basic label provider
-		CompletionProposalLabelProvider extended = (CompletionProposalLabelProvider) Platform
-				.getAdapterManager().getAdapter(labelProvider,
-						CompletionProposalLabelProvider.class);
-
-		if (extended != null)
-			return extended;
-
-		return labelProvider;
-	}
+	// protected CompletionProposalLabelProvider createLabelProvider() {
+	// CompletionProposalLabelProvider labelProvider = new
+	// PHPCompletionProposalLabelProvider();
+	//
+	// // check if there are any adapters extending basic label provider
+	// CompletionProposalLabelProvider extended =
+	// (CompletionProposalLabelProvider) Platform
+	// .getAdapterManager().getAdapter(labelProvider,
+	// CompletionProposalLabelProvider.class);
+	//
+	// if (extended != null)
+	// return extended;
+	//
+	// return labelProvider;
+	// }
 
 	protected IScriptCompletionProposal createPackageProposal(
 			CompletionProposal proposal) {
@@ -258,6 +260,11 @@ public class PHPCompletionProposalCollector extends
 
 	public void setOffset(int offset) {
 		this.offset = offset;
+	}
+
+	@Override
+	protected String getNatureId() {
+		return PHPNature.ID;
 	}
 
 }
