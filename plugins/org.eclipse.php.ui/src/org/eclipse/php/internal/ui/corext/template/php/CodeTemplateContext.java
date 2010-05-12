@@ -11,9 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.corext.template.php;
 
-import java.util.Iterator;
-
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultLineTracker;
@@ -51,15 +48,16 @@ public class CodeTemplateContext extends TemplateContext {
 	public TemplateBuffer evaluate(Template template)
 			throws BadLocationException, TemplateException {
 		// test that all variables are defined
-		Iterator iterator = getContextType().resolvers();
-		while (iterator.hasNext()) {
-			TemplateVariableResolver var = (TemplateVariableResolver) iterator
-					.next();
-			if (var instanceof CodeTemplateContextType.CodeTemplateVariableResolver) {
-				Assert.isNotNull(getVariable(var.getType()),
-						"Variable " + var.getType() + "not defined"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
+		// Iterator iterator = getContextType().resolvers();
+		// while (iterator.hasNext()) {
+		// TemplateVariableResolver var = (TemplateVariableResolver) iterator
+		// .next();
+		// if (var instanceof
+		// CodeTemplateContextType.CodeTemplateVariableResolver) {
+		// Assert.isNotNull(getVariable(var.getType()),
+		//						"Variable " + var.getType() + "not defined"); //$NON-NLS-1$ //$NON-NLS-2$
+		// }
+		// }
 
 		if (!canEvaluate(template))
 			return null;
