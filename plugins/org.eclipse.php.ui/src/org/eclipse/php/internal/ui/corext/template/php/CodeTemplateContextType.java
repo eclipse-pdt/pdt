@@ -338,7 +338,7 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 					SEE_TO_OVERRIDDEN_TAG,
 					PhpTemplateMessages.CodeTemplateContextType_variable_description_see_overridden_tag));
 			addResolver(new TagsVariableResolver());
-			addCompilationUnitVariables();
+			// addCompilationUnitVariables();
 			fIsComment = true;
 		} else if (DELEGATECOMMENT_CONTEXTTYPE.equals(contextName)) {
 			addResolver(new CodeTemplateVariableResolver(
@@ -376,7 +376,7 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 			addResolver(new CodeTemplateVariableResolver(
 					BARE_FIELD_NAME,
 					PhpTemplateMessages.CodeTemplateContextType_variable_description_barefieldname));
-			addCompilationUnitVariables();
+			// addCompilationUnitVariables();
 			fIsComment = true;
 		} else if (SETTERCOMMENT_CONTEXTTYPE.equals(contextName)) {
 			addResolver(new CodeTemplateVariableResolver(
@@ -397,7 +397,7 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 			addResolver(new CodeTemplateVariableResolver(
 					BARE_FIELD_NAME,
 					PhpTemplateMessages.CodeTemplateContextType_variable_description_barefieldname));
-			addCompilationUnitVariables();
+			// addCompilationUnitVariables();
 			fIsComment = true;
 		} else if (NEW_FILE_CONTEXTTYPE.equals(contextName)) {
 			addResolver(new PhpTemplateVariables.Encoding());
