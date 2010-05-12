@@ -1880,16 +1880,16 @@
        <contentType
              id="org.eclipse.php.core.phpsource">
           <partitionType
-                id="org.eclipse.wst.css.STYLE">
+                id="org.eclipse.wst.html.HTML_DEFAULT">
           </partitionType>
        </contentType>
     </proposalComputerExtendedActivation>
     <proposalComputerExtendedActivation
-          id="org.eclipse.wst.html.ui.proposalCategory.htmlTemplates">
+          id="org.eclipse.wst.html.ui.proposalComputer.htmlTemplates">
        <contentType
              id="org.eclipse.php.core.phpsource">
           <partitionType
-                id="org.eclipse.wst.css.STYLE">
+                id="org.eclipse.wst.html.HTML_DEFAULT">
           </partitionType>
        </contentType>
     </proposalComputerExtendedActivation>
