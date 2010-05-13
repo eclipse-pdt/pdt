@@ -62,17 +62,17 @@ public class PHPCompletionProposalLabelProvider extends
 		appendParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')'); //$NON-NLS-1$
 
-		// IMethod method = (IMethod) methodProposal.getModelElement();
-		//		nameBuffer.append(" - "); //$NON-NLS-1$
-		//
-		// IModelElement parent = method.getParent();
-		// if (parent instanceof IType) {
-		// IType type = (IType) parent;
-		// nameBuffer.append(type
-		//					.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
-		// } else {
-		// nameBuffer.append(parent.getElementName());
-		// }
+		IMethod method = (IMethod) methodProposal.getModelElement();
+		nameBuffer.append(" - "); //$NON-NLS-1$
+
+		IModelElement parent = method.getParent();
+		if (parent instanceof IType) {
+			IType type = (IType) parent;
+			nameBuffer.append(type
+					.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
+		} else {
+			nameBuffer.append(parent.getElementName());
+		}
 
 		return nameBuffer.toString();
 	}
