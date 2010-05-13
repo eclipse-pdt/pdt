@@ -61,6 +61,7 @@
 			<!-- Add other Web document wizards shortcuts to the New menu:-->
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.PHPProjectCreationWizard" />
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.PHPFileCreationWizard" />
+			<newWizardShortcut id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard" />
 			<newWizardShortcut id="org.eclipse.ui.wizards.new.folder" />
 			<newWizardShortcut id="org.eclipse.ui.wizards.new.file" />
 			<newWizardShortcut id="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard" />
@@ -125,7 +126,12 @@
 		<wizard id="org.eclipse.php.ui.wizards.PHPFileCreationWizard"
 			category="org.eclipse.php.project.ui" class="org.eclipse.php.internal.ui.wizards.PHPFileCreationWizard"
 			name="%wizard.name.0" icon="icons/full/obj16/add_php_file.gif" />
-		<primaryWizard id="org.eclipse.ui.wizards.new.folder" />
+		<wizard id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"
+			category="org.eclipse.php.project.ui" class="org.eclipse.php.internal.ui.wizards.UntitledPHPDocumentWizard"
+			name="%wizard.name.2" icon="icons/full/obj16/add_php_file.gif" 
+			canFinishEarly="true"
+            hasPages="false"/>
+        <primaryWizard id="org.eclipse.ui.wizards.new.folder" />
 	</extension>
 
 	<!--
