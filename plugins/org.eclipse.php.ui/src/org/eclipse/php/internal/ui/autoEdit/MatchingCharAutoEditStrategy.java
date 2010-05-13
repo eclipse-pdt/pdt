@@ -13,6 +13,7 @@
 package org.eclipse.php.internal.ui.autoEdit;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
@@ -146,4 +147,17 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		return bracketChar == '$';
 	}
 
+	/**
+	 * when we call command.offset++; we also need to check command.caretOffset.
+	 * bug 312439: Improper cursor jumps when using associative arrays in
+	 * content assist https://bugs.eclipse.org/bugs/show_bug.cgi?id=312439
+	 * 
+	 * @param command
+	 */
+	protected void adjustDocumentOffset(DocumentCommand command) {
+		command.offset++;
+		if (command.caretOffset != -1) {
+			command.caretOffset++;
+		}
+	}
 }

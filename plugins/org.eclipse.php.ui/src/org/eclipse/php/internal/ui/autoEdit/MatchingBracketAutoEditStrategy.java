@@ -101,8 +101,9 @@ public class MatchingBracketAutoEditStrategy extends
 				document.getUndoManager().disableUndoManagement();
 				document.replace(currentPosition + 1, 0, ""); //$NON-NLS-1$
 				document.getUndoManager().enableUndoManagement();
-				command.offset++; // this will cause the caret to be set between
-									// the brackets.
+				adjustDocumentOffset(command); // this will cause the caret to
+												// be set between the brackets.
+
 				command.length = 0;
 				command.text = ""; //$NON-NLS-1$
 			}
@@ -244,7 +245,7 @@ public class MatchingBracketAutoEditStrategy extends
 					if (matcher.match(document, endSelection + 1) != null
 							|| document.getLength() == endSelection + 1) {
 						if (command.length == 0) {
-							command.offset++;
+							adjustDocumentOffset(command);
 							command.text = ""; //$NON-NLS-1$
 						} else {
 							command.length++;

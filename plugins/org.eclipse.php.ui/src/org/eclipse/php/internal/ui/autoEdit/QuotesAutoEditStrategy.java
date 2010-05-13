@@ -78,7 +78,7 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 						char prevChar = document.getChar(startOffset - 1);
 						if (prevChar != BACK_SLASH) {
 							if (command.length == 0) {
-								command.offset++;
+								adjustDocumentOffset(command);
 								command.text = ""; //$NON-NLS-1$
 							} else {
 								command.length++;
@@ -110,8 +110,10 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 							document.getUndoManager().disableUndoManagement();
 							document.replace(command.offset + 1, 0, ""); //$NON-NLS-1$
 							document.getUndoManager().enableUndoManagement();
-							command.offset++; // this will cause the caret to be
-												// set between the quotes.
+							adjustDocumentOffset(command);// this will cause the
+															// caret to be set
+															// between the
+															// quotes.
 							command.length = 0;
 							command.text = ""; //$NON-NLS-1$
 						}
@@ -132,8 +134,10 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 						document.getUndoManager().disableUndoManagement();
 						document.replace(command.offset + 1, 0, ""); //$NON-NLS-1$
 						document.getUndoManager().enableUndoManagement();
-						command.offset++; // this will cause the caret to be set
-											// between the quotes.
+						adjustDocumentOffset(command); // this will cause the
+														// caret to be set
+														// between the quotes.
+
 						command.length = 0;
 						command.text = ""; //$NON-NLS-1$
 					}
