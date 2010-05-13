@@ -190,7 +190,6 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 		// replace the offset character
 		data = data.replaceAll("%", "");
 
-		offset = data.lastIndexOf(OFFSET_CHAR);
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
 
