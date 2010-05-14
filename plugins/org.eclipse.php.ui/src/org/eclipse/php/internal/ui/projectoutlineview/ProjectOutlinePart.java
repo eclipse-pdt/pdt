@@ -18,6 +18,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
+import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementSorter;
@@ -27,12 +28,14 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.explorer.PHPExplorerActionGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.contexts.IContextService;
 
 /**
  * Project Outline for the php perspective, it is based on the
@@ -71,6 +74,15 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 		return new ProjectOutlineLabelProvider(getContentProvider(), store);
 	}
 
+	@Override
+	protected ScriptExplorerActionGroup getActionGroup() {
+		/*
+		 * setting our own PDT action group, based on DLTK's ScriptExplorer
+		 * action-group, but also adding "include path" actions
+		 */
+		return new PHPExplorerActionGroup(this);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -86,59 +98,22 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 		getSite().getPage().addPartListener(this);
 
 		selectProject(null);
+		activateContext();
+	}
+
+	/**
+	 * Activate a context that this view uses. It will be tied to this view
+	 * activation events and will be removed when the view is disposed.
+	 */
+	private void activateContext() {
+		IContextService contextService = (IContextService) getSite()
+				.getService(IContextService.class);
+		contextService.activateContext("org.eclipse.php.ui.contexts.window");
 	}
 
 	@Override
 	protected void setComparator() {
-		getTreeViewer().setComparator(new ModelElementSorter()/*
-															 * new
-															 * ViewerSorter(){
-															 * 
-															 * @Override public
-															 * int
-															 * compare(Viewer
-															 * viewer, Object
-															 * object1, Object
-															 * object2) { if
-															 * (object1
-															 * instanceof
-															 * IModelElement &&
-															 * object2
-															 * instanceof
-															 * IModelElement) {
-															 * IModelElement
-															 * left =
-															 * (IModelElement)
-															 * object1;
-															 * IModelElement
-															 * right =
-															 * (IModelElement)
-															 * object2; int
-															 * result =
-															 * left.getElementName
-															 * (
-															 * ).compareToIgnoreCase
-															 * (
-															 * right.getElementName
-															 * ()); if (result
-															 * != 0) return
-															 * result; return
-															 * (left.getPath() +
-															 * left
-															 * .getElementName
-															 * ())
-															 * .compareToIgnoreCase
-															 * (right.getPath()
-															 * +
-															 * right.getElementName
-															 * ()); } return
-															 * super
-															 * .compare(viewer,
-															 * object1,
-															 * object2); }
-															 * 
-															 * }
-															 */);
+		getTreeViewer().setComparator(new ModelElementSorter());
 
 	}
 
