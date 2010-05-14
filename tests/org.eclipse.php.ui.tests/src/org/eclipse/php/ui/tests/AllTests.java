@@ -14,7 +14,7 @@ package org.eclipse.php.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.php.ui.tests.semantic_highlighter.SemanticHighlightingTests;
+import org.eclipse.php.ui.tests.contentassist.ContentAssistTests;
 
 public class AllTests {
 
@@ -24,8 +24,9 @@ public class AllTests {
 		// $JUnit-BEGIN$
 
 		// Semantic highlighter tests
-		suite.addTest(SemanticHighlightingTests.suite());
-
+		// suite.addTest(SemanticHighlightingTests.suite());
+		// content assist
+		suite.addTest(ContentAssistTests.suite());
 		return suite;
 	}
 }

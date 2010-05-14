@@ -17,6 +17,8 @@ Require-Bundle: org.junit,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.html.core,
  org.eclipse.wst.xml.core,
- org.eclipse.wst.sse.ui;bundle-version="1.1.101"
+ org.eclipse.wst.sse.ui;bundle-version="1.1.101",
+ org.eclipse.ui.ide,
+ org.eclipse.jface.text
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

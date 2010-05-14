@@ -1,0 +1,28 @@
+--TEST--
+Test namespace
+--FILE--
+<?php
+namespace ns1\ns11\ns111 {
+
+      class c1 {  }
+
+}
+
+namespace ns2\n21 {
+		$a = new c1|
+}
+?>
+--EXPECT--
+<?php
+namespace ns1\ns11\ns111 {
+
+      class c1 {  }
+
+}
+
+namespace ns2\n21 {
+		use ns1\ns11\ns111\c1;
+
+		$a = new c1()
+}
+?>
