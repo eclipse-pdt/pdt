@@ -11,11 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -24,6 +27,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
@@ -32,6 +37,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -93,6 +99,9 @@ public class UseStatementInjector {
 	private boolean needsAliasPrepend(IModelElement modelElement)
 			throws ModelException {
 		if (modelElement instanceof IMethod) {
+			if (modelElement instanceof FakeConstructor) {
+				return true;
+			}
 			IType declaringType = ((IMethod) modelElement).getDeclaringType();
 			return declaringType == null
 					|| PHPFlags.isNamespace(declaringType.getFlags());
@@ -183,7 +192,8 @@ public class UseStatementInjector {
 				return offset;
 			}
 			// class members should return offset directly
-			if (modelElement.getElementType() != IModelElement.TYPE) {
+			if (modelElement.getElementType() != IModelElement.TYPE
+					&& !(modelElement instanceof FakeConstructor)) {
 				IModelElement type = modelElement
 						.getAncestor(IModelElement.TYPE);
 				if (type != null
@@ -214,6 +224,17 @@ public class UseStatementInjector {
 
 						try {
 							String namespaceName = namespace.getElementName();
+							boolean useAlias = !Platform
+									.getPreferencesService()
+									.getBoolean(
+											PHPCorePlugin.ID,
+											PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
+											true, null);
+							if (!useAlias) {
+								namespaceName = namespaceName
+										+ NamespaceReference.NAMESPACE_SEPARATOR
+										+ modelElement.getElementName();
+							}
 							ModuleDeclaration moduleDeclaration = SourceParserUtil
 									.getModuleDeclaration(sourceModule);
 							TextEdit edits = null;
@@ -262,11 +283,51 @@ public class UseStatementInjector {
 									program.statements()
 											.add(0, newUseStatement);
 								}
-								edits = program.rewrite(document, null);
+								Map options = new HashMap(PHPCorePlugin
+										.getOptions());
+								// TODO project may be null
+								IScopeContext[] contents = new IScopeContext[] {
+										new ProjectScope(modelElement
+												.getScriptProject()
+												.getProject()),
+										new InstanceScope(), new DefaultScope() };
+								for (int i = 0; i < contents.length; i++) {
+									IScopeContext scopeContext = contents[i];
+									IEclipsePreferences node = scopeContext
+											.getNode(PHPCorePlugin.ID);
+									if (node != null) {
+										if (!options
+												.containsKey(PHPCoreConstants.FORMATTER_USE_TABS)) {
+											String useTabs = node
+													.get(
+															PHPCoreConstants.FORMATTER_USE_TABS,
+															null);
+											if (useTabs != null) {
+												options.put(
+														PHPCoreConstants.FORMATTER_USE_TABS,
+														useTabs);
+											}
+										}
+										if (!options
+												.containsKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE)) {
+											String size = node
+													.get(
+															PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
+															null);
+											if (size != null) {
+												options.put(
+														PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
+														size);
+											}
+										}
+									}
+								}
+
+								edits = program.rewrite(document, options);
 								edits.apply(document);
 							}
 
-							if (needsAliasPrepend(modelElement)) {
+							if (useAlias && needsAliasPrepend(modelElement)) {
 								// update replacement string: add namespace
 								// alias prefix
 								String alias;
@@ -299,8 +360,7 @@ public class UseStatementInjector {
 									replacementString = namespacePrefix
 											+ replacementString;
 								}
-								proposal
-										.setReplacementString(replacementString);
+								proposal.setReplacementString(replacementString);
 							}
 
 							if (edits != null) {
@@ -308,8 +368,7 @@ public class UseStatementInjector {
 										.getReplacementOffset()
 										+ edits.getLength();
 								offset += edits.getLength();
-								proposal
-										.setReplacementOffset(replacementOffset);
+								proposal.setReplacementOffset(replacementOffset);
 							}
 
 						} catch (Exception e) {
