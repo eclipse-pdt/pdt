@@ -22,9 +22,9 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.format.DefaultCodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
-import org.eclipse.php.internal.core.format.NullCodeFormattingProcessor;
 import org.eclipse.text.edits.*;
 
 /**
@@ -272,10 +272,9 @@ import org.eclipse.text.edits.*;
 			return doc.get();
 		} catch (BadLocationException e) {
 			// JavaPlugin.log(e); // bug in the formatter
-			Assert
-					.isTrue(
-							false,
-							"Fromatter created edits with wrong positions: " + e.getMessage()); //$NON-NLS-1$
+			Assert.isTrue(
+					false,
+					"Fromatter created edits with wrong positions: " + e.getMessage()); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -299,7 +298,7 @@ import org.eclipse.text.edits.*;
 			return contentFormatter.getCodeFormattingProcessor(document,
 					phpVersion, region);
 		}
-		return new NullCodeFormattingProcessor();
+		return new DefaultCodeFormattingProcessor(options);
 	}
 
 	/*
@@ -463,25 +462,23 @@ import org.eclipse.text.edits.*;
 				final String POS_CATEGORY = "myCategory"; //$NON-NLS-1$
 
 				doc.addPositionCategory(POS_CATEGORY);
-				doc
-						.addPositionUpdater(new DefaultPositionUpdater(
-								POS_CATEGORY) {
-							protected boolean notDeleted() {
-								int start = this.fOffset;
-								int end = start + this.fLength;
-								if (start < this.fPosition.offset
-										&& (this.fPosition.offset
-												+ this.fPosition.length < end)) {
-									this.fPosition.offset = end; // deleted
-																	// positions:
-																	// set to
-																	// end of
-																	// remove
-									return false;
-								}
-								return true;
-							}
-						});
+				doc.addPositionUpdater(new DefaultPositionUpdater(POS_CATEGORY) {
+					protected boolean notDeleted() {
+						int start = this.fOffset;
+						int end = start + this.fLength;
+						if (start < this.fPosition.offset
+								&& (this.fPosition.offset
+										+ this.fPosition.length < end)) {
+							this.fPosition.offset = end; // deleted
+															// positions:
+															// set to
+															// end of
+															// remove
+							return false;
+						}
+						return true;
+					}
+				});
 				for (int i = 0; i < positions.length; i++) {
 					try {
 						doc.addPosition(POS_CATEGORY, positions[i]);

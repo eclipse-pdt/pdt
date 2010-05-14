@@ -158,6 +158,18 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_SHOW_STRICT_OPTIONS = "contentAssistShowStrictOptions"; //$NON-NLS-1$
 
 	/**
+	 * A named preference that controls if code assist insert full qualified
+	 * name for use statement.
+	 * <p>
+	 * Value is of type <code>Boolean</code>. if
+	 * <code>false<code> code assist insert use statement only with the namespace name. If
+	 * <code>true</code> code assist insert use statement with the full
+	 * qualified name.
+	 * </p>
+	 */
+	public final static String CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE = "contentAssistInsertFullyQualifiedNameForNamespaceCheckBox"; //$NON-NLS-1$
+
+	/**
 	 * A named preference that controls if code assist also contains proposals
 	 * from other files
 	 * <p>

@@ -20,6 +20,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultLineTracker;
 import org.eclipse.jface.text.ILineTracker;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.text.edits.ReplaceEdit;
 
 /**
@@ -411,9 +412,7 @@ public final class IndentManipulation {
 				int length = indexOfIndent(line, indentUnitsToRemove, tabWidth,
 						indentWidth);
 				if (length >= 0) {
-					result
-							.add(new ReplaceEdit(offset, length,
-									newIndentString));
+					result.add(new ReplaceEdit(offset, length, newIndentString));
 				} else {
 					length = measureIndentUnits(line, tabWidth, indentWidth);
 					result.add(new ReplaceEdit(offset, length, "")); //$NON-NLS-1$
@@ -473,10 +472,9 @@ public final class IndentManipulation {
 		if (options == null) {
 			throw new IllegalArgumentException();
 		}
-		return 4;
-		// TODO link with PHP CodeFormatterConstants.FORMATTER_TAB_SIZE
-		// return getIntValue(options,
-		// DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, 4);
+		// TODO link with PHP PHPCoreConstants.FORMATTER_INDENTATION_SIZE
+		return getIntValue(options,
+				PHPCoreConstants.FORMATTER_INDENTATION_SIZE, 4);
 	}
 
 	/**

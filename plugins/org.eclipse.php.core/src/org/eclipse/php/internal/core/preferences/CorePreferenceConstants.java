@@ -36,14 +36,10 @@ public class CorePreferenceConstants {
 		IEclipsePreferences node = new DefaultScope().getNode(PHPCorePlugin.ID);
 
 		node.put(Keys.PHP_VERSION, PHPVersion.PHP5.getAlias());
-		node
-				.put(PHPCoreConstants.TASK_TAGS,
-						PHPCoreConstants.DEFAULT_TASK_TAGS);
+		node.put(PHPCoreConstants.TASK_TAGS, PHPCoreConstants.DEFAULT_TASK_TAGS);
 		node.put(PHPCoreConstants.TASK_PRIORITIES,
 				PHPCoreConstants.DEFAULT_TASK_PRIORITIES);
-		node
-				.put(PHPCoreConstants.TASK_CASE_SENSITIVE,
-						PHPCoreConstants.ENABLED);
+		node.put(PHPCoreConstants.TASK_CASE_SENSITIVE, PHPCoreConstants.ENABLED);
 		node.putBoolean(Keys.EDITOR_USE_ASP_TAGS, false);
 		node.putBoolean(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
@@ -62,6 +58,9 @@ public class CorePreferenceConstants {
 		node.putBoolean(
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES,
 				false);
+		node.putBoolean(
+				PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
+				true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
 		node.putInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 500);
