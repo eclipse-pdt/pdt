@@ -12,10 +12,7 @@
 package org.eclipse.php.ui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -431,7 +428,7 @@ public class CodeGeneration {
 	public static String getMethodComment(IScriptProject sp,
 			String declaringTypeName, String methodName, String[] paramNames,
 			String[] excTypeSig, String retTypeSig, IMethod overridden,
-			String lineDelimiter, Set<String> exceptions) throws CoreException {
+			String lineDelimiter, List<String> exceptions) throws CoreException {
 		return StubUtility.getMethodComment(sp, declaringTypeName, methodName,
 				paramNames, retTypeSig, EMPTY, overridden, false,
 				lineDelimiter, exceptions);
@@ -485,7 +482,7 @@ public class CodeGeneration {
 			String declaringTypeName, String methodName, String[] paramNames,
 			String[] excTypeSig, String retTypeSig,
 			String[] typeParameterNames, IMethod overridden,
-			String lineDelimiter, Set<String> exceptions) throws CoreException {
+			String lineDelimiter, List<String> exceptions) throws CoreException {
 		return StubUtility.getMethodComment(sp, declaringTypeName, methodName,
 				paramNames, retTypeSig, typeParameterNames, overridden, false,
 				lineDelimiter, exceptions);
@@ -570,7 +567,7 @@ public class CodeGeneration {
 			resolvedBinding = functionDeclaration.resolveFunctionBinding();
 			formalParameters = functionDeclaration.formalParameters();
 		}
-		final Set<String> exceptions = new HashSet<String>();
+		final List<String> exceptions = new ArrayList<String>();
 		elementAt.accept(new AbstractVisitor() {
 			public boolean visit(ThrowStatement throwStatement) {
 				if (throwStatement.getExpression() instanceof ClassInstanceCreation) {
@@ -585,6 +582,16 @@ public class CodeGeneration {
 				return true;
 			}
 		});
+		final List<String> newExceptions = new ArrayList<String>();
+		final Set<String> exceptionSet = new HashSet<String>();
+		for (Iterator<String> iterator = exceptions.iterator(); iterator
+				.hasNext();) {
+			String exception = iterator.next();
+			if (!exceptionSet.contains(exception)) {
+				exceptionSet.add(exception);
+				newExceptions.add(exception);
+			}
+		}
 		if (formalParameters != null) {
 			// get parameter type
 			parameterTypes = new String[formalParameters.size()];
@@ -651,12 +658,12 @@ public class CodeGeneration {
 			return StubUtility.getMethodComment(method.getScriptProject(),
 					declaringType.getElementName(), method.getElementName(),
 					paramNames, retType, typeParameterNames, overridden, false,
-					lineDelimiter, exceptions);
+					lineDelimiter, newExceptions);
 		}
 		return StubUtility.getMethodComment(method.getScriptProject(), null,
 				method.getElementName(), paramNames, retType,
 				typeParameterNames, overridden, false, lineDelimiter,
-				exceptions);
+				newExceptions);
 	}
 
 	private static List<ITypeBinding> removeDuplicateTypes(

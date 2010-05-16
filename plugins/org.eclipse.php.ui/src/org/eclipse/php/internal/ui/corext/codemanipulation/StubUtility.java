@@ -12,10 +12,7 @@
 package org.eclipse.php.internal.ui.corext.codemanipulation;
 
 import java.io.IOException;
-import java.util.AbstractList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.*;
@@ -420,7 +417,8 @@ public class StubUtility {
 	public static String getMethodComment(IScriptProject sp, String typeName,
 			String methodName, String[] paramNames, String retTypeSig,
 			String[] typeParameterNames, IMethod target, boolean delegate,
-			String lineDelimiter, Set<String> exceptions) throws CoreException {
+			String lineDelimiter, List<String> newExceptions)
+			throws CoreException {
 		String templateName = CodeTemplateContextType.METHODCOMMENT_ID;
 		if (target != null) {
 			if (delegate)
@@ -488,7 +486,7 @@ public class StubUtility {
 			try {
 				insertTag(document, tagOffsets[i], position.getLength(),
 						paramNames, retTypeSig, typeParameterNames, false,
-						lineDelimiter, exceptions);
+						lineDelimiter, newExceptions);
 			} catch (BadLocationException e) {
 				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR,
 						e));
@@ -757,7 +755,7 @@ public class StubUtility {
 	private static void insertTag(IDocument textBuffer, int offset, int length,
 			String[] paramNames, String returnType,
 			String[] typeParameterNames, boolean isDeprecated,
-			String lineDelimiter, Set<String> exceptions)
+			String lineDelimiter, List<String> newExceptions)
 			throws BadLocationException {
 		IRegion region = textBuffer.getLineInformationOfOffset(offset);
 		if (region == null) {
@@ -781,8 +779,8 @@ public class StubUtility {
 			}
 			buf.append("@param ").append(paramNames[i]); //$NON-NLS-1$
 		}
-		if (null != exceptions) {
-			for (Iterator<String> iterator = exceptions.iterator(); iterator
+		if (null != newExceptions) {
+			for (Iterator<String> iterator = newExceptions.iterator(); iterator
 					.hasNext();) {
 				String exception = iterator.next();
 				if (buf.length() > 0) {
