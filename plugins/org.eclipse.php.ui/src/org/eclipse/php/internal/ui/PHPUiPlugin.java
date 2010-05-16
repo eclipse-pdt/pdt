@@ -45,6 +45,7 @@ import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.php.internal.ui.util.ProblemMarkerManager;
+import org.eclipse.php.internal.ui.viewsupport.ImagesOnFileSystemRegistry;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
@@ -95,6 +96,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private PHPFoldingStructureProviderRegistry fFoldingStructureProviderRegistry;
 	private PHPEditorTextHoverDescriptor[] fPHPEditorTextHoverDescriptors;
 	private PHPManualSiteDescriptor[] fPHPManualSiteDescriptors;
+	private ImagesOnFileSystemRegistry fImagesOnFSRegistry;
 
 	/**
 	 * The AST provider.
@@ -147,9 +149,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 				if (PlatformUI.isWorkbenchRunning()) {
 					new InitializeAfterLoadJob().schedule(); // must be last
-																// call in
-																// start()
-																// method
+					// call in
+					// start()
+					// method
 				}
 				return Status.OK_STATUS;
 			}
@@ -580,4 +582,18 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 		}
 		return fActiveFormatter;
 	}
+
+	/**
+	 * Returns the image registry that keeps its images on the local file
+	 * system.
+	 * 
+	 * @return the image registry
+	 */
+	public ImagesOnFileSystemRegistry getImagesOnFSRegistry() {
+		if (fImagesOnFSRegistry == null) {
+			fImagesOnFSRegistry = new ImagesOnFileSystemRegistry();
+		}
+		return fImagesOnFSRegistry;
+	}
+
 }

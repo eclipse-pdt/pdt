@@ -11,19 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
-import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHoverExtension;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.ui.IEditorPart;
 
-public class PHPTextHoverProxy extends AbstractScriptEditorTextHover implements
+public class PHPTextHoverProxy extends AbstractPHPEditorTextHover implements
 		IPHPTextHover, ITextHoverExtension, IInformationProviderExtension2 {
 
 	private PHPEditorTextHoverDescriptor fHoverDescriptor;
@@ -72,6 +68,18 @@ public class PHPTextHoverProxy extends AbstractScriptEditorTextHover implements
 		if (ensureHoverCreated()) {
 			return fHover.getHoverInfo(textViewer, hoverRegion);
 		}
+		return null;
+	}
+
+	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
+		if (ensureHoverCreated()) {
+			if (fHover instanceof ITextHoverExtension2)
+				return ((ITextHoverExtension2) fHover).getHoverInfo2(
+						textViewer, hoverRegion);
+			else
+				return fHover.getHoverInfo(textViewer, hoverRegion);
+		}
+
 		return null;
 	}
 

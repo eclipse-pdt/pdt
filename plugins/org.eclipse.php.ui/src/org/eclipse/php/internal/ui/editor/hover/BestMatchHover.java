@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
@@ -26,7 +25,7 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.ui.IEditorPart;
 
-public class BestMatchHover extends AbstractScriptEditorTextHover implements
+public class BestMatchHover extends AbstractPHPEditorTextHover implements
 		IPHPTextHover, ITextHoverExtension, IInformationProviderExtension2 {
 
 	private List<PHPEditorTextHoverDescriptor> fTextHoverSpecifications;
@@ -109,6 +108,42 @@ public class BestMatchHover extends AbstractScriptEditorTextHover implements
 				return s;
 			}
 		}
+		return null;
+	}
+
+	/*
+	 * @see
+	 * org.eclipse.jface.text.ITextHoverExtension2#getHoverInfo2(org.eclipse
+	 * .jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
+	 */
+	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
+
+		checkTextHovers();
+		fBestHover = null;
+
+		if (fInstantiatedTextHovers == null)
+			return null;
+
+		for (Iterator iterator = fInstantiatedTextHovers.iterator(); iterator
+				.hasNext();) {
+			ITextHover hover = (ITextHover) iterator.next();
+
+			if (hover instanceof ITextHoverExtension2) {
+				Object info = ((ITextHoverExtension2) hover).getHoverInfo2(
+						textViewer, hoverRegion);
+				if (info != null) {
+					fBestHover = hover;
+					return info;
+				}
+			} else {
+				String s = hover.getHoverInfo(textViewer, hoverRegion);
+				if (s != null && s.trim().length() > 0) {
+					fBestHover = hover;
+					return s;
+				}
+			}
+		}
+
 		return null;
 	}
 
