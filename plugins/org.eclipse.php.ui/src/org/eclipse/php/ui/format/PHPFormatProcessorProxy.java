@@ -130,6 +130,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 		} finally {
 			// release model after formatting
 			if (structuredModel != null) {
+				structuredModel.save();
 				structuredModel.releaseFromRead();
 			}
 		}
