@@ -30,6 +30,7 @@ import org.eclipse.jface.internal.text.html.HTMLPrinter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
@@ -51,7 +52,7 @@ import org.osgi.framework.Bundle;
 
 @SuppressWarnings("restriction")
 public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
-		IPHPTextHover {
+		IPHPTextHover, IInformationProviderExtension2 {
 
 	public IHoverMessageDecorator getMessageDecorator() {
 		return null;
