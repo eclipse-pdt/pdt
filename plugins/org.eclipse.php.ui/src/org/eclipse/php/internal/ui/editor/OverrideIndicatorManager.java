@@ -199,8 +199,7 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 				if (binding != null) {
 					IMethodBinding definingMethod = Bindings
 							.findOverriddenMethod(binding, true);
-					System.out
-							.println("visitnode" + System.currentTimeMillis());
+
 					if (definingMethod != null) {
 
 						ITypeBinding definingType = definingMethod
