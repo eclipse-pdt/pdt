@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.templates;
 
+import java.util.*;
+
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
@@ -20,6 +22,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateBuffer;
 import org.eclipse.jface.text.templates.TemplateException;
+import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
@@ -29,6 +32,8 @@ import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
  */
 public class PhpTemplateContext extends ScriptTemplateContext {
 
+	private static final String DOLLAR = "dollar";
+	private static final String DOLLAR_SIGN = "$";
 	public static final char BLANK = ' ';
 	public static final char TAB = '\t';
 
@@ -67,6 +72,66 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 
 		}
 		TemplateBuffer result = super.evaluate(template);
+		// 300533: Switching through template keys? in fore and forek template
+		// is corrupter
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=300533
+		// merge ${dollar}${variable} to single $variable to solve bug 300533
+		TemplateVariable[] variables = result.getVariables();
+		TemplateVariable dollarVariable = null;
+		List<TemplateVariable> nonDollarVariables = new ArrayList<TemplateVariable>();
+		for (int i = 0; i < variables.length; i++) {
+			if (isDollar(variables[i])) {
+				dollarVariable = variables[i];
+			} else {
+				nonDollarVariables.add(variables[i]);
+			}
+		}
+		List<TemplateVariable> templateVariables = new ArrayList<TemplateVariable>();
+		if (dollarVariable != null) {
+			Set<Integer> dollarOffsetSet = new HashSet<Integer>();
+			for (int i = 0; i < dollarVariable.getOffsets().length; i++) {
+				dollarOffsetSet.add(dollarVariable.getOffsets()[i]);
+			}
+			for (Iterator iterator = nonDollarVariables.iterator(); iterator
+					.hasNext();) {
+				TemplateVariable templateVariable = (TemplateVariable) iterator
+						.next();
+				if (templateVariable.getOffsets().length > 0
+						&& isbehind(templateVariable, dollarOffsetSet)) {
+					int[] offsets = new int[templateVariable.getOffsets().length];
+					for (int i = 0; i < templateVariable.getOffsets().length; i++) {
+						dollarOffsetSet
+								.remove(templateVariable.getOffsets()[i] - 1);
+						offsets[i] = templateVariable.getOffsets()[i] - 1;
+					}
+					String name = DOLLAR_SIGN + templateVariable.getName();
+					templateVariable = new TemplateVariable(templateVariable
+							.getVariableType(), name, name, offsets);
+				}
+				templateVariables.add(templateVariable);
+			}
+			if (!dollarOffsetSet.isEmpty()) {
+				templateVariables.add(dollarVariable);
+			}
+			result.setContent(result.getString(), templateVariables
+					.toArray(new TemplateVariable[templateVariables.size()]));
+		}
+		// end
 		return result;
+	}
+
+	private boolean isbehind(TemplateVariable templateVariable,
+			Set<Integer> dollarOffsetSet) {
+		for (int i = 0; i < templateVariable.getOffsets().length; i++) {
+			if (!dollarOffsetSet.contains(templateVariable.getOffsets()[i] - 1)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean isDollar(TemplateVariable templateVariable) {
+		return templateVariable.isUnambiguous()
+				&& DOLLAR.equals(templateVariable.getType());
 	}
 }
