@@ -178,7 +178,17 @@ public final class ParameterGuessingProposal extends
 
 	private boolean hasParameters() throws ModelException {
 		return method.getParameters() != null
-				&& method.getParameters().length > 0;
+				&& hasNondefaultValues(method.getParameters());
+	}
+
+	private boolean hasNondefaultValues(IParameter[] parameters) {
+		for (int i = 0; i < parameters.length; i++) {
+			IParameter parameter = parameters[i];
+			if (parameter.getDefaultValue() == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
