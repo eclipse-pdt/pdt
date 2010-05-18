@@ -143,8 +143,14 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 				if (parentElement instanceof IFolder) {
 					IResource[] members = ((IFolder) parentElement).members();
 					ArrayList<Object> returnChlidren = new ArrayList<Object>();
-					for (IResource iResource : members) {
-						returnChlidren.add(iResource);
+					for (IResource resource2 : members) {
+						IModelElement modelElement = DLTKCore.create(resource2);
+						if (modelElement != null
+								&& isSourceFolder(modelElement)) {
+							returnChlidren.add(modelElement);
+						} else {
+							returnChlidren.add(resource2);
+						}
 					}
 					return (Object[]) returnChlidren
 							.toArray(new Object[returnChlidren.size()]);
@@ -238,6 +244,30 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			return super.getChildren(parentElement);
 		}
 		return NO_CHILDREN;
+	}
+
+	private boolean isSourceFolder(IModelElement modelElement) {
+		ScriptProject project = (ScriptProject) modelElement.getScriptProject();
+		IBuildpathEntry[] buildpath = null;
+		try {
+			buildpath = project.getResolvedBuildpath();
+		} catch (ModelException e) {
+
+		}
+		if (buildpath == null) {
+			return false;
+		}
+		for (int j = 0, buildpathLength = buildpath.length; j < buildpathLength; j++) {
+			IBuildpathEntry entry = buildpath[j];
+			// root path
+			IPath path = entry.getPath();
+			if (path != null
+					&& path.equals(modelElement.getResource().getFullPath())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private boolean isInSourceFolder(IModelElement modelElement) {
