@@ -1902,5 +1902,18 @@
           </partitionType>
        </contentType>
     </proposalComputerExtendedActivation>
+    
+    <proposalComputerExtendedActivation
+          id="org.eclipse.wst.jsdt.web.ui.ContentAssistProposals">
+       <contentType
+             id="org.eclipse.php.core.phpsource">
+			<partitionType
+          		id="org.eclipse.wst.html.SCRIPT">
+      		</partitionType>
+            <partitionType
+				id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
+			</partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
  </extension>
 </plugin>
