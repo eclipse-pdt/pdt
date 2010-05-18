@@ -11,17 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
-import org.eclipse.dltk.internal.ui.text.HTMLTextPresenter;
 import org.eclipse.dltk.internal.ui.text.hover.AbstractAnnotationHover;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
+import org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover.PresenterControlCreator;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.editors.text.EditorsUI;
 
 public class PHPAnnotationTextHover extends AbstractAnnotationHover implements
 		IPHPTextHover, IInformationProviderExtension2 {
@@ -34,13 +29,22 @@ public class PHPAnnotationTextHover extends AbstractAnnotationHover implements
 		return null;
 	}
 
+	/**
+	 * The presentation control creator.
+	 * 
+	 * @since 3.2
+	 */
+	private IInformationControlCreator fPresenterControlCreator;
+
+	/*
+	 * @seeorg.eclipse.jface.text.ITextHoverExtension2#
+	 * getInformationPresenterControlCreator()
+	 * 
+	 * @since 3.1
+	 */
 	public IInformationControlCreator getInformationPresenterControlCreator() {
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE,
-						new HTMLTextPresenter(true), EditorsUI
-								.getTooltipAffordanceString());
-			}
-		};
+		if (fPresenterControlCreator == null)
+			fPresenterControlCreator = new PresenterControlCreator();
+		return fPresenterControlCreator;
 	}
 }
