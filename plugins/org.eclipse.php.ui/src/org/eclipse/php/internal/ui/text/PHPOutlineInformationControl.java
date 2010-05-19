@@ -11,8 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text;
 
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ITypeHierarchy;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.text.ScriptOutlineInformationControl;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -28,5 +35,38 @@ public class PHPOutlineInformationControl extends
 			int treeStyle, String commandId) {
 		super(parent, shellStyle, treeStyle, commandId, PHPUiPlugin
 				.getDefault().getPreferenceStore());
+	}
+
+	protected ITypeHierarchy getSuperTypeHierarchy(
+			org.eclipse.dltk.core.IType type) {
+
+		ITypeHierarchy th = (ITypeHierarchy) fTypeHierarchies.get(type);
+		if (th == null) {
+			try {
+				th = SuperTypeHierarchyCache.getTypeHierarchy(type,
+						getProgressMonitor());
+			} catch (ModelException e) {
+				return null;
+			} catch (OperationCanceledException e) {
+				return null;
+			}
+			fTypeHierarchies.put(type, th);
+		}
+		return th;
+	};
+
+	@Override
+	protected boolean isInnerType(IModelElement element) {
+		if (element != null && element.getElementType() == IModelElement.TYPE) {
+			IType type = (IType) element;
+			type = type.getDeclaringType();
+			try {
+				if (type != null && !PHPFlags.isNamespace(type.getFlags())) {
+					return true;
+				}
+			} catch (ModelException e) {
+			}
+		}
+		return false;
 	}
 }
