@@ -295,47 +295,31 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	 */
 	private void checkForTodo(List<ITextRegion> result, String token,
 			int commentStart, int commentLength, String comment) {
-		String[] words = comment.split("\\W+");
+		ArrayList<Matcher> matchers = createMatcherList(comment);
 		int startPosition = 0;
-		for (int i = 0; i < words.length; i++) {
-			String word = words[i];
-			ArrayList<Matcher> matchers = createMatcherList(word);
 
-			Matcher matcher = getMinimalMatcher(matchers, 0);
-			ITextRegion tRegion = null;
-			int index = comment.indexOf(word, startPosition);
-			if (matcher != null) {
-				int startIndex = matcher.start();
-				int endIndex = matcher.end();
-				if (endIndex - startIndex == word.length()) {
-
-					if (index - startPosition > 0) {
-						tRegion = new ContextRegion(token, commentStart
-								+ startPosition, index - startPosition, index
-								- startPosition);
-						result.add(tRegion);
-						startPosition = index;
-					}
-					tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO,
-							commentStart + index, endIndex - startIndex,
-							endIndex - startIndex);
-					result.add(tRegion);
-					startPosition += endIndex;
-				} else {
-					final int length = word.length() - startPosition;
-					result.add(new ContextRegion(token, commentStart
-							+ startPosition, length, length));
-				}
-			} else {
-				final int length = word.length() + index - startPosition;
-				result.add(new ContextRegion(token, commentStart
-						+ startPosition, length, length));
-				startPosition += length;
+		Matcher matcher = getMinimalMatcher(matchers, startPosition);
+		ITextRegion tRegion = null;
+		while (matcher != null) {
+			int startIndex = matcher.start();
+			int endIndex = matcher.end();
+			if (startIndex != startPosition) {
+				tRegion = new ContextRegion(token,
+						commentStart + startPosition, startIndex
+								- startPosition, startIndex - startPosition);
+				result.add(tRegion);
 			}
+			tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO,
+					commentStart + startIndex, endIndex - startIndex, endIndex
+							- startIndex);
+			result.add(tRegion);
+			startPosition = endIndex;
+			matcher = getMinimalMatcher(matchers, startPosition);
 		}
-		if (words.length == 0) {
-			result.add(new ContextRegion(token, commentStart, commentLength,
-					commentLength));
+		final int length = commentLength - startPosition;
+		if (length != 0) {
+			result.add(new ContextRegion(token, commentStart + startPosition,
+					length, length));
 		}
 	}
 
