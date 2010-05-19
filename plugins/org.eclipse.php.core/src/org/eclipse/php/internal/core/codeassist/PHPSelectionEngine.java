@@ -374,7 +374,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					tRegion = container.getRegionAtCharacterOffset(offset);
 				}
 
-				if (tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+				if (tRegion != null
+						&& tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
 					tRegion = phpScriptRegion.getPhpToken(offset
 							- container.getStartOffset()
