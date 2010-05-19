@@ -670,7 +670,12 @@ function escape_const_value ($value) {
 	if (is_resource($value)) {
 		$value = "\"${value}\"";
 	} else if (!is_numeric ($value) && !is_bool ($value) && $value !== null) {
-		$value = '"'.addcslashes ($value, "\"\r\n\t").'"';
+		if($value=== '\\'){
+			$value = '"'.addcslashes ($value, "\\\"\r\n\t").'"';
+		}
+		else{
+			$value = '"'.addcslashes ($value, "\"\r\n\t").'"';
+		}
 	} else if ($value === null) {
 		$value = "null";
 	} else if ($value === false) {

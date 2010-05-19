@@ -9957,7 +9957,7 @@ define ('CRYPT_STD_DES', 1);
 define ('CRYPT_EXT_DES', 1);
 define ('CRYPT_MD5', 1);
 define ('CRYPT_BLOWFISH', 1);
-define ('DIRECTORY_SEPARATOR', "\\");
+define ('DIRECTORY_SEPARATOR', "/");
 define ('PATH_SEPARATOR', ";");
 define ('GLOB_BRACE', 128);
 define ('GLOB_MARK', 8);
