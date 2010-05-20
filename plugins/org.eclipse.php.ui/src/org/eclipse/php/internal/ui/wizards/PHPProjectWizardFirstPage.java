@@ -20,10 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
@@ -497,9 +494,13 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			PHPUiPlugin.getDefault().getPreferenceStore().setValue(
-					(PreferenceConstants.JavaScriptSupportEnable),
-					fEnableJavaScriptSupport.getSelection());
+			// PHPUiPlugin.getDefault().getPreferenceStore().setValue(
+			// (PreferenceConstants.JavaScriptSupportEnable),
+			// fEnableJavaScriptSupport.getSelection());
+		}
+
+		public boolean getSelection() {
+			return fEnableJavaScriptSupport.getSelection();
 		}
 
 	}
@@ -655,8 +656,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
 					true));
-			group
-					.setText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_title);
+			group.setText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_title);
 			fWorkspaceRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fWorkspaceRadio.setDialogFieldListener(this);
 			fWorkspaceRadio
@@ -906,7 +906,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			notifyObservers();
 		}
 
-		//	
+		//
 
 		/*
 		 * (non-Javadoc)
@@ -982,5 +982,17 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			return fragment.getWizardModel();
 		}
 		return null;
+	}
+
+	public void performFinish(IProgressMonitor monitor) {
+		Display.getDefault().asyncExec(new Runnable() {
+
+			public void run() {
+				PHPUiPlugin.getDefault().getPreferenceStore().setValue(
+						(PreferenceConstants.JavaScriptSupportEnable),
+						fJavaScriptSupportGroup.getSelection());
+			}
+		});
+
 	}
 }
