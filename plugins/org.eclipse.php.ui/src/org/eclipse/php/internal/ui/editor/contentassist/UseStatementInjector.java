@@ -224,6 +224,7 @@ public class UseStatementInjector {
 
 						try {
 							String namespaceName = namespace.getElementName();
+							String usePartName = namespaceName;
 							boolean useAlias = !Platform
 									.getPreferencesService()
 									.getBoolean(
@@ -231,7 +232,7 @@ public class UseStatementInjector {
 											PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
 											true, null);
 							if (!useAlias) {
-								namespaceName = namespaceName
+								usePartName = usePartName
 										+ NamespaceReference.NAMESPACE_SEPARATOR
 										+ modelElement.getElementName();
 							}
@@ -242,7 +243,7 @@ public class UseStatementInjector {
 							// find existing use statement:
 							UsePart usePart = ASTUtils
 									.findUseStatementByNamespace(
-											moduleDeclaration, namespaceName,
+											moduleDeclaration, usePartName,
 											offset);
 							if (usePart == null) {
 								ASTParser parser = ASTParser
@@ -256,8 +257,7 @@ public class UseStatementInjector {
 
 								NamespaceName newNamespaceName = ast
 										.newNamespaceName(createIdentifiers(
-												ast, namespaceName), false,
-												false);
+												ast, usePartName), false, false);
 								UseStatementPart newUseStatementPart = ast
 										.newUseStatementPart(newNamespaceName,
 												null);
@@ -336,11 +336,11 @@ public class UseStatementInjector {
 										&& usePart.getAlias().getName() != null) {
 									alias = usePart.getAlias().getName();
 								} else {
-									int i = namespaceName
+									int i = usePartName
 											.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-									alias = namespaceName;
+									alias = usePartName;
 									if (i != -1) {
-										alias = namespaceName.substring(i + 1);
+										alias = usePartName.substring(i + 1);
 									}
 								}
 
@@ -355,7 +355,7 @@ public class UseStatementInjector {
 												.getPhpVersion(editorElement));
 
 								// Add alias to the replacement string:
-								if (!namespaceName
+								if (!usePartName
 										.equals(existingNamespacePrefix)) {
 									replacementString = namespacePrefix
 											+ replacementString;
