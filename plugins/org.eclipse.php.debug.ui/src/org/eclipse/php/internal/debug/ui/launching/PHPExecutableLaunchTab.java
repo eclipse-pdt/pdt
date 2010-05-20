@@ -37,6 +37,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNam
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.preferences.phps.PHPexeDescriptor;
@@ -106,6 +107,11 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	// Selection changed listener (checked PHP exe)
 	private final ISelectionChangedListener fSelectionListener = new ISelectionChangedListener() {
 		public void selectionChanged(SelectionChangedEvent event) {
+
+			if (!DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID
+					.equals(phpsComboBlock.getSelectedDebuggerId())) {
+				setEnableDebugInfoOption(false);
+			}
 			handleSelectedPHPexeChanged();
 		}
 	};
@@ -689,6 +695,10 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (!PHPDebuggersRegistry.getDebuggersIds().contains(debuggerID)) {
 			debuggerID = PHPDebugPlugin.getCurrentDebuggerId();
 			phpexe = exes.getDefaultItem(debuggerID);
+		}
+
+		if (!DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID.equals(debuggerID)) {
+			setEnableDebugInfoOption(false);
 		}
 		phpsComboBlock.setDebugger(debuggerID);
 		phpsComboBlock.setPHPexe(phpexe);
