@@ -31,6 +31,6 @@ public class MethodElementReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 		if (!(obj instanceof MethodElementReturnTypeGoal)) {
 			return false;
 		}
-		return super.equals(obj);
+		return this == obj;
 	}
 }
