@@ -420,6 +420,9 @@ public class BindingLabelProvider extends LabelProvider {
 		// buffer);
 		// }
 		// } else
+		if (binding == null) {
+			return;
+		}
 		if (binding.isArray()) {
 			getTypeLabel(binding.getElementType(), flags
 					& ScriptElementLabels.T_TYPE_PARAMETERS, buffer);
