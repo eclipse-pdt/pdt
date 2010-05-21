@@ -1,0 +1,6 @@
+--TEST--
+Test Method Return Type
+--FILE--
+<?php class A {function foo ($a) { if ($a) { $r = $this->foo1($a); return $r; } else {$r = $this->foo1($a); return $r; }} function foo1($a){ if ($a) { $r = $this->foo2($a); return $r; } else {$r = $this->foo2($a); return $r;}} function foo2($a){ return 5; }} $a = new A();  $b= $a->foo(2); testMethodReturnType1($b); ?>
+--EXPECT--
+Ambigous <unknown, number>
