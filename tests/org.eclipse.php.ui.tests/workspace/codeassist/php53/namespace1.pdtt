@@ -4,15 +4,15 @@ Test CA in the same namespace
 <?php
 namespace ns1\ns11\ns111 {
 
-      class c1 {  }
-      $a = new c1|
+      class NS1c1 {  }
+      $a = new NS1c1|
 }
 ?>
 --EXPECT--
 <?php
 namespace ns1\ns11\ns111 {
 
-      class c1 {  }
-      $a = new c1()
+      class NS1c1 {  }
+      $a = new NS1c1()
 }
 ?>

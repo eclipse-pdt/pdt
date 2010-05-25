@@ -27,6 +27,8 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
@@ -129,7 +131,9 @@ public class ContentAssistTests extends AbstractPDTTTest {
 							data = data.substring(0, offset)
 									+ data.substring(offset + 1);
 
-							createFile(new ByteArrayInputStream(data.getBytes()));
+							createFile(
+									new ByteArrayInputStream(data.getBytes()),
+									fileName);
 							String result = executeAutoInsert(offset);
 							closeEditor();
 							if (!pdttFile.getExpected().trim().equals(
@@ -170,6 +174,16 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	protected static void closeEditor() {
 		fEditor.close(false);
 		fEditor = null;
+		if (testFile.exists()) {
+			try {
+				testFile.delete(true, false, null);
+				project.refreshLocal(IResource.DEPTH_INFINITE, null);
+				project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+				PHPCoreTests.waitForIndexer();
+			} catch (CoreException e) {
+			}
+
+		}
 	}
 
 	protected static String executeAutoInsert(int offset) {
@@ -179,8 +193,11 @@ public class ContentAssistTests extends AbstractPDTTTest {
 		return fEditor.getDocument().get();
 	}
 
-	protected static void createFile(InputStream inputStream) throws Exception {
-		testFile = project.getFile("test.php");
+	protected static void createFile(InputStream inputStream, String fileName)
+			throws Exception {
+		testFile = project.getFile(new Path(fileName).removeFileExtension()
+				.addFileExtension("php").lastSegment());
+		// testFile = project.getFile("test.php");
 		testFile.create(inputStream, true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
