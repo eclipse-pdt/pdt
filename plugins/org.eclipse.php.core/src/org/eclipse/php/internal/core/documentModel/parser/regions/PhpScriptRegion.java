@@ -163,11 +163,20 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 			boolean shouldDeprecatedKeyword = false;
 			int previousIndex = tokensContaier.phpTokens.indexOf(tokenStart) - 1;
-			if (previousIndex >= 0
-					&& PhpTokenContainer
-							.deprecatedKeywordAfter(tokensContaier.phpTokens
-									.get(previousIndex).getType())) {
-				shouldDeprecatedKeyword = true;
+			if (previousIndex >= 0) {
+				ITextRegion previousRegion = tokensContaier.phpTokens
+						.get(previousIndex);
+				if (PhpTokenContainer.deprecatedKeywordAfter(previousRegion
+						.getType())) {
+					shouldDeprecatedKeyword = true;
+				}
+				if (tokenStart.getType().equals(PHPRegionTypes.PHP_COMMENT)
+						&& tokenStart.getLength() == 1
+						&& previousRegion.getType().equals(
+								PHPRegionTypes.PHP_COMMENT_START)) {
+					requestStart = previousRegion.getStart();
+				}
+
 			}
 
 			int newTokenOffset = tokenStart.getStart();
@@ -285,6 +294,17 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			try {
 				final ITextRegion token = tokensContaier.getToken(tokenStart
 						.getStart() - 1);
+				return (token.getType() == PHPRegionTypes.PHP_OPERATOR && token
+						.getLength() == 2);
+			} catch (BadLocationException e) {
+				// never happens
+				assert false;
+			}
+		} else if (tokenStart.getType() == PHPRegionTypes.PHP_STRING) {
+			try {
+				ITextRegion token = tokensContaier.getToken(tokenStart
+						.getStart() - 1);
+				token = tokensContaier.getToken(token.getStart() - 1);
 				return (token.getType() == PHPRegionTypes.PHP_OPERATOR && token
 						.getLength() == 2);
 			} catch (BadLocationException e) {
