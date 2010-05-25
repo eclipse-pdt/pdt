@@ -105,8 +105,13 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 						offsets[i] = templateVariable.getOffsets()[i] - 1;
 					}
 					String name = DOLLAR_SIGN + templateVariable.getName();
+					String defaultValue = name;
+					if (templateVariable.getDefaultValue() != null) {
+						defaultValue = DOLLAR_SIGN
+								+ templateVariable.getDefaultValue();
+					}
 					templateVariable = new TemplateVariable(templateVariable
-							.getVariableType(), name, name, offsets);
+							.getVariableType(), name, defaultValue, offsets);
 				}
 				templateVariables.add(templateVariable);
 			}
