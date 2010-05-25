@@ -57,7 +57,7 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	protected static final Map<PHPVersion, String> TESTS = new LinkedHashMap<PHPVersion, String>();
 	static {
 		// TESTS.put(PHPVersion.PHP4, "/workspace/codeassist/php4");
-		TESTS.put(PHPVersion.PHP5, "/workspace/codeassist/php5");
+		// TESTS.put(PHPVersion.PHP5, "/workspace/codeassist/php5");
 		TESTS.put(PHPVersion.PHP5_3, "/workspace/codeassist/php53");
 	};
 	protected static final char OFFSET_CHAR = '|';
@@ -172,7 +172,9 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	}
 
 	protected static void closeEditor() {
+		fEditor.doSave(null);
 		fEditor.close(false);
+		fEditor.dispose();
 		fEditor = null;
 		if (testFile.exists()) {
 			try {
@@ -197,7 +199,6 @@ public class ContentAssistTests extends AbstractPDTTTest {
 			throws Exception {
 		testFile = project.getFile(new Path(fileName).removeFileExtension()
 				.addFileExtension("php").lastSegment());
-		// testFile = project.getFile("test.php");
 		testFile.create(inputStream, true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
@@ -217,6 +218,5 @@ public class ContentAssistTests extends AbstractPDTTTest {
 			fEditor = (PHPStructuredEditor) part;
 		else
 			assertTrue("Unable to open php editor", false);
-		// PHPCoreTests.waitForAutoBuild();
 	}
 }
