@@ -1,5 +1,5 @@
 --TEST--
-Test namespace
+Test CA in another namespace
 --FILE--
 <?php
 namespace ns1\ns11\ns111 {
