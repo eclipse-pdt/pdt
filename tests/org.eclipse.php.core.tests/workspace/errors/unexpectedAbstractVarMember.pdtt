@@ -1,0 +1,10 @@
+--TEST--
+Test unfinished class body error reporting
+--FILE--
+<?php
+class A {
+abstract public $a;
+}
+?>
+--EXPECT--
+[line=3, start=16, end=31] syntax error, 'Abstract' doesn't support here

@@ -2,7 +2,8 @@
 Test unfinished interface declaration error reporting
 --FILE--
 <?php
+interface R{};
 interface I extends R, {}
 ?>
 --EXPECT--
-[line=2, start=29, end=30] syntax error, unexpected '{', expecting 'identifier'
+[line=3, start=44, end=45] syntax error, unexpected '{', expecting 'identifier'
