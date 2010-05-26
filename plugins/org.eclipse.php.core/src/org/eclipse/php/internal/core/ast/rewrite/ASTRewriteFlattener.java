@@ -583,7 +583,10 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			isFirst = false;
 		}
 		result.append(" ) "); //$NON-NLS-1$
-		forStatement.getAction().accept(this);
+		Statement body = forStatement.getBody();
+		if (body != null) {
+			body.accept(this);
+		}
 		return false;
 	}
 
