@@ -111,6 +111,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			if (!DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID
 					.equals(phpsComboBlock.getSelectedDebuggerId())) {
 				setEnableDebugInfoOption(false);
+			}else{
+				setEnableDebugInfoOption(true);
 			}
 			handleSelectedPHPexeChanged();
 		}
