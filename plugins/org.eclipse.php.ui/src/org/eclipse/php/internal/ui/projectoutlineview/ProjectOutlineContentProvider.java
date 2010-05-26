@@ -266,23 +266,33 @@ public class ProjectOutlineContentProvider extends
 		} else if (kind == IModelElementDelta.REMOVED) {
 
 			if (element instanceof IOpenable) {
-				IPath removedPath = element.getPath();
-				for (TreeItem node : fViewer.getTree().getItems()) {
-					// iterating on all 1st level (classes, constants, and
-					// functions)
-					TreeItem[] treeItems = node.getItems();
-					for (TreeItem treeItem : treeItems) {
-						// iterating on all 2nd level elements and checking :
-						// if item path is prefixed by the removed element -
-						// need to remove it.
-						if (removedPath.isPrefixOf(((IModelElement) treeItem
-								.getData()).getPath())) {
-							postRemove((IModelElement) treeItem.getData(),
-									runnables);
+				final IPath removedPath = element.getPath();
+				fViewer.getControl().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						for (TreeItem node : fViewer.getTree().getItems()) {
+							// iterating on all 1st level (classes, constants,
+							// and
+							// functions)
+							TreeItem[] treeItems = node.getItems();
+							for (TreeItem treeItem : treeItems) {
+								// iterating on all 2nd level elements and
+								// checking :
+								// if item path is prefixed by the removed
+								// element -
+								// need to remove it.
+								IModelElement itemData = (IModelElement) treeItem
+										.getData();
+								if (itemData != null) {
+									if (removedPath.isPrefixOf(itemData
+											.getPath())) {
+										postRemove((IModelElement) treeItem
+												.getData(), runnables);
+									}
+								}
+							}
 						}
 					}
-
-				}
+				});
 			} else {
 				// if element is not folder/project/SourceModule etc' - just
 				// need to remove it from the view
