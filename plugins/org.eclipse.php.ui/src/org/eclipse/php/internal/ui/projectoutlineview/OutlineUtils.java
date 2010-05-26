@@ -14,7 +14,6 @@ package org.eclipse.php.internal.ui.projectoutlineview;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.ui.Logger;
 
 public class OutlineUtils {
 
@@ -26,7 +25,6 @@ public class OutlineUtils {
 			try {
 				flags = ((IField) modelElement).getFlags();
 			} catch (ModelException e) {
-				Logger.logException(e);
 			}
 			if ((flags & Modifiers.AccConstant) != 0)
 				return true;
