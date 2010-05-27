@@ -72,6 +72,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 								if (!closeTagAppears(node.getSource(),
 										command.offset)) {
 									command.text += " ?>"; //$NON-NLS-1$
+									command.caretOffset = command.offset + 2;
 									command.shiftsCaret = false;
 									command.doit = false;
 								}
