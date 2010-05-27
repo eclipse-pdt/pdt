@@ -22,9 +22,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.ICopyPolicy;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.IReorgPolicy.IMovePolicy;
+import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
 import org.eclipse.dltk.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.dltk.internal.ui.refactoring.reorg.ReorgCopyStarter;
 import org.eclipse.dltk.internal.ui.refactoring.reorg.ScriptCopyProcessor;
@@ -289,8 +289,10 @@ public class PHPSelectionTransferDropAdapter extends
 
 	private boolean contains(IResource[] resources, Object target) {
 		for (int i = 0; i < resources.length; i++) {
-			if (resources[i].equals(target))
-				return true;
+			if (resources[i] != null) {
+				if (resources[i].equals(target))
+					return true;
+			}
 		}
 
 		return false;
