@@ -29,6 +29,7 @@ import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -643,8 +644,12 @@ public class PHPModelUtils {
 							|| !exactName
 							&& elementName.toLowerCase().startsWith(
 									prefix.toLowerCase())) {
-						elements.add((IField) child);
-						processedVars.add(elementName);
+
+						IField field = (IField) child;
+						if (!isSameFileExisiting(elements, field)) {
+							elements.add((IField) child);
+							processedVars.add(elementName);
+						}
 					}
 				}
 			}
@@ -689,6 +694,32 @@ public class PHPModelUtils {
 
 		return elements.toArray(new IModelElement[elements.size()]);
 	};
+
+	private static boolean isSameFileExisiting(List<IField> elements,
+			IField field) {
+
+		for (IField current : elements) {
+			if (isSameField(current, field)) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	private static boolean isSameField(IField current, IField field) {
+
+		if (!(field instanceof SourceField)) {
+			return false;
+		}
+		if (current == field) {
+			return true;
+		}
+
+		return current.getElementName().equals(field.getElementName())
+				&& current.getParent().equals(field.getParent());
+
+	}
 
 	/**
 	 * This method searches for all global fields that where declared in the
