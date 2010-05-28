@@ -57,7 +57,7 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	protected static final Map<PHPVersion, String> TESTS = new LinkedHashMap<PHPVersion, String>();
 	static {
 		// TESTS.put(PHPVersion.PHP4, "/workspace/codeassist/php4");
-		// TESTS.put(PHPVersion.PHP5, "/workspace/codeassist/php5");
+		TESTS.put(PHPVersion.PHP5, "/workspace/codeassist/php5");
 		TESTS.put(PHPVersion.PHP5_3, "/workspace/codeassist/php53");
 	};
 	protected static final char OFFSET_CHAR = '|';

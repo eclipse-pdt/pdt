@@ -1,0 +1,20 @@
+--TEST--
+Test CA for optional parameters
+--FILE--
+<?php
+class Test {
+    public function test($mandatory, $optional = null) {}
+}
+
+$test = new Test();
+$test->|
+?>
+--EXPECT--
+<?php
+class Test {
+    public function test($mandatory, $optional = null) {}
+}
+
+$test = new Test();
+$test->test($mandatory)
+?>
