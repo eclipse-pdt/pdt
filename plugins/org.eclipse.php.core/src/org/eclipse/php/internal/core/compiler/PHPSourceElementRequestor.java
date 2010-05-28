@@ -450,8 +450,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		PHPDocBlock doc = declaration.getPHPDoc();
 		if (doc != null) {
 			for (PHPDocTag tag : doc.getTags(PHPDocTag.VAR)) {
-				info.type = PHPModelUtils.extractElementName(tag
-						.getReferences()[0].getName());
+				SimpleReference[] references = tag.getReferences();
+				if (references.length > 0) {
+					info.type = PHPModelUtils.extractElementName(references[0]
+							.getName());
+				}
 			}
 		}
 		fRequestor.enterField(info);
