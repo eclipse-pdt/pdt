@@ -37,8 +37,7 @@ public class OpenEditorActionGroup extends ActionGroup {
 	/**
 	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
 	 * selection provided by the part's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>
-	 * .
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param part
 	 *            the view part that owns this action group
@@ -81,7 +80,6 @@ public class OpenEditorActionGroup extends ActionGroup {
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
-		fOpen = new OpenAction(fSite);
 		fOpen.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_EDITOR);
 		appendToGroup(menu, fOpen);
 		if (!fIsEditorOwner) {
