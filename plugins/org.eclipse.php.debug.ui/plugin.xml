@@ -115,7 +115,7 @@
 		</debugModelPresentation>
 		<debugModelPresentation
 			class="org.eclipse.php.internal.debug.ui.presentation.XDebugModelPresentation"
-			id="org.eclipse.php.debug.ui.xdebug">
+			id="org.eclipse.php.xdebug.core.dbgp.model">
 		</debugModelPresentation>
 	</extension>
 	
