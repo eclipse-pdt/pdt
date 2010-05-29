@@ -124,7 +124,7 @@
 			contextId="org.eclipse.php.debug.ui.debugging">
 		</modelContextBinding>
 		<modelContextBinding debugModelId="org.eclipse.php.xdebug.core.dbgp.model"
-			contextId="org.eclipse.php.debug.ui.debugging">
+			contextId="org.eclipse.php.debug.ui.xdebug">
 		</modelContextBinding>
 	</extension>
 	
