@@ -95,7 +95,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			if (var.getParent().getType() == ASTNode.ARRAY_ACCESS) {
 				varParent = varParent.getParent();
 			}
-			if (varParent.getType() == ASTNode.FIELD_ACCESS) {
+			if (varParent.getType() == ASTNode.FIELD_ACCESS
+					&& ((FieldAccess) varParent).getDispatcher() != null) {
 				typeBinding = ((FieldAccess) varParent).getDispatcher()
 						.resolveTypeBinding();
 			} else if (varParent.getType() == ASTNode.STATIC_FIELD_ACCESS) {
@@ -105,7 +106,9 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				FunctionName fn = (FunctionName) varParent;
 				if (fn.getParent().getType() == ASTNode.FUNCTION_INVOCATION) {
 					FunctionInvocation fi = (FunctionInvocation) fn.getParent();
-					if (fi.getParent().getType() == ASTNode.METHOD_INVOCATION) {
+					if (fi.getParent().getType() == ASTNode.METHOD_INVOCATION
+							&& ((MethodInvocation) fi.getParent())
+									.getDispatcher() != null) {
 						typeBinding = ((MethodInvocation) fi.getParent())
 								.getDispatcher().resolveTypeBinding();
 					}
