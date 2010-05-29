@@ -30,6 +30,12 @@
 		<command categoryId="org.eclipse.debug.ui.category.run"
 			description="Run PHP Script" id="org.eclipse.php.deubg.ui.phpexeShortcut.run"
 			name="Run PHP Script" />
+		<command
+            name="%ActionDefinition.inspect.name"
+            description="%ActionDefinition.inspect.description"
+            categoryId="org.eclipse.debug.ui.category.run"
+            id="org.eclipse.php.debug.ui.commands.Inspect">
+      </command>
 	</extension>
 	
 	<extension point="org.eclipse.ui.bindings">
@@ -39,11 +45,24 @@
 		<key commandId="org.eclipse.php.deubg.ui.phpexeShortcut.debug"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M3+M2+D H" />
+		<key
+            sequence="M1+M2+I"
+            contextId="org.eclipse.php.debug.ui.debugging"
+            commandId="org.eclipse.php.debug.ui.commands.Inspect"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+        <key
+            sequence="M1+M2+I"
+            contextId="org.eclipse.php.debug.ui.xdebug"
+            commandId="org.eclipse.php.debug.ui.commands.Inspect"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	</extension>
 	
 	<extension point="org.eclipse.ui.contexts">
 		<context name="%debuggingPHP.name" description="%debuggingPHP.description"
 			id="org.eclipse.php.debug.ui.debugging" parentId="org.eclipse.debug.ui.debugging">
+		</context>
+		<context name="%debuggingPHP.name" description="%debuggingPHP.description"
+			id="org.eclipse.php.debug.ui.xdebug" parentId="org.eclipse.debug.ui.debugging">
 		</context>
 	</extension>
 	
@@ -69,6 +88,23 @@
 					</and>
 				</enablement>
 			</action>
+			
+			<action class="org.eclipse.php.internal.debug.ui.actions.PopupInspectAction"
+				definitionId="org.eclipse.php.debug.ui.commands.Inspect"
+				disabledIcon="icon/full/dtool16/insp_sbook.gif" enablesFor="+"
+				helpContextId="inspect_action_context" hoverIcon="icon/full/etool16/insp_sbook.gif"
+				icon="icon/full/etool16/insp_sbook.gif" id="org.eclipse.php.debug.ui.commands.Inspect"
+				label="inspect" menubarPath="org.eclipse.ui.run/phpGroup"
+				style="push">
+				<enablement>
+					<and>
+						<systemProperty name="org.eclipse.php.debug.ui.activeDebugging"
+							value="true" />
+						<objectClass
+							name="org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode" />
+					</and>
+				</enablement>
+			</action>
 		</actionSet>
 	</extension>
 	
@@ -79,12 +115,15 @@
 		</debugModelPresentation>
 		<debugModelPresentation
 			class="org.eclipse.php.internal.debug.ui.presentation.XDebugModelPresentation"
-			id="org.eclipse.php.xdebug.core.dbgp.model">
+			id="org.eclipse.php.debug.ui.xdebug">
 		</debugModelPresentation>
 	</extension>
 	
 	<extension point="org.eclipse.debug.ui.debugModelContextBindings">
 		<modelContextBinding debugModelId="org.eclipse.php.debug.core"
+			contextId="org.eclipse.php.debug.ui.debugging">
+		</modelContextBinding>
+		<modelContextBinding debugModelId="org.eclipse.php.xdebug.core.dbgp.model"
 			contextId="org.eclipse.php.debug.ui.debugging">
 		</modelContextBinding>
 	</extension>
@@ -169,6 +208,11 @@
 			<action class="org.eclipse.php.internal.debug.ui.actions.PHPWatchAction"
 				enablesFor="+" icon="icon/full/etool16/watch_exp.gif" id="org.eclipse.php.debug.ui.popup.WatchAction"
 				label="%Watch.label" menubarPath="additions">
+			</action>
+			<action class="org.eclipse.php.internal.debug.ui.actions.PopupInspectAction"
+				definitionId="org.eclipse.php.debug.ui.commands.Inspect"
+				enablesFor="+" icon="icon/full/etool16/insp_sbook.gif" id="org.eclipse.php.debug.ui.commands.Inspect"
+				label="%ActionDefinition.inspect.name" menubarPath="additions">
 			</action>
 			<visibility>
 				<and>

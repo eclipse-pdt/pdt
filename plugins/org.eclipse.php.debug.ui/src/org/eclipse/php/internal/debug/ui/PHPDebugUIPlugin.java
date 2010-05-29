@@ -40,6 +40,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
+import org.eclipse.php.internal.debug.ui.actions.EvaluationContextManager;
 import org.eclipse.php.internal.debug.ui.views.variables.PHPDebugElementAdapterFactory;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.widgets.Display;
@@ -111,8 +112,11 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			list.remove(propertiesFactory);
 			list.add(0, propertiesFactory);
 		}
-		// Perform a clean on the secured storage, which might contain SSH tunnels passwords that no longer being used by any of the defined launch configurations.
+		// Perform a clean on the secured storage, which might contain SSH
+		// tunnels passwords that no longer being used by any of the defined
+		// launch configurations.
 		cleanSecuredStorage();
+		EvaluationContextManager.startup();
 	}
 
 	/**
@@ -313,10 +317,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 						}
 					}
 				} catch (Exception e) {
-					Logger
-							.logException(
-									"Error while cleaning up the php debug tunnels credentials from the secured storage",
-									e);
+					Logger.logException(
+							"Error while cleaning up the php debug tunnels credentials from the secured storage",
+							e);
 				}
 				return Status.OK_STATUS;
 			}
