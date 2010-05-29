@@ -18,10 +18,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.MoveResourceAction;
@@ -62,6 +64,22 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 			action.selectionChanged(selection);
 		} else if (selectedResources != null) {
 			action = new MoveResourceAction(fShell);
+			Object object = ((IStructuredSelection) selection)
+					.getFirstElement();
+			IResource resource = null;
+			if (object instanceof IModelElement) {
+				resource = ((IModelElement) object).getResource();
+			}
+			if (object instanceof IResource) {
+				resource = (IResource) object;
+			}
+			if (object instanceof ElementImplForPhp) {
+				resource = ((ElementImplForPhp) object).getModelElement()
+						.getResource();
+			}
+			if (resource != null) {
+				selection = new StructuredSelection(resource);
+			}
 			action.selectionChanged(selection);
 
 		}
