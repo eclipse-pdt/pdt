@@ -1,0 +1,12 @@
+--TEST--
+Test Variable
+--FILE--
+<? 
+$content = 'x';
+if( $a == 1 ) {
+$content .= 'y';
+}
+$conte|
+?>
+--EXPECT--
+field($content)
