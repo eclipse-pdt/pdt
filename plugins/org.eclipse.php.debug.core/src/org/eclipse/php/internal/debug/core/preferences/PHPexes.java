@@ -460,7 +460,9 @@ public class PHPexes {
 									|| null == newItem.getExecutable())
 								continue; // not adding "problematic"
 							// executables
-							newItem.setVersion(version);
+							if (version != null) {
+								newItem.setVersion(version);
+							}
 							addItem(newItem);
 							if (isDefault) {
 								setDefaultItem(newItem);
