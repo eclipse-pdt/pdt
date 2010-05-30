@@ -11,8 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
@@ -44,7 +46,24 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	private int relevanceClass;
 	private int relevanceVar;
 	private int relevanceConst;
-	private Set<? super Object> processedElements = new HashSet<Object>();
+	private Set<? super Object> processedElements = new TreeSet<Object>(
+			new Comparator() {
+				public int compare(Object o1, Object o2) {
+					if (o1.equals(o2)) {
+						return 0;
+					}
+					// filter duplications of variables
+					if (o1 instanceof IField
+							&& o2 instanceof IField
+							&& ((IField) o1).getElementName().equals(
+									((IField) o2).getElementName())
+							&& ((IField) o1).getParent().equals(
+									((IField) o2).getParent())) {
+						return 0;
+					}
+					return 1;
+				}
+			});
 	private Set<? super Object> processedPaths = new HashSet<Object>();
 
 	public void complete(IModuleSource module, int position, int i) {
