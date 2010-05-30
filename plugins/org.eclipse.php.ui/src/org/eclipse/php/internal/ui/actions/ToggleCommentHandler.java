@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -36,6 +37,11 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  */
 
 public class ToggleCommentHandler extends CommentHandler implements IHandler {
+	static class LinePosition {
+		public int line;
+		public int offset;
+	}
+
 	public ToggleCommentHandler() {
 		super();
 	}
@@ -124,8 +130,13 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 
 		// save the selection position since it will be changing
 		Position selectionPosition = null;
+		LinePosition start = null;
+		LinePosition end = null;
 		boolean updateStartOffset = false;
 		try {
+			start = getLinePosition(document, textSelection.getOffset());
+			end = getLinePosition(document, textSelection.getOffset()
+					+ textSelection.getLength());
 			selectionPosition = new Position(textSelection.getOffset(),
 					textSelection.getLength());
 			document.addPosition(selectionPosition);
@@ -144,8 +155,22 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 
 		processAction(document, selectionStartLine, selectionEndLine);
 
-		updateCurrentSelection(textEditor, selectionPosition, document,
-				updateStartOffset);
+		updateCurrentSelection(textEditor, selectionPosition, start, end,
+				document, updateStartOffset);
+	}
+
+	private LinePosition getLinePosition(IDocument document, int offset)
+			throws BadLocationException {
+		LinePosition result = new LinePosition();
+		int line = document.getLineOfOffset(offset);
+		result.line = line;
+		result.offset = offset - document.getLineOffset(line);
+		return result;
+	}
+
+	private int getOffset(IDocument document, LinePosition position)
+			throws BadLocationException {
+		return position.offset + document.getLineOffset(position.line);
 	}
 
 	private void processAction(IDocument document, int selectionStartLine,
@@ -194,23 +219,21 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 	}
 
 	private void updateCurrentSelection(ITextEditor textEditor,
-			Position selectionPosition, IDocument document,
-			boolean updateStartOffset) {
+			Position selectionPosition, LinePosition start, LinePosition end,
+			IDocument document, boolean updateStartOffset) {
 		// update the selection if text selection changed
-		if (selectionPosition != null) {
+		if (start != null && end != null) {
 			ITextSelection selection = null;
-			if (updateStartOffset) {
-				selection = new TextSelection(document, selectionPosition
-						.getOffset()
-						- SINGLE_LINE_COMMENT.length(), selectionPosition
-						.getLength()
-						+ OPEN_COMMENT.length());
-			} else {
-				selection = new TextSelection(document, selectionPosition
-						.getOffset(), selectionPosition.getLength());
+			try {
+				int offset = getOffset(document, start);
+				selection = new TextSelection(document, offset, getOffset(
+						document, end)
+						- offset);
+			} catch (BadLocationException e) {
+				PHPUiPlugin.log(e);
 			}
 			ISelectionProvider provider = textEditor.getSelectionProvider();
-			if (provider != null) {
+			if (provider != null && selection != null) {
 				provider.setSelection(selection);
 			}
 			document.removePosition(selectionPosition);
