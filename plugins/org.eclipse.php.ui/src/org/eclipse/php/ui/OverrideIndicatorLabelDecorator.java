@@ -170,15 +170,17 @@ public class OverrideIndicatorLabelDecorator implements ILabelDecorator,
 
 		IType type = method.getDeclaringType();
 
-		MethodOverrideTester methodOverrideTester = SuperTypeHierarchyCache
-				.getMethodOverrideTester(type);
-		IMethod defining = methodOverrideTester.findOverriddenMethod(method,
-				true);
-		if (defining != null) {
-			if (isAbstract(defining)) {
-				return ScriptElementImageDescriptor.IMPLEMENTS;
-			} else {
-				return ScriptElementImageDescriptor.OVERRIDES;
+		if (type != null) {
+			MethodOverrideTester methodOverrideTester = SuperTypeHierarchyCache
+					.getMethodOverrideTester(type);
+			IMethod defining = methodOverrideTester.findOverriddenMethod(
+					method, true);
+			if (defining != null) {
+				if (isAbstract(defining)) {
+					return ScriptElementImageDescriptor.IMPLEMENTS;
+				} else {
+					return ScriptElementImageDescriptor.OVERRIDES;
+				}
 			}
 		}
 		return 0;
