@@ -11,6 +11,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class OutlineFilter {
 
@@ -57,9 +58,8 @@ public class OutlineFilter {
 						// filter duplications of variables
 						if (o1 instanceof IField
 								&& o2 instanceof IField
-								&& o1.getElementName().equals(
-										o2.getElementName())
-								&& o1.getParent().equals(o2.getParent())) {
+								&& PHPModelUtils.isSameField((IField) o1,
+										(IField) o2)) {
 							return 0;
 						}
 						return 1;

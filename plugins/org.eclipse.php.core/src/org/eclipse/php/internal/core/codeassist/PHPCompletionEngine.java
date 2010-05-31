@@ -30,6 +30,7 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
 import org.eclipse.php.internal.core.codeassist.strategies.CompletionStrategyFactory;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * Completion engine for PHP. This engine uses structured document for defining
@@ -55,10 +56,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 					// filter duplications of variables
 					if (o1 instanceof IField
 							&& o2 instanceof IField
-							&& ((IField) o1).getElementName().equals(
-									((IField) o2).getElementName())
-							&& ((IField) o1).getParent().equals(
-									((IField) o2).getParent())) {
+							&& PHPModelUtils.isSameField((IField) o1,
+									(IField) o2)) {
 						return 0;
 					}
 					return 1;

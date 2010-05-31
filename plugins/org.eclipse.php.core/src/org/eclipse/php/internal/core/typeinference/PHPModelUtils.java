@@ -707,7 +707,7 @@ public class PHPModelUtils {
 
 	}
 
-	private static boolean isSameField(IField current, IField field) {
+	public static boolean isSameField(IField current, IField field) {
 
 		if (!(field instanceof SourceField)) {
 			return false;
