@@ -118,7 +118,8 @@ public class SuperTypeHierarchyCache {
 			for (Iterator iter = fgMethodOverrideTesterCache.values()
 					.iterator(); iter.hasNext();) {
 				MethodOverrideTester curr = (MethodOverrideTester) iter.next();
-				if (curr != null && curr.getTypeHierarchy().equals(hierarchy)) {
+				if (curr != null && curr.getTypeHierarchy() != null
+						&& curr.getTypeHierarchy().equals(hierarchy)) {
 					iter.remove();
 				}
 			}
