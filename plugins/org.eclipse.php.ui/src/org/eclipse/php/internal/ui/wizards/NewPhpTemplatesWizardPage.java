@@ -56,7 +56,7 @@ public class NewPhpTemplatesWizardPage extends
 	}
 
 	protected String getPreferencePageId() {
-		return "org.eclipse.php.ui.preferences.PHPTemplatesPreferencePage"; //$NON-NLS-1$
+		return "org.eclipse.php.ui.preferences.PHPCodeTemplatePreferencePage"; //$NON-NLS-1$
 	}
 
 	protected IPreferenceStore getPreferenceStore() {

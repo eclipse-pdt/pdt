@@ -197,8 +197,8 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 
 	private boolean fIsComment;
 
-	public CodeTemplateContextType(String contextName) {
-		super(contextName);
+	public CodeTemplateContextType(String contextName, String name) {
+		super(contextName, name);
 
 		fIsComment = false;
 
@@ -406,6 +406,11 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 		}
 	}
 
+	public CodeTemplateContextType(String contextName) {
+		this(contextName, contextName);
+
+	}
+
 	private void addCompilationUnitVariables() {
 		addResolver(new CodeTemplateVariableResolver(
 				FILENAME,
@@ -484,9 +489,10 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 				CodeTemplateContextType.SETTERCOMMENT_CONTEXTTYPE));
 
 		registry.addContextType(new CodeTemplateContextType(
-				CodeTemplateContextType.NEW_FILE_CONTEXTTYPE));
-		registry.addContextType(new CodeTemplateContextType(
-				CodeTemplateContextType.NEW_HTMLFILE_CONTEXTTYPE));
+				CodeTemplateContextType.NEW_FILE_CONTEXTTYPE,
+				PhpTemplateMessages.CodeTemplateContextType_0));
+		// registry.addContextType(new CodeTemplateContextType(
+		// CodeTemplateContextType.NEW_HTMLFILE_CONTEXTTYPE));
 
 	}
 
