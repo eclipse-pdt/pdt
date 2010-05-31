@@ -80,6 +80,8 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 	private ITextEditor fTextEditor;
 	private ISelection fSelectionBeforeEvaluation;
 
+	private IWatchExpressionListener watchExpressionListener;
+
 	public PopupInspectAction() {
 		super();
 	}
@@ -241,27 +243,23 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 		if (stackFrame == null) {
 			return;
 		}
+		if (watchExpressionListener == null) {
+			watchExpressionListener = new IWatchExpressionListener() {
+				public void watchEvaluationFinished(
+						IWatchExpressionResult result) {
+					evaluationComplete(result);
+				}
+			};
+		}
 		if (stackFrame instanceof DBGpStackFrame) {
 
 			new XDebugWatchExpressionDelegate().evaluateExpression(expression,
-					stackFrame, new IWatchExpressionListener() {
-
-						public void watchEvaluationFinished(
-								IWatchExpressionResult result) {
-							evaluationComplete(result);
-						}
-					});
+					stackFrame, watchExpressionListener);
 
 		} else if (stackFrame instanceof PHPStackFrame) {
 
 			new PHPWatchExpressionDelegate().evaluateExpression(expression,
-					stackFrame, new IWatchExpressionListener() {
-
-						public void watchEvaluationFinished(
-								IWatchExpressionResult result) {
-							evaluationComplete(result);
-						}
-					});
+					stackFrame, watchExpressionListener);
 		}
 
 	}
