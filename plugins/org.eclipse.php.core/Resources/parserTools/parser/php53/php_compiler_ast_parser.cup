@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.28 2010/05/25 04:49:04 qiwang Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.29 2010/05/31 10:23:13 qiwang Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1743,10 +1743,6 @@ non_empty_member_modifiers:list
 		CompilerAstParser.ModifierDocPair modifier = (CompilerAstParser.ModifierDocPair)it.next();
 		if (modifier.doc != null) {
 			docBlock = modifier.doc;
-		}
-		
-		if(modifier.modifier == Modifiers.AccAbstract){
-			parser.reportError(new ASTError(listleft, listright), "syntax error, 'Abstract' doesn't support here");
 		}
 		result |= modifier.modifier;
 	}
