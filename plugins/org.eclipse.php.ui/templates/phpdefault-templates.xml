@@ -390,7 +390,7 @@ ${cursor}</template>
 	name="author"
 	description="%description.phpdoc.author"
 	id="org.eclipse.php.ui.editor.templates.phpdoc.author"
-	context="phpdoc"
+	context="phpcomment"
 	enabled="true">@author ${user}
 </template>
 </templates>
