@@ -34,6 +34,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.CodeGeneration;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
@@ -120,6 +121,13 @@ public class AddDescriptionAction extends Action implements
 
 	private String handleElement(ITextEditor textEditor,
 			IModelElement modelElem, IDocument document) {
+		if (textEditor instanceof PHPStructuredEditor) {
+			PHPStructuredEditor editor = (PHPStructuredEditor) textEditor;
+			if (editor.getTextViewer() != null
+					&& !editor.getTextViewer().isEditable()) {
+				return null;
+			}
+		}
 		if (modelElem instanceof ISourceModule) {
 			handleFileDocBlock((ISourceModule) modelElem,
 					(IStructuredDocument) document);
