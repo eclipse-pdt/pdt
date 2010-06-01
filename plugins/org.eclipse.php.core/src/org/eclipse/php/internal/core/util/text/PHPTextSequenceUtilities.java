@@ -130,6 +130,11 @@ public class PHPTextSequenceUtilities {
 				// remove spaces from start.
 				textSequence = textSequence.subTextSequence(readForwardSpaces(
 						textSequence, 0), textSequence.length());
+
+				if (textSequence.toString().endsWith("(")) {
+					textSequence = textSequence.subTextSequence(0, textSequence
+							.length() - 1);
+				}
 				return textSequence;
 
 			} catch (BadLocationException e) {
