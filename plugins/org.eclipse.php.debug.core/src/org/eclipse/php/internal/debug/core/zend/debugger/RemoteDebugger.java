@@ -25,7 +25,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
-import org.eclipse.php.internal.core.util.PHPSearchEngine;
+import org.eclipse.php.internal.core.util.*;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
@@ -313,11 +313,9 @@ public class RemoteDebugger implements IRemoteDebugger {
 					wsFile = workspace
 							.getRoot()
 							.getFile(
-									project
-											.getFullPath()
+									project.getFullPath()
 											.append(
-													location
-															.removeFirstSegments(segmentsToRemove)));
+													location.removeFirstSegments(segmentsToRemove)));
 					break;
 				}
 			}
@@ -361,13 +359,21 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	public static String convertToRemoteFilename(String localFile,
 			PHPDebugTarget debugTarget) {
-		IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-				new Path(localFile));
-		if (debugTarget.isPHPCGI() && wsFile.exists()
-				&& wsFile.getLocation() != null) {
-			File fsFile = wsFile.getLocation().toFile();
-			if (fsFile.exists()) {
-				return fsFile.getAbsolutePath();
+		IPath path = Path.fromPortableString(localFile);
+
+		// check if this is valid workspace path to avoid IAE
+		// e.g. when using debug URL, localFile can be "c:\Program Files\..."
+		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=306834
+		if (path.segmentCount() > 2) {
+
+			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
+					path);
+			if (debugTarget.isPHPCGI() && wsFile.exists()
+					&& wsFile.getLocation() != null) {
+				File fsFile = wsFile.getLocation().toFile();
+				if (fsFile.exists()) {
+					return fsFile.getAbsolutePath();
+				}
 			}
 		}
 		if (VirtualPath.isAbsolute(localFile)) {
@@ -1101,17 +1107,14 @@ public class RemoteDebugger implements IRemoteDebugger {
 								.getCalledFileName(), currentWorkingDir,
 								previousScriptDir, project);
 						if (result instanceof ResourceResult) {
-							layer
-									.setResolvedCalledFileName(((ResourceResult) result)
-											.getFile().getFullPath().toString());
+							layer.setResolvedCalledFileName(((ResourceResult) result)
+									.getFile().getFullPath().toString());
 						} else if (result instanceof IncludedFileResult) {
-							layer
-									.setResolvedCalledFileName(((IncludedFileResult) result)
-											.getFile().getAbsolutePath());
+							layer.setResolvedCalledFileName(((IncludedFileResult) result)
+									.getFile().getAbsolutePath());
 						} else if (result instanceof ExternalFileResult) {
-							layer
-									.setResolvedCalledFileName(((ExternalFileResult) result)
-											.getFile().getAbsolutePath());
+							layer.setResolvedCalledFileName(((ExternalFileResult) result)
+									.getFile().getAbsolutePath());
 						}
 					}
 				}

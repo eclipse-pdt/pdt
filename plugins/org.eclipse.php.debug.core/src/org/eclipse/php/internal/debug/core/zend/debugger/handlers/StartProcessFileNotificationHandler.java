@@ -194,12 +194,12 @@ public class StartProcessFileNotificationHandler implements
 									StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 					if (secondaryId != null) {
 
-						IPath path = new Path(secondaryId);
-						if (path.getDevice() == null) {
+						IPath path = Path.fromPortableString(secondaryId);
+						if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) {
 							String fullPathString = path.toString();
 							String absolutePath = fullPathString
 									.substring(fullPathString.indexOf(':') + 1);
-							path = new Path(absolutePath);
+							path = Path.fromPortableString(absolutePath);
 						} else {
 							path = EnvironmentPathUtils.getLocalPath(path);
 						}
