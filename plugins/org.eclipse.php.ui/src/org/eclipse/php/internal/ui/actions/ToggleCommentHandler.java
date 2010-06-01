@@ -170,7 +170,14 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 
 	private int getOffset(IDocument document, LinePosition position)
 			throws BadLocationException {
-		return position.offset + document.getLineOffset(position.line);
+		int result;
+		int lineLength = document.getLineLength(position.line);
+		if (position.offset <= lineLength) {
+			result = position.offset + document.getLineOffset(position.line);
+		} else {
+			result = lineLength + document.getLineOffset(position.line);
+		}
+		return result;
 	}
 
 	private void processAction(IDocument document, int selectionStartLine,
