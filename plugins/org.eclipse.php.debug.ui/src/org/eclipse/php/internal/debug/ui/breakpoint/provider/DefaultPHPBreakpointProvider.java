@@ -102,7 +102,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 				if (storage instanceof IModelElement) {
 					IModelElement element = (IModelElement) storage;
 					secondaryId = EnvironmentPathUtils.getFile(element)
-							.getFullPath().toString();
+							.getFullPath().toPortableString();
 				}
 			}
 

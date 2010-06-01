@@ -12,9 +12,6 @@
 package org.eclipse.php.internal.debug.ui.presentation;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
@@ -29,7 +26,6 @@ import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.debug.ui.IValueDetailListener;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
-import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.Openable;
@@ -161,13 +157,13 @@ public class PHPModelPresentation extends LabelProvider implements
 				fileName = (String) marker
 						.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 
-				IPath path = new Path(fileName);
+				IPath path = Path.fromPortableString(fileName);
 
-				if (path.getDevice() == null) {
+				if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) {
 					String fullPathString = path.toString();
 					String absolutePath = fullPathString
 							.substring(fullPathString.indexOf(':') + 1);
-					path = new Path(absolutePath);
+					path = Path.fromPortableString(absolutePath);
 				} else {
 					path = EnvironmentPathUtils.getLocalPath(path);
 				}
@@ -182,8 +178,7 @@ public class PHPModelPresentation extends LabelProvider implements
 						fileName = EnvironmentPathUtils
 								.getLocalPathString(path);
 					} else {
-						File file = path.toFile();
-						fileName = file.getAbsolutePath();
+						fileName = path.toPortableString();
 					}
 				}
 
