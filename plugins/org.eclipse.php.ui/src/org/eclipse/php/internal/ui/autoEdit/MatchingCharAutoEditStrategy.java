@@ -157,7 +157,7 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 	protected void adjustDocumentOffset(DocumentCommand command) {
 		command.offset++;
 		if (command.caretOffset != -1) {
-			command.caretOffset++;
+			command.caretOffset = command.offset;
 		}
 	}
 }
