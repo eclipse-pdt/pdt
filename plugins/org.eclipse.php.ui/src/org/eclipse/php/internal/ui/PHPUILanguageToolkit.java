@@ -14,9 +14,11 @@ package org.eclipse.php.internal.ui;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.ui.AbstractDLTKUILanguageToolkit;
 import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
+import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.ui.PHPElementLabels;
 
 /**
  * An implementation of IDLTKUILanguageToolkit for PHP
@@ -44,4 +46,9 @@ public class PHPUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 	public String getEditorId(Object inputElement) {
 		return "org.eclipse.php.editor";
 	}
+
+	public ScriptElementLabels getScriptElementLabels() {
+		return new PHPElementLabels();
+	}
+
 }
