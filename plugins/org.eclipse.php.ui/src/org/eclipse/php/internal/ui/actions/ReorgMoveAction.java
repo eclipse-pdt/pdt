@@ -63,15 +63,18 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 			action.selectionChanged(selection);
 		} else if (selectedResources != null) {
 			action = new MoveResourceAction(fShell);
-			Object object = ((IStructuredSelection) selection)
-					.getFirstElement();
-			if (object instanceof ElementImplForPhp) {
-				IResource resource = ((ElementImplForPhp) object)
-						.getModelElement().getResource();
-				if (resource != null) {
-					selection = new StructuredSelection(resource);
+			if (list.size() == 1) {
+				Object object = list.get(0);
+				if (object instanceof ElementImplForPhp
+						&& ((ElementImplForPhp) object).getModelElement() != null) {
+					IResource resource = ((ElementImplForPhp) object)
+							.getModelElement().getResource();
+					if (resource != null) {
+						selection = new StructuredSelection(resource);
+					}
 				}
 			}
+
 			action.selectionChanged(selection);
 
 		}
