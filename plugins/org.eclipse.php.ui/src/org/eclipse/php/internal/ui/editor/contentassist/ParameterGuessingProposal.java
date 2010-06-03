@@ -176,6 +176,10 @@ public final class ParameterGuessingProposal extends
 		return super.getReplacementString();
 	}
 
+	protected boolean isValidPrefix(String prefix) {
+		return isPrefix(prefix, super.getReplacementString());
+	}
+
 	private boolean hasParameters() throws ModelException {
 		return method.getParameters() != null
 				&& hasNondefaultValues(method.getParameters());
