@@ -1,0 +1,22 @@
+--TEST--
+Test CA in the same namespace
+--FILE--
+<?php
+namespace CMS\Application;
+class Paths {
+}
+
+namespace other\Application;
+
+$var = new \CMS\Application\|
+?>
+--EXPECT--
+<?php
+namespace CMS\Application;
+class Paths {
+}
+
+namespace other\Application;
+
+$var = new \CMS\Application\Paths()
+?>
