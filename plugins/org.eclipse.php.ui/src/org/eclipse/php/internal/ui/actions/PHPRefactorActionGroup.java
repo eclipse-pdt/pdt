@@ -7,11 +7,9 @@
  * any use. 
  *
  *******************************************************************************/
-package org.eclipse.php.internal.ui.explorer;
+package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.dltk.internal.ui.actions.refactoring.RefactorActionGroup;
-import org.eclipse.php.internal.ui.actions.IPHPActionDelegator;
-import org.eclipse.php.internal.ui.actions.PHPActionDelegatorRegistry;
 import org.eclipse.ui.IViewPart;
 
 public class PHPRefactorActionGroup extends RefactorActionGroup {

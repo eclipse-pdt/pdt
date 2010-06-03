@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.ui.explorer;
+package org.eclipse.php.internal.ui.actions;
 
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +30,7 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchSite;

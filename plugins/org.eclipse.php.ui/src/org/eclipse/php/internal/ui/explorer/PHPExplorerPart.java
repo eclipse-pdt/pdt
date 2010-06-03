@@ -20,6 +20,7 @@ import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
 import org.eclipse.dltk.internal.ui.scriptview.WorkingSetDropAdapter;
+import org.eclipse.dltk.internal.ui.workingsets.WorkingSetModel;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.PreferenceConstants;
@@ -29,7 +30,12 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.ui.actions.ConfigureWorkingSetAction;
+import org.eclipse.php.internal.ui.actions.PHPExplorerActionGroup;
+import org.eclipse.php.internal.ui.dnd.PHPNavigatorDropAdapter;
+import org.eclipse.php.internal.ui.dnd.PHPViewerDropSupport;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
+import org.eclipse.php.internal.ui.util.NamespaceNode;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -111,6 +117,21 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	@Override
 	public void setFlatLayout(boolean enable) {
 		super.setFlatLayout(false);
+	}
+
+	protected void configWorkingSet() {
+		ScriptExplorerActionGroup actionSet = getActionGroup();
+		WorkingSetModel workingSetModel = getWorkingSetModel();
+		if (actionSet != null) {
+
+			actionSet.getWorkingSetActionGroup().setWorkingSetModel(
+					workingSetModel);
+		}
+
+		ConfigureWorkingSetAction action = new ConfigureWorkingSetAction(
+				getSite());
+		action.setWorkingSetModel(workingSetModel);
+		action.run();
 	}
 
 	/*

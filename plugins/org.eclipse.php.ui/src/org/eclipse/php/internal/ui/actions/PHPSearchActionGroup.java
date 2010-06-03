@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.ui.explorer;
+package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.*;

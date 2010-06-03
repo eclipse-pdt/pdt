@@ -40,6 +40,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.util.NamespaceNode;
 import org.eclipse.wst.jsdt.core.*;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
@@ -404,7 +405,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		return getChildren(((BuildpathEntry) entry).getPath());
 	}
 
-	protected class IncludePathContainer extends BuildPathContainer {
+	public class IncludePathContainer extends BuildPathContainer {
 		private IncludePath[] fIncludePath;
 
 		public IncludePathContainer(IScriptProject parent, IncludePath[] entries) {

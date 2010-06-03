@@ -82,7 +82,6 @@ import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
-import org.eclipse.php.internal.ui.explorer.PHPSearchActionGroup;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderProxy;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;

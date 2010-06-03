@@ -8,7 +8,7 @@
  
  *******************************************************************************/
 
-package org.eclipse.php.internal.ui.explorer;
+package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.dltk.internal.ui.refactoring.reorg.CopyToClipboardAction;
 import org.eclipse.dltk.internal.ui.refactoring.reorg.PasteAction;
@@ -17,7 +17,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.php.internal.ui.actions.DeleteAction;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IViewPart;

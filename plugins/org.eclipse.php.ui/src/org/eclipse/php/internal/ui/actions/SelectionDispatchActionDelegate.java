@@ -7,14 +7,13 @@
  * any use. 
  *
  *******************************************************************************/
-package org.eclipse.php.internal.ui.explorer;
+package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.dltk.ui.actions.SelectionDispatchAction;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.php.internal.ui.actions.IPHPActionDelegator;
 import org.eclipse.ui.IWorkbenchSite;
 
 public class SelectionDispatchActionDelegate extends SelectionDispatchAction {

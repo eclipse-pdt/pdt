@@ -27,7 +27,7 @@ import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.explorer.NamespaceNode;
+import org.eclipse.php.internal.ui.util.NamespaceNode;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
