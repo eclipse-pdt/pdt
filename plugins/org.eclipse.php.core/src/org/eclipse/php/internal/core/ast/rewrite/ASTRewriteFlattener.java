@@ -409,19 +409,26 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(DoStatement doStatement) {
 		result.append("do "); //$NON-NLS-1$
-		doStatement.getAction().accept(this);
+		Statement body = doStatement.getBody();
+
+		if (body != null) {
+			body.accept(this);
+		}
 		result.append("while ("); //$NON-NLS-1$
-		doStatement.getCondition().accept(this);
+		Expression cond = doStatement.getCondition();
+		if (cond != null) {
+			cond.accept(this);
+		}
 		result.append(");\n"); //$NON-NLS-1$
 		return false;
 	}
 
 	public boolean visit(EchoStatement echoStatement) {
 		result.append("echo "); //$NON-NLS-1$
-		Expression[] expressions = echoStatement.getExpressions();
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].accept(this);
-			if (i + 1 < expressions.length) {
+		List<Expression> expressions = echoStatement.expressions();
+		for (int i = 0; i < expressions.size(); i++) {
+			expressions.get(i).accept(this);
+			if (i + 1 < expressions.size()) {
 				result.append(", ");
 			}
 		}
@@ -468,13 +475,19 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(ForEachStatement forEachStatement) {
 		result.append("foreach ("); //$NON-NLS-1$
-		forEachStatement.getExpression().accept(this);
+		Expression express = forEachStatement.getExpression();
+		if (express != null) {
+			express.accept(this);
+		}
 		result.append(" as "); //$NON-NLS-1$
 		if (forEachStatement.getKey() != null) {
 			forEachStatement.getKey().accept(this);
 			result.append(" => "); //$NON-NLS-1$
 		}
-		forEachStatement.getValue().accept(this);
+		Expression value = forEachStatement.getValue();
+		if (value != null) {
+			value.accept(this);
+		}
 		result.append(")"); //$NON-NLS-1$
 		forEachStatement.getStatement().accept(this);
 		return false;
@@ -671,9 +684,15 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(IfStatement ifStatement) {
 		result.append("if("); //$NON-NLS-1$
-		ifStatement.getCondition().accept(this);
+		Expression cond = ifStatement.getCondition();
+		if (cond != null) {
+			cond.accept(this);
+		}
 		result.append(")"); //$NON-NLS-1$
-		ifStatement.getTrueStatement().accept(this);
+		Statement trueStatement = ifStatement.getTrueStatement();
+		if (trueStatement != null) {
+			trueStatement.accept(this);
+		}
 		if (ifStatement.getFalseStatement() != null) {
 			result.append("else"); //$NON-NLS-1$
 			ifStatement.getFalseStatement().accept(this);
@@ -972,9 +991,16 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(SwitchStatement switchStatement) {
 		result.append("switch ("); //$NON-NLS-1$
-		switchStatement.getExpr().accept(this);
+
+		Expression express = switchStatement.getExpression();
+		if (express != null) {
+			express.accept(this);
+		}
 		result.append(")"); //$NON-NLS-1$
-		switchStatement.getStatement().accept(this);
+		Block statment = switchStatement.getBody();
+		if (statment != null) {
+			statment.accept(this);
+		}
 		return false;
 	}
 
@@ -985,10 +1011,14 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(TryStatement tryStatement) {
 		result.append("try "); //$NON-NLS-1$
-		tryStatement.getTryStatement().accept(this);
-		CatchClause[] catchClauses = tryStatement.getCatchClauses();
-		for (int i = 0; i < catchClauses.length; i++) {
-			catchClauses[i].accept(this);
+
+		Block body = tryStatement.getBody();
+		if (body != null) {
+			body.accept(this);
+		}
+		List<CatchClause> catchClauses = tryStatement.catchClauses();
+		for (int i = 0; i < catchClauses.size(); i++) {
+			catchClauses.get(i).accept(this);
 		}
 		return false;
 	}
