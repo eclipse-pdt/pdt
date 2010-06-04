@@ -58,15 +58,19 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 			LocalFile localFile = (LocalFile) obj;
 			IProject project = null;
 			try {
-				String file = stackFrame.getLaunch().getLaunchConfiguration()
-						.getAttribute(IPHPDebugConstants.ATTR_FILE,
-								(String) null);
-				if (file != null) {
-					IWorkspaceRoot workspaceRoot = ResourcesPlugin
-							.getWorkspace().getRoot();
-					IResource resource = workspaceRoot.findMember(file);
-					if (resource != null) {
-						project = resource.getProject();
+				if (stackFrame.getLaunch() != null
+						&& stackFrame.getLaunch().getLaunchConfiguration() != null) {
+					String file = stackFrame.getLaunch()
+							.getLaunchConfiguration()
+							.getAttribute(IPHPDebugConstants.ATTR_FILE,
+									(String) null);
+					if (file != null) {
+						IWorkspaceRoot workspaceRoot = ResourcesPlugin
+								.getWorkspace().getRoot();
+						IResource resource = workspaceRoot.findMember(file);
+						if (resource != null) {
+							project = resource.getProject();
+						}
 					}
 				}
 			} catch (CoreException e1) {
