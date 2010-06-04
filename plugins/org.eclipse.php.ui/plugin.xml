@@ -1130,6 +1130,8 @@
 		</key>
 		<key sequence="F3" commandId="org.eclipse.php.ui.edit.text.open.editor"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+        <key sequence="F3" commandId="org.eclipse.php.ui.edit.text.open.editor"
+			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />			
 		<!-- project -->
 		<!-- perspectives -->
 		<!-- views -->
