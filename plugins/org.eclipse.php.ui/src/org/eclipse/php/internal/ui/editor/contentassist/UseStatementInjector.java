@@ -87,6 +87,9 @@ public class UseStatementInjector {
 	private String getNamespaceName(NamespaceDeclaration namespaceDecl) {
 		StringBuilder nameBuf = new StringBuilder();
 		NamespaceName name = namespaceDecl.getName();
+		if (name == null) {
+			return "\\";
+		}
 		for (Identifier identifier : name.segments()) {
 			if (nameBuf.length() > 0) {
 				nameBuf.append('\\');
