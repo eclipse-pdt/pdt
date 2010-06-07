@@ -184,11 +184,11 @@ public class PHPStructuredTextViewerConfiguration extends
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer,
 			boolean reSet) {
 		if (fContentAssistant == null || reSet) {
-			if (fContentAssistant == null) {
-				fContentAssistant = new PHPContentAssistant();
-			} else {
+			if (fContentAssistant != null) {
 				fContentAssistant.uninstall();
 			}
+			fContentAssistant = new PHPContentAssistant();
+
 			// content assistant configurations
 			fContentAssistant
 					.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
