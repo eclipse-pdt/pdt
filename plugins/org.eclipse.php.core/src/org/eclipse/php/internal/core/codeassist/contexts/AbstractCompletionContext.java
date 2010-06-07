@@ -574,7 +574,11 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @throws BadLocationException
 	 */
 	public char getNextChar() throws BadLocationException {
-		// ITextRegion nextPHPToken = getNextPHPToken();
+		// if the current location is the end of the document,we return ' ' to
+		// avoid the BadLocationException
+		if (document.getLength() == offset) {
+			return ' ';
+		}
 		return document.getChar(offset);
 	}
 }
