@@ -19,12 +19,13 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.*;
 import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
-import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 
@@ -65,20 +66,23 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 			IDocument document = new Document();
 			DocumentTemplateContext context = getContext(contextTypeRegistry,
 					template, containerName, fileName, document);
+			TemplateBuffer buffer = null;
 			try {
-				TemplateBuffer buffer = context.evaluate(template);
+				buffer = context.evaluate(template);
+			} catch (BadLocationException e) {
+				PHPUiPlugin.log(e);
+			} catch (TemplateException e) {
+				PHPUiPlugin.log(e);
+			}
+			if (buffer != null) {
 				string = buffer.getString();
 				TemplateVariable[] variables = buffer.getVariables();
 				for (int i = 0; i != variables.length; i++) {
 					TemplateVariable variable = variables[i];
-					if ("cursor".equals(variable.getName())) {
+					if ("cursor".equals(variable.getName())) {//$NON-NLS-1$
 						offset = variable.getOffsets()[0];
 					}
 				}
-
-			} catch (Exception e) {
-				Logger.log(Logger.WARNING_DEBUG,
-						"Could not create template for new PHP", e); //$NON-NLS-1$
 			}
 		}
 		return new CompiledTemplate(string, offset);
