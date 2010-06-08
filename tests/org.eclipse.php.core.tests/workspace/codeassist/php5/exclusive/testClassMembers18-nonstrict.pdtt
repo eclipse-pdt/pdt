@@ -1,0 +1,117 @@
+--TEST--
+Show own class members
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class A {
+
+	//static fields
+	static private $staticPrivateField = "staticPrivateField";
+	static protected $staticProtectedField = "staticProtectedField";
+	static public $staticPublicField = "staticPublicField";
+	static $staticDefaultField = "staticDefaultField";
+		
+	//static functions
+	static public function publicStaticFunction() { echo "publicStaticFunction";}
+	static protected function protectedStaticFunction() {echo "protectedStaticFunction";}
+	static private function privateStaticFunction() {echo "privateStaticFunction";}
+	static function defaultStaticFunction() {echo "defaultStaticFunction";}
+	
+	//non static fields
+	private $privateField = "privateField";
+	protected $protectedField = "protectedField";
+	public $publicField = "publicField";
+	var $defalutField = "defalutField";
+	
+	//non static functions
+	public function publicNonStaticFunction() {echo "publicNonStaticFunction";}
+	protected function protectedNonStaticFunction() {echo "protectedNonStaticFunction";}
+	private function privateNonStaticFunction() {echo "privateNonStaticFunction";}
+	function defaultNonStaticFunction() {echo "defaultNonStaticFunction";}
+      
+	const CONSTANT_FIELD = "CONSTANT_FIELD";
+	
+	function __construct() {
+	}
+	
+	function test() {
+		$a = new A();
+		
+		$a->|
+		
+		//static fields
+		//error
+		//Debug Strict (PHP 5): /php1/testClassMember1.php line 36 - Accessing static property A::$staticPrivateField as non static
+		//Notice: /php1/testClassMember1.php line 36 - Undefined property: A::$staticPrivateField
+		//Debug Strict (PHP 5): /php1/testClassMember1.php line 37 - Accessing static property A::$staticProtectedField as non static
+		//Notice: /php1/testClassMember1.php line 37 - Undefined property: A::$staticProtectedField
+		//Debug Strict (PHP 5): /php1/testClassMember1.php line 38 - Accessing static property A::$staticPublicField as non static
+		//Notice: /php1/testClassMember1.php line 38 - Undefined property: A::$staticPublicField
+		//Debug Strict (PHP 5): /php1/testClassMember1.php line 39 - Accessing static property A::$staticDefaultField as non static
+		//Notice: /php1/testClassMember1.php line 39 - Undefined property: A::$staticDefaultField
+		
+//		in strict mode only
+//		echo $a->staticPrivateField;
+//		echo $a->staticProtectedField;
+//		echo $a->staticPublicField;
+//		echo $a->staticDefaultField;
+		
+		//static functions
+		$a->publicStaticFunction();
+		$a->protectedStaticFunction();
+		$a->privateStaticFunction();
+		$a->defaultStaticFunction();
+		
+		//non static fields
+		echo $a->privateField;
+		echo $a->protectedField;
+		echo $a->publicField;
+		echo $a->defalutField;
+		
+		//non static functions
+		$a->publicNonStaticFunction();
+		$a->protectedNonStaticFunction();
+		$a->privateNonStaticFunction();
+		$a->defaultNonStaticFunction();
+		
+		//error
+		//Notice: /php1/testClassMember1.php line 59 - Undefined property: A::$CONSTANT_FIELD
+//		echo $a->CONSTANT_FIELD;
+	}
+}
+
+
+//execution results
+//publicStaticFunction
+//protectedStaticFunction
+//privateStaticFunction
+//defaultStaticFunction
+//privateField
+//protectedField
+//publicField
+//defalutField
+//publicNonStaticFunction
+//protectedNonStaticFunction
+//privateNonStaticFunction
+//defaultNonStaticFunction
+
+?>
+--EXPECT--
+field($defalutField)
+field($privateField)
+field($protectedField)
+field($publicField)
+method(__construct)
+method(defaultNonStaticFunction)
+method(defaultStaticFunction)
+method(privateNonStaticFunction)
+method(privateStaticFunction)
+method(protectedNonStaticFunction)
+method(protectedStaticFunction)
+method(publicNonStaticFunction)
+method(publicStaticFunction)
+method(test)
+
+
+
