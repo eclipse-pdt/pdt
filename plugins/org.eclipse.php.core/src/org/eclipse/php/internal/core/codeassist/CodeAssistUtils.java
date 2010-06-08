@@ -363,18 +363,25 @@ public class CodeAssistUtils {
 				}
 			}
 			if (className.length() > 0) {
-				ModuleDeclaration moduleDeclaration = SourceParserUtil
-						.getModuleDeclaration(sourceModule, null);
-				FileContext context = new FileContext(sourceModule,
-						moduleDeclaration, offset);
-				IEvaluatedType type = PHPClassType.fromTypeName(className,
-						sourceModule, offset);
-				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
-						type, context, offset);
-				if (modelElements != null) {
-					return modelElements;
+				if (className.startsWith("$")
+						&& phpVersion.isGreaterThan(PHPVersion.PHP5)) {
+					int statementStart = offset - statementText.length();
+					return getVariableType(sourceModule, className,
+							statementStart);
+				} else {
+					ModuleDeclaration moduleDeclaration = SourceParserUtil
+							.getModuleDeclaration(sourceModule, null);
+					FileContext context = new FileContext(sourceModule,
+							moduleDeclaration, offset);
+					IEvaluatedType type = PHPClassType.fromTypeName(className,
+							sourceModule, offset);
+					IType[] modelElements = PHPTypeInferenceUtils
+							.getModelElements(type, context, offset);
+					if (modelElements != null) {
+						return modelElements;
+					}
+					return EMPTY_TYPES;
 				}
-				return EMPTY_TYPES;
 			}
 		}
 		// check for $GLOBALS['myVar'] scenario
