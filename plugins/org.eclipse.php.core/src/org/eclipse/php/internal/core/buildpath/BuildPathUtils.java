@@ -52,6 +52,63 @@ public class BuildPathUtils {
 	}
 
 	/**
+	 * Adds the given entries to the Build Path. Check duplicating before
+	 * adding.
+	 * 
+	 * @param scriptProject
+	 * @param entries
+	 * @throws ModelException
+	 */
+	public static void addNonDupEntriesToBuildPath(
+			IScriptProject scriptProject, List<IBuildpathEntry> entries)
+			throws ModelException {
+
+		// get the current buildpath entries, in order to add/remove entries
+		Set<IBuildpathEntry> newRawBuildpath = new HashSet<IBuildpathEntry>();
+
+		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
+
+		// get all of the source folders and the language library from the
+		// existing build path
+		for (IBuildpathEntry buildpathEntry : rawBuildpath) {
+			newRawBuildpath.add(buildpathEntry);
+		}
+
+		for (IBuildpathEntry buildpathEntry : entries) {
+			if (!buildpathContains(newRawBuildpath
+					.toArray(new IBuildpathEntry[newRawBuildpath.size()]),
+					buildpathEntry)) {
+				newRawBuildpath.add(buildpathEntry);
+			}
+		}
+
+		// set the new updated buildpath for the project
+		scriptProject.setRawBuildpath(newRawBuildpath
+				.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
+
+	}
+
+	/**
+	 * Returns if the given item is in the list if the given list contains the
+	 * specified entry. If the list does not contain the entry, false is
+	 * returned. The check is applied on path only. exclusion/inclusion patterns
+	 * are ignored.
+	 */
+	public static boolean buildpathContains(IBuildpathEntry[] list,
+			IBuildpathEntry entry) {
+		for (int i = 0; i < list.length; i++) {
+			IBuildpathEntry other = list[i];
+			if (other.getContentKind() == entry.getContentKind()
+					&& other.getEntryKind() == entry.getEntryKind()
+					&& other.isExported() == entry.isExported()
+					&& other.getPath().equals(entry.getPath())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Removes the given entry from the build path (according to the path)
 	 * 
 	 * @param scriptProject
