@@ -23,7 +23,7 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 
 public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 		implements ISourceParser {
-
+	private static boolean DEBUG = false;
 	private String fileName;
 
 	public AbstractPHPSourceParser(String fileName) {
@@ -40,7 +40,10 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 			return parse(new CharArrayReader(input.getContentsAsCharArray()),
 					reporter);
 		} catch (Exception e) {
-			e.printStackTrace();
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=316077
+			if (DEBUG) {
+				e.printStackTrace();
+			}
 			// XXX: add recovery
 			return new ModuleDeclaration(0);
 		}
@@ -55,7 +58,10 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 		try {
 			parser.parse();
 		} catch (Exception e) {
-			e.printStackTrace();
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=316077
+			if (DEBUG) {
+				e.printStackTrace();
+			}
 			// XXX: add recovery
 			return new ModuleDeclaration(0);
 		}
