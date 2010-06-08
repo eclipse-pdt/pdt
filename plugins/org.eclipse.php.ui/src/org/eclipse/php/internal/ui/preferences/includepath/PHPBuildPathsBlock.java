@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.preferences.includepath;
 import static org.eclipse.dltk.core.IScriptProjectFilenames.BUILDPATH_FILENAME;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -131,8 +132,12 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 			throws CoreException, OperationCanceledException {
 		removeEtnries();
 		adaptIncludePath();
-		flush(fBuildPathList.getElements(), getScriptProject(), monitor);
 		super.configureScriptProject(monitor);
+
+		List<IBuildpathEntry> existingPathes = Arrays.asList(getScriptProject()
+				.getRawBuildpath());
+		BuildPathUtils.addNonDupEntriesToBuildPath(getScriptProject(),
+				existingPathes);
 	}
 
 	private void removeEtnries() {
