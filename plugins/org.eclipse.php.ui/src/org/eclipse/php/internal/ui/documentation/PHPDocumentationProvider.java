@@ -11,67 +11,87 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.documentation;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.*;
+import java.net.URL;
 
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.ui.PreferenceConstants;
+import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
+import org.eclipse.jface.internal.text.html.HTMLPrinter;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ConstantDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover;
+import org.eclipse.php.ui.PHPElementLabels;
+import org.eclipse.swt.graphics.FontData;
+import org.osgi.framework.Bundle;
 
+@SuppressWarnings("restriction")
 public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
-	private static final String VALUE = "Value";
 	protected static final String DL_END = "</dl>"; //$NON-NLS-1$
 	protected static final String DL_START = "<dl>"; //$NON-NLS-1$
-	protected static final String DD_END = "</dd>"; //$NON-NLS-1$
-	protected static final String DD_START = "<dd>"; //$NON-NLS-1$
-	protected static final String DT_START = "<dt>"; //$NON-NLS-1$
-	protected static final String DT_END = "</dt>"; //$NON-NLS-1$
-	protected static final String FIELD_LOCATION = "Location";
-	protected static final String FIELD_AUTHOR = "Author";
-	protected static final String FIELD_CLASS = "Class";
-	protected static final String FIELD_DESC = "Description";
-	protected static final String FIELD_PARAMETERS = "Parameters";
-	protected static final String FIELD_RETURNS = "Returns";
-	protected static final String FIELD_THROWS = "Throws";
-	protected static final String FIELD_DEPRECATED = "Deprecated";
-	protected static final String FIELD_SEEALSO = "See Also";
-	protected static final String FIELD_EXTENDS = "Extends";
-	protected static final String FIELD_IMPLEMENTS = "Implements";
-	protected static final String FIELD_NAMESPACE = "Namespace";
-	protected static final String FIELD_INTERFACE = "Interface";
-	protected static final String FIELD_TYPE = "Type";
+
+	/**
+	 * The style sheet (css).
+	 */
+	private static String fgStyleSheet;
+
+	private static final long LABEL_FLAGS = ScriptElementLabels.ALL_FULLY_QUALIFIED
+			| ScriptElementLabels.M_PRE_RETURNTYPE
+			| ScriptElementLabels.M_PARAMETER_TYPES
+			| ScriptElementLabels.M_PARAMETER_NAMES
+			| ScriptElementLabels.M_EXCEPTIONS
+			| ScriptElementLabels.F_PRE_TYPE_SIGNATURE
+			| ScriptElementLabels.M_PRE_TYPE_PARAMETERS
+			| ScriptElementLabels.T_TYPE_PARAMETERS
+			| ScriptElementLabels.USE_RESOLVED;
+
+	private static final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS
+			& ~ScriptElementLabels.F_FULLY_QUALIFIED
+			| ScriptElementLabels.F_POST_QUALIFIED;
 
 	public Reader getInfo(IMember element, boolean lookIntoParents,
 			boolean lookIntoExternal) {
-		StringBuilder buf = new StringBuilder(DL_START);
-		try {
-			if (!appendBuiltinDoc(element, buf)) {
-				if (element instanceof IMethod) {
-					appendMethodInfo((IMethod) element, buf);
-				} else if (element instanceof IType) {
-					appendTypeInfo((IType) element, buf);
-				} else if (element instanceof IField) {
-					appendFieldInfo((IField) element, buf);
-				}
+		StringBuffer buffer = new StringBuffer();
+		String constantValue = null;
+		if (element instanceof IField) {
+			try {
+				constantValue = getConstantValue((IField) element);
+			} catch (ModelException e) {
+				PHPUiPlugin.log(e);
 			}
-		} catch (Exception e) {
-			Logger.logException(e);
+			if (constantValue != null)
+				constantValue = HTMLPrinter.convertToHTMLContent(constantValue);
 		}
-		buf.append(DL_END);
-		return new StringReader(buf.toString());
+
+		HTMLPrinter.addSmallHeader(buffer, getInfoText(element, constantValue,
+				true));
+		Reader reader = null;
+		try {
+			reader = getHTMLContent(element);
+		} catch (ModelException e) {
+		}
+
+		if (reader != null) {
+			HTMLPrinter.addParagraph(buffer, reader);
+		}
+
+		if (buffer.length() > 0) {
+			HTMLPrinter.insertPageProlog(buffer, 0, getStyleSheet());
+			HTMLPrinter.addPageEpilog(buffer);
+
+			return new StringReader(buffer.toString());
+		}
+		return null;
 	}
 
 	public Reader getInfo(String keyword) {
@@ -85,253 +105,134 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		return null;
 	}
 
-	private boolean appendBuiltinDoc(IMember element, StringBuilder buf) {
-		String builtinDoc = BuiltinDoc.getString(element.getElementName());
-		if (builtinDoc.length() > 0) {
-			String fileName = getFileName(element);
-
-			// append the file name
-			appendDefinitionRow(FIELD_LOCATION, fileName, buf);
-
-			// append the class name if it exists
-			IType declaringType = element.getDeclaringType();
-			appendTypeInfoRow(declaringType, buf);
-
-			buf.append(builtinDoc);
-			return true;
-		}
-		return false;
+	private static StringBuffer getInfoText(IMember member) {
+		long flags = member.getElementType() == IModelElement.FIELD ? LOCAL_VARIABLE_FLAGS
+				: LABEL_FLAGS;
+		String label = PHPElementLabels.getDefault().getElementLabel(member,
+				flags);
+		return new StringBuffer(label);
 	}
 
-	private void appendMethodInfo(IMethod method, StringBuilder buf)
-			throws ModelException {
-
-		ISourceModule sourceModule = method.getSourceModule();
-		String fileName = getFileName(method);
-
-		// append the file name
-		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
-
-		// append the class name if it exists
-		IType declaringType = method.getDeclaringType();
-		appendTypeInfoRow(declaringType, buf);
-
-		ModuleDeclaration module = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
-		MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(
-				module, method);
-		if (!(methodDeclaration instanceof IPHPDocAwareDeclaration)) {
-			return;
+	protected static Reader getHTMLContent(IMember curr) throws ModelException {
+		String html = PHPDocumentationContentAccess.getHTMLContent(curr);
+		if (html != null) {
+			return new StringReader(html);
 		}
-
-		PHPDocBlock doc = ((IPHPDocAwareDeclaration) methodDeclaration)
-				.getPHPDoc();
-		if (doc == null) {
-			return;
-		}
-
-		// append description if it exists
-		appendShortDescription(doc, buf);
-
-		// append parameters info
-		appendTagInfo(doc, PHPDocTag.PARAM, FIELD_PARAMETERS, buf);
-
-		// append return type
-		appendTagInfo(doc, PHPDocTag.RETURN, FIELD_RETURNS, buf);
-
-		// append throw info
-		appendTagInfo(doc, PHPDocTag.THROWS, FIELD_THROWS, buf);
-
-		// append see also info
-		appendTagInfo(doc, PHPDocTag.SEE, FIELD_SEEALSO, buf);
-
-		// append deprecated info
-		appendTagInfo(doc, PHPDocTag.DEPRECATED, FIELD_DEPRECATED, buf);
-
-		// append author info
-		appendTagInfo(doc, PHPDocTag.AUTHOR, FIELD_AUTHOR, buf);
+		return null;
 	}
 
-	private void appendTypeInfo(IType type, StringBuilder buf)
-			throws ModelException {
-
-		ISourceModule sourceModule = type.getSourceModule();
-		String fileName = getFileName(type);
-
-		// append the file name
-		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
-
-		// append the namespace name if it exists
-		IType declaringType = type.getDeclaringType();
-		appendTypeInfoRow(declaringType, buf);
-
-		ModuleDeclaration module = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
-		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(module,
-				type);
-
-		if (typeDeclaration instanceof ClassDeclaration) {
-			ClassDeclaration classDeclaration = (ClassDeclaration) typeDeclaration;
-			String superClassName = classDeclaration.getSuperClassName();
-			if (superClassName != null) {
-				appendDefinitionRow(FIELD_EXTENDS, superClassName, buf);
-			}
-			String[] interfaceNames = classDeclaration.getInterfaceNames();
-			if (interfaceNames != null) {
-				appendDefinitionRows(FIELD_IMPLEMENTS, interfaceNames, buf);
-			}
-		} else {
-			String[] superClassNames = type.getSuperClasses();
-			if (superClassNames != null) {
-				appendDefinitionRows(FIELD_EXTENDS, superClassNames, buf);
+	private static String getInfoText(IMember element, String constantValue,
+			boolean allowImage) {
+		StringBuffer label = getInfoText(element);
+		if (element.getElementType() == IModelElement.FIELD) {
+			if (constantValue != null) {
+				label.append(' ');
+				label.append('=');
+				label.append(' ');
+				label.append(constantValue);
 			}
 		}
 
-		if (!(typeDeclaration instanceof IPHPDocAwareDeclaration)) {
-			return;
+		String imageName = null;
+		if (allowImage) {
+			URL imageUrl = PHPUiPlugin.getDefault().getImagesOnFSRegistry()
+					.getImageURL(element);
+			if (imageUrl != null) {
+				imageName = imageUrl.toExternalForm();
+			}
 		}
-		PHPDocBlock doc = ((IPHPDocAwareDeclaration) typeDeclaration)
-				.getPHPDoc();
-		if (doc == null) {
-			return;
-		}
 
-		// append description if it exists
-		appendShortDescription(doc, buf);
-
-		// append see also info
-		appendTagInfo(doc, PHPDocTag.SEE, FIELD_SEEALSO, buf);
-
-		// append deprecated info
-		appendTagInfo(doc, PHPDocTag.DEPRECATED, FIELD_DEPRECATED, buf);
-
-		// append author info
-		appendTagInfo(doc, PHPDocTag.AUTHOR, FIELD_AUTHOR, buf);
+		StringBuffer buf = new StringBuffer();
+		PHPDocumentationHover.addImageAndLabel(buf, imageName, 16, 16, 2, 2,
+				label.toString(), 20, 2);
+		return buf.toString();
 	}
 
-	private void appendFieldInfo(IField field, StringBuilder buf)
-			throws ModelException {
+	/**
+	 * Returns the Javadoc hover style sheet with the current Javadoc font from
+	 * the preferences.
+	 * 
+	 * @return the updated style sheet
+	 */
+	protected static String getStyleSheet() {
+		if (fgStyleSheet == null)
+			fgStyleSheet = loadStyleSheet();
+		String css = fgStyleSheet;
+		if (css != null) {
+			FontData fontData = JFaceResources.getFontRegistry().getFontData(
+					PreferenceConstants.APPEARANCE_DOCUMENTATION_FONT)[0];
+			css = HTMLPrinter.convertTopLevelFont(css, fontData);
+		}
 
+		return css;
+	}
+
+	/**
+	 * Loads and returns the Javadoc hover style sheet.
+	 * 
+	 * @return the style sheet, or <code>null</code> if unable to load
+	 */
+	private static String loadStyleSheet() {
+		Bundle bundle = Platform.getBundle(PHPUiPlugin.getPluginId());
+		URL styleSheetURL = bundle
+				.getEntry("/PHPDocumentationHoverStyleSheet.css"); //$NON-NLS-1$
+		if (styleSheetURL != null) {
+			BufferedReader reader = null;
+			try {
+				reader = new BufferedReader(new InputStreamReader(styleSheetURL
+						.openStream()));
+				StringBuffer buffer = new StringBuffer(1500);
+				String line = reader.readLine();
+				while (line != null) {
+					buffer.append(line);
+					buffer.append('\n');
+					line = reader.readLine();
+				}
+				return buffer.toString();
+			} catch (IOException ex) {
+				PHPUiPlugin.log(ex);
+				return ""; //$NON-NLS-1$
+			} finally {
+				try {
+					if (reader != null)
+						reader.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return null;
+	}
+
+	private String getConstantValue(IField field) throws ModelException {
+		if (!isFinal(field)) {
+			return null;
+		}
 		ISourceModule sourceModule = field.getSourceModule();
-		String fileName = getFileName(field);
-
-		// append the file name
-		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
-
-		// append the class name if it exists
-		IType declaringType = field.getDeclaringType();
-		appendTypeInfoRow(declaringType, buf);
 
 		ModuleDeclaration module = SourceParserUtil
 				.getModuleDeclaration(sourceModule);
 		ASTNode node = PHPModelUtils.getNodeByField(module, field);
 
 		if (!(node instanceof IPHPDocAwareDeclaration)) {
-			return;
+			return null;
 		}
 		if (node instanceof ConstantDeclaration) {
 			ConstantDeclaration constantDeclaration = (ConstantDeclaration) node;
 			if (constantDeclaration.getConstantValue() instanceof Scalar) {
 				Scalar scalar = (Scalar) constantDeclaration.getConstantValue();
-				appendDefinitionRow(VALUE, scalar.getValue(), buf);
+				return scalar.getValue();
 			}
 		}
-		PHPDocBlock doc = ((IPHPDocAwareDeclaration) node).getPHPDoc();
-		if (doc == null) {
-			return;
-		}
+		return null;
 
-		// append description if it exists
-		appendShortDescription(doc, buf);
-
-		// append type information
-		for (PHPDocTag tag : doc.getTags()) {
-			if (tag.getTagKind() == PHPDocTag.VAR) {
-				SimpleReference[] references = tag.getReferences();
-				StringBuilder typeBuf = new StringBuilder();
-				for (SimpleReference ref : references) {
-					if (typeBuf.length() > 0) {
-						typeBuf.append(" | ");
-					}
-					typeBuf.append(ref.getName());
-				}
-				appendDefinitionRow(FIELD_TYPE, typeBuf.toString(), buf);
-			}
-		}
 	}
 
-	private void appendTypeInfoRow(IType type, StringBuilder buf) {
-		if (type == null) {
-			return;
-		}
-
-		int flags = 0;
+	private static boolean isFinal(IField field) {
 		try {
-			flags = type.getFlags();
+			return PHPFlags.isFinal(field.getFlags());
 		} catch (ModelException e) {
+			PHPUiPlugin.log(e);
+			return false;
 		}
-		if (PHPFlags.isNamespace(flags)) {
-			appendDefinitionRow(FIELD_NAMESPACE, type.getElementName(), buf);
-		} else if (PHPFlags.isInterface(flags)) {
-			appendDefinitionRow(FIELD_INTERFACE, type.getElementName(), buf);
-		} else {
-			appendDefinitionRow(FIELD_CLASS, type.getElementName(), buf);
-		}
-	}
-
-	protected String nl2br(String str) {
-		return str.replaceAll("\\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	protected void appendDefinitionRow(String field, String data,
-			StringBuilder buf) {
-		buf.append(DT_START).append(field).append(DT_END);
-		buf.append(DD_START).append(data).append(DD_END);
-	}
-
-	protected void appendDefinitionRows(String field, String[] data,
-			StringBuilder buf) {
-		buf.append(DT_START).append(field).append(DT_END);
-		for (String row : data) {
-			buf.append(DD_START).append(row).append(DD_END);
-		}
-	}
-
-	protected void appendShortDescription(PHPDocBlock doc, StringBuilder buf) {
-		String desc = doc.getShortDescription();
-		if (desc != null && desc.length() > 0) {
-			appendDefinitionRow(FIELD_DESC, nl2br(desc), buf);
-		}
-	}
-
-	protected void appendTagInfo(PHPDocBlock doc, int tagKind, String field,
-			StringBuilder buf) {
-		PHPDocTag[] tags = getTags(doc, tagKind);
-		if (tags.length > 0) {
-			buf.append(DT_START).append(field).append(DT_END);
-			for (PHPDocTag tag : tags) {
-				buf.append(DD_START).append(tag.getValue()).append(DD_END);
-			}
-		}
-	}
-
-	protected PHPDocTag[] getTags(PHPDocBlock doc, int kind) {
-		List<PHPDocTag> tags = new LinkedList<PHPDocTag>();
-		for (PHPDocTag tag : doc.getTags()) {
-			if (tag.getTagKind() == kind) {
-				tags.add(tag);
-			}
-		}
-		return tags.toArray(new PHPDocTag[tags.size()]);
-	}
-
-	protected String getFileName(IMember modelElement) {
-		IPath path = EnvironmentPathUtils.getLocalPath(modelElement
-				.getSourceModule().getPath());
-		String fileName = path.toOSString();
-		if (fileName.startsWith("\\") || fileName.startsWith("/")) {
-			fileName = fileName.substring(1);
-		}
-		return fileName;
 	}
 }
