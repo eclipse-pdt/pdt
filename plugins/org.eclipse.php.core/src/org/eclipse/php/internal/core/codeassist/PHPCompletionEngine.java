@@ -47,23 +47,21 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	private int relevanceClass;
 	private int relevanceVar;
 	private int relevanceConst;
-	private Set<? super Object> processedElements = new TreeSet<Object>(
-			new Comparator() {
-				public int compare(Object o1, Object o2) {
-					if (o1.equals(o2)) {
+	private Set<? super Object> processedElements = new HashSet<Object>();
+	private Set<? super Object> processedPaths = new HashSet<Object>();
+	private Set<IField> processedFields = new TreeSet<IField>(
+			new Comparator<IField>() {
+				public int compare(IField f1, IField f2) {
+					if (f1.equals(f2)) {
 						return 0;
 					}
 					// filter duplications of variables
-					if (o1 instanceof IField
-							&& o2 instanceof IField
-							&& PHPModelUtils.isSameField((IField) o1,
-									(IField) o2)) {
+					if (PHPModelUtils.isSameField((IField) f1, (IField) f2)) {
 						return 0;
 					}
-					return 1;
+					return f1.getElementName().compareTo(f2.getElementName());
 				}
 			});
-	private Set<? super Object> processedPaths = new HashSet<Object>();
 
 	public void complete(IModuleSource module, int position, int i) {
 
@@ -165,10 +163,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportField(IField field, String suffix,
 			SourceRange replaceRange, boolean removeDollar) {
-		if (processedElements.contains(field)) {
+		if (processedFields.contains(field)) {
 			return;
 		}
-		processedElements.add(field);
+		processedFields.add(field);
 
 		int flags = 0;
 		try {
