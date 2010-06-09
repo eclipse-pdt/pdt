@@ -659,35 +659,36 @@ public class PHPModelUtils {
 					.getModuleDeclaration(method.getSourceModule());
 			MethodDeclaration methodDeclaration = PHPModelUtils
 					.getNodeByMethod(rootNode, method);
-			methodDeclaration.traverse(new ASTVisitor() {
-				public boolean visit(Statement s) throws Exception {
-					if (s instanceof GlobalStatement) {
-						GlobalStatement globalStatement = (GlobalStatement) s;
-						for (Expression e : globalStatement.getVariables()) {
-							if (e instanceof VariableReference) {
-								VariableReference varReference = (VariableReference) e;
-								String varName = varReference.getName();
-								if (!processedVars.contains(varName)
-										&& (exactName
-												&& varName
-														.equalsIgnoreCase(prefix) || !exactName
-												&& varName
-														.toLowerCase()
-														.startsWith(
-																prefix.toLowerCase()))) {
-									elements.add(new FakeField(
-											(ModelElement) method, varName, e
-													.sourceStart(), e
-													.sourceEnd()
-													- e.sourceStart()));
-									processedVars.add(varName);
+			if (methodDeclaration != null) {
+				methodDeclaration.traverse(new ASTVisitor() {
+					public boolean visit(Statement s) throws Exception {
+						if (s instanceof GlobalStatement) {
+							GlobalStatement globalStatement = (GlobalStatement) s;
+							for (Expression e : globalStatement.getVariables()) {
+								if (e instanceof VariableReference) {
+									VariableReference varReference = (VariableReference) e;
+									String varName = varReference.getName();
+									if (!processedVars.contains(varName)
+											&& (exactName
+													&& varName
+															.equalsIgnoreCase(prefix) || !exactName
+													&& varName
+															.toLowerCase()
+															.startsWith(
+																	prefix.toLowerCase()))) {
+										elements.add(new FakeField(
+												(ModelElement) method, varName,
+												e.sourceStart(), e.sourceEnd()
+														- e.sourceStart()));
+										processedVars.add(varName);
+									}
 								}
 							}
 						}
+						return super.visit(s);
 					}
-					return super.visit(s);
-				}
-			});
+				});
+			}
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 		}
