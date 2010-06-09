@@ -42,7 +42,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 
 	/**
 	 * Returns active completion context resolver. By default returns this class
-	 * instance, but may be overriden using extension point.
+	 * instance, but may be overridden using extension point.
 	 * 
 	 * @return array of active {@link ICompletionContextResolver}'s
 	 */
