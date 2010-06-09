@@ -14,10 +14,8 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.*;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMember;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.core.*;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -25,9 +23,9 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
+import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassStaticMemberContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 
 /**
  * This strategy completes class members: $a->|, A::|, etc...
@@ -524,8 +522,35 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	protected <T extends IMember> Collection<T> removeOverriddenElements(
 			Collection<T> members) {
 		List<T> result = new LinkedList<T>();
+		List<T> newMembers = new ArrayList<T>();
+		newMembers.addAll(members);
+		Collections.sort(newMembers, new Comparator<T>() {
+
+			public int compare(T o1, T o2) {
+				try {
+					int flag1 = getFlag(o1.getFlags());
+					int flag2 = getFlag(o2.getFlags());
+					return flag2 - flag1;
+				} catch (ModelException e) {
+				}
+				return 0;
+			}
+
+			private int getFlag(int flags) {
+				if (Flags.isPublic(flags)) {
+					return Modifiers.AccPublic;
+				}
+				if (Flags.isProtected(flags)) {
+					return Modifiers.AccProtected;
+				}
+				if (Flags.isPrivate(flags)) {
+					return Modifiers.AccPrivate;
+				}
+				return Modifiers.AccPrivate;
+			}
+		});
 		Set<String> processed = new HashSet<String>();
-		for (IMember member : members) {
+		for (IMember member : newMembers) {
 			if (processed.add(member.getElementName())) {
 				result.add((T) member);
 			}
