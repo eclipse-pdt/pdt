@@ -52,9 +52,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	private Set<IField> processedFields = new TreeSet<IField>(
 			new Comparator<IField>() {
 				public int compare(IField f1, IField f2) {
-					if (f1.equals(f2)) {
-						return 0;
-					}
 					// filter duplications of variables
 					if (PHPModelUtils.isSameField((IField) f1, (IField) f2)) {
 						return 0;
