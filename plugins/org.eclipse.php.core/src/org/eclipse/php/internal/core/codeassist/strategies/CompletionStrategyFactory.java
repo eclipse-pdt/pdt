@@ -181,8 +181,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					context) };
 		}
 		if (contextClass == ClassExtendsContext.class) {
-			return new ICompletionStrategy[] { new NonFinalClassesStrategy(
-					context) };
+			return new ICompletionStrategy[] {
+					new NonFinalClassesStrategy(context),
+					new NamespaceNonFinalClassesStrategy(context) };
 		}
 		if (contextClass == ClassImplementsContext.class
 				|| contextClass == InterfaceExtendsContext.class) {

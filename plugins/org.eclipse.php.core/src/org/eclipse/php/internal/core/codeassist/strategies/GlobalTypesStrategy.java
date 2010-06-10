@@ -81,7 +81,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				int flags = type.getFlags();
 				reporter.reportType(type,
 						PHPFlags.isNamespace(flags) ? nsSuffix : suffix,
-						replacementRange);
+						replacementRange, getExtraInfo());
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
@@ -208,5 +208,14 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			PHPCorePlugin.log(e);
 		}
 		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected Object getExtraInfo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

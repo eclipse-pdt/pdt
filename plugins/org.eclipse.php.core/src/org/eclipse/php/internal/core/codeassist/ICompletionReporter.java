@@ -62,6 +62,22 @@ public interface ICompletionReporter {
 	public void reportType(IType type, String suffix, SourceRange replaceRange);
 
 	/**
+	 * Reports type: interface, namespace or class
+	 * 
+	 * @param type
+	 *            PHP class, interface or function
+	 * @param suffix
+	 *            Suffix to uppend after completion will be inserted
+	 * @param replaceRange
+	 *            The range in the document to be replaced with the completion
+	 *            proposal text
+	 * @param extraInfo
+	 *            extraInfo for CompletionProposal
+	 */
+	public void reportType(IType type, String suffix, SourceRange replaceRange,
+			Object extraInfo);
+
+	/**
 	 * Reports method or function
 	 * 
 	 * @param method

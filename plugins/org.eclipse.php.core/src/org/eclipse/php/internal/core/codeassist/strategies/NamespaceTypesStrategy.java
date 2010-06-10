@@ -54,7 +54,7 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 		SourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType type : getTypes(concreteContext)) {
-			reporter.reportType(type, suffix, replaceRange);
+			reporter.reportType(type, suffix, replaceRange, getExtraInfo());
 		}
 	}
 
@@ -96,5 +96,9 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 			PHPCorePlugin.log(e);
 		}
 		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+
+	protected Object getExtraInfo() {
+		return Boolean.TRUE;
 	}
 }

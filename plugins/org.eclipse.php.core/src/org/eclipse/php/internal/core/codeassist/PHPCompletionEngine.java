@@ -291,6 +291,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	}
 
 	public void reportType(IType type, String suffix, SourceRange replaceRange) {
+		reportType(type, suffix, replaceRange, null);
+	}
+
+	public void reportType(IType type, String suffix, SourceRange replaceRange,
+			Object extraInfo) {
 		if (processedElements.contains(type)) {
 			return;
 		}
@@ -302,7 +307,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 			CompletionProposal proposal = createProposal(
 					CompletionProposal.TYPE_REF, actualCompletionPosition);
-
+			proposal.setExtraInfo(extraInfo);
 			// Support parameter names for constructor:
 			if (requestor.isContextInformationMode()) {
 				try {
