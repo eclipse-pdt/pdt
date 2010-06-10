@@ -233,7 +233,8 @@ public class PHPCompletionProposalCollector extends
 
 			public String getSuffix(IType type) {
 				String defaultResult = EMPTY_STRING;
-				if (!PHPModelUtils.hasStaticMember(type)) {
+				if (typeProposal.getExtraInfo() != null
+						|| !PHPModelUtils.hasStaticMember(type)) {
 					return defaultResult;
 				}
 				String nextWord = null;
