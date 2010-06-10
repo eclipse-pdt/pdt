@@ -54,11 +54,13 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	protected static IFile testFile;
 	protected static PHPVersion phpVersion;
 	protected static PHPStructuredEditor fEditor;
-	protected static final Map<PHPVersion, String> TESTS = new LinkedHashMap<PHPVersion, String>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		// TESTS.put(PHPVersion.PHP4, "/workspace/codeassist/php4");
-		TESTS.put(PHPVersion.PHP5, "/workspace/codeassist/php5");
-		TESTS.put(PHPVersion.PHP5_3, "/workspace/codeassist/php53");
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/codeassist/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] {
+				"/workspace/codeassist/php5", "/workspace/codeassist/php53" });
 	};
 	protected static final char OFFSET_CHAR = '|';
 
@@ -96,65 +98,67 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	public static Test suite() {
 
 		TestSuite suite = new TestSuite("Content Assist Tests");
-		for (Entry<PHPVersion, String> pair : TESTS.entrySet()) {
+		for (Entry<PHPVersion, String[]> pair : TESTS.entrySet()) {
 			phpVersion = pair.getKey();
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
 
-			String[] files = getPDTTFiles(pair.getValue(), PHPUiTests
-					.getDefault().getBundle());
+			for (int i = 0; i < pair.getValue().length; i++) {
+				String[] files = getPDTTFiles(pair.getValue()[i], PHPUiTests
+						.getDefault().getBundle());
 
-			for (final String fileName : files) {
-				try {
-					final PdttFile pdttFile = new PdttFile(PHPUiTests
-							.getDefault().getBundle(), fileName);
-					phpVerSuite.addTest(new ContentAssistTests(phpVersion
-							.getAlias()
-							+ " - /" + fileName) {
+				for (final String fileName : files) {
+					try {
+						final PdttFile pdttFile = new PdttFile(PHPUiTests
+								.getDefault().getBundle(), fileName);
+						phpVerSuite.addTest(new ContentAssistTests(phpVersion
+								.getAlias()
+								+ " - /" + fileName) {
 
-						protected void setUp() throws Exception {
-							PHPCoreTests.setProjectPhpVersion(project,
-									PHPVersion.PHP5_3);
-						}
-
-						protected void tearDown() throws Exception {
-							if (testFile != null) {
-								testFile.delete(true, null);
-								testFile = null;
+							protected void setUp() throws Exception {
+								PHPCoreTests.setProjectPhpVersion(project,
+										phpVersion);
 							}
-						}
 
-						protected void runTest() throws Throwable {
-							String data = pdttFile.getFile();
-							int offset = data.lastIndexOf(OFFSET_CHAR);
-
-							// replace the offset character
-							data = data.substring(0, offset)
-									+ data.substring(offset + 1);
-
-							createFile(
-									new ByteArrayInputStream(data.getBytes()),
-									fileName);
-							String result = executeAutoInsert(offset);
-							closeEditor();
-							if (!pdttFile.getExpected().trim().equals(
-									result.trim())) {
-								StringBuilder errorBuf = new StringBuilder();
-								errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
-								errorBuf.append(pdttFile.getExpected());
-								errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
-								errorBuf.append(result);
-								fail(errorBuf.toString());
+							protected void tearDown() throws Exception {
+								if (testFile != null) {
+									testFile.delete(true, null);
+									testFile = null;
+								}
 							}
-						}
-					});
-				} catch (final Exception e) {
-					phpVerSuite.addTest(new TestCase(fileName) {
-						protected void runTest() throws Throwable {
-							throw e;
-						}
-					});
+
+							protected void runTest() throws Throwable {
+								String data = pdttFile.getFile();
+								int offset = data.lastIndexOf(OFFSET_CHAR);
+
+								// replace the offset character
+								data = data.substring(0, offset)
+										+ data.substring(offset + 1);
+
+								createFile(new ByteArrayInputStream(data
+										.getBytes()), fileName);
+								String result = executeAutoInsert(offset);
+								closeEditor();
+								if (!pdttFile.getExpected().trim().equals(
+										result.trim())) {
+									StringBuilder errorBuf = new StringBuilder();
+									errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
+									errorBuf.append(pdttFile.getExpected());
+									errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
+									errorBuf.append(result);
+									fail(errorBuf.toString());
+								}
+							}
+						});
+					} catch (final Exception e) {
+						phpVerSuite.addTest(new TestCase(fileName) {
+							protected void runTest() throws Throwable {
+								throw e;
+							}
+						});
+					}
 				}
 			}
+
 			suite.addTest(phpVerSuite);
 		}
 
