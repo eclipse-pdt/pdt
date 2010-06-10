@@ -1,0 +1,18 @@
+--TEST--
+Test CA for extending another class
+--FILE--
+<?php
+class Paths {
+	public static $_path;
+}
+class MyPaths extends Paths| {
+}
+?>
+--EXPECT--
+<?php
+class Paths {
+	public static $_path;
+}
+class MyPaths extends Paths {
+}
+?>

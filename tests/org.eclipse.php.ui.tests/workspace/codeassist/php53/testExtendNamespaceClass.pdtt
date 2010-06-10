@@ -1,0 +1,22 @@
+--TEST--
+Test CA for extending another class
+--FILE--
+<?php
+namespace PDT\Application;
+class Paths {
+	public static $_path;
+}
+namespace other\Application;
+class MyPaths extends \PDT\Application\| {
+}
+?>
+--EXPECT--
+<?php
+namespace PDT\Application;
+class Paths {
+	public static $_path;
+}
+namespace other\Application;
+class MyPaths extends \PDT\Application\Paths {
+}
+?>
