@@ -344,7 +344,7 @@ public class StubUtility {
 		StringBuffer buf = new StringBuffer();
 		buf.append("@see "); //$NON-NLS-1$
 		buf.append(declaringClassQualifiedName);
-		buf.append('#');
+		buf.append("::");
 		buf.append(methodName);
 		buf.append('(');
 
