@@ -22,10 +22,13 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a for statement
- * <pre>e.g.<pre>
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
  * for (expr1; expr2; expr3)
  * 	 statement;
- *
+ * 
  * for (expr1; expr2; expr3):
  * 	 statement
  * 	 ...
@@ -38,15 +41,20 @@ public class ForStatement extends Statement {
 	private final List<? extends Expression> increasements;
 	private final Statement action;
 
-	public ForStatement(int start, int end, List<? extends Expression> initializations, List<? extends Expression> conditions, List<? extends Expression> increasements, Statement action) {
-		assert initializations != null && conditions != null && increasements != null && action != null;
+	public ForStatement(int start, int end,
+			List<? extends Expression> initializations,
+			List<? extends Expression> conditions,
+			List<? extends Expression> increasements, Statement action) {
+		super(start, end);
+		assert initializations != null && conditions != null
+				&& increasements != null && action != null;
 		this.initializations = initializations;
 		this.conditions = conditions;
 		this.increasements = increasements;
 		this.action = action;
 	}
 
-	public void traverse(ASTVisitor visitor) throws Exception  {
+	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			for (Expression initialization : initializations) {
