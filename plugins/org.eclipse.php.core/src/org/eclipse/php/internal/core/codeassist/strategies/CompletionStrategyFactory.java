@@ -140,8 +140,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new MethodNameStrategy(context) };
 		}
 		if (contextClass == ClassStatementContext.class) {
-			return new ICompletionStrategy[] { new ClassKeywordsStrategy(
-					context) };
+			return new ICompletionStrategy[] {
+					new ClassKeywordsStrategy(context),
+					new GlobalConstantsStrategy(context) };
 		}
 		if (contextClass == GlobalStatementContext.class) {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(
