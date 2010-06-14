@@ -35,7 +35,7 @@ public class PHPStackLabelProvider implements ILabelProvider {
 
 	public String getText(Object element) {
 		if (element instanceof Expression) {
-			return "$" + ((Expression) element).toString();
+			return ((Expression) element).toString();
 
 		}
 		return null;
