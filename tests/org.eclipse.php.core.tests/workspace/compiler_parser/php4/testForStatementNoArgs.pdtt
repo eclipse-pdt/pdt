@@ -4,7 +4,7 @@ Test For Statement No Args
 <?php for (; ; )  ?>
 --EXPECT--
 <ModuleDeclaration start="0" end="21">
-	<ForStatement start="0" end="0">
+	<ForStatement start="6" end="20">
 		<Initializations>
 		</Initializations>
 		<Conditions>
