@@ -21,6 +21,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Position;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.model.TemporaryModelCache;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingStyle;
@@ -38,6 +39,9 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 public abstract class AbstractSemanticHighlighting implements
 		ISemanticHighlighting, Comparable<AbstractSemanticHighlighting> {
 
+	private static Class<?> firstHighlighting;
+	private static Class<?> lastHighlighting;
+	private static TemporaryModelCache modelCache = null;
 	private ISourceModule sourceModule = null;
 
 	private SemanticHighlightingStyle style = new SemanticHighlightingStyle(
@@ -46,6 +50,14 @@ public abstract class AbstractSemanticHighlighting implements
 	private List<Position> list;
 
 	private final String preferenceKey = this.getClass().getName();
+
+	public AbstractSemanticHighlighting() {
+		Class<? extends AbstractSemanticHighlighting> clazz = this.getClass();
+		if (firstHighlighting == null) {
+			firstHighlighting = clazz;
+		}
+		lastHighlighting = clazz;
+	}
 
 	public String getPreferenceKey() {
 		return preferenceKey;
@@ -60,6 +72,10 @@ public abstract class AbstractSemanticHighlighting implements
 			throw new IllegalStateException("Source module cannot be null");
 		}
 		return sourceModule;
+	}
+
+	protected TemporaryModelCache getModelCache() {
+		return modelCache;
 	}
 
 	protected AbstractSemanticHighlighting highlight(ISourceRange range) {
@@ -85,15 +101,26 @@ public abstract class AbstractSemanticHighlighting implements
 	}
 
 	public Position[] consumes(Program program) {
-		// long start = System.currentTimeMillis();
-		if (program != null) {
-			list = new ArrayList<Position>();
-			AbstractSemanticApply apply = getSemanticApply();
-			sourceModule = program.getSourceModule();
-			program.accept(apply);
-			return list.toArray(new Position[list.size()]);
+		try {
+			if (this.getClass() == firstHighlighting) {
+				modelCache = new TemporaryModelCache(sourceModule);
+			}
+
+			// long start = System.currentTimeMillis();
+			if (program != null) {
+				list = new ArrayList<Position>();
+				AbstractSemanticApply apply = getSemanticApply();
+				sourceModule = program.getSourceModule();
+				program.accept(apply);
+				return list.toArray(new Position[list.size()]);
+			}
+			return new Position[0];
+
+		} finally {
+			if (this.getClass() == lastHighlighting) {
+				modelCache = null;
+			}
 		}
-		return new Position[0];
 	}
 
 	public Position[] consumes(IStructuredDocumentRegion region) {

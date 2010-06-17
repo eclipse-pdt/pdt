@@ -10,10 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
+import java.util.Collection;
+
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighter.ModelUtils;
@@ -49,19 +50,15 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			if (classConst.getName() instanceof Identifier) {
 				String className = ((Identifier) classConst.getName())
 						.getName();
-				try {
-					IType[] types = PHPModelUtils.getTypes(className,
-							getSourceModule(), classConst.getStart(), null);
-					if (types != null) {
-						for (IType type : types) {
-							if (ModelUtils.isDeprecated(type)) {
-								highlight(classConst);
-								break;
-							}
+				Collection<IType> types = getModelCache().getTypes(className,
+						null);
+				if (types != null) {
+					for (IType type : types) {
+						if (ModelUtils.isDeprecated(type)) {
+							highlight(classConst);
+							break;
 						}
 					}
-				} catch (ModelException e) {
-					Logger.logException(e);
 				}
 			}
 			return true;
@@ -85,17 +82,17 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 		public boolean visit(FunctionInvocation funcInv) {
 			if (!(funcInv.getParent() instanceof MethodInvocation)) {
-				try {
-					IMethod[] functions = PHPModelUtils.getFunctions(ModelUtils
-							.getFunctionName(funcInv.getFunctionName()),
-							getSourceModule(), funcInv.getStart(), null);
-					if (functions != null && functions.length == 1) {
-						if (ModelUtils.isDeprecated(functions[0])) {
+				Collection<IMethod> functions = getModelCache()
+						.getGlobalFunctions(
+								ModelUtils.getFunctionName(funcInv
+										.getFunctionName()), null);
+				if (functions != null) {
+					for (IMethod function : functions) {
+						if (ModelUtils.isDeprecated(function)) {
 							highlight(funcInv.getFunctionName());
+							break;
 						}
 					}
-				} catch (ModelException e) {
-					Logger.logException(e);
 				}
 			}
 			return true;
