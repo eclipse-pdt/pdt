@@ -559,15 +559,16 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private static PHPDocBlock getJavadocNode(IMember member) {
-		if (member instanceof FakeConstructor) {
-			FakeConstructor fc = (FakeConstructor) member;
-			return PHPModelUtils.getDocBlock((IType) fc.getParent());
-		}
 		if (member instanceof IType) {
 			return PHPModelUtils.getDocBlock((IType) member);
 		}
 		if (member instanceof IMethod) {
-			return PHPModelUtils.getDocBlock((IMethod) member);
+			PHPDocBlock result = PHPModelUtils.getDocBlock((IMethod) member);
+			if (result == null && member instanceof FakeConstructor) {
+				FakeConstructor fc = (FakeConstructor) member;
+				result = PHPModelUtils.getDocBlock((IType) fc.getParent());
+			}
+			return result;
 		}
 		if (member instanceof IField) {
 			return PHPModelUtils.getDocBlock((IField) member);
