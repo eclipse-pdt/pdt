@@ -108,7 +108,9 @@ public class StartProcessFileNotificationHandler implements
 				}
 			} else {
 				try {
-					IFile file = ResourcesPlugin.getWorkspace().getRoot()
+					IFile file = ResourcesPlugin
+							.getWorkspace()
+							.getRoot()
 							.getFileForLocation(
 									Path.fromOSString(remoteFileName));
 					if (file != null) {
@@ -195,7 +197,9 @@ public class StartProcessFileNotificationHandler implements
 					if (secondaryId != null) {
 
 						IPath path = Path.fromPortableString(secondaryId);
-						if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) {
+						if ((path.getDevice() == null)
+								&& (path.toString()
+										.startsWith("org.eclipse.dltk"))) {
 							String fullPathString = path.toString();
 							String absolutePath = fullPathString
 									.substring(fullPathString.indexOf(':') + 1);
@@ -210,8 +214,6 @@ public class StartProcessFileNotificationHandler implements
 										.equals(new VirtualPath(secondaryId))) {
 							l.add(bp);
 						}
-					} else {
-						l.add(bp);
 					}
 				} catch (Exception e) {
 					PHPDebugPlugin.log(e);
