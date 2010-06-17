@@ -57,6 +57,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.css.ui.internal.contentassist.CSSStructuredContentAssistProcessor;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
@@ -159,8 +161,18 @@ public class PHPStructuredTextViewerConfiguration extends
 			if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
 				processors = new IContentAssistProcessor[] { phpCompletionProcessor };
 			} else {
-				IContentAssistProcessor[] superProcessors = super
-						.getContentAssistProcessors(sourceViewer, partitionType);
+				IContentAssistProcessor[] superProcessors;
+				if (partitionType.equals(ICSSPartitions.STYLE)
+						|| partitionType.equals(ICSSPartitions.COMMENT)) {
+					IContentAssistProcessor processor = new CSSStructuredContentAssistProcessor(
+							this.getContentAssistant(), partitionType,
+							sourceViewer);
+					superProcessors = new IContentAssistProcessor[] { processor };
+
+				} else {
+					superProcessors = super.getContentAssistProcessors(
+							sourceViewer, partitionType);
+				}
 				processorMap.put(partitionType, superProcessors);
 				if (superProcessors != null) {
 					processors = new IContentAssistProcessor[superProcessors.length + 1];

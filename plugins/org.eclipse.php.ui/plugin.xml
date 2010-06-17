@@ -1931,4 +1931,25 @@
        </contentType>
     </proposalComputerExtendedActivation>
  </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.css.ui.proposalCategory.css"
+          class="org.eclipse.wst.css.ui.internal.contentassist.CSSCompletionProposalComputer"
+          id="org.eclipse.wst.css.ui.proposalComputer.css">
+       <contentType
+             id="org.eclipse.php.core.phpsource">
+       </contentType>
+    </proposalComputer>
+    <proposalComputer
+          activate="false"
+          categoryId="org.eclipse.wst.css.ui.proposalCategory.cssTemplates"
+          class="org.eclipse.wst.css.ui.internal.contentassist.CSSTemplatesCompletionProposalComputer"
+          id="org.eclipse.wst.css.ui.proposalComputer.cssTemplates">
+       <contentType
+             id="org.eclipse.php.core.phpsource">
+       </contentType>
+    </proposalComputer>
+ </extension> 
 </plugin>
