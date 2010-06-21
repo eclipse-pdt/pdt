@@ -158,7 +158,7 @@ ${cursor}</template>
 	id="org.eclipse.php.ui.editor.templates.php.fnc"
 	context="php"
 	enabled="true"
-	autoinsert="false">function ${function_name}() {
+	autoinsert="false">function ${function_name}(${dollar}${param}) {
 	${cursor};
 }
 </template>
@@ -169,7 +169,7 @@ ${cursor}</template>
 	id="org.eclipse.php.ui.editor.templates.php.function"
 	context="php"
 	enabled="true"
-	autoinsert="false">function ${function_name}() {
+	autoinsert="false">function ${function_name}(${dollar}${param}) {
 	${cursor};
 }
 </template>
