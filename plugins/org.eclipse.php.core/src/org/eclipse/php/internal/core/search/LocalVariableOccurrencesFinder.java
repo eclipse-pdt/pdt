@@ -86,7 +86,9 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public boolean visit(Variable variable) {
 		Expression name = variable.getName();
-		if (name.getType() == ASTNode.IDENTIFIER && variable.isDollared()) {
+		if (name.getType() == ASTNode.IDENTIFIER
+				&& variable.isDollared()
+				&& variable.getParent().getType() != ASTNode.STATIC_FIELD_ACCESS) {
 			if (((Identifier) name).getName()
 					.equals(this.fIdentifier.getName())) {
 				addOccurrence(variable);
