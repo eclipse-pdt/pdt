@@ -15,6 +15,7 @@ import java.util.Collection;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.model.TemporaryModelCache;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighter.ModelUtils;
@@ -82,15 +83,17 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 		public boolean visit(FunctionInvocation funcInv) {
 			if (!(funcInv.getParent() instanceof MethodInvocation)) {
-				Collection<IMethod> functions = getModelCache()
-						.getGlobalFunctions(
-								ModelUtils.getFunctionName(funcInv
-										.getFunctionName()), null);
-				if (functions != null) {
-					for (IMethod function : functions) {
-						if (ModelUtils.isDeprecated(function)) {
-							highlight(funcInv.getFunctionName());
-							break;
+				TemporaryModelCache cache = getModelCache();
+				if (cache != null) {
+					Collection<IMethod> functions = cache.getGlobalFunctions(
+							ModelUtils.getFunctionName(funcInv
+									.getFunctionName()), null);
+					if (functions != null) {
+						for (IMethod function : functions) {
+							if (ModelUtils.isDeprecated(function)) {
+								highlight(funcInv.getFunctionName());
+								break;
+							}
 						}
 					}
 				}
