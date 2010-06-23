@@ -39,9 +39,10 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 public abstract class AbstractSemanticHighlighting implements
 		ISemanticHighlighting, Comparable<AbstractSemanticHighlighting> {
 
-	private static Class<?> firstHighlighting;
-	private static Class<?> lastHighlighting;
+	private static Program program = null;
+
 	private static TemporaryModelCache modelCache = null;
+
 	private ISourceModule sourceModule = null;
 
 	private SemanticHighlightingStyle style = new SemanticHighlightingStyle(
@@ -50,14 +51,6 @@ public abstract class AbstractSemanticHighlighting implements
 	private List<Position> list;
 
 	private final String preferenceKey = this.getClass().getName();
-
-	public AbstractSemanticHighlighting() {
-		Class<? extends AbstractSemanticHighlighting> clazz = this.getClass();
-		if (firstHighlighting == null) {
-			firstHighlighting = clazz;
-		}
-		lastHighlighting = clazz;
-	}
 
 	public String getPreferenceKey() {
 		return preferenceKey;
@@ -101,26 +94,20 @@ public abstract class AbstractSemanticHighlighting implements
 	}
 
 	public Position[] consumes(Program program) {
-		try {
-			if (this.getClass() == firstHighlighting) {
-				modelCache = new TemporaryModelCache(sourceModule);
-			}
-
-			// long start = System.currentTimeMillis();
-			if (program != null) {
-				list = new ArrayList<Position>();
-				AbstractSemanticApply apply = getSemanticApply();
-				sourceModule = program.getSourceModule();
-				program.accept(apply);
-				return list.toArray(new Position[list.size()]);
-			}
-			return new Position[0];
-
-		} finally {
-			if (this.getClass() == lastHighlighting) {
-				modelCache = null;
-			}
+		if (modelCache == null
+				|| AbstractSemanticHighlighting.program != program) {
+			modelCache = new TemporaryModelCache(program.getSourceModule());
+			AbstractSemanticHighlighting.program = program;
 		}
+		// long start = System.currentTimeMillis();
+		if (program != null) {
+			list = new ArrayList<Position>();
+			AbstractSemanticApply apply = getSemanticApply();
+			sourceModule = program.getSourceModule();
+			program.accept(apply);
+			return list.toArray(new Position[list.size()]);
+		}
+		return new Position[0];
 	}
 
 	public Position[] consumes(IStructuredDocumentRegion region) {
