@@ -153,7 +153,7 @@ public class PhpElementResolver implements IElementResolver {
 		}
 
 		public ISourceRange getSourceRange() throws ModelException {
-			return sourceRange;
+			return super.getNameRange();
 		}
 
 		public IParameter[] getParameters() throws ModelException {
@@ -193,7 +193,7 @@ public class PhpElementResolver implements IElementResolver {
 		}
 
 		public ISourceRange getNameRange() throws ModelException {
-			return nameRange;
+			return super.getNameRange();
 		}
 
 		public ISourceRange getSourceRange() throws ModelException {
