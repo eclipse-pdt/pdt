@@ -100,7 +100,6 @@ public abstract class AbstractSemanticHighlighting implements
 				modelCache = new TemporaryModelCache(program.getSourceModule());
 				AbstractSemanticHighlighting.program = program;
 			}
-			// long start = System.currentTimeMillis();
 
 			list = new ArrayList<Position>();
 			AbstractSemanticApply apply = getSemanticApply();
