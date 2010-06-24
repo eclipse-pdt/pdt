@@ -353,6 +353,37 @@ public class IncludePathManager {
 	}
 
 	/**
+	 * Appends the given entries to Include Path
+	 * 
+	 * @param scriptProject
+	 * @param entries
+	 * @throws ModelException
+	 */
+	public void appendEntriesToIncludePath(IProject project,
+			List<IBuildpathEntry> entries) {
+
+		List<IncludePath> includePathEntries = new ArrayList<IncludePath>();
+		for (IBuildpathEntry buildpathEntry : entries) {
+			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+						.findMember(buildpathEntry.getPath());
+				if (resource != null) {
+					includePathEntries.add(new IncludePath(resource, project));
+				}
+			} else {
+				includePathEntries
+						.add(new IncludePath(buildpathEntry, project));
+			}
+		}
+		includePathEntries.addAll(Arrays.asList(IncludePathManager
+				.getInstance().getIncludePaths(project)));
+
+		// update the include path for this project
+		setIncludePath(project, includePathEntries
+				.toArray(new IncludePath[includePathEntries.size()]));
+	}
+
+	/**
 	 * Returns whether the given path is in the include definitions Meaning if
 	 * one of the entries in the include path has the same path of this resource
 	 * 
