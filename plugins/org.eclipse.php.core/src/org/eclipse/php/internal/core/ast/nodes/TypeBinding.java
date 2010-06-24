@@ -54,6 +54,8 @@ public class TypeBinding implements ITypeBinding {
 			final int length = elements.length;
 			this.elements = new IModelElement[length];
 			System.arraycopy(elements, 0, this.elements, 0, length);
+		} else {
+			this.elements = new IModelElement[0];
 		}
 	}
 
@@ -70,6 +72,8 @@ public class TypeBinding implements ITypeBinding {
 		this.type = type;
 		if (element != null) {
 			this.elements = new IModelElement[] { element };
+		} else {
+			this.elements = new IModelElement[0];
 		}
 	}
 
@@ -858,7 +862,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @see ITypeBinding#isAmbiguous()
 	 */
 	public boolean isAmbiguous() {
-		return !isUnknown() && elements.length > 1;
+		return !isUnknown() && (elements.length != 1);
 	}
 
 	/*
