@@ -132,8 +132,12 @@ public class PhpTokenContainer {
 	 * @throws BadLocationException
 	 */
 	public String getPartitionType(int offset) throws BadLocationException {
-		final ITextRegion token = getToken(offset);
-
+		ITextRegion token = getToken(offset);
+		while (token != null
+				&& PHPRegionTypes.PHPDOC_TODO.equals(token.getType())
+				&& token.getStart() - 1 >= 0) {
+			token = getToken(token.getStart() - 1);
+		}
 		assert token != null;
 		final String type = token.getType();
 
