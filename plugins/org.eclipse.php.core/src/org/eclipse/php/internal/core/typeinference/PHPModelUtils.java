@@ -1461,22 +1461,22 @@ public class PHPModelUtils {
 	 * 
 	 * @param type
 	 *            Type to start the search from
-	 * @param referenceTree
-	 *            Cached instance of file hierarchy
+	 * @param cache
+	 *            Temporary model cache instance
 	 * @param monitor
 	 *            Progress monitor
 	 * @return unimplemented methods
 	 * @throws ModelException
 	 */
 	public static IMethod[] getUnimplementedMethods(IType type,
-			ReferenceTree referenceTree, IProgressMonitor monitor)
+			ITemporaryModelCache cache, IProgressMonitor monitor)
 			throws ModelException {
 
 		HashMap<String, IMethod> abstractMethods = new HashMap<String, IMethod>();
 		HashSet<String> nonAbstractMethods = new HashSet<String>();
 
 		internalGetUnimplementedMethods(type, nonAbstractMethods,
-				abstractMethods, new HashSet<String>(), referenceTree, monitor);
+				abstractMethods, new HashSet<String>(), cache, monitor);
 
 		for (String methodName : nonAbstractMethods) {
 			abstractMethods.remove(methodName);
@@ -1490,7 +1490,7 @@ public class PHPModelUtils {
 	private static void internalGetUnimplementedMethods(IType type,
 			HashSet<String> nonAbstractMethods,
 			HashMap<String, IMethod> abstractMethods,
-			Set<String> processedTypes, ReferenceTree referenceTree,
+			Set<String> processedTypes, ITemporaryModelCache cache,
 			IProgressMonitor monitor) throws ModelException {
 
 		int typeFlags = type.getFlags();
@@ -1507,24 +1507,40 @@ public class PHPModelUtils {
 			}
 		}
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(type
-				.getScriptProject());
 		String[] superClasses = type.getSuperClasses();
 		if (superClasses != null) {
 			for (String superClass : superClasses) {
 				if (!processedTypes.add(superClass)) {
 					continue;
 				}
-				IType[] superTypes = PhpModelAccess.getDefault().findTypes(
-						superClass, MatchRule.EXACT, 0, Modifiers.AccNameSpace,
-						scope, null);
-				Collection<IType> filteredTypes = fileNetworkFilter(type
-						.getSourceModule(), Arrays.asList(superTypes),
-						referenceTree);
-				for (IType superType : filteredTypes) {
-					internalGetUnimplementedMethods(superType,
-							nonAbstractMethods, abstractMethods,
-							processedTypes, referenceTree, monitor);
+
+				Collection<IType> types = null;
+				if (cache == null) {
+					IDLTKSearchScope scope = SearchEngine
+							.createSearchScope(type.getScriptProject());
+					IType[] superTypes = PhpModelAccess.getDefault().findTypes(
+							superClass, MatchRule.EXACT, 0,
+							Modifiers.AccNameSpace, scope, null);
+					types = fileNetworkFilter(type.getSourceModule(), Arrays
+							.asList(superTypes), null);
+				} else {
+					String namespaceName = null;
+					int i = superClass
+							.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+					if (i != -1) {
+						namespaceName = superClass.substring(0, i);
+						superClass = superClass.substring(i + 1);
+					}
+					types = cache.getClassesOrInterfaces(
+							type.getSourceModule(), superClass, namespaceName,
+							monitor);
+				}
+				if (types != null) {
+					for (IType superType : types) {
+						internalGetUnimplementedMethods(superType,
+								nonAbstractMethods, abstractMethods,
+								processedTypes, cache, monitor);
+					}
 				}
 			}
 		}
