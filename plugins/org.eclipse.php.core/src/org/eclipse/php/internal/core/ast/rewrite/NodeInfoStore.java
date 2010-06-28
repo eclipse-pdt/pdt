@@ -96,30 +96,29 @@ public final class NodeInfoStore {
 				Variable variable = (Variable) node;
 				variable.setName(this.ast.newIdentifier(""));
 				break;
-			case ASTNode.FIELD_DECLARATION:
-				// ((FieldsDeclaration)
-				// node).fragments().add(this.ast.newVariableDeclarationFragment());
+			case ASTNode.FOR_STATEMENT:
+				ForStatement forStatement = (ForStatement) node;
+				Assignment assignment1 = this.ast.newAssignment();
+				assignment1.setLeftHandSide(this.ast.newVariable("a"));
+				assignment1.setOperator(Assignment.OP_EQUAL);
+				assignment1.setRightHandSide(this.ast.newVariable("a"));
+				forStatement.initializers().add(assignment1);
+
+				InfixExpression expression1 = this.ast.newInfixExpression();
+				expression1.setLeft(this.ast.newScalar("a"));
+				expression1.setOperator(InfixExpression.OP_IS_NOT_EQUAL);
+				expression1.setRight(this.ast.newVariable("a"));
+
+				forStatement.conditions().add(expression1);
+
+				PostfixExpression pexp = this.ast.newPostfixExpression();
+				pexp.setOperator(PostfixExpression.OP_INC);
+				pexp.setVariable(this.ast.newVariable("a"));
+
+				forStatement.updaters().add(pexp);
+				forStatement.setBody(this.ast.newBlock());
+
 				break;
-			// case ASTNode.MODIFIER:
-			// ((Modifier)
-			// node).setKeyword(Modifier.ModifierKeyword.ABSTRACT_KEYWORD);
-			// break;
-			case ASTNode.TRY_STATEMENT:
-				// ((TryStatement) node).setFinally(this.ast.newBlock()); //
-				// have to set at least a finally block to be legal code
-				break;
-			// case ASTNode.VARIABLE_DECLARATION_EXPRESSION :
-			// ((VariableDeclarationExpression)
-			// node).fragments().add(this.ast.newVariableDeclarationFragment());
-			// break;
-			// case ASTNode.FIELD_DECLARATION :
-			// ((VariableDeclarationStatement)
-			// node).fragments().add(this.ast.newVariableDeclarationFragment());
-			// break;
-			// case ASTNode.PARAMETERIZED_TYPE :
-			// ((ParameterizedType)
-			// node).typeArguments().add(this.ast.newWildcardType());
-			// break;
 			}
 			return node;
 		} catch (IllegalArgumentException e) {

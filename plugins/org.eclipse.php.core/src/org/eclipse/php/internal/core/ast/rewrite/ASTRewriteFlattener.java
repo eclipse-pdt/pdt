@@ -623,8 +623,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 		}
 		result.append(')');
-		if (functionDeclaration.getBody() != null) {
-			functionDeclaration.getBody().accept(this);
+		Block body = functionDeclaration.getBody();
+		if (body != null) {
+			body.accept(this);
 		}
 		return false;
 	}
@@ -1005,7 +1006,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(ThrowStatement throwStatement) {
-		throwStatement.getExpr().accept(this);
+		throwStatement.getExpression().accept(this);
 		return false;
 	}
 
@@ -1025,7 +1026,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(UnaryOperation unaryOperation) {
 		result.append(UnaryOperation.getOperator(unaryOperation.getOperator()));
-		unaryOperation.getExpr().accept(this);
+		unaryOperation.getExpression().accept(this);
 		return false;
 	}
 
@@ -1033,15 +1034,22 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		if (variable.isDollared()) {
 			result.append("$");
 		}
-		variable.getVariableName().accept(this);
+		variable.getName().accept(this);
 		return false;
 	}
 
 	public boolean visit(WhileStatement whileStatement) {
 		result.append("while ("); //$NON-NLS-1$
-		whileStatement.getCondition().accept(this);
+		Expression condition = whileStatement.getCondition();
+
+		if (condition != null) {
+			whileStatement.getCondition().accept(this);
+		}
 		result.append(")\n"); //$NON-NLS-1$
-		whileStatement.getAction().accept(this);
+		Statement body = whileStatement.getBody();
+		if (body != null) {
+			body.accept(this);
+		}
 		return false;
 	}
 
