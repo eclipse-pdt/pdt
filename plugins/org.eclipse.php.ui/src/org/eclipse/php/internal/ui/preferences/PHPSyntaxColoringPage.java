@@ -11,19 +11,31 @@ package org.eclipse.php.internal.ui.preferences;
  *     Zend Technologies - initial API and implementation
  *******************************************************************************/
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.core.ast.nodes.ASTParser;
+import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -34,6 +46,8 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
+import org.eclipse.php.internal.ui.editor.highlighters.*;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -90,6 +104,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	private Button fUnderline;
 	private final LineStyleProviderForPhp fStyleProvider;
 	private Button fEnabler;
+	private static Map<String, Position[]> highlightingPositionMap;
 
 	public PHPSyntaxColoringPage() {
 		fStyleProvider = new LineStyleProviderForPhp();
@@ -925,6 +940,22 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		else if (offset < 0)
 			return getNamedStyleAtOffset(0);
 
+		if (highlightingPositionMap == null) {
+			initHighlightingPositions();
+		}
+
+		for (Iterator iterator = highlightingPositionMap.keySet().iterator(); iterator
+				.hasNext();) {
+			String type = (String) iterator.next();
+			Position[] positions = highlightingPositionMap.get(type);
+			for (int i = 0; i < positions.length; i++) {
+				if (offset >= positions[i].offset
+						&& offset < positions[i].offset + positions[i].length) {
+					return type;
+				}
+			}
+		}
+
 		IStructuredDocumentRegion documentRegion = fDocument
 				.getFirstStructuredDocumentRegion();
 		while (documentRegion != null && !documentRegion.containsOffset(offset)) {
@@ -967,6 +998,280 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			return namedStyle;
 		}
 		return null;
+	}
+
+	protected void initHighlightingPositions() {
+		highlightingPositionMap = new HashMap<String, Position[]>();
+		IPath stateLocation = PHPUiPlugin.getDefault().getStateLocation();
+		IPath path = stateLocation.append("/_" + "PHPSyntax"); //$NON-NLS-1$
+		IFileStore fileStore = EFS.getLocalFileSystem().getStore(path);
+
+		NonExistingPHPFileEditorInput input = new NonExistingPHPFileEditorInput(
+				fileStore, "PHPSyntax");
+
+		File realFile = ((NonExistingPHPFileEditorInput) input).getPath(input)
+				.toFile();
+
+		try {
+			FileOutputStream fos = new FileOutputStream(realFile);
+			fos.write(fDocument.get().getBytes());
+			fos.close();
+			DLTKUIPlugin.getDocumentProvider().connect(input);
+			final ISourceModule sourceModule = DLTKUIPlugin
+					.getDocumentProvider().getWorkingCopy(input);
+			if (sourceModule != null) {
+				ASTParser parser = ASTParser.newParser(sourceModule);
+				parser.setSource(fDocument.get().toCharArray());
+
+				final Program program = parser.createAST(null);
+				List<AbstractSemanticHighlighting> highlightings = new ArrayList<AbstractSemanticHighlighting>();
+
+				highlightings.add(new StaticFieldHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return StaticFieldHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new StaticMethodHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return StaticMethodHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new ConstantHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return ConstantHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new FieldHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return FieldHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new FunctionHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return FunctionHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new MethodHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return MethodHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new ClassHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return ClassHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new InternalClassHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return InternalClassHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new InternalFunctionHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return InternalFunctionHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new ParameterVariableHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return ParameterVariableHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new SuperGlobalHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return SuperGlobalHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new InternalConstantHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return InternalConstantHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new DeprecatedHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return DeprecatedHighlighting.class.getName();
+					}
+				});
+
+				for (Iterator iterator = highlightings.iterator(); iterator
+						.hasNext();) {
+					AbstractSemanticHighlighting abstractSemanticHighlighting = (AbstractSemanticHighlighting) iterator
+							.next();
+					Position[] positions = abstractSemanticHighlighting
+							.consumes(program);
+
+					if (positions != null && positions.length > 0) {
+						highlightingPositionMap
+								.put(abstractSemanticHighlighting
+										.getPreferenceKey(), positions);
+
+					}
+				}
+			}
+			DLTKUIPlugin.getDocumentProvider().disconnect(input);
+		} catch (CoreException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		realFile.delete();
 	}
 
 	private OverlayPreferenceStore getOverlayStore() {
