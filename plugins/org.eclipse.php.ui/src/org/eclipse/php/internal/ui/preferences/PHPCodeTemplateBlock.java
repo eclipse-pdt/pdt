@@ -252,6 +252,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	}
 
 	private final static int IDX_EDIT = 0;
+	private final static int IDX_NEW = 1;
 	private final static int IDX_IMPORT = 2;
 	private final static int IDX_EXPORT = 3;
 	private final static int IDX_EXPORTALL = 4;
@@ -288,7 +289,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 		String[] buttonLabels = new String[] {
 				PreferencesMessages.CodeTemplateBlock_templates_edit_button,
-				/* */null,
+				/* */"&New...",
 				PreferencesMessages.CodeTemplateBlock_templates_import_button,
 				PreferencesMessages.CodeTemplateBlock_templates_export_button,
 				PreferencesMessages.CodeTemplateBlock_templates_exportall_button
@@ -303,6 +304,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 
 		fCodeTemplateTree.enableButton(IDX_EXPORT, false);
 		fCodeTemplateTree.enableButton(IDX_EDIT, false);
+		fCodeTemplateTree.enableButton(IDX_NEW, true);
 
 		fCodeTemplateTree.addElement(COMMENT_NODE);
 		fCodeTemplateTree.addElement(CODE_NODE);
@@ -364,10 +366,10 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		GridData data = new GridData();
 		data.horizontalSpan = nColumns;
 		label.setLayoutData(data);
-		//		
+		//
 		// JobSafeStructuredDocument document= new JobSafeStructuredDocument();
 		// IDocumentPartitioner partitioner= new PHPStructuredTextPartitioner();
-		//		
+		//
 		//		//document.setDocumentPartitioner("org.eclipse.wst.sse.core.default_structured_text_partitioning", partitioner); //$NON-NLS-1$
 		// document.setDocumentPartitioner( partitioner);
 		//
@@ -380,17 +382,17 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		// store, null, fTemplateProcessor);
 		// //ScriptSourceViewerConfiguration configuration = new
 		// PHPStructuredEditor().getSourceViwerConfiguration();
-		//		
+		//
 		// PHPStructuredTextViewerConfiguration configuration = new
 		// PHPStructuredTextViewerConfiguration();
 		// viewer.configure(configuration);
 		// viewer.setEditable(false);
 		// viewer.setDocument(document);
-		//		
+		//
 		//		Font font= JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont"); //$NON-NLS-1$		
 		// viewer.getTextWidget().setFont(font);
 		// new PHPSourcePreviewerUpdater(viewer, configuration, store);
-		//		
+		//
 		// Control control= viewer.getControl();
 		// data= new GridData(GridData.HORIZONTAL_ALIGN_FILL |
 		// GridData.FILL_VERTICAL);
@@ -484,12 +486,40 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	protected void doButtonPressed(int buttonIndex, List selected) {
 		if (buttonIndex == IDX_EDIT) {
 			edit((TemplatePersistenceData) selected.get(0));
+		}
+		if (buttonIndex == IDX_NEW) {
+			add();
 		} else if (buttonIndex == IDX_EXPORT) {
 			export(selected);
 		} else if (buttonIndex == IDX_EXPORTALL) {
 			exportAll();
 		} else if (buttonIndex == IDX_IMPORT) {
 			import_();
+		}
+	}
+
+	private void add() {
+		Template newTemplate = new Template("", "",
+				EditTemplateDialog.PHP_NEW_FILE_CONTEXT, "", true);
+		EditTemplateDialog dialog = new EditTemplateDialog(getShell(),
+				newTemplate, false, true, PHPUiPlugin.getDefault()
+						.getCodeTemplateContextRegistry());
+		if (dialog.open() == Window.OK) {
+			// changed
+			// data.setTemplate(dialog.getTemplate());
+			// fCodeTemplateTree.refresh(data);
+			// fCodeTemplateTree.selectElements(new StructuredSelection(data));
+
+			TemplatePersistenceData data = new TemplatePersistenceData(dialog
+					.getTemplate(), true);
+			try {
+				fTemplateStore.add(data);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			fCodeTemplateTree.refresh();
+			// fCodeTemplateTree.setChecked(data, true);
+			fCodeTemplateTree.selectElements(new StructuredSelection(data));
 		}
 	}
 
@@ -509,8 +539,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	private void import_() {
 		FileDialog dialog = new FileDialog(getShell());
 		dialog.setText(PreferencesMessages.CodeTemplateBlock_import_title);
-		dialog
-				.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_import_extension });
+		dialog.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_import_extension });
 		String path = dialog.open();
 
 		if (path == null)
@@ -581,10 +610,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		dialog.setText(Messages.format(
 				PreferencesMessages.CodeTemplateBlock_export_title, String
 						.valueOf(templates.length)));
-		dialog
-				.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_export_extension });
-		dialog
-				.setFileName(PreferencesMessages.CodeTemplateBlock_export_filename);
+		dialog.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_export_extension });
+		dialog.setFileName(PreferencesMessages.CodeTemplateBlock_export_filename);
 		String path = dialog.open();
 
 		if (path == null)

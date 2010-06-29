@@ -166,6 +166,14 @@ public final class ProjectTemplateStore {
 		}
 	}
 
+	public void add(TemplatePersistenceData data) throws IOException {
+		if (fProjectStore == null) {
+			fInstanceStore.add(data);
+		} else {
+			fProjectStore.add(data);
+		}
+	}
+
 	public void revertChanges() throws IOException {
 		if (fProjectStore != null) {
 			// nothing to do

@@ -72,6 +72,10 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
  */
 public class EditTemplateDialog extends StatusDialog {
 
+	public static final String NEW_PHP_FILE_TEAMPLATES = "New php file teamplates";
+
+	public static final String PHP_NEW_FILE_CONTEXT = "php_new_file_context";
+
 	private static class TextViewerAction extends Action implements IUpdate {
 
 		private int fOperationCode = -1;
@@ -173,15 +177,17 @@ public class EditTemplateDialog extends StatusDialog {
 		String delim = new Document().getLegalLineDelimiters()[0];
 
 		List contexts = new ArrayList();
-		for (Iterator it = registry.contextTypes(); it.hasNext();) {
-			TemplateContextType type = (TemplateContextType) it.next();
-			if (type.getId().equals("javadoc")) //$NON-NLS-1$
-				contexts.add(new String[] { type.getId(), type.getName(),
-						"/**" + delim }); //$NON-NLS-1$
-			else
-				contexts.add(0,
-						new String[] { type.getId(), type.getName(), "" }); //$NON-NLS-1$
-		}
+		// for (Iterator it = registry.contextTypes(); it.hasNext();) {
+		// TemplateContextType type = (TemplateContextType) it.next();
+		//			if (type.getId().equals("javadoc")) //$NON-NLS-1$
+		// contexts.add(new String[] { type.getId(), type.getName(),
+		//						"/**" + delim }); //$NON-NLS-1$
+		// else
+		// contexts.add(0,
+		//						new String[] { type.getId(), type.getName(), "" }); //$NON-NLS-1$
+		// }
+		contexts.add(0, new String[] { PHP_NEW_FILE_CONTEXT,
+				NEW_PHP_FILE_TEAMPLATES, "" });
 		fContextTypes = (String[][]) contexts.toArray(new String[contexts
 				.size()][]);
 
@@ -621,13 +627,11 @@ public class EditTemplateDialog extends StatusDialog {
 				&& fNameText.getText().length() == 0;
 		if (!fSuppressError && isEmpty) {
 			status = new StatusInfo();
-			status
-					.setError(PreferencesMessages.EditTemplateDialog_error_noname);
+			status.setError(PreferencesMessages.EditTemplateDialog_error_noname);
 		} else if (fNameText != null
 				&& !isValidTemplateName(fNameText.getText())) {
 			status = new StatusInfo();
-			status
-					.setError(PreferencesMessages.EditTemplateDialog_error_invalidName);
+			status.setError(PreferencesMessages.EditTemplateDialog_error_invalidName);
 		}
 		updateStatus(status);
 	}
