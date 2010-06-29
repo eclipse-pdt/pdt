@@ -20,16 +20,22 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a class/namespace constant declaration
- * <pre>e.g.<pre> const MY_CONST = 5;
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
+ * const MY_CONST = 5;
  * const MY_CONST = 5, YOUR_CONSTANT = 8;
  */
-public class ConstantDeclaration extends Declaration implements IPHPDocAwareDeclaration {
+public class ConstantDeclaration extends Declaration implements
+		IPHPDocAwareDeclaration {
 
 	private final ConstantReference constant;
 	private final Expression initializer;
 	private PHPDocBlock phpDoc;
 
-	public ConstantDeclaration(ConstantReference constant, Expression initializer, int start, int end, PHPDocBlock phpDoc) {
+	public ConstantDeclaration(ConstantReference constant,
+			Expression initializer, int start, int end, PHPDocBlock phpDoc) {
 		super(start, end);
 
 		assert constant != null;
@@ -38,6 +44,8 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 		this.constant = constant;
 		this.initializer = initializer;
 		this.phpDoc = phpDoc;
+
+		setName(constant.getName());
 	}
 
 	public PHPDocBlock getPHPDoc() {
@@ -63,10 +71,6 @@ public class ConstantDeclaration extends Declaration implements IPHPDocAwareDecl
 
 	public ConstantReference getConstantName() {
 		return constant;
-	}
-	
-	public String getName() {
-		return constant.getName();
 	}
 
 	/**
