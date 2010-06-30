@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.BasicSearchEngine;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.SourceRange;
@@ -89,7 +90,9 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		IDLTKSearchScope scope = null;
 		IModelElement[] enclosingTypeConstants = null;
 		if (enclosingType != null) {
-			scope = SearchEngine.createSearchScope(enclosingType);
+			scope = BasicSearchEngine.createSearchScope(new IModelElement[] {
+					enclosingType.getScriptProject(), enclosingType },
+					DLTKLanguageManager.getLanguageToolkit(enclosingType));
 		} else {
 			scope = getSearchScope(abstractContext);
 		}
