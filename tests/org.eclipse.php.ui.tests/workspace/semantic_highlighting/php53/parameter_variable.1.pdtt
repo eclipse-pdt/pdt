@@ -1,0 +1,13 @@
+--TEST--
+Test Object Parameter variable Semantic highlighting
+--FILE--
+<?php
+function foo($someObject)
+{
+$someVariable = $someObject->bar;
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.ParameterVariableHighlighting:
+highlight($someObject)
+highlight($someObject)
