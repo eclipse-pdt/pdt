@@ -1212,7 +1212,7 @@ public class PHPModelUtils {
 			IType[] allSuperclasses = getSuperClasses(type, hierarchy);
 			for (IType superClass : allSuperclasses) {
 				IMethod[] method = getTypeMethod(superClass, prefix, exactName);
-				if (method != null) {
+				if (method != null && method.length > 0) {
 					methods.addAll(Arrays.asList(method));
 					break;
 				}
