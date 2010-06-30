@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ package org.eclipse.php.internal.debug.core.zend.debugger.handlers;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -32,7 +31,6 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
-import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
@@ -86,17 +84,10 @@ public class StartProcessFileNotificationHandler implements
 			PHPDebugPlugin.log(e);
 		}
 
-		String localPath = null;
 		if (isFirstFileToDebug) { // we suppose that we always get full path
 			// here
 			if (isWebServerDebugger) {
-				PathEntry pathEntry = debugTarget
-						.mapFirstDebugFile(remoteFileName);
-				if (pathEntry != null) {
-					localPath = pathEntry.getResolvedPath();
-				} else {
-					localPath = remoteFileName;
-				}
+				debugTarget.mapFirstDebugFile(remoteFileName);
 
 				// set current working directory to the current script directory
 				// on debugger side
@@ -106,25 +97,11 @@ public class StartProcessFileNotificationHandler implements
 					remoteDebugger.setCurrentWorkingDirectory(remotePath
 							.toString());
 				}
-			} else {
-				try {
-					IFile file = ResourcesPlugin
-							.getWorkspace()
-							.getRoot()
-							.getFileForLocation(
-									Path.fromOSString(remoteFileName));
-					if (file != null) {
-						localPath = file.getFullPath().toString();
-					}
-				} catch (Exception e) {
-				}
-				if (localPath == null) {
-					localPath = remoteFileName;
-				}
 			}
-		} else {
-			localPath = remoteDebugger.convertToLocalFilename(remoteFileName);
 		}
+
+		String localPath = remoteDebugger
+				.convertToLocalFilename(remoteFileName);
 
 		// send found breakpoints with remote file name
 		if (localPath != null
