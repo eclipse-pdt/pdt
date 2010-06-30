@@ -1,0 +1,24 @@
+--TEST--
+Show parent class members
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class layer {
+public $server = "";
+public function connect(){}
+}
+class db_layer extends layer{}
+class site {
+public $db;
+public function __construct(){
+$this->db = new db_layer;
+}
+}
+class mysite extends site{}
+$site = new mysite();
+$site->db->|
+?>
+--EXPECT--
+field($server)
+method(connect)
