@@ -73,8 +73,12 @@ public class FakeConstructor extends FakeMethod {
 						.getAllSuperclasses(type);
 				if (allSuperclasses != null && allSuperclasses.length > 0) {
 					for (IType superClass : allSuperclasses) {
-						constructors = getConstructorsOfType(superClass,
-								isEnclosingClass);
+						if (constructors[0] == null) {
+							constructors = getConstructorsOfType(superClass,
+									isEnclosingClass);
+						} else {
+							break;
+						}
 					}
 				}
 			}
