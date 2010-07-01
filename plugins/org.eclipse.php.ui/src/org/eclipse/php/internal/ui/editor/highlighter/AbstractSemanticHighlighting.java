@@ -95,6 +95,12 @@ public abstract class AbstractSemanticHighlighting implements
 
 	public Position[] consumes(Program program) {
 		if (program != null) {
+			if (modelCache == null
+					|| AbstractSemanticHighlighting.program != program) {
+				modelCache = new TemporaryModelCache(program.getSourceModule());
+				AbstractSemanticHighlighting.program = program;
+			}
+
 			list = new ArrayList<Position>();
 			AbstractSemanticApply apply = getSemanticApply();
 			sourceModule = program.getSourceModule();
