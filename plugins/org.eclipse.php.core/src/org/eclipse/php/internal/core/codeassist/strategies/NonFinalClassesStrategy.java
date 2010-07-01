@@ -15,6 +15,7 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
@@ -46,6 +47,6 @@ public class NonFinalClassesStrategy extends GlobalClassesStrategy {
 
 	@Override
 	protected Object getExtraInfo() {
-		return Boolean.TRUE;
+		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }

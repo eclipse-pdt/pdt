@@ -23,6 +23,7 @@ import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 
@@ -99,6 +100,6 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 	}
 
 	protected Object getExtraInfo() {
-		return Boolean.TRUE;
+		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }
