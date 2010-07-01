@@ -1481,6 +1481,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 
 	private IRegion computeHeaderComment(FoldingStructureComputationContext ctx)
 			throws ModelException {
+		if (!(ctx.getDocument() instanceof IStructuredDocument)) {
+			return null;
+		}
 		final IStructuredDocument document = (IStructuredDocument) ctx
 				.getDocument();
 		IStructuredDocumentRegion sdRegion = document
