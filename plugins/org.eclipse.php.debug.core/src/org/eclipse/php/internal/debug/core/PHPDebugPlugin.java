@@ -28,9 +28,7 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
@@ -42,7 +40,6 @@ import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
-import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -382,9 +379,7 @@ public class PHPDebugPlugin extends Plugin {
 
 	public static String getCurrentDebuggerId(IProject project) {
 		if (project != null) {
-			PHPVersion phpVersion = PHPVersion.byAlias(new Key(
-					PHPCorePlugin.ID, Keys.PHP_VERSION).getStoredValue(
-					createPreferenceScopes(project), false, null));
+			PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
 			if (phpVersion != null) {
 				return getCurrentDebuggerId(phpVersion);
 			}
@@ -422,14 +417,19 @@ public class PHPDebugPlugin extends Plugin {
 			}
 			PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
 			if (phpVersion != null) {
-				PHPexeItem item = PHPexes.getInstance()
-						.getDefaultItemForPHPVersion(phpVersion);
-				if (item != null) {
-					return item;
-				}
+				return getPHPexeItem(phpVersion);
 			}
 		}
 
+		return getWorkspaceDefaultExe();
+	}
+
+	public static PHPexeItem getPHPexeItem(PHPVersion phpVersion) {
+		PHPexeItem item = PHPexes.getInstance().getDefaultItemForPHPVersion(
+				phpVersion);
+		if (item != null) {
+			return item;
+		}
 		return getWorkspaceDefaultExe();
 	}
 
