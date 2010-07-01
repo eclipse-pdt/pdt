@@ -19,6 +19,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -233,7 +234,8 @@ public class PHPCompletionProposalCollector extends
 
 			public String getSuffix(IType type) {
 				String defaultResult = EMPTY_STRING;
-				if (typeProposal.getExtraInfo() != null
+				if (ProposalExtraInfo.TYPE_ONLY.equals(typeProposal
+						.getExtraInfo())
 						|| !PHPModelUtils.hasStaticMember(type)) {
 					return defaultResult;
 				}
