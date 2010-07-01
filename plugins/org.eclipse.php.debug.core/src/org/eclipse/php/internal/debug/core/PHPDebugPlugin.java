@@ -386,19 +386,23 @@ public class PHPDebugPlugin extends Plugin {
 					PHPCorePlugin.ID, Keys.PHP_VERSION).getStoredValue(
 					createPreferenceScopes(project), false, null));
 			if (phpVersion != null) {
-				PHPexeItem item = PHPexes.getInstance()
-						.getDefaultItemForPHPVersion(phpVersion);
-				if (item != null) {
-					return item.getDebuggerID();
-				}
+				return getCurrentDebuggerId(phpVersion);
 			}
 		}
+		return getCurrentDebuggerId();
+	}
 
+	public static String getCurrentDebuggerId(PHPVersion phpVersion) {
+		PHPexeItem item = PHPexes.getInstance().getDefaultItemForPHPVersion(
+				phpVersion);
+		if (item != null) {
+			return item.getDebuggerID();
+		}
 		return getCurrentDebuggerId();
 	}
 
 	// public static PHPexeItem getPHPexeItem(IProject project) {
-	//		
+	//
 	// }
 	public static PHPexeItem getPHPexeItem(IProject project) {
 		if (project != null) {
