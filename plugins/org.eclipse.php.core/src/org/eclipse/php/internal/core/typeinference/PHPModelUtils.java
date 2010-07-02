@@ -59,6 +59,36 @@ public class PHPModelUtils {
 	}
 
 	/**
+	 * if the elementName is a class alias for a namespace class,we get its
+	 * original name from its alias
+	 * 
+	 * @param elementName
+	 * @param sourceModule
+	 * @param offset
+	 * @param defaultClassName
+	 * @return
+	 */
+	public static String getRealName(String elementName,
+			ISourceModule sourceModule, final int offset,
+			String defaultClassName) {
+
+		// Check class name aliasing:
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
+		UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration,
+				elementName, offset);
+		if (usePart != null) {
+			elementName = usePart.getNamespace().getFullyQualifiedName();
+			int nsIndex = elementName
+					.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+			if (nsIndex != -1) {
+				defaultClassName = elementName.substring(nsIndex + 1);
+			}
+		}
+		return defaultClassName;
+	}
+
+	/**
 	 * Extracts the namespace name from the specified element name and resolves
 	 * it using USE statements that present in the file.
 	 * 
