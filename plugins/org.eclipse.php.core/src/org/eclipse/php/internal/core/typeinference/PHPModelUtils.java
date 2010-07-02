@@ -58,6 +58,16 @@ public class PHPModelUtils {
 		return element;
 	}
 
+	/**
+	 * if the elementName is a class alias for a namespace class,we get its
+	 * original name from its alias
+	 * 
+	 * @param elementName
+	 * @param sourceModule
+	 * @param offset
+	 * @param defaultClassName
+	 * @return
+	 */
 	public static String getRealName(String elementName,
 			ISourceModule sourceModule, final int offset,
 			String defaultClassName) {
