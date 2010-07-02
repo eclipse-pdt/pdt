@@ -102,10 +102,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 										types.add(new PHPClassType(reference
 												.getName()));
 									} else {
-										types
-												.add(new PHPClassType(namespace
-														.getName(), reference
-														.getName()));
+										types.add(new PHPClassType(namespace
+												.getName(), reference.getName()));
 									}
 
 								}
@@ -162,6 +160,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 						fullyQualifiedName, sourceModule, offset);
 				if (extractedNamespace != null) {
 					parentNamespace = extractedNamespace;
+					className = PHPModelUtils.getRealName(fullyQualifiedName,
+							sourceModule, offset, className);
 				}
 			}
 
