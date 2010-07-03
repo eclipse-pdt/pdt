@@ -30,10 +30,8 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 @SuppressWarnings("restriction")
 public abstract class AbstractSemanticHighlighting implements
@@ -119,26 +117,26 @@ public abstract class AbstractSemanticHighlighting implements
 	}
 
 	private Program getProgram(IStructuredDocumentRegion region) {
-		final IStructuredDocument structuredDocument = region
-				.getParentDocument();
+
+		// resolve current sourceModule
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				IWorkbenchPage page = PHPUiPlugin.getActivePage();
 				if (page != null) {
 					IEditorPart editor = page.getActiveEditor();
 					if (editor instanceof PHPStructuredEditor) {
-						PHPStructuredEditor pHPStructuredEditor = (PHPStructuredEditor) editor;
-						StructuredTextViewer textViewer = pHPStructuredEditor
-								.getTextViewer();
-						if (textViewer != null
-								&& textViewer.getDocument() == structuredDocument) {
-							sourceModule = (ISourceModule) pHPStructuredEditor
+						PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editor;
+						if (phpStructuredEditor.getTextViewer() != null
+								&& phpStructuredEditor != null) {
+							sourceModule = (ISourceModule) phpStructuredEditor
 									.getModelElement();
 						}
 					}
 				}
 			}
 		});
+
+		// resolve AST
 		Program program = null;
 		if (sourceModule != null) {
 			try {
