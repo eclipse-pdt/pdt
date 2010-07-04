@@ -1,0 +1,19 @@
+--TEST--
+[Bug 318639] New: [Content Assist] Provide content assist to alias
+--FILE--
+<?php
+namespace Example\One {
+class Response2 {
+function foo() {
+}
+}
+}
+
+namespace foo {
+use Example\One\Response2 as HTTPResponse;
+$a = new HTTPResponse ();
+$a->|
+}
+?>
+--EXPECT--
+method(foo)

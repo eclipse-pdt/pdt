@@ -1,0 +1,24 @@
+--TEST--
+use two namespace in one use statement
+--FILE--
+<?php
+namespace Example\One {
+class Response {
+function foo() {
+}
+}
+}
+namespace Example\Two {
+class D {
+function foo1() {
+}
+}
+}
+namespace foo {
+use Example\One,Example\Two\D;
+$a = new D();
+$a->|
+}
+?>
+--EXPECT--
+method(foo1)
