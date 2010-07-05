@@ -34,6 +34,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -1020,7 +1021,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			final ISourceModule sourceModule = DLTKUIPlugin
 					.getDocumentProvider().getWorkingCopy(input);
 			if (sourceModule != null) {
-				ASTParser parser = ASTParser.newParser(sourceModule);
+				ASTParser parser = ASTParser.newParser(PHPVersion.PHP5_3,
+						sourceModule);
 				parser.setSource(fDocument.get().toCharArray());
 
 				final Program program = parser.createAST(null);
