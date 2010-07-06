@@ -80,6 +80,10 @@ public class AllTests {
 				.suite());
 		// added by zhaozw.
 		suite.addTest(MarkOccurrenceTests.suite());
+
+		// test language model functions
+		suite.addTest(org.eclipse.php.core.tests.searchEngine.AllTests.suite());
+
 		// $JUnit-END$
 
 		return suite;
