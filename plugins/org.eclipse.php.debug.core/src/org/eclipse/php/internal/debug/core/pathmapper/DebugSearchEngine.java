@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.io.File;
@@ -13,11 +24,12 @@ import org.eclipse.core.runtime.content.IContentTypeManager.IContentTypeChangeLi
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
-import org.eclipse.php.internal.core.util.PHPSearchEngine;
+import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.core.util.*;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
@@ -25,14 +37,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IURIEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 
 public class DebugSearchEngine {
@@ -41,12 +46,16 @@ public class DebugSearchEngine {
 	private static IPathEntryFilter[] filters;
 
 	/**
-	 * Searches for all local resources that match provided remote file, and returns it in best match order.
-	 * This method skips internal PHP search mechanism, going straight to the path mapper, so it's good
-	 * only for resolving absolute paths.
-	 *
-	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
-	 * @param debugTarget Current debug target
+	 * Searches for all local resources that match provided remote file, and
+	 * returns it in best match order. This method skips internal PHP search
+	 * mechanism, going straight to the path mapper, so it's good only for
+	 * resolving absolute paths.
+	 * 
+	 * @param remoteFile
+	 *            Path of the file on server. This argument must not be
+	 *            <code>null</code>.
+	 * @param debugTarget
+	 *            Current debug target
 	 * @return path entry or <code>null</code> in case it could not be found
 	 */
 	public static PathEntry find(String remoteFile, IDebugTarget debugTarget) {
@@ -54,24 +63,34 @@ public class DebugSearchEngine {
 	}
 
 	/**
-	 * Searches for all local resources that match provided remote file, and returns it in best match order.
-	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
-	 * @param debugTarget Current debug target
-	 * @param currentWorkingDir Current working directory of PHP process
-	 * @param currentScriptDir Directory of current PHP file
+	 * Searches for all local resources that match provided remote file, and
+	 * returns it in best match order.
+	 * 
+	 * @param remoteFile
+	 *            Path of the file on server. This argument must not be
+	 *            <code>null</code>.
+	 * @param debugTarget
+	 *            Current debug target
+	 * @param currentWorkingDir
+	 *            Current working directory of PHP process
+	 * @param currentScriptDir
+	 *            Directory of current PHP file
 	 * @return path entry or <code>null</code> in case it could not be found
 	 */
-	public static PathEntry find(String remoteFile, IDebugTarget debugTarget, String currentWorkingDir, String currentScriptDir) {
+	public static PathEntry find(String remoteFile, IDebugTarget debugTarget,
+			String currentWorkingDir, String currentScriptDir) {
 		if (remoteFile == null) {
 			throw new NullPointerException();
 		}
 
 		PathEntry pathEntry = null;
-		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
+		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch()
+				.getLaunchConfiguration();
 
 		IProject project = null;
 		if (currentScriptDir != null) {
-			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(currentScriptDir);
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+					.findMember(currentScriptDir);
 			if (resource != null) {
 				project = resource.getProject();
 			}
@@ -79,41 +98,52 @@ public class DebugSearchEngine {
 		if (project == null) {
 			String projectName;
 			try {
-				projectName = launchConfiguration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
+				projectName = launchConfiguration.getAttribute(
+						IPHPDebugConstants.PHP_Project, (String) null);
 				if (projectName != null) {
-					project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+					project = ResourcesPlugin.getWorkspace().getRoot()
+							.getProject(projectName);
 				}
 			} catch (CoreException e) {
 				PHPDebugPlugin.log(e);
 			}
 		}
 
-		// If the given path is not absolute - use internal PHP search mechanism:
+		// If the given path is not absolute - use internal PHP search
+		// mechanism:
 		if (!VirtualPath.isAbsolute(remoteFile)) {
-			if (project != null && currentWorkingDir != null && currentScriptDir != null) {
+			if (project != null && currentWorkingDir != null
+					&& currentScriptDir != null) {
 				// This is not a full path, search using PHP Search Engine:
-				Result<?, ?> result = PHPSearchEngine.find(remoteFile, currentWorkingDir, currentScriptDir, project);
+				Result<?, ?> result = PHPSearchEngine.find(remoteFile,
+						currentWorkingDir, currentScriptDir, project);
 				if (result instanceof ExternalFileResult) {
 					ExternalFileResult extFileResult = (ExternalFileResult) result;
-					return new PathEntry(extFileResult.getFile().getAbsolutePath(), Type.EXTERNAL, extFileResult.getContainer());
+					return new PathEntry(extFileResult.getFile()
+							.getAbsolutePath(), Type.EXTERNAL,
+							extFileResult.getContainer());
 				}
 				if (result instanceof IncludedFileResult) {
 					IncludedFileResult incFileResult = (IncludedFileResult) result;
-					IIncludePathEntry container = incFileResult.getContainer();
-					Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
-					return new PathEntry(incFileResult.getFile().getAbsolutePath(), type, container);
+					IBuildpathEntry container = incFileResult.getContainer();
+					Type type = (container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
+							: Type.INCLUDE_FOLDER;
+					return new PathEntry(incFileResult.getFile()
+							.getAbsolutePath(), type, container);
 				}
 				if (result != null) {
 					// workspace file
 					ResourceResult resResult = (ResourceResult) result;
 					IResource resource = resResult.getFile();
-					return new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
+					return new PathEntry(resource.getFullPath().toString(),
+							Type.WORKSPACE, resource.getParent());
 				}
 			}
 			return null;
 		}
 
-		PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
+		PathMapper pathMapper = PathMapperRegistry
+				.getByLaunchConfiguration(launchConfiguration);
 		if (pathMapper != null) {
 			pathEntry = find(pathMapper, remoteFile, project, debugTarget);
 		}
@@ -121,13 +151,21 @@ public class DebugSearchEngine {
 	}
 
 	/**
-	 * Searches for all local resources that match provided remote file, and returns it in best match order.
-	 * @param pathMapper Path mapper to look at
-	 * @param remoteFile Path of the file on server. This argument must not be <code>null</code>.
-	 * @param debugTarget Current debug target
+	 * Searches for all local resources that match provided remote file, and
+	 * returns it in best match order.
+	 * 
+	 * @param pathMapper
+	 *            Path mapper to look at
+	 * @param remoteFile
+	 *            Path of the file on server. This argument must not be
+	 *            <code>null</code>.
+	 * @param debugTarget
+	 *            Current debug target
 	 * @return path entry or <code>null</code> in case it could not be found
 	 */
-	private static PathEntry find(final PathMapper pathMapper, final String remoteFile, final IProject currentProject, final IDebugTarget debugTarget) {
+	public static PathEntry find(final PathMapper pathMapper,
+			final String remoteFile, final IProject currentProject,
+			final IDebugTarget debugTarget) {
 
 		final PathEntry[] localFile = new PathEntry[1];
 
@@ -142,7 +180,8 @@ public class DebugSearchEngine {
 				VirtualPath abstractPath = new VirtualPath(remoteFile);
 
 				// Check whether we have an exact mapping for the remote path
-				// If so - we shouldn't proceed with search (we should have this file right in the mapped folder)
+				// If so - we shouldn't proceed with search (we should have this
+				// file right in the mapped folder)
 				VirtualPath testPath = abstractPath.clone();
 				testPath.removeLastSegment();
 				if (pathMapper.getLocalPathMapping(testPath) != null) {
@@ -151,32 +190,55 @@ public class DebugSearchEngine {
 
 				LinkedList<PathEntry> results = new LinkedList<PathEntry>();
 
-				Object[] includePaths;
-				if (currentProject != null) {
-					includePaths = PHPSearchEngine.buildIncludePath(currentProject);
-				} else {
-					// Search in the whole workspace:
-					Set<Object> s = new LinkedHashSet<Object>();
-					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-					for (IProject project : projects) {
-						if (project.isOpen() && project.isAccessible()) {
-							PHPSearchEngine.buildIncludePath(project, s);
+				IncludePath[] includePaths;
+				IBuildpathEntry[] buildPaths = null;
+
+				// Search in the whole workspace:
+				Set<IncludePath> s = new LinkedHashSet<IncludePath>();
+				Set<IBuildpathEntry> b = new LinkedHashSet<IBuildpathEntry>();
+				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+						.getProjects();
+				for (IProject project : projects) {
+					if (project.isOpen() && project.isAccessible()) {
+						// get include paths of all projects
+						PHPSearchEngine.buildIncludePath(project, s);
+
+						// get build paths of all projects
+						IScriptProject scriptProject = DLTKCore.create(project);
+						if (scriptProject != null) {
+							try {
+								IBuildpathEntry[] rawBuildpath = scriptProject
+										.getRawBuildpath();
+								for (IBuildpathEntry pathEntry : rawBuildpath) {
+									b.add(pathEntry);
+								}
+							} catch (ModelException e) {
+								PHPDebugPlugin.log(e);
+							}
+
 						}
 					}
-					includePaths = s.toArray();
 				}
+				includePaths = s.toArray(new IncludePath[s.size()]);
+				buildPaths = b.toArray(new IBuildpathEntry[b.size()]);
 
 				// Try to find this file in the Workspace:
 				try {
 					IPath path = Path.fromOSString(remoteFile);
-					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
-					if (file.exists()) {
-						for (Object includePath : includePaths) {
-							if (includePath instanceof IContainer) {
-								IContainer container = (IContainer)includePath;
-								if (container.getFullPath().isPrefixOf(file.getFullPath())) {
-									localFile[0] = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, file.getParent());
-									pathMapper.addEntry(remoteFile, localFile[0]);
+					IFile file = ResourcesPlugin.getWorkspace().getRoot()
+							.getFileForLocation(path);
+					if (file != null && file.exists()) {
+						for (IncludePath includePath : includePaths) {
+							if (includePath.getEntry() instanceof IContainer) {
+								IContainer container = (IContainer) includePath
+										.getEntry();
+								if (container.getFullPath().isPrefixOf(
+										file.getFullPath())) {
+									localFile[0] = new PathEntry(file
+											.getFullPath().toString(),
+											Type.WORKSPACE, file.getParent());
+									pathMapper.addEntry(remoteFile,
+											localFile[0]);
 									PathMapperRegistry.storeToPreferences();
 									return Status.OK_STATUS;
 								}
@@ -184,22 +246,29 @@ public class DebugSearchEngine {
 						}
 					}
 				} catch (Exception e) {
-					// no need to catch - this may be due to IPath creation failure
+					// no need to catch - this may be due to IPath creation
+					// failure
 				}
 
 				// Try to find this file in the Include Path:
 				File file = new File(remoteFile);
 				if (file.exists()) {
-					for (Object includePath : includePaths) {
-						if (includePath instanceof IIncludePathEntry) {
-							IIncludePathEntry entry = (IIncludePathEntry) includePath;
+					for (IncludePath includePath : includePaths) {
+						if (includePath.getEntry() instanceof IBuildpathEntry) {
+							IBuildpathEntry entry = (IBuildpathEntry) includePath
+									.getEntry();
 							IPath entryPath = entry.getPath();
-							if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-								entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+							if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+								entryPath = DLTKCore
+										.getResolvedVariablePath(entryPath);
 							}
-							if (entryPath != null && entryPath.isPrefixOf(Path.fromOSString(remoteFile))) {
-								Type type = (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
-								localFile[0] = new PathEntry(file.getAbsolutePath(), type, entry);
+							if (entryPath != null
+									&& entryPath.isPrefixOf(Path
+											.fromOSString(remoteFile))) {
+								Type type = (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
+										: Type.INCLUDE_FOLDER;
+								localFile[0] = new PathEntry(
+										file.getAbsolutePath(), type, entry);
 								pathMapper.addEntry(remoteFile, localFile[0]);
 								PathMapperRegistry.storeToPreferences();
 								return Status.OK_STATUS;
@@ -208,52 +277,99 @@ public class DebugSearchEngine {
 					}
 				}
 
-				// Iterate over all include path, and search for a requested file
-				for (Object includePath : includePaths) {
-					if (includePath instanceof IContainer) {
-						try {
-							find((IContainer) includePath, abstractPath, results);
-						} catch (InterruptedException e) {
-							PHPDebugPlugin.log(e);
-						}
-					} else if (includePath instanceof IIncludePathEntry) {
-						IIncludePathEntry entry = (IIncludePathEntry) includePath;
+				// try to find in build paths
+				if (buildPaths != null) {
+					for (IBuildpathEntry entry : buildPaths) {
+
 						IPath entryPath = entry.getPath();
-						if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-							if (entry.getContentKind() != IIncludePathEntry.K_BINARY) { // We don't support lookup in archive
-								File entryDir = entryPath.toFile();
-								find(entryDir, abstractPath, entry, results);
-							}
-						} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-							IProject project = (IProject) entry.getResource();
-							if (project.isOpen() && project.isAccessible()) {
-								try {
-									find(project, abstractPath, results);
-								} catch (InterruptedException e) {
-									PHPDebugPlugin.log(e);
+						if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+							// We don't support lookup in archive
+							File entryDir = entryPath.toFile();
+							find(entryDir, abstractPath, entry, results);
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT
+								|| entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+							IResource res = ResourcesPlugin.getWorkspace()
+									.getRoot()
+									.findMember(entry.getPath().lastSegment());
+							if (res instanceof IProject) {
+								IProject project = (IProject) res;
+								if (project.isOpen() && project.isAccessible()) {
+									try {
+										find(project, abstractPath, results);
+									} catch (InterruptedException e) {
+										PHPDebugPlugin.log(e);
+									}
 								}
 							}
-						} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-							entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+							entryPath = DLTKCore
+									.getResolvedVariablePath(entryPath);
 							if (entryPath != null) {
 								File entryDir = entryPath.toFile();
 								find(entryDir, abstractPath, entry, results);
 							}
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+
+							try {
+								if (projects.length == 0) {
+									continue;
+								}
+								final IProject currentProject = projects[0];
+								final IScriptProject scriptProject = DLTKCore
+										.create(currentProject);
+
+								IBuildpathContainer container = DLTKCore
+										.getBuildpathContainer(entry.getPath(),
+												scriptProject);
+								if (container != null) {
+									IBuildpathEntry[] buildpathEntries = container
+											.getBuildpathEntries();
+									entryPath = EnvironmentPathUtils
+											.getLocalPath(buildpathEntries[0]
+													.getPath());
+									if (entryPath != null) {
+										find(entryPath.toFile(), abstractPath,
+												entry, results);
+									}
+
+								}
+							} catch (ModelException e) {
+								PHPCorePlugin.log(e);
+							}
+
 						}
 					}
 				}
 
-				boolean foundInWorkspace = results.size()> 0;
+				// Iterate over all include path, and search for a requested
+				// file
+				for (IncludePath includePath : includePaths) {
+					if (includePath.getEntry() instanceof IContainer) {
+						try {
+							find((IContainer) includePath.getEntry(),
+									abstractPath, results);
+						} catch (InterruptedException e) {
+							PHPDebugPlugin.log(e);
+						}
+					}
+				}
 
-				//search in opened editors
+				boolean foundInWorkspace = results.size() > 0;
+
+				// search in opened editors
 				searchOpenedEditors(results, abstractPath);
 
-				if (!foundInWorkspace && results.size() == 1 && abstractPath.equals(results.getFirst().getAbstractPath())) {
+				if (!foundInWorkspace
+						&& results.size() == 1
+						&& abstractPath.equals(results.getFirst()
+								.getAbstractPath())) {
 					localFile[0] = results.getFirst();
-				}
-				else if (results.size() > 0) {
-					Collections.sort(results, new BestMatchPathComparator(abstractPath));
-					localFile[0] = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]), debugTarget);
+				} else if (results.size() > 0) {
+					Collections.sort(results, new BestMatchPathComparator(
+							abstractPath));
+					localFile[0] = filterItems(abstractPath,
+							results.toArray(new PathEntry[results.size()]),
+							debugTarget);
 					if (localFile[0] != null) {
 						pathMapper.addEntry(remoteFile, localFile[0]);
 						PathMapperRegistry.storeToPreferences();
@@ -272,15 +388,16 @@ public class DebugSearchEngine {
 		return localFile[0];
 	}
 
-	private static void searchOpenedEditors(LinkedList<PathEntry> results, VirtualPath remotePath) {
+	private static void searchOpenedEditors(LinkedList<PathEntry> results,
+			VirtualPath remotePath) {
 		// Collect open editor references:
 		List<IEditorReference> editors = new ArrayList<IEditorReference>(0);
-		IWorkbench workbench= PlatformUI.getWorkbench();
-		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		for (IWorkbenchWindow element : windows) {
-			IWorkbenchPage[] pages= element.getPages();
+			IWorkbenchPage[] pages = element.getPages();
 			for (IWorkbenchPage element2 : pages) {
-				IEditorReference[] references= element2.getEditorReferences();
+				IEditorReference[] references = element2.getEditorReferences();
 				editors.addAll(Arrays.asList(references));
 			}
 		}
@@ -294,15 +411,19 @@ public class DebugSearchEngine {
 				continue;
 			}
 			if (editorInput instanceof FileStoreEditorInput) {
-				File file = new File(((IURIEditorInput)editorInput).getURI());
-				if (file.exists() && file.getName().equalsIgnoreCase(remotePath.getLastSegment())) {
-					results.add(new PathEntry(file.getAbsolutePath(), PathEntry.Type.EXTERNAL, file.getParentFile()));
+				File file = new File(((IURIEditorInput) editorInput).getURI());
+				if (file.exists()
+						&& file.getName().equalsIgnoreCase(
+								remotePath.getLastSegment())) {
+					results.add(new PathEntry(file.getAbsolutePath(),
+							PathEntry.Type.EXTERNAL, file.getParentFile()));
 				}
 			}
 		}
 	}
 
-	private static PathEntry filterItems(VirtualPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
+	private static PathEntry filterItems(VirtualPath remotePath,
+			PathEntry[] entries, IDebugTarget debugTarget) {
 
 		IPathEntryFilter[] filters = initializePathEntryFilters();
 		for (int i = 0; i < filters.length; ++i) {
@@ -315,20 +436,25 @@ public class DebugSearchEngine {
 		if (filters == null) {
 			Map<String, IPathEntryFilter> filtersMap = new HashMap<String, IPathEntryFilter>();
 			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), "pathEntryFilters"); //$NON-NLS-1$
+			IConfigurationElement[] elements = registry
+					.getConfigurationElementsFor(PHPDebugPlugin.getID(),
+							"pathEntryFilters"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
 				if ("filter".equals(element.getName())) { //$NON-NLS-1$
 					String id = element.getAttribute("id"); //$NON-NLS-1$
 					if (!filtersMap.containsKey(id)) {
-						String overridesIds = element.getAttribute("overridesId");
+						String overridesIds = element
+								.getAttribute("overridesId");
 						if (overridesIds != null) {
-							StringTokenizer st = new StringTokenizer(overridesIds, ", "); //$NON-NLS-1$
+							StringTokenizer st = new StringTokenizer(
+									overridesIds, ", "); //$NON-NLS-1$
 							while (st.hasMoreTokens()) {
 								filtersMap.put(st.nextToken(), null);
 							}
 						}
 						try {
-							filtersMap.put(id, (IPathEntryFilter) element.createExecutableExtension("class")); //$NON-NLS-1$
+							filtersMap.put(id, (IPathEntryFilter) element
+									.createExecutableExtension("class")); //$NON-NLS-1$
 						} catch (CoreException e) {
 							PHPDebugPlugin.log(e);
 						}
@@ -336,7 +462,8 @@ public class DebugSearchEngine {
 				}
 			}
 			Collection<IPathEntryFilter> l = filtersMap.values();
-			while (l.remove(null)); // remove null elements
+			while (l.remove(null))
+				; // remove null elements
 			filters = l.toArray(new IPathEntryFilter[filtersMap.size()]);
 		}
 		return filters;
@@ -344,17 +471,24 @@ public class DebugSearchEngine {
 
 	/**
 	 * Searches for the path in the given IO file
-	 *
-	 * @param file File to start search from
-	 * @param path Abstract path of the remote file
-	 * @param container Include path entry container
-	 * @param results List of results to return
+	 * 
+	 * @param file
+	 *            File to start search from
+	 * @param path
+	 *            Abstract path of the remote file
+	 * @param container
+	 *            Include path entry container
+	 * @param results
+	 *            List of results to return
 	 * @throws InterruptedException
 	 */
-	private static void find(final File file, final VirtualPath path, final IIncludePathEntry container, final List<PathEntry> results) {
+	private static void find(final File file, final VirtualPath path,
+			final IBuildpathEntry container, final List<PathEntry> results) {
 		if (!file.isDirectory() && file.getName().equals(path.getLastSegment())) {
-			Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
-			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type, container);
+			Type type = (container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
+					: Type.INCLUDE_FOLDER;
+			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type,
+					container);
 			results.add(pathEntry);
 			return;
 		} else {
@@ -369,24 +503,35 @@ public class DebugSearchEngine {
 
 	/**
 	 * Searches for the path in the given resource
-	 * @param resource Resource to start the search from
-	 * @param path Abstract path of the remote file
-	 * @param results List of results to return
+	 * 
+	 * @param resource
+	 *            Resource to start the search from
+	 * @param path
+	 *            Abstract path of the remote file
+	 * @param results
+	 *            List of results to return
 	 * @throws InterruptedException
 	 */
-	private static void find(final IResource resource, final VirtualPath path, final List<PathEntry> results) throws InterruptedException {
+	private static void find(final IResource resource, final VirtualPath path,
+			final List<PathEntry> results) throws InterruptedException {
 		if (resource == null || !resource.exists() || !resource.isAccessible()) {
 			return;
 		}
 		WorkspaceJob findJob = new WorkspaceJob("") {
-			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(IProgressMonitor monitor)
+					throws CoreException {
 				resource.accept(new IResourceVisitor() {
-					public boolean visit(IResource resource) throws CoreException {
+					public boolean visit(IResource resource)
+							throws CoreException {
 						if (!resource.isAccessible()) {
 							return false;
 						}
-						if (resource instanceof IFile && resource.getName().equals(path.getLastSegment())) {
-							PathEntry pathEntry = new PathEntry(resource.getFullPath().toString(), Type.WORKSPACE, resource.getParent());
+						if (resource instanceof IFile
+								&& resource.getName().equals(
+										path.getLastSegment())) {
+							PathEntry pathEntry = new PathEntry(resource
+									.getFullPath().toString(), Type.WORKSPACE,
+									resource.getParent());
 							results.add(pathEntry);
 						}
 						return true;
@@ -399,7 +544,8 @@ public class DebugSearchEngine {
 		findJob.join();
 	}
 
-	private static class PHPFilenameFilter implements FileFilter, IContentTypeChangeListener {
+	private static class PHPFilenameFilter implements FileFilter,
+			IContentTypeChangeListener {
 		private Pattern phpFilePattern;
 
 		public PHPFilenameFilter() {
@@ -408,8 +554,10 @@ public class DebugSearchEngine {
 		}
 
 		private void buildPHPFilePattern() {
-			IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
-			String[] phpExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+			IContentType type = Platform.getContentTypeManager()
+					.getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+			String[] phpExtensions = type
+					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 			StringBuilder buf = new StringBuilder();
 			buf.append(".*\\.(");
 			for (int i = 0; i < phpExtensions.length; ++i) {
@@ -419,7 +567,8 @@ public class DebugSearchEngine {
 				buf.append(phpExtensions[i]);
 			}
 			buf.append(')');
-			phpFilePattern = Pattern.compile(buf.toString(), Pattern.CASE_INSENSITIVE);
+			phpFilePattern = Pattern.compile(buf.toString(),
+					Pattern.CASE_INSENSITIVE);
 		}
 
 		public void contentTypeChanged(ContentTypeChangeEvent event) {
@@ -427,7 +576,8 @@ public class DebugSearchEngine {
 		}
 
 		public boolean accept(File pathname) {
-			if (pathname.isDirectory() || phpFilePattern.matcher(pathname.getName()).matches()) {
+			if (pathname.isDirectory()
+					|| phpFilePattern.matcher(pathname.getName()).matches()) {
 				return true;
 			}
 			return false;
