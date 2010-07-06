@@ -1017,6 +1017,13 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * ()
 	 */
 	public final void initialize() {
+		fUpdatingCount++;
+		try {
+			update(createInitialContext());
+		} finally {
+			fUpdatingCount--;
+		}
+
 		if (viewer != null) {
 			fDocument = viewer.getDocument();
 
@@ -1030,14 +1037,6 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 				addAllAdapters();
 			}
 		}
-
-		fUpdatingCount++;
-		try {
-			update(createInitialContext());
-		} finally {
-			fUpdatingCount--;
-		}
-
 	}
 
 	/**
