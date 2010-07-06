@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 /**
  * 
@@ -24,37 +25,50 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.ISourceLocator;
 
 /**
- * A PHP Launch.
- * This launch is more flexible in terms of terminating launches.
+ * A PHP Launch. This launch is more flexible in terms of terminating launches.
  * 
  * @author shalom
  */
 public class PHPLaunch extends Launch {
 
+	private boolean pretendsRunning;
+
 	/**
 	 * Constructs a launch with the specified attributes.
-	 *
-	 * @param launchConfiguration the configuration that was launched
-	 * @param mode the mode of this launch - run or debug (constants
-	 *  defined by <code>ILaunchManager</code>)
-	 * @param locator the source locator to use for this debug session, or
-	 * 	<code>null</code> if not supported
+	 * 
+	 * @param launchConfiguration
+	 *            the configuration that was launched
+	 * @param mode
+	 *            the mode of this launch - run or debug (constants defined by
+	 *            <code>ILaunchManager</code>)
+	 * @param locator
+	 *            the source locator to use for this debug session, or
+	 *            <code>null</code> if not supported
 	 */
-	public PHPLaunch(ILaunchConfiguration launchConfiguration, String mode, ISourceLocator locator) {
+	public PHPLaunch(ILaunchConfiguration launchConfiguration, String mode,
+			ISourceLocator locator) {
 		super(launchConfiguration, mode, locator);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.Launch#canTerminate()
 	 */
 	public boolean canTerminate() {
 		return !isTerminated();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.Launch#isTerminated()
 	 */
 	public boolean isTerminated() {
+		if (pretendsRunning) {
+			return false;
+		}
+
 		if (getProcesses0().isEmpty() && getDebugTargets0().isEmpty()) {
 			return true;
 		}
@@ -97,6 +111,10 @@ public class PHPLaunch extends Launch {
 			}
 		}
 		return super.getChildren();
+	}
+
+	public void pretendRunning(boolean running) {
+		this.pretendsRunning = running;
 	}
 
 }
