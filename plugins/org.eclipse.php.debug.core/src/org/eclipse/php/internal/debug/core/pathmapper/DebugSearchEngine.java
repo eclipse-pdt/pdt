@@ -26,9 +26,10 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.includepath.IncludePath;
-import org.eclipse.php.internal.core.util.PHPSearchEngine;
+import org.eclipse.php.internal.core.util.*;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
@@ -119,8 +120,8 @@ public class DebugSearchEngine {
 				if (result instanceof ExternalFileResult) {
 					ExternalFileResult extFileResult = (ExternalFileResult) result;
 					return new PathEntry(extFileResult.getFile()
-							.getAbsolutePath(), Type.EXTERNAL, extFileResult
-							.getContainer());
+							.getAbsolutePath(), Type.EXTERNAL,
+							extFileResult.getContainer());
 				}
 				if (result instanceof IncludedFileResult) {
 					IncludedFileResult incFileResult = (IncludedFileResult) result;
@@ -191,40 +192,35 @@ public class DebugSearchEngine {
 
 				IncludePath[] includePaths;
 				IBuildpathEntry[] buildPaths = null;
-				if (currentProject != null) {
-					includePaths = PHPSearchEngine
-							.buildIncludePath(currentProject);
-				} else {
-					// Search in the whole workspace:
-					Set<IncludePath> s = new LinkedHashSet<IncludePath>();
-					Set<IBuildpathEntry> b = new LinkedHashSet<IBuildpathEntry>();
-					IProject[] projects = ResourcesPlugin.getWorkspace()
-							.getRoot().getProjects();
-					for (IProject project : projects) {
-						if (project.isOpen() && project.isAccessible()) {
-							// get include paths of all projects
-							PHPSearchEngine.buildIncludePath(project, s);
 
-							// get build paths of all projects
-							IScriptProject scriptProject = DLTKCore
-									.create(project);
-							if (scriptProject != null) {
-								try {
-									IBuildpathEntry[] rawBuildpath = scriptProject
-											.getRawBuildpath();
-									for (IBuildpathEntry pathEntry : rawBuildpath) {
-										b.add(pathEntry);
-									}
-								} catch (ModelException e) {
-									PHPDebugPlugin.log(e);
+				// Search in the whole workspace:
+				Set<IncludePath> s = new LinkedHashSet<IncludePath>();
+				Set<IBuildpathEntry> b = new LinkedHashSet<IBuildpathEntry>();
+				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+						.getProjects();
+				for (IProject project : projects) {
+					if (project.isOpen() && project.isAccessible()) {
+						// get include paths of all projects
+						PHPSearchEngine.buildIncludePath(project, s);
+
+						// get build paths of all projects
+						IScriptProject scriptProject = DLTKCore.create(project);
+						if (scriptProject != null) {
+							try {
+								IBuildpathEntry[] rawBuildpath = scriptProject
+										.getRawBuildpath();
+								for (IBuildpathEntry pathEntry : rawBuildpath) {
+									b.add(pathEntry);
 								}
-
+							} catch (ModelException e) {
+								PHPDebugPlugin.log(e);
 							}
+
 						}
 					}
-					includePaths = s.toArray(new IncludePath[s.size()]);
-					buildPaths = b.toArray(new IBuildpathEntry[b.size()]);
 				}
+				includePaths = s.toArray(new IncludePath[s.size()]);
+				buildPaths = b.toArray(new IBuildpathEntry[b.size()]);
 
 				// Try to find this file in the Workspace:
 				try {
@@ -271,86 +267,76 @@ public class DebugSearchEngine {
 											.fromOSString(remoteFile))) {
 								Type type = (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
 										: Type.INCLUDE_FOLDER;
-								localFile[0] = new PathEntry(file
-										.getAbsolutePath(), type, entry);
+								localFile[0] = new PathEntry(
+										file.getAbsolutePath(), type, entry);
 								pathMapper.addEntry(remoteFile, localFile[0]);
 								PathMapperRegistry.storeToPreferences();
 								return Status.OK_STATUS;
 							}
 						}
 					}
+				}
 
-					// try to find in build paths
-					if (buildPaths != null) {
-						for (IBuildpathEntry entry : buildPaths) {
+				// try to find in build paths
+				if (buildPaths != null) {
+					for (IBuildpathEntry entry : buildPaths) {
 
-							IPath entryPath = entry.getPath();
-							if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-								// We don't support lookup in archive
+						IPath entryPath = entry.getPath();
+						if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+							// We don't support lookup in archive
+							File entryDir = entryPath.toFile();
+							find(entryDir, abstractPath, entry, results);
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT
+								|| entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+							IResource res = ResourcesPlugin.getWorkspace()
+									.getRoot()
+									.findMember(entry.getPath().lastSegment());
+							if (res instanceof IProject) {
+								IProject project = (IProject) res;
+								if (project.isOpen() && project.isAccessible()) {
+									try {
+										find(project, abstractPath, results);
+									} catch (InterruptedException e) {
+										PHPDebugPlugin.log(e);
+									}
+								}
+							}
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+							entryPath = DLTKCore
+									.getResolvedVariablePath(entryPath);
+							if (entryPath != null) {
 								File entryDir = entryPath.toFile();
 								find(entryDir, abstractPath, entry, results);
-							} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT
-									|| entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-								IResource res = ResourcesPlugin.getWorkspace()
-										.getRoot().findMember(
-												entry.getPath().lastSegment());
-								if (res instanceof IProject) {
-									IProject project = (IProject) res;
-									if (project.isOpen()
-											&& project.isAccessible()) {
-										try {
-											find(project, abstractPath, results);
-										} catch (InterruptedException e) {
-											PHPDebugPlugin.log(e);
-										}
-									}
-								}
-							} else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-								entryPath = DLTKCore
-										.getResolvedVariablePath(entryPath);
-								if (entryPath != null) {
-									File entryDir = entryPath.toFile();
-									find(entryDir, abstractPath, entry, results);
-								}
-							} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+							}
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 
-								// TODO fix the CONTAINER case
-								IResource res = ResourcesPlugin.getWorkspace()
-										.getRoot().findMember(
-												entry.getPath().lastSegment());
-
-								if (res == null) {
+							try {
+								if (projects.length == 0) {
 									continue;
 								}
-								IProject project = res.getProject();
+								final IProject currentProject = projects[0];
+								final IScriptProject scriptProject = DLTKCore
+										.create(currentProject);
 
-								IScriptProject scriptProject = DLTKCore
-										.create(project);
-
-								try {
-									IBuildpathContainer buildpathContainer = DLTKCore
-											.getBuildpathContainer(entry
-													.getPath(), scriptProject);
-									if (buildpathContainer != null) {
-										IBuildpathEntry[] buildpathEntries = buildpathContainer
-												.getBuildpathEntries();
-										if (buildpathEntries != null
-												&& buildpathEntries.length > 0) {
-											entryPath = EnvironmentPathUtils
-													.getLocalPath(buildpathEntries[0]
-															.getPath());
-											if (entryPath != null) {
-												find(entryPath.toFile(),
-														abstractPath, entry,
-														results);
-											}
-										}
+								IBuildpathContainer container = DLTKCore
+										.getBuildpathContainer(entry.getPath(),
+												scriptProject);
+								if (container != null) {
+									IBuildpathEntry[] buildpathEntries = container
+											.getBuildpathEntries();
+									entryPath = EnvironmentPathUtils
+											.getLocalPath(buildpathEntries[0]
+													.getPath());
+									if (entryPath != null) {
+										find(entryPath.toFile(), abstractPath,
+												entry, results);
 									}
-								} catch (ModelException e) {
-									PHPDebugPlugin.log(e);
-								}
 
+								}
+							} catch (ModelException e) {
+								PHPCorePlugin.log(e);
 							}
+
 						}
 					}
 				}
@@ -381,8 +367,8 @@ public class DebugSearchEngine {
 				} else if (results.size() > 0) {
 					Collections.sort(results, new BestMatchPathComparator(
 							abstractPath));
-					localFile[0] = filterItems(abstractPath, results
-							.toArray(new PathEntry[results.size()]),
+					localFile[0] = filterItems(abstractPath,
+							results.toArray(new PathEntry[results.size()]),
 							debugTarget);
 					if (localFile[0] != null) {
 						pathMapper.addEntry(remoteFile, localFile[0]);
