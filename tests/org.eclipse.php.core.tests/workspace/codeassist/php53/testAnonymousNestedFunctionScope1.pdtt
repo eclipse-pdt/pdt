@@ -1,0 +1,25 @@
+ --TEST--
+Local variable $after should not be displayed in Outline.
+The scope of anonymous function should be ended after '}'
+
+--FILE--
+   
+<?php
+
+class A
+{
+   function Foo()
+    {
+    	$before=0;
+    	   	
+    	$add = function($para){ return($pa|+1); }; 
+         
+        $after=0;
+
+    }
+}
+
+?>
+
+--EXPECT--
+field($para)
