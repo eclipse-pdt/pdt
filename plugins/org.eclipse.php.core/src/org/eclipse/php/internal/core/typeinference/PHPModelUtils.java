@@ -32,6 +32,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -665,24 +666,7 @@ public class PHPModelUtils {
 		final Set<String> processedVars = new HashSet<String>();
 
 		try {
-			IModelElement[] children = method.getChildren();
-			for (IModelElement child : children) {
-				if (child.getElementType() == IModelElement.FIELD) {
-					String elementName = child.getElementName();
-					if (exactName
-							&& elementName.equalsIgnoreCase(prefix)
-							|| !exactName
-							&& elementName.toLowerCase().startsWith(
-									prefix.toLowerCase())) {
-
-						IField field = (IField) child;
-						if (!isSameFileExisiting(elements, field)) {
-							elements.add((IField) child);
-							processedVars.add(elementName);
-						}
-					}
-				}
-			}
+			getMethodFields(method, prefix, exactName, elements, processedVars);
 
 			// collect global variables
 			ModuleDeclaration rootNode = SourceParserUtil
@@ -724,6 +708,40 @@ public class PHPModelUtils {
 		}
 
 		return elements.toArray(new IModelElement[elements.size()]);
+	}
+
+	public static void getMethodFields(final IMethod method,
+			final String prefix, final boolean exactName,
+			final List<IField> elements, final Set<String> processedVars)
+			throws ModelException {
+		IModelElement[] children = method.getChildren();
+		for (IModelElement child : children) {
+			if (child.getElementType() == IModelElement.FIELD) {
+				String elementName = child.getElementName();
+				if (exactName
+						&& elementName.equalsIgnoreCase(prefix)
+						|| !exactName
+						&& elementName.toLowerCase().startsWith(
+								prefix.toLowerCase())) {
+
+					IField field = (IField) child;
+					if (!isSameFileExisiting(elements, field)) {
+						elements.add((IField) child);
+						processedVars.add(elementName);
+					}
+				}
+			}
+		}
+		if (isAnonymousMethod(method)) {
+			getMethodFields((IMethod) method.getParent().getParent(), prefix,
+					exactName, elements, processedVars);
+		}
+	}
+
+	public static boolean isAnonymousMethod(final IMethod method) {
+		return PHPCoreConstants.ANONYMOUS.equals(method.getElementName())
+				&& method.getParent() instanceof IField
+				&& method.getParent().getParent() instanceof IMethod;
 	};
 
 	private static boolean isSameFileExisiting(List<IField> elements,

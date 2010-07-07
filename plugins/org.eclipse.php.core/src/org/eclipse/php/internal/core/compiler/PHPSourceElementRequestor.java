@@ -29,14 +29,13 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.compiler.IElementRequestor;
-import org.eclipse.dltk.compiler.ISourceElementRequestor;
-import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
+import org.eclipse.dltk.compiler.*;
 import org.eclipse.dltk.compiler.IElementRequestor.ImportInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -167,15 +166,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fNodes.push(lambdaMethod);
 		methodGlobalVars.add(new HashSet<String>());
 
-		Declaration parentDeclaration = null;
-		if (!declarations.empty()
-				&& declarations.peek() instanceof MethodDeclaration) {
-			parentDeclaration = declarations.peek();
-			// In case we are entering a nested element - just add to the
-			// deferred list and get out of the nested element visiting process
-			deferredDeclarations.add(lambdaMethod);
-			return visitGeneral(lambdaMethod);
-		}
+		// Declaration parentDeclaration = null;
+		// if (!declarations.empty()
+		// && declarations.peek() instanceof MethodDeclaration) {
+		// parentDeclaration = declarations.peek();
+		// // In case we are entering a nested element - just add to the
+		// // deferred list and get out of the nested element visiting process
+		// deferredDeclarations.add(lambdaMethod);
+		// return visitGeneral(lambdaMethod);
+		// }
 
 		Collection<FormalParameter> arguments = lambdaMethod.getArguments();
 		StringBuilder metadata = new StringBuilder();
@@ -201,7 +200,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 		mi.parameterNames = parameters;
-		mi.name = "__anonymous";
+		mi.name = PHPCoreConstants.ANONYMOUS;
 		mi.modifiers = Modifiers.AccPublic;
 		mi.nameSourceStart = lambdaMethod.sourceStart();
 		mi.nameSourceEnd = lambdaMethod.sourceEnd();
@@ -210,7 +209,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		this.fRequestor.enterMethod(mi);
 		this.fInMethod = true;
-		
+
 		for (Argument arg : arguments) {
 			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 			info.name = arg.getName();

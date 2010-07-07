@@ -187,4 +187,6 @@ public interface PHPCoreConstants {
 
 	public static final int AccClassField = (1 << 10);
 
+	public static final String ANONYMOUS = "__anonymous";
+
 }
