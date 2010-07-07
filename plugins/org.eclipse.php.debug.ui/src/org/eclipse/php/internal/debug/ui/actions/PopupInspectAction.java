@@ -11,8 +11,6 @@
 package org.eclipse.php.internal.debug.ui.actions;
 
 import org.eclipse.core.internal.runtime.AdapterManager;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IExpressionManager;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.ui.DebugPopup;
@@ -30,7 +28,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
-import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.watch.PHPWatchExpressionDelegate;
 import org.eclipse.php.internal.debug.ui.watch.XDebugWatchExpressionDelegate;
@@ -43,7 +40,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
  * Action to do simple code evaluation. The evaluation is done in the UI thread
@@ -105,18 +101,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 		}
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection;
-			IExpressionManager expressionManager = DebugPlugin.getDefault()
-					.getExpressionManager();
-			IDOMNode domNode = (IDOMNode) selection.getFirstElement();
-			String expression;
-			try {
-				expression = domNode.getFirstStructuredDocumentRegion()
-						.getParentDocument().get(textSelection.getOffset(),
-								textSelection.getLength());
-				return expression;
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
+			return textSelection.getText();
 		}
 		return null;
 	}
