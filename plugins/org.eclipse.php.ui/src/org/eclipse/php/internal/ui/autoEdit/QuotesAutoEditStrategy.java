@@ -70,7 +70,10 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			String endState = FormatterUtils.getPartitionType(document,
 					endOffset, true);
 			if (startState == PHPPartitionTypes.PHP_QUOTED_STRING
-					|| endState == PHPPartitionTypes.PHP_QUOTED_STRING) {
+					|| endState == PHPPartitionTypes.PHP_QUOTED_STRING
+					|| (startState == PHPPartitionTypes.PHP_DEFAULT
+							&& endState == PHPPartitionTypes.PHP_DEFAULT && document
+							.getChar(endOffset - 1) == '\'')) {
 				if (endOffset < document.getLength()
 						&& startOffset == endOffset) {
 					char nextChar = document.getChar(endOffset);
