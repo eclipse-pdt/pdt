@@ -116,7 +116,7 @@ public abstract class AbstractSemanticHighlighting implements
 		return new Position[0];
 	}
 
-	private Program getProgram(IStructuredDocumentRegion region) {
+	protected Program getProgram(IStructuredDocumentRegion region) {
 
 		// resolve current sourceModule
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {

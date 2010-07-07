@@ -11,19 +11,32 @@ package org.eclipse.php.internal.ui.preferences;
  *     Zend Technologies - initial API and implementation
  *******************************************************************************/
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.ast.nodes.ASTParser;
+import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -34,6 +47,8 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
+import org.eclipse.php.internal.ui.editor.highlighters.*;
+import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -53,6 +68,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.ui.ISemanticHighlighting;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
@@ -90,6 +106,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	private Button fUnderline;
 	private final LineStyleProviderForPhp fStyleProvider;
 	private Button fEnabler;
+	private static Map<String, Position[]> highlightingPositionMap;
+	private static Map<String, HighlightingStyle> highlightingStyleMap;
 
 	public PHPSyntaxColoringPage() {
 		fStyleProvider = new LineStyleProviderForPhp();
@@ -179,8 +197,46 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 
 				fText.setStyleRange(element);
 			}
+
+			for (Iterator iterator = SemanticHighlightingManager.getInstance()
+					.getSemanticHighlightings().keySet().iterator(); iterator
+					.hasNext();) {
+				String type = (String) iterator.next();
+				ISemanticHighlighting highlighting = SemanticHighlightingManager
+						.getInstance().getSemanticHighlightings().get(type);
+				HighlightingStyle highlightingStyle = highlightingStyleMap
+						.get(type);
+				if (highlightingStyle.isEnabled()) {
+					Position[] positions = highlightingPositionMap.get(type);
+					if (positions != null) {
+						for (int i = 0; i < positions.length; i++) {
+							Position position = positions[i];
+							StyleRange styleRange = createStyleRange(
+									highlightingStyle.getTextAttribute(),
+									position);
+							fText.setStyleRange(styleRange);
+						}
+					}
+				}
+
+			}
 			documentRegion = documentRegion.getNext();
 		}
+	}
+
+	private StyleRange createStyleRange(TextAttribute attr, Position position) {
+		StyleRange result = new StyleRange(position.getOffset(), position
+				.getLength(), attr.getForeground(), attr.getBackground(), attr
+				.getStyle());
+		if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
+			result.underline = true;
+			result.fontStyle &= ~TextAttribute.UNDERLINE;
+		}
+		if ((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
+			result.strikeout = true;
+			result.fontStyle &= ~TextAttribute.STRIKETHROUGH;
+		}
+		return result;
 	}
 
 	Button createCheckbox(Composite parent, String label) {
@@ -350,6 +406,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 
 		fStylesViewer.setInput(getStylePreferenceKeys());
 
+		fOverlayStore.addPropertyChangeListener(fHighlightingChangeListener);
+		initHighlightingPositions();
+		initHighlightingStyles();
 		applyStyles();
 
 		fStylesViewer
@@ -388,8 +447,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 							getOverlayStore().setValue(
 									semanticHighlighting
 											.getColorPreferenceKey(), newValue);
-							// applyStyles();
-							// fText.redraw();
+							applyStyles();
+							fText.redraw();
 						}
 						return;
 					}
@@ -471,8 +530,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 						getOverlayStore().setValue(
 								semanticHighlighting.getBoldPreferenceKey(),
 								newValue);
-						// applyStyles();
-						// fText.redraw();
+						applyStyles();
+						fText.redraw();
 					}
 					return;
 				}
@@ -516,8 +575,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 						getOverlayStore().setValue(
 								semanticHighlightingType
 										.getItalicPreferenceKey(), newValue);
-						// applyStyles();
-						// fText.redraw();
+						applyStyles();
+						fText.redraw();
 					}
 					return;
 				}
@@ -562,8 +621,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 								semanticHighlighting
 										.getStrikethroughPreferenceKey(),
 								newValue);
-						// applyStyles();
-						// fText.redraw();
+						applyStyles();
+						fText.redraw();
 					}
 					return;
 				}
@@ -607,8 +666,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 						getOverlayStore().setValue(
 								semanticHighlighting
 										.getUnderlinePreferenceKey(), newValue);
-						// applyStyles();
-						// fText.redraw();
+						applyStyles();
+						fText.redraw();
 					}
 					return;
 				}
@@ -821,6 +880,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	@Override
 	public void dispose() {
 		if (fOverlayStore != null) {
+			fOverlayStore
+					.removePropertyChangeListener(fHighlightingChangeListener);
 			fOverlayStore.stop();
 		}
 		super.dispose();
@@ -925,6 +986,22 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		else if (offset < 0)
 			return getNamedStyleAtOffset(0);
 
+		if (highlightingPositionMap == null) {
+			initHighlightingPositions();
+		}
+
+		for (Iterator iterator = highlightingPositionMap.keySet().iterator(); iterator
+				.hasNext();) {
+			String type = (String) iterator.next();
+			Position[] positions = highlightingPositionMap.get(type);
+			for (int i = 0; i < positions.length; i++) {
+				if (offset >= positions[i].offset
+						&& offset < positions[i].offset + positions[i].length) {
+					return type;
+				}
+			}
+		}
+
 		IStructuredDocumentRegion documentRegion = fDocument
 				.getFirstStructuredDocumentRegion();
 		while (documentRegion != null && !documentRegion.containsOffset(offset)) {
@@ -967,6 +1044,281 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			return namedStyle;
 		}
 		return null;
+	}
+
+	protected void initHighlightingPositions() {
+		highlightingPositionMap = new HashMap<String, Position[]>();
+		IPath stateLocation = PHPUiPlugin.getDefault().getStateLocation();
+		IPath path = stateLocation.append("/_" + "PHPSyntax"); //$NON-NLS-1$
+		IFileStore fileStore = EFS.getLocalFileSystem().getStore(path);
+
+		NonExistingPHPFileEditorInput input = new NonExistingPHPFileEditorInput(
+				fileStore, "PHPSyntax");
+
+		File realFile = ((NonExistingPHPFileEditorInput) input).getPath(input)
+				.toFile();
+
+		try {
+			FileOutputStream fos = new FileOutputStream(realFile);
+			fos.write(fDocument.get().getBytes());
+			fos.close();
+			DLTKUIPlugin.getDocumentProvider().connect(input);
+			final ISourceModule sourceModule = DLTKUIPlugin
+					.getDocumentProvider().getWorkingCopy(input);
+			if (sourceModule != null) {
+				ASTParser parser = ASTParser.newParser(PHPVersion.PHP5_3,
+						sourceModule);
+				parser.setSource(fDocument.get().toCharArray());
+
+				final Program program = parser.createAST(null);
+				List<AbstractSemanticHighlighting> highlightings = new ArrayList<AbstractSemanticHighlighting>();
+
+				highlightings.add(new StaticFieldHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return StaticFieldHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new StaticMethodHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return StaticMethodHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new ConstantHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return ConstantHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new FieldHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return FieldHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new FunctionHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return FunctionHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new MethodHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return MethodHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new ClassHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return ClassHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new InternalClassHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return InternalClassHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new InternalFunctionHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return InternalFunctionHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new ParameterVariableHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return ParameterVariableHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new SuperGlobalHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return SuperGlobalHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new InternalConstantHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return InternalConstantHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new DeprecatedHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return DeprecatedHighlighting.class.getName();
+					}
+				});
+
+				for (Iterator iterator = highlightings.iterator(); iterator
+						.hasNext();) {
+					AbstractSemanticHighlighting abstractSemanticHighlighting = (AbstractSemanticHighlighting) iterator
+							.next();
+					Position[] positions = abstractSemanticHighlighting
+							.consumes(program);
+
+					if (positions != null && positions.length > 0) {
+						highlightingPositionMap
+								.put(abstractSemanticHighlighting
+										.getPreferenceKey(), positions);
+
+					}
+				}
+			}
+			DLTKUIPlugin.getDocumentProvider().disconnect(input);
+		} catch (CoreException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		realFile.delete();
 	}
 
 	private OverlayPreferenceStore getOverlayStore() {
@@ -1168,4 +1520,235 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		fBackgroundColorEditor.setEnabled(b);
 		fForegroundColorEditor.setEnabled(b);
 	}
+
+	private void initHighlightingStyles() {
+		highlightingStyleMap = new HashMap<String, PHPSyntaxColoringPage.HighlightingStyle>();
+		for (Iterator iterator = SemanticHighlightingManager.getInstance()
+				.getSemanticHighlightings().keySet().iterator(); iterator
+				.hasNext();) {
+			String type = (String) iterator.next();
+			ISemanticHighlighting highlighting = SemanticHighlightingManager
+					.getInstance().getSemanticHighlightings().get(type);
+			highlightingStyleMap.put(type,
+					createHighlightingStyle(highlighting));
+		}
+	}
+
+	/**
+	 * Creates a highlighting style based on the preferences defined in the
+	 * semantic highlighting
+	 * 
+	 * @param highlighting
+	 *            the semantic highlighting
+	 * @return a highlighting style based on the preferences of the semantic
+	 *         highlighting
+	 */
+	private HighlightingStyle createHighlightingStyle(
+			ISemanticHighlighting highlighting) {
+		IPreferenceStore store = highlighting.getPreferenceStore();
+		HighlightingStyle highlightingStyle = null;
+		if (store != null) {
+			TextAttribute attribute = null;
+			int style = getBoolean(store, highlighting.getBoldPreferenceKey()) ? SWT.BOLD
+					: SWT.NORMAL;
+
+			if (getBoolean(store, highlighting.getItalicPreferenceKey()))
+				style |= SWT.ITALIC;
+			if (getBoolean(store, highlighting.getStrikethroughPreferenceKey()))
+				style |= TextAttribute.STRIKETHROUGH;
+			if (getBoolean(store, highlighting.getUnderlinePreferenceKey()))
+				style |= TextAttribute.UNDERLINE;
+
+			String rgbString = getString(store, highlighting
+					.getColorPreferenceKey());
+			Color color = null;
+
+			if (rgbString != null)
+				color = EditorUtility.getColor(ColorHelper.toRGB(rgbString));
+			attribute = new TextAttribute(color, null, style);
+
+			boolean isEnabled = getBoolean(store, highlighting
+					.getEnabledPreferenceKey());
+			highlightingStyle = new HighlightingStyle(attribute, isEnabled);
+		}
+		return highlightingStyle;
+	}
+
+	/**
+	 * Looks up a boolean preference by <code>key</code> from the preference
+	 * store
+	 * 
+	 * @param store
+	 *            the preference store to lookup the preference from
+	 * @param key
+	 *            the key the preference is stored under
+	 * @return the preference value from the preference store iff key is not
+	 *         null
+	 */
+	private boolean getBoolean(IPreferenceStore store, String key) {
+		return (key == null) ? false : store.getBoolean(key);
+	}
+
+	/**
+	 * Looks up a String preference by <code>key</code> from the preference
+	 * store
+	 * 
+	 * @param store
+	 *            the preference store to lookup the preference from
+	 * @param key
+	 *            the key the preference is stored under
+	 * @return the preference value from the preference store iff key is not
+	 *         null
+	 */
+	private String getString(IPreferenceStore store, String key) {
+		return (key == null) ? null : store.getString(key);
+	}
+
+	/**
+	 * HighlightingStyle.
+	 */
+	static class HighlightingStyle {
+
+		/** Text attribute */
+		private TextAttribute fTextAttribute;
+		/** Enabled state */
+		private boolean fIsEnabled;
+
+		/**
+		 * Initialize with the given text attribute.
+		 * 
+		 * @param textAttribute
+		 *            The text attribute
+		 * @param isEnabled
+		 *            the enabled state
+		 */
+		public HighlightingStyle(TextAttribute textAttribute, boolean isEnabled) {
+			setTextAttribute(textAttribute);
+			setEnabled(isEnabled);
+		}
+
+		/**
+		 * @return Returns the text attribute.
+		 */
+		public TextAttribute getTextAttribute() {
+			return fTextAttribute;
+		}
+
+		/**
+		 * @param textAttribute
+		 *            The background to set.
+		 */
+		public void setTextAttribute(TextAttribute textAttribute) {
+			fTextAttribute = textAttribute;
+		}
+
+		/**
+		 * @return the enabled state
+		 */
+		public boolean isEnabled() {
+			return fIsEnabled;
+		}
+
+		/**
+		 * @param isEnabled
+		 *            the new enabled state
+		 */
+		public void setEnabled(boolean isEnabled) {
+			fIsEnabled = isEnabled;
+		}
+	}
+
+	private IPropertyChangeListener fHighlightingChangeListener = new IPropertyChangeListener() {
+
+		public void propertyChange(PropertyChangeEvent event) {
+			handleHighlightingPropertyChange(event);
+		}
+	};
+
+	/**
+	 * Handles property change events for individual semantic highlightings.
+	 * 
+	 * @param event
+	 */
+	private void handleHighlightingPropertyChange(PropertyChangeEvent event) {
+		String property = event.getProperty();
+		if (property == null)
+			return;
+		for (Iterator iterator = SemanticHighlightingManager.getInstance()
+				.getSemanticHighlightings().keySet().iterator(); iterator
+				.hasNext();) {
+			String type = (String) iterator.next();
+			ISemanticHighlighting highlighting = SemanticHighlightingManager
+					.getInstance().getSemanticHighlightings().get(type);
+			HighlightingStyle style = highlightingStyleMap.get(type);
+			if (property.equals(highlighting.getBoldPreferenceKey())) {
+				adaptToTextStyleChange(style, event, SWT.BOLD);
+			} else if (property.equals(highlighting.getColorPreferenceKey())) {
+				adaptToTextForegroundChange(style, event);
+			} else if (property.equals(highlighting.getEnabledPreferenceKey())) {
+				adaptToEnablementChange(style, event);
+			} else if (property.equals(highlighting.getItalicPreferenceKey())) {
+				adaptToTextStyleChange(style, event, SWT.ITALIC);
+			} else if (property.equals(highlighting
+					.getStrikethroughPreferenceKey())) {
+				adaptToTextStyleChange(style, event,
+						TextAttribute.STRIKETHROUGH);
+			} else if (property
+					.equals(highlighting.getUnderlinePreferenceKey())) {
+				adaptToTextStyleChange(style, event, TextAttribute.UNDERLINE);
+			}
+		}
+	}
+
+	private void adaptToEnablementChange(HighlightingStyle highlighting,
+			PropertyChangeEvent event) {
+		Object value = event.getNewValue();
+		boolean eventValue;
+		if (value instanceof Boolean)
+			eventValue = ((Boolean) value).booleanValue();
+		else if (IPreferenceStore.TRUE.equals(value))
+			eventValue = true;
+		else
+			eventValue = false;
+		highlighting.setEnabled(eventValue);
+	}
+
+	private void adaptToTextForegroundChange(HighlightingStyle highlighting,
+			PropertyChangeEvent event) {
+		RGB rgb = null;
+
+		Object value = event.getNewValue();
+		if (value instanceof RGB)
+			rgb = (RGB) value;
+		else if (value instanceof String)
+			rgb = ColorHelper.toRGB((String) value);
+
+		if (rgb != null) {
+			Color color = EditorUtility.getColor(rgb);
+			TextAttribute oldAttr = highlighting.getTextAttribute();
+			highlighting.setTextAttribute(new TextAttribute(color, oldAttr
+					.getBackground(), oldAttr.getStyle()));
+		}
+	}
+
+	private void adaptToTextStyleChange(HighlightingStyle highlighting,
+			PropertyChangeEvent event, int styleAttribute) {
+		boolean eventValue = false;
+		Object value = event.getNewValue();
+		if (value instanceof Boolean)
+			eventValue = ((Boolean) value).booleanValue();
+		else if (IPreferenceStore.TRUE.equals(value))
+			eventValue = true;
+
+		TextAttribute oldAttr = highlighting.getTextAttribute();
+		boolean activeValue = (oldAttr.getStyle() & styleAttribute) == styleAttribute;
+
+		if (activeValue != eventValue)
+			highlighting.setTextAttribute(new TextAttribute(oldAttr
+					.getForeground(), oldAttr.getBackground(),
+					eventValue ? oldAttr.getStyle() | styleAttribute : oldAttr
+							.getStyle()
+							& ~styleAttribute));
+	}
+
 }
