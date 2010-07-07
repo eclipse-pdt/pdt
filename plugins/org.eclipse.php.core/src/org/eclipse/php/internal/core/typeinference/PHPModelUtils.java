@@ -732,13 +732,13 @@ public class PHPModelUtils {
 				}
 			}
 		}
-		if (isAnonymousMethod(method)) {
+		if (isNestedAnonymousMethod(method)) {
 			getMethodFields((IMethod) method.getParent().getParent(), prefix,
 					exactName, elements, processedVars);
 		}
 	}
 
-	public static boolean isAnonymousMethod(final IMethod method) {
+	public static boolean isNestedAnonymousMethod(final IMethod method) {
 		return PHPCoreConstants.ANONYMOUS.equals(method.getElementName())
 				&& method.getParent() instanceof IField
 				&& method.getParent().getParent() instanceof IMethod;
