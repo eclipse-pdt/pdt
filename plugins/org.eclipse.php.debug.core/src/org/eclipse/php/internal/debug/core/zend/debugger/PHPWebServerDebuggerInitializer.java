@@ -55,7 +55,10 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry
 				.getBestMatchDebugParametersInitializer(launch);
 
-		((PHPLaunch) launch).pretendRunning(true);
+		if (launch instanceof PHPLaunch) {
+			((PHPLaunch) launch).pretendRunning(true);
+		}
+
 		boolean openInBrowser = false;
 		try {
 			openInBrowser = launch.getLaunchConfiguration().getAttribute(
@@ -67,7 +70,10 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		} else {
 			openUrlConnection(launch, parametersInitializer);
 		}
-		((PHPLaunch) launch).pretendRunning(false);
+
+		if (launch instanceof PHPLaunch) {
+			((PHPLaunch) launch).pretendRunning(false);
+		}
 	}
 
 	/**
@@ -132,8 +138,8 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 					IWorkbenchBrowserSupport browserSupport = PlatformUI
 							.getWorkbench().getBrowserSupport();
 					IWebBrowser browser = browserSupport.createBrowser(
-							browserStyle, "PDTDebuggerBrowser", browserTitle
-									.toString(), browserTitle.toString());
+							browserStyle, "PDTDebuggerBrowser",
+							browserTitle.toString(), browserTitle.toString());
 
 					if (PHPDebugPlugin.DEBUG) {
 						System.out.println("Opening URL in a browser: "
@@ -183,8 +189,8 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 						String key = k.nextElement();
 						String value = debugParameters.get(key);
 						getParams.append(URLEncoder.encode(key, URL_ENCODING))
-								.append('=').append(
-										URLEncoder.encode(value, URL_ENCODING));
+								.append('=')
+								.append(URLEncoder.encode(value, URL_ENCODING));
 						if (k.hasMoreElements()) {
 							getParams.append('&');
 						}
@@ -204,18 +210,19 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 							String key = k.nextElement();
 							String value = requestParameters.get(key);
 							getParams.append('&');
-							getParams.append(
-									URLEncoder.encode(key, URL_ENCODING))
-									.append('=').append(
-											URLEncoder.encode(value,
-													URL_ENCODING));
+							getParams
+									.append(URLEncoder
+											.encode(key, URL_ENCODING))
+									.append('=')
+									.append(URLEncoder.encode(value,
+											URL_ENCODING));
 						}
 					}
 				}
 
-				requestURL = new URL(requestURL.getProtocol(), requestURL
-						.getHost(), requestURL.getPort(), requestURL.getPath()
-						+ getParams.toString());
+				requestURL = new URL(requestURL.getProtocol(),
+						requestURL.getHost(), requestURL.getPort(),
+						requestURL.getPath() + getParams.toString());
 
 				// Open the connection:
 				if (PHPDebugPlugin.DEBUG) {
@@ -258,8 +265,8 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 						String key = k.nextElement();
 						String value = cookies.get(key);
 						cookieBuf.append(URLEncoder.encode(key, URL_ENCODING))
-								.append('=').append(
-										URLEncoder.encode(value, URL_ENCODING));
+								.append('=')
+								.append(URLEncoder.encode(value, URL_ENCODING));
 						if (k.hasMoreElements()) {
 							cookieBuf.append("; ");
 						}
@@ -268,8 +275,8 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 						System.out.println("Setting cookies: "
 								+ cookieBuf.toString());
 					}
-					urlConection.addRequestProperty("Cookie", cookieBuf
-							.toString());
+					urlConection.addRequestProperty("Cookie",
+							cookieBuf.toString());
 				}
 
 				DataOutputStream outputStream = new DataOutputStream(
@@ -285,11 +292,12 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 							while (k.hasMoreElements()) {
 								String key = k.nextElement();
 								String value = requestParameters.get(key);
-								postParams.append(
-										URLEncoder.encode(key, URL_ENCODING))
-										.append('=').append(
-												URLEncoder.encode(value,
-														URL_ENCODING));
+								postParams
+										.append(URLEncoder.encode(key,
+												URL_ENCODING))
+										.append('=')
+										.append(URLEncoder.encode(value,
+												URL_ENCODING));
 								if (k.hasMoreElements()) {
 									postParams.append('&');
 								}
@@ -311,9 +319,8 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 
 				String headerKey = urlConection.getHeaderFieldKey(1);
 				if (headerKey == null) {
-					Logger
-							.log(Logger.WARNING,
-									"No HeaderKey returned by server. Most likely not started");
+					Logger.log(Logger.WARNING,
+							"No HeaderKey returned by server. Most likely not started");
 					String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_1;
 					throw new DebugException(new Status(IStatus.ERROR,
 							PHPDebugPlugin.getID(),
@@ -356,9 +363,9 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 			Logger.logException(
 					"Unexpected exception communicating with Web server", e);
 			String errorMessage = e.getMessage();
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin
-					.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage,
-					e));
+			throw new DebugException(new Status(IStatus.ERROR,
+					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
+					errorMessage, e));
 		}
 	}
 }
