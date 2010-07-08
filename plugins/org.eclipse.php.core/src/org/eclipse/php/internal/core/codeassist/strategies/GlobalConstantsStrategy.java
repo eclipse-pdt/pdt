@@ -17,18 +17,17 @@ import java.util.List;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
-import org.eclipse.dltk.core.search.BasicSearchEngine;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
@@ -66,22 +65,14 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 		ISourceModule sourceModule = abstractContext.getSourceModule();
 
-		// find all constants in current class and global scope
 		IType enclosingType = null;
-
-		// check whether enclosing element is a method
 		try {
 			IModelElement enclosingElement = sourceModule
 					.getElementAt(abstractContext.getOffset());
 
-			// find the most outer enclosing type if exists
-			while (enclosingElement != null
-					&& !((enclosingElement instanceof IType) && (enclosingElement
-							.getParent() instanceof ISourceModule))) {
-				enclosingElement = enclosingElement.getParent();
-			}
-			if (enclosingElement instanceof IType)
+			if (enclosingElement != null && enclosingElement instanceof IType) {
 				enclosingType = (IType) enclosingElement;
+			}
 
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
@@ -89,13 +80,17 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 		IDLTKSearchScope scope = null;
 		IModelElement[] enclosingTypeConstants = null;
-		if (enclosingType != null) {
-			scope = BasicSearchEngine.createSearchScope(new IModelElement[] {
-					enclosingType.getScriptProject(), enclosingType },
-					DLTKLanguageManager.getLanguageToolkit(enclosingType));
+
+		if (enclosingType != null
+				&& isStartOfStatement(prefix, abstractContext, abstractContext
+						.getOffset())) {
+			// See the case of testClassStatement1.pdtt and
+			// testClassStatement2.pdtt
+			scope = SearchEngine.createSearchScope(enclosingType);
 		} else {
 			scope = getSearchScope(abstractContext);
 		}
+
 		enclosingTypeConstants = PhpModelAccess.getDefault().findFields(prefix,
 				matchRule, Modifiers.AccConstant, 0, scope, null);
 
@@ -111,6 +106,25 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			reporter.reportField((IField) constant, "", replaceRange, false);
 		}
 
+	}
+
+	private boolean isStartOfStatement(String prefix,
+			AbstractCompletionContext abstractContext, int offset) {
+		IDocument doc = abstractContext.getDocument();
+		try {
+			int pos = offset - prefix.length() - 1;
+			char previousChar = doc.getChar(pos);
+
+			while (Character.isWhitespace(previousChar)) {
+				pos--;
+				previousChar = doc.getChar(pos);
+			}
+
+			return previousChar == '{' || previousChar == ';';
+		} catch (BadLocationException e) {
+		}
+
+		return false;
 	}
 
 	private IModelElement[] filterClassConstants(IModelElement[] elements) {
@@ -131,20 +145,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 	private IDLTKSearchScope getSearchScope(
 			AbstractCompletionContext abstractContext) {
-
-		IDLTKSearchScope scope = null;
-		IType enclosingType = null;
-
-		if (abstractContext instanceof GlobalMethodStatementContext) {
-			GlobalMethodStatementContext globalMethodStatementContext = (GlobalMethodStatementContext) abstractContext;
-			enclosingType = globalMethodStatementContext.getEnclosingType();
-		}
-
-		if (enclosingType != null) {
-			scope = SearchEngine.createSearchScope(enclosingType);
-		} else {
-			scope = createSearchScope();
-		}
+		IDLTKSearchScope scope = createSearchScope();
 		return scope;
 	}
 

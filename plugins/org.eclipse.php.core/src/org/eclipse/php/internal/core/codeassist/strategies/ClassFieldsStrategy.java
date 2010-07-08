@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
+import org.eclipse.php.internal.core.codeassist.contexts.ClassStaticMemberContext;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
@@ -64,10 +66,26 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 			try {
 				ITypeHierarchy hierarchy = getCompanion()
 						.getSuperTypeHierarchy(type, null);
+				IField[] fields = null;
 
-				IField[] fields = PHPModelUtils.getTypeHierarchyField(type,
-						hierarchy, prefix,
-						requestor.isContextInformationMode(), null);
+				if (concreteContext instanceof ClassStaticMemberContext
+						&& concreteContext.getTriggerType() == Trigger.CLASS
+						&& ((ClassStaticMemberContext) concreteContext)
+								.isParent()) {
+					List<IField> superTypes = new ArrayList<IField>();
+					for (IType currType : hierarchy.getAllSupertypes(type)) {
+						superTypes.addAll(Arrays.asList(PHPModelUtils
+								.getTypeField(currType, prefix, requestor
+										.isContextInformationMode())));
+					}
+
+					fields = new IField[superTypes.size()];
+					fields = superTypes.toArray(fields);
+				} else {
+					fields = PHPModelUtils.getTypeHierarchyField(type,
+							hierarchy, prefix, requestor
+									.isContextInformationMode(), null);
+				}
 
 				for (IField field : removeOverriddenElements(Arrays
 						.asList(fields))) {
