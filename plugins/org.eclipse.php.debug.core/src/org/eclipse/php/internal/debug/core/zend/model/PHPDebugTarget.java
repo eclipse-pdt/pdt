@@ -30,10 +30,7 @@ import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.model.*;
-import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
-import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
-import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
-import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.pathmapper.*;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
@@ -428,8 +425,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		} catch (DebugException e) {
 			// PHPprocess doesn't throw this exception
 		}
-		Logger
-				.debugMSG("PHPDebugTarget: Calling removeBreakpointListener(this);");
+		Logger.debugMSG("PHPDebugTarget: Calling removeBreakpointListener(this);");
 		DebugPlugin.getDefault().getBreakpointManager()
 				.removeBreakpointListener(this);
 		DebugPlugin.getDefault().getBreakpointManager()
@@ -500,9 +496,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		((PHPThread) getThreads()[0]).setStepping(false);
 		fStatus = debugger.go(fGoResponseHandler);
 		if (!fStatus) {
-			Logger
-					.log(Logger.ERROR,
-							"PHPDebugTarget: debugger.go return false");
+			Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.go return false");
 		}
 	}
 
@@ -593,9 +587,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 							this);
 
 					runtimeBreakpoint.setFileName(fileName);
-					Logger
-							.debugMSG("PHPDebugTarget: Setting Breakpoint - File "
-									+ fileName + " Line Number " + lineNumber);
+					Logger.debugMSG("PHPDebugTarget: Setting Breakpoint - File "
+							+ fileName + " Line Number " + lineNumber);
 					debugger.addBreakpoint(bp.getRuntimeBreakpoint(),
 							fBreakpointAddedResponseHandler);
 				}
@@ -626,9 +619,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 			fStatus = debugger.removeBreakpoint(runtimeBreakpoint,
 					fBreakpointRemovedResponseHandler);
 			if (!fStatus && debugger.isActive()) {
-				Logger
-						.log(Logger.ERROR,
-								"PHPDebugTarget: debugger.removeBreakpoint return false");
+				Logger.log(Logger.ERROR,
+						"PHPDebugTarget: debugger.removeBreakpoint return false");
 			}
 		}
 	}
@@ -874,8 +866,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	protected IBreakpoint findBreakpoint(String fileName, int lineNumber) {
 		// determine which breakpoint was hit, and set the thread's breakpoint
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
-				.getBreakpointManager().getBreakpoints(
-						IPHPDebugConstants.ID_PHP_DEBUG_CORE);
+				.getBreakpointManager()
+				.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		for (IBreakpoint breakpoint : breakpoints) {
 			if (supportsBreakpoint(breakpoint)) {
 				if (breakpoint instanceof PHPLineBreakpoint) {
@@ -1089,8 +1081,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 									Type.WORKSPACE, resource.getParent());
 						} else if (new File(debugFileName).exists()) {
 							pathEntry = new PathEntry(debugFileName,
-									Type.EXTERNAL, new File(debugFileName)
-											.getParentFile());
+									Type.EXTERNAL,
+									new File(debugFileName).getParentFile());
 						}
 					}
 					if (pathEntry != null) {
@@ -1113,8 +1105,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 					try {
 						ILaunchConfigurationWorkingCopy wc = launchConfiguration
 								.getWorkingCopy();
-						wc.getAttribute(IPHPDebugConstants.PHP_Project, project
-								.getName());
+						wc.getAttribute(IPHPDebugConstants.PHP_Project,
+								project.getName());
 						wc.doSave();
 					} catch (CoreException e) {
 						PHPDebugPlugin.log(e);
@@ -1139,5 +1131,12 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 
 	public boolean supportsStepFilters() {
 		return isStepFiltersEnabled;
+	}
+
+	/**
+	 * always return false, this concept is xdebug specific.
+	 */
+	public boolean isWaiting() {
+		return false;
 	}
 }

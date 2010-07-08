@@ -88,6 +88,8 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 
 	private PathMapper pathMapper;
 
+	// need to have something in case a target is terminated before
+	// a session is initiated to stop a NPE in the debug view	
 	private DebugOutput debugOutput = new DebugOutput();
 
 	/**
@@ -384,12 +386,12 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 			// launch, but it doesn't matter.
 			target.waitForInitialSession(bpFacade, sessionPreferences, null);
 			if (!target.isTerminated()) {
+				addDebugTarget(target);
+				launch.addDebugTarget(target);
 				if (targetState == STATE_INIT_SESSION_WAIT) {
 					targetState = STATE_STARTED;
 					te.signalEvent();
 				}
-				debugTargets.add(target);
-				launch.addDebugTarget(target);
 			}
 		}
 		return true;
@@ -397,6 +399,11 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 
 	public void addDebugTarget(DBGpTarget target) {
 		synchronized (debugTargets) {
+			if (debugTargets.size() == 0) {
+				// this is the first target, so clear out any old debug output
+				// and set up new information.
+				debugOutput = new DebugOutput();
+			}
 			debugTargets.add(target);
 		}
 	}
@@ -492,5 +499,16 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 
 	public DebugOutput getOutputBuffer() {
 		return debugOutput;
+	}
+
+	public boolean isWaiting() {
+		boolean isWaiting = (targetState == STATE_INIT_SESSION_WAIT);
+		synchronized (debugTargets) {
+			for (int i = 0; i < debugTargets.size() && !isWaiting; i++) {
+				IPHPDebugTarget target = debugTargets.get(i);
+				isWaiting = isWaiting | target.isWaiting();
+			}
+		}
+		return isWaiting;
 	}
 }

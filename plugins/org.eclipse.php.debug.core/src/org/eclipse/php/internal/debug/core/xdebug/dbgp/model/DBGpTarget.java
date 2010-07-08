@@ -140,6 +140,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	private PathMapper pathMapper = null;
 
+	// need to have something in case a target is terminated before
+	// a session is initiated to stop a NPE in the debug view
 	private DebugOutput debugOutput = new DebugOutput();
 
 	/**
@@ -406,6 +408,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		stackFrames = null;
 		currentVariables = null;
 		superGlobalVars = null;
+		// clear any previous debug output object and create a new one.
+		debugOutput = new DebugOutput();
+
 		session.startSession();
 
 		// we are effectively suspended once the session has handshaked until we
@@ -1952,8 +1957,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 */
 	public void breakpointManagerEnablementChanged(boolean enabled) {
 		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
-				.getBreakpointManager().getBreakpoints(
-						bpFacade.getBreakpointModelID());
+				.getBreakpointManager()
+				.getBreakpoints(bpFacade.getBreakpointModelID());
 		for (int i = 0; i < breakpoints.length; i++) {
 			if (supportsBreakpoint(breakpoints[i])) {
 				if (enabled) {
@@ -1995,8 +2000,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 					DBGpBreakpointCmd entry = (DBGpBreakpointCmd) DBGpCmdQueue
 							.get(i);
 					if (entry.getCmd().equals(DBGpCommand.breakPointSet)) {
-						if (bpCmd.getBp().getFileName().equals(
-								entry.getBp().getFileName())
+						if (bpCmd.getBp().getFileName()
+								.equals(entry.getBp().getFileName())
 								&& bpCmd.getBp().getLineNumber() == entry
 										.getBp().getLineNumber()) {
 
@@ -2319,5 +2324,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			DBGpLogger.logException("unexpected encoding problem", this, e); //$NON-NLS-1$
 		}
 		return result;
+	}
+
+	public boolean isWaiting() {
+		// cannot say isWaiting for init_session_wait because that means the
+		// DebugOutput is null and that causes a null pointer exception.
+		boolean isWaiting = (STATE_STARTED_SESSION_WAIT == targetState);
+		return isWaiting;
 	}
 }

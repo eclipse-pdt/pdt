@@ -19,7 +19,6 @@ import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
-import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
@@ -33,7 +32,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	private String fileName; // workspace file relative to project, null if not
 								// in workspace
 	private int lineNo; // line within the file of this stack frame
-	private String name = ""; // string to display in debugger for this stack frame //$NON-NLS-1$
+	private String function = ""; // string to display in debugger for this stack frame //$NON-NLS-1$
 
 	// private IVariable[] variables; // variables exposed to this stack frame
 
@@ -58,18 +57,18 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 				.getAttribute(stackData, "filename")); //$NON-NLS-1$
 		qualifiedFile = ((DBGpTarget) getDebugTarget())
 				.mapToWorkspaceFileIfRequired(qualifiedFile);
+		function = DBGpResponse.getAttribute(stackData, "where");
 		// check to see if the file exists in the workspace
 		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot()
 				.findFilesForLocation(new Path(qualifiedFile));
-		// lineno
-		String whereAndLine = DBGpResponse.getAttribute(stackData, "where") + " : " + PHPDebugCoreMessages.XDebug_DBGpStackFrame_0 + " " + lineNo; //$NON-NLS-1$ //$NON-NLS-2$ 
 		if (fileFound.length > 0) {
 			IFile file = fileFound[0];
-			fileName = file.getProjectRelativePath().toString();
-			name = fileName + "." + whereAndLine;
+			// get the file found in workspace and show project/file
+			fileName = file.getProject().toString() + "/"
+					+ file.getProjectRelativePath().toString();
 		} else {
-			fileName = null;
-			name = qualifiedFile + "." + whereAndLine;
+			// file not found just show the fully qualified name.
+			fileName = qualifiedFile;
 		}
 	}
 
@@ -108,7 +107,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getName()
 	 */
 	public String getName() throws DebugException {
-		return name;
+		return function;
 	}
 
 	/*
@@ -339,7 +338,8 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 				// another line number to get the stack variables.
 				boolean isEqual = sf.getQualifiedFile().equals(
 						getQualifiedFile())
-						&& sf.stackLevel.equals(stackLevel);
+						&& sf.stackLevel.equals(stackLevel)
+						&& (sf.owningThread == owningThread);
 				return isEqual;
 			} catch (Exception e) {
 			}
@@ -353,7 +353,8 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return getQualifiedFile().hashCode() + stackLevel.hashCode();
+		return getQualifiedFile().hashCode() + stackLevel.hashCode()
+				+ owningThread.hashCode();
 	}
 
 	public String getQualifiedFile() {
