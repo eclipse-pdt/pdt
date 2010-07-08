@@ -1596,7 +1596,13 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			IResource file = ResourcesPlugin.getWorkspace().getRoot()
 					.findMember(new Path(mappedFile));
 			if (file != null) {
-				mappedFile = file.getRawLocation().toString();
+				// changed as RSE resources return null for RawLocation.
+				IPath t = file.getRawLocation();
+				if (t != null) {
+					mappedFile = t.toString();
+				} else {
+					mappedFile = file.getFullPath().toOSString();
+				}
 			}
 			if (DBGpLogger.debugResp()) {
 				String mapMsg = "mapped inbound file '" + decodedFile + "' to '" + mappedFile + "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

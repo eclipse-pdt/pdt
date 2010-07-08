@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.debug.core.xdebug.breakpoints;
 
 import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
@@ -83,7 +84,13 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 		} else {
 
 			// a file in the workspace, handles included projects
-			fileName = (resource.getRawLocation()).toOSString();
+			// changed as RSE resources return null for RawLocation.
+			IPath t = resource.getRawLocation();
+			if (t != null) {
+				fileName = t.toOSString();
+			} else {
+				fileName = resource.getFullPath().toOSString();
+			}
 			if (resource instanceof IFile) {
 				workspaceFile = (IFile) resource;
 			}
