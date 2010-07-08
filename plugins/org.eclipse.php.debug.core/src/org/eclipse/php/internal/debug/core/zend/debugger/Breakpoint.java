@@ -100,6 +100,12 @@ public class Breakpoint implements Cloneable {
 	}
 
 	public void setFileName(String newFileName) {
+		// ensure we can never set the filename to null
+		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=312951
+		if (newFileName == null) {
+			newFileName = "";
+		}
+
 		if (fileName.equals(newFileName)) {
 			return;
 		}
@@ -252,9 +258,7 @@ public class Breakpoint implements Cloneable {
 			Iterator i = listeners.iterator();
 			while (i.hasNext()) {
 				BreakpointListener curr = (BreakpointListener) i.next();
-				curr
-						.breakpointChanged(breakpoint, property, oldValue,
-								newValue);
+				curr.breakpointChanged(breakpoint, property, oldValue, newValue);
 			}
 		}
 	}
