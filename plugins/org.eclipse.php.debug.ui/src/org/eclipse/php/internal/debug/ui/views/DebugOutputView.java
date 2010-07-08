@@ -162,7 +162,8 @@ public class DebugOutputView extends AbstractDebugView implements
 				.createNewStructuredDocument();
 		Object input = dd;
 		if (fTarget != null) {
-			if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
+			if ((fTarget.isSuspended()) || (fTarget.isTerminated()) || 
+				(fTarget.isWaiting())) {
 				DebugOutput outputBuffer = fTarget.getOutputBuffer();
 				fUpdateCount = outputBuffer.getUpdateCount();
 

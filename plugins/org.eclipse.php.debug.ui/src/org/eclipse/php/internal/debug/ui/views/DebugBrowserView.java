@@ -84,8 +84,7 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener {
 		} catch (SWTError error) {
 			swtBrowser = null;
 			Label label = new Label(container, SWT.WRAP);
-			label
-					.setText(PHPDebugUIMessages.DebugBrowserView_swtBrowserNotAvailable0);
+			label.setText(PHPDebugUIMessages.DebugBrowserView_swtBrowserNotAvailable0);
 			label.setLayoutData(gridData);
 		}
 
@@ -127,8 +126,8 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener {
 			fPartListener = new DebugViewPartListener();
 			getSite().getPage().addPartListener(fPartListener);
 		}
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.BROWSER_OUTPUT_VIEW);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.BROWSER_OUTPUT_VIEW);
 	}
 
 	/*
@@ -175,7 +174,8 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener {
 
 			DebugOutput debugOutput = null;
 			if (fTarget != null) {
-				if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
+				if ((fTarget.isSuspended()) || (fTarget.isTerminated())
+						|| fTarget.isWaiting()) {
 					debugOutput = fTarget.getOutputBuffer();
 					fUpdateCount = debugOutput.getUpdateCount();
 
