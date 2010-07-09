@@ -309,7 +309,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	 * @since 3.3
 	 */
 	private Object fTextDragAndDropToken;
-	
+
 	/**
 	 * we use this for updating the code folding listeners and other things
 	 */
@@ -2242,11 +2242,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	@Override
 	public void createPartControl(final Composite parent) {
 		super.createPartControl(parent);
-		//workaround for code folding
+		// workaround for code folding
 		if (isFoldingEnabled()) {
 			installProjectionSupport();
 		}
-		//end
+		// end
 		if (isMarkingOccurrences())
 			installOccurrencesFinder(true);
 
@@ -2761,7 +2761,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	 */
 	private ListenerList fReconcilingListeners = new ListenerList(
 			ListenerList.IDENTITY);
-
 
 	public void addReconcileListener(
 			IPhpScriptReconcilingListener reconcileListener) {
