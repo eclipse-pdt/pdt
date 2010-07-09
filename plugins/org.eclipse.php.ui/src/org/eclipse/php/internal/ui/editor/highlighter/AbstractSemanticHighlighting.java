@@ -21,7 +21,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Position;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.model.TemporaryModelCache;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingStyle;
@@ -36,10 +35,6 @@ import org.eclipse.wst.sse.ui.ISemanticHighlighting;
 @SuppressWarnings("restriction")
 public abstract class AbstractSemanticHighlighting implements
 		ISemanticHighlighting, Comparable<AbstractSemanticHighlighting> {
-
-	private static Program program = null;
-
-	private static TemporaryModelCache modelCache = null;
 
 	private ISourceModule sourceModule = null;
 
@@ -63,10 +58,6 @@ public abstract class AbstractSemanticHighlighting implements
 			throw new IllegalStateException("Source module cannot be null");
 		}
 		return sourceModule;
-	}
-
-	protected TemporaryModelCache getModelCache() {
-		return modelCache;
 	}
 
 	protected AbstractSemanticHighlighting highlight(ISourceRange range) {
@@ -93,12 +84,6 @@ public abstract class AbstractSemanticHighlighting implements
 
 	public Position[] consumes(Program program) {
 		if (program != null) {
-			if (modelCache == null
-					|| AbstractSemanticHighlighting.program != program) {
-				modelCache = new TemporaryModelCache(program.getSourceModule());
-				AbstractSemanticHighlighting.program = program;
-			}
-
 			list = new ArrayList<Position>();
 			AbstractSemanticApply apply = getSemanticApply();
 			sourceModule = program.getSourceModule();

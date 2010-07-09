@@ -15,7 +15,7 @@ import java.util.Collection;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.model.TemporaryModelCache;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 import org.eclipse.php.internal.ui.editor.highlighter.ModelUtils;
@@ -51,13 +51,17 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 			if (classConst.getName() instanceof Identifier) {
 				String className = ((Identifier) classConst.getName())
 						.getName();
-				Collection<IType> types = getModelCache().getTypes(className,
-						null);
-				if (types != null) {
-					for (IType type : types) {
-						if (ModelUtils.isDeprecated(type)) {
-							highlight(classConst);
-							break;
+				IModelAccessCache cache = classConst.getAST()
+						.getBindingResolver().getModelAccessCache();
+				if (cache != null) {
+					Collection<IType> types = cache.getTypes(getSourceModule(),
+							className, null, null);
+					if (types != null) {
+						for (IType type : types) {
+							if (ModelUtils.isDeprecated(type)) {
+								highlight(classConst);
+								break;
+							}
 						}
 					}
 				}
@@ -83,9 +87,11 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 		public boolean visit(FunctionInvocation funcInv) {
 			if (!(funcInv.getParent() instanceof MethodInvocation)) {
-				TemporaryModelCache cache = getModelCache();
+				IModelAccessCache cache = funcInv.getAST().getBindingResolver()
+						.getModelAccessCache();
 				if (cache != null) {
 					Collection<IMethod> functions = cache.getGlobalFunctions(
+							getSourceModule(),
 							ModelUtils.getFunctionName(funcInv
 									.getFunctionName()), null);
 					if (functions != null) {
