@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 
-public interface ITemporaryModelCache {
+public interface IModelAccessCache {
 
 	public abstract ITypeHierarchy getSuperTypeHierarchy(IType type,
 			IProgressMonitor monitor) throws ModelException;
@@ -45,6 +45,13 @@ public interface ITemporaryModelCache {
 	 */
 	public abstract Collection<IType> getInterfaces(ISourceModule sourceModule,
 			String typeName, String namespaceName, IProgressMonitor monitor)
+			throws ModelException;
+
+	/**
+	 * Returns cached interfaces for the given name
+	 */
+	public abstract Collection<IType> getNamespaces(ISourceModule sourceModule,
+			String namespaceName, IProgressMonitor monitor)
 			throws ModelException;
 
 	/**
