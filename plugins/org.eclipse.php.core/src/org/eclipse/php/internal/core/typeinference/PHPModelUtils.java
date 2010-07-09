@@ -508,6 +508,31 @@ public class PHPModelUtils {
 	public static IField[] getFields(String fieldName,
 			ISourceModule sourceModule, int offset, IProgressMonitor monitor)
 			throws ModelException {
+		return getFields(fieldName, sourceModule, offset, null, monitor);
+	}
+
+	/**
+	 * This method returns field corresponding to its name and the file where it
+	 * was referenced. The field name may contain also the namespace part, like:
+	 * A\B\C or \A\B\C
+	 * 
+	 * @param fieldName
+	 *            Tye fully qualified field name
+	 * @param sourceModule
+	 *            The file where the element is referenced
+	 * @param offset
+	 *            The offset where the element is referenced
+	 * @param cache
+	 *            Model access cache if available
+	 * @param monitor
+	 *            Progress monitor
+	 * @return a list of relevant IField elements, or <code>null</code> in case
+	 *         there's no IField found
+	 * @throws ModelException
+	 */
+	public static IField[] getFields(String fieldName,
+			ISourceModule sourceModule, int offset, IModelAccessCache cache,
+			IProgressMonitor monitor) throws ModelException {
 		if (fieldName == null || fieldName.length() == 0) {
 			return PhpModelAccess.NULL_FIELDS;
 		}
@@ -519,7 +544,7 @@ public class PHPModelUtils {
 			if (namespace != null) {
 				if (namespace.length() > 0) {
 					IField[] fields = getNamespaceField(namespace, fieldName,
-							true, sourceModule, monitor);
+							true, sourceModule, cache, monitor);
 					if (fields.length > 0) {
 						return fields;
 					}
@@ -533,7 +558,7 @@ public class PHPModelUtils {
 				if (currentNamespace != null) {
 					namespace = currentNamespace.getElementName();
 					IField[] fields = getNamespaceField(namespace, fieldName,
-							true, sourceModule, monitor);
+							true, sourceModule, cache, monitor);
 					if (fields.length > 0) {
 						return fields;
 					}
@@ -590,6 +615,32 @@ public class PHPModelUtils {
 	public static IMethod[] getFunctions(String functionName,
 			ISourceModule sourceModule, int offset, IProgressMonitor monitor)
 			throws ModelException {
+		return getFunctions(functionName, sourceModule, offset, null, monitor);
+	}
+
+	/**
+	 * This method returns function corresponding to its name and the file where
+	 * it was referenced. The function name may contain also the namespace part,
+	 * like: A\B\foo() or \A\B\foo()
+	 * 
+	 * @param functionName
+	 *            The fully qualified function name
+	 * @param sourceModule
+	 *            The file where the element is referenced
+	 * @param offset
+	 *            The offset where the element is referenced
+	 * @param cache
+	 *            Temporary model cache instance
+	 * @param monitor
+	 *            Progress monitor
+	 * @return a list of relevant IMethod elements, or <code>null</code> in case
+	 *         there's no IMethod found
+	 * @throws ModelException
+	 */
+	public static IMethod[] getFunctions(String functionName,
+			ISourceModule sourceModule, int offset, IModelAccessCache cache,
+			IProgressMonitor monitor) throws ModelException {
+
 		if (functionName == null || functionName.length() == 0) {
 			return PhpModelAccess.NULL_METHODS;
 		}
@@ -599,7 +650,7 @@ public class PHPModelUtils {
 		if (namespace != null) {
 			if (namespace.length() > 0) {
 				IMethod[] functions = getNamespaceFunction(namespace,
-						functionName, true, sourceModule, monitor);
+						functionName, true, sourceModule, cache, monitor);
 				if (functions.length > 0) {
 					return functions;
 				}
@@ -612,24 +663,31 @@ public class PHPModelUtils {
 			if (currentNamespace != null) {
 				namespace = currentNamespace.getElementName();
 				IMethod[] functions = getNamespaceFunction(namespace,
-						functionName, true, sourceModule, monitor);
+						functionName, true, sourceModule, cache, monitor);
 				if (functions.length > 0) {
 					return functions;
 				}
 				// For functions and constants, PHP will fall back to global
 				// functions or constants if a namespaced function or constant
 				// does not exist:
-				IDLTKSearchScope scope = SearchEngine
-						.createSearchScope(sourceModule.getScriptProject());
-				functions = PhpModelAccess.getDefault().findMethods(
-						functionName, MatchRule.EXACT, Modifiers.AccGlobal, 0,
-						scope, null);
-
-				Collection<IMethod> filteredElements = filterElements(
-						sourceModule, Arrays.asList(functions));
-				return (IMethod[]) filteredElements
-						.toArray(new IMethod[filteredElements.size()]);
+				return getGlobalFunctions(sourceModule, functionName, cache,
+						monitor);
 			}
+		}
+		return getGlobalFunctions(sourceModule, functionName, cache, monitor);
+	};
+
+	private static IMethod[] getGlobalFunctions(ISourceModule sourceModule,
+			String functionName, IModelAccessCache cache,
+			IProgressMonitor monitor) {
+
+		if (cache != null) {
+			Collection<IMethod> functions = cache.getGlobalFunctions(
+					sourceModule, functionName, monitor);
+			if (functions == null) {
+				return PhpModelAccess.NULL_METHODS;
+			}
+			return (IMethod[]) functions.toArray(new IMethod[functions.size()]);
 		}
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
@@ -637,12 +695,11 @@ public class PHPModelUtils {
 		IMethod[] functions = PhpModelAccess.getDefault().findMethods(
 				functionName, MatchRule.EXACT, Modifiers.AccGlobal, 0, scope,
 				null);
-
 		Collection<IMethod> filteredElements = filterElements(sourceModule,
-				Arrays.asList(functions == null ? new IMethod[0] : functions));
+				Arrays.asList(functions));
 		return (IMethod[]) filteredElements
 				.toArray(new IMethod[filteredElements.size()]);
-	};
+	}
 
 	/**
 	 * This method searches for all fields that where declared in the specified
@@ -827,13 +884,36 @@ public class PHPModelUtils {
 	public static IField[] getNamespaceField(String namespace, String prefix,
 			boolean exactName, ISourceModule sourceModule,
 			IProgressMonitor monitor) throws ModelException {
+		return getNamespaceField(namespace, prefix, exactName, sourceModule,
+				null, monitor);
+	}
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
-				.getScriptProject());
-		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
-				namespace, MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope,
+	/**
+	 * This method returns field declared unders specified namespace
+	 * 
+	 * @param namespace
+	 *            Namespace name
+	 * @param prefix
+	 *            Field name or prefix
+	 * @param exactName
+	 *            Whether the name is exact or it is prefix
+	 * @param sourceModule
+	 *            Source module where the field is referenced
+	 * @param cache
+	 *            Model access cache if available
+	 * @param monitor
+	 *            Progress monitor
+	 * @return field declarated in the specified namespace, or null if there is
+	 *         none
+	 * @throws ModelException
+	 */
+	public static IField[] getNamespaceField(String namespace, String prefix,
+			boolean exactName, ISourceModule sourceModule,
+			IModelAccessCache cache, IProgressMonitor monitor)
+			throws ModelException {
+
+		IType[] namespaces = getNamespaces(sourceModule, namespace, cache,
 				monitor);
-
 		List<IField> result = new LinkedList<IField>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeField(ns, prefix,
@@ -860,13 +940,34 @@ public class PHPModelUtils {
 	public static IMethod[] getNamespaceFunction(String namespace,
 			String prefix, boolean exactName, ISourceModule sourceModule,
 			IProgressMonitor monitor) throws ModelException {
+		return getNamespaceFunction(namespace, prefix, exactName, sourceModule,
+				null, monitor);
+	}
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
-				.getScriptProject());
-		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
-				namespace, MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope,
+	/**
+	 * This method returns method declared unders specified namespace
+	 * 
+	 * @param namespace
+	 *            Namespace name
+	 * @param prefix
+	 *            Function name or prefix
+	 * @param exactName
+	 *            Whether the type name is exact or it is prefix
+	 * @param sourceModule
+	 *            Source module where the function is referenced
+	 * @param cache
+	 *            Model access cache if available
+	 * @param monitor
+	 *            Progress monitor
+	 * @throws ModelException
+	 */
+	public static IMethod[] getNamespaceFunction(String namespace,
+			String prefix, boolean exactName, ISourceModule sourceModule,
+			IModelAccessCache cache, IProgressMonitor monitor)
+			throws ModelException {
+
+		IType[] namespaces = getNamespaces(sourceModule, namespace, cache,
 				monitor);
-
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType ns : namespaces) {
 			result.addAll(Arrays.asList(PHPModelUtils.getTypeMethod(ns, prefix,
@@ -885,18 +986,41 @@ public class PHPModelUtils {
 	 *            Source module where the element is referenced
 	 * @param offset
 	 *            The offset in file where the element is referenced
+	 * @param monitor
 	 * @return model elements of found namespace, otherwise <code>null</code>
 	 *         (global namespace)
+	 * @throws ModelException
 	 */
 	public static IType[] getNamespaceOf(String elementName,
-			ISourceModule sourceModule, int offset) {
+			ISourceModule sourceModule, int offset, IProgressMonitor monitor)
+			throws ModelException {
+		return getNamespaceOf(elementName, sourceModule, offset, null, monitor);
+	}
+
+	/**
+	 * Guess the namespace where the specified element is declared.
+	 * 
+	 * @param elementName
+	 *            The name of the element, like: \A\B, A\B, namespace\B, \B,
+	 *            etc...
+	 * @param sourceModule
+	 *            Source module where the element is referenced
+	 * @param offset
+	 *            The offset in file where the element is referenced
+	 * @param cache
+	 *            Model access cache if available
+	 * @param monitor
+	 * @return model elements of found namespace, otherwise <code>null</code>
+	 *         (global namespace)
+	 * @throws ModelException
+	 */
+	public static IType[] getNamespaceOf(String elementName,
+			ISourceModule sourceModule, int offset, IModelAccessCache cache,
+			IProgressMonitor monitor) throws ModelException {
 		String namespace = extractNamespaceName(elementName, sourceModule,
 				offset);
 		if (namespace != null && namespace.length() > 0) {
-			IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(sourceModule.getScriptProject());
-			return PhpModelAccess.getDefault().findTypes(null, namespace,
-					MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, null);
+			return getNamespaces(sourceModule, namespace, cache, monitor);
 		}
 		return PhpModelAccess.NULL_TYPES;
 	}
@@ -921,21 +1045,61 @@ public class PHPModelUtils {
 	public static IType[] getNamespaceType(String namespace, String prefix,
 			boolean exactName, ISourceModule sourceModule,
 			IProgressMonitor monitor) throws ModelException {
+		return getNamespaceType(namespace, prefix, exactName, sourceModule,
+				monitor);
+	}
 
+	/**
+	 * This method returns type declared unders specified namespace
+	 * 
+	 * @param namespace
+	 *            Namespace name
+	 * @param prefix
+	 *            Type name or prefix
+	 * @param exactName
+	 *            Whether the type name is exact or it is prefix
+	 * @param sourceModule
+	 *            Source module where the type is referenced
+	 * @param cache
+	 *            Model access cache if available
+	 * @param monitor
+	 *            Progress monitor
+	 * @return type declarated in the specified namespace, or null if there is
+	 *         none
+	 * @throws ModelException
+	 */
+	public static IType[] getNamespaceType(String namespace, String prefix,
+			boolean exactName, ISourceModule sourceModule,
+			IModelAccessCache cache, IProgressMonitor monitor)
+			throws ModelException {
+
+		IType[] namespaces = getNamespaces(sourceModule, namespace, cache,
+				monitor);
+		List<IType> result = new LinkedList<IType>();
+		for (IType ns : namespaces) {
+			result.addAll(Arrays.asList(PHPModelUtils.getTypeType(ns, prefix,
+					exactName)));
+		}
+		return (IType[]) result.toArray(new IType[result.size()]);
+	}
+
+	private static IType[] getNamespaces(ISourceModule sourceModule,
+			String namespaceName, IModelAccessCache cache,
+			IProgressMonitor monitor) throws ModelException {
+		if (cache != null) {
+			Collection<IType> namespaces = cache.getNamespaces(sourceModule,
+					namespaceName, monitor);
+			if (namespaces == null) {
+				return PhpModelAccess.NULL_TYPES;
+			}
+			return (IType[]) namespaces.toArray(new IType[namespaces.size()]);
+		}
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
 		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
-				namespace, MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope,
-				monitor);
-
-		List<IType> result = new LinkedList<IType>();
-		if (namespaces != null) {
-			for (IType ns : namespaces) {
-				result.addAll(Arrays.asList(PHPModelUtils.getTypeType(ns,
-						prefix, exactName)));
-			}
-		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+				namespaceName, MatchRule.EXACT, Modifiers.AccNameSpace, 0,
+				scope, monitor);
+		return namespaces;
 	}
 
 	public static TypeDeclaration getNodeByClass(ModuleDeclaration rootNode,
@@ -1367,6 +1531,31 @@ public class PHPModelUtils {
 	 */
 	public static IType[] getTypes(String typeName, ISourceModule sourceModule,
 			int offset, IProgressMonitor monitor) throws ModelException {
+		return getTypes(typeName, sourceModule, offset, null, monitor);
+	}
+
+	/**
+	 * This method returns type corresponding to its name and the file where it
+	 * was referenced. The type name may contain also the namespace part, like:
+	 * A\B\C or \A\B\C
+	 * 
+	 * @param typeName
+	 *            Tye fully qualified type name
+	 * @param sourceModule
+	 *            The file where the element is referenced
+	 * @param offset
+	 *            The offset where the element is referenced
+	 * @param cache
+	 *            Model access cache if available
+	 * @param monitor
+	 *            Progress monitor
+	 * @return a list of relevant IType elements, or <code>null</code> in case
+	 *         there's no IType found
+	 * @throws ModelException
+	 */
+	public static IType[] getTypes(String typeName, ISourceModule sourceModule,
+			int offset, IModelAccessCache cache, IProgressMonitor monitor)
+			throws ModelException {
 
 		if (typeName == null || typeName.length() == 0) {
 			return PhpModelAccess.NULL_TYPES;
@@ -1377,7 +1566,7 @@ public class PHPModelUtils {
 		if (namespace != null) {
 			if (namespace.length() > 0) {
 				IType[] types = getNamespaceType(namespace, typeName, true,
-						sourceModule, monitor);
+						sourceModule, cache, monitor);
 				if (types.length > 0) {
 					return types;
 				}
@@ -1390,32 +1579,33 @@ public class PHPModelUtils {
 			if (currentNamespace != null) {
 				namespace = currentNamespace.getElementName();
 				IType[] types = getNamespaceType(namespace, typeName, true,
-						sourceModule, monitor);
+						sourceModule, cache, monitor);
 				if (types.length > 0) {
 					return types;
 				}
 			}
 		}
 
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
-				.getScriptProject());
-		IType[] types = PhpModelAccess.getDefault().findTypes(typeName,
-				MatchRule.EXACT, 0, 0, scope, null);
-		if (types == null) {
-			return PhpModelAccess.NULL_TYPES;
+		Collection<IType> types;
+		if (cache == null) {
+			IDLTKSearchScope scope = SearchEngine
+					.createSearchScope(sourceModule.getScriptProject());
+			IType[] r = PhpModelAccess.getDefault().findTypes(typeName,
+					MatchRule.EXACT, 0, 0, scope, null);
+			types = filterElements(sourceModule, Arrays.asList(r));
+		} else {
+			types = cache.getTypes(sourceModule, typeName, null, monitor);
+			if (types == null) {
+				return PhpModelAccess.NULL_TYPES;
+			}
 		}
-
-		List<IType> result = new ArrayList<IType>(types.length);
+		List<IType> result = new ArrayList<IType>(types.size());
 		for (IType type : types) {
 			if (getCurrentNamespace(type) == null) {
 				result.add(type);
 			}
 		}
-
-		Collection<IType> filteredElements = filterElements(sourceModule,
-				result);
-		return (IType[]) filteredElements.toArray(new IType[filteredElements
-				.size()]);
+		return (IType[]) result.toArray(new IType[result.size()]);
 	}
 
 	/**
@@ -1517,7 +1707,7 @@ public class PHPModelUtils {
 	 * @throws ModelException
 	 */
 	public static IMethod[] getUnimplementedMethods(IType type,
-			ITemporaryModelCache cache, IProgressMonitor monitor)
+			IModelAccessCache cache, IProgressMonitor monitor)
 			throws ModelException {
 
 		HashMap<String, IMethod> abstractMethods = new HashMap<String, IMethod>();
@@ -1538,7 +1728,7 @@ public class PHPModelUtils {
 	private static void internalGetUnimplementedMethods(IType type,
 			HashSet<String> nonAbstractMethods,
 			HashMap<String, IMethod> abstractMethods,
-			Set<String> processedTypes, ITemporaryModelCache cache,
+			Set<String> processedTypes, IModelAccessCache cache,
 			IProgressMonitor monitor) throws ModelException {
 
 		int typeFlags = type.getFlags();

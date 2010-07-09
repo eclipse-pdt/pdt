@@ -40,7 +40,7 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 		if (types == null) {
 			try {
 				methods.addAll(Arrays.asList(PHPModelUtils.getFunctions(
-						methodName, sourceModule, 0, null)));
+						methodName, sourceModule, 0, null, null)));
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();

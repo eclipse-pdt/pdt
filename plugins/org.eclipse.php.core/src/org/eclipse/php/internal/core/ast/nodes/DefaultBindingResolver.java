@@ -22,7 +22,9 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.BindingUtility;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 /**
@@ -75,6 +77,11 @@ public class DefaultBindingResolver extends BindingResolver {
 	private BindingUtility bindingUtil;
 
 	/**
+	 * Model access cache
+	 */
+	private PerFileModelAccessCache modelAccessCache;
+
+	/**
 	 * @param sourceModule
 	 *            of this resolver
 	 */
@@ -84,6 +91,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		this.workingCopyOwner = owner;
 		this.bindingUtil = new BindingUtility(this.sourceModule);
 		this.bindingTables = new BindingTables();
+		this.modelAccessCache = new PerFileModelAccessCache(sourceModule);
 	}
 
 	private ITypeBinding internalGetTypeBinding(IEvaluatedType type,
@@ -228,7 +236,8 @@ public class DefaultBindingResolver extends BindingResolver {
 	public IModelElement[] getModelElements(int offset, int length,
 			boolean filter) {
 		try {
-			return bindingUtil.getModelElement(offset, length, filter);
+			return bindingUtil.getModelElement(offset, length, filter,
+					getModelAccessCache());
 		} catch (ModelException e) {
 			Logger.log(IStatus.ERROR, e.toString());
 			return null;
@@ -380,7 +389,8 @@ public class DefaultBindingResolver extends BindingResolver {
 		IModelElement[] modelElements;
 		try {
 			modelElements = this.bindingUtil.getModelElement(fieldDeclaration
-					.getStart(), fieldDeclaration.getLength());
+					.getStart(), fieldDeclaration.getLength(),
+					getModelAccessCache());
 		} catch (ModelException e) {
 			Logger.log(IStatus.ERROR, e.toString());
 			return null;
@@ -658,7 +668,8 @@ public class DefaultBindingResolver extends BindingResolver {
 		IModelElement[] modelElements;
 		try {
 			modelElements = this.bindingUtil.getModelElement(type.getName()
-					.getStart(), type.getName().getLength());
+					.getStart(), type.getName().getLength(),
+					getModelAccessCache());
 		} catch (ModelException e) {
 			Logger.log(IStatus.ERROR, e.toString());
 			return null;
@@ -837,4 +848,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		}
 	}
 
+	public IModelAccessCache getModelAccessCache() {
+		return modelAccessCache;
+	}
 }

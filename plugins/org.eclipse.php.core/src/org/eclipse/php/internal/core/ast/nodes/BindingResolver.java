@@ -17,6 +17,7 @@ import org.eclipse.dltk.internal.compiler.lookup.BlockScope;
 import org.eclipse.dltk.internal.compiler.lookup.LookupEnvironment;
 import org.eclipse.dltk.internal.compiler.lookup.SourceModuleScope;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 
 /**
  * A binding resolver is an internal mechanism for figuring out the binding for
@@ -29,7 +30,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
  * 
  * @see AST#getBindingResolver
  */
-class BindingResolver {
+public class BindingResolver {
 
 	/**
 	 * Creates a binding resolver.
@@ -878,5 +879,12 @@ class BindingResolver {
 	 */
 	void updateKey(org.eclipse.dltk.ast.ASTNode node, ASTNode newNode) {
 		// default implementation: do nothing
+	}
+
+	/**
+	 * Returns model access cache for this binding resolver
+	 */
+	public IModelAccessCache getModelAccessCache() {
+		return null;
 	}
 }

@@ -107,8 +107,25 @@ public class PHPTypeInferenceUtils {
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType,
 			ISourceModuleContext context) {
-		return PHPTypeInferenceUtils
-				.getModelElements(evaluatedType, context, 0);
+		return PHPTypeInferenceUtils.getModelElements(evaluatedType, context,
+				0, null);
+	}
+
+	/**
+	 * Converts IEvaluatedType to IType, if found. This method filters elements
+	 * using file network dependencies.
+	 * 
+	 * @param evaluatedType
+	 *            Evaluated type
+	 * @param context
+	 * @param cache
+	 * @return model elements or <code>null</code> in case no element could be
+	 *         found
+	 */
+	public static IType[] getModelElements(IEvaluatedType evaluatedType,
+			ISourceModuleContext context, IModelAccessCache cache) {
+		return PHPTypeInferenceUtils.getModelElements(evaluatedType, context,
+				0, cache);
 	}
 
 	/**
@@ -124,12 +141,29 @@ public class PHPTypeInferenceUtils {
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType,
 			ISourceModuleContext context, int offset) {
-		return internalGetModelElements(evaluatedType, context, offset);
+		return internalGetModelElements(evaluatedType, context, offset, null);
+	}
+
+	/**
+	 * Converts IEvaluatedType to IType, if found. This method filters elements
+	 * using file network dependencies.
+	 * 
+	 * @param evaluatedType
+	 *            Evaluated type
+	 * @param context
+	 * @param offset
+	 * @param cache
+	 * @return model elements or <code>null</code> in case no element could be
+	 *         found
+	 */
+	public static IType[] getModelElements(IEvaluatedType evaluatedType,
+			ISourceModuleContext context, int offset, IModelAccessCache cache) {
+		return internalGetModelElements(evaluatedType, context, offset, cache);
 	}
 
 	private static IType[] internalGetModelElements(
 			IEvaluatedType evaluatedType, ISourceModuleContext context,
-			int offset) {
+			int offset, IModelAccessCache cache) {
 		ISourceModule sourceModule = context.getSourceModule();
 
 		if (evaluatedType instanceof ModelClassType) {
@@ -158,7 +192,7 @@ public class PHPTypeInferenceUtils {
 			} else {
 				try {
 					return PHPModelUtils.getTypes(evaluatedType.getTypeName(),
-							sourceModule, offset, null);
+							sourceModule, offset, cache, null);
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG) {
 						e.printStackTrace();
@@ -171,7 +205,7 @@ public class PHPTypeInferenceUtils {
 					.getPossibleTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
 				IType[] tmpArray = internalGetModelElements(possibleType,
-						context, offset);
+						context, offset, cache);
 				if (tmpArray != null) {
 					tmpList.addAll(Arrays.asList(tmpArray));
 				}

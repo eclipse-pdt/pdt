@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -84,7 +82,14 @@ public class NamespaceMemberContext extends StatementContext {
 		String nsName = statementText.subSequence(nsNameStart, elementStart)
 				.toString();
 
-		namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule, offset);
+		try {
+			namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule,
+					offset, null, null);
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
 		return true;
 	}
 

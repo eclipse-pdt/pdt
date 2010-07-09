@@ -17,14 +17,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class TypeBinding implements ITypeBinding {
@@ -431,15 +429,26 @@ public class TypeBinding implements ITypeBinding {
 				List<IType> typeList = new ArrayList<IType>();
 				List<IModelElement> elementList = Arrays.asList(elements);
 				for (String superTypeName : superTypeNames) {
-					IType[] types = PhpModelAccess.getDefault().findTypes(
-							superTypeName, MatchRule.EXACT, 0,
-							Modifiers.AccNameSpace, scope, null);
-					for (IType type : types) {
-						if (!elementList.contains(type)) {
-							typeList.add(type);
+					try {
+						ISourceModule sourceModule = (ISourceModule) elements[0]
+								.getAncestor(IModelElement.SOURCE_MODULE);
+						Collection<IType> types = resolver
+								.getModelAccessCache()
+								.getClassesOrInterfaces(
+										sourceModule,
+										superTypeName, null, null);
+						if (types != null) {
+							for (IType type : types) {
+								if (!elementList.contains(type)) {
+									typeList.add(type);
+								}
+							}
+						}
+					} catch (ModelException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
 						}
 					}
-					// typeList.addAll(Arrays.asList(types));
 				}
 				if (typeList.size() > 0) {
 					superTypes = typeList.toArray(new IType[typeList.size()]);

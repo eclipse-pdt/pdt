@@ -214,7 +214,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								.getFullyQualifiedName()
 								: callName.getName();
 						IMethod[] functions = PHPModelUtils.getFunctions(
-								methodName, sourceModule, offset, null);
+								methodName, sourceModule, offset, null, null);
 						return functions == null ? EMPTY : functions;
 					}
 				}
@@ -306,7 +306,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					String name = ((NamespaceReference) node).getName();
 					IType[] namespace = PHPModelUtils.getNamespaceOf(name
 							+ NamespaceReference.NAMESPACE_SEPARATOR,
-							sourceModule, offset);
+							sourceModule, offset, null, null);
 					return namespace == null ? EMPTY : namespace;
 				}
 				// Class/Interface reference:
@@ -315,7 +315,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							.getFullyQualifiedName()
 							: ((TypeReference) node).getName();
 					IType[] types = PHPModelUtils.getTypes(name, sourceModule,
-							offset, null);
+							offset, null, null);
 					if (types == null || types.length == 0) {
 						// This can be a constant or namespace in PHP 5.3:
 						IDLTKSearchScope scope = SearchEngine
@@ -326,7 +326,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								0, scope, null);
 						if (types == null || types.length == 0) {
 							return PHPModelUtils.getFields(name, sourceModule,
-									offset, null);
+									offset, null, null);
 						}
 					}
 					return types;
@@ -340,7 +340,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								.getFullyQualifiedName()
 								: ((SimpleReference) className).getName();
 						return getConstructorsIfAny(extractClasses(PHPModelUtils
-								.getTypes(name, sourceModule, offset, null)));
+								.getTypes(name, sourceModule, offset, null,
+										null)));
 					}
 				}
 				// Class name in declaration
@@ -461,7 +462,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						if (NEW.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
 							return getConstructorsIfAny(extractClasses(PHPModelUtils
 									.getTypes(elementName, sourceModule,
-											offset, null)));
+											offset, null, null)));
 						}
 
 						// Handle extends and implements:
@@ -562,7 +563,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
 							return PHPModelUtils.getTypes(elementName,
-									sourceModule, offset, null);
+									sourceModule, offset, null, null);
 						}
 						if (NS_SEPARATOR.equals(nextWord)) { //$NON-NLS-1$
 							IDLTKSearchScope scope = SearchEngine
@@ -591,7 +592,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 										.size()]);
 							}
 							return PHPModelUtils.getFunctions(elementName,
-									sourceModule, offset, null);
+									sourceModule, offset, null, null);
 						}
 
 						if (types != null && types.length > 0) {
@@ -629,14 +630,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// This can be only global constant, if we've reached
 						// here:
 						IField[] fields = PHPModelUtils.getFields(elementName,
-								sourceModule, offset, null);
+								sourceModule, offset, null, null);
 						if (fields != null && fields.length > 0) {
 							return fields;
 						}
 
 						// Return class if nothing else found.
 						return PHPModelUtils.getTypes(elementName,
-								sourceModule, offset, null);
+								sourceModule, offset, null, null);
 					}
 				}
 			}
@@ -653,14 +654,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		if (EXTENDS.equalsIgnoreCase(generalization)) {
 			if (isClassDeclaration) {
 				return extractClasses(PHPModelUtils.getTypes(elementName,
-						sourceModule, offset, null));
+						sourceModule, offset, null, null));
 			}
 			return extractInterfaces(PHPModelUtils.getTypes(elementName,
-					sourceModule, offset, null));
+					sourceModule, offset, null, null));
 		}
 		if (IMPLEMENTS.equalsIgnoreCase(generalization)) { //$NON-NLS-1$ //$NON-NLS-2$
 			return extractInterfaces(PHPModelUtils.getTypes(elementName,
-					sourceModule, offset, null));
+					sourceModule, offset, null, null));
 		}
 		return null;
 	}
@@ -762,7 +763,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-		return PHPModelUtils.getFields(prefix, sourceModule, offset, null);
+		return PHPModelUtils
+				.getFields(prefix, sourceModule, offset, null, null);
 	}
 
 	private class SourceFieldComparator implements Comparator<IModelElement> {

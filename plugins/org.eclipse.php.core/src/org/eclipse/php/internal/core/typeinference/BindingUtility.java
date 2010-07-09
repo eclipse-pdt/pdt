@@ -255,6 +255,30 @@ public class BindingUtility {
 
 	/**
 	 * This method returns model elements for the expression under the given
+	 * offset and length, and will filter the results using the file-network.
+	 * This method uses cached evaluated type from previous evaluations (if
+	 * exists).
+	 * 
+	 * @param startOffset
+	 *            Starting offset of the expression.
+	 * @param length
+	 *            Length of the expression.
+	 * @param cache
+	 *            Model access cache if available
+	 * @return model element or <code>null</code> in case it couldn't be found
+	 * @throws ModelException
+	 * 
+	 * @throws IllegalArgumentException
+	 *             in case if context cannot be found for the given node.
+	 * @see #getModelElement(int, int, boolean)
+	 */
+	public IModelElement[] getModelElement(int startOffset, int length,
+			IModelAccessCache cache) throws ModelException {
+		return getModelElement(startOffset, length, true, cache);
+	}
+
+	/**
+	 * This method returns model elements for the expression under the given
 	 * offset and length. This method uses cached evaluated type from previous
 	 * evaluations (if exists).
 	 * 
@@ -275,8 +299,38 @@ public class BindingUtility {
 		return getModelElement(new SourceRange(startOffset, length), filter);
 	}
 
+	/**
+	 * This method returns model elements for the expression under the given
+	 * offset and length. This method uses cached evaluated type from previous
+	 * evaluations (if exists).
+	 * 
+	 * @param startOffset
+	 *            Starting offset of the expression.
+	 * @param length
+	 *            Length of the expression.
+	 * @param filter
+	 *            Filter the results using the 'File-Network'.
+	 * @param cache
+	 *            Model access cache if available
+	 * @return model element or <code>null</code> in case it couldn't be found
+	 * @throws ModelException
+	 * 
+	 * @throws IllegalArgumentException
+	 *             in case if context cannot be found for the given node.
+	 */
+	public IModelElement[] getModelElement(int startOffset, int length,
+			boolean filter, IModelAccessCache cache) throws ModelException {
+		return getModelElement(new SourceRange(startOffset, length), filter,
+				cache);
+	}
+
 	protected IModelElement[] getModelElement(SourceRange sourceRange,
 			boolean filter) throws ModelException {
+		return getModelElement(sourceRange, filter, null);
+	}
+
+	protected IModelElement[] getModelElement(SourceRange sourceRange,
+			boolean filter, IModelAccessCache cache) throws ModelException {
 		ContextFinder contextFinder = getContext(sourceRange);
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
 			evaluatedTypesCache.put(sourceRange, getType(sourceRange,
@@ -285,7 +339,7 @@ public class BindingUtility {
 		IEvaluatedType evaluatedType = evaluatedTypesCache.get(sourceRange);
 		return PHPTypeInferenceUtils.getModelElements(evaluatedType,
 				(ISourceModuleContext) contextFinder.getContext(), sourceRange
-						.getOffset());
+						.getOffset(), cache);
 	}
 
 	/**
