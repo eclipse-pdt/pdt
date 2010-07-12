@@ -63,7 +63,11 @@ public class DBGpContainerValue extends DBGpValue {
 		String numChildStr = DBGpResponse.getAttribute(property, "numchildren"); //$NON-NLS-1$
 		numChild = 0;
 		if (numChildStr != null && numChildStr.trim().length() != 0) {
-			numChild = Integer.parseInt(numChildStr);
+			try {
+				numChild = Integer.parseInt(numChildStr);
+			} catch (NumberFormatException nfe) {
+				// do nothing
+			}
 		}
 		String pageStr = null;
 		String pageSizeStr = null;
@@ -72,12 +76,20 @@ public class DBGpContainerValue extends DBGpValue {
 		// TODO: currently getMaxChildren returns 0, may need to look into this.
 		pageSize = ((DBGpTarget) getDebugTarget()).getMaxChildren();
 		if (pageSizeStr != null && pageSizeStr.trim().length() != 0) {
-			pageSize = Integer.parseInt(pageSizeStr);
+			try {
+				pageSize = Integer.parseInt(pageSizeStr);
+			} catch (NumberFormatException nfe) {
+				// do nothing
+			}
 		}
 
 		page = -1;
 		if (pageStr != null && pageStr.trim().length() != 0) {
-			page = Integer.parseInt(pageStr);
+			try {
+				page = Integer.parseInt(pageStr);
+			} catch (NumberFormatException nfe) {
+				// do nothing
+			}
 		}
 		if (page == -1 && numChild > pageSize) {
 			// Assume the xdebug defect and set page = 0 to force container
@@ -90,7 +102,12 @@ public class DBGpContainerValue extends DBGpValue {
 		// String recursiveStr = DBGpResponse.getAttribute(property,
 		// "recursive");
 
-		if (page == -1 || getOwner() instanceof DBGpContainerVariable) {
+		// xdebug in 2.1 now outputs the page and pagesize attribute even if
+		// there is only a single page, ie page will never be -1 now. in
+		// xdebug 2.0.5, page will only be -1 if numChild <= pagesize, so we
+		// check for that (instead of page == -1) now which provides the
+		// required behaviour of no [x..y] type format.
+		if (numChild <= pageSize || getOwner() instanceof DBGpContainerVariable) {
 			// we have a full set of entries or we have a complete subset within
 			// a ContainerVariable
 			// create a standard child entries that show the variables and their
