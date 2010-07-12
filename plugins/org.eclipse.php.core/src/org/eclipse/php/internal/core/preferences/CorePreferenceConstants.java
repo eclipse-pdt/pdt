@@ -50,7 +50,7 @@ public class CorePreferenceConstants {
 		node.put(PHPCoreConstants.WORKSPACE_LOCALE, ULocale.getDefault()
 				.toString());
 		node.putBoolean(PHPCoreConstants.CODEASSIST_ADDIMPORT, true);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, false);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS,
 				true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
