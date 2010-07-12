@@ -28,7 +28,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.actions.PHPExplorerActionGroup;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -76,11 +75,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 
 	@Override
 	protected ScriptExplorerActionGroup getActionGroup() {
-		/*
-		 * setting our own PDT action group, based on DLTK's ScriptExplorer
-		 * action-group, but also adding "include path" actions
-		 */
-		return new PHPExplorerActionGroup(this);
+		return new PHPProjectOutlineActionGroup(this);
 	}
 
 	/*
