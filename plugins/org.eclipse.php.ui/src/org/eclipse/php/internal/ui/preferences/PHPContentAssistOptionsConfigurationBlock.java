@@ -35,6 +35,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 	protected Button insertSingleproposalsCheckBox;
 	protected Button showVariableFromOtherFilesCheckBox;
 	protected Button insertFullyQualifiedNameForNamespaceCheckBox;
+	protected Button fInsertParameterNamesRadioButton;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent, PHPUIMessages
@@ -80,6 +81,12 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 						.getString("CodeAssistPreferencePage_insertFullyQualifiedNameForNamespace"),
 				PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
 				0);
+
+		fInsertParameterNamesRadioButton = addCheckBox(
+				composite,
+				PHPUIMessages
+						.getString("CodeAssistPreferencePage_fillParameterNamesOnMethodCompletion"),
+				PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, 0);
 	}
 
 	protected void initializeValues() {

@@ -15,12 +15,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
@@ -157,7 +160,11 @@ public final class ParameterGuessingProposal extends
 	}
 
 	public String getReplacementString() {
-		if (!fReplacementStringComputed)
+		boolean fileArgumentNames = Platform.getPreferencesService()
+				.getBoolean(PHPCorePlugin.ID,
+						PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true,
+						null);
+		if (fileArgumentNames && !fReplacementStringComputed)
 			setReplacementString(computeReplacementString());
 		return super.getReplacementString();
 	}
