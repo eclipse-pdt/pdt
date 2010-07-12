@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -75,7 +74,7 @@ public class DebugOutputView extends AbstractDebugView implements
 		getSite().setSelectionProvider(fSourceViewer.getSelectionProvider());
 
 		terminateListener = new IDebugEventSetListener() {
-			PHPDebugTarget target;
+			IPHPDebugTarget target;
 
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
@@ -83,11 +82,11 @@ public class DebugOutputView extends AbstractDebugView implements
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
 
-						if (!(obj instanceof PHPDebugTarget))
+						if (!(obj instanceof IPHPDebugTarget))
 							continue;
 
 						if (events[i].getKind() == DebugEvent.TERMINATE) {
-							target = (PHPDebugTarget) obj;
+							target = (IPHPDebugTarget) obj;
 							Job job = new UIJob("debug output") {
 								public IStatus runInUIThread(
 										IProgressMonitor monitor) {
@@ -162,8 +161,8 @@ public class DebugOutputView extends AbstractDebugView implements
 				.createNewStructuredDocument();
 		Object input = dd;
 		if (fTarget != null) {
-			if ((fTarget.isSuspended()) || (fTarget.isTerminated()) || 
-				(fTarget.isWaiting())) {
+			if ((fTarget.isSuspended()) || (fTarget.isTerminated())
+					|| (fTarget.isWaiting())) {
 				DebugOutput outputBuffer = fTarget.getOutputBuffer();
 				fUpdateCount = outputBuffer.getUpdateCount();
 
