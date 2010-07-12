@@ -16,6 +16,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -36,8 +38,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						.trim().length() == 0;
 	}
 
-	private int getIndentationBaseLine(final IStructuredDocument document,
-			final int lineNumber, final int offset) throws BadLocationException {
+	public static int getIndentationBaseLine(
+			final IStructuredDocument document, final int lineNumber,
+			final int offset, boolean checkMultiLine)
+			throws BadLocationException {
 		int currLineIndex = lineNumber;
 		while (currLineIndex >= 0) {
 			final IRegion lineInfo = document.getLineInformation(currLineIndex);
@@ -49,7 +53,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			final int currLineEndOffset = lineInfo.getOffset()
 					+ lineInfo.getLength();
 			final boolean isIndentationBase = isIndentationBase(document, Math
-					.min(offset, currLineEndOffset), offset);
+					.min(offset, currLineEndOffset), offset, currLineIndex,
+					checkMultiLine);
 			if (isIndentationBase)
 				return currLineIndex;
 			currLineIndex--;
@@ -114,8 +119,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return null;
 	}
 
-	private boolean isIndentationBase(final IStructuredDocument document,
-			final int checkedOffset, final int forOffset)
+	private static boolean isIndentationBase(
+			final IStructuredDocument document, final int checkedOffset,
+			final int forOffset, int currLineIndex, boolean checkMultiLine)
 			throws BadLocationException {
 		final IRegion lineInfo = document
 				.getLineInformationOfOffset(checkedOffset);
@@ -143,7 +149,11 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				document, forOffset);
 
 		if (shouldNotConsiderAsIndentationBase(checkedLineBeginState,
-				forLineEndState))
+				forLineEndState)
+				|| checkMultiLine
+				&& isInMultiLineStatement(document, checkedLineBeginState,
+						checkedLineEndState, checkedOffset, lineStart,
+						currLineIndex))
 			return false;
 
 		// Fix bug #201688
@@ -194,7 +204,55 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				|| forLineEndState == checkedLineBeginState;
 	}
 
-	boolean lineShouldInedent(final String beginState, final String endState) {
+	private static boolean isInMultiLineStatement(IStructuredDocument document,
+			String checkedLineBeginState, String checkedLineEndState,
+			int checkedOffset, int lineStart, int currLineIndex) {
+		// TODO if in phpdoc or php miltiline,return false;
+		try {
+			char[] line = document.get(lineStart,
+					document.getLineLength(currLineIndex)).toCharArray();
+			for (int i = 0; i < line.length; i++) {
+				char c = line[i];
+				if (Character.isWhitespace(c)) {
+				} else {
+					// move line start to first non blank char
+					lineStart += i + 1;
+					break;
+				}
+			}
+		} catch (BadLocationException e) {
+		}
+
+		TextSequence textSequence = PHPTextSequenceUtilities
+				.getStatement(lineStart, document
+						.getRegionAtCharacterOffset(lineStart), true);
+		if (textSequence != null
+				&& isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(
+						document, textSequence.getOriginalOffset(0)))
+				&& document.getLineOfOffset(textSequence.getOriginalOffset(0)) < currLineIndex) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * a statement spanning multi line starts with a region of type
+	 * regionType,the lines'(except 1st) indentation are same as/based on 1st
+	 * line,then this this method return true,else return false.
+	 * 
+	 * @param regionType
+	 * @return
+	 */
+	private static boolean isRegionTypeAllowedMultiline(String regionType) {
+		// TODO maybe there are other type need to be added
+		return regionType != null
+				&& !PHPRegionTypes.PHPDOC_COMMENT_START.equals(regionType)
+				&& !PHPRegionTypes.PHP_CASE.equals(regionType);
+	}
+
+	public static boolean lineShouldInedent(final String beginState,
+			final String endState) {
 		return beginState == PHPPartitionTypes.PHP_DEFAULT
 				|| endState == PHPPartitionTypes.PHP_DEFAULT;
 	}
@@ -203,11 +261,15 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			final StringBuffer result, final int lineNumber, final int forOffset)
 			throws BadLocationException {
 		final int lastNonEmptyLineIndex = getIndentationBaseLine(document,
-				lineNumber, forOffset);
+				lineNumber, forOffset, false);
+		final int indentationBaseLineIndex = getIndentationBaseLine(document,
+				lineNumber, forOffset, true);
 		final IRegion lastNonEmptyLine = document
 				.getLineInformation(lastNonEmptyLineIndex);
+		final IRegion indentationBaseLine = document
+				.getLineInformation(indentationBaseLineIndex);
 		final String blanks = FormatterUtils.getLineBlanks(document,
-				lastNonEmptyLine);
+				indentationBaseLine);
 		result.append(blanks);
 
 		final int lastLineEndOffset = lastNonEmptyLine.getOffset()
@@ -280,8 +342,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return false;
 	}
 
-	boolean shouldNotConsiderAsIndentationBase(final String currentState,
-			final String forState) {
+	public static boolean shouldNotConsiderAsIndentationBase(
+			final String currentState, final String forState) {
 		return currentState != forState
 				&& (currentState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT
 						|| currentState == PHPPartitionTypes.PHP_DOC || currentState == PHPPartitionTypes.PHP_QUOTED_STRING);

@@ -26,8 +26,15 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 	public void placeMatchingBlanks(IStructuredDocument document,
 			StringBuffer result, int lineNumber, int forOffset)
 			throws BadLocationException {
-		final IRegion indentationBaseLine = getCurlyOpenLineInformation(
-				document, forOffset);
+		final IRegion curlyOpenLine = getCurlyOpenLineInformation(document,
+				forOffset);
+
+		int indentationBaseLineIndex = DefaultIndentationStrategy
+				.getIndentationBaseLine(document, document
+						.getLineOfOffset(curlyOpenLine.getOffset()), forOffset,
+						true);
+		final IRegion indentationBaseLine = document
+				.getLineInformation(indentationBaseLineIndex);
 		String blanks = "";
 		if (indentationBaseLine != null) {
 			blanks = FormatterUtils

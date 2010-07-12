@@ -26,6 +26,47 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 public class FormatterUtils {
 	private static PHPStructuredTextPartitioner partitioner = new PHPStructuredTextPartitioner();
 
+	public static String getRegionType(IStructuredDocument document, int offset) {
+		try {
+			IStructuredDocumentRegion sdRegion = document
+					.getRegionAtCharacterOffset(offset);
+			if (sdRegion == null) {
+				return null;
+			}
+
+			ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			if (tRegion == null && offset == document.getLength()) {
+				offset -= 1;
+				tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			}
+			// in case the cursor on the beginning of '?>' tag
+			// we decrease the offset to get the PhpScriptRegion
+			if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
+				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
+			}
+
+			int regionStart = sdRegion.getStartOffset(tRegion);
+
+			// in case of container we have the extract the PhpScriptRegion
+			if (tRegion != null && tRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) tRegion;
+				tRegion = container.getRegionAtCharacterOffset(offset);
+				regionStart += tRegion.getStart();
+			}
+
+			if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
+				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+				int regionOffset = offset - regionStart;
+				ITextRegion innerRegion = scriptRegion
+						.getPhpToken(regionOffset);
+				return innerRegion.getType();
+			}
+		} catch (final BadLocationException e) {
+		}
+
+		return null;
+	}
+
 	public static String getPartitionType(IStructuredDocument document,
 			int offset, boolean perferOpenPartitions) {
 		try {
