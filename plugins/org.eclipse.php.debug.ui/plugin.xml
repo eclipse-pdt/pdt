@@ -526,5 +526,68 @@
           id="org.eclipse.php.debug.ui.PHPtoggleTargetFactory">
     </toggleTargetFactory>
  </extension>
-
+<!-- refactoring -->
+   
+   <extension point="org.eclipse.ltk.core.refactoring.renameParticipants">
+      <renameParticipant
+            class="org.eclipse.php.internal.debug.ui.refactoring.BreakpointRenameProjectParticipant"
+            name="ScriptProject Rename"
+            id="org.eclipse.php.ui.refactoring.breakpoint.projectRename">
+         <enablement>
+           <with variable="affectedNatures">
+             <iterate operator="or">
+               <equals value="org.eclipse.php.core.PHPNature"/>
+             </iterate>
+           </with>
+           <with variable="element">
+   	         <instanceof value="org.eclipse.dltk.core.IScriptProject"/>
+           </with>
+         </enablement>
+      </renameParticipant>
+      <renameParticipant
+            class="org.eclipse.php.internal.debug.ui.refactoring.BreakpointRenamePackageParticipant"
+            name="Fragment Rename"
+            id="org.eclipse.php.ui.refactoring.breakpoint.packageRename">
+         <enablement>
+           <with variable="affectedNatures">
+             <iterate operator="or">
+               <equals value="org.eclipse.php.core.PHPNature"/>
+             </iterate>
+           </with>
+           <with variable="element">
+   	         <instanceof value="org.eclipse.dltk.core.IProjectFragment"/>
+           </with>
+         </enablement>
+      </renameParticipant>
+      <renameParticipant
+            class="org.eclipse.php.internal.debug.ui.refactoring.BreakpointRenameSourceModuleParticipant"
+            name="SourceModule Rename"
+            id="org.eclipse.php.ui.refactoring.breakpoint.packageRename">
+         <enablement>
+           <with variable="affectedNatures">
+             <iterate operator="or">
+               <equals value="org.eclipse.php.core.PHPNature"/>
+             </iterate>
+           </with>
+           <with variable="element">
+   	         <instanceof value="org.eclipse.dltk.core.ISourceModule"/>
+           </with>
+         </enablement>
+      </renameParticipant>
+      <renameParticipant
+            class="org.eclipse.php.internal.debug.ui.refactoring.BreakpointRenameSourceModuleParticipant"
+            name="ScriptFolder Rename"
+            id="org.eclipse.php.ui.refactoring.breakpoint.packageRename">
+         <enablement>
+           <with variable="affectedNatures">
+             <iterate operator="or">
+               <equals value="org.eclipse.php.core.PHPNature"/>
+             </iterate>
+           </with>
+           <with variable="element">
+   	         <instanceof value="org.eclipse.dltk.core.IScriptFolder"/>
+           </with>
+         </enablement>
+      </renameParticipant>
+   </extension>
 </plugin>

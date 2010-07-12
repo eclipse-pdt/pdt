@@ -28,6 +28,8 @@ import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.internal.ui.viewers.model.InternalTreeModelViewer;
 import org.eclipse.debug.internal.ui.views.launch.LaunchView;
+import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
@@ -65,6 +67,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	private ShowViewListener showViewListener;
 	private TerminateDebugLaunchListener finishDebugLaunchListener;
 	private FirstSelectionDebugLaunchListener firstSelectionDebugLaunchListener;
+
+	private IDebugModelPresentation fUtilPresentation;
 
 	/**
 	 * The constructor.
@@ -519,5 +523,19 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 
 		public void launchesRemoved(ILaunch[] launches) {
 		}
+	}
+
+	/**
+	 * Returns a shared utility PHP debug model presentation. Clients should not
+	 * dispose the presentation.
+	 * 
+	 * @return a PHP debug model presentation
+	 */
+	public IDebugModelPresentation getModelPresentation() {
+		if (fUtilPresentation == null) {
+			fUtilPresentation = DebugUITools
+					.newDebugModelPresentation(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
+		}
+		return fUtilPresentation;
 	}
 }
