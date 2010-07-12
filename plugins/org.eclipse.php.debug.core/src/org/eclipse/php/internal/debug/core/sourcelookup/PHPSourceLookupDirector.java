@@ -23,6 +23,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupDirector;
 import org.eclipse.debug.core.sourcelookup.ISourceLookupParticipant;
@@ -60,7 +61,8 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 			try {
 				if (stackFrame.getLaunch() != null
 						&& stackFrame.getLaunch().getLaunchConfiguration() != null) {
-					String file = stackFrame.getLaunch()
+					String file = stackFrame
+							.getLaunch()
 							.getLaunchConfiguration()
 							.getAttribute(IPHPDebugConstants.ATTR_FILE,
 									(String) null);
@@ -76,7 +78,7 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 			} catch (CoreException e1) {
 			}
 			if (project != null) {
-				PHPDebugTarget debugTarget = (PHPDebugTarget) stackFrame
+				IDebugTarget debugTarget = (IDebugTarget) stackFrame
 						.getDebugTarget();
 				try {
 					ProjectDescription desc = ((Project) project)
@@ -101,8 +103,21 @@ public class PHPSourceLookupDirector extends AbstractSourceLookupDirector {
 											null);
 									relativePath = relativePath
 											.append(filePath);
-									IFile file = debugTarget.getProject()
-											.getFile(relativePath);
+
+									IFile file = null;
+									if (debugTarget instanceof PHPDebugTarget) {
+										file = ((PHPDebugTarget) debugTarget)
+												.getProject().getFile(
+														relativePath);
+									} else {
+										// not sure what the logic here is
+										// trying to achieve but it
+										// is specific to the zend
+										// implementation, so I have put
+										// something here for xdebug to stop
+										// errors in source lookup occuring
+										file = project.getFile(relativePath);
+									}
 									if (file.isAccessible()) {
 										return file;
 									}
