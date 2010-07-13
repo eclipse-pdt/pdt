@@ -810,8 +810,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					TextEditGroup editGroup = getEditGroup(event);
 					int dotEnd = getScanner().getTokenEndOffset(
 							SymbolsProvider.getSymbol(
-									SymbolsProvider.DOT_SYMBOL_ID, scanner
-											.getPHPVersion()),
+									SymbolsProvider.OBJECT_OP_SYMBOL_ID,
+									scanner.getPHPVersion()),
 							node.getStart() + node.getLength());
 					doTextRemoveAndVisit(startPos, dotEnd - startPos, node,
 							editGroup);
@@ -834,8 +834,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				try {
 					return getScanner().getTokenEndOffset(
 							SymbolsProvider.getSymbol(
-									SymbolsProvider.DOT_SYMBOL_ID, scanner
-											.getPHPVersion()), offset + length);
+									SymbolsProvider.OBJECT_OP_SYMBOL_ID,
+									scanner.getPHPVersion()), offset + length);
 				} catch (CoreException e) {
 					handleException(e);
 				}
@@ -2397,7 +2397,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	// }
 	// int startPos= node.getStart() + 3;
 	//		String separator= getLineDelimiter() + getIndentAtOffset(node.getStart())  + " * "; //$NON-NLS-1$
-	//		
+	//
 	// rewriteNodeList(node, Javadoc.TAGS_PROPERTY, startPos, separator,
 	// separator);
 	// return false;
@@ -2410,7 +2410,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	// if (!hasChildrenChanges(node)) {
 	// return doVisitUnchangedChildren(node);
 	// }
-	//		
+	//
 	// rewriteRequiredNode(node, LabeledStatement.LABEL_PROPERTY);
 	// rewriteRequiredNode(node, LabeledStatement.BODY_PROPERTY);
 	// return false;
