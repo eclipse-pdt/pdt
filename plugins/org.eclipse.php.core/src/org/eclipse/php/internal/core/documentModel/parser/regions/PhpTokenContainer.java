@@ -202,8 +202,8 @@ public class PhpTokenContainer {
 
 	}
 
-	public synchronized ListIterator<ContextRegion> removeTokensSubList(
-			ITextRegion tokenStart, ITextRegion tokenEnd) {
+	public synchronized void removeTokensSubList(ITextRegion tokenStart,
+			ITextRegion tokenEnd) {
 		assert tokenStart != null;
 
 		// go to the start region
@@ -226,8 +226,6 @@ public class PhpTokenContainer {
 				tokensIterator.remove();
 			} while (tokensIterator.hasNext() && region != tokenEnd);
 		}
-
-		return tokensIterator;
 	}
 
 	/**
@@ -254,19 +252,19 @@ public class PhpTokenContainer {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public synchronized ListIterator<ContextRegion> getPhpTokensIterator(
-			final int offset) throws BadLocationException {
-		// fast results for empty lists
-		if (phpTokens.isEmpty()) {
-			return tokensIterator;
-		}
-		checkBadLocation(offset);
-
-		// set the token iterator to the right place
-		getToken(offset);
-
-		return tokensIterator;
-	}
+	// public synchronized ListIterator<ContextRegion> getPhpTokensIterator(
+	// final int offset) throws BadLocationException {
+	// // fast results for empty lists
+	// if (phpTokens.isEmpty()) {
+	// return tokensIterator;
+	// }
+	// checkBadLocation(offset);
+	//
+	// // set the token iterator to the right place
+	// getToken(offset);
+	//
+	// return tokensIterator;
+	// }
 
 	/**
 	 * @return the whole tokens as an array
@@ -462,5 +460,18 @@ public class PhpTokenContainer {
 		}
 
 		return iterator;
+	}
+
+	public synchronized void addNewTokens(ITextRegion[] newTokens) {
+		for (int i = 0; i < newTokens.length; i++) {
+			tokensIterator.add((ContextRegion) newTokens[i]);
+		}
+	}
+
+	public synchronized void adjustNextRegion(int size) {
+		while (tokensIterator.hasNext()) {
+			final ITextRegion adjust = (ITextRegion) tokensIterator.next();
+			adjust.adjustStart(size);
+		}
 	}
 }
