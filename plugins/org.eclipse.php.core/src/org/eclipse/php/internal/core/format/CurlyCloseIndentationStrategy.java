@@ -28,7 +28,9 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 			throws BadLocationException {
 		final IRegion curlyOpenLine = getCurlyOpenLineInformation(document,
 				forOffset);
-
+		if (curlyOpenLine == null) {
+			return;
+		}
 		int indentationBaseLineIndex = DefaultIndentationStrategy
 				.getIndentationBaseLine(document, document
 						.getLineOfOffset(curlyOpenLine.getOffset()), forOffset,
