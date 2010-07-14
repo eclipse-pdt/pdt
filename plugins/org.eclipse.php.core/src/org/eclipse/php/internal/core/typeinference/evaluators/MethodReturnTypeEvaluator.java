@@ -1,27 +1,42 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.GoalState;
-import org.eclipse.dltk.ti.InstanceContext;
+import org.eclipse.dltk.ti.IContext;
+import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
-import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
-public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
+public class MethodReturnTypeEvaluator extends
+		AbstractMethodReturnTypeEvaluator {
 
 	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
@@ -29,53 +44,112 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		super(goal);
 	}
 
-	private MethodReturnTypeGoal getTypedGoal() {
-		return (MethodReturnTypeGoal) this.getGoal();
-	}
-
-	private InstanceContext getTypedContext() {
-		return (InstanceContext) this.getGoal().getContext();
-	}
-
-	public Object produceResult() {
-		return PHPTypeInferenceUtils.combineTypes(evaluated);
-	}
-
 	public IGoal[] init() {
-		MethodReturnTypeGoal typedGoal = getTypedGoal();
-		InstanceContext typedContext = getTypedContext();
+		MethodElementReturnTypeGoal goal = (MethodElementReturnTypeGoal) getGoal();
+		String methodName = goal.getMethodName();
 
-		final Set<IMethod> methods = new HashSet<IMethod>();
+		final List<IGoal> subGoals = new LinkedList<IGoal>();
 
-		String methodName = typedGoal.getMethodName();
-		IType[] types = getTypes(typedContext.getInstanceType(), typedContext.getSourceModule());
+		for (IMethod method : getMethods()) {
 
-		if (types.length == 0) {
-			IModelElement[] elements = PHPMixinModel.getInstance().getFunction(methodName);
-			for (IModelElement e : elements) {
-				methods.add((IMethod) e);
+			ISourceModule sourceModule = method.getSourceModule();
+			ModuleDeclaration module = SourceParserUtil
+					.getModuleDeclaration(sourceModule);
+
+			MethodDeclaration decl = null;
+			try {
+				decl = PHPModelUtils.getNodeByMethod(module, method);
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 			}
-		} else {
-			for (IType type : types) {
+			// final boolean found[] = new boolean[1];
+			if (decl != null) {
+				final IContext innerContext = ASTUtils.findContext(
+						sourceModule, module, decl);
+
+				ASTVisitor visitor = new ASTVisitor() {
+					public boolean visitGeneral(ASTNode node) throws Exception {
+						if (node instanceof ReturnStatement) {
+							ReturnStatement statement = (ReturnStatement) node;
+							Expression expr = statement.getExpr();
+							if (expr == null) {
+								evaluated.add(PHPSimpleTypes.VOID);
+							} else {
+								subGoals.add(new ExpressionTypeGoal(
+										innerContext, expr));
+							}
+						}
+						return super.visitGeneral(node);
+					}
+				};
+
 				try {
-					IModelElement[] elements = PHPMixinModel.getInstance().getMethod(type.getElementName(), methodName);
-					if (elements.length == 0) {
-						elements = PHPModelUtils.getClassMethod(type, methodName, null);
+					decl.traverse(visitor);
+				} catch (Exception e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
 					}
-					for (IModelElement e : elements) {
-						methods.add((IMethod) e);
+				}
+			}
+			if (method != null) {
+				resolveMagicMethodDeclaration(method, methodName);
+			}
+		}
+
+		return subGoals.toArray(new IGoal[subGoals.size()]);
+	}
+
+	/**
+	 * Resolve magic methods defined by the @method tag
+	 */
+	private void resolveMagicMethodDeclaration(IMethod method, String methodName) {
+		final IModelElement parent = method.getParent();
+		if (parent.getElementType() != IModelElement.TYPE) {
+			return;
+		}
+
+		IType type = (IType) parent;
+		final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
+		if (docBlock != null) {
+			for (PHPDocTag tag : docBlock.getTags()) {
+				final int tagKind = tag.getTagKind();
+				if (tagKind == PHPDocTag.METHOD) {
+					final String typeName = getTypeBinding(methodName, tag);
+					if (typeName != null) {
+						IEvaluatedType resolved = PHPSimpleTypes
+								.fromString(typeName);
+						if (resolved == null) {
+							resolved = new PHPClassType(typeName);
+						}
+						evaluated.add(resolved);
 					}
-				} catch (CoreException e) {
-					Logger.logException(e);
 				}
 			}
 		}
+	}
 
-		final List<IGoal> subGoals = new ArrayList<IGoal>(methods.size());
-		for (IMethod method : methods) {
-			subGoals.add(new MethodElementReturnTypeGoal(method));
+	/**
+	 * Resolves the type from the @property tag
+	 * 
+	 * @param variableName
+	 * @param docTag
+	 * @return the type of the given variable
+	 */
+	private String getTypeBinding(String methodName, PHPDocTag docTag) {
+		final String[] split = docTag.getValue().trim().split("\\s+");
+		if (split.length < 2) {
+			return null;
 		}
-		return subGoals.toArray(new IGoal[subGoals.size()]);
+		if (split[1].equals(methodName)) {
+			return split[0];
+		} else if (split[1].length() > 2 && split[1].endsWith("()")) {
+			final String substring = split[1].substring(0,
+					split[1].length() - 2);
+			return substring.equals(methodName) ? split[0] : null;
+		}
+		return null;
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
@@ -85,4 +159,7 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
+	public Object produceResult() {
+		return PHPTypeInferenceUtils.combineTypes(evaluated);
+	}
 }
