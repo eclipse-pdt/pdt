@@ -14,7 +14,6 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -23,19 +22,13 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
-import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -57,12 +50,12 @@ public class MethodReturnTypeEvaluator extends
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 
-		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext())
-				.getSourceModule();
-		ModuleDeclaration module = SourceParserUtil
-				.getModuleDeclaration(sourceModule);
-
 		for (IMethod method : getMethods()) {
+
+			ISourceModule sourceModule = method.getSourceModule();
+			ModuleDeclaration module = SourceParserUtil
+					.getModuleDeclaration(sourceModule);
+
 			MethodDeclaration decl = null;
 			try {
 				decl = PHPModelUtils.getNodeByMethod(module, method);
@@ -103,83 +96,9 @@ public class MethodReturnTypeEvaluator extends
 			if (method != null) {
 				resolveMagicMethodDeclaration(method, methodName);
 			}
-			// if we can not get the return type,we resolve the method
-			// if the method is abstract,it will make the call in deadloop.
-			try {
-				if (subGoals.isEmpty() && evaluated.isEmpty()
-						&& !PHPFlags.isAbstract(method.getFlags())) {
-					resolveReturnType(method);
-				}
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-			}
 		}
 
 		return subGoals.toArray(new IGoal[subGoals.size()]);
-	}
-
-	private void resolveReturnType(IMethod method) throws ModelException {
-		Program program = null;
-		ISourceModule source = method.getSourceModule();
-		ASTParser parserForExpected = ASTParser.newParser(ProjectOptions
-				.getPhpVersion(source.getScriptProject().getProject()), source);
-		try {
-			parserForExpected.setSource(source);
-			program = parserForExpected.createAST(new NullProgressMonitor());
-			program.setSourceModule(source);
-		} catch (Exception e) {
-		}
-		if (program == null) {
-			return;
-		}
-
-		org.eclipse.php.internal.core.ast.nodes.ASTNode elementAt = program
-				.getElementAt(method.getSourceRange().getOffset());
-
-		if (elementAt.getParent() instanceof org.eclipse.php.internal.core.ast.nodes.MethodDeclaration) {
-			elementAt = elementAt.getParent();
-		}
-
-		ITypeBinding[] returnTypes = null;
-		IFunctionBinding resolvedBinding = null;
-
-		if (elementAt instanceof org.eclipse.php.internal.core.ast.nodes.MethodDeclaration) {
-			org.eclipse.php.internal.core.ast.nodes.MethodDeclaration methodDeclaration = (org.eclipse.php.internal.core.ast.nodes.MethodDeclaration) elementAt;
-			resolvedBinding = methodDeclaration.resolveMethodBinding();
-		} else if (elementAt instanceof FunctionDeclaration) {
-			FunctionDeclaration functionDeclaration = (FunctionDeclaration) elementAt;
-			resolvedBinding = functionDeclaration.resolveFunctionBinding();
-		}
-		if (null != resolvedBinding) {
-			returnTypes = resolvedBinding.getReturnType();
-			IType currentNamespace = PHPModelUtils.getCurrentNamespace(method);
-			if (null != returnTypes && returnTypes.length > 0) {
-				for (ITypeBinding returnType : returnTypes) {
-					if (!returnType.isUnknown() && !returnType.isAmbiguous()
-							&& !returnType.isArray()) {
-						addType(currentNamespace, returnType.getName());
-					}
-				}
-			}
-
-		}
-	}
-
-	private void addType(IType currentNamespace, String typeName) {
-		IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
-		if (type == null) {
-
-			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
-					|| currentNamespace == null) {
-				type = new PHPClassType(typeName);
-			} else if (currentNamespace != null) {
-				type = new PHPClassType(currentNamespace.getElementName(),
-						typeName);
-			}
-		}
-		if (type != null) {
-			evaluated.add(type);
-		}
 	}
 
 	/**
