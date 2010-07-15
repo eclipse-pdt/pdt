@@ -92,6 +92,22 @@ public interface ICompletionReporter {
 			SourceRange replaceRange);
 
 	/**
+	 * Reports method or function
+	 * 
+	 * @param method
+	 *            PHP method or function
+	 * @param suffix
+	 *            Suffix to uppend after completion will be inserted
+	 * @param replaceRange
+	 *            The range in the document to be replaced with the completion
+	 *            proposal text
+	 * @param extraInfo
+	 *            extraInfo for CompletionProposal
+	 */
+	public void reportMethod(IMethod method, String suffix,
+			SourceRange replaceRange, Object extraInfo);
+
+	/**
 	 * Reports field: variable, constant
 	 * 
 	 * @param field

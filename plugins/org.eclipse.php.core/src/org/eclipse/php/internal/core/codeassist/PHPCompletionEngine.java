@@ -232,7 +232,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	}
 
 	public void reportMethod(IMethod method, String suffix,
-			SourceRange replaceRange) {
+			SourceRange replaceRange, Object extraInfo) {
 		if (processedElements.contains(method)) {
 			return;
 		}
@@ -245,7 +245,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			CompletionProposal proposal = createProposal(
 					CompletionProposal.METHOD_DECLARATION,
 					actualCompletionPosition);
-
+			proposal.setExtraInfo(extraInfo);
 			// show method parameter names:
 			String[] params = null;
 			try {
@@ -288,6 +288,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			}
 		}
 
+	}
+
+	public void reportMethod(IMethod method, String suffix,
+			SourceRange replaceRange) {
+		reportMethod(method, suffix, replaceRange, null);
 	}
 
 	public void reportType(IType type, String suffix, SourceRange replaceRange) {

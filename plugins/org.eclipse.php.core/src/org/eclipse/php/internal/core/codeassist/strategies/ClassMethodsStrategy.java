@@ -25,6 +25,7 @@ import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
@@ -90,9 +91,13 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				for (IMethod method : removeOverriddenElements(Arrays
 						.asList(methods))) {
 
-					if (!magicMethods.contains(method.getElementName())
-							&& !isFiltered(method, concreteContext)) {
-						result.add(method);
+					if (!isFiltered(method, concreteContext)) {
+						if (magicMethods.contains(method.getElementName())) {
+							reporter.reportMethod(method, suffix, replaceRange,
+									ProposalExtraInfo.MAGIC_METHOD);
+						} else {
+							result.add(method);
+						}
 					}
 				}
 			} catch (CoreException e) {
