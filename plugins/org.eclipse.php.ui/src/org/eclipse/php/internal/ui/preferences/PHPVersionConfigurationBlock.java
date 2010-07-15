@@ -28,9 +28,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -48,9 +46,10 @@ public class PHPVersionConfigurationBlock extends
 
 	private static final Key PREF_PHP_VERSION = getPHPCoreKey(Keys.PHP_VERSION);
 	private static final Key PREF_ASP_TAGS = getPHPCoreKey(Keys.EDITOR_USE_ASP_TAGS);
+	private static final Key PREF_SHORT_TAGS = getPHPCoreKey(Keys.EDITOR_USE_SHORT_TAGS);
 	private IStatus fTaskTagsStatus;
 	protected ValuedCombo versionCombo;
-	// protected Button useAspTagsButton;
+	protected Button useShortTagsButton;
 	protected Label nameLabel;
 
 	public PHPVersionConfigurationBlock(IStatusChangeListener context,
@@ -60,12 +59,12 @@ public class PHPVersionConfigurationBlock extends
 
 	public void setEnabled(boolean isEnabled) {
 		versionCombo.setEnabled(isEnabled);
-		// useAspTagsButton.setEnabled(isEnabled);
+		useShortTagsButton.setEnabled(isEnabled);
 		nameLabel.setEnabled(isEnabled);
 	}
 
 	private static Key[] getKeys() {
-		return new Key[] { PREF_PHP_VERSION, PREF_ASP_TAGS };
+		return new Key[] { PREF_PHP_VERSION, PREF_SHORT_TAGS };
 	}
 
 	// Accessed from the PHP project Wizard
@@ -77,24 +76,24 @@ public class PHPVersionConfigurationBlock extends
 		layout.marginHeight = 0;
 		composite.setLayout(layout);
 		createVersionContent(composite);
-		// createUseAspTagsContent(composite);
+		createUseShortTagsContent(composite);
 		unpackPHPVersion();
-		// unpackUseAspTags();
+		unpackUseShortTags();
 		validateSettings(null, null, null);
 		return composite;
 	}
 
-	// private void createUseAspTagsContent(Composite composite) {
-	// useAspTagsButton = new Button(composite, SWT.CHECK | SWT.RIGHT);
-	// useAspTagsButton.setText(PHPUIMessages
-	// .getString("Preferences_php_editor_useAspTagsAsPhp_label"));
-	// useAspTagsButton.addListener(SWT.Selection, new Listener() {
-	// public void handleEvent(Event event) {
-	// setUseAspTagsValue(Boolean.toString(useAspTagsButton
-	// .getSelection()));
-	// }
-	// });
-	// }
+	private void createUseShortTagsContent(Composite composite) {
+		useShortTagsButton = new Button(composite, SWT.CHECK | SWT.RIGHT);
+		useShortTagsButton.setText(PHPUIMessages
+				.getString("Preferences_php_editor_useShortTagsAsPhp_label"));
+		useShortTagsButton.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event event) {
+				setUseShortTagsValue(Boolean.toString(useShortTagsButton
+						.getSelection()));
+			}
+		});
+	}
 
 	private Composite createVersionContent(Composite parent) {
 		Composite composite = new Composite(parent, SWT.RESIZE);
@@ -148,7 +147,7 @@ public class PHPVersionConfigurationBlock extends
 		if (changedKey != null) {
 			if (PREF_PHP_VERSION.equals(changedKey)) {
 				fTaskTagsStatus = validatePHPVersion();
-			} else if (PREF_ASP_TAGS.equals(changedKey)) {
+			} else if (PREF_SHORT_TAGS.equals(changedKey)) {
 				fTaskTagsStatus = validatePHPVersion();
 			} else {
 				return;
@@ -186,9 +185,9 @@ public class PHPVersionConfigurationBlock extends
 		}
 	}
 
-	private void setUseAspTagsValue(String value) {
-		setValue(PREF_ASP_TAGS, value);
-		validateSettings(PREF_ASP_TAGS, null, null);
+	private void setUseShortTagsValue(String value) {
+		setValue(PREF_SHORT_TAGS, value);
+		validateSettings(PREF_SHORT_TAGS, null, null);
 	}
 
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
@@ -214,7 +213,7 @@ public class PHPVersionConfigurationBlock extends
 	 */
 	protected void updateControls() {
 		unpackPHPVersion();
-		// unpackUseAspTags();
+		unpackUseShortTags();
 	}
 
 	private void unpackPHPVersion() {
@@ -222,10 +221,10 @@ public class PHPVersionConfigurationBlock extends
 		versionCombo.selectValue(currTags);
 	}
 
-	// private void unpackUseAspTags() {
-	// String value = getValue(PREF_ASP_TAGS);
-	// useAspTagsButton.setSelection(Boolean.valueOf(value).booleanValue());
-	// }
+	private void unpackUseShortTags() {
+		String value = getValue(PREF_SHORT_TAGS);
+		useShortTagsButton.setSelection(Boolean.valueOf(value).booleanValue());
+	}
 
 	// Accessed from the PHP project Wizard
 	public PHPVersion getPHPVersionValue() {
@@ -233,8 +232,12 @@ public class PHPVersionConfigurationBlock extends
 	}
 
 	// Accessed from the PHP project Wizard
+	public boolean getUseShortTagsValue() {
+		return getBooleanValue(PREF_SHORT_TAGS);
+	}
+
+	// Accessed from the PHP project Wizard
 	public boolean getUseAspTagsValue() {
 		return getBooleanValue(PREF_ASP_TAGS);
 	}
-
 }

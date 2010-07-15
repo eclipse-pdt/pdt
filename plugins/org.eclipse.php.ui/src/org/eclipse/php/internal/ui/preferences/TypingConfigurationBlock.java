@@ -129,9 +129,9 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-				OverlayPreferenceStore.STRING,
-				PreferenceConstants.EDITOR_USE_SHORT_TAGS));
+		// overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+		// OverlayPreferenceStore.STRING,
+		// PreferenceConstants.EDITOR_USE_SHORT_TAGS));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
 				.size()];
@@ -265,9 +265,9 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS, 0);
 
-		label = PHPUIMessages.getString("typingPage_use_short_tags");
-		addCheckBox(composite, label,
-				PreferenceConstants.EDITOR_USE_SHORT_TAGS, 0);
+		// label = PHPUIMessages.getString("typingPage_use_short_tags");
+		// addCheckBox(composite, label,
+		// PreferenceConstants.EDITOR_USE_SHORT_TAGS, 0);
 
 		createDependency(master, slave);
 	}

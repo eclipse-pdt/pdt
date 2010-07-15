@@ -188,7 +188,7 @@ public class PreferenceConstants {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public final static String EDITOR_USE_SHORT_TAGS = "useShortTags"; //$NON-NLS-1$
+	//	public final static String EDITOR_USE_SHORT_TAGS = "useShortTags"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP comments
@@ -1044,7 +1044,7 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_CLOSE_PHPDOCS_AND_COMMENTS, true);
 		store.setDefault(EDITOR_ADD_PHPDOC_TAGS, true);
 		store.setDefault(EDITOR_ADD_PHPCLOSE_TAGS, true);
-		store.setDefault(EDITOR_USE_SHORT_TAGS, false);
+		// store.setDefault(EDITOR_USE_SHORT_TAGS, false);
 
 		// mark occurrences
 		store.setDefault(PreferenceConstants.EDITOR_MARK_OCCURRENCES, true);

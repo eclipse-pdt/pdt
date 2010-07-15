@@ -11,11 +11,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
+import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -40,10 +46,30 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 
 	public void customizeDocumentCommand(IDocument document,
 			DocumentCommand command) {
-		if (!TypingPreferences.addPhpCloseTag && TypingPreferences.useShortTags) {
+		final IProject projects[] = new IProject[1];
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage page = PHPUiPlugin.getActivePage();
+				if (page != null) {
+					IEditorPart editor = page.getActiveEditor();
+					if (editor instanceof PHPStructuredEditor) {
+						PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editor;
+						if (phpStructuredEditor.getTextViewer() != null
+								&& phpStructuredEditor != null) {
+							ISourceModule sourceModule = (ISourceModule) phpStructuredEditor
+									.getModelElement();
+							projects[0] = sourceModule.getScriptProject()
+									.getProject();
+						}
+					}
+				}
+			}
+		});
+
+		boolean useShortTags = useShortTags(projects[0]);
+		if (!TypingPreferences.addPhpCloseTag && useShortTags) {
 			return;
 		}
-
 		Object textEditor = getActiveTextEditor();
 		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor)
 				.getInsertMode() == ITextEditorExtension3.SMART_INSERT))
@@ -62,13 +88,13 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 						if (node != null
 								&& prefixedWith(document, command.offset, "<")) { //$NON-NLS-1$ //$NON-NLS-2$
 							if (!TypingPreferences.addPhpCloseTag
-									&& !TypingPreferences.useShortTags) {
+									&& !useShortTags) {
 								command.text += "php "; //$NON-NLS-1$
 								command.shiftsCaret = false;
 								command.caretOffset = command.offset + 5;
 								command.doit = false;
 							} else if (TypingPreferences.addPhpCloseTag
-									&& TypingPreferences.useShortTags) {
+									&& useShortTags) {
 								if (!closeTagAppears(node.getSource(),
 										command.offset)) {
 									command.text += " ?>"; //$NON-NLS-1$
@@ -77,7 +103,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 									command.doit = false;
 								}
 							} else if (TypingPreferences.addPhpCloseTag
-									&& !TypingPreferences.useShortTags) {
+									&& !useShortTags) {
 								if (!closeTagAppears(node.getSource(),
 										command.offset)) {
 									command.text += "php ?>"; //$NON-NLS-1$
@@ -94,6 +120,12 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 			if (model != null)
 				model.releaseFromRead();
 		}
+	}
+
+	private boolean useShortTags(IProject project) {
+		String useShortTags = CorePreferencesSupport.getInstance()
+				.getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null, project);
+		return "true".equals(useShortTags);
 	}
 
 	private final boolean closeTagAppears(String source, int startFrom) {
