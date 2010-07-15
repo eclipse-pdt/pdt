@@ -24,6 +24,7 @@ public class CorePreferenceConstants {
 	public interface Keys {
 		public static final String PHP_VERSION = PHPCoreConstants.PHP_OPTIONS_PHP_VERSION;
 		public static final String EDITOR_USE_ASP_TAGS = "use_asp_tags_as_php"; //$NON-NLS-1$
+		public final static String EDITOR_USE_SHORT_TAGS = "useShortTags"; //$NON-NLS-1$
 	}
 
 	/**
@@ -41,6 +42,7 @@ public class CorePreferenceConstants {
 				PHPCoreConstants.DEFAULT_TASK_PRIORITIES);
 		node.put(PHPCoreConstants.TASK_CASE_SENSITIVE, PHPCoreConstants.ENABLED);
 		node.putBoolean(Keys.EDITOR_USE_ASP_TAGS, false);
+		node.putBoolean(Keys.EDITOR_USE_SHORT_TAGS, false);
 		node.putBoolean(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
 				PHPCoreConstants.DEFAULT_INDENTATION_SIZE);
