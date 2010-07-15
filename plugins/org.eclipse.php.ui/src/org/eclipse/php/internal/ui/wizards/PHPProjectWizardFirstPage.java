@@ -985,14 +985,16 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	}
 
 	public void performFinish(IProgressMonitor monitor) {
-		Display.getDefault().asyncExec(new Runnable() {
+		// For some wizard, the javascript group is not available.
+		if (fJavaScriptSupportGroup != null) {
+			Display.getDefault().asyncExec(new Runnable() {
 
-			public void run() {
-				PHPUiPlugin.getDefault().getPreferenceStore().setValue(
-						(PreferenceConstants.JavaScriptSupportEnable),
-						fJavaScriptSupportGroup.getSelection());
-			}
-		});
-
+				public void run() {
+					PHPUiPlugin.getDefault().getPreferenceStore().setValue(
+							(PreferenceConstants.JavaScriptSupportEnable),
+							fJavaScriptSupportGroup.getSelection());
+				}
+			});
+		}
 	}
 }
