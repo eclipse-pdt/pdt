@@ -182,7 +182,8 @@ public class UseStatementInjector {
 	 */
 	public int inject(IDocument document, ITextViewer textViewer, int offset) {
 		IModelElement modelElement = proposal.getModelElement();
-
+		if (modelElement == null)
+			return offset;
 		try {
 			if (modelElement.getElementType() == IModelElement.TYPE
 					&& PHPFlags.isNamespace(((IType) modelElement).getFlags())) {

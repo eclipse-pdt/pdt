@@ -178,7 +178,8 @@ public class PHPCompletionProposalCollector extends
 		ScriptCompletionProposal scriptProposal = createParameterGuessingProposal(
 				proposal, getSourceModule().getScriptProject(),
 				getSourceModule(), name, paramTypes, start, length, label,
-				String.valueOf(proposal.getCompletion()));
+				String.valueOf(proposal.getCompletion()), proposal
+						.getExtraInfo());
 		scriptProposal.setImage(getImage(getLabelProvider()
 				.createMethodImageDescriptor(proposal)));
 
@@ -193,10 +194,10 @@ public class PHPCompletionProposalCollector extends
 	private ScriptCompletionProposal createParameterGuessingProposal(
 			CompletionProposal proposal, IScriptProject scriptProject,
 			ISourceModule sourceModule, String name, String[] paramTypes,
-			int start, int length, String label, String string) {
+			int start, int length, String label, String string, Object extraInfo) {
 		return new ParameterGuessingProposal(proposal, scriptProject,
 				sourceModule, name, paramTypes, start, length, label, string,
-				false);
+				false, extraInfo);
 	}
 
 	private IScriptCompletionProposal createTypeProposal(
@@ -270,4 +271,14 @@ public class PHPCompletionProposalCollector extends
 		return PHPNature.ID;
 	}
 
+	@Override
+	protected int computeRelevance(CompletionProposal proposal) {
+		if (ProposalExtraInfo.STUB.equals(proposal.getExtraInfo())) {
+			return Integer.MAX_VALUE;
+		}
+		if (ProposalExtraInfo.MAGIC_METHOD.equals(proposal.getExtraInfo())) {
+			return -1;
+		}
+		return super.computeRelevance(proposal);
+	}
 }

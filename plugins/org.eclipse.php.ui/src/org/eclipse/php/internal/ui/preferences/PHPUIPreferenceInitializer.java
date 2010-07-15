@@ -28,7 +28,7 @@ public class PHPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 				.getPreferenceStore();
 		dltkStore.setDefault(
 				org.eclipse.dltk.ui.PreferenceConstants.CODEASSIST_SORTER,
-				"org.eclipse.dltk.ui.AlphabeticSorter"); //$NON-NLS-1$
+				"org.eclipse.php.ui.AlphabeticSorter"); //$NON-NLS-1$
 	}
 
 }

@@ -2002,4 +2002,11 @@
          </enablement>
       </renameParticipant>
    </extension>
+   <extension
+		point="org.eclipse.dltk.ui.scriptCompletionProposalSorters">
+		<proposalSorter
+			id="org.eclipse.php.ui.AlphabeticSorter"
+			name="Alphabetic Sorter"
+			class="org.eclipse.php.internal.ui.editor.contentassist.PHPAlphabeticSorter"/>
+	</extension>
 </plugin>
