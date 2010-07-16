@@ -420,7 +420,7 @@
 		<page
             category="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"
             class="org.eclipse.php.internal.debug.ui.preferences.phps.PHPInterpreterExecutionPreferencePage"
-            id="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"
+            id="org.eclipse.php.debug.ui.preferencesphps.PHPExecutionPreferencePreferencePage"
             name="%executionEnvironmentsPageName">
             <keywordReference id="org.eclipse.php.debug.ui.phpInterpreterExecution" />
       </page>
