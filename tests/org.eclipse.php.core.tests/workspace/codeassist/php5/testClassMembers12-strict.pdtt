@@ -13,3 +13,4 @@ class Test {
 ?>
 --EXPECT--
 field($_aInfo)
+method(__get)
