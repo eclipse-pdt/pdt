@@ -31,6 +31,8 @@ import org.eclipse.debug.core.model.ISourceLocator;
  */
 public class PHPLaunch extends Launch {
 
+	private boolean pretendsRunning;
+
 	/**
 	 * Constructs a launch with the specified attributes.
 	 * 
@@ -63,6 +65,10 @@ public class PHPLaunch extends Launch {
 	 * @see org.eclipse.debug.core.Launch#isTerminated()
 	 */
 	public boolean isTerminated() {
+		if (pretendsRunning) {
+			return false;
+		}
+
 		if (getProcesses0().isEmpty() && getDebugTargets0().isEmpty()) {
 			return true;
 		}
@@ -105,6 +111,10 @@ public class PHPLaunch extends Launch {
 			}
 		}
 		return super.getChildren();
+	}
+
+	public void pretendRunning(boolean running) {
+		this.pretendsRunning = running;
 	}
 
 }
