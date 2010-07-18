@@ -96,6 +96,35 @@ public class DaemonPlugin extends Plugin {
 		}
 	}
 
+	public boolean isInitialized(String debuggerID) {
+		if (daemons != null) {
+			for (int i = 0; i < daemons.length; i++) {
+				if (debuggerID == null
+						|| (daemons[i].isDebuggerDaemon() && debuggerID
+								.equals(daemons[i].getDebuggerID()))) {
+					if (!daemons[i].isInitialized()) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public void makeSureDebuggerInitialized(String debuggerID) {
+		while (true) {
+			if (!isInitialized(debuggerID)) {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+				}
+			} else {
+				break;
+			}
+		}
+	}
+
 	/**
 	 * Stop the daemons that has the given daemonID. In case that the give id is
 	 * null, stop all the registered daemons.

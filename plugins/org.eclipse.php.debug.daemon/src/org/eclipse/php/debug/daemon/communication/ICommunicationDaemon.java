@@ -79,4 +79,6 @@ public interface ICommunicationDaemon {
 	 * @return True, iff this daemon is a debugger daemon.
 	 */
 	public boolean isDebuggerDaemon();
+
+	public boolean isInitialized();
 }
