@@ -26,6 +26,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
+import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.swt.widgets.Display;
 
 import com.ibm.icu.text.MessageFormat;
@@ -128,6 +129,7 @@ public class PHPExecutableDebuggerInitializer {
 						+ Arrays.toString(environmetVars));
 			}
 
+			DaemonPlugin.getDefault().makeSureDebuggerInitialized(null);
 			// Execute the command line.
 			Process p;
 			File workingDirFile = new File(workingDir);

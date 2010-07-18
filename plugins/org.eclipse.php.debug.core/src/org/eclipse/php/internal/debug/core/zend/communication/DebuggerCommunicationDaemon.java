@@ -35,6 +35,7 @@ public class DebuggerCommunicationDaemon extends
 
 	public static final String ZEND_DEBUGGER_ID = "org.eclipse.php.debug.core.zendDebugger";
 	private IPropertyChangeListener portChangeListener;
+	private DebugConnectionThread thread;
 
 	/**
 	 * Constructs a new DebuggerCommunicationDaemon
@@ -82,8 +83,7 @@ public class DebuggerCommunicationDaemon extends
 	 * @param socket
 	 */
 	protected void startConnectionThread(Socket socket) {
-		// Handles the connection in a new thread
-		new DebugConnectionThread(socket);
+		thread = new DebugConnectionThread(socket);
 	}
 
 	// A port change listener

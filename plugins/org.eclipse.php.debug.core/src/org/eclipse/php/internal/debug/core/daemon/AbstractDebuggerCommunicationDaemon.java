@@ -35,6 +35,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 	protected ServerSocket serverSocket;
 	protected boolean isAlive;
 	protected Thread listenerThread;
+	private boolean isInitialized;
 
 	/**
 	 * Constructs a new AbstractDebuggerCommunicationDaemon
@@ -57,6 +58,8 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 		synchronized (lock) {
 			if (!isAlive && serverSocket != null) {
 				startListenThread();
+			} else {
+				isInitialized = true;
 			}
 		}
 	}
@@ -137,12 +140,11 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 	 */
 	public void handleMultipleBindingError() {
 		final int port = getReceiverPort();
-		Logger
-				.log(
-						Logger.ERROR,
-						"The debug port "
-								+ port
-								+ " is in use. Please select a different port for the debugger.");
+		Logger.log(
+				Logger.ERROR,
+				"The debug port "
+						+ port
+						+ " is in use. Please select a different port for the debugger.");
 	}
 
 	/**
@@ -175,7 +177,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 	 * Starts the listening thread. If the thread is already started, nothing
 	 * should happen.
 	 */
-	private void startListenThread() {
+	protected void startListenThread() {
 		synchronized (lock) {
 			if (isAlive) {
 				return;
@@ -191,6 +193,12 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 		listenerThread.start();
 	}
 
+	public boolean isInitialized() {
+		synchronized (lock) {
+			return isInitialized;
+		}
+	}
+
 	/*
 	 * The thread responsible of listening for debug requests. On every debug
 	 * request, a new thread of DebugConnectionThread is created and a debug
@@ -198,6 +206,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 	 */
 	private class ReceiverThread implements Runnable {
 		public void run() {
+			isInitialized = true;
 			try {
 				while (isAlive) {
 					Socket socket = serverSocket.accept();
@@ -208,10 +217,9 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 			} catch (IOException e) {
 				synchronized (lock) {
 					if (isAlive) {
-						Logger
-								.logException(
-										"Error while listening to incoming debug requests. Listen thread terminated!",
-										e);
+						Logger.logException(
+								"Error while listening to incoming debug requests. Listen thread terminated!",
+								e);
 						isAlive = false;
 					}
 				}

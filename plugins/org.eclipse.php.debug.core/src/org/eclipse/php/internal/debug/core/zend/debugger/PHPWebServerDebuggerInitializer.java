@@ -32,6 +32,7 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
+import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
@@ -52,6 +53,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 
 	public void debug(ILaunch launch) throws DebugException {
 
+		DaemonPlugin.getDefault().makeSureDebuggerInitialized(null);
 		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry
 				.getBestMatchDebugParametersInitializer(launch);
 

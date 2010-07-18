@@ -62,6 +62,8 @@ public class XDebugCommunicationDaemon extends
 	public static final String XDEBUG_DEBUGGER_ID = "org.eclipse.php.debug.core.xdebugDebugger";
 	private PortChangeListener portChangeListener;
 
+	// private boolean isInitialized;
+
 	/**
 	 * An XDebug communication daemon.
 	 */
@@ -78,6 +80,17 @@ public class XDebugCommunicationDaemon extends
 		initDeamonChangeListener();
 		super.init();
 	}
+
+	// @Override
+	// public void startListen() {
+	// synchronized (lock) {
+	// if (!isAlive && serverSocket != null) {
+	// startListenThread();
+	// } else {
+	// isInitialized = true;
+	// }
+	// }
+	// }
 
 	/**
 	 * Initialize a daemon change listener
@@ -170,6 +183,7 @@ public class XDebugCommunicationDaemon extends
 					"Unexpected Exception: Listener thread still listening",
 					this, e);
 		}
+		// isInitialized = true;
 	}
 
 	/**

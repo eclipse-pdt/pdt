@@ -364,8 +364,7 @@ public class DebugConnectionThread implements Runnable {
 		if (socket != null) {
 			try {
 				if (!socket.isClosed()) {
-					Logger
-							.debugMSG("DebugConnectionThread: closing the socket"); //$NON-NLS-1$ //$NON-NLS-2$
+					Logger.debugMSG("DebugConnectionThread: closing the socket"); //$NON-NLS-1$ //$NON-NLS-2$
 					socket.close();
 				}
 			} catch (Exception exc) {
@@ -570,8 +569,7 @@ public class DebugConnectionThread implements Runnable {
 			if (Boolean
 					.toString(true)
 					.equals(
-							launch
-									.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
+							launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
 				hookServerDebug(launch, debugSessionStartedNotification);
 			} else {
 				hookPHPExeDebug(launch, debugSessionStartedNotification);
@@ -1100,6 +1098,10 @@ public class DebugConnectionThread implements Runnable {
 		return false;
 	}
 
+	public boolean isInitialized() {
+		return isInitialized;
+	}
+
 	/**
 	 * This thread manages the Communication initiated by the peer. All the
 	 * messages that arrive form the peer are read by the ImputManager. The
@@ -1248,9 +1250,8 @@ public class DebugConnectionThread implements Runnable {
 							System.out
 									.println("Socket error (length is negative): possibly Server is SSL, Client is not."); //$NON-NLS-1$
 						}
-						Logger
-								.log(Logger.ERROR,
-										"Socket error (length is negative): possibly Server is SSL, Client is not."); //$NON-NLS-1$
+						Logger.log(Logger.ERROR,
+								"Socket error (length is negative): possibly Server is SSL, Client is not."); //$NON-NLS-1$
 					}
 
 					// We have a new message. process it !!.
