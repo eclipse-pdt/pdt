@@ -155,6 +155,11 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		allThreads = new IThread[0]; // needs to be defined when target is
 		// added to launch
 		fireCreationEvent();
+
+		IBreakpointManager fBreakpointManager = DebugPlugin.getDefault()
+				.getBreakpointManager();
+		fBreakpointManager.addBreakpointListener(this);
+		fBreakpointManager.addBreakpointManagerListener(this);
 	}
 
 	/**
