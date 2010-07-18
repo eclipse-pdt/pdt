@@ -26,7 +26,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class PHPInterpreterExecutionPreferencePage extends
 		AbstractPreferencePage implements IWorkbenchPreferencePage {
 
-	public static final String PREF_ID = "org.eclipse.php.ui.preferences.PHPInterpreterPreferencePage"; //$NON-NLS-1$
+	public static final String PREF_ID = "org.eclipse.php.debug.ui.preferencesphps.PHPExecutionPreferencePreferencePage"; //$NON-NLS-1$
 
 	private PHPInterpreterExecutionConfigurationBlock fConfigurationBlock;
 
