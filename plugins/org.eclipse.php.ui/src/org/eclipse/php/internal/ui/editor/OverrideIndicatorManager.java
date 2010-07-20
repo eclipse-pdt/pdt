@@ -186,7 +186,10 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 		if (ast.getSourceModule().isReadOnly()) {
 			return;
 		}
-
+		if (!ast.getSourceModule().getScriptProject().isOnBuildpath(
+				ast.getSourceModule())) {
+			return;
+		}
 		ast.accept(new AbstractVisitor() {
 			/*
 			 * @see
