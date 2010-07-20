@@ -155,11 +155,6 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		allThreads = new IThread[0]; // needs to be defined when target is
 		// added to launch
 		fireCreationEvent();
-
-		IBreakpointManager fBreakpointManager = DebugPlugin.getDefault()
-				.getBreakpointManager();
-		fBreakpointManager.addBreakpointListener(this);
-		fBreakpointManager.addBreakpointManagerListener(this);
 	}
 
 	/**
@@ -260,8 +255,10 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 				langThread = new DBGpThread(this);
 				allThreads = new IThread[] { langThread };
 				langThread.fireCreationEvent();
-				DebugPlugin.getDefault().getBreakpointManager()
-						.addBreakpointListener(this);
+				IBreakpointManager bpmgr = DebugPlugin.getDefault()
+						.getBreakpointManager();
+				bpmgr.addBreakpointListener(this);
+				bpmgr.addBreakpointManagerListener(this);
 
 				// Determine something about the initial script and path mapping
 				testInitialScriptLocating();
@@ -728,8 +725,10 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		// check we haven't already terminated
 		if (STATE_TERMINATED != targetState) {
 			DBGpSessionHandler.getInstance().removeSessionListener(this);
-			DebugPlugin.getDefault().getBreakpointManager()
-					.removeBreakpointListener(this);
+			IBreakpointManager bpmgr = DebugPlugin.getDefault()
+					.getBreakpointManager();
+			bpmgr.removeBreakpointListener(this);
+			bpmgr.removeBreakpointManagerListener(this);
 
 			if (isTerminate && STATE_STARTED_RUNNING == targetState) {
 				setState(STATE_TERMINATING);
