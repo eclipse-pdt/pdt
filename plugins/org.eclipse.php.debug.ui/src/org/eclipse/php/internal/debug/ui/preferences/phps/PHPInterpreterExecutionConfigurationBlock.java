@@ -11,7 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.preferences.phps;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.dialogs.Dialog;
@@ -216,15 +218,7 @@ public class PHPInterpreterExecutionConfigurationBlock {
 		String versionNumber = version.getAlias().substring(3);
 		PHPexeItem[] result = versionToCompatibleItems.get(version);
 		if (result == null) {
-			List<PHPexeItem> list = new ArrayList<PHPexeItem>();
-			for (int i = 0; i < allItems.length; i++) {
-				// TODO check the condition right or not
-				if (allItems[i].getVersion() != null
-						&& allItems[i].getVersion().compareTo(versionNumber) >= 0) {
-					list.add(allItems[i]);
-				}
-			}
-			result = list.toArray(new PHPexeItem[list.size()]);
+			result = phpExes.getCompatibleItems(allItems, version);
 			versionToCompatibleItems.put(version, result);
 		}
 		return result;

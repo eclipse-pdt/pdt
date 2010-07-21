@@ -292,7 +292,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 				PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName,
 						iniPath);
 
-				if (phpPathString.equals(fileName) && defaultEXE.equals(item)) {
+				if (phpPathString.equals(fileName)/* && defaultEXE.equals(item) */) {
 					config = configs[i];
 					break;
 				}

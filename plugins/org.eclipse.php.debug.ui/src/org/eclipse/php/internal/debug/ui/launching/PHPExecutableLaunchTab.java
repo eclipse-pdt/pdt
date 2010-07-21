@@ -14,22 +14,25 @@ package org.eclipse.php.internal.debug.ui.launching;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.PHPRuntime;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchDelegateProxy;
@@ -40,8 +43,8 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
+import org.eclipse.php.internal.debug.ui.preferences.phps.NewPHPsComboBlock;
 import org.eclipse.php.internal.debug.ui.preferences.phps.PHPexeDescriptor;
-import org.eclipse.php.internal.debug.ui.preferences.phps.PHPsComboBlock;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.swt.SWT;
@@ -78,6 +81,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			ModifyListener {
 		public void modifyText(final ModifyEvent e) {
 			updateLaunchConfigurationDialog();
+			phpsComboBlock.setProject(getFileProject(debugFileTextField
+					.getText()));
 		}
 
 		public void widgetSelected(final SelectionEvent e) {
@@ -105,24 +110,28 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	protected boolean enableBreakpointSelection;
 
 	// Selection changed listener (checked PHP exe)
-	private final ISelectionChangedListener fSelectionListener = new ISelectionChangedListener() {
-		public void selectionChanged(SelectionChangedEvent event) {
+	private final IPropertyChangeListener fPropertyChangeListener = new IPropertyChangeListener() {
 
+		public void propertyChange(PropertyChangeEvent event) {
 			if (!DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID
 					.equals(phpsComboBlock.getSelectedDebuggerId())) {
 				setEnableDebugInfoOption(false);
-			}else{
+			} else {
 				setEnableDebugInfoOption(true);
 			}
 			handleSelectedPHPexeChanged();
 		}
+		// public void selectionChanged(SelectionChangedEvent event) {
+		//
+
+		// }
 	};
 
 	private Button fileLocationButton;
 
 	protected WidgetListener fListener = new WidgetListener();
 	private Text locationField;
-	protected PHPsComboBlock phpsComboBlock;
+	protected NewPHPsComboBlock phpsComboBlock;
 	private Button runWithDebugInfo;
 
 	protected SelectionAdapter selectionAdapter;
@@ -130,7 +139,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public PHPExecutableLaunchTab() {
 		enableFileSelection = true;
 		enableBreakpointSelection = true;
-		phpsComboBlock = new PHPsComboBlock();
+		phpsComboBlock = new NewPHPsComboBlock();
 	}
 
 	/**
@@ -286,7 +295,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	protected void createLocationComponent(final Composite parent) {
 		phpsComboBlock.createControl(parent);
 		final Control control = phpsComboBlock.getControl();
-		phpsComboBlock.addSelectionChangedListener(fSelectionListener);
+		phpsComboBlock.addPropertyChangeListener(fPropertyChangeListener);
 		final GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		control.setLayoutData(gd);
 	}
@@ -390,6 +399,26 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}
 		isValid(configuration);
+		updatePHPFromConfig(configuration);
+	}
+
+	/**
+	 * This method updates the jre selection from the
+	 * <code>ILaunchConfiguration</code>
+	 * 
+	 * @param config
+	 *            the config to update from
+	 */
+	protected void updatePHPFromConfig(ILaunchConfiguration config) {
+		phpsComboBlock.setProject(getFileProject(debugFileTextField.getText()));
+		try {
+			String path = config.getAttribute(PHPRuntime.PHP_CONTAINER,
+					(String) null);
+			if (path != null) {
+				phpsComboBlock.setPath(Path.fromPortableString(path));
+			}
+		} catch (CoreException e) {
+		}
 	}
 
 	/*
@@ -467,6 +496,16 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * .debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void performApply(final ILaunchConfigurationWorkingCopy configuration) {
+		if (phpsComboBlock.isDefaultJRE()) {
+			configuration.setAttribute(PHPRuntime.PHP_CONTAINER, (String) null);
+		} else {
+			IPath containerPath = phpsComboBlock.getPath();
+			String portablePath = null;
+			if (containerPath != null) {
+				portablePath = containerPath.toPortableString();
+			}
+			configuration.setAttribute(PHPRuntime.PHP_CONTAINER, portablePath);
+		}
 		final String debuggerID = phpsComboBlock.getSelectedDebuggerId();
 		// Set the executable path
 		final String selectedExecutable = phpsComboBlock
@@ -514,6 +553,15 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 					IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 					breakOnFirstLine.getSelection());
 		applyLaunchDelegateConfiguration(configuration);
+	}
+
+	private IProject getFileProject(String phpFile) {
+		if (FileUtils.resourceExists(phpFile)) {
+			IResource fileToData = ResourcesPlugin.getWorkspace().getRoot()
+					.findMember(phpFile);
+			return fileToData.getProject();
+		}
+		return null;
 	}
 
 	/**
@@ -702,7 +750,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		if (!DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID.equals(debuggerID)) {
 			setEnableDebugInfoOption(false);
 		}
-		phpsComboBlock.setDebugger(debuggerID);
-		phpsComboBlock.setPHPexe(phpexe);
+		// phpsComboBlock.setDebugger(debuggerID);
+		// phpsComboBlock.setPHPexe(phpexe);
 	}
 }

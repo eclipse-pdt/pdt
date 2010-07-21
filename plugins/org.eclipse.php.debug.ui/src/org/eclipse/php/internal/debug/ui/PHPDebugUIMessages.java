@@ -144,7 +144,38 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPDebugStepFilterPreferencePage_useStepFilters;
 	public static String PHPexe_Run_With_Debug_Info;
 	public static String PHPExecutableLaunchTab_isNotPHPFile;
+
+	public static String PHPexesComboBlock_1;
+
+	public static String PHPexesComboBlock_10;
+
+	public static String PHPexesComboBlock_11;
+
+	public static String PHPexesComboBlock_12;
+
+	public static String PHPexesComboBlock_13;
+
+	public static String PHPexesComboBlock_2;
 	public static String PHPexesComboBlock_3;
+	public static String PHPexesComboBlock_15;
+	public static String PHPexesComboBlock_16;
+
+	public static String PHPexesComboBlock_0;
+
+	public static String PHPexesComboBlock_4;
+
+	public static String PHPexesComboBlock_5;
+
+	public static String PHPexesComboBlock_14;
+
+	public static String PHPexesComboBlock_6;
+
+	public static String PHPexesComboBlock_7;
+
+	public static String PHPexesComboBlock_8;
+
+	public static String PHPexesComboBlock_9;
+
 	public static String PHPLaunchingPreferencePage_Always;
 	public static String PHPLaunchingPreferencePage_multipleMessage;
 	public static String PHPLaunchingPreferencePage_Never;
