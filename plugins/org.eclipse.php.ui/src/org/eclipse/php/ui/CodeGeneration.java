@@ -641,6 +641,12 @@ public class CodeGeneration {
 		}
 
 		String[] paramNames = method.getParameterNames();
+		if (formalParameters == null) {
+			parameterTypes = new String[paramNames.length];
+			for (int i = 0; i < paramNames.length; i++) {
+				parameterTypes[i] = "unknown_type";
+			}
+		}
 		// add parameter type before parameter name
 		for (int i = 0; i < paramNames.length; i++) {
 			if (null != parameterTypes && null != parameterTypes[i]) {

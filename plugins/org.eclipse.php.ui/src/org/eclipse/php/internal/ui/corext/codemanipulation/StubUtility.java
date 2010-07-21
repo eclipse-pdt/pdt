@@ -425,7 +425,10 @@ public class StubUtility {
 				templateName = CodeTemplateContextType.DELEGATECOMMENT_ID;
 			else
 				templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
-		} else if (retTypeSig == null) {
+		} else if (retTypeSig == null
+				&& typeName != null
+				&& (typeName.equals(methodName) || "constructor"
+						.equals(methodName))) {
 			templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
 		}
 		Template template = getCodeTemplate(templateName, sp);
