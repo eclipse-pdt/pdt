@@ -40,6 +40,8 @@ import org.eclipse.wst.jsdt.internal.compiler.env.ICompilationUnit;
  */
 public class CodeGeneration {
 
+	private static final String UNKNOWN_TYPE = "unknown_type";
+
 	/**
 	 * Constant ID for the type kind to be used in
 	 * {@link #getTypeBody(String, ICompilationUnit, String, String)} to get the
@@ -323,7 +325,7 @@ public class CodeGeneration {
 			}
 
 			if (null == fieldType) {
-				fieldType = "unknown_type";
+				fieldType = UNKNOWN_TYPE;
 			}
 
 		} catch (IOException e) {
@@ -603,7 +605,7 @@ public class CodeGeneration {
 					String typeName = ((Identifier) parameterType).getName();
 					parameterTypes[i++] = typeName;
 				} else {
-					parameterTypes[i++] = "unknown_type";
+					parameterTypes[i++] = UNKNOWN_TYPE;
 				}
 			}
 		}
@@ -644,7 +646,7 @@ public class CodeGeneration {
 		if (formalParameters == null) {
 			parameterTypes = new String[paramNames.length];
 			for (int i = 0; i < paramNames.length; i++) {
-				parameterTypes[i] = "unknown_type";
+				parameterTypes[i] = UNKNOWN_TYPE;
 			}
 		}
 		// add parameter type before parameter name
