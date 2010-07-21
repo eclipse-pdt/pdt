@@ -27,11 +27,10 @@ import org.eclipse.debug.ui.RefreshTab;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
-import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.debug.core.*;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
@@ -113,6 +112,37 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		IProgressMonitor subMonitor; // the total of monitor is 100
 		if (monitor.isCanceled()) {
 			return;
+		}
+		String path = configuration.getAttribute(PHPRuntime.PHP_CONTAINER,
+				(String) null);
+		if (path != null) {
+			// update attributes,because php's execution environment may
+			// change
+			PHPVersion version = PHPRuntime.getPHPVersion(Path
+					.fromPortableString(path));
+			if (version != null) {
+				PHPexeItem item = PHPDebugPlugin.getPHPexeItem(version);
+				if (item != null) {
+					ILaunchConfigurationWorkingCopy workingCopy = configuration
+							.getWorkingCopy();
+					workingCopy.setAttribute(
+							IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, item
+									.getExecutable().toString());
+					workingCopy.setAttribute(
+							PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, item
+									.getDebuggerID());
+					if (item.getINILocation() != null) {
+						workingCopy.setAttribute(
+								IPHPDebugConstants.ATTR_INI_LOCATION, item
+										.getINILocation().toString());
+					} else {
+						workingCopy.setAttribute(
+								IPHPDebugConstants.ATTR_INI_LOCATION,
+								(String) null);
+					}
+					configuration = workingCopy.doSave();
+				}
+			}
 		}
 
 		String phpExeString = configuration.getAttribute(

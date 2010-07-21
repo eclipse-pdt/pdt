@@ -647,4 +647,20 @@ public class PHPexes {
 	public HashMap<PHPVersion, PHPexeItem> getDefaultItemsForPHPVersion() {
 		return defaultItemsForPHPVersion;
 	}
+
+	public PHPexeItem[] getCompatibleItems(PHPexeItem[] allItems,
+			PHPVersion version) {
+		String versionNumber = version.getAlias().substring(3);
+		PHPexeItem[] result;
+		List<PHPexeItem> list = new ArrayList<PHPexeItem>();
+		for (int i = 0; i < allItems.length; i++) {
+			// TODO check the condition right or not
+			if (allItems[i].getVersion() != null
+					&& allItems[i].getVersion().compareTo(versionNumber) >= 0) {
+				list.add(allItems[i]);
+			}
+		}
+		result = list.toArray(new PHPexeItem[list.size()]);
+		return result;
+	}
 }
