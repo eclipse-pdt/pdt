@@ -455,6 +455,8 @@ public class TypeBinding implements ITypeBinding {
 				} else {
 					superTypes = new IType[0];
 				}
+			} else {
+				superTypes = new IType[0];
 			}
 		}
 		return superTypes;
