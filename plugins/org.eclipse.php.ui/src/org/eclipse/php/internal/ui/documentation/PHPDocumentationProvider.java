@@ -17,6 +17,7 @@ import java.net.URL;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.ScriptElementLabels;
@@ -26,7 +27,10 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ConstantDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.typeinference.DefineMethodUtils;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover;
@@ -213,6 +217,22 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 				.getModuleDeclaration(sourceModule);
 		ASTNode node = PHPModelUtils.getNodeByField(module, field);
 
+		if (node == null) {// define constant
+			PHPCallExpression callExpression = DefineMethodUtils
+					.getDefineNodeByField(module, field);
+			if (callExpression != null) {
+				CallArgumentsList args = callExpression.getArgs();
+				if (args != null && args.getChilds() != null
+						&& args.getChilds().size() >= 2) {
+					ASTNode argument = (ASTNode) args.getChilds().get(1);
+					if (argument instanceof Scalar) {
+						String value = ASTUtils.stripQuotes(((Scalar) argument)
+								.getValue());
+						return value;
+					}
+				}
+			}
+		}
 		if (!(node instanceof IPHPDocAwareDeclaration)) {
 			return null;
 		}
