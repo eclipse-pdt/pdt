@@ -424,6 +424,9 @@ public class PHPModelUtils {
 					moduleDeclaration, field);
 			if (fieldDeclaration instanceof IPHPDocAwareDeclaration) {
 				return ((IPHPDocAwareDeclaration) fieldDeclaration).getPHPDoc();
+			} else if (fieldDeclaration == null) {
+				return DefineMethodUtils.getDefinePHPDocBlockByField(
+						moduleDeclaration, field);
 			}
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {

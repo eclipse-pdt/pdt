@@ -416,7 +416,7 @@ public class ASTUtils {
 									.sourceEnd(), callExpression.sourceStart(),
 							callExpression.sourceEnd());
 					fieldDeclaration.setModifier(Modifiers.AccGlobal
-							| Modifiers.AccConstant);
+							| Modifiers.AccConstant | Modifiers.AccFinal);
 					return fieldDeclaration;
 				}
 			}
