@@ -65,9 +65,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	// go backward and look for any region except comment region or white space
 	// region
 	// in the given line
-	private ITextRegion getLastTokenRegion(final IStructuredDocument document,
-			final IRegion line, final int forOffset)
-			throws BadLocationException {
+	private static ITextRegion getLastTokenRegion(
+			final IStructuredDocument document, final IRegion line,
+			final int forOffset) throws BadLocationException {
 		int offset = forOffset;
 		int lineStartOffset = line.getOffset();
 		IStructuredDocumentRegion sdRegion = document
@@ -260,6 +260,14 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	public void placeMatchingBlanks(final IStructuredDocument document,
 			final StringBuffer result, final int lineNumber, final int forOffset)
 			throws BadLocationException {
+		placeMatchingBlanksForStructuredDocument(document, result, lineNumber,
+				forOffset);
+	}
+
+	public static void placeMatchingBlanksForStructuredDocument(
+			final IStructuredDocument document, final StringBuffer result,
+			final int lineNumber, final int forOffset)
+			throws BadLocationException {
 		final int lastNonEmptyLineIndex = getIndentationBaseLine(document,
 				lineNumber, forOffset, false);
 		final int indentationBaseLineIndex = getIndentationBaseLine(document,
@@ -293,7 +301,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		}
 	}
 
-	boolean shouldIndent(final IStructuredDocument document, int offset,
+	static boolean shouldIndent(final IStructuredDocument document, int offset,
 			final int lineNumber) {
 		try {
 			final IRegion lineInfo = document.getLineInformation(lineNumber);

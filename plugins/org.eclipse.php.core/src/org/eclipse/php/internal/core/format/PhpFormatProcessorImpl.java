@@ -78,7 +78,8 @@ public class PhpFormatProcessorImpl extends HTMLFormatProcessorImpl {
 				formatModel(structuredModel, start, length);
 
 				// save model if needed
-				if (!structuredModel.isSharedForEdit()
+				if (structuredModel != null
+						&& !structuredModel.isSharedForEdit()
 						&& structuredModel.isSaveNeeded())
 					structuredModel.save();
 			} finally {

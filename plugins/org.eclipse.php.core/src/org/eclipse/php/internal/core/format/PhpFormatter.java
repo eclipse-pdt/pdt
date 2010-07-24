@@ -132,7 +132,7 @@ public class PhpFormatter implements IStructuredFormatter {
 		return length;
 	}
 
-	private void format(IStructuredDocumentRegion sdRegion) {
+	public void format(IStructuredDocumentRegion sdRegion) {
 		assert sdRegion != null;
 
 		// resolce formatter range

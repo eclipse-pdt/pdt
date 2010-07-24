@@ -96,7 +96,9 @@ public class FormatPreferencesSupport {
 			try {
 				editorModel = (DOMModelForPHP) StructuredModelManager
 						.getModelManager().getExistingModelForRead(document);
-
+				if (editorModel == null) {
+					return;
+				}
 				String baseLocation = editorModel.getBaseLocation();
 				// The baseLocation may be a path on disk or relative to the
 				// workspace root. Don't translate on-disk paths to
