@@ -19,14 +19,12 @@ import org.eclipse.php.internal.core.documentModel.dom.AttrImplForPhp;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.core.internal.text.rules.SimpleStructuredRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
@@ -151,7 +149,70 @@ public class PhpFormatter implements IStructuredFormatter {
 		IStructuredDocument document = sdRegion.getParentDocument();
 		int lineIndex = document.getLineOfOffset(startFormat);
 		int endLineIndex = document.getLineOfOffset(endFormat);
+		ITextRegionList textRegions = sdRegion.getRegions();
+		String newline = document.getLineDelimiter();
+		for (int i = 0; i < textRegions.size(); i++) {
+			ITextRegion textRegion = textRegions.get(i);
+			if (textRegion instanceof PhpScriptRegion) {
+				int startOffset = sdRegion.getStartOffset(textRegion);
+				PhpScriptRegion scriptRegion = (PhpScriptRegion) textRegion;
+				ITextRegion[] phpTokens;
+				try {
+					phpTokens = scriptRegion.getPhpTokens(0, textRegion
+							.getLength());
+					for (int j = phpTokens.length - 1; j >= 0; j--) {
+						ITextRegion phpToken = phpTokens[j];
+						int start = startOffset + phpToken.getStart();
+						int end = start + phpToken.getLength();
+						if (/* endFormat >= end || */startFormat <= start
+								&& endFormat >= end) {
+							if (phpToken.getType().equals(
+									PHPRegionTypes.PHP_CURLY_OPEN)) {
+								if (j < phpTokens.length - 1 && j > 0) {
+									if (phpTokens[j - 1].getType().equals(
+											PHPRegionTypes.PHP_TOKEN)
+											&& document
+													.getLineOfOffset(startOffset
+															+ phpToken
+																	.getStart()) == document
+													.getLineOfOffset(startOffset
+															+ phpTokens[j + 1]
+																	.getStart())) {
+										document.replace(startOffset
+												+ phpToken.getEnd(), 0, newline);
+										endLineIndex++;
+									}
+								}
+							} else if (phpToken.getType().equals(
+									PHPRegionTypes.PHP_CURLY_CLOSE)) {
+								if (j > 0
+										&& (phpTokens[j - 1].getType().equals(
+												PHPRegionTypes.PHP_SEMICOLON) || phpTokens[j - 1]
+												.getType()
+												.equals(
+														PHPRegionTypes.PHP_CURLY_CLOSE))) {
+									if (document.getLineOfOffset(startOffset
+											+ phpToken.getStart()) == document
+											.getLineOfOffset(startOffset
+													+ phpTokens[j - 1]
+															.getStart())) {
+										document.replace(startOffset
+												+ phpTokens[j - 1].getEnd(), 0,
+												newline);
+										endLineIndex++;
+									}
+								}
+							}
+						}
 
+					}
+				} catch (BadLocationException e) {
+				}
+			}
+		}
+		sdRegion.getRegionAtCharacterOffset(startFormat);
+		// TODO get token of each line then insert line seporator after { and
+		// after } if there is no line seporator
 		// format each line
 		for (; lineIndex <= endLineIndex; lineIndex++) {
 			formatLine(document, lineIndex);
