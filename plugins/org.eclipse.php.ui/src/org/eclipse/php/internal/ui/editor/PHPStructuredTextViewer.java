@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.editor;
 
 import java.util.ArrayList;
+import java.util.EventObject;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -19,6 +20,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
+import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.command.CommandStack;
+import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.internal.text.SelectionProcessor;
 import org.eclipse.jface.text.*;
@@ -631,4 +635,54 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	public SourceViewerConfiguration getViewerConfiguration() {
 		return fViewerConfiguration;
 	}
+
+	@Override
+	public void setDocument(IDocument document,
+			IAnnotationModel annotationModel, int modelRangeOffset,
+			int modelRangeLength) {
+		if (getDocument() instanceof IStructuredDocument) {
+			CommandStack commandStack = ((IStructuredDocument) getDocument())
+					.getUndoManager().getCommandStack();
+			if (commandStack instanceof BasicCommandStack) {
+				commandStack
+						.addCommandStackListener(getInternalCommandStackListener());
+			}
+		}
+		super.setDocument(document, annotationModel, modelRangeOffset,
+				modelRangeLength);
+		if (getDocument() instanceof IStructuredDocument) {
+			CommandStack commandStack = ((IStructuredDocument) getDocument())
+					.getUndoManager().getCommandStack();
+			if (commandStack instanceof BasicCommandStack) {
+				commandStack
+						.addCommandStackListener(getInternalCommandStackListener());
+			}
+		}
+	}
+
+	private void fireDirty() {
+		if (fTextEditor instanceof PHPStructuredEditor) {
+			PHPStructuredEditor phpEditor = (PHPStructuredEditor) fTextEditor;
+			phpEditor.firePropertyChange(ITextEditor.PROP_DIRTY);
+		}
+	}
+
+	private InternalCommandStackListener fInternalCommandStackListener;
+
+	/**
+	 * @return
+	 */
+	private CommandStackListener getInternalCommandStackListener() {
+		if (fInternalCommandStackListener == null) {
+			fInternalCommandStackListener = new InternalCommandStackListener();
+		}
+		return fInternalCommandStackListener;
+	}
+
+	class InternalCommandStackListener implements CommandStackListener {
+		public void commandStackChanged(EventObject event) {
+			fireDirty();
+		}
+	}
+
 }
