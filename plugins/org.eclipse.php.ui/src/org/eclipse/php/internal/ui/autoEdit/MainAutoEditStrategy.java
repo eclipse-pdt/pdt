@@ -31,6 +31,7 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 	private static IAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
 	private static IAutoEditStrategy docBlockAutoEditStrategy = new PhpDocAutoIndentStrategy();
 	private static IAutoEditStrategy tabAutoEditStrategy = new TabAutoEditStrategy();
+	private static IAutoEditStrategy autoIndentStrategy = new PHPAutoIndentStrategy();
 
 	public void customizeDocumentCommand(IDocument document,
 			DocumentCommand command) {
@@ -65,6 +66,7 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 					command);
 			tabAutoEditStrategy.customizeDocumentCommand(document, command);
 			quotesAutoEditStrategy.customizeDocumentCommand(document, command);
+			autoIndentStrategy.customizeDocumentCommand(document, command);
 		}
 
 	}

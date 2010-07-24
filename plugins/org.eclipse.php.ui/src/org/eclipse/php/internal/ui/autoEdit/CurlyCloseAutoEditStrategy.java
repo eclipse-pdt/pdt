@@ -26,7 +26,7 @@ public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy
 
 	public void customizeDocumentCommand(IDocument document,
 			DocumentCommand command) {
-		if (command.text != null && command.text.endsWith("}")) { //$NON-NLS-1$
+		if (command.text != null && command.text.trim().endsWith("}")) { //$NON-NLS-1$
 			autoIndentAfterCurlyClose((IStructuredDocument) document, command);
 		}
 	}
@@ -55,7 +55,37 @@ public class CurlyCloseAutoEditStrategy extends CurlyCloseIndentationStrategy
 		}
 
 		command.text = helpBuffer.toString() + command.text;
-
+		// JobSafeStructuredDocument newdocument = new
+		// JobSafeStructuredDocument(
+		// new PhpSourceParser());
+		// String start = "<?php";
+		// newdocument.set(start + command.text);
+		// PhpFormatter formatter = new PhpFormatter(0,
+		// newdocument.getLength());
+		// formatter.format(newdocument.getFirstStructuredDocumentRegion());
+		//
+		// Reader reader = new StringReader(newdocument.get());
+		// BufferedReader br = new BufferedReader(reader);
+		// List<String> list = new ArrayList<String>();
+		// String line = null;
+		// try {
+		// while ((line = br.readLine()) != null) {
+		// if (list.isEmpty()) {
+		// line = line.substring(start.length()).trim();
+		// }
+		// list.add(line);
+		// }
+		// } catch (IOException e) {
+		// }
+		// String newline = newdocument.getLineDelimiter();
+		// StringBuffer sb = new StringBuffer();
+		// for (int i = 0; i < list.size(); i++) {
+		// sb.append(helpBuffer.toString()).append(list.get(i));
+		// if (i != list.size() - 1) {
+		// sb.append(newline);
+		// }
+		// }
+		// command.text = sb.toString();
 	}
 
 	protected static boolean isBlanks(IStructuredDocument document,
