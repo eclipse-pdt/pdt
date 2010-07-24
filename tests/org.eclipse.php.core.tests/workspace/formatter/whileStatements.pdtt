@@ -30,10 +30,14 @@ while /* kuku */ ( /* kuku */ $a > 0) {
 	}
 }
 
-while ( $c > 0) {while ($d > 0) {}        }
+while ( $c > 0) {
+	while ($d > 0) {
+	}
+}
 
 
-while ($e > 0) while ($f > 0) {}
+while ($e > 0) while ($f > 0) {
+}
 
 
 while($g > 0                          ) {
