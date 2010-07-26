@@ -18,8 +18,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
+import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
 public class ProjectOptions {
 
@@ -84,6 +84,12 @@ public class ProjectOptions {
 				CorePreferencesSupport.getInstance().getPreferencesValue(
 						Keys.EDITOR_USE_ASP_TAGS, null, project))
 				.booleanValue();
+	}
+
+	public static boolean useShortTags(IProject project) {
+		String useShortTags = CorePreferencesSupport.getInstance()
+				.getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null, project);
+		return "true".equals(useShortTags);
 	}
 
 	public static final boolean isSupportingAspTags(IFile file) {
