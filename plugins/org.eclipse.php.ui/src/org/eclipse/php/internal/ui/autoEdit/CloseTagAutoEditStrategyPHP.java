@@ -17,8 +17,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
-import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -66,7 +65,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 			}
 		});
 
-		boolean useShortTags = useShortTags(projects[0]);
+		boolean useShortTags = ProjectOptions.useShortTags(projects[0]);
 		if (!TypingPreferences.addPhpCloseTag && useShortTags) {
 			return;
 		}
@@ -120,12 +119,6 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 			if (model != null)
 				model.releaseFromRead();
 		}
-	}
-
-	private boolean useShortTags(IProject project) {
-		String useShortTags = CorePreferencesSupport.getInstance()
-				.getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null, project);
-		return "true".equals(useShortTags);
 	}
 
 	private final boolean closeTagAppears(String source, int startFrom) {
