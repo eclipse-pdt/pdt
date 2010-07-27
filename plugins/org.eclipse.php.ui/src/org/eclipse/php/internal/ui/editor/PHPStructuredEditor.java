@@ -2285,6 +2285,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
+		
+		setHelpContextId("editor_preferences");//$NON-NLS-1$
 	}
 
 	private void refreshViewer() {
