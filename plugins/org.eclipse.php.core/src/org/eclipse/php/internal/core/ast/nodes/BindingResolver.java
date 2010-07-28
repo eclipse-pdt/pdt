@@ -212,6 +212,22 @@ public class BindingResolver {
 	}
 
 	/**
+	 * Returns the new method return types binding corresponding to the given
+	 * {@link IMethod} .
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 * 
+	 * @param method
+	 *            An {@link IMethod}
+	 * @return the new method return types binding
+	 */
+	public ITypeBinding[] getMethodReturnTypeBinding(IMethod method) {
+		return null;
+	}
+
+	/**
 	 * Return the working copy owner for the receiver.
 	 * <p>
 	 * The default implementation of this method returns <code>null</code>.

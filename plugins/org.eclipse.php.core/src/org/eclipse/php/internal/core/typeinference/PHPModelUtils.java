@@ -178,27 +178,15 @@ public class PHPModelUtils {
 	 *            Source module
 	 * @param elements
 	 *            Model elements to filter
-	 * @return
-	 */
-	public static <T extends IModelElement> Collection<T> fileNetworkFilter(
-			ISourceModule sourceModule, Collection<T> elements) {
-		return fileNetworkFilter(sourceModule, elements, null);
-	}
-
-	/**
-	 * Filters model elements using file network.
-	 * 
-	 * @param sourceModule
-	 *            Source module
-	 * @param elements
-	 *            Model elements to filter
-	 * @param referenceTree
-	 *            Cached instance of file hierarchy
+	 * @param cache
+	 *            Temporary model cache instance
+	 * @param monitor
+	 *            Progress monitor
 	 * @return
 	 */
 	public static <T extends IModelElement> Collection<T> fileNetworkFilter(
 			ISourceModule sourceModule, Collection<T> elements,
-			ReferenceTree referenceTree) {
+			IModelAccessCache cache, IProgressMonitor monitor) {
 
 		if (elements != null && elements.size() > 0) {
 			List<T> filteredElements = new LinkedList<T>();
@@ -210,10 +198,14 @@ public class PHPModelUtils {
 				}
 			}
 			if (filteredElements.size() == 0) {
-				// Filter by includes network
-				if (referenceTree == null) {
+				ReferenceTree referenceTree;
+				if (cache != null) {
+					referenceTree = cache.getFileHierarchy(sourceModule,
+							monitor);
+				} else {
+					// Filter by includes network
 					referenceTree = FileNetworkUtility
-							.buildReferencedFilesTree(sourceModule, null);
+							.buildReferencedFilesTree(sourceModule, monitor);
 				}
 				for (T element : elements) {
 					if (LanguageModelInitializer
@@ -263,15 +255,20 @@ public class PHPModelUtils {
 	 * 
 	 * @param sourceModule
 	 * @param elements
+	 * @param cache
+	 *            Model access cache if available
+	 * @param monitor
+	 *            Progress monitor
 	 * @return
 	 */
 	public static <T extends IModelElement> Collection<T> filterElements(
-			ISourceModule sourceModule, Collection<T> elements) {
+			ISourceModule sourceModule, Collection<T> elements,
+			IModelAccessCache cache, IProgressMonitor monitor) {
 		if (elements == null) {
 			return null;
 		}
 		if (canUseFileNetworkFilter(elements)) {
-			return fileNetworkFilter(sourceModule, elements);
+			return fileNetworkFilter(sourceModule, elements, cache, monitor);
 		}
 		return elements;
 	}
@@ -574,7 +571,7 @@ public class PHPModelUtils {
 							scope, null);
 
 					Collection<IField> filteredElements = filterElements(
-							sourceModule, Arrays.asList(fields));
+							sourceModule, Arrays.asList(fields), cache, monitor);
 					return (IField[]) filteredElements
 							.toArray(new IField[filteredElements.size()]);
 				}
@@ -588,7 +585,7 @@ public class PHPModelUtils {
 		Collection<IField> filteredElements = null;
 		if (fields != null) {
 			filteredElements = filterElements(sourceModule, Arrays
-					.asList(fields));
+					.asList(fields), cache, monitor);
 			return (IField[]) filteredElements
 					.toArray(new IField[filteredElements.size()]);
 		}
@@ -696,7 +693,7 @@ public class PHPModelUtils {
 				functionName, MatchRule.EXACT, Modifiers.AccGlobal, 0, scope,
 				null);
 		Collection<IMethod> filteredElements = filterElements(sourceModule,
-				Arrays.asList(functions));
+				Arrays.asList(functions), cache, monitor);
 		return (IMethod[]) filteredElements
 				.toArray(new IMethod[filteredElements.size()]);
 	}
@@ -1170,7 +1167,7 @@ public class PHPModelUtils {
 			hierarchy = type.newSupertypeHierarchy(null);
 		}
 		Collection<IType> filtered = filterElements(type.getSourceModule(),
-				Arrays.asList(hierarchy.getAllSuperclasses(type)));
+				Arrays.asList(hierarchy.getAllSuperclasses(type)), null, null);
 		return (IType[]) filtered.toArray(new IType[filtered.size()]);
 	}
 
@@ -1592,7 +1589,8 @@ public class PHPModelUtils {
 					.createSearchScope(sourceModule.getScriptProject());
 			IType[] r = PhpModelAccess.getDefault().findTypes(typeName,
 					MatchRule.EXACT, 0, 0, scope, null);
-			types = filterElements(sourceModule, Arrays.asList(r));
+			types = filterElements(sourceModule, Arrays.asList(r), null,
+					monitor);
 		} else {
 			types = cache.getTypes(sourceModule, typeName, null, monitor);
 			if (types == null) {
@@ -1760,7 +1758,7 @@ public class PHPModelUtils {
 							superClass, MatchRule.EXACT, 0,
 							Modifiers.AccNameSpace, scope, null);
 					types = fileNetworkFilter(type.getSourceModule(), Arrays
-							.asList(superTypes), null);
+							.asList(superTypes), null, monitor);
 				} else {
 					String namespaceName = null;
 					int i = superClass
