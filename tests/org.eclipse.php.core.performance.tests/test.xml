@@ -40,14 +40,10 @@
   <!-- This target defines the performance tests that need to be run. -->
   <target name="performance-suite">
     <property name="php-core-perf-folder" value="php_perf_folder"/>
-    <property name="extraVMargs" value="-Xmx256M -Xms256M -Dcompliance=1.5"/>
-
-  	<!--
     <delete dir="${php-core-perf-folder}" quiet="true"/>
-  	-->
     <ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 		<!-- Use a subdir 'data' so that the JCL jars are put in php-core-perf-folder and are deleted at the end of the tests. -->
-		<property name="data-dir" value="${php-core-perf-folder}/data"/>
+		<property name="data-dir" value="${php-core-perf-folder}"/>
 		<property name="plugin-name" value="${plugin-name}"/>
 		<property name="classname" value="org.eclipse.php.core.tests.performance.AllTests"/>
     </ant>

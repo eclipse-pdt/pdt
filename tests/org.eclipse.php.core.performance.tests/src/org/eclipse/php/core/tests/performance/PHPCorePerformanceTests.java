@@ -26,6 +26,8 @@ public class PHPCorePerformanceTests extends Plugin {
 	// The shared instance
 	private static PHPCorePerformanceTests plugin;
 
+	private PerformanceMonitor perfMonitor;
+
 	/**
 	 * The constructor
 	 */
@@ -43,6 +45,7 @@ public class PHPCorePerformanceTests extends Plugin {
 		plugin = this;
 
 		PHPCorePlugin.toolkitInitialized = true;
+		perfMonitor = new PerformanceMonitor(plugin.getBundle());
 	}
 
 	/*
@@ -52,6 +55,7 @@ public class PHPCorePerformanceTests extends Plugin {
 	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		perfMonitor.dispose();
 		plugin = null;
 		super.stop(context);
 	}
@@ -63,5 +67,9 @@ public class PHPCorePerformanceTests extends Plugin {
 	 */
 	public static PHPCorePerformanceTests getDefault() {
 		return plugin;
+	}
+
+	public static PerformanceMonitor getPerformanceMonitor() {
+		return plugin.perfMonitor;
 	}
 }
