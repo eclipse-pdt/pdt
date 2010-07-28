@@ -173,7 +173,7 @@ public class PHPCoreTests extends Plugin {
 	 */
 	public static void setProjectPhpVersion(IProject project,
 			PHPVersion phpVersion) throws CoreException {
-		if (phpVersion != ProjectOptions.getDefaultPhpVersion()) {
+		if (phpVersion != ProjectOptions.getPhpVersion(project)) {
 			ProjectOptions.setPhpVersion(phpVersion, project);
 			waitForAutoBuild();
 			waitForIndexer();
