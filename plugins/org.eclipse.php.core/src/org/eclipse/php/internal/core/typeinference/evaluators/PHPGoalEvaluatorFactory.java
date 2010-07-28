@@ -39,6 +39,9 @@ public class PHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 	}
 
+	public PHPGoalEvaluatorFactory() {
+	}
+
 	private static int getPriority(IConfigurationElement element) {
 		String priority = element.getAttribute("priority");
 		if (priority == null) {

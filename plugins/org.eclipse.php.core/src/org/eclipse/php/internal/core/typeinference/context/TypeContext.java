@@ -14,15 +14,18 @@ package org.eclipse.php.internal.core.typeinference.context;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 
 /**
  * This is a context for the PHP class or interface
  * 
  * @author michael
  */
-public class TypeContext extends InstanceContext implements INamespaceContext {
+public class TypeContext extends InstanceContext implements INamespaceContext,
+		IModelCacheContext {
 
 	private String namespaceName;
+	private IModelAccessCache cache;
 
 	public TypeContext(ISourceModuleContext parent, IEvaluatedType instanceType) {
 		super(parent, instanceType);
@@ -34,6 +37,14 @@ public class TypeContext extends InstanceContext implements INamespaceContext {
 
 	public String getNamespace() {
 		return namespaceName;
+	}
+
+	public IModelAccessCache getCache() {
+		return cache;
+	}
+
+	public void setCache(IModelAccessCache cache) {
+		this.cache = cache;
 	}
 
 	public int hashCode() {

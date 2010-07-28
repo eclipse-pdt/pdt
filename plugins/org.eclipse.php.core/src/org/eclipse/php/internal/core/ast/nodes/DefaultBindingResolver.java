@@ -20,8 +20,10 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.model.PerFileModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.BindingUtility;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
@@ -89,9 +91,10 @@ public class DefaultBindingResolver extends BindingResolver {
 			WorkingCopyOwner owner) {
 		this.sourceModule = sourceModule;
 		this.workingCopyOwner = owner;
-		this.bindingUtil = new BindingUtility(this.sourceModule);
 		this.bindingTables = new BindingTables();
 		this.modelAccessCache = new PerFileModelAccessCache(sourceModule);
+		this.bindingUtil = new BindingUtility(this.sourceModule,
+				this.modelAccessCache);
 	}
 
 	private ITypeBinding internalGetTypeBinding(IEvaluatedType type,
@@ -190,6 +193,45 @@ public class DefaultBindingResolver extends BindingResolver {
 			return new MethodBinding(this, method);
 		}
 		return null;
+	}
+
+	public ITypeBinding[] getMethodReturnTypeBinding(IMethod method) {
+		List<ITypeBinding> result = new LinkedList<ITypeBinding>();
+		try {
+			int flags = method.getFlags();
+			if (!PHPFlags.isAbstract(flags)) {
+				IEvaluatedType[] evaluatedFunctionReturnTypes = bindingUtil
+						.getFunctionReturnType(method);
+				for (IEvaluatedType currentEvaluatedType : evaluatedFunctionReturnTypes) {
+					ITypeBinding typeBinding = getTypeBinding(
+							currentEvaluatedType, sourceModule);
+					if (typeBinding != null) {
+						result.add(typeBinding);
+					}
+				}
+			} else {
+				IModelElement parentElement = method.getParent();
+				if (parentElement instanceof IType) {
+					IType parent = (IType) parentElement;
+					IType[] functionReturnTypes = CodeAssistUtils
+							.getFunctionReturnType(new IType[] { parent },
+									method.getElementName(),
+									CodeAssistUtils.USE_PHPDOC, method
+											.getSourceModule(), 0);
+					for (IType currentEvaluatedType : functionReturnTypes) {
+						ITypeBinding typeBinding = getTypeBinding(currentEvaluatedType);
+						if (typeBinding != null) {
+							result.add(typeBinding);
+						}
+					}
+				}
+			}
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		return (ITypeBinding[]) result.toArray(new ITypeBinding[result.size()]);
 	}
 
 	/**

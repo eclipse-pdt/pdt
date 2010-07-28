@@ -17,9 +17,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTypeGoal;
 
 public abstract class AbstractMethodReturnTypeEvaluator extends
@@ -36,11 +39,17 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 		IType[] types = typedGoal.getTypes();
 		String methodName = typedGoal.getMethodName();
 
+		IContext context = typedGoal.getContext();
+		IModelAccessCache cache = null;
+		if (context instanceof IModelCacheContext) {
+			cache = ((IModelCacheContext) context).getCache();
+		}
+
 		List<IMethod> methods = new LinkedList<IMethod>();
 		if (types == null) {
 			try {
 				methods.addAll(Arrays.asList(PHPModelUtils.getFunctions(
-						methodName, sourceModule, 0, null, null)));
+						methodName, sourceModule, 0, cache, null)));
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
@@ -52,9 +61,13 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 					IMethod[] typeMethods = PHPModelUtils.getTypeMethod(type,
 							methodName, true);
 					if (typeMethods.length == 0) {
+						ITypeHierarchy hierarchy = null;
+						if (cache != null) {
+							hierarchy = cache.getSuperTypeHierarchy(type, null);
+						}
 						typeMethods = PHPModelUtils
-								.getSuperTypeHierarchyMethod(type, methodName,
-										true, null);
+								.getSuperTypeHierarchyMethod(type, hierarchy,
+										methodName, true, null);
 					}
 					if (typeMethods.length > 0) {
 						methods.add(typeMethods[0]);

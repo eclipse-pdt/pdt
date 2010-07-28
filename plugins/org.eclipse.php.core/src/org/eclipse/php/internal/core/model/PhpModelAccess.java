@@ -19,8 +19,8 @@ import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 
 public class PhpModelAccess extends ModelAccess {
@@ -105,7 +105,6 @@ public class PhpModelAccess extends ModelAccess {
 
 	public IField[] findIncludes(String name, MatchRule matchRule,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
-
 		List<IField> result = new LinkedList<IField>();
 		if (!findElements(IModelElement.IMPORT_DECLARATION, name, matchRule, 0,
 				0, scope, result, monitor)) {

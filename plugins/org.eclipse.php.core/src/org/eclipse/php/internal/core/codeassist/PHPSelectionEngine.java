@@ -98,7 +98,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					end);
 			if (elements != null) {
 				Collection<IModelElement> filtered = PHPModelUtils
-						.filterElements(sourceModule, Arrays.asList(elements));
+						.filterElements(sourceModule, Arrays.asList(elements),
+								null, null);
 				return (IModelElement[]) filtered
 						.toArray(new IModelElement[filtered.size()]);
 			}
@@ -140,7 +141,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					offset, end);
 			if (elements != null) {
 				Collection<IModelElement> filtered = PHPModelUtils
-						.filterElements(sourceModule, Arrays.asList(elements));
+						.filterElements(sourceModule, Arrays.asList(elements),
+								null, null);
 				return (IModelElement[]) filtered
 						.toArray(new IModelElement[filtered.size()]);
 			}

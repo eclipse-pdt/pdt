@@ -30,11 +30,9 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 
@@ -65,13 +63,23 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			return null;
 		}
 
+		IContext context = typedGoal.getContext();
+		IModelAccessCache cache = null;
+		if (context instanceof IModelCacheContext) {
+			cache = ((IModelCacheContext) context).getCache();
+		}
+
 		String variableName = typedGoal.getVariableName();
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 		for (final IType type : types) {
 			try {
+				ITypeHierarchy hierarchy = null;
+				if (cache != null) {
+					hierarchy = cache.getSuperTypeHierarchy(type, null);
+				}
 				IField[] fields = PHPModelUtils.getTypeHierarchyField(type,
-						variableName, true, null);
+						hierarchy, variableName, true, null);
 				Set<IType> fieldDeclaringTypeSet = new HashSet<IType>();
 				for (IField field : fields) {
 					IType declaringType = field.getDeclaringType();
@@ -130,7 +138,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			}
 		}
 
-		resolveMagicClassVariableDeclaration(types, variableName);
+		resolveMagicClassVariableDeclaration(types, variableName, cache);
 
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
@@ -167,21 +175,28 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	 * 
 	 * @param types
 	 * @param variableName
+	 * @param cache
 	 */
 	private void resolveMagicClassVariableDeclaration(IType[] types,
-			String variableName) {
+			String variableName, IModelAccessCache cache) {
 		for (IType type : types) {
-			resolveMagicClassVariableDeclaration(variableName, type);
+			resolveMagicClassVariableDeclaration(variableName, type, cache);
 			try {
 				if (evaluated.isEmpty() && type.getSuperClasses() != null
 						&& type.getSuperClasses().length > 0) {
+
+					ITypeHierarchy hierarchy = null;
+					if (cache != null) {
+						hierarchy = cache.getSuperTypeHierarchy(type, null);
+					}
 					IType[] superClasses = PHPModelUtils.getSuperClasses(type,
-							null);
+							hierarchy);
+
 					for (int i = 0; i < superClasses.length
 					/* && evaluated.isEmpty() */; i++) {
 						IType superClass = superClasses[i];
 						resolveMagicClassVariableDeclaration(variableName,
-								superClass);
+								superClass, cache);
 					}
 				}
 			} catch (ModelException e) {
@@ -191,7 +206,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	}
 
 	protected void resolveMagicClassVariableDeclaration(String variableName,
-			IType type) {
+			IType type, IModelAccessCache cache) {
 		final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
 		if (docBlock != null) {
 			for (PHPDocTag tag : docBlock.getTags()) {

@@ -20,6 +20,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.IInstanceContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 
 /**
  * This is a PHP method or function context.
@@ -27,7 +28,8 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
  * @author michael
  */
 public class MethodContext implements IContext, INamespaceContext,
-		IArgumentsContext, IInstanceContext, ISourceModuleContext {
+		IArgumentsContext, IInstanceContext, ISourceModuleContext,
+		IModelCacheContext {
 
 	private final ISourceModule sourceModule;
 	private final ModuleDeclaration rootNode;
@@ -36,6 +38,7 @@ public class MethodContext implements IContext, INamespaceContext,
 	private final IEvaluatedType[] argTypes;
 	private IEvaluatedType instanceType;
 	private String namespaceName;
+	private IModelAccessCache cache;
 
 	public MethodContext(IContext parent, ISourceModule sourceModule,
 			ModuleDeclaration rootNode, MethodDeclaration methodNode,
@@ -114,6 +117,14 @@ public class MethodContext implements IContext, INamespaceContext,
 			}
 		}
 		return null;
+	}
+
+	public IModelAccessCache getCache() {
+		return cache;
+	}
+
+	public void setCache(IModelAccessCache cache) {
+		this.cache = cache;
 	}
 
 	public int hashCode() {

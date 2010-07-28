@@ -31,7 +31,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
-import org.eclipse.php.internal.core.typeinference.context.FileContext;
+import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.VariableReferenceEvaluator;
 
@@ -48,6 +48,7 @@ public class BindingUtility {
 	private ASTNode rootNode;
 	private Map<SourceRange, IEvaluatedType> evaluatedTypesCache = new HashMap<SourceRange, IEvaluatedType>();
 	private int timeLimit = TIME_LIMIT;
+	private IModelAccessCache modelAccessCache;
 
 	/**
 	 * Creates new instance of binding utility.
@@ -72,6 +73,12 @@ public class BindingUtility {
 	public BindingUtility(ISourceModule sourceModule, ASTNode rootNode) {
 		this.sourceModule = sourceModule;
 		this.rootNode = rootNode;
+	}
+
+	public BindingUtility(ISourceModule sourceModule,
+			IModelAccessCache modelAccessCache) {
+		this(sourceModule);
+		this.modelAccessCache = modelAccessCache;
 	}
 
 	/**
@@ -177,8 +184,10 @@ public class BindingUtility {
 			throws ModelException {
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
 			ContextFinder contextFinder = getContext(sourceRange);
-			evaluatedTypesCache.put(sourceRange, getType(sourceRange,
-					contextFinder.getContext(), contextFinder.getNode()));
+			evaluatedTypesCache.put(
+					sourceRange,
+					getType(sourceRange, contextFinder.getContext(),
+							contextFinder.getNode()));
 		}
 		return evaluatedTypesCache.get(sourceRange);
 	}
@@ -333,13 +342,15 @@ public class BindingUtility {
 			boolean filter, IModelAccessCache cache) throws ModelException {
 		ContextFinder contextFinder = getContext(sourceRange);
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
-			evaluatedTypesCache.put(sourceRange, getType(sourceRange,
-					contextFinder.getContext(), contextFinder.getNode()));
+			evaluatedTypesCache.put(
+					sourceRange,
+					getType(sourceRange, contextFinder.getContext(),
+							contextFinder.getNode()));
 		}
 		IEvaluatedType evaluatedType = evaluatedTypesCache.get(sourceRange);
 		return PHPTypeInferenceUtils.getModelElements(evaluatedType,
-				(ISourceModuleContext) contextFinder.getContext(), sourceRange
-						.getOffset(), cache);
+				(ISourceModuleContext) contextFinder.getContext(),
+				sourceRange.getOffset(), cache);
 	}
 
 	/**
@@ -436,8 +447,8 @@ public class BindingUtility {
 		}
 
 		public String toString() {
-			return new StringBuilder("<offset=").append(offset).append(
-					", length=").append(length).append(">").toString();
+			return new StringBuilder("<offset=").append(offset)
+					.append(", length=").append(length).append(">").toString();
 		}
 	}
 
@@ -457,6 +468,9 @@ public class BindingUtility {
 		}
 
 		public IContext getContext() {
+			if (context instanceof IModelCacheContext) {
+				((IModelCacheContext) context).setCache(modelAccessCache);
+			}
 			return context;
 		}
 
@@ -503,8 +517,8 @@ public class BindingUtility {
 				e.printStackTrace();
 			}
 		}
-		FileContext fileContext = new FileContext(sourceModule,
-				sourceModuleDeclaration);
+		// FileContext fileContext = new FileContext(sourceModule,
+		// sourceModuleDeclaration);
 
 		final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 		final List<Expression> returnExpressions = new LinkedList<Expression>();

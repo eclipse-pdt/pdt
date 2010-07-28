@@ -23,6 +23,7 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -51,12 +52,19 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 				.getInstanceType(), context);
 		Set<PHPDocBlock> docs = new HashSet<PHPDocBlock>();
 
+		IModelAccessCache cache = context.getCache();
+
 		if (types != null) {
 			for (IType type : types) {
 				try {
 					// we look in whole hiearchy
-					ITypeHierarchy superHierarchy = type
-							.newSupertypeHierarchy(null);
+					ITypeHierarchy superHierarchy;
+					if (cache != null) {
+						superHierarchy = cache
+								.getSuperTypeHierarchy(type, null);
+					} else {
+						superHierarchy = type.newSupertypeHierarchy(null);
+					}
 					IType[] superTypes = superHierarchy.getAllTypes();
 					for (IType superType : superTypes) {
 						IField[] typeField = PHPModelUtils.getTypeField(

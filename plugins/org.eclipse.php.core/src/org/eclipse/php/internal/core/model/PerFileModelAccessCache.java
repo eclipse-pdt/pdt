@@ -116,8 +116,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			return filteredElements;
 		}
 
-		return PHPModelUtils.fileNetworkFilter(sourceModule, elements,
-				getFileHierarchy(sourceModule, monitor));
+		return PHPModelUtils.fileNetworkFilter(sourceModule, elements, this,
+				monitor);
 	}
 
 	/**

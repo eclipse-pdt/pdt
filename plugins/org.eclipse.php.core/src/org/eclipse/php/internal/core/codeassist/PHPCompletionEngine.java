@@ -61,16 +61,20 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			});
 
 	public void complete(IModuleSource module, int position, int i) {
+		complete(module, position, i, true);
+	}
 
+	public void complete(IModuleSource module, int position, int i,
+			boolean waitForBuilder) {
 		if (!PHPCorePlugin.toolkitInitialized) {
 			return;
 		}
-
 		if (requestor instanceof IPHPCompletionRequestor) {
 			((IPHPCompletionRequestor) requestor).setOffset(offset);
-
 		}
-		ModelManager.getModelManager().getIndexManager().waitUntilReady();
+		if (waitForBuilder) {
+			ModelManager.getModelManager().getIndexManager().waitUntilReady();
+		}
 
 		relevanceKeyword = RELEVANCE_KEYWORD;
 		relevanceMethod = RELEVANCE_METHOD;

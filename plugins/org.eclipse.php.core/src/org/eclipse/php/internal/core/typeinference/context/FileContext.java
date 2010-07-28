@@ -16,6 +16,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
+import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
@@ -23,9 +24,11 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * 
  * @author michael
  */
-public class FileContext extends BasicContext implements INamespaceContext {
+public class FileContext extends BasicContext implements INamespaceContext,
+		IModelCacheContext {
 
 	private String namespaceName;
+	private IModelAccessCache cache;
 
 	/**
 	 * Creates file context where there's no declaring namespace
@@ -72,6 +75,14 @@ public class FileContext extends BasicContext implements INamespaceContext {
 	 */
 	public void setNamespace(String namespaceName) {
 		this.namespaceName = namespaceName;
+	}
+
+	public IModelAccessCache getCache() {
+		return cache;
+	}
+
+	public void setCache(IModelAccessCache cache) {
+		this.cache = cache;
 	}
 
 	public int hashCode() {

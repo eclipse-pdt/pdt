@@ -20,6 +20,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.typeinference.BindingUtility;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
@@ -27,6 +28,8 @@ import org.eclipse.php.internal.core.typeinference.context.FileContext;
 /**
  * This class is used for resolving model elements by offset in file. Results
  * are filtered in terms of file network.
+ * 
+ * @deprecated by {@link BindingUtility}
  */
 public class ModelElementResolver {
 
