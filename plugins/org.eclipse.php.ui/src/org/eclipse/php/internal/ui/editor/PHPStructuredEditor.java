@@ -38,6 +38,8 @@ import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
+import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -2283,7 +2285,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
-
+		
 		setHelpContextId("editor_preferences");//$NON-NLS-1$
 	}
 
@@ -3372,7 +3374,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	 */
 	@Override
 	public void doSave(IProgressMonitor progressMonitor) {
-
+		if (getDocument() instanceof IStructuredDocument) {
+			CommandStack commandStack = ((IStructuredDocument) getDocument())
+					.getUndoManager().getCommandStack();
+			if (commandStack instanceof BasicCommandStack) {
+				((BasicCommandStack) commandStack).saveIsDone();
+			}
+		}
 		IScriptProject project = getProject();
 		if (project != null) {
 			updateSaveActionsState(project.getProject());
@@ -3744,5 +3752,23 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		}
 
 		fIsTextDragAndDropInstalled = false;
+	}
+
+	@Override
+	public boolean isDirty() {
+		if (getDocument() instanceof IStructuredDocument) {
+			CommandStack commandStack = ((IStructuredDocument) getDocument())
+					.getUndoManager().getCommandStack();
+			if (commandStack instanceof BasicCommandStack) {
+				return ((BasicCommandStack) commandStack).isSaveNeeded();
+			}
+		}
+
+		return super.isDirty();
+	}
+
+	@Override
+	public void firePropertyChange(int property) {
+		super.firePropertyChange(property);
 	}
 }
