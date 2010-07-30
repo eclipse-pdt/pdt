@@ -993,6 +993,17 @@ public class PreferenceConstants {
 	 */
 	public static final String EXPLORER_GROUP_BY_NAMESPACES = "PHPExplorerPart.groupByNamespaces"; //$NON-NLS-1$
 
+	/**
+	 * A named preference that controls whether the 'smart paste' feature is
+	 * enabled.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 * 
+	 * @since 2.1
+	 */
+	public final static String EDITOR_SMART_PASTE = "smartPaste"; //$NON-NLS-1$
+
 	public static IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
