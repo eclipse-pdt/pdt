@@ -1,31 +1,28 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009, 2010 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.parser.regions;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ListIterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.documentModel.parser.PHPLexerStates;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer4;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer5;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
+import org.eclipse.php.internal.core.documentModel.parser.PhpLexerFactory;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
-import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -34,9 +31,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.Logger;
 
 /**
- * Description: This text region is a PHP foreign region that includes the php tokens *
- * In order to know that this text region is PhpScript one should use:
- * <code> if (region.getType() == PHPRegionContext())  { (PhpScriptRegion) region } </code>   
+ * Description: This text region is a PHP foreign region that includes the php
+ * tokens * In order to know that this text region is PhpScript one should use:
+ * 
+ * <code> if (region.getType() == PHPRegionContext())  { (PhpScriptRegion) region } </code>
+ * 
  * @author Roy, 2007
  */
 public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
@@ -50,12 +49,22 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	// true when the last reparse action is full reparse
 	protected boolean isFullReparsed;
 
-	public PhpScriptRegion(String newContext, int startOffset, IProject project, PhpLexer phpLexer) {
+	public PhpScriptRegion(String newContext, int startOffset,
+			IProject project, AbstractPhpLexer phpLexer) {
 		super(newContext, startOffset, 0, 0, PhpScriptRegion.PHP_SCRIPT);
 
 		this.project = project;
-		ST_PHP_LINE_COMMENT = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_LINE_COMMENT);
-		ST_PHP_IN_SCRIPTING = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_IN_SCRIPTING);
+
+		try {
+			// we use reflection here since we don't know the constant value of
+			// of this state in specific PHP version lexer
+			ST_PHP_LINE_COMMENT = phpLexer.getClass().getField(
+					"ST_PHP_LINE_COMMENT").getInt(phpLexer);
+			ST_PHP_IN_SCRIPTING = phpLexer.getClass().getField(
+					"ST_PHP_IN_SCRIPTING").getInt(phpLexer);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
 		completeReparse(phpLexer);
 	}
 
@@ -70,14 +79,16 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	/**
 	 * @see IPhpScriptRegion#getPhpToken(int)
 	 */
-	public final ITextRegion getPhpToken(int offset) throws BadLocationException {
+	public final ITextRegion getPhpToken(int offset)
+			throws BadLocationException {
 		return tokensContaier.getToken(offset);
 	}
 
 	/**
 	 * @see IPhpScriptRegion#getPhpTokens(int, int)
 	 */
-	public final ITextRegion[] getPhpTokens(int offset, int length) throws BadLocationException {
+	public final ITextRegion[] getPhpTokens(int offset, int length)
+			throws BadLocationException {
 		return tokensContaier.getTokens(offset, length);
 	}
 
@@ -93,7 +104,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 */
 	public boolean isLineComment(int offset) throws BadLocationException {
 		final LexerState lexState = tokensContaier.getState(offset);
-		return lexState != null && lexState.getTopState() == ST_PHP_LINE_COMMENT;
+		return lexState != null
+				&& lexState.getTopState() == ST_PHP_LINE_COMMENT;
 	}
 
 	/**
@@ -111,10 +123,13 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	@Override
-	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester,
+			IStructuredDocumentRegion flatnode, String changes,
+			int requestStart, int lengthToReplace) {
 		isFullReparsed = true;
 		try {
-			final int offset = requestStart - flatnode.getStartOffset() - getStart();
+			final int offset = requestStart - flatnode.getStartOffset()
+					- getStart();
 
 			// support the <?php case
 			if (offset < 4) {
@@ -128,9 +143,41 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			}
 
 			// get the region to re-parse
-			final ITextRegion tokenStart = tokensContaier.getToken(offset == 0 ? 0 : offset - 1);
-			final int oldEndOffset = offset + lengthToReplace;
-			final ITextRegion tokenEnd = tokensContaier.getToken(oldEndOffset);
+			ITextRegion tokenStart = tokensContaier.getToken(offset == 0 ? 0
+					: offset - 1);
+			ITextRegion tokenEnd = tokensContaier.getToken(offset
+					+ lengthToReplace);
+
+			// make sure, region to re-parse doesn't start with unknown token
+			while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenStart.getType())
+					&& (tokenStart.getStart() > 0)) {
+				tokenStart = tokensContaier.getToken(tokenStart.getStart() - 1);
+			}
+
+			// move sure, region to re-parse doesn't end with unknown token
+			while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenEnd.getType())
+					&& (tokensContaier.getLastToken() != tokenEnd)) {
+				tokenEnd = tokensContaier.getToken(tokenEnd.getEnd() + 1);
+			}
+
+			boolean shouldDeprecatedKeyword = false;
+			int previousIndex = tokensContaier.phpTokens.indexOf(tokenStart) - 1;
+			if (previousIndex >= 0) {
+				ITextRegion previousRegion = tokensContaier.phpTokens
+						.get(previousIndex);
+				if (PhpTokenContainer.deprecatedKeywordAfter(previousRegion
+						.getType())) {
+					shouldDeprecatedKeyword = true;
+				}
+				if (tokenStart.getType().equals(PHPRegionTypes.PHP_COMMENT)
+						&& tokenStart.getLength() == 1
+						&& previousRegion.getType().equals(
+								PHPRegionTypes.PHP_COMMENT_START)) {
+					requestStart = previousRegion.getStart();
+				}
+
+			}
+
 			int newTokenOffset = tokenStart.getStart();
 
 			if (isHereDoc(tokenStart)) {
@@ -138,27 +185,38 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			}
 
 			// get start and end states
-			final LexerState startState = tokensContaier.getState(newTokenOffset);
-			final LexerState endState = tokensContaier.getState(tokenEnd.getEnd() + 1);
+			final LexerState startState = tokensContaier
+					.getState(newTokenOffset);
+			final LexerState endState = tokensContaier.getState(tokenEnd
+					.getEnd() + 1);
 
 			final PhpTokenContainer newContainer = new PhpTokenContainer();
-			final PhpLexer phpLexer = getPhpLexer(new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset), startState);
+			final AbstractPhpLexer phpLexer = getPhpLexer(new DocumentReader(
+					flatnode, changes, requestStart, lengthToReplace,
+					newTokenOffset), startState);
 
 			Object state = startState;
 			try {
 				String yylex = phpLexer.getNextToken();
+				if (shouldDeprecatedKeyword
+						&& PhpTokenContainer.isKeyword(yylex)) {
+					yylex = PHPRegionTypes.PHP_STRING;
+				}
 				int yylength;
 				final int toOffset = offset + length;
-				while (yylex != null && newTokenOffset <= toOffset && yylex != PHPRegionTypes.PHP_CLOSETAG) {
+				while (yylex != null && newTokenOffset <= toOffset
+						&& yylex != PHPRegionTypes.PHP_CLOSETAG) {
 					yylength = phpLexer.getLength();
-					newContainer.addLast(yylex, newTokenOffset, yylength, yylength, state);
+					newContainer.addLast(yylex, newTokenOffset, yylength,
+							yylength, state);
 					newTokenOffset += yylength;
 					state = phpLexer.createLexicalStateMemento();
 					yylex = phpLexer.getNextToken();
 				}
 				if (yylex == PHPRegionTypes.WHITESPACE) {
 					yylength = phpLexer.getLength();
-					newContainer.adjustWhitespace(yylex, newTokenOffset, yylength, yylength, state);
+					newContainer.adjustWhitespace(yylex, newTokenOffset,
+							yylength, yylength, state);
 				}
 			} catch (IOException e) {
 				Logger.logException(e);
@@ -169,7 +227,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				return null;
 			}
 
-			// if the two streams end with the same lexer sate - 
+			// if the two streams end with the same lexer sate -
 			// 1. replace the regions
 			// 2. adjust next regions start location
 			// 3. update state changes
@@ -181,23 +239,22 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			}
 
 			// 1. replace the regions
-			final ListIterator oldIterator = tokensContaier.removeTokensSubList(tokenStart, tokenEnd);
-			ITextRegion[] newTokens = newContainer.getPhpTokens(); // now, add the new ones
-			for (int i = 0; i < newTokens.length; i++) {
-				oldIterator.add(newTokens[i]);
-			}
+			tokensContaier.removeTokensSubList(tokenStart, tokenEnd);
+			ITextRegion[] newTokens = newContainer.getPhpTokens();
+
+			// now, add the new ones
+			tokensContaier.addNewTokens(newTokens);
 
 			// 2. adjust next regions start location
-			while (oldIterator.hasNext()) {
-				final ITextRegion adjust = (ITextRegion) oldIterator.next();
-				adjust.adjustStart(size);
-			}
+			tokensContaier.adjustNextRegion(size);
 
 			// 3. update state changes
-			tokensContaier.updateStateChanges(newContainer, tokenStart.getStart(), end);
+			tokensContaier.updateStateChanges(newContainer, tokenStart
+					.getStart(), end);
 			isFullReparsed = false;
 
-			return super.updateRegion(requester, flatnode, changes, requestStart, lengthToReplace);
+			return super.updateRegion(requester, flatnode, changes,
+					requestStart, lengthToReplace);
 
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
@@ -209,19 +266,40 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @see IPhpScriptRegion#completeReparse(IDocument, int, int)
 	 */
 	public void completeReparse(IDocument doc, int start, int length) {
-		//bug fix for 225118 we need to refresh the constants since this function is being called
-		//after the project's PHP version was changed. 
-		ST_PHP_LINE_COMMENT = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_LINE_COMMENT);
-		ST_PHP_IN_SCRIPTING = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_IN_SCRIPTING);
-		PhpLexer lexer = getPhpLexer(new BlockDocumentReader(doc, start, length), null);
-		completeReparse(lexer);
+		// bug fix for 225118 we need to refresh the constants since this
+		// function is being called
+		// after the project's PHP version was changed.
+		AbstractPhpLexer phpLexer = getPhpLexer(new BlockDocumentReader(doc,
+				start, length), null);
+		try {
+			ST_PHP_LINE_COMMENT = phpLexer.getClass().getField(
+					"ST_PHP_LINE_COMMENT").getInt(phpLexer);
+			ST_PHP_IN_SCRIPTING = phpLexer.getClass().getField(
+					"ST_PHP_IN_SCRIPTING").getInt(phpLexer);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		completeReparse(phpLexer);
 	}
 
 	private final boolean isHereDoc(final ITextRegion tokenStart) {
 		if (tokenStart.getType() == PHPRegionTypes.PHP_TOKEN) {
 			try {
-				final ITextRegion token = tokensContaier.getToken(tokenStart.getStart() - 1);
-				return (token.getType() == PHPRegionTypes.PHP_OPERATOR && token.getLength() == 2);
+				final ITextRegion token = tokensContaier.getToken(tokenStart
+						.getStart() - 1);
+				return (token.getType() == PHPRegionTypes.PHP_OPERATOR && token
+						.getLength() == 2);
+			} catch (BadLocationException e) {
+				// never happens
+				assert false;
+			}
+		} else if (tokenStart.getType() == PHPRegionTypes.PHP_STRING) {
+			try {
+				ITextRegion token = tokensContaier.getToken(tokenStart
+						.getStart() - 1);
+				token = tokensContaier.getToken(token.getStart() - 1);
+				return (token.getType() == PHPRegionTypes.PHP_OPERATOR && token
+						.getLength() == 2);
 			} catch (BadLocationException e) {
 				// never happens
 				assert false;
@@ -248,9 +326,10 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 	/**
 	 * Performing a fully parse process to php script
+	 * 
 	 * @param newText
 	 */
-	public void completeReparse(PhpLexer lexer) {
+	public void completeReparse(AbstractPhpLexer lexer) {
 		setPhpTokens(lexer);
 	}
 
@@ -259,14 +338,10 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @param stream
 	 * @return a new lexer for the given project with the given stream
 	 */
-	private PhpLexer getPhpLexer(Reader stream, LexerState startState) {
-		PhpLexer lexer;
-		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-		if (phpVersion.equals(PHPCoreConstants.PHP5)) {
-			lexer = new PhpLexer5(stream);
-		} else {
-			lexer = new PhpLexer4(stream);
-		}
+	private AbstractPhpLexer getPhpLexer(Reader stream, LexerState startState) {
+		final PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
+		final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(stream,
+				phpVersion);
 		lexer.initialize(ST_PHP_IN_SCRIPTING);
 		lexer.setPatterns(project);
 
@@ -274,15 +349,15 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		if (startState != null) {
 			startState.restoreState(lexer);
 		}
-		lexer.setAspTags(UseAspTagsHandler.useAspTagsAsPhp(project));
+		lexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
 		return lexer;
 	}
 
 	/**
-	 * @param script 
+	 * @param script
 	 * @return a list of php tokens
 	 */
-	private void setPhpTokens(PhpLexer lexer) {
+	private void setPhpTokens(AbstractPhpLexer lexer) {
 		setLength(0);
 		setTextLength(0);
 
@@ -298,7 +373,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			int yylength = 0;
 			while (yylex != null && yylex != PHPRegionTypes.PHP_CLOSETAG) {
 				yylength = lexer.getLength();
-				this.tokensContaier.addLast(yylex, start, yylength, yylength, state);
+				this.tokensContaier.addLast(yylex, start, yylength, yylength,
+						state);
 				start += yylength;
 				state = lexer.createLexicalStateMemento();
 				yylex = lexer.getNextToken();
@@ -314,11 +390,10 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	/**
-	 * Returns a stream that represents the new text
-	 * We have three regions:
-	 * 1) the php region before the change
-	 * 2) the change
-	 * 3) the php region after the region without the deleted text
+	 * Returns a stream that represents the new text We have three regions: 1)
+	 * the php region before the change 2) the change 3) the php region after
+	 * the region without the deleted text
+	 * 
 	 * @param flatnode
 	 * @param change
 	 * @param requestStart
@@ -340,7 +415,9 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		private int index;
 		private int internalIndex = 0;
 
-		public DocumentReader(final IStructuredDocumentRegion flatnode, final String change, final int requestStart, final int lengthToReplace, final int newTokenOffset) {
+		public DocumentReader(final IStructuredDocumentRegion flatnode,
+				final String change, final int requestStart,
+				final int lengthToReplace, final int newTokenOffset) {
 			this.parent = flatnode.getParentDocument();
 			this.startPhpRegion = flatnode.getStart() + getStart();
 			this.endPhpRegion = startPhpRegion + getLength();
@@ -354,7 +431,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		@Override
 		public int read() throws IOException {
 			try {
-				// state 1) 
+				// state 1)
 				if (index < requestStart) {
 					return parent.getChar(index++);
 				} // state 2)
@@ -376,19 +453,20 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		@Override
 		public int read(char[] b, int off, int len) throws IOException {
 			/**
-			 * For boosting performance - Read only 80 characters from the buffer 
-			 * as the changes are usually small
+			 * For boosting performance - Read only 80 characters from the
+			 * buffer as the changes are usually small
 			 * 
-			 * Start of change 
+			 * Start of change
 			 */
 			len = len > 80 ? 80 : len;
 			/**
 			 * End of change
 			 */
-			
+
 			if (b == null) {
 				throw new NullPointerException();
-			} else if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
+			} else if ((off < 0) || (off > b.length) || (len < 0)
+					|| ((off + len) > b.length) || ((off + len) < 0)) {
 				throw new IndexOutOfBoundsException();
 			} else if (len == 0) {
 				return 0;
@@ -423,6 +501,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 	/**
 	 * Returns a stream that represents the document
+	 * 
 	 * @param StructuredDocument
 	 * @param start
 	 * @param length
@@ -435,7 +514,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		private int startPhpRegion;
 		final private int endPhpRegion;
 
-		public BlockDocumentReader(final IDocument parent, final int startPhpRegion, final int length) {
+		public BlockDocumentReader(final IDocument parent,
+				final int startPhpRegion, final int length) {
 			this.parent = parent;
 			this.startPhpRegion = startPhpRegion;
 			this.endPhpRegion = startPhpRegion + length;
@@ -444,7 +524,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		@Override
 		public int read() throws IOException {
 			try {
-				return startPhpRegion < endPhpRegion ? parent.getChar(startPhpRegion++) : -1;
+				return startPhpRegion < endPhpRegion ? parent
+						.getChar(startPhpRegion++) : -1;
 			} catch (BadLocationException e) {
 				throw new IOException(BAD_LOCATION_ERROR + startPhpRegion);
 			}
@@ -454,7 +535,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		public int read(char[] b, int off, int len) throws IOException {
 			if (b == null) {
 				throw new NullPointerException();
-			} else if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
+			} else if ((off < 0) || (off > b.length) || (len < 0)
+					|| ((off + len) > b.length) || ((off + len) < 0)) {
 				throw new IndexOutOfBoundsException();
 			} else if (len == 0) {
 				return 0;
