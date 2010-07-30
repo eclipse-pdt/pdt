@@ -1098,10 +1098,6 @@ public class DebugConnectionThread implements Runnable {
 		return false;
 	}
 
-	public boolean isInitialized() {
-		return isInitialized;
-	}
-
 	/**
 	 * This thread manages the Communication initiated by the peer. All the
 	 * messages that arrive form the peer are read by the ImputManager. The
