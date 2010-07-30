@@ -102,7 +102,6 @@ public abstract class AbstractSemanticHighlighting implements
 	}
 
 	protected Program getProgram(IStructuredDocumentRegion region) {
-
 		// resolve current sourceModule
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
