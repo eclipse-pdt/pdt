@@ -421,6 +421,9 @@ public class PHPModelUtils {
 					moduleDeclaration, field);
 			if (fieldDeclaration instanceof IPHPDocAwareDeclaration) {
 				return ((IPHPDocAwareDeclaration) fieldDeclaration).getPHPDoc();
+			} else if (fieldDeclaration == null) {
+				return DefineMethodUtils.getDefinePHPDocBlockByField(
+						moduleDeclaration, field);
 			}
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG) {
@@ -786,13 +789,13 @@ public class PHPModelUtils {
 				}
 			}
 		}
-		if (isAnonymousMethod(method)) {
+		if (isNestedAnonymousMethod(method)) {
 			getMethodFields((IMethod) method.getParent().getParent(), prefix,
 					exactName, elements, processedVars);
 		}
 	}
 
-	public static boolean isAnonymousMethod(final IMethod method) {
+	public static boolean isNestedAnonymousMethod(final IMethod method) {
 		return PHPCoreConstants.ANONYMOUS.equals(method.getElementName())
 				&& method.getParent() instanceof IField
 				&& method.getParent().getParent() instanceof IMethod;
