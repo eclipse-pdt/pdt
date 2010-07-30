@@ -56,6 +56,7 @@ public class DBGpSession {
 	private String initialScript;
 	private EngineTypes engineType;
 	private String engineVersion;
+	private String threadId;
 	private long creationTime;
 
 	private String sessionEncoding;
@@ -96,6 +97,7 @@ public class DBGpSession {
 									.getFileUri());
 					engineVersion = parsedResponse.getEngineVersion();
 					engineType = parsedResponse.getEngineType();
+					threadId = parsedResponse.getThreadId();
 					isGood = true;
 				} else {
 					DBGpLogger.logError("Init response not received. XML="
@@ -679,6 +681,16 @@ public class DBGpSession {
 	 */
 	public String getSessionId() {
 		return sessionId;
+	}
+
+	/**
+	 * get the Thread id for this session. A blank threadid usually indicates
+	 * that no thread id was returned.
+	 * 
+	 * @return the thread id
+	 */
+	public String getThreadId() {
+		return threadId;
 	}
 
 	public boolean isActive() {

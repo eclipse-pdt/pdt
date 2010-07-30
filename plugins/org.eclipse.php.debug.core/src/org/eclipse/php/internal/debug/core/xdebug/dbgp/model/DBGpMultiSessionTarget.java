@@ -89,7 +89,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 	private PathMapper pathMapper;
 
 	// need to have something in case a target is terminated before
-	// a session is initiated to stop a NPE in the debug view	
+	// a session is initiated to stop a NPE in the debug view
 	private DebugOutput debugOutput = new DebugOutput();
 
 	/**
@@ -371,6 +371,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 	}
 
 	public boolean SessionCreated(DBGpSession session) {
+		boolean accepted = false;
 		synchronized (debugTargets) {
 
 			// we need to use single shot debug targets to ensure that
@@ -380,21 +381,24 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 					this.ideKey, this.sessionID, this.stopAtStart);
 			target.setMultiSessionManaged(true);
 			target.setPathMapper(pathMapper);
-			target.SessionCreated(session);
-			// need to make sure bpFacade is thread safe.
-			// cannot provide a launch monitor here, unless this is the first
-			// launch, but it doesn't matter.
-			target.waitForInitialSession(bpFacade, sessionPreferences, null);
-			if (!target.isTerminated()) {
-				addDebugTarget(target);
-				launch.addDebugTarget(target);
-				if (targetState == STATE_INIT_SESSION_WAIT) {
-					targetState = STATE_STARTED;
-					te.signalEvent();
+			accepted = target.SessionCreated(session);
+
+			if (accepted) {
+				// need to make sure bpFacade is thread safe.
+				// cannot provide a launch monitor here, unless this is the
+				// first launch, but it doesn't matter.
+				target.waitForInitialSession(bpFacade, sessionPreferences, null);
+				if (!target.isTerminated()) {
+					addDebugTarget(target);
+					launch.addDebugTarget(target);
+					if (targetState == STATE_INIT_SESSION_WAIT) {
+						targetState = STATE_STARTED;
+						te.signalEvent();
+					}
 				}
 			}
 		}
-		return true;
+		return accepted;
 	}
 
 	public void addDebugTarget(DBGpTarget target) {

@@ -104,6 +104,7 @@ public class DBGpResponse {
 	// init attributes
 	private String idekey;
 	private String session;
+	private String threadId;
 	private String engineVersion = "";
 	private EngineTypes engineType = EngineTypes.other;
 	private String fileUri;
@@ -240,6 +241,7 @@ public class DBGpResponse {
 		// get the init information
 		type = INIT;
 		idekey = getTopAttribute("idekey");
+		threadId = getTopAttribute("thread");
 		session = getTopAttribute("session");
 		if (session.trim().length() == 0) {
 			session = null;
@@ -357,6 +359,10 @@ public class DBGpResponse {
 
 	public String getSession() {
 		return session;
+	}
+
+	public String getThreadId() {
+		return threadId;
 	}
 
 	public int getErrorCode() {
