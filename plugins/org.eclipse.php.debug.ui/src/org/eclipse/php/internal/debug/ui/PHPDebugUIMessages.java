@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui;
 
@@ -110,6 +111,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPDebugPreferencesAddon_debugOutputEncoding;
 	public static String PHPDebugPreferencesAddon_debugTransferEncoding;
 	public static String PHPDebugPreferencesAddon_selectedEncoding;
+	public static String PHPDebugPreferencesAddon_unsupportedEncoding;
 
 	public static String PHPDebugPreferencesBlock_0;
 
@@ -142,7 +144,38 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPDebugStepFilterPreferencePage_useStepFilters;
 	public static String PHPexe_Run_With_Debug_Info;
 	public static String PHPExecutableLaunchTab_isNotPHPFile;
+
+	public static String PHPexesComboBlock_1;
+
+	public static String PHPexesComboBlock_10;
+
+	public static String PHPexesComboBlock_11;
+
+	public static String PHPexesComboBlock_12;
+
+	public static String PHPexesComboBlock_13;
+
+	public static String PHPexesComboBlock_2;
 	public static String PHPexesComboBlock_3;
+	public static String PHPexesComboBlock_15;
+	public static String PHPexesComboBlock_16;
+
+	public static String PHPexesComboBlock_0;
+
+	public static String PHPexesComboBlock_4;
+
+	public static String PHPexesComboBlock_5;
+
+	public static String PHPexesComboBlock_14;
+
+	public static String PHPexesComboBlock_6;
+
+	public static String PHPexesComboBlock_7;
+
+	public static String PHPexesComboBlock_8;
+
+	public static String PHPexesComboBlock_9;
+
 	public static String PHPLaunchingPreferencePage_Always;
 	public static String PHPLaunchingPreferencePage_multipleMessage;
 	public static String PHPLaunchingPreferencePage_Never;
@@ -172,6 +205,11 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String WorkbenchOptionsBlock_workbench_options;
 	public static String WorkingDirectory;
+
+	public static String XDebugWatch_failed;
+	public static String XDebugHover_empty;
+	public static String XDebugPresentation_line;
+	public static String XDebugVariableValueEditor_invalidValue;
 
 	static {
 		// load message values from bundle file
