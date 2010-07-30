@@ -38,7 +38,8 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
  * parameter of a method.
  */
 public final class ParameterGuessingProposal extends
-		PHPOverrideCompletionProposal {
+		PHPOverrideCompletionProposal implements
+		IPHPCompletionProposalExtension {
 	private static final char[] NO_TRIGGERS = new char[0];
 	protected static final String LPAREN = "("; //$NON-NLS-1$
 	protected static final String RPAREN = ")"; //$NON-NLS-1$
@@ -48,16 +49,18 @@ public final class ParameterGuessingProposal extends
 	private IMethod method;
 	private final boolean fFillBestGuess;
 	private boolean fReplacementStringComputed = false;
+	private Object extraInfo;
 
 	public ParameterGuessingProposal(CompletionProposal proposal,
 			IScriptProject jproject, ISourceModule cu, String methodName,
 			String[] paramTypes, int start, int length, String displayName,
-			String completionProposal, boolean fillBestGuess) {
+			String completionProposal, boolean fillBestGuess, Object extraInfo) {
 		super(jproject, cu, methodName, paramTypes, start, length, displayName,
 				completionProposal);
 		this.fProposal = proposal;
 		method = (IMethod) fProposal.getModelElement();
 		this.fFillBestGuess = fillBestGuess;
+		this.extraInfo = extraInfo;
 	}
 
 	/**
@@ -423,4 +426,7 @@ public final class ParameterGuessingProposal extends
 		return ret;
 	}
 
+	public Object getExtraInfo() {
+		return extraInfo;
+	}
 }
