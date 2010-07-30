@@ -113,8 +113,10 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 				}
 			} catch (Exception e) {
 				ExceptionHandler
-						.handle(new CoreException(new Status(IStatus.ERROR,
-								PHPUiPlugin.ID, 0, "Exception occurred", e)), PHPUIMessages.getString("OverrideIndicatorManager_open_error_title"), PHPUIMessages.getString("OverrideIndicatorManager_open_error_messageHasLogEntry"));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						.handle(
+								new CoreException(new Status(IStatus.ERROR,
+										PHPUiPlugin.ID, 0,
+										"Exception occurred", e)), PHPUIMessages.getString("OverrideIndicatorManager_open_error_title"), PHPUIMessages.getString("OverrideIndicatorManager_open_error_messageHasLogEntry"));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				return;
 			}
 			String title = PHPUIMessages
@@ -184,7 +186,10 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 		if (ast.getSourceModule().isReadOnly()) {
 			return;
 		}
-
+		if (!ast.getSourceModule().getScriptProject().isOnBuildpath(
+				ast.getSourceModule())) {
+			return;
+		}
 		ast.accept(new AbstractVisitor() {
 			/*
 			 * @see
@@ -209,13 +214,15 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 								.getModifiers()) != 0;
 						String text;
 						if (isImplements)
-							text = Messages.format(
-									PHPUIMessages
-											.getString("OverrideIndicatorManager_implements"), qualifiedMethodName);//$NON-NLS-1$
+							text = Messages
+									.format(
+											PHPUIMessages
+													.getString("OverrideIndicatorManager_implements"), qualifiedMethodName);//$NON-NLS-1$
 						else
-							text = Messages.format(
-									PHPUIMessages
-											.getString("OverrideIndicatorManager_overrides"), qualifiedMethodName);//$NON-NLS-1$
+							text = Messages
+									.format(
+											PHPUIMessages
+													.getString("OverrideIndicatorManager_overrides"), qualifiedMethodName);//$NON-NLS-1$
 
 						Identifier name = node.getFunction().getFunctionName();
 						Position position = new Position(name.getStart(), name
@@ -243,8 +250,8 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 				while (iter.hasNext()) {
 					Map.Entry<OverrideIndicator, Position> mapEntry = iter
 							.next();
-					fAnnotationModel.addAnnotation(mapEntry.getKey(),
-							mapEntry.getValue());
+					fAnnotationModel.addAnnotation(mapEntry.getKey(), mapEntry
+							.getValue());
 				}
 			}
 			fOverrideAnnotations = (Annotation[]) annotationMap.keySet()
