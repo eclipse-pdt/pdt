@@ -1,20 +1,27 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
+import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -26,43 +33,99 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
- * Auto Strategy for <?php ?> insertion code
- * when the user enters "<?" in non-PHP region he gets back "php ?>"   
+ * 1.when user check both "Use short tags" and "close PHP Tag",people type "<?"
+ * then get "<? ?>". 2.when user uncheck "Use short tags" and check
+ * "close PHP Tag",people type "<?" then get "<?php ?>". 3.when user check
+ * "Use short tags" and uncheck "close PHP Tag",no completion at all. 4.when
+ * user uncheck both "Use short tags" and "close PHP Tag",people type "<?" then
+ * get "<?php"
+ * 
  * @author Roy, 2007
  */
 public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 
-	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
-		// if the user wants to automatic close php tags
-		if (TypingPreferences.addPhpCloseTag) {
+	public void customizeDocumentCommand(IDocument document,
+			DocumentCommand command) {
+		final IProject projects[] = new IProject[1];
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage page = PHPUiPlugin.getActivePage();
+				if (page != null) {
+					IEditorPart editor = page.getActiveEditor();
+					if (editor instanceof PHPStructuredEditor) {
+						PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editor;
+						if (phpStructuredEditor.getTextViewer() != null
+								&& phpStructuredEditor != null) {
+							ISourceModule sourceModule = (ISourceModule) phpStructuredEditor
+									.getModelElement();
+							projects[0] = sourceModule.getScriptProject()
+									.getProject();
+						}
+					}
+				}
+			}
+		});
 
-			Object textEditor = getActiveTextEditor();
-			if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))
-				return;
+		boolean useShortTags = useShortTags(projects[0]);
+		if (!TypingPreferences.addPhpCloseTag && useShortTags) {
+			return;
+		}
+		Object textEditor = getActiveTextEditor();
+		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor)
+				.getInsertMode() == ITextEditorExtension3.SMART_INSERT))
+			return;
 
-			IStructuredModel model = null;
-			try {
-				model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager()
+					.getExistingModelForRead(document);
 
-				if (model != null) {
-					if (command.text != null) {
-						if (command.text.equals("?")) { //$NON-NLS-1$
-							// scriptlet - add end ?>
-							IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset - 1);
-							if (node != null && prefixedWith(document, command.offset, "<") && !closeTagAppears(node.getSource(), command.offset)) { //$NON-NLS-1$ //$NON-NLS-2$
-								command.text += " ?>"; //$NON-NLS-1$
+			if (model != null) {
+				if (command.text != null) {
+					if (command.text.equals("?")) { //$NON-NLS-1$
+						IDOMNode node = (IDOMNode) model
+								.getIndexedRegion(command.offset - 1);
+						if (node != null
+								&& prefixedWith(document, command.offset, "<")) { //$NON-NLS-1$ //$NON-NLS-2$
+							if (!TypingPreferences.addPhpCloseTag
+									&& !useShortTags) {
+								command.text += "php "; //$NON-NLS-1$
 								command.shiftsCaret = false;
-								command.caretOffset = command.offset + 1;
+								command.caretOffset = command.offset + 5;
 								command.doit = false;
+							} else if (TypingPreferences.addPhpCloseTag
+									&& useShortTags) {
+								if (!closeTagAppears(node.getSource(),
+										command.offset)) {
+									command.text += " ?>"; //$NON-NLS-1$
+									command.caretOffset = command.offset + 2;
+									command.shiftsCaret = false;
+									command.doit = false;
+								}
+							} else if (TypingPreferences.addPhpCloseTag
+									&& !useShortTags) {
+								if (!closeTagAppears(node.getSource(),
+										command.offset)) {
+									command.text += "php ?>"; //$NON-NLS-1$
+									command.shiftsCaret = false;
+									command.caretOffset = command.offset + 5;
+									command.doit = false;
+								}
 							}
 						}
 					}
 				}
-			} finally {
-				if (model != null)
-					model.releaseFromRead();
 			}
+		} finally {
+			if (model != null)
+				model.releaseFromRead();
 		}
+	}
+
+	private boolean useShortTags(IProject project) {
+		String useShortTags = CorePreferencesSupport.getInstance()
+				.getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null, project);
+		return "true".equals(useShortTags);
 	}
 
 	private final boolean closeTagAppears(String source, int startFrom) {
@@ -76,7 +139,8 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 	 * @return
 	 */
 	private Object getActiveTextEditor() {
-		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {
@@ -84,7 +148,8 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 				if (editor != null) {
 					if (editor instanceof ITextEditor)
 						return editor;
-					ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
+					ITextEditor textEditor = (ITextEditor) editor
+							.getAdapter(ITextEditor.class);
 					if (textEditor != null)
 						return textEditor;
 					return editor;
@@ -97,7 +162,9 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 	private boolean prefixedWith(IDocument document, int offset, String string) {
 
 		try {
-			return document.getLength() >= string.length() && document.get(offset - string.length(), string.length()).equals(string);
+			return document.getLength() >= string.length()
+					&& document.get(offset - string.length(), string.length())
+							.equals(string);
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 			return false;
