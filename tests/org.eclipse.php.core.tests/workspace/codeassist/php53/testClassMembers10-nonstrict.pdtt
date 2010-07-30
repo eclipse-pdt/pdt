@@ -1,0 +1,27 @@
+--TEST--
+Test Static Class Var Object Operator from global namespace
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class Foo{
+	/**
+	 * @var \SoapClient
+	 */
+	public static $Client;
+} 
+Foo::$Client->| ?>
+--EXPECT--
+method(__call)
+method(SoapClient)
+method(__doRequest)
+method(__getFunctions)
+method(__getLastRequest)
+method(__getLastRequestHeaders)
+method(__getLastResponse)
+method(__getLastResponseHeaders)
+method(__getTypes)
+method(__setCookie)
+method(__setLocation)
+method(__setSoapHeaders)
+method(__soapCall)

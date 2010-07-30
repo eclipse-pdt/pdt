@@ -1,0 +1,16 @@
+--TEST--
+Test accessing class members through $this (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=269715)
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?php
+class Test {
+  private $_aInfo;
+  public function __get() {
+    chdir($this->|);
+  }
+}
+?>
+--EXPECT--
+field($_aInfo)
+method(__get)
