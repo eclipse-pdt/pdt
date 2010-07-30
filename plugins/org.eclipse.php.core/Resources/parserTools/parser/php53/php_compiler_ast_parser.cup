@@ -1,8 +1,8 @@
-package org.eclipse.php.internal.core.compiler.ast.parser.php5;
+package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.33.2.1 2010/07/30 06:29:43 zzhongwei Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.29.2.1 2010/07/30 06:29:43 zzhongwei Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,8 +15,7 @@ import org.eclipse.dltk.ast.references.*;
 import org.eclipse.dltk.ast.statements.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.*;
-import org.eclipse.php.internal.core.ast.scanner.php5.*;
-
+import org.eclipse.php.internal.core.ast.scanner.php53.*;
 
 parser code {:
 
@@ -82,6 +81,7 @@ terminal  T_CASE;
 terminal  T_DEFAULT;
 terminal  T_BREAK;
 terminal  T_CONTINUE;
+terminal  T_GOTO;
 terminal  PHPDocBlock T_FUNCTION;
 terminal  PHPDocBlock T_CONST;
 terminal  T_RETURN;
@@ -108,13 +108,17 @@ terminal  T_METHOD_C;
 terminal  T_FUNC_C;
 terminal  T_LINE;
 terminal  String T_FILE;
-terminal  T_START_HEREDOC;
+terminal  String T_START_HEREDOC;
 terminal  T_END_HEREDOC;
 terminal  T_DOLLAR_OPEN_CURLY_BRACES;
 terminal  T_CURLY_OPEN_WITH_DOLAR;
 terminal  T_CURLY_OPEN;
 terminal  T_CURLY_CLOSE;
 terminal  T_PAAMAYIM_NEKUDOTAYIM;
+terminal  T_NAMESPACE;
+terminal  T_NS_C;
+terminal  T_DIR;
+terminal  T_NS_SEPARATOR;
 terminal String T_VAR_COMMENT;
 terminal String T_DEFINE;
 
@@ -158,7 +162,12 @@ terminal T_QUATE,T_BACKQUATE;
 /* Non terminals */
 
 non terminal ModuleDeclaration thestart;
+non terminal FullyQualifiedReference namespace_name;
+non terminal List namespace_name_list;
+non terminal UsePart use_declaration;
+non terminal List use_declarations;
 non terminal top_statement_list;
+non terminal List namespace_statement_list;
 non terminal Statement top_statement;
 non terminal Statement statement;
 non terminal List inner_statement_list;
@@ -182,6 +191,8 @@ non terminal List[] new_elseif_list;
 non terminal Statement else_single;
 non terminal Statement new_else_single;
 non terminal List parameter_list;
+non terminal List lexical_vars;
+non terminal List lexical_var_list;
 non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
 non terminal PHPCallArgumentsList function_call_parameter_list;
@@ -199,7 +210,7 @@ non terminal Expression expr_without_variable;
 non terminal Expression function_call;
 non terminal Expression exit_expr;
 non terminal PHPCallArgumentsList ctor_arguments;
-non terminal Scalar common_scalar;
+non terminal Expression common_scalar;
 non terminal Expression static_scalar;
 non terminal Expression scalar;
 non terminal List static_array_pair_list;
@@ -207,6 +218,7 @@ non terminal possible_comma;
 non terminal List non_empty_static_array_pair_list;
 non terminal Expression expr;
 non terminal Expression reference_variable;
+non terminal Expression variable_class_name;
 non terminal Expression compound_variable;
 non terminal Expression dim_offset;
 non terminal Expression object_property;
@@ -218,6 +230,7 @@ non terminal Expression assignment_list_element;
 non terminal List array_pair_list;
 non terminal List non_empty_array_pair_list;
 non terminal List encaps_list;
+non terminal List backticks_expr;
 non terminal Expression encaps_var;
 non terminal Expression encaps_var_offset;
 non terminal Expression internal_functions_in_yacc;
@@ -226,11 +239,14 @@ non terminal PHPDocBlock interface_entry;
 non terminal List interface_extends_list;
 
 non terminal Expression w_variable;
+non terminal Expression class_name;
 non terminal TypeReference fully_qualified_class_name;
 non terminal List class_variable_declaration;
-non terminal List class_constant_declaration;
+non terminal List constant_declaration;
 non terminal CompilerAstParser.ModifierDocPair method_modifiers;
 non terminal Statement method_body;
+non terminal Statement named_namespace_body;
+non terminal Statement namespace_body;
 non terminal List non_empty_member_modifiers;
 non terminal CompilerAstParser.ModifierDocPair member_modifier;
 non terminal PHPCallArgumentsList method_or_not;
@@ -304,7 +320,7 @@ thestart ::=
 top_statement_list:statementList
 {:
 	PHPModuleDeclaration program = parser.getModuleDeclaration();
-	
+
 	PhpAstLexer phpAstLexer = (PhpAstLexer) parser.getScanner();
 	List commentList = phpAstLexer.getCommentList();
 	Iterator i = commentList.iterator();
@@ -323,6 +339,44 @@ top_statement_list:statementList
 :}
 ;
 
+namespace_name ::=
+namespace_name_list:list
+{:
+	StringBuilder namespaceNameBuf = new StringBuilder();
+	FullyQualifiedReference fullyQualifiedName = null;
+	Iterator i = list.iterator();
+	while (i.hasNext()) {
+		String s = (String) i.next();
+		if (i.hasNext()) {
+			if (namespaceNameBuf.length() != 0) {
+				namespaceNameBuf.append('\\');
+			}
+			namespaceNameBuf.append(s);
+		} else {
+			NamespaceReference namespaceRef = (namespaceNameBuf.length() != 0) ? 
+				new NamespaceReference(listleft, listright - s.length() - 1, namespaceNameBuf.toString()) : null;
+			fullyQualifiedName = new FullyQualifiedReference(listleft, listright, s, namespaceRef);
+		}
+	}
+	RESULT = fullyQualifiedName;
+:}
+;
+
+namespace_name_list ::=
+string_st:name
+{:
+	List list = new LinkedList();
+	list.add(name);
+	RESULT = list;
+:}
+|
+namespace_name_list:list T_NS_SEPARATOR string_st:name
+{:
+	list.add(name);
+	RESULT = list;
+:}
+;
+
 top_statement_list ::=
 top_statement_list:statementList top_statement:statement
 {:
@@ -333,18 +387,45 @@ top_statement_list:statementList top_statement:statement
 			parser.pendingStatement = null;
 		}
 	}
-	while(!parser.declarations.isEmpty() ) {
-		parser.getModuleDeclaration().addStatement(parser.declarations.pop());
-	}		
+	while(!parser.declarations.isEmpty()) {
+		parser.addStatement(parser.declarations.pop());
+	}
 :}
 
 | /* empty */
 ;
 
+namespace_statement_list ::=
+namespace_statement_list:statementList top_statement:statement
+{:
+	// Ignore null statements
+	if(statement != null) {
+		statementList.add(statement);
+		if(statement.getKind() == ASTNodeKinds.AST_ERROR){
+			if(!parser.declarations.isEmpty()) {
+				Statement node = parser.declarations.peek();
+				if(node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
+					statementList.add(parser.declarations.pop());
+				}
+			}		
+		}
+	}
+	if(!(parser.declarations.peek() instanceof NamespaceDeclaration)) {
+		statementList.add(parser.declarations.pop());
+	}
+	RESULT = statementList;	
+:}
+
+| /* empty */
+{:
+	RESULT = new LinkedList();
+:}
+;
+
 top_statement ::=
 statement:statement
 {: 
-	RESULT = statement; 
+	RESULT = statement;
 :}
 
 | function_declaration_statement:statement
@@ -361,6 +442,156 @@ statement:statement
 {: 
 	// Note: we never generate T_HALT_COMPILER
 	RESULT = null;
+:}
+
+| T_NAMESPACE:start namespace_name:name
+{:
+	NamespaceDeclaration namespace = new NamespaceDeclaration(startleft, nameright, nameleft, nameright, name.getFullyQualifiedName(), null, null);
+	parser.addDeclarationStatement(namespace);
+	parser.declarations.push(namespace);
+:}
+named_namespace_body:body
+{:
+	RESULT = body;
+:}
+
+| T_NAMESPACE:start
+{:
+	NamespaceDeclaration namespace = new NamespaceDeclaration(startleft, startright, startright, startright, NamespaceDeclaration.GLOBAL, null, null);
+	parser.addDeclarationStatement(namespace);
+	parser.declarations.push(namespace);
+:}
+namespace_body:body
+{:
+	RESULT = body;
+:}
+
+| T_USE:start use_declarations:useDeclList T_SEMICOLON:end
+{:
+	parser.declarations.push(new UseStatement(startleft, endright, useDeclList));
+:}
+
+| constant_declaration:decList T_SEMICOLON
+{:
+	Iterator i = decList.iterator();
+	while (i.hasNext()) {
+		ASTNode[] decl = (ASTNode[]) i.next();
+		ConstantReference constant = (ConstantReference)decl[0];
+		Expression initializer = (Expression)decl[1];
+		
+		PHPDocBlock docBlock = null;
+		if (decl.length == 3) {
+			docBlock = (PHPDocBlock)decl[2];
+		}
+		int start = constant.sourceStart();
+		int end = (initializer == null ? constant.sourceEnd() : initializer.sourceEnd());
+		parser.declarations.push(new ConstantDeclaration(constant, initializer, decListleft, end, docBlock));
+	}
+:}
+;
+
+named_namespace_body ::=
+T_SEMICOLON:end /* unbracketed syntax */
+{:
+	NamespaceDeclaration namespaceDeclaration = (NamespaceDeclaration)parser.declarations.pop();
+	namespaceDeclaration.setEnd(endright);
+	namespaceDeclaration.setBracketed(false);
+
+	parser.currentNamespace = namespaceDeclaration;
+
+	parser.metUnbracketedNSDecl = true;
+	if (parser.metBracketedNSDecl) {
+		parser.reportError(new ASTError(namespaceDeclaration.sourceStart(), endright), "Cannot mix bracketed namespace declarations with unbracketed namespace declarations");
+	}
+	
+	RESULT = namespaceDeclaration;
+:}
+| namespace_body:body
+{:
+	RESULT = body;
+:}
+;
+
+namespace_body ::=
+T_CURLY_OPEN:start namespace_statement_list:statementList T_CURLY_CLOSE:end
+{:
+	NamespaceDeclaration namespaceDeclaration = (NamespaceDeclaration)parser.declarations.pop();
+	namespaceDeclaration.getBody().setStart(startleft);
+	namespaceDeclaration.getBody().setEnd(endright);
+	namespaceDeclaration.getBody().getStatements().clear();
+	namespaceDeclaration.getBody().acceptStatements(statementList);
+	namespaceDeclaration.setEnd(endright);
+	
+	parser.metBracketedNSDecl = true;
+	if (parser.metUnbracketedNSDecl) {
+		parser.reportError(new ASTError(namespaceDeclaration.sourceStart(), endright), "Cannot mix bracketed namespace declarations with unbracketed namespace declarations");
+	}
+	
+	RESULT = namespaceDeclaration;
+:}
+| error:theError
+{:
+	RESULT = (NamespaceDeclaration)parser.declarations.pop();
+:}
+;
+
+
+use_declarations ::=
+use_declarations:useDeclList T_COMMA use_declaration:useDecl
+{:
+	useDeclList.add(useDecl);
+	RESULT = useDeclList;
+:}
+
+| use_declaration:useDecl
+{:
+	List useDeclList = new LinkedList();
+	useDeclList.add(useDecl);
+	RESULT = useDeclList;
+:}
+;
+
+use_declaration ::=
+namespace_name:name
+{:
+	UsePart usePart = new UsePart(name, null);
+	RESULT = usePart;
+:}
+
+| namespace_name:name T_AS T_STRING:aliasName
+{:
+	UsePart usePart = new UsePart(name, 
+		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
+	RESULT = usePart;
+:}
+
+| T_NS_SEPARATOR:s namespace_name:name
+{:
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
+
+	UsePart usePart = new UsePart(name, null);
+	RESULT = usePart;
+:}
+
+| T_NS_SEPARATOR:s namespace_name:name T_AS T_STRING:aliasName
+{:
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
+	
+	UsePart usePart = new UsePart(name,
+		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
+	RESULT = usePart;
 :}
 ;
 
@@ -416,13 +647,17 @@ unticked_statement:statement
 {: 
 	RESULT = statement; 
 :}
-| T_VAR_COMMENT
+| T_STRING:label T_NEKUDOTAIM:end
+{:
+	RESULT = new GotoLabel(labelleft, endright, label);
+:}
 | error:theError /* error statement */
 {:
 	parser.reportError();
 	ASTError error = new ASTError(theErrorleft, theErrorright);
 	RESULT = error;	
 :}
+| T_VAR_COMMENT
 ;
 
 unticked_statement ::=
@@ -614,8 +849,10 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 	RESULT = new EmptyStatement(tokenleft, tokenright); 
 :}
 
-| T_TRY:start T_CURLY_OPEN:tryBlockStart inner_statement_list:tryList T_CURLY_CLOSE:tryBlockEnd T_CATCH:catch_word T_OPEN_PARENTHESE fully_qualified_class_name:className tracked_variable:var T_CLOSE_PARENTHESE
-T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchBlockEnd additional_catches:catchesList
+| T_TRY:start T_CURLY_OPEN:tryBlockStart inner_statement_list:tryList T_CURLY_CLOSE:tryBlockEnd
+T_CATCH:catch_word T_OPEN_PARENTHESE fully_qualified_class_name:className tracked_variable:var T_CLOSE_PARENTHESE
+T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchBlockEnd
+additional_catches:catchesList
 {:
 	Block tryBlock = new Block(tryBlockStartleft, tryBlockEndright, tryList);
 	Block catchBlock = new Block(catchBlockStartleft, catchBlockEndright, catchList);
@@ -630,6 +867,10 @@ T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchB
 	RESULT = new ThrowStatement(tokenleft, endright, expr); 
 :}
 
+| T_GOTO:start T_STRING:label T_SEMICOLON:end
+{:
+	RESULT = new GotoStatement(startleft, endright, label);
+:}
 ;
 
 additional_catches ::=
@@ -725,7 +966,6 @@ is_reference ::=
 {:
 	RESULT = Boolean.FALSE;
 :}
-
 | T_REFERENCE
 {:
 	RESULT = Boolean.TRUE;
@@ -747,7 +987,7 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE:closeParenthese
 :}
 function_body:body
 {:
-RESULT = body;
+	RESULT = body;
 :}
 ;
 
@@ -796,7 +1036,6 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 		parser.reportError(new ASTError(statementListright - 1, statementListright), "syntax error, unfinished class declaration");
 		parser.pendingStatement = blockEnd;
 	}
-
 	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.pop();
 	classDeclaration.setRecovered(false);
 	classDeclaration.setEnd(blockEndright);
@@ -834,17 +1073,23 @@ error
 |
 ;
 
+/* Here go all elements that trigger the class closure */
 class_closure ::=
-T_CURLY_CLOSE
-|
-unticked_statement:statement /* error recovery */ 
-{: 
+T_CURLY_CLOSE /* normal behaviour */
+
+/* error recovery - function declaration closes current class */
+/* XXX: This is disabled for now because of lambda functions
+function_declaration_statement:statement 
+{:
 	RESULT = statement;
 :}
-|class_declaration_statement:statement /* error recovery */
-{: 
+*/
+
+/* error recovery - another class declaration closes current class */
+| class_declaration_statement:statement
+{:
 	RESULT = statement;
-:} 
+:}
 ;
 
 class_entry_type ::=
@@ -852,12 +1097,10 @@ T_CLASS:value
 {:
 	RESULT = parser.new ModifierDocPair(Modifiers.AccDefault, value); 
 :}
-               
 | T_ABSTRACT:value T_CLASS
 {:
 	RESULT = parser.new ModifierDocPair(Modifiers.AccAbstract, value);
 :}        
-
 | T_FINAL:value T_CLASS   
 {:
 	RESULT = parser.new ModifierDocPair(Modifiers.AccFinal, value);
@@ -869,7 +1112,6 @@ extends_from ::=
 {:
 	RESULT = null;
 :}
-
 | T_EXTENDS fully_qualified_class_name:className
 {:
 	RESULT = className;
@@ -894,7 +1136,6 @@ interface_extends_list ::=
 	List list = new LinkedList();
 	RESULT = list;
 :}
-
 | T_EXTENDS interface_list:list
 {:
 	RESULT = list;
@@ -1252,10 +1493,9 @@ optional_class_type ::=
 	RESULT = null;
 :}
 
-| T_STRING:className
+| fully_qualified_class_name:className
 {:
-	TypeReference reference = new TypeReference(classNameleft, classNameright, className);
-	RESULT = reference;
+	RESULT = className;
 :}
 
 | T_ARRAY:array
@@ -1415,7 +1655,7 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON
 	}
 :}
 
-| class_constant_declaration:decList T_SEMICOLON
+| constant_declaration:decList T_SEMICOLON
 {:
 	Iterator i = decList.iterator();
 	while (i.hasNext()) {
@@ -1479,7 +1719,6 @@ T_SEMICOLON:end /* abstract method */
 	methodDeclaration.setEnd(endright);
 	RESULT = null;
 :}
-
 | T_CURLY_OPEN:start inner_statement_list:statementList T_CURLY_CLOSE:end
 {:
 	PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
@@ -1618,15 +1857,15 @@ class_variable_declaration:list T_COMMA T_VARIABLE:var
 :}
 ;
 
-class_constant_declaration ::=
-class_constant_declaration:list T_COMMA string_st:constName T_EQUAL static_scalar:expr
+constant_declaration ::=
+constant_declaration:list T_COMMA T_STRING:constName T_EQUAL static_scalar:expr
 {:
 	ConstantReference constId = new ConstantReference(constNameleft, constNameright, constName);
 	list.add(new ASTNode[] {constId, expr});
 	RESULT = list;
 :}
 
-| T_CONST:value string_st:constName T_EQUAL static_scalar:expr
+| T_CONST:value T_STRING:constName T_EQUAL static_scalar:expr
 {:
 	List list = new LinkedList();
 	ConstantReference constId = new ConstantReference(constNameleft, constNameright, constName);
@@ -1951,6 +2190,11 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	RESULT = new ConditionalExpression(conditionleft, ifFalseright, condition , ifTrue, ifFalse); 
 :}
 
+| expr:condition T_QUESTION_MARK T_NEKUDOTAIM expr:ifFalse
+{: 
+	RESULT = new ConditionalExpression(conditionleft, ifFalseright, condition , null, ifFalse); 
+:}
+
 | internal_functions_in_yacc:expr
 {:
 	RESULT = expr;
@@ -2024,7 +2268,7 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	RESULT = expr;
 :}
 
-| T_BACKQUATE:start encaps_list:list T_BACKQUATE:end
+| T_BACKQUATE:start backticks_expr:list T_BACKQUATE:end
 {:
 	BackTickExpression backTickExpression = new BackTickExpression(startleft, endright, list);
 	RESULT = backTickExpression;
@@ -2045,18 +2289,90 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	PHPCallExpression result = new PHPCallExpression(startleft, exprright, null, name, list);
 	RESULT = result;
 :}
+
+| T_FUNCTION:s is_reference:isReference
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
+T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
+{:
+	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, varsList, 
+		new Block(blockStartleft, blockEndright, list), isReference.booleanValue());
+:}
+;
+
+lexical_vars ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+
+| T_USE:s T_OPEN_PARENTHESE lexical_var_list:list T_CLOSE_PARENTHESE:e
+{:
+	RESULT = list;
+:}
+;
+
+lexical_var_list ::=
+lexical_var_list:list T_COMMA T_VARIABLE:var
+{:
+	VariableReference v = new VariableReference(varleft, varright, var);
+	list.add(v);
+	RESULT = list;
+:}
+
+| lexical_var_list:list T_COMMA T_REFERENCE:ref T_VARIABLE:var
+{:
+	list.add(new ReferenceExpression (refleft, varright, new VariableReference(varleft, varright, var)));
+	RESULT = list;
+:}
+
+| T_VARIABLE:var
+{:
+	List list = new LinkedList();
+	list.add(new VariableReference(varleft, varright, var));
+	RESULT = list;
+:}
+
+| T_REFERENCE:ref T_VARIABLE:var
+{:
+	List list = new LinkedList();
+	list.add(new ReferenceExpression (refleft, varright, new VariableReference(varleft, varright, var)));
+	RESULT = list;
+:}
 ;
 
 function_call ::=
-string_st:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
-{: 
+namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+{:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
-	SimpleReference name = new SimpleReference(functionNameleft, functionNameright, functionName);
-	RESULT = new PHPCallExpression(functionNameleft, endright, null, name, parameters); 
+	RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters); 
 :}
 
-| fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+| T_NAMESPACE:namespace T_NS_SEPARATOR namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+{:
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	if (functionName.getNamespace() != null) {
+		functionName.getNamespace().setLocal(true);
+	}
+	RESULT = new PHPCallExpression(namespaceleft, endright, null, functionName, parameters); 
+:}
+
+| T_NS_SEPARATOR:s namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+{:
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	NamespaceReference namespace = functionName.getNamespace();
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		functionName.setNamespace(namespace);
+	}
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
+	RESULT = new PHPCallExpression(sleft, endright, null, functionName, parameters); 
+:}
+
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {: 
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
@@ -2065,12 +2381,29 @@ string_st:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:para
 	RESULT = staticMethodInvocation;
 :}
 
-| fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft); 
 	ReflectionStaticMethodInvocation functionInvocation = new ReflectionStaticMethodInvocation(classNameleft, endright, className, reflectionName, parameters); 
 	RESULT = functionInvocation;
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+{: 
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	SimpleReference name = new SimpleReference(functionNameleft, functionNameright, functionName);
+	StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(classNameleft, endright, className, name, parameters); 
+	RESULT = staticMethodInvocation; 
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+{: 
+	parameters.setStart(startright);
+	parameters.setEnd(endleft); 
+	ReflectionStaticMethodInvocation functionInvocation = new ReflectionStaticMethodInvocation(classNameleft, endright, className, reflectionName, parameters); 
+	RESULT = functionInvocation; 
 :}
 
 | variable_without_objects:reflectionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
@@ -2081,19 +2414,69 @@ string_st:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:para
 :}
 ;
 
-fully_qualified_class_name ::=
-T_STRING:className
+class_name ::=
+T_STATIC:s
 {:
-	TypeReference name = new TypeReference(classNameleft, classNameright, className);
+	RESULT = new FullyQualifiedReference(sleft, sright, "static", null);
+:}
+
+| namespace_name:name
+{:
+	RESULT = name;
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
+{:
+	if (name.getNamespace() != null) {
+		name.getNamespace().setLocal(true);
+	}
+	RESULT = name;
+:}
+
+| T_NS_SEPARATOR:s namespace_name:name
+{:
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
+	RESULT = name;
+:}
+;
+
+fully_qualified_class_name ::=
+namespace_name:name
+{:
+	RESULT = name;
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
+{:
+	if (name.getNamespace() != null) {
+		name.getNamespace().setLocal(true);
+	}
+	RESULT = name;
+:}
+
+| T_NS_SEPARATOR:s namespace_name:name
+{:
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
 	RESULT = name;
 :}
 ;
 
 class_name_reference ::=
-T_STRING:className
+class_name:className
 {:
-	TypeReference classReference = new TypeReference(classNameleft, classNameright, className);
-	RESULT = classReference;
+	RESULT = className;
 :}
 
 | dynamic_class_name_reference:className
@@ -2164,6 +2547,26 @@ exit_expr ::=
 :}
 ;
 
+backticks_expr ::=
+/* empty */
+{:
+	RESULT = new LinkedList();
+:}
+
+| T_ENCAPSED_AND_WHITESPACE:string
+{:
+	List list = new LinkedList();
+	Scalar scalar = new Scalar(stringleft, stringright, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
+	list.add(scalar);
+	RESULT = list;
+:}
+
+| encaps_list:list
+{:
+	RESULT = list;
+:}
+;
+
 ctor_arguments ::=
 /* empty */
 {:
@@ -2209,6 +2612,12 @@ T_LNUMBER:scalar
 	RESULT = s;
 :}
 
+| T_DIR:scalar
+{:
+	Scalar s = new Scalar(scalarleft, scalarright, "__DIR__", Scalar.TYPE_SYSTEM);
+	RESULT = s;
+:}
+
 | T_CLASS_C:scalar
 {:
 	Scalar s = new Scalar(scalarleft, scalarright, "__CLASS__", Scalar.TYPE_SYSTEM);
@@ -2226,6 +2635,24 @@ T_LNUMBER:scalar
 	Scalar s = new Scalar(scalarleft, scalarright, "__FUNCTION__", Scalar.TYPE_SYSTEM);
 	RESULT = s;
 :}
+
+| T_NS_C:scalar
+{:
+	RESULT = new Scalar(scalarleft, scalarright, "__NAMESPACE__", Scalar.TYPE_SYSTEM);
+:}
+
+| T_START_HEREDOC:label T_ENCAPSED_AND_WHITESPACE:string T_END_HEREDOC:e
+{:
+	List list = new LinkedList();
+	list.add(new Scalar(stringleft, stringright, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING));
+	RESULT = new Quote(labelleft, eright, list, label.charAt(0) == '\'' ? Quote.QT_NOWDOC : Quote.QT_HEREDOC);
+:}
+
+| T_START_HEREDOC:label T_END_HEREDOC:e
+{:
+	RESULT = new Quote(labelleft, eright, new LinkedList(), label.charAt(0) == '\'' ? Quote.QT_NOWDOC : Quote.QT_HEREDOC);
+:}
+
 ;
 
 static_scalar ::=  /* compile-time evaluated scalars */
@@ -2234,10 +2661,33 @@ common_scalar:scalar
 	RESULT = scalar;
 :}
 
-| string_st:str
+| namespace_name:name
 {:
-	Scalar s = new Scalar(strleft, strright, str, Scalar.TYPE_STRING);
-	RESULT = s;	
+	if (name.getNamespace() == null) {
+		RESULT = new Scalar(nameleft, nameright, name.getName(), Scalar.TYPE_STRING);
+	} else {
+		RESULT = name;
+	}
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
+{:
+	if (name.getNamespace() != null) {
+		name.getNamespace().setLocal(true);
+	}
+	RESULT = name;
+:}
+
+| T_NS_SEPARATOR:s namespace_name:name
+{:
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
+	RESULT = name;
 :}
 
 | T_PLUS:start static_scalar:expr
@@ -2265,45 +2715,60 @@ common_scalar:scalar
 ;
 
 static_class_constant ::=
-T_STRING:className T_PAAMAYIM_NEKUDOTAYIM string_st:varName
+class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 {:
 	ConstantReference vname = new ConstantReference(varNameleft, varNameright, varName);
-	TypeReference cname = new TypeReference(classNameleft, classNameright, className);
-	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, cname, vname); 
+	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, vname); 
 	RESULT = constant;
 :}
 ;
 
 scalar ::=
-string_st:scalar
-{: 
-	Scalar s = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_STRING);
-	RESULT = s;
-:}
-
-| T_STRING_VARNAME:scalar
+T_STRING_VARNAME:scalar
 {:
 	// TODO: check if this is a scalar
 	Scalar s = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_STRING);
 	RESULT = s;
 :}
-
 | class_constant:classConstant
 {:
 	RESULT = classConstant;
 :}
-
+| namespace_name:name
+{:
+	if (name.getNamespace() == null) {
+		RESULT = new Scalar(nameleft, nameright, name.getName(), Scalar.TYPE_STRING);
+	} else {
+		RESULT = name;
+	}
+:}
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
+{:
+	if (name.getNamespace() != null) {
+		name.getNamespace().setLocal(true);
+	}
+	RESULT = name;
+:}
+| T_NS_SEPARATOR:s namespace_name:name
+{:
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace == null) {
+		namespace = new NamespaceReference(sleft, sright, "");
+		name.setNamespace(namespace);
+	}
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
+	RESULT = name;
+:}
 | common_scalar:scalar
 {:
 	RESULT = scalar;
 :}
-
 | T_QUATE:start encaps_list:list T_QUATE:end
 {:
 	Quote quote = new Quote(startleft, endright, list, Quote.QT_QUOTE);
 	RESULT = quote;
 :}
-
 | T_START_HEREDOC:start encaps_list:list T_END_HEREDOC:end
 {:
 	Quote hereDoc = new Quote(startleft, endright, list, Quote.QT_HEREDOC);
@@ -2485,10 +2950,23 @@ reference_variable:var
 ;
 
 static_member ::=
-fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:var
+class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:var
 {:
 	StaticFieldAccess staticFieldAccess = new StaticFieldAccess(classNameleft, varright, className, var);
 	RESULT = staticFieldAccess;
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:var
+{:
+	StaticFieldAccess staticFieldAccess = new StaticFieldAccess(classNameleft, varright, className, var);
+	RESULT = staticFieldAccess;
+:}
+;
+
+variable_class_name ::=
+reference_variable:var
+{:
+	RESULT = var;
 :}
 ;
 
@@ -2767,9 +3245,20 @@ encaps_list:list encaps_var:var
 	RESULT = list;
 :}
 
-| /* empty */
+| encaps_var:var
 {:
-	RESULT = new LinkedList();
+	List list = new LinkedList();
+	list.add(var);
+	RESULT = list;
+:}
+
+| T_ENCAPSED_AND_WHITESPACE:string encaps_var:var
+{:
+	List list = new LinkedList();
+	Scalar scalar = new Scalar(stringleft, stringright, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
+	list.add(scalar);
+	list.add(var);
+	RESULT = list;
 :}
 ;
 
@@ -2899,11 +3388,17 @@ variable:var
 ;
 
 class_constant ::=
-fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:varName
+class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 {:
 	ConstantReference name = new ConstantReference(varNameleft, varNameright, varName);
 	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, name); 
 	RESULT = constant;
+:}
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
+{:
+	ConstantReference name = new ConstantReference(varNameleft, varNameright, varName);
+	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, name); 
+	RESULT = constant; 
 :}
 ;
 
