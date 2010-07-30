@@ -33,7 +33,9 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 		}
 
 		public void endVisit(Variable variable) {
-			if (variable.getParent().getType() != ASTNode.FIELD_ACCESS) {
+			if (variable.getParent().getType() != ASTNode.FIELD_ACCESS
+					|| (variable.getParent().getType() == ASTNode.FIELD_ACCESS && ((FieldAccess) variable
+							.getParent()).getDispatcher() == variable)) {
 				Expression varName = variable.getName();
 				if (params.contains(((Identifier) varName).getName())
 						&& varName instanceof Identifier
