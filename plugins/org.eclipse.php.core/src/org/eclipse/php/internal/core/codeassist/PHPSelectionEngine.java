@@ -383,7 +383,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					tRegion = phpScriptRegion.getPhpToken(offset
 							- container.getStartOffset()
 							- phpScriptRegion.getStart());
-
+					if (tRegion == null) {
+						return EMPTY;
+					}
 					// Determine element name:
 					int elementStart = container.getStartOffset()
 							+ phpScriptRegion.getStart() + tRegion.getStart();
