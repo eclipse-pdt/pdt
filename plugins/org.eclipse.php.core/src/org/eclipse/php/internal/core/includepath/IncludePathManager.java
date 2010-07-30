@@ -325,6 +325,34 @@ public class IncludePathManager {
 	}
 
 	/**
+	 * Adds the given entries to Include Path
+	 * 
+	 * @param scriptProject
+	 * @param entries
+	 * @throws ModelException
+	 */
+	public void addEntriesToIncludePath(IProject project,
+			List<IBuildpathEntry> entries) {
+
+		List<IncludePath> includePathEntries = new ArrayList<IncludePath>();
+		for (IBuildpathEntry buildpathEntry : entries) {
+			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+						.findMember(buildpathEntry.getPath());
+				if (resource != null) {
+					includePathEntries.add(new IncludePath(resource, project));
+				}
+			} else {
+				includePathEntries
+						.add(new IncludePath(buildpathEntry, project));
+			}
+		}
+		// update the include path for this project
+		setIncludePath(project, includePathEntries
+				.toArray(new IncludePath[includePathEntries.size()]));
+	}
+
+	/**
 	 * Appends the given entries to Include Path
 	 * 
 	 * @param scriptProject
@@ -350,34 +378,6 @@ public class IncludePathManager {
 		includePathEntries.addAll(Arrays.asList(IncludePathManager
 				.getInstance().getIncludePaths(project)));
 
-		// update the include path for this project
-		setIncludePath(project, includePathEntries
-				.toArray(new IncludePath[includePathEntries.size()]));
-	}
-
-	/**
-	 * Adds the given entries to Include Path
-	 * 
-	 * @param scriptProject
-	 * @param entries
-	 * @throws ModelException
-	 */
-	public void addEntriesToIncludePath(IProject project,
-			List<IBuildpathEntry> entries) {
-
-		List<IncludePath> includePathEntries = new ArrayList<IncludePath>();
-		for (IBuildpathEntry buildpathEntry : entries) {
-			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-				IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-						.findMember(buildpathEntry.getPath());
-				if (resource != null) {
-					includePathEntries.add(new IncludePath(resource, project));
-				}
-			} else {
-				includePathEntries
-						.add(new IncludePath(buildpathEntry, project));
-			}
-		}
 		// update the include path for this project
 		setIncludePath(project, includePathEntries
 				.toArray(new IncludePath[includePathEntries.size()]));
