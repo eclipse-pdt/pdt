@@ -1,6 +1,6 @@
 <?php
 
-// Start of oci8 v.1.3.5
+// Start of oci8 v.1.3.4
 
 class OCI_Lob  {
 
@@ -558,8 +558,7 @@ function oci_cancel ($statement) {}
  * @param statement resource <p>
  * A valid OCI statement identifier.
  * </p>
- * @return bool true on success or false if there are no more rows in the
- * statement.
+ * @return bool Returns true on success or false on failure.
  */
 function oci_fetch ($statement) {}
 
@@ -601,9 +600,6 @@ function oci_fetch_assoc ($statement) {}
    numeric array, or both
  * @link http://php.net/manual/en/function.oci-fetch-array.php
  * @param statement resource <p>
- * A valid OCI statement identifier.
- * </p>
- * @param mode int[optional] <p>
  * An optional second parameter can be any combination of the following
  * constants:
  * OCI_BOTH - return an array with both associative
@@ -619,6 +615,7 @@ function oci_fetch_assoc ($statement) {}
  * of the descriptor.
  * Default mode is OCI_BOTH.
  * </p>
+ * @param mode int[optional] 
  * @return array an array with both associative and numeric indices, or false if
  * there are no more rows in the statement.
  */
@@ -801,8 +798,8 @@ function oci_close ($connection) {}
  * <p>
  * If the not specified, PHP uses environment variables
  * ORACLE_SID and TWO_TASK to
- * determine the name of local Oracle instance and
- * location of tnsnames.ora accordingly.
+ * determine the name of local Oracle instance and location of 
+ * tnsnames.ora accordingly.
  * </p>
  * @param charset string[optional] &oci.charset;
  * @param session_mode int[optional] <p>
@@ -1076,8 +1073,8 @@ function oci_rollback ($connection) {}
  * </p>
  * @param type int[optional] <p>
  * Valid values for type are: 
- * OCI_DTYPE_FILE, OCI_DTYPE_LOB and
- * OCI_DTYPE_ROWID.
+ * OCI_D_FILE, OCI_D_LOB and
+ * OCI_D_ROWID.
  * </p>
  * @return OCI-Lob a new LOB or FILE descriptor on success, false on error.
  */
@@ -1900,5 +1897,5 @@ define ('OCI_TEMP_CLOB', 2);
  */
 define ('OCI_TEMP_BLOB', 1);
 
-// End of oci8 v.1.3.5
+// End of oci8 v.1.3.4
 ?>
