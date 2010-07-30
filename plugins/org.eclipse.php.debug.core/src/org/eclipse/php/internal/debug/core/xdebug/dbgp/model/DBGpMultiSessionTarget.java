@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *     IBM Corporation - initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
@@ -17,18 +18,12 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IDebugEventSetListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IMemoryBlock;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.*;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.model.DebugOutput;
+import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
-import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
@@ -39,7 +34,9 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListe
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.browser.IWebBrowser;
 
-public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTarget, IDBGpSessionListener, IDebugEventSetListener {
+public class DBGpMultiSessionTarget extends DBGpElement implements
+		IPHPDebugTarget, IDBGpDebugTarget, IDBGpSessionListener,
+		IDebugEventSetListener {
 
 	// used to identify this debug target with the associated
 	// script being debugged.
@@ -91,6 +88,10 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 
 	private PathMapper pathMapper;
 
+	// need to have something in case a target is terminated before
+	// a session is initiated to stop a NPE in the debug view	
+	private DebugOutput debugOutput = new DebugOutput();
+
 	/**
 	 * Base constructor
 	 * 
@@ -113,7 +114,8 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 	 * @param stopAtStart
 	 * @throws CoreException
 	 */
-	public DBGpMultiSessionTarget(ILaunch launch, String projectRelativeScript, String ideKey, String sessionID, boolean stopAtStart)
+	public DBGpMultiSessionTarget(ILaunch launch, String projectRelativeScript,
+			String ideKey, String sessionID, boolean stopAtStart)
 			throws CoreException {
 		this();
 		this.stopAtStart = stopAtStart;
@@ -136,8 +138,9 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 	 * @param sessionID
 	 * @param stopAtStart
 	 */
-	public DBGpMultiSessionTarget(ILaunch launch, String workspaceRelativeScript, String stopDebugURL, String ideKey, boolean stopAtStart,
-			IWebBrowser browser) {
+	public DBGpMultiSessionTarget(ILaunch launch,
+			String workspaceRelativeScript, String stopDebugURL, String ideKey,
+			boolean stopAtStart, IWebBrowser browser) {
 		this();
 		this.stopAtStart = stopAtStart;
 		this.launch = launch;
@@ -165,7 +168,8 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 	}
 
 	public String getName() throws DebugException {
-		return "MultiSession Manager";
+		// Multisession Manager
+		return PHPDebugCoreMessages.XDebug_DBGpMultiSessionTarget_0;
 	}
 
 	/*
@@ -195,8 +199,13 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 	}
 
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
-		IDebugTarget firstTarget = debugTargets.get(0);
-		return firstTarget.supportsBreakpoint(breakpoint);
+		synchronized (debugTargets) {
+			if (debugTargets.size() > 0) {
+				IDebugTarget firstTarget = debugTargets.get(0);
+				return firstTarget.supportsBreakpoint(breakpoint);
+			}
+		}
+		return false;
 	}
 
 	public boolean isSuspended() {
@@ -312,7 +321,8 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 		}
 	}
 
-	public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
+	public IMemoryBlock getMemoryBlock(long startAddress, long length)
+			throws DebugException {
 		return null;
 	}
 
@@ -326,16 +336,19 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 	 * @return
 	 */
 	private boolean isTerminating() {
-		boolean terminating = (targetState == STATE_TERMINATED) || (targetState == STATE_TERMINATING);
+		boolean terminating = (targetState == STATE_TERMINATED)
+				|| (targetState == STATE_TERMINATING);
 		return terminating;
 	}
 
-	public void waitForInitialSession(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs, IProgressMonitor launchMonitor) {
+	public void waitForInitialSession(DBGpBreakpointFacade facade,
+			DBGpPreferences sessionPrefs, IProgressMonitor launchMonitor) {
 		bpFacade = facade;
 		sessionPreferences = sessionPrefs;
 		try {
-			while (debugTargets.size() == 0 && !launch.isTerminated() && !isTerminating() && !launchMonitor.isCanceled()) {
-				te.waitForEvent(XDebugPreferenceInit.getTimeoutDefault());
+			while (debugTargets.size() == 0 && !launch.isTerminated()
+					&& !isTerminating() && !launchMonitor.isCanceled()) {
+				te.waitForEvent(DBGpPreferences.DBGP_TIMEOUT_DEFAULT);
 			}
 		} catch (InterruptedException e) {
 		}
@@ -343,7 +356,18 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 			DBGpSessionHandler.getInstance().removeSessionListener(this);
 			terminateMultiSessionDebugTarget();
 		}
+	}
 
+	public void sessionReceived(DBGpBreakpointFacade facade,
+			DBGpPreferences sessionPrefs, DBGpTarget owningTarget,
+			PathMapper globalMapper) {
+		bpFacade = facade;
+		sessionPreferences = sessionPrefs;
+		owningTarget.setMultiSessionManaged(true);
+		addDebugTarget(owningTarget);
+		setPathMapper(globalMapper);
+		launch.addDebugTarget(owningTarget);
+		owningTarget.sessionReceived(facade, sessionPrefs);
 	}
 
 	public boolean SessionCreated(DBGpSession session) {
@@ -352,7 +376,9 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 			// we need to use single shot debug targets to ensure that
 			// they terminate when complete and don't hang around waiting for
 			// another session they won't receive.
-			DBGpTarget target = new DBGpTarget(this.launch, this.scriptName, this.ideKey, this.sessionID, this.stopAtStart);
+			DBGpTarget target = new DBGpTarget(this.launch, this.scriptName,
+					this.ideKey, this.sessionID, this.stopAtStart);
+			target.setMultiSessionManaged(true);
 			target.setPathMapper(pathMapper);
 			target.SessionCreated(session);
 			// need to make sure bpFacade is thread safe.
@@ -360,15 +386,26 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 			// launch, but it doesn't matter.
 			target.waitForInitialSession(bpFacade, sessionPreferences, null);
 			if (!target.isTerminated()) {
+				addDebugTarget(target);
+				launch.addDebugTarget(target);
 				if (targetState == STATE_INIT_SESSION_WAIT) {
 					targetState = STATE_STARTED;
 					te.signalEvent();
 				}
-				debugTargets.add(target);
-				launch.addDebugTarget(target);
 			}
 		}
 		return true;
+	}
+
+	public void addDebugTarget(DBGpTarget target) {
+		synchronized (debugTargets) {
+			if (debugTargets.size() == 0) {
+				// this is the first target, so clear out any old debug output
+				// and set up new information.
+				debugOutput = new DebugOutput();
+			}
+			debugTargets.add(target);
+		}
 	}
 
 	public void breakpointAdded(IBreakpoint breakpoint) {
@@ -431,13 +468,15 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 
 		try {
 			if (browser != null) {
-				DBGpLogger.debug("browser is not null, sending " + stopDebugURL);
+				DBGpLogger
+						.debug("browser is not null, sending " + stopDebugURL); //$NON-NLS-1$
 				browser.openURL(new URL(stopDebugURL));
 			} else {
 				DBGpUtils.openInternalBrowserView(stopDebugURL);
 			}
 		} catch (PartInitException e) {
-			DBGpLogger.logException("Failed to send stop URL: " + stopDebugURL, this, e);
+			DBGpLogger.logException(
+					"Failed to send stop URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 		} catch (MalformedURLException e) {
 			// this should never happen, if it does I want it in the log
 			// as something will need to be fixed
@@ -456,5 +495,20 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 	 */
 	public boolean isWebLaunch() {
 		return webLaunch;
+	}
+
+	public DebugOutput getOutputBuffer() {
+		return debugOutput;
+	}
+
+	public boolean isWaiting() {
+		boolean isWaiting = (targetState == STATE_INIT_SESSION_WAIT);
+		synchronized (debugTargets) {
+			for (int i = 0; i < debugTargets.size() && !isWaiting; i++) {
+				IPHPDebugTarget target = debugTargets.get(i);
+				isWaiting = isWaiting | target.isWaiting();
+			}
+		}
+		return isWaiting;
 	}
 }
