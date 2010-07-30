@@ -32,7 +32,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	private String fileName; // workspace file relative to project, null if not
 								// in workspace
 	private int lineNo; // line within the file of this stack frame
-	private String function = ""; // string to display in debugger for this stack frame //$NON-NLS-1$
+	private String name = ""; // string to display in debugger for this stack frame //$NON-NLS-1$
 
 	// private IVariable[] variables; // variables exposed to this stack frame
 
@@ -57,19 +57,21 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 				.getAttribute(stackData, "filename")); //$NON-NLS-1$
 		qualifiedFile = ((DBGpTarget) getDebugTarget())
 				.mapToWorkspaceFileIfRequired(qualifiedFile);
-		function = DBGpResponse.getAttribute(stackData, "where");
+		String function = DBGpResponse.getAttribute(stackData, "where"); //$NON-NLS-1$ 
 		// check to see if the file exists in the workspace
 		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot()
 				.findFilesForLocation(new Path(qualifiedFile));
 		if (fileFound.length > 0) {
 			IFile file = fileFound[0];
 			// get the file found in workspace and show project/file
-			fileName = file.getProject().toString() + "/"
-					+ file.getProjectRelativePath().toString();
+			String projectName = file.getProject().getName();
+			String projectRelPath = file.getProjectRelativePath().toString();
+			fileName = projectName + "/" + projectRelPath;
 		} else {
-			// file not found just show the fully qualified name.
+			// fileName = null;
 			fileName = qualifiedFile;
 		}
+		name = fileName + "." + function + " : lineno " + lineNo;
 	}
 
 	/*
@@ -107,7 +109,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getName()
 	 */
 	public String getName() throws DebugException {
-		return function;
+		return name;
 	}
 
 	/*
