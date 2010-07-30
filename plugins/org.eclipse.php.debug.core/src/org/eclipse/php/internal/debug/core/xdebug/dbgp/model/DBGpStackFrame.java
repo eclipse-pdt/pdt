@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *     IBM Corporation - initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
@@ -26,12 +27,14 @@ import org.w3c.dom.Node;
 public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	private DBGpThread owningThread;
-	private String qualifiedFile = ""; // fully qualified name of the file this stack frame is in
-	private String stackLevel; // the level of this stack frame   
-	private String fileName; // workspace file relative to project, null if not in workspace
+	private String qualifiedFile = ""; // fully qualified name of the file this stack frame is in //$NON-NLS-1$
+	private String stackLevel; // the level of this stack frame
+	private String fileName; // workspace file relative to project, null if not
+								// in workspace
 	private int lineNo; // line within the file of this stack frame
-	private String name = ""; // string to display in debugger for this stack frame
-	//private IVariable[] variables; // variables exposed to this stack frame
+	private String function = ""; // string to display in debugger for this stack frame //$NON-NLS-1$
+
+	// private IVariable[] variables; // variables exposed to this stack frame
 
 	public DBGpStackFrame(DBGpThread threadOwner, Node stackData) {
 		super(threadOwner.getDebugTarget());
@@ -40,44 +43,38 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		// parse the xml information about a stack
 
 		/*
-		    <stack level="{NUM}"
-		           type="file|eval|?"
-		           filename="..."
-		           lineno="{NUM}"
-		           where=""
-		           cmdbegin="line_number:offset"
-		           cmdend="line_number:offset"/>
-		    <stack level="{NUM}"
-		           type="file|eval|?"
-		           filename="..."
-		           lineno="{NUM}">
-		        <input level="{NUM}"
-		               type="file|eval|?"
-		               filename="..."
-		               lineno="{NUM}"/>
-		    </stack>
-		</response>       
-		       */
+		 * <stack level="{NUM}" type="file|eval|?" filename="..." lineno="{NUM}"
+		 * where="" cmdbegin="line_number:offset" cmdend="line_number:offset"/>
+		 * <stack level="{NUM}" type="file|eval|?" filename="..."
+		 * lineno="{NUM}"> <input level="{NUM}" type="file|eval|?"
+		 * filename="..." lineno="{NUM}"/> </stack> </response>
+		 */
 
-		String line = DBGpResponse.getAttribute(stackData, "lineno");
-		stackLevel = DBGpResponse.getAttribute(stackData, "level");
+		String line = DBGpResponse.getAttribute(stackData, "lineno"); //$NON-NLS-1$
+		stackLevel = DBGpResponse.getAttribute(stackData, "level"); //$NON-NLS-1$
 		lineNo = Integer.parseInt(line);
-		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename"));
-		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapToWorkspaceFileIfRequired(qualifiedFile);
+		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse
+				.getAttribute(stackData, "filename")); //$NON-NLS-1$
+		qualifiedFile = ((DBGpTarget) getDebugTarget())
+				.mapToWorkspaceFileIfRequired(qualifiedFile);
+		function = DBGpResponse.getAttribute(stackData, "where");
 		// check to see if the file exists in the workspace
-		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(qualifiedFile));
+		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot()
+				.findFilesForLocation(new Path(qualifiedFile));
 		if (fileFound.length > 0) {
 			IFile file = fileFound[0];
-			fileName = file.getProjectRelativePath().toString();
-			name = fileName + "." + DBGpResponse.getAttribute(stackData, "where") + " : lineno " + lineNo;
+			// get the file found in workspace and show project/file
+			fileName = file.getProject().toString() + "/"
+					+ file.getProjectRelativePath().toString();
 		} else {
-			fileName = null;
-			name = qualifiedFile + "." + DBGpResponse.getAttribute(stackData, "where") + " : lineno " + lineNo;
+			// file not found just show the fully qualified name.
+			fileName = qualifiedFile;
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getCharEnd()
 	 */
 	public int getCharEnd() throws DebugException {
@@ -87,6 +84,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getCharStart()
 	 */
 	public int getCharStart() throws DebugException {
@@ -95,23 +93,26 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
 	 */
 	public int getLineNumber() throws DebugException {
-		DBGpLogger.debug(this.hashCode() + "::DBGpStackFrame=" + lineNo );
+		DBGpLogger.debug(this.hashCode() + "::DBGpStackFrame=" + lineNo); //$NON-NLS-1$
 		return lineNo;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getName()
 	 */
 	public String getName() throws DebugException {
-		return name;
+		return function;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#hasRegisterGroups()
 	 */
 	public boolean hasRegisterGroups() throws DebugException {
@@ -120,6 +121,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getRegisterGroups()
 	 */
 	public IRegisterGroup[] getRegisterGroups() throws DebugException {
@@ -128,6 +130,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getThread()
 	 */
 	public IThread getThread() {
@@ -136,17 +139,21 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
 	public IVariable[] getVariables() throws DebugException {
-		// see equals() as to where variables cannot be cached in the stack frame
-		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo);
-		IVariable[] variables = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
+		// see equals() as to where variables cannot be cached in the stack
+		// frame
+		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
+		IVariable[] variables = ((DBGpTarget) getDebugTarget())
+				.getVariables(stackLevel);
 		return variables;
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
 	 */
 	public boolean hasVariables() throws DebugException {
@@ -156,6 +163,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepInto()
 	 */
 	public boolean canStepInto() {
@@ -164,6 +172,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepOver()
 	 */
 	public boolean canStepOver() {
@@ -172,6 +181,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#canStepReturn()
 	 */
 	public boolean canStepReturn() {
@@ -180,6 +190,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#isStepping()
 	 */
 	public boolean isStepping() {
@@ -188,6 +199,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepInto()
 	 */
 	public void stepInto() throws DebugException {
@@ -196,6 +208,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepOver()
 	 */
 	public void stepOver() throws DebugException {
@@ -204,6 +217,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.IStep#stepReturn()
 	 */
 	public void stepReturn() throws DebugException {
@@ -212,6 +226,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
 	 */
 	public boolean canResume() {
@@ -220,6 +235,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
 	 */
 	public boolean canSuspend() {
@@ -228,6 +244,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
 	 */
 	public boolean isSuspended() {
@@ -236,6 +253,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
 	 */
 	public void resume() throws DebugException {
@@ -244,6 +262,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
 	 */
 	public void suspend() throws DebugException {
@@ -252,6 +271,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
 	public boolean canTerminate() {
@@ -260,6 +280,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
 	public boolean isTerminated() {
@@ -268,6 +289,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
 	public void terminate() throws DebugException {
@@ -276,33 +298,48 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	/**
 	 * returns on the name of the file in this stackframe.
+	 * 
 	 * @return
 	 */
 	public String getSourceName() {
 		return fileName;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
 		if (obj instanceof DBGpStackFrame) {
 			DBGpStackFrame sf = (DBGpStackFrame) obj;
 			try {
-				// a stack frame is equal if they are at the same level and for the same file
+				// a stack frame is equal if they are at the same level and for
+				// the same file
 				//
-				// if a stack frame is equal then eclipse doesn't refresh the variables pane
-				// but subsequent new stackframes created at the same level (but on different
-				// line numbers are not used to get the variables, the first one at the level
-				// is used (eg a stackframe for line 2 is used to get variables for all other
-				// lines at the same stack level, even though a stack level for one at say line
-				// 4 exists). 
+				// if a stack frame is equal then eclipse doesn't refresh the
+				// variables pane
+				// but subsequent new stackframes created at the same level (but
+				// on different
+				// line numbers are not used to get the variables, the first one
+				// at the level
+				// is used (eg a stackframe for line 2 is used to get variables
+				// for all other
+				// lines at the same stack level, even though a stack level for
+				// one at say line
+				// 4 exists).
 				//
-				// so to stop the refresh of the variables pane, stack frames at the same
-				// level should report as equal, but because of this a stack frame cannot
-				// cache the variables at that line as eclipse goes to the stack frame of
-				// another line number to get the stack variables. 
-				boolean isEqual = sf.getQualifiedFile().equals(getQualifiedFile()) && sf.stackLevel.equals(stackLevel);
+				// so to stop the refresh of the variables pane, stack frames at
+				// the same
+				// level should report as equal, but because of this a stack
+				// frame cannot
+				// cache the variables at that line as eclipse goes to the stack
+				// frame of
+				// another line number to get the stack variables.
+				boolean isEqual = sf.getQualifiedFile().equals(
+						getQualifiedFile())
+						&& sf.stackLevel.equals(stackLevel)
+						&& (sf.owningThread == owningThread);
 				return isEqual;
 			} catch (Exception e) {
 			}
@@ -310,11 +347,14 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return getQualifiedFile().hashCode() + stackLevel.hashCode();
+		return getQualifiedFile().hashCode() + stackLevel.hashCode()
+				+ owningThread.hashCode();
 	}
 
 	public String getQualifiedFile() {
