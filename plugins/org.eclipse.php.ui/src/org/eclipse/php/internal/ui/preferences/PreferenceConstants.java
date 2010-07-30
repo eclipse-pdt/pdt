@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     Zend Technologies - initial API and implementation
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
@@ -17,8 +17,11 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.SemanticHighlightingManager;
+import org.eclipse.php.internal.ui.folding.IStructuredTextFoldingProvider;
+import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
@@ -26,7 +29,7 @@ import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.spelling.SpellingService;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
+import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 
 public class PreferenceConstants {
 
@@ -40,8 +43,8 @@ public class PreferenceConstants {
 	public static final String APPEARANCE_ENABLE_VISIBILITY_SORT_ORDER = "enableVisibilityOrder"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that defines how member elements are ordered by visibility in the
-	 * PHP views using the <code>PHPElementSorter</code>.
+	 * A named preference that defines how member elements are ordered by
+	 * visibility in the PHP views using the <code>PHPElementSorter</code>.
 	 * <p>
 	 * Value is of type <code>String</code>: A comma separated list of the
 	 * following entries. Each entry must be in the list, no duplication. List
@@ -53,6 +56,7 @@ public class PreferenceConstants {
 	 * <li><b>D</b>: Default</li>
 	 * </ul>
 	 * </p>
+	 * 
 	 * @since 3.0
 	 */
 	public static final String APPEARANCE_VISIBILITY_SORT_ORDER = "org.eclipse.php.ui.visibility.order"; //$NON-NLS-1$
@@ -74,7 +78,8 @@ public class PreferenceConstants {
 	public static final String APPEARANCE_MEMBER_SORT_ORDER = "outlinesortoption"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls return type rendering of methods in the UI.
+	 * A named preference that controls return type rendering of methods in the
+	 * UI.
 	 * <p>
 	 * Value is of type <code>Boolean</code>: if <code>true</code> return types
 	 * are rendered
@@ -83,7 +88,8 @@ public class PreferenceConstants {
 	public static final String APPEARANCE_METHOD_RETURNTYPE = "methodreturntype";//$NON-NLS-1$
 
 	/**
-	 * A named preference that controls type parameter rendering of methods in the UI.
+	 * A named preference that controls type parameter rendering of methods in
+	 * the UI.
 	 * <p>
 	 * Value is of type <code>Boolean</code>: if <code>true</code> return types
 	 * are rendered
@@ -92,317 +98,19 @@ public class PreferenceConstants {
 	public static final String APPEARANCE_METHOD_TYPEPARAMETERS = "methodtypeparametesr";//$NON-NLS-1$
 
 	/**
-	 * A named preference that controls if the PHP code assist adds import
-	 * statements.
+	 * A named preference that controls whether annotation roll over is used or
+	 * not.
 	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_ADDIMPORT = "contentAssistAddImport"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if the PHP code assist gets auto activated.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION = "contentAssistAutoactivation"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the autoactivation proposals limit.
-	 * <p>
-	 * Value is of type <code>Integer</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_SIZE_LIMIT = "contentAssistAutoactivationSizeLimit"; //$NON-NLS-1$
-
-	/**
-	 * A name preference that holds the auto activation delay time in milliseconds.
-	 * <p>
-	 * Value is of type <code>Integer</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_DELAY = "contentAssistAutoactivationDelay"; //$NON-NLS-1$
-
-	/**
-	 * A name preference that holds the auto activation triggers for PHP code
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP = "contentAssistAutoactivationTriggersPHP"; //$NON-NLS-1$
-
-	/**
-	 * A name preference that holds the auto activation triggers for PHPDOC
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC = "contentAssistAutoactivationTriggersPHPDoc"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to start actiactivation on class names
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES = "contentAssistAutoactivationForClassNames"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to start actiactivation on class names
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_FOR_VARIABLES = "contentAssistAutoactivationForVariables"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to start actiactivation on class names
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS = "contentAssistAutoactivationForFunctionsKeyWordsConstants"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if the php code assist inserts a
-	 * proposal automatically if only one proposal is available.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOINSERT = "contentAssistAutoinsert"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether code assist proposals filtering is case sensitive or not.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_CASE_SENSITIVITY = "contentAssistCaseSensitivity"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if code assist for constants should be case sensitive
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> code assist for constants should be case sensitive. If
-	 * <code>false</code> case insensitive.
-	 * </p>
-	 */
-	public final static String CODEASSIST_CONSTANTS_CASE_SENSITIVE = "contentAssistConstantsCaseSensitive"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if code assist determines object type from other files
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> code assist will try to determine object type
-	 * from other files. If <code>false</code> it will determine object type only from current scope.
-	 * </p>
-	 */
-	public final static String CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES = "contentAssistDetermineObjTypeFromOtherFiles"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if argument names are filled in when a method is selected from as list
-	 * of code assist proposal.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_FILL_ARGUMENT_NAMES = "contentAssistFillMethodArguments"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if method arguments are guessed when a
-	 * method is selected from as list of code assist proposal.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_GUESS_METHOD_ARGUMENTS = "contentAssistGuessMethodArguments"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if the PHP code assist only inserts
-	 * completions. If set to false the proposals can also _replace_ code.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_INSERT_COMPLETION = "contentAssistInsertCompletion"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that defines if code assist proposals are sorted in alphabetical order.
-	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> that are sorted in alphabetical
-	 * order. If <code>false</code> that are unsorted.
-	 * </p>
-	 */
-	public final static String CODEASSIST_ORDER_PROPOSALS = "contentAssistOrderProposals"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the background color used for parameter hints.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_PARAMETERS_BACKGROUND = "contentAssistParametersBackground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the foreground color used in the code assist selection dialog.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_PARAMETERS_FOREGROUND = "contentAssistParametersForeground"; //$NON-NLS-1$
-
-	public final static String CODEASSIST_PREFIX_COMPLETION = "contentAssistPrefixCompletion"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the background color used in the code assist selection dialog.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_PROPOSALS_BACKGROUND = "contentAssistProposalsBackground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the foreground color used in the code assist selection dialog.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_PROPOSALS_FOREGROUND = "contentAssistProposalsForeground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the background color used in the code
-	 * assist selection dialog to mark replaced code.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_REPLACEMENT_BACKGROUND = "contentAssistCompletionReplacementBackground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the foreground color used in the code
-	 * assist selection dialog to mark replaced code.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_REPLACEMENT_FOREGROUND = "contentAssistCompletionReplacementForeground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to show class names in Global Completion list
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> class names in Global Completion list will be shown
-	 * <code>false</code> they will not be shown.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION = "contentAssistShowClassNamesInGlobalCompletion"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to show constants assist
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_CONSTANTS_ASSIST = "contentAssistShowConstantsAssist"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to show options that are restricted by PHP
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_NON_STRICT_OPTIONS = "contentAssistShowNonStrictOptions"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to group options
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_GROUP_OPTIONS = "contentAssistGroupOptions"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to cut common prefix
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_CUT_COMMON_PREFIX = "contentAssistCutPrefix"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if code assist also contains proposals from other files
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>false<code> code assist only contains visible members. If
-	 * <code>true</code> all members are included.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES = "contentAssistShowVariablesFromOtherFiles"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls the behavior when double clicking on a container in the folders view.
-	 * <p>
-	 * Value is of type <code>String</code>: possible values are <code>
-	 * DOUBLE_CLICK_GOES_INTO</code> or <code>
-	 * DOUBLE_CLICK_EXPANDS</code>.
-	 * </p>
-	 *
-	 * @see #DOUBLE_CLICK_EXPANDS
-	 * @see #DOUBLE_CLICK_GOES_INTO
-	 */
-	public static final String DOUBLE_CLICK = "phpviewDoubleclick"; //$NON-NLS-1$
-
-	/**
-	 * A string value used by the named preference <code>DOUBLE_CLICK</code>.
-	 *
-	 * @see #DOUBLE_CLICK
-	 */
-	public static final String DOUBLE_CLICK_EXPANDS = "phpviewDoubleclickExpands"; //$NON-NLS-1$
-
-	/**
-	 * A string value used by the named preference <code>DOUBLE_CLICK</code>.
-	 *
-	 * @see #DOUBLE_CLICK
-	 */
-	public static final String DOUBLE_CLICK_GOES_INTO = "phpviewGointo"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether annotation roll over is used or not.
-	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true<code> the annotation ruler column
+	 * Value is of type <code>Boolean</code>. If
+	 * <code>true<code> the annotation ruler column
 	 * uses a roll over to display multiple annotations
 	 * </p>
 	 */
 	public static final String EDITOR_ANNOTATION_ROLL_OVER = "editor_annotation_roll_over"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the color for the PHP boundary makers (open/close tags)
+	 * A named preference that holds the color for the PHP boundary makers
+	 * (open/close tags)
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
@@ -410,12 +118,14 @@ public class PreferenceConstants {
 	public static final String EDITOR_BOUNDARYMARKER_COLOR = "editorColorBoundarymaker"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the default color for the PHP boundary makers (open/close tags)
+	 * A named preference that holds the default color for the PHP boundary
+	 * makers (open/close tags)
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_BOUNDARYMARKER_DEFAULT_COLOR = ColorHelper.getColorString(255, 0, 0);
+	public static final String EDITOR_BOUNDARYMARKER_DEFAULT_COLOR = ColorHelper
+			.getColorString(255, 0, 0);
 
 	/**
 	 * A named preference that controls whether the 'close braces' feature is
@@ -445,8 +155,8 @@ public class PreferenceConstants {
 	public final static String EDITOR_CLOSE_STRINGS = "closeStrings"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether the 'close phpdoc and comments' feature is
-	 * enabled.
+	 * A named preference that controls whether the 'close phpdoc and comments'
+	 * feature is enabled.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -454,8 +164,8 @@ public class PreferenceConstants {
 	public final static String EDITOR_CLOSE_PHPDOCS_AND_COMMENTS = "closePhpDocsAndComments"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether the 'close phpdoc and comments' feature is
-	 * enabled.
+	 * A named preference that controls whether the 'close phpdoc and comments'
+	 * feature is enabled.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -463,13 +173,22 @@ public class PreferenceConstants {
 	public final static String EDITOR_ADD_PHPDOC_TAGS = "autoAddPhpDocTags"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether the 'close php close tag' feature is
-	 * enabled.
+	 * A named preference that controls whether the 'close php close tag'
+	 * feature is enabled.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
 	public final static String EDITOR_ADD_PHPCLOSE_TAGS = "autoAddPhpCloseTags"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that controls whether the 'use short tags' feature is
+	 * enabled.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 */
+	//	public final static String EDITOR_USE_SHORT_TAGS = "useShortTags"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP comments
@@ -485,10 +204,46 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_COMMENT_DEFAULT_COLOR = ColorHelper.getColorString(128, 128, 128);
+	public static final String EDITOR_COMMENT_DEFAULT_COLOR = ColorHelper
+			.getColorString(85, 127, 95);
 
 	/**
-	 * A named preference that holds the color for the TASK tag inside the comment
+	 * A named preference that holds the color for the PHP comments
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String EDITOR_LINE_COMMENT_COLOR = "editorColorLineComment"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for the PHP comments
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String EDITOR_LINE_COMMENT_DEFAULT_COLOR = ColorHelper
+			.getColorString(85, 127, 95);
+
+	/**
+	 * A named preference that holds the color for the PHP comments
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String EDITOR_PHPDOC_COMMENT_COLOR = "editorColorPHPDocComment"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the default color for the PHP comments
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR = ColorHelper
+			.getColorString(63, 85, 191);
+
+	/**
+	 * A named preference that holds the color for the TASK tag inside the
+	 * comment
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
@@ -496,15 +251,19 @@ public class PreferenceConstants {
 	public static final String EDITOR_TASK_COLOR = "editorColorTask"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the default color for the TASK tag inside the comment
+	 * A named preference that holds the default color for the TASK tag inside
+	 * the comment
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper.getColorString(124, 165, 213) + " | | true"; //$NON-NLS-1$
+	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper
+			.getColorString(124, 165, 213)
+			+ " | | true"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls if correction indicators are shown in the UI.
+	 * A named preference that controls if correction indicators are shown in
+	 * the UI.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -525,7 +284,8 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_HEREDOC_DEFAULT_COLOR = ColorHelper.getColorString(0, 130, 130);
+	public static final String EDITOR_HEREDOC_DEFAULT_COLOR = ColorHelper
+			.getColorString(0, 130, 130);
 
 	/**
 	 * A named preference that holds the color for the PHP keyword
@@ -541,7 +301,9 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_KEYWORD_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 255);
+	public static final String EDITOR_KEYWORD_DEFAULT_COLOR = ColorHelper
+			.packStylePreferences(new String[] {
+					ColorHelper.getColorString(127, 0, 85), null, "true" });
 
 	/**
 	 * A named preference that holds the color for the normal PHP text
@@ -557,7 +319,8 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_NORMAL_DEFAULT_COLOR = ColorHelper.getColorString(0, 0, 0);
+	public static final String EDITOR_NORMAL_DEFAULT_COLOR = ColorHelper
+			.getColorString(0, 0, 0);
 
 	/**
 	 * A named preference that holds the color for the numbers
@@ -573,7 +336,8 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_NUMBER_DEFAULT_COLOR = ColorHelper.getColorString(255, 0, 0);
+	public static final String EDITOR_NUMBER_DEFAULT_COLOR = ColorHelper
+			.getColorString(0, 0, 0);
 
 	/**
 	 * A named preference that holds the color for the PHPDoc comments
@@ -588,8 +352,12 @@ public class PreferenceConstants {
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
+	 * 
+	 * @return Foo
 	 */
-	public static final String EDITOR_PHPDOC_DEFAULT_COLOR = ColorHelper.getColorString(128, 128, 128) + " | | true"; //$NON-NLS-1$
+	public static final String EDITOR_PHPDOC_DEFAULT_COLOR = ColorHelper
+			.getColorString(127, 159, 191)
+			+ " | | true"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP string
@@ -605,7 +373,8 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_STRING_DEFAULT_COLOR = ColorHelper.getColorString(0, 130, 0);
+	public static final String EDITOR_STRING_DEFAULT_COLOR = ColorHelper
+			.getColorString(0, 0, 192);
 
 	/**
 	 * A named preference that controls whether the outline view selection
@@ -630,36 +399,39 @@ public class PreferenceConstants {
 	 * Value is of type <code>String</code>.
 	 * </p>
 	 */
-	public static final String EDITOR_VARIABLE_DEFAULT_COLOR = ColorHelper.getColorString(102, 0, 0);
+	public static final String EDITOR_VARIABLE_DEFAULT_COLOR = ColorHelper
+			.getColorString(0, 0, 0);
 
 	/**
 	 * A named preference that controls the smart tab behavior.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
-	 *
+	 * 
 	 */
 	public static final String EDITOR_SMART_TAB = "smart_tab"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether occurrences are marked in the editor.
+	 * A named preference that controls whether occurrences are marked in the
+	 * editor.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
-	 *
+	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_OCCURRENCES= "markOccurrences"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_OCCURRENCES = "markOccurrences"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether occurrences are sticky in the editor.
+	 * A named preference that controls whether occurrences are sticky in the
+	 * editor.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
-	 *
+	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_STICKY_OCCURRENCES= "stickyOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_STICKY_OCCURRENCES = "stickyOccurrences"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether type occurrences are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -669,7 +441,7 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_TYPE_OCCURRENCES= "markTypeOccurrences"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_TYPE_OCCURRENCES = "markTypeOccurrences"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether method occurrences are marked.
@@ -680,8 +452,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_METHOD_OCCURRENCES= "markMethodOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_METHOD_OCCURRENCES = "markMethodOccurrences"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether function occurrences are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -691,51 +463,55 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.4
 	 */
-	public static final String EDITOR_MARK_FUNCTION_OCCURRENCES= "markFunctionOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_FUNCTION_OCCURRENCES = "markFunctionOccurrences"; //$NON-NLS-1$
+
 	/**
-	 * A named preference that controls whether constant (static final) occurrences are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether constant (static final)
+	 * occurrences are marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is
+	 * <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_CONSTANT_OCCURRENCES= "markConstantOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_CONSTANT_OCCURRENCES = "markConstantOccurrences"; //$NON-NLS-1$
+
 	/**
-	 * A named preference that controls whether local variable occurrences are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether local variable occurrences are
+	 * marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is
+	 * <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES= "markLocalVariableOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES = "markLocalVariableOccurrences"; //$NON-NLS-1$
+
 	/**
-	 * A named preference that controls whether global variable occurrences are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether global variable occurrences are
+	 * marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is
+	 * <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 * 
 	 * @since 3.4
 	 */
-	public static final String EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES= "markGlobalVariableOccurrences"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES = "markGlobalVariableOccurrences"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether exception occurrences are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether exception occurrences are
+	 * marked. Only valid if {@link #EDITOR_MARK_OCCURRENCES} is
+	 * <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_EXCEPTION_OCCURRENCES= "markExceptionOccurrences"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_EXCEPTION_OCCURRENCES = "markExceptionOccurrences"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether method exit points are marked.
@@ -746,19 +522,20 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_METHOD_EXIT_POINTS= "markMethodExitPoints"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_METHOD_EXIT_POINTS = "markMethodExitPoints"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether targets for of <code>break</code> and <code>continue</code> statements are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference that controls whether targets for of
+	 * <code>break</code> and <code>continue</code> statements are marked. Only
+	 * valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 * 
 	 * @since 3.2
 	 */
-	public static final String EDITOR_MARK_BREAK_CONTINUE_TARGETS= "markBreakContinueTargets"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_BREAK_CONTINUE_TARGETS = "markBreakContinueTargets"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether method exit points are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -768,25 +545,104 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.1
 	 */
-	public static final String EDITOR_MARK_IMPLEMENTORS= "markImplementors"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_IMPLEMENTORS = "markImplementors"; //$NON-NLS-1$
+
 	/**
-	 * A named preference that controls whether HTML tags are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * A named preference prefix for semantic highlighting preferences.
+	 * 
+	 * @since 3.0
+	 */
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX = "semanticHighlighting."; //$NON-NLS-1$
+
+	/**
+	 * A named preference that controls if semantic highlighting is enabled.
+	 * <p>
+	 * Value is of type <code>Boolean</code>:<code>true</code> if enabled.
+	 * </p>
+	 * 
+	 * @since 3.0
+	 * @deprecated As of 3.1, this preference is not used or set any longer; see
+	 *             {@link SemanticHighlightingManager#affectsEnablement(IPreferenceStore, org.eclipse.jface.util.PropertyChangeEvent)}
+	 */
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED = EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
+			+ "enabled"; //$NON-NLS-1$
+
+	/**
+	 * A named preference suffix that controls a semantic highlighting's color.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a
+	 * string using class <code>PreferenceConverter</code>
+	 * </p>
+	 * 
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 * @since 3.0
+	 */
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_COLOR_SUFFIX = ".color"; //$NON-NLS-1$
+
+	/**
+	 * A named preference suffix that controls if semantic highlighting has the
+	 * text attribute bold.
+	 * <p>
+	 * Value is of type <code>Boolean</code>: <code>true</code> if bold.
+	 * </p>
+	 * 
+	 * @since 3.0
+	 */
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_BOLD_SUFFIX = ".bold"; //$NON-NLS-1$
+
+	/**
+	 * A named preference suffix that controls if semantic highlighting has the
+	 * text attribute italic.
+	 * <p>
+	 * Value is of type <code>Boolean</code>: <code>true</code> if italic.
+	 * </p>
+	 * 
+	 * @since 3.0
+	 */
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ITALIC_SUFFIX = ".italic"; //$NON-NLS-1$
+
+	/**
+	 * A named preference suffix that controls if semantic highlighting has the
+	 * text attribute strikethrough.
+	 * <p>
+	 * Value is of type <code>Boolean</code>: <code>true</code> if
+	 * strikethrough.
+	 * </p>
+	 * 
+	 * @since 3.1
+	 */
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_STRIKETHROUGH_SUFFIX = ".strikethrough"; //$NON-NLS-1$
+
+	/**
+	 * A named preference suffix that controls if semantic highlighting has the
+	 * text attribute underline.
+	 * <p>
+	 * Value is of type <code>Boolean</code>: <code>true</code> if underline.
+	 * </p>
+	 * 
+	 * @since 3.1
+	 */
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_UNDERLINE_SUFFIX = ".underline"; //$NON-NLS-1$
+
+	/**
+	 * A named preference suffix that controls if semantic highlighting is
+	 * enabled.
+	 * <p>
+	 * Value is of type <code>Boolean</code>: <code>true</code> if enabled.
+	 * </p>
+	 * 
+	 * @since 3.0
+	 */
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED_SUFFIX = ".enabled"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that controls whether blank lines are cleared during
+	 * formatting.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 * 
-	 * @since 3.4
-	 */
-	public static final String EDITOR_MARK_HTML_TAGS= "markHTMLTags"; //$NON-NLS-1$
-	
-	/**
-	 * A named preference that controls whether blank lines are cleared during formatting.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 *
 	 */
 	public final static String FORMATTER_COMMENT_CLEARBLANKLINES = "commentClearBlankLines"; //$NON-NLS-1$
 
@@ -795,25 +651,27 @@ public class PreferenceConstants {
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
-	 *
+	 * 
 	 */
 	public final static String FORMATTER_COMMENT_FORMATHTML = "commentFormatHtml"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls the line length of comments.
 	 * <p>
-	 * Value is of type <code>Integer</code>. The value must be at least 4 for reasonable formatting.
+	 * Value is of type <code>Integer</code>. The value must be at least 4 for
+	 * reasonable formatting.
 	 * </p>
-	 *
+	 * 
 	 */
 	public final static String FORMATTER_COMMENT_LINELENGTH = "commentLineLength"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls which profile is used by the code formatter.
+	 * A named preference that controls which profile is used by the code
+	 * formatter.
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
-	 *
+	 * 
 	 */
 	public static final String FORMATTER_PROFILE = "formatterProfile"; //$NON-NLS-1$
 
@@ -836,7 +694,8 @@ public class PreferenceConstants {
 	public static final String LINK_BROWSING_PROJECTS_TO_EDITOR = "browsingProjectstoeditor"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether the php explorer's selection is linked to the active editor.
+	 * A named preference that controls whether the php explorer's selection is
+	 * linked to the active editor.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -844,7 +703,8 @@ public class PreferenceConstants {
 	public static final String LINK_EXPLORER_TO_EDITOR = "explorerLinktoeditor"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether the  explorer's selection is linked to the active editor.
+	 * A named preference that controls whether the explorer's selection is
+	 * linked to the active editor.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -852,8 +712,8 @@ public class PreferenceConstants {
 	public static final String LINK_FOLDERS_TO_EDITOR = "foldersLinktoeditor"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether all dirty editors are automatically saved before a refactoring is
-	 * executed.
+	 * A named preference that controls whether all dirty editors are
+	 * automatically saved before a refactoring is executed.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -861,7 +721,8 @@ public class PreferenceConstants {
 	public static final String REFACTOR_SAVE_ALL_EDITORS = "RefactoringSavealleditors"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that specifies whether children of a PHP file are shown in the php explorer.
+	 * A named preference that specifies whether children of a PHP file are
+	 * shown in the php explorer.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -869,7 +730,8 @@ public class PreferenceConstants {
 	public static final String SHOW_CU_CHILDREN = "explorerCuchildren"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that specifies whether children of a php file are shown in the  explorer.
+	 * A named preference that specifies whether children of a php file are
+	 * shown in the explorer.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
@@ -890,34 +752,36 @@ public class PreferenceConstants {
 	//	public static final String EDITOR_FOLDING_INCLUDES = "foldIncludes"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether smart Home/End in PHP code is enabled
+	 * A named preference that controls whether smart Home/End in PHP code is
+	 * enabled
 	 */
 	public static final String USE_SMART_HOME_END = "useSmartHomeEnd"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether smart navigation in PHP code is enabled
-	 * on sub-words
+	 * A named preference that controls whether smart navigation in PHP code is
+	 * enabled on sub-words
 	 */
 	public static final String USE_SUB_WORD_NAVIGATION = "editorSubWordNavigation"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether folding is enabled in the PHP editor.
+	 * A named preference that controls whether folding is enabled in the PHP
+	 * editor.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
-	 *
+	 * 
 	 * @since 3.1
 	 * @see IStructuredTextFoldingProvider#FOLDING_ENABLED
 	 */
 	//	public static final String EDITOR_FOLDING_ENABLED= "editor_folding_enabled"; //$NON-NLS-1$
-	public static final String EDITOR_FOLDING_ENABLED = IStructuredTextFoldingProvider.FOLDING_ENABLED;
+	public static final String EDITOR_FOLDING_ENABLED = AbstractStructuredFoldingStrategy.FOLDING_ENABLED;
 
 	/**
 	 * A named preference that stores the configured folding provider.
 	 * <p>
 	 * Value is of type <code>String</code>.
 	 * </p>
-	 *
+	 * 
 	 * @since 3.1
 	 */
 	public static final String EDITOR_FOLDING_PROVIDER = "editor_folding_provider"; //$NON-NLS-1$
@@ -930,6 +794,8 @@ public class PreferenceConstants {
 
 	public static final String TEMPLATES_KEY = "org.eclipse.php.ui.editor.templates"; //$NON-NLS-1$
 
+	public static final String CODE_TEMPLATES_KEY = "org.eclipse.php.ui.text.custom_code_templates"; //$NON-NLS-1$
+
 	public static final String NEW_PHP_FILE_TEMPLATE = "newFileTemplateName"; //$NON-NLS-1$
 
 	public static final String ALLOW_MULTIPLE_LAUNCHES = "allowMultipleLaunches"; //$NON-NLS-1$
@@ -941,23 +807,21 @@ public class PreferenceConstants {
 	public static final String ID_BESTMATCH_HOVER = "org.eclipse.php.ui.editor.hover.BestMatchHover"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that defines whether the hint to make hover sticky should be shown.
-	 */
-	public static final String EDITOR_SHOW_TEXT_HOVER_AFFORDANCE = "PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE"; //$NON-NLS-1$
-
-	/**
 	 * A named preference that defines the key for the hover modifiers.
 	 */
-	public static final String EDITOR_TEXT_HOVER_MODIFIERS = PHPUiPlugin.ID + "hoverModifiers"; //$NON-NLS-1$
+	public static final String EDITOR_TEXT_HOVER_MODIFIERS = PHPUiPlugin.ID
+			+ "hoverModifiers"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that defines the key for the hover modifier state masks.
-	 * The value is only used if the value of <code>EDITOR_TEXT_HOVER_MODIFIERS</code>
-	 * cannot be resolved to valid SWT modifier bits.
-	 *
+	 * A named preference that defines the key for the hover modifier state
+	 * masks. The value is only used if the value of
+	 * <code>EDITOR_TEXT_HOVER_MODIFIERS</code> cannot be resolved to valid SWT
+	 * modifier bits.
+	 * 
 	 * @see #EDITOR_TEXT_HOVER_MODIFIERS
 	 */
-	public static final String EDITOR_TEXT_HOVER_MODIFIER_MASKS = PHPUiPlugin.ID + "hoverModifierMasks"; //$NON-NLS-1$
+	public static final String EDITOR_TEXT_HOVER_MODIFIER_MASKS = PHPUiPlugin.ID
+			+ "hoverModifierMasks"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that defines the key for the default PHP Manual site.
@@ -974,24 +838,161 @@ public class PreferenceConstants {
 	public static final String SWITCH_BACK_TO_PHP_PERSPECTIVE = "switchBackToPHPPerspective"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls a reduced search menu is used in the php editors.
+	 * A named preference that controls a reduced search menu is used in the php
+	 * editors.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
+	 * 
 	 * @since 3.0
 	 */
-	public static final String SEARCH_USE_REDUCED_MENU= "Search.usereducemenu"; //$NON-NLS-1$
+	public static final String SEARCH_USE_REDUCED_MENU = "Search.usereducemenu"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the background color used for parameter
+	 * hints.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a
+	 * string using class <code>PreferenceConverter</code>
+	 * </p>
+	 * 
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_PARAMETERS_BACKGROUND = "contentAssistParametersBackground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the foreground color used in the code
+	 * assist selection dialog.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a
+	 * string using class <code>PreferenceConverter</code>
+	 * </p>
+	 * 
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_PARAMETERS_FOREGROUND = "contentAssistParametersForeground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the background color used in the code
+	 * assist selection dialog.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a
+	 * string using class <code>PreferenceConverter</code>
+	 * </p>
+	 * 
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_PROPOSALS_BACKGROUND = "contentAssistProposalsBackground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the foreground color used in the code
+	 * assist selection dialog.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a
+	 * string using class <code>PreferenceConverter</code>
+	 * </p>
+	 * 
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_PROPOSALS_FOREGROUND = "contentAssistProposalsForeground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the background color used in the code
+	 * assist selection dialog to mark replaced code.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a
+	 * string using class <code>PreferenceConverter</code>
+	 * </p>
+	 * 
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_REPLACEMENT_BACKGROUND = "contentAssistCompletionReplacementBackground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the foreground color used in the code
+	 * assist selection dialog to mark replaced code.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a
+	 * string using class <code>PreferenceConverter</code>
+	 * </p>
+	 * 
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_REPLACEMENT_FOREGROUND = "contentAssistCompletionReplacementForeground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that controls whether new projects are generated using
+	 * source and output folder.
+	 * <p>
+	 * Value is of type <code>Boolean</code>. if <code>true</code> new projects
+	 * are created with a source and output folder. If <code>false</code> source
+	 * and output folder equals to the project.
+	 * </p>
+	 */
+	public static final String SRCBIN_FOLDERS_IN_NEWPROJ = "org.eclipse.php.ui.wizards.srcBinFoldersInNewProjects"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that specifies the source folder name used when
+	 * creating a new Java project. Value is inactive if
+	 * <code>SRCBIN_FOLDERS_IN_NEWPROJ</code> is set to <code>false</code>.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 * 
+	 * @see #SRCBIN_FOLDERS_IN_NEWPROJ
+	 */
+	//public static final String SRCBIN_SRCNAME = "org.eclipse.php.ui.wizards.srcBinFoldersSrcName"; //$NON-NLS-1$
+	public static final String SRCBIN_SRCNAME = "com.xore.dltk.ui.wizards.srcFoldersSrcName"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that controls if quick assist light bulbs are shown.
+	 * <p>
+	 * Value is of type <code>Boolean</code>: if <code>true</code> light bulbs
+	 * are shown for quick assists.
+	 * </p>
+	 * 
+	 * @since 3.0
+	 */
+	public static final String EDITOR_QUICKASSIST_LIGHTBULB = "org.eclipse.php.quickassist.lightbulb"; //$NON-NLS-1$
+
+	public static final String JavaScriptSupportEnable = "org.eclipse.php.ui.wizards.JSsupport"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that specifies the output folder name used when
+	 * creating a new Java project. Value is inactive if
+	 * <code>SRCBIN_FOLDERS_IN_NEWPROJ</code> is set to <code>false</code>.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 * 
+	 * @see #SRCBIN_FOLDERS_IN_NEWPROJ
+	 */
+	public static final String SRCBIN_BINNAME = "org.eclipse.php.ui.wizards.srcBinFoldersBinName"; //$NON-NLS-1$
 
 	/**
 	 * some constants for auto-ident Smart Tab
 	 */
 	public static final String TAB = "tab"; //$NON-NLS-1$
-	public static final String FORMATTER_TAB_CHAR = PHPUiPlugin.ID + ".smart_tab.char"; //$NON-NLS-1$
+	public static final String FORMATTER_TAB_CHAR = PHPUiPlugin.ID
+			+ ".smart_tab.char"; //$NON-NLS-1$
 
-	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES= "cleanup.remove_trailing_whitespaces"; //$NON-NLS-1$
-	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_ALL= "cleanup.remove_trailing_whitespaces_all"; //$NON-NLS-1$
-	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY= "cleanup.remove_trailing_whitespaces_ignore_empty"; //$NON-NLS-1$
-	
+	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES = "cleanup.remove_trailing_whitespaces"; //$NON-NLS-1$
+	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_ALL = "cleanup.remove_trailing_whitespaces_all"; //$NON-NLS-1$
+	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY = "cleanup.remove_trailing_whitespaces_ignore_empty"; //$NON-NLS-1$
+	public static final String PREF_OUTLINEMODE = "ChangeOutlineModeAction.selectedMode"; //$NON-NLS-1$
+
+	/**
+	 * This setting controls whether to group elements by namespaces in PHP
+	 * Explorer
+	 */
+	public static final String EXPLORER_GROUP_BY_NAMESPACES = "PHPExplorerPart.groupByNamespaces"; //$NON-NLS-1$
+
 	public static IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
@@ -1002,21 +1003,29 @@ public class PreferenceConstants {
 	public static void initializeDefaultValues() {
 
 		// Override Editor Preference defaults:
-		IPreferenceStore editorStore = EditorsPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore editorStore = EditorsPlugin.getDefault()
+				.getPreferenceStore();
 
 		// Show current line:
-		editorStore.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, true);
+		editorStore
+				.setDefault(
+						AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE,
+						true);
 
 		// Show line numbers:
-		editorStore.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER, true);
+		editorStore
+				.setDefault(
+						AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER,
+						true);
 
-		// disabling the spelling detection till we find a way to refine it the run only on strings and comments.
-		editorStore.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED, false);
+		// disabling the spelling detection till we find a way to refine it the
+		// run only on strings and comments.
+		editorStore.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED,
+				false);
 
 		IPreferenceStore store = getPreferenceStore();
 
-		store.setDefault(DOUBLE_CLICK, DOUBLE_CLICK_EXPANDS);
-
+		store.setDefault(JavaScriptSupportEnable, false);
 		store.setDefault(LINK_FOLDERS_TO_EDITOR, false);
 		store.setDefault(LINK_BROWSING_PROJECTS_TO_EDITOR, true);
 		store.setDefault(LINK_BROWSING_FOLDERS_TO_EDITOR, true);
@@ -1035,22 +1044,32 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_CLOSE_PHPDOCS_AND_COMMENTS, true);
 		store.setDefault(EDITOR_ADD_PHPDOC_TAGS, true);
 		store.setDefault(EDITOR_ADD_PHPCLOSE_TAGS, true);
+		// store.setDefault(EDITOR_USE_SHORT_TAGS, false);
 
 		// mark occurrences
 		store.setDefault(PreferenceConstants.EDITOR_MARK_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_STICKY_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES,
+				true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES,
+				true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES,
+				true);
+		store.setDefault(
+				PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES,
+				true);
+		store.setDefault(
+				PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES,
+				true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES,
+				true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS,
+				true);
+		store.setDefault(
+				PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_IMPLEMENTORS, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_HTML_TAGS, true);
-				
+
 		store.setDefault(FORMATTER_COMMENT_CLEARBLANKLINES, false);
 		store.setDefault(FORMATTER_COMMENT_FORMATHTML, true);
 		store.setDefault(FORMATTER_COMMENT_LINELENGTH, 80);
@@ -1065,102 +1084,143 @@ public class PreferenceConstants {
 		store.setDefault(APPEARANCE_MEMBER_SORT_ORDER, "I,S,T,C,SV,SF,V,F"); //$NON-NLS-1$
 
 		store.setDefault(EDITOR_CORRECTION_INDICATION, true);
+		store.setDefault(
+				org.eclipse.dltk.ui.PreferenceConstants.EDITOR_CORRECTION_INDICATION,
+				true);
 		store.setDefault(EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE, true);
 		store.setDefault(EDITOR_ANNOTATION_ROLL_OVER, false);
 
 		// CodeAssistPreferencePage
-		PreferenceConverter.setDefault(store, CODEASSIST_PROPOSALS_BACKGROUND, new RGB(255, 255, 255));
-		PreferenceConverter.setDefault(store, CODEASSIST_PROPOSALS_FOREGROUND, new RGB(0, 0, 0));
-		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_BACKGROUND, new RGB(255, 255, 255));
-		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_FOREGROUND, new RGB(0, 0, 0));
-		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_BACKGROUND, new RGB(255, 255, 0));
-		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_FOREGROUND, new RGB(255, 0, 0));
-		store.setDefault(CODEASSIST_CASE_SENSITIVITY, false);
-		store.setDefault(CODEASSIST_ORDER_PROPOSALS, false);
-		store.setDefault(CODEASSIST_ADDIMPORT, true);
-		store.setDefault(CODEASSIST_FILL_ARGUMENT_NAMES, false);
-		store.setDefault(CODEASSIST_GUESS_METHOD_ARGUMENTS, true);
-		store.setDefault(CODEASSIST_PREFIX_COMPLETION, false);
-		// implemented:
-		store.setDefault(CODEASSIST_AUTOINSERT, true);
-		store.setDefault(CODEASSIST_INSERT_COMPLETION, true);
-		store.setDefault(CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, true);
-		store.setDefault(CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, true);
-		store.setDefault(CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
-		store.setDefault(CODEASSIST_SHOW_NON_STRICT_OPTIONS, true);
-		store.setDefault(CODEASSIST_GROUP_OPTIONS, false);
-		store.setDefault(CODEASSIST_CUT_COMMON_PREFIX, false);
-		store.setDefault(CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
-		store.setDefault(CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
-		store.setDefault(CODEASSIST_AUTOACTIVATION, true);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_SIZE_LIMIT, 500);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_DELAY, 200);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>"); //$NON-NLS-1$
-		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@"); //$NON-NLS-1$
-		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, true);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, true);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, true);
+		PreferenceConverter.setDefault(store, CODEASSIST_PROPOSALS_BACKGROUND,
+				new RGB(255, 255, 255));
+		PreferenceConverter.setDefault(store, CODEASSIST_PROPOSALS_FOREGROUND,
+				new RGB(0, 0, 0));
+		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_BACKGROUND,
+				new RGB(255, 255, 255));
+		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_FOREGROUND,
+				new RGB(0, 0, 0));
+		PreferenceConverter.setDefault(store,
+				CODEASSIST_REPLACEMENT_BACKGROUND, new RGB(255, 255, 0));
+		PreferenceConverter.setDefault(store,
+				CODEASSIST_REPLACEMENT_FOREGROUND, new RGB(255, 0, 0));
 
 		// SyntaxColoringPage
 		store.setDefault(EDITOR_NORMAL_COLOR, EDITOR_NORMAL_DEFAULT_COLOR);
-		store.setDefault(EDITOR_BOUNDARYMARKER_COLOR, EDITOR_BOUNDARYMARKER_DEFAULT_COLOR);
+		store.setDefault(EDITOR_BOUNDARYMARKER_COLOR,
+				EDITOR_BOUNDARYMARKER_DEFAULT_COLOR);
 		store.setDefault(EDITOR_KEYWORD_COLOR, EDITOR_KEYWORD_DEFAULT_COLOR);
 		store.setDefault(EDITOR_VARIABLE_COLOR, EDITOR_VARIABLE_DEFAULT_COLOR);
 		store.setDefault(EDITOR_STRING_COLOR, EDITOR_STRING_DEFAULT_COLOR);
 		store.setDefault(EDITOR_NUMBER_COLOR, EDITOR_NUMBER_DEFAULT_COLOR);
 		store.setDefault(EDITOR_HEREDOC_COLOR, EDITOR_HEREDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_COMMENT_COLOR, EDITOR_COMMENT_DEFAULT_COLOR);
+		store.setDefault(EDITOR_LINE_COMMENT_COLOR,
+				EDITOR_LINE_COMMENT_DEFAULT_COLOR);
+		store.setDefault(EDITOR_PHPDOC_COMMENT_COLOR,
+				EDITOR_PHPDOC_COMMENT_DEFAULT_COLOR);
 		store.setDefault(EDITOR_PHPDOC_COLOR, EDITOR_PHPDOC_DEFAULT_COLOR);
 		store.setDefault(EDITOR_TASK_COLOR, EDITOR_TASK_DEFAULT_COLOR);
 
+		// SyntaxColoringPage enable
+		store.setDefault(getEnabledPreferenceKey(EDITOR_NORMAL_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_BOUNDARYMARKER_COLOR),
+				true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_KEYWORD_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_VARIABLE_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_STRING_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_NUMBER_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_HEREDOC_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_COMMENT_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_LINE_COMMENT_COLOR),
+				true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COMMENT_COLOR),
+				true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_PHPDOC_COLOR), true);
+		store.setDefault(getEnabledPreferenceKey(EDITOR_TASK_COLOR), true);
 		// PHP options
-		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION, PHPVersion.PHP5);
+		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION,
+				PHPVersion.PHP5.toString());
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_ROOT_CONTEXT, ""); //$NON-NLS-1$
 
-		//Smart home/end
+		// Smart home/end
 		store.setDefault(USE_SMART_HOME_END, true);
 
-		//smart php code sub-word navigation
+		// smart php code sub-word navigation
 		store.setDefault(USE_SUB_WORD_NAVIGATION, true);
 
 		// Folding options
 		store.setDefault(EDITOR_FOLDING_ENABLED, true);
-		store.setDefault(EDITOR_FOLDING_PROVIDER, "org.eclipse.php.ui.defaultFoldingProvider"); //$NON-NLS-1$
-		store.setDefault(EDITOR_FOLDING_PHPDOC, true);
+		store.setDefault(EDITOR_FOLDING_PROVIDER,
+				"org.eclipse.php.ui.defaultFoldingProvider"); //$NON-NLS-1$
+		store.setDefault(EDITOR_FOLDING_PHPDOC, false);
 		store.setDefault(EDITOR_FOLDING_CLASSES, false);
 		store.setDefault(EDITOR_FOLDING_FUNCTIONS, false);
 
-		//		store.setDefault(EDITOR_FOLDING_INCLUDES, false);
+		// store.setDefault(EDITOR_FOLDING_INCLUDES, false);
 		store.setDefault(TYPING_AUTO_CLOSE_STRING, true);
 		store.setDefault(TYPING_AUTO_CLOSE_BRACKETS, true);
 		store.setDefault(TYPING_AUTO_CLOSE_BRACES, true);
 
 		store.setDefault(NEW_PHP_FILE_TEMPLATE, "New simple PHP file"); //$NON-NLS-1$
 
-		store.setDefault(ALLOW_MULTIPLE_LAUNCHES, MessageDialogWithToggle.PROMPT);
+		store.setDefault(ALLOW_MULTIPLE_LAUNCHES,
+				MessageDialogWithToggle.PROMPT);
 
-		String mod1Name = Action.findModifierString(SWT.MOD1); // SWT.COMMAND on Mac; SWT.CONTROL elsewhere
-		store.setDefault(EDITOR_TEXT_HOVER_MODIFIERS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
-		store.setDefault(EDITOR_TEXT_HOVER_MODIFIER_MASKS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$
-		store.setDefault(EDITOR_SHOW_TEXT_HOVER_AFFORDANCE, true);
+		String mod1Name = Action.findModifierString(SWT.MOD1); // SWT.COMMAND on
+		// Mac;
+		// SWT.CONTROL
+		// elsewhere
+		store.setDefault(
+				EDITOR_TEXT_HOVER_MODIFIERS,
+				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
+		store.setDefault(
+				EDITOR_TEXT_HOVER_MODIFIER_MASKS,
+				"org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$		
 
-		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer.toString(new PHPManualConfig(PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION, false)));
+		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer
+				.toString(new PHPManualConfig(
+						PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL,
+						PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE,
+						PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION,
+						false)));
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
 
 		store.setDefault(PreferenceConstants.SEARCH_USE_REDUCED_MENU, true);
-		
-		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.NEVER);
+
+		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE,
+				MessageDialogWithToggle.NEVER);
 
 		// default locale
-		if (store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE).equals("")) { //$NON-NLS-1$
-			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, Locale.getDefault().toString());
-			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
+		if (store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE).equals(
+				"")) { //$NON-NLS-1$
+			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, Locale
+					.getDefault().toString());
+			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale
+					.getDefault().toString());
 		}
 
 		// save actions
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES, false);
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_ALL, true);
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, false);
+
+		// default php outline mode
+		store.setDefault(PREF_OUTLINEMODE,
+				PHPContentOutlineConfiguration.MODE_PHP);
+
+		store.setDefault(EXPLORER_GROUP_BY_NAMESPACES, false);
+
+		// PHP Semantic Highlighting
+		SemanticHighlightingManager.getInstance().initDefaults(store);
+
+		// do more complicated stuff
+		PHPProjectLayoutPreferencePage.initDefaults(store);
+	}
+
+	public static String getEnabledPreferenceKey(String preferenceKey) {
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
+				+ preferenceKey
+				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED_SUFFIX;
 	}
 
 	// Don't instantiate
