@@ -13,7 +13,6 @@ package org.eclipse.php.internal.core.search;
 
 import java.util.List;
 
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -30,9 +29,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	private String typeDeclarationName; // Class or Interface name // TODO - use
 	// Binding
 	private boolean isMethod;
-	private IType dispatcherType; // might be null
-	private IType dispatcherNamespace; // might be null
+	private ITypeBinding dispatcherType; // might be null
 	private ASTNode erroneousNode;
+	private boolean isIncludesuper;
+
+	public void setIncludesuper(boolean isIncludesuper) {
+		this.isIncludesuper = isIncludesuper;
+	}
 
 	/**
 	 * @param root
@@ -49,14 +52,10 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			Identifier identifier = (Identifier) node;
-			IType[] types = resolveDispatcherType(identifier);
-			if (types != null) {
-				dispatcherNamespace = types[0];
-				dispatcherType = types[1];
-			}
+
+			dispatcherType = resolveDispatcherType(identifier);
 			classMemberName = identifier.getName();
-			// IBinding binding = identifier.resolveBinding(); // FIXME - This
-			// should be implemented...
+
 			ASTNode parent = identifier.getParent();
 			int type = parent.getType();
 			isMethod = type == ASTNode.FUNCTION_DECLARATION
@@ -83,10 +82,9 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/*
-	 * Tries to resolve the type of the dispatcher.
-	 */
-	private IType[] resolveDispatcherType(Identifier identifier) {
-		IType[] types = new IType[2];
+	* Tries to resolve the type of the dispatcher.
+	*/
+	private ITypeBinding resolveDispatcherType(Identifier identifier) {
 		ITypeBinding typeBinding = null;
 		ASTNode parent = identifier.getParent();
 		if (parent.getType() == ASTNode.VARIABLE) {
@@ -143,31 +141,19 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		}
 		if (typeBinding != null && typeBinding.isClass()
 				&& typeBinding.getPHPElement() != null) {
-			IModelElement element = typeBinding.getPHPElement().getParent();
-			if (element instanceof IType) {
-				types[0] = (IType) element;
-			}
-			types[1] = (IType) typeBinding.getPHPElement();
-			return types;
+			return typeBinding;
 		}
 		return null;
 	}
 
-	private boolean isDispatcherTypeEquals(Identifier identifier) {
-		IType[] types = resolveDispatcherType(identifier);
-		if (types != null) {
-			if (dispatcherNamespace == null) {
-				if (types[0] != null) {
-					return false;
-				} else {
-					return dispatcherType.equals(types[1]);
-				}
-			} else {
-				return dispatcherNamespace.equals(types[0])
-						&& dispatcherType.equals(types[1]);
-			}
-		}
-		return false;
+	private boolean isDispatcherTypeEquals(Identifier identifier,
+			boolean includeSuper) {
+
+		ITypeBinding type = resolveDispatcherType(identifier);
+		return type != null
+				&& (type.equals(dispatcherType) || (includeSuper && (type
+						.isSubTypeCompatible(dispatcherType) || dispatcherType
+						.isSubTypeCompatible(type))));
 	}
 
 	/*
@@ -175,7 +161,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * traverse upward to find a defining ClassDeclaration and then resolves its
 	 * IType.
 	 */
-	protected IType[] resolveDeclaringClassType(ASTNode node) {
+	protected ITypeBinding resolveDeclaringClassType(ASTNode node) {
 		IType[] types = new IType[2];
 		ASTNode parent = node.getParent();
 		TypeDeclaration typeDeclaration = null;
@@ -203,9 +189,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			}
 			ITypeBinding typeBinding = typeDeclaration.resolveTypeBinding();
 			if (typeBinding != null) {
-				types[1] = (IType) typeBinding.getPHPElement();
+				return typeBinding;
 			}
-			return types;
 		}
 		return null;
 	}
@@ -279,7 +264,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		Identifier constant = classConstantAccess.getConstant();
 		if (classMemberName.equals(constant.getName())) {
 			if (dispatcherType != null) {
-				if (isDispatcherTypeEquals(constant)) {
+				if (isDispatcherTypeEquals(constant, isIncludesuper)) {
 					addOccurrence(new OccurrenceLocation(constant.getStart(),
 							constant.getLength(), getOccurrenceType(constant),
 							fDescription));
@@ -324,26 +309,20 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			Identifier id = (Identifier) node;
 			if (id.getName().equalsIgnoreCase(classMemberName)) {
 				if (dispatcherType != null) {
-					if (isDispatcherTypeEquals(id)) {
+					if (isDispatcherTypeEquals(id, isIncludesuper)) {
 						if (id.getParent() instanceof Variable) {
 							addOccurrence(new OccurrenceLocation(id.getParent()
 									.getStart(), id.getParent().getLength(),
 									getOccurrenceType(node), fDescription));
 						} else {
-							addOccurrence(new OccurrenceLocation(
-									node.getStart(), node.getLength(),
+							addOccurrence(new OccurrenceLocation(node
+									.getStart(), node.getLength(),
 									getOccurrenceType(node), fDescription));
 						}
 					}
 				} else {
-					ASTNode parent = node.getParent();
-					int isDollared = 0;
-					if (parent.getType() == ASTNode.VARIABLE) {
-						isDollared = ((Variable) parent).isDollared() ? 1 : 0;
-					}
-					addOccurrence(new OccurrenceLocation(node.getStart()
-							- isDollared, node.getLength() + isDollared,
-							getOccurrenceType(node), fDescription));
+					addOccurrence(new OccurrenceLocation(node.getStart(), node
+							.getLength(), getOccurrenceType(node), fDescription));
 				}
 			}
 		}
@@ -370,17 +349,17 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 					if (classMemberName
 							.equalsIgnoreCase(functionName.getName())) {
 						if (dispatcherType != null) {
-							if (isDispatcherTypeEquals(functionName)) {
+							if (isDispatcherTypeEquals(functionName,
+									isIncludesuper)) {
 								addOccurrence(new OccurrenceLocation(
-										functionName.getStart(),
-										functionName.getLength(),
+										functionName.getStart(), functionName
+												.getLength(),
 										getOccurrenceType(functionName),
 										fDescription));
 							}
 						} else {
-							addOccurrence(new OccurrenceLocation(
-									functionName.getStart(),
-									functionName.getLength(),
+							addOccurrence(new OccurrenceLocation(functionName
+									.getStart(), functionName.getLength(),
 									getOccurrenceType(functionName),
 									fDescription));
 						}
@@ -399,15 +378,16 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 								.getName();
 						if (classMemberName.equals(variable.getName())) {
 							if (dispatcherType != null) {
-								if (isDispatcherTypeEquals(variable)) {
+								if (isDispatcherTypeEquals(variable,
+										isIncludesuper)) {
 									addOccurrence(new OccurrenceLocation(
-											variable.getStart() - 1,
-											variable.getLength() + 1,
+											variable.getStart() - 1, variable
+													.getLength() + 1,
 											F_WRITE_OCCURRENCE, fDescription));
 								}
 							} else {
-								addOccurrence(new OccurrenceLocation(
-										variable.getStart() - 1,
+								addOccurrence(new OccurrenceLocation(variable
+										.getStart() - 1,
 										variable.getLength() + 1,
 										F_WRITE_OCCURRENCE, fDescription));
 							}
@@ -421,14 +401,14 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				for (Identifier name : variableNames) {
 					if (classMemberName.equals(name.getName())) {
 						if (dispatcherType != null) {
-							if (isDispatcherTypeEquals(name)) {
-								addOccurrence(new OccurrenceLocation(
-										name.getStart(), name.getLength(),
+							if (isDispatcherTypeEquals(name, isIncludesuper)) {
+								addOccurrence(new OccurrenceLocation(name
+										.getStart(), name.getLength(),
 										getOccurrenceType(name), fDescription));
 							}
 						} else {
-							addOccurrence(new OccurrenceLocation(
-									name.getStart(), name.getLength(),
+							addOccurrence(new OccurrenceLocation(name
+									.getStart(), name.getLength(),
 									getOccurrenceType(name), fDescription));
 						}
 					}
@@ -493,5 +473,17 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public String getID() {
 		return ID;
+	}
+
+	public static class a {
+		public void foo() {
+
+		}
+	}
+
+	public static class b extends a {
+		public void foo() {
+
+		}
 	}
 }
