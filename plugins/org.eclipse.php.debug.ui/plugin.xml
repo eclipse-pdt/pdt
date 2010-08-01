@@ -24,12 +24,12 @@
 	
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.eclipse.debug.ui.category.run"
-			description="Debug PHP Script" id="org.eclipse.php.deubg.ui.phpexeShortcut.debug"
-			name="Debug PHP Script">
+			description="%Debug.script.description" id="org.eclipse.php.deubg.ui.phpexeShortcut.debug"
+			name="%Debug.script.name">
 		</command>
 		<command categoryId="org.eclipse.debug.ui.category.run"
-			description="Run PHP Script" id="org.eclipse.php.deubg.ui.phpexeShortcut.run"
-			name="Run PHP Script" />
+			description="%Run.script.description" id="org.eclipse.php.deubg.ui.phpexeShortcut.run"
+			name="%Run.script.name" />
 		<command
             name="%ActionDefinition.inspect.name"
             description="%ActionDefinition.inspect.description"
@@ -94,7 +94,7 @@
 				disabledIcon="icon/full/dtool16/insp_sbook.gif" enablesFor="+"
 				helpContextId="inspect_action_context" hoverIcon="icon/full/etool16/insp_sbook.gif"
 				icon="icon/full/etool16/insp_sbook.gif" id="org.eclipse.php.debug.ui.commands.Inspect"
-				label="inspect" menubarPath="org.eclipse.ui.run/phpGroup"
+				label="%Inspect" menubarPath="org.eclipse.ui.run/phpGroup"
 				style="push">
 				<enablement>
 					<and>
@@ -320,7 +320,7 @@
 	
 	<extension point="org.eclipse.ui.themes">
 		<themeElementCategory id="org.eclipse.php.debug.ui.themePHPDebug"
-			label="PHP Debug" />
+			label="%PHP.debug" />
 	</extension>
 	
 	<extension point="org.eclipse.ui.perspectiveExtensions">
@@ -402,13 +402,13 @@
 		</page>
 		<page category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
 			class="org.eclipse.php.internal.debug.ui.preferences.InstalledDebuggersPreferencePage"
-			id="org.eclipse.php.debug.ui.installedDebuggersPage" name="Installed Debuggers">
+			id="org.eclipse.php.debug.ui.installedDebuggersPage" name="%Install.debuggers">
 			<keywordReference id="org.eclipse.php.debug.ui.installedDebuggers">
 			</keywordReference>
 		</page>
 		<page category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
 			class="org.eclipse.php.internal.debug.ui.preferences.WorkbenchOptionsPreferencePage"
-			id="org.eclipse.php.debug.ui.workbenchOptionsPage" name="Workbench Options">
+			id="org.eclipse.php.debug.ui.workbenchOptionsPage" name="%Workbench.options">
 			<keywordReference id="org.eclipse.php.debug.ui.workbench">
 			</keywordReference>
 		</page>
@@ -427,7 +427,7 @@
 		<page category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
 			class="org.eclipse.php.internal.debug.ui.preferences.stepFilter.PHPDebugStepFilterPreferencePage"
 			id="org.eclipse.php.internal.debug.ui.preferences.stepFilter.PHPDebugStepFilterPreferencePage"
-			name="Step Filtering">
+			name="%Step.filtering">
 		</page>
 	</extension>
 	
@@ -449,17 +449,17 @@
 	</extension>
 	
 	<extension point="org.eclipse.ui.keywords">
-		<keyword id="org.eclipse.php.debug.ui.debug" label="Debug Keywords">
+		<keyword id="org.eclipse.php.debug.ui.debug" label="%Debug.keywords">
 		</keyword>
 		<keyword id="org.eclipse.php.debug.ui.installedDebuggers"
-			label="installed debuggers zend xdebug configure port host">
+			label="%Debugger.port">
 		</keyword>
 		<keyword id="org.eclipse.php.debug.ui.workbench"
-			label="workbench open browser perspective switch debug multiple debug sessions">
+			label="%keyword.label.1">
 		</keyword>
-		<keyword id="org.eclipse.php.debug.ui.phpExecutables" label="PHP exe executable binary debug">
+		<keyword id="org.eclipse.php.debug.ui.phpExecutables" label="%PHP.exe.debug">
 		</keyword>
-		<keyword id="org.eclipse.php.debug.ui.phpInterpreterExecution" label="PHP Execution Environments">
+		<keyword id="org.eclipse.php.debug.ui.phpInterpreterExecution" label="%PHP.execution.environments">
 		</keyword>
 	</extension>
 	
@@ -531,7 +531,7 @@
    <extension point="org.eclipse.ltk.core.refactoring.renameParticipants">
       <renameParticipant
             class="org.eclipse.php.internal.debug.ui.refactoring.BreakpointRenameProjectParticipant"
-            name="ScriptProject Rename"
+            name="%ScriptProject.rename"
             id="org.eclipse.php.ui.refactoring.breakpoint.projectRename">
          <enablement>
            <with variable="affectedNatures">
@@ -546,7 +546,7 @@
       </renameParticipant>
       <renameParticipant
             class="org.eclipse.php.internal.debug.ui.refactoring.BreakpointRenamePackageParticipant"
-            name="Fragment Rename"
+            name="%Fragment.rename"
             id="org.eclipse.php.ui.refactoring.breakpoint.packageRename">
          <enablement>
            <with variable="affectedNatures">
@@ -561,7 +561,7 @@
       </renameParticipant>
       <renameParticipant
             class="org.eclipse.php.internal.debug.ui.refactoring.BreakpointRenameSourceModuleParticipant"
-            name="SourceModule Rename"
+            name="%SourceModule.rename"
             id="org.eclipse.php.ui.refactoring.breakpoint.packageRename">
          <enablement>
            <with variable="affectedNatures">
@@ -576,7 +576,7 @@
       </renameParticipant>
       <renameParticipant
             class="org.eclipse.php.internal.debug.ui.refactoring.BreakpointRenameSourceModuleParticipant"
-            name="ScriptFolder Rename"
+            name="%ScriptFolder.rename"
             id="org.eclipse.php.ui.refactoring.breakpoint.packageRename">
          <enablement>
            <with variable="affectedNatures">
