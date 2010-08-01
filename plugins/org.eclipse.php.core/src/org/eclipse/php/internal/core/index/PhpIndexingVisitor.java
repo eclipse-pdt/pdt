@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.index;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
@@ -119,6 +120,51 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			visitor.modifyReference(node, info);
 		}
 		requestor.addReference(info);
+	}
+
+	/**
+	 * See {@link PhpElementResolver#decodeDocInfo(String)} for the decoding
+	 * routine.
+	 * 
+	 * @param declaration
+	 *            Declaration ASTNode
+	 * @return decoded PHPDoc info, or <code>null</code> if there's no PHPDoc
+	 *         info to store.
+	 */
+	protected static String encodeDocInfo(Declaration declaration) {
+		if (declaration instanceof IPHPDocAwareDeclaration) {
+			PHPDocBlock docBlock = ((IPHPDocAwareDeclaration) declaration)
+					.getPHPDoc();
+			if (docBlock != null) {
+				Map<String, String> info = new HashMap<String, String>();
+				for (PHPDocTag tag : docBlock.getTags()) {
+					if (tag.getTagKind() == PHPDocTag.DEPRECATED) {
+						info.put("d", null);
+					} else if (tag.getTagKind() == PHPDocTag.RETURN) {
+						StringBuilder buf = new StringBuilder();
+						for (SimpleReference ref : tag.getReferences()) {
+							if (buf.length() > 0) {
+								buf.append(',');
+							}
+							buf.append(ref.getName());
+						}
+						info.put("r", buf.toString());
+					}
+				}
+				StringBuilder buf = new StringBuilder();
+				for (Entry<String, String> e : info.entrySet()) {
+					if (buf.length() > 0) {
+						buf.append(';');
+					}
+					buf.append(e.getKey());
+					if (e.getValue() != null) {
+						buf.append(':').append(e.getValue());
+					}
+				}
+				return buf.length() > 0 ? buf.toString() : null;
+			}
+		}
+		return null;
 	}
 
 	public boolean endvisit(MethodDeclaration method) throws Exception {
@@ -240,7 +286,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						.getNameEnd()
 						- method.getNameStart(), methodName,
 				metadata.length() == 0 ? null : metadata.toString(),
-				fCurrentQualifier, fCurrentParent));
+				encodeDocInfo(method), fCurrentQualifier, fCurrentParent));
 
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.visit(method);
@@ -302,7 +348,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						.getNameEnd()
 						- type.getNameStart(), type.getName(), metadata
 						.length() == 0 ? null : metadata.toString(),
-				isNamespace ? null : fCurrentQualifier, null));
+				encodeDocInfo(type), isNamespace ? null : fCurrentQualifier,
+				null));
 
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.visit(type);
@@ -393,7 +440,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						modifyDeclaration(null, new DeclarationInfo(
 								IModelElement.FIELD, Modifiers.AccPublic,
 								offset, length, offset, length, name, null,
-								fCurrentQualifier, fCurrentParent));
+								null, fCurrentQualifier, fCurrentParent));
 
 					} else if (tagKind == PHPDocTag.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
@@ -409,7 +456,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						modifyDeclaration(null, new DeclarationInfo(
 								IModelElement.METHOD, Modifiers.AccPublic,
 								offset, length, offset, length, name, null,
-								fCurrentQualifier, fCurrentParent));
+								null, fCurrentQualifier, fCurrentParent));
 					}
 				}
 			}
@@ -444,12 +491,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	public boolean visit(FieldDeclaration decl) throws Exception {
 		// This is constant declaration:
 		int modifiers = decl.getModifiers();
-		modifyDeclaration(decl,
-				new DeclarationInfo(IModelElement.FIELD, modifiers, decl
-						.sourceStart(), decl.sourceEnd() - decl.sourceStart(),
-						decl.getNameStart(), decl.getNameEnd()
-								- decl.getNameStart(), decl.getName(), null,
-						null, null));
+		modifyDeclaration(decl, new DeclarationInfo(IModelElement.FIELD,
+				modifiers, decl.sourceStart(), decl.sourceEnd()
+						- decl.sourceStart(), decl.getNameStart(), decl
+						.getNameEnd()
+						- decl.getNameStart(), decl.getName(), null,
+				encodeDocInfo(decl), null, null));
 
 		return visitGeneral(decl);
 	}
@@ -468,7 +515,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						- decl.sourceStart(), decl.getNameStart(), decl
 						.getNameEnd()
 						- decl.getNameStart(), decl.getName(), null,
-				fCurrentQualifier, fCurrentParent));
+				encodeDocInfo(decl), fCurrentQualifier, fCurrentParent));
 
 		return visitGeneral(decl);
 	}
@@ -529,7 +576,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					include.sourceEnd() - include.sourceStart(), filePath
 							.sourceStart(), filePath.sourceEnd()
 							- filePath.sourceStart(), lastSegment, fullPath,
-					null, null));
+					null, null, null));
 		}
 
 		return visitGeneral(include);
@@ -547,7 +594,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		modifyDeclaration(declaration, new DeclarationInfo(IModelElement.FIELD,
 				modifiers, offset, length, offset, length, ASTUtils
 						.stripQuotes(constantName.getName()), null,
-				fCurrentQualifier, fCurrentParent));
+				encodeDocInfo(declaration), fCurrentQualifier, fCurrentParent));
 		return visitGeneral(declaration);
 	}
 
@@ -571,7 +618,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					int length = var.sourceEnd() - offset;
 					modifyDeclaration(assignment, new DeclarationInfo(
 							IModelElement.FIELD, modifiers, offset, length,
-							offset, length, '$' + var.getName(), null,
+							offset, length, '$' + var.getName(), null, null,
 							fCurrentQualifier, fCurrentParent));
 				}
 			}
@@ -588,7 +635,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			modifyDeclaration(assignment, new DeclarationInfo(
 					IModelElement.FIELD, modifiers, offset, length, offset,
 					length, ((VariableReference) left).getName(), null, null,
-					null));
+					null, null));
 		}
 		return visitGeneral(assignment);
 	}

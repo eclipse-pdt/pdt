@@ -24,6 +24,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -57,33 +58,37 @@ public class PHPDocMethodReturnTypeEvaluator extends
 
 	public IGoal[] init() {
 		for (IMethod method : getMethods()) {
-			PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
-			if (docBlock != null) {
-				IType currentNamespace = PHPModelUtils
-						.getCurrentNamespace(method);
-				for (PHPDocTag tag : docBlock.getTags()) {
-					if (tag.getTagKind() == PHPDocTag.RETURN) {
-						// @return datatype1|datatype2|...
-						for (SimpleReference reference : tag.getReferences()) {
-							final String[] typesNames = PIPE_PATTERN
-									.split(reference.getName());
-							for (String typeName : typesNames) {
-								IEvaluatedType type = PHPSimpleTypes
-										.fromString(typeName);
-								if (type == null) {
-									if (typeName
-											.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
-											|| currentNamespace == null) {
-										type = new PHPClassType(typeName);
-									} else if (currentNamespace != null) {
-										type = new PHPClassType(
-												currentNamespace
-														.getElementName(),
-												typeName);
+			IType currentNamespace = PHPModelUtils.getCurrentNamespace(method);
+
+			if (method instanceof IPHPDocAwareElement) {
+				String[] typeNames = ((IPHPDocAwareElement) method)
+						.getReturnTypes();
+				if (typeNames != null) {
+					for (String typeName : typeNames) {
+						IEvaluatedType type = getEvaluatedType(typeName,
+								currentNamespace);
+						if (type != null) {
+							evaluated.add(type);
+						}
+					}
+				}
+
+			} else {
+				PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
+				if (docBlock != null) {
+					for (PHPDocTag tag : docBlock.getTags()) {
+						if (tag.getTagKind() == PHPDocTag.RETURN) {
+							// @return datatype1|datatype2|...
+							for (SimpleReference reference : tag
+									.getReferences()) {
+								final String[] typesNames = PIPE_PATTERN
+										.split(reference.getName());
+								for (String typeName : typesNames) {
+									IEvaluatedType type = getEvaluatedType(
+											typeName, currentNamespace);
+									if (type != null) {
+										evaluated.add(type);
 									}
-								}
-								if (type != null) {
-									evaluated.add(type);
 								}
 							}
 						}
@@ -93,6 +98,21 @@ public class PHPDocMethodReturnTypeEvaluator extends
 		}
 
 		return IGoal.NO_GOALS;
+	}
+
+	private IEvaluatedType getEvaluatedType(String typeName,
+			IType currentNamespace) {
+		IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
+		if (type == null) {
+			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
+					|| currentNamespace == null) {
+				type = new PHPClassType(typeName);
+			} else if (currentNamespace != null) {
+				type = new PHPClassType(currentNamespace.getElementName(),
+						typeName);
+			}
+		}
+		return type;
 	}
 
 	public Object produceResult() {

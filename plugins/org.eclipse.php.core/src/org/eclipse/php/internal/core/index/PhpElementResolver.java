@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.index;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.Modifiers;
@@ -28,14 +31,14 @@ public class PhpElementResolver implements IElementResolver {
 
 	public IModelElement resolve(int elementType, int flags, int offset,
 			int length, int nameOffset, int nameLength, String elementName,
-			String metadata, String qualifier, String parent,
+			String metadata, String doc, String qualifier, String parent,
 			ISourceModule sourceModule) {
 
 		ModelElement parentElement = (ModelElement) sourceModule;
 		if (qualifier != null) {
 			// namespace:
 			parentElement = new IndexType(parentElement, qualifier,
-					Modifiers.AccNameSpace, 0, 0, 0, 0, null);
+					Modifiers.AccNameSpace, 0, 0, 0, 0, null, doc);
 		}
 		if (parent != null) {
 			parentElement = new SourceType(parentElement, parent);
@@ -48,7 +51,7 @@ public class PhpElementResolver implements IElementResolver {
 				superClassNames = SEPARATOR_PATTERN.split(metadata);
 			}
 			return new IndexType(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength, superClassNames);
+					length, nameOffset, nameLength, superClassNames, doc);
 
 		case IModelElement.METHOD:
 			String[] parameters;
@@ -58,11 +61,11 @@ public class PhpElementResolver implements IElementResolver {
 				parameters = EMPTY;
 			}
 			return new IndexMethod(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength, parameters);
+					length, nameOffset, nameLength, parameters, doc);
 
 		case IModelElement.FIELD:
 			return new IndexField(parentElement, elementName, flags, offset,
-					length, nameOffset, nameLength);
+					length, nameOffset, nameLength, doc);
 
 		case IModelElement.IMPORT_DECLARATION:
 			// XXX: replace with import declaration element
@@ -75,18 +78,56 @@ public class PhpElementResolver implements IElementResolver {
 		return null;
 	}
 
-	private static class IndexField extends SourceField {
+	/**
+	 * See
+	 * {@link PhpIndexingVisitor#encodeDocInfo(org.eclipse.dltk.ast.declarations.Declaration)}
+	 * for the encoding routine
+	 * 
+	 * @param doc
+	 *            String representation of encoded PHPDoc info
+	 * @return map of encoded information, or <code>null</code> in case PHPDoc
+	 *         info is <code>null</code>
+	 */
+	protected static Map<String, String> decodeDocInfo(String doc) {
+		if (doc == null) {
+			return null;
+		}
+		Map<String, String> info = new HashMap<String, String>();
+		StringTokenizer tok = new StringTokenizer(doc, ";");
+		while (tok.hasMoreTokens()) {
+			String key = tok.nextToken();
+			String value = null;
+			int i = key.indexOf(':');
+			if (i != -1) {
+				value = key.substring(i + 1);
+				key = key.substring(0, i);
+			}
+			info.put(key, value);
+		}
+		return info;
+	}
+
+	protected static boolean isDeprecated(String doc) {
+		Map<String, String> info = decodeDocInfo(doc);
+		return (info != null && info.containsKey("d"));
+	}
+
+	private static class IndexField extends SourceField implements
+			IPHPDocAwareElement {
 
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;
+		private String doc;
 
 		public IndexField(ModelElement parent, String name, int flags,
-				int offset, int length, int nameOffset, int nameLength) {
+				int offset, int length, int nameOffset, int nameLength,
+				String doc) {
 			super(parent, name);
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
 			this.nameRange = new SourceRange(nameOffset, nameLength);
+			this.doc = doc;
 		}
 
 		public int getFlags() throws ModelException {
@@ -100,18 +141,28 @@ public class PhpElementResolver implements IElementResolver {
 		public ISourceRange getSourceRange() throws ModelException {
 			return sourceRange;
 		}
+
+		public boolean isDeprecated() {
+			return PhpElementResolver.isDeprecated(doc);
+		}
+
+		public String[] getReturnTypes() {
+			return null;
+		}
 	}
 
-	private static class IndexMethod extends SourceMethod {
+	private static class IndexMethod extends SourceMethod implements
+			IPHPDocAwareElement {
 
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;
 		private IParameter[] parameters;
+		private String doc;
 
 		public IndexMethod(ModelElement parent, String name, int flags,
 				int offset, int length, int nameOffset, int nameLength,
-				String[] parameterNames) {
+				String[] parameterNames, String doc) {
 
 			super(parent, name);
 			this.flags = flags;
@@ -142,6 +193,7 @@ public class PhpElementResolver implements IElementResolver {
 					}
 				}
 			}
+			this.doc = doc;
 		}
 
 		public int getFlags() throws ModelException {
@@ -168,24 +220,41 @@ public class PhpElementResolver implements IElementResolver {
 		public boolean isConstructor() throws ModelException {
 			return (flags & IPHPModifiers.Constructor) != 0;
 		}
+
+		public boolean isDeprecated() {
+			return PhpElementResolver.isDeprecated(doc);
+		}
+
+		public String[] getReturnTypes() {
+			Map<String, String> info = decodeDocInfo(doc);
+			if (info != null) {
+				String types = info.get("r");
+				if (types != null) {
+					return types.split(",");
+				}
+			}
+			return null;
+		}
 	}
 
-	private static class IndexType extends SourceType {
+	private static class IndexType extends SourceType implements
+			IPHPDocAwareElement {
 
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;
 		private String[] superClassNames;
+		private String doc;
 
 		public IndexType(ModelElement parent, String name, int flags,
 				int offset, int length, int nameOffset, int nameLength,
-				String[] superClassNames) {
-
+				String[] superClassNames, String doc) {
 			super(parent, name);
 			this.flags = flags;
 			this.sourceRange = new SourceRange(offset, length);
 			this.nameRange = new SourceRange(nameOffset, nameLength);
 			this.superClassNames = superClassNames;
+			this.doc = doc;
 		}
 
 		public int getFlags() throws ModelException {
@@ -202,6 +271,14 @@ public class PhpElementResolver implements IElementResolver {
 
 		public String[] getSuperClasses() throws ModelException {
 			return superClassNames;
+		}
+
+		public boolean isDeprecated() {
+			return PhpElementResolver.isDeprecated(doc);
+		}
+
+		public String[] getReturnTypes() {
+			return null;
 		}
 	}
 }
