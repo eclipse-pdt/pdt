@@ -129,8 +129,8 @@ public class NewPHPsComboBlock {
 
 	private IStatus fStatus = OK_STATUS;
 
-	private static IStatus OK_STATUS = new Status(IStatus.OK, PHPDebugUIPlugin
-			.getID(), 0, "", null); //$NON-NLS-1$
+	private static IStatus OK_STATUS = new Status(IStatus.OK,
+			PHPDebugUIPlugin.getID(), 0, "", null); //$NON-NLS-1$
 	private PHPexeItem[] phpItems = exes.getAllItems();
 
 	private IProject project;
@@ -204,6 +204,7 @@ public class NewPHPsComboBlock {
 		if (!fDefaultFirst) {
 			createDefaultJREControls(comp);
 		}
+		setUseDefaultJRE();
 	}
 
 	private void createEEControls(Composite comp) {
@@ -292,7 +293,6 @@ public class NewPHPsComboBlock {
 			}
 		});
 		fillWithWorkspacePHPexes();
-		setUseDefaultJRE();
 	}
 
 	private void createDefaultJREControls(Composite comp) {
