@@ -365,7 +365,8 @@ public class CodeAssistUtils {
 			if (className.length() > 0) {
 				if (className.startsWith("$")
 						&& phpVersion.isGreaterThan(PHPVersion.PHP5)) {
-					int statementStart = offset - statementText.length();
+					int statementStart = statementText
+							.getOriginalOffset(classNameStart);
 					return getVariableType(sourceModule, className,
 							statementStart);
 				} else {
@@ -405,7 +406,8 @@ public class CodeAssistUtils {
 		}
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
-			int statementStart = offset - statementText.length();
+			int statementStart = statementText
+					.getOriginalOffset(classNameStart);
 			return getVariableType(sourceModule, className, statementStart);
 		}
 		// if its function call calc the return type.
