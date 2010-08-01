@@ -18,6 +18,7 @@ import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public abstract class ModelUtils {
@@ -77,6 +78,9 @@ public abstract class ModelUtils {
 	}
 
 	static public boolean isDeprecated(IModelElement element) {
+		if (element instanceof IPHPDocAwareElement) {
+			return ((IPHPDocAwareElement) element).isDeprecated();
+		}
 		return isDeprecated(getPHPDoc(element));
 	}
 
