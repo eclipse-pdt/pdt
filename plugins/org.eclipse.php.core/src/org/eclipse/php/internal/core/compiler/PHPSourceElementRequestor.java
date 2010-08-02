@@ -48,6 +48,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
+	private static final String MAGIC_PROPERTY_TYPE = "MagicPropertyType";
 	private static final String CONSTRUCTOR_NAME = "__construct";
 	private static final String VOID_RETURN_TYPE = "void";
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
@@ -456,6 +457,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 						info.modifiers = Modifiers.AccPublic;
 						info.name = split[1];
+						info.type = MAGIC_PROPERTY_TYPE;
+
 						SimpleReference var = new SimpleReference(docTag
 								.sourceStart(), docTag.sourceStart() + 9,
 								removeParenthesis(split));
