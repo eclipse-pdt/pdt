@@ -302,8 +302,10 @@ public class CodeAssistUtils {
 				statementText, endPosition - triggerText.length());
 		int lastObjectOperator = PHPTextSequenceUtilities
 				.getPrivousTriggerIndex(statementText, propertyEndPosition);
-
-		if (lastObjectOperator == -1) {
+		String text = statementText.subSequence(0, propertyEndPosition)
+				.toString();
+		if (lastObjectOperator == -1
+				|| (text.indexOf('>') >= 0 && text.indexOf("->") < 0)) {
 			// if there is no "->" or "::" in the left sequence then we need to
 			// calc the object type
 			return innerGetClassName(sourceModule, statementText,
