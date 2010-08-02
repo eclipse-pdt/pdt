@@ -714,8 +714,7 @@ public class NewPHPsComboBlock {
 	}
 
 	public void setProject(IProject project) {
-		if (this.project == null && project != null
-				|| !this.project.equals(project)) {
+		if (this.project == null || !this.project.equals(project)) {
 			this.project = project;
 			setDefaultPHPexeDescriptor(fDefaultDescriptor);
 		}
