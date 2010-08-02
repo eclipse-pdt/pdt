@@ -39,9 +39,12 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	 * (non-Javadoc) Method declared on IAutoIndentStrategy
 	 */
 	public void customizeDocumentCommand(IDocument d, DocumentCommand c) {
+		// when user typing c.text.length()==1 except enter key,
+		// if user type enter key,we may add some indentation spaces/tabs for
+		// it,so we use c.text.trim().length() > 0 to filter it
 		if (c.text != null
 				&& c.text.length() > 1
-				&& !endsWithDelimiter(d, c.text)
+				&& c.text.trim().length() > 1
 				&& !getPreferenceStore().getBoolean(
 						PreferenceConstants.EDITOR_SMART_PASTE)) {
 			smartPaste(d, c);
@@ -50,22 +53,6 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 
 	private static IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
-	}
-
-	/**
-	 * Returns whether or not the text ends with one of the given search
-	 * strings.
-	 */
-	private boolean endsWithDelimiter(IDocument d, String txt) {
-
-		String[] delimiters = d.getLegalLineDelimiters();
-
-		for (int i = 0; i < delimiters.length; i++) {
-			if (txt.endsWith(delimiters[i]))
-				return true;
-		}
-
-		return false;
 	}
 
 	/**
@@ -92,9 +79,14 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 						.getLineOfOffset(command.offset));
 				if (document.get(region.getOffset(), region.getLength()).trim()
 						.length() == 0) {// blank line
-					document.replace(region.getOffset(), region.getLength(), "");
-					// adjust the offset
-					command.offset = command.offset - region.getLength();
+					if (command.offset != region.getOffset()) {
+						document.replace(region.getOffset(),
+								region.getLength(), "");
+						// adjust the offset
+						command.offset = region.getOffset();
+					}
+				} else {
+					return;
 				}
 			}
 		} catch (BadLocationException e) {
