@@ -204,6 +204,7 @@ public class NewPHPsComboBlock {
 		if (!fDefaultFirst) {
 			createDefaultJREControls(comp);
 		}
+		setUseDefaultJRE();
 	}
 
 	private void createEEControls(Composite comp) {
@@ -292,7 +293,6 @@ public class NewPHPsComboBlock {
 			}
 		});
 		fillWithWorkspacePHPexes();
-		setUseDefaultJRE();
 	}
 
 	private void createDefaultJREControls(Composite comp) {
