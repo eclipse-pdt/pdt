@@ -129,8 +129,8 @@ public class NewPHPsComboBlock {
 
 	private IStatus fStatus = OK_STATUS;
 
-	private static IStatus OK_STATUS = new Status(IStatus.OK,
-			PHPDebugUIPlugin.getID(), 0, "", null); //$NON-NLS-1$
+	private static IStatus OK_STATUS = new Status(IStatus.OK, PHPDebugUIPlugin
+			.getID(), 0, "", null); //$NON-NLS-1$
 	private PHPexeItem[] phpItems = exes.getAllItems();
 
 	private IProject project;
@@ -714,8 +714,7 @@ public class NewPHPsComboBlock {
 	}
 
 	public void setProject(IProject project) {
-		if (this.project == null && project != null
-				|| !this.project.equals(project)) {
+		if (this.project == null || !this.project.equals(project)) {
 			this.project = project;
 			setDefaultPHPexeDescriptor(fDefaultDescriptor);
 		}
