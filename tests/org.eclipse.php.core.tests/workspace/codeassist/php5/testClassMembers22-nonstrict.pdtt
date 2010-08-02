@@ -1,0 +1,16 @@
+--TEST--
+Show parent class members
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class MyCls {
+    static function foo() {
+    }
+}
+
+if (MyCls::foo() > MyCls::|) {
+}
+?>
+--EXPECT--
+method(foo)
