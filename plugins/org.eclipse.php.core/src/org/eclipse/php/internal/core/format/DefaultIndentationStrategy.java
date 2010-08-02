@@ -268,7 +268,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			final IStructuredDocument document, final StringBuffer result,
 			final int lineNumber, final int forOffset)
 			throws BadLocationException {
-		final int lastNonEmptyLineIndex = getIndentationBaseLine(document,
+		boolean enterKeyPressed = document.getLineDelimiter().equals(
+				result.toString());
+		int lastNonEmptyLineIndex = getIndentationBaseLine(document,
 				lineNumber, forOffset, false);
 		final int indentationBaseLineIndex = getIndentationBaseLine(document,
 				lineNumber, forOffset, true);
@@ -298,6 +300,126 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					.getIndentationChar(document);
 			for (int i = 0; i < indentationSize; i++)
 				result.append(indentationChar);
+		} else {
+			lastNonEmptyLineIndex = lineNumber;
+			if (!enterKeyPressed && lastNonEmptyLineIndex > 0) {
+				lastNonEmptyLineIndex--;
+			}
+			while (lastNonEmptyLineIndex >= 0) {
+				IRegion lineInfo = document
+						.getLineInformation(lastNonEmptyLineIndex);
+				String content = document.get(lineInfo.getOffset(), lineInfo
+						.getLength());
+				if (content.trim().length() > 0) {
+					break;
+				}
+				lastNonEmptyLineIndex--;
+			}
+			if (!isEndOfStatement(document, offset, lastNonEmptyLineIndex)) {
+				if (enterKeyPressed) {
+					// this line is one of multi line statement
+					if (indentationBaseLineIndex == lastNonEmptyLineIndex) {
+						// this only deal with "$a = 'aaa'.|","|" is the cursor
+						// position when we press enter key
+						placeStringIndentation(document, lastNonEmptyLineIndex,
+								result);
+					} else {
+						// in multi line statement,when user press enter key,
+						// we use the same indentation of the last non-empty
+						// line.
+						result.setLength(result.length() - blanks.length());
+						IRegion lineInfo = document
+								.getLineInformation(lastNonEmptyLineIndex);
+						result.append(FormatterUtils.getLineBlanks(document,
+								lineInfo));
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isEndOfStatement(IStructuredDocument document,
+			int offset, int lineNumber) {
+		try {
+			IRegion lineInfo = document.getLineInformation(lineNumber);
+			final IStructuredDocumentRegion sdRegion = document
+					.getRegionAtCharacterOffset(offset);
+			ITextRegion token = getLastTokenRegion(document, lineInfo, lineInfo
+					.getOffset()
+					+ lineInfo.getLength());
+			if (token == null)// comment
+				return true;
+			if (token.getType() == PHPRegionTypes.PHP_SEMICOLON
+					|| token.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
+				return true;
+			}
+		} catch (final BadLocationException e) {
+		}
+		return false;
+	}
+
+	private static void placeStringIndentation(
+			final IStructuredDocument document, int lineNumber,
+			StringBuffer result) {
+		try {
+
+			IRegion lineInfo = document.getLineInformation(lineNumber);
+			int offset = lineInfo.getOffset() + lineInfo.getLength();
+			final IStructuredDocumentRegion sdRegion = document
+					.getRegionAtCharacterOffset(offset);
+			ITextRegion token = getLastTokenRegion(document, lineInfo, offset);
+			if (token == null)
+				return;
+			String tokenType = token.getType();
+
+			if (tokenType == PHPRegionTypes.PHP_CURLY_OPEN)
+				return;
+
+			ITextRegion scriptRegion = sdRegion
+					.getRegionAtCharacterOffset(offset);
+			if (scriptRegion == null && offset == document.getLength()) {
+				offset -= 1;
+				scriptRegion = sdRegion.getRegionAtCharacterOffset(offset);
+			}
+			int regionStart = sdRegion.getStartOffset(scriptRegion);
+			// in case of container we have the extract the PhpScriptRegion
+			if (scriptRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) scriptRegion;
+				scriptRegion = container.getRegionAtCharacterOffset(offset);
+				regionStart += scriptRegion.getStart();
+			}
+			if (scriptRegion instanceof IPhpScriptRegion) {
+				if (tokenType == PHPRegionTypes.PHP_TOKEN
+						&& document.getChar(regionStart + token.getStart()) == '.') {
+					token = ((IPhpScriptRegion) scriptRegion).getPhpToken(token
+							.getStart() - 1);
+					if (token != null
+							&& token.getType() == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+						boolean isToken = true;
+						int currentOffset = regionStart + token.getStart() - 1;
+						while (currentOffset >= lineInfo.getOffset()) {
+							token = ((IPhpScriptRegion) scriptRegion)
+									.getPhpToken(token.getStart() - 1);
+							tokenType = token.getType();
+							if (isToken
+									&& (tokenType == PHPRegionTypes.PHP_TOKEN && document
+											.getChar(regionStart
+													+ token.getStart()) == '.')
+									|| !isToken
+									&& tokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+								currentOffset = regionStart + token.getStart()
+										- 1;
+							} else {
+								break;
+							}
+						}
+						for (int i = 0; i < regionStart + token.getEnd()
+								- lineInfo.getOffset(); i++)
+							result.append(' ');
+					}
+				}
+			}
+		} catch (final BadLocationException e) {
 		}
 	}
 
