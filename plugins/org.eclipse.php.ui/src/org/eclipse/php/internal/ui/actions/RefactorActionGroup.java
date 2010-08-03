@@ -82,8 +82,7 @@ public class RefactorActionGroup extends ActionGroup {
 	private static class NoActionAvailable extends Action {
 		public NoActionAvailable() {
 			setEnabled(false);
-			setText(PHPUIMessages
-					.getString("RefactorActionGroup_no_refactoring_available"));
+			setText(PHPUIMessages.RefactorActionGroup_no_refactoring_available);
 		}
 	}
 
@@ -92,8 +91,7 @@ public class RefactorActionGroup extends ActionGroup {
 	/**
 	 * Creates a new <code>RefactorActionGroup</code>. The group requires that
 	 * the selection provided by the part's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>
-	 * .
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param part
 	 *            the view part that owns this action group
@@ -110,8 +108,7 @@ public class RefactorActionGroup extends ActionGroup {
 	/**
 	 * Creates a new <code>RefactorActionGroup</code>. The action requires that
 	 * the selection provided by the page's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>
-	 * .
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param page
 	 *            the page that owns this action group
@@ -221,7 +218,7 @@ public class RefactorActionGroup extends ActionGroup {
 	}
 
 	private void addRefactorSubmenu(IMenuManager menu) {
-		String menuText = PHPUIMessages.getString("RefactorMenu_label");
+		String menuText = PHPUIMessages.RefactorMenu_label;
 
 		IMenuManager refactorSubmenu = (IMenuManager) menu.find(MENU_ID);
 		if (refactorSubmenu == null)

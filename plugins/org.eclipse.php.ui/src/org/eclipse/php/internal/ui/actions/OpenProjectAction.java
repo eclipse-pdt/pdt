@@ -55,8 +55,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 	/**
 	 * Creates a new <code>OpenProjectAction</code>. The action requires that
 	 * the selection provided by the site's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>
-	 * .
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param site
 	 *            the site providing context information for this action
@@ -136,10 +135,8 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 	private void internalRun() {
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
 				getShell(), new ModelElementLabelProvider());
-		dialog.setTitle(PHPUIMessages
-				.getString("OpenProjectAction_dialog_title"));
-		dialog.setMessage(PHPUIMessages
-				.getString("OpenProjectAction_dialog_message"));
+		dialog.setTitle(PHPUIMessages.OpenProjectAction_dialog_title);
+		dialog.setMessage(PHPUIMessages.OpenProjectAction_dialog_message);
 		dialog.setElements(getClosedProjects());
 		dialog.setMultipleSelection(true);
 		int result = dialog.open();
@@ -151,9 +148,9 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 			PlatformUI.getWorkbench().getProgressService().run(true, true,
 					new WorkbenchRunnableAdapter(runnable));
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, getShell(), PHPUIMessages
-					.getString("OpenProjectAction_dialog_title"), PHPUIMessages
-					.getString("OpenProjectAction_error_message"));
+			ExceptionHandler.handle(e, getShell(),
+					PHPUIMessages.OpenProjectAction_dialog_title,
+					PHPUIMessages.OpenProjectAction_error_message);
 		} catch (InterruptedException e) {
 		}
 	}
@@ -172,8 +169,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements
 							errorStatus = new MultiStatus(
 									PHPUiPlugin.ID,
 									IStatus.ERROR,
-									PHPUIMessages
-											.getString("OpenProjectAction_error_message"),
+									PHPUIMessages.OpenProjectAction_error_message,
 									e);
 						errorStatus.merge(e.getStatus());
 					}

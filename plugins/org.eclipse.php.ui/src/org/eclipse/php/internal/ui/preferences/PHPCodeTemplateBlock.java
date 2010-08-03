@@ -256,10 +256,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	private final static int IDX_EXPORT = 3;
 	private final static int IDX_EXPORTALL = 4;
 
-	protected final static Object COMMENT_NODE = PHPUIMessages
-			.getString("CodeTemplateBlock_templates_comment_node");
-	protected final static Object CODE_NODE = PHPUIMessages
-			.getString("CodeTemplateBlock_templates_code_node");
+	protected final static Object COMMENT_NODE = PHPUIMessages.CodeTemplateBlock_templates_comment_node;
+	protected final static Object CODE_NODE = PHPUIMessages.CodeTemplateBlock_templates_code_node;
 
 	private TreeListDialogField fCodeTemplateTree;
 	private SelectionButtonDialogField fGenerateComments;
@@ -364,10 +362,10 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		GridData data = new GridData();
 		data.horizontalSpan = nColumns;
 		label.setLayoutData(data);
-		//		
+		//
 		// JobSafeStructuredDocument document= new JobSafeStructuredDocument();
 		// IDocumentPartitioner partitioner= new PHPStructuredTextPartitioner();
-		//		
+		//
 		//		//document.setDocumentPartitioner("org.eclipse.wst.sse.core.default_structured_text_partitioning", partitioner); //$NON-NLS-1$
 		// document.setDocumentPartitioner( partitioner);
 		//
@@ -380,17 +378,17 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		// store, null, fTemplateProcessor);
 		// //ScriptSourceViewerConfiguration configuration = new
 		// PHPStructuredEditor().getSourceViwerConfiguration();
-		//		
+		//
 		// PHPStructuredTextViewerConfiguration configuration = new
 		// PHPStructuredTextViewerConfiguration();
 		// viewer.configure(configuration);
 		// viewer.setEditable(false);
 		// viewer.setDocument(document);
-		//		
+		//
 		//		Font font= JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont"); //$NON-NLS-1$		
 		// viewer.getTextWidget().setFont(font);
 		// new PHPSourcePreviewerUpdater(viewer, configuration, store);
-		//		
+		//
 		// Control control= viewer.getControl();
 		// data= new GridData(GridData.HORIZONTAL_ALIGN_FILL |
 		// GridData.FILL_VERTICAL);
@@ -509,8 +507,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	private void import_() {
 		FileDialog dialog = new FileDialog(getShell());
 		dialog.setText(PreferencesMessages.CodeTemplateBlock_import_title);
-		dialog
-				.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_import_extension });
+		dialog.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_import_extension });
 		String path = dialog.open();
 
 		if (path == null)
@@ -581,10 +578,8 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		dialog.setText(Messages.format(
 				PreferencesMessages.CodeTemplateBlock_export_title, String
 						.valueOf(templates.length)));
-		dialog
-				.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_export_extension });
-		dialog
-				.setFileName(PreferencesMessages.CodeTemplateBlock_export_filename);
+		dialog.setFilterExtensions(new String[] { PreferencesMessages.CodeTemplateBlock_export_extension });
+		dialog.setFileName(PreferencesMessages.CodeTemplateBlock_export_filename);
 		String path = dialog.open();
 
 		if (path == null)

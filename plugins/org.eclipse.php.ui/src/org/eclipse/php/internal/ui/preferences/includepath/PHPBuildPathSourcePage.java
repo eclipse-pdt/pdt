@@ -101,8 +101,8 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 				removeFromIncludePath = IncludePathUtils
 						.openConfirmationDialog(
 								getShell(),
-								PHPUIMessages
-										.getString("IncludePath.RemoveEntryTitle"), PHPUIMessages.getString("IncludePath.RemoveEntryFromIncludePathMessage")); //$NON-NLS-1$ ////$NON-NLS-2$
+								PHPUIMessages.IncludePath_RemoveEntryTitle,
+								PHPUIMessages.IncludePath_RemoveEntryFromIncludePathMessage); //$NON-NLS-1$ ////$NON-NLS-2$
 				for (IChangeListener listener : removedElementListeners) {
 					listener.update(true);
 				}

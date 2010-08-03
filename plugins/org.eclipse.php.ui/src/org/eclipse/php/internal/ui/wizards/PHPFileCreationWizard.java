@@ -45,7 +45,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 	 */
 	public PHPFileCreationWizard() {
 		super();
-		setWindowTitle(PHPUIMessages.getString("PHPFileCreationWizard.5")); //$NON-NLS-1$
+		setWindowTitle(PHPUIMessages.PHPFileCreationWizard_5); //$NON-NLS-1$
 		setNeedsProgressMonitor(true);
 	}
 
@@ -91,10 +91,9 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			return false;
 		} catch (InvocationTargetException e) {
 			Throwable realException = e.getTargetException();
-			MessageDialog
-					.openError(
-							getShell(),
-							PHPUIMessages.getString("PHPFileCreationWizard.0"), realException.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(),
+					PHPUIMessages.PHPFileCreationWizard_0, realException
+							.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		return true;
@@ -165,13 +164,13 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				String fileName, IProgressMonitor monitor, String contents,
 				final int offset, final String editorID) throws CoreException {
 			// create a sample file
-			monitor.beginTask(NLS.bind(PHPUIMessages
-					.getString("newPhpFile_create"), fileName), 2);
+			monitor.beginTask(NLS.bind(PHPUIMessages.newPhpFile_create,
+					fileName), 2);
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IResource resource = root.findMember(new Path(containerName));
 			if (!resource.exists() || !(resource instanceof IContainer)) {
-				throwCoreException(PHPUIMessages
-						.getString("PHPFileCreationWizard.1") + containerName + PHPUIMessages.getString("PHPFileCreationWizard.2")); //$NON-NLS-1$ //$NON-NLS-2$
+				throwCoreException(PHPUIMessages.PHPFileCreationWizard_1
+						+ containerName + PHPUIMessages.PHPFileCreationWizard_2); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			IContainer container = (IContainer) resource;
 			final IFile file = container.getFile(new Path(fileName));
@@ -219,8 +218,8 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			 */
 
 			monitor.worked(1);
-			monitor.setTaskName(NLS.bind(PHPUIMessages
-					.getString("newPhpFile_openning"), fileName));
+			monitor.setTaskName(NLS.bind(PHPUIMessages.newPhpFile_openning,
+					fileName));
 			wizard.getShell().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					IWorkbenchPage page = PlatformUI.getWorkbench()
@@ -258,9 +257,9 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 
 		private static void throwCoreException(String message)
 				throws CoreException {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					PHPUIMessages.getString("PHPFileCreationWizard.4"), IStatus.OK, message, null); //$NON-NLS-1$
+			IStatus status = new Status(IStatus.ERROR,
+					PHPUIMessages.PHPFileCreationWizard_4, IStatus.OK, message,
+					null); //$NON-NLS-1$
 			throw new CoreException(status);
 		}
 

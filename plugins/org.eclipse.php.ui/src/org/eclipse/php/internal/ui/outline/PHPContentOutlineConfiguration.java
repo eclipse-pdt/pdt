@@ -101,13 +101,13 @@ public class PHPContentOutlineConfiguration extends
 			final TreeViewer viewer) {
 		IContributionItem[] items;
 
-		changeOutlineModeActionPHP = new ChangeOutlineModeAction(PHPUIMessages
-				.getString("PHPOutlinePage_mode_php"), MODE_PHP, this, viewer); //$NON-NLS-1$
+		changeOutlineModeActionPHP = new ChangeOutlineModeAction(
+				PHPUIMessages.PHPOutlinePage_mode_php, MODE_PHP, this, viewer); //$NON-NLS-1$
 		final IContributionItem showPHPItem = new ActionContributionItem(
 				changeOutlineModeActionPHP);
 
-		changeOutlineModeActionHTML = new ChangeOutlineModeAction(PHPUIMessages
-				.getString("PHPOutlinePage_mode_html"), MODE_HTML, this, viewer); //$NON-NLS-1$
+		changeOutlineModeActionHTML = new ChangeOutlineModeAction(
+				PHPUIMessages.PHPOutlinePage_mode_html, MODE_HTML, this, viewer); //$NON-NLS-1$
 
 		propertyChangeListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -389,18 +389,16 @@ public class PHPContentOutlineConfiguration extends
 
 		public String getText(Object element) {
 			if (element instanceof UseStatementsNode) {
-				return PHPUIMessages
-						.getString("PHPContentOutlineConfiguration.2"); //$NON-NLS-1$
+				return PHPUIMessages.PHPContentOutlineConfiguration_2; //$NON-NLS-1$
 			}
 			if (element instanceof UseStatementElement) {
 				SimpleReference alias = ((UseStatementElement) element)
 						.getUsePart().getAlias();
 				if (alias != null) {
-					return NLS
-							.bind(
-									PHPUIMessages
-											.getString("PHPContentOutlineConfiguration.3"), super.getText(element), //$NON-NLS-1$
-									alias.getName());
+					return NLS.bind(
+							PHPUIMessages.PHPContentOutlineConfiguration_3,
+							super.getText(element), //$NON-NLS-1$
+							alias.getName());
 				}
 			}
 			return super.getText(element);

@@ -97,20 +97,19 @@ public class DefaultPHPFoldingPreferenceBlock implements
 		inner.setLayout(layout);
 
 		Label label = new Label(inner, SWT.LEFT);
-		label.setText(PHPUIMessages
-				.getString("DefaultPHPFoldingPreferenceBlock_title"));
+		label.setText(PHPUIMessages.DefaultPHPFoldingPreferenceBlock_title);
 
-		addCheckBox(inner, PHPUIMessages
-				.getString("DefaultPHPFoldingPreferenceBlock_classes"),
+		addCheckBox(inner,
+				PHPUIMessages.DefaultPHPFoldingPreferenceBlock_classes,
 				PreferenceConstants.EDITOR_FOLDING_CLASSES, 0);
 		// addCheckBox(inner,
 		// PHPUIMessages.getString("DefaultPHPFoldingPreferenceBlock_includes"),
 		// PreferenceConstants.EDITOR_FOLDING_INCLUDES, 0);
-		addCheckBox(inner, PHPUIMessages
-				.getString("DefaultPHPFoldingPreferenceBlock_functions"),
+		addCheckBox(inner,
+				PHPUIMessages.DefaultPHPFoldingPreferenceBlock_functions,
 				PreferenceConstants.EDITOR_FOLDING_FUNCTIONS, 0);
-		addCheckBox(inner, PHPUIMessages
-				.getString("DefaultPHPFoldingPreferenceBlock_PHPdoc"),
+		addCheckBox(inner,
+				PHPUIMessages.DefaultPHPFoldingPreferenceBlock_PHPdoc,
 				PreferenceConstants.EDITOR_FOLDING_PHPDOC, 0);
 
 		return inner;

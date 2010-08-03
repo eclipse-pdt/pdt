@@ -64,10 +64,9 @@ class ActionFilterContributorsRegistry {
 				.get(id);
 		if (element != null) {
 			final IActionFilterContributor contributor[] = new IActionFilterContributor[1];
-			SafeRunner
-					.run(new SafeRunnable(
-							PHPUIMessages
-									.getString("ActionFilterContributorsRegistry.0") + EXTENSION_POINT) { //$NON-NLS-1$
+			SafeRunner.run(new SafeRunnable(
+					PHPUIMessages.ActionFilterContributorsRegistry_0
+							+ EXTENSION_POINT) { //$NON-NLS-1$
 						public void run() throws Exception {
 							contributor[0] = (IActionFilterContributor) element
 									.createExecutableExtension(CLASS_ATTRIBUTE);

@@ -32,7 +32,7 @@ public class ShowGroupsAction extends Action {
 		super(label, AS_CHECK_BOX); //$NON-NLS-1$
 		this.treeViewer = treeViewer;
 		PHPPluginImages.setLocalImageDescriptors(this, "showGroups.gif"); //$NON-NLS-1$
-		setToolTipText(PHPUIMessages.getString("ShowGroupsAction.1")); //$NON-NLS-1$
+		setToolTipText(PHPUIMessages.ShowGroupsAction_1); //$NON-NLS-1$
 
 		propertyChangeListener = new IPropertyChangeListener() {
 

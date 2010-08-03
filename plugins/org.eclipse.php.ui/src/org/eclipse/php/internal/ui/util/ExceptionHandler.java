@@ -138,8 +138,7 @@ public class ExceptionHandler {
 			msg.write("\n\n"); //$NON-NLS-1$
 		}
 		if (exceptionMessage == null || exceptionMessage.length() == 0)
-			msg.write(PHPUIMessages
-					.getString("ExceptionDialog_seeErrorLogMessage"));
+			msg.write(PHPUIMessages.ExceptionDialog_seeErrorLogMessage);
 		else
 			msg.write(exceptionMessage);
 		MessageDialog.openError(shell, title, msg.toString());

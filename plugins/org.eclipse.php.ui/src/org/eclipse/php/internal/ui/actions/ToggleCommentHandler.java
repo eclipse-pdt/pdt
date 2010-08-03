@@ -186,8 +186,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 				.getExistingModelForEdit(document);
 		if (model != null) {
 			try {
-				model.beginRecording(this, PHPUIMessages
-						.getString("ToggleComment_tooltip"));
+				model.beginRecording(this, PHPUIMessages.ToggleComment_tooltip);
 				model.aboutToChangeModel();
 
 				// The eclipse way is as follows:

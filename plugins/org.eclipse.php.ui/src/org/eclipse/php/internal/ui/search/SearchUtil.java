@@ -63,10 +63,9 @@ public class SearchUtil {
 			for (int i = 0; i < workingSets.length; i++) {
 				String workingSetName = workingSets[i].getName();
 				if (firstFound)
-					result = Messages
-							.format(
-									PHPUIMessages
-											.getString("SearchUtil_workingSetConcatenation"), new String[] { result, workingSetName }); //$NON-NLS-1$
+					result = Messages.format(
+							PHPUIMessages.SearchUtil_workingSetConcatenation,
+							new String[] { result, workingSetName }); //$NON-NLS-1$
 				else {
 					result = workingSetName;
 					firstFound = true;

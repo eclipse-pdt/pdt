@@ -15,7 +15,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.graphics.RGB;
 
@@ -355,8 +354,7 @@ public class SemanticHighlightings {
 		 * getDisplayName()
 		 */
 		public String getDisplayName() {
-			return PHPUIMessages
-					.getString("SemanticHighlighting_localVariable");
+			return "";
 		}
 
 		/*

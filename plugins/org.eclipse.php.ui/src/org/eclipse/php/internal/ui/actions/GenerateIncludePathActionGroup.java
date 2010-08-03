@@ -233,8 +233,7 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 		for (Iterator iter = fActions.iterator(); iter.hasNext();) {
 			Action action = (Action) iter.next();
 			if (action instanceof ISelectionChangedListener) {
-				provider
-						.addSelectionChangedListener((ISelectionChangedListener) action);
+				provider.addSelectionChangedListener((ISelectionChangedListener) action);
 			}
 		}
 
@@ -255,8 +254,7 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 		super.fillContextMenu(menu);
 		if (!canOperateOnSelection())
 			return;
-		String menuText = PHPUIMessages
-				.getString("IncludePathActionGroup_label");
+		String menuText = PHPUIMessages.IncludePathActionGroup_label;
 		IMenuManager subMenu = new MenuManager(menuText, MENU_ID);
 		subMenu.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
@@ -338,8 +336,7 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 			for (Iterator iter = fActions.iterator(); iter.hasNext();) {
 				Action action = (Action) iter.next();
 				if (action instanceof ISelectionChangedListener)
-					provider
-							.removeSelectionChangedListener((ISelectionChangedListener) action);
+					provider.removeSelectionChangedListener((ISelectionChangedListener) action);
 			}
 		}
 		fActions = null;

@@ -56,7 +56,7 @@ public class ManualPart extends ViewPart {
 
 	public void createPartControl(Composite parent) {
 		Browser browser = new Browser(parent, SWT.NONE);
-		browser.setUrl(PHPUIMessages.getString("ManualPart.URL")); //$NON-NLS-1$
+		browser.setUrl(PHPUIMessages.ManualPart_URL); //$NON-NLS-1$
 	}
 
 	public void setFocus() {

@@ -60,8 +60,8 @@ public class PHPWizardPagesRegistry {
 		final List elementsList = (List) instance.pages.get(id);
 		if (elementsList != null) {
 			final List pagesList = new LinkedList();
-			SafeRunner.run(new SafeRunnable(PHPUIMessages
-					.getString("PHPWizardPagesRegistry.0") + EXTENSION_POINT) { //$NON-NLS-1$
+			SafeRunner.run(new SafeRunnable(
+					PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) { //$NON-NLS-1$
 						public void run() throws Exception {
 							Iterator i = elementsList.iterator();
 							while (i.hasNext()) {
@@ -93,8 +93,8 @@ public class PHPWizardPagesRegistry {
 		final List elementsList = (List) instance.pages.get(id);
 		if (elementsList != null) {
 			final List pagesList = new LinkedList();
-			SafeRunner.run(new SafeRunnable(PHPUIMessages
-					.getString("PHPWizardPagesRegistry.0") + EXTENSION_POINT) { //$NON-NLS-1$
+			SafeRunner.run(new SafeRunnable(
+					PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) { //$NON-NLS-1$
 						public void run() throws Exception {
 							Iterator i = elementsList.iterator();
 							while (i.hasNext()) {

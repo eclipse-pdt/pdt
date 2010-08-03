@@ -443,7 +443,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		} else {
 			IPath path = ((IResource) element).getFullPath();
 			if (path.isRoot()) {
-				result = PHPUIMessages.getString("PHPExplorer_title");
+				result = PHPUIMessages.PHPExplorer_title;
 			} else {
 				result = path.makeRelative().toString();
 			}
@@ -452,12 +452,12 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		if (fWorkingSetName == null)
 			return result;
 
-		String wsstr = NLS.bind(PHPUIMessages.getString("PHPExplorer_toolTip"),
+		String wsstr = NLS.bind(PHPUIMessages.PHPExplorer_toolTip,
 				new String[] { fWorkingSetName });
 		if (result.length() == 0)
 			return wsstr;
-		return NLS.bind(PHPUIMessages.getString("PHPExplorer_toolTip2"),
-				new String[] { result, fWorkingSetName });
+		return NLS.bind(PHPUIMessages.PHPExplorer_toolTip2, new String[] {
+				result, fWorkingSetName });
 	}
 
 	void updateTitle() {
@@ -477,7 +477,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		private String url;
 
 		public ShowFunctionHelpAction() {
-			super(PHPUIMessages.getString("PHPFunctionsPart.0")); //$NON-NLS-1$
+			super(PHPUIMessages.PHPFunctionsPart_0); //$NON-NLS-1$
 		}
 
 		public void setURL(String url) {

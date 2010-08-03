@@ -89,8 +89,8 @@ public final class PHPFoldingStructureProviderDescriptor {
 					.createExecutableExtension(PREFERENCES_CLASS);
 			return prefs;
 		} else {
-			throw new IllegalStateException(PHPUIMessages
-					.getString("PHPFoldingStructureProviderDescriptor.0")); //$NON-NLS-1$
+			throw new IllegalStateException(
+					PHPUIMessages.PHPFoldingStructureProviderDescriptor_0); //$NON-NLS-1$
 		}
 	}
 

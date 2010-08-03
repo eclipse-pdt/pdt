@@ -127,8 +127,8 @@ public class PHPEditorTextHoverDescriptor {
 				return (IPHPTextHover) fElement
 						.createExecutableExtension(CLASS_ATTRIBUTE);
 			} catch (CoreException x) {
-				Logger.logException(PHPUIMessages
-						.getString("PHPTextHover_createTextHover"), x);
+				Logger.logException(PHPUIMessages.PHPTextHover_createTextHover,
+						x);
 			}
 		}
 		return null;

@@ -42,8 +42,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 	public PHPProjectCreationWizard() {
 		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
 		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
-		setWindowTitle(PHPUIMessages
-				.getString("PHPProjectCreationWizard_WizardTitle"));
+		setWindowTitle(PHPUIMessages.PHPProjectCreationWizard_WizardTitle);
 	}
 
 	public void addPages() {
@@ -51,26 +50,23 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 		fFirstPage = new PHPProjectWizardFirstPage();
 
 		// First page
-		fFirstPage.setTitle(PHPUIMessages
-				.getString("PHPProjectCreationWizard_Page1Title"));
-		fFirstPage.setDescription(PHPUIMessages
-				.getString("PHPProjectCreationWizard_Page1Description"));
+		fFirstPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page1Title);
+		fFirstPage
+				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page1Description);
 		addPage(fFirstPage);
 
 		// Second page (Include Path)
 		fSecondPage = new PHPProjectWizardSecondPage(fFirstPage);
-		fSecondPage.setTitle(PHPUIMessages
-				.getString("PHPProjectCreationWizard_Page2Title"));
-		fSecondPage.setDescription(PHPUIMessages
-				.getString("PHPProjectCreationWizard_Page2Description"));
+		fSecondPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page2Title);
+		fSecondPage
+				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page2Description);
 		addPage(fSecondPage);
 
 		// Third page (Include Path)
 		fThirdPage = new PHPProjectWizardThirdPage(fFirstPage);
-		fThirdPage.setTitle(PHPUIMessages
-				.getString("PHPProjectCreationWizard_Page3Title"));
-		fThirdPage.setDescription(PHPUIMessages
-				.getString("PHPProjectCreationWizard_Page3Description"));
+		fThirdPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page3Title);
+		fThirdPage
+				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page3Description);
 		addPage(fThirdPage);
 
 		fLastPage = fSecondPage;

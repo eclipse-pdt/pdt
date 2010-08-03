@@ -41,8 +41,7 @@ public class PHPEditorHoverPreferencePage extends
 	 * #setDescription()
 	 */
 	protected void setDescription() {
-		String description = PHPUIMessages
-				.getString("PHPEditorPreferencePage_hoverTab_title");
+		String description = PHPUIMessages.PHPEditorPreferencePage_hoverTab_title;
 		setDescription(description);
 	}
 

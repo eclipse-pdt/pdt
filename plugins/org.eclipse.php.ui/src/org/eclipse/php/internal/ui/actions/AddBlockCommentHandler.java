@@ -111,8 +111,8 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 				.getExistingModelForEdit(document);
 		if (model != null) {
 			try {
-				model.beginRecording(this, PHPUIMessages
-						.getString("AddBlockComment_tooltip"));
+				model.beginRecording(this,
+						PHPUIMessages.AddBlockComment_tooltip);
 				model.aboutToChangeModel();
 
 				try {

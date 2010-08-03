@@ -30,7 +30,6 @@ import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchSite;
@@ -43,10 +42,9 @@ public class ConfigurePHPIncludePathAction extends Action implements
 	private IProject fProject;
 
 	public ConfigurePHPIncludePathAction(IWorkbenchSite site) {
-		super(PHPUIMessages.getString("ConfigureIncludePathAction_label"),
+		super(PHPUIMessages.ConfigureIncludePathAction_label,
 				DLTKPluginImages.DESC_ELCL_CONFIGURE_BUILDPATH);
-		setToolTipText(PHPUIMessages
-				.getString("ConfigureIncludePathAction_tooltip"));
+		setToolTipText(PHPUIMessages.ConfigureIncludePathAction_tooltip);
 		setDisabledImageDescriptor(DLTKPluginImages.DESC_DLCL_CONFIGURE_BUILDPATH);
 		fSite = site;
 	}

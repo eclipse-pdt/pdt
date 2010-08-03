@@ -54,8 +54,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 			fGroup.setLayout(layout);
 			GridData data = new GridData(GridData.FILL_BOTH);
 			fGroup.setLayoutData(data);
-			fGroup.setText(PHPUIMessages
-					.getString("JavaScriptSupportGroup_OptionBlockTitle"));
+			fGroup.setText(PHPUIMessages.JavaScriptSupportGroup_OptionBlockTitle);
 
 			Composite checkLinkComposite = new Composite(fGroup, SWT.NONE);
 			checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
@@ -64,8 +63,8 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 
 			fEnableJavaScriptSupport = new Button(checkLinkComposite, SWT.CHECK
 					| SWT.RIGHT);
-			fEnableJavaScriptSupport.setText(PHPUIMessages
-					.getString("JavaScriptSupportGroup_EnableSupport"));
+			fEnableJavaScriptSupport
+					.setText(PHPUIMessages.JavaScriptSupportGroup_EnableSupport);
 			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING,
 					SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.setSelection(model
@@ -87,8 +86,8 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 
 	public PHPProjectWizardBasePage(IDataModel dataModel, String pageName) {
 		super(dataModel, pageName);
-		setTitle(PHPUIMessages.getString("PHPProjectWizardBasePage.0")); //$NON-NLS-1$
-		setDescription(PHPUIMessages.getString("PHPProjectWizardBasePage.1")); //$NON-NLS-1$
+		setTitle(PHPUIMessages.PHPProjectWizardBasePage_0); //$NON-NLS-1$
+		setDescription(PHPUIMessages.PHPProjectWizardBasePage_1); //$NON-NLS-1$
 		setPageComplete(false);
 	}
 

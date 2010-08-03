@@ -126,8 +126,7 @@ public class MarkOccurrencesConfigurationBlock implements
 		composite.setLayout(layout);
 
 		Link link = new Link(composite, SWT.NONE);
-		link.setText(PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_link"));
+		link.setText(PHPUIMessages.MarkOccurrencesConfigurationBlock_link);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				PreferencesUtil.createPreferenceDialogOn(parent.getShell(),
@@ -136,80 +135,69 @@ public class MarkOccurrencesConfigurationBlock implements
 		});
 		// TODO replace by link-specific tooltips when
 		// bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=88866 gets fixed
-		link.setToolTipText(PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_link_tooltip"));
+		link.setToolTipText(PHPUIMessages.MarkOccurrencesConfigurationBlock_link_tooltip);
 
 		addFiller(composite);
 
 		String label;
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markOccurrences");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markOccurrences;
 		Button master = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_OCCURRENCES, 0);
 
 		addFiller(composite);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markTypeOccurrences");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markTypeOccurrences;
 		Button slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES, 0);
 		createDependency(master, PreferenceConstants.EDITOR_STICKY_OCCURRENCES,
 				slave);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markMethodOccurrences");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markMethodOccurrences;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES, 0);
 		createDependency(master,
 				PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES, slave);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markFunctionOccurrences");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markFunctionOccurrences;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES, 0);
 		createDependency(master,
 				PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES, slave);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markConstantOccurrences");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markConstantOccurrences;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES, 0);
 		createDependency(master,
 				PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES, slave);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markGlobalVariableOccurrences");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markGlobalVariableOccurrences;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES, 0);
 		createDependency(master,
 				PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES,
 				slave);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markLocalVariableOccurrences");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markLocalVariableOccurrences;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES, 0);
 		createDependency(master,
 				PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES,
 				slave);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markMethodExitPoints");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markMethodExitPoints;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS, 0);
 		createDependency(master,
 				PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS, slave);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markImplementors");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markImplementors;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_IMPLEMENTORS, 0);
 		createDependency(master, PreferenceConstants.EDITOR_MARK_IMPLEMENTORS,
 				slave);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_markBreakContinueTargets");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_markBreakContinueTargets;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, 0);
 		createDependency(master,
@@ -217,8 +205,7 @@ public class MarkOccurrencesConfigurationBlock implements
 
 		addFiller(composite);
 
-		label = PHPUIMessages
-				.getString("MarkOccurrencesConfigurationBlock_stickyOccurrences");
+		label = PHPUIMessages.MarkOccurrencesConfigurationBlock_stickyOccurrences;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_STICKY_OCCURRENCES, 0);
 		createDependency(master, PreferenceConstants.EDITOR_STICKY_OCCURRENCES,

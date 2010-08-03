@@ -91,8 +91,8 @@ public class SaveActionsConfigurationBlock extends
 		whiteSpacesComposite.setLayoutData(data);
 
 		doCleanupCheckbox = new Button(whiteSpacesComposite, SWT.CHECK);
-		doCleanupCheckbox.setText(PHPUIMessages
-				.getString("SaveActionsConfigurationBlock_0")); //$NON-NLS-1$
+		doCleanupCheckbox
+				.setText(PHPUIMessages.SaveActionsConfigurationBlock_0); //$NON-NLS-1$
 		doCleanupCheckbox.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -109,7 +109,7 @@ public class SaveActionsConfigurationBlock extends
 		removeWhitespacesGroup.setLayoutData(data);
 
 		all = new Button(removeWhitespacesGroup, SWT.RADIO);
-		all.setText(PHPUIMessages.getString("SaveActionsConfigurationBlock_2")); //$NON-NLS-1$
+		all.setText(PHPUIMessages.SaveActionsConfigurationBlock_2); //$NON-NLS-1$
 		all.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -121,8 +121,7 @@ public class SaveActionsConfigurationBlock extends
 			}
 		});
 		ignoreEmpty = new Button(removeWhitespacesGroup, SWT.RADIO);
-		ignoreEmpty.setText(PHPUIMessages
-				.getString("SaveActionsConfigurationBlock_3")); //$NON-NLS-1$
+		ignoreEmpty.setText(PHPUIMessages.SaveActionsConfigurationBlock_3); //$NON-NLS-1$
 		ignoreEmpty.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}

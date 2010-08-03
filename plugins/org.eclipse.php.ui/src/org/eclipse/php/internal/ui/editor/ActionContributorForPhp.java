@@ -80,8 +80,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 				.getBundleForConstructedKeys();
 
 		fRetargetShowPHPDoc = new RetargetAction(
-				PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages
-						.getString("ShowPHPDoc_label"));
+				PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages.ShowPHPDoc_label);
 		fRetargetShowPHPDoc
 				.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		fPartListeners.add(fRetargetShowPHPDoc);
@@ -136,7 +135,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	protected void addToMenu(IMenuManager menu) {
 		super.addToMenu(menu);
 		// source commands
-		String sourceMenuLabel = PHPUIMessages.getString("SourceMenu_label");
+		String sourceMenuLabel = PHPUIMessages.SourceMenu_label;
 		String sourceMenuId = "sourceMenuId"; //$NON-NLS-1$
 		IMenuManager sourceMenu = new MenuManager(sourceMenuLabel, sourceMenuId);
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, sourceMenu);
@@ -205,14 +204,18 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 				IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
 		fOpenTypeHierarchy.setAction(getAction(editor,
 				IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
-		getActionBars().setGlobalActionHandler(PHPActionConstants.OPEN_TYPE_HIERARCHY, getAction(editor,
-				IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
+		getActionBars().setGlobalActionHandler(
+				PHPActionConstants.OPEN_TYPE_HIERARCHY,
+				getAction(editor,
+						IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
 		fOpenHierarchy.setAction(getAction(editor,
 				IScriptEditorActionDefinitionIds.OPEN_HIERARCHY));
 		fOpenCallHierarchy.setAction(getAction(editor,
 				IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
-		getActionBars().setGlobalActionHandler(PHPActionConstants.OPEN_CALL_HIERARCHY, getAction(editor,
-				IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
+		getActionBars().setGlobalActionHandler(
+				PHPActionConstants.OPEN_CALL_HIERARCHY,
+				getAction(editor,
+						IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
 
 		fToggleComment
 				.setAction(getAction(

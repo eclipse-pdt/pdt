@@ -195,21 +195,19 @@ public class PHPManualConfigurationBlock implements
 
 		PHPManualAdapter adapter = new PHPManualAdapter();
 		String buttons[] = new String[] {
-				PHPUIMessages.getString("PHPManualConfigurationBlock_new"),
-				PHPUIMessages.getString("PHPManualConfigurationBlock_edit"),
-				PHPUIMessages.getString("PHPManualConfigurationBlock_remove"),
-				null,
-				PHPUIMessages.getString("PHPManualConfigurationBlock_default") };
+				PHPUIMessages.PHPManualConfigurationBlock_new,
+				PHPUIMessages.PHPManualConfigurationBlock_edit,
+				PHPUIMessages.PHPManualConfigurationBlock_remove, null,
+				PHPUIMessages.PHPManualConfigurationBlock_default };
 		fPHPManualButtonsList = new ListDialogField<PHPManualConfig>(adapter,
 				buttons, new PHPManualLabelProvider());
 		fPHPManualButtonsList.setDialogFieldListener(adapter);
 		fPHPManualButtonsList.setRemoveButtonIndex(IDX_REMOVE);
 
 		String[] columnsHeaders = new String[] {
-				PHPUIMessages.getString("PHPManualConfigurationBlock_siteName"),
-				PHPUIMessages.getString("PHPManualConfigurationBlock_url"),
-				PHPUIMessages
-						.getString("PHPManualConfigurationBlock_fileExtension") };
+				PHPUIMessages.PHPManualConfigurationBlock_siteName,
+				PHPUIMessages.PHPManualConfigurationBlock_url,
+				PHPUIMessages.PHPManualConfigurationBlock_fileExtension };
 		fPHPManualButtonsList
 				.setTableColumns(new ListDialogField.ColumnsDescription(
 						columnsHeaders, true));
@@ -250,10 +248,9 @@ public class PHPManualConfigurationBlock implements
 				GridData.HORIZONTAL_ALIGN_FILL
 						| GridData.VERTICAL_ALIGN_BEGINNING));
 
-		addCheckBox(
-				composite,
-				PHPUIMessages
-						.getString("PHPManualConfigurationBlock_openInNewBrowser"), PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER, 0); //$NON-NLS-1$
+		addCheckBox(composite,
+				PHPUIMessages.PHPManualConfigurationBlock_openInNewBrowser,
+				PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER, 0); //$NON-NLS-1$
 		addFiller(composite);
 
 		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);

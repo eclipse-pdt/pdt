@@ -77,10 +77,10 @@ public class PHPActionDelegatorRegistry {
 								.createExecutableExtension(CLASS_ATTRIBUTE);
 						topPriority = currentPriority;
 					} catch (CoreException e) {
-						Logger
-								.logException(
-										PHPUIMessages
-												.getString("PHPActionDelegatorRegistry.0") + element.getAttribute(CLASS_ATTRIBUTE), e); //$NON-NLS-1$
+						Logger.logException(
+								PHPUIMessages.PHPActionDelegatorRegistry_0
+										+ element.getAttribute(CLASS_ATTRIBUTE),
+								e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -118,10 +118,10 @@ public class PHPActionDelegatorRegistry {
 								.createExecutableExtension(CLASS_ATTRIBUTE);
 						topPriority = currentPriority;
 					} catch (CoreException e) {
-						Logger
-								.logException(
-										PHPUIMessages
-												.getString("PHPActionDelegatorRegistry.1") + element.getAttribute(CLASS_ATTRIBUTE), e); //$NON-NLS-1$
+						Logger.logException(
+								PHPUIMessages.PHPActionDelegatorRegistry_1
+										+ element.getAttribute(CLASS_ATTRIBUTE),
+								e); //$NON-NLS-1$
 					}
 				}
 			}

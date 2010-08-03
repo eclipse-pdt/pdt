@@ -69,16 +69,14 @@ public class IPVariableElementLabelProvider extends LabelProvider implements
 			StringBuffer buf = new StringBuffer(name);
 			if (curr.isReserved()) {
 				buf.append(' ');
-				buf.append(PHPUIMessages
-						.getString("CPVariableElementLabelProvider_reserved"));
+				buf.append(PHPUIMessages.CPVariableElementLabelProvider_reserved);
 			}
 			if (path != null) {
 				buf.append(" - "); //$NON-NLS-1$
 				if (!path.isEmpty()) {
 					buf.append(path.toOSString());
 				} else {
-					buf.append(PHPUIMessages
-							.getString("CPVariableElementLabelProvider_empty"));
+					buf.append(PHPUIMessages.CPVariableElementLabelProvider_empty);
 				}
 			}
 			return buf.toString();

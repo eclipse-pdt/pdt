@@ -24,10 +24,8 @@ public class NewPhpTemplatesWizardPage extends
 		NewGenericFileTemplatesWizardPage {
 
 	public NewPhpTemplatesWizardPage() {
-		super(
-				PHPUIMessages.getString("newPhpFile_wizard_templatePage_title"),
-				PHPUIMessages
-						.getString("newPhpFile_wizard_templatePage_description"));
+		super(PHPUIMessages.newPhpFile_wizard_templatePage_title,
+				PHPUIMessages.newPhpFile_wizard_templatePage_description);
 	}
 
 	protected String getTemplateContextTypeId() {
@@ -35,8 +33,7 @@ public class NewPhpTemplatesWizardPage extends
 	}
 
 	protected String getUseTemplateMessage() {
-		return PHPUIMessages
-				.getString("newPhpFile_wizard_templatePage_usePhpTemplate");
+		return PHPUIMessages.newPhpFile_wizard_templatePage_usePhpTemplate;
 	}
 
 	protected ContextTypeRegistry getTemplatesContextTypeRegistry() {
@@ -50,8 +47,7 @@ public class NewPhpTemplatesWizardPage extends
 		String name = templateContextType.getName();
 		return NLS
 				.bind(
-						PHPUIMessages
-								.getString("newPhpFile_wizard_templatePage_phpTemplatesLocation"),
+						PHPUIMessages.newPhpFile_wizard_templatePage_phpTemplatesLocation,
 						name);
 	}
 

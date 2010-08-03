@@ -43,17 +43,16 @@ public class OpenAction extends SelectionDispatchAction {
 	/**
 	 * Creates a new <code>OpenAction</code>. The action requires that the
 	 * selection provided by the site's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>
-	 * .
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param site
 	 *            the site providing context information for this action
 	 */
 	public OpenAction(IWorkbenchSite site) {
 		super(site);
-		setText(PHPUIMessages.getString("OpenAction_label"));
-		setToolTipText(PHPUIMessages.getString("OpenAction_tooltip"));
-		setDescription(PHPUIMessages.getString("OpenAction_description"));
+		setText(PHPUIMessages.OpenAction_label);
+		setToolTipText(PHPUIMessages.OpenAction_tooltip);
+		setDescription(PHPUIMessages.OpenAction_description);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 				IIDEHelpContextIds.OPEN_RESOURCE_ACTION);
 	}
@@ -133,8 +132,8 @@ public class OpenAction extends SelectionDispatchAction {
 			IEditorStatusLine statusLine = (IEditorStatusLine) fEditor
 					.getAdapter(IEditorStatusLine.class);
 			if (statusLine != null)
-				statusLine.setMessage(true, PHPUIMessages
-						.getString("OpenAction_error_messageBadSelection"),
+				statusLine.setMessage(true,
+						PHPUIMessages.OpenAction_error_messageBadSelection,
 						null);
 			getShell().getDisplay().beep();
 			return;
@@ -180,11 +179,11 @@ public class OpenAction extends SelectionDispatchAction {
 					OpenActionUtil.open(element, activateOnOpen);
 				}
 			} catch (PartInitException x) {
-				MessageDialog.openError(getShell(), PHPUIMessages
-						.getString("OpenAction_error_messageProblems"), ""); //$NON-NLS-1$
+				MessageDialog.openError(getShell(),
+						PHPUIMessages.OpenAction_error_messageProblems, ""); //$NON-NLS-1$
 			} catch (ModelException e) {
-				MessageDialog.openError(getShell(), PHPUIMessages
-						.getString("OpenAction_error_messageProblems"), ""); //$NON-NLS-1$
+				MessageDialog.openError(getShell(),
+						PHPUIMessages.OpenAction_error_messageProblems, ""); //$NON-NLS-1$
 			}
 		}
 	}
@@ -202,7 +201,7 @@ public class OpenAction extends SelectionDispatchAction {
 	}
 
 	private String getDialogTitle() {
-		return PHPUIMessages.getString("OpenAction_error_title");
+		return PHPUIMessages.OpenAction_error_title;
 	}
 
 }

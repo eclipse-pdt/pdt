@@ -28,7 +28,7 @@ public class SaveActionsPreferencePage extends PropertyAndPreferencePage {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 
 		// only used when page is shown programatically
-		setTitle(PHPUIMessages.getString("PHPSaveActionsPreferencePage_title"));
+		setTitle(PHPUIMessages.PHPSaveActionsPreferencePage_title);
 	}
 
 	/*

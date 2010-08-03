@@ -55,8 +55,7 @@ public class PHPVersionGroup implements SelectionListener {
 		fGroup.setLayout(layout);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		fGroup.setLayoutData(data);
-		fGroup.setText(PHPUIMessages
-				.getString("PHPVersionGroup_OptionBlockTitle"));
+		fGroup.setText(PHPUIMessages.PHPVersionGroup_OptionBlockTitle);
 
 		Composite checkLinkComposite = new Composite(fGroup, SWT.NONE);
 		checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
@@ -65,8 +64,8 @@ public class PHPVersionGroup implements SelectionListener {
 
 		fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK
 				| SWT.RIGHT);
-		fEnableProjectSettings.setText(PHPUIMessages
-				.getString("PHPVersionGroup_EnableProjectSettings"));
+		fEnableProjectSettings
+				.setText(PHPUIMessages.PHPVersionGroup_EnableProjectSettings);
 		fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING,
 				SWT.CENTER, false, false));
 
@@ -80,8 +79,8 @@ public class PHPVersionGroup implements SelectionListener {
 		fPreferenceLink.setFont(fGroup.getFont());
 		fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
 				true, false));
-		fPreferenceLink.setText(PHPUIMessages
-				.getString("PHPVersionGroup_ConfigWorkspaceSettings"));
+		fPreferenceLink
+				.setText(PHPUIMessages.PHPVersionGroup_ConfigWorkspaceSettings);
 		fPreferenceLink.addSelectionListener(this);
 
 		Composite versionComposite = new Composite(fGroup, SWT.NONE);

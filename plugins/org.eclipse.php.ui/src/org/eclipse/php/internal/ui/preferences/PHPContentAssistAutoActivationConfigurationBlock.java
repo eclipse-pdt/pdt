@@ -37,10 +37,9 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(
 				parent,
-				PHPUIMessages
-						.getString("CodeAssistPreferencePage_autoActivationSectionLabel"));
-		autoActivationCheckBox = addCheckBox(composite, PHPUIMessages
-				.getString("CodeAssistPreferencePage_enableAutoActivation"),
+				PHPUIMessages.CodeAssistPreferencePage_autoActivationSectionLabel);
+		autoActivationCheckBox = addCheckBox(composite,
+				PHPUIMessages.CodeAssistPreferencePage_enableAutoActivation,
 				PHPCoreConstants.CODEASSIST_AUTOACTIVATION, 0);
 		autoActivationCheckBox.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -58,18 +57,14 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends
 
 		autoActivationDelay = addLabelledTextField(
 				composite,
-				PHPUIMessages
-						.getString("CodeAssistPreferencePage_autoActivationDelay"),
+				PHPUIMessages.CodeAssistPreferencePage_autoActivationDelay,
 				PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY,
 				4,
 				20,
 				new PositiveIntegerStringValidator(
-						PHPUIMessages
-								.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"),
-						PHPUIMessages
-								.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"),
-						PHPUIMessages
-								.getString("CodeAssistPreferencePage_autoActivationDelayPositive")));
+						PHPUIMessages.CodeAssistPreferencePage_autoActivationDelayIntValue,
+						PHPUIMessages.CodeAssistPreferencePage_autoActivationDelayIntValue,
+						PHPUIMessages.CodeAssistPreferencePage_autoActivationDelayPositive));
 
 		setControlsEnablement();
 	}

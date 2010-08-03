@@ -33,8 +33,7 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 
 	public PHPAppearancePreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
-		setDescription(PHPUIMessages
-				.getString("PHPAppearancePreferencePage_appearanceHeader")); //$NON-NLS-1$
+		setDescription(PHPUIMessages.PHPAppearancePreferencePage_appearanceHeader); //$NON-NLS-1$
 	}
 
 	protected void initializeValues() {
@@ -52,8 +51,8 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 		comp.setLayout(gridLayout);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		showReturnTypeCB = new Button(comp, SWT.CHECK);
-		showReturnTypeCB.setText(PHPUIMessages
-				.getString("PHPAppearancePreferencePage_showMehodsReturnType")); //$NON-NLS-1$
+		showReturnTypeCB
+				.setText(PHPUIMessages.PHPAppearancePreferencePage_showMehodsReturnType); //$NON-NLS-1$
 		showReturnTypeCB.setLayoutData(gd);
 	}
 

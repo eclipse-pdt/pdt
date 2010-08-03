@@ -414,7 +414,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		}
 
 		public String getLabel() {
-			return PHPUIMessages.getString("IncludePathExplorerNode_label");
+			return PHPUIMessages.IncludePathExplorerNode_label;
 		}
 
 		public IAdaptable[] getChildren() {

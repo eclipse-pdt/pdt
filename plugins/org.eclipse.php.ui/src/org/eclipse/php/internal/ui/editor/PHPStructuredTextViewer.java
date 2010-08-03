@@ -221,19 +221,14 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 								.getActiveWorkbenchShell();
 						// Pop a question dialog - if the user selects 'Yes' JS
 						// Support is added, otherwise no change
-						int addJavaScriptSupport = OptionalMessageDialog
-								.open(
-										"PROMPT_ADD_JAVASCRIPT_SUPPORT",
-										activeWorkbenchShell,
-										PHPUIMessages
-												.getString("PHPStructuredTextViewer.0"),
-										null,
-										PHPUIMessages
-												.getString("PHPStructuredTextViewer.1"),
-										OptionalMessageDialog.QUESTION,
-										new String[] {
-												IDialogConstants.YES_LABEL,
-												IDialogConstants.NO_LABEL }, 0); //$NON-NLS-1$
+						int addJavaScriptSupport = OptionalMessageDialog.open(
+								"PROMPT_ADD_JAVASCRIPT_SUPPORT",
+								activeWorkbenchShell,
+								PHPUIMessages.PHPStructuredTextViewer_0, null,
+								PHPUIMessages.PHPStructuredTextViewer_1,
+								OptionalMessageDialog.QUESTION, new String[] {
+										IDialogConstants.YES_LABEL,
+										IDialogConstants.NO_LABEL }, 0); //$NON-NLS-1$
 
 						// run the JSDT action for adding the JS nature
 						if (addJavaScriptSupport == 0 && project != null) {

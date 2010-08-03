@@ -112,8 +112,8 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 				.getExistingModelForEdit(document);
 		if (model != null) {
 			try {
-				model.beginRecording(this, PHPUIMessages
-						.getString("RemoveBlockComment_tooltip"));
+				model.beginRecording(this,
+						PHPUIMessages.RemoveBlockComment_tooltip);
 				model.aboutToChangeModel();
 
 				if (document instanceof IStructuredDocument) {

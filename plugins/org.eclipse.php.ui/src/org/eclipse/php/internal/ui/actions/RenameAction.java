@@ -82,14 +82,10 @@ public class RenameAction implements IWorkbenchWindowActionDelegate,
 							resource);
 					resourceAction.run(resourceSel);
 				} else {
-					MessageDialog
-							.openInformation(
-									PlatformUI.getWorkbench().getDisplay()
-											.getActiveShell(),
-									PHPUIMessages
-											.getString("RenamePHPElementAction_name"),
-									PHPUIMessages
-											.getString("RenamePHPElementAction_not_available"));
+					MessageDialog.openInformation(PlatformUI.getWorkbench()
+							.getDisplay().getActiveShell(),
+							PHPUIMessages.RenamePHPElementAction_name,
+							PHPUIMessages.RenamePHPElementAction_not_available);
 				}
 			}
 		} else {

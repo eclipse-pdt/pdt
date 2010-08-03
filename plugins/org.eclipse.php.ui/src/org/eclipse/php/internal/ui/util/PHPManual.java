@@ -248,9 +248,8 @@ public class PHPManual {
 			buf.append(className);
 			buf.append("-"); //$NON-NLS-1$
 		}
-		buf
-				.append(Pattern
-						.compile("([A-Z])").matcher(methodName).replaceAll("-$1").replaceAll("_", "-")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$)
+		buf.append(Pattern
+				.compile("([A-Z])").matcher(methodName).replaceAll("-$1").replaceAll("_", "-")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$)
 		return buf.toString().toLowerCase().replaceAll("-+", "-"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -289,9 +288,9 @@ public class PHPManual {
 					// need to open some kind of err dialog and return
 					MessageDialog d = new MessageDialog(PlatformUI
 							.getWorkbench().getActiveWorkbenchWindow()
-							.getShell(), PHPUIMessages
-							.getString("PHPManual_title"), null, //$NON-NLS-1$
-							PHPUIMessages.getString("PHPManual_noManual_msg"), //$NON-NLS-1$
+							.getShell(), PHPUIMessages.PHPManual_title,
+							null, //$NON-NLS-1$
+							PHPUIMessages.PHPManual_noManual_msg, //$NON-NLS-1$
 							MessageDialog.INFORMATION,
 							new String[] { IDialogConstants.OK_LABEL }, 0);
 					d.open();

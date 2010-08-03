@@ -31,17 +31,15 @@ public class PHPContentAssistFiltersConfigurationBlock extends
 	protected Button showStrictOptionsCheckBox;
 
 	public void setCompositeAddon(Composite parent) {
-		Composite composite = createSubsection(parent, PHPUIMessages
-				.getString("CodeAssistPreferencePage_filtersSectionLabel"));
+		Composite composite = createSubsection(parent,
+				PHPUIMessages.CodeAssistPreferencePage_filtersSectionLabel);
 		caseSensitivityCheckBox = addCheckBox(
 				composite,
-				PHPUIMessages
-						.getString("CodeAssistPreferencePage_caseSensitiveForConstants"),
+				PHPUIMessages.CodeAssistPreferencePage_caseSensitiveForConstants,
 				PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, 0);
-		showStrictOptionsCheckBox = addCheckBox(
-				composite,
-				PHPUIMessages
-						.getString("CodeAssistPreferencePage_showStrictOptions"), PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0); //$NON-NLS-1$
+		showStrictOptionsCheckBox = addCheckBox(composite,
+				PHPUIMessages.CodeAssistPreferencePage_showStrictOptions,
+				PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0); //$NON-NLS-1$
 	}
 
 	protected IPreferenceStore getPreferenceStore() {

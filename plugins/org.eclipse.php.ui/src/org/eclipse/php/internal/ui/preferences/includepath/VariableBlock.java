@@ -56,9 +56,9 @@ public class VariableBlock {
 		fAskToBuild = true;
 
 		String[] buttonLabels = new String[] {
-				PHPUIMessages.getString("VariableBlock_vars_add_button"),
-				PHPUIMessages.getString("VariableBlock_vars_edit_button"),
-				PHPUIMessages.getString("VariableBlock_vars_remove_button") };
+				PHPUIMessages.VariableBlock_vars_add_button,
+				PHPUIMessages.VariableBlock_vars_edit_button,
+				PHPUIMessages.VariableBlock_vars_remove_button };
 
 		VariablesAdapter adapter = new VariablesAdapter();
 
@@ -68,8 +68,7 @@ public class VariableBlock {
 		fVariablesList = new ListDialogField(adapter, buttonLabels,
 				labelProvider);
 		fVariablesList.setDialogFieldListener(adapter);
-		fVariablesList.setLabelText(PHPUIMessages
-				.getString("VariableBlock_vars_label"));
+		fVariablesList.setLabelText(PHPUIMessages.VariableBlock_vars_label);
 		fVariablesList.setRemoveButtonIndex(2);
 
 		fVariablesList.enableButton(1, false);
@@ -265,10 +264,8 @@ public class VariableBlock {
 			if (fAskToBuild
 					&& doesChangeRequireFullBuild(removedVariables,
 							changedVariables)) {
-				String title = PHPUIMessages
-						.getString("VariableBlock_needsbuild_title");
-				String message = PHPUIMessages
-						.getString("VariableBlock_needsbuild_message");
+				String title = PHPUIMessages.VariableBlock_needsbuild_title;
+				String message = PHPUIMessages.VariableBlock_needsbuild_message;
 
 				MessageDialog buildDialog = new MessageDialog(getShell(),
 						title, null, message, MessageDialog.QUESTION,
@@ -285,8 +282,7 @@ public class VariableBlock {
 			final VariableBlockRunnable runnable = new VariableBlockRunnable(
 					removedVariables, changedElements, unchangedElements,
 					needsBuild);
-			Job buildJob = new Job(PHPUIMessages
-					.getString("VariableBlock_job_description")) {
+			Job buildJob = new Job(PHPUIMessages.VariableBlock_job_description) {
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
 						runnable.setVariables(monitor);
@@ -355,9 +351,8 @@ public class VariableBlock {
 		 */
 		public void run(IProgressMonitor monitor)
 				throws InvocationTargetException, InterruptedException {
-			monitor.beginTask(PHPUIMessages
-					.getString("VariableBlock_operation_desc"), fDoBuild ? 2
-					: 1);
+			monitor.beginTask(PHPUIMessages.VariableBlock_operation_desc,
+					fDoBuild ? 2 : 1);
 			try {
 				setVariables(monitor);
 

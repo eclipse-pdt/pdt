@@ -41,16 +41,15 @@ public class RefreshAction extends SelectionDispatchAction {
 	/**
 	 * Creates a new <code>RefreshAction</code>. The action requires that the
 	 * selection provided by the site's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>
-	 * .
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
 	 * @param site
 	 *            the site providing context information for this action
 	 */
 	public RefreshAction(IWorkbenchSite site) {
 		super(site);
-		setText(PHPUIMessages.getString("RefreshAction_label"));
-		setToolTipText(PHPUIMessages.getString("RefreshAction_toolTip"));
+		setText(PHPUIMessages.RefreshAction_label);
+		setToolTipText(PHPUIMessages.RefreshAction_toolTip);
 		PHPPluginImages.setLocalImageDescriptors(this, "refresh_nav.gif");//$NON-NLS-1$
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 				IIDEHelpContextIds.REFRESH_ACTION);
@@ -90,8 +89,7 @@ public class RefreshAction extends SelectionDispatchAction {
 		final IResource[] resources = getResources(selection);
 		IWorkspaceRunnable operation = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
-				monitor.beginTask(PHPUIMessages
-						.getString("RefreshAction_progressMessage"),
+				monitor.beginTask(PHPUIMessages.RefreshAction_progressMessage,
 						resources.length * 2);
 				monitor.subTask(""); //$NON-NLS-1$
 				List javaElements = new ArrayList(5);
@@ -116,9 +114,9 @@ public class RefreshAction extends SelectionDispatchAction {
 			PlatformUI.getWorkbench().getProgressService().run(true, true,
 					new WorkbenchRunnableAdapter(operation));
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, getShell(), PHPUIMessages
-					.getString("RefreshAction_error_title"), PHPUIMessages
-					.getString("RefreshAction_error_message"));
+			ExceptionHandler.handle(e, getShell(),
+					PHPUIMessages.RefreshAction_error_title,
+					PHPUIMessages.RefreshAction_error_message);
 		} catch (InterruptedException e) {
 			// canceled
 		}
@@ -167,8 +165,8 @@ public class RefreshAction extends SelectionDispatchAction {
 			return;
 		IFileStore store = EFS.getStore(location);
 		if (!store.fetchInfo().exists()) {
-			final String message = MessageFormat.format(PHPUIMessages
-					.getString("RefreshAction_locationDeleted_message"), //$NON-NLS-1$
+			final String message = MessageFormat.format(
+					PHPUIMessages.RefreshAction_locationDeleted_message, //$NON-NLS-1$
 					new Object[] { project.getName(),
 							Resources.getLocationString(project) });
 			final boolean[] result = new boolean[1];
@@ -176,12 +174,9 @@ public class RefreshAction extends SelectionDispatchAction {
 			// here).
 			getShell().getDisplay().syncExec(new Runnable() {
 				public void run() {
-					result[0] = MessageDialog
-							.openQuestion(
-									getShell(),
-									PHPUIMessages
-											.getString("RefreshAction_locationDeleted_title"),
-									message);
+					result[0] = MessageDialog.openQuestion(getShell(),
+							PHPUIMessages.RefreshAction_locationDeleted_title,
+							message);
 				}
 			});
 			if (result[0]) {

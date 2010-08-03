@@ -78,9 +78,9 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		try {
 			run(element);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, PHPUIMessages
-					.getString("RenamePHPElementAction_name"), PHPUIMessages
-					.getString("RenamePHPElementAction_exception"));
+			ExceptionHandler.handle(e,
+					PHPUIMessages.RenamePHPElementAction_name,
+					PHPUIMessages.RenamePHPElementAction_exception);
 		}
 	}
 
@@ -99,13 +99,13 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 				return;
 			}
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, PHPUIMessages
-					.getString("RenamePHPElementAction_name"), PHPUIMessages
-					.getString("RenamePHPElementAction_exception"));
+			ExceptionHandler.handle(e,
+					PHPUIMessages.RenamePHPElementAction_name,
+					PHPUIMessages.RenamePHPElementAction_exception);
 		}
-		MessageDialog.openInformation(getShell(), PHPUIMessages
-				.getString("RenamePHPElementAction_name"), PHPUIMessages
-				.getString("RenamePHPElementAction_not_available"));
+		MessageDialog.openInformation(getShell(),
+				PHPUIMessages.RenamePHPElementAction_name,
+				PHPUIMessages.RenamePHPElementAction_not_available);
 	}
 
 	public boolean canRun() throws ModelException {
@@ -133,8 +133,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	private void run(IModelElement element) throws CoreException {
 		if (!ActionUtils.isProcessable(getShell(), element))
 			return;
-		throw new RuntimeException(PHPUIMessages
-				.getString("RenamePHPElementAction.0")); //$NON-NLS-1$
+		throw new RuntimeException(PHPUIMessages.RenamePHPElementAction_0); //$NON-NLS-1$
 	}
 
 	private static boolean isRenameAvailable(IModelElement element)

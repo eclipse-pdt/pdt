@@ -135,10 +135,9 @@ public class PHPPreferencePageBlocksRegistry {
 		}
 
 		public IPHPPreferencePageBlock createPHPPreferencePageBlock() {
-			SafeRunner
-					.run(new SafeRunnable(
-							PHPUIMessages
-									.getString("PHPPreferencePageBlocksRegistry.0") + PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) { //$NON-NLS-1$ //$NON-NLS-2$
+			SafeRunner.run(new SafeRunnable(
+					PHPUIMessages.PHPPreferencePageBlocksRegistry_0
+							+ PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) { //$NON-NLS-1$ //$NON-NLS-2$
 						public void run() throws Exception {
 							try {
 								preferencesPageBlock = (IPHPPreferencePageBlock) element

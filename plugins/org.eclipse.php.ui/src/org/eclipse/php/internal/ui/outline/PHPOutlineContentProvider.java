@@ -275,10 +275,9 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		private ISourceModule sourceModule;
 
 		public UseStatementsNode(ISourceModule sourceModule) {
-			super(
-					(ModelElement) sourceModule,
-					PHPUIMessages
-							.getString("PHPOutlineContentProvider_useStatementsNode"), 0, null); //$NON-NLS-1$
+			super((ModelElement) sourceModule,
+					PHPUIMessages.PHPOutlineContentProvider_useStatementsNode,
+					0, null); //$NON-NLS-1$
 			this.sourceModule = sourceModule;
 		}
 

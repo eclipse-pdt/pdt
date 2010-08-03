@@ -100,9 +100,8 @@ public class SaveFilesHandler {
 		}
 
 		public void run() {
-			monitor
-					.beginTask(
-							PHPUIMessages.getString("SaveFilesHandler.0"), dirtyEditors.size()); //$NON-NLS-1$
+			monitor.beginTask(PHPUIMessages.SaveFilesHandler_0, dirtyEditors
+					.size()); //$NON-NLS-1$
 			for (Iterator i = dirtyEditors.iterator(); i.hasNext();) {
 				if (monitor.isCanceled()) {
 					return;

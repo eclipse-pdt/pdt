@@ -177,8 +177,8 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 				IDE.SharedImages.IMG_OBJ_PROJECT);
 		fProjectsPage = new PHPProjectsWorkbookPage(fBuildPathList,
 				fPageContainer);
-		fProjectsPage.setTitle(PHPUIMessages
-				.getString("IncludePathProjectsPage_Folders_Label")); //$NON-NLS-1$
+		fProjectsPage
+				.setTitle(PHPUIMessages.IncludePathProjectsPage_Folders_Label); //$NON-NLS-1$
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_projects);
 		item.setImage(projectImage);
@@ -186,8 +186,8 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		item.setControl(fProjectsPage.getControl(folder));
 		fLibrariesPage = new PHPLibrariesWorkbookPage(this.supportZips(),
 				fBuildPathList, fPageContainer);
-		fLibrariesPage.setTitle(PHPUIMessages
-				.getString("IncludePathLibrariesPage_Folders_Label")); //$NON-NLS-1$
+		fLibrariesPage
+				.setTitle(PHPUIMessages.IncludePathLibrariesPage_Folders_Label); //$NON-NLS-1$
 		fLibrariesPage.setScriptProject(getScriptProject());
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_libraries);
@@ -200,9 +200,9 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		composite.addDisposeListener(new ImageDisposer(cpoImage));
 		PHPBuildpathOrderingWorkbookPage ordpage = new PHPBuildpathOrderingWorkbookPage(
 				fBuildPathList);
-		setTitle(PHPUIMessages.getString("IncludePathOrderPage_Folders_Label")); //$NON-NLS-1$
+		setTitle(PHPUIMessages.IncludePathOrderPage_Folders_Label); //$NON-NLS-1$
 		item = new TabItem(folder, SWT.NONE);
-		item.setText(PHPUIMessages.getString("BuildPathsBlock_tab_order")); //$NON-NLS-1$
+		item.setText(PHPUIMessages.BuildPathsBlock_tab_order); //$NON-NLS-1$
 		item.setImage(cpoImage);
 		item.setData(ordpage);
 		item.setControl(ordpage.getControl(folder));
@@ -293,8 +293,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor
-				.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_Script);
+		monitor.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_Script);
 		monitor.beginTask("", buildpathEntries.size() * 4 + 4); //$NON-NLS-1$
 		try {
 			IProject project = javaProject.getProject();

@@ -164,8 +164,7 @@ public class BasicSelector extends Composite {
 
 	private void createMatchingLabel() {
 		matchingLabel = new Label(this, SWT.NONE);
-		matchingLabel.setText(PHPUIMessages
-				.getString("OpenType_matchingResources"));
+		matchingLabel.setText(PHPUIMessages.OpenType_matchingResources);
 	}
 
 	private void createFilterText() {
@@ -193,8 +192,7 @@ public class BasicSelector extends Composite {
 
 	private void createInstructionLabel() {
 		instructionLabel = new Label(this, SWT.NONE);
-		instructionLabel.setText(PHPUIMessages
-				.getString("OpenType_instructionText"));
+		instructionLabel.setText(PHPUIMessages.OpenType_instructionText);
 	}
 
 	public void setElements(Object[] elements) {

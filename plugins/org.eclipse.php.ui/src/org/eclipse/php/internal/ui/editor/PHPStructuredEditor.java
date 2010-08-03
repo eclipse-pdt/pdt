@@ -2110,8 +2110,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		int selectionLength = Math.abs(selection.getLength());
 		if (selectionLength > 1) {
-			setStatusLineErrorMessage(PHPUIMessages
-					.getString("GotoMatchingBracket_error_invalidSelection"));
+			setStatusLineErrorMessage(PHPUIMessages.GotoMatchingBracket_error_invalidSelection);
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -2123,8 +2122,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		IRegion region = fBracketMatcher.match(document, sourceCaretOffset);
 		if (region == null) {
-			setStatusLineErrorMessage(PHPUIMessages
-					.getString("GotoMatchingBracket_error_noMatchingBracket"));
+			setStatusLineErrorMessage(PHPUIMessages.GotoMatchingBracket_error_noMatchingBracket);
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -2153,8 +2151,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		}
 
 		if (!visible) {
-			setStatusLineErrorMessage(PHPUIMessages
-					.getString("GotoMatchingBracket_error_bracketOutsideSelectedElement"));
+			setStatusLineErrorMessage(PHPUIMessages.GotoMatchingBracket_error_bracketOutsideSelectedElement);
 			sourceViewer.getTextWidget().getDisplay().beep();
 			return;
 		}
@@ -2285,7 +2282,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
-		
+
 		setHelpContextId("editor_preferences");//$NON-NLS-1$
 	}
 
@@ -3430,14 +3427,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			progressMonitor = Progress.getMonitor(progressMonitor);
 			progressMonitor
 					.beginTask(
-							PHPUIMessages
-									.getString("RemoveTrailingWhitespaceOperation_task_generatingChanges"),
+							PHPUIMessages.RemoveTrailingWhitespaceOperation_task_generatingChanges,
 							lineCount);
 			try {
 
 				MultiTextEditWithProgress multiEdit = new MultiTextEditWithProgress(
-						PHPUIMessages
-								.getString("RemoveTrailingWhitespaceOperation_task_applyingChanges"));
+						PHPUIMessages.RemoveTrailingWhitespaceOperation_task_applyingChanges);
 
 				for (int i = 0; i < lineCount; i++) {
 					if (progressMonitor.isCanceled()) {

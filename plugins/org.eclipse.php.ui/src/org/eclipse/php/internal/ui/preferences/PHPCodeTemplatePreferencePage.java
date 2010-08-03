@@ -39,8 +39,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 
 	public PHPCodeTemplatePreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
-		setDescription(PHPUIMessages
-				.getString("CodeTemplatesPreferencePage_title")); //$NON-NLS-1$
+		setDescription(PHPUIMessages.CodeTemplatesPreferencePage_title); //$NON-NLS-1$
 
 		// only used when page is shown programatically
 		// TODO -

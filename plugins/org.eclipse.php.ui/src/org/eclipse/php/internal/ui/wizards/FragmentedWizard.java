@@ -163,8 +163,8 @@ public class FragmentedWizard implements IWizard {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
-				MessageDialog.openError(shell, PHPUIMessages
-						.getString("FragmentedWizard.0"), message); //$NON-NLS-1$
+				MessageDialog.openError(shell,
+						PHPUIMessages.FragmentedWizard_0, message); //$NON-NLS-1$
 			}
 		});
 	}
@@ -180,8 +180,8 @@ public class FragmentedWizard implements IWizard {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
-				ErrorDialog.openError(shell, PHPUIMessages
-						.getString("FragmentedWizard.1"), message, status); //$NON-NLS-1$
+				ErrorDialog.openError(shell, PHPUIMessages.FragmentedWizard_1,
+						message, status); //$NON-NLS-1$
 			}
 		});
 	}

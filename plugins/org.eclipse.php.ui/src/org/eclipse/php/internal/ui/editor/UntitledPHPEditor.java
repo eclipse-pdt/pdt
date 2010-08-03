@@ -101,12 +101,10 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 			Logger.logException(x);
 			final IStatus status = x.getStatus();
 			if (status == null || status.getSeverity() != IStatus.CANCEL) {
-				String title = PHPUIMessages
-						.getString("UntitledPHPEditor_saveError"); //$NON-NLS-1$
-				String msg = NLSUtility
-						.format(
-								PHPUIMessages
-										.getString("UntitledPHPEditor_documentCannotBeSaved"), x.getMessage()); //$NON-NLS-1$
+				String title = PHPUIMessages.UntitledPHPEditor_saveError; //$NON-NLS-1$
+				String msg = NLSUtility.format(
+						PHPUIMessages.UntitledPHPEditor_documentCannotBeSaved,
+						x.getMessage()); //$NON-NLS-1$
 				MessageDialog.openError(shell, title, msg);
 			}
 		} finally {
@@ -151,8 +149,8 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 		File oldFile = new File(oldPath.toOSString());
 		if (oldFile.exists() && oldFile.canWrite()) {
 			if (!oldFile.delete()) {
-				Logger.log(Logger.WARNING, PHPUIMessages
-						.getString("UntitledPHPEditor_deleteFailed")); //$NON-NLS-1$
+				Logger.log(Logger.WARNING,
+						PHPUIMessages.UntitledPHPEditor_deleteFailed); //$NON-NLS-1$
 			}
 		}
 

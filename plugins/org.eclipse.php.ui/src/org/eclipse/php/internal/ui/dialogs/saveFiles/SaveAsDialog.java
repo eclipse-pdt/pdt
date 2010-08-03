@@ -127,8 +127,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 		GridLayout parentLayout = (GridLayout) parent.getLayout();
 		parentLayout.makeColumnsEqualWidth = false;
 
-		newProjectButton = createButton(parent, NEW_PROJ_ID, PHPUIMessages
-				.getString("SaveAsDialog_createNewProject"), false); //$NON-NLS-1$
+		newProjectButton = createButton(parent, NEW_PROJ_ID,
+				PHPUIMessages.SaveAsDialog_createNewProject, false); //$NON-NLS-1$
 		okButton = createButton(parent, IDialogConstants.OK_ID,
 				IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID,
@@ -221,9 +221,9 @@ public class SaveAsDialog extends TitleAreaDialog {
 			String[] buttons = new String[] { IDialogConstants.YES_LABEL,
 					IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
 			String question = "The file '" + file.getFullPath().toString() + "' already exists. Would you like to replace it ?"; //$NON-NLS-1$ //$NON-NLS-2$
-			MessageDialog d = new MessageDialog(
-					getShell(),
-					PHPUIMessages.getString("SaveAsDialog_saveFileMessage"), null, question, MessageDialog.QUESTION, buttons, 0); //$NON-NLS-1$
+			MessageDialog d = new MessageDialog(getShell(),
+					PHPUIMessages.SaveAsDialog_saveFileMessage, null, question,
+					MessageDialog.QUESTION, buttons, 0); //$NON-NLS-1$
 			int overwrite = d.open();
 			switch (overwrite) {
 			case 0: // Yes

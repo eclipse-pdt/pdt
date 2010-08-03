@@ -38,8 +38,8 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 	protected Button fInsertParameterNamesRadioButton;
 
 	public void setCompositeAddon(Composite parent) {
-		Composite composite = createSubsection(parent, PHPUIMessages
-				.getString("CodeAssistPreferencePage_optionsSectionLabel"));
+		Composite composite = createSubsection(parent,
+				PHPUIMessages.CodeAssistPreferencePage_optionsSectionLabel);
 		Composite radioButtonsComposite = new Composite(composite, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
 		gridLayout.marginWidth = 0;
@@ -51,8 +51,8 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 
 		completionInsertRadioButton = new Button(radioButtonsComposite,
 				SWT.RADIO | SWT.LEFT);
-		completionInsertRadioButton.setText(PHPUIMessages
-				.getString("CodeAssistPreferencePage_completionInserts"));
+		completionInsertRadioButton
+				.setText(PHPUIMessages.CodeAssistPreferencePage_completionInserts);
 		completionInsertRadioButton.setLayoutData(new GridData());
 		completionInsertRadioButton
 				.setData(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
@@ -60,32 +60,29 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 
 		completionOverrideRadioButton = new Button(radioButtonsComposite,
 				SWT.RADIO | SWT.LEFT);
-		completionOverrideRadioButton.setText(PHPUIMessages
-				.getString("CodeAssistPreferencePage_completionOverwrites"));
+		completionOverrideRadioButton
+				.setText(PHPUIMessages.CodeAssistPreferencePage_completionOverwrites);
 		completionOverrideRadioButton.setLayoutData(new GridData());
 
 		add(completionOverrideRadioButton);
 
-		insertSingleproposalsCheckBox = addCheckBox(composite, PHPUIMessages
-				.getString("CodeAssistPreferencePage_insertSignleProposals"),
+		insertSingleproposalsCheckBox = addCheckBox(composite,
+				PHPUIMessages.CodeAssistPreferencePage_insertSignleProposals,
 				PHPCoreConstants.CODEASSIST_AUTOINSERT, 0);
 		showVariableFromOtherFilesCheckBox = addCheckBox(
 				composite,
-				PHPUIMessages
-						.getString("CodeAssistPreferencePage_showVariablesFromOtherFiles"),
+				PHPUIMessages.CodeAssistPreferencePage_showVariablesFromOtherFiles,
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
 
 		insertFullyQualifiedNameForNamespaceCheckBox = addCheckBox(
 				composite,
-				PHPUIMessages
-						.getString("CodeAssistPreferencePage_insertFullyQualifiedNameForNamespace"),
+				PHPUIMessages.CodeAssistPreferencePage_insertFullyQualifiedNameForNamespace,
 				PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
 				0);
 
 		fInsertParameterNamesRadioButton = addCheckBox(
 				composite,
-				PHPUIMessages
-						.getString("CodeAssistPreferencePage_fillParameterNamesOnMethodCompletion"),
+				PHPUIMessages.CodeAssistPreferencePage_fillParameterNamesOnMethodCompletion,
 				PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, 0);
 	}
 
