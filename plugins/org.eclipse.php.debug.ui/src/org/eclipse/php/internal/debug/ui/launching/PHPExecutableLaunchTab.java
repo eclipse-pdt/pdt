@@ -258,11 +258,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		Dialog.applyDialogFont(parent);
 
 		// HELP
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(parent,
-						IPHPHelpContextIds.LOCALLY_DEBUGGING_A_PHP_SCRIPT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.LOCALLY_DEBUGGING_A_PHP_SCRIPT);
 	}
 
 	/**
@@ -361,8 +358,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	private void handleChangeFileToDebug(final Text textField) {
 		final IResource resource = LaunchUtilities.getFileFromDialog(null,
-				getShell(), LaunchUtil.getFileExtensions(),
-				LaunchUtil.getRequiredNatures(), true);
+				getShell(), LaunchUtil.getFileExtensions(), LaunchUtil
+						.getRequiredNatures(), true);
 		if (resource instanceof IFile) {
 			textField.setText(resource.getFullPath().toString());
 
@@ -499,7 +496,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 * .debug.core.ILaunchConfigurationWorkingCopy)
 	 */
 	public void performApply(final ILaunchConfigurationWorkingCopy configuration) {
-		if (phpsComboBlock.isDefaultJRE()) {
+		if (phpsComboBlock.isDefaultPHP()) {
 			configuration.setAttribute(PHPRuntime.PHP_CONTAINER, (String) null);
 		} else {
 			IPath containerPath = phpsComboBlock.getPath();
@@ -582,8 +579,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		String debuggerID = null;
 		try {
 			debuggerID = configuration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-					PHPDebugPlugin.getCurrentDebuggerId());
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin
+							.getCurrentDebuggerId());
 			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerID);
 			configuration.setAttribute(
@@ -617,7 +614,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 						executableLocation);
 
 				String iniPath = phpExeItem.getINILocation() != null ? phpExeItem
-						.getINILocation().toString() : null;
+						.getINILocation().toString()
+						: null;
 				configuration.setAttribute(
 						IPHPDebugConstants.ATTR_INI_LOCATION, iniPath);
 
@@ -731,8 +729,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			iniPath = configuration.getAttribute(
 					IPHPDebugConstants.ATTR_INI_LOCATION, ""); //$NON-NLS-1$
 			debuggerID = configuration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-					PHPDebugPlugin.getCurrentDebuggerId());
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin
+							.getCurrentDebuggerId());
 		} catch (final CoreException ce) {
 			Logger.log(Logger.ERROR, "Error reading configuration", ce); //$NON-NLS-1$
 		}
