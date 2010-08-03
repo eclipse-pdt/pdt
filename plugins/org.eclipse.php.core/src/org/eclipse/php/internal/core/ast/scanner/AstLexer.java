@@ -30,6 +30,8 @@ public interface AstLexer extends Scanner {
 
 	public void setUseAspTagsAsPhp(boolean useAspTagsAsPhp);
 
+	public void setUseShortTags(boolean useShortTags);
+
 	public int getCurrentLine();
 
 	public int getLength();

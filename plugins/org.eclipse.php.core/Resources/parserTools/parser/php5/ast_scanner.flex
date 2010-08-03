@@ -96,6 +96,10 @@ import org.eclipse.php.internal.core.PHPVersion;
 		asp_tags = useAspTagsAsPhp;
 	}
 	
+	public void setUseShortTags(boolean useShortTags) {
+		short_tags_allowed = useShortTags;
+	}
+	
     private void pushState(int state) {
         stack.pushStack(zzLexicalState);
         yybegin(state);

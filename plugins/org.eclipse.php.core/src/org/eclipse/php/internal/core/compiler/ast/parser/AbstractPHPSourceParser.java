@@ -20,6 +20,7 @@ import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 		implements ISourceParser {
@@ -38,7 +39,8 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 			IProblemReporter reporter) {
 		try {
 			return parse(new CharArrayReader(input.getContentsAsCharArray()),
-					reporter);
+					reporter, ProjectOptions.useShortTags(input
+							.getModelElement().getScriptProject().getProject()));
 		} catch (Exception e) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=316077
 			if (DEBUG) {
@@ -51,7 +53,7 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser
 	}
 
 	public abstract IModuleDeclaration parse(Reader in,
-			IProblemReporter reporter) throws Exception;
+			IProblemReporter reporter, boolean useShortTags) throws Exception;
 
 	protected IModuleDeclaration parse(AbstractASTParser parser) {
 		parser.setFileName(fileName);
