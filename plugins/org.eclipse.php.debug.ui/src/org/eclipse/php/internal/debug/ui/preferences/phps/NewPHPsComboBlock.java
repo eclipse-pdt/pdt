@@ -40,11 +40,11 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import com.ibm.icu.text.MessageFormat;
 
 /**
- * A composite that displays installed JREs in a combo box, with a 'manage...'
- * button to modify installed JREs.
+ * A composite that displays installed PHPs in a combo box, with a 'manage...'
+ * button to modify installed PHPs.
  * <p>
  * This block implements ISelectionProvider - it sends selection change events
- * when the checked JRE in the table changes, or when the "use default" button
+ * when the checked PHP in the table changes, or when the "use default" button
  * check state changes.
  * </p>
  */
@@ -56,7 +56,7 @@ public class NewPHPsComboBlock {
 	 */
 	private final List<PHPexeItem> phpExecutables = new ArrayList<PHPexeItem>();
 
-	public static final String PROPERTY_JRE = "PROPERTY_JRE"; //$NON-NLS-1$
+	public static final String PROPERTY_PHP = "PROPERTY_PHP"; //$NON-NLS-1$
 
 	/**
 	 * This block's control
@@ -72,54 +72,48 @@ public class NewPHPsComboBlock {
 	private Button fManageButton;
 
 	/**
-	 * JRE change listeners
+	 * PHP change listeners
 	 */
 	private ListenerList fListeners = new ListenerList();
 
 	/**
-	 * Whether the default JRE should be in first position (if
-	 * <code>false</code>, it becomes last).
-	 */
-	private boolean fDefaultFirst;
-
-	/**
-	 * Default JRE descriptor or <code>null</code> if none.
+	 * Default PHP descriptor or <code>null</code> if none.
 	 */
 	private PHPexeDescriptor fDefaultDescriptor = null;
 
 	/**
-	 * Specific JRE descriptor or <code>null</code> if none.
+	 * Specific PHP descriptor or <code>null</code> if none.
 	 */
 	private PHPexeDescriptor fSpecificDescriptor = null;
 
 	/**
-	 * Default JRE radio button or <code>null</code> if none
+	 * Default PHP radio button or <code>null</code> if none
 	 */
 	private Button fDefaultButton = null;
 
 	/**
-	 * Selected JRE radio button
+	 * Selected PHP radio button
 	 */
 	private Button fSpecificButton = null;
 
 	/**
-	 * The title used for the JRE block
+	 * The title used for the PHP block
 	 */
 	private String fTitle = null;
 
 	/**
-	 * Selected JRE profile radio button
+	 * Selected PHP profile radio button
 	 */
 	private Button fEnvironmentsButton = null;
 
 	/**
-	 * Combo box of JRE profiles
+	 * Combo box of PHP profiles
 	 */
 	private Combo fEnvironmentsCombo = null;
 
 	private Button fManageEnvironmentsButton = null;
 
-	// a path to an unavailable JRE
+	// a path to an unavailable PHP
 	private IPath fErrorPath;
 
 	/**
@@ -140,14 +134,13 @@ public class NewPHPsComboBlock {
 	private final ListenerList fSelectionListeners = new ListenerList();
 
 	/**
-	 * Creates a JREs combo block.
+	 * Creates a PHPs combo block.
 	 * 
 	 * @param defaultFirst
-	 *            whether the default JRE should be in first position (if
+	 *            whether the default PHP should be in first position (if
 	 *            <code>false</code>, it becomes last)
 	 */
-	public NewPHPsComboBlock(boolean defaultFirst) {
-		fDefaultFirst = defaultFirst;
+	public NewPHPsComboBlock() {
 		fDefaultDescriptor = new PHPexeDescriptor() {
 			public String getDescription() {
 				final PHPexeItem def = PHPDebugPlugin.getPHPexeItem(project);
@@ -155,10 +148,6 @@ public class NewPHPsComboBlock {
 			}
 		};
 		setDefaultPHPexeDescriptor(fDefaultDescriptor);
-	}
-
-	public NewPHPsComboBlock() {
-		this(true);
 	}
 
 	public void addPropertyChangeListener(IPropertyChangeListener listener) {
@@ -170,7 +159,7 @@ public class NewPHPsComboBlock {
 	}
 
 	private void firePropertyChange() {
-		PropertyChangeEvent event = new PropertyChangeEvent(this, PROPERTY_JRE,
+		PropertyChangeEvent event = new PropertyChangeEvent(this, PROPERTY_PHP,
 				null, getPHPexe());
 		Object[] listeners = fListeners.getListeners();
 		for (int i = 0; i < listeners.length; i++) {
@@ -196,15 +185,10 @@ public class NewPHPsComboBlock {
 		Composite comp = SWTFactory.createComposite(group, group.getFont(), 3,
 				1, GridData.FILL_BOTH, 0, 0);
 
-		if (fDefaultFirst) {
-			createDefaultJREControls(comp);
-		}
+		createDefaultPHPControls(comp);
 		createEEControls(comp);
-		createAlternateJREControls(comp);
-		if (!fDefaultFirst) {
-			createDefaultJREControls(comp);
-		}
-		setUseDefaultJRE();
+		createAlternatePHPControls(comp);
+		setUseDefaultPHP();
 	}
 
 	private void createEEControls(Composite comp) {
@@ -234,7 +218,7 @@ public class NewPHPsComboBlock {
 		fEnvironmentsCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				// TODO
-				setPath(PHPRuntime.newJREContainerPath(getEnvironment()));
+				setPath(PHPRuntime.newPHPContainerPath(getEnvironment()));
 				firePropertyChange();
 			}
 		});
@@ -250,7 +234,7 @@ public class NewPHPsComboBlock {
 		fillWithWorkspaceProfiles();
 	}
 
-	private void createAlternateJREControls(Composite comp) {
+	private void createAlternatePHPControls(Composite comp) {
 		String text = PHPDebugUIMessages.PHPexesComboBlock_1;
 		if (fSpecificDescriptor != null) {
 			text = fSpecificDescriptor.getDescription();
@@ -295,14 +279,14 @@ public class NewPHPsComboBlock {
 		fillWithWorkspacePHPexes();
 	}
 
-	private void createDefaultJREControls(Composite comp) {
+	private void createDefaultPHPControls(Composite comp) {
 		if (fDefaultDescriptor != null) {
 			fDefaultButton = SWTFactory.createRadioButton(comp,
 					fDefaultDescriptor.getDescription(), 3);
 			fDefaultButton.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					if (fDefaultButton.getSelection()) {
-						setUseDefaultJRE();
+						setUseDefaultPHP();
 						setStatus(OK_STATUS);
 						firePropertyChange();
 					}
@@ -320,21 +304,21 @@ public class NewPHPsComboBlock {
 	 *            pref page
 	 */
 	private void showPrefPage(String id/* , IPreferencePage page */) {
-		PHPexeItem prevJRE = getPHPexe();
+		PHPexeItem prevPHP = getPHPexe();
 		PHPVersion prevEnv = getEnvironment();
 		PreferencesUtil.createPreferenceDialogOn(getShell(), id,
 				new String[] { id }, null).open();
 		// PHPDebugUIPlugin.showPreferencePage(id);
 		fillWithWorkspacePHPexes();
-		// fillWithWorkspaceJREs();
+		// fillWithWorkspacePHPs();
 		fillWithWorkspaceProfiles();
-		restoreCombo(phpExecutables, prevJRE, fExecutablesCombo);
+		restoreCombo(phpExecutables, prevPHP, fExecutablesCombo);
 		restoreCombo(fEnvironments, prevEnv, fEnvironmentsCombo);
 		// update text
 		setDefaultPHPexeDescriptor(fDefaultDescriptor);
-		if (isDefaultJRE()) {
+		if (isDefaultPHP()) {
 			// reset in case default has changed
-			setUseDefaultJRE();
+			setUseDefaultPHP();
 		}
 		// TODO
 		setPath(getPath());
@@ -363,14 +347,14 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Sets the JREs to be displayed in this block
+	 * Sets the PHPs to be displayed in this block
 	 * 
 	 * @param vms
-	 *            JREs to be displayed
+	 *            PHPs to be displayed
 	 */
-	// protected void setJREs(List jres) {
+	// protected void setPHPs(List PHPs) {
 	// phpExecutables.clear();
-	// phpExecutables.addAll(jres);
+	// phpExecutables.addAll(PHPs);
 	// // sort by name
 	// Collections.sort(phpExecutables, new Comparator() {
 	// public int compare(Object o1, Object o2) {
@@ -401,12 +385,12 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Selects a specific JRE based on type/name.
+	 * Selects a specific PHP based on type/name.
 	 * 
 	 * @param vm
-	 *            JRE or <code>null</code>
+	 *            PHP or <code>null</code>
 	 */
-	private void selectJRE(PHPexeItem vm) {
+	private void selectPHP(PHPexeItem vm) {
 		fSpecificButton.setSelection(true);
 		fDefaultButton.setSelection(false);
 		fEnvironmentsButton.setSelection(false);
@@ -422,7 +406,7 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Selects a JRE based environment.
+	 * Selects a PHP based environment.
 	 * 
 	 * @param env
 	 *            environment or <code>null</code>
@@ -443,11 +427,11 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Returns the selected JRE or <code>null</code> if none.
+	 * Returns the selected PHP or <code>null</code> if none.
 	 * 
-	 * @return the selected JRE or <code>null</code> if none
+	 * @return the selected PHP or <code>null</code> if none
 	 */
-	// public IVMInstall getJRE() {
+	// public IVMInstall getPHP() {
 	// int index = fExecutablesCombo.getSelectionIndex();
 	// if (index >= 0) {
 	// return (IVMInstall) phpExecutables.get(index);
@@ -469,10 +453,10 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Populates the JRE table with existing JREs defined in the workspace.
+	 * Populates the PHP table with existing PHPs defined in the workspace.
 	 */
-	// protected void fillWithWorkspaceJREs() {
-	// // fill with JREs
+	// protected void fillWithWorkspacePHPs() {
+	// // fill with PHPs
 	// List standins = new ArrayList();
 	// IVMInstallType[] types = PHPRuntime.getVMInstallTypes();
 	// for (int i = 0; i < types.length; i++) {
@@ -483,11 +467,11 @@ public class NewPHPsComboBlock {
 	// standins.add(new VMStandin(install));
 	// }
 	// }
-	// setJREs(standins);
+	// setPHPs(standins);
 	// }
 
 	/**
-	 * Populates the JRE profile combo with profiles defined in the workspace.
+	 * Populates the PHP profile combo with profiles defined in the workspace.
 	 */
 	protected void fillWithWorkspaceProfiles() {
 		fEnvironments.clear();
@@ -513,7 +497,7 @@ public class NewPHPsComboBlock {
 		// int i = 0;
 		// while (iter.hasNext()) {
 		// PHPVersion env = (PHPVersion) iter.next();
-		// IPath path = PHPRuntime.newJREContainerPath(env);
+		// IPath path = PHPRuntime.newPHPContainerPath(env);
 		// IVMInstall install = PHPRuntime.getVMInstall(path);
 		// if (install != null) {
 		// names[i] = MessageFormat.format(
@@ -535,10 +519,10 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Sets the Default JRE Descriptor for this block.
+	 * Sets the Default PHP Descriptor for this block.
 	 * 
 	 * @param descriptor
-	 *            default JRE descriptor
+	 *            default PHP descriptor
 	 */
 	public void setDefaultPHPexeDescriptor(PHPexeDescriptor descriptor) {
 		fDefaultDescriptor = descriptor;
@@ -548,7 +532,7 @@ public class NewPHPsComboBlock {
 	private void setButtonTextFromDescriptor(Button button,
 			PHPexeDescriptor descriptor) {
 		if (button != null) {
-			// update the description & JRE in case it has changed
+			// update the description & PHP in case it has changed
 			String currentText = button.getText();
 			String newText = descriptor.getDescription();
 			if (!newText.equals(currentText)) {
@@ -559,10 +543,10 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Sets the specific JRE Descriptor for this block.
+	 * Sets the specific PHP Descriptor for this block.
 	 * 
 	 * @param descriptor
-	 *            specific JRE descriptor
+	 *            specific PHP descriptor
 	 */
 	public void setSpecificPHPexeDescriptor(PHPexeDescriptor descriptor) {
 		fSpecificDescriptor = descriptor;
@@ -570,11 +554,11 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Returns whether the 'use default JRE' button is checked.
+	 * Returns whether the 'use default PHP' button is checked.
 	 * 
-	 * @return whether the 'use default JRE' button is checked
+	 * @return whether the 'use default PHP' button is checked
 	 */
-	public boolean isDefaultJRE() {
+	public boolean isDefaultPHP() {
 		if (fDefaultButton != null) {
 			return fDefaultButton.getSelection();
 		}
@@ -582,9 +566,9 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Sets this control to use the 'default' JRE.
+	 * Sets this control to use the 'default' PHP.
 	 */
-	private void setUseDefaultJRE() {
+	private void setUseDefaultPHP() {
 		if (fDefaultDescriptor != null) {
 			fDefaultButton.setSelection(true);
 			fSpecificButton.setSelection(false);
@@ -596,24 +580,24 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Sets the title used for this JRE block
+	 * Sets the title used for this PHP block
 	 * 
 	 * @param title
-	 *            title for this JRE block
+	 *            title for this PHP block
 	 */
 	public void setTitle(String title) {
 		fTitle = title;
 	}
 
 	/**
-	 * Refresh the default JRE description.
+	 * Refresh the default PHP description.
 	 */
 	public void refresh() {
 		setDefaultPHPexeDescriptor(fDefaultDescriptor);
 	}
 
 	/**
-	 * Returns a classpath container path identifying the selected JRE.
+	 * Returns a classpath container path identifying the selected PHP.
 	 * 
 	 * @return classpath container path or <code>null</code>
 	 * @since 3.2
@@ -626,7 +610,7 @@ public class NewPHPsComboBlock {
 			int index = fEnvironmentsCombo.getSelectionIndex();
 			if (index >= 0) {
 				PHPVersion env = (PHPVersion) fEnvironments.get(index);
-				return PHPRuntime.newJREContainerPath(env);
+				return PHPRuntime.newPHPContainerPath(env);
 			}
 			return null;
 		}
@@ -634,11 +618,11 @@ public class NewPHPsComboBlock {
 			int index = fExecutablesCombo.getSelectionIndex();
 			if (index >= 0) {
 				PHPexeItem vm = phpExecutables.get(index);
-				return PHPRuntime.newJREContainerPath(vm);
+				return PHPRuntime.newPHPContainerPath(vm);
 			}
 			return null;
 		}
-		return PHPRuntime.newDefaultJREContainerPath();
+		return PHPRuntime.newDefaultPHPContainerPath();
 	}
 
 	/**
@@ -652,9 +636,9 @@ public class NewPHPsComboBlock {
 		fErrorPath = null;
 		setStatus(OK_STATUS);
 		if (containerPath == null
-				|| PHPRuntime.newDefaultJREContainerPath()
+				|| PHPRuntime.newDefaultPHPContainerPath()
 						.equals(containerPath)) {
-			setUseDefaultJRE();
+			setUseDefaultPHP();
 		} else {
 			PHPVersion version = PHPRuntime.getPHPVersion(containerPath);
 			if (version != null) {
@@ -669,7 +653,7 @@ public class NewPHPsComboBlock {
 			} else {
 				PHPexeItem install = PHPRuntime.getPHPexeItem(containerPath);
 				if (install == null) {
-					selectJRE(install);
+					selectPHP(install);
 					fErrorPath = containerPath;
 					// String installTypeId = PHPRuntime
 					// .getVMInstallTypeId(containerPath);
@@ -701,7 +685,7 @@ public class NewPHPsComboBlock {
 					// }
 					// }
 				} else {
-					selectJRE(install);
+					selectPHP(install);
 					File location = install.getExecutable();
 					if (location == null) {
 						setError(PHPDebugUIMessages.PHPexesComboBlock_12);
@@ -727,7 +711,7 @@ public class NewPHPsComboBlock {
 	}
 
 	/**
-	 * Returns the status of the JRE selection.
+	 * Returns the status of the PHP selection.
 	 * 
 	 * @return status
 	 */
