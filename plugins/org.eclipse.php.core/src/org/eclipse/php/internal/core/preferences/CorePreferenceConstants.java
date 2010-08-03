@@ -42,7 +42,7 @@ public class CorePreferenceConstants {
 				PHPCoreConstants.DEFAULT_TASK_PRIORITIES);
 		node.put(PHPCoreConstants.TASK_CASE_SENSITIVE, PHPCoreConstants.ENABLED);
 		node.putBoolean(Keys.EDITOR_USE_ASP_TAGS, false);
-		node.putBoolean(Keys.EDITOR_USE_SHORT_TAGS, false);
+		node.putBoolean(Keys.EDITOR_USE_SHORT_TAGS, true);
 		node.putBoolean(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
 				PHPCoreConstants.DEFAULT_INDENTATION_SIZE);
