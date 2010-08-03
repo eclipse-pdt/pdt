@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
@@ -16,11 +17,11 @@ import java.util.List;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.internal.ui.PHPElementLabelProvider;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
@@ -33,8 +34,8 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
 /**
  * Action to open a closed project. Action either opens the closed projects
- * provided by the structured selection or presents a dialog from which the
- * user can select the projects to be opened.
+ * provided by the structured selection or presents a dialog from which the user
+ * can select the projects to be opened.
  * 
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
@@ -42,7 +43,8 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
  * 
  * @since 2.0
  */
-public class OpenProjectAction extends SelectionDispatchAction implements IResourceChangeListener {
+public class OpenProjectAction extends SelectionDispatchAction implements
+		IResourceChangeListener {
 
 	private static final int EMPTY_SELECTION = 1;
 	private static final int ELEMENT_SELECTION = 2;
@@ -51,19 +53,21 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	private OpenResourceAction fWorkbenchAction;
 
 	/**
-	 * Creates a new <code>OpenProjectAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
+	 * Creates a new <code>OpenProjectAction</code>. The action requires that
+	 * the selection provided by the site's selection provider is of type <code>
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
-	 * @param site the site providing context information for this action
+	 * @param site
+	 *            the site providing context information for this action
 	 */
 	public OpenProjectAction(IWorkbenchSite site) {
 		super(site);
-		fWorkbenchAction = new OpenResourceAction(site.getShell());
+		fWorkbenchAction = new OpenResourceAction(site);
 		setText(fWorkbenchAction.getText());
 		setToolTipText(fWorkbenchAction.getToolTipText());
 		setEnabled(hasCloseProjects());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.PROJECT);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+				IPHPHelpContextIds.PROJECT);
 	}
 
 	/*
@@ -72,19 +76,20 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	public void resourceChanged(IResourceChangeEvent event) {
 		fWorkbenchAction.resourceChanged(event);
 		switch (fMode) {
-			case ELEMENT_SELECTION:
-				setEnabled(fWorkbenchAction.isEnabled());
-				break;
-			case EMPTY_SELECTION:
-				internalResourceChanged(event);
-				break;
+		case ELEMENT_SELECTION:
+			setEnabled(fWorkbenchAction.isEnabled());
+			break;
+		case EMPTY_SELECTION:
+			internalResourceChanged(event);
+			break;
 		}
 	}
 
 	private void internalResourceChanged(IResourceChangeEvent event) {
 		IResourceDelta delta = event.getDelta();
 		if (delta != null) {
-			IResourceDelta[] projDeltas = delta.getAffectedChildren(IResourceDelta.CHANGED);
+			IResourceDelta[] projDeltas = delta
+					.getAffectedChildren(IResourceDelta.CHANGED);
 			for (int i = 0; i < projDeltas.length; ++i) {
 				IResourceDelta projDelta = projDeltas[i];
 				if ((projDelta.getFlags() & IResourceDelta.OPEN) != 0) {
@@ -95,7 +100,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		}
 	}
 
-	//---- normal selection -------------------------------------
+	// ---- normal selection -------------------------------------
 
 	public void selectionChanged(ISelection selection) {
 		setEnabled(hasCloseProjects());
@@ -106,7 +111,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		internalRun();
 	}
 
-	//---- structured selection ---------------------------------------
+	// ---- structured selection ---------------------------------------
 
 	public void selectionChanged(IStructuredSelection selection) {
 		if (selection.isEmpty()) {
@@ -128,9 +133,10 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	}
 
 	private void internalRun() {
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), new PHPElementLabelProvider());
-		dialog.setTitle(PHPUIMessages.getString("OpenProjectAction_dialog_title"));
-		dialog.setMessage(PHPUIMessages.getString("OpenProjectAction_dialog_message"));
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(
+				getShell(), new ModelElementLabelProvider());
+		dialog.setTitle(PHPUIMessages.OpenProjectAction_dialog_title);
+		dialog.setMessage(PHPUIMessages.OpenProjectAction_dialog_message);
 		dialog.setElements(getClosedProjects());
 		dialog.setMultipleSelection(true);
 		int result = dialog.open();
@@ -139,9 +145,12 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		final Object[] projects = dialog.getResult();
 		IWorkspaceRunnable runnable = createRunnable(projects);
 		try {
-			PlatformUI.getWorkbench().getProgressService().run(true, true, new WorkbenchRunnableAdapter(runnable));
+			PlatformUI.getWorkbench().getProgressService().run(true, true,
+					new WorkbenchRunnableAdapter(runnable));
 		} catch (InvocationTargetException e) {
-			ExceptionHandler.handle(e, getShell(), PHPUIMessages.getString("OpenProjectAction_dialog_title"), PHPUIMessages.getString("OpenProjectAction_error_message"));
+			ExceptionHandler.handle(e, getShell(),
+					PHPUIMessages.OpenProjectAction_dialog_title,
+					PHPUIMessages.OpenProjectAction_error_message);
 		} catch (InterruptedException e) {
 		}
 	}
@@ -157,7 +166,11 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 						project.open(new SubProgressMonitor(monitor, 1));
 					} catch (CoreException e) {
 						if (errorStatus == null)
-							errorStatus = new MultiStatus(PHPUiPlugin.ID, IStatus.ERROR, PHPUIMessages.getString("OpenProjectAction_error_message"), e);
+							errorStatus = new MultiStatus(
+									PHPUiPlugin.ID,
+									IStatus.ERROR,
+									PHPUIMessages.OpenProjectAction_error_message,
+									e);
 						errorStatus.merge(e.getStatus());
 					}
 				}
@@ -169,7 +182,8 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	}
 
 	private Object[] getClosedProjects() {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+				.getProjects();
 		List result = new ArrayList(5);
 		for (int i = 0; i < projects.length; i++) {
 			IProject project = projects[i];
@@ -180,7 +194,8 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	}
 
 	private boolean hasCloseProjects() {
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
+				.getProjects();
 		for (int i = 0; i < projects.length; i++) {
 			if (!projects[i].isOpen())
 				return true;

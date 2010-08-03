@@ -1,148 +1,149 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.*;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.wizards.NewElementWizard;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.php.internal.ui.wizards.operations.PHPCreationDataModelProvider;
 import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
-import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
-import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
-import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizard;
-import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
-import org.osgi.service.prefs.BackingStoreException;
 
-public class PHPProjectCreationWizard extends DataModelWizard implements IExecutableExtension, INewWizard {
+public class PHPProjectCreationWizard extends NewElementWizard implements
+		INewWizard, IExecutableExtension {
 
-	private static final String ID = "org.eclipse.php.ui.wizards.PHPProjectCreationWizard"; //$NON-NLS-1$
+	public static final String SELECTED_PROJECT = "SelectedProject";
 
-	protected PHPIncludePathPage includePathPage;
-	protected PHPProjectWizardBasePage basePage;
+	public static final String WIZARD_ID = "org.eclipse.php.wizards.newproject"; //$NON-NLS-1$
 
-	protected final ArrayList wizardPagesList = new ArrayList();
-	private IProject createdProject = null;
-	protected IConfigurationElement configElement;
-	private List /** WizardPageFactory */
-	wizardPageFactories = new ArrayList();
+	protected PHPProjectWizardFirstPage fFirstPage;
+	protected PHPProjectWizardSecondPage fSecondPage;
+	protected PHPProjectWizardThirdPage fThirdPage;
+	protected PHPProjectWizardSecondPage fLastPage = fThirdPage;
+	protected IConfigurationElement fConfigElement;
 
-	public PHPProjectCreationWizard(IDataModel model) {
-		super(model);
-		populateWizardFactoryList();
-	}
+	protected int fLastPageIndex = -1;
 
 	public PHPProjectCreationWizard() {
-		super();
-		populateWizardFactoryList();
+		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
+		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
+		setWindowTitle(PHPUIMessages.PHPProjectCreationWizard_WizardTitle);
 	}
 
-	/**
-	 * This operation is called after the Wizard  is created (and before the doAddPages)
-	 * and it is used to define all the properties that the wizard pages will set
-	 * (not necessarly store as properties).
-	 * All the wizard pages may access these properties.
-	 */
-	protected IDataModelProvider getDefaultProvider() {
-		return new PHPCreationDataModelProvider(wizardPageFactories);
+	public void addPages() {
+		super.addPages();
+		fFirstPage = new PHPProjectWizardFirstPage();
+
+		// First page
+		fFirstPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page1Title);
+		fFirstPage
+				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page1Description);
+		addPage(fFirstPage);
+
+		// Second page (Include Path)
+		fSecondPage = new PHPProjectWizardSecondPage(fFirstPage);
+		fSecondPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page2Title);
+		fSecondPage
+				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page2Description);
+		addPage(fSecondPage);
+
+		// Third page (Include Path)
+		fThirdPage = new PHPProjectWizardThirdPage(fFirstPage);
+		fThirdPage.setTitle(PHPUIMessages.PHPProjectCreationWizard_Page3Title);
+		fThirdPage
+				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page3Description);
+		addPage(fThirdPage);
+
+		fLastPage = fSecondPage;
+	}
+
+	protected void finishPage(IProgressMonitor monitor)
+			throws InterruptedException, CoreException {
+		if (fFirstPage != null)
+			fFirstPage.performFinish(monitor); // use the full progress monitor
+		if (fSecondPage != null)
+			fSecondPage.performFinish(monitor); // use the full progress monitor
+		if (fThirdPage != null)
+			fThirdPage.performFinish(monitor); // use the full progress monitor
+	}
+
+	public boolean performFinish() {
+		boolean res = super.performFinish();
+		if (res) {
+			BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
+			selectAndReveal(fLastPage.getScriptProject().getProject());
+
+			WizardModel model = fFirstPage.getWizardData();
+
+			Object eanblement = null;
+			if (model != null) {
+				eanblement = model
+						.getObject("REMOTE_GROUP_REMOTE_PROJECT_ENABLED");
+			}
+
+			if (model != null && eanblement != null && (Boolean) eanblement) {
+
+				model.putObject(SELECTED_PROJECT, fLastPage.getScriptProject()
+						.getProject());
+
+				IRunnableWithProgress run = (IRunnableWithProgress) Platform
+						.getAdapterManager().getAdapter(model,
+								IRunnableWithProgress.class);
+
+				if (run != null) {
+					try {
+						getContainer().run(true, false, run);
+					} catch (InvocationTargetException e) {
+						handleFinishException(getShell(), e);
+						return false;
+					} catch (InterruptedException e) {
+						return false;
+					}
+				}
+			}
+		}
+		return res;
 	}
 
 	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.jface.wizard.Wizard#addPages()
+	 * Stores the configuration element for the wizard. The config element will
+	 * be used in <code>performFinish</code> to set the result perspective.
 	 */
-	public void doAddPages() {
-		// if we succeeded adding the default pages, add the contributed pages
-		if(addDeafaultPages()){
-			addContributedPages();
-		}
-
+	public void setInitializationData(IConfigurationElement cfig,
+			String propertyName, Object data) {
+		fConfigElement = cfig;
 	}
 
-	protected void addContributedPages() {
-		// generates the pages added trough the phpWizardPages extention point
-		// and add them to the wizard
-		for (Iterator iter = wizardPageFactories.iterator(); iter.hasNext();) {
-			WizardPageFactory pageFactory = (WizardPageFactory) iter.next();
-			IWizardPage currentPage = pageFactory.createPage(getDataModel());
-			addPage(currentPage);
-		}
+	public boolean performCancel() {
+		fLastPage.performCancel();
+		return super.performCancel();
 	}
 
-	protected boolean addDeafaultPages() {
-		addPage(basePage = new PHPProjectWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
-		addPage(includePathPage = new PHPIncludePathPage(getDataModel(), "page2")); //$NON-NLS-1$
-		return true;
+	public IModelElement getCreatedElement() {
+		return DLTKCore.create(fFirstPage.getProjectHandle());
 	}
 
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		configElement = config;
+	public int getLastPageIndex() {
+		return fLastPageIndex;
 	}
 
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		setWindowTitle(PHPUIMessages.getString("PHPProjectCreationWizard_PageTile"));
-		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
+	public void setLastPageIndex(int current) {
+		fLastPageIndex = current;
 	}
 
-	protected boolean prePerformFinish() {
-		createdProject = (IProject) getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
-
-		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, includePathPage.getIncludePathsBlock().getIncludepathEntries());
-		basePage.setProjectOptionInModel(getDataModel());
-
-		return super.prePerformFinish();
-	}
-
-	protected void postPerformFinish() throws InvocationTargetException {
-		if (createdProject != null) {
-			// Save any project-specific data (Fix Bug# 143406)
-			try {
-				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();
-			} catch (BackingStoreException e) {
-				Logger.logException(e);
-			}
-		}
-
-		UIJob j = new UIJob("") { //$NON-NLS-1$
-			public IStatus runInUIThread(IProgressMonitor monitor) {
-				BasicNewProjectResourceWizard.updatePerspective(configElement);
-				return Status.OK_STATUS;
-			}
-		};
-		j.setUser(false);
-		j.schedule();
-	}
-
-	private void populateWizardFactoryList() {
-		IWizardPage[] pageGenerators = PHPWizardPagesRegistry.getPageFactories(ID);
-		if (pageGenerators != null) {
-			for (IWizardPage element : pageGenerators) {
-				WizardPageFactory pageFactory = (WizardPageFactory) element;
-				wizardPageFactories.add(pageFactory);
-			}
-		}
-	}
 }

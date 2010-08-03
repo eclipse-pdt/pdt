@@ -1,22 +1,23 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class PHPManualSiteDescriptor {
@@ -29,7 +30,7 @@ public class PHPManualSiteDescriptor {
 	private static final String DIRECTOR_ATTRIBUTE = "director"; //$NON-NLS-1$
 	private static final String EXTENSION_ATTRIBUTE = "extension"; //$NON-NLS-1$
 
-	public static final String DEFAULT_PHP_MANUAL_SITE = PHPUIMessages.getString("PHPManualSiteDescriptor.URL"); //$NON-NLS-1$
+	public static final String DEFAULT_PHP_MANUAL_SITE = PHPUIMessages.PHPManualSiteDescriptor_URL; //$NON-NLS-1$
 
 	public static final String DEFAULT_PHP_MANUAL_EXTENSION = "php"; //$NON-NLS-1$
 
@@ -46,7 +47,8 @@ public class PHPManualSiteDescriptor {
 
 	public static PHPManualSiteDescriptor[] getContributedSites() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHP_MANUAL_SITES_EXTENSION_POINT);
+		IConfigurationElement[] elements = registry
+				.getConfigurationElementsFor(PHP_MANUAL_SITES_EXTENSION_POINT);
 		PHPManualSiteDescriptor[] manualDescs = createDescriptors(elements);
 		initializeFromPreferences(manualDescs);
 		return manualDescs;
@@ -80,18 +82,22 @@ public class PHPManualSiteDescriptor {
 		return fElement.getAttribute(ID_ATTRIBUTE);
 	}
 
-	private static PHPManualSiteDescriptor[] createDescriptors(IConfigurationElement[] elements) {
+	private static PHPManualSiteDescriptor[] createDescriptors(
+			IConfigurationElement[] elements) {
 		List result = new ArrayList(elements.length);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (SITE_TAG.equals(element.getName())) {
-				PHPManualSiteDescriptor desc = new PHPManualSiteDescriptor(element);
+				PHPManualSiteDescriptor desc = new PHPManualSiteDescriptor(
+						element);
 				result.add(desc);
 			}
 		}
-		return (PHPManualSiteDescriptor[]) result.toArray(new PHPManualSiteDescriptor[result.size()]);
+		return (PHPManualSiteDescriptor[]) result
+				.toArray(new PHPManualSiteDescriptor[result.size()]);
 	}
 
-	private static void initializeFromPreferences(PHPManualSiteDescriptor[] manualDescs) {
+	private static void initializeFromPreferences(
+			PHPManualSiteDescriptor[] manualDescs) {
 	}
 }

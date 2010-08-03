@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.manualView;
 
@@ -24,27 +25,29 @@ public class ManualPart extends ViewPart {
 	 */
 	private static boolean fgIsAvailable = false;
 	private static boolean fgAvailabilityChecked = false;
-	
+
 	public ManualPart() {
 	}
-	
+
 	/**
-	 * Tells whether the SWT Browser widget and hence this information
-	 * control is available.
-	 *
-	 * @param parent the parent component used for checking or <code>null</code> if none
+	 * Tells whether the SWT Browser widget and hence this information control
+	 * is available.
+	 * 
+	 * @param parent
+	 *            the parent component used for checking or <code>null</code> if
+	 *            none
 	 * @return <code>true</code> if this control is available
 	 */
 	public static boolean isAvailable(Composite parent) {
 		if (!fgAvailabilityChecked) {
 			try {
-				Browser browser= new Browser(parent, SWT.NONE);
+				Browser browser = new Browser(parent, SWT.NONE);
 				browser.dispose();
-				fgIsAvailable= true;
+				fgIsAvailable = true;
 			} catch (SWTError er) {
-				fgIsAvailable= false;
+				fgIsAvailable = false;
 			} finally {
-				fgAvailabilityChecked= true;
+				fgAvailabilityChecked = true;
 			}
 		}
 
@@ -52,13 +55,13 @@ public class ManualPart extends ViewPart {
 	}
 
 	public void createPartControl(Composite parent) {
-		Browser browser=new Browser(parent,SWT.NONE);
-		browser.setUrl(PHPUIMessages.getString("ManualPart.URL")); //$NON-NLS-1$
+		Browser browser = new Browser(parent, SWT.NONE);
+		browser.setUrl(PHPUIMessages.ManualPart_URL); //$NON-NLS-1$
 	}
 
 	public void setFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

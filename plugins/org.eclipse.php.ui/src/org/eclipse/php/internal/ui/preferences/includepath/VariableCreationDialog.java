@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences.includepath;
 
@@ -19,7 +20,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.internal.ui.actions.StatusInfo;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.StatusDialog;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -41,18 +41,19 @@ public class VariableCreationDialog extends StatusDialog {
 
 	private StringButtonDialogField fPathField;
 	private StatusInfo fPathStatus;
-//	private SelectionButtonDialogField fDirButton;
+	// private SelectionButtonDialogField fDirButton;
 
 	private IPVariableElement fElement;
 
 	private List fExistingNames;
 
-	public VariableCreationDialog(Shell parent, IPVariableElement element, List existingNames) {
+	public VariableCreationDialog(Shell parent, IPVariableElement element,
+			List existingNames) {
 		super(parent);
 		if (element == null) {
-			setTitle(PHPUIMessages.getString("VariableCreationDialog_titlenew"));
+			setTitle(PHPUIMessages.VariableCreationDialog_titlenew);
 		} else {
-			setTitle(PHPUIMessages.getString("VariableCreationDialog_titleedit"));
+			setTitle(PHPUIMessages.VariableCreationDialog_titleedit);
 		}
 
 		fDialogSettings = PHPUiPlugin.getDefault().getDialogSettings();
@@ -65,16 +66,19 @@ public class VariableCreationDialog extends StatusDialog {
 		NewVariableAdapter adapter = new NewVariableAdapter();
 		fNameField = new StringDialogField();
 		fNameField.setDialogFieldListener(adapter);
-		fNameField.setLabelText(PHPUIMessages.getString("VariableCreationDialog_name_label"));
+		fNameField
+				.setLabelText(PHPUIMessages.VariableCreationDialog_name_label);
 
 		fPathField = new StringButtonDialogField(adapter);
 		fPathField.setDialogFieldListener(adapter);
-		fPathField.setLabelText(PHPUIMessages.getString("VariableCreationDialog_path_label"));
-		fPathField.setButtonLabel(PHPUIMessages.getString("VariableCreationDialog_path_dir_button"));
+		fPathField
+				.setLabelText(PHPUIMessages.VariableCreationDialog_path_label);
+		fPathField
+				.setButtonLabel(PHPUIMessages.VariableCreationDialog_path_dir_button);
 
-//		fDirButton = new SelectionButtonDialogField(SWT.PUSH);
-//		fDirButton.setDialogFieldListener(adapter);
-//		fDirButton.setLabelText(PHPUIMessages.getString("VariableCreationDialog_path_dir_button"));
+		// fDirButton = new SelectionButtonDialogField(SWT.PUSH);
+		// fDirButton.setDialogFieldListener(adapter);
+		// fDirButton.setLabelText(PHPUIMessages.getString("VariableCreationDialog_path_dir_button"));
 
 		fExistingNames = existingNames;
 
@@ -93,11 +97,15 @@ public class VariableCreationDialog extends StatusDialog {
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell,
+				IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
 	}
 
 	public IPVariableElement getIncludePathElement() {
-		return new IPVariableElement(fNameField.getText(), new Path(fPathField.getText()), IncludePathVariableManager.instance().isReserved(fNameField.getText()));
+		return null;
+		// return new IPVariableElement(fNameField.getText(), new
+		// Path(fPathField.getText()),
+		// IncludePathVariableManager.instance().isReserved(fNameField.getText()));
 	}
 
 	/*
@@ -118,16 +126,18 @@ public class VariableCreationDialog extends StatusDialog {
 		int fieldWidthHint = convertWidthInCharsToPixels(50);
 
 		fNameField.doFillIntoGrid(inner, 2);
-		LayoutUtil.setWidthHint(fNameField.getTextControl(null), fieldWidthHint);
+		LayoutUtil
+				.setWidthHint(fNameField.getTextControl(null), fieldWidthHint);
 		LayoutUtil.setHorizontalGrabbing(fNameField.getTextControl(null));
 
 		DialogField.createEmptySpace(inner, 1);
 
 		fPathField.doFillIntoGrid(inner, 3);
-		LayoutUtil.setWidthHint(fPathField.getTextControl(null), fieldWidthHint);
+		LayoutUtil
+				.setWidthHint(fPathField.getTextControl(null), fieldWidthHint);
 
-//		DialogField.createEmptySpace(inner, 2);
-//		fDirButton.doFillIntoGrid(inner, 1);
+		// DialogField.createEmptySpace(inner, 2);
+		// fDirButton.doFillIntoGrid(inner, 1);
 
 		DialogField focusField = (fElement == null) ? fNameField : fPathField;
 		focusField.postSetFocusOnDialogField(parent.getDisplay());
@@ -137,7 +147,8 @@ public class VariableCreationDialog extends StatusDialog {
 
 	// -------- NewVariableAdapter --------
 
-	private class NewVariableAdapter implements IDialogFieldListener, IStringButtonAdapter {
+	private class NewVariableAdapter implements IDialogFieldListener,
+			IStringButtonAdapter {
 
 		// -------- IDialogFieldListener
 		public void dialogFieldChanged(DialogField field) {
@@ -180,15 +191,15 @@ public class VariableCreationDialog extends StatusDialog {
 		StatusInfo status = new StatusInfo();
 		String name = fNameField.getText();
 		if (name.length() == 0) {
-			status.setError(PHPUIMessages.getString("VariableCreationDialog_error_entername"));
+			status.setError(PHPUIMessages.VariableCreationDialog_error_entername);
 			return status;
 		}
 		if (name.trim().length() != name.length()) {
-			status.setError(PHPUIMessages.getString("VariableCreationDialog_error_whitespace"));
+			status.setError(PHPUIMessages.VariableCreationDialog_error_whitespace);
 		} else if (!Path.ROOT.isValidSegment(name)) {
-			status.setError(PHPUIMessages.getString("VariableCreationDialog_error_invalidname"));
+			status.setError(PHPUIMessages.VariableCreationDialog_error_invalidname);
 		} else if (nameConflict(name)) {
-			status.setError(PHPUIMessages.getString("VariableCreationDialog_error_nameexists"));
+			status.setError(PHPUIMessages.VariableCreationDialog_error_nameexists);
 		}
 		return status;
 	}
@@ -212,9 +223,9 @@ public class VariableCreationDialog extends StatusDialog {
 		String path = fPathField.getText();
 		if (path.length() > 0) { // empty path is ok
 			if (!Path.ROOT.isValidPath(path)) {
-				status.setError(PHPUIMessages.getString("VariableCreationDialog_error_invalidpath"));
+				status.setError(PHPUIMessages.VariableCreationDialog_error_invalidpath);
 			} else if (!new File(path).exists()) {
-				status.setWarning(PHPUIMessages.getString("VariableCreationDialog_warning_pathnotexists"));
+				status.setWarning(PHPUIMessages.VariableCreationDialog_warning_pathnotexists);
 			}
 		}
 		return status;
@@ -234,34 +245,37 @@ public class VariableCreationDialog extends StatusDialog {
 		return initPath;
 	}
 
-//	/*
-//	 * Open a dialog to choose a jar from the file system
-//	 */
-//	private IPath chooseExtZipFile() {
-//		String initPath = getInitPath();
-//
-//		FileDialog dialog = new FileDialog(getShell());
-//		dialog.setText(PHPUIMessages.getString("VariableCreationDialog_extjardialog_text"));
-//		dialog.setFilterExtensions(new String[] { "*.zip", "*.jar" }); //$NON-NLS-1$
-//		dialog.setFilterPath(initPath);
-//		String res = dialog.open();
-//		if (res != null) {
-////			fDialogSettings.put(IncludePathDialogAccess.DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
-//			return Path.fromOSString(res).makeAbsolute();
-//		}
-//		return null;
-//	}
+	// /*
+	// * Open a dialog to choose a jar from the file system
+	// */
+	// private IPath chooseExtZipFile() {
+	// String initPath = getInitPath();
+	//
+	// FileDialog dialog = new FileDialog(getShell());
+	// dialog.setText(PHPUIMessages.getString("VariableCreationDialog_extjardialog_text"));
+	//		dialog.setFilterExtensions(new String[] { "*.zip", "*.jar" }); //$NON-NLS-1$
+	// dialog.setFilterPath(initPath);
+	// String res = dialog.open();
+	// if (res != null) {
+	// // fDialogSettings.put(IncludePathDialogAccess.DIALOGSTORE_LASTEXTZIP,
+	// dialog.getFilterPath());
+	// return Path.fromOSString(res).makeAbsolute();
+	// }
+	// return null;
+	// }
 
 	private IPath chooseExtDirectory() {
 		String initPath = getInitPath();
 
-		DirectoryDialog dialog = new DirectoryDialog(getParentShell(), SWT.APPLICATION_MODAL);
-		dialog.setText(PHPUIMessages.getString("VariableCreationDialog_extdirdialog_text"));
-		dialog.setMessage(PHPUIMessages.getString("VariableCreationDialog_extdirdialog_message"));
+		DirectoryDialog dialog = new DirectoryDialog(getParentShell(),
+				SWT.APPLICATION_MODAL);
+		dialog.setText(PHPUIMessages.VariableCreationDialog_extdirdialog_text);
+		dialog.setMessage(PHPUIMessages.VariableCreationDialog_extdirdialog_message);
 		dialog.setFilterPath(initPath);
 		String res = dialog.open();
 		if (res != null) {
-//			fDialogSettings.put(IncludePathDialogAccess.DIALOGSTORE_LASTEXTZIP, dialog.getFilterPath());
+			// fDialogSettings.put(IncludePathDialogAccess.DIALOGSTORE_LASTEXTZIP,
+			// dialog.getFilterPath());
 			return Path.fromOSString(res);
 		}
 		return null;

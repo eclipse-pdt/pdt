@@ -1,26 +1,31 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.util.StatusInfo;
@@ -32,11 +37,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
+import org.osgi.service.prefs.BackingStoreException;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  */
-public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock {
+public class TodoTaskConfigurationBlock extends
+		PHPCoreOptionsConfigurationBlock {
 
 	private static final Key PREF_TASK_TAGS = getPHPCoreKey(PHPCoreConstants.TASK_TAGS);
 	private static final Key PREF_TASK_PRIORITIES = getPHPCoreKey(PHPCoreConstants.TASK_PRIORITIES);
@@ -55,61 +67,83 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		public String priority;
 	}
 
-	private class TodoTaskLabelProvider extends LabelProvider implements ITableLabelProvider, IFontProvider {
+	private class TodoTaskLabelProvider extends LabelProvider implements
+			ITableLabelProvider, IFontProvider {
 
 		public TodoTaskLabelProvider() {
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 		 */
 		public Image getImage(Object element) {
 			return null; // JavaPluginImages.get(JavaPluginImages.IMG_OBJS_REFACTORING_INFO);
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
 		public String getText(Object element) {
 			return getColumnText(element, 0);
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
+		 * .lang.Object, int)
 		 */
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
+		 * lang.Object, int)
 		 */
 		public String getColumnText(Object element, int columnIndex) {
 			TodoTask task = (TodoTask) element;
 			if (columnIndex == 0) {
 				String name = task.name;
 				if (isDefaultTask(task)) {
-					name = MessageFormat.format(PHPUIMessages.getString("TodoTaskConfigurationBlock_tasks_default"), new Object[] { name });
+					name = MessageFormat
+							.format(
+									PHPUIMessages.TodoTaskConfigurationBlock_tasks_default,
+									new Object[] { name });
 				}
 				return name;
 			} else {
 				if (PRIORITY_HIGH.equals(task.priority)) {
-					return PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_high_priority");
+					return PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_high_priority;
 				} else if (PRIORITY_NORMAL.equals(task.priority)) {
-					return PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_normal_priority");
+					return PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_normal_priority;
 				} else if (PRIORITY_LOW.equals(task.priority)) {
-					return PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_low_priority");
+					return PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_low_priority;
 				}
 				return ""; //$NON-NLS-1$
 			}
 		}
 
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
 		 */
 		public Font getFont(Object element) {
 			if (isDefaultTask((TodoTask) element)) {
-				return JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT);
+				return JFaceResources.getFontRegistry().getBold(
+						JFaceResources.DIALOG_FONT);
 			}
 			return null;
 		}
@@ -130,23 +164,33 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	private ListDialogField fTodoTasksList;
 	private SelectionButtonDialogField fCaseSensitiveCheckBox;
 
-	public TodoTaskConfigurationBlock(IStatusChangeListener context, IProject project, IWorkbenchPreferenceContainer container) {
+	public TodoTaskConfigurationBlock(IStatusChangeListener context,
+			IProject project, IWorkbenchPreferenceContainer container) {
 		super(context, project, getKeys(), container);
 
 		TaskTagAdapter adapter = new TaskTagAdapter();
-		String[] buttons = new String[] { PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_add_button"), PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_edit_button"), PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_remove_button"), null,
-			PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_setdefault_button"), };
-		fTodoTasksList = new ListDialogField(adapter, buttons, new TodoTaskLabelProvider());
+		String[] buttons = new String[] {
+				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_add_button,
+				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_edit_button,
+				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_remove_button,
+				null,
+				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_setdefault_button, };
+		fTodoTasksList = new ListDialogField(adapter, buttons,
+				new TodoTaskLabelProvider());
 		fTodoTasksList.setDialogFieldListener(adapter);
 		fTodoTasksList.setRemoveButtonIndex(IDX_REMOVE);
 
-		String[] columnsHeaders = new String[] { PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_name_column"), PHPUIMessages.getString("TodoTaskConfigurationBlock_markers_tasks_priority_column"), };
+		String[] columnsHeaders = new String[] {
+				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_name_column,
+				PHPUIMessages.TodoTaskConfigurationBlock_markers_tasks_priority_column, };
 
-		fTodoTasksList.setTableColumns(new ListDialogField.ColumnsDescription(columnsHeaders, true));
+		fTodoTasksList.setTableColumns(new ListDialogField.ColumnsDescription(
+				columnsHeaders, true));
 		fTodoTasksList.setViewerSorter(new TodoTaskSorter());
 
 		fCaseSensitiveCheckBox = new SelectionButtonDialogField(SWT.CHECK);
-		fCaseSensitiveCheckBox.setLabelText(PHPUIMessages.getString("TodoTaskConfigurationBlock_casesensitive_label"));
+		fCaseSensitiveCheckBox
+				.setLabelText(PHPUIMessages.TodoTaskConfigurationBlock_casesensitive_label);
 		fCaseSensitiveCheckBox.setDialogFieldListener(adapter);
 
 		unpackTodoTasks();
@@ -178,7 +222,8 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 	}
 
 	private static Key[] getKeys() {
-		return new Key[] { PREF_TASK_TAGS, PREF_TASK_PRIORITIES, PREF_TASK_CASE_SENSITIVE };
+		return new Key[] { PREF_TASK_TAGS, PREF_TASK_PRIORITIES,
+				PREF_TASK_CASE_SENSITIVE };
 	}
 
 	public class TaskTagAdapter implements IListAdapter, IDialogFieldListener {
@@ -188,7 +233,8 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		}
 
 		private boolean canSetToDefault(List selectedElements) {
-			return selectedElements.size() == 1 && !isDefaultTask((TodoTask) selectedElements.get(0));
+			return selectedElements.size() == 1
+					&& !isDefaultTask((TodoTask) selectedElements.get(0));
 		}
 
 		public void customButtonPressed(ListDialogField field, int index) {
@@ -241,14 +287,17 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		listControl.setLayoutData(data);
 
 		Control buttonsControl = fTodoTasksList.getButtonBox(markersComposite);
-		buttonsControl.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_BEGINNING));
+		buttonsControl.setLayoutData(new GridData(
+				GridData.HORIZONTAL_ALIGN_FILL
+						| GridData.VERTICAL_ALIGN_BEGINNING));
 
 		fCaseSensitiveCheckBox.doFillIntoGrid(markersComposite, 2);
 
 		return markersComposite;
 	}
 
-	protected void validateSettings(Key changedKey, String oldValue, String newValue) {
+	protected void validateSettings(Key changedKey, String oldValue,
+			String newValue) {
 		if (changedKey != null) {
 			if (PREF_TASK_TAGS.equals(changedKey)) {
 				fTaskTagsStatus = validateTaskTags();
@@ -258,7 +307,8 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		} else {
 			fTaskTagsStatus = validateTaskTags();
 		}
-		IStatus status = fTaskTagsStatus; //StatusUtil.getMostSevere(new IStatus[] { fTaskTagsStatus });
+		IStatus status = fTaskTagsStatus; // StatusUtil.getMostSevere(new
+		// IStatus[] { fTaskTagsStatus });
 		fContext.statusChanged(status);
 	}
 
@@ -284,7 +334,8 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 			setValue(PREF_TASK_PRIORITIES, prios.toString());
 			validateSettings(PREF_TASK_TAGS, null, null);
 		} else if (field == fCaseSensitiveCheckBox) {
-			String state = fCaseSensitiveCheckBox.isSelected() ? ENABLED : DISABLED;
+			String state = fCaseSensitiveCheckBox.isSelected() ? ENABLED
+					: DISABLED;
 			setValue(PREF_TASK_CASE_SENSITIVE, state);
 		}
 	}
@@ -293,20 +344,23 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		super.useProjectSpecificSettings(enable);
 		fTodoTasksList.setEnabled(enable);
 	}
-	
+
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
-		String title = PHPUIMessages.getString("TodoTaskConfigurationBlock_needsbuild_title");
+		String title = PHPUIMessages.TodoTaskConfigurationBlock_needsbuild_title;
 		String message;
 		if (fProject == null) {
-			message = PHPUIMessages.getString("TodoTaskConfigurationBlock_needsfullbuild_message");
+			message = PHPUIMessages.TodoTaskConfigurationBlock_needsfullbuild_message;
 		} else {
-			message = PHPUIMessages.getString("TodoTaskConfigurationBlock_needsprojectbuild_message");
+			message = PHPUIMessages.TodoTaskConfigurationBlock_needsprojectbuild_message;
 		}
 		return new String[] { title, message };
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock#updateControls()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @seeorg.eclipse.jdt.internal.ui.preferences.OptionsConfigurationBlock#
+	 * updateControls()
 	 */
 	protected void updateControls() {
 		unpackTodoTasks();
@@ -336,7 +390,8 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 			edited = (TodoTask) fTodoTasksList.getSelectedElements().get(0);
 		}
 		if (index == IDX_ADD || index == IDX_EDIT) {
-			TodoTaskInputDialog dialog = new TodoTaskInputDialog(getShell(), edited, fTodoTasksList.getElements());
+			TodoTaskInputDialog dialog = new TodoTaskInputDialog(getShell(),
+					edited, fTodoTasksList.getElements());
 			if (dialog.open() == Window.OK) {
 				if (edited != null) {
 					fTodoTasksList.replaceElement(edited, dialog.getResult());
@@ -349,4 +404,41 @@ public class TodoTaskConfigurationBlock extends PHPCoreOptionsConfigurationBlock
 		}
 	}
 
+	@Override
+	protected void prepareForBuild() {
+		try {
+			fManager.applyChanges();
+		} catch (BackingStoreException e) {
+			PHPUiPlugin.log(e);
+			return;
+		}
+		IEditorReference[] editors = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage()
+				.getEditorReferences();
+		for (int i = 0; i < editors.length; i++) {
+			IEditorReference editorReference = editors[i];
+			IEditorPart editor = editorReference.getEditor(false);
+			if (editor instanceof PHPStructuredEditor) {
+				PHPStructuredEditor phpEditor = (PHPStructuredEditor) editor;
+				boolean isDirty = phpEditor.isDirty();
+				if (phpEditor.getTextViewer() instanceof PHPStructuredTextViewer) {
+					PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) phpEditor
+							.getTextViewer();
+					IDocumentAdapter documentAdapter = textViewer
+							.getDocumentAdapter();
+					IDocument document = phpEditor.getDocument();
+					String content = document.get();
+					if (documentAdapter != null) {
+						documentAdapter.replaceTextRange(0, content.length(),
+								"");
+						documentAdapter.replaceTextRange(0, 0, content);
+					}
+
+				}
+				if (!isDirty) {
+					phpEditor.doSave(null);
+				}
+			}
+		}
+	}
 }

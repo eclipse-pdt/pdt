@@ -42,7 +42,9 @@ public class PHPVersionConfigurationBlock extends
 			PHPVersion.PHP5_3.getAlias() };
 
 	public static final String[] PHP_VERSION_DESCRIPTIONS = {
-			PHPUIMessages.getString("PHPCreationDataModelProvider.0"), PHPUIMessages.getString("PHPCreationDataModelProvider.1"), PHPUIMessages.getString("PHPCreationDataModelProvider.2") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			PHPUIMessages.PHPCreationDataModelProvider_0,
+			PHPUIMessages.PHPCreationDataModelProvider_1,
+			PHPUIMessages.PHPCreationDataModelProvider_2 }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	private static final Key PREF_PHP_VERSION = getPHPCoreKey(Keys.PHP_VERSION);
 	private static final Key PREF_ASP_TAGS = getPHPCoreKey(Keys.EDITOR_USE_ASP_TAGS);
@@ -85,8 +87,8 @@ public class PHPVersionConfigurationBlock extends
 
 	private void createUseShortTagsContent(Composite composite) {
 		useShortTagsButton = new Button(composite, SWT.CHECK | SWT.RIGHT);
-		useShortTagsButton.setText(PHPUIMessages
-				.getString("Preferences_php_editor_useShortTagsAsPhp_label"));
+		useShortTagsButton
+				.setText(PHPUIMessages.Preferences_php_editor_useShortTagsAsPhp_label);
 		useShortTagsButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 				setUseShortTagsValue(Boolean.toString(useShortTagsButton
@@ -119,7 +121,7 @@ public class PHPVersionConfigurationBlock extends
 		composite.setLayout(layout);
 
 		nameLabel = new Label(composite, SWT.NONE);
-		nameLabel.setText(PHPUIMessages.getString("PHPVersionComboName"));
+		nameLabel.setText(PHPUIMessages.PHPVersionComboName);
 
 		GC gc = new GC(nameLabel);
 		gc.setFont(nameLabel.getFont());
@@ -191,15 +193,12 @@ public class PHPVersionConfigurationBlock extends
 	}
 
 	protected String[] getFullBuildDialogStrings(boolean workspaceSettings) {
-		String title = PHPUIMessages
-				.getString("PHPVersionConfigurationBlock_needsbuild_title");
+		String title = PHPUIMessages.PHPVersionConfigurationBlock_needsbuild_title;
 		String message;
 		if (workspaceSettings) {
-			message = PHPUIMessages
-					.getString("PHPVersionConfigurationBlock_needsfullbuild_message");
+			message = PHPUIMessages.PHPVersionConfigurationBlock_needsfullbuild_message;
 		} else {
-			message = PHPUIMessages
-					.getString("PHPVersionConfigurationBlock_needsprojectbuild_message");
+			message = PHPUIMessages.PHPVersionConfigurationBlock_needsprojectbuild_message;
 		}
 		return new String[] { title, message };
 		// return null;

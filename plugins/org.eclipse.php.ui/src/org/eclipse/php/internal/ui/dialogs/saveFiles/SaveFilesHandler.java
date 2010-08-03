@@ -1,7 +1,14 @@
-/**
- * Copyright (c) 2006 Zend Technologies
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  * 
- */
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.saveFiles;
 
 import java.util.ArrayList;
@@ -13,18 +20,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.*;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 
 /**
  * @author seva
- *
+ * 
  */
 public class SaveFilesHandler {
-	public static SaveFilesResult handle(IProject project, boolean autoSave, boolean promptAutoSave, IProgressMonitor monitor) {
+	public static SaveFilesResult handle(IProject project, boolean autoSave,
+			boolean promptAutoSave, IProgressMonitor monitor) {
 		SaveFilesResult result = new SaveFilesResult();
 		List dirtyEditors = getDirtyEditors(project);
 		if (dirtyEditors == null || dirtyEditors.size() == 0) {
@@ -32,14 +38,17 @@ public class SaveFilesHandler {
 			return result;
 		}
 		if (!autoSave) {
-			Display.getDefault().syncExec(new SaveFilesDialogRunnable(dirtyEditors, result, promptAutoSave));
+			Display.getDefault().syncExec(
+					new SaveFilesDialogRunnable(dirtyEditors, result,
+							promptAutoSave));
 		} else {
 			result.setAccepted(true);
 			result.setSaved(dirtyEditors);
 		}
 		List editorsToSave = result.getSaved();
 		if (editorsToSave.size() > 0) {
-			Display.getDefault().syncExec(new SaveFilesRunnable(editorsToSave, monitor));
+			Display.getDefault().syncExec(
+					new SaveFilesRunnable(editorsToSave, monitor));
 		}
 		if (monitor.isCanceled()) {
 			result.setAccepted(false);
@@ -48,13 +57,13 @@ public class SaveFilesHandler {
 	}
 
 	/**
-	 * Retreive an array of IEditorParts representing all the dirty
-	 * editors open for the files provided in the list.
+	 * Retreive an array of IEditorParts representing all the dirty editors open
+	 * for the files provided in the list.
 	 * 
 	 * @param files
-	 * 			A list of IFiles.
-	 * @return
-	 * 			An array of IEditorParts containing all the dirty editors for the files in the list.
+	 *            A list of IFiles.
+	 * @return An array of IEditorParts containing all the dirty editors for the
+	 *         files in the list.
 	 */
 	public static List getDirtyEditors(IProject project) {
 		List result = new ArrayList(0);
@@ -70,28 +79,15 @@ public class SaveFilesHandler {
 					if (input instanceof IFileEditorInput) {
 						IFileEditorInput fileInput = (IFileEditorInput) input;
 						IFile file = fileInput.getFile();
-						if (project != null && !(file.getProject() == project)){
+						if (project != null && !(file.getProject() == project)) {
 							continue;
 						}
-						result.add(ep);
-					} else
-						
-					if (isExternalFileInput(project, input)) {
 						result.add(ep);
 					}
 				}
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * @param project current project
-	 * @param input editor input
-	 * @return true if the input is of external file
-	 */
-	private static boolean isExternalFileInput(IProject project, IEditorInput input) {
-		return project == PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject() && input instanceof FileStoreEditorInput;
 	}
 
 	protected static class SaveFilesRunnable implements Runnable {
@@ -104,7 +100,8 @@ public class SaveFilesHandler {
 		}
 
 		public void run() {
-			monitor.beginTask(PHPUIMessages.getString("SaveFilesHandler.0"), dirtyEditors.size()); //$NON-NLS-1$
+			monitor.beginTask(PHPUIMessages.SaveFilesHandler_0, dirtyEditors
+					.size()); //$NON-NLS-1$
 			for (Iterator i = dirtyEditors.iterator(); i.hasNext();) {
 				if (monitor.isCanceled()) {
 					return;
@@ -121,14 +118,16 @@ public class SaveFilesHandler {
 		SaveFilesResult result;
 		boolean promptAutoSave;
 
-		public SaveFilesDialogRunnable(List dirtyEditors, SaveFilesResult result, boolean promptAutoSave) {
+		public SaveFilesDialogRunnable(List dirtyEditors,
+				SaveFilesResult result, boolean promptAutoSave) {
 			this.dirtyEditors = dirtyEditors;
 			this.result = result;
 			this.promptAutoSave = promptAutoSave;
 		}
 
 		public void run() {
-			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent().getActiveShell(), dirtyEditors, result, promptAutoSave);
+			SaveFilesDialog sfDialog = new SaveFilesDialog(Display.getCurrent()
+					.getActiveShell(), dirtyEditors, result, promptAutoSave);
 			if (sfDialog.open() == Window.OK) {
 				result.setAccepted(true);
 				result.setSaved(Arrays.asList(sfDialog.getResult()));
@@ -136,6 +135,7 @@ public class SaveFilesHandler {
 		}
 
 	}
+
 	public static class SaveFilesResult {
 		boolean autoSave;
 		boolean accepted;

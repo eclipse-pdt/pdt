@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
@@ -34,11 +35,12 @@ public class OpenEditorActionGroup extends ActionGroup {
 	private OpenAction fOpen;
 
 	/**
-	 * Creates a new <code>OpenActionGroup</code>. The group requires
-	 * that the selection provided by the part's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
+	 * Creates a new <code>OpenActionGroup</code>. The group requires that the
+	 * selection provided by the part's selection provider is of type <code>
+	 * org.eclipse.jface.viewers.IStructuredSelection</code> .
 	 * 
-	 * @param part the view part that owns this action group
+	 * @param part
+	 *            the view part that owns this action group
 	 */
 	public OpenEditorActionGroup(IViewPart part) {
 		fSite = part.getSite();
@@ -48,10 +50,10 @@ public class OpenEditorActionGroup extends ActionGroup {
 	}
 
 	/**
-	 * Returns the open action managed by this action group. 
+	 * Returns the open action managed by this action group.
 	 * 
-	 * @return the open action. Returns <code>null</code> if the group
-	 * 	doesn't provide any open action
+	 * @return the open action. Returns <code>null</code> if the group doesn't
+	 *         provide any open action
 	 */
 	public IAction getOpenAction() {
 		return fOpen;
@@ -65,20 +67,19 @@ public class OpenEditorActionGroup extends ActionGroup {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillActionBars(IActionBars actionBar) {
 		super.fillActionBars(actionBar);
 		setGlobalActionHandlers(actionBar);
 	}
 
-	/* (non-Javadoc)
-	 * Method declared in ActionGroup
+	/*
+	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
-		fOpen = new OpenAction(fSite);        
 		fOpen.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_EDITOR);
 		appendToGroup(menu, fOpen);
 		if (!fIsEditorOwner) {
@@ -122,7 +123,7 @@ public class OpenEditorActionGroup extends ActionGroup {
 			return;
 
 		// Create a menu.
-		IMenuManager submenu = new MenuManager(PHPUIMessages.getString("OpenWithMenu_label"));
+		IMenuManager submenu = new MenuManager(PHPUIMessages.OpenWithMenu_label);
 		submenu.add(new OpenWithMenu(fSite.getPage(), (IFile) resource));
 
 		// Add the submenu.

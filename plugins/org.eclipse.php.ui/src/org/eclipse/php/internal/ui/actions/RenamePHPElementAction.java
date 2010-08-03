@@ -1,26 +1,27 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.ui.IWorkbenchSite;
-
 
 public class RenamePHPElementAction extends SelectionDispatchAction {
 
@@ -36,7 +37,8 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		setEnabled(SelectionConverter.canOperateOn(fEditor));
 	}
 
-	//---- Structured selection ------------------------------------------------
+	// ---- Structured selection
+	// ------------------------------------------------
 
 	public void selectionChanged(IStructuredSelection selection) {
 		try {
@@ -50,24 +52,25 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		setEnabled(false);
 	}
 
-	private static boolean canEnable(IStructuredSelection selection) throws CoreException {
-		PHPCodeData element = getPHPElement(selection);
+	private static boolean canEnable(IStructuredSelection selection)
+			throws CoreException {
+		IModelElement element = getPHPElement(selection);
 		if (element == null)
 			return false;
 		return isRenameAvailable(element);
 	}
 
-	private static PHPCodeData getPHPElement(IStructuredSelection selection) {
+	private static IModelElement getPHPElement(IStructuredSelection selection) {
 		if (selection.size() != 1)
 			return null;
 		Object first = selection.getFirstElement();
-		if (!(first instanceof PHPCodeData))
+		if (!(first instanceof IModelElement))
 			return null;
-		return (PHPCodeData) first;
+		return (IModelElement) first;
 	}
 
 	public void run(IStructuredSelection selection) {
-		PHPCodeData element = getPHPElement(selection);
+		IModelElement element = getPHPElement(selection);
 		if (element == null) {
 			super.run(selection);
 			return;
@@ -75,11 +78,14 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		try {
 			run(element);
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_exception"));
+			ExceptionHandler.handle(e,
+					PHPUIMessages.RenamePHPElementAction_name,
+					PHPUIMessages.RenamePHPElementAction_exception);
 		}
 	}
 
-	//---- text selection ------------------------------------------------------------
+	// ---- text selection
+	// ------------------------------------------------------------
 
 	public void selectionChanged(ITextSelection selection) {
 		setEnabled(true);
@@ -87,19 +93,23 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 
 	public void run(ITextSelection selection) {
 		try {
-			PHPCodeData element = getPHPElement();
+			IModelElement element = getPHPElement();
 			if (element != null && isRenameAvailable(element)) {
 				run(element);
 				return;
 			}
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_exception"));
+			ExceptionHandler.handle(e,
+					PHPUIMessages.RenamePHPElementAction_name,
+					PHPUIMessages.RenamePHPElementAction_exception);
 		}
-		MessageDialog.openInformation(getShell(), PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_not_available"));
+		MessageDialog.openInformation(getShell(),
+				PHPUIMessages.RenamePHPElementAction_name,
+				PHPUIMessages.RenamePHPElementAction_not_available);
 	}
 
-	public boolean canRun() {
-		PHPCodeData element = getPHPElement();
+	public boolean canRun() throws ModelException {
+		IModelElement element = getPHPElement();
 		if (element == null)
 			return false;
 		try {
@@ -110,23 +120,25 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		return false;
 	}
 
-	private PHPCodeData getPHPElement() {
-		PHPCodeData[] elements = SelectionConverter.codeResolveHandled(fEditor, getShell(), PHPUIMessages.getString("RenamePHPElementAction_name"));
+	private IModelElement getPHPElement() throws ModelException {
+		IModelElement[] elements = SelectionConverter.codeResolve(fEditor);
 		if (elements == null || elements.length != 1)
 			return null;
 		return elements[0];
 	}
 
-	//---- helper methods -------------------------------------------------------------------
+	// ---- helper methods
+	// -------------------------------------------------------------------
 
-	private void run(PHPCodeData element) throws CoreException {
+	private void run(IModelElement element) throws CoreException {
 		if (!ActionUtils.isProcessable(getShell(), element))
 			return;
-		throw new RuntimeException(PHPUIMessages.getString("RenamePHPElementAction.0")); //$NON-NLS-1$
+		throw new RuntimeException(PHPUIMessages.RenamePHPElementAction_0); //$NON-NLS-1$
 	}
 
-	private static boolean isRenameAvailable(PHPCodeData element) throws CoreException {
-		// do something here
+	private static boolean isRenameAvailable(IModelElement element)
+			throws CoreException {
+		// TODO do something here
 		return false;
 	}
 

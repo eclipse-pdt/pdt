@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
@@ -24,15 +25,18 @@ public class PHPRootContextField {
 
 	private Text rootContext;
 
-	public PHPRootContextField(Composite parent, DataModelSynchHelper synchHelper) {
+	public PHPRootContextField(Composite parent,
+			DataModelSynchHelper synchHelper) {
 		Label rootContextLabel = new Label(parent, SWT.NULL);
-		rootContextLabel.setText(PHPUIMessages.getString("PHPRootContextField.0")); //$NON-NLS-1$
+		rootContextLabel.setText(PHPUIMessages.PHPRootContextField_0); //$NON-NLS-1$
 
 		rootContext = new Text(parent, SWT.BORDER);
 
 		rootContext.setLayoutData(getTextLayoutData());
 		if (synchHelper != null) {
-			synchHelper.synchText(rootContext, PHPCoreConstants.PHPOPTION_CONTEXT_ROOT, new Control[] { rootContextLabel });
+			synchHelper.synchText(rootContext,
+					PHPCoreConstants.PHPOPTION_CONTEXT_ROOT,
+					new Control[] { rootContextLabel });
 		}
 	}
 
@@ -49,13 +53,14 @@ public class PHPRootContextField {
 
 		return value;
 	}
-	
+
 	protected Object getTextLayoutData() {
-		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_BEGINNING);
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.HORIZONTAL_ALIGN_BEGINNING);
 
 		return gd;
 	}
-	
+
 	public Text getRootContextText() {
 		return rootContext;
 	}

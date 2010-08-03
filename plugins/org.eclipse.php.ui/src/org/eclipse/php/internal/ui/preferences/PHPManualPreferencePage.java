@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
@@ -14,9 +15,11 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
-public class PHPManualPreferencePage extends AbstractConfigurationBlockPreferencePage {
+public class PHPManualPreferencePage extends
+		AbstractConfigurationBlockPreferencePage {
 
-	protected IPreferenceConfigurationBlock createConfigurationBlock(OverlayPreferenceStore overlayPreferenceStore) {
+	protected IPreferenceConfigurationBlock createConfigurationBlock(
+			OverlayPreferenceStore overlayPreferenceStore) {
 		return new PHPManualConfigurationBlock(this, overlayPreferenceStore);
 	}
 
@@ -25,7 +28,7 @@ public class PHPManualPreferencePage extends AbstractConfigurationBlockPreferenc
 	}
 
 	protected void setDescription() {
-		setDescription(PHPUIMessages.getString("PHPManualPreferencePage.0")); //$NON-NLS-1$
+		setDescription(PHPUIMessages.PHPManualPreferencePage_0); //$NON-NLS-1$
 	}
 
 	protected void setPreferenceStore() {

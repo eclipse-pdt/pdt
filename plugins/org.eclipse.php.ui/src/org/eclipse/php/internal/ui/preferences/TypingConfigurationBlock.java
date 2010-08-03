@@ -150,13 +150,13 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		control.setLayout(layout);
 
 		Composite autoCloseComposite;
-		autoCloseComposite = createSubsection(control, PHPUIMessages
-				.getString("typingPage_autoClose_title"));
+		autoCloseComposite = createSubsection(control,
+				PHPUIMessages.typingPage_autoClose_title);
 		addAutoclosingSection(autoCloseComposite);
 
 		Composite smartTabSection;
-		smartTabSection = createSubsection(control, PHPUIMessages
-				.getString("typingPage_smartTab_title"));
+		smartTabSection = createSubsection(control,
+				PHPUIMessages.typingPage_smartTab_title);
 		addSmartTabSection(smartTabSection);
 
 		scrolled.setContent(control);
@@ -171,8 +171,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		smartTabComposite.setLayout(layout);
 
 		String label;
-		label = PHPUIMessages
-				.getString("PHPEditorPreferencePage_typing_smartTab");
+		label = PHPUIMessages.PHPEditorPreferencePage_typing_smartTab;
 		addCheckBox(smartTabComposite, label,
 				PreferenceConstants.EDITOR_SMART_TAB, 0);
 
@@ -184,8 +183,7 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 	private Link formatterPageLink;
 
 	private void createAutoIndentMessage(final Composite composite) {
-		String linkTooltip = PHPUIMessages
-				.getString("SmartTypingConfigurationBlock_tabs_message_tooltip");
+		String linkTooltip = PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tooltip;
 		char indentChar = FormatPreferencesSupport.getInstance()
 				.getIndentationChar(null);
 
@@ -193,16 +191,16 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 			autoIndentDetails = Messages
 					.format(
-							PHPUIMessages
-									.getString("SmartTypingConfigurationBlock_tabs_message_tab_text"),
+							PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
 							new String[] { Integer.toString(4) });
 		} else {
 			int indentSize = FormatPreferencesSupport.getInstance()
 					.getIndentationSize(null);
 			autoIndentDetails = Messages
 					.format(
-							PHPUIMessages
-									.getString("SmartTypingConfigurationBlock_tabs_message_others_text"), new String[] { Integer.toString(4), Integer.toString(indentSize), "space" }); //$NON-NLS-1$
+							PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
+							new String[] { Integer.toString(4),
+									Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}
 
 		formatterPageLink = new Link(composite, SWT.NONE);
@@ -240,28 +238,27 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		String label;
 		Button master, slave;
 
-		label = PHPUIMessages.getString("typingPage_autoClose_string");
+		label = PHPUIMessages.typingPage_autoClose_string;
 		addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_STRINGS,
 				0);
 
-		label = PHPUIMessages.getString("typingPage_autoClose_brackets");
+		label = PHPUIMessages.typingPage_autoClose_brackets;
 		addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_CLOSE_BRACKETS, 0);
 
-		label = PHPUIMessages.getString("typingPage_autoClose_braces");
+		label = PHPUIMessages.typingPage_autoClose_braces;
 		addCheckBox(composite, label, PreferenceConstants.EDITOR_CLOSE_BRACES,
 				0);
 
-		label = PHPUIMessages
-				.getString("typingPage_autoClose_phpDoc_and_commens");
+		label = PHPUIMessages.typingPage_autoClose_phpDoc_and_commens;
 		master = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_CLOSE_PHPDOCS_AND_COMMENTS, 0);
 
-		label = PHPUIMessages.getString("typingPage_autoAdd_phpDoc_tags");
+		label = PHPUIMessages.typingPage_autoAdd_phpDoc_tags;
 		slave = addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_ADD_PHPDOC_TAGS, 0);
 
-		label = PHPUIMessages.getString("typingPage_autoAdd_phpClose_tags");
+		label = PHPUIMessages.typingPage_autoAdd_phpClose_tags;
 		addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS, 0);
 
@@ -359,16 +356,16 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 			autoIndentDetails = Messages
 					.format(
-							PHPUIMessages
-									.getString("SmartTypingConfigurationBlock_tabs_message_tab_text"),
+							PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
 							new String[] { Integer.toString(4) });
 		} else {
 			int indentSize = FormatPreferencesSupport.getInstance()
 					.getIndentationSize(null);
 			autoIndentDetails = Messages
 					.format(
-							PHPUIMessages
-									.getString("SmartTypingConfigurationBlock_tabs_message_others_text"), new String[] { Integer.toString(4), Integer.toString(indentSize), "space" }); //$NON-NLS-1$
+							PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
+							new String[] { Integer.toString(4),
+									Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}
 		formatterPageLink.setText(autoIndentDetails);
 	}

@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
@@ -57,8 +58,10 @@ public class FragmentedWizard implements IWizard {
 	/**
 	 * Create a new TaskWizard with the given title and root fragment.
 	 * 
-	 * @param title a title
-	 * @param rootFragment a root fragment
+	 * @param title
+	 *            a title
+	 * @param rootFragment
+	 *            a root fragment
 	 */
 	public FragmentedWizard(String title, WizardFragment rootFragment) {
 		this(title, rootFragment, null);
@@ -66,13 +69,18 @@ public class FragmentedWizard implements IWizard {
 	}
 
 	/**
-	 * Create a new TaskWizard with the given title, root fragment, and task model.
+	 * Create a new TaskWizard with the given title, root fragment, and task
+	 * model.
 	 * 
-	 * @param title a title
-	 * @param rootFragment a root fragment
-	 * @param taskModel a task model
+	 * @param title
+	 *            a title
+	 * @param rootFragment
+	 *            a root fragment
+	 * @param taskModel
+	 *            a task model
 	 */
-	public FragmentedWizard(String title, WizardFragment rootFragment, WizardModel taskModel) {
+	public FragmentedWizard(String title, WizardFragment rootFragment,
+			WizardModel taskModel) {
 		super();
 		if (title != null)
 			setWindowTitle(title);
@@ -103,17 +111,19 @@ public class FragmentedWizard implements IWizard {
 
 	/**
 	 * Cancel the client selection.
-	 *
+	 * 
 	 * @return boolean
 	 */
 	public boolean performCancel() {
 		final List list = getAllWizardFragments();
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException {
+			public void run(IProgressMonitor monitor)
+					throws InvocationTargetException {
 				try {
 					Iterator iterator = list.iterator();
 					while (iterator.hasNext())
-						executeTask((WizardFragment) iterator.next(), CANCEL, monitor);
+						executeTask((WizardFragment) iterator.next(), CANCEL,
+								monitor);
 				} catch (CoreException ce) {
 					throw new InvocationTargetException(ce);
 				}
@@ -132,7 +142,8 @@ public class FragmentedWizard implements IWizard {
 		} catch (Exception e) {
 			t = e;
 		}
-		PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Error cancelling task wizard", t)); //$NON-NLS-1$
+		PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0,
+				"Error cancelling task wizard", t)); //$NON-NLS-1$
 
 		if (t instanceof CoreException) {
 			openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
@@ -145,29 +156,32 @@ public class FragmentedWizard implements IWizard {
 
 	/*
 	 * Open a dialog window.
-	 *
+	 * 
 	 * @param message java.lang.String
 	 */
 	private static void openError(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
-				MessageDialog.openError(shell, PHPUIMessages.getString("FragmentedWizard.0"), message); //$NON-NLS-1$
+				MessageDialog.openError(shell,
+						PHPUIMessages.FragmentedWizard_0, message); //$NON-NLS-1$
 			}
 		});
 	}
 
 	/*
 	 * Open a dialog window.
-	 *
+	 * 
 	 * @param message java.lang.String
+	 * 
 	 * @param status IStatus
 	 */
 	private static void openError(final String message, final IStatus status) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
-				ErrorDialog.openError(shell, PHPUIMessages.getString("FragmentedWizard.1"), message, status); //$NON-NLS-1$
+				ErrorDialog.openError(shell, PHPUIMessages.FragmentedWizard_1,
+						message, status); //$NON-NLS-1$
 			}
 		});
 	}
@@ -184,7 +198,8 @@ public class FragmentedWizard implements IWizard {
 				// enter & exit the remaining pages
 				int index = list.indexOf(cFragment);
 				while (index > 0 && index < list.size() - 1) {
-					final WizardFragment fragment = (WizardFragment) list.get(++index);
+					final WizardFragment fragment = (WizardFragment) list
+							.get(++index);
 					try {
 						Display.getDefault().syncExec(new Runnable() {
 							public void run() {
@@ -193,7 +208,9 @@ public class FragmentedWizard implements IWizard {
 							}
 						});
 					} catch (Exception e) {
-						PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Could not enter/exit page", e)); //$NON-NLS-1$
+						PHPUiPlugin.log(new Status(IStatus.ERROR,
+								PHPUiPlugin.ID, 0,
+								"Could not enter/exit page", e)); //$NON-NLS-1$
 					}
 				}
 
@@ -211,9 +228,12 @@ public class FragmentedWizard implements IWizard {
 							try {
 								Iterator iterator = list.iterator();
 								while (iterator.hasNext())
-									executeTask((WizardFragment) iterator.next(), FINISH, monitor2);
+									executeTask((WizardFragment) iterator
+											.next(), FINISH, monitor2);
 							} catch (CoreException ce) {
-								Status status = new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, ce.getLocalizedMessage(), null);
+								Status status = new Status(IStatus.ERROR,
+										PHPUiPlugin.ID, 0, ce
+												.getLocalizedMessage(), null);
 								PHPUiPlugin.log(status);
 								return status;
 							}
@@ -227,7 +247,8 @@ public class FragmentedWizard implements IWizard {
 				} else {
 					Iterator iterator = list.iterator();
 					while (iterator.hasNext())
-						executeTask((WizardFragment) iterator.next(), FINISH, monitor);
+						executeTask((WizardFragment) iterator.next(), FINISH,
+								monitor);
 				}
 			}
 		};
@@ -235,15 +256,18 @@ public class FragmentedWizard implements IWizard {
 		Throwable t = null;
 		try {
 			if (getContainer() != null)
-				getContainer().run(true, true, new WorkspaceRunnableAdapter(runnable));
+				getContainer().run(true, true,
+						new WorkspaceRunnableAdapter(runnable));
 			else
 				runnable.run(new NullProgressMonitor());
 			return true;
 		} catch (InvocationTargetException te) {
-			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Error finishing task wizard", te)); //$NON-NLS-1$
+			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0,
+					"Error finishing task wizard", te)); //$NON-NLS-1$
 			t = te.getCause();
 		} catch (Exception e) {
-			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Error finishing task wizard 2", e)); //$NON-NLS-1$
+			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0,
+					"Error finishing task wizard 2", e)); //$NON-NLS-1$
 			t = e;
 		}
 		if (t instanceof CoreException) {
@@ -261,7 +285,8 @@ public class FragmentedWizard implements IWizard {
 		page.setWizard(this);
 	}
 
-	protected void executeTask(WizardFragment fragment, byte type, IProgressMonitor monitor) throws CoreException {
+	protected void executeTask(WizardFragment fragment, byte type,
+			IProgressMonitor monitor) throws CoreException {
 		if (fragment == null)
 			return;
 
@@ -282,7 +307,7 @@ public class FragmentedWizard implements IWizard {
 		if (oldIndex == newIndex)
 			return;
 
-		//safeExecuteTask(currentFragment, DEPARTURE);
+		// safeExecuteTask(currentFragment, DEPARTURE);
 		if (currentFragment != null)
 			currentFragment.exit();
 
@@ -293,8 +318,8 @@ public class FragmentedWizard implements IWizard {
 
 		while (oldIndex != newIndex) {
 			WizardFragment fragment = (WizardFragment) list.get(oldIndex);
-			//safeExecuteTask(fragment, ARRIVAL);
-			//safeExecuteTask(fragment, DEPARTURE);
+			// safeExecuteTask(fragment, ARRIVAL);
+			// safeExecuteTask(fragment, DEPARTURE);
 			fragment.enter();
 			fragment.exit();
 			if (oldIndex < newIndex)
@@ -304,7 +329,7 @@ public class FragmentedWizard implements IWizard {
 		}
 
 		currentFragment = newFragment;
-		//safeExecuteTask(currentFragment, ARRIVAL);
+		// safeExecuteTask(currentFragment, ARRIVAL);
 		currentFragment.enter();
 	}
 
@@ -332,7 +357,9 @@ public class FragmentedWizard implements IWizard {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#addPages()
 	 */
 	public void addPages() {
@@ -350,35 +377,36 @@ public class FragmentedWizard implements IWizard {
 					if (page != null)
 						addPage(page);
 					else {
-						FragmentedWizardPage page2 = new FragmentedWizardPage(fragment);
+						FragmentedWizardPage page2 = new FragmentedWizardPage(
+								fragment);
 						fragmentData.put(fragment, page2);
 						addPage(page2);
 					}
 				}
 			}
 		} catch (Exception e) {
-			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Error adding fragments to wizard", e)); //$NON-NLS-1$
+			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0,
+					"Error adding fragments to wizard", e)); //$NON-NLS-1$
 		} finally {
 			addingPages = false;
 		}
 	}
 
-	/*private static void updateWizardPages() {
-	 try {
-	 current.updatePages();
-	 current.getContainer().updateButtons();
-	 } catch (Exception e) {
-	 Trace.trace(Trace.SEVERE, "Error updating wizard pages", e);
-	 }
-	 }*/
+	/*
+	 * private static void updateWizardPages() { try { current.updatePages();
+	 * current.getContainer().updateButtons(); } catch (Exception e) {
+	 * Trace.trace(Trace.SEVERE, "Error updating wizard pages", e); } }
+	 */
 
 	private FragmentedWizardPage getFragmentData(WizardFragment fragment) {
 		try {
-			FragmentedWizardPage page = (FragmentedWizardPage) fragmentData.get(fragment);
+			FragmentedWizardPage page = (FragmentedWizardPage) fragmentData
+					.get(fragment);
 			if (page != null)
 				return page;
 		} catch (Exception e) {
-			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Error getting fragment data", e)); //$NON-NLS-1$
+			PHPUiPlugin.log(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0,
+					"Error getting fragment data", e)); //$NON-NLS-1$
 		}
 
 		return null;
@@ -388,7 +416,9 @@ public class FragmentedWizard implements IWizard {
 		addPages();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#canFinish()
 	 */
 	public boolean canFinish() {
@@ -400,8 +430,12 @@ public class FragmentedWizard implements IWizard {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.wizard.IWizard#createPageControls(org.eclipse.swt.widgets.Composite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.wizard.IWizard#createPageControls(org.eclipse.swt.widgets
+	 * .Composite)
 	 */
 	public void createPageControls(Composite pageContainer) {
 		// the default behavior is to create all the pages controls
@@ -411,7 +445,9 @@ public class FragmentedWizard implements IWizard {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#dispose()
 	 */
 	public void dispose() {
@@ -427,29 +463,39 @@ public class FragmentedWizard implements IWizard {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getContainer()
 	 */
 	public IWizardContainer getContainer() {
 		return container;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getDefaultPageImage()
 	 */
 	public Image getDefaultPageImage() {
 		return defaultImage;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getDialogSettings()
 	 */
 	public IDialogSettings getDialogSettings() {
 		return dialogSettings;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.wizard.IWizard#getNextPage(org.eclipse.jface.wizard
+	 * .IWizardPage)
 	 */
 	public IWizardPage getNextPage(IWizardPage page) {
 		int index = pages.indexOf(page);
@@ -460,7 +506,9 @@ public class FragmentedWizard implements IWizard {
 		return (IWizardPage) pages.get(index + 1);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getPage(java.lang.String)
 	 */
 	public IWizardPage getPage(String name) {
@@ -473,22 +521,30 @@ public class FragmentedWizard implements IWizard {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getPageCount()
 	 */
 	public int getPageCount() {
 		return pages.size();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getPages()
 	 */
 	public IWizardPage[] getPages() {
 		return (IWizardPage[]) pages.toArray(new IWizardPage[pages.size()]);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.wizard.IWizard#getPreviousPage(org.eclipse.jface.wizard.IWizardPage)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.wizard.IWizard#getPreviousPage(org.eclipse.jface.wizard
+	 * .IWizardPage)
 	 */
 	public IWizardPage getPreviousPage(IWizardPage page) {
 		int index = pages.indexOf(page);
@@ -498,7 +554,9 @@ public class FragmentedWizard implements IWizard {
 		return (IWizardPage) pages.get(index - 1);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getStartingPage()
 	 */
 	public IWizardPage getStartingPage() {
@@ -508,43 +566,57 @@ public class FragmentedWizard implements IWizard {
 		return (IWizardPage) pages.get(0);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getTitleBarColor()
 	 */
 	public RGB getTitleBarColor() {
 		return titleBarColor;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#getWindowTitle()
 	 */
 	public String getWindowTitle() {
 		return windowTitle;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#isHelpAvailable()
 	 */
 	public boolean isHelpAvailable() {
 		return isHelpAvailable;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#needsPreviousAndNextButtons()
 	 */
 	public boolean needsPreviousAndNextButtons() {
 		return forcePreviousAndNextButtons || pages.size() > 1;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.wizard.IWizard#needsProgressMonitor()
 	 */
 	public boolean needsProgressMonitor() {
 		return needsProgressMonitor;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.wizard.IWizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.wizard.IWizard#setContainer(org.eclipse.jface.wizard
+	 * .IWizardContainer)
 	 */
 	public void setContainer(IWizardContainer wizardContainer) {
 		this.container = wizardContainer;

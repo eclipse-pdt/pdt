@@ -1,16 +1,19 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -30,13 +33,14 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 
 	public PHPAppearancePreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
-		setDescription(PHPUIMessages.getString("PHPAppearancePreferencePage_appearanceHeader")); //$NON-NLS-1$
+		setDescription(PHPUIMessages.PHPAppearancePreferencePage_appearanceHeader); //$NON-NLS-1$
 	}
 
 	protected void initializeValues() {
 		super.initializeValues();
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
-		showReturnTypeCB.setSelection(store.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE));
+		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
+		showReturnTypeCB.setSelection(store
+				.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE));
 	}
 
 	private void createMainBlock(Composite parent) {
@@ -47,14 +51,16 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 		comp.setLayout(gridLayout);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		showReturnTypeCB = new Button(comp, SWT.CHECK);
-		showReturnTypeCB.setText(PHPUIMessages.getString("PHPAppearancePreferencePage_showMehodsReturnType")); //$NON-NLS-1$
+		showReturnTypeCB
+				.setText(PHPUIMessages.PHPAppearancePreferencePage_showMehodsReturnType); //$NON-NLS-1$
 		showReturnTypeCB.setLayoutData(gd);
 	}
 
 	protected Control createContents(Composite parent) {
 		createMainBlock(parent);
 		initializeValues();
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.APPEARANCE_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.APPEARANCE_PREFERENCES);
 		return null;
 	}
 
@@ -84,14 +90,15 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 	}
 
 	protected void performDefaults() {
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 		store.setValue(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE, false);
 		super.performDefaults();
 	}
 
 	public boolean performOk() {
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
-		store.setValue(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE, showReturnTypeCB.getSelection());
+		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
+		store.setValue(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE,
+				showReturnTypeCB.getSelection());
 		return super.performOk();
 	}
 

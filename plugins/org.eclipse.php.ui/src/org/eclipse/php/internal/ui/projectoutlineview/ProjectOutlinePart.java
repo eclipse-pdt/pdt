@@ -62,7 +62,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 
 	@Override
 	public String getTitleToolTip() {
-		return PHPUIMessages.getString("PHPProjectOutline.title.tooltip");
+		return PHPUIMessages.PHPProjectOutline_title_tooltip;
 	}
 
 	@Override

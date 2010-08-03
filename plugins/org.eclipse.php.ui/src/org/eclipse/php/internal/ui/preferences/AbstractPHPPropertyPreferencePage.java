@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
@@ -17,9 +18,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.jface.dialogs.ControlEnableState;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -42,7 +45,8 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceSorter;
 
-public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage implements IWorkbenchPreferencePage {
+public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage
+		implements IWorkbenchPreferencePage {
 	/*
 	 * Disable link data, prevents the display of a "workspace" or "project"
 	 * settings link to prevent recursive dialog launching
@@ -68,11 +72,13 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	}
 
 	protected Control createWorkspaceContents(Composite composite) {
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
+		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(
+				composite, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
 		group.setLayout(new GridLayout());
 		try {
-			workspaceAddons = PHPPreferencePageBlocksRegistry.getPHPPreferencePageBlock(getPreferencePageID());
+			workspaceAddons = PHPPreferencePageBlocksRegistry
+					.getPHPPreferencePageBlock(getPreferencePageID());
 			for (int i = 0; i < workspaceAddons.length; i++) {
 				workspaceAddons[i].setCompositeAddon(group);
 				workspaceAddons[i].initializeValues(this);
@@ -85,11 +91,13 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	}
 
 	protected Control createProjectContents(Composite composite) {
-		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(composite, SWT.V_SCROLL | SWT.H_SCROLL);
+		ScrolledCompositeImpl scrolledCompositeImpl = new ScrolledCompositeImpl(
+				composite, SWT.V_SCROLL | SWT.H_SCROLL);
 		Composite group = new Composite(scrolledCompositeImpl, SWT.NONE);
 		group.setLayout(new GridLayout());
 		try {
-			projectScopeAddons = PHPPreferencePageBlocksRegistry.getPHPPreferencePageBlock(getPropertyPageID());
+			projectScopeAddons = PHPPreferencePageBlocksRegistry
+					.getPHPPreferencePageBlock(getPropertyPageID());
 			for (int i = 0; i < projectScopeAddons.length; i++) {
 				projectScopeAddons[i].setCompositeAddon(group);
 				projectScopeAddons[i].initializeValues(this);
@@ -110,14 +118,19 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 		composite.setLayoutData(data);
 
 		Composite checkLinkComposite = new Composite(composite, SWT.NONE);
-		checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+				true, false));
 		checkLinkComposite.setLayout(new GridLayout(2, false));
 
 		if (getProject() != null) {
 			fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK);
-			fEnableProjectSettings.setText(PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.0")); //$NON-NLS-1$
-			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-			boolean enabledForProject = createPreferenceScopes()[0].getNode(getPreferenceNodeQualifier()).getBoolean(getProjectSettingsKey(), false);
+			fEnableProjectSettings
+					.setText(PHPUIMessages.AbstractPHPPropertyPreferencePage_0); //$NON-NLS-1$
+			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING,
+					SWT.CENTER, false, false));
+			boolean enabledForProject = createPreferenceScopes()[0].getNode(
+					getPreferenceNodeQualifier()).getBoolean(
+					getProjectSettingsKey(), false);
 			fEnableProjectSettings.setSelection(enabledForProject);
 		} else {
 			Label spacer = new Label(checkLinkComposite, SWT.CHECK);
@@ -126,16 +139,19 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 
 		fProjectSettingsLink = new Link(checkLinkComposite, SWT.NONE);
 		fProjectSettingsLink.setFont(composite.getFont());
-		fProjectSettingsLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
+		fProjectSettingsLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
+				true, false));
 
 		/*
 		 * "element" should be a project, if null, link to per-project
 		 * properties
 		 */
 		if (getProject() != null) {
-			fProjectSettingsLink.setText("<a>" + PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.1") + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+			fProjectSettingsLink
+					.setText("<a>" + PHPUIMessages.AbstractPHPPropertyPreferencePage_1 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 		} else {
-			fProjectSettingsLink.setText("<a>" + PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.2") + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+			fProjectSettingsLink
+					.setText("<a>" + PHPUIMessages.AbstractPHPPropertyPreferencePage_2 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 		}
 
 		updateLinkEnablement();
@@ -198,7 +214,8 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	protected IScopeContext[] createPreferenceScopes() {
 		IProject project = getProject();
 		if (project != null) {
-			return new IScopeContext[] { new ProjectScope(project), new InstanceScope(), new DefaultScope() };
+			return new IScopeContext[] { new ProjectScope(project),
+					new InstanceScope(), new DefaultScope() };
 		}
 		return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
 	}
@@ -208,8 +225,13 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	protected abstract String getPreferencePageID();
 
 	protected IProject getProject() {
-		if (getElement() != null && getElement() instanceof IProject) {
-			return (IProject) getElement();
+		IAdaptable element = getElement();
+		if (element != null) {
+			if (element instanceof IProject) {
+				return (IProject) element;
+			} else if (element instanceof IScriptProject) {
+				return ((IScriptProject) element).getProject();
+			}
 		}
 		return null;
 	}
@@ -219,7 +241,8 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	protected abstract String getPropertyPageID();
 
 	protected boolean isElementSettingsEnabled() {
-		return fEnableProjectSettings != null && fEnableProjectSettings.getSelection();
+		return fEnableProjectSettings != null
+				&& fEnableProjectSettings.getSelection();
 	}
 
 	void openProjectSettings() {
@@ -227,11 +250,12 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 
 			protected Control createDialogArea(Composite container) {
 				Control area = super.createDialogArea(container);
-				getTableViewer().setSorter(new ResourceSorter(ResourceSorter.NAME));
+				getTableViewer().setSorter(
+						new ResourceSorter(ResourceSorter.NAME));
 				return area;
 			}
 		};
-		dialog.setMessage(PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.3")); //$NON-NLS-1$
+		dialog.setMessage(PHPUIMessages.AbstractPHPPropertyPreferencePage_3); //$NON-NLS-1$
 		dialog.setContentProvider(new IStructuredContentProvider() {
 			public void dispose() {
 			}
@@ -240,19 +264,25 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 				return ((IWorkspace) inputElement).getRoot().getProjects();
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			public void inputChanged(Viewer viewer, Object oldInput,
+					Object newInput) {
 			}
 		});
-		dialog.setLabelProvider(new DecoratingLabelProvider(new WorkbenchLabelProvider(), PHPUiPlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator()));
+		dialog.setLabelProvider(new DecoratingLabelProvider(
+				new WorkbenchLabelProvider(), PHPUiPlugin.getDefault()
+						.getWorkbench().getDecoratorManager()
+						.getLabelDecorator()));
 		dialog.setInput(ResourcesPlugin.getWorkspace());
-		dialog.setTitle(PHPUIMessages.getString("AbstractPHPPropertyPreferencePage.4")); //$NON-NLS-1$
+		dialog.setTitle(PHPUIMessages.AbstractPHPPropertyPreferencePage_4); //$NON-NLS-1$
 		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length > 0) {
 				IProject project = (IProject) dialog.getResult()[0];
 				Map data = new HashMap();
 				data.put(DISABLE_LINK, Boolean.TRUE);
-				PreferencesUtil.createPropertyDialogOn(getShell(), project, getPropertyPageID(), new String[] { getPropertyPageID() }, data).open();
+				PreferencesUtil.createPropertyDialogOn(getShell(), project,
+						getPropertyPageID(),
+						new String[] { getPropertyPageID() }, data).open();
 			}
 		}
 	}
@@ -260,7 +290,9 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	void openWorkspaceSettings() {
 		Map data = new HashMap();
 		data.put(DISABLE_LINK, Boolean.TRUE);
-		PreferencesUtil.createPreferenceDialogOn(getShell(), getPreferencePageID(), new String[] { getPreferencePageID() }, data).open();
+		PreferencesUtil.createPreferenceDialogOn(getShell(),
+				getPreferencePageID(), new String[] { getPreferencePageID() },
+				data).open();
 	}
 
 	public boolean performOk() {
@@ -269,9 +301,12 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 		IScopeContext[] preferenceScopes = createPreferenceScopes();
 		if (getProject() != null) {
 			if (isElementSettingsEnabled()) {
-				preferenceScopes[0].getNode(getPreferenceNodeQualifier()).putBoolean(getProjectSettingsKey(), fEnableProjectSettings.getSelection());
+				preferenceScopes[0].getNode(getPreferenceNodeQualifier())
+						.putBoolean(getProjectSettingsKey(),
+								fEnableProjectSettings.getSelection());
 			} else {
-				preferenceScopes[0].getNode(getPreferenceNodeQualifier()).remove(getProjectSettingsKey());
+				preferenceScopes[0].getNode(getPreferenceNodeQualifier())
+						.remove(getProjectSettingsKey());
 			}
 		}
 
@@ -308,7 +343,8 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 
 	private void updateLinkEnablement() {
 		if (fData != null && fProjectSettingsLink != null) {
-			fProjectSettingsLink.setEnabled(!Boolean.TRUE.equals(fData.get(DISABLE_LINK)));
+			fProjectSettingsLink.setEnabled(!Boolean.TRUE.equals(fData
+					.get(DISABLE_LINK)));
 		}
 	}
 }

@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.folding;
 
@@ -15,7 +16,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.ui.folding.IPHPFoldingPreferenceBlock;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 /**
  * Describes a contribution to the folding provider extension point.
@@ -42,8 +42,9 @@ public final class PHPFoldingStructureProviderDescriptor {
 
 	/**
 	 * Creates a new descriptor.
-	 *
-	 * @param element the configuration element to read
+	 * 
+	 * @param element
+	 *            the configuration element to read
 	 */
 	PHPFoldingStructureProviderDescriptor(IConfigurationElement element) {
 		fElement = element;
@@ -62,35 +63,40 @@ public final class PHPFoldingStructureProviderDescriptor {
 
 	/**
 	 * Creates a folding provider as described in the extension's xml.
-	 *
+	 * 
 	 * @return a new instance of the folding provider described by this
 	 *         descriptor
-	 * @throws CoreException if creation fails
+	 * @throws CoreException
+	 *             if creation fails
 	 */
 	public IStructuredTextFoldingProvider createProvider() throws CoreException {
-		IStructuredTextFoldingProvider prov = (IStructuredTextFoldingProvider) fElement.createExecutableExtension(CLASS);
+		IStructuredTextFoldingProvider prov = (IStructuredTextFoldingProvider) fElement
+				.createExecutableExtension(CLASS);
 		return prov;
 	}
 
 	/**
 	 * Creates a preferences object as described in the extension's xml.
-	 *
+	 * 
 	 * @return a new instance of the reference provider described by this
 	 *         descriptor
-	 * @throws CoreException if creation fails
+	 * @throws CoreException
+	 *             if creation fails
 	 */
 	public IPHPFoldingPreferenceBlock createPreferences() throws CoreException {
 		if (fHasPreferences) {
-			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) fElement.createExecutableExtension(PREFERENCES_CLASS);
+			IPHPFoldingPreferenceBlock prefs = (IPHPFoldingPreferenceBlock) fElement
+					.createExecutableExtension(PREFERENCES_CLASS);
 			return prefs;
 		} else {
-			throw new IllegalStateException(PHPUIMessages.getString("PHPFoldingStructureProviderDescriptor.0")); //$NON-NLS-1$
+			throw new IllegalStateException(
+					PHPUIMessages.PHPFoldingStructureProviderDescriptor_0); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * Returns the identifier of the described extension.
-	 *
+	 * 
 	 * @return Returns the id
 	 */
 	public String getId() {
@@ -99,7 +105,7 @@ public final class PHPFoldingStructureProviderDescriptor {
 
 	/**
 	 * Returns the name of the described extension.
-	 *
+	 * 
 	 * @return Returns the name
 	 */
 	public String getName() {

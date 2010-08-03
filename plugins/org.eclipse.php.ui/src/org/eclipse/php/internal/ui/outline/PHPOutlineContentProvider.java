@@ -1,422 +1,319 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.StandardPHPElementContentProvider;
-import org.eclipse.php.internal.ui.SuperClassTreeContentProvider;
-import org.eclipse.php.internal.ui.treecontent.PHPTreeNode;
-import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseTrackAdapter;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.FakeType;
+import org.eclipse.php.internal.core.typeinference.UseStatementElement;
+import org.eclipse.php.internal.core.util.OutlineFilter;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
-import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
-public class PHPOutlineContentProvider extends JFaceNodeContentProvider implements ModelListener {
+public class PHPOutlineContentProvider implements ITreeContentProvider {
 
-	static public class GroupNode implements Comparable {
+	// outline tree viewer
+	private TreeViewer fOutlineViewer;
 
-		Object[] children;
-		PHPFileData fileData;
-		String text;
-		int type;
-
-		GroupNode(final int type, final String text, final PHPFileData fileData) {
-			this.type = type;
-			this.text = text;
-			this.fileData = fileData;
-		}
-
-		public int compareTo(final Object other) {
-			//this optimization is usually worthwhile, and can always be added
-			if (this == other)
-				return 0;
-
-			// compares the type field
-			if (other instanceof GroupNode) {
-				final GroupNode otherNode = (GroupNode) other;
-				return type - otherNode.type;
-			}
-			return 0;
-		}
-
-		public Object[] getChildren() {
-			if (children == null)
-				loadChildren();
-			return children;
-		}
-
-		public Image getImage() {
-			switch (type) {
-				case GROUP_CLASSES:
-					return CLASSES_GROUP_IMAGE;
-				case GROUP_FUNCTIONS:
-					return FUNCTIONS_GROUP_IMAGE;
-				case GROUP_CONSTANTS:
-					return CONSTANTS_GROUP_IMAGE;
-				case GROUP_INCLUDES:
-					return INCLUDES_GROUP_IMAGE;
-			}
-			return null;
-		}
-
-		public String getText() {
-			return text;
-		}
-
-		public boolean hasChildren() {
-			if (children == null)
-				loadChildren();
-			return children.length > 0;
-		}
-
-		void loadChildren() {
-			if (fileData != null)
-				switch (type) {
-					case GROUP_CLASSES:
-						children = fileData.getClasses();
-						break;
-
-					case GROUP_FUNCTIONS:
-						children = fileData.getFunctions();
-						break;
-
-					case GROUP_CONSTANTS:
-						children = fileData.getConstants();
-						break;
-
-					case GROUP_INCLUDES:
-						children = fileData.getIncludeFiles();
-						break;
-				}
-			if (children == null)
-				children = new Object[0];
-		}
-
-		public void reset(final PHPFileData fileData) {
-			this.fileData = fileData;
-			children = null;
-		}
-
-		public void setFileData(final PHPFileData fileData) {
-			this.fileData = fileData;
-			loadChildren();
-		}
-	}
-
-	// this class intension is to get the selection event from the editor and then make sure the 
-	// selected elements have the IJFaceNodeAdapter as adapter - this adapter is responsible to refresh the outlineView 
-	private class PostSelectionServiceListener implements ISelectionListener {
-
-		public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
-			//			if (selection instanceof IStructuredSelection) {
-			//				final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-			//				for (final Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
-			//					final Object next = iter.next();
-			//					if (next instanceof INodeNotifier) {
-			//						final INodeNotifier node = (INodeNotifier) next;
-			//						node.getAdapterFor(IJFaceNodeAdapter.class);
-			//					}
-			//				}
-			//			}
-		}
-
-	}
-
-	private static final Image CLASSES_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage();
-
-	private static final Image CONSTANTS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage();
-
-	private static final Image FUNCTIONS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage();
-
-	public static final int GROUP_CLASSES = 3;
-
-	public static final int GROUP_CONSTANTS = 2;
-
-	public static final int GROUP_FUNCTIONS = 4;
-
-	public static final int GROUP_INCLUDES = 1;
-	private static final Image INCLUDES_GROUP_IMAGE = PHPPluginImages.DESC_OBJS_INCLUDE.createImage();
-
-	public static final int MODE_HTML = 2;
-
-	public static final int MODE_MIXED = 3;
-	public static final int MODE_PHP = 1;
-	DOMModelForPHP editorModel;
-	private ISelectionListener fSelectionListener = null;
-	GroupNode[] groupNodes;
-	private PHPOutlineLabelProvider labelProvider;
-	int mode;
-	StandardPHPElementContentProvider phpContentProvider = new StandardPHPElementContentProvider(true);
-
-	boolean showGroups;
-
-	ITreeContentProvider superClassContentProvider = new SuperClassTreeContentProvider(this);
-	TreeViewer viewer;
-
-	public PHPOutlineContentProvider(final TreeViewer viewer, PHPOutlineLabelProvider labelProvider) {
+	public PHPOutlineContentProvider(TreeViewer viewer) {
 		super();
+		fOutlineViewer = viewer;
 
-		this.viewer = viewer;
-		this.labelProvider = labelProvider;
+		// fix bug 251682 - auto-expand outline view
+		fOutlineViewer.setAutoExpandLevel(TreeViewer.ALL_LEVELS);
 
-		mode = PHPUiPlugin.getDefault().getPreferenceStore().getInt(ChangeOutlineModeAction.PREF_OUTLINEMODE);
-		if (mode == 0) {
-			mode = MODE_PHP;
-			PHPUiPlugin.getDefault().getPreferenceStore().setValue(ChangeOutlineModeAction.PREF_OUTLINEMODE, mode);
-
-		}
-		showGroups = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(ShowGroupsAction.PREF_SHOW_GROUPS);
-
-		PHPUiPlugin.getActiveWorkbenchWindow().getSelectionService().addPostSelectionListener(getSelectionServiceListener());
-
-		registerMouseTrackListener();
+		inputChanged(fOutlineViewer, null, null);
 	}
 
-	/** (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#dataCleared()
-	 */
-	public void dataCleared() {
-	}
+	// private Object[] NO_CLASS = new Object[] { new NoClassElement() };
+	private ElementChangedListener fListener;
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider#dispose()
-	 */
 	public void dispose() {
-		PHPWorkspaceModelManager.getInstance().removeModelListener(this);
-		PHPUiPlugin.getActiveWorkbenchWindow().getSelectionService().removePostSelectionListener(getSelectionServiceListener());
-		super.dispose();
+		if (fListener != null) {
+			DLTKCore.removeElementChangedListener(fListener);
+			fListener = null;
+		}
 	}
 
-	/** (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#fileDataAdded(org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData)
-	 */
-	public void fileDataAdded(final PHPFileData fileData) {
-		if (editorModel != null && editorModel.getFileData() != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName()))
-			postRefresh(true);
-	}
-
-	/** (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#fileDataChanged(org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData)
-	 */
-	public void fileDataChanged(final PHPFileData fileData) {
-		if (editorModel != null && editorModel.getFileData() != null && editorModel.getFileData().getComparableName().equals(fileData.getComparableName()))
-			if (groupNodes == null)
-				postRefresh(true);
-			else
-				for (int i = 0; i < groupNodes.length; ++i) {
-					groupNodes[i].reset(fileData);
-					postRefresh(groupNodes[i], true);
+	public Object[] getChildren(Object parent) {
+		if (parent instanceof IParent) {
+			IParent c = (IParent) parent;
+			try {
+				return OutlineFilter.filterChildrenForOutline(parent, c
+						.getChildren());
+			} catch (ModelException x) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=38341
+				// don't log NotExist exceptions as this is a valid case
+				// since we might have been posted and the element
+				// removed in the meantime.
+				if (DLTKCore.DEBUG || !x.isDoesNotExist()) {
+					DLTKUIPlugin.log(x);
 				}
-	}
-
-	/** (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.phpModel.parser.ModelListener#fileDataRemoved(org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData)
-	 */
-	public void fileDataRemoved(final PHPFileData fileData) {
-	}
-
-	public Object[] getChildren(final Object object) {
-		if (object instanceof PHPCodeData) {
-			ArrayList children = new ArrayList(Arrays.asList(phpContentProvider.getChildren(object)));
-			children.addAll(Arrays.asList(superClassContentProvider.getChildren(object)));
-			return children.toArray();
-		} else if (object instanceof DOMModelForPHP && mode == MODE_PHP) {
-			editorModel = (DOMModelForPHP) object;
-			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
-			final PHPFileData fileData = editorModel.getFileData();
-			if (fileData != null) {
-				final GroupNode[] groupNodes = getGroupNodes(fileData);
-				if (groupNodes != null)
-					return groupNodes;
 			}
-			return getChildren(fileData);
-		} else if (object instanceof GroupNode)
-			return ((GroupNode) object).getChildren();
-		else if (object instanceof PHPTreeNode)
-			return ((PHPTreeNode) object).getChildren();
-		return super.getChildren(object);
-	}
-
-	public Object[] getElements(final Object object) {
-		if (object instanceof PHPCodeData)
-			return phpContentProvider.getChildren(object);
-		else if (object instanceof DOMModelForPHP && mode == MODE_PHP) {
-			editorModel = (DOMModelForPHP) object;
-			editorModel.getDocument().getAdapterFor(IJFaceNodeAdapter.class);
-			final PHPFileData fileData = editorModel.getFileData();
-			final GroupNode[] groupNodes = getGroupNodes(fileData);
-			if (groupNodes != null)
-				return groupNodes;
-			return getElements(fileData);
 		}
-		return super.getElements(object);
+		return PHPContentOutlineConfiguration.NO_CHILDREN;
 	}
 
-	GroupNode[] getGroupNodes(final PHPFileData fileData) {
-		if (showGroups) {
-			if (groupNodes != null)
-				for (int i = 0; i < groupNodes.length; i++)
-					groupNodes[i].setFileData(fileData);
-			else
-				groupNodes = new GroupNode[] { new GroupNode(GROUP_INCLUDES, "include files", fileData), new GroupNode(GROUP_CONSTANTS, "constants", fileData), new GroupNode(GROUP_CLASSES, "classes", fileData), new GroupNode(GROUP_FUNCTIONS, "functions", fileData) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-		} else
-			groupNodes = null;
-		return groupNodes;
+	private boolean isNamespaceSupported(IModelElement modelElement) {
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(modelElement
+				.getScriptProject().getProject());
+		return phpVersion.isGreaterThan(PHPVersion.PHP5);
 	}
 
-	public int getMode() {
-		return mode;
-	}
+	public Object[] getElements(Object parent) {
+		Object[] children = getChildren(parent);
 
-	public Object getParent(final Object object) {
+		if (parent instanceof ISourceModule) {
+			ISourceModule sourceModule = (ISourceModule) parent;
 
-		if (object instanceof PHPCodeData) {
-			Object parent = superClassContentProvider.getParent(object);
-			if (parent != null) {
-				return parent;
+			if (isNamespaceSupported(sourceModule)) {
+				// if namespaces are supported, add use statements node:
+				Object[] newChildren = new Object[children.length + 1];
+				newChildren[0] = new UseStatementsNode(sourceModule);
+				System.arraycopy(children, 0, newChildren, 1, children.length);
+				children = newChildren;
 			}
-			final PHPCodeData codeData = (PHPCodeData) object;
-			final PHPCodeData container = codeData.getContainer();
-			if (container instanceof PHPFileData && showGroups) {
-				Object[] children;
-				for (int i = 0; i < groupNodes.length; ++i) {
-					children = groupNodes[i].getChildren();
-					for (int j = 0; j < children.length; ++j)
-						if (children[j] == object)
-							return groupNodes[i];
+		}
+		return children;
+	}
+
+	public Object getParent(Object child) {
+		if (child instanceof IModelElement) {
+			IModelElement e = (IModelElement) child;
+			return e.getParent();
+		}
+		return null;
+	}
+
+	public boolean hasChildren(Object parent) {
+		if (parent instanceof IParent) {
+			IParent c = (IParent) parent;
+			try {
+				IModelElement[] children = OutlineFilter
+						.filter(c.getChildren());
+				return (children != null && children.length > 0);
+			} catch (ModelException x) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=38341
+				// don't log NotExist exceptions as this is a valid case
+				// since we might have been posted and the element
+				// removed in the meantime.
+				if (DLTKUIPlugin.isDebug() || !x.isDoesNotExist()) {
+					DLTKUIPlugin.log(x);
 				}
-			} else
-				return container;
-		}
-		return super.getParent(object);
-	}
-
-	private ISelectionListener getSelectionServiceListener() {
-		if (fSelectionListener == null)
-			fSelectionListener = new PostSelectionServiceListener();
-		return fSelectionListener;
-	}
-
-	public boolean getShowGroups() {
-		return showGroups;
-	}
-
-	public boolean hasChildren(final Object object) {
-		if (object instanceof PHPCodeData) {
-			if (superClassContentProvider.hasChildren(object)) {
-				return true;
 			}
-			final Object[] phpChildren = getChildren(object);
-			return phpChildren.length > 0;
-		} else if (object instanceof GroupNode)
-			return ((GroupNode) object).hasChildren();
-		else if (object instanceof PHPTreeNode)
-			return ((PHPTreeNode) object).hasChildren();
-
-		return super.hasChildren(object);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-	 */
-	public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-		super.inputChanged(viewer, oldInput, newInput);
-		if (oldInput == null && newInput != null) {
-			PHPWorkspaceModelManager.getInstance().addModelListener(this);
-			postRefresh(newInput, true);
-		} else if (oldInput != null && newInput == null) {
-			PHPWorkspaceModelManager.getInstance().removeModelListener(this);
-			postRefresh(true);
 		}
-	}
-
-	boolean isInside(final int start, final int end, final PHPCodeData codeData) {
-		final UserData userData = codeData.getUserData();
-		if (userData == null)
-			return false;
-		if (start <= userData.getStartPosition() && end >= userData.getEndPosition())
-			return true;
 		return false;
 	}
 
-	private void postRefresh(final boolean updateLabels) {
-		postRefresh(null, updateLabels);
+	/*
+	 * @see IContentProvider#inputChanged(Viewer, Object, Object)
+	 */
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+
+		// Check that the new input is valid
+		boolean isCU = (newInput instanceof ISourceModule);
+		// Add a listener if input is valid and there wasn't one
+		if (isCU && fListener == null) {
+			fListener = new ElementChangedListener();
+			DLTKCore.addElementChangedListener(fListener);
+		}
+		// If the new input is not valid and there is a listener - remove it
+		else if (!isCU && fListener != null) {
+			DLTKCore.removeElementChangedListener(fListener);
+			fListener = null;
+		}
 	}
 
-	private void postRefresh(final Object element, final boolean updateLabels) {
-		final Runnable runnable = new Runnable() {
-			public void run() {
-				if (viewer == null)
-					return;
-				Control control = viewer.getControl();
-				if (control == null || control.isDisposed())
-					return;
+	public boolean isDeleted(Object o) {
+		return false;
+	}
 
-				if (element == null)
-					viewer.refresh(updateLabels);
-				else
-					viewer.refresh(element, updateLabels);
-				if (element instanceof DOMModelForPHP) {
-					viewer.expandToLevel(2);
+	/**
+	 * The element change listener of the java outline viewer.
+	 * 
+	 * @see IElementChangedListener
+	 */
+	protected class ElementChangedListener implements IElementChangedListener {
+
+		private int useStatementsCount;
+		private int useStatementsCountNew;
+
+		public void elementChanged(final ElementChangedEvent e) {
+
+			Control control = fOutlineViewer.getControl();
+			if (control == null || control.isDisposed()) {
+				return;
+			}
+
+			Display d = control.getDisplay();
+			if (d != null) {
+				d.asyncExec(new Runnable() {
+					public void run() {
+						IWorkbenchWindow activeWorkbenchWindow = PlatformUI
+								.getWorkbench().getActiveWorkbenchWindow();
+						if (activeWorkbenchWindow != null) {
+							IWorkbenchPage activePage = activeWorkbenchWindow
+									.getActivePage();
+							if (activePage != null) {
+								IEditorPart activeEditor = activePage
+										.getActiveEditor();
+								if (activeEditor instanceof PHPStructuredEditor) {
+									IModelElement base = ((PHPStructuredEditor) activeEditor)
+											.getModelElement();
+
+									if (isNamespaceSupported(base)) {
+										ModuleDeclaration moduleDeclaration = SourceParserUtil
+												.getModuleDeclaration((ISourceModule) base);
+										UseStatement[] useStatements = ASTUtils
+												.getUseStatements(
+														moduleDeclaration,
+														moduleDeclaration
+																.sourceEnd());
+										useStatementsCountNew = useStatements.length;
+									}
+
+									IModelElementDelta delta = findElement(
+											base, e.getDelta());
+									if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)
+											&& fOutlineViewer != null
+											&& fOutlineViewer.getControl() != null
+											&& !fOutlineViewer.getControl()
+													.isDisposed()) {
+										fOutlineViewer.refresh();
+									}
+								}
+							}
+						}
+					}
+				});
+			}
+		}
+
+		protected IModelElementDelta findElement(IModelElement unit,
+				IModelElementDelta delta) {
+
+			if (delta == null || unit == null) {
+				return null;
+			}
+
+			IModelElement element = delta.getElement();
+
+			if (unit.equals(element)) {
+				if (isPossibleStructuralChange(delta)) {
+					return delta;
+				}
+				return null;
+			}
+
+			if (element.getElementType() > IModelElement.SOURCE_MODULE) {
+				return null;
+			}
+
+			IModelElementDelta[] children = delta.getAffectedChildren();
+			if (children == null || children.length == 0) {
+				return null;
+			}
+
+			for (int i = 0; i < children.length; i++) {
+				IModelElementDelta d = findElement(unit, children[i]);
+				if (d != null) {
+					return d;
 				}
 			}
-		};
-		final Control control = viewer.getControl();
-		if (control != null && !control.isDisposed())
-			viewer.getControl().getDisplay().asyncExec(runnable);
-	}
 
-	private void registerMouseTrackListener() {
-		final Tree tree = viewer.getTree();
-		tree.addMouseTrackListener(new MouseTrackAdapter() {
-			public void mouseHover(final MouseEvent e) {
-				final TreeItem item = tree.getItem(new Point(e.x, e.y));
-				if (item != null) {
-					final Object o = item.getData();
-					if (o instanceof PHPCodeData)
-						tree.setToolTipText(labelProvider.getTooltipText(o));
-				}
+			return null;
+		}
+
+		private boolean isPossibleStructuralChange(IModelElementDelta cuDelta) {
+			int oldValue = useStatementsCount;
+			useStatementsCount = useStatementsCountNew;
+			if (oldValue != useStatementsCountNew) {
+				return true;
 			}
 
-		});
-
+			if (cuDelta.getKind() != IModelElementDelta.CHANGED) {
+				return true; // add or remove
+			}
+			int flags = cuDelta.getFlags();
+			if ((flags & IModelElementDelta.F_CHILDREN) != 0) {
+				return true;
+			}
+			return (flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
+		}
 	}
 
-	public void setMode(final int mode) {
-		this.mode = mode;
-	}
+	class UseStatementsNode extends FakeType {
 
-	public void setShowGroups(final boolean show) {
-		showGroups = show;
-		postRefresh(true);
+		private ISourceModule sourceModule;
+
+		public UseStatementsNode(ISourceModule sourceModule) {
+			super((ModelElement) sourceModule,
+					PHPUIMessages.PHPOutlineContentProvider_useStatementsNode,
+					0, null); //$NON-NLS-1$
+			this.sourceModule = sourceModule;
+		}
+
+		public IModelElement[] getChildren() throws ModelException {
+			// when rename a php file,we should return a empty array for the old
+			// sourceModule,or execute SourceParserUtil.getModuleDeclaration()
+			// will cache wrong ModuleDeclaration for the non-exist
+			// sourceModule,so when we rename the php file back to its original
+			// name will get the wrong ModuleDeclaration
+			if (!sourceModule.exists()) {
+				return new IModelElement[0];
+			}
+			ModuleDeclaration moduleDeclaration = SourceParserUtil
+					.getModuleDeclaration(sourceModule);
+			if (moduleDeclaration == null)
+				return new IModelElement[0];
+			UseStatement[] useStatements = ASTUtils.getUseStatements(
+					moduleDeclaration, moduleDeclaration.sourceEnd());
+			List<UseStatementElement> elements = new LinkedList<UseStatementElement>();
+			for (UseStatement useStatement : useStatements) {
+				for (UsePart usePart : useStatement.getParts()) {
+					elements.add(new UseStatementElement(
+							(ModelElement) sourceModule, usePart));
+				}
+			}
+			return (UseStatementElement[]) elements
+					.toArray(new UseStatementElement[elements.size()]);
+		}
+
+		public boolean hasChildren() throws ModelException {
+			return getChildren().length > 0;
+		}
+
+		@Override
+		public Object getElementInfo() throws ModelException {
+			return null;
+		}
 	}
 }

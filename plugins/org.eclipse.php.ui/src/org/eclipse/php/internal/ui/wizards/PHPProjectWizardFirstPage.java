@@ -476,12 +476,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
 					true));
-			fGroup.setText(PHPUIMessages
-					.getString("JavaScriptSupportGroup_OptionBlockTitle")); //$NON-NLS-1$
+			fGroup.setText(PHPUIMessages.JavaScriptSupportGroup_OptionBlockTitle); //$NON-NLS-1$
 
 			fEnableJavaScriptSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
-			fEnableJavaScriptSupport.setText(PHPUIMessages
-					.getString("JavaScriptSupportGroup_EnableSupport")); //$NON-NLS-1$
+			fEnableJavaScriptSupport
+					.setText(PHPUIMessages.JavaScriptSupportGroup_EnableSupport); //$NON-NLS-1$
 			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING,
 					SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.addSelectionListener(this);
@@ -519,13 +518,13 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			final int numColumns = 3;
 
 			fStdRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fStdRadio.setLabelText(PHPUIMessages
-					.getString("LayoutGroup_OptionBlock_ProjectSrc")); //$NON-NLS-1$
+			fStdRadio
+					.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_ProjectSrc); //$NON-NLS-1$
 			fStdRadio.setDialogFieldListener(this);
 
 			fSrcBinRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fSrcBinRadio.setLabelText(PHPUIMessages
-					.getString("LayoutGroup_OptionBlock_SrcResources")); //$NON-NLS-1$
+			fSrcBinRadio
+					.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_SrcResources); //$NON-NLS-1$
 			fSrcBinRadio.setDialogFieldListener(this);
 
 			// getting Preferences default choice
@@ -541,8 +540,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
 					true));
-			fGroup.setText(PHPUIMessages
-					.getString("LayoutGroup_OptionBlock_Title")); //$NON-NLS-1$
+			fGroup.setText(PHPUIMessages.LayoutGroup_OptionBlock_Title); //$NON-NLS-1$
 
 			fStdRadio.doFillIntoGrid(fGroup, 3);
 			LayoutUtil
@@ -551,8 +549,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fSrcBinRadio.doFillIntoGrid(fGroup, 2);
 
 			fPreferenceLink = new Link(fGroup, SWT.NONE);
-			fPreferenceLink.setText(PHPUIMessages
-					.getString("ToggleLinkingAction_link_description")); //$NON-NLS-1$
+			fPreferenceLink
+					.setText(PHPUIMessages.ToggleLinkingAction_link_description); //$NON-NLS-1$
 			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
 					true, false));
 			fPreferenceLink.addSelectionListener(this);
@@ -709,8 +707,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 				fLocalServerRadio = new SelectionButtonDialogField(SWT.RADIO);
 				fLocalServerRadio.setDialogFieldListener(this);
 				fLocalServerRadio
-						.setLabelText(PHPUIMessages
-								.getString("PHPProjectWizardFirstPage.localServerLabel")); //$NON-NLS-1$
+						.setLabelText(PHPUIMessages.PHPProjectWizardFirstPage_localServerLabel); //$NON-NLS-1$
 				fLocalServerRadio.setSelection(false);
 				fLocalServerRadio.doFillIntoGrid(group, numColumns);
 				fSeverLocationList = new ComboDialogField(SWT.READ_ONLY);
@@ -859,16 +856,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
 					true));
-			group.setText(PHPUIMessages
-					.getString("VersionGroup_OptionBlock_Title"));//$NON-NLS-1$ 
+			group.setText(PHPUIMessages.VersionGroup_OptionBlock_Title);//$NON-NLS-1$ 
 			fDefaultValues = new SelectionButtonDialogField(SWT.RADIO);
 			fDefaultValues.setDialogFieldListener(this);
-			fDefaultValues.setLabelText(PHPUIMessages
-					.getString("VersionGroup_OptionBlock_fDefaultValues"));//$NON-NLS-1$ 
+			fDefaultValues
+					.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fDefaultValues);//$NON-NLS-1$ 
 			fCustomValues = new SelectionButtonDialogField(SWT.RADIO);
 			fCustomValues.setDialogFieldListener(this);
-			fCustomValues.setLabelText(PHPUIMessages
-					.getString("VersionGroup_OptionBlock_fCustomValues"));//$NON-NLS-1$ 
+			fCustomValues
+					.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fCustomValues);//$NON-NLS-1$ 
 
 			fDefaultValues.setSelection(true);
 			fCustomValues.setSelection(false);

@@ -116,13 +116,11 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 						.handle(
 								new CoreException(new Status(IStatus.ERROR,
 										PHPUiPlugin.ID, 0,
-										"Exception occurred", e)), PHPUIMessages.getString("OverrideIndicatorManager_open_error_title"), PHPUIMessages.getString("OverrideIndicatorManager_open_error_messageHasLogEntry"));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+										"Exception occurred", e)), PHPUIMessages.OverrideIndicatorManager_open_error_title, PHPUIMessages.OverrideIndicatorManager_open_error_messageHasLogEntry);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				return;
 			}
-			String title = PHPUIMessages
-					.getString("OverrideIndicatorManager_open_error_title");//$NON-NLS-1$
-			String message = PHPUIMessages
-					.getString("OverrideIndicatorManager_open_error_message");//$NON-NLS-1$
+			String title = PHPUIMessages.OverrideIndicatorManager_open_error_title;//$NON-NLS-1$
+			String message = PHPUIMessages.OverrideIndicatorManager_open_error_message;//$NON-NLS-1$
 			MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(),
 					title, message);
 		}
@@ -216,13 +214,13 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 						if (isImplements)
 							text = Messages
 									.format(
-											PHPUIMessages
-													.getString("OverrideIndicatorManager_implements"), qualifiedMethodName);//$NON-NLS-1$
+											PHPUIMessages.OverrideIndicatorManager_implements,
+											qualifiedMethodName);//$NON-NLS-1$
 						else
 							text = Messages
 									.format(
-											PHPUIMessages
-													.getString("OverrideIndicatorManager_overrides"), qualifiedMethodName);//$NON-NLS-1$
+											PHPUIMessages.OverrideIndicatorManager_overrides,
+											qualifiedMethodName);//$NON-NLS-1$
 
 						Identifier name = node.getFunction().getFunctionName();
 						Position position = new Position(name.getStart(), name
