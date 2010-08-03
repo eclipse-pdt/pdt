@@ -171,10 +171,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			}
 			return;
 
-		case PASTE:
-			super.doOperation(operation);
-			return;
-
 		case CONTENTASSIST_PROPOSALS:
 			// Handle javascript content assist when there is no support
 			// (instead of printing the stack trace)
@@ -275,10 +271,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			if (fOutlinePresenter != null) {
 				fOutlinePresenter.showInformation();
 			}
-			return;
-
-		case SHIFT_LEFT:
-			shift(false, false, true);
 			return;
 
 		case SHOW_HIERARCHY:
