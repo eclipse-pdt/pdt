@@ -41,6 +41,7 @@ import org.eclipse.php.internal.core.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.ast.nodes.Statement;
 import org.eclipse.php.internal.core.ast.nodes.SwitchStatement;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.text.edits.TextEdit;
 
 public class NodeDeletionTests extends TestCase {
@@ -494,7 +495,8 @@ public class NodeDeletionTests extends TestCase {
 	 * and the ast.
 	 */
 	private Program initialize(IDocument document) throws Exception {
-		ASTParser parser = ASTParser.newParser(PHPVersion.PHP5);
+		ASTParser parser = ASTParser.newParser(PHPVersion.PHP5, ProjectOptions
+				.useShortTags(null));
 		parser.setSource(document.get().toCharArray());
 		Program program = parser.createAST(new NullProgressMonitor());
 

@@ -25,6 +25,7 @@ import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public class DomParserTests extends AbstractPDTTTest {
 
@@ -54,7 +55,8 @@ public class DomParserTests extends AbstractPDTTTest {
 
 		for (final PHPVersion phpVersion : TESTS.keySet()) {
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-			final ASTParser newParser = ASTParser.newParser(phpVersion);
+			final ASTParser newParser = ASTParser.newParser(phpVersion,
+					ProjectOptions.useShortTags(null));
 
 			for (String testsDirectory : TESTS.get(phpVersion)) {
 

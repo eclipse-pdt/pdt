@@ -29,6 +29,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.parser.AbstractPHPSourceParser;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public class CompilerParserTests extends AbstractPDTTTest {
 
@@ -76,7 +77,9 @@ public class CompilerParserTests extends AbstractPDTTTest {
 										pdttFile.getFile().trim().getBytes());
 								IModuleDeclaration moduleDeclaration = parser
 										.parse(new InputStreamReader(
-												inputStream), null);
+												inputStream), null,
+												ProjectOptions
+														.useShortTags(null));
 
 								String actual = ASTPrintVisitor
 										.toXMLString((ASTNode) moduleDeclaration);

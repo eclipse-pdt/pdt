@@ -84,6 +84,7 @@ import org.eclipse.php.internal.core.ast.nodes.WhileStatement;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.text.edits.TextEdit;
 
 /**
@@ -523,9 +524,7 @@ public class ASTRewriteTests extends TestCase {
 
 		List<CloneExpression> cloneExpressions = getAllOfType(program,
 				CloneExpression.class);
-		Assert
-				.assertTrue("Unexpected list size.",
-						cloneExpressions.size() == 1);
+		Assert.assertTrue("Unexpected list size.", cloneExpressions.size() == 1);
 		cloneExpressions.get(0).setExpression(ast.newVariable("bbb"));
 		rewrite();
 		checkResult("<?php clone $bbb; ?>");
@@ -1426,9 +1425,7 @@ public class ASTRewriteTests extends TestCase {
 
 		List<ReturnStatement> returnStatements = getAllOfType(program,
 				ReturnStatement.class);
-		Assert
-				.assertTrue("Unexpected list size.",
-						returnStatements.size() == 1);
+		Assert.assertTrue("Unexpected list size.", returnStatements.size() == 1);
 		returnStatements.get(0).setExpression(ast.newVariable("a"));
 		rewrite();
 		checkResult("<?php return $a; ?>");
@@ -1440,9 +1437,7 @@ public class ASTRewriteTests extends TestCase {
 
 		List<ReturnStatement> returnStatements = getAllOfType(program,
 				ReturnStatement.class);
-		Assert
-				.assertTrue("Unexpected list size.",
-						returnStatements.size() == 1);
+		Assert.assertTrue("Unexpected list size.", returnStatements.size() == 1);
 		((Variable) returnStatements.get(0).getExpression()).setName(ast
 				.newScalar("b"));
 		rewrite();
@@ -1455,9 +1450,7 @@ public class ASTRewriteTests extends TestCase {
 
 		List<ReturnStatement> returnStatements = getAllOfType(program,
 				ReturnStatement.class);
-		Assert
-				.assertTrue("Unexpected list size.",
-						returnStatements.size() == 1);
+		Assert.assertTrue("Unexpected list size.", returnStatements.size() == 1);
 		returnStatements.get(0).getExpression().delete();
 		rewrite();
 		checkResult("<?php return; ?>");
@@ -1991,7 +1984,8 @@ public class ASTRewriteTests extends TestCase {
 			throws Exception {
 		document = new Document(content);
 
-		ASTParser parser = ASTParser.newParser(phpVersion);
+		ASTParser parser = ASTParser.newParser(phpVersion, ProjectOptions
+				.useShortTags(null));
 		parser.setSource(document.get().toCharArray());
 		program = parser.createAST(new NullProgressMonitor());
 		ast = program.getAST();

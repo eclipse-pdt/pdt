@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public class StaticScalarExpressionsTests extends TestCase {
 
@@ -49,17 +50,16 @@ public class StaticScalarExpressionsTests extends TestCase {
 				protected void runTest() throws Exception {
 					StringReader reader = new StringReader(str);
 					Program program = ASTParser.newParser(reader,
-							PHPVersion.PHP5).createAST(
-							new NullProgressMonitor());
+							PHPVersion.PHP5, ProjectOptions.useShortTags(null))
+							.createAST(new NullProgressMonitor());
 
 					final ASTNode locateNode = Locator.locateNode(program,
 							offset);
-					Assert
-							.assertTrue(
-									desc
-											+ " test fails. offset should locate an expression node was "
-											+ locateNode.getClass().getName(),
-									locateNode instanceof Expression);
+					Assert.assertTrue(
+							desc
+									+ " test fails. offset should locate an expression node was "
+									+ locateNode.getClass().getName(),
+							locateNode instanceof Expression);
 
 					Expression expression = (Expression) locateNode;
 					final boolean actualStaticScalar = expression
