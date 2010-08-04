@@ -17,14 +17,19 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
+import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.codeassist.CompletionRequestorExtension;
+import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
+import org.eclipse.php.internal.core.codeassist.contexts.GlobalStatementContext;
 import org.eclipse.php.internal.core.codeassist.templates.CodeCompletionRequestor;
+import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalMethodStatementContextForTemplate;
+import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalStatementContextForTemplate;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 
 public class PhpTemplateVariables {
@@ -41,7 +46,7 @@ public class PhpTemplateVariables {
 					.getSourceModule();
 			int offset = ((ScriptTemplateContext) context)
 					.getCompletionOffset();
-			CodeCompletionRequestor requestor = new CodeCompletionRequestor();
+			CodeCompletionRequestor requestor = new VariableCodeCompletionRequestor();
 			try {
 				module.codeComplete(offset, requestor, 1000);
 			} catch (ModelException e) {
@@ -77,7 +82,7 @@ public class PhpTemplateVariables {
 					.getSourceModule();
 			int offset = ((ScriptTemplateContext) context)
 					.getCompletionOffset();
-			CodeCompletionRequestor requestor = new CodeCompletionRequestor();
+			CodeCompletionRequestor requestor = new VariableCodeCompletionRequestor();
 			try {
 				module.codeComplete(offset, requestor, 1000);
 			} catch (ModelException e) {
@@ -117,7 +122,7 @@ public class PhpTemplateVariables {
 					.getSourceModule();
 			int offset = ((ScriptTemplateContext) context)
 					.getCompletionOffset();
-			CodeCompletionRequestor requestor = new CodeCompletionRequestor();
+			CodeCompletionRequestor requestor = new VariableCodeCompletionRequestor();
 			try {
 				module.codeComplete(offset, requestor, 1000);
 			} catch (ModelException e) {
@@ -230,6 +235,94 @@ public class PhpTemplateVariables {
 		}
 	}
 
+	public static class Class extends TemplateVariableResolver {
+		public static final String NAME = "class"; //$NON-NLS-1$
+
+		public Class() {
+			super(NAME, "Evaluates all classes");
+		}
+
+		protected String[] resolveAll(TemplateContext context) {
+			ISourceModule module = ((ScriptTemplateContext) context)
+					.getSourceModule();
+			int offset = ((ScriptTemplateContext) context)
+					.getCompletionOffset();
+			CodeCompletionRequestor requestor = new CodeCompletionRequestor() {
+				@Override
+				public void accept(CompletionProposal proposal) {
+					if (isIgnored(proposal.getKind()))
+						return;
+					switch (proposal.getKind()) {
+					case CompletionProposal.TYPE_REF:
+						try {
+							if (!PHPFlags.isNamespace(((IType) proposal
+									.getModelElement()).getFlags())) {
+								addProposal(proposal);
+							}
+						} catch (ModelException e) {
+						}
+
+						break;
+					default:
+						break;
+					}
+				}
+
+				public ICompletionContext[] createContexts() {
+					return new ICompletionContext[] { new GlobalStatementContext() };
+				}
+			};
+			try {
+				module.codeComplete(offset, requestor, 1000);
+			} catch (ModelException e) {
+				PHPUiPlugin.log(e);
+			}
+
+			return requestor.getVariables();
+		}
+
+		protected boolean isUnambiguous(TemplateContext context) {
+			return resolve(context) != null;
+		}
+	}
+
+	public static class NumberVariable extends TemplateVariableResolver {
+		public static final String NAME = "number_variable"; //$NON-NLS-1$
+
+		public NumberVariable() {
+			super(NAME, "A proposal for an number_variable");
+		}
+
+		protected String resolve(TemplateContext context) {
+			return "dupcia";
+		}
+
+		public void resolve(TemplateVariable variable, TemplateContext context) {
+			ISourceModule module = ((ScriptTemplateContext) context)
+					.getSourceModule();
+			int offset = ((ScriptTemplateContext) context)
+					.getCompletionOffset();
+			CodeCompletionRequestor requestor = new VariableCodeCompletionRequestor();
+			try {
+				module.codeComplete(offset, requestor, 1000);
+			} catch (ModelException e) {
+				PHPUiPlugin.log(e);
+			}
+
+			String[] knownVars = requestor.getVariables();
+			Set knownVarsSet = new HashSet(Arrays.asList(knownVars));
+
+			List params = variable.getVariableType().getParams();
+			String result = "$" + findUnusedName("index", knownVarsSet);
+			variable.setValue(result);
+			variable.setResolved(true);
+		}
+
+		protected boolean isUnambiguous(TemplateContext context) {
+			return resolve(context) != null;
+		}
+	}
+
 	private static ISourceModule getSourceModule(TemplateContext context) {
 		return ((ScriptTemplateContext) context).getSourceModule();
 	}
@@ -274,5 +367,36 @@ public class PhpTemplateVariables {
 		}
 
 		return proposal;
+	}
+
+	public static class VariableCodeCompletionRequestor extends
+			CodeCompletionRequestor implements CompletionRequestorExtension {
+
+		public VariableCodeCompletionRequestor() {
+		}
+
+		@Override
+		public void accept(CompletionProposal proposal) {
+			if (isIgnored(proposal.getKind()))
+				return;
+
+			switch (proposal.getKind()) {
+			case CompletionProposal.LOCAL_VARIABLE_REF:
+				addProposal(proposal);
+				break;
+			case CompletionProposal.FIELD_REF:
+				addProposal(proposal);
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		public ICompletionContext[] createContexts() {
+			return new ICompletionContext[] { new ClassObjMemberContext(),
+					new GlobalMethodStatementContextForTemplate(),
+					new GlobalStatementContextForTemplate(), };
+		}
 	}
 }

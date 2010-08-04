@@ -48,5 +48,7 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 		addResolver(new PhpTemplateVariables.Variable());
 		addResolver(new PhpTemplateVariables.Index());
 		addResolver(new PhpTemplateVariables.NewVariable());
+		addResolver(new PhpTemplateVariables.Class());
+		addResolver(new PhpTemplateVariables.NumberVariable());
 	}
 }
