@@ -76,6 +76,13 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		AbstractCompletionContext completionContext = (AbstractCompletionContext) context;
 
 		int length = completionContext.getPrefix().length();
+		// see PHPTextSequenceUtilities line 134
+		if (completionContext.getOffset() - 1 >= 0
+				&& completionContext.getDocument().getChar(
+						completionContext.getOffset() - 1) == '(') {
+			length++;
+		}
+
 		int start = completionContext.getOffset() - length;
 		int prefixEnd = completionContext.getPrefixEnd();
 
