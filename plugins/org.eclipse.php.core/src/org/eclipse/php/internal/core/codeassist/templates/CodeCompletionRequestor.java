@@ -41,15 +41,19 @@ public class CodeCompletionRequestor extends CompletionRequestor implements
 
 		switch (proposal.getKind()) {
 		case CompletionProposal.LOCAL_VARIABLE_REF:
-			proposals.add(name);
+			addProposal(name);
 			break;
 		case CompletionProposal.FIELD_REF:
-			proposals.add(name);
+			addProposal(name);
 			break;
 
 		default:
 			break;
 		}
+	}
+
+	public final void addProposal(String name) {
+		proposals.add(name);
 	}
 
 	public String[] getVariables() {
