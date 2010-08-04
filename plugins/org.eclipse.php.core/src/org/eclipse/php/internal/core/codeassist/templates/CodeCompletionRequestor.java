@@ -10,63 +10,58 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.templates;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.CompletionRequestorExtension;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
-import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalMethodStatementContextForTemplate;
-import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalStatementContextForTemplate;
 
-public class CodeCompletionRequestor extends CompletionRequestor implements
-		CompletionRequestorExtension {
-	List<String> proposals;
+public abstract class CodeCompletionRequestor extends CompletionRequestor
+		implements CompletionRequestorExtension {
+	List<CompletionProposal> proposals;
+	Comparator sorter;
 
 	public CodeCompletionRequestor() {
-		proposals = new ArrayList<String>();
-
+		proposals = new ArrayList<CompletionProposal>();
+		sorter = getSorter();
 		setIgnored(CompletionProposal.KEYWORD, true);
+	}
+
+	protected Comparator getSorter() {
+		return new Comparator<CompletionProposal>() {
+
+			public int compare(CompletionProposal o1, CompletionProposal o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		};
 	}
 
 	@Override
 	public void accept(CompletionProposal proposal) {
 		if (isIgnored(proposal.getKind()))
 			return;
-
-		String completion = proposal.getCompletion(); // cut starting dollar
-		String name = completion.substring(1);
-
-		switch (proposal.getKind()) {
-		case CompletionProposal.LOCAL_VARIABLE_REF:
-			addProposal(name);
-			break;
-		case CompletionProposal.FIELD_REF:
-			addProposal(name);
-			break;
-
-		default:
-			break;
-		}
+		addProposal(proposal);
 	}
 
-	public final void addProposal(String name) {
-		proposals.add(name);
+	public final void addProposal(CompletionProposal proposal) {
+		proposals.add(proposal);
 	}
 
 	public String[] getVariables() {
-		return proposals.toArray(new String[proposals.size()]);
+		Collections.sort(proposals, sorter);
+		Set<String> nameSet = new HashSet<String>();
+		List<String> nameList = new ArrayList<String>();
+		for (Iterator iterator = proposals.iterator(); iterator.hasNext();) {
+			CompletionProposal proposal = (CompletionProposal) iterator.next();
+			if (!nameSet.contains(proposal.getName())) {
+				nameSet.add(proposal.getName());
+				nameList.add(proposal.getName());
+			}
+		}
+		return nameList.toArray(new String[nameList.size()]);
 	}
 
 	public String[] getArrayVariables() {
-		return proposals.toArray(new String[proposals.size()]);
-	}
-
-	public ICompletionContext[] createContexts() {
-		return new ICompletionContext[] { new ClassObjMemberContext(),
-				new GlobalMethodStatementContextForTemplate(),
-				new GlobalStatementContextForTemplate(), };
+		return getVariables();
 	}
 }
