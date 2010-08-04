@@ -16,14 +16,13 @@ package org.eclipse.php.internal.debug.core.xdebug.communication;
 
 import java.net.Socket;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.Launch;
+import org.eclipse.debug.core.*;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
@@ -193,23 +192,38 @@ public class XDebugCommunicationDaemon extends
 	 * 
 	 * @param session
 	 *            the DBGpSession.
+	 * @throws CoreException
 	 */
-	private void createLaunch(DBGpSession session) {
+	private void createLaunch(DBGpSession session) throws CoreException {
 		boolean stopAtFirstLine = PHPProjectPreferences
 				.getStopAtFirstLine(null);
 		DBGpTarget target = null;
 		PathMapper mapper = null;
 		PHPSourceLookupDirector srcLocator = new PHPSourceLookupDirector();
 		srcLocator.initializeParticipants();
+		ILaunchConfigurationType type = null;
+		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
 
-		ILaunch remoteLaunch = new Launch(null, ILaunchManager.DEBUG_MODE,
-				srcLocator);
+		if (session.getSessionId() == null) {
+			// web launch
+			type = lm
+					.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
+		} else {
+			// cli launch
+			type = lm
+					.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
+		}
+
+		ILaunchConfiguration launchConfig = type.newInstance(null,
+				PHPDebugCoreMessages.XDebugMessage_remoteSessionTitle);
+		ILaunch remoteLaunch = new Launch(launchConfig,
+				ILaunchManager.DEBUG_MODE, srcLocator);
 		boolean multiSession = XDebugPreferenceMgr.useMultiSession();
 
 		if (session.getSessionId() == null && !multiSession) {
 			// non multisession web launch
-			target = new DBGpTarget(remoteLaunch, null, null, session
-					.getIdeKey(), stopAtFirstLine, null);
+			target = new DBGpTarget(remoteLaunch, null, null,
+					session.getIdeKey(), stopAtFirstLine, null);
 
 			// try to locate a relevant server definition so we can get its path
 			// mapper
@@ -268,9 +282,9 @@ public class XDebugCommunicationDaemon extends
 			// we are not a multisession web launch, so just add to the launch
 			remoteLaunch.addDebugTarget(target);
 			// tell the target it now has a session.
-			target.sessionReceived((DBGpBreakpointFacade) IDELayerFactory
-					.getIDELayer(), XDebugPreferenceMgr
-					.createSessionPreferences());
+			target.sessionReceived(
+					(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
+					XDebugPreferenceMgr.createSessionPreferences());
 			// probably could do waitForInitialSession as session has already
 			// been set.
 		}
