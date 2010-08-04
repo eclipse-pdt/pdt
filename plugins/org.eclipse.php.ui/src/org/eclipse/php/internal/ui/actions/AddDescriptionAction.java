@@ -16,6 +16,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.Argument;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
@@ -47,11 +50,11 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 public class AddDescriptionAction extends Action implements
 		IObjectActionDelegate {
 
-	private static final String PHP_COMMENT_BLOCK_END = " */";
-	private static final String PHP_COMMENT_BLOCK_MID = " *";
-	private static final String PHP_COMMENT_BLOCK_START = "/**";
-	private final String PHP_BLOCK_OPEN_TAG = "<?php";
-	private final String PHP_BLOCK_CLOSE_TAG = "?>";
+	private static final String PHP_COMMENT_BLOCK_END = " */"; //$NON-NLS-1$
+	private static final String PHP_COMMENT_BLOCK_MID = " *"; //$NON-NLS-1$
+	private static final String PHP_COMMENT_BLOCK_START = "/**"; //$NON-NLS-1$
+	private final String PHP_BLOCK_OPEN_TAG = "<?php"; //$NON-NLS-1$
+	private final String PHP_BLOCK_CLOSE_TAG = "?>"; //$NON-NLS-1$
 	private IModelElement[] fModelElement;
 	private int startPosition = 0;
 	String docBlock;
@@ -169,11 +172,28 @@ public class AddDescriptionAction extends Action implements
 				comment = createTypeComment((IType) modelElem, lineDelim);
 				break;
 			case IModelElement.FIELD:
-				if (PHPModelUtils.getDocBlock((IField) modelElem) != null) {
-					return null;
+				if (!isParameter((IField) modelElem)) {
+					if (PHPModelUtils.getDocBlock((IField) modelElem) != null) {
+						return null;
+					}
+					comment = createFieldComment((IField) modelElem, lineDelim);
+					break;
+				} else {
+					// If the element is a parameter in the function
+					// declaration,
+					// get the parent element and go to method case.
+					modelElem = modelElem.getParent();
+					// reset the position to the beginning of the method
+					startPosition = getCodeDataOffset(modelElem);
+
+					try {
+						// reset the indent level to the method.
+						indentString = getIndentString(document, modelElem);
+					} catch (BadLocationException e) {
+						Logger.logException(e);
+						return null;
+					}
 				}
-				comment = createFieldComment((IField) modelElem, lineDelim);
-				break;
 			case IModelElement.METHOD:
 				if (PHPModelUtils.getDocBlock((IMethod) modelElem) != null) {
 					return null;
@@ -199,6 +219,20 @@ public class AddDescriptionAction extends Action implements
 		return docBlockText;
 	}
 
+	private boolean isParameter(IField field) {
+		ISourceModule sourceModule = field.getSourceModule();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
+		ASTNode fieldDeclaration = null;
+		try {
+			fieldDeclaration = PHPModelUtils.getNodeByField(moduleDeclaration,
+					field);
+		} catch (ModelException e) {
+
+		}
+		return fieldDeclaration instanceof Argument;
+	}
+
 	private String indentPattern(String originalPattern, String indentation,
 			String lineDelim) {
 		String delimPlusIndent = lineDelim + indentation;
@@ -216,8 +250,6 @@ public class AddDescriptionAction extends Action implements
 
 	private String createTypeComment(IType type, String lineDelimiter)
 			throws CoreException {
-		// String[] typeParameterNames=
-		// StubUtility.getTypeParameterNames(type.getFields());
 
 		return CodeGeneration.getTypeComment(type.getScriptProject(), type
 				.getTypeQualifiedName(), /* typeParameterNames */null,
@@ -294,7 +326,7 @@ public class AddDescriptionAction extends Action implements
 		}
 		// replacing all non-spaces/tabs to single-space, in order to get
 		// "char-clean" prefix
-		leadingString = leadingString.replaceAll("[^\\s]", " ");
+		leadingString = leadingString.replaceAll("[^\\s]", " "); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return leadingString;
 	}
