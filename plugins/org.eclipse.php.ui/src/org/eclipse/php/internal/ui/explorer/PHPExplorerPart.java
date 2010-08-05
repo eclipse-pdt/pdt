@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
 
-import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.ui.filters.DotFileFilter;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
@@ -24,11 +21,9 @@ import org.eclipse.dltk.internal.ui.workingsets.WorkingSetModel;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.PreferenceConstants;
-import org.eclipse.dltk.ui.viewsupport.ProblemTreeViewer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.actions.ConfigureWorkingSetAction;
 import org.eclipse.php.internal.ui.actions.PHPExplorerActionGroup;
@@ -36,7 +31,6 @@ import org.eclipse.php.internal.ui.dnd.PHPNavigatorDropAdapter;
 import org.eclipse.php.internal.ui.dnd.PHPViewerDropSupport;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.php.internal.ui.util.NamespaceNode;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
@@ -237,65 +231,4 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		dropSupport.addDropTargetListener(new WorkingSetDropAdapter(this));
 		dropSupport.start();
 	}
-
-	/**
-	 * This viewer ensures that non-leaves in the hierarchical layout are not
-	 * removed by any filters.
-	 * 
-	 * 
-	 */
-	protected ProblemTreeViewer createViewer(Composite composite) {
-		return new PHPPackageExplorerProblemTreeViewer(composite, SWT.MULTI
-				| SWT.H_SCROLL | SWT.V_SCROLL);
-	}
-
-	protected class PHPPackageExplorerProblemTreeViewer extends
-			PackageExplorerProblemTreeViewer {
-
-		public PHPPackageExplorerProblemTreeViewer(Composite parent, int style) {
-			super(parent, style);
-		}
-
-		@Override
-		protected boolean isFiltered(Object object, Object parent,
-				ViewerFilter[] filters) {
-			boolean res = false;
-			boolean isDotFilter = false;
-
-			for (int i = 0; i < filters.length; i++) {
-				ViewerFilter filter = filters[i];
-				if (!filter.select(this, parent, object)) {
-					res = true;
-					isDotFilter = filter instanceof DotFileFilter;
-					break;
-				}
-
-			}
-
-			if (res && isEssential(object) && !isDotFilter) {
-				return false;
-			}
-			return res;
-		}
-
-		/*
-		 * Checks if a filtered object in essential (i.e. is a parent that
-		 * should not be removed).
-		 */
-		private boolean isEssential(Object object) {
-			try {
-				if (!isFlatLayout() && object instanceof IScriptFolder) {
-					IScriptFolder fragment = (IScriptFolder) object;
-					if (!fragment.isRootFolder() && fragment.hasSubfolders()) {
-						return hasFilteredChildren(fragment);
-					}
-				}
-			} catch (ModelException e) {
-				DLTKUIPlugin.log(e);
-			}
-			return false;
-		}
-
-	}
-
 }
