@@ -996,6 +996,8 @@ public class PHPDocumentationContentAccess {
 
 		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_returns_section);
 		fBuf.append(BlOCK_TAG_ENTRY_START);
+		doWorkAround();
+
 		if (tag != null)
 			handleContentElements(tag);
 		else
@@ -1007,11 +1009,12 @@ public class PHPDocumentationContentAccess {
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
 			if (tag.getTagKind() == PHPDocTag.VAR) {
-				handleBlockTagTitle("Type");
+				handleBlockTagTitle("Type"); //$NON-NLS-1$
 			} else {
 				handleBlockTagTitle(PHPDocTag.getTagKind(tag.getTagKind()));
 			}
 			fBuf.append(BlOCK_TAG_ENTRY_START);
+			doWorkAround();
 			if (tag.getTagKind() == PHPDocTag.LINK) {
 				handleLinkTag(tag);
 			} else {
@@ -1041,6 +1044,7 @@ public class PHPDocumentationContentAccess {
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
 			fBuf.append(BlOCK_TAG_ENTRY_START);
+			doWorkAround();
 			handleThrowsTag(tag);
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 		}
@@ -1049,8 +1053,6 @@ public class PHPDocumentationContentAccess {
 			String name = (String) exceptionNames.get(i);
 			if (name != null) {
 				fBuf.append(BlOCK_TAG_ENTRY_START);
-				// handleLink(Collections.singletonList(
-				// .newSimpleName(name)));
 				if (description != null) {
 					fBuf.append(ScriptElementLabels.CONCAT_STRING);
 					fBuf.append(description);
@@ -1064,7 +1066,7 @@ public class PHPDocumentationContentAccess {
 		List<SimpleReference> fragments = Arrays.asList(tag.getReferences());
 		int size = fragments.size();
 		if (size > 0) {
-			String exceptionName = "";
+			String exceptionName = ""; //$NON-NLS-1$
 			if (fragments.get(0) instanceof TypeReference) {
 				exceptionName = fragments.get(0).getName().trim();
 				fBuf.append(exceptionName);
@@ -1088,6 +1090,7 @@ public class PHPDocumentationContentAccess {
 		for (Iterator iter = tags.iterator(); iter.hasNext();) {
 			PHPDocTag tag = (PHPDocTag) iter.next();
 			fBuf.append(BlOCK_TAG_ENTRY_START);
+			doWorkAround();
 			handleParamTag(tag);
 			fBuf.append(BlOCK_TAG_ENTRY_END);
 		}
@@ -1096,6 +1099,7 @@ public class PHPDocumentationContentAccess {
 			String name = (String) parameterNames.get(i);
 			if (name != null) {
 				fBuf.append(BlOCK_TAG_ENTRY_START);
+				doWorkAround();
 				if (parameterTypes[i] != null) {
 					fBuf.append(PARAM_NAME_START);
 					fBuf.append(parameterTypes[i]);
@@ -1135,9 +1139,9 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleLinkTag(PHPDocTag tag) {
-		fBuf.append("<a href=");
+		fBuf.append("<a href="); //$NON-NLS-1$
 		fBuf.append(tag.getValue());
-		fBuf.append(">").append(tag.getValue()).append("</a>");
+		fBuf.append(">").append(tag.getValue()).append("</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void handleLink(List fragments) {
@@ -1282,19 +1286,17 @@ public class PHPDocumentationContentAccess {
 	private boolean appendBuiltinDoc(IMember element, StringBuffer buf) {
 		String builtinDoc = BuiltinDoc.getString(element.getElementName());
 		if (builtinDoc.length() > 0) {
-			// String fileName = getFileName(element);
-			//
-			// // append the file name
-			// appendDefinitionRow(FIELD_LOCATION, fileName, buf);
-			//
-			// // append the class name if it exists
-			// IType declaringType = element.getDeclaringType();
-			// appendTypeInfoRow(declaringType, buf);
-
 			buf.append(builtinDoc);
 			return true;
 		}
 		return false;
+	}
+
+	// Work aorund for Bug 320709
+	// PHPDoc tooltips are not sized according to their contents
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=320709
+	private void doWorkAround() {
+		fBuf.append("&nbsp"); //$NON-NLS-1$
 	}
 
 }

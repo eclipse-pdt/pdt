@@ -265,11 +265,6 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		 * @since 3.4
 		 */
 		private final IInformationControlCreator fInformationPresenterControlCreator;
-		/**
-		 * <code>true</code> to use the additional info affordance,
-		 * <code>false</code> to use the hover affordance.
-		 */
-		private final boolean fAdditionalInfoAffordance;
 
 		/**
 		 * @param informationPresenterControlCreator
@@ -278,22 +273,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		 */
 		public HoverControlCreator(
 				IInformationControlCreator informationPresenterControlCreator) {
-			this(informationPresenterControlCreator, false);
-		}
-
-		/**
-		 * @param informationPresenterControlCreator
-		 *            control creator for enriched hover
-		 * @param additionalInfoAffordance
-		 *            <code>true</code> to use the additional info affordance,
-		 *            <code>false</code> to use the hover affordance
-		 * @since 3.4
-		 */
-		public HoverControlCreator(
-				IInformationControlCreator informationPresenterControlCreator,
-				boolean additionalInfoAffordance) {
 			fInformationPresenterControlCreator = informationPresenterControlCreator;
-			fAdditionalInfoAffordance = additionalInfoAffordance;
 		}
 
 		/*
@@ -555,7 +535,6 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		int nResults = elements.length;
 		StringBuffer buffer = new StringBuffer();
 		boolean hasContents = false;
-		String base = null;
 		IModelElement element = null;
 
 		int leadingImageWidth = 0;
