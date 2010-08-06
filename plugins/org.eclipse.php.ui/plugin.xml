@@ -2009,4 +2009,11 @@
 			name="Alphabetic Sorter"
 			class="org.eclipse.php.internal.ui.editor.contentassist.PHPAlphabeticSorter"/>
 	</extension>
+	<extension
+		point="org.eclipse.dltk.ui.modelContentProvider">
+		<modelContentProvider
+			id="org.eclipse.php.ui.modelContentProvider"
+			language="org.eclipse.php.core.PHPNature"
+			class="org.eclipse.php.internal.ui.provider.PHPModelContentProvider"/>
+	</extension>
 </plugin>
