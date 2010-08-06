@@ -457,7 +457,8 @@ public class PHPexes {
 							final PHPexeItem newItem = new PHPexeItem(name,
 									file, null, debuggerID, false);
 							if (null == newItem
-									|| null == newItem.getExecutable())
+									|| null == newItem.getExecutable()
+									|| newItem.getVersion() == null)
 								continue; // not adding "problematic"
 							// executables
 							if (version != null) {
