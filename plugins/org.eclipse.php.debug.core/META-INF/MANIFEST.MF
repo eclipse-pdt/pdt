@@ -27,6 +27,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.debug.core.debugger.handlers,
+ org.eclipse.php.debug.core.debugger.launching,
  org.eclipse.php.debug.core.debugger.messages,
  org.eclipse.php.debug.core.debugger.parameters,
  org.eclipse.php.internal.debug.core;x-internal:=true,

@@ -103,6 +103,8 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 	 */
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
+
+		// Launch
 		getConfigurationDelegate(configuration).launch(configuration, mode,
 				launch, monitor);
 		// Clear the launch configuration delegate.

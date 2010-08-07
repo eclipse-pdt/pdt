@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -20,6 +23,7 @@ import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.debug.core.debugger.launching.ILaunchDelegateListener;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
@@ -44,12 +48,84 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
+	private static final String ILAUNCH_LISTENER_EXTENTION_ID = "org.eclipse.php.debug.core.phpLaunchDelegateListener";
 	protected Job runDispatch;
 	protected ILaunch launch;
 	protected IDebuggerInitializer debuggerInitializer;
 
 	public PHPWebPageLaunchDelegate() {
 		debuggerInitializer = createDebuggerInitilizer();
+		registerLaunchListeners();
+	}
+
+	/*
+	 * list of registered ILaunchDelegateListeners
+	 */
+	List<ILaunchDelegateListener> launchListeners = new ArrayList<ILaunchDelegateListener>();
+
+	/**
+	 * register new a LaunchDelegateListener
+	 * 
+	 * @param listener
+	 *            - ILaunchDelegateListener listener instance
+	 */
+	private void addLaunchDelegateListener(ILaunchDelegateListener listener) {
+		Assert.isNotNull(listener);
+		launchListeners.add(listener);
+	}
+
+	/*
+	 * notify all registered ILaunchDelegateListener listeners launch is about
+	 * to be invoked
+	 * 
+	 * @see
+	 * org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.
+	 * eclipse.debug.core.ILaunchConfiguration, java.lang.String,
+	 * org.eclipse.debug.core.ILaunch,
+	 * org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	protected int notifyPreLaunch(ILaunchConfiguration configuration,
+			String mode, ILaunch launch, IProgressMonitor monitor) {
+		for (ILaunchDelegateListener listener : launchListeners) {
+			int returnCode = listener.preLaunch(configuration, mode, launch,
+					monitor);
+			if (returnCode != 0) {
+				return returnCode;
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * registers all ILAUNCH_LISTENER_EXTENTION_ID listeners
+	 */
+	private void registerLaunchListeners() {
+		IConfigurationElement[] config = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(ILAUNCH_LISTENER_EXTENTION_ID);
+		try {
+			for (IConfigurationElement e : config) {
+
+				final Object o = e.createExecutableExtension("class");
+				if (o instanceof ILaunchDelegateListener) {
+					ISafeRunnable runnable = new ISafeRunnable() {
+
+						public void run() throws Exception {
+							ILaunchDelegateListener listener = (ILaunchDelegateListener) o;
+							addLaunchDelegateListener(listener);
+						}
+
+						public void handleException(Throwable exception) {
+							System.out.println("One of the"
+									+ ILAUNCH_LISTENER_EXTENTION_ID
+									+ "extensions fail");
+						}
+					};
+					SafeRunner.run(runnable);
+				}
+			}
+		} catch (CoreException ex) {
+			System.out.println(ex.getMessage());
+		}
 	}
 
 	/**
@@ -71,6 +147,14 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 */
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
+
+		// notify all listeners of a preLaunch event.
+		int rc = notifyPreLaunch(configuration, mode, launch, monitor);
+		if (rc != 0) { // cancel launch
+			monitor.setCanceled(true);
+			monitor.done();
+			return; // canceled
+		}
 		// Check that the debug daemon is functional
 		// DEBUGGER - Make sure that the active debugger id is indeed Zend's
 		// debugger
@@ -108,8 +192,8 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		IPath filePath = new Path(fileName);
 		IProject proj = null;
 		try {
-			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					filePath.segment(0));
+			proj = ResourcesPlugin.getWorkspace().getRoot()
+					.getProject(filePath.segment(0));
 		} catch (Throwable t) {
 		}
 
@@ -144,13 +228,13 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		PHPSessionLaunchMapper.put(sessionID, launch);
 
 		// Fill all rest of the attributes:
-		launch.setAttribute(IDebugParametersKeys.PORT, Integer
-				.toString(requestPort));
-		launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER, Boolean
-				.toString(true));
+		launch.setAttribute(IDebugParametersKeys.PORT,
+				Integer.toString(requestPort));
+		launch.setAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER,
+				Boolean.toString(true));
 		launch.setAttribute(IDebugParametersKeys.ORIGINAL_URL, URL);
-		launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer
-				.toString(sessionID));
+		launch.setAttribute(IDebugParametersKeys.SESSION_ID,
+				Integer.toString(sessionID));
 
 		// Trigger the session by initiating a debug request to the debug server
 		runDispatch = new RunDispatchJobWebServer(launch);
@@ -179,10 +263,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 							.openWarning(
 									Display.getDefault().getActiveShell(),
 									PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
-									NLS
-											.bind(
-													PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound,
-													new String[] { serverName }));
+									NLS.bind(
+											PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound,
+											new String[] { serverName }));
 					PHPLaunchUtilities.openLaunchConfigurationDialog(
 							configuration, mode);
 				}
@@ -317,8 +400,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 		protected IStatus run(IProgressMonitor monitor) {
 			initiateDebug(launch);
-			Logger
-					.debugMSG("Terminating debug session: calling PHPDebugTarget.terminate()");
+			Logger.debugMSG("Terminating debug session: calling PHPDebugTarget.terminate()");
 			terminated();
 			return Status.OK_STATUS;
 		}
