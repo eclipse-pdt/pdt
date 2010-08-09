@@ -13,18 +13,18 @@ public class PHPRuntime {
 	public static final String ID_STANDARD_VM_TYPE = "org.eclipse.php.internal.debug.ui.launcher.StandardPHPType"; //$NON-NLS-1$
 
 	/**
-	 * Returns a path for the JRE classpath container identifying the default VM
+	 * Returns a path for the PHP classpath container identifying the default VM
 	 * install.
 	 * 
 	 * @return classpath container path
 	 * @since 3.2
 	 */
-	public static IPath newDefaultJREContainerPath() {
+	public static IPath newDefaultPHPContainerPath() {
 		return new Path(PHP_CONTAINER);
 	}
 
 	/**
-	 * Returns a path for the JRE classpath container identifying the specified
+	 * Returns a path for the PHP classpath container identifying the specified
 	 * VM install by type and name.
 	 * 
 	 * @param vm
@@ -32,12 +32,12 @@ public class PHPRuntime {
 	 * @return classpath container path
 	 * @since 3.2
 	 */
-	public static IPath newJREContainerPath(PHPexeItem item) {
-		return newJREContainerPath(item.getDebuggerID(), item.getName());
+	public static IPath newPHPContainerPath(PHPexeItem item) {
+		return newPHPContainerPath(item.getDebuggerID(), item.getName());
 	}
 
 	/**
-	 * Returns a path for the JRE classpath container identifying the specified
+	 * Returns a path for the PHP classpath container identifying the specified
 	 * VM install by type and name.
 	 * 
 	 * @param typeId
@@ -47,15 +47,15 @@ public class PHPRuntime {
 	 * @return classpath container path
 	 * @since 3.2
 	 */
-	public static IPath newJREContainerPath(String typeId, String name) {
-		IPath path = newDefaultJREContainerPath();
+	public static IPath newPHPContainerPath(String typeId, String name) {
+		IPath path = newDefaultPHPContainerPath();
 		path = path.append(typeId);
 		path = path.append(name);
 		return path;
 	}
 
 	/**
-	 * Returns a path for the JRE classpath container identifying the specified
+	 * Returns a path for the PHP classpath container identifying the specified
 	 * execution environment.
 	 * 
 	 * @param environment
@@ -63,8 +63,8 @@ public class PHPRuntime {
 	 * @return classpath container path
 	 * @since 3.2
 	 */
-	public static IPath newJREContainerPath(PHPVersion version) {
-		IPath path = newDefaultJREContainerPath();
+	public static IPath newPHPContainerPath(PHPVersion version) {
+		IPath path = newDefaultPHPContainerPath();
 		path = path.append(ID_STANDARD_VM_TYPE);
 		path = path.append(version.getAlias());
 		return path;
