@@ -154,7 +154,8 @@ public class PHPVersionGroup implements SelectionListener {
 	protected PHPVersionConfigurationBlock createConfigurationBlock(
 			IStatusChangeListener listener, IProject project,
 			IWorkbenchPreferenceContainer container) {
-		return new PHPVersionConfigurationBlock(listener, project, container);
+		return new PHPVersionConfigurationBlock(listener, project, container,
+				true);
 	}
 
 	public PHPVersionConfigurationBlock getVersionBlock() {

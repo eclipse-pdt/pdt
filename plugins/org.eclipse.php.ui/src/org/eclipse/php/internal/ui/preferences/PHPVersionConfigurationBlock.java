@@ -54,14 +54,25 @@ public class PHPVersionConfigurationBlock extends
 	protected Button useShortTagsButton;
 	protected Label nameLabel;
 
+	private boolean hideShortTags;
+
 	public PHPVersionConfigurationBlock(IStatusChangeListener context,
 			IProject project, IWorkbenchPreferenceContainer container) {
 		super(context, project, getKeys(), container);
 	}
 
+	public PHPVersionConfigurationBlock(IStatusChangeListener context,
+			IProject project, IWorkbenchPreferenceContainer container,
+			boolean hideShortTags) {
+		this(context, project, container);
+		this.hideShortTags = hideShortTags;
+	}
+
 	public void setEnabled(boolean isEnabled) {
 		versionCombo.setEnabled(isEnabled);
-		useShortTagsButton.setEnabled(isEnabled);
+		if (!hideShortTags) {
+			useShortTagsButton.setEnabled(isEnabled);
+		}
 		nameLabel.setEnabled(isEnabled);
 	}
 
@@ -78,9 +89,11 @@ public class PHPVersionConfigurationBlock extends
 		layout.marginHeight = 0;
 		composite.setLayout(layout);
 		createVersionContent(composite);
-		createUseShortTagsContent(composite);
 		unpackPHPVersion();
-		unpackUseShortTags();
+		if (!hideShortTags) {
+			createUseShortTagsContent(composite);
+			unpackUseShortTags();
+		}
 		validateSettings(null, null, null);
 		return composite;
 	}
@@ -95,6 +108,7 @@ public class PHPVersionConfigurationBlock extends
 						.getSelection()));
 			}
 		});
+
 	}
 
 	private Composite createVersionContent(Composite parent) {
@@ -212,7 +226,9 @@ public class PHPVersionConfigurationBlock extends
 	 */
 	protected void updateControls() {
 		unpackPHPVersion();
-		unpackUseShortTags();
+		if (!hideShortTags) {
+			unpackUseShortTags();
+		}
 	}
 
 	private void unpackPHPVersion() {

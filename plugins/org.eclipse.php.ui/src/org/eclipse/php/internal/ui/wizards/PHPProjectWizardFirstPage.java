@@ -894,7 +894,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 				IStatusChangeListener listener, IProject project,
 				IWorkbenchPreferenceContainer container) {
 			return new PHPVersionConfigurationBlock(listener, project,
-					container);
+					container, true);
 		}
 
 		protected void fireEvent() {
