@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
@@ -27,5 +29,13 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
+	}
+
+	@Override
+	public SourceRange getReplacementRange(ICompletionContext context)
+			throws BadLocationException {
+		SourceRange result = super.getReplacementRange(context);
+		result = new SourceRange(result.getOffset() + result.getLength() + 1, 0);
+		return result;
 	}
 }
