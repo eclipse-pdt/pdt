@@ -107,7 +107,7 @@ public final class ProjectTemplateStore {
 		if (fProjectStore != null) {
 			fProjectStore.load();
 
-			Set datas = new HashSet();
+			Set<String> datas = new HashSet<String>();
 			TemplatePersistenceData[] data = fProjectStore
 					.getTemplateData(false);
 			for (int i = 0; i < data.length; i++) {
@@ -171,6 +171,25 @@ public final class ProjectTemplateStore {
 			// nothing to do
 		} else {
 			fInstanceStore.load();
+		}
+	}
+
+	public Object findTemplate(String templateName, String templateContextTypeId) {
+		if (fProjectStore != null) {
+			return fProjectStore.findTemplate(templateName,
+					templateContextTypeId);
+		} else {
+			return fInstanceStore.findTemplate(templateName,
+					templateContextTypeId);
+		}
+
+	}
+
+	public Object[] getTemplates(String templateContextTypeId) {
+		if (fProjectStore != null) {
+			return fProjectStore.getTemplates(templateContextTypeId);
+		} else {
+			return fInstanceStore.getTemplates(templateContextTypeId);
 		}
 	}
 }

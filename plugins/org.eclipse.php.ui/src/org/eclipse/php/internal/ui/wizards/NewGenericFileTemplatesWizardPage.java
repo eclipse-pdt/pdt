@@ -22,16 +22,15 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.templates.*;
-import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.viewsupport.ProjectTemplateStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -45,7 +44,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -64,7 +62,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 */
 	private class TemplateContentProvider implements IStructuredContentProvider {
 		/** The template store. */
-		private TemplateStore fStore;
+		private ProjectTemplateStore fStore;
 
 		/*
 		 * @see IContentProvider#dispose()
@@ -85,7 +83,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		 * @see IContentProvider#inputChanged(Viewer, Object, Object)
 		 */
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			fStore = (TemplateStore) newInput;
+			fStore = (ProjectTemplateStore) newInput;
 		}
 	}
 
@@ -130,7 +128,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	/** The table presenting the templates. */
 	private TableViewer fTableViewer;
 	/** Template store used by this wizard page */
-	private TemplateStore fTemplateStore;
+	private ProjectTemplateStore fTemplateStore;
 	/** Checkbox for using templates. */
 	protected Button fUseTemplateButton;
 
@@ -247,10 +245,10 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		table.setLayout(tableLayout);
 
 		TableColumn column1 = new TableColumn(table, SWT.NONE);
-		column1.setText(HTMLUIMessages.NewHTMLTemplatesWizardPage_2);
+		column1.setText(Messages.NewGenericFileTemplatesWizardPage_0);
 
 		TableColumn column2 = new TableColumn(table, SWT.NONE);
-		column2.setText(HTMLUIMessages.NewHTMLTemplatesWizardPage_3);
+		column2.setText(Messages.NewGenericFileTemplatesWizardPage_1);
 
 		fTableViewer = new TableViewer(table);
 		fTableViewer.setLabelProvider(new TemplateLabelProvider());
@@ -288,11 +286,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		// create viewer that displays currently selected template's contents
 		fPatternViewer = doCreateViewer(parent);
 
-		fTemplateStore = PHPUiPlugin.getDefault().getCodeTemplateStore();
-		fTableViewer.setInput(fTemplateStore);
-
 		configureTableResizing(innerParent, table, column1, column2);
-		loadLastSavedPreferences();
 
 		String helpId = getNewFileWizardTemplatePageHelpId();
 		if (helpId != null) {
@@ -303,6 +297,18 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 				IPHPHelpContextIds.NEW);
 		setControl(parent);
 	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		if (visible) {
+			fTemplateStore = getTemplateStore();
+			fTableViewer.setInput(fTemplateStore);
+			loadLastSavedPreferences();
+		}
+		super.setVisible(visible);
+	}
+
+	protected abstract ProjectTemplateStore getTemplateStore();
 
 	protected abstract String getNewFileWizardTemplatePageHelpId();
 
@@ -347,7 +353,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	private SourceViewer doCreateViewer(Composite parent) {
 		Label label = new Label(parent, SWT.NONE);
-		label.setText(HTMLUIMessages.NewHTMLTemplatesWizardPage_5);
+		label.setText(Messages.NewGenericFileTemplatesWizardPage_2);
 		GridData data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
