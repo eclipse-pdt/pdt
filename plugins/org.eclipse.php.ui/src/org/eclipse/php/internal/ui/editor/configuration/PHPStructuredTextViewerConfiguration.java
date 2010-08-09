@@ -429,9 +429,9 @@ public class PHPStructuredTextViewerConfiguration extends
 
 		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
 		char indentCharPref = FormatPreferencesSupport.getInstance()
-				.getIndentationChar(null);
+				.getIndentationChar(sourceViewer.getDocument());
 		int indentationSize = FormatPreferencesSupport.getInstance()
-				.getIndentationSize(null);
+				.getIndentationSize(sourceViewer.getDocument());
 
 		for (int i = 0; i <= indentationSize; i++) {
 			StringBuffer prefix = new StringBuffer();
