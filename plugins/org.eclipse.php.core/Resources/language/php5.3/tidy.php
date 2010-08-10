@@ -353,11 +353,25 @@ final class tidyNode  {
 
 }
 
-function tidy_getopt () {}
+/**
+ * @param option
+ */
+function tidy_getopt ($option) {}
 
-function tidy_parse_string () {}
+/**
+ * @param input
+ * @param config_options[optional]
+ * @param encoding[optional]
+ */
+function tidy_parse_string ($input, $config_options, $encoding) {}
 
-function tidy_parse_file () {}
+/**
+ * @param file
+ * @param config_options[optional]
+ * @param encoding[optional]
+ * @param use_include_path[optional]
+ */
+function tidy_parse_file ($file, $config_options, $encoding, $use_include_path) {}
 
 /**
  * Return a string representing the parsed tidy markup
@@ -381,9 +395,20 @@ function tidy_get_error_buffer (tidy $object) {}
 
 function tidy_clean_repair () {}
 
-function tidy_repair_string () {}
+/**
+ * @param data
+ * @param config_file[optional]
+ * @param encoding[optional]
+ */
+function tidy_repair_string ($data, $config_file, $encoding) {}
 
-function tidy_repair_file () {}
+/**
+ * @param filename
+ * @param config_file[optional]
+ * @param encoding[optional]
+ * @param use_include_path[optional]
+ */
+function tidy_repair_file ($filename, $config_file, $encoding, $use_include_path) {}
 
 function tidy_diagnose () {}
 
@@ -439,7 +464,11 @@ function tidy_access_count (tidy $object) {}
  */
 function tidy_config_count (tidy $object) {}
 
-function tidy_get_opt_doc () {}
+/**
+ * @param resource
+ * @param optname
+ */
+function tidy_get_opt_doc ($resource, $optname) {}
 
 function tidy_get_root () {}
 
@@ -447,7 +476,10 @@ function tidy_get_head () {}
 
 function tidy_get_html () {}
 
-function tidy_get_body () {}
+/**
+ * @param tidy
+ */
+function tidy_get_body ($tidy) {}
 
 /**
  * ob_start callback function to repair the buffer

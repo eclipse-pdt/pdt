@@ -19,8 +19,9 @@ class DOMException extends Exception  {
 	/**
 	 * @param message[optional]
 	 * @param code[optional]
+	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code) {}
+	public function __construct ($message, $code, $previous) {}
 
 	final public function getMessage () {}
 
@@ -31,6 +32,8 @@ class DOMException extends Exception  {
 	final public function getLine () {}
 
 	final public function getTrace () {}
+
+	final public function getPrevious () {}
 
 	final public function getTraceAsString () {}
 
@@ -454,6 +457,13 @@ class DOMNode  {
 	public function getNodePath () {}
 
 	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
+
+	/**
 	 * @param exclusive[optional]
 	 * @param with_comments[optional]
 	 * @param xpath[optional]
@@ -666,6 +676,13 @@ class DOMDocumentFragment extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
+
+	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -1396,6 +1413,13 @@ class DOMDocument extends DOMNode  {
 	public function getNodePath () {}
 
 	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
+
+	/**
 	 * @param exclusive[optional]
 	 * @param with_comments[optional]
 	 * @param xpath[optional]
@@ -1772,6 +1796,13 @@ class DOMCharacterData extends DOMNode  {
 	public function getNodePath () {}
 
 	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
+
+	/**
 	 * @param exclusive[optional]
 	 * @param with_comments[optional]
 	 * @param xpath[optional]
@@ -2013,6 +2044,13 @@ class DOMAttr extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
+
+	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -2457,6 +2495,13 @@ class DOMElement extends DOMNode  {
 	public function getNodePath () {}
 
 	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
+
+	/**
 	 * @param exclusive[optional]
 	 * @param with_comments[optional]
 	 * @param xpath[optional]
@@ -2760,6 +2805,13 @@ class DOMText extends DOMCharacterData  {
 	public function getNodePath () {}
 
 	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
+
+	/**
 	 * @param exclusive[optional]
 	 * @param with_comments[optional]
 	 * @param xpath[optional]
@@ -3028,6 +3080,13 @@ class DOMComment extends DOMCharacterData  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
+
+	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -3364,6 +3423,13 @@ class DOMCdataSection extends DOMText  {
 	public function getNodePath () {}
 
 	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
+
+	/**
 	 * @param exclusive[optional]
 	 * @param with_comments[optional]
 	 * @param xpath[optional]
@@ -3601,6 +3667,13 @@ class DOMDocumentType extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
+
+	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -3868,6 +3941,13 @@ class DOMEntity extends DOMNode  {
 	public function getNodePath () {}
 
 	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
+
+	/**
 	 * @param exclusive[optional]
 	 * @param with_comments[optional]
 	 * @param xpath[optional]
@@ -4072,6 +4152,13 @@ class DOMEntityReference extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
+
+	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -4288,6 +4375,13 @@ class DOMProcessingInstruction extends DOMNode  {
 	public function getNodePath () {}
 
 	/**
+	 * Get line number for a node
+	 * @link http://www.php.net/manual/en/domnode.getlineno.php
+	 * @return int Always returns the line number where the node was defined in.
+	 */
+	public function getLineNo () {}
+
+	/**
 	 * @param exclusive[optional]
 	 * @param with_comments[optional]
 	 * @param xpath[optional]
@@ -4384,6 +4478,20 @@ class DOMXPath  {
 	 * containing all nodes matching the given XPath expression.
 	 */
 	public function evaluate ($expression, DOMNode $contextnode = null) {}
+
+	/**
+	 * Register PHP functions as XPath functions
+	 * @link http://www.php.net/manual/en/domxpath.registerphpfunctions.php
+	 * @param restrict mixed[optional] <p>
+	 * Use this parameter to only allow certain functions to be called from XPath.
+	 * </p>
+	 * <p>
+	 * This parameter can be either a string (a function name) or 
+	 * an array of function names.
+	 * </p>
+	 * @return void 
+	 */
+	public function registerPhpFunctions ($restrict = null) {}
 
 }
 

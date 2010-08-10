@@ -109,6 +109,16 @@ class XSLTProcessor  {
 	 */
 	public function registerPHPFunctions ($restrict = null) {}
 
+	/**
+	 * Sets profiling output file
+	 * @link http://www.php.net/manual/en/xsltprocessor.setprofiling.php
+	 * @param filename string <p>
+	 * Path to the file to dump profiling information.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public function setProfiling ($filename) {}
+
 }
 define ('XSL_CLONE_AUTO', 0);
 define ('XSL_CLONE_NEVER', -1);

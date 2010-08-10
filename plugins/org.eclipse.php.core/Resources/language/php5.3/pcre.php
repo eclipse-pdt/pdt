@@ -260,6 +260,24 @@ function preg_replace ($pattern, $replacement, $subject, $limit = null, &$count 
 function preg_replace_callback ($pattern, $callback, $subject, $limit = null, &$count = null) {}
 
 /**
+ * Perform a regular expression search and replace
+ * @link http://www.php.net/manual/en/function.preg-filter.php
+ * @param pattern mixed 
+ * @param replacement mixed 
+ * @param subject mixed 
+ * @param limit int[optional] 
+ * @param count int[optional] 
+ * @return mixed an array if the subject
+ * parameter is an array, or a string otherwise.
+ * </p>
+ * <p>
+ * If no matches are found or an error occurred, an empty array 
+ * is returned when subject is an array
+ * or &null; otherwise.
+ */
+function preg_filter ($pattern, $replacement, $subject, $limit = null, &$count = null) {}
+
+/**
  * Split string by a regular expression
  * @link http://www.php.net/manual/en/function.preg-split.php
  * @param pattern string <p>
@@ -437,7 +455,7 @@ define ('PREG_BAD_UTF8_OFFSET_ERROR', 5);
  * Available since PHP 5.2.4.
  * @link http://www.php.net/manual/en/pcre.constants.php
  */
-define ('PCRE_VERSION', "7.9 2009-04-11");
+define ('PCRE_VERSION', "8.00 2009-10-19");
 
 // End of pcre v.
 ?>

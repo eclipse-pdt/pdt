@@ -1190,6 +1190,10 @@ function curl_multi_info_read ($mh, &$msgs_in_queue = null) {}
  */
 function curl_multi_close ($mh) {}
 
+define ('CURLOPT_IPRESOLVE', 113);
+define ('CURL_IPRESOLVE_WHATEVER', 0);
+define ('CURL_IPRESOLVE_V4', 1);
+define ('CURL_IPRESOLVE_V6', 2);
 define ('CURLOPT_DNS_USE_GLOBAL_CACHE', 91);
 define ('CURLOPT_DNS_CACHE_TIMEOUT', 92);
 define ('CURLOPT_PORT', 3);
@@ -1203,6 +1207,12 @@ define ('CURLOPT_VERBOSE', 41);
 define ('CURLOPT_HEADER', 42);
 define ('CURLOPT_HTTPHEADER', 10023);
 define ('CURLOPT_NOPROGRESS', 43);
+
+/**
+ * Available since PHP 5.3.0
+ * @link http://www.php.net/manual/en/curl.constants.php
+ */
+define ('CURLOPT_PROGRESSFUNCTION', 20056);
 define ('CURLOPT_NOBODY', 44);
 define ('CURLOPT_FAILONERROR', 45);
 define ('CURLOPT_UPLOAD', 46);
@@ -1358,6 +1368,7 @@ define ('CURLINFO_HEADER_OUT', 2);
  * @link http://www.php.net/manual/en/curl.constants.php
  */
 define ('CURLINFO_PRIVATE', 1048597);
+define ('CURLINFO_CERTINFO', 4194338);
 define ('CURL_VERSION_IPV6', 1);
 define ('CURL_VERSION_KERBEROS4', 2);
 define ('CURL_VERSION_SSL', 4);
@@ -1498,6 +1509,20 @@ define ('CURLFTPSSL_CONTROL', 2);
  * @link http://www.php.net/manual/en/curl.constants.php
  */
 define ('CURLFTPSSL_ALL', 3);
+define ('CURLOPT_CERTINFO', 172);
+define ('CURLOPT_POSTREDIR', 161);
+define ('CURLSSH_AUTH_NONE', 0);
+define ('CURLSSH_AUTH_PUBLICKEY', 1);
+define ('CURLSSH_AUTH_PASSWORD', 2);
+define ('CURLSSH_AUTH_HOST', 4);
+define ('CURLSSH_AUTH_KEYBOARD', 8);
+define ('CURLSSH_AUTH_DEFAULT', -1);
+define ('CURLOPT_SSH_AUTH_TYPES', 151);
+define ('CURLOPT_KEYPASSWD', 10026);
+define ('CURLOPT_SSH_PUBLIC_KEYFILE', 10152);
+define ('CURLOPT_SSH_PRIVATE_KEYFILE', 10153);
+define ('CURLOPT_SSH_HOST_PUBLIC_KEY_MD5', 10162);
+define ('CURLE_SSH', 79);
 define ('CURLOPT_REDIR_PROTOCOLS', 182);
 define ('CURLOPT_PROTOCOLS', 181);
 define ('CURLPROTO_HTTP', 1);
@@ -1513,6 +1538,11 @@ define ('CURLPROTO_DICT', 512);
 define ('CURLPROTO_FILE', 1024);
 define ('CURLPROTO_TFTP', 2048);
 define ('CURLPROTO_ALL', -1);
+define ('CURLOPT_FTP_FILEMETHOD', 138);
+define ('CURLOPT_FTP_SKIP_PASV_IP', 137);
+define ('CURLFTPMETHOD_MULTICWD', 1);
+define ('CURLFTPMETHOD_NOCWD', 2);
+define ('CURLFTPMETHOD_SINGLECWD', 3);
 
 // End of curl v.
 ?>

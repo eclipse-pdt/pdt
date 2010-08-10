@@ -167,6 +167,16 @@ function hash_update_file ($context, $filename, $context = null) {}
 function hash_final ($context, $raw_output = null) {}
 
 /**
+ * Copy hashing context
+ * @link http://www.php.net/manual/en/function.hash-copy.php
+ * @param context resource <p>
+ * Hashing context returned by hash_init.
+ * </p>
+ * @return resource a copy of Hashing Context resource.
+ */
+function hash_copy ($context) {}
+
+/**
  * Return a list of registered hashing algorithms
  * @link http://www.php.net/manual/en/function.hash-algos.php
  * @return array a numerically indexed array containing the list of supported

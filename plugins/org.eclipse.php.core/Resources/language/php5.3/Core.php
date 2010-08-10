@@ -1,5 +1,152 @@
 <?php
 
+// Start of Core v.5.3.2
+
+class stdClass  {
+}
+
+interface Traversable  {
+}
+
+interface IteratorAggregate extends Traversable {
+
+	abstract public function getIterator () {}
+
+}
+
+interface Iterator extends Traversable {
+
+	abstract public function current () {}
+
+	abstract public function next () {}
+
+	abstract public function key () {}
+
+	abstract public function valid () {}
+
+	abstract public function rewind () {}
+
+}
+
+interface ArrayAccess  {
+
+	/**
+	 * @param offset
+	 */
+	abstract public function offsetExists ($offset) {}
+
+	/**
+	 * @param offset
+	 */
+	abstract public function offsetGet ($offset) {}
+
+	/**
+	 * @param offset
+	 * @param value
+	 */
+	abstract public function offsetSet ($offset, $value) {}
+
+	/**
+	 * @param offset
+	 */
+	abstract public function offsetUnset ($offset) {}
+
+}
+
+interface Serializable  {
+
+	abstract public function serialize () {}
+
+	/**
+	 * @param serialized
+	 */
+	abstract public function unserialize ($serialized) {}
+
+}
+
+class Exception  {
+	protected $message;
+	private $string;
+	protected $code;
+	protected $file;
+	protected $line;
+	private $trace;
+	private $previous;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class ErrorException extends Exception  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+	protected $severity;
+
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param severity[optional]
+	 * @param filename[optional]
+	 * @param lineno[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $severity, $filename, $lineno, $previous) {}
+
+	final public function getSeverity () {}
+
+	final private function __clone () {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+final class Closure  {
+
+	private function __construct () {}
+
+}
+
 /**
  * Gets the version of the current Zend engine
  * @link http://www.php.net/manual/en/function.zend-version.php
@@ -206,6 +353,13 @@ function defined ($name) {}
 function get_class ($object = null) {}
 
 /**
+ * the "Late Static Binding" class name
+ * @link http://www.php.net/manual/en/function.get-called-class.php
+ * @return string the class name. Returns false if called from outside a class.
+ */
+function get_called_class () {}
+
+/**
  * Retrieves the parent class name for object or class
  * @link http://www.php.net/manual/en/function.get-parent-class.php
  * @param object mixed[optional] <p>
@@ -293,6 +447,19 @@ function interface_exists ($interface_name, $autoload = null) {}
  * include_once and echo.
  */
 function function_exists ($function_name) {}
+
+/**
+ * Creates an alias for a class
+ * @link http://www.php.net/manual/en/function.class-alias.php
+ * @param original string[optional] <p>
+ * The original class.
+ * </p>
+ * @param alias string[optional] <p>
+ * The alias name for the class.
+ * </p>
+ * @return boolean Returns true on success or false on failure.
+ */
+function class_alias ($original = null, $alias = null) {}
 
 /**
  * Returns an array with the names of included or required files
@@ -401,8 +568,10 @@ function trigger_error ($error_msg, $error_type = null) {}
 /**
  * Alias of <function>trigger_error</function>
  * @link http://www.php.net/manual/en/function.user-error.php
+ * @param messsage
+ * @param error_type[optional]
  */
-function user_error () {}
+function user_error ($messsage, $error_type) {}
 
 /**
  * Sets a user-defined error handler function
@@ -712,137 +881,33 @@ function debug_backtrace ($provide_object = null) {}
  */
 function debug_print_backtrace () {}
 
-class stdClass  {
-}
+/**
+ * Forces collection of any existing garbage cycles
+ * @link http://www.php.net/manual/en/function.gc-collect-cycles.php
+ * @return int number of collected cycles.
+ */
+function gc_collect_cycles () {}
 
-class Exception  {
-	protected $message;
-	private $string;
-	protected $code;
-	protected $file;
-	protected $line;
-	private $trace;
+/**
+ * Returns status of the circular reference collector
+ * @link http://www.php.net/manual/en/function.gc-enabled.php
+ * @return bool true if the garbage collector is enabled, false otherwise.
+ */
+function gc_enabled () {}
 
+/**
+ * Activates the circular reference collector
+ * @link http://www.php.net/manual/en/function.gc-enable.php
+ * @return void 
+ */
+function gc_enable () {}
 
-	final private function __clone () {}
-
-	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 */
-	public function __construct ($message, $code) {}
-
-	final public function getMessage () {}
-
-	final public function getCode () {}
-
-	final public function getFile () {}
-
-	final public function getLine () {}
-
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
-
-}
-
-class ErrorException extends Exception  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-	protected $severity;
-
-
-	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 * @param severity[optional]
-	 * @param filename[optional]
-	 * @param lineno[optional]
-	 */
-	public function __construct ($message, $code, $severity, $filename, $lineno) {}
-
-	final public function getSeverity () {}
-
-	final private function __clone () {}
-
-	final public function getMessage () {}
-
-	final public function getCode () {}
-
-	final public function getFile () {}
-
-	final public function getLine () {}
-
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
-
-}
-
-interface Traversable  {
-}
-
-interface IteratorAggregate extends Traversable {
-
-	abstract public function getIterator () {}
-
-}
-
-interface Iterator extends Traversable {
-
-	abstract public function current () {}
-
-	abstract public function next () {}
-
-	abstract public function key () {}
-
-	abstract public function valid () {}
-
-	abstract public function rewind () {}
-
-}
-
-interface ArrayAccess  {
-
-	/**
-	 * @param offset
-	 */
-	abstract public function offsetExists ($offset) {}
-
-	/**
-	 * @param offset
-	 */
-	abstract public function offsetGet ($offset) {}
-
-	/**
-	 * @param offset
-	 * @param value
-	 */
-	abstract public function offsetSet ($offset, $value) {}
-
-	/**
-	 * @param offset
-	 */
-	abstract public function offsetUnset ($offset) {}
-
-}
-
-interface Serializable  {
-
-	abstract public function serialize () {}
-
-	/**
-	 * @param serialized
-	 */
-	abstract public function unserialize ($serialized) {}
-
-}
+/**
+ * Deactivates the circular reference collector
+ * @link http://www.php.net/manual/en/function.gc-disable.php
+ * @return void 
+ */
+function gc_disable () {}
 
 
 /**
@@ -892,6 +957,13 @@ define ('E_NOTICE', 8);
  * @link http://www.php.net/manual/en/errorfunc.constants.php
  */
 define ('E_STRICT', 2048);
+
+/**
+ * Run-time notices. Enable this to receive warnings about code
+ * that will not work in future versions.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
+define ('E_DEPRECATED', 8192);
 
 /**
  * Fatal errors that occur during PHP's initial startup. This is like an
@@ -948,29 +1020,38 @@ define ('E_USER_WARNING', 512);
 define ('E_USER_NOTICE', 1024);
 
 /**
+ * User-generated warning message. This is like an
+ * E_DEPRECATED, except it is generated in PHP code by
+ * using the PHP function trigger_error.
+ * @link http://www.php.net/manual/en/errorfunc.constants.php
+ */
+define ('E_USER_DEPRECATED', 16384);
+
+/**
  * All errors and warnings, as supported, except of level
  * E_STRICT.
  * @link http://www.php.net/manual/en/errorfunc.constants.php
  */
-define ('E_ALL', 6143);
+define ('E_ALL', 30719);
 define ('TRUE', true);
 define ('FALSE', false);
 define ('NULL', null);
 define ('ZEND_THREAD_SAFE', false);
-define ('PHP_VERSION', "5.2.13");
+define ('ZEND_DEBUG_BUILD', false);
+define ('PHP_VERSION', "5.3.2");
 define ('PHP_MAJOR_VERSION', 5);
-define ('PHP_MINOR_VERSION', 2);
-define ('PHP_RELEASE_VERSION', 13);
+define ('PHP_MINOR_VERSION', 3);
+define ('PHP_RELEASE_VERSION', 2);
 define ('PHP_EXTRA_VERSION', "");
-define ('PHP_VERSION_ID', 50213);
+define ('PHP_VERSION_ID', 50302);
 define ('PHP_ZTS', 0);
 define ('PHP_DEBUG', 0);
 define ('PHP_OS', "Linux");
 define ('PHP_SAPI', "cli");
 define ('DEFAULT_INCLUDE_PATH', ".:/usr/local/zend/share/pear");
 define ('PEAR_INSTALL_DIR', "/usr/local/zend/share/pear");
-define ('PEAR_EXTENSION_DIR', "/usr/local/zend/lib/php/20060613");
-define ('PHP_EXTENSION_DIR', "/usr/local/zend/lib/php/20060613");
+define ('PEAR_EXTENSION_DIR', "/usr/local/zend/lib/php/20090626");
+define ('PHP_EXTENSION_DIR', "/usr/local/zend/lib/php/20090626");
 define ('PHP_PREFIX', "/usr/local/zend");
 define ('PHP_BINDIR', "/usr/local/zend/bin");
 define ('PHP_LIBDIR', "/usr/local/zend/lib/php");
@@ -981,6 +1062,7 @@ define ('PHP_CONFIG_FILE_PATH', "/usr/local/zend/etc");
 define ('PHP_CONFIG_FILE_SCAN_DIR', "");
 define ('PHP_SHLIB_SUFFIX', "so");
 define ('PHP_EOL', "\n");
+define ('PHP_MAXPATHLEN', 4096);
 define ('PHP_INT_MAX', 2147483647);
 define ('PHP_INT_SIZE', 4);
 define ('PHP_OUTPUT_HANDLER_START', 1);
@@ -999,42 +1081,5 @@ define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
 
-/**
- * The full path and filename of the file. If used inside an include,
- * the name of the included file is returned.
- * Since PHP 4.0.2, __FILE__ always contains an
- * absolute path with symlinks resolved whereas in older versions it contained relative path
- * under some circumstances.
- * @link http://www.php.net/manual/en/language.constants.php
- */
-define ('__FILE__', null);
-
-/**
- * The current line number of the file.
- * @link http://www.php.net/manual/en/language.constants.php
- */
-define ('__LINE__', null);
-
-/**
- * The class name. (Added in PHP 4.3.0) As of PHP 5 this constant 
- * returns the class name as it was declared (case-sensitive). In PHP
- * 4 its value is always lowercased.
- * @link http://www.php.net/manual/en/language.constants.php
- */
-define ('__CLASS__', null);
-
-/**
- * The function name. (Added in PHP 4.3.0) As of PHP 5 this constant 
- * returns the function name as it was declared (case-sensitive). In
- * PHP 4 its value is always lowercased.
- * @link http://www.php.net/manual/en/language.constants.php
- */
-define ('__FUNCTION__', null);
-
-/**
- * The class method name. (Added in PHP 5.0.0) The method name is
- * returned as it was declared (case-sensitive).
- * @link http://www.php.net/manual/en/language.constants.php
- */
-define ('__METHOD__', null);
+// End of Core v.5.3.2
 ?>

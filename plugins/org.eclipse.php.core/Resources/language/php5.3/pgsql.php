@@ -1484,55 +1484,151 @@ function pg_delete ($connection, $table_name, array $assoc_array, $options = nul
  */
 function pg_select ($connection, $table_name, array $assoc_array, $options = null) {}
 
-function pg_exec () {}
+/**
+ * @param connection[optional]
+ * @param query[optional]
+ */
+function pg_exec ($connection, $query) {}
 
-function pg_getlastoid () {}
+/**
+ * @param result
+ */
+function pg_getlastoid ($result) {}
 
-function pg_cmdtuples () {}
+/**
+ * @param result
+ */
+function pg_cmdtuples ($result) {}
 
-function pg_errormessage () {}
+/**
+ * @param connection[optional]
+ */
+function pg_errormessage ($connection) {}
 
-function pg_numrows () {}
+/**
+ * @param result
+ */
+function pg_numrows ($result) {}
 
-function pg_numfields () {}
+/**
+ * @param result
+ */
+function pg_numfields ($result) {}
 
-function pg_fieldname () {}
+/**
+ * @param result
+ * @param field_number
+ */
+function pg_fieldname ($result, $field_number) {}
 
-function pg_fieldsize () {}
+/**
+ * @param result
+ * @param field_number
+ */
+function pg_fieldsize ($result, $field_number) {}
 
-function pg_fieldtype () {}
+/**
+ * @param result
+ * @param field_number
+ */
+function pg_fieldtype ($result, $field_number) {}
 
-function pg_fieldnum () {}
+/**
+ * @param result
+ * @param field_name
+ */
+function pg_fieldnum ($result, $field_name) {}
 
-function pg_fieldprtlen () {}
+/**
+ * @param result
+ * @param row[optional]
+ * @param field_name_or_number[optional]
+ */
+function pg_fieldprtlen ($result, $row, $field_name_or_number) {}
 
-function pg_fieldisnull () {}
+/**
+ * @param result
+ * @param row[optional]
+ * @param field_name_or_number[optional]
+ */
+function pg_fieldisnull ($result, $row, $field_name_or_number) {}
 
-function pg_freeresult () {}
+/**
+ * @param result
+ */
+function pg_freeresult ($result) {}
 
-function pg_result () {}
+/**
+ * @param connection
+ */
+function pg_result ($connection) {}
 
-function pg_loreadall () {}
+/**
+ * @param large_object
+ */
+function pg_loreadall ($large_object) {}
 
-function pg_locreate () {}
+/**
+ * @param connection[optional]
+ * @param large_object_id[optional]
+ */
+function pg_locreate ($connection, $large_object_id) {}
 
-function pg_lounlink () {}
+/**
+ * @param connection[optional]
+ * @param large_object_oid[optional]
+ */
+function pg_lounlink ($connection, $large_object_oid) {}
 
-function pg_loopen () {}
+/**
+ * @param connection[optional]
+ * @param large_object_oid[optional]
+ * @param mode[optional]
+ */
+function pg_loopen ($connection, $large_object_oid, $mode) {}
 
-function pg_loclose () {}
+/**
+ * @param large_object
+ */
+function pg_loclose ($large_object) {}
 
-function pg_loread () {}
+/**
+ * @param large_object
+ * @param len[optional]
+ */
+function pg_loread ($large_object, $len) {}
 
-function pg_lowrite () {}
+/**
+ * @param large_object
+ * @param buf
+ * @param len[optional]
+ */
+function pg_lowrite ($large_object, $buf, $len) {}
 
-function pg_loimport () {}
+/**
+ * @param connection[optional]
+ * @param filename[optional]
+ * @param large_object_oid[optional]
+ */
+function pg_loimport ($connection, $filename, $large_object_oid) {}
 
-function pg_loexport () {}
+/**
+ * @param connection[optional]
+ * @param objoid[optional]
+ * @param filename[optional]
+ */
+function pg_loexport ($connection, $objoid, $filename) {}
 
-function pg_clientencoding () {}
+/**
+ * @param connection[optional]
+ */
+function pg_clientencoding ($connection) {}
 
-function pg_setclientencoding () {}
+/**
+ * @param connection[optional]
+ * @param encoding[optional]
+ */
+function pg_setclientencoding ($connection, $encoding) {}
 
 
 /**

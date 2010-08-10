@@ -15,8 +15,9 @@ class mysqli_sql_exception extends RuntimeException  {
 	/**
 	 * @param message[optional]
 	 * @param code[optional]
+	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code) {}
+	public function __construct ($message, $code, $previous) {}
 
 	final public function getMessage () {}
 
@@ -28,6 +29,8 @@ class mysqli_sql_exception extends RuntimeException  {
 
 	final public function getTrace () {}
 
+	final public function getPrevious () {}
+
 	final public function getTraceAsString () {}
 
 	public function __toString () {}
@@ -35,27 +38,34 @@ class mysqli_sql_exception extends RuntimeException  {
 }
 
 final class mysqli_driver  {
-
-	/**
-	 * Initialize and start embedded server
-	 * @link http://www.php.net/manual/en/mysqli-driver.embedded-server-start.php
-	 * @param start bool 
-	 * @param arguments array 
-	 * @param groups array 
-	 * @return bool 
-	 */
-	public function embedded_server_start ($start, array $arguments, array $groups) {}
-
-	/**
-	 * Stop embedded server
-	 * @link http://www.php.net/manual/en/mysqli-driver.embedded-server-end.php
-	 * @return void 
-	 */
-	public function embedded_server_end () {}
+	public $client_info;
+	public $client_version;
+	public $driver_version;
+	public $embedded;
+	public $reconnect;
+	public $report_mode;
 
 }
 
 class mysqli  {
+	public $affected_rows;
+	public $client_info;
+	public $client_version;
+	public $connect_errno;
+	public $connect_error;
+	public $errno;
+	public $error;
+	public $field_count;
+	public $host_info;
+	public $info;
+	public $insert_id;
+	public $server_info;
+	public $server_version;
+	public $sqlstate;
+	public $protocol_version;
+	public $thread_id;
+	public $warning_count;
+
 
 	/**
 	 * Turns on or off auto-commiting database modifications
@@ -114,6 +124,13 @@ class mysqli  {
 	public function connect () {}
 
 	/**
+	 * Dump debugging information into the log
+	 * @link http://www.php.net/manual/en/mysqli.dump-debug-info.php
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public function dump_debug_info () {}
+
+	/**
 	 * Performs debugging operations
 	 * @link http://www.php.net/manual/en/mysqli.debug.php
 	 * @param message string <p>
@@ -122,21 +139,6 @@ class mysqli  {
 	 * @return bool true.
 	 */
 	public function debug ($message) {}
-
-	public function disable_reads_from_master () {}
-
-	public function disable_rpl_parse () {}
-
-	/**
-	 * Dump debugging information into the log
-	 * @link http://www.php.net/manual/en/mysqli.dump-debug-info.php
-	 * @return bool Returns true on success or false on failure.
-	 */
-	public function dump_debug_info () {}
-
-	public function enable_reads_from_master () {}
-
-	public function enable_rpl_parse () {}
 
 	/**
 	 * Returns a character set object
@@ -210,8 +212,6 @@ class mysqli  {
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function set_local_infile_handler (mysqli $link, $read_func) {}
-
-	public function master_query () {}
 
 	/**
 	 * Performs a query on the database
@@ -480,12 +480,6 @@ class mysqli  {
 	 */
 	public function rollback () {}
 
-	public function rpl_parse_enabled () {}
-
-	public function rpl_probe () {}
-
-	public function rpl_query_type () {}
-
 	/**
 	 * Selects the default database for database queries
 	 * @link http://www.php.net/manual/en/mysqli.select-db.php
@@ -507,10 +501,6 @@ class mysqli  {
 	public function set_charset ($charset) {}
 
 	public function set_opt () {}
-
-	public function send_query () {}
-
-	public function slave_query () {}
 
 	/**
 	 * Used for establishing secure connections using SSL
@@ -586,9 +576,15 @@ class mysqli  {
 	 */
 	public function use_result () {}
 
+	public function refresh () {}
+
 }
 
 final class mysqli_warning  {
+	public $message;
+	public $sqlstate;
+	public $errno;
+
 
 	/**
 	 * The __construct purpose
@@ -606,8 +602,14 @@ final class mysqli_warning  {
 }
 
 class mysqli_result  {
+	public $current_field;
+	public $field_count;
+	public $lengths;
+	public $num_rows;
+	public $type;
 
-	public function mysqli_result () {}
+
+	public function __construct () {}
 
 	public function close () {}
 
@@ -879,14 +881,6 @@ class mysqli_result  {
 	public function fetch_row () {}
 
 	/**
-	 * Get the number of fields in a result
-	 * @link http://www.php.net/manual/en/mysqli-result.field-count.php
-	 * @param result mysqli_result 
-	 * @return int The number of fields from a result set.
-	 */
-	public function field_count (mysqli_result $result) {}
-
-	/**
 	 * Set result pointer to a specified field offset
 	 * @link http://www.php.net/manual/en/mysqli-result.field-seek.php
 	 * @param fieldnr int <p>
@@ -902,8 +896,18 @@ class mysqli_result  {
 }
 
 class mysqli_stmt  {
+	public $affected_rows;
+	public $insert_id;
+	public $num_rows;
+	public $param_count;
+	public $field_count;
+	public $errno;
+	public $error;
+	public $sqlstate;
+	public $id;
 
-	public function mysqli_stmt () {}
+
+	public function __construct () {}
 
 	/**
 	 * Used to get the current value of a statement attribute
@@ -1171,44 +1175,9 @@ function mysqli_connect_error () {}
 
 function mysqli_data_seek () {}
 
-function mysqli_debug () {}
-
-/**
- * Disable reads from master
- * @link http://www.php.net/manual/en/function.mysqli-disable-reads-from-master.php
- * @return void 
- */
-function mysqli_disable_reads_from_master () {}
-
-/**
- * Disable RPL parse
- * @link http://www.php.net/manual/en/function.mysqli-disable-rpl-parse.php
- * @param link mysqli 
- * @return bool 
- */
-function mysqli_disable_rpl_parse (mysqli $link) {}
-
 function mysqli_dump_debug_info () {}
 
-/**
- * Enable reads from master
- * @link http://www.php.net/manual/en/function.mysqli-enable-reads-from-master.php
- * @param link mysqli 
- * @return bool 
- */
-function mysqli_enable_reads_from_master (mysqli $link) {}
-
-/**
- * Enable RPL parse
- * @link http://www.php.net/manual/en/function.mysqli-enable-rpl-parse.php
- * @param link mysqli 
- * @return bool 
- */
-function mysqli_enable_rpl_parse (mysqli $link) {}
-
-function mysqli_embedded_server_end () {}
-
-function mysqli_embedded_server_start () {}
+function mysqli_debug () {}
 
 function mysqli_errno () {}
 
@@ -1274,15 +1243,6 @@ function mysqli_set_local_infile_default () {}
 
 function mysqli_set_local_infile_handler () {}
 
-/**
- * Enforce execution of a query on the master in a master/slave setup
- * @link http://www.php.net/manual/en/function.mysqli-master-query.php
- * @param link mysqli 
- * @param query string 
- * @return bool 
- */
-function mysqli_master_query (mysqli $link, $query) {}
-
 function mysqli_more_results () {}
 
 function mysqli_multi_query () {}
@@ -1345,30 +1305,6 @@ function mysqli_real_query () {}
 
 function mysqli_rollback () {}
 
-/**
- * Check if RPL parse is enabled
- * @link http://www.php.net/manual/en/function.mysqli-rpl-parse-enabled.php
- * @param link mysqli 
- * @return int 
- */
-function mysqli_rpl_parse_enabled (mysqli $link) {}
-
-/**
- * RPL probe
- * @link http://www.php.net/manual/en/function.mysqli-rpl-probe.php
- * @param link mysqli 
- * @return bool 
- */
-function mysqli_rpl_probe (mysqli $link) {}
-
-/**
- * Returns RPL query type
- * @link http://www.php.net/manual/en/function.mysqli-rpl-query-type.php
- * @param query string 
- * @return int 
- */
-function mysqli_rpl_query_type ($query) {}
-
 function mysqli_select_db () {}
 
 function mysqli_set_charset () {}
@@ -1410,23 +1346,6 @@ function mysqli_stmt_reset () {}
 
 function mysqli_stmt_param_count () {}
 
-/**
- * Send the query and return
- * @link http://www.php.net/manual/en/function.mysqli-send-query.php
- * @param query string 
- * @return bool 
- */
-function mysqli_send_query ($query) {}
-
-/**
- * Force execution of a query on a slave in a master/slave setup
- * @link http://www.php.net/manual/en/function.mysqli-slave-query.php
- * @param link mysqli 
- * @param query string 
- * @return bool 
- */
-function mysqli_slave_query (mysqli $link, $query) {}
-
 function mysqli_sqlstate () {}
 
 function mysqli_ssl_set () {}
@@ -1447,9 +1366,9 @@ function mysqli_stmt_num_rows () {}
 
 function mysqli_stmt_sqlstate () {}
 
-function mysqli_store_result () {}
-
 function mysqli_stmt_store_result () {}
+
+function mysqli_store_result () {}
 
 function mysqli_thread_id () {}
 
@@ -1458,6 +1377,8 @@ function mysqli_thread_safe () {}
 function mysqli_use_result () {}
 
 function mysqli_warning_count () {}
+
+function mysqli_refresh () {}
 
 /**
  * Alias for <function>mysqli_stmt_bind_param</function>
@@ -1799,6 +1720,16 @@ define ('MYSQLI_GROUP_FLAG', 32768);
 
 /**
  * <p>
+ * Field is defined as ENUM. Available since PHP 5.3.0.
+ * </p>
+ * @link http://www.php.net/manual/en/mysqli.constants.php
+ */
+define ('MYSQLI_ENUM_FLAG', 256);
+define ('MYSQLI_BINARY_FLAG', 128);
+define ('MYSQLI_NO_DEFAULT_VALUE_FLAG', 4096);
+
+/**
+ * <p>
  * Field is defined as DECIMAL
  * </p>
  * @link http://www.php.net/manual/en/mysqli.constants.php
@@ -2027,9 +1958,6 @@ define ('MYSQLI_TYPE_BIT', 16);
  * @link http://www.php.net/manual/en/mysqli.constants.php
  */
 define ('MYSQLI_SET_CHARSET_NAME', 7);
-define ('MYSQLI_RPL_MASTER', 0);
-define ('MYSQLI_RPL_SLAVE', 1);
-define ('MYSQLI_RPL_ADMIN', 2);
 
 /**
  * <p>
@@ -2051,6 +1979,17 @@ define ('MYSQLI_REPORT_ERROR', 1);
 define ('MYSQLI_REPORT_STRICT', 2);
 define ('MYSQLI_REPORT_ALL', 255);
 define ('MYSQLI_REPORT_OFF', 0);
+define ('MYSQLI_DEBUG_TRACE_ENABLED', 0);
+define ('MYSQLI_SERVER_QUERY_NO_GOOD_INDEX_USED', 16);
+define ('MYSQLI_SERVER_QUERY_NO_INDEX_USED', 32);
+define ('MYSQLI_REFRESH_GRANT', 1);
+define ('MYSQLI_REFRESH_LOG', 2);
+define ('MYSQLI_REFRESH_TABLES', 4);
+define ('MYSQLI_REFRESH_HOSTS', 8);
+define ('MYSQLI_REFRESH_STATUS', 16);
+define ('MYSQLI_REFRESH_THREADS', 32);
+define ('MYSQLI_REFRESH_SLAVE', 64);
+define ('MYSQLI_REFRESH_MASTER', 128);
 
 // End of mysqli v.0.1
 ?>

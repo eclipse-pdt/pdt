@@ -1049,9 +1049,20 @@ function socket_last_error ($socket = null) {}
  */
 function socket_clear_error ($socket = null) {}
 
-function socket_getopt () {}
+/**
+ * @param socket
+ * @param level
+ * @param optname
+ */
+function socket_getopt ($socket, $level, $optname) {}
 
-function socket_setopt () {}
+/**
+ * @param socket
+ * @param level
+ * @param optname
+ * @param optval
+ */
+function socket_setopt ($socket, $level, $optname, $optval) {}
 
 define ('AF_UNIX', 1);
 define ('AF_INET', 2);

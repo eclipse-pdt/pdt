@@ -30,8 +30,9 @@ function ldap_connect ($hostname = null, $port = null) {}
 /**
  * &Alias; <function>ldap_unbind</function>
  * @link http://www.php.net/manual/en/function.ldap-close.php
+ * @param link_identifier
  */
-function ldap_close () {}
+function ldap_close ($link_identifier) {}
 
 /**
  * Bind to LDAP directory
@@ -844,6 +845,13 @@ define ('LDAP_DEREF_ALWAYS', 3);
 define ('LDAP_OPT_DEREF', 2);
 define ('LDAP_OPT_SIZELIMIT', 3);
 define ('LDAP_OPT_TIMELIMIT', 4);
+
+/**
+ * Option for ldap_set_option to allow setting network timeout.
+ * (Available as of PHP 5.3.0)
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
+define ('LDAP_OPT_NETWORK_TIMEOUT', 20485);
 define ('LDAP_OPT_PROTOCOL_VERSION', 17);
 define ('LDAP_OPT_ERROR_NUMBER', 49);
 define ('LDAP_OPT_REFERRALS', 8);

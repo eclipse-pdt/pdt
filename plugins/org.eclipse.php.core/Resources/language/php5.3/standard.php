@@ -7333,16 +7333,6 @@ function closedir ($dir_handle = null) {}
 function chdir ($directory) {}
 
 /**
- * Change the root directory
- * @link http://www.php.net/manual/en/function.chroot.php
- * @param directory string <p>
- * The new directory
- * </p>
- * @return bool Returns true on success or false on failure.
- */
-function chroot ($directory) {}
-
-/**
  * Gets the current working directory
  * @link http://www.php.net/manual/en/function.getcwd.php
  * @return string the current working directory on success, or false on
@@ -11128,6 +11118,14 @@ define ('IMAGETYPE_JPX', 11);
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('IMAGETYPE_JB2', 12);
+
+/**
+ * Image type constant used by the
+ * image_type_to_mime_type and
+ * image_type_to_extension functions.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
+define ('IMAGETYPE_SWC', 13);
 
 /**
  * Image type constant used by the

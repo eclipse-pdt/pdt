@@ -1,6 +1,6 @@
 <?php
 
-// Start of Reflection v.0.1
+// Start of Reflection v.$Revision: 1.3.4.1 $
 
 class ReflectionException extends Exception  {
 	protected $message;
@@ -14,8 +14,9 @@ class ReflectionException extends Exception  {
 	/**
 	 * @param message[optional]
 	 * @param code[optional]
+	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code) {}
+	public function __construct ($message, $code, $previous) {}
 
 	final public function getMessage () {}
 
@@ -26,6 +27,8 @@ class ReflectionException extends Exception  {
 	final public function getLine () {}
 
 	final public function getTrace () {}
+
+	final public function getPrevious () {}
 
 	final public function getTraceAsString () {}
 
@@ -97,6 +100,27 @@ class ReflectionFunctionAbstract implements Reflector {
 	abstract public function __toString () {}
 
 	/**
+	 * Checks if function in namespace
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.innamespace.php
+	 * @return bool true if it's in a namespace, otherwise false
+	 */
+	public function inNamespace () {}
+
+	/**
+	 * Checks if closure
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isclosure.php
+	 * @return bool true if it's a closure, otherwise false
+	 */
+	public function isClosure () {}
+
+	/**
+	 * Checks if deprecated
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isdeprecated.php
+	 * @return bool true if it's deprecated, otherwise false
+	 */
+	public function isDeprecated () {}
+
+	/**
 	 * Checks if is internal
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isinternal.php
 	 * @return bool true if it's internal, otherwise false
@@ -111,34 +135,6 @@ class ReflectionFunctionAbstract implements Reflector {
 	public function isUserDefined () {}
 
 	/**
-	 * Gets function name
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getname.php
-	 * @return string The name of the function.
-	 */
-	public function getName () {}
-
-	/**
-	 * Gets file name
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
-	 * @return string The file name.
-	 */
-	public function getFileName () {}
-
-	/**
-	 * Gets starting line number
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstartline.php
-	 * @return int The starting line number.
-	 */
-	public function getStartLine () {}
-
-	/**
-	 * Gets end line number
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getendline.php
-	 * @return int The ending line number of the user defined class, or false if unknown.
-	 */
-	public function getEndLine () {}
-
-	/**
 	 * Gets doc comment
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getdoccomment.php
 	 * @return string The doc comment if it exists, otherwise false
@@ -146,39 +142,11 @@ class ReflectionFunctionAbstract implements Reflector {
 	public function getDocComment () {}
 
 	/**
-	 * Gets static variables
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstaticvariables.php
-	 * @return array An array of static variables.
+	 * Gets end line number
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getendline.php
+	 * @return int The ending line number of the user defined class, or false if unknown.
 	 */
-	public function getStaticVariables () {}
-
-	/**
-	 * Checks if returns reference
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.returnsreference.php
-	 * @return bool true if it returns a reference, otherwise false
-	 */
-	public function returnsReference () {}
-
-	/**
-	 * Gets parameters
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getparameters.php
-	 * @return array The parameters, as a ReflectionParameter object.
-	 */
-	public function getParameters () {}
-
-	/**
-	 * Gets number of parameters
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofparameters.php
-	 * @return int The number of parameters.
-	 */
-	public function getNumberOfParameters () {}
-
-	/**
-	 * Gets number of required parameters
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofrequiredparameters.php
-	 * @return int The number of required parameters.
-	 */
-	public function getNumberOfRequiredParameters () {}
+	public function getEndLine () {}
 
 	/**
 	 * Gets extension info
@@ -195,11 +163,74 @@ class ReflectionFunctionAbstract implements Reflector {
 	public function getExtensionName () {}
 
 	/**
-	 * Checks if deprecated
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isdeprecated.php
-	 * @return bool true if it's deprecated, otherwise false
+	 * Gets file name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
+	 * @return string The file name.
 	 */
-	public function isDeprecated () {}
+	public function getFileName () {}
+
+	/**
+	 * Gets function name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getname.php
+	 * @return string The name of the function.
+	 */
+	public function getName () {}
+
+	/**
+	 * Gets namespace name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnamespacename.php
+	 * @return string The namespace name.
+	 */
+	public function getNamespaceName () {}
+
+	/**
+	 * Gets number of parameters
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofparameters.php
+	 * @return int The number of parameters.
+	 */
+	public function getNumberOfParameters () {}
+
+	/**
+	 * Gets number of required parameters
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofrequiredparameters.php
+	 * @return int The number of required parameters.
+	 */
+	public function getNumberOfRequiredParameters () {}
+
+	/**
+	 * Gets parameters
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getparameters.php
+	 * @return array The parameters, as a ReflectionParameter object.
+	 */
+	public function getParameters () {}
+
+	/**
+	 * Gets function short name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getshortname.php
+	 * @return string The short name of the function.
+	 */
+	public function getShortName () {}
+
+	/**
+	 * Gets starting line number
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstartline.php
+	 * @return int The starting line number.
+	 */
+	public function getStartLine () {}
+
+	/**
+	 * Gets static variables
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstaticvariables.php
+	 * @return array An array of static variables.
+	 */
+	public function getStaticVariables () {}
+
+	/**
+	 * Checks if returns reference
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.returnsreference.php
+	 * @return bool true if it returns a reference, otherwise false
+	 */
+	public function returnsReference () {}
 
 }
 
@@ -273,6 +304,27 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 	final private function __clone () {}
 
 	/**
+	 * Checks if function in namespace
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.innamespace.php
+	 * @return bool true if it's in a namespace, otherwise false
+	 */
+	public function inNamespace () {}
+
+	/**
+	 * Checks if closure
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isclosure.php
+	 * @return bool true if it's a closure, otherwise false
+	 */
+	public function isClosure () {}
+
+	/**
+	 * Checks if deprecated
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isdeprecated.php
+	 * @return bool true if it's deprecated, otherwise false
+	 */
+	public function isDeprecated () {}
+
+	/**
 	 * Checks if is internal
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isinternal.php
 	 * @return bool true if it's internal, otherwise false
@@ -287,34 +339,6 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 	public function isUserDefined () {}
 
 	/**
-	 * Gets function name
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getname.php
-	 * @return string The name of the function.
-	 */
-	public function getName () {}
-
-	/**
-	 * Gets file name
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
-	 * @return string The file name.
-	 */
-	public function getFileName () {}
-
-	/**
-	 * Gets starting line number
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstartline.php
-	 * @return int The starting line number.
-	 */
-	public function getStartLine () {}
-
-	/**
-	 * Gets end line number
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getendline.php
-	 * @return int The ending line number of the user defined class, or false if unknown.
-	 */
-	public function getEndLine () {}
-
-	/**
 	 * Gets doc comment
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getdoccomment.php
 	 * @return string The doc comment if it exists, otherwise false
@@ -322,39 +346,11 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 	public function getDocComment () {}
 
 	/**
-	 * Gets static variables
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstaticvariables.php
-	 * @return array An array of static variables.
+	 * Gets end line number
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getendline.php
+	 * @return int The ending line number of the user defined class, or false if unknown.
 	 */
-	public function getStaticVariables () {}
-
-	/**
-	 * Checks if returns reference
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.returnsreference.php
-	 * @return bool true if it returns a reference, otherwise false
-	 */
-	public function returnsReference () {}
-
-	/**
-	 * Gets parameters
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getparameters.php
-	 * @return array The parameters, as a ReflectionParameter object.
-	 */
-	public function getParameters () {}
-
-	/**
-	 * Gets number of parameters
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofparameters.php
-	 * @return int The number of parameters.
-	 */
-	public function getNumberOfParameters () {}
-
-	/**
-	 * Gets number of required parameters
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofrequiredparameters.php
-	 * @return int The number of required parameters.
-	 */
-	public function getNumberOfRequiredParameters () {}
+	public function getEndLine () {}
 
 	/**
 	 * Gets extension info
@@ -371,11 +367,74 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 	public function getExtensionName () {}
 
 	/**
-	 * Checks if deprecated
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isdeprecated.php
-	 * @return bool true if it's deprecated, otherwise false
+	 * Gets file name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
+	 * @return string The file name.
 	 */
-	public function isDeprecated () {}
+	public function getFileName () {}
+
+	/**
+	 * Gets function name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getname.php
+	 * @return string The name of the function.
+	 */
+	public function getName () {}
+
+	/**
+	 * Gets namespace name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnamespacename.php
+	 * @return string The namespace name.
+	 */
+	public function getNamespaceName () {}
+
+	/**
+	 * Gets number of parameters
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofparameters.php
+	 * @return int The number of parameters.
+	 */
+	public function getNumberOfParameters () {}
+
+	/**
+	 * Gets number of required parameters
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofrequiredparameters.php
+	 * @return int The number of required parameters.
+	 */
+	public function getNumberOfRequiredParameters () {}
+
+	/**
+	 * Gets parameters
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getparameters.php
+	 * @return array The parameters, as a ReflectionParameter object.
+	 */
+	public function getParameters () {}
+
+	/**
+	 * Gets function short name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getshortname.php
+	 * @return string The short name of the function.
+	 */
+	public function getShortName () {}
+
+	/**
+	 * Gets starting line number
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstartline.php
+	 * @return int The starting line number.
+	 */
+	public function getStartLine () {}
+
+	/**
+	 * Gets static variables
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstaticvariables.php
+	 * @return array An array of static variables.
+	 */
+	public function getStaticVariables () {}
+
+	/**
+	 * Checks if returns reference
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.returnsreference.php
+	 * @return bool true if it returns a reference, otherwise false
+	 */
+	public function returnsReference () {}
 
 }
 
@@ -647,11 +706,42 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	public function getPrototype () {}
 
 	/**
+	 * Set method accessibility
+	 * @link http://www.php.net/manual/en/reflectionmethod.setaccessible.php
+	 * @param accessible bool <p>
+	 * true to allow accessibility, or false.
+	 * </p>
+	 * @return void 
+	 */
+	public function setAccessible ($accessible) {}
+
+	/**
 	 * Clones function
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.clone.php
 	 * @return void 
 	 */
 	final private function __clone () {}
+
+	/**
+	 * Checks if function in namespace
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.innamespace.php
+	 * @return bool true if it's in a namespace, otherwise false
+	 */
+	public function inNamespace () {}
+
+	/**
+	 * Checks if closure
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isclosure.php
+	 * @return bool true if it's a closure, otherwise false
+	 */
+	public function isClosure () {}
+
+	/**
+	 * Checks if deprecated
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isdeprecated.php
+	 * @return bool true if it's deprecated, otherwise false
+	 */
+	public function isDeprecated () {}
 
 	/**
 	 * Checks if is internal
@@ -668,34 +758,6 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	public function isUserDefined () {}
 
 	/**
-	 * Gets function name
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getname.php
-	 * @return string The name of the function.
-	 */
-	public function getName () {}
-
-	/**
-	 * Gets file name
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
-	 * @return string The file name.
-	 */
-	public function getFileName () {}
-
-	/**
-	 * Gets starting line number
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstartline.php
-	 * @return int The starting line number.
-	 */
-	public function getStartLine () {}
-
-	/**
-	 * Gets end line number
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getendline.php
-	 * @return int The ending line number of the user defined class, or false if unknown.
-	 */
-	public function getEndLine () {}
-
-	/**
 	 * Gets doc comment
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getdoccomment.php
 	 * @return string The doc comment if it exists, otherwise false
@@ -703,39 +765,11 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	public function getDocComment () {}
 
 	/**
-	 * Gets static variables
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstaticvariables.php
-	 * @return array An array of static variables.
+	 * Gets end line number
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getendline.php
+	 * @return int The ending line number of the user defined class, or false if unknown.
 	 */
-	public function getStaticVariables () {}
-
-	/**
-	 * Checks if returns reference
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.returnsreference.php
-	 * @return bool true if it returns a reference, otherwise false
-	 */
-	public function returnsReference () {}
-
-	/**
-	 * Gets parameters
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getparameters.php
-	 * @return array The parameters, as a ReflectionParameter object.
-	 */
-	public function getParameters () {}
-
-	/**
-	 * Gets number of parameters
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofparameters.php
-	 * @return int The number of parameters.
-	 */
-	public function getNumberOfParameters () {}
-
-	/**
-	 * Gets number of required parameters
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofrequiredparameters.php
-	 * @return int The number of required parameters.
-	 */
-	public function getNumberOfRequiredParameters () {}
+	public function getEndLine () {}
 
 	/**
 	 * Gets extension info
@@ -752,11 +786,74 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	public function getExtensionName () {}
 
 	/**
-	 * Checks if deprecated
-	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.isdeprecated.php
-	 * @return bool true if it's deprecated, otherwise false
+	 * Gets file name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getfilename.php
+	 * @return string The file name.
 	 */
-	public function isDeprecated () {}
+	public function getFileName () {}
+
+	/**
+	 * Gets function name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getname.php
+	 * @return string The name of the function.
+	 */
+	public function getName () {}
+
+	/**
+	 * Gets namespace name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnamespacename.php
+	 * @return string The namespace name.
+	 */
+	public function getNamespaceName () {}
+
+	/**
+	 * Gets number of parameters
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofparameters.php
+	 * @return int The number of parameters.
+	 */
+	public function getNumberOfParameters () {}
+
+	/**
+	 * Gets number of required parameters
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getnumberofrequiredparameters.php
+	 * @return int The number of required parameters.
+	 */
+	public function getNumberOfRequiredParameters () {}
+
+	/**
+	 * Gets parameters
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getparameters.php
+	 * @return array The parameters, as a ReflectionParameter object.
+	 */
+	public function getParameters () {}
+
+	/**
+	 * Gets function short name
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getshortname.php
+	 * @return string The short name of the function.
+	 */
+	public function getShortName () {}
+
+	/**
+	 * Gets starting line number
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstartline.php
+	 * @return int The starting line number.
+	 */
+	public function getStartLine () {}
+
+	/**
+	 * Gets static variables
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.getstaticvariables.php
+	 * @return array An array of static variables.
+	 */
+	public function getStaticVariables () {}
+
+	/**
+	 * Checks if returns reference
+	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.returnsreference.php
+	 * @return bool true if it returns a reference, otherwise false
+	 */
+	public function returnsReference () {}
 
 }
 
@@ -1118,6 +1215,27 @@ class ReflectionClass implements Reflector {
 	 */
 	public function getExtensionName () {}
 
+	/**
+	 * Checks if in namespace
+	 * @link http://www.php.net/manual/en/reflectionclass.innamespace.php
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public function inNamespace () {}
+
+	/**
+	 * Gets namespace name
+	 * @link http://www.php.net/manual/en/reflectionclass.getnamespacename.php
+	 * @return string The namespace name.
+	 */
+	public function getNamespaceName () {}
+
+	/**
+	 * Gets short name
+	 * @link http://www.php.net/manual/en/reflectionclass.getshortname.php
+	 * @return string The class short name.
+	 */
+	public function getShortName () {}
+
 }
 
 class ReflectionObject extends ReflectionClass implements Reflector {
@@ -1478,6 +1596,27 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	 */
 	public function getExtensionName () {}
 
+	/**
+	 * Checks if in namespace
+	 * @link http://www.php.net/manual/en/reflectionclass.innamespace.php
+	 * @return bool Returns true on success or false on failure.
+	 */
+	public function inNamespace () {}
+
+	/**
+	 * Gets namespace name
+	 * @link http://www.php.net/manual/en/reflectionclass.getnamespacename.php
+	 * @return string The namespace name.
+	 */
+	public function getNamespaceName () {}
+
+	/**
+	 * Gets short name
+	 * @link http://www.php.net/manual/en/reflectionclass.getshortname.php
+	 * @return string The class short name.
+	 */
+	public function getShortName () {}
+
 }
 
 class ReflectionProperty implements Reflector {
@@ -1514,9 +1653,10 @@ class ReflectionProperty implements Reflector {
 	/**
 	 * Construct a ReflectionProperty object
 	 * @link http://www.php.net/manual/en/reflectionproperty.construct.php
-	 * @param argument
+	 * @param class[optional]
+	 * @param name[optional]
 	 */
-	public function __construct ($argument) {}
+	public function __construct ($class, $name) {}
 
 	/**
 	 * To string
@@ -1611,6 +1751,16 @@ class ReflectionProperty implements Reflector {
 	 * @return string The doc comment.
 	 */
 	public function getDocComment () {}
+
+	/**
+	 * Set property accessibility
+	 * @link http://www.php.net/manual/en/reflectionproperty.setaccessible.php
+	 * @param accessible bool <p>
+	 * true to allow accessibility, or false.
+	 * </p>
+	 * @return void 
+	 */
+	public function setAccessible ($accessible) {}
 
 }
 
@@ -1724,5 +1874,5 @@ class ReflectionExtension implements Reflector {
 	public function info () {}
 
 }
-// End of Reflection v.0.1
+// End of Reflection v.$Revision: 1.3.4.1 $
 ?>

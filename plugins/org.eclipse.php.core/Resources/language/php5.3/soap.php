@@ -7,8 +7,10 @@ class SoapClient  {
 	/**
 	 * SoapClient constructor
 	 * @link http://www.php.net/manual/en/soapclient.soapclient.php
+	 * @param wsdl
+	 * @param options[optional]
 	 */
-	public function SoapClient () {}
+	public function SoapClient ($wsdl, $options) {}
 
 	/**
 	 * Calls a SOAP function (deprecated)
@@ -166,8 +168,14 @@ class SoapVar  {
 	/**
 	 * SoapVar constructor
 	 * @link http://www.php.net/manual/en/soapvar.soapvar.php
+	 * @param data
+	 * @param encoding
+	 * @param type_name[optional]
+	 * @param type_namespace[optional]
+	 * @param node_name[optional]
+	 * @param node_namespace[optional]
 	 */
-	public function SoapVar () {}
+	public function SoapVar ($data, $encoding, $type_name, $type_namespace, $node_name, $node_namespace) {}
 
 }
 
@@ -176,8 +184,10 @@ class SoapServer  {
 	/**
 	 * SoapServer constructor
 	 * @link http://www.php.net/manual/en/soapserver.soapserver.php
+	 * @param wsdl
+	 * @param options[optional]
 	 */
-	public function SoapServer () {}
+	public function SoapServer ($wsdl, $options) {}
 
 	/**
 	 * Sets SoapServer persistence mode
@@ -304,8 +314,14 @@ class SoapFault extends Exception  {
 	/**
 	 * SoapFault constructor
 	 * @link http://www.php.net/manual/en/soapfault.soapfault.php
+	 * @param faultcode
+	 * @param faultstring
+	 * @param faultactor[optional]
+	 * @param detail[optional]
+	 * @param faultname[optional]
+	 * @param headerfault[optional]
 	 */
-	public function SoapFault () {}
+	public function SoapFault ($faultcode, $faultstring, $faultactor, $detail, $faultname, $headerfault) {}
 
 	/**
 	 * Obtain a string representation of a SoapFault
@@ -319,8 +335,9 @@ class SoapFault extends Exception  {
 	/**
 	 * @param message[optional]
 	 * @param code[optional]
+	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code) {}
+	public function __construct ($message, $code, $previous) {}
 
 	final public function getMessage () {}
 
@@ -332,6 +349,8 @@ class SoapFault extends Exception  {
 
 	final public function getTrace () {}
 
+	final public function getPrevious () {}
+
 	final public function getTraceAsString () {}
 
 }
@@ -341,8 +360,10 @@ class SoapParam  {
 	/**
 	 * SoapParam constructor
 	 * @link http://www.php.net/manual/en/soapparam.soapparam.php
+	 * @param data
+	 * @param name
 	 */
-	public function SoapParam () {}
+	public function SoapParam ($data, $name) {}
 
 }
 
@@ -351,8 +372,13 @@ class SoapHeader  {
 	/**
 	 * SoapHeader constructor
 	 * @link http://www.php.net/manual/en/soapheader.soapheader.php
+	 * @param namespace
+	 * @param name
+	 * @param data[optional]
+	 * @param mustunderstand[optional]
+	 * @param actor[optional]
 	 */
-	public function SoapHeader () {}
+	public function SoapHeader ($namespace, $name, $data, $mustunderstand, $actor) {}
 
 }
 

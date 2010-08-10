@@ -1825,20 +1825,6 @@ function image2wbmp ($image, $filename = null, $threshold = null) {}
 function imagelayereffect ($image, $effect) {}
 
 /**
- * Makes the colors of the palette version of an image more closely match the true color version
- * @link http://www.php.net/manual/en/function.imagecolormatch.php
- * @param image1 resource <p>
- * A truecolor image link resource.
- * </p>
- * @param image2 resource <p>
- * A palette image link resource pointing to an image that has the same
- * size as image1.
- * </p>
- * @return bool Returns true on success or false on failure.
- */
-function imagecolormatch ($image1, $image2) {}
-
-/**
  * Output XBM image to browser or file
  * @link http://www.php.net/manual/en/function.imagexbm.php
  * @param image resource 
@@ -1854,6 +1840,20 @@ function imagecolormatch ($image1, $image2) {}
  * @return bool Returns true on success or false on failure.
  */
 function imagexbm ($image, $filename, $foreground = null) {}
+
+/**
+ * Makes the colors of the palette version of an image more closely match the true color version
+ * @link http://www.php.net/manual/en/function.imagecolormatch.php
+ * @param image1 resource <p>
+ * A truecolor image link resource.
+ * </p>
+ * @param image2 resource <p>
+ * A palette image link resource pointing to an image that has the same
+ * size as image1.
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ */
+function imagecolormatch ($image1, $image2) {}
 
 /**
  * Applies a filter to an image
@@ -2115,6 +2115,13 @@ define ('IMG_FILTER_MEAN_REMOVAL', 9);
  * @link http://www.php.net/manual/en/image.constants.php
  */
 define ('IMG_FILTER_SMOOTH', 10);
+
+/**
+ * Special GD filter used by the imagefilter function. 
+ * (Available as of PHP 5.3.0)
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
+define ('IMG_FILTER_PIXELATE', 11);
 
 /**
  * The GD version PHP was compiled against.

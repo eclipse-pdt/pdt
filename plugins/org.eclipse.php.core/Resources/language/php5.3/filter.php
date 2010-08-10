@@ -380,6 +380,7 @@ define ('FILTER_FLAG_STRIP_LOW', 4);
  * @link http://www.php.net/manual/en/filter.constants.php
  */
 define ('FILTER_FLAG_STRIP_HIGH', 8);
+define ('FILTER_FLAG_STRIP_BACKTICK', 512);
 
 /**
  * Encode characters with ASCII value less than 32.

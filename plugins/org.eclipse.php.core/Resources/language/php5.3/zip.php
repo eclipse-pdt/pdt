@@ -1,6 +1,6 @@
 <?php
 
-// Start of zip v.1.8.11
+// Start of zip v.1.9.1
 
 class ZipArchive  {
 	const CREATE = 1;
@@ -143,6 +143,10 @@ class ZipArchive  {
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function addFile ($filename, $localname = null) {}
+
+	public function addGlob () {}
+
+	public function addPattern () {}
 
 	/**
 	 * Renames an entry defined by its index
@@ -543,5 +547,5 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-// End of zip v.1.8.11
+// End of zip v.1.9.1
 ?>

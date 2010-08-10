@@ -74,6 +74,7 @@ define ('LIBXML_VERSION', 20632);
  * @link http://www.php.net/manual/en/libxml.constants.php
  */
 define ('LIBXML_DOTTED_VERSION', "2.6.32");
+define ('LIBXML_LOADED_VERSION', 20632);
 
 /**
  * Substitute entities

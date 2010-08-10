@@ -486,6 +486,64 @@ function openssl_csr_get_subject ($csr, $use_shortnames = null) {}
 function openssl_csr_get_public_key ($csr, $use_shortnames = null) {}
 
 /**
+ * Computes a digest
+ * @link http://www.php.net/manual/en/function.openssl-digest.php
+ * @param data string <p>
+ * The data.
+ * </p>
+ * @param method string <p>
+ * The digest method.
+ * </p>
+ * @param raw_output bool[optional] <p>
+ * Setting to true will return as raw output data, otherwise the return
+ * value is binhex encoded.
+ * </p>
+ * @return string the digested hash value on success&return.falseforfailure;.
+ */
+function openssl_digest ($data, $method, $raw_output = null) {}
+
+/**
+ * Encrypts data
+ * @link http://www.php.net/manual/en/function.openssl-encrypt.php
+ * @param data string <p>
+ * The data.
+ * </p>
+ * @param method string <p>
+ * The cipher method.
+ * </p>
+ * @param password string <p>
+ * The password.
+ * </p>
+ * @param raw_output bool[optional] <p>
+ * Setting to true will return as raw output data, otherwise the return
+ * value is base64 encoded.
+ * </p>
+ * @return string the encrypted string on success&return.falseforfailure;.
+ */
+function openssl_encrypt ($data, $method, $password, $raw_output = null) {}
+
+/**
+ * Decrypts data
+ * @link http://www.php.net/manual/en/function.openssl-decrypt.php
+ * @param data string <p>
+ * The data.
+ * </p>
+ * @param method string <p>
+ * The cipher method.
+ * </p>
+ * @param password string <p>
+ * The password.
+ * </p>
+ * @param raw_input string[optional] <p>
+ * Setting to true will take a raw encoded string,
+ * otherwise a base64 string is assumed for the
+ * data parameter.
+ * </p>
+ * @return string The decrypted string on success&return.falseforfailure;.
+ */
+function openssl_decrypt ($data, $method, $password, $raw_input = null) {}
+
+/**
  * Generate signature
  * @link http://www.php.net/manual/en/function.openssl-sign.php
  * @param data string <p>
@@ -752,6 +810,57 @@ function openssl_public_encrypt ($data, &$crypted, $key, $padding = null) {}
 function openssl_public_decrypt ($data, &$decrypted, $key, $padding = null) {}
 
 /**
+ * Gets available digest methods
+ * @link http://www.php.net/manual/en/function.openssl-get-md-methods.php
+ * @param aliases bool[optional] <p>
+ * Set to true if digest aliases should be included within the
+ * returned array.
+ * </p>
+ * @return array An array of available digest methods.
+ */
+function openssl_get_md_methods ($aliases = null) {}
+
+/**
+ * Gets available cipher methods
+ * @link http://www.php.net/manual/en/function.openssl-get-cipher-methods.php
+ * @param aliases bool[optional] <p>
+ * Set to true if cipher aliases should be included within the
+ * returned array.
+ * </p>
+ * @return array An array of available cipher methods.
+ */
+function openssl_get_cipher_methods ($aliases = null) {}
+
+/**
+ * Computes shared secret for public value of remote DH key and local DH key
+ * @link http://www.php.net/manual/en/function.openssl-dh-compute-key.php
+ * @param pub_key string <p>
+ * Public key
+ * </p>
+ * @param dh_key resource <p>
+ * DH key
+ * </p>
+ * @return string computed key on success&return.falseforfailure;.
+ */
+function openssl_dh_compute_key ($pub_key, $dh_key) {}
+
+/**
+ * Generate a pseudo-random string of bytes
+ * @link http://www.php.net/manual/en/function.openssl-random-pseudo-bytes.php
+ * @param length string <p>
+ * The length of the desired string of bytes. Must be a positive integer. PHP will
+ * try to cast this parameter to a non-null integer to use it. 
+ * </p>
+ * @param crypto_strong bool[optional] <p>
+ * If passed into the function, this will hold a boolean value that determines
+ * if the algorithm used was "cryptographically strong", e.g., safe for usage with GPG, 
+ * passwords, etc. true if it did, otherwise false
+ * </p>
+ * @return string the generated &string; of bytes on success, &return.falseforfailure;.
+ */
+function openssl_random_pseudo_bytes ($length, &$crypto_strong = null) {}
+
+/**
  * Return openSSL error message
  * @link http://www.php.net/manual/en/function.openssl-error-string.php
  * @return string an error message string, or false if there are no more error
@@ -759,8 +868,8 @@ function openssl_public_decrypt ($data, &$decrypted, $key, $padding = null) {}
  */
 function openssl_error_string () {}
 
-define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8n 24 Mar 2010");
-define ('OPENSSL_VERSION_NUMBER', 9470191);
+define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8l 5 Nov 2009");
+define ('OPENSSL_VERSION_NUMBER', 9470159);
 define ('X509_PURPOSE_SSL_CLIENT', 1);
 define ('X509_PURPOSE_SSL_SERVER', 2);
 define ('X509_PURPOSE_NS_SSL_SERVER', 3);
@@ -873,6 +982,12 @@ define ('OPENSSL_KEYTYPE_RSA', 0);
 define ('OPENSSL_KEYTYPE_DSA', 1);
 define ('OPENSSL_KEYTYPE_DH', 2);
 define ('OPENSSL_KEYTYPE_EC', 3);
+
+/**
+ * Whether SNI support is available or not.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
+define ('OPENSSL_TLSEXT_SERVER_NAME', 1);
 
 // End of openssl v.
 ?>
