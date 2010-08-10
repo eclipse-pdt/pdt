@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor.hover;
 
 import java.io.*;
 import java.net.URL;
+import java.util.*;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.*;
@@ -501,6 +502,37 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		IModelElement[] elements = getElementsAt(textViewer, hoverRegion);
 		if (elements == null || elements.length == 0)
 			return null;
+		// filter the same namespace
+		Set<IModelElement> elementSet = new TreeSet<IModelElement>(
+				new Comparator<IModelElement>() {
+
+					public int compare(IModelElement o1, IModelElement o2) {
+						if (o1 instanceof IType && o2 instanceof IType) {
+							IType type1 = (IType) o1;
+							IType type2 = (IType) o2;
+							try {
+								if (PHPFlags.isNamespace(type1.getFlags())
+										&& PHPFlags.isNamespace(type2
+												.getFlags())
+										&& type1.getElementName().equals(
+												type2.getElementName())) {
+									return 0;
+								}
+							} catch (ModelException e) {
+							}
+						}
+						return 1;
+					}
+
+				});
+		List<IModelElement> elementList = new ArrayList<IModelElement>();
+		for (int i = 0; i < elements.length; i++) {
+			if (!elementSet.contains(elements[i])) {
+				elementSet.add(elements[i]);
+				elementList.add(elements[i]);
+			}
+		}
+		elements = elementList.toArray(new IModelElement[elementList.size()]);
 
 		String constantValue;
 		if (elements.length == 1
