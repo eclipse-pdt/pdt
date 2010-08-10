@@ -46,7 +46,9 @@ class finfo  {
  * A .mime and/or .mgc suffix is added if
  * needed.
  * </p>
- * @return resource a magic database resource on success&return.falseforfailure;.
+ * <p>
+ * Passing NULL or an empty string will be equivalent to the default value.
+ * </p>
  */
 function finfo_open ($options = null, $magic_file = null) {}
 
@@ -117,14 +119,62 @@ function finfo_buffer ($string, $options = null, $context = null) {}
  */
 function mime_content_type ($filename) {}
 
+
+/**
+ * No special handling.
+ * @link http://www.php.net/manual/en/fileinfo.constants.php
+ */
 define ('FILEINFO_NONE', 0);
+
+/**
+ * Follow symlinks.
+ * @link http://www.php.net/manual/en/fileinfo.constants.php
+ */
 define ('FILEINFO_SYMLINK', 2);
+
+/**
+ * Return the mime type and mime encoding as defined by RFC 2045.
+ * @link http://www.php.net/manual/en/fileinfo.constants.php
+ */
 define ('FILEINFO_MIME', 1040);
+
+/**
+ * Return the mime type.
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/fileinfo.constants.php
+ */
 define ('FILEINFO_MIME_TYPE', 16);
+
+/**
+ * Return the mime encoding of the file.
+ * Available since PHP 5.3.0.
+ * @link http://www.php.net/manual/en/fileinfo.constants.php
+ */
 define ('FILEINFO_MIME_ENCODING', 1024);
+
+/**
+ * Look at the contents of blocks or character special devices.
+ * @link http://www.php.net/manual/en/fileinfo.constants.php
+ */
 define ('FILEINFO_DEVICES', 8);
+
+/**
+ * Return all matches, not just the first.
+ * @link http://www.php.net/manual/en/fileinfo.constants.php
+ */
 define ('FILEINFO_CONTINUE', 32);
+
+/**
+ * If possible preserve the original access time.
+ * @link http://www.php.net/manual/en/fileinfo.constants.php
+ */
 define ('FILEINFO_PRESERVE_ATIME', 128);
+
+/**
+ * Don't translate unprintable characters to a \ooo octal
+ * representation.
+ * @link http://www.php.net/manual/en/fileinfo.constants.php
+ */
 define ('FILEINFO_RAW', 256);
 
 // End of fileinfo v.1.0.5-dev

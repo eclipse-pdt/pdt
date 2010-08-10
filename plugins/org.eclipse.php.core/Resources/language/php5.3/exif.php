@@ -1,6 +1,6 @@
 <?php
 
-// Start of exif v.1.4 $Id: exif.php,v 1.3 2010/02/24 15:05:08 vpunski Exp $
+// Start of exif v.1.4 $Id: exif.php,v 1.4 2010/08/10 01:43:36 qiwang Exp $
 
 /**
  * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
@@ -133,5 +133,5 @@ function exif_imagetype ($filename) {}
 
 define ('EXIF_USE_MBSTRING', 0);
 
-// End of exif v.1.4 $Id: exif.php,v 1.3 2010/02/24 15:05:08 vpunski Exp $
+// End of exif v.1.4 $Id: exif.php,v 1.4 2010/08/10 01:43:36 qiwang Exp $
 ?>

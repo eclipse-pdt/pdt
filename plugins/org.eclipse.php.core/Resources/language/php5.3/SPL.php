@@ -2343,7 +2343,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serial
 	/**
 	 * Gets the iterator classname for the ArrayObject.
 	 * @link http://www.php.net/manual/en/arrayobject.getiteratorclass.php
-	 * @return int the iterator class name that is used to iterate over this object.
+	 * @return string the iterator class name that is used to iterate over this object.
 	 */
 	public function getIteratorClass () {}
 
@@ -2417,7 +2417,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Get array copy
 	 * @link http://www.php.net/manual/en/arrayiterator.getarraycopy.php
-	 * @return void A copy of the array, or array of public properties
+	 * @return array A copy of the array, or array of public properties
 	 * if ArrayIterator refers to an object.
 	 */
 	public function getArrayCopy () {}
@@ -2643,7 +2643,7 @@ class RecursiveArrayIterator extends ArrayIterator implements Serializable, Seek
 	/**
 	 * Get array copy
 	 * @link http://www.php.net/manual/en/arrayiterator.getarraycopy.php
-	 * @return void A copy of the array, or array of public properties
+	 * @return array A copy of the array, or array of public properties
 	 * if ArrayIterator refers to an object.
 	 */
 	public function getArrayCopy () {}
@@ -3304,6 +3304,7 @@ class FilesystemIterator extends DirectoryIterator implements SeekableIterator, 
 	const CURRENT_AS_SELF = 16;
 	const KEY_MODE_MASK = 3840;
 	const KEY_AS_PATHNAME = 0;
+	const FOLLOW_SYMLINKS = 512;
 	const KEY_AS_FILENAME = 256;
 	const NEW_CURRENT_AND_KEY = 256;
 	const SKIP_DOTS = 4096;
@@ -3618,6 +3619,7 @@ class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator,
 	const CURRENT_AS_SELF = 16;
 	const KEY_MODE_MASK = 3840;
 	const KEY_AS_PATHNAME = 0;
+	const FOLLOW_SYMLINKS = 512;
 	const KEY_AS_FILENAME = 256;
 	const NEW_CURRENT_AND_KEY = 256;
 	const SKIP_DOTS = 4096;
@@ -3962,6 +3964,7 @@ class GlobIterator extends FilesystemIterator implements Iterator, Traversable, 
 	const CURRENT_AS_SELF = 16;
 	const KEY_MODE_MASK = 3840;
 	const KEY_AS_PATHNAME = 0;
+	const FOLLOW_SYMLINKS = 512;
 	const KEY_AS_FILENAME = 256;
 	const NEW_CURRENT_AND_KEY = 256;
 	const SKIP_DOTS = 4096;
@@ -6289,8 +6292,9 @@ class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 	/**
 	 * Constructs a new fixed array
 	 * @link http://www.php.net/manual/en/splfixedarray.construct.php
+	 * @param size[optional]
 	 */
-	public function __construct () {}
+	public function __construct ($size) {}
 
 	/**
 	 * Returns the size of the array
@@ -6649,8 +6653,9 @@ class MultipleIterator implements Iterator, Traversable {
 	/**
 	 * Constructs a new MultipleIterator
 	 * @link http://www.php.net/manual/en/multipleiterator.construct.php
+	 * @param flags
 	 */
-	public function __construct () {}
+	public function __construct ($flags) {}
 
 	/**
 	 * Gets the flag information

@@ -586,15 +586,78 @@ function ftp_nb_fput ($ftp_stream, $remote_file, $handle, $mode, $startpos = nul
  */
 function ftp_quit ($ftp) {}
 
+
+/**
+ * <p></p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_ASCII', 1);
+
+/**
+ * <p></p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_TEXT', 1);
+
+/**
+ * <p></p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_BINARY', 2);
+
+/**
+ * <p></p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_IMAGE', 2);
+
+/**
+ * <p>
+ * Automatically determine resume position and start position for GET and PUT requests
+ * (only works if FTP_AUTOSEEK is enabled)
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_AUTORESUME', -1);
+
+/**
+ * <p>
+ * See ftp_set_option for information.
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_TIMEOUT_SEC', 0);
+
+/**
+ * <p>
+ * See ftp_set_option for information.
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_AUTOSEEK', 1);
+
+/**
+ * <p>
+ * Asynchronous transfer has failed
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_FAILED', 0);
+
+/**
+ * <p>
+ * Asynchronous transfer has finished
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_FINISHED', 1);
+
+/**
+ * <p>
+ * Asynchronous transfer is still active
+ * </p>
+ * @link http://www.php.net/manual/en/ftp.constants.php
+ */
 define ('FTP_MOREDATA', 2);
 
 // End of ftp v.

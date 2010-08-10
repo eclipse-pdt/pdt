@@ -181,6 +181,17 @@ class tidy  {
 	public function getHtmlVer () {}
 
 	/**
+	 * Returns the documentation for the given option name
+	 * @link http://www.php.net/manual/en/tidy.getoptdoc.php
+	 * @param optname string <p>
+	 * The option name
+	 * </p>
+	 * @return string a string if the option exists and has documentation available, or
+	 * false otherwise.
+	 */
+	public function getOptDoc ($optname) {}
+
+	/**
 	 * Indicates if the document is a XHTML document
 	 * @link http://www.php.net/manual/en/tidy.isxhtml.php
 	 * @return bool This function returns true if the specified tidy
@@ -338,6 +349,8 @@ final class tidyNode  {
 	 */
 	public function getParent () {}
 
+	private function __construct () {}
+
 }
 
 function tidy_getopt () {}
@@ -426,6 +439,8 @@ function tidy_access_count (tidy $object) {}
  */
 function tidy_config_count (tidy $object) {}
 
+function tidy_get_opt_doc () {}
+
 function tidy_get_root () {}
 
 function tidy_get_head () {}
@@ -447,6 +462,11 @@ function tidy_get_body () {}
  */
 function ob_tidyhandler ($input, $mode = null) {}
 
+
+/**
+ * description
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_TAG_UNKNOWN', 0);
 define ('TIDY_TAG_A', 1);
 define ('TIDY_TAG_ABBR', 2);
@@ -566,19 +586,89 @@ define ('TIDY_TAG_UL', 115);
 define ('TIDY_TAG_VAR', 116);
 define ('TIDY_TAG_WBR', 117);
 define ('TIDY_TAG_XMP', 118);
+
+/**
+ * root node
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_ROOT', 0);
+
+/**
+ * doctype
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_DOCTYPE', 1);
+
+/**
+ * HTML comment
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_COMMENT', 2);
+
+/**
+ * Processing Instruction
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_PROCINS', 3);
+
+/**
+ * Text
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_TEXT', 4);
+
+/**
+ * start tag
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_START', 5);
+
+/**
+ * end tag
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_END', 6);
+
+/**
+ * empty tag
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_STARTEND', 7);
+
+/**
+ * CDATA
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_CDATA', 8);
+
+/**
+ * XML section
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_SECTION', 9);
+
+/**
+ * ASP code
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_ASP', 10);
+
+/**
+ * JSTE code
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_JSTE', 11);
+
+/**
+ * PHP code
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_PHP', 12);
+
+/**
+ * XML declaration
+ * @link http://www.php.net/manual/en/tidy.constants.php
+ */
 define ('TIDY_NODETYPE_XMLDECL', 13);
 
 // End of tidy v.2.0

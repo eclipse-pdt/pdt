@@ -138,7 +138,7 @@ class SoapClient  {
 	public function __setCookie ($name, $value = null) {}
 
 	/**
-	 * Sets the location of the Web service to use.
+	 * Sets the location of the Web service to use
 	 * @link http://www.php.net/manual/en/soapclient.setlocation.php
 	 * @param new_location string[optional] <p>
 	 * The new endpoint URL.
@@ -148,7 +148,7 @@ class SoapClient  {
 	public function __setLocation ($new_location = null) {}
 
 	/**
-	 * Sets SOAP headers for subsequent calls.
+	 * Sets SOAP headers for subsequent calls
 	 * @link http://www.php.net/manual/en/soapclient.setsoapheaders.php
 	 * @param soapheaders mixed[optional] <p>
 	 * The headers to be set. It could be SoapHeader

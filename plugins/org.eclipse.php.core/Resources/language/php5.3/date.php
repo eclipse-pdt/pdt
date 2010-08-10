@@ -1,6 +1,6 @@
 <?php
 
-// Start of date v.5.3.0
+// Start of date v.5.3.2
 
 class DateTime  {
 	const ATOM = "Y-m-d\TH:i:sP";
@@ -19,10 +19,37 @@ class DateTime  {
 	/**
 	 * Returns new DateTime object
 	 * @link http://www.php.net/manual/en/datetime.construct.php
-	 * @param time[optional]
-	 * @param object[optional]
+	 * @param time string[optional] <p>
+	 * String in a format accepted by strtotime.
+	 * </p>
+	 * <p>
+	 * Enter &null; here to obtain the current time when using
+	 * the $timezone parameter.
+	 * </p>
+	 * <p>
+	 * To use a Unix timestamp, put a @ in
+	 * front of the timestamp string.
+	 * </p>
+	 * @param timezone DateTimeZone[optional] <p>
+	 * A DateTimeZone object representing the
+	 * desired time zone.
+	 * </p>
+	 * <p>
+	 * If $timezone is omitted,
+	 * the current timezone will be used.
+	 * </p>
+	 * <p>
+	 * The $timezone parameter
+	 * and the current timezone are ignored when the
+	 * $time parameter either
+	 * is a UNIX timestamp (e.g. @946684800)
+	 * or specifies a timezone
+	 * (e.g. 2010-01-28T15:00:00+02:00).
+	 * </p>
+	 * @return string a new DateTime instance.
+	 * &return.falseforfailure.style.procedural;
 	 */
-	public function __construct ($time, $object) {}
+	public function __construct ($time = null, DateTimeZone $timezone = null) {}
 
 	/**
 	 * The __wakeup handler
@@ -66,7 +93,7 @@ class DateTime  {
 	 * is !, then all portions of the date/time
 	 * value generated which are not specified in
 	 * time will be initialized to corresponding
-	 * values from the Unix epoch. 
+	 * values from the Unix epoch.
 	 * </p>
 	 * <p>
 	 * The Unix epoch is 1970-01-01 00:00:00 UTC.
@@ -75,9 +102,10 @@ class DateTime  {
 	 * String representing the time.
 	 * </p>
 	 * @param timezone DateTimeZone[optional] <p>
-	 * Time zone.
+	 * A DateTimeZone object representing the
+	 * desired time zone.
 	 * </p>
-	 * @return DateTime new DateTime instance&return.falseforfailure;.
+	 * @return DateTime a new DateTime instance&return.falseforfailure;.
 	 */
 	public static function createFromFormat ($format, $time, DateTimeZone $timezone = null) {}
 
@@ -94,7 +122,7 @@ class DateTime  {
 	 * @param format string <p>
 	 * Format accepted by date.
 	 * </p>
-	 * @return string formatted date on success&return.falseforfailure;.
+	 * @return string the formatted date string on success&return.falseforfailure;.
 	 */
 	public function format ($format) {}
 
@@ -104,7 +132,7 @@ class DateTime  {
 	 * @param modify string <p>
 	 * String in a relative format accepted by strtotime.
 	 * </p>
-	 * @return DateTime the modified DateTime.
+	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
 	 */
 	public function modify ($modify) {}
 
@@ -115,7 +143,7 @@ class DateTime  {
 	 * @param interval DateInterval <p>
 	 * A DateInterval object
 	 * </p>
-	 * @return DateTime the modified self object (DateTime).
+	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
 	 */
 	public function add (DateInterval $interval) {}
 
@@ -126,14 +154,15 @@ class DateTime  {
 	 * @param interval DateInterval <p>
 	 * A DateInterval object
 	 * </p>
-	 * @return DateTime the modified self object (DateTime).
+	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
 	 */
 	public function sub (DateInterval $interval) {}
 
 	/**
 	 * Return time zone relative to given DateTime
 	 * @link http://www.php.net/manual/en/datetime.gettimezone.php
-	 * @return DateTimeZone DateTimeZone object on success&return.falseforfailure;.
+	 * @return DateTimeZone a DateTimeZone object on success
+	 * &return.falseforfailure;.
 	 */
 	public function getTimezone () {}
 
@@ -141,16 +170,17 @@ class DateTime  {
 	 * Sets the time zone for the DateTime object
 	 * @link http://www.php.net/manual/en/datetime.settimezone.php
 	 * @param timezone DateTimeZone <p>
-	 * Desired time zone.
+	 * A DateTimeZone object representing the
+	 * desired time zone.
 	 * </p>
-	 * @return DateTime the modified DateTime.
+	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
 	 */
 	public function setTimezone (DateTimeZone $timezone) {}
 
 	/**
 	 * Returns the timezone offset
 	 * @link http://www.php.net/manual/en/datetime.getoffset.php
-	 * @return int offset in seconds with respect to daylight saving time on success
+	 * @return int the timezone offset in seconds from UTC on success
 	 * &return.falseforfailure;.
 	 */
 	public function getOffset () {}
@@ -167,7 +197,7 @@ class DateTime  {
 	 * @param second int[optional] <p>
 	 * Second of the time.
 	 * </p>
-	 * @return DateTime the modified DateTime.
+	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
 	 */
 	public function setTime ($hour, $minute, $second = null) {}
 
@@ -183,7 +213,7 @@ class DateTime  {
 	 * @param day int <p>
 	 * Day of the date.
 	 * </p>
-	 * @return DateTime the modified DateTime.
+	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
 	 */
 	public function setDate ($year, $month, $day) {}
 
@@ -199,7 +229,7 @@ class DateTime  {
 	 * @param day int[optional] <p>
 	 * Offset from the first day of the week.
 	 * </p>
-	 * @return DateTime the modified DateTime.
+	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
 	 */
 	public function setISODate ($year, $week, $day = null) {}
 
@@ -209,29 +239,28 @@ class DateTime  {
 	 * @param unixtimestamp int <p>
 	 * Unix timestamp representing the date.
 	 * </p>
-	 * @return DateTime the modified DateTime.
+	 * @return DateTime &date.datetime.return.modifiedobjectorfalseforfailure;
 	 */
 	public function setTimestamp ($unixtimestamp) {}
 
 	/**
 	 * Gets the Unix timestamp
 	 * @link http://www.php.net/manual/en/datetime.gettimestamp.php
-	 * @return int Unix timestamp representing the date.
+	 * @return int the Unix timestamp representing the date.
 	 */
 	public function getTimestamp () {}
 
 	/**
 	 * Returns the difference between two DateTime objects
 	 * @link http://www.php.net/manual/en/datetime.diff.php
-	 * @param datetime DateTime <p>
-	 * The date to compare to.
-	 * </p>
+	 * @param datetime2 DateTime 
 	 * @param absolute bool[optional] <p>
 	 * Whether to return absolute difference.
 	 * </p>
-	 * @return DateInterval The difference between two dates.
+	 * @return DateInterval The DateInterval object representing the
+	 * difference between the two dates&return.falseforfailure;.
 	 */
-	public function diff (DateTime $datetime, $absolute = null) {}
+	public function diff (DateTime $datetime2, $absolute = null) {}
 
 }
 
@@ -255,7 +284,11 @@ class DateTimeZone  {
 	/**
 	 * Creates new DateTimeZone object
 	 * @link http://www.php.net/manual/en/datetimezone.construct.php
-	 * @param timezone
+	 * @param timezone string <p>
+	 * One of timezones.
+	 * </p>
+	 * @return string DateTimeZone on success.
+	 * &return.falseforfailure.style.procedural;
 	 */
 	public function __construct ($timezone) {}
 
@@ -1350,17 +1383,12 @@ function localtime ($timestamp = null, $is_associative = null) {}
 function getdate ($timestamp = null) {}
 
 /**
- * Returns new DateTime object
+ * &Alias; <methodname>DateTime::__construct</methodname>
  * @link http://www.php.net/manual/en/function.date-create.php
- * @param time string[optional] <p>
- * String in a format accepted by strtotime.
- * </p>
- * @param timezone DateTimeZone[optional] <p>
- * Time zone of the time.
- * </p>
- * @return DateTime DateTime object on success&return.falseforfailure;.
+ * @param time[optional]
+ * @param object[optional]
  */
-function date_create ($time = null, DateTimeZone $timezone = null) {}
+function date_create ($time, $object) {}
 
 /**
  * &Alias; <methodname>DateTime::createFromFormat</methodname>
@@ -1510,13 +1538,9 @@ function date_timestamp_set ($object, $unixtimestamp) {}
 function date_timestamp_get ($object) {}
 
 /**
- * Returns new DateTimeZone object
+ * &Alias; <methodname>DateTimeZone::__construct</methodname>
  * @link http://www.php.net/manual/en/function.timezone-open.php
- * @param timezone string <p>
- * Time zone identifier as full name (e.g. Europe/Prague) or abbreviation
- * (e.g. CET).
- * </p>
- * @return DateTimeZone DateTimeZone object on success &return.falseforfailure;.
+ * @param timezone
  */
 function timezone_open ($timezone) {}
 
@@ -1754,9 +1778,24 @@ define ('DATE_RFC2822', "D, d M Y H:i:s O");
 define ('DATE_RFC3339', "Y-m-d\TH:i:sP");
 define ('DATE_RSS', "D, d M Y H:i:s O");
 define ('DATE_W3C', "Y-m-d\TH:i:sP");
+
+/**
+ * Timestamp
+ * @link http://www.php.net/manual/en/datetime.constants.php
+ */
 define ('SUNFUNCS_RET_TIMESTAMP', 0);
+
+/**
+ * Hours:minutes (example: 08:02)
+ * @link http://www.php.net/manual/en/datetime.constants.php
+ */
 define ('SUNFUNCS_RET_STRING', 1);
+
+/**
+ * Hours as floating point number (example 8.75)
+ * @link http://www.php.net/manual/en/datetime.constants.php
+ */
 define ('SUNFUNCS_RET_DOUBLE', 2);
 
-// End of date v.5.3.0
+// End of date v.5.3.2
 ?>

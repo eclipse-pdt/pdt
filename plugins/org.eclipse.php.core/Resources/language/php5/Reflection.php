@@ -923,10 +923,12 @@ class ReflectionClass implements Reflector {
 	/**
 	 * Gets properties
 	 * @link http://www.php.net/manual/en/reflectionclass.getproperties.php
-	 * @param filter string[optional] <p>
-	 * The optional filter.
+	 * @param filter int[optional] <p>
+	 * The optional filter, for filtering desired property types. It's configured using
+	 * the ReflectionProperty constants,
+	 * and defaults to all property types.
 	 * </p>
-	 * @return ReflectionProperty A ReflectionProperty.
+	 * @return array An array of ReflectionProperty objects.
 	 */
 	public function getProperties ($filter = null) {}
 
@@ -1281,10 +1283,12 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	/**
 	 * Gets properties
 	 * @link http://www.php.net/manual/en/reflectionclass.getproperties.php
-	 * @param filter string[optional] <p>
-	 * The optional filter.
+	 * @param filter int[optional] <p>
+	 * The optional filter, for filtering desired property types. It's configured using
+	 * the ReflectionProperty constants,
+	 * and defaults to all property types.
 	 * </p>
-	 * @return ReflectionProperty A ReflectionProperty.
+	 * @return array An array of ReflectionProperty objects.
 	 */
 	public function getProperties ($filter = null) {}
 

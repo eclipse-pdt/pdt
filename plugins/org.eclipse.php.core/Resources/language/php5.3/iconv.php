@@ -407,9 +407,29 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
  */
 function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = null) {}
 
-define ('ICONV_IMPL', "\"libiconv\"");
-define ('ICONV_VERSION', 1.9);
+
+/**
+ * string
+ * @link http://www.php.net/manual/en/iconv.constants.php
+ */
+define ('ICONV_IMPL', "glibc");
+
+/**
+ * string
+ * @link http://www.php.net/manual/en/iconv.constants.php
+ */
+define ('ICONV_VERSION', "2.11.1");
+
+/**
+ * integer
+ * @link http://www.php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_MIME_DECODE_STRICT', 1);
+
+/**
+ * integer
+ * @link http://www.php.net/manual/en/iconv.constants.php
+ */
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 
 // End of iconv v.

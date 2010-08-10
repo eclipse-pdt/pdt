@@ -1,6 +1,6 @@
 <?php
 
-// Start of Phar v.2.0.0-dev
+// Start of Phar v.2.0.1
 
 class PharException extends Exception  {
 	protected $message;
@@ -43,6 +43,7 @@ class Phar extends RecursiveDirectoryIterator implements RecursiveIterator, Seek
 	const CURRENT_AS_SELF = 16;
 	const KEY_MODE_MASK = 3840;
 	const KEY_AS_PATHNAME = 0;
+	const FOLLOW_SYMLINKS = 512;
 	const KEY_AS_FILENAME = 256;
 	const NEW_CURRENT_AND_KEY = 256;
 	const SKIP_DOTS = 4096;
@@ -1090,6 +1091,7 @@ class PharData extends RecursiveDirectoryIterator implements RecursiveIterator, 
 	const CURRENT_AS_SELF = 16;
 	const KEY_MODE_MASK = 3840;
 	const KEY_AS_PATHNAME = 0;
+	const FOLLOW_SYMLINKS = 512;
 	const KEY_AS_FILENAME = 256;
 	const NEW_CURRENT_AND_KEY = 256;
 	const SKIP_DOTS = 4096;
@@ -2167,5 +2169,5 @@ class PharFileInfo extends SplFileInfo  {
 	public function __toString () {}
 
 }
-// End of Phar v.2.0.0-dev
+// End of Phar v.2.0.1
 ?>

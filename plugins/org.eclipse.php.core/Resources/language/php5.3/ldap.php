@@ -829,6 +829,15 @@ function ldap_parse_result ($link, $result, &$errcode, &$matcheddn = null, &$err
  */
 function ldap_start_tls ($link) {}
 
+/**
+ * Set a callback function to do re-binds on referral chasing
+ * @link http://www.php.net/manual/en/function.ldap-set-rebind-proc.php
+ * @param link resource 
+ * @param callback callback 
+ * @return bool 
+ */
+function ldap_set_rebind_proc ($link, $callback) {}
+
 define ('LDAP_DEREF_NEVER', 0);
 define ('LDAP_DEREF_SEARCHING', 1);
 define ('LDAP_DEREF_FINDING', 2);
@@ -836,6 +845,12 @@ define ('LDAP_DEREF_ALWAYS', 3);
 define ('LDAP_OPT_DEREF', 2);
 define ('LDAP_OPT_SIZELIMIT', 3);
 define ('LDAP_OPT_TIMELIMIT', 4);
+
+/**
+ * Option for ldap_set_option to allow setting network timeout.
+ * (Available as of PHP 5.3.0)
+ * @link http://www.php.net/manual/en/ldap.constants.php
+ */
 define ('LDAP_OPT_NETWORK_TIMEOUT', 20485);
 define ('LDAP_OPT_PROTOCOL_VERSION', 17);
 define ('LDAP_OPT_ERROR_NUMBER', 49);

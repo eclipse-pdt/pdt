@@ -1,6 +1,6 @@
 <?php
 
-// Start of Reflection v.$Revision: 1.3 $
+// Start of Reflection v.$Revision: 1.4 $
 
 class ReflectionException extends Exception  {
 	protected $message;
@@ -706,6 +706,16 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 	public function getPrototype () {}
 
 	/**
+	 * Set method accessibility
+	 * @link http://www.php.net/manual/en/reflectionmethod.setaccessible.php
+	 * @param accessible bool <p>
+	 * true to allow accessibility, or false.
+	 * </p>
+	 * @return void 
+	 */
+	public function setAccessible ($accessible) {}
+
+	/**
 	 * Clones function
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.clone.php
 	 * @return void 
@@ -1010,10 +1020,12 @@ class ReflectionClass implements Reflector {
 	/**
 	 * Gets properties
 	 * @link http://www.php.net/manual/en/reflectionclass.getproperties.php
-	 * @param filter string[optional] <p>
-	 * The optional filter.
+	 * @param filter int[optional] <p>
+	 * The optional filter, for filtering desired property types. It's configured using
+	 * the ReflectionProperty constants,
+	 * and defaults to all property types.
 	 * </p>
-	 * @return ReflectionProperty A ReflectionProperty.
+	 * @return array An array of ReflectionProperty objects.
 	 */
 	public function getProperties ($filter = null) {}
 
@@ -1389,10 +1401,12 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 	/**
 	 * Gets properties
 	 * @link http://www.php.net/manual/en/reflectionclass.getproperties.php
-	 * @param filter string[optional] <p>
-	 * The optional filter.
+	 * @param filter int[optional] <p>
+	 * The optional filter, for filtering desired property types. It's configured using
+	 * the ReflectionProperty constants,
+	 * and defaults to all property types.
 	 * </p>
-	 * @return ReflectionProperty A ReflectionProperty.
+	 * @return array An array of ReflectionProperty objects.
 	 */
 	public function getProperties ($filter = null) {}
 
@@ -1639,9 +1653,10 @@ class ReflectionProperty implements Reflector {
 	/**
 	 * Construct a ReflectionProperty object
 	 * @link http://www.php.net/manual/en/reflectionproperty.construct.php
-	 * @param argument
+	 * @param class[optional]
+	 * @param name[optional]
 	 */
-	public function __construct ($argument) {}
+	public function __construct ($class, $name) {}
 
 	/**
 	 * To string
@@ -1859,5 +1874,5 @@ class ReflectionExtension implements Reflector {
 	public function info () {}
 
 }
-// End of Reflection v.$Revision: 1.3 $
+// End of Reflection v.$Revision: 1.4 $
 ?>

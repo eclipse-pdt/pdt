@@ -184,6 +184,13 @@ function hash_copy ($context) {}
  */
 function hash_algos () {}
 
+
+/**
+ * Optional flag for hash_init.
+ * Indicates that the HMAC digest-keying algorithm should be
+ * applied to the current hashing context.
+ * @link http://www.php.net/manual/en/hash.constants.php
+ */
 define ('HASH_HMAC', 1);
 
 // End of hash v.1.0

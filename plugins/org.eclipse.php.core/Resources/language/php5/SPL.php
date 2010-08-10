@@ -520,14 +520,14 @@ class LimitIterator extends IteratorIterator implements OuterIterator, Traversab
 	/**
 	 * Get current key
 	 * @link http://www.php.net/manual/en/limititerator.key.php
-	 * @return mixed The current key.
+	 * @return mixed the key for the current item.
 	 */
 	public function key () {}
 
 	/**
 	 * Get current element
 	 * @link http://www.php.net/manual/en/limititerator.current.php
-	 * @return mixed The current element.
+	 * @return mixed the current element or &null; if there is none.
 	 */
 	public function current () {}
 
@@ -542,9 +542,9 @@ class LimitIterator extends IteratorIterator implements OuterIterator, Traversab
 	 * Seek to the given position
 	 * @link http://www.php.net/manual/en/limititerator.seek.php
 	 * @param position int <p>
-	 * The position being seeked to.
+	 * The position to seek to.
 	 * </p>
-	 * @return void 
+	 * @return int the offset position after seeking.
 	 */
 	public function seek ($position) {}
 
@@ -558,7 +558,7 @@ class LimitIterator extends IteratorIterator implements OuterIterator, Traversab
 	/**
 	 * Get inner iterator
 	 * @link http://www.php.net/manual/en/limititerator.getinneriterator.php
-	 * @return Iterator The inner iterator.
+	 * @return Iterator The inner iterator passed to LimitIterator::__construct.
 	 */
 	public function getInnerIterator () {}
 
@@ -1699,7 +1699,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Counta
 	/**
 	 * Gets the iterator classname for the ArrayObject.
 	 * @link http://www.php.net/manual/en/arrayobject.getiteratorclass.php
-	 * @return int the iterator class name that is used to iterate over this object.
+	 * @return string the iterator class name that is used to iterate over this object.
 	 */
 	public function getIteratorClass () {}
 
@@ -1773,7 +1773,7 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	/**
 	 * Get array copy
 	 * @link http://www.php.net/manual/en/arrayiterator.getarraycopy.php
-	 * @return void A copy of the array, or array of public properties
+	 * @return array A copy of the array, or array of public properties
 	 * if ArrayIterator refers to an object.
 	 */
 	public function getArrayCopy () {}
@@ -1980,7 +1980,7 @@ class RecursiveArrayIterator extends ArrayIterator implements SeekableIterator, 
 	/**
 	 * Get array copy
 	 * @link http://www.php.net/manual/en/arrayiterator.getarraycopy.php
-	 * @return void A copy of the array, or array of public properties
+	 * @return array A copy of the array, or array of public properties
 	 * if ArrayIterator refers to an object.
 	 */
 	public function getArrayCopy () {}
@@ -2614,6 +2614,7 @@ class RecursiveDirectoryIterator extends DirectoryIterator implements Traversabl
 	const CURRENT_AS_SELF = 16;
 	const KEY_MODE_MASK = 3840;
 	const KEY_AS_PATHNAME = 0;
+	const FOLLOW_SYMLINKS = 512;
 	const KEY_AS_FILENAME = 256;
 	const NEW_CURRENT_AND_KEY = 256;
 
@@ -4016,8 +4017,25 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	/**
 	 * Creates a new SimpleXMLElement object
 	 * @link http://www.php.net/manual/en/simplexmlelement.construct.php
+	 * @param data string <p>
+	 * A well-formed XML string or the path or URL to an XML document if 
+	 * data_is_url is true.
+	 * </p>
+	 * @param options int[optional] <p>
+	 * Optionally used to specify additional
+	 * Libxml parameters.
+	 * </p>
+	 * @param data_is_url bool[optional] <p>
+	 * By default, data_is_url is false. Use true to
+	 * specify that data is a path or URL to an XML 
+	 * document instead of string data.
+	 * </p>
+	 * @param ns string[optional] <p>
+	 * </p>
+	 * @param is_prefix bool[optional] <p>
+	 * </p>
 	 */
-	final public function __construct () {}
+	final public function __construct ($data, $options = null, $data_is_url = null, $ns = null, $is_prefix = null) {}
 
 	/**
 	 * Return a well-formed XML string based on SimpleXML element
@@ -4079,12 +4097,16 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 * Finds children of given node
 	 * @link http://www.php.net/manual/en/simplexmlelement.children.php
 	 * @param ns string[optional] <p>
+	 * An XML namespace.
 	 * </p>
 	 * @param is_prefix bool[optional] <p>
-	 * Default to false
+	 * If is_prefix is true,
+	 * ns will be regarded as a prefix. If false,
+	 * ns will be regarded as a namespace
+	 * URL.
 	 * </p>
 	 * @return SimpleXMLElement a SimpleXMLElement element, whether the node 
-	 * have children or not.
+	 * has children or not.
 	 */
 	public function children ($ns = null, $is_prefix = null) {}
 

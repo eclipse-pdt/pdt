@@ -828,6 +828,15 @@ function ldap_parse_result ($link, $result, &$errcode, &$matcheddn = null, &$err
  */
 function ldap_start_tls ($link) {}
 
+/**
+ * Set a callback function to do re-binds on referral chasing
+ * @link http://www.php.net/manual/en/function.ldap-set-rebind-proc.php
+ * @param link resource 
+ * @param callback callback 
+ * @return bool 
+ */
+function ldap_set_rebind_proc ($link, $callback) {}
+
 define ('LDAP_DEREF_NEVER', 0);
 define ('LDAP_DEREF_SEARCHING', 1);
 define ('LDAP_DEREF_FINDING', 2);

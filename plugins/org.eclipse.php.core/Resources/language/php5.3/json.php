@@ -53,15 +53,62 @@ function json_decode ($json, $assoc = null, $depth = null) {}
  */
 function json_last_error () {}
 
+
+/**
+ * All &lt; and &gt; are converted to \u003C and \u003E.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_HEX_TAG', 1);
+
+/**
+ * All &amp;s are converted to \u0026.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_HEX_AMP', 2);
+
+/**
+ * All ' are converted to \u0027.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_HEX_APOS', 4);
+
+/**
+ * All " are converted to \u0022.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_HEX_QUOT', 8);
+
+/**
+ * Outputs an object rather than an array when a non-associative array is
+ * used. Especially useful when the recipient of the output is expecting
+ * an object and the array is empty.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_FORCE_OBJECT', 16);
+
+/**
+ * No error has occurred.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_ERROR_NONE', 0);
+
+/**
+ * The maximum stack depth has been exceeded.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_ERROR_DEPTH', 1);
 define ('JSON_ERROR_STATE_MISMATCH', 2);
+
+/**
+ * Control character error, possibly incorrectly encoded.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_ERROR_CTRL_CHAR', 3);
+
+/**
+ * Syntax error.
+ * @link http://www.php.net/manual/en/json.constants.php
+ */
 define ('JSON_ERROR_SYNTAX', 4);
 
 // End of json v.1.2.1

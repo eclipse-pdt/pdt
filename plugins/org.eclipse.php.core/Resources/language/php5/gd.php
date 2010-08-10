@@ -250,6 +250,24 @@ function imagecreatefromstring ($data) {}
 function imagecolorclosest ($image, $red, $green, $blue) {}
 
 /**
+ * Get the index of the color which has the hue, white and blackness
+ * @link http://www.php.net/manual/en/function.imagecolorclosesthwb.php
+ * @param image resource 
+ * @param red int <p>
+ * Value of red component.
+ * </p>
+ * @param green int <p>
+ * Value of green component.
+ * </p>
+ * @param blue int <p>
+ * Value of blue component.
+ * </p>
+ * @return int an integer with the index of the color which has 
+ * the hue, white and blackness nearest the given color.
+ */
+function imagecolorclosesthwb ($image, $red, $green, $blue) {}
+
+/**
  * De-allocate a color for an image
  * @link http://www.php.net/manual/en/function.imagecolordeallocate.php
  * @param image resource 
@@ -331,7 +349,10 @@ function imagecolortransparent ($image, $color = null) {}
 /**
  * Find out the number of colors in an image's palette
  * @link http://www.php.net/manual/en/function.imagecolorstotal.php
- * @param image resource 
+ * @param image resource <p>
+ * An image resource, returned by one of the image creation functions, such
+ * as imagecreatefromgif.
+ * </p>
  * @return int the number of colors in the specified image's palette or 0 for
  * truecolor images.
  */
@@ -756,26 +777,6 @@ function imagecolorexactalpha ($image, $red, $green, $blue, $alpha) {}
 function imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {}
 
 /**
- * Captures a window
- * @link http://www.php.net/manual/en/function.imagegrabwindow.php
- * @param window_handle int <p>
- * The HWND window ID.
- * </p>
- * @param client_area int[optional] <p>
- * Include the client area of the application window.
- * </p>
- * @return resource an image resource identifier on success, false on failure.
- */
-function imagegrabwindow ($window_handle, $client_area = null) {}
-
-/**
- * Captures the whole screen
- * @link http://www.php.net/manual/en/function.imagegrabscreen.php
- * @return resource an image resource identifier on success, false on failure.
- */
-function imagegrabscreen () {}
-
-/**
  * Rotate an image with a given angle
  * @link http://www.php.net/manual/en/function.imagerotate.php
  * @param image resource 
@@ -788,7 +789,7 @@ function imagegrabscreen () {}
  * @param ignore_transparent int[optional] <p>
  * If set and non-zero, transparent colors are ignored (otherwise kept).
  * </p>
- * @return resource 
+ * @return resource an image resource for the rotated image, &return.falseforfailure;.
  */
 function imagerotate ($image, $angle, $bgd_color, $ignore_transparent = null) {}
 
@@ -1893,51 +1894,303 @@ function imagefilter ($image, $filtertype, $arg1 = null, $arg2 = null, $arg3 = n
  */
 function imageconvolution ($image, array $matrix, $div, $offset) {}
 
+
+/**
+ * Used as a return value by imagetypes
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_GIF', 1);
+
+/**
+ * Used as a return value by imagetypes
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_JPG', 2);
+
+/**
+ * Used as a return value by imagetypes
+ * <p>
+ * This constant has the same value as IMG_JPG
+ * </p>
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_JPEG', 2);
+
+/**
+ * Used as a return value by imagetypes
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_PNG', 4);
+
+/**
+ * Used as a return value by imagetypes
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_WBMP', 8);
+
+/**
+ * Used as a return value by imagetypes
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_XPM', 16);
+
+/**
+ * Special color option which can be used in stead of color allocated with
+ * imagecolorallocate or
+ * imagecolorallocatealpha
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_COLOR_TILED', -5);
+
+/**
+ * Special color option which can be used in stead of color allocated with
+ * imagecolorallocate or
+ * imagecolorallocatealpha
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_COLOR_STYLED', -2);
+
+/**
+ * Special color option which can be used in stead of color allocated with
+ * imagecolorallocate or
+ * imagecolorallocatealpha
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_COLOR_BRUSHED', -3);
+
+/**
+ * Special color option which can be used in stead of color allocated with
+ * imagecolorallocate or
+ * imagecolorallocatealpha
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_COLOR_STYLEDBRUSHED', -4);
+
+/**
+ * Special color option which can be used in stead of color allocated with
+ * imagecolorallocate or
+ * imagecolorallocatealpha
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_COLOR_TRANSPARENT', -6);
+
+/**
+ * A style constant used by the imagefilledarc function.
+ * <p>
+ * This constant has the same value as IMG_ARC_PIE
+ * </p>
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_ARC_ROUNDED', 0);
+
+/**
+ * A style constant used by the imagefilledarc function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_ARC_PIE', 0);
+
+/**
+ * A style constant used by the imagefilledarc function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_ARC_CHORD', 1);
+
+/**
+ * A style constant used by the imagefilledarc function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_ARC_NOFILL', 2);
+
+/**
+ * A style constant used by the imagefilledarc function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_ARC_EDGED', 4);
+
+/**
+ * A type constant used by the imagegd2 function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_GD2_RAW', 1);
+
+/**
+ * A type constant used by the imagegd2 function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_GD2_COMPRESSED', 2);
+
+/**
+ * Alpha blending effect used by the imagelayereffect function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_EFFECT_REPLACE', 0);
+
+/**
+ * Alpha blending effect used by the imagelayereffect function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_EFFECT_ALPHABLEND', 1);
+
+/**
+ * Alpha blending effect used by the imagelayereffect function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_EFFECT_NORMAL', 2);
+
+/**
+ * Alpha blending effect used by the imagelayereffect function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_EFFECT_OVERLAY', 3);
+
+/**
+ * When the bundled version of GD is used this is 1 otherwise 
+ * its set to 0.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('GD_BUNDLED', 1);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_NEGATE', 0);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_GRAYSCALE', 1);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_BRIGHTNESS', 2);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_CONTRAST', 3);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_COLORIZE', 4);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_EDGEDETECT', 5);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_GAUSSIAN_BLUR', 7);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_SELECTIVE_BLUR', 8);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_EMBOSS', 6);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_MEAN_REMOVAL', 9);
+
+/**
+ * Special GD filter used by the imagefilter function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('IMG_FILTER_SMOOTH', 10);
+
+/**
+ * The GD version PHP was compiled against.
+ * (Available as of PHP 5.2.4)
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('GD_VERSION', "2.0.35");
+
+/**
+ * The GD major version PHP was compiled against.
+ * (Available as of PHP 5.2.4)
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('GD_MAJOR_VERSION', 2);
+
+/**
+ * The GD minor version PHP was compiled against.
+ * (Available as of PHP 5.2.4)
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('GD_MINOR_VERSION', 0);
+
+/**
+ * The GD release version PHP was compiled against.
+ * (Available as of PHP 5.2.4)
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('GD_RELEASE_VERSION', 35);
+
+/**
+ * The GD "extra" version (beta/rc..) PHP was compiled against.
+ * (Available as of PHP 5.2.4)
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('GD_EXTRA_VERSION', "");
+
+/**
+ * A special PNG filter, used by the imagepng function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('PNG_NO_FILTER', 0);
+
+/**
+ * A special PNG filter, used by the imagepng function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('PNG_FILTER_NONE', 8);
+
+/**
+ * A special PNG filter, used by the imagepng function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('PNG_FILTER_SUB', 16);
+
+/**
+ * A special PNG filter, used by the imagepng function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('PNG_FILTER_UP', 32);
+
+/**
+ * A special PNG filter, used by the imagepng function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('PNG_FILTER_AVG', 64);
+
+/**
+ * A special PNG filter, used by the imagepng function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('PNG_FILTER_PAETH', 128);
+
+/**
+ * A special PNG filter, used by the imagepng function.
+ * @link http://www.php.net/manual/en/image.constants.php
+ */
 define ('PNG_ALL_FILTERS', 248);
 
 // End of gd v.

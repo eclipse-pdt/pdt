@@ -246,8 +246,7 @@ function openssl_x509_check_private_key ($cert, $key) {}
 /**
  * Exports a certificate as a string
  * @link http://www.php.net/manual/en/function.openssl-x509-export.php
- * @param x509 mixed <p>
- * </p>
+ * @param x509 mixed 
  * @param output string <p>
  * On success, this will hold the PEM.
  * </p>
@@ -259,8 +258,7 @@ function openssl_x509_export ($x509, &$output, $notext = null) {}
 /**
  * Exports a certificate to file
  * @link http://www.php.net/manual/en/function.openssl-x509-export-to-file.php
- * @param x509 mixed <p>
- * </p>
+ * @param x509 mixed 
  * @param outfilename string <p>
  * Path to the output file.
  * </p>
@@ -272,8 +270,7 @@ function openssl_x509_export_to_file ($x509, $outfilename, $notext = null) {}
 /**
  * Exports a PKCS#12 Compatible Certificate Store File to variable.
  * @link http://www.php.net/manual/en/function.openssl-pkcs12-export.php
- * @param x509 mixed <p>
- * </p>
+ * @param x509 mixed 
  * @param out string <p>
  * On success, this will hold the PKCS#12.
  * </p>
@@ -292,8 +289,7 @@ function openssl_pkcs12_export ($x509, &$out, $priv_key, $pass, array $args = nu
 /**
  * Exports a PKCS#12 Compatible Certificate Store File
  * @link http://www.php.net/manual/en/function.openssl-pkcs12-export-to-file.php
- * @param x509 mixed <p>
- * </p>
+ * @param x509 mixed 
  * @param filename string <p>
  * Path to the output file.
  * </p>
@@ -763,8 +759,8 @@ function openssl_public_decrypt ($data, &$decrypted, $key, $padding = null) {}
  */
 function openssl_error_string () {}
 
-define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8k 25 Mar 2009");
-define ('OPENSSL_VERSION_NUMBER', 9470143);
+define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8n 24 Mar 2010");
+define ('OPENSSL_VERSION_NUMBER', 9470191);
 define ('X509_PURPOSE_SSL_CLIENT', 1);
 define ('X509_PURPOSE_SSL_SERVER', 2);
 define ('X509_PURPOSE_NS_SSL_SERVER', 3);
@@ -772,19 +768,97 @@ define ('X509_PURPOSE_SMIME_SIGN', 4);
 define ('X509_PURPOSE_SMIME_ENCRYPT', 5);
 define ('X509_PURPOSE_CRL_SIGN', 6);
 define ('X509_PURPOSE_ANY', 7);
+
+/**
+ * Used as default algorithm by openssl_sign and
+ * openssl_verify.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('OPENSSL_ALGO_SHA1', 1);
 define ('OPENSSL_ALGO_MD5', 2);
 define ('OPENSSL_ALGO_MD4', 3);
-define ('OPENSSL_ALGO_MD2', 4);
 define ('OPENSSL_ALGO_DSS1', 5);
+
+/**
+ * When signing a message, use cleartext signing with the MIME
+ * type "multipart/signed". This is the default
+ * if you do not specify any flags to
+ * openssl_pkcs7_sign.
+ * If you turn this option off, the message will be signed using
+ * opaque signing, which is more resistant to translation by mail relays
+ * but cannot be read by mail agents that do not support S/MIME.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_DETACHED', 64);
+
+/**
+ * Adds text/plain content type headers to encrypted/signed
+ * message. If decrypting or verifying, it strips those headers from
+ * the output - if the decrypted or verified message is not of MIME type
+ * text/plain then an error will occur.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_TEXT', 1);
+
+/**
+ * When verifying a message, certificates (if
+ * any) included in the message are normally searched for the
+ * signing certificate. With this option only the
+ * certificates specified in the extracerts
+ * parameter of openssl_pkcs7_verify are
+ * used. The supplied certificates can still be used as
+ * untrusted CAs however.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOINTERN', 16);
+
+/**
+ * Do not verify the signers certificate of a signed
+ * message.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOVERIFY', 32);
+
+/**
+ * Do not chain verification of signers certificates: that is
+ * don't use the certificates in the signed message as untrusted CAs.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOCHAIN', 8);
+
+/**
+ * When signing a message the signer's certificate is normally
+ * included - with this option it is excluded. This will reduce the
+ * size of the signed message but the verifier must have a copy of the
+ * signers certificate available locally (passed using the
+ * extracerts to
+ * openssl_pkcs7_verify for example).
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOCERTS', 2);
+
+/**
+ * Normally when a message is signed, a set of attributes are
+ * included which include the signing time and the supported symmetric
+ * algorithms. With this option they are not included.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOATTR', 256);
+
+/**
+ * Normally the input message is converted to "canonical" format
+ * which is effectively using CR and LF
+ * as end of line: as required by the S/MIME specification. When this
+ * option is present, no translation occurs. This is useful when
+ * handling binary data which may not be in MIME format.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_BINARY', 128);
+
+/**
+ * Don't try and verify the signatures on a message
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('PKCS7_NOSIGS', 4);
 define ('OPENSSL_PKCS1_PADDING', 1);
 define ('OPENSSL_SSLV23_PADDING', 2);

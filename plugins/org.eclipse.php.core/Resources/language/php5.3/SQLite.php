@@ -260,7 +260,6 @@ final class SQLiteException extends RuntimeException  {
  * Passed by reference and is set to hold a descriptive error message
  * explaining why the database could not be opened if there was an error.
  * </p>
- * @return resource a resource (database handle) on success, false on error.
  */
 function sqlite_open ($filename, $mode = null, &$error_message = null) {}
 
@@ -750,36 +749,194 @@ function sqlite_udf_decode_binary ($data) {}
  */
 function sqlite_fetch_column_types ($table_name, $result_type = null) {}
 
+
+/**
+ * Columns are returned into the array having both a numerical index
+ * and the field name as the array index.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_BOTH', 3);
+
+/**
+ * Columns are returned into the array having a numerical index to the
+ * fields. This index starts with 0, the first field in the result.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NUM', 2);
+
+/**
+ * Columns are returned into the array having the field name as the array
+ * index.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_ASSOC', 1);
+
+/**
+ * Successful result.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_OK', 0);
+
+/**
+ * SQL error or missing database.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_ERROR', 1);
+
+/**
+ * An internal logic error in SQLite.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_INTERNAL', 2);
+
+/**
+ * Access permission denied.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_PERM', 3);
+
+/**
+ * Callback routine requested an abort.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_ABORT', 4);
+
+/**
+ * The database file is locked.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_BUSY', 5);
+
+/**
+ * A table in the database is locked.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_LOCKED', 6);
+
+/**
+ * Memory allocation failed.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NOMEM', 7);
+
+/**
+ * Attempt to write a readonly database.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_READONLY', 8);
+
+/**
+ * Operation terminated internally.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_INTERRUPT', 9);
+
+/**
+ * Disk I/O error occurred.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_IOERR', 10);
+
+/**
+ * The database disk image is malformed.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_CORRUPT', 11);
+
+/**
+ * (Internal) Table or record not found.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NOTFOUND', 12);
+
+/**
+ * Insertion failed because database is full.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_FULL', 13);
+
+/**
+ * Unable to open the database file.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_CANTOPEN', 14);
+
+/**
+ * Database lock protocol error.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_PROTOCOL', 15);
+
+/**
+ * (Internal) Database table is empty.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_EMPTY', 16);
+
+/**
+ * The database schema changed.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_SCHEMA', 17);
+
+/**
+ * Too much data for one row of a table.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_TOOBIG', 18);
+
+/**
+ * Abort due to constraint violation.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_CONSTRAINT', 19);
+
+/**
+ * Data type mismatch.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_MISMATCH', 20);
+
+/**
+ * Library used incorrectly.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_MISUSE', 21);
+
+/**
+ * Uses of OS features not supported on host.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NOLFS', 22);
+
+/**
+ * Authorized failed.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_AUTH', 23);
+
+/**
+ * File opened that is not a database file.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_NOTADB', 26);
+
+/**
+ * Auxiliary database format error.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_FORMAT', 24);
+
+/**
+ * Internal process has another row ready.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_ROW', 100);
+
+/**
+ * Internal process has finished executing.
+ * @link http://www.php.net/manual/en/sqlite.constants.php
+ */
 define ('SQLITE_DONE', 101);
 
 // End of SQLite v.2.0-dev

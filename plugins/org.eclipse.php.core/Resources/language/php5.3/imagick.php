@@ -1,6 +1,6 @@
 <?php
 
-// Start of imagick v.2.2.2
+// Start of imagick v.2.3.0
 
 class ImagickException extends Exception  {
 	protected $message;
@@ -149,8 +149,8 @@ class Imagick implements Iterator, Traversable {
 	const COLOR_OPACITY = 18;
 	const COLOR_ALPHA = 19;
 	const COLOR_FUZZ = 20;
-	const IMAGICK_EXTNUM = 20202;
-	const IMAGICK_EXTVER = "2.2.2";
+	const IMAGICK_EXTNUM = 20300;
+	const IMAGICK_EXTVER = "2.3.0";
 	const COMPOSITE_DEFAULT = 40;
 	const COMPOSITE_UNDEFINED = 0;
 	const COMPOSITE_NO = 1;
@@ -245,17 +245,14 @@ class Imagick implements Iterator, Traversable {
 	const COMPRESSION_UNDEFINED = 0;
 	const COMPRESSION_NO = 1;
 	const COMPRESSION_BZIP = 2;
-	const COMPRESSION_FAX = 6;
-	const COMPRESSION_GROUP4 = 7;
-	const COMPRESSION_JPEG = 8;
-	const COMPRESSION_JPEG2000 = 9;
-	const COMPRESSION_LOSSLESSJPEG = 10;
-	const COMPRESSION_LZW = 11;
-	const COMPRESSION_RLE = 12;
-	const COMPRESSION_ZIP = 13;
-	const COMPRESSION_DXT1 = 3;
-	const COMPRESSION_DXT3 = 4;
-	const COMPRESSION_DXT5 = 5;
+	const COMPRESSION_FAX = 3;
+	const COMPRESSION_GROUP4 = 4;
+	const COMPRESSION_JPEG = 5;
+	const COMPRESSION_JPEG2000 = 6;
+	const COMPRESSION_LOSSLESSJPEG = 7;
+	const COMPRESSION_LZW = 8;
+	const COMPRESSION_RLE = 9;
+	const COMPRESSION_ZIP = 10;
 	const PAINT_POINT = 1;
 	const PAINT_REPLACE = 2;
 	const PAINT_FLOODFILL = 3;
@@ -307,8 +304,8 @@ class Imagick implements Iterator, Traversable {
 	const CHANNEL_MATTE = 8;
 	const CHANNEL_BLACK = 32;
 	const CHANNEL_INDEX = 32;
-	const CHANNEL_ALL = 63;
-	const CHANNEL_DEFAULT = 55;
+	const CHANNEL_ALL = 255;
+	const CHANNEL_DEFAULT = 247;
 	const METRIC_UNDEFINED = 0;
 	const METRIC_MEANABSOLUTEERROR = 2;
 	const METRIC_MEANSQUAREERROR = 4;
@@ -355,7 +352,6 @@ class Imagick implements Iterator, Traversable {
 	const COLORSPACE_REC601LUMA = 17;
 	const COLORSPACE_REC709LUMA = 19;
 	const COLORSPACE_LOG = 21;
-	const COLORSPACE_CMY = 22;
 	const VIRTUALPIXELMETHOD_UNDEFINED = 0;
 	const VIRTUALPIXELMETHOD_BACKGROUND = 1;
 	const VIRTUALPIXELMETHOD_CONSTANT = 2;
@@ -363,12 +359,6 @@ class Imagick implements Iterator, Traversable {
 	const VIRTUALPIXELMETHOD_MIRROR = 5;
 	const VIRTUALPIXELMETHOD_TILE = 7;
 	const VIRTUALPIXELMETHOD_TRANSPARENT = 8;
-	const VIRTUALPIXELMETHOD_MASK = 9;
-	const VIRTUALPIXELMETHOD_BLACK = 10;
-	const VIRTUALPIXELMETHOD_GRAY = 11;
-	const VIRTUALPIXELMETHOD_WHITE = 12;
-	const VIRTUALPIXELMETHOD_HORIZONTALTILE = 13;
-	const VIRTUALPIXELMETHOD_VERTICALTILE = 14;
 	const PREVIEW_UNDEFINED = 0;
 	const PREVIEW_ROTATE = 1;
 	const PREVIEW_SHEAR = 2;
@@ -472,28 +462,14 @@ class Imagick implements Iterator, Traversable {
 	const DISTORTION_UNDEFINED = 0;
 	const DISTORTION_AFFINE = 1;
 	const DISTORTION_AFFINEPROJECTION = 2;
-	const DISTORTION_ARC = 8;
-	const DISTORTION_BILINEAR = 6;
-	const DISTORTION_PERSPECTIVE = 4;
-	const DISTORTION_PERSPECTIVEPROJECTION = 5;
-	const DISTORTION_SCALEROTATETRANSLATE = 3;
-	const DISTORTION_POLYNOMIAL = 7;
-	const DISTORTION_POLAR = 9;
-	const DISTORTION_DEPOLAR = 10;
-	const DISTORTION_BARREL = 11;
-	const DISTORTION_BARRELINVERSE = 12;
-	const DISTORTION_SHEPARDS = 13;
-	const DISTORTION_SENTINEL = 14;
-	const ALPHACHANNEL_ACTIVATE = 1;
-	const ALPHACHANNEL_DEACTIVATE = 3;
-	const ALPHACHANNEL_RESET = 6;
-	const ALPHACHANNEL_SET = 7;
-	const ALPHACHANNEL_UNDEFINED = 0;
-	const ALPHACHANNEL_COPY = 2;
-	const ALPHACHANNEL_EXTRACT = 4;
-	const ALPHACHANNEL_OPAQUE = 5;
-	const ALPHACHANNEL_SHAPE = 8;
-	const ALPHACHANNEL_TRANSPARENT = 9;
+	const DISTORTION_ARC = 3;
+	const DISTORTION_BILINEAR = 4;
+	const DISTORTION_PERSPECTIVE = 5;
+	const DISTORTION_PERSPECTIVEPROJECTION = 6;
+	const DISTORTION_SCALEROTATETRANSLATE = 7;
+	const LAYERMETHOD_MERGE = 13;
+	const LAYERMETHOD_FLATTEN = 14;
+	const LAYERMETHOD_MOSAIC = 15;
 
 
 	/**
@@ -981,6 +957,46 @@ class Imagick implements Iterator, Traversable {
 	public function paintfloodfillimage ($fill, $fuzz, $bordercolor, $x, $y, $channel = null) {}
 
 	/**
+	 * Replaces colors in the image
+	 * @link http://www.php.net/manual/en/function.imagick-clutimage.php
+	 * @param lookup_table Imagick <p>
+	 * Imagick object containing the color lookup table
+	 * </p>
+	 * @param channel float[optional] <p>
+	 * The Channeltype
+	 * constant. When not supplied, default channels are replaced.
+	 * </p>
+	 * @return bool &imagick.return.success;
+	 */
+	public function clutimage (Imagick $lookup_table, $channel = null) {}
+
+	/**
+	 * Returns the image properties
+	 * @link http://www.php.net/manual/en/function.imagick-getimageproperties.php
+	 * @param pattern string[optional] <p>
+	 * The pattern for property names.
+	 * </p>
+	 * @param only_names bool[optional] <p>
+	 * Whether to return only property names. If false then also the values are returned
+	 * </p>
+	 * @return array an array containing the image properties or property names.
+	 */
+	public function getimageproperties ($pattern = null, $only_names = null) {}
+
+	/**
+	 * Returns the image profiles
+	 * @link http://www.php.net/manual/en/function.imagick-getimageprofiles.php
+	 * @param pattern string[optional] <p>
+	 * The pattern for profile names.
+	 * </p>
+	 * @param only_names bool[optional] <p>
+	 * Whether to return only profile names. If false then values are returned as well
+	 * </p>
+	 * @return array an array containing the image profiles or profile names.
+	 */
+	public function getimageprofiles ($pattern = null, $only_names = null) {}
+
+	/**
 	 * Distorts an image using various distortion methods
 	 * @link http://www.php.net/manual/en/function.imagick-distortimage.php
 	 * @param method int <p>
@@ -997,64 +1013,116 @@ class Imagick implements Iterator, Traversable {
 	public function distortimage ($method, array $arguments, $bestfit) {}
 
 	/**
-	 * Sets image alpha channel
-	 * @link http://www.php.net/manual/en/function.imagick-setimagealphachannel.php
-	 * @param mode int <p>
-	 * One of the Imagick::ALPHACHANNEL_* constants
+	 * Writes an image to a filehandle
+	 * @link http://www.php.net/manual/en/function.imagick-writeimagefile.php
+	 * @param filehandle resource <p>
+	 * Filehandle where to write the image
 	 * </p>
 	 * @return bool &imagick.return.success;
 	 */
-	public function setimagealphachannel ($mode) {}
+	public function writeimagefile ($filehandle) {}
+
+	/**
+	 * Writes frames to a filehandle
+	 * @link http://www.php.net/manual/en/function.imagick-writeimagesfile.php
+	 * @param filehandle resource <p>
+	 * Filehandle where to write the images
+	 * </p>
+	 * @return bool &imagick.return.success;
+	 */
+	public function writeimagesfile ($filehandle) {}
+
+	/**
+	 * Reset image page
+	 * @link http://www.php.net/manual/en/function.imagick-resetimagepage.php
+	 * @param page string <p>
+	 * The page definition. For example 7168x5147+0+0
+	 * </p>
+	 * @return bool &imagick.return.success;
+	 */
+	public function resetimagepage ($page) {}
+
+	/**
+	 * Sets image clip mask
+	 * @link http://www.php.net/manual/en/function.imagick-setimageclipmask.php
+	 * @param clip_mask Imagick <p>
+	 * The Imagick object containing the clip mask
+	 * </p>
+	 * @return bool &imagick.return.success;
+	 */
+	public function setimageclipmask (Imagick $clip_mask) {}
+
+	/**
+	 * Gets image clip mask
+	 * @link http://www.php.net/manual/en/function.imagick-getimageclipmask.php
+	 * @return Imagick an Imagick object containing the clip mask.
+	 * &imagick.imagickexception.throw;
+	 */
+	public function getimageclipmask () {}
 
 	/**
 	 * Animates an image or images
-	 * @link http://www.php.net/manual/en/function.imagick-liquidrescaleimage.php
-	 * @param width int <p>
-	 * The width of the target size
-	 * </p>
-	 * @param height int <p>
-	 * The height of the target size
-	 * </p>
-	 * @param delta_x float <p>
-	 * How much the seam can traverse on x-axis. 
-	 * Passing 0 causes the seams to be straight.
-	 * </p>
-	 * @param rigidity float <p>
-	 * Introduces a bias for non-straight seams. This parameter is 
-	 * typically 0.
+	 * @link http://www.php.net/manual/en/function.imagick-animateimages.php
+	 * @param x_server string <p>
+	 * X server address
 	 * </p>
 	 * @return bool &imagick.return.success;
 	 */
-	public function liquidrescaleimage ($width, $height, $delta_x, $rigidity) {}
+	public function animateimages ($x_server) {}
 
 	/**
-	 * Sets the gravity
-	 * @link http://www.php.net/manual/en/function.imagick-setgravity.php
-	 * @param gravity int <p>
-	 * The gravity property. Refer to the list of 
-	 * gravity constants.
+	 * Recolors image
+	 * @link http://www.php.net/manual/en/function.imagick-recolorimage.php
+	 * @param matrix array <p>
+	 * The matrix containing the color values
 	 * </p>
-	 * @return bool 
+	 * @return bool &imagick.return.success;
 	 */
-	public function setgravity ($gravity) {}
+	public function recolorimage (array $matrix) {}
 
 	/**
-	 * Gets the gravity
-	 * @link http://www.php.net/manual/en/function.imagick-getgravity.php
-	 * @return bool the gravity property. Refer to the list of 
-	 * gravity constants.
-	 */
-	public function getgravity () {}
-
-	/**
-	 * Gets channel range
-	 * @link http://www.php.net/manual/en/function.imagick-getimagechannelrange.php
-	 * @param channel int <p>
-	 * &imagick.parameter.channel;
+	 * Sets font
+	 * @link http://www.php.net/manual/en/function.imagick-setfont.php
+	 * @param font string <p>
+	 * Font name or a filename
 	 * </p>
-	 * @return bool an array containing minima and maxima values of the channel(s).
+	 * @return bool &imagick.return.success;
 	 */
-	public function getimagechannelrange ($channel) {}
+	public function setfont ($font) {}
+
+	/**
+	 * Gets font
+	 * @link http://www.php.net/manual/en/function.imagick-getfont.php
+	 * @return string the string containing the font name or false if not font is set.
+	 */
+	public function getfont () {}
+
+	/**
+	 * Sets point size
+	 * @link http://www.php.net/manual/en/function.imagick-setpointsize.php
+	 * @param point_size float <p>
+	 * Point size
+	 * </p>
+	 * @return bool &imagick.return.success;
+	 */
+	public function setpointsize ($point_size) {}
+
+	/**
+	 * Gets point size
+	 * @link http://www.php.net/manual/en/function.imagick-getpointsize.php
+	 * @return string a &float; containing the point size.
+	 */
+	public function getpointsize () {}
+
+	/**
+	 * Merges image layers
+	 * @link http://www.php.net/manual/en/function.imagick-mergeimagelayers.php
+	 * @param layer_method int <p>
+	 * One of the Imagick::LAYERMETHOD_* constants
+	 * </p>
+	 * @return bool &imagick.return.success;
+	 */
+	public function mergeimagelayers ($layer_method) {}
 
 	/**
 	 * The Imagick constructor
@@ -1235,6 +1303,8 @@ class Imagick implements Iterator, Traversable {
 	 * &imagick.imagickexception.throw;
 	 */
 	public function getimageformat () {}
+
+	public function getimagemimetype () {}
 
 	/**
 	 * Removes an image from the image list
@@ -2207,6 +2277,12 @@ class Imagick implements Iterator, Traversable {
 	public function clippathimage ($pathname, $inside) {}
 
 	/**
+	 * @param pathname
+	 * @param inside
+	 */
+	public function clipimagepath ($pathname, $inside) {}
+
+	/**
 	 * Composites a set of images
 	 * @link http://www.php.net/manual/en/function.imagick-coalesceimages.php
 	 * @return Imagick a new Imagick object on success.
@@ -2338,7 +2414,8 @@ class Imagick implements Iterator, Traversable {
 	/**
 	 * Returns certain pixel differences between images
 	 * @link http://www.php.net/manual/en/function.imagick-deconstructimages.php
-	 * @return bool &imagick.return.success;
+	 * @return Imagick a new Imagick object on success.
+	 * &imagick.imagickexception.throw;
 	 */
 	public function deconstructimages () {}
 
@@ -4104,6 +4181,8 @@ class ImagickDraw  {
 	 */
 	public function gettextencoding () {}
 
+	public function getfontstretch () {}
+
 	/**
 	 * Sets the font stretch to use when annotating with text
 	 * @link http://www.php.net/manual/en/function.imagickdraw-setfontstretch.php
@@ -5142,6 +5221,20 @@ class ImagickPixel  {
 	 */
 	public function sethsl ($hue, $saturation, $luminosity) {}
 
+	public function getcolorvaluequantum () {}
+
+	/**
+	 * @param color_value
+	 */
+	public function setcolorvaluequantum ($color_value) {}
+
+	public function getindex () {}
+
+	/**
+	 * @param index
+	 */
+	public function setindex ($index) {}
+
 	/**
 	 * The ImagickPixel constructor
 	 * @link http://www.php.net/manual/en/function.imagickpixel-construct.php
@@ -5251,5 +5344,5 @@ class ImagickPixel  {
 	public function clone () {}
 
 }
-// End of imagick v.2.2.2
+// End of imagick v.2.3.0
 ?>

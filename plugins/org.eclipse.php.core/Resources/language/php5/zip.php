@@ -101,9 +101,9 @@ class ZipArchive  {
 	public function close () {}
 
 	/**
-	 * Returns the status error message, system and/or zip messages.
+	 * Returns the status error message, system and/or zip messages
 	 * @link http://www.php.net/manual/en/function.ziparchive-getstatusstring.php
-	 * @return string a file pointer (resource) on success&return.falseforfailure;.
+	 * @return string a string with the status message on success&return.falseforfailure;.
 	 */
 	public function getStatusString () {}
 
@@ -328,14 +328,14 @@ class ZipArchive  {
 	public function unchangeArchive () {}
 
 	/**
-	 * Undo all changes done in the archive.
+	 * Undo all changes done in the archive
 	 * @link http://www.php.net/manual/en/function.ziparchive-unchangeall.php
 	 * @return mixed Returns true on success or false on failure.
 	 */
 	public function unchangeAll () {}
 
 	/**
-	 * Revert all changes done to an entry at the given index.
+	 * Revert all changes done to an entry at the given index
 	 * @link http://www.php.net/manual/en/function.ziparchive-unchangeindex.php
 	 * @param index int <p>
 	 * Index of the entry.
@@ -369,7 +369,7 @@ class ZipArchive  {
 	public function extractTo ($destination, $entries = null) {}
 
 	/**
-	 * Returns the entry contents using its name.
+	 * Returns the entry contents using its name
 	 * @link http://www.php.net/manual/en/function.ziparchive-getfromname.php
 	 * @param name string <p>
 	 * Name of the entry
@@ -385,7 +385,7 @@ class ZipArchive  {
 	public function getFromName ($name, $flags = null) {}
 
 	/**
-	 * Returns the entry contents using its index.
+	 * Returns the entry contents using its index
 	 * @link http://www.php.net/manual/en/function.ziparchive-getfromindex.php
 	 * @param index int <p>
 	 * Index of the entry
