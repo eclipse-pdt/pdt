@@ -182,6 +182,13 @@ function parse_phpdoc_functions ($phpdocDir) {
 					$description = $match[1].$match[6];
 					$has_object_style = true;
 				}
+				if (preg_match ('@^(.*?)<classsynopsis>.*?<classname>(.*)</classname>.*?<constructorsynopsis>.*?<methodname>(.*?)</methodname>(.*?)</constructorsynopsis>.*?</classsynopsis>(.*)$@s', $description, $match)) {
+					$functionsDoc[$refname]['classname'] = trim($match[2]);
+					$functionsDoc[$refname]['methodname'] = trim($match[3]);
+					$parameters = $match[4];
+					$description = $match[1].$match[5];
+					$has_object_style = true;
+				}				
 				if (preg_match ('@<methodsynopsis>.*?<type>(.*?)</type>.*?<methodname>(.*?)</methodname>(.*?)</methodsynopsis>@s', $description, $match)) {
 					if ($has_object_style) {
 						$function_alias = trim($match[2]);
