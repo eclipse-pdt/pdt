@@ -28,6 +28,7 @@ import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.*;
+import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -67,6 +68,8 @@ import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.correction.CompoundQuickAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 
 public class PHPStructuredTextViewerConfiguration extends
@@ -86,6 +89,7 @@ public class PHPStructuredTextViewerConfiguration extends
 	private IQuickAssistAssistant fQuickAssistant;
 	private PHPCompletionProcessor phpCompletionProcessor;
 	Map<String, IContentAssistProcessor[]> processorMap = new HashMap<String, IContentAssistProcessor[]>();
+	private ReconcilerHighlighter fHighlighter = null;
 
 	public PHPStructuredTextViewerConfiguration() {
 	}
@@ -628,4 +632,40 @@ public class PHPStructuredTextViewerConfiguration extends
 	protected StructuredContentAssistant getContentAssistant() {
 		return this.fContentAssistant;
 	}
+
+	@Override
+	public IPresentationReconciler getPresentationReconciler(
+			ISourceViewer sourceViewer) {
+		StructuredPresentationReconciler reconciler = new PHPStructuredPresentationReconciler();
+		reconciler
+				.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+
+		String[] contentTypes = getConfiguredContentTypes(sourceViewer);
+
+		if (contentTypes != null) {
+			StructuredDocumentDamagerRepairer dr = null;
+
+			for (int i = 0; i < contentTypes.length; i++) {
+				if (fHighlighter != null) {
+					LineStyleProvider provider = fHighlighter
+							.getProvider(contentTypes[i]);
+					if (provider == null)
+						continue;
+
+					dr = new StructuredDocumentDamagerRepairer(provider);
+					dr.setDocument(sourceViewer.getDocument());
+					reconciler.setDamager(dr, contentTypes[i]);
+					reconciler.setRepairer(dr, contentTypes[i]);
+				}
+			}
+		}
+
+		return reconciler;
+	}
+
+	public void setHighlighter(ReconcilerHighlighter highlighter) {
+		fHighlighter = highlighter;
+		super.setHighlighter(highlighter);
+	}
+
 }
