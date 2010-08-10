@@ -95,8 +95,8 @@ public class PHPTextSequenceUtilities {
 				if (documentOffset == startOffset) {
 					startTokenRegion = phpScriptRegion.getPhpToken(0);
 				} else {
-					startTokenRegion = phpScriptRegion
-							.getPhpToken(documentOffset - startOffset - 1);
+					startTokenRegion = phpScriptRegion.getPhpToken(offset
+							- startOffset - 1);
 				}
 				while (true) {
 					// If statement start is at the beginning of the PHP script
