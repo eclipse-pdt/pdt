@@ -11,14 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-import java.util.Map;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.StatusUtil;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -38,12 +34,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	private PHPCodeTemplateBlock fCodeTemplateConfigurationBlock;
 
 	public PHPCodeTemplatePreferencePage() {
-		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 		setDescription(PHPUIMessages.CodeTemplatesPreferencePage_title); //$NON-NLS-1$
-
-		// only used when page is shown programatically
-		// TODO -
-		// setTitle(PreferencesMessages.CodeTemplatesPreferencePage_title);
 	}
 
 	/*
@@ -171,27 +162,5 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	 */
 	protected String getPropertyPageID() {
 		return PROP_ID;
-	}
-
-	/*
-	 * @see
-	 * org.eclipse.jface.preference.PreferencePage#applyData(java.lang.Object)
-	 */
-	public void applyData(Object data) {
-		if (data instanceof Map) {
-			Object id = ((Map) data).get(DATA_SELECT_TEMPLATE);
-			if (id instanceof String) {
-				// final TemplatePersistenceData[] templates=
-				// fCodeTemplateConfigurationBlock.fTemplateStore.getTemplateData();
-				TemplatePersistenceData template = null;
-				/*
-				 * for (int index= 0; index < templates.length; index++) {
-				 * template= templates[index]; if (template.getId().equals(id))
-				 * { fCodeTemplateConfigurationBlock.postSetSelection(template);
-				 * break; } }
-				 */
-			}
-		}
-		super.applyData(data);
 	}
 }

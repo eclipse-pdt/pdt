@@ -11,14 +11,19 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import java.io.IOException;
+
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.TemplateContextType;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.viewsupport.ProjectTemplateStore;
 
 public class NewPhpTemplatesWizardPage extends
 		NewGenericFileTemplatesWizardPage {
@@ -61,5 +66,30 @@ public class NewPhpTemplatesWizardPage extends
 
 	protected String getNewFileWizardTemplatePageHelpId() {
 		return null;
+	}
+
+	@Override
+	protected ProjectTemplateStore getTemplateStore() {
+
+		IWizard wizard = getWizard();
+		IProject project = null;
+		if (wizard instanceof PHPFileCreationWizard) {
+			project = ((PHPFileCreationWizard) wizard).getProject();
+		}
+
+		ProjectTemplateStore templateStore;
+		if (ProjectTemplateStore.hasProjectSpecificTempates(project)) {
+			templateStore = new ProjectTemplateStore(project);
+		} else {
+			templateStore = new ProjectTemplateStore(null);
+		}
+
+		try {
+			templateStore.load();
+		} catch (IOException e) {
+			// Ignore the error.
+		}
+		return templateStore;
+
 	}
 }

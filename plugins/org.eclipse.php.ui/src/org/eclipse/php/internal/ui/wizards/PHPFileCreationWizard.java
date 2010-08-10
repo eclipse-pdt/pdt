@@ -271,4 +271,11 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 
 	}
 
+	public IProject getProject() {
+		if (this.phpFileCreationWizardPage != null) {
+			return phpFileCreationWizardPage.getProject();
+		}
+		return null;
+	}
+
 }

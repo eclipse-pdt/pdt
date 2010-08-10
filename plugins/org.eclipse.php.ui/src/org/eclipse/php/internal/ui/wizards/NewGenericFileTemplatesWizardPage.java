@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
@@ -21,16 +22,15 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.templates.*;
-import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.viewsupport.ProjectTemplateStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -44,7 +44,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -52,9 +51,9 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 
 /**
- * Templates page in new file wizard. Allows users to select a new file
- * template to be applied in new file.
- *
+ * Templates page in new file wizard. Allows users to select a new file template
+ * to be applied in new file.
+ * 
  */
 public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
@@ -63,7 +62,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 */
 	private class TemplateContentProvider implements IStructuredContentProvider {
 		/** The template store. */
-		private TemplateStore fStore;
+		private ProjectTemplateStore fStore;
 
 		/*
 		 * @see IContentProvider#dispose()
@@ -76,44 +75,48 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		 * @see IStructuredContentProvider#getElements(Object)
 		 */
 		public Object[] getElements(Object input) {
-			return fStore.getTemplates(NewGenericFileTemplatesWizardPage.this.getTemplateContextTypeId());
+			return fStore.getTemplates(NewGenericFileTemplatesWizardPage.this
+					.getTemplateContextTypeId());
 		}
 
 		/*
 		 * @see IContentProvider#inputChanged(Viewer, Object, Object)
 		 */
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			fStore = (TemplateStore) newInput;
+			fStore = (ProjectTemplateStore) newInput;
 		}
 	}
 
 	/**
 	 * Label provider for templates.
 	 */
-	private class TemplateLabelProvider extends LabelProvider implements ITableLabelProvider {
+	private class TemplateLabelProvider extends LabelProvider implements
+			ITableLabelProvider {
 
 		/*
-		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object,
-		 *      int)
+		 * @see
+		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java
+		 * .lang.Object, int)
 		 */
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
 		}
 
 		/*
-		 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object,
-		 *      int)
+		 * @see
+		 * org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.
+		 * lang.Object, int)
 		 */
 		public String getColumnText(Object element, int columnIndex) {
 			Template template = (Template) element;
 
 			switch (columnIndex) {
-				case 0:
-					return template.getName();
-				case 1:
-					return template.getDescription();
-				default:
-					return ""; //$NON-NLS-1$
+			case 0:
+				return template.getName();
+			case 1:
+				return template.getDescription();
+			default:
+				return ""; //$NON-NLS-1$
 			}
 		}
 	}
@@ -125,7 +128,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	/** The table presenting the templates. */
 	private TableViewer fTableViewer;
 	/** Template store used by this wizard page */
-	private TemplateStore fTemplateStore;
+	private ProjectTemplateStore fTemplateStore;
 	/** Checkbox for using templates. */
 	protected Button fUseTemplateButton;
 
@@ -136,7 +139,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	/**
 	 * Correctly resizes the table so no phantom columns appear
-	 *
+	 * 
 	 * @param parent
 	 *            the parent control
 	 * @param buttons
@@ -150,12 +153,15 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * @param column3
 	 *            the third column
 	 */
-	private void configureTableResizing(final Composite parent, final Table table, final TableColumn column1, final TableColumn column2) {
+	private void configureTableResizing(final Composite parent,
+			final Table table, final TableColumn column1,
+			final TableColumn column2) {
 		parent.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
 				Rectangle area = parent.getClientArea();
-				Point preferredSize = table.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+				Point preferredSize = table.computeSize(SWT.DEFAULT,
+						SWT.DEFAULT);
 				int width = area.width - 2 * table.getBorderWidth();
 				if (preferredSize.y > area.height) {
 					// Subtract the scrollbar width from the total column
@@ -239,10 +245,10 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		table.setLayout(tableLayout);
 
 		TableColumn column1 = new TableColumn(table, SWT.NONE);
-		column1.setText(HTMLUIMessages.NewHTMLTemplatesWizardPage_2);
+		column1.setText(Messages.NewGenericFileTemplatesWizardPage_0);
 
 		TableColumn column2 = new TableColumn(table, SWT.NONE);
-		column2.setText(HTMLUIMessages.NewHTMLTemplatesWizardPage_3);
+		column2.setText(Messages.NewGenericFileTemplatesWizardPage_1);
 
 		fTableViewer = new TableViewer(table);
 		fTableViewer.setLabelProvider(new TemplateLabelProvider());
@@ -254,10 +260,12 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 				if (object1 instanceof Template && object2 instanceof Template) {
 					Template left = (Template) object1;
 					Template right = (Template) object2;
-					int result = left.getName().compareToIgnoreCase(right.getName());
+					int result = left.getName().compareToIgnoreCase(
+							right.getName());
 					if (result != 0)
 						return result;
-					return left.getDescription().compareToIgnoreCase(right.getDescription());
+					return left.getDescription().compareToIgnoreCase(
+							right.getDescription());
 				}
 				return super.compare(viewer, object1, object2);
 			}
@@ -268,37 +276,47 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			}
 		});
 
-		fTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent e) {
-				updateViewerInput();
-			}
-		});
+		fTableViewer
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent e) {
+						updateViewerInput();
+					}
+				});
 
 		// create viewer that displays currently selected template's contents
 		fPatternViewer = doCreateViewer(parent);
 
-		fTemplateStore = PHPUiPlugin.getDefault().getTemplateStore();
-		fTableViewer.setInput(fTemplateStore);
-
 		configureTableResizing(innerParent, table, column1, column2);
-		loadLastSavedPreferences();
 
 		String helpId = getNewFileWizardTemplatePageHelpId();
 		if (helpId != null) {
 			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpId);
 		}
 		Dialog.applyDialogFont(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.NEW);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.NEW);
 		setControl(parent);
 	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		if (visible) {
+			fTemplateStore = getTemplateStore();
+			fTableViewer.setInput(fTemplateStore);
+			loadLastSavedPreferences();
+		}
+		super.setVisible(visible);
+	}
+
+	protected abstract ProjectTemplateStore getTemplateStore();
 
 	protected abstract String getNewFileWizardTemplatePageHelpId();
 
 	/**
 	 * Creates, configures and returns a source viewer to present the template
-	 * pattern on the preference page. Clients may override to provide a
-	 * custom source viewer featuring e.g. syntax coloring.
-	 *
+	 * pattern on the preference page. Clients may override to provide a custom
+	 * source viewer featuring e.g. syntax coloring.
+	 * 
 	 * @param parent
 	 *            the parent control
 	 * @return a configured source viewer
@@ -309,17 +327,24 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 			@Override
 			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-				return baseConfiguration.getConfiguredContentTypes(sourceViewer);
+				return baseConfiguration
+						.getConfiguredContentTypes(sourceViewer);
 			}
 
 			@Override
-			public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
-				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
+			public LineStyleProvider[] getLineStyleProviders(
+					ISourceViewer sourceViewer, String partitionType) {
+				return baseConfiguration.getLineStyleProviders(sourceViewer,
+						partitionType);
 			}
 		};
-		SourceViewer viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
-		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForPHP.ContentTypeID_PHP);
+		SourceViewer viewer = new StructuredTextViewer(parent, null, null,
+				false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		((StructuredTextViewer) viewer).getTextWidget().setFont(
+				JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
+		IStructuredModel scratchModel = StructuredModelManager
+				.getModelManager().createUnManagedStructuredModelFor(
+						ContentTypeIdForPHP.ContentTypeID_PHP);
 		IDocument document = scratchModel.getStructuredDocument();
 		viewer.configure(sourceViewerConfiguration);
 		viewer.setDocument(document);
@@ -328,7 +353,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	private SourceViewer doCreateViewer(Composite parent) {
 		Label label = new Label(parent, SWT.NONE);
-		label.setText(HTMLUIMessages.NewHTMLTemplatesWizardPage_5);
+		label.setText(Messages.NewGenericFileTemplatesWizardPage_2);
 		GridData data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -371,19 +396,20 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	/**
 	 * Return the template preference page id
-	 *
+	 * 
 	 * @return
 	 */
 	protected abstract String getPreferencePageId();
 
 	/**
 	 * Get the currently selected template.
-	 *
+	 * 
 	 * @return
 	 */
 	private Template getSelectedTemplate() {
 		Template template = null;
-		IStructuredSelection selection = (IStructuredSelection) fTableViewer.getSelection();
+		IStructuredSelection selection = (IStructuredSelection) fTableViewer
+				.getSelection();
 
 		if (selection.size() == 1) {
 			template = (Template) selection.getFirstElement();
@@ -393,21 +419,33 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	/**
 	 * Returns template string to insert.
-	 *
+	 * 
 	 * @return String to insert or null if none is to be inserted
 	 */
 	public CompiledTemplate compileTemplate() {
 		Template template = getSelectedTemplate();
-		return PHPTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template);
+		return PHPTemplateStore.compileTemplate(
+				getTemplatesContextTypeRegistry(), template);
+	}
+
+	public CompiledTemplate compileTemplate(String containerName,
+			String fileName) {
+		Template template = getSelectedTemplate();
+		return PHPTemplateStore.compileTemplate(
+				getTemplatesContextTypeRegistry(), template, containerName,
+				fileName);
 	}
 
 	public TemplateProposal createTemplateProposal() {
 		TemplateProposal proposal = null;
 		Template template = getSelectedTemplate();
 		if (template != null) {
-			TemplateContextType contextType = getTemplatesContextTypeRegistry().getContextType(getTemplateContextTypeId());
-			TemplateContext context = new DocumentTemplateContext(contextType, new Document(), 0, 0);
-			proposal = new TemplateProposal(template, context, new Region(0, 0), null);
+			TemplateContextType contextType = getTemplatesContextTypeRegistry()
+					.getContextType(getTemplateContextTypeId());
+			TemplateContext context = new DocumentTemplateContext(contextType,
+					new Document(), 0, 0);
+			proposal = new TemplateProposal(template, context,
+					new Region(0, 0), null);
 		}
 
 		return proposal;
@@ -415,7 +453,8 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	void linkClicked() {
 		String pageId = getPreferencePageId();
-		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), pageId, new String[] { pageId }, null);
+		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(
+				getShell(), pageId, new String[] { pageId }, null);
 		dialog.open();
 		fTableViewer.refresh();
 	}
@@ -424,7 +463,8 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * Load the last template name used in New HTML File wizard.
 	 */
 	protected void loadLastSavedPreferences() {
-		String templateName = getPreferenceStore().getString(PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
+		String templateName = getPreferenceStore().getString(
+				PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
 		if (templateName == null || templateName.length() == 0) {
 			fLastSelectedTemplateName = ""; //$NON-NLS-1$
 			fUseTemplateButton.setSelection(false);
@@ -448,14 +488,15 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			templateName = template.getName();
 		}
 
-		getPreferenceStore().setValue(PreferenceConstants.NEW_PHP_FILE_TEMPLATE, templateName);
+		getPreferenceStore().setValue(
+				PreferenceConstants.NEW_PHP_FILE_TEMPLATE, templateName);
 	}
 
 	/**
 	 * Select a template in the table viewer given the template name. If
-	 * template name cannot be found or templateName is null, just select
-	 * first item in table. If no items in table select nothing.
-	 *
+	 * template name cannot be found or templateName is null, just select first
+	 * item in table. If no items in table select nothing.
+	 * 
 	 * @param templateName
 	 */
 	private void setSelectedTemplate(String templateName) {
@@ -463,7 +504,8 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 		if (templateName != null && templateName.length() > 0) {
 			// pick the last used template
-			template = fTemplateStore.findTemplate(templateName, getTemplateContextTypeId());
+			template = fTemplateStore.findTemplate(templateName,
+					getTemplateContextTypeId());
 		}
 
 		// no record of last used template so just pick first element

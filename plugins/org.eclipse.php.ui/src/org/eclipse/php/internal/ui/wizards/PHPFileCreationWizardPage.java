@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -50,10 +47,6 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	protected Text containerText;
 	protected Text fileText;
 	private ISelection selection;
-	protected IProject project;
-	// private Combo templatesCombo;
-	// private Combo encodingCombo;
-	// EncodingSettings encodingSettings;
 
 	protected static final String UTF_8 = "UTF 8"; //$NON-NLS-1$
 	protected static final String NO_TEMPLATE = "-- none -- "; //$NON-NLS-1$
@@ -189,7 +182,6 @@ public class PHPFileCreationWizardPage extends WizardPage {
 
 			if (container != null) {
 				containerText.setText(container.getFullPath().toString());
-				this.project = container.getProject();
 			}
 		}
 		setInitialFileName(PHPUIMessages.PHPFileCreationWizardPage_8); //$NON-NLS-1$
@@ -309,6 +301,13 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	}
 
 	public IProject getProject() {
+		String projectName = getContainerName();
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IResource resource = root.findMember(new Path(projectName));
+		IProject project = null;
+		if (resource instanceof IProject) {
+			project = (IProject) resource;
+		}
 		return project;
 	}
 }
