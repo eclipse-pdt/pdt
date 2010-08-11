@@ -32,6 +32,7 @@ import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.pathmapper.*;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
@@ -1072,6 +1073,28 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 					if (debugFileName == null) {
 						debugFileName = launchConfiguration.getAttribute(
 								IPHPDebugConstants.ATTR_FILE, (String) null);
+
+						// "debug as script" map workspace files to their
+						// absolute locations
+						String remoteEntry = launchConfiguration.getAttribute(
+								IPHPDebugConstants.ATTR_FILE_FULL_PATH,
+								(String) null);
+						if (debugFileName != null && remoteEntry != null
+								&& (!debugFileName.equals(remoteEntry))) {
+							VirtualPath localPath = new VirtualPath(
+									debugFileName);
+							VirtualPath remotePath = new VirtualPath(
+									remoteEntry);
+
+							// strip file from the path
+							localPath.removeLastSegment();
+							remotePath.removeLastSegment();
+
+							Mapping mapping = new Mapping(localPath,
+									remotePath, PathEntry.Type.WORKSPACE);
+							pathMapper.addMapping(mapping);
+						}
+
 					}
 					if (debugFileName != null) {
 						IResource resource = ResourcesPlugin.getWorkspace()
