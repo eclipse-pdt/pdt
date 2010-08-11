@@ -23,6 +23,8 @@ sReplaceStringsDst[3]="\"";
 sReplaceStringsDst[4]=String.fromCharCode(128);
 sReplaceStringsDst[5]=" ";
 var goHighLighted=null;
+var c_sEnginePath='/robo/bin/robo.dll';	// roboengine path
+var gbSearchPage=false;
 
 function _getRelativePath(strParentPath,strCurrentPath)
 {
@@ -128,6 +130,13 @@ function _getFullPath(sPath,sRelPath)
 	}	
 }
 
+function _getFullPathInAIR( sSwfPath, sRelPath)
+{
+	var retPath = _getFullPath(_getPath(sSwfPath) , sRelPath);
+	var retFile = new window.runtime.flash.filesystem.File(retPath);
+	return retFile.nativePath;			
+}
+
 function _isAbsPath(strPath)
 {
 	var strUpper=strPath.toUpperCase();
@@ -143,6 +152,23 @@ function _replaceSlash(strURL)
 
 function _getPath(strURL)
 {
+	// remove the search and hash string
+	var n=0;
+	var n1=strURL.indexOf('#');
+	var n2=strURL.indexOf('?');
+	if( n1>=0 )
+	{
+		if( n2>=0 )
+				n=(n1>n2)?n2:n1;
+		else	n=n1;
+	}else
+	{
+		if( n2>=0 )
+				n=n2;
+		else	n=strURL.length;
+	};
+	strURL=strURL.substring(0, n);
+
 	pathpos=strURL.lastIndexOf("/");
 	if(pathpos>0)
 		return strURL.substring(0,pathpos+1);
@@ -213,25 +239,69 @@ function loadData_2(sFileName,sDivName)
 	}
 }
 
-function loadDataXML(sFileName)
+function IsHTTPURL(sdocPath)
+{
+    var bRetVal = true;
+    switch(window.location.protocol)
+    {
+        case "file:":
+            bRetVal = false;
+            break;
+    }
+    return bRetVal;
+}
+
+function loadDataXML(sFileName,bAsync)
+{
+try
 {
 	var sCurrentDocPath=_getPath(document.location.href);
+	var bAsyncReq = true ;
+	if (bAsync !='undefined' )
+		bAsyncReq = bAsync ;
 	sdocPath=_getFullPath(sCurrentDocPath,sFileName);
 	if(gbIE5)
 	{
-		xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
-		xmlDoc.async=true;
-		xmlDoc.onreadystatechange=checkState;
-		if(document.body!=null)
-			xmlDoc.load(sdocPath);
+		// use xmlhttp for 304 support, xmldom doesn't support it, IE5 or later
+		var bIsHTTPURL = false;
+		if(gbAIRSSL)
+		{
+		    bIsHTTPURL = IsHTTPURL(sdocPath);
+		}
+		else
+		    bIsHTTPURL = mrIsOnEngine();
+
+	    if( bIsHTTPURL )
+	    {
+		    xmlDoc=new ActiveXObject("Microsoft.XMLHTTP");
+		    xmlDoc.onreadystatechange=checkState;
+		    if(document.body!=null)
+		    {
+			    xmlDoc.Open("get", sdocPath, bAsyncReq);
+			    xmlDoc.Send("");
+		    };
+	    }else
+	    {
+		    xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+		    xmlDoc.onreadystatechange=checkState;
+		    xmlDoc.async=bAsyncReq;
+		    if(document.body!=null)
+			    xmlDoc.load(sdocPath);
+	    };
 	}
-	else if(gbNav6)
+	else if(gbNav6 && !gbAIR)
 	{
-		xmlDoc=document.implementation.createDocument("","",null);
+		/*xmlDoc=document.implementation.createDocument("","",null);
 		xmlDoc.addEventListener("load",initializeData,false);
-		xmlDoc.load(sdocPath,"text/xml");
+		xmlDoc.load(sdocPath,"text/xml");*/
+
+		var req=new XMLHttpRequest();
+     		req.open("GET", sdocPath, false);   
+		req.send(null);   
+		xmlDoc = req.responseXML;
+		initializeData();
 	}
-	else if(gbSafari3)
+	else if(gbSafari || gbAIR)
 	{
 	        if(window.XMLHttpRequest && !(window.ActiveXObject)) 
         	{
@@ -239,11 +309,15 @@ function loadDataXML(sFileName)
             		if(xmlHttp)
             		{
   	            		xmlHttp.onreadystatechange=onXMLResponse;
-		        	xmlHttp.open("GET", sdocPath, true);
+		        	xmlHttp.open("GET", sdocPath, false);
 		        	xmlHttp.send(null);
 	        	}
         	}
 	}
+}catch(e)
+{
+    onLoadXMLError();
+}
 }
 
 function onXMLResponse()
@@ -278,6 +352,10 @@ function checkState()
 		var state=xmlDoc.readyState;
 		if(state==4)
 		{
+			// engine version uses xmlhttp, xml data in the responseXML
+			if( xmlDoc.responseXML!=null )
+				xmlDoc=xmlDoc.responseXML;
+
 			var err=xmlDoc.parseError;
 			if(err.errorCode==0)
 				putDataXML(xmlDoc,sdocPath);
@@ -332,10 +410,6 @@ function window_BUnload()
 
 function removeThis(obj)
 {
-    if(gbSafari3)
-    {
-        return;
-    }
 	if(obj.parentNode)
 		obj.parentNode.removeChild(obj);
 	else
@@ -497,17 +571,7 @@ function getFontStyle(oFont)
 	if(oFont)
 	{
 		sStyle+="font-family:"+oFont.sName+";";
-		if(gbMac)
-		{
-			var nSize=parseInt(oFont.sSize);
-			if(gbIE5)
-				nSize+=2;
-			else
-				nSize+=4;
-			sStyle+="font-size:"+nSize+"pt;";
-		}
-		else
-			sStyle+="font-size:"+oFont.sSize+";";
+		sStyle+="font-size:"+oFont.sSize+";";
 			
 		sStyle+="font-style:"+oFont.sStyle+";";
 		sStyle+="font-weight:"+oFont.sWeight+";";
@@ -545,7 +609,8 @@ function _browserStringToText(sBStr)
 
 function IsInternal(urlName)
 {
-	if(urlName.indexOf(":")==-1 && urlName.indexOf("&#58;")==-1)
+	if(urlName.indexOf(":") == -1 && urlName.indexOf("&#58;")== -1 && urlName.indexOf("//") != 0 && 
+			urlName.indexOf("/&#47;") != 0 && urlName.indexOf("&#47;/") != 0 && urlName.indexOf("&#47;&#47;") != 0)
 		return true;
 	else
 		return false;
@@ -582,6 +647,71 @@ function excapeSingleQuotandSlash(str)
 	return sRes;
 }
 
+// used by roboengine
+function mrGetRootWindow()
+{
+	var cWnd=window;
+
+	while(cWnd!=null)
+	{
+		if( cWnd.cMRServer!=null && String(cWnd.cMRServer)!='undefined' )
+		{
+			return cWnd;
+		};
+
+		cWnd=cWnd.parent;
+	};
+
+	return null;
+};
+
+function mrGetProjName()
+{
+	var cRoot=mrGetRootWindow();
+	if( cRoot==null ) return '';
+
+	var sTags=unescape(cRoot.location.search);
+	if( sTags=='' )
+		sTags=unescape(cRoot.location.hash);
+
+	var nStart, nEnd1, nEnd2;
+	var sName='';
+
+	if( (nStart=sTags.indexOf('prj='))>=0 )
+	{
+		if( (nEnd=sTags.indexOf('&', nStart))<0 ) nEnd=sTags.length;
+		if( (nEnd1=sTags.indexOf('>', nStart))<0 ) nEnd1=sTags.length;
+		if( nEnd>nEnd1 ) nEnd=nEnd1;
+		sName=sTags.substring(nStart+4, nEnd);
+	};
+
+	return sName;
+};
+
+function mrInitialize()
+{
+	var sProjName=mrGetProjName();
+	var cRoot=mrGetRootWindow();
+
+	if( sProjName!='' && cRoot!=null )
+	{
+		cRoot.cMRServer.m_bEngine=true;
+		cRoot.cMRServer.m_sProjName=sProjName;
+	};
+};
+
+function mrIsOnEngine()
+{
+	var cRoot=mrGetRootWindow();
+
+	return cRoot && cRoot.cMRServer && cRoot.cMRServer.m_bEngine==true;
+};
+
+function mrGetEngineUrl()
+{
+	return c_sEnginePath;
+};
+
 function    getClientHeight()
 {
     if(gbSafari3)
@@ -591,5 +721,66 @@ function    getClientHeight()
     return document.body.clientHeight;
     
 }
+
+function PatchParametersForEscapeChar(sParam)
+{
+	var sresult = sParam;
+	if(gbSafari)
+	{
+		sresult = sresult.replace(/%3c/gi,"<");
+		sresult = sresult.replace(/%3e/gi,">");
+	}
+	return sresult;
+}
+function SeeForSearch(strProjectDir)
+{
+
+	if(gbAIRSSL && gbSearchPage)
+	{
+		loadFts_context(strProjectDir);
+		goOdinHunter.strQuery = GetSearchTextFromURL();
+		Query();
+	}
+}
+var RH_BreadCrumbDataStringVariable="";
+function RH_Document_Write(szText)
+{
+	RH_BreadCrumbDataStringVariable+=szText;
+}
+
+function RH_AddMasterBreadcrumbs(relHomePage,styleInfo, separator, strHome, strHomePath)
+{
+	delete gaBreadcrumbsTrail;
+	gaBreadcrumbsTrail = new Array();
+	var sTopicFullPath = _getPath(document.location.href);
+	var sXmlFullPath = _getFullPath(sTopicFullPath, relHomePage);
+	var sXmlFolderPath = _getPath(sXmlFullPath);
+	var sdocPath = _getFullPath(sXmlFolderPath, "MasterData.xml");
+
+	try
+	{
+			GetMasterBreadcrumbs(sdocPath, styleInfo, separator);
+	}
+	catch(err)
+	{
+		//some error occurred while reading masterdata.xml
+	}
+	var i = gaBreadcrumbsTrail.length;
+	if(i == 0)
+	{
+	    var strTrail = "<a style=\""+ styleInfo + "\"" + " href=\"" + strHomePath + "\">" + strHome + "</a> " + separator + " ";
+	    RH_Document_Write(strTrail);
+	}
+	else
+	{
+		while(i > 0)
+		{
+			RH_Document_Write(gaBreadcrumbsTrail[i-1]);
+			i--;
+		}
+	}
+	return;
+}
+	
 
 var gbWhUtil=true;

@@ -1,0 +1,411 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Configuring a Project's PHP Build Path</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("Tasks\nConfiguring a Project's PHP Build Path");
+addAvenueInfo("Tasks","adding_elements_to_a_project_s_include_path.htm","adding_a_server_path_map.htm");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"tasks.htm\">Tasks<\/a> &gt; Configuring a Project's PHP Build Path<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ">Documentation 
+	 Survey</a> 
+	 | <a href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1>Configuring a Project's PHP Build Path 
+ </h1>
+<p>By configuring your project's PHP Build Path, you can select resources 
+ which will be included or excluded from the Build process.</p>
+<p class="Note">Note:</p>
+<p class="NoteText">If during project creation you selected the 'use project 
+ as source folder' under the Project Layout category, all resources within 
+ the folder will be added to the Build Path by default.<br>
+If you selected to 'create separate folders for source files and public 
+ resources' during the project's creation, resources in the 'public' folder 
+ will be excluded from the Build Path by default.</p>
+<p>The project's PHP Build Path can be configured through the project's 
+ Build Path properties page, accessed by right-clicking the required project 
+ and selecting Build Path | Configure Build Path.</p>
+<p class="picture"><img src="build_path_properties.png" alt="build_path_properties.png" style="border: none;" width="297" height="263" border="0"></p>
+
+<p>This page allows you to add folders and resources to your Build Path 
+ and configure rules for including / excluding certain resources in the 
+ project.</p>
+<p style="font-weight: normal;">You can configure your Build Path according 
+ to the options listed below.</p>
+<p style="font-weight: normal;">Once you have made changes, click OK to 
+ save.</p>
+<p class="Note">Note:</p>
+<p class="NoteText">By default, all folders which are on your Build Path 
+ will be included in your Include Path.</p>
+<h3><a name="include_exclude_build_path1" id="include_exclude_build_path1"></a>Configuring 
+ Inclusion/Exclusion Patterns for the Project</h3>
+<p>By configuring inclusion/exclusion patterns for the Build Path, you 
+ can select to include or exclude all resources in your project which match 
+ a defined pattern.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To include/exclude resources from 
+		 the Build Path:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px;"><p>In the Build Path 
+			 Properties page, expand the node next to the folder whose 
+			 Inclusion/Exclusion pattern you want to configure and click 
+			 Edit.<br>
+			-Or- In PHP Explorer view, right-click the folder whose Inclusion/Exclusion 
+			 pattern you want to configure and select Build Path | Configure 
+			 Inclusion / Exclusion Filters.<br>
+			The Inclusion and Exclusion patterns dialog is displayed.</p></li>
+		</ol>
+		<ol start="2" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click Add next 
+			 to the Inclusion or Exclusion patterns panes.<br>
+			The Add Inclusion/Exclusion Pattern dialog is displayed.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Enter or select 
+			 the required resource(s) or pattern to include / exclude and 
+			 click OK.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click Finish.</p></li>
+		</ol></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>All 
+		 resources in the project which match an inclusion pattern but 
+		 do not match an exclusion pattern will be added to the Build Path.</p></td>
+		
+	</tr>
+</table>
+<h3>Configuring Different Inclusion/Exclusion Patterns for Folders Within 
+ your Project</h3>
+<p>You can configure different inclusion/exclusion rules for child folders 
+ within a selected directory. However, you will need to exclude the selected 
+ child folder from the parent directory's Build Path and add it as a separate 
+ Build Path source folder. This is done to resolve any conflicts which 
+ may arise from configuring one pattern for the parent folder and another 
+ for the child.</p>
+<p>Source folders can be created and/or added from the PHP Build Path properties 
+ page or from PHP Explorer view.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To add a directory as a separate 
+		 source folder:</p>
+		<p style="font-weight: normal; text-decoration: underline; ">From 
+		 the PHP Build Path Properties page:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">Click Add Folder...<br>
+			The Source Folder Selection dialog will display.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">If necessary, click Create 
+			 New Folder to create a new folder.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p>Select 
+			 the required folder and click OK.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p>The 
+			 folder will be added as a separate source folder in the Build 
+			 Path list.</p></li>
+		</ol>
+		<p class="Note">Note:</p>
+		<p class="NoteText">In order to overcome the nesting conflict, 
+		 &#160;you should exclude the folder you have just added from the 
+		 parent folder's Build Path. See '<a href="#include_exclude_build_path1">Configuring 
+		 Inclusion/Exclusion Patterns</a>', above, for information on how 
+		 to exclude the folder and all resources contained within it.</p>
+		<p class="picture"><img src="build_path_add_source_folder.png" alt="build_path_add_source_folder.png" style="border: none;" width="363" height="228" border="0"></p>
+		
+		<p style="font-weight: normal; text-decoration: underline; ">From 
+		 PHP Explorer view:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p>Right-click 
+			 the project and select Build Path | New Source Folder.<br>
+			The New Source Folder dialog will be displayed.</p></li>
+		</ol>
+		<p class="picture"><img src="build_path_new_source_folder.png" alt="build_path_new_source_folder.png" style="border: none;" width="350" height="208" border="0"></p>
+		
+		
+		<ol start="2" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Enter the name 
+			 for the new folder in the Folder name field.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Adding a folder 
+			 to a project's Build Path could cause a conflict between the 
+			 inclusion/exclusion patterns configured for the project root 
+			 and those configured for the selected folder.<br>
+			In order to avoid these nesting conflicts, select one of the 
+			 following options:</p></li>
+		</ol>
+		<ul type="square">
+			<li><p>Replace existing project source folder entry to solve 
+			 nesting - This will remove your parent directory as a source 
+			 folder from the Build Path configuration and replace it with 
+			 the currently selected folder.</p></li>
+			<li><p>Update exclusion filters in other source folders to 
+			 solve nesting - This will exclude the currently selected folder 
+			 from the parent directory's Build Path but will add it as 
+			 a separate entity so that different inclusion/exclusion patters 
+			 can be configured for it.</p></li>
+		</ul>
+		<ol start="4" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click Finish.</p></li>
+		</ol></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>You 
+		 can now configure a pattern for including/excluding resources 
+		 for the source folder by following the instructions under '<a 
+		 href="#include_exclude_build_path1">Configuring Inclusion/Exclusion 
+		 Patterns</a>', above.</p></td>
+		
+	</tr>
+</table>
+<h3>Adding External Source Folders to the Build Path</h3>
+<p>You can add an external source folder as a link to your project which 
+ will be scanned during the Build process.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To add an external source folder 
+		 to the project's Build Path:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p>In 
+			 the Build Path Properties page, click the 'Link Source...' 
+			 button.<br>
+			-Or- In PHP Explorer view, right-click the project and select 
+			 Build Path | Link Source.<br>
+			The Link Source dialog is displayed.</p></li>
+		</ol>
+		<p class="picture"><img src="build_path_link_source.png" alt="build_path_link_source.png" style="border: none;" width="350" height="253" border="0"></p>
+		
+		
+		<ol start="2" type="1">
+			<li style="margin-left: -20px; font-family: Arial, sans-serif;">Click 
+			 the 'Browse..' button and browse to the location of the folder 
+			 you want to add to the Build Path.<br>
+			Alternately, click Variables and select the variable which 
+			 points to the required resource.</li>
+			<li style="margin-left: -20px; font-family: Arial, sans-serif;">The 
+			 Folder name field will have been automatically populated with 
+			 the name of the original folder.<br>
+			Edit this entry if required.</li>
+			<li style="margin-left: -20px; font-family: Arial, sans-serif;">Adding 
+			 a folder to a project's Build Path could cause a conflict 
+			 between the inclusion/exclusion patterns configured for the 
+			 project root and those configured for the selected folder.<br>
+			In order to avoid these nesting conflicts, select one of the 
+			 following options:</li>
+		</ol>
+		<ul type="square">
+			<li><p>Replace existing project source folder entry to solve 
+			 nesting - This will remove your parent directory as a source 
+			 folder from the Build Path configuration and replace it with 
+			 the currently selected folder.</p></li>
+			<li><p>Update exclusion filters in other source folders to 
+			 solve nesting - This will exclude the currently selected folder 
+			 from the parent directory's Build Path but will add it as 
+			 a separate entity so that different inclusion/exclusion patters 
+			 can be configured for it.</p></li>
+			<li><p>Ignore nesting conflicts - The selected folder will 
+			 be added as a separate entity to the Build Path list but will 
+			 need to be manually excluded from the project root's Build 
+			 Path to avoid nesting conflicts.</p></li>
+		</ul>
+		<ol start="5" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click Finish.</p></li>
+		</ol></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>The 
+		 folder will be added to your Build Path and displayed in the Build 
+		 Path list.</p>
+		<p style="font-weight: normal;">You can now configure a pattern 
+		 for including/excluding resources for the linked folder by following 
+		 the instructions under '<a href="#include_exclude_build_path1">Configuring 
+		 Inclusion/Exclusion Patterns</a>', above.</p></td>
+		
+	</tr>
+</table>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top; 
+											 height: 16px;">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top; 
+											 height: 35px;">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" alt="link_icon.png" style="border: none;" width="32" height="40" border="0"> </p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p><span 
+		 style="font-weight: bold;"><b>Related Links:</b></span><a href="adding_elements_to_a_project_s_include_path.htm"><br>
+		Configuring a Project's Include Path</a></p></td>
+	</tr>
+	<tr style="vertical-align: top; 
+											 height: 19px;">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+</table>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

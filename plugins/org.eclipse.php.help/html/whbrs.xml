@@ -1,0 +1,172 @@
+﻿<?xml version='1.0' encoding='utf-8' ?>
+<browsesequencelist version="1.0">
+	
+	<browsesequence name="Concepts" >
+		<item name="PHP Version Support" link="php_support.htm" />
+		<item name="Content Assist" link="code_assist_concept.htm" />
+		<item name="Syntax Coloring" link="syntax_highlighting.htm" />
+		<item name="Automatic Completion" link="automatic_insertion.htm" />
+		<item name="Matching Brackets" link="matching_brackets.htm" />
+		<item name="Mark Occurrences" link="mark_occurrences.htm" />
+		<item name="Code Folding" link="code_folding.htm" />
+		<item name="Code Commenting" link="commenting_code.htm" />
+		<item name="Hover Support" link="hover_support.htm" />
+		<item name="Override Indicators" link="override_indicators.htm" />
+		<item name="PHP Working Sets" link="php_working_sets.htm" />
+		<item name="Type Hierarchy" link="show_type_hierarchy.htm" />
+		<item name="PHP Manual Integration" link="php_manual_integration.htm" />
+		<item name="Real Time Error Detection" link="real_time_error_detection.htm" />
+		<item name="Running" link="running.htm" />
+		<item name="Debugging" link="debugging_concept.htm" />
+		<item name="Breakpoints" link="breakpoints.htm" />
+		<item name="PHP Include Paths" link="include_paths.htm" />
+		<item name="PHP Build Path" link="build_paths.htm" />
+		<item name="Path Mapping" link="path_mapping.htm" />
+		<item name="JavaScript Support" link="javascript.htm" />
+		<item name="Mylyn Integration" link="mylyn_integration.htm" />
+		<item name="Phar Integration" link="phar_integration.htm" />
+		<item name="phpDoc Block Comments" link="phpdoc_comments.htm" />
+		<item name="Bookmarks" link="bookmarks.htm" />
+	</browsesequence>
+	<browsesequence name="Getting Started" >
+		<item name="Quick Start" link="quick_start.htm" />
+		<item name="Basic Tutorials" link="basic_tutorial.htm" />
+		<item name="Creating Projects and Files" link="creating_and_uploading_a_project.htm" />
+		<item name="Working with Content Assist" link="working_with_code_assist.htm" />
+		<item name="Working with the Debugger" link="working_with_the_debugger.htm" />
+	</browsesequence>
+	<browsesequence name="Reference" >
+		<item name="PHP Perspectives and Views" link="php_perspectives_and_views.htm" />
+		<item name="PHP Perspective Menus" link="menus.htm" />
+		<item name="PHP Perspective Main Toolbar" link="php_perspective_main_toolbar.htm" />
+		<item name="PHP Preferences" link="preferences.htm" />
+		<item name="PHP Project Properties" link="php_project_properties.htm" />
+		<item name="PHP Icons" link="php_icons.htm" />
+		<item name="Keymap" link="keymap.htm" />
+		<item name="PHP Perspective" link="php_perspective_views.htm" />
+		<item name="PHP Debug Perspective" link="php_debug_perspective.htm" />
+		<item name="PHP Explorer View" link="php_explorer_view.htm" />
+		<item name="Outline View" link="php_outline_view.htm" />
+		<item name="Type Hierarchy View" link="type_hierarchy_view.htm" />
+		<item name="Debug View" link="debug_view.htm" />
+		<item name="Variables View" link="variables_view.htm" />
+		<item name="Breakpoints View" link="breakpoints_view.htm" />
+		<item name="Parameter Stack View" link="parameter_stack.htm" />
+		<item name="Debug Output View" link="debug_output_view.htm" />
+		<item name="Browser Output View" link="browser_output_view.htm" />
+		<item name="Expressions View" link="expressions_view.htm" />
+		<item name="PHP Functions View" link="php_functions_view.htm" />
+		<item name="PHP Project Outline View" link="project_outline_view.htm" />
+		<item name="File Menu" link="file.htm" />
+		<item name="Edit Menu" link="edit.htm" />
+		<item name="Source Menu" link="source.htm" />
+		<item name="Refactor Menu" link="refactor.htm" />
+		<item name="Navigate Menu" link="navigate.htm" />
+		<item name="Search Menu" link="search.htm" />
+		<item name="Project Menu" link="project.htm" />
+		<item name="Run Menu" link="run.htm" />
+		<item name="Navigation Submenu" link="navigation.htm" />
+		<item name="Window Menu" link="window.htm" />
+		<item name="Help Menu" link="help.htm" />
+		<item name="New Submenu" link="new.htm" />
+		<item name="Import Submenu" link="import.htm" />
+		<item name="Export" link="export.htm" />
+		<item name="PHP" link="php.htm" />
+		<item name="Appearance" link="appearance.htm" />
+		<item name="Debug Preferences" link="debug.htm" />
+		<item name="Editor" link="editor.htm" />
+		<item name="New Project Layout Preferences" link="new_project_layout_preferences.htm" />
+		<item name="PHP Executables Preferences" link="php_executables.htm" />
+		<item name="PHP Interpreter" link="php_interpreter.htm" />
+		<item name="PHP Manual Preferences" link="php_manual.htm" />
+		<item name="PHP Servers" link="php_servers.htm" />
+		<item name="Configuring Tunneling Debug Preferences" link="configuring_tunneling_debug_preferences.htm" />
+		<item name="Code Templates Preferences" link="code_templates_preferences.htm" />
+		<item name="Formatter" link="formatter.htm" />
+		<item name="Installed Debuggers" link="installed_debuggers.htm" />
+		<item name="Step Filtering Preferences" link="step_filtering_preferences.htm" />
+		<item name="Workbench Options" link="launching.htm" />
+		<item name="Content Assist Preferences" link="code_assist.htm" />
+		<item name="Code Folding" link="folding.htm" />
+		<item name="Hovers Preferences" link="hovers.htm" />
+		<item name="Mark Occurrences" link="mark_occurences.htm" />
+		<item name="Save Actions" link="save_actions.htm" />
+		<item name="Syntax Coloring" link="syntax_coloring.htm" />
+		<item name="Task Tags" link="task_tags.htm" />
+		<item name="Templates" link="templates.htm" />
+		<item name="Typing" link="typing.htm" />
+		<item name="Resource Properties" link="resource_properties.htm" />
+		<item name="Builders Properties" link="builders_properties.htm" />
+		<item name="PHP Build Path Properties" link="php_build_path_properties.htm" />
+		<item name="Formatter Properties" link="formatter_properties.htm" />
+		<item name="PHP Debug Properties" link="php_debug_properties.htm" />
+		<item name="PHP Include Path Properties" link="php_include_path_properties.htm" />
+		<item name="PHP Interpreter Properties" link="php_interpreter_properties.htm" />
+		<item name="PHP Task Tags Properties" link="php_task_tags_properties.htm" />
+		<item name="Project References Properties" link="project_references_properties.htm" />
+		<item name="Refactoring History" link="refactoring_history.htm" />
+		<item name="Run/Debug Settings Properties" link="run_debug_settings_properties.htm" />
+		<item name="Save Actions Properties" link="save_actions_properties.htm" />
+		<item name="Task Tags Properties" link="task_tags_properties.htm" />
+		<item name="Validation Properties" link="validation_properties.htm" />
+		<item name="Code Templates Properties" link="code_templates_properties.htm" />
+		<item name="Formatter Properties" link="formatter_properties.htm" />
+		<item name="PHP Libraries Preferences" link="php_libraries_preferences.htm" />
+	</browsesequence>
+	<browsesequence name="Tasks" >
+		<item name="Creating PHP Projects" link="creating_php_projects.htm" />
+		<item name="Creating PHP Files" link="file_creation.htm" />
+		<item name="Using Content Assist" link="using_code_assist.htm" />
+		<item name="Using Templates" link="using_templates.htm" />
+		<item name="Formatting Code" link="formatting_code.htm" />
+		<item name="Using Code Folding" link="using_code_folding.htm" />
+		<item name="Searching for PHP Elements" link="searching_for_php_elements.htm" />
+		<item name="Opening PHP Elements" link="opening_php_elements.htm" />
+		<item name="Opening Types/Methods" link="opening_types_methods.htm" />
+		<item name="Using Smart Goto Source" link="using_smart_goto_source.htm" />
+		<item name="Viewing Type Hierarchies" link="viewing_type_hierarchies.htm" />
+		<item name="Creating PHP Working Sets" link="creating_php_working_sets.htm" />
+		<item name="Using Mark Occurrences" link="using_mark_occurrences.htm" />
+		<item name="Adding Comments" link="how_to_comment_and_uncomment_php_code.htm" />
+		<item name="Adding PHP DocBlock Comments" link="commenting_php_docblocks.htm" />
+		<item name="Running Files and Applications" link="running_files_and_applications.htm" />
+		<item name="Using the Debugger" link="debugging.htm" />
+		<item name="Configuring a Project's PHP Include Path" link="adding_elements_to_a_project_s_include_path.htm" />
+		<item name="Configuring a Project's PHP Build Path" link="configuring_build_paths.htm" />
+		<item name="Adding a Server Location Path Map" link="adding_a_server_path_map.htm" />
+		<item name="Creating and opening HTML files" link="using_the_php_html_wysywig_editor.htm" />
+		<item name="Working with Mylyn Integration" link="mylyn_integration1.htm" />
+		<item name="Developing with JavaScript" link="using_javascript.htm" />
+		<item name="Creating a PHP File within a Project" link="creating_a_php_file_within_a_project.htm" />
+		<item name="Creating a PHP File Outside of a Project" link="creating_a_new_php_file_outside_of_a_project.htm" />
+		<item name="Opening an External File" link="opening_an_external_file_in_neon.htm" />
+		<item name="Accessing an Existing CVS Checkout" link="accessing_an_existing_cvs_checkout.htm" />
+		<item name="Running PHP Scripts Locally" link="running_php_scripts_locally.htm" />
+		<item name="Running PHP Scripts Remotely" link="running_php_scripts_remotely.htm" />
+		<item name="Running PHP Web Pages" link="running_php_web_pages.htm" />
+		<item name="Setting Breakpoints" link="setting_breakpoints.htm" />
+		<item name="Locally Debugging a PHP Script" link="locally_debugging_a_php_script.htm" />
+		<item name="Debugging a PHP Web Page" link="debugging_a_php_web_page.htm" />
+		<item name="Running and Analyzing Debugger Results" link="analyzing_debugger_results.htm" />
+		<item name="Setting Up Remote Debugging" link="troubleshooting_remote_debugging.htm" />
+		<item name="Setting your Environment to be an Allowed Host" link="setting_your_zend_studio_for_eclipse_to_be_an_allowed_host.htm" />
+		<item name="Ensuring the Placement of dummy.php" link="ensuring_the_placement_of_dummy.php.htm" />
+		<item name="Adding a Server Location Path Map" link="adding_a_server_path_map.htm" />
+		<item name="Enabling JavaScript Support in PHP Projects" link="enabling_javascript_support_in_php_projects.htm" />
+		<item name="Setting the JavaScript Build Path" link="setting_the_javascript_build_path.htm" />
+		<item name="Viewing JavaScript Elements in the Outline View" link="viewing_javascript_elements_in_the_outline_view.htm" />
+		<item name="Using JavaScript Content Assist" link="using_javascript_content_assist.htm" />
+		<item name="Using JavaScript Syntax Coloring" link="using_javascript_syntax_coloring.htm" />
+		<item name="Using JavaScript Mark Occurrences" link="using_javascript_mark_occurences.htm" />
+	</browsesequence>
+	<browsesequence name="Untitled" >
+		<item name="PDT Table of Contents" link="pdt_table_of_contents.htm" />
+		<item name="What's New in PDT 2.0" link="what_s_new_in_pdt_2.0.htm" />
+		<item name="Getting Started" link="getting_started.htm" />
+		<item name="Concepts" link="concepts.htm" />
+		<item name="Tasks" link="tasks.htm" />
+		<item name="Reference" link="reference.htm" />
+		<item name="Video Tutorials" link="video_tutorials.htm" />
+	</browsesequence>
+</browsesequencelist>
+

@@ -10,13 +10,13 @@ if (location.hash.length > 1)
 	if (nPos>1)
 	{
 		if(IsInternal(location.hash.substring(1, nPos)))
-			gsTopic = _textToHtml(location.hash.substring(1, nPos));
+			gsTopic = location.hash.substring(1, nPos);
 		parseParam(location.hash.substring(nPos+2));
 	}
 	else
 	{
 		if(IsInternal(location.hash.substring(1)))
-			gsTopic = _textToHtml(location.hash.substring(1));
+			gsTopic = location.hash.substring(1);
 	}
 }
 

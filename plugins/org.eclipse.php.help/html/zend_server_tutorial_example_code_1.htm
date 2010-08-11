@@ -1,0 +1,210 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Zend Server Tutorial Example Code 1</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("Zend Server Tutorial Example Code 1<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ">Documentation 
+	 Survey</a> 
+	 | <a href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1 style="color: #00709e;">Zend Server Tutorial Example Code 1
+</h1>
+<p class="Note">Note:</p>
+<p class="NoteText">Remember to delete the PHP tags that are inserted by default when creating a new PHP file before pasting in the code.</p>
+<p>Copy this code into your editor to test Zend Server Event Profiling:</p>
+<p class="code">&lt;?php</p>
+<p class="code">/**</p>
+<p class="code">&#160;* Converts Fahrenheit to Celsius (and back again)</p>
+<p class="code">&#160;*</p>
+<p class="code">&#160;* This sample application takes a number of degrees entered by the user and</p>
+<p class="code">&#160;* converts them from Fahrenheit to Celsius or vice versa</p>
+<p class="code">&#160;* &#160;</p>
+<p class="code">&#160;*/</p>
+<p class="code">?&gt;</p>
+<p class="code">&lt;html&gt;</p>
+<p class="code">&lt;head&gt;</p>
+<p class="code">&lt;title&gt;Fahrenheit / Celsius PHP Convertor&lt;/title&gt;</p>
+<p class="code">&lt;/head&gt;</p>
+<p class="code">&lt;body&gt;</p>
+<p class="code">&lt;h1&gt;Fahrenheit / Celsius PHP Convertor&lt;/h1&gt;</p>
+<p class="code">&lt;form method="get"&gt;</p>
+<p class="code">Enter number of degrees: &lt;input type="text" name="degrees" /&gt;&lt;br /&gt;</p>
+<p class="code">&lt;select name="conversion"&gt;</p>
+<p class="code">&lt;option value="ctf"&gt;Celsius to Fahrenheit&lt;/option&gt;</p>
+<p class="code">&lt;option value="ftc"&gt;Fahrenheit to Celsius&lt;/option&gt;</p>
+<p class="code">&lt;/select&gt;</p>
+<p class="code">&lt;input type="submit" value="Convert!" /&gt;</p>
+<p class="code">&lt;/form&gt;</p>
+<p class="code">&lt;?php</p>
+<p class="code">function myFunction(){</p>
+<p class="code">$degrees = (int) $_GET['degrees'];</p>
+<p class="code">&#160;</p>
+<p class="code">switch($_GET['conversion']) {</p>
+<p class="code">&#160;</p>
+<p class="code">// Convert Celsius to Fahrenheit</p>
+<p class="code">case 'ctf':</p>
+<p class="code">convertCTF($degrees);</p>
+<p class="code">break;</p>
+<p class="code">// Convert Fahrenheit to Celcius</p>
+<p class="code">case 'ftc':</p>
+<p class="code">convertFTC($degrees);</p>
+<p class="code">break;</p>
+<p class="code">}</p>
+<p class="code">&#160;</p>
+<p class="code">&#160;</p>
+<p class="code">&#160;</p>
+<p class="code">//create a slow down in performance</p>
+<p class="code">for ($a=0 ; $a&lt;10000 ; $a++){</p>
+<p class="code">for ($b=0 ; $b&lt;1000 ; $b++){</p>
+<p class="code">$c++;</p>
+<p class="code">}</p>
+<p class="code">}</p>
+<p class="code">}</p>
+<p class="code">function convertCTF($degrees){</p>
+<p class="code">$result = sprintf("%0.2f", $degrees * 9 / 5 + 32);</p>
+<p class="code">$message = "$degrees&amp;deg; Celsius is $result&amp;deg; Fahrenheit";</p>
+<p class="code">printMessage($message);</p>
+<p class="code">}</p>
+<p class="code">function convertFTC($degrees){</p>
+<p class="code">$result = sprintf("%0.2f", ($degrees - 32) * 5 / 9);</p>
+<p class="code">$message = "$degrees&amp;deg; Fahrenheit is $result&amp;deg; Celsius";</p>
+<p class="code">printMessage($message);</p>
+<p class="code">}</p>
+<p class="code">function printMessage($message){</p>
+<p class="code">echo "&lt;hr /&gt;&lt;strong&gt;&lt;em&gt;$message&lt;/em&gt;&lt;/strong&gt;&lt;hr /&gt;";</p>
+<p class="code">}</p>
+<p class="code">if (isset($_GET['degrees']) &amp;&amp; isset($_GET['conversion'])) {</p>
+<p class="code">myFunction();</p>
+<p class="code">}</p>
+<p class="code">?&gt;</p>
+<p class="code">&lt;/body&gt;</p>
+<p class="code">&lt;/html&gt;</p>
+<p align="right"><a href="working_with_zend_server.htm#Zend_Server_Profiling">Back to "Working with Zend Server"</a></p>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

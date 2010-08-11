@@ -34,7 +34,7 @@ function delayReload()
 var gsToolbarOrder = "";
 var gsMinibarOrder = "";
 
-var gsTopic = "toc.htm";
+var gsTopic = "pdt_table_of_contents.htm";
 var PANE_OPT_SEARCH = 1;
 var PANE_OPT_BROWSESEQ = 2;
 var gnOpts=-1;
@@ -47,6 +47,7 @@ var gbHasTitle=false;
 if (location.hash.length > 1)
 {
 	var sParam = location.hash;
+	sParam = PatchParametersForEscapeChar(sParam);
 	if (sParam.indexOf("#<") == 0)
 	{
 		document.location = "whcsh_home.htm#" + sParam.substring(2);
@@ -62,13 +63,13 @@ if (location.hash.length > 1)
 		if (nPos>1)
 		{
 			if(IsInternal(sParam.substring(1, nPos)))
-				gsTopic = _textToHtml(sParam.substring(1, nPos));
+				gsTopic = sParam.substring(1, nPos);
 			parseParam(sParam.substring(nPos+2));
 		}
 		else
 		{
 			if(IsInternal(sParam.substring(1)))
-				gsTopic = _textToHtml(sParam.substring(1));
+				gsTopic = sParam.substring(1);
 		}
 	}
 	if (gnPans == 1 && gsTopic)

@@ -1,0 +1,232 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Using Templates</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("Tasks\nUsing Templates");
+addAvenueInfo("Tasks","using_code_assist.htm","formatting_code.htm");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"tasks.htm\">Tasks<\/a> &gt; Using Templates<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ">Documentation 
+	 Survey</a> 
+	 | <a href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1>Using Templates 
+ </h1>
+<p>Templates are shortcuts used to insert a pre-defined framework of code 
+ into your scripts. The purpose is to save time and reduce the potential 
+ for errors in standard, repetitive code units. Once a template is inserted, 
+ you can complete the code quickly using manual and automated code entry 
+ methods.</p>
+<p style="font-weight: bold;">&#160;</p>
+<p style="font-weight: bold;">Requirements:</p>
+<p>A template must be defined in the Templates list in the <a href="templates.htm">Template 
+ Preferences page</a>, accessed from <span style="font-weight: bold;"><b>Windows 
+ | Preferences | Templates</b></span>, before it can be used. To learn how 
+ to create a new template from the Templates Preferences page, see <a href="templates.htm#Adding_new_templates">Adding 
+ a New Template.</a></p>
+
+
+<p>Templates are context sensitive and can be used in HTML, PHP, PHPDOC, 
+ JavaScript or CSS. The context of the current code being entered defines 
+ which templates are available. For example, PHP templates are not available 
+ if your current code is Java.</p>
+<h3>Inserting a Template into Code</h3>
+<p>This procedure describes how to insert a template into your script.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To insert a template:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">Place your cursor at the 
+			 desired insertion point.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Enter a character 
+			 string (e.g. &quot;Sw&quot;).</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Ctrl+Space</b></span>. 
+			 <br>
+			The <a href="working_with_code_assist.htm">Content Assist</a> 
+			 box will appear, listing all available templates and completion 
+			 options that begin with that combination of keys.<br>
+			Templates are marked in the content assist list with a blue 
+			 square. <img src="template_icon.png" alt="template_icon.png" style="border: none;" width="19" height="20" border="0"></p></li>
+			<li class="p" style="margin-left: -20px;"><p>Double-click the 
+			 required template from the list.<br>
+			The template will be entered into your code.</p></li>
+		</ol></td>
+	</tr>
+	<tr valign="top">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;">&#160;</td>
+		
+	</tr>
+</table>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-style: italic; color: #0000ff; font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-style: italic; color: #0000ff; font-size: 6pt;"><img src="txt_file_icon.png" alt="txt_file_icon.png" style="border: none;" width="28" height="41" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Example:</p>
+		<p style="font-weight: normal;">Entering &quot;sw&quot; and selecting 
+		 the &#160;&quot;switch statement&quot; template from the list 
+		 will give you the following code:</p>
+		<p class="picture" style="font-weight: bold;"><img src="template_example.png" alt="template_example.png" style="border: none;" width="223" height="172" border="0"></p>
+		<p class="picture">&#160;</p></td>
+	</tr>
+</table>
+<p class="Note">Note:</p>
+<p class="NoteText">Templates can be created, imported and exported through 
+ the <a href="templates.htm">Template Preferences page</a>, accessed from 
+ <span style="font-weight: bold;"><b>Window | Preferences | PHP | Templates</b></span>.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" alt="link_icon.png" style="border: none;" width="32" height="40" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p><span 
+		 style="font-weight: bold;"><b>Related Links:</b></span> 
+		 <a href="templates.htm"><br>
+		Templates Preferences</a> </p>
+		<p><a href="using_code_assist.htm">Using Content Assist</a> 
+		 </p></td>
+	</tr>
+</table>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

@@ -268,14 +268,17 @@ function writeBook(nIdx)
 	{
 		if (!isBookEmpty(nIdx))
 		{
-			sHTML+="parent><p><nobr><a id=\""+getBookId(nIdx)+"\" href=\"javascript:void(0);\" onfocus=\"markBook("+nIdx+");\" onclick=\"";
+			var sURL=_textToHtml_nonbsp(getItemURL(nIdx));
+			var sBookRef = "javascript:void()"
+			if(sURL!="")
+				sBookRef = sURL;
+			sHTML+="parent><p><nobr><a id=\""+getBookId(nIdx)+"\" href=\""+sBookRef+"\" onfocus=\"markBook("+nIdx+");\" onclick=\"";
 			if(gbSafari3)
 				sHTML+="markBook("+nIdx+");insertBookItems("+nIdx+", "+getItemContentsNum(nIdx);
 			else
 				sHTML+="insertBookItems("+nIdx+", "+getItemContentsNum(nIdx);
 			sHTML+=");return false;\" title=\""+sName+"\"><img alt=\"Book\" name=\""+getBId(nIdx)+"\" src=\""+sIcon+"\" border=0 align=\"absmiddle\">";
 			sHTML+="&nbsp;"+sName+"</a></nobr></p></div>";
-			var sURL=_textToHtml_nonbsp(getItemURL(nIdx));
 			if(sURL!="")
 				addBookItem(getBookId(nIdx),_textToHtml_nonbsp(getTopicTarget(nIdx)),sURL);
 			sHTML+="<div id=\""+getCBId(nIdx)+"\" class=child></div>";
@@ -862,6 +865,7 @@ function expandToc(oObj,sRest,aIdList)
 		if(!isPBId(sPId))
 			continue;
 		var sText=getInnerText2(aChildren[i]);
+		sText = sText.replace("\n", "");
 		if(sText!=sPart)
 			continue;
 		aIdList[len]=getIdByPBId(sPId);
@@ -874,12 +878,30 @@ function expandToc(oObj,sRest,aIdList)
 				var obj=getItemsByBook(aChildren[i]);
 				if(obj.length>0)
 				{
-					if(gbNav6)
+				  	if(gbNav6 || gbSafari3)
 					{
-						var sCommand=obj[0].getAttribute("onClick");
-						var nCommand=sCommand.indexOf(";");
-						sCommand=sCommand.substring(0,nCommand);
-						setTimeout(sCommand,1);
+					    if(gbNav6 )
+					    {
+						    var sCommand=obj[0].getAttribute("onClick");
+						    var nCommand=sCommand.indexOf(";");
+						    sCommand=sCommand.substring(0,nCommand);
+					    }
+					    else if(gbSafari3)
+					    {
+						    var sCommand=obj[0].getAttribute("onClick");
+						    var nCommand1=sCommand.indexOf(";");
+						    var nCommand2=sCommand.indexOf(";", nCommand1+1);
+						    sCommand=sCommand.substring(nCommand1+1, nCommand2);
+					    }
+					    var indx1 = sCommand.indexOf("(");
+						var indx2 = sCommand.indexOf(",", indx1);
+						var arg1 = sCommand.substring(indx1+1, indx2);
+						indx1 = indx2;
+						indx2 = sCommand.indexOf(")", indx1);
+						var arg2 = sCommand.substring(indx1+1, indx2);
+						n1 = parseInt(arg1);
+						n2 = parseInt(arg2);
+						insertBookItems(n1, n2);
 					}
 					else
 						obj[0].click();
@@ -1026,24 +1048,23 @@ function syncInit()
 					for(var i=0;i<aIdList.length-1;i++)
 						ExpandIt2(aIdList[i],true);
 				gsCTPath=gsTP;
-				if(!gbIE55)
-					aIdList[aIdList.length-1].focus();
-				else
-				{
-					HighLightElement(aIdList[aIdList.length-1],gsABgColor,"transparent");
-					aIdList[aIdList.length-1].focus();
-				}
+				HighLightElement(aIdList[aIdList.length-1],gsABgColor,"transparent");
+				aIdList[aIdList.length-1].focus();
+				gsTP=null;
 			}
-			var aPaths=gaBTPs;
-			gsTP=null;
-			gaBTPs=null;
-			if(aPaths!=null)
+			if(gaBTPs!=""&&gaBTPs!=null)
 			{
-				var sPath=getClosestTocPath(aPaths);
-				if(sPath!=null)
-				{	
-					gsTP=sPath;		
-					setTimeout("syncInit()",1);
+				var aPaths=gaBTPs;
+				gsTP=null;
+				gaBTPs=null;
+				if(aPaths!=null)
+				{
+					var sPath=getClosestTocPath(aPaths);
+					if(sPath!=null)
+					{	
+						gsTP=sPath;		
+						setTimeout("syncInit()",1);
+					}
 				}
 			}
 		}

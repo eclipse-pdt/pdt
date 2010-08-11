@@ -1,122 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--RoboML: Table of Content-->
+<!--
+    Copyright (c) 2009 IBM Corporation and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+    
+    Contributors:
+        IBM Corporation - initial API and implementation
+        Zend Technologies
+ -->
+
 <toc label="Table of Contents">
- <topic label="PDT Help">
-   <topic label="Table of Contents" href="html/toc.htm"/>
-  <topic label="Getting Started" href="html/Getting_Started.htm">
-    <topic label="Quick Start" href="html/Quick_Start.htm"/>
-   <topic label="Basic Tutorials" href="html/Basic_Tutorial.htm">
-     <topic label="Creating Projects and Files" href="html/Creating_and_Uploading_a_Project.htm"/>
-     <topic label="Working with Code Assist" href="html/Working_with_Code_Assist.htm"/>
-     <topic label="Working with the Debugger" href="html/Working_with_the_Debugger.htm"/>
-   </topic>
+  <topic label="PDT Table of Contents" href="html/pdt_table_of_contents.htm"/>
+  <topic label="What's New in PDT 2.x" href="html/what_s_new_in_pdt_2.0.htm"/>
+  <topic label="Getting Started" href="html/getting_started.htm">
+    <topic label="Quick Start" href="html/quick_start.htm"/>
+    <topic label="Basic Tutorials" href="html/basic_tutorial.htm">
+      <topic label="Creating Projects and Files" href="html/creating_and_uploading_a_project.htm"/>
+      <topic label="Working with Content Assist" href="html/working_with_code_assist.htm"/>
+      <topic label="Working with the Debugger" href="html/working_with_the_debugger.htm"/>
+    </topic>
   </topic>
-  <topic label="Concepts" href="html/Concepts.htm">
-    <topic label="PHP Support" href="html/PHP_Support.htm"/>
-    <topic label="Code Assist" href="html/Code_Assist_Concept.htm"/>
-    <topic label="Syntax Coloring" href="html/Syntax_Highlighting.htm"/>
-    <topic label="Automatic Completion" href="html/Automatic_Insertion.htm"/>
-    <topic label="Matching Brackets" href="html/Matching_Brackets.htm"/>
-    <topic label="Code Folding" href="html/Code_Folding.htm"/>
-   <topic label="Commenting Code" href="html/Commenting_Code.htm">
-     <topic label="phpDoc Block Comments" href="html/phpDoc_Comments.htm"/>
-   </topic>
-    <topic label="Bookmarks" href="html/Bookmarks.htm"/>
-    <topic label="Hover Support" href="html/Hover_Support.htm"/>
-    <topic label="PHP Manual Integration" href="html/PHP_Manual_Integration.htm"/>
-    <topic label="Real Time Error Detection" href="html/Real_Time_Error_Detection.htm"/>
-    <topic label="Debugging" href="html/Debugging_Concept.htm"/>
-    <topic label="Include Paths" href="html/Include_Paths.htm"/>
-    <topic label="Path Mapping" href="html/Path_Mapping.htm"/>
+  <topic label="Concepts" href="html/concepts.htm">
+    <topic label="PHP Version Support" href="html/php_support.htm"/>
+    <topic label="Content Assist" href="html/code_assist_concept.htm"/>
+    <topic label="Syntax Coloring" href="html/syntax_highlighting.htm"/>
+    <topic label="Automatic Completion" href="html/automatic_insertion.htm"/>
+    <topic label="Drag and Drop" href="html/drag_and_drop.htm"/>
+    <topic label="Matching Brackets" href="html/matching_brackets.htm"/>
+    <topic label="Mark Occurrences" href="html/mark_occurrences.htm"/>
+    <topic label="Code Folding" href="html/code_folding.htm"/>
+    <topic label="Code Commenting" href="html/commenting_code.htm">
+      <topic label="phpDoc Block Comments" href="html/phpdoc_comments.htm"/>
+      <topic label="Bookmarks" href="html/bookmarks.htm"/>
+    </topic>
+    <topic label="Hover Support" href="html/hover_support.htm"/>
+    <topic label="Override Indicators" href="html/override_indicators.htm"/>
+    <topic label="PHP Working Sets" href="html/php_working_sets.htm"/>
+    <topic label="Type Hierarchy" href="html/show_type_hierarchy.htm"/>
+    <topic label="PHP Manual Integration" href="html/php_manual_integration.htm"/>
+    <topic label="Real Time Error Detection" href="html/real_time_error_detection.htm"/>
+    <topic label="Running" href="html/running.htm"/>
+    <topic label="Debugging" href="html/debugging_concept.htm"/>
+    <topic label="Breakpoints" href="html/breakpoints.htm"/>
+    <topic label="PHP Include Path" href="html/include_paths.htm"/>
+    <topic label="PHP Build Path" href="html/build_paths.htm"/>
+    <topic label="Path Mapping" href="html/path_mapping.htm"/>
+    <topic label="JavaScript Support" href="html/javascript.htm"/>
+    <topic label="Mylyn Integration" href="html/mylyn_integration.htm"/>
+    <topic label="Phar Integration" href="html/phar_integration.htm"/>
   </topic>
-  <topic label="Tasks" href="html/Tasks.htm">
-   <topic label="Easy File Creation" href="html/File_Creation.htm">
-     <topic label="Creating a PHP File Within a Project" href="html/Creating_a_PHP_File_within_a_Project.htm"/>
-     <topic label="Creating a PHP File Outside of a Project" href="html/Creating_a_new_PHP_File_Outside_of_a_Project.htm"/>
-     <topic label="Opening an External File" href="html/Opening_an_External_File_in_Neon.htm"/>
-   </topic>
-    <topic label="Using Code Assist" href="html/Using_Code_Assist.htm"/>
-    <topic label="Using Templates" href="html/Using_Templates.htm"/>
-    <topic label="Formatting Code" href="html/Formatting_Code.htm"/>
-    <topic label="Using Code Folding" href="html/Using_Code_Folding.htm"/>
-    <topic label="Opening PHP Elements" href="html/Opening_PHP_Elements.htm"/>
-    <topic label="Searching for PHP Elements" href="html/Searching_for_PHP_Elements.htm"/>
-    <topic label="Using Smart Goto Source" href="html/Using_Smart_Goto_Source.htm"/>
-   <topic label="Adding Comments" href="html/How_to_Comment_and_Uncomment_PHP_Code.htm">
-     <topic label="Adding PHP DocBlock Comments" href="html/Commenting_PHP_DocBlocks.htm"/>
-   </topic>
-    <topic label="Adding a Server Location Path Map" href="html/Adding_a_Server_Path_Map.htm"/>
-    <topic label="Adding Elements to a Project's Include Path" href="html/Adding_Elements_to_a_Project_s_Include_Path.htm"/>
-   <topic label="Using the Debugger" href="html/Debugging.htm">
-     <topic label="Locally Debugging a PHP Script" href="html/Locally_Debugging_a_PHP_Script.htm"/>
-     <topic label="Debugging a PHP Web Page" href="html/Debugging_a_PHP_Web_Page.htm"/>
-     <topic label="Running and Analyzing Debugger Results" href="html/Analyzing_Debugger_Results.htm"/>
-    <topic label="Setting Up Remote Debugging" href="html/Troubleshooting_Remote_Debugging.htm">
-      <topic label="Setting your PDT to be an Allowed Host" href="html/Setting_your_Zend_Studio_for_Eclipse_to_be_an_Allowed_Host.htm"/>
-      <topic label="Ensuring the Placement of dummy.php" href="html/Ensuring_the_Placement_of_dummy.php.htm"/>
+  <topic label="Tasks" href="html/tasks.htm">
+    <topic label="Creating PHP Projects" href="html/creating_php_projects.htm"/>
+    <topic label="Creating PHP Files" href="html/file_creation.htm">
+      <topic label="Creating a PHP File Within a Project" href="html/creating_a_php_file_within_a_project.htm"/>
+      <topic label="Creating a  PHP File Outside of a Project" href="html/creating_a_new_php_file_outside_of_a_project.htm"/>
+      <topic label="Opening an External File" href="html/opening_an_external_file_in_neon.htm"/>
     </topic>
-   </topic>
+    <topic label="Using Content Assist" href="html/using_code_assist.htm"/>
+    <topic label="Using Templates" href="html/using_templates.htm"/>
+    <topic label="Using Drag and Drop" href="html/drag_and_drop.htm#bc-1"/>
+    <topic label="Formatting Code" href="html/formatting_code.htm"/>
+    <topic label="Using Code Folding" href="html/using_code_folding.htm"/>
+    <topic label="Searching for PHP Elements" href="html/searching_for_php_elements.htm"/>
+    <topic label="Opening PHP Elements" href="html/opening_php_elements.htm"/>
+    <topic label="Opening Types/Methods" href="html/opening_types_methods.htm"/>
+    <topic label="Using Smart Goto Source" href="html/using_smart_goto_source.htm"/>
+    <topic label="Viewing Type Hierarchies" href="html/viewing_type_hierarchies.htm"/>
+    <topic label="Creating PHP Working Sets" href="html/creating_php_working_sets.htm"/>
+    <topic label="Using Mark Occurrences" href="html/using_mark_occurrences.htm"/>
+    <topic label="Adding Comments" href="html/how_to_comment_and_uncomment_php_code.htm"/>
+    <topic label="Adding PHP DocBlock Comments" href="html/commenting_php_docblocks.htm"/>
+    <topic label="Using CVS">
+      <topic label="Accessing an Existing CVS Checkout" href="html/accessing_an_existing_cvs_checkout.htm"/>
+    </topic>
+    <topic label="Running Files and Applications" href="html/running_files_and_applications.htm">
+      <topic label="Running PHP Scripts Locally" href="html/running_php_scripts_locally.htm"/>
+      <topic label="Running PHP Scripts Remotely" href="html/running_php_scripts_remotely.htm"/>
+      <topic label="Running PHP Web Pages" href="html/running_php_web_pages.htm"/>
+    </topic>
+    <topic label="Debugging Files and Applications" href="html/debugging.htm">
+      <topic label="Setting Breakpoints" href="html/setting_breakpoints.htm"/>
+      <topic label="Using the Inspect Action" href="html/using_the_inspect_action.htm"/>
+      <topic label="Locally Debugging a PHP Script" href="html/locally_debugging_a_php_script.htm"/>
+      <topic label="Debugging a PHP Web Page" href="html/debugging_a_php_web_page.htm"/>
+      <topic label="Running and Analyzing Debugger Results" href="html/analyzing_debugger_results.htm"/>
+      <topic label="Setting Up Remote Debugging" href="html/troubleshooting_remote_debugging.htm">
+        <topic label="Setting your Environment to be an Allowed Host" href="html/setting_your_zend_studio_for_eclipse_to_be_an_allowed_host.htm"/>
+        <topic label="Ensuring the Placement of dummy.php" href="html/ensuring_the_placement_of_dummy.php.htm"/>
+        <topic label="Adding a Server Location Path Map" href="html/adding_a_server_path_map.htm"/>
+      </topic>
+    </topic>
+    <topic label="Managing PHP Libraries" href="html/php_libraries_preferences.htm">
+      <topic label="Adding a PHP Library" href="html/adding_a_php_library.htm"/>
+      <topic label="Adding External Folders to PHP Libraries" href="html/adding_external_folders_to_php_libraries.htm"/>
+      <topic label="Importing PHP User Libraries" href="html/importing_php_user_libraries.htm"/>
+      <topic label="Exporting PHP User Libraries" href="html/exporting_php_user_libraries.htm"/>
+      <topic label="Editing PHP Library Components or Folders" href="html/editing_php_library_components_or_folders.htm"/>
+      <topic label="Editing PHP User Libraries" href="html/editing_php_user_libraries.htm"/>
+      <topic label="Removing a PHP Library or Library Folder" href="html/removing_a_php_library_or_library_folder.htm"/>
+    </topic>
+    <topic label="Configuring a Project's PHP Include Path" href="html/adding_elements_to_a_project_s_include_path.htm"/>
+    <topic label="Configuring a Project's PHP Build Path" href="html/configuring_build_paths.htm"/>
+    <topic label="Adding a Server Location Path Map" href="html/adding_a_server_path_map.htm#bc-1"/>
+    <topic label="Creating and Opening HTML Files" href="html/using_the_php_html_wysywig_editor.htm"/>
+    <topic label="Working with Mylyn Integration" href="html/mylyn_integration1.htm"/>
+    <topic label="Developing with JavaScript" href="html/using_javascript.htm">
+      <topic label="Enabling JavaScript Support in PHP Projects" href="html/enabling_javascript_support_in_php_projects.htm"/>
+      <topic label="Setting the JavaScript Build Path" href="html/setting_the_javascript_build_path.htm"/>
+      <topic label="Viewing JavaScript Elements in the Outline View" href="html/viewing_javascript_elements_in_the_outline_view.htm"/>
+      <topic label="Using JavaScript Content Assist" href="html/using_javascript_content_assist.htm"/>
+      <topic label="Using JavaScript Syntax Coloring" href="html/using_javascript_syntax_coloring.htm"/>
+      <topic label="Using JavaScript Mark Occurrences" href="html/using_javascript_mark_occurences.htm"/>
+    </topic>
   </topic>
-  <topic label="Reference" href="html/Reference.htm">
-   <topic label="PHP Perspectives and Views" href="html/PHP_Perspectives_and_Views.htm">
-    <topic label="PHP Perspective" href="html/PHP_Perspective_Views.htm">
-      <topic label="PHP Explorer View" href="html/PHP_Explorer_view.htm"/>
-      <topic label="PHP Functions View" href="html/PHP_Functions_View.htm"/>
-      <topic label="PHP Project Outline View" href="html/Project_Outline_view.htm"/>
-      <topic label="Outline View" href="html/PHP_Outline_VIew.htm"/>
+  <topic label="Reference" href="html/reference.htm">
+    <topic label="PHP Perspectives and Views" href="html/php_perspectives_and_views.htm">
+      <topic label="PHP Perspective" href="html/php_perspective_views.htm">
+        <topic label="PHP Explorer View" href="html/php_explorer_view.htm"/>
+        <topic label="Outline View" href="html/php_outline_view.htm"/>
+        <topic label="Type Hierarchy View" href="html/type_hierarchy_view.htm"/>
+      </topic>
+      <topic label="PHP Debug Perspective" href="html/php_debug_perspective.htm">
+        <topic label="Debug View [PHP Debug Perspective]" href="html/debug_view.htm"/>
+        <topic label="Variables View [PHP Debug Perspective]" href="html/variables_view.htm"/>
+        <topic label="Breakpoints View [PHP Debug Perspective]" href="html/breakpoints_view.htm"/>
+        <topic label="Parameter Stack View [PHP Debug Perspective]" href="html/parameter_stack.htm"/>
+        <topic label="Expressions View [PHP Debug Perspective]" href="html/expressions_view.htm"/>
+        <topic label="Debug Output View [PHP Debug Perspective]" href="html/debug_output_view.htm"/>
+        <topic label="Browser Output View [PHP Debug Perspective]" href="html/browser_output_view.htm"/>
+      </topic>
+      <topic label="Additional Views">
+        <topic label="PHP Functions View" href="html/php_functions_view.htm"/>
+        <topic label="PHP Project Outline View" href="html/project_outline_view.htm"/>
+      </topic>
     </topic>
-    <topic label="PHP Debug Perspective" href="html/PHP_Debug_Perspective.htm">
-      <topic label="Debug View" href="html/Debug_View.htm"/>
-      <topic label="Variables View" href="html/Variables_View.htm"/>
-      <topic label="Breakpoints View" href="html/Breakpoints_View.htm"/>
-      <topic label="Parameter Stack View" href="html/Parameter_Stack.htm"/>
-      <topic label="Debug Output View" href="html/Debug_Output_View.htm"/>
-      <topic label="Browser Output View" href="html/Browser_Output_View.htm"/>
+    <topic label="PHP Perspective Menus" href="html/menus.htm">
+      <topic label="File Menu" href="html/file.htm">
+        <topic label="New" href="html/new.htm"/>
+        <topic label="Import" href="html/import.htm"/>
+        <topic label="Export" href="html/export.htm"/>
+      </topic>
+      <topic label="Edit Menu" href="html/edit.htm"/>
+      <topic label="Source Menu" href="html/source.htm"/>
+      <topic label="Refactor Menu" href="html/refactor.htm"/>
+      <topic label="Navigate Menu" href="html/navigate.htm"/>
+      <topic label="Search Menu" href="html/search.htm"/>
+      <topic label="Project Menu" href="html/project.htm"/>
+      <topic label="Run Menu" href="html/run.htm"/>
+      <topic label="Navigation Submenu" href="html/navigation.htm"/>
+      <topic label="Window Menu" href="html/window.htm"/>
+      <topic label="Help Menu" href="html/help.htm"/>
     </topic>
-   </topic>
-   <topic label="PHP Perspective Menus" href="html/Menus.htm">
-    <topic label="File" href="html/File.htm">
-      <topic label="New" href="html/New.htm"/>
-      <topic label="Import" href="html/Import.htm"/>
-      <topic label="Export" href="html/Export.htm"/>
+    <topic label="PHP Perspective Main Toolbar" href="html/php_perspective_main_toolbar.htm"/>
+    <topic label="PHP Preferences" href="html/preferences.htm">
+      <topic label="PHP Preferences Page" href="html/php.htm"/>
+      <topic label="Appearance Preferences" href="html/appearance.htm"/>
+      <topic label="Code Style Preferences">
+        <topic label="Code Templates Preferences" href="html/code_templates_preferences.htm"/>
+        <topic label="Formatter Preferences" href="html/formatter.htm"/>
+      </topic>
+      <topic label="Debug Preferences" href="html/debug.htm">
+        <topic label="Installed Debuggers Preferences" href="html/installed_debuggers.htm"/>
+        <topic label="Step Filtering Preferences" href="html/step_filtering_preferences.htm"/>
+        <topic label="Workbench Options Preferences" href="html/launching.htm"/>
+      </topic>
+      <topic label="Editor Preferences" href="html/editor.htm">
+        <topic label="Content Assist Preferences" href="html/code_assist.htm"/>
+        <topic label="Code Folding Preferences" href="html/folding.htm"/>
+        <topic label="Hovers Preferences" href="html/hovers.htm"/>
+        <topic label="Mark Occurrences Preferences" href="html/mark_occurences.htm"/>
+        <topic label="Save Actions Preferences" href="html/save_actions.htm"/>
+        <topic label="Syntax Coloring Preferences" href="html/syntax_coloring.htm"/>
+        <topic label="Task Tags Preferences" href="html/task_tags.htm"/>
+        <topic label="Templates Preferences" href="html/templates.htm"/>
+        <topic label="Typing Preferences" href="html/typing.htm"/>
+      </topic>
+      <topic label="New Project Layout Preferences" href="html/new_project_layout_preferences.htm"/>
+      <topic label="PHP Executables Preferences" href="html/php_executables.htm"/>
+      <topic label="PHP Interpreter Preferences" href="html/php_interpreter.htm"/>
+      <topic label="PHP Libraries Preferences" href="html/php_libraries_preferences.htm#bc-1"/>
+      <topic label="PHP Manual Preferences" href="html/php_manual.htm"/>
+      <topic label="PHP Servers Preferences" href="html/php_servers.htm"/>
+      <topic label="Tunneling Debug Preferences" href="html/configuring_tunneling_debug_preferences.htm"/>
     </topic>
-     <topic label="Edit" href="html/Edit.htm"/>
-     <topic label="Source" href="html/Source.htm"/>
-     <topic label="Refactor" href="html/Refactor.htm"/>
-     <topic label="Navigate" href="html/Navigate.htm"/>
-     <topic label="Search" href="html/Search.htm"/>
-     <topic label="Project" href="html/Project.htm"/>
-     <topic label="Run" href="html/Run.htm"/>
-    <topic label="Window" href="html/Window.htm">
-      <topic label="Navigation" href="html/Navigation.htm"/>
+    <topic label="PHP Project Properties" href="html/php_project_properties.htm">
+      <topic label="Resource Properties" href="html/resource_properties.htm"/>
+      <topic label="Builders Properties" href="html/builders_properties.htm"/>
+      <topic label="Code Style Properties">
+        <topic label="Code Templates Properties" href="html/code_templates_properties.htm"/>
+        <topic label="Formatter Properties" href="html/formatter_properties.htm"/>
+      </topic>
+      <topic label="PHP Build Path Properties" href="html/php_build_path_properties.htm"/>
+      <topic label="PHP Debug Properties" href="html/php_debug_properties.htm"/>
+      <topic label="PHP Include Path Properties" href="html/php_include_path_properties.htm"/>
+      <topic label="PHP Interpreter Properties" href="html/php_interpreter_properties.htm"/>
+      <topic label="PHP Task Tags Properties" href="html/php_task_tags_properties.htm"/>
+      <topic label="Project References Properties" href="html/project_references_properties.htm"/>
+      <topic label="Refactoring History" href="html/refactoring_history.htm"/>
+      <topic label="Run/Debug Settings Properties" href="html/run_debug_settings_properties.htm"/>
+      <topic label="Save Actions Properties" href="html/save_actions_properties.htm"/>
+      <topic label="Task Tags Properties" href="html/task_tags_properties.htm"/>
+      <topic label="Validation Properties" href="html/validation_properties.htm"/>
     </topic>
-     <topic label="Help" href="html/Help.htm"/>
-   </topic>
-    <topic label="PHP Perspective Main Toolbar" href="html/PHP_Perspective_Main_Toolbar.htm"/>
-   <topic label="PHP Preferences" href="html/Preferences.htm">
-     <topic label="PHP Preferences Page" href="html/PHP.htm"/>
-     <topic label="Appearance Preferences" href="html/Appearance.htm"/>
-    <topic label="Debug Preferences" href="html/Debug.htm">
-      <topic label="Installed Debuggers" href="html/Installed_Debuggers.htm"/>
-      <topic label="Workbench Options" href="html/Launching.htm"/>
-    </topic>
-    <topic label="Editor Preferences" href="html/Editor.htm">
-      <topic label="Code Assist Preferences" href="html/Code_Assist.htm"/>
-      <topic label="Folding Preferences" href="html/Folding.htm"/>
-      <topic label="Hovers Preferences" href="html/Hovers.htm"/>
-      <topic label="Syntax Coloring Preferences" href="html/Syntax_Coloring.htm"/>
-      <topic label="Task Tags Preferences" href="html/Task_Tags.htm"/>
-      <topic label="Typing Preferences" href="html/Typing.htm"/>
-    </topic>
-     <topic label="Formatter Preferences" href="html/Formatter.htm"/>
-     <topic label="Path Variables Preferences" href="html/Path_Variables.htm"/>
-     <topic label="PHP Executables Preferences" href="html/PHP_Executables.htm"/>
-     <topic label="PHP Interpreter Preferences" href="html/PHP_Interpreter.htm"/>
-     <topic label="PHP Manual Preferences" href="html/PHP_Manual.htm"/>
-     <topic label="PHP Servers Preferences" href="html/PHP_Servers.htm"/>
-     <topic label="Templates Preferences" href="html/Templates.htm"/>
-   </topic>
-    <topic label="Keymap" href="html/Keymap.htm"/>
+    <topic label="PHP Icons" href="html/php_icons.htm"/>
+    <topic label="Keymap" href="html/keymap.htm"/>
   </topic>
- </topic>
+  <topic label="Video Tutorials" href="html/video_tutorials.htm"/>
 </toc>

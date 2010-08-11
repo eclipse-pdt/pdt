@@ -1,0 +1,590 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Working with Zend Server</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("Getting Started\nBasic Tutorials\nWorking with Zend Server");
+addAvenueInfo("Getting Started","working_with_the_debugger.htm","");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"getting_started.htm\">Getting Started<\/a> &gt; <a href=\"basic_tutorial.htm\">Basic Tutorials<\/a> &gt; Working with Zend Server<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ">Documentation 
+	 Survey</a> 
+	 | <a href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1 style="color: #00709e;">Working with Zend Server 
+ </h1>
+<p>&#160;</p>
+<p style="font-style: italic;" align="center"><span style="font-style: italic;"><i>The 
+ purpose of this tutorial is to teach you how to deploy, profile and debug 
+ files and applications using the Zend Server</i></span></p>
+<p class="Strong">Contents:</p>
+<p><a href="#Purpose_and_Usage">Purpose and Usage</a></p>
+<p><a href="#Configuring_Zend_Server_Integration">Configuring Zend Server 
+ Integration</a></p>
+<p><a href="#Creating_project_Zend_Server">Creating a project on a Local 
+ Zend Server</a></p>
+<p><a href="#Zend_Server_Profiling">Diagnosing and Profiling Performance 
+ Issues on Zend Server</a></p>
+<p><a href="#Debugging_Zend_Server">Diagnosing and Debugging Errors On 
+ Zend Server</a></p>
+<h2><a name="Purpose_and_Usage" id="Purpose_and_Usage"></a>Purpose and 
+ Usage</h2>
+<p>This tutorial demonstrates how to use PDT 
+ 's integration with Zend Server 
+ in order to constantly monitor your application and easily detect and 
+ diagnose performance issues and code errors during run-time.</p>
+<p class="Note">Note:</p>
+<p class="NoteText">You must have Zend Server 
+ installed on your local machine before commencing this tutorial. See Zend Server Integration 
+ for more information on the Zend Server and where to download.</p>
+<h2><a name="Configuring_Zend_Server_Integration" id="Configuring_Zend_Server_Integration"></a>Configuring 
+ Zend Server Integration</h2>
+<p>A Zend Server installed 
+ on the same machine as PDT 
+ is automatically detected and configured in PDT 
+ .</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To automatically configure a Zend Server :</p>
+		<p style="font-weight: normal;">The auto detection is triggered 
+		 when PDT 
+		 is launched or when the Auto Detect Zend Server 
+		 button is clicked.</p>
+		<p class="Strong">For auto detection when PDT 
+		 is launched:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px;"><p>Ensure Zend Server is installed 
+			 and running on the local machine.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Open PDT .<br>
+			A popup balloon will appear in the bottom-right corner of the 
+			 window indicating that a Zend Server 
+			 installation has been detected and configured.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_detection_popup.png" alt="Zend Server Auto Detect Popup" title="Zend Server Auto Detect Popup" style="border: none;" width="310" height="102" border="0"></p>
+		<ol start="3" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click the <img src="x.png" alt="x.png" style="border: none;" width="18" height="17" border="0"> icon to close the balloon or the 'click here' 
+			 link to be taken to the Zend Server Integration help page.</p></li>
+		</ol>
+		<p class="Strong">To auto detect Zend Server 
+		 after PDT 
+		 has been launched</p>
+		<p>You can manually trigger a Zend Server 
+		 auto detection through the Servers 
+		 view by performing the following steps:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px;"><p>Open the Servers 
+			 view.<br>
+			This is available from the default PHP Perspective or can be 
+			 manually opened by going to <span style="font-weight: bold;"><b>Window 
+			 | Show View | Zend Servers | Servers</b></span>.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click the Auto 
+			 Detect Zend Server <img src="server_view_detect_zs_icon.png" alt="server_view_detect_zs_icon.png" style="border: none;" width="26" height="22" border="0"> icon on 
+			 the toolbar.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>If a Zend Server installation 
+			 has been detected, a New Zend Server Found dialog is displayed 
+			 asking whether you want to configure it to be the default 
+			 server.</p></li>
+		</ol>
+		<p class="picture"><img src="new_zend_server_found_dialog.png" alt="New Zend Server Found Dialog" title="New Zend Server Found Dialog" style="border: none;" width="352" height="108" border="0"></p>
+		<ol start="4" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Yes</b></span> 
+			 to set it as the default server or <span style="font-weight: bold;"><b>No</b></span> 
+			 for the server to be configured by but not set as the default.</p></li>
+		</ol></td>
+	</tr>
+	<tr valign="top">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>A 
+		 Local Zend Server configuration is configured and added to your 
+		 <a href="php_servers.htm">PHP Servers Preferences</a> page.</p></td>
+		
+	</tr>
+</table>
+<p>&#160;</p>
+<h2><a name="Creating_project_Zend_Server" id="Creating_project_Zend_Server"></a>Creating 
+ a project on a Local Zend Server 
+ </h2>
+<p>Through PDT 
+ , you can create new PHP projects directly on your local Zend Server's 
+ document root.</p>
+<p class="Note">Note:</p>
+<p class="NoteText">Ensure you have <a href="#Configuring_Zend_Server_Integration">configured 
+ your local Zend Server integration</a>, as described above.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To create a new PHP project on 
+		 Zend Server 
+		 ;</p>
+		<ol start="1" type="1">
+			<li class="p" style="margin-left: -20px;"><p>From the menu 
+			 bar, go to <span style="font-weight: bold;"><b>File | New | PHP 
+			 Project</b></span>.<br>
+			The New PHP Project dialog is displayed.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Enter 'ZendServerProfiling' 
+			 in the project name field.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Under the contents 
+			 category, ensure the 'create project on a local server' option 
+			 is selected.<br>
+			The directory path should point to the document root of your 
+			 Zend Server 
+			 .</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Finish</b></span>.<br>
+			The project will be created on your Zend Server 
+			 's document root.</p></li>
+		</ol></td>
+	</tr>
+	<tr valign="top">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+		
+	</tr>
+</table>
+<h2><a name="Zend_Server_Profiling" id="Zend_Server_Profiling"></a>Diagnosing 
+ and Profiling Performance Issues on Zend Server 
+ </h2>
+<p>Zend Server detects performance issues in your code and stores them 
+ as events. These events can then be profiled to diagnose the cause of 
+ the slow performance.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;"><span style="font-weight: bold;"><b>This 
+		 procedure creates a purposeful performance issue in order to demonstrates 
+		 how to profile an event:</b></span></p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px;"><p>Create a new PHP 
+			 file in the project you created above by right-clicking the 
+			 project in PHP Explorer view and selecting <span style="font-weight: bold;"><b>New 
+			 | PHP File</b></span>.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Name the file 
+			 c-to-f_convert.php and click <span style="font-weight: bold;"><b>Finish</b></span>.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Copy/paste the 
+			 example code into the file. 
+			 ( <a href="zend_server_tutorial_example_code_1.htm">Click 
+			 here to see the code</a> .) 
+			 
+			  </p></li>
+			<li class="p" style="margin-left: -20px;"><p>Save the file.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Run the application 
+			 you created by right-clicking the c-to-f_convert.php file 
+			 in PHP Explorer view and selecting <span style="font-weight: bold;"><b>Run 
+			 As | PHP Web Page</b></span>.<br>
+			The Run PHP Web Page dialog is displayed.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Ensure the URL 
+			 in the Launch URL field points to the location of your file 
+			 on Zend Server 
+			 and click <span style="font-weight: bold;"><b>OK</b></span>.<br>
+			The application is launched in PDT 
+			 's browser.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_tutorial_application.png" alt="zend_server_tutorial_application.png" style="border: none;" width="383" height="188" border="0"></p>
+		<ol start="7" type="1">
+			<li class="p" style="margin-left: -20px;"><p>In the temperature 
+			 field, enter '30' and click the <span style="font-weight: bold;"><b>Convert!</b></span> 
+			 button.<br>
+			Because the code used for this application contained a purposeful 
+			 slowdown, this action should have been detected by Zend Server and saved as 
+			 a performance event.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Open the Zend Server Event list 
+			 by right-clicking your Zend Server 
+			 configuration in the Servers view and selecting <span style="font-weight: bold;"><b>Show 
+			 Server Event List</b></span><span>.</span><br>
+			Or by clicking the arrow next to the Zend Server 
+			 icon on the toolbar <img src="server_icon.png" alt="server_icon.png" style="border: none;" width="36" height="22" border="0"> 
+			 and selecting your Zend Server 
+			 configuration from the drop-down list.<br>
+			If you have not yet configured your Zend Server 
+			 password:</p></li>
+		</ol>
+		<ol start="1" type="1">
+			<li class="p" type="i"><p>&#160;A message will appear asking 
+			 whether you want to configure this now.</p></li>
+			<li class="p" type="i"><p>Click <span style="font-weight: bold;"><b>Yes</b></span> 
+			 to be taken to the Zend Server preferences tab.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_configuration.png" alt="zend_server_configuration.png" style="border: none;" width="340" height="280" border="0"></p>
+		<ol start="3" type="i">
+			<li class="p"><p>In the Authentication field, enter your Zend Server UI password 
+			 and click <span style="font-weight: bold;"><b>Finish</b></span>.</p></li>
+			<li class="p"><p>Reopen the Zend Server Event List as described 
+			 in Step 8 above.</p></li>
+		</ol>
+		<ol start="9" type="i">
+			<li class="p" style="margin-left: -20px;" type="1"><p style="margin-left: 0px;">The 
+			 Zend Server 
+			 Event list is displayed.<br>
+			The last event displayed should be a Slow Request Execution 
+			 (Absolute) Event created by our code slow down.</p></li>
+			<li class="p" style="margin-left: -20px;" type="1"><p style="margin-left: 0px;">Click 
+			 the event to see the event details.<br>
+			The event run time was higher than the one defined in the monitoring 
+			 rules threshold.</p></li>
+		</ol>
+		<p class="Note" style="margin-left: 24px;">Note:</p>
+		<p class="NoteText" style="margin-left: 24px;">To change this threshold, 
+		 go to the Rule Management tab and click <span style="font-weight: bold;"><b>Edit</b></span> 
+		 for the Severe Slow Request Execution (Absolute) rule.</p>
+		<p class="picture"><img src="zend_server_event_list_profile_error.png" alt="zend_server_event_list_profile_error.png" style="border: none;" width="758" height="406" border="0"></p>
+		<ol start="11" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click the <span 
+			 style="font-weight: bold;"><b>Profile Event</b></span>.<br>
+			A profiling session is launched in PDT 
+			 using the same parameters as were used during the slow request 
+			 execution.</p></li>
+		</ol>
+		<p class="Note" style="margin-left: 18px;">Note:</p>
+		<p class="NoteText" style="margin-left: 18px;">If no session is 
+		 launched, see Setting 
+		 Up Zend Server Integration to ensure you have correctly configured 
+		 your integration settings in both PDT 
+		 and Zend Server 
+		 .</p>
+		<ol start="12" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Yes</b></span> 
+			 if asked to open the PHP Profile perspective.<br>
+			The Profiling views will display information regarding the 
+			 request.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Explore the Profiling 
+			 Execution Flow to detect the execution bottle-neck.<br>
+			You should see that the execution of ’r;myFunction ’r; took 
+			 most of the time.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_profile_tutorial_execution_flow.png" alt="zend_server_profile_tutorial_execution_flow.png" style="border: none;" width="661" height="133" border="0"></p>
+		<ol start="14" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Double-click <span 
+			 style="font-weight: bold;"><b>myFunction</b></span> to view the code 
+			 in the editor.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_profile_tutorial_function_code.png" alt="zend_server_profile_tutorial_function_code.png" style="border: none;" width="545" height="211" border="0"></p></td>
+	</tr>
+	<tr valign="top">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>Now 
+		 that the root-cause of the problem has been detected, you can 
+		 debug or browse your code to diagnose and fix the error.</p></td>
+		
+	</tr>
+</table>
+<h2><a name="Debugging_Zend_Server" id="Debugging_Zend_Server"></a>Diagnosing 
+ and Debugging Errors on Zend Server 
+ </h2>
+<p>Zend Server detects PHP errors in your code during run-time and stores 
+ the information as events. These events can then be debugged to diagnose 
+ the cause of the error.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;"><span style="font-weight: bold;"><b>This 
+		 procedure creates a purposeful PHP error event in order to demonstrates 
+		 how to debug and diagnose the cause of the error:</b></span></p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px;"><p>In the same project 
+			 as was created above, create a new PHP file by right-clicking 
+			 the project in PHP Explorer view and selecting <span style="font-weight: bold;"><b>New 
+			 | PHP File</b></span>.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Name the c-to-f_convert2.php 
+			 and click <span style="font-weight: bold;"><b>Finish</b></span>.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Copy/paste the 
+			 example code into the file. 
+			 ( <a href="zend_server_tutorial_example_2.htm">Click 
+			 here to see the code</a> .) 
+			 
+			  </p></li>
+			<li class="p" style="margin-left: -20px;"><p>Save the file.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Run the application 
+			 you created by right-clicking the c-to-f_convert2.php file 
+			 in PHP Explorer view and selecting <span style="font-weight: bold;"><b>Run 
+			 As | PHP Web Page</b></span>.<br>
+			The Run PHP Web Page dialog is displayed.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Ensure the URL 
+			 in the Launch URL field points to the location of your file 
+			 on Zend Server 
+			 and click <span style="font-weight: bold;"><b>OK</b></span>.<br>
+			The application is launched in PDT 
+			 's browser.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_tutorial_application.png" alt="zend_server_tutorial_application.png" style="border: none;" width="383" height="188" border="0"></p>
+		<ol start="7" type="1">
+			<li class="p" style="margin-left: -20px;"><p>In the temperature 
+			 field, enter '30' and select the Fahrenheit to Celsius conversion 
+			 type in the drop-down list.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click the <span 
+			 style="font-weight: bold;"><b>Convert!</b></span> button.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Open the Zend Server Event list 
+			 by right-clicking your Zend Server 
+			 configuration in the Servers view and selecting <span style="font-weight: bold;"><b>Show 
+			 Server Event List</b></span><span>.</span><br>
+			-Or- by clicking the arrow next to the Zend Server 
+			 icon on the toolbar <img src="server_icon.png" alt="server_icon.png" style="border: none;" width="36" height="22" border="0"> 
+			 and selecting your Zend Server 
+			 configuration from the drop-down list.<br>
+			If you have not configured your Zend Server 
+			 password:</p></li>
+		</ol>
+		<ol start="1" type="1">
+			<li class="p" type="i"><p>A message will appear asking whether 
+			 you want to configure this now.</p></li>
+			<li class="p" type="i"><p>Click <span style="font-weight: bold;"><b>Yes</b></span> 
+			 to be taken to the Zend Server preferences tab.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_configuration.png" alt="zend_server_configuration.png" style="border: none;" width="340" height="280" border="0"></p>
+		<ol start="3" type="1">
+			<li class="p" type="i"><p>In the Authentication field, enter 
+			 your Zend Server 
+			 UI password and click <span style="font-weight: bold;"><b>Finish</b></span>.</p></li>
+			<li class="p" type="i"><p>Reopen the Zend Server Event List 
+			 as described in Step 9 above.</p></li>
+		</ol>
+		<ol start="10" type="1">
+			<li class="p" style="margin-left: -20px;"><p style="margin-left: 0px;">The 
+			 Zend Server 
+			 Event list is displayed.<br>
+			The last event displayed should be a PHP Error as a result 
+			 of our PHP code error.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_debug_tutorial_event.png" alt="zend_server_debug_tutorial_event.png" style="border: none;" width="614" height="412" border="0"></p>
+		<ol start="11" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click the event 
+			 to see the event details.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_debug_event_details.png" alt="zend_server_debug_event_details.png" style="border: none;" width="745" height="489" border="0"></p>
+		<ol start="12" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Browse the Function 
+			 Data and Request tabs to see the event details.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Debug 
+			 Event</b></span>.<br>
+			A debugging session is launched in PDT 
+			 using the same parameters as were used during the initial 
+			 PHP error occurrence.</p></li>
+		</ol>
+		<p class="Note" style="margin-left: 18px;">Note:</p>
+		<p class="NoteText" style="margin-left: 18px;">If no session is 
+		 launched, see Setting 
+		 Up Zend Server Integration to ensure you have correctly configured 
+		 your integration settings in both PDT 
+		 and Zend Server 
+		 .</p>
+		<ol start="14" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Yes</b></span> 
+			 if asked to open the PHP Debug perspective.<br>
+			The debug views display information about your code.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click the Resume 
+			 button <img src="resume_icon.png" alt="resume_icon.png" style="border: none;" width="25" height="24" border="0"> in the Debug 
+			 view or click F8 to be taken to your problematic line of code.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_debug_tutorial_editor.png" alt="zend_server_debug_tutorial_editor.png" style="border: none;" width="608" height="256" border="0"></p>
+		<ol start="16" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click the Step 
+			 Over button <span style="font-weight: bold;"><b><img src="step_over_icon.png" alt="step_over_icon.png" style="border: none;" width="23" height="20" border="0"></b></span> 
+			 in the Debug view or click F6.<br>
+			A Debug Warning message appears in the Console view detailing 
+			 the error and its cause.</p></li>
+		</ol>
+		<p class="picture"><img src="zend_server_debug_tutorial_console.png" alt="zend_server_debug_tutorial_console.png" style="border: none;" width="674" height="127" border="0"></p></td>
+	</tr>
+	<tr valign="top">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>The 
+		 code can now be easily fixed (in this case by replacing the &quot;5 
+		 / 0&quot; operation with &quot;5 / 9&quot;).</p></td>
+		
+	</tr>
+</table>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="height: 16px;" valign="top">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;">.</p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+	<tr style="height: 35px;" valign="top">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" style="border: none;" alt="link_icon.png" width="32" height="40" border="0"> </p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Related Links:</p>
+		
+		
+		
+		
+		
+		<p><a href="php_servers.htm">PHP Servers Preferences</a></p>
+		<p><a href="troubleshooting_remote_debugging.htm">Setting Up Remote 
+		 Debugging</a></p></td>
+	</tr>
+	<tr style="height: 19px;" valign="top">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+</table>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

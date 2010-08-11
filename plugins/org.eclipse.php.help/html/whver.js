@@ -16,12 +16,15 @@ var gbSafari3=false;
 var gAgent=navigator.userAgent.toLowerCase();
 var gbMac=(gAgent.indexOf("mac")!=-1);
 var gbSunOS=(gAgent.indexOf("sunos")!=-1);
+var gbUnixOS=(gAgent.indexOf("linux")!=-1) || (gAgent.indexOf("unix")!=-1);
 var gbOpera=(gAgent.indexOf("opera")!=-1);
 var gbKonqueror=(gAgent.indexOf("konqueror")!= -1);
 var gbSafari=(gAgent.indexOf("safari")!= -1);
 var gbWindows=((gAgent.indexOf('win')!= -1)||(gAgent.indexOf('16bit')!= -1));
 var gbMozilla=((gAgent.indexOf('gecko')!=-1) && (gAgent.indexOf('netscape')==-1));
-
+var gbAIR=(gAgent.indexOf('adobeair')!=-1);
+var gbChrome = (gAgent.indexOf('chrome')!=-1);
+var gbAIRSSL= false ;
 
 var gVersion=navigator.appVersion.toLowerCase();
 
@@ -111,5 +114,11 @@ if(gbSafari)
 			gbSafari3=true;
 		}
 	}
+}
+if(gbChrome)
+{
+	//for the time being use same tests as safari
+	gbSafari = true ;
+	gbSafari3=true;
 }
 var gbWhVer=true;

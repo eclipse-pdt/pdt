@@ -60,6 +60,10 @@ var	WH_MSG_GETPANE			=0x0b01;
 var WH_MSG_GETDEFPANE		=0x0b02;
 var WH_MSG_HILITESEARCH 	=0x0b03;
 var WH_MSG_GETSEARCHSTR		=0x0b04;
+var WH_MSG_SETSYNSTR		=0x0b05;
+var WH_MSG_GETMAXRSLT		=0x0b06;
+var WH_MSG_SETNUMRSLT		=0x0b07;
+var WH_MSG_GETNUMRSLT		=0x0b08;
 
 function whMessage(nMessageId,wSender,nVersion,oParam)
 {
