@@ -2,8 +2,8 @@
 <head>
 <title>IDE Help</title>
 
-<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
-<meta name="description" content="WebHelp 5.50">
+<meta name="generator" content="Adobe RoboHelp 8" />
+<meta name="description" content="WebHelp 5.50" />
 <script language="javascript1.2" src="whutils.js"></script>
 </head>
 <body>
@@ -84,7 +84,7 @@ function GetTopicNumberOnly(strTopicString)
 			return GetTopicNumberById(strValue);
 		} else if (strTopicString.toLowerCase().indexOf("remoteurl") == 0) {
 			if(IsInternal(strValue))
-				gstrURL = _textToHtml(strValue);
+				gstrURL = strValue;
 			return -1;
 		}
 

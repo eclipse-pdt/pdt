@@ -1,15 +1,4 @@
-﻿/*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
- *******************************************************************************/
-//	WebHelp 5.10.006
+﻿//	WebHelp 5.10.006
 var gbNav=false;
 var gbNav6=false;
 var gbNav61=false;
@@ -33,7 +22,9 @@ var gbKonqueror=(gAgent.indexOf("konqueror")!= -1);
 var gbSafari=(gAgent.indexOf("safari")!= -1);
 var gbWindows=((gAgent.indexOf('win')!= -1)||(gAgent.indexOf('16bit')!= -1));
 var gbMozilla=((gAgent.indexOf('gecko')!=-1) && (gAgent.indexOf('netscape')==-1));
-
+var gbAIR=(gAgent.indexOf('adobeair')!=-1);
+var gbChrome = (gAgent.indexOf('chrome')!=-1);
+var gbAIRSSL= false ;
 
 var gVersion=navigator.appVersion.toLowerCase();
 
@@ -123,5 +114,11 @@ if(gbSafari)
 			gbSafari3=true;
 		}
 	}
+}
+if(gbChrome)
+{
+	//for the time being use same tests as safari
+	gbSafari = true ;
+	gbSafari3=true;
 }
 var gbWhVer=true;

@@ -1,15 +1,4 @@
-﻿/*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
- *******************************************************************************/
-//	WebHelp 5.10.003
+﻿//	WebHelp 5.10.003
 RegisterListener2(this, WH_MSG_GETSTARTFRAME);
 RegisterListener2(this, WH_MSG_GETDEFAULTTOPIC);
 RegisterListener2(this, WH_MSG_MINIBARORDER);
@@ -45,7 +34,7 @@ function delayReload()
 var gsToolbarOrder = "";
 var gsMinibarOrder = "";
 
-var gsTopic = "toc.htm";
+var gsTopic = "pdt_table_of_contents.htm";
 var PANE_OPT_SEARCH = 1;
 var PANE_OPT_BROWSESEQ = 2;
 var gnOpts=-1;
@@ -58,6 +47,7 @@ var gbHasTitle=false;
 if (location.hash.length > 1)
 {
 	var sParam = location.hash;
+	sParam = PatchParametersForEscapeChar(sParam);
 	if (sParam.indexOf("#<") == 0)
 	{
 		document.location = "whcsh_home.htm#" + sParam.substring(2);
@@ -73,13 +63,13 @@ if (location.hash.length > 1)
 		if (nPos>1)
 		{
 			if(IsInternal(sParam.substring(1, nPos)))
-				gsTopic = _textToHtml(sParam.substring(1, nPos));
+				gsTopic = sParam.substring(1, nPos);
 			parseParam(sParam.substring(nPos+2));
 		}
 		else
 		{
 			if(IsInternal(sParam.substring(1)))
-				gsTopic = _textToHtml(sParam.substring(1));
+				gsTopic = sParam.substring(1);
 		}
 	}
 	if (gnPans == 1 && gsTopic)

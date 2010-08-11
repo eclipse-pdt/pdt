@@ -1,15 +1,4 @@
-﻿/*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
- *******************************************************************************/
-//	WebHelp 5.10.001
+﻿//	WebHelp 5.10.001
 var gfunLookUp;
 var gbInputEnable;
 var gfunInit;
@@ -17,6 +6,7 @@ var gstrFormName= "";
 var gbWithButton = false;
 var gsTitle="";
 var gsHiliteSearchTitle="";
+var gsMaxSearchTitle="";
 var gsOverImage = "";
 var gsOutImage = "";
 var gsClickImage = "";
@@ -33,6 +23,7 @@ var goNormalFont=null;
 var goHoverFont=null;
 var gnType=-1;
 var gbWhForm=false;
+var gnMaxRslt = 10 ;
 
 function setBackground(sBgImage)
 {
@@ -121,6 +112,7 @@ function writeFormStyle()
 	var sStyle = "<style type='text/css'>";
 	sStyle += "p.title {" + getFontStyle(goTitleFont) + "margin-top:0;margin-bottom:0}\n";
 	sStyle += ".inputfield {" + getFontStyle(goInputFont) +"width:100%; }\n";
+	sStyle += ".maxfield {" + getFontStyle(goInputFont) +"width:12%; }\n";
 	sStyle += ".hilite {" + getFontStyle(goTitleFont) + "margin-top:0;margin-bottom:0; }\n";
 	sStyle+="A:link {"+getFontStyle(goNormalFont)+"}\n";
 	sStyle+="A:visited {"+getFontStyle(goNormalFont)+"}\n";
@@ -135,8 +127,9 @@ function writeFormStyle()
 	document.write(sStyle);
 }
 
-function lookupKeyDown()
+function lookupKeyDown(NSEvent)
 {
+	
 	if (gbInputEnable)
 	{
 		if (gbIE4)
@@ -145,7 +138,19 @@ function lookupKeyDown()
 				gfunLookUp(true);
 			else
 				gfunLookUp(false);
-		}			
+		}	
+		else if (gbNav6)		
+		{
+		    if(NSEvent)
+		    {
+		        if (NSEvent.which== 13)	//Enter key
+				    gfunLookUp(true);
+			    else
+				    gfunLookUp(false);
+		    }
+		    else
+				gfunLookUp(false);
+		}
 		else
 			gfunLookUp(false);
 	}
@@ -156,7 +161,12 @@ function init()
 	if (gfunInit)
 		gfunInit();
 	if (!window.Array)  return;
-		document.onkeyup = lookupKeyDown;
+	if (window.captureEvents){
+        window.captureEvents(Event.KEYUP);
+        window.onkeyup=lookupKeyDown;
+    }
+    else
+        document.onkeyup=lookupKeyDown;		
 }
 
 function inputSubmit()
@@ -204,8 +214,32 @@ function getFormHTML()
 		sForm += "</tr><tr class=\"hilite\" valign=\"middle\"><td width=\"100%\"><input type=\"checkbox\" name=\"HiLite\" checked>" + gsHiliteSearchTitle + "<br></td>";
 	}
 
-	sForm += "</tr></table></p></td></tr></form></table>";
+	sForm += "</tr>" ;
+	
+    //check pane in focus is Search pane.
+	var oMsg=new whMessage(WH_MSG_GETPANEINFO,this,1,null);
+	if(SendMessage(oMsg)) {
+		if (oMsg.oParam == "fts") 
+			sForm += "<tr class=\"hilite\" valign=\"middle\"><td>" + gsMaxSearchTitle + "  <input class=\"maxfield\" type=\"text\" maxLength=\"2\" name=\"MaxResults\" onblur=\"javascript: this.value =input_filter(this.value)\" value=\"" + gnMaxRslt + "\" ></td></tr>" ;
+	}
+	sForm += "</table></p></td></tr></form></table>";
 	return sForm;
+}
+
+function input_filter(a_sVal)
+{
+	var num = gnMaxRslt ;
+	try 
+	{
+		num=parseInt(a_sVal);
+		if (( num.toString() == "NaN")||(num <= 0))
+		    num = gnMaxRslt ;
+	}
+	catch(er) 
+	{
+	    num = gnMaxRslt ;
+	}
+	return num ;
 }
 
 function onMouseOver()

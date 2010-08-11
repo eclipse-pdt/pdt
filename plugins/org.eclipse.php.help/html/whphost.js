@@ -1,15 +1,4 @@
-﻿/*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
- *******************************************************************************/
-//	WebHelp 5.10.005
+﻿//	WebHelp 5.10.005
 var gaProj=new Array();
 var gnChecked=0;
 var gsProjName="";
@@ -334,10 +323,28 @@ function addProjectHTML(sName)
 	gsProjName=sName;
 }
 
+function mrAlterProjUrl(sProjUrl)
+{
+	if( mrIsOnEngine()==true )
+	{
+		var sProjName=mrGetProjName();
+		if( sProjName!='' )
+		{
+			// now build the server url
+			sProjUrl=mrGetEngineUrl()+'?mgr=sys&cmd=prjinf&prj='+sProjName;
+		};
+	};
+
+	return sProjUrl;
+};
+
 function addProjectXML(sName)
 {
+	// intialize the roboengine varialbes
+	mrInitialize();
+
 	gbXML=true;
-	gsProjName=sName;
+	gsProjName=mrAlterProjUrl(sName);
 }
 
 function window_MyBunload()
@@ -356,6 +363,11 @@ function putDataXML(xmlDoc,sdocPath)
 			var aRProj=new Array();
 			aRProj[0]=new Object();
 			aRProj[0].sPPath=_getPath(sdocPath);
+
+			// server serves the full path, so we don't need the project path anymore
+			if( mrIsOnEngine()==true )
+				aRProj[0].sPPath="";
+
 			var sLangId=projectNode.getAttribute("langid");
 			if(sLangId)
 			{
@@ -458,7 +470,7 @@ function isSamePath(sPath1,sPath2)
 
 function checkRemoteProject()
 {
-	if(gaProj.length!=gnChecked)
+	if(gaProj.length > gnChecked)
 	{
 		setTimeout("cancelProj("+gnChecked+");",10000);
 		loadData2(gaProj[gnChecked].sPPath+gsProjName);
@@ -515,6 +527,7 @@ function window_unload()
 	UnRegisterListener2(this,WH_MSG_GETPANEINFO);
 	UnRegisterListener2(this,WH_MSG_GETSEARCHSTR);
 	UnRegisterListener2(this,WH_MSG_HILITESEARCH);
+	UnRegisterListener2(this,WH_MSG_GETNUMRSLT);
 }
 
 function onSendMessage(oMsg)
@@ -585,13 +598,28 @@ function onSendMessage(oMsg)
 			var ftsElem = getElement("ftsIFrame");
 			if(ftsElem)
 			{
-			  if(!gbSafari3 && typeof(ftsElem.contentWindow.document.forms[0]) != "undefined")
+			  if(typeof(ftsElem.contentWindow.document.forms[0]) != "undefined")
 			  {
 			    var str1 = ftsElem.contentWindow.document.forms[0].quesn.value;
 			    oMsg.oParam = str1;
 			  }
 			}
 
+			return true;
+		}
+		else if(nMsgId==WH_MSG_GETNUMRSLT)
+		{
+			var ftsElem = getElement("ftsIFrame");
+			if(ftsElem)
+			{
+			  var tbl = ftsElem.contentWindow.document.getElementById("FtsRslt") ;
+			  if( tbl)
+				oMsg.oParam = tbl.rows.length ;			  
+			  else
+				oMsg.oParam = 0 ;
+			}
+			else
+				oMsg.oParam = 0 ;
 			return true;
 		}
 	}
@@ -608,6 +636,7 @@ if(window.gbWhUtil&&window.gbWhMsg&&window.gbWhVer&&window.gbWhProxy)
 	RegisterListener2(this,WH_MSG_GETPANEINFO);
 	RegisterListener2(this,WH_MSG_GETSEARCHSTR);
 	RegisterListener2(this,WH_MSG_HILITESEARCH);
+	RegisterListener2(this,WH_MSG_GETNUMRSLT);
 
 	if((gbMac&&gbIE4)||(gbSunOS&&gbIE5)||gbOpera7)
 	{

@@ -1,0 +1,368 @@
+﻿BODY { 
+      font-family:Arial; 
+      background-color:#ffffff;  }
+H1 { 
+    margin-left:1pt; 
+    letter-spacing:0.1pt; 
+    font-weight:bold; 
+    line-height:150%; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+    font-size:16pt; 
+    margin-top:1pt; 
+    margin-bottom:5pt; 
+    border-bottom-style:None; 
+    font-style:normal; 
+    background-color:#ffffff; 
+    color:#47c333; 
+    text-decoration:none;  }
+LI.H1 { 
+       letter-spacing:0.1pt; 
+       font-weight:bold; 
+       line-height:150%; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       font-size:16pt; 
+       font-style:normal; 
+       color:#47c333; 
+       text-decoration:none;  }
+H2 { 
+    font-weight:bold; 
+    font-size:11pt; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+    margin-top:7pt; 
+    margin-bottom:7pt; 
+    color:#000000;  }
+LI.H2 { 
+       font-weight:bold; 
+       font-size:11pt; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       color:#000000;  }
+H3 { 
+    font-weight:bold; 
+    font-size:10pt; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+    background-color:Transparent; 
+    color:#666666; 
+    margin-bottom:5pt; 
+    margin-top:9.5pt;  }
+LI.H3 { 
+       font-weight:bold; 
+       font-size:10pt; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       color:#666666;  }
+H4 { 
+    font-weight:bold; 
+    font-size:10pt; 
+    color:#848484; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif;  }
+LI.H4 { 
+       font-weight:bold; 
+       font-size:10pt; 
+       color:#848484; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif;  }
+H5 { 
+    font-weight:bold; 
+    font-size:10.0pt; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+    margin-top:6pt; 
+    margin-bottom:6pt; 
+    line-height:150%; 
+    color:#848484;  }
+LI.H5 { 
+       font-weight:bold; 
+       font-size:10.0pt; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       line-height:150%; 
+       color:#848484;  }
+H6 { 
+    font-weight:bold; 
+    font-size:8.0pt; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+    margin-bottom:1pt; 
+    color:#848484; 
+    margin-top:6pt; 
+    line-height:150%;  }
+LI.H6 { 
+       font-weight:bold; 
+       font-size:8.0pt; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       color:#848484; 
+       line-height:150%;  }
+P { 
+   margin-top:1pt; 
+   margin-bottom:1pt; 
+   line-height:150%; 
+   font-weight:normal; 
+   font-style:normal; 
+   font-size:10pt; 
+   font-family:Arial, sans-serif;  }
+LI.P { 
+      line-height:150%; 
+      font-weight:normal; 
+      font-style:normal; 
+      font-size:10pt; 
+      font-family:Arial, sans-serif;  }
+A.expandspot { 
+              cursor:hand; 
+              font-style:italic; 
+              font-size:10pt; 
+              font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+              color:#ff8e00; 
+              text-decoration:none;  }
+SPAN.expandtext { 
+                 font-style:italic; 
+                 font-weight:normal; 
+                 font-size:10pt; 
+                 font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+                 color:#ffffff;  }
+A.dropspot { 
+            cursor:hand; 
+            font-style:italic; 
+            font-size:10pt; 
+            font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+            color:#ff8e00; 
+            text-decoration:none;  }
+A.glossterm { 
+             cursor:hand; 
+             font-style:italic; 
+             font-size:10pt; 
+             font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+             color:#848484; 
+             text-decoration:none;  }
+SPAN.glosstext { 
+                font-style:italic; 
+                font-weight:normal; 
+                font-size:10pt; 
+                font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+                color:#848484;  }
+OL { 
+    margin-top:0px; 
+    margin-bottom:0px; 
+    font-size:10pt; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+    color:#323232;  }
+UL { 
+    margin-top:0px; 
+    margin-bottom:0px; 
+    font-size:10pt; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+    color:#323232;  }
+P.Note { 
+        font-weight:bold; 
+        font-style:normal; 
+        color:#ffffff; 
+        border-top-style:Solid; 
+        border-bottom-style:Solid; 
+        margin-top:7.5pt; 
+        line-height:Normal; 
+        background-color:#828282; 
+        border-top-width:4px; 
+        border-bottom-width:4px; 
+        border-top-color:#828282; 
+        border-bottom-color:#828282; 
+        x-next-class:NoteText; 
+        x-next-type:P;  }
+LI.P-Note { 
+           font-weight:bold; 
+           font-style:normal; 
+           color:#ffffff; 
+           line-height:Normal;  }
+P.NoteText { 
+            margin-top:1pt; 
+            margin-bottom:7.5pt; 
+            line-height:150%; 
+            background-color:#e4e4e4;  }
+LI.P-NoteText { 
+               line-height:150%;  }
+P.footertext { 
+              font-size:8pt; 
+              text-align:Center; 
+              border-top-style:Solid; 
+              border-top-width:4px; 
+              border-top-color:#93b7e2;  }
+LI.P-footertext { 
+                 font-size:8pt; 
+                 text-align:Center;  }
+P.ListBullet1 { 
+               list-style:square; 
+               margin-top:4.5pt; 
+               margin-bottom:4.5pt;  }
+LI.P-ListBullet1 { 
+                  list-style:square;  }
+P.ListBullet2 { 
+               list-style:disc; 
+               margin-left:12pt;  }
+LI.P-ListBullet2 { 
+                  list-style:disc;  }
+P.Hyperlinkintopic { 
+                    color:#ff8e00; 
+                    text-align:Right; 
+                    margin-top:4.5pt; 
+                    text-decoration:none;  }
+LI.P-Hyperlinkintopic { 
+                       color:#ff8e00; 
+                       text-align:Right; 
+                       text-decoration:none;  }
+A:active { 
+          color:#0000ff; 
+          font-size:10pt; 
+          font-family:Arial, sans-serif; 
+          text-decoration:underline;  }
+A:hover { 
+         background-color:Transparent; 
+         color:#800080; 
+         font-size:10pt; 
+         font-family:Arial, sans-serif; 
+         text-decoration:underline;  }
+A:link { 
+        background-color:Transparent; 
+        color:#0000ff; 
+        font-size:10pt; 
+        font-family:Arial, sans-serif; 
+        text-decoration:underline;  }
+A:visited { 
+           background-color:Transparent; 
+           color:#0000ff; 
+           font-size:10pt; 
+           font-family:Arial, sans-serif; 
+           text-decoration:underline;  }
+A.popupspot { 
+             font-size:10pt; 
+             font-weight:bold; 
+             font-style:normal; 
+             font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+             color:#5b9beb; 
+             text-decoration:none;  }
+P.ContactInfo {  }
+LI.P-ContactInfo {  }
+P.InsideChapter { 
+                 font-weight:bold; 
+                 font-style:normal; 
+                 font-family:"Trebuchet MS"  , sans-serif; 
+                 background-color:Transparent; 
+                 text-transform:uppercase;  }
+LI.P-InsideChapter { 
+                    font-weight:bold; 
+                    font-style:normal; 
+                    font-family:"Trebuchet MS"  , sans-serif; 
+                    text-transform:uppercase;  }
+P.InsideChapterCont { 
+                     font-family:"Trebuchet MS"  , sans-serif; 
+                     background-color:Transparent; 
+                     text-transform:uppercase;  }
+LI.P-InsideChapterCont { 
+                        font-family:"Trebuchet MS"  , sans-serif; 
+                        text-transform:uppercase;  }
+P.InsideChapterLast { 
+                     font-family:"Trebuchet MS"  , sans-serif; 
+                     background-color:Transparent; 
+                     text-transform:uppercase; 
+                     border-bottom-style:Solid; 
+                     border-bottom-width:1px; 
+                     border-bottom-color:#323232;  }
+LI.P-InsideChapterLast { 
+                        font-family:"Trebuchet MS"  , sans-serif; 
+                        text-transform:uppercase;  }
+P.FIgureCaption { 
+                 text-align:Center; 
+                 font-size:8pt; 
+                 x-next-type:P;  }
+LI.P-FIgureCaption { 
+                    text-align:Center; 
+                    font-size:8pt;  }
+P.picture { 
+           text-align:Center; 
+           margin-top:9pt; 
+           margin-bottom:9pt; 
+           x-next-class:FIgureCaption; 
+           x-next-type:P;  }
+LI.P-picture { 
+              text-align:Center;  }
+P.TableText { 
+             font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+             font-size:8pt;  }
+LI.P-TableText { 
+                font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+                font-size:8pt;  }
+P.Title { 
+         font-size:11pt; 
+         font-weight:bold; 
+         font-style:normal; 
+         color:#3491c7; 
+         margin-bottom:4.5pt;  }
+LI.P-Title { 
+            font-size:11pt; 
+            font-weight:bold; 
+            font-style:normal; 
+            color:#3491c7;  }
+P.code { 
+        font-family:"Courier New"  , monospace; 
+        background-color:#eeeeee; 
+        margin-bottom:1pt; 
+        margin-top:1pt;  }
+LI.P-code { 
+           font-family:"Courier New"  , monospace;  }
+P.ListBullet3 { 
+               list-style:circle; 
+               margin-left:36pt;  }
+LI.P-ListBullet3 { 
+                  list-style:circle;  }
+P.Strong { 
+          font-weight:bold; 
+          font-style:normal; 
+          color:#848484; 
+          margin-top:4.5pt; 
+          margin-bottom:4.5pt;  }
+LI.P-Strong { 
+             font-weight:bold; 
+             font-style:normal; 
+             color:#848484;  }
+P.footnote { 
+            font-size:6pt;  }
+LI.P-footnote { 
+               font-size:6pt;  }
+P.PartTitle { 
+             font-size:14pt; 
+             font-weight:bold; 
+             font-style:normal; 
+             color:#848484; 
+             text-transform:uppercase;  }
+LI.P-PartTitle { 
+                font-size:14pt; 
+                font-weight:bold; 
+                font-style:normal; 
+                color:#848484; 
+                text-transform:uppercase;  }
+P.PDThelp { 
+           font-family:"Myriad Pro"  , "Myriad Pro Black"  , "Myriad Pro Light"  , sans-serif; 
+           color:#00709e; 
+           font-weight:normal; 
+           font-style:normal; 
+           font-size:28pt;  }
+LI.P-PDThelp { 
+              font-family:"Myriad Pro"  , "Myriad Pro Black"  , "Myriad Pro Light"  , sans-serif; 
+              color:#00709e; 
+              font-weight:normal; 
+              font-style:normal; 
+              font-size:28pt;  }
+P.NUMBERS { 
+           list-style:decimal; 
+           margin-top:6pt;  }
+LI.P-NUMBERS { 
+              list-style:decimal;  }
+P.NUmbers2 { 
+            list-style:lower-alpha;  }
+LI.P-NUmbers2 { 
+               list-style:lower-alpha;  }
+P.Numbers3 { 
+            list-style:lower-roman; 
+            margin-left:18pt;  }
+LI.P-Numbers3 { 
+               list-style:lower-roman;  }
+ol ol { 
+       margin-top:1px;  }
+ol ul { 
+       margin-top:1px;  }
+ul ul { 
+       margin-top:1px;  }
+ul ol { 
+       margin-top:1px;  }

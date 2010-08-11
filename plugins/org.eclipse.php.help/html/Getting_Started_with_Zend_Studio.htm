@@ -1,0 +1,484 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Getting Started with Zend Studio</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+img_whs1 { border:none; width:673px; height:501px; float:none; border-style:none; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs3 { width:7.093%; }
+col.whs4 { width:92.907%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs7 { font-size:6pt; }
+td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs9 { font-weight:bold; }
+td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs13 { list-style:decimal; }
+img_whs14 { border:none; width:24px; height:22px; float:none; border-style:none; }
+img_whs15 { border:none; width:17px; height:14px; float:none; border-style:none; }
+td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+p.whs17 { font-weight:normal; }
+img_whs18 { border:none; width:310px; height:102px; float:none; border-style:none; }
+ol.whs19 { list-style:lower-roman; }
+img_whs20 { border:none; width:26px; height:22px; float:none; border-style:none; }
+p.whs21 { x-condition:Online; }
+tr.whs22 { x-cell-content-align:top; height:27px; }
+tr.whs23 { x-cell-content-align:top; height:841px; }
+img_whs24 { border:none; width:401px; height:518px; float:none; border-style:none; }
+tr.whs25 { x-cell-content-align:top; height:22px; }
+img_whs26 { border:none; width:414px; height:263px; float:none; border-style:none; }
+img_whs27 { border:none; width:364px; height:520px; float:none; border-style:none; }
+img_whs28 { border:none; width:432px; height:190px; float:none; border-style:none; }
+img_whs29 { border:none; width:483px; height:264px; float:none; border-style:none; }
+img_whs30 { border:none; width:424px; height:170px; float:none; border-style:none; }
+p.whs31 { x-condition:Product; }
+div.whs32 { width:100%; }
+p.whs33 { text-align:right; x-condition:Product, Online; }
+p.whs34 { text-align:right; x-condition:Online; }
+p.whs35 { text-align:center; x-condition:PDT; text-decoration:underline; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	
+	}
+
+
+	if(1)
+	{
+	
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<h1>First Steps for Developing Applications with Zend Studio</h1>
+<p>&nbsp;</p>
+<p>The following steps will help guide you through the basic process of 
+ using PDT 
+ to develop and run your PHP applications:</p>
+<p>The first time PDT 
+ is launched, the Welcome Page is displayed.</p>
+<p class=picture><img src="welcome_page.png" x-maintain-ratio="TRUE" width="673px" height="501px" border="0" class="img_whs1"></p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To use the Welcome Page:</p>
+<ol start="1" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Browse the Welcome Page 
+ to learn about PDT 
+ features and functionality.<br>
+	Click the home button <img src="welcome_homepage.png" x-maintain-ratio="TRUE" width="24px" height="22px" border="0" class="img_whs14"> in the top-right corner to be taken back 
+ to the main Welcome homeage.</p></li>
+	<li style="margin-left: -20px;" class=p><p>You can close the Welcome 
+ Page by clicking the <img src="x_icon.png" x-maintain-ratio="TRUE" width="17px" height="14px" border="0" class="img_whs15"> icon in the Welcome tab, situated in the top-left 
+ corner of the window.PDT's 
+ workbench is displayed, by default showing the PHP perspective. This perspective 
+ contains a number of views to assist you in PHP development.<br>
+	The PHP Explorer view is a file system view displaying the PHP projects 
+ located in your workspace.</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>&nbsp;</td>
+</tr>
+</table>
+<h3>Install Zend Server (optional)</h3>
+<p>Zend Server 
+ is a complete, enterprise-ready Web Application Server for running and 
+ managing PHP applications that require a high level of reliability, performance 
+ and security. It includes the most reliable and up-to-date version of 
+ PHP, tested PHP extensions, database drivers and other enhancements. Zend Server 
+ comes bundled with Zend Framework (the leading open-source PHP framework), 
+ Apache and MySQL. </p>
+<p>Zend Server 
+ provides automatic integration with PDT for an optimal environment 
+ for developing, deploying and debugging your PHP applications. </p>
+<p>&nbsp;</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To install and configure Zend Server:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Download Zend Server from <a href="http://www.zend.com/en/products/server/downloads" 
+ target=_blank>http://www.zend.com/en/products/server/downloads</a>.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Install Zend Server according 
+ to the installation instructions. These will vary depending on your operating 
+ system.<br>
+	See <a href="http://files.zend.com/help/Zend-Server/zend-server.htm#installation_guide.htm" 
+ target=_blank>http://files.zend.com/help/Zend-Server/zend-server.htm#installation_guide.htm</a> 
+ for full information on installing Zend Server.</p></li>
+	<li style="margin-left: -20px;" class=p><p>If Zend Server is installed 
+ on the same machine as Zend Studio, Zend Studio will automatically detect 
+ and configure it.<span style="font-weight: normal;"><br>
+	The auto detection can be triggered in two ways:</span></p></li>
+</ol>
+<ol start="1" type="1" class="whs13">
+	<li style="list-style: lower-roman;  font-weight: normal; " type=i 
+ class=p><p class="whs17">Automatically when PDT 
+ is launched.<br>
+	A popup ballon will appear in the bottom-right corner of the window 
+ indicating that a Zend Server 
+ installation has been detected and configured.</p></li>
+</ol>
+<p class=picture style="text-align: left; margin-left: 40px;" align=left><img src="zend_server_detection_popup.png" x-maintain-ratio="TRUE" width="310px" height="102px" border="0" class="img_whs18"></p>
+<ol start="2" type="i" class="whs19">
+	<li style=" font-weight: normal; " class=p><p class="whs17">By 
+ clicking the Auto Detect Zend Server 
+ button<img src="server_view_detect_zs_icon.png" x-maintain-ratio="TRUE" width="26px" height="22px" border="0" class="img_whs20"> &nbsp;in the Servers view (this is available 
+ from the default PHP Perspective or can be manually opened by going to 
+ Window | Show View | Zend Servers | Servers).</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>Once a Zend Server 
+ installation has been detected, the integration between PDT 
+ and Zend Server 
+ enables you to easily deploy, run, debug and profile applications.</td>
+</tr>
+</table>
+<p class="whs21">See Zend Server Integration for more information.</p>
+<h3>Create a PHP project</h3>
+<p>In order to start coding, you should create a PHP project which will 
+ contain the files for your application.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs22">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs23">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To create a new PHP project:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>From 
+ the menu bar, go to File | New | PHP Project<br>
+	-Or- In PHP Explorer view, right-click and select New | PHP Project.<br>
+	The New PHP Project wizard is displayed.</p></li>
+</ol>
+<p class=picture><img src="new_php_project_wizard_studio_7.png" x-maintain-ratio="TRUE" width="401px" height="518px" border="0" class="img_whs24"></p>
+<ol start="2" type="1" class="whs13">
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs17">Enter 
+ a name for the project in the project name field.</p></li>
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs17">In 
+ the Contents category, select the location and default contents of the 
+ new project.<br>
+	The options available are:</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>Create 
+ new project in workspace - a new empty PHP project is created in your 
+ workspace.<br>
+	By default a workspace will have been created in @user.home/Zend/workspaces/DefaultWorkspace7 
+ when you first launched PDT.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>Create 
+ a project from existing source - Creates a project which includes source 
+ files situated externally to the workspace.<br>
+	Click Browse to select the existing project contents.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>Create 
+ project on a local server - Creates a new PHP project on a local Zend 
+ Server. This option will only be available if a local Zend Server has 
+ been configured.</p></li>
+</ol>
+<ol start="4" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Click Finish.</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs25">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>The new PHP project will be created in your workspace and displayed 
+ in <a href="PHP_Explorer_view.htm">PHP Explorer View</a>.</td>
+</tr>
+</table>
+<p class="whs21">See <a HREF="Creating_PHP_Projects.htm" 
+ style="x-condition: Online;">Creating PHP Projects</a> for more information.</p>
+<h3>Create PHP Files</h3>
+<p>You can now start to develop your application by creating PHP Files 
+ in your project.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To create a new PHP file within you project:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>In PHP Explorer view, select 
+ the project you created.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Right-click and select New 
+ | PHP File -or- go to File on the Menu Bar and select New | PHP File.<br>
+	The PHP File creation dialog is displayed.</p></li>
+</ol>
+<p class=picture><img src="new_php_file_wizard.png" x-maintain-ratio="TRUE" width="414px" height="263px" border="0" class="img_whs26"></p>
+<ol start="3" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Enter the name of the file 
+ and click Finish. </p></li>
+</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>Your file will open in the editor and will appear within your project 
+ in PHP Explorer view.</td>
+</tr>
+</table>
+<p class="whs21">See <a href="File_Creation.htm" style="x-condition: Online;">Creating 
+ PHP Files</a> for more information.</p>
+<p>&nbsp;</p>
+<h3>Create PHP Elements</h3>
+<p>You can use PDT's 
+ PHP element creation wizards to quickly and easily create PHP elements 
+ such as classes and interfaces within your code.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To create a new PHP class/interface</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs17">In 
+ PHP Explorer view, right-click the project/file in which you want to create 
+ the new class/interface and select New | Class or Interface.<br>
+	The New PHP Class/Interface wizard is displayed</p></li>
+</ol>
+<p class=picture>.<img src="new_php_class_wizard.png" x-maintain-ratio="TRUE" width="364px" height="520px" border="0" class="img_whs27"></p>
+<ol start="2" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Enter the required details 
+ and click Finish.</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>The new class/interface will be created with the required code.</td>
+</tr>
+</table>
+<p class="whs21">&nbsp;See Creating PHP Elements for more information.</p>
+<h3>Write Code</h3>
+<p>Manually type code in your files. As you type, content assist will suggest 
+ code options according to the context of the code.</p>
+<p>You can select a required code string to quickly insert it into your 
+ script<br>
+If the Content Assist window does not pop up automatically, press Ctrl+Space.</p>
+<p class=picture><img src="code_assist_example.png" x-maintain-ratio="TRUE" width="432px" height="190px" border="0" class="img_whs28"></p>
+<p class="whs21">See <a HREF="Code_Assist_Concept.htm" style="x-condition: Online;">Code 
+ Assist</a> for more information.</p>
+<h3>Rename Elements</h3>
+<p>If at any point during your development you want to rename an element, 
+ this can be easily done using the in-place refactoring feature</p>
+<p>This will apply the rename operation to all occurrences of the required 
+ element so that all links between elements are maintained.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To rename an element within the editor:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>In the editor, place your 
+ cursor on the element to be renamed.</p></li>
+	<li style="margin-left: -20px;" class=p><p>From the menu bar select 
+ Refactor | Rename -or- right-click and select Refactor | Rename -or- press 
+ Alt-Shift-R.<br>
+	All occurrences of the element are put in a frame and the Refactor 
+ popup is displayed.</p></li>
+</ol>
+<p class=picture>&nbsp;<img src="inline_refactor.jpg" x-maintain-ratio="TRUE" width="483px" height="264px" border="0" class="img_whs29"></p>
+<ol start="4" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Type the new element name 
+ in the box. <br>
+	All occurrences of the element name are automatically updated.</p></li>
+</ol>
+<p class=Note style="margin-left: 18px;">Note:</p>
+<p class=NoteText style="margin-left: 18px;">To preview the changes before 
+ applying them, click the arrow in the right-hand corner of the Refactor 
+ popup and select Preview.</p>
+<ol start="5" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Click Enter to apply the 
+ refactoring.</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>The element will be renamed and all instances where that element is 
+ referenced will be updated to reflect the changes.</td>
+</tr>
+</table>
+<p>See Refactoring for more information.</p>
+<h3>Run your application</h3>
+<p>In order to preview the execution of your application on a server, you 
+ can easily run it in PDT's 
+ internal browser.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To run your application:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs17">Place 
+ your application on a Web server.<br>
+	If you selected the to create your project on a local Zend Server you 
+ can skip this step.</p></li>
+</ol>
+<ol start="2" type="1" class="whs13">
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs17">In 
+ PHP Explorer, right-click the file from which you would like to start 
+ the execution and select Run As | PHP Web Page.<br>
+	The Run PHP Web Page dialog opens.</p></li>
+</ol>
+<p class=picture><img src="run_webpage_dialog.png" x-maintain-ratio="TRUE" width="424px" height="170px" border="0" class="img_whs30"></p>
+<ol start="3" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Ensure the URL pointing 
+ to the file on the server is correct.<br>
+	Edit if necessary.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click OK.</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>Your application will be run and displayed in a browser.</p>
+<p>You can periodically rerun your application to preview any changes you 
+ have made to your files during development. The files that will be executed 
+ will be the files statuted locally on your workspace, irrespective of 
+ any changes made to the server copies of the files.</td>
+</tr>
+</table>
+<p class="whs31">See <a HREF="Running.htm" style="x-condition: Product;">Running</a> 
+ for more information.</p>
+<p>&nbsp;</p>
+<p>In addition to the options and features highlighted in this document, 
+ PDT 
+ contains a wide range of features to help you with all aspects of your 
+ PHP development.</p>
+<div placeholder id="footer" class="whs32">
+ <p align="right" class="whs33"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://www.zend.com/en/resources/zend-documentation/Zend-Studio/zend-studio.htm" 
+ style="color: #000000; x-condition: Product, Online;">Online Documentation</a> 
+ for the most up-to-date information.</p>
+ <p align="right" class="whs34"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs35">PHP Development 
+ Tools</p>
+ </div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+
+}
+//-->
+</script>
+</body>
+</html>

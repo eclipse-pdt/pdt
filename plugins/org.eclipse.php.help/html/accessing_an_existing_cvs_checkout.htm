@@ -1,0 +1,224 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Accessing an Existing CVS Checkout</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("Tasks\nUsing CVS\nAccessing an Existing CVS Checkout");
+addAvenueInfo("Tasks","opening_an_external_file_in_neon.htm","running_php_scripts_locally.htm");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"tasks.htm\">Tasks<\/a> &gt; <a href=\"accessing_an_existing_cvs_checkout.htm\">Using CVS<\/a> &gt; Accessing an Existing CVS Checkout<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ">Documentation 
+	 Survey</a> 
+	 | <a href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1>Accessing an Existing CVS Checkout 
+ </h1>
+<p>This procedure shows you how to access projects in PDT 
+ that you have previously checked out from CVS. This means you do not have 
+ to check out resources again to a new location in order to have access 
+ to PDT 's 
+ functionality.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To access previously checked out 
+		 projects:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">Launch the New PHP Project 
+			 Wizard by going to <span style="font-weight: bold;"><b>File | 
+			 New | PHP Project</b></span> -or- right-clicking in PHP Explorer 
+			 view and selecting <span style="font-weight: bold;"><b>New | 
+			 PHP Project</b></span>.<br>
+			The &quot;New PHP Project&quot; wizard will open.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">In the Project contents category, 
+			 unmark the Use default checkbox and browse to the location 
+			 of your checked out CVS resources.</p></li>
+		</ol>
+		<p class="picture"><img src="new_php_project_svn.png" alt="new_php_project_svn.png" title="New PHP Project Wizard - Pointing to your CVS project contents location" style="border: none;" width="327" height="360" border="0"></p>
+		<ol start="3" type="1">
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">Click <span style="font-weight: bold;"><b>Finish</b></span>.<br>
+			A new PHP Project will be created with the contents of the 
+			 project you had checked out.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">In PHP Explorer View, right-click 
+			 your project and select <span style="font-weight: bold;"><b>Team 
+			 | Share Project</b></span>.<br>
+			A &quot;Share Project&quot; dialog will open.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">From the repository list, 
+			 select CVS and click <span style="font-weight: bold;"><b>Next</b></span>.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">If you have not yet configured 
+			 a CVS repository, you will need to enter your CVS repository 
+			 details. See Configuring 
+			 a CVS Connection for more information.<br>
+			If you have already configured a CVS connection, mark the 'Use 
+			 existing repository location' option and select your repository 
+			 from the list.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">Click <span style="font-weight: bold;"><b>Finish</b></span>.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">Depending on your authentication 
+			 settings, a dialog might appear asking you to provide authentication 
+			 information.<br>
+			Enter your password and click <span style="font-weight: bold;"><b>Next</b></span>. 
+			 (Mark the Save Password checkbox to ensure that this screen 
+			 does not reappear.)<br>
+			A &quot;Commit&quot; dialog will open.</p></li>
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">Enter a comment if required 
+			 and click <span style="font-weight: bold;"><b>OK</b></span>.</p></li>
+		</ol></td>
+	</tr>
+	<tr valign="top">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>Your 
+		 project will be uploaded to the CVS repository.</p>
+		<p>Your project will have a repository icon <img src="svn_repository_icon.png" alt="svn_repository_icon.png" style="border: none;" width="22" height="18" border="0">next 
+		 to it in PHP Explorer view, indicating that it is linked to an 
+		 CVS repository.<br>
+		Your can now perform all CVS functions (commit, update etc.) on 
+		 this project.</p></td>
+		
+	</tr>
+</table>
+
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

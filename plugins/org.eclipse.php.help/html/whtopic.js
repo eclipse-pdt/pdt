@@ -1,19 +1,9 @@
-﻿/*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
- *******************************************************************************/
-//	WebHelp 5.10.005
+﻿//	WebHelp 5.10.005
 var gsPPath="";
 var gaPaths=new Array();
 var gaAvenues=new Array();
 var gaSearchTerms = new Array();
+var gChildPathInMain="";
 
 var goFrame=null;
 var gsStartPage="";
@@ -22,8 +12,7 @@ var gsSearchFormHref="";
 var gnTopicOnly=-1;
 var gnOutmostTopic=-1;
 var gsFtsBreakChars="\t\r\n\"\\ .,!@#$%^&*()~'`:;<>?/{}[]|+-=\x85\x92\x93\x94\x95\x96\x97\x99\xA9\xAE\xB7";
-
-var gsHiliteSearchSetting = "enable,#b2b4bf,black";
+var gsHiliteSearchSetting = "disable,#b2b4bf,black";
 var gsBkgndColor="";
 var gsTextColor="";
 var BTN_TEXT=1;
@@ -51,6 +40,7 @@ var gbCheckSync=false;
 var gbSyncEnabled=false;
 var gaBreadcrumbsTrail = new Array();
 var gnYPos = -1;
+var gbBadUriError = false;
 
 function AddMasterBreadcrumbs(relHomePage, styleInfo, separator, strHome, strHomePath)
 {
@@ -63,31 +53,48 @@ function AddMasterBreadcrumbs(relHomePage, styleInfo, separator, strHome, strHom
 
 	try
 	{
-		GetMasterBreadcrumbs(sdocPath, styleInfo, separator);
+			GetMasterBreadcrumbs(sdocPath, styleInfo, separator);
 	}
 	catch(err)
 	{
-		var i = gaBreadcrumbsTrail.length;
-		if(i == 0)
+		//some error occurred while reading masterdata.xml
+	}
+	var i = gaBreadcrumbsTrail.length;
+	if(i == 0)
+	{
+	    var strTrail;
+	    if(styleInfo == "breadcrumbs")
+		    strTrail = "<a class=\""+ styleInfo + "\"" + " href=\"" + strHomePath + "\">" + strHome + "</a> " + ((strHome == "")? "":separator) + " ";
+	    else
+	        strTrail = "<a style=\""+ styleInfo + "\"" + " href=\"" + strHomePath + "\">" + strHome + "</a> " + ((strHome == "")? "":separator) + " ";
+		document.write(strTrail);
+	}
+	else
+	{
+		while(i > 0)
 		{
-			var strTrail = "<a style=\""+ styleInfo + "\"" + " href=\"" + strHomePath + "\">" + strHome + "</a> " + separator + " ";
-			document.write(strTrail);
-		}
-		else
-		{
-			while(i > 0)
-			{
-				document.write(gaBreadcrumbsTrail[i-1]);
-				i--;
-			}
+			document.write(gaBreadcrumbsTrail[i-1]);
+			i--;
 		}
 	}
 	return;
 }
 
 var xmlHttp1;
+var xmlDoc1;
+function processReqChange1()
+{
+   // only if req shows "loaded"
+    if (xmlHttp1.readyState == 4) 
+		xmlDoc1 = xmlHttp1.responseXML;
+}
 function GetMasterBreadcrumbs(masterFullPath, styleInfo, separator)
-{	
+{
+	//dont read if not part of merged projects
+	if(masterFullPath.indexOf("/mergedProjects/") == -1 &&
+			masterFullPath.indexOf("\\mergedProjects\\") == -1)
+			return;
+				
 	if(gbIE5)
 	{
 		xmlDoc1=new ActiveXObject("Microsoft.XMLDOM");
@@ -103,16 +110,14 @@ function GetMasterBreadcrumbs(masterFullPath, styleInfo, separator)
 	}
 	else if(gbSafari3)
 	{
-        if(window.XMLHttpRequest && !(window.ActiveXObject)) 
-    	{
-	    	xmlHttp1 = new XMLHttpRequest();
-    		if(xmlHttp1)
-    		{
-        		xmlHttp1.onreadystatechange=onXMLResponse;
-        	    xmlHttp1.open("GET", masterFullPath, true);
-        	    xmlHttp1.send(null);
-    	    }
-    	}
+        	if(window.XMLHttpRequest)
+			xmlHttp1 = new XMLHttpRequest();
+		if(xmlHttp1)
+		{
+			xmlHttp1.onreadystatechange=processReqChange1;
+			xmlHttp1.open("GET", masterFullPath, false);
+			xmlHttp1.send("");
+		}
 	}
 
 	if(xmlDoc1 == null) throw "error";
@@ -147,7 +152,10 @@ function GetMasterBreadcrumbs(masterFullPath, styleInfo, separator)
 		{
 			var sHrefRelPath = _getPath(masterFullPath) + masterRelPath;
 			var sHrefFullPath = _getFullPath(sHrefRelPath, path); 
- 			strTrail += "<a style=\""+ styleInfo + "\"" + " href=\"" + sHrefFullPath + "\">" + name + "</a> " + separator + " ";
+			if(styleInfo == "breadcrumbs")
+ 			    strTrail += "<a class=\""+ styleInfo + "\"" + " href=\"" + sHrefFullPath + "\">" + name + "</a> " + separator + " ";
+ 			else
+ 			    strTrail += "<a style=\""+ styleInfo + "\"" + " href=\"" + sHrefFullPath + "\">" + name + "</a> " + separator + " ";
 		}
 
 	}	
@@ -156,10 +164,10 @@ function GetMasterBreadcrumbs(masterFullPath, styleInfo, separator)
 
 	// call for master breadcrumbs
 	masterFullPath = _getPath(masterFullPath)
-	masterFullPath += masterRelPath;
+	masterFullPath = _getFullPath(masterFullPath, masterRelPath);
 	masterFullPath = _getFullPath(masterFullPath, "MasterData.xml");
 
-	GetMasterBreadcrumbs(masterFullPath);
+	GetMasterBreadcrumbs(masterFullPath, styleInfo, separator);
 	
 }
 
@@ -302,18 +310,25 @@ function DomTextNode( a_Node, a_nFrom )
 		var nLastStart = 0;
 		for ( var i = 0; i < this.aClosedRanges.length; i++ )
 		{
-			strHTML += strText.substring( nLastStart, this.aClosedRanges[i].nStart - this.nFrom );
+			strHTML += _textToHtml_nonbsp(strText.substring( nLastStart, this.aClosedRanges[i].nStart - this.nFrom ));
 			strHTML += s_strHlStart;
-			strHTML += strText.substring( this.aClosedRanges[i].nStart - this.nFrom,
-										  this.aClosedRanges[i].nEnd - this.nFrom );
+			strHTML += _textToHtml_nonbsp(strText.substring( this.aClosedRanges[i].nStart - this.nFrom,
+										  this.aClosedRanges[i].nEnd - this.nFrom ));
 			strHTML += s_strHlEnd;
 
 			nLastStart = this.aClosedRanges[i].nEnd - this.nFrom;
 		}
-		strHTML += strText.substr( nLastStart );
+		strHTML += _textToHtml_nonbsp(strText.substr( nLastStart ));
 		
 		var spanElement = document.createElement( "span" );
 		spanElement.innerHTML = strHTML;
+		if (gbIE)
+		{
+		    //for IE, when assigning string to innerHTML, leading whitespaces are dropped
+		    if ((strHTML.length >0)&&(strHTML.charAt(0) == " "))
+		        spanElement.innerHTML = "&nbsp;" + spanElement.innerHTML ;       
+		}   
+		
 		this.node.parentNode.replaceChild( spanElement, this.node );
 		if(gnYPos == -1)
 		{
@@ -523,19 +538,26 @@ function highlightDocument()
 }
 
 /////// start routine /////////
+function IsHighLightRequired()
+{
+	var bRetVal = false;
+	var searchSetting = gsHiliteSearchSetting.match( "^(.+),(.+),(.*)$" );
+
+	if(searchSetting != null)
+	{
+		if(searchSetting[1] == "enable")
+		{
+			gsBkgndColor = searchSetting[2];
+			gsTextColor = searchSetting[3];
+			bRetVal = true;
+		}
+	}
+	return bRetVal;
+}
 
 function highlightSearch()
 {
-	var searchSetting = gsHiliteSearchSetting.match( "^(.+),(.+),(.*)$" );
-
-	if(searchSetting == null)
-		return;
-
-	if(searchSetting[1] != "enable")
-		return;
-
-	gsBkgndColor = searchSetting[2];
-	gsTextColor = searchSetting[3];
+	if(!IsHighLightRequired())	return;
 
 	//check pane in focus is Search pane.
 	var oMsg=new whMessage(WH_MSG_GETPANEINFO,this,1,null);
@@ -552,6 +574,14 @@ function highlightSearch()
 			return;
 	}
 	
+	//check num of results greater than 0
+	var oMsg=new whMessage(WH_MSG_GETNUMRSLT,this,1,null);
+	if(SendMessage(oMsg))
+	{
+		if(oMsg.oParam <= 0)
+			return;
+	}
+	
 	//get string in search box.
 	var oMsg = new whMessage(WH_MSG_GETSEARCHSTR, this, 1, null);
 	var strTerms = "";
@@ -559,11 +589,18 @@ function highlightSearch()
 	{
 		strTerms = oMsg.oParam;		
 	}
+	
+	StartHighLightSearch(strTerms);	
+
+}
+
+function StartHighLightSearch(strTerms)
+{
+	if(!IsHighLightRequired())	return;
 
 	findSearchTerms(strTerms, false);
-
+	
 	highlightDocument();
-
 }
 
 //////// common with FTS routines to identify stop word etc. ////////////
@@ -596,17 +633,17 @@ function findSearchTerms(searchTerms, bSkip)
 		searchTerms=sInput;
 		
 		var bAdd = true;
-		if((sCW=="or")||(sCW=="|"))
+		if((sCW=="or")||(sCW=="|")||(sCW=="OR"))
 		{
 			bSkip = false;
 			bAdd = false;
 		}
-		else if((sCW=="and")||(sCW=="&"))
+		else if((sCW=="and")||(sCW=="&")||(sCW=="AND"))
 		{
 			bSkip = false;
 			bAdd = false;
 		}
-		else if((sCW=="not")||(sCW=="~"))
+		else if((sCW=="not")||(sCW=="~")||(sCW=="NOT"))
 		{
 			bSkip = true;
 			bAdd = false;
@@ -713,6 +750,92 @@ function button(sText,nWidth,nHeight)
 	}
 }
 
+
+//recursively finds the parent project StartPage path if exists 
+//also computes the child toc path in the parent toc recursively until 
+//main proj
+
+var xmlhttp=null;
+var xmlDoc = null;
+function processReqChange()
+{
+   // only if req shows "loaded"
+    if (xmlhttp.readyState == 4) 
+		xmlDoc = xmlhttp.responseXML;
+}
+
+function getPPStartPagePath(sPath)
+{
+	if(sPath.length != 0)
+	{
+		var sXmlFolderPath = _getPath(sPath);
+		if(sXmlFolderPath.indexOf("/mergedProjects/") == -1 &&
+			sXmlFolderPath.indexOf("\\mergedProjects\\") == -1)
+			return sPath;
+		
+		var sdocPath = _getFullPath(sXmlFolderPath, "MasterData.xml");
+		try
+		{
+			if(gbIE5) //Internet Explorer
+			{
+				xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+				xmlDoc.async=false;
+  				xmlDoc.load(sdocPath);
+			}
+			else if(gbNav6) //Firefox, Mozilla, Opera etc.
+			{
+				var req=new XMLHttpRequest();
+ 		        req.open("GET", sdocPath, false);   
+	            req.send(null); 
+	            xmlDoc = req.responseXML;
+			}
+			else if(gbSafari3) //Safari
+			{ 
+				if(window.XMLHttpRequest)
+					xmlhttp = new XMLHttpRequest();
+				if(xmlhttp)
+				{
+					xmlhttp.onreadystatechange=processReqChange;
+					xmlhttp.open("GET", sdocPath, false);
+					xmlhttp.send("");
+				}
+			}
+		}
+		catch(e){
+			gbBadUriError=true;
+			return sPath;
+		}
+
+		if(xmlDoc == null) return sPath;			
+		var root = xmlDoc.documentElement;
+		if(root == null) return sPath;
+		var masterProj = null;
+		try
+		{
+			masterProj = xmlDoc.getElementsByTagName("syncinfo");	
+			var childTocPosInParent = null;
+			if(masterProj)
+			{
+				var startpage = xmlDoc.getElementsByTagName("startpage");	
+				masterStartPageName = startpage[0].getAttribute("name");
+				masterStartPageRelPath = startpage[0].getAttribute("url");
+				var tocpos = xmlDoc.getElementsByTagName("tocpos");
+				childTocPosInParent = tocpos[0].getAttribute("path");
+						
+			}
+		}
+		catch(e){return sPath;}
+		if(childTocPosInParent)
+		{
+			childTocPosInParent = childTocPosInParent.replace(/\\n/g, "\n");
+			gChildPathInMain = childTocPosInParent +  gChildPathInMain;
+		}
+		sXmlFolderPath = _getFullPath(sXmlFolderPath, masterStartPageRelPath+masterStartPageName);
+		sXmlFolderPath = getPPStartPagePath(sXmlFolderPath);
+		return sXmlFolderPath;
+	}
+}
+
 //project info
 function setRelStartPage(sPath)
 {
@@ -720,7 +843,16 @@ function setRelStartPage(sPath)
 	{
 		gsPPath=_getFullPath(_getPath(document.location.href),_getPath(sPath));
 		gsStartPage=_getFullPath(_getPath(document.location.href),sPath);
+		try{
+			gsStartPage = getPPStartPagePath(gsStartPage);
+		}
+		catch(e)
+		{
+			alert("Error reading masterData.xml");
+		}
 		gsRelCurPagePath=_getRelativeFileName(gsStartPage,document.location.href);
+		for(var i=0; i< gaPaths.length; i++)
+			gaPaths[i] = gChildPathInMain + gaPaths[i];
 	}
 }
 
@@ -744,9 +876,15 @@ function addTocInfo(sTocPath)
 	gaPaths[gaPaths.length]=sTocPath;
 }
 
+
+var flex_nextLocation;
+var flex_previousLocation;
+
 function addAvenueInfo(sName,sPrev,sNext)
 {
-	gaAvenues[gaAvenues.length]=new avenueInfo(sName,sPrev,sNext);	
+	gaAvenues[gaAvenues.length]=new avenueInfo(sName,sPrev,sNext);
+	flex_previousLocation = sPrev;
+	flex_nextLocation = sNext;
 }
 
 function addButton(sType,nStyle,sText,sHref,sOnClick,sOnMouseOver,sOnLoad,nWidth,nHeight,sImg1,sImg2,sImg3)
@@ -973,9 +1111,14 @@ function onPrev()
 function createSyncInfo()
 {
 	var oParam=new Object();
-	if(gsPPath.length==0)
-		gsPPath=_getPath(document.location.href);
-	oParam.sPPath=gsPPath;
+	var sPath = null;
+	if(gsStartPage.length != 0)
+		sPath = _getPath(gsStartPage);
+	else if(gsPPath.length==0)
+		sPath =_getPath(document.location.href);
+	else 
+		sPath = gsPPath;
+	oParam.sPPath=sPath;
 	oParam.sTPath=document.location.href;
 	oParam.aPaths=gaPaths;
 	return oParam;
@@ -1080,6 +1223,8 @@ function getCurrentAvenue()
 
 function unRegisterListener()
 {
+	if(gbAIRSSL)
+		return;
 	sendInvalidSyncInfo();
 	enableWebSearch(false);
 	if(whtopic_foldUnload)
@@ -1182,8 +1327,17 @@ function canGo(bNext)
 
 function show()
 {
-	if(gsStartPage!="")
-		window.location=gsStartPage+"#"+gsRelCurPagePath;
+	if(gbBadUriError)
+	{
+		var strMainPage = document.location.href;
+		var indx = strMainPage.toLowerCase().indexOf("/mergedprojects/");
+		if(indx != -1)
+			window.location = strMainPage.substring(0, indx+1) + "whcsh_home.htm#topicurl=" + strMainPage.substring(indx+1);
+		else if(gsStartPage!="")
+				window.location=gsStartPage+"#"+gsRelCurPagePath;
+	}
+	else if(gsStartPage!="")
+			window.location=gsStartPage+"#"+gsRelCurPagePath;
 }
 
 function hide()
@@ -1242,6 +1396,7 @@ function searchB(nForm)
 	SendMessage(oMsg);
 }
 
+
 function getSearchFormHTML()
 {
 	var sHTML="";
@@ -1263,6 +1418,9 @@ function getSearchFormHTML()
 	return sHTML;
 }
 
+
+
+
 function showHidePane(bShow)
 {
 	var oMsg=null;
@@ -1282,9 +1440,40 @@ function isShowHideEnable()
 }
 
 
+
+
+if(window.gbWhUtil && window.gbWhVer && (gbAIRSSL ||(window.gbWhMsg&&window.gbWhProxy)))
+{
+	if(!gbAIRSSL)
+	{
+		RegisterListener("bsscright",WH_MSG_GETAVIAVENUES);
+		RegisterListener("bsscright",WH_MSG_GETTOCPATHS);
+		RegisterListener("bsscright",WH_MSG_NEXT);
+		RegisterListener("bsscright",WH_MSG_PREV);
+		RegisterListener("bsscright",WH_MSG_WEBSEARCH);
+	}
+	if(gbMac&&gbIE4)
+	{
+		if(typeof(window.onunload)!="unknown")
+			if(window.onunload.toString!=unRegisterListener.toString)
+				whtopic_foldUnload=window.onunload;
+	}
+	else
+	{
+		if(window.onunload)
+			if(window.onunload.toString!=unRegisterListener.toString)
+				whtopic_foldUnload=window.onunload;
+	}
+	window.onunload=unRegisterListener;
+	
+	gbWhTopic=true;
+}
+else
+	document.location.reload();
+
 function PickupDialog_Invoke()
 {
-	if(!gbIE4||gbMac)
+	if(!gbIE4||gbMac||gbAIRSSL)
 	{
 		if(typeof(_PopupMenu_Invoke)=="function")
 			return _PopupMenu_Invoke(PickupDialog_Invoke.arguments);
@@ -1341,28 +1530,4 @@ function PickupDialog_Invoke()
 	}
 }
 
-if(window.gbWhUtil&&window.gbWhMsg&&window.gbWhVer&&window.gbWhProxy)
-{
-	RegisterListener("bsscright",WH_MSG_GETAVIAVENUES);
-	RegisterListener("bsscright",WH_MSG_GETTOCPATHS);
-	RegisterListener("bsscright",WH_MSG_NEXT);
-	RegisterListener("bsscright",WH_MSG_PREV);
-	RegisterListener("bsscright",WH_MSG_WEBSEARCH);
-	if(gbMac&&gbIE4)
-	{
-		if(typeof(window.onunload)!="unknown")
-			if(window.onunload.toString!=unRegisterListener.toString)
-				whtopic_foldUnload=window.onunload;
-	}
-	else
-	{
-		if(window.onunload)
-			if(window.onunload.toString!=unRegisterListener.toString)
-				whtopic_foldUnload=window.onunload;
-	}
-	window.onunload=unRegisterListener;
-	
-	gbWhTopic=true;
-}
-else
-	document.location.reload();
+
