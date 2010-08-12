@@ -57,8 +57,14 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 	private boolean isInternalClass(Identifier type) {
 		try {
 			ISourceModule module = getSourceModule();
-			IModelElement[] elements = module.codeSelect(type.getStart(), type
-					.getLength());
+			// there is no internal class for external file
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=322466
+			if (module.getScriptProject().getProject().getName().trim()
+					.length() == 0) {
+				return false;
+			}
+			IModelElement[] elements = module.codeSelect(type.getStart(),
+					type.getLength());
 			if (elements != null && elements.length == 1 && elements[0] != null) {
 				IModelElement element = (IModelElement) elements[0];
 				return ModelUtils.isExternalElement(element);
