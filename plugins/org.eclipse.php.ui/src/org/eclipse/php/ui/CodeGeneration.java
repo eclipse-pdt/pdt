@@ -533,7 +533,9 @@ public class CodeGeneration {
 		if (program == null) {
 			ISourceModule source = method.getSourceModule();
 			ASTParser parserForExpected = ASTParser.newParser(ProjectOptions
-					.getPhpVersion(source.getScriptProject().getProject()));
+					.getPhpVersion(source.getScriptProject().getProject()),
+					ProjectOptions.useShortTags(source.getScriptProject()
+							.getProject()));
 			try {
 				parserForExpected.setSource(source);
 				program = parserForExpected
