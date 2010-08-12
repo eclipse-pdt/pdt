@@ -26,7 +26,6 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Statement;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 
 /**
  * Tests {@link ASTMatcher}
@@ -59,9 +58,8 @@ public class ASTMatcherTests extends TestCase {
 
 	private ASTNode getAstNode(String str) throws Exception {
 		StringReader reader = new StringReader(str);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.useShortTags(null)).createAST(
-				new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, true)
+				.createAST(new NullProgressMonitor());
 		List<Statement> statements = program.statements();
 
 		Assert.assertNotNull(statements);

@@ -29,7 +29,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 
 /**
  * These tests used for checking association between declaration AST node and
@@ -237,7 +236,7 @@ public class PHPDocAwareDeclarationTests extends TestCase {
 	public void parseAndTest(Reader reader, String declarationName, String str,
 			boolean positiveTest) throws Exception {
 		IModuleDeclaration program = new PhpSourceParser().parse(reader, null,
-				ProjectOptions.useShortTags(null));
+				true);
 		DeclarationSearcher searcher = new DeclarationSearcher(declarationName);
 		((PHPModuleDeclaration) program).traverse(searcher);
 		Declaration declaration = searcher.getResult();

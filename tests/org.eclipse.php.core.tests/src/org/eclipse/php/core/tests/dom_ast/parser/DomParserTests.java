@@ -25,7 +25,6 @@ import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public class DomParserTests extends AbstractPDTTTest {
 
@@ -55,8 +54,7 @@ public class DomParserTests extends AbstractPDTTTest {
 
 		for (final PHPVersion phpVersion : TESTS.keySet()) {
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-			final ASTParser newParser = ASTParser.newParser(phpVersion,
-					ProjectOptions.useShortTags(null));
+			final ASTParser newParser = ASTParser.newParser(phpVersion, true);
 
 			for (String testsDirectory : TESTS.get(phpVersion)) {
 
@@ -64,8 +62,7 @@ public class DomParserTests extends AbstractPDTTTest {
 					try {
 						final PdttFile pdttFile = new PdttFile(fileName);
 						phpVerSuite.addTest(new DomParserTests(phpVersion
-								.getAlias()
-								+ " - /" + fileName) {
+								.getAlias() + " - /" + fileName) {
 
 							protected void runTest() throws Throwable {
 								newParser.setSource(pdttFile.getFile().trim()
@@ -73,8 +70,8 @@ public class DomParserTests extends AbstractPDTTTest {
 								Program program = newParser
 										.createAST(new NullProgressMonitor());
 
-								assertContents(pdttFile.getExpected(), program
-										.toString());
+								assertContents(pdttFile.getExpected(),
+										program.toString());
 							}
 						});
 					} catch (final Exception e) {

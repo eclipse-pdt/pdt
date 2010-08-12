@@ -27,7 +27,6 @@ import org.eclipse.php.internal.core.ast.nodes.DefaultCommentMapper;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Statement;
 import org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 
 /**
  * Tests for {@link DefaultCommentMapper}
@@ -99,9 +98,8 @@ public class CommentMapperTests extends TestCase {
 	public void parseAndCompare(String programStr) throws Exception {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.useShortTags(null)).createAST(
-				new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, true)
+				.createAST(new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PhpAstLexer(reader));
 
@@ -121,9 +119,8 @@ public class CommentMapperTests extends TestCase {
 			throws Exception {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
-		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.useShortTags(null)).createAST(
-				new NullProgressMonitor());
+		Program program = ASTParser.newParser(reader, PHPVersion.PHP5, true)
+				.createAST(new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PhpAstLexer(reader));
 
