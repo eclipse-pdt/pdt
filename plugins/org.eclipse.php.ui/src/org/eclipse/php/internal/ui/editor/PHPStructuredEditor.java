@@ -3374,6 +3374,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		if (getDocument() instanceof IStructuredDocument) {
 			CommandStack commandStack = ((IStructuredDocument) getDocument())
 					.getUndoManager().getCommandStack();
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=322529
+			((IStructuredDocument) getDocument()).getUndoManager()
+					.forceEndOfPendingCommand(null,
+							getViewer().getSelectedRange().x,
+							getViewer().getSelectedRange().y);
 			if (commandStack instanceof BasicCommandStack) {
 				((BasicCommandStack) commandStack).saveIsDone();
 			}
