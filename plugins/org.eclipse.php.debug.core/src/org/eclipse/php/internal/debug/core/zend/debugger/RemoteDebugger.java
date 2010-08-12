@@ -364,7 +364,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		// check if this is valid workspace path to avoid IAE
 		// e.g. when using debug URL, localFile can be "c:\Program Files\..."
 		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=306834
-		if (path.segmentCount() > 2) {
+		if (path.segmentCount() >= 2) {
 
 			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
 					path);
