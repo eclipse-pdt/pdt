@@ -166,11 +166,12 @@ public class AST {
 	 */
 	private BindingResolver resolver = new BindingResolver();
 
-	public AST(Reader reader, PHPVersion apiLevel, boolean aspTagsAsPhp)
-			throws IOException {
+	public AST(Reader reader, PHPVersion apiLevel, boolean aspTagsAsPhp,
+			boolean useShortTags) throws IOException {
 		this.useASPTags = aspTagsAsPhp;
 		this.apiLevel = apiLevel;
-		this.lexer = getLexerInstance(reader, apiLevel, aspTagsAsPhp);
+		this.lexer = getLexerInstance(reader, apiLevel, aspTagsAsPhp,
+				useShortTags);
 		this.parser = getParserInstance(apiLevel, this.lexer);
 	}
 
@@ -184,18 +185,21 @@ public class AST {
 	 * @throws IOException
 	 */
 	private AstLexer getLexerInstance(Reader reader, PHPVersion phpVersion,
-			boolean aspTagsAsPhp) throws IOException {
+			boolean aspTagsAsPhp, boolean useShortTags) throws IOException {
 		if (PHPVersion.PHP4 == phpVersion) {
 			final AstLexer lexer4 = getLexer4(reader);
 			lexer4.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer4.setUseShortTags(useShortTags);
 			return lexer4;
 		} else if (PHPVersion.PHP5 == phpVersion) {
 			final AstLexer lexer5 = getLexer5(reader);
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer5.setUseShortTags(useShortTags);
 			return lexer5;
 		} else if (PHPVersion.PHP5_3 == phpVersion) {
 			final AstLexer lexer53 = getLexer53(reader);
 			lexer53.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer53.setUseShortTags(useShortTags);
 			return lexer53;
 		} else {
 			throw new IllegalArgumentException(CoreMessages
