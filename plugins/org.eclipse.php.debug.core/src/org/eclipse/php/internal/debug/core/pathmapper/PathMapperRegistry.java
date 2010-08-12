@@ -15,9 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationListener;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.*;
@@ -29,7 +27,7 @@ import org.eclipse.php.internal.ui.preferences.util.XMLPreferencesReaderUI;
 import org.eclipse.php.internal.ui.preferences.util.XMLPreferencesWriterUI;
 
 public class PathMapperRegistry implements IXMLPreferencesStorable,
-		IServersManagerListener, IPHPExesListener, ILaunchConfigurationListener {
+		IServersManagerListener, IPHPExesListener {
 
 	private static final String PATH_MAPPER_PREF_KEY = PHPDebugPlugin.getID()
 			+ ".pathMapper"; //$NON-NLS-1$
@@ -37,12 +35,10 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 	private static PathMapperRegistry instance;
 	private HashMap<Server, PathMapper> serverPathMapper;
 	private HashMap<PHPexeItem, PathMapper> phpExePathMapper;
-	private HashMap<ILaunchConfiguration, PathMapper> launchMapper;
 
 	private PathMapperRegistry() {
 		serverPathMapper = new HashMap<Server, PathMapper>();
 		phpExePathMapper = new HashMap<PHPexeItem, PathMapper>();
-		launchMapper = new HashMap<ILaunchConfiguration, PathMapper>();
 		loadFromPreferences();
 	}
 
@@ -104,17 +100,16 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 					(String) null);
 			if (serverName != null) {
 				pathMapper = getByServer(ServersManager.getServer(serverName));
-			} else {
-				PathMapperRegistry reg = getInstance();
-				DebugPlugin.getDefault().getLaunchManager()
-						.addLaunchConfigurationListener(reg);
-				pathMapper = reg.launchMapper.get(launchConfiguration);
-				if (pathMapper == null) {
-					pathMapper = new PathMapper();
-					reg.launchMapper.put(launchConfiguration, pathMapper);
-				}
-			}
-
+			}/*
+			 * else { String phpExe =
+			 * launchConfiguration.getAttribute(PHPCoreConstants
+			 * .ATTR_EXECUTABLE_LOCATION, (String) null); String phpIni =
+			 * launchConfiguration
+			 * .getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
+			 * if (phpExe != null) { pathMapper =
+			 * getByPHPExe(PHPexes.getInstance().getItemForFile(phpExe,
+			 * phpIni)); } }
+			 */
 		} catch (CoreException e) {
 			PHPDebugPlugin.log(e);
 		}
@@ -123,16 +118,18 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 
 	@SuppressWarnings("unchecked")
 	public void loadFromPreferences() {
-		HashMap[] elements = XMLPreferencesReaderUI.read(PHPProjectPreferences
-				.getModelPreferences(), PATH_MAPPER_PREF_KEY);
+		HashMap[] elements = XMLPreferencesReaderUI.read(
+				PHPProjectPreferences.getModelPreferences(),
+				PATH_MAPPER_PREF_KEY);
 		if (elements.length == 1) {
 			restoreFromMap(elements[0]);
 		}
 	}
 
 	public static void storeToPreferences() {
-		XMLPreferencesWriterUI.write(PHPProjectPreferences
-				.getModelPreferences(), PATH_MAPPER_PREF_KEY, getInstance());
+		XMLPreferencesWriterUI.write(
+				PHPProjectPreferences.getModelPreferences(),
+				PATH_MAPPER_PREF_KEY, getInstance());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -223,17 +220,5 @@ public class PathMapperRegistry implements IXMLPreferencesStorable,
 
 	public void phpExeRemoved(PHPExesEvent event) {
 		phpExePathMapper.remove(event.getPHPExeItem());
-	}
-
-	public void launchConfigurationAdded(ILaunchConfiguration configuration) {
-		// empty
-	}
-
-	public void launchConfigurationChanged(ILaunchConfiguration configuration) {
-		// empty
-	}
-
-	public void launchConfigurationRemoved(ILaunchConfiguration configuration) {
-		launchMapper.remove(configuration);
 	}
 }
