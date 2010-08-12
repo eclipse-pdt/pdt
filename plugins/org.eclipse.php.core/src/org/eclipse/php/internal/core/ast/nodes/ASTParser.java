@@ -128,9 +128,9 @@ public class ASTParser {
 
 	public static ASTParser newParser(Reader reader, PHPVersion version,
 			boolean useASPTags, ISourceModule sourceModule) throws IOException {
-		return new ASTParser(reader, version, useASPTags, ProjectOptions
-				.useShortTags(sourceModule.getScriptProject().getProject()),
-				sourceModule);
+		return new ASTParser(reader, version, useASPTags,
+				ProjectOptions.useShortTags(sourceModule.getScriptProject()
+						.getProject()), sourceModule);
 	}
 
 	/**
@@ -252,8 +252,8 @@ public class ASTParser {
 	public static final Program parse(String phpCode, boolean aspTagsAsPhp,
 			boolean useShortTags) throws Exception {
 		StringReader reader = new StringReader(phpCode);
-		return parse(reader, aspTagsAsPhp, ProjectOptions
-				.getDefaultPhpVersion(), useShortTags);
+		return parse(reader, aspTagsAsPhp,
+				ProjectOptions.getDefaultPhpVersion(), useShortTags);
 	}
 
 	/**
@@ -268,8 +268,8 @@ public class ASTParser {
 	public static final Program parse(File phpFile, boolean aspTagsAsPhp,
 			boolean useShortTags) throws Exception {
 		final Reader reader = new FileReader(phpFile);
-		return parse(reader, aspTagsAsPhp, ProjectOptions
-				.getDefaultPhpVersion(), useShortTags);
+		return parse(reader, aspTagsAsPhp,
+				ProjectOptions.getDefaultPhpVersion(), useShortTags);
 	}
 
 	/**
@@ -278,8 +278,8 @@ public class ASTParser {
 	public static final Program parse(final IDocument phpDocument,
 			boolean aspTagsAsPhp, PHPVersion phpVersion, boolean useShortTags)
 			throws Exception {
-		return parse(phpDocument, aspTagsAsPhp, phpVersion, 0, phpDocument
-				.getLength(), useShortTags);
+		return parse(phpDocument, aspTagsAsPhp, phpVersion, 0,
+				phpDocument.getLength(), useShortTags);
 	}
 
 	/**
@@ -311,8 +311,8 @@ public class ASTParser {
 	 */
 	public static final Program parse(IDocument phpDocument,
 			boolean aspTagsAsPhp, boolean useShortTags) throws Exception {
-		return parse(phpDocument, aspTagsAsPhp, ProjectOptions
-				.getDefaultPhpVersion(), useShortTags);
+		return parse(phpDocument, aspTagsAsPhp,
+				ProjectOptions.getDefaultPhpVersion(), useShortTags);
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class ASTParser {
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(String phpCode) throws Exception {
-		return parse(phpCode, true, ProjectOptions.useShortTags(null));
+		return parse(phpCode, true, true);
 	}
 
 	/**
@@ -328,7 +328,7 @@ public class ASTParser {
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(File phpFile) throws Exception {
-		return parse(phpFile, true, ProjectOptions.useShortTags(null));
+		return parse(phpFile, true, true);
 	}
 
 	/**
@@ -336,8 +336,7 @@ public class ASTParser {
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(Reader reader) throws Exception {
-		return parse(reader, true, ProjectOptions.getDefaultPhpVersion(),
-				ProjectOptions.useShortTags(null));
+		return parse(reader, true, ProjectOptions.getDefaultPhpVersion(), true);
 	}
 
 	/**
@@ -391,9 +390,8 @@ public class ASTParser {
 			lexer53.setAST(ast);
 			return lexer53;
 		} else {
-			throw new IllegalArgumentException(CoreMessages
-					.getString("ASTParser_1")
-					+ phpVersion);
+			throw new IllegalArgumentException(
+					CoreMessages.getString("ASTParser_1") + phpVersion);
 		}
 	}
 
@@ -412,9 +410,8 @@ public class ASTParser {
 			parser.setAST(ast);
 			return parser;
 		} else {
-			throw new IllegalArgumentException(CoreMessages
-					.getString("ASTParser_1")
-					+ phpVersion);
+			throw new IllegalArgumentException(
+					CoreMessages.getString("ASTParser_1") + phpVersion);
 		}
 
 	}
