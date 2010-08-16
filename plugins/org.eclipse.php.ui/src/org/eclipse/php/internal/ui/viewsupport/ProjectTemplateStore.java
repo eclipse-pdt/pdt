@@ -69,6 +69,9 @@ public final class ProjectTemplateStore {
 	}
 
 	public static boolean hasProjectSpecificTempates(IProject project) {
+		if (project == null) {
+			return false;
+		}
 		String pref = new ProjectScope(project).getNode(PHPUiPlugin.ID).get(
 				KEY, null);
 		if (pref != null && pref.trim().length() > 0) {
