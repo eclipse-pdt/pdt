@@ -160,6 +160,18 @@ public class PHPStructuredTextViewerConfiguration extends
 							PHPPartitionTypes.PHP_DEFAULT);
 					addContentAssistProcessors(sourceViewer);
 				}
+			} else {
+				ContentAssistant phpContentAssistant = (ContentAssistant) getPHPContentAssistant(sourceViewer);
+				// make sure current contentAssistant install dltk's
+				// ContentAssistProcessor.CompletionListener,so we can call
+				// IContentAssistantExtension3.setRepeatedInvocationTrigger for
+				// PHPContentAssistant,so we can press "ctrl+space" to switch
+				// between different template categories
+				if (phpCompletionProcessor.getAssistant() != phpContentAssistant) {
+					phpCompletionProcessor = new PHPCompletionProcessor(
+							textEditor, phpContentAssistant,
+							PHPPartitionTypes.PHP_DEFAULT);
+				}
 			}
 
 			if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
