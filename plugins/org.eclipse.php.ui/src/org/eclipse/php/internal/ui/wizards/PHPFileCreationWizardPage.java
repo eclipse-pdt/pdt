@@ -151,8 +151,11 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		initialize();
 		dialogChanged();
 		setControl(container);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(parent,
+						IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
 	}
 
 	/**
@@ -307,6 +310,8 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		IProject project = null;
 		if (resource instanceof IProject) {
 			project = (IProject) resource;
+		} else if (resource != null) {
+			project = resource.getProject();
 		}
 		return project;
 	}
