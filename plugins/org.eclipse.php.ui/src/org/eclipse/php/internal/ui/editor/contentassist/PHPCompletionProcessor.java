@@ -26,10 +26,12 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 			',' };
 	protected static final char[] completionAutoActivationChars = { '>', ':' };
 	private boolean explicit;
+	private ContentAssistant assistant;
 
 	public PHPCompletionProcessor(IEditorPart editor,
 			ContentAssistant assistant, String partition) {
 		super(editor, assistant, partition);
+		this.assistant = assistant;
 		setCompletionProposalAutoActivationCharacters(getAutoactivationTriggers());
 	}
 
@@ -65,5 +67,9 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 
 	public boolean isExplicit() {
 		return explicit;
+	}
+
+	public ContentAssistant getAssistant() {
+		return assistant;
 	}
 }
