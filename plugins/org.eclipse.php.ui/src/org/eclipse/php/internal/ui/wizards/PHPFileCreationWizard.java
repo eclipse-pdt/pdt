@@ -68,6 +68,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		final String containerName = phpFileCreationWizardPage
 				.getContainerName();
 		final String fileName = phpFileCreationWizardPage.getFileName();
+		newPhpTemplatesWizardPage.resetTableViewerInput();
 		final PHPTemplateStore.CompiledTemplate template = this.newPhpTemplatesWizardPage
 				.compileTemplate(containerName, fileName);
 
@@ -92,8 +93,8 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		} catch (InvocationTargetException e) {
 			Throwable realException = e.getTargetException();
 			MessageDialog.openError(getShell(),
-					PHPUIMessages.PHPFileCreationWizard_0, realException
-							.getMessage()); //$NON-NLS-1$
+					PHPUIMessages.PHPFileCreationWizard_0,
+					realException.getMessage()); //$NON-NLS-1$
 			return false;
 		}
 		return true;
@@ -164,8 +165,8 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				String fileName, IProgressMonitor monitor, String contents,
 				final int offset, final String editorID) throws CoreException {
 			// create a sample file
-			monitor.beginTask(NLS.bind(PHPUIMessages.newPhpFile_create,
-					fileName), 2);
+			monitor.beginTask(
+					NLS.bind(PHPUIMessages.newPhpFile_create, fileName), 2);
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IResource resource = root.findMember(new Path(containerName));
 			if (!resource.exists() || !(resource instanceof IContainer)) {

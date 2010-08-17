@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
@@ -23,6 +24,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.templates.*;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -131,6 +133,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	private ProjectTemplateStore fTemplateStore;
 	/** Checkbox for using templates. */
 	protected Button fUseTemplateButton;
+	private IProject fProject;
 
 	public NewGenericFileTemplatesWizardPage(String title, String description) {
 		super("NewGenericTemplatesWizardPage", title, null); //$NON-NLS-1$
@@ -292,18 +295,28 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		if (helpId != null) {
 			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpId);
 		}
+		resetTableViewerInput();
 		Dialog.applyDialogFont(parent);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
 				IPHPHelpContextIds.NEW);
 		setControl(parent);
 	}
 
-	@Override
-	public void setVisible(boolean visible) {
-		if (visible) {
+	public void resetTableViewerInput() {
+		IProject newProject = getProject();
+		if ((fProject == null && fProject != newProject)
+				|| (fProject != null && !fProject.equals(newProject))) {
+			fProject = newProject;
 			fTemplateStore = getTemplateStore();
 			fTableViewer.setInput(fTemplateStore);
 			loadLastSavedPreferences();
+		}
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		if (visible) {
+			resetTableViewerInput();
 		}
 		super.setVisible(visible);
 	}
@@ -473,6 +486,15 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			fUseTemplateButton.setSelection(true);
 		}
 		enableTemplates();
+	}
+
+	protected IProject getProject() {
+		IWizard wizard = getWizard();
+		IProject project = null;
+		if (wizard instanceof PHPFileCreationWizard) {
+			project = ((PHPFileCreationWizard) wizard).getProject();
+		}
+		return project;
 	}
 
 	protected abstract IPreferenceStore getPreferenceStore();

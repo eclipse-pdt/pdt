@@ -177,7 +177,8 @@ public final class ProjectTemplateStore {
 		}
 	}
 
-	public Object findTemplate(String templateName, String templateContextTypeId) {
+	public Template findTemplate(String templateName,
+			String templateContextTypeId) {
 		if (fProjectStore != null) {
 			return fProjectStore.findTemplate(templateName,
 					templateContextTypeId);
@@ -188,7 +189,7 @@ public final class ProjectTemplateStore {
 
 	}
 
-	public Object[] getTemplates(String templateContextTypeId) {
+	public Template[] getTemplates(String templateContextTypeId) {
 		if (fProjectStore != null) {
 			return fProjectStore.getTemplates(templateContextTypeId);
 		} else {
