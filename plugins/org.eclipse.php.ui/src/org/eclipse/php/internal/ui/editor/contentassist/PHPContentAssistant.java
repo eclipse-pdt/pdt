@@ -139,8 +139,7 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 							if (processors != null) {
 								StringBuffer sb = new StringBuffer();
 								for (int i = 0; i < processors.length; i++) {
-									sb
-											.append(computeAllAutoActivationTriggers(processors[i]));
+									sb.append(computeAllAutoActivationTriggers(processors[i]));
 								}
 								if (sb.toString().indexOf(e.character) < 0) {
 									stop();
@@ -160,6 +159,12 @@ public class PHPContentAssistant extends StructuredContentAssistant implements
 					activation = (char[]) evaluatePrivateMemberMethod(
 							"fContentAssistSubjectControlAdapter", "getCompletionProposalAutoActivationCharacters", new Class[] { ContentAssistant.class, int.class }, new Object[] { PHPContentAssistant.super, pos }); //$NON-NLS-1$ //$NON-NLS-2$
 					activated = contains(activation, e.character);
+				} else {
+					if (e.character == 0x3E) {// '>' will not trigger proposal
+												// popuped
+						stop();
+						return;
+					}
 				}
 				int showStyle;
 				if (activated && !isProposalPopupActive()) {
