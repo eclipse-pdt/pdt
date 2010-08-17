@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.TemplateContextType;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -51,8 +50,7 @@ public class NewPhpTemplatesWizardPage extends
 				.getContextType(getTemplateContextTypeId());
 		String name = templateContextType.getName();
 		return NLS
-				.bind(
-						PHPUIMessages.newPhpFile_wizard_templatePage_phpTemplatesLocation,
+				.bind(PHPUIMessages.newPhpFile_wizard_templatePage_phpTemplatesLocation,
 						name);
 	}
 
@@ -71,11 +69,7 @@ public class NewPhpTemplatesWizardPage extends
 	@Override
 	protected ProjectTemplateStore getTemplateStore() {
 
-		IWizard wizard = getWizard();
-		IProject project = null;
-		if (wizard instanceof PHPFileCreationWizard) {
-			project = ((PHPFileCreationWizard) wizard).getProject();
-		}
+		IProject project = getProject();
 
 		ProjectTemplateStore templateStore;
 		if (ProjectTemplateStore.hasProjectSpecificTempates(project)) {
