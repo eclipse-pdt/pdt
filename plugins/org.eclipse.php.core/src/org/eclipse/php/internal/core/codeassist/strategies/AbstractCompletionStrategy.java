@@ -112,7 +112,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		int endOfReplacement = start + length;
 		if (document.getLength() == start) {
 			endOfReplacement = start;
-		} else if (start < document.getLength() - 2) {
+		} else if (endOfReplacement < document.getLength() - 2) {
 			if (document.getChar(endOfReplacement) == '('
 					&& document.getChar(endOfReplacement + 1) == ')') {
 				endOfReplacement += 2;
