@@ -182,13 +182,13 @@ public class PreferenceConstants {
 	public final static String EDITOR_ADD_PHPCLOSE_TAGS = "autoAddPhpCloseTags"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls whether the 'use short tags' feature is
-	 * enabled.
+	 * A named preference that controls whether the 'Add "php" after PHP start
+	 * tag (<?)' feature is enabled.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	//	public final static String EDITOR_USE_SHORT_TAGS = "useShortTags"; //$NON-NLS-1$
+	public final static String EDITOR_ADD_PHP_FOR_PHPSTART_TAGS = "autoAddPhpForPhpStartTags"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP comments
@@ -1055,7 +1055,7 @@ public class PreferenceConstants {
 		store.setDefault(EDITOR_CLOSE_PHPDOCS_AND_COMMENTS, true);
 		store.setDefault(EDITOR_ADD_PHPDOC_TAGS, true);
 		store.setDefault(EDITOR_ADD_PHPCLOSE_TAGS, true);
-		// store.setDefault(EDITOR_USE_SHORT_TAGS, false);
+		store.setDefault(EDITOR_ADD_PHP_FOR_PHPSTART_TAGS, true);
 
 		// mark occurrences
 		store.setDefault(PreferenceConstants.EDITOR_MARK_OCCURRENCES, true);

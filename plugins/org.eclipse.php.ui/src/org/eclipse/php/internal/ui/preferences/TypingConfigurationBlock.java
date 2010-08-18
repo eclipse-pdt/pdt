@@ -129,9 +129,9 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
 				OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS));
-		// overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
-		// OverlayPreferenceStore.STRING,
-		// PreferenceConstants.EDITOR_USE_SHORT_TAGS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.STRING,
+				PreferenceConstants.EDITOR_ADD_PHP_FOR_PHPSTART_TAGS));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
 				.size()];
@@ -190,15 +190,13 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		if (indentChar == '\t') {
 
 			autoIndentDetails = Messages
-					.format(
-							PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
+					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
 							new String[] { Integer.toString(4) });
 		} else {
 			int indentSize = FormatPreferencesSupport.getInstance()
 					.getIndentationSize(null);
 			autoIndentDetails = Messages
-					.format(
-							PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
+					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
 							new String[] { Integer.toString(4),
 									Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}
@@ -212,10 +210,9 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		formatterPageLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				PreferencesUtil
-						.createPreferenceDialogOn(
-								formatterPageLink.getShell(),
-								"org.eclipse.php.ui.preferences.PHPFormatterPreferencePage", null, null); //$NON-NLS-1$
+				PreferencesUtil.createPreferenceDialogOn(
+						formatterPageLink.getShell(),
+						"org.eclipse.php.ui.preferences.PHPFormatterPreferencePage", null, null); //$NON-NLS-1$
 			}
 		});
 	}
@@ -262,9 +259,9 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		addCheckBox(composite, label,
 				PreferenceConstants.EDITOR_ADD_PHPCLOSE_TAGS, 0);
 
-		// label = PHPUIMessages.getString("typingPage_use_short_tags");
-		// addCheckBox(composite, label,
-		// PreferenceConstants.EDITOR_USE_SHORT_TAGS, 0);
+		label = PHPUIMessages.typingPage_autoAdd_php_for_phpstart_tags;
+		addCheckBox(composite, label,
+				PreferenceConstants.EDITOR_ADD_PHP_FOR_PHPSTART_TAGS, 0);
 
 		createDependency(master, slave);
 	}
@@ -338,8 +335,8 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fStore.setValue((String) fCheckBoxes.get(button), button
-					.getSelection());
+			fStore.setValue((String) fCheckBoxes.get(button),
+					button.getSelection());
 		}
 	};
 
@@ -355,15 +352,13 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		if (indentChar == '\t') {
 
 			autoIndentDetails = Messages
-					.format(
-							PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
+					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_tab_text,
 							new String[] { Integer.toString(4) });
 		} else {
 			int indentSize = FormatPreferencesSupport.getInstance()
 					.getIndentationSize(null);
 			autoIndentDetails = Messages
-					.format(
-							PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
+					.format(PHPUIMessages.SmartTypingConfigurationBlock_tabs_message_others_text,
 							new String[] { Integer.toString(4),
 									Integer.toString(indentSize), "space" }); //$NON-NLS-1$
 		}

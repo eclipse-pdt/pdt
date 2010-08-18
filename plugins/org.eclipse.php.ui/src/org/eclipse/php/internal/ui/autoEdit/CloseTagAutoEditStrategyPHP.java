@@ -17,7 +17,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -32,11 +31,12 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
- * 1.when user check both "Use short tags" and "close PHP Tag",people type "<?"
- * then get "<? ?>". 2.when user uncheck "Use short tags" and check
- * "close PHP Tag",people type "<?" then get "<?php ?>". 3.when user check
- * "Use short tags" and uncheck "close PHP Tag",no completion at all. 4.when
- * user uncheck both "Use short tags" and "close PHP Tag",people type "<?" then
+ * 1.when user check both "Add php after PHP start tag (<?)" and
+ * "close PHP Tag",people type "<?" then get "<? ?>". 2.when user uncheck
+ * "Add php after PHP start tag (<?)" and check "close PHP Tag",people type "<?"
+ * then get "<?php ?>". 3.when user check "Add php after PHP start tag (<?)" and
+ * uncheck "close PHP Tag",no completion at all. 4.when user uncheck both
+ * "Add php after PHP start tag (<?)" and "close PHP Tag",people type "<?" then
  * get "<?php"
  * 
  * @author Roy, 2007
@@ -65,8 +65,8 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 			}
 		});
 
-		boolean useShortTags = ProjectOptions.useShortTags(projects[0]);
-		if (!TypingPreferences.addPhpCloseTag && useShortTags) {
+		if (!TypingPreferences.addPhpCloseTag
+				&& !TypingPreferences.addPhpForPhpStartTags) {
 			return;
 		}
 		Object textEditor = getActiveTextEditor();
@@ -87,13 +87,13 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 						if (node != null
 								&& prefixedWith(document, command.offset, "<")) { //$NON-NLS-1$ //$NON-NLS-2$
 							if (!TypingPreferences.addPhpCloseTag
-									&& !useShortTags) {
+									&& TypingPreferences.addPhpForPhpStartTags) {
 								command.text += "php "; //$NON-NLS-1$
 								command.shiftsCaret = false;
 								command.caretOffset = command.offset + 5;
 								command.doit = false;
 							} else if (TypingPreferences.addPhpCloseTag
-									&& useShortTags) {
+									&& !TypingPreferences.addPhpForPhpStartTags) {
 								if (!closeTagAppears(node.getSource(),
 										command.offset)) {
 									command.text += " ?>"; //$NON-NLS-1$
@@ -102,7 +102,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 									command.doit = false;
 								}
 							} else if (TypingPreferences.addPhpCloseTag
-									&& !useShortTags) {
+									&& TypingPreferences.addPhpForPhpStartTags) {
 								if (!closeTagAppears(node.getSource(),
 										command.offset)) {
 									command.text += "php ?>"; //$NON-NLS-1$

@@ -18,6 +18,7 @@ import org.eclipse.osgi.util.NLS;
 
 public final class PHPUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.PHPUIMessages"; //$NON-NLS-1$
+
 	private static ResourceBundle fResourceBundle;
 
 	private PHPUIMessages() {
@@ -739,6 +740,7 @@ public final class PHPUIMessages extends NLS {
 	public static String TodoTaskConfigurationBlock_markers_tasks_setdefault_button;
 	public static String CustomFiltersDialog_patternInfo;
 	public static String typingPage_autoAdd_phpClose_tags;
+	public static String typingPage_autoAdd_php_for_phpstart_tags;
 	public static String WorkingSetModel_histroy_name;
 	public static String GotoType_action_description;
 	public static String GotoMatchingBracket_error_noMatchingBracket;
@@ -957,7 +959,6 @@ public final class PHPUIMessages extends NLS {
 	public static String CodeAssistPreferencePage_showVariablesFromOtherFiles;
 	public static String OpenAction_declaration_label;
 	public static String CodeTemplateBlock_templates_edit_button;
-
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PHPUIMessages.class);
 	}
