@@ -38,6 +38,6 @@ public interface IFormatterProcessorFactory {
 	 * @throws Exception
 	 */
 	public ICodeFormattingProcessor getCodeFormattingProcessor(
-			IDocument document, PHPVersion phpVersion, IRegion region)
-			throws Exception;
+			IDocument document, PHPVersion phpVersion, boolean useShortTags,
+			IRegion region) throws Exception;
 }

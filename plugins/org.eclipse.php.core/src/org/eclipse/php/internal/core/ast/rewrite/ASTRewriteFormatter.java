@@ -133,10 +133,11 @@ import org.eclipse.text.edits.*;
 	private final Map options;
 	private IDocument document;
 	private PHPVersion phpVersion;
+	private boolean useShortTags;
 
 	public ASTRewriteFormatter(IDocument document, NodeInfoStore placeholders,
 			RewriteEventStore eventStore, Map options, String lineDelimiter,
-			PHPVersion version) {
+			PHPVersion version, boolean useShortTags) {
 		this.document = document;
 		this.placeholders = placeholders;
 		this.eventStore = eventStore;
@@ -283,8 +284,8 @@ import org.eclipse.text.edits.*;
 			int length, int indentationLevel) {
 		try {
 			ICodeFormattingProcessor codeFormatter = createCodeFormatter(
-					this.options, new Region(offset, length), createDocument(
-							string, null));
+					this.options, new Region(offset, length),
+					createDocument(string, null));
 			return codeFormatter.getTextEdits();
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -296,7 +297,7 @@ import org.eclipse.text.edits.*;
 			IRegion region, IDocument document) throws Exception {
 		if (getContentFomatter() != null) {
 			return contentFormatter.getCodeFormattingProcessor(document,
-					phpVersion, region);
+					phpVersion, useShortTags, region);
 		}
 		return new DefaultCodeFormattingProcessor(options);
 	}
@@ -380,8 +381,8 @@ import org.eclipse.text.edits.*;
 		}
 
 		String concatStr = prefix + str + suffix;
-		TextEdit edit = formatString(0, concatStr, prefix.length(), str
-				.length(), indentationLevel);
+		TextEdit edit = formatString(0, concatStr, prefix.length(),
+				str.length(), indentationLevel);
 
 		if (prefix.length() > 0) {
 			edit = shifEdit(edit, prefix.length(), prefix);
