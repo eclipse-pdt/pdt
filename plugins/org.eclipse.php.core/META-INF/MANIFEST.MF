@@ -18,6 +18,7 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Provide-Package: org.eclipse.php.core.codeassist,
  org.eclipse.php.core.compiler,
+ org.eclipse.php.core.format,
  org.eclipse.php.core.index,
  org.eclipse.php.core.language,
  org.eclipse.php.internal.core,
