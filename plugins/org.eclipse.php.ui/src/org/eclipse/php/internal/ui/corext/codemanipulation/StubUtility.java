@@ -12,7 +12,10 @@
 package org.eclipse.php.internal.ui.corext.codemanipulation;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.*;
@@ -49,9 +52,9 @@ public class StubUtility {
 
 	private static final String[] EMPTY = new String[0];
 
-	private static final Set VALID_TYPE_BODY_TEMPLATES;
+	private static final Set<String> VALID_TYPE_BODY_TEMPLATES;
 	static {
-		VALID_TYPE_BODY_TEMPLATES = new HashSet();
+		VALID_TYPE_BODY_TEMPLATES = new HashSet<String>();
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.CLASSBODY_ID);
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.INTERFACEBODY_ID);
 		VALID_TYPE_BODY_TEMPLATES.add(CodeTemplateContextType.ENUMBODY_ID);
@@ -133,23 +136,6 @@ public class StubUtility {
 		return evaluateTemplate(context, template);
 	}
 
-	/*
-	 * public static String getCatchBodyContent(IScriptProject sp, String
-	 * exceptionType, String variableName, ASTNode locationInAST, String
-	 * lineDelimiter) throws CoreException { String enclosingType = "";
-	 * //$NON-NLS-1$ String enclosingMethod = ""; //$NON-NLS-1$
-	 * 
-	 * if (locationInAST != null) { MethodDeclaration parentMethod =
-	 * ASTResolving.findParentMethodDeclaration(locationInAST); if (parentMethod
-	 * != null) { enclosingMethod = parentMethod.getName(); locationInAST =
-	 * parentMethod; } ASTNode parentType =
-	 * ASTResolving.findParentType(locationInAST); if (parentType instanceof
-	 * AbstractTypeDeclaration) { enclosingType = ((AbstractTypeDeclaration)
-	 * parentType).getName().getIdentifier(); } } return getCatchBodyContent(sp,
-	 * exceptionType, variableName, enclosingType, enclosingMethod,
-	 * lineDelimiter); }
-	 */
-
 	public static String getCatchBodyContent(IScriptProject sp,
 			String exceptionType, String variableName, String enclosingType,
 			String enclosingMethod, String lineDelimiter) throws CoreException {
@@ -183,9 +169,6 @@ public class StubUtility {
 		IScriptProject project = sp;
 		CodeTemplateContext context = new CodeTemplateContext(template
 				.getContextTypeId(), project, lineDelimiter);
-		// context.setCompilationUnitVariables(sp);
-		// context.setVariable(CodeTemplateContextType.PACKAGE_DECLARATION,
-		// packDecl);
 		context.setVariable(CodeTemplateContextType.TYPE_COMMENT,
 				typeComment != null ? typeComment : ""); //$NON-NLS-1$
 		context.setVariable(CodeTemplateContextType.FILE_COMMENT,
@@ -217,11 +200,8 @@ public class StubUtility {
 
 		CodeTemplateContext context = new CodeTemplateContext(template
 				.getContextTypeId(), sp, lineDelimiter);
-		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.FILENAME, sp
 				.getElementName());
-		// context.setVariable(CodeTemplateContextType.TYPENAME ,
-		// sp.getElementName());
 		return evaluateTemplate(context, template);
 	}
 
@@ -241,7 +221,6 @@ public class StubUtility {
 		}
 		CodeTemplateContext context = new CodeTemplateContext(template
 				.getContextTypeId(), sp, lineDelim);
-		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature
 				.getQualifier(typeQualifiedName));
 		context.setVariable(CodeTemplateContextType.TYPENAME, Signature
@@ -261,7 +240,7 @@ public class StubUtility {
 		}
 
 		TemplateVariable position = findVariable(buffer,
-				CodeTemplateContextType.TAGS); // look if Javadoc tags have to
+				CodeTemplateContextType.TAGS); // look if PHPDoc tags have to
 		// be added
 		if (position == null) {
 			return str;
@@ -325,8 +304,7 @@ public class StubUtility {
 				return getParameterTypeNamesForSeeTag(resolvedBinding);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PHPUiPlugin.log(e);
 		}
 
 		// fall back code. Not good for generic methods!
@@ -447,7 +425,7 @@ public class StubUtility {
 		}
 		if (target != null) {
 			String targetTypeName = target.getDeclaringType()
-					.getFullyQualifiedName(".");
+					.getTypeQualifiedName(".");
 			String[] targetParamTypeNames = getParameterTypeNamesForSeeTag(target);
 			if (delegate)
 				context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG,
@@ -476,7 +454,7 @@ public class StubUtility {
 			return null;
 		}
 		TemplateVariable position = findVariable(buffer,
-				CodeTemplateContextType.TAGS); // look if Javadoc tags have to
+				CodeTemplateContextType.TAGS); // look if PHPDoc tags have to
 		// be added
 		if (position == null) {
 			return str;
@@ -491,8 +469,8 @@ public class StubUtility {
 						paramNames, retTypeSig, typeParameterNames, false,
 						lineDelimiter, newExceptions);
 			} catch (BadLocationException e) {
-				throw new CoreException(DLTKUIStatus.createError(IStatus.ERROR,
-						e));
+				throw new CoreException(new Status(IStatus.ERROR,
+						PHPUiPlugin.ID, e.getClass().getName(), e));
 			}
 		}
 		return document.get();
@@ -505,7 +483,7 @@ public class StubUtility {
 		IDocument doc = new Document(buffer.getString());
 		int nLines = doc.getNumberOfLines();
 		MultiTextEdit edit = new MultiTextEdit();
-		HashSet removedLines = new HashSet();
+		HashSet<Integer> removedLines = new HashSet<Integer>();
 		for (int i = 0; i < variables.length; i++) {
 			TemplateVariable position = findVariable(buffer, variables[i]); // look
 			// if
@@ -563,7 +541,6 @@ public class StubUtility {
 		}
 		CodeTemplateContext context = new CodeTemplateContext(template
 				.getContextTypeId(), sp, lineDelimiter);
-		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 
@@ -588,7 +565,6 @@ public class StubUtility {
 
 		CodeTemplateContext context = new CodeTemplateContext(template
 				.getContextTypeId(), sp, lineDelimiter);
-		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
 				methodName);
@@ -617,7 +593,6 @@ public class StubUtility {
 		}
 		CodeTemplateContext context = new CodeTemplateContext(template
 				.getContextTypeId(), sp, lineDelimiter);
-		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
 				methodName);
@@ -667,76 +642,6 @@ public class StubUtility {
 		}
 	}
 
-	/*
-	 * Don't use this method directly, use CodeGeneration.
-	 * 
-	 * @see org.eclipse.jdt.ui.CodeGeneration#getMethodComment(ICompilationUnit,
-	 * String, MethodDeclaration, boolean, String, String[], String)
-	 */
-	/*
-	 * public static String getMethodComment(IScriptProject sp, String typeName,
-	 * MethodDeclaration decl, boolean isDeprecated, String targetName, String
-	 * targetMethodDeclaringTypeName, String[] targetMethodParameterTypeNames,
-	 * boolean delegate, String lineDelimiter) throws CoreException { boolean
-	 * needsTarget = targetMethodDeclaringTypeName != null &&
-	 * targetMethodParameterTypeNames != null; String templateName =
-	 * CodeTemplateContextType.METHODCOMMENT_ID; if (decl.isConstructor()) {
-	 * templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID; } else if
-	 * (needsTarget) { if (delegate) templateName =
-	 * CodeTemplateContextType.DELEGATECOMMENT_ID; else templateName =
-	 * CodeTemplateContextType.OVERRIDECOMMENT_ID; } Template template =
-	 * getCodeTemplate(templateName, sp); if (template == null) { return null; }
-	 * CodeTemplateContext context = new
-	 * CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter); //
-	 * context.setCompilationUnitVariables(sp);
-	 * context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
-	 * context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
-	 * decl.getName().getIdentifier()); if (!decl.isConstructor()) {
-	 * context.setVariable(CodeTemplateContextType.RETURN_TYPE,
-	 * ASTNodes.asString(getReturnType(decl))); } if (needsTarget) { if
-	 * (delegate) context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG,
-	 * getSeeTag(targetMethodDeclaringTypeName, targetName,
-	 * targetMethodParameterTypeNames)); else
-	 * context.setVariable(CodeTemplateContextType.SEE_TO_OVERRIDDEN_TAG,
-	 * getSeeTag(targetMethodDeclaringTypeName, targetName,
-	 * targetMethodParameterTypeNames)); }
-	 * 
-	 * TemplateBuffer buffer; try { buffer = context.evaluate(template); } catch
-	 * (BadLocationException e) { throw new CoreException(Status.CANCEL_STATUS);
-	 * } catch (TemplateException e) { throw new
-	 * CoreException(Status.CANCEL_STATUS); } if (buffer == null) return null;
-	 * String str = buffer.getString(); if
-	 * (Strings.containsOnlyWhitespaces(str)) { return null; } TemplateVariable
-	 * position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if
-	 * Javadoc tags have to be added if (position == null) { return str; }
-	 * 
-	 * IDocument textBuffer = new Document(str); List typeParams =
-	 * decl.typeParameters(); String[] typeParamNames = new
-	 * String[typeParams.size()]; for (int i = 0; i < typeParamNames.length;
-	 * i++) { TypeParameter elem = (TypeParameter) typeParams.get(i);
-	 * typeParamNames[i] = elem.getName().getIdentifier(); } List params =
-	 * decl.parameters(); String[] paramNames = new String[params.size()]; for
-	 * (int i = 0; i < paramNames.length; i++) { SingleVariableDeclaration elem
-	 * = (SingleVariableDeclaration) params.get(i); paramNames[i] =
-	 * elem.getName().getIdentifier(); }
-	 * 
-	 * String returnType = null; if (!decl.isConstructor()) { returnType =
-	 * ASTNodes.asString(getReturnType(decl)); } int[] tagOffsets =
-	 * position.getOffsets(); for (int i = tagOffsets.length - 1; i >= 0; i--) {
-	 * // from last to first try { insertTag(textBuffer, tagOffsets[i],
-	 * position.getLength(), paramNames, exceptionNames, returnType,
-	 * typeParamNames, isDeprecated, lineDelimiter); } catch
-	 * (BadLocationException e) { throw new
-	 * CoreException(DLTKUIStatus.createError(IStatus.ERROR, e)); } } return
-	 * textBuffer.get(); }
-	 */
-
-	/**
-	 * @param decl
-	 *            the method declaration
-	 * @return the return type
-	 * @deprecated Deprecated to avoid deprecated warnings
-	 */
 	/*
 	 * private static ASTNode getReturnType(MethodDeclaration decl) { // used
 	 * from API, can't eliminate return decl.getAST().apiLevel() == AST.JLS2 ?
@@ -873,14 +778,6 @@ public class StubUtility {
 				Platform.PREF_LINE_SEPARATOR, platformDefault, scopeContext);
 	}
 
-	private static String removeTypeArguments(String baseName) {
-		int idx = baseName.indexOf('<');
-		if (idx != -1) {
-			return baseName.substring(0, idx);
-		}
-		return baseName;
-	}
-
 	// --------------------------- name suggestions --------------------------
 
 	public static final int STATIC_FIELD = 1;
@@ -888,58 +785,6 @@ public class StubUtility {
 	public static final int CONSTANT_FIELD = 3;
 	public static final int PARAMETER = 4;
 	public static final int LOCAL = 5;
-
-	private static class ExcludedCollection extends AbstractList {
-		private String[] fExcluded;
-
-		public ExcludedCollection(String[] excluded) {
-			fExcluded = excluded;
-		}
-
-		public String[] getExcludedArray() {
-			return fExcluded;
-		}
-
-		public int size() {
-			return fExcluded.length;
-		}
-
-		public Object get(int index) {
-			return fExcluded[index];
-		}
-
-		public int indexOf(Object o) {
-			if (o instanceof String) {
-				for (int i = 0; i < fExcluded.length; i++) {
-					if (o.equals(fExcluded[i]))
-						return i;
-				}
-			}
-			return -1;
-		}
-
-		public boolean contains(Object o) {
-			return indexOf(o) != -1;
-		}
-	}
-
-	// -------------------- preference access -----------------------
-
-	/*
-	 * public static boolean useThisForFieldAccess(IScriptProject project) {
-	 * return
-	 * Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants
-	 * .CODEGEN_KEYWORD_THIS, project)).booleanValue(); }
-	 * 
-	 * public static boolean useIsForBooleanGetters(IScriptProject project) {
-	 * return
-	 * Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants
-	 * .CODEGEN_IS_FOR_GETTERS, project)).booleanValue(); }
-	 * 
-	 * public static boolean doAddComments(IScriptProject project) { return
-	 * Boolean.valueOf(PreferenceConstants.getPreference(PreferenceConstants.
-	 * CODEGEN_ADD_COMMENTS, project)).booleanValue(); }
-	 */
 
 	/**
 	 * Only to be used by tests
@@ -976,16 +821,4 @@ public class StubUtility {
 		}
 		return projectStore.findTemplateById(id);
 	}
-
-	/*
-	 * public static ImportRewrite createImportRewrite(IScriptProject sp,
-	 * boolean restoreExistingImports) throws ModelException { return
-	 * CodeStyleConfiguration.createImportRewrite(sp, restoreExistingImports); }
-	 * 
-	 * public static ImportRewrite createImportRewrite(ScriptProject astRoot,
-	 * boolean restoreExistingImports) { return
-	 * CodeStyleConfiguration.createImportRewrite(astRoot,
-	 * restoreExistingImports); }
-	 */
-
 }

@@ -23,7 +23,6 @@ import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.ui.editor.SharedASTProvider;
-import org.eclipse.wst.jsdt.internal.compiler.env.ICompilationUnit;
 
 /**
  * Class that offers access to the templates contained in the 'code templates'
@@ -44,7 +43,7 @@ public class CodeGeneration {
 
 	/**
 	 * Constant ID for the type kind to be used in
-	 * {@link #getTypeBody(String, ICompilationUnit, String, String)} to get the
+	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the
 	 * code template used for a new class type body.
 	 * 
 	 * @since 3.2
@@ -53,7 +52,7 @@ public class CodeGeneration {
 
 	/**
 	 * Constant ID for the type kind to be used in
-	 * {@link #getTypeBody(String, ICompilationUnit, String, String)} to get the
+	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the
 	 * code template used for a new interface type body.
 	 * 
 	 * @since 3.2
@@ -62,7 +61,7 @@ public class CodeGeneration {
 
 	/**
 	 * Constant ID for the type kind to be used in
-	 * {@link #getTypeBody(String, ICompilationUnit, String, String)} to get the
+	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the
 	 * code template used for a new enum type body.
 	 * 
 	 * @since 3.2
@@ -71,7 +70,7 @@ public class CodeGeneration {
 
 	/**
 	 * Constant ID for the type kind to be used in
-	 * {@link #getTypeBody(String, ICompilationUnit, String, String)} to get the
+	 * {@link #getTypeBody(String, IScriptProject, String, String)} to get the
 	 * code template used for a new annotation type body.
 	 * 
 	 * @since 3.2
@@ -574,7 +573,8 @@ public class CodeGeneration {
 		final List<String> exceptions = new ArrayList<String>();
 		elementAt.accept(new AbstractVisitor() {
 			public boolean visit(ThrowStatement throwStatement) {
-				if (throwStatement.getExpression() instanceof ClassInstanceCreation) {
+				Expression expression = throwStatement.getExpression();
+				if (expression instanceof ClassInstanceCreation) {
 					ClassInstanceCreation cic = (ClassInstanceCreation) throwStatement
 							.getExpression();
 					if (cic.getClassName().getName() instanceof Identifier) {
@@ -583,6 +583,14 @@ public class CodeGeneration {
 						exceptions.add(name.getName());
 					}
 				}
+				if (expression instanceof Variable) {
+					ITypeBinding type = ((Variable) expression)
+							.resolveTypeBinding();
+					if (type != null) {
+						exceptions.add(type.getName());
+					}
+				}
+
 				return true;
 			}
 		});
