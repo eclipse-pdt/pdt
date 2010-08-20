@@ -1,0 +1,73 @@
+--TEST--
+Show own class static members
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?
+class A {
+
+//static fields
+	static private $staticPrivateField = "staticPrivateField\n";
+	static protected $staticProtectedField = "staticProtectedField\n";
+	static public $staticPublicField = "staticPublicField\n";
+	static $staticDefaultField = "staticDefaultField\n";
+		
+	//static functions
+	static public function publicStaticFunction() { echo "publicStaticFunction\n";}
+	static protected function protectedStaticFunction() {echo "protectedStaticFunction\n";}
+	static private function privateStaticFunction() {echo "privateStaticFunction\n";}
+	static function defaultStaticFunction() {echo "defaultStaticFunction\n";}
+	
+	//non static fields
+	private $privateField = "privateField\n";
+	protected $protectedField = "protectedField\n";
+	public $publicField = "publicField\n";
+	var $defalutField = "defalutField\n";
+	
+	//non static functions
+	public function publicNonStaticFunction() {echo "publicNonStaticFunction\n";}
+	protected function protectedNonStaticFunction() {echo "protectedNonStaticFunction\n";}
+	private function privateNonStaticFunction() {echo "privateNonStaticFunction\n";}
+	function defaultNonStaticFunction() {echo "defaultNonStaticFunction\n";}
+      
+	const CONSTANT_FIELD = "CONSTANT_FIELD";
+	function __construct() {
+		
+	}
+}
+	
+		
+echo A::publicStaticFunction();
+echo A::defaultStaticFunction();
+
+echo A::publicNonStaticFunction();
+echo A::defaultNonStaticFunction();
+
+echo A::$staticPublicField;
+echo A::$staticDefaultField;
+
+echo A::CONSTANT_FIELD;
+
+A::|
+
+//execution results	
+//publicStaticFunction
+//defaultStaticFunction
+//publicNonStaticFunction
+//defaultNonStaticFunction
+//staticPublicField
+//staticDefaultField
+//CONSTANT_FIELD
+
+?>
+--EXPECT--
+field($staticDefaultField)
+field($staticPublicField)
+field(CONSTANT_FIELD)
+method(defaultNonStaticFunction)
+method(defaultStaticFunction)
+method(publicNonStaticFunction)
+method(publicStaticFunction)
+
+
+

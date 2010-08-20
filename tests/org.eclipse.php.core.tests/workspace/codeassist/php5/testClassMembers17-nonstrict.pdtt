@@ -1,0 +1,106 @@
+--TEST--
+Show own class static members
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class A {
+
+//static fields
+	static private $staticPrivateField = "staticPrivateField\n";
+	static protected $staticProtectedField = "staticProtectedField\n";
+	static public $staticPublicField = "staticPublicField\n";
+	static $staticDefaultField = "staticDefaultField\n";
+		
+	//static functions
+	static public function publicStaticFunction() { echo "publicStaticFunction\n";}
+	static protected function protectedStaticFunction() {echo "protectedStaticFunction\n";}
+	static private function privateStaticFunction() {echo "privateStaticFunction\n";}
+	static function defaultStaticFunction() {echo "defaultStaticFunction\n";}
+	
+	//non static fields
+	private $privateField = "privateField\n";
+	protected $protectedField = "protectedField\n";
+	public $publicField = "publicField\n";
+	var $defalutField = "defalutField\n";
+	
+	//non static functions
+	public function publicNonStaticFunction() {echo "publicNonStaticFunction\n";}
+	protected function protectedNonStaticFunction() {echo "protectedNonStaticFunction\n";}
+	private function privateNonStaticFunction() {echo "privateNonStaticFunction\n";}
+	function defaultNonStaticFunction() {echo "defaultNonStaticFunction\n";}
+      
+	const CONSTANT_FIELD = "CONSTANT_FIELD";
+	function __construct() {
+		
+		//static functions
+		echo A::publicStaticFunction();
+		echo A::protectedStaticFunction();
+		echo A::privateStaticFunction();
+		echo A::defaultStaticFunction();
+		
+		//non static functions
+		echo A::publicNonStaticFunction();
+		echo A::protectedNonStaticFunction();
+		echo A::privateNonStaticFunction();
+		echo A::defaultNonStaticFunction();
+		
+//		echo A::$privateField;
+//		echo A::$protectedField;
+//		echo A::$publicField;
+//		echo A::$defalutField;
+		
+		echo A::$staticPrivateField;
+		echo A::$staticProtectedField;
+		echo A::$staticPublicField;
+		echo A::$staticDefaultField;
+		
+		echo A::CONSTANT_FIELD;
+		
+		A::|
+	}
+}
+	
+		
+$a = new A();
+	
+//execution results
+//publicStaticFunction
+//protectedStaticFunction
+//privateStaticFunction
+//defaultStaticFunction
+//publicNonStaticFunction
+//protectedNonStaticFunction
+//privateNonStaticFunction
+//defaultNonStaticFunction
+//staticPrivateField
+//staticProtectedField
+//staticPublicField
+//staticDefaultField
+//CONSTANT_FIELD
+
+
+//the next functions may be accessed without object instance.
+//for the documentation please see http://www.php.net/manual/en/keyword.paamayim-nekudotayim.php
+//publicNonStaticFunction
+//protectedNonStaticFunction
+//privateNonStaticFunction
+//defaultNonStaticFunction
+
+//CONSTANT_FIELD
+
+?>
+--EXPECT--
+field($staticDefaultField)
+field($staticPrivateField)
+field($staticProtectedField)
+field($staticPublicField)
+field(CONSTANT_FIELD)
+method(defaultNonStaticFunction)
+method(defaultStaticFunction)
+method(privateNonStaticFunction)
+method(privateStaticFunction)
+method(protectedNonStaticFunction)
+method(protectedStaticFunction)
+method(publicNonStaticFunction)
+method(publicStaticFunction)
