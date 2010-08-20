@@ -343,8 +343,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 
 	public void waitForInitialSession(DBGpBreakpointFacade facade,
 			DBGpPreferences sessionPrefs, IProgressMonitor launchMonitor) {
-		bpFacade = facade;
-		sessionPreferences = sessionPrefs;
+		configureInitialState(facade, sessionPrefs);
 		try {
 			while (debugTargets.size() == 0 && !launch.isTerminated()
 					&& !isTerminating() && !launchMonitor.isCanceled()) {
@@ -361,13 +360,18 @@ public class DBGpMultiSessionTarget extends DBGpElement implements
 	public void sessionReceived(DBGpBreakpointFacade facade,
 			DBGpPreferences sessionPrefs, DBGpTarget owningTarget,
 			PathMapper globalMapper) {
-		bpFacade = facade;
-		sessionPreferences = sessionPrefs;
+		configureInitialState(facade, sessionPrefs);
 		owningTarget.setMultiSessionManaged(true);
 		addDebugTarget(owningTarget);
 		setPathMapper(globalMapper);
 		launch.addDebugTarget(owningTarget);
 		owningTarget.sessionReceived(facade, sessionPrefs);
+	}
+
+	public void configureInitialState(DBGpBreakpointFacade facade,
+			DBGpPreferences sessionPrefs) {
+		bpFacade = facade;
+		sessionPreferences = sessionPrefs;
 	}
 
 	public boolean SessionCreated(DBGpSession session) {

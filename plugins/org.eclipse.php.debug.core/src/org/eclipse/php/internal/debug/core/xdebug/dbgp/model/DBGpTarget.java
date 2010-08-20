@@ -212,9 +212,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 	 */
 	public void waitForInitialSession(DBGpBreakpointFacade facade,
 			DBGpPreferences sessionPrefs, IProgressMonitor launchMonitor) {
-		bpFacade = facade;
-		sessionPreferences = sessionPrefs;
-		setState(STATE_INIT_SESSION_WAIT);
+		configureInitialState(facade, sessionPrefs);
 
 		try {
 			while (session == null && !launch.isTerminated()
@@ -238,10 +236,15 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 	public void sessionReceived(DBGpBreakpointFacade facade,
 			DBGpPreferences sessionPrefs) {
+		configureInitialState(facade, sessionPrefs);
+		sessionReceived(null);
+	}
+
+	public void configureInitialState(DBGpBreakpointFacade facade,
+			DBGpPreferences sessionPrefs) {
 		bpFacade = facade;
 		sessionPreferences = sessionPrefs;
 		setState(STATE_INIT_SESSION_WAIT);
-		sessionReceived(null);
 	}
 
 	private void sessionReceived(IProgressMonitor launchMonitor) {

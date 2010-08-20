@@ -25,4 +25,7 @@ public interface IDBGpDebugTarget extends IDebugTarget {
 	public void setPathMapper(PathMapper mapper);
 
 	public boolean isWebLaunch();
+
+	public void configureInitialState(DBGpBreakpointFacade facade,
+			DBGpPreferences sessionPrefs);
 }

@@ -200,7 +200,11 @@ public class XDebugCommunicationDaemon extends
 		DBGpTarget target = null;
 		PathMapper mapper = null;
 		PHPSourceLookupDirector srcLocator = new PHPSourceLookupDirector();
-		srcLocator.initializeParticipants();
+		srcLocator.setSourcePathComputer(DebugPlugin
+				.getDefault()
+				.getLaunchManager()
+				.getSourcePathComputer(
+						"org.eclipse.php.debug.core.sourcePathComputer.php"));
 		ILaunchConfigurationType type = null;
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
 
@@ -216,6 +220,8 @@ public class XDebugCommunicationDaemon extends
 
 		ILaunchConfiguration launchConfig = type.newInstance(null,
 				PHPDebugCoreMessages.XDebugMessage_remoteSessionTitle);
+		srcLocator.initializeDefaults(launchConfig);
+		srcLocator.initializeParticipants();
 		ILaunch remoteLaunch = new Launch(launchConfig,
 				ILaunchManager.DEBUG_MODE, srcLocator);
 		boolean multiSession = XDebugPreferenceMgr.useMultiSession();
