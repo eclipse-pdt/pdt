@@ -1,0 +1,16 @@
+--TEST--
+Test class constructor
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class person {
+	function __construct($name) {
+		$this->setName($name);
+	}
+}
+
+$x = new person("gadi");
+echo $x->|
+?>
+--EXPECT--
