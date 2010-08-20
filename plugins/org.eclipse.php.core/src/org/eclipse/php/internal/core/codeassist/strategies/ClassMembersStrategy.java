@@ -129,6 +129,9 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 */
 	protected boolean isFiltered(IMember member, IType type,
 			ClassMemberContext context) throws ModelException {
+		if (isConstructor(member, type, context)) {
+			return true;
+		}
 
 		if (context.getPhpVersion() == PHPVersion.PHP4) {
 			if (!isVisible(member, context)) {
@@ -439,6 +442,19 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			}
 		}
 		return true;
+	}
+
+	private boolean isConstructor(IMember member, IType type,
+			ClassMemberContext context) {
+		if (member instanceof IMethod) {
+			String methodName = member.getElementName();
+			if (methodName.equals("__construct")
+					|| methodName.equals(member.getDeclaringType()
+							.getElementName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
