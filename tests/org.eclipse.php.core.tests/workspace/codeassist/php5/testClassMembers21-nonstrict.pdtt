@@ -6,7 +6,9 @@ org.eclipse.php.core/contentAssistShowStrictOptions=false
 <?
 class layer {
 public $server = "";
+private $privateField = "";
 public function connect(){}
+private function privateMethod(){}
 }
 class db_layer extends layer{}
 class site {
