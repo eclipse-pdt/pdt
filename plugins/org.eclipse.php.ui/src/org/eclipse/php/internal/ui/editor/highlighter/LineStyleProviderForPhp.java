@@ -427,8 +427,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		// instead of end-start?
 		if (end > maxOffset)
 			end = maxOffset;
-		StyleRange result = new StyleRange(start, end - start, attr
-				.getForeground(), attr.getBackground(), attr.getStyle());
+		StyleRange result = new StyleRange(start, end - start,
+				attr.getForeground(), attr.getBackground(), attr.getStyle());
 		if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 			result.underline = true;
 			result.fontStyle &= ~TextAttribute.UNDERLINE;
@@ -641,8 +641,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				from = partitionStartOffset - regionStart;
 				length = partitionLength;
 			}
-			phpTokens = region.getPhpTokens(from, Math.min(length, region
-					.getLength()));
+			phpTokens = region.getPhpTokens(from,
+					Math.min(length, region.getLength()));
 			ITextRegion prevElement = null;
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
@@ -692,11 +692,10 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 						styleLength -= (partitionStartOffset - styleStart);
 						styleStart = partitionStartOffset;
 					}
-					if (styleStart + styleLength > partitionStartOffset
-							+ partitionLength) {// if the region ends after the
-						// requested end position -
+					if (styleStart > partitionStartOffset + partitionLength) {
+						// if the region ends after the requested end position -
 						// making it shorter
-						styleLength -= (styleStart + styleLength)
+						styleLength -= styleStart
 								- (partitionStartOffset + partitionLength);
 					}
 					if (attr.getBackground() != null
