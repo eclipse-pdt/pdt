@@ -64,7 +64,6 @@ A::|
 field($staticDefaultField)
 field($staticPublicField)
 field(CONSTANT_FIELD)
-method(__construct)
 method(defaultNonStaticFunction)
 method(defaultStaticFunction)
 method(publicNonStaticFunction)

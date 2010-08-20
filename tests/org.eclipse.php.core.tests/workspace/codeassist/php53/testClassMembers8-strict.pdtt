@@ -94,7 +94,6 @@ class A {
 
 ?>
 --EXPECT--
-method(__construct)
 method(publicStaticFunction)
 method(protectedStaticFunction)
 method(privateStaticFunction)

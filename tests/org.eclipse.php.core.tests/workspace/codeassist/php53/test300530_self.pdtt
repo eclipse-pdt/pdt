@@ -27,5 +27,4 @@ class foo extends bax
 field(BAZ)
 field(SKIN)
 method(bar)
-method(__construct)
 ?>
