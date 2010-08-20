@@ -200,7 +200,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 			int absolutOffset = lastRegion.getStart()
 					+ structuredDocumentRegion.getStartOffset()
 					+ xmlRelativeOffset;
-			if (absolutOffset <= endOffset) {
+			if (absolutOffset <= endOffset && offset <= absolutOffset) {
 				lengthToCopyDown = absolutOffset - offset;
 				;
 			}
