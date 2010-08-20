@@ -91,7 +91,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				for (IMethod method : removeOverriddenElements(Arrays
 						.asList(methods))) {
 
-					if (!isFiltered(method, concreteContext)) {
+					if (!isFiltered(method, type, concreteContext)) {
 						if (magicMethods.contains(method.getElementName())) {
 							reporter.reportMethod(method, suffix, replaceRange,
 									ProposalExtraInfo.MAGIC_METHOD);

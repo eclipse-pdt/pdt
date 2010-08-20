@@ -122,12 +122,13 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * assist
 	 * 
 	 * @param member
+	 * @param type
 	 * @param context
 	 * @return
 	 * @throws ModelException
 	 */
-	protected boolean isFiltered(IMember member, ClassMemberContext context)
-			throws ModelException {
+	protected boolean isFiltered(IMember member, IType type,
+			ClassMemberContext context) throws ModelException {
 
 		if (context.getPhpVersion() == PHPVersion.PHP4) {
 			if (!isVisible(member, context)) {
@@ -161,7 +162,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					if (context.getTriggerType() == Trigger.CLASS
 							&& !isFunctionParameterContext) {
 						/* check 5 */
-						if (PHPFlags.isPrivate(flags)) {
+						if (PHPFlags.isPrivate(flags)
+								&& member.getDeclaringType().equals(type)) {
 							if (isParent(context)) { // is Parent
 								return true; // 1:1
 							} else if (isSelfKeyword(context)) {
@@ -186,7 +188,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 						}
 
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
-						if (PHPFlags.isPrivate(flags)) {
+						if (PHPFlags.isPrivate(flags)
+								&& member.getDeclaringType().equals(type)) {
 							if (isThisKeyWord(context) && showStrictOptions()) {
 								return false; // 1:5
 							} else if (isIndirectThis(context)) {
@@ -219,7 +222,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				} else if (member instanceof IMethod) {
 					if (context.getTriggerType() == Trigger.CLASS
 							&& !isFunctionParameterContext) {
-						if (PHPFlags.isPrivate(flags)) {
+						if (PHPFlags.isPrivate(flags)
+								&& member.getDeclaringType().equals(type)) {
 							if (isParent(context)) {
 								return true; // 5:1
 							} else if (isSelfCall(context)) {
@@ -275,7 +279,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 							}
 						}
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
-						if (PHPFlags.isPrivate(flags)) {
+						if (PHPFlags.isPrivate(flags)
+								&& member.getDeclaringType().equals(type)) {
 							if (isThisKeyWord(context)) {
 								return false; // 5:5
 							} else if (isIndirectThis(context)) {
@@ -317,7 +322,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 							&& !isFunctionParameterContext) {
 						return true; // 9:1 - 12:4
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
-						if (PHPFlags.isPrivate(flags)) {
+						if (PHPFlags.isPrivate(flags)
+								&& member.getDeclaringType().equals(type)) {
 							if (isThisKeyWord(context)) {
 								return false; // 9:5
 							} else if (isIndirectThis(context)) {
@@ -347,7 +353,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 				} else if (member instanceof IMethod) {
 					if (context.getTriggerType() == Trigger.CLASS
 							&& !isFunctionParameterContext) {
-						if (PHPFlags.isPrivate(flags)) {
+						if (PHPFlags.isPrivate(flags)
+								&& member.getDeclaringType().equals(type)) {
 							if (isParent(context)) {
 								return true; // 13:1
 							} else if (isSelfKeyword(context)) {
@@ -391,7 +398,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 							}
 						}
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
-						if (PHPFlags.isPrivate(flags)) {
+						if (PHPFlags.isPrivate(flags)
+								&& member.getDeclaringType().equals(type)) {
 							if (isThisKeyWord(context)) {
 								return false; // 13:5
 							} else if (isIndirectThis(context)) {

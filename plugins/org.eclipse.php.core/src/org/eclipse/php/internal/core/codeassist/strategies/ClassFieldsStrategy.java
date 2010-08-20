@@ -75,21 +75,21 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 					List<IField> superTypes = new ArrayList<IField>();
 					for (IType currType : hierarchy.getAllSupertypes(type)) {
 						superTypes.addAll(Arrays.asList(PHPModelUtils
-								.getTypeField(currType, prefix, requestor
-										.isContextInformationMode())));
+								.getTypeField(currType, prefix,
+										requestor.isContextInformationMode())));
 					}
 
 					fields = new IField[superTypes.size()];
 					fields = superTypes.toArray(fields);
 				} else {
 					fields = PHPModelUtils.getTypeHierarchyField(type,
-							hierarchy, prefix, requestor
-									.isContextInformationMode(), null);
+							hierarchy, prefix,
+							requestor.isContextInformationMode(), null);
 				}
 
 				for (IField field : removeOverriddenElements(Arrays
 						.asList(fields))) {
-					if (!isFiltered(field, concreteContext)) {
+					if (!isFiltered(field, type, concreteContext)) {
 						result.add(field);
 					}
 				}
