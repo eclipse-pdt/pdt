@@ -187,10 +187,14 @@ public class PhpFormatter implements IStructuredFormatter {
 									PHPRegionTypes.PHP_CURLY_CLOSE)) {
 								if (j > 0
 										&& (phpTokens[j - 1].getType().equals(
-												PHPRegionTypes.PHP_SEMICOLON) || phpTokens[j - 1]
+												PHPRegionTypes.PHP_SEMICOLON)
+												|| phpTokens[j - 1]
+														.getType()
+														.equals(
+																PHPRegionTypes.PHP_CURLY_CLOSE) || phpTokens[j - 1]
 												.getType()
 												.equals(
-														PHPRegionTypes.PHP_CURLY_CLOSE))) {
+														PHPRegionTypes.PHP_COMMENT_END))) {
 									if (document.getLineOfOffset(startOffset
 											+ phpToken.getStart()) == document
 											.getLineOfOffset(startOffset
