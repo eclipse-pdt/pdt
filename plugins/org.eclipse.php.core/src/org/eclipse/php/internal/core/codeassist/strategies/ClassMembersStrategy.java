@@ -130,6 +130,11 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	protected boolean isFiltered(IMember member, IType type,
 			ClassMemberContext context) throws ModelException {
 		if (isConstructor(member, type, context)) {
+			// we can call parent::__construct from subclass
+			if (context.getTriggerType() == Trigger.CLASS && isParent(context)
+					&& !member.getDeclaringType().equals(type)) {
+				return false;
+			}
 			return true;
 		}
 
