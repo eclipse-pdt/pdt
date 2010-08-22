@@ -1,0 +1,300 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Running and Analyzing Debugger Results</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("User Guide\nTasks\nDebugging Files and Applications\nRunning and Analyzing Debugger Results");
+addAvenueInfo("Tasks","debugging_a_php_web_page.htm","troubleshooting_remote_debugging.htm");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"pdt_table_of_contents.htm\">User Guide<\/a> &gt; <a href=\"tasks.htm\">Tasks<\/a> &gt; <a href=\"debugging.htm\">Debugging Files and Applications<\/a> &gt; Running and Analyzing Debugger Results<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script><script type="text/javascript" language="JavaScript1.2" src="./ehlpdhtm.js"></script>
+
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ" 
+	 target="_blank">Documentation Survey</a> 
+	 | <a 
+	 href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1><a name="MiniTOCBookMark1"></a>Running and Analyzing Debugger Results 
+ </h1>
+<p align="left" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;" >In&#160;this&#160;Topic&#160;<a class="dropspot" href="javascript:TextPopup(this)" id="MTHotSpot28688" ><span class="MTText" style="display: none;" >Show</span><span class="MTText" >Hide</span></a></p>
+<script type="text/javascript" language="JavaScript1.2">//<![CDATA[
+TextPopupInit('MTHotSpot28688', 'MTPOPUP28688');
+//]]></script>
+<div align="left" class="droptext" id="MTPOPUP28688" >
+ <p align="left"  ><a href="#MiniTOCBookMark2" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">About</a></p>
+ <p align="left"  ><a href="#MiniTOCBookMark3" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">Controlling the debugging process</a></p>
+ <p align="left"  ><a href="#MiniTOCBookMark4" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">Views Provided During PHP, Web Page or URL Debugging</a></p>
+ <p align="left"  ><a href="#MiniTOCBookMark5" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">Views Provided During JavaScript Debugging </a></p>
+</div>
+<h2><a name="MiniTOCBookMark2"></a>About</h2>
+<p>Once you have launched one of the debug sessions (PHP Script, PHP Web 
+ Page or URL), you can control and monitor the debugging process using 
+ the views displayed in the debugging process.</p>
+<p>&#160;</p>
+<h2><a name="MiniTOCBookMark3"></a>Controlling the debugging process</h2>
+<p>The debug process can be controlled using the various buttons in the 
+ Debug view.</p>
+<ol type="1">
+	<li class="p"><p>The Debug process will automatically stop at each 
+	 breakpoint.</p></li>
+	<li class="p"><p>The various views will display information about the 
+	 debugging process up to that point only.</p></li>
+	<li class="p"><p>You can use the various buttons in the debug view 
+	 to decide how to continue with the debugging process:</p></li>
+</ol>
+<ul type="square">
+	<li><p>Click the Resume button <img src="resume_icon.png" alt="resume_icon.png" style="border: none;" width="25" height="24" border="0"> 
+	 &#160;to continue the debugging process until the next breakpoint, 
+	 or until the end of the debugging process.</p></li>
+	<li><p>Click the Terminate button <img src="terminate_debug_icojn.png" alt="terminate_debug_icojn.png" style="border: none;" width="19" height="17" border="0"> 
+	 to stop the debugging process.</p></li>
+	<li><p>Click the Step Over <img src="step_over_icon.png" alt="step_over_icon.png" style="border: none;" width="23" height="20" border="0"> 
+	 button to step over the next method call (without entering it) at 
+	 the currently executing line of code. The method will still be executed.</p></li>
+	<li><p>Click the Step Return button <img src="step_return.png" alt="step_return.png" style="border: none;" width="20" height="22" border="0"> 
+	 &#160;to return from a method which has been stepped into. The remainder 
+	 of the code that was skipped by returning is still executed.</p></li>
+	<li><p>Click the Step Into button <img src="step_into_icon.png" alt="step_into_icon.png" style="border: none;" width="27" height="24" border="0"> 
+	 to step into the next method call at the currently executing line 
+	 of code.</p></li>
+	<li><p>Click the Use Step Filters button <img src="use_step_filters_icon.png" alt="use_step_filters_icon.png" style="border: none;" width="30" height="28" border="0"> to change 
+	 whether step filters should be used in the current Debug View.</p></li>
+	<li><p>Once the debugging process has terminated, you can click the 
+	 Remove Terminated Launches button <img src="remove_terminated_launches_icon.png" alt="remove_terminated_launches_icon.png" style="border: none;" width="27" height="25" border="0"> 
+	 to remove any terminated debug sessions from the list.</p></li>
+</ul>
+<h2><a name="MiniTOCBookMark4"></a>Views Provided During PHP, Web Page or URL Debugging</h2>
+<p class="ListBullet1" style="font-weight: normal;">During the debugging 
+ process (for PHP Script, PHP Web Page or URL), various views will provide 
+ the following information:</p>
+<ul type="square">
+	<li><p><a href="debug_view.htm">Debug View</a> &#160;- Here you can 
+	 control (stop, pause, and resume) the debugging process. You can also 
+	 decide whether to step into, step over or step return (step out off) 
+	 certain functions.</p></li>
+	<li><p><a href="variables_view.htm">Variables</a> - Will display the 
+	 various variables in your script.</p></li>
+	<li><p><a href="breakpoints_view.htm">Breakpoints</a> - Will display 
+	 the breakpoints you have entered</p></li>
+	<li><p><a href="parameter_stack.htm">Parameter Stack</a> - Will display 
+	 the parameters through which functions are reached.</p></li>
+	<li><p>Editor Window - Will display the code at the relevant sections, 
+	 according to which line is selected in the Debug View window.</p></li>
+	<li><p><a href="debug_output_view.htm">Debug Output</a> - Will show 
+	 the textual output of the script. This will be updated as the debugging 
+	 process continues.</p></li>
+	<li><p><a href="browser_output_view.htm">Browser Output</a> - Will 
+	 show the output of the script to a browser. This will be updated as 
+	 the debugging process continues.</p></li>
+	<li><p><a 
+	 href="../../PLUGINS_ROOT/org.eclipse.jdt.doc.user/reference/views/console/ref-console_view.htm">Console 
+	 View</a> - Displays any error and warning messages.</p></li>
+	
+	<li><p><a 
+	 href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/ctskview.htm">Tasks 
+	 View</a> - Displays tasks that were added to your script 
+	 (if applicable).</p></li>
+	
+</ul>
+<p style="font-weight: bold; margin-left: 0px;">&#160;</p>
+<h2><a name="MiniTOCBookMark5"></a>Views Provided During JavaScript Debugging </h2>
+<p style="margin-left: 0px; font-weight: normal;">During the debugging 
+ process (for JavaScript debugging), various views will provide the following 
+ information:</p>
+<ul type="square">
+	<li><p>Debug View [Debug 
+	 Perspective] &#160;- Here you can control (stop, pause, and resume) 
+	 the debugging process. You can also decide whether to step into, step 
+	 over or step return (step out off) certain functions.</p></li>
+	<li><p>Variables View 
+	 [Debug Perspective] - Will display the various variables in your 
+	 script.</p></li>
+	<li><p>Breakpoints 
+	 View [Debug Perspective] - Will display the breakpoints you have 
+	 entered.</p></li>
+	<li><p>Scripts View - Displays a list 
+	 of available scripts. Double click a script to see it's code in an 
+	 editor. &#160;</p></li>
+	<li><p>Editor Window - Will display the code at the relevant sections, 
+	 according to which line is selected in the Debug View window.</p></li>
+	<li><p>Internal 
+	 Web Browser - Displays the code you are debugging in the Browser.</p></li>
+	<li><p>Debug Output 
+	 View [Debug Perspective] - Will show the textual output of the 
+	 script. This will be updated as the debugging process continues.</p></li>
+	<li><p>Browser 
+	 Output View [Debug Perspective] - Will show the output of the 
+	 script to a browser. This will be updated as the debugging process 
+	 continues.</p></li>
+	<li><p><a 
+	 href="../../PLUGINS_ROOT/org.eclipse.jdt.doc.user/reference/views/console/ref-console_view.htm">Console 
+	 View</a> - Displays any error and warning messages.</p></li>
+	<li></li>
+	<li><p><a 
+	 href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/ctskview.htm">Tasks 
+	 View</a> - Displays tasks that were added to your script 
+	 (if applicable).</p></li>
+	<li></li>
+</ul>
+<p>&#160;</p>
+<p class="Note">Note:</p>
+<p class="NoteText">See '<a href="php_debug_perspective.htm">PHP Debug 
+ Perspective</a>' for more on the views that will be displayed during Debugging.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" alt="link_icon.png" style="border: none;" width="32" height="40" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Related Links:</p>
+		<p><a href="php_debug_perspective.htm">PHP 
+		 Debug Perspective</a></p>
+		<p><a href="working_with_the_debugger.htm">Working 
+		 with the Debugger</a></p>
+		<p><a href="debugging.htm">Debugging 
+		 </a></p>
+		
+		<p><a href="debugging_a_php_web_page.htm">Debugging 
+		 a PHP Web Page </a></p>
+		
+		<p><span><a href="debug.htm">D 
+		 ebug Preferences</a> </span></p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+</table>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>phpDoc Block Comments</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("User Guide\nConcepts\nCode Commenting\nphpDoc Block Comments");
+addAvenueInfo("Concepts","phar_integration.htm","bookmarks.htm");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"pdt_table_of_contents.htm\">User Guide<\/a> &gt; <a href=\"concepts.htm\">Concepts<\/a> &gt; <a href=\"commenting_code.htm\">Code Commenting<\/a> &gt; phpDoc Block Comments<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ" 
+	 target="_blank">Documentation Survey</a> 
+	 | <a 
+	 href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1>phpDoc Block Comments 
+ </h1>
+<p>PDT offers 
+ a preset means for adding phpDoc comments to files by providing an input 
+ line when including statements, classes, class variables, and constants 
+ to the code. Developers are prompted to immediately add a description 
+ ensuring that the added elements are documented in their context and in 
+ real-time.</p>
+<p class="ListBullet2" style="margin-left: 0px;">phpDoc blocks are descriptive 
+ comments that are part of the application code. They are used to describe 
+ the PHP element in the exact location in the code where the element appears. 
+ The block consists of a short description, long description, and phpDoc 
+ tags.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-style: italic; color: #0000ff; font-size: 6pt;"><img src="txt_file_icon.png" alt="Usage Example" title="Usage Example" style="border: none;" width="28" height="41" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Example:</p>
+		<p>When creating a phpDoc Block commen for the following function:</p>
+		<p class="code">function add ($a, $b) {</p>
+		<p class="code">&#160;&#160;&#160;&#160;return $a + $b;</p>
+		<p class="code">}</p>
+		<p>&#160;the following comment will be created:</p>
+		<p class="code">/**</p>
+		<p class="code">&#160;* Enter description here...</p>
+		<p class="code">&#160;*</p>
+		<p class="code">&#160;* @param unknown_type $a</p>
+		<p class="code">&#160;* @param unknown_type $b</p>
+		<p class="code">&#160;* @return unknown</p>
+		<p class="code">&#160;*/</p></td>
+	</tr>
+	<tr valign="top">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>The 
+		 comments should now be edited with the relevant description and 
+		 parameters.</p></td>
+		
+	</tr>
+</table>
+<p class="ListBullet2" style="margin-left: 0px;">Descriptions that are 
+ added for a code element are also automatically added to the Content Assist 
+ bank so that the next time the code element is used it is readily available 
+ from the Content Assist list. The element's descriptions will also appear 
+ in the Outline view.</p>
+<p class="Note">Note:</p>
+<p class="NoteText">PDT 
+ offers Content Assist support for magic members declared in code comments. 
+ See the <a href="code_assist_concept.htm#magic_members">Content Assist</a> 
+ concept for more information.</p>
+<p class="ListBullet2" style="margin-left: 0px;">phpDoc blocks also serve 
+ as the input for creating a PHPDoc.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" style="border: none;" alt="link_icon.png" width="32" height="40" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Related Links:</p>
+		<p style="font-weight: normal;"><a href="commenting_php_docblocks.htm">Commenting PHP DocBlocks</a> 
+		 </p>
+		<p style="font-weight: normal;"><a href="commenting_code.htm" style="font-weight: normal;">Commenting 
+		 Code</a> </p>
+		<p><a href="how_to_comment_and_uncomment_php_code.htm">Commenting PHP 
+		 Code</a> </p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+</table>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

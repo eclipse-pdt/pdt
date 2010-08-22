@@ -1,0 +1,273 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Path Mapping</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("User Guide\nConcepts\nPath Mapping");
+addAvenueInfo("Concepts","build_paths.htm","javascript.htm");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"pdt_table_of_contents.htm\">User Guide<\/a> &gt; <a href=\"concepts.htm\">Concepts<\/a> &gt; Path Mapping<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ" 
+	 target="_blank">Documentation Survey</a> 
+	 | <a 
+	 href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1>Path Mapping 
+ </h1>
+<p>PDT enables 
+ you to map server paths to local paths while Debugging on a server. </p>
+<p class="Note" style="margin-left: 0px;">Note:</p>
+<p class="NoteText" style="margin-left: 0px;">Path Mapping is only activated 
+ during PHP Web Page Debugging .</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-style: italic; color: #0000ff; font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-style: italic; color: #0000ff; font-size: 6pt;"><img src="txt_file_icon.png" alt="Usage Example" title="Usage Example" style="border: none;" width="28" height="41" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Example:</p>
+		<p>The server path 'C:\Documents and Settings\MyProject' has been 
+		 mapped to '/MyProject' on the Workspace:</p>
+		
+		<p class="picture"><img src="path_mapping_dialog_pdt.png" alt="Path Mapping Server Settings" title="Path Mapping Server Settings" style="border: none;" width="427" height="240" border="0"></p>
+		<p>During PHP 
+		 Web Page Debugging , a file is called from location 
+		 'C:\Documents and Settings\MyProject\a.php':</p>
+		<p class="picture"><img src="path_map_example.png" alt="path_map_example.png" style="border: none;" width="438" height="68" border="0"></p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;">
+		<p>The file that will open in 
+		 the editor during Debugging will be the a.php file located in 
+		 the 'MyProject' project, situated on the Workspace. The file content 
+		 will still be taken from the server copy.</p></td>
+		
+	</tr>
+</table>
+<p class="Note">Note:</p>
+<p class="NoteText">Server Path Maps can be viewed and defined in the Path 
+ Mapping tab of the <a href="php_servers.htm">PHP Servers Preferences page.</a></p>
+<p class="Strong">Defining Path Maps</p>
+<p>Path Maps can be defined in three ways:</p>
+<ol type="1">
+	<li class="p" style="margin-left: -20px;"><p style="margin-left: 12px;">Manually, 
+	 through the <a href="php_servers.htm">PHP Servers Preferences page</a>. 
+	 See '<a href="adding_a_server_path_map.htm">Adding a Server Location 
+	 Path Map</a>' for more information.</p></li>
+	<li class="p" style="margin-left: -20px;"><p style="margin-left: 12px;">Automatically 
+	 whenever a file is debugged 
+	 - A Path Map is automatically set between the path to the debug target's 
+	 parent project (the parent project of the file from which the debugging 
+	 process has been launched - e.g. C:\Workspace\MyProject) and the debug 
+	 target's project in the Workspace (e.g. MyProject).</p></li>
+	<li class="p" style="margin-left: -20px;"><p style="margin-left: 12px;">Through 
+	 the Path Mapping dialog. This is launched during debugging whenever a file defined with an absolute 
+	 path (See '<a href="include_paths.htm">Include Paths</a>' for more 
+	 on absolute file locations) is called 
+	 and found .<br>
+	In this scenario, a Path Mapping dialog will appear with a list of 
+	 'similar files' to the one being called.<br>
+	'Similar' files are files with the same name as the called file that 
+	 are situated in the following locations:</p></li>
+</ol>
+<ul type="square">
+	<li><p>Files in the project from which the file was called.</p></li>
+	<li><p>Files in projects that are in the Include Paths of the project 
+	 from which the file was called.</p></li>
+	<li><p>Files that are open in a PDT 
+	 editor.</p></li>
+</ul>
+<p class="Note" style="margin-left: 40px;">Note:</p>
+<p class="NoteText" style="margin-left: 40px;">If the debug/profile session 
+ was triggered from the Zend Debugger 
+ Toolbar, all files in the Workspace with the same name will be listed.</p>
+
+<p class="picture"><img src="path_mapping_options_pdt.png" alt="Path Mapping file options Dialog" title="Path Mapping file options Dialog" style="border: none;" width="288" height="227" border="0"></p>
+<p class="Note" style="margin-left: 12px;">Note:</p>
+<p class="NoteText" style="margin-left: 12px;">The dialog will not appear 
+ if a Path Mapping to the called location has already been defined.</p>
+<p style="margin-left: 12px;">Selecting a file from the list results in 
+ a Path Map being created between the called remote file's parent folder 
+ and the parent folder of the 'similar' file selected from the list. This 
+ means that every time a file is called from the same parent folder, will 
+ be searched for in the selected Workspace/local folder 
+ and opened during Debugging/Profiling .</p>
+
+
+
+<p style="margin-left: 12px;">If none 
+ of the options in the Matching items list represent your desired file 
+ location, you may select the 'Do not map the following server path to 
+ a local resource: ' option. This means that, during the debugging/profiling 
+ process, whenever this path is called, no files will open in the editor.<br>
+You can click Configure to modify the path to include any parent or child 
+ directories.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top; 
+											 height: 16px;">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top; 
+											 height: 35px;">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" alt="link_icon.png" style="border: none;" width="32" height="40" border="0"> 
+		 </p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p><span 
+		 style="font-weight: bold;"><b>Related Links:</b></span><a href="adding_elements_to_a_project_s_include_path.htm"><br>
+		Include Paths</a></p>
+		<p><a href="adding_a_server_path_map.htm">Adding a Server Location 
+		 Path Map</a></p>
+		<p><a href="php_servers.htm">PHP Servers Preferences</a></p>
+		<p><a href="debugging.htm">Using the Debugger</a><a href="adding_elements_to_a_project_s_include_path.htm">&#160;</a></p></td>
+	</tr>
+	<tr style="vertical-align: top; 
+											 height: 19px;">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+</table>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

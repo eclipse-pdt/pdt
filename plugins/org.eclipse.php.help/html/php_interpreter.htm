@@ -1,0 +1,271 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>PHP Interpreter</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("User Guide\nReference\nPHP Preferences\nPHP Interpreter Preferences");
+addAvenueInfo("Reference","php_executables.htm","php_manual.htm");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"pdt_table_of_contents.htm\">User Guide<\/a> &gt; <a href=\"reference.htm\">Reference<\/a> &gt; <a href=\"preferences.htm\">PHP Preferences<\/a> &gt; PHP Interpreter Preferences<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script><script type="text/javascript" language="JavaScript1.2" src="./ehlpdhtm.js"></script>
+
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ" 
+	 target="_blank">Documentation Survey</a> 
+	 | <a 
+	 href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1><a name="MiniTOCBookMark1"></a>PHP Interpreter 
+ Preferences</h1>
+<p align="left" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;" >In&#160;this&#160;Topic&#160;<a class="dropspot" href="javascript:TextPopup(this)" id="MTHotSpot39102" ><span class="MTText" style="display: none;" >Show</span><span class="MTText" >Hide</span></a></p>
+<script type="text/javascript" language="JavaScript1.2">//<![CDATA[
+TextPopupInit('MTHotSpot39102', 'MTPOPUP39102');
+//]]></script>
+<div align="left" class="droptext" id="MTPOPUP39102" >
+ <p align="left"  ><a href="#MiniTOCBookMark2" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">About</a></p>
+ <p align="left"  ><a href="#MiniTOCBookMark3" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">Configuring Your PHP Version</a></p>
+ <p align="left"  ><a href="#MiniTOCBookMark4" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">Using a Different PHP Interpreter for a Specific Project</a></p>
+</div>
+<h2><a name="MiniTOCBookMark2"></a>About</h2>
+<p>The PHP Interpreter preferences page allows you to set which PHP version 
+ to use for the project. This will affect the internal debugger, code analyzer 
+ and content assist.</p>
+<p>&#160;</p>
+<p>The PHP Interpreter 
+ Preferences page is accessed from Window | Preferences | PHP | PHP Interpreter 
+ .</p>
+<p class="picture"><img src="php_interpreter.png" alt="php_interpreter.png" style="border: none;" width="416" height="176" border="0"></p>
+
+<h2><a name="MiniTOCBookMark3"></a>Configuring Your PHP Version</h2>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To configure your PHP version:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px;"><p>Select the PHP 
+			 Version to use. The default options are PHP 4 or PHP 5 or 
+			 greater.<br>
+			See <a href="php_support.htm">PHP Support</a> for more on effects 
+			 the PHP version settings have.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Mark the &quot;Use 
+			 ASP tags as PHP tags&quot; checkbox in order for Code Completion 
+			 to respond to ASP tags in the same way as it responds to PHP 
+			 tags.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click OK to apply 
+			 your settings.</p></li>
+		</ol></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+		
+	</tr>
+</table>
+<h2><a name="MiniTOCBookMark4"></a><span>Using a Different PHP Interpreter for a Specific Project</span></h2>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To use a different PHP Interpreter 
+		 for a specific project:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px;"><p>Select the link 
+			 labelled &quot;Configure Project Specific Settings&quot;.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Select the specific 
+			 project from the list.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Another PHP Interpreter 
+			 preferences page will open.</p></li>
+		</ol>
+		
+		<p class="picture"><img src="php_interpreter_project_pdt.png" alt="php_interpreter_project_pdt.png" style="border: none;" width="589" height="235" border="0"></p>
+		
+		<ol start="4" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Mark the Enable 
+			 project specific settings checkbox.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Choose your PHP 
+			 version.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click Apply.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>A prompt dialog 
+			 will appear stating that a rebuild of the project must occur 
+			 for the settings to take effect.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click Yes to rebuild 
+			 the project. Error parsing will be performed according to 
+			 the PHP version chosen.<br>
+			If you click No, the rebuild will be performed the next time 
+			  
+			 it is restarted.&#160;</p></li>
+		</ol></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+		
+	</tr>
+</table>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" alt="link_icon.png" style="border: none;" width="32" height="40" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Related Links:</p>
+		<p><a href="php_support.htm">PHP Support</a> </p>
+		<p><a href="php_executables.htm">PHP Executables Preferences</a> 
+		 </p>
+		<p><a href="preferences.htm">PHP 
+		 Preferences</a></p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+</table>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

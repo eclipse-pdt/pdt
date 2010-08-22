@@ -1,0 +1,283 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Creating PHP Projects</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("User Guide\nTasks\nCreating PHP Projects");
+addAvenueInfo("Tasks","","file_creation.htm");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"pdt_table_of_contents.htm\">User Guide<\/a> &gt; <a href=\"tasks.htm\">Tasks<\/a> &gt; Creating PHP Projects<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ" 
+	 target="_blank">Documentation Survey</a> 
+	 | <a 
+	 href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1>Creating PHP Projects 
+ </h1>
+<p>PHP projects are the containers within which all PHP and other application 
+ files should be created.</p>
+<p> </p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">To create a new PHP project:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p>From 
+			 the menu bar, go to <span style="font-weight: bold;"><b>File 
+			 | New | PHP Project</b></span><br>
+			-Or- In PHP Explorer view, right-click and select <span style="font-weight: bold;"><b>New 
+			 | PHP Project</b></span>.<br>
+			The New PHP Project wizard is displayed.</p></li>
+		</ol>
+		<p class="picture"><img src="new_php_project_wizard.png" alt="new_php_project_wizard.png" title="New PHP Project Wizard" style="border: none;" width="388" height="489" border="0"> 
+		 </p>
+		
+		<ol start="2" type="1">
+			<li class="p" style="margin-left: -20px; font-weight: normal;"><p 
+				 style="font-weight: normal;">Enter the following information:</p></li>
+		</ol>
+		<ul>
+			<li style="margin-left: -20px;" type="square"><p>Project name 
+			 - The required project name</p></li>
+			
+			<li style="margin-left: -20px;" type="square"><p>Contents - 
+			 Select whether to:</p></li>
+			<li type="disc"><p>Create a new project in the workspace - 
+			 Creates a new PHP project in the workspace directory.
+			  </p></li>
+			<li type="disc"><p>Create a project from existing source - 
+			 Creates a PHP project pointing to files situated outside of 
+			 the workspace.<br>
+			Click <span style="font-weight: bold;"><b>Browse</b></span> to select 
+			 the required source content.</p></li>
+			
+			<li style="margin-left: -20px;" type="square"><p>PHP Version 
+			 - Select whether to:</p></li>
+			
+			<li type="disc"><p>Use default PHP settings - Uses the default 
+			 PHP Interpreter settings.</p></li>
+			<li type="disc"><p>Use project specific settings - Select the 
+			 PHP version to be used for the project and whether ASP tags 
+			 are used as PHP tags.<br>
+			See <a href="php_support.htm">PHP Version Support</a> for more 
+			 information</p></li>
+			<li style="margin-left: -20px;" type="square"><p>Project Layout 
+			 - Select whether to:</p></li>
+			<li style="margin-left: -20px;" type="disc"><p style="margin-left: 24px;">Use 
+			 project as source folder - All resources within the project 
+			 will be added to the Build Path by default.</p></li>
+			<li style="margin-left: -20px;" type="disc"><p style="margin-left: 24px;">Create 
+			 separate folders for source files and public resources - Separate 
+			 folders will be created in which you can place resources which 
+			 should be included or excluded from the Build Path.<br>
+			See <a href="configuring_build_paths.htm">Configuring a Project's 
+			 PHP Build Path</a> for more information.<span style="margin-left: 12px;"><br>
+			The default setting for this option can be configured from 
+			 the <a href="new_project_layout_preferences.htm">New Project 
+			 Layout Preferences</a> page.</span></p></li>
+			<li style="margin-left: -20px;" type="square"><p>JavaScript 
+			 Support - Mark the 'Enable JavaScript support for this project' 
+			 checkbox for JavaScript functionality (e.g. JavaScript Content 
+			 Assist options) to be available to the project.<br>
+			See <a href="enabling_javascript_support_in_php_projects.htm">Enabling 
+			 JavaScript Support in PHP Projects</a> for more information.</p></li>
+		</ul>
+		<ol start="3" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Next</b></span> 
+			 to <a href="adding_elements_to_a_project_s_include_path.htm">configure 
+			 the project's Include Path</a> (this can also be done following 
+			 the project creation).</p></li>
+			
+		</ol>
+		<ol start="4" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Next</b></span> 
+			 to <a href="configuring_build_paths.htm">configure the project's 
+			 PHP Build Path</a> (this can also be done following project 
+			 creation).</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click<span style="font-weight: bold;"><b> 
+			 Finish</b></span>.</p></li>
+		</ol></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>The 
+		 new PHP project will be created in your workspace and displayed 
+		 in <a href="php_explorer_view.htm">PHP Explorer View</a>.</p>
+		<p>You can now start to develop your application by <a href="file_creation.htm">creating 
+		 PHP Files</a> or adding other resources to your project.</p></td>
+		
+	</tr>
+</table>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top; 
+											 height: 16px;">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top; 
+											 height: 35px;">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" alt="link_icon.png" style="border: none;" width="32" height="40" border="0"> 
+		 </p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Related Links:</p>
+		<p><a href="creating_and_uploading_a_project.htm">Creating Projects 
+		 and Files</a></p>
+		<p><a href="getting_started.htm">Getting Started</a></p>
+		<p><a href="file_creation.htm">Creating PHP Files</a> 
+		 <a href="build_paths.htm"><br>
+		PHP Build Path</a> </p>
+		<p><a href="include_paths.htm">PHP Include Paths</a></p></td>
+	</tr>
+	<tr style="vertical-align: top; 
+											 height: 19px;">
+		<td style="width: 7.093%; padding-right: 10px; 
+												 padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; 
+												 padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+</table>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

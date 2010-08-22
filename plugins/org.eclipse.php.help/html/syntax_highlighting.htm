@@ -1,0 +1,361 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Syntax Coloring</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("User Guide\nConcepts\nSyntax Coloring");
+addAvenueInfo("Concepts","code_assist_concept.htm","automatic_insertion.htm");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"pdt_table_of_contents.htm\">User Guide<\/a> &gt; <a href=\"concepts.htm\">Concepts<\/a> &gt; Syntax Coloring<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ" 
+	 target="_blank">Documentation Survey</a> 
+	 | <a 
+	 href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1>Syntax Coloring 
+ </h1>
+<p>PDT can 
+ automatically apply different colors and font attributes to different 
+ PHP syntax elements in order for your scripts to be more easily navigable 
+ and to help you find relevant sections quickly and easily. With the Syntax 
+ Coloring Rules you can set the foreground color, background color and 
+ font type for a range of different elements in your code through the Syntax 
+ Coloring Preferences page. This allows for a quick assessment of your 
+ code with the different elements individually visible, making errors visually 
+ distinct and easier to detect. </p>
+<p>Completing the relevant element will cause the required color and font 
+ settings to be applied to it.</p>
+<p class="picture"><img src="syntax_coloring_example.png" title="Code with Syntax Coloring Applied" style="border: none;" alt="syntax_coloring_example.png" width="396" height="284" border="0"></p>
+<p>&#160;</p>
+<p>The table below goes into further detail about the elements available 
+ for Syntax Coloring rules and their default settings. </p>
+<table cellspacing="0" width="100%" border="1">
+	<col style="width: 20.071%;">
+	<col style="width: 49.903%;">
+	<col style="width: 16.569%;">
+	<col style="width: 13.457%;">
+	<tr style="height: 61px;">
+		<td><span style="font-weight: bold;"><b>Element Name</b></span></td>
+		<td><span style="font-weight: bold;"><b>Element Description</b></span></td>
+		<td><span style="font-weight: bold;"><b>Default Foreground Color</b></span></td>
+		<td><span style="font-weight: bold;"><b>Default Font</b></span></td>
+	</tr>
+	<tr style="height: 27px;">
+		<td>Classes</td>
+		<td>A user defined type (class or interface).</td>
+		<td><img src="classes.png" style="border: none;" alt="classes.png" width="45" height="23" border="0"></td>
+		<td>&#160;</td>
+	</tr>
+	<tr style="height: 40px;">
+		<td>Constants</td>
+		<td>A variable with a value that cannot be altered during execution. 
+		 </td>
+		<td><img src="constants.png" style="border: none;" alt="constants.png" width="45" height="23" border="0"></td>
+		<td><span style="font-style: italic;"><i>Italic</i></span></td>
+	</tr>
+	<tr style="height: 40px;">
+		<td >Deprecated members</td>
+		<td >An unused member which still appears while transitioning to 
+		 new members. </td>
+		<td ><img src="deprecated_members.png" style="border: none;" alt="deprecated_members.png" width="45" height="23" border="0"></td>
+		<td ><span style="text-decoration: line-through; ">Strikethrough</span></td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Fields</td>
+		<td >A reference to a class variable</td>
+		<td ><img src="fields.png" style="border: none;" alt="fields.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Functions</td>
+		<td >A reference to a function</td>
+		<td ><img src="functions.png" style="border: none;" alt="functions.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Heredoc</td>
+		<td >A Heredoc block representation of a string value.</td>
+		<td ><img src="heredoc.png" style="border: none;" alt="heredoc.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Internal classes</td>
+		<td >A Type that was declared by PHP.</td>
+		<td ><img src="internal_classes.png" style="border: none;" alt="internal_classes.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 40px;">
+		<td >Internal constants</td>
+		<td >A constant that was declared by PHP.</td>
+		<td ><img src="internal_constants.png" style="border: none;" alt="internal_constants.png" width="45" height="23" border="0"></td>
+		<td ><span style="font-weight: bold; font-style: italic;"><i><b>Bold 
+		 and Italic</b></i></span></td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Internal functions</td>
+		<td >A function that was declared by PHP.</td>
+		<td ><img src="internal_functions.png" style="border: none;" alt="internal_functions.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Keyword</td>
+		<td >A keyword that was declared by PHP.</td>
+		<td ><img src="keyword.png" style="border: none;" alt="keyword.png" width="45" height="23" border="0"></td>
+		<td ><span style="font-weight: bold;"><b>Bold</b></span></td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Methods</td>
+		<td >A reference to a method </td>
+		<td ><img src="methods.png" style="border: none;" alt="methods.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Multi-line comment</td>
+		<td >A comment that spans more than one line. (&quot;* */&quot;)</td>
+		<td ><img src="multi_line_comment.png" style="border: none;" alt="multi_line_comment.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Normal</td>
+		<td >Any section that does not have any specific description that 
+		 applies to it. </td>
+		<td ><img src="normal.png" style="border: none;" alt="normal.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Number</td>
+		<td >A number. </td>
+		<td ><img src="number.png" style="border: none;" alt="number.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 40px;">
+		<td >Parameter variables</td>
+		<td >A variable used in a method which refers to arguments in the 
+		 method. </td>
+		<td ><img src="parameter_variables.png" style="border: none;" alt="parameter_variables.png" width="45" height="23" border="0"></td>
+		<td ><span style="text-decoration: underline; "><u>Underline</u></span></td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >PHP tags</td>
+		<td >The PHP start and end tag (&lt;?php, ?&gt;).</td>
+		<td ><img src="php_tags.png" style="border: none;" alt="php_tags.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 40px;">
+		<td >PHPDoc</td>
+		<td >A standard for commenting PHP which allows you to insert annotations 
+		 in your code. </td>
+		<td ><img src="phpdoc.png" style="border: none;" alt="phpdoc.png" width="45" height="23" border="0"></td>
+		<td ><span style="font-weight: bold;"><b>Bold</b></span></td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >PHPDoc comment</td>
+		<td >A readable annotation inserted into your code.</td>
+		<td ><img src="phpdoc_comment.png" style="border: none;" alt="phpdoc_comment.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Single-line comment</td>
+		<td >A comment that spans a single line. </td>
+		<td ><img src="single_line_comment.png" style="border: none;" alt="single_line_comment.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Static fields</td>
+		<td >A reference to a static field</td>
+		<td ><img src="static_fields.png" style="border: none;" alt="static_fields.png" width="45" height="23" border="0"></td>
+		<td ><span style="font-style: italic;"><i>Italic</i></span></td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Static methods</td>
+		<td >A reference to a static method</td>
+		<td ><img src="static_methods.png" style="border: none;" alt="static_methods.png" width="45" height="23" border="0"></td>
+		<td ><span style="font-style: italic;"><i>Italic</i></span></td>
+	</tr>
+	<tr style="height: 40px;">
+		<td >String</td>
+		<td >A sequence of characters selected from a set, which represent 
+		 a string of data values. &#160;</td>
+		<td ><img src="string.png" style="border: none;" alt="string.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+	<tr style="height: 40px;">
+		<td >Superglobal variables</td>
+		<td >A reference to Superglobal variables such as $_GLOBALS</td>
+		<td ><img src="superglobal_variables.png" style="border: none;" alt="superglobal_variables.png" width="45" height="23" border="0"></td>
+		<td ><span style="font-weight: bold;"><b>Bold</b></span></td>
+	</tr>
+	<tr style="height: 40px;">
+		<td >Task tag</td>
+		<td >A reference to reminders of actions, work to do, or any other 
+		 action required. </td>
+		<td ><img src="task_tag.png" style="border: none;" alt="task_tag.png" width="45" height="23" border="0"></td>
+		<td ><span style="font-weight: bold;"><b>Bold</b></span></td>
+	</tr>
+	<tr style="height: 27px;">
+		<td >Variable</td>
+		<td >A reference to a variable.</td>
+		<td ><img src="variable.png" style="border: none;" alt="variable.png" width="45" height="23" border="0"></td>
+		<td >&#160;</td>
+	</tr>
+</table>
+<p class="Note">Note:</p>
+<p class="NoteText">All elements have a default Background of white. </p>
+<p>The color and font settings can be configured from the <a href="syntax_coloring.htm">Syntax 
+ Coloring preferences</a> page, accessed from <span style="font-weight: bold;"><b>Window 
+ | Preferences | PHP | Editor | Syntax Coloring</b></span>.</p>
+<p class="Note">Note:</p>
+<p class="NoteText">Syntax Coloring will also be available for JavaScript 
+ elements if JavaScript support was enabled for the project. See <a href="enabling_javascript_support_in_php_projects.htm">Enabling 
+ JavaScript Support in PHP Projects</a> for more information.<br>
+To configure JavaScript Syntax Coloring preferences, go to <span style="font-weight: bold;"><b>Window 
+ | Preferences | JavaScript | Editor | Syntax Coloring</b></span>.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" alt="link_icon.png" style="border: none;" width="32" height="40" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Related Links:</p>
+		<p><a href="syntax_coloring.htm">Syntax Coloring preferences</a> 
+		 </p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+</table>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>

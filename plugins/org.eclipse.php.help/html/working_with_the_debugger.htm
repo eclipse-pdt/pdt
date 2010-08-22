@@ -1,0 +1,508 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="generator" content="Adobe RoboHelp 8">
+<title>Working with the Debugger</title>
+<link rel="StyleSheet" href="default.css" type="text/css">
+<style type="text/css">
+<!--
+body { border-left-style:None;
+border-right-style:None;
+border-bottom-style:None;
+background-color:Transparent;
+border-top-style:None; }
+-->
+</style>
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//]]>
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute;
+left:0px;
+top:0px;
+z-index:4;
+visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style>
+<script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.gbWhTopic)
+{
+	var strUrl = document.location.href;
+	var bc = 0;
+	var n = strUrl.toLowerCase().indexOf("bc-");
+	if(n != -1)
+	{
+		document.location.href = strUrl.substring(0, n);
+		bc = strUrl.substring(n+3);
+	}
+
+	if (window.setRelStartPage)
+	{
+	addTocInfo("User Guide\nGetting Started\nBasic Tutorials\nWorking with the Debugger");
+addAvenueInfo("Getting Started","working_with_code_assist.htm","");
+
+	}
+
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("ide_help.htm", "", "&gt;", "Home", "pdt_table_of_contents.htm");
+document.write("<a href=\"pdt_table_of_contents.htm\">User Guide<\/a> &gt; <a href=\"getting_started.htm\">Getting Started<\/a> &gt; <a href=\"basic_tutorial.htm\">Basic Tutorials<\/a> &gt; Working with the Debugger<\/p>");
+
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("ide_help.htm");
+
+		autoSync(0);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+//]]></script>
+</head>
+
+<body><script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+//]]></script>
+<script src="./ehlpdhtm.js" type="text/javascript" language="JavaScript1.2"></script>
+<div style="width: 100%; position: relative;" id="header">
+	
+	
+ <p align="right"><a 
+	 title="Documentation Survey" href="http://spreadsheets.google.com/viewform?formkey=dC1scEswTjFia2tDQ3Y5TVJBbkNQcWc6MQ" 
+	 target="_blank">Documentation Survey</a> 
+	 | <a 
+	 href="javascript:crlf=&quot;&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on PDT for page &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"><span 
+	 style="background-color: #ffffff;">Submit Documentation</span><span 
+	 style="background-color: #ffffff;"> Feedback</span></a><span 
+	 style="background-color: #ffffff;"></span><span style="background-color: #ffffff;"> 
+	 </span><span style="background-color: #ffffff;">| 
+	 </span><span 
+	 style="background-color: #ffffff;"><a title="View Latest Version and Get PDF Online" 
+											 href="http://www.zend.com/en/resources/zend-documentation/" 
+											 target="_blank">View Latest 
+	 Version and Get PDF Online</a></span></p>
+</div>
+
+
+<h1><a name="MiniTOCBookMark1"></a>Working with the Debugger 
+ </h1>
+<p class="Strong"><a name="Contents" id="Contents"></a></p>
+<p align="left" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;" >In&#160;this&#160;Topic&#160;<a class="dropspot" href="javascript:TextPopup(this)" id="MTHotSpot9032" ><span class="MTText" style="display: none;" >Show</span><span class="MTText" >Hide</span></a></p>
+<script type="text/javascript" language="JavaScript1.2">//<![CDATA[
+TextPopupInit('MTHotSpot9032', 'MTPOPUP9032');
+//]]></script>
+<div align="left" class="droptext" id="MTPOPUP9032" >
+ <p align="left"  ><a href="#MiniTOCBookMark2" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">Purpose and 
+ Usage</a></p>
+ <p align="left"  ><a href="#MiniTOCBookMark3" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">Debugging 
+ Local PHP Files (PHP Scripts)</a></p>
+ <p align="left"  ><a href="#MiniTOCBookMark4" style="font-family:Arial;font-size:12pt;font-weight: normal;font-style: normal;text-decoration: none;">Debugging 
+ PHP Applications (PHP Web Pages)</a></p>
+</div>
+<p>&#160;</p>
+<p>The purpose of this tutorial is to teach you how to debug files and 
+ applications both remotely and locally in order to gain maximum efficiency 
+ and accuracy from your files and projects.</p>
+<h2><a name="MiniTOCBookMark2"></a><a name="Purpose_and_Usage" id="Purpose_and_Usage"></a>Purpose and 
+ Usage</h2>
+<p>PDT 's 
+ Debugging feature can detect and diagnose errors in PHP code situated 
+ locally or on remote servers. The debugger allows you to control the execution 
+ of your program by setting breakpoints, suspending launched programs, 
+ stepping through your code, and examining the contents of variables.</p>
+<p>Debugging should be used at stages where your scripts and applications 
+ are formed sufficiently to be tried and tested.</p>
+<p>PDT includes 
+ several types of debugging:</p>
+<ul type="square">
+	<li><p>Locally Debugging PHP Scripts - Debugging PHP files using 
+	 an internal PHP Executable 
+	 debugger.</p></li>
+	
+	<li><p>Debugging PHP Web Pages - Debugging files, applications and 
+	 projects on your server </p></li>
+	
+	
+</ul>
+<p align="right"><a 
+	 href="#Contents">Back to Top</a> </p>
+<h2><a name="MiniTOCBookMark3"></a><a name="Debugging_PHP_Files" id="Debugging_PHP_Files"></a>Debugging 
+ Local PHP Files (PHP Scripts)</h2>
+<p>PHP files (PHP Scripts) on your workspace can be debugged  locally 
+ using PDT's internal debugger.  </p>
+<div>
+<p class="Note">Note:</p>
+<p class="NoteText">Your server must be running the XDebug in order for remote debugging  capabilities to function.<br>
+</p>
+</div>
+<p class="Strong"><a name="Debugging_Files_Locally" id="Debugging_Files_Locally"></a>Debugging 
+ a PHP File Locally</p>
+<p>Files can be debugged using PDT 
+ 's internal debugger.</p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">This procedure demonstrates how 
+		 to debug a file using the internal debugger or your server's debugger:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px;"><p><a name="steps_1_3" 
+															 id="steps_1_3"></a>Inside 
+			 a PHP project, <a href="javascript:void(0);" id="a1" onmouseover="if (parseInt(navigator.appVersion) >= 4 &amp;&amp; typeof(BSPSPopupOnMouseOver) == 'function') BSPSPopupOnMouseOver(event);" class="BSSCPopup" onclick="BSSCPopup('creating_a_php_file_within_a_project.htm');return false;">create a PHP file</a>, called 
+			 &quot;debug&quot;, and copy-paste the example code into it. 
+			 ( <a href="debugger_code_.htm">Click 
+			 here to see the code</a> .) 
+			 
+			  </p></li>
+			<li class="p" style="margin-left: -20px;"><p>Set a breakpoint 
+			 at line 103 by double-clicking the marker bar to the left 
+			 of the editor window.<span style="margin-left: 40px;"><br>
+			A blue ball will appear.</span></p></li>
+			<li class="p" style="margin-left: -20px;"><p>Save the file.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click the arrow 
+			 next to the debug button <img src="debug_icon.png" alt="debug_icon.png" style="border: none;" width="39" height="25" border="0"> 
+			 on the toolbar and select <span style="font-weight: bold;"><b>Debug 
+			 Configurations</b></span>... -or- select <span style="font-weight: bold;"><b>Run 
+			 | Debug Configurations</b></span> from the main menu -or- right-click 
+			 the file in PHP Explorer view and select <span style="font-weight: bold;"><b>Debug 
+			 Configurations....</b></span><br>
+			A Debug dialog will appear.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Double-click the 
+			 PHP Script option to create a new debug configuration.</p></li>
+		</ol>
+		<p class="picture">&#160;&#160;<img src="debug_phpscript_configuration.png" alt="New Debug Configuration" title="New Debug Configuration" style="border: none;" width="510" height="398" border="0"> 
+		 </p>
+		
+		<ol start="6" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Enter a name for 
+			 the new configuration.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>To debug the file 
+			 using your 
+			 PHP Executable debugger, select the PHP Executable option 
+			 in the Debugger Location category.
+			 
+			  </p></li>
+			<li class="p" style="margin-left: -20px;"><p>Under PHP File, 
+			 click <span style="font-weight: bold;"><b>Browse</b></span> and select 
+			 the &quot;debug&quot; file.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Ensure that the 
+			 'Break at First Line' Breakpoint checkbox is selected.</p></li>
+		</ol>
+		<ol start="9" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Apply</b></span> 
+			 and then <span style="font-weight: bold;"><b>Debug</b></span>.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Yes</b></span> 
+			 if asked whether to open the PHP Debug Perspective.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>A number of views 
+			 will open with information about your script.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>The Debug View 
+			 is where the debug stack trace is displayed and the debugging 
+			 process can be monitored and controlled.</p></li>
+		</ol>
+		<p class="picture"><img src="debug_view.png" alt="Debug View" title="Debug View" style="border: none;" width="315" height="175" border="0"></p>
+		<p style="margin-left: 24px;">The debugging process will currently 
+		 have stopped where your first &lt;?php label appears.</p>
+		<ol start="13" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click the Resume 
+			 icon <img src="resume_icon.png" alt="resume_icon.png" style="border: none;" width="25" height="24" border="0"> to continue 
+			 to the breakpoint.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click Step Into 
+			 <img src="step_into_icon.png" alt="step_into_icon.png" style="border: none;" width="27" height="24" border="0">. The Debugger 
+			 goes into the function defined in line 103 and advances to 
+			 line 77.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>The Variable view 
+			 will now display various information about the relevant variables 
+			 and parameters through which the function was reached.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>In the editor 
+			 window, place and hold the cursor over $worker_name, $worker_address, 
+			 and $worker_phone. A tooltip appears displaying the variable 
+			 values.</p></li>
+		</ol>
+		<p class="picture"><img src="debug_tutorial_editor.png" alt="Editor View While Debugging" title="Editor View While Debugging" style="border: none;" width="395" height="235" border="0"></p>
+		<ol start="17" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click Step Return. 
+			 <img src="debug_step_return_icon.png" alt="debug_step_return_icon.png" style="border: none;" width="25" height="24" border="0"> The cursor returns 
+			 to line 103.<br>
+			The Debug Output view will display the HTML output created 
+			 up until the breakpoint, while the Browser Output view will 
+			 show the current output to a browser.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>In the Debug view, 
+			 click Resume <img src="resume_icon.png" alt="resume_icon.png" style="border: none;" width="25" height="24" border="0"> &#160;until 
+			 the debugging process is terminated.<br>
+			Notice that as the debugging process progresses, the Debug 
+			 Output and Browser Output displays are updated.</p></li>
+		</ol>
+		<p class="picture"><img src="debug_browser_output.png" alt="Browser Output" title="Browser Output" style="border: none;" width="292" height="203" border="0"></p>
+		<ol start="19" type="1">
+			<li class="p" style="margin-left: -20px;"><p>The console view 
+			 will display any errors or warnings about your script. In 
+			 this case, it will display a Notice about an undefined variable 
+			 on line 105.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click on the PHP 
+			 Perspective icon to return to normal editing mode.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>To run the debugging 
+			 process again, click the arrow next to the debug icon <img src="debug_icon.png" alt="debug_icon.png" style="border: none;" width="39" height="25" border="0"> on the toolbar and select your configuration 
+			 -or- select <span style="font-weight: bold;"><b>Debug Configurations...</b></span> 
+			 and double-click your configuration from the &quot;Debug&quot; 
+			 dialog.<br>
+			Clicking the debug icon will debug the last executed launch 
+			 configuration.</p></li>
+		</ol></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+		
+	</tr>
+</table>
+<p align="right"><a 
+	 href="#Contents">Back to Top</a> </p>
+
+
+<div>
+<p class="Note">Note:</p>
+<p class="NoteText">Your server must be running the XDebug in order for remote debugging  capabilities to function.<br>
+</p>
+</div>
+
+
+<h2><a name="MiniTOCBookMark4"></a><a name="Debugging_PHP_Applications" id="Debugging_PHP_Applications"></a>Debugging 
+ PHP Applications (PHP Web Pages)</h2>
+<p>PDT also 
+ allows you to debug applications, projects or files that are already on 
+ the server.  
+ </p>
+<div>
+<p class="Note">Note:</p>
+<p class="NoteText">Your server must be running the XDebug in order for remote debugging  capabilities to function.<br>
+</p>
+</div>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="ref_icon.png" alt="Instructions on how to complete a procedure" title="Instructions on how to complete a procedure" style="border: none;" width="28" height="33" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">This procedure demonstrates how 
+		 to debug applications on a server:</p>
+		<ol type="1">
+			<li class="p" style="margin-left: -20px;"><p>Inside a PHP project, 
+			 <a href="creating_a_php_file_within_a_project.htm">create 
+			 a new PHP file</a>, called &quot;form1&quot;, with the following 
+			 code:</p></li>
+		</ol>
+		<p class="code" style="margin-left: 0px;">&lt;html&gt;</p>
+		<p class="code" style="margin-left: 0px;">&lt;body&gt;</p>
+		<p class="code" style="margin-left: 0px;">&lt;form action=&quot;welcome.php&quot; 
+		 method=&quot;post&quot;&gt;</p>
+		<p class="code" style="margin-left: 0px;">Name: &lt;input type=&quot;text&quot; 
+		 name=&quot;name&quot; /&gt;</p>
+		<p class="code" style="margin-left: 0px;">Age: &lt;input type=&quot;text&quot; 
+		 name=&quot;age&quot; /&gt;</p>
+		<p class="code" style="margin-left: 0px;">&lt;input type=&quot;submit&quot; 
+		 /&gt;</p>
+		<p class="code" style="margin-left: 0px;">&lt;/form&gt;</p>
+		<p class="code" style="margin-left: 0px;">&lt;/body&gt;</p>
+		<p class="code" style="margin-left: 0px;">&lt;/html&gt;</p>
+		<ol start="2" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Create a second 
+			 PHP file, called &quot;welcome&quot;, with the following code:</p></li>
+		</ol>
+		<p class="code" style="margin-left: 0px;">&lt;html&gt;</p>
+		<p class="code" style="margin-left: 0px;">&lt;body&gt;</p>
+		<p class="code" style="margin-left: 0px;">Welcome &lt;?php echo 
+		 $_POST[&quot;name&quot;]; ?&gt;.&lt;br /&gt;</p>
+		<p class="code" style="margin-left: 0px;">You are &lt;?php echo 
+		 $_POST[&quot;age&quot;]; ?&gt; years old.</p>
+		<p class="code" style="margin-left: 0px;">&lt;/body&gt;</p>
+		<p class="code" style="margin-left: 0px;">&lt;/html&gt;</p>
+		<ol start="3" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Save both files 
+			 and copy them to your server.</p></li>
+			<li class="p" style="margin-left: -20px;"><p><a name="step_4" 
+															 id="step_4"></a>Click 
+			 the arrow next to the debug button <img src="debug_icon.png" alt="debug_icon.png" style="border: none;" width="39" height="25" border="0"> &#160;on 
+			 the toolbar and select Debug Configurations... -or- right-click 
+			 the file in PHP explorer or within the file's editor window 
+			 and select <span style="font-weight: bold;"><b>Debug as | Debug 
+			 Configurations....</b></span><br>
+			A Debug dialog will appear.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Double-click on 
+			 the PHP Web Page option to create a new debug configuration.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Enter a name for 
+			 the new configuration.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Select the Debugger from the Server Debugger drop-down 
+			 list.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Select your server 
+			 from the drop-down list.<br>
+			If you have not configured a server, click the PHP Servers 
+			 link to be taken to the <a href="php_servers.htm">PHP Servers 
+			 Preferences</a> page.</p></li>
+		</ol>
+		<ol start="9" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Under the File/Project 
+			 category, click <span style="font-weight: bold;"><b>Browse</b></span> 
+			 and select the &quot;form1&quot; file. This will be the file 
+			 from which the debugger will start debugging (the 'debug target'.)</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Ensure that the 
+			 URL pointing to the file location is correct.<br>
+			If this is not correct, unmark the Auto Generate checkbox and 
+			 manually change the URL.</p></li>
+		</ol>
+		
+		
+		<p class="picture"><img src="debug_configuration_webpage.png" alt="New Debug Configuration" title="New Debug Configuration" style="border: none;" width="429" height="336" border="0"></p>
+		<ol start="11" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Apply</b></span> 
+			 and then <span style="font-weight: bold;"><b>Debug</b></span>.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click <span style="font-weight: bold;"><b>Yes</b></span> 
+			 when asked whether to open the PHP Debug Perspective.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>The Debug Perspective 
+			 will open with several views relevant to the debugging process 
+			 (See '<a href="php_debug_perspective.htm">PHP Debug Perspective</a>' 
+			 for more information on the different views.)</p></li>
+			<li class="p" style="margin-left: -20px;"><p>In the editor 
+			 view, you will see the code for the &quot;form1&quot; file.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>In the Debug view, 
+			 click <span style="font-weight: bold;"><b>Resume</b></span> to resume 
+			 the debugging process.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>The browser output 
+			 will display a form asking you to enter your Name and Age.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Select the browser 
+			 view (tabbed with the editor window). This will display the 
+			 output of your script in a browser in 'real time'.<br>
+			Note that this is different from the Browser Output window.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>In the browser 
+			 view, enter your Name and Age and click <span style="font-weight: bold;"><b>Submit 
+			 Query</b></span>.</p></li>
+		</ol>
+		<p class="picture"><img src="debug_webpage_ouput.png" alt="Browser View" title="Browser View" style="border: none;" width="567" height="131" border="0"></p>
+		<ol start="20" type="1">
+			<li class="p" style="margin-left: -20px;"><p>Another editor 
+			 tab will open, with the script from the welcome.php file.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>In the Debug view, 
+			 click <span style="font-weight: bold;"><b>Resume</b></span> to resume 
+			 the debugging process.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>The browser output 
+			 and browser views will display the final result of your application:<br>
+			&quot;Welcome [Name].<br>
+			You are [Age] years old.&quot;</p></li>
+		</ol>
+		<p class="picture"><img src="debug_webpage_browser_output.png" alt="Browser Output" title="Browser Output" style="border: none;" width="251" height="99" border="0"></p>
+		<ol start="23" type="1">
+			<li class="p" style="margin-left: -20px;"><p>The debugging 
+			 process will have terminated.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>Click on the PHP 
+			 Perspective icon to return to normal editing mode.</p></li>
+			<li class="p" style="margin-left: -20px;"><p>To run the debugging 
+			 process again, click the arrow next to the debug icon <img src="debug_icon.png" alt="debug_icon.png" style="border: none;" width="39" height="25" border="0"> on the toolbar and select your debugging 
+			 configuration.</p></li>
+		</ol></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td colspan="2" style="width: 100%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+		
+	</tr>
+</table>
+<p align="right"><a 
+	 href="#Contents">Back to Top</a> </p>
+<table cellspacing="0" width="100%">
+	<col style="width: 7.093%;">
+	<col style="width: 92.907%;">
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;"><img src="link_icon.png" alt="link_icon.png" style="border: none;" width="32" height="40" border="0"></p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-weight: bold;">Related Links:</p>
+		<p><a href="debugging.htm">Debugging</a></p>
+		<p><a href="debugging.htm">Using 
+		 the Debugger</a></p>
+		
+		<p><a href="debugging_a_php_web_page.htm">Debugging 
+		 a PHP Web Page</a></p>
+		
+		
+		<p><a href="debug.htm">Debug 
+		 Preferences</a></p>
+		<p><a href="analyzing_debugger_results.htm">Running 
+		 and Analyzing Debugger Results</a></p></td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td style="width: 7.093%; padding-right: 10px; padding-left: 10px;"><p 
+			 style="font-size: 6pt;">&#160;</p></td>
+		<td style="width: 92.907%; padding-right: 10px; padding-left: 10px;"><p>&#160;</p></td>
+	</tr>
+</table>
+<p align="right"><a 
+	 href="#Contents">Back to Top</a> </p>
+<div style="width: 100%; position: relative;" id="footer">
+	
+ <p style="text-decoration: underline; " 
+										 align="center">PHP Development 
+	 Tools</p>
+	
+	
+</div>
+<script type="text/javascript" language="JavaScript1.2">//<![CDATA[
+	if( typeof( FilePopupInit ) != 'function' ) FilePopupInit = new Function();
+	FilePopupInit('a1');
+//]]></script>
+<script type="text/javascript" language="javascript1.2">//<![CDATA[
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+
+highlightSearch();
+//-->
+//]]></script>
+</body>
+</html>
