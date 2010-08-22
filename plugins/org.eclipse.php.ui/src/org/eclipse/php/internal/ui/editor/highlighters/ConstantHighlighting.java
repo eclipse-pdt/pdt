@@ -19,6 +19,7 @@ import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighti
 public class ConstantHighlighting extends AbstractSemanticHighlighting {
 
 	protected class ConstantApply extends AbstractSemanticApply {
+		boolean isInQuote = false;
 
 		@Override
 		public boolean visit(ConstantDeclaration constDecl) {
@@ -29,10 +30,19 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 			return true;
 		}
 
+		public boolean visit(Quote quote) {
+			isInQuote = true;
+			return true;
+		}
+
+		public void endVisit(Quote quote) {
+			isInQuote = false;
+		}
+
 		@Override
 		public boolean visit(Scalar scalar) {
 			String value = scalar.getStringValue();
-			if ((scalar.getScalarType() == Scalar.TYPE_STRING || scalar
+			if ((scalar.getScalarType() == Scalar.TYPE_STRING && !isInQuote || scalar
 					.getScalarType() == Scalar.TYPE_SYSTEM)
 					&& !"null".equals(value)
 					&& !"false".equals(value)
