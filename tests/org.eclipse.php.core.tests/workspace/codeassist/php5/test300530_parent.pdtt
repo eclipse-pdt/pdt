@@ -29,5 +29,4 @@ class foo extends bax
 --EXPECT--
 field(AAZ)
 field(BAZ)
-method(__construct)
 ?>
