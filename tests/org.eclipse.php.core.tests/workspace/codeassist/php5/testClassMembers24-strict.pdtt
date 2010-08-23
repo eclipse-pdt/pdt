@@ -1,0 +1,19 @@
+--TEST--
+Test class constructor
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class person {
+	function __construct($name) {
+		$this->setName($name);
+	}
+}
+class man extends person {
+	function __construct($name) {
+		parent::|
+	}
+}
+?>
+--EXPECT--
+method(__construct)
