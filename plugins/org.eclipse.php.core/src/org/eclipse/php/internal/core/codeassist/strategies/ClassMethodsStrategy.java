@@ -14,10 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ITypeHierarchy;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -75,7 +72,6 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				.getMethods(phpVersion)));
 
 		boolean exactName = requestor.isContextInformationMode();
-
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
@@ -88,10 +84,14 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 						.getTypeHierarchyMethod(type, hierarchy, prefix,
 								exactName, null);
 
+				boolean inConstructor = isInConstructor(type,
+						type.getMethods(), concreteContext);
 				for (IMethod method : removeOverriddenElements(Arrays
 						.asList(methods))) {
 
-					if (!isFiltered(method, type, concreteContext)) {
+					if ((!isConstructor(method) || inConstructor
+							&& isSuperConstructor(method, type, concreteContext))
+							&& !isFiltered(method, type, concreteContext)) {
 						if (magicMethods.contains(method.getElementName())) {
 							reporter.reportMethod(method, suffix, replaceRange,
 									ProposalExtraInfo.MAGIC_METHOD);
@@ -107,6 +107,69 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		for (IMethod method : result) {
 			reporter.reportMethod((IMethod) method, suffix, replaceRange);
 		}
+	}
+
+	private boolean isInConstructor(IType type, IMethod[] methods,
+			ClassMemberContext concreteContext) {
+		try {
+			for (int i = 0; i < methods.length; i++) {
+				IMethod method = methods[i];
+				if (isConstructor(method)
+						&& method.getDeclaringType().equals(type)) {
+					ISourceRange construtorRange = method.getSourceRange();
+					if (concreteContext.getOffset() > construtorRange
+							.getOffset()
+							&& concreteContext.getOffset() < construtorRange
+									.getOffset()
+									+ construtorRange.getLength()) {
+						return true;
+					}
+				}
+			}
+		} catch (ModelException e) {
+		}
+		return false;
+	}
+
+	private boolean isSuperConstructor(IMethod method, IType type,
+			ClassMemberContext context) {
+		if (isConstructor(method) && context.getTriggerType() == Trigger.CLASS
+				&& isParent(context) && !method.getDeclaringType().equals(type)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * is 'parent' keyword
+	 * 
+	 * @param context
+	 * @return
+	 */
+	private boolean isParent(ClassMemberContext context) {
+		return !isThisCall(context) && isParentCall(context)
+				&& isDirectParentCall(context);
+	}
+
+	private boolean isConstructor(IMethod method) {
+		String methodName = method.getElementName();
+		if (methodName.equals("__construct")
+				|| methodName
+						.equals(method.getDeclaringType().getElementName())) {
+			return true;
+		}
+		return false;
+	}
+
+	private IMethod getConstructor(IType type, IMethod[] methods) {
+		for (int i = 0; i < methods.length; i++) {
+			IMethod method = methods[i];
+			if (isConstructor(method)) {
+				return method;
+			}
+		}
+
+		return null;
 	}
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
