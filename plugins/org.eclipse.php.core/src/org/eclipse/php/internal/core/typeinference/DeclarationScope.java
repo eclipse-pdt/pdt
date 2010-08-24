@@ -6,10 +6,11 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.IfStatement;
 
 /**
- * Variable declaration scope. Each scope contains mapping between variable
- * name and its possible declarations.
+ * Variable declaration scope. Each scope contains mapping between variable name
+ * and its possible declarations.
  * 
  * @author michael
  */
@@ -65,8 +66,8 @@ public class DeclarationScope {
 	}
 
 	/**
-	 * Returns all possible variable declarations for the given variable
-	 * name in current scope.
+	 * Returns all possible variable declarations for the given variable name in
+	 * current scope.
 	 * 
 	 * @param varName
 	 */
@@ -80,8 +81,7 @@ public class DeclarationScope {
 				}
 			}
 		}
-		return (Declaration[]) result
-				.toArray(new Declaration[result.size()]);
+		return (Declaration[]) result.toArray(new Declaration[result.size()]);
 	}
 
 	/**
@@ -115,7 +115,8 @@ public class DeclarationScope {
 
 		if (varDecls.size() > level) {
 			Declaration decl = varDecls.get(level);
-			if (decl != null) {
+			Statement block = innerBlocks.get(level - 1);
+			if (isInSameBlock(block, decl.getNode(), declNode)) {
 				// replace existing declaration with a new one (leave
 				// 'isGlobal' flag the same)
 				decl.setNode(declNode);
@@ -123,8 +124,37 @@ public class DeclarationScope {
 			}
 		}
 		// add new declaration
-		varDecls.addLast(new Declaration(
-				declNode instanceof GlobalStatement, declNode));
+		varDecls.addLast(new Declaration(declNode instanceof GlobalStatement,
+				declNode));
+	}
+
+	private boolean isInSameBlock(Statement block, ASTNode oldNode,
+			ASTNode newNode) {
+		if (block instanceof IfStatement) {
+			IfStatement ifStatement = (IfStatement) block;
+			Statement oldBlock = getBlock(ifStatement, oldNode);
+			Statement newBlock = getBlock(ifStatement, newNode);
+			if (oldBlock != null && oldBlock == newBlock) {
+				return isInSameBlock(newBlock, oldNode, newNode);
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private Statement getBlock(IfStatement ifStatement, ASTNode node) {
+		if (ifStatement.getTrueStatement().sourceStart() <= node.sourceStart()
+				&& ifStatement.getTrueStatement().sourceEnd() >= node
+						.sourceEnd()) {
+			return ifStatement.getTrueStatement();
+		} else if (ifStatement.getFalseStatement().sourceStart() <= node
+				.sourceStart()
+				&& ifStatement.getFalseStatement().sourceEnd() >= node
+						.sourceEnd()) {
+			return ifStatement.getFalseStatement();
+		}
+		return null;
 	}
 
 	public String toString() {
