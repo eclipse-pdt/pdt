@@ -96,9 +96,15 @@ public class FormatPreferencesSupport {
 			try {
 				editorModel = (DOMModelForPHP) StructuredModelManager
 						.getModelManager().getExistingModelForRead(document);
+
+				// The PHPMergeViewer can be used outside Editor.
+				// E.g. the preview page.
+				// In those cases, the editroModel is null.
+				// Do the check and return in null case.
 				if (editorModel == null) {
 					return;
 				}
+
 				String baseLocation = editorModel.getBaseLocation();
 				// The baseLocation may be a path on disk or relative to the
 				// workspace root. Don't translate on-disk paths to
