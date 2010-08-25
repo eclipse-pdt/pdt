@@ -1,30 +1,30 @@
 /*******************************************************************************
- * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.server.core;
 
 import java.beans.PropertyChangeListener;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
 /**
  * A generic server implementation.
  */
-public class Server implements IXMLPreferencesStorable {
+public class Server implements IXMLPreferencesStorable, IAdaptable {
 
 	// Used as a root element name when saving and loading the preferences.
 	public static final String SERVER_ELEMENT = "server";
@@ -39,6 +39,8 @@ public class Server implements IXMLPreferencesStorable {
 
 	private static final int DEFAULT_HTTP_PORT = 80;
 
+	public static final String LOCALSERVER = "localserver";
+
 	private ServerHelper helper;
 
 	/**
@@ -50,14 +52,16 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Constructs a new Server.
-	 *
+	 * 
 	 * @param name
 	 * @param hostName
 	 * @param baseURL
 	 * @param documentRoot
 	 * @param publish
+	 * @throws MalformedURLException
 	 */
-	public Server(String name, String host, String baseURL, String documentRoot) {
+	public Server(String name, String host, String baseURL, String documentRoot)
+			throws MalformedURLException {
 		this();
 		setName(name);
 		setHost(host);
@@ -67,8 +71,9 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Add a property change listener to this server.
-	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * 
+	 * @param listener
+	 *            java.beans.PropertyChangeListener
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		helper.addPropertyChangeListener(listener);
@@ -76,8 +81,9 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Remove a property change listener from this server.
-	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * 
+	 * @param listener
+	 *            java.beans.PropertyChangeListener
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		helper.removePropertyChangeListener(listener);
@@ -85,19 +91,24 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Sets an arbitrary attribute to this Server.
-	 *
-	 * @param attributeName The attribute name
-	 * @param value The String value of this attribute.
+	 * 
+	 * @param attributeName
+	 *            The attribute name
+	 * @param value
+	 *            The String value of this attribute.
 	 */
 	public void setAttribute(String attributeName, String value) {
 		helper.setAttribute(attributeName, value);
 	}
 
 	/**
-	 * Returns an arbitrary attribute from this Server according to a given attribute name.
-	 *
-	 * @param attributeName The attribute name
-	 * @param defaultValue A default value to use if the attribute was not found
+	 * Returns an arbitrary attribute from this Server according to a given
+	 * attribute name.
+	 * 
+	 * @param attributeName
+	 *            The attribute name
+	 * @param defaultValue
+	 *            A default value to use if the attribute was not found
 	 * @return The String value of this attribute
 	 */
 	public String getAttribute(String attributeName, String defaultValue) {
@@ -106,22 +117,12 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Removed an attribute.
-	 *
-	 * @param attributeName The attribute name.
+	 * 
+	 * @param attributeName
+	 *            The attribute name.
 	 */
 	public void removeAttribute(String attributeName) {
 		helper.removeAttribute(attributeName);
-	}
-
-	public String getContextRoot(IProject project) {
-		PHPProjectOptions options = PHPProjectOptions.forProject(project);
-		String contextRoot = (String) options.getOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
-
-		if (contextRoot == null || contextRoot.equals("")) {
-			contextRoot = project.getFullPath().toString();
-		}
-
-		return contextRoot;
 	}
 
 	public String getName() {
@@ -133,11 +134,29 @@ public class Server implements IXMLPreferencesStorable {
 	}
 
 	public String getBaseURL() {
-		return getAttribute(Server.BASE_URL, "");
+		String base = getAttribute(Server.BASE_URL, "");
+		String port = getPortString();
+
+		URL resultURL;
+		try {
+			URL baseURL = new URL(base);
+			resultURL = new URL(baseURL.getProtocol(), baseURL.getHost(),
+					port != null && port.length() != 0 ? Integer.valueOf(port)
+							: -1, "");
+		} catch (MalformedURLException e) {
+			// hopefully this is not called as setBaseURL is safe
+			return base;
+		}
+		return resultURL.toString();
 	}
 
-	public void setBaseURL(String url) {
-		setAttribute(Server.BASE_URL, url);
+	public void setBaseURL(String url) throws MalformedURLException {
+		URL baseURL = new URL(url);
+		if (baseURL.getPort() != -1) {
+			this.setPort(String.valueOf(baseURL.getPort()));
+		}
+		URL url2 = new URL(baseURL.getProtocol(), baseURL.getHost(), "");
+		setAttribute(Server.BASE_URL, url2.toString());
 	}
 
 	public String getHost() {
@@ -158,26 +177,12 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Return the root URL of this server.
-	 *
+	 * 
 	 * @return java.net.URL
 	 */
 	public URL getRootURL() {
-
 		try {
-			String port = getPortString();
-			String base = getBaseURL();
-			if (base.equals(""))
-				base = "http://" + getHost();
-
-			URL url = null;
-
-			if (port.equals("80"))
-				url = new URL(base + "/");
-			else
-				url = new URL(base + ":" + port + "/");
-
-			return url;
-
+			return new URL(this.getBaseURL());
 		} catch (Exception e) {
 			Logger.logException("Could not get root URL", e);
 			return null;
@@ -185,7 +190,8 @@ public class Server implements IXMLPreferencesStorable {
 
 	}
 
-	protected static String renderCommandLine(String[] commandLine, String separator) {
+	protected static String renderCommandLine(String[] commandLine,
+			String separator) {
 		if (commandLine == null || commandLine.length < 1)
 			return "";
 		StringBuffer buf = new StringBuffer(commandLine[0]);
@@ -243,19 +249,24 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Return a string representation of this Server.
+	 * 
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		return "Server [" + getName() + "::"+ getHost() + ']';
+		return "Server [" + getName() + "::" + getHost() + ']';
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#restoreFromMap(java.util.HashMap)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
+	 * #restoreFromMap(java.util.HashMap)
 	 */
 	public void restoreFromMap(HashMap map) {
 		HashMap properties = (HashMap) map.get(SERVER_ELEMENT);
-		// This will cause for property change events to be fired on every attribute set.
+		// This will cause for property change events to be fired on every
+		// attribute set.
 		Iterator keys = properties.keySet().iterator();
 		while (keys.hasNext()) {
 			String key = (String) keys.next();
@@ -265,7 +276,10 @@ public class Server implements IXMLPreferencesStorable {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#storeToMap()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
+	 * #storeToMap()
 	 */
 	public HashMap storeToMap() {
 		HashMap properties = new HashMap(helper.map);
@@ -276,6 +290,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Checks whether this server is local machine
+	 * 
 	 * @return
 	 */
 	public boolean isLocal() {
@@ -288,5 +303,9 @@ public class Server implements IXMLPreferencesStorable {
 		} catch (Exception e) {
 		}
 		return false;
+	}
+
+	public Object getAdapter(Class adapter) {
+		return null;
 	}
 }
