@@ -72,12 +72,30 @@ public class PHPDebugPropertyPreferencePage extends
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		comp.setLayoutData(gd);
 
-		debugPreferencesBlock = new PHPDebugPreferencesBlock();
+		debugPreferencesBlock = new PHPDebugPreferencesBlock(
+				getProject() == null);
+
 		debugPreferencesBlock.setCompositeAddon(comp);
 		debugPreferencesBlock.initializeValues(this);
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.DEBUG_PREFERENCES);
+		debugPreferencesBlock.setValidator(new IPageValidator() {
+
+			public void validate(IPageControlValidator pageValidator)
+					throws ControlValidationException {
+
+				pageValidator.validate();
+				setValid(pageValidator.isValid());
+				if (!pageValidator.isValid())
+					setErrorMessage(pageValidator.getErrorMessage());
+				else {
+					setErrorMessage(null);
+				}
+			}
+
+		});
+
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.DEBUG_PREFERENCES);
 		return comp;
 	}
 
