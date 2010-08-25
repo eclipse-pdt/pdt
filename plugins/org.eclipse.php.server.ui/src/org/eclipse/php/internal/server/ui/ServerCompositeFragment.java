@@ -1,5 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.server.ui;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -30,27 +42,34 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 	/**
 	 * ServerCompositeFragment
-	 *
-	 * @param parent the parent composite
-	 * @param wizard the wizard handle
+	 * 
+	 * @param parent
+	 *            the parent composite
+	 * @param wizard
+	 *            the wizard handle
 	 */
-	public ServerCompositeFragment(Composite parent, IControlHandler handler, boolean isForEditing) {
+	public ServerCompositeFragment(Composite parent, IControlHandler handler,
+			boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		setDescription(PHPServerUIMessages.getString("ServerCompositeFragment.specifyInformation")); //$NON-NLS-1$
+		setDescription(PHPServerUIMessages
+				.getString("ServerCompositeFragment.specifyInformation")); //$NON-NLS-1$
 		controlHandler.setDescription(getDescription());
 		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
-		setDisplayName(PHPServerUIMessages.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
+		setDisplayName(PHPServerUIMessages
+				.getString("ServerCompositeFragment.server")); //$NON-NLS-1$
 		createControl();
 	}
 
 	/**
 	 * Override the super setData to handle only Server types.
-	 *
-	 * @throws IllegalArgumentException if the given object is not a {@link Server}
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the given object is not a {@link Server}
 	 */
 	public void setData(Object server) throws IllegalArgumentException {
 		if (server != null && !(server instanceof Server)) {
-			throw new IllegalArgumentException("The given object is not a Server");
+			throw new IllegalArgumentException(
+					"The given object is not a Server");
 		}
 		super.setData(server);
 		init();
@@ -76,7 +95,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 		nameGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label label = new Label(nameGroup, SWT.NONE);
-		label.setText(PHPServerUIMessages.getString("ServerCompositeFragment.nameLabel")); //$NON-NLS-1$
+		label.setText(PHPServerUIMessages
+				.getString("ServerCompositeFragment.nameLabel")); //$NON-NLS-1$
 		GridData data = new GridData();
 		label.setLayoutData(data);
 
@@ -119,7 +139,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 					boolean ok = checkServerName(serverName);
 					if (ok) {
 						name.setText(serverName);
-						//						workingCopy.setName(serverName);
+						// workingCopy.setName(serverName);
 						modifiedValuesCache.serverName = serverName;
 						nameSet = true;
 						break;
@@ -128,7 +148,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 				}
 				if (!nameSet) {
 					name.setText(""); //$NON-NLS-1$
-					//					workingCopy.setName("");
+					// workingCopy.setName("");
 					modifiedValuesCache.serverName = ""; //$NON-NLS-1$
 				}
 			} else {
@@ -147,7 +167,9 @@ public class ServerCompositeFragment extends CompositeFragment {
 				originalValuesCache.port = port;
 				modifiedValuesCache.port = port;
 			} catch (Exception e) {
-				setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
+				setMessage(
+						PHPServerUIMessages
+								.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			}
 		} else {
 			baseURL = "http://" + server.getHost(); //$NON-NLS-1$
@@ -158,13 +180,18 @@ public class ServerCompositeFragment extends CompositeFragment {
 				int port = createdURL.getPort();
 				modifiedValuesCache.port = port;
 			} catch (Exception e) {
-				setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
+				setMessage(
+						PHPServerUIMessages
+								.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			}
 		}
-		if (originalValuesCache.serverName != null && originalValuesCache.serverName.length() > 0) {
-			setTitle(PHPServerUIMessages.getString("ServerCompositeFragment.editServer") + " [" + originalValuesCache.serverName + ']'); //$NON-NLS-1$ //$NON-NLS-2$
+		if (originalValuesCache.serverName != null
+				&& originalValuesCache.serverName.length() > 0) {
+			setTitle(PHPServerUIMessages
+					.getString("ServerCompositeFragment.editServer") + " [" + originalValuesCache.serverName + ']'); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
-			setTitle(PHPServerUIMessages.getString("ServerCompositeFragment.configureServer")); //$NON-NLS-1$
+			setTitle(PHPServerUIMessages
+					.getString("ServerCompositeFragment.configureServer")); //$NON-NLS-1$
 		}
 		controlHandler.setTitle(getTitle());
 	}
@@ -179,17 +206,33 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 		String serverName = modifiedValuesCache.serverName;
 		if (serverName == null || serverName.trim().equals("")) { //$NON-NLS-1$
-			setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.missingServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
+			setMessage(
+					PHPServerUIMessages
+							.getString("ServerCompositeFragment.missingServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
 		} else {
 			boolean ok = checkServerName(serverName);
 			if (!ok) {
-				setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.duplicateServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
+				setMessage(
+						PHPServerUIMessages
+								.getString("ServerCompositeFragment.duplicateServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
 			}
 		}
 
 		String urlStr = url.getText();
+		try {
+			URL url = new URL(urlStr);
+			if (url.getPath() != null && !url.getPath().isEmpty()) {
+				urlStr = null;
+			}
+		} catch (MalformedURLException e1) {
+			// in case of Malformed URL - reset
+			urlStr = null;
+		}
+
 		if (urlStr == null || urlStr.equals("")) { //$NON-NLS-1$
-			setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
+			setMessage(
+					PHPServerUIMessages
+							.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
 
@@ -198,12 +241,14 @@ public class ServerCompositeFragment extends CompositeFragment {
 			String host = baseURL.getHost();
 			int port = baseURL.getPort();
 
-			//			workingCopy.setHost(host);
-			//			server.setPort(String.valueOf(port));
+			// workingCopy.setHost(host);
+			// server.setPort(String.valueOf(port));
 			modifiedValuesCache.host = host;
 			modifiedValuesCache.port = port;
 		} catch (Exception e) {
-			setMessage(PHPServerUIMessages.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
+			setMessage(
+					PHPServerUIMessages
+							.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
 		controlHandler.update();
@@ -223,7 +268,8 @@ public class ServerCompositeFragment extends CompositeFragment {
 		urlGroup.setLayout(layout);
 		urlGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		urlGroup.setFont(font);
-		urlGroup.setText(PHPServerUIMessages.getString("ServerCompositeFragment.enterDocumentRootURL")); //$NON-NLS-1$
+		urlGroup.setText(PHPServerUIMessages
+				.getString("ServerCompositeFragment.enterDocumentRootURL")); //$NON-NLS-1$
 
 		url = new Text(urlGroup, SWT.BORDER);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -232,7 +278,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 			public void modifyText(ModifyEvent e) {
 				if (getServer() != null) {
 					String urlStr = url.getText();
-					//					server.setBaseURL(urlStr);
+					// server.setBaseURL(urlStr);
 					modifiedValuesCache.url = urlStr;
 				}
 				validate();
@@ -263,19 +309,32 @@ public class ServerCompositeFragment extends CompositeFragment {
 	 */
 	public boolean performOk() {
 		try {
+			Server defaultServer = ServersManager.getDefaultServer(null);
+			boolean isDefault = false;
+			isDefault = defaultServer != null
+					&& defaultServer.getName().equals(
+							originalValuesCache.serverName);
+
 			Server server = getServer();
-			// Save any modification logged into the modified value cache object.
+			// Save any modification logged into the modified value cache
+			// object.
 			if (server != null) {
 				server.setPort(String.valueOf(modifiedValuesCache.port));
 				server.setBaseURL(modifiedValuesCache.url);
 			}
 			server.setHost(modifiedValuesCache.host);
 			server.setName(modifiedValuesCache.serverName);
-			if (originalValuesCache.serverName != null && !originalValuesCache.serverName.equals("") && //$NON-NLS-1$
-				!originalValuesCache.serverName.equals(modifiedValuesCache.serverName)) {
+			if (originalValuesCache.serverName != null
+					&& !originalValuesCache.serverName.equals("") && //$NON-NLS-1$
+					!originalValuesCache.serverName
+							.equals(modifiedValuesCache.serverName)) {
 				// Update the ServerManager with the new server name
+
 				ServersManager.removeServer(originalValuesCache.serverName);
 				ServersManager.addServer(server);
+				if (isDefault) {
+					ServersManager.setDefaultServer(null, server);
+				}
 			}
 		} catch (Throwable e) {
 			Logger.logException("Error while saving the server settings", e); //$NON-NLS-1$
@@ -286,10 +345,12 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.php.internal.server.ui.CompositeFragment#performCancel()
 	 */
 	public boolean performCancel() {
-		// Since the performOk might be triggered if this composite is inside a wizard fragment, we have to
+		// Since the performOk might be triggered if this composite is inside a
+		// wizard fragment, we have to
 		// implement the perform cancel to revert any changes made.
 		try {
 			Server server = getServer();
