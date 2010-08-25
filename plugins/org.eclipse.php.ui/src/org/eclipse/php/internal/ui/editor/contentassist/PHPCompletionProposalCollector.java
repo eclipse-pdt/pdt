@@ -22,7 +22,6 @@ import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -237,14 +236,13 @@ public class PHPCompletionProposalCollector extends
 				String defaultResult = EMPTY_STRING;
 				if (ProposalExtraInfo.TYPE_ONLY.equals(typeProposal
 						.getExtraInfo())
-						|| !PHPModelUtils.hasStaticMember(type)) {
+						|| !PHPModelUtils.hasStaticOrConstMember(type)) {
 					return defaultResult;
 				}
 				String nextWord = null;
 				try {
 					nextWord = document.get(offset, 2);// "::".length()
 				} catch (BadLocationException e) {
-					PHPUiPlugin.log(e);
 				}
 				return DOUBLE_COLON.equals(nextWord) ? defaultResult
 						: DOUBLE_COLON;
