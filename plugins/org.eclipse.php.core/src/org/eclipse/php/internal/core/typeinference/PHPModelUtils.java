@@ -1791,17 +1791,17 @@ public class PHPModelUtils {
 	 *            the given type
 	 * @return if the given type has static member
 	 */
-	public static boolean hasStaticMember(IType type) {
+	public static boolean hasStaticOrConstMember(IType type) {
 		try {
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
 			IModelElement[] members = PHPModelUtils.getTypeHierarchyField(type,
 					hierarchy, "", false, null);
-			if (hasStaticElement(members)) {
+			if (hasStaticOrConstMember(members)) {
 				return true;
 			}
 			members = PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, "",
 					false, null);
-			if (hasStaticElement(members)) {
+			if (hasStaticOrConstMember(members)) {
 				return true;
 			}
 		} catch (ModelException e) {
@@ -1812,7 +1812,7 @@ public class PHPModelUtils {
 		return false;
 	}
 
-	public static boolean hasStaticElement(IModelElement[] elements)
+	public static boolean hasStaticOrConstMember(IModelElement[] elements)
 			throws ModelException {
 		for (int i = 0; i < elements.length; i++) {
 			IModelElement modelElement = elements[i];
