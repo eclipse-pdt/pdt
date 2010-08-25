@@ -99,6 +99,7 @@ public class ServerLaunchConfigurationTab extends
 	private boolean saveWorkingCopy;
 	private Set<String> fDebuggerIds;
 	private IDebugServerConnectionTest[] debugTesters = new IDebugServerConnectionTest[0];
+	private String basePath;
 
 	/**
 	 * Create a new server launch configuration tab.
@@ -131,8 +132,8 @@ public class ServerLaunchConfigurationTab extends
 		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		scrolledComposite.setMinSize(size.x, size.y);
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.DEBUGGING_A_PHP_WEB_PAGE);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.DEBUGGING_A_PHP_WEB_PAGE);
 		setControl(scrolledComposite);
 	}
 
@@ -263,12 +264,12 @@ public class ServerLaunchConfigurationTab extends
 			}
 		});
 
-		createNewServer = createPushButton(phpServerComp, PHPServerUIMessages
-				.getString("ServerTab.new"), null); //$NON-NLS-1$
+		createNewServer = createPushButton(phpServerComp,
+				PHPServerUIMessages.getString("ServerTab.new"), null); //$NON-NLS-1$
 		createNewServer.addSelectionListener(fListener);
 
-		configureServers = createPushButton(phpServerComp, PHPServerUIMessages
-				.getString("ServerTab.configure"), null); //$NON-NLS-1$
+		configureServers = createPushButton(phpServerComp,
+				PHPServerUIMessages.getString("ServerTab.configure"), null); //$NON-NLS-1$
 		configureServers.addSelectionListener(fListener);
 
 		servers = new ArrayList<Server>();
@@ -360,8 +361,7 @@ public class ServerLaunchConfigurationTab extends
 						}
 						try {
 							filtersMap
-									.put(
-											id,
+									.put(id,
 											(IDebugServerConnectionTest) element
 													.createExecutableExtension("class")); //$NON-NLS-1$
 						} catch (CoreException e) {
@@ -444,8 +444,8 @@ public class ServerLaunchConfigurationTab extends
 		fFile.setLayoutData(gd);
 		fFile.addModifyListener(fListener);
 
-		fileButton = createPushButton(group, PHPServerUIMessages
-				.getString("ServerTab.browse"), null); //$NON-NLS-1$
+		fileButton = createPushButton(group,
+				PHPServerUIMessages.getString("ServerTab.browse"), null); //$NON-NLS-1$
 		gd = (GridData) fileButton.getLayoutData();
 		gd.horizontalSpan = 1;
 		fileButton.addSelectionListener(fListener);
@@ -464,8 +464,7 @@ public class ServerLaunchConfigurationTab extends
 				public void run() {
 					servers.add(newServer);
 					serverCombo.add(newServer.getName());
-					serverCombo
-							.select(serverCombo.indexOf(newServer.getName()));
+					serverCombo.select(serverCombo.indexOf(newServer.getName()));
 					handleServerSelection();
 				}
 			});
@@ -520,8 +519,13 @@ public class ServerLaunchConfigurationTab extends
 		}
 	}
 
+	private String getBasePath(IProject project) {
+		return initializeBasePath(project);
+	}
+
 	protected void updateURLComponents(String urlStr) {
 		try {
+			String basePath = this.basePath;
 			URL url = new URL(urlStr);
 			String port = url.getPort() == -1 ? "" : ":" + url.getPort();
 			fURLHost.setText(url.getProtocol()
@@ -534,6 +538,19 @@ public class ServerLaunchConfigurationTab extends
 		} catch (MalformedURLException e) {
 			Logger.logException(e);
 		}
+	}
+
+	private IProject getProject(ILaunchConfiguration configuration)
+			throws CoreException {
+
+		String projectName = configuration.getAttribute(
+				IPHPDebugConstants.PHP_Project, (String) null);
+		IProject project = null;
+		if (projectName != null) {
+			project = ResourcesPlugin.getWorkspace().getRoot()
+					.getProject(projectName);
+		}
+		return project;
 	}
 
 	protected IProject getProject(String name) {
@@ -630,8 +647,17 @@ public class ServerLaunchConfigurationTab extends
 		} catch (CoreException e) {
 			// ignore
 		}
+
 		initializeExtensionControls(configuration);
+
 		isValid(configuration);
+	}
+
+	private String initializeBasePath(IProject project) {
+		if (project == null)
+			return null;
+		return PHPProjectPreferences.getDefaultBasePath(project);
+
 	}
 
 	protected void initializeExtensionControls(
@@ -667,17 +693,27 @@ public class ServerLaunchConfigurationTab extends
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IResource resource = root.findMember(fileName);
+
+		basePath = getBasePath(resource.getProject());
+		if (basePath == null && resource.getProject() != null)
+			basePath = resource.getProject().getName();
+		else if (basePath == null && resource.getProject() == null) {
+			basePath = "";
+		}
+
 		if (resource == null) {
 			return fileName;
 		}
 		int type = resource.getType();
 		if (type == IResource.FILE || type == IResource.FOLDER) {
-			formatFile = resource.getFullPath().toString();
+
+			formatFile = basePath + "/"
+					+ resource.getFullPath().removeFirstSegments(1).toString();
 		} else {
-			formatFile = "/"; //$NON-NLS-1$
+			formatFile = basePath + "/"; //$NON-NLS-1$
 		}
 		if (!formatFile.startsWith("/")) { //$NON-NLS-1$
-			formatFile = "/" + formatFile; //$NON-NLS-1$
+			formatFile = basePath + "/" + formatFile; //$NON-NLS-1$
 		}
 		return formatFile;
 	}
@@ -749,8 +785,8 @@ public class ServerLaunchConfigurationTab extends
 					IPHPDebugConstants.PHP_Project, (String) null);
 			IProject project = null;
 			if (projectName != null) {
-				project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-						projectName);
+				project = ResourcesPlugin.getWorkspace().getRoot()
+						.getProject(projectName);
 			}
 			Server defaultServer = ServersManager.getDefaultServer(project);
 			int nameIndex = serverCombo.indexOf(defaultServer.getName());
@@ -773,8 +809,8 @@ public class ServerLaunchConfigurationTab extends
 					IPHPDebugConstants.PHP_Project, (String) null);
 			IProject project = null;
 			if (projectName != null) {
-				project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-						projectName);
+				project = ResourcesPlugin.getWorkspace().getRoot()
+						.getProject(projectName);
 			}
 			String defaultDebuggerID = PHPProjectPreferences
 					.getDefaultDebuggerID(project);
@@ -809,8 +845,8 @@ public class ServerLaunchConfigurationTab extends
 		String url = fURLHost.getText() + urlPath;
 		configuration.setAttribute(Server.FILE_NAME, fileName);
 		configuration.setAttribute(Server.BASE_URL, url);
-		configuration.setAttribute(AUTO_GENERATED_URL, autoGeneratedURL
-				.getSelection());
+		configuration.setAttribute(AUTO_GENERATED_URL,
+				autoGeneratedURL.getSelection());
 		configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 				breakOnFirstLine.getSelection());
 
@@ -845,8 +881,8 @@ public class ServerLaunchConfigurationTab extends
 		String debuggerID = null;
 		try {
 			debuggerID = configuration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin
-							.getCurrentDebuggerId());
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+					PHPDebugPlugin.getCurrentDebuggerId());
 			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerID);
 			configuration.setAttribute(

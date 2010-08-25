@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.server.ui.launching;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -122,13 +125,16 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 					}
 				}
 
+				String basePath = PHPProjectPreferences
+						.getDefaultBasePath(project);
+
 				boolean breakAtFirstLine = PHPProjectPreferences
 						.getStopAtFirstLine(project);
 				String selectedURL = null;
 				boolean showDebugDialog = true;
 				if (obj instanceof IScriptProject) {
 					final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(
-							mode, (IScriptProject) obj);
+							mode, (IScriptProject) obj, basePath);
 					final int open = dialog.open();
 					if (open == PHPWebPageLaunchDialog.OK) {
 						defaultServer = dialog.getServer();
@@ -165,13 +171,11 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 				final IStatus stat = ce.getStatus();
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						ErrorDialog
-								.openError(
-										PHPDebugUIPlugin
-												.getActiveWorkbenchShell(),
-										PHPDebugUIMessages.launch_failure_msg_title,
-										PHPDebugUIMessages.launch_failure_server_msg_text,
-										stat);
+						ErrorDialog.openError(
+								PHPDebugUIPlugin.getActiveWorkbenchShell(),
+								PHPDebugUIMessages.launch_failure_msg_title,
+								PHPDebugUIMessages.launch_failure_server_msg_text,
+								stat);
 					}
 				});
 			}
@@ -204,11 +208,12 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 				String configuredFileName = configs[i].getAttribute(
 						Server.FILE_NAME, (String) null);
 
-				if (configuredFileName.equals(fileName)
-						&& server.getName().equals(configuredServerName)) {
-					config = configs[i].getWorkingCopy();
-					break;
-				}
+				if (configuredFileName != null)
+					if (configuredFileName.equals(fileName)
+							&& server.getName().equals(configuredServerName)) {
+						config = configs[i].getWorkingCopy();
+						break;
+					}
 			}
 
 			if (config == null) {
@@ -262,7 +267,13 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 		if (selectedURL != null) {
 			URL = selectedURL;
 		} else {
-			URL = server.getBaseURL() + new Path(fileName).toString();
+			try {
+				URL resolvedUrl = constractURL(res.getProject(),
+						server.getBaseURL(), new Path(fileName));
+				URL = resolvedUrl.toString();
+			} catch (MalformedURLException e) {
+				// safe as resolved URL is server.getBaseURL()
+			}
 		}
 
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
@@ -271,9 +282,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 		// Set the debugger ID and the configuration delegate for this launch
 		// configuration
 		String debuggerID = PHPProjectPreferences.getDefaultDebuggerID(project);
-		wc
-				.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-						debuggerID);
+		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
 		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 				.getDebuggerConfiguration(debuggerID);
 		wc.setAttribute(
@@ -283,10 +292,10 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 		wc.setAttribute(Server.NAME, server.getName());
 		wc.setAttribute(Server.FILE_NAME, fileName);
 		wc.setAttribute(Server.BASE_URL, URL);
-		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin
-				.getDebugInfoOption());
-		wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin
-				.getOpenInBrowserOption());
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO,
+				PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER,
+				PHPDebugPlugin.getOpenInBrowserOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 				breakAtFirstLine);
 		if (res != null) {
@@ -306,6 +315,33 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 		}
 		config = wc.doSave();
 		return config;
+	}
+
+	private static URL constractURL(IProject project, String serverURL,
+			Path path) throws MalformedURLException {
+
+		IPath url = new Path(serverURL);
+
+		String basePath = getProjectsBasePath(project);
+		boolean removeFirstSegment = true;
+		if (basePath == null) {
+			basePath = "/";
+			removeFirstSegment = false;
+		}
+		url = url.append(basePath);
+		if (removeFirstSegment)
+			url = url.append(path.removeFirstSegments(1));
+		else
+			url = url.append(path);
+		return new URL(url.toString());
+
+	}
+
+	private static String getProjectsBasePath(IProject project) {
+		if (project == null)
+			return null;
+		return PHPProjectPreferences.getDefaultBasePath(project);
+
 	}
 
 	/**

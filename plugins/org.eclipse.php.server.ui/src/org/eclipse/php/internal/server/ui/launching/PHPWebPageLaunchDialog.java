@@ -62,13 +62,16 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	private boolean isBreakAtFirstLine;
 	private String pathString;
 	private String fileName;
+	private String basePath;
 
-	public PHPWebPageLaunchDialog(String mode, IScriptProject obj) {
+	public PHPWebPageLaunchDialog(String mode, IScriptProject obj,
+			String basePath) {
 		super(PHPDebugUIPlugin.getActiveWorkbenchShell());
 		// , "Launch Web Page", null, "", INFORMATION, new String[] {
 		// IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		this.mode = mode;
 		this.project = obj;
+		this.basePath = basePath;
 		this.server = ServersManager.getLocalServer(obj.getProject());
 	}
 
@@ -94,8 +97,8 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 
 		initializeURLControl();
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.DEBUGGING);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.DEBUGGING);
 		return parent;
 	}
 
@@ -144,17 +147,15 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		}
 
 		Group group = new Group(parent, SWT.NONE);
-		group
-				.setText(PHPServerUIMessages
-						.getString("PHPWebPageLaunchDialog.6")); //$NON-NLS-1$
+		group.setText(PHPServerUIMessages.getString("PHPWebPageLaunchDialog.6")); //$NON-NLS-1$
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayout(layout);
 		group.setLayoutData(gridData);
 
-		breakOnFirstLine = createCheckButton(group, PHPServerUIMessages
-				.getString("PHPWebPageLaunchDialog.7")); //$NON-NLS-1$
+		breakOnFirstLine = createCheckButton(group,
+				PHPServerUIMessages.getString("PHPWebPageLaunchDialog.7")); //$NON-NLS-1$
 		breakOnFirstLine.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -187,8 +188,8 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		// gridData.widthHint = IDialogConstants.ENTRY_FIELD_WIDTH;
 		fFile.setLayoutData(gd);
 		fFile.addModifyListener(fListener);
-		fileButton = createPushButton(group, PHPServerUIMessages
-				.getString("ServerTab.browse")); //$NON-NLS-1$
+		fileButton = createPushButton(group,
+				PHPServerUIMessages.getString("ServerTab.browse")); //$NON-NLS-1$
 		gd = (GridData) fileButton.getLayoutData();
 		gd.horizontalSpan = 1;
 		fileButton.addSelectionListener(fListener);

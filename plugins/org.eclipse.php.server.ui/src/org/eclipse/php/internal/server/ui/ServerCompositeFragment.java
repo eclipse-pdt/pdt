@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.server.ui;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -218,6 +219,16 @@ public class ServerCompositeFragment extends CompositeFragment {
 		}
 
 		String urlStr = url.getText();
+		try {
+			URL url = new URL(urlStr);
+			if (url.getPath() != null && !url.getPath().isEmpty()) {
+				urlStr = null;
+			}
+		} catch (MalformedURLException e1) {
+			// in case of Malformed URL - reset
+			urlStr = null;
+		}
+
 		if (urlStr == null || urlStr.equals("")) { //$NON-NLS-1$
 			setMessage(
 					PHPServerUIMessages
