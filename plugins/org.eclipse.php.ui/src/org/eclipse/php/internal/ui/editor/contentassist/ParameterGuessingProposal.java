@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.*;
@@ -51,6 +52,7 @@ public final class ParameterGuessingProposal extends
 	private final boolean fFillBestGuess;
 	private boolean fReplacementStringComputed = false;
 	private Object extraInfo;
+	private boolean fReplacementLengthComputed;
 
 	public ParameterGuessingProposal(CompletionProposal proposal,
 			IScriptProject jproject, ISourceModule cu, String methodName,
@@ -74,7 +76,7 @@ public final class ParameterGuessingProposal extends
 	private IMethod getProperMethod(IMethod modelElement) {
 		if (modelElement instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) modelElement;
-			IType type = modelElement.getDeclaringType();
+			IType type = fc.getDeclaringType();
 			IMethod[] ctors = FakeConstructor.getConstructors(type, fc
 					.isEnclosingClass());
 			// here we must make sure ctors[1] != null,
@@ -185,6 +187,29 @@ public final class ParameterGuessingProposal extends
 		return PARENS.equals(nextWord);
 	}
 
+	/**
+	 * Gets the replacement length.
+	 * 
+	 * @return Returns a int
+	 */
+	public final int getReplacementLength() {
+		if (!fReplacementLengthComputed)
+			setReplacementLength(fProposal.getReplaceEnd()
+					- fProposal.getReplaceStart());
+		return super.getReplacementLength();
+	}
+
+	/**
+	 * Sets the replacement length.
+	 * 
+	 * @param replacementLength
+	 *            The replacementLength to set
+	 */
+	public final void setReplacementLength(int replacementLength) {
+		fReplacementLengthComputed = true;
+		super.setReplacementLength(replacementLength);
+	}
+
 	/*
 	 * @seeorg.eclipse.jdt.internal.ui.text.java.JavaMethodCompletionProposal#
 	 * needsLinkedMode()
@@ -208,13 +233,33 @@ public final class ParameterGuessingProposal extends
 		try {
 			// we should get the real constructor here
 			method = getProperMethod(method);
-			if (hasParameters()) {
+			if (hasParameters() && hasArgumentList()) {
 				return computeGuessingCompletion();
 			}
 		} catch (ModelException e) {
 			e.printStackTrace();
 		}
 		return super.getReplacementString();
+	}
+
+	/**
+	 * Returns <code>true</code> if the argument list should be inserted by the
+	 * proposal, <code>false</code> if not.
+	 * 
+	 * @return <code>true</code> when the proposal is not in javadoc nor within
+	 *         an import and comprises the parameter list
+	 */
+	protected boolean hasArgumentList() {
+		if (CompletionProposal.METHOD_NAME_REFERENCE == fProposal.getKind())
+			return false;
+		Preferences preferenceStore = PHPCorePlugin.getDefault()
+				.getPluginPreferences();
+		boolean noOverwrite = preferenceStore
+				.getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION)
+				^ isToggleEating();
+		char[] completion = fProposal.getCompletion().toCharArray();
+		return !isInScriptdoc() && completion.length > 0
+				&& (noOverwrite || completion[completion.length - 1] == ')');
 	}
 
 	protected boolean isValidPrefix(String prefix) {
