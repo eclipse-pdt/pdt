@@ -40,6 +40,7 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 public final class ParameterGuessingProposal extends
 		PHPOverrideCompletionProposal implements
 		IPHPCompletionProposalExtension {
+	private static final String PARENS = "()";
 	private static final char[] NO_TRIGGERS = new char[0];
 	protected static final String LPAREN = "("; //$NON-NLS-1$
 	protected static final String RPAREN = ")"; //$NON-NLS-1$
@@ -99,6 +100,7 @@ public final class ParameterGuessingProposal extends
 	 */
 	public void apply(IDocument document, char trigger, int offset) {
 		try {
+			dealSuffix(document, offset);
 			super.apply(document, trigger, offset);
 
 			int baseOffset = getReplacementOffset();
@@ -152,6 +154,35 @@ public final class ParameterGuessingProposal extends
 			PHPUiPlugin.log(e);
 			openErrorDialog(e);
 		}
+	}
+
+	private void dealSuffix(IDocument document, int offset) {
+		String replacement = getReplacementString();
+		if (replacement.endsWith(PARENS)) {
+			if (cursorInBrackets(document, offset)) {
+				setReplacementLength(getReplacementLength() + 1);
+			} else if (cursorInBrackets(document, offset + 1)) {
+				setReplacementLength(getReplacementLength() + 2);
+			}
+		} else {
+			// deal with case that a method that do not have parameters but with
+			// append with parameters when using insert mode,for example
+			// getA|($a),we should generate getA()($a) instead of getA($a),but
+			// for getA|(),we should generate getA()
+			if (insertCompletion() && !cursorInBrackets(document, offset + 1)) {
+				replacement = replacement + PARENS;
+				setReplacementString(replacement);
+			}
+		}
+	}
+
+	private boolean cursorInBrackets(IDocument document, int offset) {
+		String nextWord = null;
+		try {
+			nextWord = document.get(offset - 1, 2);// "()".length()
+		} catch (BadLocationException e) {
+		}
+		return PARENS.equals(nextWord);
 	}
 
 	/*
