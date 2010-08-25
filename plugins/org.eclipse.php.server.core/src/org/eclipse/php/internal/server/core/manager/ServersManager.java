@@ -13,6 +13,7 @@ package org.eclipse.php.internal.server.core.manager;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -270,7 +271,11 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 			} else {
 				// Create a default server and hook it as a workspace and the
 				// project server (can be the same).
-				server = createServer(Default_Server_Name, BASE_URL);
+				try {
+					server = createServer(Default_Server_Name, BASE_URL);
+				} catch (MalformedURLException e) {
+					// safe server creation
+				}
 				manager.defaultServersMap.put(null, server);
 				manager.defaultServersMap.put(project, server);
 				manager.innerSaveDefaultServer(project, server);
@@ -343,8 +348,10 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 * @param name
 	 * @param baseURL
 	 * @return
+	 * @throws MalformedURLException
 	 */
-	public static Server createServer(String name, String baseURL) {
+	public static Server createServer(String name, String baseURL)
+			throws MalformedURLException {
 		Server server = new Server(name, "localhost", baseURL, "");
 		addServer(server);
 		return server;
@@ -456,8 +463,8 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		String oldValue = (String) evt.getOldValue();
 		String newValue = (String) evt.getNewValue();
 		ServerManagerEvent event = new ServerManagerEvent(
-				ServerManagerEvent.MANAGER_EVENT_MODIFIED, server, evt
-						.getPropertyName(), oldValue, newValue);
+				ServerManagerEvent.MANAGER_EVENT_MODIFIED, server,
+				evt.getPropertyName(), oldValue, newValue);
 		fireEvent(event);
 	}
 

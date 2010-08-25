@@ -13,6 +13,7 @@ package org.eclipse.php.internal.server.core;
 
 import java.beans.PropertyChangeListener;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,8 +58,10 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	 * @param baseURL
 	 * @param documentRoot
 	 * @param publish
+	 * @throws MalformedURLException
 	 */
-	public Server(String name, String host, String baseURL, String documentRoot) {
+	public Server(String name, String host, String baseURL, String documentRoot)
+			throws MalformedURLException {
 		this();
 		setName(name);
 		setHost(host);
@@ -131,11 +134,29 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	}
 
 	public String getBaseURL() {
-		return getAttribute(Server.BASE_URL, "");
+		String base = getAttribute(Server.BASE_URL, "");
+		String port = getPortString();
+
+		URL resultURL;
+		try {
+			URL baseURL = new URL(base);
+			resultURL = new URL(baseURL.getProtocol(), baseURL.getHost(),
+					port != null && port.length() != 0 ? Integer.valueOf(port)
+							: -1, "");
+		} catch (MalformedURLException e) {
+			// hopefully this is not called as setBaseURL is safe
+			return base;
+		}
+		return resultURL.toString();
 	}
 
-	public void setBaseURL(String url) {
-		setAttribute(Server.BASE_URL, url);
+	public void setBaseURL(String url) throws MalformedURLException {
+		URL baseURL = new URL(url);
+		if (baseURL.getPort() != -1) {
+			this.setPort(String.valueOf(baseURL.getPort()));
+		}
+		URL url2 = new URL(baseURL.getProtocol(), baseURL.getHost(), "");
+		setAttribute(Server.BASE_URL, url2.toString());
 	}
 
 	public String getHost() {
@@ -160,22 +181,8 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	 * @return java.net.URL
 	 */
 	public URL getRootURL() {
-
 		try {
-			String port = getPortString();
-			String base = getBaseURL();
-			if (base.equals(""))
-				base = "http://" + getHost();
-
-			URL url = null;
-
-			if (port.equals("80"))
-				url = new URL(base + "/");
-			else
-				url = new URL(base + ":" + port + "/");
-
-			return url;
-
+			return new URL(this.getBaseURL());
 		} catch (Exception e) {
 			Logger.logException("Could not get root URL", e);
 			return null;
