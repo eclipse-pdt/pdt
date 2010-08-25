@@ -62,4 +62,6 @@ public class PHPDebugCorePreferenceNames {
 
 	public static final String INSTALLED_PHP_DEFAULT_FOR_VERSIONS = Debug_ID
 			+ "php_versions";//$NON-NLS-1$
+
+	public static final String DEFAULT_BASE_PATH = "DefaultProjectBasePath";
 }

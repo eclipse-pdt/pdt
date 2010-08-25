@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
+import java.net.MalformedURLException;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.*;
@@ -116,9 +118,11 @@ public class PHPDebugPlugin extends Plugin {
 
 		super.stop(context);
 		plugin = null;
-		DebugUIPlugin.getDefault().getPreferenceStore().setValue(
-				IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
-				fInitialAutoRemoveLaunches);
+		DebugUIPlugin
+				.getDefault()
+				.getPreferenceStore()
+				.setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
+						fInitialAutoRemoveLaunches);
 	}
 
 	/**
@@ -231,8 +235,13 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public static void createDefaultPHPServer() {
 		if (ServersManager.getServers().length == 0) {
-			Server server = ServersManager.createServer(
-					IPHPDebugConstants.Default_Server_Name, BASE_URL);
+			Server server = null;
+			try {
+				server = ServersManager.createServer(
+						IPHPDebugConstants.Default_Server_Name, BASE_URL);
+			} catch (MalformedURLException e) {
+				// safe - no exception
+			}
 			ServersManager.save();
 			ServersManager.setDefaultServer(null, server);
 		}
@@ -305,12 +314,14 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public static void setDisableAutoRemoveLaunches(
 			boolean disableAutoRemoveLaunches) {
-		if (DebugUIPlugin.getDefault().getPreferenceStore().getBoolean(
-				IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES) == disableAutoRemoveLaunches) {
+		if (DebugUIPlugin.getDefault().getPreferenceStore()
+				.getBoolean(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES) == disableAutoRemoveLaunches) {
 			fLaunchChangedAutoRemoveLaunches = true;
-			DebugUIPlugin.getDefault().getPreferenceStore().setValue(
-					IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
-					!disableAutoRemoveLaunches);
+			DebugUIPlugin
+					.getDefault()
+					.getPreferenceStore()
+					.setValue(IDebugUIConstants.PREF_AUTO_REMOVE_OLD_LAUNCHES,
+							!disableAutoRemoveLaunches);
 		}
 	}
 

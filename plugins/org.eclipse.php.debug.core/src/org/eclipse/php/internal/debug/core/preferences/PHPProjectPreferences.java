@@ -57,6 +57,30 @@ public class PHPProjectPreferences {
 
 	}
 
+	public static String getDefaultBasePath(IProject project) {
+
+		String basePath = null;
+		if (project != null && getElementSettingsForProject(project)) {
+			IScopeContext projectScope = getProjectScope(project);
+			basePath = projectScope.getNode(getPreferenceNodeQualifier()).get(
+					PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
+		}
+		if (basePath == null) {
+			return "/" + project.getName();
+		}
+		return basePath;
+	}
+
+	public static void setDefaultBasePath(IProject project, String value) {
+		Preferences prefs = getModelPreferences();
+		prefs.setValue(PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, value);
+		if (project != null && getElementSettingsForProject(project)) {
+			IScopeContext projectScope = getProjectScope(project);
+			projectScope.getNode(getPreferenceNodeQualifier()).put(
+					PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, value);
+		}
+	}
+
 	public static String getDefaultServerName(IProject project) {
 		Preferences prefs = getModelPreferences();
 		String serverName = prefs
@@ -106,4 +130,5 @@ public class PHPProjectPreferences {
 		}
 		return encoding;
 	}
+
 }
