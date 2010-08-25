@@ -1,0 +1,20 @@
+--TEST--
+Test class member
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class class_name {
+function get_plugin(String $a,String $b) {
+}
+
+function getPluginString(String $a,String $b) {
+}
+
+function get_plugin1() {
+$this->get_plugin(|);//cursor position
+}
+}
+?>
+--EXPECT--
+method(get_plugin)
