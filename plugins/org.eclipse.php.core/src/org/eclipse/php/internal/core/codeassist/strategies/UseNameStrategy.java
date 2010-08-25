@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
 public class UseNameStrategy extends GlobalTypesStrategy {
@@ -27,5 +28,10 @@ public class UseNameStrategy extends GlobalTypesStrategy {
 
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
+	}
+
+	@Override
+	protected Object getExtraInfo() {
+		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }
