@@ -115,12 +115,22 @@ public class DeclarationScope {
 
 		if (varDecls.size() > level) {
 			Declaration decl = varDecls.get(level);
-			Statement block = innerBlocks.get(level - 1);
-			if (isInSameBlock(block, decl.getNode(), declNode)) {
-				// replace existing declaration with a new one (leave
-				// 'isGlobal' flag the same)
-				decl.setNode(declNode);
-				return;
+			// The case that the node is inside another node
+			if (level > 0) {
+				Statement block = innerBlocks.get(level - 1);
+				if (isInSameBlock(block, decl.getNode(), declNode)) {
+					// replace existing declaration with a new one (leave
+					// 'isGlobal' flag the same)
+					decl.setNode(declNode);
+					return;
+				}
+			} else { // The node is the top node.
+				if (decl != null) {
+					// replace existing declaration with a new one (leave
+					// 'isGlobal' flag the same)
+					decl.setNode(declNode);
+					return;
+				}
 			}
 		}
 		// add new declaration
