@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.editor.highlighters;
 
 import java.util.List;
 
+import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
@@ -67,7 +68,9 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 					&& !(parent instanceof StaticDispatch)) {
 				List<Identifier> segs = namespace.segments();
 				Identifier c = segs.get(segs.size() - 1);
-				highlight(c);
+				if (PhpElementConciliator.concile(c) == PhpElementConciliator.CONCILIATOR_CONSTANT) {
+					highlight(c);
+				}
 			}
 			return true;
 		}
