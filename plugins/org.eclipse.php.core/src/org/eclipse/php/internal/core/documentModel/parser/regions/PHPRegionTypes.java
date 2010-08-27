@@ -427,6 +427,8 @@ public interface PHPRegionTypes {
 
 	static final String PHP_OPERATOR = "PHP_OPERATOR"; //$NON-NLS-1$
 
+	static final String PHP_THIS = "PHP_THIS"; //$NON-NLS-1$
+
 	static final String PHP_PARENT = "PHP_PARENT"; //$NON-NLS-1$
 
 	static final String PHP__CLASS__ = "PHP__CLASS__"; //$NON-NLS-1$

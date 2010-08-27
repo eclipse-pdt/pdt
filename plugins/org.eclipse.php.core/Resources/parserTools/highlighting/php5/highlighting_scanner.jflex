@@ -535,7 +535,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
 }
 
 <ST_PHP_IN_SCRIPTING>"$this" {
-    return PHP_KEYWORD;
+    return PHP_THIS;
 }
 
 <ST_PHP_IN_SCRIPTING>"$"{LABEL} {
