@@ -132,25 +132,23 @@ public class PHPINIUtil {
 							final IBuildpathContainer buildpathContainer = DLTKCore
 									.getBuildpathContainer(entry.getPath(),
 											scriptProject);
-							if (buildpathContainer != null) {
-								final IBuildpathEntry[] buildpathEntries = buildpathContainer
-										.getBuildpathEntries();
-								if (buildpathEntries != null) {
-									for (IBuildpathEntry iBuildpathEntry : buildpathEntries) {
-										final IPath localPath = EnvironmentPathUtils
-												.getLocalPath(iBuildpathEntry
-														.getPath());
-										includePath.add(localPath.toOSString());
-									}
-
+							final IBuildpathEntry[] buildpathEntries = buildpathContainer
+									.getBuildpathEntries();
+							if (buildpathEntries != null) {
+								for (IBuildpathEntry iBuildpathEntry : buildpathEntries) {
+									final IPath localPath = EnvironmentPathUtils
+											.getLocalPath(iBuildpathEntry
+													.getPath());
+									includePath.add(localPath.toOSString());
 								}
+
 							}
 
 						} catch (ModelException e) {
 							Logger.logException(e);
 						}
 					}
-				} else if (pathObject.getEntry() instanceof IContainer) {
+				} else {
 					IContainer container = (IContainer) pathObject.getEntry();
 					IPath location = container.getLocation();
 					if (location != null) {
