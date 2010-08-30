@@ -158,8 +158,9 @@ public class DeclarationScope {
 				&& ifStatement.getTrueStatement().sourceEnd() >= node
 						.sourceEnd()) {
 			return ifStatement.getTrueStatement();
-		} else if (ifStatement.getFalseStatement().sourceStart() <= node
-				.sourceStart()
+		} else if (ifStatement.getFalseStatement() != null
+				&& ifStatement.getFalseStatement().sourceStart() <= node
+						.sourceStart()
 				&& ifStatement.getFalseStatement().sourceEnd() >= node
 						.sourceEnd()) {
 			return ifStatement.getFalseStatement();
