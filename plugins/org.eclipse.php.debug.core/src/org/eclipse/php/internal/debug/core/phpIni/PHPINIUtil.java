@@ -132,23 +132,25 @@ public class PHPINIUtil {
 							final IBuildpathContainer buildpathContainer = DLTKCore
 									.getBuildpathContainer(entry.getPath(),
 											scriptProject);
-							final IBuildpathEntry[] buildpathEntries = buildpathContainer
-									.getBuildpathEntries();
-							if (buildpathEntries != null) {
-								for (IBuildpathEntry iBuildpathEntry : buildpathEntries) {
-									final IPath localPath = EnvironmentPathUtils
-											.getLocalPath(iBuildpathEntry
-													.getPath());
-									includePath.add(localPath.toOSString());
-								}
+							if (buildpathContainer != null) {
+								final IBuildpathEntry[] buildpathEntries = buildpathContainer
+										.getBuildpathEntries();
+								if (buildpathEntries != null) {
+									for (IBuildpathEntry iBuildpathEntry : buildpathEntries) {
+										final IPath localPath = EnvironmentPathUtils
+												.getLocalPath(iBuildpathEntry
+														.getPath());
+										includePath.add(localPath.toOSString());
+									}
 
+								}
 							}
 
 						} catch (ModelException e) {
 							Logger.logException(e);
 						}
 					}
-				} else {
+				} else if (pathObject.getEntry() instanceof IContainer) {
 					IContainer container = (IContainer) pathObject.getEntry();
 					IPath location = container.getLocation();
 					if (location != null) {
@@ -156,8 +158,8 @@ public class PHPINIUtil {
 					}
 				}
 			}
-			modifyIncludePath(tempIniFile, includePath
-					.toArray(new String[includePath.size()]));
+			modifyIncludePath(tempIniFile,
+					includePath.toArray(new String[includePath.size()]));
 		}
 		return tempIniFile;
 	}
@@ -189,11 +191,12 @@ public class PHPINIUtil {
 					phpIniFile.getParentFile(),
 					Platform.OS_WIN32.equals(Platform.getOS()) ? "ZendDebugger.dll" : "ZendDebugger.so"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (debuggerFile.exists()) {
-				modifyDebuggerExtensionPath(tempIniFile, debuggerFile
-						.getAbsolutePath());
+				modifyDebuggerExtensionPath(tempIniFile,
+						debuggerFile.getAbsolutePath());
 			}
-			modifyExtensionDir(tempIniFile, new File(debuggerFile
-					.getParentFile(), "ext").getAbsolutePath());
+			modifyExtensionDir(tempIniFile,
+					new File(debuggerFile.getParentFile(), "ext")
+							.getAbsolutePath());
 		}
 
 		if (PHPDebugPlugin.DEBUG) {
@@ -285,8 +288,8 @@ public class PHPINIUtil {
 			try {
 				Process p = Runtime.getRuntime().exec(
 						new String[] { phpExeFile.getAbsolutePath(), "-i" });
-				BufferedReader r = new BufferedReader(new InputStreamReader(p
-						.getInputStream()));
+				BufferedReader r = new BufferedReader(new InputStreamReader(
+						p.getInputStream()));
 				String l;
 				while ((l = r.readLine()) != null) {
 					int i = l.indexOf(" => ");
