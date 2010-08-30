@@ -81,30 +81,7 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 		public IStatus run(IProgressMonitor monitor) {
 
 			try {
-				IWatchExpressionResult watchResult = new IWatchExpressionResult() {
-					public IValue getValue() {
-						Expression value = getExpression(debugTarget,
-								fExpressionText);
-						IValue iValue = new PHPValue(debugTarget, value);
-						return iValue;
-					}
-
-					public boolean hasErrors() {
-						return false;
-					}
-
-					public String[] getErrorMessages() {
-						return null;
-					}
-
-					public String getExpressionText() {
-						return fExpressionText;
-					}
-
-					public DebugException getException() {
-						return null;
-					}
-				};
+				IWatchExpressionResult watchResult = new PHPWatchExpressionResult();
 				fListener.watchEvaluationFinished(watchResult);
 			} catch (Exception e) {
 				Logger.logException(e);
@@ -138,5 +115,34 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 		debugTarget.getExpressionManager().getExpressionValue(expression, 1);
 		expressionManager.update(expression, 1);
 		return expression;
+	}
+
+	private class PHPWatchExpressionResult implements IWatchExpressionResult,
+			IWatchExpressionResultExtension {
+		public IValue getValue() {
+			Expression value = getExpression(debugTarget, fExpressionText);
+			IValue iValue = new PHPValue(debugTarget, value);
+			return iValue;
+		}
+
+		public boolean hasErrors() {
+			return false;
+		}
+
+		public String[] getErrorMessages() {
+			return null;
+		}
+
+		public String getExpressionText() {
+			return fExpressionText;
+		}
+
+		public DebugException getException() {
+			return null;
+		}
+
+		public IDebugTarget getDebugTarget() {
+			return debugTarget;
+		}
 	}
 }

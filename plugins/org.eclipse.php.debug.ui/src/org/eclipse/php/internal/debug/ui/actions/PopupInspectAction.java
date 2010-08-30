@@ -29,6 +29,7 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.debug.ui.watch.IWatchExpressionResultExtension;
 import org.eclipse.php.internal.debug.ui.watch.PHPWatchExpressionDelegate;
 import org.eclipse.php.internal.debug.ui.watch.XDebugWatchExpressionDelegate;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -179,6 +180,9 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 					IValue value = getValue();
 					if (value != null) {
 						return getValue().getDebugTarget();
+					} else if (result instanceof IWatchExpressionResultExtension) {
+						return ((IWatchExpressionResultExtension) result)
+								.getDebugTarget();
 					}
 					// An expression should never be created with a null value
 					// *and*

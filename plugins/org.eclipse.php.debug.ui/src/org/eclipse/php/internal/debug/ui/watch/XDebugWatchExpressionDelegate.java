@@ -80,7 +80,8 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 		}
 	}
 
-	private class XDebugWatchExpressionResult implements IWatchExpressionResult {
+	private class XDebugWatchExpressionResult implements
+			IWatchExpressionResult, IWatchExpressionResultExtension {
 		private boolean hasErrors = false;
 		private IValue evalResult;
 
@@ -138,6 +139,10 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 
 		public DebugException getException() {
 			return null;
+		}
+
+		public IDebugTarget getDebugTarget() {
+			return debugTarget;
 		}
 
 	}
