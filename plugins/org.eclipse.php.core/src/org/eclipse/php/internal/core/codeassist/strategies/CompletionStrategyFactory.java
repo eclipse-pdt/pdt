@@ -203,6 +203,10 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == UseNameContext.class) {
 			return new ICompletionStrategy[] { new UseNameStrategy(context) };
 		}
+		if (contextClass == NamespaceUseNameContext.class) {
+			return new ICompletionStrategy[] { new NamespaceUseNameStrategy(
+					context) };
+		}
 		if (contextClass == IncludeStatementContext.class) {
 			return new ICompletionStrategy[] { new IncludeStatementStrategy(
 					context) };
