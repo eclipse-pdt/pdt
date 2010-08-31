@@ -154,16 +154,16 @@ public class DeclarationScope {
 	}
 
 	private Statement getBlock(IfStatement ifStatement, ASTNode node) {
-		if (ifStatement.getTrueStatement().sourceStart() <= node.sourceStart()
-				&& ifStatement.getTrueStatement().sourceEnd() >= node
-						.sourceEnd()) {
-			return ifStatement.getTrueStatement();
-		} else if (ifStatement.getFalseStatement() != null
-				&& ifStatement.getFalseStatement().sourceStart() <= node
-						.sourceStart()
-				&& ifStatement.getFalseStatement().sourceEnd() >= node
-						.sourceEnd()) {
-			return ifStatement.getFalseStatement();
+		Statement falseStatement = ifStatement.getFalseStatement();
+		Statement trueStatement = ifStatement.getTrueStatement();
+		if (trueStatement != null
+				&& trueStatement.sourceStart() <= node.sourceStart()
+				&& trueStatement.sourceEnd() >= node.sourceEnd()) {
+			return trueStatement;
+		} else if (falseStatement != null
+				&& falseStatement.sourceStart() <= node.sourceStart()
+				&& falseStatement.sourceEnd() >= node.sourceEnd()) {
+			return falseStatement;
 		}
 		return null;
 	}
