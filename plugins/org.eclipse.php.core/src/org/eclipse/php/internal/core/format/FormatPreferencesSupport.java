@@ -65,7 +65,7 @@ public class FormatPreferencesSupport {
 	}
 
 	public int getIndentationSize(IDocument document) {
-		if (document == null) {
+		if (!verifyValidity(document)) {
 			String indentSize = preferencesSupport
 					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 			if (indentSize == null) {
@@ -73,12 +73,11 @@ public class FormatPreferencesSupport {
 			}
 			return Integer.valueOf(indentSize).intValue();
 		}
-		verifyValidity(document);
 		return indentationSize;
 	}
 
 	public char getIndentationChar(IDocument document) {
-		if (document == null) {
+		if (!verifyValidity(document)) {
 			String useTab = preferencesSupport
 					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTab == null) {
@@ -86,11 +85,10 @@ public class FormatPreferencesSupport {
 			}
 			return (Boolean.valueOf(useTab).booleanValue()) ? '\t' : ' ';
 		}
-		verifyValidity(document);
 		return indentationChar;
 	}
 
-	private void verifyValidity(IDocument document) {
+	private boolean verifyValidity(IDocument document) {
 		if (fLastDocument != document) {
 			DOMModelForPHP editorModel = null;
 			try {
@@ -102,7 +100,7 @@ public class FormatPreferencesSupport {
 				// In those cases, the editroModel is null.
 				// Do the check and return in null case.
 				if (editorModel == null) {
-					return;
+					return false;
 				}
 
 				String baseLocation = editorModel.getBaseLocation();
@@ -119,7 +117,7 @@ public class FormatPreferencesSupport {
 					}
 				}
 				if (file == null) {
-					return;
+					return false;
 				}
 
 				IProject project = file.getProject();
@@ -147,6 +145,7 @@ public class FormatPreferencesSupport {
 			preferencesChanged = false;
 			fLastDocument = document;
 		}
+		return true;
 	}
 
 	private void verifyListening() {
