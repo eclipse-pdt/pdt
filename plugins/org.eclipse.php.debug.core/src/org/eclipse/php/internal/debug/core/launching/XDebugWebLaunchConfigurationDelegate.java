@@ -27,6 +27,7 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
+import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
@@ -35,7 +36,6 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
-import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -54,7 +54,7 @@ public class XDebugWebLaunchConfigurationDelegate extends
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(
-				DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+				XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
 			monitor.setCanceled(true);
 			monitor.done();
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
@@ -87,8 +87,8 @@ public class XDebugWebLaunchConfigurationDelegate extends
 		IPath filePath = new Path(fileName);
 		IProject proj = null;
 		try {
-			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					filePath.segment(0));
+			proj = ResourcesPlugin.getWorkspace().getRoot()
+					.getProject(filePath.segment(0));
 		} catch (Throwable t) {
 			if (proj == null) {
 				Logger.logException(
@@ -143,8 +143,8 @@ public class XDebugWebLaunchConfigurationDelegate extends
 				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
 					displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_2
 							+ DBGpProxyHandler.instance.getErrorMsg());
-					DebugPlugin.getDefault().getLaunchManager().removeLaunch(
-							launch);
+					DebugPlugin.getDefault().getLaunchManager()
+							.removeLaunch(launch);
 					return;
 				}
 			} else {
@@ -183,7 +183,7 @@ public class XDebugWebLaunchConfigurationDelegate extends
 		// load the URL into the appropriate web browser
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
 		subMonitor.beginTask(
-				PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_3, 
+				PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_3,
 				10);
 
 		Display.getDefault().syncExec(new Runnable() {
@@ -215,11 +215,9 @@ public class XDebugWebLaunchConfigurationDelegate extends
 				launch.addDebugTarget(target);
 				subMonitor
 						.subTask(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_4); //$NON-NLS-1$
-				target
-						.waitForInitialSession(
-								(DBGpBreakpointFacade) IDELayerFactory
-										.getIDELayer(), XDebugPreferenceMgr
-										.createSessionPreferences(), monitor);
+				target.waitForInitialSession(
+						(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
+						XDebugPreferenceMgr.createSessionPreferences(), monitor);
 			} else {
 				// launched ok, so remove the launch from the debug view as we
 				// are not debugging.
@@ -241,8 +239,9 @@ public class XDebugWebLaunchConfigurationDelegate extends
 
 	/**
 	 * Displays a dialog with an error message.
-	 *
-	 * @param message The error to display.
+	 * 
+	 * @param message
+	 *            The error to display.
 	 */
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
@@ -255,7 +254,7 @@ public class XDebugWebLaunchConfigurationDelegate extends
 
 	/**
 	 * determine whether an external browser is going to be opened
-	 *
+	 * 
 	 * @return true if external browser is required
 	 */
 	private boolean openExternal() {
@@ -269,10 +268,15 @@ public class XDebugWebLaunchConfigurationDelegate extends
 	}
 
 	/**
-	 * generate the URLS that start the debug environment and stop the debug environment.
-	 * @param baseURL the base URL
-	 * @param sessionId the DBGp session Id
-	 * @param ideKey the DBGp IDE Key
+	 * generate the URLS that start the debug environment and stop the debug
+	 * environment.
+	 * 
+	 * @param baseURL
+	 *            the base URL
+	 * @param sessionId
+	 *            the DBGp session Id
+	 * @param ideKey
+	 *            the DBGp IDE Key
 	 * @return start and stop queries
 	 */
 	public String[] generateStartStopDebugURLs(String baseURL,
