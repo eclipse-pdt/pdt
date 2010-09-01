@@ -51,6 +51,17 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 					&& value.charAt(0) != '\''
 					&& value.charAt(0) != '"') {
 				highlight(scalar);
+			} else if (scalar.getParent() instanceof FunctionInvocation) {// for
+																			// define
+																			// function
+				FunctionInvocation fi = (FunctionInvocation) scalar.getParent();
+				if (fi.parameters().get(0) == scalar) {
+					final Identifier identifier = (Identifier) fi
+							.getFunctionName().getName();
+					if ("define".equalsIgnoreCase(identifier.getName()) || "constant".equalsIgnoreCase(identifier.getName())) {//$NON-NLS-1$ //$NON-NLS-2$
+						highlight(scalar);
+					}
+				}
 			}
 			return true;
 		}
