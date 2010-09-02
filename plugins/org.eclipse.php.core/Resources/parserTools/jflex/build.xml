@@ -1,0 +1,36 @@
+<!--
+    Copyright (c) 2010 IBM Corporation and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+    
+    Contributors:
+        IBM Corporation - initial API and implementation
+        Zend Technologies
+ -->
+<project name="Downloading JFlex from www.jflex.de" default="getJFlexJar">
+	
+	<target name="init">
+		<property name="jflexVersion" value="1.4.1" />
+
+		<!-- if dir exists, then it'll be used to get jflex -->
+		<available file="/shared/tools/php" property="jflex.work.dir" value="/shared/tools/php"/>
+		<!-- otherwise, tmpdir will be used. -->
+		<property name="jflex.work.dir" value="${java.io.tmpdir}/PDT_JFlex_files"/>
+		
+		<mkdir dir="${jflex.work.dir}" />
+		<property name="jflexJar" value="${jflex.work.dir}/jflex-${jflexVersion}/lib/JFlex.jar" />
+	</target>
+
+	<target name="getJFlexJar" depends="init">
+		<available property="jarExists" file="${jflexJar}" />
+		<antcall target="downloadAndUnpack" />
+	</target>
+	
+	<target name="downloadAndUnpack" unless="jarExists">
+		<get src="http://jflex.de/jflex-${jflexVersion}.zip" dest="${jflex.work.dir}/jflex-${jflexVersion}.zip" verbose="true" usetimestamp="true" />
+		<unzip src="${jflex.work.dir}/jflex-${jflexVersion}.zip" dest="${jflex.work.dir}" />
+	</target>
+
+</project>
