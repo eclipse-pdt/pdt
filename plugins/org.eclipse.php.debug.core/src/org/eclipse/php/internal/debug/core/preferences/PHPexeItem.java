@@ -373,8 +373,9 @@ public class PHPexeItem {
 			PHPexes.changePermissions(executable);
 
 			// Detect version and type:
-			String output = exec(executable.getAbsolutePath(),
-					"-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
+			String output = exec(
+					executable.getAbsolutePath(),
+					"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
 			Matcher m = PHP_VERSION.matcher(output);
 			if (m.find()) {
 				version = m.group(1);
@@ -404,7 +405,7 @@ public class PHPexeItem {
 			if (detectedConfig == null) {
 				output = exec(
 						executable.getAbsolutePath(),
-						"-c", tempPHPIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$
+						"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$
 				if (sapiType == SAPI_CLI) {
 					m = PHP_CLI_CONFIG.matcher(output);
 				} else if (sapiType == SAPI_CGI) {
@@ -473,9 +474,8 @@ public class PHPexeItem {
 
 		try {
 			PHPexes.changePermissions(executable);
-			exec(
-					executable.getAbsolutePath(),
-					"-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", scriptFile); //$NON-NLS-1$ //$NON-NLS-2$
+			exec(executable.getAbsolutePath(),
+					"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", scriptFile); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (IOException e) {
 			DebugPlugin.log(e);
 			status = false;

@@ -903,7 +903,7 @@ public class PHPLaunchUtilities {
 				: "off";
 
 		List<String> cmdLineList = new LinkedList<String>();
-		cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c",
+		cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-n", "-c",
 				phpConfigDir, "-d", "asp_tags=" + aspTags, scriptPath }));
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
