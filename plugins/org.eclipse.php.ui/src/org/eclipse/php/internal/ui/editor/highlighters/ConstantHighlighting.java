@@ -76,7 +76,8 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 		public boolean visit(NamespaceName namespace) {
 			ASTNode parent = namespace.getParent();
 			if (!(parent instanceof NamespaceDeclaration)
-					&& !(parent instanceof StaticDispatch)) {
+					&& !(parent instanceof StaticDispatch)
+					&& !(parent instanceof FunctionName)) {
 				List<Identifier> segs = namespace.segments();
 				Identifier c = segs.get(segs.size() - 1);
 				if (PhpElementConciliator.concile(c) == PhpElementConciliator.CONCILIATOR_CONSTANT) {
