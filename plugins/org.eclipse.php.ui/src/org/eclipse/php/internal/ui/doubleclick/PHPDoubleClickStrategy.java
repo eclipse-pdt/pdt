@@ -86,6 +86,7 @@ public class PHPDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 
 									// Handle double-click on PHPDoc tags:
 									if (tRegion.getType() == PHPRegionTypes.PHP_VARIABLE
+											|| tRegion.getType() == PHPRegionTypes.PHP_THIS
 											|| PHPPartitionTypes
 													.isPHPDocTagState(tRegion
 															.getType())) {
