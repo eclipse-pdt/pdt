@@ -17,7 +17,7 @@
 		<!-- if dir exists, then it'll be used to get jflex -->
 		<available file="/shared/tools/php" property="jflex.work.dir" value="/shared/tools/php"/>
 		<!-- otherwise, tmpdir will be used. -->
-		<!--<property name="jflex.work.dir" value="${java.io.tmpdir}/PDT_JFlex_files"/>-->
+		<property name="jflex.work.dir" value="${java.io.tmpdir}/PDT_JFlex_files"/>
 		
 		<mkdir dir="${jflex.work.dir}" />
 		<property name="jflexJar" value="${jflex.work.dir}/jflex-${jflexVersion}/lib/JFlex.jar" />
