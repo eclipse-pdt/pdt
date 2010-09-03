@@ -221,7 +221,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		String urlStr = url.getText();
 		try {
 			URL url = new URL(urlStr);
-			if (url.getPath() != null && !url.getPath().isEmpty()) {
+			if (url.getPath() != null && (url.getPath().length() != 0)) {
 				urlStr = null;
 			}
 		} catch (MalformedURLException e1) {
