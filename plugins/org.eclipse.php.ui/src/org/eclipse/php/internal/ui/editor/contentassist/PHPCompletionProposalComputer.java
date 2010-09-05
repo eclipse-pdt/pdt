@@ -54,14 +54,18 @@ public class PHPCompletionProposalComputer extends
 		IDocument document = context.getDocument();
 		int offset = context.getInvocationOffset();
 		int leftNumber = 0;
+		// if the cursor is at the end of the document
+		if (document.getLength() == offset) {
+			offset--;
+		}
 		try {
 			for (; offset > 0; --offset) {
 				if (document.getChar(offset) == '(') {
 					leftNumber++;
-				}else if(document.getChar(offset - 1) == ')'){
+				} else if (document.getChar(offset - 1) == ')') {
 					leftNumber--;
 				}
-				if(leftNumber == 1){
+				if (leftNumber == 1) {
 					return offset;
 				}
 			}

@@ -144,8 +144,8 @@ public class PHPContextInformationValidator implements
 
 			IDocument document = fViewer.getDocument();
 			IRegion line = document.getLineInformationOfOffset(fPosition);
-
-			if (offset < line.getOffset() || offset >= document.getLength())
+			// offset could equals to document's length
+			if (offset < line.getOffset() || offset > document.getLength())
 				return false;
 
 			return getCharCount(document, fPosition, offset, "(", ")", false) >= 0; //$NON-NLS-1$//$NON-NLS-2$
