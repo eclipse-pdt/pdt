@@ -51,6 +51,19 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 					&& value.charAt(0) != '\''
 					&& value.charAt(0) != '"') {
 				highlight(scalar);
+			} else if (scalar.getParent() instanceof FunctionInvocation) {// for
+																			// define
+																			// function
+				FunctionInvocation fi = (FunctionInvocation) scalar.getParent();
+				if (fi.parameters().get(0) == scalar) {
+					if (fi.getFunctionName().getName() instanceof Identifier) {
+						final Identifier identifier = (Identifier) fi
+								.getFunctionName().getName();
+						if ("define".equalsIgnoreCase(identifier.getName()) || "constant".equalsIgnoreCase(identifier.getName())) {//$NON-NLS-1$ //$NON-NLS-2$
+							highlight(scalar);
+						}
+					}
+				}
 			}
 			return true;
 		}
@@ -65,7 +78,8 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 		public boolean visit(NamespaceName namespace) {
 			ASTNode parent = namespace.getParent();
 			if (!(parent instanceof NamespaceDeclaration)
-					&& !(parent instanceof StaticDispatch)) {
+					&& !(parent instanceof StaticDispatch)
+					&& !(parent instanceof FunctionName)) {
 				List<Identifier> segs = namespace.segments();
 				Identifier c = segs.get(segs.size() - 1);
 				if (PhpElementConciliator.concile(c) == PhpElementConciliator.CONCILIATOR_CONSTANT) {
