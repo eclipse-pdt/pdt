@@ -587,8 +587,8 @@ public class PHPModelUtils {
 
 		Collection<IField> filteredElements = null;
 		if (fields != null) {
-			filteredElements = filterElements(sourceModule, Arrays
-					.asList(fields), cache, monitor);
+			filteredElements = filterElements(sourceModule,
+					Arrays.asList(fields), cache, monitor);
 			return (IField[]) filteredElements
 					.toArray(new IField[filteredElements.size()]);
 		}
@@ -1565,6 +1565,8 @@ public class PHPModelUtils {
 		typeName = extractElementName(typeName);
 		if (namespace != null) {
 			if (namespace.length() > 0) {
+				typeName = getRealName(typeName, sourceModule, offset, typeName);
+
 				IType[] types = getNamespaceType(namespace, typeName, true,
 						sourceModule, cache, monitor);
 				if (types.length > 0) {
@@ -1760,8 +1762,8 @@ public class PHPModelUtils {
 					IType[] superTypes = PhpModelAccess.getDefault().findTypes(
 							superClass, MatchRule.EXACT, 0,
 							Modifiers.AccNameSpace, scope, null);
-					types = fileNetworkFilter(type.getSourceModule(), Arrays
-							.asList(superTypes), null, monitor);
+					types = fileNetworkFilter(type.getSourceModule(),
+							Arrays.asList(superTypes), null, monitor);
 				} else {
 					String namespaceName = null;
 					int i = superClass
