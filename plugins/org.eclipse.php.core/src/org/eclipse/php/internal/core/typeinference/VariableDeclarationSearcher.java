@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -170,9 +173,16 @@ public class VariableDeclarationSearcher extends ContextFinder {
 				addDeclaredVariables(nestedVar, node);
 			}
 		} else if (variable instanceof ReflectionArrayVariableReference) {
-			ArrayVariableReference varRef = (ArrayVariableReference) ((ReflectionArrayVariableReference) variable)
+			Expression expression = ((ReflectionArrayVariableReference) variable)
 					.getExpression();
-			getScope().addDeclaration(varRef.getName(), node);
+			while (expression instanceof ReflectionArrayVariableReference) {
+				expression = ((ReflectionArrayVariableReference) expression)
+						.getExpression();
+			}
+			if (expression instanceof ArrayVariableReference) {
+				ArrayVariableReference varRef = (ArrayVariableReference) expression;
+				getScope().addDeclaration(varRef.getName(), node);
+			}
 		}
 	}
 
