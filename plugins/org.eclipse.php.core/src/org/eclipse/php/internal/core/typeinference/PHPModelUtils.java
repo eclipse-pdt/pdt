@@ -1818,7 +1818,8 @@ public class PHPModelUtils {
 			IModelElement modelElement = elements[i];
 			if (modelElement instanceof IMember) {
 				IMember member = (IMember) modelElement;
-				if (Flags.isStatic(member.getFlags())) {
+				int flags = member.getFlags();
+				if (Flags.isStatic(flags) || Flags.isFinal(flags)) {
 					return true;
 				}
 
