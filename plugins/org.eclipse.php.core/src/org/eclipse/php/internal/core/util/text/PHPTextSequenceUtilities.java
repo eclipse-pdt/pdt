@@ -131,10 +131,6 @@ public class PHPTextSequenceUtilities {
 				textSequence = textSequence.subTextSequence(readForwardSpaces(
 						textSequence, 0), textSequence.length());
 
-				if (textSequence.toString().endsWith("(")) {
-					textSequence = textSequence.subTextSequence(0, textSequence
-							.length() - 1);
-				}
 				return textSequence;
 
 			} catch (BadLocationException e) {
@@ -209,7 +205,8 @@ public class PHPTextSequenceUtilities {
 		while (offset < length && textSequence.charAt(offset) != ')') {
 			++offset;
 		}
-		if (textSequence.charAt(offset) == ')') {
+		if (textSequence.length() > offset
+				&& textSequence.charAt(offset) == ')') {
 			return offset + 1;
 		}
 		return -1;
