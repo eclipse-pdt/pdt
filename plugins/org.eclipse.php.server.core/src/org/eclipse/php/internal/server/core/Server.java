@@ -141,13 +141,20 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 		try {
 			URL baseURL = new URL(base);
 			resultURL = new URL(baseURL.getProtocol(), baseURL.getHost(),
-					port != null && port.length() != 0 ? Integer.valueOf(port)
-							: -1, "");
+					getFormattedPort(port), "");
 		} catch (MalformedURLException e) {
 			// hopefully this is not called as setBaseURL is safe
 			return base;
 		}
 		return resultURL.toString();
+	}
+
+	private int getFormattedPort(String port) {
+		int i = (port == null || port.length() == 0) ?  -1 : Integer.valueOf(port);
+		if (i == DEFAULT_HTTP_PORT) {
+			i = -1;
+		}
+		return i;
 	}
 
 	public void setBaseURL(String url) throws MalformedURLException {
