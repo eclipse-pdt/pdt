@@ -54,7 +54,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	private static final String VOID_RETURN_TYPE = "void";
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
 	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace";
-	private static final String NULL_VALUE = "#"; //$NON-NLS-1$
+	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
 	 * since in php the type declarations can be nested.
@@ -272,7 +272,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return visit;
 	}
 
-	public boolean visitMethodDeclaration(MethodDeclaration method)
+	private boolean visitMethodDeclaration(MethodDeclaration method)
 			throws Exception {
 		this.fNodes.push(method);
 		List args = method.getArguments();
@@ -287,7 +287,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					Literal scalar = (Literal) arg.getInitialization();
 					initializers[a] = scalar.getValue();
 				} else {
-					initializers[a] = NULL_VALUE;
+					initializers[a] = DEFAULT_VALUE;
 				}
 			}
 		}
@@ -498,8 +498,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						info.name = split[1];
 						info.type = MAGIC_PROPERTY_TYPE;
 
-						SimpleReference var = new SimpleReference(
-								docTag.sourceStart(), docTag.sourceStart() + 9,
+						SimpleReference var = new SimpleReference(docTag
+								.sourceStart(), docTag.sourceStart() + 9,
 								removeParenthesis(split));
 						info.nameSourceStart = var.sourceStart();
 						info.nameSourceEnd = var.sourceEnd();
@@ -519,8 +519,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 						mi.parameterNames = null;
 						mi.name = removeParenthesis(split);
-						SimpleReference var = new SimpleReference(
-								docTag.sourceStart(), docTag.sourceStart() + 6,
+						SimpleReference var = new SimpleReference(docTag
+								.sourceStart(), docTag.sourceStart() + 6,
 								removeParenthesis(split));
 						mi.modifiers = Modifiers.AccPublic;
 						mi.nameSourceStart = var.sourceStart();
@@ -665,8 +665,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		// information in order to access it quickly:
 		if (include.getExpr() instanceof Scalar) {
 			Scalar filePath = (Scalar) include.getExpr();
-			fRequestor.acceptMethodReference("include", 0,
-					filePath.sourceStart(), filePath.sourceEnd());
+			fRequestor.acceptMethodReference("include", 0, filePath
+					.sourceStart(), filePath.sourceEnd());
 		}
 		return true;
 	}
@@ -813,8 +813,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(TypeReference reference) throws Exception {
-		fRequestor.acceptTypeReference(reference.getName(),
-				reference.sourceStart());
+		fRequestor.acceptTypeReference(reference.getName(), reference
+				.sourceStart());
 		return true;
 	}
 

@@ -57,6 +57,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 	public static final String PARAMETER_SEPERATOR = "|"; //$NON-NLS-1$
 	public static final String NULL_VALUE = "#"; //$NON-NLS-1$
+	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
 	 * since in php the type declarations can be nested.
@@ -271,7 +272,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						Literal scalar = (Literal) arg.getInitialization();
 						defaultValue = scalar.getValue();
 					} else {
-						defaultValue = "";
+						defaultValue = DEFAULT_VALUE;
 					}
 				}
 				metadata.append(defaultValue);
@@ -282,15 +283,13 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		}
 
 		// Add method declaration:
-		modifyDeclaration(
-				method,
-				new DeclarationInfo(IModelElement.METHOD, modifiers, method
-						.sourceStart(), method.sourceEnd()
+		modifyDeclaration(method, new DeclarationInfo(IModelElement.METHOD,
+				modifiers, method.sourceStart(), method.sourceEnd()
 						- method.sourceStart(), method.getNameStart(), method
-						.getNameEnd() - method.getNameStart(), methodName,
-						metadata.length() == 0 ? null : metadata.toString(),
-						encodeDocInfo(method), fCurrentQualifier,
-						fCurrentParent));
+						.getNameEnd()
+						- method.getNameStart(), methodName,
+				metadata.length() == 0 ? null : metadata.toString(),
+				encodeDocInfo(method), fCurrentQualifier, fCurrentParent));
 
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.visit(method);
@@ -346,15 +345,14 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 			}
 		}
 
-		modifyDeclaration(
-				type,
-				new DeclarationInfo(IModelElement.TYPE, modifiers, type
-						.sourceStart(), type.sourceEnd() - type.sourceStart(),
-						type.getNameStart(), type.getNameEnd()
-								- type.getNameStart(), type.getName(), metadata
-								.length() == 0 ? null : metadata.toString(),
-						encodeDocInfo(type), isNamespace ? null
-								: fCurrentQualifier, null));
+		modifyDeclaration(type, new DeclarationInfo(IModelElement.TYPE,
+				modifiers, type.sourceStart(), type.sourceEnd()
+						- type.sourceStart(), type.getNameStart(), type
+						.getNameEnd()
+						- type.getNameStart(), type.getName(), metadata
+						.length() == 0 ? null : metadata.toString(),
+				encodeDocInfo(type), isNamespace ? null : fCurrentQualifier,
+				null));
 
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.visit(type);
@@ -496,13 +494,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	public boolean visit(FieldDeclaration decl) throws Exception {
 		// This is constant declaration:
 		int modifiers = decl.getModifiers();
-		modifyDeclaration(
-				decl,
-				new DeclarationInfo(IModelElement.FIELD, modifiers, decl
-						.sourceStart(), decl.sourceEnd() - decl.sourceStart(),
-						decl.getNameStart(), decl.getNameEnd()
-								- decl.getNameStart(), decl.getName(), null,
-						encodeDocInfo(decl), null, null));
+		modifyDeclaration(decl, new DeclarationInfo(IModelElement.FIELD,
+				modifiers, decl.sourceStart(), decl.sourceEnd()
+						- decl.sourceStart(), decl.getNameStart(), decl
+						.getNameEnd()
+						- decl.getNameStart(), decl.getName(), null,
+				encodeDocInfo(decl), null, null));
 
 		return visitGeneral(decl);
 	}
@@ -516,13 +513,12 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		// This is variable declaration:
 		int modifiers = decl.getModifiers();
 
-		modifyDeclaration(
-				decl,
-				new DeclarationInfo(IModelElement.FIELD, modifiers, decl
-						.sourceStart(), decl.sourceEnd() - decl.sourceStart(),
-						decl.getNameStart(), decl.getNameEnd()
-								- decl.getNameStart(), decl.getName(), null,
-						encodeDocInfo(decl), fCurrentQualifier, fCurrentParent));
+		modifyDeclaration(decl, new DeclarationInfo(IModelElement.FIELD,
+				modifiers, decl.sourceStart(), decl.sourceEnd()
+						- decl.sourceStart(), decl.getNameStart(), decl
+						.getNameEnd()
+						- decl.getNameStart(), decl.getName(), null,
+				encodeDocInfo(decl), fCurrentQualifier, fCurrentParent));
 
 		return visitGeneral(decl);
 	}
@@ -551,12 +547,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				argsCount = args.getChilds().size();
 			}
 
-			modifyReference(
-					call,
-					new ReferenceInfo(IModelElement.METHOD, call.sourceStart(),
-							call.sourceEnd() - call.sourceStart(), call
-									.getName(), Integer.toString(argsCount),
-							null));
+			modifyReference(call, new ReferenceInfo(IModelElement.METHOD, call
+					.sourceStart(), call.sourceEnd() - call.sourceStart(), call
+					.getName(), Integer.toString(argsCount), null));
 		}
 
 		return visitGeneral(call);
@@ -567,30 +560,26 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		// information in order to access it quickly:
 		if (include.getExpr() instanceof Scalar) {
 			Scalar filePath = (Scalar) include.getExpr();
-			modifyReference(
-					include,
-					new ReferenceInfo(IModelElement.METHOD, filePath
-							.sourceStart(), filePath.sourceEnd()
+			modifyReference(include, new ReferenceInfo(IModelElement.METHOD,
+					filePath.sourceStart(), filePath.sourceEnd()
 							- filePath.sourceStart(), "include", Integer
 							.toString(1), null));
 
 			String fullPath = ASTUtils.stripQuotes(((Scalar) filePath)
 					.getValue());
-			int idx = Math.max(fullPath.lastIndexOf('/'),
-					fullPath.lastIndexOf('\\'));
+			int idx = Math.max(fullPath.lastIndexOf('/'), fullPath
+					.lastIndexOf('\\'));
 
 			String lastSegment = fullPath;
 			if (idx != -1) {
 				lastSegment = lastSegment.substring(idx + 1);
 			}
-			modifyDeclaration(
-					include,
-					new DeclarationInfo(IModelElement.IMPORT_DECLARATION, 0,
-							include.sourceStart(), include.sourceEnd()
-									- include.sourceStart(), filePath
-									.sourceStart(), filePath.sourceEnd()
-									- filePath.sourceStart(), lastSegment,
-							fullPath, null, null, null));
+			modifyDeclaration(include, new DeclarationInfo(
+					IModelElement.IMPORT_DECLARATION, 0, include.sourceStart(),
+					include.sourceEnd() - include.sourceStart(), filePath
+							.sourceStart(), filePath.sourceEnd()
+							- filePath.sourceStart(), lastSegment, fullPath,
+					null, null, null));
 		}
 
 		return visitGeneral(include);
@@ -605,13 +594,10 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		ConstantReference constantName = declaration.getConstantName();
 		int offset = constantName.sourceStart();
 		int length = constantName.sourceEnd();
-		modifyDeclaration(
-				declaration,
-				new DeclarationInfo(IModelElement.FIELD, modifiers, offset,
-						length, offset, length, ASTUtils
-								.stripQuotes(constantName.getName()), null,
-						encodeDocInfo(declaration), fCurrentQualifier,
-						fCurrentParent));
+		modifyDeclaration(declaration, new DeclarationInfo(IModelElement.FIELD,
+				modifiers, offset, length, offset, length, ASTUtils
+						.stripQuotes(constantName.getName()), null,
+				encodeDocInfo(declaration), fCurrentQualifier, fCurrentParent));
 		return visitGeneral(declaration);
 	}
 
@@ -679,10 +665,10 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	}
 
 	public boolean visit(TypeReference reference) throws Exception {
-		modifyReference(reference,
-				new ReferenceInfo(IModelElement.TYPE, reference.sourceStart(),
-						reference.sourceEnd() - reference.sourceStart(),
-						reference.getName(), null, null));
+		modifyReference(reference, new ReferenceInfo(IModelElement.TYPE,
+				reference.sourceStart(), reference.sourceEnd()
+						- reference.sourceStart(), reference.getName(), null,
+				null));
 		return visitGeneral(reference);
 	}
 
