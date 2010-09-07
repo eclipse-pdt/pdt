@@ -161,9 +161,7 @@ public final class ParameterGuessingProposal extends
 	private void dealSuffix(IDocument document, int offset) {
 		String replacement = getReplacementString();
 		if (replacement.endsWith(RPAREN)) {
-			if (cursorInBrackets(document, offset)) {
-				setReplacementLength(getReplacementLength() + 1);
-			} else if (cursorInBrackets(document, offset + 1)) {
+			if (cursorInBrackets(document, offset + 1)) {
 				setReplacementLength(getReplacementLength() + 2);
 			}
 		} else {
