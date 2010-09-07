@@ -24,6 +24,7 @@ import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.expressions.Literal;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -53,6 +54,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	private static final String VOID_RETURN_TYPE = "void";
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
 	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace";
+	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
 
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
@@ -74,7 +76,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
 
 	protected NamespaceDeclaration fLastNamespace;
-	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();;
+	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor,
 			IModuleSource sourceModule) {
@@ -252,7 +254,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(method);
 		}
 
-		boolean visit = super.visit(method);
+		boolean visit = visitMethodDeclaration(method);
 
 		if (visit) {
 			// Process method argument (local variable) declarations:
@@ -269,6 +271,44 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			}
 		}
 		return visit;
+	}
+
+	private boolean visitMethodDeclaration(MethodDeclaration method)
+			throws Exception {
+		this.fNodes.push(method);
+		List args = method.getArguments();
+
+		String[] parameter = new String[args.size()];
+		String[] initializers = new String[args.size()];
+		for (int a = 0; a < args.size(); a++) {
+			Argument arg = (Argument) args.get(a);
+			parameter[a] = arg.getName();
+			if (arg.getInitialization() != null) {
+				if (arg.getInitialization() instanceof Literal) {
+					Literal scalar = (Literal) arg.getInitialization();
+					initializers[a] = scalar.getValue();
+				} else {
+					initializers[a] = DEFAULT_VALUE;
+				}
+			}
+		}
+
+		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+		mi.parameterNames = parameter;
+		mi.name = method.getName();
+		mi.modifiers = method.getModifiers();
+		mi.nameSourceStart = method.getNameStart();
+		mi.nameSourceEnd = method.getNameEnd() - 1;
+		mi.declarationStart = method.sourceStart();
+		mi.parameterInitializers = initializers;
+
+		modifyMethodInfo(method, mi);
+
+		this.fRequestor.enterMethod(mi);
+
+		this.fInMethod = true;
+		this.fCurrentMethod = method;
+		return true;
 	}
 
 	protected void modifyMethodInfo(MethodDeclaration methodDeclaration,
