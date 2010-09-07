@@ -187,9 +187,19 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		String nextWord = null;
 		try {
 			nextWord = abstractContext.getNextWord();
+			if ("(".equals(nextWord)) {
+				return "";
+			} else {
+				// workaround for
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=323462
+				if (abstractContext.getPrefix().trim().length() == 0) {
+					nextWord = abstractContext.getNextWord(2);
+				}
+			}
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
+
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

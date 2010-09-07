@@ -497,6 +497,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @throws BadLocationException
 	 */
 	public ITextRegion getPHPToken() throws BadLocationException {
+		return getPHPToken(offset);
+	}
+
+	public ITextRegion getPHPToken(int offset) throws BadLocationException {
 		return phpScriptRegion.getPhpToken(offset
 				- regionCollection.getStartOffset()
 				- phpScriptRegion.getStart() - 1);
@@ -509,6 +513,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @throws BadLocationException
 	 */
 	public String getPrefix() throws BadLocationException {
+		return getPrefixWithoutProcessing();
+	}
+
+	public String getPrefixWithoutProcessing() {
 		if (hasWhitespaceBeforeCursor()) {
 			return ""; //$NON-NLS-1$
 		}
@@ -556,6 +564,29 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		return phpToken;
 	}
 
+	public ITextRegion getNextPHPToken(int times) throws BadLocationException {
+		ITextRegion phpToken = null;
+		int offset = this.offset;
+		while (times-- > 0) {
+			phpToken = getPHPToken(offset);
+			do {
+				phpToken = phpScriptRegion.getPhpToken(phpToken.getEnd());
+				if (!PHPPartitionTypes.isPHPCommentState(phpToken.getType())
+						&& phpToken.getType() != PHPRegionTypes.WHITESPACE) {
+					break;
+				}
+			} while (phpToken.getEnd() < phpScriptRegion.getLength());
+			if (phpToken == null) {
+				return null;
+			} else {
+				offset = regionCollection.getStartOffset()
+						+ phpScriptRegion.getStart() + phpToken.getEnd();
+			}
+		}
+
+		return phpToken;
+	}
+
 	/**
 	 * Returns next word after the cursor position
 	 * 
@@ -563,6 +594,13 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 */
 	public String getNextWord() throws BadLocationException {
 		ITextRegion nextPHPToken = getNextPHPToken();
+		return document.get(regionCollection.getStartOffset()
+				+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
+				nextPHPToken.getTextLength());
+	}
+
+	public String getNextWord(int times) throws BadLocationException {
+		ITextRegion nextPHPToken = getNextPHPToken(times);
 		return document.get(regionCollection.getStartOffset()
 				+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
 				nextPHPToken.getTextLength());
