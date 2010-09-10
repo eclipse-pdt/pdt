@@ -142,7 +142,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == ClassStatementContext.class) {
 			return new ICompletionStrategy[] {
 					new ClassKeywordsStrategy(context),
-					new GlobalConstantsStrategy(context) };
+					new GlobalConstantsStrategy(context),
+					new GlobalTypesStrategy(context) };
 		}
 		if (contextClass == GlobalStatementContext.class) {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(
