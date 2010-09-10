@@ -94,8 +94,8 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 					.getAdapter(ITextOperationTarget.class);
 			final int opCode = ISourceViewer.QUICK_ASSIST;
 			if (operation != null && operation.canDoOperation(opCode)) {
-				fTextEditor.selectAndReveal(fPosition.getOffset(), fPosition
-						.getLength());
+				fTextEditor.selectAndReveal(fPosition.getOffset(),
+						fPosition.getLength());
 				operation.doOperation(opCode);
 			}
 			return;
@@ -115,20 +115,20 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 
 		if (fAnnotation instanceof OverrideIndicatorManager.OverrideIndicator) {
 			initialize(fBundle,
-					"PhpSelectAnnotationRulerAction.OpenSuperImplementation."); //$NON-NLS-1$
+					"PhpSelectAnnotationRulerAction_OpenSuperImplementation_"); //$NON-NLS-1$
 			return;
 		}
 
 		if (fHasCorrection) {
 			if (fAnnotation instanceof AssistAnnotation)
 				initialize(fBundle,
-						"PhpSelectAnnotationRulerAction.QuickAssist."); //$NON-NLS-1$
+						"PhpSelectAnnotationRulerAction_QuickAssist_"); //$NON-NLS-1$
 			else
-				initialize(fBundle, "PhpSelectAnnotationRulerAction.QuickFix."); //$NON-NLS-1$
+				initialize(fBundle, "PhpSelectAnnotationRulerAction_QuickFix_"); //$NON-NLS-1$
 			return;
 		}
 
-		initialize(fBundle, "PhpSelectAnnotationRulerAction.GotoAnnotation."); //$NON-NLS-1$;
+		initialize(fBundle, "PhpSelectAnnotationRulerAction_GotoAnnotation_"); //$NON-NLS-1$;
 		super.update();
 	}
 
