@@ -114,7 +114,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		
 		int valueStart = start + getTagKind(tagKind).length() + 1;
 		
-		if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS) {
+		if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS || tagKind == SEE) {
 			
 			int wordStart = getNonWhitespaceIndex(value, 0);
 			int wordEnd = getWhitespaceIndex(value, wordStart);
