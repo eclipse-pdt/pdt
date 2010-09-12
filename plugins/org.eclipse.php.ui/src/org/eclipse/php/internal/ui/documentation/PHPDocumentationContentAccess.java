@@ -1,5 +1,6 @@
 package org.eclipse.php.internal.ui.documentation;
 
+import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -540,13 +541,13 @@ public class PHPDocumentationContentAccess {
 	private static CharSequence createSimpleMemberLink(IMember member) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<a href='"); //$NON-NLS-1$
-		// try {
-		// String uri=
-		// JavaElementLinks.createURI(JavaElementLinks.JAVADOC_SCHEME, member);
-		// buf.append(uri);
-		// } catch (URISyntaxException e) {
-		// JavaPlugin.log(e);
-		// }
+		try {
+			String uri = PHPElementLinks.createURI(
+					PHPElementLinks.PHPDOC_SCHEME, member);
+			buf.append(uri);
+		} catch (URISyntaxException e) {
+			PHPUiPlugin.log(e);
+		}
 		buf.append("'>"); //$NON-NLS-1$
 		ScriptElementLabels.getDefault().getElementLabel(member, 0, buf);
 		buf.append("</a>"); //$NON-NLS-1$
@@ -1145,90 +1146,120 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleLink(List fragments) {
-		// int fs = fragments.size();
-		// if (fs > 0) {
-		// Object first = fragments.get(0);
-		// String refTypeName = null;
-		// String refMemberName = null;
-		// String[] refMethodParamTypes = null;
-		// String[] refMethodParamNames = null;
-		// if (first instanceof Name) {
-		// Name name = (Name) first;
-		// refTypeName = name.getFullyQualifiedName();
-		// } else if (first instanceof MemberRef) {
-		// MemberRef memberRef = (MemberRef) first;
-		// Name qualifier = memberRef.getQualifier();
-		//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); //$NON-NLS-1$
-		// refMemberName = memberRef.getName().getIdentifier();
-		// } else if (first instanceof MethodRef) {
-		// MethodRef methodRef = (MethodRef) first;
-		// Name qualifier = methodRef.getQualifier();
-		//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); //$NON-NLS-1$
-		// refMemberName = methodRef.getName().getIdentifier();
-		// List params = methodRef.parameters();
-		// int ps = params.size();
-		// refMethodParamTypes = new String[ps];
-		// refMethodParamNames = new String[ps];
-		// for (int i = 0; i < ps; i++) {
-		// MethodRefParameter param = (MethodRefParameter) params
-		// .get(i);
-		// refMethodParamTypes[i] = ASTNodes.asString(param.getType());
-		// SimpleName paramName = param.getName();
-		// if (paramName != null)
-		// refMethodParamNames[i] = paramName.getIdentifier();
-		// }
-		// }
-		//
-		// if (refTypeName != null) {
-		//				fBuf.append("<a href='"); //$NON-NLS-1$
-		// try {
-		// String scheme = JavaElementLinks.JAVADOC_SCHEME;
-		// String uri = JavaElementLinks.createURI(scheme, fMember,
-		// refTypeName, refMemberName, refMethodParamTypes);
-		// fBuf.append(uri);
-		// } catch (URISyntaxException e) {
-		// PHPUiPlugin.log(e);
-		// }
-		//				fBuf.append("'>"); //$NON-NLS-1$
-		// if (fs > 1) {
-		// // if (fs == 2 && fragments.get(1) instanceof TextElement) {
-		// // String text= removeLeadingWhitespace(((TextElement)
-		// // fragments.get(1)).getText());
-		// // if (text.length() != 0)
-		// // handleText(text);
-		// // else
-		// // //throws
-		// // }
-		// handleContentElements(fragments.subList(1, fs));
-		// } else {
-		// fBuf.append(refTypeName);
-		// if (refMemberName != null) {
-		// if (refTypeName.length() > 0) {
-		// fBuf.append('.');
-		// }
-		// fBuf.append(refMemberName);
-		// if (refMethodParamTypes != null) {
-		// fBuf.append('(');
-		// for (int i = 0; i < refMethodParamTypes.length; i++) {
-		// String pType = refMethodParamTypes[i];
-		// fBuf.append(pType);
-		// String pName = refMethodParamNames[i];
-		// if (pName != null) {
-		// fBuf.append(' ').append(pName);
-		// }
-		// if (i < refMethodParamTypes.length - 1) {
-		//									fBuf.append(", "); //$NON-NLS-1$
-		// }
-		// }
-		// fBuf.append(')');
-		// }
-		// }
-		// }
-		//				fBuf.append("</a>"); //$NON-NLS-1$
-		// } else {
-		// handleContentElements(fragments);
-		// }
-		// }
+		int fs = fragments.size();
+		if (fs > 0) {
+			Object first = fragments.get(0);
+			String refTypeName = null;
+			String refMemberName = null;
+			String[] refMethodParamTypes = null;
+			String[] refMethodParamNames = null;
+			if (first instanceof TypeReference) {
+				TypeReference type = (TypeReference) first;
+				String name = type.getName();
+
+				int typeNameEnd = name.indexOf("::");
+				if (typeNameEnd == -1) {
+					refTypeName = name;
+				} else {
+					refTypeName = name.substring(0, typeNameEnd);
+
+					int argsListStart = name.indexOf('(', typeNameEnd);
+					if (argsListStart == -1) {
+						refMemberName = name.substring(typeNameEnd
+								+ "::".length());
+					} else {
+						refMemberName = name.substring(
+								typeNameEnd + "::".length(), argsListStart);
+
+						int argsListEnd = name.indexOf(argsListStart, ')');
+						if (argsListEnd == -1) {
+							refMethodParamTypes = new String[0];
+						} else {
+							String argsList = name.substring(argsListStart
+									+ ")".length(), argsListEnd);
+							String[] args = argsList.split(",");
+							for (int i = 0; i < args.length; i++) {
+								args[i] = args[i].trim();
+							}
+							refMethodParamTypes = args;
+						}
+					}
+				}
+
+			} // else if (first instanceof MemberRef) {
+				// MemberRef memberRef = (MemberRef) first;
+				// Name qualifier = memberRef.getQualifier();
+				//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); //$NON-NLS-1$
+				// refMemberName = memberRef.getName().getIdentifier();
+				// } else if (first instanceof MethodRef) {
+				// MethodRef methodRef = (MethodRef) first;
+				// Name qualifier = methodRef.getQualifier();
+				//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); //$NON-NLS-1$
+				// refMemberName = methodRef.getName().getIdentifier();
+				// List params = methodRef.parameters();
+				// int ps = params.size();
+				// refMethodParamTypes = new String[ps];
+				// refMethodParamNames = new String[ps];
+				// for (int i = 0; i < ps; i++) {
+				// MethodRefParameter param = (MethodRefParameter) params
+				// .get(i);
+				// refMethodParamTypes[i] = ASTNodes.asString(param.getType());
+				// SimpleName paramName = param.getName();
+				// if (paramName != null)
+				// refMethodParamNames[i] = paramName.getIdentifier();
+				// }
+				// }
+
+			if (refTypeName != null) {
+				fBuf.append("<a href='"); //$NON-NLS-1$
+				try {
+					String scheme = PHPElementLinks.PHPDOC_SCHEME;
+					String uri = PHPElementLinks.createURI(scheme, fMember,
+							refTypeName, refMemberName, refMethodParamTypes);
+					fBuf.append(uri);
+				} catch (URISyntaxException e) {
+					PHPUiPlugin.log(e);
+				}
+				fBuf.append("'>"); //$NON-NLS-1$
+				if (fs > 1) {
+					// if (fs == 2 && fragments.get(1) instanceof TextElement) {
+					// String text= removeLeadingWhitespace(((TextElement)
+					// fragments.get(1)).getText());
+					// if (text.length() != 0)
+					// handleText(text);
+					// else
+					// //throws
+					// }
+					// handleContentElements(fragments.subList(1, fs));
+				} else {
+					fBuf.append(refTypeName);
+					if (refMemberName != null) {
+						if (refTypeName.length() > 0) {
+							fBuf.append("::");
+						}
+						fBuf.append(refMemberName);
+						if (refMethodParamTypes != null) {
+							fBuf.append('(');
+							for (int i = 0; i < refMethodParamTypes.length; i++) {
+								String pType = refMethodParamTypes[i];
+								fBuf.append(pType);
+								String pName = refMethodParamNames[i];
+								if (pName != null) {
+									fBuf.append(' ').append(pName);
+								}
+								if (i < refMethodParamTypes.length - 1) {
+									fBuf.append(", "); //$NON-NLS-1$
+								}
+							}
+							fBuf.append(')');
+						}
+					}
+				}
+				fBuf.append("</a>"); //$NON-NLS-1$
+			} else {
+				// handleContentElements(fragments);
+			}
+		}
 	}
 
 	private boolean containsOnlyNull(List parameterNames) {
