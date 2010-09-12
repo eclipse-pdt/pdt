@@ -36,6 +36,7 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.documentation.PHPElementLinks;
 import org.eclipse.php.internal.ui.documentation.PHPDocumentationContentAccess;
 import org.eclipse.php.internal.ui.util.Messages;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -43,6 +44,7 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
@@ -245,6 +247,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 				tbm.update(true);
 
+				addLinkListener(iControl);
+
 				return iControl;
 
 			} else {
@@ -298,6 +302,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 						return fInformationPresenterControlCreator;
 					}
 				};
+
+				addLinkListener(iControl);
 				return iControl;
 			} else {
 				return new DefaultInformationControl(parent,
@@ -382,101 +388,77 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		return fHoverControlCreator;
 	}
 
-	// private static void addLinkListener(final BrowserInformationControl
-	// control) {
-	// control.addLocationListener(JavaElementLinks
-	// .createLocationListener(new JavaElementLinks.ILinkHandler() {
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see
-	// * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
-	// * .ILinkHandler
-	// * #handleJavadocViewLink(org.eclipse.jdt.core.
-	// * IModelElement)
-	// */
-	// public void handleJavadocViewLink(IModelElement linkTarget) {
-	// control.notifyDelayedInputChange(null);
-	// control.setVisible(false);
-	// control.dispose(); // FIXME: should have protocol to
-	// // hide, rather than dispose
-	// try {
-	// JavadocView view = (JavadocView) PHPUiPlugin
-	// .getActivePage().showView(
-	// JavaUI.ID_JAVADOC_VIEW);
-	// view.setInput(linkTarget);
-	// } catch (PartInitException e) {
-	// PHPUiPlugin.log(e);
-	// }
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see
-	// * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
-	// * .ILinkHandler
-	// * #handleInlineJavadocLink(org.eclipse.jdt.core
-	// * .IModelElement)
-	// */
-	// public void handleInlineJavadocLink(IModelElement linkTarget) {
-	// PHPDocumentationBrowserInformationControlInput hoverInfo = getHoverInfo(
-	// new IModelElement[] { linkTarget }, null,
-	// (PHPDocumentationBrowserInformationControlInput) control
-	// .getInput());
-	// if (control.hasDelayedInputChangeListener())
-	// control.notifyDelayedInputChange(hoverInfo);
-	// else
-	// control.setInput(hoverInfo);
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see
-	// * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
-	// * .ILinkHandler
-	// * #handleDeclarationLink(org.eclipse.jdt.core.
-	// * IModelElement)
-	// */
-	// public void handleDeclarationLink(IModelElement linkTarget) {
-	// control.notifyDelayedInputChange(null);
-	// control.dispose(); // FIXME: should have protocol to
-	// // hide, rather than dispose
-	// try {
-	// // FIXME: add hover location to editor navigation
-	// // history?
-	// JavaUI.openInEditor(linkTarget);
-	// } catch (PartInitException e) {
-	// PHPUiPlugin.log(e);
-	// } catch (ModelException e) {
-	// PHPUiPlugin.log(e);
-	// }
-	// }
-	//
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see
-	// * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
-	// * .ILinkHandler#handleExternalLink(java.net.URL,
-	// * org.eclipse.swt.widgets.Display)
-	// */
-	// public boolean handleExternalLink(URL url, Display display) {
-	// control.notifyDelayedInputChange(null);
-	// control.dispose(); // FIXME: should have protocol to
-	// // hide, rather than dispose
-	//
-	// // open external links in real browser:
-	//						OpenBrowserUtil.open(url, display, ""); //$NON-NLS-1$
-	//
-	// return true;
-	// }
-	//
-	// public void handleTextSet() {
-	// }
-	// }));
-	// }
+	private static void addLinkListener(final BrowserInformationControl control) {
+		control.addLocationListener(PHPElementLinks
+				.createLocationListener(new PHPElementLinks.ILinkHandler() {
+					/*
+					 * (non-Javadoc)
+					 * 
+					 * @see
+					 * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
+					 * .ILinkHandler
+					 * #handleInlineJavadocLink(org.eclipse.jdt.core
+					 * .IModelElement)
+					 */
+					public void handleInlineLink(IModelElement linkTarget) {
+						PHPDocumentationBrowserInformationControlInput hoverInfo = getHoverInfo(
+								new IModelElement[] { linkTarget },
+								null,
+								(PHPDocumentationBrowserInformationControlInput) control
+										.getInput());
+						if (control.hasDelayedInputChangeListener())
+							control.notifyDelayedInputChange(hoverInfo);
+						else
+							control.setInput(hoverInfo);
+					}
+
+					/*
+					 * (non-Javadoc)
+					 * 
+					 * @see
+					 * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
+					 * .ILinkHandler
+					 * #handleDeclarationLink(org.eclipse.jdt.core.
+					 * IModelElement)
+					 */
+					public void handleDeclarationLink(IModelElement linkTarget) {
+						control.notifyDelayedInputChange(null);
+						control.dispose(); // FIXME: should have protocol to
+						// hide, rather than dispose
+						// try {
+						// FIXME: add hover location to editor navigation
+						// history?
+						// JavaUI.openInEditor(linkTarget);
+						// } catch (PartInitException e) {
+						// PHPUiPlugin.log(e);
+						// } catch (ModelException e) {
+						// PHPUiPlugin.log(e);
+						// }
+					}
+
+					/*
+					 * (non-Javadoc)
+					 * 
+					 * @see
+					 * org.eclipse.jdt.internal.ui.viewsupport.JavaElementLinks
+					 * .ILinkHandler#handleExternalLink(java.net.URL,
+					 * org.eclipse.swt.widgets.Display)
+					 */
+					public boolean handleExternalLink(URL url, Display display) {
+						control.notifyDelayedInputChange(null);
+						control.dispose(); // FIXME: should have protocol to
+						// hide, rather than dispose
+
+						// open external links in real browser:
+						//OpenBrowserUtil.open(url, display, ""); //$NON-NLS-1$
+
+						return true;
+					}
+
+					public void handleTextSet() {
+					}
+				}));
+	}
 
 	/**
 	 * @deprecated see
