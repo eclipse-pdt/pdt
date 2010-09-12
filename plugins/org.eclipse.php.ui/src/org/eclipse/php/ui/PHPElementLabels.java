@@ -106,7 +106,7 @@ public class PHPElementLabels extends ScriptElementLabels {
 				if (type != null) {
 					getTypeLabel(type, T_FULLY_QUALIFIED
 							| (flags & QUALIFIER_FLAGS), buf);
-					buf.append(".");
+					buf.append("::");
 				}
 			}
 
