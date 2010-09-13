@@ -46,9 +46,12 @@ public class PHPDocumentationContentAccess {
 
 	/**
 	 * Implements the "Algorithm for Inheriting Method Comments" as specified
-	 * for <a href="http://java.sun.com/j2se/1.4.2/docs/tooldocs/solaris/javadoc.html#inheritingcomments"
-	 * >1.4.2</a>, <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/javadoc.html#inheritingcomments"
-	 * >1.5</a>, and <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/javadoc.html#inheritingcomments"
+	 * for <a href=
+	 * "http://java.sun.com/j2se/1.4.2/docs/tooldocs/solaris/javadoc.html#inheritingcomments"
+	 * >1.4.2</a>, <a href=
+	 * "http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/javadoc.html#inheritingcomments"
+	 * >1.5</a>, and <a href=
+	 * "http://java.sun.com/javase/6/docs/technotes/tools/windows/javadoc.html#inheritingcomments"
 	 * >1.6</a>.
 	 * 
 	 * <p>
@@ -581,7 +584,7 @@ public class PHPDocumentationContentAccess {
 		PHPDocBlock javadoc = getJavadocNode(member);
 
 		if (javadoc == null) {
-			javadoc = new PHPDocBlock(0, 0, null, new PHPDocTag[0]);
+			javadoc = new PHPDocBlock(0, 0, null, null, new PHPDocTag[0]);
 		}
 		if (canInheritJavadoc(member)) {
 			IMethod method = (IMethod) member;
@@ -635,6 +638,7 @@ public class PHPDocumentationContentAccess {
 		List<PHPDocTag> since = new ArrayList<PHPDocTag>();
 		List<PHPDocTag> rest = new ArrayList<PHPDocTag>();
 		String shortDescription = fJavadoc.getShortDescription();
+		String longDescription = fJavadoc.getLongDescription();
 		PHPDocTag[] tags = fJavadoc.getTags();
 		for (PHPDocTag tag : tags) {
 			if (PHPDocTag.PARAM == tag.getTagKind()) {
@@ -691,7 +695,14 @@ public class PHPDocumentationContentAccess {
 			handleDeprecatedTag(deprecatedTag);
 		if (shortDescription != null && shortDescription.length() > 0)
 			fBuf.append(shortDescription);
-		else if (fMethod != null) {
+		if (longDescription != null && longDescription.length() > 0) {
+			fBuf.append("<p>");
+			longDescription = longDescription.replaceAll("\r\n", "<p>");
+			longDescription = longDescription.replaceAll("\n\r", "<p>");
+			longDescription = longDescription.replaceAll("\n", "<p>");
+			longDescription = longDescription.replaceAll("\r", "<p>");
+			fBuf.append(longDescription);
+		} else if (fMethod != null) {
 			CharSequence inherited = fJavadocLookup
 					.getInheritedMainDescription(fMethod);
 			handleInherited(inherited);
