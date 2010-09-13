@@ -67,7 +67,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
         PHPDocTag[] tags = new PHPDocTag[tagList.size()];
         tagList.toArray(tags);
 
-        PHPDocBlock rv = new PHPDocBlock(start, zzMarkedPos - zzPushbackPos, shortDesc, tags);
+        PHPDocBlock rv = new PHPDocBlock(start, zzMarkedPos - zzPushbackPos,
+				shortDesc, longDesc, tags);
 
         return rv;
 

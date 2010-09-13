@@ -19,11 +19,14 @@ import org.eclipse.dltk.ast.ASTVisitor;
 public class PHPDocBlock extends Comment {
 
 	private String shortDescription;
+	private String longDescription;
 	private PHPDocTag[] tags;
 
-	public PHPDocBlock(int start, int end, String shortDescription, PHPDocTag[] tags) {
+	public PHPDocBlock(int start, int end, String shortDescription,
+			String longDescription, PHPDocTag[] tags) {
 		super(start, end, Comment.TYPE_PHPDOC);
 		this.shortDescription = shortDescription;
+		this.longDescription = longDescription;
 		this.tags = tags;
 	}
 
@@ -45,10 +48,14 @@ public class PHPDocBlock extends Comment {
 		return shortDescription;
 	}
 
+	public String getLongDescription() {
+		return longDescription;
+	}
+
 	public PHPDocTag[] getTags() {
 		return tags;
 	}
-	
+
 	public PHPDocTag[] getTags(int kind) {
 		List<PHPDocTag> res = new LinkedList<PHPDocTag>();
 		if (tags != null) {
@@ -61,13 +68,13 @@ public class PHPDocBlock extends Comment {
 		return res.toArray(new PHPDocTag[res.size()]);
 	}
 
-	public void adjustStart(int start){
+	public void adjustStart(int start) {
 		setStart(sourceStart() + start);
 		setEnd(sourceEnd() + start);
-		
+
 		for (PHPDocTag tag : tags) {
 			tag.adjustStart(start);
 		}
 	}
-		
+
 }
