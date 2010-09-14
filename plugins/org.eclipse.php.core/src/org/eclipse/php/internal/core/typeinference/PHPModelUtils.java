@@ -152,6 +152,17 @@ public class PHPModelUtils {
 					if (usePart != null) {
 						return usePart.getNamespace().getFullyQualifiedName();
 					}
+				} else {
+					nsIndex = namespace
+							.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+					String alias = namespace.substring(0, nsIndex);
+					usePart = ASTUtils.findUseStatementByAlias(
+							moduleDeclaration, alias, offset);
+					if (usePart != null) {
+						return usePart.getNamespace().getFullyQualifiedName()
+								+ NamespaceReference.NAMESPACE_SEPARATOR
+								+ namespace.substring(nsIndex + 1);
+					}
 				}
 
 				// 3. it can be a sub-namespace of the current namespace:
