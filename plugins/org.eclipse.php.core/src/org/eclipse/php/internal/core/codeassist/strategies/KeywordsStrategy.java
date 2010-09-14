@@ -20,17 +20,20 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.language.keywords.IPHPKeywordsInitializer;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
 /**
- * This strategy completes keywords. Direct implementation must define what kind of keywords
- * should be proposed in code assist. 
+ * This strategy completes keywords. Direct implementation must define what kind
+ * of keywords should be proposed in code assist.
+ * 
  * @author michael
  */
 public abstract class KeywordsStrategy extends GlobalElementStrategy {
-	
-	public KeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+
+	public KeywordsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -39,23 +42,33 @@ public abstract class KeywordsStrategy extends GlobalElementStrategy {
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		
+
 		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
 		ISourceModule sourceModule = concreteContext.getSourceModule();
 		String prefix = concreteContext.getPrefix();
 		SourceRange replaceRange = getReplacementRange(concreteContext);
-		
-		Collection<KeywordData> keywordsList = PHPKeywords.getInstance(sourceModule.getScriptProject().getProject()).findByPrefix(prefix);
+		boolean withoutSemicolon = concreteContext.getNextWord().trim()
+				.equals(IPHPKeywordsInitializer.SEMICOLON_SUFFIX);
+		Collection<KeywordData> keywordsList = PHPKeywords.getInstance(
+				sourceModule.getScriptProject().getProject()).findByPrefix(
+				prefix);
 		for (KeywordData keyword : keywordsList) {
 			if (!filterKeyword(keyword)) {
-				reporter.reportKeyword(keyword.name, keyword.suffix, replaceRange);
+				String suffix = keyword.suffix;
+				if (withoutSemicolon
+						&& suffix
+								.endsWith(IPHPKeywordsInitializer.SEMICOLON_SUFFIX)) {
+					suffix = suffix.substring(0, suffix.length() - 1);
+				}
+				reporter.reportKeyword(keyword.name, suffix, replaceRange);
 			}
 		}
 	}
 
 	/**
 	 * Filters keyword from the proposal list
+	 * 
 	 * @return
 	 */
 	abstract protected boolean filterKeyword(KeywordData keyword);
