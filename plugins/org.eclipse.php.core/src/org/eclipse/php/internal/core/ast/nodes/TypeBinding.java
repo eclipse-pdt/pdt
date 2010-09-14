@@ -23,6 +23,7 @@ import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class TypeBinding implements ITypeBinding {
@@ -432,11 +433,18 @@ public class TypeBinding implements ITypeBinding {
 					try {
 						ISourceModule sourceModule = (ISourceModule) elements[0]
 								.getAncestor(IModelElement.SOURCE_MODULE);
+						String namespace = null;
+						if (superTypeName
+								.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+							int index = superTypeName
+									.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+							namespace = superTypeName.substring(0, index);
+							superTypeName = superTypeName.substring(index + 1);
+						}
 						Collection<IType> types = resolver
-								.getModelAccessCache()
-								.getClassesOrInterfaces(
-										sourceModule,
-										superTypeName, null, null);
+								.getModelAccessCache().getClassesOrInterfaces(
+										sourceModule, superTypeName, namespace,
+										null);
 						if (types != null) {
 							for (IType type : types) {
 								if (!elementList.contains(type)) {
