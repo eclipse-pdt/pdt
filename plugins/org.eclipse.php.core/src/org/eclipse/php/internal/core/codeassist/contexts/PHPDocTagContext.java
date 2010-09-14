@@ -11,8 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
@@ -32,12 +38,57 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 
 	private String tagName;
 
+	private Pattern[] todos;
+
+	public void setPatterns(IProject project) {
+		if (project != null) {
+			todos = TaskPatternsProvider.getInstance().getPatternsForProject(
+					project);
+		} else {
+			todos = TaskPatternsProvider.getInstance()
+					.getPetternsForWorkspace();
+		}
+	}
+
+	private ArrayList<Matcher> createMatcherList(String content) {
+		ArrayList<Matcher> list = new ArrayList<Matcher>(todos.length);
+		for (int i = 0; i < todos.length; i++) {
+			list.add(i, todos[i].matcher(content));
+		}
+		return list;
+	}
+
+	private Matcher getMinimalMatcher(ArrayList<Matcher> matchers,
+			int startPosition) {
+		Matcher minimal = null;
+		int size = matchers.size();
+		for (int i = 0; i < size;) {
+			Matcher tmp = (Matcher) matchers.get(i);
+			if (tmp.find(startPosition)) {
+				if (minimal == null || tmp.start() < minimal.start()) {
+					minimal = tmp;
+				}
+				i++;
+			} else {
+				matchers.remove(i);
+				size--;
+			}
+		}
+		return minimal;
+	}
+
+	private boolean isPHPTag(String tagName) {
+		ArrayList<Matcher> matchers = createMatcherList(tagName);
+		Matcher matcher = getMinimalMatcher(matchers, 0);
+		return matcher != null;
+	}
+
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-
+		setPatterns(sourceModule.getScriptProject().getProject());
 		TextSequence statementText = getStatementText();
 
 		int tagEnd = statementText.length(), tagStart;
@@ -51,6 +102,8 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 			tagName = statementText.subSequence(tagStart, tagEnd).toString();
 
 			if (tagStart > 0 && statementText.charAt(tagStart - 1) == '@') {
+				found = true;
+			} else if (isPHPTag(tagName)) {
 				found = true;
 			}
 
