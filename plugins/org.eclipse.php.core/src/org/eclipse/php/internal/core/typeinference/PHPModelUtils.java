@@ -587,8 +587,8 @@ public class PHPModelUtils {
 
 		Collection<IField> filteredElements = null;
 		if (fields != null) {
-			filteredElements = filterElements(sourceModule,
-					Arrays.asList(fields), cache, monitor);
+			filteredElements = filterElements(sourceModule, Arrays
+					.asList(fields), cache, monitor);
 			return (IField[]) filteredElements
 					.toArray(new IField[filteredElements.size()]);
 		}
@@ -1762,8 +1762,8 @@ public class PHPModelUtils {
 					IType[] superTypes = PhpModelAccess.getDefault().findTypes(
 							superClass, MatchRule.EXACT, 0,
 							Modifiers.AccNameSpace, scope, null);
-					types = fileNetworkFilter(type.getSourceModule(),
-							Arrays.asList(superTypes), null, monitor);
+					types = fileNetworkFilter(type.getSourceModule(), Arrays
+							.asList(superTypes), null, monitor);
 				} else {
 					String namespaceName = null;
 					int i = superClass
@@ -1795,6 +1795,9 @@ public class PHPModelUtils {
 	 */
 	public static boolean hasStaticOrConstMember(IType type) {
 		try {
+			if (PHPFlags.isNamespace(type.getFlags())) {
+				return false;
+			}
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
 			IModelElement[] members = PHPModelUtils.getTypeHierarchyField(type,
 					hierarchy, "", false, null);
