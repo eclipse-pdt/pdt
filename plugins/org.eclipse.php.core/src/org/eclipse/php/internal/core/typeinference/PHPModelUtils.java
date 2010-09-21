@@ -52,11 +52,31 @@ public class PHPModelUtils {
 	 * @return element name without the namespace prefix
 	 */
 	public static String extractElementName(String element) {
-		int i = element.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-		if (i != -1) {
-			element = element.substring(i + 1).trim();
+		if (element != null) {
+			int i = element.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+			if (i != -1) {
+				element = element.substring(i + 1).trim();
+			}
 		}
 		return element;
+	}
+
+	/**
+	 * Extracts the name space name from the given fully qualified name
+	 * 
+	 * @param element
+	 *            Element name
+	 * @return namespace prefix
+	 */
+	public static String extractNameSapceName(String element) {
+		String nameSpaceName = null;
+		if (element != null) {
+			int i = element.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+			if (i != -1) {
+				nameSpaceName = element.substring(0, i).trim();
+			}
+		}
+		return nameSpaceName;
 	}
 
 	/**
