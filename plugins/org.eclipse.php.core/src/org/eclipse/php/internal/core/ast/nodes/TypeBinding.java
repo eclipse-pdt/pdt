@@ -24,6 +24,7 @@ import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class TypeBinding implements ITypeBinding {
 
@@ -432,11 +433,15 @@ public class TypeBinding implements ITypeBinding {
 					try {
 						ISourceModule sourceModule = (ISourceModule) elements[0]
 								.getAncestor(IModelElement.SOURCE_MODULE);
+
+						String typeName = PHPModelUtils
+								.extractElementName(superTypeName);
+						String nameSpace = PHPModelUtils
+								.extractNameSapceName(superTypeName);
 						Collection<IType> types = resolver
 								.getModelAccessCache()
-								.getClassesOrInterfaces(
-										sourceModule,
-										superTypeName, null, null);
+								.getClassesOrInterfaces(sourceModule, typeName,
+										nameSpace, null);
 						if (types != null) {
 							for (IType type : types) {
 								if (!elementList.contains(type)) {
