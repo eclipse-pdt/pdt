@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 /**
  * 
  */
@@ -16,13 +27,16 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.text.correction.PHPCorrectionProcessor;
+import org.eclipse.php.internal.ui.text.correction.QuickAssistLightBulbUpdater.AssistAnnotation;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.*;
 
 /**
- * Action which gets triggered when selecting (annotations) in the vertical ruler.
- *
+ * Action which gets triggered when selecting (annotations) in the vertical
+ * ruler.
+ * 
  * <p>
  * Was originally called >code>JavaSelectMarkerRulerAction</code>.
  * </p>
@@ -37,7 +51,8 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	private boolean fHasCorrection;
 	private ResourceBundle fBundle;
 
-	public PhpSelectAnnotationRulerAction(ResourceBundle bundle, String prefix, ITextEditor editor, IVerticalRulerInfo ruler) {
+	public PhpSelectAnnotationRulerAction(ResourceBundle bundle, String prefix,
+			ITextEditor editor, IVerticalRulerInfo ruler) {
 		super(bundle, prefix, editor, ruler);
 		fBundle = bundle;
 		fTextEditor = editor;
@@ -45,11 +60,13 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		fAnnotationPreferenceLookup = EditorsUI.getAnnotationPreferenceLookup();
 		fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 
-		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IJavaHelpContextIds.JAVA_SELECT_MARKER_RULER_ACTION);
+		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
+		// IJavaHelpContextIds.JAVA_SELECT_MARKER_RULER_ACTION);
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.texteditor.SelectMarkerRulerAction#run()
 	 */
 	public void run() {
@@ -60,7 +77,10 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 	}
 
 	/*
-	 * @see org.eclipse.jface.action.IAction#runWithEvent(org.eclipse.swt.widgets.Event)
+	 * @see
+	 * org.eclipse.jface.action.IAction#runWithEvent(org.eclipse.swt.widgets
+	 * .Event)
+	 * 
 	 * @since 3.2
 	 */
 	public void runWithEvent(Event event) {
@@ -70,10 +90,12 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		}
 
 		if (fHasCorrection) {
-			ITextOperationTarget operation = (ITextOperationTarget) fTextEditor.getAdapter(ITextOperationTarget.class);
+			ITextOperationTarget operation = (ITextOperationTarget) fTextEditor
+					.getAdapter(ITextOperationTarget.class);
 			final int opCode = ISourceViewer.QUICK_ASSIST;
 			if (operation != null && operation.canDoOperation(opCode)) {
-				fTextEditor.selectAndReveal(fPosition.getOffset(), fPosition.getLength());
+				fTextEditor.selectAndReveal(fPosition.getOffset(),
+						fPosition.getLength());
 				operation.doOperation(opCode);
 			}
 			return;
@@ -84,6 +106,7 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.texteditor.SelectMarkerRulerAction#update()
 	 */
 	public void update() {
@@ -91,19 +114,21 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		setEnabled(true); // super.update() might change this later
 
 		if (fAnnotation instanceof OverrideIndicatorManager.OverrideIndicator) {
-			initialize(fBundle, "PhpSelectAnnotationRulerAction.OpenSuperImplementation."); //$NON-NLS-1$
+			initialize(fBundle,
+					"PhpSelectAnnotationRulerAction_OpenSuperImplementation_"); //$NON-NLS-1$
 			return;
 		}
-		// TODO - Add the quick-fix support here.
-		//		if (fHasCorrection) {
-		//			if (fAnnotation instanceof AssistAnnotation)
-		//				initialize(fBundle, "JavaSelectAnnotationRulerAction.QuickAssist."); //$NON-NLS-1$
-		//			else
-		//				initialize(fBundle, "JavaSelectAnnotationRulerAction.QuickFix."); //$NON-NLS-1$
-		//			return;
-		//		}
 
-		initialize(fBundle, "PhpSelectAnnotationRulerAction.GotoAnnotation."); //$NON-NLS-1$;
+		if (fHasCorrection) {
+			if (fAnnotation instanceof AssistAnnotation)
+				initialize(fBundle,
+						"PhpSelectAnnotationRulerAction_QuickAssist_"); //$NON-NLS-1$
+			else
+				initialize(fBundle, "PhpSelectAnnotationRulerAction_QuickFix_"); //$NON-NLS-1$
+			return;
+		}
+
+		initialize(fBundle, "PhpSelectAnnotationRulerAction_GotoAnnotation_"); //$NON-NLS-1$;
 		super.update();
 	}
 
@@ -119,7 +144,8 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		if (model == null)
 			return;
 
-		boolean hasAssistLightbulb = false;// TODO - fStore.getBoolean(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
+		boolean hasAssistLightbulb = fStore
+				.getBoolean(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
 
 		Iterator iter = model.getAnnotationIterator();
 		int layer = Integer.MIN_VALUE;
@@ -140,29 +166,34 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 			if (!includesRulerLine(position, document))
 				continue;
 
-			// TODO - Add the quick-fix support here.
-			//			boolean isReadOnly = fTextEditor instanceof ITextEditorExtension && ((ITextEditorExtension) fTextEditor).isEditorInputReadOnly();
-			//			if (!isReadOnly && (((hasAssistLightbulb && annotation instanceof AssistAnnotation) || JavaCorrectionProcessor.hasCorrections(annotation)))) {
-			//				fPosition = position;
-			//				fAnnotation = annotation;
-			//				fHasCorrection = true;
-			//				layer = annotationLayer;
-			//				continue;
-			//			} else {
-			AnnotationPreference preference = fAnnotationPreferenceLookup.getAnnotationPreference(annotation);
-			if (preference == null)
-				continue;
-
-			String key = preference.getVerticalRulerPreferenceKey();
-			if (key == null)
-				continue;
-
-			// if (fStore.getBoolean(key)) {
-			if (annotation instanceof OverrideIndicatorManager.OverrideIndicator) {
+			boolean isReadOnly = fTextEditor instanceof ITextEditorExtension
+					&& ((ITextEditorExtension) fTextEditor)
+							.isEditorInputReadOnly();
+			if (!isReadOnly
+					&& (((hasAssistLightbulb && annotation instanceof AssistAnnotation) || PHPCorrectionProcessor
+							.hasCorrections(annotation)))) {
 				fPosition = position;
 				fAnnotation = annotation;
-				fHasCorrection = false;
+				fHasCorrection = true;
 				layer = annotationLayer;
+				continue;
+			} else if (!fHasCorrection) {
+				AnnotationPreference preference = fAnnotationPreferenceLookup
+						.getAnnotationPreference(annotation);
+				if (preference == null)
+					continue;
+
+				String key = preference.getVerticalRulerPreferenceKey();
+				if (key == null)
+					continue;
+
+				// if (fStore.getBoolean(key)) {
+				if (annotation instanceof OverrideIndicatorManager.OverrideIndicator) {
+					fPosition = position;
+					fAnnotation = annotation;
+					fHasCorrection = false;
+					layer = annotationLayer;
+				}
 			}
 		}
 	}
