@@ -1,0 +1,16 @@
+--TEST--
+Test global constant.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+<?
+class a {
+    const JIGGA = 'test';
+}
+
+echo JIG|
+?>
+--EXPECT--
+
+?>

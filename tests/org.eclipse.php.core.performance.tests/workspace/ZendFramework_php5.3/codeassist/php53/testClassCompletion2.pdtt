@@ -1,0 +1,14 @@
+--TEST--
+Should complete current namespace class defined in method
+--FILE--
+<?
+	namespace NS;
+	class A {
+		function foo() {
+			class MyClass {}
+		}
+	}
+	MyCla|
+?>
+--EXPECT--
+type(MyClass)

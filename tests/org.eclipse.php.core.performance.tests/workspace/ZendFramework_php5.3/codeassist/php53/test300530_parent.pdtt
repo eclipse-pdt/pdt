@@ -1,0 +1,33 @@
+--TEST--
+Test global constant.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+namespace NS;
+class aax
+{
+    const AAZ = 'test';
+}
+class bax extends aax
+{
+    const BAZ = 'test';
+    function __construct()
+    {
+        ;
+    }
+}
+class foo extends bax
+{
+    const SKIN = 'test';
+    
+    function bar(){
+    	parent::|
+    }
+    
+}
+?>
+--EXPECT--
+field(AAZ)
+field(BAZ)
+?>

@@ -1,0 +1,13 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+$foo = "";
+class Foo {
+   public $foo = "";
+   public function foo($foo){
+		$foo|;
+   }
+}
+?>
+--EXPECT--

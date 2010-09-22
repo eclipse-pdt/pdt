@@ -1,0 +1,10 @@
+--TEST--
+Test Method Argument Selection
+--FILE--
+<?
+function foo($arg) {
+	echo |$arg|;
+}
+?>
+--EXPECT--
+field($arg)

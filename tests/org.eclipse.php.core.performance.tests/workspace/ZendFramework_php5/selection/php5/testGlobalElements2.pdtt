@@ -1,0 +1,10 @@
+--TEST--
+Test Function Selection
+--FILE--
+<?
+function foo() {
+}
+|foo|();
+?>
+--EXPECT--
+method(foo)

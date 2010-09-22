@@ -1,0 +1,46 @@
+--TEST--
+Test formatting class comments
+--FILE--
+<?php
+/**
+* php doc
+*/
+class AAA {
+// comment
+var $a ;
+var $b ;
+public function foo () {
+} 
+} 
+class BBB {
+// comment
+// comment
+var $a ;
+var $b ;
+function foo () {
+} 
+// comment
+} 
+?>
+--EXPECT--
+<?php
+/**
+ * php doc
+ */
+class AAA {
+	// comment
+	var $a ;
+	var $b ;
+	public function foo () {
+	}
+}
+class BBB {
+	// comment
+	// comment
+	var $a ;
+	var $b ;
+	function foo () {
+	}
+	// comment
+}
+?>

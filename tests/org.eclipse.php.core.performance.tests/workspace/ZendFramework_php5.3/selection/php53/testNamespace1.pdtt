@@ -1,0 +1,9 @@
+--TEST--
+Should complete namespace fully qualified name
+--FILE--
+<?
+namespace NS;
+|\NS|\foo();
+?>
+--EXPECT--
+type(NS)

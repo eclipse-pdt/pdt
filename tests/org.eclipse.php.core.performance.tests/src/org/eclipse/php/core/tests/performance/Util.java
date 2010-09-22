@@ -13,6 +13,15 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.ast.nodes.ASTParser;
+import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.project.ProjectOptions;
+
 public class Util {
 
 	public static void copyInputStream(InputStream in, OutputStream out)
@@ -110,4 +119,24 @@ public class Util {
 		File file = downloadFile(fileURL, targetDirectory);
 		unzip(file, targetDirectory);
 	}
+
+	public static Program createProgramFromSource(IFile file) throws Exception {
+		ISourceModule source = DLTKCore.createSourceModuleFrom(file);
+		return createProgramFromSource(source);
+	}
+
+	public static Program createProgramFromSource(ISourceModule source)
+			throws Exception {
+		IProject project = source.getScriptProject().getProject();
+		PHPVersion version;
+		if (project != null) {
+			version = ProjectOptions.getPhpVersion(project);
+		} else {
+			version = ProjectOptions.getDefaultPhpVersion();
+		}
+		ASTParser newParser = ASTParser.newParser(version,
+				(ISourceModule) source);
+		return newParser.createAST(null);
+	}
+
 }

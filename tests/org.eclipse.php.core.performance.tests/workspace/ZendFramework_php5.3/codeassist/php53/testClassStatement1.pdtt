@@ -1,0 +1,19 @@
+--TEST--
+Should complete class keywords under namespace
+--FILE--
+<?
+namespace NS;
+class A {
+	|
+}
+?>
+--EXPECT--
+keyword(abstract)
+keyword(const)
+keyword(final)
+keyword(function)
+keyword(private)
+keyword(protected)
+keyword(public)
+keyword(static)
+keyword(var)

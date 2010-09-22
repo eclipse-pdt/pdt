@@ -1,0 +1,17 @@
+--TEST--
+[php 5.3] Code assist is not suggested for global classes
+--FILE--
+<?php
+class MyTestClass {
+}
+interface MyTestInterface {
+}
+use \MyTest|
+?>
+--EXPECT--
+type(MyTestClass)
+type(MyTestInterface)
+
+
+
+

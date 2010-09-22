@@ -1,0 +1,17 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+class Foo {
+	public function Foo(){}
+	public static $d="";
+	const Foo="";
+}
+class Bar extends Foo{
+	const Foo="";
+	public function bar(){
+	}
+}
+Foo|::$d;
+?>
+--EXPECT--

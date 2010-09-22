@@ -1,0 +1,68 @@
+--TEST--
+Test formatting if statements
+--FILE--
+<?php
+
+if ($a>$b) {
+	echo $a;
+}
+
+if ($c>$b) 
+{
+	echo $c;
+} else              {
+	echo $b;
+}
+
+if ($c>$b) 
+{
+	echo $c;
+}                  elseif ($b>$a ) {
+	echo $a;
+}                   else {
+	echo $b;
+}
+
+if ($c>$b) 
+{
+	echo $c;
+}                  else if ($b>$a ) {
+	echo $a;
+}                   else {
+	echo $b;
+}
+
+?>
+--EXPECT--
+<?php
+
+if ($a>$b) {
+	echo $a;
+}
+
+if ($c>$b)
+{
+	echo $c;
+} else              {
+	echo $b;
+}
+
+if ($c>$b)
+{
+	echo $c;
+}                  elseif ($b>$a ) {
+	echo $a;
+}                   else {
+	echo $b;
+}
+
+if ($c>$b)
+{
+	echo $c;
+}                  else if ($b>$a ) {
+	echo $a;
+}                   else {
+	echo $b;
+}
+
+?>

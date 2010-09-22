@@ -1,0 +1,12 @@
+--TEST--
+Anonymous function parameter should be suggested inside the function
+--FILE--
+
+<?php
+$greet = function($name)
+{
+    printf("My %s\r\n", $n|); 
+};
+
+--EXPECT--
+field($name)

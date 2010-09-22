@@ -1,0 +1,23 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+namespace My\aa\bb;
+$foo = "";
+class Foo {
+   public $foo = "";
+   public function foo($foo){
+		$foo;
+   }
+}
+
+namespace My\aa\cc;
+$foo = "";
+class Foo {
+   public $foo = "";
+   public function foo($foo){
+		$foo|;
+   }
+}
+?>
+--EXPECT--

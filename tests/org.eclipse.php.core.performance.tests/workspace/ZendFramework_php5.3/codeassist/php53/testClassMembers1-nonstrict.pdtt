@@ -1,0 +1,33 @@
+--TEST--
+Should complete class members under namespace from namespace alias
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+namespace NS;
+class A {
+	var $simpleField;
+	private $privateField;
+	protected $protectedField;
+	public $publicField;
+	static $staticField;
+	const CONSTANT_FIELD = 5;
+	static public function publicStaticFunction() {}
+	static protected function protectedStaticFunction() {}
+	static private function privateStaticFunction() {}
+	static function defaultStaticFunction() {}
+	public function publicNonStaticFunction() {}
+	protected function protectedNonStaticFunction() {}
+	private function privateNonStaticFunction() {}
+	function defaultNonStaticFunction() {}
+}
+
+namespace OtherNS;
+use NS as Z;
+Z\A::|
+?>
+--EXPECT--
+field($staticField)
+field(CONSTANT_FIELD)
+method(defaultStaticFunction)
+method(publicStaticFunction)

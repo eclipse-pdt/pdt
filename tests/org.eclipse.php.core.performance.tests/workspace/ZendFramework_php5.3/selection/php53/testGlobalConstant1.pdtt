@@ -1,0 +1,24 @@
+--TEST--
+Should recognize global constants (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=291970)
+--FILE--
+<?php
+define('cint_TEST_CONSTANT', 1);
+
+$test = |cint_TEST_CONSTANT|; // onhover & ctrl-click Doesn't work
+
+function test($cintConstant) {
+	$test = cint_TEST_CONSTANT; // onhover & ctrl-click Doesn't work
+}
+
+class test {
+	public function test() {
+		$this->test = cint_TEST_CONSTANT; // onhover & ctrl-click Doesn't work
+	}
+	
+	public function testPerform() {
+		test('String', cint_TEST_CONSTANT); // onhover & ctrl-click Doesn't work
+	}
+}
+?>
+--EXPECT--
+field(cint_TEST_CONSTANT)

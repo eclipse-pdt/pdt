@@ -1,0 +1,19 @@
+--TEST--
+Test class methods with parent from global namespace
+--FILE--
+<?php
+namespace ABC;
+require_once 'dom.php';
+class MyClass extends \SoapClient {
+    
+    function foo() {}
+    static function bar() {}
+    function test() {
+    	parent::__getTypes();;
+    	self::|bar|();
+    	$this->foo();
+    }
+}
+?>
+--EXPECT--
+method(bar)

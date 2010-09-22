@@ -1,0 +1,29 @@
+--TEST--
+Test global constant.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class bax
+{
+    const BAZ = 'test';
+    function __construct()
+    {
+        ;
+    }
+}
+class foo extends bax
+{
+    const SKIN = 'test';
+    
+    function bar(){
+    	self::|
+    }
+    
+}
+
+--EXPECT--
+field(BAZ)
+field(SKIN)
+method(bar)
+?>

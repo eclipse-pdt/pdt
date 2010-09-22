@@ -1,0 +1,12 @@
+--TEST--
+Test Method Call Selection2
+--FILE--
+<?
+class A {
+	function foo() {}
+}
+$a = new A();
+|$a->foo()|;
+?>
+--EXPECT--
+method(foo)

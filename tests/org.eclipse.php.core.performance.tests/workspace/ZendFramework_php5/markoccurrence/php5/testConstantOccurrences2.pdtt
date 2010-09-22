@@ -1,0 +1,11 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+define('TEST1', 0);
+class TEST1 {
+	const TEST1="";
+}
+TEST1|;
+?>
+--EXPECT--

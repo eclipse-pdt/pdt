@@ -1,0 +1,11 @@
+--TEST--
+Test namespace element selection using 'namespace' keyword prefix
+--FILE--
+<?
+namespace NS;
+class foo {
+}
+namespace\|foo|;
+?>
+--EXPECT--
+type(foo)

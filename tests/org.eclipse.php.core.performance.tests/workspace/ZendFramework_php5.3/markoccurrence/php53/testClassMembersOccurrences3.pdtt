@@ -1,0 +1,16 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+namespace My\aa\bb;
+class Foo {
+   public static $d="";
+}
+namespace My\aa\cc;
+class Foo {
+   public static $d="";
+}
+use My\aa\bb;
+bb\Foo::$d|;
+?>
+--EXPECT--

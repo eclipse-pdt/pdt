@@ -1,0 +1,11 @@
+--TEST--
+Test Static Field Access Selection
+--FILE--
+<?
+class A {
+	var $var;
+}
+|A::$var|;
+?>
+--EXPECT--
+field($var)

@@ -1,0 +1,8 @@
+--TEST--
+Should complete global namespace class after 'extends' keyword
+--FILE--
+<?php
+class Test extends \Exc|
+?>
+--EXPECT--
+type(Exception)

@@ -1,0 +1,31 @@
+--TEST--
+Use statement test.
+Case no slash.
+--FILE--
+<?php
+namespace MyTestNS1 {	class MyTestClass1 {}	}
+namespace MyTestNS2 {	class MyTestClass2 {}	}
+
+namespace MyTestNS1\NS11 { class MyTestClass3 {} }
+namespace MyTestNS1\NS12 { class MyTestClass4 {} }
+
+namespace MyTestNS2\NS21 { class MyTestClass5 {} }
+namespace MyTestNS2\NS22 { class MyTestClass6 {} }
+
+namespace test{
+	use MyTest|
+}
+?>
+--EXPECT--
+type(MyTestClass1)
+type(MyTestClass2)
+type(MyTestClass3)
+type(MyTestClass4)
+type(MyTestClass5)
+type(MyTestClass6)
+type(MyTestNS1)
+type(MyTestNS1\NS11)
+type(MyTestNS1\NS12)
+type(MyTestNS2)
+type(MyTestNS2\NS21)
+type(MyTestNS2\NS22)

@@ -1,0 +1,7 @@
+--TEST--
+Test Method Parameter with keywords, shoudl be self or parent only
+--FILE--
+<? class myClass { const BAZ = 'test'; function foo($a = pare|) {} } ?>
+--EXPECT--
+keyword(parent)
+
