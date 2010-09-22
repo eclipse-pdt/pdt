@@ -1,0 +1,22 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+
+list($a,$b)= array(1,2,3);
+$array=array(1=>2,2=>3);
+$array[$i]->foo();
+$array{'kuku'}->foo();
+$array[]='first cell';
+
+?>
+--EXPECT--
+<?php
+
+list($a,$b)= array(1,2,3);
+$array=array(1=>2,2=>3);
+$array[$i]->foo();
+$array{'kuku'}->foo();
+$array[]='first cell';
+
+?>

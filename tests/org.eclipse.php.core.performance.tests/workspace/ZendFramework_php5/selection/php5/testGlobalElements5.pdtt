@@ -1,0 +1,9 @@
+--TEST--
+Test Variable Selection
+--FILE--
+<?
+$global = 5;
+|$global|;
+?>
+--EXPECT--
+field($global)

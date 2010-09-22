@@ -1,0 +1,31 @@
+--TEST--
+Should see other namespaces within current one.
+--FILE--
+<?php
+namespace nm1; 
+interface A_intr{
+function fooA();
+
+}	
+ 
+namespace nm2; 
+class B_class { 
+	
+	function fooB() { 
+      return __METHOD__; 
+	} 
+} 
+
+namespace nm3  
+class C extends B_class implements A_intr{
+
+	fooA(){
+		return __METHOD__; 
+	}
+	$my = new C_class ();
+	$my->|	
+}
+?>
+--EXPECT--
+fooA() - nm3\C_class 
+fooB() - nm2\B_class

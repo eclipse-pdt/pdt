@@ -1,0 +1,32 @@
+--TEST--
+Test global constant.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+namespace NS;
+class bax
+{
+    const BAZ = 'test';
+    function __construct()
+    {
+        ;
+    }
+}
+class foo extends bax
+{
+    const SKIN = 'test';
+    
+    function bar(){
+    	DIR|
+    }
+    
+}
+
+--EXPECT--
+type(DirectoryIterator)
+type(Directory)
+method(dirname)
+method(dir)
+field(DIRECTORY_SEPARATOR)
+?>

@@ -1,0 +1,10 @@
+--TEST--
+Test Class Constant Selection
+--FILE--
+<?
+class A {
+	const A|BC| = 5;
+}
+?>
+--EXPECT--
+field(ABC)

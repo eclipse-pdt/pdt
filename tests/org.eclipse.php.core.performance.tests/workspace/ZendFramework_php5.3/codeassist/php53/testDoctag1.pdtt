@@ -1,0 +1,16 @@
+--TEST--
+Test var
+--FILE--
+<?
+class MyClass {
+}
+/**
+ * 
+ * @author douya
+ * @var MyC|
+ */
+class SomeClass {
+}
+?>
+--EXPECT--
+type(MyClass)

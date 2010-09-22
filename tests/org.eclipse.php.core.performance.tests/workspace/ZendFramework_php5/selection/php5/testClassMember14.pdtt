@@ -1,0 +1,11 @@
+--TEST--
+Test Static Constant Access Selection
+--FILE--
+<?
+class A {
+	const C = 5;
+}
+|A::C|;
+?>
+--EXPECT--
+field(C)

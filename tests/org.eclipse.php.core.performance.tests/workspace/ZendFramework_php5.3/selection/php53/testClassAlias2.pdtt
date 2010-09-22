@@ -1,0 +1,16 @@
+--TEST--
+Should recognize class aliases (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=267544)
+--FILE--
+<?
+namespace NS1 {
+	class Foo {
+	}
+}
+namespace NS2 {
+	use \NS1\Foo;
+	class Bar extends |Foo| {
+	}
+}
+?>
+--EXPECT--
+type(Foo)

@@ -1,0 +1,11 @@
+--TEST--
+Test Class Camelcase
+--FILE--
+<?
+	class MyVeryLongClassName1 {}
+	class MyVeryLongClassName2 {}
+	MVLCN|
+?>
+--EXPECT--
+type(MyVeryLongClassName1)
+type(MyVeryLongClassName2)

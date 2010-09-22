@@ -1,0 +1,10 @@
+--TEST--
+Should NOT select method foo() from unknown alias 'NS'
+--FILE--
+<?
+namespace NS;
+function foo() {
+}
+|NS\foo|();
+?>
+--EXPECT--

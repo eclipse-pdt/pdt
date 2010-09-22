@@ -1,0 +1,34 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+define('FOO', 0);
+class Foo {
+   const FOO="";
+   public function Foo(){}
+}
+function bar() {
+}
+$a= new Foo();
+echo FOO;
+
+namespace My\aa\cc;
+define('FOO', 0);
+class Foo {
+   const FOO="";
+   public function Foo(){}
+}
+function bar() {
+}
+$a= new Foo();
+echo FOO;
+
+use My\aa\bb;
+function bar() {
+}
+$a= new Foo();
+echo \My\aa\bb\FOO;
+echo \My\aa\cc\FOO;
+echo FOO|;
+?>
+--EXPECT--

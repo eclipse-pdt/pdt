@@ -1,0 +1,19 @@
+--TEST--
+Test Super Methods
+--FILE--
+<?
+class A {
+	function superDefault() {}
+	public function superPublic() {}
+	protected function superProtected() {}
+	private function superPrivate() {}
+	public final function superFinal() {}
+}
+class B extends A {
+	function super|
+}
+?>
+--EXPECT--
+method(superDefault)
+method(superProtected)
+method(superPublic)

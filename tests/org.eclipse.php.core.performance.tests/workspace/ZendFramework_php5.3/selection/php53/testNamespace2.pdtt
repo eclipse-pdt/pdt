@@ -1,0 +1,14 @@
+--TEST--
+Should complete other namespace using alias
+--FILE--
+<?
+namespace NS;
+function foo() {
+}
+
+namespace OtherNS;
+use NS as Z;
+|Z|\foo();
+?>
+--EXPECT--
+type(NS)

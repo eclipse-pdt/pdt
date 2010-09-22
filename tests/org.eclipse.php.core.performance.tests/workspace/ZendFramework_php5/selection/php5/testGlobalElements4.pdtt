@@ -1,0 +1,11 @@
+--TEST--
+Test Method Local Var Selection
+--FILE--
+<?
+function foo() {
+	$my='';
+	echo |$my|;
+}
+?>
+--EXPECT--
+field($my)

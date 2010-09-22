@@ -1,0 +1,19 @@
+--TEST--
+Test global constant.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+namespace NS;
+define ('LW_DB_PASSWORD', '');
+define ('LW_DB_SERVER', 'localhost');
+
+class Test{
+   private $var = LW|  
+}
+
+--EXPECT--
+field(LW_DB_PASSWORD)
+field(LW_DB_SERVER)
+
+?>

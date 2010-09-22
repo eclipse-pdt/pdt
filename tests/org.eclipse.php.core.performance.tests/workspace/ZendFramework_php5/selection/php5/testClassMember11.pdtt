@@ -1,0 +1,14 @@
+--TEST--
+Test Overriden Method Call Selection
+--FILE--
+<?
+class A {
+	function foo() {}
+}
+class B extends A {
+}
+$b = new B();
+$b->|foo()|;
+?>
+--EXPECT--
+method(foo)

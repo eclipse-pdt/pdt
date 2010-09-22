@@ -1,0 +1,15 @@
+--TEST--
+Test Parent Method Selection2
+--FILE--
+<?
+class A {
+	function foo() {}
+}
+class B extends A {
+	function __construct() {
+		parent::|foo()|;
+	}
+}
+?>
+--EXPECT--
+method(foo)
