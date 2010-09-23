@@ -13,10 +13,12 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.ILaunchesListener;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.php.internal.core.util.collections.IntMap;
 import org.eclipse.php.internal.core.util.collections.IntMap.Entry;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
 import org.eclipse.swt.browser.Browser;
 
 /**
@@ -97,12 +99,25 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 			}
 		}
 		updateSystemProperty(launches);
-		if (DebugPlugin.getDefault().getLaunchManager().getLaunches().length == 0) {
-			// In case we have no more launches, clear the browser's cache
+
+		if (hasNoDebugLaunch()) {
+			// In case we have no more php debug launches, clear the browser's
+			// cache
 			// (cookies) to avoid any debug session trigger as a result
 			// of a remaining cookie.
 			Browser.clearSessions();
 		}
+	}
+
+	private boolean hasNoDebugLaunch() {
+		ILaunch[] l = DebugPlugin.getDefault().getLaunchManager().getLaunches();
+		int dbgSessions = 0;
+		for (int i = 0; i < l.length; i++) {
+			if (ILaunchManager.DEBUG_MODE.equals(l[i].getLaunchMode())
+					&& l[i] instanceof PHPLaunch)
+				dbgSessions++;
+		}
+		return dbgSessions == 0;
 	}
 
 	/**
