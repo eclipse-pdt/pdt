@@ -58,7 +58,9 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
-					final PdttFile pdttFile = new PdttFile(fileName);
+					final PdttFile pdttFile = new PdttFile(
+							PHPCorePerformanceTests.getDefault().getBundle(),
+							fileName);
 					PhpElementConciliatorTest test = new PhpElementConciliatorTest(
 							fileName) {
 						protected void tearDown() throws Exception {

@@ -77,6 +77,7 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
 					final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
+							PHPCorePerformanceTests.getDefault().getBundle(),
 							fileName);
 					CodeAssistTests test = new CodeAssistTests(fileName) {
 

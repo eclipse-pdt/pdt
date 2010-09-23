@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.core.tests.PdttFile;
+import org.osgi.framework.Bundle;
 
 /**
  * This is an extension of {@link PdttFile} that parses the --EXPECT-- section
@@ -41,6 +42,10 @@ public class CodeAssistPdttFile extends PdttFile {
 
 	public CodeAssistPdttFile(String fileName) throws Exception {
 		super(fileName);
+	}
+
+	public CodeAssistPdttFile(Bundle bundle, String fileName) throws Exception {
+		super(bundle, fileName);
 	}
 
 	public ExpectedProposal[] getExpectedProposals() {

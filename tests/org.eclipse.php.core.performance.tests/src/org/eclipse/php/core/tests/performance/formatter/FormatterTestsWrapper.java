@@ -67,7 +67,9 @@ public class FormatterTestsWrapper extends AbstractPDTTTest {
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
-					final PdttFile pdttFile = new PdttFile(fileName);
+					final PdttFile pdttFile = new PdttFile(
+							PHPCorePerformanceTests.getDefault().getBundle(),
+							fileName);
 					FormatterTests test = new FormatterTests(fileName) {
 						protected void tearDown() throws Exception {
 							if (testFile != null) {

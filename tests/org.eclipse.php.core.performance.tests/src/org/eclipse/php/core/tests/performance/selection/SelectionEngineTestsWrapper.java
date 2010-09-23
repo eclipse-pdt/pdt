@@ -74,6 +74,7 @@ public class SelectionEngineTestsWrapper extends AbstractPDTTTest {
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
 					final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
+							PHPCorePerformanceTests.getDefault().getBundle(),
 							fileName);
 					SelectionEngineTests test = new SelectionEngineTests(
 							fileName) {

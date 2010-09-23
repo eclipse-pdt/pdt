@@ -80,7 +80,9 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
-					final PdttFile pdttFile = new PdttFile(fileName);
+					final PdttFile pdttFile = new PdttFile(
+							PHPCorePerformanceTests.getDefault().getBundle(),
+							fileName);
 					MarkOccurrenceTests test = new MarkOccurrenceTests(
 							phpVersion.getAlias() + " - /" + fileName) {
 

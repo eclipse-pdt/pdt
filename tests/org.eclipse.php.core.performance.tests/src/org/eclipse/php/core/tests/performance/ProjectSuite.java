@@ -32,11 +32,11 @@ import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public class ProjectSuite extends AbstractModelTests {
-	private Metadata metadata;
-	private PerformanceMonitor perfMonitor;
+	protected Metadata metadata;
+	protected PerformanceMonitor perfMonitor;
 
-	public ProjectSuite(String name) {
-		super(PHPCorePerformanceTests.PLUGIN_ID, name);
+	public ProjectSuite() {
+		super(PHPCorePerformanceTests.PLUGIN_ID, "");
 	}
 
 	public Test suite(final Metadata metadata) {
@@ -44,20 +44,7 @@ public class ProjectSuite extends AbstractModelTests {
 
 		TestSuite suite = new TestSuite(metadata.project + " Performance Tests");
 
-		suite.addTest(new BuildProjectTest());
-		suite.addTest(new SearchAllTypesTest());
-		suite.addTest(new SearchAllFunctionsTest());
-		suite.addTest(new SearchGlobalVariablesTest());
-		suite.addTest(new SearchIncludeStatementsTest());
-		suite.addTest(new SuperTypeHierarchyTest());
-		suite.addTest(new TypeHierarchyTest());
-
-		suite.addTest(new CodeAssistTestsWrapper().suite(metadata));
-		suite.addTest(new MarkOccurrenceTestsWrapper().suite(metadata));
-		suite.addTest(new PhpElementConciliatorTestWrapper().suite(metadata));
-		suite.addTest(new FormatterTestsWrapper().suite(metadata));
-		suite.addTest(new SelectionEngineTestsWrapper().suite(metadata));
-		suite.addTest(new TypeInferenceTestsWrapper().suite(metadata));
+		addTests(suite);
 
 		// Create a setup wrapper
 		TestSetup setup = new TestSetup(suite) {
@@ -86,6 +73,23 @@ public class ProjectSuite extends AbstractModelTests {
 			}
 		};
 		return setup;
+	}
+
+	protected void addTests(TestSuite suite) {
+		suite.addTest(new BuildProjectTest());
+		suite.addTest(new SearchAllTypesTest());
+		suite.addTest(new SearchAllFunctionsTest());
+		suite.addTest(new SearchGlobalVariablesTest());
+		suite.addTest(new SearchIncludeStatementsTest());
+		suite.addTest(new SuperTypeHierarchyTest());
+		suite.addTest(new TypeHierarchyTest());
+
+		suite.addTest(new CodeAssistTestsWrapper().suite(metadata));
+		suite.addTest(new MarkOccurrenceTestsWrapper().suite(metadata));
+		suite.addTest(new PhpElementConciliatorTestWrapper().suite(metadata));
+		suite.addTest(new FormatterTestsWrapper().suite(metadata));
+		suite.addTest(new SelectionEngineTestsWrapper().suite(metadata));
+		suite.addTest(new TypeInferenceTestsWrapper().suite(metadata));
 	}
 
 	public static class Metadata {

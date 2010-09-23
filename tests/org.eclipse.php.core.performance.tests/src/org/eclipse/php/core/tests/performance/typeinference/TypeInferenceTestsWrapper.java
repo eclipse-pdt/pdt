@@ -106,7 +106,9 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
-					final PdttFile pdttFile = new PdttFile(fileName);
+					final PdttFile pdttFile = new PdttFile(
+							PHPCorePerformanceTests.getDefault().getBundle(),
+							fileName);
 					final String pruner = getPrunerType(pdttFile);
 
 					suite.addTest(new TypeInferenceTests(phpVersion.getAlias()

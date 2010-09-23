@@ -32,10 +32,10 @@ public class ZFPerformanceTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(PROJECT + " Performance Tests");
-		Test test = new ProjectSuite("").suite(new Metadata(PROJECT + "_"
+		Test test = new ProjectSuite().suite(new Metadata(PROJECT + "_"
 				+ PHPVersion.PHP5.getAlias(), URL, TYPE, PHPVersion.PHP5));
 		suite.addTest(test);
-		test = new ProjectSuite("").suite(new Metadata(PROJECT + "_"
+		test = new ProjectSuite().suite(new Metadata(PROJECT + "_"
 				+ PHPVersion.PHP5_3.getAlias(), URL, TYPE, PHPVersion.PHP5_3));
 		suite.addTest(test);
 

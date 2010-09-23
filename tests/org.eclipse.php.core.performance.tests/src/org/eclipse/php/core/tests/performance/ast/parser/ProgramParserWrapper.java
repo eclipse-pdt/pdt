@@ -51,9 +51,12 @@ public class ProgramParserWrapper extends AbstractPDTTTest {
 			testsDirectory = testsDirectory.replaceAll("project",
 					metadata.project);
 
-			for (final String fileName : getPDTTFiles(testsDirectory)) {
+			for (final String fileName : getPDTTFiles(testsDirectory,
+					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
-					final PdttFile pdttFile = new PdttFile(fileName);
+					final PdttFile pdttFile = new PdttFile(
+							PHPCorePerformanceTests.getDefault().getBundle(),
+							fileName);
 					ProgramParser test = new ProgramParser(phpVersion
 							.getAlias()
 							+ " - /" + fileName) {
