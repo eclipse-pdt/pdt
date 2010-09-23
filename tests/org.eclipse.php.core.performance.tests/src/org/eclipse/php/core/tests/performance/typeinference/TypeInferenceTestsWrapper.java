@@ -68,27 +68,10 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 	}
 
 	public static void setUpSuite() throws Exception {
-		// project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-		// "TypeInferenceTests");
-		// if (project.exists()) {
-		// return;
-		// }
-		//
-		// project.create(null);
-		// project.open(null);
-		//
-		// // configure nature
-		// IProjectDescription desc = project.getDescription();
-		// desc.setNatureIds(new String[] { PHPNature.ID });
-		// project.setDescription(desc, null);
-
 		typeInferenceEngine = new PHPTypeInferencer();
 	}
 
 	public static void tearDownSuite() throws Exception {
-		// project.close(null);
-		// project.delete(true, true, null);
-		// project = null;
 		typeInferenceEngine = null;
 	}
 
@@ -129,13 +112,6 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 
 							findEvaluatedType(fileName, code, criteriaFunction,
 									pruner);
-
-							// Assert.assertNotNull(
-							// "Can't evaluate type for: " + code,
-							// evaluatedType);
-							// Assert.assertEquals(pdttFile.getExpected()
-							// .trim(), evaluatedType.getTypeName()
-							// .trim());
 						}
 					});
 				} catch (final Exception e) {
@@ -153,8 +129,6 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 				}
 			}
 		}
-		// suite.addTest(phpVerSuite);
-		// }
 
 		// Create a setup wrapper
 		TestSetup setup = new TestSetup(suite) {
