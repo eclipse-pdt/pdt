@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.performance.formatter;
 
+import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class FormatterTestsWrapper extends AbstractPDTTTest {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
 				metadata.project);
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
-		TestSuite suite = new TestSuite("Locator Tests");
+		TestSuite suite = new TestSuite("Formatter Tests");
 
 		final PHPVersion phpVersion = metadata.phpVersion;
 		for (String testsDirectory : TESTS.get(phpVersion)) {
@@ -76,6 +77,7 @@ public class FormatterTestsWrapper extends AbstractPDTTTest {
 						}
 
 						protected void runTest() throws Throwable {
+
 							executeLocator(pdttFile.getFile(), fileName);
 						}
 					};
@@ -110,7 +112,7 @@ public class FormatterTestsWrapper extends AbstractPDTTTest {
 	 */
 	protected void executeLocator(String data, final String fileName)
 			throws Exception {
-
+		testFile = createFile(data.trim());
 		IStructuredModel modelForEdit = StructuredModelManager
 				.getModelManager().getModelForEdit(testFile);
 		try {
@@ -135,6 +137,12 @@ public class FormatterTestsWrapper extends AbstractPDTTTest {
 				modelForEdit.releaseFromEdit();
 			}
 		}
+	}
+
+	protected IFile createFile(String data) throws Exception {
+		IFile testFile = project.getFile("test" + ".php");
+		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
+		return testFile;
 	}
 
 	public class FormatterTests extends AbstractPDTTTest {

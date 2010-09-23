@@ -25,6 +25,7 @@ import org.eclipse.php.core.tests.performance.codeassist.CodeAssistTestsWrapper;
 import org.eclipse.php.core.tests.performance.formatter.FormatterTestsWrapper;
 import org.eclipse.php.core.tests.performance.markoccurrence.MarkOccurrenceTestsWrapper;
 import org.eclipse.php.core.tests.performance.selection.SelectionEngineTestsWrapper;
+import org.eclipse.php.core.tests.performance.typeinference.TypeInferenceTestsWrapper;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -56,6 +57,7 @@ public class ProjectSuite extends AbstractModelTests {
 		suite.addTest(new PhpElementConciliatorTestWrapper().suite(metadata));
 		suite.addTest(new FormatterTestsWrapper().suite(metadata));
 		suite.addTest(new SelectionEngineTestsWrapper().suite(metadata));
+		suite.addTest(new TypeInferenceTestsWrapper().suite(metadata));
 
 		// Create a setup wrapper
 		TestSetup setup = new TestSetup(suite) {
@@ -117,8 +119,6 @@ public class ProjectSuite extends AbstractModelTests {
 			perfMonitor.execute(metadata.project + ".testBuildProject",
 					new Operation() {
 						public void run() throws Exception {
-							System.out
-									.println(project.getLocation().toString());
 							project.refreshLocal(IResource.DEPTH_INFINITE, null);
 							PHPCoreTests.waitForIndexer();
 						}
