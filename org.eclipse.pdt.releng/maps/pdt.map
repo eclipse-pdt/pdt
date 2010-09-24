@@ -1,8 +1,5 @@
 !***************  PROJECT CONTRIBUTION  ******************************************************** 
 
-!*** Special entries from eclipse
-fragment@org.eclipse.ant.optional.junit=v20080717,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
-
 !*** Project's plugins, features and fragments
 feature@org.eclipse.php=v20100822-1200,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php-feature
 feature@org.eclipse.php.sdk=v20100826-1100,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.php.sdk-feature
