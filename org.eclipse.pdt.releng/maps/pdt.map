@@ -1,7 +1,6 @@
 !***************  PROJECT CONTRIBUTION  ******************************************************** 
 
 !*** Special entries from eclipse
-plugin@org.eclipse.test=v20081002,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
 fragment@org.eclipse.ant.optional.junit=v20080717,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
 
 !*** Project's plugins, features and fragments
@@ -22,8 +21,6 @@ plugin@org.eclipse.php.help=v20100822-0100,:pserver:anonymous@dev.eclipse.org:/c
 plugin@org.eclipse.php.core.tests=v20100822-0100,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/tests/org.eclipse.php.core.tests
 plugin@org.eclipse.php.ui.tests=v20100822-0100,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/tests/org.eclipse.php.ui.tests
 plugin@org.eclipse.php.core.performance.tests=v20100822-0100,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/tests/org.eclipse.php.core.performance.tests
-plugin@org.eclipse.test.performance=v20100410-0300,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/tests/org.eclipse.test.performance
-plugin@org.eclipse.test.performance.ui=v20100410-0300,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/tests/org.eclipse.test.performance.ui
 
 
 !*** Mylyn bridge
