@@ -3757,15 +3757,30 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 	@Override
 	public boolean isDirty() {
+		// if super.isDirty() return false,it means this
+		boolean result = super.isDirty();
+		if (!result) {
+			return result;
+		}
 		if (getDocument() instanceof IStructuredDocument) {
 			CommandStack commandStack = ((IStructuredDocument) getDocument())
 					.getUndoManager().getCommandStack();
 			if (commandStack instanceof BasicCommandStack) {
-				return ((BasicCommandStack) commandStack).isSaveNeeded();
+				BasicCommandStack bcs = (BasicCommandStack) commandStack;
+				if (bcs.isSaveNeeded()) {
+					if (!result) {
+						bcs.saveIsDone();
+						return result;
+					} else {
+						return true;
+					}
+				} else {
+					return false;
+				}
 			}
 		}
 
-		return super.isDirty();
+		return result;
 	}
 
 	@Override
