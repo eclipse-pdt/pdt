@@ -36,8 +36,7 @@ public class PHPStructuredPresentationReconciler extends
 					if (originalRegion.getOffset() >= r.getOffset()
 							&& originalRegion.getOffset()
 									+ originalRegion.getLength() <= r
-									.getOffset()
-									+ r.getLength()) {
+									.getOffset() + r.getLength()) {
 						return r;
 					} else {
 						i = jumpto + 2;
@@ -79,8 +78,8 @@ public class PHPStructuredPresentationReconciler extends
 				int length = validLength;
 				ITypedRegion[] wholePartitions = TextUtilities
 						.computePartitioning(document,
-								getDocumentPartitioning(), 0, document
-										.getLength(), false);
+								getDocumentPartitioning(), 0,
+								document.getLength(), false);
 				// determine start
 				ITypedRegion newRegion = getWholeRegion(wholePartitions,
 						partitions[0]);
@@ -195,8 +194,7 @@ public class PHPStructuredPresentationReconciler extends
 										int end = styleRange.start
 												+ styleRange.length;
 										styleRange.length = typedRegion
-												.getOffset()
-												- styleRange.start;
+												.getOffset() - styleRange.start;
 										fRangeSet.add(styleRange);
 										styleRange = new StyleRange(
 												typedRegion.getOffset()
@@ -215,8 +213,7 @@ public class PHPStructuredPresentationReconciler extends
 													+ styleRange.length > typedRegion
 													.getOffset()) {
 										styleRange.length = typedRegion
-												.getOffset()
-												- styleRange.start;
+												.getOffset() - styleRange.start;
 										break;
 									} else if (styleRange.start > typedRegion
 											.getOffset()
@@ -299,8 +296,7 @@ public class PHPStructuredPresentationReconciler extends
 						&& styleRange.start + styleRange.length > damage
 								.getOffset()
 						&& styleRange.start + styleRange.length <= damage
-								.getOffset()
-								+ validLength) {
+								.getOffset() + validLength) {
 					int rangeEnd = styleRange.start + styleRange.length;
 					styleRange.start = damage.getOffset();
 					styleRange.length = rangeEnd - damage.getOffset();
@@ -308,15 +304,13 @@ public class PHPStructuredPresentationReconciler extends
 				} else if (styleRange.start >= damage.getOffset()
 						&& styleRange.start < damage.getOffset() + validLength
 						&& styleRange.start + styleRange.length > damage
-								.getOffset()
-								+ validLength) {
+								.getOffset() + validLength) {
 					styleRange.length = damage.getOffset() + validLength
 							- styleRange.start;
 					presentation.addStyleRange(styleRange);
 				} else if (styleRange.start >= damage.getOffset()
 						&& styleRange.start + styleRange.length <= damage
-								.getOffset()
-								+ validLength) {
+								.getOffset() + validLength) {
 					presentation.addStyleRange(styleRange);
 				}
 
