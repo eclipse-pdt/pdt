@@ -215,10 +215,10 @@ public class PHPStructuredPresentationReconciler extends
 										styleRange.length = typedRegion
 												.getOffset() - styleRange.start;
 										break;
-									} else if (styleRange.start > typedRegion
+									} else if (styleRange.start >= typedRegion
 											.getOffset()
 											&& styleRange.start
-													+ styleRange.length < typedRegion
+													+ styleRange.length <= typedRegion
 													.getOffset()
 													+ typedRegion.getLength()) {
 										styleRange = null;
