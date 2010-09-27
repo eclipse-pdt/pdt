@@ -300,18 +300,18 @@ public class PHPStructuredPresentationReconciler extends
 					int rangeEnd = styleRange.start + styleRange.length;
 					styleRange.start = damage.getOffset();
 					styleRange.length = rangeEnd - damage.getOffset();
-					presentation.addStyleRange(styleRange);
+					addStyleRange(presentation, styleRange);
 				} else if (styleRange.start >= damage.getOffset()
 						&& styleRange.start < damage.getOffset() + validLength
 						&& styleRange.start + styleRange.length > damage
 								.getOffset() + validLength) {
 					styleRange.length = damage.getOffset() + validLength
 							- styleRange.start;
-					presentation.addStyleRange(styleRange);
+					addStyleRange(presentation, styleRange);
 				} else if (styleRange.start >= damage.getOffset()
 						&& styleRange.start + styleRange.length <= damage
 								.getOffset() + validLength) {
-					presentation.addStyleRange(styleRange);
+					addStyleRange(presentation, styleRange);
 				}
 
 			}
@@ -321,6 +321,13 @@ public class PHPStructuredPresentationReconciler extends
 			/* ignored in platform PresentationReconciler, too */
 		}
 		return null;
+	}
+
+	private void addStyleRange(TextPresentation presentation,
+			StyleRange styleRange) {
+		if (styleRange.length > 0) {
+			presentation.addStyleRange(styleRange);
+		}
 	}
 
 	// protected TextPresentation createPresentation(IRegion damage,
