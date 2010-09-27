@@ -1,6 +1,12 @@
 <project name="Build specific targets and properties">
 
-		<target name="preFetch">
+		<target name="postFetch">
+                <echo>Generate PHP parser</echo>
+                <antcall target="generatePhpParserFiles">
+                        <param name="parserGenerator" value="${buildDirectory}/plugins/org.eclipse.php.core/Resources/parserTools/build.xml" />
+                </antcall>
+			
+
 			<echo>check out org.eclipse.test to ${buildDirectory}/plugins/, because Athen expects it as source</echo>
     		<cvs cvsroot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse"
     			package="org.eclipse.test"
@@ -14,13 +20,6 @@
     			package="org.eclipse.ant.optional.junit"
     			dest="${buildDirectory}/plugins/"
     			tag="v20080717"/>
-		</target>
-			
-        <target name="postFetch">
-                <echo>Generate PHP parser</echo>
-                <antcall target="generatePhpParserFiles">
-                        <param name="parserGenerator" value="${buildDirectory}/plugins/org.eclipse.php.core/Resources/parserTools/build.xml" />
-                </antcall>
         </target>
 
 
