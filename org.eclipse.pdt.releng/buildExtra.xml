@@ -1,7 +1,7 @@
 <project name="Build specific targets and properties">
 
 		<target name="preFetch">
-			<!-- check out org.eclipse.test, because Athen expects it as source -->
+			<echo>check out org.eclipse.test to ${buildDirectory}/plugins/, because Athen expects it as source</echo>
     		<cvs cvsroot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse"
     			package="org.eclipse.test"
     			dest="${buildDirectory}/plugins/"
