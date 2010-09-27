@@ -1,0 +1,28 @@
+<project name="Build specific targets and properties">
+
+        <target name="postFetch">
+                <echo>Generate PHP parser</echo>
+                <antcall target="generatePhpParserFiles">
+                        <param name="parserGenerator" value="${buildDirectory}/plugins/org.eclipse.php.core/Resources/parserTools/build.xml" />
+                </antcall>
+        	
+        		<!-- check out org.eclipse.test, because Athen expects it as source -->
+        		<cvs cvsroot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse"
+        			package="org.eclipse.test"
+        			dest="${buildDirectory}/plugins/"
+        			tag="v20081002"/>
+
+        </target>
+
+
+        <target name="checkParserGeneratorExists">
+                <available property="parserGeneratorExists" file="${parserGenerator}" />
+        </target>
+
+        <!-- Generate the PHP Parser classes -->
+        <target name="generatePhpParserFiles" depends="checkParserGeneratorExists" if="parserGeneratorExists">
+                <ant antfile="${parserGenerator}" />
+        </target>
+
+</project>
+
