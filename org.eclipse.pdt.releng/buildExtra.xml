@@ -7,9 +7,13 @@
     			dest="${buildDirectory}/plugins/"
     			tag="v20081002"/>
 			<cvs cvsroot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse"
-			    			package="org.eclipse.ant.optional.junit"
-			    			dest="${buildDirectory}/plugins/"
-			    			tag="v20080717"/>
+    			package="org.eclipse.test"
+    			dest="${buildDirectory}/dropins/"
+    			tag="v20081002"/>
+			<cvs cvsroot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse"
+    			package="org.eclipse.ant.optional.junit"
+    			dest="${buildDirectory}/plugins/"
+    			tag="v20080717"/>
 		</target>
 			
         <target name="postFetch">
