@@ -1,0 +1,15 @@
+--TEST--
+Test Combine With Global
+--FILE--
+<?php
+$a = new A();
+function foo() {
+	global $a;
+	if (true) {
+		$a =  new B();
+	}
+	testCombineWithGlobal($a);
+}
+?>
+--EXPECT--
+Ambigous <B, A>

@@ -1,0 +1,11 @@
+--TEST--
+Test Instance Of Condition2
+--FILE--
+<?
+$a = new B();
+if ($a instanceof A) {
+	testInstanceOfCondition2($a);
+}
+?>
+--EXPECT--
+A

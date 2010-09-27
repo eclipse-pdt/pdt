@@ -41,7 +41,7 @@ import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
-import org.eclipse.php.core.tests.performance.ProjectSuite.Metadata;
+import org.eclipse.php.core.tests.performance.ProjectSuite;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
@@ -75,17 +75,18 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 		typeInferenceEngine = null;
 	}
 
-	public Test suite(final Metadata metadata) {
+	public Test suite(final Map map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				metadata.project);
+				map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 
 		TestSuite suite = new TestSuite("Type Inference Tests");
 
-		final PHPVersion phpVersion = metadata.phpVersion;
+		final PHPVersion phpVersion = (PHPVersion) map
+				.get(ProjectSuite.PHP_VERSION);
 		for (String testsDirectory : TESTS.get(phpVersion)) {
-			testsDirectory = testsDirectory.replaceAll("project",
-					metadata.project);
+			testsDirectory = testsDirectory.replaceAll("project", map.get(
+					ProjectSuite.PROJECT).toString());
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
@@ -184,7 +185,7 @@ public class TypeInferenceTestsWrapper extends AbstractPDTTTest {
 
 	protected void findEvaluatedType(String fileName, String code,
 			String criteriaFunction, final String pruner) throws Exception {
-		IFile file = project.getFile("dummy.php");
+		IFile file = project.getFile("pdttest/test.php");
 		if (file.exists()) {
 			file.setContents(new ByteArrayInputStream(code.getBytes()), true,
 					false, null);

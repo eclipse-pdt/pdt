@@ -1,0 +1,4 @@
+--TEST--
+Test New Own Class
+--FILE--
+<? class MyClass { public function __construct($a, $b) {} function getZendClass() { return new Zend| ; } } ?> 

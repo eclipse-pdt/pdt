@@ -1,0 +1,6 @@
+--TEST--
+Test Method Return Type
+--FILE--
+<?php class A { function foo() { return 5; } } $a = new A();  $b= $a->foo(); testMethodReturnType($b); ?>
+--EXPECT--
+number

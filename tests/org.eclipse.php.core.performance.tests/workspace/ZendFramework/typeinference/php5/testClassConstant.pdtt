@@ -1,0 +1,6 @@
+--TEST--
+Test Class Constant
+--FILE--
+<?php class A { const FOO = 5; } testClassConstant(A::FOO); ?>
+--EXPECT--
+number

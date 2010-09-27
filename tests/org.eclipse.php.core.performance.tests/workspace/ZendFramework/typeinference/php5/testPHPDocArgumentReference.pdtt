@@ -1,0 +1,8 @@
+--TEST--
+Test PHP Doc Argument Reference
+--FILE--
+<?php /**
+* @param $a A
+*/ function foo($a) { testPHPDocArgumentReference($a); } ?>
+--EXPECT--
+A

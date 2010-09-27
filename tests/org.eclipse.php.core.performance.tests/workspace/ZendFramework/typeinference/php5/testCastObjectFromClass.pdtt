@@ -1,0 +1,6 @@
+--TEST--
+Test Cast Object From Class
+--FILE--
+<?php class A{} testCastObjectFromClass((object)new A()); ?>
+--EXPECT--
+A

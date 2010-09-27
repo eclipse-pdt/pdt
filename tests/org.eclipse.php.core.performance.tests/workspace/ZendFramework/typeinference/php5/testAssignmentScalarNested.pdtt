@@ -1,0 +1,6 @@
+--TEST--
+Test Assignment Scalar Nested
+--FILE--
+<?php testAssignmentScalarNested($a = ($b = 5)); ?>
+--EXPECT--
+number

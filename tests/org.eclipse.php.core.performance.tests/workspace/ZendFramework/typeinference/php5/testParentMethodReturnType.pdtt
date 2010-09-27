@@ -1,0 +1,6 @@
+--TEST--
+Test Parent Method Return Type
+--FILE--
+<?php class A { function foo() { return 5; } } class B extends A {} $b = new B(); testParentMethodReturnType($b->foo()); ?>
+--EXPECT--
+number

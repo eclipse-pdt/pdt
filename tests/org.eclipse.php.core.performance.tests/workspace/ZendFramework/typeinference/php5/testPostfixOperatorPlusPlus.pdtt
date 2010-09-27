@@ -1,0 +1,6 @@
+--TEST--
+Test Postfix Operator Plus Plus
+--FILE--
+<?php $a="abc"; testPostfixOperatorPlusPlus($a++); ?>
+--EXPECT--
+string

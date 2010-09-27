@@ -1,0 +1,6 @@
+--TEST--
+Test Class Var Method Decl
+--FILE--
+<?php class A { function foo() { $this->f = 5; } } $a = new A(); testClassVarMethodDecl($a->f); ?>
+--EXPECT--
+number

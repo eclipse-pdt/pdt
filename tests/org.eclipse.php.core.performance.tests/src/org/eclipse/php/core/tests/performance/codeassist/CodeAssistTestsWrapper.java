@@ -36,7 +36,7 @@ import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
-import org.eclipse.php.core.tests.performance.ProjectSuite.Metadata;
+import org.eclipse.php.core.tests.performance.ProjectSuite;
 import org.eclipse.php.internal.core.PHPVersion;
 
 public class CodeAssistTestsWrapper extends AbstractPDTTTest {
@@ -63,16 +63,17 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 		super("");
 	}
 
-	public Test suite(final Metadata metadata) {
+	public Test suite(final Map map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				metadata.project);
+				map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto Code Assist Tests");
 
-		final PHPVersion phpVersion = metadata.phpVersion;
+		final PHPVersion phpVersion = (PHPVersion) map
+				.get(ProjectSuite.PHP_VERSION);
 		for (String testsDirectory : TESTS.get(phpVersion)) {
-			testsDirectory = testsDirectory.replaceAll("project",
-					metadata.project);
+			testsDirectory = testsDirectory.replaceAll("project", map.get(
+					ProjectSuite.PROJECT).toString());
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
@@ -139,7 +140,7 @@ public class CodeAssistTestsWrapper extends AbstractPDTTTest {
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
 
-		testFile = project.getFile("test.php");
+		testFile = project.getFile("pdttest/test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		project.refreshLocal(IResource.DEPTH_ONE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);

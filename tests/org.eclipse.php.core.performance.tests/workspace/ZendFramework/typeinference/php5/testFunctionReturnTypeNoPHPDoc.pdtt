@@ -1,0 +1,10 @@
+--TEST--
+Test Function Return Type No PHP Doc
+--CONFIG--
+prune: phpdocGoals
+--FILE--
+<?php /**
+* @return A
+*/ function foo() { return new B(); } testFunctionReturnTypeNoPHPDoc(foo()); ?>
+--EXPECT--
+B

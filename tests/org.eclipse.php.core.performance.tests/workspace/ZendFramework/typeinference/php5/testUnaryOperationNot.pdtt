@@ -1,0 +1,6 @@
+--TEST--
+Test Unary Operation Not
+--FILE--
+<?php $a = "s"; testUnaryOperationNot(!$a); ?>
+--EXPECT--
+boolean

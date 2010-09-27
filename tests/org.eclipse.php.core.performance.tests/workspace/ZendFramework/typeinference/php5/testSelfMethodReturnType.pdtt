@@ -1,0 +1,6 @@
+--TEST--
+Test Self Method Return Type
+--FILE--
+<?php class A { function bar() { return 5; } function foo() { testSelfMethodReturnType(self::bar()); } }  ?>
+--EXPECT--
+number
