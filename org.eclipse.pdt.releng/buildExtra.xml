@@ -1,5 +1,21 @@
 <project name="Build specific targets and properties">
 
+		<target name="preFetch">
+			<echo>check out org.eclipse.test to ${buildDirectory}/plugins/, because Athen expects it as source</echo>
+    		<cvs cvsroot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse"
+    			package="org.eclipse.test"
+    			dest="${buildDirectory}/plugins/"
+    			tag="v20081002"/>
+			<cvs cvsroot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse"
+    			package="org.eclipse.test"
+    			dest="${buildDirectory}/dropins/"
+    			tag="v20081002"/>
+			<cvs cvsroot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse"
+    			package="org.eclipse.ant.optional.junit"
+    			dest="${buildDirectory}/plugins/"
+    			tag="v20080717"/>
+		</target>
+			
         <target name="postFetch">
                 <echo>Generate PHP parser</echo>
                 <antcall target="generatePhpParserFiles">
