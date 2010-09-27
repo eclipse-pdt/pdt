@@ -3767,19 +3767,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 					.getUndoManager().getCommandStack();
 			if (commandStack instanceof BasicCommandStack) {
 				BasicCommandStack bcs = (BasicCommandStack) commandStack;
-				if (bcs.isSaveNeeded()) {
-					if (!result) {
-						bcs.saveIsDone();
-						return result;
-					} else {
-						return true;
-					}
-				} else {
-					return false;
-				}
+				return bcs.isSaveNeeded();
 			}
 		}
-
 		return result;
 	}
 
