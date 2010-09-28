@@ -37,9 +37,10 @@ public class PresentationCollector extends AbstractCollection {
 			Logger.logException(e);
 			throw e;
 		}
-		if (range.length <= 0) {
+		// only log exception when range's length is less than 0
+		if (range.length < 0) {
 			IllegalArgumentException e = new IllegalArgumentException(
-				"Zero or negative length StyleRange " + range.start + ":" + range.length); //$NON-NLS-1$ //$NON-NLS-2$
+					"Negative length StyleRange " + range.start + ":" + range.length); //$NON-NLS-1$ //$NON-NLS-2$
 			Logger.logException(e);
 			return false;
 		}
