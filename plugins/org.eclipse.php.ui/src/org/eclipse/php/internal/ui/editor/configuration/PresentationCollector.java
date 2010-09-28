@@ -37,6 +37,13 @@ public class PresentationCollector extends AbstractCollection {
 			Logger.logException(e);
 			throw e;
 		}
+		// only log exception when range's length is less than 0
+		if (range.length < 0) {
+			IllegalArgumentException e = new IllegalArgumentException(
+					"Negative length StyleRange " + range.start + ":" + range.length); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.logException(e);
+			return false;
+		}
 		lastOffset = range.start + range.length;
 		fPresentation.addStyleRange(range);
 		return true;
