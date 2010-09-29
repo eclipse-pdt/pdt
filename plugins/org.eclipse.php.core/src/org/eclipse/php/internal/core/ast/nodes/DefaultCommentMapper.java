@@ -41,7 +41,8 @@ public class DefaultCommentMapper {
 	static final int STORAGE_INCREMENT = 16;
 
 	/**
-	 * @param table the given table of comments
+	 * @param table
+	 *            the given table of comments
 	 */
 	DefaultCommentMapper(Comment[] table) {
 		this.comments = table;
@@ -54,8 +55,10 @@ public class DefaultCommentMapper {
 	/**
 	 * Get comment of the list which includes a given position
 	 * 
-	 * @param position The position belonging to the looked up comment
-	 * @return comment which includes the given position or null if none was found
+	 * @param position
+	 *            The position belonging to the looked up comment
+	 * @return comment which includes the given position or null if none was
+	 *         found
 	 */
 	Comment getComment(int position) {
 
@@ -74,11 +77,10 @@ public class DefaultCommentMapper {
 	}
 
 	/*
-	 * Get the index of comment which contains given position.
-	 * If there's no matching comment, then return depends on exact parameter:
-	 *		= 0: return -1
-	 *		< 0: return index of the comment before the given position
-	 *		> 0: return index of the comment after the given position
+	 * Get the index of comment which contains given position. If there's no
+	 * matching comment, then return depends on exact parameter: = 0: return -1
+	 * < 0: return index of the comment before the given position > 0: return
+	 * index of the comment after the given position
 	 */
 	private int getCommentIndex(int start, int position, int exact) {
 		if (position == 0) {
@@ -116,13 +118,14 @@ public class DefaultCommentMapper {
 
 	/**
 	 * Returns the extended start position of the given node. Unlike
-	 * {@link ASTNode#getStart()} and {@link ASTNode#getLength()},
-	 * the extended source range may include comments and whitespace
-	 * immediately before or after the normal source range for the node.
+	 * {@link ASTNode#getStart()} and {@link ASTNode#getLength()}, the extended
+	 * source range may include comments and whitespace immediately before or
+	 * after the normal source range for the node.
 	 * 
-	 * @param node the node
-	 * @return the 0-based character index, or <code>-1</code>
-	 *    if no source position information is recorded for this node
+	 * @param node
+	 *            the node
+	 * @return the 0-based character index, or <code>-1</code> if no source
+	 *         position information is recorded for this node
 	 * @see #getExtendedLength(ASTNode)
 	 * @since 3.0
 	 */
@@ -141,17 +144,21 @@ public class DefaultCommentMapper {
 	}
 
 	/*
-	 * Search the line number corresponding to a specific position
-	 * between the given line range (inclusive)
+	 * Search the line number corresponding to a specific position between the
+	 * given line range (inclusive)
+	 * 
 	 * @param position int
+	 * 
 	 * @param lineRange size-2 int[]
+	 * 
 	 * @return int
 	 */
 	public final int getLineNumber(int position, int[] lineRange) {
 		try {
 			return this.document.getLineOfOffset(position);
 		} catch (BadLocationException e) {
-			throw new IllegalArgumentException("getLineNumber() in DefaultCommentMapper with " + position);
+			throw new IllegalArgumentException(
+					"getLineNumber() in DefaultCommentMapper with " + position);
 		}
 	}
 
@@ -176,13 +183,14 @@ public class DefaultCommentMapper {
 
 	/**
 	 * Returns the extended source length of the given node. Unlike
-	 * {@link ASTNode#getStart()} and {@link ASTNode#getLength()},
-	 * the extended source range may include comments and whitespace
-	 * immediately before or after the normal source range for the node.
+	 * {@link ASTNode#getStart()} and {@link ASTNode#getLength()}, the extended
+	 * source range may include comments and whitespace immediately before or
+	 * after the normal source range for the node.
 	 * 
-	 * @param node the node
-	 * @return a (possibly 0) length, or <code>0</code>
-	 *    if no source position information is recorded for this node
+	 * @param node
+	 *            the node
+	 * @return a (possibly 0) length, or <code>0</code> if no source position
+	 *         information is recorded for this node
 	 * @see #getExtendedStartPosition(ASTNode)
 	 * @see #getExtendedEnd(ASTNode)
 	 * @since 3.0
@@ -195,7 +203,8 @@ public class DefaultCommentMapper {
 	 * Return index of first leading comment of a given node.
 	 * 
 	 * @param node
-	 * @return index of first leading comment or -1 if node has no leading comment
+	 * @return index of first leading comment or -1 if node has no leading
+	 *         comment
 	 */
 	int firstLeadingCommentIndex(ASTNode node) {
 		if (this.leadingPtr >= 0) {
@@ -212,7 +221,8 @@ public class DefaultCommentMapper {
 	 * Return index of last trailing comment of a given node.
 	 * 
 	 * @param node
-	 * @return index of last trailing comment or -1 if node has no trailing comment
+	 * @return index of last trailing comment or -1 if node has no trailing
+	 *         comment
 	 */
 	int lastTrailingCommentIndex(ASTNode node) {
 		if (this.trailingPtr >= 0) {
@@ -226,10 +236,9 @@ public class DefaultCommentMapper {
 	}
 
 	/*
-	 * Initialize leading and trailing comments tables in whole nodes hierarchy of a compilation
-	 * unit.
-	 * Scanner is necessary to scan between nodes and comments and verify if there's
-	 * nothing else than white spaces.
+	 * Initialize leading and trailing comments tables in whole nodes hierarchy
+	 * of a compilation unit. Scanner is necessary to scan between nodes and
+	 * comments and verify if there's nothing else than white spaces.
 	 */
 	void initialize(Program unit, AstLexer sc, IDocument document) {
 
@@ -247,7 +256,8 @@ public class DefaultCommentMapper {
 		if (this.comments == null) {
 			return;
 		}
-		this.comments = (Comment[]) commentsCollection.toArray(new Comment[commentsCollection.size()]);
+		this.comments = (Comment[]) commentsCollection
+				.toArray(new Comment[commentsCollection.size()]);
 		int size = this.comments.length;
 		if (size == 0) {
 			return;
@@ -264,8 +274,12 @@ public class DefaultCommentMapper {
 		// Reduce leading arrays if necessary
 		int leadingCount = this.leadingPtr + 1;
 		if (leadingCount > 0 && leadingCount < this.leadingIndexes.length) {
-			System.arraycopy(this.leadingNodes, 0, this.leadingNodes = new ASTNode[leadingCount], 0, leadingCount);
-			System.arraycopy(this.leadingIndexes, 0, this.leadingIndexes = new long[leadingCount], 0, leadingCount);
+			System.arraycopy(this.leadingNodes, 0,
+					this.leadingNodes = new ASTNode[leadingCount], 0,
+					leadingCount);
+			System.arraycopy(this.leadingIndexes, 0,
+					this.leadingIndexes = new long[leadingCount], 0,
+					leadingCount);
 		}
 
 		// Reduce trailing arrays if necessary
@@ -282,9 +296,14 @@ public class DefaultCommentMapper {
 
 			// reduce array size
 			int trailingCount = this.trailingPtr + 1;
-			if (trailingCount > 0 && trailingCount < this.trailingIndexes.length) {
-				System.arraycopy(this.trailingNodes, 0, this.trailingNodes = new ASTNode[trailingCount], 0, trailingCount);
-				System.arraycopy(this.trailingIndexes, 0, this.trailingIndexes = new long[trailingCount], 0, trailingCount);
+			if (trailingCount > 0
+					&& trailingCount < this.trailingIndexes.length) {
+				System.arraycopy(this.trailingNodes, 0,
+						this.trailingNodes = new ASTNode[trailingCount], 0,
+						trailingCount);
+				System.arraycopy(this.trailingIndexes, 0,
+						this.trailingIndexes = new long[trailingCount], 0,
+						trailingCount);
 			}
 		}
 
@@ -293,27 +312,33 @@ public class DefaultCommentMapper {
 	}
 
 	/**
-	 * Search and store node leading comments. Comments are searched in position range
-	 * from previous extended position to node start position. If one or several comment are found,
-	 * returns first comment start position, otherwise returns node start position.
+	 * Search and store node leading comments. Comments are searched in position
+	 * range from previous extended position to node start position. If one or
+	 * several comment are found, returns first comment start position,
+	 * otherwise returns node start position.
 	 * <p>
-	 * Starts to search for first comment before node start position and return if none was found...
-	 *</p><p>
-	 * When first comment is found before node, goes up in comment list until one of
-	 * following conditions becomes true:
+	 * Starts to search for first comment before node start position and return
+	 * if none was found...
+	 * </p>
+	 * <p>
+	 * When first comment is found before node, goes up in comment list until
+	 * one of following conditions becomes true:
 	 * <ol>
-	 * 	<li>comment end is before previous end</li>
-	 * 	<li>comment start and previous end is on the same line but not on same line of node start</li>
-	 * 	<li>there's other than white characters between current node and comment</li>
-	 * 	<li>TODO : there's more than 1 line between current node and comment</li>
+	 * <li>comment end is before previous end</li>
+	 * <li>comment start and previous end is on the same line but not on same
+	 * line of node start</li>
+	 * <li>there's other than white characters between current node and comment</li>
+	 * <li>TODO : there's more than 1 line between current node and comment</li>
 	 * </ol>
-	 * If some comment have been found, then no token should be on
-	 * on the same line before, so remove all comments which do not verify this assumption.
-	 * </p><p>
-	 * If finally there's leading still comments, then stores indexes of the first and last one
-	 * in leading comments table.
+	 * If some comment have been found, then no token should be on on the same
+	 * line before, so remove all comments which do not verify this assumption.
+	 * </p>
+	 * <p>
+	 * If finally there's leading still comments, then stores indexes of the
+	 * first and last one in leading comments table.
 	 */
-	int storeLeadingComments(ASTNode node, int previousEnd, int[] parentLineRange) {
+	int storeLeadingComments(ASTNode node, int previousEnd,
+			int[] parentLineRange) {
 		// Init extended position
 		int nodeStart = node.getStart();
 		int extended = nodeStart;
@@ -333,22 +358,26 @@ public class DefaultCommentMapper {
 		int endIdx = idx;
 		int previousStart = nodeStart;
 		while (idx >= 0 && previousStart >= previousEnd) {
-			// Verify for each comment that there's only white spaces between end and start of {following comment|node}
+			// Verify for each comment that there's only white spaces between
+			// end and start of {following comment|node}
 			Comment comment = this.comments[idx];
 			int commentStart = comment.getStart();
 			int end = commentStart + comment.getLength() - 1;
 			int commentLine = getLineNumber(commentStart, parentLineRange);
-			if (end <= previousEnd || (commentLine == previousEndLine && commentLine != nodeStartLine)) {
+			if (end <= previousEnd
+					|| (commentLine == previousEndLine && commentLine != nodeStartLine)) {
 				// stop search on condition 1) and 2)
 				break;
-			} else if ((end + 1) < previousStart) { // may be equals => then no scan is necessary
+			} else if ((end + 1) < previousStart) { // may be equals => then no
+													// scan is necessary
 				try {
 					resetTo(end + 1, previousStart);
 					this.scanner.next_token();
 					String token = this.scanner.yytext();
 					if (token != null && token.trim().length() > 0) {
 						// stop search on condition 3)
-						// if first comment fails, then there's no extended position in fact
+						// if first comment fails, then there's no extended
+						// position in fact
 						if (idx == endIdx) {
 							return nodeStart;
 						}
@@ -371,12 +400,18 @@ public class DefaultCommentMapper {
 					this.leadingNodes = new ASTNode[STORAGE_INCREMENT];
 					this.leadingIndexes = new long[STORAGE_INCREMENT];
 				} else if (this.leadingPtr == this.leadingNodes.length) {
-					int newLength = (this.leadingPtr * 3 / 2) + STORAGE_INCREMENT;
-					System.arraycopy(this.leadingNodes, 0, this.leadingNodes = new ASTNode[newLength], 0, this.leadingPtr);
-					System.arraycopy(this.leadingIndexes, 0, this.leadingIndexes = new long[newLength], 0, this.leadingPtr);
+					int newLength = (this.leadingPtr * 3 / 2)
+							+ STORAGE_INCREMENT;
+					System.arraycopy(this.leadingNodes, 0,
+							this.leadingNodes = new ASTNode[newLength], 0,
+							this.leadingPtr);
+					System.arraycopy(this.leadingIndexes, 0,
+							this.leadingIndexes = new long[newLength], 0,
+							this.leadingPtr);
 				}
 				this.leadingNodes[this.leadingPtr] = node;
-				this.leadingIndexes[this.leadingPtr] = (((long) startIdx) << 32) + endIdx;
+				this.leadingIndexes[this.leadingPtr] = (((long) startIdx) << 32)
+						+ endIdx;
 				extended = this.comments[endIdx].getStart();
 			}
 		}
@@ -385,34 +420,42 @@ public class DefaultCommentMapper {
 
 	private void resetTo(int begin, int end) throws IOException {
 		if (scanner == null) {
-			throw new IllegalArgumentException("null at resetTo(int begin, int end)");
+			throw new IllegalArgumentException(
+					"null at resetTo(int begin, int end)");
 		}
-		this.scanner.yyreset(new IntervalDocumentReader(this.document, begin, end));
+		this.scanner.yyreset(new IntervalDocumentReader(this.document, begin,
+				end));
 		this.scanner.setInScriptingState();
 	}
 
 	/**
-	 * Search and store node trailing comments. Comments are searched in position range
-	 * from node end position to specified next start. If one or several comment are found,
-	 * returns last comment end position, otherwise returns node end position.
+	 * Search and store node trailing comments. Comments are searched in
+	 * position range from node end position to specified next start. If one or
+	 * several comment are found, returns last comment end position, otherwise
+	 * returns node end position.
 	 * <p>
-	 * Starts to search for first comment after node end position and return if none was found...
-	 *</p><p>
-	 * When first comment is found after node, goes down in comment list until one of
-	 * following conditions becomes true:
+	 * Starts to search for first comment after node end position and return if
+	 * none was found...
+	 * </p>
+	 * <p>
+	 * When first comment is found after node, goes down in comment list until
+	 * one of following conditions becomes true:
 	 * <ol>
-	 * 	<li>comment start is after next start</li>
-	 * 	<li>there's other than white characters between current node and comment</li>
-	 * 	<li>TODO there's more than 1 line between current node and comment</li>
-	 *</ol>
-	 * If at least potential comments have been found, then all of them has to be separated
-	 * from following node. So, remove all comments which do not verify this assumption.
-	 * Note that this verification is not applicable on last node.
-	 * </p><p>
-	 * If finally there's still trailing comments, then stores indexes of the first and last one
-	 * in trailing comments table.
+	 * <li>comment start is after next start</li>
+	 * <li>there's other than white characters between current node and comment</li>
+	 * <li>TODO there's more than 1 line between current node and comment</li>
+	 * </ol>
+	 * If at least potential comments have been found, then all of them has to
+	 * be separated from following node. So, remove all comments which do not
+	 * verify this assumption. Note that this verification is not applicable on
+	 * last node.
+	 * </p>
+	 * <p>
+	 * If finally there's still trailing comments, then stores indexes of the
+	 * first and last one in trailing comments table.
 	 */
-	int storeTrailingComments(ASTNode node, int nextStart, boolean lastChild, int[] parentLineRange) {
+	int storeTrailingComments(ASTNode node, int nextStart, boolean lastChild,
+			int[] parentLineRange) {
 
 		// Init extended position
 		int nodeEnd = node.getStart() + node.getLength() - 1;
@@ -424,8 +467,12 @@ public class DefaultCommentMapper {
 				this.lastTrailingPtr = -1;
 			} else if (this.trailingPtr == this.trailingNodes.length) {
 				int newLength = (this.trailingPtr * 3 / 2) + STORAGE_INCREMENT;
-				System.arraycopy(this.trailingNodes, 0, this.trailingNodes = new ASTNode[newLength], 0, this.trailingPtr);
-				System.arraycopy(this.trailingIndexes, 0, this.trailingIndexes = new long[newLength], 0, this.trailingPtr);
+				System.arraycopy(this.trailingNodes, 0,
+						this.trailingNodes = new ASTNode[newLength], 0,
+						this.trailingPtr);
+				System.arraycopy(this.trailingIndexes, 0,
+						this.trailingIndexes = new long[newLength], 0,
+						this.trailingPtr);
 			}
 			this.trailingNodes[this.trailingPtr] = node;
 			this.trailingIndexes[this.trailingPtr] = -1;
@@ -453,7 +500,8 @@ public class DefaultCommentMapper {
 			// get comment and leave if next starting position has been reached
 			Comment comment = this.comments[idx];
 			commentStart = comment.getStart();
-			// verify that there's nothing else than white spaces between node/comments
+			// verify that there's nothing else than white spaces between
+			// node/comments
 			if (commentStart >= nextStart) {
 				// stop search on condition 1)
 				break;
@@ -464,11 +512,13 @@ public class DefaultCommentMapper {
 					String token = this.scanner.yytext();
 					if (token != null && token.trim().length() > 0) {
 						// stop search on condition 2)
-						// if first index fails, then there's no extended position in fact...
+						// if first index fails, then there's no extended
+						// position in fact...
 						if (idx == startIdx) {
 							return nodeEnd;
 						}
-						// otherwise we get the last index of trailing comment => break
+						// otherwise we get the last index of trailing comment
+						// => break
 						break;
 					}
 				} catch (Exception e) {
@@ -504,17 +554,23 @@ public class DefaultCommentMapper {
 				this.lastTrailingPtr = -1;
 			} else if (this.trailingPtr == this.trailingNodes.length) {
 				int newLength = (this.trailingPtr * 3 / 2) + STORAGE_INCREMENT;
-				System.arraycopy(this.trailingNodes, 0, this.trailingNodes = new ASTNode[newLength], 0, this.trailingPtr);
-				System.arraycopy(this.trailingIndexes, 0, this.trailingIndexes = new long[newLength], 0, this.trailingPtr);
+				System.arraycopy(this.trailingNodes, 0,
+						this.trailingNodes = new ASTNode[newLength], 0,
+						this.trailingPtr);
+				System.arraycopy(this.trailingIndexes, 0,
+						this.trailingIndexes = new long[newLength], 0,
+						this.trailingPtr);
 			}
 			this.trailingNodes[this.trailingPtr] = node;
 			long nodeRange = (((long) startIdx) << 32) + endIdx;
 			this.trailingIndexes[this.trailingPtr] = nodeRange;
 			// Compute new extended end
-			extended = this.comments[endIdx].getStart() + this.comments[endIdx].getLength() - 1;
+			extended = this.comments[endIdx].getStart()
+					+ this.comments[endIdx].getLength() - 1;
 			// Look for children unresolved extended end
 			ASTNode previousNode = node;
-			int ptr = this.trailingPtr - 1; // children extended end were stored before
+			int ptr = this.trailingPtr - 1; // children extended end were stored
+											// before
 			while (ptr >= 0) {
 				long range = this.trailingIndexes[ptr];
 				if (range != -1)
@@ -554,44 +610,64 @@ public class DefaultCommentMapper {
 			int previousEnd = parent.getStart();
 
 			// Look for sibling node
-			ASTNode sibling = parent == this.topSiblingParent ? (ASTNode) this.siblings[this.siblingPtr] : null;
+			ASTNode sibling = parent == this.topSiblingParent ? (ASTNode) this.siblings[this.siblingPtr]
+					: null;
 			if (sibling != null) {
-				// Found one previous sibling, so compute its trailing comments using current node start position
+				// Found one previous sibling, so compute its trailing comments
+				// using current node start position
 				try {
-					previousEnd = storeTrailingComments(sibling, node.getStart(), false, this.parentLineRange[this.siblingPtr]);
+					previousEnd = storeTrailingComments(sibling, node
+							.getStart(), false,
+							this.parentLineRange[this.siblingPtr]);
 				} catch (Exception ex) {
-					// Give up extended ranges at this level if unexpected exception happens...
+					// Give up extended ranges at this level if unexpected
+					// exception happens...
 				}
 			}
 
-			// Stop visit for malformed node (see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=84049)
+			// Stop visit for malformed node (see bug
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=84049)
 			if (node.getType() == ASTNode.AST_ERROR) {
 				return false;
 			}
 
 			// Compute leading comments for current node
-			int[] previousLineRange = this.siblingPtr > -1 ? this.parentLineRange[this.siblingPtr] : new int[] { 1, DefaultCommentMapper.this.document.getNumberOfLines() };
+			int[] previousLineRange = this.siblingPtr > -1 ? this.parentLineRange[this.siblingPtr]
+					: new int[] {
+							1,
+							DefaultCommentMapper.this.document
+									.getNumberOfLines() };
 			try {
 				storeLeadingComments(node, previousEnd, previousLineRange);
 			} catch (Exception ex) {
-				// Give up extended ranges at this level if unexpected exception happens...
+				// Give up extended ranges at this level if unexpected exception
+				// happens...
 			}
 
 			// Store current node as waiting sibling for its parent
 			if (this.topSiblingParent != parent) {
 				if (this.siblings.length == ++this.siblingPtr) {
-					System.arraycopy(this.siblings, 0, this.siblings = new ASTNode[this.siblingPtr * 2], 0, this.siblingPtr);
-					System.arraycopy(this.parentLineRange, 0, this.parentLineRange = new int[this.siblingPtr * 2][], 0, this.siblingPtr);
+					System.arraycopy(this.siblings, 0,
+							this.siblings = new ASTNode[this.siblingPtr * 2],
+							0, this.siblingPtr);
+					System.arraycopy(
+							this.parentLineRange,
+							0,
+							this.parentLineRange = new int[this.siblingPtr * 2][],
+							0, this.siblingPtr);
 				}
 				if (this.topSiblingParent == null) {
 					// node is a CompilationUnit
 					this.parentLineRange[this.siblingPtr] = previousLineRange;
 				} else {
 					int parentStart = parent.getStart();
-					int firstLine = getLineNumber(parentStart, previousLineRange);
-					int lastLine = getLineNumber(parentStart + parent.getLength() - 1, previousLineRange);
+					int firstLine = getLineNumber(parentStart,
+							previousLineRange);
+					int lastLine = getLineNumber(parentStart
+							+ parent.getLength() - 1, previousLineRange);
 					if (this.parentLineRange[this.siblingPtr] == null) {
-						this.parentLineRange[this.siblingPtr] = new int[] { firstLine, lastLine };
+						this.parentLineRange[this.siblingPtr] = new int[] {
+								firstLine, lastLine };
 					} else {
 						int[] lineRange = this.parentLineRange[this.siblingPtr];
 						lineRange[0] = firstLine;
@@ -606,20 +682,24 @@ public class DefaultCommentMapper {
 			return true;
 		}
 
-		public void endVisit(ASTNode node) {
+		public void endVisitNode(ASTNode node) {
 
 			// Look if a child node is waiting for trailing comments computing
-			ASTNode sibling = this.topSiblingParent == node ? (ASTNode) this.siblings[this.siblingPtr] : null;
+			ASTNode sibling = this.topSiblingParent == node ? (ASTNode) this.siblings[this.siblingPtr]
+					: null;
 			if (sibling != null) {
 				try {
-					storeTrailingComments(sibling, node.getStart() + node.getLength() - 1, true, this.parentLineRange[this.siblingPtr]);
+					storeTrailingComments(sibling, node.getStart()
+							+ node.getLength() - 1, true,
+							this.parentLineRange[this.siblingPtr]);
 				} catch (Exception ex) {
-					// Give up extended ranges at this level if unexpected exception happens...
+					// Give up extended ranges at this level if unexpected
+					// exception happens...
 				}
 			}
 			// Remove sibling if needed
-			if (this.topSiblingParent != null /*not a CompilationUnit*/
-				&& this.topSiblingParent == node) {
+			if (this.topSiblingParent != null /* not a CompilationUnit */
+					&& this.topSiblingParent == node) {
 				this.siblingPtr--;
 				this.topSiblingParent = node.getParent();
 			}
@@ -637,6 +717,7 @@ public class DefaultCommentMapper {
 
 	/**
 	 * Returns a stream that represents the document
+	 * 
 	 * @param StructuredDocument
 	 * @param start
 	 * @param length
@@ -649,7 +730,8 @@ public class DefaultCommentMapper {
 		private int startPhpRegion;
 		final private int endPhpRegion;
 
-		public IntervalDocumentReader(final IDocument parent, final int startPhpRegion, final int endPhpRegion) {
+		public IntervalDocumentReader(final IDocument parent,
+				final int startPhpRegion, final int endPhpRegion) {
 			this.parent = parent;
 			this.startPhpRegion = startPhpRegion;
 			this.endPhpRegion = endPhpRegion;
@@ -658,7 +740,8 @@ public class DefaultCommentMapper {
 		@Override
 		public int read() throws IOException {
 			try {
-				return startPhpRegion < endPhpRegion ? parent.getChar(startPhpRegion++) : -1;
+				return startPhpRegion < endPhpRegion ? parent
+						.getChar(startPhpRegion++) : -1;
 			} catch (BadLocationException e) {
 				throw new IOException(BAD_LOCATION_ERROR + startPhpRegion);
 			}
@@ -668,7 +751,8 @@ public class DefaultCommentMapper {
 		public int read(char[] b, int off, int len) throws IOException {
 			if (b == null) {
 				throw new NullPointerException();
-			} else if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
+			} else if ((off < 0) || (off > b.length) || (len < 0)
+					|| ((off + len) > b.length) || ((off + len) < 0)) {
 				throw new IndexOutOfBoundsException();
 			} else if (len == 0) {
 				return 0;
