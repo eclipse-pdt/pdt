@@ -92,67 +92,6 @@ public class PHPStructuredPresentationReconciler extends
 					length = newRegion.getOffset() + newRegion.getLength()
 							- start;
 				}
-				// if (partitions[0].getType().equals(CSS_STYLE)) {
-				// int i = 0;
-				// int jumpto = -1;
-				// while (i < wholePartitions.length) {
-				// ITypedRegion r = wholePartitions[i];
-				// if (wholePartitions[i].getType().equals(CSS_STYLE)) {
-				// jumpto = getFollowingCSS(wholePartitions, i);
-				// r = new SimpleStructuredTypedRegion(r.getOffset(),
-				// wholePartitions[jumpto].getOffset()
-				// + wholePartitions[jumpto]
-				// .getLength()
-				// - r.getOffset(), CSS_STYLE);
-				// if (partitions[0].getOffset() >= r.getOffset()
-				// && partitions[0].getOffset()
-				// + partitions[0].getLength() <= r
-				// .getOffset()
-				// + r.getLength()) {
-				// start = r.getOffset();
-				// break;
-				// } else {
-				// i = jumpto + 2;
-				// }
-				// } else {
-				// i++;
-				// }
-				//
-				// }
-				// }
-				// // determine end
-				// if (partitions[partitions.length - 1].getType().equals(
-				// CSS_STYLE)) {
-				// int i = 0;
-				// int jumpto = -1;
-				// while (i < wholePartitions.length) {
-				// ITypedRegion r = wholePartitions[i];
-				// if (wholePartitions[i].getType().equals(CSS_STYLE)) {
-				// jumpto = getFollowingCSS(wholePartitions, i);
-				// r = new SimpleStructuredTypedRegion(r.getOffset(),
-				// wholePartitions[jumpto].getOffset()
-				// + wholePartitions[jumpto]
-				// .getLength()
-				// - r.getOffset(), CSS_STYLE);
-				// if (partitions[partitions.length - 1].getOffset() >= r
-				// .getOffset()
-				// && partitions[partitions.length - 1]
-				// .getOffset()
-				// + partitions[partitions.length - 1]
-				// .getLength() <= r
-				// .getOffset()
-				// + r.getLength()) {
-				// length = r.getOffset() + r.getLength() - start;
-				// break;
-				// } else {
-				// i = jumpto + 2;
-				// }
-				// } else {
-				// i++;
-				// }
-				//
-				// }
-				// }
 				partitions = TextUtilities.computePartitioning(document,
 						getDocumentPartitioning(), start, length, false);
 
@@ -163,9 +102,6 @@ public class PHPStructuredPresentationReconciler extends
 			int jumpto = -1;
 			for (int i = 0; i < partitions.length; i++) {
 				ITypedRegion r = partitions[i];
-				// IPresentationRepairer repairer = getRepairer(r.getType());
-				// if (repairer != null)
-				// repairer.createPresentation(presentation, r);
 				if (r.getType().equals(CSS_STYLE)) {
 					if (i > jumpto) {
 						jumpto = getFollowingCSS(partitions, i);
@@ -182,6 +118,15 @@ public class PHPStructuredPresentationReconciler extends
 									.hasNext();) {
 								StyleRange styleRange = (StyleRange) iterator
 										.next();
+								// the styleRange's scope may be out of the
+								// region see
+								// https://bugs.eclipse.org/bugs/attachment.cgi?id=179715
+								if (styleRange.start < r.getOffset()
+										|| (styleRange.start
+												+ styleRange.length > r
+												.getOffset() + r.getLength())) {
+									continue;
+								}
 
 								for (int j = i + 1; j < jumpto; j = j + 2) {
 									ITypedRegion typedRegion = partitions[j];
