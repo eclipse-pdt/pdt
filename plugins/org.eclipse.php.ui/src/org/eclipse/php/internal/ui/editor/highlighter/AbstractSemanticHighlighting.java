@@ -85,8 +85,8 @@ public abstract class AbstractSemanticHighlighting implements
 	public Position[] consumes(Program program) {
 		if (program != null) {
 			list = new ArrayList<Position>();
-			AbstractSemanticApply apply = getSemanticApply();
 			sourceModule = program.getSourceModule();
+			AbstractSemanticApply apply = getSemanticApply();
 			program.accept(apply);
 			return list.toArray(new Position[list.size()]);
 		}
