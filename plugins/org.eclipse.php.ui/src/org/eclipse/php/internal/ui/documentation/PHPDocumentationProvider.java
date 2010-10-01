@@ -31,6 +31,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.DefineMethodUtils;
+import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover;
@@ -65,6 +66,15 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 	public Reader getInfo(IMember element, boolean lookIntoParents,
 			boolean lookIntoExternal) {
+		if (element instanceof FakeConstructor) {
+			IType type = (IType) element.getParent();
+			IMethod[] ctors = FakeConstructor.getConstructors(type, true);
+			if (ctors != null && ctors.length == 2) {
+				if (ctors[0] != null) {
+					element = ctors[0];
+				}
+			}
+		}
 		StringBuffer buffer = new StringBuffer();
 		String constantValue = null;
 		if (element instanceof IField) {
@@ -77,8 +87,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 				constantValue = HTMLPrinter.convertToHTMLContent(constantValue);
 		}
 
-		HTMLPrinter.addSmallHeader(buffer, getInfoText(element, constantValue,
-				true));
+		HTMLPrinter.addSmallHeader(buffer,
+				getInfoText(element, constantValue, true));
 		Reader reader = null;
 		try {
 			reader = getHTMLContent(element);
@@ -183,8 +193,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		if (styleSheetURL != null) {
 			BufferedReader reader = null;
 			try {
-				reader = new BufferedReader(new InputStreamReader(styleSheetURL
-						.openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						styleSheetURL.openStream()));
 				StringBuffer buffer = new StringBuffer(1500);
 				String line = reader.readLine();
 				while (line != null) {
