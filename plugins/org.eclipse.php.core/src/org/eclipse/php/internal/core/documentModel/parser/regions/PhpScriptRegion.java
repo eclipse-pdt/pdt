@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.documentModel.parser.regions;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ListIterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.BadLocationException;
@@ -239,14 +240,20 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			}
 
 			// 1. replace the regions
-			tokensContaier.removeTokensSubList(tokenStart, tokenEnd);
-			ITextRegion[] newTokens = newContainer.getPhpTokens();
-
-			// now, add the new ones
-			tokensContaier.addNewTokens(newTokens);
+			final ListIterator oldIterator = tokensContaier
+					.removeTokensSubList(tokenStart, tokenEnd);
+			ITextRegion[] newTokens = newContainer.getPhpTokens(); // now, add
+			// the new
+			// ones
+			for (int i = 0; i < newTokens.length; i++) {
+				oldIterator.add(newTokens[i]);
+			}
 
 			// 2. adjust next regions start location
-			tokensContaier.adjustNextRegion(size);
+			while (oldIterator.hasNext()) {
+				final ITextRegion adjust = (ITextRegion) oldIterator.next();
+				adjust.adjustStart(size);
+			}
 
 			// 3. update state changes
 			tokensContaier.updateStateChanges(newContainer, tokenStart
