@@ -232,7 +232,11 @@ public class PHPStructuredPresentationReconciler extends
 				}
 
 			});
-			presentation = new TextPresentation(damage, fRanges.size());
+			int length = fRanges.size();
+			if (length == 0) {
+				length = 1;
+			}
+			presentation = new TextPresentation(damage, length);
 			for (Iterator iterator = fRanges.iterator(); iterator.hasNext();) {
 				StyleRange styleRange = (StyleRange) iterator.next();
 				if (styleRange.start + styleRange.length <= damage.getOffset()) {
