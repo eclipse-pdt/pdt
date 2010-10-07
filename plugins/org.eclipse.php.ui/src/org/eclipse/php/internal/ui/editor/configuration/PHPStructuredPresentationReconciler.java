@@ -220,6 +220,9 @@ public class PHPStructuredPresentationReconciler extends
 
 				}
 			}
+			if (fRangeSet.isEmpty()) {
+				return null;
+			}
 			List<StyleRange> fRanges = new ArrayList<StyleRange>();
 			for (Iterator iterator = fRangeSet.iterator(); iterator.hasNext();) {
 				StyleRange styleRange = (StyleRange) iterator.next();
@@ -232,11 +235,7 @@ public class PHPStructuredPresentationReconciler extends
 				}
 
 			});
-			int length = fRanges.size();
-			if (length == 0) {
-				length = 1;
-			}
-			presentation = new TextPresentation(damage, length);
+			presentation = new TextPresentation(damage, fRanges.size());
 			for (Iterator iterator = fRanges.iterator(); iterator.hasNext();) {
 				StyleRange styleRange = (StyleRange) iterator.next();
 				if (styleRange.start + styleRange.length <= damage.getOffset()) {
