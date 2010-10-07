@@ -34,6 +34,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -841,10 +842,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	 */
 	public class VersionGroup extends Observable implements Observer,
 			IStringButtonAdapter, IDialogFieldListener, SelectionListener {
-		protected final SelectionButtonDialogField fDefaultValues;
+		public final SelectionButtonDialogField fDefaultValues;
 		protected final SelectionButtonDialogField fCustomValues;
 
-		protected PHPVersionConfigurationBlock fConfigurationBlock;
+		public PHPVersionConfigurationBlock fConfigurationBlock;
 
 		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID
 				+ ".last.external.project"; //$NON-NLS-1$
@@ -989,5 +990,28 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 						fJavaScriptSupportGroup.getSelection());
 			}
 		});
+	}
+
+	public boolean shouldSupportJavaScript() {
+
+		return fJavaScriptSupportGroup != null
+				&& fJavaScriptSupportGroup.shouldSupportJavaScript();
+	}
+
+	public boolean isDefaultVersionSelected() {
+		return fVersionGroup != null
+				&& fVersionGroup.fDefaultValues.isSelected();
+	}
+
+	public boolean getUseAspTagsValue() {
+		return fVersionGroup != null
+				&& fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
+	}
+
+	public PHPVersion getPHPVersionValue() {
+		if (fVersionGroup != null) {
+			return fVersionGroup.fConfigurationBlock.getPHPVersionValue();
+		}
+		return null;
 	}
 }
