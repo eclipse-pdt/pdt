@@ -82,15 +82,15 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/*
-	* Tries to resolve the type of the dispatcher.
-	*/
+	 * Tries to resolve the type of the dispatcher.
+	 */
 	private ITypeBinding resolveDispatcherType(Identifier identifier) {
 		ITypeBinding typeBinding = null;
 		ASTNode parent = identifier.getParent();
 		if (parent.getType() == ASTNode.VARIABLE) {
 			Variable var = (Variable) parent;
 			ASTNode varParent = var.getParent();
-			if (var.getParent().getType() == ASTNode.ARRAY_ACCESS) {
+			while (varParent.getType() == ASTNode.ARRAY_ACCESS) {
 				varParent = varParent.getParent();
 			}
 			if (varParent.getType() == ASTNode.FIELD_ACCESS
@@ -326,7 +326,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				}
 			}
 		}
-		if (node.getType() == ASTNode.VARIABLE
+		if (node instanceof Variable
 		/* && node.getParent().getType() != ASTNode.FUNCTION_NAME */) {
 			Variable id = (Variable) node;
 			checkDispatch(id.getName());
