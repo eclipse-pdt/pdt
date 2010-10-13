@@ -694,6 +694,10 @@ public class ServerLaunchConfigurationTab extends
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IResource resource = root.findMember(fileName);
 
+		if (resource == null) {
+			return fileName;
+		}
+
 		basePath = getBasePath(resource.getProject());
 		if (basePath == null && resource.getProject() != null)
 			basePath = resource.getProject().getName();
@@ -701,9 +705,6 @@ public class ServerLaunchConfigurationTab extends
 			basePath = "";
 		}
 
-		if (resource == null) {
-			return fileName;
-		}
 		int type = resource.getType();
 		if (type == IResource.FILE || type == IResource.FOLDER) {
 
