@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.php.core" version="2">
+    <resource path="META-INF/MANIFEST.MF">
+        <filter id="924844039">
+            <message_arguments>
+                <message_argument value="2.2.0.qualifier"/>
+                <message_argument value="2.2.1.v20101001-2300"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/php/internal/core/codeassist/ICompletionReporter.java" type="org.eclipse.php.internal.core.codeassist.ICompletionReporter">
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.codeassist.ICompletionReporter"/>
+                <message_argument value="getModule()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/php/internal/core/compiler/ast/nodes/PHPDocBlock.java" type="org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock">
+        <filter id="338722907">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock"/>
+                <message_argument value="PHPDocBlock(int, int, String, PHPDocTag[])"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/php/internal/core/documentModel/parser/PHPTokenizer.java" type="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer">
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_ABORT_EMBEDDED"/>
+                <message_argument value="24"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_BLOCK_TAG_INTERNAL_SCAN"/>
+                <message_argument value="23"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_BLOCK_TAG_SCAN"/>
+                <message_argument value="19"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_PHP_CONTENT"/>
+                <message_argument value="20"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_ATTLIST_DECLARATION"/>
+                <message_argument value="17"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_ATTLIST_DECLARATION_CONTENT"/>
+                <message_argument value="18"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_ATTRIBUTE_NAME"/>
+                <message_argument value="6"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_ATTRIBUTE_VALUE"/>
+                <message_argument value="8"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_ATTRIBUTE_VALUE_DQUOTED"/>
+                <message_argument value="22"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_ATTRIBUTE_VALUE_SQUOTED"/>
+                <message_argument value="21"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_DECLARATION"/>
+                <message_argument value="9"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_DECLARATION_CLOSE"/>
+                <message_argument value="10"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_DOCTYPE_DECLARATION"/>
+                <message_argument value="11"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_DOCTYPE_EXTERNAL_ID"/>
+                <message_argument value="12"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_DOCTYPE_ID_PUBLIC"/>
+                <message_argument value="13"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_DOCTYPE_ID_SYSTEM"/>
+                <message_argument value="14"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_ELEMENT_DECLARATION"/>
+                <message_argument value="15"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_ELEMENT_DECLARATION_CONTENT"/>
+                <message_argument value="16"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_EQUALS"/>
+                <message_argument value="7"/>
+            </message_arguments>
+        </filter>
+        <filter id="388194388">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.documentModel.parser.PHPTokenizer"/>
+                <message_argument value="ST_XML_TAG_NAME"/>
+                <message_argument value="5"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/php/internal/core/format/DefaultIndentationStrategy.java" type="org.eclipse.php.internal.core.format.DefaultIndentationStrategy">
+        <filter id="421662840">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.format.DefaultIndentationStrategy"/>
+                <message_argument value="lineShouldInedent(String, String)"/>
+            </message_arguments>
+        </filter>
+        <filter id="421662840">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.format.DefaultIndentationStrategy"/>
+                <message_argument value="shouldNotConsiderAsIndentationBase(String, String)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/php/internal/core/project/ProjectOptions.java" type="org.eclipse.php.internal.core.project.ProjectOptions">
+        <filter id="338792546">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.internal.core.project.ProjectOptions"/>
+                <message_argument value="useShortTags(IModelElement)"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>
