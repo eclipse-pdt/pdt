@@ -88,7 +88,9 @@ public class ProjectSuite extends AbstractModelTests {
 				IFolder testFolder = project.getFolder("pdttest");
 				testFolder.create(true, true, null);
 
-				if (((Boolean) map.get(CHANGE_INCLUDE_PATH)).booleanValue()) {
+				if (map.get(CHANGE_INCLUDE_PATH) != null
+						&& ((Boolean) map.get(CHANGE_INCLUDE_PATH))
+								.booleanValue()) {
 					String[] includePath = (String[]) map.get(INCLUDE_PATH);
 					IBuildpathEntry[] buildpathEntries = new IBuildpathEntry[includePath.length + 1];
 					buildpathEntries[buildpathEntries.length - 1] = DLTKCore
