@@ -25,6 +25,7 @@ import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
 import org.eclipse.jface.internal.text.html.HTMLPrinter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ConstantDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
@@ -68,12 +69,19 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			boolean lookIntoExternal) {
 		if (element instanceof FakeConstructor) {
 			IType type = (IType) element.getParent();
+			if (type instanceof AliasType) {
+				type = (IType) type.getParent();
+				element = FakeConstructor.createFakeConstructor(null, type,
+						false);
+			}
 			IMethod[] ctors = FakeConstructor.getConstructors(type, true);
 			if (ctors != null && ctors.length == 2) {
 				if (ctors[0] != null) {
 					element = ctors[0];
 				}
 			}
+		} else if (element instanceof AliasType) {
+			element = (IType) element.getParent();
 		}
 		StringBuffer buffer = new StringBuffer();
 		String constantValue = null;

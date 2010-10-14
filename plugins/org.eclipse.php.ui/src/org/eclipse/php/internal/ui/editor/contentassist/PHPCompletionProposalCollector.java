@@ -18,6 +18,7 @@ import org.eclipse.dltk.ui.text.completion.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -177,8 +178,8 @@ public class PHPCompletionProposalCollector extends
 		ScriptCompletionProposal scriptProposal = createParameterGuessingProposal(
 				proposal, getSourceModule().getScriptProject(),
 				getSourceModule(), name, paramTypes, start, length, label,
-				String.valueOf(proposal.getCompletion()), proposal
-						.getExtraInfo());
+				String.valueOf(proposal.getCompletion()),
+				proposal.getExtraInfo());
 		scriptProposal.setImage(getImage(getLabelProvider()
 				.createMethodImageDescriptor(proposal)));
 
@@ -227,13 +228,22 @@ public class PHPCompletionProposalCollector extends
 
 			private String computeReplacementString() {
 				fReplacementStringComputed = true;
-				String suffix = getSuffix((IType) typeProposal
-						.getModelElement());
-				return super.getReplacementString() + suffix;
+				IType type = (IType) typeProposal.getModelElement();
+				String suffix = getSuffix(type);
+				String replacementString = null;
+				if (typeProposal.getModelElement() instanceof AliasType) {
+					replacementString = ((AliasType) typeProposal
+							.getModelElement()).getAlias();
+				} else {
+					replacementString = super.getReplacementString();
+				}
+				return replacementString + suffix;
 			}
 
 			public String getSuffix(IType type) {
 				String defaultResult = EMPTY_STRING;
+				if (type instanceof AliasType) {
+				}
 				if (ProposalExtraInfo.TYPE_ONLY.equals(typeProposal
 						.getExtraInfo())
 						|| !PHPModelUtils.hasStaticOrConstMember(type)) {

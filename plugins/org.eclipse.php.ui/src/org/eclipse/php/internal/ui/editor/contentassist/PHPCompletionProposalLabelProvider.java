@@ -16,7 +16,9 @@ import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 
 public class PHPCompletionProposalLabelProvider extends
 		CompletionProposalLabelProvider {
@@ -53,6 +55,17 @@ public class PHPCompletionProposalLabelProvider extends
 	protected String createOverrideMethodProposalLabel(
 			CompletionProposal methodProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
+		IMethod method = (IMethod) methodProposal.getModelElement();
+
+		if (method instanceof FakeConstructor) {
+			IType type = (IType) method.getParent();
+			if (type instanceof AliasType) {
+				AliasType aliasType = (AliasType) type;
+				nameBuffer.append(aliasType.getAlias());
+				nameBuffer.append("()");
+				return nameBuffer.toString();
+			}
+		}
 
 		// method name
 		nameBuffer.append(methodProposal.getName());
@@ -62,7 +75,6 @@ public class PHPCompletionProposalLabelProvider extends
 		appendParameterList(nameBuffer, methodProposal);
 		nameBuffer.append(')'); //$NON-NLS-1$
 
-		IMethod method = (IMethod) methodProposal.getModelElement();
 		nameBuffer.append(" - "); //$NON-NLS-1$
 
 		IModelElement parent = method.getParent();
@@ -80,9 +92,14 @@ public class PHPCompletionProposalLabelProvider extends
 	protected String createTypeProposalLabel(CompletionProposal typeProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
 
+		IType type = (IType) typeProposal.getModelElement();
+		if (type instanceof AliasType) {
+			AliasType aliasType = (AliasType) type;
+			nameBuffer.append(aliasType.getAlias());
+			return nameBuffer.toString();
+		}
 		nameBuffer.append(typeProposal.getName());
 
-		IType type = (IType) typeProposal.getModelElement();
 		if (type.getParent() != null) {
 			nameBuffer.append(" - "); //$NON-NLS-1$
 			IModelElement parent = type.getParent();

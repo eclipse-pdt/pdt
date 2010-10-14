@@ -25,6 +25,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
@@ -53,6 +54,7 @@ public final class ParameterGuessingProposal extends
 	private boolean fReplacementStringComputed = false;
 	private Object extraInfo;
 	private boolean fReplacementLengthComputed;
+	private String alias = null;
 
 	public ParameterGuessingProposal(CompletionProposal proposal,
 			IScriptProject jproject, ISourceModule cu, String methodName,
@@ -76,15 +78,22 @@ public final class ParameterGuessingProposal extends
 	private IMethod getProperMethod(IMethod modelElement) {
 		if (modelElement instanceof FakeConstructor) {
 			FakeConstructor fc = (FakeConstructor) modelElement;
+			if (fc.getParent() instanceof AliasType) {
+				AliasType aliasType = (AliasType) fc.getParent();
+				alias = aliasType.getAlias();
+				fc = FakeConstructor.createFakeConstructor(null,
+						(IType) aliasType.getParent(), false);
+			}
 			IType type = fc.getDeclaringType();
-			IMethod[] ctors = FakeConstructor.getConstructors(type, fc
-					.isEnclosingClass());
+			IMethod[] ctors = FakeConstructor.getConstructors(type,
+					fc.isEnclosingClass());
 			// here we must make sure ctors[1] != null,
 			// it means there is an available FakeConstructor for ctors[0]
 			if (ctors != null && ctors.length == 2 && ctors[0] != null
 					&& ctors[1] != null) {
 				return ctors[0];
 			}
+			return fc;
 		}
 
 		return modelElement;
@@ -108,7 +117,8 @@ public final class ParameterGuessingProposal extends
 			int baseOffset = getReplacementOffset();
 			String replacement = getReplacementString();
 
-			if (fPositions != null && getTextViewer() != null) {
+			if (fPositions != null && fPositions.length > 0
+					&& getTextViewer() != null) {
 
 				LinkedModeModel model = new LinkedModeModel();
 
@@ -134,8 +144,8 @@ public final class ParameterGuessingProposal extends
 				model.forceInstall();
 
 				LinkedModeUI ui = new EditorLinkedModeUI(model, getTextViewer());
-				ui.setExitPosition(getTextViewer(), baseOffset
-						+ replacement.length(), 0, Integer.MAX_VALUE);
+				ui.setExitPosition(getTextViewer(),
+						baseOffset + replacement.length(), 0, Integer.MAX_VALUE);
 				ui.setExitPolicy(new ExitPolicy(')', document));
 				ui.setCyclingMode(LinkedModeUI.CYCLE_WHEN_NO_PARENT);
 				ui.setDoContextInfo(true);
@@ -231,7 +241,7 @@ public final class ParameterGuessingProposal extends
 		try {
 			// we should get the real constructor here
 			method = getProperMethod(method);
-			if (hasParameters() && hasArgumentList()) {
+			if (alias != null || hasParameters() && hasArgumentList()) {
 				return computeGuessingCompletion();
 			}
 		} catch (ModelException e) {
@@ -261,7 +271,27 @@ public final class ParameterGuessingProposal extends
 	}
 
 	protected boolean isValidPrefix(String prefix) {
-		return isPrefix(prefix, super.getReplacementString());
+		initAlias();
+		String replacementString = null;
+		if (alias != null) {
+			replacementString = getAlias();
+		} else {
+			replacementString = super.getReplacementString();
+		}
+		return isPrefix(prefix, replacementString);
+	}
+
+	public String getAlias() {
+		return alias + LPAREN + RPAREN;
+	}
+
+	private void initAlias() {
+		if (method instanceof FakeConstructor) {
+			FakeConstructor fc = (FakeConstructor) method;
+			if (fc.getParent() instanceof AliasType) {
+				alias = ((AliasType) fc.getParent()).getAlias();
+			}
+		}
 	}
 
 	private boolean hasParameters() throws ModelException {
@@ -346,8 +376,13 @@ public final class ParameterGuessingProposal extends
 	 * @since 3.4
 	 */
 	protected void appendMethodNameReplacement(StringBuffer buffer) {
-		buffer.append(fProposal.getName());
-		buffer.append(LPAREN);
+		if (alias != null) {
+			buffer.append(alias);
+			buffer.append(LPAREN);
+		} else {
+			buffer.append(fProposal.getName());
+			buffer.append(LPAREN);
+		}
 	}
 
 	private ICompletionProposal[][] guessParameters(char[][] parameterNames)
@@ -396,14 +431,14 @@ public final class ParameterGuessingProposal extends
 		if (fSelectedRegion == null)
 			return new Point(getReplacementOffset(), 0);
 
-		return new Point(fSelectedRegion.getOffset(), fSelectedRegion
-				.getLength());
+		return new Point(fSelectedRegion.getOffset(),
+				fSelectedRegion.getLength());
 	}
 
 	private void openErrorDialog(Exception e) {
 		Shell shell = getTextViewer().getTextWidget().getShell();
-		MessageDialog.openError(shell, "Error guessing parameters", e
-				.getMessage());
+		MessageDialog.openError(shell, "Error guessing parameters",
+				e.getMessage());
 	}
 
 	private void ensurePositionCategoryInstalled(final IDocument document,

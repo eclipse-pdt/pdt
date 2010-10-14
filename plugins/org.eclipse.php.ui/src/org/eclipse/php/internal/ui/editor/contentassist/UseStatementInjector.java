@@ -31,6 +31,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -182,6 +183,15 @@ public class UseStatementInjector {
 	 */
 	public int inject(IDocument document, ITextViewer textViewer, int offset) {
 		IModelElement modelElement = proposal.getModelElement();
+		if (modelElement instanceof FakeConstructor) {
+			FakeConstructor fc = (FakeConstructor) modelElement;
+			if (fc.getParent() instanceof AliasType) {
+				return offset;
+			}
+
+		} else if (modelElement instanceof AliasType) {
+			return offset;
+		}
 		if (modelElement == null)
 			return offset;
 		try {
@@ -260,8 +270,10 @@ public class UseStatementInjector {
 								AST ast = program.getAST();
 
 								NamespaceName newNamespaceName = ast
-										.newNamespaceName(createIdentifiers(
-												ast, usePartName), false, false);
+										.newNamespaceName(
+												createIdentifiers(ast,
+														usePartName), false,
+												false);
 								UseStatementPart newUseStatementPart = ast
 										.newUseStatementPart(newNamespaceName,
 												null);
@@ -287,8 +299,8 @@ public class UseStatementInjector {
 									program.statements()
 											.add(0, newUseStatement);
 								}
-								Map options = new HashMap(PHPCorePlugin
-										.getOptions());
+								Map options = new HashMap(
+										PHPCorePlugin.getOptions());
 								// TODO project may be null
 								IScopeContext[] contents = new IScopeContext[] {
 										new ProjectScope(modelElement
@@ -303,8 +315,7 @@ public class UseStatementInjector {
 										if (!options
 												.containsKey(PHPCoreConstants.FORMATTER_USE_TABS)) {
 											String useTabs = node
-													.get(
-															PHPCoreConstants.FORMATTER_USE_TABS,
+													.get(PHPCoreConstants.FORMATTER_USE_TABS,
 															null);
 											if (useTabs != null) {
 												options.put(
@@ -315,8 +326,7 @@ public class UseStatementInjector {
 										if (!options
 												.containsKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE)) {
 											String size = node
-													.get(
-															PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
+													.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
 															null);
 											if (size != null) {
 												options.put(
