@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<component id="org.eclipse.php.debug.daemon" version="2">
+    <resource path="META-INF/MANIFEST.MF">
+        <filter id="923795461">
+            <message_arguments>
+                <message_argument value="2.2.0.qualifier"/>
+                <message_argument value="2.2.0.v20101001-2300"/>
+            </message_arguments>
+        </filter>
+    </resource>
+    <resource path="src/org/eclipse/php/debug/daemon/communication/ICommunicationDaemon.java" type="org.eclipse.php.debug.daemon.communication.ICommunicationDaemon">
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.php.debug.daemon.communication.ICommunicationDaemon"/>
+                <message_argument value="isInitialized()"/>
+            </message_arguments>
+        </filter>
+        <filter id="1211105284">
+            <message_arguments>
+                <message_argument value="isInitialized()"/>
+            </message_arguments>
+        </filter>
+    </resource>
+</component>
