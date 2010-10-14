@@ -195,7 +195,7 @@ class SimpleXMLElement implements Traversable {
  * </p>
  * @param is_prefix bool[optional] <p>
  * </p>
- * @return object an object of class SimpleXMLElement with
+ * @return SimpleXMLElement an object of class SimpleXMLElement with
  * properties containing the data held within the XML document. On errors, it
  * will return false.
  */
@@ -221,7 +221,7 @@ function simplexml_load_file ($filename, $class_name = null, $options = null, $n
  * </p>
  * @param is_prefix bool[optional] <p>
  * </p>
- * @return object an object of class SimpleXMLElement with
+ * @return SimpleXMLElement an object of class SimpleXMLElement with
  * properties containing the data held within the xml document. On errors, it
  * will return false.
  */
