@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.codeassist;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
@@ -136,4 +137,10 @@ public interface ICompletionReporter {
 	 */
 	public void reportKeyword(String keyword, String suffix,
 			SourceRange replaceRange);
+
+	/**
+	 * @since 2.2
+	 * @return
+	 */
+	public IModuleSource getModule();
 }

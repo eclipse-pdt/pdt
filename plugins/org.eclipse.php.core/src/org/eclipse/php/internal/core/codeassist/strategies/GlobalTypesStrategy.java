@@ -11,14 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.compiler.env.IModuleSource;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -26,12 +26,18 @@ import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This strategy completes global types (classes, interfaces, namespaces)
@@ -43,6 +49,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	protected final int trueFlag;
 	protected final int falseFlag;
 	protected static final IType[] EMPTY = {};
+	private boolean aliasAdded = false;
 
 	public GlobalTypesStrategy(ICompletionContext context, int trueFlag,
 			int falseFlag) {
@@ -86,6 +93,156 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
+		addAlias(reporter, suffix);
+
+	}
+
+	protected void addAlias(ICompletionReporter reporter, String suffix)
+			throws BadLocationException {
+		if (aliasAdded) {
+			return;
+		}
+		aliasAdded = true;
+		ICompletionContext context = getContext();
+		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
+		if (!abstractContext.getCompletionRequestor()
+				.isContextInformationMode()) {
+			// get types for alias
+			final String prefix = abstractContext.getPrefixWithoutProcessing();
+
+			if (prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
+				IModuleSource module = reporter.getModule();
+				org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
+						.getModelElement();
+				ModuleDeclaration moduleDeclaration = SourceParserUtil
+						.getModuleDeclaration(sourceModule);
+				final int offset = abstractContext.getOffset();
+				IType namespace = PHPModelUtils.getCurrentNamespace(
+						sourceModule, offset);
+
+				final Map<String, UsePart> result = getAliasToNSMap(prefix,
+						moduleDeclaration, offset, namespace);
+				reportAlias(reporter, suffix, abstractContext, module, result);
+
+			}
+		}
+	}
+
+	protected void reportAliasForNS(ICompletionReporter reporter,
+			String suffix, AbstractCompletionContext abstractContext,
+			IModuleSource module, final Map<String, UsePart> result)
+			throws BadLocationException {
+		SourceRange replacementRange = getReplacementRange(abstractContext);
+		IDLTKSearchScope scope = createSearchScope();
+		for (Iterator iterator = result.keySet().iterator(); iterator.hasNext();) {
+			String name = (String) iterator.next();
+			String fullName = result.get(name).getNamespace()
+					.getFullyQualifiedName();
+			IType[] elements = PhpModelAccess.getDefault().findTypes(null,
+					fullName + NamespaceReference.NAMESPACE_SEPARATOR,
+					MatchRule.PREFIX, 0, 0, scope, null);
+			for (int i = 0; i < elements.length; i++) {
+				String elementName = elements[i].getElementName();
+				reportAlias(reporter, scope, module, replacementRange,
+						elements[i], elementName,
+						elementName.replace(fullName, name), suffix);
+			}
+		}
+	}
+
+	protected void reportAlias(ICompletionReporter reporter, String suffix,
+			AbstractCompletionContext abstractContext, IModuleSource module,
+			final Map<String, UsePart> result) throws BadLocationException {
+		SourceRange replacementRange = getReplacementRange(abstractContext);
+		IDLTKSearchScope scope = createSearchScope();
+		for (Iterator iterator = result.keySet().iterator(); iterator.hasNext();) {
+			String name = (String) iterator.next();
+			String fullName = result.get(name).getNamespace()
+					.getFullyQualifiedName();
+			IType[] elements = PhpModelAccess.getDefault().findTypes(fullName,
+					MatchRule.EXACT, 0, 0, scope, null);
+			try {
+				for (int i = 0; i < elements.length; i++) {
+					if (!PHPFlags.isNamespace(elements[i].getFlags())) {
+						reportAlias(reporter, scope, module, replacementRange,
+								elements[i], fullName, name, suffix);
+					} else {
+						IType[] typesOfNS = elements[i].getTypes();
+						for (int j = 0; j < typesOfNS.length; j++) {
+
+						}
+					}
+				}
+
+			} catch (ModelException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private Map<String, UsePart> getAliasToNSMap(final String prefix,
+			ModuleDeclaration moduleDeclaration, final int offset,
+			IType namespace) {
+		final Map<String, UsePart> result = new HashMap<String, UsePart>();
+		try {
+			int start = 0;
+			if (namespace != null) {
+				start = namespace.getSourceRange().getOffset();
+			}
+			final int searchStart = start;
+
+			moduleDeclaration.traverse(new ASTVisitor() {
+
+				public boolean visit(Statement s) throws Exception {
+					if (s instanceof UseStatement) {
+						UseStatement useStatement = (UseStatement) s;
+						for (UsePart usePart : useStatement.getParts()) {
+							if (usePart.getAlias() != null
+									&& usePart.getAlias().getName() != null) {
+								// TODO case non-sensitive
+								String name = usePart.getAlias().getName();
+								if (name.startsWith(prefix)) {
+									result.put(name, usePart);
+								}
+							} else {
+								String name = usePart.getNamespace()
+										.getFullyQualifiedName();
+								int index = name
+										.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+								if (index >= 0) {
+									name = name.substring(index + 1);
+								}
+								if (name.startsWith(prefix)) {
+									result.put(name, usePart);
+
+								}
+							}
+						}
+					}
+					return visitGeneral(s);
+				}
+
+				public boolean visitGeneral(ASTNode node) throws Exception {
+					if (node.sourceStart() > offset
+							|| node.sourceEnd() < searchStart) {
+						return false;
+					}
+					return super.visitGeneral(node);
+				}
+			});
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return result;
+	}
+
+	protected void reportAlias(ICompletionReporter reporter,
+			IDLTKSearchScope scope, IModuleSource module,
+			SourceRange replacementRange, IType type, String fullName,
+			String alias, String suffix) {
+		reporter.reportType(
+				new AliasType((ModelElement) type, fullName, alias), suffix,
+				replacementRange, getExtraInfo());
 	}
 
 	/**
@@ -116,7 +273,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 					MatchRule.CAMEL_CASE, trueFlag, falseFlag, scope, null);
 			result.addAll(Arrays.asList(types));
 		}
-		IType[] types = PhpModelAccess.getDefault().findTypes(prefix,
+		IType[] types = PhpModelAccess.getDefault().findTypes(null, prefix,
 				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
 		result.addAll(Arrays.asList(types));
 
@@ -144,8 +301,8 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 				// get the class data for "self". In case of null, the self
 				// function will not be added
-				IType selfClassData = CodeAssistUtils.getSelfClassData(context
-						.getSourceModule(), context.getOffset());
+				IType selfClassData = CodeAssistUtils.getSelfClassData(
+						context.getSourceModule(), context.getOffset());
 				if (selfClassData != null) {
 					try {
 						IMethod ctor = null;
@@ -160,10 +317,10 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 									.getSourceRange();
 							FakeMethod ctorMethod = new FakeMethod(
 									(ModelElement) selfClassData, "self",
-									sourceRange.getOffset(), sourceRange
-											.getLength(), sourceRange
-											.getOffset(), sourceRange
-											.getLength()) {
+									sourceRange.getOffset(),
+									sourceRange.getLength(),
+									sourceRange.getOffset(),
+									sourceRange.getLength()) {
 								public boolean isConstructor()
 										throws ModelException {
 									return true;
@@ -175,12 +332,14 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 						} else {
 							ISourceRange sourceRange = selfClassData
 									.getSourceRange();
-							reporter.reportMethod(new FakeMethod(
-									(ModelElement) selfClassData, "self",
-									sourceRange.getOffset(), sourceRange
-											.getLength(), sourceRange
-											.getOffset(), sourceRange
-											.getLength()), "()", replaceRange);
+							reporter.reportMethod(
+									new FakeMethod(
+											(ModelElement) selfClassData,
+											"self", sourceRange.getOffset(),
+											sourceRange.getLength(),
+											sourceRange.getOffset(),
+											sourceRange.getLength()), "()",
+									replaceRange);
 						}
 					} catch (ModelException e) {
 						PHPCorePlugin.log(e);

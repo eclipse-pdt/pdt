@@ -3,11 +3,15 @@
  */
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
@@ -21,6 +25,8 @@ import org.eclipse.php.internal.core.typeinference.FakeConstructor;
  */
 public abstract class AbstractClassInstantiationStrategy extends
 		GlobalTypesStrategy {
+
+	private IType enclosingClass;
 
 	public AbstractClassInstantiationStrategy(ICompletionContext context,
 			int trueFlag, int falseFlag) {
@@ -36,7 +42,7 @@ public abstract class AbstractClassInstantiationStrategy extends
 		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
 
-		IType enclosingClass = null;
+		enclosingClass = null;
 		try {
 			IModelElement enclosingElement = concreteContext.getSourceModule()
 					.getElementAt(concreteContext.getOffset());
@@ -68,8 +74,8 @@ public abstract class AbstractClassInstantiationStrategy extends
 			} else {
 				// if this is context information mode,we use this,
 				// because the number of types' length is very small
-				IMethod[] ctors = FakeConstructor.getConstructors(type, type
-						.equals(enclosingClass));
+				IMethod[] ctors = FakeConstructor.getConstructors(type,
+						type.equals(enclosingClass));
 				if (ctors != null && ctors.length == 2) {
 					if (ctors[1] != null) {
 						reporter.reportMethod(ctors[1], suffix, replaceRange);
@@ -80,6 +86,19 @@ public abstract class AbstractClassInstantiationStrategy extends
 			}
 
 		}
+		addAlias(reporter, suffix);
+	}
+
+	@Override
+	protected void reportAlias(ICompletionReporter reporter,
+			IDLTKSearchScope scope, IModuleSource module,
+			SourceRange replacementRange, IType type,
+			String fullyQualifiedName, String alias, String suffix) {
+		IType aliasType = new AliasType((ModelElement) type,
+				fullyQualifiedName, alias);
+		IMethod ctorMethod = FakeConstructor.createFakeConstructor(null,
+				aliasType, type.equals(enclosingClass));
+		reporter.reportMethod(ctorMethod, "", replacementRange);
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

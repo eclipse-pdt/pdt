@@ -60,6 +60,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				}
 			});
 
+	IModuleSource module;
+
 	public void complete(IModuleSource module, int position, int i) {
 		complete(module, position, i, true);
 	}
@@ -76,6 +78,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			ModelManager.getModelManager().getIndexManager().waitUntilReady();
 		}
 
+		this.module = module;
 		relevanceKeyword = RELEVANCE_KEYWORD;
 		relevanceMethod = RELEVANCE_METHOD;
 		relevanceClass = RELEVANCE_CLASS;
@@ -409,6 +412,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	protected String processTypeName(IType type, String token) {
 		return type.getElementName();
+	}
+
+	public IModuleSource getModule() {
+		return module;
 	}
 
 }
