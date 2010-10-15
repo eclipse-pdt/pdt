@@ -1,0 +1,26 @@
+--TEST--
+Test Deprecated Semantic highlighting
+--FILE--
+<?php
+/**
+ * @deprecated
+ */
+class Foo {
+  /**
+   * @deprecated
+   */
+  public $attr;
+  
+  public function test(){
+  	for ($i = 0; $i < 10; $i++) {
+			$this->attr;
+			${func}();
+	}
+  }
+}
+?>
+--EXPECT--
+org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting:
+highlight(Foo)
+highlight($attr)
+highlight(attr)
