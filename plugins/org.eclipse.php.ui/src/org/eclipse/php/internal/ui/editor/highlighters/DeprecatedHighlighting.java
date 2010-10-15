@@ -90,15 +90,20 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 				IModelAccessCache cache = funcInv.getAST().getBindingResolver()
 						.getModelAccessCache();
 				if (cache != null) {
-					Collection<IMethod> functions = cache.getGlobalFunctions(
-							getSourceModule(),
-							ModelUtils.getFunctionName(funcInv
-									.getFunctionName()), null);
-					if (functions != null) {
-						for (IMethod function : functions) {
-							if (ModelUtils.isDeprecated(function)) {
-								highlight(funcInv.getFunctionName());
-								break;
+					String functionName = ModelUtils.getFunctionName(funcInv
+							.getFunctionName());
+					// functionName will be null if the function call looks like
+					// ${func}(&$this),the ${func} is type of ReflectionVariable
+					if (functionName != null) {
+						Collection<IMethod> functions = cache
+								.getGlobalFunctions(getSourceModule(),
+										functionName, null);
+						if (functions != null) {
+							for (IMethod function : functions) {
+								if (ModelUtils.isDeprecated(function)) {
+									highlight(funcInv.getFunctionName());
+									break;
+								}
 							}
 						}
 					}
