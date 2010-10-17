@@ -32,7 +32,7 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
  * This class is not intended to be subclassed or instantiated by clients.
  * </p>
  * 
- * @since 2.1
+ * @since 2.2
  * 
  * @noinstantiate This class is not intended to be instantiated by clients.
  * @noextend This class is not intended to be subclassed by clients.
@@ -530,19 +530,7 @@ public class CodeGeneration {
 		}
 
 		if (program == null) {
-			ISourceModule source = method.getSourceModule();
-			ASTParser parserForExpected = ASTParser.newParser(ProjectOptions
-					.getPhpVersion(source.getScriptProject().getProject()),
-					ProjectOptions.useShortTags(source.getScriptProject()
-							.getProject()));
-			try {
-				parserForExpected.setSource(source);
-				program = parserForExpected
-						.createAST(new NullProgressMonitor());
-				program.recordModifications();
-				program.setSourceModule(source);
-			} catch (Exception e) {
-			}
+			program = generageProgram(method, program);
 			if (program == null) {
 				return null;
 			}
@@ -550,6 +538,17 @@ public class CodeGeneration {
 
 		ASTNode elementAt = program.getElementAt(method.getSourceRange()
 				.getOffset());
+
+		if (!(elementAt instanceof MethodDeclaration
+				|| elementAt instanceof FunctionDeclaration || elementAt
+				.getParent() instanceof MethodDeclaration)) {
+			program = generageProgram(method, program);
+			if (program == null) {
+				return null;
+			}
+			elementAt = program.getElementAt(method.getSourceRange()
+					.getOffset());
+		}
 
 		if (elementAt.getParent() instanceof MethodDeclaration) {
 			elementAt = elementAt.getParent();
@@ -636,8 +635,8 @@ public class CodeGeneration {
 					}
 				}
 				if (returnTypeBuffer.length() > 0) {
-					retType = returnTypeBuffer.substring(0, returnTypeBuffer
-							.length() - 1);
+					retType = returnTypeBuffer.substring(0,
+							returnTypeBuffer.length() - 1);
 				}
 			}
 
@@ -682,6 +681,20 @@ public class CodeGeneration {
 				method.getElementName(), paramNames, retType,
 				typeParameterNames, overridden, false, lineDelimiter,
 				newExceptions);
+	}
+
+	private static Program generageProgram(IMethod method, Program program) {
+		ISourceModule source = method.getSourceModule();
+		ASTParser parserForExpected = ASTParser.newParser(ProjectOptions
+				.getPhpVersion(source.getScriptProject().getProject()), source);
+		try {
+			parserForExpected.setSource(source);
+			program = parserForExpected.createAST(new NullProgressMonitor());
+			program.recordModifications();
+			program.setSourceModule(source);
+		} catch (Exception e) {
+		}
+		return program;
 	}
 
 	private static List<ITypeBinding> removeDuplicateTypes(
