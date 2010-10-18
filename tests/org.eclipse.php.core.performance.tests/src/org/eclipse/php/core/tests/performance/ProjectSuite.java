@@ -102,8 +102,9 @@ public class ProjectSuite extends AbstractModelTests {
 					scriptProject.setRawBuildpath(buildpathEntries, null);
 				}
 
-				Util.downloadAndExtract(map.get(URL).toString(), scriptProject
-						.getProject().getLocation().toString());
+				// Util.downloadAndExtract(map.get(URL).toString(),
+				// scriptProject
+				// .getProject().getLocation().toString());
 				perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 			}
 
@@ -116,12 +117,12 @@ public class ProjectSuite extends AbstractModelTests {
 
 	protected void addTests(TestSuite suite) {
 		suite.addTest(new BuildProjectTest());
-		suite.addTest(new SearchAllTypesTest());
-		suite.addTest(new SearchAllFunctionsTest());
-		suite.addTest(new SearchGlobalVariablesTest());
-		suite.addTest(new SearchIncludeStatementsTest());
-		suite.addTest(new SuperTypeHierarchyTest());
-		suite.addTest(new TypeHierarchyTest());
+		// suite.addTest(new SearchAllTypesTest());
+		// suite.addTest(new SearchAllFunctionsTest());
+		// suite.addTest(new SearchGlobalVariablesTest());
+		// suite.addTest(new SearchIncludeStatementsTest());
+		// suite.addTest(new SuperTypeHierarchyTest());
+		// suite.addTest(new TypeHierarchyTest());
 
 		suite.addTest(new CodeAssistTestsWrapper().suite(map));
 		suite.addTest(new MarkOccurrenceTestsWrapper().suite(map));
