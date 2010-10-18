@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.*;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.ui.DLTKPluginImages;
@@ -34,10 +35,13 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.documentation.PHPElementLinks;
 import org.eclipse.php.internal.ui.documentation.PHPDocumentationContentAccess;
+import org.eclipse.php.internal.ui.documentation.PHPElementLinks;
 import org.eclipse.php.internal.ui.util.Messages;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
@@ -139,8 +143,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			if (current != null && current.getNext() != null) {
 				setToolTipText(Messages
-						.format(
-								PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
+						.format(PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
 								BasicElementLabels.getJavaElementName(current
 										.getNext().getInputName())));
 				setEnabled(true);
@@ -177,8 +180,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			try {
 				// FIXME: add hover location to editor navigation history?
-				IEditorPart editor = EditorUtility.openInEditor(infoInput
-						.getElement(), true);
+				IEditorPart editor = EditorUtility.openInEditor(
+						infoInput.getElement(), true);
 				EditorUtility.revealInEditor(editor, infoInput.getElement());
 			} catch (PartInitException e) {
 				PHPUiPlugin.log(e);
@@ -561,8 +564,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				if (curr instanceof IMember
 						|| curr.getElementType() == IModelElement.FIELD) {
 					// FIXME: provide links
-					HTMLPrinter.addBullet(buffer, getInfoText(curr,
-							constantValue, false));
+					HTMLPrinter.addBullet(buffer,
+							getInfoText(curr, constantValue, false));
 					hasContents = true;
 				}
 				HTMLPrinter.endBulletList(buffer);
@@ -573,8 +576,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			element = elements[0];
 			if (element instanceof IMember) {
 				IMember member = (IMember) element;
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(member,
-						constantValue, true));
+				HTMLPrinter.addSmallHeader(buffer,
+						getInfoText(member, constantValue, true));
 				Reader reader = null;
 				try {
 					reader = getHTMLContent(member);
@@ -587,8 +590,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				hasContents = true;
 
 			} else if (element.getElementType() == IModelElement.FIELD) {
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(element,
-						constantValue, true));
+				HTMLPrinter.addSmallHeader(buffer,
+						getInfoText(element, constantValue, true));
 				hasContents = true;
 			}
 			leadingImageWidth = 20;
@@ -673,14 +676,72 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 						null);
 				ASTNode node = NodeFinder.perform(unit, field.getNameRange()
 						.getOffset(), field.getNameRange().getLength());
-				if (node != null && node instanceof Identifier
-						&& node.getParent() instanceof ConstantDeclaration) {
-					ConstantDeclaration decl = (ConstantDeclaration) node
-							.getParent();
-					if (decl.initializers().size() == 1
-							&& decl.initializers().get(0) instanceof Scalar) {
-						Scalar scalar = (Scalar) decl.initializers().get(0);
-						constantValue = scalar.getStringValue();
+				if (node != null) {
+					if (node instanceof Identifier
+							&& node.getParent() instanceof ConstantDeclaration) {
+						ConstantDeclaration decl = (ConstantDeclaration) node
+								.getParent();
+						if (decl.initializers().size() == 1
+								&& decl.initializers().get(0) instanceof Scalar) {
+							Scalar scalar = (Scalar) decl.initializers().get(0);
+							constantValue = scalar.getStringValue();
+						}
+					} else if (node instanceof Scalar
+							&& node.getParent() instanceof FunctionInvocation) {
+						FunctionInvocation invocation = (FunctionInvocation) node
+								.getParent();
+						Expression function = invocation.getFunctionName()
+								.getName();
+						String functionName = "";
+						// for PHP5.3
+						if (function instanceof NamespaceName) {
+							// global function
+							if (((NamespaceName) function).isGlobal()) {
+								functionName = ((NamespaceName) function)
+										.getName();
+								if (functionName.charAt(0) == '\\') {
+									functionName = functionName.substring(1);
+								}
+							} else {
+								ModuleDeclaration parsedUnit = SourceParserUtil
+										.getModuleDeclaration(
+												field.getSourceModule(), null);
+								org.eclipse.dltk.ast.ASTNode func = ASTUtils
+										.findMinimalNode(parsedUnit,
+												function.getStart(),
+												function.getEnd());
+
+								if (func instanceof FullyQualifiedReference) {
+									functionName = ((FullyQualifiedReference) func)
+											.getFullyQualifiedName();
+								}
+								// look for the element in current namespace
+								if (functionName.indexOf('\\') == -1) {
+									IType currentNamespace = PHPModelUtils
+											.getCurrentNamespace(
+													field.getSourceModule(),
+													function.getStart());
+									String fullyQualifiedFuncName = "\\"
+											+ currentNamespace.getElementName()
+											+ "\\" + functionName;
+									IMethod[] methods = PHPModelUtils
+											.getFunctions(
+													fullyQualifiedFuncName,
+													field.getSourceModule(),
+													function.getStart(), null);
+									if (methods != null && methods.length > 0) {
+										functionName = fullyQualifiedFuncName;
+									}
+								}
+							}
+						} else if (function instanceof Identifier) {
+							functionName = ((Identifier) function).getName();
+						}
+						if (functionName.equalsIgnoreCase("define")
+								&& invocation.parameters().size() >= 2) {
+							constantValue = ((Scalar) invocation.parameters()
+									.get(1)).getStringValue();
+						}
 					}
 				}
 			} catch (ModelException e) {
@@ -762,8 +823,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		if (styleSheetURL != null) {
 			BufferedReader reader = null;
 			try {
-				reader = new BufferedReader(new InputStreamReader(styleSheetURL
-						.openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						styleSheetURL.openStream()));
 				StringBuffer buffer = new StringBuffer(1500);
 				String line = reader.readLine();
 				while (line != null) {
