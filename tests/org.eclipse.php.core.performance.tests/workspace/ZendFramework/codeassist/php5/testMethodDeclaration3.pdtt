@@ -1,0 +1,8 @@
+--TEST--
+Test Super Methods
+--FILE--
+<?
+class B extends Zend_Controller_Action_Helper_Json {
+	function |
+}
+?>

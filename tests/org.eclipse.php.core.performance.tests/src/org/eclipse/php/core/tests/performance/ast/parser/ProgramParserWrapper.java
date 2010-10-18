@@ -1,4 +1,4 @@
-package org.eclipse.php.core.tests.performance.ast.locator;
+package org.eclipse.php.core.tests.performance.ast.parser;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
@@ -22,26 +22,22 @@ import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
 import org.eclipse.php.core.tests.performance.ProjectSuite;
 import org.eclipse.php.core.tests.performance.Util;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 
-public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
+public class ProgramParserWrapper extends AbstractPDTTTest {
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP5,
-				new String[] { "/workspace/project/locator/php5" });
+				new String[] { "/workspace/project/programparser/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] {
-		// "/workspace/project/locator/php5",
-				"/workspace/project/locator/php53" });
+		// "/workspace/project/programparser/php5",
+				"/workspace/project/programparser/php53" });
 	};
 
-	protected IFile testFile;
-	protected IProject project;
-
-	protected static final char OFFSET_CHAR = '|';
+	private IFile testFile;
+	private IProject project;
 	private PerformanceMonitor perfMonitor;
 
-	public PhpElementConciliatorTestWrapper() {
+	public ProgramParserWrapper() {
 		super("");
 	}
 
@@ -49,21 +45,29 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
 				map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
-		TestSuite suite = new TestSuite("Locator Tests");
-
+		TestSuite suite = new TestSuite("Auto Program Parser Tests");
 		final PHPVersion phpVersion = (PHPVersion) map
 				.get(ProjectSuite.PHP_VERSION);
 		for (String testsDirectory : TESTS.get(phpVersion)) {
 			testsDirectory = testsDirectory.replaceAll("project", map.get(
 					ProjectSuite.PROJECT).toString());
+
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
 					final PdttFile pdttFile = new PdttFile(
 							PHPCorePerformanceTests.getDefault().getBundle(),
 							fileName);
-					PhpElementConciliatorTest test = new PhpElementConciliatorTest(
-							fileName) {
+					ProgramParser test = new ProgramParser(phpVersion
+							.getAlias()
+							+ " - /" + fileName) {
+
+						protected void setUp() throws Exception {
+							PHPCoreTests.setProjectPhpVersion(project,
+									phpVersion);
+							pdttFile.applyPreferences();
+						}
+
 						protected void tearDown() throws Exception {
 							if (testFile != null) {
 								testFile.delete(true, null);
@@ -72,7 +76,7 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 						}
 
 						protected void runTest() throws Throwable {
-							executeLocator(pdttFile.getFile(), fileName);
+							executeParser(pdttFile.getFile(), fileName);
 						}
 					};
 					suite.addTest(test);
@@ -104,16 +108,8 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
-	protected void executeLocator(String data, final String fileName)
+	protected void executeParser(String data, final String fileName)
 			throws Exception {
-
-		int offset = data.lastIndexOf(OFFSET_CHAR);
-		if (offset == -1) {
-			throw new IllegalArgumentException("Offset character is not set");
-		}
-		offset = data.lastIndexOf(OFFSET_CHAR);
-		// replace the offset character
-		data = data.substring(0, offset) + data.substring(offset + 1);
 
 		testFile = project.getFile("pdttest/test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
@@ -121,23 +117,19 @@ public class PhpElementConciliatorTestWrapper extends AbstractPDTTTest {
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 
 		PHPCoreTests.waitForIndexer();
-		final Program astRoot = Util.createProgramFromSource(testFile);
-
-		assertNotNull(astRoot);
-		// ASTNode selectedNode = NodeFinder.perform(astRoot, offset, 0);
-		final int finalOffset = offset;
-		perfMonitor.execute("PerformanceTests.testPhpElementConciliator" + "_"
+		perfMonitor.execute("PerformanceTests.testProgramParser" + "_"
 				+ fileName, new Operation() {
 			public void run() throws Exception {
-				NodeFinder.perform(astRoot, finalOffset, 0);
+				Util.createProgramFromSource(testFile);
 			}
 		}, 1, 10);
 	}
 
-	public class PhpElementConciliatorTest extends AbstractPDTTTest {
+	public class ProgramParser extends AbstractPDTTTest {
 
-		public PhpElementConciliatorTest(String description) {
+		public ProgramParser(String description) {
 			super(description);
 		}
+
 	}
 }

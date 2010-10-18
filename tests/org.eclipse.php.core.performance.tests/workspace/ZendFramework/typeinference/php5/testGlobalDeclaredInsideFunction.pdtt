@@ -1,0 +1,12 @@
+--TEST--
+Test Global Declared Inside Function
+--FILE--
+<?php
+function foo() {
+	global $a;
+	$a = new A();
+}
+testGlobalDeclaredInsideFunction($a);
+?>
+--EXPECT--
+A

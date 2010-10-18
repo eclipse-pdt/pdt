@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.performance.formatter;
 
+import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
-import org.eclipse.php.core.tests.performance.ProjectSuite.Metadata;
+import org.eclipse.php.core.tests.performance.ProjectSuite;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -53,20 +54,23 @@ public class FormatterTestsWrapper extends AbstractPDTTTest {
 		super("");
 	}
 
-	public Test suite(final Metadata metadata) {
+	public Test suite(final Map map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				metadata.project);
+				map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
-		TestSuite suite = new TestSuite("Locator Tests");
+		TestSuite suite = new TestSuite("Formatter Tests");
 
-		final PHPVersion phpVersion = metadata.phpVersion;
+		final PHPVersion phpVersion = (PHPVersion) map
+				.get(ProjectSuite.PHP_VERSION);
 		for (String testsDirectory : TESTS.get(phpVersion)) {
-			testsDirectory = testsDirectory.replaceAll("project",
-					metadata.project);
+			testsDirectory = testsDirectory.replaceAll("project", map.get(
+					ProjectSuite.PROJECT).toString());
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
-					final PdttFile pdttFile = new PdttFile(fileName);
+					final PdttFile pdttFile = new PdttFile(
+							PHPCorePerformanceTests.getDefault().getBundle(),
+							fileName);
 					FormatterTests test = new FormatterTests(fileName) {
 						protected void tearDown() throws Exception {
 							if (testFile != null) {
@@ -76,6 +80,7 @@ public class FormatterTestsWrapper extends AbstractPDTTTest {
 						}
 
 						protected void runTest() throws Throwable {
+
 							executeLocator(pdttFile.getFile(), fileName);
 						}
 					};
@@ -110,7 +115,7 @@ public class FormatterTestsWrapper extends AbstractPDTTTest {
 	 */
 	protected void executeLocator(String data, final String fileName)
 			throws Exception {
-
+		testFile = createFile(data.trim());
 		IStructuredModel modelForEdit = StructuredModelManager
 				.getModelManager().getModelForEdit(testFile);
 		try {
@@ -135,6 +140,12 @@ public class FormatterTestsWrapper extends AbstractPDTTTest {
 				modelForEdit.releaseFromEdit();
 			}
 		}
+	}
+
+	protected IFile createFile(String data) throws Exception {
+		IFile testFile = project.getFile("pdttest/test.php");
+		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
+		return testFile;
 	}
 
 	public class FormatterTests extends AbstractPDTTTest {

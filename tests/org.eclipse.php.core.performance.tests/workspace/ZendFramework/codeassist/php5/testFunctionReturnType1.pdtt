@@ -1,0 +1,19 @@
+--TEST--
+Test Function Return Multiple Types
+--FILE--
+<?
+class A {
+	function foo() {}
+}
+class B {
+	function bar() {}
+}
+function bar() {
+	if (t()) {
+		return new Zend_Auth_Result();
+	} else {
+		return new Zend_Controller_Action_Helper_Json();
+	}
+}
+bar()->|
+?>

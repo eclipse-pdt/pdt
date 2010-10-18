@@ -1,0 +1,6 @@
+--TEST--
+Test Constant
+--FILE--
+<?php define('MY_CONST', 'Hello'); testConstant(MY_CONST); ?>
+--EXPECT--
+string

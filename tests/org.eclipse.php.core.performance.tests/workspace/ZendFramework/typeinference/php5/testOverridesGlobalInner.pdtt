@@ -1,0 +1,6 @@
+--TEST--
+Test Overrides Global Inner
+--FILE--
+<?php $a = 5; function foo() { if (true) { global $a; $a =  new A(); } testOverridesGlobalInner($a); } ?>
+--EXPECT--
+A

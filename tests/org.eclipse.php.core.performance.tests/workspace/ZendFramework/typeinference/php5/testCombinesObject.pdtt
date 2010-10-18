@@ -1,0 +1,12 @@
+--TEST--
+Test Combines Object
+--FILE--
+<?php
+$a = new A();
+if(true) {
+	$a = new B();
+}
+testCombinesObject($a);
+?>
+--EXPECT--
+Ambigous <A, B>

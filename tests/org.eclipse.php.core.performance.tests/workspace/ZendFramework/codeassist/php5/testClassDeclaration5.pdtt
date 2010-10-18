@@ -1,0 +1,7 @@
+--TEST--
+Should NOT propose final classes after 'extends'
+--FILE--
+<?php
+
+class Another extends Zend_|
+

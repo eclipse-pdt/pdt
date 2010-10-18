@@ -1,0 +1,6 @@
+--TEST--
+Test Builtin Method Return Type
+--FILE--
+<?php testBuiltinMethodReturnType(libxml_get_last_error()); ?>
+--EXPECT--
+LibXMLError

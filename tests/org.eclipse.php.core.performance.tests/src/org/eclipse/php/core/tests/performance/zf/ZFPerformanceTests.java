@@ -11,11 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.performance.zf;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.php.core.tests.performance.ProjectSuite;
-import org.eclipse.php.core.tests.performance.ProjectSuite.Metadata;
 import org.eclipse.php.internal.core.PHPVersion;
 
 /**
@@ -32,11 +34,28 @@ public class ZFPerformanceTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(PROJECT + " Performance Tests");
-		Test test = new ProjectSuite("").suite(new Metadata(PROJECT + "_"
-				+ PHPVersion.PHP5.getAlias(), URL, TYPE, PHPVersion.PHP5));
+		Map map = new HashMap();
+		map.put(ProjectSuite.PROJECT, PROJECT);
+		map.put(ProjectSuite.URL, URL);
+		map.put(ProjectSuite.TYPE, TYPE);
+		map.put(ProjectSuite.PHP_VERSION, PHPVersion.PHP5);
+		map.put(ProjectSuite.CHANGE_INCLUDE_PATH, Boolean.TRUE);
+		map.put(ProjectSuite.INCLUDE_PATH, new String[] { "library" });
+		map.put(ProjectSuite.REFERENCED_FILE,
+				new String[] { "library/Zend/View/Helper/Abstract.php" });
+		map.put(ProjectSuite.REFERENCING_FILE,
+				new String[] { "library/Zend/View/Helper/Action.php" });
+		Test test = new ProjectSuite().suite(map);
 		suite.addTest(test);
-		test = new ProjectSuite("").suite(new Metadata(PROJECT + "_"
-				+ PHPVersion.PHP5_3.getAlias(), URL, TYPE, PHPVersion.PHP5_3));
+
+		map = new HashMap();
+		map.put(ProjectSuite.PROJECT, PROJECT);
+		map.put(ProjectSuite.URL, URL);
+		map.put(ProjectSuite.TYPE, TYPE);
+		map.put(ProjectSuite.PHP_VERSION, PHPVersion.PHP5_3);
+		map.put(ProjectSuite.CHANGE_INCLUDE_PATH, Boolean.TRUE);
+		map.put(ProjectSuite.INCLUDE_PATH, new String[] { "library" });
+		test = new ProjectSuite().suite(map);
 		suite.addTest(test);
 
 		return suite;

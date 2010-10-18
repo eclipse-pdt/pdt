@@ -32,7 +32,7 @@ import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.core.tests.performance.PHPCorePerformanceTests;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor;
 import org.eclipse.php.core.tests.performance.PerformanceMonitor.Operation;
-import org.eclipse.php.core.tests.performance.ProjectSuite.Metadata;
+import org.eclipse.php.core.tests.performance.ProjectSuite;
 import org.eclipse.php.core.tests.performance.Util;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
@@ -64,23 +64,26 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 		super("");
 	}
 
-	public Test suite(final Metadata metadata) {
+	public Test suite(final Map map) {
 		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				metadata.project);
+				map.get(ProjectSuite.PROJECT).toString());
 		perfMonitor = PHPCorePerformanceTests.getPerformanceMonitor();
 		TestSuite suite = new TestSuite("Auto Mark Occurrence Tests");
 
 		// for (final PHPVersion phpVersion : TESTS.keySet()) {
 		// TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-		final PHPVersion phpVersion = metadata.phpVersion;
+		final PHPVersion phpVersion = (PHPVersion) map
+				.get(ProjectSuite.PHP_VERSION);
 
 		for (String testsDirectory : TESTS.get(phpVersion)) {
-			testsDirectory = testsDirectory.replaceAll("project",
-					metadata.project);
+			testsDirectory = testsDirectory.replaceAll("project", map.get(
+					ProjectSuite.PROJECT).toString());
 			for (final String fileName : getPDTTFiles(testsDirectory,
 					PHPCorePerformanceTests.getDefault().getBundle())) {
 				try {
-					final PdttFile pdttFile = new PdttFile(fileName);
+					final PdttFile pdttFile = new PdttFile(
+							PHPCorePerformanceTests.getDefault().getBundle(),
+							fileName);
 					MarkOccurrenceTests test = new MarkOccurrenceTests(
 							phpVersion.getAlias() + " - /" + fileName) {
 
@@ -160,7 +163,7 @@ public class MarkOccurrenceTestsWrapper extends AbstractPDTTTest {
 		// replace the offset character
 		data = data.substring(0, offset) + data.substring(offset + 1);
 
-		testFile = project.getFile("test.php");
+		testFile = project.getFile("pdttest/test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		project.refreshLocal(IResource.DEPTH_ONE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);

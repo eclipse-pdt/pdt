@@ -1,0 +1,6 @@
+--TEST--
+Test Function Return Type
+--FILE--
+<?php function foo() { return __FILE__; } testFunctionReturnType(foo()); ?>
+--EXPECT--
+string

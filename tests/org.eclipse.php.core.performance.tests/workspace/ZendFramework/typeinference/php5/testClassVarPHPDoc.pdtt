@@ -1,0 +1,17 @@
+--TEST--
+Test Class Var PHP Doc
+--CONFIG--
+prune: heavyGoals
+--FILE--
+<?php class A {
+	/**
+	 * @var A
+	 */
+	 var $f = 0;
+}
+/* @var $a A */
+$a = new A();
+testClassVarPHPDoc($a->f);
+?>
+--EXPECT--
+A

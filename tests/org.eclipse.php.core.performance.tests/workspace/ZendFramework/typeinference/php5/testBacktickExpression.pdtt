@@ -1,0 +1,6 @@
+--TEST--
+Test Backtick Expression
+--FILE--
+<?php testBacktickExpression(`ls -l`); ?>
+--EXPECT--
+string

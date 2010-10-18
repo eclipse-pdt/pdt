@@ -1,0 +1,6 @@
+--TEST--
+Test In Array Index
+--FILE--
+<?
+$arr[|];
+?>

@@ -100,8 +100,8 @@ public class PerformanceMonitor {
 					"INSERT INTO EXECUTIONS(DATE) VALUES(?);",
 					Statement.RETURN_GENERATED_KEYS);
 			try {
-				statement.setTimestamp(1, new Timestamp(System
-						.currentTimeMillis()));
+				statement.setTimestamp(1,
+						new Timestamp(System.currentTimeMillis()));
 				statement.executeUpdate();
 				ResultSet result = statement.getGeneratedKeys();
 				try {
@@ -243,7 +243,8 @@ public class PerformanceMonitor {
 		long testAverage = testTimeSum / times;
 
 		long savedAverage = getAverage(testId, AVG_SAMPLES);
-		if (savedAverage != -1 && testAverage > savedAverage) {
+		if (savedAverage != 0 && savedAverage != -1
+				&& testAverage > savedAverage) {
 
 			long diff = testAverage - savedAverage;
 			if (diff * 100 / savedAverage > threshold) {
