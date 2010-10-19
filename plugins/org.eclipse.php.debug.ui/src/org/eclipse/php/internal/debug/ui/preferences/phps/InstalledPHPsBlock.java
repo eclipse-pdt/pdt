@@ -441,9 +441,9 @@ public class InstalledPHPsBlock {
 		if (phpExe == null) {
 			return;
 		}
-		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(), phpExe
-				.getExecutable(), phpExe.getINILocation(), phpExe
-				.getDebuggerID(), phpExe.isEditable());
+		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(),
+				phpExe.getExecutable(), phpExe.getINILocation(),
+				phpExe.getDebuggerID(), phpExe.isEditable());
 		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
 				phpExeToEdit, phpExes.getAllItems());
 		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
@@ -738,6 +738,7 @@ public class InstalledPHPsBlock {
 				int i = 1;
 				while (isDuplicateName(nameCopy)) {
 					nameCopy = phpExe.getName() + '[' + i++ + ']';
+					phpExe.setName(nameCopy);
 				}
 				// Since the search for PHP exe option does not 'know' the
 				// debugger id it should assign to the PHPexeItem,
@@ -865,7 +866,9 @@ public class InstalledPHPsBlock {
 				if (e1 instanceof PHPexeItem && e2 instanceof PHPexeItem) {
 					final PHPexeItem left = (PHPexeItem) e1;
 					final PHPexeItem right = (PHPexeItem) e2;
-					return left.getExecutable().getAbsolutePath()
+					return left
+							.getExecutable()
+							.getAbsolutePath()
 							.compareToIgnoreCase(
 									right.getExecutable().getAbsolutePath());
 				}
