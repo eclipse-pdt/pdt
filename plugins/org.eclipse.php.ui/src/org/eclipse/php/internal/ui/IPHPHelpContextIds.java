@@ -175,6 +175,9 @@ public interface IPHPHelpContextIds {
 	public static final String PHARPACKAGER_WIZARD_PAGE = PREFIX
 			+ "phar_packager_wizard_page_context"; //$NON-NLS-1$ [html/Keymap.htm]
 
+	public static final String PHPEXE_ENV_PREFERENCES = PREFIX
+			+ "execution_environments_preferences"; //$NON-NLS-1$ [html/Keymap.htm]
+
 	public static final String PHAR_FILE_IMPORT_WIZARD_PAGE = PREFIX
 			+ "phar_file_import_wizard_page";
 }
