@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.ui.preferences.phps;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.AbstractPreferencePage;
 import org.eclipse.swt.SWT;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 public class PHPInterpreterExecutionPreferencePage extends
 		AbstractPreferencePage implements IWorkbenchPreferencePage {
@@ -74,10 +76,14 @@ public class PHPInterpreterExecutionPreferencePage extends
 		control.setLayoutData(data);
 
 		applyDialogFont(ancestor);
-		// TODO: fix help
-		// PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor,
-		// IPHPHelpContextIds.PHP_EXECUTABLES_PREFERENCES);
 		return ancestor;
+	}
+
+	@Override
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
+				IPHPHelpContextIds.PHPEXE_ENV_PREFERENCES);
 	}
 
 	/*
