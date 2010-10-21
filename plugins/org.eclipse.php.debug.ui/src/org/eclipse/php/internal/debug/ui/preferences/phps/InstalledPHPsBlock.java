@@ -738,8 +738,8 @@ public class InstalledPHPsBlock {
 				int i = 1;
 				while (isDuplicateName(nameCopy)) {
 					nameCopy = phpExe.getName() + '[' + i++ + ']';
-					phpExe.setName(nameCopy);
 				}
+				phpExe.setName(nameCopy);
 				// Since the search for PHP exe option does not 'know' the
 				// debugger id it should assign to the PHPexeItem,
 				// we call for PHPexes.getDefaultDebuggerId() - which can also
