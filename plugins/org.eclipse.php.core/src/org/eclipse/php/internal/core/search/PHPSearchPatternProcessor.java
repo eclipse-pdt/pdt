@@ -12,9 +12,9 @@
 package org.eclipse.php.internal.core.search;
 
 import org.eclipse.dltk.compiler.CharOperation;
-import org.eclipse.dltk.core.ISearchPatternProcessor;
+import org.eclipse.dltk.core.search.SearchPatternProcessor;
 
-public class PHPSearchPatternProcessor implements ISearchPatternProcessor {
+public class PHPSearchPatternProcessor extends SearchPatternProcessor {
 
 	private static final String TYPE_DELIMITER = "\\"; //$NON-NLS-1$
 	private static final String OBJ_CALL_DELIMITER = "->"; //$NON-NLS-1$
@@ -58,7 +58,10 @@ public class PHPSearchPatternProcessor implements ISearchPatternProcessor {
 		return pattern.toCharArray();
 	}
 
-	public String extractTypeChars(String pattern) {
+	/**
+	 * @since 2.2
+	 */
+	private String extractPHPTypeChars(String pattern) {
 		final int pos = pattern.lastIndexOf(TYPE_DELIMITER);
 		if (pos != -1) {
 			final int begin = pos + TYPE_DELIMITER.length();
@@ -69,18 +72,27 @@ public class PHPSearchPatternProcessor implements ISearchPatternProcessor {
 		return pattern;
 	}
 
-	public char[] extractTypeQualification(String pattern) {
+	/**
+	 * @since 2.2
+	 */
+	private String extractPHPTypeQualification(String pattern) {
 		final int pos = pattern.lastIndexOf(TYPE_DELIMITER);
 		if (pos != -1) {
 			final char[] result = new char[pos];
 			pattern.getChars(0, pos, result, 0);
-			return CharOperation.replace(result, TYPE_DELIMITER.toCharArray(),
-					new char[] { '$' });
+			return new String(CharOperation.replace(result,
+					TYPE_DELIMITER.toCharArray(), new char[] { '$' }));
 		}
 		return null;
 	}
 
 	public String getDelimiterReplacementString() {
 		return TYPE_DELIMITER;
+	}
+
+	public ITypePattern parseType(String patternString) {
+		return new TypePatten(extractPHPTypeQualification(patternString),
+				extractPHPTypeChars(patternString));
+
 	}
 }
