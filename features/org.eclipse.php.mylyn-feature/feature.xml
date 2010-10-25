@@ -25,7 +25,7 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.dltk.mylyn" version="1.0.0" match="compatible"/>
+      <import feature="org.eclipse.dltk.mylyn" version="2.0.0" match="compatible"/>
    </requires>
 
    <plugin
