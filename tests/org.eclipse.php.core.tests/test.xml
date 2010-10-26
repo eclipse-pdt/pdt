@@ -25,7 +25,7 @@
 	<!-- Emma? Where are you? (Emma installation directory) -->
 	<property name='emma.dir' value='/shared/tools/php/emma-2.0.5312' />
 	<!-- Where are the class files? -->
-	<property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildID}.jar' />
+	<property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar' />
 	<!-- <path id='bin'>
 			<fileset dir='${eclipse-home}' includes='plugins/org.eclipse.php.core_*.jar' />
 		</path> -->
@@ -65,7 +65,7 @@
 	<!-- after all the tests have been run should go here. -->
 	<target name="run" depends="init,suite,cleanup">
 		<echo>=======================start instr=======================</echo>
-		<echo>=======================${buildID}=======================</echo>
+		<echo>=======================${buildTimestamp}=======================</echo>
 		<echo>=======================${bin}=======================</echo>
 		<emma>
 			<!-- instrumentation of bin folder -->
