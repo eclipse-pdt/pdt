@@ -64,7 +64,6 @@
 	<!-- after all the tests have been run should go here. -->
 	<target name="run" depends="init,suite,cleanup">
 		<echo>=======================start instr=======================</echo>
-		<echo>=======================instr dir:${bin}</echo>
 		<emma>
 			<!-- instrumentation of bin folder -->
 			<instr instrpathref="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
