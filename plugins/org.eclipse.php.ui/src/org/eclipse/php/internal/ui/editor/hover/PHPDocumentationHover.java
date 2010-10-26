@@ -721,9 +721,16 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 											.getCurrentNamespace(
 													field.getSourceModule(),
 													function.getStart());
-									String fullyQualifiedFuncName = "\\"
-											+ currentNamespace.getElementName()
-											+ "\\" + functionName;
+									String fullyQualifiedFuncName = "";
+									if (currentNamespace != null) {
+										fullyQualifiedFuncName = "\\"
+												+ currentNamespace
+														.getElementName()
+												+ "\\" + functionName;
+									} else {
+										fullyQualifiedFuncName = functionName;
+									}
+
 									IMethod[] methods = PHPModelUtils
 											.getFunctions(
 													fullyQualifiedFuncName,
