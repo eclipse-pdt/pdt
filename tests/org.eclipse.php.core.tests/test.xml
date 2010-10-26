@@ -25,7 +25,9 @@
 	<!-- Emma? Where are you? (Emma installation directory) -->
 	<property name='emma.dir' value='/shared/tools/php/emma-2.0.5312' />
 	<!-- Where are the class files? -->
-	<property name="bin" value="${eclipse-home}/plugins/org.eclipse.php.core_*.jar" />
+	<path id='bin'>
+			<fileset dir='${eclipse-home}' includes='plugins/org.eclipse.php.core_*.jar' />
+		</path>
 	<!-- EMMA distribution directory: -->
 	<path id='emma.lib'>
 		<fileset dir='${emma.dir}' includes='lib/*.jar' />
@@ -65,7 +67,7 @@
 		<echo>=======================instr dir:${bin}</echo>
 		<emma>
 			<!-- instrumentation of bin folder -->
-			<instr instrpath="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
+			<instr instrpathref="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
 		</emma>
 		<echo>=======================end instr=======================</echo>
 		<ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
