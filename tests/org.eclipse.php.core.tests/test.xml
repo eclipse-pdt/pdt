@@ -62,25 +62,25 @@
 	<!-- This target runs the test suite. Any actions that need to happen -->
 	<!-- after all the tests have been run should go here. -->
 	<target name="run" depends="init,suite,cleanup">
+		<echo>=======================start instr=======================</echo>
 		<emma>
-			<echo>=======================start instr=======================</echo>
 			<!-- instrumentation of bin folder -->
 			<instr instrpath="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
-			<echo>=======================end instr=======================</echo>
 		</emma>
+		<echo>=======================end instr=======================</echo>
 		<ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="includes" value="org*.xml" />
 			<property name="output-file" value="${plugin-name}.xml" />
 			<property name="extraVMargs" value="-Demma.coverage.out.file=${pdt-folder}/phpcore.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
 		</ant>
+		<echo>=======================start report=======================</echo>
 		<emma>
-			<echo>=======================start report=======================</echo>
 			<!-- creating a report -->
 			<report sort="+name,+class,+method,+block" sourcepath="${src.dir}">
 				<infileset dir="${pdt-folder}" includes="*.emma, *.ec" />
 				<html outfile="${pdt-folder}/index.html" depth="method" columns="name,class,method,block,line" />
 			</report>
-			<echo>=======================end report=======================</echo>
 		</emma>
+		<echo>=======================end report=======================</echo>
 	</target>
 </project>
