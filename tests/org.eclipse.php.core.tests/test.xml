@@ -25,8 +25,7 @@
 	<!-- Emma? Where are you? (Emma installation directory) -->
 	<property name='emma.dir' value='/shared/tools/php/emma-2.0.5312' />
 	<!-- Where are the class files? -->
-	<property name="bin" value="${eclipse-home}/plugins/org.eclipse.php.core/bin" />
-	<property name="src.dir" value="${eclipse-home}/plugins/org.eclipse.php.core/src" />
+	<property name="bin" value="${eclipse-home}/plugins/org.eclipse.php.core_*.jar" />
 	<!-- EMMA distribution directory: -->
 	<path id='emma.lib'>
 		<fileset dir='${emma.dir}' includes='lib/*.jar' />
@@ -77,7 +76,7 @@
 		<echo>=======================start report=======================</echo>
 		<emma>
 			<!-- creating a report -->
-			<report sort="+name,+class,+method,+block" sourcepath="${src.dir}">
+			<report sort="+name,+class,+method,+block">
 				<infileset dir="${pdt-folder}" includes="*.emma, *.ec" />
 				<html outfile="${pdt-folder}/index.html" depth="method" columns="name,class,method,block,line" />
 			</report>
