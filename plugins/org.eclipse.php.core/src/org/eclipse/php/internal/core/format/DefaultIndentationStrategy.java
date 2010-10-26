@@ -52,8 +52,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			}
 			final int currLineEndOffset = lineInfo.getOffset()
 					+ lineInfo.getLength();
-			final boolean isIndentationBase = isIndentationBase(document, Math
-					.min(offset, currLineEndOffset), offset, currLineIndex,
+			final boolean isIndentationBase = isIndentationBase(document,
+					Math.min(offset, currLineEndOffset), offset, currLineIndex,
 					checkMultiLine);
 			if (isIndentationBase)
 				return currLineIndex;
@@ -224,8 +224,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		}
 
 		TextSequence textSequence = PHPTextSequenceUtilities
-				.getStatement(lineStart, document
-						.getRegionAtCharacterOffset(lineStart), true);
+				.getStatement(lineStart,
+						document.getRegionAtCharacterOffset(lineStart), true);
 		if (textSequence != null
 				&& isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(
 						document, textSequence.getOriginalOffset(0)))
@@ -308,8 +308,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			while (lastNonEmptyLineIndex >= 0) {
 				IRegion lineInfo = document
 						.getLineInformation(lastNonEmptyLineIndex);
-				String content = document.get(lineInfo.getOffset(), lineInfo
-						.getLength());
+				String content = document.get(lineInfo.getOffset(),
+						lineInfo.getLength());
 				if (content.trim().length() > 0) {
 					break;
 				}
@@ -344,9 +344,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			IRegion lineInfo = document.getLineInformation(lineNumber);
 			final IStructuredDocumentRegion sdRegion = document
 					.getRegionAtCharacterOffset(offset);
-			ITextRegion token = getLastTokenRegion(document, lineInfo, lineInfo
-					.getOffset()
-					+ lineInfo.getLength());
+			ITextRegion token = getLastTokenRegion(document, lineInfo,
+					lineInfo.getOffset() + lineInfo.getLength());
 			if (token == null)// comment
 				return true;
 			if (token.getType() == PHPRegionTypes.PHP_SEMICOLON
@@ -472,6 +471,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return false;
 	}
 
+	/**
+	 * @since 2.2
+	 */
 	public static boolean shouldNotConsiderAsIndentationBase(
 			final String currentState, final String forState) {
 		return currentState != forState
