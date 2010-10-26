@@ -22,8 +22,6 @@
 	<property name="pdt-folder" value="${eclipse-home}/pdt_folder" />
 
 
-	<!-- Where should we output the results? -->
-	<property name="output.dir" value="${pdt-folder}/org.eclipse.php.core/emma" />
 	<!-- Emma? Where are you? (Emma installation directory) -->
 	<property name='emma.dir' value='/shared/tools/php/emma-2.0.5312' />
 	<!-- Where are the class files? -->
@@ -66,18 +64,18 @@
 	<target name="run" depends="init,suite,cleanup">
 		<emma>
 			<!-- instrumentation of bin folder -->
-			<instr instrpath="${bin}" mode="overwrite" outfile="${output.dir}/coverage.emma" />
+			<instr instrpath="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
 		</emma>
 		<ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="includes" value="org*.xml" />
 			<property name="output-file" value="${plugin-name}.xml" />
-			<property name="extraVMargs" value="-Demma.coverage.out.file=${output.dir}/coverage.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
+			<property name="extraVMargs" value="-Demma.coverage.out.file=${pdt-folder}/phpcore.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
 		</ant>
 		<emma>
 			<!-- creating a report -->
 			<report sort="+name,+class,+method,+block" sourcepath="${src.dir}">
-				<infileset dir="${output.dir}" includes="*.emma, *.ec" />
-				<html outfile="${output.dir}/index.html" depth="method" columns="name,class,method,block,line" />
+				<infileset dir="${pdt-folder}" includes="*.emma, *.ec" />
+				<html outfile="${pdt-folder}/index.html" depth="method" columns="name,class,method,block,line" />
 			</report>
 		</emma>
 	</target>
