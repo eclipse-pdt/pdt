@@ -48,6 +48,7 @@
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
 		<delete dir="${pdt-folder}" quiet="true" />
+		<echo>testresults-folder=================================${testresults-folder}</echo>
 		<emma>
 			<!-- instrumentation of jar -->
 			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
