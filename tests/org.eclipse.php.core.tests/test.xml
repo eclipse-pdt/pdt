@@ -25,10 +25,10 @@
 	<!-- Emma? Where are you? (Emma installation directory) -->
 	<property name='emma.dir' value='/shared/tools/php/emma-2.0.5312' />
 	<!-- Where are the class files? -->
-	<!-- <property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar' /> -->
+	<!-- <property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar' />
 	<path id='bin'>
-			<fileset dir='${eclipse-home}' includes='plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar' />
-		</path>
+		<fileset dir='${eclipse-home}' includes='plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar' />
+	</path> -->
 	<!-- EMMA distribution directory: -->
 	<path id='emma.lib'>
 		<fileset dir='${emma.dir}' includes='lib/*.jar' />
@@ -46,31 +46,24 @@
 
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
-
 		<delete dir="${pdt-folder}" quiet="true" />
-		<echo>=======================start instr=======================</echo>
-		<echo>=======================${eclipse-home}=======================</echo>
-		<echo>=======================${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar=======================</echo>
 		<emma>
-			<!-- instrumentation of bin folder -->
+			<!-- instrumentation of jar -->
 			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
 		</emma>
-		<echo>=======================end instr=======================</echo>
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${pdt-folder}" />
 			<property name="plugin-name" value="${plugin-name}" />
 			<property name="classname" value="org.eclipse.php.core.tests.AllTests" />
 			<property name="extraVMargs" value="-Demma.coverage.out.file=${pdt-folder}/phpcore.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
 		</ant>
-		<echo>=======================start report=======================</echo>
 		<emma>
 			<!-- creating a report -->
 			<report sort="+name,+class,+method,+block">
 				<infileset dir="${pdt-folder}" includes="*.emma, *.ec" />
-				<html outfile="${pdt-folder}/index.html" depth="method" columns="name,class,method,block,line" />
+				<html outfile="${pdt-folder}/phpcorecoverage.html" depth="method" columns="name,class,method,block,line" />
 			</report>
 		</emma>
-		<echo>=======================end report=======================</echo>
 	</target>
 
 	<!-- This target holds code to cleanup the testing environment after -->
