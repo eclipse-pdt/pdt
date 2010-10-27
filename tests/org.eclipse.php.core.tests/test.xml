@@ -20,7 +20,7 @@
 	<property name="plugin-name" value="org.eclipse.php.core.tests" />
 	<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test/library.xml" />
 	<property name="pdt-folder" value="${eclipse-home}/pdt_folder" />
-	<property name="testresults-folder" value="${writableBuildRoot}/testresults" />
+	<property name="testresults-folder" value="${buildDir}/testresults" />
 
 
 	<!-- Emma? Where are you? (Emma installation directory) -->
