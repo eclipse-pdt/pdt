@@ -48,11 +48,28 @@
 	<target name="suite">
 
 		<delete dir="${pdt-folder}" quiet="true" />
+		<echo>=======================start instr=======================</echo>
+		<echo>=======================${eclipse-home}=======================</echo>
+		<echo>=======================${bin}=======================</echo>
+		<emma>
+			<!-- instrumentation of bin folder -->
+			<instr instrpathref="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
+		</emma>
+		<echo>=======================end instr=======================</echo>
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${pdt-folder}" />
 			<property name="plugin-name" value="${plugin-name}" />
 			<property name="classname" value="org.eclipse.php.core.tests.AllTests" />
 		</ant>
+		<echo>=======================start report=======================</echo>
+		<emma>
+			<!-- creating a report -->
+			<report sort="+name,+class,+method,+block">
+				<infileset dir="${pdt-folder}" includes="*.emma, *.ec" />
+				<html outfile="${pdt-folder}/index.html" depth="method" columns="name,class,method,block,line" />
+			</report>
+		</emma>
+		<echo>=======================end report=======================</echo>
 	</target>
 
 	<!-- This target holds code to cleanup the testing environment after -->
@@ -64,27 +81,12 @@
 	<!-- This target runs the test suite. Any actions that need to happen -->
 	<!-- after all the tests have been run should go here. -->
 	<target name="run" depends="init,suite,cleanup">
-		<echo>=======================start instr=======================</echo>
-		<echo>=======================${eclipse-home}=======================</echo>
-		<echo>=======================${bin}=======================</echo>
-		<emma>
-			<!-- instrumentation of bin folder -->
-			<instr instrpathref="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
-		</emma>
-		<echo>=======================end instr=======================</echo>
+
 		<ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="includes" value="org*.xml" />
 			<property name="output-file" value="${plugin-name}.xml" />
 			<property name="extraVMargs" value="-Demma.coverage.out.file=${pdt-folder}/phpcore.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
 		</ant>
-		<echo>=======================start report=======================</echo>
-		<emma>
-			<!-- creating a report -->
-			<report sort="+name,+class,+method,+block">
-				<infileset dir="${pdt-folder}" includes="*.emma, *.ec" />
-				<html outfile="${pdt-folder}/index.html" depth="method" columns="name,class,method,block,line" />
-			</report>
-		</emma>
-		<echo>=======================end report=======================</echo>
+
 	</target>
 </project>
