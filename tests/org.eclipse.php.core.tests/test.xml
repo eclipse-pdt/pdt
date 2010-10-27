@@ -60,6 +60,7 @@
 			<property name="data-dir" value="${pdt-folder}" />
 			<property name="plugin-name" value="${plugin-name}" />
 			<property name="classname" value="org.eclipse.php.core.tests.AllTests" />
+			<property name="extraVMargs" value="-Demma.coverage.out.file=${pdt-folder}/phpcore.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
 		</ant>
 		<echo>=======================start report=======================</echo>
 		<emma>
@@ -85,7 +86,6 @@
 		<ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="includes" value="org*.xml" />
 			<property name="output-file" value="${plugin-name}.xml" />
-			<property name="extraVMargs" value="-Demma.coverage.out.file=${pdt-folder}/phpcore.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
 		</ant>
 
 	</target>
