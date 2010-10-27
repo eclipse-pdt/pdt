@@ -53,7 +53,7 @@
 		<echo>=======================${bin}=======================</echo>
 		<emma>
 			<!-- instrumentation of bin folder -->
-			<instr instrpathref="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
+			<instr instrpath="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
 		</emma>
 		<echo>=======================end instr=======================</echo>
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
