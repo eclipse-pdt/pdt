@@ -32,8 +32,8 @@
 	</target>
 	<target name="postProcess">
 		<echo>analysis  start=================================</echo>
-		<apitooling.apigeneration projectname="org.eclipse.php.core" project="${buildDirectory}/plugins/org.eclipse.php.core" binary="${buildDirectory}/plugins/org.eclipse.php.core/bin" target="${buildDirectory}/plugins/org.eclipse.php.core" debug="true" />
-		<apitooling.apigeneration projectname="org.eclipse.php.ui" project="${buildDirectory}/plugins/org.eclipse.php.ui" binary="${buildDirectory}/plugins/org.eclipse.php.ui/bin" target="${buildDirectory}/plugins/org.eclipse.php.ui" debug="true" />
+		<apitooling.apigeneration projectname="org.eclipse.php.core" project="${buildDirectory}/plugins/org.eclipse.php.core" binary="${buildDirectory}/plugins/org.eclipse.php.core/@dot" target="${buildDirectory}/plugins/org.eclipse.php.core" debug="true" />
+		<apitooling.apigeneration projectname="org.eclipse.php.ui" project="${buildDirectory}/plugins/org.eclipse.php.ui" binary="${buildDirectory}/plugins/org.eclipse.php.ui/@dot" target="${buildDirectory}/plugins/org.eclipse.php.ui" debug="true" />
 		<apitooling.analysis baseline="${baseline}" profile="${profile}" report="${report_location}" debug="true" />
 		<apitooling.analysis_reportconversion htmlfiles="${html_report_location}" xmlfiles="${report_location}" debug="true" />
 	</target>
