@@ -50,10 +50,10 @@
 		<delete dir="${pdt-folder}" quiet="true" />
 		<echo>=======================start instr=======================</echo>
 		<echo>=======================${eclipse-home}=======================</echo>
-		<echo>=======================${bin}=======================</echo>
+		<echo>=======================${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar=======================</echo>
 		<emma>
 			<!-- instrumentation of bin folder -->
-			<instr instrpath="${bin}" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
+			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${pdt-folder}/phpcore.emma" />
 		</emma>
 		<echo>=======================end instr=======================</echo>
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
