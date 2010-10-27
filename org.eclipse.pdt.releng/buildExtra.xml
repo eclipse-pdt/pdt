@@ -31,11 +31,12 @@
 		<ant antfile="${parserGenerator}" />
 	</target>
 	<target name="postProcess">
-		<echo>analysis  start=================================</echo>
-		<echo>baseline=================================${baseline}</echo>
-		<echo>profile=================================${profile}</echo>
 		<apitooling.apigeneration projectname="org.eclipse.php.core" project="${buildDirectory}/plugins/org.eclipse.php.core" binary="${buildDirectory}/plugins/org.eclipse.php.core/@dot" target="${buildDirectory}/plugins/org.eclipse.php.core" debug="true" />
 		<apitooling.apigeneration projectname="org.eclipse.php.ui" project="${buildDirectory}/plugins/org.eclipse.php.ui" binary="${buildDirectory}/plugins/org.eclipse.php.ui/@dot" target="${buildDirectory}/plugins/org.eclipse.php.ui" debug="true" />
+	</target>
+	<target name="postAssemble">
+		<echo>analysis  start=================================</echo>
+		<echo>baseline=================================${baseline}</echo>
 		<apitooling.analysis baseline="${baseline}" profile="${profile}" report="${report_location}" debug="true" />
 		<apitooling.analysis_reportconversion htmlfiles="${html_report_location}" xmlfiles="${report_location}" debug="true" />
 	</target>
