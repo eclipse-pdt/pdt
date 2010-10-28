@@ -4,10 +4,10 @@
 	<property name="baseline" value="/home/zhaozw/Desktop/pdt-SDK-S201006090518.zip" />
 	<property name="profile" value="/home/zhaozw/Desktop/pdt-SDK-N201010231504.zip" />
 	<property name="baseline" value="${buildDir}/${buildLabel}/${masterZip}" /> -->
-	<property name="baseline" value="${buildDirectory}/${buildLabel}/${masterZip}" />
+	<property name="baseline" value="/home/data/httpd/download.eclipse.org/tools/pdt/downloads/drops/2.2.0/S201006090518/pdt-SDK-S201006090518.zip" />
 	<property name="profile" value="${buildDirectory}/${buildLabel}/${masterZip}" />
-	<property name="report_location" value="${writableBuildRoot}/api" />
-	<property name="html_report_location" value="${writableBuildRoot}/api-html" />
+	<property name="report_location" value="${buildDir}/api" />
+	<property name="html_report_location" value="${buildDir}/api-html" />
 	<target name="preFetch">
 		<echo>check out org.eclipse.test to ${buildDirectory}/plugins/, because Athen expects it as source</echo>
 		<cvs cvsroot=":pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse" package="org.eclipse.test" dest="${buildDirectory}/plugins/" tag="v20081002" />
@@ -38,6 +38,8 @@
 	<target name="extraPackaging">
 		<echo>analysis  start=================================</echo>
 		<echo>baseline=================================${baseline}</echo>
+		<mkdir dir="${report_location}"/>
+		<mkdir dir="${html_report_location}"/>
 		<apitooling.analysis baseline="${baseline}" profile="${profile}" report="${report_location}" debug="true" />
 		<apitooling.analysis_reportconversion htmlfiles="${html_report_location}" xmlfiles="${report_location}" debug="true" />
 	</target>
