@@ -37,9 +37,17 @@
 	</target>
 	<target name="extraPackaging">
 		<echo>analysis  start=================================</echo>
-		<echo>baseline=================================${baseline}</echo>
-		<mkdir dir="${report_location}"/>
-		<mkdir dir="${html_report_location}"/>
+		<if>
+			<available file="${baseline}" type="file" />
+			<then>
+				<echo>baseline aaaaa=================================${baseline}</echo>
+			</then>
+			<else>
+				<echo>baseline bbbbb=================================${baseline}</echo>
+			</else>
+		</if>
+		<mkdir dir="${report_location}" />
+		<mkdir dir="${html_report_location}" />
 		<apitooling.analysis baseline="${baseline}" profile="${profile}" report="${report_location}" debug="true" />
 		<apitooling.analysis_reportconversion htmlfiles="${html_report_location}" xmlfiles="${report_location}" debug="true" />
 	</target>
