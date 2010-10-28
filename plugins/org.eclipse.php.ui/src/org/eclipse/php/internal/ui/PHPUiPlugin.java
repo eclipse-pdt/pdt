@@ -32,7 +32,6 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.osgi.service.environment.EnvironmentInfo;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
-import org.eclipse.php.internal.ui.dnd.DNDUtils;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
 import org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
@@ -139,10 +138,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 		Job job = new Job("") {
 			protected IStatus run(IProgressMonitor monitor) {
 
-				PlatformUI.getWorkbench().getDisplay().asyncExec(
-						new Runnable() {
+				PlatformUI.getWorkbench().getDisplay()
+						.asyncExec(new Runnable() {
 							public void run() {
-								DNDUtils.initEditorSiteExternalDrop();
 								processCommandLine(context);
 							}
 						});
