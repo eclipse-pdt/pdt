@@ -139,7 +139,7 @@ public interface ICompletionReporter {
 			SourceRange replaceRange);
 
 	/**
-	 * @since 2.2
+	 * @since 2.3
 	 * @return
 	 */
 	public IModuleSource getModule();
