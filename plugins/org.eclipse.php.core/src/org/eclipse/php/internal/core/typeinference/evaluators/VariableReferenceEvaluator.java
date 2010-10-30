@@ -92,8 +92,8 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 							.sourceStart()) {
 						break;
 					}
-					if (varComment.getVariableReference().getName().equals(
-							variableReference.getName())) {
+					if (varComment.getVariableReference().getName()
+							.equals(variableReference.getName())) {
 						List<IGoal> goals = new LinkedList<IGoal>();
 						for (TypeReference ref : varComment.getTypeReferences()) {
 							goals.add(new ExpressionTypeGoal(context, ref));
@@ -203,7 +203,8 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		}
 
 		protected void postProcessGeneral(ASTNode node) {
-			if (node.sourceStart() == variableOffset) {
+			if (node.sourceStart() <= variableOffset
+					&& node.sourceEnd() >= variableOffset) {
 				variableContext = contextStack.peek();
 				variableLevel = getScope(variableContext).getInnerBlockLevel();
 			}
