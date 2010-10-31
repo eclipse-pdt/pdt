@@ -1,0 +1,20 @@
+--TEST--
+Test class constructor
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+    class Foo {
+       public $test;
+    }
+
+    class Bar {
+       public function test() {
+          $Foo = new Foo();
+          $Foo->test;            // code assist works here
+          $name = $Foo->|         // code assist doesn't work here
+       }
+    }
+?>
+--EXPECT--
+field($test)
