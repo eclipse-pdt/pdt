@@ -50,7 +50,7 @@
 		</if>
 		<mkdir dir="${report_location}" />
 		<mkdir dir="${html_report_location}" />
-		<apitooling.analysis baseline="${baseline}" profile="${profile}" report="${report_location}" debug="true" />
+		<apitooling.analysis baseline="${baseline}" profile="${profile}" report="${report_location}" debug="true" includelist="${buildDirectory}/plugins/org.eclipse.php/includeList.txt"/>
 		<apitooling.analysis_reportconversion htmlfiles="${html_report_location}" xmlfiles="${report_location}" debug="true" />
 	</target>
 </project>
