@@ -1,0 +1,8 @@
+org.eclipse.php.core
+org.eclipse.php.debug.core
+org.eclipse.php.debug.daemon
+org.eclipse.php.debug.ui
+org.eclipse.php.mylyn.ui
+org.eclipse.php.server.core
+org.eclipse.php.server.ui
+org.eclipse.php.ui
