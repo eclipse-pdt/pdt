@@ -5,11 +5,9 @@
 	<property name="profile" value="/home/zhaozw/Desktop/pdt-SDK-N201010231504.zip" />
 	<property name="baseline" value="${buildDir}/${buildLabel}/${masterZip}" />
 	<property name="baseline" value="/home/data/httpd/download.eclipse.org/tools/pdt/downloads/drops/2.2.0/S201006090518/pdt-SDK-S201006090518.zip" />
-	<property name="profile" value="${buildDirectory}/${buildLabel}/${masterZip}" />
+	<property name="profile" value="${buildDirectory}/${buildLabel}/${masterZip}" /> -->
 	<property name="baseline" value="/home/data/httpd/download.eclipse.org/technology/epp/downloads/release/helios/SR1/eclipse-php-helios-SR1-win32.zip" />
-	<property name="profile" value="${buildDirectory}" /> -->
-	<property name="profile" value="/home/data/httpd/download.eclipse.org/technology/epp/downloads/release/helios/SR1/eclipse-php-helios-SR1-win32.zip" />
-	<property name="baseline" value="${buildDirectory}" />
+	<property name="profile" value="${buildDirectory}" />
 	<property name="report_location" value="${buildDir}/api" />
 	<property name="html_report_location" value="${buildDir}/api-html" />
 	<target name="preFetch">
