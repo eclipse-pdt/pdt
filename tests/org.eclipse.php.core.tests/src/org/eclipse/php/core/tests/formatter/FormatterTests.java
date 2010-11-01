@@ -26,6 +26,13 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.dltk.compiler.problem.IProblem;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuffer;
+import org.eclipse.dltk.core.IProblemRequestor;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ScriptModelUtil;
+import org.eclipse.dltk.core.WorkingCopyOwner;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
@@ -48,8 +55,8 @@ public class FormatterTests extends AbstractPDTTTest {
 	protected static int count;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"FormatterTests");
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("FormatterTests");
 		if (project.exists()) {
 			return;
 		}
@@ -61,6 +68,20 @@ public class FormatterTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+
+		WorkingCopyOwner.setPrimaryBufferProvider(new WorkingCopyOwner() {
+			public IBuffer createBuffer(ISourceModule workingCopy) {
+				ISourceModule original = workingCopy.getPrimary();
+				IResource resource = original.getResource();
+				if (resource != null) {
+					if (resource instanceof IFile) {
+						return new DocumentAdapter(workingCopy,
+								(IFile) resource);
+					}
+				}
+				return DocumentAdapter.NULL;
+			}
+		});
 
 		for (PdttFile pdttFile : filesMap.keySet()) {
 			IFile file = createFile(pdttFile.getFile().trim());
@@ -108,7 +129,37 @@ public class FormatterTests extends AbstractPDTTTest {
 							protected void runTest() throws Throwable {
 
 								IFile file = filesMap.get(pdttFile);
+								ISourceModule modelElement = (ISourceModule) DLTKCore
+										.create(file);
+								if (ScriptModelUtil.isPrimary(modelElement))
+									modelElement.becomeWorkingCopy(
+											new IProblemRequestor() {
 
+												public void acceptProblem(
+														IProblem problem) {
+													// TODO Auto-generated
+													// method stub
+
+												}
+
+												public void beginReporting() {
+													// TODO Auto-generated
+													// method stub
+
+												}
+
+												public void endReporting() {
+													// TODO Auto-generated
+													// method stub
+
+												}
+
+												public boolean isActive() {
+													// TODO Auto-generated
+													// method stub
+													return false;
+												}
+											}, null);
 								IStructuredModel modelForEdit = StructuredModelManager
 										.getModelManager()
 										.getModelForEdit(file);
@@ -120,7 +171,6 @@ public class FormatterTests extends AbstractPDTTTest {
 									PhpFormatProcessorImpl formatter = new PhpFormatProcessorImpl();
 									formatter.formatDocument(document, 0,
 											document.getLength());
-
 									assertContents(pdttFile.getExpected(),
 											document.get());
 
