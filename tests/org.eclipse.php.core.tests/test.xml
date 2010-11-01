@@ -20,7 +20,7 @@
 	<property name="plugin-name" value="org.eclipse.php.core.tests" />
 	<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test/library.xml" />
 	<property name="pdt-folder" value="${eclipse-home}/pdt_folder" />
-	<property name="testresults-folder" value="${buildDir}/testresults" />
+	<property name="testresults-folder" value="${buildDir}/emmatestresults" />
 
 
 	<!-- Emma? Where are you? (Emma installation directory) -->
@@ -48,6 +48,9 @@
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
 		<delete dir="${pdt-folder}" quiet="true" />
+		<echo>instr  start=================================</echo>
+		<echo>${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar</echo>
+		<echo>${testresults-folder}</echo>
 		<emma>
 			<!-- instrumentation of jar -->
 			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
