@@ -40,7 +40,7 @@
 			<property name="data-dir" value="${pdt-folder}" />
 			<property name="plugin-name" value="${plugin-name}" />
 			<property name="classname" value="org.eclipse.php.ui.tests.AllTests" />
-			<property name="extraVMargs" value="-Demma.coverage.out.file=${pdt-folder}/phpui.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
+			<property name="extraVMargs" value="-Demma.coverage.out.file=${pdt-folder}/phpcore.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
 		</ant>
 	</target>
 
