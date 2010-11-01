@@ -38,16 +38,6 @@
 		<apitooling.apigeneration projectname="org.eclipse.php.ui" project="${buildDirectory}/plugins/org.eclipse.php.ui" binary="${buildDirectory}/plugins/org.eclipse.php.ui/@dot" target="${buildDirectory}/plugins/org.eclipse.php.ui" debug="true" />
 	</target>
 	<target name="extraPackaging">
-		<echo>analysis  start=================================</echo>
-		<if>
-			<available file="${baseline}" type="file" />
-			<then>
-				<echo>baseline aaaaa=================================${baseline}</echo>
-			</then>
-			<else>
-				<echo>baseline bbbbb=================================${baseline}</echo>
-			</else>
-		</if>
 		<mkdir dir="${report_location}" />
 		<mkdir dir="${html_report_location}" />
 		<apitooling.analysis baseline="${baseline}" profile="${profile}" report="${report_location}" debug="true" excludelist="${buildDirectory}/plugins/org.eclipse.php/excludelist.txt"/>
