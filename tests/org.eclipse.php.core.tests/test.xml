@@ -53,7 +53,7 @@
 		<echo>${testresults-folder}</echo>
 		<emma>
 			<!-- instrumentation of jar -->
-			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_2.2.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
+			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_2.3.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
 		</emma>
 		<mkdir dir="${testresults-folder}" />
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
