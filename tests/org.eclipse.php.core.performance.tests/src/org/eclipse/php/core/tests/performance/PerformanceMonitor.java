@@ -41,8 +41,6 @@ public class PerformanceMonitor {
 
 		pool = JdbcConnectionPool.create("jdbc:h2:"
 				+ new File(resultsDir, "db").getAbsolutePath(), "test", "");
-		System.out.println("db file location ================");
-		System.out.println(new File(resultsDir, "db").getAbsolutePath());
 		createSchema();
 		executionId = getExecutionId();
 
