@@ -34,7 +34,7 @@ public class PerformanceMonitor {
 
 		File resultsDir = new File(System.getProperty("user.home")
 				+ File.separator + ".perf_results" + File.separator
-				+ bundle.getSymbolicName());
+				+ bundle.getSymbolicName() + bundle.getVersion());
 		if (!resultsDir.exists()) {
 			resultsDir.mkdirs();
 		}
