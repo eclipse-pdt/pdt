@@ -15,6 +15,7 @@
 package org.eclipse.php.internal.ui.actions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.dltk.internal.ui.actions.CCPActionGroup;
 import org.eclipse.dltk.internal.ui.actions.refactoring.RefactorActionGroup;
@@ -49,6 +50,29 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 
 	public PHPExplorerActionGroup(ScriptExplorerPart part) {
 		super(part);
+		removeWrongWorkingSetFilter(part);
+	}
+
+	/**
+	 * bug 329194: Changing working set show blank explorer. Now there are two
+	 * working set filters,and the second is not updated when change working
+	 * set.So remove the second one.
+	 * 
+	 * @param part
+	 */
+	private void removeWrongWorkingSetFilter(ScriptExplorerPart part) {
+		ViewerFilter filter = super.getWorkingSetActionGroup().getFilterGroup()
+				.getWorkingSetFilter();
+		ViewerFilter[] filters = part.getTreeViewer().getFilters();
+		List<ViewerFilter> filterList = new ArrayList<ViewerFilter>();
+		for (int i = 0; i < filters.length; i++) {
+			ViewerFilter viewerFilter = filters[i];
+			if (viewerFilter != filter) {
+				filterList.add(viewerFilter);
+			}
+		}
+		part.getTreeViewer().setFilters(
+				filterList.toArray(new ViewerFilter[filterList.size()]));
 	}
 
 	/*
@@ -178,12 +202,12 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 					TreePath[] paths = ((ITreeSelection) selection)
 							.getPathsFor(element);
 					for (int i = 0; i < paths.length; i++) {
-						viewer.setExpandedState(paths[i], !viewer
-								.getExpandedState(paths[i]));
+						viewer.setExpandedState(paths[i],
+								!viewer.getExpandedState(paths[i]));
 					}
 				} else {
-					viewer.setExpandedState(element, !viewer
-							.getExpandedState(element));
+					viewer.setExpandedState(element,
+							!viewer.getExpandedState(element));
 				}
 			}
 		} else {
@@ -198,8 +222,8 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 	 */
 	private boolean doubleClickGoesInto() {
 		return PreferenceConstants.DOUBLE_CLICK_GOES_INTO.equals(DLTKUIPlugin
-				.getDefault().getPreferenceStore().getString(
-						PreferenceConstants.DOUBLE_CLICK));
+				.getDefault().getPreferenceStore()
+				.getString(PreferenceConstants.DOUBLE_CLICK));
 	}
 
 	public ViewActionGroup getWorkingSetActionGroup() {
