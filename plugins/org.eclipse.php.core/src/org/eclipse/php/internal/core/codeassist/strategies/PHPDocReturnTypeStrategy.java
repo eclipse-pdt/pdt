@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -24,6 +25,11 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  */
 public class PHPDocReturnTypeStrategy extends GlobalClassesStrategy {
 
+	private static final String ARRAY_TYPE = "array";
+	private static final String MIXED_TYPE = "mixed";
+	private static final String VOID_TYPE = "void";
+	private static final String EMPTY = "";
+
 	public PHPDocReturnTypeStrategy(ICompletionContext context) {
 		super(context);
 	}
@@ -34,6 +40,18 @@ public class PHPDocReturnTypeStrategy extends GlobalClassesStrategy {
 			return;
 		}
 		super.apply(reporter);
+		String prefix = ((PHPDocTagContext) context).getPrefix();
+		SourceRange replaceRange = getReplacementRange(context);
+		reportKeyword(reporter, replaceRange, ARRAY_TYPE, prefix);
+		reportKeyword(reporter, replaceRange, MIXED_TYPE, prefix);
+		reportKeyword(reporter, replaceRange, VOID_TYPE, prefix);
+	}
+
+	private void reportKeyword(ICompletionReporter reporter,
+			SourceRange replaceRange, String keyword, String prefix) {
+		if (keyword.startsWith(prefix)) {
+			reporter.reportKeyword(keyword, EMPTY, replaceRange);
+		}
 	}
 
 	@Override
