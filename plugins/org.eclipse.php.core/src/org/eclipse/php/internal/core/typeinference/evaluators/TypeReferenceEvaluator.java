@@ -148,21 +148,25 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			if (context instanceof INamespaceContext) {
 				parentNamespace = ((INamespaceContext) context).getNamespace();
 			}
-
+			String fullyQualifiedName;
 			// If the namespace was prefixed explicitly - use it:
 			if (typeReference instanceof FullyQualifiedReference) {
-				String fullyQualifiedName = ((FullyQualifiedReference) typeReference)
+				fullyQualifiedName = ((FullyQualifiedReference) typeReference)
 						.getFullyQualifiedName();
-				ISourceModule sourceModule = ((ISourceModuleContext) context)
-						.getSourceModule();
-				int offset = typeReference.sourceStart();
-				String extractedNamespace = PHPModelUtils.extractNamespaceName(
-						fullyQualifiedName, sourceModule, offset);
-				if (extractedNamespace != null) {
-					parentNamespace = extractedNamespace;
-					className = PHPModelUtils.getRealName(fullyQualifiedName,
-							sourceModule, offset, className);
-				}
+			} else {
+				fullyQualifiedName = typeReference.getName();
+				className = PHPModelUtils
+						.extractElementName(fullyQualifiedName);
+			}
+			ISourceModule sourceModule = ((ISourceModuleContext) context)
+					.getSourceModule();
+			int offset = typeReference.sourceStart();
+			String extractedNamespace = PHPModelUtils.extractNamespaceName(
+					fullyQualifiedName, sourceModule, offset);
+			if (extractedNamespace != null) {
+				parentNamespace = extractedNamespace;
+				className = PHPModelUtils.getRealName(fullyQualifiedName,
+						sourceModule, offset, className);
 			}
 
 			if (parentNamespace != null) {
