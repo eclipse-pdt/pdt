@@ -1,0 +1,14 @@
+--TEST--
+Test PHPDoc Function Return Type
+--FILE--
+<?php
+
+/**
+ * @return arr|
+ */
+function foo() {}
+?>
+--EXPECT--
+type(ArrayObject)
+type(ArrayIterator)
+keyword(array)
