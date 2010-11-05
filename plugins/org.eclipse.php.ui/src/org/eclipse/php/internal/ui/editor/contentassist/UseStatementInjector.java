@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -72,8 +73,18 @@ public class UseStatementInjector {
 		return identifiers;
 	}
 
-	private NamespaceDeclaration getCurrentNamespace(Program program, int offset) {
-		ASTNode node = program.getElementAt(offset);
+	private NamespaceDeclaration getCurrentNamespace(Program program,
+			ISourceModule sourceModule, int offset) {
+		SourceType ns = (SourceType) PHPModelUtils.getCurrentNamespace(
+				sourceModule, offset);
+		ASTNode node = null;
+		try {
+			node = program.getElementAt(ns.getSourceRange().getOffset());
+		} catch (ModelException e) {
+		}
+		if (node == null) {
+			return null;
+		}
 		do {
 			switch (node.getType()) {
 			case ASTNode.NAMESPACE:
@@ -282,7 +293,7 @@ public class UseStatementInjector {
 												.asList(new UseStatementPart[] { newUseStatementPart }));
 
 								NamespaceDeclaration currentNamespace = getCurrentNamespace(
-										program, offset - 1);
+										program, sourceModule, offset - 1);
 								if (currentNamespace != null) {
 									if (namespaceName
 											.equals(getNamespaceName(currentNamespace))) {
