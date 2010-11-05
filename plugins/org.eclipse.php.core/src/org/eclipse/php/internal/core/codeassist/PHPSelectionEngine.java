@@ -313,9 +313,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 				// Class/Interface reference:
 				else if (node instanceof TypeReference) {
-					String name = (node instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) node)
-							.getFullyQualifiedName()
-							: ((TypeReference) node).getName();
+					IEvaluatedType evaluatedType = PHPTypeInferenceUtils
+							.resolveExpression(sourceModule, node);
+					String name = evaluatedType.getTypeName();
 					IType[] types = PHPModelUtils.getTypes(name, sourceModule,
 							offset, null, null);
 					if (types == null || types.length == 0) {
@@ -338,12 +338,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					ClassInstanceCreation newNode = (ClassInstanceCreation) node;
 					Expression className = newNode.getClassName();
 					if (className instanceof SimpleReference) {
-						String name = (className instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) className)
-								.getFullyQualifiedName()
-								: ((SimpleReference) className).getName();
+						IEvaluatedType evaluatedType = PHPTypeInferenceUtils
+								.resolveExpression(sourceModule, node);
 						return getConstructorsIfAny(extractClasses(PHPModelUtils
-								.getTypes(name, sourceModule, offset, null,
-										null)));
+								.getTypes(evaluatedType.getTypeName(),
+										sourceModule, offset, null, null)));
 					}
 				}
 				// Class name in declaration
