@@ -80,5 +80,8 @@ public interface ICommunicationDaemon {
 	 */
 	public boolean isDebuggerDaemon();
 
+	/**
+	 * @since 2.2
+	 */
 	public boolean isInitialized();
 }
