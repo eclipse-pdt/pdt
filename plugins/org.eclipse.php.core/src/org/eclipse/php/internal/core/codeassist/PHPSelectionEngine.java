@@ -213,8 +213,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					} else {
 						SimpleReference callName = callExpression.getCallName();
 						String methodName = callName instanceof FullyQualifiedReference ? ((FullyQualifiedReference) callName)
-								.getFullyQualifiedName()
-								: callName.getName();
+								.getFullyQualifiedName() : callName.getName();
 						IMethod[] functions = PHPModelUtils.getFunctions(
 								methodName, sourceModule, offset, null, null);
 						return functions == null ? EMPTY : functions;
@@ -320,6 +319,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							offset, null, null);
 					if (types == null || types.length == 0) {
 						// This can be a constant or namespace in PHP 5.3:
+						if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+							name = name.substring(1);
+						}
 						IDLTKSearchScope scope = SearchEngine
 								.createSearchScope(sourceModule
 										.getScriptProject());
@@ -327,6 +329,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								name, MatchRule.EXACT, Modifiers.AccNameSpace,
 								0, scope, null);
 						if (types == null || types.length == 0) {
+							name = NamespaceReference.NAMESPACE_SEPARATOR
+									+ name;
 							return PHPModelUtils.getFields(name, sourceModule,
 									offset, null, null);
 						}
@@ -420,11 +424,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 					} while (nextRegion.getEnd() < phpScriptRegion.getLength());
 
-					String nextWord = sDoc
-							.get(container.getStartOffset()
+					String nextWord = sDoc.get(
+							container.getStartOffset()
 									+ phpScriptRegion.getStart()
-									+ nextRegion.getStart(), nextRegion
-									.getTextLength());
+									+ nextRegion.getStart(),
+							nextRegion.getTextLength());
 
 					if (elementName.length() > 0) {
 						IType containerType = PHPModelUtils.getCurrentType(
