@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.internal.core.*;
 import org.eclipse.php.core.compiler.IPHPModifiers;
