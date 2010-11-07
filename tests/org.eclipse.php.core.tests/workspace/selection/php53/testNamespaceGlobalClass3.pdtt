@@ -1,0 +1,12 @@
+--TEST--
+Test namespace element selection for global class
+--FILE--
+<?php
+namespace ns;
+
+use Exception;
+
+$e = new |Exception|();
+?>
+--EXPECT--
+method(__construct)

@@ -1,0 +1,13 @@
+--TEST--
+Test namespace element selection for use statement
+--FILE--
+<?
+namespace NS;
+class foo {
+}
+
+namespace OtherNS;
+use \|NS|;
+?>
+--EXPECT--
+type(NS)
