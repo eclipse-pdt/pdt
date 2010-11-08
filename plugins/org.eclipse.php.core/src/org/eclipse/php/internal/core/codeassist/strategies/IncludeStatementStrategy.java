@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -284,11 +287,17 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 	}
 
 	private void addInternalEntries(ICompletionReporter reporter,
-			SourceRange replaceRange, final Object entry,
-			IPath prefixPathFolder, IPath lastSegmant) throws CoreException {
+			SourceRange replaceRange, Object entry, IPath prefixPathFolder,
+			IPath lastSegmant) throws CoreException {
 		IContainer container = (IContainer) entry;
 		if (prefixPathFolder.segmentCount() > 0) {
-			container = container.getFolder(prefixPathFolder);
+			for (IContainer con : getContainers(container)) {
+				container = con.getFolder(prefixPathFolder);
+				if (container.isAccessible()) {
+					entry = con;
+					break;
+				}
+			}
 		}
 
 		if (!container.isAccessible()) {
@@ -296,6 +305,38 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		}
 
 		ICompletionContext context = getContext();
+		if (container instanceof IProject) {
+			for (IContainer con : getContainers(container)) {
+				findResource(reporter, replaceRange, con, lastSegmant, context,
+						con);
+			}
+		} else {
+			findResource(reporter, replaceRange, entry, lastSegmant, context,
+					container);
+		}
+	}
+
+	private IContainer[] getContainers(IContainer container)
+			throws ModelException {
+		if (container instanceof IProject) {
+			IScriptProject project = DLTKCore.create((IProject) container);
+			IProjectFragment[] fragments = project.getProjectFragments();
+			List<IContainer> containers = new ArrayList<IContainer>();
+			for (IProjectFragment fragment : fragments) {
+				if (fragment.getResource() instanceof IFolder
+						|| fragment.getResource() instanceof IProject) {
+					containers.add((IContainer) fragment.getResource());
+				}
+			}
+			return containers.toArray(new IContainer[containers.size()]);
+		}
+		return new IContainer[] { container };
+	}
+
+	private void findResource(ICompletionReporter reporter,
+			SourceRange replaceRange, final Object entry, IPath lastSegmant,
+			ICompletionContext context, IContainer container)
+			throws CoreException {
 		IResource[] members = container.members();
 		for (IResource resource : members) {
 			final IPath relative = resource.getFullPath().makeRelativeTo(

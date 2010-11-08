@@ -145,8 +145,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 					PharPath pharPath = PharPath.getPharPath(new Path(path));
 					if (pharPath != null) {
 						if (external
-								&& apfp
-										.equals(new Path(pharPath.getPharName()))
+								&& apfp.equals(new Path(pharPath.getPharName()))
 								|| !external
 								&& apfp.lastSegment().equals(
 										new Path(pharPath.getPharName())
@@ -203,9 +202,20 @@ public class PHPSearchEngine implements IIncludepathListener {
 					.getRoot();
 			IProject project = workspaceRoot.getProject(entryPath.segment(0));
 			if (project.isAccessible()) {
-				IResource resource = project.findMember(path);
-				if (resource instanceof IFile) {
-					return new ResourceResult((IFile) resource);
+				IScriptProject scriptProject = DLTKCore.create(project);
+				try {
+					for (IProjectFragment fragment : scriptProject
+							.getProjectFragments()) {
+						if (fragment.getResource() instanceof IFolder
+								|| fragment.getResource() instanceof IProject) {
+							IResource resource = ((IContainer) fragment
+									.getResource()).findMember(path);
+							if (resource instanceof IFile) {
+								return new ResourceResult((IFile) resource);
+							}
+						}
+					}
+				} catch (ModelException e) {
 				}
 			}
 		} else if (entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
