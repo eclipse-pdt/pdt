@@ -99,7 +99,7 @@ public class PHPStructuredPresentationReconciler extends
 
 				}
 
-				Set<StyleRange> fRangeSet = new HashSet<StyleRange>();
+				List<StyleRange> fRangeSet = new LinkedList<StyleRange>();
 
 				int jumpto = -1;
 				for (int i = 0; i < partitions.length; i++) {
