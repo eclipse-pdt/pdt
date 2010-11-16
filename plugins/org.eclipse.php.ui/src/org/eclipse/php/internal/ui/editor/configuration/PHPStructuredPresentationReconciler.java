@@ -28,7 +28,8 @@ public class PHPStructuredPresentationReconciler extends
 				ITypedRegion r = wholePartitions[i];
 				if (wholePartitions[i].getType().equals(
 						originalRegion.getType())) {
-					jumpto = getFollowingCSS(wholePartitions, i);
+					jumpto = getFollowingCSS(wholePartitions, i,
+							originalRegion.getType());
 					r = new SimpleStructuredTypedRegion(r.getOffset(),
 							wholePartitions[jumpto].getOffset()
 									+ wholePartitions[jumpto].getLength()
@@ -70,6 +71,7 @@ public class PHPStructuredPresentationReconciler extends
 					document, getDocumentPartitioning(), damage.getOffset(),
 					validLength, false);
 
+			if (containSpecialType(partitions)) {
 			// when modify editor content the damage region is not equal to
 			// document's region,so we need to adjust the damage region's start
 			// and length
@@ -97,21 +99,18 @@ public class PHPStructuredPresentationReconciler extends
 
 			}
 
-			Set<StyleRange> fRangeSet = new HashSet<StyleRange>();
+			List<StyleRange> fRangeSet = new LinkedList<StyleRange>();
 
 			int jumpto = -1;
 			for (int i = 0; i < partitions.length; i++) {
 				ITypedRegion r = partitions[i];
-				// IPresentationRepairer repairer = getRepairer(r.getType());
-				// if (repairer != null)
-				// repairer.createPresentation(presentation, r);
-				if (r.getType().equals(CSS_STYLE)) {
+				if (fTypeSet.contains(r.getType())) {
 					if (i > jumpto) {
-						jumpto = getFollowingCSS(partitions, i);
+						jumpto = getFollowingCSS(partitions, i, r.getType());
 						r = new SimpleStructuredTypedRegion(r.getOffset(),
 								partitions[jumpto].getOffset()
 										+ partitions[jumpto].getLength()
-										- r.getOffset(), CSS_STYLE);
+										- r.getOffset(), r.getType());
 						IPresentationRepairer repairer = getRepairer(r
 								.getType());
 						if (repairer != null) {
@@ -267,11 +266,30 @@ public class PHPStructuredPresentationReconciler extends
 
 			}
 			return presentation;
+			 } else {
+			 for (int i = 0; i < partitions.length; i++) {
+			 ITypedRegion r = partitions[i];
+			 IPresentationRepairer repairer = getRepairer(r.getType());
+			 if (repairer != null)
+			 repairer.createPresentation(presentation, r);
+			 }
+			 return presentation;
+			 }
 
 		} catch (BadLocationException x) {
 			/* ignored in platform PresentationReconciler, too */
 		}
 		return null;
+	}
+
+	private boolean containSpecialType(ITypedRegion[] partitions) {
+		for (int i = 0; i < partitions.length; i++) {
+			ITypedRegion r = partitions[i];
+			if (fTypeSet.contains(r.getType())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void addStyleRange(TextPresentation presentation,
@@ -315,14 +333,14 @@ public class PHPStructuredPresentationReconciler extends
 	// return null;
 	// }
 
-	private int getFollowingCSS(ITypedRegion[] partitions, int i) {
+	private int getFollowingCSS(ITypedRegion[] partitions, int i, String type) {
 		int result = i;
 		i++;
 		for (; i < partitions.length; i = i + 2) {
 			if (i + 1 < partitions.length
 					&& partitions[i].getType().equals(
 							PHPPartitionTypes.PHP_DEFAULT)
-					&& partitions[i + 1].getType().equals(CSS_STYLE)) {
+					&& partitions[i + 1].getType().equals(type)) {
 				result = result + 2;
 			} else {
 				break;
