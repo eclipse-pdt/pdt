@@ -11,21 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
-import java.io.File;
 import java.net.URI;
-import java.util.*;
-import java.util.List;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
-import org.eclipse.dltk.core.environment.IFileHandle;
-import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.*;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -35,8 +32,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.server.core.Server;
-import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -84,8 +79,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		composite.setLayout(initGridLayout(new GridLayout(1, false), false));
 		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
 		// create UI elements
-		fNameGroup = new NameGroup(composite, fInitialName);
-		fPHPLocationGroup = new LocationGroup(composite);
+		fNameGroup = new NameGroup(composite, fInitialName, getShell());
+		fPHPLocationGroup = new LocationGroup(composite, fNameGroup, getShell());
 
 		CompositeData data = new CompositeData();
 		data.setParetnt(composite);
@@ -98,7 +93,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		fLayoutGroup = new LayoutGroup(composite);
 		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
 
-		fDetectGroup = new DetectGroup(composite);
+		fDetectGroup = new DetectGroup(composite, fPHPLocationGroup, fNameGroup);
 
 		// establish connections
 		fNameGroup.addObserver(fPHPLocationGroup);
@@ -123,8 +118,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	}
 
 	protected void setHelpContext(Composite parent) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.CREATING_PHP_PROJECTS);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.CREATING_PHP_PROJECTS);
 	}
 
 	public URI getLocationURI() {
@@ -148,8 +143,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	 * @return the new project resource handle
 	 */
 	public IProject getProjectHandle() {
-		return ResourcesPlugin.getWorkspace().getRoot().getProject(
-				fNameGroup.getName());
+		return ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(fNameGroup.getName());
 	}
 
 	public String getProjectName() {
@@ -191,162 +186,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			layout.marginHeight = 0;
 		}
 		return layout;
-	}
-
-	/**
-	 * Show a warning when the project location contains files.
-	 */
-	protected final class DetectGroup extends Observable implements Observer,
-			SelectionListener {
-		private final Link fHintText;
-		private Label fIcon;
-		private boolean fDetect;
-
-		public DetectGroup(Composite parent) {
-
-			Composite composite = new Composite(parent, SWT.NONE);
-			composite
-					.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
-			GridLayout layout = new GridLayout(2, false);
-			layout.horizontalSpacing = 10;
-			composite.setLayout(layout);
-
-			fIcon = new Label(composite, SWT.LEFT);
-			fIcon.setImage(Dialog.getImage(Dialog.DLG_IMG_MESSAGE_WARNING));
-			GridData gridData = new GridData(SWT.LEFT, SWT.CENTER, false, false);
-			fIcon.setLayoutData(gridData);
-			fIcon.setVisible(false);
-
-			fHintText = new Link(composite, SWT.WRAP);
-			fHintText.setFont(composite.getFont());
-			gridData = new GridData(GridData.FILL, SWT.FILL, true, true);
-			gridData.widthHint = convertWidthInCharsToPixels(50);
-			gridData.heightHint = convertHeightInCharsToPixels(3);
-			fHintText.setLayoutData(gridData);
-		}
-
-		private boolean isValidProjectName(String name) {
-			if (name.length() == 0) {
-				return false;
-			}
-			final IWorkspace workspace = DLTKUIPlugin.getWorkspace();
-			return workspace.validateName(name, IResource.PROJECT).isOK()
-					&& workspace.getRoot().findMember(name) == null;
-		}
-
-		public void update(Observable o, Object arg) {
-			if (o instanceof LocationGroup) {
-				boolean oldDetectState = fDetect;
-				IPath location = fPHPLocationGroup.getLocation();
-				if (fPHPLocationGroup.isInWorkspace()) {
-					if (!isValidProjectName(getProjectName())) {
-						fDetect = false;
-					} else {
-						IEnvironment environment = fPHPLocationGroup
-								.getEnvironment();
-						final IFileHandle directory = environment
-								.getFile(location.append(getProjectName()));
-						fDetect = directory.isDirectory();
-					}
-				} else {
-					IEnvironment environment = fPHPLocationGroup
-							.getEnvironment();
-					if (location.toPortableString().length() > 0) {
-						final IFileHandle directory = environment
-								.getFile(location);
-						fDetect = directory.isDirectory();
-					}
-				}
-				if (oldDetectState != fDetect) {
-					setChanged();
-					notifyObservers();
-					if (fDetect) {
-						fHintText.setVisible(true);
-						fHintText
-								.setText(NewWizardMessages.ScriptProjectWizardFirstPage_DetectGroup_message);
-					} else {
-						fHintText.setVisible(false);
-					}
-
-				}
-			}
-		}
-
-		public boolean mustDetect() {
-			return fDetect;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse
-		 * .swt.events.SelectionEvent)
-		 */
-		public void widgetSelected(SelectionEvent e) {
-			widgetDefaultSelected(e);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org
-		 * .eclipse.swt.events.SelectionEvent)
-		 */
-		public void widgetDefaultSelected(SelectionEvent e) {
-			if (DLTKCore.DEBUG) {
-				System.err
-						.println("DetectGroup show compilancePreferencePage..."); //$NON-NLS-1$
-			}
-
-		}
-	}
-
-	/**
-	 * Request a project name. Fires an event whenever the text field is
-	 * changed, regardless of its content.
-	 */
-	public final class NameGroup extends Observable implements
-			IDialogFieldListener {
-		protected final StringDialogField fNameField;
-
-		public NameGroup(Composite composite, String initialName) {
-			final Composite nameComposite = new Composite(composite, SWT.NONE);
-			nameComposite.setFont(composite.getFont());
-			nameComposite.setLayout(initGridLayout(new GridLayout(2, false),
-					true));
-			nameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			// text field for project name
-			fNameField = new StringDialogField();
-			fNameField
-					.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_NameGroup_label_text);
-			fNameField.setDialogFieldListener(this);
-			setName(initialName);
-			fNameField.doFillIntoGrid(nameComposite, 2);
-			LayoutUtil.setHorizontalGrabbing(fNameField.getTextControl(null));
-		}
-
-		protected void fireEvent() {
-			setChanged();
-			notifyObservers();
-		}
-
-		public String getName() {
-			return fNameField.getText().trim();
-		}
-
-		public void postSetFocus() {
-			fNameField.postSetFocusOnDialogField(getShell().getDisplay());
-		}
-
-		public void setName(String name) {
-			fNameField.setText(name);
-		}
-
-		public void dialogFieldChanged(DialogField field) {
-			fireEvent();
-		}
 	}
 
 	/**
@@ -464,8 +303,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		protected Button fEnableJavaScriptSupport;
 
 		public boolean shouldSupportJavaScript() {
-			return PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(
-					(PreferenceConstants.JavaScriptSupportEnable));
+			return PHPUiPlugin.getDefault().getPreferenceStore()
+					.getBoolean((PreferenceConstants.JavaScriptSupportEnable));
 		}
 
 		public JavaScriptSupportGroup(Composite composite,
@@ -486,8 +325,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 					SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.addSelectionListener(this);
 			fEnableJavaScriptSupport.setSelection(PHPUiPlugin.getDefault()
-					.getPreferenceStore().getBoolean(
-							(PreferenceConstants.JavaScriptSupportEnable)));
+					.getPreferenceStore()
+					.getBoolean((PreferenceConstants.JavaScriptSupportEnable)));
 		}
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -632,214 +471,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	 * field is changed, regardless of whether the change originates from the
 	 * user or has been invoked programmatically.
 	 */
-	public class LocationGroup extends Observable implements Observer,
-			IStringButtonAdapter, IDialogFieldListener {
-		protected final SelectionButtonDialogField fWorkspaceRadio;
-		protected final SelectionButtonDialogField fExternalRadio;
-		protected final StringButtonDialogField fLocation;
-		// protected final ComboDialogField fEnvironment;
-		private IEnvironment[] environments;
-
-		private String fPreviousExternalLocation;
-		private int localEnv;
-		protected SelectionButtonDialogField fLocalServerRadio;
-		protected ComboDialogField fSeverLocationList;
-		private String[] docRootArray;
-
-		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID
-				+ ".last.external.project"; //$NON-NLS-1$
-
-		public LocationGroup(Composite composite) {
-			final int numColumns = 3;
-			final Group group = new Group(composite, SWT.None);
-			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
-					true));
-			group.setText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_title);
-			fWorkspaceRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fWorkspaceRadio.setDialogFieldListener(this);
-			fWorkspaceRadio
-					.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_workspace_desc);
-			fExternalRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fExternalRadio.setDialogFieldListener(this);
-			fExternalRadio
-					.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_external_desc);
-			fLocation = new StringButtonDialogField(this);
-			fLocation.setDialogFieldListener(this);
-			fLocation
-					.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
-			fLocation
-					.setButtonLabel(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_browseButton_desc);
-			// fExternalRadio.attachDialogField(fLocation);
-			fWorkspaceRadio.setSelection(true);
-			fExternalRadio.setSelection(false);
-			fPreviousExternalLocation = ""; //$NON-NLS-1$
-			fWorkspaceRadio.doFillIntoGrid(group, numColumns);
-			fExternalRadio.doFillIntoGrid(group, numColumns);
-			fLocation.doFillIntoGrid(group, numColumns);
-			LayoutUtil.setHorizontalGrabbing(fLocation.getTextControl(null));
-			fExternalRadio.attachDialogFields(new DialogField[] { fLocation });
-
-			environments = EnvironmentManager.getEnvironments();
-			String[] items = new String[environments.length];
-			localEnv = 0;
-			for (int i = 0; i < items.length; i++) {
-				items[i] = environments[i].getName();
-				if (environments[i].isLocal()) {
-					localEnv = i;
-				}
-			}
-
-			// check if any of the server can provide local doc root.
-
-			Server[] servers = ServersManager.getServers();
-			List<String> docRoots = new ArrayList<String>();
-			for (int i = 0; i < servers.length; i++) {
-				String docRoot = servers[i].getDocumentRoot();
-				String isLocal = servers[i].getAttribute(Server.LOCALSERVER,
-						null);
-				if (isLocal != null && docRoot != null
-						&& !"".equals(docRoot.trim())) { //$NON-NLS-1$
-					docRoots.add(docRoot);
-				}
-			}
-
-			if (docRoots.size() > 0) {
-				fLocalServerRadio = new SelectionButtonDialogField(SWT.RADIO);
-				fLocalServerRadio.setDialogFieldListener(this);
-				fLocalServerRadio
-						.setLabelText(PHPUIMessages.PHPProjectWizardFirstPage_localServerLabel); //$NON-NLS-1$
-				fLocalServerRadio.setSelection(false);
-				fLocalServerRadio.doFillIntoGrid(group, numColumns);
-				fSeverLocationList = new ComboDialogField(SWT.READ_ONLY);
-				fSeverLocationList
-						.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
-				fSeverLocationList.doFillIntoGrid(group, numColumns);
-				fSeverLocationList.setEnabled(false);
-				docRootArray = new String[docRoots.size()];
-				docRoots.toArray(docRootArray);
-				fSeverLocationList.setItems(docRootArray);
-				fSeverLocationList.selectItem(0);
-				fLocalServerRadio.attachDialogField(fSeverLocationList);
-				fWorkspaceRadio.setSelection(false);
-				fLocalServerRadio.setSelection(true);
-			}
-
-		}
-
-		public boolean isInLocalServer() {
-			return fLocalServerRadio != null && fLocalServerRadio.isSelected();
-		}
-
-		protected void fireEvent() {
-			setChanged();
-			notifyObservers();
-		}
-
-		protected String getDefaultPath(String name) {
-			IEnvironment environment = this.getEnvironment();
-			if (environment != null && environment.isLocal()) {
-				final IPath path = Platform.getLocation().append(name);
-				return path.toOSString();
-			} else {
-				return ""; //$NON-NLS-1$
-			}
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.util.Observer#update(java.util.Observable,
-		 * java.lang.Object)
-		 */
-		public void update(Observable o, Object arg) {
-			if (isInWorkspace()) {
-				fLocation.setText(getDefaultPath(fNameGroup.getName()));
-			}
-			if (docRootArray != null && docRootArray.length > 0) {
-				int index = fSeverLocationList.getSelectionIndex();
-				String[] items = getDocItems(docRootArray);
-				fSeverLocationList.setItems(items);
-				fSeverLocationList.selectItem(index);
-			}
-
-			fireEvent();
-		}
-
-		private String[] getDocItems(String[] docRootArray) {
-			String[] items = new String[docRootArray.length];
-			for (int i = 0; i < docRootArray.length; i++) {
-				items[i] = docRootArray[i] + File.separator
-						+ fNameGroup.getName(); //$NON-NLS-1$
-			}
-			return items;
-		}
-
-		public IPath getLocation() {
-			if (isInWorkspace()) {
-				return Platform.getLocation();
-			}
-			if (isInLocalServer()) {
-				return new Path(fSeverLocationList.getText());
-			}
-			return new Path(fLocation.getText().trim());
-		}
-
-		public boolean isInWorkspace() {
-			return fWorkspaceRadio.isSelected();
-		}
-
-		public IEnvironment getEnvironment() {
-			if (fWorkspaceRadio.isSelected()) {
-				return EnvironmentManager
-						.getEnvironmentById(LocalEnvironment.ENVIRONMENT_ID);
-			}
-			// return environments[fEnvironment.getSelectionIndex()];
-			return environments[localEnv];
-		}
-
-		public void changeControlPressed(DialogField field) {
-			IEnvironment environment = getEnvironment();
-			IEnvironmentUI environmentUI = (IEnvironmentUI) environment
-					.getAdapter(IEnvironmentUI.class);
-			if (environmentUI != null) {
-				String selectedDirectory = environmentUI
-						.selectFolder(getShell());
-
-				if (selectedDirectory != null) {
-					fLocation.setText(selectedDirectory);
-					DLTKUIPlugin.getDefault().getDialogSettings().put(
-							DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
-				}
-			}
-		}
-
-		public void dialogFieldChanged(DialogField field) {
-			if (field == fWorkspaceRadio) {
-				final boolean checked = fWorkspaceRadio.isSelected();
-				if (checked) {
-					fPreviousExternalLocation = fLocation.getText();
-					fLocation.setText(getDefaultPath(fNameGroup.getName()));
-				} else {
-					IEnvironment environment = this.getEnvironment();
-					if (environment != null && environment.isLocal()) {
-						fLocation.setText(fPreviousExternalLocation);
-					} else {
-						fLocation.setText(""); //$NON-NLS-1$
-					}
-				}
-			}
-
-			fireEvent();
-		}
-
-	}
-
-	/**
-	 * Request a location. Fires an event whenever the checkbox or the location
-	 * field is changed, regardless of whether the change originates from the
-	 * user or has been invoked programmatically.
-	 */
 	public class VersionGroup extends Observable implements Observer,
 			IStringButtonAdapter, IDialogFieldListener, SelectionListener {
 		public final SelectionButtonDialogField fDefaultValues;
@@ -925,8 +556,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 
 				if (selectedDirectory != null) {
 					// fLocation.setText(selectedDirectory);
-					DLTKUIPlugin.getDefault().getDialogSettings().put(
-							DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
+					DLTKUIPlugin
+							.getDefault()
+							.getDialogSettings()
+							.put(DIALOGSTORE_LAST_EXTERNAL_LOC,
+									selectedDirectory);
 				}
 			}
 		}
@@ -985,9 +619,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		Display.getDefault().asyncExec(new Runnable() {
 
 			public void run() {
-				PHPUiPlugin.getDefault().getPreferenceStore().setValue(
-						(PreferenceConstants.JavaScriptSupportEnable),
-						fJavaScriptSupportGroup.getSelection());
+				PHPUiPlugin
+						.getDefault()
+						.getPreferenceStore()
+						.setValue(
+								(PreferenceConstants.JavaScriptSupportEnable),
+								fJavaScriptSupportGroup.getSelection());
 			}
 		});
 	}
