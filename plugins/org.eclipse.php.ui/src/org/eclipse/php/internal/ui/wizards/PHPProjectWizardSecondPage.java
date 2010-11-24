@@ -49,6 +49,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.includepath.PHPIncludePathsBlock;
 import org.eclipse.php.internal.ui.util.BusyIndicatorRunnableContext;
+import org.eclipse.php.ui.util.PHPProjectUtils;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
@@ -165,10 +166,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 			monitor = new NullProgressMonitor();
 		}
 		try {
-			monitor
-					.beginTask(
-							NewWizardMessages.ScriptProjectWizardSecondPage_operation_initialize,
-							70);
+			monitor.beginTask(
+					NewWizardMessages.ScriptProjectWizardSecondPage_operation_initialize,
+					70);
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
@@ -179,8 +179,8 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 					URI rootLocation = ResourcesPlugin.getWorkspace().getRoot()
 							.getLocationURI();
 					realLocation = new URI(rootLocation.getScheme(), null, Path
-							.fromPortableString(rootLocation.getPath()).append(
-									getProject().getName()).toString(), null);
+							.fromPortableString(rootLocation.getPath())
+							.append(getProject().getName()).toString(), null);
 				} catch (URISyntaxException e) {
 					Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
 				}
@@ -211,10 +211,10 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 				// need to create sub-folders and set special build/include
 				// paths
 				IPreferenceStore store = getPreferenceStore();
-				IPath srcPath = new Path(store
-						.getString(PreferenceConstants.SRCBIN_SRCNAME));
-				IPath binPath = new Path(store
-						.getString(PreferenceConstants.SRCBIN_BINNAME));
+				IPath srcPath = new Path(
+						store.getString(PreferenceConstants.SRCBIN_SRCNAME));
+				IPath binPath = new Path(
+						store.getString(PreferenceConstants.SRCBIN_BINNAME));
 
 				if (srcPath.segmentCount() > 0) {
 					IFolder folder = getProject().getFolder(srcPath);
@@ -303,8 +303,12 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	}
 
 	protected void setHelpContext(Control control) {
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,
-				IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
+		PlatformUI
+				.getWorkbench()
+				.getHelpSystem()
+				.setHelp(
+						control,
+						IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
 	}
 
 	/**
@@ -349,10 +353,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		}
 
 		int nSteps = 6;
-		monitor
-				.beginTask(
-						NewWizardMessages.ScriptCapabilityConfigurationPage_op_desc_Script,
-						nSteps);
+		monitor.beginTask(
+				NewWizardMessages.ScriptCapabilityConfigurationPage_op_desc_Script,
+				nSteps);
 
 		try {
 			IProject project = getProject();
@@ -464,10 +467,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 					IStatus.ERROR,
 					DLTKUIPlugin.PLUGIN_ID,
 					IStatus.ERROR,
-					Messages
-							.format(
-									NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup,
-									name), e);
+					Messages.format(
+							NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup,
+							name), e);
 			throw new CoreException(status);
 		}
 	}
@@ -511,10 +513,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	public void performFinish(IProgressMonitor monitor) throws CoreException,
 			InterruptedException {
 		try {
-			monitor
-					.beginTask(
-							NewWizardMessages.ScriptProjectWizardSecondPage_operation_create,
-							3);
+			monitor.beginTask(
+					NewWizardMessages.ScriptProjectWizardSecondPage_operation_create,
+					3);
 			if (getProject() == null || !getProject().exists()) {
 				updateProject(new SubProgressMonitor(monitor, 1));
 			}
@@ -584,10 +585,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		if (monitor == null || noProgressMonitor) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor
-				.beginTask(
-						NewWizardMessages.ScriptProjectWizardSecondPage_operation_remove,
-						3);
+		monitor.beginTask(
+				NewWizardMessages.ScriptProjectWizardSecondPage_operation_remove,
+				3);
 		try {
 			try {
 				URI projLoc = getProject().getLocationURI();
@@ -632,7 +632,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	 */
 	public void createProject(IProject project, URI locationURI,
 			IProgressMonitor monitor) throws CoreException {
-		BuildpathsBlock.createProject(project, locationURI, monitor);
+		PHPProjectUtils.createProjectAt(project, locationURI, monitor);
 	}
 
 	/**
