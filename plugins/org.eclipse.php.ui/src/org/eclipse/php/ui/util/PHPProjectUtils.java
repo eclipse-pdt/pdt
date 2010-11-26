@@ -8,7 +8,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 
 public class PHPProjectUtils {
@@ -18,7 +17,7 @@ public class PHPProjectUtils {
 			monitor = new NullProgressMonitor();
 		}
 		monitor.beginTask(
-				NewWizardMessages.BuildPathsBlock_operationdesc_project, 100);
+				NewWizardMessages.BuildPathsBlock_operationdesc_project, 10);
 		// create the project
 		try {
 			if (!project.exists()) {
@@ -30,10 +29,10 @@ public class PHPProjectUtils {
 					locationURI = null;
 				}
 				desc.setLocationURI(locationURI);
-				project.create(desc, new SubProgressMonitor(monitor, 50));
+				project.create(desc, monitor);
 			}
 			if (!project.isOpen()) {
-				project.open(new SubProgressMonitor(monitor, 50));
+				project.open(monitor);
 			}
 		} finally {
 			// not null
