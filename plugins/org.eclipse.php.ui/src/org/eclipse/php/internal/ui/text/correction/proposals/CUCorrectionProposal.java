@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.corext.refactoring.changes.SourceModuleChange;
+import org.eclipse.dltk.core.manipulation.SourceModuleChange;
 import org.eclipse.dltk.internal.corext.util.Resources;
 import org.eclipse.dltk.internal.corext.util.Strings;
 import org.eclipse.dltk.internal.ui.DLTKUIStatus;
