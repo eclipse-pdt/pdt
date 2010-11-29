@@ -1,10 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
+import org.eclipse.php.core.compiler.PHPFlags;
 
 public class Bindings {
 
@@ -107,6 +117,7 @@ public class Bindings {
 		IVariableBinding[] fields = type.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			IVariableBinding field = fields[i];
+			// TODO see if we can remove the dollar sign from here
 			if (field.getName().equals(fieldName))
 				return field;
 		}
@@ -187,6 +198,74 @@ public class Bindings {
 		}
 		return null;
 	}
+	
+	/**
+	 * Finds the method specified by <code>methodName</code> and </code>parameters</code> in
+	 * the type hierarchy denoted by the given type. Returns <code>null</code> if no such method
+	 * exists. If the method is defined in more than one super type only the first match is 
+	 * returned. First the super class is examined and than the implemented interfaces.
+	 * @param type The type to search the method in
+	 * @param methodName The name of the method to find
+	 * @return the method binding representing the method
+	 */
+	public static IMethodBinding[] findAbstractMethodsInHierarchy(ITypeBinding type) {
+		
+		List<IMethodBinding> methodsToOVerride = new ArrayList<IMethodBinding>();
+		Set<String> overridenMethodsNames = new HashSet<String>();
+		collectAbstractMethodsInHierarchy(type, methodsToOVerride, overridenMethodsNames);
+		
+		return (IMethodBinding[]) methodsToOVerride.toArray(new IMethodBinding[methodsToOVerride.size()]);
+	}
+	
+	private static  void collectAbstractMethodsInHierarchy(ITypeBinding curr, List<IMethodBinding> methodsToOverride, Set<String> overridenMethodsNames) {
+
+		Set<IMethodBinding> tempMethods = new TreeSet<IMethodBinding>();
+		
+		// start of current IType method pass
+		if(curr != null) {
+			if (PHPFlags.isInterface(curr.getModifiers())) {
+				for (IMethodBinding methodBinding : curr.getDeclaredMethods()) {
+					if (!overridenMethodsNames.contains(methodBinding.getName())) {
+						methodsToOverride.add(methodBinding);
+						overridenMethodsNames.add(methodBinding.getName());
+					}
+				}
+			}
+			
+			//an abstract class
+			else if (PHPFlags.isAbstract(curr.getModifiers())) {
+				for (IMethodBinding methodBinding : curr.getDeclaredMethods()) {
+					if (!PHPFlags.isAbstract(methodBinding.getModifiers())) {
+						overridenMethodsNames.add(methodBinding.getName());
+					}else if (!overridenMethodsNames.contains(methodBinding.getName())) {
+						methodsToOverride.add(methodBinding);
+						overridenMethodsNames.add(methodBinding.getName());
+					}
+				}
+			}
+	
+			else {//add existing methods to exclude list
+				for (IMethodBinding methodBinding : curr.getDeclaredMethods()) {
+					if (!overridenMethodsNames.contains(methodBinding.getName())) {
+						overridenMethodsNames.add(methodBinding.getName());
+					}
+				}
+			}
+			
+			// end of current IType method pass
+			
+			//this class has a superclass
+			ITypeBinding superClassBinding = curr.getSuperclass();
+			if (superClassBinding != null && superClassBinding.getName() != null) {
+				collectAbstractMethodsInHierarchy(superClassBinding, methodsToOverride, overridenMethodsNames);;
+			}
+			//this class has interfaces
+			ITypeBinding[] interfaceBindings = curr.getInterfaces();
+			for(ITypeBinding interfaceBinding : interfaceBindings) {
+				collectAbstractMethodsInHierarchy(superClassBinding, methodsToOverride, overridenMethodsNames);;
+			}
+		}
+	}
 
 	/**
 	 * Finds the method in the given <code>type</code> that is overridden by the specified <code>method<code>.
@@ -213,19 +292,28 @@ public class Bindings {
 	 * @return the method binding overridden the method
 	 */
 	public static IMethodBinding findOverriddenMethodInHierarchy(ITypeBinding type, IMethodBinding binding) {
+		return innerFindOverriddenMethodInHierarchy(type, binding, new HashSet<ITypeBinding>());
+	}
+	
+	public static IMethodBinding innerFindOverriddenMethodInHierarchy(ITypeBinding type, IMethodBinding binding, Set<ITypeBinding> processedTypes) {
+		if (!processedTypes.add(type)) {
+			return null;
+		}
+		
 		IMethodBinding method = findOverriddenMethodInType(type, binding);
 		if (method != null)
 			return method;
 		ITypeBinding superClass = type.getSuperclass();
 		if (superClass != null) {
-			method = findOverriddenMethodInHierarchy(superClass, binding);
-			if (method != null)
+			method = innerFindOverriddenMethodInHierarchy(superClass, binding,processedTypes);
+			if (method != null) {
 				return method;
+			}
 		}
 		ITypeBinding[] interfaces = type.getInterfaces();
 		if (interfaces != null) {
 			for (int i = 0; i < interfaces.length; i++) {
-				method = findOverriddenMethodInHierarchy(interfaces[i], binding);
+				method = innerFindOverriddenMethodInHierarchy(interfaces[i], binding,processedTypes);
 				if (method != null)
 					return method;
 			}
@@ -242,7 +330,7 @@ public class Bindings {
 	 */
 	public static IMethodBinding findOverriddenMethod(IMethodBinding overriding, boolean testVisibility) {
 		int modifiers = overriding.getModifiers();
-		if (Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers) || overriding.isConstructor()) {
+		if (testVisibility && (PHPFlags.isPrivate(modifiers) /*|| PHPFlags.isStatic(modifiers) || overriding.isConstructor()*/)) {
 			return null;
 		}
 
@@ -252,7 +340,7 @@ public class Bindings {
 		}
 		if (type.getSuperclass() != null) {
 			IMethodBinding res = findOverriddenMethodInHierarchy(type.getSuperclass(), overriding);
-			if (res != null && !Modifier.isPrivate(res.getModifiers())) {
+			if (res != null && !PHPFlags.isPrivate(res.getModifiers())) {
 				if (!testVisibility || isVisibleInHierarchy(res/*, overriding.getDeclaringClass().getPackage()*/)) {
 					return res;
 				}
@@ -271,9 +359,9 @@ public class Bindings {
 	public static boolean isVisibleInHierarchy(IMethodBinding member/*, IPackageBinding pack*/) {
 		int otherflags = member.getModifiers();
 		ITypeBinding declaringType = member.getDeclaringClass();
-		if (Modifier.isPublic(otherflags) || Modifier.isProtected(otherflags) || (declaringType != null && declaringType.isInterface())) {
+		if (PHPFlags.isPublic(otherflags) || PHPFlags.isProtected(otherflags) || (declaringType != null && declaringType.isInterface())) {
 			return true;
-		} else if (Modifier.isPrivate(otherflags)) {
+		} else if (PHPFlags.isPrivate(otherflags)) {
 			return false;
 		}
 		return declaringType != null /*&& pack == declaringType.getPackage()*/;
