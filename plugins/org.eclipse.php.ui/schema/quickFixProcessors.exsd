@@ -65,7 +65,6 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
    <element name="quickFixProcessor">
       <complexType>
          <sequence>
-            <element ref="enablement" minOccurs="0" maxOccurs="1"/>
             <element ref="handledMarkerTypes" minOccurs="0" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="id" type="string" use="required">
