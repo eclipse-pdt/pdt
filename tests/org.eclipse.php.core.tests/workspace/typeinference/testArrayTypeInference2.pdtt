@@ -1,0 +1,15 @@
+--TEST--
+Test Array Type Inference
+--FILE--
+<?php
+class Employee {
+}
+class Employee1 {
+}
+$rows = array();
+$rows[] = new Employee();
+$rows[] = new Employee1();
+testArrayTypeInference2($rows[0])
+?>
+--EXPECT--
+Ambigous <Employee, Employee1>

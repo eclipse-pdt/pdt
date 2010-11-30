@@ -1,0 +1,17 @@
+--TEST--
+Test Array Type Inference
+--FILE--
+<?php
+class Employee {
+}
+class Employee1 {
+}
+$rows = array();
+$rows[] = new Employee();
+while (mysqli_stmt_fetch($stmt)) {
+    $rows[] = new Employee1();
+}
+testArrayTypeInference4($rows[0])
+?>	
+--EXPECT--
+Ambigous <Employee, Employee1>
