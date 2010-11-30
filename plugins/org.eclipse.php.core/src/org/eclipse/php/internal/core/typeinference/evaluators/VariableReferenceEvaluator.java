@@ -31,10 +31,12 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
 import org.eclipse.php.internal.core.typeinference.Declaration;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
+import org.eclipse.php.internal.core.typeinference.goals.ArrayDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 
@@ -92,8 +94,8 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 							.sourceStart()) {
 						break;
 					}
-					if (varComment.getVariableReference().getName().equals(
-							variableReference.getName())) {
+					if (varComment.getVariableReference().getName()
+							.equals(variableReference.getName())) {
 						List<IGoal> goals = new LinkedList<IGoal>();
 						for (TypeReference ref : varComment.getTypeReferences()) {
 							goals.add(new ExpressionTypeGoal(context, ref));
@@ -106,7 +108,12 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				boolean mergeWithGlobalScope = false;
 				for (int i = 0; i < decls.length; ++i) {
 					Declaration decl = decls[i];
-					if (decl.getNode() instanceof GlobalStatement) {
+					// TODO check ArrayCreation and its element type
+					if (decl instanceof ArrayDeclaration) {
+						ArrayDeclaration arrayDeclaration = (ArrayDeclaration) decl;
+						subGoals.add(new ArrayDeclarationGoal(context,
+								arrayDeclaration));
+					} else if (decl.getNode() instanceof GlobalStatement) {
 						mergeWithGlobalScope = true;
 					} else {
 						ASTNode declNode = decl.getNode();
@@ -203,7 +210,8 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		}
 
 		protected void postProcessGeneral(ASTNode node) {
-			if (node.sourceStart() == variableOffset) {
+			if (node.sourceStart() <= variableOffset
+					&& node.sourceEnd() >= variableOffset) {
 				variableContext = contextStack.peek();
 				variableLevel = getScope(variableContext).getInnerBlockLevel();
 			}

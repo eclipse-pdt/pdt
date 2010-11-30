@@ -5,8 +5,7 @@ import java.util.*;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.ti.IContext;
-import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.IfStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 /**
  * Variable declaration scope. Each scope contains mapping between variable name
@@ -101,6 +100,7 @@ public class DeclarationScope {
 
 		int level = innerBlocks.size();
 
+		// TODO check ArrayCreation,ArrayVariableReference
 		// skip all inner conditional blocks statements, since we've reached
 		// a re-declaration here
 		while (varDecls.size() > level + 1) {
@@ -112,7 +112,19 @@ public class DeclarationScope {
 		while (varDecls.size() < level) {
 			varDecls.addLast(null);
 		}
-
+		if (declNode instanceof Assignment
+				&& (((Assignment) declNode).getVariable() instanceof ArrayVariableReference)) {
+			int index = varDecls.size() - 1;
+			while (index >= 0) {
+				Declaration decl = varDecls.get(index);
+				if (decl instanceof ArrayDeclaration) {
+					ArrayDeclaration arrayDeclaration = (ArrayDeclaration) decl;
+					arrayDeclaration.addDeclaration(declNode);
+					return;
+				}
+				index--;
+			}
+		}
 		if (varDecls.size() > level) {
 			Declaration decl = varDecls.get(level);
 			// The case that the node is inside another node
@@ -129,17 +141,32 @@ public class DeclarationScope {
 							// replace existing declaration with a new one
 							// (leave
 							// 'isGlobal' flag the same)
-					decl.setNode(declNode);
+					if (decl instanceof ArrayDeclaration) {
+						decl = new Declaration(
+								declNode instanceof GlobalStatement, declNode);
+						varDecls.set(level, decl);
+					} else {
+						decl.setNode(declNode);
+					}
+
 					return;
 				}
 			}
 		}
 		// add new declaration
-		varDecls.addLast(new Declaration(declNode instanceof GlobalStatement,
-				declNode));
+		if (declNode instanceof Assignment
+				&& (((Assignment) declNode).getValue() instanceof ArrayCreation)) {
+			varDecls.addLast(new ArrayDeclaration(
+					declNode instanceof GlobalStatement, declNode));
+
+		} else {
+			varDecls.addLast(new Declaration(
+					declNode instanceof GlobalStatement, declNode));
+		}
+
 	}
 
-	private boolean isInSameBlock(Statement block, ASTNode oldNode,
+	public static boolean isInSameBlock(Statement block, ASTNode oldNode,
 			ASTNode newNode) {
 		if (block instanceof IfStatement) {
 			IfStatement ifStatement = (IfStatement) block;
@@ -154,7 +181,7 @@ public class DeclarationScope {
 		return true;
 	}
 
-	private Statement getBlock(IfStatement ifStatement, ASTNode node) {
+	private static Statement getBlock(IfStatement ifStatement, ASTNode node) {
 		Statement falseStatement = ifStatement.getFalseStatement();
 		Statement trueStatement = ifStatement.getTrueStatement();
 		if (trueStatement != null

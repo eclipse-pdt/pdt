@@ -1,19 +1,32 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
-import org.eclipse.dltk.ti.goals.*;
+import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
+import org.eclipse.dltk.ti.goals.FixedAnswerEvaluator;
+import org.eclipse.dltk.ti.goals.GoalEvaluator;
+import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocMethodReturnTypeEvaluator;
-import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.VarCommentVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.*;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
-import org.eclipse.php.internal.core.typeinference.goals.phpdoc.VarCommentVariableGoal;
 
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
@@ -25,17 +38,8 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			ExpressionTypeGoal exprGoal = (ExpressionTypeGoal) goal;
 			return createExpressionEvaluator(exprGoal);
 		}
-		if (goalClass == VariableTypeGoal.class) {
-			return new VariableTypeEvaluator(goal);
-		}
-		if (goalClass == VariableDeclarationGoal.class) {
-			return new VariableDeclarationEvaluator(goal);
-		}
-		if (goalClass == MethodReturnTypeGoal.class) {
-			return new MethodReturnTypeEvaluator(goal);
-		}
 		if (goalClass == MethodElementReturnTypeGoal.class) {
-			return new MethodElementReturnTypeEvaluator(goal);
+			return new MethodReturnTypeEvaluator(goal);
 		}
 		if (goalClass == PHPDocMethodReturnTypeGoal.class) {
 			return new PHPDocMethodReturnTypeEvaluator(goal);
@@ -52,8 +56,11 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (goalClass == ConstantDeclarationGoal.class) {
 			return new ConstantDeclarationEvaluator(goal);
 		}
-		if (goalClass == VarCommentVariableGoal.class) {
-			return new VarCommentVariableEvaluator(goal);
+		if (goalClass == ForeachStatementGoal.class) {
+			return new ForeachStatementEvaluator(goal);
+		}
+		if (goalClass == ArrayDeclarationGoal.class) {
+			return new ArrayDeclarationGoalEvaluator(goal);
 		}
 		return null;
 	}
@@ -63,6 +70,10 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		ASTNode expression = exprGoal.getExpression();
 		Class<?> expressionClass = expression.getClass();
 
+		if (expressionClass == InterfaceDeclaration.class
+				|| expressionClass == ClassDeclaration.class) {
+			return new PHPClassEvaluator(exprGoal, (TypeDeclaration) expression);
+		}
 		if (expressionClass == Assignment.class) {
 			return new AssignmentEvaluator(exprGoal);
 		}
@@ -70,11 +81,13 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			Scalar scalar = (Scalar) expression;
 			return new ScalarEvaluator(exprGoal, scalar);
 		}
-		if (expressionClass == TypeReference.class) {
+		if (expressionClass == TypeReference.class
+				|| expressionClass == FullyQualifiedReference.class) {
 			TypeReference type = (TypeReference) expression;
 			return new TypeReferenceEvaluator(exprGoal, type);
 		}
-		if (expressionClass == PHPCallExpression.class || expressionClass == StaticMethodInvocation.class) {
+		if (expressionClass == PHPCallExpression.class
+				|| expressionClass == StaticMethodInvocation.class) {
 			return new MethodCallTypeEvaluator(exprGoal);
 		}
 		if (expressionClass == ClassInstanceCreation.class) {
@@ -98,14 +111,17 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == VariableReference.class) {
 			return new VariableReferenceEvaluator(exprGoal);
 		}
-		if (expressionClass == BackTickExpression.class || expressionClass == Quote.class) {
-			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_STRING));
+		if (expressionClass == BackTickExpression.class
+				|| expressionClass == Quote.class) {
+			return new FixedAnswerEvaluator(exprGoal, new SimpleType(
+					SimpleType.TYPE_STRING));
 		}
 		if (expressionClass == CloneExpression.class) {
 			return new CloneEvaluator(exprGoal);
 		}
 		if (expressionClass == InstanceOfExpression.class) {
-			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_BOOLEAN));
+			return new FixedAnswerEvaluator(exprGoal, new SimpleType(
+					SimpleType.TYPE_BOOLEAN));
 		}
 		if (expressionClass == ConditionalExpression.class) {
 			return new ConditionalExpressionEvaluator(exprGoal);
@@ -116,14 +132,19 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == ArrayVariableReference.class) {
 			return new ArrayVariableReferenceEvaluator(exprGoal);
 		}
-		if (expressionClass == FieldAccess.class || expressionClass == StaticFieldAccess.class) {
+		if (expressionClass == FieldAccess.class
+				|| expressionClass == StaticFieldAccess.class) {
 			return new FieldAccessEvaluator(exprGoal);
 		}
 		if (expressionClass == StaticConstantAccess.class) {
 			return new StaticConstantAccessEvaluator(exprGoal);
 		}
-		if (expressionClass == FormalParameter.class) {
+		if (expressionClass == FormalParameter.class
+				|| expressionClass == FormalParameterByReference.class) {
 			return new FormalParameterEvaluator(exprGoal);
+		}
+		if (expressionClass == CatchClause.class) {
+			return new CatchClauseEvaluator(exprGoal);
 		}
 
 		return null;
