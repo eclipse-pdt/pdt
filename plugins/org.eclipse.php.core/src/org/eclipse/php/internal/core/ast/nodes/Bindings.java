@@ -305,7 +305,7 @@ public class Bindings {
 			return method;
 		ITypeBinding superClass = type.getSuperclass();
 		if (superClass != null) {
-			method = findOverriddenMethodInHierarchy(superClass, binding);
+			method = innerFindOverriddenMethodInHierarchy(superClass, binding,processedTypes);
 			if (method != null) {
 				return method;
 			}
@@ -313,7 +313,7 @@ public class Bindings {
 		ITypeBinding[] interfaces = type.getInterfaces();
 		if (interfaces != null) {
 			for (int i = 0; i < interfaces.length; i++) {
-				method = findOverriddenMethodInHierarchy(interfaces[i], binding);
+				method = innerFindOverriddenMethodInHierarchy(interfaces[i], binding,processedTypes);
 				if (method != null)
 					return method;
 			}
