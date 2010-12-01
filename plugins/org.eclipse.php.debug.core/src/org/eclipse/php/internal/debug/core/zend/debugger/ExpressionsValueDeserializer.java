@@ -125,8 +125,11 @@ public class ExpressionsValueDeserializer {
 			String name;
 			if (type == 'i') {
 				name = Integer.toString(reader.readInt());
-			} else {
+			} else if (type == 's') {
 				name = reader.readString();
+			} else {
+				// fall back when type is invalid
+				return ExpressionValue.NULL_VALUE;
 			}
 			if (expression == null) {
 				variableNodes[i] = createDefaultVariable(name);
@@ -158,10 +161,12 @@ public class ExpressionsValueDeserializer {
 			String name;
 			if (type == 'i') {
 				name = Integer.toString(reader.readInt());
-			} else {
+			} else if (type == 's') {
 				name = reader.readString();
+			} else {
+				// fall back when type is invalid
+				return ExpressionValue.NULL_VALUE;
 			}
-
 			if (expression == null) {
 				expressionNodes[i] = createDefaultVariable(name);
 			} else {
