@@ -77,6 +77,7 @@ import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder;
 import org.eclipse.php.internal.core.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.core.search.OccurrencesFinderFactory;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -2284,7 +2285,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
 
-		setHelpContextId("editor_preferences");//$NON-NLS-1$
+		setHelpContextId(IPHPHelpContextIds.EDITOR_PREFERENCES);//$NON-NLS-1$
 	}
 
 	private void refreshViewer() {
