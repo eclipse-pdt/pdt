@@ -154,6 +154,8 @@ public class PhpElementResolver implements IElementResolver {
 	private static class IndexMethod extends SourceMethod implements
 			IPHPDocAwareElement {
 
+		private final static Pattern ARRAY_TYPE_PATTERN = Pattern
+				.compile("array\\[.*\\]");
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;
@@ -230,7 +232,11 @@ public class PhpElementResolver implements IElementResolver {
 			if (info != null) {
 				String types = info.get("r");
 				if (types != null) {
-					return types.split(",");
+					String[] returnTypes = types.split(",");
+					for (int i = 0; i < returnTypes.length; i++) {
+						returnTypes[i] = returnTypes[i].replaceAll("~", ",");
+					}
+					return returnTypes;
 				}
 			}
 			return null;
