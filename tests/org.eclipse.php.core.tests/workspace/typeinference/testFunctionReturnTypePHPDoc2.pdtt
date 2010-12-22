@@ -1,0 +1,12 @@
+--TEST--
+Test Function Return Array Type PHP Doc
+--CONFIG--
+prune: heavyGoals
+--FILE--
+<?php /**
+* @return array[B]|D
+*/ function foo() { return new B(); }
+$a = foo();
+testFunctionReturnTypePHPDoc2($a[0]); ?>
+--EXPECT--
+Ambigous <B>
