@@ -84,7 +84,8 @@ public class DetectGroup extends Observable implements Observer,
 				IEnvironment environment = fPHPLocationGroup.getEnvironment();
 				if (location.toPortableString().length() > 0) {
 					final IFileHandle directory = environment.getFile(location);
-					fDetect = directory.isDirectory();
+					fDetect = directory.isDirectory()
+							&& directory.getPath().toFile().exists();
 				}
 			}
 			if (oldDetectState != fDetect) {

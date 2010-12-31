@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Map;
 import java.util.Observable;
@@ -265,8 +266,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 				if (EnvironmentManager.isLocal(environment)) {
 					final IStatus locationStatus = workspace
 							.validateProjectLocation(handle, projectPath);
+					File file = projectPath.toFile();
 					if (!locationStatus.isOK()) {
 						setErrorMessage(locationStatus.getMessage());
+						setPageComplete(false);
+						return;
+					}
+
+					if ((!file.isDirectory() || !file.exists())) {
+						setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_invalidDirectory);
 						setPageComplete(false);
 						return;
 					}
