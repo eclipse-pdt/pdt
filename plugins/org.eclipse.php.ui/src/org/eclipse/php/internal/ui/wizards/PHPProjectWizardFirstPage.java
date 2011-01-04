@@ -272,12 +272,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 						setPageComplete(false);
 						return;
 					}
-
-					if ((!file.isDirectory() || !file.exists())) {
-						setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_invalidDirectory);
-						setPageComplete(false);
-						return;
-					}
 				}
 			}
 
