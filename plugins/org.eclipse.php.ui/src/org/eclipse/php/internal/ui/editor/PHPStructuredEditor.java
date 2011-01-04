@@ -120,6 +120,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StorageModelProvider;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
@@ -924,8 +925,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 					return Status.CANCEL_STATUS;
 
 				OccurrenceLocation location = fLocations[i];
-				Position position = new Position(location.getOffset(),
-						location.getLength());
+				Position position = new Position(location.getOffset(), location
+						.getLength());
 
 				String description = location.getDescription();
 				String annotationType = (location.getFlags() == IOccurrencesFinder.F_WRITE_OCCURRENCE) ? "org.eclipse.php.ui.occurrences.write" : "org.eclipse.php.ui.occurrences"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -942,8 +943,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 					// ruler
 					@Override
 					public void paint(GC gc, Canvas canvas, Rectangle r) {
-						ImageUtilities.drawImage(
-								PHPUiPlugin.getImageDescriptorRegistry().get(
+						ImageUtilities.drawImage(PHPUiPlugin
+								.getImageDescriptorRegistry().get(
 										PHPPluginImages.DESC_OBJS_OCCURRENCES),
 								gc, canvas, r, SWT.CENTER, SWT.TOP);
 					}
@@ -964,8 +965,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 					removeOccurrenceAnnotations();
 					for (Map.Entry<Annotation, Position> entry : annotationMap
 							.entrySet()) {
-						annotationModel.addAnnotation(entry.getKey(),
-								entry.getValue());
+						annotationModel.addAnnotation(entry.getKey(), entry
+								.getValue());
 					}
 				}
 				fOccurrenceAnnotations = annotationMap.keySet().toArray(
@@ -1057,8 +1058,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 						for (IStructuredDocumentRegion element : sdRegions) {
 							Iterator regionsIt = element.getRegions()
 									.iterator();
-							reparseRegion(doc, regionsIt,
-									element.getStartOffset());
+							reparseRegion(doc, regionsIt, element
+									.getStartOffset());
 						}
 						PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) getTextViewer();
 						textViewer.reconcile();
@@ -1106,7 +1107,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 													false, null));
 							contentAssistant
 									.setAutoActivationDelay(preferencesService
-											.getInt(PHPCorePlugin.ID,
+											.getInt(
+													PHPCorePlugin.ID,
 													PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY,
 													0, null));
 							contentAssistant
@@ -1174,11 +1176,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		 */
 		boolean foldingEnabled = PHPUiPlugin.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
-		SSEUIPlugin
-				.getDefault()
-				.getPreferenceStore()
-				.setValue(AbstractStructuredFoldingStrategy.FOLDING_ENABLED,
-						foldingEnabled);
+		SSEUIPlugin.getDefault().getPreferenceStore().setValue(
+				AbstractStructuredFoldingStrategy.FOLDING_ENABLED,
+				foldingEnabled);
 		setDocumentProvider(DLTKUIPlugin.getDocumentProvider());
 	}
 
@@ -2026,11 +2026,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		markAsCursorDependentAction(
 				IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, true);
 
-		ResourceAction resAction = new TextOperationAction(
-				DLTKEditorMessages.getBundleForConstructedKeys(),
+		ResourceAction resAction = new TextOperationAction(DLTKEditorMessages
+				.getBundleForConstructedKeys(),
 				"ShowPHPDoc.", this, ISourceViewer.INFORMATION, true); //$NON-NLS-1$
-		resAction = new InformationDispatchAction(
-				DLTKEditorMessages.getBundleForConstructedKeys(),
+		resAction = new InformationDispatchAction(DLTKEditorMessages
+				.getBundleForConstructedKeys(),
 				"ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction
 				.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
@@ -2714,8 +2714,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 							ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 				}
 			} else
-				sourceViewer.setTextHover(
-						configuration.getTextHover(sourceViewer, t), t);
+				sourceViewer.setTextHover(configuration.getTextHover(
+						sourceViewer, t), t);
 		}
 	}
 
@@ -2756,6 +2756,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				return provider;
 			}
 		}
+		if (getEditorInput() instanceof IStorageEditorInput) {
+			IDocumentProvider provider = StorageModelProvider.getInstance();
+			if (provider != null) {
+				return provider;
+			}
+		}
+
 		return super.getDocumentProvider();
 	}
 
@@ -2782,8 +2789,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	public void aboutToBeReconciled() {
 
 		// Notify AST provider
-		PHPUiPlugin.getDefault().getASTProvider()
-				.aboutToBeReconciled((ISourceModule) getModelElement());
+		PHPUiPlugin.getDefault().getASTProvider().aboutToBeReconciled(
+				(ISourceModule) getModelElement());
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
@@ -2962,8 +2969,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		OccurrenceLocation[] locations = null;
 
-		ASTNode selectedNode = NodeFinder.perform(astRoot,
-				selection.getOffset(), selection.getLength());
+		ASTNode selectedNode = NodeFinder.perform(astRoot, selection
+				.getOffset(), selection.getLength());
 
 		if (locations == null && fMarkExceptions) {
 			// TODO : Implement Me!
