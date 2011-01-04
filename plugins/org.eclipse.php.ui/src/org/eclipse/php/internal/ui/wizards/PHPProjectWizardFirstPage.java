@@ -272,6 +272,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 						setPageComplete(false);
 						return;
 					}
+
+					if (!canCreate(projectPath.toFile())) {
+						setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_invalidDirectory);
+						setPageComplete(false);
+						return;
+					}
 				}
 			}
 
@@ -290,6 +296,16 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			setErrorMessage(null);
 			setMessage(null);
 		}
+	}
+
+	private boolean canCreate(File file) {
+		while (!file.exists()) {
+			file = file.getParentFile();
+			if (file == null)
+				return false;
+		}
+
+		return file.canWrite();
 	}
 
 	/**
