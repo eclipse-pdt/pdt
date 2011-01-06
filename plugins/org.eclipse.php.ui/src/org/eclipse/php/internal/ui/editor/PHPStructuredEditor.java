@@ -2756,6 +2756,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				return provider;
 			}
 		}
+		if (getEditorInput() instanceof RefactorableFileEditorInput) {
+			return super.getDocumentProvider();
+		}
 		if (getEditorInput() instanceof IStorageEditorInput) {
 			IDocumentProvider provider = StorageModelProvider.getInstance();
 			if (provider != null) {
