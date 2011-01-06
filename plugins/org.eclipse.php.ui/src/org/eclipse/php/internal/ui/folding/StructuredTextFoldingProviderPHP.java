@@ -469,6 +469,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			if (ast == null)
 				return false; // can't compute
 
+			if (!(ast.getResource() instanceof IFile)) {
+				return false;
+			}
 			final IFile resource = (IFile) ast.getResource();
 
 			IDocument document = getDocument();
