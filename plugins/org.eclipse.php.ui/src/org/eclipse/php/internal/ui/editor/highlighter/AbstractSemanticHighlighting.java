@@ -110,8 +110,8 @@ public abstract class AbstractSemanticHighlighting implements
 					IEditorPart editor = page.getActiveEditor();
 					if (editor instanceof PHPStructuredEditor) {
 						PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editor;
-						if (phpStructuredEditor.getTextViewer() != null
-								&& phpStructuredEditor != null) {
+						if (phpStructuredEditor != null
+								&& phpStructuredEditor.getTextViewer() != null) {
 							sourceModule = (ISourceModule) phpStructuredEditor
 									.getModelElement();
 						}
