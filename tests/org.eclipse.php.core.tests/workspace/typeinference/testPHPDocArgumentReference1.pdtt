@@ -1,0 +1,37 @@
+--TEST--
+Test Inherited DocPHP Doc Argument Reference
+--FILE--
+<?php
+class A
+{
+	public function saySomething()
+	{
+		echo 'something';
+	}
+}
+
+class B
+{
+	/**
+	 * @param A $b
+	 */
+	public function makeSaySomething($b)
+	{
+		$b->saySomething();
+	}
+}
+
+class C extends B
+{
+
+	/**
+	 * Test
+	 */
+	public function makeSaySomething($b)
+	{
+		testPHPDocArgumentReference1($b);
+	}
+}
+?>
+--EXPECT--
+A
