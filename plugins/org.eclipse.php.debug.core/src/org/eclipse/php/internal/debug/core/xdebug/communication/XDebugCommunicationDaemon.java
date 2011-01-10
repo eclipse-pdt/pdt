@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.debug.core.*;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -306,17 +307,15 @@ public class XDebugCommunicationDaemon extends
 				public void run() {
 					IWorkbenchWindow window = PlatformUI.getWorkbench()
 							.getActiveWorkbenchWindow();
-					// code the debug perspectives.
-					// org.eclipse.php.debug.ui.PHPDebugPerspective
+					// code the debug perspective.
 					// org.eclipse.debug.ui.DebugPerspective
 					// also look at the PHPLaunchUtilities
 					if (!PerspectiveManager.isCurrentPerspective(window,
-							"org.eclipse.php.debug.ui.PHPDebugPerspective")) {
+							IDebugUIConstants.ID_DEBUG_PERSPECTIVE)) {
 						if (PerspectiveManager.shouldSwitchPerspective(window,
-								"org.eclipse.php.debug.ui.PHPDebugPerspective")) {
-							PerspectiveManager
-									.switchToPerspective(window,
-											"org.eclipse.php.debug.ui.PHPDebugPerspective");
+								IDebugUIConstants.ID_DEBUG_PERSPECTIVE)) {
+							PerspectiveManager.switchToPerspective(window,
+									IDebugUIConstants.ID_DEBUG_PERSPECTIVE);
 						}
 					}
 				}
