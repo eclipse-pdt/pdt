@@ -324,44 +324,42 @@
 	</extension>
 	
 	<extension point="org.eclipse.ui.perspectiveExtensions">
-		<perspectiveExtension targetID="org.eclipse.debug.ui.DebugPerspective">
-			<view visible="false" relative="org.eclipse.debug.ui.VariableView"
-				relationship="stack" id="org.eclipse.debug.ui.PHPStackView" />
-		</perspectiveExtension>
-		<perspectiveExtension targetID="org.eclipse.debug.ui.DebugPerspective">
-			<view id="org.eclipse.debug.ui.PHPDebugOutput" relationship="stack"
-				relative="org.eclipse.ui.console.ConsoleView">
-			</view>
-			<showInPart id="org.eclipse.ui.views.ResourceNavigator">
-			</showInPart>
-		</perspectiveExtension>
-		<perspectiveExtension targetID="org.eclipse.debug.ui.DebugPerspective">
-			<view id="org.eclipse.debug.ui.PHPBrowserOutput" relationship="stack"
-				relative="org.eclipse.ui.console.ConsoleView">
-			</view>
-		</perspectiveExtension>
-		<perspectiveExtension targetID="org.eclipse.php.debug.ui.PHPDebugPerspective">
-			<view id="org.eclipse.debug.ui.PHPStackView" relationship="stack"
-				relative="org.eclipse.debug.ui.VariableView" visible="false">
-			</view>
-			<actionSet id="org.eclipse.ui.NavigateActionSet">
-			</actionSet>
-			<actionSet id="org.eclipse.debug.ui.breakpointActionSet">
-			</actionSet>
-			<showInPart id="org.eclipse.ui.views.ResourceNavigator">
-			</showInPart>
-			<showInPart id="org.eclipse.php.ui.explorer">
-			</showInPart>
-			<actionSet id="org.eclipse.php.debug.ui.actionSet">
-			</actionSet>
-			<actionSet id="org.eclipse.php.ui.text.php.actionSet.presentation">
-			</actionSet>
-   <actionSet
-         id="org.eclipse.php.ui.PHPActionSet">
-   </actionSet>
-   <actionSet
-         id="org.eclipse.php.ui.A_OpenActionSet">
-   </actionSet>
+		<perspectiveExtension
+		      targetID="org.eclipse.debug.ui.DebugPerspective">
+		   <view
+		         id="org.eclipse.debug.ui.PHPStackView"
+		         relationship="stack"
+		         relative="org.eclipse.debug.ui.VariableView"
+		         visible="false">
+		   </view>
+		   <view
+		         id="org.eclipse.debug.ui.PHPDebugOutput"
+		         relationship="stack"
+		         relative="org.eclipse.ui.console.ConsoleView">
+		   </view>
+		   <showInPart
+		         id="org.eclipse.ui.views.ResourceNavigator">
+		   </showInPart>
+		   <view
+		         id="org.eclipse.debug.ui.PHPBrowserOutput"
+		         relationship="stack"
+		         relative="org.eclipse.ui.console.ConsoleView">
+		   </view>
+		   <showInPart
+		         id="org.eclipse.php.ui.explorer">
+		   </showInPart>
+		   <actionSet
+		         id="org.eclipse.php.debug.ui.actionSet">
+		   </actionSet>
+		   <actionSet
+		         id="org.eclipse.php.ui.text.php.actionSet.presentation">
+		   </actionSet>
+		   <actionSet
+		         id="org.eclipse.php.ui.PHPActionSet">
+		   </actionSet>
+		   <actionSet
+		         id="org.eclipse.php.ui.A_OpenActionSet">
+		   </actionSet>
 		</perspectiveExtension>
 	</extension>
 	
@@ -461,13 +459,6 @@
 		</keyword>
 		<keyword id="org.eclipse.php.debug.ui.phpInterpreterExecution" label="PHP Execution Environments">
 		</keyword>
-	</extension>
-	
-	<extension point="org.eclipse.ui.perspectives">
-		<perspective name="%DebugPerspective.name" icon="icon/full/obj16/debug_persp.gif"
-			class="org.eclipse.php.internal.debug.ui.PHPDebugPerspectiveFactory"
-			id="org.eclipse.php.debug.ui.PHPDebugPerspective">
-		</perspective>
 	</extension>
 	
 	<!-- Editor -->

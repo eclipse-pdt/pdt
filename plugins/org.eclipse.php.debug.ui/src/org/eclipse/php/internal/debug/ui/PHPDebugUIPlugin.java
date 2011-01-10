@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2011 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,8 @@ import org.eclipse.php.internal.debug.core.launching.PHPLaunch;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.actions.EvaluationContextManager;
+import org.eclipse.php.internal.debug.ui.views.DebugBrowserView;
+import org.eclipse.php.internal.debug.ui.views.DebugOutputView;
 import org.eclipse.php.internal.debug.ui.views.variables.PHPDebugElementAdapterFactory;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.widgets.Display;
@@ -374,8 +376,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 									"debug output") {
 								public IStatus runInUIThread(
 										IProgressMonitor monitor) {
-									showView(PHPDebugPerspectiveFactory.ID_PHPBrowserOutput);
-									showView(PHPDebugPerspectiveFactory.ID_PHPDebugOutput);
+									showView(DebugBrowserView.ID_PHPBrowserOutput);
+									showView(DebugOutputView.ID_PHPDebugOutput);
 									showView(IConsoleConstants.ID_CONSOLE_VIEW);
 									return Status.OK_STATUS;
 								}
