@@ -756,7 +756,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     }
 }
 
-<ST_PHP_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
+<ST_PHP_HEREDOC>({HEREDOC_CHARS}*{HEREDOC_NEWLINE}+)+{LABEL}";"?[\n\r] {
     int label_len = yylength() - 1;
 
     if (yytext().charAt(label_len-1)==';') {
