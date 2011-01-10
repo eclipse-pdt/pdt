@@ -20,6 +20,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 
 /**
  * Description: The viewer enables the file comparing with syntax coloring
@@ -50,6 +51,11 @@ public class PhpMergeViewer extends TextMergeViewer {
 			((SourceViewer) textViewer)
 					.configure(new PHPStructuredTextViewerConfiguration());
 		}
+	}
+
+	@Override
+	protected String getDocumentPartitioning() {
+		return IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING;
 	}
 
 	public IDocumentPartitioner getDocumentPartitioner() {

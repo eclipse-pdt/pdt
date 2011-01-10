@@ -622,7 +622,7 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 			// a shared document (i.e. file buffer)
 			IDocument newDoc = connectToSharedDocument();
 
-			if (newDoc == null) {
+			if (newDoc == null || !(newDoc instanceof IStructuredDocument)) {
 				IStreamContentAccessor sca = (IStreamContentAccessor) fElement;
 				String s = null;
 
