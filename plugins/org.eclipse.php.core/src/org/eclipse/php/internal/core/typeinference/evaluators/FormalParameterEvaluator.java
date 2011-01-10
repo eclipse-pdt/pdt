@@ -11,7 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -23,6 +25,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
@@ -46,16 +49,35 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 				MethodContext methodContext = (MethodContext) context;
 				PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext
 						.getMethodNode();
-				PHPDocBlock docBlock = methodDeclaration.getPHPDoc();
-				if (docBlock != null) {
-					for (PHPDocTag tag : docBlock.getTags()) {
-						if (tag.getTagKind() == PHPDocTag.PARAM) {
-							SimpleReference[] references = tag.getReferences();
-							if (references.length == 2) {
-								if (references[0].getName().equals(
-										parameter.getName())) {
-									result = PHPClassType
-											.fromSimpleReference(references[1]);
+				PHPDocBlock[] docBlocks = new PHPDocBlock[0];
+				try {
+					IMethod method = (IMethod) methodContext.getSourceModule()
+							.getElementAt(methodDeclaration.getNameStart());
+					if (method.getDeclaringType() != null) {
+						docBlocks = PHPModelUtils.getTypeHierarchyMethodDoc(
+								method.getDeclaringType(), method
+										.getElementName(), true, null);
+					} else {
+						docBlocks = new PHPDocBlock[] { methodDeclaration
+								.getPHPDoc() };
+					}
+				} catch (CoreException e) {
+				}
+				for (PHPDocBlock docBlock : docBlocks) {
+					if (result != null) {
+						break;
+					}
+					if (docBlock != null) {
+						for (PHPDocTag tag : docBlock.getTags()) {
+							if (tag.getTagKind() == PHPDocTag.PARAM) {
+								SimpleReference[] references = tag
+										.getReferences();
+								if (references.length == 2) {
+									if (references[0].getName().equals(
+											parameter.getName())) {
+										result = PHPClassType
+												.fromSimpleReference(references[1]);
+									}
 								}
 							}
 						}
