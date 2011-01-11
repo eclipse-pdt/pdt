@@ -756,7 +756,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     }
 }
 
-<ST_PHP_HEREDOC>({HEREDOC_CHARS}*{HEREDOC_NEWLINE}+)+{LABEL}";"?[\n\r] {
+<ST_PHP_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
     int label_len = yylength() - 1;
 
     if (yytext().charAt(label_len-1)==';') {
@@ -814,6 +814,21 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 }
 
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
+	if(yytext().startsWith(heredoc)){
+		String text = yytext();
+		int index = heredoc_len;
+		while(index < text.length() && Character.isWhitespace(text.charAt(index))){
+			if(text.charAt(index) == '\r'
+				|| text.charAt(index) == '\n'){
+				yypushback(yylength()-index-1);
+		        heredoc=null;
+		        heredoc_len=0;
+		        yybegin(ST_PHP_IN_SCRIPTING);
+		        return PHP_HEREDOC_TAG;
+			}
+			index++;
+		}
+	}
 	return PHP_ENCAPSED_AND_WHITESPACE;
 }
 
