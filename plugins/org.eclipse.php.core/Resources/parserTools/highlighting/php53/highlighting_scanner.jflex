@@ -890,7 +890,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 }
 
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
-	if(yytext().startsWith(heredoc)){
+	if(heredoc!=null&&yytext().startsWith(heredoc)){
 		String text = yytext();
 		if(heredoc_len < text.length() && (text.charAt(heredoc_len) == '\r'
 			|| text.charAt(heredoc_len) == '\n')){
