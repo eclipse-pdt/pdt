@@ -18,10 +18,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
-import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -91,7 +90,6 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 	private String internalContext = null;
 	
 	private final XMLParserRegionFactory fRegionFactory = new XMLParserRegionFactory();
-
 /**
  * user method 
  */
@@ -239,7 +237,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			// spill over the end of the buffer while checking.
 			if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_currentPos > 0 && yy_currentPos < yy_buffer.length - 1 &&
 					yy_buffer[yy_currentPos - 1] == '<' && 
-					(yy_buffer[yy_currentPos] == '?' || (yy_buffer[yy_currentPos] == '%' && UseAspTagsHandler.useAspTagsAsPhp(project)))) {
+					(yy_buffer[yy_currentPos] == '?' || (yy_buffer[yy_currentPos] == '%' && ProjectOptions.isSupportingAspTags(project)))) {
 				fLastInternalBlockStart = yy_markedPos = yy_currentPos - 1;
 				yy_currentPos = yy_markedPos + 1;
 				int resumeState = yystate();
@@ -370,10 +368,7 @@ private ITextRegion bufferedTextRegion = null;
 private final String doScanEndPhp(boolean isAsp, String searchContext, int exitState, int immediateFallbackState) throws IOException {
 	yypushback(1); // begin with the last char
 	
-	int[] currentParameters = getParamenters();
-	currentParameters[6] = ST_PHP_IN_SCRIPTING;
-	
-	final PhpLexer phpLexer = getPhpLexer(currentParameters); 
+	final AbstractPhpLexer phpLexer = getPhpLexer(); 
 	bufferedTextRegion = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
 
 	// restore the locations / states
@@ -386,21 +381,24 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
 /**
  * @param project
  * @param stream
- * @return a new lexer for the given project with the given stream
+ * @return a new lexer for the given project with the given stream initialized with current parameters
  */
-private PhpLexer getPhpLexer(int[] parameters) {
-	PhpLexer lexer;
-	final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-	if (phpVersion.equals(PHPCoreConstants.PHP5)) {
-		lexer = new PhpLexer5(yy_reader);
-	} else {
-		lexer = new PhpLexer4(yy_reader);
+private AbstractPhpLexer getPhpLexer() {
+	final PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
+	final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(yy_reader, phpVersion);
+	int[] currentParameters = getParamenters();
+	try {
+		// set initial lexer state - we use reflection here since we don't know the constant value of 
+		// of this state in specific PHP version lexer 
+		currentParameters[6] = lexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(lexer);
+	} catch (Exception e) {
+		Logger.logException(e);
 	}
-	lexer.initialize(parameters[6]);
-	lexer.reset(yy_reader, yy_buffer, parameters);
+	lexer.initialize(currentParameters[6]);
+	lexer.reset(yy_reader, yy_buffer, currentParameters);
 	lexer.setPatterns(project);
 
-	lexer.setAspTags(UseAspTagsHandler.useAspTagsAsPhp(project));
+	lexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
 	return lexer;
 }
 
@@ -593,11 +591,9 @@ private final String doBlockTagScan() throws IOException {
 }
 
 private IProject project;
-private int ST_PHP_IN_SCRIPTING = -1; 
 
 public void setProject(IProject project) {
 	this.project = project;
-	ST_PHP_IN_SCRIPTING = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_IN_SCRIPTING);
 }
 
 public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){
@@ -879,6 +875,17 @@ private final String scanXMLCommentText() throws IOException {
 %state ST_CDATA_END
 %state ST_XML_COMMENT
 %state ST_XML_COMMENT_END
+%state ST_PI
+%state ST_PI_WS
+%state ST_PI_CONTENT
+%state ST_XML_PI_ATTRIBUTE_NAME
+%state ST_XML_PI_EQUALS
+%state ST_XML_PI_ATTRIBUTE_VALUE
+%state ST_XML_PI_TAG_CLOSE
+%state ST_DHTML_ATTRIBUTE_NAME
+%state ST_DHTML_EQUALS
+%state ST_DHTML_ATTRIBUTE_VALUE
+%state ST_DHTML_TAG_CLOSE
 
 
 // normal tag states
@@ -923,7 +930,8 @@ genericTagClose      = >
 genericEndTagOpen    = <\/
 genericEmptyTagClose = \/>
 
-
+PIstart = <\?
+PIend   = \?>
 
 // [1] document ::= prolog element Misc*
 document = ({prolog} {element} {Misc}*)
@@ -975,6 +983,11 @@ CommentStart = (<!\-\-)
 CommentEnd   = (\-\->)
 Comment = ({CommentStart}.*{CommentEnd})
 
+// [16] PI ::= '<?' PITarget (S (Char* - (Char* '?>' Char*)))? '?>'
+//PI = (<\?{PITarget} {Char}* \?>)
+
+// [17] PITarget ::= Name - (('X' | 'x') ('M' | 'm') ('L' | 'l'))
+//PITarget = ({Name}((X|x)(M|m)(L|l)))
 
 // [18] CDSect ::= CDStart CData CDEnd
 CDSect = ({CDStart}{CData}{CDEnd})
@@ -1283,15 +1296,16 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 
 //PHP MACROS
 WHITESPACE = [\n\r \t]
-PHP_START = (<\?{WHITESPACE}*)|(<\?[Pp][Hh][P|p]{WHITESPACE}+)
-PHP_END = \?>
+//PHP_START = {WHITESPACE}*(<\?{WHITESPACE}*)|(<\?[Pp][Hh][P|p]{WHITESPACE}+)
+PHP_START       = <\?[Pp][Hh][P|p]{WHITESPACE}*
+//PIend = \?>
 PHP_ASP_START=<%
 PHP_ASP_END=%>
 %%
 
 
 /* white space within a tag */
-<ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID> {S}* {
+<ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_PI, ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID> {S}* {
 	if(Debug.debugTokenizer)
 		dump("white space");//$NON-NLS-1$
         return WHITE_SPACE;
@@ -1310,13 +1324,13 @@ PHP_ASP_END=%>
 
 /* VERY special cases for tags as values */
 /* quoted Php */
-<ST_XML_ATTRIBUTE_VALUE_DQUOTED> ["] {
+<ST_XML_ATTRIBUTE_VALUE_DQUOTED> [\"] {
 	return XML_TAG_ATTRIBUTE_VALUE_DQUOTE;
 }
 <ST_XML_ATTRIBUTE_VALUE_SQUOTED> ['] {
 	return XML_TAG_ATTRIBUTE_VALUE_SQUOTE;
 }
-<ST_XML_ATTRIBUTE_VALUE> ["] {
+<ST_XML_ATTRIBUTE_VALUE> [\"] {
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_DQUOTED;
 	yybegin(ST_XML_ATTRIBUTE_VALUE_DQUOTED);
@@ -1343,7 +1357,7 @@ PHP_ASP_END=%>
 	return PROXY_CONTEXT;
 }
 
-<ST_XML_ATTRIBUTE_VALUE_DQUOTED> ([^<"\x24\x23]|[\x24\x23][^\x7b])+ {
+<ST_XML_ATTRIBUTE_VALUE_DQUOTED> ([^<\"\x24\x23]|[\x24\x23][^\x7b])+ {
 	return XML_TAG_ATTRIBUTE_VALUE;
 }
 <ST_XML_ATTRIBUTE_VALUE_SQUOTED> ([^<'\x24\x23]|[\x24\x23][^\x7b])+ {
@@ -1518,6 +1532,59 @@ PHP_ASP_END=%>
 // END NESTED XML
 
 
+{PHP_START} | {PHP_ASP_START} | {PIstart} {
+	if(Debug.debugTokenizer)
+		dump("\nprocessing instruction start");//$NON-NLS-1$
+	if ("<?".equals(yytext())
+			&& !ProjectOptions.useShortTags(project)) {
+		yybegin(ST_PI);
+		return XML_PI_OPEN;
+
+	} else {
+		// removeing trailing whitespaces for the php open
+		String phpStart = yytext();
+		int i = phpStart.length() - 1;
+		while (i >= 0
+				&& Character.isWhitespace(phpStart.charAt(i--))) {
+			yypushback(1);
+		}
+		fStateStack.push(yystate());// YYINITIAL
+		if (fStateStack.peek() == YYINITIAL) {
+			// the simple case, just a regular scriptlet out in
+			// content
+			yybegin(ST_PHP_CONTENT);
+			return PHP_OPEN;
+		} else {
+			if (yystate() == ST_XML_ATTRIBUTE_VALUE_DQUOTED)
+				fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_DQUOTED;
+			else if (yystate() == ST_XML_ATTRIBUTE_VALUE_SQUOTED)
+				fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_SQUOTED;
+			else if (yystate() == ST_CDATA_TEXT) {
+				fEmbeddedPostState = ST_CDATA_TEXT;
+				fEmbeddedHint = XML_CDATA_TEXT;
+			}
+			yybegin(ST_PHP_CONTENT);
+			assembleEmbeddedContainer(PHP_OPEN, PHP_CLOSE);
+			if (yystate() == ST_BLOCK_TAG_INTERNAL_SCAN) {
+				yybegin(ST_BLOCK_TAG_SCAN);
+				return BLOCK_TEXT;
+			}
+			// required help for successive embedded regions
+			if (yystate() == ST_XML_TAG_NAME) {
+				fEmbeddedHint = XML_TAG_NAME;
+				fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+			} else if ((yystate() == ST_XML_ATTRIBUTE_NAME || yystate() == ST_XML_EQUALS)) {
+				fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+				fEmbeddedPostState = ST_XML_EQUALS;
+			} else if (yystate() == ST_XML_ATTRIBUTE_VALUE) {
+				fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
+				fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+			}
+			return PROXY_CONTEXT;
+		}
+	}
+
+}
 // XML & PHP Comments
 
 <YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION> {CommentStart} {
@@ -1554,6 +1621,8 @@ PHP_ASP_END=%>
 <ST_CDATA_TEXT> .|\r|\n {
 	if(Debug.debugTokenizer)
 		dump("CDATA text");//$NON-NLS-1$
+	fEmbeddedPostState = ST_CDATA_TEXT;
+	fEmbeddedHint = XML_CDATA_TEXT;
 	String blockContext = doBlockScan("]]>", XML_CDATA_TEXT, ST_CDATA_END);//$NON-NLS-1$
 	if(blockContext == XML_CDATA_TEXT)
 		yybegin(ST_CDATA_END);
@@ -1580,6 +1649,134 @@ PHP_ASP_END=%>
 	if(Debug.debugTokenizer)
 		dump("\nEntityRef");//$NON-NLS-1$
 	return XML_ENTITY_REFERENCE;
+}
+
+// the next four are order dependent
+<ST_PI> ((X|x)(M|m)(L|l)) {
+	if(Debug.debugTokenizer)
+		dump("XML processing instruction target");//$NON-NLS-1$
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	fEmbeddedPostState = ST_XML_EQUALS;
+        yybegin(ST_XML_PI_ATTRIBUTE_NAME);
+        return XML_TAG_NAME;
+}
+// XML declarations
+<ST_PI> ((P|p)(H|h)(P|p)) {
+	if(Debug.debugTokenizer)
+		dump("PHP processing instruction target");//$NON-NLS-1$
+	//fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	//fEmbeddedPostState = ST_XML_EQUALS;
+        //yybegin(ST_XML_PI_ATTRIBUTE_NAME);
+        //return XML_TAG_NAME;
+        yybegin(ST_PHP_CONTENT);
+		return PHP_OPEN;
+}
+<ST_PI> ([iI][mM][pP][oO][rR][tT]) {
+	if(Debug.debugTokenizer)
+		dump("DHTML processing instruction target");//$NON-NLS-1$
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	fEmbeddedPostState = ST_XML_EQUALS;
+        yybegin(ST_DHTML_ATTRIBUTE_NAME);
+        return XML_TAG_NAME;
+}
+<ST_PI> xml-stylesheet {
+	if(Debug.debugTokenizer)
+		dump("XSL processing instruction target");//$NON-NLS-1$
+	fEmbeddedPostState = ST_XML_EQUALS;
+        yybegin(ST_XML_PI_ATTRIBUTE_NAME);
+        return XML_TAG_NAME;
+}
+<ST_PI> {Name} {
+	if(Debug.debugTokenizer)
+		dump("processing instruction target");//$NON-NLS-1$
+	fEmbeddedHint = XML_CONTENT;
+        yybegin(ST_PI_WS);
+        return XML_TAG_NAME;
+}
+<ST_PI_WS> {S}+ {
+        yybegin(ST_PI_CONTENT);
+        return WHITE_SPACE;
+}
+<ST_PI, ST_PI_WS> \?> {
+	if(Debug.debugTokenizer)
+		dump("processing instruction end");//$NON-NLS-1$
+	fEmbeddedHint = UNDEFINED;
+        yybegin(YYINITIAL);
+        return XML_PI_CLOSE;
+}
+<ST_PI_CONTENT> . {
+		// block scan until close is found
+	return doScan("?>", false, false, XML_PI_CONTENT, ST_XML_PI_TAG_CLOSE, ST_XML_PI_TAG_CLOSE);
+}
+<ST_PI_CONTENT,ST_XML_PI_TAG_CLOSE> \?> {
+		// ended with nothing inside
+		fEmbeddedHint = UNDEFINED;
+        yybegin(YYINITIAL);
+        return XML_PI_CLOSE;
+}
+
+<ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_EQUALS> {Name} {
+	if(Debug.debugTokenizer)
+		dump("XML processing instruction attribute name");//$NON-NLS-1$
+        yybegin(ST_XML_PI_EQUALS);
+        return XML_TAG_ATTRIBUTE_NAME;
+}
+<ST_XML_PI_EQUALS> {Eq} {
+	if(Debug.debugTokenizer)
+		dump("XML processing instruction '='");//$NON-NLS-1$
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
+	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+        yybegin(ST_XML_PI_ATTRIBUTE_VALUE);
+        return XML_TAG_ATTRIBUTE_EQUALS;
+}
+/* the value was found, look for the next name */
+<ST_XML_PI_ATTRIBUTE_VALUE> {AttValue} {
+	if(Debug.debugTokenizer)
+		dump("XML processing instruction attribute value");//$NON-NLS-1$
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	fEmbeddedPostState = ST_XML_EQUALS;
+        yybegin(ST_XML_PI_ATTRIBUTE_NAME);
+        return XML_TAG_ATTRIBUTE_VALUE;
+}
+/* the PI's close was found */
+<ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE> {PIend} {
+	if(Debug.debugTokenizer)
+		dump("XML processing instruction end");//$NON-NLS-1$
+	fEmbeddedHint = UNDEFINED;
+        yybegin(YYINITIAL);
+        return XML_PI_CLOSE;
+}
+// DHTML
+<ST_DHTML_ATTRIBUTE_NAME, ST_DHTML_EQUALS> {Name} {
+	if(Debug.debugTokenizer)
+		dump("DHTML processing instruction attribute name");//$NON-NLS-1$
+        yybegin(ST_DHTML_EQUALS);
+        return XML_TAG_ATTRIBUTE_NAME;
+}
+<ST_DHTML_EQUALS> {Eq} {
+	if(Debug.debugTokenizer)
+		dump("DHTML processing instruction '='");//$NON-NLS-1$
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
+	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+        yybegin(ST_DHTML_ATTRIBUTE_VALUE);
+        return XML_TAG_ATTRIBUTE_EQUALS;
+}
+/* the value was found, look for the next name */
+<ST_DHTML_ATTRIBUTE_VALUE> {AttValue} | ([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
+	if(Debug.debugTokenizer)
+		dump("DHTML processing instruction attribute value");//$NON-NLS-1$
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	fEmbeddedPostState = ST_XML_EQUALS;
+        yybegin(ST_DHTML_ATTRIBUTE_NAME);
+        return XML_TAG_ATTRIBUTE_VALUE;
+}
+/* The DHTML PI's close was found */
+<ST_DHTML_EQUALS, ST_DHTML_ATTRIBUTE_NAME, ST_DHTML_ATTRIBUTE_VALUE> [/]*> {
+	if(Debug.debugTokenizer)
+		dump("DHTML processing instruction end");//$NON-NLS-1$
+	fEmbeddedHint = UNDEFINED;
+        yybegin(YYINITIAL);
+        return XML_PI_CLOSE;
 }
 
 // XML declarations
@@ -1720,8 +1917,8 @@ PHP_ASP_END=%>
 	}
 
 //PHP PROCESSING ACTIONS
-<YYINITIAL,ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID, ST_XML_COMMENT, ST_XML_ATTRIBUTE_VALUE_DQUOTED, ST_XML_ATTRIBUTE_VALUE_SQUOTED, ST_CDATA_TEXT, ST_BLOCK_TAG_INTERNAL_SCAN> {PHP_START} | {PHP_ASP_START} {
-    if (UseAspTagsHandler.useAspTagsAsPhp(project) ||yytext().charAt(1) != '%') {
+<YYINITIAL,ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID, ST_XML_COMMENT, ST_XML_ATTRIBUTE_VALUE_DQUOTED, ST_XML_ATTRIBUTE_VALUE_SQUOTED, ST_BLOCK_TAG_INTERNAL_SCAN>{WHITESPACE}* {PHP_START} | {PHP_ASP_START} {
+    if (ProjectOptions.isSupportingAspTags(project) ||yytext().charAt(1) != '%') {
 		//removeing trailing whitespaces for the php open
 		String phpStart = yytext();
 		int i = phpStart.length() - 1; 
@@ -1771,13 +1968,13 @@ PHP_ASP_END=%>
 	return XML_TAG_OPEN;
 }
 
-<ST_PHP_CONTENT> {PHP_END} | {PHP_ASP_END} {
+<ST_PHP_CONTENT> {PIend} | {PHP_ASP_END} {
 	yybegin(fStateStack.pop());
 	return PHP_CLOSE;
 	
 }
 <ST_PHP_CONTENT> .|\n|\r {
-	return doScanEndPhp(UseAspTagsHandler.useAspTagsAsPhp(project), PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
+	return doScanEndPhp(ProjectOptions.isSupportingAspTags(project), PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
 }
 
 . {
