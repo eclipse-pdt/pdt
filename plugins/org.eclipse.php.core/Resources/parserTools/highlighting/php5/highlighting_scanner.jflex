@@ -774,11 +774,29 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
         return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_END_HEREDOC>{NEWLINE}{LABEL}";"?[\n\r] {
-    heredoc=null;
-    heredoc_len=0;
-    yybegin(ST_PHP_IN_SCRIPTING);
-    return PHP_HEREDOC_TAG;
+<ST_PHP_END_HEREDOC>{NEWLINE}*({ANY_CHAR}[^\n\r;])*{LABEL}";"?[\n\r] {
+	int label_len = yylength() - 1;
+	int startIndex = 0;
+	String yytext = yytext();
+	if (yytext.charAt(label_len - 1) == ';') {
+		label_len--;
+	}
+	while (yytext.charAt(startIndex) == '\r'
+			|| yytext.charAt(startIndex) == '\n') {
+		startIndex++;
+	}
+
+	if (label_len > heredoc_len
+			&& yytext.substring(startIndex, label_len).equals(
+					heredoc)) {
+		heredoc = null;
+		heredoc_len = 0;
+		yybegin(ST_PHP_IN_SCRIPTING);
+		return PHP_HEREDOC_TAG;
+	} else {
+		yybegin(ST_PHP_HEREDOC);
+		return PHP_CONSTANT_ENCAPSED_STRING;
+	}
 }
 
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {
