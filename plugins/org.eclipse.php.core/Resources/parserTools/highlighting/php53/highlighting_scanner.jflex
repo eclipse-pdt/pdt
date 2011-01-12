@@ -809,6 +809,16 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_HEREDOC_TAG;
 }
 
+<ST_PHP_END_HEREDOC>{NEWLINE}*{LABEL}({TABS_AND_SPACES}[^\n\r])+";"?[\n\r] {
+	yybegin(ST_PHP_HEREDOC);
+	return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_END_HEREDOC>{NEWLINE}*({TABS_AND_SPACES}[^\n\r])+{LABEL}";"?[\n\r] {
+	yybegin(ST_PHP_HEREDOC);
+	return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
 <ST_PHP_NOWDOC>{LABEL}";"?[\n\r] {
     int label_len = yylength() - 1;
 
