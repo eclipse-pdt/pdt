@@ -275,7 +275,7 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 		marker.setAttribute(IMarker.CHAR_START, offset);
 		marker.setAttribute(IMarker.CHAR_END, charEnd);
 		marker.setAttribute(IMarker.MESSAGE, taskStr);
-		marker.setAttribute(IMarker.USER_EDITABLE, true);
+		marker.setAttribute(IMarker.USER_EDITABLE, false);
 		marker.setAttribute(IMarker.PRIORITY, priority);
 	}
 
