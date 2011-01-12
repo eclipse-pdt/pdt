@@ -892,17 +892,13 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 <ST_PHP_HEREDOC>{HEREDOC_CHARS}*({HEREDOC_NEWLINE}+({LABEL}";"?)?)? {
 	if(yytext().startsWith(heredoc)){
 		String text = yytext();
-		int index = heredoc_len;
-		while(index < text.length() && Character.isWhitespace(text.charAt(index))){
-			if(text.charAt(index) == '\r'
-				|| text.charAt(index) == '\n'){
-				yypushback(yylength()-index-1);
-		        heredoc=null;
-		        heredoc_len=0;
-		        yybegin(ST_PHP_IN_SCRIPTING);
-		        return PHP_HEREDOC_TAG;
-			}
-			index++;
+		if(heredoc_len < text.length() && (text.charAt(heredoc_len) == '\r'
+			|| text.charAt(heredoc_len) == '\n')){
+			yypushback(yylength()-heredoc_len-1);
+	        heredoc=null;
+	        heredoc_len=0;
+	        yybegin(ST_PHP_IN_SCRIPTING);
+	        return PHP_HEREDOC_TAG;
 		}
 	}
 	return PHP_ENCAPSED_AND_WHITESPACE;
