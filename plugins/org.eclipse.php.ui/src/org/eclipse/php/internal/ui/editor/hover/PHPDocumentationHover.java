@@ -143,7 +143,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			if (current != null && current.getNext() != null) {
 				setToolTipText(Messages
-						.format(PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
+						.format(
+								PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
 								BasicElementLabels.getJavaElementName(current
 										.getNext().getInputName())));
 				setEnabled(true);
@@ -180,8 +181,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			try {
 				// FIXME: add hover location to editor navigation history?
-				IEditorPart editor = EditorUtility.openInEditor(
-						infoInput.getElement(), true);
+				IEditorPart editor = EditorUtility.openInEditor(infoInput
+						.getElement(), true);
 				EditorUtility.revealInEditor(editor, infoInput.getElement());
 			} catch (PartInitException e) {
 				PHPUiPlugin.log(e);
@@ -549,35 +550,16 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	private static PHPDocumentationBrowserInformationControlInput getHoverInfo(
 			IModelElement[] elements, String constantValue,
 			PHPDocumentationBrowserInformationControlInput previousInput) {
-		int nResults = elements.length;
 		StringBuffer buffer = new StringBuffer();
 		boolean hasContents = false;
 		IModelElement element = null;
-
-		int leadingImageWidth = 0;
-
-		if (nResults > 1) {
-
-			for (int i = 0; i < elements.length; i++) {
-				HTMLPrinter.startBulletList(buffer);
-				IModelElement curr = elements[i];
-				if (curr instanceof IMember
-						|| curr.getElementType() == IModelElement.FIELD) {
-					// FIXME: provide links
-					HTMLPrinter.addBullet(buffer,
-							getInfoText(curr, constantValue, false));
-					hasContents = true;
-				}
-				HTMLPrinter.endBulletList(buffer);
-			}
-
-		} else {
-
-			element = elements[0];
+		int leadingImageWidth = 20;
+		for (int i = 0; i < elements.length; i++) {
+			element = elements[i];
 			if (element instanceof IMember) {
 				IMember member = (IMember) element;
-				HTMLPrinter.addSmallHeader(buffer,
-						getInfoText(member, constantValue, true));
+				HTMLPrinter.addSmallHeader(buffer, getInfoText(member,
+						constantValue, true, i == 0));
 				Reader reader = null;
 				try {
 					reader = getHTMLContent(member);
@@ -587,14 +569,15 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				if (reader != null) {
 					HTMLPrinter.addParagraph(buffer, reader);
 				}
+				if (i != elements.length - 1) {
+					buffer.append("<hr>");
+				}
 				hasContents = true;
-
 			} else if (element.getElementType() == IModelElement.FIELD) {
-				HTMLPrinter.addSmallHeader(buffer,
-						getInfoText(element, constantValue, true));
+				HTMLPrinter.addSmallHeader(buffer, getInfoText(element,
+						constantValue, true, i == 0));
 				hasContents = true;
 			}
-			leadingImageWidth = 20;
 		}
 
 		if (!hasContents)
@@ -612,7 +595,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	}
 
 	private static String getInfoText(IModelElement element,
-			String constantValue, boolean allowImage) {
+			String constantValue, boolean allowImage, boolean isFirstElement) {
 		StringBuffer label = getInfoText(element);
 		if (element.getElementType() == IModelElement.FIELD) {
 			if (constantValue != null) {
@@ -633,7 +616,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		}
 
 		StringBuffer buf = new StringBuffer();
-		addImageAndLabel(buf, imageName, 16, 16, 2, 2, label.toString(), 20, 2);
+		addImageAndLabel(buf, imageName, 16, 16, 2, 2, label.toString(), 20, 2,
+				isFirstElement);
 		return buf.toString();
 	}
 
@@ -704,12 +688,11 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 								}
 							} else {
 								ModuleDeclaration parsedUnit = SourceParserUtil
-										.getModuleDeclaration(
-												field.getSourceModule(), null);
+										.getModuleDeclaration(field
+												.getSourceModule(), null);
 								org.eclipse.dltk.ast.ASTNode func = ASTUtils
-										.findMinimalNode(parsedUnit,
-												function.getStart(),
-												function.getEnd());
+										.findMinimalNode(parsedUnit, function
+												.getStart(), function.getEnd());
 
 								if (func instanceof FullyQualifiedReference) {
 									functionName = ((FullyQualifiedReference) func)
@@ -718,8 +701,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 								// look for the element in current namespace
 								if (functionName.indexOf('\\') == -1) {
 									IType currentNamespace = PHPModelUtils
-											.getCurrentNamespace(
-													field.getSourceModule(),
+											.getCurrentNamespace(field
+													.getSourceModule(),
 													function.getStart());
 									String fullyQualifiedFuncName = "";
 									if (currentNamespace != null) {
@@ -830,8 +813,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		if (styleSheetURL != null) {
 			BufferedReader reader = null;
 			try {
-				reader = new BufferedReader(new InputStreamReader(
-						styleSheetURL.openStream()));
+				reader = new BufferedReader(new InputStreamReader(styleSheetURL
+						.openStream()));
 				StringBuffer buffer = new StringBuffer(1500);
 				String line = reader.readLine();
 				while (line != null) {
@@ -857,14 +840,29 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 	public static void addImageAndLabel(StringBuffer buf, String imageName,
 			int imageWidth, int imageHeight, int imageLeft, int imageTop,
 			String label, int labelLeft, int labelTop) {
+		addImageAndLabel(buf, imageName, imageWidth, imageHeight, imageLeft,
+				imageTop, label, labelLeft, labelTop, true);
+	}
 
+	private static void addImageAndLabel(StringBuffer buf, String imageName,
+			int imageWidth, int imageHeight, int imageLeft, int imageTop,
+			String label, int labelLeft, int labelTop, boolean isFirstElement) {
+
+		// workaround to make the window wide enough
+		label = label + "&nbsp";
 		if (imageName != null) {
 			StringBuffer imageStyle = new StringBuffer("position: absolute; "); //$NON-NLS-1$
 			imageStyle.append("width: ").append(imageWidth).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
 			imageStyle.append("height: ").append(imageHeight).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
-			imageStyle.append("top: ").append(imageTop).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
-			imageStyle.append("left: ").append(imageLeft).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
-
+			if (isFirstElement) {
+				imageStyle.append("top: ").append(imageTop).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
+				imageStyle.append("left: ").append(imageLeft).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				imageStyle
+						.append("margin-top: ").append(imageTop).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
+				imageStyle
+						.append("margin-left: ").append(-imageLeft).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			buf.append("<!--[if lte IE 6]><![if gte IE 5.5]>\n"); //$NON-NLS-1$
 			buf.append("<span style=\"").append(imageStyle).append("filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='").append(imageName).append("')\"></span>\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			buf.append("<![endif]><![endif]-->\n"); //$NON-NLS-1$
