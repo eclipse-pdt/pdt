@@ -3,6 +3,8 @@ package org.eclipse.php.internal.ui.documentation;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -31,6 +33,9 @@ import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
  */
 @SuppressWarnings({ "restriction", "unchecked", "rawtypes" })
 public class PHPDocumentationContentAccess {
+
+	private static final Pattern INLINE_LINK_PATTERN = Pattern
+			.compile("\\{@link[\\s]+[^\\}]*\\}");
 
 	private static final String BLOCK_TAG_START = "<dl>"; //$NON-NLS-1$
 	private static final String BLOCK_TAG_END = "</dl>"; //$NON-NLS-1$
@@ -707,6 +712,7 @@ public class PHPDocumentationContentAccess {
 					.getInheritedMainDescription(fMethod);
 			handleInherited(inherited);
 		}
+		handleInlineLinks();
 
 		CharSequence[] parameterDescriptions = new CharSequence[parameterNames
 				.size()];
@@ -765,6 +771,39 @@ public class PHPDocumentationContentAccess {
 		String result = fBuf.toString();
 		fBuf = null;
 		return result;
+	}
+
+	private void handleInlineLinks() {
+		Matcher m = INLINE_LINK_PATTERN.matcher(fBuf);
+		StringBuffer sb = new StringBuffer();
+		while (m.find()) {
+			String[] strs = m.group().split("[\\s]+", 3);
+			String url = removeLastRightCurlyBrace(strs[1]);
+			if (url.toLowerCase().startsWith("http")) {
+				String description = "";
+				if (strs.length == 3) {
+					description = removeLastRightCurlyBrace(strs[2]);
+				} else {
+					description = url;
+				}
+				String link = "<a href=\"" + url + "\">" + description + "</a>";
+				m.appendReplacement(sb, link);
+			} else {
+				m.appendReplacement(sb,
+						handleLink(Arrays.asList(new TypeReference(0, 0, url)))
+								.toString());
+			}
+		}
+		m.appendTail(sb);
+		fBuf = sb;
+		sb = null;
+	}
+
+	private String removeLastRightCurlyBrace(String str) {
+		if (str.endsWith("}")) {
+			return str.substring(0, str.length() - 1);
+		}
+		return str;
 	}
 
 	private void handleDeprecatedTag(PHPDocTag tag) {
@@ -1043,7 +1082,7 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private void handleSeeTag(PHPDocTag tag) {
-		handleLink(Arrays.asList(tag.getReferences()));
+		fBuf.append(handleLink(Arrays.asList(tag.getReferences())));
 	}
 
 	private void handleExceptionTags(List tags, List exceptionNames,
@@ -1156,7 +1195,8 @@ public class PHPDocumentationContentAccess {
 		fBuf.append(">").append(tag.getValue()).append("</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	private void handleLink(List fragments) {
+	private StringBuffer handleLink(List fragments) {
+		StringBuffer sb = new StringBuffer();
 		int fs = fragments.size();
 		if (fs > 0) {
 			Object first = fragments.get(0);
@@ -1222,16 +1262,16 @@ public class PHPDocumentationContentAccess {
 				// }
 
 			if (refTypeName != null) {
-				fBuf.append("<a href='"); //$NON-NLS-1$
+				sb.append("<a href='"); //$NON-NLS-1$
 				try {
 					String scheme = PHPElementLinks.PHPDOC_SCHEME;
 					String uri = PHPElementLinks.createURI(scheme, fMember,
 							refTypeName, refMemberName, refMethodParamTypes);
-					fBuf.append(uri);
+					sb.append(uri);
 				} catch (URISyntaxException e) {
 					PHPUiPlugin.log(e);
 				}
-				fBuf.append("'>"); //$NON-NLS-1$
+				sb.append("'>"); //$NON-NLS-1$
 				if (fs > 1) {
 					// if (fs == 2 && fragments.get(1) instanceof TextElement) {
 					// String text= removeLeadingWhitespace(((TextElement)
@@ -1243,34 +1283,35 @@ public class PHPDocumentationContentAccess {
 					// }
 					// handleContentElements(fragments.subList(1, fs));
 				} else {
-					fBuf.append(refTypeName);
+					sb.append(refTypeName);
 					if (refMemberName != null) {
 						if (refTypeName.length() > 0) {
-							fBuf.append("::");
+							sb.append("::");
 						}
-						fBuf.append(refMemberName);
+						sb.append(refMemberName);
 						if (refMethodParamTypes != null) {
-							fBuf.append('(');
+							sb.append('(');
 							for (int i = 0; i < refMethodParamTypes.length; i++) {
 								String pType = refMethodParamTypes[i];
-								fBuf.append(pType);
+								sb.append(pType);
 								String pName = refMethodParamNames[i];
 								if (pName != null) {
-									fBuf.append(' ').append(pName);
+									sb.append(' ').append(pName);
 								}
 								if (i < refMethodParamTypes.length - 1) {
-									fBuf.append(", "); //$NON-NLS-1$
+									sb.append(", "); //$NON-NLS-1$
 								}
 							}
-							fBuf.append(')');
+							sb.append(')');
 						}
 					}
 				}
-				fBuf.append("</a>"); //$NON-NLS-1$
+				sb.append("</a>"); //$NON-NLS-1$
 			} else {
 				// handleContentElements(fragments);
 			}
 		}
+		return sb;
 	}
 
 	private boolean containsOnlyNull(List parameterNames) {
