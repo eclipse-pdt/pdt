@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,13 +7,14 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
+ *     Zend Technologies
  *******************************************************************************/
 
 package org.eclipse.php.internal.core.documentModel.dom;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
@@ -26,9 +27,13 @@ import org.w3c.dom.Node;
 
 /**
  * Represents elements in the dom model {@link DOMModelForPHP}
+ * 
  * @author Roy, 2007
  */
-public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
+public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
+		IImplForPhp {
+
+	private IModelElement modelElement;
 
 	public ElementImplForPhp() {
 		super();
@@ -42,12 +47,10 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 		super(that);
 	}
 
-	@Override
 	protected boolean isNestedClosed(String regionType) {
 		return regionType == PHPRegionContext.PHP_CLOSE;
 	}
 
-	@Override
 	public Node cloneNode(boolean deep) {
 		ElementImpl cloned = new ElementImplForPhp(this);
 		if (deep)
@@ -56,24 +59,20 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 	}
 
 	/**
-	 * @see ElementStyleImpl#setOwnerDocument(Document)
-	 * make this method package visible
+	 * @see ElementStyleImpl#setOwnerDocument(Document) make this method package
+	 *      visible
 	 */
-	@Override
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
 
 	/**
-	 * @see setTagName(String)
-	 * make this method package visible
+	 * @see setTagName(String) make this method package visible
 	 */
-	@Override
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
 	}
 
-	@Override
 	public boolean isGlobalTag() {
 		return isPhpTag() ? false : super.isGlobalTag();
 	}
@@ -82,14 +81,14 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 	 * @return true if it is a php element
 	 */
 	public boolean isPhpTag() {
-		return getNodeName() == PHPDOMModelParser.PHP_TAG_NAME;
+		return PHPDOMModelParser.PHP_TAG_NAME.equals(getNodeName());
 	}
 
-	@Override
 	public INodeAdapter getExistingAdapter(Object type) {
 
 		// no validation or validation propagation for PHP tags
-		if (isPhpTag() && ValidationAdapter.class.isAssignableFrom((Class) type)) {
+		if (isPhpTag() && type instanceof Class
+				&& ValidationAdapter.class.isAssignableFrom((Class) type)) {
 			return nullValidator;
 		}
 		return super.getExistingAdapter(type);
@@ -97,12 +96,24 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 
 	private final static ValidationComponent nullValidator = new NullValidator();
 
-	@Override
 	public String getPrefix() {
 		final String prefix = super.getPrefix();
 		if (prefix == null && isPhpTag()) {
 			return ""; //$NON-NLS-1$
 		}
 		return prefix;
+	}
+
+	public IModelElement getModelElement() {
+		return modelElement;
+	}
+
+	public void setModelElement(IModelElement modelElement) {
+		this.modelElement = modelElement;
+	}
+
+	@Override
+	public boolean isStartTagClosed() {
+		return isPhpTag() ? true : super.isStartTagClosed();
 	}
 }
