@@ -87,7 +87,7 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
 	public INodeAdapter getExistingAdapter(Object type) {
 
 		// no validation or validation propagation for PHP tags
-		if (isPhpTag()
+		if (isPhpTag() && type instanceof Class
 				&& ValidationAdapter.class.isAssignableFrom((Class) type)) {
 			return nullValidator;
 		}
