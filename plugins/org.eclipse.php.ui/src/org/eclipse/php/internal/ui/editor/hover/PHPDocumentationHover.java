@@ -36,9 +36,10 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.documentation.PHPElementLinks;
 import org.eclipse.php.internal.ui.documentation.PHPDocumentationContentAccess;
+import org.eclipse.php.internal.ui.documentation.PHPElementLinks;
 import org.eclipse.php.internal.ui.util.Messages;
+import org.eclipse.php.internal.ui.util.OpenBrowserUtil;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -139,8 +140,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			if (current != null && current.getNext() != null) {
 				setToolTipText(Messages
-						.format(
-								PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
+						.format(PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
 								BasicElementLabels.getJavaElementName(current
 										.getNext().getInputName())));
 				setEnabled(true);
@@ -177,8 +177,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			try {
 				// FIXME: add hover location to editor navigation history?
-				IEditorPart editor = EditorUtility.openInEditor(infoInput
-						.getElement(), true);
+				IEditorPart editor = EditorUtility.openInEditor(
+						infoInput.getElement(), true);
 				EditorUtility.revealInEditor(editor, infoInput.getElement());
 			} catch (PartInitException e) {
 				PHPUiPlugin.log(e);
@@ -450,7 +450,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 						// hide, rather than dispose
 
 						// open external links in real browser:
-						//OpenBrowserUtil.open(url, display, ""); //$NON-NLS-1$
+						OpenBrowserUtil.open(url, display); //$NON-NLS-1$
 
 						return true;
 					}
@@ -561,8 +561,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				if (curr instanceof IMember
 						|| curr.getElementType() == IModelElement.FIELD) {
 					// FIXME: provide links
-					HTMLPrinter.addBullet(buffer, getInfoText(curr,
-							constantValue, false));
+					HTMLPrinter.addBullet(buffer,
+							getInfoText(curr, constantValue, false));
 					hasContents = true;
 				}
 				HTMLPrinter.endBulletList(buffer);
@@ -573,8 +573,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			element = elements[0];
 			if (element instanceof IMember) {
 				IMember member = (IMember) element;
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(member,
-						constantValue, true));
+				HTMLPrinter.addSmallHeader(buffer,
+						getInfoText(member, constantValue, true));
 				Reader reader = null;
 				try {
 					reader = getHTMLContent(member);
@@ -587,8 +587,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				hasContents = true;
 
 			} else if (element.getElementType() == IModelElement.FIELD) {
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(element,
-						constantValue, true));
+				HTMLPrinter.addSmallHeader(buffer,
+						getInfoText(element, constantValue, true));
 				hasContents = true;
 			}
 			leadingImageWidth = 20;
@@ -762,8 +762,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		if (styleSheetURL != null) {
 			BufferedReader reader = null;
 			try {
-				reader = new BufferedReader(new InputStreamReader(styleSheetURL
-						.openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						styleSheetURL.openStream()));
 				StringBuffer buffer = new StringBuffer(1500);
 				String line = reader.readLine();
 				while (line != null) {
