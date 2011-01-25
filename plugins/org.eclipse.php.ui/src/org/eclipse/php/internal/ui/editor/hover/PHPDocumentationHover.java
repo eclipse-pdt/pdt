@@ -43,6 +43,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.documentation.PHPDocumentationContentAccess;
 import org.eclipse.php.internal.ui.documentation.PHPElementLinks;
 import org.eclipse.php.internal.ui.util.Messages;
+import org.eclipse.php.internal.ui.util.OpenBrowserUtil;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
@@ -454,7 +455,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 						// hide, rather than dispose
 
 						// open external links in real browser:
-						//OpenBrowserUtil.open(url, display, ""); //$NON-NLS-1$
+						OpenBrowserUtil.open(url, display); //$NON-NLS-1$
 
 						return true;
 					}
