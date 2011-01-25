@@ -120,6 +120,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StorageModelProvider;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
@@ -2756,6 +2757,16 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				return provider;
 			}
 		}
+		if (getEditorInput() instanceof RefactorableFileEditorInput) {
+			return super.getDocumentProvider();
+		}
+		if (getEditorInput() instanceof IStorageEditorInput) {
+			IDocumentProvider provider = StorageModelProvider.getInstance();
+			if (provider != null) {
+				return provider;
+			}
+		}
+
 		return super.getDocumentProvider();
 	}
 
