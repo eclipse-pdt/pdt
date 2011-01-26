@@ -204,21 +204,16 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 		setMessage(getDescription(), IMessageProvider.NONE);
 
-		String serverName = modifiedValuesCache.serverName;
-		if (serverName == null || serverName.trim().equals("")) { //$NON-NLS-1$
-			setMessage(
-					PHPServerUIMessages
-							.getString("ServerCompositeFragment.missingServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
-		} else {
-			boolean ok = checkServerName(serverName);
+		String urlStr = url.getText();
+		if (urlStr != null && !urlStr.trim().equals("")) {
+			boolean ok = checkServerUrl(urlStr);
 			if (!ok) {
 				setMessage(
 						PHPServerUIMessages
-								.getString("ServerCompositeFragment.duplicateServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
+								.getString("ServerCompositeFragment.duplicateServerUrl"), IMessageProvider.ERROR); //$NON-NLS-1$
 			}
 		}
 
-		String urlStr = url.getText();
 		try {
 			URL url = new URL(urlStr);
 			if (url.getPath() != null && url.getPath().length() != 0) {
@@ -239,6 +234,11 @@ public class ServerCompositeFragment extends CompositeFragment {
 		try {
 			URL baseURL = new URL(urlStr);
 			String host = baseURL.getHost();
+			if (host.trim().length() == 0) {
+				setMessage(
+						PHPServerUIMessages
+								.getString("ServerCompositeFragment.serverURLEmpty"), IMessageProvider.ERROR); //$NON-NLS-1$
+			}
 			int port = baseURL.getPort();
 
 			// workingCopy.setHost(host);
@@ -251,6 +251,21 @@ public class ServerCompositeFragment extends CompositeFragment {
 							.getString("ServerCompositeFragment.enterValidURL"), IMessageProvider.ERROR); //$NON-NLS-1$
 			return;
 		}
+
+		String serverName = modifiedValuesCache.serverName;
+		if (serverName == null || serverName.trim().equals("")) { //$NON-NLS-1$
+			setMessage(
+					PHPServerUIMessages
+							.getString("ServerCompositeFragment.missingServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
+		} else {
+			boolean ok = checkServerName(serverName);
+			if (!ok) {
+				setMessage(
+						PHPServerUIMessages
+								.getString("ServerCompositeFragment.duplicateServerName"), IMessageProvider.ERROR); //$NON-NLS-1$
+			}
+		}
+
 		controlHandler.update();
 	}
 
@@ -298,6 +313,27 @@ public class ServerCompositeFragment extends CompositeFragment {
 			for (int i = 0; i < size; i++) {
 				Server server = allServers[i];
 				if (name.equals(server.getName()))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean checkServerUrl(String url) {
+		url = url.trim();
+		if (originalValuesCache.serverName != null
+				&& originalValuesCache.serverName.trim().length() > 0) {
+			if (url.equals(originalValuesCache.url)) {
+				return true;
+			}
+		}
+		Server[] allServers = ServersManager.getServers();
+
+		if (allServers != null) {
+			int size = allServers.length;
+			for (int i = 0; i < size; i++) {
+				Server server = allServers[i];
+				if (url.equals(server.getBaseURL()))
 					return false;
 			}
 		}
