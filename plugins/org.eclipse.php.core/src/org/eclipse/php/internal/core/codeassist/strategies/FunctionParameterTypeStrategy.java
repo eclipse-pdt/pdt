@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.php.core.codeassist.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 
 /**
@@ -27,5 +28,8 @@ public class FunctionParameterTypeStrategy extends GlobalTypesStrategy {
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return " "; //$NON-NLS-1$
+	}
+	protected Object getExtraInfo() {
+		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }

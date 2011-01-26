@@ -102,9 +102,17 @@ public abstract class AbstractClassInstantiationStrategy extends
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {
+		boolean insertMode = isInsertMode();
+
 		char nextChar = ' ';
 		try {
-			nextChar = abstractContext.getNextChar();
+			if(insertMode){
+				nextChar = abstractContext.getNextChar();
+			}else{
+				SourceRange replacementRange = getReplacementRange(abstractContext);
+				nextChar = abstractContext.getDocument().getChar(replacementRange.getOffset()+replacementRange.getLength());
+			}
+			
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}

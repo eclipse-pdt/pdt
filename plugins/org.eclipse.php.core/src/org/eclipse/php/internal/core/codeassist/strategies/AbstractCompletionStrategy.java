@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
@@ -186,4 +187,13 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 		// XXX: add language model here
 		return SearchEngine.createSearchScope(sourceModule);
 	}
+
+	protected boolean isInsertMode() {
+		Preferences preferenceStore = PHPCorePlugin.getDefault()
+				.getPluginPreferences();
+		boolean noOverwrite = preferenceStore
+				.getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
+		return noOverwrite;
+	}
+
 }

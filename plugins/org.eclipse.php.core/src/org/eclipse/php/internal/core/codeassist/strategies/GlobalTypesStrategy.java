@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import java.util.*;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -27,6 +28,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -65,7 +67,8 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	public SourceRange getReplacementRange(ICompletionContext context)
 			throws BadLocationException {
 		SourceRange replacementRange = super.getReplacementRange(context);
-		if (replacementRange.getLength() > 0) {
+		boolean insertMode = isInsertMode();
+		if (replacementRange.getLength() > 0 && insertMode) {
 			return new SourceRange(replacementRange.getOffset(),
 					replacementRange.getLength() - 1);
 		}
