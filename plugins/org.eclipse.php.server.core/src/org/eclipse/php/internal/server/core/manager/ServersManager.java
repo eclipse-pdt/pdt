@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -108,14 +109,24 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		if (server == null) {
 			return;
 		}
+
 		ServersManager manager = getInstance();
-		Server oldValue = (Server) manager.servers
-				.put(server.getName(), server);
+		Server oldValue = ServersManager.getServer(server);
+		if (server != oldValue) {
+			manager.servers.remove(oldValue.getName());
+			oldValue.removePropertyChangeListener(manager);
+			ServerManagerEvent event = new ServerManagerEvent(
+					ServerManagerEvent.MANAGER_EVENT_REMOVED, oldValue);
+			manager.fireEvent(event);
+		}
+		oldValue = (Server) manager.servers.put(server.getName(), server);
 		if (oldValue != null) {
 			oldValue.removePropertyChangeListener(manager);
 			ServerManagerEvent event = new ServerManagerEvent(
 					ServerManagerEvent.MANAGER_EVENT_REMOVED, oldValue);
 			manager.fireEvent(event);
+		} else {
+
 		}
 		ServerManagerEvent event = new ServerManagerEvent(
 				ServerManagerEvent.MANAGER_EVENT_ADDED, server);
@@ -197,6 +208,18 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		return (Server) manager.servers.get(serverName);
 	}
 
+	public static Server getServer(Server oldServer) {
+		ServersManager manager = getInstance();
+		for (Iterator iterator = manager.servers.values().iterator(); iterator
+				.hasNext();) {
+			Server server = (Server) iterator.next();
+			if (server.getBaseURL().equals(oldServer.getBaseURL())) {
+				return server;
+			}
+		}
+		return oldServer;
+	}
+
 	/**
 	 * Returns all the Servers that are managed by this manager.
 	 * 
@@ -273,6 +296,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 				// project server (can be the same).
 				try {
 					server = createServer(Default_Server_Name, BASE_URL);
+
 				} catch (MalformedURLException e) {
 					// safe server creation
 				}
@@ -353,6 +377,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	public static Server createServer(String name, String baseURL)
 			throws MalformedURLException {
 		Server server = new Server(name, "localhost", baseURL, "");
+		server = ServersManager.getServer(server);
 		addServer(server);
 		return server;
 	}
