@@ -1,0 +1,12 @@
+--TEST--
+Test overwrite mode
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=false
+--FILE--
+<?php
+new SoapC|lient123(); 
+?>
+--EXPECT--
+<?php
+new SoapClient(); 
+?>

@@ -1,5 +1,7 @@
 --TEST--
 Test CA for extending another class
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
 --FILE--
 <?php
 class Paths {

@@ -1,5 +1,7 @@
 --TEST--
 Test CA in the same namespace
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
 --FILE--
 <?php
 namespace CMS\Application;

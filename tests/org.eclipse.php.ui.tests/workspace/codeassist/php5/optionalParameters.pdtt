@@ -1,5 +1,7 @@
 --TEST--
 Test CA for optional parameters
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
 --FILE--
 <?php
 class Test {

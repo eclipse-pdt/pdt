@@ -1,0 +1,22 @@
+--TEST--
+Test instance of class
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+class Testddd {
+	public static function run( ){
+	}
+}
+if ($ instanceof Testddd|) {
+}
+?>
+--EXPECT--
+<?php
+class Testddd {
+	public static function run( ){
+	}
+}
+if ($ instanceof Testddd) {
+}
+?>

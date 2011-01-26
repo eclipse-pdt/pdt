@@ -117,6 +117,7 @@ public class ContentAssistTests extends AbstractPDTTTest {
 							protected void setUp() throws Exception {
 								PHPCoreTests.setProjectPhpVersion(project,
 										phpVersion);
+								pdttFile.applyPreferences();
 							}
 
 							protected void tearDown() throws Exception {
