@@ -74,8 +74,7 @@ public class PHPTextSequenceUtilities {
 		}
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
 			tRegion = container.getRegionAtCharacterOffset(container
-					.getStartOffset()
-					+ tRegion.getStart() - 1);
+					.getStartOffset() + tRegion.getStart() - 1);
 		}
 
 		// This text region must be of type PhpScriptRegion:
@@ -128,8 +127,9 @@ public class PHPTextSequenceUtilities {
 				}
 
 				// remove spaces from start.
-				textSequence = textSequence.subTextSequence(readForwardSpaces(
-						textSequence, 0), textSequence.length());
+				textSequence = textSequence.subTextSequence(
+						readForwardSpaces(textSequence, 0),
+						textSequence.length());
 
 				return textSequence;
 
@@ -565,6 +565,8 @@ public class PHPTextSequenceUtilities {
 					if (bracketsNum == 0 && rv >= 2) {
 						if (textSequence.charAt(rv - 2) == '-') {
 							return rv - 2;
+						} else {
+							return -1;
 						}
 					}
 					break;
