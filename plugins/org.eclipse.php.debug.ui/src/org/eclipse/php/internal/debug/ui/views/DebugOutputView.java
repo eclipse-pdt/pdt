@@ -152,7 +152,7 @@ public class DebugOutputView extends AbstractDebugView implements
 				.getString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT);
 
 		Color dflt = Display.getDefault().getSystemColor(
-				SWT.COLOR_WIDGET_BACKGROUND);
+				SWT.COLOR_LIST_BACKGROUND);
 
 		if ("true".equalsIgnoreCase(useDefault)) {
 			return dflt;
