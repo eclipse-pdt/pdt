@@ -158,15 +158,18 @@ public class PHPCorePlugin extends Plugin {
 							}
 							IScriptProject scriptProject = DLTKCore
 									.create(project);
-							IProjectFragment[] projectFragments = scriptProject
-									.getProjectFragments();
-							for (IProjectFragment projectFragment : projectFragments) {
-								ProjectIndexerManager.removeProjectFragment(
-										scriptProject, projectFragment
-												.getPath());
+							if (scriptProject.isOpen()) {
+								IProjectFragment[] projectFragments = scriptProject
+										.getProjectFragments();
+								for (IProjectFragment projectFragment : projectFragments) {
+									ProjectIndexerManager
+											.removeProjectFragment(
+													scriptProject,
+													projectFragment.getPath());
+								}
+								ProjectIndexerManager.removeProject(project
+										.getFullPath());
 							}
-							ProjectIndexerManager.removeProject(project
-									.getFullPath());
 						}
 
 						// add to index:
@@ -250,8 +253,8 @@ public class PHPCorePlugin extends Plugin {
 		if (oldIncludePath != null) {
 			newPath.addAll(Arrays.asList(oldIncludePath));
 		}
-		scriptProject.setRawBuildpath(newPath
-				.toArray(new IBuildpathEntry[newPath.size()]),
+		scriptProject.setRawBuildpath(
+				newPath.toArray(new IBuildpathEntry[newPath.size()]),
 				new NullProgressMonitor());
 	}
 
@@ -401,8 +404,7 @@ public class PHPCorePlugin extends Plugin {
 					.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 			try {
 				if (monitor != null) {
-					monitor
-							.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
+					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
 					monitor.worked(25);
 				}
 
