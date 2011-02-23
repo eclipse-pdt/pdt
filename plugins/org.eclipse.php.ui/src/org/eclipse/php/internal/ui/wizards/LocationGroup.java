@@ -93,8 +93,18 @@ public class LocationGroup extends Observable implements Observer,
 			}
 		}
 
-		// check if any of the server can provide local doc root.
+		createLocalServersGroup(group, numColumns);
 
+	}
+
+	/**
+	 * check if any of the server can provide local doc root.
+	 * 
+	 * @param group
+	 * @param numColumns
+	 */
+	protected void createLocalServersGroup(final Group group,
+			final int numColumns) {
 		Server[] servers = ServersManager.getServers();
 		List<String> docRoots = new ArrayList<String>();
 		for (int i = 0; i < servers.length; i++) {
@@ -125,8 +135,19 @@ public class LocationGroup extends Observable implements Observer,
 			fLocalServerRadio.attachDialogField(fSeverLocationList);
 			fWorkspaceRadio.setSelection(false);
 			fLocalServerRadio.setSelection(true);
+		} else {
+			createNoLocalServersFound(group, numColumns);
 		}
+	}
 
+	/**
+	 * add proper GUI if there's no preconfigured local server
+	 * 
+	 * @param group
+	 * @param numColumns
+	 */
+	protected void createNoLocalServersFound(Group group, int numColumns) {
+		// empty
 	}
 
 	public boolean isInLocalServer() {
