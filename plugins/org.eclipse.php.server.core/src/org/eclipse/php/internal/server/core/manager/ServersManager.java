@@ -21,7 +21,10 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -154,12 +157,12 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 		ServersManager manager = ServersManager.getInstance();
 		Server removedServer = (Server) manager.servers.remove(serverName);
 		Server workspaceDefault = getDefaultServer(null);
-		if (workspaceDefault == null) {
-			// Should not happen
-			Logger.log(IStatus.ERROR,
-					"There is no defined default server for the workspace.");
-			return null;
-		}
+		// if (workspaceDefault == null) {
+		// // Should not happen
+		// Logger.log(IStatus.ERROR,
+		// "There is no defined default server for the workspace.");
+		// return null;
+		// }
 		if (removedServer == null) {
 			// if the name is not existing, just quit.
 			return null;
