@@ -12,14 +12,10 @@
 package org.eclipse.php.internal.debug.ui.breakpoint.provider;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.internal.resources.LinkDescription;
-import org.eclipse.core.internal.resources.Project;
-import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -87,7 +83,10 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 			String secondaryId = null;
 			if (input instanceof IFileEditorInput) {
 				IFileEditorInput fileEditorInput = (IFileEditorInput) input;
-				secondaryId = getLinkedLocation(fileEditorInput.getFile());
+				if (fileEditorInput.getFile().isLinked()) {
+					secondaryId = fileEditorInput.getFile().getRawLocation()
+							.toString();
+				}
 			} else if (input instanceof IURIEditorInput
 					|| (input instanceof NonExistingPHPFileEditorInput)) {
 
@@ -134,39 +133,6 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 							new Object[] {}), null);
 		}
 		return status;
-	}
-
-	private static String getLinkedLocation(IResource resource) {
-		String linkedLocation = null;
-		if (resource != null) {
-			ProjectDescription desc = ((Project) resource.getProject())
-					.internalGetDescription();
-			if (desc != null) {
-				HashMap links = desc.getLinks();
-				if (links != null) {
-
-					for (Iterator<IPath> iterator = links.keySet().iterator(); iterator
-							.hasNext();) {
-						IPath relativePath = iterator.next();
-						LinkDescription linkDescription = (LinkDescription) links
-								.get(relativePath);
-						IPath linkPath = new Path(linkDescription
-								.getLocationURI().getPath());
-
-						IPath filePath = resource.getLocation();
-						if (linkPath.equals(filePath)) {
-							linkedLocation = linkPath.toString();
-
-							IResource r = ResourcesPlugin.getWorkspace()
-									.getRoot().findMember(linkedLocation);
-							break;
-						}
-					}
-				}
-
-			}
-		}
-		return linkedLocation;
 	}
 
 	protected void showErrorMessage() {
