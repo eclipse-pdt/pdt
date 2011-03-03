@@ -205,7 +205,7 @@ public class DebugSearchEngine {
 
 						// get build paths of all projects
 						IScriptProject scriptProject = DLTKCore.create(project);
-						if (scriptProject != null) {
+						if (scriptProject != null && scriptProject.isOpen()) {
 							try {
 								IBuildpathEntry[] rawBuildpath = scriptProject
 										.getRawBuildpath();
