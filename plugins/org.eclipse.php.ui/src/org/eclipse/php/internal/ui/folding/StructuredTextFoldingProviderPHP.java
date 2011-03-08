@@ -469,6 +469,9 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			if (ast == null)
 				return false; // can't compute
 
+			if (!(ast.getResource() instanceof IFile)) {
+				return false;
+			}
 			final IFile resource = (IFile) ast.getResource();
 
 			IDocument document = getDocument();
@@ -1846,8 +1849,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * #collapseElements(org.eclipse.jdt.core.IModelElement[])
 	 */
 	public final void collapseElements(IModelElement[] elements) {
-		Set<IModelElement> set = new HashSet<IModelElement>(Arrays
-				.asList(elements));
+		Set<IModelElement> set = new HashSet<IModelElement>(
+				Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, false), false);
 	}
 
@@ -1857,8 +1860,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * #expandElements(org.eclipse.jdt.core.IModelElement[])
 	 */
 	public final void expandElements(IModelElement[] elements) {
-		Set<IModelElement> set = new HashSet<IModelElement>(Arrays
-				.asList(elements));
+		Set<IModelElement> set = new HashSet<IModelElement>(
+				Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, true), true);
 	}
 
@@ -1897,8 +1900,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			}
 		}
 
-		model.modifyAnnotations(null, null, modified
-				.toArray(new Annotation[modified.size()]));
+		model.modifyAnnotations(null, null,
+				modified.toArray(new Annotation[modified.size()]));
 	}
 
 	/*
