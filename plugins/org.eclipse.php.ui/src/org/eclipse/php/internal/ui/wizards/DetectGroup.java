@@ -37,8 +37,8 @@ public class DetectGroup extends Observable implements Observer,
 		this.fPHPLocationGroup = locationGroup;
 		this.fGroupName = nameGroup;
 
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		Composite composite = new Composite(parent, SWT.None);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true));
 		GridLayout layout = new GridLayout(2, false);
 		layout.horizontalSpacing = 10;
 		composite.setLayout(layout);
@@ -53,8 +53,10 @@ public class DetectGroup extends Observable implements Observer,
 		fHintText.setFont(composite.getFont());
 		gridData = new GridData(GridData.FILL, SWT.FILL, true, true);
 		gridData.widthHint = 500;
-		gridData.heightHint = 30;
 		fHintText.setLayoutData(gridData);
+		fHintText
+				.setText(NewWizardMessages.ScriptProjectWizardFirstPage_DetectGroup_message);
+		fHintText.setVisible(false);
 	}
 
 	private boolean isValidProjectName(String name) {
@@ -93,10 +95,10 @@ public class DetectGroup extends Observable implements Observer,
 				notifyObservers();
 				if (fDetect) {
 					fHintText.setVisible(true);
-					fHintText
-							.setText(NewWizardMessages.ScriptProjectWizardFirstPage_DetectGroup_message);
+					fIcon.setVisible(true);
 				} else {
 					fHintText.setVisible(false);
+					fIcon.setVisible(false);
 				}
 
 			}
