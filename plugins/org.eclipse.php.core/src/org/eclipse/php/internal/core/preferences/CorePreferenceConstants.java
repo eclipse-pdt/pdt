@@ -36,7 +36,7 @@ public class CorePreferenceConstants {
 	public static void initializeDefaultValues() {
 		IEclipsePreferences node = new DefaultScope().getNode(PHPCorePlugin.ID);
 
-		node.put(Keys.PHP_VERSION, PHPVersion.PHP5.getAlias());
+		node.put(Keys.PHP_VERSION, PHPVersion.PHP5_3.getAlias());
 		node.put(PHPCoreConstants.TASK_TAGS, PHPCoreConstants.DEFAULT_TASK_TAGS);
 		node.put(PHPCoreConstants.TASK_PRIORITIES,
 				PHPCoreConstants.DEFAULT_TASK_PRIORITIES);
