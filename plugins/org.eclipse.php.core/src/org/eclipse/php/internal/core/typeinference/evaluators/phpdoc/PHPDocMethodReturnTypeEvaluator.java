@@ -13,11 +13,13 @@ package org.eclipse.php.internal.core.typeinference.evaluators.phpdoc;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -42,6 +44,9 @@ import org.eclipse.php.internal.core.typeinference.evaluators.AbstractMethodRetu
 public class PHPDocMethodReturnTypeEvaluator extends
 		AbstractMethodReturnTypeEvaluator {
 
+	private final static Pattern ARRAY_TYPE_PATTERN = Pattern
+			.compile("array\\[.*\\]");
+
 	/**
 	 * Used for splitting the data types list of the returned tag
 	 */
@@ -65,10 +70,16 @@ public class PHPDocMethodReturnTypeEvaluator extends
 						.getReturnTypes();
 				if (typeNames != null) {
 					for (String typeName : typeNames) {
-						IEvaluatedType type = getEvaluatedType(typeName,
-								currentNamespace);
-						if (type != null) {
-							evaluated.add(type);
+						Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
+						if (m.find()) {
+							evaluated.add(getArrayType(m.group(),
+									currentNamespace));
+						} else {
+							IEvaluatedType type = getEvaluatedType(typeName,
+									currentNamespace);
+							if (type != null) {
+								evaluated.add(type);
+							}
 						}
 					}
 				}
@@ -84,10 +95,17 @@ public class PHPDocMethodReturnTypeEvaluator extends
 								final String[] typesNames = PIPE_PATTERN
 										.split(reference.getName());
 								for (String typeName : typesNames) {
-									IEvaluatedType type = getEvaluatedType(
-											typeName, currentNamespace);
-									if (type != null) {
-										evaluated.add(type);
+									Matcher m = ARRAY_TYPE_PATTERN
+											.matcher(typeName);
+									if (m.find()) {
+										evaluated.add(getArrayType(m.group(),
+												currentNamespace));
+									} else {
+										IEvaluatedType type = getEvaluatedType(
+												typeName, currentNamespace);
+										if (type != null) {
+											evaluated.add(type);
+										}
 									}
 								}
 							}
@@ -98,6 +116,25 @@ public class PHPDocMethodReturnTypeEvaluator extends
 		}
 
 		return IGoal.NO_GOALS;
+	}
+
+	private MultiTypeType getArrayType(String type, IType currentNamespace) {
+		int beginIndex = type.indexOf("[") + 1;
+		int endIndex = type.lastIndexOf("]");
+		type = type.substring(beginIndex, endIndex);
+		MultiTypeType arrayType = new MultiTypeType();
+		Matcher m = ARRAY_TYPE_PATTERN.matcher(type);
+		if (m.find()) {
+			arrayType.addType(getArrayType(m.group(), currentNamespace));
+			type = m.replaceAll("");
+		}
+		String[] typeNames = type.split(",");
+		for (String name : typeNames) {
+			if (!"".equals(name)) {
+				arrayType.addType(getEvaluatedType(name, currentNamespace));
+			}
+		}
+		return arrayType;
 	}
 
 	private IEvaluatedType getEvaluatedType(String typeName,

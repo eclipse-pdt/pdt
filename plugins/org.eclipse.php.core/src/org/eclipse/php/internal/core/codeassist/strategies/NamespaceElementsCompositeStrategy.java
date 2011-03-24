@@ -18,6 +18,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassInstantiationContext;
+import org.eclipse.php.internal.core.codeassist.contexts.ExceptionClassInstantiationContext;
 
 /**
  * This composite contains strategies that complete namespace elements
@@ -34,29 +35,40 @@ public class NamespaceElementsCompositeStrategy extends
 		super(context);
 
 		boolean hasNewClassContext = false;
+		boolean hasNewExceptionClassContext = false;
 		for (ICompletionContext c : allContexts) {
-			if (c instanceof ClassInstantiationContext) {
+			if (c instanceof ExceptionClassInstantiationContext) {
+				hasNewExceptionClassContext = true;
+				break;
+			} else if (c instanceof ClassInstantiationContext) {
 				hasNewClassContext = true;
 				break;
 			}
 		}
 
 		if (isGlobalNamespace) {
-			if (!hasNewClassContext) {
+			if (hasNewClassContext) {
+				strategies.add(new ClassInstantiationStrategy(context));
+			} else if (hasNewExceptionClassContext) {
+				strategies
+						.add(new ExceptionClassInstantiationStrategy(context));
+			} else {
 				strategies.add(new GlobalTypesStrategy(context));
 				strategies.add(new GlobalFunctionsStrategy(context));
 				strategies.add(new GlobalConstantsStrategy(context));
-			} else {
-				strategies.add(new ClassInstantiationStrategy(context));
 			}
 		} else {
-			if (!hasNewClassContext) {
+			if (hasNewClassContext) {
+				strategies
+						.add(new NamespaceClassInstantiationStrategy(context));
+			} else if (hasNewExceptionClassContext) {
+				strategies
+						.add(new NamespaceExceptionClassInstantiationStrategy(
+								context));
+			} else {
 				strategies.add(new NamespaceTypesStrategy(context));
 				strategies.add(new NamespaceFunctionsStrategy(context));
 				strategies.add(new NamespaceConstantsStrategy(context));
-			} else {
-				strategies
-						.add(new NamespaceClassInstantiationStrategy(context));
 			}
 		}
 	}

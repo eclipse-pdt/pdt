@@ -305,6 +305,9 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @throws RuntimeException
 	 */
 	private void checkDispatch(ASTNode node) {
+		while (node.getType() == ASTNode.ARRAY_ACCESS) {
+			node = ((ArrayAccess) node).getName();
+		}
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			Identifier id = (Identifier) node;
 			if (id.getName().equalsIgnoreCase(classMemberName)) {

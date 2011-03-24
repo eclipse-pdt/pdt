@@ -59,10 +59,10 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		try {
 			// we use reflection here since we don't know the constant value of
 			// of this state in specific PHP version lexer
-			ST_PHP_LINE_COMMENT = phpLexer.getClass().getField(
-					"ST_PHP_LINE_COMMENT").getInt(phpLexer);
-			ST_PHP_IN_SCRIPTING = phpLexer.getClass().getField(
-					"ST_PHP_IN_SCRIPTING").getInt(phpLexer);
+			ST_PHP_LINE_COMMENT = phpLexer.getClass()
+					.getField("ST_PHP_LINE_COMMENT").getInt(phpLexer);
+			ST_PHP_IN_SCRIPTING = phpLexer.getClass()
+					.getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -256,8 +256,8 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			}
 
 			// 3. update state changes
-			tokensContaier.updateStateChanges(newContainer, tokenStart
-					.getStart(), end);
+			tokensContaier.updateStateChanges(newContainer,
+					tokenStart.getStart(), end);
 			isFullReparsed = false;
 
 			return super.updateRegion(requester, flatnode, changes,
@@ -279,10 +279,10 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		AbstractPhpLexer phpLexer = getPhpLexer(new BlockDocumentReader(doc,
 				start, length), null);
 		try {
-			ST_PHP_LINE_COMMENT = phpLexer.getClass().getField(
-					"ST_PHP_LINE_COMMENT").getInt(phpLexer);
-			ST_PHP_IN_SCRIPTING = phpLexer.getClass().getField(
-					"ST_PHP_IN_SCRIPTING").getInt(phpLexer);
+			ST_PHP_LINE_COMMENT = phpLexer.getClass()
+					.getField("ST_PHP_LINE_COMMENT").getInt(phpLexer);
+			ST_PHP_IN_SCRIPTING = phpLexer.getClass()
+					.getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -294,8 +294,9 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			try {
 				final ITextRegion token = tokensContaier.getToken(tokenStart
 						.getStart() - 1);
-				return (token.getType() == PHPRegionTypes.PHP_OPERATOR && token
-						.getLength() == 2);
+				return token != null
+						&& (token.getType() == PHPRegionTypes.PHP_OPERATOR && token
+								.getLength() == 2);
 			} catch (BadLocationException e) {
 				// never happens
 				assert false;
@@ -304,9 +305,13 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			try {
 				ITextRegion token = tokensContaier.getToken(tokenStart
 						.getStart() - 1);
-				token = tokensContaier.getToken(token.getStart() - 1);
-				return (token.getType() == PHPRegionTypes.PHP_OPERATOR && token
-						.getLength() == 2);
+				if (token != null) {
+					token = tokensContaier.getToken(token.getStart() - 1);
+					return token != null
+							&& (token.getType() == PHPRegionTypes.PHP_OPERATOR && token
+									.getLength() == 2);
+				}
+
 			} catch (BadLocationException e) {
 				// never happens
 				assert false;

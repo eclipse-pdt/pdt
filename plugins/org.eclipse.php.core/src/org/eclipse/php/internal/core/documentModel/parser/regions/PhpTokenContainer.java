@@ -61,17 +61,30 @@ public class PhpTokenContainer {
 		// smart searching
 		ITextRegion result = tokensIterator.hasNext() ? tokensIterator.next()
 				: tokensIterator.previous();
+		ITextRegion oldResult = result;
 		if (isInside(result, offset)) {
 			return result;
 		}
 
-		if (offset >= result.getEnd()) { // if the offset is beyond - go fetch
+		if (result != null && offset >= result.getEnd()) { // if the offset is
+															// beyond - go fetch
 			// from next
 			while (tokensIterator.hasNext() && !isInside(result, offset)) {
+				if (result == null) {
+					return oldResult;
+				} else {
+					oldResult = result;
+				}
 				result = tokensIterator.next();
+
 			}
 		} else { // else go fetch from previous
 			while (tokensIterator.hasPrevious() && !isInside(result, offset)) {
+				if (result == null) {
+					return oldResult;
+				} else {
+					oldResult = result;
+				}
 				result = tokensIterator.previous();
 			}
 			// moves the iterator to the next one
@@ -90,9 +103,12 @@ public class PhpTokenContainer {
 		// ITextRegion
 
 		ITextRegion token = getToken(offset);
-		result.add(token);
+		if (token != null) {
+			result.add(token);
+		}
 
-		while (tokensIterator.hasNext() && token.getEnd() <= offset + length) {
+		while (tokensIterator.hasNext() && token != null
+				&& token.getEnd() <= offset + length) {
 			token = tokensIterator.next();
 			result.add(token);
 		}
@@ -101,7 +117,8 @@ public class PhpTokenContainer {
 	}
 
 	private final boolean isInside(ITextRegion region, int offset) {
-		return region.getStart() <= offset && offset < region.getEnd();
+		return region != null && region.getStart() <= offset
+				&& offset < region.getEnd();
 	}
 
 	/**

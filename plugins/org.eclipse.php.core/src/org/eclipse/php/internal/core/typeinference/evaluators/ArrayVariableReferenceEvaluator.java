@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -36,17 +37,27 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 		ArrayVariableReference reference = (ArrayVariableReference) typedGoal
 				.getExpression();
 		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
-				new VariableReference(reference.sourceStart(), reference
-						.sourceEnd(), reference.getName())) };
+				new VariableReference(reference.sourceStart(),
+						reference.sourceEnd(), reference.getName())) };
 	}
 
 	public Object produceResult() {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		if (result instanceof MultiTypeType) {
+		if (result instanceof AmbiguousType) {
+			IEvaluatedType[] possibleTypes = ((AmbiguousType) result)
+					.getPossibleTypes();
+			List<IEvaluatedType> types = new ArrayList<IEvaluatedType>();
+			for (IEvaluatedType type : possibleTypes) {
+				if (type instanceof MultiTypeType) {
+					types.addAll(((MultiTypeType) type).getTypes());
+				}
+			}
+			result = new AmbiguousType(types.toArray(new IEvaluatedType[types
+					.size()]));
+		} else if (result instanceof MultiTypeType) {
 			MultiTypeType multiTypeType = (MultiTypeType) result;
 			List<IEvaluatedType> types = multiTypeType.getTypes();
 			result = new AmbiguousType(types.toArray(new IEvaluatedType[types

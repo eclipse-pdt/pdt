@@ -72,6 +72,13 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				.getMethods(phpVersion)));
 
 		boolean exactName = requestor.isContextInformationMode();
+		// for methodName(|),we need set exactName to true
+		if (!exactName
+				&& concreteContext.getOffset() - 1 >= 0
+				&& concreteContext.getDocument().getChar(
+						concreteContext.getOffset() - 1) == '(') {
+			exactName = true;
+		}
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
@@ -193,7 +200,6 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
-
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

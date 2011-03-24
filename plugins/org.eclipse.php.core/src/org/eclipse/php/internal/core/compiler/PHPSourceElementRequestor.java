@@ -75,7 +75,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
 
 	protected NamespaceDeclaration fLastNamespace;
-	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();;
+	protected Map<String, UsePart> fLastUseParts = new HashMap<String, UsePart>();
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor,
 			IModuleSource sourceModule) {

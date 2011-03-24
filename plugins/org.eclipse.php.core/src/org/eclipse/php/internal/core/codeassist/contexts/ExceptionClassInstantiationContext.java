@@ -4,17 +4,20 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 public class ExceptionClassInstantiationContext extends StatementContext {
-	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public boolean isValid(ISourceModule sourceModule, int offset,
+			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		try {
 			String previousWord = getPreviousWord();
 			String previous2Word = getPreviousWord(2);
-			if ("new".equalsIgnoreCase(previousWord) && "throw".equalsIgnoreCase(previous2Word)) {
+			if ("new".equalsIgnoreCase(previousWord)
+					&& "throw".equalsIgnoreCase(previous2Word)) {
 				return true;
 			}
 		} catch (BadLocationException e) {
@@ -22,7 +25,16 @@ public class ExceptionClassInstantiationContext extends StatementContext {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return false;
+	}
+
+	public String getPrefix() throws BadLocationException {
+		String prefix = super.getPrefix();
+		if (prefix.length() > 0
+				&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			return prefix.substring(1);
+		}
+		return prefix;
 	}
 }

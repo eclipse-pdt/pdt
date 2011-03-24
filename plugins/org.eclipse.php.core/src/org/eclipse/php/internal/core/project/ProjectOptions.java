@@ -92,6 +92,10 @@ public class ProjectOptions {
 		return "true".equals(useShortTags);
 	}
 
+	public static boolean useShortTags(IModelElement modelElement) {
+		return useShortTags(getProject(modelElement));
+	}
+
 	public static final boolean isSupportingAspTags(IFile file) {
 		return isSupportingAspTags(file.getProject());
 	}

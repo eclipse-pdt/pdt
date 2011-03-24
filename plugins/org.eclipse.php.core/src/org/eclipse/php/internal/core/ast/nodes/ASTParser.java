@@ -17,6 +17,7 @@ import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
 import java_cup.runtime.lr_parser;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
@@ -327,7 +328,8 @@ public class ASTParser {
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(String phpCode) throws Exception {
-		return parse(phpCode, true, ProjectOptions.useShortTags(null));
+		return parse(phpCode, true,
+				ProjectOptions.useShortTags((IProject) null));
 	}
 
 	/**
@@ -335,7 +337,8 @@ public class ASTParser {
 	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(File phpFile) throws Exception {
-		return parse(phpFile, true, ProjectOptions.useShortTags(null));
+		return parse(phpFile, true,
+				ProjectOptions.useShortTags((IProject) null));
 	}
 
 	/**
@@ -344,7 +347,7 @@ public class ASTParser {
 	 */
 	public static final Program parse(Reader reader) throws Exception {
 		return parse(reader, true, ProjectOptions.getDefaultPhpVersion(),
-				ProjectOptions.useShortTags(null));
+				ProjectOptions.useShortTags((IProject) null));
 	}
 
 	/**
