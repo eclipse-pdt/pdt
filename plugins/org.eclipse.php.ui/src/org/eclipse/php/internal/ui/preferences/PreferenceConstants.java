@@ -258,8 +258,7 @@ public class PreferenceConstants {
 	 * </p>
 	 */
 	public static final String EDITOR_TASK_DEFAULT_COLOR = ColorHelper
-			.getColorString(124, 165, 213)
-			+ " | | true"; //$NON-NLS-1$
+			.getColorString(124, 165, 213) + " | | true"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls if correction indicators are shown in
@@ -356,8 +355,7 @@ public class PreferenceConstants {
 	 * @return Foo
 	 */
 	public static final String EDITOR_PHPDOC_DEFAULT_COLOR = ColorHelper
-			.getColorString(127, 159, 191)
-			+ " | | true"; //$NON-NLS-1$
+			.getColorString(127, 159, 191) + " | | true"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that holds the color for the PHP string
@@ -579,6 +577,8 @@ public class PreferenceConstants {
 	 * @since 3.0
 	 */
 	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_COLOR_SUFFIX = ".color"; //$NON-NLS-1$
+
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_BGCOLOR_SUFFIX = ".bgcolor"; //$NON-NLS-1$
 
 	/**
 	 * A named preference suffix that controls if semantic highlighting has the
@@ -1150,7 +1150,7 @@ public class PreferenceConstants {
 		store.setDefault(getEnabledPreferenceKey(EDITOR_TASK_COLOR), true);
 		// PHP options
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION,
-				PHPVersion.PHP5.toString());
+				PHPVersion.PHP5_3.toString());
 		store.setDefault(PHPCoreConstants.PHP_OPTIONS_PHP_ROOT_CONTEXT, ""); //$NON-NLS-1$
 
 		// Smart home/end
