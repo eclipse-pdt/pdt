@@ -161,41 +161,44 @@ public class StartProcessFileNotificationHandler implements
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot()
 					.findMember(localPath);
 
-			if (resource != null) {
-				if (bp.getMarker().getResource().equals(resource)) {
-					l.add(bp);
-				}
-			} else {
-				try {
-					String secondaryId = (String) bp
-							.getMarker()
-							.getAttribute(
-									StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
-					if (secondaryId != null) {
-
-						IPath path = Path.fromPortableString(secondaryId);
-						if ((path.getDevice() == null)
-								&& (path.toString()
-										.startsWith("org.eclipse.dltk"))) {
-							String fullPathString = path.toString();
-							String absolutePath = fullPathString
-									.substring(fullPathString.indexOf(':') + 1);
-							path = Path.fromPortableString(absolutePath);
-						} else {
-							path = EnvironmentPathUtils.getLocalPath(path);
-						}
-
-						secondaryId = path.toString();
-						if (VirtualPath.isAbsolute(localPath)
-								&& new VirtualPath(localPath)
-										.equals(new VirtualPath(secondaryId))) {
-							l.add(bp);
-						}
-					}
-				} catch (Exception e) {
-					PHPDebugPlugin.log(e);
-				}
+			// if (resource != null) {
+			if (bp.getMarker().getResource().equals(resource)) {
+				l.add(bp);
+				continue;
 			}
+			// } else {
+			try {
+				String secondaryId = (String) bp
+						.getMarker()
+						.getAttribute(
+								StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+				if (secondaryId != null) {
+
+					IPath path = Path.fromPortableString(secondaryId);
+					if ((path.getDevice() == null)
+							&& (path.toString().startsWith("org.eclipse.dltk"))) {
+						String fullPathString = path.toString();
+						String absolutePath = fullPathString
+								.substring(fullPathString.indexOf(':') + 1);
+						path = Path.fromPortableString(absolutePath);
+					} else {
+						path = EnvironmentPathUtils.getLocalPath(path);
+					}
+
+					secondaryId = path.toString();
+					if (VirtualPath.isAbsolute(localPath)
+							&& (new VirtualPath(localPath)
+									.equals(new VirtualPath(secondaryId)))
+							|| resource != null
+							&& secondaryId.equals(resource.getLocation()
+									.toString())) {
+						l.add(bp);
+					}
+				}
+			} catch (Exception e) {
+				PHPDebugPlugin.log(e);
+			}
+			// }
 		}
 		return l.toArray(new IBreakpoint[l.size()]);
 	}
