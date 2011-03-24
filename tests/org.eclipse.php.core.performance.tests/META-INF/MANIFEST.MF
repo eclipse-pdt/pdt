@@ -4,7 +4,7 @@ Bundle-Name: PDT Core Performance Tests
 Bundle-SymbolicName: org.eclipse.php.core.performance.tests;singleton:=true
 Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: org.eclipse.php.core.tests.performance.PHPCorePerformanceTests
-Require-Bundle: org.junit;bundle-version="4.8.1",
+Require-Bundle: org.junit;bundle-version="[3.8.2,3.8.3)",
  org.eclipse.wst.sse.core;bundle-version="1.1.400",
  org.eclipse.wst.html.core;bundle-version="1.1.300",
  org.eclipse.wst.xml.core;bundle-version="1.1.400",
