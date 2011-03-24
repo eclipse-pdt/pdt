@@ -18,6 +18,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.jface.text.Document;
@@ -250,8 +251,9 @@ public class ASTRewriteTests extends TestCase {
 		parameters.add(ast.newScalar("b", Scalar.TYPE_STRING));
 		parameters.add(ast.newVariable("c"));
 		staticInvocations.get(0).setMethod(
-				ast.newFunctionInvocation(ast.newFunctionName(ast
-						.newIdentifier("bar")), parameters));
+				ast.newFunctionInvocation(
+						ast.newFunctionName(ast.newIdentifier("bar")),
+						parameters));
 		rewrite();
 		checkResult("<?php B::bar(b,$c); ?>");
 	}
@@ -465,8 +467,8 @@ public class ASTRewriteTests extends TestCase {
 				StaticFieldAccess.class);
 		Assert.assertTrue("Unexpected list size.", fieldsAccess.size() == 1);
 		fieldsAccess.get(0).setField(
-				ast.newReflectionVariable(ast.newArrayAccess(ast
-						.newVariable("bar"), ast.newScalar("333"))));
+				ast.newReflectionVariable(ast.newArrayAccess(
+						ast.newVariable("bar"), ast.newScalar("333"))));
 		rewrite();
 		checkResult("<?php MyClass::$$bar[333];?>");
 	}
@@ -492,8 +494,8 @@ public class ASTRewriteTests extends TestCase {
 				MethodInvocation.class);
 		Assert.assertTrue("Unexpected list size.",
 				methodInvocations.size() == 2);
-		methodInvocations.get(1).getMethod().setFunctionName(
-				ast.newFunctionName(ast.newScalar("boobo")));
+		methodInvocations.get(1).getMethod()
+				.setFunctionName(ast.newFunctionName(ast.newScalar("boobo")));
 		rewrite();
 		checkResult("<?php $myClass->boobo()->bar(); ?>");
 	}
@@ -506,8 +508,8 @@ public class ASTRewriteTests extends TestCase {
 				FunctionInvocation.class);
 		Assert.assertTrue("Unexpected list size.",
 				functionInvocations.size() == 1);
-		functionInvocations.get(0).getFunctionName().setName(
-				ast.newScalar("bar"));
+		functionInvocations.get(0).getFunctionName()
+				.setName(ast.newScalar("bar"));
 		List<MethodInvocation> methodInvocations = getAllOfType(program,
 				MethodInvocation.class);
 		Assert.assertTrue("Unexpected list size.",
@@ -723,8 +725,8 @@ public class ASTRewriteTests extends TestCase {
 		List<Reference> references = getAllOfType(program, Reference.class);
 		Assert.assertTrue("Unexpected list size.", references.size() == 1);
 		references.get(0).setExpression(
-				ast.newFunctionInvocation(ast.newFunctionName(ast
-						.newVariable("bar")), null));
+				ast.newFunctionInvocation(
+						ast.newFunctionName(ast.newVariable("bar")), null));
 		rewrite();
 		checkResult("<?php $g = &$bar(); ?>");
 	}
@@ -748,8 +750,8 @@ public class ASTRewriteTests extends TestCase {
 		List<InstanceOfExpression> instanceOf = getAllOfType(program,
 				InstanceOfExpression.class);
 		Assert.assertTrue("Unexpected list size.", instanceOf.size() == 1);
-		instanceOf.get(0).getClassName().setClassName(
-				ast.newScalar("Foo", Scalar.TYPE_STRING));
+		instanceOf.get(0).getClassName()
+				.setClassName(ast.newScalar("Foo", Scalar.TYPE_STRING));
 		instanceOf.get(0).setExpression(ast.newVariable("b"));
 		rewrite();
 		checkResult("<?php $b instanceof Foo;?>");
@@ -763,8 +765,8 @@ public class ASTRewriteTests extends TestCase {
 				IgnoreError.class);
 		Assert.assertTrue("Unexpected list size.", ignoreErrors.size() == 1);
 		ignoreErrors.get(0).setExpression(
-				ast.newFunctionInvocation(ast.newFunctionName(ast
-						.newScalar("bar")), null));
+				ast.newFunctionInvocation(
+						ast.newFunctionName(ast.newScalar("bar")), null));
 		rewrite();
 		checkResult("<?php @bar(); ?>");
 	}
@@ -824,9 +826,10 @@ public class ASTRewriteTests extends TestCase {
 
 		List<ArrayCreation> arrays = getAllOfType(program, ArrayCreation.class);
 		Assert.assertTrue("Unexpected list size.", arrays.size() == 1);
-		arrays.get(0).elements().add(
-				ast.newArrayElement(ast.newScalar("'foo'"), ast
-						.newScalar("'boo'")));
+		arrays.get(0)
+				.elements()
+				.add(ast.newArrayElement(ast.newScalar("'foo'"),
+						ast.newScalar("'boo'")));
 		rewrite();
 		checkResult("<?php array(1,2,3, 'foo'=>'boo',); ?>");
 	}
@@ -837,8 +840,8 @@ public class ASTRewriteTests extends TestCase {
 
 		List<ArrayCreation> arrays = getAllOfType(program, ArrayCreation.class);
 		Assert.assertTrue("Unexpected list size.", arrays.size() == 1);
-		arrays.get(0).elements().add(
-				ast.newArrayElement(null, ast.newScalar("4")));
+		arrays.get(0).elements()
+				.add(ast.newArrayElement(null, ast.newScalar("4")));
 		rewrite();
 		checkResult("<?php array(1,2,3, 4,); ?>");
 	}
@@ -862,9 +865,11 @@ public class ASTRewriteTests extends TestCase {
 				FunctionDeclaration.class);
 		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setFunctionName(ast.newIdentifier("bar"));
-		declarations.get(0).formalParameters().add(
-				ast.newFormalParameter(ast.newIdentifier("int"), ast
-						.newVariable("a"), null, false));
+		declarations
+				.get(0)
+				.formalParameters()
+				.add(ast.newFormalParameter(ast.newIdentifier("int"),
+						ast.newVariable("a"), null, false));
 		rewrite();
 		checkResult("<?php function bar(int $a) {} ?> ");
 	}
@@ -876,9 +881,11 @@ public class ASTRewriteTests extends TestCase {
 				FunctionDeclaration.class);
 		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setFunctionName(ast.newIdentifier("bar"));
-		declarations.get(0).formalParameters().add(
-				ast.newFormalParameter(ast.newIdentifier("int"), ast
-						.newVariable("a"), null, true));
+		declarations
+				.get(0)
+				.formalParameters()
+				.add(ast.newFormalParameter(ast.newIdentifier("int"),
+						ast.newVariable("a"), null, true));
 		rewrite();
 		checkResult("<?php function bar(const int $a) {} ?> ");
 	}
@@ -890,8 +897,8 @@ public class ASTRewriteTests extends TestCase {
 		List<FunctionDeclaration> declarations = getAllOfType(program,
 				FunctionDeclaration.class);
 		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).formalParameters().get(0).setParameterType(
-				ast.newIdentifier("string"));
+		declarations.get(0).formalParameters().get(0)
+				.setParameterType(ast.newIdentifier("string"));
 		rewrite();
 		checkResult("<?php function foo( string $a) {} ?> ");
 	}
@@ -903,8 +910,8 @@ public class ASTRewriteTests extends TestCase {
 		List<FunctionDeclaration> declarations = getAllOfType(program,
 				FunctionDeclaration.class);
 		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).formalParameters().get(1).setParameterType(
-				ast.newIdentifier("string"));
+		declarations.get(0).formalParameters().get(1)
+				.setParameterType(ast.newIdentifier("string"));
 		rewrite();
 		checkResult("<?php function foo($a, string $b) {} ?> ");
 	}
@@ -916,8 +923,8 @@ public class ASTRewriteTests extends TestCase {
 		List<FunctionDeclaration> declarations = getAllOfType(program,
 				FunctionDeclaration.class);
 		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).formalParameters().get(1).setParameterType(
-				ast.newIdentifier("string"));
+		declarations.get(0).formalParameters().get(1)
+				.setParameterType(ast.newIdentifier("string"));
 		rewrite();
 		checkResult("<?php function foo($a, string $b) {} ?> ");
 	}
@@ -946,8 +953,7 @@ public class ASTRewriteTests extends TestCase {
 				ast.newScalar("'boobo'"), true));
 		Block body = ast.newBlock();
 		program.statements()
-				.add(
-						0,
+				.add(0,
 						ast.newFunctionDeclaration(name, formalParameters,
 								body, false));
 		rewrite();
@@ -1274,8 +1280,8 @@ public class ASTRewriteTests extends TestCase {
 		Assert.assertTrue("Unexpected list size.", expressions.size() == 1);
 		expressions.get(0).setOperator(InfixExpression.OP_MOD);
 		expressions.get(0).setRight(
-				ast.newFunctionInvocation(ast.newFunctionName(ast
-						.newScalar("foo")), null));
+				ast.newFunctionInvocation(
+						ast.newFunctionName(ast.newScalar("foo")), null));
 		rewrite();
 		checkResult("<?php $a % foo();?>");
 	}
@@ -1499,8 +1505,8 @@ public class ASTRewriteTests extends TestCase {
 		List<SwitchCase> switchCases = getAllOfType(program, SwitchCase.class);
 		Assert.assertTrue("Unexpected list size.", switchCases.size() == 3);
 		switchCases.get(0).setValue(ast.newScalar("5"));
-		switchCases.get(0).actions().set(0,
-				ast.newEchoStatement(ast.newScalar("'i equals 5'")));
+		switchCases.get(0).actions()
+				.set(0, ast.newEchoStatement(ast.newScalar("'i equals 5'")));
 		rewrite();
 		checkResult("<?php switch ($i) { case 5:    echo 'i equals 5';\n    break; case 1:     echo 'i equals 1';     break; default:    echo 'i not equals 0,1';  }  ?>");
 	}
@@ -1530,11 +1536,11 @@ public class ASTRewriteTests extends TestCase {
 		Assert.assertTrue("Unexpected list size.", blocks.size() == 1);
 		List<Statement> actions = new ArrayList<Statement>(3);
 		actions.add(ast.newEchoStatement(ast.newScalar("'a new case'")));
-		actions.add(ast.newExpressionStatement(ast.newFunctionInvocation(ast
-				.newFunctionName(ast.newScalar("foo")), null)));
+		actions.add(ast.newExpressionStatement(ast.newFunctionInvocation(
+				ast.newFunctionName(ast.newScalar("foo")), null)));
 		actions.add(ast.newBreakStatement());
-		blocks.get(0).statements().add(2,
-				ast.newSwitchCase(ast.newScalar("2"), actions, false));
+		blocks.get(0).statements()
+				.add(2, ast.newSwitchCase(ast.newScalar("2"), actions, false));
 		rewrite();
 		checkResult("<?php \nswitch ($i) { \n	case 0:\n		echo 'i equals 0';\n		break;\n	case 1:\n		echo 'i equals 1';\n		break;\n	case 2 :\n		echo 'a new case';\n		foo ();\n		break;\n\n	default:\n		echo 'i not equals 0,1';\n}  ?>");
 	}
@@ -1759,14 +1765,20 @@ public class ASTRewriteTests extends TestCase {
 		List<ForStatement> statements = getAllOfType(program,
 				ForStatement.class);
 		Assert.assertTrue("Unexpected list size.", statements.size() == 1);
-		statements.get(0).initializers().add(
-				ast.newAssignment(ast.newVariable("j"), Assignment.OP_EQUAL,
-						ast.newScalar("5")));
-		statements.get(0).conditions().add(
-				ast.newInfixExpression(ast.newVariable("j"),
+		statements
+				.get(0)
+				.initializers()
+				.add(ast.newAssignment(ast.newVariable("j"),
+						Assignment.OP_EQUAL, ast.newScalar("5")));
+		statements
+				.get(0)
+				.conditions()
+				.add(ast.newInfixExpression(ast.newVariable("j"),
 						InfixExpression.OP_LGREATER, ast.newScalar("20")));
-		statements.get(0).updaters().add(
-				ast.newPrefixExpression(ast.newVariable("j"),
+		statements
+				.get(0)
+				.updaters()
+				.add(ast.newPrefixExpression(ast.newVariable("j"),
 						PrefixExpression.OP_INC));
 		rewrite();
 		checkResult("<?php for ($i = 1, $j=5; $i <= 10, $j > 20; $i++, $j++) {  echo $i; } ?>");
@@ -1858,9 +1870,11 @@ public class ASTRewriteTests extends TestCase {
 		Block newBlock = ast.newBlock();
 		newBlock.statements().add(
 				ast.newEchoStatement(ast.newScalar("'Hello'")));
-		statements.get(0).catchClauses().add(
-				ast.newCatchClause(ast.newIdentifier("Boobo"), ast
-						.newVariable("b"), newBlock));
+		statements
+				.get(0)
+				.catchClauses()
+				.add(ast.newCatchClause(ast.newIdentifier("Boobo"),
+						ast.newVariable("b"), newBlock));
 		rewrite();
 		checkResult("<?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; }catch (Boobo $b) {\necho 'Hello';\n}\n  ?>");
 	}
@@ -1894,8 +1908,8 @@ public class ASTRewriteTests extends TestCase {
 
 		List<GlobalStatement> statements = getAllOfType(program,
 				GlobalStatement.class);
-		statements.get(0).variables().add(
-				ast.newReflectionVariable(ast.newVariable("b")));
+		statements.get(0).variables()
+				.add(ast.newReflectionVariable(ast.newVariable("b")));
 		rewrite();
 		checkResult("<?php global $$a, $$b; ?>");
 	}
@@ -1906,9 +1920,11 @@ public class ASTRewriteTests extends TestCase {
 
 		List<StaticStatement> statements = getAllOfType(program,
 				StaticStatement.class);
-		statements.get(0).expressions().add(
-				ast.newAssignment(ast.newVariable("b"), Assignment.OP_EQUAL,
-						ast.newScalar("8")));
+		statements
+				.get(0)
+				.expressions()
+				.add(ast.newAssignment(ast.newVariable("b"),
+						Assignment.OP_EQUAL, ast.newScalar("8")));
 		rewrite();
 		checkResult("<?php static $a, $b=8;?>");
 	}
@@ -1930,9 +1946,11 @@ public class ASTRewriteTests extends TestCase {
 		List<FieldsDeclaration> declarations = getAllOfType(program,
 				FieldsDeclaration.class);
 		Assert.assertTrue("Unexpected list size.", declarations.size() == 2);
-		declarations.get(0).fields().add(
-				ast.newSingleFieldDeclaration(ast.newVariable("b"), ast
-						.newScalar("4")));
+		declarations
+				.get(0)
+				.fields()
+				.add(ast.newSingleFieldDeclaration(ast.newVariable("b"),
+						ast.newScalar("4")));
 		declarations.get(0).fields().get(0).getValue().delete();
 		declarations.get(1).setModifier(
 				Modifiers.AccProtected | Modifiers.AccFinal);
@@ -1949,8 +1967,8 @@ public class ASTRewriteTests extends TestCase {
 		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
 		declarations.get(0).setModifier(
 				Modifiers.AccProtected | Modifiers.AccAbstract);
-		declarations.get(0).getFunction().setFunctionName(
-				ast.newIdentifier("bar"));
+		declarations.get(0).getFunction()
+				.setFunctionName(ast.newIdentifier("bar"));
 		rewrite();
 		checkResult("<?php class A { protected abstract function bar(int $a){} }?> ");
 	}
@@ -1984,8 +2002,8 @@ public class ASTRewriteTests extends TestCase {
 			throws Exception {
 		document = new Document(content);
 
-		ASTParser parser = ASTParser.newParser(phpVersion, ProjectOptions
-				.useShortTags(null));
+		ASTParser parser = ASTParser.newParser(phpVersion,
+				ProjectOptions.useShortTags((IProject) null));
 		parser.setSource(document.get().toCharArray());
 		program = parser.createAST(new NullProgressMonitor());
 		ast = program.getAST();

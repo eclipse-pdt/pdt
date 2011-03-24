@@ -17,6 +17,7 @@ import java.io.StringReader;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -100,7 +101,7 @@ public class CommentMapperTests extends TestCase {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
 		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.useShortTags(null)).createAST(
+				ProjectOptions.useShortTags((IProject) null)).createAST(
 				new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PhpAstLexer(reader));
@@ -122,7 +123,7 @@ public class CommentMapperTests extends TestCase {
 		final IDocument document = new Document(programStr);
 		final Reader reader = new StringReader(programStr);
 		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.useShortTags(null)).createAST(
+				ProjectOptions.useShortTags((IProject) null)).createAST(
 				new NullProgressMonitor());
 
 		program.initCommentMapper(document, new PhpAstLexer(reader));

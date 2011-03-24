@@ -21,6 +21,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
@@ -68,8 +69,7 @@ public class CompilerParserTests extends AbstractPDTTTest {
 					try {
 						final PdttFile pdttFile = new PdttFile(fileName);
 						phpVerSuite.addTest(new CompilerParserTests(phpVersion
-								.getAlias()
-								+ " - /" + fileName) {
+								.getAlias() + " - /" + fileName) {
 
 							protected void runTest() throws Throwable {
 
@@ -77,9 +77,10 @@ public class CompilerParserTests extends AbstractPDTTTest {
 										pdttFile.getFile().trim().getBytes());
 								IModuleDeclaration moduleDeclaration = parser
 										.parse(new InputStreamReader(
-												inputStream), null,
+												inputStream),
+												null,
 												ProjectOptions
-														.useShortTags(null));
+														.useShortTags((IProject) null));
 
 								String actual = ASTPrintVisitor
 										.toXMLString((ASTNode) moduleDeclaration);

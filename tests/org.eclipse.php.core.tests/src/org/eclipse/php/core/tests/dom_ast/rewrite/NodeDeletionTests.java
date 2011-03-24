@@ -16,6 +16,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -495,8 +496,8 @@ public class NodeDeletionTests extends TestCase {
 	 * and the ast.
 	 */
 	private Program initialize(IDocument document) throws Exception {
-		ASTParser parser = ASTParser.newParser(PHPVersion.PHP5, ProjectOptions
-				.useShortTags(null));
+		ASTParser parser = ASTParser.newParser(PHPVersion.PHP5,
+				ProjectOptions.useShortTags((IProject) null));
 		parser.setSource(document.get().toCharArray());
 		Program program = parser.createAST(new NullProgressMonitor());
 

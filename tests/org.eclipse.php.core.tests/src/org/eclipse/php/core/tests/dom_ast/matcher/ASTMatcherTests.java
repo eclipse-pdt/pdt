@@ -18,6 +18,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
@@ -60,7 +61,7 @@ public class ASTMatcherTests extends TestCase {
 	private ASTNode getAstNode(String str) throws Exception {
 		StringReader reader = new StringReader(str);
 		Program program = ASTParser.newParser(reader, PHPVersion.PHP5,
-				ProjectOptions.useShortTags(null)).createAST(
+				ProjectOptions.useShortTags((IProject) null)).createAST(
 				new NullProgressMonitor());
 		List<Statement> statements = program.statements();
 

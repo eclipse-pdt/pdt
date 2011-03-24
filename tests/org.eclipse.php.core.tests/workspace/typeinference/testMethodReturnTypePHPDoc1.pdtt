@@ -1,0 +1,27 @@
+--TEST--
+Test Method Return Array Type PHP Doc
+--CONFIG--
+prune: heavyGoals
+--FILE--
+<?php
+class B {
+}
+class C {
+
+
+	/**
+	* @return array[array[A,B]]
+	*/
+	function function_name($param) {
+	}
+}
+$var = new C();
+$result = $var->function_name();
+foreach($result as $r) {
+	foreach($r as $c) {
+		testMethodReturnTypePHPDoc1($c);
+	}
+}
+?>
+--EXPECT--
+Ambigous <A, B>

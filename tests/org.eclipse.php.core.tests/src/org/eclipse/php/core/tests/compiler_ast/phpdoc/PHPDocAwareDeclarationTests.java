@@ -19,6 +19,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -237,7 +238,7 @@ public class PHPDocAwareDeclarationTests extends TestCase {
 	public void parseAndTest(Reader reader, String declarationName, String str,
 			boolean positiveTest) throws Exception {
 		IModuleDeclaration program = new PhpSourceParser().parse(reader, null,
-				ProjectOptions.useShortTags(null));
+				ProjectOptions.useShortTags((IProject) null));
 		DeclarationSearcher searcher = new DeclarationSearcher(declarationName);
 		((PHPModuleDeclaration) program).traverse(searcher);
 		Declaration declaration = searcher.getResult();

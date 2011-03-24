@@ -17,6 +17,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.locator.Locator;
@@ -50,7 +51,8 @@ public class StaticScalarExpressionsTests extends TestCase {
 				protected void runTest() throws Exception {
 					StringReader reader = new StringReader(str);
 					Program program = ASTParser.newParser(reader,
-							PHPVersion.PHP5, ProjectOptions.useShortTags(null))
+							PHPVersion.PHP5,
+							ProjectOptions.useShortTags((IProject) null))
 							.createAST(new NullProgressMonitor());
 
 					final ASTNode locateNode = Locator.locateNode(program,
