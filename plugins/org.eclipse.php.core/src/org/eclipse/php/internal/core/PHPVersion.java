@@ -23,7 +23,7 @@ public enum PHPVersion {
 	PHP5("php5"), //$NON-NLS-1$
 
 	/**
-	 * This 5.3 is a major version - it should be 5½.0, actually.
+	 * This 5.3 is a major version - it should be 5.0, actually.
 	 * <p>
 	 * New in this version:
 	 * <ul>

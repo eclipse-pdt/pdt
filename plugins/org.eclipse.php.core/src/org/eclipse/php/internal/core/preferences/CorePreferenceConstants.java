@@ -36,7 +36,7 @@ public class CorePreferenceConstants {
 	public static void initializeDefaultValues() {
 		IEclipsePreferences node = new DefaultScope().getNode(PHPCorePlugin.ID);
 
-		node.put(Keys.PHP_VERSION, PHPVersion.PHP5.getAlias());
+		node.put(Keys.PHP_VERSION, PHPVersion.PHP5_3.getAlias());
 		node.put(PHPCoreConstants.TASK_TAGS, PHPCoreConstants.DEFAULT_TASK_TAGS);
 		node.put(PHPCoreConstants.TASK_PRIORITIES,
 				PHPCoreConstants.DEFAULT_TASK_PRIORITIES);
@@ -53,6 +53,7 @@ public class CorePreferenceConstants {
 				.toString());
 		node.putBoolean(PHPCoreConstants.CODEASSIST_ADDIMPORT, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STUB, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS,
 				true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
