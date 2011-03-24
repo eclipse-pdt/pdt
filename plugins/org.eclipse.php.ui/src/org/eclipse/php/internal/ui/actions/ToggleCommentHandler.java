@@ -72,7 +72,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 					// If there is alternating or more then one block in the
 					// text selection, action is aborted !
 					if (isMoreThanOneContextBlockSelected(sDoc, textSelection)) {
-						org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();// org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+						org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler();// org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler();
 						return addBlockCommentHandlerWST.execute(event);
 					}
 
@@ -98,7 +98,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 							|| isJavaScriptRegion) {
 						processAction(textEditor, document, textSelection);
 					} else {
-						org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler toggleCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler();// org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+						org.eclipse.wst.sse.ui.internal.handlers.ToggleLineCommentHandler toggleCommentHandlerWST = new org.eclipse.wst.sse.ui.internal.handlers.ToggleLineCommentHandler();// org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler();
 						return toggleCommentHandlerWST.execute(event);
 					}
 				}
@@ -233,8 +233,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 			try {
 				int offset = getOffset(document, start);
 				selection = new TextSelection(document, offset, getOffset(
-						document, end)
-						- offset);
+						document, end) - offset);
 			} catch (BadLocationException e) {
 				PHPUiPlugin.log(e);
 			}

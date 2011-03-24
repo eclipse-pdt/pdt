@@ -94,6 +94,42 @@ public class PHPOverrideCompletionProposal extends
 
 	public IContextInformation getContextInformation() {
 		String displayString = getDisplayString();
+
+		// * ZSTD-335
+		IModelElement modelElement = getModelElement();
+		if (modelElement instanceof IMethod) {
+			IMethod method = (IMethod) modelElement;
+			IParameter[] parameters;
+			try {
+				parameters = method.getParameters();
+				if (parameters != null) {
+					StringBuffer sb = new StringBuffer();
+					for (int i = 0; i < parameters.length; i++) {
+						IParameter parameter = parameters[i];
+						if (parameter.getType() != null) {
+							sb.append(parameter.getType()).append(" ");
+						}
+						sb.append(parameter.getName());
+						if (parameter.getDefaultValue() != null) {
+							sb.append("=").append(parameter.getDefaultValue());
+						}
+						sb.append(",");
+					}
+					String infoDisplayString = sb.toString();
+					if (infoDisplayString.length() > 0) {
+						infoDisplayString = infoDisplayString.substring(0,
+								infoDisplayString.length() - 1);
+						return new ContextInformation(displayString,
+								infoDisplayString);
+					}
+
+				}
+			} catch (ModelException e) {
+				e.printStackTrace();
+			}
+
+		}
+
 		String infoDisplayString = displayString;
 
 		int i = infoDisplayString.indexOf('(');

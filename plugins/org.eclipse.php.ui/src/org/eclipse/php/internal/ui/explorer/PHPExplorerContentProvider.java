@@ -187,6 +187,17 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						returnChlidren
 								.addAll(Arrays
 										.asList(getAllNamespaces((IScriptProject) parentElement)));
+
+						IResource[] resChildren = ((IContainer) resource)
+								.members();
+						for (IResource resource2 : resChildren) {
+							IModelElement modelElement = DLTKCore
+									.create(resource2);
+							if (modelElement == null
+									|| !isInSourceFolder(modelElement)) {
+								returnChlidren.add(resource2);
+							}
+						}
 					} else {
 						IResource[] resChildren = ((IContainer) resource)
 								.members();

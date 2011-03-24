@@ -68,7 +68,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 				if (isMoreThanOneContextBlockSelected(document, textSelection)) {
 					// displayCommentActinosErrorDialog(editor);
 					// return null;
-					org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler removeBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler();// org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+					org.eclipse.wst.sse.ui.internal.handlers.RemoveBlockCommentHandler removeBlockCommentHandlerWST = new org.eclipse.wst.sse.ui.internal.handlers.RemoveBlockCommentHandler();// org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
 					return removeBlockCommentHandlerWST.execute(event);
 				}
 
@@ -93,7 +93,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 						processAction(textEditor, document, textSelection);
 					} else {
-						org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler removeBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler();
+						org.eclipse.wst.sse.ui.internal.handlers.RemoveBlockCommentHandler removeBlockCommentHandlerWST = new org.eclipse.wst.sse.ui.internal.handlers.RemoveBlockCommentHandler();
 						return removeBlockCommentHandlerWST.execute(event);
 					}
 				}
@@ -166,9 +166,8 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 										token, (PhpScriptRegion) textRegion);
 								TextLocation commentOffsets = new TextLocation(
 										startToken.getStart()
-												+ normelizedOffset, startToken
-												.getEnd()
-												+ normelizedOffset);
+												+ normelizedOffset,
+										startToken.getEnd() + normelizedOffset);
 								boolean result = validateAndPushLocation(
 										phpCommentLocationStack, commentOffsets);
 								assert (result);
@@ -177,10 +176,9 @@ public class RemoveBlockCommentHandler extends CommentHandler implements
 
 								ITextRegion endToken = findCommentEndToken(
 										token, (PhpScriptRegion) textRegion);
-								commentOffsets = new TextLocation(endToken
-										.getStart()
-										+ normelizedOffset, endToken.getEnd()
-										+ normelizedOffset);
+								commentOffsets = new TextLocation(
+										endToken.getStart() + normelizedOffset,
+										endToken.getEnd() + normelizedOffset);
 								result = validateAndPushLocation(
 										phpCommentLocationStack, commentOffsets);
 								assert (result);

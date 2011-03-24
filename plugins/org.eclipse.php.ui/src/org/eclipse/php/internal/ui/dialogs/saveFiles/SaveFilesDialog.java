@@ -59,8 +59,7 @@ public class SaveFilesDialog extends ListSelectionDialog {
 							return title;
 						}
 						return NLS
-								.bind(
-										"{0} [{1}]", new String[] { title, file.getFullPath().toString() }); //$NON-NLS-1$
+								.bind("{0} [{1}]", new String[] { title, file.getFullPath().toString() }); //$NON-NLS-1$
 					}
 				}, PHPUIMessages.SaveFilesDialog_1); //$NON-NLS-1$
 		this.promptAutoSave = promptAutoSave;

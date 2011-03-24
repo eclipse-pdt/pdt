@@ -63,7 +63,7 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 				if (isMoreThanOneContextBlockSelected(document, textSelection)) {
 					// displayCommentActinosErrorDialog(editor);
 					// return null;
-					org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();// org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+					org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler();// org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler();
 					return addBlockCommentHandlerWST.execute(event);
 
 				}
@@ -89,7 +89,7 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 						processAction(textEditor, document, textSelection);
 					} else {
-						org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+						org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.sse.ui.internal.handlers.AddBlockCommentHandler();
 						return addBlockCommentHandlerWST.execute(event);
 					}
 				}
