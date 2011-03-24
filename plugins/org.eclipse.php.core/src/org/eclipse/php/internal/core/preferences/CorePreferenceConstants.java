@@ -53,7 +53,6 @@ public class CorePreferenceConstants {
 				.toString());
 		node.putBoolean(PHPCoreConstants.CODEASSIST_ADDIMPORT, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STUB, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS,
 				true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
