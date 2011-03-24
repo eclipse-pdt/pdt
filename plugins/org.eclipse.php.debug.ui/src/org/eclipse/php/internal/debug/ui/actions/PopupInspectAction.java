@@ -36,10 +36,13 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
+import org.eclipse.ui.contexts.IContextActivation;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
@@ -211,6 +214,20 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 		}
 		DebugPopup displayPopup = new InspectPopupDialog(getShell(),
 				getPopupAnchor(textWidget), ACTION_DEFININITION_ID, expression) {
+			IContextActivation contextActivation;
+
+			@Override
+			protected Control createDialogArea(Composite parent) {
+				Control result = super.createDialogArea(parent);
+				if (fTextEditor != null) {
+					IContextService contextService = (IContextService) fTextEditor
+							.getSite().getService(IContextService.class);
+					contextActivation = contextService
+							.activateContext("org.eclipse.php.debug.ui.xdebug");
+				}
+				return result;
+			}
+
 			public boolean close() {
 				boolean returnValue = super.close();
 				if (fTextEditor != null && fSelectionBeforeEvaluation != null) {
@@ -219,6 +236,12 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 					fTextEditor = null;
 					fSelectionBeforeEvaluation = null;
 				}
+				// if (fTextEditor != null) {
+				// IContextService contextService = (IContextService)
+				// fTextEditor
+				// .getSite().getService(IContextService.class);
+				// contextService.deactivateContext(contextActivation);
+				// }
 				return returnValue;
 			}
 		};
@@ -232,6 +255,8 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 		if (stackFrame == null) {
 			return;
 		}
+
+		setNewTargetPart(getTargetPart());
 		if (watchExpressionListener == null) {
 			watchExpressionListener = new IWatchExpressionListener() {
 				public void watchEvaluationFinished(

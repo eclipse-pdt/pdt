@@ -82,7 +82,11 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 			// Calculate secondary ID
 			String secondaryId = null;
 			if (input instanceof IFileEditorInput) {
-
+				IFileEditorInput fileEditorInput = (IFileEditorInput) input;
+				if (fileEditorInput.getFile().isLinked()) {
+					secondaryId = fileEditorInput.getFile().getRawLocation()
+							.toString();
+				}
 			} else if (input instanceof IURIEditorInput
 					|| (input instanceof NonExistingPHPFileEditorInput)) {
 
@@ -108,8 +112,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 
 			if (secondaryId != null) {
 				attributes
-						.put(
-								StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
+						.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
 								secondaryId);
 			}
 
@@ -214,8 +217,8 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 							linePart = idoc.get(startOffset,
 									partitions[i].getLength()).trim();
 							if (Pattern.matches(".*[a-zA-Z0-0_]+.*", linePart)
-									&& !linePart.trim().toLowerCase().equals(
-											"<?php")) {
+									&& !linePart.trim().toLowerCase()
+											.equals("<?php")) {
 								result = startOffset;
 								break;
 							}
@@ -223,8 +226,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 					}
 					++editorLineNumber;
 				} while ((!phpPartitionVisited || PHPStructuredTextPartitioner
-						.isPHPPartitionType(partitionType))
-						&& result == -1);
+						.isPHPPartitionType(partitionType)) && result == -1);
 			} catch (BadLocationException e) {
 				result = -1;
 			}

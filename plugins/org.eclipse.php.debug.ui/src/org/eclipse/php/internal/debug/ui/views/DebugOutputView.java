@@ -23,17 +23,25 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.wst.html.core.internal.encoding.HTMLDocumentLoader;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
@@ -75,6 +83,8 @@ public class DebugOutputView extends AbstractDebugView implements
 				.addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
 		getSite().setSelectionProvider(fSourceViewer.getSelectionProvider());
 
+		setBackgroundColor();
+
 		terminateListener = new IDebugEventSetListener() {
 			IPHPDebugTarget target;
 
@@ -107,6 +117,63 @@ public class DebugOutputView extends AbstractDebugView implements
 		debugViewHelper = new DebugViewHelper();
 
 		return fSourceViewer;
+	}
+
+	private void setBackgroundColor() {
+		IPreferenceStore store = EditorsPlugin.getDefault()
+				.getPreferenceStore();
+
+		fSourceViewer.getTextWidget().setBackground(getBackgroundColor(store));
+		IPropertyChangeListener listener = new IPropertyChangeListener() {
+
+			public void propertyChange(PropertyChangeEvent event) {
+				IPreferenceStore store = EditorsPlugin.getDefault()
+						.getPreferenceStore();
+				String prop = event.getProperty();
+				if (prop.equals(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT)
+						|| prop.equals(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND)) {
+					fSourceViewer.getTextWidget().setBackground(
+							getBackgroundColor(store));
+				}
+
+			}
+		};
+		store.addPropertyChangeListener(listener);
+
+	}
+
+	/**
+	 * Get background color
+	 * 
+	 * @return background color
+	 */
+	private Color getBackgroundColor(IPreferenceStore store) {
+		String useDefault = store
+				.getString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT);
+
+		Color dflt = Display.getDefault().getSystemColor(
+				SWT.COLOR_LIST_BACKGROUND);
+
+		if ("true".equalsIgnoreCase(useDefault)) {
+			return dflt;
+		}
+
+		String bgColor = store
+				.getString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND);
+		if (bgColor == null || bgColor.equals("")) {
+			return dflt;
+		}
+
+		String[] rgb = bgColor.split(",");
+		RGB color;
+		try {
+			color = new RGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]),
+					Integer.parseInt(rgb[2]));
+		} catch (Throwable ex) {
+			return dflt;
+		}
+
+		return new Color(Display.getDefault(), color);
 	}
 
 	/*
