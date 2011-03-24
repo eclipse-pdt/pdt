@@ -24,7 +24,7 @@
 
 
 	<!-- Emma? Where are you? (Emma installation directory) -->
-	<available file="/shared/tools/php/emma-2.0.5312" property="emma.dir" value="/shared/tools/php/emma-2.0.5312"/>
+	<available file="/shared/tools/php/emma-2.0.5312" property="emma.dir" value="/shared/tools/php/emma-2.0.5312" />
 	<property name='emma.dir' value='/var/www/3rd-party/emma-2.0.5312' />
 	<!-- Where are the class files? -->
 	<!-- <property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar' />
@@ -83,5 +83,22 @@
 			<property name="output-file" value="${plugin-name}.xml" />
 		</ant>
 
+	</target>
+	<target name="collect-results">
+		<dirname property="output-dir" file="${test-output}" />
+		<basename property="output-file-name" file="${test-output}" />
+		<junitreport todir="${junit-report-output}" tofile="${classname}.xml">
+			<fileset dir="${output-dir}">
+				<include name="${output-file-name}" />
+			</fileset>
+		</junitreport>
+		<xslt style="${eclipse-home}/dropins/pdt/eclipse/plugins/org.eclipse.test/JUNIT.XSL" basedir="${junit-report-output}" includes="${classname}.result.xml" destdir="${junit-report-output}" />
+		<!--
+	save .log content and *.log content from configuration directory
+	-->
+		<concat destfile="${junit-report-output}/${classname}.log">
+			<fileset dir="${eclipse-home}" includes="${data-dir}/.metadata/*.log" />
+			<fileset dir="${eclipse-home}" includes="configuration/*.log" />
+		</concat>
 	</target>
 </project>
