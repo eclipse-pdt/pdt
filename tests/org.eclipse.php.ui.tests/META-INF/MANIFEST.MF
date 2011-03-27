@@ -4,7 +4,7 @@ Bundle-Name: PDT Ui Unit Tests
 Bundle-SymbolicName: org.eclipse.php.ui.tests;singleton:=true
 Bundle-Version: 3.0.0.qualifier
 Bundle-Activator: org.eclipse.php.ui.tests.PHPUiTests
-Require-Bundle: org.junit;bundle-version="4.8.1",
+Require-Bundle: org.junit;bundle-version="[3.8.2,3.8.3)",
  org.eclipse.ui;bundle-version="3.5.0",
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
