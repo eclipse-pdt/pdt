@@ -2012,4 +2012,37 @@
 			language="org.eclipse.php.core.PHPNature"
 			class="org.eclipse.php.internal.ui.provider.PHPModelContentProvider"/>
 	</extension>
+	
+    <extension
+          point="org.eclipse.wst.sse.ui.commentingStrategy">
+       <blockCommentingStrategy
+             prefix="/*"
+             suffix="*/">
+          <contentType
+                id="org.eclipse.php.core.phpsource">
+             <requiredPartitionTypes>
+                <partitionType
+                      id="org.eclipse.php.PHP_DEFAULT">
+                </partitionType>
+             </requiredPartitionTypes>
+             <allowablePartitionTypes
+                   anyPartitionType="false">
+             </allowablePartitionTypes>
+          </contentType>
+       </blockCommentingStrategy>
+       <lineCommentingStrategy
+             prefix="//">
+          <contentType
+                id="org.eclipse.php.core.phpsource">
+             <requiredPartitionTypes>
+                <partitionType
+                      id="org.eclipse.php.PHP_DEFAULT">
+                </partitionType>
+             </requiredPartitionTypes>
+             <allowablePartitionTypes
+                   anyPartitionType="false">
+             </allowablePartitionTypes>
+          </contentType>
+       </lineCommentingStrategy>
+    </extension> 
 </plugin>
