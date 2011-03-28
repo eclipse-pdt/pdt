@@ -52,7 +52,7 @@ public class DetectGroup extends Observable implements Observer,
 		fHintText = new Link(composite, SWT.WRAP);
 		fHintText.setFont(composite.getFont());
 		gridData = new GridData(GridData.FILL, SWT.FILL, true, true);
-		gridData.widthHint = 500;
+		gridData.widthHint = 520;
 		fHintText.setLayoutData(gridData);
 		fHintText
 				.setText(NewWizardMessages.ScriptProjectWizardFirstPage_DetectGroup_message);
