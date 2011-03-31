@@ -99,9 +99,7 @@ public class LocationGroup extends Observable implements Observer,
 		List<String> docRoots = new ArrayList<String>();
 		for (int i = 0; i < servers.length; i++) {
 			String docRoot = servers[i].getDocumentRoot();
-			String isLocal = servers[i].getAttribute(Server.LOCALSERVER, null);
-			if (isLocal != null && docRoot != null
-					&& !"".equals(docRoot.trim())) { //$NON-NLS-1$
+			if (docRoot != null && !"".equals(docRoot.trim())) { //$NON-NLS-1$
 				docRoots.add(docRoot);
 			}
 		}
