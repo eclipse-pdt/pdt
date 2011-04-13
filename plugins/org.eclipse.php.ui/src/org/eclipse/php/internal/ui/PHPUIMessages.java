@@ -922,6 +922,12 @@ public final class PHPUIMessages extends NLS {
 	public static String GotoType_dialog_message;
 	public static String CodeTemplateBlock_error_read_title;
 	public static String ConfigureIncludePathAction_label;
+
+	public static String ContentMergeViewer_0;
+
+	public static String ContentMergeViewer_1;
+
+	public static String ContentMergeViewer_2;
 	public static String newPhpFile_openning;
 	public static String MarkOccurrencesConfigurationBlock_markMethodExitPoints;
 	public static String IncludePathContainerDefaultPage_path_error_enterpath;

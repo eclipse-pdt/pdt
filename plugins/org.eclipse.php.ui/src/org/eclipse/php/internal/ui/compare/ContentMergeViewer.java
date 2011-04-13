@@ -37,6 +37,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.TextProcessor;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.*;
@@ -80,7 +81,10 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 
 		SaveAction(boolean left) {
 			super(true, false, false);
-			Utilities.initAction(this, getResourceBundle(), "action.save."); //$NON-NLS-1$
+
+			setText(PHPUIMessages.ContentMergeViewer_0);
+			setToolTipText(PHPUIMessages.ContentMergeViewer_1);
+			setDescription(PHPUIMessages.ContentMergeViewer_2);
 		}
 
 		public void run() {
@@ -739,8 +743,9 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 				// post alert
 				Shell shell = fComposite.getShell();
 
-				MessageDialog dialog = new MessageDialog(shell, Utilities
-						.getString(getResourceBundle(), "saveDialog.title"), //$NON-NLS-1$
+				MessageDialog dialog = new MessageDialog(shell,
+						Utilities.getString(getResourceBundle(),
+								"saveDialog.title"), //$NON-NLS-1$
 						null, // accept the default window icon
 						Utilities.getString(getResourceBundle(),
 								"saveDialog.message"), //$NON-NLS-1$
@@ -879,8 +884,8 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 		createControls(fComposite);
 
 		fHandlerService = CompareHandlerService
-				.createFor(getCompareConfiguration().getContainer(), fComposite
-						.getShell());
+				.createFor(getCompareConfiguration().getContainer(),
+						fComposite.getShell());
 
 		initializeToolbars(parent);
 
@@ -1167,8 +1172,8 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 	/* package */int getHeaderHeight() {
 		int headerHeight = fLeftLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT,
 				true).y;
-		headerHeight = Math.max(headerHeight, fDirectionLabel.computeSize(
-				SWT.DEFAULT, SWT.DEFAULT, true).y);
+		headerHeight = Math.max(headerHeight,
+				fDirectionLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT, true).y);
 		return headerHeight;
 	}
 
@@ -1355,9 +1360,9 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 
 				MessageDialog dialog = new MessageDialog(
 						shell,
-						CompareMessages.ContentMergeViewer_resource_changed_title,
+						"", //$NON-NLS-1$
 						null, // accept the default window icon
-						CompareMessages.ContentMergeViewer_resource_changed_description,
+						"", //$NON-NLS-1$
 						MessageDialog.QUESTION, new String[] {
 								IDialogConstants.YES_LABEL, // 0
 								IDialogConstants.NO_LABEL, // 1
