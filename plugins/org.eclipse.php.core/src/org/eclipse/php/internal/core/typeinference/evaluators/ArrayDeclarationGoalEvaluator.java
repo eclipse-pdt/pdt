@@ -10,10 +10,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ForEachStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
 import org.eclipse.php.internal.core.typeinference.Declaration;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -33,33 +30,52 @@ public class ArrayDeclarationGoalEvaluator extends GoalEvaluator {
 
 		List<IGoal> subGoals = new LinkedList<IGoal>();
 
-		ArrayCreation arrayCreation = (ArrayCreation) ((Assignment) typedGoal
-				.getExpression().getNode()).getValue();
+		if ((typedGoal.getExpression().getNode() instanceof Assignment)) {
 
-		for (ArrayElement arrayElement : arrayCreation.getElements()) {
-			subGoals.add(new ExpressionTypeGoal(typedGoal.getContext(),
-					arrayElement.getValue()));
-		}
-		subGoals.toArray(new IGoal[subGoals.size()]);
+			if ((((Assignment) typedGoal.getExpression().getNode()).getValue() instanceof ArrayCreation)) {
+				ArrayCreation arrayCreation = (ArrayCreation) ((Assignment) typedGoal
+						.getExpression().getNode()).getValue();
 
-		List<Declaration> decls = typedGoal.getExpression().getDeclarations();
-
-		IContext context = goal.getContext();
-		for (int i = 0; i < decls.size(); ++i) {
-			Declaration decl = decls.get(i);
-			// TODO check ArrayCreation and its element type
-			if (decl instanceof ArrayDeclaration) {
-				ArrayDeclaration arrayDeclaration = (ArrayDeclaration) decl;
-				subGoals.add(new ArrayDeclarationGoal(context, arrayDeclaration));
-			} else {
-				ASTNode declNode = decl.getNode();
-				if (declNode instanceof ForEachStatement) {
-					subGoals.add(new ForeachStatementGoal(context,
-							((ForEachStatement) declNode).getExpression()));
-				} else {
-					subGoals.add(new ExpressionTypeGoal(context, declNode));
+				for (ArrayElement arrayElement : arrayCreation.getElements()) {
+					subGoals.add(new ExpressionTypeGoal(typedGoal.getContext(),
+							arrayElement.getValue()));
 				}
+				subGoals.toArray(new IGoal[subGoals.size()]);
+
+				List<Declaration> decls = typedGoal.getExpression()
+						.getDeclarations();
+
+				IContext context = goal.getContext();
+				for (int i = 0; i < decls.size(); ++i) {
+					Declaration decl = decls.get(i);
+					// TODO check ArrayCreation and its element type
+					if (decl instanceof ArrayDeclaration) {
+						ArrayDeclaration arrayDeclaration = (ArrayDeclaration) decl;
+						subGoals.add(new ArrayDeclarationGoal(context,
+								arrayDeclaration));
+					} else {
+						ASTNode declNode = decl.getNode();
+						if (declNode instanceof ForEachStatement) {
+							subGoals.add(new ForeachStatementGoal(context,
+									((ForEachStatement) declNode)
+											.getExpression()));
+						} else {
+							subGoals.add(new ExpressionTypeGoal(context,
+									declNode));
+						}
+					}
+				}
+
+			} else if ((((Assignment) typedGoal.getExpression().getNode())
+					.getValue() instanceof PHPCallExpression)) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=336995
+				// TODO $form['path_redirect']['table'] =
+				// path_redirect_list_redirects(array(), array('redirect' =>
+				// 'node/' . $form['#node']->nid));
+			} else {
+				// TODO other case
 			}
+
 		}
 
 		return subGoals.toArray(new IGoal[subGoals.size()]);
