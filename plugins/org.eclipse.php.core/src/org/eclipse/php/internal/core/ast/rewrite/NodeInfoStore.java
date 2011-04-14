@@ -119,6 +119,12 @@ public final class NodeInfoStore {
 				forStatement.setBody(this.ast.newBlock());
 
 				break;
+			case ASTNode.FUNCTION_INVOCATION:
+				FunctionInvocation functionInvocation = (FunctionInvocation) node;
+				FunctionName functionName = this.ast.newFunctionName();
+				functionName.setName(this.ast.newIdentifier(""));
+				functionInvocation.setFunctionName(functionName);
+				break;
 			}
 			return node;
 		} catch (IllegalArgumentException e) {
