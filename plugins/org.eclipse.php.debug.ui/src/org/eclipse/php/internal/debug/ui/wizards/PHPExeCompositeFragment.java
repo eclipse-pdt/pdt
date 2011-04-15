@@ -58,8 +58,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		controlHandler.setImageDescriptor(PHPDebugUIImages
 				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
 
-		debuggersIds = new LinkedList<String>(PHPDebuggersRegistry
-				.getDebuggersIds());
+		debuggersIds = new LinkedList<String>(
+				PHPDebuggersRegistry.getDebuggersIds());
 		createControl();
 	}
 
@@ -112,8 +112,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			public void changeControlPressed(DialogField field) {
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setFilterPath(fPHPExePath.getText());
-				dialog
-						.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPRootDialog_message);
+				dialog.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPRootDialog_message);
 				String newPath = dialog.open();
 				if (newPath != null) {
 					fPHPExePath.setText(newPath);
@@ -129,8 +128,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setFilterPath(fPHPIni.getText());
 				dialog.setFilterExtensions(new String[] { "*.ini", "*.*" });
-				dialog
-						.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPIniDialog_message);
+				dialog.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPIniDialog_message);
 				String newPath = dialog.open();
 				if (newPath != null) {
 					fPHPIni.setText(newPath);
@@ -326,7 +324,9 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 
 		phpExeItem.setExecutable(executableLocation);
 
-		if (phpExeItem.getSapiType() != null) {
+		if (phpExeItem.getSapiType() != null
+				&& (fSapiTypes.getText() == null || fSapiTypes.getText().trim()
+						.length() == 0)) {
 			fSapiTypes.setText(phpExeItem.getSapiType());
 		}
 		if (phpExeItem.getINILocation() != null

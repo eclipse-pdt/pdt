@@ -444,6 +444,7 @@ public class InstalledPHPsBlock {
 		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(),
 				phpExe.getExecutable(), phpExe.getINILocation(),
 				phpExe.getDebuggerID(), phpExe.isEditable());
+		phpExeToEdit.setSapiType(phpExe.getSapiType());
 		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
 				phpExeToEdit, phpExes.getAllItems());
 		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
@@ -454,6 +455,7 @@ public class InstalledPHPsBlock {
 		phpExe.setExecutable(phpExeToEdit.getExecutable());
 		phpExe.setINILocation(phpExeToEdit.getINILocation());
 		phpExe.setDebuggerID(phpExeToEdit.getDebuggerID());
+		phpExe.setSapiType(phpExeToEdit.getSapiType());
 
 		fPHPExeList.refresh();
 		commitChanges();
