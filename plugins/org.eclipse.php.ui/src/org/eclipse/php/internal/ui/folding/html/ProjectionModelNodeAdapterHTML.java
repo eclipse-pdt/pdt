@@ -26,6 +26,11 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.xml.core.internal.document.CommentImpl;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.ui.internal.projection.XMLCommentFoldingPosition;
+import org.eclipse.wst.xml.ui.internal.projection.XMLElementFoldingPosition;
 import org.w3c.dom.Node;
 
 /**
@@ -126,43 +131,24 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			// fAdapterFactory.getProjectionViewer().getDocument();
 			// if (document != null) {
 			IndexedRegion inode = (IndexedRegion) node;
-			int start = inode.getStartOffset();
-			int end = inode.getEndOffset();
-			if (start >= 0 && start < end) {
-				// region-based
-				// extra line when collapsed, but no region
-				// increase when add newline
-				pos = new Position(start, end - start);
-				// try {
-				// // line-based
-				// // extra line when collapsed, but no region
-				// // increase when add newline
-				// IRegion startLineRegion =
-				// document.getLineInformationOfOffset(start);
-				// IRegion endLineRegion =
-				// document.getLineInformationOfOffset(end);
-				// int startOffset = startLineRegion.getOffset();
-				// int endOffset = endLineRegion.getOffset() +
-				// endLineRegion.getLength();
-				// if (endOffset > startOffset) {
-				// pos = new Position(startOffset, endOffset -
-				// startOffset);
-				// }
-				//
-				// // line-based
-				// // no extra line when collapsed, but region increase
-				// // when add newline
-				// int startLine = document.getLineOfOffset(start);
-				// int endLine = document.getLineOfOffset(end);
-				// if (endLine + 1 < document.getNumberOfLines()) {
-				// int offset = document.getLineOffset(startLine);
-				// int endOffset = document.getLineOffset(endLine + 1);
-				// pos = new Position(offset, endOffset - offset);
-				// }
-				// }
-				// catch (BadLocationException x) {
-				// Logger.log(Logger.WARNING_DEBUG, null, x);
-				// }
+			// only want to fold regions of the valid type and with a valid
+			// range
+			if (inode.getStartOffset() >= 0 && inode.getLength() >= 0) {
+				IDOMNode node1 = (IDOMNode) inode;
+				IStructuredDocumentRegion startRegion = node1
+						.getStartStructuredDocumentRegion();
+				IStructuredDocumentRegion endRegion = node1
+						.getEndStructuredDocumentRegion();
+				// if the node has an endRegion (end tag) then folding region is
+				// between the start and end tag
+				// else if the region is a comment
+				// else if the region is only an open tag or an open/close tag
+				// then don't fold it
+				if (startRegion != null && endRegion != null) {
+					pos = new XMLElementFoldingPosition(startRegion, endRegion);
+				} else if (startRegion != null && node instanceof CommentImpl) {
+					pos = new XMLCommentFoldingPosition(startRegion);
+				}
 			}
 		}
 		// }
