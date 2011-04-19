@@ -67,13 +67,14 @@ public class StaticFieldHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	@Override
+	public int getPriority() {
+		return 110;
+	}
+
+	@Override
 	public void initDefaultPreferences() {
 		getStyle().setItalicByDefault(true).setDefaultTextColor(0, 0, 192);
 	}
-
-	/*
-	 * @Override public int getPriority() { return 100; }
-	 */
 
 	public String getDisplayName() {
 		return "Static fields";
