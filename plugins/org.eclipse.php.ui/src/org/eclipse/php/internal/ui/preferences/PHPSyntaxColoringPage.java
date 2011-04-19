@@ -1295,6 +1295,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 					}
 				});
 
+				Collections.sort(highlightings);
+
 				for (Iterator iterator = highlightings.iterator(); iterator
 						.hasNext();) {
 					AbstractSemanticHighlighting abstractSemanticHighlighting = (AbstractSemanticHighlighting) iterator
