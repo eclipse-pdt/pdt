@@ -280,7 +280,7 @@ public class PHPCompletionProposalCollector extends
 	}
 
 	@Override
-	protected int computeRelevance(CompletionProposal proposal) {
+	public int computeRelevance(CompletionProposal proposal) {
 		if (ProposalExtraInfo.STUB.equals(proposal.getExtraInfo())) {
 			return Integer.MAX_VALUE;
 		}

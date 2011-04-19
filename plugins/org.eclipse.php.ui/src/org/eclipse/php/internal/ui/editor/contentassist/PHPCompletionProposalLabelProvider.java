@@ -89,7 +89,7 @@ public class PHPCompletionProposalLabelProvider extends
 		return nameBuffer.toString();
 	}
 
-	protected String createTypeProposalLabel(CompletionProposal typeProposal) {
+	public String createTypeProposalLabel(CompletionProposal typeProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
 
 		IType type = (IType) typeProposal.getModelElement();
@@ -123,12 +123,6 @@ public class PHPCompletionProposalLabelProvider extends
 		}
 
 		return nameBuffer.toString();
-	}
-
-	@Override
-	protected ImageDescriptor createTypeImageDescriptor(
-			CompletionProposal proposal) {
-		return super.createTypeImageDescriptor(proposal);
 	}
 
 	@Override
