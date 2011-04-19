@@ -318,7 +318,8 @@ public class PhpElementConciliator {
 	private final static boolean isThisVariable(Variable variable) {
 		return (variable.isDollared()
 				&& variable.getName() instanceof Identifier && THIS
-				.equalsIgnoreCase(((Identifier) variable.getName()).getName()));
+					.equalsIgnoreCase(((Identifier) variable.getName())
+							.getName()));
 	}
 
 	/**
@@ -684,7 +685,7 @@ public class PhpElementConciliator {
 				FunctionInvocation functionInvocation = (FunctionInvocation) node;
 				final Expression functionName = functionInvocation
 						.getFunctionName().getName();
-				if (functionName.getType() != ASTNode.IDENTIFIER) {
+				if (!(functionName instanceof Identifier)) {
 					return false;
 				}
 
@@ -705,8 +706,8 @@ public class PhpElementConciliator {
 				if (stringValue.length() < 2 || stringValue.charAt(0) != '"') {
 					return false;
 				}
-				exists = name.equals(stringValue.substring(1, stringValue
-						.length() - 1));
+				exists = name.equals(stringValue.substring(1,
+						stringValue.length() - 1));
 			}
 			return true;
 		}
