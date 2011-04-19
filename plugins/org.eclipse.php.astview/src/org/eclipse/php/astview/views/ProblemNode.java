@@ -78,7 +78,10 @@ public class ProblemNode extends ASTAttribute {
 	}
 	
 	private String getErrorLabel() {
-		int id= fProblem.getID();
+		if(fProblem.getID() == null){
+			return "";
+		}
+		int id= Integer.parseInt(fProblem.getID().name());
 		StringBuffer buf= new StringBuffer();
 			
 		if ((id & IProblem.TypeRelated) != 0) {
@@ -113,7 +116,10 @@ public class ProblemNode extends ASTAttribute {
 	}
 	
 	private String getConstantName() {
-		int id= fProblem.getID();
+		if(fProblem.getID() == null){
+			return "";
+		}
+		int id= Integer.parseInt(fProblem.getID().name());
 		Field[] fields= IProblem.class.getFields();
 		for (int i= 0; i < fields.length; i++) {
 			Field f= fields[i];
