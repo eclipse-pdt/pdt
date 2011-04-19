@@ -78,14 +78,17 @@ a:hover {
 </style>
 </head>
 <body>
-<table style="width: 100%;" border="0" cellpadding="2">
-	<tbody>
-		<tr>
-			<td <?=$pageTitle ?>="left" width="60%">
-			<h1><?=$pageTitle ?> <br>
-			<font size="<?=$pageTitle ?>" color="#8080FF">PHP Development Tools</font></h1>
-			</td>
-			<![CDATA[
+	<table style="width: 100%;" border="0" cellpadding="2">
+		<tbody>
+			<tr>
+				<td <?=$pageTitle ?>="left" width="60%">
+					<h1>
+					<?=$pageTitle ?>
+						<br> <font size="<?=$pageTitle ?>" color="#8080FF">PHP Development
+							Tools</font>
+					</h1>
+				</td>
+				<![CDATA[
 			function matchwo(a,b)
 			{
 			if (a < b && a < 0) then
@@ -98,8 +101,8 @@ a:hover {
 			   }
 			}
 		]]>
-		</tr>
-	</tbody>
-</table>
+			</tr>
+		</tbody>
+	</table>
 </body>
 </html>

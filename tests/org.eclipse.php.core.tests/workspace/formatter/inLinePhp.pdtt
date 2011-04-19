@@ -15,12 +15,12 @@ Test formatting inline PHP code
 --EXPECT--
 <HTML>
 <Body>
-<Table>
-	<tr>
-		<td><?php
-		echo $b ;
-		?></td>
-	</tr>
-</Table>
+	<Table>
+		<tr>
+			<td><?php
+			echo $b ;
+			?></td>
+		</tr>
+	</Table>
 </Body>
 </HTML>
