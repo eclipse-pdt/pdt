@@ -33,7 +33,7 @@ public class PHPToggleBreakpointsTargetFactory implements
 
 	public String getDefaultToggleTarget(IWorkbenchPart part,
 			ISelection selection) {
-		return null;
+		return ID;
 	}
 
 	public String getToggleTargetDescription(String targetID) {
