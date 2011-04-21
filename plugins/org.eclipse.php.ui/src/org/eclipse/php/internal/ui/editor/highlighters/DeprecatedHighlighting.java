@@ -125,7 +125,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public int getPriority() {
-		return 12;
+		return 120;
 	}
 
 	public String getDisplayName() {
