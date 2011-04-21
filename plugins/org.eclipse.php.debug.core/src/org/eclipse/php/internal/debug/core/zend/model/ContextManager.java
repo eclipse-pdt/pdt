@@ -31,6 +31,7 @@ public class ContextManager {
 	private int fSuspendCount;
 
 	private final static String DUMMY_PHP_FILE = "dummy.php";
+	private final static String THIS_VARIABLE = "$this";
 
 	public ContextManager(PHPDebugTarget target, IRemoteDebugger debugger) {
 		super();
@@ -142,8 +143,7 @@ public class ContextManager {
 								sName,
 								cwd,
 								frameCt < frames.length ? ((PHPStackFrame) frames[frameCt])
-										.getSourceName()
-										: null);
+										.getSourceName() : null);
 				if (rName == null) {
 					rName = sName;
 				}
@@ -151,8 +151,8 @@ public class ContextManager {
 			}
 
 			frames[frameCt - 1] = new PHPStackFrame(thread, sName, rName,
-					layers[i].getCallerFunctionName(), layers[i]
-							.getCallerLineNumber() + 1, layers[i].getDepth(),
+					layers[i].getCallerFunctionName(),
+					layers[i].getCallerLineNumber() + 1, layers[i].getDepth(),
 					layers[i - 1].getVariables());
 			frameCt--;
 
@@ -162,8 +162,8 @@ public class ContextManager {
 			}
 		}
 
-		String resolvedFile = remoteDebugger.convertToLocalFilename(fTarget
-				.getLastFileName(), cwd, currentScript);
+		String resolvedFile = remoteDebugger.convertToLocalFilename(
+				fTarget.getLastFileName(), cwd, currentScript);
 		if (resolvedFile == null) {
 			resolvedFile = fTarget.getLastFileName();
 		}
@@ -180,6 +180,7 @@ public class ContextManager {
 		if (expressionsManager == null) {
 			return new Expression[0];
 		}
+		expressionsManager.update(new DefaultExpression(THIS_VARIABLE), 1);
 		return expressionsManager.getLocalVariables(1);
 	}
 
