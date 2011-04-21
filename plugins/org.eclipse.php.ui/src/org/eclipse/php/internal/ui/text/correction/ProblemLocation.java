@@ -33,7 +33,11 @@ public class ProblemLocation implements IProblemLocation {
 	private final String fMarkerType;
 
 	public ProblemLocation(int offset, int length, IScriptAnnotation annotation) {
-		fId = annotation.getId();
+		if (annotation.getId() != null) {
+			fId = Integer.parseInt(annotation.getId().name());
+		} else {
+			fId = -1;
+		}
 		fArguments = annotation.getArguments();
 		fOffset = offset;
 		fLength = length;
@@ -56,14 +60,17 @@ public class ProblemLocation implements IProblemLocation {
 	}
 
 	public ProblemLocation(IProblem problem) {
-		fId = problem.getID();
+		if (problem.getID() != null) {
+			fId = Integer.parseInt(problem.getID().name());
+		} else {
+			fId = -1;
+		}
 		fArguments = problem.getArguments();
 		fOffset = problem.getSourceStart();
 		fLength = problem.getSourceEnd() - fOffset + 1;
 		fIsError = problem.isError();
 		fMarkerType = problem instanceof CategorizedProblem ? ((CategorizedProblem) problem)
-				.getMarkerType()
-				: IScriptModelMarker.DLTK_MODEL_PROBLEM_MARKER;
+				.getMarkerType() : IScriptModelMarker.DLTK_MODEL_PROBLEM_MARKER;
 	}
 
 	/*

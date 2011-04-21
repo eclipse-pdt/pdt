@@ -117,14 +117,15 @@ public class PHPCorrectionProcessor implements
 	public static boolean hasCorrections(Annotation annotation) {
 		if (annotation instanceof IScriptAnnotation) {
 			IScriptAnnotation javaAnnotation = (IScriptAnnotation) annotation;
-			int problemId = javaAnnotation.getId();
-			if (problemId != -1) {
+			if (javaAnnotation.getId() != null) {
+				String problemId = javaAnnotation.getId().name();
 				ISourceModule cu = javaAnnotation.getSourceModule();
 				if (cu != null) {
-					return hasCorrections(cu, problemId, javaAnnotation
-							.getMarkerType());
+					return hasCorrections(cu, Integer.parseInt(problemId),
+							javaAnnotation.getMarkerType());
 				}
 			}
+
 		}
 		if (annotation instanceof SimpleMarkerAnnotation) {
 			return hasCorrections(((SimpleMarkerAnnotation) annotation)
@@ -202,8 +203,7 @@ public class PHPCorrectionProcessor implements
 						return CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_menu;
 					else
 						return NLS
-								.bind(
-										CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_key,
+								.bind(CorrectionMessages.JavaCorrectionProcessor_go_to_original_using_key,
 										key);
 				} else if (fAssistant.isProblemLocationAvailable()) {
 					String key = getQuickAssistBinding();
@@ -211,8 +211,7 @@ public class PHPCorrectionProcessor implements
 						return CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_menu;
 					else
 						return NLS
-								.bind(
-										CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_key,
+								.bind(CorrectionMessages.JavaCorrectionProcessor_go_to_closest_using_key,
 										key);
 				} else
 					return ""; //$NON-NLS-1$
@@ -340,13 +339,15 @@ public class PHPCorrectionProcessor implements
 
 	private static ProblemLocation getProblemLocation(
 			IScriptAnnotation javaAnnotation, IAnnotationModel model) {
-		int problemId = javaAnnotation.getId();
-		if (problemId != -1) {
+		if (javaAnnotation.getId() != null) {
 			Position pos = model.getPosition((Annotation) javaAnnotation);
 			if (pos != null) {
 				return new ProblemLocation(pos.getOffset(), pos.getLength(),
-						javaAnnotation); // java problems all handled by the
-											// quick assist processors
+						javaAnnotation); // java problems
+											// all handled
+											// by the
+											// quick assist
+											// processors
 			}
 		}
 		return null;
