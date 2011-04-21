@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.compiler.problem.DefaultProblem;
-import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
@@ -63,7 +62,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 		}
 
 		public boolean isError() {
-			return (this.severity & ProblemSeverities.Error) != 0;
+			return (this.severity & IMarker.SEVERITY_ERROR) != 0;
 		}
 	}
 
@@ -150,8 +149,8 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 	 *            Occurrence location
 	 */
 	protected void addOccurrence(OccurrenceLocation location) {
-		if (!hasProblems(location.getOffset(), location.getOffset()
-				+ location.getLength())) {
+		if (!hasProblems(location.getOffset(),
+				location.getOffset() + location.getLength())) {
 			fResult.add(location);
 		}
 	}
@@ -270,9 +269,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 				String namespace = fullName.substring(0, index);
 				if (lastUseParts.containsKey(namespace)) {
 					fullName = new StringBuilder(lastUseParts.get(namespace)
-							.getName().getName()).append(
-							NamespaceReference.NAMESPACE_SEPARATOR).append(
-							fullName.substring(index + 1)).toString();
+							.getName().getName())
+							.append(NamespaceReference.NAMESPACE_SEPARATOR)
+							.append(fullName.substring(index + 1)).toString();
 				}
 			} else if (lastUseParts.containsKey(fullName)) {
 				fullName = new StringBuilder(lastUseParts.get(fullName)
@@ -281,9 +280,9 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 				if (currentNamespace != null
 						&& currentNamespace.getName() != null) {
 					fullName = new StringBuilder(currentNamespace.getName()
-							.getName()).append(
-							NamespaceReference.NAMESPACE_SEPARATOR).append(
-							fullName).toString();
+							.getName())
+							.append(NamespaceReference.NAMESPACE_SEPARATOR)
+							.append(fullName).toString();
 				}
 			}
 		}
