@@ -2035,6 +2035,68 @@
                    anyPartitionType="false">
              </allowablePartitionTypes>
           </contentType>
+	       <contentType
+	             associatedCommentPartitionTypeID="org.eclipse.php.PHP_COMMENT"
+	             id="org.eclipse.php.core.phpsource">
+             <requiredPartitionTypes>
+                <partitionType
+                      id="org.eclipse.php.PHP_COMMENT">
+                </partitionType>
+             </requiredPartitionTypes>
+             <allowablePartitionTypes
+                   anyPartitionType="false">
+             </allowablePartitionTypes>
+	       </contentType>
+          <contentType
+             id="org.eclipse.php.core.phpsource">
+	          <allowablePartitionTypes
+	                anyPartitionType="false">
+	          </allowablePartitionTypes>
+	          <requiredPartitionTypes>
+	             <partitionType
+	                   id="org.eclipse.wst.css.STYLE">
+	             </partitionType>
+	          </requiredPartitionTypes>
+	       </contentType>
+	       <contentType
+	             associatedCommentPartitionTypeID="org.eclipse.wst.css.COMMENT"
+	             id="org.eclipse.php.core.phpsource">
+             <requiredPartitionTypes>
+                <partitionType
+                      id="org.eclipse.wst.css.COMMENT">
+                </partitionType>
+             </requiredPartitionTypes>
+             <allowablePartitionTypes
+                   anyPartitionType="false">
+             </allowablePartitionTypes>
+	       </contentType>
+       </blockCommentingStrategy>
+       <blockCommentingStrategy
+             prefix="&lt;!--"
+          	 suffix="--&gt;">
+          <contentType
+             id="org.eclipse.php.core.phpsource">
+	          <allowablePartitionTypes
+	                anyPartitionType="false">
+	          </allowablePartitionTypes>
+	          <requiredPartitionTypes>
+	             <partitionType
+	                   id="org.eclipse.wst.html.HTML_DEFAULT">
+	             </partitionType>
+	          </requiredPartitionTypes>
+	       </contentType>
+	       <contentType
+	             associatedCommentPartitionTypeID="org.eclipse.wst.html.HTML_COMMENT"
+	             id="org.eclipse.php.core.phpsource">
+             <requiredPartitionTypes>
+                <partitionType
+                      id="org.eclipse.wst.html.HTML_COMMENT">
+                </partitionType>
+             </requiredPartitionTypes>
+             <allowablePartitionTypes
+                   anyPartitionType="false">
+             </allowablePartitionTypes>
+	       </contentType>
        </blockCommentingStrategy>
        <lineCommentingStrategy
              prefix="//">
