@@ -12,7 +12,7 @@
 package org.eclipse.php.core.tests.includepath;
 
 import junit.framework.Assert;
-import junit.framework.TestSuite;
+import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -26,13 +26,12 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
-import org.eclipse.dltk.core.tests.model.SuiteOfTestCases;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.project.PHPNature;
 
-public class IncludePathManagerTests extends SuiteOfTestCases {
+public class IncludePathManagerTests extends TestCase {
 
 	protected IProject project;
 
@@ -40,16 +39,13 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 		super(name);
 	}
 
-	public static TestSuite suite() {
-		return new Suite(IncludePathManagerTests.class);
-	}
-
-	public void setUpSuite() throws Exception {
+	@Override
+	protected void setUp() throws Exception {
 		// Initialize include path manager:
 		IncludePathManager.getInstance();
 
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"IncludePathManagerTests");
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("IncludePathManagerTests");
 		if (project.exists()) {
 			return;
 		}
@@ -62,12 +58,11 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
 
-		super.setUpSuite();
 	}
 
-	public void tearDownSuite() throws Exception {
+	@Override
+	protected void tearDown() throws Exception {
 		project.delete(true, null);
-		super.tearDownSuite();
 	}
 
 	public void testIncludePathGet() throws Exception {
@@ -112,14 +107,18 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 
 		Assert.assertTrue(includePath.length == 1);
 		Assert.assertTrue(includePath[0].isBuildpath());
-		Assert.assertEquals(EnvironmentPathUtils.getLocalPath(
-				((IBuildpathEntry) includePath[0].getEntry()).getPath())
-				.toOSString(), libraryPath);
+		Assert.assertEquals(
+				EnvironmentPathUtils
+						.getLocalPath(
+								((IBuildpathEntry) includePath[0].getEntry())
+										.getPath()).toOSString(), libraryPath);
 	}
 
 	// This test checks how include path changes are saved:
 	public void testIncludePathSet() throws Exception {
-		IFolder folder = project.getFolder("a").getFolder("b");
+		IFolder folder = project.getFolder("a");
+		folder.create(true, true, null);
+		folder = folder.getFolder("b");
 		folder.create(true, true, null);
 
 		// Add new resource to the include path:
@@ -133,9 +132,9 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 		setIncludePath(manager, includePath);
 		includePath = manager.getIncludePaths(project);
 
-		Assert.assertTrue(includePath.length == 2);
-		Assert.assertFalse(includePath[1].isBuildpath());
-		Assert.assertEquals(((IResource) includePath[1].getEntry()), folder);
+		Assert.assertTrue(includePath.length == 1);
+		Assert.assertFalse(includePath[0].isBuildpath());
+		Assert.assertEquals(((IResource) includePath[0].getEntry()), folder);
 	}
 
 	private void setIncludePath(IncludePathManager manager,
