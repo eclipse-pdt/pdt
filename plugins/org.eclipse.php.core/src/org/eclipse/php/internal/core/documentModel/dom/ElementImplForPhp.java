@@ -33,6 +33,7 @@ import org.w3c.dom.Node;
 public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
 		IImplForPhp {
 
+	private static final String WORKBENCH_ADAPTER = "org.eclipse.ui.model.IWorkbenchAdapter";
 	private IModelElement modelElement;
 
 	public ElementImplForPhp() {
@@ -40,6 +41,11 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
 	}
 
 	public Object getAdapter(Class adapter) {
+		if (adapter != null
+				&& adapter.getName().equals(
+						WORKBENCH_ADAPTER)) {
+			return null;
+		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
