@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
+import org.eclipse.php.core.tests.compiler_ast.parser.CompilerParserTests;
 import org.eclipse.php.core.tests.compiler_ast.phpdoc.PHPDocAwareDeclarationTests;
 import org.eclipse.php.core.tests.compiler_ast.phpdoc.PHPDocParserTests;
 import org.eclipse.php.core.tests.document.lexer.DocumentLexerTests;
@@ -23,6 +24,7 @@ import org.eclipse.php.core.tests.dom_ast.CommentMapperTests;
 import org.eclipse.php.core.tests.dom_ast.StaticScalarExpressionsTests;
 import org.eclipse.php.core.tests.dom_ast.binding.BindingTests;
 import org.eclipse.php.core.tests.dom_ast.matcher.ASTMatcherTests;
+import org.eclipse.php.core.tests.dom_ast.parser.DomParserTests;
 import org.eclipse.php.core.tests.dom_ast.rewrite.ASTRewriteTests;
 import org.eclipse.php.core.tests.errors.ErrorReportingTests;
 import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
@@ -42,8 +44,8 @@ public class AllTests {
 		// $JUnit-BEGIN$
 
 		// Model tests:
-		// suite.addTest(DomParserTests.suite());
-		// suite.addTest(CompilerParserTests.suite());
+		suite.addTest(DomParserTests.suite());
+		suite.addTest(CompilerParserTests.suite());
 		suite.addTest(ErrorReportingTests.suite());
 		suite.addTest(ASTRewriteTests.suite());
 		suite.addTest(ASTMatcherTests.suite());
