@@ -2024,23 +2024,12 @@
        <blockCommentingStrategy
              prefix="/*"
              suffix="*/">
-          <contentType
-                id="org.eclipse.php.core.phpsource">
-             <requiredPartitionTypes>
-                <partitionType
-                      id="org.eclipse.php.PHP_DEFAULT">
-                </partitionType>
-             </requiredPartitionTypes>
-             <allowablePartitionTypes
-                   anyPartitionType="false">
-             </allowablePartitionTypes>
-          </contentType>
 	       <contentType
-	             associatedCommentPartitionTypeID="org.eclipse.php.PHP_COMMENT"
+	             associatedCommentPartitionTypeID="org.eclipse.php.PHP_DEFAULT"
 	             id="org.eclipse.php.core.phpsource">
              <requiredPartitionTypes>
                 <partitionType
-                      id="org.eclipse.php.PHP_COMMENT">
+                      id="org.eclipse.php.PHP_DEFAULT">
                 </partitionType>
              </requiredPartitionTypes>
              <allowablePartitionTypes
