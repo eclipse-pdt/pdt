@@ -66,7 +66,7 @@ public class BindingTests extends SuiteOfTestCases {
 		super(name);
 	}
 
-	public static TestSuite suite() {
+	public static TestSuite testSuite() {
 		return new Suite(BindingTests.class);
 	}
 
@@ -77,8 +77,8 @@ public class BindingTests extends SuiteOfTestCases {
 
 	protected void setUp() throws Exception {
 		if (project == null) {
-			project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					"BindingTests");
+			project = ResourcesPlugin.getWorkspace().getRoot()
+					.getProject("BindingTests");
 			if (project.exists()) {
 				return;
 			}
@@ -126,8 +126,9 @@ public class BindingTests extends SuiteOfTestCases {
 		PHPVersion version = ProjectOptions.getDefaultPhpVersion();
 		ISourceModule sourceModule = null;
 		sourceModule = DLTKCore.createSourceModuleFrom(testFile);
-		ASTParser parser = ASTParser.newParser(new InputStreamReader(testFile
-				.getContents()), version, false, sourceModule);
+		ASTParser parser = ASTParser.newParser(
+				new InputStreamReader(testFile.getContents()), version, false,
+				sourceModule);
 		return parser.createAST(new NullProgressMonitor());
 	}
 
@@ -231,8 +232,8 @@ public class BindingTests extends SuiteOfTestCases {
 		int indexOf = locateElement(content, 0);
 		ITypeBinding type = getTypeBinding(content);
 		ITypeBinding otherType = getTypeBinding(content, indexOf + 4);
-		Assert.assertTrue("Should be sub-type compatible", otherType
-				.isSubTypeCompatible(type));
+		Assert.assertTrue("Should be sub-type compatible",
+				otherType.isSubTypeCompatible(type));
 	}
 
 	public void testIsSubTypeCompatibleFalse() throws Exception {
@@ -241,8 +242,8 @@ public class BindingTests extends SuiteOfTestCases {
 		int indexOf = locateElement(content, 0);
 		ITypeBinding type = getTypeBinding(content);
 		ITypeBinding otherType = getTypeBinding(content, indexOf + 4);
-		Assert.assertFalse("Should NOT be sub-type compatible", type
-				.isSubTypeCompatible(otherType));
+		Assert.assertFalse("Should NOT be sub-type compatible",
+				type.isSubTypeCompatible(otherType));
 	}
 
 	public void testBinaryName() throws Exception {
@@ -295,12 +296,12 @@ public class BindingTests extends SuiteOfTestCases {
 
 		type = getTypeBinding(content, index + 4);
 		IMethodBinding[] classAMethods = type.getDeclaredMethods();
-		Assert.assertTrue("Should override", classAMethods[0]
-				.overrides(interfaceBMethods[0]));
-		Assert.assertFalse("Should NOT override", classAMethods[1]
-				.overrides(interfaceBMethods[0]));
-		Assert.assertTrue("Should override", classAMethods[2]
-				.overrides(interfaceBMethods[0]));
+		Assert.assertTrue("Should override",
+				classAMethods[0].overrides(interfaceBMethods[0]));
+		Assert.assertFalse("Should NOT override",
+				classAMethods[1].overrides(interfaceBMethods[0]));
+		Assert.assertTrue("Should override",
+				classAMethods[2].overrides(interfaceBMethods[0]));
 	}
 
 	// public void testConstantExpressionBinding() throws Exception {
@@ -380,8 +381,8 @@ public class BindingTests extends SuiteOfTestCases {
 		Assert.assertNotNull(methodBinding);
 		Assert.assertTrue(methodBinding.getName().equals("mymethod"));
 		Assert.assertNotNull(methodBinding.getDeclaringClass());
-		Assert.assertTrue(methodBinding.getDeclaringClass().getName().equals(
-				"MyClass"));
+		Assert.assertTrue(methodBinding.getDeclaringClass().getName()
+				.equals("MyClass"));
 		Assert.assertTrue(methodBinding.isConstructor() == false);
 		Assert.assertTrue(methodBinding.getReturnType()[0].getName().equals(
 				"string"));
@@ -432,10 +433,8 @@ public class BindingTests extends SuiteOfTestCases {
 
 			IBinding sourceBinding = include.resolveBinding();
 
-			Assert
-					.assertTrue(sourceBinding.getName().equals("myFile.php") == true);
-			Assert
-					.assertTrue(sourceBinding.getPHPElement().getElementType() == IModelElement.SOURCE_MODULE);
+			Assert.assertTrue(sourceBinding.getName().equals("myFile.php") == true);
+			Assert.assertTrue(sourceBinding.getPHPElement().getElementType() == IModelElement.SOURCE_MODULE);
 			Assert.assertTrue(sourceBinding.getKind() == IBinding.INCLUDE);
 
 		} finally {
@@ -473,8 +472,8 @@ public class BindingTests extends SuiteOfTestCases {
 		Assert.assertNotNull(methodBinding);
 		Assert.assertTrue(methodBinding.getName().equals("foo"));
 		Assert.assertNotNull(methodBinding.getDeclaringClass());
-		Assert.assertTrue(methodBinding.getDeclaringClass().getName().equals(
-				"MyClass"));
+		Assert.assertTrue(methodBinding.getDeclaringClass().getName()
+				.equals("MyClass"));
 		Assert.assertTrue(methodBinding.isConstructor() == false);
 		Assert.assertTrue(methodBinding.getReturnType()[0].getName().equals(
 				"MyClass"));

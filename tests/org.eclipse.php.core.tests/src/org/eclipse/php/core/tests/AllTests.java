@@ -64,7 +64,7 @@ public class AllTests {
 		suite.addTest(PHPDocAwareDeclarationTests.suite());
 
 		suite.addTestSuite(IncludePathManagerTests.class);
-		suite.addTest(BindingTests.suite());
+		suite.addTest(BindingTests.testSuite());
 
 		// Document tests:
 		suite.addTest(DocumentLexerTests.suite());
