@@ -23,6 +23,7 @@ import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -1596,8 +1597,17 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 
 		// do we now have a remapped file ?
 		if (mappedPathEntry == null) {
-			DBGpLogger.debug("inbound File '" + decodedFile + "' Not remapped"); //$NON-NLS-1$ //$NON-NLS-2$
-			mappedFile = decodedFile;
+			final PharPath pharPath = PharPath.getPharPath(new Path(
+					"phar:" + decodedFile)); //$NON-NLS-1$
+			if (pharPath != null) {
+				DBGpLogger
+						.debug("inbound File '" + decodedFile + "' remapped to phar file"); //$NON-NLS-1$ //$NON-NLS-2$
+				mappedFile = "phar:" + decodedFile; //$NON-NLS-1$
+			} else {
+				DBGpLogger
+						.debug("inbound File '" + decodedFile + "' Not remapped"); //$NON-NLS-1$ //$NON-NLS-2$
+				mappedFile = decodedFile;
+			}
 		} else {
 			mappedFile = mappedPathEntry.getResolvedPath();
 			IResource file = ResourcesPlugin.getWorkspace().getRoot()

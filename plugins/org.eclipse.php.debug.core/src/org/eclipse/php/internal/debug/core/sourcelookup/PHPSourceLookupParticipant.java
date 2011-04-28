@@ -12,13 +12,19 @@
 package org.eclipse.php.internal.debug.core.sourcelookup;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.debug.core.sourcelookup.AbstractSourceLookupParticipant;
+import org.eclipse.dltk.core.IArchiveEntry;
+import org.eclipse.dltk.core.IModelStatusConstants;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
@@ -26,6 +32,8 @@ import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.util.HandleFactory;
 import org.eclipse.dltk.internal.ui.search.DLTKSearchScopeFactory;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.phar.PharArchiveFile;
+import org.eclipse.php.internal.core.phar.PharPath;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 
@@ -94,10 +102,83 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 				if (file.exists()) {
 					return new Object[] { new LocalFile(file) };
 				}
+
+				// try a phar
+				final PharPath pharPath = PharPath.getPharPath(new Path(
+						fileName));
+				if (pharPath != null) {
+
+					try {
+						final PharArchiveFile archiveFile = new PharArchiveFile(
+								pharPath.getPharName());
+						final IArchiveEntry entry = archiveFile
+								.getArchiveEntry((pharPath.getFolder().length() == 0 ? ""
+										: pharPath.getFolder() + "/")
+										+ pharPath.getFile());
+						return new Object[] { new ExternalEntryFile(fileName,
+								archiveFile, entry) };
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
 				return EMPTY;
 			}
 		}
 		return sourceElements;
+	}
+
+	private static final class ExternalEntryFile extends PlatformObject
+			implements IStorage {
+
+		private String fileName;
+		private IArchiveEntry entry;
+		private PharArchiveFile archiveFile;
+
+		public ExternalEntryFile(String fileName, PharArchiveFile archiveFile,
+				IArchiveEntry entry) {
+			this.fileName = fileName;
+			this.entry = entry;
+			this.archiveFile = archiveFile;
+		}
+
+		public InputStream getContents() throws CoreException {
+			try {
+				return this.archiveFile.getInputStream(entry);
+			} catch (IOException e) {
+				throw new ModelException(e, IModelStatusConstants.IO_EXCEPTION);
+			}
+		}
+
+		/**
+		 * @see IStorage#getFullPath
+		 */
+		public IPath getFullPath() {
+			return new Path(this.fileName);
+		}
+
+		/**
+		 * @see IStorage#getName
+		 */
+		public String getName() {
+			return this.entry.getName();
+		}
+
+		/**
+		 * @see IStorage#isReadOnly()
+		 */
+		public boolean isReadOnly() {
+			return true;
+		}
+
+		/**
+		 * @see IStorage#isReadOnly()
+		 */
+		public String toString() {
+			return "ExternalEntryFile[" + this.fileName + "]"; //$NON-NLS-2$ //$NON-NLS-1$
+		}
+
 	}
 
 }
