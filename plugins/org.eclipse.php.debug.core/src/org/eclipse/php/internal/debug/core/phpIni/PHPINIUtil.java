@@ -17,10 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -112,17 +109,30 @@ public class PHPINIUtil {
 					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT
 							|| entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE
 							|| entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-						IPath entryPath = EnvironmentPathUtils
-								.getLocalPath(entry.getPath());
-						IResource resource = ResourcesPlugin.getWorkspace()
-								.getRoot().findMember(entryPath);
-						if (resource != null) {
-							IPath location = resource.getLocation();
-							if (location != null) {
-								includePath.add(location.toOSString());
+						if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+							IWorkspaceRoot root = ResourcesPlugin
+									.getWorkspace().getRoot();
+							IResource resource = root.findMember(entry
+									.getPath());
+							IModelElement scriptProject = DLTKCore
+									.create(resource);
+							if (scriptProject instanceof IScriptProject) {
+								try {
+									IProjectFragment[] projectFragments = ((IScriptProject) scriptProject)
+											.getProjectFragments();
+									for (IProjectFragment projectFragment : projectFragments) {
+										if (projectFragment.getResource() instanceof IFolder
+												|| projectFragment
+														.getResource() instanceof IProject)
+											addIncludePath(includePath,
+													projectFragment.getPath());
+									}
+
+								} catch (ModelException e) {
+								}
 							}
 						} else {
-							includePath.add(entryPath.toOSString());
+							addIncludePath(includePath, entry.getPath());
 						}
 					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 						try {
@@ -162,6 +172,20 @@ public class PHPINIUtil {
 					includePath.toArray(new String[includePath.size()]));
 		}
 		return tempIniFile;
+	}
+
+	private static void addIncludePath(List<String> includePath, IPath path) {
+		IPath entryPath = EnvironmentPathUtils.getLocalPath(path);
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+				.findMember(entryPath);
+		if (resource != null) {
+			IPath location = resource.getLocation();
+			if (location != null) {
+				includePath.add(location.toOSString());
+			}
+		} else {
+			includePath.add(entryPath.toOSString());
+		}
 	}
 
 	/**
