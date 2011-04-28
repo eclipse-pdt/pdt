@@ -32,6 +32,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractMethodReturnTypeEvaluator;
+import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTypeGoal;
 
 /**
  * This Evaluator process the phpdoc of a method to determine its returned
@@ -46,6 +47,8 @@ public class PHPDocMethodReturnTypeEvaluator extends
 
 	private final static Pattern ARRAY_TYPE_PATTERN = Pattern
 			.compile("array\\[.*\\]");
+
+	private final static String SELF_RETURN_TYPE = "self";
 
 	/**
 	 * Used for splitting the data types list of the returned tag
@@ -87,6 +90,8 @@ public class PHPDocMethodReturnTypeEvaluator extends
 			} else {
 				PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
 				if (docBlock != null) {
+					AbstractMethodReturnTypeGoal typedGoal = (AbstractMethodReturnTypeGoal) goal;
+					IType[] types = typedGoal.getTypes();
 					for (PHPDocTag tag : docBlock.getTags()) {
 						if (tag.getTagKind() == PHPDocTag.RETURN) {
 							// @return datatype1|datatype2|...
@@ -101,10 +106,22 @@ public class PHPDocMethodReturnTypeEvaluator extends
 										evaluated.add(getArrayType(m.group(),
 												currentNamespace));
 									} else {
-										IEvaluatedType type = getEvaluatedType(
-												typeName, currentNamespace);
-										if (type != null) {
-											evaluated.add(type);
+										if (typeName.equals(SELF_RETURN_TYPE)
+												&& types != null) {
+											for (IType t : types) {
+												IEvaluatedType type = getEvaluatedType(
+														t.getElementName(),
+														currentNamespace);
+												if (type != null) {
+													evaluated.add(type);
+												}
+											}
+										} else {
+											IEvaluatedType type = getEvaluatedType(
+													typeName, currentNamespace);
+											if (type != null) {
+												evaluated.add(type);
+											}
 										}
 									}
 								}
