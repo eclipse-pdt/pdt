@@ -28,6 +28,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -133,8 +134,8 @@ public class CodeAssistUtils {
 		IContext context = ASTUtils.findContext(sourceModule,
 				moduleDeclaration, position);
 		if (context != null) {
-			VariableReference varReference = new VariableReference(position,
-					position + variableName.length(), variableName);
+			VariableReference varReference = getVariableReference(variableName,
+					position);
 			ExpressionTypeGoal goal = new ExpressionTypeGoal(context,
 					varReference);
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
@@ -147,6 +148,27 @@ public class CodeAssistUtils {
 			}
 		}
 		return EMPTY_TYPES;
+	}
+
+	private static VariableReference getVariableReference(String variableName,
+			int position) {
+		String start = "";
+		int arrayType = 0;
+		if (variableName.endsWith("]")) {
+			start = "[";
+			arrayType = ArrayVariableReference.VARIABLE_ARRAY;
+		} else if (variableName.endsWith("}")) {
+			start = "{";
+			arrayType = ArrayVariableReference.VARIABLE_HASHTABLE;
+		}
+		if (!"".equals(start)) {
+			int startIndex = variableName.indexOf(start);
+			String name = variableName.substring(0, startIndex);
+			return new ArrayVariableReference(position, position
+					+ variableName.length(), name, null, arrayType);
+		}
+		return new VariableReference(position,
+				position + variableName.length(), variableName);
 	}
 
 	/**
@@ -387,12 +409,12 @@ public class CodeAssistUtils {
 				}
 			}
 		}
-		// check for $GLOBALS['myVar'] scenario
 		if (className.length() == 0) {
 			// this can happen if the first char before the property is ']'
 			String testedVar = statementText
 					.subSequence(0, propertyEndPosition).toString().trim();
 			if (testedVar != null && testedVar.length() != 0) {
+				// check for $GLOBALS['myVar'] scenario
 				Matcher m = globalPattern.matcher(testedVar);
 				if (m.matches()) {
 					// $GLOBALS['myVar'] => 'myVar'
@@ -403,6 +425,9 @@ public class CodeAssistUtils {
 					className = DOLLAR
 							+ quotedVarName.substring(1,
 									quotedVarName.length() - 1); //$NON-NLS-1$
+					// check for $array[0] scenario
+				} else if (testedVar.endsWith("}") || testedVar.endsWith("]")) {
+					className = testedVar;
 				}
 			}
 		}
