@@ -232,8 +232,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 									&& ((BuildPathContainer) modelElement)
 											.getBuildpathEntry()
 											.getPath()
-											.equals(
-													LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
+											.equals(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
 								returnChlidren.add(modelElement);
 							}
 						}
@@ -416,11 +415,23 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		return getChildren(((BuildpathEntry) entry).getPath());
 	}
 
+	private static IBuildpathEntry getBuildpathEntry(IScriptProject parent) {
+		IBuildpathEntry[] entries;
+		try {
+			entries = parent.getRawBuildpath();
+			if (entries != null && entries.length > 0) {
+				return entries[0];
+			}
+		} catch (ModelException e) {
+		}
+		return DLTKCore.newContainerEntry(parent.getPath());
+	}
+
 	public class IncludePathContainer extends BuildPathContainer {
 		private IncludePath[] fIncludePath;
 
 		public IncludePathContainer(IScriptProject parent, IncludePath[] entries) {
-			super(parent, DLTKCore.newContainerEntry(parent.getPath()));
+			super(parent, PHPExplorerContentProvider.getBuildpathEntry(parent));
 			fIncludePath = entries;
 		}
 
