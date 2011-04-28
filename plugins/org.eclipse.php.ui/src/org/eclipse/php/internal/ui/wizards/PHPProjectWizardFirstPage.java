@@ -118,6 +118,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		setHelpContext(composite);
 	}
 
+	public boolean isExistingLocation() {
+		return fPHPLocationGroup.isExistingLocation();
+	}
+
 	protected void setHelpContext(Composite parent) {
 		PlatformUI.getWorkbench().getHelpSystem()
 				.setHelp(parent, IPHPHelpContextIds.CREATING_PHP_PROJECTS);

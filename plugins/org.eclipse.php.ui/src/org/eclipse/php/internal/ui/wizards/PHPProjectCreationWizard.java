@@ -130,7 +130,8 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 	}
 
 	public boolean performCancel() {
-		fLastPage.performCancel();
+		if (!fFirstPage.isExistingLocation())
+			fLastPage.performCancel();
 		return super.performCancel();
 	}
 

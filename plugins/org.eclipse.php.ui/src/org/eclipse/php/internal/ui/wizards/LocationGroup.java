@@ -97,6 +97,10 @@ public class LocationGroup extends Observable implements Observer,
 
 	}
 
+	public boolean isExistingLocation() {
+		return fExternalRadio.isSelected();
+	}
+
 	/**
 	 * check if any of the server can provide local doc root.
 	 * 
