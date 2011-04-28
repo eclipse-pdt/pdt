@@ -141,9 +141,16 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 									// get the actual message for this task - if
 									// any
 									if (j + 1 < phpTokens.length) {
-										ITextRegion phpNextToken = phpTokens[j + 1];
-										length = length
-												+ phpNextToken.getLength();
+										for (int k = j + 1; k < phpTokens.length; k++) {
+											ITextRegion phpNextToken = phpTokens[k];
+											if (PHPRegionTypes.PHPDOC_TODO
+													.equals(phpNextToken
+															.getType())) {
+												break;
+											}
+											length = length
+													+ phpNextToken.getLength();
+										}
 									}
 
 									try {
@@ -206,8 +213,8 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	 * @return the IFile
 	 */
 	public IFile getFile(String delta) {
-		IResource res = ResourcesPlugin.getWorkspace().getRoot().getFile(
-				new Path(delta));
+		IResource res = ResourcesPlugin.getWorkspace().getRoot()
+				.getFile(new Path(delta));
 		return res instanceof IFile ? (IFile) res : null;
 	}
 
