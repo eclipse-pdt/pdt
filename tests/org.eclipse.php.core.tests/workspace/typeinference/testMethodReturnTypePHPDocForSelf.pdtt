@@ -1,0 +1,36 @@
+--TEST--
+Test Method Return Type PHP Doc for self
+--CONFIG--
+prune: heavyGoals
+--FILE--
+<?php
+abstract class Member {
+
+	/**
+	 * @return self
+	 */
+	public function setStatic($isStatic) {
+
+		$this->isStatic = $isStatic;
+
+		return $this;
+	}
+}
+
+class Property extends Member {
+
+	/**
+	 * @return Property
+	 */
+	public function setFinal($isFinal) {
+
+		$this->isFinal = $isFinal;
+
+		return $this;
+	}
+}
+
+$property = new Property;
+testMethodReturnTypePHPDocForSelf($property->setStatic(true));
+--EXPECT--
+Property
