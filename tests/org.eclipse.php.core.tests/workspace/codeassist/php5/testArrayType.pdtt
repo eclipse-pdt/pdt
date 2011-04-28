@@ -1,0 +1,17 @@
+--TEST--
+Test In Array Type
+--FILE--
+<?php
+class Employee {
+	public $a;
+}
+class Employee1 {
+	public $b;
+}
+
+$rows = array(new Employee(), new Employee1());
+$rows[0]->|;
+?>
+--EXPECT--
+field($a)
+field($b)
