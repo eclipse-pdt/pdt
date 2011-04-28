@@ -125,7 +125,9 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements
 		}
 
 		if (value != null) {
-			value.replaceAll("\t", "    "); //$NON-NLS-1$ //$NON-NLS-2$
+			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			// value = value.replaceAll("\n", "<br>");
 		}
 
 		return value;
@@ -157,7 +159,9 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements
 		}
 
 		if (value != null) {
-			value.replaceAll("\t", "    "); //$NON-NLS-1$ //$NON-NLS-2$
+			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			// value = value.replaceAll("\n", "<br>");
 		}
 		return value;
 	}

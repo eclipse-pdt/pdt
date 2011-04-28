@@ -107,9 +107,8 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 							if (prevRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
 								String nextTokenString = textViewer
 										.getDocument()
-										.get(
-												phpScriptRegion.getStart()
-														+ nextRegion.getStart(),
+										.get(phpScriptRegion.getStart()
+												+ nextRegion.getStart(),
 												nextRegion.getLength());
 								if (!"(".equals(nextTokenString)) {
 									varOffset = phpScriptRegion.getStart()
@@ -209,7 +208,9 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 		}
 
 		if (value != null) {
-			value.replaceAll("\t", "    ");
+			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;")
+					.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			// value = value.replaceAll("\n", "<br>");
 		}
 
 		return value;
