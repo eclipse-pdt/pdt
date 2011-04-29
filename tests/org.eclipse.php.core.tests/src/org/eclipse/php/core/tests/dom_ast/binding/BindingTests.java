@@ -15,7 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 
 import junit.framework.Assert;
-import junit.framework.TestSuite;
+import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.tests.model.SuiteOfTestCases;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
@@ -57,22 +56,13 @@ import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
-public class BindingTests extends SuiteOfTestCases {
+public class BindingTests extends TestCase {
 
 	protected IProject project;
 	private IFile testFile;
 
 	public BindingTests(String name) {
 		super(name);
-	}
-
-	public static TestSuite testSuite() {
-		return new Suite(BindingTests.class);
-	}
-
-	public void tearDownSuite() throws Exception {
-		project.delete(true, null);
-		super.tearDownSuite();
 	}
 
 	protected void setUp() throws Exception {
@@ -170,7 +160,8 @@ public class BindingTests extends SuiteOfTestCases {
 	}
 
 	protected void tearDown() throws Exception {
-		testFile.delete(true, new NullProgressMonitor());
+		// testFile.delete(true, new NullProgressMonitor());
+		project.delete(true, null);
 	}
 
 	public void testBasicExpression() throws Exception {
