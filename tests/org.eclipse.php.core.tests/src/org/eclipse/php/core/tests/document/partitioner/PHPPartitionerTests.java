@@ -12,17 +12,32 @@
 package org.eclipse.php.core.tests.document.partitioner;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.dltk.core.tests.model.AbstractSingleProjectSearchTests;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -34,17 +49,20 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  * @author Alon Peled
  */
-public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
+public class PHPPartitionerTests extends TestCase {
 
 	private static final String PROJECT_NAME = "partitioner";
 
 	public PHPPartitionerTests(String name) {
-		super(PHPCoreTests.PLUGIN_ID, name, PROJECT_NAME);
+		super(name);
 	}
 
-	public static Suite suite() {
-		return new Suite(PHPPartitionerTests.class);
-	}
+	//
+	// public static Test suite() {
+	//
+	// TestSuite suite = new TestSuite("Auto Code Assist Tests");
+	// return new Suite(PHPPartitionerTests.class);
+	// }
 
 	// Stores length of system line separator to compute the offset within the
 	// file
@@ -56,6 +74,124 @@ public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
 			"PHP_Single_Comment", "PHP_Multi_Comment", "PHP_Doc",
 			"Test quoted string partition", "1 F d, Y", "Running test" };
 
+	protected static IProject project;
+	protected static IFile testFile;
+
+	public File getSourceWorkspacePath() {
+		return new File(getPluginDirectoryPath(), "workspace");
+	}
+
+	/**
+	 * Returns the OS path to the directory that contains this plugin.
+	 */
+	protected File getPluginDirectoryPath() {
+		try {
+			URL platformURL = Platform.getBundle(PHPCoreTests.PLUGIN_ID)
+					.getEntry("/");
+			return new File(FileLocator.toFileURL(platformURL).getFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the IWorkspace this test suite is running on.
+	 */
+	public static IWorkspace getWorkspace() {
+		return ResourcesPlugin.getWorkspace();
+	}
+
+	public static IWorkspaceRoot getWorkspaceRoot() {
+		return getWorkspace().getRoot();
+	}
+
+	/**
+	 * Copy the given source directory (and all its contents) to the given
+	 * target directory.
+	 */
+	protected void copyDirectory(File source, File target) throws IOException {
+		if (!target.exists()) {
+			target.mkdirs();
+		}
+		File[] files = source.listFiles();
+		if (files == null)
+			return;
+		for (int i = 0; i < files.length; i++) {
+			File sourceChild = files[i];
+			String name = sourceChild.getName();
+			if (name.equals("CVS") || name.equals(".svn"))
+				continue;
+			File targetChild = new File(target, name);
+			if (sourceChild.isDirectory()) {
+				copyDirectory(sourceChild, targetChild);
+			} else {
+				copy(sourceChild, targetChild);
+			}
+		}
+	}
+
+	/**
+	 * Copy file from src (path to the original file) to dest (path to the
+	 * destination file).
+	 */
+	public static void copy(File src, File dest) throws IOException {
+		InputStream in = null;
+		OutputStream out = null;
+		byte[] buffer = new byte[12 * 1024];
+		int read;
+
+		try {
+			in = new FileInputStream(src);
+
+			try {
+				out = new FileOutputStream(dest);
+
+				while ((read = in.read(buffer)) != -1) {
+					out.write(buffer, 0, read);
+				}
+			} finally {
+				if (out != null) {
+					out.close();
+				}
+			}
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
+	}
+
+	protected void setUp() throws Exception {
+		// copy files in project from source workspace to target workspace
+		final File sourceWorkspacePath = getSourceWorkspacePath();
+		final File targetWorkspacePath = getWorkspaceRoot().getLocation()
+				.toFile();
+
+		copyDirectory(new File(sourceWorkspacePath, PROJECT_NAME), new File(
+				targetWorkspacePath, PROJECT_NAME));
+
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(PROJECT_NAME);
+		if (project.exists()) {
+			return;
+		}
+
+		project.create(null);
+		project.open(null);
+
+		// configure nature
+		IProjectDescription desc = project.getDescription();
+		desc.setNatureIds(new String[] { PHPNature.ID });
+		project.setDescription(desc, null);
+	}
+
+	protected void tearDown() throws Exception {
+		project.close(null);
+		project.delete(true, true, null);
+		project = null;
+	}
+
 	/**
 	 * Test PHP partition inside HTML
 	 * 
@@ -66,8 +202,8 @@ public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
 		ArrayList<String> matches = getPartitionType(phpLookUp,
 				"phpPartitionerTestHTML.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches
-					.get(i));
+			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT,
+					(String) matches.get(i));
 		}
 	}
 
@@ -82,8 +218,8 @@ public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
 		ArrayList<String> matches = getPartitionType(phpLookUp,
 				"phpPartitionerTestPhp.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches
-					.get(i));
+			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT,
+					(String) matches.get(i));
 		}
 	}
 
@@ -98,8 +234,8 @@ public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
 		ArrayList<String> matches = getPartitionType(phpLookUp,
 				"phpPartitionerTestPhpAsHTMLAttributeKey.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches
-					.get(i));
+			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT,
+					(String) matches.get(i));
 		}
 	}
 
@@ -114,8 +250,8 @@ public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
 		ArrayList<String> matches = getPartitionType(phpLookUp,
 				"phpPartitionerTestPhpAsHTMLAttributeValue.php");
 		for (int i = 0; i < matches.size(); i++) {
-			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT, (String) matches
-					.get(i));
+			Assert.assertEquals(PHPPartitionTypes.PHP_DEFAULT,
+					(String) matches.get(i));
 		}
 	}
 
@@ -139,7 +275,7 @@ public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
 		ArrayList<String> results = new ArrayList<String>();
 
 		// init files
-		IFile inFile = getProject(PROJECT_NAME).getFile(testDataFile);
+		IFile inFile = project.getFile(testDataFile);
 
 		// open streams
 		InputStreamReader inStream = new InputStreamReader(inFile.getContents());
