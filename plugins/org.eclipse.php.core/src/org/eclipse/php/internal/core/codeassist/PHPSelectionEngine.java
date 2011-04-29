@@ -340,10 +340,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				// 'new' statement
 				else if (node instanceof ClassInstanceCreation) {
 					ClassInstanceCreation newNode = (ClassInstanceCreation) node;
+
 					Expression className = newNode.getClassName();
-					if (className instanceof SimpleReference
-							&& (offset >= className.sourceStart() && end <= className
-									.sourceEnd())) {
+					if ((className instanceof SimpleReference || className instanceof FullyQualifiedReference)) {
 						IEvaluatedType evaluatedType = PHPTypeInferenceUtils
 								.resolveExpression(sourceModule, node);
 						return getConstructorsIfAny(extractClasses(PHPModelUtils
