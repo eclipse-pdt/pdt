@@ -31,10 +31,12 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
+import org.eclipse.wst.sse.ui.ISemanticHighlightingExtension2;
 
 @SuppressWarnings("restriction")
 public abstract class AbstractSemanticHighlighting implements
-		ISemanticHighlighting, Comparable<AbstractSemanticHighlighting> {
+		ISemanticHighlighting, ISemanticHighlightingExtension2,
+		Comparable<AbstractSemanticHighlighting> {
 
 	private ISourceModule sourceModule = null;
 
@@ -101,7 +103,8 @@ public abstract class AbstractSemanticHighlighting implements
 		return new Position[0];
 	}
 
-	protected Program getProgram(IStructuredDocumentRegion region) {
+	protected Program getProgram(final IStructuredDocumentRegion region) {// region.getParentDocument().get()
+		sourceModule = null;
 		// resolve current sourceModule
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 			public void run() {
@@ -110,10 +113,15 @@ public abstract class AbstractSemanticHighlighting implements
 					IEditorPart editor = page.getActiveEditor();
 					if (editor instanceof PHPStructuredEditor) {
 						PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editor;
-						if (phpStructuredEditor != null
-								&& phpStructuredEditor.getTextViewer() != null) {
-							sourceModule = (ISourceModule) phpStructuredEditor
-									.getModelElement();
+						if (phpStructuredEditor.getTextViewer() != null
+								&& phpStructuredEditor != null
+								&& phpStructuredEditor.getDocument() == region
+										.getParentDocument()) {
+							if (phpStructuredEditor != null
+									&& phpStructuredEditor.getTextViewer() != null) {
+								sourceModule = (ISourceModule) phpStructuredEditor
+										.getModelElement();
+							}
 						}
 					}
 				}
@@ -145,6 +153,12 @@ public abstract class AbstractSemanticHighlighting implements
 		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
 				+ preferenceKey
 				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_COLOR_SUFFIX;
+	}
+
+	public String getBackgroundColorPreferenceKey() {
+		return PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX
+				+ preferenceKey
+				+ PreferenceConstants.EDITOR_SEMANTIC_HIGHLIGHTING_BGCOLOR_SUFFIX;
 	}
 
 	public String getEnabledPreferenceKey() {
