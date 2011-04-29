@@ -341,7 +341,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				else if (node instanceof ClassInstanceCreation) {
 					ClassInstanceCreation newNode = (ClassInstanceCreation) node;
 					Expression className = newNode.getClassName();
-					if (className instanceof SimpleReference) {
+					if (className instanceof SimpleReference
+							&& (offset >= className.sourceStart() && end <= className
+									.sourceEnd())) {
 						IEvaluatedType evaluatedType = PHPTypeInferenceUtils
 								.resolveExpression(sourceModule, node);
 						return getConstructorsIfAny(extractClasses(PHPModelUtils
