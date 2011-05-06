@@ -49,6 +49,13 @@
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
 		<delete dir="${pdt-folder}" quiet="true" />
+		<mkdir dir="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test" />
+		<copy todir="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test">
+        	<fileset dir="${eclipse-home}/dropins/pdt/eclipse/plugins/org.eclipse.test/">
+        		<include name="*"/>
+        		<include name="*.*"/>
+        	</fileset>
+    	</copy>
 		<emma>
 			<!-- instrumentation of jar -->
 			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
