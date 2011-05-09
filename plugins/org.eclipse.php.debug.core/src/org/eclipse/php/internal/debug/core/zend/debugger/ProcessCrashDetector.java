@@ -128,12 +128,6 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 
 		public void run() {
 			try {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				InputStreamReader isr = new InputStreamReader(is);
 				BufferedReader br = new BufferedReader(isr);
 
