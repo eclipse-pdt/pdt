@@ -16,13 +16,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -66,17 +72,32 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 	 */
 	public void run() {
 		try {
-			StreamGobbler errorGobbler = new StreamGobbler(process
-					.getErrorStream(), true);
-			StreamGobbler inputGobbler = new StreamGobbler(process
-					.getInputStream(), false);
+			boolean streamerReqd = false;
+			try {
+				ILaunchConfiguration config = launch.getLaunchConfiguration();
+				if (config.getAttribute(
+						PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, "")
+						.equals(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
+					streamerReqd = config.getAttribute(
+							IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true)
+							|| launch.getLaunchMode().equals(
+									ILaunchManager.DEBUG_MODE);
+				}
+			} catch (CoreException e) {
+			}
+			if (streamerReqd) {
 
-			ConsolePlugin.getDefault().getConsoleManager().addConsoleListener(
-					this);
+				StreamGobbler errorGobbler = new StreamGobbler(
+						process.getErrorStream(), true);
+				StreamGobbler inputGobbler = new StreamGobbler(
+						process.getInputStream(), false);
 
-			errorGobbler.start();
-			inputGobbler.start();
+				ConsolePlugin.getDefault().getConsoleManager()
+						.addConsoleListener(this);
 
+				errorGobbler.start();
+				inputGobbler.start();
+			}
 			int exitValue = process.waitFor();
 			IDebugTarget debugTarget = launch.getDebugTarget();
 			if (debugTarget != null) {
@@ -107,6 +128,12 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 
 		public void run() {
 			try {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				InputStreamReader isr = new InputStreamReader(is);
 				BufferedReader br = new BufferedReader(isr);
 
