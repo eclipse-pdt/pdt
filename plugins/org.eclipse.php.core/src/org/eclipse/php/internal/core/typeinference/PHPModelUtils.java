@@ -1298,18 +1298,20 @@ public class PHPModelUtils {
 			boolean exactName) throws ModelException {
 
 		List<IField> result = new LinkedList<IField>();
-		IField[] fields = type.getFields();
-		for (IField field : fields) {
-			String elementName = field.getElementName();
-			if (elementName.startsWith("$") && !prefix.startsWith("$")) {
-				elementName = elementName.substring(1);
-			}
-			if (exactName
-					&& elementName.equalsIgnoreCase(prefix)
-					|| !exactName
-					&& elementName.toLowerCase().startsWith(
-							prefix.toLowerCase())) {
-				result.add(field);
+		if (type.exists()) {
+			IField[] fields = type.getFields();
+			for (IField field : fields) {
+				String elementName = field.getElementName();
+				if (elementName.startsWith("$") && !prefix.startsWith("$")) {
+					elementName = elementName.substring(1);
+				}
+				if (exactName
+						&& elementName.equalsIgnoreCase(prefix)
+						|| !exactName
+						&& elementName.toLowerCase().startsWith(
+								prefix.toLowerCase())) {
+					result.add(field);
+				}
 			}
 		}
 		return (IField[]) result.toArray(new IField[result.size()]);
@@ -1529,15 +1531,17 @@ public class PHPModelUtils {
 			boolean exactName) throws ModelException {
 
 		List<IMethod> result = new LinkedList<IMethod>();
-		IMethod[] methods = type.getMethods();
-		for (IMethod method : methods) {
-			String elementName = method.getElementName();
-			if (exactName
-					&& elementName.equalsIgnoreCase(prefix)
-					|| !exactName
-					&& elementName.toLowerCase().startsWith(
-							prefix.toLowerCase())) {
-				result.add(method);
+		if (type.exists()) {
+			IMethod[] methods = type.getMethods();
+			for (IMethod method : methods) {
+				String elementName = method.getElementName();
+				if (exactName
+						&& elementName.equalsIgnoreCase(prefix)
+						|| !exactName
+						&& elementName.toLowerCase().startsWith(
+								prefix.toLowerCase())) {
+					result.add(method);
+				}
 			}
 		}
 		return (IMethod[]) result.toArray(new IMethod[result.size()]);
