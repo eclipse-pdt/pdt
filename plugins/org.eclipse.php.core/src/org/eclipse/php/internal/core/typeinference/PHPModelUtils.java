@@ -1855,7 +1855,9 @@ public class PHPModelUtils {
 			if (modelElement instanceof IMember) {
 				IMember member = (IMember) modelElement;
 				int flags = member.getFlags();
-				if (Flags.isStatic(flags) || Flags.isFinal(flags)) {
+				if (Flags.isStatic(flags)
+						|| ((modelElement instanceof IField) && Flags
+								.isFinal(flags))) {
 					return true;
 				}
 
