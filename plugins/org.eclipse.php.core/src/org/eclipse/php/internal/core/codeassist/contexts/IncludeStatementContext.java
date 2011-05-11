@@ -43,7 +43,8 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 
 	private final boolean isIncludeStatement(TextSequence statementText,
 			String variant) {
-		if (statementText.length() < variant.length()) {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=333165
+		if (statementText.length() < variant.length() + 1) {
 			return false;
 		}
 		final int length = variant.length();
