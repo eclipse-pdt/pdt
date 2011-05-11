@@ -153,7 +153,7 @@ public final class ParameterGuessingProposal extends
 				fSelectedRegion = ui.getSelectedRegion();
 
 			} else {
-				fSelectedRegion = new Region(baseOffset + replacement.length(),
+				fSelectedRegion = new Region(baseOffset + getCursorPosition(),
 						0);
 			}
 
