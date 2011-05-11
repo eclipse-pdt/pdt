@@ -1134,7 +1134,7 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			try {
 				sModel = StructuredModelManager.getModelManager()
 						.getExistingModelForRead(fDocument);
-				if (sModel != null) {
+				if (sModel != null && (sModel instanceof IDOMModel)) {
 					final FactoryRegistry factoryRegistry = sModel
 							.getFactoryRegistry();
 
@@ -1849,8 +1849,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * #collapseElements(org.eclipse.jdt.core.IModelElement[])
 	 */
 	public final void collapseElements(IModelElement[] elements) {
-		Set<IModelElement> set = new HashSet<IModelElement>(Arrays
-				.asList(elements));
+		Set<IModelElement> set = new HashSet<IModelElement>(
+				Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, false), false);
 	}
 
@@ -1860,8 +1860,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 	 * #expandElements(org.eclipse.jdt.core.IModelElement[])
 	 */
 	public final void expandElements(IModelElement[] elements) {
-		Set<IModelElement> set = new HashSet<IModelElement>(Arrays
-				.asList(elements));
+		Set<IModelElement> set = new HashSet<IModelElement>(
+				Arrays.asList(elements));
 		modifyFiltered(new PhpElementSetFilter(set, true), true);
 	}
 
@@ -1900,8 +1900,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 			}
 		}
 
-		model.modifyAnnotations(null, null, modified
-				.toArray(new Annotation[modified.size()]));
+		model.modifyAnnotations(null, null,
+				modified.toArray(new Annotation[modified.size()]));
 	}
 
 	/*
