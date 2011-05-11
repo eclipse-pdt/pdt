@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,11 +42,17 @@ public class ConditionalExpressionEvaluator extends GoalEvaluator {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		ConditionalExpression conditionalExpression = (ConditionalExpression) typedGoal
 				.getExpression();
-		return new IGoal[] {
-				new ExpressionTypeGoal(goal.getContext(), conditionalExpression
-						.getIfTrue()),
-				new ExpressionTypeGoal(goal.getContext(), conditionalExpression
-						.getIfFalse()) };
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=339405
+		List<IGoal> result = new ArrayList<IGoal>();
+		if (conditionalExpression.getIfTrue() != null) {
+			result.add(new ExpressionTypeGoal(goal.getContext(),
+					conditionalExpression.getIfTrue()));
+		}
+		if (conditionalExpression.getIfFalse() != null) {
+			result.add(new ExpressionTypeGoal(goal.getContext(),
+					conditionalExpression.getIfFalse()));
+		}
+		return result.toArray(new IGoal[result.size()]);
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
