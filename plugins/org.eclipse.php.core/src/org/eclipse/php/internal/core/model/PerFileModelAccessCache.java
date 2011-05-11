@@ -135,6 +135,10 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	public Collection<IMethod> getGlobalFunctions(ISourceModule sourceModule,
 			String functionName, IProgressMonitor monitor) {
 
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=342465
+		if (functionName == null) {
+			return new ArrayList<IMethod>();
+		}
 		Collection<IMethod> functions;
 
 		if (!this.sourceModule.equals(sourceModule)) {
