@@ -381,6 +381,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	protected void addDefaultTextAttribute(String colorKey) {
 		if (getColorPreferences() != null) {
 			String prefString = PreferenceConstants.EDITOR_NORMAL_DEFAULT_COLOR;
+			getColorPreferences().setValue(colorKey, prefString);
 			String[] stylePrefs = ColorHelper
 					.unpackStylePreferences(prefString);
 			if (stylePrefs != null) {
@@ -429,8 +430,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		// instead of end-start?
 		if (end > maxOffset)
 			end = maxOffset;
-		StyleRange result = new StyleRange(start, end - start, attr
-				.getForeground(), attr.getBackground(), attr.getStyle());
+		StyleRange result = new StyleRange(start, end - start,
+				attr.getForeground(), attr.getBackground(), attr.getStyle());
 		if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 			result.underline = true;
 			result.fontStyle &= ~TextAttribute.UNDERLINE;
@@ -643,8 +644,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				from = partitionStartOffset - regionStart;
 				length = partitionLength;
 			}
-			phpTokens = region.getPhpTokens(from, Math.min(length, region
-					.getLength()));
+			phpTokens = region.getPhpTokens(from,
+					Math.min(length, region.getLength()));
 			ITextRegion prevElement = null;
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
