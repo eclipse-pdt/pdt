@@ -750,6 +750,7 @@ public class PreferenceConstants {
 	public static final String EDITOR_FOLDING_CLASSES = "foldClasses"; //$NON-NLS-1$
 	public static final String EDITOR_FOLDING_FUNCTIONS = "foldFunctions"; //$NON-NLS-1$
 	//	public static final String EDITOR_FOLDING_INCLUDES = "foldIncludes"; //$NON-NLS-1$
+	public static final String EDITOR_FOLDING_HEADER_COMMENTS = "foldHeaderComment"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether smart Home/End in PHP code is

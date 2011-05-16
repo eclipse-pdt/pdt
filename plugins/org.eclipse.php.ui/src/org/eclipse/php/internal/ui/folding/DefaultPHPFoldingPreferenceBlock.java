@@ -50,8 +50,8 @@ public class DefaultPHPFoldingPreferenceBlock implements
 
 		public void widgetSelected(SelectionEvent e) {
 			Button button = (Button) e.widget;
-			fOverlayStore.setValue((String) fCheckBoxes.get(button), button
-					.getSelection());
+			fOverlayStore.setValue((String) fCheckBoxes.get(button),
+					button.getSelection());
 		}
 	};
 
@@ -76,6 +76,9 @@ public class DefaultPHPFoldingPreferenceBlock implements
 		// overlayKeys.add(new
 		// OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN,
 		// PreferenceConstants.EDITOR_FOLDING_INCLUDES));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.BOOLEAN,
+				PreferenceConstants.EDITOR_FOLDING_HEADER_COMMENTS));
 
 		return (OverlayKey[]) overlayKeys.toArray(new OverlayKey[overlayKeys
 				.size()]);
@@ -111,6 +114,9 @@ public class DefaultPHPFoldingPreferenceBlock implements
 		addCheckBox(inner,
 				PHPUIMessages.DefaultPHPFoldingPreferenceBlock_PHPdoc,
 				PreferenceConstants.EDITOR_FOLDING_PHPDOC, 0);
+		addCheckBox(inner,
+				PHPUIMessages.DefaultPHPFoldingPreferenceBlock_header_comments,
+				PreferenceConstants.EDITOR_FOLDING_HEADER_COMMENTS, 0);
 
 		return inner;
 	}

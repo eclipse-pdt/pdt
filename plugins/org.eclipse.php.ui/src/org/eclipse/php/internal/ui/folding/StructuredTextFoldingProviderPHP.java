@@ -1213,6 +1213,8 @@ public class StructuredTextFoldingProviderPHP implements IProjectionListener,
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_PHPDOC);
 		fCollapseMembers = store
 				.getBoolean(PreferenceConstants.EDITOR_FOLDING_FUNCTIONS);
+		fCollapseHeaderComments = store
+				.getBoolean(PreferenceConstants.EDITOR_FOLDING_HEADER_COMMENTS);
 	}
 
 	private void update(FoldingStructureComputationContext ctx) {

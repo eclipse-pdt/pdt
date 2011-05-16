@@ -111,6 +111,7 @@ public final class PHPUIMessages extends NLS {
 	public static String PasteSourceReferencesFromClipboardAction_paste1;
 	public static String IncludePathContainerDefaultPage_path_error_alreadyexists;
 	public static String DefaultPHPFoldingPreferenceBlock_PHPdoc;
+	public static String DefaultPHPFoldingPreferenceBlock_header_comments;
 	public static String PHPTemplateStore_error_message_nameEmpty;
 	public static String PHPBasePreferencePage_description;
 	public static String ColorPage_PHPDOCComment;
