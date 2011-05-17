@@ -1,0 +1,24 @@
+--TEST--
+Should complete global types from other namespace
+--FILE--
+<?
+namespace exmaple {
+
+   class Bla
+	{
+		function __construct()
+		{
+			try
+			{
+			// function which throws exception
+			}
+			catch (\Excepti| ){
+			   
+			}
+		}
+
+	}
+}
+?>
+--EXPECT--
+type(Exception)
