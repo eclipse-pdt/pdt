@@ -81,6 +81,10 @@ public class NamespaceMemberContext extends StatementContext {
 				statementText, endNamespace, false);
 		String nsName = statementText.subSequence(nsNameStart, elementStart)
 				.toString();
+		if (nsName.equals("\\")) {
+			isGlobal = true;
+			return true;
+		}
 
 		try {
 			namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule,
