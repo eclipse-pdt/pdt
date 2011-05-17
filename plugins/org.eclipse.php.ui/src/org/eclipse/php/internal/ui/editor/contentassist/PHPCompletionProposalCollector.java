@@ -18,11 +18,16 @@ import org.eclipse.dltk.ui.text.completion.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -229,6 +234,27 @@ public class PHPCompletionProposalCollector extends
 			private String computeReplacementString() {
 				fReplacementStringComputed = true;
 				IType type = (IType) typeProposal.getModelElement();
+
+				String prefix = "";
+				try {
+					int flags = type.getFlags();
+					IType namespace = PHPModelUtils.getCurrentNamespace(type);
+					if (!PHPFlags.isNamespace(flags)
+							&& namespace == null
+							&& !ProjectOptions.getPhpVersion(
+									PHPCompletionProposalCollector.this
+											.getScriptProject().getProject())
+									.isLessThan(PHPVersion.PHP5_3)
+							&& PHPCompletionProposalCollector.this.document
+									.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
+						prefix = prefix
+								+ NamespaceReference.NAMESPACE_SEPARATOR;
+					}
+				} catch (ModelException e) {
+					PHPUiPlugin.log(e);
+				} catch (BadLocationException e) {
+					PHPUiPlugin.log(e);
+				}
 				String suffix = getSuffix(type);
 				String replacementString = null;
 				if (typeProposal.getModelElement() instanceof AliasType) {
@@ -237,7 +263,7 @@ public class PHPCompletionProposalCollector extends
 				} else {
 					replacementString = super.getReplacementString();
 				}
-				return replacementString + suffix;
+				return prefix + replacementString + suffix;
 			}
 
 			public String getSuffix(IType type) {
