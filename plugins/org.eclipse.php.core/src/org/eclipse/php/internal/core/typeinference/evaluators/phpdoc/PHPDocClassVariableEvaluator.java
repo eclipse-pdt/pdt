@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -27,6 +28,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractPHPGoalEvaluator;
@@ -37,6 +39,8 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVaria
  * body using field access.
  */
 public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
+
+	private static final String SPLASH = "\\";
 
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
@@ -101,8 +105,29 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 						Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
 						if (m.find()) {
 							evaluated.add(getArrayType(m.group(),
-									currentNamespace));
+									currentNamespace, doc.sourceStart()));
 						} else {
+							if (typeName.indexOf(SPLASH) > 0) {
+								// check if the first part is an
+								// alias,then get the full name
+								ModuleDeclaration moduleDeclaration = SourceParserUtil
+										.getModuleDeclaration(currentNamespace
+												.getSourceModule());
+								String prefix = typeName.substring(0,
+										typeName.indexOf(SPLASH));
+								final Map<String, UsePart> result = PHPModelUtils
+										.getAliasToNSMap(prefix,
+												moduleDeclaration,
+												doc.sourceStart(),
+												currentNamespace, true);
+								if (result.containsKey(prefix)) {
+									String fullName = result.get(prefix)
+											.getNamespace()
+											.getFullyQualifiedName();
+									typeName = typeName.replace(prefix,
+											fullName);
+								}
+							}
 							IEvaluatedType type = getEvaluatedType(typeName,
 									currentNamespace);
 							if (type != null) {
@@ -132,19 +157,22 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	private MultiTypeType getArrayType(String type, IType currentNamespace) {
+	private MultiTypeType getArrayType(String type, IType currentNamespace,
+			int offset) {
 		int beginIndex = type.indexOf("[") + 1;
 		int endIndex = type.lastIndexOf("]");
 		type = type.substring(beginIndex, endIndex);
 		MultiTypeType arrayType = new MultiTypeType();
 		Matcher m = ARRAY_TYPE_PATTERN.matcher(type);
 		if (m.find()) {
-			arrayType.addType(getArrayType(m.group(), currentNamespace));
+			arrayType
+					.addType(getArrayType(m.group(), currentNamespace, offset));
 			type = m.replaceAll("");
 		}
 		String[] typeNames = type.split(",");
 		for (String name : typeNames) {
 			if (!"".equals(name)) {
+
 				arrayType.addType(getEvaluatedType(name, currentNamespace));
 			}
 		}
