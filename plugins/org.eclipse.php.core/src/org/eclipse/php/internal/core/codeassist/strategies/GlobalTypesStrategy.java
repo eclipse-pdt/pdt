@@ -13,11 +13,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import java.util.*;
 
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -27,8 +23,6 @@ import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
@@ -36,7 +30,6 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -48,6 +41,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class GlobalTypesStrategy extends GlobalElementStrategy {
 
+	private static final String SPLASH = "\\";
 	protected final int trueFlag;
 	protected final int falseFlag;
 	protected static final IType[] EMPTY = {};
@@ -111,7 +105,17 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		if (!abstractContext.getCompletionRequestor()
 				.isContextInformationMode()) {
 			// get types for alias
-			final String prefix = abstractContext.getPrefixWithoutProcessing();
+			String prefix = abstractContext.getPrefixWithoutProcessing();
+			boolean exactMatch = false;
+			if (prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) == 0) {
+				return;
+			} else if (prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+				prefix = prefix.substring(0,
+						prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+				exactMatch = true;
+			} else {
+
+			}
 
 			if (prefix.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
 				IModuleSource module = reporter.getModule();
@@ -123,8 +127,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				IType namespace = PHPModelUtils.getCurrentNamespace(
 						sourceModule, offset);
 
-				final Map<String, UsePart> result = getAliasToNSMap(prefix,
-						moduleDeclaration, offset, namespace);
+				final Map<String, UsePart> result = PHPModelUtils
+						.getAliasToNSMap(prefix, moduleDeclaration, offset,
+								namespace, exactMatch);
 				reportAlias(reporter, suffix, abstractContext, module, result);
 
 			}
@@ -157,22 +162,43 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			AbstractCompletionContext abstractContext, IModuleSource module,
 			final Map<String, UsePart> result) throws BadLocationException {
 		SourceRange replacementRange = getReplacementRange(abstractContext);
+		String prefix = abstractContext.getPrefixWithoutProcessing();
 		IDLTKSearchScope scope = createSearchScope();
 		for (Iterator iterator = result.keySet().iterator(); iterator.hasNext();) {
 			String name = (String) iterator.next();
 			String fullName = result.get(name).getNamespace()
 					.getFullyQualifiedName();
-			IType[] elements = PhpModelAccess.getDefault().findTypes(fullName,
-					MatchRule.EXACT, 0, 0, scope, null);
+			IType[] elements = PhpModelAccess.getDefault().findTypes(null,
+					fullName, MatchRule.PREFIX, 0, 0, scope, null);
 			try {
 				for (int i = 0; i < elements.length; i++) {
+					String elementName = elements[i].getElementName();
 					if (!PHPFlags.isNamespace(elements[i].getFlags())) {
 						reportAlias(reporter, scope, module, replacementRange,
-								elements[i], fullName, name, suffix);
+								elements[i], elementName,
+								elementName.replace(fullName, name), suffix);
 					} else {
+						String nsname = prefix.replace(name, fullName);
+						if (nsname.startsWith(elementName + SPLASH)
+								&& nsname.lastIndexOf(SPLASH) == elementName
+										.length()) {
+							// namespace strategy will handle this case
+							continue;
+						}
 						IType[] typesOfNS = elements[i].getTypes();
-						for (int j = 0; j < typesOfNS.length; j++) {
 
+						for (int j = 0; j < typesOfNS.length; j++) {
+							reportAlias(
+									reporter,
+									scope,
+									module,
+									replacementRange,
+									typesOfNS[j],
+									elementName + SPLASH
+											+ typesOfNS[j].getElementName(),
+									(elementName + SPLASH + typesOfNS[j]
+											.getElementName()).replace(
+											fullName, name), suffix);
 						}
 					}
 				}
@@ -181,62 +207,6 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private Map<String, UsePart> getAliasToNSMap(final String prefix,
-			ModuleDeclaration moduleDeclaration, final int offset,
-			IType namespace) {
-		final Map<String, UsePart> result = new HashMap<String, UsePart>();
-		try {
-			int start = 0;
-			if (namespace != null) {
-				start = namespace.getSourceRange().getOffset();
-			}
-			final int searchStart = start;
-
-			moduleDeclaration.traverse(new ASTVisitor() {
-
-				public boolean visit(Statement s) throws Exception {
-					if (s instanceof UseStatement) {
-						UseStatement useStatement = (UseStatement) s;
-						for (UsePart usePart : useStatement.getParts()) {
-							if (usePart.getAlias() != null
-									&& usePart.getAlias().getName() != null) {
-								// TODO case non-sensitive
-								String name = usePart.getAlias().getName();
-								if (name.startsWith(prefix)) {
-									result.put(name, usePart);
-								}
-							} else {
-								String name = usePart.getNamespace()
-										.getFullyQualifiedName();
-								int index = name
-										.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-								if (index >= 0) {
-									name = name.substring(index + 1);
-								}
-								if (name.startsWith(prefix)) {
-									result.put(name, usePart);
-
-								}
-							}
-						}
-					}
-					return visitGeneral(s);
-				}
-
-				public boolean visitGeneral(ASTNode node) throws Exception {
-					if (node.sourceStart() > offset
-							|| node.sourceEnd() < searchStart) {
-						return false;
-					}
-					return super.visitGeneral(node);
-				}
-			});
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return result;
 	}
 
 	protected void reportAlias(ICompletionReporter reporter,
@@ -359,7 +329,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
-		return "\\".equals(nextWord) ? "" : "\\"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return SPLASH.equals(nextWord) ? "" : SPLASH; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

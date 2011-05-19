@@ -1869,4 +1869,63 @@ public class PHPModelUtils {
 		}
 		return false;
 	}
+
+	public static Map<String, UsePart> getAliasToNSMap(final String prefix,
+			ModuleDeclaration moduleDeclaration, final int offset,
+			IType namespace, final boolean exactMatch) {
+		final Map<String, UsePart> result = new HashMap<String, UsePart>();
+		try {
+			int start = 0;
+			if (namespace != null) {
+				start = namespace.getSourceRange().getOffset();
+			}
+			final int searchStart = start;
+
+			moduleDeclaration.traverse(new ASTVisitor() {
+
+				public boolean visit(Statement s) throws Exception {
+					if (s instanceof UseStatement) {
+						UseStatement useStatement = (UseStatement) s;
+						for (UsePart usePart : useStatement.getParts()) {
+							if (usePart.getAlias() != null
+									&& usePart.getAlias().getName() != null) {
+								// TODO case non-sensitive
+								String name = usePart.getAlias().getName();
+								if (name.startsWith(prefix)) {
+									result.put(name, usePart);
+								}
+							} else {
+								String name = usePart.getNamespace()
+										.getFullyQualifiedName();
+								int index = name
+										.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+								if (index >= 0) {
+									name = name.substring(index + 1);
+								}
+								if (exactMatch && name.equals(prefix)
+										|| !exactMatch
+										&& name.startsWith(prefix)) {
+									result.put(name, usePart);
+
+								}
+							}
+						}
+					}
+					return visitGeneral(s);
+				}
+
+				public boolean visitGeneral(ASTNode node) throws Exception {
+					if (node.sourceStart() > offset
+							|| node.sourceEnd() < searchStart) {
+						return false;
+					}
+					return super.visitGeneral(node);
+				}
+			});
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return result;
+	}
+
 }
