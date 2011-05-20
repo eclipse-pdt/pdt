@@ -142,7 +142,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == ClassStatementContext.class) {
 			return new ICompletionStrategy[] {
 					new ClassKeywordsStrategy(context),
-					new GlobalConstantsStrategy(context) };
+					new GlobalConstantsStrategy(context),
+			// new GlobalTypesStrategy(context)
+			};
 		}
 		if (contextClass == GlobalStatementContext.class) {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(
@@ -193,12 +195,16 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		}
 		if (contextClass == NamespaceMemberContext.class) {
 			return new ICompletionStrategy[] { new NamespaceElementsCompositeStrategy(
-					context, allContexts, ((NamespaceMemberContext) context)
-							.isGlobal()) };
+					context, allContexts,
+					((NamespaceMemberContext) context).isGlobal()) };
 		}
 		if (contextClass == NamespaceNameContext.class
 				|| contextClass == NamespaceDeclContext.class) {
 			return new ICompletionStrategy[] { new NamespacesStrategy(context) };
+		}
+		if (contextClass == GotoStatementContext.class) {
+			return new ICompletionStrategy[] { new GotoStatementStrategy(
+					context) };
 		}
 		if (contextClass == UseNameContext.class) {
 			return new ICompletionStrategy[] { new UseNameStrategy(context) };
