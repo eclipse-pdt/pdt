@@ -1,0 +1,29 @@
+--TEST--
+Should complete goto labels defined in current scope
+--FILE--
+<?php
+namespace a;
+NSLABEL:
+echo a;
+class A {
+
+	static function function_name($param) {
+		A_CLASSLABEL1:
+		echo a;
+		B_CLASSLABEL2:
+		echo a;
+		B_CLASSLABEL3:
+		echo a;
+	}
+
+}
+
+function func() {
+	METHODLABEL:
+	ccc;
+	GOTO |;
+}
+
+?>
+--EXPECT--
+keyword(METHODLABEL)
