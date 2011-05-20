@@ -1,0 +1,33 @@
+--TEST--
+Should complete class members from singleton method in other namespace
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?php
+namespace ns1\n\a;
+use ns1\n as mm;
+class CCC{
+	/**
+	 * @return mm\b\CCC The test class
+	 */
+	function test() {
+		echo "test";
+	}
+}
+
+namespace ns1\n\b;
+class CCC{
+   /**
+    * @return CCC The test class
+    */
+   function testb() {
+      echo "test";
+   }
+}
+namespace ns2;
+use ns1\n as mm;
+$v = new mm\a\CCC();
+$v->test()->|
+?>
+--EXPECT--
+method(testb)

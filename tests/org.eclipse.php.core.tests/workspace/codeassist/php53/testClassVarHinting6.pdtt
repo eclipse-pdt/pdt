@@ -1,0 +1,34 @@
+--TEST--
+Test Class Var Hinting Hierarchy from global namespace
+--FILE--
+<?
+namespace ns1\n\a;
+use ns1\n as mm;
+class CCC{
+   /**
+   * @var mm\b\CCC
+   */
+   public $test1;
+	/**
+	 * @return mm\b\CCC The test class
+	 */
+	function test() {
+		echo "test";
+	}
+}
+
+namespace ns1\n\b;
+class CCC{
+   /**
+    * @return CCC The test class
+    */
+   function testb() {
+      echo "test";
+   }
+}
+namespace ns2;
+use ns1\n as mm;
+$v = new mm\a\CCC();
+$v->test1->| ?>
+--EXPECT--
+method(testb)
