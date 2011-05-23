@@ -265,21 +265,47 @@ public class UseStatementInjector {
 									.getModuleDeclaration(sourceModule);
 							TextEdit edits = null;
 
+							ASTParser parser = ASTParser
+									.newParser(sourceModule);
+							parser.setSource(document.get().toCharArray());
+							Program program = parser.createAST(null);
+
+							// don't insert USE statement for current namespace
+							if (isSameNamespace(namespaceName, program,
+									sourceModule, offset)) {
+								return offset;
+							}
+
 							// find existing use statement:
 							UsePart usePart = ASTUtils
 									.findUseStatementByNamespace(
 											moduleDeclaration, usePartName,
 											offset);
-							if (usePart == null) {
-								ASTParser parser = ASTParser
-										.newParser(sourceModule);
-								parser.setSource(document.get().toCharArray());
 
-								Program program = parser.createAST(null);
+							List<String> importedTypeName = getImportedTypeName(
+									moduleDeclaration, offset);
+							String typeName = "";
+							if (!useAlias) {
+								typeName = modelElement.getElementName()
+										.toLowerCase();
+							} else {
+								if (usePart != null
+										&& usePart.getAlias() != null
+										&& usePart.getAlias().getName() != null) {
+									typeName = usePart.getAlias().getName();
+								} else {
+									typeName = PHPModelUtils
+											.extractElementName(namespaceName)
+											.toLowerCase();
+								}
+							}
+
+							// if the class/namesapce has not been imported
+							// add use statement
+							if (!importedTypeName.contains(typeName)) {
+
 								program.recordModifications();
-
 								AST ast = program.getAST();
-
 								NamespaceName newNamespaceName = ast
 										.newNamespaceName(
 												createIdentifiers(ast,
@@ -295,18 +321,14 @@ public class UseStatementInjector {
 								NamespaceDeclaration currentNamespace = getCurrentNamespace(
 										program, sourceModule, offset - 1);
 								if (currentNamespace != null) {
-									if (namespaceName
-											.equals(getNamespaceName(currentNamespace))) {
-										// don't insert USE statement for
-										// current namespace
-										return offset;
-									}
-									// insert in the beginning of the current
+									// insert in the beginning of the
+									// current
 									// namespace:
 									currentNamespace.getBody().statements()
 											.add(0, newUseStatement);
 								} else {
-									// insert in the beginning of the document:
+									// insert in the beginning of the
+									// document:
 									program.statements()
 											.add(0, newUseStatement);
 								}
@@ -350,26 +372,23 @@ public class UseStatementInjector {
 
 								edits = program.rewrite(document, options);
 								edits.apply(document);
+							} else if (!useAlias
+									&& (usePart == null || !usePartName
+											.equals(usePart.getNamespace()
+													.getFullyQualifiedName()))) {
+								// if the type name already exists, use fully
+								// qualified name to replace
+								proposal.setReplacementString(NamespaceReference.NAMESPACE_SEPARATOR
+										+ namespaceName
+										+ NamespaceReference.NAMESPACE_SEPARATOR
+										+ proposal.getReplacementString());
 							}
 
 							if (useAlias && needsAliasPrepend(modelElement)) {
+
 								// update replacement string: add namespace
 								// alias prefix
-								String alias;
-								if (usePart != null
-										&& usePart.getAlias() != null
-										&& usePart.getAlias().getName() != null) {
-									alias = usePart.getAlias().getName();
-								} else {
-									int i = usePartName
-											.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-									alias = usePartName;
-									if (i != -1) {
-										alias = usePartName.substring(i + 1);
-									}
-								}
-
-								String namespacePrefix = alias
+								String namespacePrefix = typeName
 										+ NamespaceReference.NAMESPACE_SEPARATOR;
 								String replacementString = proposal
 										.getReplacementString();
@@ -405,5 +424,44 @@ public class UseStatementInjector {
 		}
 
 		return offset;
+	}
+
+	/**
+	 * Get all the class / namespace names which have been imported by use
+	 * statement
+	 * 
+	 * @param moduleDeclaration
+	 * @param offset
+	 * @return
+	 */
+	private List<String> getImportedTypeName(
+			ModuleDeclaration moduleDeclaration, final int offset) {
+		org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement[] useStatements = ASTUtils
+				.getUseStatements(moduleDeclaration, offset);
+		List<String> importedClass = new ArrayList<String>();
+		for (org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement statement : useStatements) {
+			for (UsePart usePart : statement.getParts()) {
+				String name;
+				if (usePart.getAlias() != null) {
+					name = usePart.getAlias().getName();
+				} else {
+					// In case there's no alias - the alias is the
+					// last segment of the namespace name:
+					name = usePart.getNamespace().getName();
+				}
+				importedClass.add(name.toLowerCase());
+			}
+		}
+		return importedClass;
+	}
+
+	private boolean isSameNamespace(String namespaceName, Program program,
+			ISourceModule sourceModule, int offset) {
+		NamespaceDeclaration currentNamespace = getCurrentNamespace(program,
+				sourceModule, offset - 1);
+		if (namespaceName.equals(getNamespaceName(currentNamespace))) {
+			return true;
+		}
+		return false;
 	}
 }
