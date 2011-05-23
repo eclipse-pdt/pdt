@@ -25,9 +25,9 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  */
 public class PHPDocReturnTypeStrategy extends GlobalClassesStrategy {
 
-	private static final String ARRAY_TYPE = "array";
-	private static final String MIXED_TYPE = "mixed";
-	private static final String VOID_TYPE = "void";
+	private static final String[] ALL_TYPE = new String[] { "array", "array",
+			"mixed", "void", "integer", "int", "string", "float", "double",
+			"bool", "boolean", "resource", "null", "NULL" };
 	private static final String EMPTY = "";
 
 	public PHPDocReturnTypeStrategy(ICompletionContext context) {
@@ -42,9 +42,10 @@ public class PHPDocReturnTypeStrategy extends GlobalClassesStrategy {
 		super.apply(reporter);
 		String prefix = ((PHPDocTagContext) context).getPrefix();
 		SourceRange replaceRange = getReplacementRange(context);
-		reportKeyword(reporter, replaceRange, ARRAY_TYPE, prefix);
-		reportKeyword(reporter, replaceRange, MIXED_TYPE, prefix);
-		reportKeyword(reporter, replaceRange, VOID_TYPE, prefix);
+		for (int i = 0; i < ALL_TYPE.length; i++) {
+			reportKeyword(reporter, replaceRange, ALL_TYPE[i], prefix);
+
+		}
 	}
 
 	private void reportKeyword(ICompletionReporter reporter,
