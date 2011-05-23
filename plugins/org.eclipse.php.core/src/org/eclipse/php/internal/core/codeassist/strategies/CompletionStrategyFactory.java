@@ -206,6 +206,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new GotoStatementStrategy(
 					context) };
 		}
+		if (contextClass == TypeCastingContext.class) {
+			return new ICompletionStrategy[] { new TypeCastingStrategy(context) };
+		}
 		if (contextClass == UseNameContext.class) {
 			return new ICompletionStrategy[] { new UseNameStrategy(context) };
 		}
