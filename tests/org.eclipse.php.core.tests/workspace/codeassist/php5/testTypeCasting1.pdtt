@@ -1,0 +1,19 @@
+--TEST--
+Test Type casting
+--FILE--
+<?php
+( | )$str
+?>
+--EXPECT--
+keyword(int)
+keyword(integer)
+keyword(bool)
+keyword(boolean)
+keyword(float)
+keyword(double)
+keyword(real)
+keyword(string)
+keyword(array)
+keyword(object)
+keyword(unset)
+keyword(binary)

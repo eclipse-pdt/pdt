@@ -1,0 +1,8 @@
+--TEST--
+Test Type casting
+--FILE--
+<?php
+( a| )$str
+?>
+--EXPECT--
+keyword(array)
