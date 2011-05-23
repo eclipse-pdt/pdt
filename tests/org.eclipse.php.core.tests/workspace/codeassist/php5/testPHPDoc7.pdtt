@@ -1,0 +1,12 @@
+--TEST--
+Test PHPDoc Function Return Type
+--FILE--
+<?php
+
+/**
+ * @return voi|
+ */
+function foo() {}
+?>
+--EXPECT--
+keyword(void)
