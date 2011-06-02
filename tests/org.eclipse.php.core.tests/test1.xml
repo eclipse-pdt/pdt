@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!--
+    Copyright (c) 2009 IBM Corporation and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        IBM Corporation - initial API and implementation
+        Zend Technologies
+ -->
+
+<project name="testsuite" default="run" basedir=".">
+	<!-- The property ${eclipse-home} should be passed into this script -->
+	<!-- Set a meaningful default value for when it is not. -->
+	<property name="eclipse-home" value="${basedir}\..\.." />
+
+	<!-- sets the properties plugin-name, and library-file -->
+	<property name="plugin-name" value="org.eclipse.php.core.tests" />
+	<!-- <property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test/library.xml" /> -->
+	<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.3.100/library.xml" />
+	<property name="pdt-folder" value="${eclipse-home}/pdt_folder" />
+	<property name="testresults-folder" value="${buildDir}/testresults" />
+
+
+	<!-- Emma? Where are you? (Emma installation directory) -->
+	<available file="/shared/tools/php/emma-2.0.5312" property="emma.dir" value="/shared/tools/php/emma-2.0.5312" />
+	<property name='emma.dir' value='/var/www/3rd-party/emma-2.0.5312' />
+
+	<!-- Where are the class files? -->
+	<!-- <property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar' />
+	<path id='bin'>
+		<fileset dir='${eclipse-home}' includes='plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar' />
+	</path> -->
+	<!-- EMMA distribution directory: -->
+	<path id='emma.lib'>
+		<fileset dir='${emma.dir}' includes='lib/*.jar' />
+	</path>
+	<taskdef resource='emma_ant.properties' classpathref='emma.lib' />
+	<!-- This target holds all initialization code that needs to be done for -->
+	<!-- all tests that are to be run. Initialization for individual tests -->
+	<!-- should be done within the body of the suite target. -->
+	<target name="init">
+		<tstamp />
+		<delete>
+			<fileset dir="${eclipse-home}" includes="org*.xml" />
+		</delete>
+	</target>
+
+	<!-- This target defines the tests that need to be run. -->
+	<target name="suite">
+		<delete dir="${pdt-folder}" quiet="true" />
+	    <condition property="isStudio">
+	      <available file="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test" type="dir"/>
+	    </condition>
+		<antcall target="copyTestPlugin" />
+		<emma>
+			<!-- instrumentation of jar -->
+			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
+		</emma>
+		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
+			<property name="data-dir" value="${pdt-folder}" />
+			<property name="plugin-name" value="${plugin-name}" />
+			<property name="classname" value="org.eclipse.php.core.tests.AllTests" />
+			<property name="extraVMargs" value="-Demma.coverage.out.file=${testresults-folder}/phpcore.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
+		</ant>
+		<emma enabled="true" >
+			<!-- creating a report -->
+			<report sort="+name,+class,+method,+block">
+				<property name="report.out.encoding" value="UTF-8" />
+				<infileset dir="${testresults-folder}" includes="*.emma, *.ec" />
+				<html outfile="${testresults-folder}/phpcorecoverage.html" depth="method" columns="name,class,method,block,line" />
+			</report>
+		</emma>
+	</target>
+
+	<target name="copyTestPlugin" unless="isStudio">
+		<mkdir dir="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test" />
+		<copy todir="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test">
+        	<fileset dir="${eclipse-home}/dropins/pdt/eclipse/plugins/org.eclipse.test/">
+        		<include name="*"/>
+        		<include name="*.*"/>
+        	</fileset>
+    	</copy>
+	</target>
+
+	<!-- This target holds code to cleanup the testing environment after -->
+	<!-- after all of the tests have been run. You can use this target to -->
+	<!-- delete temporary files that have been created. -->
+	<target name="cleanup">
+	</target>
+
+	<!-- This target runs the test suite. Any actions that need to happen -->
+	<!-- after all the tests have been run should go here. -->
+	<target name="run" depends="init,suite,cleanup">
+
+		<ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
+			<property name="includes" value="org*.xml" />
+			<property name="output-file" value="${plugin-name}.xml" />
+		</ant>
+
+	</target>
+	<target name="collect-results">
+		<dirname property="output-dir" file="${test-output}" />
+		<basename property="output-file-name" file="${test-output}" />
+		<junitreport todir="${junit-report-output}" tofile="${classname}.xml">
+			<fileset dir="${output-dir}">
+				<include name="${output-file-name}" />
+			</fileset>
+		</junitreport>
+		<xslt style="${eclipse-home}/dropins/pdt/eclipse/plugins/org.eclipse.test/JUNIT.XSL" basedir="${junit-report-output}" includes="${classname}.result.xml" destdir="${junit-report-output}" />
+		<!--
+	save .log content and *.log content from configuration directory
+	-->
+		<concat destfile="${junit-report-output}/${classname}.log">
+			<fileset dir="${eclipse-home}" includes="${data-dir}/.metadata/*.log" />
+			<fileset dir="${eclipse-home}" includes="configuration/*.log" />
+		</concat>
+	</target>
+</project>
