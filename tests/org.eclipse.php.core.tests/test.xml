@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<!--
+
+<!--
     Copyright (c) 2009 IBM Corporation and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
@@ -27,7 +28,6 @@
 	<!-- Emma? Where are you? (Emma installation directory) -->
 	<available file="/shared/tools/php/emma-2.0.5312" property="emma.dir" value="/shared/tools/php/emma-2.0.5312" />
 	<property name='emma.dir' value='/var/www/3rd-party/emma-2.0.5312' />
-
 	<!-- Where are the class files? -->
 	<!-- <property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar' />
 	<path id='bin'>
@@ -51,10 +51,13 @@
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
 		<delete dir="${pdt-folder}" quiet="true" />
-	    <condition property="isStudio">
-	      <available file="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test" type="dir"/>
-	    </condition>
-		<antcall target="copyTestPlugin" />
+		<mkdir dir="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test" />
+		<copy todir="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test">
+        	<fileset dir="${eclipse-home}/dropins/pdt/eclipse/plugins/org.eclipse.test/">
+        		<include name="*"/>
+        		<include name="*.*"/>
+        	</fileset>
+    	</copy>
 		<emma>
 			<!-- instrumentation of jar -->
 			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
@@ -73,16 +76,6 @@
 				<html outfile="${testresults-folder}/phpcorecoverage.html" depth="method" columns="name,class,method,block,line" />
 			</report>
 		</emma>
-	</target>
-
-	<target name="copyTestPlugin" unless="isStudio">
-		<mkdir dir="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test" />
-		<copy todir="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test">
-        	<fileset dir="${eclipse-home}/dropins/pdt/eclipse/plugins/org.eclipse.test/">
-        		<include name="*"/>
-        		<include name="*.*"/>
-        	</fileset>
-    	</copy>
 	</target>
 
 	<!-- This target holds code to cleanup the testing environment after -->
