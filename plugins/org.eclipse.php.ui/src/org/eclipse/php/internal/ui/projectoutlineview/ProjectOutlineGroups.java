@@ -16,10 +16,7 @@ import java.util.*;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
@@ -152,12 +149,27 @@ public enum ProjectOutlineGroups {
 				break;
 
 			case GROUP_CONSTANTS:
+				// find all constants
 				IField[] findFields = PhpModelAccess.getDefault().findFields(
-						null, MatchRule.PREFIX,
-						Modifiers.AccConstant | Modifiers.AccGlobal, 0, scope,
-						null);
+						null, MatchRule.PREFIX, Modifiers.AccConstant, 0,
+						scope, null);
 				if (findFields != null) {
-					childrenList.addAll(Arrays.asList(findFields));
+					for (IField field : findFields) {
+						try {
+							IModelElement element = field;
+							if (field.getParent() instanceof ISourceModule) {
+								element = ((ISourceModule) field.getParent())
+										.getElementAt(field.getNameRange()
+												.getOffset());
+							}
+							if (element != null
+									&& element.getParent() instanceof ISourceModule) {
+								// display constants defined in GLOBAL scope
+								childrenList.add(element);
+							}
+						} catch (ModelException e) {
+						}
+					}
 				}
 				break;
 			}
