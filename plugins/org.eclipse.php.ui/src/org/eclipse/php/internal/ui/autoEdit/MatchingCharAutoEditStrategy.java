@@ -105,7 +105,8 @@ public abstract class MatchingCharAutoEditStrategy implements IAutoEditStrategy 
 		final char nextChar = document.getChar(offset + 1);
 
 		if (Character.isWhitespace(currChar) || isClosingBracket(currChar)
-				|| isQuote && isQuote(currChar) || currChar == ';')
+				|| isQuote && isQuote(currChar) || currChar == ';'
+				|| currChar == ',')
 			return true;
 		if (offset + 1 >= document.getLength())
 			return false;
