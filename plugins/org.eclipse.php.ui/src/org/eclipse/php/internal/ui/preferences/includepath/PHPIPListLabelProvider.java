@@ -25,6 +25,7 @@ import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.ui.phar.wizard.PharUIUtil;
+import org.eclipse.php.internal.ui.util.LabelProviderUtil;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -77,7 +78,11 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 
 	@Override
 	public String getCPListElementText(BPListElement cpentry) {
-		String result = super.getCPListElementText(cpentry);
+		String result = LabelProviderUtil.getVariableName(cpentry.getPath(),
+				cpentry.getEntryKind());
+		if (result == null) {
+			result = super.getCPListElementText(cpentry);
+		}
 		if (PharUIUtil.isInvalidPharBuildEntry(cpentry)) {
 			result = result + fInvalidLabel;
 		}

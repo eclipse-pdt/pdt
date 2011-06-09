@@ -23,6 +23,7 @@ import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
+import org.eclipse.php.internal.ui.util.LabelProviderUtil;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -159,9 +160,15 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 				if (iBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
 					return getEntryDescription(element, iBuildpathEntry);
 				} else {
-					IPath localPath = EnvironmentPathUtils
-							.getLocalPath(iBuildpathEntry.getPath());
-					return localPath.toOSString();
+					String result = LabelProviderUtil.getVariableName(
+							iBuildpathEntry.getPath(),
+							iBuildpathEntry.getEntryKind());
+					if (result == null) {
+						IPath localPath = EnvironmentPathUtils
+								.getLocalPath(iBuildpathEntry.getPath());
+						return localPath.toOSString();
+					}
+					return result;
 				}
 			}
 			if (entry instanceof ExternalProjectFragment) {
@@ -190,8 +197,8 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 		IScriptProject scriptProject = DLTKCore.create(project);
 		IBuildpathContainer buildpathContainer = null;
 		try {
-			buildpathContainer = DLTKCore.getBuildpathContainer(iBuildpathEntry
-					.getPath(), scriptProject);
+			buildpathContainer = DLTKCore.getBuildpathContainer(
+					iBuildpathEntry.getPath(), scriptProject);
 		} catch (ModelException e) {
 			// no matching container - return the path
 		}
