@@ -1536,7 +1536,7 @@ PHP_ASP_END=%>
 	if(Debug.debugTokenizer)
 		dump("\nprocessing instruction start");//$NON-NLS-1$
 	if ("<?".equals(yytext())
-			&& !ProjectOptions.useShortTags(project)) {
+			&& !(ProjectOptions.useShortTags(project) && Character.isWhitespace(yy_buffer[yy_currentPos - 1]))) {
 		yybegin(ST_PI);
 		return XML_PI_OPEN;
 
