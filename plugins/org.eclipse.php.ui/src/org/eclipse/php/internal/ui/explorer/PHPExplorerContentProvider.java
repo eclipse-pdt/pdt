@@ -408,9 +408,13 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 				.create(((IncludePath) parentElement).getProject());
 		IProjectFragment[] findProjectFragments = scriptProject
 				.findProjectFragments((IBuildpathEntry) entry);
+		List<Object> children = new LinkedList<Object>();
 		for (IProjectFragment projectFragment : findProjectFragments) {
-			// can be only one
-			return getChildren(projectFragment);
+			Object[] fragmentChildren = getChildren(projectFragment);
+			children.addAll(Arrays.asList(fragmentChildren));
+		}
+		if (!children.isEmpty()) {
+			return children.toArray(new Object[children.size()]);
 		}
 		return getChildren(((BuildpathEntry) entry).getPath());
 	}
