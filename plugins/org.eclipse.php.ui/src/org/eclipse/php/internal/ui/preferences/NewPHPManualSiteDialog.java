@@ -383,8 +383,8 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 				return;
 			}
 			result = new PHPManualConfig(name.getText(), CHM_PROTO + chmFileStr
-					+ detectCHMLanguageSuffix(chmFileStr), fileExtCombo
-					.getText(), false); //$NON-NLS-1$
+					+ detectCHMLanguageSuffix(chmFileStr),
+					fileExtCombo.getText(), false); //$NON-NLS-1$
 		}
 	}
 
@@ -426,11 +426,14 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 		try {
 			FileReader r = new FileReader(chmFile);
 			try {
-				r.read(buf);
+				while (r.ready()) {
+					r.read(buf);
 
-				Matcher m = LANG_DETECT_PATTERN.matcher(new String(buf));
-				if (m.find()) {
-					suffix.append(m.group(1));
+					Matcher m = LANG_DETECT_PATTERN.matcher(new String(buf));
+					if (m.find()) {
+						suffix.append(m.group(1));
+						break;
+					}
 				}
 			} finally {
 				r.close();
