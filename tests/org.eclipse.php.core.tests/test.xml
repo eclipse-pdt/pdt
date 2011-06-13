@@ -23,6 +23,7 @@
 	<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.3.100/library.xml" />
 	<property name="pdt-folder" value="${eclipse-home}/pdt_folder" />
 	<property name="testresults-folder" value="${buildDir}/testresults" />
+	<property name="junit-stylesheet" value="${eclipse-home}/dropins/pdt/eclipse/plugins/org.eclipse.test/JUNIT.XSL"/>
 
 
 	<!-- Emma? Where are you? (Emma installation directory) -->
@@ -52,10 +53,10 @@
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
 		<delete dir="${pdt-folder}" quiet="true" />
-	    <condition property="isStudio">
+		<!-- <condition property="isStudio">
 	      <available file="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test" type="dir"/>
 	    </condition>
-		<antcall target="copyTestPlugin" />
+		<antcall target="copyTestPlugin" /> -->
 		<emma>
 			<!-- instrumentation of jar -->
 			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
