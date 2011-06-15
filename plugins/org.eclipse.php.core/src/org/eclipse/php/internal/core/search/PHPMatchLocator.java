@@ -24,11 +24,15 @@ import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.compiler.util.HashtableOfIntValues;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.SearchMatch;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
 import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
+import org.eclipse.dltk.internal.core.search.matching.MethodPattern;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 public class PHPMatchLocator extends MatchLocator {
@@ -83,8 +87,9 @@ public class PHPMatchLocator extends MatchLocator {
 				occurrencesCounts.put(simpleName, occurrenceCount);
 				Integer level = (Integer) nodeSet.matchingNodes
 						.removeKey(typeDeclaration);
-				reportMatching(typeDeclaration, parent, level != null ? level
-						.intValue() : -1, nodeSet, occurrenceCount);
+				reportMatching(typeDeclaration, parent,
+						level != null ? level.intValue() : -1, nodeSet,
+						occurrenceCount);
 				return false; // don't visit members as this was done during
 			} catch (CoreException e) {
 				throw new WrappedCoreException(e);
@@ -95,8 +100,8 @@ public class PHPMatchLocator extends MatchLocator {
 			try {
 				Integer level = (Integer) nodeSet.matchingNodes
 						.removeKey(method);
-				reportMatching(null, method, parent, level != null ? level
-						.intValue() : -1, nodeSet);
+				reportMatching(null, method, parent,
+						level != null ? level.intValue() : -1, nodeSet);
 				return false; // don't visit members as this was done during
 			} catch (CoreException e) {
 				throw new WrappedCoreException(e);
@@ -141,8 +146,8 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 
 		// references in this method
-		ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(), method
-				.sourceEnd());
+		ASTNode[] nodes = nodeSet.matchingNodes(method.sourceStart(),
+				method.sourceEnd());
 		if (nodes != null) {
 			if (parent == null) {
 				parent = createSourceModuleHandle();
@@ -160,8 +165,8 @@ public class PHPMatchLocator extends MatchLocator {
 									.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
 						}
 						this.patternLocator.matchReportReference(node,
-								enclosingElement, (Scope) null, level
-										.intValue(), this);
+								enclosingElement, (Scope) null,
+								level.intValue(), this);
 					}
 					return;
 				}
@@ -220,8 +225,8 @@ public class PHPMatchLocator extends MatchLocator {
 										.println("TODO: Searching. Add scope support."); //$NON-NLS-1$
 							}
 							this.patternLocator.matchReportReference(node,
-									enclosingElement, (Scope) null, level
-											.intValue(), this);
+									enclosingElement, (Scope) null,
+									level.intValue(), this);
 						}
 						return;
 					}
@@ -245,4 +250,32 @@ public class PHPMatchLocator extends MatchLocator {
 		super.reportMatching(type, parent, accuracy, nodeSet, occurrenceCount);
 	}
 
+	@Override
+	public SearchMatch newMethodReferenceMatch(IModelElement enclosingElement,
+			int accuracy, int offset, int length, boolean isConstructor,
+			boolean isSynthetic, ASTNode reference) {
+		if ((pattern instanceof MethodPattern)
+				&& (reference instanceof PHPCallExpression)) {
+			PHPCallExpression pce = (PHPCallExpression) reference;
+			ISourceModule module = (ISourceModule) enclosingElement
+					.getAncestor(IModelElement.SOURCE_MODULE);
+			if (module != null) {
+				try {
+					IModelElement[] elements = module.codeSelect(pce
+							.getCallName().sourceStart(), 0);
+					for (int i = 0; i < elements.length; i++) {
+						if (pattern.focus.equals(elements[i])) {
+
+							return super.newMethodReferenceMatch(
+									enclosingElement, accuracy, offset, length,
+									isConstructor, isSynthetic, reference);
+						}
+					}
+				} catch (ModelException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
 }
