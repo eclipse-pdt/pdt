@@ -238,9 +238,12 @@ public class PHPCompletionProposalCollector extends
 				String prefix = "";
 				try {
 					int flags = type.getFlags();
+					IType currentNamespace = PHPModelUtils.getCurrentNamespace(
+							getSourceModule(), getReplacementOffset());
 					IType namespace = PHPModelUtils.getCurrentNamespace(type);
 					if (!PHPFlags.isNamespace(flags)
 							&& namespace == null
+							&& currentNamespace != null
 							&& !ProjectOptions.getPhpVersion(
 									PHPCompletionProposalCollector.this
 											.getScriptProject().getProject())
@@ -277,7 +280,7 @@ public class PHPCompletionProposalCollector extends
 				}
 				String nextWord = null;
 				try {
-					nextWord = document.get(offset, 2);// "::".length()
+					nextWord = document.get(getReplacementOffset(), 2);// "::".length()
 				} catch (BadLocationException e) {
 				}
 				return DOUBLE_COLON.equals(nextWord) ? defaultResult
