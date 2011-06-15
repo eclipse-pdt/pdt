@@ -8,7 +8,7 @@ class Testddd {
 	public static function run( ){
 	}
 }
-if ($ instanceof Testddd|) {
+if ($a instanceof Testddd|) {
 }
 ?>
 --EXPECT--
@@ -17,6 +17,6 @@ class Testddd {
 	public static function run( ){
 	}
 }
-if ($ instanceof Testddd) {
+if ($a instanceof Testddd) {
 }
 ?>

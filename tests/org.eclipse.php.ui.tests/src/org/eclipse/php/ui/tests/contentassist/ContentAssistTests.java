@@ -52,7 +52,7 @@ public class ContentAssistTests extends AbstractPDTTTest {
 
 	protected static IProject project;
 	protected static IFile testFile;
-	protected static PHPVersion phpVersion;
+	// protected static PHPVersion phpVersion;
 	protected static PHPStructuredEditor fEditor;
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
@@ -65,8 +65,8 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	protected static final char OFFSET_CHAR = '|';
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"Content Assist");
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("Content Assist");
 		if (project.exists()) {
 			return;
 		}
@@ -81,8 +81,8 @@ public class ContentAssistTests extends AbstractPDTTTest {
 
 		// set auto insert to true,if there are only one proposal in the CA,it
 		// will insert the proposal,so we can test CA without UI interaction
-		PHPUiPlugin.getDefault().getPluginPreferences().setDefault(
-				PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+		PHPUiPlugin.getDefault().getPluginPreferences()
+				.setDefault(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 	}
 
 	public static void tearDownSuite() throws Exception {
@@ -99,7 +99,7 @@ public class ContentAssistTests extends AbstractPDTTTest {
 
 		TestSuite suite = new TestSuite("Content Assist Tests");
 		for (Entry<PHPVersion, String[]> pair : TESTS.entrySet()) {
-			phpVersion = pair.getKey();
+			final PHPVersion phpVersion = pair.getKey();
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
 
 			for (int i = 0; i < pair.getValue().length; i++) {
@@ -111,8 +111,7 @@ public class ContentAssistTests extends AbstractPDTTTest {
 						final PdttFile pdttFile = new PdttFile(PHPUiTests
 								.getDefault().getBundle(), fileName);
 						phpVerSuite.addTest(new ContentAssistTests(phpVersion
-								.getAlias()
-								+ " - /" + fileName) {
+								.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
 								PHPCoreTests.setProjectPhpVersion(project,
@@ -135,12 +134,13 @@ public class ContentAssistTests extends AbstractPDTTTest {
 								data = data.substring(0, offset)
 										+ data.substring(offset + 1);
 
-								createFile(new ByteArrayInputStream(data
-										.getBytes()), fileName);
+								createFile(
+										new ByteArrayInputStream(data
+												.getBytes()), fileName);
 								String result = executeAutoInsert(offset);
 								closeEditor();
-								if (!pdttFile.getExpected().trim().equals(
-										result.trim())) {
+								if (!pdttFile.getExpected().trim()
+										.equals(result.trim())) {
 									StringBuilder errorBuf = new StringBuilder();
 									errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
 									errorBuf.append(pdttFile.getExpected());
