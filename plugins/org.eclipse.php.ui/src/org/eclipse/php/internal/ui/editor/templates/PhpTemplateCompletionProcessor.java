@@ -20,10 +20,7 @@ import org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.templates.ContextTypeRegistry;
-import org.eclipse.jface.text.templates.Template;
-import org.eclipse.jface.text.templates.TemplateContext;
-import org.eclipse.jface.text.templates.TemplateContextType;
+import org.eclipse.jface.text.templates.*;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.Logger;
@@ -35,6 +32,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.TemplateInformationControlCreator;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.IWorkbenchPartOrientation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -44,6 +42,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 public class PhpTemplateCompletionProcessor extends
 		ScriptTemplateCompletionProcessor {
+
+	private static final String $_LINE_SELECTION = "${" + GlobalTemplateVariables.LineSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String $_WORD_SELECTION = "${" + GlobalTemplateVariables.WordSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static final ICompletionProposal[] EMPTY_ICOMPLETION_PROPOSAL = new ICompletionProposal[0];
 	private static final ICompletionProposal[] EMPTY = {};
@@ -71,13 +72,63 @@ public class PhpTemplateCompletionProcessor extends
 		if (isInDocOrCommentOrString(viewer, offset)) {
 			return EMPTY;
 		}
+
+		ITextSelection selection = (ITextSelection) viewer
+				.getSelectionProvider().getSelection();
+
+		ICompletionProposal[] selectionProposal = EMPTY;
+		if (selection.getLength() != 0) {
+			int tempOffset = offset;
+			// adjust offset to end of normalized selection
+			if (selection.getOffset() == tempOffset)
+				tempOffset = selection.getOffset() + selection.getLength();
+
+			String prefix = extractPrefix(viewer, tempOffset);
+			IRegion region = new Region(selection.getOffset(),
+					selection.getLength());
+			TemplateContext context = createContext(viewer, region);
+			if (context == null)
+				return new ICompletionProposal[0];
+
+			// name of the selection variables {line, word}_selection
+			context.setVariable("selection", selection.getText()); //$NON-NLS-1$
+
+			boolean multipleLinesSelected = areMultipleLinesSelected(viewer);
+
+			List<TemplateProposal> matches = new ArrayList<TemplateProposal>();
+			Template[] templates = getTemplates(context.getContextType()
+					.getId());
+			for (int i = 0; i != templates.length; i++) {
+				Template template = templates[i];
+				if (context.canEvaluate(template)
+						&& (!multipleLinesSelected
+								&& template.getPattern().indexOf(
+										$_WORD_SELECTION) != -1 || (multipleLinesSelected && template
+								.getPattern().indexOf($_LINE_SELECTION) != -1))) {
+					matches.add((TemplateProposal) createProposal(templates[i],
+							context, region, getRelevance(template, prefix)));
+				}
+			}
+			selectionProposal = matches.toArray(new ICompletionProposal[matches
+					.size()]);
+		}
 		ICompletionProposal[] completionProposals = super
 				.computeCompletionProposals(viewer, offset);
 		if (completionProposals == null) {
-			return EMPTY;
+			return selectionProposal;
 		}
-		return filterUsingPrefix(completionProposals, extractPrefix(viewer,
-				offset));
+		completionProposals = filterUsingPrefix(completionProposals,
+				extractPrefix(viewer, offset));
+
+		List<ICompletionProposal> matches = new ArrayList<ICompletionProposal>();
+		for (int i = 0; i < completionProposals.length; i++) {
+			matches.add(completionProposals[i]);
+		}
+		for (int i = 0; i < selectionProposal.length; i++) {
+			matches.add(selectionProposal[i]);
+		}
+
+		return matches.toArray(new ICompletionProposal[matches.size()]);
 	}
 
 	private boolean isInDocOrCommentOrString(ITextViewer viewer, int offset) {
@@ -261,4 +312,45 @@ public class PhpTemplateCompletionProcessor extends
 		return PhpTemplateAccess.getInstance();
 	}
 
+	@Override
+	protected boolean isMatchingTemplate(Template template, String prefix,
+			TemplateContext context) {
+		// TODO Auto-generated method stub
+		// if (template.getPattern().indexOf("${word_selection}") >= 0) {
+		// return true;
+		// }
+		return super.isMatchingTemplate(template, prefix, context);
+	}
+
+	/**
+	 * Returns <code>true</code> if one line is completely selected or if
+	 * multiple lines are selected. Being completely selected means that all
+	 * characters except the new line characters are selected.
+	 * 
+	 * @param viewer
+	 *            the text viewer
+	 * @return <code>true</code> if one or multiple lines are selected
+	 * @since 2.1
+	 */
+	private boolean areMultipleLinesSelected(ITextViewer viewer) {
+		if (viewer == null)
+			return false;
+
+		Point s = viewer.getSelectedRange();
+		if (s.y == 0)
+			return false;
+
+		try {
+
+			IDocument document = viewer.getDocument();
+			int startLine = document.getLineOfOffset(s.x);
+			int endLine = document.getLineOfOffset(s.x + s.y);
+			IRegion line = document.getLineInformation(startLine);
+			return startLine != endLine
+					|| (s.x == line.getOffset() && s.y == line.getLength());
+
+		} catch (BadLocationException x) {
+			return false;
+		}
+	}
 }
