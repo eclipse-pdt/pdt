@@ -168,7 +168,8 @@ public class ContextManager {
 			resolvedFile = fTarget.getLastFileName();
 		}
 		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(),
-				resolvedFile, (layers.length == 1) ? "" : frames[1].getName(),
+				resolvedFile, (layers.length == 1) ? ""
+						: layers[layers.length - 1].getCalledFunctionName(),
 				fTarget.getLastStop(), frameCt, getLocalVariables());
 
 		return frames;
