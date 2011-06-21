@@ -312,16 +312,6 @@ public class PhpTemplateCompletionProcessor extends
 		return PhpTemplateAccess.getInstance();
 	}
 
-	@Override
-	protected boolean isMatchingTemplate(Template template, String prefix,
-			TemplateContext context) {
-		// TODO Auto-generated method stub
-		// if (template.getPattern().indexOf("${word_selection}") >= 0) {
-		// return true;
-		// }
-		return super.isMatchingTemplate(template, prefix, context);
-	}
-
 	/**
 	 * Returns <code>true</code> if one line is completely selected or if
 	 * multiple lines are selected. Being completely selected means that all
