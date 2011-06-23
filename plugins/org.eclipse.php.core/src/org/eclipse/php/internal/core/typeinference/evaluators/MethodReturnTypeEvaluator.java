@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
 public class MethodReturnTypeEvaluator extends
@@ -49,8 +50,9 @@ public class MethodReturnTypeEvaluator extends
 		String methodName = goal.getMethodName();
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
-
-		for (IMethod method : getMethods()) {
+		MethodsAndTypes mat = getMethodsAndTypes();
+		for (int i = 0; i < mat.methods.length; i++) {
+			IMethod method = mat.methods[i];
 
 			ISourceModule sourceModule = method.getSourceModule();
 			ModuleDeclaration module = SourceParserUtil
@@ -68,6 +70,10 @@ public class MethodReturnTypeEvaluator extends
 			if (decl != null) {
 				final IContext innerContext = ASTUtils.findContext(
 						sourceModule, module, decl);
+				if (innerContext instanceof MethodContext) {
+					MethodContext mc = (MethodContext) innerContext;
+					mc.setCurrentType(mat.types[i]);
+				}
 
 				ASTVisitor visitor = new ASTVisitor() {
 					public boolean visitGeneral(ASTNode node) throws Exception {

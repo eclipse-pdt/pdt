@@ -16,6 +16,7 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.IInstanceContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -39,6 +40,7 @@ public class MethodContext implements IContext, INamespaceContext,
 	private IEvaluatedType instanceType;
 	private String namespaceName;
 	private IModelAccessCache cache;
+	private IType type;
 
 	public MethodContext(IContext parent, ISourceModule sourceModule,
 			ModuleDeclaration rootNode, MethodDeclaration methodNode,
@@ -170,5 +172,13 @@ public class MethodContext implements IContext, INamespaceContext,
 		} else if (!sourceModule.equals(other.sourceModule))
 			return false;
 		return true;
+	}
+
+	public void setCurrentType(IType type) {
+		this.type = type;
+	}
+
+	public IType getType() {
+		return type;
 	}
 }

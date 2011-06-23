@@ -27,12 +27,20 @@ import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTyp
 
 public abstract class AbstractMethodReturnTypeEvaluator extends
 		AbstractPHPGoalEvaluator {
+	protected class MethodsAndTypes {
+		public IMethod[] methods;
+		public IType[] types;
+	}
 
 	public AbstractMethodReturnTypeEvaluator(IGoal goal) {
 		super(goal);
 	}
 
 	protected IMethod[] getMethods() {
+		return getMethodsAndTypes().methods;
+	}
+
+	protected MethodsAndTypes getMethodsAndTypes() {
 		AbstractMethodReturnTypeGoal typedGoal = (AbstractMethodReturnTypeGoal) goal;
 		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext())
 				.getSourceModule();
@@ -46,10 +54,14 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 		}
 
 		List<IMethod> methods = new LinkedList<IMethod>();
+		List<IType> methodTypes = new LinkedList<IType>();
 		if (types == null) {
 			try {
 				methods.addAll(Arrays.asList(PHPModelUtils.getFunctions(
 						methodName, sourceModule, 0, cache, null)));
+				for (IMethod method : methods) {
+					methodTypes.add(null);
+				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
@@ -71,6 +83,7 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 					}
 					if (typeMethods.length > 0) {
 						methods.add(typeMethods[0]);
+						methodTypes.add(type);
 					}
 				}
 			} catch (CoreException e) {
@@ -79,7 +92,11 @@ public abstract class AbstractMethodReturnTypeEvaluator extends
 				}
 			}
 		}
+		MethodsAndTypes mat = new MethodsAndTypes();
+		mat.methods = (IMethod[]) methods.toArray(new IMethod[methods.size()]);
+		mat.types = (IType[]) methodTypes
+				.toArray(new IType[methodTypes.size()]);
 
-		return (IMethod[]) methods.toArray(new IMethod[methods.size()]);
+		return mat;
 	}
 }

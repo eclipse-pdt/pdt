@@ -31,10 +31,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
+import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
@@ -85,8 +82,8 @@ public class CodeAssistUtils {
 
 				ModuleDeclaration moduleDeclaration = SourceParserUtil
 						.getModuleDeclaration(type.getSourceModule(), null);
-				FileContext fileContext = new FileContext(type
-						.getSourceModule(), moduleDeclaration, offset);
+				FileContext fileContext = new FileContext(
+						type.getSourceModule(), moduleDeclaration, offset);
 				TypeContext typeContext = new TypeContext(fileContext,
 						classType);
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
@@ -220,8 +217,14 @@ public class CodeAssistUtils {
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
 				context, types, method);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
-		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType,
-				(ISourceModuleContext) context, offset);
+		if (evaluatedType instanceof PHPThisClassType
+				&& ((PHPThisClassType) evaluatedType).getType() != null) {
+			modelElements = new IType[] { ((PHPThisClassType) evaluatedType)
+					.getType() };
+		} else {
+			modelElements = PHPTypeInferenceUtils.getModelElements(
+					evaluatedType, (ISourceModuleContext) context, offset);
+		}
 		if (modelElements != null) {
 			return modelElements;
 		}
