@@ -99,8 +99,10 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				extensionElements.length);
 		for (IConfigurationElement element : extensionElements) {
 			try {
-				extensions.add((PhpIndexingVisitorExtension) element
-						.createExecutableExtension(CLASS_ATTR));
+				PhpIndexingVisitorExtension ext = (PhpIndexingVisitorExtension) element
+						.createExecutableExtension(CLASS_ATTR);
+				ext.setRequestor(requestor);
+				extensions.add(ext);
 			} catch (CoreException e) {
 				Logger.logException(e);
 			}

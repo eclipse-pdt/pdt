@@ -13,6 +13,7 @@ package org.eclipse.php.core.index;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.core.index2.IIndexingRequestor;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.DeclarationInfo;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 
@@ -23,6 +24,8 @@ import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
  * @since 2.2
  */
 public abstract class PhpIndexingVisitorExtension extends ASTVisitor {
+
+	protected IIndexingRequestor requestor;
 
 	/**
 	 * This is a last chance before modifying element declaration information
@@ -46,5 +49,10 @@ public abstract class PhpIndexingVisitorExtension extends ASTVisitor {
 	 *            Reference info
 	 */
 	public void modifyReference(ASTNode node, ReferenceInfo info) {
+	}
+
+	public void setRequestor(IIndexingRequestor requestor) {
+
+		this.requestor = requestor;
 	}
 }
