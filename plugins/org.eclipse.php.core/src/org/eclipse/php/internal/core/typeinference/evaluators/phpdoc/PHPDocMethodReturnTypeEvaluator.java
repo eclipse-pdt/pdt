@@ -50,8 +50,6 @@ import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTyp
 public class PHPDocMethodReturnTypeEvaluator extends
 		AbstractMethodReturnTypeEvaluator {
 
-	private static final String SPLASH = "\\";
-
 	private final static Pattern ARRAY_TYPE_PATTERN = Pattern
 			.compile("array\\[.*\\]");
 
@@ -130,15 +128,18 @@ public class PHPDocMethodReturnTypeEvaluator extends
 												}
 											}
 										} else {
-											if (typeName.indexOf(SPLASH) > 0) {
+											if (typeName
+													.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
+													&& currentNamespace != null) {
 												// check if the first part is an
 												// alias,then get the full name
 												ModuleDeclaration moduleDeclaration = SourceParserUtil
 														.getModuleDeclaration(currentNamespace
 																.getSourceModule());
 												String prefix = typeName
-														.substring(0, typeName
-																.indexOf(SPLASH));
+														.substring(
+																0,
+																typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
 												final Map<String, UsePart> result = PHPModelUtils
 														.getAliasToNSMap(
 																prefix,
@@ -189,13 +190,16 @@ public class PHPDocMethodReturnTypeEvaluator extends
 		String[] typeNames = type.split(",");
 		for (String name : typeNames) {
 			if (!"".equals(name)) {
-				if (name.indexOf(SPLASH) > 0) {
+
+				if (name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
+						&& currentNamespace != null) {
 					// check if the first part is an
 					// alias,then get the full name
 					ModuleDeclaration moduleDeclaration = SourceParserUtil
 							.getModuleDeclaration(currentNamespace
 									.getSourceModule());
-					String prefix = name.substring(0, name.indexOf(SPLASH));
+					String prefix = name.substring(0, name
+							.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
 					final Map<String, UsePart> result = PHPModelUtils
 							.getAliasToNSMap(prefix, moduleDeclaration, offset,
 									currentNamespace, true);
