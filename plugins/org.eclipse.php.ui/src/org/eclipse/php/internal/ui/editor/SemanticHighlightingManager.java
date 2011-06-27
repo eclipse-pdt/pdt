@@ -55,29 +55,16 @@ public class SemanticHighlightingManager {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private SemanticHighlightingManager loadSemanticHighlighter(String className)
-			throws Exception {
-		Class<? extends AbstractSemanticHighlighting> clazz = (Class<? extends AbstractSemanticHighlighting>) Class
-				.forName(className);
-		return loadSemanticHighlighter(clazz);
-	}
-
-	private SemanticHighlightingManager loadSemanticHighlighter(
-			Class<? extends AbstractSemanticHighlighting> clazz)
-			throws Exception {
-		AbstractSemanticHighlighting instance = clazz.newInstance();
-		rules.add(instance);
-		return this;
-	}
-
 	private SemanticHighlightingManager loadContributor(
 			IConfigurationElement[] elements) throws Exception {
 		for (IConfigurationElement element : elements) {
 			String target = element.getAttribute("target");
 			if ("org.eclipse.php.core.phpsource".equals(target)) {
-				String className = element.getAttribute("class");
-				loadSemanticHighlighter(className);
+				final Object o = element.createExecutableExtension("class");
+				if (o instanceof AbstractSemanticHighlighting) {
+					AbstractSemanticHighlighting instance = (AbstractSemanticHighlighting) o;
+					rules.add(instance);
+				}
 			}
 		}
 		return this;
@@ -99,18 +86,21 @@ public class SemanticHighlightingManager {
 		for (AbstractSemanticHighlighting rule : semanticHighlightings) {
 			rule.initDefaultPreferences();
 			SemanticHighlightingStyle style = rule.getStyle();
-			setDefaultAndFireEvent(store, rule.getColorPreferenceKey(), style
-					.getDefaultTextColor());
-			store.setDefault(rule.getBoldPreferenceKey(), style
-					.isBoldByDefault());
-			store.setDefault(rule.getItalicPreferenceKey(), style
-					.isItalicByDefault());
-			store.setDefault(rule.getStrikethroughPreferenceKey(), style
-					.isStrikethroughByDefault());
-			store.setDefault(rule.getUnderlinePreferenceKey(), style
-					.isUnderlineByDefault());
-			store.setDefault(rule.getEnabledPreferenceKey(), style
-					.isEnabledByDefault());
+			setDefaultAndFireEvent(store, rule.getColorPreferenceKey(),
+					style.getDefaultTextColor());
+			// setDefaultAndFireEvent(store,
+			// rule.getBackgroundColorPreferenceKey(), style
+			// .);
+			store.setDefault(rule.getBoldPreferenceKey(),
+					style.isBoldByDefault());
+			store.setDefault(rule.getItalicPreferenceKey(),
+					style.isItalicByDefault());
+			store.setDefault(rule.getStrikethroughPreferenceKey(),
+					style.isStrikethroughByDefault());
+			store.setDefault(rule.getUnderlinePreferenceKey(),
+					style.isUnderlineByDefault());
+			store.setDefault(rule.getEnabledPreferenceKey(),
+					style.isEnabledByDefault());
 		}
 		return this;
 	}
