@@ -1032,8 +1032,8 @@
 		<command name="%ActionDefinition.renameElement.name"
 			description="%ActionDefinition.renameElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.rename.element" />
-		<command name="%command.name"
-			description="%command.description" categoryId="org.eclipse.php.ui.category.refactoring"
+		<command name="%ActionDefinition.moveElement.name"
+			description="%ActionDefinition.moveElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.move.element" />
 		<command name="%command.openFunctionsManual.name" description="%command.openFunctionsManual.description"
 			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.edit.text.php.open.manual" />
