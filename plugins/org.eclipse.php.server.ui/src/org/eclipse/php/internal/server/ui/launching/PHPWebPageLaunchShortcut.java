@@ -320,7 +320,8 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 	private static URL constractURL(IProject project, String serverURL,
 			Path path) throws MalformedURLException {
 
-		IPath url = new Path(serverURL);
+		URL server = new URL(serverURL);
+		IPath url = new Path("/" + server.getPath());
 
 		String basePath = getProjectsBasePath(project);
 		boolean removeFirstSegment = true;
@@ -333,7 +334,8 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 			url = url.append(path.removeFirstSegments(1));
 		else
 			url = url.append(path);
-		return new URL(url.toString());
+		return new URL(server.getProtocol(), server.getHost(),
+				server.getPort(), url.toString());
 
 	}
 
