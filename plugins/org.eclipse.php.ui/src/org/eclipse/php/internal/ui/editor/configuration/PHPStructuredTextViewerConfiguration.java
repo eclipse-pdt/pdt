@@ -40,6 +40,7 @@ import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
+import org.eclipse.php.internal.ui.autoEdit.IndentLineAutoEditStrategy;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
@@ -79,6 +80,7 @@ public class PHPStructuredTextViewerConfiguration extends
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String[] DEFAULT_PREFIXES = new String[] {
 			"//", "#", EMPTY }; //$NON-NLS-1$
+	private static final IAutoEditStrategy indentLineAutoEditStrategy = new IndentLineAutoEditStrategy();
 	private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
 	private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();
 	private static final IAutoEditStrategy[] phpStrategies = new IAutoEditStrategy[] { mainAutoEditStrategy };
@@ -419,6 +421,14 @@ public class PHPStructuredTextViewerConfiguration extends
 			ISourceViewer sourceViewer, String contentType) {
 		final IAutoEditStrategy[] autoEditStrategies = super
 				.getAutoEditStrategies(sourceViewer, contentType);
+		for (int i = 0; i < autoEditStrategies.length; i++) {
+			if (autoEditStrategies[i] instanceof org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs
+			// ||
+			// org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForTabs
+			) {
+				autoEditStrategies[i] = indentLineAutoEditStrategy;
+			}
+		}
 		final int length = autoEditStrategies.length;
 		final IAutoEditStrategy[] augAutoEditStrategies = new IAutoEditStrategy[length + 1];
 		System.arraycopy(autoEditStrategies, 0, augAutoEditStrategies, 0,
