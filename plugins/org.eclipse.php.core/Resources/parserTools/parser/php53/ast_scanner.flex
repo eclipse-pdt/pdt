@@ -958,7 +958,7 @@ yybegin(ST_DOCBLOCK);
     	yybegin(ST_NOWDOC);
     }
     else if (hereOrNowDoc.charAt(0) == '"') {
-    	heredoc = heredoc.substring(1, heredoc_len-1);
+    	heredoc = hereOrNowDoc.substring(1, heredoc_len-1);
     	sym.value = heredoc;
     	heredoc_len -= 2;
     	yybegin(ST_HEREDOC);
