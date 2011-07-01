@@ -27,7 +27,7 @@ public class PhpIndexingParser implements IIndexingParser {
 				.getModuleDeclaration(module);
 		if (moduleDeclaration != null) {
 			try {
-				moduleDeclaration.traverse(new PhpIndexingVisitor(requestor));
+				moduleDeclaration.traverse(new PhpIndexingVisitor(requestor, module));
 			} catch (Exception e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();

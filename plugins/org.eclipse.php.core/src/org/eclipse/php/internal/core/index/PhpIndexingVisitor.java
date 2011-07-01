@@ -32,6 +32,7 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.DeclarationInfo;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
@@ -92,7 +93,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 	protected IIndexingRequestor requestor;
 
-	public PhpIndexingVisitor(IIndexingRequestor requestor) {
+	public PhpIndexingVisitor(IIndexingRequestor requestor, ISourceModule module) {
 		this.requestor = requestor;
 
 		List<PhpIndexingVisitorExtension> extensions = new ArrayList<PhpIndexingVisitorExtension>(
@@ -102,6 +103,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				PhpIndexingVisitorExtension ext = (PhpIndexingVisitorExtension) element
 						.createExecutableExtension(CLASS_ATTR);
 				ext.setRequestor(requestor);
+				// pass the ISourceModule over to the extension
+				// in case it needs it during indexing
+				ext.setSourceModule(module);
 				extensions.add(ext);
 			} catch (CoreException e) {
 				Logger.logException(e);

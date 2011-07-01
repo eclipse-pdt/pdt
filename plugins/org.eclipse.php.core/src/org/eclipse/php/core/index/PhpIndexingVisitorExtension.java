@@ -13,6 +13,7 @@ package org.eclipse.php.core.index;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.DeclarationInfo;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
@@ -26,6 +27,7 @@ import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 public abstract class PhpIndexingVisitorExtension extends ASTVisitor {
 
 	protected IIndexingRequestor requestor;
+	protected ISourceModule sourceModule;
 
 	/**
 	 * This is a last chance before modifying element declaration information
@@ -54,5 +56,11 @@ public abstract class PhpIndexingVisitorExtension extends ASTVisitor {
 	public void setRequestor(IIndexingRequestor requestor) {
 
 		this.requestor = requestor;
+	}
+
+	public void setSourceModule(ISourceModule module) {
+
+		this.sourceModule = module;
+
 	}
 }
