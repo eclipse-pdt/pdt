@@ -41,9 +41,6 @@ public class DOMDocumentForPHP extends DocumentStyleImpl {
 	 *            java.lang.String
 	 */
 	public Element createElement(String tagName) throws DOMException {
-		if (tagName.trim().startsWith("<?php")) {
-			return null;
-		}
 		checkTagNameValidity(tagName);
 
 		ElementImplForPhp element = new ElementImplForPhp();
