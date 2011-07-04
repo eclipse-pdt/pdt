@@ -92,10 +92,25 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		} catch (BadLocationException e) {
 		}
 
+		Document tempdocument = new Document(command.text);
+		String newline = tempdocument.getDefaultLineDelimiter();
+		int lines = tempdocument.getNumberOfLines();
+		StringBuffer tempsb = new StringBuffer();
+		try {
+			for (int i = 0; i < lines; i++) {
+				IRegion region = tempdocument.getLineInformation(i);
+				if (i > 0) {
+					tempsb.append(newline);
+				}
+				tempsb.append(tempdocument.get(region.getOffset(),
+						region.getLength()).trim());
+			}
+		} catch (BadLocationException e) {
+		}
 		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
 				new PhpSourceParser());
 		String start = "<?php";
-		newdocument.set(start + command.text);
+		newdocument.set(start + tempsb.toString());
 		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength());
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
@@ -106,8 +121,8 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			int lineNumber = newdocument.getNumberOfLines();
 			for (int i = 0; i < lineNumber; i++) {
 				IRegion region = newdocument.getLineInformation(i);
-				String line = newdocument.get(region.getOffset(), region
-						.getLength());
+				String line = newdocument.get(region.getOffset(),
+						region.getLength());
 				if (list.isEmpty()) {
 					line = line.substring(start.length()).trim();
 				}
@@ -115,7 +130,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			}
 		} catch (BadLocationException e) {
 		}
-		String newline = newdocument.getLineDelimiter();
+		// String newline = newdocument.getLineDelimiter();
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
 			sb.append(helpBuffer.toString()).append(list.get(i));
