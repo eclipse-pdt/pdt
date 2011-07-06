@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<plugin name="Eclipse Help" id="pdtcom.zend.php.help" version ="1.0" provider-name="">
-<extension point="org.eclipse.help.toc">
-<toc file="toc.xml" primary="true" />
-</extension>
-</plugin>

@@ -12,200 +12,200 @@
  -->
 
 <toc label="Table of Contents">
-  <topic label="PDT Table of Contents" href="html/pdt_table_of_contents.htm"/>
-  <topic label="What's New in PDT 2.x" href="html/what_s_new_in_pdt_2.0.htm"/>
-  <topic label="Getting Started" href="html/getting_started.htm">
-    <topic label="Quick Start" href="html/quick_start.htm"/>
-    <topic label="Basic Tutorials" href="html/basic_tutorial.htm">
-      <topic label="Creating Projects and Files" href="html/creating_and_uploading_a_project.htm"/>
-      <topic label="Working with Content Assist" href="html/working_with_code_assist.htm"/>
-      <topic label="Working with the Debugger" href="html/working_with_the_debugger.htm"/>
+  <topic label="PDT Table of Contents" href="http://www.eclipse.org/pdt/help/html/pdt_table_of_contents.htm"/>
+  <topic label="What's New in PDT 2.x" href="http://www.eclipse.org/pdt/help/html/what_s_new_in_pdt_2.0.htm"/>
+  <topic label="Getting Started" href="http://www.eclipse.org/pdt/help/html/getting_started.htm">
+    <topic label="Quick Start" href="http://www.eclipse.org/pdt/help/html/quick_start.htm"/>
+    <topic label="Basic Tutorials" href="http://www.eclipse.org/pdt/help/html/basic_tutorial.htm">
+      <topic label="Creating Projects and Files" href="http://www.eclipse.org/pdt/help/html/creating_and_uploading_a_project.htm"/>
+      <topic label="Working with Content Assist" href="http://www.eclipse.org/pdt/help/html/working_with_code_assist.htm"/>
+      <topic label="Working with the Debugger" href="http://www.eclipse.org/pdt/help/html/working_with_the_debugger.htm"/>
     </topic>
   </topic>
-  <topic label="Concepts" href="html/concepts.htm">
-    <topic label="PHP Version Support" href="html/php_support.htm"/>
-    <topic label="Content Assist" href="html/code_assist_concept.htm"/>
-    <topic label="Syntax Coloring" href="html/syntax_highlighting.htm"/>
-    <topic label="Automatic Completion" href="html/automatic_insertion.htm"/>
-    <topic label="Drag and Drop" href="html/drag_and_drop.htm"/>
-    <topic label="Matching Brackets" href="html/matching_brackets.htm"/>
-    <topic label="Mark Occurrences" href="html/mark_occurrences.htm"/>
-    <topic label="Code Folding" href="html/code_folding.htm"/>
-    <topic label="Code Commenting" href="html/commenting_code.htm">
-      <topic label="phpDoc Block Comments" href="html/phpdoc_comments.htm"/>
-      <topic label="Bookmarks" href="html/bookmarks.htm"/>
+  <topic label="Concepts" href="http://www.eclipse.org/pdt/help/html/concepts.htm">
+    <topic label="PHP Version Support" href="http://www.eclipse.org/pdt/help/html/php_support.htm"/>
+    <topic label="Content Assist" href="http://www.eclipse.org/pdt/help/html/code_assist_concept.htm"/>
+    <topic label="Syntax Coloring" href="http://www.eclipse.org/pdt/help/html/syntax_highlighting.htm"/>
+    <topic label="Automatic Completion" href="http://www.eclipse.org/pdt/help/html/automatic_insertion.htm"/>
+    <topic label="Drag and Drop" href="http://www.eclipse.org/pdt/help/html/drag_and_drop.htm"/>
+    <topic label="Matching Brackets" href="http://www.eclipse.org/pdt/help/html/matching_brackets.htm"/>
+    <topic label="Mark Occurrences" href="http://www.eclipse.org/pdt/help/html/mark_occurrences.htm"/>
+    <topic label="Code Folding" href="http://www.eclipse.org/pdt/help/html/code_folding.htm"/>
+    <topic label="Code Commenting" href="http://www.eclipse.org/pdt/help/html/commenting_code.htm">
+      <topic label="phpDoc Block Comments" href="http://www.eclipse.org/pdt/help/html/phpdoc_comments.htm"/>
+      <topic label="Bookmarks" href="http://www.eclipse.org/pdt/help/html/bookmarks.htm"/>
     </topic>
-    <topic label="Hover Support" href="html/hover_support.htm"/>
-    <topic label="Override Indicators" href="html/override_indicators.htm"/>
-    <topic label="PHP Working Sets" href="html/php_working_sets.htm"/>
-    <topic label="Type Hierarchy" href="html/show_type_hierarchy.htm"/>
-    <topic label="PHP Manual Integration" href="html/php_manual_integration.htm"/>
-    <topic label="Real Time Error Detection" href="html/real_time_error_detection.htm"/>
-    <topic label="Running" href="html/running.htm"/>
-    <topic label="Debugging" href="html/debugging_concept.htm"/>
-    <topic label="Breakpoints" href="html/breakpoints.htm"/>
-    <topic label="PHP Include Path" href="html/include_paths.htm"/>
-    <topic label="PHP Build Path" href="html/build_paths.htm"/>
-    <topic label="Path Mapping" href="html/path_mapping.htm"/>
-    <topic label="JavaScript Support" href="html/javascript.htm"/>
-    <topic label="Mylyn Integration" href="html/mylyn_integration.htm"/>
-    <topic label="Phar Integration" href="html/phar_integration.htm"/>
+    <topic label="Hover Support" href="http://www.eclipse.org/pdt/help/html/hover_support.htm"/>
+    <topic label="Override Indicators" href="http://www.eclipse.org/pdt/help/html/override_indicators.htm"/>
+    <topic label="PHP Working Sets" href="http://www.eclipse.org/pdt/help/html/php_working_sets.htm"/>
+    <topic label="Type Hierarchy" href="http://www.eclipse.org/pdt/help/html/show_type_hierarchy.htm"/>
+    <topic label="PHP Manual Integration" href="http://www.eclipse.org/pdt/help/html/php_manual_integration.htm"/>
+    <topic label="Real Time Error Detection" href="http://www.eclipse.org/pdt/help/html/real_time_error_detection.htm"/>
+    <topic label="Running" href="http://www.eclipse.org/pdt/help/html/running.htm"/>
+    <topic label="Debugging" href="http://www.eclipse.org/pdt/help/html/debugging_concept.htm"/>
+    <topic label="Breakpoints" href="http://www.eclipse.org/pdt/help/html/breakpoints.htm"/>
+    <topic label="PHP Include Path" href="http://www.eclipse.org/pdt/help/html/include_paths.htm"/>
+    <topic label="PHP Build Path" href="http://www.eclipse.org/pdt/help/html/build_paths.htm"/>
+    <topic label="Path Mapping" href="http://www.eclipse.org/pdt/help/html/path_mapping.htm"/>
+    <topic label="JavaScript Support" href="http://www.eclipse.org/pdt/help/html/javascript.htm"/>
+    <topic label="Mylyn Integration" href="http://www.eclipse.org/pdt/help/html/mylyn_integration.htm"/>
+    <topic label="Phar Integration" href="http://www.eclipse.org/pdt/help/html/phar_integration.htm"/>
   </topic>
-  <topic label="Tasks" href="html/tasks.htm">
-    <topic label="Creating PHP Projects" href="html/creating_php_projects.htm"/>
-    <topic label="Creating PHP Files" href="html/file_creation.htm">
-      <topic label="Creating a PHP File Within a Project" href="html/creating_a_php_file_within_a_project.htm"/>
-      <topic label="Creating a  PHP File Outside of a Project" href="html/creating_a_new_php_file_outside_of_a_project.htm"/>
-      <topic label="Opening an External File" href="html/opening_an_external_file_in_neon.htm"/>
+  <topic label="Tasks" href="http://www.eclipse.org/pdt/help/html/tasks.htm">
+    <topic label="Creating PHP Projects" href="http://www.eclipse.org/pdt/help/html/creating_php_projects.htm"/>
+    <topic label="Creating PHP Files" href="http://www.eclipse.org/pdt/help/html/file_creation.htm">
+      <topic label="Creating a PHP File Within a Project" href="http://www.eclipse.org/pdt/help/html/creating_a_php_file_within_a_project.htm"/>
+      <topic label="Creating a  PHP File Outside of a Project" href="http://www.eclipse.org/pdt/help/html/creating_a_new_php_file_outside_of_a_project.htm"/>
+      <topic label="Opening an External File" href="http://www.eclipse.org/pdt/help/html/opening_an_external_file_in_neon.htm"/>
     </topic>
-    <topic label="Using Content Assist" href="html/using_code_assist.htm"/>
-    <topic label="Using Templates" href="html/using_templates.htm"/>
-    <topic label="Using Drag and Drop" href="html/drag_and_drop.htm#bc-1"/>
-    <topic label="Formatting Code" href="html/formatting_code.htm"/>
-    <topic label="Using Code Folding" href="html/using_code_folding.htm"/>
-    <topic label="Searching for PHP Elements" href="html/searching_for_php_elements.htm"/>
-    <topic label="Opening PHP Elements" href="html/opening_php_elements.htm"/>
-    <topic label="Opening Types/Methods" href="html/opening_types_methods.htm"/>
-    <topic label="Using Smart Goto Source" href="html/using_smart_goto_source.htm"/>
-    <topic label="Viewing Type Hierarchies" href="html/viewing_type_hierarchies.htm"/>
-    <topic label="Creating PHP Working Sets" href="html/creating_php_working_sets.htm"/>
-    <topic label="Using Mark Occurrences" href="html/using_mark_occurrences.htm"/>
-    <topic label="Adding Comments" href="html/how_to_comment_and_uncomment_php_code.htm"/>
-    <topic label="Adding PHP DocBlock Comments" href="html/commenting_php_docblocks.htm"/>
+    <topic label="Using Content Assist" href="http://www.eclipse.org/pdt/help/html/using_code_assist.htm"/>
+    <topic label="Using Templates" href="http://www.eclipse.org/pdt/help/html/using_templates.htm"/>
+    <topic label="Using Drag and Drop" href="http://www.eclipse.org/pdt/help/html/drag_and_drop.htm#bc-1"/>
+    <topic label="Formatting Code" href="http://www.eclipse.org/pdt/help/html/formatting_code.htm"/>
+    <topic label="Using Code Folding" href="http://www.eclipse.org/pdt/help/html/using_code_folding.htm"/>
+    <topic label="Searching for PHP Elements" href="http://www.eclipse.org/pdt/help/html/searching_for_php_elements.htm"/>
+    <topic label="Opening PHP Elements" href="http://www.eclipse.org/pdt/help/html/opening_php_elements.htm"/>
+    <topic label="Opening Types/Methods" href="http://www.eclipse.org/pdt/help/html/opening_types_methods.htm"/>
+    <topic label="Using Smart Goto Source" href="http://www.eclipse.org/pdt/help/html/using_smart_goto_source.htm"/>
+    <topic label="Viewing Type Hierarchies" href="http://www.eclipse.org/pdt/help/html/viewing_type_hierarchies.htm"/>
+    <topic label="Creating PHP Working Sets" href="http://www.eclipse.org/pdt/help/html/creating_php_working_sets.htm"/>
+    <topic label="Using Mark Occurrences" href="http://www.eclipse.org/pdt/help/html/using_mark_occurrences.htm"/>
+    <topic label="Adding Comments" href="http://www.eclipse.org/pdt/help/html/how_to_comment_and_uncomment_php_code.htm"/>
+    <topic label="Adding PHP DocBlock Comments" href="http://www.eclipse.org/pdt/help/html/commenting_php_docblocks.htm"/>
     <topic label="Using CVS">
-      <topic label="Accessing an Existing CVS Checkout" href="html/accessing_an_existing_cvs_checkout.htm"/>
+      <topic label="Accessing an Existing CVS Checkout" href="http://www.eclipse.org/pdt/help/html/accessing_an_existing_cvs_checkout.htm"/>
     </topic>
-    <topic label="Running Files and Applications" href="html/running_files_and_applications.htm">
-      <topic label="Running PHP Scripts Locally" href="html/running_php_scripts_locally.htm"/>
-      <topic label="Running PHP Scripts Remotely" href="html/running_php_scripts_remotely.htm"/>
-      <topic label="Running PHP Web Pages" href="html/running_php_web_pages.htm"/>
+    <topic label="Running Files and Applications" href="http://www.eclipse.org/pdt/help/html/running_files_and_applications.htm">
+      <topic label="Running PHP Scripts Locally" href="http://www.eclipse.org/pdt/help/html/running_php_scripts_locally.htm"/>
+      <topic label="Running PHP Scripts Remotely" href="http://www.eclipse.org/pdt/help/html/running_php_scripts_remotely.htm"/>
+      <topic label="Running PHP Web Pages" href="http://www.eclipse.org/pdt/help/html/running_php_web_pages.htm"/>
     </topic>
-    <topic label="Debugging Files and Applications" href="html/debugging.htm">
-      <topic label="Setting Breakpoints" href="html/setting_breakpoints.htm"/>
-      <topic label="Using the Inspect Action" href="html/using_the_inspect_action.htm"/>
-      <topic label="Locally Debugging a PHP Script" href="html/locally_debugging_a_php_script.htm"/>
-      <topic label="Debugging a PHP Web Page" href="html/debugging_a_php_web_page.htm"/>
-      <topic label="Running and Analyzing Debugger Results" href="html/analyzing_debugger_results.htm"/>
-      <topic label="Setting Up Remote Debugging" href="html/troubleshooting_remote_debugging.htm">
-        <topic label="Setting your Environment to be an Allowed Host" href="html/setting_your_zend_studio_for_eclipse_to_be_an_allowed_host.htm"/>
-        <topic label="Ensuring the Placement of dummy.php" href="html/ensuring_the_placement_of_dummy.php.htm"/>
-        <topic label="Adding a Server Location Path Map" href="html/adding_a_server_path_map.htm"/>
+    <topic label="Debugging Files and Applications" href="http://www.eclipse.org/pdt/help/html/debugging.htm">
+      <topic label="Setting Breakpoints" href="http://www.eclipse.org/pdt/help/html/setting_breakpoints.htm"/>
+      <topic label="Using the Inspect Action" href="http://www.eclipse.org/pdt/help/html/using_the_inspect_action.htm"/>
+      <topic label="Locally Debugging a PHP Script" href="http://www.eclipse.org/pdt/help/html/locally_debugging_a_php_script.htm"/>
+      <topic label="Debugging a PHP Web Page" href="http://www.eclipse.org/pdt/help/html/debugging_a_php_web_page.htm"/>
+      <topic label="Running and Analyzing Debugger Results" href="http://www.eclipse.org/pdt/help/html/analyzing_debugger_results.htm"/>
+      <topic label="Setting Up Remote Debugging" href="http://www.eclipse.org/pdt/help/html/troubleshooting_remote_debugging.htm">
+        <topic label="Setting your Environment to be an Allowed Host" href="http://www.eclipse.org/pdt/help/html/setting_your_zend_studio_for_eclipse_to_be_an_allowed_host.htm"/>
+        <topic label="Ensuring the Placement of dummy.php" href="http://www.eclipse.org/pdt/help/html/ensuring_the_placement_of_dummy.php.htm"/>
+        <topic label="Adding a Server Location Path Map" href="http://www.eclipse.org/pdt/help/html/adding_a_server_path_map.htm"/>
       </topic>
     </topic>
-    <topic label="Managing PHP Libraries" href="html/php_libraries_preferences.htm">
-      <topic label="Adding a PHP Library" href="html/adding_a_php_library.htm"/>
-      <topic label="Adding External Folders to PHP Libraries" href="html/adding_external_folders_to_php_libraries.htm"/>
-      <topic label="Importing PHP User Libraries" href="html/importing_php_user_libraries.htm"/>
-      <topic label="Exporting PHP User Libraries" href="html/exporting_php_user_libraries.htm"/>
-      <topic label="Editing PHP Library Components or Folders" href="html/editing_php_library_components_or_folders.htm"/>
-      <topic label="Editing PHP User Libraries" href="html/editing_php_user_libraries.htm"/>
-      <topic label="Removing a PHP Library or Library Folder" href="html/removing_a_php_library_or_library_folder.htm"/>
+    <topic label="Managing PHP Libraries" href="http://www.eclipse.org/pdt/help/html/php_libraries_preferences.htm">
+      <topic label="Adding a PHP Library" href="http://www.eclipse.org/pdt/help/html/adding_a_php_library.htm"/>
+      <topic label="Adding External Folders to PHP Libraries" href="http://www.eclipse.org/pdt/help/html/adding_external_folders_to_php_libraries.htm"/>
+      <topic label="Importing PHP User Libraries" href="http://www.eclipse.org/pdt/help/html/importing_php_user_libraries.htm"/>
+      <topic label="Exporting PHP User Libraries" href="http://www.eclipse.org/pdt/help/html/exporting_php_user_libraries.htm"/>
+      <topic label="Editing PHP Library Components or Folders" href="http://www.eclipse.org/pdt/help/html/editing_php_library_components_or_folders.htm"/>
+      <topic label="Editing PHP User Libraries" href="http://www.eclipse.org/pdt/help/html/editing_php_user_libraries.htm"/>
+      <topic label="Removing a PHP Library or Library Folder" href="http://www.eclipse.org/pdt/help/html/removing_a_php_library_or_library_folder.htm"/>
     </topic>
-    <topic label="Configuring a Project's PHP Include Path" href="html/adding_elements_to_a_project_s_include_path.htm"/>
-    <topic label="Configuring a Project's PHP Build Path" href="html/configuring_build_paths.htm"/>
-    <topic label="Adding a Server Location Path Map" href="html/adding_a_server_path_map.htm#bc-1"/>
-    <topic label="Creating and Opening HTML Files" href="html/using_the_php_html_wysywig_editor.htm"/>
-    <topic label="Working with Mylyn Integration" href="html/mylyn_integration1.htm"/>
-    <topic label="Developing with JavaScript" href="html/using_javascript.htm">
-      <topic label="Enabling JavaScript Support in PHP Projects" href="html/enabling_javascript_support_in_php_projects.htm"/>
-      <topic label="Setting the JavaScript Build Path" href="html/setting_the_javascript_build_path.htm"/>
-      <topic label="Viewing JavaScript Elements in the Outline View" href="html/viewing_javascript_elements_in_the_outline_view.htm"/>
-      <topic label="Using JavaScript Content Assist" href="html/using_javascript_content_assist.htm"/>
-      <topic label="Using JavaScript Syntax Coloring" href="html/using_javascript_syntax_coloring.htm"/>
-      <topic label="Using JavaScript Mark Occurrences" href="html/using_javascript_mark_occurences.htm"/>
+    <topic label="Configuring a Project's PHP Include Path" href="http://www.eclipse.org/pdt/help/html/adding_elements_to_a_project_s_include_path.htm"/>
+    <topic label="Configuring a Project's PHP Build Path" href="http://www.eclipse.org/pdt/help/html/configuring_build_paths.htm"/>
+    <topic label="Adding a Server Location Path Map" href="http://www.eclipse.org/pdt/help/html/adding_a_server_path_map.htm#bc-1"/>
+    <topic label="Creating and Opening HTML Files" href="http://www.eclipse.org/pdt/help/html/using_the_php_html_wysywig_editor.htm"/>
+    <topic label="Working with Mylyn Integration" href="http://www.eclipse.org/pdt/help/html/mylyn_integration1.htm"/>
+    <topic label="Developing with JavaScript" href="http://www.eclipse.org/pdt/help/html/using_javascript.htm">
+      <topic label="Enabling JavaScript Support in PHP Projects" href="http://www.eclipse.org/pdt/help/html/enabling_javascript_support_in_php_projects.htm"/>
+      <topic label="Setting the JavaScript Build Path" href="http://www.eclipse.org/pdt/help/html/setting_the_javascript_build_path.htm"/>
+      <topic label="Viewing JavaScript Elements in the Outline View" href="http://www.eclipse.org/pdt/help/html/viewing_javascript_elements_in_the_outline_view.htm"/>
+      <topic label="Using JavaScript Content Assist" href="http://www.eclipse.org/pdt/help/html/using_javascript_content_assist.htm"/>
+      <topic label="Using JavaScript Syntax Coloring" href="http://www.eclipse.org/pdt/help/html/using_javascript_syntax_coloring.htm"/>
+      <topic label="Using JavaScript Mark Occurrences" href="http://www.eclipse.org/pdt/help/html/using_javascript_mark_occurences.htm"/>
     </topic>
   </topic>
-  <topic label="Reference" href="html/reference.htm">
-    <topic label="PHP Perspectives and Views" href="html/php_perspectives_and_views.htm">
-      <topic label="PHP Perspective" href="html/php_perspective_views.htm">
-        <topic label="PHP Explorer View" href="html/php_explorer_view.htm"/>
-        <topic label="Outline View" href="html/php_outline_view.htm"/>
-        <topic label="Type Hierarchy View" href="html/type_hierarchy_view.htm"/>
+  <topic label="Reference" href="http://www.eclipse.org/pdt/help/html/reference.htm">
+    <topic label="PHP Perspectives and Views" href="http://www.eclipse.org/pdt/help/html/php_perspectives_and_views.htm">
+      <topic label="PHP Perspective" href="http://www.eclipse.org/pdt/help/html/php_perspective_views.htm">
+        <topic label="PHP Explorer View" href="http://www.eclipse.org/pdt/help/html/php_explorer_view.htm"/>
+        <topic label="Outline View" href="http://www.eclipse.org/pdt/help/html/php_outline_view.htm"/>
+        <topic label="Type Hierarchy View" href="http://www.eclipse.org/pdt/help/html/type_hierarchy_view.htm"/>
       </topic>
-      <topic label="PHP Debug Perspective" href="html/php_debug_perspective.htm">
-        <topic label="Debug View [PHP Debug Perspective]" href="html/debug_view.htm"/>
-        <topic label="Variables View [PHP Debug Perspective]" href="html/variables_view.htm"/>
-        <topic label="Breakpoints View [PHP Debug Perspective]" href="html/breakpoints_view.htm"/>
-        <topic label="Parameter Stack View [PHP Debug Perspective]" href="html/parameter_stack.htm"/>
-        <topic label="Expressions View [PHP Debug Perspective]" href="html/expressions_view.htm"/>
-        <topic label="Debug Output View [PHP Debug Perspective]" href="html/debug_output_view.htm"/>
-        <topic label="Browser Output View [PHP Debug Perspective]" href="html/browser_output_view.htm"/>
+      <topic label="PHP Debug Perspective" href="http://www.eclipse.org/pdt/help/html/php_debug_perspective.htm">
+        <topic label="Debug View [PHP Debug Perspective]" href="http://www.eclipse.org/pdt/help/html/debug_view.htm"/>
+        <topic label="Variables View [PHP Debug Perspective]" href="http://www.eclipse.org/pdt/help/html/variables_view.htm"/>
+        <topic label="Breakpoints View [PHP Debug Perspective]" href="http://www.eclipse.org/pdt/help/html/breakpoints_view.htm"/>
+        <topic label="Parameter Stack View [PHP Debug Perspective]" href="http://www.eclipse.org/pdt/help/html/parameter_stack.htm"/>
+        <topic label="Expressions View [PHP Debug Perspective]" href="http://www.eclipse.org/pdt/help/html/expressions_view.htm"/>
+        <topic label="Debug Output View [PHP Debug Perspective]" href="http://www.eclipse.org/pdt/help/html/debug_output_view.htm"/>
+        <topic label="Browser Output View [PHP Debug Perspective]" href="http://www.eclipse.org/pdt/help/html/browser_output_view.htm"/>
       </topic>
       <topic label="Additional Views">
-        <topic label="PHP Functions View" href="html/php_functions_view.htm"/>
-        <topic label="PHP Project Outline View" href="html/project_outline_view.htm"/>
+        <topic label="PHP Functions View" href="http://www.eclipse.org/pdt/help/html/php_functions_view.htm"/>
+        <topic label="PHP Project Outline View" href="http://www.eclipse.org/pdt/help/html/project_outline_view.htm"/>
       </topic>
     </topic>
-    <topic label="PHP Perspective Menus" href="html/menus.htm">
-      <topic label="File Menu" href="html/file.htm">
-        <topic label="New" href="html/new.htm"/>
-        <topic label="Import" href="html/import.htm"/>
-        <topic label="Export" href="html/export.htm"/>
+    <topic label="PHP Perspective Menus" href="http://www.eclipse.org/pdt/help/html/menus.htm">
+      <topic label="File Menu" href="http://www.eclipse.org/pdt/help/html/file.htm">
+        <topic label="New" href="http://www.eclipse.org/pdt/help/html/new.htm"/>
+        <topic label="Import" href="http://www.eclipse.org/pdt/help/html/import.htm"/>
+        <topic label="Export" href="http://www.eclipse.org/pdt/help/html/export.htm"/>
       </topic>
-      <topic label="Edit Menu" href="html/edit.htm"/>
-      <topic label="Source Menu" href="html/source.htm"/>
-      <topic label="Refactor Menu" href="html/refactor.htm"/>
-      <topic label="Navigate Menu" href="html/navigate.htm"/>
-      <topic label="Search Menu" href="html/search.htm"/>
-      <topic label="Project Menu" href="html/project.htm"/>
-      <topic label="Run Menu" href="html/run.htm"/>
-      <topic label="Navigation Submenu" href="html/navigation.htm"/>
-      <topic label="Window Menu" href="html/window.htm"/>
-      <topic label="Help Menu" href="html/help.htm"/>
+      <topic label="Edit Menu" href="http://www.eclipse.org/pdt/help/html/edit.htm"/>
+      <topic label="Source Menu" href="http://www.eclipse.org/pdt/help/html/source.htm"/>
+      <topic label="Refactor Menu" href="http://www.eclipse.org/pdt/help/html/refactor.htm"/>
+      <topic label="Navigate Menu" href="http://www.eclipse.org/pdt/help/html/navigate.htm"/>
+      <topic label="Search Menu" href="http://www.eclipse.org/pdt/help/html/search.htm"/>
+      <topic label="Project Menu" href="http://www.eclipse.org/pdt/help/html/project.htm"/>
+      <topic label="Run Menu" href="http://www.eclipse.org/pdt/help/html/run.htm"/>
+      <topic label="Navigation Submenu" href="http://www.eclipse.org/pdt/help/html/navigation.htm"/>
+      <topic label="Window Menu" href="http://www.eclipse.org/pdt/help/html/window.htm"/>
+      <topic label="Help Menu" href="http://www.eclipse.org/pdt/help/html/help.htm"/>
     </topic>
-    <topic label="PHP Perspective Main Toolbar" href="html/php_perspective_main_toolbar.htm"/>
-    <topic label="PHP Preferences" href="html/preferences.htm">
-      <topic label="PHP Preferences Page" href="html/php.htm"/>
-      <topic label="Appearance Preferences" href="html/appearance.htm"/>
+    <topic label="PHP Perspective Main Toolbar" href="http://www.eclipse.org/pdt/help/html/php_perspective_main_toolbar.htm"/>
+    <topic label="PHP Preferences" href="http://www.eclipse.org/pdt/help/html/preferences.htm">
+      <topic label="PHP Preferences Page" href="http://www.eclipse.org/pdt/help/html/php.htm"/>
+      <topic label="Appearance Preferences" href="http://www.eclipse.org/pdt/help/html/appearance.htm"/>
       <topic label="Code Style Preferences">
-        <topic label="Code Templates Preferences" href="html/code_templates_preferences.htm"/>
-        <topic label="Formatter Preferences" href="html/formatter.htm"/>
+        <topic label="Code Templates Preferences" href="http://www.eclipse.org/pdt/help/html/code_templates_preferences.htm"/>
+        <topic label="Formatter Preferences" href="http://www.eclipse.org/pdt/help/html/formatter.htm"/>
       </topic>
-      <topic label="Debug Preferences" href="html/debug.htm">
-        <topic label="Installed Debuggers Preferences" href="html/installed_debuggers.htm"/>
-        <topic label="Step Filtering Preferences" href="html/step_filtering_preferences.htm"/>
-        <topic label="Workbench Options Preferences" href="html/launching.htm"/>
+      <topic label="Debug Preferences" href="http://www.eclipse.org/pdt/help/html/debug.htm">
+        <topic label="Installed Debuggers Preferences" href="http://www.eclipse.org/pdt/help/html/installed_debuggers.htm"/>
+        <topic label="Step Filtering Preferences" href="http://www.eclipse.org/pdt/help/html/step_filtering_preferences.htm"/>
+        <topic label="Workbench Options Preferences" href="http://www.eclipse.org/pdt/help/html/launching.htm"/>
       </topic>
-      <topic label="Editor Preferences" href="html/editor.htm">
-        <topic label="Content Assist Preferences" href="html/code_assist.htm"/>
-        <topic label="Code Folding Preferences" href="html/folding.htm"/>
-        <topic label="Hovers Preferences" href="html/hovers.htm"/>
-        <topic label="Mark Occurrences Preferences" href="html/mark_occurences.htm"/>
-        <topic label="Save Actions Preferences" href="html/save_actions.htm"/>
-        <topic label="Syntax Coloring Preferences" href="html/syntax_coloring.htm"/>
-        <topic label="Task Tags Preferences" href="html/task_tags.htm"/>
-        <topic label="Templates Preferences" href="html/templates.htm"/>
-        <topic label="Typing Preferences" href="html/typing.htm"/>
+      <topic label="Editor Preferences" href="http://www.eclipse.org/pdt/help/html/editor.htm">
+        <topic label="Content Assist Preferences" href="http://www.eclipse.org/pdt/help/html/code_assist.htm"/>
+        <topic label="Code Folding Preferences" href="http://www.eclipse.org/pdt/help/html/folding.htm"/>
+        <topic label="Hovers Preferences" href="http://www.eclipse.org/pdt/help/html/hovers.htm"/>
+        <topic label="Mark Occurrences Preferences" href="http://www.eclipse.org/pdt/help/html/mark_occurences.htm"/>
+        <topic label="Save Actions Preferences" href="http://www.eclipse.org/pdt/help/html/save_actions.htm"/>
+        <topic label="Syntax Coloring Preferences" href="http://www.eclipse.org/pdt/help/html/syntax_coloring.htm"/>
+        <topic label="Task Tags Preferences" href="http://www.eclipse.org/pdt/help/html/task_tags.htm"/>
+        <topic label="Templates Preferences" href="http://www.eclipse.org/pdt/help/html/templates.htm"/>
+        <topic label="Typing Preferences" href="http://www.eclipse.org/pdt/help/html/typing.htm"/>
       </topic>
-      <topic label="New Project Layout Preferences" href="html/new_project_layout_preferences.htm"/>
-      <topic label="PHP Executables Preferences" href="html/php_executables.htm"/>
-      <topic label="PHP Interpreter Preferences" href="html/php_interpreter.htm"/>
-      <topic label="PHP Libraries Preferences" href="html/php_libraries_preferences.htm#bc-1"/>
-      <topic label="PHP Manual Preferences" href="html/php_manual.htm"/>
-      <topic label="PHP Servers Preferences" href="html/php_servers.htm"/>
-      <topic label="Tunneling Debug Preferences" href="html/configuring_tunneling_debug_preferences.htm"/>
+      <topic label="New Project Layout Preferences" href="http://www.eclipse.org/pdt/help/html/new_project_layout_preferences.htm"/>
+      <topic label="PHP Executables Preferences" href="http://www.eclipse.org/pdt/help/html/php_executables.htm"/>
+      <topic label="PHP Interpreter Preferences" href="http://www.eclipse.org/pdt/help/html/php_interpreter.htm"/>
+      <topic label="PHP Libraries Preferences" href="http://www.eclipse.org/pdt/help/html/php_libraries_preferences.htm#bc-1"/>
+      <topic label="PHP Manual Preferences" href="http://www.eclipse.org/pdt/help/html/php_manual.htm"/>
+      <topic label="PHP Servers Preferences" href="http://www.eclipse.org/pdt/help/html/php_servers.htm"/>
+      <topic label="Tunneling Debug Preferences" href="http://www.eclipse.org/pdt/help/html/configuring_tunneling_debug_preferences.htm"/>
     </topic>
-    <topic label="PHP Project Properties" href="html/php_project_properties.htm">
-      <topic label="Resource Properties" href="html/resource_properties.htm"/>
-      <topic label="Builders Properties" href="html/builders_properties.htm"/>
+    <topic label="PHP Project Properties" href="http://www.eclipse.org/pdt/help/html/php_project_properties.htm">
+      <topic label="Resource Properties" href="http://www.eclipse.org/pdt/help/html/resource_properties.htm"/>
+      <topic label="Builders Properties" href="http://www.eclipse.org/pdt/help/html/builders_properties.htm"/>
       <topic label="Code Style Properties">
-        <topic label="Code Templates Properties" href="html/code_templates_properties.htm"/>
-        <topic label="Formatter Properties" href="html/formatter_properties.htm"/>
+        <topic label="Code Templates Properties" href="http://www.eclipse.org/pdt/help/html/code_templates_properties.htm"/>
+        <topic label="Formatter Properties" href="http://www.eclipse.org/pdt/help/html/formatter_properties.htm"/>
       </topic>
-      <topic label="PHP Build Path Properties" href="html/php_build_path_properties.htm"/>
-      <topic label="PHP Debug Properties" href="html/php_debug_properties.htm"/>
-      <topic label="PHP Include Path Properties" href="html/php_include_path_properties.htm"/>
-      <topic label="PHP Interpreter Properties" href="html/php_interpreter_properties.htm"/>
-      <topic label="PHP Task Tags Properties" href="html/php_task_tags_properties.htm"/>
-      <topic label="Project References Properties" href="html/project_references_properties.htm"/>
-      <topic label="Refactoring History" href="html/refactoring_history.htm"/>
-      <topic label="Run/Debug Settings Properties" href="html/run_debug_settings_properties.htm"/>
-      <topic label="Save Actions Properties" href="html/save_actions_properties.htm"/>
-      <topic label="Task Tags Properties" href="html/task_tags_properties.htm"/>
-      <topic label="Validation Properties" href="html/validation_properties.htm"/>
+      <topic label="PHP Build Path Properties" href="http://www.eclipse.org/pdt/help/html/php_build_path_properties.htm"/>
+      <topic label="PHP Debug Properties" href="http://www.eclipse.org/pdt/help/html/php_debug_properties.htm"/>
+      <topic label="PHP Include Path Properties" href="http://www.eclipse.org/pdt/help/html/php_include_path_properties.htm"/>
+      <topic label="PHP Interpreter Properties" href="http://www.eclipse.org/pdt/help/html/php_interpreter_properties.htm"/>
+      <topic label="PHP Task Tags Properties" href="http://www.eclipse.org/pdt/help/html/php_task_tags_properties.htm"/>
+      <topic label="Project References Properties" href="http://www.eclipse.org/pdt/help/html/project_references_properties.htm"/>
+      <topic label="Refactoring History" href="http://www.eclipse.org/pdt/help/html/refactoring_history.htm"/>
+      <topic label="Run/Debug Settings Properties" href="http://www.eclipse.org/pdt/help/html/run_debug_settings_properties.htm"/>
+      <topic label="Save Actions Properties" href="http://www.eclipse.org/pdt/help/html/save_actions_properties.htm"/>
+      <topic label="Task Tags Properties" href="http://www.eclipse.org/pdt/help/html/task_tags_properties.htm"/>
+      <topic label="Validation Properties" href="http://www.eclipse.org/pdt/help/html/validation_properties.htm"/>
     </topic>
-    <topic label="PHP Icons" href="html/php_icons.htm"/>
-    <topic label="Keymap" href="html/keymap.htm"/>
+    <topic label="PHP Icons" href="http://www.eclipse.org/pdt/help/html/php_icons.htm"/>
+    <topic label="Keymap" href="http://www.eclipse.org/pdt/help/html/keymap.htm"/>
   </topic>
-  <topic label="Video Tutorials" href="html/video_tutorials.htm"/>
+  <topic label="Video Tutorials" href="http://www.eclipse.org/pdt/help/html/video_tutorials.htm"/>
 </toc>
