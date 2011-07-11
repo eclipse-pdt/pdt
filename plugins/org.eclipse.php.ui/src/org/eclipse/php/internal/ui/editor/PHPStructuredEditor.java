@@ -83,6 +83,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
+import org.eclipse.php.internal.ui.autoEdit.TabAutoEditStrategy;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderProxy;
@@ -3785,4 +3786,31 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	public void firePropertyChange(int property) {
 		super.firePropertyChange(property);
 	}
+
+	protected boolean isTabsToSpacesConversionEnabled() {
+		return true;
+	}
+
+	protected void installTabsToSpacesConverter() {
+		SourceViewerConfiguration config = getSourceViewerConfiguration();
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (config != null && sourceViewer instanceof ITextViewerExtension7) {
+			((ITextViewerExtension7) sourceViewer)
+					.setTabsToSpacesConverter(new TabAutoEditStrategy());
+			updateIndentPrefixes();
+		}
+	}
+
+	/**
+	 * Installs a tabs to spaces converter.
+	 * 
+	 * <p>
+	 * Subclasses may extend or override this method.
+	 * </p>
+	 * 
+	 * @since 3.3
+	 */
+	protected void uninstallTabsToSpacesConverter() {
+	}
+
 }

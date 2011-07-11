@@ -671,9 +671,4 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			fireDirty();
 		}
 	}
-
-	@Override
-	public void setTabsToSpacesConverter(IAutoEditStrategy converter) {
-		// do nothing,we use TabAutoEditStrategy to deal with '\t'
-	}
 }
