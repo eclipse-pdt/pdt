@@ -110,7 +110,9 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
 				new PhpSourceParser());
 		String start = "<?php";
-		newdocument.set(start + tempsb.toString());
+		// String newline = newdocument.getDefaultLineDelimiter();
+		// newdocument.set(start + newline + command.text.trim());
+		newdocument.set(start + newline + tempsb.toString());
 		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength());
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
@@ -123,8 +125,8 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				IRegion region = newdocument.getLineInformation(i);
 				String line = newdocument.get(region.getOffset(),
 						region.getLength());
-				if (list.isEmpty()) {
-					line = line.substring(start.length()).trim();
+				if (i == 0) {
+					continue;
 				}
 				list.add(line);
 			}
