@@ -1554,7 +1554,7 @@
 	</extension>
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
-			class="org.eclipse.dltk.ui.ProblemsLabelDecorator" id="org.eclipse.php.ui.problemsDecorator"
+			class="org.eclipse.dltk.internal.ui.navigator.TreeHierarchyLayoutProblemsDecorator" id="org.eclipse.php.ui.problemsDecorator"
 			label="%decorator.label.0" lightweight="true" location="BOTTOM_LEFT"
 			state="true">
 			<enablement>
@@ -1579,7 +1579,7 @@
 	
 	<extension point="org.eclipse.ui.decorators">
 		<decorator adaptable="true"
-			class="org.eclipse.dltk.ui.ProblemsLabelDecorator" id="org.eclipse.php.ui.problemsDecoratorForIModelElement"
+			class="org.eclipse.dltk.internal.ui.navigator.TreeHierarchyLayoutProblemsDecorator" id="org.eclipse.php.ui.problemsDecoratorForIModelElement"
 			label="%decorator.label.0" lightweight="true" location="BOTTOM_LEFT"
 			state="true">
 			<enablement>
