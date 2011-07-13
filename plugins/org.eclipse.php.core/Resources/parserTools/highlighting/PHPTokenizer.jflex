@@ -570,7 +570,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 	 * user method
 	 */
 	private boolean isNestable(String tagName) {
-		return true;
+		return false; //true is for jsp
 	}
 
 /**
