@@ -26,6 +26,7 @@ import org.eclipse.php.core.tests.dom_ast.binding.BindingTests;
 import org.eclipse.php.core.tests.dom_ast.matcher.ASTMatcherTests;
 import org.eclipse.php.core.tests.dom_ast.parser.DomParserTests;
 import org.eclipse.php.core.tests.dom_ast.rewrite.ASTRewriteTests;
+import org.eclipse.php.core.tests.errors.ErrorReportingTests;
 import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
 import org.eclipse.php.core.tests.formatter.FormatterTests;
 import org.eclipse.php.core.tests.includepath.IncludePathManagerTests;
@@ -45,7 +46,7 @@ public class AllTests {
 		// Model tests:
 		suite.addTest(DomParserTests.suite());
 		suite.addTest(CompilerParserTests.suite());
-		// suite.addTest(ErrorReportingTests.suite());
+		suite.addTest(ErrorReportingTests.suite());
 		suite.addTest(ASTRewriteTests.suite());
 		suite.addTest(ASTMatcherTests.suite());
 		suite.addTest(CommentMapperTests.suite());
