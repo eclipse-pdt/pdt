@@ -11,8 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.pathmapper;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugTarget;
@@ -32,38 +31,98 @@ public class PathEntrySelector implements IPathEntryFilter {
 	public PathEntrySelector() {
 	}
 
-	public PathEntry[] filter(final PathEntry[] entries,
+	public PathEntry[] filter(PathEntry[] entries,
 			final VirtualPath remotePath, final IDebugTarget debugTarget) {
+		entries = removeDuplicate(entries);
 		final List<PathEntry> l = new LinkedList<PathEntry>();
-		Runnable r = new Runnable() {
-			public void run() {
-				// grab usable shell from somewhere:
-				Shell shell = Display.getDefault().getActiveShell();
-				if (shell == null) {
-					IWorkbenchWindow window = PlatformUI.getWorkbench()
-							.getActiveWorkbenchWindow();
-					if (window == null) {
-						IWorkbenchWindow windows[] = PlatformUI.getWorkbench()
-								.getWorkbenchWindows();
-						window = windows[0];
-					}
-					if (window != null) {
-						shell = window.getShell();
-					}
-				}
-				PathEntry entry = runFilterDialog(shell, remotePath, entries,
-						debugTarget);
-				if (entry != null) {
-					l.add(entry);
-				}
-			}
-		};
-		if (Display.getCurrent() != null) {
-			r.run();
+		final PathEntry[] mostMatchEntries = getMostMatchEntries(entries,
+				remotePath);
+		if (mostMatchEntries.length == 1) {
+			l.add(mostMatchEntries[0]);
 		} else {
-			Display.getDefault().syncExec(r);
+			Runnable r = new Runnable() {
+				public void run() {
+					// grab usable shell from somewhere:
+					Shell shell = Display.getDefault().getActiveShell();
+					if (shell == null) {
+						IWorkbenchWindow window = PlatformUI.getWorkbench()
+								.getActiveWorkbenchWindow();
+						if (window == null) {
+							IWorkbenchWindow windows[] = PlatformUI
+									.getWorkbench().getWorkbenchWindows();
+							window = windows[0];
+						}
+						if (window != null) {
+							shell = window.getShell();
+						}
+					}
+					PathEntry entry = runFilterDialog(shell, remotePath,
+							mostMatchEntries, debugTarget);
+					if (entry != null) {
+						l.add(entry);
+					}
+				}
+			};
+			if (Display.getCurrent() != null) {
+				r.run();
+			} else {
+				Display.getDefault().syncExec(r);
+			}
 		}
 		return l.toArray(new PathEntry[l.size()]);
+	}
+
+	private PathEntry[] removeDuplicate(PathEntry[] entries) {
+		Set<PathEntry> set = new HashSet<PathEntry>();
+		for (int i = 0; i < entries.length; i++) {
+			set.add(entries[i]);
+		}
+		return set.toArray(new PathEntry[set.size()]);
+	}
+
+	private PathEntry[] getMostMatchEntries(PathEntry[] entries,
+			VirtualPath remotePath) {
+		if (remotePath.getSegmentsCount() == 1) {
+			return entries;
+		}
+		Map<Integer, List<PathEntry>> map = new HashMap<Integer, List<PathEntry>>();
+		int mostMatchSegmentsNumber = 1;
+		for (int i = 0; i < entries.length; i++) {
+			PathEntry pathEntry = entries[i];
+			VirtualPath virtualPath = pathEntry.getAbstractPath();
+			int matchSegmentsNumber = getMatchSegmentsNumber(virtualPath,
+					remotePath);
+			if (matchSegmentsNumber > mostMatchSegmentsNumber) {
+				mostMatchSegmentsNumber = matchSegmentsNumber;
+			}
+			List<PathEntry> list = map.get(matchSegmentsNumber);
+			if (list == null) {
+				list = new ArrayList<PathEntry>();
+				map.put(matchSegmentsNumber, list);
+			}
+			list.add(pathEntry);
+
+		}
+		List<PathEntry> mostMatchList = map.get(mostMatchSegmentsNumber);
+		return mostMatchList.toArray(new PathEntry[mostMatchList.size()]);
+	}
+
+	private int getMatchSegmentsNumber(VirtualPath virtualPath,
+			VirtualPath remotePath) {
+		int i = virtualPath.getSegmentsCount();
+		if (i > remotePath.getSegmentsCount()) {
+			i = remotePath.getSegmentsCount();
+		}
+		int result = 0;
+		// compare last i segments.
+		for (int j = i - 1; j >= 0; j--) {
+			if (virtualPath.getSegments()[j
+					+ (virtualPath.getSegmentsCount() - i)].equals(remotePath
+					.getSegments()[j + (remotePath.getSegmentsCount() - i)])) {
+				result++;
+			}
+		}
+		return result;
 	}
 
 	protected PathEntrySelectionDialog createSelectionDialog(Shell shell,
