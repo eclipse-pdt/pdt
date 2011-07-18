@@ -156,7 +156,7 @@
 				<enablement>
 					<count value="1" />
 					<!-- Pass a 'script' argument for the enablement test -->
-					<test args="script" property="org.eclipse.php.debug.ui.launchablePHP" value="true" />
+					<test args="script" property="org.eclipse.php.debug.ui.launchableCLIPHP" value="true" />
 				</enablement>
 			</contextualLaunch>
 			<configurationType
@@ -467,6 +467,13 @@
 			class="org.eclipse.php.internal.debug.ui.PropertyTesters.PHPLaunchPropertyTester"
 			id="org.eclipse.php.debug.ui.launchPropertyTester" namespace="org.eclipse.php.debug.ui"
 			properties="launchablePHP" type="java.lang.Object" />
+	</extension>
+ 
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			class="org.eclipse.php.internal.debug.ui.PropertyTesters.PHPCLILaunchPropertyTester"
+			id="org.eclipse.php.debug.ui.cliLaunchPropertyTester" namespace="org.eclipse.php.debug.ui"
+			properties="launchableCLIPHP" type="java.lang.Object" />
 	</extension>
  
 	<extension point="org.eclipse.debug.ui.variableValueEditors">
