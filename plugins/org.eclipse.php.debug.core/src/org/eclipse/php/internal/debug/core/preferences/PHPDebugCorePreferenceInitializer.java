@@ -36,6 +36,7 @@ public class PHPDebugCorePreferenceInitializer extends
 
 		// formatting preferences
 		node.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, true);
+		node.putBoolean(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG, false);
 		node.putBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);

@@ -57,6 +57,20 @@ public class PHPProjectPreferences {
 
 	}
 
+	public static boolean isEnableCLIDebug(IProject project) {
+		Preferences prefs = getModelPreferences();
+		boolean enableCLIDebug = prefs
+				.getBoolean(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG);
+		if (project != null && getElementSettingsForProject(project)) {
+			IScopeContext projectScope = getProjectScope(project);
+			enableCLIDebug = projectScope.getNode(getPreferenceNodeQualifier())
+					.getBoolean(PHPDebugCorePreferenceNames.ENABLE_CLI_DEBUG,
+							enableCLIDebug);
+		}
+		return enableCLIDebug;
+
+	}
+
 	public static String getDefaultBasePath(IProject project) {
 
 		String basePath = null;
