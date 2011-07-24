@@ -1,0 +1,9 @@
+--TEST--
+Test unfinished class body error reporting
+--FILE--
+<?php
+class A {
+$a = new A();
+?>
+--EXPECT--
+[line=3, start=16, end=18] syntax error, unexpected '$a', expecting 'function'

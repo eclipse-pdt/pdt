@@ -2,7 +2,7 @@
 Test unfinished method declaration error reporting
 --FILE--
 <?php
-function foo() {
+function foo($a,) {}
 ?>
 --EXPECT--
-[line=3, start=25, end=28] syntax error, unexpected 'EOF'
+[line=2, start=21, end=22] syntax error, unexpected ','

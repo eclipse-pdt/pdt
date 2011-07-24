@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished class declaration error reporting
+--FILE--
+<?php
+class A 
+?>
+--EXPECT--
+[line=3, start=15, end=18] syntax error, unexpected 'EOF', expecting '{'

@@ -1,0 +1,9 @@
+--TEST--
+Test unfinished interface declaration error reporting
+--FILE--
+<?php
+interface R{};
+interface I extends R, {}
+?>
+--EXPECT--
+[line=3, start=44, end=45] syntax error, unexpected '{'

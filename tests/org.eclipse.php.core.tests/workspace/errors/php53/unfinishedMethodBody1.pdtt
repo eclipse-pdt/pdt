@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished method declaration error reporting
+--FILE--
+<?php
+function foo() { $a }
+?>
+--EXPECT--
+[line=2, start=26, end=27] syntax error, unexpected '}'

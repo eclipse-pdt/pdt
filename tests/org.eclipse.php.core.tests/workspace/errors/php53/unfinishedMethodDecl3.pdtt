@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished method declaration error reporting
+--FILE--
+<?php
+function foo(A) {}
+?>
+--EXPECT--
+[line=2, start=20, end=21] syntax error, unexpected ')', expecting 'variable' or '&'
