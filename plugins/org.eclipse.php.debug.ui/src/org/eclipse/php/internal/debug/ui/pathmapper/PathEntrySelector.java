@@ -143,11 +143,13 @@ public class PathEntrySelector implements IPathEntryFilter {
 
 			// Ignore path was chosen:
 			VirtualPath ignorePath = selectDialog.getIgnoreResult();
+			result = new PathEntry(ignorePath, PathEntry.Type.SERVER, null);
 			if (debugTarget instanceof PHPDebugTarget) {
 				PHPDebugTarget phpDebugTarget = (PHPDebugTarget) debugTarget;
 				phpDebugTarget.getContextManager().addToResolveBlacklist(
 						ignorePath, Type.RECURSIVE);
 			}
+			return result;
 		} else {
 			try {
 				debugTarget.terminate();
