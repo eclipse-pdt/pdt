@@ -63,7 +63,6 @@ public class PathMapper implements IXMLPreferencesStorable {
 	}
 
 	public synchronized void addServerEntry(String remoteFile, PathEntry entry) {
-		VirtualPath remotePath = new VirtualPath(remoteFile);
 		VirtualPath localPath = entry.getAbstractPath().clone(); // don't break
 																	// original
 																	// entry
@@ -98,7 +97,9 @@ public class PathMapper implements IXMLPreferencesStorable {
 		if (path != null) {
 			String localFile = path.toString();
 			Type type = getPathType(path);
-			if (type == Type.WORKSPACE) {
+			if (type == Type.SERVER) {
+				return null;
+			} else if (type == Type.WORKSPACE) {
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot()
 						.findMember(localFile);
 				if (resource != null) {
