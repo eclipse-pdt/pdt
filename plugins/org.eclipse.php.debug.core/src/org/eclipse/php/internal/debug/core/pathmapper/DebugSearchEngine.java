@@ -174,6 +174,16 @@ public class DebugSearchEngine {
 				// First, look into the path mapper:
 				localFile[0] = pathMapper.getLocalFile(remoteFile);
 				if (localFile[0] != null) {
+					if (localFile[0].getType() == Type.SERVER) {
+						localFile[0] = null;
+					}
+					return Status.OK_STATUS;
+				}
+
+				// if it is server mapping
+				localFile[0] = pathMapper.getServerFile(remoteFile);
+				if (localFile[0] != null) {
+					localFile[0] = null;
 					return Status.OK_STATUS;
 				}
 
@@ -371,8 +381,11 @@ public class DebugSearchEngine {
 							results.toArray(new PathEntry[results.size()]),
 							debugTarget);
 					if (localFile[0] != null) {
-						pathMapper.addEntry(remoteFile, localFile[0]);
+						pathMapper.addServerEntry(remoteFile, localFile[0]);
 						PathMapperRegistry.storeToPreferences();
+						if (localFile[0].getType() == Type.SERVER) {
+							localFile[0] = null;
+						}
 					}
 				}
 				return Status.OK_STATUS;

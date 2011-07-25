@@ -23,7 +23,8 @@ public class PathEntry {
 	 */
 	public enum Type {
 		WORKSPACE("Workspace File"), INCLUDE_VAR("Include Path Variable"), INCLUDE_FOLDER(
-				"Include Path Folder"), EXTERNAL("External File"), ;
+				"Include Path Folder"), EXTERNAL("External File"), SERVER(
+				"Server File"), ;
 
 		private String name;
 

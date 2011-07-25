@@ -62,6 +62,17 @@ public class PathMapper implements IXMLPreferencesStorable {
 		}
 	}
 
+	public synchronized void addServerEntry(String remoteFile, PathEntry entry) {
+		VirtualPath remotePath = new VirtualPath(remoteFile);
+		VirtualPath localPath = entry.getAbstractPath().clone(); // don't break
+																	// original
+																	// entry
+																	// path
+		remoteToLocalMap.put(localPath, localPath);
+		localToRemoteMap.put(localPath, localPath);
+		localToPathEntryType.put(localPath, entry.getType());
+	}
+
 	public String getRemoteFile(String localFile) {
 		VirtualPath path = getPath(localToRemoteMap, new VirtualPath(localFile));
 		if (path != null) {
@@ -100,6 +111,18 @@ public class PathMapper implements IXMLPreferencesStorable {
 						return new PathEntry(path, type, null);
 					}
 					return new PathEntry(path, type, file.getParentFile());
+				}
+			}
+		}
+		return null;
+	}
+
+	public PathEntry getServerFile(String remoteFile) {
+		VirtualPath tmp = new VirtualPath(remoteFile);
+		for (VirtualPath path : remoteToLocalMap.keySet()) {
+			if (localToPathEntryType.get(path) == Type.SERVER) {
+				if (path.isPrefixOf(tmp)) {
+					return new PathEntry(path, Type.SERVER, null);
 				}
 			}
 		}
