@@ -522,6 +522,12 @@
     <toggleTargetFactory
           class="org.eclipse.php.internal.debug.ui.breakpoint.PHPToggleBreakpointsTargetFactory"
           id="org.eclipse.php.debug.ui.PHPtoggleTargetFactory">
+       <enablement>
+       <!-- Enable the breakpoint toggle for the PHP editor -->
+          <or>
+            <instanceof value="org.eclipse.php.internal.ui.editor.PHPStructuredEditor"/>
+          </or>
+       </enablement>
     </toggleTargetFactory>
  </extension>
 <!-- refactoring -->
