@@ -44,6 +44,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -899,12 +900,16 @@ public class PHPLaunchUtilities {
 			String phpExe, String phpConfigDir, String scriptPath, String[] args)
 			throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
-		String aspTags = isUsingASPTags(getProject(configuration)) ? "on"
+		IProject project = getProject(configuration);
+		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on"
+				: "off";
+		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on"
 				: "off";
 
 		List<String> cmdLineList = new LinkedList<String>();
 		cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-n", "-c",
-				phpConfigDir, "-d", "asp_tags=" + aspTags, scriptPath }));
+				phpConfigDir, "-d", "asp_tags=" + aspTags, "-d",
+				"short_open_tag=" + shortOpenTag, scriptPath }));
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
 		}
