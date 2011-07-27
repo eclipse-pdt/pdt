@@ -1297,7 +1297,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 //PHP MACROS
 WHITESPACE = [\n\r \t]
 //PHP_START = {WHITESPACE}*(<\?{WHITESPACE}*)|(<\?[Pp][Hh][P|p]{WHITESPACE}+)
-PHP_START       = <\?[Pp][Hh][P|p]{WHITESPACE}*
+PHP_START       = <\?[Pp][Hh][P|p]{WHITESPACE}+
 //PIend = \?>
 PHP_ASP_START=<%
 PHP_ASP_END=%>
@@ -1665,17 +1665,6 @@ PHP_ASP_END=%>
 	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_XML_PI_ATTRIBUTE_NAME);
         return XML_TAG_NAME;
-}
-// XML declarations
-<ST_PI> ((P|p)(H|h)(P|p)) {
-	if(Debug.debugTokenizer)
-		dump("PHP processing instruction target");//$NON-NLS-1$
-	//fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-	//fEmbeddedPostState = ST_XML_EQUALS;
-        //yybegin(ST_XML_PI_ATTRIBUTE_NAME);
-        //return XML_TAG_NAME;
-        yybegin(ST_PHP_CONTENT);
-		return PHP_OPEN;
 }
 <ST_PI> ([iI][mM][pP][oO][rR][tT]) {
 	if(Debug.debugTokenizer)
