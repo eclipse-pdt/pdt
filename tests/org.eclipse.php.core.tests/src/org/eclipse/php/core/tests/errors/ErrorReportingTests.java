@@ -163,7 +163,7 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 
 	protected static IFile createFile(String data) throws Exception {
 
-		testFile = project.getFile("test" + (++count) + ".php");
+		testFile = project.getFile("ErrorReportingTests_" + (++count) + ".php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
