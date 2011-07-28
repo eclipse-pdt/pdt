@@ -76,6 +76,8 @@ import org.eclipse.swt.widgets.*;
  */
 public abstract class ContentMergeViewer extends ContentViewer implements
 		IPropertyChangeNotifier, IFlushable {
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=330672
+	org.eclipse.compare.contentmergeviewer.ContentMergeViewer cmv;
 
 	class SaveAction extends MergeViewerAction {
 
@@ -372,6 +374,55 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 		fRightSaveAction = new SaveAction(false);
 		fRightSaveAction.setEnabled(false);
 
+		// this is used to update the dirty status,if we use
+		// org.eclipse.php.internal.ui.compare.ContentMergeViewer,we will get a
+		// ClassCastException
+		cmv = new org.eclipse.compare.contentmergeviewer.ContentMergeViewer(
+				fStyles, fBundle, fCompareConfiguration) {
+
+			@Override
+			protected void createControls(Composite composite) {
+
+			}
+
+			@Override
+			protected void handleResizeAncestor(int x, int y, int width,
+					int height) {
+
+			}
+
+			@Override
+			protected void handleResizeLeftRight(int x, int y, int leftWidth,
+					int centerWidth, int rightWidth, int height) {
+
+			}
+
+			@Override
+			protected void updateContent(Object ancestor, Object left,
+					Object right) {
+
+			}
+
+			@Override
+			protected void copy(boolean leftToRight) {
+
+			}
+
+			@Override
+			protected byte[] getContents(boolean left) {
+				return null;
+			}
+
+			@Override
+			public boolean internalIsLeftDirty() {
+				return ContentMergeViewer.this.isLeftDirty();
+			}
+
+			@Override
+			public boolean internalIsRightDirty() {
+				return ContentMergeViewer.this.isRightDirty();
+			}
+		};
 	}
 
 	// ---- hooks ---------------------
@@ -1208,7 +1259,7 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 	}
 
 	private void fireDirtyState(boolean state) {
-		Utilities.firePropertyChange(fListenerList, this,
+		Utilities.firePropertyChange(fListenerList, cmv,
 				CompareEditorInput.DIRTY_STATE, null, new Boolean(state));
 	}
 
@@ -1358,9 +1409,7 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 				// post alert
 				Shell shell = fComposite.getShell();
 
-				MessageDialog dialog = new MessageDialog(
-						shell,
-						"", //$NON-NLS-1$
+				MessageDialog dialog = new MessageDialog(shell, "", //$NON-NLS-1$
 						null, // accept the default window icon
 						"", //$NON-NLS-1$
 						MessageDialog.QUESTION, new String[] {
