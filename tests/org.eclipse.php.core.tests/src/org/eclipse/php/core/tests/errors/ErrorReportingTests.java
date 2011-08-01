@@ -165,10 +165,12 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 
 		testFile = project.getFile("ErrorReportingTests_" + (++count) + ".php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
+
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
 		PHPCoreTests.waitForIndexer();
+		PHPCoreTests.waitForAutoBuild();
 		return testFile;
 	}
 }
