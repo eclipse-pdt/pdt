@@ -36,14 +36,10 @@ import org.eclipse.php.internal.core.project.PHPNature;
 
 public class ErrorReportingTests extends AbstractPDTTTest {
 
-	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
-	static {
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/errors/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/errors/php53" });
-	};
+	protected static final String[] TEST_DIRS = { "/workspace/errors/php5" };
 
+	protected static Map<PdttFile, IFile> filesMap = new LinkedHashMap<PdttFile, IFile>();
 	protected static IProject project;
-	protected static IFile testFile;
 	protected static int count;
 
 	public static void setUpSuite() throws Exception {
@@ -60,6 +56,18 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
+
+		for (PdttFile pdttFile : filesMap.keySet()) {
+			IFile file = createFile(pdttFile.getFile().trim());
+			filesMap.put(pdttFile, file);
+		}
+
+		PHPCoreTests.setProjectPhpVersion(project, PHPVersion.PHP5);
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+
+		PHPCoreTests.waitForIndexer();
+		PHPCoreTests.waitForAutoBuild();
 	}
 
 	public static void tearDownSuite() throws Exception {
@@ -76,81 +84,53 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 
 		TestSuite suite = new TestSuite("Error Reporting Tests");
 
-		for (final PHPVersion phpVersion : TESTS.keySet()) {
-			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
+		for (String testsDirectory : TEST_DIRS) {
 
-			for (String testsDirectory : TESTS.get(phpVersion)) {
+			for (final String fileName : getPDTTFiles(testsDirectory)) {
+				try {
+					final PdttFile pdttFile = new PdttFile(fileName);
+					filesMap.put(pdttFile, null);
 
-				for (final String fileName : getPDTTFiles(testsDirectory)) {
-					try {
-						final PdttFile pdttFile = new PdttFile(fileName);
+					suite.addTest(new ErrorReportingTests("/" + fileName) {
 
-						phpVerSuite.addTest(new ErrorReportingTests("/"
-								+ fileName) {
+						protected void runTest() throws Throwable {
+							IFile file = filesMap.get(pdttFile);
 
-							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project,
-										phpVersion);
-								project.build(
-										IncrementalProjectBuilder.FULL_BUILD,
-										null);
+							StringBuilder buf = new StringBuilder();
 
-								PHPCoreTests.waitForIndexer();
-								PHPCoreTests.waitForAutoBuild();
+							IMarker[] markers = file.findMarkers(
+									DefaultProblem.MARKER_TYPE_PROBLEM, true,
+									IResource.DEPTH_ZERO);
+							for (IMarker marker : markers) {
+								buf.append("\n[line=");
+								buf.append(marker
+										.getAttribute(IMarker.LINE_NUMBER));
+								buf.append(", start=");
+								buf.append(marker
+										.getAttribute(IMarker.CHAR_START));
+								buf.append(", end=");
+								buf.append(marker
+										.getAttribute(IMarker.CHAR_END));
+								buf.append("] ");
+								buf.append(marker.getAttribute(IMarker.MESSAGE))
+										.append('\n');
 							}
 
-							protected void tearDown() throws Exception {
-								if (testFile != null) {
-									try {
-										testFile.delete(true, null);
-									} catch (Exception e) {
-									}
-									testFile = null;
-								}
-							}
-
-							protected void runTest() throws Throwable {
-								IFile file = createFile(pdttFile.getFile());
-
-								StringBuilder buf = new StringBuilder();
-
-								IMarker[] markers = file.findMarkers(
-										DefaultProblem.MARKER_TYPE_PROBLEM,
-										true, IResource.DEPTH_ZERO);
-								for (IMarker marker : markers) {
-									buf.append("\n[line=");
-									buf.append(marker
-											.getAttribute(IMarker.LINE_NUMBER));
-									buf.append(", start=");
-									buf.append(marker
-											.getAttribute(IMarker.CHAR_START));
-									buf.append(", end=");
-									buf.append(marker
-											.getAttribute(IMarker.CHAR_END));
-									buf.append("] ");
-									buf.append(
-											marker.getAttribute(IMarker.MESSAGE))
-											.append('\n');
-								}
-								assertContents(pdttFile.getExpected(),
-										buf.toString());
-							}
-						});
-					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy
-																		// test
-									// indicating
-									// PDTT
-									// file parsing
-									// failure
-									protected void runTest() throws Throwable {
-										throw e;
-									}
-								});
-					}
+							assertContents(pdttFile.getExpected(),
+									buf.toString());
+						}
+					});
+				} catch (final Exception e) {
+					suite.addTest(new TestCase(fileName) { // dummy test
+															// indicating PDTT
+															// file parsing
+															// failure
+						protected void runTest() throws Throwable {
+							throw e;
+						}
+					});
 				}
 			}
-			suite.addTest(phpVerSuite);
 		}
 
 		// Create a setup wrapper
@@ -168,15 +148,8 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 	}
 
 	protected static IFile createFile(String data) throws Exception {
-
-		testFile = project.getFile("ErrorReportingTests_" + (++count) + ".php");
+		IFile testFile = project.getFile("test" + (++count) + ".php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
-
-		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-
-		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
 		return testFile;
 	}
 }
