@@ -91,6 +91,12 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 							protected void setUp() throws Exception {
 								PHPCoreTests.setProjectPhpVersion(project,
 										phpVersion);
+								project.build(
+										IncrementalProjectBuilder.FULL_BUILD,
+										null);
+
+								PHPCoreTests.waitForIndexer();
+								PHPCoreTests.waitForAutoBuild();
 							}
 
 							protected void tearDown() throws Exception {
