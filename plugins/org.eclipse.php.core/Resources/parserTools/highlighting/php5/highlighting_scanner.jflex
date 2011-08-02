@@ -756,7 +756,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     }
 }
 
-<ST_PHP_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
+<ST_PHP_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r]? {
     int label_len = yylength() - 1;
 
     if (yytext().charAt(label_len-1)==';') {
@@ -774,7 +774,7 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
         return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_END_HEREDOC>{NEWLINE}*({ANY_CHAR}[^\n\r;])*{LABEL}";"?[\n\r] {
+<ST_PHP_END_HEREDOC>{NEWLINE}*({ANY_CHAR}[^\n\r;])*{LABEL}";"?[\n\r]? {
 	int label_len = yylength() - 1;
 	int startIndex = 0;
 	String yytext = yytext();
