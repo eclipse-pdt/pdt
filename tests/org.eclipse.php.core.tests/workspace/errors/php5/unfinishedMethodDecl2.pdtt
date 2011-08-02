@@ -6,4 +6,4 @@ function foo() {
 $a = 5;
 ?>
 --EXPECT--
-[line=5, start=34, end=37] syntax error, unexpected 'EOF'
+[line=4, start=33, end=36] syntax error, unexpected 'EOF'

@@ -5,4 +5,4 @@ Test unfinished method declaration error reporting
 function foo() {
 ?>
 --EXPECT--
-[line=4, start=26, end=29] syntax error, unexpected 'EOF'
+[line=3, start=25, end=28] syntax error, unexpected 'EOF'

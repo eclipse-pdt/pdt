@@ -5,4 +5,4 @@ Test unfinished class declaration error reporting
 class A {
 ?>
 --EXPECT--
-[line=4, start=14, end=15] syntax error, unfinished class declaration
+[line=3, start=14, end=15] syntax error, unfinished class declaration
