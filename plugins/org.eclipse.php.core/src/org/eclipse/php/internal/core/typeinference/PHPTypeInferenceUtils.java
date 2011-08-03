@@ -70,8 +70,8 @@ public class PHPTypeInferenceUtils {
 		if (types.size() == 1) {
 			return types.iterator().next();
 		}
-		return new AmbiguousType(types
-				.toArray(new IEvaluatedType[types.size()]));
+		return new AmbiguousType(
+				types.toArray(new IEvaluatedType[types.size()]));
 	}
 
 	public static IEvaluatedType resolveExpression(ISourceModule sourceModule,
@@ -92,7 +92,7 @@ public class PHPTypeInferenceUtils {
 			return typeInferencer.evaluateType(new ExpressionTypeGoal(context,
 					expression));
 		}
-		return null;
+		return UnknownType.INSTANCE;
 	}
 
 	/**
