@@ -835,7 +835,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
 	if(heredoc!=null&&yytext().startsWith(heredoc)){
 		String text = yytext();
 		if(heredoc_len < text.length() && (text.charAt(heredoc_len) == '\r'
-			|| text.charAt(heredoc_len) == '\n')){
+			|| text.charAt(heredoc_len) == '\n'|| text.charAt(heredoc_len) == ';')){
 			yypushback(yylength()-heredoc_len-1);
 	        heredoc=null;
 	        heredoc_len=0;
