@@ -381,10 +381,13 @@ public class DebugSearchEngine {
 							results.toArray(new PathEntry[results.size()]),
 							debugTarget);
 					if (localFile[0] != null) {
-						pathMapper.addServerEntry(remoteFile, localFile[0]);
-						PathMapperRegistry.storeToPreferences();
 						if (localFile[0].getType() == Type.SERVER) {
+							pathMapper.addServerEntry(remoteFile, localFile[0]);
+							PathMapperRegistry.storeToPreferences();
 							localFile[0] = null;
+						} else {
+							pathMapper.addEntry(remoteFile, localFile[0]);
+							PathMapperRegistry.storeToPreferences();
 						}
 					}
 				}
