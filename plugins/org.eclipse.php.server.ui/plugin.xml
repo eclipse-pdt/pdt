@@ -63,11 +63,11 @@
 	
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.eclipse.debug.ui.category.run"
-			description="Debug PHP Web Page" id="org.eclipse.php.server.ui.phpServerShortcut.debug"
-			name="Debug PHP Web Page" />
+			description="%WebLaunch.debug.description" id="org.eclipse.php.server.ui.phpServerShortcut.debug"
+			name="%WebLaunch.debug.name" />
 		<command categoryId="org.eclipse.debug.ui.category.run"
-			description="Run PHP Web Page" id="org.eclipse.php.server.ui.phpServerShortcut.run"
-			name="Run PHP Web Page" />
+			description="%WebLaunch.run.description" id="org.eclipse.php.server.ui.phpServerShortcut.run"
+			name="%WebLaunch.run.name" />
 	</extension>
 	
 	<extension point="org.eclipse.ui.bindings">

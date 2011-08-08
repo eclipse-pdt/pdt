@@ -36,7 +36,6 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNam
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.ui.Logger;
-import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -115,13 +114,9 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 					defaultServer = ServersManager.getDefaultServer(project);
 					if (defaultServer == null) {
 						// Sould not happen
-						throw new CoreException(
-								new Status(
-										IStatus.ERROR,
-										PHPDebugUIPlugin.ID,
-										IStatus.OK,
-										"Could not create a defualt server for the launch.",
-										null));
+						throw new CoreException(new Status(IStatus.ERROR,
+								PHPDebugUIPlugin.ID, IStatus.OK,
+								Messages.PHPWebPageLaunchShortcut_0, null));
 					}
 				}
 
@@ -151,7 +146,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 					// Could not find target to launch
 					throw new CoreException(new Status(IStatus.ERROR,
 							PHPDebugUIPlugin.ID, IStatus.OK,
-							PHPDebugUIMessages.launch_failure_no_target, null));
+							Messages.launch_failure_no_target, null));
 				}
 
 				// Launch the app
@@ -173,9 +168,8 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 					public void run() {
 						ErrorDialog.openError(
 								PHPDebugUIPlugin.getActiveWorkbenchShell(),
-								PHPDebugUIMessages.launch_failure_msg_title,
-								PHPDebugUIMessages.launch_failure_server_msg_text,
-								stat);
+								Messages.launch_failure_msg_title,
+								Messages.launch_failure_server_msg_text, stat);
 					}
 				});
 			}
@@ -303,9 +297,9 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 		}
 		// Display a dialog for selecting the URL.
 		if (showDebugDialog) {
-			String title = (ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page"
-					: (ILaunchManager.PROFILE_MODE.equals(mode) ? "Profile PHP Web Page"
-							: "Run PHP Web Page"));
+			String title = (ILaunchManager.DEBUG_MODE.equals(mode) ? Messages.PHPWebPageLaunchShortcut_1
+					: (ILaunchManager.PROFILE_MODE.equals(mode) ? Messages.PHPWebPageLaunchShortcut_2
+							: Messages.PHPWebPageLaunchShortcut_3));
 			PHPWebPageURLLaunchDialog launchDialog = new PHPWebPageURLLaunchDialog(
 					wc, server, title);
 			launchDialog.setBlockOnOpen(true);
@@ -321,12 +315,12 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 			Path path) throws MalformedURLException {
 
 		URL server = new URL(serverURL);
-		IPath url = new Path("/" + server.getPath());
+		IPath url = new Path("/" + server.getPath()); //$NON-NLS-1$
 
 		String basePath = getProjectsBasePath(project);
 		boolean removeFirstSegment = true;
 		if (basePath == null) {
-			basePath = "/";
+			basePath = "/"; //$NON-NLS-1$
 			removeFirstSegment = false;
 		}
 		url = url.append(basePath);
@@ -357,22 +351,22 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 	 *         fails for some reason.
 	 */
 	protected static String getNewConfigurationName(String fileName) {
-		String configurationName = "New_configuration";
+		String configurationName = Messages.PHPWebPageLaunchShortcut_4;
 		try {
 			IPath path = Path.fromOSString(fileName);
 			String fileExtention = path.getFileExtension();
 			String lastSegment = path.lastSegment();
 			if (lastSegment != null) {
 				if (fileExtention != null) {
-					lastSegment = lastSegment.replaceFirst("." + fileExtention,
-							"");
+					lastSegment = lastSegment.replaceFirst("." + fileExtention, //$NON-NLS-1$
+							""); //$NON-NLS-1$
 				}
 				configurationName = lastSegment;
 			}
 		} catch (Exception e) {
 			Logger.log(Logger.WARNING_DEBUG,
-					"Could not generate configuration name for " + fileName
-							+ ".\nThe default name will be used.", e);
+					Messages.PHPWebPageLaunchShortcut_9 + fileName
+							+ Messages.PHPWebPageLaunchShortcut_10, e);
 		}
 		return DebugPlugin.getDefault().getLaunchManager()
 				.generateUniqueLaunchConfigurationNameFrom(configurationName);
