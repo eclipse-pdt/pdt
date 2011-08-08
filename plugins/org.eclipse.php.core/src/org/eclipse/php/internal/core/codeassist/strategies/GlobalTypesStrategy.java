@@ -203,6 +203,39 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 					}
 				}
 
+				elements = PhpModelAccess.getDefault().findTypes(fullName,
+						MatchRule.EXACT, 0, 0, scope, null);
+
+				for (int i = 0; i < elements.length; i++) {
+					String elementName = elements[i].getElementName();
+					if (!PHPFlags.isNamespace(elements[i].getFlags())) {
+						reportAlias(reporter, scope, module, replacementRange,
+								elements[i], elementName, name, suffix);
+					} else {
+						String nsname = prefix.replace(name, fullName);
+						if (nsname.startsWith(elementName + SPLASH)
+								&& nsname.lastIndexOf(SPLASH) == elementName
+										.length()) {
+							// namespace strategy will handle this case
+							continue;
+						}
+						IType[] typesOfNS = elements[i].getTypes();
+
+						for (int j = 0; j < typesOfNS.length; j++) {
+							reportAlias(
+									reporter,
+									scope,
+									module,
+									replacementRange,
+									typesOfNS[j],
+									elementName + SPLASH
+											+ typesOfNS[j].getElementName(),
+									(elementName + SPLASH + typesOfNS[j]
+											.getElementName()).replace(
+											fullName, name), suffix);
+						}
+					}
+				}
 			} catch (ModelException e) {
 				e.printStackTrace();
 			}
