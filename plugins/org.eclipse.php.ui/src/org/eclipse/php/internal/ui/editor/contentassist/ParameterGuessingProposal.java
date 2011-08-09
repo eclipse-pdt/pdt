@@ -146,7 +146,7 @@ public final class ParameterGuessingProposal extends
 				LinkedModeUI ui = new EditorLinkedModeUI(model, getTextViewer());
 				ui.setExitPosition(getTextViewer(),
 						baseOffset + replacement.length(), 0, Integer.MAX_VALUE);
-				ui.setExitPolicy(new ExitPolicy(')', document));
+				// ui.setExitPolicy(new ExitPolicy(')', document));
 				ui.setCyclingMode(LinkedModeUI.CYCLE_WHEN_NO_PARENT);
 				ui.setDoContextInfo(true);
 				ui.enter();
