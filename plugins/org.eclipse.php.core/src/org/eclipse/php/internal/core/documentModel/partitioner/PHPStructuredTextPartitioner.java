@@ -114,8 +114,9 @@ public class PHPStructuredTextPartitioner extends
 		if (result.getType().equals(PHPPartitionTypes.PHP_DEFAULT)) {
 			IStructuredDocumentRegion structuredDocumentRegion = fStructuredDocument
 					.getRegionAtCharacterOffset(offset);
-			if ((structuredDocumentRegion.getStartOffset() == offset - 1)
-					&& offset > 0) {
+			if (structuredDocumentRegion.getStartOffset() == offset
+					|| ((offset > 0 && structuredDocumentRegion
+							.getStartOffset() == offset - 1))) {
 				return super.getPartition(offset - 1);
 			}
 		}
