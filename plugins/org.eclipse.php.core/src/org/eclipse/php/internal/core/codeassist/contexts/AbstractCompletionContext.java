@@ -225,9 +225,8 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			ITextRegionCollection regionCollection,
 			IPhpScriptRegion phpScriptRegion, int offset)
 			throws BadLocationException {
-
-		int internalOffset = offset - regionCollection.getStartOffset()
-				- phpScriptRegion.getStart() - 1;
+		int internalOffset = getOffset(offset, regionCollection,
+				phpScriptRegion);
 		String partitionType = phpScriptRegion.getPartition(internalOffset);
 
 		// if we are at the begining of multi-line comment or docBlock then we
@@ -501,9 +500,18 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 
 	public ITextRegion getPHPToken(int offset) throws BadLocationException {
-		return phpScriptRegion.getPhpToken(offset
-				- regionCollection.getStartOffset()
-				- phpScriptRegion.getStart() - 1);
+		return phpScriptRegion.getPhpToken(getOffset(offset, regionCollection,
+				phpScriptRegion));
+	}
+
+	private int getOffset(int offset, ITextRegionCollection regionCollection,
+			IPhpScriptRegion phpScriptRegion) {
+		int result = offset - regionCollection.getStartOffset()
+				- phpScriptRegion.getStart() - 1;
+		if (result < 0) {
+			result = 0;
+		}
+		return result;
 	}
 
 	/**
@@ -594,16 +602,18 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 */
 	public String getNextWord() throws BadLocationException {
 		ITextRegion nextPHPToken = getNextPHPToken();
-		return document.get(regionCollection.getStartOffset()
-				+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
-				nextPHPToken.getTextLength());
+		return document
+				.get(regionCollection.getStartOffset()
+						+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
+						nextPHPToken.getTextLength());
 	}
 
 	public String getNextWord(int times) throws BadLocationException {
 		ITextRegion nextPHPToken = getNextPHPToken(times);
-		return document.get(regionCollection.getStartOffset()
-				+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
-				nextPHPToken.getTextLength());
+		return document
+				.get(regionCollection.getStartOffset()
+						+ phpScriptRegion.getStart() + nextPHPToken.getStart(),
+						nextPHPToken.getTextLength());
 	}
 
 	/**
