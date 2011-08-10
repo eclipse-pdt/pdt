@@ -144,8 +144,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			if (current != null && current.getNext() != null) {
 				setToolTipText(Messages
-						.format(
-								PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
+						.format(PHPHoverMessages.JavadocHover_forward_toElement_toolTip,
 								BasicElementLabels.getJavaElementName(current
 										.getNext().getInputName())));
 				setEnabled(true);
@@ -182,8 +181,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 
 			try {
 				// FIXME: add hover location to editor navigation history?
-				IEditorPart editor = EditorUtility.openInEditor(infoInput
-						.getElement(), true);
+				IEditorPart editor = EditorUtility.openInEditor(
+						infoInput.getElement(), true);
 				EditorUtility.revealInEditor(editor, infoInput.getElement());
 			} catch (PartInitException e) {
 				PHPUiPlugin.log(e);
@@ -559,8 +558,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			element = elements[i];
 			if (element instanceof IMember) {
 				IMember member = (IMember) element;
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(member,
-						constantValue, true, i == 0));
+				HTMLPrinter.addSmallHeader(buffer,
+						getInfoText(member, constantValue, true, i == 0));
 				Reader reader = null;
 				try {
 					reader = getHTMLContent(member);
@@ -575,8 +574,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 				}
 				hasContents = true;
 			} else if (element.getElementType() == IModelElement.FIELD) {
-				HTMLPrinter.addSmallHeader(buffer, getInfoText(element,
-						constantValue, true, i == 0));
+				HTMLPrinter.addSmallHeader(buffer,
+						getInfoText(element, constantValue, true, i == 0));
 				hasContents = true;
 			}
 		}
@@ -689,11 +688,12 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 								}
 							} else {
 								ModuleDeclaration parsedUnit = SourceParserUtil
-										.getModuleDeclaration(field
-												.getSourceModule(), null);
+										.getModuleDeclaration(
+												field.getSourceModule(), null);
 								org.eclipse.dltk.ast.ASTNode func = ASTUtils
-										.findMinimalNode(parsedUnit, function
-												.getStart(), function.getEnd());
+										.findMinimalNode(parsedUnit,
+												function.getStart(),
+												function.getEnd());
 
 								if (func instanceof FullyQualifiedReference) {
 									functionName = ((FullyQualifiedReference) func)
@@ -702,8 +702,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 								// look for the element in current namespace
 								if (functionName.indexOf('\\') == -1) {
 									IType currentNamespace = PHPModelUtils
-											.getCurrentNamespace(field
-													.getSourceModule(),
+											.getCurrentNamespace(
+													field.getSourceModule(),
 													function.getStart());
 									String fullyQualifiedFuncName = "";
 									if (currentNamespace != null) {
@@ -729,7 +729,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 							functionName = ((Identifier) function).getName();
 						}
 						if (functionName.equalsIgnoreCase("define")
-								&& invocation.parameters().size() >= 2) {
+								&& invocation.parameters().size() >= 2
+								&& invocation.parameters().get(1) instanceof Scalar) {
 							constantValue = ((Scalar) invocation.parameters()
 									.get(1)).getStringValue();
 						}
@@ -814,8 +815,8 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 		if (styleSheetURL != null) {
 			BufferedReader reader = null;
 			try {
-				reader = new BufferedReader(new InputStreamReader(styleSheetURL
-						.openStream()));
+				reader = new BufferedReader(new InputStreamReader(
+						styleSheetURL.openStream()));
 				StringBuffer buffer = new StringBuffer(1500);
 				String line = reader.readLine();
 				while (line != null) {
