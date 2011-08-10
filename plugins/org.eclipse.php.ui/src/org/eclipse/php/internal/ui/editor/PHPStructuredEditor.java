@@ -729,7 +729,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 								SharedASTProvider.getAST(
 										(ISourceModule) sourceModule,
 										SharedASTProvider.WAIT_NO,
-										getProgressMonitor()));
+										getProgressMonitor()), false);
 					} catch (ModelException e) {
 						Logger.logException(e);
 					} catch (IOException e) {
@@ -2825,6 +2825,29 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		for (int i = 0, length = listeners.length; i < length; ++i)
 			((IPhpScriptReconcilingListener) listeners[i]).reconciled(ast,
 					forced, progressMonitor);
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				fForcedMarkOccurrencesSelection = getSelectionProvider()
+						.getSelection();
+				IModelElement sourceModule = getModelElement();
+				if (sourceModule != null
+						&& sourceModule.getElementType() == IModelElement.SOURCE_MODULE) {
+					try {
+						updateOccurrenceAnnotations(
+								(ITextSelection) fForcedMarkOccurrencesSelection,
+								SharedASTProvider.getAST(
+										(ISourceModule) sourceModule,
+										SharedASTProvider.WAIT_ACTIVE_ONLY,
+										getProgressMonitor()), true);
+					} catch (ModelException e) {
+						Logger.logException(e);
+					} catch (IOException e) {
+						Logger.logException(e);
+					}
+				}
+			}
+		});
+
 	}
 
 	/**
@@ -2926,10 +2949,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	 *            the text selection
 	 * @param astRoot
 	 *            the compilation unit AST
+	 * @param forceUpdate
 	 * @since 3.0
 	 */
 	protected void updateOccurrenceAnnotations(ITextSelection selection,
-			Program astRoot) {
+			Program astRoot, boolean forceUpdate) {
 
 		if (fOccurrencesFinderJob != null)
 			fOccurrencesFinderJob.cancel();
@@ -2957,7 +2981,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 					.getModificationStamp();
 			IRegion markOccurrenceTargetRegion = fMarkOccurrenceTargetRegion;
 			hasChanged = currentModificationStamp != fMarkOccurrenceModificationStamp;
-			if (markOccurrenceTargetRegion != null && !hasChanged) {
+			if (!forceUpdate && markOccurrenceTargetRegion != null
+					&& !hasChanged) {
 				if (markOccurrenceTargetRegion.getOffset() <= offset
 						&& offset <= markOccurrenceTargetRegion.getOffset()
 								+ markOccurrenceTargetRegion.getLength())
@@ -3109,7 +3134,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		fPostSelectionListenerWithAST = new ISelectionListenerWithAST() {
 			public void selectionChanged(IEditorPart part,
 					ITextSelection selection, Program astRoot) {
-				updateOccurrenceAnnotations(selection, astRoot);
+				updateOccurrenceAnnotations(selection, astRoot, false);
 			}
 		};
 		SelectionListenerWithASTManager.getDefault().addListener(this,
@@ -3126,7 +3151,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 							getProgressMonitor());
 					updateOccurrenceAnnotations(
 							(ITextSelection) fForcedMarkOccurrencesSelection,
-							ast);
+							ast, false);
 				} catch (ModelException e) {
 					Logger.logException(e);
 				} catch (IOException e) {
