@@ -1,0 +1,11 @@
+--TEST--
+Should NOT propose final classes after 'extends'
+--FILE--
+<?php
+class foo
+{
+	private $_tmp = arr|;
+}
+
+--EXPECT--
+keyword(array)
