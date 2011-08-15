@@ -21,14 +21,16 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
- * This strategy completes keywords that can be shown in a class body 
+ * This strategy completes keywords that can be shown in a class body
+ * 
  * @author michael
  */
 public class ClassKeywordsStrategy extends KeywordsStrategy {
 
 	private TextSequence statementText;
-	
-	public ClassKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+
+	public ClassKeywordsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -38,18 +40,25 @@ public class ClassKeywordsStrategy extends KeywordsStrategy {
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
-		statementText = ((AbstractCompletionContext) context).getStatementText();
+		statementText = ((AbstractCompletionContext) context)
+				.getStatementText();
 		super.apply(reporter);
 	}
 
 	protected boolean filterKeyword(KeywordData keyword) {
+		if (keyword.name.equals("array")
+				&& statementText.toString().indexOf("=") > 0) {
+			return false;
+		}
 		if ((keyword.context & PHPKeywords.CLASS_BODY) == 0) {
 			return true;
 		}
 		// check whether this keyword is included in the statement already
 		int i = statementText.toString().indexOf(keyword.name);
 		if (i != -1) {
-			if ((i == 0 || Character.isWhitespace(statementText.charAt(i-1)) && Character.isWhitespace(statementText.charAt(i + keyword.name.length())))) {
+			if ((i == 0 || Character.isWhitespace(statementText.charAt(i - 1))
+					&& Character.isWhitespace(statementText.charAt(i
+							+ keyword.name.length())))) {
 				return true;
 			}
 		}
