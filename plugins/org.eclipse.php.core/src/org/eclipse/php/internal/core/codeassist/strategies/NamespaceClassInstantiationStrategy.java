@@ -68,6 +68,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 		SourceRange replaceRange = getReplacementRange(context);
 
 		IType[] types = getTypes(concreteContext);
+		String suffix = getSuffix(concreteContext);
 		for (IType type : types) {
 			IMethod ctor = null;
 			if (requestor.isContextInformationMode()) {
@@ -83,7 +84,6 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 				}
 			}
 
-			String suffix = getSuffix(concreteContext);
 			try {
 				if (ctor != null) {
 					if (!PHPFlags.isPrivate(ctor.getFlags())
@@ -104,8 +104,8 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 						// here we use fake method,and do the real work in class
 						// ParameterGuessingProposal
 						IMethod ctorMethod = FakeConstructor
-								.createFakeConstructor(null, type, type
-										.equals(enclosingClass));
+								.createFakeConstructor(null, type,
+										type.equals(enclosingClass));
 						reporter.reportMethod(ctorMethod, suffix, replaceRange);
 					}
 				}

@@ -24,6 +24,7 @@ import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.core.codeassist.ICompletionStrategyFactory;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.*;
 import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalMethodStatementContextForTemplate;
 import org.eclipse.php.internal.core.codeassist.templates.contexts.GlobalStatementContextForTemplate;
@@ -100,7 +101,12 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		}
 		if (contextClass == PHPDocVarStartContext.class) {
 			return new ICompletionStrategy[] { new GlobalClassesStrategy(
-					context) };
+					context) {
+				@Override
+				protected Object getExtraInfo() {
+					return ProposalExtraInfo.TYPE_ONLY;
+				}
+			} };
 		}
 		if (contextClass == PHPDocThrowsStartContext.class) {
 			return new ICompletionStrategy[] { new ExceptionClassStrategy(
@@ -227,6 +233,10 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		}
 		if (contextClass == GlobalMethodStatementContextForTemplate.class) {
 			return new ICompletionStrategy[] { new LocalMethodVariablesStrategyForTemplate(
+					context) };
+		}
+		if (contextClass == NamespacePHPDocVarStartContext.class) {
+			return new ICompletionStrategy[] { new NamespaceDocTypesCompositeStrategy(
 					context) };
 		}
 		return new ICompletionStrategy[] {};
