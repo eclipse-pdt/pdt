@@ -1,0 +1,20 @@
+--TEST--
+Test var
+--FILE--
+<?
+namespace ns\a\b;
+class CCC {
+}
+
+namespace ns1;
+use ns\a\b as a;
+class CCC1 {
+	/**
+	 * @return \ns| //CA will be suggested at curesor position when you press ctrl+space
+	 */
+	var $rt = 435;
+}
+?>
+--EXPECT--
+type(ns1)
+type(ns\a\b)
