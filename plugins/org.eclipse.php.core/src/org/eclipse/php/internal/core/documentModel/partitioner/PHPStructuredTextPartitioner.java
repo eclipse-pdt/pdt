@@ -11,11 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.partitioner;
 
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -32,23 +30,6 @@ public class PHPStructuredTextPartitioner extends
 	public String getPartitionType(final ITextRegion region, final int offset) {
 		// if php region
 		if (isPhpRegion(region.getType())) {
-			if (region instanceof IPhpScriptRegion) {
-				IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
-				ITextRegion textRegion;
-				try {
-					textRegion = phpScriptRegion.getPhpToken(offset
-					// - sdRegion.getStartOffset()
-							- region.getStart());
-					// handle comments
-					if (PHPPartitionTypes.isPHPCommentState(textRegion
-							.getType())) {
-						// return PHPPartitionTypes.PHP_COMMENT;
-					}
-				} catch (BadLocationException e) {
-					// TODO Auto-generated catch block
-					// e.printStackTrace();
-				}
-			}
 			return PHPPartitionTypes.PHP_DEFAULT;
 		}
 
