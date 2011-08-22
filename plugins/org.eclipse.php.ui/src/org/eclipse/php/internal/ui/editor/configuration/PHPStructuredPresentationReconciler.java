@@ -94,8 +94,11 @@ public class PHPStructuredPresentationReconciler extends
 						length = newRegion.getOffset() + newRegion.getLength()
 								- start;
 					}
-					partitions = TextUtilities.computePartitioning(document,
-							getDocumentPartitioning(), start, length, false);
+					if (start != damage.getOffset() || length != validLength) {
+						partitions = TextUtilities.computePartitioning(
+								document, getDocumentPartitioning(), start,
+								length, false);
+					}
 
 				}
 
@@ -104,7 +107,11 @@ public class PHPStructuredPresentationReconciler extends
 				int jumpto = -1;
 				for (int i = 0; i < partitions.length; i++) {
 					ITypedRegion r = partitions[i];
-					if (fTypeSet.contains(r.getType())) {
+					if (fTypeSet.contains(r.getType())
+							&& (i + 2 < partitions.length)
+							&& PHPPartitionTypes.PHP_DEFAULT
+									.equals(partitions[i + 1].getType())
+							&& r.getType().equals(partitions[i + 2].getType())) {
 						if (i > jumpto) {
 							jumpto = getFollowingCSS(partitions, i, r.getType());
 							r = new SimpleStructuredTypedRegion(r.getOffset(),
@@ -161,7 +168,7 @@ public class PHPStructuredPresentationReconciler extends
 												.getOffset()
 												&& styleRange.start
 														+ styleRange.length > typedRegion
-														.getOffset()) {
+															.getOffset()) {
 											styleRange.length = typedRegion
 													.getOffset()
 													- styleRange.start;
@@ -196,7 +203,7 @@ public class PHPStructuredPresentationReconciler extends
 
 										} else if (styleRange.start
 												+ styleRange.length < typedRegion
-												.getOffset()) {
+													.getOffset()) {
 											break;
 										}
 									}
@@ -298,7 +305,11 @@ public class PHPStructuredPresentationReconciler extends
 	private boolean containSpecialType(ITypedRegion[] partitions) {
 		for (int i = 0; i < partitions.length; i++) {
 			ITypedRegion r = partitions[i];
-			if (fTypeSet.contains(r.getType())) {
+			if (fTypeSet.contains(r.getType())
+					&& (i + 2 < partitions.length)
+					&& PHPPartitionTypes.PHP_DEFAULT.equals(partitions[i + 1]
+							.getType())
+					&& r.getType().equals(partitions[i + 2].getType())) {
 				return true;
 			}
 		}
