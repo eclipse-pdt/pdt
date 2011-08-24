@@ -334,14 +334,17 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 								lineInfo));
 					}
 				} else {
-					// in multi line statement,when user press enter key,
-					// we use the same indentation of the last non-empty
-					// line.
-					result.setLength(result.length() - blanks.length());
-					IRegion lineInfo = document
-							.getLineInformation(lastNonEmptyLineIndex);
-					result.append(FormatterUtils.getLineBlanks(document,
-							lineInfo));
+					if (enterKeyPressed) {
+						// in multi line statement,when user press enter key,
+						// we use the same indentation of the last non-empty
+						// line.
+						result.setLength(result.length() - blanks.length());
+						IRegion lineInfo = document
+								.getLineInformation(lastNonEmptyLineIndex);
+						result.append(FormatterUtils.getLineBlanks(document,
+								lineInfo));
+					}
+
 				}
 			}
 		}
