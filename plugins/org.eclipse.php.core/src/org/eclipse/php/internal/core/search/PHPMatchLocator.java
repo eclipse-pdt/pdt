@@ -27,10 +27,12 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.SearchMatch;
+import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
 import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
 import org.eclipse.dltk.internal.core.search.matching.MethodPattern;
+import org.eclipse.dltk.internal.core.search.matching.OrPattern;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -254,7 +256,7 @@ public class PHPMatchLocator extends MatchLocator {
 	public SearchMatch newMethodReferenceMatch(IModelElement enclosingElement,
 			int accuracy, int offset, int length, boolean isConstructor,
 			boolean isSynthetic, ASTNode reference) {
-		if ((pattern instanceof MethodPattern)
+		if (pattern instanceof MethodPattern
 				&& (reference instanceof PHPCallExpression)) {
 			PHPCallExpression pce = (PHPCallExpression) reference;
 			ISourceModule module = (ISourceModule) enclosingElement
@@ -275,7 +277,24 @@ public class PHPMatchLocator extends MatchLocator {
 					e.printStackTrace();
 				}
 			}
+		} else if (pattern instanceof OrPattern) {
+			return super.newMethodReferenceMatch(enclosingElement, accuracy,
+					offset, length, isConstructor, isSynthetic, reference);
 		}
 		return null;
+	}
+
+	private boolean isMethodPattern() {
+		if (pattern instanceof MethodPattern) {
+			return true;
+		} else if (pattern instanceof OrPattern) {
+			SearchPattern[] patterns = ((OrPattern) pattern).getPatterns();
+			for (int i = 0; i < patterns.length; i++) {
+				if (patterns[i] instanceof MethodPattern) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
