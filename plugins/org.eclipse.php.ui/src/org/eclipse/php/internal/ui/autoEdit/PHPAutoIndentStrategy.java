@@ -103,7 +103,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 					tempsb.append(newline);
 				}
 				tempsb.append(tempdocument.get(region.getOffset(),
-						region.getLength()).trim());
+						region.getLength()));
 			}
 		} catch (BadLocationException e) {
 		}
