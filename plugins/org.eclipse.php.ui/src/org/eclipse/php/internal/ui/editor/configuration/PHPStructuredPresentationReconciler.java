@@ -28,8 +28,8 @@ public class PHPStructuredPresentationReconciler extends
 				ITypedRegion r = wholePartitions[i];
 				if (wholePartitions[i].getType().equals(
 						originalRegion.getType())) {
-					jumpto = getFollowingCSS(wholePartitions, i,
-							originalRegion.getType());
+					jumpto = getFollowingCSS(wholePartitions, i, originalRegion
+							.getType());
 					r = new SimpleStructuredTypedRegion(r.getOffset(),
 							wholePartitions[jumpto].getOffset()
 									+ wholePartitions[jumpto].getLength()
@@ -37,7 +37,8 @@ public class PHPStructuredPresentationReconciler extends
 					if (originalRegion.getOffset() >= r.getOffset()
 							&& originalRegion.getOffset()
 									+ originalRegion.getLength() <= r
-									.getOffset() + r.getLength()) {
+									.getOffset()
+									+ r.getLength()) {
 						return r;
 					} else {
 						i = jumpto + 2;
@@ -72,209 +73,232 @@ public class PHPStructuredPresentationReconciler extends
 					validLength, false);
 
 			if (containSpecialType(partitions)) {
-			// when modify editor content the damage region is not equal to
-			// document's region,so we need to adjust the damage region's start
-			// and length
-			if (partitions != null && partitions.length > 0) {
-				int start = damage.getOffset();
-				int length = validLength;
-				ITypedRegion[] wholePartitions = TextUtilities
-						.computePartitioning(document,
-								getDocumentPartitioning(), 0,
-								document.getLength(), false);
-				// determine start
-				ITypedRegion newRegion = getWholeRegion(wholePartitions,
-						partitions[0]);
-				if (newRegion != null) {
-					start = newRegion.getOffset();
+				// when modify editor content the damage region is not equal to
+				// document's region,so we need to adjust the damage region's
+				// start and length
+				if (partitions != null && partitions.length > 0) {
+					int start = damage.getOffset();
+					int length = validLength;
+					ITypedRegion[] wholePartitions = TextUtilities
+							.computePartitioning(document,
+									getDocumentPartitioning(), 0, document
+											.getLength(), false);
+					// determine start
+					ITypedRegion newRegion = getWholeRegion(wholePartitions,
+							partitions[0]);
+					if (newRegion != null) {
+						start = newRegion.getOffset();
+					}
+					newRegion = getWholeRegion(wholePartitions,
+							partitions[partitions.length - 1]);
+					if (newRegion != null) {
+						length = newRegion.getOffset() + newRegion.getLength()
+								- start;
+					}
+					if (start != damage.getOffset() || length != validLength) {
+						partitions = TextUtilities.computePartitioning(
+								document, getDocumentPartitioning(), start,
+								length, false);
+					}
+
 				}
-				newRegion = getWholeRegion(wholePartitions,
-						partitions[partitions.length - 1]);
-				if (newRegion != null) {
-					length = newRegion.getOffset() + newRegion.getLength()
-							- start;
-				}
-				partitions = TextUtilities.computePartitioning(document,
-						getDocumentPartitioning(), start, length, false);
 
-			}
+				List<StyleRange> fRangeSet = new LinkedList<StyleRange>();
 
-			List<StyleRange> fRangeSet = new LinkedList<StyleRange>();
-
-			int jumpto = -1;
-			for (int i = 0; i < partitions.length; i++) {
-				ITypedRegion r = partitions[i];
-				if (fTypeSet.contains(r.getType())) {
-					if (i > jumpto) {
-						jumpto = getFollowingCSS(partitions, i, r.getType());
-						r = new SimpleStructuredTypedRegion(r.getOffset(),
-								partitions[jumpto].getOffset()
-										+ partitions[jumpto].getLength()
-										- r.getOffset(), r.getType());
-						IPresentationRepairer repairer = getRepairer(r
-								.getType());
-						if (repairer != null) {
-							repairer.createPresentation(presentation, r);
-							for (Iterator iterator = presentation
-									.getAllStyleRangeIterator(); iterator
-									.hasNext();) {
-								// the styleRange's scope may be out of the
-								// region see
-								// https://bugs.eclipse.org/bugs/attachment.cgi?id=179715
-								StyleRange styleRange = (StyleRange) iterator
-										.next();
-								if (styleRange.start < r.getOffset()
-										|| (styleRange.start
-												+ styleRange.length > r
-												.getOffset() + r.getLength())) {
-									continue;
-								}
-
-								for (int j = i + 1; j < jumpto; j = j + 2) {
-									ITypedRegion typedRegion = partitions[j];
-									if (styleRange.start < typedRegion
-											.getOffset()
-											&& styleRange.start
-													+ styleRange.length > typedRegion
+				int jumpto = -1;
+				for (int i = 0; i < partitions.length; i++) {
+					ITypedRegion r = partitions[i];
+					if (fTypeSet.contains(r.getType())
+							&& (i + 2 < partitions.length)
+							&& PHPPartitionTypes.PHP_DEFAULT
+									.equals(partitions[i + 1].getType())
+							&& r.getType().equals(partitions[i + 2].getType())) {
+						if (i > jumpto) {
+							jumpto = getFollowingCSS(partitions, i, r.getType());
+							r = new SimpleStructuredTypedRegion(r.getOffset(),
+									partitions[jumpto].getOffset()
+											+ partitions[jumpto].getLength()
+											- r.getOffset(), r.getType());
+							IPresentationRepairer repairer = getRepairer(r
+									.getType());
+							if (repairer != null) {
+								repairer.createPresentation(presentation, r);
+								for (Iterator iterator = presentation
+										.getAllStyleRangeIterator(); iterator
+										.hasNext();) {
+									StyleRange styleRange = (StyleRange) iterator
+											.next();
+									// the styleRange's scope may be out of the
+									// region see
+									// https://bugs.eclipse.org/bugs/attachment.cgi?id=179715
+									if (styleRange.start < r.getOffset()
+											|| (styleRange.start
+													+ styleRange.length > r
 													.getOffset()
-													+ typedRegion.getLength()) {
-										int end = styleRange.start
-												+ styleRange.length;
-										styleRange.length = typedRegion
-												.getOffset() - styleRange.start;
-										fRangeSet.add(styleRange);
-										styleRange = new StyleRange(
-												typedRegion.getOffset()
-														+ typedRegion
-																.getLength(),
-												end
-														- (typedRegion
-																.getOffset() + typedRegion
-																.getLength()),
-												styleRange.foreground,
-												styleRange.background,
-												styleRange.fontStyle);
-									} else if (styleRange.start < typedRegion
-											.getOffset()
-											&& styleRange.start
-													+ styleRange.length > typedRegion
-													.getOffset()) {
-										styleRange.length = typedRegion
-												.getOffset() - styleRange.start;
-										break;
-									} else if (styleRange.start >= typedRegion
-											.getOffset()
-											&& styleRange.start
-													+ styleRange.length <= typedRegion
-													.getOffset()
-													+ typedRegion.getLength()) {
-										styleRange = null;
-										break;
-									} else if (styleRange.start > typedRegion
-											.getOffset()
-											&& styleRange.start < typedRegion
-													.getOffset()
-													+ typedRegion.getLength()
-											&& styleRange.start
-													+ styleRange.length > typedRegion
-													.getOffset()
-													+ typedRegion.getLength()) {
-										styleRange.length = styleRange.start
-												+ styleRange.length
-												- (typedRegion.getOffset() + typedRegion
-														.getLength());
-										styleRange.start = typedRegion
-												.getOffset()
-												+ typedRegion.getLength();
-
-									} else if (styleRange.start
-											+ styleRange.length < typedRegion
-											.getOffset()) {
-										break;
+													+ r.getLength())) {
+										continue;
 									}
-								}
-								if (styleRange != null) {
-									fRangeSet.add(styleRange);
+
+									for (int j = i + 1; j < jumpto; j = j + 2) {
+										ITypedRegion typedRegion = partitions[j];
+										if (styleRange.start < typedRegion
+												.getOffset()
+												&& styleRange.start
+														+ styleRange.length > typedRegion
+														.getOffset()
+														+ typedRegion
+																.getLength()) {
+											int end = styleRange.start
+													+ styleRange.length;
+											styleRange.length = typedRegion
+													.getOffset()
+													- styleRange.start;
+											fRangeSet.add(styleRange);
+											styleRange = new StyleRange(
+													typedRegion.getOffset()
+															+ typedRegion
+																	.getLength(),
+													end
+															- (typedRegion
+																	.getOffset() + typedRegion
+																	.getLength()),
+													styleRange.foreground,
+													styleRange.background,
+													styleRange.fontStyle);
+										} else if (styleRange.start < typedRegion
+												.getOffset()
+												&& styleRange.start
+														+ styleRange.length > typedRegion
+														.getOffset()) {
+											styleRange.length = typedRegion
+													.getOffset()
+													- styleRange.start;
+											break;
+										} else if (styleRange.start >= typedRegion
+												.getOffset()
+												&& styleRange.start
+														+ styleRange.length <= typedRegion
+														.getOffset()
+														+ typedRegion
+																.getLength()) {
+											styleRange = null;
+											break;
+										} else if (styleRange.start > typedRegion
+												.getOffset()
+												&& styleRange.start < typedRegion
+														.getOffset()
+														+ typedRegion
+																.getLength()
+												&& styleRange.start
+														+ styleRange.length > typedRegion
+														.getOffset()
+														+ typedRegion
+																.getLength()) {
+											styleRange.length = styleRange.start
+													+ styleRange.length
+													- (typedRegion.getOffset() + typedRegion
+															.getLength());
+											styleRange.start = typedRegion
+													.getOffset()
+													+ typedRegion.getLength();
+
+										} else if (styleRange.start
+												+ styleRange.length < typedRegion
+												.getOffset()) {
+											break;
+										}
+									}
+									if (styleRange != null) {
+										fRangeSet.add(styleRange);
+									}
 								}
 							}
 						}
+
+					} else {
+						int oldLength = 0;
+						for (Iterator iterator = presentation
+								.getAllStyleRangeIterator(); iterator.hasNext();) {
+							iterator.next();
+							oldLength++;
+						}
+						IPresentationRepairer repairer = getRepairer(r
+								.getType());
+						if (repairer != null)
+							repairer.createPresentation(presentation, r);
+						int newLength = 0;
+						for (Iterator iterator = presentation
+								.getAllStyleRangeIterator(); iterator.hasNext();) {
+							StyleRange styleRange = (StyleRange) iterator
+									.next();
+							oldLength--;
+							if (oldLength < 0) {
+								fRangeSet.add(styleRange);
+							}
+						}
+
+					}
+				}
+				if (fRangeSet.isEmpty()) {
+					return null;
+				}
+				List<StyleRange> fRanges = new ArrayList<StyleRange>();
+				for (Iterator iterator = fRangeSet.iterator(); iterator
+						.hasNext();) {
+					StyleRange styleRange = (StyleRange) iterator.next();
+					fRanges.add(styleRange);
+				}
+				Collections.sort(fRanges, new Comparator<StyleRange>() {
+
+					public int compare(StyleRange o1, StyleRange o2) {
+						return o1.start - o2.start;
 					}
 
-				} else {
-					int oldLength = 0;
-					for (Iterator iterator = presentation
-							.getAllStyleRangeIterator(); iterator.hasNext();) {
-						iterator.next();
-						oldLength++;
+				});
+				presentation = new TextPresentation(damage, fRanges.size());
+				for (Iterator iterator = fRanges.iterator(); iterator.hasNext();) {
+					StyleRange styleRange = (StyleRange) iterator.next();
+					if (styleRange.start + styleRange.length <= damage
+							.getOffset()) {
+						continue;
+					} else if (styleRange.start <= damage.getOffset()
+							&& styleRange.start + styleRange.length > damage
+									.getOffset()
+							&& styleRange.start + styleRange.length <= damage
+									.getOffset()
+									+ validLength) {
+						int rangeEnd = styleRange.start + styleRange.length;
+						styleRange.start = damage.getOffset();
+						styleRange.length = rangeEnd - damage.getOffset();
+						addStyleRange(presentation, styleRange);
+					} else if (styleRange.start >= damage.getOffset()
+							&& styleRange.start < damage.getOffset()
+									+ validLength
+							&& styleRange.start + styleRange.length > damage
+									.getOffset()
+									+ validLength) {
+						styleRange.length = damage.getOffset() + validLength
+								- styleRange.start;
+						addStyleRange(presentation, styleRange);
+					} else if (styleRange.start >= damage.getOffset()
+							&& styleRange.start + styleRange.length <= damage
+									.getOffset()
+									+ validLength) {
+						addStyleRange(presentation, styleRange);
 					}
+
+				}
+				return presentation;
+			} else {
+				for (int i = 0; i < partitions.length; i++) {
+					ITypedRegion r = partitions[i];
 					IPresentationRepairer repairer = getRepairer(r.getType());
 					if (repairer != null)
 						repairer.createPresentation(presentation, r);
-					int newLength = 0;
-					for (Iterator iterator = presentation
-							.getAllStyleRangeIterator(); iterator.hasNext();) {
-						StyleRange styleRange = (StyleRange) iterator.next();
-						oldLength--;
-						if (oldLength < 0) {
-							fRangeSet.add(styleRange);
-						}
-					}
-
-				}
-			}
-			if (fRangeSet.isEmpty()) {
-				return null;
-			}
-			List<StyleRange> fRanges = new ArrayList<StyleRange>();
-			for (Iterator iterator = fRangeSet.iterator(); iterator.hasNext();) {
-				StyleRange styleRange = (StyleRange) iterator.next();
-				fRanges.add(styleRange);
-			}
-			Collections.sort(fRanges, new Comparator<StyleRange>() {
-
-				public int compare(StyleRange o1, StyleRange o2) {
-					return o1.start - o2.start;
 				}
 
-			});
-			presentation = new TextPresentation(damage, fRanges.size());
-			for (Iterator iterator = fRanges.iterator(); iterator.hasNext();) {
-				StyleRange styleRange = (StyleRange) iterator.next();
-				if (styleRange.start + styleRange.length <= damage.getOffset()) {
-					continue;
-				} else if (styleRange.start <= damage.getOffset()
-						&& styleRange.start + styleRange.length > damage
-								.getOffset()
-						&& styleRange.start + styleRange.length <= damage
-								.getOffset() + validLength) {
-					int rangeEnd = styleRange.start + styleRange.length;
-					styleRange.start = damage.getOffset();
-					styleRange.length = rangeEnd - damage.getOffset();
-					addStyleRange(presentation, styleRange);
-				} else if (styleRange.start >= damage.getOffset()
-						&& styleRange.start < damage.getOffset() + validLength
-						&& styleRange.start + styleRange.length > damage
-								.getOffset() + validLength) {
-					styleRange.length = damage.getOffset() + validLength
-							- styleRange.start;
-					addStyleRange(presentation, styleRange);
-				} else if (styleRange.start >= damage.getOffset()
-						&& styleRange.start + styleRange.length <= damage
-								.getOffset() + validLength) {
-					addStyleRange(presentation, styleRange);
-				}
-
+				return presentation;
 			}
-			return presentation;
-			 } else {
-			 for (int i = 0; i < partitions.length; i++) {
-			 ITypedRegion r = partitions[i];
-			 IPresentationRepairer repairer = getRepairer(r.getType());
-			 if (repairer != null)
-			 repairer.createPresentation(presentation, r);
-			 }
-			 return presentation;
-			 }
 
 		} catch (BadLocationException x) {
 			/* ignored in platform PresentationReconciler, too */
@@ -285,7 +309,11 @@ public class PHPStructuredPresentationReconciler extends
 	private boolean containSpecialType(ITypedRegion[] partitions) {
 		for (int i = 0; i < partitions.length; i++) {
 			ITypedRegion r = partitions[i];
-			if (fTypeSet.contains(r.getType())) {
+			if (fTypeSet.contains(r.getType())
+					&& (i + 2 < partitions.length)
+					&& PHPPartitionTypes.PHP_DEFAULT.equals(partitions[i + 1]
+							.getType())
+					&& r.getType().equals(partitions[i + 2].getType())) {
 				return true;
 			}
 		}
