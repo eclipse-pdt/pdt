@@ -131,6 +131,10 @@ public class PhpTemplateCompletionProcessor extends
 		return matches.toArray(new ICompletionProposal[matches.size()]);
 	}
 
+	protected boolean isValidPrefix(String prefix) {
+		return true;
+	}
+
 	private boolean isInDocOrCommentOrString(ITextViewer viewer, int offset) {
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		if (modelManager != null) {
@@ -192,10 +196,6 @@ public class PhpTemplateCompletionProcessor extends
 
 	private ICompletionProposal[] filterUsingPrefix(
 			ICompletionProposal[] completionProposals, String prefix) {
-		if (prefix.length() == 0) { // no templats should be offered if there is
-			// no prefix.
-			return EMPTY_ICOMPLETION_PROPOSAL;
-		}
 		List<PhpTemplateProposal> matches = new ArrayList<PhpTemplateProposal>();
 		for (int i = 0; i < completionProposals.length; i++) {
 			PhpTemplateProposal phpTemplateProposal = (PhpTemplateProposal) completionProposals[i];
