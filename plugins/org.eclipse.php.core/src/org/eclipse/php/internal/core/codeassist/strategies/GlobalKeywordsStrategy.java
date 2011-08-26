@@ -11,8 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
+import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
@@ -36,4 +39,13 @@ public class GlobalKeywordsStrategy extends KeywordsStrategy {
 		return (keyword.context & PHPKeywords.GLOBAL) == 0;
 	}
 
+	@Override
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
+		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
+		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
+			return;
+		}
+		super.apply(reporter);
+	}
 }

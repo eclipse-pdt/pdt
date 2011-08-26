@@ -16,8 +16,10 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -66,7 +68,6 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		if (prefix.length() > 0 && !prefix.startsWith("$")) {
 			return;
 		}
-
 		CompletionRequestor requestor = abstractContext
 				.getCompletionRequestor();
 
@@ -81,8 +82,8 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule,
 					Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
 		} else {
-			fields = PHPModelUtils.getFileFields(abstractContext
-					.getSourceModule(), prefix, false, null);
+			fields = PHPModelUtils.getFileFields(
+					abstractContext.getSourceModule(), prefix, false, null);
 		}
 
 		SourceRange replaceRange = getReplacementRange(context);
@@ -96,8 +97,8 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 				if (variable.startsWith(prefix)) {
 					if (!requestor.isContextInformationMode()
 							|| variable.length() == prefix.length()) {
-						reporter.reportField(new FakeField(
-								(ModelElement) abstractContext
+						reporter.reportField(
+								new FakeField((ModelElement) abstractContext
 										.getSourceModule(), variable, 0, 0),
 								"", replaceRange, false); // NON-NLS-1
 					}
@@ -110,5 +111,17 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES,
 				true, null);
+	}
+
+	@Override
+	protected IDLTKSearchScope createSearchScope() {
+		ICompletionContext context = getContext();
+		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
+		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
+			ISourceModule sourceModule = ((AbstractCompletionContext) context)
+					.getSourceModule();
+			return SearchEngine.createSearchScope(sourceModule);
+		}
+		return super.createSearchScope();
 	}
 }

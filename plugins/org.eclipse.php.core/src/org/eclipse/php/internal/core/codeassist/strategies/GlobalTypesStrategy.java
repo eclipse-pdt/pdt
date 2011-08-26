@@ -73,6 +73,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
+		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
+			return;
+		}
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 
 		IType[] types = getTypes(abstractContext);

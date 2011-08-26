@@ -53,6 +53,10 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		CompletionRequestor requestor = abstractContext
 				.getCompletionRequestor();
 
+		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
+			return;
+		}
+
 		String prefix = abstractContext.getPrefix();
 		if (prefix.startsWith("$")) {
 			return;
@@ -82,8 +86,8 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		IModelElement[] enclosingTypeConstants = null;
 
 		if (enclosingType != null
-				&& isStartOfStatement(prefix, abstractContext, abstractContext
-						.getOffset())) {
+				&& isStartOfStatement(prefix, abstractContext,
+						abstractContext.getOffset())) {
 			// See the case of testClassStatement1.pdtt and
 			// testClassStatement2.pdtt
 			scope = SearchEngine.createSearchScope(enclosingType);

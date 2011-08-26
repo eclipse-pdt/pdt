@@ -43,6 +43,10 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		CompletionRequestor requestor = abstractContext
 				.getCompletionRequestor();
 
+		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
+			return;
+		}
+
 		String prefix = abstractContext.getPrefix();
 		if (prefix.startsWith("$")) {
 			return;
