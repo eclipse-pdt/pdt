@@ -11,14 +11,9 @@
 package org.eclipse.php.internal.ui.editor.highlighters;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.Flags;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
-import org.eclipse.php.internal.ui.editor.highlighter.ModelUtils;
 
 public class StaticMethodHighlighting extends AbstractSemanticHighlighting {
 
@@ -50,22 +45,6 @@ public class StaticMethodHighlighting extends AbstractSemanticHighlighting {
 			if (functionName.getType() == ASTNode.IDENTIFIER
 					&& invocationParent == ASTNode.STATIC_METHOD_INVOCATION) {
 				highlight(functionName);
-			}
-			return true;
-		}
-
-		@Override
-		public boolean visit(MethodInvocation methodInvocation) {
-			IMethod method = ModelUtils.getMethod(methodInvocation);
-			if (method != null) {
-				try {
-					if (Flags.isStatic(method.getFlags())) {
-						highlight(methodInvocation.getMethod()
-								.getFunctionName());
-					}
-				} catch (ModelException e) {
-					Logger.logException(e);
-				}
 			}
 			return true;
 		}

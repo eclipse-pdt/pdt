@@ -120,7 +120,7 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 
 	@Override
 	public void initDefaultPreferences() {
-		getStyle().setStrikethroughByDefault(true);
+		getStyle().setStrikethroughByDefault(true).setEnabledByDefault(false);
 	}
 
 	@Override
