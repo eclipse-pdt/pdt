@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?><!--
+<?eclipse version="3.0"?>
+<!--
     Copyright (c) 2009 IBM Corporation and others.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
@@ -55,6 +56,12 @@
             contextId="org.eclipse.php.debug.ui.xdebug"
             commandId="org.eclipse.php.debug.ui.commands.Inspect"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+	    <!---->
+	    <key
+            sequence="M1+M2+I"
+            contextId="org.eclipse.ui.contexts.dialogAndWindow"
+            commandId="org.eclipse.php.debug.ui.commands.Inspect"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	</extension>
 	
 	<extension point="org.eclipse.ui.contexts">
@@ -64,6 +71,13 @@
 		<context name="%debuggingPHP.name" description="%debuggingPHP.description"
 			id="org.eclipse.php.debug.ui.xdebug" parentId="org.eclipse.debug.ui.debugging">
 		</context>
+		<!--
+		<context name="%debuggingPHP.name" description="%debuggingPHP.description"
+			id="org.eclipse.php.debug.ui.debugging.dialogAndWindow" parentId="org.eclipse.ui.contexts.dialogAndWindow">
+		</context>
+		<context name="%debuggingPHP.name" description="%debuggingPHP.description"
+			id="org.eclipse.php.debug.ui.xdebug.dialogAndWindow" parentId="org.eclipse.ui.contexts.dialogAndWindow">
+		</context>-->
 	</extension>
 	
 	<extension point="org.eclipse.ui.actionSets">
