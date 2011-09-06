@@ -15,7 +15,7 @@ foreach ($arr2 as $key2 => $value2)
 
 foreach ($arr as $value) {
 	foreach ($arr2 as $key2 => $value2)
-	echo $key2;
+		echo $key2;
 }
 
 

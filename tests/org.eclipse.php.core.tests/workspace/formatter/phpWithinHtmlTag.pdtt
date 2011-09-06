@@ -29,7 +29,7 @@ $pageTitle = 'My Page Title';
 			<tr>
 				<td align="left" width="60%">
 					<h1>
-					<?=$pageTitle ?>
+						<?=$pageTitle ?>
 						<br> <font size="1" color="#8080FF">PHP Development Tools</font>
 					</h1>
 				</td>

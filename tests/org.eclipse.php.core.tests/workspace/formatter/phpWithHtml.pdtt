@@ -83,7 +83,7 @@ a:hover {
 			<tr>
 				<td <?=$pageTitle ?>="left" width="60%">
 					<h1>
-					<?=$pageTitle ?>
+						<?=$pageTitle ?>
 						<br> <font size="<?=$pageTitle ?>" color="#8080FF">PHP Development
 							Tools</font>
 					</h1>
