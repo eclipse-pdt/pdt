@@ -11,14 +11,22 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.format;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -126,7 +134,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		final IRegion lineInfo = document
 				.getLineInformationOfOffset(checkedOffset);
 		int lineStart = lineInfo.getOffset();
-
+		// document.getLineOfOffset(forOffset)
 		if (isBlanks(document, lineStart, checkedOffset, forOffset))
 			return false;
 
@@ -226,6 +234,13 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
 						document.getRegionAtCharacterOffset(lineStart), true);
+		// if (textSequence != null
+		// && isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(
+		// document, textSequence.getOriginalOffset(0)))
+		// && document.getLineOfOffset(textSequence.getOriginalOffset(0)) <
+		// currLineIndex) {
+		// return true;
+		// }
 		if (textSequence != null
 				&& isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(
 						document, textSequence.getOriginalOffset(0)))
@@ -234,6 +249,95 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		}
 
 		return false;
+	}
+
+	public static boolean isInMultiLineStatement(
+			final IStructuredDocument document, final int lineNumber,
+			final int offset) throws BadLocationException {
+		try {
+			IRegion lineInfo = document.getLineInformationOfOffset(offset);
+			int lineStart = lineInfo.getOffset();
+			while (Character.isWhitespace(document.getChar(lineStart)))
+				lineStart++;
+			Program program = getProgram(document);
+			if (program == null || lineStart > program.getEnd()
+					|| offset > program.getEnd()) {
+				return false;
+			}
+			// document.get(21, 37)
+			ASTNode node = getIndentationBaseNode(program, document, offset);
+			if (node == null) {
+				return false;
+			}
+
+			return document.getLineOfOffset(node.getStart()) < lineNumber;
+			// return document.getLineOfOffset(node.getStart()) != document
+			// .getLineOfOffset(node.getEnd());
+		} catch (Exception e) {
+			PHPCorePlugin.log(e);
+		}
+		return false;
+	}
+
+	public static ASTNode getASTNode(final IStructuredDocument document,
+			final int offset) throws BadLocationException {
+		try {
+			IRegion lineInfo = document.getLineInformationOfOffset(offset);
+			int lineStart = lineInfo.getOffset();
+			while (Character.isWhitespace(document.getChar(lineStart)))
+				lineStart++;
+			Program program = getProgram(document);
+			if (program == null || lineStart > program.getEnd()
+					|| offset > program.getEnd()) {
+				return null;
+			}
+			if (lineStart < offset
+					|| lineStart > (lineInfo.getOffset() + lineInfo.getLength())) {
+				lineStart = offset;
+			}
+			// document.get(21, 37)
+			ASTNode node = getIndentationBaseNode(program, document, lineStart);
+			if (node == program) {
+				return null;
+			}
+			return node;
+
+			// return document.getLineOfOffset(node.getStart()) != document
+			// .getLineOfOffset(node.getEnd());
+		} catch (Exception e) {
+			PHPCorePlugin.log(e);
+		}
+		return null;
+	}
+
+	private static ASTNode getIndentationBaseNode(Program program,
+			IStructuredDocument document, int offset)
+			throws BadLocationException {
+		ASTNode node = program.getElementAt(offset);
+		// process Comment by default way
+		if (node instanceof Comment) {
+			return null;
+		} else {
+			if (node instanceof DoStatement) {
+				int nextCharIndex = offset;
+				while (Character.isWhitespace(document.getChar(nextCharIndex)))
+					nextCharIndex++;
+				// if current offset is out of DoStatement Body
+				if (nextCharIndex != ((DoStatement) node).getBody().getStart()) {
+					node = node.getParent();
+				}
+			} else if (offset == node.getStart() && node.getParent() != null) {
+				while (node.getParent() != null
+						&& node.getStart() == node.getParent().getStart()) {
+					node = node.getParent();
+				}
+				// node = node.getParent();
+			}
+			if (node instanceof ASTError) {
+				return null;
+			}
+			return node;
+		}
 	}
 
 	/**
@@ -281,31 +385,132 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		final String blanks = FormatterUtils.getLineBlanks(document,
 				indentationBaseLine);
 		result.append(blanks);
+		IRegion currentLine = document.getLineInformationOfOffset(forOffset);
+		if (!enterKeyPressed
+				&& document
+						.get(currentLine.getOffset(),
+								forOffset - currentLine.getOffset()).trim()
+						.length() != 0) {
+			return;
+		}
 
+		ASTNode node = getASTNode(document, forOffset);
+		if (node != null) {
+			if (enterKeyPressed) {
+				node = getIndentNode(node);
+			}
+			ASTNode parentNode = node.getParent();
+			parentNode = getIndentNode(parentNode);
+			if (isInlinePHP(node, parentNode)) {
+				originalPlaceMatchingBlanks(document, result, lineNumber,
+						forOffset, enterKeyPressed, indentationBaseLineIndex,
+						lastNonEmptyLine, blanks);
+			} else {
+				IRegion startLine = document.getLineInformationOfOffset(node
+						.getStart());
+				IRegion endLine = document.getLineInformationOfOffset(node
+						.getEnd());
+				if (currentLine.getOffset() == startLine.getOffset()
+						&& !enterKeyPressed/* && result.length() != 0 */) {
+
+					IRegion parentStartLine = document
+							.getLineInformationOfOffset(parentNode.getStart());
+					result.setLength(result.length() - blanks.length());
+					char[] lineChars = document
+							.get(parentStartLine.getOffset(),
+									parentNode.getStart()
+											- parentStartLine.getOffset())
+							.toCharArray();
+					for (int i = 0; i < lineChars.length; i++) {
+						char c = lineChars[i];
+						if (Character.isWhitespace(c)) {
+							result.append(c);
+						} else {
+							result.append(" ");
+						}
+					}
+					if (!(parentNode instanceof Program)
+							&& !(parentNode instanceof InfixExpression)
+							&& !(node instanceof Block)) {
+						addIndent(document, result);
+					}
+					return;
+				} else {
+					result.setLength(result.length() - blanks.length());
+					char[] lineChars = document.get(startLine.getOffset(),
+							node.getStart() - startLine.getOffset())
+							.toCharArray();
+					if (currentLine.getOffset() != endLine.getOffset()
+							&& !(node instanceof InfixExpression)) {
+						for (int i = 0; i < lineChars.length; i++) {
+							char c = lineChars[i];
+							if (Character.isWhitespace(c)) {
+								result.append(c);
+							} else {
+								result.append(" ");
+							}
+						}
+						if (!enterKeyPressed && (node instanceof IfStatement)) {
+							String currentString = document.get(
+									currentLine.getOffset(),
+									currentLine.getOffset()
+											+ currentLine.getLength());
+							if (!currentString.trim().toLowerCase()
+									.startsWith("else")) {
+								addIndent(document, result);
+							}
+						} else {
+							addIndent(document, result);
+
+						}
+
+					} else {
+						for (int i = 0; i < lineChars.length; i++) {
+							char c = lineChars[i];
+							if (Character.isWhitespace(c)) {
+								result.append(c);
+							} else {
+								return;
+							}
+						}
+					}
+				}
+			}
+
+		} else {
+			originalPlaceMatchingBlanks(document, result, lineNumber,
+					forOffset, enterKeyPressed, indentationBaseLineIndex,
+					lastNonEmptyLine, blanks);
+		}
+
+	}
+
+	private static void originalPlaceMatchingBlanks(
+			final IStructuredDocument document, final StringBuffer result,
+			final int lineNumber, final int forOffset, boolean enterKeyPressed,
+			final int indentationBaseLineIndex, final IRegion lastNonEmptyLine,
+			final String blanks) throws BadLocationException {
+		int lastNonEmptyLineIndex;
 		final int lastLineEndOffset = lastNonEmptyLine.getOffset()
 				+ lastNonEmptyLine.getLength();
 		int offset;
-		int line;
+		// int line;
 		if (forOffset < lastLineEndOffset) {
 			offset = forOffset;
-			line = lineNumber;
+			// line = lineNumber;
 		} else {
 			offset = lastLineEndOffset;
-			line = lastNonEmptyLineIndex;
+			// line = lastNonEmptyLineIndex;
 		}
-		if (shouldIndent(document, offset, line)) {
-			final int indentationSize = FormatPreferencesSupport.getInstance()
-					.getIndentationSize(document);
-			final char indentationChar = FormatPreferencesSupport.getInstance()
-					.getIndentationChar(document);
-			for (int i = 0; i < indentationSize; i++)
-				result.append(indentationChar);
+		if (shouldIndent(document, offset, lineNumber)) {
+			addIndent(document, result);
 		} else {
+
 			lastNonEmptyLineIndex = lineNumber;
 			if (!enterKeyPressed && lastNonEmptyLineIndex > 0) {
 				lastNonEmptyLineIndex--;
 			}
-			while (lastNonEmptyLineIndex >= 0) {
+			while (lastNonEmptyLineIndex > 0) {
 				IRegion lineInfo = document
 						.getLineInformation(lastNonEmptyLineIndex);
 				String content = document.get(lineInfo.getOffset(),
@@ -316,38 +521,88 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				lastNonEmptyLineIndex--;
 			}
 			if (!isEndOfStatement(document, offset, lastNonEmptyLineIndex)) {
-				if (enterKeyPressed) {
-					// this line is one of multi line statement
-					if (indentationBaseLineIndex == lastNonEmptyLineIndex) {
-						// this only deal with "$a = 'aaa'.|","|" is the cursor
-						// position when we press enter key
-						placeStringIndentation(document, lastNonEmptyLineIndex,
-								result);
-					} else {
-						// in multi line statement,when user press enter key,
-						// we use the same indentation of the last non-empty
-						// line.
-						result.setLength(result.length() - blanks.length());
-						IRegion lineInfo = document
-								.getLineInformation(lastNonEmptyLineIndex);
-						result.append(FormatterUtils.getLineBlanks(document,
-								lineInfo));
-					}
+				// if (enterKeyPressed) {
+				// this line is one of multi line statement
+				if (indentationBaseLineIndex == lastNonEmptyLineIndex) {
+					// this only deal with "$a = 'aaa'.|","|" is the
+					// cursor
+					// position when we press enter key
+					placeStringIndentation(document, lastNonEmptyLineIndex,
+							result);
 				} else {
-					if (enterKeyPressed) {
-						// in multi line statement,when user press enter key,
-						// we use the same indentation of the last non-empty
-						// line.
-						result.setLength(result.length() - blanks.length());
-						IRegion lineInfo = document
-								.getLineInformation(lastNonEmptyLineIndex);
-						result.append(FormatterUtils.getLineBlanks(document,
-								lineInfo));
-					}
+					// in multi line statement,when user press enter
+					// key,
+					// we use the same indentation of the last non-empty
+					// line.
+					result.setLength(result.length() - blanks.length());
+					IRegion lineInfo = document
+							.getLineInformation(lastNonEmptyLineIndex);
+					result.append(FormatterUtils.getLineBlanks(document,
+							lineInfo));
+				}
+				// } else {
+				// // if (enterKeyPressed) {
+				// // in multi line statement,when user press enter key,
+				// // we use the same indentation of the last non-empty
+				// // line.
+				// result.setLength(result.length() - blanks.length());
+				// IRegion lineInfo = document
+				// .getLineInformation(lastNonEmptyLineIndex);
+				// result.append(FormatterUtils.getLineBlanks(document,
+				// lineInfo));
+				// // }
+				//
+				// }
+			}
 
+		}
+	}
+
+	private static boolean isInlinePHP(ASTNode node, ASTNode parentNode) {
+		if (node.getParent() instanceof Program) {
+			Program program = (Program) node.getParent();
+			for (int i = 0; i < program.statements().size(); i++) {
+				Statement statement = program.statements().get(i);
+				if (node == statement) {
+					return false;
+				}
+				if (statement instanceof InLineHtml) {
+					return true;
 				}
 			}
 		}
+		return false;
+	}
+
+	private static ASTNode getIndentNode(ASTNode parentNode) {
+		while (parentNode.getParent() != null
+				&& parentNode.getStart() == parentNode.getParent().getStart()) {
+			parentNode = parentNode.getParent();
+		}
+		while (parentNode instanceof Block && parentNode.getParent() != null) {
+			parentNode = parentNode.getParent();
+		}
+		if ((parentNode instanceof FunctionDeclaration)
+				|| parentNode instanceof CatchClause) {
+			parentNode = parentNode.getParent();
+		}
+		while ((parentNode instanceof IfStatement)
+				&& (parentNode.getParent() instanceof IfStatement)
+				&& ((IfStatement) parentNode.getParent()).getFalseStatement() == parentNode) {
+			// else if statement,we need find the if statement
+			parentNode = parentNode.getParent();
+		}
+		return parentNode;
+	}
+
+	private static void addIndent(final IStructuredDocument document,
+			final StringBuffer result) {
+		final int indentationSize = FormatPreferencesSupport.getInstance()
+				.getIndentationSize(document);
+		final char indentationChar = FormatPreferencesSupport.getInstance()
+				.getIndentationChar(document);
+		for (int i = 0; i < indentationSize; i++)
+			result.append(indentationChar);
 	}
 
 	private static boolean isEndOfStatement(IStructuredDocument document,
@@ -489,8 +744,32 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	public static boolean shouldNotConsiderAsIndentationBase(
 			final String currentState, final String forState) {
 		return currentState != forState
-				&& (currentState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT
-						|| currentState == PHPPartitionTypes.PHP_DOC || currentState == PHPPartitionTypes.PHP_QUOTED_STRING);
+				&& (currentState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT || currentState == PHPPartitionTypes.PHP_DOC);
+	}
+
+	public static Program getProgram(IStructuredDocument document) {
+		IStructuredModel structuredModel = null;
+		try {
+			structuredModel = StructuredModelManager.getModelManager()
+					.getExistingModelForRead(document);
+			if (structuredModel != null) {
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+						.findMember(structuredModel.getBaseLocation());
+				ISourceModule modelElement = (ISourceModule) DLTKCore
+						.create(resource);
+				ASTParser parser = ASTParser.newParser(modelElement);
+
+				return parser.createAST(null);
+			}
+
+		} catch (Exception e) {
+		} finally {
+			// ensureClosed(outputStream, null);
+			// release from model manager
+			if (structuredModel != null)
+				structuredModel.releaseFromRead();
+		}
+		return null;
 	}
 
 }
