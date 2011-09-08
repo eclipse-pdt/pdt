@@ -49,8 +49,11 @@ public class PhpTemplateCompletionProcessor extends
 	private static final ICompletionProposal[] EMPTY_ICOMPLETION_PROPOSAL = new ICompletionProposal[0];
 	private static final ICompletionProposal[] EMPTY = {};
 	private String contextTypeId = PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
+	private int offset;
+	private static final String NON_PREFIX_CHAR = ";)>";
 
 	private static char[] IGNORE = new char[] { '.', ':', '@', '$' };
+	private IDocument document;
 
 	public PhpTemplateCompletionProcessor(
 			ScriptContentAssistInvocationContext context) {
@@ -59,7 +62,8 @@ public class PhpTemplateCompletionProcessor extends
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
-		IDocument document = viewer.getDocument();
+		this.offset = offset;
+		document = viewer.getDocument();
 		try {
 			String type = TextUtilities.getContentType(document,
 					IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
@@ -132,6 +136,14 @@ public class PhpTemplateCompletionProcessor extends
 	}
 
 	protected boolean isValidPrefix(String prefix) {
+		try {
+			char ch = document.getChar(offset - 1 - prefix.length());
+			// if (!(Character.isWhitespace(ch))) {
+			if (NON_PREFIX_CHAR.indexOf(ch) >= 0) {
+				return false;
+			}
+		} catch (BadLocationException e) {
+		}
 		return true;
 	}
 
@@ -342,5 +354,11 @@ public class PhpTemplateCompletionProcessor extends
 		} catch (BadLocationException x) {
 			return false;
 		}
+	}
+
+	@Override
+	protected int getRelevance(Template template, String prefix) {
+		// TODO Auto-generated method stub
+		return 80;
 	}
 }
