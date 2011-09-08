@@ -50,7 +50,7 @@ public class PhpTemplateCompletionProcessor extends
 	private static final ICompletionProposal[] EMPTY = {};
 	private String contextTypeId = PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
 	private int offset;
-	private static final String NON_PREFIX_CHAR = ";)>";
+	private static final String NON_PREFIX_CHAR = ";()>";
 
 	private static char[] IGNORE = new char[] { '.', ':', '@', '$' };
 	private IDocument document;
