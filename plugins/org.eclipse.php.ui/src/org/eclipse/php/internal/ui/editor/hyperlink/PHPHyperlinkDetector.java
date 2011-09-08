@@ -30,6 +30,8 @@ import org.eclipse.ui.texteditor.IEditorStatusLine;
 
 public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
+	private static final String NEW = "new";
+
 	/*
 	 * @see
 	 * org.eclipse.jface.text.hyperlink.IHyperlinkDetector#detectHyperlinks(
@@ -68,6 +70,14 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 			if (wordRegion == null)
 				return null;
 
+			try {
+				String text = document.get(wordRegion.getOffset(),
+						wordRegion.getLength());
+				if (text.equals(NEW)) {
+					return null;
+				}
+			} catch (BadLocationException e) {
+			}
 			IModelElement[] elements = null;
 			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(),
 					wordRegion.getLength());
