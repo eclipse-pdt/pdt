@@ -575,7 +575,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	}
 
 	private static ASTNode getIndentNode(ASTNode parentNode) {
-		if (parentNode != null) {
+		if (parentNode == null) {
 			return null;
 		}
 		while (parentNode.getParent() != null
