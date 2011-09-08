@@ -401,7 +401,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			}
 			ASTNode parentNode = node.getParent();
 			parentNode = getIndentNode(parentNode);
-			if (isInlinePHP(node, parentNode)) {
+			if (parentNode == null || isInlinePHP(node, parentNode)) {
 				originalPlaceMatchingBlanks(document, result, lineNumber,
 						forOffset, enterKeyPressed, indentationBaseLineIndex,
 						lastNonEmptyLine, blanks);
@@ -575,6 +575,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	}
 
 	private static ASTNode getIndentNode(ASTNode parentNode) {
+		if (parentNode != null) {
+			return null;
+		}
 		while (parentNode.getParent() != null
 				&& parentNode.getStart() == parentNode.getParent().getStart()) {
 			parentNode = parentNode.getParent();
