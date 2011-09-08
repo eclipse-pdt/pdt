@@ -107,27 +107,43 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 							evaluated.add(getArrayType(m.group(),
 									currentNamespace, doc.sourceStart()));
 						} else {
-							if (typeName.indexOf(SPLASH) > 0) {
-								// check if the first part is an
-								// alias,then get the full name
+							if (currentNamespace != null) {
 								ModuleDeclaration moduleDeclaration = SourceParserUtil
 										.getModuleDeclaration(currentNamespace
 												.getSourceModule());
-								String prefix = typeName.substring(0,
-										typeName.indexOf(SPLASH));
-								final Map<String, UsePart> result = PHPModelUtils
-										.getAliasToNSMap(prefix,
-												moduleDeclaration,
-												doc.sourceStart(),
-												currentNamespace, true);
-								if (result.containsKey(prefix)) {
-									String fullName = result.get(prefix)
-											.getNamespace()
-											.getFullyQualifiedName();
-									typeName = typeName.replace(prefix,
-											fullName);
+								if (typeName.indexOf(SPLASH) > 0) {
+									// check if the first part is an
+									// alias,then get the full name
+									String prefix = typeName.substring(0,
+											typeName.indexOf(SPLASH));
+									final Map<String, UsePart> result = PHPModelUtils
+											.getAliasToNSMap(prefix,
+													moduleDeclaration,
+													doc.sourceStart(),
+													currentNamespace, true);
+									if (result.containsKey(prefix)) {
+										String fullName = result.get(prefix)
+												.getNamespace()
+												.getFullyQualifiedName();
+										typeName = typeName.replace(prefix,
+												fullName);
+									}
+								} else {
+									String prefix = typeName;
+									final Map<String, UsePart> result = PHPModelUtils
+											.getAliasToNSMap(prefix,
+													moduleDeclaration,
+													doc.sourceStart(),
+													currentNamespace, true);
+									if (result.containsKey(prefix)) {
+										String fullName = result.get(prefix)
+												.getNamespace()
+												.getFullyQualifiedName();
+										typeName = fullName;
+									}
 								}
 							}
+
 							IEvaluatedType type = getEvaluatedType(typeName,
 									currentNamespace);
 							if (type != null) {
