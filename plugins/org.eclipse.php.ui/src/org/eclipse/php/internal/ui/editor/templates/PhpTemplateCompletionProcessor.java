@@ -46,23 +46,21 @@ public class PhpTemplateCompletionProcessor extends
 	private static final String $_LINE_SELECTION = "${" + GlobalTemplateVariables.LineSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String $_WORD_SELECTION = "${" + GlobalTemplateVariables.WordSelection.NAME + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static final ICompletionProposal[] EMPTY_ICOMPLETION_PROPOSAL = new ICompletionProposal[0];
 	private static final ICompletionProposal[] EMPTY = {};
 	private String contextTypeId = PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
-	private int offset;
-	private static final String NON_PREFIX_CHAR = ";()>";
 
 	private static char[] IGNORE = new char[] { '.', ':', '@', '$' };
 	private IDocument document;
+	private boolean explicit;
 
 	public PhpTemplateCompletionProcessor(
-			ScriptContentAssistInvocationContext context) {
+			ScriptContentAssistInvocationContext context, boolean explicit) {
 		super(context);
+		this.explicit = explicit;
 	}
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
-		this.offset = offset;
 		document = viewer.getDocument();
 		try {
 			String type = TextUtilities.getContentType(document,
@@ -136,13 +134,8 @@ public class PhpTemplateCompletionProcessor extends
 	}
 
 	protected boolean isValidPrefix(String prefix) {
-		try {
-			char ch = document.getChar(offset - 1 - prefix.length());
-			// if (!(Character.isWhitespace(ch))) {
-			if (NON_PREFIX_CHAR.indexOf(ch) >= 0) {
-				return false;
-			}
-		} catch (BadLocationException e) {
+		if (!explicit && (prefix == null || prefix.length() == 0)) {
+			return false;
 		}
 		return true;
 	}

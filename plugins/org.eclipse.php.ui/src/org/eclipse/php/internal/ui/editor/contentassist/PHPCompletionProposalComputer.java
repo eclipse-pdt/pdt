@@ -32,7 +32,13 @@ public class PHPCompletionProposalComputer extends
 
 	protected TemplateCompletionProcessor createTemplateProposalComputer(
 			ScriptContentAssistInvocationContext context) {
-		return new PhpTemplateCompletionProcessor(context);
+		boolean explicit = false;
+		if (context instanceof PHPContentAssistInvocationContext) {
+			explicit = ((PHPContentAssistInvocationContext) context)
+					.isExplicit();
+		}
+
+		return new PhpTemplateCompletionProcessor(context, explicit);
 	}
 
 	protected ScriptCompletionProposalCollector createCollector(
