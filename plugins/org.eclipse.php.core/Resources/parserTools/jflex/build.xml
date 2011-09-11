@@ -22,12 +22,19 @@
 		<mkdir dir="${jflex.work.dir}" />
 		<property name="jflexJar" value="${jflex.work.dir}/jflex-${jflexVersion}/lib/JFlex.jar" />
 	</target>
-
-	<target name="getJFlexJar" depends="init">
-		<available property="jarExists" file="${jflexJar}" />
-		<antcall target="downloadAndUnpack" />
-	</target>
 	
+	
+	<target name="getJFlexJar" depends="init">
+			<available property="jarExists" file="${jflexJar}" />
+			<antcall target="setHttpProxy" />
+			<antcall target="downloadAndUnpack" />
+		</target>
+		
+	<target name="setHttpProxy" if="http.proxyHost">
+		<echo message="proxy: - ${http.proxyHost}:${http.proxyPort}" />
+		<setproxy proxyhost="${http.proxyHost}" proxyport="${http.proxyPort}" />
+	</target>
+
 	<target name="downloadAndUnpack" unless="jarExists">
 		<get src="http://jflex.de/jflex-${jflexVersion}.zip" dest="${jflex.work.dir}/jflex-${jflexVersion}.zip" verbose="true" usetimestamp="true" />
 		<unzip src="${jflex.work.dir}/jflex-${jflexVersion}.zip" dest="${jflex.work.dir}" />
