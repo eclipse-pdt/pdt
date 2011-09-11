@@ -14,6 +14,11 @@ buildTimestamp="`date +%Y%m%d%H%M`"
 projectid="tools.pdt"
 version="2.2.0"
 
+ftp_proxy=http://proxy.eclipse.org:9898
+http_proxy=http://proxy.eclipse.org:9898
+https_proxy=http://proxy.eclipse.org:9898
+no_proxy='localhost, 127.0.0.1, 172.30.206.0, eclipse.org'
+
 # leave blank to use assumed values (which may be wrong!)
 projRelengRoot='-projRelengRoot :pserver:anonymous@dev.eclipse.org:/cvsroot/tools'
 projRelengPath='-projRelengPath org.eclipse.pdt/components/releng/org.eclipse.pdt.releng'
