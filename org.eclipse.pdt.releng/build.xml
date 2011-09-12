@@ -1,5 +1,5 @@
 <project default="run" name="org.eclipse.pdt.releng/build.xml - Run a PDT build using the Athena CBI">
-	<target name="run" depends="check-proxy">
+	<target name="run">
 		<!--
                         1. You must check out the following projects to your workspace:
 
@@ -69,41 +69,5 @@
 		<!-- invoke a new Eclipse process and launch the build from the common.releng folder -->
 		<property name="relengCommonBuilderDir" value="${workspaceDir}/org.eclipse.dash.common.releng" />
 		<ant antfile="${relengCommonBuilderDir}/buildAll.xml" target="runEclipse" dir="${relengCommonBuilderDir}" />
-	</target>
-
-	<target name="check-proxy" description="Checks that proxy properties are set before proceeding -- fails with diagnosis otherwise.">
-		<condition property="check-proxy.hostAndPortBothNotSet">
-			<and>
-				<not>
-					<isset property="http.proxyHost" />
-				</not>
-				<not>
-					<isset property="http.proxyPort" />
-				</not>
-			</and>
-		</condition>
-		<fail if="check-proxy.hostAndPortBothNotSet">Properties 'http.proxyHost' and 'http.proxyPort' are both not set.</fail>
-
-		<condition property="check-proxy.hostSetOnly">
-			<and>
-				<isset property="http.proxyHost" />
-				<not>
-					<isset property="http.proxyPort" />
-				</not>
-			</and>
-		</condition>
-		<fail if="check-proxy.hostSetOnly">Property 'http.proxyHost' set to '${http.proxyHost}' but 'http.proxyPort' not set.</fail>
-
-		<condition property="check-proxy.portSetOnly">
-			<and>
-				<isset property="http.proxyPort" />
-				<not>
-					<isset property="http.proxyHost" />
-				</not>
-			</and>
-		</condition>
-		<fail if="check-proxy.portSetOnly">Property 'http.proxyPort' set to '${http.proxyPort}' but 'http.proxyHost' not set.</fail>
-
-		<echo>Property 'http.proxyHost' is set to '${http.proxyHost}' and property 'http.proxyPort' is set to '${http.proxyPort}'.</echo>
 	</target>
 </project>
