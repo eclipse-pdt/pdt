@@ -1,6 +1,6 @@
 <project default="run" name="org.eclipse.pdt.releng/build.xml - Run a PDT build using the Athena CBI">
-        <target name="run">
-                <!--
+	<target name="run" depends="check-proxy">
+		<!--
                         1. You must check out the following projects to your workspace:
 
                                 org.eclipse.releng.basebuilder
@@ -36,38 +36,74 @@
                                         JAVA_HOME=${JAVA14_HOME}
                 -->
 
-                <!-- load properties and set timestamp for the build -->
-                <property file="build.properties" />
-                <tstamp>
-                        <format property="buildTimestamp" pattern="yyyyMMddHHmm" />
-                </tstamp>
+		<!-- load properties and set timestamp for the build -->
+		<property file="build.properties" />
+		<tstamp>
+			<format property="buildTimestamp" pattern="yyyyMMddHHmm" />
+		</tstamp>
 
-                <!--
+		<!--
                 to build from HEAD, uncomment these lines
                 <property name="forceContextQualifier" value="v${buildTimestamp}" />
                 <property name="fetchTag" value="HEAD" />
                 -->
 
-                <!-- calculate workspaceDir as parent of this folder, the project's .releng folder (relengBuilderDir) -->
-                <property name="relengBuilderDir" value="${basedir}" />
-                <dirname file="${relengBuilderDir}" property="workspaceDir" />
+		<!-- calculate workspaceDir as parent of this folder, the project's .releng folder (relengBuilderDir) -->
+		<property name="relengBuilderDir" value="${basedir}" />
+		<dirname file="${relengBuilderDir}" property="workspaceDir" />
 
-                <!--
+		<!--
                         can build in /tmp, eg., in /tmp/build, or in workspace, eg.,
                         ${WORKSPACE}/build
                 -->
-                <property name="writableBuildRoot" value="/tmp/build" />
+		<property name="writableBuildRoot" value="/tmp/build" />
 
-                <!--
+		<!--
                         can be simple path, eg.,
                         ${writableBuildRoot}/${buildType}${buildTimestamp} or longer, eg.,
                         ${writableBuildRoot}/${topprojectName}/${projectName}/downloads/drops/${version}/${buildType}${buildTimestamp} or
                         ${writableBuildRoot}/${topprojectName}/${projectName}/${subprojectName}/downloads/drops/${version}/${buildType}${buildTimestamp}
                 -->
-                <property name="buildDir" value="${writableBuildRoot}/${buildType}${buildTimestamp}" />
+		<property name="buildDir" value="${writableBuildRoot}/${buildType}${buildTimestamp}" />
 
-                <!-- invoke a new Eclipse process and launch the build from the common.releng folder -->
-                <property name="relengCommonBuilderDir" value="${workspaceDir}/org.eclipse.dash.common.releng" />
-                <ant antfile="${relengCommonBuilderDir}/buildAll.xml" target="runEclipse" dir="${relengCommonBuilderDir}" />
-        </target>
+		<!-- invoke a new Eclipse process and launch the build from the common.releng folder -->
+		<property name="relengCommonBuilderDir" value="${workspaceDir}/org.eclipse.dash.common.releng" />
+		<ant antfile="${relengCommonBuilderDir}/buildAll.xml" target="runEclipse" dir="${relengCommonBuilderDir}" />
+	</target>
+
+	<target name="check-proxy" description="Checks that proxy properties are set before proceeding -- fails with diagnosis otherwise.">
+		<condition property="check-proxy.hostAndPortBothNotSet">
+			<and>
+				<not>
+					<isset property="http.proxyHost" />
+				</not>
+				<not>
+					<isset property="http.proxyPort" />
+				</not>
+			</and>
+		</condition>
+		<fail if="check-proxy.hostAndPortBothNotSet">Properties 'http.proxyHost' and 'http.proxyPort' are both not set.</fail>
+
+		<condition property="check-proxy.hostSetOnly">
+			<and>
+				<isset property="http.proxyHost" />
+				<not>
+					<isset property="http.proxyPort" />
+				</not>
+			</and>
+		</condition>
+		<fail if="check-proxy.hostSetOnly">Property 'http.proxyHost' set to '${http.proxyHost}' but 'http.proxyPort' not set.</fail>
+
+		<condition property="check-proxy.portSetOnly">
+			<and>
+				<isset property="http.proxyPort" />
+				<not>
+					<isset property="http.proxyHost" />
+				</not>
+			</and>
+		</condition>
+		<fail if="check-proxy.portSetOnly">Property 'http.proxyPort' set to '${http.proxyPort}' but 'http.proxyHost' not set.</fail>
+
+		<echo>Property 'http.proxyHost' is set to '${http.proxyHost}' and property 'http.proxyPort' is set to '${http.proxyPort}'.</echo>
+	</target>
 </project>
