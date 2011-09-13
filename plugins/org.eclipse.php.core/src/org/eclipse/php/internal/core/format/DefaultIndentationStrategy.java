@@ -284,7 +284,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		try {
 			IRegion lineInfo = document.getLineInformationOfOffset(offset);
 			int lineStart = lineInfo.getOffset();
-			while (Character.isWhitespace(document.getChar(lineStart)))
+			while (Character.isWhitespace(document.getChar(lineStart))
+					&& (lineStart < document.getLength() - 1))
 				lineStart++;
 			Program program = getProgram(document);
 			if (program == null || lineStart > program.getEnd()
