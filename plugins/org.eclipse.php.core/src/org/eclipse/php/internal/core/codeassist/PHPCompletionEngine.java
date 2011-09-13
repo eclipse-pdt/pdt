@@ -99,12 +99,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				ICompletionContext[] contexts = resolver.resolve(sourceModule,
 						position, requestor, companion);
 
-				if (contexts != null) {
+				if (contexts != null && contexts.length > 0) {
 					for (ICompletionStrategyFactory factory : strategyFactories) {
 						ICompletionStrategy[] strategies = factory
 								.create(contexts);
 
-						if (strategies != null) {
+						if (strategies != null && strategies.length > 0) {
 							for (ICompletionStrategy strategy : strategies) {
 								strategy.init(companion);
 
@@ -198,9 +198,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setModelElement(field);
 			proposal.setFlags(flags);
 			proposal.setRelevance(relevance);
-			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange
-					.getOffset()
-					+ replaceRange.getLength());
+			proposal.setReplaceRange(replaceRange.getOffset(),
+					replaceRange.getOffset() + replaceRange.getLength());
 
 			this.requestor.accept(proposal);
 
@@ -226,9 +225,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setName(keyword);
 			proposal.setCompletion(keyword + suffix);
 			proposal.setRelevance(nextKeywordRelevance());
-			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange
-					.getOffset()
-					+ replaceRange.getLength());
+			proposal.setReplaceRange(replaceRange.getOffset(),
+					replaceRange.getOffset() + replaceRange.getLength());
 
 			this.requestor.accept(proposal);
 
@@ -283,9 +281,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				}
 			}
 
-			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange
-					.getOffset()
-					+ replaceRange.getLength());
+			proposal.setReplaceRange(replaceRange.getOffset(),
+					replaceRange.getOffset() + replaceRange.getLength());
 			proposal.setRelevance(relevance);
 
 			this.requestor.accept(proposal);
@@ -352,9 +349,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				PHPCorePlugin.log(e);
 			}
 
-			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange
-					.getOffset()
-					+ replaceRange.getLength());
+			proposal.setReplaceRange(replaceRange.getOffset(),
+					replaceRange.getOffset() + replaceRange.getLength());
 			proposal.setRelevance(relevance);
 
 			this.requestor.accept(proposal);
@@ -391,9 +387,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		proposal.setName(relative.toString());
 		proposal.setCompletion((relative.toString() + suffix));
 		proposal.setRelevance(nextKeywordRelevance());
-		proposal.setReplaceRange(replaceRange.getOffset(), replaceRange
-				.getOffset()
-				+ replaceRange.getLength());
+		proposal.setReplaceRange(replaceRange.getOffset(),
+				replaceRange.getOffset() + replaceRange.getLength());
 		proposal.setModelElement(model);
 
 		this.requestor.accept(proposal);
