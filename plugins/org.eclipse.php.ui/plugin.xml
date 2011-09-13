@@ -610,10 +610,16 @@
 			</enabledWhen>
 		</handler>
 		<!-- overriding WST's Handlers with the same 'commanId' -->
-		<handler class="org.eclipse.php.internal.ui.actions.ToggleCommentHandler"
+		<handler class="org.eclipse.php.internal.ui.actions.PHPToggleLineCommentHandler"
 			commandId="org.eclipse.wst.sse.ui.toggle.comment">
 			<activeWhen>
+			<or>
 				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			   <with variable="activePartId">
+			    <equals value="org.eclipse.php.editor"/>
+			   </with>
+			</or>
+				
 			</activeWhen>
 			<enabledWhen>
 				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
