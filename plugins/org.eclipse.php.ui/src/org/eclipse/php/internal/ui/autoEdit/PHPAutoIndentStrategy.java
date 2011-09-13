@@ -65,12 +65,11 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 						.getLineOfOffset(command.offset));
 				if (document.get(region.getOffset(), region.getLength()).trim()
 						.length() == 0) {// blank line
-					if (command.offset != region.getOffset()) {
-						document.replace(region.getOffset(),
-								region.getLength(), "");
-						// adjust the offset
-						command.offset = region.getOffset();
-					}
+				// if (command.offset != region.getOffset()) {
+					document.replace(region.getOffset(), region.getLength(), "");
+					// adjust the offset
+					command.offset = region.getOffset();
+					// }
 					String oldContent = document.get();
 					int endHalf = oldContent.length() - region.getOffset();
 					document.replace(region.getOffset(), 0, command.text);
