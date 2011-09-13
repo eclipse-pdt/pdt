@@ -450,7 +450,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 								result.append(" ");
 							}
 						}
-						if (!enterKeyPressed && (node instanceof IfStatement)) {
+						if (!enterKeyPressed && isBlockable(node)) {
 							String currentString = document.get(
 									currentLine.getOffset(),
 									currentLine.getOffset()
@@ -460,7 +460,27 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 								addIndent(document, result);
 							}
 						} else {
-							addIndent(document, result);
+							if (enterKeyPressed
+									&& isBlockable(node)
+									&& ((currentLine.getOffset() == startLine
+											.getOffset())
+											&& document
+													.get(currentLine
+															.getOffset(),
+															forOffset
+																	- currentLine
+																			.getOffset())
+													.trim().length() == 0 || document
+											.get(forOffset,
+													currentLine.getOffset()
+															+ currentLine
+																	.getLength()
+															- forOffset).trim()
+											.startsWith("{"))) {
+								// for example |if (xxx){ and if (xxx)|{
+							} else {
+								addIndent(document, result);
+							}
 
 						}
 
@@ -474,6 +494,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 							}
 						}
 					}
+
 				}
 			}
 
@@ -483,6 +504,15 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					lastNonEmptyLine, blanks);
 		}
 
+	}
+
+	private static boolean isBlockable(ASTNode node) {
+		return node instanceof IfStatement || node instanceof ForEachStatement
+				|| node instanceof ForStatement
+				|| node instanceof WhileStatement
+				|| node instanceof MethodDeclaration
+				|| node instanceof FunctionDeclaration
+				|| node instanceof ClassDeclaration;
 	}
 
 	private static void originalPlaceMatchingBlanks(
@@ -589,7 +619,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				|| parentNode instanceof CatchClause) {
 			parentNode = parentNode.getParent();
 		}
-		while ((parentNode instanceof IfStatement)
+		while (isBlockable(parentNode)
 				&& (parentNode.getParent() instanceof IfStatement)
 				&& ((IfStatement) parentNode.getParent()).getFalseStatement() == parentNode) {
 			// else if statement,we need find the if statement
