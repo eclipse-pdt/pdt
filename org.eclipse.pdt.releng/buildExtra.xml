@@ -45,6 +45,7 @@
 	</target>
 	
 	<target name="check-proxy" description="Checks that proxy properties are set before proceeding -- fails with diagnosis otherwise.">
+		<setproxy proxyhost="proxy.eclipse.org" proxyport="9898" />
 		<condition property="check-proxy.hostAndPortBothNotSet">
 			<and>
 				<not>
