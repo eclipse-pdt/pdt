@@ -241,19 +241,29 @@ public class PHPStructuredPresentationReconciler extends
 				if (fRangeSet.isEmpty()) {
 					return null;
 				}
-				List<StyleRange> fRanges = new ArrayList<StyleRange>();
-				for (Iterator iterator = fRangeSet.iterator(); iterator
-						.hasNext();) {
-					StyleRange styleRange = (StyleRange) iterator.next();
-					fRanges.add(styleRange);
-				}
-				Collections.sort(fRanges, new Comparator<StyleRange>() {
+				Collections.sort(fRangeSet, new Comparator<StyleRange>() {
 
 					public int compare(StyleRange o1, StyleRange o2) {
 						return o1.start - o2.start;
 					}
 
 				});
+				List<StyleRange> fRanges = new ArrayList<StyleRange>();
+				StyleRange[] rangeArray = fRangeSet
+						.toArray(new StyleRange[fRangeSet.size()]);
+				StyleRange lastRange = rangeArray[0];
+				fRanges.add(lastRange);
+				for (int i = 1; i < rangeArray.length; i++) {
+					StyleRange styleRange = rangeArray[i];
+					// do not add duplicate ranges
+					if (styleRange.start == lastRange.start
+							&& styleRange.length == lastRange.length) {
+						continue;
+					} else {
+						fRanges.add(styleRange);
+						lastRange = styleRange;
+					}
+				}
 				presentation = new TextPresentation(damage, fRanges.size());
 				for (Iterator iterator = fRanges.iterator(); iterator.hasNext();) {
 					StyleRange styleRange = (StyleRange) iterator.next();
