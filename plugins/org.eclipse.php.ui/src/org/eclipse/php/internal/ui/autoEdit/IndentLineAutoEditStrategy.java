@@ -11,12 +11,24 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
+import java.io.IOException;
+
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.*;
+import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.core.format.IIndentationStrategy;
+import org.eclipse.php.internal.core.format.IIndentationStrategyExtension1;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
@@ -165,8 +177,52 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 				: trimedText.charAt(0);
 		final IIndentationStrategy indentationStrategy = getAutoEditStrategy(insertionStrategyKey);
 
-		indentationStrategy.placeMatchingBlanks(document, result, lineNumber,
-				forOffset);
+		if (indentationStrategy instanceof IIndentationStrategyExtension1) {
+			((IIndentationStrategyExtension1) indentationStrategy)
+					.placeMatchingBlanks(document, result, lineNumber,
+							forOffset, getCurrentProgram(document));
+		} else {
+			indentationStrategy.placeMatchingBlanks(document, result,
+					lineNumber, forOffset);
+		}
 	}
 
+	private Program getCurrentProgram(final IStructuredDocument document) {
+		final ISourceModule[] sourceModules = new ISourceModule[1];
+		// resolve current sourceModule
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				IWorkbenchPage page = PHPUiPlugin.getActivePage();
+				if (page != null) {
+					IEditorPart editor = page.getActiveEditor();
+					if (editor instanceof PHPStructuredEditor) {
+						PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editor;
+						if (phpStructuredEditor.getTextViewer() != null
+								&& phpStructuredEditor != null
+								&& phpStructuredEditor.getDocument() == document) {
+							if (phpStructuredEditor != null
+									&& phpStructuredEditor.getTextViewer() != null) {
+								sourceModules[0] = (ISourceModule) phpStructuredEditor
+										.getModelElement();
+							}
+						}
+					}
+				}
+			}
+		});
+
+		// resolve AST
+		Program program = null;
+		if (sourceModules[0] != null) {
+			try {
+				program = SharedASTProvider.getAST(sourceModules[0],
+						SharedASTProvider.WAIT_YES, null);
+			} catch (ModelException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return program;
+	}
 }
