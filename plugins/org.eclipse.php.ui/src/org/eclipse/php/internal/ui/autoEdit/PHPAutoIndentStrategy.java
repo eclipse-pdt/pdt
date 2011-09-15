@@ -11,12 +11,21 @@
  **********************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
+import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
+import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.PhpFormatter;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 
 /**
  * Auto indent strategy sensitive to brackets.
@@ -58,39 +67,79 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 	protected void smartPaste(IDocument document, DocumentCommand command) {
 		if (command.offset == -1 || document.getLength() == 0)
 			return;
+		StringBuffer helpBuffer = new StringBuffer();
 		try {
 			if (document instanceof IStructuredDocument) {
-				IStructuredDocument structuredDocument = (IStructuredDocument) document;
+				DefaultIndentationStrategy
+						.placeMatchingBlanksForStructuredDocument(
+								(IStructuredDocument) document, helpBuffer,
+								document.getLineOfOffset(command.offset),
+								command.offset);
 				IRegion region = document.getLineInformation(document
 						.getLineOfOffset(command.offset));
 				if (document.get(region.getOffset(), region.getLength()).trim()
 						.length() == 0) {// blank line
-				// if (command.offset != region.getOffset()) {
-					document.replace(region.getOffset(), region.getLength(), "");
-					// adjust the offset
-					command.offset = region.getOffset();
-					// }
-					String oldContent = document.get();
-					int endHalf = oldContent.length() - region.getOffset();
-					document.replace(region.getOffset(), 0, command.text);
-					PhpFormatter formatter = new PhpFormatter(
-							region.getOffset(), command.text.length());
-
-					formatter
-							.format(structuredDocument
-									.getStructuredDocumentRegions(
-											region.getOffset(), 0)[0]);
-					String newContent = document.get();
-					command.text = newContent.substring(region.getOffset(),
-							newContent.length() - endHalf);
-					document.set(oldContent);
-					return;
-
+					if (command.offset != region.getOffset()) {
+						document.replace(region.getOffset(),
+								region.getLength(), "");
+						// adjust the offset
+						command.offset = region.getOffset();
+					}
 				} else {
 					return;
 				}
 			}
 		} catch (BadLocationException e) {
 		}
+
+		Document tempdocument = new Document(command.text);
+		String newline = tempdocument.getDefaultLineDelimiter();
+		int lines = tempdocument.getNumberOfLines();
+		StringBuffer tempsb = new StringBuffer();
+		try {
+			for (int i = 0; i < lines; i++) {
+				IRegion region = tempdocument.getLineInformation(i);
+				if (i > 0) {
+					tempsb.append(newline);
+				}
+				tempsb.append(tempdocument.get(region.getOffset(),
+						region.getLength()));
+			}
+		} catch (BadLocationException e) {
+		}
+		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
+				new PhpSourceParser());
+		String start = "<?php";
+		// String newline = newdocument.getDefaultLineDelimiter();
+		// newdocument.set(start + newline + command.text.trim());
+		newdocument.set(start + newline + tempsb.toString());
+		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength());
+		formatter.format(newdocument.getFirstStructuredDocumentRegion());
+
+		Reader reader = new StringReader(newdocument.get());
+		BufferedReader br = new BufferedReader(reader);
+		List<String> list = new ArrayList<String>();
+		try {
+			int lineNumber = newdocument.getNumberOfLines();
+			for (int i = 0; i < lineNumber; i++) {
+				IRegion region = newdocument.getLineInformation(i);
+				String line = newdocument.get(region.getOffset(),
+						region.getLength());
+				if (i == 0) {
+					continue;
+				}
+				list.add(line);
+			}
+		} catch (BadLocationException e) {
+		}
+		// String newline = newdocument.getLineDelimiter();
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < list.size(); i++) {
+			sb.append(helpBuffer.toString()).append(list.get(i));
+			if (i != list.size() - 1) {
+				sb.append(newline);
+			}
+		}
+		command.text = sb.toString();
 	}
 }
