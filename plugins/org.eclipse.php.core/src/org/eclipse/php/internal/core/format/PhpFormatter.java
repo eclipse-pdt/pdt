@@ -158,8 +158,8 @@ public class PhpFormatter implements IStructuredFormatter {
 				PhpScriptRegion scriptRegion = (PhpScriptRegion) textRegion;
 				ITextRegion[] phpTokens;
 				try {
-					phpTokens = scriptRegion.getPhpTokens(0,
-							textRegion.getLength());
+					phpTokens = scriptRegion.getPhpTokens(0, textRegion
+							.getLength());
 					for (int j = phpTokens.length - 1; j >= 0; j--) {
 						ITextRegion phpToken = phpTokens[j];
 						int start = startOffset + phpToken.getStart();
@@ -178,9 +178,8 @@ public class PhpFormatter implements IStructuredFormatter {
 													.getLineOfOffset(startOffset
 															+ phpTokens[j + 1]
 																	.getStart())) {
-										document.replace(
-												startOffset + phpToken.getEnd(),
-												0, newline);
+										document.replace(startOffset
+												+ phpToken.getEnd(), 0, newline);
 										endLineIndex++;
 									}
 								}
@@ -191,9 +190,11 @@ public class PhpFormatter implements IStructuredFormatter {
 												PHPRegionTypes.PHP_SEMICOLON)
 												|| phpTokens[j - 1]
 														.getType()
-														.equals(PHPRegionTypes.PHP_CURLY_CLOSE) || phpTokens[j - 1]
+														.equals(
+																PHPRegionTypes.PHP_CURLY_CLOSE) || phpTokens[j - 1]
 												.getType()
-												.equals(PHPRegionTypes.PHP_COMMENT_END))) {
+												.equals(
+														PHPRegionTypes.PHP_COMMENT_END))) {
 									if (document.getLineOfOffset(startOffset
 											+ phpToken.getStart()) == document
 											.getLineOfOffset(startOffset
@@ -415,8 +416,7 @@ public class PhpFormatter implements IStructuredFormatter {
 				document, lineInfo.getOffset());
 		return ((checkedLineBeginState == PHPPartitionTypes.PHP_DEFAULT)
 				|| (checkedLineBeginState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT)
-				|| (checkedLineBeginState == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT)
-				|| (checkedLineBeginState == PHPPartitionTypes.PHP_DOC) || (checkedLineBeginState == PHPPartitionTypes.PHP_QUOTED_STRING));
+				|| (checkedLineBeginState == PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT) || (checkedLineBeginState == PHPPartitionTypes.PHP_DOC));
 	}
 
 	protected IIndentationStrategy getIndentationStrategy(char c) {
