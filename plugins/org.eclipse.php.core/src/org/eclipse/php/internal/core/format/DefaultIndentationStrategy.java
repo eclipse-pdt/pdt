@@ -26,6 +26,15 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class DefaultIndentationStrategy implements IIndentationStrategy {
 
+	static class LineState {
+		boolean inBracelessBlock;
+		boolean inMultiLine;
+		// IRegion baseRegion;
+		// int baseRegionOffset;
+		// boolean shouldIndent;
+		StringBuffer indent = new StringBuffer();
+	}
+
 	/**
 	 * Check if the line contains any non blank chars.
 	 */
@@ -130,6 +139,11 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		if (isBlanks(document, lineStart, checkedOffset, forOffset))
 			return false;
 
+		PHPHeuristicScanner scanner = PHPHeuristicScanner
+				.createHeuristicScanner(document, lineStart, true);
+		if (inBracelessBlock(scanner, document, lineStart)) {
+			return false;
+		}
 		// need to get to the first tRegion - so that we wont get the state of
 		// the
 		// tRegion in the previos line
@@ -281,7 +295,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		final String blanks = FormatterUtils.getLineBlanks(document,
 				indentationBaseLine);
 		result.append(blanks);
-
 		final int lastLineEndOffset = lastNonEmptyLine.getOffset()
 				+ lastNonEmptyLine.getLength();
 		int offset;
@@ -294,60 +307,214 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			line = lastNonEmptyLineIndex;
 		}
 		if (shouldIndent(document, offset, line)) {
-			final int indentationSize = FormatPreferencesSupport.getInstance()
-					.getIndentationSize(document);
-			final char indentationChar = FormatPreferencesSupport.getInstance()
-					.getIndentationChar(document);
-			for (int i = 0; i < indentationSize; i++)
-				result.append(indentationChar);
+			indent(document, result);
 		} else {
-			lastNonEmptyLineIndex = lineNumber;
-			if (!enterKeyPressed && lastNonEmptyLineIndex > 0) {
-				lastNonEmptyLineIndex--;
-			}
-			while (lastNonEmptyLineIndex >= 0) {
-				IRegion lineInfo = document
-						.getLineInformation(lastNonEmptyLineIndex);
-				String content = document.get(lineInfo.getOffset(),
-						lineInfo.getLength());
-				if (content.trim().length() > 0) {
-					break;
+			boolean intended = indentMultiLineCase(document, lineNumber,
+					forOffset, enterKeyPressed, result, blanks);
+			if (!intended) {
+				lastNonEmptyLineIndex = lineNumber;
+				if (!enterKeyPressed && lastNonEmptyLineIndex > 0) {
+					lastNonEmptyLineIndex--;
 				}
-				lastNonEmptyLineIndex--;
-			}
-			if (!isEndOfStatement(document, offset, lastNonEmptyLineIndex)) {
-				if (enterKeyPressed) {
-					// this line is one of multi line statement
+				while (lastNonEmptyLineIndex >= 0) {
+					IRegion lineInfo = document
+							.getLineInformation(lastNonEmptyLineIndex);
+					String content = document.get(lineInfo.getOffset(),
+							lineInfo.getLength());
+					if (content.trim().length() > 0) {
+						break;
+					}
+					lastNonEmptyLineIndex--;
+				}
+				if (!isEndOfStatement(document, offset, lastNonEmptyLineIndex)) {
 					if (indentationBaseLineIndex == lastNonEmptyLineIndex) {
-						// this only deal with "$a = 'aaa'.|","|" is the cursor
+						// this only deal with "$a = 'aaa'.|","|" is the
+						// cursor
 						// position when we press enter key
 						placeStringIndentation(document, lastNonEmptyLineIndex,
 								result);
-					} else {
-						// in multi line statement,when user press enter key,
-						// we use the same indentation of the last non-empty
-						// line.
-						result.setLength(result.length() - blanks.length());
-						IRegion lineInfo = document
-								.getLineInformation(lastNonEmptyLineIndex);
-						result.append(FormatterUtils.getLineBlanks(document,
-								lineInfo));
 					}
-				} else {
-					if (enterKeyPressed) {
-						// in multi line statement,when user press enter key,
-						// we use the same indentation of the last non-empty
-						// line.
-						result.setLength(result.length() - blanks.length());
-						IRegion lineInfo = document
-								.getLineInformation(lastNonEmptyLineIndex);
-						result.append(FormatterUtils.getLineBlanks(document,
-								lineInfo));
-					}
-
+					// if (enterKeyPressed) {
+					// this line is one of multi line statement
+					// in multi line statement,when user press enter
+					// key,
+					// we use the same indentation of the last non-empty
+					// line.
+					result.setLength(result.length() - blanks.length());
+					IRegion lineInfo = document
+							.getLineInformation(lastNonEmptyLineIndex);
+					result.append(FormatterUtils.getLineBlanks(document,
+							lineInfo));
+					// }
 				}
 			}
+
 		}
+	}
+
+	private static void indent(final IStructuredDocument document,
+			final StringBuffer result) {
+		final int indentationSize = FormatPreferencesSupport.getInstance()
+				.getIndentationSize(document);
+		final char indentationChar = FormatPreferencesSupport.getInstance()
+				.getIndentationChar(document);
+		for (int i = 0; i < indentationSize; i++)
+			result.append(indentationChar);
+	}
+
+	private static boolean indentMultiLineCase(IStructuredDocument document,
+			int lineNumber, int offset, boolean enterKeyPressed,
+			StringBuffer result, String blanks) {
+		// LineState lineState = new LineState();
+		// StringBuffer sb = new StringBuffer();
+		try {
+			PHPHeuristicScanner scanner = PHPHeuristicScanner
+					.createHeuristicScanner(document, offset, true);
+			if (inBracelessBlock(scanner, document, offset)) {
+				// lineState.inBracelessBlock = true;
+				indent(document, result);
+				return true;
+			} else if (inMultiLine(scanner, document, lineNumber, offset,
+					enterKeyPressed)) {
+				// lineState.inBracelessBlock = true;
+				int peer = scanner.findOpeningPeer(offset - 1,
+						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+				if (peer != PHPHeuristicScanner.NOT_FOUND) {
+					// lineState.indent.setLength(0)
+					// int baseLine = document.getLineOfOffset(peer);
+					String newblanks = FormatterUtils.getLineBlanks(document,
+							document.getLineInformationOfOffset(peer));
+					StringBuffer newBuffer = new StringBuffer(newblanks);
+					IRegion region = document
+							.getLineInformationOfOffset(offset);
+					if (!document
+							.get(offset,
+									region.getOffset() + region.getLength()
+											- offset).trim()
+							.startsWith("" + PHPHeuristicScanner.RPAREN)) {
+						indent(document, newBuffer, 2);
+					}
+					// if (newBuffer.length() > blanks.length()) {
+
+					result.setLength(result.length() - blanks.length());
+					result.append(newBuffer.toString());
+					return true;
+					// }
+					// if(isset($a)
+					// ||abc(isset($b),
+					// isset($b))){
+					// echo "";//
+					// echo "";//
+					// }
+				}
+			} else if (inMultiLineString(scanner, document, lineNumber, offset,
+					enterKeyPressed)) {
+				if (!endOfString(document, offset, scanner, enterKeyPressed)) {
+					int startOffset = getStartOffsetOfString(document, offset,
+							scanner, enterKeyPressed);
+
+					result.setLength(result.length() - blanks.length());
+					String newblanks = FormatterUtils.getLineBlanks(document,
+							document.getLineInformationOfOffset(startOffset));
+					result.append(newblanks);
+					indent(document, result, 2);
+				}
+				return true;
+
+			}
+		} catch (final BadLocationException e) {
+		}
+		return false;
+	}
+
+	private static boolean endOfString(IStructuredDocument document,
+			int offset, PHPHeuristicScanner scanner, boolean enterKeyPressed) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private static int getStartOffsetOfString(IStructuredDocument document,
+			int offset, PHPHeuristicScanner scanner, boolean enterKeyPressed) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private static boolean inMultiLineString(PHPHeuristicScanner scanner,
+			IStructuredDocument document, int lineNumber, int offset,
+			boolean enterKeyPressed) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private static void indent(IStructuredDocument document,
+			StringBuffer indent, int times) {
+		for (int i = 0; i < times; i++) {
+			indent(document, indent);
+		}
+	}
+
+	private static boolean inMultiLine(PHPHeuristicScanner scanner,
+			IStructuredDocument document, int lineNumber, int offset,
+			boolean enterKeyPressed) {
+		// TODO if in phpdoc or php miltiline,return false;
+		int lineStart = offset;
+		try {
+			IRegion region = document.getLineInformation(lineNumber);
+			char[] line = document.get(lineStart,
+					region.getOffset() + region.getLength() - lineStart)
+					.toCharArray();
+			for (int i = 0; i < line.length; i++) {
+				char c = line[i];
+				if (Character.isWhitespace(c)) {
+				} else {
+					// move line start to first non blank char
+					lineStart += i + 1;
+					break;
+				}
+			}
+			// scanner = PHPHeuristicScanner.createHeuristicScanner(document,
+			// lineStart);
+		} catch (BadLocationException e) {
+		}
+		int peer = scanner.findOpeningPeer(offset - 1,
+				PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+		if (peer == PHPHeuristicScanner.NOT_FOUND) {
+			return false;
+		}
+		TextSequence textSequence = PHPTextSequenceUtilities
+				.getStatement(lineStart,
+						document.getRegionAtCharacterOffset(lineStart), true);
+		if (textSequence != null
+				&& isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(
+						document, textSequence.getOriginalOffset(0)))) {
+			int statementStart = textSequence.getOriginalOffset(0);
+			if (statementStart < peer) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean inBracelessBlock(PHPHeuristicScanner scanner,
+			IStructuredDocument document, int offset) {
+		boolean isBracelessBlock = scanner.isBracelessBlockStart(offset - 1,
+				PHPHeuristicScanner.UNBOUND);
+		if (isBracelessBlock) {
+			try {
+				IRegion region = document.getLineInformationOfOffset(offset);
+				if (!document
+						.get(offset,
+								region.getOffset() + region.getLength()
+										- offset).trim()
+						.startsWith("" + PHPHeuristicScanner.LBRACE)) {
+					return true;
+				}
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
 	private static boolean isEndOfStatement(IStructuredDocument document,
@@ -424,9 +591,11 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 								break;
 							}
 						}
-						for (int i = 0; i < regionStart + token.getEnd()
-								- lineInfo.getOffset(); i++)
-							result.append(' ');
+						indent(document, result, 2);
+						// for (int i = 0; i < regionStart + token.getEnd()
+						// - lineInfo.getOffset(); i++){
+						// result.append(' ');
+						// }
 					}
 				}
 			}
