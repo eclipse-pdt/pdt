@@ -16,6 +16,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
+import org.eclipse.php.internal.core.format.PHPHeuristicScanner;
+import org.eclipse.php.internal.core.format.Symbols;
 
 /**
  * Helper class for match pairs of characters. (Formerly used WTP's
@@ -146,7 +148,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 		if (useGenericsHeuristic && !fHighlightAngularBrackets)
 			return -1;
 		PHPHeuristicScanner scanner = PHPHeuristicScanner
-				.createHeuristicScanner(document, offset);
+				.createHeuristicScanner(document, offset, false);
 		if (useGenericsHeuristic
 				&& !isTypeParameterBracket(offset, document, scanner))
 			return -1;
@@ -161,7 +163,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 			return -1;
 
 		PHPHeuristicScanner scanner = PHPHeuristicScanner
-				.createHeuristicScanner(document, offset);
+				.createHeuristicScanner(document, offset, false);
 		int peer = scanner
 				.findOpeningPeer(offset - 1, openingPeer, closingPeer);
 		if (peer == PHPHeuristicScanner.NOT_FOUND)
