@@ -368,12 +368,39 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		// LineState lineState = new LineState();
 		// StringBuffer sb = new StringBuffer();
 		try {
+			IRegion region = document.getLineInformationOfOffset(offset);
+			String content = document.get(offset,
+					region.getOffset() + region.getLength() - offset);
 			PHPHeuristicScanner scanner = PHPHeuristicScanner
 					.createHeuristicScanner(document, offset, true);
 			if (inBracelessBlock(scanner, document, offset)) {
 				// lineState.inBracelessBlock = true;
 				indent(document, result);
 				return true;
+			} else if (content.trim().startsWith(
+					"" + PHPHeuristicScanner.LBRACE)) {
+				// lineState.inBracelessBlock = true;
+				int token = scanner.previousToken(offset - 1,
+						PHPHeuristicScanner.UNBOUND);
+				if (token == PHPHeuristicScanner.TokenRPAREN) {
+
+					int peer = scanner.findOpeningPeer(scanner.getPosition(),
+							PHPHeuristicScanner.LPAREN,
+							PHPHeuristicScanner.RPAREN);
+					if (peer != PHPHeuristicScanner.NOT_FOUND) {
+
+						String newblanks = FormatterUtils.getLineBlanks(
+								document,
+								document.getLineInformationOfOffset(peer));
+						StringBuffer newBuffer = new StringBuffer(newblanks);
+						// IRegion region = document
+						// .getLineInformationOfOffset(offset);
+
+						result.setLength(result.length() - blanks.length());
+						result.append(newBuffer.toString());
+						return true;
+					}
+				}
 			} else if (inMultiLine(scanner, document, lineNumber, offset,
 					enterKeyPressed)) {
 				// lineState.inBracelessBlock = true;
@@ -385,13 +412,16 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					String newblanks = FormatterUtils.getLineBlanks(document,
 							document.getLineInformationOfOffset(peer));
 					StringBuffer newBuffer = new StringBuffer(newblanks);
-					IRegion region = document
-							.getLineInformationOfOffset(offset);
-					if (!document
-							.get(offset,
-									region.getOffset() + region.getLength()
-											- offset).trim()
-							.startsWith("" + PHPHeuristicScanner.RPAREN)) {
+					// IRegion region = document
+					// .getLineInformationOfOffset(offset);
+					if (enterKeyPressed
+							|| !document
+									.get(offset,
+											region.getOffset()
+													+ region.getLength()
+													- offset)
+									.trim()
+									.startsWith("" + PHPHeuristicScanner.RPAREN)) {
 						indent(document, newBuffer, 2);
 					}
 					// if (newBuffer.length() > blanks.length()) {
