@@ -54,7 +54,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 		final IContext context = goal.getContext();
 		String className = typeReference.getName();
 
-		if ("self".equals(className)) { //$NON-NLS-1$
+		if ("self".equals(className) || "static".equals(className)) { //$NON-NLS-1$
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
 				IEvaluatedType instanceType = methodContext.getInstanceType();
@@ -137,8 +137,8 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				if (types.size() == 1) {
 					result = types.get(0);
 				} else if (types.size() > 1) {
-					result = new AmbiguousType(types
-							.toArray(new IEvaluatedType[types.size()]));
+					result = new AmbiguousType(
+							types.toArray(new IEvaluatedType[types.size()]));
 				}
 			}
 		} else {
