@@ -178,8 +178,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-		int relevance = PHPFlags.isConstant(flags) ? nextConstantRelevance()
-				: nextVariableRelevance();
+		int relevance = PHPFlags.isConstant(flags) ? relevanceConst
+				: relevanceVar;
 
 		noProposal = false;
 
@@ -224,7 +224,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 					CompletionProposal.KEYWORD, actualCompletionPosition);
 			proposal.setName(keyword);
 			proposal.setCompletion(keyword + suffix);
-			proposal.setRelevance(nextKeywordRelevance());
+			proposal.setRelevance(relevanceKeyword);
 			proposal.setReplaceRange(replaceRange.getOffset(),
 					replaceRange.getOffset() + replaceRange.getLength());
 
@@ -268,7 +268,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setModelElement(method);
 			proposal.setName(elementName);
 
-			int relevance = nextMethodRelevance();
+			int relevance = relevanceMethod;
 			proposal.setCompletion((completionName + suffix));
 
 			try {
@@ -340,7 +340,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setModelElement(type);
 			proposal.setName(elementName);
 
-			int relevance = nextClassRelevance();
+			int relevance = relevanceClass;
 			proposal.setCompletion(completionName + suffix);
 
 			try {
@@ -386,7 +386,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 		proposal.setName(relative.toString());
 		proposal.setCompletion((relative.toString() + suffix));
-		proposal.setRelevance(nextKeywordRelevance());
+		proposal.setRelevance(relevanceKeyword);
 		proposal.setReplaceRange(replaceRange.getOffset(),
 				replaceRange.getOffset() + replaceRange.getLength());
 		proposal.setModelElement(model);
