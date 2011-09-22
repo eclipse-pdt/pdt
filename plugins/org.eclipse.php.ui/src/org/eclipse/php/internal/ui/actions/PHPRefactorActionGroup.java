@@ -10,6 +10,7 @@
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.dltk.internal.ui.actions.refactoring.RefactorActionGroup;
+import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
 import org.eclipse.ui.IViewPart;
 
 public class PHPRefactorActionGroup extends RefactorActionGroup {
@@ -25,7 +26,7 @@ public class PHPRefactorActionGroup extends RefactorActionGroup {
 					renamePHPElement);
 			fRenameAction.setText("Rename...");
 			fRenameAction
-					.setActionDefinitionId("org.eclipse.php.ui.edit.text.rename.element");
+					.setActionDefinitionId(IScriptEditorActionDefinitionIds.RENAME_ELEMENT);
 		}
 
 		IPHPActionDelegator movePHPElement = PHPActionDelegatorRegistry
