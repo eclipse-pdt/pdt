@@ -280,10 +280,8 @@ public class PHPToolkitUtil {
 						PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
 
 		PHPVersion version = PHPVersion.byAlias(versionName);
-		if (version != null && version.isGreaterThan(PHPVersion.PHP4)) {
+		if (version != null && ProjectOptions.getDefaultPhpVersion() != version) {
 			ProjectOptions.setPhpVersion(version, project);
-		} else {
-			ProjectOptions.setPhpVersion(PHPVersion.PHP5, project);
 		}
 	}
 
