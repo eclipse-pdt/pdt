@@ -303,7 +303,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut2 {
 			PHPWebPageURLLaunchDialog launchDialog = new PHPWebPageURLLaunchDialog(
 					wc, server, title);
 			launchDialog.setBlockOnOpen(true);
-			if (launchDialog.open() == PHPWebPageURLLaunchDialog.CANCEL) {
+			if (launchDialog.open() != PHPWebPageURLLaunchDialog.OK) {
 				return null;
 			}
 		}
