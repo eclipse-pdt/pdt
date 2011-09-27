@@ -21,10 +21,12 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeType;
 import org.eclipse.php.internal.core.typeinference.UseStatementElement;
@@ -67,8 +69,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		if (parent instanceof IParent) {
 			IParent c = (IParent) parent;
 			try {
-				return OutlineFilter.filterChildrenForOutline(parent, c
-						.getChildren());
+				return OutlineFilter.filterChildrenForOutline(parent,
+						c.getChildren());
 			} catch (ModelException x) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=38341
 				// don't log NotExist exceptions as this is a valid case
@@ -83,7 +85,14 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	}
 
 	private boolean isNamespaceSupported(IModelElement modelElement) {
-		PHPVersion phpVersion = ProjectOptions.getPhpVersion(modelElement
+		PHPVersion phpVersion = null;
+		if (modelElement == null || modelElement.getScriptProject() == null) {
+			String versionName = CorePreferencesSupport.getInstance()
+					.getWorkspacePreferencesValue(
+							PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
+			phpVersion = PHPVersion.byAlias(versionName);
+		}
+		phpVersion = ProjectOptions.getPhpVersion(modelElement
 				.getScriptProject().getProject());
 		return phpVersion.isGreaterThan(PHPVersion.PHP5);
 	}
