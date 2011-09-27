@@ -91,9 +91,10 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 					.getWorkspacePreferencesValue(
 							PHPCoreConstants.PHP_OPTIONS_PHP_VERSION);
 			phpVersion = PHPVersion.byAlias(versionName);
+		} else {
+			phpVersion = ProjectOptions.getPhpVersion(modelElement
+					.getScriptProject().getProject());
 		}
-		phpVersion = ProjectOptions.getPhpVersion(modelElement
-				.getScriptProject().getProject());
 		return phpVersion.isGreaterThan(PHPVersion.PHP5);
 	}
 
