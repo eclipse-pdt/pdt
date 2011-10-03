@@ -40,9 +40,9 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			"HTTP_ACCEPT_LANGUAGE", "HTTP_CONNECTION", "HTTP_HOST",
 			"HTTP_USER_AGENT", "PATH", "PATH_TRANSLATED", "PHP_SELF",
 			"QUERY_STRING", "REMOTE_ADDR", "REMOTE_PORT", "REQUEST_METHOD",
-			"REQUEST_URI", "SCRIPT_FILENAME", "SCRIPT_NAME", "SERVER_ADDR",
-			"SERVER_ADMIN", "SERVER_NAME", "SERVER_PORT", "SERVER_PROTOCOL",
-			"SERVER_SIGNATURE", "SERVER_SOFTWARE", };
+			"REQUEST_TIME", "REQUEST_URI", "SCRIPT_FILENAME", "SCRIPT_NAME",
+			"SERVER_ADDR", "SERVER_ADMIN", "SERVER_NAME", "SERVER_PORT",
+			"SERVER_PROTOCOL", "SERVER_SIGNATURE", "SERVER_SOFTWARE", };
 
 	protected final static String[] SESSION_VARS = { "SID" };
 
@@ -96,8 +96,9 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 				IField field = (IField) element;
 				try {
 					ISourceRange sourceRange = field.getSourceRange();
-					FakeField fakeField = new FakeField((ModelElement) field
-							.getParent(), field.getElementName().substring(1),
+					FakeField fakeField = new FakeField(
+							(ModelElement) field.getParent(), field
+									.getElementName().substring(1),
 							sourceRange.getOffset(), sourceRange.getLength());
 					reporter.reportField(fakeField, "", replaceRange, true); // NON-NLS-1
 				} catch (ModelException e) {
@@ -106,8 +107,8 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			}
 
 			PHPVersion phpVersion = arrayContext.getPhpVersion();
-			reportVariables(reporter, arrayContext, PHPVariables
-					.getVariables(phpVersion), prefix, true);
+			reportVariables(reporter, arrayContext,
+					PHPVariables.getVariables(phpVersion), prefix, true);
 		}
 	}
 
@@ -129,8 +130,9 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			if (variable.startsWith(prefix)) {
 				if (!requestor.isContextInformationMode()
 						|| variable.length() == prefix.length()) {
-					reporter.reportField(new FakeField((ModelElement) context
-							.getSourceModule(), variable, 0, 0), "",
+					reporter.reportField(
+							new FakeField((ModelElement) context
+									.getSourceModule(), variable, 0, 0), "",
 							replaceRange, false); // NON-NLS-1
 				}
 			}
