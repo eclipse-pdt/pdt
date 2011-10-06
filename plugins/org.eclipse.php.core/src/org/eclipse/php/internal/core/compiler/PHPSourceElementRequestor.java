@@ -41,6 +41,8 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.util.MagicMemberUtil;
+import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
 
 /**
  * This visitor builds DLTK structured model elements.
@@ -496,10 +498,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 						info.modifiers = Modifiers.AccPublic;
 						info.name = split[1];
-						info.type = MAGIC_PROPERTY_TYPE;
+						info.type = split[0];
 
-						SimpleReference var = new SimpleReference(docTag
-								.sourceStart(), docTag.sourceStart() + 9,
+						SimpleReference var = new SimpleReference(
+								docTag.sourceStart(), docTag.sourceStart() + 9,
 								removeParenthesis(split));
 						info.nameSourceStart = var.sourceStart();
 						info.nameSourceEnd = var.sourceEnd();
@@ -519,14 +521,23 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 						mi.parameterNames = null;
 						mi.name = removeParenthesis(split);
-						SimpleReference var = new SimpleReference(docTag
-								.sourceStart(), docTag.sourceStart() + 6,
+						SimpleReference var = new SimpleReference(
+								docTag.sourceStart(), docTag.sourceStart() + 6,
 								removeParenthesis(split));
 						mi.modifiers = Modifiers.AccPublic;
 						mi.nameSourceStart = var.sourceStart();
 						mi.nameSourceEnd = var.sourceEnd();
 						mi.declarationStart = mi.nameSourceStart;
 						mi.isConstructor = false;
+						mi.returnType = split[0];
+
+						MagicMethod magicMethod = MagicMemberUtil
+								.getMagicMethod(docTag.getValue());
+						if (magicMethod != null) {
+							mi.parameterNames = magicMethod.parameterNames;
+							mi.parameterTypes = magicMethod.parameterTypes;
+							mi.parameterInitializers = magicMethod.parameterInitializers;
+						}
 
 						this.fRequestor.enterMethod(mi);
 						this.fRequestor.exitMethod(mi.nameSourceEnd);
@@ -576,6 +587,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				if (references.length > 0) {
 					info.type = PHPModelUtils.extractElementName(references[0]
 							.getName());
+					// info.type = references[0].getName();
 				}
 			}
 		}
@@ -665,8 +677,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		// information in order to access it quickly:
 		if (include.getExpr() instanceof Scalar) {
 			Scalar filePath = (Scalar) include.getExpr();
-			fRequestor.acceptMethodReference("include", 0, filePath
-					.sourceStart(), filePath.sourceEnd());
+			fRequestor.acceptMethodReference("include", 0,
+					filePath.sourceStart(), filePath.sourceEnd());
 		}
 		return true;
 	}
@@ -813,8 +825,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(TypeReference reference) throws Exception {
-		fRequestor.acceptTypeReference(reference.getName(), reference
-				.sourceStart());
+		fRequestor.acceptTypeReference(reference.getName(),
+				reference.sourceStart());
 		return true;
 	}
 
