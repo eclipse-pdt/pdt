@@ -1102,6 +1102,24 @@
 			commandId="org.eclipse.php.ui.edit.text.add.description" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 
 		<!-- refactoring -->
+		<key commandId="org.eclipse.php.ui.edit.text.rename.element"
+			contextId="org.eclipse.php.ui.contexts.window" 
+			schemeId="org.eclipse.php.ui.scheme"
+			sequence="M2+M3+R" />
+		<key commandId="org.eclipse.php.ui.edit.text.rename.element"
+			contextId="org.eclipse.php.ui.phpEditorScope" 
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M2+M3+R">
+		</key>
+		<key platform="carbon" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			sequence="M2+M3+R" />
+		<key commandId="org.eclipse.php.ui.edit.text.rename.element"
+			contextId="org.eclipse.php.ui.contexts.window" platform="carbon"
+			schemeId="org.eclipse.php.ui.scheme" sequence="COMMAND+ALT+R" />
+		<key commandId="org.eclipse.php.ui.edit.text.rename.element"
+			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+R">
+		</key>		
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
 			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+V" />
@@ -1198,6 +1216,11 @@
 		<key platform="carbon" sequence="COMMAND+ALT+O"
 			contextId="org.eclipse.php.ui.phpEditorScope" commandId="org.eclipse.php.ui.edit.text.toggleMarkOccurrences"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+		<scheme
+		    id="org.eclipse.php.ui.scheme"
+		    name="name"
+		    parentId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</scheme>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page class="org.eclipse.php.internal.ui.preferences.PHPBasePreferencePage"
