@@ -18,6 +18,10 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.util.MagicMemberUtil;
+import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicField;
+import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMember;
+import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
 
@@ -589,6 +593,10 @@ public class PHPDocumentationContentAccess {
 		PHPDocBlock javadoc = getJavadocNode(member);
 
 		if (javadoc == null) {
+			MagicMember magicMember = getMagicMember(member);
+			if (magicMember != null) {
+				return getHTMLForMagicMember(member, magicMember);
+			}
 			javadoc = new PHPDocBlock(0, 0, null, null, new PHPDocTag[0]);
 		}
 		if (canInheritJavadoc(member)) {
@@ -604,6 +612,126 @@ public class PHPDocumentationContentAccess {
 					.toHTML();
 		}
 		return new PHPDocumentationContentAccess(member, javadoc).toHTML();
+	}
+
+	private static String getHTMLForMagicMember(IMember member,
+			MagicMember magicMember) {
+
+		StringBuffer fBuf = new StringBuffer();
+
+		if (appendBuiltinDoc(member, fBuf)) {
+			return fBuf.toString();
+		}
+		if (magicMember instanceof MagicField) {
+			MagicField magicField = (MagicField) magicMember;
+			fBuf.append(magicField.desc);
+			fBuf.append(BLOCK_TAG_START);
+			fBuf.append("<dt>"); //$NON-NLS-1$
+			fBuf.append("Type"); //$NON-NLS-1$
+			fBuf.append("</dt>"); //$NON-NLS-1$
+			fBuf.append(BlOCK_TAG_ENTRY_START);
+			fBuf.append("&nbsp"); //$NON-NLS-1$
+			fBuf.append(magicField.type);
+			fBuf.append(BlOCK_TAG_ENTRY_END);
+			fBuf.append(BLOCK_TAG_END);
+		} else {
+			MagicMethod magicMethod = (MagicMethod) magicMember;
+			fBuf.append(magicMethod.desc);
+			fBuf.append(BLOCK_TAG_START);
+
+			if (magicMethod.parameterNames.length > 0) {
+
+				fBuf.append("<dt>"); //$NON-NLS-1$
+				fBuf.append(PHPDocumentationMessages.JavaDoc2HTMLTextReader_parameters_section);
+				fBuf.append("</dt>"); //$NON-NLS-1$
+				for (int i = 0; i < magicMethod.parameterNames.length; i++) {
+					fBuf.append(BlOCK_TAG_ENTRY_START);
+					fBuf.append("&nbsp"); //$NON-NLS-1$
+					String parameterName = magicMethod.parameterNames[i];
+					String parameterType = magicMethod.parameterTypes[i];
+					if (parameterType != null) {
+						fBuf.append(PARAM_NAME_START);
+						fBuf.append(parameterType);
+						fBuf.append(PARAM_NAME_END);
+					}
+					fBuf.append(PARAM_NAME_START);
+					fBuf.append(parameterName);
+					fBuf.append(PARAM_NAME_END);
+					fBuf.append(BlOCK_TAG_ENTRY_END);
+				}
+			}
+
+			if (magicMethod.returnType != null) {
+
+				fBuf.append("<dt>"); //$NON-NLS-1$
+				fBuf.append(PHPDocumentationMessages.JavaDoc2HTMLTextReader_returns_section);
+				fBuf.append("</dt>"); //$NON-NLS-1$
+				fBuf.append(BlOCK_TAG_ENTRY_START);
+				fBuf.append("&nbsp"); //$NON-NLS-1$
+				fBuf.append(magicMethod.returnType);
+				fBuf.append(BlOCK_TAG_ENTRY_END);
+			}
+			fBuf.append(BLOCK_TAG_END);
+		}
+		return fBuf.toString();
+	}
+
+	private static MagicMember getMagicMember(IMember member) {
+		if (member instanceof IMethod || member instanceof IField) {
+			IType type = null;
+			if (member instanceof IMethod) {
+				type = ((IMethod) member).getDeclaringType();
+				PHPDocBlock doc = PHPModelUtils.getDocBlock(type);
+				if (doc != null) {
+					Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
+					final PHPDocTag[] tags = doc.getTags();
+					for (PHPDocTag docTag : tags) {
+						final int tagKind = docTag.getTagKind();
+						if (tagKind == PHPDocTag.METHOD) {
+							// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
+							final String[] split = WHITESPACE_SEPERATOR
+									.split(docTag.getValue().trim());
+							if (split.length < 2) {
+								continue;
+							}
+
+							if (MagicMemberUtil.removeParenthesis(split)
+									.equals(member.getElementName())) {
+								return MagicMemberUtil.getMagicMethod(docTag
+										.getValue());
+							}
+						}
+					}
+				}
+			} else {
+				type = ((IField) member).getDeclaringType();
+				PHPDocBlock doc = PHPModelUtils.getDocBlock(type);
+				if (doc != null) {
+					Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
+					final PHPDocTag[] tags = doc.getTags();
+					for (PHPDocTag docTag : tags) {
+						final int tagKind = docTag.getTagKind();
+						if (tagKind == PHPDocTag.PROPERTY
+								|| tagKind == PHPDocTag.PROPERTY_READ
+								|| tagKind == PHPDocTag.PROPERTY_WRITE) {
+							// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
+							final String[] split = WHITESPACE_SEPERATOR
+									.split(docTag.getValue().trim());
+							if (split.length < 2) {
+								continue;
+							}
+
+							if (split[1].equals(member.getElementName())) {
+								return MagicMemberUtil.getMagicField(docTag
+										.getValue());
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 
 	private static boolean canInheritJavadoc(IMember member) {
@@ -1366,7 +1494,7 @@ public class PHPDocumentationContentAccess {
 		return null;
 	}
 
-	private boolean appendBuiltinDoc(IMember element, StringBuffer buf) {
+	private static boolean appendBuiltinDoc(IMember element, StringBuffer buf) {
 		String builtinDoc = BuiltinDoc.getString(element.getElementName());
 		if (builtinDoc.length() > 0) {
 			buf.append(builtinDoc);
