@@ -890,8 +890,8 @@ public class Util {
 		// line delimiter in project preference
 		IScopeContext[] scopeContext;
 		if (project != null) {
-			scopeContext = new IScopeContext[] { new ProjectScope(project
-					.getProject()) };
+			scopeContext = new IScopeContext[] { new ProjectScope(
+					project.getProject()) };
 			lineSeparator = Platform.getPreferencesService().getString(
 					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
 					scopeContext);
@@ -2985,8 +2985,8 @@ public class Util {
 	public static String toAnchor(char[] methodSignature, String methodName,
 			boolean isVarArgs) {
 		try {
-			return new String(toAnchor(methodSignature, methodName
-					.toCharArray(), isVarArgs));
+			return new String(toAnchor(methodSignature,
+					methodName.toCharArray(), isVarArgs));
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
@@ -3261,6 +3261,9 @@ public class Util {
 			try {
 				String lineDelimiter = (i == numberOfLines - 1 ? "" : document
 						.getLineDelimiter(i));
+				if (lineDelimiter == null) {
+					lineDelimiter = "";
+				}
 				IRegion lineInformation = document.getLineInformation(i);
 				result[i] = lineInformation.getOffset()
 						+ lineInformation.getLength() + lineDelimiter.length();
