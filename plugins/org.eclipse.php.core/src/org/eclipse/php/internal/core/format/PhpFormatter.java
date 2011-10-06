@@ -171,6 +171,7 @@ public class PhpFormatter implements IStructuredFormatter {
 								if (j < phpTokens.length - 1 && j > 0) {
 									if (phpTokens[j - 1].getType().equals(
 											PHPRegionTypes.PHP_TOKEN)
+											&& !isComment(phpTokens[j + 1])
 											&& document
 													.getLineOfOffset(startOffset
 															+ phpToken
@@ -221,6 +222,20 @@ public class PhpFormatter implements IStructuredFormatter {
 			formatLine(document, lineIndex);
 		}
 
+	}
+
+	private boolean isComment(ITextRegion iTextRegion) {
+		if (iTextRegion.getType().equals(PHPRegionTypes.PHP_COMMENT)
+				|| iTextRegion.getType().equals(
+						PHPRegionTypes.PHP_COMMENT_START)
+				|| iTextRegion.getType()
+						.equals(PHPRegionTypes.PHP_LINE_COMMENT)
+				|| iTextRegion.getType().equals(PHPRegionTypes.PHPDOC_COMMENT)
+				|| iTextRegion.getType().equals(
+						PHPRegionTypes.PHPDOC_COMMENT_START)) {
+			return true;
+		}
+		return false;
 	}
 
 	private final StringBuffer resultBuffer = new StringBuffer();
