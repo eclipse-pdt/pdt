@@ -25,7 +25,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.includepath.IncludePath;
@@ -263,6 +265,39 @@ public class DebugSearchEngine {
 				// Try to find this file in the Include Path:
 				File file = new File(remoteFile);
 				if (file.exists()) {
+					try {
+						IScriptProject scriptProject = DLTKCore
+								.create(currentProject);
+						IBuildpathEntry[] rawBuildpath = scriptProject
+								.getRawBuildpath();
+
+						IEnvironment environment = EnvironmentManager
+								.getEnvironment(currentProject);
+						IPath remoteFilePath = EnvironmentPathUtils
+								.getFullPath(environment, new Path(remoteFile));
+						for (IBuildpathEntry entry : rawBuildpath) {
+							IPath entryPath = entry.getPath();
+							if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+								entryPath = DLTKCore
+										.getResolvedVariablePath(entryPath);
+							}
+							if (entryPath != null
+									&& (entryPath.isPrefixOf(Path
+											.fromOSString(remoteFile)) || entryPath
+											.isPrefixOf(remoteFilePath))) {
+								Type type = (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
+										: Type.INCLUDE_FOLDER;
+								localFile[0] = new PathEntry(
+										file.getAbsolutePath(), type, entry);
+								// pathMapper.addEntry(remoteFile,
+								// localFile[0]);
+								// PathMapperRegistry.storeToPreferences();
+								return Status.OK_STATUS;
+							}
+						}
+					} catch (ModelException e) {
+						PHPDebugPlugin.log(e);
+					}
 					for (IncludePath includePath : includePaths) {
 						if (includePath.getEntry() instanceof IBuildpathEntry) {
 							IBuildpathEntry entry = (IBuildpathEntry) includePath
