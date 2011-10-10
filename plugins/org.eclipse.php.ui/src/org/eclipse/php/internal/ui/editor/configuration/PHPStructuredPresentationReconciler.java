@@ -215,24 +215,28 @@ public class PHPStructuredPresentationReconciler extends
 						}
 
 					} else {
-						int oldLength = 0;
-						for (Iterator iterator = presentation
-								.getAllStyleRangeIterator(); iterator.hasNext();) {
-							iterator.next();
-							oldLength++;
-						}
-						IPresentationRepairer repairer = getRepairer(r
-								.getType());
-						if (repairer != null)
-							repairer.createPresentation(presentation, r);
-						int newLength = 0;
-						for (Iterator iterator = presentation
-								.getAllStyleRangeIterator(); iterator.hasNext();) {
-							StyleRange styleRange = (StyleRange) iterator
-									.next();
-							oldLength--;
-							if (oldLength < 0) {
-								fRangeSet.add(styleRange);
+						if (i != jumpto) {// jumpto partition has been added
+							int oldLength = 0;
+							for (Iterator iterator = presentation
+									.getAllStyleRangeIterator(); iterator
+									.hasNext();) {
+								iterator.next();
+								oldLength++;
+							}
+							IPresentationRepairer repairer = getRepairer(r
+									.getType());
+							if (repairer != null)
+								repairer.createPresentation(presentation, r);
+							int newLength = 0;
+							for (Iterator iterator = presentation
+									.getAllStyleRangeIterator(); iterator
+									.hasNext();) {
+								StyleRange styleRange = (StyleRange) iterator
+										.next();
+								oldLength--;
+								if (oldLength < 0) {
+									fRangeSet.add(styleRange);
+								}
 							}
 						}
 
