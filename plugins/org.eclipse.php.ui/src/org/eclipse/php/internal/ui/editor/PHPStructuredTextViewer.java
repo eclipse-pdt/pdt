@@ -67,7 +67,6 @@ import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
-import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
@@ -193,7 +192,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 					ITextRegion textRegion = sdRegion
 							.getRegionAtCharacterOffset(selectionOffset);
 					if (textRegion instanceof ForeignRegion) {
-						isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
+						ForeignRegion foreignRegion = (ForeignRegion) textRegion;
+						isJavaScriptRegion = "script"
+								.equalsIgnoreCase(foreignRegion
+										.getSurroundingTag());
 					}
 
 					// Check if the containing project has JS nature or not
