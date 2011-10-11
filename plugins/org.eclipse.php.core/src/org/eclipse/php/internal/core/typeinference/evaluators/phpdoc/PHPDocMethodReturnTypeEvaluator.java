@@ -18,7 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
@@ -27,10 +26,7 @@ import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -72,100 +68,111 @@ public class PHPDocMethodReturnTypeEvaluator extends
 	public IGoal[] init() {
 		for (IMethod method : getMethods()) {
 			IType currentNamespace = PHPModelUtils.getCurrentNamespace(method);
-
+			String[] typeNames = null;
 			if (method instanceof IPHPDocAwareElement) {
-				String[] typeNames = ((IPHPDocAwareElement) method)
-						.getReturnTypes();
-				if (typeNames != null) {
-					for (String typeName : typeNames) {
-						Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
-						if (m.find()) {
-							int offset = 0;
-							try {
-								offset = method.getSourceRange().getOffset();
-							} catch (ModelException e) {
+				typeNames = ((IPHPDocAwareElement) method).getReturnTypes();
+			} else {
+				List<String> returnTypeList = new LinkedList<String>();
+				PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
+				PHPDocTag[] tags = docBlock.getTags(PHPDocTagKinds.RETURN);
+				if (tags != null && tags.length > 0) {
+					for (PHPDocTag phpDocTag : tags) {
+						if (phpDocTag.getReferences() != null
+								&& phpDocTag.getReferences().length > 0) {
+							// returnTypeList.add(phpDocTag.getReferences()[0]
+							// .getStringRepresentation());
+							String[] returnTypes = phpDocTag.getReferences()[0]
+									.getStringRepresentation().split(",");
+							for (String returnType : returnTypes) {
+								returnTypeList.add(returnType);
 							}
-							evaluated.add(getArrayType(m.group(),
-									currentNamespace, offset));
+						}
+
+					}
+				}
+				typeNames = returnTypeList.toArray(new String[returnTypeList
+						.size()]);
+			}
+			if (typeNames != null) {
+				for (String typeName : typeNames) {
+					Matcher m = ARRAY_TYPE_PATTERN.matcher(typeName);
+					if (m.find()) {
+						int offset = 0;
+						try {
+							offset = method.getSourceRange().getOffset();
+						} catch (ModelException e) {
+						}
+						evaluated.add(getArrayType(m.group(), currentNamespace,
+								offset));
+					} else {
+						AbstractMethodReturnTypeGoal goal = (AbstractMethodReturnTypeGoal) getGoal();
+						IType[] types = goal.getTypes();
+						if (typeName.equals(SELF_RETURN_TYPE) && types != null) {
+							for (IType t : types) {
+								IEvaluatedType type = getEvaluatedType(
+										t.getElementName(), currentNamespace);
+								if (type != null) {
+									evaluated.add(type);
+								}
+							}
 						} else {
+							if (currentNamespace != null) {
+
+								PHPDocBlock docBlock = PHPModelUtils
+										.getDocBlock(method);
+								ModuleDeclaration moduleDeclaration = SourceParserUtil
+										.getModuleDeclaration(currentNamespace
+												.getSourceModule());
+								if (typeName
+										.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+									// check if the first part
+									// is an
+									// alias,then get the full
+									// name
+									String prefix = typeName
+											.substring(
+													0,
+													typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+									final Map<String, UsePart> result = PHPModelUtils
+											.getAliasToNSMap(prefix,
+													moduleDeclaration,
+													docBlock.sourceStart(),
+													currentNamespace, true);
+									if (result.containsKey(prefix)) {
+										String fullName = result.get(prefix)
+												.getNamespace()
+												.getFullyQualifiedName();
+										typeName = typeName.replace(prefix,
+												fullName);
+									}
+								} else if (typeName
+										.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
+
+									String prefix = typeName;
+									final Map<String, UsePart> result = PHPModelUtils
+											.getAliasToNSMap(prefix,
+													moduleDeclaration,
+													docBlock.sourceStart(),
+													currentNamespace, true);
+									if (result.containsKey(prefix)) {
+										String fullName = result.get(prefix)
+												.getNamespace()
+												.getFullyQualifiedName();
+										typeName = fullName;
+									}
+								}
+							}
 							IEvaluatedType type = getEvaluatedType(typeName,
 									currentNamespace);
 							if (type != null) {
 								evaluated.add(type);
 							}
 						}
-					}
-				}
 
-			} else {
-				PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
-				if (docBlock != null) {
-					AbstractMethodReturnTypeGoal typedGoal = (AbstractMethodReturnTypeGoal) goal;
-					IType[] types = typedGoal.getTypes();
-					for (PHPDocTag tag : docBlock.getTags()) {
-						if (tag.getTagKind() == PHPDocTag.RETURN) {
-							// @return datatype1|datatype2|...
-							for (SimpleReference reference : tag
-									.getReferences()) {
-								final String[] typesNames = PIPE_PATTERN
-										.split(reference.getName());
-								for (String typeName : typesNames) {
-									Matcher m = ARRAY_TYPE_PATTERN
-											.matcher(typeName);
-									if (m.find()) {
-										evaluated.add(getArrayType(m.group(),
-												currentNamespace,
-												docBlock.sourceStart()));
-									} else {
-										if (typeName.equals(SELF_RETURN_TYPE)
-												&& types != null) {
-											for (IType t : types) {
-												IEvaluatedType type = getEvaluatedType(
-														t.getElementName(),
-														currentNamespace);
-												if (type != null) {
-													evaluated.add(type);
-												}
-											}
-										} else {
-											if (typeName
-													.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
-													&& currentNamespace != null) {
-												// check if the first part is an
-												// alias,then get the full name
-												ModuleDeclaration moduleDeclaration = SourceParserUtil
-														.getModuleDeclaration(currentNamespace
-																.getSourceModule());
-												String prefix = typeName
-														.substring(
-																0,
-																typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
-												final Map<String, UsePart> result = PHPModelUtils
-														.getAliasToNSMap(
-																prefix,
-																moduleDeclaration,
-																docBlock.sourceStart(),
-																currentNamespace,
-																true);
-												if (result.containsKey(prefix)) {
-													String fullName = result
-															.get(prefix)
-															.getNamespace()
-															.getFullyQualifiedName();
-													typeName = typeName
-															.replace(prefix,
-																	fullName);
-												}
-											}
-											IEvaluatedType type = getEvaluatedType(
-													typeName, currentNamespace);
-											if (type != null) {
-												evaluated.add(type);
-											}
-										}
-									}
-								}
-							}
+						IEvaluatedType type = getEvaluatedType(typeName,
+								currentNamespace);
+						if (type != null) {
+							evaluated.add(type);
 						}
 					}
 				}
