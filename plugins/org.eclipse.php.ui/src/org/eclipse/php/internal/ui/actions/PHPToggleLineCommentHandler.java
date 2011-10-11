@@ -171,8 +171,9 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 			IRegion region = document.getLineInformation(line);
 			String string = document
 					.get(region.getOffset(), region.getLength()).trim();
-			isComment = (string.length() >= OPEN_COMMENT.length() && string
-					.startsWith(OPEN_COMMENT))
+			isComment = string.trim().length() == 0
+					|| (string.length() >= OPEN_COMMENT.length() && string
+							.startsWith(OPEN_COMMENT))
 					|| (string.length() >= SINGLE_LINE_COMMENT.length() && string
 							.startsWith(SINGLE_LINE_COMMENT));
 		} catch (BadLocationException e) {
