@@ -1,0 +1,25 @@
+--TEST--
+Should complete class members from singleton method in other namespace
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace Foo\Bar;
+class SomeClass {
+	function test() {
+	}
+}
+namespace Foo\Foo;
+use Foo\Bar\SomeClass;
+
+/**
+ * @return SomeClass
+ *
+ */
+function getSome() {
+	return new SomeClass();
+}
+getSome()->|
+?>
+--EXPECT--
+method(test)
