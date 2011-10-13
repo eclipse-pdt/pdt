@@ -583,6 +583,8 @@ public final class PHPHeuristicScanner implements Symbols {
 				return TokenDEFAULT;
 			if ("finally".equals(s)) //$NON-NLS-1$
 				return TokenFINALLY;
+			if ("foreach".equals(s)) //$NON-NLS-1$
+				return TokenFOR;
 			break;
 		case 9:
 			if ("interface".equals(s)) //$NON-NLS-1$
