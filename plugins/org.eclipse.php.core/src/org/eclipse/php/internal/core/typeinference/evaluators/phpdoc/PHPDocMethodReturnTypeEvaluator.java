@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
@@ -74,20 +75,22 @@ public class PHPDocMethodReturnTypeEvaluator extends
 			} else {
 				List<String> returnTypeList = new LinkedList<String>();
 				PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
+				if (docBlock == null) {
+					return IGoal.NO_GOALS;
+				}
 				PHPDocTag[] tags = docBlock.getTags(PHPDocTagKinds.RETURN);
 				if (tags != null && tags.length > 0) {
 					for (PHPDocTag phpDocTag : tags) {
 						if (phpDocTag.getReferences() != null
 								&& phpDocTag.getReferences().length > 0) {
-							// returnTypeList.add(phpDocTag.getReferences()[0]
-							// .getStringRepresentation());
-							String[] returnTypes = phpDocTag.getReferences()[0]
-									.getStringRepresentation().split(",");
-							for (String returnType : returnTypes) {
-								returnTypeList.add(returnType);
+							for (SimpleReference ref : phpDocTag
+									.getReferences()) {
+								String type = ref.getName();
+								if (type != null) {
+									returnTypeList.add(type);
+								}
 							}
 						}
-
 					}
 				}
 				typeNames = returnTypeList.toArray(new String[returnTypeList
@@ -167,12 +170,6 @@ public class PHPDocMethodReturnTypeEvaluator extends
 							if (type != null) {
 								evaluated.add(type);
 							}
-						}
-
-						IEvaluatedType type = getEvaluatedType(typeName,
-								currentNamespace);
-						if (type != null) {
-							evaluated.add(type);
 						}
 					}
 				}
