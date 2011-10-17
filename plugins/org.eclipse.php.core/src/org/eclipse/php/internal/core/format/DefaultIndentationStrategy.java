@@ -26,6 +26,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class DefaultIndentationStrategy implements IIndentationStrategy {
 
+	private static final String BLANK = "";
+
 	static class LineState {
 		boolean inBracelessBlock;
 		boolean inMultiLine;
@@ -275,12 +277,24 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			final StringBuffer result, final int lineNumber, final int forOffset)
 			throws BadLocationException {
 		placeMatchingBlanksForStructuredDocument(document, result, lineNumber,
-				forOffset);
+				forOffset, getCommandText());
+	}
+
+	protected String getCommandText() {
+		return BLANK;
 	}
 
 	public static void placeMatchingBlanksForStructuredDocument(
 			final IStructuredDocument document, final StringBuffer result,
 			final int lineNumber, final int forOffset)
+			throws BadLocationException {
+		placeMatchingBlanksForStructuredDocument(document, result, lineNumber,
+				forOffset, BLANK);
+	}
+
+	public static void placeMatchingBlanksForStructuredDocument(
+			final IStructuredDocument document, final StringBuffer result,
+			final int lineNumber, final int forOffset, String commandText)
 			throws BadLocationException {
 		boolean enterKeyPressed = document.getLineDelimiter().equals(
 				result.toString());
@@ -310,7 +324,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			indent(document, result);
 		} else {
 			boolean intended = indentMultiLineCase(document, lineNumber,
-					forOffset, enterKeyPressed, result, blanks);
+					forOffset, enterKeyPressed, result, blanks, commandText);
 			if (!intended) {
 				lastNonEmptyLineIndex = lineNumber;
 				if (!enterKeyPressed && lastNonEmptyLineIndex > 0) {
@@ -364,7 +378,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 	private static boolean indentMultiLineCase(IStructuredDocument document,
 			int lineNumber, int offset, boolean enterKeyPressed,
-			StringBuffer result, String blanks) {
+			StringBuffer result, String blanks, String commandText) {
 		// LineState lineState = new LineState();
 		// StringBuffer sb = new StringBuffer();
 		try {
@@ -375,10 +389,12 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					.createHeuristicScanner(document, offset, true);
 			if (inBracelessBlock(scanner, document, offset)) {
 				// lineState.inBracelessBlock = true;
-				indent(document, result);
+				if (!"{".equals(commandText)) {
+					indent(document, result);
+				}
 				return true;
 			} else if (content.trim().startsWith(
-					"" + PHPHeuristicScanner.LBRACE)) {
+					BLANK + PHPHeuristicScanner.LBRACE)) {
 				// lineState.inBracelessBlock = true;
 				int token = scanner.previousToken(offset - 1,
 						PHPHeuristicScanner.UNBOUND);
@@ -421,7 +437,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 													+ region.getLength()
 													- offset)
 									.trim()
-									.startsWith("" + PHPHeuristicScanner.RPAREN)) {
+									.startsWith(
+											BLANK + PHPHeuristicScanner.RPAREN)) {
 						indent(document, newBuffer, 2);
 					}
 					// if (newBuffer.length() > blanks.length()) {
@@ -536,7 +553,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						.get(offset,
 								region.getOffset() + region.getLength()
 										- offset).trim()
-						.startsWith("" + PHPHeuristicScanner.LBRACE)) {
+						.startsWith(BLANK + PHPHeuristicScanner.LBRACE)) {
 					return true;
 				}
 			} catch (BadLocationException e) {
