@@ -52,9 +52,9 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy
 			}
 			int lineNumber = document.getLineOfOffset(startOffset);
 
-			if (isBlanks(document, startlineInfo.getOffset(), endlineInfo
-					.getOffset()
-					+ endlineInfo.getLength(), startOffset)) {
+			if (isBlanks(document, startlineInfo.getOffset(),
+					endlineInfo.getOffset() + endlineInfo.getLength(),
+					startOffset)) {
 				placeMatchingBlanks(document, helpBuffer, lineNumber,
 						startOffset);
 				int endSelection = command.offset + command.length;
@@ -70,4 +70,7 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy
 
 	}
 
+	protected String getCommandText() {
+		return "{";
+	}
 }
