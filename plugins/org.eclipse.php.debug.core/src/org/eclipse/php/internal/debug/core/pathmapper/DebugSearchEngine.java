@@ -268,34 +268,38 @@ public class DebugSearchEngine {
 					try {
 						IScriptProject scriptProject = DLTKCore
 								.create(currentProject);
-						IBuildpathEntry[] rawBuildpath = scriptProject
-								.getRawBuildpath();
+						if (currentProject != null) {
+							IBuildpathEntry[] rawBuildpath = scriptProject
+									.getRawBuildpath();
 
-						IEnvironment environment = EnvironmentManager
-								.getEnvironment(currentProject);
-						IPath remoteFilePath = EnvironmentPathUtils
-								.getFullPath(environment, new Path(remoteFile));
-						for (IBuildpathEntry entry : rawBuildpath) {
-							IPath entryPath = entry.getPath();
-							if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-								entryPath = DLTKCore
-										.getResolvedVariablePath(entryPath);
-							}
-							if (entryPath != null
-									&& (entryPath.isPrefixOf(Path
-											.fromOSString(remoteFile)) || entryPath
-											.isPrefixOf(remoteFilePath))) {
-								Type type = (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
-										: Type.INCLUDE_FOLDER;
-								localFile[0] = new PathEntry(
-										file.getAbsolutePath(), type, entry);
-								// pathMapper.addEntry(remoteFile,
-								// localFile[0]);
-								// PathMapperRegistry.storeToPreferences();
-								return Status.OK_STATUS;
+							IEnvironment environment = EnvironmentManager
+									.getEnvironment(currentProject);
+							IPath remoteFilePath = EnvironmentPathUtils
+									.getFullPath(environment, new Path(
+											remoteFile));
+							for (IBuildpathEntry entry : rawBuildpath) {
+								IPath entryPath = entry.getPath();
+								if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+									entryPath = DLTKCore
+											.getResolvedVariablePath(entryPath);
+								}
+								if (entryPath != null
+										&& (entryPath.isPrefixOf(Path
+												.fromOSString(remoteFile)) || entryPath
+												.isPrefixOf(remoteFilePath))) {
+									Type type = (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR
+											: Type.INCLUDE_FOLDER;
+									localFile[0] = new PathEntry(
+											file.getAbsolutePath(), type, entry);
+									// pathMapper.addEntry(remoteFile,
+									// localFile[0]);
+									// PathMapperRegistry.storeToPreferences();
+									return Status.OK_STATUS;
+								}
 							}
 						}
-					} catch (ModelException e) {
+
+					} catch (Exception e) {
 						PHPDebugPlugin.log(e);
 					}
 					for (IncludePath includePath : includePaths) {
