@@ -134,8 +134,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					new GlobalElementsCompositeStrategy(context, false) };
 		}
 		if (contextClass == FunctionParameterTypeContext.class) {
-			return new ICompletionStrategy[] { new FunctionParameterTypeStrategy(
-					context) };
+			return new ICompletionStrategy[] {
+					new FunctionParameterTypeStrategy(context),
+					new FunctionParameterKeywordTypeStrategy(context) };
 		}
 		if (contextClass == FunctionParameterValueContext.class) {
 			return new ICompletionStrategy[] {
