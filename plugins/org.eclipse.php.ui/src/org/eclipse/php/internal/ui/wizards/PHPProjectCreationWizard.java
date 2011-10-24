@@ -85,7 +85,9 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 	public boolean performFinish() {
 		boolean res = super.performFinish();
 		if (res) {
-			BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
+			if (updatePerspective()) {
+				BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
+			}
 			selectAndReveal(fLastPage.getScriptProject().getProject());
 
 			WizardModel model = fFirstPage.getWizardData();
@@ -147,4 +149,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 		fLastPageIndex = current;
 	}
 
+	protected boolean updatePerspective() {
+		return true;
+	}
 }
