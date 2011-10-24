@@ -125,7 +125,7 @@ public class NewPHPsComboBlock {
 
 	private static IStatus OK_STATUS = new Status(IStatus.OK,
 			PHPDebugUIPlugin.getID(), 0, "", null); //$NON-NLS-1$
-	private PHPexeItem[] phpItems = exes.getAllItems();
+	// private PHPexeItem[] phpItems = exes.getAllItems();
 
 	private IProject project;
 	/*
@@ -730,6 +730,7 @@ public class NewPHPsComboBlock {
 	protected void fillWithWorkspacePHPexes() {
 		// fill with PHPexes
 		final List<PHPexeItem> standins = new ArrayList<PHPexeItem>();
+		PHPexeItem[] phpItems = exes.getAllItems();
 		if (phpItems != null) {
 			for (int i = 0; i < phpItems.length; i++) {
 				final PHPexeItem type = phpItems[i];
@@ -818,7 +819,8 @@ public class NewPHPsComboBlock {
 	}
 
 	private PHPexeItem getPHPexe(IProject project) {
-		if (fSpecificButton.getSelection() && !phpExecutables.isEmpty()) {
+		if (fSpecificButton.getSelection() && !phpExecutables.isEmpty()
+				&& fExecutablesCombo.getSelectionIndex() >= 0) {
 			return phpExecutables.get(fExecutablesCombo.getSelectionIndex());
 		} else if (fEnvironmentsButton.getSelection()) {
 			return PHPDebugPlugin.getPHPexeItem(PHPVersion
@@ -843,7 +845,8 @@ public class NewPHPsComboBlock {
 	 * @return The debugger's id.
 	 */
 	public String getSelectedDebuggerId() {
-		if (fSpecificButton.getSelection() && !phpExecutables.isEmpty()) {
+		if (fSpecificButton.getSelection() && !phpExecutables.isEmpty()
+				&& fExecutablesCombo.getSelectionIndex() >= 0) {
 			return phpExecutables.get(fExecutablesCombo.getSelectionIndex())
 					.getDebuggerID();
 		} else if (fEnvironmentsButton.getSelection()) {
