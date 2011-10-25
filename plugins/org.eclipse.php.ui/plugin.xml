@@ -1088,7 +1088,7 @@
 			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+7" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key platform="gtk" sequence="ESC CTRL+C" contextId="org.eclipse.php.ui.phpEditorScope"
+		<key platform="gtk" sequence="M1+M2+C" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+O" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.dltk.ui.edit.text.script.show.outline" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
