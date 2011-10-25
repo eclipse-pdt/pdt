@@ -28,6 +28,7 @@ import org.eclipse.dltk.internal.core.*;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
@@ -42,6 +43,8 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.NamespaceNode;
 import org.eclipse.wst.jsdt.core.*;
+import org.eclipse.wst.jsdt.core.ElementChangedEvent;
+import org.eclipse.wst.jsdt.core.IElementChangedListener;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
 import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
@@ -53,7 +56,8 @@ import org.eclipse.wst.jsdt.ui.project.JsNature;
  * 
  */
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
-		implements IIncludepathListener /* , IResourceChangeListener */{
+		implements IIncludepathListener /* , IResourceChangeListener */,
+		IElementChangedListener {
 	public final static ArrayList EMPTY_LIST = new ArrayList();
 	StandardJavaScriptElementContentProvider jsContentProvider;
 
@@ -488,5 +492,52 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 
 		postRefresh(resources, true, runnables);
 		this.executeRunnables(runnables);
+	}
+
+	@Override
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		super.inputChanged(viewer, oldInput, newInput);
+		JavaScriptCore.addElementChangedListener(this);
+	}
+
+	public void elementChanged(ElementChangedEvent event) {
+		IJavaScriptElementDelta[] affectedChildren = event.getDelta()
+				.getAffectedChildren();
+		final ArrayList<Runnable> runnables = new ArrayList<Runnable>();
+		for (int i = 0; i < affectedChildren.length; i++) {
+			if (processDelta(affectedChildren[i], runnables)) {
+				return; // early return, element got refreshed
+			}
+		}
+
+	}
+
+	private boolean processDelta(IJavaScriptElementDelta delta,
+			ArrayList<Runnable> runnables) {
+		int flags = delta.getFlags();
+		IJavaScriptElement element = delta.getElement();
+		int elementType = element.getElementType();
+
+		if (elementType != IJavaScriptElement.JAVASCRIPT_MODEL
+				&& elementType != IJavaScriptElement.JAVASCRIPT_PROJECT) {
+			IJavaScriptProject proj = element.getJavaScriptProject();
+			if (proj == null || !proj.getProject().isOpen())
+				return false;
+		}
+
+		if (elementType == IJavaScriptElement.JAVASCRIPT_PROJECT) {
+			// if the raw class path has changed we refresh the entire project
+			if ((flags & IJavaScriptElementDelta.F_INCLUDEPATH_CHANGED) != 0) {
+
+				final ArrayList<IScriptProject> resources = new ArrayList<IScriptProject>(
+						1);
+				IProject project = ((IJavaScriptProject) element).getProject();
+				resources.add(DLTKCore.create(project));
+				postRefresh(resources, true, runnables);
+				this.executeRunnables(runnables);
+				return true;
+			}
+		}
+		return false;
 	}
 }
