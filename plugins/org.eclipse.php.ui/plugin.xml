@@ -861,7 +861,7 @@
 	          visible="false">
 	       <action
 	             class="org.eclipse.php.internal.ui.actions.RenameAction"
-	             definitionId="org.eclipse.php.ui.edit.text.rename.element"
+	             definitionId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 	             id="org.eclipse.php.ui.refactoring.rename"
 	             label="%action.label.3"
 	             menubarPath="org.eclipse.pdt.ui.refactoring.menu/reorgGroup">
@@ -1002,8 +1002,6 @@
 			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			description="%context.editingPhpSource.description" id="org.eclipse.php.core.phpsource">
 		</context>
-		<context name="%context.window.name" description="%context.window.description"
-			parentId="org.eclipse.ui.contexts.window" id="org.eclipse.php.ui.contexts.window" />
 	</extension>
 
 	<extension point="org.eclipse.ui.commands">
@@ -1035,9 +1033,6 @@
 			categoryId="org.eclipse.ui.category.views" id="org.eclipse.php.ui.explorer" />
 
 		<!-- refactoring -->
-		<command name="%ActionDefinition.renameElement.name"
-			description="%ActionDefinition.renameElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
-			id="org.eclipse.php.ui.edit.text.rename.element" />
 		<command name="%ActionDefinition.moveElement.name"
 			description="%ActionDefinition.moveElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.move.element" />
@@ -1102,26 +1097,17 @@
 			commandId="org.eclipse.php.ui.edit.text.add.description" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 
 		<!-- refactoring -->
-		<key commandId="org.eclipse.php.ui.edit.text.rename.element"
-			contextId="org.eclipse.php.ui.contexts.window" 
-			schemeId="org.eclipse.php.ui.scheme"
-			sequence="M2+M3+R" />
-		<key commandId="org.eclipse.php.ui.edit.text.rename.element"
+		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 			contextId="org.eclipse.php.ui.phpEditorScope" 
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+R">
 		</key>
-		<key platform="carbon" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="M2+M3+R" />
-		<key commandId="org.eclipse.php.ui.edit.text.rename.element"
-			contextId="org.eclipse.php.ui.contexts.window" platform="carbon"
-			schemeId="org.eclipse.php.ui.scheme" sequence="COMMAND+ALT+R" />
-		<key commandId="org.eclipse.php.ui.edit.text.rename.element"
+		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+R">
 		</key>		
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
-			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+V" />
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
@@ -1130,7 +1116,7 @@
 		<key platform="carbon" sequence="M2+M3+V" commandId=""
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
-			contextId="org.eclipse.php.ui.contexts.window" platform="carbon"
+			contextId="org.eclipse.dltk.ui.context.views" platform="carbon"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+V" />
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
 			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
@@ -1139,7 +1125,7 @@
 		<key sequence="F3" commandId="org.eclipse.php.ui.edit.text.open.editor"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
         <key sequence="F3" commandId="org.eclipse.php.ui.edit.text.open.editor"
-			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />			
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />			
 		<!-- project -->
 		<!-- perspectives -->
 		<!-- views -->
@@ -1159,7 +1145,7 @@
 		<key
 			sequence="M1+M2+M"
 			commandId="org.eclipse.php.ui.navigate.open.method"
-			contextId="org.eclipse.php.ui.contexts.window"
+			contextId="org.eclipse.dltk.ui.context.views"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
 		<key
@@ -1171,24 +1157,24 @@
 		<key
 			sequence="M1+M2+T"
 			commandId="org.eclipse.php.ui.navigate.open.type"
-			contextId="org.eclipse.php.ui.contexts.window"
+			contextId="org.eclipse.dltk.ui.context.views"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
 		<key sequence="M1+M2+H" commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
-			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M2+H" commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M2+F2" commandId="org.eclipse.php.ui.edit.text.php.open.manual"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M3+H"
 			commandId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"
-			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M3+H"
 			commandId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="F4"
 			commandId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
-			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="F4"
 			commandId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
@@ -1197,7 +1183,7 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M2+F" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.wst.sse.ui.format.document" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key sequence="M1+M2+F" contextId="org.eclipse.php.ui.contexts.window"
+		<key sequence="M1+M2+F" contextId="org.eclipse.dltk.ui.context.views"
 			commandId="org.eclipse.wst.sse.ui.format.document" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+I" commandId="org.eclipse.wst.sse.ui.format.active.elements"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
@@ -1216,11 +1202,6 @@
 		<key platform="carbon" sequence="COMMAND+ALT+O"
 			contextId="org.eclipse.php.ui.phpEditorScope" commandId="org.eclipse.php.ui.edit.text.toggleMarkOccurrences"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<scheme
-		    id="org.eclipse.php.ui.scheme"
-		    name="name"
-		    parentId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</scheme>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page class="org.eclipse.php.internal.ui.preferences.PHPBasePreferencePage"
@@ -1447,7 +1428,7 @@
 	       </menu>
 	       <action
 	             class="org.eclipse.php.internal.ui.actions.RenameAction"
-	             definitionId="org.eclipse.php.ui.edit.text.rename.element"
+	             definitionId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 	             id="org.eclipse.php.ui.refactoring.pop.rename"
 	             label="%action.label.6"
 	             menubarPath="org.eclipse.php.ui.refactor.menu/refactoringGroup"

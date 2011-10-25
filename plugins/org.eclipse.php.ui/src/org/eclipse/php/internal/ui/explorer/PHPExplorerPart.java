@@ -36,7 +36,6 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
@@ -195,8 +194,6 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	public void createPartControl(Composite parent) {
 		// TODO Auto-generated method stub
 		super.createPartControl(parent);
-		// initDragAndDrop();
-		activateContext();
 	}
 
 	private void initDragAndDrop() {
@@ -213,16 +210,6 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		NavigatorDropAdapter adapter = new PHPNavigatorDropAdapter(viewer);
 		adapter.setFeedbackEnabled(true);
 		viewer.addDropSupport(ops, transfers, adapter);
-	}
-
-	/**
-	 * Activate a context that this view uses. It will be tied to this view
-	 * activation events and will be removed when the view is disposed.
-	 */
-	private void activateContext() {
-		IContextService contextService = (IContextService) getSite()
-				.getService(IContextService.class);
-		contextService.activateContext("org.eclipse.php.ui.contexts.window");
 	}
 
 	protected void initDrop() {
