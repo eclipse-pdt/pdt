@@ -10,7 +10,7 @@ class Paths {
 
 namespace other\Application;
 
-\CMS\Application\|
+\CMS\Application\Pa|
 ?>
 --EXPECT--
 <?php

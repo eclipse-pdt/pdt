@@ -9,7 +9,7 @@ class Paths {
 	public static $_path;
 }
 namespace other\Application;
-class MyPaths extends \PDT\Application\| {
+class MyPaths extends \PDT\Application\Pa| {
 }
 ?>
 --EXPECT--
