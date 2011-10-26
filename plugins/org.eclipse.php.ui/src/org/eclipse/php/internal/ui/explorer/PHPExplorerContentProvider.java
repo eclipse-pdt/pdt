@@ -76,6 +76,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	public void dispose() {
 		super.dispose();
 		IncludePathManager.getInstance().unregisterIncludepathListener(this);
+		JavaScriptCore.removeElementChangedListener(this);
 	}
 
 	private Object[] getNonPhpProjects(final IScriptModel model)
@@ -497,7 +498,11 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		super.inputChanged(viewer, oldInput, newInput);
-		JavaScriptCore.addElementChangedListener(this);
+		if (oldInput == null && newInput != null) {
+			JavaScriptCore.addElementChangedListener(this);
+		} else if (oldInput != null && newInput == null) {
+			JavaScriptCore.removeElementChangedListener(this);
+		}
 	}
 
 	public void elementChanged(ElementChangedEvent event) {
