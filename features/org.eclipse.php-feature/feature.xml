@@ -27,7 +27,6 @@
 
    <requires>
       <import feature="org.eclipse.dltk.core" version="3.0.0" match="compatible"/>
-      <import feature="org.eclipse.wst.xml_ui.feature" version="3.1.0" match="compatible"/>
       <import feature="org.eclipse.dltk.core.index" version="3.0.0" match="compatible"/>
    </requires>
 
