@@ -48,6 +48,7 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -183,10 +184,40 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								.resolveExpression(sourceModule, parsedUnit,
 										context, callExpression.getReceiver());
 						if (receiverType != null) {
-							IModelElement[] elements = PHPTypeInferenceUtils
-									.getModelElements(receiverType,
-											(ISourceModuleContext) context,
-											offset);
+							IModelElement[] elements = null;
+							if ((receiverType instanceof PHPClassType)
+									&& ((PHPClassType) receiverType).isGlobal()) {
+
+								IDLTKSearchScope scope = SearchEngine
+										.createSearchScope(sourceModule
+												.getScriptProject());
+								elements = PhpModelAccess.getDefault()
+										.findTypes(receiverType.getTypeName(),
+												MatchRule.EXACT, 0, 0, scope,
+												null);
+								LinkedList<IModelElement> result = new LinkedList<IModelElement>();
+								for (IModelElement element : elements) {
+									IModelElement parent = element.getParent();
+									while (parent.getParent() instanceof IType) {
+										parent = parent.getParent();
+									}
+									if ((parent instanceof IType)
+											&& PHPFlags
+													.isNamespace(((IType) parent)
+															.getFlags())) {
+										// Do nothing
+									} else {
+										result.add(element);
+									}
+								}
+								elements = result.toArray(new IType[result
+										.size()]);
+							} else {
+								elements = PHPTypeInferenceUtils
+										.getModelElements(receiverType,
+												(ISourceModuleContext) context,
+												offset);
+							}
 							List<IModelElement> methods = new LinkedList<IModelElement>();
 							if (elements != null) {
 								for (IModelElement element : elements) {
@@ -314,6 +345,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				else if (node instanceof TypeReference) {
 					IEvaluatedType evaluatedType = PHPTypeInferenceUtils
 							.resolveExpression(sourceModule, node);
+					if (evaluatedType == null) {
+						return new IType[0];
+					}
 					String name = evaluatedType.getTypeName();
 					IType[] types = PHPModelUtils.getTypes(name, sourceModule,
 							offset, null, null);

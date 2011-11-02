@@ -29,6 +29,7 @@ public class PHPClassType extends ClassType implements IClassType {
 
 	private String namespace;
 	private String typeName;
+	private boolean global = false;
 
 	/**
 	 * Constructs evaluated type for PHP class or interface. The type name can
@@ -47,12 +48,13 @@ public class PHPClassType extends ClassType implements IClassType {
 			this.typeName = typeName;
 		} else if (i == 0) {
 			this.typeName = typeName.substring(1, typeName.length());
+			global = true;
 		} else if (i > 0) {
 			// check is global namespace
 			if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 				// make the type name fully qualified:
-				typeName = new StringBuilder().append(
-						NamespaceReference.NAMESPACE_SEPARATOR)
+				typeName = new StringBuilder()
+						.append(NamespaceReference.NAMESPACE_SEPARATOR)
 						.append(typeName).toString();
 				i += 1;
 			}
@@ -77,9 +79,9 @@ public class PHPClassType extends ClassType implements IClassType {
 		}
 
 		this.namespace = namespace;
-		this.typeName = new StringBuilder(namespace).append(
-				NamespaceReference.NAMESPACE_SEPARATOR).append(typeName)
-				.toString();
+		this.typeName = new StringBuilder(namespace)
+				.append(NamespaceReference.NAMESPACE_SEPARATOR)
+				.append(typeName).toString();
 	}
 
 	/**
@@ -99,6 +101,10 @@ public class PHPClassType extends ClassType implements IClassType {
 	 */
 	public String getNamespace() {
 		return namespace;
+	}
+
+	public boolean isGlobal() {
+		return global;
 	}
 
 	public boolean subtypeOf(IEvaluatedType type) {
@@ -126,8 +132,8 @@ public class PHPClassType extends ClassType implements IClassType {
 		String namespace = PHPModelUtils.extractNamespaceName(typeName,
 				sourceModule, offset);
 		if (namespace != null) {
-			return new PHPClassType(namespace, PHPModelUtils
-					.extractElementName(typeName));
+			return new PHPClassType(namespace,
+					PHPModelUtils.extractElementName(typeName));
 		}
 		return new PHPClassType(typeName);
 	}
@@ -155,8 +161,7 @@ public class PHPClassType extends ClassType implements IClassType {
 	 */
 	public static IEvaluatedType fromSimpleReference(SimpleReference name) {
 		String typeName = name instanceof FullyQualifiedReference ? ((FullyQualifiedReference) name)
-				.getFullyQualifiedName()
-				: name.getName();
+				.getFullyQualifiedName() : name.getName();
 		IEvaluatedType simpleType = PHPSimpleTypes.fromString(typeName);
 		if (simpleType != null) {
 			return simpleType;
