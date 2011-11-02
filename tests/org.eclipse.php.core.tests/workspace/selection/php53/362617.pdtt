@@ -1,0 +1,33 @@
+--TEST--
+Test namespace element selection 
+--FILE--
+<?php
+namespace Alliance\Common;
+
+  abstract class DatabaseBackedObject {
+
+    public function __construct(iACMEDatabase &$aDB = NULL) {
+
+      if ($aDB) {
+        $this->DB = &$aDB;
+      }
+      else {
+        $this->DB = &\ACMEDatabase::getDatabase(static::$databaseName);
+      }
+    }
+
+  }
+  
+namespace Alliance\Publication;
+  use Alliance\Common;
+
+  class Customer extends Common\DatabaseBackedObject {
+
+    public function __construct(iACMEDatabase &$aDB = NULL) {
+      parent::|__construct|($aDB); //gives warning "Call to undefined method '__construct'" here
+      /* do some stuff */
+    }
+}
+?>
+--EXPECT--
+method(__construct)
