@@ -346,7 +346,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					IEvaluatedType evaluatedType = PHPTypeInferenceUtils
 							.resolveExpression(sourceModule, node);
 					if (evaluatedType == null) {
-						return new IType[0];
+						return EMPTY;
 					}
 					String name = evaluatedType.getTypeName();
 					IType[] types = PHPModelUtils.getTypes(name, sourceModule,
