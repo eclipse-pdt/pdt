@@ -56,12 +56,14 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 			Logger.logException("PHPLineTracker error getting message", e);
 			return;
 		}
-		HyperlinkEntry hyperLink = fPHPHyperLink.getHyperlinkEntry(message);
-		if (hyperLink != null) {
-			IHyperlink link = hyperLink.getLink();
-			if (link != null) {
-				fConsole.addLink(link, line.getOffset(), hyperLink
-						.getHyperLength());
+		if (fPHPHyperLink != null) {
+			HyperlinkEntry hyperLink = fPHPHyperLink.getHyperlinkEntry(message);
+			if (hyperLink != null) {
+				IHyperlink link = hyperLink.getLink();
+				if (link != null) {
+					fConsole.addLink(link, line.getOffset(),
+							hyperLink.getHyperLength());
+				}
 			}
 		}
 	}
