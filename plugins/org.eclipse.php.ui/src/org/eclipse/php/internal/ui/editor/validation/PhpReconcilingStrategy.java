@@ -108,6 +108,9 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		if (delta.length > 0) {
 			// get the file, model and document:
 			IFile file = getFile(delta[0]);
+			if (file == null) {
+				return null;
+			}
 			org.eclipse.ui.part.FileEditorInput fileEditorInput = new org.eclipse.ui.part.FileEditorInput(
 					file);
 			return fileEditorInput;
@@ -237,8 +240,12 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	 * @return the IFile
 	 */
 	public IFile getFile(String delta) {
-		IResource res = ResourcesPlugin.getWorkspace().getRoot().getFile(
-				new Path(delta));
+		IResource res = null;
+		try {
+			res = ResourcesPlugin.getWorkspace().getRoot()
+					.getFile(new Path(delta));
+		} catch (Exception e) {
+		}
 		return res instanceof IFile ? (IFile) res : null;
 	}
 
