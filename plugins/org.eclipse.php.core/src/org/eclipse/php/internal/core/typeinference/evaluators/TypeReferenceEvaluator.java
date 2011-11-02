@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.ASTNode;
@@ -25,6 +26,8 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
@@ -35,8 +38,10 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.context.INamespaceContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
@@ -66,6 +71,13 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			if (context instanceof MethodContext) {
 				final MethodContext methodContext = (MethodContext) context;
 				ModuleDeclaration rootNode = methodContext.getRootNode();
+				ISourceModule sourceModule = ((ISourceModuleContext) context)
+						.getSourceModule();
+				final IType currentNamespace = PHPModelUtils
+						.getCurrentNamespace(sourceModule,
+								rootNode.sourceStart());
+				final ModuleDeclaration moduleDeclaration = SourceParserUtil
+						.getModuleDeclaration(sourceModule);
 				final MethodDeclaration methodDecl = methodContext
 						.getMethodNode();
 
@@ -92,19 +104,100 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 									SimpleReference reference = null;
 									if (node instanceof SimpleReference) {
 										reference = (SimpleReference) node;
+										String typeName = reference.getName();
 										if (reference instanceof FullyQualifiedReference) {
 											FullyQualifiedReference ref = (FullyQualifiedReference) node;
 											namespace = ref.getNamespace();
 										}
+										if (namespace != null
+												&& !namespace.getName().equals(
+														"")) {
+											String nsName = namespace.getName();
+											if (nsName.equals("\\")) {
+												typeName = nsName + typeName;
+											} else {
+												if (nsName
+														.startsWith("namespace\\")) {
+													nsName = nsName.replace(
+															"namespace\\", "");
+												}
+												typeName = nsName
+														+ NamespaceReference.NAMESPACE_SEPARATOR
+														+ typeName;
+											}
+										}
+										if (typeName
+												.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+											// check if the first part
+											// is an
+											// alias,then get the full
+											// name
+											String prefix = typeName.substring(
+													0,
+													typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+											final Map<String, UsePart> result = PHPModelUtils
+													.getAliasToNSMap(
+															prefix,
+															moduleDeclaration,
+															reference
+																	.sourceStart(),
+															currentNamespace,
+															true);
+											if (result.containsKey(prefix)) {
+												String fullName = result
+														.get(prefix)
+														.getNamespace()
+														.getFullyQualifiedName();
+												typeName = typeName.replace(
+														prefix, fullName);
+											}
+										} else if (typeName
+												.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
+
+											String prefix = typeName;
+											final Map<String, UsePart> result = PHPModelUtils
+													.getAliasToNSMap(
+															prefix,
+															moduleDeclaration,
+															reference
+																	.sourceStart(),
+															currentNamespace,
+															true);
+											if (result.containsKey(prefix)) {
+												String fullName = result
+														.get(prefix)
+														.getNamespace()
+														.getFullyQualifiedName();
+												typeName = fullName;
+											}
+										}
+										IEvaluatedType type = PHPSimpleTypes
+												.fromString(typeName);
+										if (type == null) {
+											if (typeName
+													.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
+													|| currentNamespace == null) {
+												type = new PHPClassType(
+														typeName);
+											} else if (currentNamespace != null) {
+												type = new PHPClassType(
+														currentNamespace
+																.getElementName(),
+														typeName);
+											}
+										}
+
+										types.add(type);
 									}
-									if (namespace == null
-											|| namespace.getName().equals("")) {
-										types.add(new PHPClassType(reference
-												.getName()));
-									} else {
-										types.add(new PHPClassType(namespace
-												.getName(), reference.getName()));
-									}
+									// if (namespace == null
+									// || namespace.getName().equals("")) {
+									// types.add(new PHPClassType(reference
+									// .getName()));
+									// } else {
+									// types.add(new
+									// PHPClassType(namespace.getName(),
+									// reference.getName()));
+									// }
 
 								}
 								found = true;
