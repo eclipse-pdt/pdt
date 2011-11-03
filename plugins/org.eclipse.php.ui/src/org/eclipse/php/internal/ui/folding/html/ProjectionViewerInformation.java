@@ -12,15 +12,21 @@
 package org.eclipse.php.internal.ui.folding.html;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.wst.html.ui.internal.Logger;
+import org.eclipse.php.internal.core.Logger;
 
 /**
  * Contains information about a projection viewer and also manages updating the
@@ -79,8 +85,14 @@ class ProjectionViewerInformation {
 		}
 
 		public void perform(IDocument document, IDocumentListener owner) {
-			fInfo.applyAnnotationModelChanges();
-			fInfo.setIsDocumentChanging(false);
+			IJobManager jobManager = Job.getJobManager();
+			if (jobManager.find("Applying annotation model changes").length == 0) {
+				ApplyAnnotationModelChangesJob job = new ApplyAnnotationModelChangesJob(
+						"Applying annotation model changes", fInfo);
+				job.setPriority(Job.DECORATE);
+				job.setSystem(true);
+				job.schedule();
+			}
 		}
 	}
 
@@ -104,7 +116,7 @@ class ProjectionViewerInformation {
 	/**
 	 * List of projection annotation model changes that need to be applied
 	 */
-	private List fQueuedAnnotationChanges;
+	private List<ProjectionAnnotationModelChanges> fQueuedAnnotationChanges;
 
 	public ProjectionViewerInformation(ProjectionViewer viewer) {
 		fDocument = viewer.getDocument();
@@ -115,9 +127,10 @@ class ProjectionViewerInformation {
 		return fDocument;
 	}
 
-	private List getQueuedAnnotationChanges() {
+	private List<ProjectionAnnotationModelChanges> getQueuedAnnotationChanges() {
 		if (fQueuedAnnotationChanges == null) {
-			fQueuedAnnotationChanges = new ArrayList();
+			fQueuedAnnotationChanges = Collections
+					.synchronizedList(new ArrayList<ProjectionAnnotationModelChanges>());
 		}
 		return fQueuedAnnotationChanges;
 	}
@@ -135,20 +148,22 @@ class ProjectionViewerInformation {
 	 * annotation model.
 	 */
 	void applyAnnotationModelChanges() {
-		List queuedChanges = getQueuedAnnotationChanges();
+		List<ProjectionAnnotationModelChanges> queuedChanges = getQueuedAnnotationChanges();
 		// go through all the pending annotation changes and apply
 		// them to
 		// the projection annotation model
-		while (!queuedChanges.isEmpty()) {
-			ProjectionAnnotationModelChanges changes = (ProjectionAnnotationModelChanges) queuedChanges
-					.remove(0);
-			try {
-				fProjectionAnnotationModel.modifyAnnotations(changes
-						.getDeletions(), changes.getAdditions(), changes
-						.getModifications());
-			} catch (Exception e) {
-				// if anything goes wrong, log it and continue
-				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+		synchronized (queuedChanges) {
+			while (!queuedChanges.isEmpty()) {
+				ProjectionAnnotationModelChanges changes = queuedChanges
+						.remove(0);
+				try {
+					fProjectionAnnotationModel.modifyAnnotations(
+							changes.getDeletions(), changes.getAdditions(),
+							changes.getModifications());
+				} catch (Exception e) {
+					// if anything goes wrong, log it and continue
+					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				}
 			}
 		}
 	}
@@ -170,9 +185,13 @@ class ProjectionViewerInformation {
 			ProjectionAnnotationModelChanges newChange) {
 		/*
 		 * future_TODO: maybe improve by checking if annotation projection model
-		 * change already exists for node. if so, throw out old change.
+		 * change already exists for node. if so, throw out old change. (For
+		 * some reason after removing old changes for a node folding is broken.)
 		 */
-		getQueuedAnnotationChanges().add(newChange);
+		List<ProjectionAnnotationModelChanges> changes = getQueuedAnnotationChanges();
+		synchronized (changes) {
+			changes.add(newChange);
+		}
 
 		// if document isn't changing, go ahead and apply it
 		if (!isDocumentChanging()) {
@@ -199,6 +218,26 @@ class ProjectionViewerInformation {
 		if (fQueuedAnnotationChanges != null) {
 			fQueuedAnnotationChanges.clear();
 			fQueuedAnnotationChanges = null;
+		}
+	}
+
+	private class ApplyAnnotationModelChangesJob extends Job {
+		ProjectionViewerInformation fInfo;
+
+		public ApplyAnnotationModelChangesJob(String name,
+				ProjectionViewerInformation fInfo) {
+			super(name);
+			this.fInfo = fInfo;
+		}
+
+		public boolean belongsTo(Object family) {
+			return getName().equals(family);
+		}
+
+		public IStatus run(IProgressMonitor monitor) {
+			fInfo.applyAnnotationModelChanges();
+			fInfo.setIsDocumentChanging(false);
+			return Status.OK_STATUS;
 		}
 	}
 }
