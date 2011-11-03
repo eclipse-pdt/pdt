@@ -233,7 +233,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 											methods.addAll(Arrays
 													.asList(method));
 										} catch (CoreException e) {
-											PHPCorePlugin.log(e);
 										}
 									}
 								}
