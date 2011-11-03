@@ -44,6 +44,8 @@ import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.Declarati
 
 public class PHPModelUtils {
 
+	private static final IType[] EMPTY_TYPES = new IType[0];
+
 	/**
 	 * Extracts the element name from the given fully qualified name
 	 * 
@@ -1198,7 +1200,12 @@ public class PHPModelUtils {
 	public static IType[] getSuperClasses(IType type, ITypeHierarchy hierarchy)
 			throws ModelException {
 		if (hierarchy == null) {
-			hierarchy = type.newSupertypeHierarchy(null);
+			if (type.getScriptProject() == null
+					|| !type.getScriptProject().exists()) {
+				return EMPTY_TYPES;
+			} else {
+				hierarchy = type.newSupertypeHierarchy(null);
+			}
 		}
 		Collection<IType> filtered = filterElements(type.getSourceModule(),
 				Arrays.asList(hierarchy.getAllSuperclasses(type)), null, null);
