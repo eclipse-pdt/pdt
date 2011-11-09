@@ -345,6 +345,10 @@ public class PHPexes {
 		for (int i = 0; i < phpExecutablesLocations.length; i++) {
 			String iniLocation = NULL_PLACE_HOLDER.equals(phpIniLocations[i]) ? null
 					: phpIniLocations[i]; //$NON-NLS-1$
+			// 361399: PDT Project Properties Debug page cause hang
+			if ((names.length <= i) || (debuggers.length <= i)) {
+				break;
+			}
 			final PHPexeItem item = new PHPexeItem(names[i],
 					phpExecutablesLocations[i], iniLocation, debuggers[i]);
 			// the size of defaultItemForPHPVersions may be 0 when you use this
