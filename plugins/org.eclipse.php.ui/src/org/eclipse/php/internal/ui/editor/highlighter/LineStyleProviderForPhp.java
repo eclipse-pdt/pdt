@@ -368,12 +368,19 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	 */
 	protected void addTextAttribute(String colorKey) {
 		if (getColorPreferences() != null) {
-			String prefString = getColorPreferences().getString(colorKey);
-			String[] stylePrefs = ColorHelper
-					.unpackStylePreferences(prefString);
-			if (stylePrefs != null) {
-				getTextAttributes().put(colorKey,
-						createTextAttribute(stylePrefs));
+			String enableKey = PreferenceConstants
+					.getEnabledPreferenceKey(colorKey);
+			boolean enabled = getColorPreferences().getBoolean(enableKey);
+			if (enabled) {
+				String prefString = getColorPreferences().getString(colorKey);
+				String[] stylePrefs = ColorHelper
+						.unpackStylePreferences(prefString);
+				if (stylePrefs != null) {
+					getTextAttributes().put(colorKey,
+							createTextAttribute(stylePrefs));
+				}
+			} else {
+				addDefaultTextAttribute(colorKey);
 			}
 		}
 	}
@@ -381,7 +388,6 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 	protected void addDefaultTextAttribute(String colorKey) {
 		if (getColorPreferences() != null) {
 			String prefString = PreferenceConstants.EDITOR_NORMAL_DEFAULT_COLOR;
-			getColorPreferences().setValue(colorKey, prefString);
 			String[] stylePrefs = ColorHelper
 					.unpackStylePreferences(prefString);
 			if (stylePrefs != null) {
