@@ -28,7 +28,7 @@
 
 	<!-- Emma? Where are you? (Emma installation directory) -->
 	<available file="/shared/tools/php/emma-2.0.5312" property="emma.dir" value="/shared/tools/php/emma-2.0.5312" />
-	<property name='emma.dir' value='/var/www/3rd-party/emma-2.0.5312' />
+	<property name='emma.dir' value='/shared/tools/php/emma-2.0.5312' />
 
 	<!-- Where are the class files? -->
 	<!-- <property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar' />
