@@ -27,8 +27,10 @@
 
 
 	<!-- Emma? Where are you? (Emma installation directory) -->
+	<!--
 	<available file="/shared/tools/php/emma-2.0.5312" property="emma.dir" value="/shared/tools/php/emma-2.0.5312" />
 	<property name='emma.dir' value='/shared/tools/php/emma-2.0.5312' />
+	 -->
 
 	<!-- Where are the class files? -->
 	<!-- <property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar' />
@@ -36,10 +38,12 @@
 		<fileset dir='${eclipse-home}' includes='plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar' />
 	</path> -->
 	<!-- EMMA distribution directory: -->
+	<!--
 	<path id='emma.lib'>
 		<fileset dir='${emma.dir}' includes='lib/*.jar' />
 	</path>
 	<taskdef resource='emma_ant.properties' classpathref='emma.lib' />
+	 -->
 	<!-- This target holds all initialization code that needs to be done for -->
 	<!-- all tests that are to be run. Initialization for individual tests -->
 	<!-- should be done within the body of the suite target. -->
@@ -57,8 +61,9 @@
 	      <available file="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test" type="dir"/>
 	    </condition>
 		<antcall target="copyTestPlugin" />
+		
+		<!--
 		<emma>
-			<!-- instrumentation of jar -->
 			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
 		</emma>
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
@@ -68,13 +73,13 @@
 			<property name="extraVMargs" value="-Demma.coverage.out.file=${testresults-folder}/phpcore.emma -Dosgi.dev=${emma.dir}/lib/emma.jar" />
 		</ant>
 		<emma enabled="true" >
-			<!-- creating a report -->
 			<report sort="+name,+class,+method,+block">
 				<property name="report.out.encoding" value="UTF-8" />
 				<infileset dir="${testresults-folder}" includes="*.emma, *.ec" />
 				<html outfile="${testresults-folder}/phpcorecoverage.html" depth="method" columns="name,class,method,block,line" />
 			</report>
 		</emma>
+		 -->
 	</target>
 
 	<target name="copyTestPlugin" unless="isStudio">
