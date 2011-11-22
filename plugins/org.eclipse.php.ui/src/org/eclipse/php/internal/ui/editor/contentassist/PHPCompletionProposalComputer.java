@@ -29,6 +29,8 @@ public class PHPCompletionProposalComputer extends
 		ScriptCompletionProposalComputer {
 
 	private String fErrorMessage;
+	private PHPCompletionProposalCollector phpCompletionProposalCollector;
+	private PhpTemplateCompletionProcessor phpTemplateCompletionProcessor;
 
 	protected TemplateCompletionProcessor createTemplateProposalComputer(
 			ScriptContentAssistInvocationContext context) {
@@ -38,7 +40,9 @@ public class PHPCompletionProposalComputer extends
 					.isExplicit();
 		}
 
-		return new PhpTemplateCompletionProcessor(context, explicit);
+		phpTemplateCompletionProcessor = new PhpTemplateCompletionProcessor(
+				context, explicit);
+		return phpTemplateCompletionProcessor;
 	}
 
 	protected ScriptCompletionProposalCollector createCollector(
@@ -50,8 +54,9 @@ public class PHPCompletionProposalComputer extends
 					.isExplicit();
 		}
 
-		return new PHPCompletionProposalCollector(context.getDocument(),
-				context.getSourceModule(), explicit);
+		phpCompletionProposalCollector = new PHPCompletionProposalCollector(
+				context.getDocument(), context.getSourceModule(), explicit);
+		return phpCompletionProposalCollector;
 	}
 
 	protected int guessContextInformationPosition(
@@ -117,5 +122,8 @@ public class PHPCompletionProposalComputer extends
 	public void sessionEnded() {
 		super.sessionEnded();
 		fErrorMessage = null;
+		if (phpTemplateCompletionProcessor != null) {
+			phpTemplateCompletionProcessor.reset();
+		}
 	}
 }

@@ -16,6 +16,7 @@ import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.dltk.ui.templates.ScriptTemplateVariables;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Position;
 
 /**
  * Context Type id for PHP
@@ -28,6 +29,11 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 			int length, ISourceModule sourceModule) {
 		return new PhpTemplateContext(this, document, offset, length,
 				sourceModule);
+	}
+
+	public ScriptTemplateContext createContext(IDocument document,
+			Position position, ISourceModule sourceModule) {
+		return new PhpTemplateContext(this, document, position, sourceModule);
 	}
 
 	/*

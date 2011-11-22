@@ -11,12 +11,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.templates;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.templates.ScriptTemplateAccess;
 import org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor;
+import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -52,6 +54,9 @@ public class PhpTemplateCompletionProcessor extends
 	private static char[] IGNORE = new char[] { '.', ':', '@', '$' };
 	private IDocument document;
 	private boolean explicit;
+	private boolean isSelection;
+	/** Positions created on the key documents to remove in reset. */
+	private final Map<IDocument, Position> fPositions = new HashMap<IDocument, Position>();
 
 	public PhpTemplateCompletionProcessor(
 			ScriptContentAssistInvocationContext context, boolean explicit) {
@@ -80,17 +85,28 @@ public class PhpTemplateCompletionProcessor extends
 
 		ICompletionProposal[] selectionProposal = EMPTY;
 		if (selection.getLength() != 0) {
+			isSelection = true;
 			int tempOffset = offset;
 			// adjust offset to end of normalized selection
 			if (selection.getOffset() == tempOffset)
 				tempOffset = selection.getOffset() + selection.getLength();
 
 			String prefix = extractPrefix(viewer, tempOffset);
-			IRegion region = new Region(selection.getOffset(),
-					selection.getLength());
-			TemplateContext context = createContext(viewer, region);
+			IRegion region = new Region(selection.getOffset(), 0);
+			Position position = new Position(offset, selection.getLength());
+			TemplateContext context = createContext(viewer, region, position);//
 			if (context == null)
 				return new ICompletionProposal[0];
+
+			// if (selection.y != 0) {
+			try {
+				// selectedText= document.get(selection.getOffset(),
+				// selection.getLength());
+				document.addPosition(position);
+				fPositions.put(document, position);
+			} catch (BadLocationException e) {
+			}
+			// }
 
 			// name of the selection variables {line, word}_selection
 			context.setVariable("selection", selection.getText()); //$NON-NLS-1$
@@ -113,6 +129,8 @@ public class PhpTemplateCompletionProcessor extends
 			}
 			selectionProposal = matches.toArray(new ICompletionProposal[matches
 					.size()]);
+		} else {
+			isSelection = false;
 		}
 		ICompletionProposal[] completionProposals = super
 				.computeCompletionProposals(viewer, offset);
@@ -123,18 +141,49 @@ public class PhpTemplateCompletionProcessor extends
 				extractPrefix(viewer, offset));
 
 		List<ICompletionProposal> matches = new ArrayList<ICompletionProposal>();
-		for (int i = 0; i < completionProposals.length; i++) {
-			matches.add(completionProposals[i]);
-		}
 		for (int i = 0; i < selectionProposal.length; i++) {
 			matches.add(selectionProposal[i]);
+		}
+		for (int i = 0; i < completionProposals.length; i++) {
+			matches.add(completionProposals[i]);
 		}
 
 		return matches.toArray(new ICompletionProposal[matches.size()]);
 	}
 
+	/**
+	 * Empties the collector.
+	 */
+	public void reset() {
+		for (Iterator<Entry<IDocument, Position>> it = fPositions.entrySet()
+				.iterator(); it.hasNext();) {
+			Entry<IDocument, Position> entry = it.next();
+			IDocument doc = entry.getKey();
+			Position position = entry.getValue();
+			doc.removePosition(position);
+		}
+		fPositions.clear();
+	}
+
+	protected TemplateContext createContext(ITextViewer viewer, IRegion region,
+			Position position) {
+		TemplateContextType contextType = getContextType(viewer, region);
+		if (contextType instanceof ScriptTemplateContextType) {
+			IDocument document = viewer.getDocument();
+
+			ISourceModule sourceModule = getContext().getSourceModule();
+			if (sourceModule == null) {
+				return null;
+			}
+			return ((ScriptTemplateContextType) contextType).createContext(
+					document, position, sourceModule);
+		}
+		return null;
+	}
+
 	protected boolean isValidPrefix(String prefix) {
-		if (!explicit && (prefix == null || prefix.length() == 0)) {
+		if ((!explicit || isSelection)
+				&& (prefix == null || prefix.length() == 0)) {
 			return false;
 		}
 		return true;

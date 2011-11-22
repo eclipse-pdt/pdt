@@ -19,6 +19,7 @@ import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateBuffer;
 import org.eclipse.jface.text.templates.TemplateException;
@@ -41,6 +42,11 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 			IDocument document, int offset, int length,
 			ISourceModule sourceModule) {
 		super(phpTemplateContextType, document, offset, length, sourceModule);
+	}
+
+	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType,
+			IDocument document, Position position, ISourceModule sourceModule) {
+		super(phpTemplateContextType, document, position, sourceModule);
 	}
 
 	@Override
@@ -66,9 +72,9 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 			}
 			String newPattern = TextUtils.replace(template.getPattern(), TAB,
 					sb.toString());
-			template = new Template(template.getName(), template
-					.getDescription(), template.getContextTypeId(), newPattern,
-					template.isAutoInsertable());
+			template = new Template(template.getName(),
+					template.getDescription(), template.getContextTypeId(),
+					newPattern, template.isAutoInsertable());
 
 		}
 		TemplateBuffer result = super.evaluate(template);
@@ -110,8 +116,9 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 						defaultValue = DOLLAR_SIGN
 								+ templateVariable.getDefaultValue();
 					}
-					templateVariable = new TemplateVariable(templateVariable
-							.getVariableType(), name, defaultValue, offsets);
+					templateVariable = new TemplateVariable(
+							templateVariable.getVariableType(), name,
+							defaultValue, offsets);
 				}
 				templateVariables.add(templateVariable);
 			}
