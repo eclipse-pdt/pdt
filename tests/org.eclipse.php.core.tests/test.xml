@@ -61,7 +61,12 @@
 	      <available file="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test" type="dir"/>
 	    </condition>
 		<antcall target="copyTestPlugin" />
-		
+
+		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
+			<property name="data-dir" value="${pdt-folder}" />
+			<property name="plugin-name" value="${plugin-name}" />
+			<property name="classname" value="org.eclipse.php.core.tests.AllTests" />
+		</ant>
 		<!--
 		<emma>
 			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.0.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
@@ -108,6 +113,7 @@
 		</ant>
 
 	</target>
+	<!-- 
 	<target name="collect-results">
 		<dirname property="output-dir" file="${test-output}" />
 		<basename property="output-file-name" file="${test-output}" />
@@ -117,12 +123,10 @@
 			</fileset>
 		</junitreport>
 		<xslt style="${eclipse-home}/dropins/pdt/eclipse/plugins/org.eclipse.test/JUNIT.XSL" basedir="${junit-report-output}" includes="${classname}.result.xml" destdir="${junit-report-output}" />
-		<!--
-	save .log content and *.log content from configuration directory
-	-->
 		<concat destfile="${junit-report-output}/${classname}.log">
 			<fileset dir="${eclipse-home}" includes="${data-dir}/.metadata/*.log" />
 			<fileset dir="${eclipse-home}" includes="configuration/*.log" />
 		</concat>
 	</target>
+	 -->
 </project>
