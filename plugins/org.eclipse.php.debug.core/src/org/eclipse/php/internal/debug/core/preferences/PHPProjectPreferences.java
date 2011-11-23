@@ -79,7 +79,7 @@ public class PHPProjectPreferences {
 			basePath = projectScope.getNode(getPreferenceNodeQualifier()).get(
 					PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
 		}
-		if (basePath == null) {
+		if (project != null && basePath == null) {
 			return "/" + project.getName();
 		}
 		return basePath;
