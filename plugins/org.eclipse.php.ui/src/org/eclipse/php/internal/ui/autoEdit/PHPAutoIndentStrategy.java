@@ -45,7 +45,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		if (c.text != null
 				&& c.text.length() > 1
 				&& c.text.trim().length() > 1
-				&& !getPreferenceStore().getBoolean(
+				&& getPreferenceStore().getBoolean(
 						PreferenceConstants.EDITOR_SMART_PASTE)) {
 			smartPaste(d, c);
 		}

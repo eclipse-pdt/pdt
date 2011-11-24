@@ -133,6 +133,10 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 				OverlayPreferenceStore.STRING,
 				PreferenceConstants.EDITOR_ADD_PHP_FOR_PHPSTART_TAGS));
 
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+				OverlayPreferenceStore.STRING,
+				PreferenceConstants.EDITOR_SMART_PASTE));
+
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
 				.size()];
 		overlayKeys.toArray(keys);
@@ -154,6 +158,11 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 				PHPUIMessages.typingPage_autoClose_title);
 		addAutoclosingSection(autoCloseComposite);
 
+		Composite smartPasteSection;
+		smartPasteSection = createSubsection(control,
+				PHPUIMessages.typingPage_smartPaste_title);
+		addSmartPasteSection(smartPasteSection);
+
 		Composite smartTabSection;
 		smartTabSection = createSubsection(control,
 				PHPUIMessages.typingPage_smartTab_title);
@@ -163,6 +172,17 @@ public class TypingConfigurationBlock implements IPreferenceConfigurationBlock {
 		final Point size = control.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		scrolled.setMinSize(size.x, size.y);
 		return scrolled;
+
+	}
+
+	private void addSmartPasteSection(Composite smartPasteComposite) {
+		GridLayout layout = new GridLayout();
+		smartPasteComposite.setLayout(layout);
+
+		String label;
+		label = PHPUIMessages.PHPEditorPreferencePage_typing_smartPaste;
+		addCheckBox(smartPasteComposite, label,
+				PreferenceConstants.EDITOR_SMART_PASTE, 0);
 
 	}
 

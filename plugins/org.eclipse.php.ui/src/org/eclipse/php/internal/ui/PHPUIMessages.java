@@ -138,6 +138,7 @@ public final class PHPUIMessages extends NLS {
 	public static String ConvertToPDTProjectAction_convert_to_PDT_project_tooltip;
 	public static String CoreUtility_buildproject_taskname;
 	public static String PHPUIHelp_link_label;
+	public static String typingPage_smartPaste_title;
 	public static String typingPage_smartTab_title;
 	public static String PHPWorkingSetPage_workingSet_content;
 	public static String PHPExplorer_removeFilters;
@@ -223,6 +224,7 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPSearchResultPage_groupby_project;
 	public static String PHPProjectOutline_nodes_namespaces;
 	public static String IncludePathExplorerNode_label;
+	public static String PHPEditorPreferencePage_typing_smartPaste;
 	public static String PHPEditorPreferencePage_typing_smartTab;
 	public static String SearchParticipant_error_noClass;
 	public static String OpenTypeAction_errorTitle;
