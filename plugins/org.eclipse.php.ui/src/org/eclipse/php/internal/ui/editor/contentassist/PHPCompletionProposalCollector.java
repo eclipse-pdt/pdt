@@ -205,7 +205,7 @@ public class PHPCompletionProposalCollector extends
 				false, extraInfo);
 	}
 
-	private IScriptCompletionProposal createTypeProposal(
+	protected IScriptCompletionProposal createTypeProposal(
 			final CompletionProposal typeProposal) {
 
 		String completion = new String(typeProposal.getCompletion());
