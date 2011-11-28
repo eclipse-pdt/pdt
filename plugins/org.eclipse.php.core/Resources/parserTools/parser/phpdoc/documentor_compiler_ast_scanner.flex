@@ -13,12 +13,15 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 
 %%
 
