@@ -730,7 +730,7 @@ class Exception  {
 	 * @param message[optional]
 	 * @param code[optional]
 	 */
-	public function __construct ($message, $code) {}
+	public function __construct ($message = null, $code = null) {}
 
 	final public function getMessage () {}
 
@@ -763,7 +763,7 @@ class ErrorException extends Exception  {
 	 * @param filename[optional]
 	 * @param lineno[optional]
 	 */
-	public function __construct ($message, $code, $severity, $filename, $lineno) {}
+	public function __construct ($message = null, $code = null, $severity = null, $filename = null, $lineno = null) {}
 
 	final public function getSeverity () {}
 
