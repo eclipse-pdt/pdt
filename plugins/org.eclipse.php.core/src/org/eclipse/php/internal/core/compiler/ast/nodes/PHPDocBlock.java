@@ -21,13 +21,20 @@ public class PHPDocBlock extends Comment {
 	private String shortDescription;
 	private String longDescription;
 	private PHPDocTag[] tags;
+	private List<Scalar> texts;
 
 	public PHPDocBlock(int start, int end, String shortDescription,
 			String longDescription, PHPDocTag[] tags) {
+		this(start, end, shortDescription, longDescription, tags, null);
+	}
+
+	public PHPDocBlock(int start, int end, String shortDescription,
+			String longDescription, PHPDocTag[] tags, List<Scalar> texts) {
 		super(start, end, Comment.TYPE_PHPDOC);
 		this.shortDescription = shortDescription;
 		this.longDescription = longDescription;
 		this.tags = tags;
+		this.texts = texts;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -54,6 +61,10 @@ public class PHPDocBlock extends Comment {
 
 	public PHPDocTag[] getTags() {
 		return tags;
+	}
+
+	public List<Scalar> getTexts() {
+		return texts;
 	}
 
 	public PHPDocTag[] getTags(int kind) {

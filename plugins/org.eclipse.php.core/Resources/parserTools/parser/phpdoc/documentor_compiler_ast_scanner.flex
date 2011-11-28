@@ -49,76 +49,128 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
     private StringBuffer sBuffer = null;
     private int numOfLines = 0;
     private int startPos = 0;
+	private List<Scalar> textList;
 
-    public PHPDocBlock parse (){
-    	int start = zzStartRead - zzPushbackPos;
-        longDesc = "";
-        tagList = new ArrayList<PHPDocTag>();
-        sBuffer = new StringBuffer();
-        numOfLines = 1;
+	public PHPDocBlock parse() {
+		int start = zzStartRead - zzPushbackPos;
+		longDesc = "";
+		tagList = new ArrayList<PHPDocTag>();
+		textList = new ArrayList<Scalar>();
+		sBuffer = new StringBuffer();
+		numOfLines = 1;
 
-        //start parsing
-        try {
-            next_token();
-        } catch (IOException e) {
-            Logger.logException(e);
-        }
+		// start parsing
+		try {
+			next_token();
+		} catch (IOException e) {
+			Logger.logException(e);
+		}
+		if (!tagList.isEmpty() && !textList.isEmpty()) {
+			// lastText is empty if the last line only contains '*/' and white
+			// spaces
+			Scalar lastText = textList.get(textList.size() - 1);
+			PHPDocTag lastTag = tagList.get(tagList.size() - 1);
+			if (lastText.sourceEnd() >= lastTag.sourceEnd()) {
+				textList.remove(textList.size() - 1);
+				if (!isBlank(lastText.getValue())) {
+					lastTag.getTexts().add(lastText);
+				}
+			}
+		}
 
-        PHPDocTag[] tags = new PHPDocTag[tagList.size()];
-        tagList.toArray(tags);
+		PHPDocTag[] tags = new PHPDocTag[tagList.size()];
+		tagList.toArray(tags);
 
-        PHPDocBlock rv = new PHPDocBlock(start, zzMarkedPos - zzPushbackPos,
-				shortDesc, longDesc, tags);
+		PHPDocBlock rv = new PHPDocBlock(start, zzMarkedPos - zzPushbackPos,
+				shortDesc, longDesc, tags, textList);
 
-        return rv;
+		return rv;
 
-    }
+	}
 
-    private void startTagsState(int firstState){
-        updateStartPos();
-        hendleDesc();
-        currTagId = firstState;
-        tagPosition = findTagPosition();
-        sBuffer = new StringBuffer();
-        yybegin(ST_IN_TAGS);
-    }
+	private boolean isBlank(String value) {
+		char[] line = value.toCharArray();
+		for (int i = 0; i < line.length; i++) {
+			char c = line[i];
+			if (c != '\t' && c != ' ') {
+				return false;
+			}
+		}
+		return true;
+	}
 
-    private int findTagPosition(){
-    	for (int i = zzStartRead; i < zzMarkedPos; i++) {
-			if(zzBuffer[i]=='@'){
+	private void startTagsState(int firstState) {
+		updateStartPos();
+		hendleDesc();
+		currTagId = firstState;
+		tagPosition = findTagPosition();
+		sBuffer = new StringBuffer();
+		yybegin(ST_IN_TAGS);
+	}
+
+	private int findTagPosition() {
+		for (int i = zzStartRead; i < zzMarkedPos; i++) {
+			if (zzBuffer[i] == '@') {
 				return i - zzPushbackPos;
 			}
 		}
-    	return -1;
-    }
-    private void setNewTag(int newTag){
-       updateStartPos();
-       setTagValue();
+		return -1;
+	}
 
-       sBuffer = new StringBuffer();
-       currTagId = newTag;
-       tagPosition = findTagPosition();
-    }
+	private void setNewTag(int newTag) {
+		updateStartPos();
+		setTagValue();
 
-    private void setTagValue(){
-        String value = sBuffer.toString();
-        // special case for backward compatibility
-        if (currTagId == PHPDocTagKinds.DESC) {
-            shortDesc = shortDesc + value;
-            return;
-        }
+		sBuffer = new StringBuffer();
+		currTagId = newTag;
+		tagPosition = findTagPosition();
+	}
 
-        PHPDocTag basicPHPDocTag = new PHPDocTag(tagPosition, zzStartRead - zzPushbackPos, currTagId,value);
-        tagList.add(basicPHPDocTag);
-    }
+	private void setTagValue() {
+		String value = sBuffer.toString();
+		// special case for backward compatibility
+		if (currTagId == PHPDocTagKinds.DESC) {
+			shortDesc = shortDesc + value;
+			return;
+		}
 
-    private void appendText(){
-    	if(oldString != null){
-    		sBuffer.append(oldString);
-    	}
-       	sBuffer.append(zzBuffer, startPos, zzMarkedPos-startPos);
-       	updateStartPos();
-    }
+		PHPDocTag basicPHPDocTag = new PHPDocTag(tagPosition, zzStartRead
+				- zzPushbackPos, currTagId, value, getTexts(tagPosition,
+				zzStartRead, true));
+		tagList.add(basicPHPDocTag);
+	}
+
+	private List<Scalar> getTexts(int start, int end, boolean remove) {
+		List<Scalar> result = new ArrayList<Scalar>();
+		for (Iterator iterator = textList.iterator(); iterator.hasNext();) {
+			Scalar scalar = (Scalar) iterator.next();
+			if (scalar.sourceStart() >= start && scalar.sourceEnd() <= end) {
+				result.add(scalar);
+				if (remove) {
+					iterator.remove();
+				}
+			}
+		}
+		// Scalar[] texts = new Scalar[result.size()];
+		// result.toArray(texts);
+		return result;
+	}
+
+	private void appendText() {
+		if (oldString != null) {
+			sBuffer.append(oldString);
+		}
+		StringBuffer sb = new StringBuffer();
+		sb.append(zzBuffer, startPos, zzMarkedPos - startPos);
+		addText(sb.toString());
+		sBuffer.append(sb);
+		updateStartPos();
+	}
+
+	private void addText(String string) {
+		textList.add(new Scalar(startPos, startPos + string.length(), string,
+				Scalar.TYPE_STRING));
+	}
 
     private void hendleDesc() {
         if(zzLexicalState == ST_IN_SHORT_DESC){
@@ -131,30 +183,34 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
         sBuffer = new StringBuffer();
     }
 
-    private void startLongDescState() {
-        hendleDesc();
-        updateStartPos();
-        yybegin(ST_IN_LONG_DESC);
-    }
+	private void startLongDescState(boolean withNewLine) {
+		hendleDesc();
+		updateStartPos();
+		if (!withNewLine) {
+			addText("");
+		}
+		yybegin(ST_IN_LONG_DESC);
+	}
 
-    private void hendleNewLine() {
-        appendText();
-        if(numOfLines==4){
-            int firstLineEnd = sBuffer.indexOf("\n",1);
-            shortDesc = sBuffer.substring(0,firstLineEnd);
-            shortDesc = shortDesc.trim();
-            sBuffer.delete(0,firstLineEnd);
-            yybegin(ST_IN_LONG_DESC);
-        }
-        else{
-          numOfLines++;
-        }
-    }
-
-    private void appendLastText(){
-       sBuffer.append(zzBuffer, startPos, zzMarkedPos-startPos-2);
-       updateStartPos();
-    }
+	private void hendleNewLine() {
+		appendText();
+		if (numOfLines == 4) {
+			int firstLineEnd = sBuffer.indexOf("\n", 1);
+			shortDesc = sBuffer.substring(0, firstLineEnd);
+			shortDesc = shortDesc.trim();
+			sBuffer.delete(0, firstLineEnd);
+			yybegin(ST_IN_LONG_DESC);
+		} else {
+			numOfLines++;
+		}
+	}
+	private void appendLastText() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(zzBuffer, startPos, zzMarkedPos - startPos - 2);
+		addText(sb.toString());
+		sBuffer.append(sb);
+		updateStartPos();
+	}
 
     int maxNumberofLines = 4;
 
@@ -242,11 +298,11 @@ EMPTYLINE=({LINESTART}{TABS_AND_SPACES}{NEWLINE})
     return -1;
 }
 
-<ST_IN_SHORT_DESC>^{EMPTYLINE}  {startLongDescState();}
+<ST_IN_SHORT_DESC>^{EMPTYLINE}  {startLongDescState(false);}
 
 <ST_IN_SHORT_DESC>(([ \t]+)"."|"."([ \t]+)|"."{NEWLINE}) {
     appendText();
-    startLongDescState();
+    startLongDescState(true);
 }
 
 <ST_IN_SHORT_DESC>{NEWLINE}     {hendleNewLine();}

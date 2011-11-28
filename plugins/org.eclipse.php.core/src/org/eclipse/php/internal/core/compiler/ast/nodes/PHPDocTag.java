@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,17 +59,74 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	public static final String PROPERTY_READ_NAME = "property-read"; //$NON-NLS-1$
 	public static final String PROPERTY_WRITE_NAME = "property-write"; //$NON-NLS-1$
 	public static final String METHOD_NAME = "method"; //$NON-NLS-1$
-	
+
 	private static final SimpleReference[] EMPTY = {};
 	private final int tagKind;
 	private String value;
 	private SimpleReference[] references;
+	private List<Scalar> texts;
 
-	public PHPDocTag(int start, int end, int tagKind, String value) {
+	public PHPDocTag(int start, int end, int tagKind, String value,
+			List<Scalar> texts) {
 		super(start, end);
 		this.tagKind = tagKind;
 		this.value = value;
 		updateReferences(start, end);
+		this.texts = texts;
+	}
+
+	public List<Scalar> getTexts() {
+		return texts;
+	}
+
+	public String[] getDescTexts() {
+		int wordSize = references.length;
+		List<String> result = new ArrayList<String>();
+		for (int i = 0; i < texts.size(); i++) {
+			String text = texts.get(i).getValue();
+			if (wordSize <= 0) {
+				result.add(text);
+			} else {
+				if (text.trim().length() == 0) {
+					continue;
+				}
+				List<String> commentWords = Arrays.asList(text.trim().split(
+						"[ \r\n]"));
+				commentWords = removeEmptyString(commentWords);
+				if (commentWords.size() <= wordSize) {
+					wordSize = wordSize - commentWords.size();
+				} else {
+					text = removeFirstWords(text, commentWords, wordSize);
+					result.add(text);
+					wordSize = 0;
+				}
+			}
+
+		}
+		String[] texts = new String[result.size()];
+		result.toArray(texts);
+		return texts;
+	}
+
+	public static List<String> removeEmptyString(List<String> commentWords) {
+		List<String> result = new ArrayList<String>();
+		for (int i = 0; i < commentWords.size(); i++) {
+			String word = commentWords.get(i);
+			if (word.trim().length() != 0) {
+				result.add(word);
+			}
+
+		}
+		return result;
+	}
+
+	private String removeFirstWords(String text, List<String> commentWords,
+			int wordSize) {
+		for (int i = 0; i < wordSize; i++) {
+			int index = text.indexOf(commentWords.get(i));
+			text = text.substring(commentWords.get(i).length() + index);
+		}
+		return text.trim();
 	}
 
 	private static int getNonWhitespaceIndex(String line, int startIndex) {
@@ -89,7 +148,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		}
 		return i;
 	}
-	
+
 	private static int getClassStartIndex(String line, int startIndex) {
 		int i = startIndex;
 		for (; i < line.length(); ++i) {
@@ -99,7 +158,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		}
 		return i;
 	}
-	
+
 	private static int getClassEndIndex(String line, int startIndex) {
 		int i = startIndex;
 		for (; i < line.length(); ++i) {
@@ -111,25 +170,28 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	}
 
 	private void updateReferences(int start, int end) {
-		
+
 		int valueStart = start + getTagKind(tagKind).length() + 1;
-		
-		if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS || tagKind == SEE) {
-			
+
+		if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS
+				|| tagKind == SEE) {
+
 			int wordStart = getNonWhitespaceIndex(value, 0);
 			int wordEnd = getWhitespaceIndex(value, wordStart);
 			if (wordStart < wordEnd) {
-				
+
 				String word = value.substring(wordStart, wordEnd);
 
 				int classStart = getClassStartIndex(word, 0);
 				int classEnd = getClassEndIndex(word, classStart);
 				List<TypeReference> types = new LinkedList<TypeReference>();
-				
+
 				while (classStart < classEnd) {
 					String className = word.substring(classStart, classEnd);
-					types.add(new TypeReference(valueStart + wordStart + classStart, valueStart + wordStart + classEnd, className));
-					
+					types.add(new TypeReference(valueStart + wordStart
+							+ classStart, valueStart + wordStart + classEnd,
+							className));
+
 					classStart = getClassStartIndex(word, classEnd);
 					classEnd = getClassEndIndex(word, classStart);
 				}
@@ -138,25 +200,35 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 				}
 			}
 		} else if (tagKind == PARAM) {
-			
+
 			int firstWordStart = getNonWhitespaceIndex(value, 0);
 			int firstWordEnd = getWhitespaceIndex(value, firstWordStart);
 			if (firstWordStart < firstWordEnd) {
-				
+
 				int secondWordStart = getNonWhitespaceIndex(value, firstWordEnd);
 				int secondWordEnd = getWhitespaceIndex(value, secondWordStart);
 				if (secondWordStart < secondWordEnd) {
 
-					String firstWord = value.substring(firstWordStart, firstWordEnd);
-					String secondWord = value.substring(secondWordStart, secondWordEnd);
+					String firstWord = value.substring(firstWordStart,
+							firstWordEnd);
+					String secondWord = value.substring(secondWordStart,
+							secondWordEnd);
 					if (firstWord.charAt(0) == '$') {
 						references = new SimpleReference[2];
-						references[0] = new VariableReference(valueStart + firstWordStart, valueStart + firstWordEnd, firstWord);
-						references[1] = new TypeReference(valueStart + secondWordStart, valueStart + secondWordEnd, secondWord);
+						references[0] = new VariableReference(valueStart
+								+ firstWordStart, valueStart + firstWordEnd,
+								firstWord);
+						references[1] = new TypeReference(valueStart
+								+ secondWordStart, valueStart + secondWordEnd,
+								secondWord);
 					} else if (secondWord.charAt(0) == '$') {
 						references = new SimpleReference[2];
-						references[0] = new VariableReference(valueStart + secondWordStart, valueStart + secondWordEnd, secondWord);
-						references[1] = new TypeReference(valueStart + firstWordStart, valueStart + firstWordEnd, firstWord);
+						references[0] = new VariableReference(valueStart
+								+ secondWordStart, valueStart + secondWordEnd,
+								secondWord);
+						references[1] = new TypeReference(valueStart
+								+ firstWordStart, valueStart + firstWordEnd,
+								firstWord);
 					}
 				}
 			}
@@ -199,75 +271,76 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
 	public static String getTagKind(int kind) {
 		switch (kind) {
-			case ABSTRACT:
-				return ABSTRACT_NAME;
-			case AUTHOR:
-				return AUTHOR_NAME;
-			case DEPRECATED:
-				return DEPRECATED_NAME;
-			case FINAL:
-				return FINAL_NAME;
-			case GLOBAL:
-				return GLOBAL_NAME;
-			case NAME:
-				return NAME_NAME;
-			case RETURN:
-				return RETURN_NAME;
-			case PARAM:
-				return PARAM_NAME;
-			case SEE:
-				return SEE_NAME;
-			case STATIC:
-				return STATIC_NAME;
-			case STATICVAR:
-				return STATICVAR_NAME;
-			case TODO:
-				return TODO_NAME;
-			case VAR:
-				return VAR_NAME;
-			case PACKAGE:
-				return PACKAGE_NAME;
-			case ACCESS:
-				return ACCESS_NAME;
-			case CATEGORY:
-				return CATEGORY_NAME;
-			case COPYRIGHT:
-				return COPYRIGHT_NAME;
-			case DESC:
-				return DESC_NAME;
-			case EXAMPLE:
-				return EXAMPLE_NAME;
-			case FILESOURCE:
-				return FILESOURCE_NAME;
-			case IGNORE:
-				return IGNORE_NAME;
-			case INTERNAL:
-				return INTERNAL_NAME;
-			case LICENSE:
-				return LICENSE_NAME;
-			case LINK:
-				return LINK_NAME;
-			case SINCE:
-				return SINCE_NAME;
-			case SUBPACKAGE:
-				return SUBPACKAGE_NAME;
-			case TUTORIAL:
-				return TUTORIAL_NAME;
-			case USES:
-				return USES_NAME;
-			case VERSION:
-				return VERSION_NAME;
-			case THROWS:
-				return THROWS_NAME;
-			case PROPERTY:
-				return PROPERTY_NAME;
-			case PROPERTY_READ:
-				return PROPERTY_READ_NAME;
-			case PROPERTY_WRITE:
-				return PROPERTY_WRITE_NAME;
-			case METHOD:
-				return METHOD_NAME;
+		case ABSTRACT:
+			return ABSTRACT_NAME;
+		case AUTHOR:
+			return AUTHOR_NAME;
+		case DEPRECATED:
+			return DEPRECATED_NAME;
+		case FINAL:
+			return FINAL_NAME;
+		case GLOBAL:
+			return GLOBAL_NAME;
+		case NAME:
+			return NAME_NAME;
+		case RETURN:
+			return RETURN_NAME;
+		case PARAM:
+			return PARAM_NAME;
+		case SEE:
+			return SEE_NAME;
+		case STATIC:
+			return STATIC_NAME;
+		case STATICVAR:
+			return STATICVAR_NAME;
+		case TODO:
+			return TODO_NAME;
+		case VAR:
+			return VAR_NAME;
+		case PACKAGE:
+			return PACKAGE_NAME;
+		case ACCESS:
+			return ACCESS_NAME;
+		case CATEGORY:
+			return CATEGORY_NAME;
+		case COPYRIGHT:
+			return COPYRIGHT_NAME;
+		case DESC:
+			return DESC_NAME;
+		case EXAMPLE:
+			return EXAMPLE_NAME;
+		case FILESOURCE:
+			return FILESOURCE_NAME;
+		case IGNORE:
+			return IGNORE_NAME;
+		case INTERNAL:
+			return INTERNAL_NAME;
+		case LICENSE:
+			return LICENSE_NAME;
+		case LINK:
+			return LINK_NAME;
+		case SINCE:
+			return SINCE_NAME;
+		case SUBPACKAGE:
+			return SUBPACKAGE_NAME;
+		case TUTORIAL:
+			return TUTORIAL_NAME;
+		case USES:
+			return USES_NAME;
+		case VERSION:
+			return VERSION_NAME;
+		case THROWS:
+			return THROWS_NAME;
+		case PROPERTY:
+			return PROPERTY_NAME;
+		case PROPERTY_READ:
+			return PROPERTY_READ_NAME;
+		case PROPERTY_WRITE:
+			return PROPERTY_WRITE_NAME;
+		case METHOD:
+			return METHOD_NAME;
 		}
 		return ERROR;
 	}
+
 }
