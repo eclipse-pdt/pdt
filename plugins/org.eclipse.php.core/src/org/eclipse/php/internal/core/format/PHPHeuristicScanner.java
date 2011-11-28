@@ -995,24 +995,31 @@ public final class PHPHeuristicScanner implements Symbols {
 				if (textRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 					textRegion = phpScriptRegion.getPhpToken(position
-							- sdRegion.getStartOffset()
-							- phpScriptRegion.getStart());
+							- phpScriptRegion.getStart()
+							- sdRegion.getStartOffset());
+
+					int regionStart = textRegion.getStart()
+							+ phpScriptRegion.getStart()
+							+ sdRegion.getStartOffset();
 					// handle comments
 					if (PHPPartitionTypes.isPHPCommentState(textRegion
 							.getType())) {
-						return new TypedRegion(position, 0,
+						return new TypedRegion(regionStart,
+								textRegion.getLength(),
 								PHPPartitionTypes.PHP_COMMENT);
 					}
 					// handle strings
 					else if (PHPPartitionTypes.isPHPQuotesState(textRegion
 							.getType())) {
-						return new TypedRegion(position, 0,
+						return new TypedRegion(regionStart,
+								textRegion.getLength(),
 								PHPPartitionTypes.PHP_QUOTED_STRING);
 					}
 					// handle the rest
 					else if (PHPPartitionTypes.isPHPRegularState(textRegion
 							.getType())) {
-						return new TypedRegion(position, 0,
+						return new TypedRegion(regionStart,
+								textRegion.getLength(),
 								PHPPartitionTypes.PHP_DEFAULT);
 					}
 				}
