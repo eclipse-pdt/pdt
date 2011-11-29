@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.format;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -25,7 +28,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class FormatterUtils {
+	private static final String FORMATTER_COMMON_PREFERENCE_EXT = "org.eclipse.php.core.phpFormatterCommonPreferences";
 	private static PHPStructuredTextPartitioner partitioner = new PHPStructuredTextPartitioner();
+	private static IFormatterCommonPrferences usedFormatter;
 
 	public static String getRegionType(IStructuredDocument document, int offset) {
 		try {
@@ -181,5 +186,32 @@ public class FormatterUtils {
 		}
 
 		return currentStructuredDocumentRegion;
+	}
+
+	public static IFormatterCommonPrferences getFormatterCommonPrferences() {
+
+		if (usedFormatter == null) {
+			IConfigurationElement[] elements = Platform.getExtensionRegistry()
+					.getConfigurationElementsFor(
+							FORMATTER_COMMON_PREFERENCE_EXT);
+			for (int i = 0; i < elements.length; i++) {
+				IConfigurationElement element = elements[i];
+				if (element.getName().equals("processor")) { //$NON-NLS-1$
+					try {
+						usedFormatter = (IFormatterCommonPrferences) element
+								.createExecutableExtension("class");
+					} catch (CoreException e) {
+					}
+					;
+				}
+			}
+
+			if (usedFormatter == null) {
+				usedFormatter = FormatPreferencesSupport.getInstance();
+			}
+		}
+
+		return usedFormatter;
+
 	}
 }

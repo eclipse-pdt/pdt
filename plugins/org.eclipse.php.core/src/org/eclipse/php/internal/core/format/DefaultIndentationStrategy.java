@@ -345,6 +345,13 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			final IStructuredDocument document, final StringBuffer result,
 			final int lineNumber, final int forOffset, String commandText)
 			throws BadLocationException {
+		int indentationWrappedLineSize = FormatterUtils
+				.getFormatterCommonPrferences().getIndentationWrappedLineSize(
+						document);
+		int indentationSize = FormatterUtils.getFormatterCommonPrferences()
+				.getIndentationSize(document);
+		char indentationChar = FormatterUtils.getFormatterCommonPrferences()
+				.getIndentationChar(document);
 		boolean enterKeyPressed = document.getLineDelimiter().equals(
 				result.toString());
 		int lastNonEmptyLineIndex = getIndentationBaseLine(document,
@@ -370,10 +377,12 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			line = lastNonEmptyLineIndex;
 		}
 		if (shouldIndent(document, offset, line)) {
-			indent(document, result);
+			indent(document, result, indentationChar, indentationSize);
 		} else {
 			boolean intended = indentMultiLineCase(document, lineNumber,
-					forOffset, enterKeyPressed, result, blanks, commandText);
+					forOffset, enterKeyPressed, result, blanks, commandText,
+					indentationWrappedLineSize, indentationChar,
+					indentationSize);
 			if (!intended) {
 				lastNonEmptyLineIndex = lineNumber;
 				if (!enterKeyPressed && lastNonEmptyLineIndex > 0) {
@@ -395,7 +404,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						// cursor
 						// position when we press enter key
 						placeStringIndentation(document, lastNonEmptyLineIndex,
-								result);
+								result, indentationWrappedLineSize,
+								indentationChar, indentationSize);
 					}
 					// if (enterKeyPressed) {
 					// this line is one of multi line statement
@@ -416,18 +426,20 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	}
 
 	private static void indent(final IStructuredDocument document,
-			final StringBuffer result) {
-		final int indentationSize = FormatPreferencesSupport.getInstance()
-				.getIndentationSize(document);
-		final char indentationChar = FormatPreferencesSupport.getInstance()
-				.getIndentationChar(document);
+			final StringBuffer result, int indentationChar, int indentationSize) {
+		// final int indentationSize = FormatPreferencesSupport.getInstance()
+		// .getIndentationSize(document);
+		// final char indentationChar = FormatPreferencesSupport.getInstance()
+		// .getIndentationChar(document);
 		for (int i = 0; i < indentationSize; i++)
-			result.append(indentationChar);
+			result.append((char) indentationChar);
 	}
 
 	private static boolean indentMultiLineCase(IStructuredDocument document,
 			int lineNumber, int offset, boolean enterKeyPressed,
-			StringBuffer result, String blanks, String commandText) {
+			StringBuffer result, String blanks, String commandText,
+			int indentationWrappedLineSize, int indentationChar,
+			int indentationSize) {
 		// LineState lineState = new LineState();
 		// StringBuffer sb = new StringBuffer();
 		try {
@@ -439,7 +451,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			if (inBracelessBlock(scanner, document, offset)) {
 				// lineState.inBracelessBlock = true;
 				if (!"{".equals(commandText)) {
-					indent(document, result);
+					indent(document, result, indentationChar, indentationSize);
 				}
 				return true;
 			} else if (content.trim().startsWith(
@@ -488,7 +500,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 									.trim()
 									.startsWith(
 											BLANK + PHPHeuristicScanner.RPAREN)) {
-						indent(document, newBuffer, 2);
+						indent(document, newBuffer, indentationWrappedLineSize,
+								indentationChar, indentationSize);
 					}
 					// if (newBuffer.length() > blanks.length()) {
 
@@ -513,7 +526,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					String newblanks = FormatterUtils.getLineBlanks(document,
 							document.getLineInformationOfOffset(startOffset));
 					result.append(newblanks);
-					indent(document, result, 2);
+					indent(document, result, indentationWrappedLineSize,
+							indentationChar, indentationSize);
 				}
 				return true;
 
@@ -543,9 +557,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	}
 
 	private static void indent(IStructuredDocument document,
-			StringBuffer indent, int times) {
+			StringBuffer indent, int times, int indentationChar,
+			int indentationSize) {
 		for (int i = 0; i < times; i++) {
-			indent(document, indent);
+			indent(document, indent, indentationChar, indentationSize);
 		}
 	}
 
@@ -634,7 +649,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 	private static void placeStringIndentation(
 			final IStructuredDocument document, int lineNumber,
-			StringBuffer result) {
+			StringBuffer result, int indentationWrappedLineSize,
+			int indentationChar, int indentationSize) {
 		try {
 
 			IRegion lineInfo = document.getLineInformation(lineNumber);
@@ -687,7 +703,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 								break;
 							}
 						}
-						indent(document, result, 2);
+						indent(document, result, indentationWrappedLineSize,
+								indentationChar, indentationSize);
 						// for (int i = 0; i < regionStart + token.getEnd()
 						// - lineInfo.getOffset(); i++){
 						// result.append(' ');

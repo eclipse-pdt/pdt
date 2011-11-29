@@ -29,13 +29,15 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
  * @author guy.g
  * 
  */
-public class FormatPreferencesSupport {
+public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	private IDocument fLastDocument = null;
 	private IProject fLastProject = null;
 
 	private char indentationChar;
 	private int indentationSize;
+	private int fIndentationWrappedLineSize;
+	private int fIndentationArrayInitSize;
 
 	private PreferencesSupport preferencesSupport = null;
 	private PreferencesPropagatorListener listener = null;
@@ -62,6 +64,30 @@ public class FormatPreferencesSupport {
 			instance = new FormatPreferencesSupport();
 		}
 		return instance;
+	}
+
+	public int getIndentationWrappedLineSize(IDocument document) {
+		if (!verifyValidity(document)) {
+			String indentSize = preferencesSupport
+					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
+			if (indentSize == null) {
+				return 1;
+			}
+			return Integer.valueOf(indentSize).intValue();
+		}
+		return fIndentationWrappedLineSize;
+	}
+
+	public int getIndentationArrayInitSize(IDocument document) {
+		if (!verifyValidity(document)) {
+			String indentSize = preferencesSupport
+					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
+			if (indentSize == null) {
+				return 1;
+			}
+			return Integer.valueOf(indentSize).intValue();
+		}
+		return fIndentationArrayInitSize;
 	}
 
 	public int getIndentationSize(IDocument document) {
@@ -110,8 +136,8 @@ public class FormatPreferencesSupport {
 				IPath basePath = new Path(baseLocation);
 				IFile file = null;
 				if (basePath.segmentCount() > 1) {
-					file = ResourcesPlugin.getWorkspace().getRoot().getFile(
-							basePath);
+					file = ResourcesPlugin.getWorkspace().getRoot()
+							.getFile(basePath);
 					if (!file.exists()) {
 						file = null;
 					}
@@ -137,10 +163,22 @@ public class FormatPreferencesSupport {
 			String indentSize = preferencesSupport.getPreferencesValue(
 					PHPCoreConstants.FORMATTER_INDENTATION_SIZE, null,
 					fLastProject);
+			String indentationWrappedLineSize = preferencesSupport
+					.getPreferencesValue(
+							PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
+							null, fLastProject);
+			String indentationArrayInitSize = preferencesSupport
+					.getPreferencesValue(
+							PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
+							null, fLastProject);
 
 			indentationChar = (Boolean.valueOf(useTab).booleanValue()) ? '\t'
 					: ' ';
 			indentationSize = Integer.valueOf(indentSize).intValue();
+			fIndentationWrappedLineSize = Integer.valueOf(
+					indentationWrappedLineSize).intValue();
+			fIndentationArrayInitSize = Integer.valueOf(
+					indentationArrayInitSize).intValue();
 
 			preferencesChanged = false;
 			fLastDocument = document;
@@ -151,12 +189,20 @@ public class FormatPreferencesSupport {
 	private void verifyListening() {
 		if (listener != null) {
 			preferencesPropagator.removePropagatorListener(listener,
+					PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
+			preferencesPropagator.removePropagatorListener(listener,
+					PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
+			preferencesPropagator.removePropagatorListener(listener,
 					PHPCoreConstants.FORMATTER_USE_TABS);
 			preferencesPropagator.removePropagatorListener(listener,
 					PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 		}
 
 		listener = new PreferencesPropagatorListener(fLastProject);
+		preferencesPropagator.addPropagatorListener(listener,
+				PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
+		preferencesPropagator.addPropagatorListener(listener,
+				PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
 		preferencesPropagator.addPropagatorListener(listener,
 				PHPCoreConstants.FORMATTER_USE_TABS);
 		preferencesPropagator.addPropagatorListener(listener,

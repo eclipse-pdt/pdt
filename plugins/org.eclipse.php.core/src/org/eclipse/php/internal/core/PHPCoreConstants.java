@@ -45,6 +45,8 @@ public interface PHPCoreConstants {
 	public static final String ENABLED = "enabled"; //$NON-NLS-1$
 	public static final String DISABLED = "disabled"; //$NON-NLS-1$
 	public static final String DEFAULT_INDENTATION_SIZE = "1"; //$NON-NLS-1$
+	public static final String DEFAULT_INDENTATION_WRAPPED_LINE_SIZE = "2"; //$NON-NLS-1$
+	public static final String DEFAULT_INDENTATION_ARRAY_INIT_SIZE = "2"; //$NON-NLS-1$
 
 	public static final String INCLUDE_PATH_VARIABLE_NAMES = PLUGIN_ID
 			+ ".includePathVariableNames"; //$NON-NLS-1$
@@ -63,6 +65,10 @@ public interface PHPCoreConstants {
 			+ ".phpForamtterUseTabs"; //$NON-NLS-1$
 	public static final String FORMATTER_INDENTATION_SIZE = PLUGIN_ID
 			+ ".phpForamtterIndentationSize"; //$NON-NLS-1$
+	public static final String FORMATTER_INDENTATION_WRAPPED_LINE_SIZE = PLUGIN_ID
+			+ ".phpForamtterIndentationWrappedLineSize"; //$NON-NLS-1$
+	public static final String FORMATTER_INDENTATION_ARRAY_INIT_SIZE = PLUGIN_ID
+			+ ".phpForamtterArrayInitSize"; //$NON-NLS-1$
 
 	public static final String CODEGEN_ADD_COMMENTS = PLUGIN_ID + ".phpDoc"; //$NON-NLS-1$
 
