@@ -37,6 +37,8 @@ public class PHPFormatterConfigurationBlock extends
 
 	public static final Key PREF_FORMATTER_USE_TABS = getPHPCoreKey(PHPCoreConstants.FORMATTER_USE_TABS);
 	public static final Key PREF_FORMATTER_INDENTATION_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+	public static final Key PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
+	public static final Key PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
 
 	private static final int MIN_INDENT_SIZE = 0;
 	private static final int MAX_INDENT_SIZE = 32;
@@ -45,6 +47,8 @@ public class PHPFormatterConfigurationBlock extends
 
 	private Combo tabPolicyCombo;
 	private Text indentSizeTxt;
+	private Text fDefaultIndentWrapLineSizeTxt;
+	private Text fDefaultIndentArrayInitSizeTxt;
 
 	public PHPFormatterConfigurationBlock(IStatusChangeListener context,
 			IProject project, IWorkbenchPreferenceContainer container) {
@@ -86,6 +90,17 @@ public class PHPFormatterConfigurationBlock extends
 		indentSizeTxt.setTextLimit(2);
 		indentSizeTxt.setLayoutData(gd);
 
+		gd = new GridData();
+		gd.widthHint = 20;
+
+		Label indentWrapLineSize = new Label(formattingComposite, SWT.NULL);
+		indentWrapLineSize
+				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentWrapLineSizeLabel); //$NON-NLS-1$
+		fDefaultIndentWrapLineSizeTxt = new Text(formattingComposite,
+				SWT.BORDER);
+		fDefaultIndentWrapLineSizeTxt.setTextLimit(2);
+		fDefaultIndentWrapLineSizeTxt.setLayoutData(gd);
+
 		tabPolicyCombo.addSelectionListener(new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -106,6 +121,7 @@ public class PHPFormatterConfigurationBlock extends
 		});
 
 		indentSizeTxt.addModifyListener(this);
+		fDefaultIndentWrapLineSizeTxt.addModifyListener(this);
 		tabPolicyCombo.addSelectionListener(this);
 
 		initValues();
@@ -126,8 +142,8 @@ public class PHPFormatterConfigurationBlock extends
 								IStatus.ERROR,
 								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
 					} else {
-						setValue(PREF_FORMATTER_INDENTATION_SIZE, String
-								.valueOf(fIndentationSize));
+						setValue(PREF_FORMATTER_INDENTATION_SIZE,
+								String.valueOf(fIndentationSize));
 						fFormatterStatus = new StatusInfo();
 					}
 				} catch (NumberFormatException nfe) {
@@ -135,6 +151,44 @@ public class PHPFormatterConfigurationBlock extends
 							IStatus.ERROR,
 							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
 				}
+			}
+			if (PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE.equals(changedKey)) {
+				try {
+					fIndentationWrappedLineSize = Integer.valueOf(newValue);
+					if (fIndentationWrappedLineSize < MIN_INDENT_SIZE
+							|| fIndentationWrappedLineSize > MAX_INDENT_SIZE) {
+						fFormatterStatus = new StatusInfo(
+								IStatus.ERROR,
+								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
+					} else {
+						setValue(PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
+								String.valueOf(fIndentationWrappedLineSize));
+						fFormatterStatus = new StatusInfo();
+					}
+				} catch (NumberFormatException nfe) {
+					fFormatterStatus = new StatusInfo(
+							IStatus.ERROR,
+							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
+				}
+			}
+			if (PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE.equals(changedKey)) {
+				// try {
+				// fIndentationArrayInitSize = Integer.valueOf(newValue);
+				// if (fIndentationArrayInitSize < MIN_INDENT_SIZE
+				// || fIndentationArrayInitSize > MAX_INDENT_SIZE) {
+				// fFormatterStatus = new StatusInfo(
+				// IStatus.ERROR,
+				//								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
+				// } else {
+				// setValue(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
+				// String.valueOf(fIndentationArrayInitSize));
+				// fFormatterStatus = new StatusInfo();
+				// }
+				// } catch (NumberFormatException nfe) {
+				// fFormatterStatus = new StatusInfo(
+				// IStatus.ERROR,
+				//							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
+				// }
 			} else {
 				return;
 			}
@@ -152,7 +206,9 @@ public class PHPFormatterConfigurationBlock extends
 
 	private static Key[] getKeys() {
 		return new Key[] { PREF_FORMATTER_USE_TABS,
-				PREF_FORMATTER_INDENTATION_SIZE };
+				PREF_FORMATTER_INDENTATION_SIZE,
+				PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
+				PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE };
 	}
 
 	private Group createComposite(Composite parent, int numColumns) {
@@ -191,6 +247,11 @@ public class PHPFormatterConfigurationBlock extends
 		String textFieldStr = c.getText();
 		validateSettings(PREF_FORMATTER_INDENTATION_SIZE, new Integer(
 				fIndentationSize).toString(), textFieldStr);
+		validateSettings(PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
+				new Integer(fIndentationWrappedLineSize).toString(),
+				textFieldStr);
+		validateSettings(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
+				new Integer(fIndentationArrayInitSize).toString(), textFieldStr);
 
 	}
 
@@ -201,14 +262,26 @@ public class PHPFormatterConfigurationBlock extends
 
 	private boolean fUseTabs;
 	private int fIndentationSize;
+	private int fIndentationWrappedLineSize;
+	private int fIndentationArrayInitSize;
 
 	private void initValues() {
 		String useTabs = getValue(PREF_FORMATTER_USE_TABS);
 		String indentationSize = getValue(PREF_FORMATTER_INDENTATION_SIZE);
+		String indentationWrappedLineSize = getValue(PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
+		String indentationArrayInitSize = getValue(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
 
 		fUseTabs = Boolean.valueOf(useTabs).booleanValue();
 		fIndentationSize = Integer.valueOf(indentationSize).intValue();
 		indentSizeTxt.setText(indentationSize);
+
+		fIndentationWrappedLineSize = Integer.valueOf(
+				indentationWrappedLineSize).intValue();
+		fDefaultIndentWrapLineSizeTxt.setText(indentationWrappedLineSize);
+
+		fIndentationArrayInitSize = Integer.valueOf(indentationArrayInitSize)
+				.intValue();
+		// fDefaultIndentArrayInitSizeTxt.setText(indentationArrayInitSize);
 	}
 
 	private void updateValues() {
