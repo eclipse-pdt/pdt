@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -140,8 +141,8 @@ public class FormatterUtils {
 	/**
 	 * Return the blanks at the start of the line.
 	 */
-	public static String getLineBlanks(IStructuredDocument document,
-			IRegion lineInfo) throws BadLocationException {
+	public static String getLineBlanks(IDocument document, IRegion lineInfo)
+			throws BadLocationException {
 		helpBuffer.setLength(0);
 		int startOffset = lineInfo.getOffset();
 		int length = lineInfo.getLength();
