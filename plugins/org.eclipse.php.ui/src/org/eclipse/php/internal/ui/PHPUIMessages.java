@@ -273,6 +273,7 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPEditorHoverConfigurationBlock_nameColumnTitle;
 	public static String RefreshAction_toolTip;
 	public static String PHPFormatterConfigurationBlock_indentSizeLabel;
+	public static String PHPFormatterConfigurationBlock_indentWrapLineSizeLabel;
 	public static String PHPProjectWizardBasePage_1;
 	public static String PHPProjectWizardBasePage_0;
 	public static String ExceptionOccurrencesFinder_label_singular;
@@ -968,6 +969,7 @@ public final class PHPUIMessages extends NLS {
 	public static String CodeAssistPreferencePage_showVariablesFromOtherFiles;
 	public static String OpenAction_declaration_label;
 	public static String CodeTemplateBlock_templates_edit_button;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PHPUIMessages.class);
 	}
