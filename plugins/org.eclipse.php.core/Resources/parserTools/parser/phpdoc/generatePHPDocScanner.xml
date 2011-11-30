@@ -19,10 +19,10 @@
 			targetfile="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/DocumentorLexer.java">
 			
 			<srcfiles dir=".">
-				<and>
+				<or>
 					<filename name="documentor_compiler_ast_scanner.flex"/>
 					<filename name="documentor_compiler_ast_scanner.skeleton"/>
-				</and>
+				</or>
 			</srcfiles>
 		</uptodate>
 	</target>
