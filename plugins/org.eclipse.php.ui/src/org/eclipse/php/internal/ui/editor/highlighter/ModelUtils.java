@@ -29,8 +29,8 @@ public abstract class ModelUtils {
 		if (type != null && fieldName != null) {
 			IVariableBinding[] fields = type.getDeclaredFields();
 			for (IVariableBinding field : fields) {
-				if (field.getName().substring(1).toLowerCase().equals(
-						fieldName.toLowerCase())) {
+				if (field.getName().substring(1).toLowerCase()
+						.equals(fieldName.toLowerCase())) {
 					return (IField) field.getPHPElement();
 				}
 			}
@@ -46,8 +46,26 @@ public abstract class ModelUtils {
 		if (type != null && methodName != null) {
 			IMethodBinding[] methods = type.getDeclaredMethods();
 			for (IMethodBinding method : methods) {
-				if (method.getName().toLowerCase().equals(
-						methodName.toLowerCase())) {
+				if (method.getName().toLowerCase()
+						.equals(methodName.toLowerCase())) {
+					return (IMethod) method.getPHPElement();
+				}
+			}
+		}
+		return null;
+	}
+
+	static public IMethod getMethod(MethodDeclaration methodDeclaration) {
+		ITypeBinding type = methodDeclaration.resolveMethodBinding()
+				.getDeclaringClass();
+
+		String methodName = methodDeclaration.getFunction().getFunctionName()
+				.getName();
+		if (type != null && methodName != null) {
+			IMethodBinding[] methods = type.getDeclaredMethods();
+			for (IMethodBinding method : methods) {
+				if (method.getName().toLowerCase()
+						.equals(methodName.toLowerCase())) {
 					return (IMethod) method.getPHPElement();
 				}
 			}
