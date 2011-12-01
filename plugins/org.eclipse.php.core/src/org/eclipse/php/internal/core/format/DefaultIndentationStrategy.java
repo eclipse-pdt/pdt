@@ -170,7 +170,11 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					// not comment nor white space
 					return tRegion;
 				}
-				tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+				if (tRegion.getStart() >= 1) {
+					tRegion = scriptRegion.getPhpToken(tRegion.getStart() - 1);
+				} else {
+					tRegion = null;
+				}
 			} while (tRegion != null
 					&& tRegion.getStart() + regionStart > lineStartOffset);
 		}
@@ -348,10 +352,19 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		int indentationWrappedLineSize = FormatterUtils
 				.getFormatterCommonPrferences().getIndentationWrappedLineSize(
 						document);
+		int indentationArrayInitSize = FormatterUtils
+				.getFormatterCommonPrferences().getIndentationArrayInitSize(
+						document);
 		int indentationSize = FormatterUtils.getFormatterCommonPrferences()
 				.getIndentationSize(document);
 		char indentationChar = FormatterUtils.getFormatterCommonPrferences()
 				.getIndentationChar(document);
+		IndentationObject indentationObject = new IndentationObject();
+		indentationObject.indentationWrappedLineSize = indentationWrappedLineSize;
+		indentationObject.indentationArrayInitSize = indentationArrayInitSize;
+		indentationObject.indentationSize = indentationSize;
+		indentationObject.indentationChar = indentationChar;
+
 		boolean enterKeyPressed = document.getLineDelimiter().equals(
 				result.toString());
 		int lastNonEmptyLineIndex = getIndentationBaseLine(document,
@@ -381,8 +394,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		} else {
 			boolean intended = indentMultiLineCase(document, lineNumber,
 					forOffset, enterKeyPressed, result, blanks, commandText,
-					indentationWrappedLineSize, indentationChar,
-					indentationSize);
+					indentationObject);
 			if (!intended) {
 				lastNonEmptyLineIndex = lineNumber;
 				if (!enterKeyPressed && lastNonEmptyLineIndex > 0) {
@@ -404,8 +416,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						// cursor
 						// position when we press enter key
 						placeStringIndentation(document, lastNonEmptyLineIndex,
-								result, indentationWrappedLineSize,
-								indentationChar, indentationSize);
+								result, indentationObject);
 					}
 					// if (enterKeyPressed) {
 					// this line is one of multi line statement
@@ -438,8 +449,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	private static boolean indentMultiLineCase(IStructuredDocument document,
 			int lineNumber, int offset, boolean enterKeyPressed,
 			StringBuffer result, String blanks, String commandText,
-			int indentationWrappedLineSize, int indentationChar,
-			int indentationSize) {
+			IndentationObject indentationObject) {
 		// LineState lineState = new LineState();
 		// StringBuffer sb = new StringBuffer();
 		try {
@@ -451,7 +461,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			if (inBracelessBlock(scanner, document, offset)) {
 				// lineState.inBracelessBlock = true;
 				if (!"{".equals(commandText)) {
-					indent(document, result, indentationChar, indentationSize);
+					indent(document, result, indentationObject.indentationChar,
+							indentationObject.indentationSize);
 				}
 				return true;
 			} else if (content.trim().startsWith(
@@ -484,6 +495,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				int peer = scanner.findOpeningPeer(offset - 1,
 						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
 				if (peer != PHPHeuristicScanner.NOT_FOUND) {
+
+					int token = scanner.previousToken(peer - 1,
+							PHPHeuristicScanner.UNBOUND);
+					boolean isArray = token == Symbols.TokenARRAY;
 					// lineState.indent.setLength(0)
 					// int baseLine = document.getLineOfOffset(peer);
 					String newblanks = FormatterUtils.getLineBlanks(document,
@@ -500,21 +515,23 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 									.trim()
 									.startsWith(
 											BLANK + PHPHeuristicScanner.RPAREN)) {
-						indent(document, newBuffer, indentationWrappedLineSize,
-								indentationChar, indentationSize);
+						if (isArray) {
+							indent(document, newBuffer,
+									indentationObject.indentationArrayInitSize,
+									indentationObject.indentationChar,
+									indentationObject.indentationSize);
+						} else {
+							indent(document,
+									newBuffer,
+									indentationObject.indentationWrappedLineSize,
+									indentationObject.indentationChar,
+									indentationObject.indentationSize);
+						}
 					}
-					// if (newBuffer.length() > blanks.length()) {
 
 					result.setLength(result.length() - blanks.length());
 					result.append(newBuffer.toString());
 					return true;
-					// }
-					// if(isset($a)
-					// ||abc(isset($b),
-					// isset($b))){
-					// echo "";//
-					// echo "";//
-					// }
 				}
 			}
 		} catch (final BadLocationException e) {
@@ -605,7 +622,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			if (token == null)// comment
 				return true;
 			if (token.getType() == PHPRegionTypes.PHP_SEMICOLON
-					|| token.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
+					|| token.getType() == PHPRegionTypes.PHP_CURLY_CLOSE
+					|| token.getType() == PHPRegionTypes.PHP_HEREDOC_TAG) {
 				return true;
 			}
 		} catch (final BadLocationException e) {
@@ -615,8 +633,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 	private static void placeStringIndentation(
 			final IStructuredDocument document, int lineNumber,
-			StringBuffer result, int indentationWrappedLineSize,
-			int indentationChar, int indentationSize) {
+			StringBuffer result, IndentationObject indentationObject) {
 		try {
 
 			IRegion lineInfo = document.getLineInformation(lineNumber);
@@ -669,8 +686,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 								break;
 							}
 						}
-						indent(document, result, indentationWrappedLineSize,
-								indentationChar, indentationSize);
+						indent(document, result,
+								indentationObject.indentationWrappedLineSize,
+								indentationObject.indentationChar,
+								indentationObject.indentationSize);
 						// for (int i = 0; i < regionStart + token.getEnd()
 						// - lineInfo.getOffset(); i++){
 						// result.append(' ');
@@ -739,6 +758,14 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return currentState != forState
 				&& (currentState == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT
 						|| currentState == PHPPartitionTypes.PHP_DOC || currentState == PHPPartitionTypes.PHP_QUOTED_STRING);
+	}
+
+	private static class IndentationObject {
+		public int indentationWrappedLineSize;
+		public int indentationArrayInitSize;
+		public int indentationSize;
+		public char indentationChar;
+
 	}
 
 }

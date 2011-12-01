@@ -18,7 +18,6 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.core.Logger;
-import org.osgi.service.prefs.BackingStoreException;
 
 public class PreferencesSupport {
 
@@ -134,6 +133,9 @@ public class PreferencesSupport {
 	public boolean setProjectSpecificPreferencesValue(String key, String value,
 			IProject project) {
 		assert project != null;
+		if (!project.exists()) {
+			return false;
+		}
 		ProjectScope scope = (ProjectScope) projectToScope.get(project);
 		if (scope == null) {
 			scope = new ProjectScope(project);
@@ -144,7 +146,7 @@ public class PreferencesSupport {
 			node.put(key, value);
 			try {
 				node.flush();
-			} catch (BackingStoreException e) {
+			} catch (Exception e) {
 				Logger.logException(e);
 			}
 			return true;

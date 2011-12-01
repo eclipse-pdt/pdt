@@ -166,13 +166,20 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 			String indentationWrappedLineSize = preferencesSupport
 					.getPreferencesValue(
 							PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
-							PHPCoreConstants.DEFAULT_INDENTATION_WRAPPED_LINE_SIZE,
-							fLastProject);
+							null, fLastProject);
+			if (indentationWrappedLineSize == null
+					|| indentationWrappedLineSize.trim().length() == 0) {
+				indentationWrappedLineSize = PHPCoreConstants.DEFAULT_INDENTATION_WRAPPED_LINE_SIZE;
+			}
+
 			String indentationArrayInitSize = preferencesSupport
 					.getPreferencesValue(
 							PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
-							PHPCoreConstants.DEFAULT_INDENTATION_ARRAY_INIT_SIZE,
-							fLastProject);
+							null, fLastProject);
+			if (indentationArrayInitSize == null
+					|| indentationArrayInitSize.trim().length() == 0) {
+				indentationArrayInitSize = PHPCoreConstants.DEFAULT_INDENTATION_ARRAY_INIT_SIZE;
+			}
 
 			indentationChar = (Boolean.valueOf(useTab).booleanValue()) ? '\t'
 					: ' ';
