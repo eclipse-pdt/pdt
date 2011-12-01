@@ -13,10 +13,12 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationR
 public class PHPStructuredPresentationReconciler extends
 		StructuredPresentationReconciler {
 	private static final String CSS_STYLE = "org.eclipse.wst.css.STYLE";
+	private static final String JS_SCRIPT = "org.eclipse.wst.html.SCRIPT";
 	private Map fRepairers;
 	private static final Set<String> fTypeSet = new HashSet<String>();
 	static {
 		fTypeSet.add(CSS_STYLE);
+		fTypeSet.add(JS_SCRIPT);
 	}
 
 	ITypedRegion getWholeRegion(ITypedRegion[] wholePartitions,
