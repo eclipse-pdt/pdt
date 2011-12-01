@@ -107,6 +107,7 @@ public class PHPModelUtils {
 			if (nsIndex != -1) {
 				defaultClassName = elementName.substring(nsIndex + 1);
 			}
+			defaultClassName = elementName;
 		}
 		return defaultClassName;
 	}
