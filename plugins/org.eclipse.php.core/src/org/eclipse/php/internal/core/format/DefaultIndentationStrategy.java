@@ -92,7 +92,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			int index = getMultiLineStatementStartOffset(document,
 					lineInfo.getOffset(), currLineIndex);
 			if (index > -1) {
-				return index - 1;
+				return index;
 			}
 		}
 		return currLineIndex - 1;
@@ -516,43 +516,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					// echo "";//
 					// }
 				}
-			} else if (inMultiLineString(scanner, document, lineNumber, offset,
-					enterKeyPressed)) {
-				if (!endOfString(document, offset, scanner, enterKeyPressed)) {
-					int startOffset = getStartOffsetOfString(document, offset,
-							scanner, enterKeyPressed);
-
-					result.setLength(result.length() - blanks.length());
-					String newblanks = FormatterUtils.getLineBlanks(document,
-							document.getLineInformationOfOffset(startOffset));
-					result.append(newblanks);
-					indent(document, result, indentationWrappedLineSize,
-							indentationChar, indentationSize);
-				}
-				return true;
-
 			}
 		} catch (final BadLocationException e) {
 		}
-		return false;
-	}
-
-	private static boolean endOfString(IStructuredDocument document,
-			int offset, PHPHeuristicScanner scanner, boolean enterKeyPressed) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	private static int getStartOffsetOfString(IStructuredDocument document,
-			int offset, PHPHeuristicScanner scanner, boolean enterKeyPressed) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	private static boolean inMultiLineString(PHPHeuristicScanner scanner,
-			IStructuredDocument document, int lineNumber, int offset,
-			boolean enterKeyPressed) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
