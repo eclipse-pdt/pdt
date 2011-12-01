@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.phpIni;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.eclipse.core.filesystem.EFS;
@@ -287,10 +288,25 @@ public class PHPINIUtil {
 						new LocalFile(phpIniFile), EFS.OVERWRITE,
 						new NullProgressMonitor());
 			}
+
+			appendDefaultPHPIniContent(phpIniFile);
 		} catch (Exception e) {
 			PHPDebugPlugin.log(e);
 		}
 		return phpIniFile;
+	}
+
+	private static void appendDefaultPHPIniContent(File phpIniFile)
+			throws IOException {
+
+		FileWriter fw = new FileWriter(phpIniFile, true);
+
+		// TODO expose default php.ini in PHP properties
+		fw.append("\ndate.timezone= \"")
+				.append(Calendar.getInstance().getTimeZone().getID())
+				.append("\"\n");
+		fw.close();
+
 	}
 
 	/**
