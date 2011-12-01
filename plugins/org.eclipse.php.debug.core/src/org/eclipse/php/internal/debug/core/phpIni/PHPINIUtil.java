@@ -305,6 +305,7 @@ public class PHPINIUtil {
 		fw.append("\ndate.timezone= \"")
 				.append(Calendar.getInstance().getTimeZone().getID())
 				.append("\"\n");
+		fw.append("memory_limit = \"256M\"\n");
 		fw.close();
 
 	}
