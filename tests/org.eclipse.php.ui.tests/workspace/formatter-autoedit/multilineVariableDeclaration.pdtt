@@ -1,0 +1,15 @@
+--TEST--
+Tests auto editing multiline statements.
+--FILE--
+<?php
+              $a = new BadFunctionCallException(
+                           $message, $code, $previous);|
+
+?>
+--EXPECT--
+<?php
+              $a = new BadFunctionCallException(
+                           $message, $code, $previous);
+              
+
+?>

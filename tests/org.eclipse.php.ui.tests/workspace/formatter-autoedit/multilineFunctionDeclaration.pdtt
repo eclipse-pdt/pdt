@@ -1,0 +1,16 @@
+--TEST--
+Tests auto editing multiline statements.
+--FILE--
+<?php
+function __set($property, $value,
+                     $g) {|
+
+?>
+--EXPECT--
+<?php
+function __set($property, $value,
+                     $g) {
+	
+}
+
+?>

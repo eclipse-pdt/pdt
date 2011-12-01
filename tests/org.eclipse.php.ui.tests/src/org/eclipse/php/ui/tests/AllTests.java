@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.php.ui.tests.contentassist.ContentAssistTests;
+import org.eclipse.php.ui.tests.formatter.autoedit.FormatterAutoEditTests;
 import org.eclipse.php.ui.tests.semantic_highlighter.SemanticHighlightingTests;
 
 public class AllTests {
@@ -28,6 +29,8 @@ public class AllTests {
 		suite.addTest(SemanticHighlightingTests.suite());
 		// content assist
 		suite.addTest(ContentAssistTests.suite());
+		// auto edit, indentation
+		suite.addTest(FormatterAutoEditTests.suite());
 		return suite;
 	}
 }

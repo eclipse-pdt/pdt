@@ -1,0 +1,19 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+function __construct() {
+	$a = array (
+					'abc', 'defg' 
+					);|
+}
+?>
+--EXPECT--
+<?php
+function __construct() {
+	$a = array (
+					'abc', 'defg' 
+					);
+	
+}
+?>

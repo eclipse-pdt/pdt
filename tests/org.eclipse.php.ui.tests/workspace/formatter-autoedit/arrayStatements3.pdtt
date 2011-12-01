@@ -1,0 +1,15 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+              $a = foo(
+                           $a, $b);|
+
+?>
+--EXPECT--
+<?php
+              $a = foo(
+                           $a, $b);
+              
+
+?>
