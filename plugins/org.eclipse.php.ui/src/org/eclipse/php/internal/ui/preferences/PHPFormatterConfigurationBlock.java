@@ -101,6 +101,14 @@ public class PHPFormatterConfigurationBlock extends
 		fDefaultIndentWrapLineSizeTxt.setTextLimit(2);
 		fDefaultIndentWrapLineSizeTxt.setLayoutData(gd);
 
+		Label indentArrayInitSize = new Label(formattingComposite, SWT.NULL);
+		indentArrayInitSize
+				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentWrapLineSizeLabel); //$NON-NLS-1$
+		fDefaultIndentArrayInitSizeTxt = new Text(formattingComposite,
+				SWT.BORDER);
+		fDefaultIndentArrayInitSizeTxt.setTextLimit(2);
+		fDefaultIndentArrayInitSizeTxt.setLayoutData(gd);
+
 		tabPolicyCombo.addSelectionListener(new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -122,6 +130,7 @@ public class PHPFormatterConfigurationBlock extends
 
 		indentSizeTxt.addModifyListener(this);
 		fDefaultIndentWrapLineSizeTxt.addModifyListener(this);
+		fDefaultIndentArrayInitSizeTxt.addModifyListener(this);
 		tabPolicyCombo.addSelectionListener(this);
 
 		initValues();
@@ -172,23 +181,23 @@ public class PHPFormatterConfigurationBlock extends
 				}
 			}
 			if (PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE.equals(changedKey)) {
-				// try {
-				// fIndentationArrayInitSize = Integer.valueOf(newValue);
-				// if (fIndentationArrayInitSize < MIN_INDENT_SIZE
-				// || fIndentationArrayInitSize > MAX_INDENT_SIZE) {
-				// fFormatterStatus = new StatusInfo(
-				// IStatus.ERROR,
-				//								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
-				// } else {
-				// setValue(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
-				// String.valueOf(fIndentationArrayInitSize));
-				// fFormatterStatus = new StatusInfo();
-				// }
-				// } catch (NumberFormatException nfe) {
-				// fFormatterStatus = new StatusInfo(
-				// IStatus.ERROR,
-				//							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
-				// }
+				try {
+					fIndentationArrayInitSize = Integer.valueOf(newValue);
+					if (fIndentationArrayInitSize < MIN_INDENT_SIZE
+							|| fIndentationArrayInitSize > MAX_INDENT_SIZE) {
+						fFormatterStatus = new StatusInfo(
+								IStatus.ERROR,
+								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
+					} else {
+						setValue(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
+								String.valueOf(fIndentationArrayInitSize));
+						fFormatterStatus = new StatusInfo();
+					}
+				} catch (NumberFormatException nfe) {
+					fFormatterStatus = new StatusInfo(
+							IStatus.ERROR,
+							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
+				}
 			} else {
 				return;
 			}
@@ -245,14 +254,18 @@ public class PHPFormatterConfigurationBlock extends
 	protected void validateValues(Widget w) {
 		Text c = (Text) w;
 		String textFieldStr = c.getText();
-		validateSettings(PREF_FORMATTER_INDENTATION_SIZE, new Integer(
-				fIndentationSize).toString(), textFieldStr);
-		validateSettings(PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
-				new Integer(fIndentationWrappedLineSize).toString(),
-				textFieldStr);
-		validateSettings(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
-				new Integer(fIndentationArrayInitSize).toString(), textFieldStr);
-
+		if (c == indentSizeTxt) {
+			validateSettings(PREF_FORMATTER_INDENTATION_SIZE, new Integer(
+					fIndentationSize).toString(), textFieldStr);
+		} else if (c == fDefaultIndentWrapLineSizeTxt) {
+			validateSettings(PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
+					new Integer(fIndentationWrappedLineSize).toString(),
+					textFieldStr);
+		} else if (c == fDefaultIndentArrayInitSizeTxt) {
+			validateSettings(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
+					new Integer(fIndentationArrayInitSize).toString(),
+					textFieldStr);
+		}
 	}
 
 	protected void updateControls() {
@@ -281,7 +294,7 @@ public class PHPFormatterConfigurationBlock extends
 
 		fIndentationArrayInitSize = Integer.valueOf(indentationArrayInitSize)
 				.intValue();
-		// fDefaultIndentArrayInitSizeTxt.setText(indentationArrayInitSize);
+		fDefaultIndentArrayInitSizeTxt.setText(indentationArrayInitSize);
 	}
 
 	private void updateValues() {
