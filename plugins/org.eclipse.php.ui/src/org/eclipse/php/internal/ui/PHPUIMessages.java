@@ -274,6 +274,7 @@ public final class PHPUIMessages extends NLS {
 	public static String RefreshAction_toolTip;
 	public static String PHPFormatterConfigurationBlock_indentSizeLabel;
 	public static String PHPFormatterConfigurationBlock_indentWrapLineSizeLabel;
+	public static String PHPFormatterConfigurationBlock_indentArrayInitSizeLabel;
 	public static String PHPProjectWizardBasePage_1;
 	public static String PHPProjectWizardBasePage_0;
 	public static String ExceptionOccurrencesFinder_label_singular;

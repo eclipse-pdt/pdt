@@ -103,7 +103,7 @@ public class PHPFormatterConfigurationBlock extends
 
 		Label indentArrayInitSize = new Label(formattingComposite, SWT.NULL);
 		indentArrayInitSize
-				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentWrapLineSizeLabel); //$NON-NLS-1$
+				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentArrayInitSizeLabel); //$NON-NLS-1$
 		fDefaultIndentArrayInitSizeTxt = new Text(formattingComposite,
 				SWT.BORDER);
 		fDefaultIndentArrayInitSizeTxt.setTextLimit(2);
