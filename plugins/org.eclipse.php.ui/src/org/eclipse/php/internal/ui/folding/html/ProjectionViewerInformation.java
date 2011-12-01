@@ -148,22 +148,27 @@ class ProjectionViewerInformation {
 	 * annotation model.
 	 */
 	void applyAnnotationModelChanges() {
+		List<ProjectionAnnotationModelChanges> changesToApply = new ArrayList<ProjectionAnnotationModelChanges>();
+
 		List<ProjectionAnnotationModelChanges> queuedChanges = getQueuedAnnotationChanges();
+		// Copy of changes to apply. Original list is cleared.
+		synchronized (queuedChanges) {
+			changesToApply.addAll(queuedChanges);
+			queuedChanges.clear();
+		}
+		queuedChanges = null;
 		// go through all the pending annotation changes and apply
 		// them to
 		// the projection annotation model
-		synchronized (queuedChanges) {
-			while (!queuedChanges.isEmpty()) {
-				ProjectionAnnotationModelChanges changes = queuedChanges
-						.remove(0);
-				try {
-					fProjectionAnnotationModel.modifyAnnotations(
-							changes.getDeletions(), changes.getAdditions(),
-							changes.getModifications());
-				} catch (Exception e) {
-					// if anything goes wrong, log it and continue
-					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
-				}
+		while (!changesToApply.isEmpty()) {
+			ProjectionAnnotationModelChanges changes = changesToApply.remove(0);
+			try {
+				fProjectionAnnotationModel.modifyAnnotations(
+						changes.getDeletions(), changes.getAdditions(),
+						changes.getModifications());
+			} catch (Exception e) {
+				// if anything goes wrong, log it and continue
+				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 			}
 		}
 	}
@@ -183,14 +188,16 @@ class ProjectionViewerInformation {
 	 */
 	public void queueAnnotationModelChanges(
 			ProjectionAnnotationModelChanges newChange) {
-		/*
-		 * future_TODO: maybe improve by checking if annotation projection model
-		 * change already exists for node. if so, throw out old change. (For
-		 * some reason after removing old changes for a node folding is broken.)
-		 */
+
 		List<ProjectionAnnotationModelChanges> changes = getQueuedAnnotationChanges();
 		synchronized (changes) {
-			changes.add(newChange);
+			int index = changes.indexOf(newChange);
+			if (index > -1) {
+				changes.get(index).updateChange(newChange);
+			} else {
+				changes.add(newChange);
+			}
+
 		}
 
 		// if document isn't changing, go ahead and apply it

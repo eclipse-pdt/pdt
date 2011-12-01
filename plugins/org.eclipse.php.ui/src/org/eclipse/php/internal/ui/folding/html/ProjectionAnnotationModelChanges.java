@@ -53,4 +53,19 @@ class ProjectionAnnotationModelChanges {
 	public Node getNode() {
 		return fNode;
 	}
+
+	public boolean equals(Object obj) {
+		if (obj instanceof ProjectionAnnotationModelChanges) {
+			return ((ProjectionAnnotationModelChanges) obj).getNode()
+					.isSameNode(this.getNode());
+		}
+		return super.equals(obj);
+	}
+
+	public void updateChange(ProjectionAnnotationModelChanges newChange) {
+		fModifications = newChange.getModifications();
+		fAdditions.putAll(newChange.getAdditions());
+		fDeletions = newChange.getDeletions();
+	}
+
 }
