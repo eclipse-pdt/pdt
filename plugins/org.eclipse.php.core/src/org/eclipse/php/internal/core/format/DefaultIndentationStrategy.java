@@ -430,6 +430,19 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					result.append(FormatterUtils.getLineBlanks(document,
 							lineInfo));
 					// }
+				} else {// current is a new statement,check if we should indent
+						// it based on indentationBaseLine
+					if (result.length() == blanks.length()) {
+
+						final int baseLineEndOffset = indentationBaseLine
+								.getOffset() + indentationBaseLine.getLength();
+						offset = baseLineEndOffset;
+						line = indentationBaseLineIndex;
+						if (shouldIndent(document, offset, line)) {
+							indent(document, result, indentationChar,
+									indentationSize);
+						}
+					}
 				}
 			}
 
@@ -622,8 +635,11 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			if (token == null)// comment
 				return true;
 			if (token.getType() == PHPRegionTypes.PHP_SEMICOLON
-					|| token.getType() == PHPRegionTypes.PHP_CURLY_CLOSE
-					|| token.getType() == PHPRegionTypes.PHP_HEREDOC_TAG) {
+					|| token.getType() == PHPRegionTypes.PHP_CURLY_CLOSE) {
+				return true;
+			} else if (token.getType() == PHPRegionTypes.PHP_HEREDOC_TAG
+					&& document.get(lineInfo.getOffset(), lineInfo.getLength())
+							.trim().endsWith(";")) {
 				return true;
 			}
 		} catch (final BadLocationException e) {

@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.format;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
@@ -132,6 +135,10 @@ public class PhpFormatter implements IStructuredFormatter {
 		return length;
 	}
 
+	public Set<Integer> getIgnoreLines() {
+		return ignoreLines;
+	}
+
 	public void format(IStructuredDocumentRegion sdRegion) {
 		assert sdRegion != null;
 
@@ -239,6 +246,8 @@ public class PhpFormatter implements IStructuredFormatter {
 	}
 
 	private final StringBuffer resultBuffer = new StringBuffer();
+	private boolean isInHeredoc;
+	private Set<Integer> ignoreLines = new HashSet<Integer>();
 
 	/**
 	 * formats a PHP line according to the strategies and formatting conventions
@@ -295,6 +304,7 @@ public class PhpFormatter implements IStructuredFormatter {
 					.getRegionAtCharacterOffset(formattedLineStart);
 			ITextRegion firstTokenInLine = sdRegion
 					.getRegionAtCharacterOffset(formattedLineStart);
+			ITextRegion lastTokenInLine = null;
 			int regionStart = sdRegion.getStartOffset(firstTokenInLine);
 			if (firstTokenInLine instanceof ITextRegionContainer) {
 				ITextRegionContainer container = (ITextRegionContainer) firstTokenInLine;
@@ -305,6 +315,10 @@ public class PhpFormatter implements IStructuredFormatter {
 
 			if (firstTokenInLine instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) firstTokenInLine;
+				if (scriptRegion.getStart() + scriptRegion.getLength() < formattedLineStart
+						- regionStart) {
+					return;
+				}
 				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart
 						- regionStart);
 				if (firstTokenInLine != null
@@ -315,11 +329,22 @@ public class PhpFormatter implements IStructuredFormatter {
 							.getPhpToken(formattedLineStart - regionStart
 									+ firstTokenInLine.getLength());
 				}
-			}
+				if (scriptRegion.getStart() + scriptRegion.getLength() >= formattedTextEnd
+						- regionStart - 1) {
 
-			// if the first char is not from this line
-			if (firstTokenInLine == null)
-				return;
+					lastTokenInLine = scriptRegion.getPhpToken(formattedTextEnd
+							- regionStart - 1);
+					if (lastTokenInLine != null
+							&& lastTokenInLine.getEnd()
+									+ sdRegion.getStartOffset() > orginalLineStart
+									+ originalLineLength
+							&& lastTokenInLine.getType() == PHPRegionTypes.WHITESPACE) {
+						lastTokenInLine = scriptRegion
+								.getPhpToken(formattedTextEnd - regionStart - 1
+										- lastTokenInLine.getLength());
+					}
+				}
+			}
 
 			/*
 			 * if (firstTokenInLine.getStart() + sdRegion.getStartOffset() <
@@ -335,6 +360,20 @@ public class PhpFormatter implements IStructuredFormatter {
 				return;
 
 			String firstTokenType = firstTokenInLine.getType();
+
+			boolean formatThisLine = !isInHeredoc;
+			if (firstTokenType == PHPRegionTypes.PHP_HEREDOC_TAG
+					|| (lastTokenInLine != null && lastTokenInLine.getType() == PHPRegionTypes.PHP_HEREDOC_TAG)) {
+				isInHeredoc = !isInHeredoc;
+				// ignoreLines.add(lineNumber);
+			}
+			// if (isInHeredoc) {
+			// ignoreLines.add(lineNumber);
+			// }
+			if (!formatThisLine) {
+				ignoreLines.add(lineNumber);
+				return;
+			}
 			if (firstTokenType == PHPRegionTypes.PHP_CASE
 					|| firstTokenType == PHPRegionTypes.PHP_DEFAULT) {
 				insertionStrategy = caseDefaultIndentationStrategy;
