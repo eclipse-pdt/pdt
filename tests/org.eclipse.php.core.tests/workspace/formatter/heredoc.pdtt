@@ -1,0 +1,256 @@
+--TEST--
+Test formatting for heredoc
+--FILE--
+<?php
+if($a){
+	<<<MY_MARKER
+  Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER;
+	<<<MY_MARKER_2
+  Hello world
+  Bye Bye world
+Bla Bla Bla
+MY_MARKER_2;
+	<<<MY_MARKER
+  Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER;
+	<<<MY_MARKER_2
+Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER_2;
+
+	$foo = <<<ENDOFSQL
+    SELECT a, b, c
+      FROM table1
+      JOIN table2
+        ON foo = bar
+     WHERE a > 2
+ENDOFSQL;
+	fputs(<<<EOF
+set term
+plot
+EOF
+	);
+	if($a){
+
+		$foo = <<<ENDOFSQL
+        SELECT a, b, c
+          FROM table1
+          JOIN table2
+            ON foo = bar
+         WHERE a > 2
+ENDOFSQL;
+
+		$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+
+		if($a){
+
+			$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+
+			$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+		}
+	}
+	if($a){
+
+		if($a){
+
+		}
+	}
+	if($a){
+
+		if($a){
+
+		}
+	}
+	if($a){
+
+		if($a){
+
+		}
+	}
+	if($a)
+		echo "";
+	else
+		echo "";
+
+	echo "";
+	$a="".
+			"".
+			"".
+			"";
+	$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+	$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+	echo "";
+
+
+	if($a){
+
+		if($a){
+
+		}
+	}
+}
+
+?>
+--EXPECT--
+<?php
+if($a){
+	<<<MY_MARKER
+  Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER;
+	<<<MY_MARKER_2
+  Hello world
+  Bye Bye world
+Bla Bla Bla
+MY_MARKER_2;
+	<<<MY_MARKER
+  Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER;
+	<<<MY_MARKER_2
+Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER_2;
+
+	$foo = <<<ENDOFSQL
+    SELECT a, b, c
+      FROM table1
+      JOIN table2
+        ON foo = bar
+     WHERE a > 2
+ENDOFSQL;
+	fputs(<<<EOF
+set term
+plot
+EOF
+	);
+	if($a){
+
+		$foo = <<<ENDOFSQL
+        SELECT a, b, c
+          FROM table1
+          JOIN table2
+            ON foo = bar
+         WHERE a > 2
+ENDOFSQL;
+
+		$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+
+		if($a){
+
+			$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+
+			$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+		}
+	}
+	if($a){
+
+		if($a){
+
+		}
+	}
+	if($a){
+
+		if($a){
+
+		}
+	}
+	if($a){
+
+		if($a){
+
+		}
+	}
+	if($a)
+		echo "";
+	else
+		echo "";
+
+	echo "";
+	$a="".
+			"".
+			"".
+			"";
+	$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+	$foo = <<<ENDOFSQL
+      SELECT a, b, c
+        FROM table1
+        JOIN table2
+          ON foo = bar
+       WHERE a > 2
+ENDOFSQL;
+	echo "";
+
+
+	if($a){
+
+		if($a){
+
+		}
+	}
+}
+
+?>
