@@ -102,8 +102,13 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				if (i > 0) {
 					tempsb.append(newline);
 				}
-				tempsb.append(tempdocument.get(region.getOffset(),
-						region.getLength()).trim());
+				if (i == 0) {
+					tempsb.append(tempdocument.get(region.getOffset(),
+							region.getLength()).trim());
+				} else {
+					tempsb.append(tempdocument.get(region.getOffset(),
+							region.getLength()));
+				}
 			}
 		} catch (BadLocationException e) {
 		}
@@ -135,7 +140,10 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		// String newline = newdocument.getLineDelimiter();
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
-			sb.append(helpBuffer.toString()).append(list.get(i));
+			if (!formatter.getIgnoreLines().contains(i + 1)) {
+				sb.append(helpBuffer.toString());
+			}
+			sb.append(list.get(i));
 			if (i != list.size() - 1) {
 				sb.append(newline);
 			}
