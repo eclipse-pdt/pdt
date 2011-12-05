@@ -85,7 +85,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		return super.visit(node);
 	}
 
-	public final boolean endvisit(ModuleDeclaration node) throws Exception {
+	public boolean endvisit(ModuleDeclaration node) throws Exception {
 		return super.endvisit(node);
 	}
 
