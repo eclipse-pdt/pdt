@@ -59,7 +59,8 @@ public class FormatterAutoEditTests extends FormatterTests {
 				for (final String fileName : getPDTTFiles(testsDirectory,
 						PHPUiTests.getDefault().getBundle())) {
 					try {
-						final PdttFile pdttFile = new PdttFile(fileName);
+						final PdttFile pdttFile = new PdttFile(PHPUiTests
+								.getDefault().getBundle(), fileName);
 						filesMap.put(pdttFile, null);
 
 						phpVerSuite.addTest(new FormatterAutoEditTests("/"
