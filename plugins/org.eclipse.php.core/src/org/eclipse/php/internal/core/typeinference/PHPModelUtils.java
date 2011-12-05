@@ -106,8 +106,9 @@ public class PHPModelUtils {
 					.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 			if (nsIndex != -1) {
 				defaultClassName = elementName.substring(nsIndex + 1);
+			} else {
+				defaultClassName = elementName;
 			}
-			defaultClassName = elementName;
 		}
 		return defaultClassName;
 	}
