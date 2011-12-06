@@ -38,6 +38,7 @@
 			<property name="data-dir" value="${pdt-folder}" />
 			<property name="plugin-name" value="${plugin-name}" />
 			<property name="classname" value="org.eclipse.php.ui.tests.AllTests" />
+			<property name="extraVMargs" value="-Xms512M -Xmx1024m -XX:MaxNewSize=128m -XX:MaxPermSize=128m" />
 		</ant>
 	</target>
 
