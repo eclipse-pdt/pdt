@@ -1,0 +1,21 @@
+--TEST--
+Test Class Selection,the searched field must be named "$testField",EXPECT is the occurrence times of the searched field
+--FILE--
+<?
+class scrap {
+
+	protected $testField;
+
+	protected function getField() {
+		return $this->testField;
+	}
+
+}
+class scrap1 extends scrap {
+
+protected function get_tmp_var() { return $this->testField; }
+
+}
+?>
+--EXPECT--
+3

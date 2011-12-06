@@ -7,10 +7,11 @@ public class AllTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(AllTests.class.getName());
-		//$JUnit-BEGIN$
+		// $JUnit-BEGIN$
 		suite.addTestSuite(PHP5LanguageModelTest.class);
 		suite.addTestSuite(PHP53LanguageModelTest.class);
-		//$JUnit-END$
+		suite.addTest(SearchFieldTests.suite());
+		// $JUnit-END$
 		return suite;
 	}
 
