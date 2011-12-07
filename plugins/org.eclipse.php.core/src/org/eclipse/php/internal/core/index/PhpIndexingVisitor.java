@@ -52,6 +52,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
  */
 public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
+	private static final String DOLOR = "$";
 	private static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
 	private static final String EXTENSION_POINT = "phpIndexingVisitors"; //$NON-NLS-1$
@@ -749,6 +750,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		if (node instanceof PHPCallExpression) {
 			return visit((PHPCallExpression) node);
 		}
+		if (node instanceof FieldAccess) {
+			return visit((FieldAccess) node);
+		}
 
 		for (PhpIndexingVisitorExtension visitor : extensions) {
 			visitor.visit(node);
@@ -798,4 +802,27 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		fNodes.push(node);
 		return true;
 	}
+
+	public boolean endvisit(FieldAccess declaration) throws Exception {
+		endvisitGeneral(declaration);
+		return true;
+	}
+
+	public boolean visit(FieldAccess access) throws Exception {
+		// This is variable field access:
+		if (access.getField() instanceof SimpleReference) {
+			SimpleReference simpleReference = (SimpleReference) access.getField();
+
+			String name = simpleReference.getName();
+			if (!name.startsWith(DOLOR)) {
+				name = DOLOR + name;
+			}
+			modifyReference(access, new ReferenceInfo(IModelElement.FIELD,
+					simpleReference.sourceStart(), simpleReference.sourceEnd()
+							- simpleReference.sourceStart(), name, null, null));
+		}
+
+		return visitGeneral(access);
+	}
+
 }
