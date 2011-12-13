@@ -47,25 +47,27 @@ public class FormatterUtils {
 			}
 			// in case the cursor on the beginning of '?>' tag
 			// we decrease the offset to get the PhpScriptRegion
-			if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
+			if (tRegion != null
+					&& tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
 				tRegion = sdRegion.getRegionAtCharacterOffset(offset - 1);
 			}
+			if (tRegion != null) {
+				int regionStart = sdRegion.getStartOffset(tRegion);
 
-			int regionStart = sdRegion.getStartOffset(tRegion);
+				// in case of container we have the extract the PhpScriptRegion
+				if (tRegion != null && tRegion instanceof ITextRegionContainer) {
+					ITextRegionContainer container = (ITextRegionContainer) tRegion;
+					tRegion = container.getRegionAtCharacterOffset(offset);
+					regionStart += tRegion.getStart();
+				}
 
-			// in case of container we have the extract the PhpScriptRegion
-			if (tRegion != null && tRegion instanceof ITextRegionContainer) {
-				ITextRegionContainer container = (ITextRegionContainer) tRegion;
-				tRegion = container.getRegionAtCharacterOffset(offset);
-				regionStart += tRegion.getStart();
-			}
-
-			if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
-				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-				int regionOffset = offset - regionStart;
-				ITextRegion innerRegion = scriptRegion
-						.getPhpToken(regionOffset);
-				return innerRegion.getType();
+				if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
+					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+					int regionOffset = offset - regionStart;
+					ITextRegion innerRegion = scriptRegion
+							.getPhpToken(regionOffset);
+					return innerRegion.getType();
+				}
 			}
 		} catch (final BadLocationException e) {
 		}
