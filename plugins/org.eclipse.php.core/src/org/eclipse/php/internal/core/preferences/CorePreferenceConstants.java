@@ -46,6 +46,10 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
 				PHPCoreConstants.DEFAULT_INDENTATION_SIZE);
+		node.put(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
+				PHPCoreConstants.DEFAULT_INDENTATION_WRAPPED_LINE_SIZE);
+		node.put(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
+				PHPCoreConstants.DEFAULT_INDENTATION_ARRAY_INIT_SIZE);
 		node.putBoolean(PHPCoreConstants.CODEGEN_ADD_COMMENTS, false);
 		node.put(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, ULocale
 				.getDefault().toString());
