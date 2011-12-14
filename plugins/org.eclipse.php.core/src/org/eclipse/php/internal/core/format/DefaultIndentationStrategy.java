@@ -317,7 +317,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		// TODO maybe there are other type need to be added
 		return regionType != null
 				&& !PHPRegionTypes.PHPDOC_COMMENT_START.equals(regionType)
-				&& !PHPRegionTypes.PHP_CASE.equals(regionType);
+				&& !PHPRegionTypes.PHP_CASE.equals(regionType)
+				&& !PHPRegionTypes.PHP_DEFAULT.equals(regionType);
 	}
 
 	public static boolean lineShouldInedent(final String beginState,
