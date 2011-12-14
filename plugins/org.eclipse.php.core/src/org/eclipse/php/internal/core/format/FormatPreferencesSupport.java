@@ -70,7 +70,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 		if (!verifyValidity(document)) {
 			String indentSize = preferencesSupport
 					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
-			if (indentSize == null) {
+			if (indentSize == null || indentSize.length() == 0) {
 				return 1;
 			}
 			return Integer.valueOf(indentSize).intValue();
@@ -82,7 +82,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 		if (!verifyValidity(document)) {
 			String indentSize = preferencesSupport
 					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
-			if (indentSize == null) {
+			if (indentSize == null || indentSize.length() == 0) {
 				return 1;
 			}
 			return Integer.valueOf(indentSize).intValue();
@@ -94,7 +94,7 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 		if (!verifyValidity(document)) {
 			String indentSize = preferencesSupport
 					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
-			if (indentSize == null) {
+			if (indentSize == null || indentSize.length() == 0) {
 				return 1;
 			}
 			return Integer.valueOf(indentSize).intValue();
