@@ -32,6 +32,8 @@ import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
  */
 public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 
+	private static final String DEFAULT_LINE_DELIMITER = "\r\n";
+
 	public PHPAutoIndentStrategy() {
 	}
 
@@ -93,7 +95,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		}
 
 		Document tempdocument = new Document(command.text);
-		String newline = tempdocument.getDefaultLineDelimiter();
+		String newline = DEFAULT_LINE_DELIMITER;
 		int lines = tempdocument.getNumberOfLines();
 		StringBuffer tempsb = new StringBuffer();
 		try {
