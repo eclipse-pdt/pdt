@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 /**
  * This context represents state when staying in a 'instanceof' statement. <br/>
@@ -45,5 +46,14 @@ public class InstanceOfContext extends StatementContext {
 		}
 
 		return false;
+	}
+
+	public String getPrefix() throws BadLocationException {
+		String prefix = super.getPrefix();
+		if (prefix.length() > 0
+				&& prefix.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+			return prefix.substring(1);
+		}
+		return prefix;
 	}
 }

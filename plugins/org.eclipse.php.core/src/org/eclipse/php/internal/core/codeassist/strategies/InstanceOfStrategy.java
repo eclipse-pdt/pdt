@@ -16,6 +16,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 /**
  * This strategy completes global classes after 'new' statement
@@ -29,8 +30,17 @@ public class InstanceOfStrategy extends GlobalTypesStrategy {
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		super.apply(reporter);
+		// let NamespaceInstanceOfStrategy to deal with namespace prefix
+		AbstractCompletionContext completionContext = (AbstractCompletionContext) getContext();
+		// String suffix = getSuffix(completionContext);
+		// addAlias(reporter, suffix);
+		if (completionContext.getPrefix() != null
+				&& completionContext.getPrefix().indexOf(
+						NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
+			return;
+		}
 
+		super.apply(reporter);
 		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
 		addSelf(concreteContext, reporter);
@@ -39,6 +49,7 @@ public class InstanceOfStrategy extends GlobalTypesStrategy {
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}
+
 	protected Object getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}

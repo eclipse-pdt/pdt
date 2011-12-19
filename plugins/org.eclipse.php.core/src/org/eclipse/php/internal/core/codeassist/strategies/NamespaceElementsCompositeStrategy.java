@@ -19,6 +19,7 @@ import org.eclipse.php.core.codeassist.ICompletionStrategy;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassInstantiationContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ExceptionClassInstantiationContext;
+import org.eclipse.php.internal.core.codeassist.contexts.InstanceOfContext;
 
 /**
  * This composite contains strategies that complete namespace elements
@@ -36,12 +37,16 @@ public class NamespaceElementsCompositeStrategy extends
 
 		boolean hasNewClassContext = false;
 		boolean hasNewExceptionClassContext = false;
+		boolean hasInstanceOfContext = false;
 		for (ICompletionContext c : allContexts) {
 			if (c instanceof ExceptionClassInstantiationContext) {
 				hasNewExceptionClassContext = true;
 				break;
 			} else if (c instanceof ClassInstantiationContext) {
 				hasNewClassContext = true;
+				break;
+			} else if (c instanceof InstanceOfContext) {
+				hasInstanceOfContext = true;
 				break;
 			}
 		}
@@ -52,6 +57,8 @@ public class NamespaceElementsCompositeStrategy extends
 			} else if (hasNewExceptionClassContext) {
 				strategies
 						.add(new ExceptionClassInstantiationStrategy(context));
+			} else if (hasInstanceOfContext) {
+				strategies.add(new InstanceOfStrategy(context));
 			} else {
 				strategies.add(new GlobalTypesStrategy(context));
 				strategies.add(new GlobalFunctionsStrategy(context));
@@ -65,6 +72,8 @@ public class NamespaceElementsCompositeStrategy extends
 				strategies
 						.add(new NamespaceExceptionClassInstantiationStrategy(
 								context));
+			} else if (hasInstanceOfContext) {
+				strategies.add(new NamespaceInstanceOfStrategy(context));
 			} else {
 				strategies.add(new NamespaceTypesStrategy(context));
 				strategies.add(new NamespaceFunctionsStrategy(context));
