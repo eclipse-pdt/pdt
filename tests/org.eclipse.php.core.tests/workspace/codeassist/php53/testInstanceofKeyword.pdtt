@@ -1,0 +1,9 @@
+--TEST--
+test for instanceof key word
+--FILE--
+<?
+if ( $a instanceof \SoapClient| ) {
+}
+?>
+--EXPECT--
+type(SoapClient)
