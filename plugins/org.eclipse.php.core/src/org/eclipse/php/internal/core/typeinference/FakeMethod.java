@@ -12,14 +12,13 @@
 package org.eclipse.php.internal.core.typeinference;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.IParameter;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.SourceMethodUtils;
 import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.dltk.internal.core.util.Util;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 
 /**
  * This is a fake model element that can live independently from the DLTK model
@@ -112,4 +111,29 @@ public class FakeMethod extends SourceMethod {
 	public boolean isConstructor() throws ModelException {
 		return isConstructor;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof FakeMethod)) {
+			return false;
+		}
+		FakeMethod fm = (FakeMethod) o;
+		return this.name.equals(fm.name)
+				&& getRealParent(this.parent).equals(getRealParent(fm.parent));
+	}
+
+	public int hashCode() {
+		return Util.combineHashCodes(this.name.hashCode(),
+				getRealParent(this.parent).hashCode());
+	}
+
+	public IModelElement getRealParent(IModelElement type) {
+		if (type instanceof AliasType) {
+			AliasType at = (AliasType) type;
+			return at.getParent();
+
+		}
+		return this.parent;
+	}
+
 }
