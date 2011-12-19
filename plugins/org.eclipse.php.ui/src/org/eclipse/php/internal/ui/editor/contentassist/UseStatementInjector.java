@@ -77,6 +77,9 @@ public class UseStatementInjector {
 			ISourceModule sourceModule, int offset) {
 		SourceType ns = (SourceType) PHPModelUtils.getCurrentNamespace(
 				sourceModule, offset);
+		if (ns == null) {
+			return null;
+		}
 		ASTNode node = null;
 		try {
 			node = program.getElementAt(ns.getSourceRange().getOffset());
@@ -459,6 +462,9 @@ public class UseStatementInjector {
 			ISourceModule sourceModule, int offset) {
 		NamespaceDeclaration currentNamespace = getCurrentNamespace(program,
 				sourceModule, offset - 1);
+		if (currentNamespace == null) {
+			return false;
+		}
 		if (namespaceName.equals(getNamespaceName(currentNamespace))) {
 			return true;
 		}
