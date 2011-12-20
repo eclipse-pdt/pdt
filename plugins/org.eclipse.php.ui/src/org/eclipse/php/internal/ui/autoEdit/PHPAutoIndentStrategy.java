@@ -139,7 +139,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			}
 		} catch (BadLocationException e) {
 		}
-		// String newline = newdocument.getLineDelimiter();
+		newline = newdocument.getLineDelimiter();
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
 			if (!formatter.getIgnoreLines().contains(i + 1)) {
