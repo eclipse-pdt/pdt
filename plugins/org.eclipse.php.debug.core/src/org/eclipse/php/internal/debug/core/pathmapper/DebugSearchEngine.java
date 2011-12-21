@@ -268,7 +268,7 @@ public class DebugSearchEngine {
 					try {
 						IScriptProject scriptProject = DLTKCore
 								.create(currentProject);
-						if (currentProject != null) {
+						if (currentProject != null && scriptProject != null) {
 							IBuildpathEntry[] rawBuildpath = scriptProject
 									.getRawBuildpath();
 
