@@ -1,0 +1,8 @@
+--TEST--
+Test Variable Selection for case sensitive
+--FILE--
+<?
+$global = 5;
+|$globaL|;
+?>
+--EXPECT--
