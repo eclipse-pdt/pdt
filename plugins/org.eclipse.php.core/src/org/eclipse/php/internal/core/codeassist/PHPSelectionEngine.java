@@ -144,6 +144,77 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				Collection<IModelElement> filtered = PHPModelUtils
 						.filterElements(sourceModule, Arrays.asList(elements),
 								null, null);
+
+				if (filtered.size() == 0) {
+					return EMPTY;
+				}
+				IStructuredDocumentRegion sRegion = document
+						.getRegionAtCharacterOffset(offset);
+				if (sRegion != null) {
+					ITextRegion tRegion = sRegion
+							.getRegionAtCharacterOffset(offset);
+
+					ITextRegionCollection container = sRegion;
+					if (tRegion instanceof ITextRegionContainer) {
+						container = (ITextRegionContainer) tRegion;
+						tRegion = container.getRegionAtCharacterOffset(offset);
+					}
+					if (tRegion != null
+							&& tRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) tRegion;
+						try {
+							tRegion = phpScriptRegion.getPhpToken(offset
+									- container.getStartOffset()
+									- phpScriptRegion.getStart());
+						} catch (BadLocationException e) {
+						}
+						if (tRegion != null) {
+							// Determine element name:
+							int elementStart = container.getStartOffset()
+									+ phpScriptRegion.getStart()
+									+ tRegion.getStart();
+							TextSequence statement = PHPTextSequenceUtilities
+									.getStatement(
+											elementStart + tRegion.getLength(),
+											sRegion, true);
+							if (statement != null) {
+								int endPosition = PHPTextSequenceUtilities
+										.readBackwardSpaces(statement,
+												statement.length());
+								int startPosition = PHPTextSequenceUtilities
+										.readIdentifierStartIndex(phpVersion,
+												statement, endPosition, true);
+								String elementName = statement.subSequence(
+										startPosition, endPosition).toString();
+								List<IModelElement> result = new LinkedList<IModelElement>();
+								for (Iterator<IModelElement> iterator = filtered
+										.iterator(); iterator.hasNext();) {
+									IModelElement modelElement = (IModelElement) iterator
+											.next();
+									if (modelElement instanceof IField) {
+										String fieldName = elementName;
+										if (!fieldName.startsWith("$")) {
+											fieldName = "$" + fieldName;
+										}
+										if (modelElement.getElementName()
+												.equals(fieldName)
+												|| modelElement
+														.getElementName()
+														.equals(elementName)) {
+											result.add(modelElement);
+										}
+									} else if (modelElement.getElementName()
+											.equals(elementName)) {
+										result.add(modelElement);
+									}
+								}
+								return (IModelElement[]) result
+										.toArray(new IModelElement[result
+												.size()]);
+							}
+						}
+					}
+				}
 				return (IModelElement[]) filtered
 						.toArray(new IModelElement[filtered.size()]);
 			}
