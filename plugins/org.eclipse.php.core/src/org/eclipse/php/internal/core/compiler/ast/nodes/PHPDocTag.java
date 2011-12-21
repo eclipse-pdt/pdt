@@ -64,6 +64,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	private final int tagKind;
 	private String value;
 	private SimpleReference[] references;
+	private SimpleReference[] referencesWithOrigOrder;
 	private List<Scalar> texts;
 
 	public PHPDocTag(int start, int end, int tagKind, String value,
@@ -80,7 +81,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	}
 
 	public String[] getDescTexts() {
-		int wordSize = references.length;
+		int wordSize = referencesWithOrigOrder.length;
 		List<String> result = new ArrayList<String>();
 		for (int i = 0; i < texts.size(); i++) {
 			String text = texts.get(i).getValue();
@@ -197,6 +198,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 				}
 				if (types.size() > 0) {
 					references = types.toArray(new TypeReference[types.size()]);
+					referencesWithOrigOrder = references;
 				}
 			}
 		} else if (tagKind == PARAM) {
@@ -221,6 +223,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 						references[1] = new TypeReference(valueStart
 								+ secondWordStart, valueStart + secondWordEnd,
 								secondWord);
+						referencesWithOrigOrder = references;
 					} else if (secondWord.charAt(0) == '$') {
 						references = new SimpleReference[2];
 						references[0] = new VariableReference(valueStart
@@ -229,6 +232,9 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 						references[1] = new TypeReference(valueStart
 								+ firstWordStart, valueStart + firstWordEnd,
 								firstWord);
+						referencesWithOrigOrder = new SimpleReference[2];
+						referencesWithOrigOrder[0] = references[1];
+						referencesWithOrigOrder[1] = references[0];
 					}
 				}
 			}
@@ -262,6 +268,10 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
 	public SimpleReference[] getReferences() {
 		return references;
+	}
+
+	public SimpleReference[] getReferencesWithOrigOrder() {
+		return referencesWithOrigOrder;
 	}
 
 	public void adjustStart(int start) {
