@@ -12,14 +12,23 @@ package org.eclipse.php.internal.ui.editor.highlighter;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
+import org.eclipse.dltk.ti.IContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 
 public abstract class ModelUtils {
 
@@ -56,8 +65,11 @@ public abstract class ModelUtils {
 	}
 
 	static public IMethod getMethod(MethodDeclaration methodDeclaration) {
-		ITypeBinding type = methodDeclaration.resolveMethodBinding()
-				.getDeclaringClass();
+		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
+		if (methodBinding == null) {
+			return null;
+		}
+		ITypeBinding type = methodBinding.getDeclaringClass();
 
 		String methodName = methodDeclaration.getFunction().getFunctionName()
 				.getName();
@@ -71,6 +83,28 @@ public abstract class ModelUtils {
 			}
 		}
 		return null;
+	}
+
+	static public IMethod getMethod(FunctionDeclaration functionDeclaration) {
+		IFunctionBinding function = functionDeclaration
+				.resolveFunctionBinding();
+		if (function == null) {
+			return null;
+		}
+		IMethod method = (IMethod) function.getPHPElement();
+		return method;
+	}
+
+	static public IMethod getFunctionMethod(
+			FunctionDeclaration functionDeclaration) {
+		ASTNode parent = functionDeclaration.getParent();
+		IMethod method = null;
+		if (parent instanceof MethodDeclaration) {
+			method = ModelUtils.getMethod((MethodDeclaration) parent);
+		} else {
+			method = ModelUtils.getMethod(functionDeclaration);
+		}
+		return method;
 	}
 
 	static public Collection<ISourceRange> getDeprecatedElements(
@@ -112,6 +146,42 @@ public abstract class ModelUtils {
 			doc = PHPModelUtils.getDocBlock((IType) element);
 		}
 		return doc;
+	}
+
+	static public IType[] getTypes(String typeName, ISourceModule sm,
+			int offset, IType currentNamespace) {
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sm, null);
+		IContext context = ASTUtils.findContext(sm, moduleDeclaration, offset);
+		if (currentNamespace != null) {
+			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+				// check if the first part is an alias,then get the full name
+				String prefix = typeName.substring(0, typeName
+						.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+				final Map<String, UsePart> result = PHPModelUtils
+						.getAliasToNSMap(prefix, moduleDeclaration, offset,
+								currentNamespace, true);
+				if (result.containsKey(prefix)) {
+					String fullName = result.get(prefix).getNamespace()
+							.getFullyQualifiedName();
+					typeName = typeName.replace(prefix, fullName);
+				}
+			} else if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
+
+				String prefix = typeName;
+				final Map<String, UsePart> result = PHPModelUtils
+						.getAliasToNSMap(prefix, moduleDeclaration, offset,
+								currentNamespace, true);
+				if (result.containsKey(prefix)) {
+					String fullName = result.get(prefix).getNamespace()
+							.getFullyQualifiedName();
+					typeName = fullName;
+				}
+			}
+		}
+		return PHPTypeInferenceUtils.getModelElements(
+				new PHPClassType(typeName), (ISourceModuleContext) context,
+				offset);
 	}
 
 	static private boolean isDeprecated(PHPDocBlock doc) {
