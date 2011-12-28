@@ -242,6 +242,9 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		if (references == null) {
 			references = EMPTY;
 		}
+		if (referencesWithOrigOrder == null) {
+			referencesWithOrigOrder = EMPTY;
+		}
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
