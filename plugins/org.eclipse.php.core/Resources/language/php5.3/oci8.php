@@ -145,12 +145,12 @@ class OCI_Lob  {
 	/**
 	 * Appends data from the large object to another large object
 	 * @link http://php.net/manual/en/function.oci-lob-append.php
-	 * @param lob_from OCI-Lob <p>
+	 * @param lob_from OCI_Lob <p>
 	 * The copied LOB.
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function append (OCI-Lob $lob_from) {}
+	public function append (OCI_Lob $lob_from) {}
 
 	/**
 	 * Returns size of large object
@@ -292,7 +292,7 @@ class OCI_Collection  {
 	 * </p>
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function assign (OCI-Collection $from) {}
+	public function assign (OCI_Collection $from) {}
 
 	/**
 	 * Returns size of the collection
@@ -983,15 +983,15 @@ function ocigetbufferinglob ($lob_descriptor) {}
 /**
  * Compares two LOB/FILE locators for equality
  * @link http://php.net/manual/en/function.oci-lob-is-equal.php
- * @param lob1 OCI-Lob <p>
+ * @param lob1 OCI_Lob <p>
  * A LOB identifier.
  * </p>
- * @param lob2 OCI-Lob <p>
+ * @param lob2 OCI_Lob <p>
  * A LOB identifier.
  * </p>
  * @return bool true if these objects are equal, false otherwise.
  */
-function oci_lob_is_equal (OCI-Lob $lob1, OCI-Lob $lob2) {}
+function oci_lob_is_equal (OCI_Lob $lob1, OCI_Lob $lob2) {}
 
 /**
  * @param lob_descriptor
@@ -1017,7 +1017,7 @@ function oci_lob_append ($lob_descriptor_to, $lob_descriptor_from) {}
  * @param lob_to OCI-Lob <p>
  * The destination LOB.
  * </p>
- * @param lob_from OCI-Lob <p>
+ * @param lob_from OCI_Lob <p>
  * The copied LOB.
  * </p>
  * @param length int[optional] <p>
@@ -1025,7 +1025,7 @@ function oci_lob_append ($lob_descriptor_to, $lob_descriptor_from) {}
  * </p>
  * @return bool Returns true on success or false on failure.
  */
-function oci_lob_copy (OCI-Lob $lob_to, OCI-Lob $lob_from, $length = null) {}
+function oci_lob_copy (OCI_Lob $lob_to, OCI_Lob $lob_from, $length = null) {}
 
 /**
  * @param lob_descriptor

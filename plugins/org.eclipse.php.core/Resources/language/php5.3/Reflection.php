@@ -1,6 +1,6 @@
 <?php
 
-// Start of Reflection v.$Revision: 1.4 $
+// Start of Reflection v.$Revision: 1.5 $
 
 class ReflectionException extends Exception  {
 	protected $message;
@@ -81,10 +81,10 @@ interface Reflector  {
 
 }
 
-class ReflectionFunctionAbstract implements Reflector {
-	abstract public $name;
-
-
+abstract class ReflectionFunctionAbstract implements Reflector {
+	
+	public $name;
+	
 	/**
 	 * Clones function
 	 * @link http://www.php.net/manual/en/reflectionfunctionabstract.clone.php
@@ -1874,5 +1874,5 @@ class ReflectionExtension implements Reflector {
 	public function info () {}
 
 }
-// End of Reflection v.$Revision: 1.4 $
+// End of Reflection v.$Revision: 1.5 $
 ?>

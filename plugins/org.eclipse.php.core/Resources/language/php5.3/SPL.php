@@ -688,7 +688,7 @@ class IteratorIterator implements Iterator, Traversable, OuterIterator {
 
 }
 
-class FilterIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator {
+abstract class FilterIterator extends IteratorIterator implements OuterIterator, Traversable, Iterator {
 
 	/**
 	 * Construct a filterIterator
@@ -748,7 +748,7 @@ class FilterIterator extends IteratorIterator implements OuterIterator, Traversa
 
 }
 
-class RecursiveFilterIterator extends FilterIterator implements Iterator, Traversable, OuterIterator, RecursiveIterator {
+abstract class RecursiveFilterIterator extends FilterIterator implements Iterator, Traversable, OuterIterator, RecursiveIterator {
 
 	/**
 	 * Create a RecursiveFilterIterator from a RecursiveIterator
@@ -5867,7 +5867,7 @@ class SplStack extends SplDoublyLinkedList implements ArrayAccess, Countable, Tr
 
 }
 
-class SplHeap implements Iterator, Traversable, Countable {
+abstract class SplHeap implements Iterator, Traversable, Countable {
 
 	/**
 	 * Extracts a node from top of the heap and sift up.
