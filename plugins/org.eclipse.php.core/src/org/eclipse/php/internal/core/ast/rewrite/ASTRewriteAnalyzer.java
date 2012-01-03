@@ -1540,7 +1540,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		int pos = content.length; // TODO - Check if this is right (using 0
 		// cause for the code to be inserted before
 		// the <?php section).
-		rewriteNodeList(node, Program.STATEMENTS_PROPERTY, pos, "", "");
+		rewriteNodeList(node, Program.STATEMENTS_PROPERTY, pos, "",
+				getLineDelimiter());
 		// int startPos = rewriteNode(node, Program.PACKAGE_PROPERTY, 0,
 		// ASTRewriteFormatter.NONE);
 		//
