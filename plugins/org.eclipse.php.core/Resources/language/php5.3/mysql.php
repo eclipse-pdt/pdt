@@ -178,6 +178,7 @@ function mysql_unbuffered_query ($query, $link_identifier = null) {}
  * Data inside the query should be properly escaped.
  * </p>
  * @param link_identifier resource[optional] 
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged (use mysql_select_db() and mysql_query() instead).
  * @return resource a positive MySQL result resource to the query result,
  * or false on error. The function also returns true/false for
  * INSERT/UPDATE/DELETE
@@ -548,6 +549,7 @@ function mysql_field_flags ($result, $field_offset) {}
  * @param unescaped_string string <p>
  * The string that is to be escaped.
  * </p>
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged (use mysql_real_escape_string() instead).
  * @return string the escaped string.
  */
 function mysql_escape_string ($unescaped_string) {}

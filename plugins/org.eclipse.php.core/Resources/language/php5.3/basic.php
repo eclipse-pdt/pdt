@@ -25,6 +25,7 @@
  * directory depends on
  * whether PHP has been built with --enable-debug
  * or not
+ * @deprecated This function has been removed from some SAPIs in PHP 5.3.
  * @return bool Returns true on success or false on failure. If the functionality of loading modules is not available
  * or has been disabled (either by setting
  * enable_dl off or by enabling &safemode;

@@ -24,6 +24,7 @@
  * $regs[0] will contain a copy of the complete string
  * matched.
  * </p>
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged (use preg_match() instead).
  * @return int the length of the matched string if a match for
  * pattern was found in string,
  * or false if no matches were found or an error occurred.
@@ -52,6 +53,7 @@ function ereg ($pattern, $string, array &$regs = null) {}
  * @param string string <p>
  * The input string.
  * </p>
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged (use preg_replace() instead).
  * @return string The modified string is returned. If no matches are found in 
  * string, then it will be returned unchanged.
  */
@@ -78,6 +80,7 @@ function ereg_replace ($pattern, $replacement, $string) {}
  * second, and so on. $regs[0] will contain a copy of the complete string
  * matched.
  * </p>
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged (use preg_match() with the 'i' modifier instead).
  * @return int the length of the matched string if a match for
  * pattern was found in string,
  * or false if no matches were found or an error occurred.
@@ -106,6 +109,7 @@ function eregi ($pattern, $string, array &$regs = null) {}
  * @param string string <p>
  * The input string.
  * </p>
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged (use preg_replace() with the 'i' modifier instead).
  * @return string The modified string is returned. If no matches are found in 
  * string, then it will be returned unchanged.
  */
@@ -136,6 +140,7 @@ function eregi_replace ($pattern, $replacement, $string) {}
  * last element containing the whole rest of
  * string.
  * </p>
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged (use preg_split() instead).
  * @return array an array of strings, each of which is a substring of
  * string formed by splitting it on boundaries formed
  * by the case-sensitive regular expression pattern.
@@ -197,6 +202,7 @@ function spliti ($pattern, $string, $limit = null) {}
  * @param string string <p>
  * The input string.
  * </p>
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged.
  * @return string a valid regular expression which will match
  * string, ignoring case. This expression is
  * string with each alphabetic character converted to

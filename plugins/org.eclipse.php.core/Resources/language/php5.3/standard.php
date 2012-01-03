@@ -3903,6 +3903,7 @@ function get_cfg_var ($option) {}
  * &Alias; <function>set_magic_quotes_runtime</function>
  * @link http://www.php.net/manual/en/function.magic-quotes-runtime.php
  * @param new_setting
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged.
  */
 function magic_quotes_runtime ($new_setting) {}
 
@@ -3912,6 +3913,7 @@ function magic_quotes_runtime ($new_setting) {}
  * @param new_setting bool <p>
  * false for off, true for on.
  * </p>
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged.
  * @return bool Returns true on success or false on failure.
  */
 function set_magic_quotes_runtime ($new_setting) {}
@@ -4091,6 +4093,7 @@ function call_user_func_array ($function, array $param_arr) {}
  * </p>
  * @param parameter mixed[optional] 
  * @param _ mixed[optional] 
+ * @deprecated Deprecated as of PHP 4.1.0 (use call_user_func() instead).
  * @return mixed 
  */
 function call_user_method ($method_name, &$obj, $parameter = null, $_ = null) {}
@@ -4108,6 +4111,7 @@ function call_user_method ($method_name, &$obj, $parameter = null, $_ = null) {}
  * @param params array <p>
  * An array of parameters.
  * </p>
+ * @deprecated Deprecated as of PHP 4.1.0 (use call_user_func_array() instead).
  * @return mixed 
  */
 function call_user_method_array ($method_name, &$obj, array $params) {}
@@ -6731,6 +6735,7 @@ function set_file_buffer ($fp, $buffer) {}
  * @link http://www.php.net/manual/en/function.set-socket-blocking.php
  * @param socket
  * @param mode
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged (use stream_set_blocking() instead).
  */
 function set_socket_blocking ($socket, $mode) {}
 
@@ -8188,6 +8193,7 @@ function closelog () {}
 /**
  * Initializes all syslog related variables
  * @link http://www.php.net/manual/en/function.define-syslog-variables.php
+ * @deprecated Deprecated as of PHP 5.3.0. Relying on this feature is highly discouraged.
  * @return void 
  */
 function define_syslog_variables () {}
