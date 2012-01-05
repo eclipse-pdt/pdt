@@ -17,13 +17,16 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class ReflectionCallExpression extends Expression {
+public class ReflectionCallExpression extends Expression implements
+		Dereferencable {
 
 	private Expression receiver;
 	private Expression name;
 	private CallArgumentsList args;
+	private PHPArrayDereferenceList arrayDereferenceList;
 
-	public ReflectionCallExpression(int start, int end, Expression receiver, Expression name, CallArgumentsList args) {
+	public ReflectionCallExpression(int start, int end, Expression receiver,
+			Expression name, CallArgumentsList args) {
 		super(start, end);
 
 		assert name != null;
@@ -49,6 +52,9 @@ public class ReflectionCallExpression extends Expression {
 			}
 			name.traverse(visitor);
 			args.traverse(visitor);
+			if (getArrayDereferenceList() != null) {
+				getArrayDereferenceList().traverse(visitor);
+			}
 		}
 		visitor.endvisit(this);
 	}
@@ -69,6 +75,15 @@ public class ReflectionCallExpression extends Expression {
 		assert receiver != null;
 		this.receiver = receiver;
 		setStart(receiver.sourceStart());
+	}
+
+	public PHPArrayDereferenceList getArrayDereferenceList() {
+		return arrayDereferenceList;
+	}
+
+	public void setArrayDereferenceList(
+			PHPArrayDereferenceList arrayDereferenceList) {
+		this.arrayDereferenceList = arrayDereferenceList;
 	}
 
 	/**

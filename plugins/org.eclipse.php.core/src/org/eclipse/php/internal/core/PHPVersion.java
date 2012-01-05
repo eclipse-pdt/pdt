@@ -33,7 +33,8 @@ public enum PHPVersion {
 	 * Binding</a>
 	 * </ul>
 	 */
-	PHP5_3("php5.3"); //$NON-NLS-1$
+	PHP5_3("php5.3"), //$NON-NLS-1$
+	PHP5_4("php5.4"); //$NON-NLS-1$
 
 	private String alias;
 

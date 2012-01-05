@@ -201,6 +201,11 @@ public class AST {
 			lexer53.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer53.setUseShortTags(useShortTags);
 			return lexer53;
+		} else if (PHPVersion.PHP5_4 == phpVersion) {
+			final AstLexer lexer54 = getLexer54(reader);
+			lexer54.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer54.setUseShortTags(useShortTags);
+			return lexer54;
 		} else {
 			throw new IllegalArgumentException(CoreMessages
 					.getString("ASTParser_1")
@@ -208,6 +213,12 @@ public class AST {
 		}
 	}
 
+	private AstLexer getLexer54(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer(
+				reader);
+		phpAstLexer5.setAST(this);
+		return phpAstLexer5;
+	}
 	private AstLexer getLexer53(Reader reader) throws IOException {
 		final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer phpAstLexer5 = new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer(
 				reader);
@@ -242,6 +253,11 @@ public class AST {
 			return parser;
 		} else if (PHPVersion.PHP5_3 == phpVersion) {
 			final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser(
+					lexer);
+			parser.setAST(this);
+			return parser;
+		} else if (PHPVersion.PHP5_4 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php54.PhpAstParser parser = new org.eclipse.php.internal.core.ast.scanner.php54.PhpAstParser(
 					lexer);
 			parser.setAST(this);
 			return parser;
@@ -2761,8 +2777,110 @@ public class AST {
 				this);
 		lfDeclaration.setBody(body);
 		lfDeclaration.setIsReference(isReference);
+		lfDeclaration.setStatic(isStatic);
 		lfDeclaration.formalParameters().addAll(formalParameters);
 		lfDeclaration.lexicalVariables().addAll(lexicalVars);
 		return lfDeclaration;
 	}
+	
+	
+	/*************************php5.4 starts***************************/
+
+	public ChainingInstanceCall newChainingInstanceCall(
+			PHPArrayDereferenceList arrayDereferenceList,
+			List<VariableBase> chainingMethodOrProperty) {
+		ChainingInstanceCall lfDeclaration = new ChainingInstanceCall(
+				this,arrayDereferenceList, chainingMethodOrProperty);
+		return lfDeclaration;
+	}
+
+	public DereferenceNode newDereferenceNode(Expression indexName) {
+		DereferenceNode lfDeclaration = new DereferenceNode(this);
+		lfDeclaration.setName(indexName);
+		return lfDeclaration;
+	}
+
+	public FullyQualifiedTraitMethodReference newFullyQualifiedTraitMethodReference(NamespaceName className,
+			String functionName) {
+		FullyQualifiedTraitMethodReference lfDeclaration = new FullyQualifiedTraitMethodReference(this);
+		lfDeclaration.setClassName(className);
+		lfDeclaration.setFunctionName(functionName);
+		return lfDeclaration;
+	}
+	public PHPArrayDereferenceList newPHPArrayDereferenceList(List<DereferenceNode> dereferences) {
+		PHPArrayDereferenceList lfDeclaration = new PHPArrayDereferenceList(this,dereferences);
+		return lfDeclaration;
+	}
+
+	public TraitAlias newTraitAlias(Expression traitMethod,
+			int modifier, String functionName) {
+		TraitAlias lfDeclaration = new TraitAlias(this);
+		lfDeclaration.setModifier(modifier);
+		lfDeclaration.setTraitMethod(traitMethod);
+		lfDeclaration.setFunctionName(functionName);
+		return lfDeclaration;
+	}
+
+	public TraitAliasStatement newTraitAliasStatement(TraitAlias alias) {
+		TraitAliasStatement lfDeclaration = new TraitAliasStatement(this);
+		lfDeclaration.setAlias(alias);
+		return lfDeclaration;
+	}
+
+	/**
+	 * Creates a new {@link TraitDeclaration}.
+	 * 
+	 * @return A new TraitDeclaration.
+	 */
+	public TraitDeclaration newTraitDeclaration() {
+		TraitDeclaration lfDeclaration = new TraitDeclaration(this);
+		return lfDeclaration;
+	}
+
+	/**
+	 * Creates a new {@link TraitDeclaration}.
+	 * 
+	 * @param modifier
+	 * @param className
+	 * @param superClass
+	 * @param interfaces
+	 * @param body
+	 * @return A new TraitDeclaration.
+	 */
+	public TraitDeclaration newTraitDeclaration(int modifier, String className,
+			String superClass, List<Identifier> interfaces, Block body) {
+		TraitDeclaration traitDeclaration = new TraitDeclaration(this);
+		traitDeclaration.setModifier(modifier);
+		traitDeclaration.setName(newIdentifier(className));
+		if (superClass != null) {
+			traitDeclaration.setSuperClass(newIdentifier(superClass));
+		} else {
+			traitDeclaration.setSuperClass(null);
+		}
+		traitDeclaration.interfaces().addAll(interfaces);
+		traitDeclaration.setBody(body);
+		return traitDeclaration;
+	}
+	public TraitPrecedence newTraitPrecedence(FullyQualifiedTraitMethodReference methodReference,
+			List<NamespaceName> trList) {
+		TraitPrecedence lfDeclaration = new TraitPrecedence(this);
+		lfDeclaration.setMethodReference(methodReference);
+		lfDeclaration.setTrList(trList);
+		return lfDeclaration;
+	}
+
+	public TraitPrecedenceStatement newTraitPrecedenceStatement(TraitPrecedence precedence) {
+		TraitPrecedenceStatement lfDeclaration = new TraitPrecedenceStatement(this);
+		lfDeclaration.setPrecedence(precedence);
+		return lfDeclaration;
+	}
+
+	public TraitUseStatement newTraitUseStatement(List<NamespaceName> traitList, List<TraitStatement> tsList) {
+		TraitUseStatement lfDeclaration = new TraitUseStatement(this);
+		lfDeclaration.setTraitList(traitList);
+		lfDeclaration.setTsList(tsList);
+		return lfDeclaration;
+	}
+	
+	/*************************php5.4 ends***************************/
 }

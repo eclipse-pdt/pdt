@@ -22,20 +22,26 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents a lambda function declaration
- * e.g.<pre>
+ * Represents a lambda function declaration e.g.
+ * 
+ * <pre>
  * function & (parameters) use (lexical vars) { body }
  * </pre>
+ * 
  * @see http://wiki.php.net/rfc/closures
  */
 public class LambdaFunctionDeclaration extends Expression {
 
 	private final boolean isReference;
+	private final boolean isStatic;
 	private final List<? extends Expression> lexicalVars;
 	protected List<FormalParameter> arguments = new LinkedList<FormalParameter>();
 	private Block body = new Block();
 
-	public LambdaFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters, List<? extends Expression> lexicalVars, Block body, final boolean isReference) {
+	public LambdaFunctionDeclaration(int start, int end,
+			List<FormalParameter> formalParameters,
+			List<? extends Expression> lexicalVars, Block body,
+			final boolean isReference, boolean isStatic) {
 		super(start, end);
 
 		if (formalParameters != null) {
@@ -45,6 +51,15 @@ public class LambdaFunctionDeclaration extends Expression {
 
 		this.lexicalVars = lexicalVars;
 		this.isReference = isReference;
+		this.isStatic = isStatic;
+	}
+
+	public LambdaFunctionDeclaration(int start, int end,
+			List<FormalParameter> formalParameters,
+			List<? extends Expression> lexicalVars, Block body,
+			final boolean isReference) {
+		this(start, end, formalParameters, lexicalVars, body, isReference,
+				false);
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -53,13 +68,13 @@ public class LambdaFunctionDeclaration extends Expression {
 			for (FormalParameter param : arguments) {
 				param.traverse(visitor);
 			}
-			
+
 			if (lexicalVars != null) {
 				for (Expression var : lexicalVars) {
 					var.traverse(visitor);
 				}
 			}
-			
+
 			if (this.body != null) {
 				this.body.traverse(visitor);
 			}
@@ -70,17 +85,21 @@ public class LambdaFunctionDeclaration extends Expression {
 	public Collection<? extends Expression> getLexicalVars() {
 		return lexicalVars;
 	}
-	
+
 	public Collection<FormalParameter> getArguments() {
 		return arguments;
 	}
-	
+
 	public Block getBody() {
 		return body;
 	}
 
 	public boolean isReference() {
 		return isReference;
+	}
+
+	public boolean isStatic() {
+		return isStatic;
 	}
 
 	/**

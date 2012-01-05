@@ -57,6 +57,19 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	}
 
 	/**
+	 * Returns whether the given integer includes the <code>namespace</code>
+	 * modifier.
+	 * 
+	 * @param flags
+	 *            the flags
+	 * @return <code>true</code> if the <code>namespace</code> modifier is
+	 *         included
+	 */
+	public static boolean isTrait(int flags) {
+		return (flags & AccTrait) != 0;
+	}
+
+	/**
 	 * Returns whether the given integer includes the <code>constant</code>
 	 * modifier.
 	 * 
@@ -78,7 +91,7 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	 * @return <code>true</code> if the <code>class</code> modifier is included
 	 */
 	public static boolean isClass(int flags) {
-		return !isNamespace(flags) && !isInterface(flags);
+		return !isNamespace(flags) && !isInterface(flags) && !isTrait(flags);
 	}
 
 	public static String toString(int mod) {

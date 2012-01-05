@@ -11,52 +11,64 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
-import java.util.Iterator;
+import java.util.List;
 
-import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.expressions.CallArgumentsList;
+import org.eclipse.dltk.ast.references.TypeReference;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class PHPCallArgumentsList extends CallArgumentsList {
-	PHPArrayDereferenceList arrayDereferenceList;
+/**
+ * Represent a 'use' statement.
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
+ * use A;
+ * use A as B;
+ * use \A\B as C;
+ */
+public class TraitUseStatement extends Statement {
 
-	public PHPCallArgumentsList() {
-	}
+	private List<TypeReference> traitList;
+	private List<TraitStatement> tsList;
 
-	public PHPCallArgumentsList(int start, int end) {
+	public TraitUseStatement(int start, int end, List<TypeReference> traitList,
+			List<TraitStatement> tsList) {
 		super(start, end);
+
+		assert traitList != null;
+		assert tsList != null;
+		this.traitList = traitList;
+		this.tsList = tsList;
 	}
 
-	public PHPArrayDereferenceList getArrayDereferenceList() {
-		return arrayDereferenceList;
+	public void traverse(ASTVisitor visitor) throws Exception {
+		if (visitor.visit(this)) {
+			if (traitList != null) {
+				for (TypeReference s : traitList) {
+					s.traverse(visitor);
+				}
+			}
+
+			if (tsList != null) {
+				for (TraitStatement s : tsList) {
+					s.traverse(visitor);
+				}
+			}
+			visitor.endvisit(this);
+		}
 	}
 
-	public void setArrayDereferenceList(
-			PHPArrayDereferenceList arrayDereferenceList) {
-		this.arrayDereferenceList = arrayDereferenceList;
+	public int getKind() {
+		return ASTNodeKinds.USE_STATEMENT;
 	}
 
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
 	public final void printNode(CorePrinter output) {
-	}
-
-	public void traverse(ASTVisitor visitor) throws Exception {
-		if (visitor.visit(this)) {
-			if (getChilds() != null) {
-				for (Iterator iter = getChilds().iterator(); iter.hasNext();) {
-					ASTNode s = (ASTNode) iter.next();
-					s.traverse(visitor);
-				}
-			}
-			if (arrayDereferenceList != null) {
-				arrayDereferenceList.traverse(visitor);
-			}
-			visitor.endvisit(this);
-		}
 	}
 
 	public String toString() {

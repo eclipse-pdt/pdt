@@ -18,7 +18,11 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a scalar
- * <pre>e.g.<pre> 'string',
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
+ * 'string',
  * 1,
  * 1.3,
  * __CLASS__
@@ -35,6 +39,8 @@ public class Scalar extends StringLiteral {
 	public static final int TYPE_UNKNOWN = 3;
 	// system scalars (__CLASS__ / ...)
 	public static final int TYPE_SYSTEM = 4;
+	// 'binary' starts with "0b",e.g "0b"[01]+
+	public static final int TYPE_BIN = 5;
 
 	private final int scalarType;
 
@@ -50,18 +56,18 @@ public class Scalar extends StringLiteral {
 
 	public String getType() {
 		switch (getScalarType()) {
-			case TYPE_INT:
-				return "int"; //$NON-NLS-1$
-			case TYPE_REAL:
-				return "real"; //$NON-NLS-1$
-			case TYPE_STRING:
-				return "string"; //$NON-NLS-1$
-			case TYPE_UNKNOWN:
-				return "unknown"; //$NON-NLS-1$
-			case TYPE_SYSTEM:
-				return "system"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case TYPE_INT:
+			return "int"; //$NON-NLS-1$
+		case TYPE_REAL:
+			return "real"; //$NON-NLS-1$
+		case TYPE_STRING:
+			return "string"; //$NON-NLS-1$
+		case TYPE_UNKNOWN:
+			return "unknown"; //$NON-NLS-1$
+		case TYPE_SYSTEM:
+			return "system"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 

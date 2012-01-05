@@ -19,30 +19,47 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class PHPCallExpression extends CallExpression {
+public class PHPCallExpression extends CallExpression implements Dereferencable {
 
-	public PHPCallExpression(int start, int end, ASTNode receiver, String name, CallArgumentsList args) {
+	private PHPArrayDereferenceList arrayDereferenceList;
+
+	public PHPCallExpression(int start, int end, ASTNode receiver, String name,
+			CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 	}
 
-	public PHPCallExpression(int start, int end, ASTNode receiver, SimpleReference name, CallArgumentsList args) {
+	public PHPCallExpression(int start, int end, ASTNode receiver,
+			SimpleReference name, CallArgumentsList args) {
 		super(start, end, receiver, name, args);
 	}
 
-	public PHPCallExpression(ASTNode receiver, String name, CallArgumentsList args) {
+	public PHPCallExpression(ASTNode receiver, String name,
+			CallArgumentsList args) {
 		super(receiver, name, args);
 	}
 
+	public PHPArrayDereferenceList getArrayDereferenceList() {
+		return arrayDereferenceList;
+	}
+
+	public void setArrayDereferenceList(
+			PHPArrayDereferenceList arrayDereferenceList) {
+		this.arrayDereferenceList = arrayDereferenceList;
+	}
+
 	public void traverse(ASTVisitor pVisitor) throws Exception {
-		if( pVisitor.visit( this ) ) {
-			if( receiver != null ) {
-				receiver.traverse( pVisitor );
+		if (pVisitor.visit(this)) {
+			if (receiver != null) {
+				receiver.traverse(pVisitor);
 			}
 			getCallName().traverse(pVisitor);
-			if(getArgs() != null ) {
-				getArgs().traverse( pVisitor );
+			if (getArgs() != null) {
+				getArgs().traverse(pVisitor);
 			}
-			pVisitor.endvisit( this );
+			if (getArrayDereferenceList() != null) {
+				getArrayDereferenceList().traverse(pVisitor);
+			}
+			pVisitor.endvisit(this);
 		}
 	}
 

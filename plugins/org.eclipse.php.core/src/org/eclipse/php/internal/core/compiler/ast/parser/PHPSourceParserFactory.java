@@ -72,6 +72,10 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements
 			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PhpSourceParser(
 					fileName);
 		}
+		if (PHPVersion.PHP5_4 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PhpSourceParser(
+					fileName);
+		}
 		return null;
 	}
 
@@ -91,6 +95,9 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements
 		}
 		if (PHPVersion.PHP5_3 == phpVersion) {
 			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PhpSourceParser();
+		}
+		if (PHPVersion.PHP5_4 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PhpSourceParser();
 		}
 		return null;
 	}

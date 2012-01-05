@@ -55,6 +55,63 @@ public class SymbolsProvider {
 	public static final int OBJECT_OP_SYMBOL_ID = 26;
 
 	public static final Symbol ERROR_SYMBOL = new Symbol(Integer.MIN_VALUE);
+
+	// Pre-defined PHP 54 Symbols.
+	private static final Symbol OBJECT_OP_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_OBJECT_OPERATOR);
+	private static final Symbol DOT_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_NEKUDA);
+	private static final Symbol LESS_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_RGREATER);
+	private static final Symbol GREATER_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_LGREATER);
+	private static final Symbol RBRACKET_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_CLOSE_RECT);
+	private static final Symbol LBRACKET_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_OPEN_RECT);
+	private static final Symbol RBRACE_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_CURLY_CLOSE);
+	private static final Symbol LBRACE_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_CURLY_OPEN);
+	private static final Symbol LPAREN_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_OPEN_PARENTHESE);
+	private static final Symbol RPAREN_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_CLOSE_PARENTHESE);
+	private static final Symbol INTERFACE_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_INTERFACE);
+	private static final Symbol CLASS_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_CLASS);
+	private static final Symbol RETURN_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_RETURN);
+	private static final Symbol BREAK_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_BREAK);
+	private static final Symbol CONTINUE_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_CONTINUE);
+	private static final Symbol DO_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_DO);
+	private static final Symbol WHILE_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_WHILE);
+	private static final Symbol SEMICOLON_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_SEMICOLON);
+	private static final Symbol THROW_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_THROW);
+	private static final Symbol NEW_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_NEW);
+	private static final Symbol ELSE_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ELSE);
+	private static final Symbol IMPLEMENTS_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_IMPLEMENTS);
+	private static final Symbol END_IF_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ENDIF);
+	private static final Symbol END_FOR_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ENDFOR);
+	private static final Symbol END_WHILE_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ENDWHILE);
+	private static final Symbol END_FOREACH_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ENDFOREACH);
+	private static final Symbol END_SWITCH_SYMBOL_PHP54 = new Symbol(
+			org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ENDSWITCH);
+
 	// Pre-defined PHP 53 Symbols.
 	private static final Symbol OBJECT_OP_SYMBOL_PHP53 = new Symbol(
 			org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_OBJECT_OPERATOR);
@@ -405,6 +462,66 @@ public class SymbolsProvider {
 				break;
 			}
 		}
+		if (PHPVersion.PHP5_4 == phpVersion) {
+			switch (symID) {
+			case DOT_SYMBOL_ID:
+				return DOT_SYMBOL_PHP54;
+			case LESS_ID:
+				return LESS_SYMBOL_PHP54;
+			case GREATER_ID:
+				return GREATER_SYMBOL_PHP54;
+			case RBRACKET_ID:
+				return RBRACKET_SYMBOL_PHP54;
+			case LBRACKET_ID:
+				return LBRACKET_SYMBOL_PHP54;
+			case RBRACE_ID:
+				return RBRACE_SYMBOL_PHP54;
+			case LBRACE_ID:
+				return LBRACE_SYMBOL_PHP54;
+			case RPAREN_ID:
+				return RPAREN_SYMBOL_PHP54;
+			case LPAREN_ID:
+				return LPAREN_SYMBOL_PHP54;
+			case INTERFACE_ID:
+				return INTERFACE_SYMBOL_PHP54;
+			case CLASS_ID:
+				return CLASS_SYMBOL_PHP54;
+			case RETURN_ID:
+				return RETURN_SYMBOL_PHP54;
+			case BREAK_ID:
+				return BREAK_SYMBOL_PHP54;
+			case CONTINUE_ID:
+				return CONTINUE_SYMBOL_PHP54;
+			case DO_ID:
+				return DO_SYMBOL_PHP54;
+			case WHILE_ID:
+				return WHILE_SYMBOL_PHP54;
+			case SEMICOLON_ID:
+				return SEMICOLON_SYMBOL_PHP54;
+			case THROW_ID:
+				return THROW_SYMBOL_PHP54;
+			case NEW_ID:
+				return NEW_SYMBOL_PHP54;
+			case ELSE_ID:
+				return ELSE_SYMBOL_PHP54;
+			case IMPLEMENTS_ID:
+				return IMPLEMENTS_SYMBOL_PHP54;
+			case END_FOR_ID:
+				return END_FOR_SYMBOL_PHP54;
+			case END_FOREACH_ID:
+				return END_FOREACH_SYMBOL_PHP54;
+			case END_IF_ID:
+				return END_IF_SYMBOL_PHP54;
+			case END_WHILE_ID:
+				return END_WHILE_SYMBOL_PHP54;
+			case END_SWITCH_ID:
+				return END_SWITCH_SYMBOL_PHP54;
+			case OBJECT_OP_SYMBOL_ID:
+				return OBJECT_OP_SYMBOL_PHP54;
+			default:
+				break;
+			}
+		}
 		return ERROR_SYMBOL;
 	}
 
@@ -419,7 +536,21 @@ public class SymbolsProvider {
 	 * @return The sym id or the ERROR_SYMBOL.sym in case of an error.
 	 */
 	public static int getModifierSym(String modifier, PHPVersion phpVersion) {
-		if (PHPVersion.PHP5_3 == phpVersion) {
+		if (PHPVersion.PHP5_4 == phpVersion) {
+			if (modifier.equals("public")) {
+				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_PUBLIC;
+			} else if (modifier.equals("private")) {
+				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_PRIVATE;
+			} else if (modifier.equals("protected")) {
+				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_PROTECTED;
+			} else if (modifier.equals("static")) {
+				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_STATIC;
+			} else if (modifier.equals("abstract")) {
+				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ABSTRACT;
+			} else if (modifier.equals("final")) {
+				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_FINAL;
+			}
+		} else if (PHPVersion.PHP5_3 == phpVersion) {
 			if (modifier.equals("public")) {
 				return org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_PUBLIC;
 			} else if (modifier.equals("private")) {

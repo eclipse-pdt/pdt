@@ -18,10 +18,13 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents a class instanciation.
- * This class holds the class name as an expression and
- * array of constructor parameters
- * <pre>e.g.<pre> new MyClass(),
+ * Represents a class instanciation. This class holds the class name as an
+ * expression and array of constructor parameters
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
+ * new MyClass(),
  * new $a('start'),
  * new foo()(1, $a)
  */
@@ -29,8 +32,10 @@ public class ClassInstanceCreation extends Expression {
 
 	private final Expression className;
 	private final CallArgumentsList ctorParams;
+	private ChainingInstanceCall chainingInstanceCall;
 
-	public ClassInstanceCreation(int start, int end, Expression className, CallArgumentsList ctorParams) {
+	public ClassInstanceCreation(int start, int end, Expression className,
+			CallArgumentsList ctorParams) {
 		super(start, end);
 
 		assert className != null && ctorParams != null;
@@ -44,6 +49,9 @@ public class ClassInstanceCreation extends Expression {
 		if (visit) {
 			className.traverse(visitor);
 			ctorParams.traverse(visitor);
+			if (chainingInstanceCall != null) {
+				chainingInstanceCall.traverse(visitor);
+			}
 		}
 		visitor.endvisit(this);
 	}
@@ -58,6 +66,15 @@ public class ClassInstanceCreation extends Expression {
 
 	public CallArgumentsList getCtorParams() {
 		return ctorParams;
+	}
+
+	public ChainingInstanceCall getChainingInstanceCall() {
+		return chainingInstanceCall;
+	}
+
+	public void setChainingInstanceCall(
+			ChainingInstanceCall chainingInstanceCall) {
+		this.chainingInstanceCall = chainingInstanceCall;
 	}
 
 	/**
