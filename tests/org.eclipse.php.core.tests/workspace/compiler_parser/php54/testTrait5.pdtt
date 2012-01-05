@@ -1,0 +1,58 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait HelloWorld {
+    public function sayHello() {
+        echo 'Hello World!';
+    }
+}
+
+// Change visibility of sayHello
+class MyClass1 {
+    use HelloWorld { sayHello as protected; }
+}
+
+// Alias method with changed visibility
+// sayHello visibility not changed
+class MyClass2 {
+    use HelloWorld { sayHello as private myPrivateHello; }
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="352">
+	<TraitDeclaration start="7" end="95" modifiers="" name="HelloWorld">
+		<PHPMethodDeclaration start="30" end="93" modifiers="public" name="sayHello">
+			<EchoStatement start="67" end="87">
+				<Scalar start="72" end="86" type="string" value="&apos;Hello World!&apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="130" end="194" modifiers="" name="MyClass1">
+		<TraitUseStatement start="151" end="192">
+			<FullyQualifiedReference start="155" end="165" name="HelloWorld">
+			</FullyQualifiedReference>
+			<TraitAliasStatement start="168" end="190">
+				<TraitAlias start="0" end="0">
+					<SimpleReference start="168" end="176" name="sayHello">
+					</SimpleReference>
+				</TraitAlias>
+			</TraitAliasStatement>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<ClassDeclaration start="271" end="348" modifiers="" name="MyClass2">
+		<TraitUseStatement start="292" end="346">
+			<FullyQualifiedReference start="296" end="306" name="HelloWorld">
+			</FullyQualifiedReference>
+			<TraitAliasStatement start="309" end="344">
+				<TraitAlias start="0" end="0" methodName="myPrivateHello">
+					<SimpleReference start="309" end="317" name="sayHello">
+					</SimpleReference>
+				</TraitAlias>
+			</TraitAliasStatement>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<EmptyStatement start="349" end="351">
+	</EmptyStatement>
+</ModuleDeclaration>

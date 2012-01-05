@@ -1,0 +1,58 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait Hello {
+    public function sayHello() {
+        echo 'Hello ';
+    }
+}
+
+trait World {
+    public function sayWorld() {
+        echo ' World';
+    }
+}
+
+class MyHelloWorld {
+    use Hello, World;
+    public function sayExclamationMark() {
+        echo '!';
+    }
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="280">
+	<TraitDeclaration start="7" end="84" modifiers="" name="Hello">
+		<PHPMethodDeclaration start="25" end="82" modifiers="public" name="sayHello">
+			<EchoStatement start="62" end="76">
+				<Scalar start="67" end="75" type="string" value="&apos;Hello &apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<TraitDeclaration start="86" end="163" modifiers="" name="World">
+		<PHPMethodDeclaration start="104" end="161" modifiers="public" name="sayWorld">
+			<EchoStatement start="141" end="155">
+				<Scalar start="146" end="154" type="string" value="&apos; World&apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="165" end="276" modifiers="" name="MyHelloWorld">
+		<TraitUseStatement start="190" end="207">
+			<FullyQualifiedReference start="194" end="199" name="Hello">
+			</FullyQualifiedReference>
+			<FullyQualifiedReference start="201" end="206" name="World">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+		<PHPMethodDeclaration start="212" end="274" modifiers="public" name="sayExclamationMark">
+			<EchoStatement start="259" end="268">
+				<Scalar start="264" end="267" type="string" value="&apos;!&apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="277" end="279">
+	</EmptyStatement>
+</ModuleDeclaration>

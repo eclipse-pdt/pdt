@@ -1,0 +1,183 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait Hello {
+    public function sayHelloWorld() {
+        echo 'Hello'.$this->getWorld();
+    }
+    abstract public function getWorld();
+}
+
+class MyHelloWorld {
+    private $world;
+    use Hello;
+    public function getWorld() {
+        return $this->world;
+    }
+    public function setWorld($val) {
+        $this->world = $val;
+    }
+}
+?>
+--EXPECT--
+<Program start='0' length='349'>
+	<Statements>
+		<TraitDeclaration start='7' length='140''>
+			<TraitName>
+				<Identifier start='13' length='5' name='Hello'/>
+			</TraitName>
+			<Block start='19' length='128' isCurly='true'>
+				<MethodDeclaration start='25' length='79' modifier='public'>
+					<FunctionDeclaration start='32' length='72' isReference='false'>
+						<FunctionName>
+							<Identifier start='41' length='13' name='sayHelloWorld'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='57' length='47' isCurly='true'>
+								<EchoStatement start='67' length='31'>
+									<InfixExpression start='72' length='25' operator='.'>
+										<Scalar start='72' length='7' type='string' value='&apos;Hello&apos;'/>
+										<MethodInvocation start='80' length='17'>
+											<Dispatcher>
+												<Variable start='80' length='5' isDollared='true'>
+													<Identifier start='81' length='4' name='this'/>
+												</Variable>
+											</Dispatcher>
+											<Property>
+												<FunctionInvocation start='87' length='10'>
+													<FunctionName start='87' length='8'>
+														<Variable start='87' length='8' isDollared='false'>
+															<Identifier start='87' length='8' name='getWorld'/>
+														</Variable>
+													</FunctionName>
+													<Parameters>
+													</Parameters>
+												</FunctionInvocation>
+											</Property>
+										</MethodInvocation>
+									</InfixExpression>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+				<MethodDeclaration start='109' length='36' modifier='public abstract'>
+					<FunctionDeclaration start='125' length='20' isReference='false'>
+						<FunctionName>
+							<Identifier start='134' length='8' name='getWorld'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<ClassDeclaration start='149' length='197' modifier=''>
+			<ClassName>
+				<Identifier start='155' length='12' name='MyHelloWorld'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='168' length='178' isCurly='true'>
+				<FieldsDeclaration start='174' length='15' modifier='private'>
+					<VariableName>
+						<Variable start='182' length='6' isDollared='true'>
+							<Identifier start='183' length='5' name='world'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<TraitUseStatement start='194' length='10'>
+					<TraitNameList>
+						<NamespaceName start='198' length='5' global='false' current='false'>
+							<Identifier start='198' length='5' name='Hello'/>
+						</NamespaceName>
+					</TraitNameList>
+				</TraitUseStatement>
+				<MethodDeclaration start='209' length='63' modifier='public'>
+					<FunctionDeclaration start='216' length='56' isReference='false'>
+						<FunctionName>
+							<Identifier start='225' length='8' name='getWorld'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='236' length='36' isCurly='true'>
+								<ReturnStatement start='246' length='20'>
+									<FieldAccess start='253' length='12'>
+										<Dispatcher>
+											<Variable start='253' length='5' isDollared='true'>
+												<Identifier start='254' length='4' name='this'/>
+											</Variable>
+										</Dispatcher>
+										<Property>
+											<Variable start='260' length='5' isDollared='false'>
+												<Identifier start='260' length='5' name='world'/>
+											</Variable>
+										</Property>
+									</FieldAccess>
+								</ReturnStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+				<MethodDeclaration start='277' length='67' modifier='public'>
+					<FunctionDeclaration start='284' length='60' isReference='false'>
+						<FunctionName>
+							<Identifier start='293' length='8' name='setWorld'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='302' length='4' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='302' length='4' isDollared='true'>
+										<Identifier start='303' length='3' name='val'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='308' length='36' isCurly='true'>
+								<ExpressionStatement start='318' length='20'>
+									<Assignment start='318' length='19' operator='='>
+										<FieldAccess start='318' length='12'>
+											<Dispatcher>
+												<Variable start='318' length='5' isDollared='true'>
+													<Identifier start='319' length='4' name='this'/>
+												</Variable>
+											</Dispatcher>
+											<Property>
+												<Variable start='325' length='5' isDollared='false'>
+													<Identifier start='325' length='5' name='world'/>
+												</Variable>
+											</Property>
+										</FieldAccess>
+										<Value>
+											<Variable start='333' length='4' isDollared='true'>
+												<Identifier start='334' length='3' name='val'/>
+											</Variable>
+										</Value>
+									</Assignment>
+								</ExpressionStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='347' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,123 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait HelloWorld {
+    public function sayHello() {
+        echo 'Hello World!';
+    }
+}
+
+// Change visibility of sayHello
+class MyClass1 {
+    use HelloWorld { sayHello as protected; }
+}
+
+// Alias method with changed visibility
+// sayHello visibility not changed
+class MyClass2 {
+    use HelloWorld { sayHello as private myPrivateHello; }
+}
+?>
+--EXPECT--
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE| 
+|1
+PHP_TRAIT|trait|1
+WHITESPACE| |1
+PHP_STRING|HelloWorld|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|sayHello|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|'Hello World!'|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Change visibility of sayHello
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|MyClass1|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_USE|use|1
+WHITESPACE| |1
+PHP_STRING|HelloWorld|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE| |1
+PHP_STRING|sayHello|1
+WHITESPACE| |1
+PHP_AS|as|1
+WHITESPACE| |1
+PHP_PROTECTED|protected|1
+PHP_SEMICOLON|;|1
+WHITESPACE| |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Alias method with changed visibility
+|1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| sayHello visibility not changed
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|MyClass2|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_USE|use|1
+WHITESPACE| |1
+PHP_STRING|HelloWorld|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE| |1
+PHP_STRING|sayHello|1
+WHITESPACE| |1
+PHP_AS|as|1
+WHITESPACE| |1
+PHP_PRIVATE|private|1
+WHITESPACE| |1
+PHP_STRING|myPrivateHello|1
+PHP_SEMICOLON|;|1
+WHITESPACE| |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1

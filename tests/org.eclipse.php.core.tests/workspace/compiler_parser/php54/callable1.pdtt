@@ -1,0 +1,54 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php
+function hi(callable $f) {
+    $f();
+}
+hi([new Human("Gonzalo"), 'hello']);
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="85">
+	<PHPMethodDeclaration start="6" end="44" modifiers="" name="hi">
+		<FormalParameter start="18" end="20" modifiers="" isMandatory="true">
+			<TypeReference start="18" end="26" name="callable">
+			</TypeReference>
+			<VariableReference start="27" end="29" name="$f">
+			</VariableReference>
+		</FormalParameter>
+		<ExpressionStatement start="37" end="42">
+			<ReflectionCallExpression start="37" end="41">
+				<VariableReference start="37" end="39" name="$f">
+				</VariableReference>
+				<PHPCallArgumentsList start="40" end="40">
+				</PHPCallArgumentsList>
+			</ReflectionCallExpression>
+		</ExpressionStatement>
+	</PHPMethodDeclaration>
+	<ExpressionStatement start="45" end="81">
+		<PHPCallExpression start="45" end="80">
+			<FullyQualifiedReference start="45" end="47" name="hi">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="48" end="79">
+				<ArrayCreation start="48" end="79">
+					<ArrayElement start="49" end="69">
+						<ClassInstanceCreation start="49" end="69">
+							<FullyQualifiedReference start="53" end="58" name="Human">
+							</FullyQualifiedReference>
+							<PHPCallArgumentsList start="59" end="68">
+								<Scalar start="59" end="68" type="string" value="&quot;Gonzalo&quot;">
+								</Scalar>
+							</PHPCallArgumentsList>
+						</ClassInstanceCreation>
+					</ArrayElement>
+					<ArrayElement start="71" end="78">
+						<Scalar start="71" end="78" type="string" value="&apos;hello&apos;">
+						</Scalar>
+					</ArrayElement>
+				</ArrayCreation>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="82" end="84">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,29 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+echo (new Human("Gonzalo"))->hello();
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="48">
+	<EchoStatement start="7" end="44">
+		<ClassInstanceCreation start="13" end="33">
+			<FullyQualifiedReference start="17" end="22" name="Human">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="23" end="32">
+				<Scalar start="23" end="32" type="string" value="&quot;Gonzalo&quot;">
+				</Scalar>
+			</PHPCallArgumentsList>
+			<ChainingInstanceCall start="0" end="0">
+				<PHPCallExpression start="36" end="43">
+					<SimpleReference start="36" end="41" name="hello">
+					</SimpleReference>
+					<PHPCallArgumentsList start="42" end="42">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</ChainingInstanceCall>
+		</ClassInstanceCreation>
+	</EchoStatement>
+	<EmptyStatement start="45" end="47">
+	</EmptyStatement>
+</ModuleDeclaration>

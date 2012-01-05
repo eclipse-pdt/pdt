@@ -42,6 +42,9 @@ public class CompilerParserTests extends AbstractPDTTTest {
 				new String[] { "/workspace/compiler_parser/php5" });
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/compiler_parser/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] {
+				"/workspace/compiler_parser/php53",
+				"/workspace/compiler_parser/php54" });
 	};
 
 	public static void setUpSuite() throws Exception {

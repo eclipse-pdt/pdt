@@ -1,0 +1,90 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait PropertiesTrait {
+    public $x = 1;
+}
+
+class PropertiesExample {
+    use PropertiesTrait;
+}
+
+$example = new PropertiesExample;
+$example->x;
+?>
+--EXPECT--
+<Program start='0' length='156'>
+	<Statements>
+		<TraitDeclaration start='7' length='44''>
+			<TraitName>
+				<Identifier start='13' length='15' name='PropertiesTrait'/>
+			</TraitName>
+			<Block start='29' length='22' isCurly='true'>
+				<FieldsDeclaration start='35' length='14' modifier='public'>
+					<VariableName>
+						<Variable start='42' length='2' isDollared='true'>
+							<Identifier start='43' length='1' name='x'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='47' length='1' type='int' value='1'/>
+					</InitialValue>
+				</FieldsDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<ClassDeclaration start='53' length='52' modifier=''>
+			<ClassName>
+				<Identifier start='59' length='17' name='PropertiesExample'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='77' length='28' isCurly='true'>
+				<TraitUseStatement start='83' length='20'>
+					<TraitNameList>
+						<NamespaceName start='87' length='15' global='false' current='false'>
+							<Identifier start='87' length='15' name='PropertiesTrait'/>
+						</NamespaceName>
+					</TraitNameList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<ExpressionStatement start='107' length='33'>
+			<Assignment start='107' length='32' operator='='>
+				<Variable start='107' length='8' isDollared='true'>
+					<Identifier start='108' length='7' name='example'/>
+				</Variable>
+				<Value>
+					<ClassInstanceCreation start='118' length='21'>
+						<ClassName start='122' length='17'>
+							<NamespaceName start='122' length='17' global='false' current='false'>
+								<Identifier start='122' length='17' name='PropertiesExample'/>
+							</NamespaceName>
+						</ClassName>
+						<ConstructorParameters>
+						</ConstructorParameters>
+					</ClassInstanceCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='141' length='12'>
+			<FieldAccess start='141' length='11'>
+				<Dispatcher>
+					<Variable start='141' length='8' isDollared='true'>
+						<Identifier start='142' length='7' name='example'/>
+					</Variable>
+				</Dispatcher>
+				<Property>
+					<Variable start='151' length='1' isDollared='false'>
+						<Identifier start='151' length='1' name='x'/>
+					</Variable>
+				</Property>
+			</FieldAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='154' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

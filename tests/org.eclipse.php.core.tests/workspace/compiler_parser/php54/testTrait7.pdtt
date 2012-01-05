@@ -1,0 +1,69 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait Counter {
+    public function inc() {
+        static $c = 0;
+        $c = $c + 1;
+        echo "$c\n";
+    }
+}
+
+class C1 {
+    use Counter;
+}
+
+class C2 {
+    use Counter;
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="189">
+	<TraitDeclaration start="7" end="123" modifiers="" name="Counter">
+		<PHPMethodDeclaration start="27" end="121" modifiers="public" name="inc">
+			<StaticStatement start="59" end="73">
+				<Assignment start="66" end="72" operator="=">
+					<VariableReference start="66" end="68" name="$c">
+					</VariableReference>
+					<Scalar start="71" end="72" type="int" value="0">
+					</Scalar>
+				</Assignment>
+			</StaticStatement>
+			<ExpressionStatement start="82" end="94">
+				<Assignment start="82" end="93" operator="=">
+					<VariableReference start="82" end="84" name="$c">
+					</VariableReference>
+					<InfixExpression start="87" end="93" operator="+">
+						<VariableReference start="87" end="89" name="$c">
+						</VariableReference>
+						<Scalar start="92" end="93" type="int" value="1">
+						</Scalar>
+					</InfixExpression>
+				</Assignment>
+			</ExpressionStatement>
+			<EchoStatement start="103" end="115">
+				<Quote start="108" end="114" type="quote">
+					<VariableReference start="109" end="111" name="$c">
+					</VariableReference>
+					<Scalar start="111" end="113" type="string" value="\n">
+					</Scalar>
+				</Quote>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="125" end="154" modifiers="" name="C1">
+		<TraitUseStatement start="140" end="152">
+			<FullyQualifiedReference start="144" end="151" name="Counter">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<ClassDeclaration start="156" end="185" modifiers="" name="C2">
+		<TraitUseStatement start="171" end="183">
+			<FullyQualifiedReference start="175" end="182" name="Counter">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<EmptyStatement start="186" end="188">
+	</EmptyStatement>
+</ModuleDeclaration>

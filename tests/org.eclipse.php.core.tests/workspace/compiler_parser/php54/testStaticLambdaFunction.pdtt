@@ -1,0 +1,19 @@
+--TEST--
+Test Lambda Function
+--FILE--
+<?php $lambda = static function () { }; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="43">
+	<ExpressionStatement start="6" end="39">
+		<Assignment start="6" end="38" operator="=">
+			<VariableReference start="6" end="13" name="$lambda">
+			</VariableReference>
+			<LambdaFunctionDeclaration start="23" end="38" isReference="false" isStatic="true">
+				<Arguments>
+				</Arguments>
+			</LambdaFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="40" end="42">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,105 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait HelloWorld {
+    public function sayHello() {
+        echo 'Hello World!';
+    }
+}
+
+// Change visibility of sayHello
+class MyClass1 {
+    use HelloWorld { sayHello as protected; }
+}
+
+// Alias method with changed visibility
+// sayHello visibility not changed
+class MyClass2 {
+    use HelloWorld { sayHello as private myPrivateHello; }
+}
+?>
+--EXPECT--
+<Program start='0' length='351'>
+	<Statements>
+		<TraitDeclaration start='7' length='88''>
+			<TraitName>
+				<Identifier start='13' length='10' name='HelloWorld'/>
+			</TraitName>
+			<Block start='24' length='71' isCurly='true'>
+				<MethodDeclaration start='30' length='63' modifier='public'>
+					<FunctionDeclaration start='37' length='56' isReference='false'>
+						<FunctionName>
+							<Identifier start='46' length='8' name='sayHello'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='57' length='36' isCurly='true'>
+								<EchoStatement start='67' length='20'>
+									<Scalar start='72' length='14' type='string' value='&apos;Hello World!&apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<ClassDeclaration start='130' length='64' modifier=''>
+			<ClassName>
+				<Identifier start='136' length='8' name='MyClass1'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='145' length='49' isCurly='true'>
+				<TraitUseStatement start='151' length='41'>
+					<TraitNameList>
+						<NamespaceName start='155' length='10' global='false' current='false'>
+							<Identifier start='155' length='10' name='HelloWorld'/>
+						</NamespaceName>
+					</TraitNameList>
+					<TraitStatementList>
+						<TraitAliasStatement start='168' length='22'>
+							<TraitAlias start='168' length='21'>
+								<Identifier start='168' length='8' name='sayHello'/>
+							</TraitAlias>
+						</TraitAliasStatement>
+					</TraitStatementList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<ClassDeclaration start='271' length='77' modifier=''>
+			<ClassName>
+				<Identifier start='277' length='8' name='MyClass2'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='286' length='62' isCurly='true'>
+				<TraitUseStatement start='292' length='54'>
+					<TraitNameList>
+						<NamespaceName start='296' length='10' global='false' current='false'>
+							<Identifier start='296' length='10' name='HelloWorld'/>
+						</NamespaceName>
+					</TraitNameList>
+					<TraitStatementList>
+						<TraitAliasStatement start='309' length='35'>
+							<TraitAlias start='309' length='34'>
+								<Identifier start='309' length='8' name='sayHello'/>
+							</TraitAlias>
+						</TraitAliasStatement>
+					</TraitStatementList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='349' length='2'/>
+	</Statements>
+	<Comments>
+		<Comment start='97' length='33' commentType='singleLine'/>
+		<Comment start='196' length='40' commentType='singleLine'/>
+		<Comment start='236' length='35' commentType='singleLine'/>
+	</Comments>
+</Program>

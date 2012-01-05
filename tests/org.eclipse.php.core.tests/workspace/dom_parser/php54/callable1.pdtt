@@ -1,0 +1,87 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php
+function hi(callable $f) {
+    $f();
+}
+hi([new Human("Gonzalo"), 'hello']);
+?>
+--EXPECT--
+<Program start='0' length='84'>
+	<Statements>
+		<FunctionDeclaration start='6' length='38' isReference='false'>
+			<FunctionName>
+				<Identifier start='15' length='2' name='hi'/>
+			</FunctionName>
+			<FormalParameters>
+				<FormalParameter start='18' length='11' isMandatory='false'>
+					<Type>
+						<Identifier start='18' length='8' name='callable'/>
+					</Type>
+					<ParameterName>
+						<Variable start='27' length='2' isDollared='true'>
+							<Identifier start='28' length='1' name='f'/>
+						</Variable>
+					</ParameterName>
+					<DefaultValue>
+					</DefaultValue>
+				</FormalParameter>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='31' length='13' isCurly='true'>
+					<ExpressionStatement start='37' length='5'>
+						<FunctionInvocation start='37' length='4'>
+							<FunctionName start='37' length='2'>
+								<Variable start='37' length='2' isDollared='true'>
+									<Identifier start='38' length='1' name='f'/>
+								</Variable>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+					</ExpressionStatement>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<ExpressionStatement start='45' length='36'>
+			<FunctionInvocation start='45' length='35'>
+				<FunctionName start='45' length='2'>
+					<NamespaceName start='45' length='2' global='false' current='false'>
+						<Identifier start='45' length='2' name='hi'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+					<ArrayCreation start='48' length='31'>
+						<ArrayElement start='49' length='20'>
+							<Key>
+							</Key>
+							<Value>
+								<ClassInstanceCreation start='49' length='20'>
+									<ClassName start='53' length='5'>
+										<NamespaceName start='53' length='5' global='false' current='false'>
+											<Identifier start='53' length='5' name='Human'/>
+										</NamespaceName>
+									</ClassName>
+									<ConstructorParameters>
+										<Scalar start='59' length='9' type='string' value='"Gonzalo"'/>
+									</ConstructorParameters>
+								</ClassInstanceCreation>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='71' length='7'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='71' length='7' type='string' value='&apos;hello&apos;'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='82' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

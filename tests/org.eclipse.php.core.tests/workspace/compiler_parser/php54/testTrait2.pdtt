@@ -1,0 +1,85 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+class Base {
+    public function sayHello() {
+        echo 'Hello ';
+    }
+}
+
+trait SayWorld {
+    public function sayHello() {
+        parent::sayHello();
+        echo 'World!';
+    }
+}
+
+class MyHelloWorld extends Base {
+    use SayWorld;
+}
+
+$o = new MyHelloWorld();
+$o->sayHello();
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="294">
+	<ClassDeclaration start="7" end="83" modifiers="" name="Base">
+		<PHPMethodDeclaration start="24" end="81" modifiers="public" name="sayHello">
+			<EchoStatement start="61" end="75">
+				<Scalar start="66" end="74" type="string" value="&apos;Hello &apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<TraitDeclaration start="85" end="193" modifiers="" name="SayWorld">
+		<PHPMethodDeclaration start="106" end="191" modifiers="public" name="sayHello">
+			<ExpressionStatement start="143" end="162">
+				<StaticMethodInvocation start="143" end="161">
+					<FullyQualifiedReference start="143" end="149" name="parent">
+					</FullyQualifiedReference>
+					<SimpleReference start="151" end="159" name="sayHello">
+					</SimpleReference>
+					<PHPCallArgumentsList start="160" end="160">
+					</PHPCallArgumentsList>
+				</StaticMethodInvocation>
+			</ExpressionStatement>
+			<EchoStatement start="171" end="185">
+				<Scalar start="176" end="184" type="string" value="&apos;World!&apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="195" end="248" modifiers="" name="MyHelloWorld">
+		<FullyQualifiedReference start="222" end="226" name="Base">
+		</FullyQualifiedReference>
+		<TraitUseStatement start="233" end="246">
+			<FullyQualifiedReference start="237" end="245" name="SayWorld">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<ExpressionStatement start="250" end="274">
+		<Assignment start="250" end="273" operator="=">
+			<VariableReference start="250" end="252" name="$o">
+			</VariableReference>
+			<ClassInstanceCreation start="255" end="273">
+				<FullyQualifiedReference start="259" end="271" name="MyHelloWorld">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="272" end="272">
+				</PHPCallArgumentsList>
+			</ClassInstanceCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="275" end="290">
+		<PHPCallExpression start="275" end="289">
+			<VariableReference start="275" end="277" name="$o">
+			</VariableReference>
+			<SimpleReference start="279" end="287" name="sayHello">
+			</SimpleReference>
+			<PHPCallArgumentsList start="288" end="288">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="291" end="293">
+	</EmptyStatement>
+</ModuleDeclaration>

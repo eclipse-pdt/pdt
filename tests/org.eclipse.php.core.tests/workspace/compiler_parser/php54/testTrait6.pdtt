@@ -1,0 +1,85 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait Hello {
+    public function sayHelloWorld() {
+        echo 'Hello'.$this->getWorld();
+    }
+    abstract public function getWorld();
+}
+
+class MyHelloWorld {
+    private $world;
+    use Hello;
+    public function getWorld() {
+        return $this->world;
+    }
+    public function setWorld($val) {
+        $this->world = $val;
+    }
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="350">
+	<TraitDeclaration start="7" end="147" modifiers="" name="Hello">
+		<PHPMethodDeclaration start="25" end="104" modifiers="public" name="sayHelloWorld">
+			<EchoStatement start="67" end="98">
+				<InfixExpression start="72" end="97" operator=".">
+					<Scalar start="72" end="79" type="string" value="&apos;Hello&apos;">
+					</Scalar>
+					<PHPCallExpression start="80" end="97">
+						<VariableReference start="80" end="85" name="$this">
+						</VariableReference>
+						<SimpleReference start="87" end="95" name="getWorld">
+						</SimpleReference>
+						<PHPCallArgumentsList start="96" end="96">
+						</PHPCallArgumentsList>
+					</PHPCallExpression>
+				</InfixExpression>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="109" end="145" modifiers="abstract,public" name="getWorld">
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="149" end="346" modifiers="" name="MyHelloWorld">
+		<PHPFieldDeclaration start="182" end="188" modifiers="private">
+			<SimpleReference start="182" end="188" name="$world">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<TraitUseStatement start="194" end="204">
+			<FullyQualifiedReference start="198" end="203" name="Hello">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+		<PHPMethodDeclaration start="209" end="272" modifiers="public" name="getWorld">
+			<ReturnStatement start="246" end="266">
+				<FieldAccess start="253" end="265">
+					<VariableReference start="253" end="258" name="$this">
+					</VariableReference>
+					<SimpleReference start="260" end="265" name="world">
+					</SimpleReference>
+				</FieldAccess>
+			</ReturnStatement>
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="277" end="344" modifiers="public" name="setWorld">
+			<FormalParameter start="302" end="306" modifiers="" isMandatory="true">
+				<VariableReference start="302" end="306" name="$val">
+				</VariableReference>
+			</FormalParameter>
+			<ExpressionStatement start="318" end="338">
+				<Assignment start="318" end="337" operator="=">
+					<FieldAccess start="318" end="330">
+						<VariableReference start="318" end="323" name="$this">
+						</VariableReference>
+						<SimpleReference start="325" end="330" name="world">
+						</SimpleReference>
+					</FieldAccess>
+					<VariableReference start="333" end="337" name="$val">
+					</VariableReference>
+				</Assignment>
+			</ExpressionStatement>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="347" end="349">
+	</EmptyStatement>
+</ModuleDeclaration>

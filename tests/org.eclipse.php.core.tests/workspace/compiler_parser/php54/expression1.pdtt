@@ -1,0 +1,51 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+foreach ([new Human("Gonzalo"), new Human("Peter")] as $human) {
+    echo $human->{'hello'}();
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="107">
+	<ForEachStatement start="7" end="103">
+		<ArrayCreation start="16" end="58">
+			<ArrayElement start="17" end="37">
+				<ClassInstanceCreation start="17" end="37">
+					<FullyQualifiedReference start="21" end="26" name="Human">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="27" end="36">
+						<Scalar start="27" end="36" type="string" value="&quot;Gonzalo&quot;">
+						</Scalar>
+					</PHPCallArgumentsList>
+				</ClassInstanceCreation>
+			</ArrayElement>
+			<ArrayElement start="39" end="57">
+				<ClassInstanceCreation start="39" end="57">
+					<FullyQualifiedReference start="43" end="48" name="Human">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="49" end="56">
+						<Scalar start="49" end="56" type="string" value="&quot;Peter&quot;">
+						</Scalar>
+					</PHPCallArgumentsList>
+				</ClassInstanceCreation>
+			</ArrayElement>
+		</ArrayCreation>
+		<VariableReference start="62" end="68" name="$human">
+		</VariableReference>
+		<EchoStatement start="76" end="101">
+			<ReflectionCallExpression start="81" end="100">
+				<VariableReference start="81" end="87" name="$human">
+				</VariableReference>
+				<ReflectionVariableReference start="89" end="98">
+					<Scalar start="90" end="97" type="string" value="&apos;hello&apos;">
+					</Scalar>
+				</ReflectionVariableReference>
+				<PHPCallArgumentsList start="99" end="99">
+				</PHPCallArgumentsList>
+			</ReflectionCallExpression>
+		</EchoStatement>
+	</ForEachStatement>
+	<EmptyStatement start="104" end="106">
+	</EmptyStatement>
+</ModuleDeclaration>

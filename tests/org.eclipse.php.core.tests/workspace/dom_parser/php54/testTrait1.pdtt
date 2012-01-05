@@ -1,0 +1,74 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait ezcReflectionReturnInfo {
+    function getReturnType() {}
+    function getReturnDescription() {}
+}
+class ezcReflectionMethod extends ReflectionMethod {
+    use ezcReflectionReturnInfo;
+}
+?>
+--EXPECT--
+<Program start='0' length='202'>
+	<Statements>
+		<TraitDeclaration start='7' length='104''>
+			<TraitName>
+				<Identifier start='13' length='23' name='ezcReflectionReturnInfo'/>
+			</TraitName>
+			<Block start='37' length='74' isCurly='true'>
+				<MethodDeclaration start='43' length='27' modifier='public'>
+					<FunctionDeclaration start='43' length='27' isReference='false'>
+						<FunctionName>
+							<Identifier start='52' length='13' name='getReturnType'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='68' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+				<MethodDeclaration start='75' length='34' modifier='public'>
+					<FunctionDeclaration start='75' length='34' isReference='false'>
+						<FunctionName>
+							<Identifier start='84' length='20' name='getReturnDescription'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='107' length='2' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<ClassDeclaration start='112' length='87' modifier=''>
+			<ClassName>
+				<Identifier start='118' length='19' name='ezcReflectionMethod'/>
+			</ClassName>
+			<SuperClassName>
+				<NamespaceName start='146' length='16' global='false' current='false'>
+					<Identifier start='146' length='16' name='ReflectionMethod'/>
+				</NamespaceName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='163' length='36' isCurly='true'>
+				<TraitUseStatement start='169' length='28'>
+					<TraitNameList>
+						<NamespaceName start='173' length='23' global='false' current='false'>
+							<Identifier start='173' length='23' name='ezcReflectionReturnInfo'/>
+						</NamespaceName>
+					</TraitNameList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='200' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

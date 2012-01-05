@@ -1,0 +1,83 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait StaticExample {
+    public static function doSomething() {
+        return 'Doing something';
+    }
+}
+
+class Example {
+    use StaticExample;
+}
+
+Example::doSomething();
+?>
+--EXPECT--
+<Program start='0' length='183'>
+	<Statements>
+		<TraitDeclaration start='7' length='106''>
+			<TraitName>
+				<Identifier start='13' length='13' name='StaticExample'/>
+			</TraitName>
+			<Block start='27' length='86' isCurly='true'>
+				<MethodDeclaration start='33' length='78' modifier='public static'>
+					<FunctionDeclaration start='47' length='64' isReference='false'>
+						<FunctionName>
+							<Identifier start='56' length='11' name='doSomething'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='70' length='41' isCurly='true'>
+								<ReturnStatement start='80' length='25'>
+									<Scalar start='87' length='17' type='string' value='&apos;Doing something&apos;'/>
+								</ReturnStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<ClassDeclaration start='115' length='40' modifier=''>
+			<ClassName>
+				<Identifier start='121' length='7' name='Example'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='129' length='26' isCurly='true'>
+				<TraitUseStatement start='135' length='18'>
+					<TraitNameList>
+						<NamespaceName start='139' length='13' global='false' current='false'>
+							<Identifier start='139' length='13' name='StaticExample'/>
+						</NamespaceName>
+					</TraitNameList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<ExpressionStatement start='157' length='23'>
+			<StaticMethodInvocation start='157' length='22'>
+				<ClassName>
+					<NamespaceName start='157' length='7' global='false' current='false'>
+						<Identifier start='157' length='7' name='Example'/>
+					</NamespaceName>
+				</ClassName>
+				<FunctionInvocation start='166' length='13'>
+					<FunctionName start='166' length='11'>
+						<Variable start='166' length='11' isDollared='false'>
+							<Identifier start='166' length='11' name='doSomething'/>
+						</Variable>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+				</FunctionInvocation>
+			</StaticMethodInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='181' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

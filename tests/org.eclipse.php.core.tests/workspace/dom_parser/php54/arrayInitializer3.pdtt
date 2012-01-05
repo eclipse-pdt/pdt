@@ -1,0 +1,64 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+function data() {
+    return ['name' => 'Gonzalo', 'surname' => 'Ayuso'];
+}
+echo data()['name'];
+?>
+--EXPECT--
+<Program start='0' length='106'>
+	<Statements>
+		<FunctionDeclaration start='7' length='75' isReference='false'>
+			<FunctionName>
+				<Identifier start='16' length='4' name='data'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='23' length='59' isCurly='true'>
+					<ReturnStatement start='29' length='51'>
+						<ArrayCreation start='36' length='43'>
+							<ArrayElement start='37' length='19'>
+								<Key>
+									<Scalar start='37' length='6' type='string' value='&apos;name&apos;'/>
+								</Key>
+								<Value>
+									<Scalar start='47' length='9' type='string' value='&apos;Gonzalo&apos;'/>
+								</Value>
+							</ArrayElement>
+							<ArrayElement start='58' length='20'>
+								<Key>
+									<Scalar start='58' length='9' type='string' value='&apos;surname&apos;'/>
+								</Key>
+								<Value>
+									<Scalar start='71' length='7' type='string' value='&apos;Ayuso&apos;'/>
+								</Value>
+							</ArrayElement>
+						</ArrayCreation>
+					</ReturnStatement>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<EchoStatement start='83' length='20'>
+			<FunctionInvocation start='88' length='6'>
+				<FunctionName start='88' length='4'>
+					<NamespaceName start='88' length='4' global='false' current='false'>
+						<Identifier start='88' length='4' name='data'/>
+					</NamespaceName>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+					<PHPArrayDereferenceList start='-1' length='0'>
+						<DereferenceNode start='94' length='8'>
+							<Scalar start='95' length='6' type='string' value='&apos;name&apos;'/>
+						</DereferenceNode>
+					</PHPArrayDereferenceList>
+			</FunctionInvocation>
+		</EchoStatement>
+		<EmptyStatement start='104' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

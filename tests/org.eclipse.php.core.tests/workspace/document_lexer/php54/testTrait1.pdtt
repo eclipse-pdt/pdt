@@ -1,0 +1,69 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait ezcReflectionReturnInfo {
+    function getReturnType() {}
+    function getReturnDescription() {}
+}
+class ezcReflectionMethod extends ReflectionMethod {
+    use ezcReflectionReturnInfo;
+}
+?>
+--EXPECT--
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE| 
+|1
+PHP_TRAIT|trait|1
+WHITESPACE| |1
+PHP_STRING|ezcReflectionReturnInfo|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getReturnType|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getReturnDescription|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|ezcReflectionMethod|1
+WHITESPACE| |1
+PHP_EXTENDS|extends|1
+WHITESPACE| |1
+PHP_STRING|ReflectionMethod|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_USE|use|1
+WHITESPACE| |1
+PHP_STRING|ezcReflectionReturnInfo|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1

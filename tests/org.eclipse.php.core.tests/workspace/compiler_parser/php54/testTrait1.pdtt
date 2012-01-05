@@ -1,0 +1,31 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait ezcReflectionReturnInfo {
+    function getReturnType() {}
+    function getReturnDescription() {}
+}
+class ezcReflectionMethod extends ReflectionMethod {
+    use ezcReflectionReturnInfo;
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="203">
+	<TraitDeclaration start="7" end="111" modifiers="" name="ezcReflectionReturnInfo">
+		<PHPMethodDeclaration start="43" end="70" modifiers="public" name="getReturnType">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="75" end="109" modifiers="public" name="getReturnDescription">
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="112" end="199" modifiers="" name="ezcReflectionMethod">
+		<FullyQualifiedReference start="146" end="162" name="ReflectionMethod">
+		</FullyQualifiedReference>
+		<TraitUseStatement start="169" end="197">
+			<FullyQualifiedReference start="173" end="196" name="ezcReflectionReturnInfo">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<EmptyStatement start="200" end="202">
+	</EmptyStatement>
+</ModuleDeclaration>

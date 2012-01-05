@@ -1,0 +1,42 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+$f = [new Human("Gonzalo"), 'hello'];
+echo $f();
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="59">
+	<ExpressionStatement start="7" end="44">
+		<Assignment start="7" end="43" operator="=">
+			<VariableReference start="7" end="9" name="$f">
+			</VariableReference>
+			<ArrayCreation start="12" end="43">
+				<ArrayElement start="13" end="33">
+					<ClassInstanceCreation start="13" end="33">
+						<FullyQualifiedReference start="17" end="22" name="Human">
+						</FullyQualifiedReference>
+						<PHPCallArgumentsList start="23" end="32">
+							<Scalar start="23" end="32" type="string" value="&quot;Gonzalo&quot;">
+							</Scalar>
+						</PHPCallArgumentsList>
+					</ClassInstanceCreation>
+				</ArrayElement>
+				<ArrayElement start="35" end="42">
+					<Scalar start="35" end="42" type="string" value="&apos;hello&apos;">
+					</Scalar>
+				</ArrayElement>
+			</ArrayCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<EchoStatement start="45" end="55">
+		<ReflectionCallExpression start="50" end="54">
+			<VariableReference start="50" end="52" name="$f">
+			</VariableReference>
+			<PHPCallArgumentsList start="53" end="53">
+			</PHPCallArgumentsList>
+		</ReflectionCallExpression>
+	</EchoStatement>
+	<EmptyStatement start="56" end="58">
+	</EmptyStatement>
+</ModuleDeclaration>

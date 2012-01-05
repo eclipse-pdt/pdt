@@ -1,0 +1,114 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait Hello {
+    public function sayHello() {
+        echo 'Hello ';
+    }
+}
+
+trait World {
+    public function sayWorld() {
+        echo ' World';
+    }
+}
+
+class MyHelloWorld {
+    use Hello, World;
+    public function sayExclamationMark() {
+        echo '!';
+    }
+}
+?>
+--EXPECT--
+<Program start='0' length='279'>
+	<Statements>
+		<TraitDeclaration start='7' length='77''>
+			<TraitName>
+				<Identifier start='13' length='5' name='Hello'/>
+			</TraitName>
+			<Block start='19' length='65' isCurly='true'>
+				<MethodDeclaration start='25' length='57' modifier='public'>
+					<FunctionDeclaration start='32' length='50' isReference='false'>
+						<FunctionName>
+							<Identifier start='41' length='8' name='sayHello'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='52' length='30' isCurly='true'>
+								<EchoStatement start='62' length='14'>
+									<Scalar start='67' length='8' type='string' value='&apos;Hello &apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<TraitDeclaration start='86' length='77''>
+			<TraitName>
+				<Identifier start='92' length='5' name='World'/>
+			</TraitName>
+			<Block start='98' length='65' isCurly='true'>
+				<MethodDeclaration start='104' length='57' modifier='public'>
+					<FunctionDeclaration start='111' length='50' isReference='false'>
+						<FunctionName>
+							<Identifier start='120' length='8' name='sayWorld'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='131' length='30' isCurly='true'>
+								<EchoStatement start='141' length='14'>
+									<Scalar start='146' length='8' type='string' value='&apos; World&apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<ClassDeclaration start='165' length='111' modifier=''>
+			<ClassName>
+				<Identifier start='171' length='12' name='MyHelloWorld'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='184' length='92' isCurly='true'>
+				<TraitUseStatement start='190' length='17'>
+					<TraitNameList>
+						<NamespaceName start='194' length='5' global='false' current='false'>
+							<Identifier start='194' length='5' name='Hello'/>
+						</NamespaceName>
+						<NamespaceName start='201' length='5' global='false' current='false'>
+							<Identifier start='201' length='5' name='World'/>
+						</NamespaceName>
+					</TraitNameList>
+				</TraitUseStatement>
+				<MethodDeclaration start='212' length='62' modifier='public'>
+					<FunctionDeclaration start='219' length='55' isReference='false'>
+						<FunctionName>
+							<Identifier start='228' length='18' name='sayExclamationMark'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='249' length='25' isCurly='true'>
+								<EchoStatement start='259' length='9'>
+									<Scalar start='264' length='3' type='string' value='&apos;!&apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='277' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,46 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+function data() {
+    return ['name' => 'Gonzalo', 'surname' => 'Ayuso'];
+}
+echo data()['name'];
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="107">
+	<PHPMethodDeclaration start="7" end="82" modifiers="" name="data">
+		<ReturnStatement start="29" end="80">
+			<ArrayCreation start="36" end="79">
+				<ArrayElement start="37" end="56">
+					<Scalar start="37" end="43" type="string" value="&apos;name&apos;">
+					</Scalar>
+					<Scalar start="47" end="56" type="string" value="&apos;Gonzalo&apos;">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="58" end="78">
+					<Scalar start="58" end="67" type="string" value="&apos;surname&apos;">
+					</Scalar>
+					<Scalar start="71" end="78" type="string" value="&apos;Ayuso&apos;">
+					</Scalar>
+				</ArrayElement>
+			</ArrayCreation>
+		</ReturnStatement>
+	</PHPMethodDeclaration>
+	<EchoStatement start="83" end="103">
+		<PHPCallExpression start="88" end="94">
+			<FullyQualifiedReference start="88" end="92" name="data">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="93" end="93">
+			</PHPCallArgumentsList>
+			<PHPArrayDereferenceList start="0" end="-1">
+				<DereferenceNode start="94" end="102">
+					<Scalar start="95" end="101" type="string" value="&apos;name&apos;">
+					</Scalar>
+				</DereferenceNode>
+			</PHPArrayDereferenceList>
+		</PHPCallExpression>
+	</EchoStatement>
+	<EmptyStatement start="104" end="106">
+	</EmptyStatement>
+</ModuleDeclaration>

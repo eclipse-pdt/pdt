@@ -1,0 +1,117 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait Counter {
+    public function inc() {
+        static $c = 0;
+        $c = $c + 1;
+        echo "$c\n";
+    }
+}
+
+class C1 {
+    use Counter;
+}
+
+class C2 {
+    use Counter;
+}
+?>
+--EXPECT--
+<Program start='0' length='188'>
+	<Statements>
+		<TraitDeclaration start='7' length='116''>
+			<TraitName>
+				<Identifier start='13' length='7' name='Counter'/>
+			</TraitName>
+			<Block start='21' length='102' isCurly='true'>
+				<MethodDeclaration start='27' length='94' modifier='public'>
+					<FunctionDeclaration start='34' length='87' isReference='false'>
+						<FunctionName>
+							<Identifier start='43' length='3' name='inc'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='49' length='72' isCurly='true'>
+								<StaticStatement start='59' length='14'>
+									<Assignment start='66' length='6' operator='='>
+										<Variable start='66' length='2' isDollared='true'>
+											<Identifier start='67' length='1' name='c'/>
+										</Variable>
+										<Value>
+											<Scalar start='71' length='1' type='int' value='0'/>
+										</Value>
+									</Assignment>
+								</StaticStatement>
+								<ExpressionStatement start='82' length='12'>
+									<Assignment start='82' length='11' operator='='>
+										<Variable start='82' length='2' isDollared='true'>
+											<Identifier start='83' length='1' name='c'/>
+										</Variable>
+										<Value>
+											<InfixExpression start='87' length='6' operator='+'>
+												<Variable start='87' length='2' isDollared='true'>
+													<Identifier start='88' length='1' name='c'/>
+												</Variable>
+												<Scalar start='92' length='1' type='int' value='1'/>
+											</InfixExpression>
+										</Value>
+									</Assignment>
+								</ExpressionStatement>
+								<EchoStatement start='103' length='12'>
+									<Quote start='108' length='6' type='quote'>
+										<Variable start='109' length='2' isDollared='true'>
+											<Identifier start='110' length='1' name='c'/>
+										</Variable>
+										<Scalar start='111' length='2' type='string' value='\n'/>
+									</Quote>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<ClassDeclaration start='125' length='29' modifier=''>
+			<ClassName>
+				<Identifier start='131' length='2' name='C1'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='134' length='20' isCurly='true'>
+				<TraitUseStatement start='140' length='12'>
+					<TraitNameList>
+						<NamespaceName start='144' length='7' global='false' current='false'>
+							<Identifier start='144' length='7' name='Counter'/>
+						</NamespaceName>
+					</TraitNameList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<ClassDeclaration start='156' length='29' modifier=''>
+			<ClassName>
+				<Identifier start='162' length='2' name='C2'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='165' length='20' isCurly='true'>
+				<TraitUseStatement start='171' length='12'>
+					<TraitNameList>
+						<NamespaceName start='175' length='7' global='false' current='false'>
+							<Identifier start='175' length='7' name='Counter'/>
+						</NamespaceName>
+					</TraitNameList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='186' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

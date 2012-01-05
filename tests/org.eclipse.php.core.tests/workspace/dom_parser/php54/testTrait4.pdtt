@@ -1,0 +1,234 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait A {
+    public function smallTalk() {
+        echo 'a';
+    }
+    public function bigTalk() {
+        echo 'A';
+    }
+}
+
+trait B {
+    public function smallTalk() {
+        echo 'b';
+    }
+    public function bigTalk() {
+        echo 'B';
+    }
+}
+
+class Talker {
+    use A, B {
+        B::smallTalk insteadof A;
+        A::bigTalk insteadof B;
+    }
+}
+
+class Aliased_Talker {
+    use A, B {
+        B::smallTalk insteadof A;
+        A::bigTalk insteadof B;
+        B::bigTalk as talk;
+    }
+}
+?>
+--EXPECT--
+<Program start='0' length='508'>
+	<Statements>
+		<TraitDeclaration start='7' length='125''>
+			<TraitName>
+				<Identifier start='13' length='1' name='A'/>
+			</TraitName>
+			<Block start='15' length='117' isCurly='true'>
+				<MethodDeclaration start='21' length='53' modifier='public'>
+					<FunctionDeclaration start='28' length='46' isReference='false'>
+						<FunctionName>
+							<Identifier start='37' length='9' name='smallTalk'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='49' length='25' isCurly='true'>
+								<EchoStatement start='59' length='9'>
+									<Scalar start='64' length='3' type='string' value='&apos;a&apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+				<MethodDeclaration start='79' length='51' modifier='public'>
+					<FunctionDeclaration start='86' length='44' isReference='false'>
+						<FunctionName>
+							<Identifier start='95' length='7' name='bigTalk'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='105' length='25' isCurly='true'>
+								<EchoStatement start='115' length='9'>
+									<Scalar start='120' length='3' type='string' value='&apos;A&apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<TraitDeclaration start='134' length='125''>
+			<TraitName>
+				<Identifier start='140' length='1' name='B'/>
+			</TraitName>
+			<Block start='142' length='117' isCurly='true'>
+				<MethodDeclaration start='148' length='53' modifier='public'>
+					<FunctionDeclaration start='155' length='46' isReference='false'>
+						<FunctionName>
+							<Identifier start='164' length='9' name='smallTalk'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='176' length='25' isCurly='true'>
+								<EchoStatement start='186' length='9'>
+									<Scalar start='191' length='3' type='string' value='&apos;b&apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+				<MethodDeclaration start='206' length='51' modifier='public'>
+					<FunctionDeclaration start='213' length='44' isReference='false'>
+						<FunctionName>
+							<Identifier start='222' length='7' name='bigTalk'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='232' length='25' isCurly='true'>
+								<EchoStatement start='242' length='9'>
+									<Scalar start='247' length='3' type='string' value='&apos;B&apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<ClassDeclaration start='261' length='103' modifier=''>
+			<ClassName>
+				<Identifier start='267' length='6' name='Talker'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='274' length='90' isCurly='true'>
+				<TraitUseStatement start='280' length='82'>
+					<TraitNameList>
+						<NamespaceName start='284' length='1' global='false' current='false'>
+							<Identifier start='284' length='1' name='A'/>
+						</NamespaceName>
+						<NamespaceName start='287' length='1' global='false' current='false'>
+							<Identifier start='287' length='1' name='B'/>
+						</NamespaceName>
+					</TraitNameList>
+					<TraitStatementList>
+						<TraitPrecedenceStatement start='299' length='25'>
+							<TraitAlias start='299' length='24'>
+								<FunctionName start='299' length='12' functionName='smallTalk'>
+									<NamespaceName start='299' length='1' global='false' current='false'>
+										<Identifier start='299' length='1' name='B'/>
+									</NamespaceName>
+								</FunctionName>
+								<TraitReferenceList>
+									<NamespaceName start='322' length='1' global='false' current='false'>
+										<Identifier start='322' length='1' name='A'/>
+									</NamespaceName>
+								</TraitReferenceList>
+							</TraitAlias>
+						</TraitPrecedenceStatement>
+						<TraitPrecedenceStatement start='333' length='23'>
+							<TraitAlias start='333' length='22'>
+								<FunctionName start='333' length='10' functionName='bigTalk'>
+									<NamespaceName start='333' length='1' global='false' current='false'>
+										<Identifier start='333' length='1' name='A'/>
+									</NamespaceName>
+								</FunctionName>
+								<TraitReferenceList>
+									<NamespaceName start='354' length='1' global='false' current='false'>
+										<Identifier start='354' length='1' name='B'/>
+									</NamespaceName>
+								</TraitReferenceList>
+							</TraitAlias>
+						</TraitPrecedenceStatement>
+					</TraitStatementList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<ClassDeclaration start='366' length='139' modifier=''>
+			<ClassName>
+				<Identifier start='372' length='14' name='Aliased_Talker'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='387' length='118' isCurly='true'>
+				<TraitUseStatement start='393' length='110'>
+					<TraitNameList>
+						<NamespaceName start='397' length='1' global='false' current='false'>
+							<Identifier start='397' length='1' name='A'/>
+						</NamespaceName>
+						<NamespaceName start='400' length='1' global='false' current='false'>
+							<Identifier start='400' length='1' name='B'/>
+						</NamespaceName>
+					</TraitNameList>
+					<TraitStatementList>
+						<TraitPrecedenceStatement start='412' length='25'>
+							<TraitAlias start='412' length='24'>
+								<FunctionName start='412' length='12' functionName='smallTalk'>
+									<NamespaceName start='412' length='1' global='false' current='false'>
+										<Identifier start='412' length='1' name='B'/>
+									</NamespaceName>
+								</FunctionName>
+								<TraitReferenceList>
+									<NamespaceName start='435' length='1' global='false' current='false'>
+										<Identifier start='435' length='1' name='A'/>
+									</NamespaceName>
+								</TraitReferenceList>
+							</TraitAlias>
+						</TraitPrecedenceStatement>
+						<TraitPrecedenceStatement start='446' length='23'>
+							<TraitAlias start='446' length='22'>
+								<FunctionName start='446' length='10' functionName='bigTalk'>
+									<NamespaceName start='446' length='1' global='false' current='false'>
+										<Identifier start='446' length='1' name='A'/>
+									</NamespaceName>
+								</FunctionName>
+								<TraitReferenceList>
+									<NamespaceName start='467' length='1' global='false' current='false'>
+										<Identifier start='467' length='1' name='B'/>
+									</NamespaceName>
+								</TraitReferenceList>
+							</TraitAlias>
+						</TraitPrecedenceStatement>
+						<TraitAliasStatement start='478' length='19'>
+							<TraitAlias start='478' length='18'>
+								<FunctionName start='478' length='10' functionName='bigTalk'>
+									<NamespaceName start='478' length='1' global='false' current='false'>
+										<Identifier start='478' length='1' name='B'/>
+									</NamespaceName>
+								</FunctionName>
+							</TraitAlias>
+						</TraitAliasStatement>
+					</TraitStatementList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='506' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

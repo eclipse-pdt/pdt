@@ -1,0 +1,54 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait PropertiesTrait {
+    public $x = 1;
+}
+
+class PropertiesExample {
+    use PropertiesTrait;
+}
+
+$example = new PropertiesExample;
+$example->x;
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="157">
+	<TraitDeclaration start="7" end="51" modifiers="" name="PropertiesTrait">
+		<PHPFieldDeclaration start="42" end="48" modifiers="public">
+			<SimpleReference start="42" end="44" name="$x">
+			</SimpleReference>
+			<Scalar start="47" end="48" type="int" value="1">
+			</Scalar>
+		</PHPFieldDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="53" end="105" modifiers="" name="PropertiesExample">
+		<TraitUseStatement start="83" end="103">
+			<FullyQualifiedReference start="87" end="102" name="PropertiesTrait">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<ExpressionStatement start="107" end="140">
+		<Assignment start="107" end="139" operator="=">
+			<VariableReference start="107" end="115" name="$example">
+			</VariableReference>
+			<ClassInstanceCreation start="118" end="139">
+				<FullyQualifiedReference start="122" end="139" name="PropertiesExample">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="139" end="139">
+				</PHPCallArgumentsList>
+			</ClassInstanceCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="141" end="153">
+		<FieldAccess start="141" end="152">
+			<VariableReference start="141" end="149" name="$example">
+			</VariableReference>
+			<SimpleReference start="151" end="152" name="x">
+			</SimpleReference>
+		</FieldAccess>
+	</ExpressionStatement>
+	<EmptyStatement start="154" end="156">
+	</EmptyStatement>
+</ModuleDeclaration>

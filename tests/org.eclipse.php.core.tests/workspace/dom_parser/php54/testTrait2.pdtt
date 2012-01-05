@@ -1,0 +1,159 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+class Base {
+    public function sayHello() {
+        echo 'Hello ';
+    }
+}
+
+trait SayWorld {
+    public function sayHello() {
+        parent::sayHello();
+        echo 'World!';
+    }
+}
+
+class MyHelloWorld extends Base {
+    use SayWorld;
+}
+
+$o = new MyHelloWorld();
+$o->sayHello();
+?>
+--EXPECT--
+<Program start='0' length='293'>
+	<Statements>
+		<ClassDeclaration start='7' length='76' modifier=''>
+			<ClassName>
+				<Identifier start='13' length='4' name='Base'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='18' length='65' isCurly='true'>
+				<MethodDeclaration start='24' length='57' modifier='public'>
+					<FunctionDeclaration start='31' length='50' isReference='false'>
+						<FunctionName>
+							<Identifier start='40' length='8' name='sayHello'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='51' length='30' isCurly='true'>
+								<EchoStatement start='61' length='14'>
+									<Scalar start='66' length='8' type='string' value='&apos;Hello &apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<TraitDeclaration start='85' length='108''>
+			<TraitName>
+				<Identifier start='91' length='8' name='SayWorld'/>
+			</TraitName>
+			<Block start='100' length='93' isCurly='true'>
+				<MethodDeclaration start='106' length='85' modifier='public'>
+					<FunctionDeclaration start='113' length='78' isReference='false'>
+						<FunctionName>
+							<Identifier start='122' length='8' name='sayHello'/>
+						</FunctionName>
+						<FormalParameters>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='133' length='58' isCurly='true'>
+								<ExpressionStatement start='143' length='19'>
+									<StaticMethodInvocation start='143' length='18'>
+										<ClassName>
+											<NamespaceName start='143' length='6' global='false' current='false'>
+												<Identifier start='143' length='6' name='parent'/>
+											</NamespaceName>
+										</ClassName>
+										<FunctionInvocation start='151' length='10'>
+											<FunctionName start='151' length='8'>
+												<Variable start='151' length='8' isDollared='false'>
+													<Identifier start='151' length='8' name='sayHello'/>
+												</Variable>
+											</FunctionName>
+											<Parameters>
+											</Parameters>
+										</FunctionInvocation>
+									</StaticMethodInvocation>
+								</ExpressionStatement>
+								<EchoStatement start='171' length='14'>
+									<Scalar start='176' length='8' type='string' value='&apos;World!&apos;'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</TraitDeclaration>
+		<ClassDeclaration start='195' length='53' modifier=''>
+			<ClassName>
+				<Identifier start='201' length='12' name='MyHelloWorld'/>
+			</ClassName>
+			<SuperClassName>
+				<NamespaceName start='222' length='4' global='false' current='false'>
+					<Identifier start='222' length='4' name='Base'/>
+				</NamespaceName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='227' length='21' isCurly='true'>
+				<TraitUseStatement start='233' length='13'>
+					<TraitNameList>
+						<NamespaceName start='237' length='8' global='false' current='false'>
+							<Identifier start='237' length='8' name='SayWorld'/>
+						</NamespaceName>
+					</TraitNameList>
+				</TraitUseStatement>
+			</Block>
+		</ClassDeclaration>
+		<ExpressionStatement start='250' length='24'>
+			<Assignment start='250' length='23' operator='='>
+				<Variable start='250' length='2' isDollared='true'>
+					<Identifier start='251' length='1' name='o'/>
+				</Variable>
+				<Value>
+					<ClassInstanceCreation start='255' length='18'>
+						<ClassName start='259' length='12'>
+							<NamespaceName start='259' length='12' global='false' current='false'>
+								<Identifier start='259' length='12' name='MyHelloWorld'/>
+							</NamespaceName>
+						</ClassName>
+						<ConstructorParameters>
+						</ConstructorParameters>
+					</ClassInstanceCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start='275' length='15'>
+			<MethodInvocation start='275' length='14'>
+				<Dispatcher>
+					<Variable start='275' length='2' isDollared='true'>
+						<Identifier start='276' length='1' name='o'/>
+					</Variable>
+				</Dispatcher>
+				<Property>
+					<FunctionInvocation start='279' length='10'>
+						<FunctionName start='279' length='8'>
+							<Variable start='279' length='8' isDollared='false'>
+								<Identifier start='279' length='8' name='sayHello'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</Property>
+			</MethodInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='291' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

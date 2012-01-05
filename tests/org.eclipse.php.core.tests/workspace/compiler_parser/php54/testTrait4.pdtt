@@ -1,0 +1,144 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait A {
+    public function smallTalk() {
+        echo 'a';
+    }
+    public function bigTalk() {
+        echo 'A';
+    }
+}
+
+trait B {
+    public function smallTalk() {
+        echo 'b';
+    }
+    public function bigTalk() {
+        echo 'B';
+    }
+}
+
+class Talker {
+    use A, B {
+        B::smallTalk insteadof A;
+        A::bigTalk insteadof B;
+    }
+}
+
+class Aliased_Talker {
+    use A, B {
+        B::smallTalk insteadof A;
+        A::bigTalk insteadof B;
+        B::bigTalk as talk;
+    }
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="509">
+	<TraitDeclaration start="7" end="132" modifiers="" name="A">
+		<PHPMethodDeclaration start="21" end="74" modifiers="public" name="smallTalk">
+			<EchoStatement start="59" end="68">
+				<Scalar start="64" end="67" type="string" value="&apos;a&apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="79" end="130" modifiers="public" name="bigTalk">
+			<EchoStatement start="115" end="124">
+				<Scalar start="120" end="123" type="string" value="&apos;A&apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<TraitDeclaration start="134" end="259" modifiers="" name="B">
+		<PHPMethodDeclaration start="148" end="201" modifiers="public" name="smallTalk">
+			<EchoStatement start="186" end="195">
+				<Scalar start="191" end="194" type="string" value="&apos;b&apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="206" end="257" modifiers="public" name="bigTalk">
+			<EchoStatement start="242" end="251">
+				<Scalar start="247" end="250" type="string" value="&apos;B&apos;">
+				</Scalar>
+			</EchoStatement>
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="261" end="364" modifiers="" name="Talker">
+		<TraitUseStatement start="280" end="362">
+			<FullyQualifiedReference start="284" end="285" name="A">
+			</FullyQualifiedReference>
+			<FullyQualifiedReference start="287" end="288" name="B">
+			</FullyQualifiedReference>
+			<TraitPrecedenceStatement start="299" end="324">
+				<TraitPrecedence start="299" end="323">
+					<FullyQualifiedTraitMethodReference start="299" end="311" functionName="smallTalk">
+						<className>
+							<FullyQualifiedReference start="299" end="300" name="B">
+							</FullyQualifiedReference>
+						</className>
+					</FullyQualifiedTraitMethodReference>
+					<FullyQualifiedReference start="322" end="323" name="A">
+					</FullyQualifiedReference>
+				</TraitPrecedence>
+			</TraitPrecedenceStatement>
+			<TraitPrecedenceStatement start="333" end="356">
+				<TraitPrecedence start="333" end="355">
+					<FullyQualifiedTraitMethodReference start="333" end="343" functionName="bigTalk">
+						<className>
+							<FullyQualifiedReference start="333" end="334" name="A">
+							</FullyQualifiedReference>
+						</className>
+					</FullyQualifiedTraitMethodReference>
+					<FullyQualifiedReference start="354" end="355" name="B">
+					</FullyQualifiedReference>
+				</TraitPrecedence>
+			</TraitPrecedenceStatement>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<ClassDeclaration start="366" end="505" modifiers="" name="Aliased_Talker">
+		<TraitUseStatement start="393" end="503">
+			<FullyQualifiedReference start="397" end="398" name="A">
+			</FullyQualifiedReference>
+			<FullyQualifiedReference start="400" end="401" name="B">
+			</FullyQualifiedReference>
+			<TraitPrecedenceStatement start="412" end="437">
+				<TraitPrecedence start="412" end="436">
+					<FullyQualifiedTraitMethodReference start="412" end="424" functionName="smallTalk">
+						<className>
+							<FullyQualifiedReference start="412" end="413" name="B">
+							</FullyQualifiedReference>
+						</className>
+					</FullyQualifiedTraitMethodReference>
+					<FullyQualifiedReference start="435" end="436" name="A">
+					</FullyQualifiedReference>
+				</TraitPrecedence>
+			</TraitPrecedenceStatement>
+			<TraitPrecedenceStatement start="446" end="469">
+				<TraitPrecedence start="446" end="468">
+					<FullyQualifiedTraitMethodReference start="446" end="456" functionName="bigTalk">
+						<className>
+							<FullyQualifiedReference start="446" end="447" name="A">
+							</FullyQualifiedReference>
+						</className>
+					</FullyQualifiedTraitMethodReference>
+					<FullyQualifiedReference start="467" end="468" name="B">
+					</FullyQualifiedReference>
+				</TraitPrecedence>
+			</TraitPrecedenceStatement>
+			<TraitAliasStatement start="478" end="497">
+				<TraitAlias start="0" end="0" methodName="talk">
+					<FullyQualifiedTraitMethodReference start="478" end="488" functionName="bigTalk">
+						<className>
+							<FullyQualifiedReference start="478" end="479" name="B">
+							</FullyQualifiedReference>
+						</className>
+					</FullyQualifiedTraitMethodReference>
+				</TraitAlias>
+			</TraitAliasStatement>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<EmptyStatement start="506" end="508">
+	</EmptyStatement>
+</ModuleDeclaration>

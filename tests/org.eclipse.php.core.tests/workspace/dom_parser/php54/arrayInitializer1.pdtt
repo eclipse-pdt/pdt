@@ -1,0 +1,60 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+$f = [new Human("Gonzalo"), 'hello'];
+echo $f();
+?>
+--EXPECT--
+<Program start='0' length='58'>
+	<Statements>
+		<ExpressionStatement start='7' length='37'>
+			<Assignment start='7' length='36' operator='='>
+				<Variable start='7' length='2' isDollared='true'>
+					<Identifier start='8' length='1' name='f'/>
+				</Variable>
+				<Value>
+					<ArrayCreation start='12' length='31'>
+						<ArrayElement start='13' length='20'>
+							<Key>
+							</Key>
+							<Value>
+								<ClassInstanceCreation start='13' length='20'>
+									<ClassName start='17' length='5'>
+										<NamespaceName start='17' length='5' global='false' current='false'>
+											<Identifier start='17' length='5' name='Human'/>
+										</NamespaceName>
+									</ClassName>
+									<ConstructorParameters>
+										<Scalar start='23' length='9' type='string' value='"Gonzalo"'/>
+									</ConstructorParameters>
+								</ClassInstanceCreation>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='35' length='7'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='35' length='7' type='string' value='&apos;hello&apos;'/>
+							</Value>
+						</ArrayElement>
+					</ArrayCreation>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EchoStatement start='45' length='10'>
+			<FunctionInvocation start='50' length='4'>
+				<FunctionName start='50' length='2'>
+					<Variable start='50' length='2' isDollared='true'>
+						<Identifier start='51' length='1' name='f'/>
+					</Variable>
+				</FunctionName>
+				<Parameters>
+				</Parameters>
+			</FunctionInvocation>
+		</EchoStatement>
+		<EmptyStatement start='56' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

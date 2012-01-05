@@ -1,0 +1,83 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+foreach ([new Human("Gonzalo"), new Human("Peter")] as $human) {
+    echo $human->{'hello'}();
+}
+?>
+--EXPECT--
+<Program start='0' length='106'>
+	<Statements>
+		<ForEachStatement start='7' length='96'>
+			<Expression>
+				<ArrayCreation start='16' length='42'>
+					<ArrayElement start='17' length='20'>
+						<Key>
+						</Key>
+						<Value>
+							<ClassInstanceCreation start='17' length='20'>
+								<ClassName start='21' length='5'>
+									<NamespaceName start='21' length='5' global='false' current='false'>
+										<Identifier start='21' length='5' name='Human'/>
+									</NamespaceName>
+								</ClassName>
+								<ConstructorParameters>
+									<Scalar start='27' length='9' type='string' value='"Gonzalo"'/>
+								</ConstructorParameters>
+							</ClassInstanceCreation>
+						</Value>
+					</ArrayElement>
+					<ArrayElement start='39' length='18'>
+						<Key>
+						</Key>
+						<Value>
+							<ClassInstanceCreation start='39' length='18'>
+								<ClassName start='43' length='5'>
+									<NamespaceName start='43' length='5' global='false' current='false'>
+										<Identifier start='43' length='5' name='Human'/>
+									</NamespaceName>
+								</ClassName>
+								<ConstructorParameters>
+									<Scalar start='49' length='7' type='string' value='"Peter"'/>
+								</ConstructorParameters>
+							</ClassInstanceCreation>
+						</Value>
+					</ArrayElement>
+				</ArrayCreation>
+			</Expression>
+			<Key>
+			</Key>
+			<Value>
+				<Variable start='62' length='6' isDollared='true'>
+					<Identifier start='63' length='5' name='human'/>
+				</Variable>
+			</Value>
+			<Block start='70' length='33' isCurly='true'>
+				<EchoStatement start='76' length='25'>
+					<MethodInvocation start='81' length='19'>
+						<Dispatcher>
+							<Variable start='81' length='6' isDollared='true'>
+								<Identifier start='82' length='5' name='human'/>
+							</Variable>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='89' length='11'>
+								<FunctionName start='89' length='9'>
+									<ReflectionVariable start='89' length='9'>
+										<Scalar start='90' length='7' type='string' value='&apos;hello&apos;'/>
+									</ReflectionVariable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</EchoStatement>
+			</Block>
+		</ForEachStatement>
+		<EmptyStatement start='104' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

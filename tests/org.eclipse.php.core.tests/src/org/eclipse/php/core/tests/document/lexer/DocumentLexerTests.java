@@ -36,6 +36,9 @@ public class DocumentLexerTests extends AbstractPDTTTest {
 				new String[] { "/workspace/document_lexer/php5" });
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/document_lexer/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] {
+				"/workspace/document_lexer/php53",
+				"/workspace/document_lexer/php54" });
 	};
 
 	public static void setUpSuite() throws Exception {
@@ -61,8 +64,7 @@ public class DocumentLexerTests extends AbstractPDTTTest {
 					try {
 						final PdttFile pdttFile = new PdttFile(fileName);
 						phpVerSuite.addTest(new DocumentLexerTests(phpVersion
-								.getAlias()
-								+ " - /" + fileName) {
+								.getAlias() + " - /" + fileName) {
 
 							protected void runTest() throws Throwable {
 
@@ -82,8 +84,8 @@ public class DocumentLexerTests extends AbstractPDTTTest {
 								while (tokenType != null) {
 									actualBuf.append(tokenType).append('|')
 											.append(lexer.yytext()).append('|')
-											.append(lexer.yystate()).append(
-													'\n');
+											.append(lexer.yystate())
+											.append('\n');
 									tokenType = lexer.yylex();
 								}
 

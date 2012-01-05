@@ -1,0 +1,147 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait Hello {
+    public function sayHelloWorld() {
+        echo 'Hello'.$this->getWorld();
+    }
+    abstract public function getWorld();
+}
+
+class MyHelloWorld {
+    private $world;
+    use Hello;
+    public function getWorld() {
+        return $this->world;
+    }
+    public function setWorld($val) {
+        $this->world = $val;
+    }
+}
+?>
+--EXPECT--
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE| 
+|1
+PHP_TRAIT|trait|1
+WHITESPACE| |1
+PHP_STRING|Hello|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|sayHelloWorld|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|'Hello'|1
+PHP_TOKEN|.|1
+PHP_THIS|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getWorld|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_ABSTRACT|abstract|1
+WHITESPACE| |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getWorld|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|MyHelloWorld|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_PRIVATE|private|1
+WHITESPACE| |1
+PHP_VARIABLE|$world|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_USE|use|1
+WHITESPACE| |1
+PHP_STRING|Hello|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getWorld|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_THIS|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|world|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|setWorld|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$val|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_THIS|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|world|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$val|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1

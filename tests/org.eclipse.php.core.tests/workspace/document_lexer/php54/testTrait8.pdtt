@@ -1,0 +1,81 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait StaticExample {
+    public static function doSomething() {
+        return 'Doing something';
+    }
+}
+
+class Example {
+    use StaticExample;
+}
+
+Example::doSomething();
+?>
+--EXPECT--
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE| 
+|1
+PHP_TRAIT|trait|1
+WHITESPACE| |1
+PHP_STRING|StaticExample|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_STATIC|static|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|doSomething|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|'Doing something'|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|Example|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_USE|use|1
+WHITESPACE| |1
+PHP_STRING|StaticExample|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_STRING|Example|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|doSomething|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1

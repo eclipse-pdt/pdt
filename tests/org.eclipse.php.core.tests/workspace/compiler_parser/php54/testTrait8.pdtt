@@ -1,0 +1,45 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait StaticExample {
+    public static function doSomething() {
+        return 'Doing something';
+    }
+}
+
+class Example {
+    use StaticExample;
+}
+
+Example::doSomething();
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="184">
+	<TraitDeclaration start="7" end="113" modifiers="" name="StaticExample">
+		<PHPMethodDeclaration start="33" end="111" modifiers="public,static" name="doSomething">
+			<ReturnStatement start="80" end="105">
+				<Scalar start="87" end="104" type="string" value="&apos;Doing something&apos;">
+				</Scalar>
+			</ReturnStatement>
+		</PHPMethodDeclaration>
+	</TraitDeclaration>
+	<ClassDeclaration start="115" end="155" modifiers="" name="Example">
+		<TraitUseStatement start="135" end="153">
+			<FullyQualifiedReference start="139" end="152" name="StaticExample">
+			</FullyQualifiedReference>
+		</TraitUseStatement>
+	</ClassDeclaration>
+	<ExpressionStatement start="157" end="180">
+		<StaticMethodInvocation start="157" end="179">
+			<FullyQualifiedReference start="157" end="164" name="Example">
+			</FullyQualifiedReference>
+			<SimpleReference start="166" end="177" name="doSomething">
+			</SimpleReference>
+			<PHPCallArgumentsList start="178" end="178">
+			</PHPCallArgumentsList>
+		</StaticMethodInvocation>
+	</ExpressionStatement>
+	<EmptyStatement start="181" end="183">
+	</EmptyStatement>
+</ModuleDeclaration>
