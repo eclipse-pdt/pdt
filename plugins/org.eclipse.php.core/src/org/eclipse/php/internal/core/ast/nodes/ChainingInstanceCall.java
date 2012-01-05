@@ -69,7 +69,10 @@ public class ChainingInstanceCall extends Expression {
 
 	public void setArrayDereferenceList(
 			PHPArrayDereferenceList arrayDereferenceList) {
+		ASTNode oldChild = this.arrayDereferenceList;
+		preReplaceChild(oldChild, arrayDereferenceList, ARRAY_DEREFERENCE_LIST);
 		this.arrayDereferenceList = arrayDereferenceList;
+		postReplaceChild(oldChild, arrayDereferenceList, ARRAY_DEREFERENCE_LIST);
 	}
 
 	public PHPArrayDereferenceList getArrayDereferenceList() {

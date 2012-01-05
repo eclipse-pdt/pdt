@@ -25,7 +25,7 @@ public class TraitPrecedence extends Expression {
 		super(ast);
 	}
 
-	FullyQualifiedTraitMethodReference methodReference;
+	private FullyQualifiedTraitMethodReference methodReference;
 	private ASTNode.NodeList<NamespaceName> trList = new ASTNode.NodeList<NamespaceName>(
 			TRAIT_REFERENCE_LIST);;
 
@@ -56,7 +56,13 @@ public class TraitPrecedence extends Expression {
 
 	public void setMethodReference(
 			FullyQualifiedTraitMethodReference methodReference) {
+		if (methodReference == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.methodReference;
+		preReplaceChild(oldChild, methodReference, METHOD_REFERENCE);
 		this.methodReference = methodReference;
+		postReplaceChild(oldChild, methodReference, METHOD_REFERENCE);
 	}
 
 	public List<NamespaceName> getTrList() {

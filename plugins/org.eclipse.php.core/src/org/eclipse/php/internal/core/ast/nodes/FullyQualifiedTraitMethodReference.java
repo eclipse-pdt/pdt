@@ -50,7 +50,14 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	}
 
 	public void setClassName(NamespaceName className) {
+		if (className == null) {
+			throw new IllegalArgumentException();
+		}
+
+		ASTNode oldChild = this.className;
+		preReplaceChild(oldChild, className, CLASS_NAME);
 		this.className = className;
+		postReplaceChild(oldChild, className, CLASS_NAME);
 	}
 
 	public String getFunctionName() {
@@ -58,7 +65,13 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	}
 
 	public void setFunctionName(String functionName) {
+		if (functionName == null) {
+			throw new IllegalArgumentException();
+		}
+
+		preValueChange(FUNCTION_NAME);
 		this.functionName = functionName;
+		postValueChange(FUNCTION_NAME);
 	}
 
 	public void accept0(Visitor visitor) {

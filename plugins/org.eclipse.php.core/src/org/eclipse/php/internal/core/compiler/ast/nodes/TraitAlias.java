@@ -11,12 +11,12 @@ import org.eclipse.dltk.ast.references.SimpleReference;
  * 
  */
 public class TraitAlias extends Expression {
-	Expression traitMethod;
-	int modifier;
+	private Expression traitMethod;
+	private int modifier;
 	/**
 	 * methodName could be null
 	 */
-	SimpleReference methodName;
+	private SimpleReference methodName;
 
 	public TraitAlias(Expression traitMethod, int modifier,
 			SimpleReference methodName) {

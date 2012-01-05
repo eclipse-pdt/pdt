@@ -3,7 +3,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 
 public class TraitPrecedenceStatement extends TraitStatement {
-	TraitPrecedence precedence;
+	private TraitPrecedence precedence;
 
 	public TraitPrecedenceStatement(int start, int end, AST ast,
 			TraitPrecedence precedence) {

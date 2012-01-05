@@ -10,7 +10,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 public abstract class TraitStatement extends Statement {
 
-	Expression exp;
+	private Expression exp;
 
 	public static final ChildPropertyDescriptor EXP = new ChildPropertyDescriptor(
 			TraitStatement.class,
@@ -43,7 +43,14 @@ public abstract class TraitStatement extends Statement {
 	}
 
 	public void setExp(Expression exp) {
+		if (exp == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.exp;
+		preReplaceChild(oldChild, exp, EXP);
 		this.exp = exp;
+		postReplaceChild(oldChild, exp, EXP);
+
 	}
 
 	public void accept0(Visitor visitor) {

@@ -13,7 +13,7 @@ import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.ASTNode;
 
 public class ChainingMethodPropertyList extends ASTListNode {
-	ASTNode parent;
+	private ASTNode parent;
 
 	public ChainingMethodPropertyList() {
 		super();

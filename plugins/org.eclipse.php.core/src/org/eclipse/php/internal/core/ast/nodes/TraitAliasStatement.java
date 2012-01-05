@@ -3,7 +3,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 
 public class TraitAliasStatement extends TraitStatement {
-	TraitAlias alias;
+	private TraitAlias alias;
 
 	public TraitAliasStatement(int start, int end, AST ast, TraitAlias alias) {
 		super(start, end, ast, alias);

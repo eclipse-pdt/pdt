@@ -6,7 +6,7 @@ import org.eclipse.dltk.ast.references.TypeReference;
 
 public class FullyQualifiedTraitMethodReference extends Expression {
 
-	protected String functionName;
+	private String functionName;
 	private TypeReference className;
 
 	public FullyQualifiedTraitMethodReference(int start, int end,

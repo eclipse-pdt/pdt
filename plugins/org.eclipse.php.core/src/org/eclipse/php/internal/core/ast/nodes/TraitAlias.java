@@ -22,8 +22,8 @@ public class TraitAlias extends Expression {
 		super(ast);
 	}
 
-	Expression traitMethod;
-	int modifier;
+	private Expression traitMethod;
+	private int modifier;
 
 	/**
 	 * functionName could be null
@@ -58,7 +58,13 @@ public class TraitAlias extends Expression {
 	}
 
 	public void setTraitMethod(Expression traitMethod) {
+		if (traitMethod == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.traitMethod;
+		preReplaceChild(oldChild, traitMethod, TRAIT_METHOD);
 		this.traitMethod = traitMethod;
+		postReplaceChild(oldChild, traitMethod, TRAIT_METHOD);
 	}
 
 	public int getModifier() {
@@ -66,7 +72,9 @@ public class TraitAlias extends Expression {
 	}
 
 	public void setModifier(int modifier) {
+		preValueChange(MODIFIER);
 		this.modifier = modifier;
+		postValueChange(MODIFIER);
 	}
 
 	public String getFunctionName() {
@@ -74,7 +82,10 @@ public class TraitAlias extends Expression {
 	}
 
 	public void setFunctionName(String functionName) {
+		preValueChange(FUNCTION_NAME);
 		this.functionName = functionName;
+		postValueChange(FUNCTION_NAME);
+
 	}
 
 	public void accept0(Visitor visitor) {

@@ -7,8 +7,8 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.TypeReference;
 
 public class TraitPrecedence extends Expression {
-	FullyQualifiedTraitMethodReference methodReference;
-	List<TypeReference> trList;
+	private FullyQualifiedTraitMethodReference methodReference;
+	private List<TypeReference> trList;
 
 	public TraitPrecedence(int start, int end,
 			FullyQualifiedTraitMethodReference methodReference,
