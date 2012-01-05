@@ -96,8 +96,10 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 				buf.append(",static");
 			}
 			String modifiers = buf.toString();
-			parameters.put("modifiers", modifiers.length() > 0 ? modifiers
-					.substring(1) : modifiers);
+			parameters
+					.put("modifiers",
+							modifiers.length() > 0 ? modifiers.substring(1)
+									: modifiers);
 		}
 
 		return parameters;
@@ -492,8 +494,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(ArrayVariableReference s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
-		parameters.put("type", ArrayVariableReference.getArrayType(s
-				.getArrayType()));
+		parameters.put("type",
+				ArrayVariableReference.getArrayType(s.getArrayType()));
 		parameters.put("name", s.getName());
 		xmlWriter.startTag("ArrayVariableReference", parameters);
 		return true;
@@ -1025,6 +1027,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(LambdaFunctionDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("isReference", Boolean.toString(s.isReference()));
+		if (s.isStatic()) {
+			parameters.put("isStatic", Boolean.toString(s.isStatic()));
+		}
 		xmlWriter.startTag("LambdaFunctionDeclaration", parameters);
 
 		xmlWriter.startTag("Arguments", new HashMap<String, String>());
@@ -1046,4 +1051,140 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 		return false;
 	}
+
+	// php5.4 starts
+	Map<String, String> EMPTY_MAP = new HashMap<String, String>();
+
+	public boolean visit(ChainingInstanceCall s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("ChainingInstanceCall", parameters);
+		return true;
+	}
+
+	public boolean visit(ChainingMethodPropertyList s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("ChainingMethodPropertyList", parameters);
+		return true;
+	}
+
+	public boolean visit(DereferenceNode s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("DereferenceNode", parameters);
+		return true;
+	}
+
+	public boolean visit(FullyQualifiedTraitMethodReference s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("functionName", s.getFunctionName());
+		xmlWriter.startTag("FullyQualifiedTraitMethodReference", parameters);
+		xmlWriter.startTag("className", EMPTY_MAP);
+		s.getClassName().traverse(this);
+		xmlWriter.endTag("className");
+		xmlWriter.endTag("FullyQualifiedTraitMethodReference");
+		return false;
+	}
+
+	public boolean visit(PHPArrayDereferenceList s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("PHPArrayDereferenceList", parameters);
+		return true;
+	}
+
+	public boolean visit(TraitAlias s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		if (s.getMethodName() != null) {
+			parameters.put("methodName", s.getMethodName().getName());
+		}
+
+		xmlWriter.startTag("TraitAlias", parameters);
+		return true;
+	}
+
+	public boolean visit(TraitAliasStatement s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("TraitAliasStatement", parameters);
+		return true;
+	}
+
+	public boolean visit(TraitPrecedence s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("TraitPrecedence", parameters);
+		return true;
+	}
+
+	public boolean visit(TraitPrecedenceStatement s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("TraitPrecedenceStatement", parameters);
+		return true;
+	}
+
+	public boolean visit(TraitUseStatement s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("TraitUseStatement", parameters);
+		return true;
+	}
+
+	public boolean visit(TraitDeclaration s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName());
+		xmlWriter.startTag("TraitDeclaration", parameters);
+		return true;
+	}
+
+	public boolean endvisit(ChainingInstanceCall s) throws Exception {
+		xmlWriter.endTag("ChainingInstanceCall");
+		return false;
+	}
+
+	public boolean endvisit(ChainingMethodPropertyList s) throws Exception {
+		xmlWriter.endTag("ChainingMethodPropertyList");
+		return false;
+	}
+
+	public boolean endvisit(DereferenceNode s) throws Exception {
+		xmlWriter.endTag("DereferenceNode");
+		return false;
+	}
+
+	public boolean endvisit(FullyQualifiedTraitMethodReference s)
+			throws Exception {
+		xmlWriter.endTag("FullyQualifiedTraitMethodReference");
+		return false;
+	}
+
+	public boolean endvisit(PHPArrayDereferenceList s) throws Exception {
+		xmlWriter.endTag("PHPArrayDereferenceList");
+		return false;
+	}
+
+	public boolean endvisit(TraitAlias s) throws Exception {
+		xmlWriter.endTag("TraitAlias");
+		return false;
+	}
+
+	public boolean endvisit(TraitAliasStatement s) throws Exception {
+		xmlWriter.endTag("TraitAliasStatement");
+		return false;
+	}
+
+	public boolean endvisit(TraitPrecedence s) throws Exception {
+		xmlWriter.endTag("TraitPrecedence");
+		return false;
+	}
+
+	public boolean endvisit(TraitPrecedenceStatement s) throws Exception {
+		xmlWriter.endTag("TraitPrecedenceStatement");
+		return false;
+	}
+
+	public boolean endvisit(TraitUseStatement s) throws Exception {
+		xmlWriter.endTag("TraitUseStatement");
+		return false;
+	}
+
+	public boolean endvisit(TraitDeclaration s) throws Exception {
+		xmlWriter.endTag("TraitDeclaration");
+		return false;
+	}
+	// php5.4 ends
 }

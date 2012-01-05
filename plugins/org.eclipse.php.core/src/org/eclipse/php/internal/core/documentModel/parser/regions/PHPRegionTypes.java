@@ -72,6 +72,12 @@ public interface PHPRegionTypes {
 
 	static final String PHP_CLASS = "PHP_CLASS"; //$NON-NLS-1$
 
+	static final String PHP_TRAIT = "PHP_TRAIT"; //$NON-NLS-1$
+
+	static final String PHP_INSTEADOF = "PHP_INSTEADOF"; //$NON-NLS-1$
+
+	static final String PHP_CALLABLE = "PHP_CALLABLE"; //$NON-NLS-1$
+
 	// static final String PHP_END_HEREDOC = "PHP_END_HEREDOC";
 
 	static final String PHP_FOR = "PHP_FOR"; //$NON-NLS-1$

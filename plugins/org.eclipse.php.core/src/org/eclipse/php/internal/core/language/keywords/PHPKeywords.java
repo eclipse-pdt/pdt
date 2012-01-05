@@ -115,6 +115,8 @@ public class PHPKeywords {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5());
 				} else if (PHPVersion.PHP5_3 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_3());
+				} else if (PHPVersion.PHP5_4 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_5_4());
 				} else {
 					throw new IllegalArgumentException(
 							"No PHP version defined for project!");

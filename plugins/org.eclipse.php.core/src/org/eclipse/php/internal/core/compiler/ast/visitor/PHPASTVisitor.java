@@ -915,6 +915,41 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(LambdaFunctionDeclaration.class)) {
 			return endvisit((LambdaFunctionDeclaration) s);
 		}
+
+		// php5.4
+		if (nodeClass.equals(ChainingInstanceCall.class)) {
+			return endvisit((ChainingInstanceCall) s);
+		}
+		if (nodeClass.equals(ChainingMethodPropertyList.class)) {
+			return endvisit((ChainingMethodPropertyList) s);
+		}
+		if (nodeClass.equals(DereferenceNode.class)) {
+			return endvisit((DereferenceNode) s);
+		}
+		if (nodeClass.equals(FullyQualifiedTraitMethodReference.class)) {
+			return endvisit((FullyQualifiedTraitMethodReference) s);
+		}
+		if (nodeClass.equals(PHPArrayDereferenceList.class)) {
+			return endvisit((PHPArrayDereferenceList) s);
+		}
+		if (nodeClass.equals(TraitAlias.class)) {
+			return endvisit((TraitAlias) s);
+		}
+		if (nodeClass.equals(TraitAliasStatement.class)) {
+			return endvisit((TraitAliasStatement) s);
+		}
+		if (nodeClass.equals(TraitPrecedence.class)) {
+			return endvisit((TraitPrecedence) s);
+		}
+		if (nodeClass.equals(TraitPrecedenceStatement.class)) {
+			return endvisit((TraitPrecedenceStatement) s);
+		}
+		if (nodeClass.equals(TraitUseStatement.class)) {
+			return endvisit((TraitUseStatement) s);
+		}
+		if (nodeClass.equals(TraitDeclaration.class)) {
+			return endvisit((TraitDeclaration) s);
+		}
 		return true;
 	}
 
@@ -934,6 +969,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(TypeDeclaration s) throws Exception {
+		if (s instanceof TraitDeclaration) {
+			return endvisit((TraitDeclaration) s);
+		}
 		if (s instanceof ClassDeclaration) {
 			return endvisit((ClassDeclaration) s);
 		}
@@ -1167,8 +1205,146 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(LambdaFunctionDeclaration.class)) {
 			return visit((LambdaFunctionDeclaration) s);
 		}
+
+		// php5.4
+		if (nodeClass.equals(ChainingInstanceCall.class)) {
+			return visit((ChainingInstanceCall) s);
+		}
+		if (nodeClass.equals(ChainingMethodPropertyList.class)) {
+			return visit((ChainingMethodPropertyList) s);
+		}
+		if (nodeClass.equals(DereferenceNode.class)) {
+			return visit((DereferenceNode) s);
+		}
+		if (nodeClass.equals(FullyQualifiedTraitMethodReference.class)) {
+			return visit((FullyQualifiedTraitMethodReference) s);
+		}
+		if (nodeClass.equals(PHPArrayDereferenceList.class)) {
+			return visit((PHPArrayDereferenceList) s);
+		}
+		if (nodeClass.equals(TraitAlias.class)) {
+			return visit((TraitAlias) s);
+		}
+		if (nodeClass.equals(TraitAliasStatement.class)) {
+			return visit((TraitAliasStatement) s);
+		}
+		if (nodeClass.equals(TraitPrecedence.class)) {
+			return visit((TraitPrecedence) s);
+		}
+		if (nodeClass.equals(TraitPrecedenceStatement.class)) {
+			return visit((TraitPrecedenceStatement) s);
+		}
+		if (nodeClass.equals(TraitUseStatement.class)) {
+			return visit((TraitUseStatement) s);
+		}
+		if (nodeClass.equals(TraitDeclaration.class)) {
+			return visit((TraitDeclaration) s);
+		}
 		return true;
 	}
+
+	// php5.4 starts
+	public boolean visit(ChainingInstanceCall s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(ChainingMethodPropertyList s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(DereferenceNode s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(FullyQualifiedTraitMethodReference s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(PHPArrayDereferenceList s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(TraitAlias s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(TraitAliasStatement s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(TraitPrecedence s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(TraitPrecedenceStatement s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(TraitUseStatement s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(TraitDeclaration s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean endvisit(ChainingInstanceCall s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(ChainingMethodPropertyList s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(DereferenceNode s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(FullyQualifiedTraitMethodReference s)
+			throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(PHPArrayDereferenceList s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(TraitAlias s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(TraitAliasStatement s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(TraitPrecedence s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(TraitPrecedenceStatement s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(TraitUseStatement s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(TraitDeclaration s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	// php5.4 ends
 
 	public boolean visit(Expression s) throws Exception {
 		return visit((ASTNode) s);
@@ -1186,6 +1362,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(TypeDeclaration s) throws Exception {
+		if (s instanceof TraitDeclaration) {
+			return visit((TraitDeclaration) s);
+		}
 		if (s instanceof ClassDeclaration) {
 			return visit((ClassDeclaration) s);
 		}
