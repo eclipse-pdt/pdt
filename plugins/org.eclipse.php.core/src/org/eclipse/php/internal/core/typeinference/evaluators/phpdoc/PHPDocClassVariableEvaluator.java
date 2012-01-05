@@ -128,7 +128,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 										typeName = typeName.replace(prefix,
 												fullName);
 									}
-								} else {
+								} else if (typeName.indexOf(SPLASH) < 0) {
 									String prefix = typeName;
 									final Map<String, UsePart> result = PHPModelUtils
 											.getAliasToNSMap(prefix,
