@@ -29,6 +29,11 @@
 		<ant dir="${antfile.dir}/parser/php53/" antfile="generateAstScanner.xml" />
 		<ant dir="${antfile.dir}/parser/php53/" antfile="generateCompilerAstParser.xml" />
 		
+		<!-- PHP 5.3 AST -->
+		<ant dir="${antfile.dir}/parser/php54/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php54/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php54/" antfile="generateCompilerAstParser.xml" />
+		
 		<!-- PHPDoc Lexer -->
 		<ant dir="${antfile.dir}/parser/phpdoc/" antfile="generatePHPDocScanner.xml" />
 		
@@ -36,7 +41,9 @@
 		<ant dir="${antfile.dir}/highlighting/php4" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php5" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php53" antfile="generateHighlightingScanner.xml" />
+		<ant dir="${antfile.dir}/highlighting/php54" antfile="generateHighlightingScanner.xml" />
 		<!-- Disabled automatic generation, since JFlex 1.2.2 is not available for download -->
+		<!-- <ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" /> -->
 		<!-- <ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" /> -->
 		
 	</target>
