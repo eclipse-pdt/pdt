@@ -154,6 +154,7 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPEditorPreferencePage_0;
 	public static String SearchParticipant_error_noNature;
 	public static String VariableCreationDialog_titleedit;
+	public static String PHPCreationDataModelProvider_3;
 	public static String PHPCreationDataModelProvider_2;
 	public static String PHPCreationDataModelProvider_1;
 	public static String PHPCreationDataModelProvider_0;
