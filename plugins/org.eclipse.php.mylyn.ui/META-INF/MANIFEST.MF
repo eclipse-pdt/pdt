@@ -6,7 +6,7 @@ Bundle-SymbolicName: org.eclipse.php.mylyn.ui;singleton:=true
 Bundle-Version: 3.0.1.qualifier
 Bundle-Activator: org.eclipse.php.mylyn.ui.PDTMylynPlugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.dltk.mylyn;bundle-version="2.0.0";resolution:=optional
+ org.eclipse.dltk.mylyn;bundle-version="[3.0.0,5.0.0)";resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.php.mylyn.ui
