@@ -181,6 +181,7 @@ function split ($pattern, $string, $limit = null) {}
  * last element containing the whole rest of
  * string.
  * </p>
+ * @deprecated Deprecated as of PHP 5.3.0 (use preg_split() with the 'i' modifier instead).
  * @return array an array of strings, each of which is a substring of
  * string formed by splitting it on boundaries formed
  * by the case insensitive regular expression pattern.
