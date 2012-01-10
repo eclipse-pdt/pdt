@@ -479,28 +479,6 @@ import org.eclipse.text.edits.*;
 						}
 						return true;
 					}
-
-					protected void adaptToReplace() {
-						if (fPosition.offset == fOffset
-								&& fPosition.length == fLength
-								&& fPosition.length > 0) {
-
-							// replace the whole range of the position
-							fPosition.length += (fReplaceLength - fLength);
-							if (fPosition.length < 0) {
-								fPosition.offset += fPosition.length;
-								fPosition.length = 0;
-							}
-
-						} else {
-
-							if (fLength > 0)
-								adaptToRemove();
-
-							if (fReplaceLength > 0)
-								adaptToInsert();
-						}
-					}
 				});
 				for (int i = 0; i < positions.length; i++) {
 					try {

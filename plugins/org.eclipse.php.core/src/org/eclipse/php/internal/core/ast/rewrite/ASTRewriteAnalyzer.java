@@ -49,6 +49,7 @@ import org.eclipse.text.edits.*;
  */
 public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
+	private static final String CURLY_CLOSE = "}";
 	TextEdit currentEdit;
 	final RewriteEventStore eventStore; // used from inner classes
 
@@ -1248,6 +1249,12 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 		if (currPos < formatted.length()) {
 			String insertStr = formatted.substring(currPos);
+			if (node instanceof MethodStub && insertStr.startsWith(CURLY_CLOSE)) {
+				doTextInsert(insertOffset, getLineDelimiter(), editGroup);
+				String destIndentString = this.formatter
+						.getIndentString(getCurrentLine(formatted, currPos));
+				doTextInsert(insertOffset, destIndentString, editGroup);
+			}
 			doTextInsert(insertOffset, insertStr, editGroup);
 		}
 	}
@@ -1871,7 +1878,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					int closePos = arrayAccess.getEnd() - 1;
 					TextEditGroup editGroup = getEditGroup(event);
 					doTextReplace(openPos, 1, "{", editGroup);
-					doTextReplace(closePos, 1, "}", editGroup);
+					doTextReplace(closePos, 1, CURLY_CLOSE, editGroup);
 				} else {
 					// the modification was from a variable hashtable to a
 					// variable array.
