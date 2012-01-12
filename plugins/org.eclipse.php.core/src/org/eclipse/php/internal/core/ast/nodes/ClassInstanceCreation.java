@@ -45,6 +45,9 @@ public class ClassInstanceCreation extends Expression {
 	public static final ChildListPropertyDescriptor CTOR_PARAMS_PROPERTY = new ChildListPropertyDescriptor(
 			ClassInstanceCreation.class,
 			"ctorParams", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor CHAINING_INSTANCE_CALL_PROPERTY = new ChildPropertyDescriptor(
+			ClassInstanceCreation.class,
+			"className", ClassName.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -57,6 +60,7 @@ public class ClassInstanceCreation extends Expression {
 				2);
 		propertyList.add(CLASSNAME_PROPERTY);
 		propertyList.add(CTOR_PARAMS_PROPERTY);
+		propertyList.add(CHAINING_INSTANCE_CALL_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
@@ -97,6 +101,9 @@ public class ClassInstanceCreation extends Expression {
 		for (ASTNode node : this.ctorParams) {
 			node.accept(visitor);
 		}
+		if (chainingInstanceCall != null) {
+			chainingInstanceCall.accept(visitor);
+		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
@@ -105,12 +112,18 @@ public class ClassInstanceCreation extends Expression {
 		for (ASTNode node : this.ctorParams) {
 			node.traverseTopDown(visitor);
 		}
+		if (chainingInstanceCall != null) {
+			chainingInstanceCall.traverseTopDown(visitor);
+		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
 		className.traverseBottomUp(visitor);
 		for (ASTNode node : this.ctorParams) {
 			node.traverseBottomUp(visitor);
+		}
+		if (chainingInstanceCall != null) {
+			chainingInstanceCall.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -126,6 +139,10 @@ public class ClassInstanceCreation extends Expression {
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append(tab).append("</ConstructorParameters>\n"); //$NON-NLS-1$
+		if (chainingInstanceCall != null) {
+			chainingInstanceCall.toString(buffer, TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$
+		}
 		buffer.append(tab).append("</ClassInstanceCreation>"); //$NON-NLS-1$
 	}
 
@@ -181,6 +198,13 @@ public class ClassInstanceCreation extends Expression {
 				return getClassName();
 			} else {
 				setClassName((ClassName) child);
+				return null;
+			}
+		} else if (property == CHAINING_INSTANCE_CALL_PROPERTY) {
+			if (get) {
+				return getChainingInstanceCall();
+			} else {
+				setChainingInstanceCall((ChainingInstanceCall) child);
 				return null;
 			}
 		}

@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php54;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.1 2012/01/05 09:00:45 zzhongwei Exp $
+////    $Id: php_ast_parser.cup,v 1.2 2012/01/12 09:15:35 zzhongwei Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -879,7 +879,7 @@ extends_from:superClass implements_list:interfaces
 T_CURLY_OPEN:blockStart class_statement_list:sList T_CURLY_CLOSE:blockEnd
 {:
 	if(modifier.intValue()==ClassDeclaration.MODIFIER_TRAIT){
-		RESULT = new TraitDeclaration(modifierleft ,blockEndright, parser.ast, modifier.intValue(),
+		RESULT = new TraitDeclaration(modifierleft ,blockEndright, parser.ast, ClassDeclaration.MODIFIER_NONE,
 			new Identifier(classNameleft, classNameright, parser.ast, className), superClass, interfaces,
 			new Block(blockStartleft, blockEndright, parser.ast, sList));
 	}else{
@@ -1557,7 +1557,8 @@ trait_method_reference_fully_qualified ::=
 	//FunctionName name = new FunctionName(functionNameleft, functionNameright, parser.ast, 
 	//		new Identifier(functionNameleft, functionNameright, parser.ast, s));
 	//SimpleReference name = new SimpleReference(functionNameleft, functionNameright, functionName);
-	FullyQualifiedTraitMethodReference methodReference = new FullyQualifiedTraitMethodReference(classNameleft, functionNameright, parser.ast, className, functionName); 
+	Identifier name = new Identifier(functionNameleft, functionNameright, parser.ast, functionName);
+	FullyQualifiedTraitMethodReference methodReference = new FullyQualifiedTraitMethodReference(classNameleft, functionNameright, parser.ast, className, name); 
 	RESULT = methodReference;
 :}
 ;
@@ -1566,13 +1567,17 @@ trait_alias ::=
 		trait_method_reference:reference T_AS trait_modifiers:modifier T_STRING:functionName
 {:
 	int modifierValue = modifier == null ? Modifiers.AccPublic : modifier.intValue();
-	TraitAlias alias = new TraitAlias(referenceleft, functionNameright, parser.ast,reference,modifierValue,functionName);
+	int modifierOffset = modifier == null ? functionNameleft : modifierleft;
+	//SimpleReference name = new SimpleReference(functionNameleft, functionNameright, functionName);
+	Identifier name = new Identifier(functionNameleft, functionNameright, parser.ast, functionName);
+	TraitAlias alias = new TraitAlias(referenceleft, functionNameright, parser.ast,reference,modifierValue,modifierOffset,name);
 	RESULT = alias;
 :}
-|	trait_method_reference:reference T_AS member_modifier:modifier
+|	trait_method_reference:reference T_AS:as member_modifier:modifier
 {:
 	int modifierValue = modifier == null ? Modifiers.AccPublic : modifier.intValue();
-	TraitAlias alias = new TraitAlias(referenceleft, modifierright, parser.ast,reference,modifierValue,null);
+	int modifierOffset = modifier == null ? asright + 1 : modifierleft;
+	TraitAlias alias = new TraitAlias(referenceleft, modifierright, parser.ast,reference,modifierValue,modifierOffset,null);
 	RESULT = alias;
 :}
 ;

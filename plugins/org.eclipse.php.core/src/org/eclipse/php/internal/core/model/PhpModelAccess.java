@@ -22,6 +22,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.index2.search.ModelAccess;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 
 public class PhpModelAccess extends ModelAccess {
 	public static final IType[] NULL_TYPES = new IType[0];
@@ -83,8 +84,8 @@ public class PhpModelAccess extends ModelAccess {
 	@Override
 	public IType[] findTypes(String name, MatchRule matchRule, int trueFlags,
 			int falseFlags, IDLTKSearchScope scope, IProgressMonitor monitor) {
-		IType[] result = super.findTypes(name, matchRule, trueFlags,
-				falseFlags, scope, monitor);
+		IType[] result = super.findTypes(name, matchRule, trueFlags, falseFlags
+				| IPHPModifiers.AccTrait, scope, monitor);
 		if (result == null) {
 			result = PhpModelAccess.NULL_TYPES;
 		}
@@ -96,7 +97,7 @@ public class PhpModelAccess extends ModelAccess {
 			MatchRule matchRule, int trueFlags, int falseFlags,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		IType[] result = super.findTypes(qualifier, name, matchRule, trueFlags,
-				falseFlags, scope, monitor);
+				falseFlags | IPHPModifiers.AccTrait, scope, monitor);
 		if (result == null) {
 			result = PhpModelAccess.NULL_TYPES;
 		}

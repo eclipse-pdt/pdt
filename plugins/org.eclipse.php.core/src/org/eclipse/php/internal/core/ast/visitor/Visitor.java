@@ -337,4 +337,48 @@ public interface Visitor {
 	public boolean visit(ASTNode node);
 
 	public void endVisit(ASTNode node);
+
+	// php5.4 starts
+
+	public boolean visit(ChainingInstanceCall node);
+
+	public void endVisit(ChainingInstanceCall node);
+
+	public boolean visit(DereferenceNode node);
+
+	public void endVisit(DereferenceNode node);
+
+	public boolean visit(FullyQualifiedTraitMethodReference node);
+
+	public void endVisit(FullyQualifiedTraitMethodReference node);
+
+	public boolean visit(PHPArrayDereferenceList node);
+
+	public void endVisit(PHPArrayDereferenceList node);
+
+	public boolean visit(TraitAlias node);
+
+	public void endVisit(TraitAlias node);
+
+	public boolean visit(TraitAliasStatement node);
+
+	public void endVisit(TraitAliasStatement node);
+
+	public boolean visit(TraitDeclaration node);
+
+	public void endVisit(TraitDeclaration node);
+
+	public boolean visit(TraitPrecedence node);
+
+	public void endVisit(TraitPrecedence node);
+
+	public boolean visit(TraitPrecedenceStatement node);
+
+	public void endVisit(TraitPrecedenceStatement node);
+
+	public boolean visit(TraitUseStatement node);
+
+	public void endVisit(TraitUseStatement node);
+	// php5.4 ends
+
 }

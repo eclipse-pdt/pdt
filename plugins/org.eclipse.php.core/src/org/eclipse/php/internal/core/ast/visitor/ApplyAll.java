@@ -606,4 +606,88 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public void endVisit(GotoLabel gotoLabel) {
 		endVisitNode(gotoLabel);
 	}
+
+	// php5.4 starts
+
+	public boolean visit(ChainingInstanceCall node) {
+		return apply(node);
+	}
+
+	public void endVisit(ChainingInstanceCall node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(DereferenceNode node) {
+		return apply(node);
+	}
+
+	public void endVisit(DereferenceNode node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(FullyQualifiedTraitMethodReference node) {
+		return apply(node);
+	}
+
+	public void endVisit(FullyQualifiedTraitMethodReference node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(PHPArrayDereferenceList node) {
+		return apply(node);
+	}
+
+	public void endVisit(PHPArrayDereferenceList node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(TraitAlias node) {
+		return apply(node);
+	}
+
+	public void endVisit(TraitAlias node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(TraitAliasStatement node) {
+		return apply(node);
+	}
+
+	public void endVisit(TraitAliasStatement node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(TraitDeclaration node) {
+		return apply(node);
+	}
+
+	public void endVisit(TraitDeclaration node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(TraitPrecedence node) {
+		return apply(node);
+	}
+
+	public void endVisit(TraitPrecedence node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(TraitPrecedenceStatement node) {
+		return apply(node);
+	}
+
+	public void endVisit(TraitPrecedenceStatement node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(TraitUseStatement node) {
+		return apply(node);
+	}
+
+	public void endVisit(TraitUseStatement node) {
+		endVisitNode(node);
+	}
+	// php5.4 ends
+
 }

@@ -48,7 +48,7 @@ public abstract class LineInformation {
 			}
 
 			public int getLineOffset(int line) {
-				return astRoot.getPosition(line + 1, 0);
+				return astRoot.getPosition(line + 1, 0) - 1;
 			}
 		};
 	}

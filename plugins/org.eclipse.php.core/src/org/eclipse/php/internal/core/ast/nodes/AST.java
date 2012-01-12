@@ -2801,7 +2801,7 @@ public class AST {
 	}
 
 	public FullyQualifiedTraitMethodReference newFullyQualifiedTraitMethodReference(NamespaceName className,
-			String functionName) {
+			Identifier functionName) {
 		FullyQualifiedTraitMethodReference lfDeclaration = new FullyQualifiedTraitMethodReference(this);
 		lfDeclaration.setClassName(className);
 		lfDeclaration.setFunctionName(functionName);
@@ -2813,7 +2813,7 @@ public class AST {
 	}
 
 	public TraitAlias newTraitAlias(Expression traitMethod,
-			int modifier, String functionName) {
+			int modifier, Identifier functionName) {
 		TraitAlias lfDeclaration = new TraitAlias(this);
 		lfDeclaration.setModifier(modifier);
 		lfDeclaration.setTraitMethod(traitMethod);

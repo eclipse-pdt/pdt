@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
+import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 public class TraitPrecedenceStatement extends TraitStatement {
 	private TraitPrecedence precedence;
@@ -50,4 +51,11 @@ public class TraitPrecedenceStatement extends TraitStatement {
 		return result;
 	}
 
+	public void accept0(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}
 }

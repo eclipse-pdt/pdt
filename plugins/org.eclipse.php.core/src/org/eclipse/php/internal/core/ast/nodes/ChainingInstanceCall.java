@@ -146,12 +146,13 @@ public class ChainingInstanceCall extends Expression {
 			buffer.append(TAB).append(tab)
 					.append("<ChainingMethodOrProperty>\n"); //$NON-NLS-1$
 			for (VariableBase variableBase : chainingMethodOrProperty) {
-				variableBase.toString(buffer, TAB + tab);
+				variableBase.toString(buffer, TAB + TAB + tab);
 				buffer.append("\n"); //$NON-NLS-1$
 			}
 			buffer.append(TAB).append(tab)
 					.append("</ChainingMethodOrProperty>"); //$NON-NLS-1$
 		}
+		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append("</ChainingInstanceCall>"); //$NON-NLS-1$
 	}
 
@@ -184,6 +185,32 @@ public class ChainingInstanceCall extends Expression {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
 			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
+	}
+
+	/*
+	 * (omit javadoc for this method) Method declared on ASTNode.
+	 */
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == CHAINING_METHOD_OR_PROPERTY) {
+			return getChainingMethodOrProperty();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
+		if (property == ARRAY_DEREFERENCE_LIST) {
+			if (get) {
+				return getArrayDereferenceList();
+			} else {
+				setArrayDereferenceList((PHPArrayDereferenceList) child);
+				return null;
+			}
+		}
+
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
 	}
 
 }

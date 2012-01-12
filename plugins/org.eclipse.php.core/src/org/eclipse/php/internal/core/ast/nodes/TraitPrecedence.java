@@ -115,7 +115,7 @@ public class TraitPrecedence extends Expression {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<TraitAlias"); //$NON-NLS-1$
+		buffer.append(tab).append("<TraitPrecedence"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
 		methodReference.toString(buffer, TAB + tab);
@@ -128,7 +128,7 @@ public class TraitPrecedence extends Expression {
 			}
 			buffer.append(TAB).append(tab).append("</TraitReferenceList>\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</TraitAlias>"); //$NON-NLS-1$
+		buffer.append(tab).append("</TraitPrecedence>"); //$NON-NLS-1$
 	}
 
 	public int getType() {
@@ -157,6 +157,29 @@ public class TraitPrecedence extends Expression {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
 			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
+		if (property == METHOD_REFERENCE) {
+			if (get) {
+				return getMethodReference();
+			} else {
+				setMethodReference((FullyQualifiedTraitMethodReference) child);
+				return null;
+			}
+		}
+
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == TRAIT_REFERENCE_LIST) {
+			return getTrList();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
 	}
 
 }

@@ -11,14 +11,14 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class FullyQualifiedTraitMethodReference extends Expression {
 
 	private NamespaceName className;
-	private String functionName;
+	private Identifier functionName;
 
 	public static final ChildPropertyDescriptor CLASS_NAME = new ChildPropertyDescriptor(
 			FullyQualifiedTraitMethodReference.class,
 			"className", NamespaceName.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor FUNCTION_NAME = new SimplePropertyDescriptor(
+	public static final ChildPropertyDescriptor FUNCTION_NAME = new ChildPropertyDescriptor(
 			FullyQualifiedTraitMethodReference.class,
-			"functionName", String.class, MANDATORY); //$NON-NLS-1$
+			"functionName", Identifier.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -35,7 +35,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	}
 
 	public FullyQualifiedTraitMethodReference(int start, int end, AST ast,
-			NamespaceName className, String functionName) {
+			NamespaceName className, Identifier functionName) {
 		super(start, end, ast);
 		this.className = className;
 		this.functionName = functionName;
@@ -60,18 +60,15 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 		postReplaceChild(oldChild, className, CLASS_NAME);
 	}
 
-	public String getFunctionName() {
+	public Identifier getFunctionName() {
 		return functionName;
 	}
 
-	public void setFunctionName(String functionName) {
-		if (functionName == null) {
-			throw new IllegalArgumentException();
-		}
-
-		preValueChange(FUNCTION_NAME);
+	public void setFunctionName(Identifier functionName) {
+		ASTNode oldChild = this.functionName;
+		preReplaceChild(oldChild, functionName, FUNCTION_NAME);
 		this.functionName = functionName;
-		postValueChange(FUNCTION_NAME);
+		postReplaceChild(oldChild, functionName, FUNCTION_NAME);
 	}
 
 	public void accept0(Visitor visitor) {
@@ -84,23 +81,27 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 
 	public void childrenAccept(Visitor visitor) {
 		className.accept(visitor);
+		functionName.accept(visitor);
 
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		className.traverseTopDown(visitor);
+		functionName.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
 		className.traverseBottomUp(visitor);
+		functionName.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<FunctionName"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" functionName='").append(functionName).append("'");
+		buffer.append(" functionName='").append(functionName.getName())
+				.append("'");
 		buffer.append(">\n"); //$NON-NLS-1$
 		className.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
@@ -131,6 +132,42 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
 			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
+	}
+
+	// @Override
+	// Object internalGetSetObjectProperty(SimplePropertyDescriptor property,
+	// boolean get, Object value) {
+	// if (property == FUNCTION_NAME) {
+	// if (get) {
+	// return getFunctionName();
+	// } else {
+	// setFunctionName((String) value);
+	// return null;
+	// }
+	// }
+	// return super.internalGetSetObjectProperty(property, get, value);
+	// }
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
+		if (property == CLASS_NAME) {
+			if (get) {
+				return getClassName();
+			} else {
+				setClassName((NamespaceName) child);
+				return null;
+			}
+		} else if (property == FUNCTION_NAME) {
+			if (get) {
+				return getFunctionName();
+			} else {
+				setFunctionName((Identifier) child);
+				return null;
+			}
+		}
+
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
 	}
 
 }

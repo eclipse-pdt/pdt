@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
+import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 public class TraitAliasStatement extends TraitStatement {
 	private TraitAlias alias;
@@ -48,4 +49,11 @@ public class TraitAliasStatement extends TraitStatement {
 		return result;
 	}
 
+	public void accept0(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}
 }

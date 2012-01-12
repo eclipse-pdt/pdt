@@ -111,4 +111,12 @@ public class PHPArrayDereferenceList extends Expression {
 		return dereferences;
 	}
 
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == DEREFERENCES_PROPERTY) {
+			return getDereferences();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
+	}
+
 }

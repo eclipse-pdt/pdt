@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 public class TraitAlias extends Expression {
 
+	// TODO need modifier start offset,change functionName to scalar
 	public TraitAlias(int start, int end, AST ast, Expression traitMethod,
-			int modifier, String functionName) {
+			int modifier, int modifierOffset, Identifier functionName) {
 		super(start, end, ast);
 		this.traitMethod = traitMethod;
 		this.modifier = modifier;
+		this.modifierOffset = modifierOffset;
 		this.functionName = functionName;
 	}
 
@@ -24,19 +27,21 @@ public class TraitAlias extends Expression {
 
 	private Expression traitMethod;
 	private int modifier;
+	private int modifierOffset;
 
 	/**
 	 * functionName could be null
 	 */
-	private String functionName;
+	private Identifier functionName;
 
 	public static final ChildPropertyDescriptor TRAIT_METHOD = new ChildPropertyDescriptor(
 			TraitAlias.class,
 			"traitMethod", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor MODIFIER = new SimplePropertyDescriptor(
 			TraitAlias.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor FUNCTION_NAME = new SimplePropertyDescriptor(
-			TraitAlias.class, "functionName", String.class, OPTIONAL); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor FUNCTION_NAME = new ChildPropertyDescriptor(
+			TraitAlias.class,
+			"functionName", Identifier.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -77,15 +82,23 @@ public class TraitAlias extends Expression {
 		postValueChange(MODIFIER);
 	}
 
-	public String getFunctionName() {
+	public int getModifierOffset() {
+		return modifierOffset;
+	}
+
+	public void setModifierOffset(int modifierOffset) {
+		this.modifierOffset = modifierOffset;
+	}
+
+	public Identifier getFunctionName() {
 		return functionName;
 	}
 
-	public void setFunctionName(String functionName) {
-		preValueChange(FUNCTION_NAME);
+	public void setFunctionName(Identifier functionName) {
+		ASTNode oldChild = this.functionName;
+		preReplaceChild(oldChild, functionName, FUNCTION_NAME);
 		this.functionName = functionName;
-		postValueChange(FUNCTION_NAME);
-
+		postReplaceChild(oldChild, functionName, FUNCTION_NAME);
 	}
 
 	public void accept0(Visitor visitor) {
@@ -98,23 +111,35 @@ public class TraitAlias extends Expression {
 
 	public void childrenAccept(Visitor visitor) {
 		traitMethod.accept(visitor);
+		if (functionName != null) {
+			functionName.accept(visitor);
+		}
 
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		traitMethod.traverseTopDown(visitor);
+		if (functionName != null) {
+			functionName.traverseTopDown(visitor);
+		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
 		traitMethod.traverseBottomUp(visitor);
+		if (functionName != null) {
+			functionName.traverseBottomUp(visitor);
+		}
 		accept(visitor);
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<TraitAlias"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n"); //$NON-NLS-1$
+		if (functionName != null) {
+			buffer.append(" functionName='").append(functionName.getName()).append("' "); //$NON-NLS-1$
+		}
+		buffer.append(" modifier='").append(PHPFlags.toString(modifier)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		traitMethod.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append("</TraitAlias>"); //$NON-NLS-1$
@@ -135,8 +160,11 @@ public class TraitAlias extends Expression {
 	@Override
 	ASTNode clone0(AST target) {
 		Expression traitMethod = ASTNode.copySubtree(target, getTraitMethod());
+		Identifier functionName = ASTNode
+				.copySubtree(target, getFunctionName());
 		final TraitAlias result = new TraitAlias(this.getStart(),
-				this.getEnd(), target, traitMethod, modifier, functionName);
+				this.getEnd(), target, traitMethod, modifier, modifierOffset,
+				functionName);
 		return result;
 	}
 
@@ -144,6 +172,57 @@ public class TraitAlias extends Expression {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
 			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
+	}
+
+	// @Override
+	// Object internalGetSetObjectProperty(SimplePropertyDescriptor property,
+	// boolean get, Object value) {
+	// if (property == FUNCTION_NAME) {
+	// if (get) {
+	// return getFunctionName();
+	// } else {
+	// setFunctionName((String) value);
+	// return null;
+	// }
+	// }
+	// return super.internalGetSetObjectProperty(property, get, value);
+	// }
+
+	@Override
+	int internalGetSetIntProperty(SimplePropertyDescriptor property,
+			boolean get, int value) {
+		if (property == MODIFIER) {
+			if (get) {
+				return getModifier();
+			} else {
+				int oldValue = getModifier();
+				setModifier(value);
+				return oldValue;
+			}
+		}
+		return super.internalGetSetIntProperty(property, get, value);
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
+		if (property == TRAIT_METHOD) {
+			if (get) {
+				return getTraitMethod();
+			} else {
+				setTraitMethod((Expression) child);
+				return null;
+			}
+		} else if (property == FUNCTION_NAME) {
+			if (get) {
+				return getFunctionName();
+			} else {
+				setFunctionName((Identifier) child);
+				return null;
+			}
+		}
+
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
 	}
 
 }

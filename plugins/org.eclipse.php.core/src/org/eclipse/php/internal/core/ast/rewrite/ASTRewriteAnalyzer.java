@@ -2027,6 +2027,12 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				handleException(e);
 			}
 		}
+		if (isChanged(node,
+				ClassInstanceCreation.CHAINING_INSTANCE_CALL_PROPERTY)) {
+
+			rewriteRequiredNodeVisit(node,
+					ClassInstanceCreation.CHAINING_INSTANCE_CALL_PROPERTY);
+		}
 		return false;
 	}
 
@@ -3674,6 +3680,29 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			return doVisitUnchangedChildren(lambdaFunctionDeclaration);
 		}
 
+		// static FIXME
+		// RewriteEvent staticEvent = getEvent(lambdaFunctionDeclaration,
+		// LambdaFunctionDeclaration.IS_STATIC);
+		// if (staticEvent != null && staticEvent.getChangeKind() ==
+		// RewriteEvent.REPLACED) {
+		// boolean isStatic = (Boolean) staticEvent.getNewValue();
+		//
+		// try {
+		// TextEditGroup editGroup = getEditGroup(staticEvent);
+		// int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8;
+		// int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
+		// doTextRemove(startDeletionFrom,
+		// startOffset - startDeletionFrom, editGroup);
+		// if (isStatic) {
+		// doTextInsert(startDeletionFrom, " & ", editGroup);
+		// } else {
+		// doTextInsert(startDeletionFrom, " ", editGroup);
+		// }
+		// } catch (CoreException e) {
+		// handleException(e);
+		// }
+		// }
+
 		// Reference
 		RewriteEvent event = getEvent(lambdaFunctionDeclaration,
 				LambdaFunctionDeclaration.IS_REFERENCE_PROPERTY);
@@ -3849,4 +3878,121 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 		return false;
 	}
+
+	// php5.4 starts
+
+	public boolean visit(ChainingInstanceCall node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteRequiredNode(node, ChainingInstanceCall.ARRAY_DEREFERENCE_LIST);
+		rewriteNodeList(node, ChainingInstanceCall.CHAINING_METHOD_OR_PROPERTY,
+				node.getStart(), "", "");
+		return false;
+	}
+
+	public boolean visit(DereferenceNode node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteRequiredNode(node, ChainingInstanceCall.ARRAY_DEREFERENCE_LIST);
+		return false;
+	}
+
+	public boolean visit(FullyQualifiedTraitMethodReference node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteRequiredNode(node, FullyQualifiedTraitMethodReference.CLASS_NAME);
+		rewriteRequiredNode(node,
+				FullyQualifiedTraitMethodReference.FUNCTION_NAME);
+		return false;
+	}
+
+	public boolean visit(PHPArrayDereferenceList node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteNodeList(node, PHPArrayDereferenceList.DEREFERENCES_PROPERTY,
+				node.getStart(), "", "");
+		return false;
+	}
+
+	public boolean visit(TraitAlias node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteRequiredNode(node, TraitAlias.TRAIT_METHOD);
+		rewriteModifiers(node, TraitAlias.MODIFIER, node.getModifierOffset());
+		rewriteRequiredNode(node, TraitAlias.FUNCTION_NAME);
+		return false;
+	}
+
+	public boolean visit(TraitAliasStatement node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteRequiredNode(node, TraitAliasStatement.EXP);
+		return false;
+	}
+
+	public boolean visit(TraitDeclaration node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		try {
+			// Rewrite the modifier property
+			// rewriteClassDeclarationModifier(classDeclaration);
+			// Rewrite the super-class property
+			// rewriteClassDeclarationSuperClass(classDeclaration);
+			// Rewrite the interfaces
+			// int pos;
+			// if (classDeclaration.getSuperClass() == null) {
+			// pos = classDeclaration.getName().getEnd();
+			// } else {
+			// pos = classDeclaration.getSuperClass().getEnd();
+			// }
+			// rewriteNodeList(classDeclaration,
+			// ClassDeclaration.INTERFACES_PROPERTY, pos, " implements ",
+			// ", ");
+			// Rewrite the name and the body
+			return rewriteRequiredNodeVisit(node,
+					ClassDeclaration.NAME_PROPERTY,
+					ClassDeclaration.BODY_PROPERTY);
+		} catch (Exception e) {
+			handleException(e);
+		}
+		return false;
+	}
+
+	public boolean visit(TraitPrecedence node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteRequiredNode(node, TraitPrecedence.METHOD_REFERENCE);
+		rewriteNodeList(node, TraitPrecedence.TRAIT_REFERENCE_LIST,
+				node.getStart(), "", ", ");
+		return false;
+	}
+
+	public boolean visit(TraitPrecedenceStatement node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteRequiredNode(node, TraitPrecedenceStatement.EXP);
+		return false;
+	}
+
+	public boolean visit(TraitUseStatement node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteNodeList(node, TraitUseStatement.TRAIT, node.getStart(), "",
+				", ");
+		rewriteNodeList(node, TraitUseStatement.TRAIT_STATEMENT,
+				node.getStart(), "", ", ");
+		return false;
+	}
+	// php5.4 ends
+
 }

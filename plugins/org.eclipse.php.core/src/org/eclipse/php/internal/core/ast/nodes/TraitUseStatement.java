@@ -32,9 +32,9 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class TraitUseStatement extends Statement {
 
 	private ASTNode.NodeList<NamespaceName> traitList = new ASTNode.NodeList<NamespaceName>(
-			TRAIT);;
+			TRAIT);
 	private ASTNode.NodeList<TraitStatement> tsList = new ASTNode.NodeList<TraitStatement>(
-			TRAIT_STATEMENT);;
+			TRAIT_STATEMENT);
 
 	public static final ChildListPropertyDescriptor TRAIT = new ChildListPropertyDescriptor(
 			TraitUseStatement.class,
@@ -160,7 +160,7 @@ public class TraitUseStatement extends Statement {
 		return result;
 	}
 
-	public ASTNode.NodeList<NamespaceName> getTraitList() {
+	public List<NamespaceName> getTraitList() {
 		return traitList;
 	}
 
@@ -171,7 +171,7 @@ public class TraitUseStatement extends Statement {
 		}
 	}
 
-	public ASTNode.NodeList<TraitStatement> getTsList() {
+	public List<TraitStatement> getTsList() {
 		return tsList;
 	}
 
@@ -180,6 +180,16 @@ public class TraitUseStatement extends Statement {
 		if (tsList != null) {
 			this.tsList.addAll(tsList);
 		}
+	}
+
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == TRAIT) {
+			return getTraitList();
+		} else if (property == TRAIT_STATEMENT) {
+			return getTsList();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
 	}
 
 }

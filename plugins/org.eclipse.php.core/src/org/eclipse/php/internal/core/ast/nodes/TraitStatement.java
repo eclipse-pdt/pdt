@@ -103,4 +103,19 @@ public abstract class TraitStatement extends Statement {
 		return PROPERTY_DESCRIPTORS;
 	}
 
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
+		if (property == EXP) {
+			if (get) {
+				return getExp();
+			} else {
+				setExp((Expression) child);
+				return null;
+			}
+		}
+
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
 }
