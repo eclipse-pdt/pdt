@@ -496,13 +496,17 @@ public class NodeDeletionTests extends TestCase {
 	 * and the ast.
 	 */
 	private Program initialize(IDocument document) throws Exception {
-		ASTParser parser = ASTParser.newParser(PHPVersion.PHP5,
+		ASTParser parser = ASTParser.newParser(getPHPVersion(),
 				ProjectOptions.useShortTags((IProject) null));
 		parser.setSource(document.get().toCharArray());
 		Program program = parser.createAST(new NullProgressMonitor());
 
 		program.recordModifications();
 		return program;
+	}
+
+	protected PHPVersion getPHPVersion() {
+		return PHPVersion.PHP5;
 	}
 
 	private void rewrite(Program program, IDocument document) throws Exception {

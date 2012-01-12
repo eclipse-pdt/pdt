@@ -95,9 +95,9 @@ import org.eclipse.text.edits.TextEdit;
  */
 public class ASTRewriteTests extends TestCase {
 
-	private AST ast;
-	private IDocument document;
-	private Program program;
+	protected AST ast;
+	protected IDocument document;
+	protected Program program;
 
 	public ASTRewriteTests(String name) {
 		super(name);
@@ -105,7 +105,9 @@ public class ASTRewriteTests extends TestCase {
 
 	public static TestSuite suite() {
 		return new TestSuite(new Class[] { ASTRewriteTests.class,
-				NodeDeletionTests.class, }, ASTRewriteTests.class.getName());
+				NodeDeletionTests.class, ASTRewriteTestsPHP54.class,
+				NodeDeletionTestsPHP54.class, },
+				ASTRewriteTests.class.getName());
 	}
 
 	// //////////////////////// Tests //////////////////////////
@@ -2011,22 +2013,41 @@ public class ASTRewriteTests extends TestCase {
 		program.recordModifications();
 	}
 
-	private void initialize(String content) throws Exception {
-		initialize(content, PHPVersion.PHP5);
+	protected final void initialize(String content) throws Exception {
+		initialize(content, getPHPVersion());
 	}
 
-	private void rewrite() throws Exception {
+	protected PHPVersion getPHPVersion() {
+		return PHPVersion.PHP5;
+	}
+
+	protected final void rewrite() throws Exception {
 		TextEdit edits = program.rewrite(document, null);
 		edits.apply(document);
 	}
 
-	private void checkResult(String expected) {
+	protected final void checkResult(String expected) {
 		String actual = document.get();
 		String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expected,
 				actual);
 		if (diff != null) {
 			fail(diff);
 		}
+	}
+
+	public <T extends ASTNode> List<T> getAllOfType(Program program,
+			final String className) {
+		final List<T> list = new ArrayList<T>();
+		program.accept(new ApplyAll() {
+			@SuppressWarnings("unchecked")
+			protected boolean apply(ASTNode node) {
+				if (node.getClass().getName().equals(className)) {
+					list.add((T) node);
+				}
+				return true;
+			}
+		});
+		return list;
 	}
 
 	public <T extends ASTNode> List<T> getAllOfType(Program program,
