@@ -62,7 +62,7 @@ class MyClass2 {
 					</TraitNameList>
 					<TraitStatementList>
 						<TraitAliasStatement start='168' length='22'>
-							<TraitAlias start='168' length='21'>
+							<TraitAlias start='168' length='21' modifier='protected'>
 								<Identifier start='168' length='8' name='sayHello'/>
 							</TraitAlias>
 						</TraitAliasStatement>
@@ -87,7 +87,7 @@ class MyClass2 {
 					</TraitNameList>
 					<TraitStatementList>
 						<TraitAliasStatement start='309' length='35'>
-							<TraitAlias start='309' length='34'>
+							<TraitAlias start='309' length='34' functionName='myPrivateHello'  modifier='private'>
 								<Identifier start='309' length='8' name='sayHello'/>
 							</TraitAlias>
 						</TraitAliasStatement>

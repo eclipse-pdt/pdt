@@ -17,6 +17,19 @@ echo (new Human("Gonzalo"))->hello();
 				<ConstructorParameters>
 					<Scalar start='23' length='9' type='string' value='"Gonzalo"'/>
 				</ConstructorParameters>
+				<ChainingInstanceCall start='34' length='9'>
+					<ChainingMethodOrProperty>
+						<FunctionInvocation start='36' length='7'>
+							<FunctionName start='36' length='5'>
+								<Variable start='36' length='5' isDollared='false'>
+									<Identifier start='36' length='5' name='hello'/>
+								</Variable>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+					</ChainingMethodOrProperty>
+				</ChainingInstanceCall>
 			</ClassInstanceCreation>
 		</EchoStatement>
 		<EmptyStatement start='45' length='2'/>
