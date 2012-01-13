@@ -113,7 +113,7 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 
 	// FIXME should fix this case,the scalar's end is wrong!
 	// public void testEmptyHeredoc() throws Exception {
-	// String str = "<?php <<<Heredoc\nabc\nHeredoc;\n?>";
+	// String str = "<?php <<<Heredoc\nabc\nefg\nHeredoc;\n?>";
 	// initialize(str);
 	//
 	// List<Quote> quotes = getAllOfType(program, Quote.class);
@@ -121,8 +121,15 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 	// quotes.get(0).expressions().clear();
 	// quotes.get(0).expressions().add(ast.newScalar("Hello World\n"));
 	// rewrite();
-	// checkResult("<?php <<<Heredoc\nHello World\nHeredoc;\n?>");
+	// checkResult("<?php <<<Heredoc\nHello World\nefg\nHeredoc;\n?>");
 	// }
+
+	public void testEmptyHeredoc() throws Exception {
+		String str = "<?php <<<Heredoc\nHeredoc;\n?>";
+		initialize(str);
+		checkResult("<?php <<<Heredoc\nHeredoc;\n?>");
+
+	}
 
 	public void testTraitDeclarationSimple() throws Exception {
 		String str = "<?php trait MyTrait { } ?> ";
