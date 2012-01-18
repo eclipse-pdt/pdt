@@ -16,13 +16,17 @@ import org.eclipse.dltk.ast.expressions.Expression;
 
 /**
  * Represents a field access
- * <pre>e.g.<pre> $a->$b
+ * 
+ * <pre>e.g.
+ * 
+ * <pre> $a->$b
  */
 public class FieldAccess extends Dispatch {
 
 	private final Expression field;
 
-	public FieldAccess(int start, int end, Expression dispatcher, Expression field) {
+	public FieldAccess(int start, int end, Expression dispatcher,
+			Expression field) {
 		super(start, end, dispatcher);
 
 		assert field != null;

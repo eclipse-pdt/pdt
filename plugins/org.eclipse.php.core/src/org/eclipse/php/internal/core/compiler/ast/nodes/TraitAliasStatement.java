@@ -25,7 +25,6 @@ public class TraitAliasStatement extends TraitStatement {
 
 	@Override
 	public int getKind() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

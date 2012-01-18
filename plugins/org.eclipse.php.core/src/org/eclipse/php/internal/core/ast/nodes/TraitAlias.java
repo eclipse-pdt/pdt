@@ -15,10 +15,10 @@ public class TraitAlias extends Expression {
 	public TraitAlias(int start, int end, AST ast, Expression traitMethod,
 			int modifier, int modifierOffset, Identifier functionName) {
 		super(start, end, ast);
-		this.traitMethod = traitMethod;
-		this.modifier = modifier;
-		this.modifierOffset = modifierOffset;
-		this.functionName = functionName;
+		setTraitMethod(traitMethod);
+		setModifier(modifier);
+		setModifierOffset(modifierOffset);
+		setFunctionName(functionName);
 	}
 
 	public TraitAlias(AST ast) {

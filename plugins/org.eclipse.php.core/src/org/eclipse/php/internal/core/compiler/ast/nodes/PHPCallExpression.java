@@ -38,6 +38,10 @@ public class PHPCallExpression extends CallExpression implements Dereferencable 
 		super(receiver, name, args);
 	}
 
+	public void setReceiver(ASTNode receiver) {
+		this.receiver = receiver;
+	}
+
 	public PHPArrayDereferenceList getArrayDereferenceList() {
 		return arrayDereferenceList;
 	}

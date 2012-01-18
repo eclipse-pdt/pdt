@@ -31,7 +31,7 @@ public abstract class TraitStatement extends Statement {
 
 	public TraitStatement(int start, int end, AST ast, Expression exp) {
 		super(start, end, ast);
-		this.exp = exp;
+		setExp(exp);
 	}
 
 	public TraitStatement(AST ast) {

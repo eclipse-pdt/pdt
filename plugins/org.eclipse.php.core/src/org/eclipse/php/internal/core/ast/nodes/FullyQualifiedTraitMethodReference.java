@@ -37,8 +37,8 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	public FullyQualifiedTraitMethodReference(int start, int end, AST ast,
 			NamespaceName className, Identifier functionName) {
 		super(start, end, ast);
-		this.className = className;
-		this.functionName = functionName;
+		setClassName(className);
+		setFunctionName(functionName);
 	}
 
 	public FullyQualifiedTraitMethodReference(AST ast) {

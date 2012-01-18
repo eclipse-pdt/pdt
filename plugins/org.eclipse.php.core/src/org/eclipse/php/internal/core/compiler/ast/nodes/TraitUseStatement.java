@@ -61,6 +61,22 @@ public class TraitUseStatement extends Statement {
 		}
 	}
 
+	public List<TypeReference> getTraitList() {
+		return traitList;
+	}
+
+	public void setTraitList(List<TypeReference> traitList) {
+		this.traitList = traitList;
+	}
+
+	public List<TraitStatement> getTsList() {
+		return tsList;
+	}
+
+	public void setTsList(List<TraitStatement> tsList) {
+		this.tsList = tsList;
+	}
+
 	public int getKind() {
 		return ASTNodeKinds.USE_STATEMENT;
 	}

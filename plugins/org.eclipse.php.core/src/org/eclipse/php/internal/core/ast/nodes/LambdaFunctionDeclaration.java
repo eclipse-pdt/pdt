@@ -105,7 +105,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		if (body != null) {
 			setBody(body);
 		}
-		this.isStatic = isStatic;
+		setStatic(isStatic);
 	}
 
 	public LambdaFunctionDeclaration(AST ast) {

@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -232,41 +231,6 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * this function searches the sequence from the right closing bracket ")"
-	 * and finding the position of the left "(" the offset has to be the offset
-	 * of the "("
-	 */
-	public static int getFunctionNameEndOffset(TextSequence statementText,
-			int offset) {
-		if (statementText.charAt(offset) != ')') {
-			return 0;
-		}
-		int currChar = offset;
-		int bracketsNum = 1;
-		char inStringMode = 0;
-		while (bracketsNum != 0 && currChar >= 0) {
-			currChar--;
-			// get the current char
-			final char charAt = statementText.charAt(currChar);
-			// if it is string close / open - update state
-			if (charAt == '\'' || charAt == '"') {
-				inStringMode = inStringMode == 0 ? charAt
-						: inStringMode == charAt ? 0 : inStringMode;
-			}
-
-			if (inStringMode != 0)
-				continue;
-
-			if (charAt == ')') {
-				bracketsNum++;
-			} else if (charAt == '(') {
-				bracketsNum--;
-			}
-		}
-		return currChar;
-	}
-
-	/**
 	 * The "self" function needs to be added only if we are in a class method
 	 * and it is not an abstract class or an interface
 	 * 
@@ -351,14 +315,118 @@ public class CodeAssistUtils {
 			return getVariableType(types, propertyName, offset);
 		}
 
+		boolean arrayReference = false;
+		PHPVersion version = ProjectOptions.getPhpVersion(sourceModule
+				.getScriptProject().getProject());
+		if (propertyName.endsWith("]")
+				&& version.isGreaterThan(PHPVersion.PHP5_3)) {
+			int closeBracketIndex = propertyName.lastIndexOf(')');
+			if (closeBracketIndex >= 0) {
+				if (propertyName.indexOf('[', closeBracketIndex) > closeBracketIndex) {
+					arrayReference = true;
+				}
+			}
+		}
 		String functionName = propertyName.substring(0, bracketIndex).trim();
 		Set<IType> result = new LinkedHashSet<IType>();
-		IType[] returnTypes = getFunctionReturnType(types, functionName,
-				sourceModule, offset);
+		IType[] returnTypes = null;
+		if (arrayReference) {
+			returnTypes = getFunctionArrayReturnType(types, functionName,
+					sourceModule, offset);
+		} else {
+			returnTypes = getFunctionReturnType(types, functionName,
+					sourceModule, offset);
+		}
 		if (returnTypes != null) {
 			result.addAll(Arrays.asList(returnTypes));
 		}
 		return result.toArray(new IType[result.size()]);
+	}
+
+	/**
+	 * example:(new class1())->avc2()[1][1]->avc1()
+	 * 
+	 * @param types
+	 * @param method
+	 * @param mask
+	 * @param sourceModule
+	 * @param offset
+	 * @return
+	 */
+	private static IType[] getFunctionArrayReturnType(IType[] types,
+			String method, ISourceModule sourceModule, int offset) {
+		return getFunctionArrayReturnType(types, method, USE_PHPDOC,
+				sourceModule, offset);
+	}
+
+	/**
+	 * example:(new class1())->avc2()[1][1]->avc1()
+	 * 
+	 * @param types
+	 * @param method
+	 * @param mask
+	 * @param sourceModule
+	 * @param offset
+	 * @return
+	 */
+	private static IType[] getFunctionArrayReturnType(IType[] types,
+			String method, int mask, ISourceModule sourceModule, int offset) {
+		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule,
+				moduleDeclaration, offset);
+
+		IEvaluatedType evaluatedType;
+		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
+		if (usePhpDoc) {
+			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(
+					context, types, method);
+			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal);
+			if (evaluatedType instanceof MultiTypeType) {
+				List<IType> tmpList = new LinkedList<IType>();
+				List<IEvaluatedType> possibleTypes = ((MultiTypeType) evaluatedType)
+						.getTypes();
+				for (IEvaluatedType possibleType : possibleTypes) {
+					IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(
+							possibleType, (ISourceModuleContext) context,
+							offset, (IModelAccessCache) null);
+					if (tmpArray != null) {
+						tmpList.addAll(Arrays.asList(tmpArray));
+					}
+				}
+				// the elements are filtered already
+				return tmpList.toArray(new IType[tmpList.size()]);
+			}
+
+			// modelElements = PHPTypeInferenceUtils.getModelElements(
+			// evaluatedType, (ISourceModuleContext) context, offset);
+			// if (modelElements != null) {
+			// return modelElements;
+			// }
+		}
+
+		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(
+				context, types, method);
+		evaluatedType = typeInferencer.evaluateType(methodGoal);
+
+		if (evaluatedType instanceof MultiTypeType) {
+			List<IType> tmpList = new LinkedList<IType>();
+			List<IEvaluatedType> possibleTypes = ((MultiTypeType) evaluatedType)
+					.getTypes();
+			for (IEvaluatedType possibleType : possibleTypes) {
+				IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(
+						possibleType, (ISourceModuleContext) context, offset,
+						(IModelAccessCache) null);
+				if (tmpArray != null) {
+					tmpList.addAll(Arrays.asList(tmpArray));
+				}
+			}
+			// the elements are filtered already
+			return tmpList.toArray(new IType[tmpList.size()]);
+		}
+
+		return EMPTY_TYPES;
 	}
 
 	/**
@@ -443,8 +511,8 @@ public class CodeAssistUtils {
 		// if its function call calc the return type.
 		if (propertyEndPosition > 0
 				&& statementText.charAt(propertyEndPosition - 1) == ')') {
-			int functionNameEnd = getFunctionNameEndOffset(statementText,
-					propertyEndPosition - 1);
+			int functionNameEnd = PHPModelUtils.getFunctionNameEndOffset(
+					statementText, propertyEndPosition - 1);
 			int functionNameStart = PHPTextSequenceUtilities
 					.readIdentifierStartIndex(phpVersion, statementText,
 							functionNameEnd, false);
@@ -453,10 +521,50 @@ public class CodeAssistUtils {
 					functionNameEnd).toString();
 			// if its a non class function
 			Set<IType> returnTypes = new LinkedHashSet<IType>();
-			IType[] types = getFunctionReturnType(null, functionName,
-					sourceModule, offset);
-			if (types != null) {
-				returnTypes.addAll(Arrays.asList(types));
+			if (functionNameStart == functionNameEnd
+					&& statementText.charAt(functionNameStart) == '('
+					&& propertyEndPosition - 1 > functionNameStart + 1
+					&& phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
+				TextSequence newClassStatementText = statementText
+						.subTextSequence(functionNameStart + 1,
+								propertyEndPosition - 1);
+				String newClassName = PHPModelUtils
+						.getClassNameForNewStatement(newClassStatementText,
+								phpVersion);
+				try {
+					return PHPModelUtils.getTypes(newClassName, sourceModule,
+							offset, null, null);
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+				}
+				// String newClassName = statementText
+				// .subSequence(functionNameStart + 1,
+				// propertyEndPosition - 1).toString().trim();
+				// if (newClassName.startsWith("new")
+				// && newClassName.endsWith(")")) {
+				// int newClassNameEnd = PHPModelUtils.getFunctionNameEndOffset(
+				// newClassStatementText,
+				// newClassStatementText.length() - 1);
+				// int newClassNameStart = PHPTextSequenceUtilities
+				// .readIdentifierStartIndex(phpVersion,
+				// newClassStatementText, newClassNameEnd,
+				// false);
+				// if (newClassNameStart > 3) {// should have blank chars after
+				// // 'new'
+				// newClassName = newClassStatementText.subSequence(
+				// newClassNameStart, newClassNameEnd).toString();
+				//
+				// }
+				// }
+
+			} else {
+				IType[] types = getFunctionReturnType(null, functionName,
+						sourceModule, offset);
+				if (types != null) {
+					returnTypes.addAll(Arrays.asList(types));
+				}
 			}
 			return returnTypes.toArray(new IType[returnTypes.size()]);
 		}

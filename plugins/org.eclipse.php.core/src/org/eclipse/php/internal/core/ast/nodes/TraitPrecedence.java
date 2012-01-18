@@ -14,7 +14,7 @@ public class TraitPrecedence extends Expression {
 			FullyQualifiedTraitMethodReference methodReference,
 			List<NamespaceName> trList) {
 		super(start, end, ast);
-		this.methodReference = methodReference;
+		setMethodReference(methodReference);
 
 		if (trList != null) {
 			this.trList.addAll(trList);

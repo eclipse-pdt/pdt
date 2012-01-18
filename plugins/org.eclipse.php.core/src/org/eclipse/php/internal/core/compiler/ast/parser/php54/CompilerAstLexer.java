@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java_cup.runtime.Symbol;
 
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
-import org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants;
+import org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;

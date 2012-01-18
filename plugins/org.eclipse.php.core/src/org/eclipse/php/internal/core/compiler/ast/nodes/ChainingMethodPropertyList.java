@@ -40,4 +40,5 @@ public class ChainingMethodPropertyList extends ASTListNode {
 	public ASTNode getParent() {
 		return parent;
 	}
+
 }

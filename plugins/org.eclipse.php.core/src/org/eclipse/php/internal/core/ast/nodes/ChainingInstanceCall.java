@@ -52,7 +52,7 @@ public class ChainingInstanceCall extends Expression {
 			List<VariableBase> chainingMethodOrProperty) {
 		super(ast);
 
-		this.arrayDereferenceList = arrayDereferenceList;
+		setArrayDereferenceList(arrayDereferenceList);
 		if (chainingMethodOrProperty != null) {
 			this.chainingMethodOrProperty.addAll(chainingMethodOrProperty);
 		}

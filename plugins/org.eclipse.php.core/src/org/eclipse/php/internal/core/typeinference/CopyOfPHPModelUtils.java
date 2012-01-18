@@ -34,7 +34,6 @@ import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
@@ -42,12 +41,8 @@ import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
-import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
-import org.eclipse.php.internal.core.util.text.TextSequence;
 
-public class PHPModelUtils {
-
-	private static final IType[] EMPTY_TYPES = new IType[0];
+public class CopyOfPHPModelUtils {
 
 	/**
 	 * Extracts the element name from the given fully qualified name
@@ -109,8 +104,6 @@ public class PHPModelUtils {
 					.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 			if (nsIndex != -1) {
 				defaultClassName = elementName.substring(nsIndex + 1);
-			} else {
-				defaultClassName = elementName;
 			}
 		}
 		return defaultClassName;
@@ -167,7 +160,7 @@ public class PHPModelUtils {
 				// 1. It can be a special 'namespace' keyword, which points to
 				// the current namespace:
 				if ("namespace".equalsIgnoreCase(namespace)) {
-					IType currentNamespace = PHPModelUtils.getCurrentNamespace(
+					IType currentNamespace = CopyOfPHPModelUtils.getCurrentNamespace(
 							sourceModule, offset);
 					return currentNamespace.getElementName();
 				}
@@ -193,7 +186,7 @@ public class PHPModelUtils {
 				}
 
 				// 3. it can be a sub-namespace of the current namespace:
-				IType currentNamespace = PHPModelUtils.getCurrentNamespace(
+				IType currentNamespace = CopyOfPHPModelUtils.getCurrentNamespace(
 						sourceModule, offset);
 				if (currentNamespace != null) {
 					return new StringBuilder(currentNamespace.getElementName())
@@ -455,7 +448,7 @@ public class PHPModelUtils {
 			ISourceModule sourceModule = field.getSourceModule();
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
 					.getModuleDeclaration(sourceModule);
-			ASTNode fieldDeclaration = PHPModelUtils.getNodeByField(
+			ASTNode fieldDeclaration = CopyOfPHPModelUtils.getNodeByField(
 					moduleDeclaration, field);
 			if (fieldDeclaration instanceof IPHPDocAwareDeclaration) {
 				return ((IPHPDocAwareDeclaration) fieldDeclaration).getPHPDoc();
@@ -485,7 +478,7 @@ public class PHPModelUtils {
 			ISourceModule sourceModule = method.getSourceModule();
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
 					.getModuleDeclaration(sourceModule);
-			MethodDeclaration methodDeclaration = PHPModelUtils
+			MethodDeclaration methodDeclaration = CopyOfPHPModelUtils
 					.getNodeByMethod(moduleDeclaration, method);
 			if (methodDeclaration instanceof IPHPDocAwareDeclaration) {
 				return ((IPHPDocAwareDeclaration) methodDeclaration)
@@ -513,7 +506,7 @@ public class PHPModelUtils {
 			ISourceModule sourceModule = type.getSourceModule();
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
 					.getModuleDeclaration(sourceModule);
-			TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(
+			TypeDeclaration typeDeclaration = CopyOfPHPModelUtils.getNodeByClass(
 					moduleDeclaration, type);
 			if (typeDeclaration instanceof IPHPDocAwareDeclaration) {
 				return ((IPHPDocAwareDeclaration) typeDeclaration).getPHPDoc();
@@ -766,7 +759,7 @@ public class PHPModelUtils {
 			// collect global variables
 			ModuleDeclaration rootNode = SourceParserUtil
 					.getModuleDeclaration(method.getSourceModule());
-			MethodDeclaration methodDeclaration = PHPModelUtils
+			MethodDeclaration methodDeclaration = CopyOfPHPModelUtils
 					.getNodeByMethod(rootNode, method);
 			if (methodDeclaration != null) {
 				methodDeclaration.traverse(new ASTVisitor() {
@@ -954,7 +947,7 @@ public class PHPModelUtils {
 				monitor);
 		List<IField> result = new LinkedList<IField>();
 		for (IType ns : namespaces) {
-			result.addAll(Arrays.asList(PHPModelUtils.getTypeField(ns, prefix,
+			result.addAll(Arrays.asList(CopyOfPHPModelUtils.getTypeField(ns, prefix,
 					exactName)));
 		}
 		return (IField[]) result.toArray(new IField[result.size()]);
@@ -1008,7 +1001,7 @@ public class PHPModelUtils {
 				monitor);
 		List<IMethod> result = new LinkedList<IMethod>();
 		for (IType ns : namespaces) {
-			result.addAll(Arrays.asList(PHPModelUtils.getTypeMethod(ns, prefix,
+			result.addAll(Arrays.asList(CopyOfPHPModelUtils.getTypeMethod(ns, prefix,
 					exactName)));
 		}
 		return (IMethod[]) result.toArray(new IMethod[result.size()]);
@@ -1082,9 +1075,9 @@ public class PHPModelUtils {
 	 */
 	public static IType[] getNamespaceType(String namespace, String prefix,
 			boolean exactName, ISourceModule sourceModule,
-			IProgressMonitor monitor, boolean isType) throws ModelException {
+			IProgressMonitor monitor) throws ModelException {
 		return getNamespaceType(namespace, prefix, exactName, sourceModule,
-				null, monitor, isType);
+				monitor);
 	}
 
 	/**
@@ -1102,22 +1095,21 @@ public class PHPModelUtils {
 	 *            Model access cache if available
 	 * @param monitor
 	 *            Progress monitor
-	 * @param isType
 	 * @return type declarated in the specified namespace, or null if there is
 	 *         none
 	 * @throws ModelException
 	 */
 	public static IType[] getNamespaceType(String namespace, String prefix,
 			boolean exactName, ISourceModule sourceModule,
-			IModelAccessCache cache, IProgressMonitor monitor, boolean isType)
+			IModelAccessCache cache, IProgressMonitor monitor)
 			throws ModelException {
 
 		IType[] namespaces = getNamespaces(sourceModule, namespace, cache,
 				monitor);
 		List<IType> result = new LinkedList<IType>();
 		for (IType ns : namespaces) {
-			result.addAll(Arrays.asList(PHPModelUtils.getTypeType(ns, prefix,
-					exactName, isType)));
+			result.addAll(Arrays.asList(CopyOfPHPModelUtils.getTypeType(ns, prefix,
+					exactName)));
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
 	}
@@ -1206,12 +1198,7 @@ public class PHPModelUtils {
 	public static IType[] getSuperClasses(IType type, ITypeHierarchy hierarchy)
 			throws ModelException {
 		if (hierarchy == null) {
-			if (type.getScriptProject() == null
-					|| !type.getScriptProject().exists()) {
-				return EMPTY_TYPES;
-			} else {
-				hierarchy = type.newSupertypeHierarchy(null);
-			}
+			hierarchy = type.newSupertypeHierarchy(null);
 		}
 		Collection<IType> filtered = filterElements(type.getSourceModule(),
 				Arrays.asList(hierarchy.getAllSuperclasses(type)), null, null);
@@ -1312,26 +1299,7 @@ public class PHPModelUtils {
 
 		List<IField> result = new LinkedList<IField>();
 		if (type.exists()) {
-			Set<String> nameSet = new HashSet<String>();
 			IField[] fields = type.getFields();
-			for (IField field : fields) {
-				String elementName = field.getElementName();
-
-				if (elementName.startsWith("$")) {
-					nameSet.add(elementName.substring(1));
-				}
-				if (elementName.startsWith("$") && !prefix.startsWith("$")) {
-					elementName = elementName.substring(1);
-				}
-				if (exactName
-						&& elementName.equalsIgnoreCase(prefix)
-						|| !exactName
-						&& elementName.toLowerCase().startsWith(
-								prefix.toLowerCase())) {
-					result.add(field);
-				}
-			}
-			fields = TraitUtils.getTraitFields(type, nameSet);
 			for (IField field : fields) {
 				String elementName = field.getElementName();
 				if (elementName.startsWith("$") && !prefix.startsWith("$")) {
@@ -1564,20 +1532,7 @@ public class PHPModelUtils {
 
 		List<IMethod> result = new LinkedList<IMethod>();
 		if (type.exists()) {
-			Set<String> nameSet = new HashSet<String>();
 			IMethod[] methods = type.getMethods();
-			for (IMethod method : methods) {
-				String elementName = method.getElementName();
-				nameSet.add(elementName);
-				if (exactName
-						&& elementName.equalsIgnoreCase(prefix)
-						|| !exactName
-						&& elementName.toLowerCase().startsWith(
-								prefix.toLowerCase())) {
-					result.add(method);
-				}
-			}
-			methods = TraitUtils.getTraitMethods(type, nameSet);
 			for (IMethod method : methods) {
 				String elementName = method.getElementName();
 				if (exactName
@@ -1636,12 +1591,6 @@ public class PHPModelUtils {
 	public static IType[] getTypes(String typeName, ISourceModule sourceModule,
 			int offset, IModelAccessCache cache, IProgressMonitor monitor)
 			throws ModelException {
-		return getTypes(typeName, sourceModule, offset, cache, monitor, true);
-	}
-
-	public static IType[] getTypes(String typeName, ISourceModule sourceModule,
-			int offset, IModelAccessCache cache, IProgressMonitor monitor,
-			boolean isType) throws ModelException {
 
 		if (typeName == null || typeName.length() == 0) {
 			return PhpModelAccess.NULL_TYPES;
@@ -1654,8 +1603,7 @@ public class PHPModelUtils {
 				typeName = getRealName(typeName, sourceModule, offset, typeName);
 
 				IType[] types = getNamespaceType(namespace, typeName, true,
-						sourceModule, cache, monitor, isType);
-				types = filterType(types, isType);
+						sourceModule, cache, monitor);
 				if (types.length > 0) {
 					return types;
 				}
@@ -1668,8 +1616,7 @@ public class PHPModelUtils {
 			if (currentNamespace != null) {
 				namespace = currentNamespace.getElementName();
 				IType[] types = getNamespaceType(namespace, typeName, true,
-						sourceModule, cache, monitor, isType);
-				types = filterType(types, isType);
+						sourceModule, cache, monitor);
 				if (types.length > 0) {
 					return types;
 				}
@@ -1680,14 +1627,8 @@ public class PHPModelUtils {
 		if (cache == null) {
 			IDLTKSearchScope scope = SearchEngine
 					.createSearchScope(sourceModule.getScriptProject());
-			IType[] r;
-			if (isType) {
-				r = PhpModelAccess.getDefault().findTypes(typeName,
-						MatchRule.EXACT, 0, 0, scope, null);
-			} else {
-				r = PhpModelAccess.getDefault().findTraits(typeName,
-						MatchRule.EXACT, 0, 0, scope, null);
-			}
+			IType[] r = PhpModelAccess.getDefault().findTypes(typeName,
+					MatchRule.EXACT, 0, 0, scope, null);
 			types = filterElements(sourceModule, Arrays.asList(r), null,
 					monitor);
 		} else {
@@ -1703,22 +1644,6 @@ public class PHPModelUtils {
 			}
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
-	}
-
-	private static IType[] filterType(IType[] types, boolean isType) {
-		// TODO Auto-generated method stub
-		if (isType) {
-
-		} else {
-
-		}
-		return types;
-	}
-
-	public static IType[] getTraits(String typeName,
-			ISourceModule sourceModule, int offset, IModelAccessCache cache,
-			IProgressMonitor monitor) throws ModelException {
-		return getTypes(typeName, sourceModule, offset, cache, monitor, false);
 	}
 
 	/**
@@ -1770,18 +1695,13 @@ public class PHPModelUtils {
 	 *            Enclosed type name or prefix
 	 * @param exactName
 	 *            Whether the name is exact or it is prefix
-	 * @param isType
 	 * @throws ModelException
 	 */
 	public static IType[] getTypeType(IType type, String prefix,
-			boolean exactName, boolean isType) throws ModelException {
+			boolean exactName) throws ModelException {
 		List<IType> result = new LinkedList<IType>();
 		IType[] types = type.getTypes();
 		for (IType t : types) {
-			if (isType && PHPFlags.isTrait(type.getFlags()) || !isType
-					&& !PHPFlags.isTrait(type.getFlags())) {
-				continue;
-			}
 			String elementName = t.getElementName();
 			if (exactName
 					&& elementName.equalsIgnoreCase(prefix)
@@ -1792,11 +1712,6 @@ public class PHPModelUtils {
 			}
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
-	}
-
-	public static IType[] getTypeType(IType type, String prefix,
-			boolean exactName) throws ModelException {
-		return getTypeType(type, prefix, exactName, true);
 	}
 
 	/**
@@ -1919,12 +1834,12 @@ public class PHPModelUtils {
 				return false;
 			}
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
-			IModelElement[] members = PHPModelUtils.getTypeHierarchyField(type,
+			IModelElement[] members = CopyOfPHPModelUtils.getTypeHierarchyField(type,
 					hierarchy, "", false, null);
 			if (hasStaticOrConstMember(members)) {
 				return true;
 			}
-			members = PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, "",
+			members = CopyOfPHPModelUtils.getTypeHierarchyMethod(type, hierarchy, "",
 					false, null);
 			if (hasStaticOrConstMember(members)) {
 				return true;
@@ -1954,160 +1869,4 @@ public class PHPModelUtils {
 		}
 		return false;
 	}
-
-	public static Map<String, UsePart> getAliasToNSMap(final String prefix,
-			ModuleDeclaration moduleDeclaration, final int offset,
-			IType namespace, final boolean exactMatch) {
-		final Map<String, UsePart> result = new HashMap<String, UsePart>();
-		try {
-			int start = 0;
-			if (namespace != null) {
-				start = namespace.getSourceRange().getOffset();
-			}
-			final int searchStart = start;
-
-			moduleDeclaration.traverse(new ASTVisitor() {
-
-				public boolean visit(Statement s) throws Exception {
-					if (s instanceof UseStatement) {
-						UseStatement useStatement = (UseStatement) s;
-						for (UsePart usePart : useStatement.getParts()) {
-							if (usePart.getAlias() != null
-									&& usePart.getAlias().getName() != null) {
-								// TODO case non-sensitive
-								String name = usePart.getAlias().getName();
-								if (name.startsWith(prefix)) {
-									result.put(name, usePart);
-								}
-							} else {
-								String name = usePart.getNamespace()
-										.getFullyQualifiedName();
-								int index = name
-										.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-								if (index >= 0) {
-									name = name.substring(index + 1);
-								}
-								if (exactMatch && name.equals(prefix)
-										|| !exactMatch
-										&& name.startsWith(prefix)) {
-									result.put(name, usePart);
-
-								}
-							}
-						}
-					}
-					return visitGeneral(s);
-				}
-
-				public boolean visitGeneral(ASTNode node) throws Exception {
-					if (node.sourceStart() > offset
-							|| node.sourceEnd() < searchStart) {
-						return false;
-					}
-					return super.visitGeneral(node);
-				}
-			});
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return result;
-	}
-
-	public static String getClassNameForNewStatement(
-			TextSequence newClassStatementText, PHPVersion phpVersion) {
-		if (phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
-			// TextSequence newClassStatementText =
-			// statementText.subTextSequence(
-			// functionNameStart + 1, propertyEndPosition - 1);
-			String newClassName = newClassStatementText.toString().trim();
-			if (newClassName.startsWith("new") && newClassName.endsWith(")")) {
-				int newClassNameEnd = getFunctionNameEndOffset(
-						newClassStatementText,
-						newClassStatementText.length() - 1);
-				int newClassNameStart = PHPTextSequenceUtilities
-						.readIdentifierStartIndex(phpVersion,
-								newClassStatementText, newClassNameEnd, false);
-				if (newClassNameStart > 3
-						&& newClassNameStart < newClassNameEnd) {// should have
-																	// blank
-																	// chars
-																	// after
-					// 'new'
-					newClassName = newClassStatementText.subSequence(
-							newClassNameStart, newClassNameEnd).toString();
-
-					return newClassName;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * this function searches the sequence from the right closing bracket ")"
-	 * and finding the position of the left "(" the offset has to be the offset
-	 * of the "("
-	 */
-	public static int getFunctionNameEndOffset(TextSequence statementText,
-			int offset) {
-		if (statementText.charAt(offset) != ')') {
-			return 0;
-		}
-		int currChar = offset;
-		int bracketsNum = 1;
-		char inStringMode = 0;
-		while (bracketsNum != 0 && currChar >= 0) {
-			currChar--;
-			// get the current char
-			final char charAt = statementText.charAt(currChar);
-			// if it is string close / open - update state
-			if (charAt == '\'' || charAt == '"') {
-				inStringMode = inStringMode == 0 ? charAt
-						: inStringMode == charAt ? 0 : inStringMode;
-			}
-
-			if (inStringMode != 0)
-				continue;
-
-			if (charAt == ')') {
-				bracketsNum++;
-			} else if (charAt == '(') {
-				bracketsNum--;
-			}
-		}
-		return currChar;
-	}
-
-	public static String getFullName(IType declaringType) {
-		try {
-			return getFullName(declaringType.getElementName(),
-					declaringType.getSourceModule(), declaringType
-							.getSourceRange().getOffset());
-		} catch (ModelException e) {
-			return declaringType.getElementName();
-		}
-	}
-
-	public static String getFullName(String typeName,
-			ISourceModule sourceModule, final int offset) {
-		String namespace = extractNamespaceName(typeName, sourceModule, offset);
-		typeName = extractElementName(typeName);
-		if (namespace != null) {
-			if (namespace.length() > 0) {
-				typeName = getRealName(typeName, sourceModule, offset, typeName);
-				typeName = namespace + NamespaceReference.NAMESPACE_SEPARATOR
-						+ typeName;
-			}
-		} else {
-			// look for the element in current namespace:
-			IType currentNamespace = getCurrentNamespace(sourceModule, offset);
-			if (currentNamespace != null) {
-				namespace = currentNamespace.getElementName();
-				typeName = namespace + NamespaceReference.NAMESPACE_SEPARATOR
-						+ typeName;
-			}
-		}
-		return typeName;
-	}
-
 }

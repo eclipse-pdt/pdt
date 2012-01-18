@@ -104,6 +104,31 @@ public class PhpModelAccess extends ModelAccess {
 		return result;
 	}
 
+	public IType[] findTraits(String name, MatchRule matchRule, int trueFlags,
+			int falseFlags, IDLTKSearchScope scope, IProgressMonitor monitor) {
+		IType[] result = super.findTypes(name, matchRule, trueFlags
+				| IPHPModifiers.AccTrait, falseFlags
+				| IPHPModifiers.AccInterface | IPHPModifiers.AccNameSpace,
+				scope, monitor);
+		if (result == null) {
+			result = PhpModelAccess.NULL_TYPES;
+		}
+		return result;
+	}
+
+	public IType[] findTraits(String qualifier, String name,
+			MatchRule matchRule, int trueFlags, int falseFlags,
+			IDLTKSearchScope scope, IProgressMonitor monitor) {
+		IType[] result = super.findTypes(qualifier, name, matchRule, trueFlags
+				| IPHPModifiers.AccTrait, falseFlags
+				| IPHPModifiers.AccInterface | IPHPModifiers.AccNameSpace,
+				scope, monitor);
+		if (result == null) {
+			result = PhpModelAccess.NULL_TYPES;
+		}
+		return result;
+	}
+
 	public IField[] findIncludes(String name, MatchRule matchRule,
 			IDLTKSearchScope scope, IProgressMonitor monitor) {
 		List<IField> result = new LinkedList<IField>();

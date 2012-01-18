@@ -49,9 +49,9 @@ public class ClassInstanceCreation extends Expression {
 		if (visit) {
 			className.traverse(visitor);
 			ctorParams.traverse(visitor);
-			if (chainingInstanceCall != null) {
-				chainingInstanceCall.traverse(visitor);
-			}
+			// if (chainingInstanceCall != null) {
+			// chainingInstanceCall.traverse(visitor);
+			// }
 		}
 		visitor.endvisit(this);
 	}

@@ -74,6 +74,14 @@ public class StaticMethodInvocation extends PHPCallExpression {
 		}
 	}
 
+	@Override
+	public String getName() {
+		if (functionName != null && functionName instanceof SimpleReference) {
+			return ((SimpleReference) functionName).getName();
+		}
+		return super.getName();
+	}
+
 	public int getKind() {
 		return ASTNodeKinds.STATIC_METHOD_INVOCATION;
 	}
