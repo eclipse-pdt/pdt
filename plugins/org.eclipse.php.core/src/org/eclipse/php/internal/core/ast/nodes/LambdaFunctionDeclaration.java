@@ -33,6 +33,7 @@ public class LambdaFunctionDeclaration extends Expression {
 
 	private boolean isReference;
 	private boolean isStatic;
+	private int staticStart;
 	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<FormalParameter>(
 			FORMAL_PARAMETERS_PROPERTY);
 	private final ASTNode.NodeList<Expression> lexicalVariables = new ASTNode.NodeList<Expression>(
@@ -78,12 +79,12 @@ public class LambdaFunctionDeclaration extends Expression {
 			List formalParameters, List lexicalVars, Block body,
 			final boolean isReference) {
 		this(start, end, ast, formalParameters, lexicalVars, body, isReference,
-				false);
+				false, -1);
 	}
 
 	public LambdaFunctionDeclaration(int start, int end, AST ast,
 			List formalParameters, List lexicalVars, Block body,
-			final boolean isReference, final boolean isStatic) {
+			final boolean isReference, final boolean isStatic, int staticStart) {
 		super(start, end, ast);
 
 		if (formalParameters == null) {
@@ -106,6 +107,7 @@ public class LambdaFunctionDeclaration extends Expression {
 			setBody(body);
 		}
 		setStatic(isStatic);
+		this.staticStart = staticStart;
 	}
 
 	public LambdaFunctionDeclaration(AST ast) {
@@ -350,7 +352,7 @@ public class LambdaFunctionDeclaration extends Expression {
 
 		final LambdaFunctionDeclaration result = new LambdaFunctionDeclaration(
 				getStart(), getEnd(), target, formalParams, lexicalVars, body,
-				isRef, isStatic());
+				isRef, isStatic(), this.staticStart);
 		return result;
 	}
 
