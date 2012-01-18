@@ -22,8 +22,12 @@ public class PhpElementConciliatorV5_3Test extends AbstraceConciliatorTest {
 		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
 
-		project1 = createProject("project53", PHPVersion.PHP5_3);
+		project1 = createProject("project53", getPHPVersion());
 
+	}
+
+	protected PHPVersion getPHPVersion() {
+		return PHPVersion.PHP5_3;
 	}
 
 	private IFile setFileContent(String content) throws CoreException {

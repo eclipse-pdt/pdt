@@ -50,17 +50,20 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 	protected static final int ENGINE_TIMEOUT = 100000;
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/typeinference" });
+		TESTS.put(PHPVersion.PHP5,
+				new String[] { "/workspace/typeinference/php5" });
 		TESTS.put(PHPVersion.PHP5_3,
-				new String[] { "/workspace/typeinference" });
+				new String[] { "/workspace/typeinference/php5" });
+		TESTS.put(PHPVersion.PHP5_4,
+				new String[] { "/workspace/typeinference/php5" });
 	};
 
 	private static PHPTypeInferencer typeInferenceEngine;
 	private static IProject project;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"TypeInferenceTests");
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("TypeInferenceTests");
 		if (project.exists()) {
 			return;
 		}
@@ -102,8 +105,7 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 						final String pruner = getPrunerType(pdttFile);
 
 						phpVerSuite.addTest(new TypeInferenceTests(phpVersion
-								.getAlias()
-								+ " - /" + fileName) {
+								.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
 								PHPCoreTests.setProjectPhpVersion(project,
@@ -227,8 +229,8 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 			Assert.assertNotNull("Can't find context for " + criteriaFunction
 					+ "() in code: " + code, searcher.getContext());
 
-			ExpressionTypeGoal goal = new ExpressionTypeGoal(searcher
-					.getContext(), searcher.getResult());
+			ExpressionTypeGoal goal = new ExpressionTypeGoal(
+					searcher.getContext(), searcher.getResult());
 
 			if ("phpdocGoals".equals(pruner)) {
 				return typeInferenceEngine.evaluateTypeHeavy(goal,

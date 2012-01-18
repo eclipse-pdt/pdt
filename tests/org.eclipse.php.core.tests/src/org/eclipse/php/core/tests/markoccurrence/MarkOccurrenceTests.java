@@ -58,14 +58,17 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_3, new String[] {
 				"/workspace/markoccurrence/php5",
 				"/workspace/markoccurrence/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] {
+				"/workspace/markoccurrence/php5",
+				"/workspace/markoccurrence/php53" });
 	};
 
 	protected static IProject project;
 	protected static IFile testFile;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"MarkOccurrenceTests");
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("MarkOccurrenceTests");
 		if (project.exists()) {
 			return;
 		}
@@ -102,8 +105,7 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 					try {
 						final PdttFile pdttFile = new PdttFile(fileName);
 						phpVerSuite.addTest(new MarkOccurrenceTests(phpVersion
-								.getAlias()
-								+ " - /" + fileName) {
+								.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
 								PHPCoreTests.setProjectPhpVersion(project,
@@ -309,8 +311,8 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 			}
 			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
 			for (OccurrenceLocation p : proposals) {
-				errorBuf.append('[').append(p.getOffset()).append(',').append(
-						p.getLength()).append(']').append("\n");
+				errorBuf.append('[').append(p.getOffset()).append(',')
+						.append(p.getLength()).append(']').append("\n");
 			}
 			fail(errorBuf.toString());
 		}

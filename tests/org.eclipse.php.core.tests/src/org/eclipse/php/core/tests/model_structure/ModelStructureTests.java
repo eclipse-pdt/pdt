@@ -48,14 +48,16 @@ public class ModelStructureTests extends AbstractPDTTTest {
 	static {
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP5_4,
+				new String[] { "/workspace/model_structure/php53" });
 	};
 
 	protected static IProject project;
 	protected static IFile testFile;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"ModelStructureTests");
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("ModelStructureTests");
 		if (project.exists()) {
 			return;
 		}
@@ -92,8 +94,7 @@ public class ModelStructureTests extends AbstractPDTTTest {
 					try {
 						final PdttFile pdttFile = new PdttFile(fileName);
 						phpVerSuite.addTest(new ModelStructureTests(phpVersion
-								.getAlias()
-								+ " - /" + fileName) {
+								.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
 								PHPCoreTests.setProjectPhpVersion(project,
@@ -118,8 +119,8 @@ public class ModelStructureTests extends AbstractPDTTTest {
 										printStream));
 								printStream.close();
 
-								assertContents(pdttFile.getExpected(), stream
-										.toString());
+								assertContents(pdttFile.getExpected(),
+										stream.toString());
 							}
 						});
 					} catch (final Exception e) {

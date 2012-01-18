@@ -42,10 +42,10 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 	protected static final char SELECTION_CHAR = '|';
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS
-				.put(PHPVersion.PHP5,
-						new String[] { "/workspace/selection/php5" });
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/selection/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] {
+				"/workspace/selection/php5", "/workspace/selection/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] {
 				"/workspace/selection/php5", "/workspace/selection/php53" });
 	};
 
@@ -53,8 +53,8 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 	protected static IFile testFile;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"AutoSelectionEngine");
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("AutoSelectionEngine");
 		if (project.exists()) {
 			return;
 		}
@@ -92,8 +92,7 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 						final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
 								fileName);
 						phpVerSuite.addTest(new SelectionEngineTests(phpVersion
-								.getAlias()
-								+ " - /" + fileName) {
+								.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
 								PHPCoreTests.setProjectPhpVersion(project,
@@ -139,11 +138,9 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 
 								if (!proposalsEqual) {
 									StringBuilder errorBuf = new StringBuilder();
-									errorBuf
-											.append("\nEXPECTED ELEMENTS LIST:\n-----------------------------\n");
+									errorBuf.append("\nEXPECTED ELEMENTS LIST:\n-----------------------------\n");
 									errorBuf.append(pdttFile.getExpected());
-									errorBuf
-											.append("\nACTUAL ELEMENTS LIST:\n-----------------------------\n");
+									errorBuf.append("\nACTUAL ELEMENTS LIST:\n-----------------------------\n");
 									for (IModelElement modelElement : elements) {
 										switch (modelElement.getElementType()) {
 										case IModelElement.FIELD:
@@ -156,8 +153,9 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 											errorBuf.append("type");
 											break;
 										}
-										errorBuf.append('(').append(
-												modelElement.getElementName())
+										errorBuf.append('(')
+												.append(modelElement
+														.getElementName())
 												.append(")\n");
 									}
 									fail(errorBuf.toString());
