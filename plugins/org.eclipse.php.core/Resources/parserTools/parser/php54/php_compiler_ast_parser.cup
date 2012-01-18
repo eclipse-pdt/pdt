@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php54;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.1 2012/01/05 09:00:45 zzhongwei Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.2 2012/01/18 08:16:07 zzhongwei Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2459,7 +2459,29 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 | T_OPEN_PARENTHESE:start new_expr:expr T_CLOSE_PARENTHESE:end instance_call:call
 {:
 	expr.setChainingInstanceCall(call);
-	RESULT = expr; 
+	
+	if (call.getChainingMethodPropertyList() != null
+		&& !call.getChainingMethodPropertyList()
+			.getChilds().isEmpty()) {
+		// then get the aggregated list of properties (->...->...->...)
+		List list = call.getChainingMethodPropertyList()
+			.getChilds();
+		
+		// now create the dispatch(es) nodes 
+		Expression dispatcher = expr;
+	
+		Iterator listIt = list.iterator();
+		while (listIt.hasNext()) {
+			Expression property = (Expression)listIt.next();
+			dispatcher = parser.createDispatch(dispatcher, property);
+		}	
+		RESULT = dispatcher;
+	}else{
+		RESULT = expr; 
+	}
+
+	
+	
 :}
 
 | expr:condition T_QUESTION_MARK expr:ifTrue T_NEKUDOTAIM expr:ifFalse
@@ -2667,7 +2689,12 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 {: 
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
-	SimpleReference name = new SimpleReference(functionNameleft, functionNameleft, "");
+	SimpleReference name;
+	if(functionName instanceof SimpleReference){
+		name = (SimpleReference)functionName;
+	}else{
+		name = new SimpleReference(functionNameleft, functionNameleft, "");
+	}
 	StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(classNameleft, endright, className, functionName,name, parameters); 
 	RESULT = staticMethodInvocation;
 :}
@@ -2684,7 +2711,12 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 {: 
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
-	SimpleReference name = new SimpleReference(functionNameleft, functionNameleft, "");
+	SimpleReference name;
+	if(functionName instanceof SimpleReference){
+		name = (SimpleReference)functionName;
+	}else{
+		name = new SimpleReference(functionNameleft, functionNameleft, "");
+	}
 	StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(classNameleft, endright, className, functionName,name, parameters); 
 	RESULT = staticMethodInvocation; 
 :}
