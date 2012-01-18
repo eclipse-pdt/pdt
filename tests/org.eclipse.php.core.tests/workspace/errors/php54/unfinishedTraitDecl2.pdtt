@@ -1,0 +1,10 @@
+--TEST--
+Test unfinished trait declaration error reporting
+--FILE--
+<?php
+trait A {
+5
+}
+?>
+--EXPECT--
+[line=3, start=16, end=17] syntax error, unexpected '5', expecting 'function'

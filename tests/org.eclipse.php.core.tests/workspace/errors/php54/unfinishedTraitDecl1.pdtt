@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished trait declaration error reporting
+--FILE--
+<?php
+trait A {
+?>
+--EXPECT--
+[line=3, start=16, end=19] syntax error, unexpected 'EOF', expecting 'function'
