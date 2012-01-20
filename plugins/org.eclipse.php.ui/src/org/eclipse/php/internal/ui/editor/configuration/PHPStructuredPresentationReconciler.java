@@ -320,13 +320,46 @@ public class PHPStructuredPresentationReconciler extends
 			} else {
 				TextPresentation presentation = new TextPresentation(damage,
 						1000);
-				for (int i = 0; i < partitions.length; i++) {
-					ITypedRegion r = partitions[i];
-					IPresentationRepairer repairer = getRepairer(r.getType());
-					if (repairer != null)
+
+				List<ITypedRegion> damagedPartitions = findDamagedPartitions(
+						partitions, damage);
+
+				// performance optimisation: if only PHPScriptRegion has been
+				// damaged and not fully reparsed we can try to create
+				// presentation for updated tokens only.
+				if (damagedPartitions.size() == 1) {
+					ITypedRegion r = damagedPartitions.get(0);
+					IPresentationRepairer repairer = getRepairer(damagedPartitions
+							.get(0).getType());
+					if (repairer != null) {
+						if (r.getType().equals(PHPPartitionTypes.PHP_DEFAULT)) {
+							if (repairer instanceof StructuredDocumentDamagerRepairer) {
+								TextPresentation newPresentation = ((StructuredDocumentDamagerRepairer) repairer)
+										.getPresentation(r, damage);
+								if (newPresentation != null) {
+									presentation = newPresentation;
+								}
+							}
+						}
 						repairer.createPresentation(presentation, r);
+					}
+				} else {
+					for (int i = 0; i < damagedPartitions.size(); i++) {
+						ITypedRegion r = damagedPartitions.get(i);
+						IPresentationRepairer repairer = getRepairer(r
+								.getType());
+						if (repairer != null)
+							repairer.createPresentation(presentation, r);
+					}
 				}
 
+				// OLD CODE
+				// for (int i = 0; i < partitions.length; i++) {
+				// ITypedRegion r = partitions[i];
+				// IPresentationRepairer repairer = getRepairer(r.getType());
+				// if (repairer != null)
+				// repairer.createPresentation(presentation, r);
+				// }
 				return presentation;
 			}
 
@@ -334,6 +367,35 @@ public class PHPStructuredPresentationReconciler extends
 			/* ignored in platform PresentationReconciler, too */
 		}
 		return null;
+	}
+
+	private List<ITypedRegion> findDamagedPartitions(ITypedRegion[] partitions,
+			IRegion damage) {
+		List<ITypedRegion> damagedPartitions = new ArrayList<ITypedRegion>();
+		int damageEnd = damage.getOffset() + damage.getLength();
+		for (int i = 0; i < partitions.length; i++) {
+			ITypedRegion p = partitions[i];
+			int pEnd = p.getOffset() + p.getLength();
+			// damage starts within current partition
+			if (damage.getOffset() >= p.getOffset()
+					&& damage.getOffset() <= pEnd) {
+				damagedPartitions.add(p);
+				if (damageEnd < pEnd) {
+					// damage covers only this one partition
+					break;
+				}
+			}
+			// damages starts in previous partition and ends here
+			else if (damage.getOffset() < p.getOffset() && damageEnd <= pEnd) {
+				damagedPartitions.add(p);
+				break;
+			}
+			// damage starts in previous partition and ends in next one
+			else if (damage.getOffset() < p.getOffset() && damageEnd > pEnd) {
+				damagedPartitions.add(p);
+			}
+		}
+		return damagedPartitions;
 	}
 
 	private boolean containSpecialType(ITypedRegion[] partitions) {

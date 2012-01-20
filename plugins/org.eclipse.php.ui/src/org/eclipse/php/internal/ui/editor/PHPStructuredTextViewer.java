@@ -429,9 +429,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 							structuredDocument, structuredDocumentRegion,
 							structuredDocumentRegion, null, newList, null, 0, 0);
 					redrawRegionsReplaced(regionsReplacedEvent);
-				} else {
-					region.setFullReparsed(true);
-				}
+				} 
 			}
 			super.redrawRegionChanged(structuredDocumentEvent);
 		}

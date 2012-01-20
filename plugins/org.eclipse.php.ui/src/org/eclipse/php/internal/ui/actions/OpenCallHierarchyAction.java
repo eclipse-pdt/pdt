@@ -17,8 +17,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -107,8 +109,19 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
-	public void selectionChanged(ITextSelection selection) {
-		setEnabled(isEnabled(selection));
+	public void selectionChanged(final ITextSelection selection) {
+		Job job = new Job("Enabling Open Call Hierarchy action") {
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				setEnabled(isEnabled(selection));
+				return Status.OK_STATUS;
+			}
+		};
+		job.setSystem(true);
+		job.setPriority(Job.DECORATE);
+		job.schedule();
+
 	}
 
 	/*

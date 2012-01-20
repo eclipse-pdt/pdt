@@ -2397,6 +2397,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class required) {
 
+		if (fPHPOutlinePage != null && fPHPOutlinePage.getControl() != null
+				&& !fPHPOutlinePage.getControl().isDisposed()
+				&& !fPHPOutlinePage.getControl().isVisible()) {
+			return null;
+		}
+
 		Object adapter = super.getAdapter(required);
 
 		// add selection listener to outline page

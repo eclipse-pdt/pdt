@@ -467,6 +467,11 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 		return prepareTextRegions;
 	}
 
+	public IStructuredDocumentRegion getDamagedRegion(ITypedRegion typedRegion) {
+		final int partitionStartOffset = typedRegion.getOffset();
+		return getDocument().getRegionAtCharacterOffset(partitionStartOffset);
+	}
+
 	/**
 	 * @param region
 	 * @param start
@@ -656,8 +661,19 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				from = partitionStartOffset - regionStart;
 				length = partitionLength;
 			}
-			phpTokens = region.getPhpTokens(from,
-					Math.min(length, region.getLength()));
+
+			if (!region.isFullReparsed()
+					&& (regionStart == partitionStartOffset)) {
+				phpTokens = region.getUpdatedPhpTokens();
+				from = region.getUpdatedTokensStart();
+				partitionStartOffset = from + regionStart;
+				length = partitionLength = region.getUpdatedTokensLength();
+
+			} else {
+				phpTokens = region.getPhpTokens(from,
+						Math.min(length, region.getLength()));
+			}
+
 			ITextRegion prevElement = null;
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];

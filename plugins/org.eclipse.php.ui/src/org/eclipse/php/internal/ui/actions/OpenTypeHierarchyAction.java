@@ -25,10 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.ui.DLTKUIMessages;
@@ -111,8 +109,18 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 	/*
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
-	public void selectionChanged(ITextSelection selection) {
-		setEnabled(isEnabled(selection));
+	public void selectionChanged(final ITextSelection selection) {
+		Job job = new Job("Enabling Open Type Hierarchy action") {
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				setEnabled(isEnabled(selection));
+				return Status.OK_STATUS;
+			}
+		};
+		job.setSystem(true);
+		job.setPriority(Job.DECORATE);
+		job.schedule();
 	}
 
 	/*

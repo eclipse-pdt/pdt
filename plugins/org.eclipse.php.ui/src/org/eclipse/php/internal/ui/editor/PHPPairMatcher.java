@@ -164,8 +164,8 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 
 		PHPHeuristicScanner scanner = PHPHeuristicScanner
 				.createHeuristicScanner(document, offset, false);
-		int peer = scanner
-				.findOpeningPeer(offset - 1, openingPeer, closingPeer);
+		int peer = scanner.findOpeningPeer(offset - 1,
+				PHPHeuristicScanner.UNBOUND, openingPeer, closingPeer);
 		if (peer == PHPHeuristicScanner.NOT_FOUND)
 			return -1;
 		if (useGenericsHeuristic

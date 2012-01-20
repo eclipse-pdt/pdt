@@ -14,6 +14,10 @@ package org.eclipse.php.internal.ui.outline;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -44,6 +48,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 	// outline tree viewer
 	private TreeViewer fOutlineViewer;
+	private ISourceModule fSourceModule;
+	private IModelElement[] fUseStatements;
 
 	public PHPOutlineContentProvider(TreeViewer viewer) {
 		super();
@@ -178,53 +184,67 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 		public void elementChanged(final ElementChangedEvent e) {
 
-			Control control = fOutlineViewer.getControl();
+			final Control control = fOutlineViewer.getControl();
 			if (control == null || control.isDisposed()) {
 				return;
 			}
 
-			Display d = control.getDisplay();
-			if (d != null) {
-				d.asyncExec(new Runnable() {
-					public void run() {
-						IWorkbenchWindow activeWorkbenchWindow = PlatformUI
-								.getWorkbench().getActiveWorkbenchWindow();
-						if (activeWorkbenchWindow != null) {
-							IWorkbenchPage activePage = activeWorkbenchWindow
-									.getActivePage();
-							if (activePage != null) {
-								IEditorPart activeEditor = activePage
-										.getActiveEditor();
-								if (activeEditor instanceof PHPStructuredEditor) {
-									IModelElement base = ((PHPStructuredEditor) activeEditor)
-											.getModelElement();
+			// update useStatements
+			Job job = new Job("Updating Outline view") {
 
-									if (isNamespaceSupported(base)) {
-										ModuleDeclaration moduleDeclaration = SourceParserUtil
-												.getModuleDeclaration((ISourceModule) base);
-										UseStatement[] useStatements = ASTUtils
-												.getUseStatements(
-														moduleDeclaration,
-														moduleDeclaration
-																.sourceEnd());
-										useStatementsCountNew = useStatements.length;
-									}
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
 
-									IModelElementDelta delta = findElement(
-											base, e.getDelta());
-									if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)
-											&& fOutlineViewer != null
-											&& fOutlineViewer.getControl() != null
-											&& !fOutlineViewer.getControl()
-													.isDisposed()) {
-										fOutlineViewer.refresh();
+					fUseStatements = getUseStatements();
+
+					IWorkbenchWindow activeWorkbenchWindow = PlatformUI
+							.getWorkbench().getActiveWorkbenchWindow();
+					if (activeWorkbenchWindow != null) {
+						IWorkbenchPage activePage = activeWorkbenchWindow
+								.getActivePage();
+						if (activePage != null) {
+							IEditorPart activeEditor = activePage
+									.getActiveEditor();
+							if (activeEditor instanceof PHPStructuredEditor) {
+								IModelElement base = ((PHPStructuredEditor) activeEditor)
+										.getModelElement();
+
+								if (isNamespaceSupported(base)) {
+									ModuleDeclaration moduleDeclaration = SourceParserUtil
+											.getModuleDeclaration((ISourceModule) base);
+									UseStatement[] useStatements = ASTUtils
+											.getUseStatements(
+													moduleDeclaration,
+													moduleDeclaration
+															.sourceEnd());
+									useStatementsCountNew = useStatements.length;
+								}
+
+								IModelElementDelta delta = findElement(base,
+										e.getDelta());
+								if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)
+										&& fOutlineViewer != null
+										&& fOutlineViewer.getControl() != null
+										&& !fOutlineViewer.getControl()
+												.isDisposed()) {
+									Display d = control.getDisplay();
+									if (d != null) {
+										d.asyncExec(new Runnable() {
+											public void run() {
+												fOutlineViewer.refresh();
+											}
+										});
 									}
 								}
 							}
 						}
 					}
-				});
-			}
+					return Status.OK_STATUS;
+				}
+			};
+			job.setPriority(Job.DECORATE);
+			job.setSystem(true);
+			job.schedule();
 		}
 
 		protected IModelElementDelta findElement(IModelElement unit,
@@ -282,39 +302,17 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 
 	class UseStatementsNode extends FakeType {
 
-		private ISourceModule sourceModule;
-
 		public UseStatementsNode(ISourceModule sourceModule) {
 			super((ModelElement) sourceModule,
 					PHPUIMessages.PHPOutlineContentProvider_useStatementsNode,
 					0, null); //$NON-NLS-1$
-			this.sourceModule = sourceModule;
+			fSourceModule = sourceModule;
 		}
 
 		public IModelElement[] getChildren() throws ModelException {
-			// when rename a php file,we should return a empty array for the old
-			// sourceModule,or execute SourceParserUtil.getModuleDeclaration()
-			// will cache wrong ModuleDeclaration for the non-exist
-			// sourceModule,so when we rename the php file back to its original
-			// name will get the wrong ModuleDeclaration
-			if (!sourceModule.exists()) {
-				return new IModelElement[0];
-			}
-			ModuleDeclaration moduleDeclaration = SourceParserUtil
-					.getModuleDeclaration(sourceModule);
-			if (moduleDeclaration == null)
-				return new IModelElement[0];
-			UseStatement[] useStatements = ASTUtils.getUseStatements(
-					moduleDeclaration, moduleDeclaration.sourceEnd());
-			List<UseStatementElement> elements = new LinkedList<UseStatementElement>();
-			for (UseStatement useStatement : useStatements) {
-				for (UsePart usePart : useStatement.getParts()) {
-					elements.add(new UseStatementElement(
-							(ModelElement) sourceModule, usePart));
-				}
-			}
-			return (UseStatementElement[]) elements
-					.toArray(new UseStatementElement[elements.size()]);
+			if (fUseStatements == null)
+				fUseStatements = getUseStatements();
+			return fUseStatements;
 		}
 
 		public boolean hasChildren() throws ModelException {
@@ -326,4 +324,31 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			return null;
 		}
 	}
+
+	private IModelElement[] getUseStatements() {
+		// when rename a php file,we should return a empty array for the old
+		// sourceModule,or execute SourceParserUtil.getModuleDeclaration()
+		// will cache wrong ModuleDeclaration for the non-exist
+		// sourceModule,so when we rename the php file back to its original
+		// name will get the wrong ModuleDeclaration
+		if (!fSourceModule.exists()) {
+			return new IModelElement[0];
+		}
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(fSourceModule);
+		if (moduleDeclaration == null)
+			return new IModelElement[0];
+		UseStatement[] useStatements = ASTUtils.getUseStatements(
+				moduleDeclaration, moduleDeclaration.sourceEnd());
+		List<UseStatementElement> elements = new LinkedList<UseStatementElement>();
+		for (UseStatement useStatement : useStatements) {
+			for (UsePart usePart : useStatement.getParts()) {
+				elements.add(new UseStatementElement(
+						(ModelElement) fSourceModule, usePart));
+			}
+		}
+		return (UseStatementElement[]) elements
+				.toArray(new UseStatementElement[elements.size()]);
+	}
+
 }
