@@ -126,7 +126,8 @@ public class PhpTokenContainer {
 	 * @return the lexer state at the given offset
 	 * @throws BadLocationException
 	 */
-	public LexerState getState(int offset) throws BadLocationException {
+	public synchronized LexerState getState(int offset)
+			throws BadLocationException {
 		Iterator<LexerStateChange> iter = lexerStateChanges.iterator();
 		assert iter.hasNext();
 
@@ -148,7 +149,8 @@ public class PhpTokenContainer {
 	 * @return the partition type of the given offset
 	 * @throws BadLocationException
 	 */
-	public String getPartitionType(int offset) throws BadLocationException {
+	public synchronized String getPartitionType(int offset)
+			throws BadLocationException {
 		ITextRegion token = getToken(offset);
 		while (token != null
 				&& PHPRegionTypes.PHPDOC_TODO.equals(token.getType())
@@ -179,7 +181,7 @@ public class PhpTokenContainer {
 	 * @param toOffset
 	 * @param size
 	 */
-	public void updateStateChanges(PhpTokenContainer newContainer,
+	public synchronized void updateStateChanges(PhpTokenContainer newContainer,
 			int fromOffset, int toOffset) {
 		if (newContainer.lexerStateChanges.size() < 2) {
 			return;
@@ -288,14 +290,14 @@ public class PhpTokenContainer {
 	/**
 	 * @return the whole tokens as an array
 	 */
-	public ITextRegion[] getPhpTokens() {
+	public synchronized ITextRegion[] getPhpTokens() {
 		return phpTokens.toArray(new ITextRegion[phpTokens.size()]);
 	}
 
 	/**
 	 * Clears the containers
 	 */
-	public void reset() {
+	public synchronized void reset() {
 		this.phpTokens.clear();
 		this.lexerStateChanges.clear();
 	}
@@ -303,7 +305,7 @@ public class PhpTokenContainer {
 	/**
 	 * @return true for empty container
 	 */
-	public boolean isEmpty() {
+	public synchronized boolean isEmpty() {
 		return this.phpTokens.isEmpty();
 	}
 
@@ -389,8 +391,8 @@ public class PhpTokenContainer {
 	 * @param yylength
 	 * @param lexerState
 	 */
-	public void adjustWhitespace(String yylex, int start, int yylengthLength,
-			int yylength, Object lexerState) {
+	public synchronized void adjustWhitespace(String yylex, int start,
+			int yylengthLength, int yylength, Object lexerState) {
 		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start)
 				&& tokensIterator == null;
 
@@ -444,7 +446,7 @@ public class PhpTokenContainer {
 	 * @param offset
 	 * @throws BadLocationException
 	 */
-	protected final void checkBadLocation(int offset)
+	protected synchronized final void checkBadLocation(int offset)
 			throws BadLocationException {
 		ITextRegion lastRegion = getLastToken();
 		if (offset < 0 || lastRegion.getEnd() < offset) {
@@ -453,11 +455,11 @@ public class PhpTokenContainer {
 		}
 	}
 
-	protected final ITextRegion getLastToken() {
+	protected synchronized final ITextRegion getLastToken() {
 		return phpTokens.getLast();
 	}
 
-	protected LexerStateChange getLastChange() {
+	protected synchronized LexerStateChange getLastChange() {
 		return lexerStateChanges.getLast();
 	}
 

@@ -35,6 +35,13 @@ public interface IPhpScriptRegion extends ITextRegion {
 	public abstract ITextRegion[] getPhpTokens(int from, int length)
 			throws BadLocationException;
 
+	public abstract ITextRegion[] getUpdatedPhpTokens()
+			throws BadLocationException;
+
+	public int getUpdatedTokensStart();
+
+	public int getUpdatedTokensLength();
+
 	/**
 	 * Returns a single php token that lay in the given offset
 	 * 

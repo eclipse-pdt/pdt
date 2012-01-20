@@ -42,8 +42,20 @@ import org.eclipse.wst.xml.core.internal.Logger;
 public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 	private static final String PHP_SCRIPT = "PHP Script"; //$NON-NLS-1$
-	private final PhpTokenContainer tokensContaier = new PhpTokenContainer();
+	private PhpTokenContainer tokensContaier = new PhpTokenContainer();
 	private final IProject project;
+	private int updatedTokensStart = -1;
+
+	public int getUpdatedTokensStart() {
+		return updatedTokensStart;
+	}
+
+	public int getUpdatedTokensLength() {
+		return updatedTokensEnd - updatedTokensStart;
+	}
+
+	private int updatedTokensEnd = -1;
+
 	private int ST_PHP_LINE_COMMENT = -1;
 	private int ST_PHP_IN_SCRIPTING = -1;
 
@@ -94,6 +106,18 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	}
 
 	/**
+	 * @throws BadLocationException
+	 * @see IPhpScriptRegion#getUpdatedPhpTokens(int, int)
+	 */
+	public ITextRegion[] getUpdatedPhpTokens() throws BadLocationException {
+		if (updatedTokensStart == -1) {
+			return null;
+		}
+		return tokensContaier.getTokens(updatedTokensStart, updatedTokensEnd
+				- updatedTokensStart);
+	}
+
+	/**
 	 * @see IPhpScriptRegion#getPartition(int)
 	 */
 	public String getPartition(int offset) throws BadLocationException {
@@ -128,6 +152,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			IStructuredDocumentRegion flatnode, String changes,
 			int requestStart, int lengthToReplace) {
 		isFullReparsed = true;
+		updatedTokensStart = -1;
 		try {
 			final int offset = requestStart - flatnode.getStartOffset()
 					- getStart();
@@ -143,122 +168,132 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				return null;
 			}
 
-			// get the region to re-parse
-			ITextRegion tokenStart = tokensContaier.getToken(offset == 0 ? 0
-					: offset - 1);
-			ITextRegion tokenEnd = tokensContaier.getToken(offset
-					+ lengthToReplace);
+			synchronized (tokensContaier) {
+				// get the region to re-parse
+				ITextRegion tokenStart = tokensContaier
+						.getToken(offset == 0 ? 0 : offset - 1);
+				ITextRegion tokenEnd = tokensContaier.getToken(offset
+						+ lengthToReplace);
 
-			// make sure, region to re-parse doesn't start with unknown token
-			while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenStart.getType())
-					&& (tokenStart.getStart() > 0)) {
-				tokenStart = tokensContaier.getToken(tokenStart.getStart() - 1);
-			}
-
-			// move sure, region to re-parse doesn't end with unknown token
-			while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenEnd.getType())
-					&& (tokensContaier.getLastToken() != tokenEnd)) {
-				tokenEnd = tokensContaier.getToken(tokenEnd.getEnd() + 1);
-			}
-
-			boolean shouldDeprecatedKeyword = false;
-			int previousIndex = tokensContaier.phpTokens.indexOf(tokenStart) - 1;
-			if (previousIndex >= 0) {
-				ITextRegion previousRegion = tokensContaier.phpTokens
-						.get(previousIndex);
-				if (PhpTokenContainer.deprecatedKeywordAfter(previousRegion
-						.getType())) {
-					shouldDeprecatedKeyword = true;
-				}
-				if (tokenStart.getType().equals(PHPRegionTypes.PHP_COMMENT)
-						&& tokenStart.getLength() == 1
-						&& previousRegion.getType().equals(
-								PHPRegionTypes.PHP_COMMENT_START)) {
-					requestStart = previousRegion.getStart();
+				// make sure, region to re-parse doesn't start with unknown
+				// token
+				while (PHPRegionTypes.UNKNOWN_TOKEN
+						.equals(tokenStart.getType())
+						&& (tokenStart.getStart() > 0)) {
+					tokenStart = tokensContaier
+							.getToken(tokenStart.getStart() - 1);
 				}
 
-			}
-
-			int newTokenOffset = tokenStart.getStart();
-
-			if (isHereDoc(tokenStart)) {
-				return null;
-			}
-
-			// get start and end states
-			final LexerState startState = tokensContaier
-					.getState(newTokenOffset);
-			final LexerState endState = tokensContaier.getState(tokenEnd
-					.getEnd() + 1);
-
-			final PhpTokenContainer newContainer = new PhpTokenContainer();
-			final AbstractPhpLexer phpLexer = getPhpLexer(new DocumentReader(
-					flatnode, changes, requestStart, lengthToReplace,
-					newTokenOffset), startState);
-
-			Object state = startState;
-			try {
-				String yylex = phpLexer.getNextToken();
-				if (shouldDeprecatedKeyword
-						&& PhpTokenContainer.isKeyword(yylex)) {
-					yylex = PHPRegionTypes.PHP_STRING;
+				// move sure, region to re-parse doesn't end with unknown token
+				while (PHPRegionTypes.UNKNOWN_TOKEN.equals(tokenEnd.getType())
+						&& (tokensContaier.getLastToken() != tokenEnd)) {
+					tokenEnd = tokensContaier.getToken(tokenEnd.getEnd() + 1);
 				}
-				int yylength;
-				final int toOffset = offset + length;
-				while (yylex != null && newTokenOffset <= toOffset
-						&& yylex != PHPRegionTypes.PHP_CLOSETAG) {
-					yylength = phpLexer.getLength();
-					newContainer.addLast(yylex, newTokenOffset, yylength,
-							yylength, state);
-					newTokenOffset += yylength;
-					state = phpLexer.createLexicalStateMemento();
-					yylex = phpLexer.getNextToken();
+
+				boolean shouldDeprecatedKeyword = false;
+				int previousIndex = tokensContaier.phpTokens
+						.indexOf(tokenStart) - 1;
+				if (previousIndex >= 0) {
+					ITextRegion previousRegion = tokensContaier.phpTokens
+							.get(previousIndex);
+					if (PhpTokenContainer.deprecatedKeywordAfter(previousRegion
+							.getType())) {
+						shouldDeprecatedKeyword = true;
+					}
+					if (tokenStart.getType().equals(PHPRegionTypes.PHP_COMMENT)
+							&& tokenStart.getLength() == 1
+							&& previousRegion.getType().equals(
+									PHPRegionTypes.PHP_COMMENT_START)) {
+						requestStart = previousRegion.getStart();
+					}
+
 				}
-				if (yylex == PHPRegionTypes.WHITESPACE) {
-					yylength = phpLexer.getLength();
-					newContainer.adjustWhitespace(yylex, newTokenOffset,
-							yylength, yylength, state);
+
+				int newTokenOffset = tokenStart.getStart();
+
+				if (isHereDoc(tokenStart)) {
+					return null;
 				}
-			} catch (IOException e) {
-				Logger.logException(e);
+
+				// get start and end states
+				final LexerState startState = tokensContaier
+						.getState(newTokenOffset);
+				final LexerState endState = tokensContaier.getState(tokenEnd
+						.getEnd() + 1);
+
+				final PhpTokenContainer newContainer = new PhpTokenContainer();
+				final AbstractPhpLexer phpLexer = getPhpLexer(
+						new DocumentReader(flatnode, changes, requestStart,
+								lengthToReplace, newTokenOffset), startState);
+
+				Object state = startState;
+				try {
+					String yylex = phpLexer.getNextToken();
+					if (shouldDeprecatedKeyword
+							&& PhpTokenContainer.isKeyword(yylex)) {
+						yylex = PHPRegionTypes.PHP_STRING;
+					}
+					int yylength;
+					final int toOffset = offset + length;
+					while (yylex != null && newTokenOffset <= toOffset
+							&& yylex != PHPRegionTypes.PHP_CLOSETAG) {
+						yylength = phpLexer.getLength();
+						newContainer.addLast(yylex, newTokenOffset, yylength,
+								yylength, state);
+						newTokenOffset += yylength;
+						state = phpLexer.createLexicalStateMemento();
+						yylex = phpLexer.getNextToken();
+					}
+					if (yylex == PHPRegionTypes.WHITESPACE) {
+						yylength = phpLexer.getLength();
+						newContainer.adjustWhitespace(yylex, newTokenOffset,
+								yylength, yylength, state);
+					}
+				} catch (IOException e) {
+					Logger.logException(e);
+				}
+
+				// if the fast reparser couldn't lex - - reparse all
+				if (newContainer.isEmpty()) {
+					return null;
+				}
+
+				// if the two streams end with the same lexer sate -
+				// 1. replace the regions
+				// 2. adjust next regions start location
+				// 3. update state changes
+				final int size = length - lengthToReplace;
+				final int end = newContainer.getLastToken().getEnd();
+
+				if (!state.equals(endState) || tokenEnd.getEnd() + size != end) {
+					return null;
+				}
+
+				// 1. replace the regions
+				final ListIterator oldIterator = tokensContaier
+						.removeTokensSubList(tokenStart, tokenEnd);
+
+				ITextRegion[] newTokens = newContainer.getPhpTokens(); // now,
+																		// add
+				// the new
+				// ones
+				for (int i = 0; i < newTokens.length; i++) {
+					oldIterator.add(newTokens[i]);
+				}
+
+				// 2. adjust next regions start location
+				while (oldIterator.hasNext()) {
+					final ITextRegion adjust = (ITextRegion) oldIterator.next();
+					adjust.adjustStart(size);
+				}
+
+				// 3. update state changes
+				tokensContaier.updateStateChanges(newContainer,
+						tokenStart.getStart(), end);
+				updatedTokensStart = tokenStart.getStart();
+				updatedTokensEnd = end;
+				isFullReparsed = false;
 			}
-
-			// if the fast reparser couldn't lex - - reparse all
-			if (newContainer.isEmpty()) {
-				return null;
-			}
-
-			// if the two streams end with the same lexer sate -
-			// 1. replace the regions
-			// 2. adjust next regions start location
-			// 3. update state changes
-			final int size = length - lengthToReplace;
-			final int end = newContainer.getLastToken().getEnd();
-
-			if (!state.equals(endState) || tokenEnd.getEnd() + size != end) {
-				return null;
-			}
-
-			// 1. replace the regions
-			final ListIterator oldIterator = tokensContaier
-					.removeTokensSubList(tokenStart, tokenEnd);
-			ITextRegion[] newTokens = newContainer.getPhpTokens(); // now, add
-			// the new
-			// ones
-			for (int i = 0; i < newTokens.length; i++) {
-				oldIterator.add(newTokens[i]);
-			}
-
-			// 2. adjust next regions start location
-			while (oldIterator.hasNext()) {
-				final ITextRegion adjust = (ITextRegion) oldIterator.next();
-				adjust.adjustStart(size);
-			}
-
-			// 3. update state changes
-			tokensContaier.updateStateChanges(newContainer,
-					tokenStart.getStart(), end);
-			isFullReparsed = false;
 
 			return super.updateRegion(requester, flatnode, changes,
 					requestStart, lengthToReplace);
@@ -289,7 +324,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		completeReparse(phpLexer);
 	}
 
-	private final boolean isHereDoc(final ITextRegion tokenStart) {
+	private synchronized final boolean isHereDoc(final ITextRegion tokenStart) {
 		if (tokenStart.getType() == PHPRegionTypes.PHP_TOKEN) {
 			try {
 				final ITextRegion token = tokensContaier.getToken(tokenStart
@@ -369,7 +404,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @param script
 	 * @return a list of php tokens
 	 */
-	private void setPhpTokens(AbstractPhpLexer lexer) {
+	private synchronized void setPhpTokens(AbstractPhpLexer lexer) {
 		setLength(0);
 		setTextLength(0);
 

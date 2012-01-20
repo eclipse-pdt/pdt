@@ -658,20 +658,23 @@ public final class PHPHeuristicScanner implements Symbols {
 	 * 
 	 * @param start
 	 *            the start position
+	 * @param bound
+	 *            the stop position
 	 * @param openingPeer
 	 *            the opening peer character (e.g. '{')
 	 * @param closingPeer
 	 *            the closing peer character (e.g. '}')
 	 * @return the matching peer character position, or <code>NOT_FOUND</code>
 	 */
-	public int findOpeningPeer(int start, char openingPeer, char closingPeer) {
+	public int findOpeningPeer(int start, int bound, char openingPeer,
+			char closingPeer) {
 		Assert.isTrue(start < fDocument.getLength());
 
 		try {
 			int depth = 1;
 			start += 1;
 			while (true) {
-				start = scanBackward(start - 1, UNBOUND, new CharacterMatch(
+				start = scanBackward(start - 1, bound, new CharacterMatch(
 						new char[] { openingPeer, closingPeer }));
 				if (start == NOT_FOUND)
 					return NOT_FOUND;
@@ -705,7 +708,8 @@ public final class PHPHeuristicScanner implements Symbols {
 		if (offset < 1 || offset >= fDocument.getLength())
 			return null;
 
-		int begin = findOpeningPeer(offset - 1, LBRACE, RBRACE);
+		int begin = findOpeningPeer(offset - 1, PHPHeuristicScanner.UNBOUND,
+				LBRACE, RBRACE);
 		int end = findClosingPeer(offset, LBRACE, RBRACE);
 		if (begin == NOT_FOUND || end == NOT_FOUND)
 			return null;
@@ -893,7 +897,6 @@ public final class PHPHeuristicScanner implements Symbols {
 		try {
 			fPos = start;
 			while (fPos > bound) {
-
 				fChar = fDocument.getChar(fPos);
 				if (condition.stop(fChar, fPos, false))
 					return fPos;
@@ -1094,7 +1097,8 @@ public final class PHPHeuristicScanner implements Symbols {
 		case TokenELSE:
 			return true;
 		case TokenRPAREN:
-			position = findOpeningPeer(fPos, LPAREN, RPAREN);
+			position = findOpeningPeer(fPos, PHPHeuristicScanner.UNBOUND,
+					LPAREN, RPAREN);
 			if (position > 0) {
 				switch (previousToken(position - 1, bound)) {
 				case TokenIF:

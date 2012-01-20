@@ -317,6 +317,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		// TODO maybe there are other type need to be added
 		return regionType != null
 				&& !PHPRegionTypes.PHPDOC_COMMENT_START.equals(regionType)
+				&& !PHPRegionTypes.PHP_LINE_COMMENT.equals(regionType)
+				&& !PHPRegionTypes.PHP_STRING.equals(regionType)
 				&& !PHPRegionTypes.PHP_CASE.equals(regionType)
 				&& !PHPRegionTypes.PHP_DEFAULT.equals(regionType);
 	}
@@ -487,6 +489,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				if (token == PHPHeuristicScanner.TokenRPAREN) {
 
 					int peer = scanner.findOpeningPeer(scanner.getPosition(),
+							PHPHeuristicScanner.UNBOUND,
 							PHPHeuristicScanner.LPAREN,
 							PHPHeuristicScanner.RPAREN);
 					if (peer != PHPHeuristicScanner.NOT_FOUND) {
@@ -503,10 +506,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						return true;
 					}
 				}
-			} else if (inMultiLine(scanner, document, lineNumber, offset,
-					enterKeyPressed)) {
+			} else if (inMultiLine(scanner, document, lineNumber, offset)) {
 				// lineState.inBracelessBlock = true;
 				int peer = scanner.findOpeningPeer(offset - 1,
+						PHPHeuristicScanner.UNBOUND,
 						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
 				if (peer != PHPHeuristicScanner.NOT_FOUND) {
 
@@ -562,9 +565,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	}
 
 	private static boolean inMultiLine(PHPHeuristicScanner scanner,
-			IStructuredDocument document, int lineNumber, int offset,
-			boolean enterKeyPressed) {
-		// TODO if in phpdoc or php miltiline,return false;
+			IStructuredDocument document, int lineNumber, int offset) {
 		int lineStart = offset;
 		try {
 			IRegion region = document.getLineInformation(lineNumber);
@@ -580,22 +581,22 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					break;
 				}
 			}
-			// scanner = PHPHeuristicScanner.createHeuristicScanner(document,
-			// lineStart);
 		} catch (BadLocationException e) {
-		}
-		int peer = scanner.findOpeningPeer(offset - 1,
-				PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
-		if (peer == PHPHeuristicScanner.NOT_FOUND) {
-			return false;
 		}
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
 						document.getRegionAtCharacterOffset(lineStart), true);
-		if (textSequence != null
-				&& isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(
-						document, textSequence.getOriginalOffset(0)))) {
+		String regionType = FormatterUtils.getRegionType(document,
+				textSequence.getOriginalOffset(0));
+		if (textSequence != null && isRegionTypeAllowedMultiline(regionType)) {
 			int statementStart = textSequence.getOriginalOffset(0);
+			// we only search for opening pear in textSequence
+			int peer = scanner.findOpeningPeer(offset - 1,
+					textSequence.getOriginalOffset(0),
+					PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+			if (peer == PHPHeuristicScanner.NOT_FOUND) {
+				return false;
+			}
 			if (statementStart < peer) {
 				return true;
 			}
