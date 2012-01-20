@@ -1,0 +1,24 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+trait ezcReflectionReturnInfo {
+    function getReturnType() {}
+    function getReturnDescription() {}
+}
+class ezcReflectionMethod extends ReflectionMethod {
+    use ezcReflectionReturnInfo;
+}
+?>
+--EXPECT--
+<?php 
+trait ezcReflectionReturnInfo {
+	function getReturnType() {
+	}
+	function getReturnDescription() {
+	}
+}
+class ezcReflectionMethod extends ReflectionMethod {
+	use ezcReflectionReturnInfo;
+}
+?>

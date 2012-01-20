@@ -1,0 +1,14 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+foreach ([new Human("Gonzalo"), new Human("Peter")] as $human) {
+    echo $human->{'hello'}();
+}
+?>
+--EXPECT--
+<?php 
+foreach ([new Human("Gonzalo"), new Human("Peter")] as $human) {
+	echo $human->{'hello'}();
+}
+?>

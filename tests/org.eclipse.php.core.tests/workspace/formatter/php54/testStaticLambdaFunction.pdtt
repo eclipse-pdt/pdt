@@ -1,0 +1,11 @@
+--TEST--
+Test Lambda Function
+--FILE--
+<?php 
+$lambda = static function () { }; 
+?>
+--EXPECT--
+<?php 
+$lambda = static function () {
+};
+?>
