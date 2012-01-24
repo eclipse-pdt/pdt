@@ -3249,14 +3249,19 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	protected void selectionChanged() {
 		if (getSelectionProvider() == null)
 			return;
-		ISourceReference element = computeHighlightRangeSourceReference();
-		// if
-		// (getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE))
-		// synchronizeOutlinePage(element);
-		setSelection(element, false);
-		// if (!fSelectionChangedViaGotoAnnotation)
-		// updateStatusLine();
-		// fSelectionChangedViaGotoAnnotation= false;
+		Job job = new Job("PHPStructuredEditor selection changed job") {
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				ISourceReference element = computeHighlightRangeSourceReference();
+				setSelection(element, false);
+				return Status.OK_STATUS;
+			}
+		};
+		job.setPriority(Job.DECORATE);
+		job.setSystem(true);
+		job.schedule();
+
 	}
 
 	/**
@@ -3270,19 +3275,24 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		ISourceViewer sourceViewer = getSourceViewer();
 		if (sourceViewer == null)
 			return null;
-		StyledText styledText = sourceViewer.getTextWidget();
+		final StyledText styledText = sourceViewer.getTextWidget();
 		if (styledText == null)
 			return null;
-		int caret = 0;
+		final int[] caret = new int[1];
 		if (sourceViewer instanceof ITextViewerExtension5) {
-			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
-			caret = extension.widgetOffset2ModelOffset(styledText
-					.getCaretOffset());
+			final ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
+			Display.getDefault().syncExec(new Runnable() {
+				public void run() {
+					caret[0] = extension.widgetOffset2ModelOffset(styledText
+							.getCaretOffset());
+				}
+			});
+
 		} else {
 			int offset = sourceViewer.getVisibleRegion().getOffset();
-			caret = offset + styledText.getCaretOffset();
+			caret[0] = offset + styledText.getCaretOffset();
 		}
-		IModelElement element = getElementAt(caret, false);
+		IModelElement element = getElementAt(caret[0], false);
 		if (!(element instanceof ISourceReference))
 			return null;
 		return (ISourceReference) element;
@@ -3291,9 +3301,14 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	protected void setSelection(ISourceReference reference, boolean moveCursor) {
 		if (getSelectionProvider() == null)
 			return;
-		ISelection selection = getSelectionProvider().getSelection();
-		if (selection instanceof TextSelection) {
-			TextSelection textSelection = (TextSelection) selection;
+		final ISelection[] selection = new ISelection[1];
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				selection[0] = getSelectionProvider().getSelection();
+			}
+		});
+		if (selection[0] instanceof TextSelection) {
+			TextSelection textSelection = (TextSelection) selection[0];
 			if (textSelection instanceof IStructuredSelection) {
 				Object firstElement = ((IStructuredSelection) textSelection)
 						.getFirstElement();
