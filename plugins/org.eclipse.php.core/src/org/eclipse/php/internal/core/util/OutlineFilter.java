@@ -5,12 +5,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 public class OutlineFilter {
@@ -77,21 +74,16 @@ public class OutlineFilter {
 			return (name != null && name.indexOf('<') >= 0);
 		}
 		// Filter out non-class variables:
-		if (element.getElementType() == IModelElement.FIELD) {
-			IField field = (IField) element;
-			try {
-				if ((field.getFlags() & Modifiers.AccConstant) != 0
-						|| (field instanceof UseStatement)) {
-					return false;
-				}
-			} catch (ModelException e) {
-			}
-			IModelElement parent = element.getParent();
-			if (parent != null) {
-				return (parent.getElementType() == IModelElement.METHOD);
-			}
-		}
-		if (element.getElementType() == IModelElement.IMPORT_CONTAINER) {
+		IModelElement parent = element.getParent();
+		if (parent != null) {
+			int parentType = parent.getElementType();
+			if (element.getElementType() == IModelElement.FIELD
+					&& !(parentType == IModelElement.METHOD)
+					&& !(parentType == IModelElement.TYPE)) {
+				return false;
+			} else if (parentType == IModelElement.METHOD)
+				return true;
+		} else if (element.getElementType() == IModelElement.IMPORT_CONTAINER) {
 			return true;
 		}
 		return false;
