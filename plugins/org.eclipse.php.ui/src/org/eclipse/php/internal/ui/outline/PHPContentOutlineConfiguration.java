@@ -370,6 +370,21 @@ public class PHPContentOutlineConfiguration extends
 			if (element instanceof UseStatementsNode) {
 				return DLTKPluginImages.DESC_OBJS_IMPCONT;
 			}
+
+			// If element is a field or method and it's parent is not a class or
+			// interface
+			// then we can avoid time consuming flag checking
+			// (public/protected/private flags)
+			IModelElement parent = element.getParent();
+			if (parent != null && parent.getElementType() != IModelElement.TYPE) {
+				if (element.getElementType() == IModelElement.FIELD) {
+					return DLTKPluginImages.DESC_FIELD_PUBLIC;
+				}
+				if (element.getElementType() == IModelElement.METHOD) {
+					return DLTKPluginImages.DESC_METHOD_PUBLIC;
+				}
+			}
+
 			return super.getBaseImageDescriptor(element, renderFlags);
 		}
 	}
@@ -390,6 +405,12 @@ public class PHPContentOutlineConfiguration extends
 		public String getText(Object element) {
 			if (element instanceof UseStatementsNode) {
 				return PHPUIMessages.PHPContentOutlineConfiguration_2; //$NON-NLS-1$
+			}
+			if (element instanceof IModelElement) {
+				IModelElement me = (IModelElement) element;
+				if (me.getElementType() == IModelElement.FIELD) {
+					return me.getElementName();
+				}
 			}
 			if (element instanceof UseStatementElement) {
 				SimpleReference alias = ((UseStatementElement) element)
