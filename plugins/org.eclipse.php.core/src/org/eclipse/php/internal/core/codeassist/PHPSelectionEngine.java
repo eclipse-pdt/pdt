@@ -227,10 +227,22 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 	private IModelElement[] internalASTResolve(ISourceModule sourceModule,
 			int offset, int end) throws ModelException {
+		String source;
 
-		String source = sourceModule.getSource();
-		offset = PHPTextSequenceUtilities.readIdentifierStartIndex(source,
-				offset, true);
+		try {
+			source = sourceModule.getSource();
+			offset = PHPTextSequenceUtilities.readIdentifierStartIndex(source,
+					offset, true);
+		} catch (IndexOutOfBoundsException ex) {
+			// ISourceModule.getSource() may throw
+			// ArrayIndexOutOfBoundsException and
+			// PHPTextSequenceUtilities.readIdentifierStartIndex() may throw
+			// StringIndexOutOfBoundExceptio in case when main thread
+			// modifies editor content in parallel to this action in background
+			// thread
+			return null;
+		}
+
 		end = PHPTextSequenceUtilities
 				.readIdentifierEndIndex(source, end, true);
 

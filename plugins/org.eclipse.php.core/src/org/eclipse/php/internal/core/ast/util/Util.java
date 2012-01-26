@@ -3268,9 +3268,10 @@ public class Util {
 				result[i] = lineInformation.getOffset()
 						+ lineInformation.getLength() + lineDelimiter.length();
 			} catch (BadLocationException e) {
-				assert false;
-				throw new IllegalStateException(
-						"PhpReconcilingStrategy#lineEndTable(document");
+				// This may happen when main thread modified file content and
+				// numberOfLines is no longer valid for the document. No need to
+				// throw exception here.
+				return result;
 			}
 			i++;
 		}
