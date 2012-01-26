@@ -28,6 +28,8 @@ import org.eclipse.jface.internal.text.SelectionProcessor;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistantExtension2;
+import org.eclipse.jface.text.contentassist.IContentAssistantExtension4;
 import org.eclipse.jface.text.formatter.FormattingContext;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
@@ -96,6 +98,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private boolean fFireSelectionChanged = true;
 
 	private IDocumentAdapter documentAdapter;
+
+	private ContentAssistantFacade fContentAssistantFacade;
 
 	public PHPStructuredTextViewer(Composite parent,
 			IVerticalRuler verticalRuler, IOverviewRuler overviewRuler,
@@ -471,6 +475,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		fContentAssistant = newPHPAssistant;
 		if (fContentAssistant != null) {
 			fContentAssistant.install(this);
+			if (fContentAssistant instanceof IContentAssistantExtension2
+					&& fContentAssistant instanceof IContentAssistantExtension4)
+				fContentAssistantFacade = new ContentAssistantFacade(
+						fContentAssistant);
 			fContentAssistantInstalled = true;
 		} else {
 			// 248036 - disable the content assist operation if no content
@@ -671,4 +679,17 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			fireDirty();
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.wst.sse.ui.internal.StructuredTextViewer#getContentAssistFacade
+	 * ()
+	 */
+	@Override
+	public ContentAssistantFacade getContentAssistFacade() {
+		return fContentAssistantFacade;
+	}
+
 }
