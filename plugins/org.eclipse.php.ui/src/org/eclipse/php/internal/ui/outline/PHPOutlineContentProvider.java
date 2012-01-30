@@ -339,7 +339,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		// will cache wrong ModuleDeclaration for the non-exist
 		// sourceModule,so when we rename the php file back to its original
 		// name will get the wrong ModuleDeclaration
-		if (!fSourceModule.exists()) {
+		if (null == fSourceModule || !fSourceModule.exists()) {
 			return new IModelElement[0];
 		}
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
