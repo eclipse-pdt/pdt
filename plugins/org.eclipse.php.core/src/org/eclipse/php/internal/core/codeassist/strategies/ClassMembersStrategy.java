@@ -16,6 +16,7 @@ import java.util.*;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
@@ -26,6 +27,10 @@ import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassStaticMemberContext;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.TraitUtils;
+import org.eclipse.php.internal.core.typeinference.UseTrait;
 
 /**
  * This strategy completes class members: $a->|, A::|, etc...
@@ -163,7 +168,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 							&& !isFunctionParameterContext) {
 						/* check 5 */
 						if (PHPFlags.isPrivate(flags)
-								&& member.getDeclaringType().equals(type)) {
+								&& (member.getDeclaringType().equals(type) || isTraitMember(
+										context.getPhpVersion(), type, member))) {
 							if (isParent(context)) { // is Parent
 								return true; // 1:1
 							} else if (isSelfKeyword(context)) {
@@ -189,7 +195,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
 						if (PHPFlags.isPrivate(flags)
-								&& member.getDeclaringType().equals(type)) {
+								&& (member.getDeclaringType().equals(type) || isTraitMember(
+										context.getPhpVersion(), type, member))) {
 							if (isThisKeyWord(context) && showStrictOptions()) {
 								return false; // 1:5
 							} else if (isIndirectThis(context)) {
@@ -223,7 +230,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					if (context.getTriggerType() == Trigger.CLASS
 							&& !isFunctionParameterContext) {
 						if (PHPFlags.isPrivate(flags)
-								&& member.getDeclaringType().equals(type)) {
+								&& (member.getDeclaringType().equals(type) || isTraitMember(
+										context.getPhpVersion(), type, member))) {
 							if (isParent(context)) {
 								return true; // 5:1
 							} else if (isSelfCall(context)) {
@@ -280,7 +288,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 						}
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
 						if (PHPFlags.isPrivate(flags)
-								&& member.getDeclaringType().equals(type)) {
+								&& (member.getDeclaringType().equals(type) || isTraitMember(
+										context.getPhpVersion(), type, member))) {
 							if (isThisKeyWord(context)) {
 								return false; // 5:5
 							} else if (isIndirectThis(context)) {
@@ -323,7 +332,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 						return true; // 9:1 - 12:4
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
 						if (PHPFlags.isPrivate(flags)
-								&& member.getDeclaringType().equals(type)) {
+								&& (member.getDeclaringType().equals(type) || isTraitMember(
+										context.getPhpVersion(), type, member))) {
 							if (isThisKeyWord(context)) {
 								return false; // 9:5
 							} else if (isIndirectThis(context)) {
@@ -354,7 +364,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 					if (context.getTriggerType() == Trigger.CLASS
 							&& !isFunctionParameterContext) {
 						if (PHPFlags.isPrivate(flags)
-								&& member.getDeclaringType().equals(type)) {
+								&& (member.getDeclaringType().equals(type) || isTraitMember(
+										context.getPhpVersion(), type, member))) {
 							if (isParent(context)) {
 								return true; // 13:1
 							} else if (isSelfKeyword(context)) {
@@ -399,7 +410,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 						}
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
 						if (PHPFlags.isPrivate(flags)
-								&& member.getDeclaringType().equals(type)) {
+								&& (member.getDeclaringType().equals(type) || isTraitMember(
+										context.getPhpVersion(), type, member))) {
 							if (isThisKeyWord(context)) {
 								return false; // 13:5
 							} else if (isIndirectThis(context)) {
@@ -439,6 +451,36 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 			}
 		}
 		return true;
+	}
+
+	private boolean isTraitMember(PHPVersion phpVersion, IType type,
+			IMember member) {
+		return isTraitMember(phpVersion, type, member, new HashSet<IType>());
+	}
+
+	private boolean isTraitMember(PHPVersion phpVersion, IType type,
+			IMember member, Set<IType> typeSet) {
+		if (phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
+			UseTrait useTrait = TraitUtils.parse(type);
+			String typeName = PHPModelUtils.getFullName(member
+					.getDeclaringType());
+			for (String trait : useTrait.getTraits()) {
+				if (trait.equals(typeName)) {
+					return true;
+				}
+			}
+
+			for (String trait : useTrait.getTraits()) {
+				IType[] traits = PhpModelAccess.getDefault().findTraits(trait,
+						MatchRule.EXACT, 0, 0,
+						TraitUtils.createSearchScope(type), null);
+
+				for (IType traitType : traits) {
+					return isTraitMember(phpVersion, traitType, member, typeSet);
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
