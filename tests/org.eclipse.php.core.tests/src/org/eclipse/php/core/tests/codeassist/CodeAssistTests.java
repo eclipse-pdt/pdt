@@ -50,14 +50,17 @@ public class CodeAssistTests extends AbstractPDTTTest {
 				"/workspace/codeassist/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] {
 				"/workspace/codeassist/php5", "/workspace/codeassist/php53" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] {
+				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
+				"/workspace/codeassist/php54" });
 	};
 
 	protected static IProject project;
 	protected static IFile testFile;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"CodeAssistTests");
+		project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("CodeAssistTests");
 		if (project.exists()) {
 			return;
 		}
@@ -95,8 +98,7 @@ public class CodeAssistTests extends AbstractPDTTTest {
 						final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
 								fileName);
 						phpVerSuite.addTest(new CodeAssistTests(phpVersion
-								.getAlias()
-								+ " - /" + fileName) {
+								.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
 								PHPCoreTests.setProjectPhpVersion(project,
@@ -245,17 +247,15 @@ public class CodeAssistTests extends AbstractPDTTTest {
 
 		if (!proposalsEqual) {
 			StringBuilder errorBuf = new StringBuilder();
-			errorBuf
-					.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
+			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
 			errorBuf.append(pdttFile.getExpected());
-			errorBuf
-					.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
+			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
 			for (CompletionProposal p : proposals) {
 				IModelElement modelElement = p.getModelElement();
 				if (modelElement == null
 						|| modelElement.getElementName() == null) {
-					errorBuf.append("keyword(").append(p.getName()).append(
-							")\n");
+					errorBuf.append("keyword(").append(p.getName())
+							.append(")\n");
 				} else {
 					switch (modelElement.getElementType()) {
 					case IModelElement.FIELD:
