@@ -71,10 +71,14 @@ public class TraitUtils {
 				if (traitMethod instanceof SimpleReference) {
 					SimpleReference simpleReference = (SimpleReference) traitMethod;
 					TraitAliasObject ta = new TraitAliasObject();
+					// ta.traitName = PHPModelUtils.getFullName(
+					// simpleReference.getName(), sourceModule, offset);
 					ta.traitMethodName = simpleReference.getName();
 					ta.newMethodVisibility = new_name.getAlias().getModifier();
-					ta.newMethodName = new_name.getAlias().getMethodName()
-							.getName();
+					if (new_name.getAlias().getMethodName() != null) {
+						ta.newMethodName = new_name.getAlias().getMethodName()
+								.getName();
+					}
 					useTrait.getTraitAliases().add(ta);
 					useTrait.getAliasMap().put(ta.traitMethodName, ta);
 				} else if (traitMethod instanceof FullyQualifiedTraitMethodReference) {
@@ -85,8 +89,10 @@ public class TraitUtils {
 							.getClassName().getName(), sourceModule, offset);
 					ta.traitMethodName = simpleReference.getFunctionName();
 					ta.newMethodVisibility = new_name.getAlias().getModifier();
-					ta.newMethodName = new_name.getAlias().getMethodName()
-							.getName();
+					if (new_name.getAlias().getMethodName() != null) {
+						ta.newMethodName = new_name.getAlias().getMethodName()
+								.getName();
+					}
 					useTrait.getTraitAliases().add(ta);
 					useTrait.getAliasMap().put(ta.traitMethodName, ta);
 				}
@@ -120,7 +126,8 @@ public class TraitUtils {
 			for (IType traitType : traitTypes) {
 				IField[] fields;
 				try {
-					fields = traitType.getFields();
+					fields = PHPModelUtils.getTypeField(traitType, "", false);
+					// fields = traitType.getFields();
 					for (IField field : fields) {
 						field = getFieldWrapper(useTrait, field);
 						if (field == null) {
@@ -142,23 +149,48 @@ public class TraitUtils {
 	}
 
 	private static IField getFieldWrapper(UseTrait useTrait, IField field) {
+		// TraitAliasObject tao = useTrait.getAliasMap().get(
+		// field.getElementName());
+		// TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(
+		// field.getElementName());
+		// if (tpo != null) {
+		// String fullName = PHPModelUtils.getFullName(field
+		// .getDeclaringType());
+		// if (!fullName.equals(tpo.traitName) || tao == null
+		// || tao.newMethodName == null) {
+		// return null;
+		// }
+		// } else {
+		//
+		// }
+		// if (tao != null) {
+		// field = new FieldWrapper(field, tao.newMethodVisibility,
+		// tao.newMethodName);
+		// }
+		// return field;
 		TraitAliasObject tao = useTrait.getAliasMap().get(
 				field.getElementName());
 		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(
 				field.getElementName());
-		if (tpo != null) {
-			String fullName = PHPModelUtils.getFullName(field
-					.getDeclaringType());
-			if (!fullName.equals(tpo.traitName) || tao == null
-					|| tao.newMethodName == null) {
-				return null;
-			}
-		} else {
-
-		}
-		if (tao != null) {
+		String fullName = PHPModelUtils.getFullName(field.getDeclaringType());
+		if (tao != null
+				&& (tao.traitName == null || fullName.equals(tao.traitName))) {
 			field = new FieldWrapper(field, tao.newMethodVisibility,
 					tao.newMethodName);
+			return field;
+		}
+		if (tpo != null) {
+			if (!fullName.equals(tpo.traitName)) {
+				return null;
+			}
+			// if (!fullName.equals(tpo.traitName)
+			// && (tao == null || (fullName.equals(tao.traitName)
+			// && tao.newMethodName != null && !fullName
+			// .equals(tao.newMethodName)))) {
+			// return null;
+			// }
+		} else {
+
 		}
 		return field;
 	}
@@ -172,7 +204,8 @@ public class TraitUtils {
 			for (IType traitType : traitTypes) {
 				IMethod[] methods;
 				try {
-					methods = traitType.getMethods();
+					methods = PHPModelUtils.getTypeMethod(traitType, "", false);
+					// methods = traitType.getMethods();
 					for (IMethod method : methods) {
 						method = getMethodWrapper(useTrait, method);
 						if (method == null) {
@@ -196,7 +229,8 @@ public class TraitUtils {
 		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(
 				method.getElementName());
 		String fullName = PHPModelUtils.getFullName(method.getDeclaringType());
-		if (tao != null && fullName.equals(tao.traitName)) {
+		if (tao != null
+				&& (tao.traitName == null || fullName.equals(tao.traitName))) {
 			method = new MethodWrapper(method, tao.newMethodVisibility,
 					tao.newMethodName);
 			return method;
@@ -247,11 +281,11 @@ public class TraitUtils {
 			try {
 				this.flags = member.getFlags();
 				if (flags != -1) {
-					if (PHPFlags.isPrivate(flags)) {
+					if (PHPFlags.isPrivate(this.flags)) {
 						this.flags = this.flags ^ Modifiers.AccPrivate;
-					} else if (PHPFlags.isProtected(flags)) {
+					} else if (PHPFlags.isProtected(this.flags)) {
 						this.flags = this.flags ^ Modifiers.AccProtected;
-					} else if (PHPFlags.isPublic(flags)) {
+					} else if (PHPFlags.isPublic(this.flags)) {
 						this.flags = this.flags ^ Modifiers.AccPublic;
 					}
 					this.flags = this.flags | flags;
@@ -298,11 +332,11 @@ public class TraitUtils {
 			try {
 				this.flags = member.getFlags();
 				if (flags != -1) {
-					if (PHPFlags.isPrivate(flags)) {
+					if (PHPFlags.isPrivate(this.flags)) {
 						this.flags = this.flags ^ Modifiers.AccPrivate;
-					} else if (PHPFlags.isProtected(flags)) {
+					} else if (PHPFlags.isProtected(this.flags)) {
 						this.flags = this.flags ^ Modifiers.AccProtected;
-					} else if (PHPFlags.isPublic(flags)) {
+					} else if (PHPFlags.isPublic(this.flags)) {
 						this.flags = this.flags ^ Modifiers.AccPublic;
 					}
 					this.flags = this.flags | flags;

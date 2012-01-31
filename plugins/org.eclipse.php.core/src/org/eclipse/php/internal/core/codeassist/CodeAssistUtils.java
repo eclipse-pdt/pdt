@@ -123,6 +123,53 @@ public class CodeAssistUtils {
 	 * @param position
 	 * @return
 	 */
+	public static IType[] getArrayVariableType(ISourceModule sourceModule,
+			String variableName, int position) {
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule,
+				moduleDeclaration, position);
+		if (context != null) {
+			VariableReference varReference = getVariableReference(variableName,
+					position);
+			ExpressionTypeGoal goal = new ExpressionTypeGoal(context,
+					varReference);
+			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
+			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
+
+			if (evaluatedType instanceof MultiTypeType) {
+				List<IType> tmpList = new LinkedList<IType>();
+				List<IEvaluatedType> possibleTypes = ((MultiTypeType) evaluatedType)
+						.getTypes();
+				for (IEvaluatedType possibleType : possibleTypes) {
+					IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(
+							possibleType, (ISourceModuleContext) context,
+							position, (IModelAccessCache) null);
+					if (tmpArray != null) {
+						tmpList.addAll(Arrays.asList(tmpArray));
+					}
+				}
+				// the elements are filtered already
+				return tmpList.toArray(new IType[tmpList.size()]);
+			}
+
+			IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
+					evaluatedType, (ISourceModuleContext) context, position);
+			if (modelElements != null) {
+				return modelElements;
+			}
+		}
+		return EMPTY_TYPES;
+	}
+
+	/**
+	 * Returns type of a variable defined by name.
+	 * 
+	 * @param sourceModule
+	 * @param variableName
+	 * @param position
+	 * @return
+	 */
 	public static IType[] getVariableType(ISourceModule sourceModule,
 			String variableName, int position) {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
@@ -497,7 +544,25 @@ public class CodeAssistUtils {
 							+ quotedVarName.substring(1,
 									quotedVarName.length() - 1); //$NON-NLS-1$
 					// check for $array[0] scenario
-				} else if (testedVar.endsWith("}") || testedVar.endsWith("]")) {
+				} else if (testedVar.endsWith("}")) {
+					className = testedVar;
+				} else if (testedVar.endsWith("]")) {
+					if (statementText.toString().lastIndexOf('[') > 0) {
+						int end = statementText.toString().lastIndexOf('[');
+						int classNameStart1 = PHPTextSequenceUtilities
+								.readIdentifierStartIndex(phpVersion,
+										statementText, end, true);
+						className = statementText.subSequence(classNameStart1,
+								end).toString();
+						// if its object call calc the object type.
+						if (className.length() > 0
+								&& className.charAt(0) == '$') {
+							int statementStart = statementText
+									.getOriginalOffset(classNameStart);
+							return getArrayVariableType(sourceModule,
+									className, statementStart);
+						}
+					}
 					className = testedVar;
 				}
 			}
