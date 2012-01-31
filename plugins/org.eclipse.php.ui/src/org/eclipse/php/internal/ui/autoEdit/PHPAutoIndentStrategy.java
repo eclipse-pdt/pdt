@@ -11,9 +11,6 @@
  **********************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
-import java.io.BufferedReader;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +99,11 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			for (int i = 0; i < lines; i++) {
 				IRegion region = tempdocument.getLineInformation(i);
 				if (i > 0) {
-					tempsb.append(newline);
+					if (tempdocument.getLineDelimiter(i - 1) != null) {
+						tempsb.append(tempdocument.getLineDelimiter(i - 1));
+					} else {
+						tempsb.append(newline);
+					}
 				}
 				if (i == 0) {
 					tempsb.append(tempdocument.get(region.getOffset(),
@@ -117,29 +118,28 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
 				new PhpSourceParser());
 		String start = "<?php";
-		// String newline = newdocument.getDefaultLineDelimiter();
-		// newdocument.set(start + newline + command.text.trim());
 		newdocument.set(start + newline + tempsb.toString());
 		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength());
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
-		Reader reader = new StringReader(newdocument.get());
-		BufferedReader br = new BufferedReader(reader);
 		List<String> list = new ArrayList<String>();
+		List<String> lineEndList = new ArrayList<String>();
 		try {
 			int lineNumber = newdocument.getNumberOfLines();
 			for (int i = 0; i < lineNumber; i++) {
-				IRegion region = newdocument.getLineInformation(i);
-				String line = newdocument.get(region.getOffset(),
-						region.getLength());
 				if (i == 0) {
 					continue;
 				}
+				IRegion region = newdocument.getLineInformation(i);
+				String line = newdocument.get(region.getOffset(),
+						region.getLength());
 				list.add(line);
+				if (tempdocument.getLineDelimiter(i) != null) {
+					lineEndList.add(tempdocument.getLineDelimiter(i));
+				}
 			}
 		} catch (BadLocationException e) {
 		}
-		newline = newdocument.getLineDelimiter();
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
 			if (!formatter.getIgnoreLines().contains(i + 1)) {
@@ -147,7 +147,11 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			}
 			sb.append(list.get(i));
 			if (i != list.size() - 1) {
-				sb.append(newline);
+				if (i < lineEndList.size()) {
+					sb.append(lineEndList.get(i));
+				} else {
+					sb.append(lineEndList.get(0));
+				}
 			}
 		}
 		command.text = sb.toString();
