@@ -1,0 +1,14 @@
+--TEST--
+Test array dereferencing 3
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+$TESTa=0;
+$TESTb=1;
+$arr= [0,[1,2],3];
+echo $arr[1][$TEST|
+?>
+--EXPECT--
+field($TESTa)
+field($TESTb)

@@ -1,0 +1,35 @@
+--TEST--
+Test traits suggestion from CLA 1
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait TESTA {
+    public function publicA() {
+        echo 'publicA';
+    }
+    protected function protectedA() {
+        echo 'protectedA';
+    }
+    private function privateA() {
+        echo 'privateA';
+    }
+}
+trait TESTB {
+    public function publicB() {
+        echo 'publicB';
+    }
+    protected function protectedB() {
+        echo 'protectedB';
+    }
+    private function privateB() {
+        echo 'privateB';
+    }
+}
+class CLA {
+	use TEST|
+}
+?>
+--EXPECT--
+type(TESTA)
+type(TESTB)

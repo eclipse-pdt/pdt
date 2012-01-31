@@ -1,0 +1,23 @@
+--TEST--
+Test trait A
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait A {
+    public function publicA() {
+        echo 'publicA';
+    }
+    protected function protectedA() {
+        echo 'protectedA';
+    }
+    private function privateA() {
+        echo 'privateA';
+	    self::|
+    }
+}
+?>
+--EXPECT--
+method(publicA)
+method(protectedA)
+method(privateA)

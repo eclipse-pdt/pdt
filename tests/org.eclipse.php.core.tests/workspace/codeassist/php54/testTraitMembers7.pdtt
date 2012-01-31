@@ -1,0 +1,21 @@
+--TEST--
+Test trait Members 8
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait A {
+    private static $no;
+	protected static $maybe;
+	public static $yes;
+	function foo(){
+	}
+}
+class CLA {
+    use A;
+}
+$o = new CLA();
+$o->|
+?>
+--EXPECT--
+method(foo)

@@ -1,0 +1,18 @@
+--TEST--
+Test array dereferencing for an array returned by a function 2
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+function foo () {
+  return array(1,'adam'=> 2, 3, 'bamby'=> 4);
+}
+static $TESTa= 'adam';
+$TESTb= 'bamby';
+$TESTc=0;
+foo()[$TEST|
+?>
+--EXPECT--
+field($TESTa)
+field($TESTb)
+field($TESTc)

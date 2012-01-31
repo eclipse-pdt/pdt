@@ -1,0 +1,14 @@
+--TEST--
+Test array dereferencing for an array returned by a function 1
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+function foo () {
+  return array(1,2,3);
+}
+$TESTa=0;
+foo()[$TEST|
+?>
+--EXPECT--
+field($TESTa)

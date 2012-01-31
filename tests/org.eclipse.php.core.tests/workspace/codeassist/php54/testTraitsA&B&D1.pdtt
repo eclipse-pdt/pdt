@@ -1,0 +1,52 @@
+--TEST--
+Test trait D which uses traits A & B - from D
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait A {
+    public function publicA() {
+        echo 'publicA';
+    }
+    protected function protectedA() {
+        echo 'protectedA';
+    }
+    private function privateA() {
+        echo 'privateA';
+    }
+}
+trait B {
+    public function publicB() {
+        echo 'publicB';
+    }
+    protected function protectedB() {
+        echo 'protectedB';
+    }
+    private function privateB() {
+        echo 'privateB';
+    }
+}
+trait D {
+    use A,B;
+    public function publicD() {
+        echo 'publicD';
+    }
+    protected function protectedD() {
+        echo 'protectedD';
+    }
+    private function privateD() {
+        echo 'privateD';
+	    self::|
+    }
+}
+?>
+--EXPECT--
+method(publicA)
+method(protectedA)
+method(privateA)
+method(publicB)
+method(protectedB)
+method(privateB)
+method(publicD)
+method(protectedD)
+method(privateD)

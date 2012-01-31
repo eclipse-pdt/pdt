@@ -1,0 +1,23 @@
+--TEST--
+Test array dereferencing for an array returned by a function 10
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class myClass {
+	function fruit() {
+		return array ('a' => new CL(), 'b' => 'banana' );
+	}
+}
+class CL {
+	function foo() {
+		return ' an apple';
+	}
+	public $a = 'amy';
+	public static $b = ' bought';
+}
+$o= new myClass();
+echo $o::fruit()['a']::|
+?>
+--EXPECT--
+field($b)

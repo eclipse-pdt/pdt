@@ -1,0 +1,38 @@
+--TEST--
+Test trait C which uses A - from C
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait A {
+    public function publicA() {
+        echo 'publicA';
+    }
+    protected function protectedA() {
+        echo 'protectedA';
+    }
+    private function privateA() {
+        echo 'privateA';
+    }
+}
+trait C {
+    use A;
+    public function publicC() {
+        echo 'publicC';
+    }
+    protected function protectedC() {
+        echo 'protectedC';
+    }
+    private function privateC() {
+        echo 'privateC';
+	    self::|
+    }
+}
+?>
+--EXPECT--
+method(publicA)
+method(protectedA)
+method(privateA)
+method(publicC)
+method(protectedC)
+method(privateC)

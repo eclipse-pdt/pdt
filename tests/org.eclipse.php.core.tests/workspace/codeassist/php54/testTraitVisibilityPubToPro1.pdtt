@@ -1,0 +1,21 @@
+--TEST--
+Test trait method visibility change public to protected 1
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait HelloWorld {
+    public function sayHello() {
+        echo 'Hello World!';
+    }
+}
+class MyClass {
+    use HelloWorld { sayHello as protected; }
+    function foo(){
+		self::|
+	}
+}
+?>
+--EXPECT--
+method(sayHello)
+method(foo)

@@ -1,0 +1,14 @@
+--TEST--
+Test array dereferencing 2
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+function TESTfoo(){
+	return 0;
+}
+$arr= [1,2,3];
+echo $arr[TESTf|
+?>
+--EXPECT--
+method(TESTfoo)

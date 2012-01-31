@@ -1,0 +1,17 @@
+--TEST--
+Test array dereferencing 5
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class myClass{
+	function foo(){
+		return 0;
+	}
+} 
+$o= new myClass();
+$arr= [0,$o,3];
+$arr[1]->|
+?>
+--EXPECT--
+method(foo)

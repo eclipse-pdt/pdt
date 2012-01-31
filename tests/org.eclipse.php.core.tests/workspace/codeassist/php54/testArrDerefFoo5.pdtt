@@ -1,0 +1,22 @@
+--TEST--
+Test array dereferencing for an array returned by a function 5
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+class CLA {
+	function foo() {
+		return array (1, 'adam' => 2, 3, 'bamby' => 4 );
+	}
+}
+$TESTa = 'adam';
+static $TESTb = 'bamby';
+$TESTc = 0;
+$TESTo = new CLA();
+echo $TESTo::foo()[$TEST|
+?>
+--EXPECT--
+field($TESTa)
+field($TESTb)
+field($TESTc)
+field($TESTo)

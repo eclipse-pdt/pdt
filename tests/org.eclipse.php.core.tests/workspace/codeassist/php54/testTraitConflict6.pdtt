@@ -1,0 +1,39 @@
+--TEST--
+Test trait method conflict resolution 6
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait A {
+    public function smallTalk() {
+        echo 'a';
+    }
+    public function bigTalk() {
+        echo 'A';
+    }
+}
+
+trait B {
+    public function smallTalk() {
+        echo 'b';
+    }
+    public function bigTalk() {
+        echo 'B';
+    }
+}
+class Talker {
+    use A, B {
+        A::smallTalk insteadof B;
+        B::bigTalk insteadof A;
+        B::smallTalk as stalk;
+        A::bigTalk as btalk;
+    }
+}
+$o= new Talker();
+$o->|
+?>
+--EXPECT--
+method(smallTalk)
+method(bigTalk)
+method(sTalk)
+method(bTalk)

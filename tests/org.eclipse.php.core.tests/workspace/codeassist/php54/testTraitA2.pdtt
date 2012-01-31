@@ -1,0 +1,29 @@
+--TEST--
+Test class CLA which uses trait A
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait A {
+    public function publicA() {
+        echo 'publicA';
+    }
+    protected function protectedA() {
+        echo 'protectedA';
+    }
+    private function privateA() {
+        echo 'privateA';
+    }
+}
+class CLA {
+    use A;
+    function foo(){
+		self::|
+	}
+}
+?>
+--EXPECT--
+method(publicA)
+method(protectedA)
+method(privateA)
+method(foo)

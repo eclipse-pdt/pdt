@@ -1,0 +1,58 @@
+--TEST--
+Test class CLA which uses trait B & trait C which uses trait A - from CLA
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait A {
+    public function publicA() {
+        echo 'publicA';
+    }
+    protected function protectedA() {
+        echo 'protectedA';
+    }
+    private function privateA() {
+        echo 'privateA';
+    }
+}
+trait B {
+    public function publicB() {
+        echo 'publicB';
+    }
+    protected function protectedB() {
+        echo 'protectedB';
+    }
+    private function privateB() {
+        echo 'privateB';
+    }
+}
+trait C {
+    use A;
+    public function publicC() {
+        echo 'publicC';
+    }
+    protected function protectedC() {
+        echo 'protectedC';
+    }
+    private function privateC() {
+        echo 'privateC';
+    }
+}
+class CLA {
+    use C,B;
+    function foo(){
+		self::|
+	}
+}
+?>
+--EXPECT--
+method(publicA)
+method(protectedA)
+method(privateA)
+method(publicB)
+method(protectedB)
+method(privateB)
+method(publicC)
+method(protectedC)
+method(privateC)
+method(foo)

@@ -1,0 +1,38 @@
+--TEST--
+Test Namespace and traits 9
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace One {
+	trait A {
+		function foo1() {
+			echo 44;
+		}
+	}
+	trait B {
+		use A;
+		function foo2(){
+			echo 22;
+		}
+	}
+	class Agree {
+		use B;
+		function foo3() {
+			echo 33;
+		}
+		use B;
+	}
+	function funky(){
+		return 0;
+	}
+}
+namespace foo {
+	use \One\|
+}
+?>
+--EXPECT--
+method(funky)
+type(Agree)
+type(A)
+type(B)
