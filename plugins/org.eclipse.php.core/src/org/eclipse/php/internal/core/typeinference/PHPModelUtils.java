@@ -1837,7 +1837,7 @@ public class PHPModelUtils {
 		HashSet<String> nonAbstractMethods = new HashSet<String>();
 
 		internalGetUnimplementedMethods(type, nonAbstractMethods,
-				abstractMethods, new HashSet<String>(), cache, monitor);
+				abstractMethods, new HashSet<String>(), cache, monitor, true);
 
 		for (String methodName : nonAbstractMethods) {
 			abstractMethods.remove(methodName);
@@ -1852,13 +1852,21 @@ public class PHPModelUtils {
 			HashSet<String> nonAbstractMethods,
 			HashMap<String, IMethod> abstractMethods,
 			Set<String> processedTypes, IModelAccessCache cache,
-			IProgressMonitor monitor) throws ModelException {
+			IProgressMonitor monitor, boolean checkConstructor)
+			throws ModelException {
 
 		int typeFlags = type.getFlags();
 		for (IMethod method : type.getMethods()) {
 			String methodName = method.getElementName();
 			int methodFlags = method.getFlags();
 			boolean isAbstract = PHPFlags.isAbstract(methodFlags);
+			if (/* !PHPFlags.isInterface(typeFlags)&& */isConstructor(method)) {
+				if (checkConstructor) {
+					checkConstructor = false;
+				} else {
+					continue;
+				}
+			}
 			if (isAbstract || PHPFlags.isInterface(typeFlags)) {
 				if (!abstractMethods.containsKey(methodName)) {
 					abstractMethods.put(methodName, method);
@@ -1900,11 +1908,22 @@ public class PHPModelUtils {
 					for (IType superType : types) {
 						internalGetUnimplementedMethods(superType,
 								nonAbstractMethods, abstractMethods,
-								processedTypes, cache, monitor);
+								processedTypes, cache, monitor,
+								checkConstructor);
 					}
 				}
 			}
 		}
+	}
+
+	public static boolean isConstructor(IMethod method) {
+		String methodName = method.getElementName();
+		if (methodName.equals("__construct")
+				|| methodName
+						.equals(method.getDeclaringType().getElementName())) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
