@@ -69,6 +69,10 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 		return (flags & AccTrait) != 0;
 	}
 
+	public static boolean isMagicProperty(int flags) {
+		return (flags & AccMagicProperty) != 0;
+	}
+
 	/**
 	 * Returns whether the given integer includes the <code>constant</code>
 	 * modifier.

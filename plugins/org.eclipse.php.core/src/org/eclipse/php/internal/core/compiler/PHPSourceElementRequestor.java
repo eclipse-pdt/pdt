@@ -34,6 +34,7 @@ import org.eclipse.dltk.compiler.*;
 import org.eclipse.dltk.compiler.IElementRequestor.ImportInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.IModuleSource;
+import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -496,7 +497,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 							break;
 						}
 						ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-						info.modifiers = Modifiers.AccPublic;
+						info.modifiers = Modifiers.AccPublic
+								| IPHPModifiers.AccMagicProperty;
 						info.name = split[1];
 						info.type = split[0];
 
