@@ -150,7 +150,11 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				if (i < lineEndList.size()) {
 					sb.append(lineEndList.get(i));
 				} else {
-					sb.append(lineEndList.get(0));
+					if (!lineEndList.isEmpty()) {
+						sb.append(lineEndList.get(0));
+					} else {
+						sb.append(newdocument.getDefaultLineDelimiter());
+					}
 				}
 			}
 		}
