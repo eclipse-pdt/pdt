@@ -33,8 +33,8 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 
 	public IPath getPath(IScriptProject project) {
 		try {
-			return new Path(getLanguageLibraryPath(project, ProjectOptions
-					.getPhpVersion(project)));
+			return new Path(getLanguageLibraryPath(project,
+					ProjectOptions.getPhpVersion(project)));
 		} catch (Exception e) {
 			Logger.logException(e);
 			return null;
@@ -53,7 +53,10 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 		if (phpVersion == PHPVersion.PHP5) {
 			return LANGUAGE_LIBRARY_PATH + "5";
 		}
-		return LANGUAGE_LIBRARY_PATH + "5.3";
+		if (phpVersion == PHPVersion.PHP5_3) {
+			return LANGUAGE_LIBRARY_PATH + "5.3";
+		}
+		return LANGUAGE_LIBRARY_PATH + "5.4";
 	}
 
 	public Plugin getPlugin() {
