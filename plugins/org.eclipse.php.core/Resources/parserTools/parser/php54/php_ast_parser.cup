@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php54;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.3 2012/01/18 09:37:41 zzhongwei Exp $
+////    $Id: php_ast_parser.cup,v 1.4 2012/02/02 08:53:20 zzhongwei Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2110,7 +2110,25 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 | T_OPEN_PARENTHESE new_expr:expr T_CLOSE_PARENTHESE instance_call:call
 {:
 	expr.setChainingInstanceCall(call);
-	RESULT = expr; 
+	
+	if (call!=null && !call.getChainingMethodOrProperty().isEmpty()) {
+		// then get the aggregated list of properties (->...->...->...)
+		List list = call.getChainingMethodOrProperty();
+		
+		// now create the dispatch(es) nodes 
+		Dispatch dispatch = null;
+		VariableBase dispatcher = expr;
+	
+		Iterator listIt = list.iterator();
+		while (listIt.hasNext()) {
+			VariableBase property = (VariableBase)listIt.next();
+			dispatch = parser.createDispatch(dispatcher, property);
+			dispatcher = dispatch;
+		}	
+		RESULT = dispatcher;
+	}else{
+		RESULT = expr; 
+	}
 :}
 
 | expr:cond T_QUESTION_MARK expr:ifTrue T_NEKUDOTAIM expr:ifFalse
@@ -2734,7 +2752,12 @@ base_variable_with_function_calls:var T_OBJECT_OPERATOR object_property:memberPr
 		firstVarProperty = memberProperty;
 	} else {
 		FunctionName fn = new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty);
-		firstVarProperty = new FunctionInvocation(memberPropertyleft, paramsListright, parser.ast, fn, paramsList.parameterList,paramsList.arrayDereferenceList);
+		//if(paramsList.arrayDereferenceList!=null&&!paramsList.arrayDereferenceList.getDereferences().isEmpty()){
+		//	firstVarProperty = new FunctionInvocation(memberPropertyleft, paramsList.arrayDereferenceList.getDereferences().get(paramsList.arrayDereferenceList.getDereferences().size()-1).getEnd(), parser.ast, fn, paramsList.parameterList,paramsList.arrayDereferenceList);
+		//}else{
+			firstVarProperty = new FunctionInvocation(memberPropertyleft, paramsListright, parser.ast, fn, paramsList.parameterList,paramsList.arrayDereferenceList);
+		//}
+		
 	}
 
 	// then get the aggregated list of properties (->...->...->...)
@@ -2778,8 +2801,13 @@ T_OBJECT_OPERATOR object_property:memberProperty method_or_not:paramsList
 	if (paramsList == null) {
 		RESULT = memberProperty;
 	} else {
-		RESULT = new FunctionInvocation(memberPropertyleft, paramsListright, parser.ast, 
-			new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty), paramsList.parameterList,paramsList.arrayDereferenceList);
+		//if(paramsList.arrayDereferenceList!=null&&!paramsList.arrayDereferenceList.getDereferences().isEmpty()){
+		//	RESULT = new FunctionInvocation(memberPropertyleft, paramsList.arrayDereferenceList.getDereferences().get(paramsList.arrayDereferenceList.getDereferences().size()-1).getEnd(), parser.ast, 
+		//		new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty), paramsList.parameterList,paramsList.arrayDereferenceList);
+		//}else{
+			RESULT = new FunctionInvocation(memberPropertyleft, paramsListright, parser.ast, 
+				new FunctionName(memberPropertyleft, memberPropertyright, parser.ast, memberProperty), paramsList.parameterList,paramsList.arrayDereferenceList);
+		//}
 	}
 :}
 ;
