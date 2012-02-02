@@ -30,7 +30,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * new $a('start'),
  * new foo()(1, $a)
  */
-public class ClassInstanceCreation extends Expression {
+public class ClassInstanceCreation extends VariableBase {
 
 	private ClassName className;
 	private ASTNode.NodeList<Expression> ctorParams = new ASTNode.NodeList<Expression>(
@@ -101,9 +101,9 @@ public class ClassInstanceCreation extends Expression {
 		for (ASTNode node : this.ctorParams) {
 			node.accept(visitor);
 		}
-		if (chainingInstanceCall != null) {
-			chainingInstanceCall.accept(visitor);
-		}
+		// if (chainingInstanceCall != null) {
+		// chainingInstanceCall.accept(visitor);
+		// }
 	}
 
 	public void traverseTopDown(Visitor visitor) {
@@ -112,9 +112,9 @@ public class ClassInstanceCreation extends Expression {
 		for (ASTNode node : this.ctorParams) {
 			node.traverseTopDown(visitor);
 		}
-		if (chainingInstanceCall != null) {
-			chainingInstanceCall.traverseTopDown(visitor);
-		}
+		// if (chainingInstanceCall != null) {
+		// chainingInstanceCall.traverseTopDown(visitor);
+		// }
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
@@ -122,9 +122,9 @@ public class ClassInstanceCreation extends Expression {
 		for (ASTNode node : this.ctorParams) {
 			node.traverseBottomUp(visitor);
 		}
-		if (chainingInstanceCall != null) {
-			chainingInstanceCall.traverseBottomUp(visitor);
-		}
+		// if (chainingInstanceCall != null) {
+		// chainingInstanceCall.traverseBottomUp(visitor);
+		// }
 		accept(visitor);
 	}
 
@@ -139,10 +139,10 @@ public class ClassInstanceCreation extends Expression {
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append(tab).append("</ConstructorParameters>\n"); //$NON-NLS-1$
-		if (chainingInstanceCall != null) {
-			chainingInstanceCall.toString(buffer, TAB + tab);
-			buffer.append("\n"); //$NON-NLS-1$
-		}
+		// if (chainingInstanceCall != null) {
+		// chainingInstanceCall.toString(buffer, TAB + tab);
+		//			buffer.append("\n"); //$NON-NLS-1$
+		// }
 		buffer.append(tab).append("</ClassInstanceCreation>"); //$NON-NLS-1$
 	}
 

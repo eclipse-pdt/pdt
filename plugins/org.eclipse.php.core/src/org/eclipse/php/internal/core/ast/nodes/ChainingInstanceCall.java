@@ -2,6 +2,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.php.internal.core.PHPVersion;
@@ -12,15 +13,18 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 public class ChainingInstanceCall extends Expression {
 
 	private PHPArrayDereferenceList arrayDereferenceList;
-	private ASTNode.NodeList<VariableBase> chainingMethodOrProperty = new ASTNode.NodeList<VariableBase>(
-			CHAINING_METHOD_OR_PROPERTY);
+	// private ASTNode.NodeList<VariableBase> chainingMethodOrProperty = new
+	// ASTNode.NodeList<VariableBase>(
+	// CHAINING_METHOD_OR_PROPERTY);
+	private List<VariableBase> chainingMethodOrProperty = new LinkedList<VariableBase>();
 
 	public static final ChildPropertyDescriptor ARRAY_DEREFERENCE_LIST = new ChildPropertyDescriptor(
 			ChainingInstanceCall.class,
 			"arrayDereferenceList", PHPArrayDereferenceList.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildListPropertyDescriptor CHAINING_METHOD_OR_PROPERTY = new ChildListPropertyDescriptor(
-			ChainingInstanceCall.class,
-			"chainingMethodOrProperty", VariableBase.class, CYCLE_RISK); //$NON-NLS-1$
+	// public static final ChildListPropertyDescriptor
+	// CHAINING_METHOD_OR_PROPERTY = new ChildListPropertyDescriptor(
+	// ChainingInstanceCall.class,
+	//			"chainingMethodOrProperty", VariableBase.class, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -32,7 +36,7 @@ public class ChainingInstanceCall extends Expression {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
 				1);
 		propertyList.add(ARRAY_DEREFERENCE_LIST);
-		propertyList.add(CHAINING_METHOD_OR_PROPERTY);
+		// propertyList.add(CHAINING_METHOD_OR_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
@@ -191,9 +195,9 @@ public class ChainingInstanceCall extends Expression {
 	 * (omit javadoc for this method) Method declared on ASTNode.
 	 */
 	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
-		if (property == CHAINING_METHOD_OR_PROPERTY) {
-			return getChainingMethodOrProperty();
-		}
+		// if (property == CHAINING_METHOD_OR_PROPERTY) {
+		// return getChainingMethodOrProperty();
+		// }
 		// allow default implementation to flag the error
 		return super.internalGetChildListProperty(property);
 	}
