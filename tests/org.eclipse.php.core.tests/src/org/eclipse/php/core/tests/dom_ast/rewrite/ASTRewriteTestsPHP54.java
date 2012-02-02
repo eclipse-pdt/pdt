@@ -19,7 +19,6 @@ import junit.framework.TestSuite;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ArrayElement;
-import org.eclipse.php.internal.core.ast.nodes.ChainingInstanceCall;
 import org.eclipse.php.internal.core.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
@@ -223,13 +222,13 @@ public class ASTRewriteTestsPHP54 extends ASTRewriteTests {
 		String str = "<?php (new Human('Gonzalo'))->hello(); ?>";
 		initialize(str);
 
-		List<ChainingInstanceCall> arrayAccess = getAllOfType(program,
-				ChainingInstanceCall.class);
+		List<FunctionInvocation> arrayAccess = getAllOfType(program,
+				FunctionInvocation.class);
 		Assert.assertTrue("Unexpected list size.", arrayAccess.size() == 1);
 		Variable name = ast.newVariable("world");
 		name.setIsDollared(false);
-		((FunctionInvocation) arrayAccess.get(0).getChainingMethodOrProperty()
-				.get(0)).getFunctionName().setName(name);
+		((FunctionInvocation) arrayAccess.get(0)).getFunctionName().setName(
+				name);
 		rewrite();
 		checkResult("<?php (new Human('Gonzalo'))->world(); ?>");
 	}
