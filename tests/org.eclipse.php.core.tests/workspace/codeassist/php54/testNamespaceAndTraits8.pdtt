@@ -29,6 +29,6 @@ namespace foo {
 ?>
 --EXPECT--
 type(One)
-type(One\Agree)
-type(One\A)
-type(One\B)
+type(Agree)
+type(A)
+type(B)
