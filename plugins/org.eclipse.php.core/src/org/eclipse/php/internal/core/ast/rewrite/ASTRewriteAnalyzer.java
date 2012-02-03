@@ -3886,8 +3886,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			return doVisitUnchangedChildren(node);
 		}
 		rewriteRequiredNode(node, ChainingInstanceCall.ARRAY_DEREFERENCE_LIST);
-		rewriteNodeList(node, ChainingInstanceCall.CHAINING_METHOD_OR_PROPERTY,
-				node.getStart(), "", "");
+		// rewriteNodeList(node,
+		// ChainingInstanceCall.CHAINING_METHOD_OR_PROPERTY,
+		// node.getStart(), "", "");
 		return false;
 	}
 
