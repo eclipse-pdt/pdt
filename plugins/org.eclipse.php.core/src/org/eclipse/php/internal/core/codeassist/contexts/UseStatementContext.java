@@ -31,12 +31,16 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class UseStatementContext extends StatementContext {
 
+	protected boolean useTrait;
+
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 
+		useTrait = new ClassStatementContext().isValid(sourceModule, offset,
+				requestor);
 		TextSequence statementText = getStatementText();
 		if (statementText.length() >= 4) {
 			if ("use".equals(statementText.subSequence(0, 3).toString())
@@ -46,5 +50,9 @@ public abstract class UseStatementContext extends StatementContext {
 			}
 		}
 		return false;
+	}
+
+	public boolean isUseTrait() {
+		return useTrait;
 	}
 }
