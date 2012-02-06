@@ -24,11 +24,10 @@ namespace One {
 	}
 }
 namespace foo {
-	use On|
+	use One\|
 }
 ?>
 --EXPECT--
-type(One)
 type(Agree)
 type(A)
 type(B)
