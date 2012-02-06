@@ -16,6 +16,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
  * This context represents the state when staying in a use statement in a
@@ -39,9 +40,17 @@ public class UseNameContext extends UseStatementContext {
 		}
 
 		try {
-			String previousWord = getPreviousWord();
-			if ("use".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
-				return true;
+			if (useTrait) {
+				TextSequence statementText = getStatementText();
+				if (statementText.toString().indexOf('{') < 0
+						&& statementText.toString().indexOf('}') < 0) {
+					return true;
+				}
+			} else {
+				String previousWord = getPreviousWord();
+				if ("use".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
+					return true;
+				}
 			}
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);

@@ -47,9 +47,17 @@ public class NamespaceUseNameContext extends UseStatementContext {
 		}
 
 		try {
-			String previousWord = getPreviousWord();
-			if (!"use".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
-				return false;
+			if (useTrait) {
+				TextSequence statementText = getStatementText();
+				if (statementText.toString().indexOf('{') >= 0
+						|| statementText.toString().indexOf('}') >= 0) {
+					return false;
+				}
+			} else {
+				String previousWord = getPreviousWord();
+				if (!"use".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
+					return false;
+				}
 			}
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);

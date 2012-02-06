@@ -217,11 +217,24 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new TypeCastingStrategy(context) };
 		}
 		if (contextClass == UseNameContext.class) {
-			return new ICompletionStrategy[] { new UseNameStrategy(context) };
+			UseNameContext useNameContext = (UseNameContext) context;
+			if (useNameContext.isUseTrait()) {
+				return new ICompletionStrategy[] { new UseTraitNameStrategy(
+						context) };
+			} else {
+				return new ICompletionStrategy[] { new UseNameStrategy(context) };
+			}
+
 		}
 		if (contextClass == NamespaceUseNameContext.class) {
-			return new ICompletionStrategy[] { new NamespaceUseNameStrategy(
-					context) };
+			NamespaceUseNameContext useNameContext = (NamespaceUseNameContext) context;
+			if (useNameContext.isUseTrait()) {
+				return new ICompletionStrategy[] { new NamespaceUseTraitNameStrategy(
+						context) };
+			} else {
+				return new ICompletionStrategy[] { new NamespaceUseNameStrategy(
+						context) };
+			}
 		}
 		if (contextClass == IncludeStatementContext.class) {
 			return new ICompletionStrategy[] { new IncludeStatementStrategy(
