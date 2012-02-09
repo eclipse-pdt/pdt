@@ -17,6 +17,7 @@ final class PHPDocumentationMessages extends NLS {
 	public static String CompletionEvaluator_default_package;
 	public static String JavaDoc2HTMLTextReader_parameters_section;
 	public static String JavaDoc2HTMLTextReader_returns_section;
+	public static String JavaDoc2HTMLTextReader_namespace_section;
 	public static String JavaDoc2HTMLTextReader_throws_section;
 	public static String JavaDoc2HTMLTextReader_author_section;
 	public static String JavaDoc2HTMLTextReader_deprecated_section;

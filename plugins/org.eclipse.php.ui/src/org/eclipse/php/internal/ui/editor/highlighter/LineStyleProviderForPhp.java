@@ -311,6 +311,8 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 				PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_STATICVAR,
 				PreferenceConstants.EDITOR_PHPDOC_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHPDOC_NAMESPACE,
+				PreferenceConstants.EDITOR_PHPDOC_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHPDOC_DEPRECATED,
 				PreferenceConstants.EDITOR_PHPDOC_COLOR);
 

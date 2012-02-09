@@ -763,6 +763,7 @@ public class PHPDocumentationContentAccess {
 
 		PHPDocTag deprecatedTag = null;
 		PHPDocTag returnTag = null;
+		PHPDocTag namespaceTag = null;
 		List<PHPDocTag> parameters = new ArrayList<PHPDocTag>();
 		List<PHPDocTag> exceptions = new ArrayList<PHPDocTag>();
 		List<PHPDocTag> versions = new ArrayList<PHPDocTag>();
@@ -796,6 +797,10 @@ public class PHPDocumentationContentAccess {
 				if (returnTag == null)
 					returnTag = tag; // the Javadoc tool only shows the first
 				// return tag
+
+			} else if (PHPDocTag.NAMESPACE == tag.getTagKind()) {
+				if (namespaceTag == null)
+					namespaceTag = tag;
 
 			} else if (PHPDocTag.THROWS == tag.getTagKind()) {
 				exceptions.add(tag);
@@ -860,10 +865,12 @@ public class PHPDocumentationContentAccess {
 		boolean hasInheritedExceptions = inheritExceptionDescriptions(
 				exceptionNames, exceptionDescriptions);
 		boolean hasExceptions = exceptions.size() > 0 || hasInheritedExceptions;
+		boolean hasNamespace = namespaceTag != null;
 
 		if (hasParameters
 				|| hasReturnTag
 				|| hasExceptions
+				|| hasNamespace
 				|| versions.size() > 0
 				|| authors.size() > 0
 				|| since.size() > 0
@@ -875,6 +882,7 @@ public class PHPDocumentationContentAccess {
 			handleParameterTags(parameters, parameterNames, parameterTypes,
 					parameterDescriptions);
 			handleReturnTag(returnTag, returnDescription);
+			handleNamespaceTag(namespaceTag);
 			handleExceptionTags(exceptions, exceptionNames,
 					exceptionDescriptions);
 			handleBlockTags(
@@ -1181,6 +1189,19 @@ public class PHPDocumentationContentAccess {
 			handleContentElements(tag);
 		else
 			fBuf.append(returnDescription);
+		fBuf.append(BlOCK_TAG_ENTRY_END);
+	}
+
+	private void handleNamespaceTag(PHPDocTag tag) {
+		if (tag == null)
+			return;
+
+		handleBlockTagTitle(PHPDocumentationMessages.JavaDoc2HTMLTextReader_namespace_section);
+		fBuf.append(BlOCK_TAG_ENTRY_START);
+		doWorkAround();
+
+		if (tag != null)
+			handleContentElements(tag);
 		fBuf.append(BlOCK_TAG_ENTRY_END);
 	}
 
