@@ -54,7 +54,7 @@ public class PdttFile {
 	protected enum STATES {
 
 		TEST("--TEST--"), CONFIG("--CONFIG--"), PREFERENCES("--PREFERENCES--"), FILE(
-				"--FILE--"), EXPECT("--EXPECT--");
+				"--FILE--"), EXPECT("--EXPECT--"), OTHER("--OTHER--");
 
 		private static class Names {
 			private static Map<String, STATES> map = new HashMap<String, STATES>();
@@ -83,6 +83,7 @@ public class PdttFile {
 	private String description;
 	private String file = "";
 	private String expected = "";
+	private String other;
 
 	/**
 	 * Constructs new PdttFile using default bundle: {@link PHPCoreTests}
@@ -168,6 +169,14 @@ public class PdttFile {
 		Assert.assertNotNull("File: " + fileName
 				+ " doesn't contain --EXPECT-- section", expected);
 		return expected;
+	}
+
+	public String getOther() {
+		return other;
+	}
+
+	public void setOther(String other) {
+		this.other = other;
 	}
 
 	protected InputStream openResource(String path) throws IOException {
@@ -256,6 +265,8 @@ public class PdttFile {
 		w.println(file.trim());
 		w.println(STATES.EXPECT.getName());
 		w.println(expected.trim());
+		w.println(STATES.OTHER.getName());
+		w.println(other.trim());
 	}
 
 	/**
@@ -285,6 +296,12 @@ public class PdttFile {
 			break;
 		case EXPECT:
 			this.expected += (line + "\n");
+			break;
+		case OTHER:
+			if (this.other == null) {
+				this.other = "";
+			}
+			this.other += (line + "\n");
 			break;
 		case CONFIG:
 			int i = line.indexOf(':');
