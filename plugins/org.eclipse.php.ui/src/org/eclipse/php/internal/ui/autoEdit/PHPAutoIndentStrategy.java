@@ -97,41 +97,15 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			}
 		} catch (BadLocationException e) {
 		}
-
-		// IPath stateLocation = PHPUiPlugin.getDefault().getStateLocation();
-		// IPath path = stateLocation
-		//				.append("/formatter_" + new Object().hashCode()); //$NON-NLS-1$
-		// IFileStore fileStore = EFS.getLocalFileSystem().getStore(path);
-		//
-		// NonExistingPHPFileEditorInput input = new
-		// NonExistingPHPFileEditorInput(
-		// fileStore, UNTITLED_PHP_DOC_PREFIX);
-		//
-		// File realFile = ((NonExistingPHPFileEditorInput)
-		// input).getPath(input)
-		// .toFile();
-		// realFile.deleteOnExit();
-		// final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace()
-		// .getRoot();
-		// IProject project = workspaceRoot.getProject("/ ");
-		// IFile file = project.getFile(new Path(realFile.getName()));
 		IStructuredModel structuredModel = null;
-		// IStructuredModel modelForEdit = StructuredModelManager
-		// .getModelManager()
-		// .getModelForEdit(realFile);
 		try {
 			String beforeText = document.get(0, command.offset);
 			String afterText = document.get(command.offset,
 					document.getLength() - command.offset);
 			String newPhpText = beforeText + command.text + afterText;
-			// file.create(new ByteArrayInputStream(newPhpText.getBytes()),
-			// true,
-			// null);
 			JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
 					new PhpSourceParser());
 			newdocument.set(newPhpText);
-			// structuredModel = StructuredModelManager.getModelManager()
-			// .getExistingModelForRead(file);
 			IContentFormatter contentFormatter = PHPFormatProcessorProxy
 					.getFormatter();
 			if (contentFormatter instanceof IFormatterProcessorFactory) {
@@ -153,104 +127,6 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				structuredModel.releaseFromRead();
 			}
 		}
-
-		// Document tempdocument = new Document(command.text);
-		// String newline = DEFAULT_LINE_DELIMITER;
-		// int lines = tempdocument.getNumberOfLines();
-		// StringBuffer tempsb = new StringBuffer();
-		// try {
-		// for (int i = 0; i < lines; i++) {
-		// IRegion region = tempdocument.getLineInformation(i);
-		// if (i > 0) {
-		// if (tempdocument.getLineDelimiter(i - 1) != null) {
-		// tempsb.append(tempdocument.getLineDelimiter(i - 1));
-		// } else {
-		// tempsb.append(newline);
-		// }
-		// }
-		// if (i == 0) {
-		// tempsb.append(tempdocument.get(region.getOffset(),
-		// region.getLength()).trim());
-		// } else {
-		// tempsb.append(tempdocument.get(region.getOffset(),
-		// region.getLength()));
-		// }
-		// }
-		// } catch (BadLocationException e) {
-		// }
-		// JobSafeStructuredDocument newdocument = new
-		// JobSafeStructuredDocument(
-		// new PhpSourceParser());
-		// String start = "<?php";
-		// newdocument.set(start + newline + tempsb.toString());
-		// IContentFormatter contentFormatter = PHPFormatProcessorProxy
-		// .getFormatter();
-		// if (contentFormatter instanceof IFormatterProcessorFactory) {
-		// IStructuredModel structuredModel = null;
-		// try {
-		// if (document instanceof IStructuredDocument) {
-		// IStructuredDocument structuredDocument = (IStructuredDocument)
-		// document;
-		// structuredModel = StructuredModelManager.getModelManager()
-		// .getExistingModelForRead(document);
-		// DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
-		//
-		// IProject project = getProject(doModelForPHP);
-		// ((IFormatterProcessorFactory) contentFormatter)
-		// .setDefaultProject(project);
-		// }
-		// } catch (Exception e) {
-		// } finally {
-		// if (structuredModel != null) {
-		// structuredModel.releaseFromRead();
-		// }
-		// }
-		//
-		// }
-		// contentFormatter.format(newdocument,
-		// new Region(0, newdocument.getLength()));
-		//
-		// List<String> list = new ArrayList<String>();
-		// List<String> lineEndList = new ArrayList<String>();
-		// try {
-		// int lineNumber = newdocument.getNumberOfLines();
-		// for (int i = 0; i < lineNumber; i++) {
-		// if (i == 0) {
-		// continue;
-		// }
-		// IRegion region = newdocument.getLineInformation(i);
-		// String line = newdocument.get(region.getOffset(),
-		// region.getLength());
-		// list.add(line);
-		// if (tempdocument.getLineDelimiter(i) != null) {
-		// lineEndList.add(tempdocument.getLineDelimiter(i));
-		// }
-		// }
-		// } catch (BadLocationException e) {
-		// }
-		// String defaultLineDelimiter = newdocument.getDefaultLineDelimiter();
-		// PhpFormatter formatter = new PhpFormatter(0,
-		// newdocument.getLength());
-		// formatter.format(newdocument.getFirstStructuredDocumentRegion());
-		// StringBuffer sb = new StringBuffer();
-		// for (int i = 0; i < list.size(); i++) {
-		// if (!formatter.getIgnoreLines().contains(i + 1)) {
-		// sb.append(helpBuffer.toString());
-		// }
-		// sb.append(list.get(i));
-		// if (i != list.size() - 1) {
-		// if (i < lineEndList.size()) {
-		// sb.append(lineEndList.get(i));
-		// } else {
-		// if (!lineEndList.isEmpty()) {
-		// sb.append(lineEndList.get(0));
-		// } else {
-		// sb.append(defaultLineDelimiter);
-		// }
-		// }
-		// }
-		// }
-		// command.text = sb.toString();
 	}
 
 	/**
