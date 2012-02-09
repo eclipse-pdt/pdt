@@ -573,6 +573,17 @@ public class CodeAssistUtils {
 					.getOriginalOffset(classNameStart);
 			return getVariableType(sourceModule, className, statementStart);
 		}
+		boolean arrayReference = false;
+		if (statementText.charAt(propertyEndPosition - 1) == ']'
+				&& phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
+			int closeBracketIndex = statementText.toString().lastIndexOf(')');
+			if (closeBracketIndex >= 0) {
+				if (statementText.toString().indexOf('[', closeBracketIndex) > closeBracketIndex) {
+					propertyEndPosition = closeBracketIndex + 1;
+					arrayReference = true;
+				}
+			}
+		}
 		// if its function call calc the return type.
 		if (propertyEndPosition > 0
 				&& statementText.charAt(propertyEndPosition - 1) == ')') {
@@ -625,10 +636,19 @@ public class CodeAssistUtils {
 				// }
 
 			} else {
-				IType[] types = getFunctionReturnType(null, functionName,
-						sourceModule, offset);
-				if (types != null) {
-					returnTypes.addAll(Arrays.asList(types));
+				if (arrayReference) {
+
+					IType[] types = getFunctionArrayReturnType(null,
+							functionName, sourceModule, offset);
+					if (types != null) {
+						returnTypes.addAll(Arrays.asList(types));
+					}
+				} else {
+					IType[] types = getFunctionReturnType(null, functionName,
+							sourceModule, offset);
+					if (types != null) {
+						returnTypes.addAll(Arrays.asList(types));
+					}
 				}
 			}
 			return returnTypes.toArray(new IType[returnTypes.size()]);
