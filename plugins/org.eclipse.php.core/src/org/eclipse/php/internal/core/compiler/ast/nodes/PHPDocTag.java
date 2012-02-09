@@ -59,6 +59,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	public static final String PROPERTY_READ_NAME = "property-read"; //$NON-NLS-1$
 	public static final String PROPERTY_WRITE_NAME = "property-write"; //$NON-NLS-1$
 	public static final String METHOD_NAME = "method"; //$NON-NLS-1$
+	public static final String NAMESPACE_NAME = "namespace"; //$NON-NLS-1$
 
 	private static final SimpleReference[] EMPTY = {};
 	private final int tagKind;
@@ -352,6 +353,8 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 			return PROPERTY_WRITE_NAME;
 		case METHOD:
 			return METHOD_NAME;
+		case NAMESPACE:
+			return NAMESPACE_NAME;
 		}
 		return ERROR;
 	}

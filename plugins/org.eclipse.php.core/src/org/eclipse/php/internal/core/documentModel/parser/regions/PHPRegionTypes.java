@@ -413,6 +413,8 @@ public interface PHPRegionTypes {
 
 	static final String PHPDOC_STATICVAR = "PHPDOC_STATICVAR"; //$NON-NLS-1$
 
+	static final String PHPDOC_NAMESPACE = "PHPDOC_NAMESPACE"; //$NON-NLS-1$
+
 	static final String PHPDOC_DEPRECATED = "PHPDOC_DEPRECATED"; //$NON-NLS-1$
 
 	static final String PHP_HEREDOC_TAG = "PHP_HEREDOC_TAG"; //$NON-NLS-1$

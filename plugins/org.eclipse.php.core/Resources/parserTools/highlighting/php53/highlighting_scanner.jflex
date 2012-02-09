@@ -655,6 +655,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     "@link"          {return PHPDOC_LINK;}
     "@magic"         {return PHPDOC_MAGIC;}
     "@method"        {return PHPDOC_METHOD;}    
+    "@namespace"     {return PHPDOC_NAMESPACE;}
     "@name"          {return PHPDOC_NAME;}
     "@package"       {return PHPDOC_PACKAGE;}
     "@param"         {return PHPDOC_PARAM;}

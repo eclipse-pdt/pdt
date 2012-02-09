@@ -30,9 +30,10 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 	public static final String[] PHPDOC_TAGS = { "abstract", "access",
 			"author", "category", "copyright", "deprecated", "example",
 			"final", "filesource", "global", "ignore", "internal", "license",
-			"link", "method", "name", "package", "param", "property", "return",
-			"see", "since", "static", "staticvar", "subpackage", "todo",
-			"throws", "tutorial", "uses", "var", "version" };
+			"link", "method", "namespace", "name", "package", "param",
+			"property", "return", "see", "since", "static", "staticvar",
+			"subpackage", "todo", "throws", "tutorial", "uses", "var",
+			"version" };
 
 	public PHPDocTagStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
