@@ -57,6 +57,7 @@ public class ClassKeywordsStrategy extends KeywordsStrategy {
 		int i = statementText.toString().indexOf(keyword.name);
 		if (i != -1) {
 			if ((i == 0 || Character.isWhitespace(statementText.charAt(i - 1))
+					&& statementText.length() > (i + keyword.name.length())
 					&& Character.isWhitespace(statementText.charAt(i
 							+ keyword.name.length())))) {
 				return true;
