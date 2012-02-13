@@ -22,6 +22,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.format.PHPFormatProcessorProxy;
@@ -34,9 +35,6 @@ import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
  * Auto indent strategy sensitive to brackets.
  */
 public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
-
-	private static final String DEFAULT_LINE_DELIMITER = "\r\n";
-	private final static String UNTITLED_PHP_DOC_PREFIX = "PHPDocument"; //$NON-NLS-1$
 
 	public PHPAutoIndentStrategy() {
 	}
@@ -99,27 +97,33 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		}
 		IStructuredModel structuredModel = null;
 		try {
-			String beforeText = document.get(0, command.offset);
-			String afterText = document.get(command.offset,
-					document.getLength() - command.offset);
-			String newPhpText = beforeText + command.text + afterText;
-			JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
-					new PhpSourceParser());
-			newdocument.set(newPhpText);
+			IProject project = null;
 			IContentFormatter contentFormatter = PHPFormatProcessorProxy
 					.getFormatter();
 			if (contentFormatter instanceof IFormatterProcessorFactory) {
 				structuredModel = StructuredModelManager.getModelManager()
 						.getExistingModelForRead(document);
 				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
-				IProject project = getProject(doModelForPHP);
+				project = getProject(doModelForPHP);
 				((IFormatterProcessorFactory) contentFormatter)
 						.setDefaultProject(project);
 			}
-			contentFormatter.format(newdocument, new Region(command.offset,
-					command.text.length()));
-			command.text = newdocument.get(command.offset,
-					newdocument.getLength() - document.getLength());
+			String lineSeparator = PHPModelUtils.getLineSeparator(project);
+			String beforeText = document.get(0, command.offset);
+			beforeText = beforeText.trim() + lineSeparator;
+			String afterText = lineSeparator
+					+ document.get(command.offset,
+							document.getLength() - command.offset).trim();
+			String newPhpText = beforeText + command.text + afterText;
+			JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
+					new PhpSourceParser());
+			newdocument.set(newPhpText);
+			contentFormatter.format(newdocument, new Region(
+					beforeText.length(), command.text.length()));
+			command.text = newdocument.get(
+					beforeText.length(),
+					newdocument.getLength()
+							- (beforeText.length() + afterText.length()));
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		} finally {
