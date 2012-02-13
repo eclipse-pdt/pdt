@@ -13,8 +13,13 @@ package org.eclipse.php.internal.core.typeinference;
 
 import java.util.*;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.Modifiers;
@@ -1691,7 +1696,11 @@ public class PHPModelUtils {
 			types = filterElements(sourceModule, Arrays.asList(r), null,
 					monitor);
 		} else {
-			types = cache.getTypes(sourceModule, typeName, null, monitor);
+			if (isType) {
+				types = cache.getTypes(sourceModule, typeName, null, monitor);
+			} else {
+				types = cache.getTraits(sourceModule, typeName, null, monitor);
+			}
 			if (types == null) {
 				return PhpModelAccess.NULL_TYPES;
 			}
@@ -2127,6 +2136,24 @@ public class PHPModelUtils {
 			}
 		}
 		return typeName;
+	}
+
+	public static String getLineSeparator(IProject project) {
+		String lineSeparator = null;
+		if (project != null) {
+			lineSeparator = Platform.getPreferencesService().getString(
+					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
+					new IScopeContext[] { new ProjectScope(project) });
+		}
+		if (lineSeparator == null) {
+			lineSeparator = Platform.getPreferencesService().getString(
+					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
+					new IScopeContext[] { new InstanceScope() });
+		}
+		if (lineSeparator == null) {
+			lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);
+		}
+		return lineSeparator;
 	}
 
 }
