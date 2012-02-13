@@ -124,6 +124,8 @@ public class Scalar extends Expression {
 			return "unknown"; //$NON-NLS-1$
 		case TYPE_SYSTEM:
 			return "system"; //$NON-NLS-1$
+		case TYPE_BIN:
+			return "bin"; //$NON-NLS-1$
 		default:
 			throw new IllegalArgumentException();
 		}
