@@ -586,6 +586,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
 						document.getRegionAtCharacterOffset(lineStart), true);
+		if (textSequence == null) {
+			return false;
+		}
 		String regionType = FormatterUtils.getRegionType(document,
 				textSequence.getOriginalOffset(0));
 		if (textSequence != null && isRegionTypeAllowedMultiline(regionType)) {
