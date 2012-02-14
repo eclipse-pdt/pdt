@@ -889,4 +889,46 @@ public class TypeBinding implements ITypeBinding {
 	public boolean isUnknown() {
 		return this.elements == null && !(this.type instanceof SimpleType);
 	}
+
+	public List<IType> getTraitList(boolean isMethod, String classMemberName) {
+		if (this.elements == null || elements.length == 0) {
+			return null;
+		}
+		List<IType> result = new LinkedList<IType>();
+		for (IModelElement type : elements) {
+			IType trait = getTrait((IType) type, isMethod, classMemberName);
+			if (trait != null) {
+				result.add(trait);
+			}
+		}
+		return result;
+	}
+
+	private IType getTrait(IType type, boolean isMethod, String classMemberName) {
+		if (type != null) {
+			try {
+				// if (PHPFlags.isTrait(element.getFlags())) {
+				// return element;
+				// }
+				IMember[] members;
+				if (isMethod) {
+					members = PHPModelUtils.getTypeMethod(type,
+							classMemberName, true);
+				} else {
+					members = PHPModelUtils.getTypeField(type, classMemberName,
+							true);
+				}
+				for (IMember member : members) {
+					IType declaringType = member.getDeclaringType();
+
+					if (PHPFlags.isTrait(declaringType.getFlags())) {
+						return declaringType;
+					}
+				}
+			} catch (ModelException e) {
+			}
+		}
+		return null;
+	}
+
 }

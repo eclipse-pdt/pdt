@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.php.internal.core.compiler.ast.nodes.TraitDeclaration;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 /**
@@ -25,7 +26,12 @@ public class PHPClassEvaluator extends AbstractPHPGoalEvaluator {
 
 	public PHPClassEvaluator(IGoal goal, TypeDeclaration declare) {
 		super(goal);
-		result = new PHPClassType(declare.getName());
+		Class<?> expressionClass = declare.getClass();
+		if (expressionClass == TraitDeclaration.class) {
+			result = new PHPTraitType(declare.getName());
+		} else {
+			result = new PHPClassType(declare.getName());
+		}
 
 	}
 

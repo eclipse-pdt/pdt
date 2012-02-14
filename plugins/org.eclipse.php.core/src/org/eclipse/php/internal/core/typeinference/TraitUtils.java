@@ -124,6 +124,9 @@ public class TraitUtils {
 			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait,
 					MatchRule.EXACT, 0, 0, createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
+				if (!trait.equals(PHPModelUtils.getFullName(traitType))) {
+					continue;
+				}
 				IField[] fields;
 				try {
 					fields = PHPModelUtils.getTypeField(traitType, "", false);
@@ -202,6 +205,9 @@ public class TraitUtils {
 			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait,
 					MatchRule.EXACT, 0, 0, createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
+				if (!trait.equals(PHPModelUtils.getFullName(traitType))) {
+					continue;
+				}
 				IMethod[] methods;
 				try {
 					methods = PHPModelUtils.getTypeMethod(traitType, "", false);

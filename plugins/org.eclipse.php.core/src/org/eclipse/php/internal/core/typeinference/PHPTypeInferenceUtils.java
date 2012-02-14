@@ -25,7 +25,9 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 
 public class PHPTypeInferenceUtils {
 
@@ -179,7 +181,14 @@ public class PHPTypeInferenceUtils {
 					for (IType t : types) {
 						if (t.getElementName().equalsIgnoreCase(
 								evaluatedType.getTypeName())) {
-							result.add(t);
+							Class<?> expressionClass = evaluatedType.getClass();
+							if ((expressionClass == PHPTraitType.class)
+									&& PHPFlags.isTrait(t.getFlags())
+									|| (expressionClass == PHPClassType.class)
+									&& PHPFlags.isClass(t.getFlags())) {
+								result.add(t);
+							}
+
 							break;
 						}
 					}
@@ -191,8 +200,16 @@ public class PHPTypeInferenceUtils {
 				return result.toArray(new IType[result.size()]);
 			} else {
 				try {
-					return PHPModelUtils.getTypes(evaluatedType.getTypeName(),
-							sourceModule, offset, cache, null);
+					Class<?> expressionClass = evaluatedType.getClass();
+					if (expressionClass == PHPTraitType.class) {
+						return PHPModelUtils.getTypes(
+								evaluatedType.getTypeName(), sourceModule,
+								offset, cache, null, false);
+					} else {
+						return PHPModelUtils.getTypes(
+								evaluatedType.getTypeName(), sourceModule,
+								offset, cache, null);
+					}
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG) {
 						e.printStackTrace();

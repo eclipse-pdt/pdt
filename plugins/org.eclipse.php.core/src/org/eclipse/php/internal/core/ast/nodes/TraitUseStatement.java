@@ -140,7 +140,7 @@ public class TraitUseStatement extends Statement {
 
 	@Override
 	public int getType() {
-		return 0;
+		return TRAIT_USE_STATEMENT;
 	}
 
 	@Override

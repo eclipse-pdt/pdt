@@ -15,7 +15,9 @@ import java.util.List;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 
 /**
  * Class members occurrences finder.
@@ -32,6 +34,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	private ITypeBinding dispatcherType; // might be null
 	private ASTNode erroneousNode;
 	private boolean isIncludesuper;
+	private List<IType> traitList;
 
 	public void setIncludesuper(boolean isIncludesuper) {
 		this.isIncludesuper = isIncludesuper;
@@ -50,6 +53,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		typeDeclarationName = null;
 		isMethod = false;
 
+		PHPVersion phpVersion = PHPVersion.PHP5_4;
+		if (root.getSourceModule().getScriptProject() != null
+				&& root.getSourceModule().getScriptProject().getProject() != null) {
+			phpVersion = ProjectOptions.getPhpVersion(root.getSourceModule()
+					.getScriptProject().getProject());
+		}
+
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			Identifier identifier = (Identifier) node;
 
@@ -61,6 +71,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			isMethod = type == ASTNode.FUNCTION_DECLARATION
 					|| parent.getLocationInParent() == FunctionName.NAME_PROPERTY
 					|| parent.getLocationInParent() == FunctionInvocation.FUNCTION_PROPERTY;
+
+			if (dispatcherType != null
+					&& phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
+				traitList = dispatcherType.getTraitList(isMethod,
+						classMemberName);
+			}
+
 			while (typeDeclarationName == null && parent != fASTRoot) {
 				if (type == ASTNode.CLASS_DECLARATION
 						|| type == ASTNode.INTERFACE_DECLARATION) {
@@ -150,6 +167,17 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			boolean includeSuper) {
 
 		ITypeBinding type = resolveDispatcherType(identifier);
+		if (type != null && traitList != null && !traitList.isEmpty()) {
+			List<IType> traitList1 = type.getTraitList(isMethod,
+					classMemberName);
+			for (IType trait1 : traitList1) {
+				for (IType trait : traitList) {
+					if (trait1.equals(trait)) {
+						return true;
+					}
+				}
+			}
+		}
 		return type != null
 				&& (type.equals(dispatcherType) || (includeSuper && (type
 						.isSubTypeCompatible(dispatcherType) || dispatcherType
@@ -318,14 +346,15 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 									.getStart(), id.getParent().getLength(),
 									getOccurrenceType(node), fDescription));
 						} else {
-							addOccurrence(new OccurrenceLocation(node
-									.getStart(), node.getLength(),
+							addOccurrence(new OccurrenceLocation(
+									node.getStart(), node.getLength(),
 									getOccurrenceType(node), fDescription));
 						}
 					}
 				} else {
-					addOccurrence(new OccurrenceLocation(node.getStart(), node
-							.getLength(), getOccurrenceType(node), fDescription));
+					addOccurrence(new OccurrenceLocation(node.getStart(),
+							node.getLength(), getOccurrenceType(node),
+							fDescription));
 				}
 			}
 		}
@@ -355,14 +384,15 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 							if (isDispatcherTypeEquals(functionName,
 									isIncludesuper)) {
 								addOccurrence(new OccurrenceLocation(
-										functionName.getStart(), functionName
-												.getLength(),
+										functionName.getStart(),
+										functionName.getLength(),
 										getOccurrenceType(functionName),
 										fDescription));
 							}
 						} else {
-							addOccurrence(new OccurrenceLocation(functionName
-									.getStart(), functionName.getLength(),
+							addOccurrence(new OccurrenceLocation(
+									functionName.getStart(),
+									functionName.getLength(),
 									getOccurrenceType(functionName),
 									fDescription));
 						}
@@ -384,13 +414,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 								if (isDispatcherTypeEquals(variable,
 										isIncludesuper)) {
 									addOccurrence(new OccurrenceLocation(
-											variable.getStart() - 1, variable
-													.getLength() + 1,
+											variable.getStart() - 1,
+											variable.getLength() + 1,
 											F_WRITE_OCCURRENCE, fDescription));
 								}
 							} else {
-								addOccurrence(new OccurrenceLocation(variable
-										.getStart() - 1,
+								addOccurrence(new OccurrenceLocation(
+										variable.getStart() - 1,
 										variable.getLength() + 1,
 										F_WRITE_OCCURRENCE, fDescription));
 							}
@@ -405,13 +435,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 					if (classMemberName.equals(name.getName())) {
 						if (dispatcherType != null) {
 							if (isDispatcherTypeEquals(name, isIncludesuper)) {
-								addOccurrence(new OccurrenceLocation(name
-										.getStart(), name.getLength(),
+								addOccurrence(new OccurrenceLocation(
+										name.getStart(), name.getLength(),
 										getOccurrenceType(name), fDescription));
 							}
 						} else {
-							addOccurrence(new OccurrenceLocation(name
-									.getStart(), name.getLength(),
+							addOccurrence(new OccurrenceLocation(
+									name.getStart(), name.getLength(),
 									getOccurrenceType(name), fDescription));
 						}
 					}
