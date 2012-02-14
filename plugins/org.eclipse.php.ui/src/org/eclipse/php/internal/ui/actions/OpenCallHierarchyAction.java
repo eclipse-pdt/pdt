@@ -41,6 +41,7 @@ import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.corext.dom.NodeFinder;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.IWorkbenchSite;
@@ -110,12 +111,17 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void selectionChanged(final ITextSelection selection) {
-		Job job = new Job("Enabling Open Call Hierarchy action") {
+		Job job = new Job(PHPUiPlugin.OPEN_HIERARCHY_ACTION_FAMILY_NAME) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				setEnabled(isEnabled(selection));
 				return Status.OK_STATUS;
+			}
+
+			@Override
+			public boolean belongsTo(Object family) {
+				return getName().equals(family);
 			}
 		};
 		job.setSystem(true);

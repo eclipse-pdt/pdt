@@ -110,14 +110,20 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void selectionChanged(final ITextSelection selection) {
-		Job job = new Job("Enabling Open Type Hierarchy action") {
+		Job job = new Job(PHPUiPlugin.OPEN_HIERARCHY_ACTION_FAMILY_NAME) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				setEnabled(isEnabled(selection));
 				return Status.OK_STATUS;
 			}
+
+			@Override
+			public boolean belongsTo(Object family) {
+				return getName().equals(family);
+			}
 		};
+
 		job.setSystem(true);
 		job.setPriority(Job.DECORATE);
 		job.schedule();
