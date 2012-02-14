@@ -99,8 +99,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			StringBuffer buf = new StringBuffer(c.text);
 			IRegion prefix = findPrefixRange(d, line);
 			String indentation = d.get(prefix.getOffset(), prefix.getLength());
-			int lengthToAdd = Math.min(offset - prefix.getOffset(), prefix
-					.getLength());
+			int lengthToAdd = Math.min(offset - prefix.getOffset(),
+					prefix.getLength());
 
 			buf.append(indentation.substring(0, lengthToAdd));
 
@@ -191,8 +191,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 *         preference store
 	 */
 	private boolean isPreferenceTrue(String preference) {
-		return PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(
-				preference);
+		return PHPUiPlugin.getDefault().getPreferenceStore()
+				.getBoolean(preference);
 	}
 
 	/**
@@ -376,8 +376,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		String comment = createTypeComment(type, lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
-			return prepareTemplateComment(comment.trim(), indentation, type
-					.getScriptProject(), lineDelimiter);
+			return prepareTemplateComment(comment.trim(), indentation,
+					type.getScriptProject(), lineDelimiter);
 		}
 		return null;
 	}
@@ -388,8 +388,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		String comment = createFieldComment(field, lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
-			return prepareTemplateComment(comment.trim(), indentation, field
-					.getScriptProject(), lineDelimiter);
+			return prepareTemplateComment(comment.trim(), indentation,
+					field.getScriptProject(), lineDelimiter);
 		}
 		return null;
 	}
@@ -403,8 +403,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 																	// lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
-			return prepareTemplateComment(comment, indentation, method
-					.getScriptProject(), lineDelimiter);
+			return prepareTemplateComment(comment, indentation,
+					method.getScriptProject(), lineDelimiter);
 		}
 		return null;
 	}
@@ -512,8 +512,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 				return true; // partition goes to end of document - probably a
 								// new comment
 
-			String comment = document.get(partition.getOffset(), partition
-					.getLength());
+			String comment = document.get(partition.getOffset(),
+					partition.getLength());
 			if (comment.indexOf("/*", 2) != -1) //$NON-NLS-1$
 				return true; // enclosed another comment -> probably a new
 								// comment
@@ -633,8 +633,9 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 											document, line);
 									// build indentation based on the prefix
 									// length
-									String indentation = document.get(prefix
-											.getOffset(), prefix.getLength());
+									String indentation = document.get(
+											prefix.getOffset(),
+											prefix.getLength());
 									buf.append(indentation);
 									// perform the actual work
 									command.shiftsCaret = false;
@@ -645,7 +646,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 								}
 							}
 						} catch (BadLocationException e) {
-							Logger.logException(e);
+							// May be caused by concurrent threads. Can be
+							// ignored.
 						}
 
 						// just the line delimiter
@@ -740,8 +742,8 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			throws CoreException {
 		// String[] typeParameterNames=
 		// StubUtility.getTypeParameterNames(type.getFields());
-		return CodeGeneration.getTypeComment(type.getScriptProject(), type
-				.getTypeQualifiedName(), /* typeParameterNames */null,
+		return CodeGeneration.getTypeComment(type.getScriptProject(),
+				type.getTypeQualifiedName(), /* typeParameterNames */null,
 				lineDelimiter);
 	}
 
