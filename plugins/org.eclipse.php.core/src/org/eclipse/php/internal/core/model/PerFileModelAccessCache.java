@@ -29,6 +29,7 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 	private Map<IType, ITypeHierarchy> hierarchyCache = new HashMap<IType, ITypeHierarchy>();
 	private Map<String, Collection<IMethod>> globalFunctionsCache;
 	private Map<String, Collection<IType>> allTypesCache;
+	private Map<String, Collection<IType>> allTraitsCache;
 	private ReferenceTree fileHierarchy;
 
 	/**
@@ -247,6 +248,76 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			key.append(typeName);
 
 			types = allTypesCache.get(key.toString());
+		}
+		return filterElements(sourceModule, types, monitor);
+	}
+
+	/**
+	 * Returns cached result of a trait search, or invokes a new search query
+	 * 
+	 * @param sourceModule
+	 *            Current source module
+	 * @param typeName
+	 *            The name of the trait
+	 * @param monitor
+	 *            Progress monitor
+	 * @return a collection of traits according to a given name, or
+	 *         <code>null</code> if not found
+	 */
+	public Collection<IType> getTraits(ISourceModule sourceModule,
+			String typeName, String namespaceName, IProgressMonitor monitor) {
+
+		Collection<IType> types;
+
+		if (!this.sourceModule.equals(sourceModule)) {
+			// Invoke a new search, since we only cache for the original file in
+			// this class:
+			IScriptProject scriptProject = sourceModule.getScriptProject();
+			IDLTKSearchScope scope = SearchEngine
+					.createSearchScope(scriptProject);
+			types = Arrays.asList(PhpModelAccess.getDefault().findTraits(
+					typeName, MatchRule.EXACT, 0, 0, scope, null));
+
+		} else {
+			typeName = typeName.toLowerCase();
+
+			if (allTraitsCache == null) {
+				allTraitsCache = new HashMap<String, Collection<IType>>();
+
+				IScriptProject scriptProject = sourceModule.getScriptProject();
+				IDLTKSearchScope scope = SearchEngine
+						.createSearchScope(scriptProject);
+
+				IType[] allTypes = PhpModelAccess.getDefault().findTraits(null,
+						MatchRule.PREFIX, 0, 0, scope, null);
+				for (IType type : allTypes) {
+					String elementName = type.getTypeQualifiedName()
+							.toLowerCase();
+					Collection<IType> typesList = allTraitsCache
+							.get(elementName);
+					if (typesList == null) {
+						typesList = new LinkedList<IType>();
+						allTraitsCache.put(elementName, typesList);
+					}
+					typesList.add(type);
+				}
+			}
+
+			// if the namespace is not blank, append it to the key.
+			StringBuffer key = new StringBuffer();
+			if (namespaceName != null && !"".equals(namespaceName.trim())) {
+				String nameSpace = namespaceName;
+				if (namespaceName.startsWith("\\")
+						|| namespaceName.startsWith("/")) {
+					nameSpace = namespaceName.substring(1);
+				}
+				if (nameSpace.length() > 0) {
+					key.append(nameSpace.toLowerCase()).append("$");
+				}
+			}
+			key.append(typeName);
+
+			types = allTraitsCache.get(key.toString());
 		}
 		return filterElements(sourceModule, types, monitor);
 	}

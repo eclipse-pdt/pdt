@@ -34,6 +34,12 @@ public interface IModelAccessCache {
 			String typeName, String namespaceName, IProgressMonitor monitor);
 
 	/**
+	 * Returns cached traits for the given name
+	 */
+	public abstract Collection<IType> getTraits(ISourceModule sourceModule,
+			String typeName, String namespaceName, IProgressMonitor monitor);
+
+	/**
 	 * Returns cached classes for the given name
 	 */
 	public abstract Collection<IType> getClasses(ISourceModule sourceModule,
