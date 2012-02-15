@@ -1,0 +1,11 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php
+function hi(callable $f) {
+    $f();
+}
+|hi|([new Human("Gonzalo"), 'hello']);
+?>
+--EXPECT--
+method(hi)

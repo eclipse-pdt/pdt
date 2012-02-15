@@ -1,0 +1,11 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+function data() {
+    return ['name' => 'Gonzalo', 'surname' => 'Ayuso'];
+}
+echo |data|()['name'];
+?>
+--EXPECT--
+method(data)

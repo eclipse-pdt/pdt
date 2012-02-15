@@ -54,8 +54,9 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 				new String[] { "/workspace/typeinference/php5" });
 		TESTS.put(PHPVersion.PHP5_3,
 				new String[] { "/workspace/typeinference/php5" });
-		TESTS.put(PHPVersion.PHP5_4,
-				new String[] { "/workspace/typeinference/php5" });
+		TESTS.put(PHPVersion.PHP5_4, new String[] {
+				"/workspace/typeinference/php5",
+				"/workspace/typeinference/php54" });
 	};
 
 	private static PHPTypeInferencer typeInferenceEngine;

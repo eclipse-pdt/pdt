@@ -1,0 +1,26 @@
+--TEST--
+Should recognize class aliases (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=267544)
+--FILE--
+<?
+class class1{
+	/**
+	 * @var class1
+	 */
+	public $a;
+	public function avc1 ()
+	{
+		return new class1;
+	}
+	public function avc2 ()
+	{
+		return array(new class1) ;
+	}
+	public function avc3 ()
+	{
+		return [new class1] ;
+	}
+}
+$a=(new class1())->avc1()->avc1()->a->|avc1|();
+?>
+--EXPECT--
+method(avc1)
