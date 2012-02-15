@@ -1,0 +1,48 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+trait PropertiesTrait1 {
+    public %$x% = 1;
+    public function smallTalk1() {
+        echo 'a';
+    }
+    public function bigTalk() {
+        echo 'A';
+    }
+}
+
+trait PropertiesTrait2 {
+    public $x = 1;
+    public $y = 1;
+    public $z = 1;
+    public function smallTalk1() {
+        echo 'a';
+    }
+    public function bigTalk() {
+        echo 'A';
+    }
+}
+
+trait PropertiesTrait3 {
+	use PropertiesTrait1;
+    public $y = 1;
+    public function smallTalk3() {
+        echo 'a';
+    }
+    public function bigTalk3() {
+        echo 'A';
+    }
+}
+class PropertiesExample2 {
+    use PropertiesTrait3;
+    public $z = 1;
+}
+
+$example = new PropertiesExample2;
+$example->z;
+$example->smallTalk1();
+$example->y;
+$example->%x%|;
+?>
+--EXPECT--

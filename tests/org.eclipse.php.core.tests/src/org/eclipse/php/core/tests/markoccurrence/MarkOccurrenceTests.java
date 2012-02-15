@@ -60,7 +60,8 @@ public class MarkOccurrenceTests extends AbstractPDTTTest {
 				"/workspace/markoccurrence/php53" });
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
 				"/workspace/markoccurrence/php5",
-				"/workspace/markoccurrence/php53" });
+				"/workspace/markoccurrence/php53",
+				"/workspace/markoccurrence/php54" });
 	};
 
 	protected static IProject project;
