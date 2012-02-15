@@ -118,8 +118,9 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
 					new PhpSourceParser());
 			newdocument.set(newPhpText);
-			contentFormatter.format(newdocument, new Region(
-					beforeText.length(), command.text.length()));
+			contentFormatter.format(newdocument, new Region(beforeText.length()
+					- lineSeparator.length(), command.text.length()
+					+ lineSeparator.length()));
 			command.text = newdocument.get(
 					beforeText.length(),
 					newdocument.getLength()
