@@ -73,6 +73,7 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 	 */
 	public void dispose() {
 		fConsole = null;
+		fPHPHyperLink.dispose();
 		fPHPHyperLink = null;
 	}
 
@@ -83,6 +84,8 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 	 * org.eclipse.debug.ui.console.IConsoleLineTrackerExtension#consoleClosed()
 	 */
 	public void consoleClosed() {
-		fPHPHyperLink.dispose();
+		if (fPHPHyperLink != null) {
+			fPHPHyperLink.dispose();
+		}
 	}
 }
