@@ -2397,31 +2397,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class required) {
 
-		if (fPHPOutlinePage != null && fPHPOutlinePage.getControl() != null
-				&& !fPHPOutlinePage.getControl().isDisposed()) {
-
-			final boolean[] isOutlineViewVisible = new boolean[] { Boolean.TRUE };
-			// File Search action executes this method in a background thread
-			Display.getDefault().syncExec(new Runnable() {
-
-				public void run() {
-					if (!fPHPOutlinePage.getControl().isVisible()) {
-						isOutlineViewVisible[0] = false;
-					}
-				}
-			});
-
-			if (!isOutlineViewVisible[0])
-				return null;
-
-		}
-
 		Object adapter = super.getAdapter(required);
 
 		// add selection listener to outline page
 		// so that if outline selects model element, editor selects correct item
 		if (adapter instanceof ConfigurableContentOutlinePage
-				&& IContentOutlinePage.class.equals(required)) {
+				&& IContentOutlinePage.class.equals(required)
+				&& shouldOutlineViewBeLoaded()) {
 			final ConfigurableContentOutlinePage outlinePage = (ConfigurableContentOutlinePage) adapter;
 			if (fPHPOutlinePageListener == null) {
 				fPHPOutlinePageListener = new OutlineSelectionChangedListener();
@@ -2437,6 +2419,16 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			fModelElement = modelElement;
 		}
 		return adapter;
+	}
+
+	private boolean shouldOutlineViewBeLoaded() {
+		if (fPHPOutlinePage != null
+				&& fPHPOutlinePage.getControl() != null
+				&& (fPHPOutlinePage.getControl().isDisposed() || !fPHPOutlinePage
+						.getControl().isVisible())) {
+			return false;
+		}
+		return true;
 	}
 
 	protected void clearStatusLine() {
