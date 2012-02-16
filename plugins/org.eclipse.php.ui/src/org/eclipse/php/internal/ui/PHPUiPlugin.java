@@ -112,7 +112,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	private PHPTemplateStore fCodeTemplateStore;
 
-	public static String OPEN_HIERARCHY_ACTION_FAMILY_NAME = "Open Hierarchy action";
+	public static String OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME = "Open Call Hierarchy action";
+	public static String OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME = "Open Type Hierarchy action";
 
 	/**
 	 * The constructor.
@@ -213,7 +214,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
-		Platform.getJobManager().cancel(OPEN_HIERARCHY_ACTION_FAMILY_NAME);
+		Platform.getJobManager().cancel(OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
+		Platform.getJobManager().cancel(OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
 		fASTProvider = null;
 		plugin = null;
 	}

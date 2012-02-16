@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -111,7 +112,14 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void selectionChanged(final ITextSelection selection) {
-		Job job = new Job(PHPUiPlugin.OPEN_HIERARCHY_ACTION_FAMILY_NAME) {
+
+		IJobManager jobManager = Job.getJobManager();
+		if (jobManager.find(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME).length > 0) {
+			jobManager
+					.cancel(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
+		}
+
+		Job job = new Job(PHPUiPlugin.OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {

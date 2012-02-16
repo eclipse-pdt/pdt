@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
@@ -110,8 +111,14 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 	 * (non-Javadoc) Method declared on SelectionDispatchAction.
 	 */
 	public void selectionChanged(final ITextSelection selection) {
-		Job job = new Job(PHPUiPlugin.OPEN_HIERARCHY_ACTION_FAMILY_NAME) {
 
+		IJobManager jobManager = Job.getJobManager();
+		if (jobManager.find(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME).length > 0) {
+			jobManager
+					.cancel(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
+		}
+
+		Job job = new Job(PHPUiPlugin.OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				setEnabled(isEnabled(selection));
