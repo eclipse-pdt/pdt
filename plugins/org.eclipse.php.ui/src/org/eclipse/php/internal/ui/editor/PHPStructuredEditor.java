@@ -2422,10 +2422,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	}
 
 	private boolean shouldOutlineViewBeLoaded() {
-		if (fPHPOutlinePage != null
-				&& fPHPOutlinePage.getControl() != null
-				&& (fPHPOutlinePage.getControl().isDisposed() || !fPHPOutlinePage
-						.getControl().isVisible())) {
+		if (fPHPOutlinePage != null && fPHPOutlinePage.getControl() != null
+				&& !fPHPOutlinePage.getControl().isDisposed()
+				&& !fPHPOutlinePage.getControl().isVisible()) {
 			return false;
 		}
 		return true;
