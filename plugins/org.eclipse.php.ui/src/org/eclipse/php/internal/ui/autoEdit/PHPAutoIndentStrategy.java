@@ -107,6 +107,8 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				project = getProject(doModelForPHP);
 				((IFormatterProcessorFactory) contentFormatter)
 						.setDefaultProject(project);
+				((IFormatterProcessorFactory) contentFormatter)
+						.setIsPasting(true);
 			}
 			String lineSeparator = PHPModelUtils.getLineSeparator(project);
 			String beforeText = document.get(0, command.offset);
