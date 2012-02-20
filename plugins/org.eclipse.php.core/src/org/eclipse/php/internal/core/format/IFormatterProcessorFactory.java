@@ -43,4 +43,6 @@ public interface IFormatterProcessorFactory {
 			IRegion region) throws Exception;
 
 	public void setDefaultProject(IProject project);
+
+	public void setIsPasting(boolean isPasting);
 }
