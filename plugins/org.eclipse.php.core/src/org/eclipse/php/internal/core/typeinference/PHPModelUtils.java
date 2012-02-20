@@ -1681,6 +1681,7 @@ public class PHPModelUtils {
 			}
 		}
 
+		List<IType> result = new ArrayList<IType>();
 		Collection<IType> types;
 		if (cache == null) {
 			IDLTKSearchScope scope = SearchEngine
@@ -1693,8 +1694,12 @@ public class PHPModelUtils {
 				r = PhpModelAccess.getDefault().findTraits(typeName,
 						MatchRule.EXACT, 0, 0, scope, null);
 			}
-			types = filterElements(sourceModule, Arrays.asList(r), null,
-					monitor);
+			for (IType type : r) {
+				if (getCurrentNamespace(type) == null) {
+					result.add(type);
+				}
+			}
+			types = filterElements(sourceModule, result, null, monitor);
 		} else {
 			if (isType) {
 				types = cache.getTypes(sourceModule, typeName, null, monitor);
@@ -1705,7 +1710,7 @@ public class PHPModelUtils {
 				return PhpModelAccess.NULL_TYPES;
 			}
 		}
-		List<IType> result = new ArrayList<IType>(types.size());
+		result.clear();
 		for (IType type : types) {
 			if (getCurrentNamespace(type) == null) {
 				result.add(type);
