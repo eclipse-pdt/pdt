@@ -90,8 +90,11 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 				model = StructuredModelManager.getModelManager()
 						.getExistingModelForRead(file);
 			} catch (Exception e) {
-				model = StructuredModelManager.getModelManager()
-						.createUnManagedStructuredModelFor(file);
+				try {
+					model = StructuredModelManager.getModelManager()
+							.createUnManagedStructuredModelFor(file);
+				} catch (Exception e2) {
+				}
 			}
 			if (model == null) {
 				return;
