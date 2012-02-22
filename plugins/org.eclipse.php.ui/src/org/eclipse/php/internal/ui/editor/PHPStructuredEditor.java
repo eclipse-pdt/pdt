@@ -3196,6 +3196,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		case PhpElementConciliator.CONCILIATOR_FUNCTION:
 			return fMarkFunctionOccurrences;
 		case PhpElementConciliator.CONCILIATOR_CLASSNAME:
+		case PhpElementConciliator.CONCILIATOR_TRAITNAME:
 			return fMarkTypeOccurrences;
 		case PhpElementConciliator.CONCILIATOR_CONSTANT:
 			return fMarkConstantOccurrences;
