@@ -1475,7 +1475,7 @@ public class PHPDocumentationContentAccess {
 			int infoType) {
 		for (PHPDocTag tag : phpDoc.getTags(PHPDocTag.PARAM)) {
 			String name = getParameterInfo(tag, PARAMETER_NAME_TYPE);
-			if (name.equals(paramName)) {
+			if (name != null && name.equals(paramName)) {
 				return getParameterInfo(tag, infoType);
 			}
 			continue;
