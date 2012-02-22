@@ -11,14 +11,19 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.evaluation.types.IClassType;
 import org.eclipse.dltk.ti.types.ClassType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 
 /**
  * This evaluated type represents PHP class or interface
@@ -131,11 +136,23 @@ public class PHPClassType extends ClassType implements IClassType {
 			ISourceModule sourceModule, int offset) {
 		String namespace = PHPModelUtils.extractNamespaceName(typeName,
 				sourceModule, offset);
-		if (namespace != null) {
-			return new PHPClassType(namespace,
-					PHPModelUtils.extractElementName(typeName));
+		final ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule);
+		if (PHPModelUtils.isInUseTraitStatement(moduleDeclaration, offset)) {
+
+			if (namespace != null) {
+				return new PHPTraitType(namespace,
+						PHPModelUtils.extractElementName(typeName));
+			}
+			return new PHPTraitType(typeName);
+		} else {
+
+			if (namespace != null) {
+				return new PHPClassType(namespace,
+						PHPModelUtils.extractElementName(typeName));
+			}
+			return new PHPClassType(typeName);
 		}
-		return new PHPClassType(typeName);
 	}
 
 	/**
@@ -146,6 +163,17 @@ public class PHPClassType extends ClassType implements IClassType {
 	 */
 	public static PHPClassType fromIType(IType type) {
 		String elementName = type.getElementName();
+		try {
+			if (PHPFlags.isTrait(type.getFlags())) {
+				IType namespace = type.getDeclaringType();
+				if (namespace != null) {
+					return new PHPTraitType(namespace.getElementName(),
+							elementName);
+				}
+				return new PHPTraitType(elementName);
+			}
+		} catch (ModelException e) {
+		}
 		IType namespace = type.getDeclaringType();
 		if (namespace != null) {
 			return new PHPClassType(namespace.getElementName(), elementName);

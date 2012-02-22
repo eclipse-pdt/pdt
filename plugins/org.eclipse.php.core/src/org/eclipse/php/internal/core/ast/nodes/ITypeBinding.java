@@ -350,6 +350,15 @@ public interface ITypeBinding extends IBinding {
 	public boolean isClass();
 
 	/**
+	 * Returns whether this type binding represents a class type or a recovered
+	 * binding.
+	 * 
+	 * @return <code>true</code> if this object represents a trait or a
+	 *         recovered binding, and <code>false</code> otherwise
+	 */
+	public boolean isTrait();
+
+	/**
 	 * Returns whether this type binding represents an interface type.
 	 * <p>
 	 * Note that an interface can also be an annotation type.

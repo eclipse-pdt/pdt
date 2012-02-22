@@ -261,11 +261,20 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				className = PHPModelUtils.getRealName(fullyQualifiedName,
 						sourceModule, offset, className);
 			}
-
-			if (parentNamespace != null) {
-				result = new PHPClassType(parentNamespace, className);
+			if (PHPModelUtils.isInUseTraitStatement(
+					((ISourceModuleContext) context).getRootNode(),
+					typeReference.sourceStart())) {
+				if (parentNamespace != null) {
+					result = new PHPTraitType(parentNamespace, className);
+				} else {
+					result = new PHPTraitType(className);
+				}
 			} else {
-				result = new PHPClassType(className);
+				if (parentNamespace != null) {
+					result = new PHPClassType(parentNamespace, className);
+				} else {
+					result = new PHPClassType(className);
+				}
 			}
 		}
 

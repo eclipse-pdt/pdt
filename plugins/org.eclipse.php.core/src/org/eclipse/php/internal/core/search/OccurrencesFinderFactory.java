@@ -46,6 +46,8 @@ public class OccurrencesFinderFactory {
 			return new ConstantsOccurrencesFinder();
 		case PhpElementConciliator.CONCILIATOR_CLASSNAME:
 			return new ClassNameOccurrencesFinder();
+		case PhpElementConciliator.CONCILIATOR_TRAITNAME:
+			return new TraitNameOccurrencesFinder();
 		case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
 			return new ClassMembersOccurrencesFinder();
 		case PhpElementConciliator.CONCILIATOR_UNKNOWN:

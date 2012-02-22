@@ -41,7 +41,7 @@ import org.eclipse.php.internal.core.typeinference.evaluators.VariableReferenceE
 public class BindingUtility {
 
 	/** Default time limit for type inference evaluation */
-	private static final int TIME_LIMIT = 500;
+	private static final int TIME_LIMIT = 1000;
 
 	private ISourceModule sourceModule;
 	private ASTNode rootNode;

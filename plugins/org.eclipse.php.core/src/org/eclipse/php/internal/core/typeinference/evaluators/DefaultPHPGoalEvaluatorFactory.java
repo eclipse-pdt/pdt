@@ -87,6 +87,15 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			TypeReference type = (TypeReference) expression;
 			return new TypeReferenceEvaluator(exprGoal, type);
 		}
+		if (expressionClass == TraitAliasStatement.class) {
+			TraitAliasStatement tas = (TraitAliasStatement) expression;
+			if (tas.getAlias().getTraitMethod() instanceof FullyQualifiedTraitMethodReference) {
+				FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) tas
+						.getAlias().getTraitMethod();
+				return new TypeReferenceEvaluator(exprGoal,
+						reference.getClassName());
+			}
+		}
 		if (expressionClass == PHPCallExpression.class
 				|| expressionClass == StaticMethodInvocation.class) {
 			return new MethodCallTypeEvaluator(exprGoal);

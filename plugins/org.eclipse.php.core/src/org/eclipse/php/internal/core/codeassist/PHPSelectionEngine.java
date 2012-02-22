@@ -53,6 +53,7 @@ import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -452,7 +453,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					}
 					String name = evaluatedType.getTypeName();
 					IType[] types = PHPModelUtils.getTypes(name, sourceModule,
-							offset, null, null);
+							offset, null, null,
+							!(evaluatedType instanceof PHPTraitType));
 					if (types == null || types.length == 0) {
 						// This can be a constant or namespace in PHP 5.3:
 						if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
@@ -461,9 +463,16 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						IDLTKSearchScope scope = SearchEngine
 								.createSearchScope(sourceModule
 										.getScriptProject());
-						types = PhpModelAccess.getDefault().findTypes(null,
-								name, MatchRule.EXACT, Modifiers.AccNameSpace,
-								0, scope, null);
+						if (evaluatedType instanceof PHPTraitType) {
+							types = PhpModelAccess.getDefault().findTraits(
+									null, name, MatchRule.EXACT,
+									Modifiers.AccNameSpace, 0, scope, null);
+						} else {
+							types = PhpModelAccess.getDefault().findTypes(null,
+									name, MatchRule.EXACT,
+									Modifiers.AccNameSpace, 0, scope, null);
+						}
+
 						if (types == null || types.length == 0) {
 							name = NamespaceReference.NAMESPACE_SEPARATOR
 									+ name;
@@ -741,7 +750,19 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return PHPModelUtils.getFunctions(elementName,
 									sourceModule, offset, null, null);
 						}
-
+						if ("insteadof".equals(nextWord)
+								|| "as".equals(nextWord)) { //$NON-NLS-1$
+							if (types != null && types.length > 0) {
+								List<IMethod> methods = new LinkedList<IMethod>();
+								for (IType t : types) {
+									methods.addAll(Arrays.asList(PHPModelUtils
+											.getTypeHierarchyMethod(t,
+													elementName, true, null)));
+								}
+								return methods.toArray(new IMethod[methods
+										.size()]);
+							}
+						}
 						if (types != null && types.length > 0) {
 							// Check whether this is a class constant:
 							if (startPosition > 0) {

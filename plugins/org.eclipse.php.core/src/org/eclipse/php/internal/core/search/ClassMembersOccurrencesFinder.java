@@ -70,7 +70,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			int type = parent.getType();
 			isMethod = type == ASTNode.FUNCTION_DECLARATION
 					|| parent.getLocationInParent() == FunctionName.NAME_PROPERTY
-					|| parent.getLocationInParent() == FunctionInvocation.FUNCTION_PROPERTY;
+					|| parent.getLocationInParent() == FunctionInvocation.FUNCTION_PROPERTY
+					|| type == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE;
 
 			if (dispatcherType != null
 					&& phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
@@ -155,8 +156,12 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		} else if (parent.getType() == ASTNode.CONSTANT_DECLARATION) {
 			ConstantDeclaration ccd = (ConstantDeclaration) parent;
 			return resolveDeclaringClassType(ccd);
+		} else if (parent.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
+			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) parent;
+			typeBinding = reference.getClassName().resolveTypeBinding();
 		}
-		if (typeBinding != null && typeBinding.isClass()
+		if (typeBinding != null
+				&& (typeBinding.isClass() || typeBinding.isTrait())
 				&& typeBinding.getPHPElement() != null) {
 			return typeBinding;
 		}
@@ -320,6 +325,14 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	/**
 	 * Mark var on: MyClass::var;
 	 */
+	public boolean visit(FullyQualifiedTraitMethodReference fieldAccess) {
+		if (isMethod) {
+			checkDispatch(fieldAccess.getFunctionName());
+		}
+
+		return super.visit(fieldAccess);
+	}
+
 	public boolean visit(StaticFieldAccess fieldAccess) {
 		if (!isMethod) {
 			checkDispatch(fieldAccess.getField().getName());
@@ -378,6 +391,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				if (isMethod) {
 					final Identifier functionName = classMethodDeclaration
 							.getFunction().getFunctionName();
+					ITypeBinding type = resolveDispatcherType(functionName);
 					if (classMemberName
 							.equalsIgnoreCase(functionName.getName())) {
 						if (dispatcherType != null) {

@@ -42,6 +42,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -2159,6 +2160,25 @@ public class PHPModelUtils {
 			lineSeparator = System.getProperty(Platform.PREF_LINE_SEPARATOR);
 		}
 		return lineSeparator;
+	}
+
+	public static boolean isInUseTraitStatement(ModuleDeclaration rootNode,
+			final int offset) {
+		final boolean[] found = new boolean[1];
+		found[0] = false;
+		try {
+			rootNode.traverse(new PHPASTVisitor() {
+				public boolean visit(TraitUseStatement s) throws Exception {
+					if (s.sourceStart() <= offset && s.sourceEnd() >= offset) {
+						found[0] = true;
+					}
+					return false;
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return found[0];
 	}
 
 }

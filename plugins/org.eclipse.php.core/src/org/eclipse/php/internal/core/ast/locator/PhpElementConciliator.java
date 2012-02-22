@@ -35,6 +35,7 @@ public class PhpElementConciliator {
 	public static final int CONCILIATOR_CONSTANT = 5;
 	public static final int CONCILIATOR_CLASS_MEMBER = 6;
 	public static final int CONCILIATOR_PROGRAM = 7;
+	public static final int CONCILIATOR_TRAITNAME = 8;
 
 	public static int concile(ASTNode locateNode) {
 		if (locateNode == null || isProgram(locateNode)) {
@@ -45,6 +46,8 @@ public class PhpElementConciliator {
 			return CONCILIATOR_FUNCTION;
 		} else if (isClassName(locateNode)) {
 			return CONCILIATOR_CLASSNAME;
+		} else if (isTraitName(locateNode)) {
+			return CONCILIATOR_TRAITNAME;
 		} else if (isConstant(locateNode)) {
 			return CONCILIATOR_CONSTANT;
 		} else if (isLocalVariable(locateNode)) {
@@ -75,7 +78,8 @@ public class PhpElementConciliator {
 		if (parent.getType() == ASTNode.FUNCTION_NAME
 				|| parent.getType() == ASTNode.CLASS_NAME
 				|| parent.getType() == ASTNode.NAMESPACE
-				|| parent.getType() == ASTNode.USE_STATEMENT_PART) {
+				|| parent.getType() == ASTNode.USE_STATEMENT_PART
+				|| parent.getType() == ASTNode.TRAIT_USE_STATEMENT) {
 			return false;
 		}
 
@@ -114,6 +118,14 @@ public class PhpElementConciliator {
 				if (parent.getType() == ASTNode.METHOD_DECLARATION) {
 					return true;
 				}
+			}
+			return false;
+		}
+
+		if (parent.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
+			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) parent;
+			if (reference.getFunctionName() == locateNode) {
+				return true;
 			}
 			return false;
 		}
@@ -271,6 +283,44 @@ public class PhpElementConciliator {
 		return false;
 	}
 
+	/**
+	 * @param locateNode
+	 * @return true if the given path indicates a trait
+	 */
+	private static boolean isTraitName(ASTNode locateNode) {
+		assert locateNode != null;
+
+		ASTNode parent = null;
+		if (locateNode.getType() == ASTNode.CLASS_DECLARATION) {
+			parent = locateNode;
+		} else if (locateNode.getType() == ASTNode.IDENTIFIER) {
+			parent = locateNode.getParent();
+		} else {
+			return false;
+		}
+
+		if (parent.getType() == ASTNode.NAMESPACE_NAME) {
+			locateNode = parent;
+			parent = parent.getParent();
+		}
+
+		final int parentType = parent.getType();
+		if (parentType == ASTNode.CLASS_DECLARATION
+				|| parentType == ASTNode.TRAIT_USE_STATEMENT
+				|| parentType == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
+			if (parentType == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
+				FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) parent;
+				if (reference.getFunctionName() == locateNode) {
+					return false;
+				}
+
+			}
+			return true;
+		}
+
+		return false;
+	}
+
 	private static boolean isLocalVariable(ASTNode locateNode) {
 		assert locateNode != null;
 		Variable parent = null;
@@ -354,7 +404,7 @@ public class PhpElementConciliator {
 		final Identifier targetIdentifier = ((Identifier) locateNode);
 
 		ASTNode parent = locateNode.getParent();
-		if (parent.getType() != ASTNode.VARIABLE) {
+		if (parent == null || parent.getType() != ASTNode.VARIABLE) {
 			return false;
 		}
 
@@ -511,7 +561,7 @@ public class PhpElementConciliator {
 				&& !"define".equals(((Identifier) locateNode).getName())) {
 			targetIdentifier = (Identifier) locateNode;
 			parent = targetIdentifier.getParent();
-			if (parent.getType() == ASTNode.NAMESPACE_NAME) {
+			if (parent != null && parent.getType() == ASTNode.NAMESPACE_NAME) {
 				parent = targetIdentifier.getParent().getParent();
 			}
 		} else {
@@ -519,9 +569,11 @@ public class PhpElementConciliator {
 		}
 
 		// check if it is a function
-		if (parent.getType() != ASTNode.FUNCTION_DECLARATION
+		if (parent == null
+				|| parent.getType() != ASTNode.FUNCTION_DECLARATION
 				&& parent.getType() != ASTNode.FUNCTION_NAME
-				|| parent.getParent().getType() == ASTNode.METHOD_DECLARATION) {
+				|| parent.getParent().getType() == ASTNode.METHOD_DECLARATION
+				|| parent.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
 			return false;
 		}
 

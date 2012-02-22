@@ -109,7 +109,7 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	}
 
 	public int getType() {
-		return ASTNode.FUNCTION_NAME;
+		return ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE;
 	}
 
 	/*

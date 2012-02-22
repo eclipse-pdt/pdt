@@ -25,6 +25,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.evaluators.PHPTraitType;
 
 public class TypeBinding implements ITypeBinding {
 
@@ -567,6 +568,20 @@ public class TypeBinding implements ITypeBinding {
 			return false;
 		}
 		return type.getClass() == PHPClassType.class;
+	}
+
+	/**
+	 * Returns whether this type binding represents a class trait or a recovered
+	 * binding.
+	 * 
+	 * @return <code>true</code> if this object represents a trait or a
+	 *         recovered binding, and <code>false</code> otherwise
+	 */
+	public boolean isTrait() {
+		if (isUnknown()) {
+			return false;
+		}
+		return type.getClass() == PHPTraitType.class;
 	}
 
 	/**
