@@ -266,12 +266,13 @@ public class PHPMatchLocator extends MatchLocator {
 					IModelElement[] elements = module.codeSelect(pce
 							.getCallName().sourceStart(), 0);
 					for (int i = 0; i < elements.length; i++) {
-						if (pattern.focus != null
-								&& pattern.focus.equals(elements[i])) {
-
-							return super.newMethodReferenceMatch(
-									enclosingElement, accuracy, offset, length,
-									isConstructor, isSynthetic, reference);
+						if (pattern.focus != null) {
+							if (pattern.focus.equals(elements[i])) {
+								return super.newMethodReferenceMatch(
+										enclosingElement, accuracy, offset,
+										length, isConstructor, isSynthetic,
+										reference);
+							}
 						} else {
 							MethodPattern methodPattern = (MethodPattern) pattern;
 							if (new String(methodPattern.selector)
