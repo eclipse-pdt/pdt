@@ -11,21 +11,22 @@
  **********************************************************************/
 package org.eclipse.php.internal.ui.autoEdit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
-import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.format.DefaultIndentationStrategy;
-import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
+import org.eclipse.php.internal.core.format.PhpFormatter;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.php.ui.format.PHPFormatProcessorProxy;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -95,46 +96,151 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			}
 		} catch (BadLocationException e) {
 		}
+
+		String newline = PHPModelUtils.getLineSeparator(null);
 		IStructuredModel structuredModel = null;
 		try {
 			IProject project = null;
-			IContentFormatter contentFormatter = PHPFormatProcessorProxy
-					.getFormatter();
-			if (contentFormatter instanceof IFormatterProcessorFactory) {
-				structuredModel = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(document);
-				DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
-				project = getProject(doModelForPHP);
-				((IFormatterProcessorFactory) contentFormatter)
-						.setDefaultProject(project);
-				((IFormatterProcessorFactory) contentFormatter)
-						.setIsPasting(true);
-			}
-			String lineSeparator = PHPModelUtils.getLineSeparator(project);
-			String beforeText = document.get(0, command.offset);
-			beforeText = beforeText.trim() + lineSeparator;
-			String afterText = lineSeparator
-					+ document.get(command.offset,
-							document.getLength() - command.offset).trim();
-			String newPhpText = beforeText + command.text + afterText;
-			JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
-					new PhpSourceParser());
-			newdocument.set(newPhpText);
-			contentFormatter.format(newdocument, new Region(beforeText.length()
-					- lineSeparator.length(), command.text.length()
-					+ lineSeparator.length()));
-			command.text = newdocument.get(
-					beforeText.length(),
-					newdocument.getLength()
-							- (beforeText.length() + afterText.length()));
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			structuredModel = StructuredModelManager.getModelManager()
+					.getExistingModelForRead(document);
+			DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
+			project = getProject(doModelForPHP);
+			newline = PHPModelUtils.getLineSeparator(project);
+		} catch (Exception e) {
 		} finally {
 			if (structuredModel != null) {
 				structuredModel.releaseFromRead();
 			}
 		}
+		Document tempdocument = new Document(command.text);
+		int lines = tempdocument.getNumberOfLines();
+		StringBuffer tempsb = new StringBuffer();
+		try {
+			for (int i = 0; i < lines; i++) {
+				IRegion region = tempdocument.getLineInformation(i);
+				if (i > 0) {
+					tempsb.append(newline);
+				}
+				if (i == 0) {
+					tempsb.append(tempdocument.get(region.getOffset(),
+							region.getLength()).trim());
+				} else {
+					tempsb.append(tempdocument.get(region.getOffset(),
+							region.getLength()));
+				}
+			}
+		} catch (BadLocationException e) {
+		}
+		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
+				new PhpSourceParser());
+		String start = "<?php";
+		newdocument.set(start + newline + tempsb.toString());
+		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength());
+		formatter.format(newdocument.getFirstStructuredDocumentRegion());
+
+		List<String> list = new ArrayList<String>();
+		try {
+			int lineNumber = newdocument.getNumberOfLines();
+			for (int i = 0; i < lineNumber; i++) {
+				if (i == 0) {
+					continue;
+				}
+				IRegion region = newdocument.getLineInformation(i);
+				String line = newdocument.get(region.getOffset(),
+						region.getLength());
+				list.add(line);
+			}
+		} catch (BadLocationException e) {
+		}
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < list.size(); i++) {
+			if (!formatter.getIgnoreLines().contains(i + 1)) {
+				sb.append(helpBuffer.toString());
+			}
+			sb.append(list.get(i));
+			if (i == list.size() - 1) {
+			} else {
+				sb.append(newline);
+			}
+
+		}
+		command.text = sb.toString();
 	}
+
+	/**
+	 * Set the indent of a bracket based on the command provided in the supplied
+	 * document.
+	 * 
+	 * @param document
+	 *            - the document being parsed
+	 * @param command
+	 *            - the command being performed
+	 */
+	// protected void smartPaste(IDocument document, DocumentCommand command) {
+	// if (command.offset == -1 || document.getLength() == 0)
+	// return;
+	// StringBuffer helpBuffer = new StringBuffer();
+	// try {
+	// if (document instanceof IStructuredDocument) {
+	// DefaultIndentationStrategy
+	// .placeMatchingBlanksForStructuredDocument(
+	// (IStructuredDocument) document, helpBuffer,
+	// document.getLineOfOffset(command.offset),
+	// command.offset);
+	// IRegion region = document.getLineInformation(document
+	// .getLineOfOffset(command.offset));
+	// if (document.get(region.getOffset(), region.getLength()).trim()
+	// .length() == 0) {// blank line
+	// if (command.offset != region.getOffset()) {
+	// document.replace(region.getOffset(),
+	// region.getLength(), "");
+	// // adjust the offset
+	// command.offset = region.getOffset();
+	// }
+	// } else {
+	// return;
+	// }
+	// }
+	// } catch (BadLocationException e) {
+	// }
+	// IStructuredModel structuredModel = null;
+	// try {
+	// IProject project = null;
+	// IContentFormatter contentFormatter = new MultiPassContentFormatter(
+	// IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING,
+	// IHTMLPartitions.HTML_DEFAULT);
+	// ((MultiPassContentFormatter) contentFormatter)
+	// .setMasterStrategy(new StructuredFormattingStrategy(
+	// new PhpFormatProcessorImpl()));
+	// structuredModel = StructuredModelManager.getModelManager()
+	// .getExistingModelForRead(document);
+	// DOMModelForPHP doModelForPHP = (DOMModelForPHP) structuredModel;
+	// project = getProject(doModelForPHP);
+	// String lineSeparator = PHPModelUtils.getLineSeparator(project);
+	// String beforeText = document.get(0, command.offset);
+	// String afterText = lineSeparator
+	// + document.get(command.offset, document.getLength()
+	// - command.offset);
+	// String pastedText = command.text.replaceAll("\r\n", "\n")
+	// .replaceAll("\r", "\n").replaceAll("\n", lineSeparator);
+	// String newPhpText = beforeText + pastedText + afterText;
+	// JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
+	// new PhpSourceParser());
+	// newdocument.set(newPhpText);
+	// contentFormatter.format(newdocument, new Region(
+	// beforeText.length(), command.text.length()));
+	// command.text = newdocument.get(
+	// beforeText.length(),
+	// newdocument.getLength()
+	// - (beforeText.length() + afterText.length()));
+	// } catch (Exception e1) {
+	// e1.printStackTrace();
+	// } finally {
+	// if (structuredModel != null) {
+	// structuredModel.releaseFromRead();
+	// }
+	// }
+	// }
 
 	/**
 	 * @param doModelForPHP
