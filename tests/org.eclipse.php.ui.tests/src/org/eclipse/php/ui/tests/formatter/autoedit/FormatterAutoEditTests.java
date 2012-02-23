@@ -133,7 +133,12 @@ public class FormatterAutoEditTests extends FormatterTests {
 
 									cmd.offset = offset;
 									cmd.length = 0;
-									cmd.text = "\n";
+									if (pdttFile.getOther() != null) {
+										cmd.text = pdttFile.getOther();
+									} else {
+										cmd.text = "\n";
+									}
+
 									cmd.doit = true;
 									cmd.shiftsCaret = true;
 									cmd.caretOffset = -1;
