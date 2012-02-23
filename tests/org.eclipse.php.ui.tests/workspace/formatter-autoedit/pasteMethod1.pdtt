@@ -51,17 +51,17 @@ class ZendTest
             ORDER BY Hierarchy_Structure ASC";
 		return $query;
 	}
-
-	public function newsPageAfterPaste() {
+	public function newsPageAfterPaste ()
+	{
 		$query = "
-            SELECT T.*
-            FROM Page_Main AS T
-            WHERE
-            (
-                POSITION( CONCAT( '\n', 'TopSecondary', '\n' ) IN CONCAT( '\n', Menu, '\n' ) )
-                AND Enabled = 1
-            )
-            ORDER BY Hierarchy_Structure ASC";
+		SELECT T.*
+		FROM Page_Main AS T
+		WHERE
+		(
+		POSITION( CONCAT( '\n', 'TopSecondary', '\n' ) IN CONCAT( '\n', Menu, '\n' ) )
+		AND Enabled = 1
+		)
+		ORDER BY Hierarchy_Structure ASC";
 		return $query;
 	}
 	
