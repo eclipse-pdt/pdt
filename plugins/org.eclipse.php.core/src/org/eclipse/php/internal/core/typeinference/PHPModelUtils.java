@@ -1700,7 +1700,8 @@ public class PHPModelUtils {
 					result.add(type);
 				}
 			}
-			types = filterElements(sourceModule, result, null, monitor);
+			types = filterElements(sourceModule, Arrays.asList((IType[]) result
+					.toArray(new IType[result.size()])), null, monitor);
 		} else {
 			if (isType) {
 				types = cache.getTypes(sourceModule, typeName, null, monitor);
