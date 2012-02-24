@@ -535,6 +535,19 @@ public final class ParameterGuessingProposal extends
 		return ret;
 	}
 
+	@Override
+	public void setReplacementOffset(int replacementOffset) {
+		int oldReplacementOffset = getReplacementOffset();
+		if (fPositions != null && fPositions.length > 0) {
+			for (Position position : fPositions) {
+				position.offset = position.offset
+						+ (replacementOffset - oldReplacementOffset);
+			}
+		}
+
+		super.setReplacementOffset(replacementOffset);
+	}
+
 	public Object getExtraInfo() {
 		return extraInfo;
 	}
