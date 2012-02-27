@@ -274,15 +274,9 @@ public class PHPMatchLocator extends MatchLocator {
 										reference);
 							}
 						} else {
-							MethodPattern methodPattern = (MethodPattern) pattern;
-							if (new String(methodPattern.selector)
-									.equals(elements[i].getElementName())) {
-								return super.newMethodReferenceMatch(
-										enclosingElement, accuracy, offset,
-										length, isConstructor, isSynthetic,
-										reference);
-							}
-
+							return super.newMethodReferenceMatch(
+									enclosingElement, accuracy, offset, length,
+									isConstructor, isSynthetic, reference);
 						}
 					}
 				} catch (ModelException e) {
