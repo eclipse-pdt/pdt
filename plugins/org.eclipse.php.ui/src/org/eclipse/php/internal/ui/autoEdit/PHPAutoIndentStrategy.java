@@ -114,16 +114,24 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		}
 		Document tempdocument = new Document(command.text);
 		int lines = tempdocument.getNumberOfLines();
+		// starting empty lines of pasted code.
+		int startingEmptyLines = 0;
 		StringBuffer tempsb = new StringBuffer();
 		try {
 			for (int i = 0; i < lines; i++) {
 				IRegion region = tempdocument.getLineInformation(i);
-				if (i > 0) {
+				if (tempsb.length() > 0) {
 					tempsb.append(newline);
 				}
-				if (i == 0) {
-					tempsb.append(tempdocument.get(region.getOffset(),
-							region.getLength()).trim());
+				String currentLine = tempdocument.get(region.getOffset(),
+						region.getLength());
+				if (tempsb.length() == 0) {
+					if (currentLine.trim().length() == 0) {
+						startingEmptyLines++;
+					} else {
+						tempsb.append(currentLine.trim());
+					}
+
 				} else {
 					tempsb.append(tempdocument.get(region.getOffset(),
 							region.getLength()));
@@ -153,6 +161,9 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		} catch (BadLocationException e) {
 		}
 		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < startingEmptyLines; i++) {
+			sb.append(newline);
+		}
 		for (int i = 0; i < list.size(); i++) {
 			if (!formatter.getIgnoreLines().contains(i + 1)) {
 				sb.append(helpBuffer.toString());
