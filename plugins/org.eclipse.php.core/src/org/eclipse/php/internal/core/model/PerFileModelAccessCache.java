@@ -26,7 +26,8 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 public class PerFileModelAccessCache implements IModelAccessCache {
 
 	private ISourceModule sourceModule;
-	private Map<IType, ITypeHierarchy> hierarchyCache = new HashMap<IType, ITypeHierarchy>();
+	private Map<IType, ITypeHierarchy> hierarchyCache = Collections
+			.synchronizedMap(new HashMap<IType, ITypeHierarchy>());
 	private Map<String, Collection<IMethod>> globalFunctionsCache;
 	private Map<String, Collection<IType>> allTypesCache;
 	private Map<String, Collection<IType>> allTraitsCache;
@@ -156,7 +157,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			functionName = functionName.toLowerCase();
 
 			if (globalFunctionsCache == null) {
-				globalFunctionsCache = new HashMap<String, Collection<IMethod>>();
+				globalFunctionsCache = Collections
+						.synchronizedMap(new HashMap<String, Collection<IMethod>>());
 
 				IScriptProject scriptProject = sourceModule.getScriptProject();
 				IDLTKSearchScope scope = SearchEngine
@@ -212,7 +214,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			typeName = typeName.toLowerCase();
 
 			if (allTypesCache == null) {
-				allTypesCache = new HashMap<String, Collection<IType>>();
+				allTypesCache = Collections
+						.synchronizedMap(new HashMap<String, Collection<IType>>());
 
 				IScriptProject scriptProject = sourceModule.getScriptProject();
 				IDLTKSearchScope scope = SearchEngine
@@ -223,8 +226,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 				for (IType type : allTypes) {
 					String elementName = type.getTypeQualifiedName()
 							.toLowerCase();
-					Collection<IType> typesList = allTypesCache
-							.get(elementName);
+					Collection<IType> typesList;
+					typesList = allTypesCache.get(elementName);
 					if (typesList == null) {
 						typesList = new LinkedList<IType>();
 						allTypesCache.put(elementName, typesList);
@@ -282,7 +285,8 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			typeName = typeName.toLowerCase();
 
 			if (allTraitsCache == null) {
-				allTraitsCache = new HashMap<String, Collection<IType>>();
+				allTraitsCache = Collections
+						.synchronizedMap(new HashMap<String, Collection<IType>>());
 
 				IScriptProject scriptProject = sourceModule.getScriptProject();
 				IDLTKSearchScope scope = SearchEngine
