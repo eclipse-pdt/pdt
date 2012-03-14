@@ -351,7 +351,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		}
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			Identifier id = (Identifier) node;
-			if (id.getName().equalsIgnoreCase(classMemberName)) {
+			if (id.getName().equals(classMemberName)) {
 				if (dispatcherType != null) {
 					if (isDispatcherTypeEquals(id, isIncludesuper)) {
 						if (id.getParent() instanceof Variable) {
@@ -392,8 +392,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 					final Identifier functionName = classMethodDeclaration
 							.getFunction().getFunctionName();
 					ITypeBinding type = resolveDispatcherType(functionName);
-					if (classMemberName
-							.equalsIgnoreCase(functionName.getName())) {
+					if (classMemberName.equals(functionName.getName())) {
 						if (dispatcherType != null) {
 							if (isDispatcherTypeEquals(functionName,
 									isIncludesuper)) {
