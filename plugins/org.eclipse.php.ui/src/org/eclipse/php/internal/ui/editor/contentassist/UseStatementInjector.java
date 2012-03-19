@@ -75,7 +75,7 @@ public class UseStatementInjector {
 
 	private NamespaceDeclaration getCurrentNamespace(Program program,
 			ISourceModule sourceModule, int offset) {
-		SourceType ns = (SourceType) PHPModelUtils.getCurrentNamespace(
+		SourceType ns = (SourceType) PHPModelUtils.getPossibleCurrentNamespace(
 				sourceModule, offset);
 		if (ns == null) {
 			return null;
