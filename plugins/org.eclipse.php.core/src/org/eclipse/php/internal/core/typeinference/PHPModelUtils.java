@@ -402,6 +402,42 @@ public class PHPModelUtils {
 	}
 
 	/**
+	 * if there are error in the php file,the parser can not be parse the ast
+	 * correctly
+	 * 
+	 * @param sourceModule
+	 * @param offset
+	 * @return
+	 */
+	public static IType getPossibleCurrentNamespace(ISourceModule sourceModule,
+			int offset) {
+		try {
+			IType result = getCurrentNamespace(sourceModule, offset);
+			if (result == null) {
+				IType[] types = sourceModule.getTypes();
+				if (types != null && types.length > 0
+						&& PHPFlags.isNamespace(types[0].getFlags())) {
+					for (int i = 0; i < types.length; i++) {
+						if (types[i].getSourceRange().getOffset() <= offset
+								&& PHPFlags.isNamespace(types[i].getFlags())) {
+							result = types[i];
+						} else {
+							return result;
+						}
+
+					}
+				}
+
+			}
+			return result;
+
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		}
+		return null;
+	}
+
+	/**
 	 * Returns the current class or interface by the specified file and offset
 	 * 
 	 * @param sourceModule
