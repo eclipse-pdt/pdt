@@ -55,8 +55,8 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 							.getElementAt(methodDeclaration.getNameStart());
 					if (method.getDeclaringType() != null) {
 						docBlocks = PHPModelUtils.getTypeHierarchyMethodDoc(
-								method.getDeclaringType(), method
-										.getElementName(), true, null);
+								method.getDeclaringType(),
+								method.getElementName(), true, null);
 					} else {
 						docBlocks = new PHPDocBlock[] { methodDeclaration
 								.getPHPDoc() };
@@ -75,8 +75,18 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 								if (references.length == 2) {
 									if (references[0].getName().equals(
 											parameter.getName())) {
+										// result = PHPClassType
+										// .fromSimpleReference(PHPModelUtils.getFullName(references[1].getName(),
+										// methodContext.getSourceModule(),
+										// references[1].sourceStart()));
+										// fix unit test testDoctag7.pdtt
 										result = PHPClassType
-												.fromSimpleReference(references[1]);
+												.fromTypeName(
+														references[1].getName(),
+														methodContext
+																.getSourceModule(),
+														references[1]
+																.sourceStart());
 									}
 								}
 							}
