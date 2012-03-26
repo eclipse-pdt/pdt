@@ -1,0 +1,49 @@
+--TEST--
+Test var
+--FILE--
+<?
+namespace Bar {
+	class Baz {
+		function barbaz() {
+		}
+	}
+}
+
+namespace Bar\Baz {
+	class Bat {
+		function batFoo() {
+		}
+	}
+}
+
+namespace Something {
+	class Else1 {
+		function else1Foo() {
+		}
+	}
+}
+
+namespace Foo\Bar {
+	class Foo {
+		function fooBarFoo() {
+		}
+	}
+}
+
+namespace Foo\Bar {
+
+	use Bar\Baz;
+
+	/**
+	 *
+	 * @param Baz $a
+	 * @param Baz\Bat $b
+	 * @param Foo $c
+	 * @return |\Something\Else1|
+	 */
+	function foo($a, $b, $c) {
+	}
+}
+?>
+--EXPECT--
+type(Else1)
