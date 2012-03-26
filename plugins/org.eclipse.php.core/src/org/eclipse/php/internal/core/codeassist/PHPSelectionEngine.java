@@ -255,6 +255,48 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(
 				sourceModule, null);
 
+		// boolean inDocBlock=false;
+		if (parsedUnit instanceof PHPModuleDeclaration) {
+			PHPModuleDeclaration phpModuleDeclaration = (PHPModuleDeclaration) parsedUnit;
+			List<PHPDocBlock> phpBlocks = phpModuleDeclaration
+					.getPhpDocBlocks();
+			for (PHPDocBlock phpDocBlock : phpBlocks) {
+				int realStart = phpDocBlock.sourceStart();
+				int realEnd = phpDocBlock.sourceEnd();
+				if (realStart <= offset && realEnd >= end) {
+					// inDocBlock=true;
+					PHPDocTag[] tags = phpDocBlock.getTags();
+					if (tags != null) {
+						for (PHPDocTag phpDocTag : tags) {
+							if (phpDocTag.sourceStart() <= offset
+									&& phpDocTag.sourceEnd() >= end) {
+								SimpleReference[] references = phpDocTag
+										.getReferences();
+								if (tags != null) {
+									for (SimpleReference simpleReference : references) {
+										if (simpleReference instanceof TypeReference) {
+											TypeReference typeReference = (TypeReference) simpleReference;
+											if (typeReference.sourceStart() <= offset
+													&& typeReference
+															.sourceEnd() >= end) {
+												IType[] types = filterNS(PHPModelUtils
+														.getTypes(typeReference
+																.getName(),
+																sourceModule,
+																offset, null));
+												return types;
+
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					return null;
+				}
+			}
+		}
 		ASTNode node = ASTUtils.findMinimalNode(parsedUnit, offset, end);
 		if (node != null) {
 
@@ -509,6 +551,22 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			}
 		}
 		return null;
+	}
+
+	private IType[] filterNS(IType[] types) throws ModelException {
+		// TODO Auto-generated method stub
+		if (types == null) {
+			return types;
+		} else {
+			Set<? super IType> result = new HashSet<IType>();
+			// List<IType> result = new LinkedList<IType>();
+			for (IType type : types) {
+				if (PHPFlags.isClass(type.getFlags())) {
+					result.add(type);
+				}
+			}
+			return (IType[]) result.toArray(new IType[result.size()]);
+		}
 	}
 
 	private IModelElement[] internalResolve(IStructuredDocument sDoc,
