@@ -121,7 +121,8 @@ public class FormatterTests extends AbstractPDTTTest {
 						final PdttFile pdttFile = new PdttFile(fileName);
 						filesMap.put(pdttFile, null);
 
-						phpVerSuite.addTest(new FormatterTests("/" + fileName) {
+						phpVerSuite.addTest(new FormatterTests(phpVersion
+								.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
 								PHPCoreTests.setProjectPhpVersion(project,
