@@ -151,8 +151,8 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 					BusyIndicator.showWhile(getShell().getDisplay(),
 							new Runnable() {
 								public void run() {
-									setSubtreeChecked(element, fTree
-											.getChecked(element), false);
+									setSubtreeChecked(element,
+											fTree.getChecked(element), false);
 								}
 							});
 			}
@@ -327,8 +327,16 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				findCheckedElements(checkedResources, children[i]);
 			else if (fTree.getChecked(children[i])) {
 				checkedResources.add(children[i]);
-				findCheckedElements(checkedResources, children[i]);
+				addChildren(checkedResources, children[i]);
 			}
+		}
+	}
+
+	private void addChildren(List checkedResources, Object parent) {
+		Object[] children = fTreeContentProvider.getChildren(parent);
+		for (int i = 0; i < children.length; i++) {
+			checkedResources.add(children[i]);
+			addChildren(checkedResources, children[i]);
 		}
 	}
 
