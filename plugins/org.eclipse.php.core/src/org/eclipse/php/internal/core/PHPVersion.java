@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,4 +63,9 @@ public enum PHPVersion {
 	public boolean isGreaterThan(PHPVersion phpVersion) {
 		return ordinal() > phpVersion.ordinal();
 	}
+
+	public static Collection<PHPVersion> getAllVersions() {
+		return Aliases.map.values();
+	}
+
 }
