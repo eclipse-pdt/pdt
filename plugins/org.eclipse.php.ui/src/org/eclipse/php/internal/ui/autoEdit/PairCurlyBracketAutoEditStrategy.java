@@ -78,10 +78,13 @@ public class PairCurlyBracketAutoEditStrategy implements
 			DocumentCommand command, StringBuffer buffer) {
 		try {
 
+			boolean isClosingParen = isClosingParen(document, command);
 			int offset = command.offset;
 
 			int rvPosition = offset + buffer.length();
-			rvPosition += copyRestOfLine(document, command, buffer);
+			if (!isClosingParen) {
+				rvPosition += copyRestOfLine(document, command, buffer);
+			}
 
 			boolean addCurlyClose = false;
 			int curlyCloseCounter = 0;
@@ -141,11 +144,72 @@ public class PairCurlyBracketAutoEditStrategy implements
 			if (addCurlyClose) {
 				addCurlyCloseBracket(document, command, buffer);
 			}
+			if (isClosingParen) {
+				rvPosition += copyRestOfLine(document, command, buffer);
+			}
+
 			return rvPosition;
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
 		return -1;
+	}
+
+	private boolean isClosingParen(IStructuredDocument document,
+			DocumentCommand command) throws BadLocationException {
+		// TODO Auto-generated method stub
+		int documentLength = document.getLength();
+		if (command.offset + command.length == documentLength) { // if we're at
+																	// the end
+																	// of the
+																	// document
+																	// then
+																	// nothing
+																	// to copy
+			return false;
+		}
+		int offset = command.offset;
+		IRegion lineInfo = document.getLineInformationOfOffset(offset);
+		int endOffset = lineInfo.getOffset() + lineInfo.getLength();
+		int whiteSpacesAdded = 0;
+		int lengthToCopyDown = endOffset - offset;
+
+		IStructuredDocumentRegion[] structuredDocumentRegions = document
+				.getStructuredDocumentRegions(offset, lengthToCopyDown);
+		if (structuredDocumentRegions != null
+				&& structuredDocumentRegions.length > 0) {
+			IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentRegions[0];
+			ITextRegion firstRegion = structuredDocumentRegion.getFirstRegion();
+			ITextRegion lastRegion = structuredDocumentRegion.getLastRegion();
+
+			int xmlRelativeOffset = 0;
+
+			// deal with PHP block within HTML tags
+			if (!(firstRegion instanceof ContextRegion)) { // meaning
+															// "not-PHP-Resgion"
+				ITextRegion regionAtCharacterOffset = structuredDocumentRegion
+						.getRegionAtCharacterOffset(offset);
+				if (regionAtCharacterOffset instanceof ContextRegionContainer) {
+					ContextRegionContainer phpContext = (ContextRegionContainer) regionAtCharacterOffset;
+					lastRegion = phpContext.getLastRegion();
+					firstRegion = phpContext.getFirstRegion();
+					xmlRelativeOffset = firstRegion.getLength();
+				}
+
+			}
+			int absolutOffset = lastRegion.getStart()
+					+ structuredDocumentRegion.getStartOffset()
+					+ xmlRelativeOffset;
+			if (absolutOffset <= endOffset && offset <= absolutOffset) {
+				lengthToCopyDown = absolutOffset - offset;
+				;
+			}
+		}
+		String lineEnd = document.get(offset, lengthToCopyDown).trim();
+		if (lineEnd.startsWith(")") || lineEnd.startsWith("]")) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
