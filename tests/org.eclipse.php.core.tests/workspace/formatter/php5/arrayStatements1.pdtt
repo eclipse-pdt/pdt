@@ -1,0 +1,24 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+$schema = array(
+		'options' => array(
+				ServiceInstruction::VALIDATOR => function ($data)
+				{
+				return is_callable($data);
+			}
+)
+				);
+?>
+--EXPECT--
+<?php
+$schema = array(
+		'options' => array(
+				ServiceInstruction::VALIDATOR => function ($data)
+				{
+					return is_callable($data);
+				}
+		)
+);
+?>
