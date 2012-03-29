@@ -1038,7 +1038,7 @@ public final class PHPHeuristicScanner implements Symbols {
 
 	}
 
-	private ITextRegion getTextRegion(int position) {
+	public ITextRegion getTextRegion(int position) {
 		Assert.isTrue(position >= 0);
 		Assert.isTrue(position <= fDocument.getLength());
 		try {
