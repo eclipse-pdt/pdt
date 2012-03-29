@@ -143,7 +143,8 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				new PhpSourceParser());
 		String start = "<?php";
 		newdocument.set(start + newline + tempsb.toString());
-		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength());
+		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength(),
+				false);
 		formatter.format(newdocument.getFirstStructuredDocumentRegion());
 
 		List<String> list = new ArrayList<String>();
