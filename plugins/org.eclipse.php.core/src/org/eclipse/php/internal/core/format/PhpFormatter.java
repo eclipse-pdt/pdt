@@ -48,10 +48,18 @@ public class PhpFormatter implements IStructuredFormatter {
 
 	private static final byte CHAR_TAB = '\t';
 	private static final byte CHAR_SPACE = ' ';
+	protected boolean checkNewLine = true;
+
+	public PhpFormatter(int start, int length, boolean checkNewLine) {
+		this.start = start;
+		this.length = length;
+		this.checkNewLine = checkNewLine;
+	}
 
 	public PhpFormatter(int start, int length) {
 		this.start = start;
 		this.length = length;
+		this.checkNewLine = true;
 	}
 
 	public void format(Node node) {
@@ -156,71 +164,78 @@ public class PhpFormatter implements IStructuredFormatter {
 		IStructuredDocument document = sdRegion.getParentDocument();
 		int lineIndex = document.getLineOfOffset(startFormat);
 		int endLineIndex = document.getLineOfOffset(endFormat);
-		ITextRegionList textRegions = sdRegion.getRegions();
-		String newline = document.getLineDelimiter();
-		for (int i = 0; i < textRegions.size(); i++) {
-			ITextRegion textRegion = textRegions.get(i);
-			if (textRegion instanceof PhpScriptRegion) {
-				int startOffset = sdRegion.getStartOffset(textRegion);
-				PhpScriptRegion scriptRegion = (PhpScriptRegion) textRegion;
-				ITextRegion[] phpTokens;
-				try {
-					phpTokens = scriptRegion.getPhpTokens(0,
-							textRegion.getLength());
-					for (int j = phpTokens.length - 1; j >= 0; j--) {
-						ITextRegion phpToken = phpTokens[j];
-						int start = startOffset + phpToken.getStart();
-						int end = start + phpToken.getLength();
-						if (/* endFormat >= end || */startFormat <= start
-								&& endFormat >= end) {
-							if (phpToken.getType().equals(
-									PHPRegionTypes.PHP_CURLY_OPEN)) {
-								if (j < phpTokens.length - 1 && j > 0) {
-									if (phpTokens[j - 1].getType().equals(
-											PHPRegionTypes.PHP_TOKEN)
-											&& !isComment(phpTokens[j + 1])
-											&& document
-													.getLineOfOffset(startOffset
-															+ phpToken
-																	.getStart()) == document
-													.getLineOfOffset(startOffset
-															+ phpTokens[j + 1]
-																	.getStart())) {
-										document.replace(
-												startOffset + phpToken.getEnd(),
-												0, newline);
-										endLineIndex++;
+		if (checkNewLine) {
+			ITextRegionList textRegions = sdRegion.getRegions();
+			String newline = document.getLineDelimiter();
+			for (int i = 0; i < textRegions.size(); i++) {
+				ITextRegion textRegion = textRegions.get(i);
+				if (textRegion instanceof PhpScriptRegion) {
+					int startOffset = sdRegion.getStartOffset(textRegion);
+					PhpScriptRegion scriptRegion = (PhpScriptRegion) textRegion;
+					ITextRegion[] phpTokens;
+					try {
+						phpTokens = scriptRegion.getPhpTokens(0,
+								textRegion.getLength());
+						for (int j = phpTokens.length - 1; j >= 0; j--) {
+							ITextRegion phpToken = phpTokens[j];
+							int start = startOffset + phpToken.getStart();
+							int end = start + phpToken.getLength();
+							if (/* endFormat >= end || */startFormat <= start
+									&& endFormat >= end) {
+								if (phpToken.getType().equals(
+										PHPRegionTypes.PHP_CURLY_OPEN)) {
+									if (j < phpTokens.length - 1 && j > 0) {
+										if (phpTokens[j - 1].getType().equals(
+												PHPRegionTypes.PHP_TOKEN)
+												&& !isComment(phpTokens[j + 1])
+												&& document
+														.getLineOfOffset(startOffset
+																+ phpToken
+																		.getStart()) == document
+														.getLineOfOffset(startOffset
+																+ phpTokens[j + 1]
+																		.getStart())) {
+											document.replace(startOffset
+													+ phpToken.getEnd(), 0,
+													newline);
+											endLineIndex++;
+										}
 									}
-								}
-							} else if (phpToken.getType().equals(
-									PHPRegionTypes.PHP_CURLY_CLOSE)) {
-								if (j > 0
-										&& (phpTokens[j - 1].getType().equals(
-												PHPRegionTypes.PHP_SEMICOLON)
-												|| phpTokens[j - 1]
-														.getType()
-														.equals(PHPRegionTypes.PHP_CURLY_CLOSE) || phpTokens[j - 1]
-												.getType()
-												.equals(PHPRegionTypes.PHP_COMMENT_END))) {
-									if (document.getLineOfOffset(startOffset
-											+ phpToken.getStart()) == document
-											.getLineOfOffset(startOffset
-													+ phpTokens[j - 1]
-															.getStart())) {
-										document.replace(startOffset
-												+ phpTokens[j - 1].getEnd(), 0,
-												newline);
-										endLineIndex++;
+								} else if (phpToken.getType().equals(
+										PHPRegionTypes.PHP_CURLY_CLOSE)) {
+									if (j > 0
+											&& (phpTokens[j - 1]
+													.getType()
+													.equals(PHPRegionTypes.PHP_SEMICOLON)
+													|| phpTokens[j - 1]
+															.getType()
+															.equals(PHPRegionTypes.PHP_CURLY_CLOSE) || phpTokens[j - 1]
+													.getType()
+													.equals(PHPRegionTypes.PHP_COMMENT_END))) {
+										if (document
+												.getLineOfOffset(startOffset
+														+ phpToken.getStart()) == document
+												.getLineOfOffset(startOffset
+														+ phpTokens[j - 1]
+																.getStart())) {
+											document.replace(
+													startOffset
+															+ phpTokens[j - 1]
+																	.getEnd(),
+													0, newline);
+											endLineIndex++;
+										}
 									}
 								}
 							}
-						}
 
+						}
+					} catch (BadLocationException e) {
 					}
-				} catch (BadLocationException e) {
 				}
 			}
 		}
+
 		sdRegion.getRegionAtCharacterOffset(startFormat);
 		// TODO get token of each line then insert line seporator after { and
 		// after } if there is no line seporator
