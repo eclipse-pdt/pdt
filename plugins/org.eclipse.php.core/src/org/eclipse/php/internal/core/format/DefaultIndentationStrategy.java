@@ -12,7 +12,9 @@
 package org.eclipse.php.internal.core.format;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
@@ -61,6 +63,45 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			final IStructuredDocument document, int currLineIndex,
 			final int offset, boolean checkMultiLine)
 			throws BadLocationException {
+		// PHPHeuristicScanner scanner = PHPHeuristicScanner
+		// .createHeuristicScanner(document, offset - 1, true);
+		// int nonWhitespacePosition = scanner.findNonWhitespaceBackward(
+		// offset - 1, PHPHeuristicScanner.UNBOUND);
+		// if (document.getLineOfOffset(nonWhitespacePosition) == currLineIndex
+		// && nonWhitespacePosition <= offset) {
+		// ITextRegion textRegion = scanner
+		// .getTextRegion(nonWhitespacePosition);
+		// if (textRegion != null
+		// && textRegion.getType()
+		// .equals(PHPRegionTypes.PHP_SEMICOLON)) {
+		// return currLineIndex;
+		// }
+		// }
+		if (checkMultiLine) {
+			currLineIndex = adjustLine(document, currLineIndex, offset);
+		}
+		// PHPHeuristicScanner scanner = PHPHeuristicScanner
+		// .createHeuristicScanner(document, offset - 1, true);
+		//
+		// int token = scanner.previousToken(offset - 1,
+		// PHPHeuristicScanner.UNBOUND);
+		// if (document.getLineOfOffset(scanner.getPosition()) == currLineIndex
+		// && scanner.getPosition() <= offset) {
+		// if (token == PHPHeuristicScanner.TokenSEMICOLON) {
+		// // return currLineIndex;
+		// }
+		// }
+
+		// if (document.getLength() == offset) {
+		// if (document.getChar(offset - 1) == ';') {
+		// return currLineIndex;
+		// }
+		// } else {
+		// if (document.getChar(offset) == ';'
+		// || document.getChar(offset - 1) == ';') {
+		// return currLineIndex;
+		// }
+		// }
 		while (currLineIndex >= 0) {
 
 			if (isIndentationBase(document, offset, currLineIndex,
@@ -71,6 +112,49 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					currLineIndex);
 		}
 		return 0;
+	}
+
+	private static int adjustLine(IStructuredDocument document,
+			int currLineIndex, int offset) throws BadLocationException {
+		// TODO ignore the comment
+		final IRegion lineInfo = document.getLineInformation(currLineIndex);
+
+		// if (lineInfo.getLength() == 0) {
+		// return currLineIndex;
+		// }
+
+		int lineEnd = lineInfo.getOffset() + lineInfo.getLength();
+		lineEnd = Math.min(lineEnd, offset);
+		if (lineEnd == lineInfo.getOffset()) {
+			lineEnd = moveLineStartToNonBlankChar(document, lineEnd,
+					currLineIndex) - 1;
+		}
+		if (lineEnd == document.getLength() && lineEnd > 0) {
+			lineEnd--;
+		}
+		PHPHeuristicScanner scanner = PHPHeuristicScanner
+				.createHeuristicScanner(document, lineEnd, true);
+		int token = scanner.previousToken(lineEnd, PHPHeuristicScanner.UNBOUND);
+		if (token == PHPHeuristicScanner.TokenSEMICOLON) {
+			token = scanner.previousToken(scanner.getPosition(),
+					PHPHeuristicScanner.UNBOUND);
+		}
+		if (token == PHPHeuristicScanner.TokenRPAREN) {
+			int peer = scanner.findOpeningPeer(scanner.getPosition(),
+					PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LPAREN,
+					PHPHeuristicScanner.RPAREN);
+			if (peer != PHPHeuristicScanner.NOT_FOUND) {
+				return document.getLineOfOffset(scanner.getPosition());
+			}
+		} else if (token == PHPHeuristicScanner.TokenLBRACKET) {
+			int peer = scanner.findOpeningPeer(scanner.getPosition(),
+					PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACKET,
+					PHPHeuristicScanner.RBRACKET);
+			if (peer != PHPHeuristicScanner.NOT_FOUND) {
+				return document.getLineOfOffset(scanner.getPosition());
+			}
+		}
+		return currLineIndex;
 	}
 
 	private static int getNextLineIndex(IStructuredDocument document,
@@ -94,6 +178,13 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			if (index > -1) {
 				return index;
 			}
+		}
+		if (checkMultiLine) {
+			int result = adjustLine(document, currLineIndex, currLineEndOffset);
+			if (result == currLineIndex && result != 0) {
+				result--;
+			}
+			return result;
 		}
 		return currLineIndex - 1;
 	}
@@ -223,12 +314,12 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		// the current potential line for formatting begin offset
 		final String forLineEndState = FormatterUtils.getPartitionType(
 				document, forOffset);
-
-		if (shouldNotConsiderAsIndentationBase(checkedLineBeginState,
-				forLineEndState)
-				|| (checkMultiLine && isInMultiLineStatement(document,
-						checkedLineBeginState, checkedLineEndState,
-						checkedOffset, lineStart, currLineIndex)))
+		if (!lineContainIncompleteBlock(document, checkedOffset, lineStart,
+				currLineIndex)
+				&& (shouldNotConsiderAsIndentationBase(checkedLineBeginState,
+						forLineEndState) || (checkMultiLine && isInMultiLineStatement(
+						document, checkedLineBeginState, checkedLineEndState,
+						checkedOffset, lineStart, currLineIndex))))
 			return false;
 
 		// Fix bug #201688
@@ -281,9 +372,134 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 	private static boolean isInMultiLineStatement(IStructuredDocument document,
 			String checkedLineBeginState, String checkedLineEndState,
-			int checkedOffset, int lineStart, int currLineIndex) {
+			int checkedOffset, int lineStart, int currLineIndex)
+			throws BadLocationException {
 		return getMultiLineStatementStartOffset(document, lineStart,
-				currLineIndex) > -1 ? true : false;
+				currLineIndex, checkedOffset) > -1 ? true : false;
+	}
+
+	private static int getMultiLineStatementStartOffset(
+			IStructuredDocument document, int lineStart, int currLineIndex,
+			int checkedOffset) throws BadLocationException {
+
+		// TODO moveLineStartToNonBlankChar or moveLineEndToNonBlankChar
+		lineStart = moveLineStartToNonBlankChar(document, lineStart,
+				currLineIndex);
+		// char lineStartChar = document.getChar(lineStart - 1);
+		// if (lineStartChar == PHPHeuristicScanner.RBRACE
+		// // || lineStartChar == PHPHeuristicScanner.RBRACKET
+		// || lineStartChar == PHPHeuristicScanner.RPAREN) {
+		//
+		// PHPHeuristicScanner scanner = PHPHeuristicScanner
+		// .createHeuristicScanner(document, lineStart, true);
+		// if (lineStartChar == PHPHeuristicScanner.RBRACE) {
+		// int peer = scanner.findOpeningPeer(checkedOffset,
+		// PHPHeuristicScanner.UNBOUND,
+		// PHPHeuristicScanner.LBRACE, PHPHeuristicScanner.RBRACE);
+		// if (peer != PHPHeuristicScanner.NOT_FOUND) {
+		// lineStart = peer;
+		// }
+		// } else if (lineStartChar == PHPHeuristicScanner.RBRACKET) {
+		// int peer = scanner.findOpeningPeer(checkedOffset,
+		// PHPHeuristicScanner.UNBOUND,
+		// PHPHeuristicScanner.LBRACKET,
+		// PHPHeuristicScanner.RBRACKET);
+		// if (peer != PHPHeuristicScanner.NOT_FOUND) {
+		// lineStart = peer;
+		// }
+		// } else {
+		// int peer = scanner.findOpeningPeer(checkedOffset,
+		// PHPHeuristicScanner.UNBOUND,
+		// PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+		// if (peer != PHPHeuristicScanner.NOT_FOUND) {
+		// lineStart = peer;
+		// }
+		// }
+		// }
+
+		TextSequence textSequence = PHPTextSequenceUtilities
+				.getStatement(lineStart,
+						document.getRegionAtCharacterOffset(lineStart), true);
+		if (textSequence != null
+				&& isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(
+						document, textSequence.getOriginalOffset(0)))
+				&& document.getLineOfOffset(textSequence.getOriginalOffset(0)) < currLineIndex) {
+			return document.getLineOfOffset(textSequence.getOriginalOffset(0));
+		}
+
+		return -1;
+	}
+
+	private static boolean lineContainIncompleteBlock(
+			IStructuredDocument document, int checkedOffset, int lineStart,
+			int currLineIndex) throws BadLocationException {
+		// TODO Auto-generated method stub
+		PHPHeuristicScanner scanner = PHPHeuristicScanner
+				.createHeuristicScanner(document, lineStart, true);
+		if (checkedOffset == document.getLength() && checkedOffset > 0) {
+			checkedOffset--;
+		}
+		int openParenPeer = scanner.findOpeningPeer(checkedOffset,
+				PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LPAREN,
+				PHPHeuristicScanner.RPAREN);
+		int openBracePeer = scanner.findOpeningPeer(checkedOffset,
+				PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACE,
+				PHPHeuristicScanner.RBRACE);
+		int openBracketPeer = scanner.findOpeningPeer(checkedOffset,
+				PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACKET,
+				PHPHeuristicScanner.RBRACKET);
+		int biggest = Math.max(openParenPeer, openBracePeer);
+		biggest = Math.max(biggest, openBracketPeer);
+		if (biggest != PHPHeuristicScanner.NOT_FOUND && biggest > lineStart) {
+			// the whole document
+			final IStructuredDocumentRegion sdRegion = document
+					.getRegionAtCharacterOffset(lineStart);
+			// the whole PHP script
+			ITextRegion phpScriptRegion = sdRegion
+					.getRegionAtCharacterOffset(lineStart);
+			int phpContentStartOffset = sdRegion
+					.getStartOffset(phpScriptRegion);
+
+			if (phpScriptRegion instanceof ITextRegionContainer) {
+				ITextRegionContainer container = (ITextRegionContainer) phpScriptRegion;
+				phpScriptRegion = container
+						.getRegionAtCharacterOffset(lineStart);
+				phpContentStartOffset += phpScriptRegion.getStart();
+			}
+
+			if (phpScriptRegion instanceof IPhpScriptRegion) {
+				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
+				ITextRegion[] tokens = scriptRegion.getPhpTokens(lineStart,
+						biggest - lineStart);
+				if (tokens != null && tokens.length > 0) {
+					Set<String> tokenTypeSet = new HashSet<String>();
+					for (int i = 0; i < tokens.length; i++) {
+						tokenTypeSet.add(tokens[i].getType());
+					}
+					if (biggest == openParenPeer) {
+						if (tokenTypeSet.contains(PHPRegionTypes.PHP_NEW)
+								|| tokenTypeSet
+										.contains(PHPRegionTypes.PHP_FUNCTION)
+								|| tokenTypeSet
+										.contains(PHPRegionTypes.PHP_ARRAY)) {
+							return true;
+						}
+					} else if (biggest == openBracePeer) {
+						if (tokenTypeSet.contains(PHPRegionTypes.PHP_NEW)
+								|| tokenTypeSet
+										.contains(PHPRegionTypes.PHP_FUNCTION)) {
+							return true;
+						}
+					} else {
+						if (tokenTypeSet.contains(PHPRegionTypes.PHP_ARRAY)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	private static int getMultiLineStatementStartOffset(
@@ -352,6 +568,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			final IStructuredDocument document, final StringBuffer result,
 			final int lineNumber, final int forOffset, String commandText)
 			throws BadLocationException {
+
 		int indentationWrappedLineSize = FormatterUtils
 				.getFormatterCommonPrferences().getIndentationWrappedLineSize(
 						document);
@@ -370,6 +587,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 		boolean enterKeyPressed = document.getLineDelimiter().equals(
 				result.toString());
+		if (forOffset == 0) {
+			return;
+		}
 		int lastNonEmptyLineIndex = getIndentationBaseLine(document,
 				lineNumber, forOffset, false);
 		final int indentationBaseLineIndex = getIndentationBaseLine(document,
@@ -427,11 +647,64 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					// key,
 					// we use the same indentation of the last non-empty
 					// line.
-					result.setLength(result.length() - blanks.length());
-					IRegion lineInfo = document
-							.getLineInformation(lastNonEmptyLineIndex);
-					result.append(FormatterUtils.getLineBlanks(document,
-							lineInfo));
+					boolean shouldNotChangeIndent = false;
+					if (forOffset != document.getLength()) {
+						final IRegion lineInfo = document
+								.getLineInformation(lineNumber);
+						int nonEmptyOffset = forOffset;
+						if (!enterKeyPressed) {
+							if (nonEmptyOffset == lineInfo.getOffset()) {
+								nonEmptyOffset = moveLineStartToNonBlankChar(
+										document, nonEmptyOffset, lineNumber) - 1;
+							}
+						}
+						char lineStartChar = document.getChar(nonEmptyOffset);
+						if (lineStartChar == PHPHeuristicScanner.RBRACE
+						// || lineStartChar == PHPHeuristicScanner.RBRACKET
+								|| lineStartChar == PHPHeuristicScanner.RPAREN) {
+
+							PHPHeuristicScanner scanner = PHPHeuristicScanner
+									.createHeuristicScanner(document,
+											nonEmptyOffset, true);
+							if (lineStartChar == PHPHeuristicScanner.RBRACE) {
+								int peer = scanner.findOpeningPeer(
+										nonEmptyOffset - 1,
+										PHPHeuristicScanner.UNBOUND,
+										PHPHeuristicScanner.LBRACE,
+										PHPHeuristicScanner.RBRACE);
+								if (peer != PHPHeuristicScanner.NOT_FOUND) {
+									shouldNotChangeIndent = true;
+								}
+							} else if (lineStartChar == PHPHeuristicScanner.RBRACKET) {
+								int peer = scanner.findOpeningPeer(
+										nonEmptyOffset - 1,
+										PHPHeuristicScanner.UNBOUND,
+										PHPHeuristicScanner.LBRACKET,
+										PHPHeuristicScanner.RBRACKET);
+								if (peer != PHPHeuristicScanner.NOT_FOUND) {
+									shouldNotChangeIndent = true;
+								}
+							} else {
+								int peer = scanner.findOpeningPeer(
+										nonEmptyOffset - 1,
+										PHPHeuristicScanner.UNBOUND,
+										PHPHeuristicScanner.LPAREN,
+										PHPHeuristicScanner.RPAREN);
+								if (peer != PHPHeuristicScanner.NOT_FOUND) {
+									shouldNotChangeIndent = true;
+								}
+							}
+						}
+					}
+
+					if (!shouldNotChangeIndent) {
+						result.setLength(result.length() - blanks.length());
+						IRegion lineInfo = document
+								.getLineInformation(lastNonEmptyLineIndex);
+						result.append(FormatterUtils.getLineBlanks(document,
+								lineInfo));
+					}
+
 					// }
 				} else {// current is a new statement,check if we should indent
 						// it based on indentationBaseLine
@@ -550,6 +823,21 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					result.append(newBuffer.toString());
 					return true;
 				}
+			} else {
+				int baseLine = inMultiLineString(document, offset, lineNumber,
+						enterKeyPressed);
+				if (baseLine >= 0) {
+					String newblanks = FormatterUtils.getLineBlanks(document,
+							document.getLineInformation(baseLine));
+					StringBuffer newBuffer = new StringBuffer(newblanks);
+					indent(document, newBuffer,
+							indentationObject.indentationWrappedLineSize,
+							indentationObject.indentationChar,
+							indentationObject.indentationSize);
+					result.setLength(result.length() - blanks.length());
+					result.append(newBuffer.toString());
+					return true;
+				}
 			}
 		} catch (final BadLocationException e) {
 		}
@@ -605,6 +893,45 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			}
 		}
 		return false;
+	}
+
+	private static int inMultiLineString(IStructuredDocument document,
+			int offset, int lineNumber, boolean enterKeyPressed) {
+
+		try {
+			IRegion lineInfo = document.getLineInformation(lineNumber);
+			final IStructuredDocumentRegion sdRegion = document
+					.getRegionAtCharacterOffset(offset);
+			ITextRegion token = getLastTokenRegion(document, lineInfo, offset);
+			if (token == null)
+				return -1;
+			String tokenType = token.getType();
+
+			if (tokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+				int startLine = document.getLineOfOffset(token.getStart());
+				if (enterKeyPressed && startLine <= lineNumber
+						|| !enterKeyPressed && startLine < lineNumber) {
+					return startLine;
+				}
+			}
+		} catch (BadLocationException e) {
+		}
+
+		// Program program = null;
+		// try {
+		// final Reader reader = new StringReader(document.get());
+		// program = ASTParser.newParser(reader, PHPVersion.PHP5_4, true)
+		// .createAST(new NullProgressMonitor());
+		// ASTNode node = NodeFinder.perform(program, offset, 0);
+		// if (node != null && node.getType() == ASTNode.SCALAR
+		// && ((Scalar) node).getScalarType() == Scalar.TYPE_STRING
+		// && document.getLineOfOffset(node.getStart()) < lineNumber) {
+		// return document.getLineOfOffset(node.getStart());
+		// }
+		// } catch (Exception e) {
+		// }
+
+		return -1;
 	}
 
 	private static boolean inBracelessBlock(PHPHeuristicScanner scanner,
