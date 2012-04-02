@@ -48,18 +48,18 @@ public class PhpFormatter implements IStructuredFormatter {
 
 	private static final byte CHAR_TAB = '\t';
 	private static final byte CHAR_SPACE = ' ';
-	protected boolean checkNewLine = true;
+	protected boolean isCopyPaste = false;
 
-	public PhpFormatter(int start, int length, boolean checkNewLine) {
+	public PhpFormatter(int start, int length, boolean isCopyPaste) {
 		this.start = start;
 		this.length = length;
-		this.checkNewLine = checkNewLine;
+		this.isCopyPaste = isCopyPaste;
 	}
 
 	public PhpFormatter(int start, int length) {
 		this.start = start;
 		this.length = length;
-		this.checkNewLine = true;
+		this.isCopyPaste = false;
 	}
 
 	public void format(Node node) {
@@ -164,7 +164,7 @@ public class PhpFormatter implements IStructuredFormatter {
 		IStructuredDocument document = sdRegion.getParentDocument();
 		int lineIndex = document.getLineOfOffset(startFormat);
 		int endLineIndex = document.getLineOfOffset(endFormat);
-		if (checkNewLine) {
+		if (!isCopyPaste) {
 			ITextRegionList textRegions = sdRegion.getRegions();
 			String newline = document.getLineDelimiter();
 			for (int i = 0; i < textRegions.size(); i++) {
@@ -327,13 +327,14 @@ public class PhpFormatter implements IStructuredFormatter {
 						.getRegionAtCharacterOffset(formattedLineStart);
 				regionStart += firstTokenInLine.getStart();
 			}
-
+			int scriptRegionLength = 0;
 			if (firstTokenInLine instanceof IPhpScriptRegion) {
 				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) firstTokenInLine;
 				if (scriptRegion.getStart() + scriptRegion.getLength() < formattedLineStart
 						- regionStart) {
 					return;
 				}
+				scriptRegionLength = scriptRegion.getStart();
 				firstTokenInLine = scriptRegion.getPhpToken(formattedLineStart
 						- regionStart);
 				if (firstTokenInLine != null
@@ -380,11 +381,17 @@ public class PhpFormatter implements IStructuredFormatter {
 			if (firstTokenType == PHPRegionTypes.PHP_HEREDOC_TAG
 					|| (lastTokenInLine != null && lastTokenInLine.getType() == PHPRegionTypes.PHP_HEREDOC_TAG)) {
 				isInHeredoc = !isInHeredoc;
-				// ignoreLines.add(lineNumber);
 			}
-			// if (isInHeredoc) {
-			// ignoreLines.add(lineNumber);
-			// }
+			if (isCopyPaste) {
+				if (firstTokenType == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+					int startLine = document.getLineOfOffset(firstTokenInLine
+							.getStart() + scriptRegionLength);
+					if (startLine < lineNumber) {
+						ignoreLines.add(lineNumber);
+						return;
+					}
+				}
+			}
 			if (!formatThisLine) {
 				ignoreLines.add(lineNumber);
 				return;
