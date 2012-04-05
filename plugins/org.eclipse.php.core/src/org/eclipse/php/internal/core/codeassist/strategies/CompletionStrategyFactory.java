@@ -131,7 +131,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			// Example: $array[foo()], $array[$otherVar]
 			return new ICompletionStrategy[] {
 					new BuiltinArrayKeysStrategy(context),
-					new GlobalElementsCompositeStrategy(context, false) };
+					new GlobalElementsCompositeStrategy(context, false),
+					new LocalMethodVariablesStrategyForArray(context) };
 		}
 		if (contextClass == FunctionParameterTypeContext.class) {
 			return new ICompletionStrategy[] {
