@@ -102,7 +102,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		// return currLineIndex;
 		// }
 		// }
-		while (currLineIndex >= 0) {
+		while (currLineIndex > 0) {
 
 			if (isIndentationBase(document, offset, currLineIndex,
 					checkMultiLine))
