@@ -1,0 +1,13 @@
+--TEST--
+Test Array Key
+--FILE--
+<? 
+function fun()
+{
+	$index=1;
+	$arr=array();
+	$arr[$i|] = $i;
+}
+?>
+--EXPECT--
+field($index)
