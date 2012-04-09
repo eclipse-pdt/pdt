@@ -1,0 +1,17 @@
+--TEST--
+[Bug 318639] New: [Content Assist] Provide content assist to alias
+--FILE--
+<?php
+namespace myNS;
+class aClassWithALongName
+{
+	const someconst=1;
+	function somefunction(){}
+}
+namespace myNS1;
+use \myNS\aClassWithALongName as aClass;
+echo aCla|;
+?>
+--EXPECT--
+type(aClassWithALongName)
+type(aClass)

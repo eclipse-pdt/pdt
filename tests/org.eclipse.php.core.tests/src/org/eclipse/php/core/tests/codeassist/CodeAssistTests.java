@@ -38,7 +38,9 @@ import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 
 public class CodeAssistTests extends AbstractPDTTTest {
 
@@ -223,11 +225,31 @@ public class CodeAssistTests extends AbstractPDTTTest {
 							found = true;
 							break;
 						}
-					} else if (modelElement.getElementType() == expectedProposal.type
-							&& modelElement.getElementName().equalsIgnoreCase(
+					} else if (modelElement.getElementType() == expectedProposal.type) {
+						if (modelElement instanceof AliasType) {
+							if (((AliasType) modelElement).getAlias().equals(
 									expectedProposal.name)) {
-						found = true;
-						break;
+
+								found = true;
+								break;
+							}
+
+						} else if ((modelElement instanceof FakeConstructor)
+								&& (modelElement.getParent() instanceof AliasType)) {
+							if (((AliasType) modelElement.getParent())
+									.getAlias().equals(expectedProposal.name)) {
+
+								found = true;
+								break;
+							}
+
+						} else {
+							if (modelElement.getElementName().equalsIgnoreCase(
+									expectedProposal.name)) {
+								found = true;
+								break;
+							}
+						}
 					} else if (modelElement.getElementType() == expectedProposal.type
 							&& new String(proposal.getName())
 									.equalsIgnoreCase(expectedProposal.name)) {
@@ -268,8 +290,15 @@ public class CodeAssistTests extends AbstractPDTTTest {
 						errorBuf.append("type");
 						break;
 					}
-					errorBuf.append('(').append(modelElement.getElementName())
-							.append(")\n");
+					if (modelElement instanceof AliasType) {
+						errorBuf.append('(')
+								.append(((AliasType) modelElement).getAlias())
+								.append(")\n");
+					} else {
+						errorBuf.append('(')
+								.append(modelElement.getElementName())
+								.append(")\n");
+					}
 				}
 			}
 			fail(errorBuf.toString());
