@@ -130,7 +130,7 @@ public class FakeMethod extends SourceMethod {
 	public IModelElement getRealParent(IModelElement type) {
 		if (type instanceof AliasType) {
 			AliasType at = (AliasType) type;
-			return at.getParent();
+			return at.getType();
 
 		}
 		return this.parent;

@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
@@ -47,7 +44,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 	private int relevanceClass;
 	private int relevanceVar;
 	private int relevanceConst;
-	private Set<? super Object> processedElements = new HashSet<Object>();
+	private Map<? super Object, Object> processedElements = new HashMap<Object, Object>();
 	private Set<? super Object> processedPaths = new HashSet<Object>();
 	private Set<IField> processedFields = new TreeSet<IField>(
 			new Comparator<IField>() {
@@ -211,10 +208,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportKeyword(String keyword, String suffix,
 			SourceRange replaceRange) {
-		if (processedElements.contains(keyword)) {
+		if (processedElements.containsKey(keyword)) {
 			return;
 		}
-		processedElements.add(keyword);
+		processedElements.put(keyword, keyword);
 
 		noProposal = false;
 
@@ -238,10 +235,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportMethod(IMethod method, String suffix,
 			SourceRange replaceRange, Object extraInfo) {
-		if (processedElements.contains(method)) {
+		if (processedElements.containsKey(method)
+				&& ((IMethod) processedElements.get(method)).getParent()
+						.getClass() == method.getParent().getClass()) {
+
 			return;
 		}
-		processedElements.add(method);
+		processedElements.put(method, method);
 
 		noProposal = false;
 
@@ -305,10 +305,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportType(IType type, String suffix, SourceRange replaceRange,
 			Object extraInfo) {
-		if (processedElements.contains(type)) {
+		if (processedElements.containsKey(type)
+				&& processedElements.get(type).getClass() == type.getClass()) {
 			return;
 		}
-		processedElements.add(type);
+		processedElements.put(type, type);
 
 		noProposal = false;
 
@@ -363,11 +364,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportResource(IModelElement model, IPath relative,
 			String suffix, SourceRange replaceRange) {
-		if (processedElements.contains(model)
+		if (processedElements.containsKey(model)
 				|| processedPaths.contains(relative)) {
 			return;
 		}
-		processedElements.add(model);
+		processedElements.put(model, model);
 		processedPaths.add(relative);
 		noProposal = false;
 
