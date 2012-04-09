@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
@@ -171,6 +172,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			String name = (String) iterator.next();
 			String fullName = result.get(name).getNamespace()
 					.getFullyQualifiedName();
+			if (fullName.startsWith("\\")) {
+				fullName = fullName.substring(1);
+			}
 			IType[] elements = PhpModelAccess.getDefault().findTypes(null,
 					fullName, MatchRule.PREFIX, 0, 0, scope, null);
 			try {
@@ -284,7 +288,15 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		}
 		IType[] types = PhpModelAccess.getDefault().findTypes(null, prefix,
 				MatchRule.PREFIX, trueFlag, falseFlag, scope, null);
-		result.addAll(Arrays.asList(types));
+		if (context instanceof NamespaceMemberContext) {
+			for (IType type : types) {
+				if (PHPModelUtils.getFullName(type).startsWith(prefix)) {
+					result.add(type);
+				}
+			}
+		} else {
+			result.addAll(Arrays.asList(types));
+		}
 
 		return (IType[]) result.toArray(new IType[result.size()]);
 	}
