@@ -520,6 +520,16 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					lastNonDelete = i;
 				}
 			}
+			if (isInsertUseStatement) {
+				if (parent instanceof Block) {
+					Block block = (Block) parent;
+					if (block.isCurly()) {
+						currPos = offset + getSeparatorString(0).length();
+					} else {
+						currPos = offset;
+					}
+				}
+			}
 
 			if (currPos == -1) { // only inserts
 				if (keyword.length() > 0) { // creating a new list -> insert
@@ -3994,6 +4004,14 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				node.getStart(), "", ", ");
 		return false;
 	}
+
 	// php5.4 ends
+
+	private boolean isInsertUseStatement;
+
+	public void setInsertUseStatement(boolean isInsertUseStatement) {
+		// TODO Auto-generated method stub
+		this.isInsertUseStatement = isInsertUseStatement;
+	}
 
 }

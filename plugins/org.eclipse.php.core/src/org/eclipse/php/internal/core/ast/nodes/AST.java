@@ -2881,6 +2881,13 @@ public class AST {
 		lfDeclaration.setTsList(tsList);
 		return lfDeclaration;
 	}
+
 	
 	/*************************php5.4 ends***************************/
+	
+
+	public void setInsertUseStatement(boolean isInsertUseStatement) {
+		// TODO Auto-generated method stub
+		this.rewriter.setInsertUseStatement(isInsertUseStatement);
+	}
 }
