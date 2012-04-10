@@ -372,9 +372,10 @@ public class UseStatementInjector {
 										}
 									}
 								}
-
+								ast.setInsertUseStatement(true);
 								edits = program.rewrite(document, options);
 								edits.apply(document);
+								ast.setInsertUseStatement(false);
 							} else if (!useAlias
 									&& (usePart == null || !usePartName
 											.equals(usePart.getNamespace()
