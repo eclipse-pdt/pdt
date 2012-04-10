@@ -157,7 +157,9 @@ public class PHPModelUtils {
 		}
 
 		boolean isGlobal = false;
-		if (elementName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (elementName != null
+				&& elementName.length() > 0
+				&& elementName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			isGlobal = true;
 		}
 
@@ -2219,4 +2221,31 @@ public class PHPModelUtils {
 		return found[0];
 	}
 
+	/**
+	 * Strips single or double quotes from the start and from the end of the
+	 * given string
+	 * 
+	 * @param name
+	 *            String
+	 * @return
+	 */
+	public static String stripQuotes(String name) {
+		int len = name.length();
+		if (len > 1
+				&& (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name
+						.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
+			name = name.substring(1, len - 1);
+		}
+		return name;
+	}
+
+	public static boolean isQuotesString(String name) {
+		int len = name.length();
+		if (len > 1
+				&& (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name
+						.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
+			return true;
+		}
+		return false;
+	}
 }
