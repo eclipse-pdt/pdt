@@ -150,7 +150,9 @@ public class PHPModelUtils {
 				elementName, offset);
 		if (usePart != null) {
 			elementName = usePart.getNamespace().getFullyQualifiedName();
-			if (elementName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+			if (elementName != null
+					&& elementName.length() > 0
+					&& elementName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 				elementName = NamespaceReference.NAMESPACE_SEPARATOR
 						+ elementName;
 			}
