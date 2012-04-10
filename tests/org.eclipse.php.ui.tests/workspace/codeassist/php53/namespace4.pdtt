@@ -1,0 +1,40 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+namespace myNS\subNS;
+class AAA {}
+
+namespace myNS\subNS1;
+/**
+ * @author Administrator
+ *
+ */
+class BBB {
+
+	function fun()
+	{
+		$a = new AAA| // <- here get code assist and choose class AAA
+	}
+}
+?>
+--EXPECT--
+<?php
+namespace myNS\subNS;
+class AAA {}
+
+namespace myNS\subNS1;
+/use myNS\subNS\AAA;
+
+**
+ * @author Administrator
+ *
+ */
+class BBB {
+
+	function fun()
+	{
+		$a = new AAA() // <- here get code assist and choose class AAA
+	}
+}
+?>
