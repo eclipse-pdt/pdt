@@ -35,6 +35,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -2250,4 +2251,29 @@ public class PHPModelUtils {
 		}
 		return false;
 	}
+
+	public static IModelElement[] getTypeInString(ISourceModule sourceModule,
+			IRegion wordRegion) {
+		IModelElement[] elements = null;
+		ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(
+				sourceModule, null);
+
+		ASTNode node = ASTUtils.findMinimalNode(parsedUnit,
+				wordRegion.getOffset(),
+				wordRegion.getOffset() + wordRegion.getLength());
+		if (node instanceof Scalar) {
+			Scalar scalar = (Scalar) node;
+			if (PHPModelUtils.isQuotesString(scalar.getValue())
+					&& scalar.getScalarType() == Scalar.TYPE_STRING) {
+				try {
+					elements = PHPModelUtils.getTypes(
+							PHPModelUtils.stripQuotes(scalar.getValue()),
+							sourceModule, scalar.sourceStart(), null, null);
+				} catch (Exception e) {
+				}
+			}
+		}
+		return elements;
+	}
+
 }
