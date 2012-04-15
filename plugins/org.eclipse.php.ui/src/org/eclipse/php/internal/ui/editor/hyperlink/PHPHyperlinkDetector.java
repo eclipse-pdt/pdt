@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor.hyperlink;
 
 import org.eclipse.dltk.core.ICodeAssist;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.actions.ActionMessages;
 import org.eclipse.dltk.internal.ui.actions.OpenActionUtil;
@@ -25,6 +26,7 @@ import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 
@@ -81,6 +83,12 @@ public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 			IModelElement[] elements = null;
 			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(),
 					wordRegion.getLength());
+			if ((elements == null || elements.length == 0)
+					&& input instanceof ISourceModule) {
+				elements = PHPModelUtils.getTypeInString((ISourceModule) input,
+						wordRegion);
+
+			}
 			if (elements != null && elements.length > 0) {
 				final IHyperlink link;
 				if (elements.length == 1) {

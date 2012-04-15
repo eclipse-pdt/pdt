@@ -3,6 +3,7 @@ package org.eclipse.php.internal.ui.editor.hover;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.dltk.core.ICodeAssist;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput;
@@ -10,6 +11,7 @@ import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IWorkingCopyManager;
 import org.eclipse.jface.text.*;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -30,8 +32,8 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover
 	public IInformationControlCreator getHoverControlCreator() {
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, EditorsUI
-						.getTooltipAffordanceString());
+				return new DefaultInformationControl(parent,
+						EditorsUI.getTooltipAffordanceString());
 			}
 		};
 	}
@@ -93,16 +95,23 @@ public class AbstractPHPEditorTextHover extends AbstractScriptEditorTextHover
 		 */
 		if (hoverRegion.getLength() == 0)
 			return null;
-
+		IModelElement[] elements = null;
 		ICodeAssist resolve = getCodeAssist();
 		if (resolve != null) {
 			try {
-				return resolve.codeSelect(hoverRegion.getOffset(), hoverRegion
-						.getLength());
+				elements = resolve.codeSelect(hoverRegion.getOffset(),
+						hoverRegion.getLength());
+
+				if ((elements == null || elements.length == 0)
+						&& resolve instanceof ISourceModule) {
+					elements = PHPModelUtils.getTypeInString(
+							(ISourceModule) resolve, hoverRegion);
+
+				}
 			} catch (ModelException x) {
 				return null;
 			}
 		}
-		return null;
+		return elements;
 	}
 }
