@@ -46,19 +46,8 @@
 		<key commandId="org.eclipse.php.deubg.ui.phpexeShortcut.debug"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M3+M2+D H" />
-		<key
-            sequence="M1+M2+I"
-            contextId="org.eclipse.php.debug.ui.debugging"
-            commandId="org.eclipse.php.debug.ui.commands.Inspect"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-        <key
-            sequence="M1+M2+I"
-            contextId="org.eclipse.php.debug.ui.xdebug"
-            commandId="org.eclipse.php.debug.ui.commands.Inspect"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-	    <!---->
 	    <key
-            sequence="M1+M2+I"
+            sequence="M1+M2+V"
             contextId="org.eclipse.ui.contexts.dialogAndWindow"
             commandId="org.eclipse.php.debug.ui.commands.Inspect"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
