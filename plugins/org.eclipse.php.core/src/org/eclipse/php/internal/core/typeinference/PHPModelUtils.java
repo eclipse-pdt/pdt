@@ -54,6 +54,9 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 
 public class PHPModelUtils {
 
+	public static final String ENCLOSING_TYPE_SEPARATOR = new String(
+			new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); //$NON-NLS-1$
+
 	private static final IType[] EMPTY_TYPES = new IType[0];
 
 	/**
