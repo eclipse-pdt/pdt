@@ -38,6 +38,7 @@ import org.eclipse.jface.text.templates.persistence.TemplatePersistenceData;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.util.Signature;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContext;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
@@ -74,8 +75,8 @@ public class StubUtility {
 		if (template == null) {
 			return bodyStatement;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), project, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), project, lineDelimiter);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
 				methodName);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE,
@@ -101,8 +102,8 @@ public class StubUtility {
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), project, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), project, lineDelimiter);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
 				methodName);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE,
@@ -123,8 +124,8 @@ public class StubUtility {
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), project, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), project, lineDelimiter);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
 				methodName);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE,
@@ -145,8 +146,8 @@ public class StubUtility {
 			return null;
 		}
 
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), sp, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelimiter);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE,
 				enclosingType);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
@@ -167,16 +168,16 @@ public class StubUtility {
 		}
 
 		IScriptProject project = sp;
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), project, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), project, lineDelimiter);
 		context.setVariable(CodeTemplateContextType.TYPE_COMMENT,
 				typeComment != null ? typeComment : ""); //$NON-NLS-1$
 		context.setVariable(CodeTemplateContextType.FILE_COMMENT,
 				fileComment != null ? fileComment : ""); //$NON-NLS-1$
 		context.setVariable(CodeTemplateContextType.TYPE_DECLARATION,
 				typeContent);
-		context.setVariable(CodeTemplateContextType.TYPENAME, sp
-				.getElementName());
+		context.setVariable(CodeTemplateContextType.TYPENAME,
+				sp.getElementName());
 
 		String[] fullLine = { CodeTemplateContextType.PACKAGE_DECLARATION,
 				CodeTemplateContextType.FILE_COMMENT,
@@ -198,10 +199,10 @@ public class StubUtility {
 			return null;
 		}
 
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), sp, lineDelimiter);
-		context.setVariable(CodeTemplateContextType.FILENAME, sp
-				.getElementName());
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelimiter);
+		context.setVariable(CodeTemplateContextType.FILENAME,
+				sp.getElementName());
 		return evaluateTemplate(context, template);
 	}
 
@@ -219,12 +220,12 @@ public class StubUtility {
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), sp, lineDelim);
-		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, Signature
-				.getQualifier(typeQualifiedName));
-		context.setVariable(CodeTemplateContextType.TYPENAME, Signature
-				.getSimpleName(typeQualifiedName));
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelim);
+		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE,
+				Signature.getQualifier(typeQualifiedName));
+		context.setVariable(CodeTemplateContextType.TYPENAME,
+				Signature.getSimpleName(typeQualifiedName));
 
 		TemplateBuffer buffer;
 		try {
@@ -285,8 +286,8 @@ public class StubUtility {
 	private static String[] getParameterTypeNamesForSeeTag(IMethod overridden)
 			throws ModelException {
 		try {
-			Program program = SharedASTProvider.getAST(overridden
-					.getSourceModule(), SharedASTProvider.WAIT_YES,
+			Program program = SharedASTProvider.getAST(
+					overridden.getSourceModule(), SharedASTProvider.WAIT_YES,
 					new NullProgressMonitor());
 			ASTNode elementAt = program.getElementAt(overridden
 					.getSourceRange().getOffset());
@@ -378,8 +379,8 @@ public class StubUtility {
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), sp, lineDelim);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelim);
 		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.TYPENAME, typeName);
 
@@ -413,8 +414,8 @@ public class StubUtility {
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), sp, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelimiter);
 		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
@@ -425,10 +426,16 @@ public class StubUtility {
 		}
 		if (target != null) {
 			String targetTypeName = target.getDeclaringType()
-					.getTypeQualifiedName(".");
+					.getTypeQualifiedName(
+							PHPModelUtils.ENCLOSING_TYPE_SEPARATOR);
+			if (targetTypeName.indexOf(PHPModelUtils.ENCLOSING_TYPE_SEPARATOR) > 0) {
+				targetTypeName = PHPModelUtils.ENCLOSING_TYPE_SEPARATOR
+						+ targetTypeName;
+			}
 			String[] targetParamTypeNames = getParameterTypeNamesForSeeTag(target);
 			if (delegate)
-				context.setVariable(CodeTemplateContextType.SEE_TO_TARGET_TAG,
+				context.setVariable(
+						CodeTemplateContextType.SEE_TO_TARGET_TAG,
 						getSeeTag(targetTypeName, methodName,
 								targetParamTypeNames));
 			else
@@ -523,8 +530,8 @@ public class StubUtility {
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), sp, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelimiter);
 		// context.setCompilationUnitVariables(sp);
 		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
@@ -539,8 +546,8 @@ public class StubUtility {
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), sp, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelimiter);
 		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 
@@ -563,8 +570,8 @@ public class StubUtility {
 			return null;
 		}
 
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), sp, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelimiter);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
 				methodName);
@@ -591,8 +598,8 @@ public class StubUtility {
 		if (template == null) {
 			return null;
 		}
-		CodeTemplateContext context = new CodeTemplateContext(template
-				.getContextTypeId(), sp, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sp, lineDelimiter);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_TYPE, typeName);
 		context.setVariable(CodeTemplateContextType.ENCLOSING_METHOD,
 				methodName);
@@ -669,8 +676,8 @@ public class StubUtility {
 		if (region == null) {
 			return;
 		}
-		String lineStart = textBuffer.get(region.getOffset(), offset
-				- region.getOffset());
+		String lineStart = textBuffer.get(region.getOffset(),
+				offset - region.getOffset());
 
 		StringBuffer buf = new StringBuffer();
 		if (null != typeParameterNames) {
@@ -763,8 +770,8 @@ public class StubUtility {
 		IScopeContext[] scopeContext;
 		if (project != null) {
 			// project preference
-			scopeContext = new IScopeContext[] { new ProjectScope(project
-					.getProject()) };
+			scopeContext = new IScopeContext[] { new ProjectScope(
+					project.getProject()) };
 			String lineDelimiter = Platform.getPreferencesService().getString(
 					Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null,
 					scopeContext);
@@ -812,8 +819,8 @@ public class StubUtility {
 		if (sp == null)
 			return PHPUiPlugin.getDefault().getCodeTemplateStore()
 					.findTemplateById(id);
-		ProjectTemplateStore projectStore = new ProjectTemplateStore(sp
-				.getProject());
+		ProjectTemplateStore projectStore = new ProjectTemplateStore(
+				sp.getProject());
 		try {
 			projectStore.load();
 		} catch (IOException e) {
