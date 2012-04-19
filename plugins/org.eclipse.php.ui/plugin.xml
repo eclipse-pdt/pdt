@@ -480,70 +480,86 @@
 		<!-- Script Explorer -->
 		<filter description="%HideSystemFiles.description" enabled="true"
 			id="org.eclipse.php.ui.explorer.DotFilesFilter" name="%HideSystemFiles.label"
-			class="org.eclipse.dltk.internal.ui.filters.DotFileFilter">
+			class="org.eclipse.php.ui.explorer.DotFileFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter description="%ContainMembers.description" enabled="false"
 			id="org.eclipse.php.ui.explorer.ContainMembersFilter" name="%ContainMembers.label"
-			class="org.eclipse.dltk.internal.ui.filters.ContainMembersFilter">
+			class="org.eclipse.dltk.internal.ui.filters.ContainMembersFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideEmptyPackages.label" enabled="false"
 			description="%HideEmptyPackages.description" class="org.eclipse.dltk.internal.ui.filters.EmptyPackageFilter"
-			id="org.eclipse.php.ui.explorer.EmptyPackageFilter">
+			id="org.eclipse.php.ui.explorer.EmptyPackageFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideEmptyInnerPackages.label" enabled="false"
 			description="%HideEmptyInnerPackages.description"
 			class="org.eclipse.dltk.internal.ui.filters.EmptyInnerPackageFilter"
-			id="org.eclipse.php.ui.explorer.EmptyInnerPackageFilter">
+			id="org.eclipse.php.ui.explorer.EmptyInnerPackageFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideNonScriptElements.label" enabled="false"
 			description="%HideNonScriptElements.description"
 			class="org.eclipse.dltk.internal.ui.filters.NonScriptElementFilter"
-			id="org.eclipse.php.ui.explorer.NonScriptElementFilter">
+			id="org.eclipse.php.ui.explorer.NonScriptElementFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideReferencedLibraries.label" enabled="false"
 			description="%HideReferencedLibraries.description" class="org.eclipse.dltk.internal.ui.filters.LibraryFilter"
-			id="org.eclipse.php.ui.explorer.LibraryFilter">
+			id="org.eclipse.php.ui.explorer.LibraryFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideContainedLibraries.label" enabled="false"
 			description="%HideContainedLibraries.description"
 			class="org.eclipse.dltk.internal.ui.filters.ContainedLibraryFilter"
-			id="org.eclipse.php.ui.explorer.ContainedLibraryFilter">
+			id="org.eclipse.php.ui.explorer.ContainedLibraryFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideScriptFiles.label" enabled="false"
 			description="%HideScriptFiles.description" class="org.eclipse.dltk.internal.ui.filters.ScriptFileFilter"
-			id="org.eclipse.php.ui.explorer.SMFileFilter">
+			id="org.eclipse.php.ui.explorer.SMFileFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideNonScriptProjects.label" enabled="false"
 			description="%HideNonScriptProjects.description"
 			class="org.eclipse.php.internal.ui.filters.NonPHPProjectsFilter"
-			id="org.eclipse.php.ui.explorer.NonScriptProjectsFilter">
+			id="org.eclipse.php.ui.explorer.NonScriptProjectsFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideNonSharedProjects.label" enabled="false"
 			description="%HideNonSharedProjects.description"
 			class="org.eclipse.dltk.internal.ui.filters.NonSharedProjectFilter"
-			id="org.eclipse.php.ui.explorer.NonSharedProjectsFilter">
+			id="org.eclipse.php.ui.explorer.NonSharedProjectsFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideClosedProjects.label" enabled="false"
 			description="%HideClosedProjects.description"
-			class="org.eclipse.dltk.internal.ui.filters.ClosedProjectFilter" id="org.eclipse.php.ui.explorer.ClosedProjectsFilter">
+			class="org.eclipse.dltk.internal.ui.filters.ClosedProjectFilter" id="org.eclipse.php.ui.explorer.ClosedProjectsFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideFields.label" enabled="false"
 			description="%HideFields.description" class="org.eclipse.dltk.internal.ui.filters.FieldsFilter"
-			id="org.eclipse.php.ui.explorer.FieldsFilter">
+			id="org.eclipse.php.ui.explorer.FieldsFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideUseStatements.label" enabled="true"
 			description="%HideUseStatements.description" class="org.eclipse.dltk.internal.ui.filters.ImportDeclarationFilter"
-			id="org.eclipse.php.ui.explorer.UseStatementFilter">
+			id="org.eclipse.php.ui.explorer.UseStatementFilter"
+			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter name="%HideNonPublic.label" enabled="false"
 			description="%HideNonPublic.description" class="org.eclipse.php.internal.ui.filters.NonPublicFilter"
-			id="org.eclipse.php.ui.explorer.NonPublicFilter" />
+			id="org.eclipse.php.ui.explorer.NonPublicFilter"
+			targetId="org.eclipse.php.ui.explorer" />
 		<filter name="%HideHTMLFiles.label" enabled="false"
 			description="%HideHTMLFiles.description"
-			class="org.eclipse.php.internal.ui.filters.PHPContentTypeFilter" id="org.eclipse.php.ui.explorer.PHPHTMLFilter" />
+			class="org.eclipse.php.internal.ui.filters.PHPContentTypeFilter" id="org.eclipse.php.ui.explorer.PHPHTMLFilter" 
+			targetId="org.eclipse.php.ui.explorer"/>
 		<filter class="org.eclipse.php.internal.ui.filters.RSEProjectFilter"
 			description="%HideRSETempProject.description" enabled="true"
-			id="org.eclipse.php.ui.explorer.RSEProjectFilter" name="%HideRSETempProject.label" />
+			id="org.eclipse.php.ui.explorer.RSEProjectFilter" name="%HideRSETempProject.label" 
+			targetId="org.eclipse.php.ui.explorer"/>
 	</extension>
 	
 	<extension point="org.eclipse.dltk.ui.dltkElementFilters">
