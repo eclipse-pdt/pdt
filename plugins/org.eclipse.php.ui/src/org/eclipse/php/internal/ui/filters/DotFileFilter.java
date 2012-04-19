@@ -9,6 +9,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 public class DotFileFilter extends ViewerFilter {
 
+	private static final String HTACCESS_FILE = ".htaccess";
+
 	public DotFileFilter() {
 		// TODO Auto-generated constructor stub
 	}
@@ -29,13 +31,13 @@ public class DotFileFilter extends ViewerFilter {
 				}
 			}
 		} else if (element instanceof ISourceModule) {
-			if (((ISourceModule) element).getElementName().startsWith(".")) { //$NON-NLS-1$
+			if (((ISourceModule) element).getElementName().startsWith(".") && !((ISourceModule) element).getElementName().equals(HTACCESS_FILE)) { //$NON-NLS-1$
 				return false;
 			}
 		} else if (element instanceof IResource) {
 			String lastSegment = ((IResource) element).getFullPath()
 					.lastSegment();
-			if (lastSegment.startsWith(".") && !lastSegment.equals(".htaccess")) { //$NON-NLS-1$
+			if (lastSegment.startsWith(".") && !lastSegment.equals(HTACCESS_FILE)) { //$NON-NLS-1$
 				return false;
 			}
 		}
