@@ -480,7 +480,7 @@
 		<!-- Script Explorer -->
 		<filter description="%HideSystemFiles.description" enabled="true"
 			id="org.eclipse.php.ui.explorer.DotFilesFilter" name="%HideSystemFiles.label"
-			class="org.eclipse.php.ui.explorer.DotFileFilter"
+			class="org.eclipse.php.internal.ui.filters.DotFileFilter"
 			targetId="org.eclipse.php.ui.explorer">
 		</filter>
 		<filter description="%ContainMembers.description" enabled="false"

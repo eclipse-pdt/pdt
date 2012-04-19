@@ -1,4 +1,4 @@
-package org.eclipse.php.ui.explorer;
+package org.eclipse.php.internal.ui.filters;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
