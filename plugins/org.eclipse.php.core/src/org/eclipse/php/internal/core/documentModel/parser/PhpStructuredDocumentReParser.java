@@ -11,10 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.documentModel.parser;
 
+import java.util.List;
+
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 
 /**
@@ -92,5 +95,19 @@ public class PhpStructuredDocumentReParser extends
 	public StructuredDocumentEvent reparse() {
 		final StructuredDocumentEvent documentEvent = super.reparse();
 		return documentEvent;
+	}
+
+	@Override
+	public StructuredDocumentEvent _checkBlockNodeList(List blockTagList) {
+		// There are no blocktags that should be checked within PHP script
+		// content
+		if (dirtyStart.equals(dirtyEnd)) {
+			ITextRegion region = dirtyStart.getRegionAtCharacterOffset(fStart);
+			if (region.getType().equals(PHPRegionContext.PHP_CONTENT)
+					&& (dirtyStart.getStart() + region.getEnd() >= (fStart + fLengthToReplace))) {
+				return null;
+			}
+		}
+		return super._checkBlockNodeList(blockTagList);
 	}
 }
