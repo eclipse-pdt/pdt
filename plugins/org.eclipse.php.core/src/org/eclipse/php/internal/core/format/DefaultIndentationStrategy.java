@@ -433,72 +433,80 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	private static boolean lineContainIncompleteBlock(
 			IStructuredDocument document, int checkedOffset, int lineStart,
 			int currLineIndex) throws BadLocationException {
-		// TODO Auto-generated method stub
+
 		PHPHeuristicScanner scanner = PHPHeuristicScanner
 				.createHeuristicScanner(document, lineStart, true);
 		if (checkedOffset == document.getLength() && checkedOffset > 0) {
 			checkedOffset--;
 		}
-		int openParenPeer = scanner.findOpeningPeer(checkedOffset,
-				PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LPAREN,
-				PHPHeuristicScanner.RPAREN);
-		int openBracePeer = scanner.findOpeningPeer(checkedOffset,
-				PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACE,
-				PHPHeuristicScanner.RBRACE);
-		int openBracketPeer = scanner.findOpeningPeer(checkedOffset,
-				PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACKET,
-				PHPHeuristicScanner.RBRACKET);
-		int biggest = Math.max(openParenPeer, openBracePeer);
-		biggest = Math.max(biggest, openBracketPeer);
-		if (biggest != PHPHeuristicScanner.NOT_FOUND && biggest > lineStart) {
-			// the whole document
-			final IStructuredDocumentRegion sdRegion = document
-					.getRegionAtCharacterOffset(lineStart);
-			// the whole PHP script
-			ITextRegion phpScriptRegion = sdRegion
-					.getRegionAtCharacterOffset(lineStart);
-			int phpContentStartOffset = sdRegion
-					.getStartOffset(phpScriptRegion);
-
-			if (phpScriptRegion instanceof ITextRegionContainer) {
-				ITextRegionContainer container = (ITextRegionContainer) phpScriptRegion;
-				phpScriptRegion = container
+		TextSequence textSequence = PHPTextSequenceUtilities
+				.getStatement(lineStart,
+						document.getRegionAtCharacterOffset(lineStart), true);
+		if (textSequence != null
+				&& isRegionTypeAllowedMultiline(FormatterUtils.getRegionType(
+						document, textSequence.getOriginalOffset(0)))) {
+			int statementStart = textSequence.getOriginalOffset(0);
+			// we only search for opening pear in textSequence
+			int openParenPeer = scanner.findOpeningPeer(checkedOffset,
+					statementStart, PHPHeuristicScanner.LPAREN,
+					PHPHeuristicScanner.RPAREN);
+			int openBracePeer = scanner.findOpeningPeer(checkedOffset,
+					statementStart, PHPHeuristicScanner.LBRACE,
+					PHPHeuristicScanner.RBRACE);
+			int openBracketPeer = scanner.findOpeningPeer(checkedOffset,
+					statementStart, PHPHeuristicScanner.LBRACKET,
+					PHPHeuristicScanner.RBRACKET);
+			int biggest = Math.max(openParenPeer, openBracePeer);
+			biggest = Math.max(biggest, openBracketPeer);
+			if (biggest != PHPHeuristicScanner.NOT_FOUND && biggest > lineStart) {
+				// the whole document
+				final IStructuredDocumentRegion sdRegion = document
 						.getRegionAtCharacterOffset(lineStart);
-				phpContentStartOffset += phpScriptRegion.getStart();
-			}
+				// the whole PHP script
+				ITextRegion phpScriptRegion = sdRegion
+						.getRegionAtCharacterOffset(lineStart);
+				int phpContentStartOffset = sdRegion
+						.getStartOffset(phpScriptRegion);
 
-			if (phpScriptRegion instanceof IPhpScriptRegion) {
-				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
-				ITextRegion[] tokens = scriptRegion.getPhpTokens(lineStart,
-						biggest - lineStart);
-				if (tokens != null && tokens.length > 0) {
-					Set<String> tokenTypeSet = new HashSet<String>();
-					for (int i = 0; i < tokens.length; i++) {
-						tokenTypeSet.add(tokens[i].getType());
-					}
-					if (biggest == openParenPeer) {
-						if (tokenTypeSet.contains(PHPRegionTypes.PHP_NEW)
-								|| tokenTypeSet
-										.contains(PHPRegionTypes.PHP_FUNCTION)
-								|| tokenTypeSet
-										.contains(PHPRegionTypes.PHP_ARRAY)) {
-							return true;
+				if (phpScriptRegion instanceof ITextRegionContainer) {
+					ITextRegionContainer container = (ITextRegionContainer) phpScriptRegion;
+					phpScriptRegion = container
+							.getRegionAtCharacterOffset(lineStart);
+					phpContentStartOffset += phpScriptRegion.getStart();
+				}
+
+				if (phpScriptRegion instanceof IPhpScriptRegion) {
+					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
+					ITextRegion[] tokens = scriptRegion.getPhpTokens(lineStart,
+							biggest - lineStart);
+					if (tokens != null && tokens.length > 0) {
+						Set<String> tokenTypeSet = new HashSet<String>();
+						for (int i = 0; i < tokens.length; i++) {
+							tokenTypeSet.add(tokens[i].getType());
 						}
-					} else if (biggest == openBracePeer) {
-						if (tokenTypeSet.contains(PHPRegionTypes.PHP_NEW)
-								|| tokenTypeSet
-										.contains(PHPRegionTypes.PHP_FUNCTION)) {
-							return true;
-						}
-					} else {
-						if (tokenTypeSet.contains(PHPRegionTypes.PHP_ARRAY)) {
-							return true;
+						if (biggest == openParenPeer) {
+							if (tokenTypeSet.contains(PHPRegionTypes.PHP_NEW)
+									|| tokenTypeSet
+											.contains(PHPRegionTypes.PHP_FUNCTION)
+									|| tokenTypeSet
+											.contains(PHPRegionTypes.PHP_ARRAY)) {
+								return true;
+							}
+						} else if (biggest == openBracePeer) {
+							if (tokenTypeSet.contains(PHPRegionTypes.PHP_NEW)
+									|| tokenTypeSet
+											.contains(PHPRegionTypes.PHP_FUNCTION)) {
+								return true;
+							}
+						} else {
+							if (tokenTypeSet.contains(PHPRegionTypes.PHP_ARRAY)) {
+								return true;
+							}
 						}
 					}
 				}
 			}
 		}
-
 		return false;
 	}
 
