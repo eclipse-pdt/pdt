@@ -103,7 +103,8 @@ public class PhpStructuredDocumentReParser extends
 		// content
 		if (dirtyStart.equals(dirtyEnd)) {
 			ITextRegion region = dirtyStart.getRegionAtCharacterOffset(fStart);
-			if (region.getType().equals(PHPRegionContext.PHP_CONTENT)
+			if (region != null
+					&& region.getType().equals(PHPRegionContext.PHP_CONTENT)
 					&& (dirtyStart.getStart() + region.getEnd() >= (fStart + fLengthToReplace))) {
 				return null;
 			}
