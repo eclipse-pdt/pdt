@@ -528,6 +528,14 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					} else {
 						currPos = offset;
 					}
+				} else if (parent instanceof Program) {
+					Program program = (Program) parent;
+					List<Comment> comments = program.comments();
+					if (comments != null && comments.size() > 0
+							&& comments.get(0).getStart() < currPos) {
+						currPos = comments.get(0).getStart();
+					}
+
 				}
 			}
 
