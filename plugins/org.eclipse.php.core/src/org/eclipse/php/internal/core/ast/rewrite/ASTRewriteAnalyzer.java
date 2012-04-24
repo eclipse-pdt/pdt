@@ -521,21 +521,16 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				}
 			}
 			if (isInsertUseStatement) {
-				if (parent instanceof Block) {
-					Block block = (Block) parent;
-					if (block.isCurly()) {
-						currPos = offset + getSeparatorString(0).length();
-					} else {
-						currPos = offset;
+				Program program = parent.getProgramRoot();
+				List<Comment> comments = program.comments();
+				if (comments != null && comments.size() > 0) {
+					for (Comment comment : comments) {
+						if (comment.getStart() >= parent.getStart()
+								&& comment.getStart() < currPos) {
+							currPos = comment.getStart();
+							break;
+						}
 					}
-				} else if (parent instanceof Program) {
-					Program program = (Program) parent;
-					List<Comment> comments = program.comments();
-					if (comments != null && comments.size() > 0
-							&& comments.get(0).getStart() < currPos) {
-						currPos = comments.get(0).getStart();
-					}
-
 				}
 			}
 
