@@ -46,8 +46,9 @@
 		<key commandId="org.eclipse.php.deubg.ui.phpexeShortcut.debug"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M3+M2+D H" />
+		<!--M3+M2+Y,M3+M2+H, M1+M2+V,1+M2+Z   -->
 	    <key
-            sequence="M1+M2+V"
+            sequence="M1+M2+Z"
             contextId="org.eclipse.ui.contexts.dialogAndWindow"
             commandId="org.eclipse.php.debug.ui.commands.Inspect"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
@@ -364,8 +365,23 @@
 		         id="org.eclipse.php.ui.A_OpenActionSet">
 		   </actionSet>
 		</perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.php.perspective">
+         <actionSet
+               id="org.eclipse.php.debug.ui.actionSet">
+         </actionSet>
+      </perspectiveExtension>
 	</extension>
-	
+	<extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.php.debug.ui.actionSet">
+         <part
+               id="org.eclipse.php.editor">
+         </part>
+      </actionSetPartAssociation>
+   </extension>
+   
 	<extension point="org.eclipse.debug.ui.contextViewBindings">
 		<contextViewBinding contextId="org.eclipse.php.debug.ui.debugging"
 			viewId="org.eclipse.debug.ui.PHPStackView" />
