@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -51,16 +52,24 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 						.getMethodNode();
 				PHPDocBlock[] docBlocks = new PHPDocBlock[0];
 				try {
-					IMethod method = (IMethod) methodContext.getSourceModule()
+					IModelElement element = methodContext.getSourceModule()
 							.getElementAt(methodDeclaration.getNameStart());
-					if (method.getDeclaringType() != null) {
-						docBlocks = PHPModelUtils.getTypeHierarchyMethodDoc(
-								method.getDeclaringType(),
-								method.getElementName(), true, null);
+					if (element instanceof IMethod) {
+						IMethod method = (IMethod) element;
+						if (method.getDeclaringType() != null) {
+							docBlocks = PHPModelUtils
+									.getTypeHierarchyMethodDoc(
+											method.getDeclaringType(),
+											method.getElementName(), true, null);
+						} else {
+							docBlocks = new PHPDocBlock[] { methodDeclaration
+									.getPHPDoc() };
+						}
 					} else {
 						docBlocks = new PHPDocBlock[] { methodDeclaration
 								.getPHPDoc() };
 					}
+
 				} catch (CoreException e) {
 				}
 				for (PHPDocBlock docBlock : docBlocks) {
