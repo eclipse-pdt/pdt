@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
@@ -723,18 +724,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				IModelElement sourceModule = getModelElement();
 				if (sourceModule != null
 						&& sourceModule.getElementType() == IModelElement.SOURCE_MODULE) {
-					try {
-						updateOccurrenceAnnotations(
-								(ITextSelection) fForcedMarkOccurrencesSelection,
-								SharedASTProvider.getAST(
-										(ISourceModule) sourceModule,
-										SharedASTProvider.WAIT_NO,
-										getProgressMonitor()));
-					} catch (ModelException e) {
-						Logger.logException(e);
-					} catch (IOException e) {
-						Logger.logException(e);
-					}
+					updateOccurrenceAnnotations(
+							(ITextSelection) fForcedMarkOccurrencesSelection,
+							sourceModule);
 				}
 			}
 		}
@@ -2275,6 +2267,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			}
 
 			public void textChanged(TextChangedEvent event) {
+				// Mark AST dirty
+				PHPUiPlugin.getDefault().getASTProvider().markASTDirty();
 			}
 
 			public void textSet(TextChangedEvent event) {
@@ -2925,6 +2919,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		return annotationModel;
 	}
 
+	protected void updateOccurrenceAnnotations(ITextSelection selection,
+			Program astRoot) {
+		updateOccurencesAnnotationsRunJob(selection, astRoot);
+	}
+
 	/**
 	 * Updates the occurrences annotations based on the current selection.
 	 * 
@@ -2938,8 +2937,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	 *            the compilation unit AST
 	 * @since 3.0
 	 */
-	protected void updateOccurrenceAnnotations(ITextSelection selection,
-			Program astRoot) {
+	protected void updateOccurrenceAnnotations(final ITextSelection selection,
+			final IModelElement sourceModule) {
 
 		if (fOccurrencesFinderJob != null)
 			fOccurrencesFinderJob.cancel();
@@ -2947,6 +2946,45 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		if (!fMarkOccurrenceAnnotations)
 			return;
 
+		String updatingOccurencesJobName = "Updating occurence annotations";
+
+		IJobManager jobManager = Job.getJobManager();
+		if (jobManager.find(updatingOccurencesJobName).length > 0) {
+			jobManager.cancel(updatingOccurencesJobName);
+		}
+		Job job = new Job(updatingOccurencesJobName) {
+
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				Program astRoot = null;
+				try {
+					astRoot = SharedASTProvider.getAST(
+							(ISourceModule) sourceModule,
+							SharedASTProvider.WAIT_YES,
+							new NullProgressMonitor());
+				} catch (ModelException e) {
+					Logger.logException(e);
+				} catch (IOException e) {
+					Logger.logException(e);
+				}
+
+				updateOccurencesAnnotationsRunJob(selection, astRoot);
+				return Status.OK_STATUS;
+			}
+
+			@Override
+			public boolean belongsTo(Object family) {
+				return getName().equals(family);
+			}
+		};
+		job.setSystem(true);
+		job.setPriority(Job.DECORATE);
+		job.schedule();
+
+	}
+
+	private void updateOccurencesAnnotationsRunJob(ITextSelection selection,
+			Program astRoot) {
 		if (astRoot == null || selection == null)
 			return;
 
@@ -3098,18 +3136,29 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				inputElement, null);
 		addReconcileListener(fOverrideIndicatorManager);
 		if (provideAST) {
-			try {
-				Program ast = SharedASTProvider.getAST(
-						(ISourceModule) inputElement,
-						SharedASTProvider.WAIT_ACTIVE_ONLY,
-						getProgressMonitor());
-				fOverrideIndicatorManager.reconciled(ast, true,
-						getProgressMonitor());
-			} catch (ModelException e) {
-				Logger.logException(e);
-			} catch (IOException e) {
-				Logger.logException(e);
-			}
+			Job job = new Job("Installing override indicator") {
+
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					try {
+						Program ast = SharedASTProvider.getAST(
+								(ISourceModule) inputElement,
+								SharedASTProvider.WAIT_ACTIVE_ONLY,
+								new NullProgressMonitor());
+						fOverrideIndicatorManager.reconciled(ast, true,
+								getProgressMonitor());
+					} catch (ModelException e) {
+						Logger.logException(e);
+					} catch (IOException e) {
+						Logger.logException(e);
+					}
+					return Status.OK_STATUS;
+				}
+			};
+			job.setSystem(true);
+			job.setPriority(Job.DECORATE);
+			job.schedule();
+
 		}
 	}
 
@@ -3127,21 +3176,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		if (forceUpdate && getSelectionProvider() != null) {
 			fForcedMarkOccurrencesSelection = getSelectionProvider()
 					.getSelection();
-			IModelElement source = getModelElement();
+			final IModelElement source = getModelElement();
 			if ((source != null)
 					&& source.getElementType() == IModelElement.SOURCE_MODULE) {
-				try {
-					final Program ast = SharedASTProvider.getAST(
-							(ISourceModule) source, SharedASTProvider.WAIT_NO,
-							getProgressMonitor());
-					updateOccurrenceAnnotations(
-							(ITextSelection) fForcedMarkOccurrencesSelection,
-							ast);
-				} catch (ModelException e) {
-					Logger.logException(e);
-				} catch (IOException e) {
-					Logger.logException(e);
-				}
+				updateOccurrenceAnnotations(
+						(ITextSelection) fForcedMarkOccurrencesSelection,
+						(ISourceModule) source);
 			}
 		}
 
