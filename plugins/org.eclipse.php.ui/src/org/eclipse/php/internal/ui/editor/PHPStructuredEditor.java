@@ -2988,7 +2988,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		if (astRoot == null || selection == null)
 			return;
 
-		IDocument document = getSourceViewer().getDocument();
+		ISourceViewer viewer = getSourceViewer();
+		if (viewer == null)
+			return;
+
+		IDocument document = viewer.getDocument();
 		if (document == null)
 			return;
 
