@@ -47,6 +47,8 @@ import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTyp
 public class PHPDocMethodReturnTypeEvaluator extends
 		AbstractMethodReturnTypeEvaluator {
 
+	private static final String BRACKETS = "[]";
+
 	private final static Pattern ARRAY_TYPE_PATTERN = Pattern
 			.compile("array\\[.*\\]");
 
@@ -55,7 +57,7 @@ public class PHPDocMethodReturnTypeEvaluator extends
 	/**
 	 * Used for splitting the data types list of the returned tag
 	 */
-	private final static Pattern PIPE_PATTERN = Pattern.compile("\\|");
+	// private final static Pattern PIPE_PATTERN = Pattern.compile("\\|");
 
 	/**
 	 * Holds the result of evaluated types that this evaluator resolved
@@ -107,6 +109,16 @@ public class PHPDocMethodReturnTypeEvaluator extends
 						}
 						evaluated.add(getArrayType(m.group(), currentNamespace,
 								offset));
+					} else if (typeName.endsWith(BRACKETS)
+							&& typeName.length() > 2) {
+						int offset = 0;
+						try {
+							offset = method.getSourceRange().getOffset();
+						} catch (ModelException e) {
+						}
+						evaluated.add(getArrayType(
+								typeName.substring(0, typeName.length() - 2),
+								currentNamespace, offset));
 					} else {
 						AbstractMethodReturnTypeGoal goal = (AbstractMethodReturnTypeGoal) getGoal();
 						IType[] types = goal.getTypes();
@@ -183,13 +195,21 @@ public class PHPDocMethodReturnTypeEvaluator extends
 			int offset) {
 		int beginIndex = type.indexOf("[") + 1;
 		int endIndex = type.lastIndexOf("]");
-		type = type.substring(beginIndex, endIndex);
+		if (endIndex != -1) {
+			type = type.substring(beginIndex, endIndex);
+		}
+
 		MultiTypeType arrayType = new MultiTypeType();
 		Matcher m = ARRAY_TYPE_PATTERN.matcher(type);
 		if (m.find()) {
 			arrayType
 					.addType(getArrayType(m.group(), currentNamespace, offset));
 			type = m.replaceAll("");
+		} else if (type.endsWith(BRACKETS) && type.length() > 2) {
+			arrayType.addType(getArrayType(
+					type.substring(0, type.length() - 2), currentNamespace,
+					offset));
+			type = type.replaceAll(BRACKETS, "");
 		}
 		String[] typeNames = type.split(",");
 		for (String name : typeNames) {
