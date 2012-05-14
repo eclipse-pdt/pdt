@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.UseStatementsNode;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.PlatformUI;
@@ -26,15 +27,27 @@ public class SortAction extends Action {
 
 	public static final String PREF_IS_SORTED = "SortingAction.isChecked"; //$NON-NLS-1$
 	private TreeViewer treeViewer;
-	private ModelElementSorter fComparator = new ModelElementSorter();
+	private ModelElementSorter fComparator = new ModelElementSorter() {
+		public int compare(org.eclipse.jface.viewers.Viewer viewer, Object e1,
+				Object e2) {
+
+			if (e1 instanceof UseStatementsNode) {
+				return -1;
+			} else if (e2 instanceof UseStatementsNode) {
+				return 1;
+			} else {
+				return super.compare(viewer, e1, e2);
+			}
+		};
+	};
 	private SourcePositionSorter fSourcePositonComparator = new SourcePositionSorter();
 
 	public SortAction(TreeViewer treeViewer) {
 		super();
 
 		this.treeViewer = treeViewer;
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
-				IPHPHelpContextIds.OUTLINE_VIEW);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(this, IPHPHelpContextIds.OUTLINE_VIEW);
 		setText(PHPUIMessages.PHPOutlinePage_Sort_label);
 		PHPPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.gif"); //$NON-NLS-1$
 		setToolTipText(PHPUIMessages.PHPOutlinePage_Sort_tooltip);
@@ -65,7 +78,7 @@ public class SortAction extends Action {
 				});
 
 		if (store)
-			PHPUiPlugin.getDefault().getPreferenceStore().setValue(
-					PREF_IS_SORTED, on); //$NON-NLS-1$
+			PHPUiPlugin.getDefault().getPreferenceStore()
+					.setValue(PREF_IS_SORTED, on); //$NON-NLS-1$
 	}
 }
