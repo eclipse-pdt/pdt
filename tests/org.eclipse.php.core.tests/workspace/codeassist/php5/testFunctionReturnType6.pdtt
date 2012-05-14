@@ -1,0 +1,19 @@
+--TEST--
+Test Nested Code With This
+--FILE--
+<?php
+class Test {
+	function test() {
+		;
+	}
+}
+/**
+ * @return Test[]
+ */
+function fn() {}
+$arr = fn();
+foreach ($arr as $object) {
+	$object->|
+}
+--EXPECT--
+method(test)
