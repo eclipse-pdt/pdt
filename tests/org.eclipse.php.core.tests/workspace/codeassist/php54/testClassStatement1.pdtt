@@ -1,0 +1,15 @@
+--TEST--
+Test In Class Declaration
+--FILE--
+<? class A { | } ?>
+--EXPECT--
+keyword(abstract)
+keyword(const)
+keyword(final)
+keyword(function)
+keyword(private)
+keyword(protected)
+keyword(public)
+keyword(static)
+keyword(use)
+keyword(var)
