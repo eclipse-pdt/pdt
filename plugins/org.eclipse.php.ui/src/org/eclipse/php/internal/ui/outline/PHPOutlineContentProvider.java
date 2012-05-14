@@ -308,7 +308,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 	}
 
-	class UseStatementsNode extends FakeType {
+	public class UseStatementsNode extends FakeType {
 
 		public UseStatementsNode(ISourceModule sourceModule) {
 			super((ModelElement) sourceModule,
