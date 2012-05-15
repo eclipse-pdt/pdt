@@ -1,0 +1,29 @@
+--TEST--
+Test class constructor
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class Class1 {
+	function test1() {
+		;
+	}
+}
+class Class2 {
+	function test2() {
+		;
+	}
+}
+function method1()
+{
+	$table = ""; /* @var $table Class1 */
+}
+
+function method2()
+{
+	$table = ""; /* @var $table Class2 */
+	$table->|
+}
+?>
+--EXPECT--
+method(test2)
