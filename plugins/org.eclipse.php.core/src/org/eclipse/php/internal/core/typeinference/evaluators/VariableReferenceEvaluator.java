@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -102,7 +100,15 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 
 				List<VarComment> varComments = ((PHPModuleDeclaration) rootNode)
 						.getVarComments();
-				for (VarComment varComment : varComments) {
+				List<VarComment> newList = new ArrayList<VarComment>();
+				newList.addAll(varComments);
+				Collections.sort(newList, new Comparator<VarComment>() {
+
+					public int compare(VarComment o1, VarComment o2) {
+						return o2.sourceStart() - o1.sourceStart();
+					}
+				});
+				for (VarComment varComment : newList) {
 					if (varComment.sourceStart() > variableReference
 							.sourceStart()) {
 						break;
