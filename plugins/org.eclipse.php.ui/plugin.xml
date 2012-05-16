@@ -762,6 +762,12 @@
 			<adapter type="org.eclipse.core.resources.IResource" />
 		</factory>
 		-->
+		<factory
+			adaptableType="org.eclipse.php.internal.core.documentModel.DOMModelForPHP"
+			class="org.eclipse.php.internal.ui.spelling.SpellcheckDelegateAdapterFactory">
+			<adapter
+            	type="org.eclipse.wst.sse.ui.internal.spelling.ISpellcheckDelegate"/>
+		</factory>
 	</extension>
 
 	<!-- Editor actionsets -->
