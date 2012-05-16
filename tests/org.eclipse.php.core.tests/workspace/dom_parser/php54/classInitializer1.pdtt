@@ -8,9 +8,9 @@ echo (new Human("Gonzalo"))->hello();
 <Program start='0' length='47'>
 	<Statements>
 		<EchoStatement start='7' length='37'>
-			<MethodInvocation start='13' length='30'>
+			<MethodInvocation start='12' length='31'>
 				<Dispatcher>
-					<ClassInstanceCreation start='13' length='20'>
+					<ClassInstanceCreation start='12' length='21'>
 						<ClassName start='17' length='5'>
 							<NamespaceName start='17' length='5' global='false' current='false'>
 								<Identifier start='17' length='5' name='Human'/>
