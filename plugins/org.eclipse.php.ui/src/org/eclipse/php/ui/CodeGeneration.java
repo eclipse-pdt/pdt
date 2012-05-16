@@ -541,7 +541,7 @@ public class CodeGeneration {
 
 		if (!(elementAt instanceof MethodDeclaration
 				|| elementAt instanceof FunctionDeclaration || elementAt
-				.getParent() instanceof MethodDeclaration)) {
+					.getParent() instanceof MethodDeclaration)) {
 			program = generageProgram(method, program);
 			if (program == null) {
 				return null;
@@ -614,7 +614,16 @@ public class CodeGeneration {
 					String typeName = ((Identifier) parameterType).getName();
 					parameterTypes[i++] = typeName;
 				} else {
-					parameterTypes[i++] = UNKNOWN_TYPE;
+					if (formalParameter.getDefaultValue() != null
+							&& formalParameter.getDefaultValue() instanceof Scalar) {
+						Scalar scalar = (Scalar) formalParameter
+								.getDefaultValue();
+						parameterTypes[i++] = Scalar.getType(scalar
+								.getScalarType());
+					} else {
+						parameterTypes[i++] = UNKNOWN_TYPE;
+					}
+
 				}
 			}
 		}
