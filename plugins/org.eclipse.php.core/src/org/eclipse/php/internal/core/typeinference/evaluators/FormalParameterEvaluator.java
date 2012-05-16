@@ -21,10 +21,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
@@ -101,6 +98,11 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 							}
 						}
 					}
+				}
+				if (result == null
+						&& parameter.getInitialization() instanceof Scalar) {
+					Scalar scalar = (Scalar) parameter.getInitialization();
+					result = new PHPClassType(scalar.getType());
 				}
 			}
 		}
