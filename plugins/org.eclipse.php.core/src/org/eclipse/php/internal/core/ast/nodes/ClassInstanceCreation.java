@@ -253,6 +253,15 @@ public class ClassInstanceCreation extends VariableBase {
 		return result;
 	}
 
+	public ClassInstanceCreation cloneWithNewStart(int offset) {
+		AST target = getAST();
+		final List params = ASTNode.copySubtrees(target, ctorParams());
+		final ClassName cn = ASTNode.copySubtree(target, getClassName());
+		final ClassInstanceCreation result = new ClassInstanceCreation(offset,
+				this.getEnd(), target, cn, params);
+		return result;
+	}
+
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
 			PHPVersion apiLevel) {

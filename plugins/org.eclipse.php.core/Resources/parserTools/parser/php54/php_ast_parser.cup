@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php54;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.4 2012/02/02 08:53:20 zzhongwei Exp $
+////    $Id: php_ast_parser.cup,v 1.5 2012/05/16 05:48:46 zzhongwei Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2107,8 +2107,9 @@ T_LIST:s T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close T_EQ
 	RESULT = expr; 
 :}
 
-| T_OPEN_PARENTHESE new_expr:expr T_CLOSE_PARENTHESE instance_call:call
+| T_OPEN_PARENTHESE:open new_expr:expr T_CLOSE_PARENTHESE instance_call:call
 {:
+	expr = expr.cloneWithNewStart(openleft);
 	expr.setChainingInstanceCall(call);
 	
 	if (call!=null && !call.getChainingMethodOrProperty().isEmpty()) {
