@@ -17,9 +17,11 @@ import java.util.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -618,8 +620,16 @@ public class CodeGeneration {
 							&& formalParameter.getDefaultValue() instanceof Scalar) {
 						Scalar scalar = (Scalar) formalParameter
 								.getDefaultValue();
-						parameterTypes[i++] = Scalar.getType(scalar
-								.getScalarType());
+						IEvaluatedType simpleType = PHPSimpleTypes
+								.fromString(Scalar.getType(scalar
+										.getScalarType()));
+						if (simpleType == null) {
+							parameterTypes[i++] = Scalar.getType(scalar
+									.getScalarType());
+						} else {
+							parameterTypes[i++] = simpleType.getTypeName();
+						}
+
 					} else {
 						parameterTypes[i++] = UNKNOWN_TYPE;
 					}
