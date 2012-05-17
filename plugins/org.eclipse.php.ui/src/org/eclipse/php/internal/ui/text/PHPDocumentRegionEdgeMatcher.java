@@ -41,7 +41,7 @@ public class PHPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {
 	}
 
 	public IRegion match(IDocument document, int offset) {
-		if (offset < 0 || offset >= document.getLength())
+		if (offset < 0 || offset > document.getLength())
 			return null;
 
 		IRegion match = null;
