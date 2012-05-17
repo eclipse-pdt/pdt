@@ -779,6 +779,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 					switchEnablement(enablement);
 					getOverlayStore().setValue(
 							semantic.getEnabledPreferenceKey(), enablement);
+					applyStyles();
+					fText.redraw();
 
 				} else if (getStylePreferenceKeys().contains(namedStyle)) {
 					boolean enablement = fEnabler.getSelection();
@@ -787,6 +789,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 							PreferenceConstants
 									.getEnabledPreferenceKey(namedStyle),
 							enablement);
+					applyStyles();
+					fText.redraw();
 				}
 			}
 
