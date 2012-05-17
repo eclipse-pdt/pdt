@@ -24,6 +24,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
@@ -102,7 +103,10 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 				if (result == null
 						&& parameter.getInitialization() instanceof Scalar) {
 					Scalar scalar = (Scalar) parameter.getInitialization();
-					result = new PHPClassType(scalar.getType());
+					result = PHPSimpleTypes.fromString(scalar.getType());
+					if (result == null) {
+						result = new PHPClassType(scalar.getType());
+					}
 				}
 			}
 		}

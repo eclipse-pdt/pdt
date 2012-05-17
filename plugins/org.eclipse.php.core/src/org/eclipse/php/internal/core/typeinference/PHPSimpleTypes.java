@@ -48,6 +48,7 @@ public class PHPSimpleTypes {
 		SIMPLE_TYPES.put("integer", NUMBER);
 		SIMPLE_TYPES.put("float", NUMBER);
 		SIMPLE_TYPES.put("double", NUMBER);
+		SIMPLE_TYPES.put("number", NUMBER);
 		SIMPLE_TYPES.put("string", STRING);
 		SIMPLE_TYPES.put("resource", RESOURCE);
 		SIMPLE_TYPES.put("string", STRING);
