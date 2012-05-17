@@ -17,6 +17,7 @@ import java.util.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
@@ -41,7 +42,8 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
  */
 public class CodeGeneration {
 
-	private static final String UNKNOWN_TYPE = "unknown_type";
+	private static final String UNKNOWN_TYPE = UnknownType.INSTANCE
+			.getTypeName();
 
 	/**
 	 * Constant ID for the type kind to be used in
