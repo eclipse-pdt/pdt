@@ -202,7 +202,8 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 					referencesWithOrigOrder = references;
 				}
 			}
-		} else if (tagKind == PARAM) {
+		} else if (tagKind == PARAM || tagKind == PROPERTY
+				|| tagKind == PROPERTY_READ || tagKind == PROPERTY_WRITE) {
 
 			int firstWordStart = getNonWhitespaceIndex(value, 0);
 			int firstWordEnd = getWhitespaceIndex(value, firstWordStart);
