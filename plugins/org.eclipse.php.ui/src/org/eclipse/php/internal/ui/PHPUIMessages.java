@@ -274,6 +274,7 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPEditorHoverConfigurationBlock_nameColumnTitle;
 	public static String RefreshAction_toolTip;
 	public static String PHPFormatterConfigurationBlock_indentSizeLabel;
+	public static String PHPFormatterConfigurationBlock_tabSizeLabel;
 	public static String PHPFormatterConfigurationBlock_indentWrapLineSizeLabel;
 	public static String PHPFormatterConfigurationBlock_indentArrayInitSizeLabel;
 	public static String PHPProjectWizardBasePage_1;
@@ -641,6 +642,7 @@ public final class PHPUIMessages extends NLS {
 	public static String MarkOccurrencesConfigurationBlock_markTypeOccurrences;
 	public static String Search_Error_search_notsuccessful_message;
 	public static String PHPFormatterConfigurationBlock_indentSizeErrorMessage;
+	public static String PHPFormatterConfigurationBlock_tabSizeErrorMessage;
 	public static String OpenPHPPerspectiveAction_error_open_failed;
 	public static String MarkOccurrencesConfigurationBlock_link;
 	public static String PHPManualConfigurationBlock_remove;
