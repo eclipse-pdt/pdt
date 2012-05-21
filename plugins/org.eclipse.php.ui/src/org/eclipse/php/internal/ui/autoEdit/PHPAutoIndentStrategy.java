@@ -52,7 +52,12 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				&& c.text.trim().length() > 1
 				&& getPreferenceStore().getBoolean(
 						PreferenceConstants.EDITOR_SMART_PASTE)) {
-			smartPaste(d, c);
+			try {
+				smartPaste(d, c);
+			} catch (Exception e) {
+				PHPUiPlugin.log(e);
+			}
+
 		}
 	}
 
@@ -95,6 +100,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				}
 			}
 		} catch (BadLocationException e) {
+			PHPUiPlugin.log(e);
 		}
 
 		String newline = PHPModelUtils.getLineSeparator(null);
@@ -107,6 +113,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			project = getProject(doModelForPHP);
 			newline = PHPModelUtils.getLineSeparator(project);
 		} catch (Exception e) {
+			PHPUiPlugin.log(e);
 		} finally {
 			if (structuredModel != null) {
 				structuredModel.releaseFromRead();
@@ -138,6 +145,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 				}
 			}
 		} catch (BadLocationException e) {
+			PHPUiPlugin.log(e);
 		}
 		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
 				new PhpSourceParser());
