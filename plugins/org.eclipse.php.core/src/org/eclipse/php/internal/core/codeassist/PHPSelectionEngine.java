@@ -272,7 +272,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									&& phpDocTag.sourceEnd() >= end) {
 								SimpleReference[] references = phpDocTag
 										.getReferences();
-								if (tags != null) {
+								if (references != null) {
 									for (SimpleReference simpleReference : references) {
 										if (simpleReference instanceof TypeReference) {
 											TypeReference typeReference = (TypeReference) simpleReference;
@@ -547,7 +547,18 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					if (element != null) {
 						return new IModelElement[] { element };
 					}
-				}
+				}/*
+				 * else if (node instanceof Scalar) { Scalar scalar = (Scalar)
+				 * node; if (PHPModelUtils.isQuotesString(scalar.getValue())) {
+				 * 
+				 * IEvaluatedType evaluatedType = PHPTypeInferenceUtils
+				 * .resolveExpression(sourceModule, node); if (evaluatedType !=
+				 * null) {
+				 * 
+				 * IType[] types = PHPModelUtils.getTypes(
+				 * evaluatedType.getTypeName(), sourceModule, offset, null,
+				 * null); return types; } } }
+				 */
 			}
 		}
 		return null;
