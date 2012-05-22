@@ -37,6 +37,7 @@ public class PHPFormatterConfigurationBlock extends
 
 	public static final Key PREF_FORMATTER_USE_TABS = getPHPCoreKey(PHPCoreConstants.FORMATTER_USE_TABS);
 	public static final Key PREF_FORMATTER_INDENTATION_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
+	public static final Key PREF_FORMATTER_TAB_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_TAB_SIZE);
 	public static final Key PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
 	public static final Key PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE = getPHPCoreKey(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
 
@@ -47,6 +48,7 @@ public class PHPFormatterConfigurationBlock extends
 
 	private Combo tabPolicyCombo;
 	private Text indentSizeTxt;
+	private Text tabSizeTxt;
 	private Text fDefaultIndentWrapLineSizeTxt;
 	private Text fDefaultIndentArrayInitSizeTxt;
 
@@ -93,6 +95,16 @@ public class PHPFormatterConfigurationBlock extends
 		gd = new GridData();
 		gd.widthHint = 20;
 
+		Label tabSizeLabel = new Label(formattingComposite, SWT.NULL);
+		tabSizeLabel
+				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_tabSizeLabel); //$NON-NLS-1$
+		tabSizeTxt = new Text(formattingComposite, SWT.BORDER);
+		tabSizeTxt.setTextLimit(2);
+		tabSizeTxt.setLayoutData(gd);
+
+		gd = new GridData();
+		gd.widthHint = 20;
+
 		Label indentWrapLineSize = new Label(formattingComposite, SWT.NULL);
 		indentWrapLineSize
 				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentWrapLineSizeLabel); //$NON-NLS-1$
@@ -129,6 +141,7 @@ public class PHPFormatterConfigurationBlock extends
 		});
 
 		indentSizeTxt.addModifyListener(this);
+		tabSizeTxt.addModifyListener(this);
 		fDefaultIndentWrapLineSizeTxt.addModifyListener(this);
 		fDefaultIndentArrayInitSizeTxt.addModifyListener(this);
 		tabPolicyCombo.addSelectionListener(this);
@@ -159,6 +172,25 @@ public class PHPFormatterConfigurationBlock extends
 					fFormatterStatus = new StatusInfo(
 							IStatus.ERROR,
 							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); //$NON-NLS-1$
+				}
+			}
+			if (PREF_FORMATTER_TAB_SIZE.equals(changedKey)) {
+				try {
+					fTabSize = Integer.valueOf(newValue);
+					if (fTabSize < MIN_INDENT_SIZE
+							|| fTabSize > MAX_INDENT_SIZE) {
+						fFormatterStatus = new StatusInfo(
+								IStatus.ERROR,
+								PHPUIMessages.PHPFormatterConfigurationBlock_tabSizeErrorMessage); //$NON-NLS-1$
+					} else {
+						setValue(PREF_FORMATTER_TAB_SIZE,
+								String.valueOf(fTabSize));
+						fFormatterStatus = new StatusInfo();
+					}
+				} catch (NumberFormatException nfe) {
+					fFormatterStatus = new StatusInfo(
+							IStatus.ERROR,
+							PHPUIMessages.PHPFormatterConfigurationBlock_tabSizeErrorMessage); //$NON-NLS-1$
 				}
 			}
 			if (PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE.equals(changedKey)) {
@@ -257,6 +289,9 @@ public class PHPFormatterConfigurationBlock extends
 		if (c == indentSizeTxt) {
 			validateSettings(PREF_FORMATTER_INDENTATION_SIZE, new Integer(
 					fIndentationSize).toString(), textFieldStr);
+		} else if (c == tabSizeTxt) {
+			validateSettings(PREF_FORMATTER_TAB_SIZE,
+					new Integer(fTabSize).toString(), textFieldStr);
 		} else if (c == fDefaultIndentWrapLineSizeTxt) {
 			validateSettings(PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
 					new Integer(fIndentationWrappedLineSize).toString(),
@@ -275,18 +310,22 @@ public class PHPFormatterConfigurationBlock extends
 
 	private boolean fUseTabs;
 	private int fIndentationSize;
+	private int fTabSize;
 	private int fIndentationWrappedLineSize;
 	private int fIndentationArrayInitSize;
 
 	private void initValues() {
 		String useTabs = getValue(PREF_FORMATTER_USE_TABS);
 		String indentationSize = getValue(PREF_FORMATTER_INDENTATION_SIZE);
+		String tabSize = getValue(PREF_FORMATTER_TAB_SIZE);
 		String indentationWrappedLineSize = getValue(PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE);
 		String indentationArrayInitSize = getValue(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE);
 
 		fUseTabs = Boolean.valueOf(useTabs).booleanValue();
 		fIndentationSize = Integer.valueOf(indentationSize).intValue();
 		indentSizeTxt.setText(indentationSize);
+		fTabSize = Integer.valueOf(tabSize).intValue();
+		tabSizeTxt.setText(tabSize);
 
 		fIndentationWrappedLineSize = Integer.valueOf(
 				indentationWrappedLineSize).intValue();
