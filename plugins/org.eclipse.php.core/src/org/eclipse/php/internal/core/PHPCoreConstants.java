@@ -45,6 +45,7 @@ public interface PHPCoreConstants {
 	public static final String ENABLED = "enabled"; //$NON-NLS-1$
 	public static final String DISABLED = "disabled"; //$NON-NLS-1$
 	public static final String DEFAULT_INDENTATION_SIZE = "1"; //$NON-NLS-1$
+	public static final String DEFAULT_TAB_SIZE = "4"; //$NON-NLS-1$
 	public static final String DEFAULT_INDENTATION_WRAPPED_LINE_SIZE = "2"; //$NON-NLS-1$
 	public static final String DEFAULT_INDENTATION_ARRAY_INIT_SIZE = "2"; //$NON-NLS-1$
 
@@ -65,6 +66,8 @@ public interface PHPCoreConstants {
 			+ ".phpForamtterUseTabs"; //$NON-NLS-1$
 	public static final String FORMATTER_INDENTATION_SIZE = PLUGIN_ID
 			+ ".phpForamtterIndentationSize"; //$NON-NLS-1$
+	public static final String FORMATTER_TAB_SIZE = PLUGIN_ID
+			+ ".phpForamtterTabSize"; //$NON-NLS-1$
 	public static final String FORMATTER_INDENTATION_WRAPPED_LINE_SIZE = PLUGIN_ID
 			+ ".phpForamtterIndentationWrappedLineSize"; //$NON-NLS-1$
 	public static final String FORMATTER_INDENTATION_ARRAY_INIT_SIZE = PLUGIN_ID
@@ -133,6 +136,18 @@ public interface PHPCoreConstants {
 	 * </p>
 	 */
 	public final static String CODEASSIST_FILL_ARGUMENT_NAMES = "contentAssistFillMethodArguments"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that controls if code assist also contains proposals
+	 * of class/method/field stub which does not exist,and when user choose it,a
+	 * new class/method/field will be inserted
+	 * <p>
+	 * Value is of type <code>Boolean</code>. if
+	 * <code>false<code> code assist does not contain stubs. If
+	 * <code>true</code> code assist contains stubs.
+	 * </p>
+	 */
+	public final static String CODEASSIST_SHOW_STUB = "contentAssistShowStub"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls if method arguments are guessed when a
