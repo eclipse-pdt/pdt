@@ -46,6 +46,8 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_SIZE,
 				PHPCoreConstants.DEFAULT_INDENTATION_SIZE);
+		node.put(PHPCoreConstants.FORMATTER_TAB_SIZE,
+				PHPCoreConstants.DEFAULT_TAB_SIZE);
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
 				PHPCoreConstants.DEFAULT_INDENTATION_WRAPPED_LINE_SIZE);
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_ARRAY_INIT_SIZE,

@@ -36,6 +36,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 	private char indentationChar;
 	private int indentationSize;
+	private int tabSize;
+	private boolean useTab;
 	private int fIndentationWrappedLineSize;
 	private int fIndentationArrayInitSize;
 
@@ -102,6 +104,18 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 		return indentationSize;
 	}
 
+	public int getTabSize(IDocument document) {
+		if (!verifyValidity(document)) {
+			String tabSizeStr = preferencesSupport
+					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_TAB_SIZE);
+			if (tabSizeStr == null || tabSizeStr.length() == 0) {
+				return tabSize;
+			}
+			return Integer.valueOf(tabSizeStr).intValue();
+		}
+		return tabSize;
+	}
+
 	public char getIndentationChar(IDocument document) {
 		if (!verifyValidity(document)) {
 			String useTab = preferencesSupport
@@ -112,6 +126,18 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 			return (Boolean.valueOf(useTab).booleanValue()) ? '\t' : ' ';
 		}
 		return indentationChar;
+	}
+
+	public boolean useTab(IDocument document) {
+		if (!verifyValidity(document)) {
+			String useTab = preferencesSupport
+					.getWorkspacePreferencesValue(PHPCoreConstants.FORMATTER_USE_TABS);
+			if (useTab == null) {
+				return true;
+			}
+			return Boolean.valueOf(useTab).booleanValue();
+		}
+		return useTab;
 	}
 
 	private boolean verifyValidity(IDocument document) {
@@ -163,6 +189,8 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 			String indentSize = preferencesSupport.getPreferencesValue(
 					PHPCoreConstants.FORMATTER_INDENTATION_SIZE, null,
 					fLastProject);
+			String tabSize = preferencesSupport.getPreferencesValue(
+					PHPCoreConstants.FORMATTER_TAB_SIZE, null, fLastProject);
 			String indentationWrappedLineSize = preferencesSupport
 					.getPreferencesValue(
 							PHPCoreConstants.FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
@@ -183,7 +211,9 @@ public class FormatPreferencesSupport implements IFormatterCommonPrferences {
 
 			indentationChar = (Boolean.valueOf(useTab).booleanValue()) ? '\t'
 					: ' ';
+			this.useTab = Boolean.valueOf(useTab).booleanValue();
 			indentationSize = Integer.valueOf(indentSize).intValue();
+			this.tabSize = Integer.valueOf(tabSize).intValue();
 			fIndentationWrappedLineSize = Integer.valueOf(
 					indentationWrappedLineSize).intValue();
 			fIndentationArrayInitSize = Integer.valueOf(

@@ -10,4 +10,8 @@ public interface IFormatterCommonPrferences {
 	public int getIndentationSize(IDocument document);
 
 	public char getIndentationChar(IDocument document);
+
+	public int getTabSize(IDocument document);
+
+	public boolean useTab(IDocument document);
 }
