@@ -262,6 +262,9 @@ public class PhpElementConciliator {
 			parent = parent.getParent();
 		}
 
+		if (parent instanceof TraitDeclaration) {
+			return false;
+		}
 		final int parentType = parent.getType();
 		if (parentType == ASTNode.CLASS_NAME
 				|| parentType == ASTNode.CLASS_DECLARATION
