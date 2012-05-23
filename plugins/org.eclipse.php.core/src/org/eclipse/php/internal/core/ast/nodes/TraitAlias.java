@@ -146,7 +146,7 @@ public class TraitAlias extends Expression {
 	}
 
 	public int getType() {
-		return ASTNode.FUNCTION_NAME;
+		return ASTNode.TRAIT_ALIAS;
 	}
 
 	/*
