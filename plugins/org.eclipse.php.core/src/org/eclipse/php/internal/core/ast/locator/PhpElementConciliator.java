@@ -37,6 +37,8 @@ public class PhpElementConciliator {
 	public static final int CONCILIATOR_PROGRAM = 7;
 	public static final int CONCILIATOR_TRAITNAME = 8;
 
+	// public static final int CONCILIATOR_TRAIT_MEMBER = 9;
+
 	public static int concile(ASTNode locateNode) {
 		if (locateNode == null || isProgram(locateNode)) {
 			return CONCILIATOR_PROGRAM;
@@ -110,6 +112,10 @@ public class PhpElementConciliator {
 			parent = locateNode.getParent();
 		}
 
+		if (parent instanceof TraitAlias) {
+			TraitAlias ta = (TraitAlias) parent;
+			return locateNode == ta.getTraitMethod();
+		}
 		// check if it is a method declaration
 		if (parent.getType() == ASTNode.FUNCTION_DECLARATION) {
 			// check if it is a method declaration
@@ -580,6 +586,9 @@ public class PhpElementConciliator {
 			return false;
 		}
 
+		if (parent instanceof TraitAlias) {
+			return false;
+		}
 		// check if it is a method
 		final int type = parent.getParent().getType();
 		if (type == ASTNode.FUNCTION_INVOCATION) {

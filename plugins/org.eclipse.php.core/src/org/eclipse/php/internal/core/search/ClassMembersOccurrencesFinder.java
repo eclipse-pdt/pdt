@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.project.ProjectOptions;
@@ -71,7 +72,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			isMethod = type == ASTNode.FUNCTION_DECLARATION
 					|| parent.getLocationInParent() == FunctionName.NAME_PROPERTY
 					|| parent.getLocationInParent() == FunctionInvocation.FUNCTION_PROPERTY
-					|| type == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE;
+					|| type == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE
+					|| type == ASTNode.TRAIT_ALIAS;
 
 			if (dispatcherType != null
 					&& phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
@@ -159,6 +161,21 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		} else if (parent.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
 			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) parent;
 			typeBinding = reference.getClassName().resolveTypeBinding();
+		} else if (parent.getType() == ASTNode.TRAIT_ALIAS) {
+			TraitAlias traitAlias = (TraitAlias) parent;
+			List<NamespaceName> nameList = ((TraitUseStatement) traitAlias
+					.getParent().getParent()).getTraitList();
+			for (NamespaceName namespaceName : nameList) {
+				typeBinding = namespaceName.resolveTypeBinding();
+				if (typeBinding != null
+						&& (typeBinding.isClass() || typeBinding.isTrait())
+						&& typeBinding.getPHPElement() != null
+						&& ((IType) typeBinding.getPHPElement())
+								.getMethod(identifier.getName()) != null) {
+					return typeBinding;
+				}
+			}
+			return null;
 		}
 		if (typeBinding != null
 				&& (typeBinding.isClass() || typeBinding.isTrait())
@@ -339,6 +356,21 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		}
 
 		return super.visit(fieldAccess);
+	}
+
+	public boolean visit(TraitAlias node) {
+		if (dispatcherType != null
+				&& PHPFlags.isTrait(dispatcherType.getModifiers())) {
+			Expression expression = node.getTraitMethod();
+			if (expression.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
+				return true;
+			} else {
+				checkDispatch(expression);
+				return false;
+			}
+		}
+
+		return super.visit(node);
 	}
 
 	/**
