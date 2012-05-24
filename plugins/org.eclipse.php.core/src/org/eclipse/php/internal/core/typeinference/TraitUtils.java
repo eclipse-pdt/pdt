@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.core.typeinference;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -201,12 +202,19 @@ public class TraitUtils {
 	public static IMethod[] getTraitMethods(IType type, Set<String> nameSet) {
 		UseTrait useTrait = parse(type);
 		List<IMethod> fieldList = new ArrayList<IMethod>();
+		Set<String> traitNameSet = new HashSet<String>();
 		for (String trait : useTrait.getTraits()) {
 			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait,
 					MatchRule.EXACT, 0, 0, createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
-				if (!trait.equals(PHPModelUtils.getFullName(traitType))) {
+				String traitName = PHPModelUtils.getFullName(traitType);
+				if (!trait.equals(traitName)) {
 					continue;
+				}
+				if (traitNameSet.contains(traitName)) {
+					continue;
+				} else {
+					traitNameSet.add(traitName);
 				}
 				IMethod[] methods;
 				try {
