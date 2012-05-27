@@ -906,10 +906,10 @@ public class TypeBinding implements ITypeBinding {
 	}
 
 	public List<IType> getTraitList(boolean isMethod, String classMemberName) {
-		if (this.elements == null || elements.length == 0) {
-			return null;
-		}
 		List<IType> result = new LinkedList<IType>();
+		if (this.elements == null || elements.length == 0) {
+			return result;
+		}
 		for (IModelElement type : elements) {
 			IType trait = getTrait((IType) type, isMethod, classMemberName);
 			if (trait != null) {
