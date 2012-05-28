@@ -121,12 +121,19 @@ public class TraitUtils {
 	public static IField[] getTraitFields(IType type, Set<String> nameSet) {
 		UseTrait useTrait = parse(type);
 		List<IField> fieldList = new ArrayList<IField>();
+		Set<String> traitNameSet = new HashSet<String>();
 		for (String trait : useTrait.getTraits()) {
 			IType[] traitTypes = PhpModelAccess.getDefault().findTraits(trait,
 					MatchRule.EXACT, 0, 0, createSearchScope(type), null);
 			for (IType traitType : traitTypes) {
-				if (!trait.equals(PHPModelUtils.getFullName(traitType))) {
+				String traitName = PHPModelUtils.getFullName(traitType);
+				if (!trait.equals(traitName)) {
 					continue;
+				}
+				if (traitNameSet.contains(traitName)) {
+					continue;
+				} else {
+					traitNameSet.add(traitName);
 				}
 				IField[] fields;
 				try {
@@ -172,10 +179,12 @@ public class TraitUtils {
 		// tao.newMethodName);
 		// }
 		// return field;
-		TraitAliasObject tao = useTrait.getAliasMap().get(
-				field.getElementName());
-		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(
-				field.getElementName());
+		String fieldName = field.getElementName();
+		if (fieldName.startsWith("$")) {
+			fieldName = fieldName.substring(1);
+		}
+		TraitAliasObject tao = useTrait.getAliasMap().get(fieldName);
+		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(fieldName);
 		String fullName = PHPModelUtils.getFullName(field.getDeclaringType());
 		if (tao != null
 				&& (tao.traitName == null || fullName.equals(tao.traitName))) {
