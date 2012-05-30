@@ -1,0 +1,34 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+trait RenameTraitMember{
+	public function %fun1%(){
+	}
+	public function fun2() {
+	}
+	public function fun3() {
+	}
+	public $a;
+	private $b;
+	public $c;
+}
+class RenameTraitMember_class {
+	use RenameTraitMember{
+		%fun1%| as public;
+		a as a1;
+	}
+	use RenameTraitMember{
+		RenameTraitMember::fun2 as public fun4;
+		b as public b1;
+	}
+}
+$a = new RenameTraitMember_class();
+$a->%fun1%();
+$a->fun4();
+$a->fun3();
+$a->b1;
+$a->a1;
+$a->c;
+?>
+--EXPECT--
