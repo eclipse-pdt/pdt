@@ -42,7 +42,9 @@ public class StaticMethodHighlighting extends AbstractSemanticHighlighting {
 					.getFunctionName().getName();
 			final int invocationParent = functionInvocation.getParent()
 					.getType();
-			if (functionName.getType() == ASTNode.IDENTIFIER
+			if ((functionName.getType() == ASTNode.IDENTIFIER || (functionName
+					.getType() == ASTNode.VARIABLE && ((Variable) functionName)
+					.getName().getType() == ASTNode.IDENTIFIER))
 					&& invocationParent == ASTNode.STATIC_METHOD_INVOCATION) {
 				highlight(functionName);
 			}
