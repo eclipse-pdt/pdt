@@ -13,9 +13,7 @@ package org.eclipse.php.internal.core.search;
 
 import java.util.List;
 
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.project.ProjectOptions;
@@ -64,7 +62,6 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			Identifier identifier = (Identifier) node;
 
-			dispatcherType = resolveDispatcherType(identifier);
 			classMemberName = identifier.getName();
 
 			ASTNode parent = identifier.getParent();
@@ -75,10 +72,17 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 					|| type == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE
 					|| type == ASTNode.TRAIT_ALIAS;
 
+			dispatcherType = resolveDispatcherType(identifier);
 			if (dispatcherType != null
 					&& phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
-				traitList = dispatcherType.getTraitList(isMethod,
-						classMemberName);
+				String memberName = getRealName(identifier);
+				// if (dispatcherType.isTrait()) {
+				// traitList = new LinkedList<IType>();
+				// traitList.add((IType) dispatcherType.getPHPElement());
+				// } else {
+				traitList = dispatcherType.getTraitList(isMethod, memberName,
+						false);
+				// }
 			}
 
 			while (typeDeclarationName == null && parent != fASTRoot) {
@@ -161,18 +165,32 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		} else if (parent.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
 			FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) parent;
 			typeBinding = reference.getClassName().resolveTypeBinding();
+			ITypeBinding temp = getTypeBinding(typeBinding, reference
+					.getFunctionName().getName());
+			if (temp != null) {
+				return temp;
+			}
 		} else if (parent.getType() == ASTNode.TRAIT_ALIAS) {
 			TraitAlias traitAlias = (TraitAlias) parent;
 			List<NamespaceName> nameList = ((TraitUseStatement) traitAlias
 					.getParent().getParent()).getTraitList();
+			String memberName = null;
+			if (identifier == traitAlias.getFunctionName()) {
+				Expression expression = traitAlias.getTraitMethod();
+				if (expression.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
+					FullyQualifiedTraitMethodReference fqtm = (FullyQualifiedTraitMethodReference) expression;
+					memberName = fqtm.getFunctionName().getName();
+				} else {
+					memberName = ((Identifier) expression).getName();
+				}
+			} else {
+				memberName = identifier.getName();
+			}
 			for (NamespaceName namespaceName : nameList) {
 				typeBinding = namespaceName.resolveTypeBinding();
-				if (typeBinding != null
-						&& (typeBinding.isClass() || typeBinding.isTrait())
-						&& typeBinding.getPHPElement() != null
-						&& ((IType) typeBinding.getPHPElement())
-								.getMethod(identifier.getName()) != null) {
-					return typeBinding;
+				ITypeBinding temp = getTypeBinding(typeBinding, memberName);
+				if (temp != null) {
+					return temp;
 				}
 			}
 			return null;
@@ -185,13 +203,53 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		return null;
 	}
 
+	private ITypeBinding getTypeBinding(ITypeBinding typeBinding,
+			String memberName) {
+		if (typeBinding != null && typeBinding.isTrait()
+				&& typeBinding.getPHPElement() != null) {
+			try {
+				IModelElement[] members = ((IType) typeBinding.getPHPElement())
+						.getChildren();
+				for (IModelElement modelElement : members) {
+					if (modelElement.getElementName().equals(memberName)
+							|| modelElement.getElementName().equals(
+									"$" + memberName)) {
+						if (modelElement instanceof IMethod) {
+							if (dispatcherType == null
+									&& typeBinding.getPHPElement() != null) {
+								isMethod = true;
+							}
+						} else {
+							if (dispatcherType == null
+									&& typeBinding.getPHPElement() != null) {
+								isMethod = false;
+							}
+						}
+						return typeBinding;
+					}
+				}
+			} catch (ModelException e) {
+			}
+
+		}
+		return null;
+	}
+
 	private boolean isDispatcherTypeEquals(Identifier identifier,
 			boolean includeSuper) {
 
 		ITypeBinding type = resolveDispatcherType(identifier);
 		if (type != null && traitList != null && !traitList.isEmpty()) {
-			List<IType> traitList1 = type.getTraitList(isMethod,
-					classMemberName);
+			// if (type.isTrait()) {
+			// for (IType trait : traitList) {
+			// if (type.getPHPElement().equals(trait)) {
+			// return true;
+			// }
+			// }
+			// } else {
+			String memberName = getRealName(identifier);
+			List<IType> traitList1 = type.getTraitList(isMethod, memberName,
+					false);
 			for (IType trait1 : traitList1) {
 				for (IType trait : traitList) {
 					if (trait1.equals(trait)) {
@@ -199,11 +257,30 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 					}
 				}
 			}
+			// }
+
 		}
 		return type != null
 				&& (type.equals(dispatcherType) || (includeSuper && (type
 						.isSubTypeCompatible(dispatcherType) || dispatcherType
 						.isSubTypeCompatible(type))));
+	}
+
+	private String getRealName(Identifier identifier) {
+		String memberName = this.classMemberName;
+		if (identifier.getParent().getType() == ASTNode.TRAIT_ALIAS) {
+			TraitAlias traitAlias = (TraitAlias) identifier.getParent();
+			if (identifier == traitAlias.getFunctionName()) {
+				Expression expression = traitAlias.getTraitMethod();
+				if (expression.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
+					FullyQualifiedTraitMethodReference fqtm = (FullyQualifiedTraitMethodReference) expression;
+					memberName = fqtm.getFunctionName().getName();
+				} else {
+					memberName = ((Identifier) expression).getName();
+				}
+			}
+		}
+		return memberName;
 	}
 
 	/*
@@ -343,9 +420,9 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Mark var on: MyClass::var;
 	 */
 	public boolean visit(FullyQualifiedTraitMethodReference fieldAccess) {
-		if (isMethod) {
-			checkDispatch(fieldAccess.getFunctionName());
-		}
+		// if (isMethod) {
+		checkDispatch(fieldAccess.getFunctionName());
+		// }
 
 		return super.visit(fieldAccess);
 	}
@@ -359,15 +436,17 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(TraitAlias node) {
-		if (dispatcherType != null
-				&& PHPFlags.isTrait(dispatcherType.getModifiers())) {
+		if (dispatcherType != null) {
 			Expression expression = node.getTraitMethod();
 			if (expression.getType() == ASTNode.FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE) {
-				return true;
+				visit((FullyQualifiedTraitMethodReference) expression);
 			} else {
 				checkDispatch(expression);
-				return false;
 			}
+			if (node.getFunctionName() != null) {
+				checkDispatch(node.getFunctionName());
+			}
+			return false;
 		}
 
 		return super.visit(node);
@@ -551,17 +630,5 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public String getID() {
 		return ID;
-	}
-
-	public static class a {
-		public void foo() {
-
-		}
-	}
-
-	public static class b extends a {
-		public void foo() {
-
-		}
 	}
 }

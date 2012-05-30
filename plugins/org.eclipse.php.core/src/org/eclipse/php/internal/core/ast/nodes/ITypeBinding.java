@@ -421,6 +421,8 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public boolean isUnknown();
 
-	public List<IType> getTraitList(boolean isMethod, String classMemberName);
+	public List<IType> getTraitList(boolean isMethod, String classMemberName,
+			boolean includeSuper);
 
+	public org.eclipse.dltk.core.IModelElement[] getPHPElements();
 }

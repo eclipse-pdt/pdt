@@ -905,7 +905,8 @@ public class TypeBinding implements ITypeBinding {
 		return this.elements == null && !(this.type instanceof SimpleType);
 	}
 
-	public List<IType> getTraitList(boolean isMethod, String classMemberName) {
+	public List<IType> getTraitList(boolean isMethod, String classMemberName,
+			boolean includeSuper) {
 		List<IType> result = new LinkedList<IType>();
 		if (this.elements == null || elements.length == 0) {
 			return result;
@@ -914,6 +915,34 @@ public class TypeBinding implements ITypeBinding {
 			IType trait = getTrait((IType) type, isMethod, classMemberName);
 			if (trait != null) {
 				result.add(trait);
+			}
+		}
+		if (includeSuper) {
+
+			for (IModelElement element : elements) {
+				IType type = (IType) element;
+				try {
+					if (type.getSuperClasses() == null
+							|| type.getSuperClasses().length == 0
+							|| PHPFlags.isTrait(type.getFlags())) {
+						return result;
+					}
+
+					ITypeHierarchy supertypeHierarchy = hierarchy.get(type);
+					if (supertypeHierarchy == null) {
+						supertypeHierarchy = type
+								.newSupertypeHierarchy(new NullProgressMonitor());
+						hierarchy.put(type, supertypeHierarchy);
+					}
+					IType trait = getTrait(type, isMethod, classMemberName);
+					if (trait != null) {
+						result.add(trait);
+					}
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		return result;
@@ -944,6 +973,10 @@ public class TypeBinding implements ITypeBinding {
 			}
 		}
 		return null;
+	}
+
+	public IModelElement[] getPHPElements() {
+		return elements;
 	}
 
 }

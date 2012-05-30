@@ -113,8 +113,9 @@ public class PhpElementConciliator {
 		}
 
 		if (parent instanceof TraitAlias) {
-			TraitAlias ta = (TraitAlias) parent;
-			return locateNode == ta.getTraitMethod();
+			// TraitAlias ta = (TraitAlias) parent;
+			// return locateNode == ta.getTraitMethod();
+			return true;
 		}
 		// check if it is a method declaration
 		if (parent.getType() == ASTNode.FUNCTION_DECLARATION) {

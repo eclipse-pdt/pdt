@@ -140,7 +140,7 @@ public class TraitUtils {
 					fields = PHPModelUtils.getTypeField(traitType, "", false);
 					// fields = traitType.getFields();
 					for (IField field : fields) {
-						field = getFieldWrapper(useTrait, field);
+						field = getFieldWrapper(useTrait, field, type);
 						if (field == null) {
 							continue;
 						}
@@ -159,7 +159,8 @@ public class TraitUtils {
 		return fieldList.toArray(new IField[fieldList.size()]);
 	}
 
-	private static IField getFieldWrapper(UseTrait useTrait, IField field) {
+	private static IField getFieldWrapper(UseTrait useTrait, IField field,
+			IType type) {
 		// TraitAliasObject tao = useTrait.getAliasMap().get(
 		// field.getElementName());
 		// TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(
@@ -189,7 +190,7 @@ public class TraitUtils {
 		if (tao != null
 				&& (tao.traitName == null || fullName.equals(tao.traitName))) {
 			field = new FieldWrapper(field, tao.newMethodVisibility,
-					tao.newMethodName);
+					tao.newMethodName, type);
 			return field;
 		}
 		if (tpo != null) {
@@ -230,7 +231,7 @@ public class TraitUtils {
 					methods = PHPModelUtils.getTypeMethod(traitType, "", false);
 					// methods = traitType.getMethods();
 					for (IMethod method : methods) {
-						method = getMethodWrapper(useTrait, method);
+						method = getMethodWrapper(useTrait, method, type);
 						if (method == null) {
 							continue;
 						}
@@ -246,7 +247,8 @@ public class TraitUtils {
 		return fieldList.toArray(new IMethod[fieldList.size()]);
 	}
 
-	private static IMethod getMethodWrapper(UseTrait useTrait, IMethod method) {
+	private static IMethod getMethodWrapper(UseTrait useTrait, IMethod method,
+			IType type) {
 		TraitAliasObject tao = useTrait.getAliasMap().get(
 				method.getElementName());
 		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(
@@ -255,7 +257,7 @@ public class TraitUtils {
 		if (tao != null
 				&& (tao.traitName == null || fullName.equals(tao.traitName))) {
 			method = new MethodWrapper(method, tao.newMethodVisibility,
-					tao.newMethodName);
+					tao.newMethodName, type);
 			return method;
 		}
 		if (tpo != null) {
@@ -291,16 +293,30 @@ public class TraitUtils {
 		return SearchEngine.createSearchScope(sourceModule);
 	}
 
-	private static class FieldWrapper extends SourceField {
+	public static interface ITraitMember {
+		public String getRealName();
+
+		public IType getHostType();
+
+		public boolean useAlias();
+	}
+
+	private static class FieldWrapper extends SourceField implements
+			ITraitMember {
 
 		private int flags = -1;
 		private String name;
 		private IMember member;
+		private IType type;
 
-		public FieldWrapper(IMember member, int flags, String name) {
+		public FieldWrapper(IMember member, int flags, String name, IType type) {
 			super((ModelElement) member.getParent(), member.getElementName());
 			this.member = member;
+			if (!name.startsWith("$")) {
+				name = "$" + name;
+			}
 			this.name = name;
+			this.type = type;
 			try {
 				this.flags = member.getFlags();
 				if (flags != -1) {
@@ -340,18 +356,34 @@ public class TraitUtils {
 			}
 			return member.getElementName();
 		}
+
+		public String getRealName() {
+			return member.getElementName();
+		}
+
+		public IType getHostType() {
+			return type;
+		}
+
+		public boolean useAlias() {
+			return name != null && !name.equals(member.getElementName());
+		}
+
 	}
 
-	private static class MethodWrapper extends SourceMethod {
+	private static class MethodWrapper extends SourceMethod implements
+			ITraitMember {
 
 		private int flags = -1;
 		private String name;
 		private IMethod member;
+		private IType type;
 
-		public MethodWrapper(IMethod member, int flags, String name) {
+		public MethodWrapper(IMethod member, int flags, String name, IType type) {
 			super((ModelElement) member.getParent(), member.getElementName());
 			this.member = member;
 			this.name = name;
+			this.type = type;
 			try {
 				this.flags = member.getFlags();
 				if (flags != -1) {
@@ -390,6 +422,14 @@ public class TraitUtils {
 				return name;
 			}
 			return member.getElementName();
+		}
+
+		public String getRealName() {
+			return member.getElementName();
+		}
+
+		public IType getHostType() {
+			return type;
 		}
 
 		public IParameter[] getParameters() throws ModelException {
@@ -403,6 +443,10 @@ public class TraitUtils {
 
 		public boolean isConstructor() throws ModelException {
 			return false;
+		}
+
+		public boolean useAlias() {
+			return name != null && !name.equals(member.getElementName());
 		}
 	}
 
