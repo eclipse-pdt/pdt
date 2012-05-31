@@ -40,6 +40,8 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 
 	private Pattern[] todos;
 
+	protected int tagStart;
+
 	public void setPatterns(IProject project) {
 		if (project != null) {
 			todos = TaskPatternsProvider.getInstance().getPatternsForProject(
@@ -91,7 +93,7 @@ public abstract class PHPDocTagContext extends PHPDocContext {
 		setPatterns(sourceModule.getScriptProject().getProject());
 		TextSequence statementText = getStatementText();
 
-		int tagEnd = statementText.length(), tagStart;
+		int tagEnd = statementText.length();
 		boolean found = false;
 		do {
 			tagEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText,

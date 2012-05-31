@@ -11,41 +11,49 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 
 /**
- * This context represents state when staying in a PHPDoc block. <br/>
- * Example:
+ * This context represents the state when staying after 'return' tag in PHPDoc
+ * block <br/>
+ * Examples:
  * 
  * <pre>
- *   /**
- *    * |
+ *   1. /**
+ *       * @return |
+ *   2. /**
+ *       * @return Ty|
  * </pre>
  * 
  * @author michael
  */
-public abstract class PHPDocContext extends AbstractCompletionContext {
+public class PHPDocPropertyTagContext extends PHPDocTagContext {
+
+	public static final Set<String> TAGS = new HashSet<String>();
+	static {
+		TAGS.add("property");
+		TAGS.add("property-read");
+		TAGS.add("property-write");
+	}
 
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return isRightPartitionType();
-	}
-
-	protected boolean isRightPartitionType() {
-		return getPartitionType() == PHPPartitionTypes.PHP_DOC;
-	}
-
-	public int getPrefixEnd() throws BadLocationException {
-		int prefixEnd = getOffset();
-		while (!Character.isWhitespace(getDocument().getChar(prefixEnd))) {
-			++prefixEnd;
+		try {
+			int lastWordOffset = getPreviousWordOffset(2);
+			if (lastWordOffset > tagStart) {
+				return false;
+			}
+		} catch (BadLocationException e) {
+			return false;
 		}
-		return prefixEnd;
+		return TAGS.contains(getTagName().toLowerCase());
 	}
 }
