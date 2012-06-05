@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.ui.filters;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IScriptFolder;
 import org.eclipse.dltk.core.ISourceModule;
@@ -9,6 +10,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 public class DotFileFilter extends ViewerFilter {
 
+	private static final String DOT = ".";
 	private static final String HTACCESS_FILE = ".htaccess";
 
 	public DotFileFilter() {
@@ -26,19 +28,24 @@ public class DotFileFilter extends ViewerFilter {
 			Path path = new Path(name);
 			for (int i = 0; i < path.segmentCount(); i++) {
 				String segment = path.segment(i);
-				if (segment.startsWith(".")) { //$NON-NLS-1$
+				if (segment.startsWith(DOT)) { //$NON-NLS-1$
 					return false;
 				}
 			}
 		} else if (element instanceof ISourceModule) {
-			if (((ISourceModule) element).getElementName().startsWith(".") && !((ISourceModule) element).getElementName().equals(HTACCESS_FILE)) { //$NON-NLS-1$
+			if (((ISourceModule) element).getElementName().startsWith(DOT)
+					&& !((ISourceModule) element).getElementName().equals(
+							HTACCESS_FILE)) { //$NON-NLS-1$
 				return false;
 			}
 		} else if (element instanceof IResource) {
-			String lastSegment = ((IResource) element).getFullPath()
-					.lastSegment();
-			if (lastSegment.startsWith(".") && !lastSegment.equals(HTACCESS_FILE)) { //$NON-NLS-1$
-				return false;
+
+			IPath path = ((IResource) element).getFullPath();
+			for (int i = 0; i < path.segmentCount(); i++) {
+				String segment = path.segment(i);
+				if (segment.startsWith(DOT)) { //$NON-NLS-1$
+					return false;
+				}
 			}
 		}
 		return true;
