@@ -68,7 +68,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION,
 				IPageLayout.LEFT, 0.22f, editorArea);
 		topLeft.addView(ID_EXPLORER);
-		topLeft.addView(ID_TYPEHIERARCHY);
+		// topLeft.addView(ID_TYPEHIERARCHY);
 
 		// Bottom: Attributes view, Problem View, Task List, placeholder for
 		// Design View Log
