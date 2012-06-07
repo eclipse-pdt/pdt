@@ -46,7 +46,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		layout.addPerspectiveShortcut(ORG_ECLIPSE_DEBUG_UI_DEBUG_PERSPECTIVE);
 
 		layout.addShowViewShortcut(ID_EXPLORER);
-		layout.addShowViewShortcut(ID_TYPEHIERARCHY);
+		// layout.addShowViewShortcut(ID_TYPEHIERARCHY);
 		layout.addShowViewShortcut(ID_FUNCTIONS);
 		layout.addShowViewShortcut(ID_PROJECT_OUTLINE);
 		layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
@@ -75,7 +75,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION,
 				IPageLayout.BOTTOM, 0.75f, editorArea);
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
-		bottom.addView(IPageLayout.ID_TASK_LIST);
+		// bottom.addView(IPageLayout.ID_TASK_LIST);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
