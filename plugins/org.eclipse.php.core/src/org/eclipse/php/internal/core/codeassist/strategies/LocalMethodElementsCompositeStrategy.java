@@ -35,7 +35,6 @@ public class LocalMethodElementsCompositeStrategy extends
 		strategies.add(new LocalMethodVariablesStrategy(context));
 		strategies.add(new GlobalConstantsStrategy(context));
 		strategies.add(new GlobalKeywordsStrategy(context));
-		strategies.add(new ClassKeywordsStrategy(context));
 		strategies.add(new MethodKeywordStrategy(context));
 	}
 
