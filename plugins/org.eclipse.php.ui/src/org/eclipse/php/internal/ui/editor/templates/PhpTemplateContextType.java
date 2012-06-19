@@ -23,7 +23,17 @@ import org.eclipse.jface.text.Position;
  */
 public class PhpTemplateContextType extends ScriptTemplateContextType {
 
+	// for all php except comment
 	public static final String PHP_CONTEXT_TYPE_ID = "php"; //$NON-NLS-1$
+	// for all statements
+	public static final String PHP_STATEMENTS_CONTEXT_TYPE_ID = "php-statements"; //$NON-NLS-1$
+	// for class,trait,interface statements(private,public and method
+	// proposal)
+	public static final String PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID = "php-type-members"; //$NON-NLS-1$
+	// for statements in type method
+	public static final String PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID = "php-type-method-statements"; //$NON-NLS-1$
+	// for statements out of function and class
+	public static final String PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID = "php-global-members"; //$NON-NLS-1$
 
 	public ScriptTemplateContext createContext(IDocument document, int offset,
 			int length, ISourceModule sourceModule) {

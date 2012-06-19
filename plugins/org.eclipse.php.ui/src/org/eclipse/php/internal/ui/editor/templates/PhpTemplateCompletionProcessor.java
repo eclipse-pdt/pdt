@@ -14,18 +14,21 @@ package org.eclipse.php.internal.ui.editor.templates;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.templates.ScriptTemplateAccess;
 import org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.*;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -58,6 +61,9 @@ public class PhpTemplateCompletionProcessor extends
 	/** Positions created on the key documents to remove in reset. */
 	private final Map<IDocument, Position> fPositions = new HashMap<IDocument, Position>();
 
+	private IMethod enclosingMethod;
+	private IType enclosingType;
+
 	public PhpTemplateCompletionProcessor(
 			ScriptContentAssistInvocationContext context, boolean explicit) {
 		super(context);
@@ -80,6 +86,60 @@ public class PhpTemplateCompletionProcessor extends
 			return EMPTY;
 		}
 
+		ISourceModule sourceModule = getContext().getSourceModule();
+		if (sourceModule == null) {
+			return EMPTY;
+		}
+		List<String> contextIds = new ArrayList<String>();
+		contextIds.add(contextTypeId);
+		// check whether enclosing element is a method
+		try {
+			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			while (enclosingElement instanceof IField) {
+				enclosingElement = enclosingElement.getParent();
+			}
+			if ((enclosingElement instanceof IMethod)) {
+				enclosingMethod = (IMethod) enclosingElement;
+			}
+
+			// find the most outer enclosing type if exists
+			while (enclosingElement != null
+					&& !(enclosingElement instanceof IType && enclosingElement
+							.getParent() instanceof ISourceModule)) {
+				enclosingElement = enclosingElement.getParent();
+			}
+			enclosingType = (IType) enclosingElement;
+
+			if (enclosingMethod == null && enclosingType == null) {
+				contextIds
+						.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+				contextIds
+						.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
+			} else if (enclosingMethod == null && enclosingType != null) {
+				if (!PHPFlags.isNamespace(enclosingType.getFlags())) {
+					contextIds
+							.add(PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
+				} else {
+					contextIds
+							.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+					contextIds
+							.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
+				}
+			} else if (enclosingMethod != null && enclosingType != null) {
+				if (!PHPFlags.isNamespace(enclosingType.getFlags())) {
+					contextIds
+							.add(PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
+				}
+				contextIds
+						.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+			} else if (enclosingMethod != null && enclosingType == null) {
+				contextIds
+						.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
+			}
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		}
+
 		ITextSelection selection = (ITextSelection) viewer
 				.getSelectionProvider().getSelection();
 
@@ -98,15 +158,11 @@ public class PhpTemplateCompletionProcessor extends
 			if (context == null)
 				return new ICompletionProposal[0];
 
-			// if (selection.y != 0) {
 			try {
-				// selectedText= document.get(selection.getOffset(),
-				// selection.getLength());
 				document.addPosition(position);
 				fPositions.put(document, position);
 			} catch (BadLocationException e) {
 			}
-			// }
 
 			// name of the selection variables {line, word}_selection
 			context.setVariable("selection", selection.getText()); //$NON-NLS-1$
@@ -114,8 +170,7 @@ public class PhpTemplateCompletionProcessor extends
 			boolean multipleLinesSelected = areMultipleLinesSelected(viewer);
 
 			List<TemplateProposal> matches = new ArrayList<TemplateProposal>();
-			Template[] templates = getTemplates(context.getContextType()
-					.getId());
+			Template[] templates = getTemplates(contextIds);
 			for (int i = 0; i != templates.length; i++) {
 				Template template = templates[i];
 				if (context.canEvaluate(template)
@@ -132,23 +187,56 @@ public class PhpTemplateCompletionProcessor extends
 		} else {
 			isSelection = false;
 		}
-		ICompletionProposal[] completionProposals = super
-				.computeCompletionProposals(viewer, offset);
-		if (completionProposals == null) {
-			return selectionProposal;
+		String prefix = extractPrefix(viewer, offset);
+		if (!isValidPrefix(prefix)) {
+			return new ICompletionProposal[0];
 		}
-		completionProposals = filterUsingPrefix(completionProposals,
-				extractPrefix(viewer, offset));
+		IRegion region = new Region(offset - prefix.length(), prefix.length());
+		TemplateContext context = createContext(viewer, region);
+		if (context == null)
+			return new ICompletionProposal[0];
 
-		List<ICompletionProposal> matches = new ArrayList<ICompletionProposal>();
+		// name of the selection variables {line, word}_selection
+		context.setVariable("selection", selection.getText()); //$NON-NLS-1$
+
+		List<TemplateProposal> matches = new ArrayList<TemplateProposal>();
+
+		Template[] templates = getTemplates(contextIds);
+		for (int i = 0; i < templates.length; i++) {
+			Template template = templates[i];
+			try {
+				context.getContextType().validate(template.getPattern());
+			} catch (TemplateException e) {
+				continue;
+			}
+			if (template.getName().startsWith(prefix))
+				matches.add((TemplateProposal) createProposal(template,
+						context, region, getRelevance(template, prefix)));
+		}
+
+		final IInformationControlCreator controlCreator = getInformationControlCreator();
+		for (TemplateProposal proposal : matches) {
+			proposal.setInformationControlCreator(controlCreator);
+		}
+
+		List<ICompletionProposal> result = new ArrayList<ICompletionProposal>();
 		for (int i = 0; i < selectionProposal.length; i++) {
-			matches.add(selectionProposal[i]);
+			result.add(selectionProposal[i]);
 		}
-		for (int i = 0; i < completionProposals.length; i++) {
-			matches.add(completionProposals[i]);
+		for (int i = 0; i < matches.size(); i++) {
+			result.add(matches.get(i));
 		}
 
-		return matches.toArray(new ICompletionProposal[matches.size()]);
+		return result.toArray(new ICompletionProposal[matches.size()]);
+	}
+
+	private Template[] getTemplates(List<String> contextIds) {
+		List<Template> result = new ArrayList<Template>();
+		for (String id : contextIds) {
+			Template[] templates = getTemplates(id);
+			result.addAll(Arrays.asList(templates));
+		}
+		return result.toArray(new Template[result.size()]);
 	}
 
 	/**
@@ -400,7 +488,6 @@ public class PhpTemplateCompletionProcessor extends
 
 	@Override
 	protected int getRelevance(Template template, String prefix) {
-		// TODO Auto-generated method stub
 		return 80;
 	}
 }

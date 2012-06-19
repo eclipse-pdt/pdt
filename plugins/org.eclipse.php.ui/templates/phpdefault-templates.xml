@@ -21,7 +21,7 @@
 	name="pr"
 	description="%description.php.print"
 	id="org.eclipse.php.ui.editor.templates.php.print"
-	context="php"
+	context="php-statements"
 	enabled="true" 
 	autoinsert="false">print ${};
 ${cursor}</template>
@@ -30,7 +30,7 @@ ${cursor}</template>
 	name="prs"
 	description="%description.php.print.string"
 	id="org.eclipse.php.ui.editor.templates.php.print.string"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">print "${}";
 ${cursor}</template>
@@ -39,7 +39,7 @@ ${cursor}</template>
 	name="prln"
 	description="%description.php.print.newline"
 	id="org.eclipse.php.ui.editor.templates.php.print.newline"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">print ${}."\n";
 ${cursor}</template>
@@ -48,7 +48,7 @@ ${cursor}</template>
 	name="prv"
 	description="%description.php.print.variable"
 	id="org.eclipse.php.ui.editor.templates.php.print.variable"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">print("\${dollar}${variable} = ". ${dollar}${variable});
 ${cursor}</template>
@@ -57,7 +57,7 @@ ${cursor}</template>
 	name="prf"
 	description="%description.php.print.functionName"
 	id="org.eclipse.php.ui.editor.templates.php.print.functionName"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">print("${function_container}");
 ${cursor}</template>
@@ -66,7 +66,7 @@ ${cursor}</template>
 	name="prc"
 	description="%description.php.print.className"
 	id="org.eclipse.php.ui.editor.templates.php.print.className"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">print("${class_container}");
 ${cursor}</template>
@@ -75,7 +75,7 @@ ${cursor}</template>
 	name="eco"
 	description="%description.php.echo"
 	id="org.eclipse.php.ui.editor.templates.php.echo"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">echo("${}");
 ${cursor}</template>
@@ -84,7 +84,7 @@ ${cursor}</template>
 	name="iter"
 	description="%description.php.arrayIterator"
 	id="org.eclipse.php.ui.editor.templates.php.arrayIterator"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">for (${dollar}${number_variable} = 0 ; ${dollar}${number_variable} &lt; count(${dollar}${array_variable}) ; ${dollar}${number_variable}++) {
 	${cursor};
@@ -95,7 +95,7 @@ ${cursor}</template>
 	name="inst"
 	description="%description.php.instanceof"
 	id="org.eclipse.php.ui.editor.templates.php.instanceof"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">if (${dollar}${variable} instanceof ${class}) {
 	${cursor};
@@ -106,7 +106,7 @@ ${cursor}</template>
 	name="for" 
 	description="%description.php.for"
 	id="org.eclipse.php.ui.editor.templates.php.for" 
-	context="php" 
+	context="php-statements" 
 	enabled="true" 
 	autoinsert="false">for (${dollar}${index} = 0; ${dollar}${index} &lt; ${number_variable}; ${dollar}${index}++) {
 	${line_selection}${cursor}
@@ -117,7 +117,7 @@ ${cursor}</template>
 	name="fore"
 	description="%description.php.foreach"
 	id="org.eclipse.php.ui.editor.templates.php.foreach"
-	context="php"
+	context="php-statements"
 	enabled="true" 
 	autoinsert="false">foreach (${dollar}${array_expression} as ${dollar}${value}) {
 	${cursor};
@@ -128,7 +128,7 @@ ${cursor}</template>
 	name="forek"
 	description="%description.php.foreachkey"
 	id="org.eclipse.php.ui.editor.templates.php.foreachkey"
-	context="php"
+	context="php-statements"
 	enabled="true" 
 	autoinsert="false">foreach (${dollar}${array_expression} as ${dollar}${key} => ${dollar}${value}) {
 	${cursor};
@@ -139,7 +139,7 @@ ${cursor}</template>
 	name="swi"
 	description="%description.php.switch"
 	id="org.eclipse.php.ui.editor.templates.php.switch"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">switch (${dollar}${variable}) {
 	case ${value}:
@@ -156,7 +156,7 @@ ${cursor}</template>
 	name="fnc"
 	description="%description.php.functionStatement"
 	id="org.eclipse.php.ui.editor.templates.php.fnc"
-	context="php"
+	context="php-type-members"
 	enabled="true"
 	autoinsert="false">function ${function_name}(${dollar}${param}) {
 	${cursor};
@@ -167,7 +167,29 @@ ${cursor}</template>
 	name="function"
 	description="%description.php.functionStatement"
 	id="org.eclipse.php.ui.editor.templates.php.function"
-	context="php"
+	context="php-type-members"
+	enabled="true"
+	autoinsert="false">function ${function_name}(${dollar}${param}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="fnc"
+	description="%description.php.functionStatement"
+	id="org.eclipse.php.ui.editor.templates.php.fnc"
+	context="php-global-members"
+	enabled="true"
+	autoinsert="false">function ${function_name}(${dollar}${param}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="function"
+	description="%description.php.functionStatement"
+	id="org.eclipse.php.ui.editor.templates.php.function"
+	context="php-global-members"
 	enabled="true"
 	autoinsert="false">function ${function_name}(${dollar}${param}) {
 	${cursor};
@@ -178,7 +200,7 @@ ${cursor}</template>
 	name="lambda"
 	description="%description.php.lambdaStatement"
 	id="org.eclipse.php.ui.editor.templates.php.lambda"
-	context="php"
+	context="php-global-members"
 	enabled="true"
 	autoinsert="false">function (${parameters}) use (${lexical_variables}) {
 	${cursor};
@@ -189,7 +211,7 @@ ${cursor}</template>
 	name="closure"
 	description="%description.php.lambdaStatement"
 	id="org.eclipse.php.ui.editor.templates.php.closure"
-	context="php"
+	context="php-global-members"
 	enabled="true"
 	autoinsert="false">function (${parameters}) use (${lexical_variables}) {
 	${cursor};
@@ -200,7 +222,7 @@ ${cursor}</template>
 	name="cls"
 	description="%description.php.class"
 	id="org.eclipse.php.ui.editor.templates.php.cls"
-	context="php"
+	context="php-global-members"
 	enabled="true"
 	autoinsert="false">class ${class_name} {
 	function ${function_name}() {
@@ -213,7 +235,7 @@ ${cursor}</template>
 	name="class"
 	description="%description.php.class"
 	id="org.eclipse.php.ui.editor.templates.php.class"
-	context="php"
+	context="php-global-members"
 	enabled="true"
 	autoinsert="false">class ${class_name} {
 	function ${function_name}() {
@@ -226,7 +248,7 @@ ${cursor}</template>
 	name="if"
 	description="%description.php.if"
 	id="org.eclipse.php.ui.editor.templates.php.if"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">if (${condition}) {
 	${cursor};
@@ -237,7 +259,7 @@ ${cursor}</template>
 	name="els"
 	description="%description.php.else"
 	id="org.eclipse.php.ui.editor.templates.php.else"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">else {
 	${cursor};
@@ -248,7 +270,7 @@ ${cursor}</template>
 	name="elif"
 	description="%description.php.elif"
 	id="org.eclipse.php.ui.editor.templates.php.elif"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">elseif (${condition}) {
 	${cursor};
@@ -259,7 +281,7 @@ ${cursor}</template>
 	name="try"
 	description="%description.php.try"
 	id="org.eclipse.php.ui.editor.templates.php.try"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">try {
 	${cursor}
@@ -271,7 +293,7 @@ ${cursor}</template>
 	name="while"
 	description="%description.php.while"
 	id="org.eclipse.php.ui.editor.templates.php.while"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">while (${condition}) {
 	${cursor};
@@ -282,7 +304,7 @@ ${cursor}</template>
 	name="itdir"
 	description="%description.php.itdir"
 	id="org.eclipse.php.ui.editor.templates.php.itdir"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">${dollar}${dirh} = opendir(${dirname});
 if (${dollar}${dirh}) {
@@ -298,7 +320,7 @@ if (${dollar}${dirh}) {
 	name="my_fr"
 	description="%description.php.mySql.fr"
 	id="org.eclipse.php.ui.editor.templates.php.mySql.fr"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">while (${dollar}${row} = mysql_fetch_row(${dollar}${query})) {
 	${cursor};
@@ -309,7 +331,7 @@ if (${dollar}${dirh}) {
 	name="my_fa"
 	description="%description.php.mySql.fa"
 	id="org.eclipse.php.ui.editor.templates.php.mySql.fa"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">while (${dollar}${row} = mysql_fetch_array(${dollar}${query})) {
 	${cursor};
@@ -320,7 +342,7 @@ if (${dollar}${dirh}) {
 	name="my_fo"
 	description="%description.php.mySql.fo"
 	id="org.eclipse.php.ui.editor.templates.php.mySql.fo"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">while (${dollar}${row} = mysql_fetch_object(${dollar}${query})) {
 	${cursor};
@@ -331,7 +353,7 @@ if (${dollar}${dirh}) {
 	name="my_gc"
 	description="%description.php.my_gc"
 	id="org.eclipse.php.ui.editor.templates.php.my_gc"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">ob_start();
 	
@@ -345,7 +367,7 @@ ob_end_clean();
 	name="cln"
 	description="%description.php.cln"
 	id="org.eclipse.php.ui.editor.templates.php.cln"
-	context="php"
+	context="php-statements"
 	enabled="true"
 	autoinsert="false">${dollar}${new_obj} = clone ${dollar}${variable};
 ${cursor}</template>
@@ -354,7 +376,7 @@ ${cursor}</template>
 	name="pcon"
 	description="%description.php.pcon"
 	id="org.eclipse.php.ui.editor.templates.php.pcon"
-	context="php"
+	context="php-type-method-statements"
 	enabled="true"
 	autoinsert="false">parent::__construct();
 ${cursor}</template>
@@ -363,7 +385,7 @@ ${cursor}</template>
 	name="pclon"
 	description="%description.php.pclon"
 	id="org.eclipse.php.ui.editor.templates.php.pclon"
-	context="php"
+	context="php-type-method-statements"
 	enabled="true"
 	autoinsert="false">parent::__clone();
 </template>
@@ -372,7 +394,7 @@ ${cursor}</template>
 	name="use"
 	description="%description.php.use"
 	id="org.eclipse.php.ui.editor.templates.php.use"
-	context="php"
+	context="php-global-members"
 	enabled="true"
 	autoinsert="false">use ${namespace} as ${alias};</template>
 
@@ -380,7 +402,7 @@ ${cursor}</template>
 	name="ns"
 	description="%description.php.ns"
 	id="org.eclipse.php.ui.editor.templates.php.ns"
-	context="php"
+	context="php-global-members"
 	enabled="true"
 	autoinsert="false">namespace ${name};</template>
 

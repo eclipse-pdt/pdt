@@ -399,4 +399,35 @@ public class PhpTemplateVariables {
 					new GlobalStatementContextForTemplate(), };
 		}
 	}
+
+	public static class Namespace extends TemplateVariableResolver {
+		public static final String NAME = "namespace"; //$NON-NLS-1$
+
+		public Namespace() {
+			super(NAME, "Evaluates to file encoding");
+		}
+
+		protected String resolve(TemplateContext context) {
+			String path = null;
+
+			ISourceModule module = getSourceModule(context);
+			if (module == null)
+				return null;
+			IModelElement parent = module.getParent();
+			path = parent.getElementName();
+			while (!(parent instanceof IProjectFragment)) {
+				parent = parent.getParent();
+				if (parent.getElementName().length() == 0)
+					break;
+				path = parent.getElementName() + "\\" + path;
+			}
+			return path;
+
+		}
+
+		protected boolean isUnambiguous(TemplateContext context) {
+			return resolve(context) != null;
+		}
+	}
+
 }
