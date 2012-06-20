@@ -25,10 +25,10 @@ import org.eclipse.ui.console.IConsoleConstants;
 public class PHPPerspectiveFactory implements IPerspectiveFactory {
 
 	private static final String TOP_LEFT_LOCATION = "topLeft"; //$NON-NLS-1$
-	private static final String TOP_RIGHT_LOCATION = "right"; //$NON-NLS-1$
+	public static final String TOP_RIGHT_LOCATION = "right"; //$NON-NLS-1$
 	private static final String BOTTOM_LOCATION = "bottom"; //$NON-NLS-1$
 
-	private static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
+	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
 
 	// other view id's
 	private static final String ID_EXPLORER = "org.eclipse.php.ui.explorer"; //$NON-NLS-1$
