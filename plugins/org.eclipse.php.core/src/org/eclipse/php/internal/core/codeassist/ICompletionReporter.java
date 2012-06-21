@@ -32,6 +32,7 @@ public interface ICompletionReporter {
 	public final static int RELEVANCE_CLASS = 100000;
 	public final static int RELEVANCE_VAR = 10000;
 	public final static int RELEVANCE_CONST = 1000;
+	public final static int RELEVANCE_ADJUST = 100;
 
 	/**
 	 * Reports a PHP resource (file or folder)
@@ -78,6 +79,9 @@ public interface ICompletionReporter {
 	public void reportType(IType type, String suffix, SourceRange replaceRange,
 			Object extraInfo);
 
+	public void reportType(IType type, String suffix, SourceRange replaceRange,
+			Object extraInfo, int subRelevance);
+
 	/**
 	 * Reports method or function
 	 * 
@@ -108,6 +112,9 @@ public interface ICompletionReporter {
 	public void reportMethod(IMethod method, String suffix,
 			SourceRange replaceRange, Object extraInfo);
 
+	public void reportMethod(IMethod method, String suffix,
+			SourceRange replaceRange, Object extraInfo, int subRelevance);
+
 	/**
 	 * Reports field: variable, constant
 	 * 
@@ -124,6 +131,9 @@ public interface ICompletionReporter {
 	public void reportField(IField field, String suffix,
 			SourceRange replaceRange, boolean removeDollar);
 
+	public void reportField(IField field, String suffix,
+			SourceRange replaceRange, boolean removeDollar, int subRelevance);
+
 	/**
 	 * Reports PHP keyword
 	 * 
@@ -137,6 +147,9 @@ public interface ICompletionReporter {
 	 */
 	public void reportKeyword(String keyword, String suffix,
 			SourceRange replaceRange);
+
+	public void reportKeyword(String keyword, String suffix,
+			SourceRange replaceRange, int subRelevance);
 
 	/**
 	 * @since 2.3

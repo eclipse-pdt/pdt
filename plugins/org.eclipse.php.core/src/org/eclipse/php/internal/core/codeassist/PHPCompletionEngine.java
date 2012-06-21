@@ -164,6 +164,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportField(IField field, String suffix,
 			SourceRange replaceRange, boolean removeDollar) {
+		reportField(field, suffix, replaceRange, removeDollar, 0);
+	}
+
+	public void reportField(IField field, String suffix,
+			SourceRange replaceRange, boolean removeDollar, int subRelevance) {
 		if (processedFields.contains(field)) {
 			return;
 		}
@@ -177,6 +182,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		}
 		int relevance = PHPFlags.isConstant(flags) ? relevanceConst
 				: relevanceVar;
+		relevance += subRelevance;
 
 		noProposal = false;
 
@@ -208,6 +214,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportKeyword(String keyword, String suffix,
 			SourceRange replaceRange) {
+		reportKeyword(keyword, suffix, replaceRange, 0);
+	}
+
+	public void reportKeyword(String keyword, String suffix,
+			SourceRange replaceRange, int subRelevance) {
 		if (processedElements.containsKey(keyword)) {
 			return;
 		}
@@ -221,7 +232,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 					CompletionProposal.KEYWORD, actualCompletionPosition);
 			proposal.setName(keyword);
 			proposal.setCompletion(keyword + suffix);
-			proposal.setRelevance(relevanceKeyword);
+			proposal.setRelevance(relevanceKeyword + subRelevance);
 			proposal.setReplaceRange(replaceRange.getOffset(),
 					replaceRange.getOffset() + replaceRange.getLength());
 
@@ -235,6 +246,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportMethod(IMethod method, String suffix,
 			SourceRange replaceRange, Object extraInfo) {
+		reportMethod(method, suffix, replaceRange, extraInfo, 0);
+	}
+
+	public void reportMethod(IMethod method, String suffix,
+			SourceRange replaceRange, Object extraInfo, int subRelevance) {
 		if (processedElements.containsKey(method)
 				&& ((IMethod) processedElements.get(method)).getParent()
 						.getClass() == method.getParent().getClass()) {
@@ -268,7 +284,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setModelElement(method);
 			proposal.setName(elementName);
 
-			int relevance = relevanceMethod;
+			int relevance = relevanceMethod + subRelevance;
 			proposal.setCompletion((completionName + suffix));
 
 			try {
@@ -305,6 +321,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportType(IType type, String suffix, SourceRange replaceRange,
 			Object extraInfo) {
+		reportType(type, suffix, replaceRange, extraInfo, 0);
+	}
+
+	public void reportType(IType type, String suffix, SourceRange replaceRange,
+			Object extraInfo, int subRelevance) {
 		if (processedElements.containsKey(type)
 				&& processedElements.get(type).getClass() == type.getClass()) {
 			return;
@@ -341,7 +362,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setModelElement(type);
 			proposal.setName(elementName);
 
-			int relevance = relevanceClass;
+			int relevance = relevanceClass + subRelevance;
 			proposal.setCompletion(completionName + suffix);
 
 			try {

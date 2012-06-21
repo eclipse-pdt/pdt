@@ -71,10 +71,9 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 			IType declaringType = enclosingMethod.getDeclaringType();
 			if (declaringType != null) {
 				if ("$this".startsWith(prefix)) { //$NON-NLS-1$
-					reporter
-							.reportField(
-									new FakeField((ModelElement) declaringType,
-											"$this", 0, 0), suffix, replaceRange, false); //NON-NLS-1 //$NON-NLS-2$
+					reporter.reportField(
+							new FakeField((ModelElement) declaringType,
+									"$this", 0, 0), suffix, replaceRange, false, ICompletionReporter.RELEVANCE_ADJUST); //NON-NLS-1 //$NON-NLS-2$
 				}
 			}
 		}
@@ -82,7 +81,8 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		for (IModelElement element : PHPModelUtils.getMethodFields(
 				enclosingMethod, prefix, requestor.isContextInformationMode(),
 				null)) {
-			reporter.reportField((IField) element, "", replaceRange, false);
+			reporter.reportField((IField) element, "", replaceRange, false,
+					ICompletionReporter.RELEVANCE_ADJUST);
 		}
 
 		PHPVersion phpVersion = concreteContext.getPhpVersion();
@@ -92,7 +92,8 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 						|| variable.length() == prefix.length()) {
 					reporter.reportField(new FakeField(
 							(ModelElement) concreteContext.getSourceModule(),
-							variable, 0, 0), "", replaceRange, false); // NON-NLS-1
+							variable, 0, 0), "", replaceRange, false,
+							-ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
 				}
 			}
 		}
