@@ -929,12 +929,6 @@
            id="org.eclipse.pdt.ui.SourceActionsSet"
            label="%actionSet.label"
            visible="false">
-<!--        <menu
-              id="sourceMenuId"
-              label="%menu.label"
-              path="edit">
-        </menu>
-        -->
         <action
               class="org.eclipse.php.internal.ui.actions.FormatDocumentAction"
               definitionId="org.eclipse.wst.sse.ui.format.document"
@@ -955,14 +949,6 @@
 				</visibleWhen>
 			</command>
 		</menuContribution>
-		<!-- <menuContribution locationURI="menu:sourceMenuId?before=sourceBegin">
-			<command commandId="org.eclipse.wst.sse.ui.format.document"
-				id="FormatDocument" mnemonic="%command.mnemonic" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
-				</visibleWhen>
-			</command>
-		</menuContribution> -->
 
 		<menuContribution locationURI="popup:sourcePopupMenuId?before=sourceBegin">
 			<command commandId="org.eclipse.php.ui.edit.text.add.description"
@@ -972,6 +958,7 @@
 				</visibleWhen>
 			</command>
 		</menuContribution>
+		
 		
 		  <menuContribution locationURI="menu:sourceMenuId?after=sourceBegin">
 			<command commandId="org.eclipse.wst.sse.ui.toggle.comment"
@@ -1447,7 +1434,6 @@
 			<!-- Format delegate action for Projects/folders/files -->
 			<action label="%FormatAction.label"
 				class="org.eclipse.php.internal.ui.actions.format.FormatActionDelegate"
-				menubarPath="source/addDescriptionGroup"
 				id="org.eclipse.php.ui.internal.actions.FormatActionDelegate">
 			</action>
 			<visibility>
