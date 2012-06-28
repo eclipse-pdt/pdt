@@ -51,7 +51,7 @@
 			<actionSet id="org.eclipse.debug.ui.launchActionSet" />
 			<actionSet id="org.eclipse.ui.NavigateActionSet" />
 			<actionSet id="org.eclipse.php.ui.PHPActionSet" />
-			<actionSet id="org.eclipse.debug.ui.breakpointActionSet" />
+			<!-- <actionSet id="org.eclipse.debug.ui.breakpointActionSet" />-->
 			<actionSet id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet" />
 
 			<viewShortcut id="org.eclipse.ui.views.ContentOutline" />
@@ -893,6 +893,23 @@
 	          id="org.eclipse.pdt.ui.RefactoringActionSet"
 	          label="%CodingActionSet.label"
 	          visible="false">
+	          <!-- =========================================================================== -->
+			<!-- Refactoring Menu                                                            -->
+			<!-- =========================================================================== -->
+         <menu
+               label="%Refactoring.menu.label"
+               path="edit"
+               id="org.eclipse.pdt.ui.refactoring.menu">
+            <separator name="undoRedoGroup"/>
+            <separator name="reorgGroup"/>
+            <separator name="codingGroup"/>
+            <separator name="reorgGroup2"/>
+            <separator name="typeGroup"/>
+            <separator name="typeGroup2"/>
+            <separator name="codingGroup2"/>
+            <separator name="typeGroup3"/>
+            <separator name="scriptGroup"/>
+         </menu>
 	       <action
 	             class="org.eclipse.php.internal.ui.actions.RenameAction"
 	             definitionId="org.eclipse.dltk.ui.edit.text.script.rename.element"
@@ -912,17 +929,17 @@
            id="org.eclipse.pdt.ui.SourceActionsSet"
            label="%actionSet.label"
            visible="false">
-        <menu
+<!--        <menu
               id="sourceMenuId"
               label="%menu.label"
               path="edit">
         </menu>
+        -->
         <action
               class="org.eclipse.php.internal.ui.actions.FormatDocumentAction"
               definitionId="org.eclipse.wst.sse.ui.format.document"
               id="org.eclipse.php.ui.action1"
               label="%action.label.5"
-              menubarPath="sourceMenuId/format"
               style="push">
         </action>
      </actionSet>
@@ -938,6 +955,14 @@
 				</visibleWhen>
 			</command>
 		</menuContribution>
+		<!-- <menuContribution locationURI="menu:sourceMenuId?before=sourceBegin">
+			<command commandId="org.eclipse.wst.sse.ui.format.document"
+				id="FormatDocument" mnemonic="%command.mnemonic" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+				</visibleWhen>
+			</command>
+		</menuContribution> -->
 
 		<menuContribution locationURI="popup:sourcePopupMenuId?before=sourceBegin">
 			<command commandId="org.eclipse.php.ui.edit.text.add.description"
