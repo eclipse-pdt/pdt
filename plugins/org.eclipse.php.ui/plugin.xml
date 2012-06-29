@@ -929,11 +929,18 @@
            id="org.eclipse.pdt.ui.SourceActionsSet"
            label="%actionSet.label"
            visible="false">
+        <menu
+              id="sourceMenuId"
+              label="%menu.label"
+              path="edit">
+            <separator name="format"/>
+        </menu>
         <action
               class="org.eclipse.php.internal.ui.actions.FormatDocumentAction"
               definitionId="org.eclipse.wst.sse.ui.format.document"
               id="org.eclipse.php.ui.action1"
               label="%action.label.5"
+              menubarPath="sourceMenuId/format"
               style="push">
         </action>
      </actionSet>
