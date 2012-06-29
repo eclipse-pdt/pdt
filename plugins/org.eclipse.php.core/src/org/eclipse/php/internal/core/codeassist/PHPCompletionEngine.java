@@ -103,18 +103,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 						if (strategies != null && strategies.length > 0) {
 							for (ICompletionStrategy strategy : strategies) {
-
-								if (strategy == null)
-									continue;
-
 								strategy.init(companion);
-
 								try {
 									strategy.apply(this);
 								} catch (Exception e) {
 									PHPCorePlugin.log(e);
-									// remove 'broken' strategies from the list
-									strategy = null;
 								}
 							}
 						}
