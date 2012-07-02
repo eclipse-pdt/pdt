@@ -900,15 +900,7 @@
                label="%Refactoring.menu.label"
                path="edit"
                id="org.eclipse.pdt.ui.refactoring.menu">
-            <separator name="undoRedoGroup"/>
             <separator name="reorgGroup"/>
-            <separator name="codingGroup"/>
-            <separator name="reorgGroup2"/>
-            <separator name="typeGroup"/>
-            <separator name="typeGroup2"/>
-            <separator name="codingGroup2"/>
-            <separator name="typeGroup3"/>
-            <separator name="scriptGroup"/>
          </menu>
 	       <action
 	             class="org.eclipse.php.internal.ui.actions.RenameAction"
@@ -1019,28 +1011,7 @@
 	             id="org.eclipse.pdt.ui.refactoring.menu"
 	             label="%menu.label.0">
 	          <separator
-	                name="undoRedoGroup">
-	          </separator>
-	          <separator
 	                name="reorgGroup">
-	          </separator>
-	          <separator
-	                name="codingGroup">
-	          </separator>
-	          <separator
-	                name="reorgGroup2">
-	          </separator>
-	          <separator
-	                name="typeGroup">
-	          </separator>
-	          <separator
-	                name="codingGroup2">
-	          </separator>
-	          <separator
-	                name="typeGroup2">
-	          </separator>
-	          <separator
-	                name="scriptGroup">
 	          </separator>
 	       </menu>
 	    </menuContribution>
@@ -1471,8 +1442,8 @@
 	          id="org.eclipse.php.refactoring.ui.editorPopupContribution"
 	          targetID="org.eclipse.php.core.phpsource.source.EditorContext">
 	       <menu
-	             id="org.eclipse.php.ui.refactor.menu"
-	             label="%menu.label.1"
+	             id="refactorPopupMenuId"
+	             label="%Refactoring.menu.label"
 	             path="Edit">
 	          <separator
 	                name="refactoringGroup">
@@ -1483,7 +1454,7 @@
 	             definitionId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 	             id="org.eclipse.php.ui.refactoring.pop.rename"
 	             label="%action.label.6"
-	             menubarPath="org.eclipse.php.ui.refactor.menu/refactoringGroup"
+	             menubarPath="refactorPopupMenuId/refactoringGroup"
 	             tooltip="%OrganizeIncludes.label.tooltip">
 	       </action>
 	       <action
@@ -1491,7 +1462,7 @@
 	             definitionId="org.eclipse.php.ui.edit.text.move.element"
 	             id="org.eclipse.php.ui.refactoring.pop.move"
 	             label="%action.label.7"
-	             menubarPath="org.eclipse.php.ui.refactor.menu/refactoringGroup"
+	             menubarPath="refactorPopupMenuId/refactoringGroup"
 	             tooltip="%action.tooltip">
 	       </action>
 	    </viewerContribution>
