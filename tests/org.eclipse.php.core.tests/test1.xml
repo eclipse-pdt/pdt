@@ -29,9 +29,9 @@
 	<property name='emma.dir' value='/var/www/3rd-party/emma-2.0.5312' />
 
 	<!-- Where are the class files? -->
-	<!-- <property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_3.0.1.v${buildTimestamp}.jar' />
+	<!-- <property name='bin' value='${eclipse-home}/plugins/org.eclipse.php.core_3.1.1.v${buildTimestamp}.jar' />
 	<path id='bin'>
-		<fileset dir='${eclipse-home}' includes='plugins/org.eclipse.php.core_3.0.1.v${buildTimestamp}.jar' />
+		<fileset dir='${eclipse-home}' includes='plugins/org.eclipse.php.core_3.1.1.v${buildTimestamp}.jar' />
 	</path> -->
 	<!-- EMMA distribution directory: -->
 	<path id='emma.lib'>
@@ -57,7 +57,7 @@
 		<antcall target="copyTestPlugin" />
 		<emma>
 			<!-- instrumentation of jar -->
-			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.0.1.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
+			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.1.1.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
 		</emma>
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${pdt-folder}" />
