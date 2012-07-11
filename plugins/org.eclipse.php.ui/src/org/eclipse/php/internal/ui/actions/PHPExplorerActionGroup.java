@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dltk.internal.ui.actions.CCPActionGroup;
+import org.eclipse.dltk.internal.ui.actions.NewWizardsActionGroup;
 import org.eclipse.dltk.internal.ui.actions.refactoring.RefactorActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.LayoutActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
@@ -88,7 +89,9 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 		final ArrayList<ActionGroup> filtered = new ArrayList<ActionGroup>(
 				groups.length - 1);
 		for (int i = 0; i < groups.length; i++) {
-			if (!(groups[i] instanceof LayoutActionGroup
+			if (groups[i] instanceof NewWizardsActionGroup) {
+				filtered.add(new PHPNewWizardsActionGroup(getPart().getSite()));
+			} else if (!(groups[i] instanceof LayoutActionGroup
 					|| groups[i] instanceof GenerateActionGroup
 					|| groups[i] instanceof RefactorActionGroup || groups[i] instanceof CCPActionGroup)) {
 				// use pdt's NavigateActionGroup instead of dltk's
