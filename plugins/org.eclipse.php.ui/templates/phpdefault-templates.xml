@@ -197,6 +197,28 @@ ${cursor}</template>
 </template>
 
 <template
+	name="fnc"
+	description="%description.php.functionStatement"
+	id="org.eclipse.php.ui.editor.templates.php.fnc"
+	context="php-global-members"
+	enabled="true"
+	autoinsert="false">function ${function_name}(${dollar}${param}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="function"
+	description="%description.php.functionStatement"
+	id="org.eclipse.php.ui.editor.templates.php.function"
+	context="php-global-members"
+	enabled="true"
+	autoinsert="false">function ${function_name}(${dollar}${param}) {
+	${cursor};
+}
+</template>
+
+<template
 	name="lambda"
 	description="%description.php.lambdaStatement"
 	id="org.eclipse.php.ui.editor.templates.php.lambda"
