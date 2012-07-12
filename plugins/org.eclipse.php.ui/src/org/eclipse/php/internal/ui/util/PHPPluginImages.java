@@ -37,8 +37,8 @@ public class PHPPluginImages {
 	// Otherwise low color
 	// images are used
 	static {
-		fgIconBaseURL = PHPUiPlugin.getDefault().getBundle().getEntry(
-				"/icons/full/"); //$NON-NLS-1$
+		fgIconBaseURL = PHPUiPlugin.getDefault().getBundle()
+				.getEntry("/icons/full/"); //$NON-NLS-1$
 	}
 
 	// The plug-in registry
@@ -47,7 +47,7 @@ public class PHPPluginImages {
 
 	private static final String T_OBJ = "obj16"; //$NON-NLS-1$
 	private static final String T_OVR = "ovr16"; //$NON-NLS-1$
-	private static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
+	public static final String T_WIZBAN = "wizban"; //$NON-NLS-1$
 	private static final String T_ELCL = "elcl16"; //$NON-NLS-1$
 	private static final String T_DLCL = "dlcl16"; //$NON-NLS-1$
 	private static final String T_ETOOL = "etool16"; //$NON-NLS-1$
@@ -318,8 +318,8 @@ public class PHPPluginImages {
 			for (Iterator iter = fgAvoidSWTErrorMap.keySet().iterator(); iter
 					.hasNext();) {
 				String key = (String) iter.next();
-				fgImageRegistry.put(key, (ImageDescriptor) fgAvoidSWTErrorMap
-						.get(key));
+				fgImageRegistry.put(key,
+						(ImageDescriptor) fgAvoidSWTErrorMap.get(key));
 			}
 			fgAvoidSWTErrorMap = null;
 		}
@@ -360,8 +360,8 @@ public class PHPPluginImages {
 			boolean createAsComposite, int flags, Point size) {
 		try {
 			ImageDescriptor result = ImageDescriptor
-					.createFromURL(makeIconFileURL(prefix, name
-							.substring(NAME_PREFIX_LENGTH)));
+					.createFromURL(makeIconFileURL(prefix,
+							name.substring(NAME_PREFIX_LENGTH)));
 			if (createAsComposite) {
 				result = new PHPElementImageDescriptor(result, flags, size);
 			}
@@ -382,8 +382,8 @@ public class PHPPluginImages {
 			String key) {
 		try {
 			ImageDescriptor result = ImageDescriptor
-					.createFromURL(makeIconFileURL(prefix, name
-							.substring(NAME_PREFIX_LENGTH)));
+					.createFromURL(makeIconFileURL(prefix,
+							name.substring(NAME_PREFIX_LENGTH)));
 			if (fgAvoidSWTErrorMap == null) {
 				fgAvoidSWTErrorMap = new HashMap();
 			}
@@ -397,7 +397,7 @@ public class PHPPluginImages {
 		}
 	}
 
-	private static ImageDescriptor create(String prefix, String name) {
+	public static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
 		} catch (MalformedURLException e) {
@@ -405,8 +405,29 @@ public class PHPPluginImages {
 		}
 	}
 
-	private static URL makeIconFileURL(String prefix, String name)
+	public static URL makeIconFileURL(String prefix, String name)
 			throws MalformedURLException {
+		if (fgIconBaseURL == null)
+			throw new MalformedURLException();
+
+		StringBuffer buffer = new StringBuffer(prefix);
+		buffer.append('/');
+		buffer.append(name);
+		return new URL(fgIconBaseURL, buffer.toString());
+	}
+
+	public static ImageDescriptor create(URL fgIconBaseURL, String prefix,
+			String name) {
+		try {
+			return ImageDescriptor.createFromURL(makeIconFileURL(fgIconBaseURL,
+					prefix, name));
+		} catch (MalformedURLException e) {
+			return ImageDescriptor.getMissingImageDescriptor();
+		}
+	}
+
+	public static URL makeIconFileURL(URL fgIconBaseURL, String prefix,
+			String name) throws MalformedURLException {
 		if (fgIconBaseURL == null)
 			throw new MalformedURLException();
 
