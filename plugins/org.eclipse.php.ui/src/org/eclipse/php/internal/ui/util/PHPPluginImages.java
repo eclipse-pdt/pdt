@@ -74,6 +74,8 @@ public class PHPPluginImages {
 	public static final String IMG_OBJS_GHOST = NAME_PREFIX + "ghost.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_CLASS = NAME_PREFIX
 			+ "phpclassdata.gif"; //$NON-NLS-1$
+	public static final String IMG_OBJS_METHOD = NAME_PREFIX
+			+ "methpub_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_CLASSALT = NAME_PREFIX
 			+ "phpclassdata.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_CLASS_DEFAULT = NAME_PREFIX
@@ -187,6 +189,8 @@ public class PHPPluginImages {
 	//
 	public static final ImageDescriptor DESC_OBJS_CLASS = createManaged(T_OBJ,
 			IMG_OBJS_CLASS);
+	public static final ImageDescriptor DESC_OBJS_METHOD = createManaged(T_OBJ,
+			IMG_OBJS_METHOD);
 	public static final ImageDescriptor DESC_OBJS_CLASS_DEFAULT = createManaged(
 			T_OBJ, IMG_OBJS_CLASS_DEFAULT);
 	public static final ImageDescriptor DESC_OBJS_INTERFACE = createManaged(
