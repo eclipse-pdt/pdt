@@ -71,8 +71,8 @@
 		<module>../features/org.eclipse.php.all-feature</module>
 		<module>../plugins/org.eclipse.php.core</module>
 		<module>../plugins/org.eclipse.php.core.parser</module>
-		<module>../plugins/org.eclipse.php.core.performance.tests</module>
-		<module>../plugins/org.eclipse.php.core.tests</module>
+		<module>../tests/org.eclipse.php.core.performance.tests</module>
+		<module>../tests/org.eclipse.php.core.tests</module>
 		<module>../plugins/org.eclipse.php.debug.core</module>
 		<module>../plugins/org.eclipse.php.debug.daemon</module>
 		<module>../plugins/org.eclipse.php.debug.ui</module>
@@ -85,7 +85,7 @@
 		<module>../features/org.eclipse.php.source-feature</module>
 		<module>../features/org.eclipse.php.test-feature</module>
 		<module>../plugins/org.eclipse.php.ui</module>
-		<module>../plugins/org.eclipse.php.ui.tests</module>
+		<module>../tests/org.eclipse.php.ui.tests</module>
 	</modules>
 
 </project>
