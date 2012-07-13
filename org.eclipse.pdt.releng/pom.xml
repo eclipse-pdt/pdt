@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.eclipse.php</groupId>
+	<artifactId>org.eclipse.pdt.releng</artifactId>
+	<version>3.1.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<!-- this is the parent POM from which all modules inherit common settings -->
+	<properties>
+		<tycho-version>0.14.0</tycho-version>
+		<antrun-version>1.6</antrun-version>
+		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<!-- enable tycho build extension -->
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>plugin-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>juno</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/releases/juno</url>
+		</repository>
+		<repository>
+			<id>dltk-tests</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/technology/dltk/updates/</url>
+		</repository>
+		<repository>
+			<id>eclipse-tests</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/eclipse/updates/4.2/R-4.2-201206081400</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>maven.eclipse.org</id>
+			<url>http://maven.eclipse.org/nexus/content/groups/public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<modules>
+		<module>../features/org.eclipse.php-feature</module>
+		<module>../dev/org.eclipse.php-repository</module>
+		<module>../features/org.eclipse.php.all-feature</module>
+		<module>../plugins/org.eclipse.php.core</module>
+		<module>../plugins/org.eclipse.php.core.parser</module>
+		<module>../plugins/org.eclipse.php.core.performance.tests</module>
+		<module>../plugins/org.eclipse.php.core.tests</module>
+		<module>../plugins/org.eclipse.php.debug.core</module>
+		<module>../plugins/org.eclipse.php.debug.daemon</module>
+		<module>../plugins/org.eclipse.php.debug.ui</module>
+		<module>../plugins/org.eclipse.php.help</module>
+		<module>../features/org.eclipse.php.mylyn-feature</module>
+		<module>../plugins/org.eclipse.php.mylyn.ui</module>
+		<module>../features/org.eclipse.php.sdk-feature</module>
+		<module>../plugins/org.eclipse.php.server.core</module>
+		<module>../plugins/org.eclipse.php.server.ui</module>
+		<module>../features/org.eclipse.php.source-feature</module>
+		<module>../features/org.eclipse.php.test-feature</module>
+		<module>../plugins/org.eclipse.php.ui</module>
+		<module>../plugins/org.eclipse.php.ui.tests</module>
+	</modules>
+
+</project>
