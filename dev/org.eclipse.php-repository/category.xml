@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.eclipse.php_3.1.1.qualifier.jar" id="org.eclipse.php" version="3.1.1.qualifier">
+      <category name="org.eclipse.php.category"/>
+   </feature>
+   <feature url="features/org.eclipse.php.mylyn_3.1.1.qualifier.jar" id="org.eclipse.php.mylyn" version="3.1.1.qualifier">
+      <category name="org.eclipse.php.category"/>
+   </feature>
+   <feature url="features/org.eclipse.php.sdk_3.1.1.qualifier.jar" id="org.eclipse.php.sdk" version="3.1.1.qualifier"/>
+   <feature url="features/org.eclipse.php.test_3.1.1.qualifier.jar" id="org.eclipse.php.test" version="3.1.1.qualifier"/>
+   <category-def name="org.eclipse.php.category" label="PHP Development Tools"/>
+</site>
