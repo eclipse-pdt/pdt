@@ -69,29 +69,14 @@ public class NewWizard extends Wizard {
 	public void addPages() {
 		IWizardCategory root = WorkbenchPlugin.getDefault()
 				.getNewWizardRegistry().getRootCategory();
-		List<IWizardDescriptor> wizards = new ArrayList<IWizardDescriptor>();
-		fillWizards(root, wizards);
-		IWizardDescriptor[] primary = sortWizard(wizards);
-		// IWizardDescriptor[] primary = WorkbenchPlugin.getDefault()
-		// .getNewWizardRegistry().getPrimaryWizards();
+		IWizardDescriptor[] primary = new IWizardDescriptor[0];
+		if (projectsOnly) {
+			List<IWizardDescriptor> wizards = new ArrayList<IWizardDescriptor>();
+			fillWizards(root, wizards);
+			primary = sortWizard(wizards);
+		}
 
-		// if (categoryId != null) {
-		// IWizardCategory categories = root;
-		// StringTokenizer familyTokenizer = new StringTokenizer(categoryId,
-		// CATEGORY_SEPARATOR);
-		// while (familyTokenizer.hasMoreElements()) {
-		// categories = getChildWithID(categories,
-		// familyTokenizer.nextToken());
-		// if (categories == null) {
-		// break;
-		// }
-		// }
-		// if (categories != null) {
-		// root = categories;
-		// }
-		// }
-
-		mainPage = new NewWizardSelectionPage(workbench, selection, null,
+		mainPage = new NewWizardSelectionPage(workbench, selection, root,
 				primary, projectsOnly);
 		addPage(mainPage);
 	}

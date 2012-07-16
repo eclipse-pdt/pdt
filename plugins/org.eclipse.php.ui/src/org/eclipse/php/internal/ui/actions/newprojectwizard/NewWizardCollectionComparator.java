@@ -11,7 +11,10 @@
 
 package org.eclipse.php.internal.ui.actions.newprojectwizard;
 
+import java.util.Set;
+
 import org.eclipse.jface.viewers.IBasicPropertyConstants;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.ui.internal.dialogs.WizardCollectionElement;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardElement;
@@ -27,6 +30,7 @@ import org.eclipse.ui.internal.registry.WizardsRegistryReader;
  * at the beginning of the sorted result.
  */
 class NewWizardCollectionComparator extends ViewerComparator {
+	private Set primaryWizards;
 	/**
 	 * Static instance of this class.
 	 */
@@ -66,11 +70,23 @@ class NewWizardCollectionComparator extends ViewerComparator {
 		return super.category(element);
 	}
 
+	@Override
+	public int compare(Viewer viewer, Object e1, Object e2) {
+		if (primaryWizards.contains(e1) || primaryWizards.contains(e2)) {
+			return -1;
+		}
+		return super.compare(viewer, e1, e2);
+	}
+
 	/**
 	 * Return true if this sorter is affected by a property change of
 	 * propertyName on the specified element.
 	 */
 	public boolean isSorterProperty(Object object, String propertyId) {
 		return propertyId.equals(IBasicPropertyConstants.P_TEXT);
+	}
+
+	public void setPrimaryWizards(Set primaryWizards) {
+		this.primaryWizards = primaryWizards;
 	}
 }

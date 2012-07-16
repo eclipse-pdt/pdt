@@ -52,6 +52,35 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  */
 class NewWizardNewPage implements ISelectionChangedListener {
 
+	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<String>();
+	private static final Set<String> PROJECT_WIZARD_ID_SET = new HashSet<String>();
+	static {
+
+		PROJECT_WIZARD_ID
+				.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard");
+		PROJECT_WIZARD_ID
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard");
+		PROJECT_WIZARD_ID
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard");
+		PROJECT_WIZARD_ID
+				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard");
+
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.localphp");
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.cvs.ui.projectWizard");
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.existingphp");
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.git.ui.projectWizard");
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.github.ui.projectWizard");
+		PROJECT_WIZARD_ID
+				.add("com.zend.php.ui.wizards.PHPRemoteProjectCreationWizard");
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.svn.ui.SVNProjectWizard");
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.phpcloud.ui.projectWizard");
+		PROJECT_WIZARD_ID_SET.addAll(PROJECT_WIZARD_ID);
+
+		PROJECT_WIZARD_ID
+				.add("org.zend.php.framework.ui.wizards.ZendFrameworkProjectCreationWizard");
+		PROJECT_WIZARD_ID
+				.add("org.zend.php.framework.ui.wizards.NewZendItemWizard");
+	}
 	// id constants
 	private static final String DIALOG_SETTING_SECTION_NAME = "NewWizardSelectionPage."; //$NON-NLS-1$
 
@@ -180,7 +209,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 * @return whether all wizards in the category are considered primary
 	 */
 	private boolean allPrimary(IWizardCategory category) {
-		if (category == null) {
+		if (category == null || projectsOnly) {
 			return true;
 		}
 		IWizardDescriptor[] wizards = category.getWizards();
@@ -317,7 +346,6 @@ class NewWizardNewPage implements ISelectionChangedListener {
 				return element;
 			}
 		});
-		// treeViewer.setComparator(NewWizardCollectionComparator.INSTANCE);
 		treeViewer.addSelectionChangedListener(this);
 
 		ArrayList inputArray = new ArrayList();
@@ -326,13 +354,49 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			inputArray.add(primaryWizards[i]);
 		}
 
+		if (!projectsOnly) {
+
+			IWizardCategory phpCategory = wizardCategories
+					.findCategory(new Path("org.eclipse.php.project.ui"));
+			// IWizardCategory[] children = wizardCategories.getCategories();
+			// for (int i = 0; i < children.length; i++) {
+			// if ("org.eclipse.php.project.ui".equals(children[i].getId())) {
+			// phpCategory = children[i];
+			// }
+			// }
+			if (phpCategory != null) {
+				IWizardDescriptor[] wizards = phpCategory.getWizards();
+				for (int i = 0; i < wizards.length; i++) {
+					inputArray.add(wizards[i]);
+				}
+				inputArray = sortWizard(inputArray);
+				IWizardCategory[] categories = phpCategory.getCategories();
+				for (int i = 0; i < categories.length; i++) {
+					inputArray.add(categories[i]);
+				}
+				IWizardDescriptor folder = wizardCategories
+						.findWizard("org.eclipse.ui.wizards.new.folder");
+				if (folder != null) {
+					inputArray.add(folder);
+				}
+			}
+			NewWizardCollectionComparator comparator = NewWizardCollectionComparator.INSTANCE;
+			Set set = new HashSet();
+			set.addAll(inputArray);
+			comparator.setPrimaryWizards(set);
+			treeViewer.setComparator(comparator);
+		}
+
 		boolean expandTop = false;
 
 		if (wizardCategories != null) {
 			if (wizardCategories.getParent() == null) {
 				IWizardCategory[] children = wizardCategories.getCategories();
 				for (int i = 0; i < children.length; i++) {
-					inputArray.add(children[i]);
+					if (!"org.eclipse.php.project.ui".equals(children[i]
+							.getId())) {
+						inputArray.add(children[i]);
+					}
 				}
 			} else {
 				expandTop = true;
@@ -776,4 +840,21 @@ class NewWizardNewPage implements ISelectionChangedListener {
 
 		updateDescription(selectedObject);
 	}
+
+	private ArrayList<IWizardDescriptor> sortWizard(List wizards) {
+		ArrayList<IWizardDescriptor> result = new ArrayList<IWizardDescriptor>();
+		for (String id : PROJECT_WIZARD_ID) {
+			for (int i = 0; i < wizards.size(); i++) {
+				if (wizards.get(i) instanceof IWizardDescriptor) {
+					IWizardDescriptor iWizardDescriptor = (IWizardDescriptor) wizards
+							.get(i);
+					if (id.equals(iWizardDescriptor.getId())) {
+						result.add(iWizardDescriptor);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 }
