@@ -902,12 +902,6 @@
 	             id="org.eclipse.php.ui.refactoring.rename"
 	             label="%action.label.3"
 	             menubarPath="org.eclipse.pdt.ui.refactoring.menu/reorgGroup">
-		<enablement>
-            <or>
-            	<instanceof value="org.eclipse.dltk.core.IModelElement"/>
-            	<instanceof value="org.eclipse.dltk.core.IModelElement"/>
-            </or>
-		</enablement>
 	       </action>
 	        <action
 	              class="org.eclipse.php.internal.ui.actions.ReorgMoveAction"
@@ -915,12 +909,6 @@
 	              id="org.eclipse.php.ui.actions.Move"
 	              label="%action.label.4"
 	              menubarPath="org.eclipse.pdt.ui.refactoring.menu/reorgGroup">
-		<enablement>
-            <or>
-            	<instanceof value="org.eclipse.dltk.core.IModelElement"/>
-            	<instanceof value="org.eclipse.dltk.core.IModelElement"/>
-            </or>
-		</enablement>
 	        </action>
 	    </actionSet>
      <actionSet
