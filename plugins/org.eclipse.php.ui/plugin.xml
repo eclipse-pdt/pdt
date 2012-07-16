@@ -1136,7 +1136,12 @@
 		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
 			schemeId="org.eclipse.php.ui.keybindings.scheme" sequence="COMMAND+ALT+R">
-		</key>		
+		</key>
+		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
+			contextId="org.eclipse.dltk.ui.context.views" 
+			schemeId="org.eclipse.php.ui.keybindings.scheme"
+			sequence="M2+M3+R">
+		</key>
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
 			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.keybindings.scheme"
 			sequence="M2+M3+V" />
