@@ -43,7 +43,7 @@ public class DotFileFilter extends ViewerFilter {
 			IPath path = ((IResource) element).getFullPath();
 			for (int i = 0; i < path.segmentCount(); i++) {
 				String segment = path.segment(i);
-				if (segment.startsWith(DOT)) { //$NON-NLS-1$
+				if (segment.startsWith(DOT) && !segment.equals(HTACCESS_FILE)) { //$NON-NLS-1$
 					return false;
 				}
 			}
