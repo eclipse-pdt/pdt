@@ -1116,139 +1116,139 @@
 			M3=ALT, M4=CTRL
 		-->
 		<key sequence="M1+/" contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+7" contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key platform="gtk" sequence="M1+M2+C" contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+O" contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.dltk.ui.edit.text.script.show.outline" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			commandId="org.eclipse.dltk.ui.edit.text.script.show.outline" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<!-- source -->
 		<key sequence="M1+M2+J" contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.php.ui.edit.text.add.description" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			commandId="org.eclipse.php.ui.edit.text.add.description" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 
 		<!-- refactoring -->
 		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 			contextId="org.eclipse.php.ui.phpEditorScope" 
-			schemeId="org.eclipse.php.ui.keybindings.scheme"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+R">
 		</key>
 		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" sequence="COMMAND+ALT+R">
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+R">
 		</key>
 		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 			contextId="org.eclipse.dltk.ui.context.views" 
-			schemeId="org.eclipse.php.ui.keybindings.scheme"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+R">
 		</key>
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
-			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.keybindings.scheme"
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+V" />
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.keybindings.scheme"
+			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+V">
 		</key>
 		<key platform="carbon" sequence="M2+M3+V" commandId=""
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
 			contextId="org.eclipse.dltk.ui.context.views" platform="carbon"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" sequence="COMMAND+ALT+V" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+V" />
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
 			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" sequence="COMMAND+ALT+V">
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+V">
 		</key>
 		<key sequence="F3" commandId="org.eclipse.php.ui.edit.text.open.editor"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
         <key sequence="F3" commandId="org.eclipse.php.ui.edit.text.open.editor"
-			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.keybindings.scheme" />			
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />			
 		<!-- project -->
 		<!-- perspectives -->
 		<!-- views -->
 		<key sequence="M2+M3+Q E" commandId="org.eclipse.php.ui.explorer"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key platform="carbon" sequence="M2+M3+Q P" commandId=""
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key platform="carbon" sequence="COMMAND+ALT+Q P" commandId="org.eclipse.php.ui.explorer"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
 		<key
 			sequence="M1+M2+M"
 			commandId="org.eclipse.php.ui.navigate.open.method"
 			contextId="org.eclipse.php.ui.phpEditorScope"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
 		<key
 			sequence="M1+M2+M"
 			commandId="org.eclipse.php.ui.navigate.open.method"
 			contextId="org.eclipse.dltk.ui.context.views"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
 		<key
 			sequence="M1+M2+T"
 			commandId="org.eclipse.php.ui.navigate.open.type"
 			contextId="org.eclipse.php.ui.phpEditorScope"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
 		<key
 			sequence="M1+M2+T"
 			commandId="org.eclipse.php.ui.navigate.open.type"
 			contextId="org.eclipse.dltk.ui.context.views"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
 		<key sequence="M1+M2+H" commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
-			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M2+H" commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M2+F2" commandId="org.eclipse.php.ui.edit.text.php.open.manual"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M3+H"
 			commandId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"
-			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M3+H"
 			commandId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="F4"
 			commandId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
-			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="F4"
 			commandId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+T" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.dltk.ui.edit.text.script.open.hierarchy"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M2+F" contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.wst.sse.ui.format.document" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			commandId="org.eclipse.wst.sse.ui.format.document" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M2+F" contextId="org.eclipse.dltk.ui.context.views"
-			commandId="org.eclipse.wst.sse.ui.format.document" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			commandId="org.eclipse.wst.sse.ui.format.document" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+I" commandId="org.eclipse.wst.sse.ui.format.active.elements"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key platform="gtk" sequence="ESC CTRL+F" contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.wst.sse.ui.format.document" schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			commandId="org.eclipse.wst.sse.ui.format.document" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key commandId="org.eclipse.php.ui.edit.text.show.phpdoc"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.keybindings.scheme"
+			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="F2" />
 		<key commandId="org.eclipse.php.ui.editor.goto.matching.bracket"
-			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.php.ui.keybindings.scheme"
+			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M1+M2+P" />
 		<!-- Mark occurrences -->
 		<key sequence="M2+M3+O" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.php.ui.edit.text.toggleMarkOccurrences"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key platform="carbon" sequence="COMMAND+ALT+O"
 			contextId="org.eclipse.php.ui.phpEditorScope" commandId="org.eclipse.php.ui.edit.text.toggleMarkOccurrences"
-			schemeId="org.eclipse.php.ui.keybindings.scheme" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 			
       <key
             commandId="org.eclipse.php.ui.newWizard"
             sequence="M1+N"
 			contextId="org.eclipse.php.ui.phpEditorScope"
-            schemeId="org.eclipse.php.ui.keybindings.scheme" />
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
       <key
             commandId="org.eclipse.php.ui.newWizard"
             sequence="M1+N"
 			contextId="org.eclipse.dltk.ui.context.views"
-            schemeId="org.eclipse.php.ui.keybindings.scheme" />
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
     <scheme
           description="PDT key bindings"
           id="org.eclipse.php.ui.keybindings.scheme"
