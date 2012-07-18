@@ -37,6 +37,38 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  */
 public class NewWizardMenu extends BaseNewWizardMenu {
 
+	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<String>();
+	static {
+		PROJECT_WIZARD_ID
+				.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard");
+		PROJECT_WIZARD_ID
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard");
+		PROJECT_WIZARD_ID
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard");
+
+		PROJECT_WIZARD_ID
+				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard");
+		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.folder");
+		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.file");
+		PROJECT_WIZARD_ID
+				.add("org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard");
+		PROJECT_WIZARD_ID
+				.add("org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard");
+		PROJECT_WIZARD_ID
+				.add("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard");
+		PROJECT_WIZARD_ID
+				.add("org.eclipse.ui.editors.wizards.UntitledTextFileWizard");
+		PROJECT_WIZARD_ID
+				.add("org.zend.php.framework.ui.wizards.NewZendItemWizard");
+
+		PROJECT_WIZARD_ID
+				.add("com.zend.php.ui.wizards.wizards.RemoteFolderWizard");
+		PROJECT_WIZARD_ID.add("org.eclipse.php.wst.jsdt.ui.NewJSWizard");
+		PROJECT_WIZARD_ID
+				.add("org.eclipse.mylyn.tasks.ui.wizards.new.repository.task");
+		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestCaseWizard");
+		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestSuiteWizard");
+	}
 	private final IAction newExampleAction;
 	private final IAction newProjectAction;
 
@@ -140,20 +172,43 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 				// list.add(curr);
 			}
 		}
-		if (isProject) {
-			list.add(new ActionContributionItem(newProjectAction));
-			list.add(new Separator());
-			if (hasExamples()) {
-				list.add(new ActionContributionItem(newExampleAction));
-				list.add(new Separator());
-			}
-		} else {
+		list.add(new ActionContributionItem(newProjectAction));
+		list.add(new Separator());
+
+		shortCuts = sortShortcuts(shortCuts);
+		if (!isProject) {
 			if (!shortCuts.isEmpty()) {
 				list.addAll(shortCuts);
 				list.add(new Separator());
 			}
 		}
+		if (hasExamples()) {
+			list.add(new ActionContributionItem(newExampleAction));
+			list.add(new Separator());
+		}
 		list.add(new ActionContributionItem(getShowDialogAction()));
+	}
+
+	private ArrayList sortShortcuts(ArrayList shortCuts) {
+		ArrayList result = new ArrayList();
+		for (String id : PROJECT_WIZARD_ID) {
+			for (Iterator iterator = shortCuts.iterator(); iterator.hasNext();) {
+				Object curr = iterator.next();
+				if (curr instanceof ActionContributionItem) {
+					ActionContributionItem item = (ActionContributionItem) curr;
+					if (item.getAction() instanceof NewWizardShortcutAction) {
+						NewWizardShortcutAction action = (NewWizardShortcutAction) item
+								.getAction();
+						if (id.equals(action.getWizardDescriptor().getId())) {
+							result.add(item);
+							iterator.remove();
+						}
+					}
+				}
+			}
+		}
+		result.addAll(shortCuts);
+		return result;
 	}
 
 	private boolean isNewProjectWizardAction(IAction action) {
