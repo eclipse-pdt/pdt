@@ -72,7 +72,8 @@ class NewWizardCollectionComparator extends ViewerComparator {
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (primaryWizards.contains(e1) || primaryWizards.contains(e2)) {
+		if (primaryWizards != null
+				&& (primaryWizards.contains(e1) || primaryWizards.contains(e2))) {
 			return -1;
 		}
 		return super.compare(viewer, e1, e2);
