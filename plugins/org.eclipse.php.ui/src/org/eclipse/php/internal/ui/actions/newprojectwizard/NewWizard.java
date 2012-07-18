@@ -30,6 +30,10 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  * extension point.
  */
 public class NewWizard extends Wizard {
+	private static final String EXAMPLE = "example";
+
+	private static final String ZEND = ".zend.";
+
 	private static final String CATEGORY_SEPARATOR = "/"; //$NON-NLS-1$
 
 	private String categoryId = null;
@@ -63,9 +67,10 @@ public class NewWizard extends Wizard {
 	private void fillWizards(IWizardCategory root,
 			List<IWizardDescriptor> wizards) {
 		for (IWizardDescriptor wizardDescriptor : root.getWizards()) {
-			if (wizardDescriptor.getId().toLowerCase().indexOf(".zend.") >= 0
-					&& !wizardDescriptor.getId().equals(
-							"com.zend.php.ui.JSProjectCreationWizard")) {
+			if (wizardDescriptor.getId().toLowerCase().indexOf(ZEND) >= 0
+					&& (wizardDescriptor.getCategory() == null || wizardDescriptor
+							.getCategory().getId().toLowerCase()
+							.indexOf(EXAMPLE) < 0)) {
 				wizards.add(wizardDescriptor);
 			}
 		}
