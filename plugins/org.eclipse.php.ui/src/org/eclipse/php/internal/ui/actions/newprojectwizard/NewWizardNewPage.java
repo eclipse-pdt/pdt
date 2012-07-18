@@ -385,6 +385,10 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			set.addAll(inputArray);
 			comparator.setPrimaryWizards(set);
 			treeViewer.setComparator(comparator);
+		} else {
+			NewWizardCollectionComparator comparator = NewWizardCollectionComparator.INSTANCE;
+			comparator.setPrimaryWizards(null);
+			treeViewer.setComparator(comparator);
 		}
 
 		boolean expandTop = false;

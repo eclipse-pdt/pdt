@@ -11,9 +11,7 @@
 package org.eclipse.php.internal.ui.actions.newprojectwizard;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
@@ -32,25 +30,6 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  * extension point.
  */
 public class NewWizard extends Wizard {
-	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<String>();
-	private static final Set<String> PROJECT_WIZARD_ID_SET = new HashSet<String>();
-	static {
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.localphp");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.cvs.ui.projectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.existingphp");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.git.ui.projectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.github.ui.projectWizard");
-		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.PHPRemoteProjectCreationWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.svn.ui.SVNProjectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.phpcloud.ui.projectWizard");
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.wst.jsdt.ui.wizards.JavaProjectWizard");
-		PROJECT_WIZARD_ID
-				.add("org.eclipse.wst.web.ui.internal.wizards.SimpleWebProjectWizard");
-		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.project");
-		PROJECT_WIZARD_ID_SET.addAll(PROJECT_WIZARD_ID);
-	}
 	private static final String CATEGORY_SEPARATOR = "/"; //$NON-NLS-1$
 
 	private String categoryId = null;
@@ -73,7 +52,7 @@ public class NewWizard extends Wizard {
 		if (projectsOnly) {
 			List<IWizardDescriptor> wizards = new ArrayList<IWizardDescriptor>();
 			fillWizards(root, wizards);
-			primary = sortWizard(wizards);
+			primary = wizards.toArray(new IWizardDescriptor[wizards.size()]);
 		}
 
 		mainPage = new NewWizardSelectionPage(workbench, selection, root,
@@ -81,22 +60,12 @@ public class NewWizard extends Wizard {
 		addPage(mainPage);
 	}
 
-	private IWizardDescriptor[] sortWizard(List<IWizardDescriptor> wizards) {
-		List<IWizardDescriptor> result = new ArrayList<IWizardDescriptor>();
-		for (String id : PROJECT_WIZARD_ID) {
-			for (IWizardDescriptor iWizardDescriptor : wizards) {
-				if (id.equals(iWizardDescriptor.getId())) {
-					result.add(iWizardDescriptor);
-				}
-			}
-		}
-		return result.toArray(new IWizardDescriptor[result.size()]);
-	}
-
 	private void fillWizards(IWizardCategory root,
 			List<IWizardDescriptor> wizards) {
 		for (IWizardDescriptor wizardDescriptor : root.getWizards()) {
-			if (PROJECT_WIZARD_ID_SET.contains(wizardDescriptor.getId())) {
+			if (wizardDescriptor.getId().toLowerCase().indexOf(".zend.") >= 0
+					&& !wizardDescriptor.getId().equals(
+							"com.zend.php.ui.JSProjectCreationWizard")) {
 				wizards.add(wizardDescriptor);
 			}
 		}
