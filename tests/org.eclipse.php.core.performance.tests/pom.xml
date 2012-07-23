@@ -24,6 +24,12 @@
     		<configuration>
       			<testSuite>org.eclipse.php.core.performance.tests</testSuite>
       			<testClass>org.eclipse.php.core.tests.performance.AllTests</testClass>
+      			<dependencies>
+					<dependency>
+						<type>p2-installable-unit</type>
+						<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
+					</dependency>
+				</dependencies>
     		</configuration>
   		</plugin>
 	  </plugins>
