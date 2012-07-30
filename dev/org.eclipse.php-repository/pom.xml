@@ -13,4 +13,16 @@
 	<artifactId>org.eclipse.php.repository</artifactId>
 	<version>3.1.1-SNAPSHOT</version>
 	<packaging>eclipse-repository</packaging>
+	
+	<build>
+	  <plugins>
+	    <plugin>
+	      <groupId>org.eclipse.tycho</groupId>
+	      <artifactId>tycho-packaging-plugin</artifactId>
+	      <configuration>
+	        <archiveSite>true</archiveSite>
+	      </configuration>
+	    </plugin>
+	  </plugins>
+	</build>
 </project>
