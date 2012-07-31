@@ -42,14 +42,14 @@
 
 	<repositories>
 		<repository>
+			<id>dltk-tests</id>
+			<layout>p2</layout>
+			<url>https://hudson.eclipse.org/hudson/job/dltk-nightly/lastSuccessfulBuild/artifact/org.eclipse.dltk.releng/build/update.site/target/site/</url>
+		</repository>
+		<repository>
 			<id>juno</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/juno</url>
-		</repository>
-		<repository>
-			<id>dltk-tests</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/technology/dltk/updates/</url>
 		</repository>
 		<repository>
 			<id>eclipse-tests</id>
