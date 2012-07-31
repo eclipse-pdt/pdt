@@ -13,25 +13,52 @@
 	<artifactId>org.eclipse.php.ui.tests</artifactId>
 	<version>3.1.1-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
-	
-	
+
+	<profiles>
+		<profile>
+			<id>macosx</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<properties>
+				<test.vmargs>-Xmx512m -XX:MaxPermSize=256m -XstartOnFirstThread</test.vmargs>
+			</properties>
+		</profile>
+		<profile>
+			<id>other-os</id>
+			<activation>
+				<os>
+					<family>!mac</family>
+				</os>
+			</activation>
+			<properties>
+				<test.vmargs>-Xmx512m -XX:MaxPermSize=256m</test.vmargs>
+			</properties>
+		</profile>
+	</profiles>
+
 	<build>
-	  <plugins>
-	  	<plugin>
-    		<groupId>org.eclipse.tycho</groupId>
-    		<artifactId>tycho-surefire-plugin</artifactId>
-    		<version>${tycho-version}</version>
-    		<configuration>
-      			<testSuite>org.eclipse.php.ui.tests</testSuite>
-      			<testClass>org.eclipse.php.ui.tests.AllTests</testClass>
-      			<dependencies>
-					<dependency>
-						<type>p2-installable-unit</type>
-						<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
-					</dependency>
-				</dependencies>
-    		</configuration>
-  		</plugin>
-	  </plugins>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<testSuite>org.eclipse.php.ui.tests</testSuite>
+					<testClass>org.eclipse.php.ui.tests.AllTests</testClass>
+					<useUIHarness>true</useUIHarness>
+	                <useUIThread>true</useUIThread>
+					<argLine>${test.vmargs}</argLine>
+					<dependencies>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
+						</dependency>
+					</dependencies>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>
