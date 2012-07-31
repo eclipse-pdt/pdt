@@ -13,14 +13,21 @@ package org.eclipse.php.internal.debug.ui.pathmapper;
 
 import java.util.*;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.pathmapper.IPathEntryFilter;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.ResolveBlackList.Type;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -37,8 +44,15 @@ public class PathEntrySelector implements IPathEntryFilter {
 		final List<PathEntry> l = new LinkedList<PathEntry>();
 		final PathEntry[] mostMatchEntries = getMostMatchEntries(entries,
 				remotePath);
+		PathEntry matchByConfig = null;
+		if (mostMatchEntries.length == 0 || mostMatchEntries.length > 1) {
+			matchByConfig = getMatchFromLaunchConfiguration(entries,
+					debugTarget.getLaunch().getLaunchConfiguration());
+		}
 		if (mostMatchEntries.length == 1) {
 			l.add(mostMatchEntries[0]);
+		} else if (matchByConfig != null) {
+			l.add(matchByConfig);
 		} else {
 			Runnable r = new Runnable() {
 				public void run() {
@@ -70,6 +84,31 @@ public class PathEntrySelector implements IPathEntryFilter {
 			}
 		}
 		return l.toArray(new PathEntry[l.size()]);
+	}
+
+	private PathEntry getMatchFromLaunchConfiguration(PathEntry[] entries,
+			ILaunchConfiguration launchConfiguration) {
+		try {
+			String projectName = launchConfiguration.getAttribute(
+					IPHPDebugConstants.PHP_Project, (String) null);
+			if (projectName != null) {
+				IProject project = ResourcesPlugin.getWorkspace().getRoot()
+						.getProject(projectName);
+				for (PathEntry pathEntry : entries) {
+					Object container = pathEntry.getContainer();
+					if (container instanceof IContainer) {
+						IProject p = ((IContainer) container).getProject();
+						if (p != null && p.equals(project)) {
+							return pathEntry;
+						}
+					}
+				}
+			}
+		} catch (CoreException e) {
+			// log exception and continue debugging
+			PHPDebugUIPlugin.log(e);
+		}
+		return null;
 	}
 
 	private PathEntry[] removeDuplicate(PathEntry[] entries) {
