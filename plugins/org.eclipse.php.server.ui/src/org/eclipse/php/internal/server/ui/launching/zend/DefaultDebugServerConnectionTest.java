@@ -106,8 +106,7 @@ public class DefaultDebugServerConnectionTest implements
 						if (isFinished) {
 							break;
 						} else {
-							Thread.sleep(DEFAULT_TIMEOUT);
-							if (isFinished) {
+							if (!isTimeouted()) {
 								break;
 							}
 							timeoutServerList.add(clientHost);
@@ -145,6 +144,16 @@ public class DefaultDebugServerConnectionTest implements
 				} finally {
 					removeThisListener();
 				}
+			}
+
+			private boolean isTimeouted() throws InterruptedException {
+				for (int i = 0; i < 10; i++) {
+					Thread.sleep(DEFAULT_TIMEOUT / 10);
+					if (isFinished) {
+						return false;
+					}
+				}
+				return true;
 			}
 
 			private void activateTestDebug(IProgressMonitor monitor,
