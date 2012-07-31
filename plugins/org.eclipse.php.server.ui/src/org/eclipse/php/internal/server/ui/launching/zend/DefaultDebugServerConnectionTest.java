@@ -95,12 +95,8 @@ public class DefaultDebugServerConnectionTest implements
 						} catch (SocketTimeoutException ste) {// debugger caused
 							// timeout
 							if (!isFinished) {
-								String generalTimeout = NLS
-										.bind(
-												PHPServerUIMessages
-														.getString("DefaultDebugServerConnectionTest_timeOutMessage"), fURL); //$NON-NLS-1$
-								showCustomErrorDialog(generalTimeout); //$NON-NLS-1$
-								return;
+								timeoutServerList.add(clientHost);
+								continue;
 							}
 						}
 						// the following condition test is due to immediate
