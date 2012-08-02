@@ -1344,6 +1344,57 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 						return DeprecatedHighlighting.class.getName();
 					}
 				});
+				highlightings.add(new TraitHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return TraitHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new TraitMethodHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return TraitMethodHighlighting.class.getName();
+					}
+				});
+				highlightings.add(new TraitFieldHighlighting() {
+					@Override
+					protected Program getProgram(
+							IStructuredDocumentRegion region) {
+						return program;
+					}
+
+					@Override
+					public ISourceModule getSourceModule() {
+						return sourceModule;
+					}
+
+					@Override
+					public String getPreferenceKey() {
+						return TraitFieldHighlighting.class.getName();
+					}
+				});
 
 				Collections.sort(highlightings);
 
