@@ -195,7 +195,14 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	}
 
 	protected static String executeAutoInsert(int offset) {
-		StructuredTextViewer viewer = fEditor.getTextViewer();
+		StructuredTextViewer viewer = null;
+		int tries = 3;
+		while ((tries-- > 0) && ((viewer = fEditor.getTextViewer()) == null)) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+		}
 		StyledText textWidget = viewer.getTextWidget();
 		textWidget.setCaretOffset(offset);
 		viewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
