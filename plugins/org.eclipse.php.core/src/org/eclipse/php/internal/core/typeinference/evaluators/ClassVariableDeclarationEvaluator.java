@@ -56,8 +56,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 		if (types == null) {
 			TypeContext context = (TypeContext) typedGoal.getContext();
-			types = PHPTypeInferenceUtils.getModelElements(context
-					.getInstanceType(), context);
+			types = PHPTypeInferenceUtils.getModelElements(
+					context.getInstanceType(), context);
 		}
 		if (types == null) {
 			return null;
@@ -80,11 +80,11 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				}
 				IField[] fields = PHPModelUtils.getTypeHierarchyField(type,
 						hierarchy, variableName, true, null);
-				Set<IType> fieldDeclaringTypeSet = new HashSet<IType>();
+				Map<IType, IType> fieldDeclaringTypeSet = new HashMap<IType, IType>();
 				for (IField field : fields) {
 					IType declaringType = field.getDeclaringType();
 					if (declaringType != null) {
-						fieldDeclaringTypeSet.add(declaringType);
+						fieldDeclaringTypeSet.put(declaringType, type);
 						ISourceModule sourceModule = declaringType
 								.getSourceModule();
 						ModuleDeclaration moduleDeclaration = SourceParserUtil
@@ -100,9 +100,10 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 									.getSourceRange();
 
 							ClassDeclarationSearcher searcher = new ClassDeclarationSearcher(
-									sourceModule, typeDeclaration, sourceRange
-											.getOffset(), sourceRange
-											.getLength(), null);
+									sourceModule, typeDeclaration,
+									sourceRange.getOffset(),
+									sourceRange.getLength(), null, type,
+									declaringType);
 							try {
 								moduleDeclaration.traverse(searcher);
 								if (searcher.getResult() != null) {
@@ -120,15 +121,17 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				}
 
 				if (subGoals.size() == 0) {
-					getGoalFromStaticDeclaration(variableName, subGoals, type);
+					getGoalFromStaticDeclaration(variableName, subGoals, type,
+							null);
 				}
 				fieldDeclaringTypeSet.remove(type);
 				if (subGoals.size() == 0 && !fieldDeclaringTypeSet.isEmpty()) {
-					for (Iterator iterator = fieldDeclaringTypeSet.iterator(); iterator
-							.hasNext();) {
+					for (Iterator iterator = fieldDeclaringTypeSet.keySet()
+							.iterator(); iterator.hasNext();) {
 						IType fieldDeclaringType = (IType) iterator.next();
 						getGoalFromStaticDeclaration(variableName, subGoals,
-								fieldDeclaringType);
+								fieldDeclaringType,
+								fieldDeclaringTypeSet.get(fieldDeclaringType));
 					}
 				}
 			} catch (CoreException e) {
@@ -144,17 +147,25 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	}
 
 	protected void getGoalFromStaticDeclaration(String variableName,
-			final List<IGoal> subGoals, final IType type) throws ModelException {
-		ISourceModule sourceModule = type.getSourceModule();
+			final List<IGoal> subGoals, final IType declaringType,
+			IType realType) throws ModelException {
+		ISourceModule sourceModule = declaringType.getSourceModule();
 		ModuleDeclaration moduleDeclaration = SourceParserUtil
 				.getModuleDeclaration(sourceModule);
 		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(
-				moduleDeclaration, type);
+				moduleDeclaration, declaringType);
 
 		// try to search declarations of type "self::$var =" or
 		// "$this->var ="
-		ClassDeclarationSearcher searcher = new ClassDeclarationSearcher(
-				sourceModule, typeDeclaration, 0, 0, variableName);
+		ClassDeclarationSearcher searcher;
+		if (realType != null) {
+			searcher = new ClassDeclarationSearcher(sourceModule,
+					typeDeclaration, 0, 0, variableName, realType,
+					declaringType);
+		} else {
+			searcher = new ClassDeclarationSearcher(sourceModule,
+					typeDeclaration, 0, 0, variableName);
+		}
 		try {
 			moduleDeclaration.traverse(searcher);
 			Map<ASTNode, IContext> staticDeclarations = searcher
@@ -281,6 +292,19 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			this.staticDeclarations = new HashMap<ASTNode, IContext>();
 		}
 
+		public ClassDeclarationSearcher(ISourceModule sourceModule,
+				TypeDeclaration typeDeclaration, int offset, int length,
+				String variableName, IType realType, IType declaringType) {
+			// this(sourceModule, typeDeclaration2, offset2, length2,
+			// variableName);
+			super(sourceModule, realType, declaringType);
+			this.typeDeclaration = typeDeclaration;
+			this.offset = offset;
+			this.length = length;
+			this.variableName = variableName;
+			this.staticDeclarations = new HashMap<ASTNode, IContext>();
+		}
+
 		public ASTNode getResult() {
 			return result;
 		}
@@ -332,8 +356,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 										&& variableName
 												.equals(((VariableReference) field)
 														.getName())) {
-									staticDeclarations.put(right, contextStack
-											.peek());
+									staticDeclarations.put(right,
+											contextStack.peek());
 								}
 							}
 						} else if (left instanceof FieldAccess) {
@@ -346,8 +370,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 										&& variableName
 												.equals('$' + ((SimpleReference) field)
 														.getName())) {
-									staticDeclarations.put(right, contextStack
-											.peek());
+									staticDeclarations.put(right,
+											contextStack.peek());
 								}
 							}
 						}

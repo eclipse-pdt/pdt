@@ -29,7 +29,9 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
+import org.eclipse.php.internal.core.typeinference.Declaration;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.ArrayDeclarationGoal;
@@ -60,22 +62,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				MethodContext methodContext = (MethodContext) context;
 				IEvaluatedType instanceType = methodContext.getInstanceType();
 				if (instanceType != null) {
-					if (instanceType instanceof PHPClassType
-							&& methodContext.getType() != null) {
-						PHPClassType phpClassType = (PHPClassType) instanceType;
-						if (phpClassType.getNamespace() != null) {
-							this.results.add(new PHPThisClassType(phpClassType
-									.getNamespace(),
-									phpClassType.getTypeName(), methodContext
-											.getType()));
-						} else {
-
-							this.results.add(new PHPThisClassType(phpClassType
-									.getTypeName(), methodContext.getType()));
-						}
-					} else {
-						this.results.add(instanceType);
-					}
+					this.results.add(instanceType);
 				} else {
 					this.results.add(new SimpleType(SimpleType.TYPE_NULL));
 				}

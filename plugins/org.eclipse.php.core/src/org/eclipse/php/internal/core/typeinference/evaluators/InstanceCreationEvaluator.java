@@ -20,6 +20,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class InstanceCreationEvaluator extends GoalEvaluator {
 
@@ -34,9 +35,16 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 		ClassInstanceCreation expression = (ClassInstanceCreation) typedGoal
 				.getExpression();
 		Expression className = expression.getClassName();
-		if (className instanceof TypeReference) {
-			return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
-					className) };
+		if ((className instanceof TypeReference)) {
+			if (((TypeReference) className).getName().equals("self")
+					&& (goal.getContext() instanceof MethodContext)) {
+				MethodContext methodContext = (MethodContext) goal.getContext();
+				result = methodContext.getInstanceType();
+				return IGoal.NO_GOALS;
+			} else {
+				return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
+						className) };
+			}
 		}
 		result = UnknownType.INSTANCE;
 		return IGoal.NO_GOALS;
