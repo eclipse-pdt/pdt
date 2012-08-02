@@ -94,7 +94,9 @@ public class DebugOutputView extends AbstractDebugView implements
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
-
+						// 386462: [Regression] Debug Output does not refresh
+						// depending on the focus
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=386462
 						if (!(obj instanceof IPHPDebugTarget || obj instanceof PHPThread))
 							continue;
 
