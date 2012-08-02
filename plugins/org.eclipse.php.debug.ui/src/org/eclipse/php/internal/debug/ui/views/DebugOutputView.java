@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
+import org.eclipse.php.internal.debug.core.zend.model.PHPThread;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -94,11 +95,18 @@ public class DebugOutputView extends AbstractDebugView implements
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
 
-						if (!(obj instanceof IPHPDebugTarget))
+						if (!(obj instanceof IPHPDebugTarget || obj instanceof PHPThread))
 							continue;
 
-						if (events[i].getKind() == DebugEvent.TERMINATE) {
-							target = (IPHPDebugTarget) obj;
+						if (events[i].getKind() == DebugEvent.TERMINATE
+								|| events[i].getKind() == DebugEvent.SUSPEND) {
+							if (obj instanceof IPHPDebugTarget) {
+
+								target = (IPHPDebugTarget) obj;
+							} else {
+								target = (IPHPDebugTarget) ((PHPThread) obj)
+										.getDebugTarget();
+							}
 							Job job = new UIJob("debug output") {
 								public IStatus runInUIThread(
 										IProgressMonitor monitor) {
