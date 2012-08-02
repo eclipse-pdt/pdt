@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.SourceField;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
@@ -22,7 +26,18 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(SingleFieldDeclaration fieldDecl) {
-			highlight(fieldDecl.getName());
+			ClassDeclaration cd = null;
+			ASTNode parent = fieldDecl.getParent();
+			while (parent != null) {
+				if (parent instanceof ClassDeclaration) {
+					cd = (ClassDeclaration) parent;
+					break;
+				}
+				parent = parent.getParent();
+			}
+			if (!(cd instanceof TraitDeclaration)) {
+				highlight(fieldDecl.getName());
+			}
 			return true;
 		}
 
@@ -45,7 +60,31 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 
 		public boolean visit(Variable var) {
 			if (visitField > 0 && !var.isDollared()) {
-				highlight(var);
+
+				IModelElement[] elements = null;
+				boolean processed = false;
+				try {
+					elements = (getSourceModule()).codeSelect(var.getStart(),
+							var.getLength());
+					if (elements != null && elements.length > 0) {
+						processed = true;
+						for (IModelElement iModelElement : elements) {
+							if ((iModelElement instanceof SourceField)) {
+								SourceField sourceMethod = (SourceField) iModelElement;
+								if (sourceMethod.getDeclaringType() != null
+										&& PHPFlags.isClass(sourceMethod
+												.getDeclaringType().getFlags())) {
+									highlight(var);
+									break;
+								}
+							}
+						}
+					}
+				} catch (ModelException e) {
+				}
+				if (!processed) {
+					highlight(var);
+				}
 			}
 			return true;
 		}

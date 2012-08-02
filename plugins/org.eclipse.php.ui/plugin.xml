@@ -1932,6 +1932,28 @@
             target="org.eclipse.php.core.phpsource">
         </highlighting>
     </extension>
+    
+    
+    <extension point="org.eclipse.wst.sse.ui.semanticHighlighting">
+        <highlighting
+        class="org.eclipse.php.internal.ui.editor.highlighters.TraitHighlighting"
+        target="org.eclipse.php.core.phpsource">
+        </highlighting>
+    </extension>
+
+    <extension point="org.eclipse.wst.sse.ui.semanticHighlighting">
+        <highlighting
+        class="org.eclipse.php.internal.ui.editor.highlighters.TraitMethodHighlighting"
+        target="org.eclipse.php.core.phpsource">
+        </highlighting>
+    </extension>
+
+    <extension point="org.eclipse.wst.sse.ui.semanticHighlighting">
+        <highlighting
+            class="org.eclipse.php.internal.ui.editor.highlighters.TraitFieldHighlighting"
+            target="org.eclipse.php.core.phpsource">
+        </highlighting>
+    </extension>
 
     <extension
           id="commentTemplateProposalCategory"

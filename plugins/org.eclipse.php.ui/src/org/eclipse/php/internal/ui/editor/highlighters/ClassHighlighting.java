@@ -22,6 +22,9 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(ClassDeclaration clazz) {
+			if (clazz instanceof TraitDeclaration) {
+				return true;
+			}
 			highlight(clazz.getName());
 			Expression superClass = clazz.getSuperClass();
 			if (superClass instanceof NamespaceName) {
