@@ -22,6 +22,7 @@ import org.eclipse.dltk.ti.IInstanceContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.IModelAccessCache;
+import org.eclipse.php.internal.core.typeinference.PHPThisClassType;
 
 /**
  * This is a PHP method or function context.
@@ -176,6 +177,16 @@ public class MethodContext implements IContext, INamespaceContext,
 
 	public void setCurrentType(IType type) {
 		this.type = type;
+		if (type != null) {
+			if (type.getParent() instanceof IType) {
+				IType ns = (IType) type.getParent();
+				instanceType = new PHPThisClassType(ns.getElementName(),
+						type.getElementName(), type);
+			} else {
+				instanceType = new PHPThisClassType(type.getElementName(), type);
+			}
+
+		}
 	}
 
 	public IType getType() {

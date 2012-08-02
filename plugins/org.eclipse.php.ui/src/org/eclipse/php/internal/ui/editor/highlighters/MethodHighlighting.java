@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.SourceMethod;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
@@ -40,7 +44,31 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 		 */
 		private void checkDispatch(ASTNode node) {
 			if (node.getType() == ASTNode.IDENTIFIER) {
-				highlight(node);
+				// ((Identifier)node).resolveBinding()
+				IModelElement[] elements = null;
+				boolean processed = false;
+				try {
+					elements = (getSourceModule()).codeSelect(node.getStart(),
+							node.getLength());
+					if (elements != null && elements.length > 0) {
+						processed = true;
+						for (IModelElement iModelElement : elements) {
+							if (iModelElement instanceof SourceMethod) {
+								SourceMethod sourceMethod = (SourceMethod) iModelElement;
+								if (sourceMethod.getDeclaringType() != null
+										&& PHPFlags.isClass(sourceMethod
+												.getDeclaringType().getFlags())) {
+									highlight(node);
+								}
+							}
+						}
+					}
+				} catch (ModelException e) {
+				}
+				if (!processed) {
+					highlight(node);
+				}
+
 			}
 			if (node.getType() == ASTNode.VARIABLE) {
 				Variable id = (Variable) node;

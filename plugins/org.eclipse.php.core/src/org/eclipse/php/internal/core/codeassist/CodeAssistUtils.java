@@ -390,6 +390,56 @@ public class CodeAssistUtils {
 		return result.toArray(new IType[result.size()]);
 	}
 
+	public static IType[] getTraitsFor(ISourceModule sourceModule,
+			TextSequence statementText, int endPosition, int offset) {
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule
+				.getScriptProject().getProject());
+		if (phpVersion.isLessThan(PHPVersion.PHP5_4)) {
+			return EMPTY_TYPES;
+		}
+		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, endPosition); // read whitespace
+
+		boolean isClassTriger = false;
+
+		if (endPosition < 2) {
+			return EMPTY_TYPES;
+		}
+
+		String triggerText = statementText.subSequence(endPosition - 2,
+				endPosition).toString();
+		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
+		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
+			isClassTriger = true;
+		} else {
+			return EMPTY_TYPES;
+		}
+
+		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(
+				statementText, endPosition - triggerText.length());
+		// int lastObjectOperator = PHPTextSequenceUtilities
+		// .getPrivousTriggerIndex(statementText, propertyEndPosition);
+		// String text = statementText.subSequence(0, propertyEndPosition)
+		// .toString();
+		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
+				phpVersion, statementText, propertyEndPosition, true);
+		String className = statementText.subSequence(classNameStart,
+				propertyEndPosition).toString();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil
+				.getModuleDeclaration(sourceModule, null);
+		FileContext context = new FileContext(sourceModule, moduleDeclaration,
+				offset);
+		IEvaluatedType type = PHPClassType.fromTraitName(className,
+				sourceModule, offset);
+		IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type,
+				context, offset);
+		if (modelElements != null) {
+			return modelElements;
+		}
+		return EMPTY_TYPES;
+
+	}
+
 	/**
 	 * example:(new class1())->avc2()[1][1]->avc1()
 	 * 

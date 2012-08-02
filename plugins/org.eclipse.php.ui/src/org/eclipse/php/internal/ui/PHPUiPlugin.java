@@ -392,6 +392,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			registry.addContextType(PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
 			registry.addContextType(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
 			registry.addContextType(PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
+			registry.addContextType(PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
 			registry.addContextType(PhpCommentTemplateContextType.PHP_COMMENT_CONTEXT_TYPE_ID);
 
 			fContextTypeRegistry = registry;

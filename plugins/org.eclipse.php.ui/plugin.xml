@@ -388,6 +388,9 @@
 		<contextType name="%templates.php4.contextType.name"
 			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
 			id="php-type-method-statements" />
+		<contextType name="%templates.php5.contextType.name"
+			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
+			id="php-class-members" />
 		<contextType name="%templates.phpcomment.contextType.name"
 			class="org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType"
 			id="phpcomment" />
@@ -797,6 +800,12 @@
 	             id="org.eclipse.php.editor">
 	       </part>
 	    </actionSetPartAssociation>
+         <actionSetPartAssociation
+               targetID="org.eclipse.pdt.ui.RefactoringActionSet">
+            <part
+                  id="org.eclipse.php.ui.explorer">
+            </part>
+         </actionSetPartAssociation>
      <actionSetPartAssociation
            targetID="org.eclipse.pdt.ui.SourceActionsSet">
         <part
@@ -1929,6 +1938,28 @@
     <extension point="org.eclipse.wst.sse.ui.semanticHighlighting">
         <highlighting
             class="org.eclipse.php.internal.ui.editor.highlighters.DeprecatedHighlighting"
+            target="org.eclipse.php.core.phpsource">
+        </highlighting>
+    </extension>
+    
+    
+    <extension point="org.eclipse.wst.sse.ui.semanticHighlighting">
+        <highlighting
+        class="org.eclipse.php.internal.ui.editor.highlighters.TraitHighlighting"
+        target="org.eclipse.php.core.phpsource">
+        </highlighting>
+    </extension>
+
+    <extension point="org.eclipse.wst.sse.ui.semanticHighlighting">
+        <highlighting
+        class="org.eclipse.php.internal.ui.editor.highlighters.TraitMethodHighlighting"
+        target="org.eclipse.php.core.phpsource">
+        </highlighting>
+    </extension>
+
+    <extension point="org.eclipse.wst.sse.ui.semanticHighlighting">
+        <highlighting
+            class="org.eclipse.php.internal.ui.editor.highlighters.TraitFieldHighlighting"
             target="org.eclipse.php.core.phpsource">
         </highlighting>
     </extension>

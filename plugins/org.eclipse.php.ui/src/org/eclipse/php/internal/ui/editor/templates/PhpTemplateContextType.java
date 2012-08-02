@@ -35,6 +35,9 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 	// for statements out of function and class
 	public static final String PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID = "php-global-members"; //$NON-NLS-1$
 
+	//	public static final String PHP_TRAIT_STATEMENT_CONTEXT_TYPE_ID = "php-trait-statement"; //$NON-NLS-1$
+	public static final String PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID = "php-class-members"; //$NON-NLS-1$
+
 	public ScriptTemplateContext createContext(IDocument document, int offset,
 			int length, ISourceModule sourceModule) {
 		return new PhpTemplateContext(this, document, offset, length,

@@ -73,8 +73,35 @@ public class CompletionCompanion {
 			triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(
 					statementText, triggerEnd);
 
-			rhTypesCache.put(offset, CodeAssistUtils.getTypesFor(aContext
-					.getSourceModule(), statementText, triggerEnd, offset));
+			rhTypesCache.put(offset, CodeAssistUtils.getTypesFor(
+					aContext.getSourceModule(), statementText, triggerEnd,
+					offset));
+		}
+		return rhTypesCache.get(offset);
+	}
+
+	public IType[] getLeftHandType(ICompletionContext context, boolean isType) {
+		AbstractCompletionContext aContext = (AbstractCompletionContext) context;
+		int offset = aContext.getOffset();
+		if (!rhTypesCache.containsKey(offset)) {
+
+			TextSequence statementText = aContext.getStatementText();
+			int triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(
+					statementText, statementText.length());
+			triggerEnd = PHPTextSequenceUtilities.readIdentifierStartIndex(
+					statementText, triggerEnd, true);
+			triggerEnd = PHPTextSequenceUtilities.readBackwardSpaces(
+					statementText, triggerEnd);
+
+			if (isType) {
+				rhTypesCache.put(offset, CodeAssistUtils.getTypesFor(
+						aContext.getSourceModule(), statementText, triggerEnd,
+						offset));
+			} else {
+				rhTypesCache.put(offset, CodeAssistUtils.getTraitsFor(
+						aContext.getSourceModule(), statementText, triggerEnd,
+						offset));
+			}
 		}
 		return rhTypesCache.get(offset);
 	}

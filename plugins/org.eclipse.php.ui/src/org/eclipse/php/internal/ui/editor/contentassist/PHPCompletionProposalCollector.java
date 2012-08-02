@@ -273,8 +273,7 @@ public class PHPCompletionProposalCollector extends
 				String defaultResult = EMPTY_STRING;
 				if (type instanceof AliasType) {
 				}
-				if (ProposalExtraInfo.TYPE_ONLY.equals(typeProposal
-						.getExtraInfo())
+				if (ProposalExtraInfo.isTypeOnly(typeProposal.getExtraInfo())
 						|| !PHPModelUtils.hasStaticOrConstMember(type)) {
 					return defaultResult;
 				}
@@ -310,10 +309,10 @@ public class PHPCompletionProposalCollector extends
 
 	@Override
 	public int computeRelevance(CompletionProposal proposal) {
-		if (ProposalExtraInfo.STUB.equals(proposal.getExtraInfo())) {
-			return Integer.MAX_VALUE;
-		}
-		if (ProposalExtraInfo.MAGIC_METHOD.equals(proposal.getExtraInfo())) {
+		// if (ProposalExtraInfo.STUB.equals(proposal.getExtraInfo())) {
+		// return Integer.MAX_VALUE;
+		// }
+		if (ProposalExtraInfo.isMagicMethod(proposal.getExtraInfo())) {
 			return -1;
 		}
 		return super.computeRelevance(proposal);

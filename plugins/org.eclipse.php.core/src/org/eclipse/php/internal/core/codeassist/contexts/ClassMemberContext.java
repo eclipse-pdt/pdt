@@ -66,6 +66,13 @@ public abstract class ClassMemberContext extends StatementContext {
 		}
 
 		TextSequence statementText = getStatementText();
+		// boolean b = isInUseTraitStatement();
+		// if (b) {
+		// return false;
+		// }
+		// TextSequence statementText1 = getStatementText(statementText
+		// .getOriginalOffset(0) - 2);
+		// statementText1.toString();
 		int totalLength = statementText.length();
 		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(
 				statementText, totalLength);
@@ -88,7 +95,7 @@ public abstract class ClassMemberContext extends StatementContext {
 			return false;
 		}
 
-		types = getCompanion().getLeftHandType(this);
+		types = getCompanion().getLeftHandType(this, !isInUseTraitStatement());
 		return true;
 	}
 

@@ -149,11 +149,22 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new MethodNameStrategy(context) };
 		}
 		if (contextClass == ClassStatementContext.class) {
-			return new ICompletionStrategy[] {
-					new ClassKeywordsStrategy(context),
-					new GlobalConstantsStrategy(context),
-			// new GlobalTypesStrategy(context)
-			};
+			if (((ClassStatementContext) context).isInUseTraitStatement()) {
+				int type = ((ClassStatementContext) context)
+						.getUseTraitStatementContext();
+				if (type == AbstractCompletionContext.TRAIT_NAME) {
+					return new ICompletionStrategy[] { new InUseTraitStrategy(
+							context) };
+				} else {
+					return new ICompletionStrategy[] {};
+				}
+			} else {
+				return new ICompletionStrategy[] {
+						new ClassKeywordsStrategy(context),
+						new GlobalConstantsStrategy(context),
+				// new GlobalTypesStrategy(context)
+				};
+			}
 		}
 		if (contextClass == GlobalStatementContext.class) {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(
@@ -178,6 +189,13 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new ExceptionClassInstantiationStrategy(
 					context) };
 		}
+		// if (contextClass ==
+		// ClassStaticMemberContext.class&&((ClassStaticMemberContext)context).isInUseTraitStatement())
+		// {
+		// return new ICompletionStrategy[] {
+		// new ClassFieldsStrategy(context),
+		// new ClassMethodsStrategy(context) };
+		// }
 		if (contextClass == ClassStaticMemberContext.class
 				|| contextClass == ClassObjMemberContext.class) {
 			return new ICompletionStrategy[] {

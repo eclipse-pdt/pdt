@@ -89,7 +89,9 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 
 				for (IField field : removeOverriddenElements(Arrays
 						.asList(fields))) {
-					if (!isFiltered(field, type, concreteContext)) {
+					if (concreteContext.isInUseTraitStatement()) {
+						result.add(field);
+					} else if (!isFiltered(field, type, concreteContext)) {
 						result.add(field);
 					}
 				}

@@ -96,7 +96,11 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 				for (IMethod method : removeOverriddenElements(Arrays
 						.asList(methods))) {
 
-					if ((!isConstructor(method) || inConstructor
+					if (concreteContext.isInUseTraitStatement()) {
+						// result.add(method);
+						reporter.reportMethod((IMethod) method, "",
+								replaceRange, ProposalExtraInfo.METHOD_ONLY);
+					} else if ((!isConstructor(method) || inConstructor
 							&& isSuperConstructor(method, type, concreteContext))
 							&& !isFiltered(method, type, concreteContext)) {
 						if (magicMethods.contains(method.getElementName())) {
@@ -127,8 +131,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 					if (concreteContext.getOffset() > construtorRange
 							.getOffset()
 							&& concreteContext.getOffset() < construtorRange
-									.getOffset()
-									+ construtorRange.getLength()) {
+									.getOffset() + construtorRange.getLength()) {
 						return true;
 					}
 				}

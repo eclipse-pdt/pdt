@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
+import org.eclipse.php.internal.debug.core.zend.model.PHPThread;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -93,12 +94,21 @@ public class DebugOutputView extends AbstractDebugView implements
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
-
-						if (!(obj instanceof IPHPDebugTarget))
+						// 386462: [Regression] Debug Output does not refresh
+						// depending on the focus
+						// https://bugs.eclipse.org/bugs/show_bug.cgi?id=386462
+						if (!(obj instanceof IPHPDebugTarget || obj instanceof PHPThread))
 							continue;
 
-						if (events[i].getKind() == DebugEvent.TERMINATE) {
-							target = (IPHPDebugTarget) obj;
+						if (events[i].getKind() == DebugEvent.TERMINATE
+								|| events[i].getKind() == DebugEvent.SUSPEND) {
+							if (obj instanceof IPHPDebugTarget) {
+
+								target = (IPHPDebugTarget) obj;
+							} else {
+								target = (IPHPDebugTarget) ((PHPThread) obj)
+										.getDebugTarget();
+							}
 							Job job = new UIJob("debug output") {
 								public IStatus runInUIThread(
 										IProgressMonitor monitor) {
