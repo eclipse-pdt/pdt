@@ -104,8 +104,7 @@ public class PhpTemplateCompletionProcessor extends
 
 			// find the most outer enclosing type if exists
 			while (enclosingElement != null
-					&& !(enclosingElement instanceof IType && enclosingElement
-							.getParent() instanceof ISourceModule)) {
+					&& !(enclosingElement instanceof IType)) {
 				enclosingElement = enclosingElement.getParent();
 			}
 			enclosingType = (IType) enclosingElement;
@@ -119,6 +118,10 @@ public class PhpTemplateCompletionProcessor extends
 				if (!PHPFlags.isNamespace(enclosingType.getFlags())) {
 					contextIds
 							.add(PhpTemplateContextType.PHP_TYPE_MEMBERS_CONTEXT_TYPE_ID);
+					if (PHPFlags.isClass(enclosingType.getFlags())) {
+						contextIds
+								.add(PhpTemplateContextType.PHP_CLASS_MEMBERS_CONTEXT_TYPE_ID);
+					}
 				} else {
 					contextIds
 							.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);

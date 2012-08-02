@@ -388,6 +388,9 @@
 		<contextType name="%templates.php4.contextType.name"
 			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
 			id="php-type-method-statements" />
+		<contextType name="%templates.php5.contextType.name"
+			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
+			id="php-class-members" />
 		<contextType name="%templates.phpcomment.contextType.name"
 			class="org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType"
 			id="phpcomment" />
