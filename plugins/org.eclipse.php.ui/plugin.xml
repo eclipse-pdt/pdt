@@ -800,6 +800,12 @@
 	             id="org.eclipse.php.editor">
 	       </part>
 	    </actionSetPartAssociation>
+         <actionSetPartAssociation
+               targetID="org.eclipse.pdt.ui.RefactoringActionSet">
+            <part
+                  id="org.eclipse.php.ui.explorer">
+            </part>
+         </actionSetPartAssociation>
      <actionSetPartAssociation
            targetID="org.eclipse.pdt.ui.SourceActionsSet">
         <part
