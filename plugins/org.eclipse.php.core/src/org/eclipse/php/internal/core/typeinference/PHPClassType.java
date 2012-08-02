@@ -155,6 +155,18 @@ public class PHPClassType extends ClassType implements IClassType {
 		}
 	}
 
+	public static PHPClassType fromTraitName(String typeName,
+			ISourceModule sourceModule, int offset) {
+		String namespace = PHPModelUtils.extractNamespaceName(typeName,
+				sourceModule, offset);
+
+		if (namespace != null) {
+			return new PHPTraitType(namespace,
+					PHPModelUtils.extractElementName(typeName));
+		}
+		return new PHPTraitType(typeName);
+	}
+
 	/**
 	 * Creates evaluated type from the given IType.
 	 * 

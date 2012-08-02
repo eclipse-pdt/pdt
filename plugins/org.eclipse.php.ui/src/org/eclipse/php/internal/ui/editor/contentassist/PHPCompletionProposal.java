@@ -59,7 +59,16 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 		if (word.startsWith("$") && !prefix.startsWith("$")) {
 			word = word.substring(1);
 		}
-		return isPrefix(prefix, word);
+		boolean result = isPrefix(prefix, word);
+		// int index = word.indexOf(" - ");
+		// if (!result && index >= 0 && prefix.indexOf('\\') >= 0) {
+		// StringBuffer sb = new StringBuffer();
+		// sb.append(word.substring(index + " - ".length()));
+		// sb.append('\\');
+		// sb.append(word.substring(0, index));
+		// result = isPrefix(prefix, sb.toString());
+		// }
+		return result;
 	}
 
 	protected boolean isSmartTrigger(char trigger) {

@@ -41,6 +41,8 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.ast.nodes.Identifier;
+import org.eclipse.php.internal.core.ast.nodes.NamespaceName;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
@@ -2188,6 +2190,24 @@ public class PHPModelUtils {
 			}
 		}
 		return typeName;
+	}
+
+	public static String getFullName(NamespaceName namespaceName) {
+
+		StringBuffer sb = new StringBuffer();
+		if (namespaceName.isGlobal()) {
+			sb.append(NamespaceReference.NAMESPACE_SEPARATOR);
+		}
+		List<Identifier> segments = namespaceName.segments();
+		for (Identifier identifier : segments) {
+			if (sb.length() == 0 && namespaceName.isGlobal()) {
+				sb.append(NamespaceReference.NAMESPACE_SEPARATOR);
+			} else if (sb.length() > 0) {
+				sb.append(NamespaceReference.NAMESPACE_SEPARATOR);
+			}
+			sb.append(identifier.getName());
+		}
+		return sb.toString();
 	}
 
 	public static String getLineSeparator(IProject project) {

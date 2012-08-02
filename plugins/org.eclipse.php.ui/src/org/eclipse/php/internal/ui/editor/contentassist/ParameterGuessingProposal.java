@@ -26,6 +26,7 @@ import org.eclipse.jface.text.link.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasType;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
@@ -227,6 +228,10 @@ public final class ParameterGuessingProposal extends
 	}
 
 	public String getReplacementString() {
+		if (ProposalExtraInfo.isMethodOnly(extraInfo)) {
+			setReplacementString(method.getElementName());
+			return super.getReplacementString();
+		}
 		boolean fileArgumentNames = Platform.getPreferencesService()
 				.getBoolean(PHPCorePlugin.ID,
 						PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true,
