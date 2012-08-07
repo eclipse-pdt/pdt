@@ -1,0 +1,44 @@
+--TEST--
+Test traits suggestion from CLA 1
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait singleton
+{
+	private static $oInstance = null;
+
+	public static function getSingleton() {
+		if(!self::$oInstance instanceof self) {
+			self::$oInstance = new self;
+		}
+		return self::$oInstance;
+
+	}
+}
+
+class NewClass
+{
+	/**
+	 * @var NewClass
+	 * @return NewClass
+	 */
+	use singleton;
+
+	public function display() {
+		echo get_class($this);
+	}
+
+	protected function doSomething() {
+		// Would be nice for the definition of @var NewClass above
+		// to allow Ctrl space to show available instance methods
+		// on self::$oInstance->
+		self::$oInstance->display();
+	}
+}
+
+NewClass::getSingleton()->|
+?>
+--EXPECT--
+method(display)
+method(getSingleton)
