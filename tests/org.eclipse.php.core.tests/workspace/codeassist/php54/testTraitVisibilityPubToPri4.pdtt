@@ -16,3 +16,4 @@ $o= new MyClass();
 $o->|
 ?>
 --EXPECT--
+method(sayHello)

@@ -17,5 +17,6 @@ class MyClass {
 }
 ?>
 --EXPECT--
-method(say)
 method(foo)
+method(sayHello)
+method(say)
