@@ -45,6 +45,8 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard");
 		PROJECT_WIZARD_ID
 				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard");
+		PROJECT_WIZARD_ID
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard");
 
 		PROJECT_WIZARD_ID
 				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard");

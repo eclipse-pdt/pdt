@@ -63,6 +63,8 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		PROJECT_WIZARD_ID
 				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard");
 		PROJECT_WIZARD_ID
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard");
+		PROJECT_WIZARD_ID
 				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard");
 
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.localphp");
