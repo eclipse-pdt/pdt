@@ -39,6 +39,8 @@ import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.tests.PHPUiTests;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -194,8 +196,17 @@ public class ContentAssistTests extends AbstractPDTTTest {
 	}
 
 	protected static String executeAutoInsert(int offset) {
-		StructuredTextViewer viewer = fEditor.getTextViewer();
-		viewer.getTextWidget().setCaretOffset(offset);
+		StructuredTextViewer viewer = null;
+		Display display = Display.getDefault();
+		long timeout = System.currentTimeMillis() + 3000;
+		while ((System.currentTimeMillis() < timeout)
+				&& ((viewer = fEditor.getTextViewer()) == null)) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+		StyledText textWidget = viewer.getTextWidget();
+		textWidget.setCaretOffset(offset);
 		viewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
 		return fEditor.getDocument().get();
 	}

@@ -1286,13 +1286,18 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		if (getSelectionProvider() instanceof IPostSelectionProvider) {
 			IPostSelectionProvider psp = (IPostSelectionProvider) getSelectionProvider();
-			IAction action = getAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
-			if (action instanceof ISelectionChangedListener) {
-				psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
-			}
-			action = getAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
-			if (action instanceof ISelectionChangedListener) {
-				psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
+			try {
+				IAction action = getAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+				if (action instanceof ISelectionChangedListener) {
+					psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
+				}
+				action = getAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+				if (action instanceof ISelectionChangedListener) {
+					psp.removePostSelectionChangedListener((ISelectionChangedListener) action);
+				}
+			} catch (NullPointerException ex) {
+				// NPE thrown by getAction in case when class has already been
+				// disposed but dispose is called again.
 			}
 		}
 

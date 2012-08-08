@@ -73,8 +73,10 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 	 */
 	public void dispose() {
 		fConsole = null;
-		fPHPHyperLink.dispose();
-		fPHPHyperLink = null;
+		if (fPHPHyperLink != null) {
+			fPHPHyperLink.dispose();
+			fPHPHyperLink = null;
+		}
 	}
 
 	/*
