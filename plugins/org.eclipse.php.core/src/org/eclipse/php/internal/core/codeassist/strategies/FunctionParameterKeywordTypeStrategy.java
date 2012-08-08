@@ -18,6 +18,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.FunctionParameterTypeContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
@@ -31,6 +32,7 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  */
 public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 
+	private static final String CALLABLE = "callable";
 	public static final String[] KEYWORDS = { "self", "parent" };
 
 	/**
@@ -52,13 +54,13 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
 		FunctionParameterTypeContext context = (FunctionParameterTypeContext) getContext();
+		String prefix = context.getPrefix();
+		String suffix = "";
+		SourceRange replaceRange = getReplacementRange(context);
 		if (context.getEnclosingType() != null) {
 			try {
 				int flags = context.getEnclosingType().getFlags();
 				if (!PHPFlags.isNamespace(flags)) {
-					SourceRange replaceRange = getReplacementRange(context);
-					String suffix = "";
-					String prefix = context.getPrefix();
 					for (String keyword : KEYWORDS) {
 						if (keyword.startsWith(prefix)) {
 							reporter.reportKeyword(keyword, suffix,
@@ -71,6 +73,12 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 			}
 		}
 
+		PHPVersion phpVersion = context.getPhpVersion();
+		if (phpVersion.isGreaterThan(PHPVersion.PHP5_3)) {
+			if (CALLABLE.startsWith(prefix)) {
+				reporter.reportKeyword(CALLABLE, suffix, replaceRange);
+			}
+		}
 	}
 
 	/*
