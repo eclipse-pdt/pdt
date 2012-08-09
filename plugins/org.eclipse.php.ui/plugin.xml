@@ -1445,11 +1445,17 @@
 		
 		<objectContribution objectClass="org.eclipse.dltk.core.IModelElement"
 			id="org.eclipse.php.ui.containersAndFilesContribution">
-			<menu label="%category.source.name" path="additions" id="source" />
+	        <menu
+	              id="source"
+	              label="%category.source.name"
+	              path="additions">
+	            <separator name="format"/>
+	        </menu>
 			<!-- Format delegate action for Projects/folders/files -->
 			<action label="%FormatAction.label"
 				class="org.eclipse.php.internal.ui.actions.format.FormatActionDelegate"
-				id="org.eclipse.php.ui.internal.actions.FormatActionDelegate">
+				id="org.eclipse.php.ui.internal.actions.FormatActionDelegate"
+				menubarPath="source/format" >
 			</action>
 			<visibility>
 				<or>
