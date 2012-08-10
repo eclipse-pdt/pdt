@@ -138,7 +138,8 @@ public class ContentAssistTests extends AbstractPDTTTest {
 
 								createFile(
 										new ByteArrayInputStream(data
-												.getBytes()), fileName);
+												.getBytes()),
+										phpVersion.getAlias() + fileName);
 								String result = executeAutoInsert(offset);
 								closeEditor();
 								if (!pdttFile.getExpected().trim()
