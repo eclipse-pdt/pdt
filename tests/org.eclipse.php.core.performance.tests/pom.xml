@@ -30,6 +30,7 @@
 						<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
 					</dependency>
 				</dependencies>
+				<skipTests>${skipPdtPerformanceTests}</skipTests>
     		</configuration>
   		</plugin>
 	  </plugins>
