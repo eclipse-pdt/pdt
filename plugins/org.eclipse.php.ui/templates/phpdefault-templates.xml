@@ -277,7 +277,7 @@ ${cursor}</template>
 <template
 	name="fnc"
 	description="%description.php.functionStatement"
-	id="org.eclipse.php.ui.editor.templates.php.fnc"
+	id="org.eclipse.php.ui.editor.templates.php.fnc1"
 	context="php-global-members"
 	enabled="true"
 	autoinsert="false">function ${function_name}(${dollar}${param}) {
@@ -288,29 +288,7 @@ ${cursor}</template>
 <template
 	name="function"
 	description="%description.php.functionStatement"
-	id="org.eclipse.php.ui.editor.templates.php.function"
-	context="php-global-members"
-	enabled="true"
-	autoinsert="false">function ${function_name}(${dollar}${param}) {
-	${cursor};
-}
-</template>
-
-<template
-	name="fnc"
-	description="%description.php.functionStatement"
-	id="org.eclipse.php.ui.editor.templates.php.fnc"
-	context="php-global-members"
-	enabled="true"
-	autoinsert="false">function ${function_name}(${dollar}${param}) {
-	${cursor};
-}
-</template>
-
-<template
-	name="function"
-	description="%description.php.functionStatement"
-	id="org.eclipse.php.ui.editor.templates.php.function"
+	id="org.eclipse.php.ui.editor.templates.php.function1"
 	context="php-global-members"
 	enabled="true"
 	autoinsert="false">function ${function_name}(${dollar}${param}) {

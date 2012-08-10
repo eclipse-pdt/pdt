@@ -1,0 +1,16 @@
+--TEST--
+Test array dereferencing 1
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+
+class class_name {
+	function fun1() {
+		$clousure = static function() {
+			$th|
+		};
+	}
+}
+?>
+--EXPECT--

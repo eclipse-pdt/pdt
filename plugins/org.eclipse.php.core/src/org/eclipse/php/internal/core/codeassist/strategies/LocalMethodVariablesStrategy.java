@@ -34,6 +34,8 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 
+	private static final String THIS = "$this";
+
 	public LocalMethodVariablesStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
 		super(context, elementFilter);
@@ -70,10 +72,27 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		if (!PHPFlags.isStatic(enclosingMethod.getFlags())) {
 			IType declaringType = enclosingMethod.getDeclaringType();
 			if (declaringType != null) {
-				if ("$this".startsWith(prefix)) { //$NON-NLS-1$
-					reporter.reportField(
-							new FakeField((ModelElement) declaringType,
-									"$this", 0, 0), suffix, replaceRange, false, ICompletionReporter.RELEVANCE_ADJUST); //NON-NLS-1 //$NON-NLS-2$
+				if (THIS.startsWith(prefix)) { //$NON-NLS-1$
+					reporter.reportField(new FakeField(
+							(ModelElement) declaringType, THIS, 0, 0), suffix,
+							replaceRange, false,
+							ICompletionReporter.RELEVANCE_ADJUST); //NON-NLS-1 //$NON-NLS-2$
+				}
+			} else {
+				if (enclosingMethod.getParent() instanceof IField
+						&& concreteContext.getPhpVersion().isGreaterThan(
+								PHPVersion.PHP5_3)) {
+					IMethod method = (IMethod) enclosingMethod.getParent()
+							.getAncestor(IModelElement.METHOD);
+					if (method != null) {
+						declaringType = method.getDeclaringType();
+						if (THIS.startsWith(prefix)) { //$NON-NLS-1$
+							reporter.reportField(new FakeField(
+									(ModelElement) declaringType, THIS, 0, 0),
+									suffix, replaceRange, false,
+									ICompletionReporter.RELEVANCE_ADJUST); //NON-NLS-1 //$NON-NLS-2$
+						}
+					}
 				}
 			}
 		}

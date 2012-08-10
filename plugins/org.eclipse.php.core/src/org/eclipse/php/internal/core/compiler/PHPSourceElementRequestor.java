@@ -207,6 +207,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		mi.parameterNames = parameters;
 		mi.name = PHPCoreConstants.ANONYMOUS;
 		mi.modifiers = Modifiers.AccPublic;
+		if (lambdaMethod.isStatic()) {
+			mi.modifiers |= Modifiers.AccStatic;
+		}
 		mi.nameSourceStart = lambdaMethod.sourceStart();
 		mi.nameSourceEnd = lambdaMethod.sourceEnd();
 		mi.declarationStart = mi.nameSourceStart;

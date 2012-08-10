@@ -11,7 +11,7 @@ public class UseTrait {
 	private List<TraitPrecedenceObject> traitPrecedences = new ArrayList<TraitPrecedenceObject>();
 	private List<TraitAliasObject> traitAliases = new ArrayList<TraitAliasObject>();
 	private Map<String, TraitPrecedenceObject> precedenceMap = new HashMap<String, TraitPrecedenceObject>();
-	private Map<String, TraitAliasObject> aliasMap = new HashMap<String, TraitAliasObject>();
+	private Map<String, List<TraitAliasObject>> aliasMap = new HashMap<String, List<TraitAliasObject>>();
 
 	public List<String> getTraits() {
 		return traits;
@@ -25,7 +25,7 @@ public class UseTrait {
 		return traitAliases;
 	}
 
-	public Map<String, TraitAliasObject> getAliasMap() {
+	public Map<String, List<TraitAliasObject>> getAliasMap() {
 		return aliasMap;
 	}
 

@@ -81,7 +81,15 @@ public class TraitUtils {
 								.getName();
 					}
 					useTrait.getTraitAliases().add(ta);
-					useTrait.getAliasMap().put(ta.traitMethodName, ta);
+					List<TraitAliasObject> traitAliases = useTrait
+							.getAliasMap().get(ta.traitMethodName);
+					if (traitAliases == null) {
+						traitAliases = new ArrayList<TraitAliasObject>();
+						useTrait.getAliasMap().put(ta.traitMethodName,
+								traitAliases);
+					}
+					traitAliases.add(ta);
+					// useTrait.getAliasMap().put(ta.traitMethodName, ta);
 				} else if (traitMethod instanceof FullyQualifiedTraitMethodReference) {
 					FullyQualifiedTraitMethodReference simpleReference = (FullyQualifiedTraitMethodReference) traitMethod;
 
@@ -95,7 +103,15 @@ public class TraitUtils {
 								.getName();
 					}
 					useTrait.getTraitAliases().add(ta);
-					useTrait.getAliasMap().put(ta.traitMethodName, ta);
+					List<TraitAliasObject> traitAliases = useTrait
+							.getAliasMap().get(ta.traitMethodName);
+					if (traitAliases == null) {
+						traitAliases = new ArrayList<TraitAliasObject>();
+						useTrait.getAliasMap().put(ta.traitMethodName,
+								traitAliases);
+					}
+					traitAliases.add(ta);
+					// useTrait.getAliasMap().put(ta.traitMethodName, ta);
 				}
 
 			} else if (traitStatement instanceof TraitPrecedenceStatement) {
@@ -140,16 +156,19 @@ public class TraitUtils {
 					fields = PHPModelUtils.getTypeField(traitType, "", false);
 					// fields = traitType.getFields();
 					for (IField field : fields) {
-						field = getFieldWrapper(useTrait, field, type);
-						if (field == null) {
-							continue;
-						}
-						String elementName = field.getElementName();
-						if (elementName.startsWith("$")) {
-							elementName = elementName.substring(1);
-						}
-						if (!nameSet.contains(elementName)) {
-							fieldList.add(field);
+						List<IField> aliasList = getFieldWrapper(useTrait,
+								field, type);
+						for (IField alias : aliasList) {
+							if (alias == null) {
+								continue;
+							}
+							String elementName = alias.getElementName();
+							if (elementName.startsWith("$")) {
+								elementName = elementName.substring(1);
+							}
+							if (!nameSet.contains(elementName)) {
+								fieldList.add(alias);
+							}
 						}
 					}
 				} catch (ModelException e) {
@@ -159,54 +178,52 @@ public class TraitUtils {
 		return fieldList.toArray(new IField[fieldList.size()]);
 	}
 
-	private static IField getFieldWrapper(UseTrait useTrait, IField field,
-			IType type) {
-		// TraitAliasObject tao = useTrait.getAliasMap().get(
-		// field.getElementName());
-		// TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(
-		// field.getElementName());
-		// if (tpo != null) {
-		// String fullName = PHPModelUtils.getFullName(field
-		// .getDeclaringType());
-		// if (!fullName.equals(tpo.traitName) || tao == null
-		// || tao.newMethodName == null) {
-		// return null;
-		// }
-		// } else {
-		//
-		// }
-		// if (tao != null) {
-		// field = new FieldWrapper(field, tao.newMethodVisibility,
-		// tao.newMethodName);
-		// }
-		// return field;
+	private static List<IField> getFieldWrapper(UseTrait useTrait,
+			IField field, IType type) {
+		List<IField> result = new ArrayList<IField>();
 		String fieldName = field.getElementName();
 		if (fieldName.startsWith("$")) {
 			fieldName = fieldName.substring(1);
 		}
-		TraitAliasObject tao = useTrait.getAliasMap().get(fieldName);
 		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(fieldName);
-		String fullName = PHPModelUtils.getFullName(field.getDeclaringType());
-		if (tao != null
-				&& (tao.traitName == null || fullName.equals(tao.traitName))) {
-			field = new FieldWrapper(field, tao.newMethodVisibility,
-					tao.newMethodName, type);
-			return field;
-		}
+		boolean shouldAddSelf = true;
+		boolean changeVisibility = false;
 		if (tpo != null) {
-			if (!fullName.equals(tpo.traitName)) {
-				return null;
-			}
-			// if (!fullName.equals(tpo.traitName)
-			// && (tao == null || (fullName.equals(tao.traitName)
-			// && tao.newMethodName != null && !fullName
-			// .equals(tao.newMethodName)))) {
-			// return null;
-			// }
-		} else {
-
+			shouldAddSelf = false;
 		}
-		return field;
+		List<TraitAliasObject> aliasList = useTrait.getAliasMap()
+				.get(fieldName);
+		String fullName = PHPModelUtils.getFullName(field.getDeclaringType());
+		if (aliasList != null) {
+			for (TraitAliasObject tao : aliasList) {
+				if ((tao.traitName == null || fullName.equals(tao.traitName))) {
+					IField alias = new FieldWrapper(field,
+							tao.newMethodVisibility, tao.newMethodName, type);
+					result.add(alias);
+					if (fieldName.equals(tao.newMethodName)
+							|| tao.newMethodName == null) {
+						changeVisibility = true;
+					}
+				}
+				if (tpo != null) {
+					if (!fullName.equals(tpo.traitName)) {
+						continue;
+					} else {
+						shouldAddSelf = true;
+					}
+				}
+			}
+		} else {
+			if (tpo != null && fullName.equals(tpo.traitName)) {
+				shouldAddSelf = true;
+			}
+		}
+
+		if (shouldAddSelf && !changeVisibility) {
+			result.add(field);
+		}
+		// TraitAliasObject tao = useTrait.getAliasMap().get(fieldName);
+		return result;
 	}
 
 	public static IMethod[] getTraitMethods(IType type, Set<String> nameSet) {
@@ -231,13 +248,17 @@ public class TraitUtils {
 					methods = PHPModelUtils.getTypeMethod(traitType, "", false);
 					// methods = traitType.getMethods();
 					for (IMethod method : methods) {
-						method = getMethodWrapper(useTrait, method, type);
-						if (method == null) {
-							continue;
-						}
-						String elementName = method.getElementName();
-						if (!nameSet.contains(elementName)) {
-							fieldList.add(method);
+
+						List<IMethod> aliasList = getMethodWrapper(useTrait,
+								method, type);
+						for (IMethod alias : aliasList) {
+							if (alias == null) {
+								continue;
+							}
+							String elementName = alias.getElementName();
+							if (!nameSet.contains(elementName)) {
+								fieldList.add(alias);
+							}
 						}
 					}
 				} catch (ModelException e) {
@@ -247,33 +268,52 @@ public class TraitUtils {
 		return fieldList.toArray(new IMethod[fieldList.size()]);
 	}
 
-	private static IMethod getMethodWrapper(UseTrait useTrait, IMethod method,
-			IType type) {
-		TraitAliasObject tao = useTrait.getAliasMap().get(
-				method.getElementName());
-		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(
-				method.getElementName());
-		String fullName = PHPModelUtils.getFullName(method.getDeclaringType());
-		if (tao != null
-				&& (tao.traitName == null || fullName.equals(tao.traitName))) {
-			method = new MethodWrapper(method, tao.newMethodVisibility,
-					tao.newMethodName, type);
-			return method;
-		}
-		if (tpo != null) {
-			if (!fullName.equals(tpo.traitName)) {
-				return null;
-			}
-			// if (!fullName.equals(tpo.traitName)
-			// && (tao == null || (fullName.equals(tao.traitName)
-			// && tao.newMethodName != null && !fullName
-			// .equals(tao.newMethodName)))) {
-			// return null;
-			// }
-		} else {
+	private static List<IMethod> getMethodWrapper(UseTrait useTrait,
+			IMethod method, IType type) {
 
+		List<IMethod> result = new ArrayList<IMethod>();
+		String methodName = method.getElementName();
+		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(methodName);
+		boolean shouldAddSelf = true;
+		boolean changeVisibility = false;
+		if (tpo != null) {
+			shouldAddSelf = false;
 		}
-		return method;
+		List<TraitAliasObject> aliasList = useTrait.getAliasMap().get(
+				methodName);
+		String fullName = PHPModelUtils.getFullName(method.getDeclaringType());
+		if (aliasList != null) {
+			for (TraitAliasObject tao : aliasList) {
+				if ((tao.traitName == null || fullName.equals(tao.traitName))) {
+					IMethod alias = new MethodWrapper(method,
+							tao.newMethodVisibility, tao.newMethodName, type);
+					result.add(alias);
+					if (methodName.equals(tao.newMethodName)
+							|| tao.newMethodName == null) {
+						changeVisibility = true;
+					}
+				}
+				if (tpo != null) {
+					if (!fullName.equals(tpo.traitName)) {
+						continue;
+					} else {
+						shouldAddSelf = true;
+					}
+				}
+			}
+		} else {
+			if (tpo != null) {
+				if (fullName.equals(tpo.traitName)) {
+					shouldAddSelf = true;
+				}
+			}
+		}
+		if (shouldAddSelf && !changeVisibility) {
+			result.add(method);
+		}
+		// TraitAliasObject tao = useTrait.getAliasMap().get(fieldName);
+		return result;
+
 	}
 
 	/**

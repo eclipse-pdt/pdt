@@ -17,3 +17,4 @@ $o->|
 ?>
 --EXPECT--
 method(say)
+method(sayHello)

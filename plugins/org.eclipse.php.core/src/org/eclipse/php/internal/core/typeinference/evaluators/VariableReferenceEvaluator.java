@@ -28,10 +28,13 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.ArrayDeclaration;
 import org.eclipse.php.internal.core.typeinference.Declaration;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.ArrayDeclarationGoal;
@@ -52,7 +55,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] init() {
-		VariableReference variableReference = (VariableReference) ((ExpressionTypeGoal) goal)
+		final VariableReference variableReference = (VariableReference) ((ExpressionTypeGoal) goal)
 				.getExpression();
 		IContext context = goal.getContext();
 
@@ -60,11 +63,42 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		if (variableReference.getName().equals("$this")) {
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
-				IEvaluatedType instanceType = methodContext.getInstanceType();
-				if (instanceType != null) {
-					this.results.add(instanceType);
-				} else {
+				final LambdaFunctionDeclaration[] lambdas = new LambdaFunctionDeclaration[1];
+				ContextFinder contextFinder = new ContextFinder(
+						methodContext.getSourceModule()) {
+					@Override
+					public boolean visit(Expression s) throws Exception {
+						if (s instanceof LambdaFunctionDeclaration) {
+							LambdaFunctionDeclaration lambda = (LambdaFunctionDeclaration) s;
+							if (variableReference.sourceStart() > lambda
+									.sourceStart()
+									&& variableReference.sourceEnd() < lambda
+											.sourceEnd()) {
+								lambdas[0] = lambda;
+							}
+						}
+						return super.visit(s);
+					}
+				};
+				try {
+					methodContext.getRootNode().traverse(contextFinder);
+				} catch (Exception e) {
+				}
+				PHPVersion phpVersion = ProjectOptions
+						.getPhpVersion(methodContext.getSourceModule()
+								.getScriptProject().getProject());
+				if (lambdas[0] != null
+						&& (lambdas[0].isStatic() || phpVersion
+								.isLessThan(PHPVersion.PHP5_4))) {
 					this.results.add(new SimpleType(SimpleType.TYPE_NULL));
+				} else {
+					IEvaluatedType instanceType = methodContext
+							.getInstanceType();
+					if (instanceType != null) {
+						this.results.add(instanceType);
+					} else {
+						this.results.add(new SimpleType(SimpleType.TYPE_NULL));
+					}
 				}
 				return IGoal.NO_GOALS;
 			}

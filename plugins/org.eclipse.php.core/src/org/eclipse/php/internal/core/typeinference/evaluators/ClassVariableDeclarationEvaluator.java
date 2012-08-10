@@ -273,6 +273,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	 */
 	class ClassDeclarationSearcher extends ContextFinder {
 
+		private static final String NULL = "null";
 		private TypeDeclaration typeDeclaration;
 		private ASTNode result;
 		private IContext context;
@@ -326,6 +327,14 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 							&& phpFieldDecl.sourceEnd()
 									- phpFieldDecl.getDeclarationStart() == length) {
 						result = ((PHPFieldDeclaration) e).getVariableValue();
+						if (result instanceof Scalar) {
+							Scalar scalar = (Scalar) result;
+							if (scalar.getScalarType() == Scalar.TYPE_STRING
+									&& scalar.getValue().toLowerCase()
+											.equals(NULL)) {
+								result = null;
+							}
+						}
 						context = contextStack.peek();
 					}
 				}
