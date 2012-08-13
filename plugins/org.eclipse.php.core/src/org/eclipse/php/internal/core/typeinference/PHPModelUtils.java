@@ -2120,6 +2120,8 @@ public class PHPModelUtils {
 
 					return newClassName;
 				}
+			} else if (newClassName.startsWith("new")) {
+				return newClassName.substring(3).trim();
 			}
 		}
 		return null;
