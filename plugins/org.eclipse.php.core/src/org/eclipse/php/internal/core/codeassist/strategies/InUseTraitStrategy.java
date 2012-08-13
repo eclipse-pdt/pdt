@@ -62,7 +62,7 @@ public class InUseTraitStrategy extends AbstractCompletionStrategy {
 				moduleDeclaration, offset);
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 		for (String useType : useTypes) {
-			if (useType.trim().startsWith(prefix)) {
+			if (useType.trim().toLowerCase().startsWith(prefix.toLowerCase())) {
 
 				IEvaluatedType type = PHPClassType.fromTraitName(useType,
 						sourceModule, offset);
