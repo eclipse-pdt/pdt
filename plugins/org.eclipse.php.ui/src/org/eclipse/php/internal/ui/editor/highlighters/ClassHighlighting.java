@@ -22,9 +22,6 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 
 		@Override
 		public boolean visit(ClassDeclaration clazz) {
-			if (clazz instanceof TraitDeclaration) {
-				return true;
-			}
 			highlight(clazz.getName());
 			Expression superClass = clazz.getSuperClass();
 			if (superClass instanceof NamespaceName) {
@@ -55,6 +52,35 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 				highlight(type);
 			}
 			return true;
+		}
+
+		public boolean visit(TraitUseStatement node) {
+			List<NamespaceName> traitList = node.getTraitList();
+			for (NamespaceName namespaceName : traitList) {
+				highlightNamespaceType(namespaceName);
+			}
+			List<TraitStatement> tsList = node.getTsList();
+			for (TraitStatement traitStatement : tsList) {
+				if (traitStatement instanceof TraitAliasStatement) {
+					TraitAliasStatement statement = (TraitAliasStatement) traitStatement;
+					if (statement.getAlias().getTraitMethod() instanceof FullyQualifiedTraitMethodReference) {
+						FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) statement
+								.getAlias().getTraitMethod();
+						highlightNamespaceType(reference.getClassName());
+					}
+
+				} else if (traitStatement instanceof TraitPrecedenceStatement) {
+					TraitPrecedenceStatement statement = (TraitPrecedenceStatement) traitStatement;
+					FullyQualifiedTraitMethodReference reference = statement
+							.getPrecedence().getMethodReference();
+					highlightNamespaceType(reference.getClassName());
+					traitList = statement.getPrecedence().getTrList();
+					for (NamespaceName namespaceName : traitList) {
+						highlightNamespaceType(namespaceName);
+					}
+				}
+			}
+			return false;
 		}
 
 		private void highlightNamespaceType(NamespaceName name) {

@@ -10,11 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.highlighters;
 
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
+import java.util.List;
+
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceField;
-import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticHighlighting;
 
@@ -35,9 +41,7 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 				}
 				parent = parent.getParent();
 			}
-			if (!(cd instanceof TraitDeclaration)) {
-				highlight(fieldDecl.getName());
-			}
+			highlight(fieldDecl.getName());
 			return true;
 		}
 
@@ -70,13 +74,8 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 						processed = true;
 						for (IModelElement iModelElement : elements) {
 							if ((iModelElement instanceof SourceField)) {
-								SourceField sourceMethod = (SourceField) iModelElement;
-								if (sourceMethod.getDeclaringType() != null
-										&& PHPFlags.isClass(sourceMethod
-												.getDeclaringType().getFlags())) {
-									highlight(var);
-									break;
-								}
+								highlight(var);
+								break;
 							}
 						}
 					}
@@ -100,6 +99,134 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 				throw new IllegalStateException("visitField is negative: "
 						+ visitField);
 			}
+		}
+
+		public boolean visit(TraitUseStatement node) {
+			ISourceModule sourceModule = getSourceModule();
+			ModuleDeclaration moduleDeclaration = SourceParserUtil
+					.getModuleDeclaration(sourceModule, null);
+			FileContext context = new FileContext(sourceModule,
+					moduleDeclaration, node.getStart());
+			List<TraitStatement> tsList = node.getTsList();
+			for (TraitStatement traitStatement : tsList) {
+				if (traitStatement instanceof TraitAliasStatement) {
+					TraitAliasStatement statement = (TraitAliasStatement) traitStatement;
+					if (statement.getAlias().getTraitMethod() instanceof FullyQualifiedTraitMethodReference) {
+						FullyQualifiedTraitMethodReference reference = (FullyQualifiedTraitMethodReference) statement
+								.getAlias().getTraitMethod();
+
+						IEvaluatedType type = PHPClassType.fromTraitName(
+								PHPModelUtils.getFullName(reference
+										.getClassName()), sourceModule,
+								traitStatement.getStart());
+						IType[] modelElements = PHPTypeInferenceUtils
+								.getModelElements(type, context,
+										traitStatement.getStart());
+						if (modelElements != null && modelElements.length > 0) {
+							for (IType iType : modelElements) {
+								boolean shouldBreak = false;
+								try {
+									IModelElement[] children = iType
+											.getChildren();
+									for (IModelElement iModelElement : children) {
+										if (iModelElement.getElementName()
+												.equals(reference
+														.getFunctionName()
+														.getName())
+												&& (iModelElement instanceof IField)) {
+											highlight(reference
+													.getFunctionName());
+											shouldBreak = true;
+											break;
+										}
+									}
+								} catch (ModelException e) {
+									e.printStackTrace();
+								}
+								if (shouldBreak) {
+									break;
+								}
+							}
+						}
+					} else {
+						Identifier method = (Identifier) statement.getAlias()
+								.getTraitMethod();
+						List<NamespaceName> traitList = node.getTraitList();
+						for (NamespaceName namespaceName : traitList) {
+							boolean shouldBreak = false;
+							IEvaluatedType type = PHPClassType.fromTraitName(
+									PHPModelUtils.getFullName(namespaceName),
+									sourceModule, traitStatement.getStart());
+							IType[] modelElements = PHPTypeInferenceUtils
+									.getModelElements(type, context,
+											traitStatement.getStart());
+							if (modelElements != null
+									&& modelElements.length > 0) {
+								for (IType iType : modelElements) {
+									try {
+										IModelElement[] children = iType
+												.getChildren();
+										for (IModelElement iModelElement : children) {
+											if (iModelElement.getElementName()
+													.equals(method.getName())
+													&& (iModelElement instanceof IField)) {
+												highlight(method);
+												shouldBreak = true;
+												break;
+											}
+										}
+									} catch (ModelException e) {
+										e.printStackTrace();
+									}
+									if (shouldBreak) {
+										break;
+									}
+								}
+							}
+							if (shouldBreak) {
+								break;
+							}
+						}
+					}
+
+				} else if (traitStatement instanceof TraitPrecedenceStatement) {
+					TraitPrecedenceStatement statement = (TraitPrecedenceStatement) traitStatement;
+					FullyQualifiedTraitMethodReference reference = statement
+							.getPrecedence().getMethodReference();
+
+					IEvaluatedType type = PHPClassType
+							.fromTraitName(PHPModelUtils.getFullName(reference
+									.getClassName()), sourceModule,
+									traitStatement.getStart());
+					IType[] modelElements = PHPTypeInferenceUtils
+							.getModelElements(type, context,
+									traitStatement.getStart());
+					if (modelElements != null && modelElements.length > 0) {
+						for (IType iType : modelElements) {
+							boolean shouldBreak = false;
+							try {
+								IModelElement[] children = iType.getChildren();
+								for (IModelElement iModelElement : children) {
+									if (iModelElement.getElementName().equals(
+											reference.getFunctionName()
+													.getName())
+											&& ((iModelElement instanceof IField))) {
+										highlight(reference.getFunctionName());
+										shouldBreak = true;
+										break;
+									}
+								}
+							} catch (ModelException e) {
+								e.printStackTrace();
+							}
+							if (shouldBreak) {
+								break;
+							}
+						}
+					}
+				}
+			}
+			return false;
 		}
 	}
 
