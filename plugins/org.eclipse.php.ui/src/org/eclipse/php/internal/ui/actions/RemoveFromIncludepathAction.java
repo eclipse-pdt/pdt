@@ -75,20 +75,17 @@ public class RemoveFromIncludepathAction extends Action implements
 							.removeEntryFromIncludePath(
 									includePath.getProject(),
 									(IBuildpathEntry) (includePath.getEntry()));
-				else {
-					IProject proj = includePath.getProject();
-					IncludePathManager manager = IncludePathManager
-							.getInstance();
-					IncludePath[] paths = manager.getIncludePaths(proj);
-					List<IncludePath> entries = new ArrayList<IncludePath>();
-					for (IncludePath path : paths) {
-						if (!path.equals(includePath)) {
-							entries.add(path);
-						}
+				IProject proj = includePath.getProject();
+				IncludePathManager manager = IncludePathManager.getInstance();
+				IncludePath[] paths = manager.getIncludePaths(proj);
+				List<IncludePath> entries = new ArrayList<IncludePath>();
+				for (IncludePath path : paths) {
+					if (!path.equals(includePath)) {
+						entries.add(path);
 					}
-					manager.setIncludePath(proj, entries
-							.toArray(new IncludePath[entries.size()]));
 				}
+				manager.setIncludePath(proj,
+						entries.toArray(new IncludePath[entries.size()]));
 			} catch (ModelException e) {
 				Logger.logException("Could not remove buildPathEntry", e);
 			}
