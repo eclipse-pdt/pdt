@@ -54,6 +54,8 @@ public class PHPDebugCorePreferenceInitializer extends
 		node.put(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER,
 				"org.eclipse.php.debug.core.defaultInitializer"); //$NON-NLS-1$
 
+		node.putBoolean(PHPDebugCorePreferenceNames.SORT_BY_NAME, false);
+
 		try {
 			StringBuilder b = new StringBuilder();
 			Enumeration<NetworkInterface> ii = NetworkInterface

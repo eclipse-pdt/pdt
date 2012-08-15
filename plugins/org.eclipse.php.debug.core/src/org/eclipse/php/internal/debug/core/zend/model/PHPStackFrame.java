@@ -21,6 +21,7 @@ import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
+import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
 
 /**
  * PHP stack frame.
@@ -99,11 +100,12 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
 	 */
 	public IVariable[] getVariables() throws DebugException {
-		Expression[] localVariables = fLocalVariables;
+		Expression[] localVariables = ExpressionValue.sort(fLocalVariables);
 		IVariable[] variables = new PHPVariable[localVariables.length];
 		for (int i = 0; i < localVariables.length; i++) {
-			variables[i] = new PHPVariable((PHPDebugTarget) fThread
-					.getDebugTarget(), localVariables[i]);
+			variables[i] = new PHPVariable(
+					(PHPDebugTarget) fThread.getDebugTarget(),
+					localVariables[i]);
 		}
 		return variables;
 	}

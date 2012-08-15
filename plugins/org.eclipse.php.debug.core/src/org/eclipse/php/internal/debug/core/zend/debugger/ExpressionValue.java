@@ -11,6 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+
 public class ExpressionValue {
 
 	public static int NULL_TYPE = 0;
@@ -50,8 +57,30 @@ public class ExpressionValue {
 		return valueAsString;
 	}
 
-	public Expression[] getChildren() {
+	public Expression[] getOriChildren() {
 		return children;
+	}
+
+	public Expression[] getChildren() {
+		return sort(children);
+	}
+
+	public static Expression[] sort(Expression[] children) {
+		if (PHPProjectPreferences.isSortByName()) {
+			List<Expression> list = new ArrayList<Expression>();
+			for (Expression expression : children) {
+				list.add(expression);
+			}
+			Collections.sort(list, new Comparator<Expression>() {
+				public int compare(Expression o1, Expression o2) {
+					return o1.getName()[o1.getName().length - 1].compareTo(o2
+							.getName()[o1.getName().length - 1]);
+				}
+			});
+			return list.toArray(new Expression[list.size()]);
+		} else {
+			return children;
+		}
 	}
 
 	public boolean isNull() {

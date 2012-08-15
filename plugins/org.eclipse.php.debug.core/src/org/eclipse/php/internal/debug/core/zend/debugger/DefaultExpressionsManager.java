@@ -151,7 +151,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		ExpressionValue variableValue = expressionValueDeserializer
 				.deserializer(null, value);
 
-		Expression[] localVariables = variableValue.getChildren();
+		Expression[] localVariables = variableValue.getOriChildren();
 		if (localVariables == null) {
 			localVariables = EMPTY_VARIABLE_ARRAY;
 		}

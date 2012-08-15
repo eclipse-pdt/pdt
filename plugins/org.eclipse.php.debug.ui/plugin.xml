@@ -613,4 +613,21 @@
          </enablement>
       </renameParticipant>
    </extension>
+   
+   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            targetID="org.eclipse.debug.ui.VariableView"
+            id="org.eclipse.php.debug.ui.variablesView.popupMenu">
+      <!-- Variable Group -->
+         <action
+               label="%SortActionName"
+               class="org.eclipse.php.internal.debug.ui.actions.SortByNameAction"
+               menubarPath="variableGroup"
+               id="org.eclipse.php.debug.ui.SortByName">
+         </action>
+      </viewerContribution>
+   </extension>
+   
 </plugin>

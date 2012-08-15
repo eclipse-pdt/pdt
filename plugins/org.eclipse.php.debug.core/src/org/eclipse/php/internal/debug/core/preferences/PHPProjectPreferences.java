@@ -71,6 +71,18 @@ public class PHPProjectPreferences {
 
 	}
 
+	public static boolean isSortByName() {
+		Preferences prefs = getModelPreferences();
+		return prefs.getBoolean(PHPDebugCorePreferenceNames.SORT_BY_NAME);
+
+	}
+
+	public static void changeSortByNameStatus() {
+		Preferences prefs = getModelPreferences();
+		prefs.setValue(PHPDebugCorePreferenceNames.SORT_BY_NAME,
+				!prefs.getBoolean(PHPDebugCorePreferenceNames.SORT_BY_NAME));
+	}
+
 	public static String getDefaultBasePath(IProject project) {
 
 		String basePath = null;
