@@ -125,15 +125,17 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			// If array has quotes or double-quotes around the key - show only
 			// builtin keys:
 			if (((ArrayKeyContext) context).hasQuotes()) {
-				return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy(
-						context) };
+				return new ICompletionStrategy[] {
+						new BuiltinArrayKeysStrategy(context),
+						new ArrayStringKeysStrategy(context) };
 			}
 			// Otherwise - show all global elements also:
 			// Example: $array[foo()], $array[$otherVar]
 			return new ICompletionStrategy[] {
 					new BuiltinArrayKeysStrategy(context),
 					new GlobalElementsCompositeStrategy(context, false),
-					new LocalMethodVariablesStrategyForArray(context) };
+					new LocalMethodVariablesStrategyForArray(context),
+					new ArrayStringKeysStrategy(context) };
 		}
 		if (contextClass == FunctionParameterTypeContext.class) {
 			return new ICompletionStrategy[] {
