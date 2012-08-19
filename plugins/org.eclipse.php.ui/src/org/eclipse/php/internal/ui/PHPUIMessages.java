@@ -974,6 +974,8 @@ public final class PHPUIMessages extends NLS {
 	public static String OpenAction_declaration_label;
 	public static String CodeTemplateBlock_templates_edit_button;
 
+	public static String CodeAssistPreferencePage_showVariablesFromReferencedFiles;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PHPUIMessages.class);
 	}

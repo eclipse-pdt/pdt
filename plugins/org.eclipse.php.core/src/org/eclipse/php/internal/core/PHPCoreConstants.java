@@ -200,6 +200,7 @@ public interface PHPCoreConstants {
 	 * </p>
 	 */
 	public final static String CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES = "contentAssistShowVariablesFromOtherFiles"; //$NON-NLS-1$
+	public final static String CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES = "contentAssistShowVariablesFromReferencedFiles"; //$NON-NLS-1$
 
 	/**
 	 * PHP Task Marker

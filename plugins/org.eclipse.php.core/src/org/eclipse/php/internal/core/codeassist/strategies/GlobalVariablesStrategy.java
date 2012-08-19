@@ -11,13 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.BasicSearchEngine;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -30,6 +32,9 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
+import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
+import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.language.PHPVariables;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeField;
@@ -77,8 +82,13 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		}
 
 		IField[] fields;
-		if (showVarsFromOtherFiles()) {
+		if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES)) {
 			IDLTKSearchScope scope = createSearchScope();
+			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule,
+					Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
+		} else if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES)) {
+			IDLTKSearchScope scope = createSearchScopeWithReferencedFiles(abstractContext
+					.getSourceModule());
 			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule,
 					Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
 		} else {
@@ -107,10 +117,38 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		}
 	}
 
-	protected boolean showVarsFromOtherFiles() {
+	private IDLTKSearchScope createSearchScopeWithReferencedFiles(
+			ISourceModule sourceModule) {
+		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(
+				sourceModule, null);
+		if (tree != null && tree.getRoot() != null) {
+			Collection<Node> allIncludedNodes = tree.getRoot().getChildren();
+			if (allIncludedNodes != null) {
+				Set<ISourceModule> list = new HashSet<ISourceModule>();
+				list.add(sourceModule);
+				getNodeChildren(tree.getRoot(), list);
+				return BasicSearchEngine.createSearchScope(
+						list.toArray(new ISourceModule[list.size()]),
+						DLTKLanguageManager.getLanguageToolkit(sourceModule));
+			}
+		}
+		return super.createSearchScope();
+	}
+
+	private void getNodeChildren(Node root, Set<ISourceModule> list) {
+		if (root.getChildren() == null) {
+			return;
+		}
+		for (Node includedNode : root.getChildren()) {
+			ISourceModule sm = includedNode.getFile();
+			list.add(sm);
+			getNodeChildren(includedNode, list);
+		}
+	}
+
+	protected boolean showVarsFromOtherFiles(String id) {
 		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID,
-				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES,
-				true, null);
+				id, true, null);
 	}
 
 	@Override

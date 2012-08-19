@@ -17,6 +17,8 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -34,6 +36,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 	protected Button completionOverrideRadioButton;
 	protected Button insertSingleproposalsCheckBox;
 	protected Button showVariableFromOtherFilesCheckBox;
+	protected Button showVariableFromReferencedFilesCheckBox;
 	protected Button insertFullyQualifiedNameForNamespaceCheckBox;
 	protected Button fInsertParameterNamesRadioButton;
 
@@ -73,6 +76,20 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 				composite,
 				PHPUIMessages.CodeAssistPreferencePage_showVariablesFromOtherFiles,
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
+		showVariableFromOtherFilesCheckBox
+				.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent e) {
+						showVariableFromReferencedFilesCheckBox
+								.setEnabled(!showVariableFromOtherFilesCheckBox
+										.getSelection());
+					}
+				});
+
+		showVariableFromReferencedFilesCheckBox = addCheckBox(
+				composite,
+				PHPUIMessages.CodeAssistPreferencePage_showVariablesFromReferencedFiles,
+				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES,
+				0);
 
 		insertFullyQualifiedNameForNamespaceCheckBox = addCheckBox(
 				composite,
