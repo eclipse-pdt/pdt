@@ -123,7 +123,10 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				Scalar scalar = (Scalar) s.getKey();
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {
 					String key = ASTUtils.stripQuotes(scalar.getValue());
-					if (key.toLowerCase().startsWith(prefix.toLowerCase())) {
+					if (!scalar.getValue().equals(key)
+							&& key.length() > 0
+							&& key.toLowerCase().startsWith(
+									prefix.toLowerCase())) {
 						names.add(key);
 					}
 				}
@@ -137,7 +140,10 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				Scalar scalar = (Scalar) s.getIndex();
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {
 					String key = ASTUtils.stripQuotes(scalar.getValue());
-					if (key.toLowerCase().startsWith(prefix.toLowerCase())) {
+					if (!scalar.getValue().equals(key)
+							&& key.length() > 0
+							&& key.toLowerCase().startsWith(
+									prefix.toLowerCase())) {
 						names.add(key);
 					}
 				}
@@ -151,7 +157,10 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				Scalar scalar = (Scalar) s.getIndex();
 				if (scalar.getScalarType() == Scalar.TYPE_STRING) {
 					String key = ASTUtils.stripQuotes(scalar.getValue());
-					if (key.toLowerCase().startsWith(prefix.toLowerCase())) {
+					if (!scalar.getValue().equals(key)
+							&& key.length() > 0
+							&& key.toLowerCase().startsWith(
+									prefix.toLowerCase())) {
 						names.add(key);
 					}
 				}
