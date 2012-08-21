@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
@@ -81,20 +79,31 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 			matchRule = MatchRule.EXACT;
 		}
 
-		IField[] fields;
+		IField[] fields = null;
 		if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES)) {
 			IDLTKSearchScope scope = createSearchScope();
 			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule,
 					Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
 		} else if (showVarsFromOtherFiles(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES)) {
+			// FIXME why we can't get $myGlobalVar from php
+			// code:list($myGlobalVar) = 0;
 			IDLTKSearchScope scope = createSearchScopeWithReferencedFiles(abstractContext
 					.getSourceModule());
 			fields = PhpModelAccess.getDefault().findFields(prefix, matchRule,
 					Modifiers.AccGlobal, Modifiers.AccConstant, scope, null);
-		} else {
-			fields = PHPModelUtils.getFileFields(
-					abstractContext.getSourceModule(), prefix, false, null);
 		}
+
+		List<IField> result = new LinkedList<IField>();
+		if (fields != null) {
+			result.addAll(Arrays.asList(fields));
+		}
+
+		fields = PHPModelUtils.getFileFields(abstractContext.getSourceModule(),
+				prefix, false, null);
+		if (fields != null) {
+			result.addAll(Arrays.asList(fields));
+		}
+		fields = result.toArray(new IField[result.size()]);
 
 		SourceRange replaceRange = getReplacementRange(context);
 		for (IModelElement var : fields) {
@@ -121,18 +130,17 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 			ISourceModule sourceModule) {
 		ReferenceTree tree = FileNetworkUtility.buildReferencedFilesTree(
 				sourceModule, null);
+		Set<ISourceModule> list = new HashSet<ISourceModule>();
+		list.add(sourceModule);
 		if (tree != null && tree.getRoot() != null) {
 			Collection<Node> allIncludedNodes = tree.getRoot().getChildren();
 			if (allIncludedNodes != null) {
-				Set<ISourceModule> list = new HashSet<ISourceModule>();
-				list.add(sourceModule);
 				getNodeChildren(tree.getRoot(), list);
-				return BasicSearchEngine.createSearchScope(
-						list.toArray(new ISourceModule[list.size()]),
-						DLTKLanguageManager.getLanguageToolkit(sourceModule));
 			}
 		}
-		return super.createSearchScope();
+		return BasicSearchEngine.createSearchScope(
+				list.toArray(new ISourceModule[list.size()]),
+				DLTKLanguageManager.getLanguageToolkit(sourceModule));
 	}
 
 	private void getNodeChildren(Node root, Set<ISourceModule> list) {
