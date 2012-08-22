@@ -52,7 +52,7 @@
 			<actionSet id="org.eclipse.ui.NavigateActionSet" />
 			<actionSet id="org.eclipse.php.ui.PHPActionSet" />
 			<actionSet id="org.eclipse.debug.ui.breakpointActionSet" />
-			<actionSet id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet" />
+			<!-- <actionSet id="org.eclipse.wst.server.ui.internal.webbrowser.actionSet" /> -->
 
 			<viewShortcut id="org.eclipse.ui.views.ContentOutline" />
 			<viewShortcut id="org.eclipse.ui.views.ProblemView" />
