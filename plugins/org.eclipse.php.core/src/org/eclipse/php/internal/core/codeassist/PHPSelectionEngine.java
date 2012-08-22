@@ -547,7 +547,44 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					if (element != null) {
 						return new IModelElement[] { element };
 					}
-				}/*
+				} else if (node instanceof SimpleReference) {
+
+					SimpleReference reference = (SimpleReference) node;
+
+					node = ASTUtils.findMinimalNode(parsedUnit, offset,
+							node.end() + 1);
+					if (node instanceof TraitAliasStatement) {
+						node = ASTUtils.findMinimalNode(parsedUnit, offset,
+								node.end() + 1);
+						if (node instanceof TraitUseStatement) {
+							TraitUseStatement statement = (TraitUseStatement) node;
+							List<IModelElement> methods = new LinkedList<IModelElement>();
+							for (TypeReference typeReference : statement
+									.getTraitList()) {
+								IType[] types = PHPModelUtils.getTypes(
+										typeReference.getName(), sourceModule,
+										offset, null, null, false);
+								for (IType t : types) {
+									IModelElement[] children = t.getChildren();
+									for (IModelElement modelElement : children) {
+										String name = modelElement
+												.getElementName();
+										if (name.startsWith("$")) {
+											name = name.substring(1);
+										}
+										if (name.equals(reference.getName())) {
+											methods.add(modelElement);
+										}
+									}
+								}
+							}
+
+							return methods.toArray(new IMethod[methods.size()]);
+						}
+
+					}
+				}
+				/*
 				 * else if (node instanceof Scalar) { Scalar scalar = (Scalar)
 				 * node; if (PHPModelUtils.isQuotesString(scalar.getValue())) {
 				 * 

@@ -68,7 +68,7 @@ public class CorePreferenceConstants {
 				false);
 		node.putBoolean(
 				PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_REFERENCED_FILES,
-				false);
+				true);
 		node.putBoolean(
 				PHPCoreConstants.CODEASSIST_INSERT_FULL_QUALIFIED_NAME_FOR_NAMESPACE,
 				true);
