@@ -107,6 +107,9 @@ public class PHPContentAssistOptionsConfigurationBlock extends
 		super.initializeValues();
 		completionOverrideRadioButton.setSelection(!completionInsertRadioButton
 				.getSelection());
+		if (showVariableFromOtherFilesCheckBox.getSelection()) {
+			showVariableFromReferencedFilesCheckBox.setEnabled(false);
+		}
 	}
 
 	@Override
