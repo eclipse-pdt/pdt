@@ -111,8 +111,8 @@ class DeleteChangeCreator {
 		Assert.isNotNull(manager);
 		TextFileChange textFileChange = null;
 		if (cu != null && cu.getResource() instanceof IFile) {
-			textFileChange = new TextFileChange(cu.getElementName(), (IFile) cu
-					.getResource());
+			textFileChange = new TextFileChange(cu.getElementName(),
+					(IFile) cu.getResource());
 			MultiTextEdit fileChangeRootEdit = new MultiTextEdit();
 			textFileChange.setEdit(fileChangeRootEdit);
 
@@ -129,11 +129,15 @@ class DeleteChangeCreator {
 				}
 				if (sourceRange != null) {
 					IStructuredDocument document = determineDocument(cu);
-					int suffixLength = getSuffixLength(document, sourceRange
-							.getOffset()
-							+ sourceRange.getLength(), ';');
+					int suffixLength = getSuffixLength(document,
+							sourceRange.getOffset() + sourceRange.getLength(),
+							';');
+					int length = sourceRange.getLength() + suffixLength;
+					if (sourceRange.getOffset() + length > document.getLength()) {
+						length = document.getLength() - sourceRange.getOffset();
+					}
 					DeleteEdit edit = new DeleteEdit(sourceRange.getOffset(),
-							sourceRange.getLength() + suffixLength);
+							length);
 
 					fileChangeRootEdit.addChild(edit);
 					if (cu.isWorkingCopy()) {
@@ -152,7 +156,7 @@ class DeleteChangeCreator {
 	private static int getSuffixLength(IStructuredDocument document,
 			int offset, char endChar) {
 		try {
-			int length = document.getLength();
+			int length = document.getLength() - offset;
 			for (int rv = 0; rv < length; rv++) {
 				char c = document.getChar(rv + offset);
 				if (Character.isWhitespace(c)) {
