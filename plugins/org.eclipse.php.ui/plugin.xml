@@ -653,7 +653,12 @@
 				
 			</activeWhen>
 			<enabledWhen>
+			<or>
 				<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
+			   <with variable="activePartId">
+			    <equals value="org.eclipse.php.editor"/>
+			   </with>
+			</or>
 			</enabledWhen>
 		</handler>
 		<handler class="org.eclipse.php.internal.ui.actions.AddBlockCommentHandler"
