@@ -47,6 +47,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	public static final int NONE = 0;
 	public static final int TRAIT_NAME = 1;
+	public static final int TRAIT_KEYWORD = 2;
 	private CompletionCompanion companion;
 	private CompletionRequestor requestor;
 	private ISourceModule sourceModule;
@@ -734,7 +735,12 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 					if (startTokenRegion.getStart() == 0) {
 						return NONE;
 					}
-					types.add(startTokenRegion.getType());
+					if (startTokenRegion.getType() != PHPRegionTypes.PHP_LINE_COMMENT
+							&& startTokenRegion.getType() != PHPRegionTypes.PHP_COMMENT
+							&& startTokenRegion.getType() != PHPRegionTypes.WHITESPACE
+							&& !startTokenRegion.getType().startsWith("PHPDOC")) {
+						types.add(startTokenRegion.getType());
+					}
 					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN
 							|| startTokenRegion.getType() == PHPRegionTypes.PHP_INSTEADOF
 							|| startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON
@@ -755,15 +761,38 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 					|| type == PHPRegionTypes.PHP_INSTEADOF
 					|| type == PHPRegionTypes.PHP_SEMICOLON) {
 				return TRAIT_NAME;
+			} else if (type == PHPRegionTypes.PHP_AS) {
+				return TRAIT_KEYWORD;
+			}
+			if (type == PHPRegionTypes.PHP_INSTEADOF) {
+				return TRAIT_KEYWORD;
 			}
 		} else if (types.size() == 2) {
 			String type1 = types.get(0);
 			String type = types.get(1);
+			try {
+				if (type == PHPRegionTypes.PHP_SEMICOLON
+						&& type1 == PHPRegionTypes.PHP_STRING
+						&& Character.isWhitespace(document.getChar(offset - 1))) {
+
+					return TRAIT_KEYWORD;
+				}
+			} catch (BadLocationException e) {
+			}
 			if (type == PHPRegionTypes.PHP_CURLY_OPEN
 					|| type == PHPRegionTypes.PHP_INSTEADOF
 					|| type == PHPRegionTypes.PHP_SEMICOLON
 					|| type1 == PHPRegionTypes.PHP_STRING) {
 				return TRAIT_NAME;
+			}
+		} else if (types.size() == 3) {
+			String type = types.get(0);
+			String type1 = types.get(1);
+			String type2 = types.get(2);
+			if (type == PHPRegionTypes.PHP_STRING
+					&& type1 == PHPRegionTypes.PHP_STRING
+					&& type2 == PHPRegionTypes.PHP_SEMICOLON) {
+				return TRAIT_KEYWORD;
 			}
 		}
 

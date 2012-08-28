@@ -157,6 +157,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				if (type == AbstractCompletionContext.TRAIT_NAME) {
 					return new ICompletionStrategy[] { new InUseTraitStrategy(
 							context) };
+				} else if (type == AbstractCompletionContext.TRAIT_KEYWORD) {
+					return new ICompletionStrategy[] { new InUseTraitKeywordStrategy(
+							context) };
 				} else {
 					return new ICompletionStrategy[] {};
 				}
