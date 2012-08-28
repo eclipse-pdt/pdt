@@ -1841,8 +1841,8 @@ public class PHPModelUtils {
 		List<IType> result = new LinkedList<IType>();
 		IType[] types = type.getTypes();
 		for (IType t : types) {
-			if (isType && PHPFlags.isTrait(type.getFlags()) || !isType
-					&& !PHPFlags.isTrait(type.getFlags())) {
+			if (isType && PHPFlags.isTrait(t.getFlags()) || !isType
+					&& !PHPFlags.isTrait(t.getFlags())) {
 				continue;
 			}
 			String elementName = t.getElementName();
