@@ -31,8 +31,8 @@ class SimpleFragment extends ASTFragment {
 		if (!PHPASTMatcher.doNodesMatch(getAssociatedNode(), node))
 			return new IASTFragment[0];
 
-		IASTFragment match = ASTFragmentFactory
-				.createFragmentForFullSubtree(node);
+		IASTFragment match = ASTFragmentFactory.createFragmentForFullSubtree(
+				node, this);
 		Assert.isTrue(match.matches(this) || this.matches(match));
 		return new IASTFragment[] { match };
 	}

@@ -66,13 +66,14 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 		if (!isAssociativeInfix(node))
 			return null;
 
+		// InfixExpression groupRoot = findGroupRoot(node);
 		InfixExpression groupRoot = findGroupRoot(node);
 		Assert.isTrue(isAGroupRoot(groupRoot));
 
 		List<Expression> groupMembers = AssociativeInfixExpressionFragment
 				.findGroupMembersInOrderFor(node);
 
-		return new AssociativeInfixExpressionFragment(groupRoot, groupMembers);
+		return new AssociativeInfixExpressionFragment(node, groupMembers);
 	}
 
 	private static InfixExpression findGroupRoot(InfixExpression node) {
@@ -159,7 +160,7 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 
 	public IASTFragment[] getMatchingFragmentsWithNode(ASTNode node) {
 		IASTFragment fragmentForNode = ASTFragmentFactory
-				.createFragmentForFullSubtree(node);
+				.createFragmentForFullSubtree(node, this);
 		if (fragmentForNode instanceof AssociativeInfixExpressionFragment) {
 			AssociativeInfixExpressionFragment kin = (AssociativeInfixExpressionFragment) fragmentForNode;
 			return kin.getSubFragmentsWithMyNodeMatching(this);
@@ -215,8 +216,8 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 		int startPosition = getStartPosition();
 		// TODO - Check if it's working
 		String source = fGroupRoot.getProgramRoot().getSourceModule()
-				.getSource().substring(startPosition,
-						getLength() + startPosition);
+				.getSource()
+				.substring(startPosition, getLength() + startPosition);
 		// String source= cu.getBuffer().getText(getStartPosition(),
 		// getLength());
 		return (Expression) rewrite.createStringPlaceholder(source,
@@ -288,7 +289,7 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 
 	private AssociativeInfixExpressionFragment(InfixExpression groupRoot,
 			List/* <Expression> */operands) {
-		Assert.isTrue(isAGroupRoot(groupRoot));
+		// Assert.isTrue(isAGroupRoot(groupRoot));
 		Assert.isTrue(operands.size() >= 2);
 		fGroupRoot = groupRoot;
 		fOperands = Collections.unmodifiableList(operands);
@@ -355,8 +356,9 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements
 		IASTFragment[] result = new IASTFragment[0];
 		for (Iterator iter = getOperands().iterator(); iter.hasNext();) {
 			ASTNode operand = (ASTNode) iter.next();
-			result = union(result, ASTMatchingFragmentFinder
-					.findMatchingFragments(operand, (ASTFragment) toMatch));
+			result = union(result,
+					ASTMatchingFragmentFinder.findMatchingFragments(operand,
+							(ASTFragment) toMatch));
 		}
 		return result;
 	}

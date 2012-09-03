@@ -61,18 +61,18 @@ public class ASTFragmentFactory {
 	 */
 	public static IASTFragment createFragmentForSourceRange(SourceRange range,
 			ASTNode scope, IDocument document) throws Exception {
-		SelectionAnalyzer sa = new SelectionAnalyzer(Selection
-				.createFromStartLength(range.getOffset(), range.getLength()),
-				false);
+		SelectionAnalyzer sa = new SelectionAnalyzer(
+				Selection.createFromStartLength(range.getOffset(),
+						range.getLength()), false);
 		scope.accept(sa);
 		if (isSingleNodeSelected(sa, range, document, scope))
-			return ASTFragmentFactory.createFragmentForFullSubtree(sa
-					.getFirstSelectedNode());
+			return ASTFragmentFactory.createFragmentForFullSubtree(
+					sa.getFirstSelectedNode(), null);
 		if (isEmptySelectionCoveredByANode(range, sa))
-			return ASTFragmentFactory.createFragmentForFullSubtree(sa
-					.getLastCoveringNode());
-		return ASTFragmentFactory.createFragmentForSubPartBySourceRange(sa
-				.getLastCoveringNode(), range, scope, document);
+			return ASTFragmentFactory.createFragmentForFullSubtree(
+					sa.getLastCoveringNode(), null);
+		return ASTFragmentFactory.createFragmentForSubPartBySourceRange(
+				sa.getLastCoveringNode(), range, scope, document);
 	}
 
 	/**
@@ -99,8 +99,8 @@ public class ASTFragmentFactory {
 			SourceRange range, IDocument document, ASTNode scope)
 			throws BadLocationException {
 		return sa.getSelectedNodes().length == 1
-				&& !rangeIncludesNonWhitespaceOutsideNode(range, sa
-						.getFirstSelectedNode(), document, scope);
+				&& !rangeIncludesNonWhitespaceOutsideNode(range,
+						sa.getFirstSelectedNode(), document, scope);
 	}
 
 	private static boolean rangeIncludesNonWhitespaceOutsideNode(
@@ -117,10 +117,13 @@ public class ASTFragmentFactory {
 	 * be <code>node</code>.
 	 * 
 	 * XXX: more doc (current assertions about input vs. output)
+	 * 
+	 * @param astFragment
 	 */
-	public static IASTFragment createFragmentForFullSubtree(ASTNode node) {
-		IASTFragment result = FragmentForFullSubtreeFactory
-				.createFragmentFor(node);
+	public static IASTFragment createFragmentForFullSubtree(ASTNode node,
+			IASTFragment astFragment) {
+		IASTFragment result = FragmentForFullSubtreeFactory.createFragmentFor(
+				node, astFragment);
 		Assert.isNotNull(result);
 		return result;
 	}
@@ -160,7 +163,7 @@ public class ASTFragmentFactory {
 			fRange = range;
 			fScope = scope;
 			fDocument = document;
-			IASTFragment result = createFragment(node);
+			IASTFragment result = createFragment(node, null);
 			if (modelException != null)
 				throw modelException;
 			return result;
@@ -176,8 +179,10 @@ public class ASTFragmentFactory {
 
 	private static class FragmentForFullSubtreeFactory extends FragmentFactory {
 
-		public static IASTFragment createFragmentFor(ASTNode node) {
-			return new FragmentForFullSubtreeFactory().createFragment(node);
+		public static IASTFragment createFragmentFor(ASTNode node,
+				IASTFragment astFragment) {
+			return new FragmentForFullSubtreeFactory().createFragment(node,
+					astFragment);
 		}
 
 		public boolean visit(InfixExpression node) {
@@ -190,6 +195,14 @@ public class ASTFragmentFactory {
 					.createFragmentForFullSubtree(node);
 			if (fragment == null)
 				return visit((Expression) node);
+			if (oldFragment instanceof AssociativeInfixExpressionFragment
+					&& fragment instanceof AssociativeInfixExpressionFragment) {
+				AssociativeInfixExpressionFragment f1 = (AssociativeInfixExpressionFragment) oldFragment;
+				AssociativeInfixExpressionFragment f2 = (AssociativeInfixExpressionFragment) fragment;
+				if (f1.getOperands().size() != f2.getOperands().size()) {
+					return visit((Expression) node);
+				}
+			}
 
 			setFragment(fragment);
 			return false;
@@ -208,8 +221,11 @@ public class ASTFragmentFactory {
 
 	private static abstract class FragmentFactory extends HierarchicalVisitor {
 		private IASTFragment fFragment;
+		protected IASTFragment oldFragment;
 
-		protected IASTFragment createFragment(ASTNode node) {
+		protected IASTFragment createFragment(ASTNode node,
+				IASTFragment astFragment) {
+			oldFragment = astFragment;
 			fFragment = null;
 			node.accept(this);
 			return fFragment;
@@ -231,6 +247,10 @@ public class ASTFragmentFactory {
 		protected final boolean isFragmentSet() {
 			return getFragment() != null;
 		}
+	}
+
+	public static IASTFragment createFragmentForFullSubtree(ASTNode node) {
+		return createFragmentForFullSubtree(node, null);
 	}
 
 }

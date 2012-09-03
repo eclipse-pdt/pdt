@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -70,6 +71,9 @@ public class TraitUseStatement extends Statement {
 	}
 
 	public List<TraitStatement> getTsList() {
+		if (tsList == null) {
+			tsList = new ArrayList<TraitStatement>();
+		}
 		return tsList;
 	}
 
