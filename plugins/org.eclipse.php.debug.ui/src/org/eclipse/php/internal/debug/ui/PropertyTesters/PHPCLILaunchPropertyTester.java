@@ -81,6 +81,9 @@ public class PHPCLILaunchPropertyTester extends PropertyTester {
 
 	private boolean isCLIEnable(IResource resource) {
 		if (resource != null && resource.getProject() != null) {
+			if (resource.getProject().getName().trim().length() == 0) {
+				return true;
+			}
 			return PHPProjectPreferences
 					.isEnableCLIDebug(resource.getProject());
 		} else {
