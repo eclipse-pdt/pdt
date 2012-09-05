@@ -12,7 +12,11 @@
 package org.eclipse.php.internal.ui.outline;
 
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -33,6 +37,13 @@ public class PHPOutlineLabelProvider extends XMLLabelProvider {
 	}
 
 	public Image getImage(Object o) {
+
+		try {
+			if (o instanceof IType && PHPFlags.isTrait(((IType) o).getFlags())) {
+				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_TRAIT);
+			}
+		} catch (ModelException e) {
+		}
 		if (o instanceof IModelElement) {
 			return modelElementLabelProvider.getImage(o);
 		}

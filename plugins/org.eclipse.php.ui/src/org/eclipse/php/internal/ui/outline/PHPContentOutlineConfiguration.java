@@ -12,9 +12,7 @@
 package org.eclipse.php.internal.ui.outline;
 
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ISourceReference;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.filters.FilterMessages;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -34,6 +32,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.typeinference.UseStatementElement;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -41,6 +40,7 @@ import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.UseStatementsNode;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -85,8 +85,8 @@ public class PHPContentOutlineConfiguration extends
 
 	public PHPContentOutlineConfiguration() {
 		super();
-		mode = PHPUiPlugin.getDefault().getPreferenceStore().getInt(
-				PreferenceConstants.PREF_OUTLINEMODE);
+		mode = PHPUiPlugin.getDefault().getPreferenceStore()
+				.getInt(PreferenceConstants.PREF_OUTLINEMODE);
 	}
 
 	public int getMode() {
@@ -383,6 +383,13 @@ public class PHPContentOutlineConfiguration extends
 				if (element.getElementType() == IModelElement.METHOD) {
 					return DLTKPluginImages.DESC_METHOD_PUBLIC;
 				}
+			}
+			try {
+				if (element instanceof IType
+						&& PHPFlags.isTrait(((IType) element).getFlags())) {
+					return PHPPluginImages.DESC_OBJS_TRAIT;
+				}
+			} catch (ModelException e) {
 			}
 
 			return super.getBaseImageDescriptor(element, renderFlags);

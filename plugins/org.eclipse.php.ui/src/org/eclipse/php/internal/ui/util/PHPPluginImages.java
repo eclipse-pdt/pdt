@@ -126,6 +126,7 @@ public class PHPPluginImages {
 			+ "namespace_group.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_OCCURRENCES = NAME_PREFIX
 			+ "searchm_obj.gif"; //$NON-NLS-1$
+	public static final String IMG_OBJS_TRAIT = NAME_PREFIX + "trait_obj.png"; //$NON-NLS-1$
 
 	public static final String IMG_OBJS_ZIP = NAME_PREFIX + "zip_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_EXTZIP = NAME_PREFIX + "zip_l_obj.gif"; //$NON-NLS-1$
@@ -275,6 +276,8 @@ public class PHPPluginImages {
 			CLASS_BROWSER, IMG_TEMPLATE);//$NON-NLS-1$
 	public static final ImageDescriptor DESC_OBJS_EXTJAR = createManaged(T_OBJ,
 			IMG_OBJS_EXTJAR);
+	public static final ImageDescriptor DESC_OBJS_TRAIT = createManaged(T_OBJ,
+			IMG_OBJS_TRAIT);
 
 	/**
 	 * Returns the image managed under the given key in this registry.
