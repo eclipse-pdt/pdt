@@ -15,6 +15,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
@@ -38,6 +40,7 @@ import org.eclipse.swt.widgets.Label;
 public class PHPExeCompositeFragment extends CompositeFragment implements
 		IPHPExeCompositeFragment {
 
+	private static final String PHP_INI = "php.ini";
 	private PHPexeItem[] existingItems;
 	private StringDialogField fPHPexeName;
 	private StringButtonDialogField fPHPExePath;
@@ -48,6 +51,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 	private Label fSapiTypesLabel;
 	private Combo fSapiTypes;
 	private String initialName;
+	private boolean isIniFileSet = false;
 
 	public PHPExeCompositeFragment(Composite parent, IControlHandler handler,
 			boolean isForEditing) {
@@ -132,6 +136,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 				String newPath = dialog.open();
 				if (newPath != null) {
 					fPHPIni.setText(newPath);
+					isIniFileSet = true;
 				}
 			}
 		});
@@ -197,6 +202,19 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 
 		fPHPExePath.setDialogFieldListener(new IDialogFieldListener() {
 			public void dialogFieldChanged(DialogField field) {
+				String newPath = fPHPExePath.getText();
+				if (newPath != null && newPath.trim().length() > 0) {
+					if (!isIniFileSet
+							|| (fPHPIni.getText() == null || fPHPIni.getText()
+									.trim().length() == 0)) {
+						IPath path = new Path(newPath);
+						path = path.removeLastSegments(1);
+						path = path.append(PHP_INI);
+						if (path.toFile().exists()) {
+							fPHPIni.setText(path.toOSString());
+						}
+					}
+				}
 				validate();
 			}
 		});
