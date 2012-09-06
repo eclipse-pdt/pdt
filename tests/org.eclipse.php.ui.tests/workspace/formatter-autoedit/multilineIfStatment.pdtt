@@ -1,0 +1,16 @@
+--TEST--
+Tests auto editing multiline statements.
+--FILE--
+<?php
+              if (!preg_match('@^(?:http://)?([^/]+)@i',
+                           "http://www.php.net/index.html")) {|}
+
+?>
+--EXPECT--
+<?php
+              if (!preg_match('@^(?:http://)?([^/]+)@i',
+                           "http://www.php.net/index.html")) {
+              	
+              }
+
+?>
