@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.xml.core,
  com.ibm.icu;bundle-version="4.0.1",
  org.eclipse.php.core.parser,
- org.eclipse.dltk.core.index.sql
+ org.eclipse.dltk.core.index.sql,
+ org.eclipse.wst.common.project.facet.core
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.core.codeassist,
  org.eclipse.php.core.compiler,
@@ -454,6 +455,7 @@ Export-Package: org.eclipse.php.core.codeassist,
    org.eclipse.php.ui,
    org.eclipse.php.ui.performance.tests,
    org.eclipse.php.ui.tests",
+ org.eclipse.php.internal.core.facet,
  org.eclipse.php.internal.core.filenetwork;
   x-friends:="org.eclipse.php.core.performance.tests,
    org.eclipse.php.core.tests,

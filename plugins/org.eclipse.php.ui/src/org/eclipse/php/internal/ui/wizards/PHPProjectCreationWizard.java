@@ -13,12 +13,15 @@ package org.eclipse.php.internal.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.facet.PHPFacets;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.ui.INewWizard;
@@ -89,6 +92,15 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 				BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
 			}
 			selectAndReveal(fLastPage.getScriptProject().getProject());
+
+			IProject project = fLastPage.getScriptProject().getProject();
+			try {
+				PHPFacets.createFacetedProject(project,
+						fFirstPage.getPHPVersionValue(),
+						new NullProgressMonitor());
+			} catch (CoreException ex) {
+				PHPCorePlugin.log(ex);
+			}
 
 			WizardModel model = fFirstPage.getWizardData();
 

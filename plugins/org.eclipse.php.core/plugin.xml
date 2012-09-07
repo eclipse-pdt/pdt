@@ -311,4 +311,69 @@
             nature="org.eclipse.php.core.PHPNature">
       </enable>
    </extension>
+   <extension
+         point="org.eclipse.wst.common.project.facet.core.facets">
+      <project-facet
+            id="php.core.component">
+         <label>%PHPFacet.core.label</label>
+         <description>%PHPFacet.core.description</description>
+      </project-facet>
+      <project-facet-version facet="php.core.component" version="1">
+         <constraint>
+             <and>
+                <conflicts facet="jst.java" />
+                <conflicts group="modules" />
+             </and>
+         </constraint>
+      </project-facet-version>
+      <project-facet
+            id="php.component">
+         <label>%PHPFacet.label</label>
+         <description>%PHPFacet.description</description>
+      </project-facet>
+      <project-facet-version facet="php.component" version="4">
+         <constraint>
+             <and>
+                <requires facet="php.core.component" />
+             </and>
+         </constraint>
+      </project-facet-version>
+      <project-facet-version facet="php.component" version="5">
+         <constraint>
+             <and>
+                <requires facet="php.core.component" />
+             </and>
+         </constraint>
+      </project-facet-version>
+      <project-facet-version facet="php.component" version="5.3">
+         <constraint>
+             <and>
+                <requires facet="php.core.component" />
+             </and>
+         </constraint>
+      </project-facet-version>
+      <project-facet-version facet="php.component" version="5.4">
+         <constraint>
+             <and>
+                <requires facet="php.core.component" />
+             </and>
+         </constraint>
+      </project-facet-version>
+      
+      <action facet="php.core.component" version="1" type="install">
+         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+      </action>
+      <action facet="php.component" version="4" type="install">
+         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+      </action>
+      <action facet="php.component" version="5" type="install">
+         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+      </action>
+      <action facet="php.component" version="5.3" type="install">
+         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+      </action>
+      <action facet="php.component" version="5.4" type="install">
+         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+      </action>
+   </extension>
 </plugin>
