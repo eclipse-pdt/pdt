@@ -1,0 +1,60 @@
+--TEST--
+Test class constructor
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class Model {
+	private $a;
+	function test() {
+		;
+	}
+}
+class ListOfModels implements Iterator {
+	/**
+	 * @return Model
+	 */
+	public function current(){
+	}
+	/**
+	 * @return Model
+	 * @see Iterator::next()
+	 */
+	public function next() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-PHPdoc)
+	 * @see Iterator::key()
+	 */
+	public function key() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-PHPdoc)
+	 * @see Iterator::valid()
+	 */
+	public function valid() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-PHPdoc)
+	 * @see Iterator::rewind()
+	 */
+	public function rewind() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+
+$list=new ListOfModels();
+foreach($list as $model) {
+	$model->|
+}
+?>
+--EXPECT--
+method(test)

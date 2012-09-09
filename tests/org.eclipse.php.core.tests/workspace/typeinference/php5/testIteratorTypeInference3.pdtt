@@ -1,0 +1,36 @@
+--TEST--
+Test Type Inference for class implementing Iterator
+--FILE--
+<?php
+class Model extends ArrayIterator {
+
+	public function current(){
+		return new SubModel();
+	}
+
+}
+
+class SubModel {
+
+	public function get() {
+
+	}
+
+}
+class ListOfModels implements Iterator {
+
+	public function current(){
+		return new Model();
+	}
+
+
+}
+$list = new ListOfModels();
+foreach($list as $model) {
+	foreach ($model as $submodel) {
+		testIteratorTypeInference3($submodel);
+	}
+}
+?>
+--EXPECT--
+SubModel

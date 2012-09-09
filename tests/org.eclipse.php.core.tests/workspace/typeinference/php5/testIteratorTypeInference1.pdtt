@@ -1,0 +1,26 @@
+--TEST--
+Test Type Inference for class implementing Iterator
+--FILE--
+<?php
+class Model {
+
+	public function get() {
+
+	}
+
+}
+class ListOfModels implements Iterator {
+
+	public function current(){
+		return new Model();
+	}
+
+
+}
+$list = new ListOfModels();
+foreach($list as $model) {
+	testIteratorTypeInference1($model);
+}
+?>
+--EXPECT--
+Model

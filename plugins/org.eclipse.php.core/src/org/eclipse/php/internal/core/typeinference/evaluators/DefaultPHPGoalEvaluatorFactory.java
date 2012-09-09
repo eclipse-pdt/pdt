@@ -62,6 +62,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (goalClass == ArrayDeclarationGoal.class) {
 			return new ArrayDeclarationGoalEvaluator(goal);
 		}
+		if (goalClass == IteratorTypeGoal.class) {
+			return new IteratorTypeGoalEvaluator(goal);
+		}
 		return null;
 	}
 

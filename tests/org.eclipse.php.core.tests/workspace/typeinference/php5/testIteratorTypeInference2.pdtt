@@ -1,0 +1,35 @@
+--TEST--
+Test Type Inference for class implementing Iterator
+--FILE--
+<?php
+class Model {
+
+	public function get() {
+
+	}
+
+}
+class Model1 {
+
+	public function get() {
+
+	}
+
+}
+class ListOfModels implements Iterator {
+
+	/**
+	 * @return Model|Model1
+	 */
+	public function current(){
+	}
+
+
+}
+$list = new ListOfModels();
+foreach($list as $model) {
+	testIteratorTypeInference2($model);
+}
+?>
+--EXPECT--
+Ambigous <Model, Model1>

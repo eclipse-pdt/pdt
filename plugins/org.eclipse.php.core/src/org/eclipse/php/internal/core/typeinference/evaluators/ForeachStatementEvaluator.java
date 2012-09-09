@@ -16,11 +16,11 @@ import java.util.List;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
-import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
+import org.eclipse.php.internal.core.typeinference.goals.IteratorTypeGoal;
 
 /**
  * This evaluator determines types that array expression in foreach statement
@@ -36,7 +36,7 @@ public class ForeachStatementEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		ForeachStatementGoal typedGoal = (ForeachStatementGoal) goal;
-		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(),
+		return new IGoal[] { new IteratorTypeGoal(goal.getContext(),
 				typedGoal.getExpression()) };
 	}
 
@@ -44,8 +44,11 @@ public class ForeachStatementEvaluator extends GoalEvaluator {
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (result instanceof MultiTypeType) {
 			List types = ((MultiTypeType) result).getTypes();
-			this.result = new AmbiguousType((IEvaluatedType[]) types
-					.toArray(new IEvaluatedType[types.size()]));
+			this.result = new AmbiguousType(
+					(IEvaluatedType[]) types.toArray(new IEvaluatedType[types
+							.size()]));
+		} else if (result instanceof AmbiguousType) {
+			this.result = (AmbiguousType) result;
 		}
 		return IGoal.NO_GOALS;
 	}
