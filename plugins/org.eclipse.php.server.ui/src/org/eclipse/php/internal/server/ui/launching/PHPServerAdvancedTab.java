@@ -13,7 +13,10 @@ package org.eclipse.php.internal.server.ui.launching;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.*;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -23,12 +26,20 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.debug.ui.IDebugServerConnectionTest;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
+import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.server.core.tunneling.TunnelTester;
 import org.eclipse.php.internal.server.ui.Logger;
 import org.eclipse.php.internal.server.ui.PixelConverter;
@@ -36,6 +47,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
@@ -48,6 +60,10 @@ import org.eclipse.ui.progress.UIJob;
  * @author Shalom Gibly
  */
 public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
+
+	// flag to be used to decide whether to enable combo in launch config dialog
+	// after the user requests a launch, they cannot change it
+	private static final String READ_ONLY = "read-only"; //$NON-NLS-1$
 
 	private Button debugFirstPageBt;
 	private Button debugAllPagesBt;
@@ -68,7 +84,14 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	private CLabel testResultLabel;
 	private Label nameLabel;
 	private Label passwordLabel;
+	private Combo fDebuggersCombo;
+	private Button validateDebuggerBtn;
+	private Button configureDebugger;
+	private Button breakOnFirstLine;
 	public boolean isTextModificationChange;
+
+	private IDebugServerConnectionTest[] debugTesters = new IDebugServerConnectionTest[0];
+	private Set<String> fDebuggerIds;
 
 	/**
 	 * Constructor
@@ -86,12 +109,10 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
-		layout.numColumns = 1;
-		composite.setLayout(layout);
+		composite.setLayout(new GridLayout(1, false));
 
+		createDebuggerSelectionControl(composite);
+		createBreakControl(composite);
 		createAdvanceControl(composite);
 		createExtensionControls(composite);
 
@@ -107,18 +128,12 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	protected void createAdvanceControl(Composite composite) {
 		// == Groups ==
 		tunnelGroup = new Group(composite, SWT.NONE);
-		GridLayout layout = new GridLayout(1, false);
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
-		tunnelGroup.setLayout(layout);
+		tunnelGroup.setLayout(new GridLayout(1, false));
 		tunnelGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		tunnelGroup.setText("SSH Tunnel");
 
 		Group browserGroup = new Group(composite, SWT.NONE);
-		layout = new GridLayout(1, false);
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
-		browserGroup.setLayout(layout);
+		browserGroup.setLayout(new GridLayout(1, false));
 		browserGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		browserGroup.setText("Browser");
 
@@ -147,8 +162,9 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		password.setLayoutData(data);
 		final Composite testConnectionComposite = new Composite(
 				credentialsComposite, SWT.NONE);
-		layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(2, false);
 		layout.marginWidth = 0;
+		layout.marginHeight = 0;
 		testConnectionComposite.setLayout(layout);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 2;
@@ -189,10 +205,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		openBrowser.setLayoutData(data);
 
 		sessionGroup = new Composite(browserGroup, SWT.NONE);
-		layout = new GridLayout(3, false);
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
-		sessionGroup.setLayout(layout);
+		sessionGroup.setLayout(new GridLayout(3, false));
 		sessionGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		openBrowser.addSelectionListener(new SelectionAdapter() {
@@ -233,8 +246,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		data.horizontalIndent = 20;
 
 		debugFromTxt = new Text(sessionGroup, SWT.SINGLE | SWT.BORDER);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		debugFromTxt.setLayoutData(data);
+		debugFromTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		resetBt = createPushButton(sessionGroup, "Default", null);
 		resetBt.addSelectionListener(new SelectionAdapter() {
@@ -286,6 +298,130 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		};
 		userName.addKeyListener(userInputListener);
 		password.addKeyListener(userInputListener);
+	}
+
+	protected void createDebuggerSelectionControl(Composite parent) {
+		Group group = new Group(parent, SWT.NONE);
+		group.setText("Debugger"); //$NON-NLS-1$
+		GridLayout ly = new GridLayout(1, false);
+		ly.marginHeight = 0;
+		ly.marginWidth = 0;
+		group.setLayout(ly);
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		Composite debuggerServerComp = new Composite(group, SWT.NONE);
+		GridLayout layout = new GridLayout(4, false);
+		debuggerServerComp.setLayout(layout);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		debuggerServerComp.setLayoutData(data);
+		Font font = parent.getFont();
+		debuggerServerComp.setFont(font);
+
+		// Add the debuggers combo
+		Label label = new Label(debuggerServerComp, SWT.WRAP);
+		data = new GridData(GridData.BEGINNING);
+		data.widthHint = 100;
+		label.setLayoutData(data);
+		label.setFont(font);
+		label.setText("Server Debugger:");
+
+		fDebuggersCombo = new Combo(debuggerServerComp, SWT.SINGLE | SWT.BORDER
+				| SWT.READ_ONLY);
+		fDebuggersCombo.setFont(font);
+		fDebuggersCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		fDebuggersCombo.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(final SelectionEvent e) {
+				updateLaunchConfigurationDialog();
+				updateDebugServerTesters();
+			}
+		});
+
+		validateDebuggerBtn = createPushButton(debuggerServerComp, "Test", null); //$NON-NLS-1$
+		validateDebuggerBtn.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				updateDebugServerTesters();
+				String serverName = null;
+				try {
+					serverName = launchConfiguration.getAttribute(Server.NAME,
+							(String) null);
+				} catch (CoreException e) {
+					// TODO handle
+				}
+				if (serverName != null) {
+					Server server = ServersManager.getServer(serverName);
+					for (IDebugServerConnectionTest debugServerTester : debugTesters) {
+						debugServerTester.testConnection(server, getShell());
+					}
+				}
+			}
+		});
+
+		configureDebugger = createPushButton(debuggerServerComp,
+				PHPServerUIMessages.getString("ServerTab.configure"), null); //$NON-NLS-1$
+		configureDebugger.addSelectionListener(new SelectionAdapter() {
+
+			public void widgetSelected(SelectionEvent e) {
+				handleConfigureDebuggerSelected();
+			}
+		});
+
+		// initialize the debuggers list
+		fillDebuggers();
+	}
+
+	// In case this is a debug mode, display 'Break on first line' attribute
+	// checkbox.
+	protected void createBreakControl(Composite parent) {
+
+		Group group = new Group(parent, SWT.NONE);
+		group.setText("Breakpoint");
+		group.setLayout(new GridLayout(1, false));
+		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		breakOnFirstLine = createCheckButton(group, "Break at First Line");
+		breakOnFirstLine.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
+		// Disables/Enables all the controls according the the debug mode.
+		String mode = getLaunchConfigurationDialog().getMode();
+		boolean isDebugMode = ILaunchManager.DEBUG_MODE.equals(mode);
+		breakOnFirstLine.setEnabled(isDebugMode);
+	}
+
+	protected void handleConfigureDebuggerSelected() {
+		String selectedDebugger = getSelectedDebuggerId();
+
+		AbstractDebuggerConfiguration[] debuggersConfigurations = PHPDebuggersRegistry
+				.getDebuggersConfigurations();
+		for (AbstractDebuggerConfiguration debuggerConfig : debuggersConfigurations) {
+			if (debuggerConfig.getDebuggerId().equals(selectedDebugger)) {
+				debuggerConfig.openConfigurationDialog(Display.getDefault()
+						.getActiveShell());
+			}
+		}
+	}
+
+	/**
+	 * Populates the debuggers with the debuggers defined in the workspace.
+	 */
+	protected void fillDebuggers() {
+		fDebuggerIds = PHPDebuggersRegistry.getDebuggersIds();
+		for (String id : fDebuggerIds) {
+			// Insert the debuggers names
+			fDebuggersCombo.add(PHPDebuggersRegistry.getDebuggerName(id));
+		}
+		// Select the default debugger
+		String defaultName = PHPDebuggersRegistry
+				.getDebuggerName(PHPDebuggersRegistry.getDefaultDebuggerId());
+		int index = fDebuggersCombo.indexOf(defaultName);
+		if (index > -1) {
+			fDebuggersCombo.select(index);
+		} else if (fDebuggersCombo.getItemCount() > 0) {
+			fDebuggersCombo.select(0);
+		}
 	}
 
 	/**
@@ -394,8 +530,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 								.getSystemColor(SWT.COLOR_DARK_YELLOW));
 						testResultLabel
 								.setText("Undetermined (click for more information)");
-						testResultLabel.setData("info", connectionStatus
-								.getMessage());
+						testResultLabel.setData("info",
+								connectionStatus.getMessage());
 						// Update the password fields in case the multi status
 						// also contains a password change information
 						IStatus[] children = connectionStatus.getChildren();
@@ -415,8 +551,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 								.getSystemColor(SWT.COLOR_DARK_GREEN));
 						testResultLabel
 								.setText("Connected with warnings (click for more information)");
-						testResultLabel.setData("info", connectionStatus
-								.getMessage());
+						testResultLabel.setData("info",
+								connectionStatus.getMessage());
 					} else if (connectionStatus.getSeverity() == IStatus.INFO) {
 						testResultLabel.setForeground(Display.getDefault()
 								.getSystemColor(SWT.COLOR_DARK_GREEN));
@@ -433,8 +569,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 								.getSystemColor(SWT.COLOR_DARK_RED));
 						testResultLabel
 								.setText("Failed to Connect (click for more information)");
-						testResultLabel.setData("info", connectionStatus
-								.getMessage());
+						testResultLabel.setData("info",
+								connectionStatus.getMessage());
 					}
 				} catch (OperationCanceledException oce) {
 					testButton.setEnabled(true);
@@ -465,7 +601,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
 	 */
 	public String getName() {
-		return "Advanced";
+		return "Debugger";
 	}
 
 	/*
@@ -477,6 +613,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		launchConfiguration = configuration;
+		initializeDebuggerControl(configuration);
 		boolean isXdebugger = isXdebug(configuration);
 		try {
 			boolean isUsingTunnel = configuration.getAttribute(
@@ -489,12 +626,11 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 				if (userName.getText().length() > 0) {
 					// Load the password from the Secured Storage
 					try {
-						password
-								.setText(PHPLaunchUtilities
-										.getSecurePreferences(
-												PHPLaunchUtilities
-														.getDebugHost(launchConfiguration))
-										.get(userName.getText(), ""));
+						password.setText(PHPLaunchUtilities
+								.getSecurePreferences(
+										PHPLaunchUtilities
+												.getDebugHost(launchConfiguration))
+								.get(userName.getText(), ""));
 					} catch (StorageException e) {
 						Logger.logException(
 								"Error accessing the secured storage", e);
@@ -509,8 +645,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			// with a browser instance, we check for it and enable it anyway.
 			isOpenInBrowser = isXdebugger
 					|| configuration.getAttribute(
-							IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin
-							.getOpenInBrowserOption());
+							IPHPDebugConstants.OPEN_IN_BROWSER,
+							PHPDebugPlugin.getOpenInBrowserOption());
 			// isUsingExternalBrowser = internalWebBrowserAvailable
 			// && configuration.getAttribute(
 			// IPHPDebugConstants.USE_INTERNAL_BROWSER, false);
@@ -551,9 +687,60 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			enableSessionSettingButtons(isXdebugger
 					|| (isOpenInBrowser && ILaunchManager.DEBUG_MODE
 							.equals(getLaunchConfigurationDialog().getMode())));
+			if (breakOnFirstLine != null) {
+				// init the breakpoint settings
+				breakOnFirstLine.setSelection(configuration.getAttribute(
+						IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+						PHPDebugPlugin.getStopAtFirstLine()));
+			}
 		} catch (CoreException e) {
 		}
 		isValid(configuration);
+	}
+
+	protected void initializeDebuggerControl(ILaunchConfiguration configuration) {
+		try {
+			String debuggerID = configuration.getAttribute(
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, "");
+			if (debuggerID != null && !debuggerID.equals("")) { //$NON-NLS-1$
+				fDebuggersCombo.setText(PHPDebuggersRegistry
+						.getDebuggerName(debuggerID));
+			} else {
+				selectDefaultDebugger(configuration);
+			}
+			// flag should only be set if launch has been attempted on the
+			// config
+			if (configuration.getAttribute(READ_ONLY, false)) {
+				fDebuggersCombo.setEnabled(false);
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	/*
+	 * Select the default debugger for this launch configuration.
+	 */
+	private void selectDefaultDebugger(ILaunchConfiguration configuration)
+			throws CoreException {
+		if (fDebuggersCombo != null && fDebuggersCombo.getItemCount() > 0) {
+			String projectName = configuration.getAttribute(
+					IPHPDebugConstants.PHP_Project, (String) null);
+			IProject project = null;
+			if (projectName != null) {
+				project = ResourcesPlugin.getWorkspace().getRoot()
+						.getProject(projectName);
+			}
+			String defaultDebuggerID = PHPProjectPreferences
+					.getDefaultDebuggerID(project);
+			String debuggerName = PHPDebuggersRegistry
+					.getDebuggerName(defaultDebuggerID);
+			int nameIndex = fDebuggersCombo.indexOf(debuggerName);
+			if (nameIndex > -1) {
+				fDebuggersCombo.select(nameIndex);
+			} else {
+				fDebuggersCombo.select(0);
+			}
+		}
 	}
 
 	/*
@@ -582,20 +769,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 * value will be used to determine the options to display in this dialog.
 	 */
 	private boolean isXdebug(ILaunchConfiguration configuration) {
-		try {
-			String debuggerID = configuration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, "");
-			if (debuggerID != null && !debuggerID.equals("")) { //$NON-NLS-1$
-				return XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID
-						.equals(debuggerID);
-			}
-		} catch (CoreException e) {
-			Logger
-					.logException(
-							"PHPServerAdvancedTab.isZendDebugger() failed to determine the debugger type",
-							e);
-		}
-		return false;
+		return XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID
+				.equals(getSelectedDebuggerId());
 	}
 
 	/*
@@ -607,6 +782,10 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		launchConfiguration = configuration;
+		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+				getSelectedDebuggerId());
+		configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
+				breakOnFirstLine.getSelection());
 		configuration.setAttribute(IPHPDebugConstants.USE_SSH_TUNNEL,
 				debugThroughTunnel.getSelection());
 		if (debugThroughTunnel.getSelection()) {
@@ -654,17 +833,23 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(IPHPDebugConstants.SSH_TUNNEL_PASSWORD,
 					"");
 		}
-		configuration.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, isOpenInBrowser);
+		configuration.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER,
+				isOpenInBrowser);
 		// configuration.setAttribute(IPHPDebugConstants.USE_INTERNAL_BROWSER,
 		// internalBrowser.getSelection());
 		if (isOpenInBrowser) {
 			if (debugAllPagesBt.getSelection()) {
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
+						IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 			} else if (debugFirstPageBt.getSelection()) {
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
+						IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
 			} else {
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_START_FROM);
-				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
+						IPHPDebugConstants.DEBUGGING_START_FROM);
+				configuration.setAttribute(
+						IPHPDebugConstants.DEBUGGING_START_FROM_URL,
+						debugFromTxt.getText());
 				configuration.setAttribute(
 						IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE,
 						debugContinueBt.getSelection());
@@ -676,6 +861,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		}
 		applyExtension(configuration);
 		isTextModificationChange = false; // reset this flag here.
+		updateDebugServerTesters();
 	}
 
 	/**
@@ -699,6 +885,11 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		setErrorMessage(null);
 		configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES,
 				IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+		try {
+			selectDefaultDebugger(configuration);
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
 	}
 
 	/*
@@ -743,6 +934,79 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 */
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {
 		return true;
+	}
+
+	/**
+	 * Returns the id of the selected debugger.
+	 * 
+	 * @return The debugger's id.
+	 */
+	private String getSelectedDebuggerId() {
+		int selectedIndex = fDebuggersCombo.getSelectionIndex();
+		String debuggerId = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID; // default
+		if (selectedIndex > -1 && fDebuggerIds.size() > selectedIndex) {
+			debuggerId = fDebuggerIds.toArray()[selectedIndex].toString();
+		}
+		return debuggerId;
+	}
+
+	private void updateDebugServerTesters() {
+		int selectedDebuggerIndex = fDebuggersCombo.getSelectionIndex();
+		final String currentDebuggerType = fDebuggersCombo
+				.getItem(selectedDebuggerIndex);
+		debugTesters = retrieveAllServerTestExtensions(currentDebuggerType);
+		if (debugTesters.length == 0) {
+			validateDebuggerBtn.setEnabled(false);
+		} else {
+			validateDebuggerBtn.setEnabled(true);
+		}
+	}
+
+	private IDebugServerConnectionTest[] retrieveAllServerTestExtensions(
+			final String currentDebuggerType) {
+		String debugServerTestExtensionName = "org.eclipse.php.debug.ui.debugServerConnectionTest"; //$NON-NLS-1$
+		Map<String, IDebugServerConnectionTest> filtersMap = new HashMap<String, IDebugServerConnectionTest>();
+		IConfigurationElement[] elements = Platform.getExtensionRegistry()
+				.getConfigurationElementsFor(debugServerTestExtensionName);
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			if ("debugServerTest".equals(element.getName())) { //$NON-NLS-1$
+				String debuggerTypeName = elements[i]
+						.getAttribute("debuggerTypeName");
+				String overridesIds = elements[i].getAttribute("overridesId");
+				if (debuggerTypeName.equals(currentDebuggerType)) {// must be
+																	// equal to
+																	// the
+																	// current
+																	// selected
+																	// type
+					String id = element.getAttribute("id"); //$NON-NLS-1$
+					if (!filtersMap.containsKey(id)) {
+						if (overridesIds != null) {
+							StringTokenizer st = new StringTokenizer(
+									overridesIds, ", "); //$NON-NLS-1$
+							while (st.hasMoreTokens()) {
+								filtersMap.put(st.nextToken(), null);
+							}
+						}
+						try {
+							filtersMap
+									.put(id,
+											(IDebugServerConnectionTest) element
+													.createExecutableExtension("class")); //$NON-NLS-1$
+						} catch (CoreException e) {
+							PHPDebugPlugin.log(e);
+						}
+					}
+
+				}
+			}
+		}
+		Collection<IDebugServerConnectionTest> l = filtersMap.values();
+		while (l.remove(null))
+			; // remove null elements
+		debugTesters = l.toArray(new IDebugServerConnectionTest[l.size()]);
+		return debugTesters;
 	}
 
 	// Update the 'debug from' related widgets
