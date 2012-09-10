@@ -138,8 +138,9 @@ public class ContentAssistTests extends AbstractPDTTTest {
 
 								createFile(
 										new ByteArrayInputStream(data
-												.getBytes()),
-										System.currentTimeMillis() + fileName);
+												.getBytes()), Long
+												.toString(System
+														.currentTimeMillis()));
 								String result = executeAutoInsert(offset);
 								closeEditor();
 								if (!pdttFile.getExpected().trim()
