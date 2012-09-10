@@ -206,6 +206,11 @@ public class ContentAssistTests extends AbstractPDTTTest {
 				display.sleep();
 			}
 		}
+		if (viewer == null) {
+			fail("fEditor.getTextViewer() returns null for file "
+					+ testFile.getFullPath() + "(" + testFile.getLocation()
+					+ ")");
+		}
 		StyledText textWidget = viewer.getTextWidget();
 		textWidget.setCaretOffset(offset);
 		viewer.doOperation(ISourceViewer.CONTENTASSIST_PROPOSALS);
