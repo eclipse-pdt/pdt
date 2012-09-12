@@ -138,8 +138,9 @@ public class ContentAssistTests extends AbstractPDTTTest {
 
 								createFile(
 										new ByteArrayInputStream(data
-												.getBytes()),
-										phpVersion.getAlias() + fileName);
+												.getBytes()), Long
+												.toString(System
+														.currentTimeMillis()));
 								String result = executeAutoInsert(offset);
 								closeEditor();
 								if (!pdttFile.getExpected().trim()
@@ -205,6 +206,11 @@ public class ContentAssistTests extends AbstractPDTTTest {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
+		}
+		if (viewer == null) {
+			fail("fEditor.getTextViewer() returns null for file "
+					+ testFile.getFullPath() + "(" + testFile.getLocation()
+					+ ")");
 		}
 		StyledText textWidget = viewer.getTextWidget();
 		textWidget.setCaretOffset(offset);
