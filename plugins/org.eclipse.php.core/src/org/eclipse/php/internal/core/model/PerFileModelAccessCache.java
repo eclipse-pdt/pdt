@@ -207,8 +207,9 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 			IScriptProject scriptProject = sourceModule.getScriptProject();
 			IDLTKSearchScope scope = SearchEngine
 					.createSearchScope(scriptProject);
-			types = Arrays.asList(PhpModelAccess.getDefault().findTypes(
-					typeName, MatchRule.EXACT, 0, 0, scope, null));
+			types = Arrays.asList(PhpModelAccess.getDefault()
+					.findTypes(namespaceName, typeName, MatchRule.EXACT, 0, 0,
+							scope, null));
 
 		} else {
 			typeName = typeName.toLowerCase();
