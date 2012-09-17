@@ -132,7 +132,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				for (VarComment varComment : newList) {
 					if (varComment.sourceStart() > variableReference
 							.sourceStart()) {
-						break;
+						continue;
 					}
 					if (varComment.getVariableReference().getName()
 							.equals(variableReference.getName())) {
