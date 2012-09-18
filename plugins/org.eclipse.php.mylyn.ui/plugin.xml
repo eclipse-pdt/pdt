@@ -93,15 +93,4 @@
 		</filter>
 	</extension>
 
- <extension point="org.eclipse.ui.activities">
-
-  <activity id="org.eclipse.php.mylyn.ui.views.tasks"
-      description="Filters other contributions from rse"
-   name="My Other Activity" />
-   <activityPatternBinding
-         activityId="org.eclipse.php.mylyn.ui.views.tasks"
-         isEqualityPattern="true"
-         pattern="org.eclipse.mylyn.tasks.ui/org.eclipse.mylyn.tasks.ui.views.tasks">
-   </activityPatternBinding>
- </extension>
 </plugin>
