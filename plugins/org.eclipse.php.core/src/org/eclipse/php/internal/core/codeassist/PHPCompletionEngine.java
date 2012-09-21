@@ -210,6 +210,47 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		}
 	}
 
+	public void reportField(IField field, String completion,
+			SourceRange replaceRange, int subRelevance) {
+		if (processedFields.contains(field)) {
+			return;
+		}
+		processedFields.add(field);
+
+		int flags = 0;
+		try {
+			flags = field.getFlags();
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		}
+		int relevance = PHPFlags.isConstant(flags) ? relevanceConst
+				: relevanceVar;
+		relevance += subRelevance;
+
+		noProposal = false;
+
+		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
+
+			CompletionProposal proposal = createProposal(
+					CompletionProposal.FIELD_REF, actualCompletionPosition);
+			proposal.setName(field.getElementName());
+
+			proposal.setCompletion(completion);
+
+			proposal.setModelElement(field);
+			proposal.setFlags(flags);
+			proposal.setRelevance(relevance);
+			proposal.setReplaceRange(replaceRange.getOffset(),
+					replaceRange.getOffset() + replaceRange.getLength());
+
+			this.requestor.accept(proposal);
+
+			if (DEBUG) {
+				this.printDebug(proposal);
+			}
+		}
+	}
+
 	public void reportKeyword(String keyword, String suffix,
 			SourceRange replaceRange) {
 		reportKeyword(keyword, suffix, replaceRange, 0);
