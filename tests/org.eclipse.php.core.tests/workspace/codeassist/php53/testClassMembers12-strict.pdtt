@@ -1,0 +1,23 @@
+--TEST--
+Should complete class variables using PHPDoc @var hinting
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?
+namespace zend\test1;
+class Test1 {
+	function foo() {
+		;
+	}
+}
+
+namespace zend1\test2;
+use zend as ze;
+class Test2 extends ze\test1\Test1 {
+}
+$a = new Test2();
+
+$a->|
+?>
+--EXPECT--
+method(foo)

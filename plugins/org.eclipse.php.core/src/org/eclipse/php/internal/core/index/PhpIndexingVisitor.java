@@ -390,11 +390,21 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				if (fullyQualifiedName.getNamespace() != null) {
 					String namespace = fullyQualifiedName.getNamespace()
 							.getName();
+					String subnamespace = "";
+					if (namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR
+							&& namespace
+									.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
+						int firstNSLocation = namespace
+								.indexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+						subnamespace = namespace.substring(firstNSLocation);
+						namespace = namespace.substring(0, firstNSLocation);
+					}
 					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 						name = name.substring(1);
 					} else if (fLastUseParts.containsKey(namespace)) {
 						name = new StringBuilder(fLastUseParts.get(namespace)
 								.getNamespace().getFullyQualifiedName())
+								.append(subnamespace)
 								.append(NamespaceReference.NAMESPACE_SEPARATOR)
 								.append(fullyQualifiedName.getName())
 								.toString();
@@ -811,7 +821,8 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	public boolean visit(FieldAccess access) throws Exception {
 		// This is variable field access:
 		if (access.getField() instanceof SimpleReference) {
-			SimpleReference simpleReference = (SimpleReference) access.getField();
+			SimpleReference simpleReference = (SimpleReference) access
+					.getField();
 
 			String name = simpleReference.getName();
 			if (!name.startsWith(DOLOR)) {
