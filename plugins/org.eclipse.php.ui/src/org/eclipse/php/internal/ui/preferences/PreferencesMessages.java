@@ -802,4 +802,6 @@ public final class PreferencesMessages extends NLS {
 	public static String FavoriteStaticMemberInputDialog_error_invalidTypeName;
 	public static String FavoriteStaticMemberInputDialog_error_entryExists;
 
+	public static String PHPCoreOptionsConfigurationBlock_SettingVersionFailed_Title;
+
 }

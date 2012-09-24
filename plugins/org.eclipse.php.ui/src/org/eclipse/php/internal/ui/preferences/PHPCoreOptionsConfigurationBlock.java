@@ -12,7 +12,14 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.facet.PHPFacets;
+import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -39,4 +46,21 @@ public abstract class PHPCoreOptionsConfigurationBlock extends
 		return getKey(PHPCorePlugin.ID, key);
 	}
 
+	protected boolean checkChanges(IScopeContext currContext) {
+		final Key versionKey = getPHPCoreKey(Keys.PHP_VERSION);
+		// synch the php facets version if needed
+		final String newVersion = versionKey.getStoredValue(currContext,
+				fManager);
+		final IStatus status = PHPFacets.setFacetedVersion(fProject,
+				PHPVersion.byAlias(newVersion));
+		if (!status.isOK()) {
+			MessageDialog dialog = new MessageDialog(
+					getShell(),
+					PreferencesMessages.PHPCoreOptionsConfigurationBlock_SettingVersionFailed_Title,
+					null, status.getMessage(), MessageDialog.ERROR,
+					new String[] { IDialogConstants.CANCEL_LABEL }, 0);
+			dialog.open();
+		}
+		return status.isOK();
+	}
 }

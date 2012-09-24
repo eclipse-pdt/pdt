@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.*;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
@@ -13,6 +13,39 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 public class PHPFacets {
+
+	/**
+	 * Synchronizes the php version for facets
+	 * 
+	 * @param project
+	 * @return the status of setting the version
+	 */
+	public static IStatus setFacetedVersion(IProject project, PHPVersion version) {
+		if (isFacetedProject(project)) {
+			try {
+				final IProjectFacetVersion facetedVersion = convertToFacetVersion(version);
+				final IProjectFacet phpFacet = ProjectFacetsManager
+						.getProjectFacet(PHPFacetsConstants.PHP_COMPONENT);
+				final IFacetedProject faceted = ProjectFacetsManager
+						.create(project);
+				if (!facetedVersion.equals(faceted
+						.getInstalledVersion(phpFacet))) {
+					final Set<IFacetedProject.Action> actions = new HashSet<IFacetedProject.Action>();
+					actions.add(new IFacetedProject.Action(
+							IFacetedProject.Action.Type.VERSION_CHANGE,
+							facetedVersion, null));
+					faceted.modify(actions, new NullProgressMonitor());
+				}
+			} catch (CoreException ex) {
+				return new Status(IStatus.ERROR, PHPCorePlugin.ID,
+						Messages.PHPFacets_SettingVersionFailed, ex);
+			} catch (IllegalArgumentException ex) {
+				return new Status(IStatus.ERROR, PHPCorePlugin.ID,
+						Messages.PHPFacets_SettingVersionFailed, ex);
+			}
+		}
+		return Status.OK_STATUS;
+	}
 
 	/**
 	 * Returns true if the given project is a faceted project and the php core

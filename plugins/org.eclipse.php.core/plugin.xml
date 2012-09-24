@@ -361,19 +361,31 @@
       </project-facet-version>
       
       <action facet="php.core.component" version="1" type="install">
-         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+         <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
       </action>
       <action facet="php.component" version="4" type="install">
-         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+         <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
       </action>
       <action facet="php.component" version="5" type="install">
-         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+         <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
       </action>
       <action facet="php.component" version="5.3" type="install">
-         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+         <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
       </action>
       <action facet="php.component" version="5.4" type="install">
-         <delegate class="org.eclipse.php.internal.core.facet.DummyActionDelegate" />
+         <delegate class="org.eclipse.php.internal.core.facet.InstallActionDelegate" />
+      </action>
+      <action facet="php.component" version="4" type="version-change">
+         <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
+      </action>
+      <action facet="php.component" version="5" type="version-change">
+         <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
+      </action>
+      <action facet="php.component" version="5.3" type="version-change">
+         <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
+      </action>
+      <action facet="php.component" version="5.4" type="version-change">
+         <delegate class="org.eclipse.php.internal.core.facet.VersionChangeActionDelegate" />
       </action>
    </extension>
 </plugin>

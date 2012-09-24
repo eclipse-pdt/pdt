@@ -142,8 +142,8 @@ public abstract class OptionsConfigurationBlock {
 			fDisabledProjectSettings = new IdentityHashMap();
 			for (int i = 0; i < allKeys.length; i++) {
 				Key curr = allKeys[i];
-				fDisabledProjectSettings.put(curr, curr.getStoredValue(
-						fLookupOrder, false, fManager));
+				fDisabledProjectSettings.put(curr,
+						curr.getStoredValue(fLookupOrder, false, fManager));
 			}
 		}
 
@@ -439,8 +439,8 @@ public abstract class OptionsConfigurationBlock {
 		for (int i = 0; i < fExpandedComposites.size(); i++) {
 			ExpandableComposite curr = (ExpandableComposite) fExpandedComposites
 					.get(i);
-			settings.put(SETTINGS_EXPANDED + String.valueOf(i), curr
-					.isExpanded());
+			settings.put(SETTINGS_EXPANDED + String.valueOf(i),
+					curr.isExpanded());
 		}
 	}
 
@@ -615,6 +615,11 @@ public abstract class OptionsConfigurationBlock {
 			hasChanges = true;
 		}
 
+		if (!this.checkChanges(currContext)) {
+			// check failed
+			return false;
+		}
+
 		boolean doBuild = false;
 		if (needsBuild) {
 			String[] strings = getFullBuildDialogStrings(fProject == null);
@@ -654,6 +659,17 @@ public abstract class OptionsConfigurationBlock {
 			}
 
 		}
+		return true;
+	}
+
+	/**
+	 * Default implementation returns true. Override and return false if the
+	 * changes are incompatible to the underlying project
+	 * 
+	 * @param currContext
+	 * @return false to deny the changes.
+	 */
+	protected boolean checkChanges(IScopeContext currContext) {
 		return true;
 	}
 
