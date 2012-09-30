@@ -47,6 +47,12 @@ public abstract class PHPCoreOptionsConfigurationBlock extends
 	}
 
 	protected boolean checkChanges(IScopeContext currContext) {
+
+		// we're in the preferences page not a project properties page
+		if (fProject == null) {
+			return true;
+		}
+
 		final Key versionKey = getPHPCoreKey(Keys.PHP_VERSION);
 		// synch the php facets version if needed
 		final String newVersion = versionKey.getStoredValue(currContext,
