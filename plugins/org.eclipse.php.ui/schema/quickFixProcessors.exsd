@@ -89,11 +89,12 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
                <documentation>
                   the name of the class that implements this Quick Fix processor. The
 class must be public and implement
-&lt;samp&gt;com.zend.php.semanticanalysis.internal.ui.text.correction.IQuickFixProcessor&lt;/samp&gt;
+&lt;samp&gt;org.eclipse.php.internal.ui.text.correction.IQuickFixProcessor&lt;/samp&gt;
 with a public 0-argument constructor.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":com.zend.php.semanticanalysis.internal.ui.text.correction.IQuickFixProcessor"/>
+               org.eclipse.php.internal.ui.text.correction
+                  <meta.attribute kind="java" basedOn=":org.eclipse.php.internal.ui.text.correction.IQuickFixProcessor"/>
                </appInfo>
             </annotation>
          </attribute>
@@ -147,7 +148,7 @@ If no handled marker type are specified, the processor will get problems of type
 
 &lt;p&gt;
 &lt;pre&gt;
- &lt;extension point=&quot;com.zend.php.semanticanalysis.ui.quickFixProcessors&quot;&gt;
+ &lt;extension point=&quot;org.eclipse.php.ui.quickFixProcessors&quot;&gt;
   &lt;quickFixProcessor
    id=&quot;AdvancedQuickFixProcessor&quot;
    name=&quot;Advanced Quick Fix Processor&quot;
@@ -175,7 +176,7 @@ If no handled marker type are specified, the processor will get problems of type
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         The contributed class must implement &lt;code&gt;com.zend.php.semanticanalysis.ui.text.IQuickFixProcessor&lt;/code&gt;
+         The contributed class must implement &lt;code&gt;org.eclipse.php.internal.ui.text.correction.IQuickFixProcessor&lt;/code&gt;
       </documentation>
    </annotation>
 
