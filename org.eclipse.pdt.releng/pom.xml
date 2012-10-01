@@ -68,7 +68,6 @@
 	<modules>
 		<module>../features/org.eclipse.php-feature</module>
 		<module>../dev/org.eclipse.php-repository</module>
-		<module>../features/org.eclipse.php.all-feature</module>
 		<module>../plugins/org.eclipse.php.core</module>
 		<module>../plugins/org.eclipse.php.core.parser</module>
 		<module>../tests/org.eclipse.php.core.performance.tests</module>
@@ -79,7 +78,6 @@
 		<module>../plugins/org.eclipse.php.help</module>
 		<module>../features/org.eclipse.php.mylyn-feature</module>
 		<module>../plugins/org.eclipse.php.mylyn.ui</module>
-		<module>../features/org.eclipse.php.sdk-feature</module>
 		<module>../plugins/org.eclipse.php.server.core</module>
 		<module>../plugins/org.eclipse.php.server.ui</module>
 		<module>../features/org.eclipse.php.source-feature</module>
