@@ -47,20 +47,24 @@ public abstract class PHPCoreOptionsConfigurationBlock extends
 	}
 
 	protected boolean checkChanges(IScopeContext currContext) {
-		final Key versionKey = getPHPCoreKey(Keys.PHP_VERSION);
-		// synch the php facets version if needed
-		final String newVersion = versionKey.getStoredValue(currContext,
-				fManager);
-		final IStatus status = PHPFacets.setFacetedVersion(fProject,
-				PHPVersion.byAlias(newVersion));
-		if (!status.isOK()) {
-			MessageDialog dialog = new MessageDialog(
-					getShell(),
-					PreferencesMessages.PHPCoreOptionsConfigurationBlock_SettingVersionFailed_Title,
-					null, status.getMessage(), MessageDialog.ERROR,
-					new String[] { IDialogConstants.CANCEL_LABEL }, 0);
-			dialog.open();
+		if (fProject != null) {
+			final Key versionKey = getPHPCoreKey(Keys.PHP_VERSION);
+			// synch the php facets version if needed
+			final String newVersion = versionKey.getStoredValue(currContext,
+					fManager);
+			final IStatus status = PHPFacets.setFacetedVersion(fProject,
+					PHPVersion.byAlias(newVersion));
+			if (!status.isOK()) {
+				MessageDialog dialog = new MessageDialog(
+						getShell(),
+						PreferencesMessages.PHPCoreOptionsConfigurationBlock_SettingVersionFailed_Title,
+						null, status.getMessage(), MessageDialog.ERROR,
+						new String[] { IDialogConstants.CANCEL_LABEL }, 0);
+				dialog.open();
+			}
+			return status.isOK();
 		}
-		return status.isOK();
+
+		return super.checkChanges(currContext);
 	}
 }
