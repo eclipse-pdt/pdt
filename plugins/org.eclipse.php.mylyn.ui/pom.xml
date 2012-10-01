@@ -6,11 +6,11 @@
 	<parent>
 		<artifactId>org.eclipse.pdt.releng</artifactId>
 		<groupId>org.eclipse.php</groupId>
-		<version>3.1.1-SNAPSHOT</version>
+		<version>3.1.2-SNAPSHOT</version>
 		<relativePath>../../org.eclipse.pdt.releng/pom.xml</relativePath>
 	</parent>
 	<groupId>org.eclipse.php</groupId>
 	<artifactId>org.eclipse.php.mylyn.ui</artifactId>
-	<version>3.1.1-SNAPSHOT</version>
+	<version>3.1.2-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 </project>
