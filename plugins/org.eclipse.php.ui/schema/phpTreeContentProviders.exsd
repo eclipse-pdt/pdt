@@ -1,16 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.php.ui">
+<schema targetNamespace="org.eclipse.php.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.php.ui" id="phpTreeContentProviders" name="PHP Tree Content Provider"/>
       </appInfo>
       <documentation>
-         This extension points allows to provide content providers for a Tree Viewer used for displaying PHP elements (PHP Explorer, Outline, Project Outline, etc&apos;). Standard PHP Element Content Provider (the default one) collects all content providers contributed via extension point, and concatenates their contents.
+         This extension points allows to provide content providers for a Tree Viewer used for displaying PHP elements in the PHP Explorer. Standard PHP Explorer Content Provider (the default one) collects all content providers contributed via extension point, and concatenates their contents.
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence minOccurs="0" maxOccurs="unbounded">
             <element ref="provider" minOccurs="1" maxOccurs="unbounded"/>
@@ -50,15 +55,8 @@
                   PHP tree content provider&apos;s class
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="org.eclipse.php.ui.treecontent.IPHPTreeContentProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.php.internal.ui.explorer.IPHPTreeContentProvider"/>
                </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="targetId" type="string">
-            <annotation>
-               <documentation>
-                  A comma-separated list of tree viewers, this content provider is applicable to.
-               </documentation>
             </annotation>
          </attribute>
       </complexType>
@@ -69,7 +67,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         0.7
+         3.1.2
       </documentation>
    </annotation>
 
@@ -80,13 +78,23 @@
       <documentation>
          &lt;p&gt;
 &lt;pre&gt;
-	&lt;extension point=&quot;org.eclipse.php.ui.phpTreeContentProviders&quot;&gt;
-		&lt;provider
-			class=&quot;org.eclipse.php.ui.treecontent.IncludePathTreeContent&quot;
-			targetId=&quot;org.eclipse.php.ui.explorer&quot; /&gt;
-	&lt;/extension&gt;
+ &lt;extension point=&quot;org.eclipse.php.ui.phpTreeContentProviders&quot;&gt;
+  &lt;provider
+   class=&quot;org.eclipse.php.ui.treecontent.IncludePathTreeContent&quot;/&gt;
+ &lt;/extension&gt;
 &lt;/pre&gt;
 &lt;/p&gt;
+      </documentation>
+   </annotation>
+
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2001, 2004 IBM Corporation and others.&lt;br&gt;
+All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 
@@ -96,25 +104,6 @@
       </appInfo>
       <documentation>
          PHP tree content provider class must implement &lt;code&gt;org.eclipse.php.ui.treecontent.IPHPTreeContentProvider&lt;/code&gt;.
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="implementation"/>
-      </appInfo>
-      <documentation>
-         Look at &lt;code&gt;org.eclipse.php.ui.treecontent.IncludePathTreeContent&lt;/code&gt;, which is contributed to PHP Explorer.
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         Copyright (c) 2001, 2004 IBM Corporation and others.&lt;br&gt;
-All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
       </documentation>
    </annotation>
 
