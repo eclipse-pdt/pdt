@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * 
@@ -44,5 +45,23 @@ public interface IPHPTreeContentProvider {
 	 * @return
 	 */
 	Object[] handleChildren(Object parentElement);
+
+	/**
+	 * Return the tree-text for a given element or null if if can't provide a
+	 * text.
+	 * 
+	 * @param element
+	 * @return String | null
+	 */
+	String getText(Object element);
+
+	/**
+	 * Return the {@link Image} for a given tree element or null if it can't
+	 * provide an image.
+	 * 
+	 * @param element
+	 * @return
+	 */
+	Image getImage(Object element);
 
 }

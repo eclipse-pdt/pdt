@@ -124,6 +124,18 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			}
 		} catch (ModelException e) {
 		}
+
+		if (element != null) {
+			for (IPHPTreeContentProvider provider : TreeContentProviderRegistry
+					.getInstance().getTreeProviders()) {
+				Image image = provider.getImage(element);
+
+				if (image != null) {
+					return image;
+				}
+			}
+		}
+
 		return super.getImage(element);
 	}
 
@@ -190,6 +202,18 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 			return null;
 		}
+
+		if (element != null) {
+			for (IPHPTreeContentProvider provider : TreeContentProviderRegistry
+					.getInstance().getTreeProviders()) {
+				String label = provider.getText(element);
+
+				if (label != null) {
+					return label;
+				}
+			}
+		}
+
 		return super.getText(element);
 	}
 
