@@ -27,6 +27,7 @@ import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.index.IPHPDocAwareElement;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -68,7 +69,57 @@ public class PHPDocMethodReturnTypeEvaluator extends
 		super(goal);
 	}
 
+	private void evaluateReturnType(List<String> returnTypeList,
+			PHPDocBlock docBlock, IMethod method) {
+
+		PHPDocTag[] tags = docBlock.getTags(PHPDocTagKinds.RETURN);
+		PHPDocTag[] inherit = docBlock.getTags(PHPDocTagKinds.INHERITDOC);
+
+		if (inherit != null && inherit.length == 1) {
+			IType type = method.getDeclaringType();
+
+			if (type != null) {
+				try {
+					IType[] superClasses = PHPModelUtils.getSuperClasses(type,
+							null);
+
+					for (IType superClass : superClasses) {
+						IMethod superClassMethod = superClass.getMethod(method
+								.getElementName());
+
+						if (superClassMethod != null) {
+							PHPDocBlock superDocBlock = PHPModelUtils
+									.getDocBlock(superClassMethod);
+							if (superDocBlock == null) {
+								continue;
+							}
+							evaluateReturnType(returnTypeList, superDocBlock,
+									superClassMethod);
+						}
+					}
+				} catch (ModelException e) {
+					PHPCorePlugin.getDefault().log(e);
+				}
+			}
+		}
+
+		if (tags != null && tags.length > 0) {
+			for (PHPDocTag phpDocTag : tags) {
+				if (phpDocTag.getReferences() != null
+						&& phpDocTag.getReferences().length > 0) {
+					for (SimpleReference ref : phpDocTag.getReferences()) {
+						String type = ref.getName();
+						if (type != null) {
+							returnTypeList.add(type);
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public IGoal[] init() {
+
 		for (IMethod method : getMethods()) {
 			IType currentNamespace = PHPModelUtils.getCurrentNamespace(method);
 			String[] typeNames = null;
@@ -80,21 +131,8 @@ public class PHPDocMethodReturnTypeEvaluator extends
 				if (docBlock == null) {
 					return IGoal.NO_GOALS;
 				}
-				PHPDocTag[] tags = docBlock.getTags(PHPDocTagKinds.RETURN);
-				if (tags != null && tags.length > 0) {
-					for (PHPDocTag phpDocTag : tags) {
-						if (phpDocTag.getReferences() != null
-								&& phpDocTag.getReferences().length > 0) {
-							for (SimpleReference ref : phpDocTag
-									.getReferences()) {
-								String type = ref.getName();
-								if (type != null) {
-									returnTypeList.add(type);
-								}
-							}
-						}
-					}
-				}
+
+				evaluateReturnType(returnTypeList, docBlock, method);
 				typeNames = returnTypeList.toArray(new String[returnTypeList
 						.size()]);
 			}
