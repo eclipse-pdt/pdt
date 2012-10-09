@@ -28,6 +28,7 @@ import org.eclipse.dltk.internal.core.*;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
@@ -55,10 +56,11 @@ import org.eclipse.wst.jsdt.ui.project.JsNature;
  * @author apeled, ncohen
  * 
  */
+@SuppressWarnings("restriction")
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		implements IIncludepathListener /* , IResourceChangeListener */,
 		IElementChangedListener {
-	public final static ArrayList EMPTY_LIST = new ArrayList();
+	public final static ArrayList<Object> EMPTY_LIST = new ArrayList<Object>();
 	StandardJavaScriptElementContentProvider jsContentProvider;
 
 	public PHPExplorerContentProvider(boolean provideMembers) {
@@ -102,6 +104,16 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 				}
 			}
 		}
+
+		/*
+		 * for (ITreeContentProvider provider : TreeContentProviderRegistry
+		 * .getInstance().getTreeProviders()) {
+		 * 
+		 * Object[] providerChildern = provider.getChildren(parentElement);
+		 * 
+		 * if (providerChildern != null) { return providerChildern; } }
+		 */
+
 		// include path node
 		if (parentElement instanceof IncludePath) {
 			final Object entry = ((IncludePath) parentElement).getEntry();
@@ -161,6 +173,17 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					return (Object[]) returnChlidren
 							.toArray(new Object[returnChlidren.size()]);
 				}
+
+				for (ITreeContentProvider provider : TreeContentProviderRegistry
+						.getInstance().getTreeProviders()) {
+
+					Object[] providerChildren = provider
+							.getChildren(parentElement);
+					if (providerChildren != null) {
+						return providerChildren;
+					}
+				}
+
 				return super.getChildren(parentElement);
 			}
 
@@ -177,7 +200,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						return NO_CHILDREN;
 					}
 
-					ArrayList<Object> returnChlidren = new ArrayList<Object>();
+					ArrayList<Object> returnChildren = new ArrayList<Object>();
 
 					boolean groupByNamespace = PHPUiPlugin
 							.getDefault()
@@ -187,9 +210,9 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					if (groupByNamespace
 							&& parentElement instanceof IScriptProject
 							&& supportsNamespaces((IScriptProject) parentElement)) {
-						returnChlidren.add(new GlobalNamespace(
+						returnChildren.add(new GlobalNamespace(
 								(IScriptProject) parentElement));
-						returnChlidren
+						returnChildren
 								.addAll(Arrays
 										.asList(getAllNamespaces((IScriptProject) parentElement)));
 
@@ -200,7 +223,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 									.create(resource2);
 							if (modelElement == null
 									|| !isInSourceFolder(modelElement)) {
-								returnChlidren.add(resource2);
+								returnChildren.add(resource2);
 							}
 						}
 					} else {
@@ -211,9 +234,9 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 									.create(resource2);
 							if (modelElement != null
 									&& isInSourceFolder(modelElement)) {
-								returnChlidren.add(modelElement);
+								returnChildren.add(modelElement);
 							} else {
-								returnChlidren.add(resource2);
+								returnChildren.add(resource2);
 							}
 						}
 					}
@@ -228,7 +251,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 								.getInstance().getIncludePaths(project);
 						IncludePathContainer incPathContainer = new IncludePathContainer(
 								scriptProject, includePaths);
-						returnChlidren.add(incPathContainer);
+						returnChildren.add(incPathContainer);
 
 						// Add the language library
 						Object[] projectChildren = getProjectFragments(scriptProject);
@@ -238,7 +261,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 											.getBuildpathEntry()
 											.getPath()
 											.equals(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
-								returnChlidren.add(modelElement);
+								returnChildren.add(modelElement);
 							}
 						}
 
@@ -246,19 +269,33 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						if (hasJsNature) {
 							ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(
 									JavaScriptCore.create(project));
-							returnChlidren.add(projectLibs);
+							returnChildren.add(projectLibs);
+						}
+
+						// let extensions contribute explorer root elements
+						for (ITreeContentProvider provider : TreeContentProviderRegistry
+								.getInstance().getTreeProviders()) {
+
+							Object[] providerChildren = provider
+									.getChildren(parentElement);
+							if (providerChildren != null) {
+								returnChildren.addAll(new ArrayList<Object>(
+										Arrays.asList(providerChildren)));
+							}
 						}
 					}
-					return returnChlidren.toArray();
+					return returnChildren.toArray();
 				}
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
+
 		if (parentElement instanceof ArchiveProjectFragment
 				|| parentElement instanceof ArchiveFolder) {
 			return super.getChildren(parentElement);
 		}
+
 		return NO_CHILDREN;
 	}
 
@@ -361,7 +398,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			return new Object[0];
 
 		ArrayList<IJavaScriptElement> allChildren = new ArrayList<IJavaScriptElement>();
-		ArrayList expanded = new ArrayList();
+		ArrayList<Object> expanded = new ArrayList<Object>();
 		expanded.addAll(Arrays.asList(children));
 
 		if (expanded == null || expanded.size() < 1)
