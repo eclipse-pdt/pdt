@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 
@@ -17,10 +19,12 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 public class TreeContentProviderRegistry {
 
 	private static final String EXTENSION_POINT = "phpTreeContentProviders"; //$NON-NLS-1$
-	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
+	private static final String LABEL_PROVIDER = "labelProvider"; //$NON-NLS-1$
+	private static final String CONTENT_PROVIDER = "contentProvider"; //$NON-NLS-1$
 
 	private static TreeContentProviderRegistry instance;
-	private List<IPHPTreeContentProvider> contributions = new ArrayList<IPHPTreeContentProvider>();
+	private List<ITreeContentProvider> contentProviders = new ArrayList<ITreeContentProvider>();
+	private List<ILabelProvider> labelProviders = new ArrayList<ILabelProvider>();
 
 	private TreeContentProviderRegistry() {
 
@@ -36,11 +40,18 @@ public class TreeContentProviderRegistry {
 					try {
 
 						Object execExt = configElement
-								.createExecutableExtension(CLASS_ATTRIBUTE); //$NON-NLS-1$
-						if (execExt instanceof IPHPTreeContentProvider) {
-							IPHPTreeContentProvider treeProvider = (IPHPTreeContentProvider) execExt;
-							contributions.add(treeProvider);
+								.createExecutableExtension(CONTENT_PROVIDER); //$NON-NLS-1$
+						if (execExt instanceof ITreeContentProvider) {
+							contentProviders
+									.add((ITreeContentProvider) execExt);
 						}
+
+						Object labelProvider = configElement
+								.createExecutableExtension(LABEL_PROVIDER); //$NON-NLS-1$
+						if (labelProvider instanceof ILabelProvider) {
+							labelProviders.add((ILabelProvider) labelProvider);
+						}
+
 					} catch (CoreException e) {
 						// executable extension could not be
 						// created: ignore
@@ -61,7 +72,11 @@ public class TreeContentProviderRegistry {
 		return instance;
 	}
 
-	public List<IPHPTreeContentProvider> getTreeProviders() {
-		return contributions;
+	public List<ITreeContentProvider> getTreeProviders() {
+		return contentProviders;
+	}
+
+	public List<ILabelProvider> getLabelProviders() {
+		return labelProviders;
 	}
 }

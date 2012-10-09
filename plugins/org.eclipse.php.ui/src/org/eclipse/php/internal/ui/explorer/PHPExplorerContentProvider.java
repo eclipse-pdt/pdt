@@ -28,6 +28,7 @@ import org.eclipse.dltk.internal.core.*;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
@@ -104,13 +105,15 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 			}
 		}
 
-		for (IPHPTreeContentProvider provider : TreeContentProviderRegistry
-				.getInstance().getTreeProviders()) {
-			if (provider.canHandle(parentElement)) {
-				return provider.handleChildren(parentElement);
-			}
+		/*
+		 * for (ITreeContentProvider provider : TreeContentProviderRegistry
+		 * .getInstance().getTreeProviders()) {
+		 * 
+		 * Object[] providerChildern = provider.getChildren(parentElement);
+		 * 
+		 * if (providerChildern != null) { return providerChildern; } }
+		 */
 
-		}
 		// include path node
 		if (parentElement instanceof IncludePath) {
 			final Object entry = ((IncludePath) parentElement).getEntry();
@@ -170,6 +173,17 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 					return (Object[]) returnChlidren
 							.toArray(new Object[returnChlidren.size()]);
 				}
+
+				for (ITreeContentProvider provider : TreeContentProviderRegistry
+						.getInstance().getTreeProviders()) {
+
+					Object[] providerChildren = provider
+							.getChildren(parentElement);
+					if (providerChildren != null) {
+						return providerChildren;
+					}
+				}
+
 				return super.getChildren(parentElement);
 			}
 
@@ -259,12 +273,15 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 						}
 
 						// let extensions contribute explorer root elements
-						for (IPHPTreeContentProvider provider : TreeContentProviderRegistry
+						for (ITreeContentProvider provider : TreeContentProviderRegistry
 								.getInstance().getTreeProviders()) {
 
-							provider.handleProjectChildren(returnChildren,
-									scriptProject);
-
+							Object[] providerChildren = provider
+									.getChildren(parentElement);
+							if (providerChildren != null) {
+								returnChildren.addAll(new ArrayList<Object>(
+										Arrays.asList(providerChildren)));
+							}
 						}
 					}
 					return returnChildren.toArray();

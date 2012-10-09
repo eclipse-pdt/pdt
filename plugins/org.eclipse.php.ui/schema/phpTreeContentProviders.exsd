@@ -49,18 +49,37 @@
 
    <element name="provider">
       <complexType>
-         <attribute name="class" type="string" use="required">
+         <attribute name="labelProvider" type="string" use="required">
+            <annotation>
+               <documentation>
+                  PHP tree label provider&apos;s class
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.jface.viewers.ILabelProvider"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="contentProvider" type="string" use="required">
             <annotation>
                <documentation>
                   PHP tree content provider&apos;s class
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.php.internal.ui.explorer.IPHPTreeContentProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.jface.viewers.ITreeContentProvider"/>
                </appInfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         PHP tree content provider class must implement &lt;code&gt;org.eclipse.php.ui.treecontent.IPHPTreeContentProvider&lt;/code&gt;.
+      </documentation>
+   </annotation>
 
    <annotation>
       <appInfo>
@@ -95,15 +114,6 @@
       <documentation>
          Copyright (c) 2001, 2004 IBM Corporation and others.&lt;br&gt;
 All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         PHP tree content provider class must implement &lt;code&gt;org.eclipse.php.ui.treecontent.IPHPTreeContentProvider&lt;/code&gt;.
       </documentation>
    </annotation>
 
