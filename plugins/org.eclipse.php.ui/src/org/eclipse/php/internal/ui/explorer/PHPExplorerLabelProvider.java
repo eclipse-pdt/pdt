@@ -21,6 +21,7 @@ import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -124,6 +125,18 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			}
 		} catch (ModelException e) {
 		}
+
+		if (element != null) {
+			for (ILabelProvider provider : TreeContentProviderRegistry
+					.getInstance().getLabelProviders()) {
+				Image image = provider.getImage(element);
+
+				if (image != null) {
+					return image;
+				}
+			}
+		}
+
 		return super.getImage(element);
 	}
 
@@ -190,6 +203,18 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 			return null;
 		}
+
+		if (element != null) {
+			for (ILabelProvider provider : TreeContentProviderRegistry
+					.getInstance().getLabelProviders()) {
+				String label = provider.getText(element);
+
+				if (label != null) {
+					return label;
+				}
+			}
+		}
+
 		return super.getText(element);
 	}
 
