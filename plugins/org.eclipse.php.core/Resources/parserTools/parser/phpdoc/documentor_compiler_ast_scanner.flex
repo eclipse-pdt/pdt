@@ -347,6 +347,7 @@ EMPTYLINE=({LINESTART}{TABS_AND_SPACES}{NEWLINE})
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@property-read")  	{startTagsState(PHPDocTagKinds.PROPERTY_READ);}
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@property-write") 	{startTagsState(PHPDocTagKinds.PROPERTY_WRITE);}
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@version")      	{startTagsState(PHPDocTagKinds.VERSION);}
+<ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("{@inheritdoc}")     {startTagsState(PHPDocTagKinds.INHERITDOC);}
 
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC,ST_IN_TAGS>^{LINESTART}       {updateStartPos();}
 
@@ -392,6 +393,7 @@ EMPTYLINE=({LINESTART}{TABS_AND_SPACES}{NEWLINE})
 <ST_IN_TAGS>^{LINESTART}("@property-write") {setNewTag(PHPDocTagKinds.PROPERTY_WRITE);}
 <ST_IN_TAGS>^{LINESTART}("@var")        	{setNewTag(PHPDocTagKinds.VAR);}
 <ST_IN_TAGS>^{LINESTART}("@version")    	{setNewTag(PHPDocTagKinds.VERSION);}
+<ST_IN_TAGS>^{LINESTART}("{@inheritDoc}")   {setNewTag(PHPDocTagKinds.INHERITDOC);}
 
 <ST_IN_TAGS>{TABS_AND_SPACES}("*/") {handleDocEnd_inTags();return -1;}
 

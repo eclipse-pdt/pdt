@@ -83,4 +83,6 @@ public interface PHPDocTagKinds {
 
 	public static final int NAMESPACE = 34;
 
+	public static final int INHERITDOC = 35;
+
 }
