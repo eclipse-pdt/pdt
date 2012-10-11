@@ -794,6 +794,15 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 					&& type2 == PHPRegionTypes.PHP_SEMICOLON) {
 				return TRAIT_KEYWORD;
 			}
+		} else if (types.size() == 4) {
+			String type = types.get(0);
+			String type1 = types.get(1);
+			String type2 = types.get(2);
+			if (type == PHPRegionTypes.PHP_STRING
+					&& type1 == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM
+					&& type2 == PHPRegionTypes.PHP_STRING) {
+				return TRAIT_KEYWORD;
+			}
 		}
 
 		return NONE;
