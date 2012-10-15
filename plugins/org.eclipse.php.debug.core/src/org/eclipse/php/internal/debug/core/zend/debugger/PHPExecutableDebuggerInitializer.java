@@ -89,10 +89,12 @@ public class PHPExecutableDebuggerInitializer {
 
 			// Detect PHP SAPI type:
 			String sapiType = null;
+			String phpV = null;
 			PHPexeItem[] items = PHPexes.getInstance().getAllItems();
 			for (PHPexeItem item : items) {
 				if (item.getExecutable().equals(phpExeFile)) {
 					sapiType = item.getSapiType();
+					phpV = item.getVersion();
 					break;
 				}
 			}
@@ -111,13 +113,15 @@ public class PHPExecutableDebuggerInitializer {
 				additionalLaunchEnvironment.putAll(envVariables);
 				envVariables = additionalLaunchEnvironment;
 			}
-			String[] environmetVars = PHPLaunchUtilities.getEnvironment(launch
-					.getLaunchConfiguration(), asAttributesArray(envVariables));
+			String[] environmetVars = PHPLaunchUtilities.getEnvironment(
+					launch.getLaunchConfiguration(),
+					asAttributesArray(envVariables));
 
 			// Prepare the command line.
-			String[] phpCmdArray = PHPLaunchUtilities.getCommandLine(launch
-					.getLaunchConfiguration(), phpExe, phpConfigDir, fileName,
-					sapiType == PHPexeItem.SAPI_CLI ? args : null);
+			String[] phpCmdArray = PHPLaunchUtilities.getCommandLine(
+					launch.getLaunchConfiguration(), phpExe, phpConfigDir,
+					fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null,
+					phpV);
 
 			// Make sure that we have executable permissions on the file.
 			PHPexes.changePermissions(new File(phpCmdArray[0]));
