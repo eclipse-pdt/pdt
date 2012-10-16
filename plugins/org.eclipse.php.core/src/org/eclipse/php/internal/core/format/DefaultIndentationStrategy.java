@@ -993,10 +993,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				String trimedLine = document.get(offset,
 						region.getOffset() + region.getLength() - offset)
 						.trim();
-				if (!(trimedLine.startsWith(BLANK// + PHPHeuristicScanner.LBRACE
-						))
-						&& trimedLine.contains(Character
-								.toString(PHPHeuristicScanner.LBRACE))) {
+				if (!(trimedLine.startsWith(BLANK + PHPHeuristicScanner.LBRACE)))
+				// && trimedLine.contains(Character
+				// .toString(PHPHeuristicScanner.LBRACE)))
+				{
 					return true;
 				}
 			} catch (BadLocationException e) {
