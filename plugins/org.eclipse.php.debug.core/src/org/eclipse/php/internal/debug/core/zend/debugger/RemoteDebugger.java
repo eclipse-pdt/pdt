@@ -13,18 +13,28 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuildpathContainer;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.util.*;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
@@ -77,6 +87,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	private DebugConnectionThread connection;
 	private IDebugHandler debugHandler;
 	private Map<String, String> resolvedFiles;
+	private Map<String, List<IPath>> resolvedIncludePaths;
 	private int currentProtocolId = 0;
 	private int previousSuspendCount;
 	private String cachedCWD;
@@ -93,6 +104,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		connection.setCommunicationAdministrator(this);
 		connection.setCommunicationClient(this);
 		resolvedFiles = new HashMap<String, String>();
+		resolvedIncludePaths = new HashMap<String, List<IPath>>();
 	}
 
 	public IDebugHandler getDebugHandler() {
@@ -341,6 +353,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 					debugTarget, cwd, currentScriptDir);
 			if (pathEntry != null) {
 				resolvedFile = pathEntry.getResolvedPath();
+			} else {
+				try {
+					resolvedFile = tryGuessMapping(remoteFile, debugTarget);
+				} catch (ModelException e) {
+					resolvedFile = remoteFile;
+				}
 			}
 			resolvedFiles.put(resolvedFileKey, resolvedFile);
 		}
@@ -1167,6 +1185,96 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return null;
 		}
 		return response.getVarResult();
+	}
+
+	private String tryGuessMapping(String remoteFile, PHPDebugTarget debugTarget)
+			throws ModelException {
+		String orginalURL = debugTarget.getLaunch().getAttribute(
+				IDebugParametersKeys.ORIGINAL_URL);
+		if (orginalURL != null) {
+			String projectName = new Path(orginalURL).segment(0);
+			IWorkspace workspace = ResourcesPlugin.getWorkspace();
+			IProject project = workspace.getRoot().getProject(projectName);
+			if (project != null) {
+				projectName = project.getName();
+				IPath remotePath = new Path(remoteFile);
+				int size = remotePath.segmentCount();
+				for (int j = 0; j < size; j++) {
+					String segment = remotePath.segment(j);
+					if (segment.equals(projectName)) {
+						remotePath = remotePath.removeFirstSegments(j);
+						size = remotePath.segmentCount();
+						for (int i = 0; i < size; i++) {
+							remotePath = remotePath.removeFirstSegments(1);
+							if (remotePath.segmentCount() > 0) {
+								IResource res = project.getFile(remotePath);
+								if (res != null && res.exists()) {
+									return project.getFullPath()
+											.append(remotePath).toString();
+								}
+							}
+						}
+						List<IPath> includePaths = getIncludePaths(project);
+						if (includePaths.size() > 0) {
+							return checkIncludePaths(remoteFile, includePaths);
+						}
+					}
+				}
+			}
+		}
+		return remoteFile;
+	}
+
+	private String checkIncludePaths(String remoteFile, List<IPath> includePaths) {
+		IPath remotePath = new Path(remoteFile);
+		int size = remotePath.segmentCount();
+		for (int i = 0; i < size; i++) {
+			if (remotePath.segmentCount() > 0) {
+				for (IPath includePath : includePaths) {
+					File file = includePath.append(remotePath).toFile();
+					if (file.exists()) {
+						return file.toString();
+					}
+				}
+				remotePath = remotePath.removeFirstSegments(1);
+			}
+		}
+		return remoteFile;
+	}
+
+	private List<IPath> getIncludePaths(IProject project) throws ModelException {
+		List<IPath> includePaths = resolvedIncludePaths.get(project.getName());
+		if (includePaths != null) {
+			return includePaths;
+		} else {
+			includePaths = new ArrayList<IPath>();
+		}
+		IncludePath[] paths = IncludePathManager.getInstance().getIncludePaths(
+				project);
+		for (IncludePath includePath : paths) {
+			if (includePath.getEntry() instanceof IBuildpathEntry) {
+				IBuildpathEntry bPath = (IBuildpathEntry) includePath
+						.getEntry();
+				if (bPath.getEntryKind() == IBuildpathEntry.BPE_CONTAINER
+						&& !bPath.getPath().toString()
+								.equals("org.eclipse.php.core.LANGUAGE")) {
+					IBuildpathContainer buildpathContainer = DLTKCore
+							.getBuildpathContainer(bPath.getPath(),
+									DLTKCore.create(project));
+					if (buildpathContainer != null) {
+						final IBuildpathEntry[] buildpathEntries = buildpathContainer
+								.getBuildpathEntries();
+						for (IBuildpathEntry buildpathEntry : buildpathEntries) {
+							IPath localPath = EnvironmentPathUtils
+									.getLocalPath(buildpathEntry.getPath());
+							includePaths.add(localPath);
+						}
+					}
+				}
+			}
+		}
+		resolvedIncludePaths.put(project.getName(), includePaths);
+		return includePaths;
 	}
 
 	// ---------------------------------------------------------------------------
