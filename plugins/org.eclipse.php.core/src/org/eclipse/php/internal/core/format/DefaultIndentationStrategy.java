@@ -849,7 +849,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 							if (scanner.nextToken(offset, region.getOffset()
 									+ region.getLength()) == PHPHeuristicScanner.TokenRPAREN
 									&& isAssignment) {
-								indent(document, newBuffer, 0,
+								indent(document, newBuffer, 2,
 										indentationObject.indentationChar,
 										indentationObject.indentationSize);
 							} else {
