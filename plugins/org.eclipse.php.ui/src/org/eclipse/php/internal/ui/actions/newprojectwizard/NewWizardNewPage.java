@@ -76,6 +76,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 				.add("com.zend.php.ui.wizards.PHPRemoteProjectCreationWizard");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.svn.ui.SVNProjectWizard");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.phpcloud.ui.projectWizard");
+		PROJECT_WIZARD_ID.add("com.zend.php.ccm.ui.restfulProjectWizard");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.openshift.ui.projectWizard");
 		PROJECT_WIZARD_ID_SET.addAll(PROJECT_WIZARD_ID);
 
