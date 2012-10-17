@@ -378,26 +378,20 @@ public class PHPexeItem {
 					"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
 			Matcher m = PHP_VERSION.matcher(output);
 			if (m.find()) {
-				version = m.group(1);
-				String type = m.group(2);
-				if (type.startsWith("cgi")) { //$NON-NLS-1$
-					sapiType = SAPI_CGI;
-				} else if (type.startsWith("cli")) { //$NON-NLS-1$
-					sapiType = SAPI_CLI;
+				initFields(m);
+			} else {
+				output = exec(
+						executable.getAbsolutePath(),
+						"-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
+				m = PHP_VERSION.matcher(output);
+				if (m.find()) {
+					initFields(m);
 				} else {
 					PHPDebugPlugin
-							.logErrorMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
+							.logErrorMessage("Can't determine version of the PHP executable"); //$NON-NLS-1$	
 					// this.executable = null;
 					return;
 				}
-
-				if (name == null) {
-					name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				}
-			} else {
-				PHPDebugPlugin
-						.logErrorMessage("Can't determine version of the PHP executable"); //$NON-NLS-1$	
-				// this.executable = null;
 				return;
 			}
 
@@ -429,6 +423,25 @@ public class PHPexeItem {
 		}
 	}
 
+	private void initFields(Matcher m) {
+		version = m.group(1);
+		String type = m.group(2);
+		if (type.startsWith("cgi")) { //$NON-NLS-1$
+			sapiType = SAPI_CGI;
+		} else if (type.startsWith("cli")) { //$NON-NLS-1$
+			sapiType = SAPI_CLI;
+		} else {
+			PHPDebugPlugin
+					.logErrorMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
+			// this.executable = null;
+			return;
+		}
+
+		if (name == null) {
+			name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+	}
+
 	/**
 	 * Executes given command
 	 * 
@@ -445,8 +458,8 @@ public class PHPexeItem {
 		}
 
 		Process p = Runtime.getRuntime().exec(cmd, envParams);
-		BufferedReader r = new BufferedReader(new InputStreamReader(p
-				.getInputStream()));
+		BufferedReader r = new BufferedReader(new InputStreamReader(
+				p.getInputStream()));
 		StringBuilder buf = new StringBuilder();
 		String l;
 		while ((l = r.readLine()) != null) {

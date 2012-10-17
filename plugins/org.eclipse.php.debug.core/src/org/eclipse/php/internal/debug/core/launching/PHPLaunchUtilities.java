@@ -122,8 +122,7 @@ public class PHPLaunchUtilities {
 						}
 
 						if (shouldShowDebug) {
-							page
-									.showView("org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
+							page.showView("org.eclipse.debug.ui.PHPDebugOutput"); //$NON-NLS-1$
 						}
 					} catch (Exception e) {
 						Logger.logException(
@@ -189,11 +188,10 @@ public class PHPLaunchUtilities {
 			final Display disp = Display.getDefault();
 			disp.syncExec(new Runnable() {
 				public void run() {
-					MessageDialog
-							.openInformation(
-									disp.getActiveShell(),
-									PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
-									PHPDebugCoreMessages.PHPLaunchUtilities_activeLaunchDetected);
+					MessageDialog.openInformation(
+							disp.getActiveShell(),
+							PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle,
+							PHPDebugCoreMessages.PHPLaunchUtilities_activeLaunchDetected);
 				}
 			});
 			return false;
@@ -205,14 +203,13 @@ public class PHPLaunchUtilities {
 			public void run() {
 				// Display a dialog to notify the existence of a previous active
 				// launch.
-				MessageDialogWithToggle m = MessageDialogWithToggle
-						.openYesNoQuestion(
-								disp.getActiveShell(),
-								PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-								PHPDebugCoreMessages.PHPLaunchUtilities_multipleLaunchesPrompt,
-								PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision,
-								false, store,
-								PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES);
+				MessageDialogWithToggle m = MessageDialogWithToggle.openYesNoQuestion(
+						disp.getActiveShell(),
+						PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+						PHPDebugCoreMessages.PHPLaunchUtilities_multipleLaunchesPrompt,
+						PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision,
+						false, store,
+						PreferenceConstants.ALLOW_MULTIPLE_LAUNCHES);
 				resultHolder.setReturnCode(m.getReturnCode());
 			}
 		});
@@ -288,11 +285,9 @@ public class PHPLaunchUtilities {
 					.openYesNoQuestion(
 							window.getShell(),
 							PHPDebugCoreMessages.PHPLaunchUtilities_PHPPerspectiveSwitchTitle,
-							NLS
-									.bind(
-											PHPDebugCoreMessages.PHPLaunchUtilities_PHPPerspectiveSwitchMessage,
-											new String[] { perspective
-													.getLabel() }),
+							NLS.bind(
+									PHPDebugCoreMessages.PHPLaunchUtilities_PHPPerspectiveSwitchMessage,
+									new String[] { perspective.getLabel() }),
 							PHPDebugCoreMessages.PHPLaunchUtilities_rememberDecision,
 							false, store,
 							PreferenceConstants.SWITCH_BACK_TO_PHP_PERSPECTIVE);
@@ -365,31 +360,27 @@ public class PHPLaunchUtilities {
 					// TODO - Advanced message dialog with 'don't show this
 					// again' check.
 					if (fHasContiniousLaunch) {
-						resultHolder
-								.setResult(MessageDialog
-										.openConfirm(
-												Display.getDefault()
-														.getActiveShell(),
-												PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-												"A previous launch with 'Debug All Pages' or 'Start Debug From' attribute was identifed.\nLaunching a new session will terminate and remove the old launch, directing all future debug requests associated with it to the new launch.\nDo you wish to continue and launch a new session?")); //$NON-NLS-1$
+						resultHolder.setResult(MessageDialog
+								.openConfirm(
+										Display.getDefault().getActiveShell(),
+										PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+										"A previous launch with 'Debug All Pages' or 'Start Debug From' attribute was identifed.\nLaunching a new session will terminate and remove the old launch, directing all future debug requests associated with it to the new launch.\nDo you wish to continue and launch a new session?")); //$NON-NLS-1$
 					} else {
 						if (newIsDebugAllPages) {
-							resultHolder
-									.setResult(MessageDialog
-											.openConfirm(
-													Display.getDefault()
-															.getActiveShell(),
-													PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-													"The requested launch has a 'Debug All Pages' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?")); //$NON-NLS-1$
+							resultHolder.setResult(MessageDialog
+									.openConfirm(
+											Display.getDefault()
+													.getActiveShell(),
+											PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+											"The requested launch has a 'Debug All Pages' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?")); //$NON-NLS-1$
 						} else {
 							// newIsStartDebugFrom == true
-							resultHolder
-									.setResult(MessageDialog
-											.openConfirm(
-													Display.getDefault()
-															.getActiveShell(),
-													PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-													"The requested launch has a 'Start Debug From' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?")); //$NON-NLS-1$
+							resultHolder.setResult(MessageDialog
+									.openConfirm(
+											Display.getDefault()
+													.getActiveShell(),
+											PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
+											"The requested launch has a 'Start Debug From' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?")); //$NON-NLS-1$
 						}
 					}
 					if (resultHolder.getResult()) {
@@ -741,8 +732,8 @@ public class PHPLaunchUtilities {
 		for (String attribute : attributesArray) {
 			try {
 				int index = attribute.indexOf('=');
-				map.put(attribute.substring(0, index), attribute
-						.substring(index + 1));
+				map.put(attribute.substring(0, index),
+						attribute.substring(index + 1));
 			} catch (Exception e) {
 				Logger.logException("Error while parsing launch attribute '"
 						+ attribute + '\'', e);
@@ -781,6 +772,33 @@ public class PHPLaunchUtilities {
 		env.put("SCRIPT_NAME", fileName); //$NON-NLS-1$
 		env.put("PATH_TRANSLATED", fileName); //$NON-NLS-1$
 		env.put("PATH_INFO", fileName); //$NON-NLS-1$
+
+		// Build query string
+		StringBuilder queryStringBuf = new StringBuilder(query);
+		queryStringBuf.append("&debug_host=127.0.0.1"); //$NON-NLS-1$
+		if (scriptArguments != null) {
+			for (String arg : scriptArguments) {
+				queryStringBuf.append('&').append(arg);
+			}
+		}
+		env.put("QUERY_STRING", queryStringBuf.toString());
+		env.put("REDIRECT_STATUS", "1"); //$NON-NLS-1$
+		env.put("PHPRC", phpConfigDir); //$NON-NLS-1$
+
+		appendLibrarySearchPathEnv(env, new File(phpExeDir));
+
+		return env;
+	}
+
+	public static Map<String, String> getPHP54BuildinServerLaunchEnvironment(
+			String fileName, String query, String phpConfigDir,
+			String phpExeDir, String[] scriptArguments) {
+		Map<String, String> env = new HashMap<String, String>();
+		env.put("REQUEST_METHOD", "GET"); //$NON-NLS-1$ //$NON-NLS-2$
+		//		env.put("SCRIPT_FILENAME", fileName); //$NON-NLS-1$
+		//		env.put("SCRIPT_NAME", fileName); //$NON-NLS-1$
+		//		env.put("PATH_TRANSLATED", fileName); //$NON-NLS-1$
+		//		env.put("PATH_INFO", fileName); //$NON-NLS-1$
 
 		// Build query string
 		StringBuilder queryStringBuf = new StringBuilder(query);
@@ -893,12 +911,13 @@ public class PHPLaunchUtilities {
 	 * @param args
 	 *            Command line arguments, if using PHP CLI, otherwise -
 	 *            <code>null</code>
+	 * @param phpVersion
 	 * @return commands array
 	 * @throws CoreException
 	 */
 	public static String[] getCommandLine(ILaunchConfiguration configuration,
-			String phpExe, String phpConfigDir, String scriptPath, String[] args)
-			throws CoreException {
+			String phpExe, String phpConfigDir, String scriptPath,
+			String[] args, String phpVersion) throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		IProject project = getProject(configuration);
 		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on"
@@ -907,9 +926,49 @@ public class PHPLaunchUtilities {
 				: "off";
 
 		List<String> cmdLineList = new LinkedList<String>();
-		cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-n", "-c",
-				phpConfigDir, "-d", "asp_tags=" + aspTags, "-d",
-				"short_open_tag=" + shortOpenTag, scriptPath }));
+		if (phpVersion != null && phpVersion.startsWith("4")) {
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c",
+					phpConfigDir, "-d", "asp_tags=" + aspTags, "-d",
+					"short_open_tag=" + shortOpenTag, scriptPath }));
+		} else {
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-n", "-c",
+					phpConfigDir, "-d", "asp_tags=" + aspTags, "-d",
+					"short_open_tag=" + shortOpenTag, scriptPath }));
+		}
+		if (args != null) {
+			cmdLineList.addAll(Arrays.asList(args));
+		}
+		return cmdLineList.toArray(new String[cmdLineList.size()]);
+	}
+
+	public static String[] getCommandLineForPHP54BuildinServer(
+			ILaunchConfiguration configuration, String phpExe,
+			String phpConfigDir, String server, String root, String routerFile,
+			String[] args) throws CoreException {
+		// Check if we should treat ASP tags as PHP tags
+		IProject project = getProject(configuration);
+		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on"
+				: "off";
+		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on"
+				: "off";
+		if (server.startsWith("http://")) {
+			server = server.substring(7);
+		} else if (server.startsWith("https://")) {
+			server = server.substring(8);
+		}
+
+		List<String> cmdLineList = new LinkedList<String>();
+		if (routerFile == null) {
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S",
+					server, "-t", root, "-n", "-c", phpConfigDir, "-d",
+					"asp_tags=" + aspTags, "-d",
+					"short_open_tag=" + shortOpenTag }));
+		} else {
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S",
+					server, "-t", root, routerFile, "-n", "-c", phpConfigDir,
+					"-d", "asp_tags=" + aspTags, "-d",
+					"short_open_tag=" + shortOpenTag }));
+		}
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
 		}
@@ -1051,10 +1110,9 @@ public class PHPLaunchUtilities {
 		} catch (CoreException e) {
 			Logger.logException("Error obtaining an SSHTunnel instance", e);//$NON-NLS-1$
 		} catch (StorageException e) {
-			Logger
-					.logException(
-							"Error accessing the secured storage for the debug SSH tunnel",//$NON-NLS-1$
-							e);
+			Logger.logException(
+					"Error accessing the secured storage for the debug SSH tunnel",//$NON-NLS-1$
+					e);
 		}
 		return null;
 	}
@@ -1068,8 +1126,8 @@ public class PHPLaunchUtilities {
 	public static int getDebugPort(ILaunchConfiguration launchConfiguration) {
 		try {
 			String debuggerID = launchConfiguration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin
-							.getCurrentDebuggerId());
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+					PHPDebugPlugin.getCurrentDebuggerId());
 			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerID);
 			return debuggerConfiguration.getPort();

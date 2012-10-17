@@ -151,8 +151,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new MethodNameStrategy(context) };
 		}
 		if (contextClass == ClassStatementContext.class) {
-			if (((ClassStatementContext) context).isInUseTraitStatement()) {
-				int type = ((ClassStatementContext) context)
+			if (((AbstractCompletionContext) context).isInUseTraitStatement()) {
+				int type = ((AbstractCompletionContext) context)
 						.getUseTraitStatementContext();
 				if (type == AbstractCompletionContext.TRAIT_NAME) {
 					return new ICompletionStrategy[] { new InUseTraitStrategy(
@@ -203,9 +203,23 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		// }
 		if (contextClass == ClassStaticMemberContext.class
 				|| contextClass == ClassObjMemberContext.class) {
-			return new ICompletionStrategy[] {
-					new ClassFieldsStrategy(context),
-					new ClassMethodsStrategy(context) };
+			if (((AbstractCompletionContext) context).isInUseTraitStatement()) {
+				int type = ((AbstractCompletionContext) context)
+						.getUseTraitStatementContext();
+				if (type == AbstractCompletionContext.TRAIT_NAME) {
+					return new ICompletionStrategy[] { new InUseTraitStrategy(
+							context) };
+				} else if (type == AbstractCompletionContext.TRAIT_KEYWORD) {
+					return new ICompletionStrategy[] { new InUseTraitKeywordStrategy(
+							context) };
+				} else {
+					return new ICompletionStrategy[] {};
+				}
+			} else {
+				return new ICompletionStrategy[] {
+						new ClassFieldsStrategy(context),
+						new ClassMethodsStrategy(context) };
+			}
 		}
 		if (contextClass == ClassDeclarationKeywordContext.class) {
 			return new ICompletionStrategy[] { new ClassDeclarationKeywordsStrategy(
