@@ -41,7 +41,6 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	static class LineState {
 		boolean inBracelessBlock;
 		boolean inMultiLine;
-
 		// IRegion baseRegion;
 		// int baseRegionOffset;
 		// boolean shouldIndent;
@@ -578,6 +577,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			final int lineNumber, final int forOffset, String commandText)
 			throws BadLocationException {
 
+		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils
+				.getFormatterCommonPrferences();
 		int indentationWrappedLineSize = FormatterUtils
 				.getFormatterCommonPrferences().getIndentationWrappedLineSize(
 						document);
@@ -593,6 +594,14 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		indentationObject.indentationArrayInitSize = indentationArrayInitSize;
 		indentationObject.indentationSize = indentationSize;
 		indentationObject.indentationChar = indentationChar;
+
+		// remove this
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// indentationObject.indentationWrappedLineSize = 0;
+		// indentationObject.indentationArrayInitSize = 0;
+		// indentationObject.indentationSize = 0;
+		// remove this
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		boolean enterKeyPressed = document.getLineDelimiter().equals(
 				result.toString());
@@ -788,6 +797,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						return true;
 					}
 				}
+
 			} else if (inMultiLine(scanner, document, lineNumber, offset)) {
 				// lineState.inBracelessBlock = true;
 				int peer = scanner.findOpeningPeer(offset - 1,
@@ -795,8 +805,27 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
 				if (peer != PHPHeuristicScanner.NOT_FOUND) {
 
-					int token = scanner.previousToken(peer - 1,
+					// search for assignment (i.e. "=>")
+					int position = peer - 1;
+					int token = scanner.previousToken(position,
 							PHPHeuristicScanner.UNBOUND);
+					// scan tokens backwards until reaching a PHP token
+					while (token > 100
+							|| token == PHPHeuristicScanner.TokenOTHER) {
+						position--;
+						token = scanner.previousToken(position,
+								PHPHeuristicScanner.UNBOUND);
+					}
+
+					position--;
+					boolean isAssignment = scanner.previousToken(position,
+							PHPHeuristicScanner.UNBOUND) == PHPHeuristicScanner.TokenGREATERTHAN
+							&& scanner.previousToken(position - 1,
+									PHPHeuristicScanner.UNBOUND) == PHPHeuristicScanner.TokenEQUAL;
+
+					token = scanner.previousToken(peer - 1,
+							PHPHeuristicScanner.UNBOUND);
+
 					boolean isArray = token == Symbols.TokenARRAY;
 					// lineState.indent.setLength(0)
 					// int baseLine = document.getLineOfOffset(peer);
@@ -815,10 +844,21 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 									.startsWith(
 											BLANK + PHPHeuristicScanner.RPAREN)) {
 						if (isArray) {
-							indent(document, newBuffer,
-									indentationObject.indentationArrayInitSize,
-									indentationObject.indentationChar,
-									indentationObject.indentationSize);
+							region = document
+									.getLineInformationOfOffset(offset);
+							if (scanner.nextToken(offset, region.getOffset()
+									+ region.getLength()) == PHPHeuristicScanner.TokenRPAREN
+									&& isAssignment) {
+								indent(document, newBuffer, 0,
+										indentationObject.indentationChar,
+										indentationObject.indentationSize);
+							} else {
+								indent(document,
+										newBuffer,
+										indentationObject.indentationArrayInitSize,
+										indentationObject.indentationChar,
+										indentationObject.indentationSize);
+							}
 						} else {
 							indent(document,
 									newBuffer,
@@ -950,11 +990,13 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		if (isBracelessBlock) {
 			try {
 				IRegion region = document.getLineInformationOfOffset(offset);
-				if (!document
-						.get(offset,
-								region.getOffset() + region.getLength()
-										- offset).trim()
-						.startsWith(BLANK + PHPHeuristicScanner.LBRACE)) {
+				String trimedLine = document.get(offset,
+						region.getOffset() + region.getLength() - offset)
+						.trim();
+				if (!(trimedLine.startsWith(BLANK + PHPHeuristicScanner.LBRACE)))
+				// && trimedLine.contains(Character
+				// .toString(PHPHeuristicScanner.LBRACE)))
+				{
 					return true;
 				}
 			} catch (BadLocationException e) {
