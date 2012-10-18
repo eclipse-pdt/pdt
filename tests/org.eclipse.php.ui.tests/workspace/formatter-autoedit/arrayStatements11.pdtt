@@ -1,0 +1,23 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+return array(
+		'controllers' => array(
+				'invokables' => array(
+						'ControllerSUperHoo' => 'NewModule\Controller\ControllerSUperHooController',
+				|),
+		)
+);
+?>
+--EXPECT--
+<?php
+return array(
+		'controllers' => array(
+				'invokables' => array(
+						'ControllerSUperHoo' => 'NewModule\Controller\ControllerSUperHooController',
+				
+				),
+		)
+);
+?>
