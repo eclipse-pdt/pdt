@@ -61,8 +61,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	public void debugPHPExecutable(ILaunch launch, String phpExe,
 			String fileToDebug) throws DebugException {
 		try {
-			launch.setAttribute(IDebugParametersKeys.EXECUTABLE_LAUNCH,
-					Boolean.toString(true));
+			launch.setAttribute(IDebugParametersKeys.EXECUTABLE_LAUNCH, Boolean
+					.toString(true));
 
 			IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry
 					.getBestMatchDebugParametersInitializer(launch);
@@ -85,9 +85,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			Logger.logException(
 					"PHPDebugTarget: Debugger didn't find file to debug.", e1);
 			String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;
-			throw new DebugException(new Status(IStatus.ERROR,
-					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
-					errorMessage, e1));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin
+					.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage,
+					e1));
 		}
 	}
 
@@ -129,8 +129,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 							IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, item
 									.getExecutable().toString());
 					workingCopy.setAttribute(
-							PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-							item.getDebuggerID());
+							PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, item
+									.getDebuggerID());
 					if (item.getINILocation() != null) {
 						workingCopy.setAttribute(
 								IPHPDebugConstants.ATTR_INI_LOCATION, item
@@ -194,11 +194,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		// Locate the php.ini by using the attribute. If the attribute was null,
 		// try to locate an php.ini that exists next to the executable.
 		File phpIni = (phpIniPath != null && new File(phpIniPath).exists()) ? new File(
-				phpIniPath) : PHPINIUtil.findPHPIni(phpExeString);
+				phpIniPath)
+				: PHPINIUtil.findPHPIni(phpExeString);
 		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString,
 				project);
-		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION,
-				tempIni.getAbsolutePath());
+		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni
+				.getAbsolutePath());
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE) || runWithDebugInfo == true) {
 			boolean stopAtFirstLine = configuration.getAttribute(
@@ -238,12 +239,12 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			PHPSessionLaunchMapper.put(sessionID, launch);
 
 			// Define all needed debug attributes:
-			launch.setAttribute(IDebugParametersKeys.PORT,
-					Integer.toString(requestPort));
+			launch.setAttribute(IDebugParametersKeys.PORT, Integer
+					.toString(requestPort));
 			launch.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT,
 					Boolean.toString(stopAtFirstLine));
-			launch.setAttribute(IDebugParametersKeys.SESSION_ID,
-					Integer.toString(sessionID));
+			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer
+					.toString(sessionID));
 
 			// Trigger the debug session by initiating a debug requset to the
 			// php.exe
@@ -267,12 +268,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 			// Detect PHP SAPI type:
 			String sapiType = null;
-			String phpV = null;
 			PHPexeItem[] items = PHPexes.getInstance().getAllItems();
 			for (PHPexeItem item : items) {
 				if (item.getExecutable().equals(phpExeFile)) {
 					sapiType = item.getSapiType();
-					phpV = item.getVersion();
 					break;
 				}
 			}
@@ -281,8 +280,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 					.getLaunchConfiguration());
 			String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch
 					.getLaunchConfiguration(), phpExeString, phpConfigDir,
-					fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null,
-					phpV);
+					fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null);
 
 			// Set library search path:
 			String libPath = PHPLaunchUtilities
@@ -329,7 +327,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				subMonitor
 						.beginTask(
 								MessageFormat
-										.format("start launch", new Object[] { configuration.getName() }), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+										.format(
+												"start launch", new Object[] { configuration.getName() }), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
 				process = DebugPlugin.newProcess(launch, p,
 						phpExe.toOSString(), processAttributes);
 				if (process == null) {

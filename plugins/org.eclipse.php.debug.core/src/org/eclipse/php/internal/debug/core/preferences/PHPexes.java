@@ -200,60 +200,6 @@ public class PHPexes {
 		return map.get(name);
 	}
 
-	public PHPexeItem getItem(String name) {
-		for (Iterator<String> iterator = items.keySet().iterator(); iterator
-				.hasNext();) {
-			String debuggerId = iterator.next();
-			HashMap<String, PHPexeItem> map = items.get(debuggerId);
-			if (map != null) {
-				PHPexeItem item = map.get(name);
-				if (item != null) {
-					return item;
-				}
-			}
-		}
-		return null;
-	}
-
-	public PHPexeItem getPHP54Item() {
-		for (Iterator<String> iterator = items.keySet().iterator(); iterator
-				.hasNext();) {
-			String debuggerId = iterator.next();
-			HashMap<String, PHPexeItem> map = items.get(debuggerId);
-			if (map != null) {
-				for (Iterator<PHPexeItem> iterator2 = map.values().iterator(); iterator2
-						.hasNext();) {
-					PHPexeItem item = iterator2.next();
-					if (item != null
-							&& item.getVersion().compareTo("5.4.0") >= 0) {
-						return item;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	public List<PHPexeItem> getPHP54Items() {
-		List<PHPexeItem> result = new ArrayList<PHPexeItem>();
-		for (Iterator<String> iterator = items.keySet().iterator(); iterator
-				.hasNext();) {
-			String debuggerId = iterator.next();
-			HashMap<String, PHPexeItem> map = items.get(debuggerId);
-			if (map != null) {
-				for (Iterator<PHPexeItem> iterator2 = map.values().iterator(); iterator2
-						.hasNext();) {
-					PHPexeItem item = iterator2.next();
-					if (item != null
-							&& item.getVersion().compareTo("5.4.0") >= 0) {
-						result.add(item);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
 	/**
 	 * Search for the executable file name in all of the registered
 	 * {@link PHPexeItem}s and return a reference to the one that refer to the
@@ -359,7 +305,8 @@ public class PHPexes {
 			locationsString = "";
 		}
 		final String[] phpExecutablesLocations = locationsString.length() > 0 ? locationsString
-				.split(SEPARATOR) : new String[0];
+				.split(SEPARATOR)
+				: new String[0];
 
 		// Load the item executable ini's array
 		String inisString = prefs
@@ -380,7 +327,8 @@ public class PHPexes {
 			debuggersString = "";
 		}
 		final String[] debuggers = debuggersString.length() > 0 ? debuggersString
-				.split(SEPARATOR) : new String[0];
+				.split(SEPARATOR)
+				: new String[0];
 
 		// Load the PHP Versions array
 		String defaultItemForPHPVersionString = prefs
@@ -532,16 +480,17 @@ public class PHPexes {
 					PHPDebugPlugin
 							.getDefault()
 							.getLog()
-							.log(new Status(
-									1,
-									PHPDebugPlugin.getID(),
-									1001,
-									"PHP executable "
-											+ location
-											+ " not found neither in plugin "
-											+ pluginId
-											+ " nor in fragments attached to it",
-									null));
+							.log(
+									new Status(
+											1,
+											PHPDebugPlugin.getID(),
+											1001,
+											"PHP executable "
+													+ location
+													+ " not found neither in plugin "
+													+ pluginId
+													+ " nor in fragments attached to it",
+											null));
 			}
 		}
 	}
@@ -706,9 +655,6 @@ public class PHPexes {
 
 	public PHPexeItem[] getCompatibleItems(PHPexeItem[] allItems,
 			PHPVersion version) {
-		if (version.equals(PHPVersion.PHP4)) {
-			return allItems;
-		}
 		String versionNumber = version.getAlias().substring(3);
 		PHPexeItem[] result;
 		List<PHPexeItem> list = new ArrayList<PHPexeItem>();

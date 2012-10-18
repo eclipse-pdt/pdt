@@ -126,11 +126,12 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		// Locate the php ini by using the attribute. If the attribute was null,
 		// try to locate an ini that exists next to the executable.
 		File phpIni = (phpIniString != null && new File(phpIniString).exists()) ? new File(
-				phpIniString) : PHPINIUtil.findPHPIni(phpExeString);
+				phpIniString)
+				: PHPINIUtil.findPHPIni(phpExeString);
 		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString,
 				project);
-		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION,
-				tempIni.getAbsolutePath());
+		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni
+				.getAbsolutePath());
 
 		// add process type to process attributes, basically the name of the exe
 		// that was launched
@@ -176,8 +177,8 @@ public class XDebugExeLaunchConfigurationDelegate extends
 				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
 					displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_2
 							+ DBGpProxyHandler.instance.getErrorMsg()); //$NON-NLS-1$
-					DebugPlugin.getDefault().getLaunchManager()
-							.removeLaunch(launch);
+					DebugPlugin.getDefault().getLaunchManager().removeLaunch(
+							launch);
 					return;
 				}
 			} else {
@@ -222,12 +223,10 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		// Detect PHP SAPI type and thus where we need arguments
 		File phpExeFile = new File(phpExeString);
 		String sapiType = null;
-		String phpV = null;
 		PHPexeItem[] items = PHPexes.getInstance().getAllItems();
 		for (PHPexeItem item : items) {
 			if (item.getExecutable().equals(phpExeFile)) {
 				sapiType = item.getSapiType();
-				phpV = item.getVersion();
 				break;
 			}
 		}
@@ -239,9 +238,8 @@ public class XDebugExeLaunchConfigurationDelegate extends
 
 		// define the command line for launching
 		String[] cmdLine = null;
-		cmdLine = PHPLaunchUtilities.getCommandLine(configuration,
-				phpExe.toOSString(), tempIni.toString(), phpFile.toOSString(),
-				args, phpV);
+		cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe
+				.toOSString(), tempIni.toString(), phpFile.toOSString(), args);
 
 		// Launch the process
 		final Process phpExeProcess = DebugPlugin.exec(cmdLine, workingDir,
@@ -272,9 +270,11 @@ public class XDebugExeLaunchConfigurationDelegate extends
 				launch.addDebugTarget(target);
 				subMonitor
 						.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4); //$NON-NLS-1$
-				target.waitForInitialSession(
-						(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
-						XDebugPreferenceMgr.createSessionPreferences(), monitor);
+				target
+						.waitForInitialSession(
+								(DBGpBreakpointFacade) IDELayerFactory
+										.getIDELayer(), XDebugPreferenceMgr
+										.createSessionPreferences(), monitor);
 			}
 
 		} else {
