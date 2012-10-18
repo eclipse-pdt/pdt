@@ -347,10 +347,6 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 						.length() == 0)) {
 			fSapiTypes.setText(phpExeItem.getSapiType());
 		}
-		if (phpExeItem.getINILocation() != null
-				&& fPHPIni.getText().trim().length() == 0) {
-			fPHPIni.setText(phpExeItem.getINILocation().getAbsolutePath());
-		}
 
 		if (phpExeItem.getExecutable() == null) {
 			setMessage(

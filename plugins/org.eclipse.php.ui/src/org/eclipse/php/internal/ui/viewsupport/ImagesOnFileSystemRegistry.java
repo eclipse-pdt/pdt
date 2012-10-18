@@ -6,9 +6,13 @@ import java.net.URL;
 import java.util.HashMap;
 
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
@@ -30,14 +34,30 @@ public class ImagesOnFileSystemRegistry {
 	public ImagesOnFileSystemRegistry() {
 		fURLMap = new HashMap();
 		fTempDir = getTempDir();
-		fImageProvider = new ScriptElementImageProvider();
+		fImageProvider = new ScriptElementImageProvider() {
+			@Override
+			public ImageDescriptor getBaseImageDescriptor(
+					IModelElement element, int renderFlags) {
+				// TODO Auto-generated method stub
+				if (element.getElementType() == IModelElement.TYPE) {
+					IType type = (IType) element;
+					try {
+						if (PHPFlags.isTrait(type.getFlags())) {
+							return PHPPluginImages.DESC_OBJS_TRAIT;
+						}
+					} catch (ModelException e) {
+					}
+				}
+				return super.getBaseImageDescriptor(element, renderFlags);
+			}
+		};
 		fImageCount = 0;
 	}
 
 	private File getTempDir() {
 		try {
-			File imageDir = PHPUiPlugin.getDefault().getStateLocation().append(
-					IMAGE_DIR).toFile();
+			File imageDir = PHPUiPlugin.getDefault().getStateLocation()
+					.append(IMAGE_DIR).toFile();
 			if (imageDir.exists()) {
 				// has not been deleted on previous shutdown
 				delete(imageDir);
