@@ -41,6 +41,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 	static class LineState {
 		boolean inBracelessBlock;
 		boolean inMultiLine;
+
 		// IRegion baseRegion;
 		// int baseRegionOffset;
 		// boolean shouldIndent;
