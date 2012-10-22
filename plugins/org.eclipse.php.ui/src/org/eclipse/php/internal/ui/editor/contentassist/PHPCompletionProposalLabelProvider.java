@@ -16,9 +16,11 @@ import org.eclipse.dltk.internal.core.ArchiveProjectFragment;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
 
 public class PHPCompletionProposalLabelProvider extends
 		CompletionProposalLabelProvider {
@@ -136,5 +138,15 @@ public class PHPCompletionProposalLabelProvider extends
 			return DLTKPluginImages.DESC_OBJS_JAR;
 		}
 		return super.createImageDescriptor(proposal);
+	}
+
+	@Override
+	public ImageDescriptor createTypeImageDescriptor(CompletionProposal proposal) {
+		if (PHPFlags.isTrait(proposal.getFlags())) {
+			return decorateImageDescriptor(PHPPluginImages.DESC_OBJS_TRAIT,
+					proposal);
+		} else {
+			return super.createTypeImageDescriptor(proposal);
+		}
 	}
 }
