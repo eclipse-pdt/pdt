@@ -74,8 +74,7 @@ public class PHPTextSequenceUtilities {
 		}
 		if (tRegion != null && tRegion.getType() == PHPRegionContext.PHP_CLOSE) {
 			tRegion = container.getRegionAtCharacterOffset(container
-					.getStartOffset()
-					+ tRegion.getStart() - 1);
+					.getStartOffset() + tRegion.getStart() - 1);
 		}
 
 		// This text region must be of type PhpScriptRegion:
@@ -106,7 +105,8 @@ public class PHPTextSequenceUtilities {
 					}
 					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_CLOSE
 							|| startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN
-							|| startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON) {
+							|| startTokenRegion.getType() == PHPRegionTypes.PHP_SEMICOLON
+							|| startTokenRegion.getType() == PHPRegionTypes.PHP_IF) {
 						// Calculate starting position of the statement (it
 						// should go right after this startTokenRegion):
 						startOffset += startTokenRegion.getEnd();
@@ -128,8 +128,9 @@ public class PHPTextSequenceUtilities {
 				}
 
 				// remove spaces from start.
-				textSequence = textSequence.subTextSequence(readForwardSpaces(
-						textSequence, 0), textSequence.length());
+				textSequence = textSequence.subTextSequence(
+						readForwardSpaces(textSequence, 0),
+						textSequence.length());
 
 				return textSequence;
 

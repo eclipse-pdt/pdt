@@ -1091,6 +1091,12 @@ public final class PHPHeuristicScanner implements Symbols {
 	public boolean isBracelessBlockStart(int position, int bound) {
 		if (position < 1)
 			return false;
+		switch (nextToken(position, PHPHeuristicScanner.UNBOUND)) {
+		case TokenIF:
+		case TokenFOR:
+		case TokenWHILE:
+			return false;
+		}
 
 		switch (previousToken(position, bound)) {
 		case TokenDO:

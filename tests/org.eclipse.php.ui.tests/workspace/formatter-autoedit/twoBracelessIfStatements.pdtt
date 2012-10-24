@@ -1,0 +1,13 @@
+--TEST--
+Tests auto editing multiline statements.
+--FILE--
+<?php
+if ($validator instanceof ValidatorInterface)		
+	if (! $validator->isValid($param)) |
+?>
+--EXPECT--
+<?php
+if ($validator instanceof ValidatorInterface)		
+	if (! $validator->isValid($param)) 
+		
+?>
