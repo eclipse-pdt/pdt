@@ -73,6 +73,10 @@ public class SpellcheckDelegateAdapterFactory implements IAdapterFactory {
 											.equals(PHPPartitionTypes.PHP_DOC)) {
 								shouldSpellcheck = true;
 							}
+						} else {
+							// not a PHP script region, then it must be HTML ->
+							// enable spellcheck
+							shouldSpellcheck = true;
 						}
 					} catch (BadLocationException e) {
 
