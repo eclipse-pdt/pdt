@@ -20,8 +20,6 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.compiler.util.HashtableOfIntValues;
 import org.eclipse.dltk.core.DLTKCore;
@@ -32,7 +30,6 @@ import org.eclipse.dltk.core.search.SearchMatch;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
-import org.eclipse.dltk.internal.core.search.matching.FieldPattern;
 import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
 import org.eclipse.dltk.internal.core.search.matching.MethodPattern;
 import org.eclipse.dltk.internal.core.search.matching.OrPattern;
@@ -256,47 +253,6 @@ public class PHPMatchLocator extends MatchLocator {
 	}
 
 	@Override
-	public SearchMatch newFieldReferenceMatch(IModelElement enclosingElement,
-			int accuracy, int offset, int length, ASTNode reference) {
-
-		if (pattern instanceof FieldPattern
-				&& (reference instanceof VariableReference || reference instanceof SimpleReference)) {
-			ISourceModule module = (ISourceModule) enclosingElement
-					.getAncestor(IModelElement.SOURCE_MODULE);
-			if (module != null) {
-				try {
-					IModelElement[] elements = module.codeSelect(
-							reference.sourceStart(), 0);
-					for (int i = 0; i < elements.length; i++) {
-						if (pattern.focus != null) {
-							if (pattern.focus.equals(elements[i])) {
-								return super.newFieldReferenceMatch(
-										enclosingElement, accuracy, offset,
-										length, reference);
-							}
-						} else {
-							FieldPattern methodPattern = (FieldPattern) pattern;
-							if (new String(methodPattern.name)
-									.equals(elements[i].getElementName())) {
-								return super.newFieldReferenceMatch(
-										enclosingElement, accuracy, offset,
-										length, reference);
-							}
-
-						}
-					}
-				} catch (ModelException e) {
-					e.printStackTrace();
-				}
-			}
-		} else if (pattern instanceof OrPattern) {
-			return super.newFieldReferenceMatch(enclosingElement, accuracy,
-					offset, length, reference);
-		}
-		return null;
-	}
-
-	@Override
 	public SearchMatch newMethodReferenceMatch(IModelElement enclosingElement,
 			int accuracy, int offset, int length, boolean isConstructor,
 			boolean isSynthetic, ASTNode reference) {
@@ -309,26 +265,33 @@ public class PHPMatchLocator extends MatchLocator {
 				try {
 					IModelElement[] elements = module.codeSelect(pce
 							.getCallName().sourceStart(), 0);
-					for (int i = 0; i < elements.length; i++) {
-						if (pattern.focus != null) {
-							if (pattern.focus.equals(elements[i])) {
+					if (elements == null || elements.length == 0) {
+						return super.newMethodReferenceMatch(enclosingElement,
+								accuracy, offset, length, isConstructor,
+								isSynthetic, reference);
+					} else {
+						for (int i = 0; i < elements.length; i++) {
+							if (pattern.focus != null) {
+								if (pattern.focus.equals(elements[i])) {
+									return super.newMethodReferenceMatch(
+											enclosingElement, accuracy, offset,
+											length, isConstructor, isSynthetic,
+											reference);
+								}
+							} else {
+								// MethodPattern methodPattern = (MethodPattern) pattern;
+								// if (new String(methodPattern.selector)
+								// .equals(elements[i].getElementName())) {
 								return super.newMethodReferenceMatch(
 										enclosingElement, accuracy, offset,
 										length, isConstructor, isSynthetic,
 										reference);
-							}
-						} else {
-							MethodPattern methodPattern = (MethodPattern) pattern;
-							if (new String(methodPattern.selector)
-									.equals(elements[i].getElementName())) {
-								return super.newMethodReferenceMatch(
-										enclosingElement, accuracy, offset,
-										length, isConstructor, isSynthetic,
-										reference);
-							}
+								// }
 
+							}
 						}
 					}
+
 				} catch (ModelException e) {
 					e.printStackTrace();
 				}
