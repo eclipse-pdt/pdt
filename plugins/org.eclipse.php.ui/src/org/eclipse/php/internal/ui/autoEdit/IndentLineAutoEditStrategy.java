@@ -146,7 +146,8 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 			}
 		}
 
-		if (TypingPreferences.closeBrackets && prevChar == '(') {
+		if (TypingPreferences.closeBrackets
+				&& (prevChar == '(' || prevChar == '[')) {
 			if (currentState != PHPPartitionTypes.PHP_DEFAULT) {
 				if (document.getLength() == offset) {
 					currentState = FormatterUtils.getPartitionType(document,
@@ -176,6 +177,7 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 		case '}':
 			return curlyCloseAutoEditStrategy;
 		case ')':
+		case ']':
 			return parenCloseAutoEditStrategy;
 		default:
 			if (registry.hasExtensions()) {
