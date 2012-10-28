@@ -11,23 +11,32 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ltk.core.refactoring.CheckConditionsOperation;
+import org.eclipse.ltk.core.refactoring.CreateChangeOperation;
+import org.eclipse.ltk.core.refactoring.PerformChangeOperation;
+import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
+import org.eclipse.ltk.internal.core.refactoring.resource.MoveResourcesProcessor;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 
+@SuppressWarnings("restriction")
 public class ReorgMoveAction extends AbstractMoveDelegator {
 
 	private static final String MOVE_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.Move";
@@ -42,7 +51,10 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 			return;
 		}
 		if (selectedResources != null && !selectedResources.isEmpty()) {
-			createWorkbenchAction(selectedResources).run();
+			SelectionListenerAction action = createWorkbenchAction(selectedResources);
+			if (action != null) {
+				action.run();
+			}
 		}
 	}
 
@@ -75,10 +87,71 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 				}
 			}
 
+			// don't open the move dialog, resource could be moved directly
+			// using the drop target
+			if (target != null && directMove(selection) == true) {
+				return null;
+			}
+
 			action.selectionChanged(selection);
 
 		}
 		return action;
+	}
+
+	/**
+	 * Move the resources contained in the selection to the target folder
+	 * directly without opening the dialog.
+	 * 
+	 * The CheckConditionsOperation will ensure no files are overwritten in the
+	 * target folder.
+	 * 
+	 * @param selection
+	 * @return true if move operation was successfull, false otherwise.
+	 */
+	protected boolean directMove(IStructuredSelection selection) {
+
+		IResource[] resources = new IResource[selection.size()];
+		Iterator<?> iterator = selection.iterator();
+		int i = 0;
+		while (iterator.hasNext()) {
+			resources[i++] = (IResource) iterator.next();
+
+		}
+
+		MoveResourcesProcessor processor = new MoveResourcesProcessor(resources);
+		processor.setDestination(target);
+
+		ProcessorBasedRefactoring refactoring = new ProcessorBasedRefactoring(
+				processor);
+		CheckConditionsOperation checkOp = new CheckConditionsOperation(
+				refactoring, CheckConditionsOperation.ALL_CONDITIONS);
+		CreateChangeOperation operation = new CreateChangeOperation(checkOp,
+				RefactoringStatus.WARNING);
+		PerformChangeOperation perform = new PerformChangeOperation(operation);
+
+		try {
+			ResourcesPlugin.getWorkspace().run(perform,
+					new NullProgressMonitor());
+		} catch (CoreException e) {
+			PHPCorePlugin.log(e.getStatus());
+			return false;
+		}
+
+		RefactoringStatus status = perform.getValidationStatus();
+
+		if (status == null) {
+			RefactoringStatus refactoringStatus = checkOp.getStatus();
+
+			if (refactoringStatus != null && !refactoringStatus.isOK()) {
+				MessageDialog
+						.openError(fShell, "Error moving resource",
+								"A resource with the same name exists in the target folder.");
+			}
+			return false;
+		}
+
+		return true;
 	}
 
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
