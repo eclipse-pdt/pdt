@@ -564,7 +564,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		return BLANK;
 	}
 
-	public static void placeMatchingBlanksForStructuredDocument(
+	public void placeMatchingBlanksForStructuredDocument(
 			final IStructuredDocument document, final StringBuffer result,
 			final int lineNumber, final int forOffset)
 			throws BadLocationException {
@@ -572,7 +572,19 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				forOffset, BLANK);
 	}
 
-	public static void placeMatchingBlanksForStructuredDocument(
+	protected int getIndentationSize(final IStructuredDocument document) {
+
+		return FormatterUtils.getFormatterCommonPrferences()
+				.getIndentationSize(document);
+	}
+
+	protected char getIndentationChar(final IStructuredDocument document) {
+
+		return FormatterUtils.getFormatterCommonPrferences()
+				.getIndentationChar(document);
+	}
+
+	public void placeMatchingBlanksForStructuredDocument(
 			final IStructuredDocument document, final StringBuffer result,
 			final int lineNumber, final int forOffset, String commandText)
 			throws BadLocationException {
@@ -585,10 +597,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		int indentationArrayInitSize = FormatterUtils
 				.getFormatterCommonPrferences().getIndentationArrayInitSize(
 						document);
-		int indentationSize = FormatterUtils.getFormatterCommonPrferences()
-				.getIndentationSize(document);
-		char indentationChar = FormatterUtils.getFormatterCommonPrferences()
-				.getIndentationChar(document);
+		int indentationSize = getIndentationSize(document);
+		char indentationChar = getIndentationChar(document);
 		IndentationObject indentationObject = new IndentationObject();
 		indentationObject.indentationWrappedLineSize = indentationWrappedLineSize;
 		indentationObject.indentationArrayInitSize = indentationArrayInitSize;
