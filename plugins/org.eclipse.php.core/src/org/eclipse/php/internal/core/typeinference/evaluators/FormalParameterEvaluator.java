@@ -40,7 +40,7 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 		FormalParameter parameter = (FormalParameter) typedGoal.getExpression();
 
 		SimpleReference type = parameter.getParameterType();
-		if (type != null) {
+		if (type != null && "array".equals(type.getName()) == false) {
 			result = PHPClassType.fromSimpleReference(type);
 		} else {
 			IContext context = typedGoal.getContext();
@@ -87,9 +87,15 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 										// methodContext.getSourceModule(),
 										// references[1].sourceStart()));
 										// fix unit test testDoctag7.pdtt
+										String typeName = references[1]
+												.getName();
+										if (typeName.endsWith("[]")) {
+											typeName = typeName.replace("[]",
+													"");
+										}
 										result = PHPClassType
 												.fromTypeName(
-														references[1].getName(),
+														typeName,
 														methodContext
 																.getSourceModule(),
 														references[1]
