@@ -70,7 +70,9 @@ public abstract class AbstractClassInstantiationStrategy extends
 				// ParameterGuessingProposal
 				IMethod ctorMethod = FakeConstructor.createFakeConstructor(
 						null, type, type.equals(enclosingClass));
-				reporter.reportMethod(ctorMethod, suffix, replaceRange);
+
+				reporter.reportMethod(ctorMethod, suffix, replaceRange,
+						type.getFullyQualifiedName());
 			} else {
 				// if this is context information mode,we use this,
 				// because the number of types' length is very small
@@ -86,6 +88,7 @@ public abstract class AbstractClassInstantiationStrategy extends
 			}
 
 		}
+
 		addAlias(reporter, suffix);
 	}
 
@@ -106,13 +109,15 @@ public abstract class AbstractClassInstantiationStrategy extends
 
 		char nextChar = ' ';
 		try {
-			if(insertMode){
+			if (insertMode) {
 				nextChar = abstractContext.getNextChar();
-			}else{
+			} else {
 				SourceRange replacementRange = getReplacementRange(abstractContext);
-				nextChar = abstractContext.getDocument().getChar(replacementRange.getOffset()+replacementRange.getLength());
+				nextChar = abstractContext.getDocument().getChar(
+						replacementRange.getOffset()
+								+ replacementRange.getLength());
 			}
-			
+
 		} catch (BadLocationException e) {
 			PHPCorePlugin.log(e);
 		}
