@@ -267,6 +267,15 @@ public class PHPStructuredTextViewerConfiguration extends
 				}
 			}
 		}
+
+		// reset auto activation delay based on pdt's setting,because it was
+		// changed by wtp
+		IPreferencesService preferencesService = Platform
+				.getPreferencesService();
+		int fAutoActivationDelay = preferencesService.getInt(PHPCorePlugin.ID,
+				PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200, null);
+
+		fContentAssistant.setAutoActivationDelay(fAutoActivationDelay);
 	}
 
 	@Override
