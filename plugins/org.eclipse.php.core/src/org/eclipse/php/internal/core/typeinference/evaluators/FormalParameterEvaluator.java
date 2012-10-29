@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
+import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
 
@@ -40,7 +41,7 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 		FormalParameter parameter = (FormalParameter) typedGoal.getExpression();
 
 		SimpleReference type = parameter.getParameterType();
-		if (type != null) {
+		if (type != null && "array".equals(type.getName()) == false) {
 			result = PHPClassType.fromSimpleReference(type);
 		} else {
 			IContext context = typedGoal.getContext();
@@ -87,9 +88,15 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 										// methodContext.getSourceModule(),
 										// references[1].sourceStart()));
 										// fix unit test testDoctag7.pdtt
+										String typeName = references[1]
+												.getName();
+										if (typeName
+												.endsWith(PHPDocClassVariableEvaluator.BRACKETS)) {
+											typeName = typeName.substring(0, typeName.length() -2);
+										}
 										result = PHPClassType
 												.fromTypeName(
-														references[1].getName(),
+														typeName,
 														methodContext
 																.getSourceModule(),
 														references[1]
