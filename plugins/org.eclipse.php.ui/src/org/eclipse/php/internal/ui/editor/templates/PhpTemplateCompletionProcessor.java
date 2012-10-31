@@ -102,6 +102,18 @@ public class PhpTemplateCompletionProcessor extends
 				enclosingMethod = (IMethod) enclosingElement;
 			}
 
+			boolean isFieldAccess = false;
+
+			try {
+				if (offset > 2) {
+					String accessPrefix = document.get(offset - 2, 2);
+					if ("->".equals(accessPrefix) || "::".equals(accessPrefix)) {
+						isFieldAccess = true;
+					}
+				}
+			} catch (BadLocationException e) {
+			}
+
 			// find the most outer enclosing type if exists
 			while (enclosingElement != null
 					&& !(enclosingElement instanceof IType)) {
@@ -110,6 +122,7 @@ public class PhpTemplateCompletionProcessor extends
 			enclosingType = (IType) enclosingElement;
 
 			if (enclosingMethod == null && enclosingType == null) {
+
 				contextIds
 						.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
 				contextIds
@@ -128,14 +141,17 @@ public class PhpTemplateCompletionProcessor extends
 					contextIds
 							.add(PhpTemplateContextType.PHP_GLOBAL_MEMBERS_CONTEXT_TYPE_ID);
 				}
-			} else if (enclosingMethod != null && enclosingType != null) {
+			} else if (enclosingMethod != null && enclosingType != null
+					&& !isFieldAccess) {
+
 				if (!PHPFlags.isNamespace(enclosingType.getFlags())) {
 					contextIds
 							.add(PhpTemplateContextType.PHP_TYPE_METHOD_STATEMENTS_CONTEXT_TYPE_ID);
 				}
 				contextIds
 						.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
-			} else if (enclosingMethod != null && enclosingType == null) {
+			} else if (enclosingMethod != null && enclosingType == null
+					&& !isFieldAccess) {
 				contextIds
 						.add(PhpTemplateContextType.PHP_STATEMENTS_CONTEXT_TYPE_ID);
 			}
