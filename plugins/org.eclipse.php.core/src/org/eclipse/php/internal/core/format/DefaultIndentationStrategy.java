@@ -595,23 +595,44 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		indentationObject.indentationSize = indentationSize;
 		indentationObject.indentationChar = indentationChar;
 
-		// remove this
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// indentationObject.indentationWrappedLineSize = 0;
-		// indentationObject.indentationArrayInitSize = 0;
-		// indentationObject.indentationSize = 0;
-		// remove this
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 		boolean enterKeyPressed = document.getLineDelimiter().equals(
 				result.toString());
 		if (forOffset == 0) {
 			return;
 		}
-		int lastNonEmptyLineIndex = getIndentationBaseLine(document,
-				lineNumber, forOffset, false);
-		final int indentationBaseLineIndex = getIndentationBaseLine(document,
-				lineNumber, forOffset, true);
+
+		int lineOfOffset = document.getLineOfOffset(forOffset);
+		IRegion lineInformationOfOffset = document
+				.getLineInformation(lineOfOffset);
+		final String lineText = document.get(
+				lineInformationOfOffset.getOffset(),
+				lineInformationOfOffset.getLength());
+
+		int lastNonEmptyLineIndex;
+		final int indentationBaseLineIndex;
+		final int newForOffset;
+
+		// code for not formatting comments
+		if (lineText.trim().startsWith("//")) {
+			lastNonEmptyLineIndex = lineOfOffset;
+			indentationBaseLineIndex = lineOfOffset;
+			int i = lineInformationOfOffset.getOffset();
+			for (; i < lineInformationOfOffset.getOffset()
+					+ lineInformationOfOffset.getLength()
+					&& document.getChar(i) != '/'; i++)
+				;
+			newForOffset = (forOffset < i) ? i : forOffset;
+
+		}
+		// end
+		else {
+			newForOffset = forOffset;
+			lastNonEmptyLineIndex = getIndentationBaseLine(document,
+					lineNumber, newForOffset, false);
+			indentationBaseLineIndex = getIndentationBaseLine(document,
+					lineNumber, newForOffset, true);
+		}
+
 		final IRegion lastNonEmptyLine = document
 				.getLineInformation(lastNonEmptyLineIndex);
 		final IRegion indentationBaseLine = document
@@ -623,8 +644,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				+ lastNonEmptyLine.getLength();
 		int offset;
 		int line;
-		if (forOffset < lastLineEndOffset) {
-			offset = forOffset;
+		if (newForOffset < lastLineEndOffset) {
+			offset = newForOffset;
 			line = lineNumber;
 		} else {
 			offset = lastLineEndOffset;
@@ -634,7 +655,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			indent(document, result, indentationChar, indentationSize);
 		} else {
 			boolean intended = indentMultiLineCase(document, lineNumber,
-					forOffset, enterKeyPressed, result, blanks, commandText,
+					newForOffset, enterKeyPressed, result, blanks, commandText,
 					indentationObject);
 			if (!intended) {
 				lastNonEmptyLineIndex = lineNumber;
@@ -666,10 +687,10 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					// we use the same indentation of the last non-empty
 					// line.
 					boolean shouldNotChangeIndent = false;
-					if (forOffset != document.getLength()) {
+					if (newForOffset != document.getLength()) {
 						final IRegion lineInfo = document
 								.getLineInformation(lineNumber);
-						int nonEmptyOffset = forOffset;
+						int nonEmptyOffset = newForOffset;
 						if (!enterKeyPressed) {
 							if (nonEmptyOffset == lineInfo.getOffset()) {
 								nonEmptyOffset = moveLineStartToNonBlankChar(
