@@ -42,6 +42,8 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
 	private static final String SPLASH = "\\";
 
+	public static final String BRACKETS = "[]";
+
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
 	private final static Pattern ARRAY_TYPE_PATTERN = Pattern
@@ -106,6 +108,17 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 						if (m.find()) {
 							evaluated.add(getArrayType(m.group(),
 									currentNamespace, doc.sourceStart()));
+						} else if (typeName.endsWith(BRACKETS)
+								&& typeName.length() > 2) {
+							int offset = 0;
+							try {
+								offset = typeField.getSourceRange().getOffset();
+							} catch (ModelException e) {
+							}
+							evaluated.add(getArrayType(typeName.substring(0,
+									typeName.length() - 2), currentNamespace,
+									offset));
+
 						} else {
 							if (currentNamespace != null) {
 								ModuleDeclaration moduleDeclaration = SourceParserUtil
@@ -177,7 +190,9 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			int offset) {
 		int beginIndex = type.indexOf("[") + 1;
 		int endIndex = type.lastIndexOf("]");
-		type = type.substring(beginIndex, endIndex);
+		if (endIndex != -1) {
+			type = type.substring(beginIndex, endIndex);
+		}
 		MultiTypeType arrayType = new MultiTypeType();
 		Matcher m = ARRAY_TYPE_PATTERN.matcher(type);
 		if (m.find()) {
