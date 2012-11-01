@@ -327,13 +327,18 @@ public class UseStatementInjector {
 									// insert in the beginning of the
 									// current
 									// namespace:
+									int index = getLastUsestatementIndex(
+											currentNamespace.getBody()
+													.statements(), offset);
 									currentNamespace.getBody().statements()
-											.add(0, newUseStatement);
+											.add(index, newUseStatement);
 								} else {
 									// insert in the beginning of the
 									// document:
-									program.statements()
-											.add(0, newUseStatement);
+									int index = getLastUsestatementIndex(
+											program.statements(), offset);
+									program.statements().add(index,
+											newUseStatement);
 								}
 								Map options = new HashMap(
 										PHPCorePlugin.getOptions());
@@ -428,6 +433,18 @@ public class UseStatementInjector {
 		}
 
 		return offset;
+	}
+
+	private int getLastUsestatementIndex(List<Statement> statements, int offset) {
+		int result = 0;
+		for (int i = 0; i < statements.size(); i++) {
+			Statement statement = statements.get(i);
+			if (statement.getEnd() <= offset
+					&& statement instanceof UseStatement) {
+				result = i + 1;
+			}
+		}
+		return result;
 	}
 
 	/**
