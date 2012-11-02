@@ -11,25 +11,34 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
-import java.io.File;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.internal.corext.util.Messages;
+import org.eclipse.dltk.internal.ui.util.CoreUtility;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.*;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
+import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -37,6 +46,7 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.*;
+import org.eclipse.php.ui.util.PHPProjectUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -44,6 +54,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
@@ -52,6 +63,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class PHPProjectWizardFirstPage extends WizardPage implements
 		IPHPProjectCreateWizardPage {
+
 	public PHPProjectWizardFirstPage() {
 		super(PAGE_NAME);
 		setPageComplete(false);
@@ -59,6 +71,16 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		setDescription(NewWizardMessages.ScriptProjectWizardFirstPage_page_description);
 		fInitialName = ""; //$NON-NLS-1$
 	}
+
+	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$
+	protected static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
+	protected URI fCurrProjectLocation; // null if location is platform location
+
+	private boolean fKeepContent;
+
+	private File fDotProjectBackup;
+	private File fDotBuildpathBackup;
+	private Boolean fIsAutobuild;
 
 	private static final String PAGE_NAME = NewWizardMessages.ScriptProjectWizardFirstPage_page_title;
 	public static final String ERROR_MESSAGE = "ErrorMessage";
@@ -617,14 +639,305 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 
-		IWizardPage currentPage = getContainer().getCurrentPage();
-		if (!visible && currentPage != null) {
-			// going forward from 1st page to 2nd one
+		if (visible) {
+			// if there is a project we are going from 2nd to 1st
+			// remove the project
+			removeProject();
+		} else {
+			IWizardPage currentPage = getContainer().getCurrentPage();
 			if (currentPage instanceof IPHPProjectCreateWizardPage) {
+				// going forward from 1st page to 2nd one
+				changeToNewProject();
 				((IPHPProjectCreateWizardPage) currentPage).initPage();
 			}
 		}
 
+	}
+
+	private void removeProject() {
+		if (fNameGroup == null || fNameGroup.getName() == null
+				|| fNameGroup.getName().length() == 0) {
+			return;
+		}
+		if (getProjectHandle() == null || !getProjectHandle().exists()) {
+			return;
+		}
+
+		IRunnableWithProgress op = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor)
+					throws InvocationTargetException, InterruptedException {
+				doRemoveProject(monitor);
+			}
+		};
+
+		try {
+			getContainer().run(true, true,
+					new WorkspaceModifyDelegatingOperation(op));
+		} catch (InvocationTargetException e) {
+			final String title = NewWizardMessages.ScriptProjectWizardSecondPage_error_remove_title;
+			final String message = NewWizardMessages.ScriptProjectWizardSecondPage_error_remove_message;
+			ExceptionHandler.handle(e, getShell(), title, message);
+		} catch (InterruptedException e) {
+			// cancel pressed
+		}
+	}
+
+	final void doRemoveProject(IProgressMonitor monitor)
+			throws InvocationTargetException {
+		final boolean noProgressMonitor = (fCurrProjectLocation == null); // inside
+		// workspace
+		if (monitor == null || noProgressMonitor) {
+			monitor = new NullProgressMonitor();
+		}
+		monitor.beginTask(
+				NewWizardMessages.ScriptProjectWizardSecondPage_operation_remove,
+				3);
+		try {
+			try {
+				URI projLoc = getProjectHandle().getLocationURI();
+
+				boolean removeContent = !fKeepContent
+						&& getProjectHandle().isSynchronized(
+								IResource.DEPTH_INFINITE);
+				getProjectHandle().delete(removeContent, false,
+						new SubProgressMonitor(monitor, 2));
+
+			} finally {
+				CoreUtility.enableAutoBuild(fIsAutobuild.booleanValue()); // fIsAutobuild
+				// must
+				// be
+				// set
+				fIsAutobuild = null;
+			}
+		} catch (CoreException e) {
+			throw new InvocationTargetException(e);
+		} finally {
+			monitor.done();
+			fKeepContent = false;
+		}
+	}
+
+	private void changeToNewProject() {
+		fKeepContent = this.getDetect();
+
+		final IRunnableWithProgress op = new IRunnableWithProgress() {
+			public void run(IProgressMonitor monitor)
+					throws InvocationTargetException, InterruptedException {
+				try {
+					if (fIsAutobuild == null) {
+						fIsAutobuild = Boolean.valueOf(CoreUtility
+								.enableAutoBuild(false));
+					}
+					updateProject(monitor);
+				} catch (CoreException e) {
+					throw new InvocationTargetException(e);
+				} catch (OperationCanceledException e) {
+					throw new InterruptedException();
+				} finally {
+					monitor.done();
+				}
+			}
+		};
+
+		try {
+			getContainer().run(true, false,
+					new WorkspaceModifyDelegatingOperation(op));
+		} catch (InvocationTargetException e) {
+			final String title = NewWizardMessages.ScriptProjectWizardSecondPage_error_title;
+			final String message = NewWizardMessages.ScriptProjectWizardSecondPage_error_message;
+			ExceptionHandler.handle(e, getShell(), title, message);
+		} catch (InterruptedException e) {
+			// cancel pressed
+		}
+	}
+
+	/**
+	 * Called from the wizard on cancel.
+	 */
+	public void performCancel() {
+		removeProject();
+	}
+
+	/**
+	 * Helper method to create and open a IProject. The project location is
+	 * configured. No natures are added.
+	 * 
+	 * @param project
+	 *            The handle of the project to create.
+	 * @param locationURI
+	 *            The location of the project or <code>null</code> to create the
+	 *            project in the workspace
+	 * @param monitor
+	 *            a progress monitor to report progress or <code>null</code> if
+	 *            progress reporting is not desired
+	 * @throws CoreException
+	 *             if the project couldn't be created
+	 * @see org.eclipse.core.resources.IProjectDescription#setLocationURI(java.net.URI)
+	 * 
+	 */
+	public void createProject(IProject project, URI locationURI,
+			IProgressMonitor monitor) throws CoreException {
+		PHPProjectUtils.createProjectAt(project, locationURI, monitor);
+	}
+
+	protected void rememberExistingFiles(URI projectLocation)
+			throws CoreException {
+		fDotProjectBackup = null;
+		fDotBuildpathBackup = null;
+
+		IFileStore file = EFS.getStore(projectLocation);
+		if (file.fetchInfo().exists()) {
+			IFileStore projectFile = file.getChild(FILENAME_PROJECT);
+			if (projectFile.fetchInfo().exists()) {
+				fDotProjectBackup = createBackup(projectFile, "project-desc"); //$NON-NLS-1$ 
+			}
+			IFileStore buildpathFile = file.getChild(FILENAME_BUILDPATH);
+			if (buildpathFile.fetchInfo().exists()) {
+				fDotBuildpathBackup = createBackup(buildpathFile,
+						"buildpath-desc"); //$NON-NLS-1$ 
+			}
+		}
+	}
+
+	private void restoreExistingFiles(URI projectLocation,
+			IProgressMonitor monitor) throws CoreException {
+		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1
+				: 0)) * 2;
+		monitor.beginTask("", ticks); //$NON-NLS-1$
+		try {
+			if (fDotProjectBackup != null) {
+				IFileStore projectFile = EFS.getStore(projectLocation)
+						.getChild(FILENAME_PROJECT);
+				projectFile
+						.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
+				copyFile(fDotProjectBackup, projectFile,
+						new SubProgressMonitor(monitor, 1));
+			}
+		} catch (IOException e) {
+			IStatus status = new Status(
+					IStatus.ERROR,
+					DLTKUIPlugin.PLUGIN_ID,
+					IStatus.ERROR,
+					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project,
+					e);
+			throw new CoreException(status);
+		}
+		try {
+			if (fDotBuildpathBackup != null) {
+				IFileStore buildpathFile = EFS.getStore(projectLocation)
+						.getChild(FILENAME_BUILDPATH);
+				buildpathFile.delete(EFS.NONE, new SubProgressMonitor(monitor,
+						1));
+				copyFile(fDotBuildpathBackup, buildpathFile,
+						new SubProgressMonitor(monitor, 1));
+			}
+		} catch (IOException e) {
+			IStatus status = new Status(
+					IStatus.ERROR,
+					DLTKUIPlugin.PLUGIN_ID,
+					IStatus.ERROR,
+					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_buildpath,
+					e);
+			throw new CoreException(status);
+		}
+	}
+
+	private File createBackup(IFileStore source, String name)
+			throws CoreException {
+		try {
+			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$//$NON-NLS-2$
+			copyFile(source, bak);
+			return bak;
+		} catch (IOException e) {
+			IStatus status = new Status(
+					IStatus.ERROR,
+					DLTKUIPlugin.PLUGIN_ID,
+					IStatus.ERROR,
+					Messages.format(
+							NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup,
+							name), e);
+			throw new CoreException(status);
+		}
+	}
+
+	private void copyFile(IFileStore source, File target) throws IOException,
+			CoreException {
+		InputStream is = source.openInputStream(EFS.NONE, null);
+		FileOutputStream os = new FileOutputStream(target);
+		copyFile(is, os);
+	}
+
+	private void copyFile(File source, IFileStore target,
+			IProgressMonitor monitor) throws IOException, CoreException {
+		FileInputStream is = new FileInputStream(source);
+		OutputStream os = target.openOutputStream(EFS.NONE, monitor);
+		copyFile(is, os);
+	}
+
+	private void copyFile(InputStream is, OutputStream os) throws IOException {
+		try {
+			byte[] buffer = new byte[8192];
+			while (true) {
+				int bytesRead = is.read(buffer);
+				if (bytesRead == -1)
+					break;
+
+				os.write(buffer, 0, bytesRead);
+			}
+		} finally {
+			try {
+				is.close();
+			} finally {
+				os.close();
+			}
+		}
+	}
+
+	protected URI getProjectLocationURI() throws CoreException {
+		if (this.isInWorkspace()) {
+			return null;
+		}
+		return this.getLocationURI();
+	}
+
+	protected void updateProject(IProgressMonitor monitor)
+			throws CoreException, InterruptedException {
+
+		IProject projectHandle = this.getProjectHandle();
+		DLTKCore.create(projectHandle);
+		fCurrProjectLocation = getProjectLocationURI();
+
+		if (monitor == null) {
+			monitor = new NullProgressMonitor();
+		}
+		try {
+			monitor.beginTask(
+					NewWizardMessages.ScriptProjectWizardSecondPage_operation_initialize,
+					70);
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+
+			URI realLocation = fCurrProjectLocation;
+			if (fCurrProjectLocation == null) { // inside workspace
+				try {
+					URI rootLocation = ResourcesPlugin.getWorkspace().getRoot()
+							.getLocationURI();
+					realLocation = new URI(rootLocation.getScheme(), null, Path
+							.fromPortableString(rootLocation.getPath())
+							.append(projectHandle.getName()).toString(), null);
+				} catch (URISyntaxException e) {
+					Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
+				}
+			}
+
+			rememberExistingFiles(realLocation);
+
+			createProject(projectHandle, fCurrProjectLocation,
+					new SubProgressMonitor(monitor, 20));
+		} finally {
+			monitor.done();
+		}
 	}
 
 	public void initPage() {

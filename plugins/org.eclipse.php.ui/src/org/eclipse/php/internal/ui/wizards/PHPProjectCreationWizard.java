@@ -42,6 +42,8 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 
 	protected int fLastPageIndex = -1;
 
+	private PHPProjectWizardFacetsPage fFacetsPage;
+
 	public PHPProjectCreationWizard() {
 		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
 		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
@@ -57,6 +59,13 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 		fFirstPage
 				.setDescription(PHPUIMessages.PHPProjectCreationWizard_Page1Description);
 		addPage(fFirstPage);
+
+		fFacetsPage = new PHPProjectWizardFacetsPage(fFirstPage);
+		fFacetsPage
+				.setTitle(PHPUIMessages.PHPProjectCreationWizard_PageFacetsTitle);
+		fFacetsPage
+				.setDescription(PHPUIMessages.PHPProjectCreationWizard_PageFacetsDescription);
+		addPage(fFacetsPage);
 
 		// Second page (Include Path)
 		fSecondPage = new PHPProjectWizardSecondPage(fFirstPage);
@@ -145,7 +154,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 
 	public boolean performCancel() {
 		if (!fFirstPage.isExistingLocation())
-			fLastPage.performCancel();
+			fFirstPage.performCancel();
 		return super.performCancel();
 	}
 

@@ -167,6 +167,7 @@ public final class PHPUIMessages extends NLS {
 	public static String PhpTemplateNumberVariableResolver_2;
 	public static String Search_Error_openEditor_message;
 	public static String PHPProjectCreationWizard_Page1Title;
+	public static String PHPProjectCreationWizard_PageFacetsTitle;
 	public static String PHPSearchResultPage_sortByName;
 	public static String newPhpFile_wizard_templatePage_usePhpTemplate;
 	public static String ShowInNavigatorView_dialog_title;
@@ -296,6 +297,7 @@ public final class PHPUIMessages extends NLS {
 	public static String DragAdapter_problemTitle;
 	public static String CustomFiltersDialog_filterList_label;
 	public static String PHPProjectCreationWizard_Page1Description;
+	public static String PHPProjectCreationWizard_PageFacetsDescription;
 	public static String typingPage_autoAdd_phpDoc_tags;
 	public static String PHPBuildPreferencePage_title;
 	public static String PHPOutlineElementComparer_2;

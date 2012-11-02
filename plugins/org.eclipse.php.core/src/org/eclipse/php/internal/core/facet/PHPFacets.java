@@ -177,4 +177,16 @@ public class PHPFacets {
 		facetedProject.installProjectFacet(convertToFacetVersion(phpVersion),
 				null, monitor);
 	}
+
+	/**
+	 * Returns the faceted version of the core facet
+	 * 
+	 * @return core facet
+	 */
+	public static IProjectFacetVersion getCoreVersion() {
+		IProjectFacet coreFacet = ProjectFacetsManager
+				.getProjectFacet(PHPFacetsConstants.PHP_CORE_COMPONENT);
+		return coreFacet.getDefaultVersion();
+	}
+
 }

@@ -11,26 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
-import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.corext.util.Messages;
 import org.eclipse.dltk.internal.ui.util.CoreUtility;
 import org.eclipse.dltk.internal.ui.wizards.BuildpathDetector;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
-import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
@@ -74,8 +66,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 
 	private boolean fKeepContent;
 
-	private File fDotProjectBackup;
-	private File fDotBuildpathBackup;
 	private Boolean fIsAutobuild;
 
 	/**
@@ -85,9 +75,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		fFirstPage = mainPage;
 		fCurrProjectLocation = null;
 		fKeepContent = false;
-
-		fDotProjectBackup = null;
-		fDotBuildpathBackup = null;
 		fIsAutobuild = null;
 	}
 
@@ -97,27 +84,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 
 	protected boolean useNewSourcePage() {
 		return true;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.dialogs.IDialogPage#setVisible(boolean)
-	 */
-	public void setVisible(boolean visible) {
-		super.setVisible(visible);
-		IWizardPage currentPage = getContainer().getCurrentPage();
-		if (!visible && currentPage != null) {
-			// going back from 2nd page to 1st one
-			if (currentPage instanceof PHPProjectWizardFirstPage) {
-				IWizardPage nextPage = currentPage.getNextPage();
-				if (nextPage instanceof PHPProjectWizardSecondPage) {
-					((PHPProjectWizardSecondPage) nextPage).removeProject();
-				} else {
-					throw (new IllegalStateException());
-				}
-			}
-		}
 	}
 
 	private void changeToNewProject() {
@@ -172,21 +138,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-
-			URI realLocation = fCurrProjectLocation;
-			if (fCurrProjectLocation == null) { // inside workspace
-				try {
-					URI rootLocation = ResourcesPlugin.getWorkspace().getRoot()
-							.getLocationURI();
-					realLocation = new URI(rootLocation.getScheme(), null, Path
-							.fromPortableString(rootLocation.getPath())
-							.append(getProject().getName()).toString(), null);
-				} catch (URISyntaxException e) {
-					Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
-				}
-			}
-
-			rememberExistingFiles(realLocation);
 
 			createProject(getProject(), fCurrProjectLocation,
 					new SubProgressMonitor(monitor, 20));
@@ -394,119 +345,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		return fFirstPage.getLocationURI();
 	}
 
-	protected void rememberExistingFiles(URI projectLocation)
-			throws CoreException {
-		fDotProjectBackup = null;
-		fDotBuildpathBackup = null;
-
-		IFileStore file = EFS.getStore(projectLocation);
-		if (file.fetchInfo().exists()) {
-			IFileStore projectFile = file.getChild(FILENAME_PROJECT);
-			if (projectFile.fetchInfo().exists()) {
-				fDotProjectBackup = createBackup(projectFile, "project-desc"); //$NON-NLS-1$ 
-			}
-			IFileStore buildpathFile = file.getChild(FILENAME_BUILDPATH);
-			if (buildpathFile.fetchInfo().exists()) {
-				fDotBuildpathBackup = createBackup(buildpathFile,
-						"buildpath-desc"); //$NON-NLS-1$ 
-			}
-		}
-	}
-
-	private void restoreExistingFiles(URI projectLocation,
-			IProgressMonitor monitor) throws CoreException {
-		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1
-				: 0)) * 2;
-		monitor.beginTask("", ticks); //$NON-NLS-1$
-		try {
-			if (fDotProjectBackup != null) {
-				IFileStore projectFile = EFS.getStore(projectLocation)
-						.getChild(FILENAME_PROJECT);
-				projectFile
-						.delete(EFS.NONE, new SubProgressMonitor(monitor, 1));
-				copyFile(fDotProjectBackup, projectFile,
-						new SubProgressMonitor(monitor, 1));
-			}
-		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_project,
-					e);
-			throw new CoreException(status);
-		}
-		try {
-			if (fDotBuildpathBackup != null) {
-				IFileStore buildpathFile = EFS.getStore(projectLocation)
-						.getChild(FILENAME_BUILDPATH);
-				buildpathFile.delete(EFS.NONE, new SubProgressMonitor(monitor,
-						1));
-				copyFile(fDotBuildpathBackup, buildpathFile,
-						new SubProgressMonitor(monitor, 1));
-			}
-		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					NewWizardMessages.ScriptProjectWizardSecondPage_problem_restore_buildpath,
-					e);
-			throw new CoreException(status);
-		}
-	}
-
-	private File createBackup(IFileStore source, String name)
-			throws CoreException {
-		try {
-			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$//$NON-NLS-2$
-			copyFile(source, bak);
-			return bak;
-		} catch (IOException e) {
-			IStatus status = new Status(
-					IStatus.ERROR,
-					DLTKUIPlugin.PLUGIN_ID,
-					IStatus.ERROR,
-					Messages.format(
-							NewWizardMessages.ScriptProjectWizardSecondPage_problem_backup,
-							name), e);
-			throw new CoreException(status);
-		}
-	}
-
-	private void copyFile(IFileStore source, File target) throws IOException,
-			CoreException {
-		InputStream is = source.openInputStream(EFS.NONE, null);
-		FileOutputStream os = new FileOutputStream(target);
-		copyFile(is, os);
-	}
-
-	private void copyFile(File source, IFileStore target,
-			IProgressMonitor monitor) throws IOException, CoreException {
-		FileInputStream is = new FileInputStream(source);
-		OutputStream os = target.openOutputStream(EFS.NONE, monitor);
-		copyFile(is, os);
-	}
-
-	private void copyFile(InputStream is, OutputStream os) throws IOException {
-		try {
-			byte[] buffer = new byte[8192];
-			while (true) {
-				int bytesRead = is.read(buffer);
-				if (bytesRead == -1)
-					break;
-
-				os.write(buffer, 0, bytesRead);
-			}
-		} finally {
-			try {
-				is.close();
-			} finally {
-				os.close();
-			}
-		}
-	}
-
 	/**
 	 * Called from the wizard on finish.
 	 */
@@ -554,65 +392,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		ProjectOptions.setPhpVersion(phpVersion, getProject());
 	}
 
-	private void removeProject() {
-		if (getProject() == null || !getProject().exists()) {
-			return;
-		}
-
-		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException, InterruptedException {
-				doRemoveProject(monitor);
-			}
-		};
-
-		try {
-			getContainer().run(true, true,
-					new WorkspaceModifyDelegatingOperation(op));
-		} catch (InvocationTargetException e) {
-			final String title = NewWizardMessages.ScriptProjectWizardSecondPage_error_remove_title;
-			final String message = NewWizardMessages.ScriptProjectWizardSecondPage_error_remove_message;
-			ExceptionHandler.handle(e, getShell(), title, message);
-		} catch (InterruptedException e) {
-			// cancel pressed
-		}
-	}
-
-	final void doRemoveProject(IProgressMonitor monitor)
-			throws InvocationTargetException {
-		final boolean noProgressMonitor = (fCurrProjectLocation == null); // inside
-		// workspace
-		if (monitor == null || noProgressMonitor) {
-			monitor = new NullProgressMonitor();
-		}
-		monitor.beginTask(
-				NewWizardMessages.ScriptProjectWizardSecondPage_operation_remove,
-				3);
-		try {
-			try {
-				URI projLoc = getProject().getLocationURI();
-
-				boolean removeContent = !fKeepContent
-						&& getProject()
-								.isSynchronized(IResource.DEPTH_INFINITE);
-				getProject().delete(removeContent, false,
-						new SubProgressMonitor(monitor, 2));
-
-			} finally {
-				CoreUtility.enableAutoBuild(fIsAutobuild.booleanValue()); // fIsAutobuild
-				// must
-				// be
-				// set
-				fIsAutobuild = null;
-			}
-		} catch (CoreException e) {
-			throw new InvocationTargetException(e);
-		} finally {
-			monitor.done();
-			fKeepContent = false;
-		}
-	}
-
 	/**
 	 * Helper method to create and open a IProject. The project location is
 	 * configured. No natures are added.
@@ -633,13 +412,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	public void createProject(IProject project, URI locationURI,
 			IProgressMonitor monitor) throws CoreException {
 		PHPProjectUtils.createProjectAt(project, locationURI, monitor);
-	}
-
-	/**
-	 * Called from the wizard on cancel.
-	 */
-	public void performCancel() {
-		removeProject();
 	}
 
 	public IProject getCurrProject() {
