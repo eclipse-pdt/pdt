@@ -613,7 +613,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		final int newForOffset;
 
 		// code for not formatting comments
-		if (lineText.trim().startsWith("//")) {
+		if (lineText.trim().startsWith("//") && enterKeyPressed) {
 			lastNonEmptyLineIndex = lineOfOffset;
 			indentationBaseLineIndex = lineOfOffset;
 			int i = lineInformationOfOffset.getOffset();
@@ -622,7 +622,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					&& document.getChar(i) != '/'; i++)
 				;
 			newForOffset = (forOffset < i) ? i : forOffset;
-
+			
 		}
 		// end
 		else {
