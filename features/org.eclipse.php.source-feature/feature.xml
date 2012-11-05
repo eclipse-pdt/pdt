@@ -24,7 +24,7 @@
       %license
    </license>
 
-  <plugin
+   <plugin
          id="org.eclipse.php.core.source"
          download-size="0"
          install-size="0"
@@ -61,13 +61,6 @@
 
    <plugin
          id="org.eclipse.php.ui.source"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.php.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
