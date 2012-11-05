@@ -464,6 +464,18 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 
 		protected int getStartOfNextNode(int nextIndex, int defaultPos) {
+			// workaround for bug 393253
+			if (nextIndex > 0
+					&& this.list[nextIndex].getChangeKind() == RewriteEvent.INSERTED
+					&& this.list[nextIndex - 1].getChangeKind() == RewriteEvent.UNCHANGED
+					&& this.list[nextIndex].getNewValue() instanceof UseStatement
+					&& this.list[nextIndex - 1].getOriginalValue() instanceof UseStatement) {
+				if (((UseStatement) this.list[nextIndex].getNewValue())
+						.getStart() > 0) {
+					return ((UseStatement) this.list[nextIndex].getNewValue())
+							.getStart();
+				}
+			}
 			for (int i = nextIndex; i < this.list.length; i++) {
 				RewriteEvent elem = this.list[i];
 				if (elem.getChangeKind() != RewriteEvent.INSERTED) {

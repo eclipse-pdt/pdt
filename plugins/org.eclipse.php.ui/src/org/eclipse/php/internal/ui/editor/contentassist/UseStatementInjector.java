@@ -330,6 +330,20 @@ public class UseStatementInjector {
 									int index = getLastUsestatementIndex(
 											currentNamespace.getBody()
 													.statements(), offset);
+									if (index > 0) {// workaround for bug 393253
+										try {
+											int beginLine = document
+													.getLineOfOffset(program
+															.statements()
+															.get(index - 1)
+															.getEnd()) + 1;
+											newUseStatement
+													.setSourceRange(
+															document.getLineOffset(beginLine),
+															0);
+										} catch (Exception e) {
+										}
+									}
 									currentNamespace.getBody().statements()
 											.add(index, newUseStatement);
 								} else {
@@ -337,6 +351,20 @@ public class UseStatementInjector {
 									// document:
 									int index = getLastUsestatementIndex(
 											program.statements(), offset);
+									if (index > 0) {// workaround for bug 393253
+										try {
+											int beginLine = document
+													.getLineOfOffset(program
+															.statements()
+															.get(index - 1)
+															.getEnd()) + 1;
+											newUseStatement
+													.setSourceRange(
+															document.getLineOffset(beginLine),
+															0);
+										} catch (Exception e) {
+										}
+									}
 									program.statements().add(index,
 											newUseStatement);
 								}
