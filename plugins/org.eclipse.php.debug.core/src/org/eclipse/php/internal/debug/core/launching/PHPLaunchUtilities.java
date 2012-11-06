@@ -926,15 +926,9 @@ public class PHPLaunchUtilities {
 				: "off";
 
 		List<String> cmdLineList = new LinkedList<String>();
-		if (phpVersion != null && phpVersion.startsWith("4")) {
-			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c",
-					phpConfigDir, "-d", "asp_tags=" + aspTags, "-d",
-					"short_open_tag=" + shortOpenTag, scriptPath }));
-		} else {
-			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-n", "-c",
-					phpConfigDir, "-d", "asp_tags=" + aspTags, "-d",
-					"short_open_tag=" + shortOpenTag, scriptPath }));
-		}
+		cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c",
+				phpConfigDir, "-d", "asp_tags=" + aspTags, "-d",
+				"short_open_tag=" + shortOpenTag, scriptPath }));
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
 		}
