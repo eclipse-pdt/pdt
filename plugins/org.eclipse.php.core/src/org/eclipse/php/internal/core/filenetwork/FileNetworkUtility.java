@@ -29,7 +29,7 @@ import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.model.IncludeField;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
-import org.eclipse.php.internal.core.util.PHPSearchEngine;
+import org.eclipse.php.internal.core.util.*;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedPharFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
@@ -158,8 +158,7 @@ public class FileNetworkUtility {
 		}
 
 		IModelElement parentElement = (file instanceof ExternalSourceModule) ? ((ExternalSourceModule) file)
-				.getProjectFragment()
-				: file.getScriptProject();
+				.getProjectFragment() : file.getScriptProject();
 
 		IField[] includes = includesCache.get(parentElement);
 		if (includes == null) {
@@ -171,8 +170,8 @@ public class FileNetworkUtility {
 		for (IField include : includes) {
 			String filePath = ((IncludeField) include).getFilePath();
 			String lastSegment = filePath;
-			int i = Math.max(filePath.lastIndexOf('/'), filePath
-					.lastIndexOf('\\'));
+			int i = Math.max(filePath.lastIndexOf('/'),
+					filePath.lastIndexOf('\\'));
 			if (i > 0) {
 				lastSegment = lastSegment.substring(i + 1);
 			}
@@ -299,13 +298,18 @@ public class FileNetworkUtility {
 	}
 
 	public static ISourceModule findSourceModule(ISourceModule from, String path) {
+		return findSourceModule(from, path, null);
+	}
+
+	public static ISourceModule findSourceModule(ISourceModule from,
+			String path, Set<String> exclusiveFiles) {
 		ISourceModule sourceModule = null;
 
 		IProject currentProject = from.getScriptProject().getProject();
 		String currentScriptDir = from.getParent().getPath().toString();
 		String currentWorkingDir = currentScriptDir; // currentProject.getFullPath().toString();
 		Result<?, ?> result = PHPSearchEngine.find(path, currentWorkingDir,
-				currentScriptDir, currentProject);
+				currentScriptDir, currentProject, exclusiveFiles);
 
 		if (result instanceof ResourceResult) {
 			// workspace file

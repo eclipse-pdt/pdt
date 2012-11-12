@@ -81,8 +81,22 @@ public class PHPSearchEngine implements IIncludepathListener {
 				currentScriptDir, currentProject);
 	}
 
+	public static Result<?, ?> find(String path, String currentWorkingDir,
+			String currentScriptDir, IProject currentProject,
+			Set<String> exclusiveFiles) {
+		return getInstance().internalFind(path, currentWorkingDir,
+				currentScriptDir, currentProject, exclusiveFiles);
+	}
+
 	private Result<?, ?> internalFind(String path, String currentWorkingDir,
 			String currentScriptDir, IProject currentProject) {
+		return internalFind(path, currentWorkingDir, currentScriptDir,
+				currentProject, null);
+	}
+
+	private Result<?, ?> internalFind(String path, String currentWorkingDir,
+			String currentScriptDir, IProject currentProject,
+			Set<String> exclusiveFiles) {
 		if (path == null || currentWorkingDir == null
 				|| currentScriptDir == null || currentProject == null) {
 			throw new NullPointerException("Parameters can't be null");
@@ -99,6 +113,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 			// ./ or ../
 			return searchExternalOrWorkspaceFile(currentWorkingDir, path);
 		}
+		List<Result> list = new ArrayList<PHPSearchEngine.Result>();
 
 		// look into include path:
 		IncludePath[] includePaths = buildIncludePath(currentProject);
@@ -113,10 +128,21 @@ public class PHPSearchEngine implements IIncludepathListener {
 			} else {
 				IContainer container = (IContainer) includePath.getEntry();
 				IResource resource = container.findMember(path);
-				if (resource instanceof IFile) {
-					return new ResourceResult((IFile) resource);
+				if ((resource instanceof IFile)) {
+					Result result = new ResourceResult((IFile) resource);
+					if (exclusiveFiles == null
+							|| !exclusiveFiles.contains(resource.getLocation()
+									.toOSString())) {
+						return result;
+					} else {
+						list.add(result);
+					}
+
 				}
 			}
+		}
+		if (!list.isEmpty()) {
+			return list.get(0);
 		}
 
 		// look at current script directory:
@@ -279,7 +305,9 @@ public class PHPSearchEngine implements IIncludepathListener {
 
 	private static Result<?, ?> searchExternalOrWorkspaceFile(File file) {
 		if (file.exists()) {
-			IFile res = ResourcesPlugin.getWorkspace().getRoot()
+			IFile res = ResourcesPlugin
+					.getWorkspace()
+					.getRoot()
 					.getFileForLocation(
 							Path.fromOSString(file.getAbsolutePath()));
 			if (res != null) {
