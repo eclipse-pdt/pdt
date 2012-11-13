@@ -843,7 +843,7 @@
 				definitionId="org.eclipse.php.ui.navigate.open.type" disabledIcon="icons/full/dtool16/opentype.gif"
 				icon="icons/full/etool16/opentype.gif" id="openType"
 				label="%OpenTypeAction.label" menubarPath="navigate/open.ext2"
-				tooltip="%OpenTypeAction.tooltip" toolbarPath="org.eclipse.search.searchActionSet/Search" />
+				tooltip="%OpenTypeAction.tooltip" />
 			<action class="org.eclipse.php.internal.ui.actions.OpenMethodAction"
 				definitionId="org.eclipse.php.ui.navigate.open.method" disabledIcon="icons/full/dtool16/openmethod.gif"
 				icon="icons/full/etool16/openmethod.gif" id="openMethod"
