@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.php.debug.ui,
  org.eclipse.wst.sse.ui,
  org.eclipse.help,
- org.eclipse.equinox.security;bundle-version="1.0.100"
+ org.eclipse.equinox.security;bundle-version="1.0.100",
+ org.eclipse.dltk.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.internal.server;x-internal:=true,
  org.eclipse.php.internal.server.ui;x-internal:=true,
