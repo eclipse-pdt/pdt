@@ -11,30 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hyperlink;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.filesystem.IFileInfo;
-import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.compiler.problem.IProblem;
-import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.ui.editor.DocumentAdapter;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.ui.editor.ModelElementHyperlink;
-import org.eclipse.dltk.launching.ScriptRuntime;
-import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.actions.OpenAction;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -48,8 +36,6 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
-import org.eclipse.ui.IURIEditorInput;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
@@ -127,16 +113,7 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 			set.add(sourceModule.getResource().getLocation().toOSString());
 			ISourceModule includedSourceModule = FileNetworkUtility
 					.findSourceModule(sourceModule, file[0], set);
-			if (includedSourceModule == null) {
-				includedSourceModule = createFakeSourceModule(file[0]);
-			}
 			if (includedSourceModule != null) {
-				return new IHyperlink[] { new ModelElementHyperlink(
-						selectRegion[0], includedSourceModule, new OpenAction(
-								editor)) };
-			} else {
-				includedSourceModule = createFakeSourceModule(file[0]);
-
 				return new IHyperlink[] { new ModelElementHyperlink(
 						selectRegion[0], includedSourceModule, new OpenAction(
 								editor)) };
@@ -153,135 +130,4 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 				&& (region1.getOffset() + region1.getLength() <= region2
 						.getOffset() + region2.getLength());
 	}
-
-	private ISourceModule createFakeSourceModule(String filePath) {
-		// filePath = normalize(filePath);
-		try {
-			final IFileStore fileStore = EFS.getLocalFileSystem().getStore(
-					new Path(filePath));
-			IFileInfo fetchInfo = fileStore.fetchInfo();
-			if (!fetchInfo.isDirectory() && fetchInfo.exists()) {
-				IURIEditorInput editorInput = new FileStoreEditorInput(
-						fileStore);
-				final URI uri = editorInput.getURI();
-				// final IFileStore fileStore = EFS.getStore(uri);
-				final IPath path = URIUtil.toPath(uri);
-				final String fileStoreName = fileStore.getName();
-				if (fileStoreName == null || path == null)
-					return null;
-
-				WorkingCopyOwner woc = new WorkingCopyOwner() {
-					/*
-					 * @see
-					 * org.eclipse.jdt.core.WorkingCopyOwner#createBuffer(org
-					 * .eclipse .jdt.core.ICompilationUnit)
-					 * 
-					 * @since 3.2
-					 */
-					public IBuffer createBuffer(ISourceModule workingCopy) {
-						return new DocumentAdapter(workingCopy, fileStore, path);
-					}
-				};
-
-				IBuildpathEntry[] cpEntries = null;
-				IScriptProject jp = findScriptProject(path);
-				if (jp != null)
-					cpEntries = jp.getResolvedBuildpath(true);
-
-				if (cpEntries == null || cpEntries.length == 0)
-					cpEntries = new IBuildpathEntry[] { ScriptRuntime
-							.getDefaultInterpreterContainerEntry() };
-
-				final ISourceModule cu = woc.newWorkingCopy(fileStoreName,
-						cpEntries, new IProblemRequestor() {
-
-							public void acceptProblem(IProblem problem) {
-								// TODO Auto-generated method stub
-
-							}
-
-							public void beginReporting() {
-								// TODO Auto-generated method stub
-
-							}
-
-							public void endReporting() {
-								// TODO Auto-generated method stub
-
-							}
-
-							public boolean isActive() {
-								// TODO Auto-generated method stub
-								return false;
-							}
-						}, new NullProgressMonitor());
-
-				// if (!isModifiable(editorInput))
-				ScriptModelUtil.reconcile(cu);
-
-				return cu;
-
-			}
-		} catch (CoreException ex) {
-			return null;
-		}
-		return null;
-	}
-
-	private String normalize(String filePath) {
-		// TODO Auto-generated method stub
-		IPath path = new Path(filePath);
-		List<String> segmentList = new ArrayList<String>();
-		for (int i = path.segments().length - 1; i >= 0; i--) {
-			String segment = path.segments()[i];
-			int j = 0;
-			while (segment.equals("..") && i - j > 0) {
-				// i--;
-				j++;
-				segment = path.segments()[i - j];
-			}
-			if (i - 2 * j >= 0) {
-				segment = path.segments()[i - 2 * j];
-				segmentList.add(segment);
-			}
-		}
-		IPath newPath = new Path(path.getDevice(), "");
-		for (int i = segmentList.size() - 1; i >= 0; i--) {
-			newPath.append(segmentList.get(i));
-		}
-		return null;
-	}
-
-	/**
-	 * Fuzzy search for script project in the workspace that matches the given
-	 * path.
-	 * 
-	 * @param path
-	 *            the path to match
-	 * @return the matching script project or <code>null</code>
-	 * 
-	 */
-	private IScriptProject findScriptProject(IPath path) {
-		if (path == null)
-			return null;
-
-		String[] pathSegments = path.segments();
-		IScriptModel model = DLTKCore.create(DLTKUIPlugin.getWorkspace()
-				.getRoot());
-		IScriptProject[] projects;
-		try {
-			projects = model.getScriptProjects();
-		} catch (ModelException e) {
-			return null; // ignore - use default RE
-		}
-		for (int i = 0; i < projects.length; i++) {
-			IPath projectPath = projects[i].getProject().getFullPath();
-			String projectSegment = projectPath.segments()[0];
-			for (int j = 0; j < pathSegments.length; j++)
-				if (projectSegment.equals(pathSegments[j]))
-					return projects[i];
-		}
-		return null;
-	}
-
 }
