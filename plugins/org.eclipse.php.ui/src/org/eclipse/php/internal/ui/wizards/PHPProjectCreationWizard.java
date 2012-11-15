@@ -21,7 +21,9 @@ import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.facet.PHPFacets;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.ui.INewWizard;
@@ -103,9 +105,12 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 			selectAndReveal(fLastPage.getScriptProject().getProject());
 
 			IProject project = fLastPage.getScriptProject().getProject();
+			PHPVersion version = fFirstPage.getPHPVersionValue();
+			if (version == null) {
+				version = ProjectOptions.getDefaultPhpVersion();
+			}
 			try {
-				PHPFacets.createFacetedProject(project,
-						fFirstPage.getPHPVersionValue(),
+				PHPFacets.createFacetedProject(project, version,
 						new NullProgressMonitor());
 			} catch (CoreException ex) {
 				PHPCorePlugin.log(ex);
