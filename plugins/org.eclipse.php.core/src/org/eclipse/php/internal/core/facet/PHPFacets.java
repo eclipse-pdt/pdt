@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
@@ -137,9 +136,6 @@ public class PHPFacets {
 	 * @return the php facets version
 	 */
 	public static IProjectFacetVersion convertToFacetVersion(PHPVersion version) {
-		if (version == null) {
-			version = ProjectOptions.getDefaultPhpVersion();
-		}
 		IProjectFacet phpFacet = ProjectFacetsManager
 				.getProjectFacet(PHPFacetsConstants.PHP_COMPONENT);
 		switch (version) {
