@@ -26,6 +26,7 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	private final String methodName;
 	private IType[] types;
 	private IEvaluatedType evaluatedType;
+	private String[] argNames;
 
 	public AbstractMethodReturnTypeGoal(IContext context,
 			IEvaluatedType evaluatedType, String methodName) {
@@ -41,6 +42,16 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 		Assert.isNotNull(methodName);
 		this.methodName = methodName;
 		this.types = types;
+	}
+
+	public AbstractMethodReturnTypeGoal(IContext context,
+			IEvaluatedType evaluatedType, String methodName, String[] argNames) {
+		this(context, evaluatedType, methodName);
+		this.argNames = argNames;
+	}
+
+	public String[] getArgNames() {
+		return argNames;
 	}
 
 	public String getMethodName() {

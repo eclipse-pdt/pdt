@@ -12,8 +12,10 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
@@ -21,6 +23,8 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
@@ -84,8 +88,22 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 				previousResult = null;
 			}
 			state = STATE_WAITING_METHOD;
+			CallArgumentsList args = expression.getArgs();
+			String[] argNames = null;
+			if (args != null && args.getChilds() != null) {
+				List childs = args.getChilds();
+				int i = 0;
+				argNames = new String[childs.size()];
+				for (Object o : childs) {
+					if (o instanceof Scalar) {
+						Scalar arg = (Scalar) o;
+						argNames[i] = ASTUtils.stripQuotes(arg.getValue());
+					}
+					i++;
+				}
+			}
 			return new MethodElementReturnTypeGoal(typedGoal.getContext(),
-					receiverType, expression.getName());
+					receiverType, expression.getName(), argNames);
 		}
 
 		if (state == STATE_WAITING_METHOD) {
