@@ -48,7 +48,7 @@
 			sequence="M3+M2+D H" />
 		<!--M3+M2+Y,M3+M2+H, M1+M2+V,1+M2+Z   -->
 	    <key
-            sequence="M1+M2+Z"
+            sequence="M1+M2+N"
             contextId="org.eclipse.ui.contexts.dialogAndWindow"
             commandId="org.eclipse.php.debug.ui.commands.Inspect"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
