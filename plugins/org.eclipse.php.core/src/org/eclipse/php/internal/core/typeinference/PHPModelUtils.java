@@ -1919,7 +1919,8 @@ public class PHPModelUtils {
 			throws ModelException {
 
 		int typeFlags = type.getFlags();
-		for (IMethod method : type.getMethods()) {
+		IMethod[] methods = getTypeMethod(type, "", false);
+		for (IMethod method : methods) {
 			String methodName = method.getElementName();
 			int methodFlags = method.getFlags();
 			boolean isAbstract = PHPFlags.isAbstract(methodFlags);
