@@ -67,17 +67,18 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		PROJECT_WIZARD_ID
 				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard");
 
+		PROJECT_WIZARD_ID.add("com.zend.php.ccm.ui.ccmProjectWizard");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.localphp");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.cvs.ui.projectWizard");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.existingphp");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.git.ui.projectWizard");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.github.ui.projectWizard");
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.openshift.ui.projectWizard");
 		PROJECT_WIZARD_ID
 				.add("com.zend.php.ui.wizards.PHPRemoteProjectCreationWizard");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.svn.ui.SVNProjectWizard");
 		PROJECT_WIZARD_ID.add("com.zend.php.ide.phpcloud.ui.projectWizard");
 		PROJECT_WIZARD_ID.add("com.zend.php.ccm.ui.restfulProjectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.openshift.ui.projectWizard");
 		PROJECT_WIZARD_ID_SET.addAll(PROJECT_WIZARD_ID);
 
 		PROJECT_WIZARD_ID
