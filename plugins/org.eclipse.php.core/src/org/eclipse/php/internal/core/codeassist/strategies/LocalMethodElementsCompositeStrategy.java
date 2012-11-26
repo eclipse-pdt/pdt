@@ -16,6 +16,7 @@ import java.util.Collection;
 
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
+import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 
 /**
@@ -36,6 +37,14 @@ public class LocalMethodElementsCompositeStrategy extends
 		strategies.add(new GlobalConstantsStrategy(context));
 		strategies.add(new GlobalKeywordsStrategy(context));
 		strategies.add(new MethodKeywordStrategy(context));
+	}
+
+	@Override
+	public void init(CompletionCompanion companion) {
+		super.init(companion);
+		for (ICompletionStrategy strategy : strategies) {
+			strategy.init(companion);
+		}
 	}
 
 	public void apply(ICompletionReporter reporter) throws Exception {

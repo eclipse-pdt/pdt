@@ -5,7 +5,6 @@ org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <? class MyClass { function getInstance() { pare|} } ?> 
 --EXPECT--
-keyword(parent)
 type(ParentIterator)
 
 

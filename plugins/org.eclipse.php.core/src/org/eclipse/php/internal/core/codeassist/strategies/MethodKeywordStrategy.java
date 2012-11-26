@@ -11,8 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ITypeHierarchy;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
+import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
@@ -50,6 +55,29 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 	 */
 	@Override
 	protected boolean filterKeyword(KeywordData keyword) {
+		// if the class does not have parent
+		if ((keyword.context & PHPKeywords.METHOD_BODY) != 0
+				&& keyword.name.equals("parent")) {
+			ICompletionContext context = getContext();
+			if (context instanceof GlobalMethodStatementContext) {
+				GlobalMethodStatementContext globalContext = (GlobalMethodStatementContext) context;
+				IType type = globalContext.getEnclosingType();
+				try {
+					if (PHPFlags.isClass(type.getFlags())) {
+						ITypeHierarchy hierarchy = getCompanion()
+								.getSuperTypeHierarchy(type, null);
+						IType[] superTypes = hierarchy.getAllSupertypes(type);
+						for (IType superType : superTypes) {
+							if (PHPFlags.isClass(superType.getFlags())) {
+								return false;
+							}
+						}
+					}
+				} catch (ModelException e) {
+				}
+				return true;
+			}
+		}
 		return (keyword.context & PHPKeywords.METHOD_BODY) == 0;
 	}
 
