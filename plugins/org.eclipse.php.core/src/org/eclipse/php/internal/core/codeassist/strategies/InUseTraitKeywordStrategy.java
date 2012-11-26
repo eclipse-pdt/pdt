@@ -6,7 +6,7 @@ import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassStatementContext;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
 public class InUseTraitKeywordStrategy extends KeywordsStrategy {
@@ -32,7 +32,7 @@ public class InUseTraitKeywordStrategy extends KeywordsStrategy {
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
-		ClassStatementContext context = (ClassStatementContext) getContext();
+		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
 		String prefix = context.getPrefix();
 		String suffix = "";
 		SourceRange replaceRange = getReplacementRange(context);
