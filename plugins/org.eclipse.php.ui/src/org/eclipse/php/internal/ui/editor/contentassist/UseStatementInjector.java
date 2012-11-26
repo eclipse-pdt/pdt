@@ -333,7 +333,8 @@ public class UseStatementInjector {
 									if (index > 0) {// workaround for bug 393253
 										try {
 											int beginLine = document
-													.getLineOfOffset(program
+													.getLineOfOffset(currentNamespace
+															.getBody()
 															.statements()
 															.get(index - 1)
 															.getEnd()) + 1;
