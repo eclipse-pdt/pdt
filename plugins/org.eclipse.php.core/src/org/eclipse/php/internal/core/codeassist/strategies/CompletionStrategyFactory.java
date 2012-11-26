@@ -213,7 +213,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					return new ICompletionStrategy[] { new InUseTraitKeywordStrategy(
 							context) };
 				} else {
-					return new ICompletionStrategy[] {};
+					return new ICompletionStrategy[] {
+							new ClassFieldsStrategy(context),
+							new ClassMethodsStrategy(context) };
 				}
 			} else {
 				return new ICompletionStrategy[] {
