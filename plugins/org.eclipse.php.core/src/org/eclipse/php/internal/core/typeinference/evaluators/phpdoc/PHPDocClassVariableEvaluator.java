@@ -140,6 +140,10 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 												.getFullyQualifiedName();
 										typeName = typeName.replace(prefix,
 												fullName);
+										if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+											typeName = NamespaceReference.NAMESPACE_SEPARATOR
+													+ typeName;
+										}
 									}
 								} else if (typeName.indexOf(SPLASH) < 0) {
 									String prefix = typeName;
@@ -153,6 +157,10 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 												.getNamespace()
 												.getFullyQualifiedName();
 										typeName = fullName;
+										if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+											typeName = NamespaceReference.NAMESPACE_SEPARATOR
+													+ typeName;
+										}
 									}
 								}
 							}
@@ -204,6 +212,28 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		for (String name : typeNames) {
 			if (!"".equals(name)) {
 
+				if (name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
+						&& currentNamespace != null) {
+					// check if the first part is an
+					// alias,then get the full name
+					ModuleDeclaration moduleDeclaration = SourceParserUtil
+							.getModuleDeclaration(currentNamespace
+									.getSourceModule());
+					String prefix = name.substring(0, name
+							.indexOf(NamespaceReference.NAMESPACE_SEPARATOR));
+					final Map<String, UsePart> result = PHPModelUtils
+							.getAliasToNSMap(prefix, moduleDeclaration, offset,
+									currentNamespace, true);
+					if (result.containsKey(prefix)) {
+						String fullName = result.get(prefix).getNamespace()
+								.getFullyQualifiedName();
+						name = name.replace(prefix, fullName);
+						if (name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+							name = NamespaceReference.NAMESPACE_SEPARATOR
+									+ name;
+						}
+					}
+				}
 				arrayType.addType(getEvaluatedType(name, currentNamespace));
 			}
 		}
@@ -214,6 +244,12 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			IType currentNamespace) {
 		IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
 		if (type == null) {
+			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
+					&& currentNamespace != null) {
+				typeName = NamespaceReference.NAMESPACE_SEPARATOR
+						+ currentNamespace.getElementName()
+						+ NamespaceReference.NAMESPACE_SEPARATOR + typeName;
+			}
 			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
 					|| currentNamespace == null) {
 				type = new PHPClassType(typeName);

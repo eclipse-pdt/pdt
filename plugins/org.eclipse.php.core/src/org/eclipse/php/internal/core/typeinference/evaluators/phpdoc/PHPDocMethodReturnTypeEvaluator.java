@@ -131,7 +131,7 @@ public class PHPDocMethodReturnTypeEvaluator extends
 				if (docBlock == null) {
 					return IGoal.NO_GOALS;
 				}
-				
+
 				evaluateReturnType(returnTypeList, docBlock, method);
 				typeNames = returnTypeList.toArray(new String[returnTypeList
 						.size()]);
@@ -197,6 +197,10 @@ public class PHPDocMethodReturnTypeEvaluator extends
 												.getFullyQualifiedName();
 										typeName = typeName.replace(prefix,
 												fullName);
+										if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+											typeName = NamespaceReference.NAMESPACE_SEPARATOR
+													+ typeName;
+										}
 									}
 								} else if (typeName
 										.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
@@ -212,6 +216,10 @@ public class PHPDocMethodReturnTypeEvaluator extends
 												.getNamespace()
 												.getFullyQualifiedName();
 										typeName = fullName;
+										if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+											typeName = NamespaceReference.NAMESPACE_SEPARATOR
+													+ typeName;
+										}
 									}
 								}
 							}
@@ -269,6 +277,10 @@ public class PHPDocMethodReturnTypeEvaluator extends
 						String fullName = result.get(prefix).getNamespace()
 								.getFullyQualifiedName();
 						name = name.replace(prefix, fullName);
+						if (name.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+							name = NamespaceReference.NAMESPACE_SEPARATOR
+									+ name;
+						}
 					}
 				}
 				arrayType.addType(getEvaluatedType(name, currentNamespace));
@@ -281,6 +293,12 @@ public class PHPDocMethodReturnTypeEvaluator extends
 			IType currentNamespace) {
 		IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
 		if (type == null) {
+			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
+					&& currentNamespace != null) {
+				typeName = NamespaceReference.NAMESPACE_SEPARATOR
+						+ currentNamespace.getElementName()
+						+ NamespaceReference.NAMESPACE_SEPARATOR + typeName;
+			}
 			if (typeName.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1
 					|| currentNamespace == null) {
 				type = new PHPClassType(typeName);

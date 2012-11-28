@@ -1,0 +1,38 @@
+--TEST--
+Should complete current namespace class defined in function
+--FILE--
+<?php
+namespace foo\bar\baz
+{
+class Target { function foo_bar_baz(); }
+}
+
+namespace bar\baz
+{
+class Target { function bar_baz(); }
+}
+
+namespace foo
+{
+class TestAbsolute
+{
+/**
+* @return \bar\baz\Target
+*/
+function test() {}
+}
+
+class TestRelative
+{
+/**
+* @return bar\baz\Target
+*/
+function test() {}
+}
+
+$testRelative = new TestRelative();
+$testRelative->test()->| // hint appears for bar_baz() again, this is WRONG. It should be foo_bar_baz()
+}
+?>
+--EXPECT--
+method(foo_bar_baz)

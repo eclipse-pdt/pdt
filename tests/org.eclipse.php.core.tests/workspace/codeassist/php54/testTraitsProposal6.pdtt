@@ -23,12 +23,10 @@ trait B {
 }
 class Aliased_Talker {
     use A, B {
-        B::smallTalk insteadof A;
-        A::bigTalk insteadof B;//test
-        B::bigTalk |;
+        B::|;
     }
 }
 ?>
 --EXPECT--
-keyword(as)
-keyword(insteadof)
+method(bigTalk)
+method(smallTalk)

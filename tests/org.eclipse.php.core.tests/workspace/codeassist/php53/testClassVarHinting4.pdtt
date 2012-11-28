@@ -18,7 +18,7 @@ namespace NS3 {
 // use NS2;
 class TestClass {
 	/**
-	 * @var NS1\If1|NS2\If2
+	 * @var \NS1\If1|\NS2\If2
 	 */
 	public $_testObject;
 } 
