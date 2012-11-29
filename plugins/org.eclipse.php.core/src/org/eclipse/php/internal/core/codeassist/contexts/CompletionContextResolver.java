@@ -94,7 +94,8 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				new GotoStatementContext(), new NamespaceUseNameContext(),
 				new NamespaceDeclContext(), new IncludeStatementContext(),
 				new ExceptionClassInstantiationContext(),
-				new TypeCastingContext(), new NamespacePHPDocVarStartContext() };
+				new TypeCastingContext(), new NamespacePHPDocVarStartContext(),
+				new QuotesContext() };
 	}
 
 	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset,

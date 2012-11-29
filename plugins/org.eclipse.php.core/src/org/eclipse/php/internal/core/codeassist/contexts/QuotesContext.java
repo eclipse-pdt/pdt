@@ -20,7 +20,7 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
  * 
  * @author michael
  */
-public abstract class QuotesContext extends AbstractCompletionContext {
+public class QuotesContext extends AbstractCompletionContext {
 
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
