@@ -60,9 +60,16 @@ public class TraitUtils {
 			useTrait = new UseTrait();
 		}
 		for (TypeReference typeReference : statement.getTraitList()) {
+			String name = typeReference.getName();
+			if (typeReference instanceof FullyQualifiedReference) {
+				FullyQualifiedReference reference = (FullyQualifiedReference) typeReference;
+				if (reference.getNamespace() != null) {
+					name = reference.getNamespace().getName()
+							+ NamespaceReference.NAMESPACE_SEPARATOR + name;
+				}
+			}
 			useTrait.getTraits().add(
-					PHPModelUtils.getFullName(typeReference.getName(),
-							sourceModule, offset));
+					PHPModelUtils.getFullName(name, sourceModule, offset));
 		}
 
 		for (TraitStatement traitStatement : statement.getTsList()) {

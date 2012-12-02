@@ -1,0 +1,24 @@
+--TEST--
+Test trait Members 8
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+trait AnotherA {
+	public function smallTalk() {
+		echo 'a';
+	}
+	public function bigTalk() {
+		echo 'A';
+	}
+}
+
+class Aliased_Talker {
+	use AnotherA {
+		AnotherA::| // Should get the methods smallTalk and bigTalk after the ::
+	}
+}
+?>
+--EXPECT--
+method(bigTalk)
+method(smallTalk)

@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 
@@ -171,8 +172,12 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			Map<ASTNode, IContext> staticDeclarations = searcher
 					.getStaticDeclarations();
 			for (ASTNode node : staticDeclarations.keySet()) {
-				subGoals.add(new ExpressionTypeGoal(staticDeclarations
-						.get(node), node));
+				IContext context = staticDeclarations.get(node);
+				if (context instanceof MethodContext) {
+					MethodContext methodContext = (MethodContext) context;
+					methodContext.setCurrentType(realType);
+				}
+				subGoals.add(new ExpressionTypeGoal(context, node));
 			}
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG) {

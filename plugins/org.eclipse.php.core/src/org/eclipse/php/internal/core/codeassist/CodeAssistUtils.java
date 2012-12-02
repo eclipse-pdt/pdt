@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -136,21 +137,9 @@ public class CodeAssistUtils {
 					varReference);
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
-
-			if (evaluatedType instanceof MultiTypeType) {
-				List<IType> tmpList = new LinkedList<IType>();
-				List<IEvaluatedType> possibleTypes = ((MultiTypeType) evaluatedType)
-						.getTypes();
-				for (IEvaluatedType possibleType : possibleTypes) {
-					IType[] tmpArray = PHPTypeInferenceUtils.getModelElements(
-							possibleType, (ISourceModuleContext) context,
-							position, (IModelAccessCache) null);
-					if (tmpArray != null) {
-						tmpList.addAll(Arrays.asList(tmpArray));
-					}
-				}
-				// the elements are filtered already
-				return tmpList.toArray(new IType[tmpList.size()]);
+			if (evaluatedType instanceof MultiTypeType
+					|| evaluatedType instanceof AmbiguousType) {
+				return getTypes(position, context, evaluatedType);
 			}
 
 			IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
@@ -160,6 +149,36 @@ public class CodeAssistUtils {
 			}
 		}
 		return EMPTY_TYPES;
+	}
+
+	private static IType[] getTypes(int position, IContext context,
+			IEvaluatedType evaluatedType) {
+		List<IType> tmpList = new LinkedList<IType>();
+		List<IEvaluatedType> possibleTypes = new LinkedList<IEvaluatedType>();
+		if (evaluatedType instanceof MultiTypeType) {
+			possibleTypes = ((MultiTypeType) evaluatedType).getTypes();
+		} else if (evaluatedType instanceof AmbiguousType) {
+			possibleTypes.addAll(Arrays.asList(((AmbiguousType) evaluatedType)
+					.getPossibleTypes()));
+		} else {
+			possibleTypes.add(evaluatedType);
+		}
+		for (IEvaluatedType possibleType : possibleTypes) {
+			IType[] tmpArray;
+			if (possibleType instanceof MultiTypeType
+					|| possibleType instanceof AmbiguousType) {
+				tmpArray = getTypes(position, context, possibleType);
+			} else {
+				tmpArray = PHPTypeInferenceUtils.getModelElements(possibleType,
+						(ISourceModuleContext) context, position,
+						(IModelAccessCache) null);
+			}
+			if (tmpArray != null) {
+				tmpList.addAll(Arrays.asList(tmpArray));
+			}
+		}
+		// the elements are filtered already
+		return tmpList.toArray(new IType[tmpList.size()]);
 	}
 
 	/**
@@ -184,8 +203,9 @@ public class CodeAssistUtils {
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
 
-			IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
-					evaluatedType, (ISourceModuleContext) context, position);
+			IType[] modelElements = getTypes(position, context, evaluatedType);
+			// IType[] modelElements = PHPTypeInferenceUtils.getModelElements(
+			// evaluatedType, (ISourceModuleContext) context, position);
 			if (modelElements != null) {
 				return modelElements;
 			}

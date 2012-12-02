@@ -1,0 +1,41 @@
+--TEST--
+Test trait Members 8
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?php
+namespace Traits; // Second line that breaks it
+
+trait singleton {
+
+	private static $oInstance;
+
+	public static function getSingleton() {
+		if(!self::$oInstance instanceof self) {
+			self::$oInstance = new self;
+		}
+		return self::$oInstance;
+	}
+}
+namespace TestNamespace;
+
+require_once '386637.php';
+
+class UnNameSpacedClass {
+
+	/**
+	 * @var \UnNameSpacedClass
+	 * @return \UnNameSpacedClass
+	 */
+	use \Traits\singleton; // First line that breaks it
+
+	public function testFunction() {
+		echo 'Test Function';
+	}
+}
+// Test 1: Not Working
+UnNameSpacedClass::getSingleton()->|
+?>
+--EXPECT--
+method(getSingleton)
+method(testFunction)
