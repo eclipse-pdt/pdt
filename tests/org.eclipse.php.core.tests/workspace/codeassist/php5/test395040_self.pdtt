@@ -1,0 +1,16 @@
+--TEST--
+Test global constant.
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+class MyClass {
+	function test($param) {
+		$a = 1;
+		| // trigger Content Assist at cursor position "|"
+	}
+}
+?>
+--EXPECT--
+keyword(self)
+?>
