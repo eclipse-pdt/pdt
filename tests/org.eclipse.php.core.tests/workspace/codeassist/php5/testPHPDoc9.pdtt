@@ -1,0 +1,19 @@
+--TEST--
+Test PHPDoc Function Return Type
+--FILE--
+<?php
+class T1{
+	function test(){
+		/* @var $t2 T2 */
+		$t2->| //... not works, cause of new bug (even if T2 class declared below), this part was working previously
+	}
+}
+class T2{
+	function test(){
+		/* @var $t1 T1 */
+		$t1->
+	}
+}
+?>
+--EXPECT--
+method(test)
