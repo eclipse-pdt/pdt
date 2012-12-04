@@ -25,7 +25,6 @@ class AAA {}
 
 namespace myNS\subNS1;
 use myNS\subNS\AAA;
-
 /**
  * @author Administrator
  *
