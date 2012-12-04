@@ -7,10 +7,10 @@ org.eclipse.php.core/contentAssistShowStrictOptions=false
 class MyClass {
 	function test($param) {
 		$a = 1;
-		self|
+		parent|
 	}
 }
 ?>
 --EXPECT--
-keyword(self)
+keyword(ParentIterator)
 ?>
