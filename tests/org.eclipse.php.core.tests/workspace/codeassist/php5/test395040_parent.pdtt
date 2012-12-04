@@ -12,5 +12,5 @@ class MyClass {
 }
 ?>
 --EXPECT--
-keyword(ParentIterator)
+type(ParentIterator)
 ?>
