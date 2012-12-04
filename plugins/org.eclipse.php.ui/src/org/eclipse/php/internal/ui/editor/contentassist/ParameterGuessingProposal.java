@@ -170,10 +170,25 @@ public final class ParameterGuessingProposal extends
 	}
 
 	private void dealSuffix(IDocument document, int offset) {
+		boolean toggleEating = isToggleEating();
+		boolean instertCompletion = insertCompletion();
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=395654
+		// workaround for GlobalTypesStrategy.getReplacementRange()
+		if (instertCompletion && toggleEating) {
+			setReplacementLength(getReplacementLength() + 1);
+		}
+
 		String replacement = getReplacementString();
 		if (replacement.endsWith(RPAREN)) {
-			if (cursorInBrackets(document, offset + 1)) {
-				setReplacementLength(getReplacementLength() + 2);
+			if (instertCompletion && toggleEating) {
+				if (cursorInBrackets(document, getReplacementOffset()
+						+ getReplacementLength() + 1)) {
+					setReplacementLength(getReplacementLength() + 2);
+				}
+			} else {
+				if (cursorInBrackets(document, offset + 1)) {
+					setReplacementLength(getReplacementLength() + 2);
+				}
 			}
 		} else {
 			// deal with case that a method that do not have parameters but with

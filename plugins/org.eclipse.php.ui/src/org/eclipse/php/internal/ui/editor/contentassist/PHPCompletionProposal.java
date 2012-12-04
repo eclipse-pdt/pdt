@@ -76,6 +76,14 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 	}
 
 	public void apply(IDocument document, char trigger, int offset) {
+		boolean toggleEating = isToggleEating();
+		boolean instertCompletion = insertCompletion();
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=395654
+		// workaround for GlobalTypesStrategy.getReplacementRange()
+		if (instertCompletion && toggleEating) {
+			setReplacementLength(getReplacementLength() + 1);
+		}
+
 		IModelElement modelElement = getModelElement();
 
 		boolean activateCodeAssist = false;
