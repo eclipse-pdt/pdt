@@ -315,8 +315,8 @@
          point="org.eclipse.wst.common.project.facet.core.facets">
       <project-facet
             id="php.core.component">
-         <label>%PHPFacet.core.label</label>
-         <description>%PHPFacet.core.description</description>
+         <label>PHP Core Facet</label>
+         <description>PHP Core Facet</description>
       </project-facet>
       <project-facet-version facet="php.core.component" version="1">
          <constraint>
@@ -328,8 +328,8 @@
       </project-facet-version>
       <project-facet
             id="php.component">
-         <label>%PHPFacet.label</label>
-         <description>%PHPFacet.description</description>
+         <label>PHP Facet</label>
+         <description>PHP Facet</description>
       </project-facet>
       <project-facet-version facet="php.component" version="4">
          <constraint>
