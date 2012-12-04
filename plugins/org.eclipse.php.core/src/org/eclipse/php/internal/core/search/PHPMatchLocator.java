@@ -22,10 +22,7 @@ import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.compiler.util.HashtableOfIntValues;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.SearchMatch;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
@@ -33,6 +30,7 @@ import org.eclipse.dltk.core.search.matching.PatternLocator;
 import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
 import org.eclipse.dltk.internal.core.search.matching.MethodPattern;
 import org.eclipse.dltk.internal.core.search.matching.OrPattern;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -256,6 +254,13 @@ public class PHPMatchLocator extends MatchLocator {
 	public SearchMatch newMethodReferenceMatch(IModelElement enclosingElement,
 			int accuracy, int offset, int length, boolean isConstructor,
 			boolean isSynthetic, ASTNode reference) {
+		return newMethodReferenceMatch(enclosingElement, accuracy, offset,
+				length, isConstructor, isSynthetic, reference, pattern);
+	}
+
+	public SearchMatch newMethodReferenceMatch(IModelElement enclosingElement,
+			int accuracy, int offset, int length, boolean isConstructor,
+			boolean isSynthetic, ASTNode reference, SearchPattern pattern) {
 		if (pattern instanceof MethodPattern
 				&& (reference instanceof PHPCallExpression)) {
 			PHPCallExpression pce = (PHPCallExpression) reference;
@@ -279,13 +284,45 @@ public class PHPMatchLocator extends MatchLocator {
 											reference);
 								}
 							} else {
-								// MethodPattern methodPattern = (MethodPattern) pattern;
+								MethodPattern methodPattern = (MethodPattern) pattern;
+								if (methodPattern.declaringSimpleName != null
+										&& elements[i]
+												.getAncestor(IModelElement.TYPE) != null
+										&& PHPFlags
+												.isClass(((IType) elements[i]
+														.getAncestor(IModelElement.TYPE))
+														.getFlags())
+										&& new String(
+												methodPattern.declaringSimpleName)
+												.equalsIgnoreCase(((IType) elements[i]
+														.getParent())
+														.getElementName())) {
+
+									return super.newMethodReferenceMatch(
+											enclosingElement, accuracy, offset,
+											length, isConstructor, isSynthetic,
+											reference);
+								} else if (methodPattern.declaringSimpleName == null
+										&& (elements[i]
+												.getAncestor(IModelElement.TYPE) == null || elements[i]
+												.getAncestor(IModelElement.TYPE) != null
+												&& !PHPFlags
+														.isClass(((IType) elements[i]
+																.getAncestor(IModelElement.TYPE))
+																.getFlags()))) {
+
+									return super.newMethodReferenceMatch(
+											enclosingElement, accuracy, offset,
+											length, isConstructor, isSynthetic,
+											reference);
+								}
+
 								// if (new String(methodPattern.selector)
 								// .equals(elements[i].getElementName())) {
-								return super.newMethodReferenceMatch(
-										enclosingElement, accuracy, offset,
-										length, isConstructor, isSynthetic,
-										reference);
+								// return super.newMethodReferenceMatch(
+								// enclosingElement, accuracy, offset,
+								// length, isConstructor, isSynthetic,
+								// reference);
 								// }
 
 							}
@@ -297,8 +334,15 @@ public class PHPMatchLocator extends MatchLocator {
 				}
 			}
 		} else if (pattern instanceof OrPattern) {
-			return super.newMethodReferenceMatch(enclosingElement, accuracy,
-					offset, length, isConstructor, isSynthetic, reference);
+			for (SearchPattern searchPattern : ((OrPattern) pattern)
+					.getPatterns()) {
+				if (searchPattern instanceof MethodPattern) {
+					return newMethodReferenceMatch(enclosingElement, accuracy,
+							offset, length, isConstructor, isSynthetic,
+							reference, searchPattern);
+				}
+
+			}
 		}
 		return null;
 	}
