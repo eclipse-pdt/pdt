@@ -277,6 +277,63 @@ public class PHPModelUtils {
 		return elements;
 	}
 
+	public static <T extends IModelElement> Collection<T> fileNetworkFilterTypes(
+			ISourceModule sourceModule, Collection<T> elements,
+			IModelAccessCache cache, boolean isNs, IProgressMonitor monitor) {
+
+		if (elements != null && elements.size() > 0) {
+			List<T> filteredElements = new LinkedList<T>();
+
+			// If some of elements belong to current file return just it:
+			for (T element : elements) {
+				try {
+					if (sourceModule.equals(element.getOpenable())
+							&& (isNs
+									&& PHPFlags.isNamespace(((IType) element)
+											.getFlags()) || !isNs
+									&& !PHPFlags.isNamespace(((IType) element)
+											.getFlags()))) {
+						filteredElements.add(element);
+					}
+				} catch (ModelException e) {
+				}
+			}
+			if (filteredElements.size() == 0) {
+				ReferenceTree referenceTree;
+				if (cache != null) {
+					referenceTree = cache.getFileHierarchy(sourceModule,
+							monitor);
+				} else {
+					// Filter by includes network
+					referenceTree = FileNetworkUtility
+							.buildReferencedFilesTree(sourceModule, monitor);
+				}
+				for (T element : elements) {
+					if (LanguageModelInitializer
+							.isLanguageModelElement(element)
+							|| referenceTree.find(((ModelElement) element)
+									.getSourceModule())) {
+						try {
+							if ((isNs
+									&& PHPFlags.isNamespace(((IType) element)
+											.getFlags()) || !isNs
+									&& !PHPFlags.isNamespace(((IType) element)
+											.getFlags()))) {
+								filteredElements.add(element);
+							}
+						} catch (ModelException e) {
+						}
+
+					}
+				}
+			}
+			if (filteredElements.size() > 0) {
+				elements = filteredElements;
+			}
+		}
+		return elements;
+	}
+
 	/**
 	 * Determine whether givent elements represent the same type and name, but
 	 * declared in different files (determine whether file network filtering can
