@@ -272,8 +272,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 	final void doTextInsert(int offset, String insertString,
 			TextEditGroup editGroup) {
-		if (isInsertUseStatement && insertString.trim().length() == 0) {
-			return;
+		if (isInsertUseStatement && insertString.trim().length() > 0) {
+			insertString = insertString.replaceAll("\r", "").replaceAll("\n",
+					"");
 		}
 		if (insertString.length() > 0) {
 			// bug fix for 95839: problem with inserting at the end of a line
