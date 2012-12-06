@@ -12,10 +12,11 @@ package org.eclipse.php.internal.ui.editor.highlighters;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.internal.core.ast.nodes.Expression;
+import org.eclipse.php.internal.core.ast.nodes.FunctionInvocation;
+import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.search.AbstractOccurrencesFinder;
 import org.eclipse.php.internal.ui.editor.highlighter.AbstractSemanticApply;
@@ -56,45 +57,16 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 					fLastUseParts, fCurrentNamespace);
 			IModelElement[] elements = PhpModelAccess.getDefault().findMethods(
 					fullName, MatchRule.EXACT, 0, 0, createSearchScope(), null);
-			if (elements != null && elements.length == 1 && elements[0] != null) {
-				if (ModelUtils.isExternalElement(elements[0])) {
-					highlight(identifier);
+			if (elements != null && elements.length > 0 && elements[0] != null) {
+				for (IModelElement modelElement : elements) {
+					if (modelElement != null) {
+						if (ModelUtils.isExternalElement(modelElement)) {
+							highlight(identifier);
+							return;
+						}
+					}
 				}
 			}
-			// nodeToFullName.put(identifier, fullName);
-		}
-
-		// public boolean visit(FunctionInvocation functionInvocation) {
-		// final Expression functionName = functionInvocation
-		// .getFunctionName().getName();
-		// final int invocationParent = functionInvocation.getParent()
-		// .getType();
-		// if ((functionName.getType() == ASTNode.IDENTIFIER || functionName
-		// .getType() == ASTNode.NAMESPACE_NAME)
-		// && invocationParent != ASTNode.STATIC_METHOD_INVOCATION) {
-		// if (functionName instanceof Identifier) {
-		// if (isInternalFunction(functionInvocation.getFunctionName())) {
-		// highlight(functionName);
-		// }
-		// }
-		// //
-		// }
-		// return true;
-		// }
-
-		private boolean isInternalFunction(FunctionName functionName) {
-			try {
-				ISourceModule module = getSourceModule();
-				IModelElement[] elements = module.codeSelect(
-						functionName.getStart(), functionName.getLength());
-				if (elements.length == 1 && elements[0] != null) {
-					IModelElement element = (IModelElement) elements[0];
-					return ModelUtils.isExternalElement(element);
-				}
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
-			return false;
 		}
 	}
 
