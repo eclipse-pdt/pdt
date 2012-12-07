@@ -1391,8 +1391,7 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 	 * Handle a change to the given input reported from an
 	 * {@link org.eclipse.compare.structuremergeviewer.ICompareInputChangeListener}
 	 * . This class registers a listener with its input and reports any change
-	 * events through this method. By default, this method prompts for any
-	 * unsaved changes and then refreshes the viewer. Subclasses may override.
+	 * events through this method. Subclasses may override.
 	 * 
 	 * @since 3.3
 	 */
@@ -1400,33 +1399,7 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 		// before setting the new input we have to save the old
 		Object input = getInput();
 		if (isLeftDirty() || isRightDirty()) {
-
-			if (Utilities.RUNNING_TESTS) {
-				if (Utilities.TESTING_FLUSH_ON_COMPARE_INPUT_CHANGE) {
-					flushContent(input, null);
-				}
-			} else {
-				// post alert
-				Shell shell = fComposite.getShell();
-
-				MessageDialog dialog = new MessageDialog(shell, "", //$NON-NLS-1$
-						null, // accept the default window icon
-						"", //$NON-NLS-1$
-						MessageDialog.QUESTION, new String[] {
-								IDialogConstants.YES_LABEL, // 0
-								IDialogConstants.NO_LABEL, // 1
-						}, 0); // default button index
-
-				switch (dialog.open()) { // open returns index of pressed button
-				case 0:
-					flushContent(input, null);
-					break;
-				case 1:
-					setLeftDirty(false);
-					setRightDirty(false);
-					break;
-				}
-			}
+			flushContent(input, null);
 		}
 		refresh();
 	}
