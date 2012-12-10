@@ -1105,11 +1105,6 @@
             description="%command.newWizard.description"
             id="org.eclipse.php.ui.newWizard"
             name="%command.newWizard.name">
-         <commandParameter
-               id="newWizardId"
-               name="%command.newWizard.newWizardIdParameter.name"
-               optional="true"
-               values="org.eclipse.ui.internal.registry.WizardParameterValues$New"/>
       </command>
 	</extension>
 
