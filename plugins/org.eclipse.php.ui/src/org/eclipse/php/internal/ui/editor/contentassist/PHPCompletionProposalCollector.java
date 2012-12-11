@@ -238,12 +238,9 @@ public class PHPCompletionProposalCollector extends
 				String prefix = "";
 				try {
 					int flags = type.getFlags();
-					IType currentNamespace = PHPModelUtils.getCurrentNamespace(
-							getSourceModule(), getReplacementOffset());
 					IType namespace = PHPModelUtils.getCurrentNamespace(type);
 					if (!PHPFlags.isNamespace(flags)
 							&& namespace == null
-							// && currentNamespace != null
 							&& !ProjectOptions.getPhpVersion(
 									PHPCompletionProposalCollector.this
 											.getScriptProject().getProject())
