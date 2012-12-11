@@ -243,7 +243,7 @@ public class PHPCompletionProposalCollector extends
 					IType namespace = PHPModelUtils.getCurrentNamespace(type);
 					if (!PHPFlags.isNamespace(flags)
 							&& namespace == null
-							&& currentNamespace != null
+							// && currentNamespace != null
 							&& !ProjectOptions.getPhpVersion(
 									PHPCompletionProposalCollector.this
 											.getScriptProject().getProject())
