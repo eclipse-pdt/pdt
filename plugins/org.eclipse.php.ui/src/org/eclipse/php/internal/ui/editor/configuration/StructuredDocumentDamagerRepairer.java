@@ -45,7 +45,7 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 				if (!phpScriptRegion.isFullReparsed()) {
 					Region r = new Region(
 							phpScriptRegion.getUpdatedTokensStart()
-									+ phpScriptRegion.getStart(),
+									+ region.getOffset(),
 							phpScriptRegion.getUpdatedTokensLength());
 					return new TextPresentation((IRegion) r, 1000);
 				}
