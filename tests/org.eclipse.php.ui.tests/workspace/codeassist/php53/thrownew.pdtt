@@ -1,0 +1,14 @@
+--TEST--
+Test instance of class
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace test;
+throw new Exception|
+?>
+--EXPECT--
+<?php
+namespace test;
+throw new \Exception()
+?>

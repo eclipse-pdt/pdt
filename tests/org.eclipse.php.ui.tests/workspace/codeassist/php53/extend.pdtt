@@ -1,0 +1,20 @@
+--TEST--
+Test instance of class
+--PREFERENCES--
+org.eclipse.php.core/contentAssistInsertCompletion=true
+--FILE--
+<?php
+namespace test;
+class Testddd extends Exception|{
+	public static function run( ){
+	}
+}
+?>
+--EXPECT--
+<?php
+namespace test;
+class Testddd extends \Exception{
+	public static function run( ){
+	}
+}
+?>

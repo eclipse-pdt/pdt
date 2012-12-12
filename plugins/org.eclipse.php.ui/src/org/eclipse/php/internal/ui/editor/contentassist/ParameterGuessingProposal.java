@@ -23,11 +23,16 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.link.*;
+import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeConstructor;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.template.contentassist.PositionBasedCompletionProposal;
 import org.eclipse.swt.graphics.Point;
@@ -56,17 +61,22 @@ public final class ParameterGuessingProposal extends
 	private Object extraInfo;
 	private boolean fReplacementLengthComputed;
 	private String alias = null;
+	private IDocument document = null;
+	private IScriptProject sProject = null;
 
 	public ParameterGuessingProposal(CompletionProposal proposal,
 			IScriptProject jproject, ISourceModule cu, String methodName,
 			String[] paramTypes, int start, int length, String displayName,
-			String completionProposal, boolean fillBestGuess, Object extraInfo) {
+			String completionProposal, boolean fillBestGuess, Object extraInfo,
+			IDocument document) {
 		super(jproject, cu, methodName, paramTypes, start, length, displayName,
 				completionProposal);
 		this.fProposal = proposal;
 		method = (IMethod) fProposal.getModelElement();
 		this.fFillBestGuess = fillBestGuess;
 		this.extraInfo = extraInfo;
+		this.document = document;
+		this.sProject = jproject;
 	}
 
 	/**
@@ -243,8 +253,35 @@ public final class ParameterGuessingProposal extends
 	}
 
 	public String getReplacementString() {
+		String prefix = "";
+		try {
+			if (method.isConstructor()) {
+				IType type = method.getDeclaringType();
+				try {
+					int flags = type.getFlags();
+					IType currentNamespace = PHPModelUtils.getCurrentNamespace(
+							fSourceModule, getReplacementOffset());
+					IType namespace = PHPModelUtils.getCurrentNamespace(type);
+					if (!PHPFlags.isNamespace(flags)
+							&& namespace == null
+							&& currentNamespace != null
+							&& !ProjectOptions.getPhpVersion(
+									sProject.getProject()).isLessThan(
+									PHPVersion.PHP5_3)
+							&& document.getChar(getReplacementOffset() - 1) != NamespaceReference.NAMESPACE_SEPARATOR) {
+						prefix = prefix
+								+ NamespaceReference.NAMESPACE_SEPARATOR;
+					}
+				} catch (ModelException e) {
+					PHPUiPlugin.log(e);
+				} catch (BadLocationException e) {
+					PHPUiPlugin.log(e);
+				}
+			}
+		} catch (ModelException e) {
+		}
 		if (ProposalExtraInfo.isMethodOnly(extraInfo)) {
-			setReplacementString(method.getElementName());
+			setReplacementString(prefix + method.getElementName());
 			return super.getReplacementString();
 		}
 		boolean fileArgumentNames = Platform.getPreferencesService()
@@ -252,7 +289,10 @@ public final class ParameterGuessingProposal extends
 						PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, true,
 						null);
 		if (fileArgumentNames && !fReplacementStringComputed)
-			setReplacementString(computeReplacementString());
+			setReplacementString(prefix + computeReplacementString());
+		if (!fileArgumentNames)
+			setReplacementString(prefix + super.getReplacementString());
+
 		return super.getReplacementString();
 	}
 

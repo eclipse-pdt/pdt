@@ -202,7 +202,7 @@ public class PHPCompletionProposalCollector extends
 			int start, int length, String label, String string, Object extraInfo) {
 		return new ParameterGuessingProposal(proposal, scriptProject,
 				sourceModule, name, paramTypes, start, length, label, string,
-				false, extraInfo);
+				false, extraInfo, document);
 	}
 
 	protected IScriptCompletionProposal createTypeProposal(
