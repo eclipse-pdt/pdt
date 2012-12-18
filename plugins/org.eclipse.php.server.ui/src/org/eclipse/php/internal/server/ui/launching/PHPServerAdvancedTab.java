@@ -331,6 +331,16 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		fDebuggersCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		fDebuggersCombo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
+				boolean isXDebug = isXdebug();
+				openBrowser.setEnabled(!isXDebug);
+				sessionGroup.setVisible(!isXDebug);
+				openBrowser.setSelection(isXDebug
+						|| debugFirstPageBt.getEnabled());
+				if (isXDebug) {
+					openBrowser.setText("Open in Browser (locked for XDebug)");
+				} else {
+					openBrowser.setText("Open in Browser");
+				}
 				updateLaunchConfigurationDialog();
 				updateDebugServerTesters();
 			}
@@ -614,7 +624,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		launchConfiguration = configuration;
 		initializeDebuggerControl(configuration);
-		boolean isXdebugger = isXdebug(configuration);
+		boolean isXdebugger = isXdebug();
 		try {
 			boolean isUsingTunnel = configuration.getAttribute(
 					IPHPDebugConstants.USE_SSH_TUNNEL, false);
@@ -754,7 +764,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		super.activated(workingCopy);
 		// hide/show the session group in case the debugger type was modified in
 		// the 'main' tab
-		boolean isXDebug = isXdebug(workingCopy);
+		boolean isXDebug = isXdebug();
 		sessionGroup.setVisible(!isXDebug);
 		openBrowser.setEnabled(!isXDebug);
 		if (isXDebug) {
@@ -768,7 +778,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 * Aptana addition - Check to see if this is a XDebug configuration. This
 	 * value will be used to determine the options to display in this dialog.
 	 */
-	private boolean isXdebug(ILaunchConfiguration configuration) {
+	private boolean isXdebug() {
 		return XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID
 				.equals(getSelectedDebuggerId());
 	}
