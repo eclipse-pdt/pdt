@@ -190,15 +190,15 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 			String string = document
 					.get(region.getOffset(), region.getLength()).trim();
 			boolean phpStrat = false;
-			if (isSingleLine) {
-				if (string.startsWith(PHP)) {
-					string = string.substring(PHP.length()).trim();
-					phpStrat = true;
-				} else if (string.startsWith(SHORT_TAG)) {
-					string = string.substring(SHORT_TAG.length()).trim();
-					phpStrat = true;
-				}
+			// if (isSingleLine) {
+			if (string.startsWith(PHP)) {
+				string = string.substring(PHP.length()).trim();
+				phpStrat = true;
+			} else if (string.startsWith(SHORT_TAG)) {
+				string = string.substring(SHORT_TAG.length()).trim();
+				phpStrat = true;
 			}
+			// }
 
 			isComment = !phpStrat
 					&& string.trim().length() == 0
