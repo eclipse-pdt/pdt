@@ -94,6 +94,11 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 
 			// if we need to put the caret at a position differnt then the end
 			// of the text
+			if (DefaultIndentationStrategy.getPairArrayParen()) {
+				futureCaretPosition = DefaultIndentationStrategy
+						.getPairArrayOffset();
+				DefaultIndentationStrategy.unsetPairArrayParen();
+			}
 			if (futureCaretPosition != -1) {
 				// runing the command ourselfs
 				document.replace(command.offset, command.length, command.text);

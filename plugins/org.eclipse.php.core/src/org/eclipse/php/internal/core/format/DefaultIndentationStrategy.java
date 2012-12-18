@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -37,6 +38,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					PHPPartitionTypes.PHP_DOC });
 
 	private static final String BLANK = "";
+	private static boolean pairArrayParen;
+	private static int pairArrayOffset;
 
 	static class LineState {
 		boolean inBracelessBlock;
@@ -295,6 +298,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		PHPHeuristicScanner scanner = PHPHeuristicScanner
 				.createHeuristicScanner(document, lineStart, true);
 		if (inBracelessBlock(scanner, document, lineStart)) {
+			if (scanner.previousToken(forOffset - 1,
+					PHPHeuristicScanner.UNBOUND) == PHPHeuristicScanner.TokenLPAREN)
+				return true;
 			return false;
 		}
 		// need to get to the first tRegion - so that we wont get the state of
@@ -622,7 +628,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					&& document.getChar(i) != '/'; i++)
 				;
 			newForOffset = (forOffset < i) ? i : forOffset;
-			
+
 		}
 		// end
 		else {
@@ -853,6 +859,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					String newblanks = FormatterUtils.getLineBlanks(document,
 							document.getLineInformationOfOffset(peer));
 					StringBuffer newBuffer = new StringBuffer(newblanks);
+					pairArrayParen = false;
 					// IRegion region = document
 					// .getLineInformationOfOffset(offset);
 					if (enterKeyPressed
@@ -868,11 +875,19 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 							region = document
 									.getLineInformationOfOffset(offset);
 							if (scanner.nextToken(offset, region.getOffset()
-									+ region.getLength()) == PHPHeuristicScanner.TokenRPAREN
-									&& isAssignment) {
-								indent(document, newBuffer, 0,
-										indentationObject.indentationChar,
-										indentationObject.indentationSize);
+									+ region.getLength()) == PHPHeuristicScanner.TokenRPAREN) {
+								if (isAssignment)
+									indent(document, newBuffer, 0,
+											indentationObject.indentationChar,
+											indentationObject.indentationSize);
+								else {
+									indent(document,
+											newBuffer,
+											indentationObject.indentationArrayInitSize,
+											indentationObject.indentationChar,
+											indentationObject.indentationSize);
+									pairArrayParen = true;
+								}
 							} else {
 								indent(document,
 										newBuffer,
@@ -891,6 +906,12 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 					result.setLength(result.length() - blanks.length());
 					result.append(newBuffer.toString());
+					if (pairArrayParen) {
+						pairArrayOffset = offset + result.length();
+						result.append(Util.getLineSeparator(null, null));
+						result.append(blanks);
+
+					}
 					return true;
 				}
 			} else {
@@ -1186,6 +1207,25 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		public int indentationSize;
 		public char indentationChar;
 
+	}
+
+	public static int getPairArrayOffset() {
+
+		// TODO Auto-generated method stub
+		if (pairArrayParen) {
+			return pairArrayOffset;
+		}
+		return -1;
+	}
+
+	public static boolean getPairArrayParen() {
+		// TODO Auto-generated method stub
+		return pairArrayParen;
+	}
+
+	public static void unsetPairArrayParen() {
+		// TODO Auto-generated method stub
+		pairArrayParen = false;
 	}
 
 }
