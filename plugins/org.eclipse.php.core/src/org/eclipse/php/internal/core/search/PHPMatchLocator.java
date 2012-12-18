@@ -268,6 +268,7 @@ public class PHPMatchLocator extends MatchLocator {
 					.getAncestor(IModelElement.SOURCE_MODULE);
 			if (module != null) {
 				try {
+					MethodPattern methodPattern = (MethodPattern) pattern;
 					IModelElement[] elements = module.codeSelect(pce
 							.getCallName().sourceStart(), 0);
 					if (elements == null || elements.length == 0) {
@@ -284,7 +285,6 @@ public class PHPMatchLocator extends MatchLocator {
 											reference);
 								}
 							} else {
-								MethodPattern methodPattern = (MethodPattern) pattern;
 								if (methodPattern.declaringSimpleName != null
 										&& elements[i]
 												.getAncestor(IModelElement.TYPE) != null
@@ -310,6 +310,16 @@ public class PHPMatchLocator extends MatchLocator {
 														.isClass(((IType) elements[i]
 																.getAncestor(IModelElement.TYPE))
 																.getFlags()))) {
+
+									return super.newMethodReferenceMatch(
+											enclosingElement, accuracy, offset,
+											length, isConstructor, isSynthetic,
+											reference);
+								} else if (methodPattern.declaringSimpleName == null
+										&& methodPattern.selector != null
+										&& new String(methodPattern.selector)
+												.equals(elements[i]
+														.getElementName())) {
 
 									return super.newMethodReferenceMatch(
 											enclosingElement, accuracy, offset,
