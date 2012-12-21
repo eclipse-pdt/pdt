@@ -75,7 +75,7 @@ import org.eclipse.swt.widgets.*;
  * @see TextMergeViewer
  */
 public abstract class ContentMergeViewer extends ContentViewer implements
-		IPropertyChangeNotifier, IFlushable {
+		IPropertyChangeNotifier, IFlushable, IFlushable2 {
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=330672
 	org.eclipse.compare.contentmergeviewer.ContentMergeViewer cmv;
 
@@ -1342,7 +1342,7 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 	 *            from a place where a progress monitor was not available.
 	 * @since 3.3
 	 */
-	protected void flushContent(Object input, IProgressMonitor monitor) {
+	protected void flushContentOld(Object input, IProgressMonitor monitor) {
 
 		// write back modified contents
 		IMergeViewerContentProvider content = (IMergeViewerContentProvider) getContentProvider();
@@ -1365,6 +1365,55 @@ public abstract class ContentMergeViewer extends ContentViewer implements
 			setRightDirty(false);
 			content.saveRightContent(input, bytes);
 		}
+	}
+
+	protected void flushContent(Object input, IProgressMonitor monitor) {
+		flushLeftSide(input, monitor);
+		flushRightSide(input, monitor);
+	}
+
+	void flushLeftSide(Object input, IProgressMonitor monitor) {
+		IMergeViewerContentProvider content = (IMergeViewerContentProvider) getContentProvider();
+
+		boolean rightEmpty = content.getRightContent(input) == null;
+
+		if (getCompareConfiguration().isLeftEditable() && isLeftDirty()) {
+			byte[] bytes = getContents(true);
+			if (rightEmpty && bytes != null && bytes.length == 0)
+				bytes = null;
+			setLeftDirty(false);
+			content.saveLeftContent(input, bytes);
+		}
+	}
+
+	void flushRightSide(Object input, IProgressMonitor monitor) {
+		IMergeViewerContentProvider content = (IMergeViewerContentProvider) getContentProvider();
+
+		boolean leftEmpty = content.getLeftContent(input) == null;
+
+		if (getCompareConfiguration().isRightEditable() && isRightDirty()) {
+			byte[] bytes = getContents(false);
+			if (leftEmpty && bytes != null && bytes.length == 0)
+				bytes = null;
+			setRightDirty(false);
+			content.saveRightContent(input, bytes);
+		}
+	}
+
+	/**
+	 * @param monitor
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	public void flushLeft(IProgressMonitor monitor) {
+		flushLeftSide(getInput(), monitor);
+	}
+
+	/**
+	 * @param monitor
+	 * @noreference This method is not intended to be referenced by clients.
+	 */
+	public void flushRight(IProgressMonitor monitor) {
+		flushRightSide(getInput(), monitor);
 	}
 
 	/**
