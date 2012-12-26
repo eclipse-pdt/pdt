@@ -71,7 +71,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 			// fileName = null;
 			fileName = qualifiedFile;
 		}
-		name = fileName + "." + function + " : lineno " + lineNo;
+		name = fileName + "." + function + "() : lineno " + lineNo;
 	}
 
 	/*

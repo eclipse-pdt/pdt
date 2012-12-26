@@ -41,11 +41,12 @@ public class XDebugModelPresentation extends PHPModelPresentation implements
 				String frameName = frame.getName();
 				if (frameName != null && frameName.length() > 0) {
 					buffer.append(frame.getName());
-					buffer.append("() "); //$NON-NLS-1$
+					//					buffer.append("() "); //$NON-NLS-1$
+				} else {
+					buffer.append(((DBGpStackFrame) frame).getSourceName());
+					buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1
+							+ (frame.getLineNumber()));
 				}
-				buffer.append(((DBGpStackFrame) frame).getSourceName());
-				buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1
-						+ (frame.getLineNumber()));
 				return buffer.toString();
 
 			} catch (DebugException e) {
