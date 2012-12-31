@@ -1,0 +1,12 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+$inputFilter->add(array(|));
+?>
+--EXPECT--
+<?php
+$inputFilter->add(array(
+		
+));
+?>
