@@ -36,7 +36,8 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
+import org.eclipse.php.internal.core.format.FormatterUtils;
+import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
@@ -463,9 +464,11 @@ public class PHPStructuredTextViewerConfiguration extends
 		Vector<String> vector = new Vector<String>();
 
 		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
-		char indentCharPref = FormatPreferencesSupport.getInstance()
+		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils
+				.getFormatterCommonPrferences();
+		char indentCharPref = formatterCommonPrferences
 				.getIndentationChar(sourceViewer.getDocument());
-		int indentationSize = FormatPreferencesSupport.getInstance()
+		int indentationSize = formatterCommonPrferences
 				.getIndentationSize(sourceViewer.getDocument());
 
 		for (int i = 0; i <= indentationSize; i++) {

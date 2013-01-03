@@ -13,7 +13,8 @@
 package org.eclipse.php.internal.ui.autoEdit;
 
 import org.eclipse.jface.text.*;
-import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
+import org.eclipse.php.internal.core.format.FormatterUtils;
+import org.eclipse.php.internal.core.format.IFormatterCommonPrferences;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -46,8 +47,8 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 			this.document = (IStructuredDocument) document;
 
 			boolean isAutoIndent = PHPUiPlugin.getDefault()
-					.getPreferenceStore().getBoolean(
-							PreferenceConstants.EDITOR_SMART_TAB);
+					.getPreferenceStore()
+					.getBoolean(PreferenceConstants.EDITOR_SMART_TAB);
 			if (!isAutoIndent) {
 				applyTabRule();
 				return;
@@ -248,11 +249,13 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 
 	// This method applies the standard Tab rule and will perform a regular tab
 	private void applyTabRule() {
-		char indentChar = FormatPreferencesSupport.getInstance()
+		IFormatterCommonPrferences formatterCommonPrferences = FormatterUtils
+				.getFormatterCommonPrferences();
+		char indentChar = formatterCommonPrferences
 				.getIndentationChar(document);
 
 		if (indentChar == ' ') {
-			int indentSize = FormatPreferencesSupport.getInstance()
+			int indentSize = formatterCommonPrferences
 					.getIndentationSize(document);
 			command.text += getIndentationString(indentSize);
 		} else {
