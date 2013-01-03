@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Ui Unit Tests
 Bundle-SymbolicName: org.eclipse.php.ui.tests;singleton:=true
-Bundle-Version: 3.1.2.qualifier
+Bundle-Version: 3.2.0.qualifier
 Bundle-Activator: org.eclipse.php.ui.tests.PHPUiTests
 Require-Bundle: org.junit,
  org.eclipse.ui;bundle-version="3.5.0",

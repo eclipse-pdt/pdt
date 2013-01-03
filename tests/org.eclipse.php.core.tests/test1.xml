@@ -57,7 +57,7 @@
 		<antcall target="copyTestPlugin" />
 		<emma>
 			<!-- instrumentation of jar -->
-			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.1.2.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
+			<instr instrpath="${eclipse-home}/plugins/org.eclipse.php.core_3.2.0.v${buildTimestamp}.jar" mode="overwrite" outfile="${testresults-folder}/phpcore.emma" />
 		</emma>
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${pdt-folder}" />
