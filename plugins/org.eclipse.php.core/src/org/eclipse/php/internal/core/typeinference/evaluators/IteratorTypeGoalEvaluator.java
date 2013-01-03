@@ -143,11 +143,15 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 			for (int i = 0; i < docBlocks.length; i++) {
 				PHPDocTag[] tags = docBlocks[i].getTags();
 				for (int j = 0; j < tags.length; j++) {
-					PHPDocTag tag = tags[i];
+					PHPDocTag tag = tags[j];
 					if (tag.getTagKind() == PHPDocTag.PARAM) {
 						SimpleReference[] refs = tag.getReferences();
-						if (refs[1].getName().equals(
-								type.getElementName() + PHPDocClassVariableEvaluator.BRACKETS)) {
+						if (refs != null
+								&& refs.length > 1
+								&& refs[1]
+										.getName()
+										.equals(type.getElementName()
+												+ PHPDocClassVariableEvaluator.BRACKETS)) {
 							return true;
 						}
 					}
