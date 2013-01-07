@@ -326,8 +326,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 							.getRoot()
 							.getFile(
 									project.getFullPath()
-											.append(
-													location.removeFirstSegments(segmentsToRemove)));
+											.append(location
+													.removeFirstSegments(segmentsToRemove)));
 					break;
 				}
 			}
@@ -384,8 +384,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=306834
 		if (path.segmentCount() >= 2) {
 
-			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(
-					path);
+			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot()
+					.getFile(path);
 			if (debugTarget.isPHPCGI() && wsFile.exists()
 					&& wsFile.getLocation() != null) {
 				File fsFile = wsFile.getLocation().toFile();
@@ -813,8 +813,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public static void warnOlderDebugVersion() {
 		boolean dontShowWarning = PHPDebugPlugin.getDefault()
-				.getPluginPreferences().getBoolean(
-						"DontShowOlderDebuggerWarning"); //$NON-NLS-1$
+				.getPluginPreferences()
+				.getBoolean("DontShowOlderDebuggerWarning"); //$NON-NLS-1$
 		if (!dontShowWarning) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
@@ -1121,8 +1121,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 					if (layer.getCalledFileName() != null
 							&& currentWorkingDir != null && project != null) {
-						Result<?, ?> result = PHPSearchEngine.find(layer
-								.getCalledFileName(), currentWorkingDir,
+						Result<?, ?> result = PHPSearchEngine.find(
+								layer.getCalledFileName(), currentWorkingDir,
 								previousScriptDir, project);
 						if (result instanceof ResourceResult) {
 							layer.setResolvedCalledFileName(((ResourceResult) result)
@@ -1218,6 +1218,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 						if (includePaths.size() > 0) {
 							return checkIncludePaths(remoteFile, includePaths);
 						}
+						break;
 					}
 				}
 			}
