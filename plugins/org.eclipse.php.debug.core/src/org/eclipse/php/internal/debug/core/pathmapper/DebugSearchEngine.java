@@ -39,6 +39,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 
@@ -96,6 +97,9 @@ public class DebugSearchEngine {
 			if (resource != null) {
 				project = resource.getProject();
 			}
+		}
+		if (project == null && debugTarget instanceof PHPDebugTarget) {
+			project = ((PHPDebugTarget) debugTarget).getProject();
 		}
 		if (project == null) {
 			String projectName;
@@ -208,8 +212,13 @@ public class DebugSearchEngine {
 				// Search in the whole workspace:
 				Set<IncludePath> s = new LinkedHashSet<IncludePath>();
 				Set<IBuildpathEntry> b = new LinkedHashSet<IBuildpathEntry>();
-				IProject[] projects = ResourcesPlugin.getWorkspace().getRoot()
-						.getProjects();
+				IProject[] projects = null;
+				if (currentProject != null && currentProject.isOpen()) {
+					projects = new IProject[] { currentProject };
+				} else {
+					projects = ResourcesPlugin.getWorkspace().getRoot()
+							.getProjects();
+				}
 				for (IProject project : projects) {
 					if (project.isOpen() && project.isAccessible()) {
 						// get include paths of all projects
