@@ -148,6 +148,18 @@ public class PHPResponseHandler {
 
 	}
 
+	public class AddFilesResponseHandler
+			implements
+			org.eclipse.php.internal.debug.core.zend.debugger.Debugger.AddFilesResponseHandler {
+
+		public void addFiles(boolean success) {
+			if (!success)
+				Logger.log(Logger.ERROR,
+						"PHPResponseHandler: AddFilesResponseHandler failed");
+		}
+
+	}
+
 	public PHPResponseHandler(PHPDebugTarget debugTarget) {
 		fDebugTarget = debugTarget;
 	}

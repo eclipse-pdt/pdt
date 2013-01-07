@@ -213,6 +213,18 @@ public interface Debugger {
 			int depth, String[] path);
 
 	/**
+	 * Asynchronous addFiles Returns true if succeeded sending the request,
+	 * false otherwise.
+	 */
+	public boolean addFiles(String[] paths,
+			AddFilesResponseHandler responseHandler);
+
+	/**
+	 * Synchronous addFiles Returns true if succeeded adding the Breakpoint.
+	 */
+	public boolean addFiles(String[] paths);
+
+	/**
 	 * Finish the debugger running.
 	 */
 	public void finish();
@@ -326,6 +338,13 @@ public interface Debugger {
 
 	}
 
+	// Interface for add files response handler.
+	public static interface AddFilesResponseHandler {
+
+		public void addFiles(boolean success);
+
+	}
+
 	// ---------------------------------------------------------------------------
 
 	// An interface for all the respones handler.
@@ -336,7 +355,7 @@ public interface Debugger {
 			StepOverResponseHandler, StepOutResponseHandler, GoResponseHandler,
 			PauseResponseHandler, AssignValueResponseHandler,
 			VariableValueResponseHandler, GetCallStackResponseHandler,
-			GetStackVariableValueResponseHandler {
+			GetStackVariableValueResponseHandler, AddFilesResponseHandler {
 
 	}
 
@@ -409,6 +428,10 @@ public interface Debugger {
 				String[] path, String reslut, boolean success) {
 			// System.out.println("stackVariableValue: " + value + " " + reslut
 			// + " " + success);
+		}
+
+		public void addFiles(boolean success) {
+			// System.out.println("addFiles: " + success);
 		}
 
 	}

@@ -612,20 +612,14 @@ public class DebugConnectionThread implements Runnable {
 			throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch
 				.getLaunchConfiguration();
-		String projectName = launchConfiguration.getAttribute(
-				IPHPDebugConstants.PHP_Project, (String) null);
 
-		IProject project = null;
-		if (projectName != null) {
-			project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-					projectName);
-		}
+		IProject project = getProject(launchConfiguration);
 
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(
 				IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
 		inputManager.setOutputEncoding(launchConfiguration.getAttribute(
 				IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
-		String URL = launchConfiguration.getAttribute(Server.BASE_URL, ""); //$NON-NLS-1$
+		String URL = getURL(launchConfiguration);
 
 		boolean stopAtFirstLine = project == null ? true
 				: PHPProjectPreferences.getStopAtFirstLine(project);
@@ -1096,6 +1090,36 @@ public class DebugConnectionThread implements Runnable {
 			Logger.logException(e);
 		}
 		return false;
+	}
+
+	/**
+	 * Get {@link IProject} instance from provided launch configuration.
+	 * 
+	 * @param configuration
+	 * @return {@link IProject}
+	 * @throws CoreException
+	 */
+	protected IProject getProject(ILaunchConfiguration configuration)
+			throws CoreException {
+		String projectName = configuration.getAttribute(
+				IPHPDebugConstants.PHP_Project, (String) null);
+		if (projectName != null) {
+			return ResourcesPlugin.getWorkspace().getRoot()
+					.getProject(projectName);
+		}
+		return null;
+	}
+
+	/**
+	 * Get url from provided launch configuration.
+	 * 
+	 * @param configuration
+	 * @return
+	 * @throws CoreException
+	 */
+	protected String getURL(ILaunchConfiguration configuration)
+			throws CoreException {
+		return configuration.getAttribute(Server.BASE_URL, ""); //$NON-NLS-1$
 	}
 
 	/**

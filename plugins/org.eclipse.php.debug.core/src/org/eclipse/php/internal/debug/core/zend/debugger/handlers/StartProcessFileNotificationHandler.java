@@ -98,6 +98,7 @@ public class StartProcessFileNotificationHandler implements
 							.toString());
 				}
 			}
+			debugTarget.addBreakpointFiles();
 		}
 
 		String localPath = remoteDebugger

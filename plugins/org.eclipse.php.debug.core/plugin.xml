@@ -355,6 +355,16 @@
             id="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackLiteResponse"
             name="Get Call Stack Response (Lite)">
       </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.AddFilesRequest"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.AddFilesRequest"
+            name="Add Files Request">
+      </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.AddFilesResponse"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.AddFilesResponse"
+            name="Add Files Response">
+      </message>
 
   </extension>
   <extension

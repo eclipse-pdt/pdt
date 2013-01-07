@@ -77,9 +77,16 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public static final int PROTOCOL_ID_2006040705 = 2006040705;
 
 	/**
+	 * New protocol ID from 12/2012 which provides new message type:
+	 * {@link AddFilesRequest} allows send initial list of files which contain
+	 * at least one breakpoint.
+	 */
+	public static final int PROTOCOL_ID_2012121702 = 2012121702;
+
+	/**
 	 * Latest protocol ID
 	 */
-	public static final int PROTOCOL_ID_LATEST = PROTOCOL_ID_2006040705;
+	public static final int PROTOCOL_ID_LATEST = PROTOCOL_ID_2012121702;
 
 	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 
@@ -784,6 +791,46 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
+	 * Asynchronous addFiles Returns true if succeeded sending the request,
+	 * false otherwise.
+	 */
+	public boolean addFiles(String[] paths,
+			AddFilesResponseHandler responseHandler) {
+		if (!this.isActive()) {
+			return false;
+		}
+		try {
+			AddFilesRequest request = new AddFilesRequest();
+			request.setPaths(paths);
+			connection.sendRequest(request, new ThisHandleResponse(
+					responseHandler));
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * Synchronous addFiles Returns true if succeeded adding the Breakpoint.
+	 */
+	public boolean addFiles(String[] paths) {
+		if (!this.isActive()) {
+			return false;
+		}
+		try {
+			AddFilesRequest request = new AddFilesRequest();
+			request.setPaths(paths);
+			AddFilesResponse response = (AddFilesResponse) connection
+					.sendRequest(request);
+			return response != null && response.getStatus() == 0;
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
 	 * This method is used for detecting protocol version of Debugger
 	 * 
 	 * @return <code>true</code> if succeeded to detect, otherwise
@@ -792,6 +839,10 @@ public class RemoteDebugger implements IRemoteDebugger {
 	protected boolean detectProtocolID() {
 		// check whether debugger is using the latest protocol ID:
 		if (setProtocol(PROTOCOL_ID_LATEST)) {
+			return true;
+		}
+		// check whether debugger is using one of older protocol ID:
+		if (setProtocol(PROTOCOL_ID_2006040705)) {
 			return true;
 		}
 		// check whether debugger is using one of older protocol ID:
@@ -1189,37 +1240,38 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	private String tryGuessMapping(String remoteFile, PHPDebugTarget debugTarget)
 			throws ModelException {
-		String orginalURL = debugTarget.getLaunch().getAttribute(
-				IDebugParametersKeys.ORIGINAL_URL);
-		if (orginalURL != null) {
+		IProject project = debugTarget.getProject();
+		if (project == null) {
+			String orginalURL = debugTarget.getLaunch().getAttribute(
+					IDebugParametersKeys.ORIGINAL_URL);
 			String projectName = new Path(orginalURL).segment(0);
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			IProject project = workspace.getRoot().getProject(projectName);
-			if (project != null) {
-				projectName = project.getName();
-				IPath remotePath = new Path(remoteFile);
-				int size = remotePath.segmentCount();
-				for (int j = 0; j < size; j++) {
-					String segment = remotePath.segment(j);
-					if (segment.equals(projectName)) {
-						remotePath = remotePath.removeFirstSegments(j);
-						size = remotePath.segmentCount();
-						for (int i = 0; i < size; i++) {
-							remotePath = remotePath.removeFirstSegments(1);
-							if (remotePath.segmentCount() > 0) {
-								IResource res = project.getFile(remotePath);
-								if (res != null && res.exists()) {
-									return project.getFullPath()
-											.append(remotePath).toString();
-								}
+			project = workspace.getRoot().getProject(projectName);
+		}
+		if (project != null) {
+			String projectName = project.getName();
+			IPath remotePath = new Path(remoteFile);
+			int size = remotePath.segmentCount();
+			for (int j = 0; j < size; j++) {
+				String segment = remotePath.segment(j);
+				if (segment.equals(projectName)) {
+					remotePath = remotePath.removeFirstSegments(j);
+					size = remotePath.segmentCount();
+					for (int i = 0; i < size; i++) {
+						remotePath = remotePath.removeFirstSegments(1);
+						if (remotePath.segmentCount() > 0) {
+							IResource res = project.getFile(remotePath);
+							if (res != null && res.exists()) {
+								return project.getFullPath().append(remotePath)
+										.toString();
 							}
 						}
-						List<IPath> includePaths = getIncludePaths(project);
-						if (includePaths.size() > 0) {
-							return checkIncludePaths(remoteFile, includePaths);
-						}
-						break;
 					}
+					List<IPath> includePaths = getIncludePaths(project);
+					if (includePaths.size() > 0) {
+						return checkIncludePaths(remoteFile, includePaths);
+					}
+					break;
 				}
 			}
 		}
@@ -1243,7 +1295,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return remoteFile;
 	}
 
-	private List<IPath> getIncludePaths(IProject project) throws ModelException {
+	public List<IPath> getIncludePaths(IProject project) throws ModelException {
 		List<IPath> includePaths = resolvedIncludePaths.get(project.getName());
 		if (includePaths != null) {
 			return includePaths;

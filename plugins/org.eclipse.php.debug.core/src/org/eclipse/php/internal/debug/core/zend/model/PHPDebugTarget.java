@@ -15,13 +15,12 @@ import java.io.File;
 import java.util.*;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.ui.AbstractDebugView;
 import org.eclipse.debug.ui.IDebugUIConstants;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
@@ -90,6 +89,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StepOutResponseHandler fStepOutResponseHandler;
 	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.GoResponseHandler fGoResponseHandler;
 	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.PauseResponseHandler fPauseResponseHandler;
+	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.AddFilesResponseHandler fAddFilesResponseHandler;
 	protected DefaultExpressionsManager expressionsManager;
 
 	// private IVariable[] fVariables;
@@ -258,6 +258,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		fStepOutResponseHandler = fPHPResponseHandler.new StepOutResponseHandler();
 		fGoResponseHandler = fPHPResponseHandler.new GoResponseHandler();
 		fPauseResponseHandler = fPHPResponseHandler.new PauseResponseHandler();
+		fAddFilesResponseHandler = fPHPResponseHandler.new AddFilesResponseHandler();
 
 		fSuspendCount = 0;
 		fContextManager = new ContextManager(this, debugger);
@@ -1034,6 +1035,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		return fStartResponseHandler;
 	}
 
+	public org.eclipse.php.internal.debug.core.zend.debugger.Debugger.AddFilesResponseHandler getAddFilesResponseHandler() {
+		return fAddFilesResponseHandler;
+	}
+
 	public ContextManager getContextManager() {
 		return fContextManager;
 	}
@@ -1139,4 +1144,115 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	public boolean isWaiting() {
 		return false;
 	}
+
+	public void addBreakpointFiles() {
+		if (debugger.getCurrentProtocolID() >= RemoteDebugger.PROTOCOL_ID_2012121702) {
+			List<String> paths = new ArrayList<String>();
+			try {
+				if (fBreakpointManager.isEnabled()) {
+					List<IBreakpoint> breakpoints = new ArrayList<IBreakpoint>(
+							Arrays.asList(fBreakpointManager
+									.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE)));
+					if (breakpoints != null && breakpoints.size() > 0) {
+						getBreakpointFiles(fProject, paths, breakpoints);
+						getBreakpointsIncludePath(fProject, paths, breakpoints);
+						debugger.addFiles(paths.toArray(new String[paths.size()]));
+					}
+				}
+			} catch (CoreException e) {
+				PHPDebugPlugin.log(e);
+			}
+		}
+	}
+
+	private void getBreakpointsIncludePath(IProject container,
+			List<String> paths, List<IBreakpoint> breakpoints)
+			throws CoreException {
+		if (container == null) {
+			String localFile = ((RemoteDebugger) debugger)
+					.convertToLocalFilename(fLastFileName);
+			if (localFile != null) {
+				IPath localPath = new Path(localFile);
+				String projectName = localPath.segment(0);
+				container = ResourcesPlugin.getWorkspace().getRoot()
+						.getProject(projectName);
+				if (container == null) {
+					return;
+				}
+			}
+		}
+		List<IPath> includePaths = ((RemoteDebugger) debugger)
+				.getIncludePaths(fProject);
+		for (IBreakpoint bp : breakpoints) {
+			String secondaryId = (String) bp.getMarker().getAttribute(
+					StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
+			if (secondaryId != null) {
+
+				IPath path = Path.fromPortableString(secondaryId);
+				if ((path.getDevice() == null)
+						&& (path.toString().startsWith("org.eclipse.dltk"))) {
+					String fullPathString = path.toString();
+					String absolutePath = fullPathString
+							.substring(fullPathString.indexOf(':') + 1);
+					path = Path.fromPortableString(absolutePath);
+				} else {
+					path = EnvironmentPathUtils.getLocalPath(path);
+				}
+				if (path != null) {
+					for (IPath includePath : includePaths) {
+						int size = includePath.segmentCount();
+						if (path.matchingFirstSegments(includePath) == size) {
+							String remotePath = RemoteDebugger
+									.convertToRemoteFilename(path.toString(),
+											this);
+							if (remotePath != null && remotePath.length() > 0) {
+								paths.add(remotePath);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void getBreakpointFiles(IContainer container, List<String> paths,
+			List<IBreakpoint> breakpoints) throws CoreException {
+		if (container == null) {
+			String localFile = ((RemoteDebugger) debugger)
+					.convertToLocalFilename(fLastFileName);
+			if (localFile != null) {
+				IPath localPath = new Path(localFile);
+				String projectName = localPath.segment(0);
+				container = ResourcesPlugin.getWorkspace().getRoot()
+						.getProject(projectName);
+				if (container == null) {
+					return;
+				}
+			}
+		}
+		IResource[] members = container.members();
+		for (IResource res : members) {
+			if (res instanceof IContainer) {
+				getBreakpointFiles((IContainer) res, paths, breakpoints);
+			} else {
+				if (res.getName().endsWith(".php")) {
+					List<IBreakpoint> toRemove = new ArrayList<IBreakpoint>();
+					for (IBreakpoint bp : breakpoints) {
+						if (bp.getMarker().getResource().equals(res)) {
+							String remotePath = RemoteDebugger
+									.convertToRemoteFilename(res.getFullPath()
+											.toString(), this);
+							if (remotePath != null && remotePath.length() > 0) {
+								paths.add(remotePath);
+								toRemove.add(bp);
+							}
+							break;
+						}
+					}
+					breakpoints.removeAll(toRemove);
+				}
+			}
+		}
+	}
+
 }
