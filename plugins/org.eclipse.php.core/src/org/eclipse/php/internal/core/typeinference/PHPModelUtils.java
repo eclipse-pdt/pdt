@@ -35,6 +35,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
+import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.Logger;
@@ -464,6 +465,37 @@ public class PHPModelUtils {
 			}
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
+		}
+		return null;
+	}
+
+	public static IType getCurrentNamespaceIfAny(ISourceModule sourceModule,
+			int offset) {
+		IType result = getCurrentNamespace(sourceModule, offset);
+		if (result == null) {
+			try {
+				IModelElement[] elements = sourceModule.getChildren();
+				for (IModelElement modelElement : elements) {
+
+					if (modelElement instanceof IType
+							&& PHPFlags.isNamespace(((IType) modelElement)
+									.getFlags())) {
+						result = (IType) modelElement;
+					}
+
+					if (modelElement instanceof SourceRefElement) {
+						SourceRefElement child = (SourceRefElement) modelElement;
+						ISourceRange range = child.getSourceRange();
+						int start = range.getOffset();
+						int end = start + range.getLength();
+						if (start <= offset && offset <= end) {
+							return result;
+						}
+					}
+				}
+			} catch (ModelException e) {
+				PHPCorePlugin.log(e);
+			}
 		}
 		return null;
 	}

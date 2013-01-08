@@ -259,8 +259,9 @@ public final class ParameterGuessingProposal extends
 				IType type = method.getDeclaringType();
 				try {
 					int flags = type.getFlags();
-					IType currentNamespace = PHPModelUtils.getCurrentNamespace(
-							fSourceModule, getReplacementOffset());
+					IType currentNamespace = PHPModelUtils
+							.getCurrentNamespaceIfAny(fSourceModule,
+									getReplacementOffset());
 					IType namespace = PHPModelUtils.getCurrentNamespace(type);
 					if (!PHPFlags.isNamespace(flags)
 							&& namespace == null
