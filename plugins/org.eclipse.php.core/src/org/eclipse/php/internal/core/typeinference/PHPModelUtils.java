@@ -497,7 +497,7 @@ public class PHPModelUtils {
 				PHPCorePlugin.log(e);
 			}
 		}
-		return null;
+		return result;
 	}
 
 	/**
