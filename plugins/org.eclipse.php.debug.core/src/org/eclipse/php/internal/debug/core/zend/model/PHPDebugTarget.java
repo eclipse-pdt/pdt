@@ -1235,22 +1235,20 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 			if (res instanceof IContainer) {
 				getBreakpointFiles((IContainer) res, paths, breakpoints);
 			} else {
-				if (res.getName().endsWith(".php")) {
-					List<IBreakpoint> toRemove = new ArrayList<IBreakpoint>();
-					for (IBreakpoint bp : breakpoints) {
-						if (bp.getMarker().getResource().equals(res)) {
-							String remotePath = RemoteDebugger
-									.convertToRemoteFilename(res.getFullPath()
-											.toString(), this);
-							if (remotePath != null && remotePath.length() > 0) {
-								paths.add(remotePath);
-								toRemove.add(bp);
-							}
-							break;
+				List<IBreakpoint> toRemove = new ArrayList<IBreakpoint>();
+				for (IBreakpoint bp : breakpoints) {
+					if (bp.getMarker().getResource().equals(res)) {
+						String remotePath = RemoteDebugger
+								.convertToRemoteFilename(res.getFullPath()
+										.toString(), this);
+						if (remotePath != null && remotePath.length() > 0) {
+							paths.add(remotePath);
+							toRemove.add(bp);
 						}
+						break;
 					}
-					breakpoints.removeAll(toRemove);
 				}
+				breakpoints.removeAll(toRemove);
 			}
 		}
 	}
