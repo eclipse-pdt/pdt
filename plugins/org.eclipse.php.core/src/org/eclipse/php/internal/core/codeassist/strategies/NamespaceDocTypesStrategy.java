@@ -16,15 +16,18 @@ import java.util.List;
 
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespacePHPDocVarStartContext;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 /**
  * This strategy completes namespace classes and interfaces
@@ -75,7 +78,31 @@ public class NamespaceDocTypesStrategy extends AbstractCompletionStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
+		for (IType ns : context.getPossibleNamespaces()) {
+			if (context.getNsPrefix() == null) {
+				result.add(ns);
+			} else {
+				String fullName = ns.getElementName();
+				String alias = getAlias(ns, context.getNsPrefix());
+				if (alias == null) {
+					result.add(ns);
+				} else {
+					result.add(new AliasType((ModelElement) ns, fullName, alias));
+				}
+			}
+		}
 		return (IType[]) result.toArray(new IType[result.size()]);
+	}
+
+	private String getAlias(IType ns, String currentNSName) {
+		String result = ns.getElementName();
+		currentNSName = currentNSName + NamespaceReference.NAMESPACE_SEPARATOR;
+		if (result.startsWith(currentNSName)) {
+			result = result.substring(currentNSName.length());
+		} else {
+			result = null;
+		}
+		return result;
 	}
 
 	public SourceRange getReplacementRange(ICompletionContext context)

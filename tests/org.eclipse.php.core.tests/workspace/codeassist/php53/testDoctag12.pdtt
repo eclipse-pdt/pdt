@@ -1,0 +1,42 @@
+--TEST--
+Test var
+--FILE--
+<?
+namespace foo\bar\baz1 {
+
+	class Target {
+		function foo_bar_baz();
+	}
+}
+
+namespace bar\baz {
+
+	class Target {
+		function bar_baz();
+	}
+}
+
+namespace foo {
+
+	class TestAbsolute {
+		/**
+		 *
+		 * @return \bar|
+		 *
+		 */
+		function test() {
+		}
+	}
+	class TestRelative {
+		/**
+		 *
+		 * @return bar\baz1\ 
+		 *
+		 */
+		function test() {
+		}
+	}
+}
+?>
+--EXPECT--
+type(bar\baz)
