@@ -34,6 +34,7 @@ import org.eclipse.dltk.compiler.*;
 import org.eclipse.dltk.compiler.IElementRequestor.ImportInfo;
 import org.eclipse.dltk.compiler.IElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.IModuleSource;
+import org.eclipse.dltk.core.Flags;
 import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.compiler.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
@@ -334,6 +335,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		if (fCurrentClass == null || fCurrentClass == fLastNamespace) {
 			mi.modifiers |= Modifiers.AccGlobal;
+		}
+		if (!Flags.isPrivate(mi.modifiers) && !Flags.isProtected(mi.modifiers)
+				&& !Flags.isPublic(mi.modifiers)) {
+			mi.modifiers |= Modifiers.AccPublic;
 		}
 
 		mi.parameterTypes = processParamterTypes(methodDeclaration);

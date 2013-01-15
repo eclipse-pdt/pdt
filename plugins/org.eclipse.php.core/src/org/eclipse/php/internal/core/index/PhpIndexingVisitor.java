@@ -31,6 +31,7 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.core.Flags;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.index2.IIndexingRequestor;
@@ -250,6 +251,10 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		if (parentDeclaration == null
 				|| (parentDeclaration instanceof TypeDeclaration && parentDeclaration == fCurrentNamespace)) {
 			modifiers |= Modifiers.AccGlobal;
+		}
+		if (!Flags.isPrivate(modifiers) && !Flags.isProtected(modifiers)
+				&& !Flags.isPublic(modifiers)) {
+			modifiers |= Modifiers.AccPublic;
 		}
 
 		StringBuilder metadata = new StringBuilder();
