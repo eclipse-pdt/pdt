@@ -49,6 +49,9 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		boolean changed = false;
 
 		try {
+			// TODO this will be remove soon,just to see if this method is
+			// executed in Zend Studio.
+			Logger.log(Logger.ERROR, "PHP Toggle Line Comment is starting.");
 			// get text selection lines info
 			int selectionStartLine = textSelection.getStartLine();
 			int selectionEndLine = textSelection.getEndLine();
