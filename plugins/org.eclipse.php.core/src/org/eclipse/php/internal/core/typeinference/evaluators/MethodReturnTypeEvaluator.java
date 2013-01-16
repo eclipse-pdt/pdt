@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -34,6 +35,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
+import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
 public class MethodReturnTypeEvaluator extends
@@ -119,17 +121,35 @@ public class MethodReturnTypeEvaluator extends
 		IType type = (IType) parent;
 		final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
 		if (docBlock != null) {
+			IType currentNamespace = PHPModelUtils.getCurrentNamespace(type);
 			for (PHPDocTag tag : docBlock.getTags()) {
 				final int tagKind = tag.getTagKind();
 				if (tagKind == PHPDocTag.METHOD) {
 					final String typeName = getTypeBinding(methodName, tag);
 					if (typeName != null) {
-						IEvaluatedType resolved = PHPSimpleTypes
-								.fromString(typeName);
-						if (resolved == null) {
-							resolved = new PHPClassType(typeName);
+						Matcher m = PHPDocClassVariableEvaluator.ARRAY_TYPE_PATTERN
+								.matcher(typeName);
+						if (m.find()) {
+							evaluated.add(PHPDocClassVariableEvaluator
+									.getArrayType(m.group(), currentNamespace,
+											tag.sourceStart()));
+						} else if (typeName
+								.endsWith(PHPDocClassVariableEvaluator.BRACKETS)
+								&& typeName.length() > 2) {
+							int offset = tag.sourceStart();
+							evaluated.add(PHPDocClassVariableEvaluator
+									.getArrayType(
+											typeName.substring(0,
+													typeName.length() - 2),
+											currentNamespace, offset));
+						} else {
+							IEvaluatedType resolved = PHPSimpleTypes
+									.fromString(typeName);
+							if (resolved == null) {
+								resolved = new PHPClassType(typeName);
+							}
+							evaluated.add(resolved);
 						}
-						evaluated.add(resolved);
 					}
 				}
 			}
@@ -168,4 +188,5 @@ public class MethodReturnTypeEvaluator extends
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineTypes(evaluated);
 	}
+
 }

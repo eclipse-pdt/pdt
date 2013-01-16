@@ -46,7 +46,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
-	private final static Pattern ARRAY_TYPE_PATTERN = Pattern
+	public final static Pattern ARRAY_TYPE_PATTERN = Pattern
 			.compile("array\\[.*\\]");
 
 	public PHPDocClassVariableEvaluator(IGoal goal) {
@@ -194,8 +194,8 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	private MultiTypeType getArrayType(String type, IType currentNamespace,
-			int offset) {
+	public static MultiTypeType getArrayType(String type,
+			IType currentNamespace, int offset) {
 		int beginIndex = type.indexOf("[") + 1;
 		int endIndex = type.lastIndexOf("]");
 		if (endIndex != -1) {
@@ -240,7 +240,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		return arrayType;
 	}
 
-	private IEvaluatedType getEvaluatedType(String typeName,
+	public static IEvaluatedType getEvaluatedType(String typeName,
 			IType currentNamespace) {
 		IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
 		if (type == null) {

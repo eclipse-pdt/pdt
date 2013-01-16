@@ -1,0 +1,50 @@
+--TEST--
+Test class constructor
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+
+/**
+*
+* @method Foo[] getAllWithProblem() getAllWithProblem()
+*/
+class Foo
+{
+
+/**
+* 
+* @return Foo[]
+*/
+public function getAllNoProblem()
+{
+return array( new Foo() );
+}
+
+static public function testScenerios()
+{
+// scenerio 1
+$oFoo1 = $this->getOne();
+// works
+$oFoo1->autocompleteWorks();
+
+// scenerio 2
+foreach($this->getAllNoProblem() as $oFoo2)
+{
+// works
+$oFoo2->autocompleteWorks();
+}
+
+// scenerio 3
+foreach($this->getAllWithProblem() as $oFoo3)
+{
+// dosen't work
+$oFoo3->|
+}
+}
+}
+?>
+--EXPECT--
+method(getAllNoProblem)
+method(getAllWithProblem)
+method(testScenerios)
