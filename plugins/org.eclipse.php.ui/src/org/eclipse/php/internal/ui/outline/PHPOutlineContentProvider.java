@@ -227,24 +227,24 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 															.sourceEnd());
 									useStatementsCountNew = useStatements.length;
 								}
-
-								IModelElementDelta delta = findElement(base,
-										e.getDelta());
-								if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)
-										&& fOutlineViewer != null
-										&& fOutlineViewer.getControl() != null
-										&& !fOutlineViewer.getControl()
-												.isDisposed()) {
-									Display d = control.getDisplay();
-									if (d != null) {
-										d.asyncExec(new Runnable() {
-											public void run() {
-												fOutlineViewer.refresh();
-											}
-										});
+							}
+						}
+					}
+					IModelElementDelta delta = findElement(fSourceModule,
+							e.getDelta());
+					if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)) {
+						Display d = control.getDisplay();
+						if (d != null) {
+							d.asyncExec(new Runnable() {
+								public void run() {
+									if (fOutlineViewer != null
+											&& fOutlineViewer.getControl() != null
+											&& !fOutlineViewer.getControl()
+													.isDisposed()) {
+										fOutlineViewer.refresh();
 									}
 								}
-							}
+							});
 						}
 					}
 					return Status.OK_STATUS;

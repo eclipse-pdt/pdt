@@ -299,11 +299,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	protected OverrideIndicatorManager fOverrideIndicatorManager;
 
 	/**
-	 * Stores the current IModelElement used as the outline input.
-	 */
-	private IModelElement fModelElement;
-
-	/**
 	 * Tells whether text drag and drop has been installed on the control.
 	 * 
 	 * @since 3.3
@@ -2418,20 +2413,14 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			}
 			fPHPOutlinePageListener.install(outlinePage);
 			fPHPOutlinePage = outlinePage;
-
-			// Set the outline page input only if it is different than the
-			// current one
-			IModelElement modelElement = getModelElement();
-			outlinePage.setInput(modelElement);
-			fModelElement = modelElement;
+			outlinePage.setInput(getModelElement());
 		}
 		return adapter;
 	}
 
 	private boolean shouldOutlineViewBeLoaded() {
 		if (fPHPOutlinePage != null && fPHPOutlinePage.getControl() != null
-				&& !fPHPOutlinePage.getControl().isDisposed()
-				&& !fPHPOutlinePage.getControl().isVisible()) {
+				&& !fPHPOutlinePage.getControl().isDisposed()) {
 			return false;
 		}
 		return true;
