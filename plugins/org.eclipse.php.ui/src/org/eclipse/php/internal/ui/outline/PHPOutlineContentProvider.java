@@ -232,17 +232,16 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 					}
 					IModelElementDelta delta = findElement(fSourceModule,
 							e.getDelta());
-					if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)) {
+					if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)
+							&& fOutlineViewer != null
+							&& fOutlineViewer.getControl() != null
+							&& !fOutlineViewer.getControl()
+									.isDisposed()) {
 						Display d = control.getDisplay();
 						if (d != null) {
 							d.asyncExec(new Runnable() {
 								public void run() {
-									if (fOutlineViewer != null
-											&& fOutlineViewer.getControl() != null
-											&& !fOutlineViewer.getControl()
-													.isDisposed()) {
-										fOutlineViewer.refresh();
-									}
+									fOutlineViewer.refresh();
 								}
 							});
 						}
