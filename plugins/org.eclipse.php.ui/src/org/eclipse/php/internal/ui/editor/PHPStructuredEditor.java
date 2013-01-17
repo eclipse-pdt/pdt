@@ -3151,8 +3151,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 								(ISourceModule) inputElement,
 								SharedASTProvider.WAIT_ACTIVE_ONLY,
 								new NullProgressMonitor());
-						fOverrideIndicatorManager.reconciled(ast, true,
-								getProgressMonitor());
+						if (fOverrideIndicatorManager != null) {
+							fOverrideIndicatorManager.reconciled(ast, true,
+									getProgressMonitor());
+						}
 					} catch (ModelException e) {
 						Logger.logException(e);
 					} catch (IOException e) {
