@@ -529,12 +529,75 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					ClassInstanceCreation newNode = (ClassInstanceCreation) node;
 
 					Expression className = newNode.getClassName();
+
 					if ((className instanceof SimpleReference || className instanceof FullyQualifiedReference)) {
 						IEvaluatedType evaluatedType = PHPTypeInferenceUtils
 								.resolveExpression(sourceModule, node);
 						return getConstructorsIfAny(extractClasses(PHPModelUtils
 								.getTypes(evaluatedType.getTypeName(),
 										sourceModule, offset, null, null)));
+					} else if ((className instanceof StaticFieldAccess)) {
+						StaticFieldAccess staticFieldAccess = (StaticFieldAccess) className;
+						if ((offset >= staticFieldAccess.getDispatcher()
+								.sourceStart())
+								&& (offset <= staticFieldAccess.getDispatcher()
+										.sourceEnd())) {
+							className = staticFieldAccess.getDispatcher();
+							IEvaluatedType evaluatedType = PHPTypeInferenceUtils
+									.resolveExpression(sourceModule, className);
+							return extractClasses(PHPModelUtils.getTypes(
+									evaluatedType.getTypeName(), sourceModule,
+									offset, null, null));
+						} else if ((offset >= staticFieldAccess.getField()
+								.sourceStart())
+								&& (offset <= staticFieldAccess.getField()
+										.sourceEnd())) {
+							className = staticFieldAccess.getField();
+
+							String fieldName = null;
+							ASTNode field = staticFieldAccess.getField();
+							if (field instanceof VariableReference) {
+								fieldName = ((VariableReference) field)
+										.getName();
+							}
+							if (fieldName != null
+									&& staticFieldAccess.getDispatcher() != null) {
+								IEvaluatedType dispatcherType = PHPTypeInferenceUtils
+										.resolveExpression(sourceModule,
+												parsedUnit, context,
+												staticFieldAccess
+														.getDispatcher());
+								if (dispatcherType != null) {
+									IModelElement[] elements = PHPTypeInferenceUtils
+											.getModelElements(
+													dispatcherType,
+													(ISourceModuleContext) context,
+													offset);
+									List<IModelElement> fields = new LinkedList<IModelElement>();
+									if (elements != null) {
+										for (IModelElement element : elements) {
+											if (element instanceof IType) {
+												IType type = (IType) element;
+												try {
+													fields.addAll(Arrays
+															.asList(PHPModelUtils
+																	.getTypeField(
+																			type,
+																			fieldName,
+																			true)));
+												} catch (ModelException e) {
+													PHPCorePlugin.log(e);
+												}
+											}
+										}
+									}
+									return fields
+											.toArray(new IModelElement[fields
+													.size()]);
+								}
+							}
+						}
+
 					}
 				}
 				// Class name in declaration
