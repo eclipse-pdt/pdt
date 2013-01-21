@@ -50,27 +50,7 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 		 */
 		private void checkDispatch(ASTNode node) {
 			if (node.getType() == ASTNode.IDENTIFIER) {
-				// ((Identifier)node).resolveBinding()
-				IModelElement[] elements = null;
-				boolean processed = false;
-				try {
-					elements = (getSourceModule()).codeSelect(node.getStart(),
-							node.getLength());
-					if (elements != null && elements.length > 0) {
-						processed = true;
-						for (IModelElement iModelElement : elements) {
-							if (iModelElement instanceof SourceMethod) {
-								highlight(node);
-								break;
-							}
-						}
-					}
-				} catch (ModelException e) {
-				}
-				if (!processed) {
-					highlight(node);
-				}
-
+				highlight(node);
 			}
 			if (node.getType() == ASTNode.VARIABLE) {
 				Variable id = (Variable) node;

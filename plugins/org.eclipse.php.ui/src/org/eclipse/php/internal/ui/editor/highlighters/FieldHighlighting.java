@@ -64,26 +64,7 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 
 		public boolean visit(Variable var) {
 			if (visitField > 0 && !var.isDollared()) {
-
-				IModelElement[] elements = null;
-				boolean processed = false;
-				try {
-					elements = (getSourceModule()).codeSelect(var.getStart(),
-							var.getLength());
-					if (elements != null && elements.length > 0) {
-						processed = true;
-						for (IModelElement iModelElement : elements) {
-							if ((iModelElement instanceof SourceField)) {
-								highlight(var);
-								break;
-							}
-						}
-					}
-				} catch (ModelException e) {
-				}
-				if (!processed) {
-					highlight(var);
-				}
+				highlight(var);
 			}
 			return true;
 		}
