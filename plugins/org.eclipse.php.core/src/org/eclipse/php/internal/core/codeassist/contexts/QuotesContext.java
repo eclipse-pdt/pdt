@@ -21,10 +21,14 @@ import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes
  * @author michael
  */
 public class QuotesContext extends AbstractCompletionContext {
+	private IncludeStatementContext includeStatementContext = new IncludeStatementContext();
 
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
+			return false;
+		}
+		if (includeStatementContext.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
 		return (getPartitionType() == PHPPartitionTypes.PHP_QUOTED_STRING);
