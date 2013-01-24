@@ -582,6 +582,9 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 										StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
 										(String) marker
 												.getAttribute(IMarker.LOCATION));
+						IPath localPath = EnvironmentPathUtils
+								.getLocalPath(Path.fromPortableString(fileName));
+						fileName = localPath.toString();
 					}
 
 					fileName = RemoteDebugger.convertToRemoteFilename(fileName,
