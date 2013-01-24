@@ -1,0 +1,59 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+
+namespace bar\baz
+{
+	class Target { function bar_baz(); }
+}
+
+namespace foo
+{
+	class TestAbsolute
+	{
+		/**
+		 * @return \bar\baz\Target
+		 */
+		function test() {}
+	}
+
+	class TestRelative
+	{
+		/**
+		 * @return bar\baz\Target
+		 */
+		function test() {}
+	}
+	bar| //call CA here
+}
+?>
+--EXPECT--
+<?php
+
+namespace bar\baz
+{
+	class Target { function bar_baz(); }
+}
+
+namespace foo
+{
+	use bar;
+	class TestAbsolute
+	{
+		/**
+		 * @return \bar\baz\Target
+		 */
+		function test() {}
+	}
+
+	class TestRelative
+	{
+		/**
+		 * @return bar\baz\Target
+		 */
+		function test() {}
+	}
+	bar\baz\ //call CA here
+}
+?>
