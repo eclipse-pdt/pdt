@@ -1247,6 +1247,14 @@
             sequence="M1+N"
 			contextId="org.eclipse.dltk.ui.context.views"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+      <key
+            commandId="org.eclipse.ui.window.nextEditor"
+            sequence="M1+TAB"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+      <key
+            commandId="org.eclipse.ui.window.previousEditor"
+            sequence="M1+M2+TAB"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
     <scheme
           description="PDT key bindings"
           id="org.eclipse.php.ui.keybindings.scheme"
