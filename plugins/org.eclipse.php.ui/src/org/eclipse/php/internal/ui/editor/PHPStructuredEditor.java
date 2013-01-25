@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.text.CharacterIterator;
 import java.util.*;
 
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.IFileBufferStatusCodes;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -115,7 +114,6 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.dnd.IDragAndDropService;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.IFoldingCommandIds;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -1973,12 +1971,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	protected void createActions() {
 		super.createActions();
 
-		// add handlers to handler service
-		IHandlerService handlerService = (IHandlerService) getSite()
-				.getService(IHandlerService.class);
-		IHandler toggleCommentHandler = new PHPToggleLineCommentHandler();
-		handlerService.activateHandler(ActionDefinitionIds.TOGGLE_COMMENT,
-				toggleCommentHandler);
 		final ResourceBundle resourceBundle = PHPUIMessages.getResourceBundle();
 
 		Action action = new GotoMatchingBracketAction(this);
