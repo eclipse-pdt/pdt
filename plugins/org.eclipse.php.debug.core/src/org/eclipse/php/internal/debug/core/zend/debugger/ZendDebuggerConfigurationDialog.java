@@ -41,6 +41,7 @@ public class ZendDebuggerConfigurationDialog extends
 	protected Text fDebugTextBox;
 	protected Text fClientIP;
 	protected Text fDebugResponseTimeout;
+	protected Button fUseNewProtocol;
 	protected ZendDebuggerConfiguration zendDebuggerConfiguration;
 
 	/**
@@ -100,6 +101,10 @@ public class ZendDebuggerConfigurationDialog extends
 		gridData.widthHint = convertWidthInCharsToPixels(100);
 		fDebugResponseTimeout
 				.addModifyListener(new DebugResponseTimeoutListener());
+		fUseNewProtocol = addCheckBox(
+				composite,
+				PHPDebugCoreMessages.ZendDebuggerConfigurationDialog_useNewProtocol,
+				PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL, 0);
 
 		internalInitializeValues(); // Initialize the dialog's values.
 
@@ -116,6 +121,8 @@ public class ZendDebuggerConfigurationDialog extends
 				.getString(PHPDebugCorePreferenceNames.CLIENT_IP));
 		fDebugResponseTimeout.setText(Integer.toString(prefs
 				.getInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT)));
+		fUseNewProtocol.setSelection(prefs
+				.getBoolean(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL));
 	}
 
 	protected void okPressed() {
@@ -124,10 +131,12 @@ public class ZendDebuggerConfigurationDialog extends
 				fRunWithDebugInfo.getSelection());
 		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT,
 				fDebugTextBox.getText());
-		prefs.setValue(PHPDebugCorePreferenceNames.CLIENT_IP, fClientIP
-				.getText());
+		prefs.setValue(PHPDebugCorePreferenceNames.CLIENT_IP,
+				fClientIP.getText());
 		prefs.setValue(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT,
 				Integer.parseInt(fDebugResponseTimeout.getText()));
+		prefs.setValue(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL,
+				fUseNewProtocol.getSelection());
 		PHPDebugPlugin.getDefault().savePluginPreferences(); // save
 		super.okPressed();
 	}

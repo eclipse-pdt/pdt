@@ -365,6 +365,12 @@
             id="org.eclipse.php.internal.debug.core.zend.debugger.messages.AddFilesResponse"
             name="Add Files Response">
       </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.IniAlteredNotification"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.IniAlteredNotificationHandler"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.IniAlteredNotification"
+            name="Ini Altered Notification">
+      </message>
 
   </extension>
   <extension

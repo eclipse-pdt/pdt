@@ -102,6 +102,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 	protected IBreakpointManager fBreakpointManager;
 	protected boolean fIsServerWindows = false;
 	protected DebugConnectionThread fConnectionThread;
+	protected Set<String> fAddFilesPaths;
 
 	/**
 	 * Constructs a new debug target in the given launch for the associated PHP
@@ -266,6 +267,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		fBreakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		fBreakpointManager.addBreakpointListener(this);
 		fBreakpointManager.addBreakpointManagerListener(this);
+		fAddFilesPaths = new HashSet<String>();
 	}
 
 	public IProcess getProcess() {
@@ -314,7 +316,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		return fLastStop;
 	}
 
-	String getLastFileName() {
+	public String getLastFileName() {
 		return fLastFileName;
 	}
 
@@ -1148,7 +1150,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		return false;
 	}
 
-	public void addBreakpointFiles() {
+	public void addBreakpointFiles(IProject... projects) {
 		if (debugger.getCurrentProtocolID() >= RemoteDebugger.PROTOCOL_ID_2012121702) {
 			List<String> paths = new ArrayList<String>();
 			try {
@@ -1157,9 +1159,17 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 							Arrays.asList(fBreakpointManager
 									.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE)));
 					if (breakpoints != null && breakpoints.size() > 0) {
-						getBreakpointFiles(fProject, paths, breakpoints);
-						getBreakpointsIncludePath(fProject, paths, breakpoints);
-						debugger.addFiles(paths.toArray(new String[paths.size()]));
+						for (IProject project : projects) {
+							getBreakpointFiles(project, paths, breakpoints);
+							getBreakpointsIncludePath(project, paths,
+									breakpoints);
+						}
+						int oldSize = fAddFilesPaths.size();
+						fAddFilesPaths.addAll(paths);
+						if (oldSize < fAddFilesPaths.size()) {
+							debugger.addFiles(fAddFilesPaths
+									.toArray(new String[paths.size()]));
+						}
 					}
 				}
 			} catch (CoreException e) {

@@ -66,6 +66,8 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String ZendDebuggerConfigurationDialog_invalid_response_time_exc;
 
 	public static String ZendDebuggerConfigurationDialog_runWithDebugInfo;
+
+	public static String ZendDebuggerConfigurationDialog_useNewProtocol;
 	public static String ZendDebuggerConfigurationDialog_zendDebugger;
 	public static String ZendDebuggerConfigurationDialog_zendDebuggerSettings;
 

@@ -22,6 +22,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathContainer;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -42,8 +43,11 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.*;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -837,8 +841,23 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 *         <code>false</code>
 	 */
 	protected boolean detectProtocolID() {
+		boolean isUseNewProtocol = false;
+		try {
+			ILaunchConfiguration config = getDebugHandler().getDebugTarget()
+					.getLaunch().getLaunchConfiguration();
+			String debuggerId = config.getAttribute(
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
+					DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
+			if (debuggerId == DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID) {
+				ZendDebuggerConfiguration debuggerConfiguration = (ZendDebuggerConfiguration) PHPDebuggersRegistry
+						.getDebuggerConfiguration(debuggerId);
+				isUseNewProtocol = debuggerConfiguration.isUseNewProtocol();
+			}
+		} catch (CoreException e) {
+			PHPDebugPlugin.log(e);
+		}
 		// check whether debugger is using the latest protocol ID:
-		if (setProtocol(PROTOCOL_ID_LATEST)) {
+		if (isUseNewProtocol && setProtocol(PROTOCOL_ID_LATEST)) {
 			return true;
 		}
 		// check whether debugger is using one of older protocol ID:

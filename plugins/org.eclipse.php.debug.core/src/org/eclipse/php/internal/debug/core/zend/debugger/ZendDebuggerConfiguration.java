@@ -66,6 +66,14 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		preferences.setValue(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, port);
 	}
 
+	public boolean isUseNewProtocol() {
+		return preferences.getBoolean(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL);
+	}
+
+	public void setUNewProtocol(boolean enable) {
+		preferences.setValue(PHPDebugCorePreferenceNames.ZEND_NEW_PROTOCOL, enable);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
