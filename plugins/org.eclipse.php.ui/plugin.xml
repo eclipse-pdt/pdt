@@ -1054,6 +1054,10 @@
 			categoryId="org.eclipse.ui.category.views" id="org.eclipse.php.ui.explorer" />
 
 		<!-- refactoring -->
+		<command name="Rename"
+			description="Rename" categoryId="org.eclipse.php.ui.category.refactoring"
+			id="org.eclipse.dltk.ui.edit.text.script.rename.element" />
+			
 		<command name="%ActionDefinition.moveElement.name"
 			description="%ActionDefinition.moveElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.move.element" />
@@ -1127,19 +1131,14 @@
 
 		<!-- refactoring -->
 		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
-			contextId="org.eclipse.php.ui.phpEditorScope" 
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="M2+M3+R">
-		</key>
-		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
 			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+R">
 		</key>
-		<key commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
-			contextId="org.eclipse.dltk.ui.context.views" 
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-			sequence="M2+M3+R">
-		</key>
+        <key
+            sequence="M2+M3+R"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.dltk.ui.edit.text.script.rename.element"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
 			contextId="org.eclipse.dltk.ui.context.views" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+V" />

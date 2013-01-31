@@ -64,6 +64,23 @@ public abstract class ModelUtils {
 		return null;
 	}
 
+	static public IMethod getMethod(StaticMethodInvocation methodInvocation) {
+		ITypeBinding type = methodInvocation.getClassName()
+				.resolveTypeBinding();
+		String methodName = getFunctionName(methodInvocation.getMethod()
+				.getFunctionName());
+		if (type != null && methodName != null) {
+			IMethodBinding[] methods = type.getDeclaredMethods();
+			for (IMethodBinding method : methods) {
+				if (method.getName().toLowerCase()
+						.equals(methodName.toLowerCase())) {
+					return (IMethod) method.getPHPElement();
+				}
+			}
+		}
+		return null;
+	}
+
 	static public IMethod getMethod(MethodDeclaration methodDeclaration) {
 		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
 		if (methodBinding == null) {
