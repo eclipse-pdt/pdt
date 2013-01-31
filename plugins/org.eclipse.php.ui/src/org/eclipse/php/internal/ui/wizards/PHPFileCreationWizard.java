@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.wizards;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.*;
@@ -195,7 +196,8 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 			}
 
 			try {
-				InputStream stream = openContentStream(contents);
+				InputStream stream = openContentStream(contents,
+						getCharSetValue(container));
 				if (file.exists()) {
 					file.setContents(stream, true, true, monitor);
 				} else {
@@ -248,12 +250,29 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 		/**
 		 * We will initialize file contents with a sample text.
 		 */
-		private static InputStream openContentStream(String contents) {
+		private static InputStream openContentStream(String contents,
+				String charSet) {
 			if (contents == null) {
 				contents = ""; //$NON-NLS-1$
 			}
+			byte[] bytes;
+			try {
+				bytes = contents.getBytes(charSet);
+			} catch (UnsupportedEncodingException e) {
+				bytes = contents.getBytes();
+			}
 
-			return new ByteArrayInputStream(contents.getBytes());
+			return new ByteArrayInputStream(bytes);
+		}
+
+		protected String getCharSetValue(IContainer container) {
+			try {
+				return container.getDefaultCharset(true);
+			} catch (CoreException e) {// If there is an error return the
+										// default
+				return WorkbenchEncoding.getWorkbenchDefaultEncoding();
+			}
+
 		}
 
 		private static void throwCoreException(String message)
