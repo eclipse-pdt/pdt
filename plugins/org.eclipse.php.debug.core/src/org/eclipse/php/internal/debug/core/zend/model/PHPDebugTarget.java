@@ -1168,7 +1168,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 						fAddFilesPaths.addAll(paths);
 						if (oldSize < fAddFilesPaths.size()) {
 							debugger.addFiles(fAddFilesPaths
-									.toArray(new String[paths.size()]));
+									.toArray(new String[fAddFilesPaths.size()]));
 						}
 					}
 				}
