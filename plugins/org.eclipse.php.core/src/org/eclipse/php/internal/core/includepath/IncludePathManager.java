@@ -241,8 +241,8 @@ public class IncludePathManager {
 						.getEntry();
 				IPath localPath = EnvironmentPathUtils.getLocalPath(entry
 						.getPath());
-				buf.append(entry.getEntryKind()).append(';').append(
-						localPath.toString());
+				buf.append(entry.getEntryKind()).append(';')
+						.append(localPath.toString());
 			} else {
 				IResource entry = (IResource) includePath.getEntry();
 				buf.append("0;").append(entry.getFullPath().toString());
@@ -272,10 +272,10 @@ public class IncludePathManager {
 
 	public static boolean isBuildpathAllowed(IBuildpathEntry entry) {
 		return ((entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER && !entry
-				.getPath().toString().equals(
-						LanguageModelInitializer.CONTAINER_PATH))
+				.getPath().toString()
+				.equals(LanguageModelInitializer.CONTAINER_PATH))
 				|| entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || entry
-				.getEntryKind() == IBuildpathEntry.BPE_PROJECT);
+					.getEntryKind() == IBuildpathEntry.BPE_PROJECT);
 	}
 
 	/**
@@ -312,13 +312,15 @@ public class IncludePathManager {
 
 		}
 		// update the include path for this project
-		setIncludePath(project, newIncludePathEntries
-				.toArray(new IncludePath[newIncludePathEntries.size()]));
+		setIncludePath(project,
+				newIncludePathEntries
+						.toArray(new IncludePath[newIncludePathEntries.size()]));
 
 		// if it's a library, remove it also from build path
 		IScriptProject scriptProject = DLTKCore.create(project);
-		if ((buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || buildpathEntry
-				.getEntryKind() == IBuildpathEntry.BPE_CONTAINER)) {
+		if ((buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY
+				|| buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER || buildpathEntry
+					.getEntryKind() == IBuildpathEntry.BPE_PROJECT)) {
 			BuildPathUtils.removeEntryFromBuildPath(scriptProject,
 					buildpathEntry);
 		}
@@ -348,8 +350,9 @@ public class IncludePathManager {
 			}
 		}
 		// update the include path for this project
-		setIncludePath(project, includePathEntries
-				.toArray(new IncludePath[includePathEntries.size()]));
+		setIncludePath(project,
+				includePathEntries.toArray(new IncludePath[includePathEntries
+						.size()]));
 	}
 
 	/**
@@ -379,8 +382,9 @@ public class IncludePathManager {
 				.getInstance().getIncludePaths(project)));
 
 		// update the include path for this project
-		setIncludePath(project, includePathEntries
-				.toArray(new IncludePath[includePathEntries.size()]));
+		setIncludePath(project,
+				includePathEntries.toArray(new IncludePath[includePathEntries
+						.size()]));
 	}
 
 	/**
