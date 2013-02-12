@@ -178,7 +178,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		boolean found = false;
 		IBuildpathEntry[] rawBuildpath = project.getRawBuildpath();
 		for (IBuildpathEntry entry : rawBuildpath) {
-			if (entry.isContainerEntry()
+			if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER
 					&& entry.getPath().equals(LANGUAGE_CONTAINER_PATH)) {
 				found = true;
 				break;
