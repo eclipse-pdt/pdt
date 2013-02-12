@@ -115,13 +115,11 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 				&& containerPath.segment(0).equals(CONTAINER_PATH)) {
 			try {
 				if (isPHPProject(scriptProject)) {
-					DLTKCore
-							.setBuildpathContainer(
-									containerPath,
-									new IScriptProject[] { scriptProject },
-									new IBuildpathContainer[] { new LanguageModelContainer(
-											containerPath, scriptProject) },
-									null);
+					DLTKCore.setBuildpathContainer(
+							containerPath,
+							new IScriptProject[] { scriptProject },
+							new IBuildpathContainer[] { new LanguageModelContainer(
+									containerPath, scriptProject) }, null);
 					initializeListener(containerPath, scriptProject);
 				}
 			} catch (Exception e) {
@@ -178,7 +176,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		boolean found = false;
 		IBuildpathEntry[] rawBuildpath = project.getRawBuildpath();
 		for (IBuildpathEntry entry : rawBuildpath) {
-			if (entry.isContainerEntry()
+			if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER
 					&& entry.getPath().equals(LANGUAGE_CONTAINER_PATH)) {
 				found = true;
 				break;
@@ -193,8 +191,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 					newSize);
 			newRawBuildpath.addAll(Arrays.asList(rawBuildpath));
 			newRawBuildpath.add(containerEntry);
-			project.setRawBuildpath(newRawBuildpath
-					.toArray(new IBuildpathEntry[newSize]), null);
+			project.setRawBuildpath(
+					newRawBuildpath.toArray(new IBuildpathEntry[newSize]), null);
 		}
 	}
 
