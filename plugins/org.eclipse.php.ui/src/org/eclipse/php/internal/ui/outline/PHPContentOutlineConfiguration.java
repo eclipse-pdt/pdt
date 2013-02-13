@@ -82,6 +82,7 @@ public class PHPContentOutlineConfiguration extends
 
 	/** See {@link #MODE_PHP}, {@link #MODE_HTML} */
 	private int mode;
+	private ISelection lastSelection = null;
 
 	public PHPContentOutlineConfiguration() {
 		super();
@@ -293,23 +294,37 @@ public class PHPContentOutlineConfiguration extends
 	public ISelection getSelection(final TreeViewer viewer,
 			final ISelection selection) {
 		final IContentProvider contentProvider = viewer.getContentProvider();
+		if (!selection.isEmpty())
+			lastSelection = selection;
 		if (contentProvider instanceof PHPOutlineContentProvider) {
 			if (MODE_PHP == mode) {
-				if (selection instanceof IStructuredSelection
-						&& selection instanceof TextSelection) {
+				if (lastSelection instanceof IStructuredSelection
+						&& lastSelection instanceof TextSelection) {
 					IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
 					if (activeEditor instanceof PHPStructuredEditor) {
 						ISourceReference computedSourceReference = ((PHPStructuredEditor) activeEditor)
 								.computeHighlightRangeSourceReference();
 						if (computedSourceReference != null) {
-							return new StructuredSelection(
+							Object parent = ((PHPOutlineContentProvider) contentProvider)
+									.getParent(computedSourceReference);
+							for (Object element : ((PHPOutlineContentProvider) contentProvider)
+									.getChildren(parent))
+								if (element == computedSourceReference) {
+									lastSelection = new StructuredSelection(
+											computedSourceReference);
+									return lastSelection;
+								}
+							lastSelection = new StructuredSelection(
 									computedSourceReference);
+							return lastSelection;
+							// return new StructuredSelection(
+							// computedSourceReference);
 						}
 					}
 				}
 			}
 		}
-		return super.getSelection(viewer, selection);
+		return super.getSelection(viewer, lastSelection);
 	}
 
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {

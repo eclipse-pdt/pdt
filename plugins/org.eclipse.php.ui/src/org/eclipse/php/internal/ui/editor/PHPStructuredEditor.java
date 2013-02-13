@@ -3337,7 +3337,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			int offset = sourceViewer.getVisibleRegion().getOffset();
 			caret[0] = offset + styledText.getCaretOffset();
 		}
-		IModelElement element = getElementAt(caret[0], false);
+		// IModelElement element = getElementAt(caret[0], false);
+		IModelElement element = getElementAt(caret[0], true);
 		if (!(element instanceof ISourceReference))
 			return null;
 		return (ISourceReference) element;
