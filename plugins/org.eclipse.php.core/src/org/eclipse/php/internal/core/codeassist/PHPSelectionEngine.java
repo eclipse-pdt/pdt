@@ -15,6 +15,7 @@ import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Declaration;
@@ -953,12 +954,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							}
 
 							// What can it be? Only class variables:
-							Set<IModelElement> fields = new TreeSet<IModelElement>(
-									new SourceFieldComparator());
+							// Set<IModelElement> fields = new
+							// TreeSet<IModelElement>(
+							// new SourceFieldComparator());
+							final List<IField> fields = new ArrayList<IField>();
 							for (IType t : types) {
-								fields.addAll(Arrays.asList(PHPModelUtils
-										.getTypeHierarchyField(t, elementName,
-												true, null)));
+								fields.addAll(Arrays
+										.asList(getTypeHierarchyField(t, null,
+												elementName, true, null)));
 							}
 							return fields.toArray(new IModelElement[fields
 									.size()]);
@@ -982,6 +985,29 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			PHPCorePlugin.log(e);
 		}
 		return EMPTY;
+	}
+
+	public static IField[] getTypeHierarchyField(IType type,
+			ITypeHierarchy hierarchy, String prefix, boolean exactName,
+			IProgressMonitor monitor) throws CoreException {
+		if (prefix == null) {
+			throw new NullPointerException();
+		}
+		final List<IField> fields = new ArrayList<IField>();
+		fields.addAll(Arrays.asList(PHPModelUtils.getTypeField(type, prefix,
+				exactName)));
+		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
+			Set<IModelElement> fieldSet = new TreeSet<IModelElement>(
+					new SourceFieldComparator());
+			fieldSet.addAll(Arrays.asList(PHPModelUtils
+					.getSuperTypeHierarchyField(type, hierarchy, prefix,
+							exactName, monitor)));
+			IField[] temp = fieldSet.toArray(new IField[fields.size()]);
+			for (IField field : temp) {
+				fields.add(field);
+			}
+		}
+		return fields.toArray(new IField[fields.size()]);
 	}
 
 	private static IModelElement[] getGeneralizationTypes(
@@ -1104,11 +1130,17 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				.getFields(prefix, sourceModule, offset, null, null);
 	}
 
-	private class SourceFieldComparator implements Comparator<IModelElement> {
+	private static class SourceFieldComparator implements
+			Comparator<IModelElement> {
 		public int compare(IModelElement o1, IModelElement o2) {
 			try {
 				SourceRefElement e1 = (SourceRefElement) o1;
 				SourceRefElement e2 = (SourceRefElement) o2;
+				IType type1 = (IType) e1.getAncestor(IModelElement.TYPE);
+				IType type2 = (IType) e2.getAncestor(IModelElement.TYPE);
+				if (type1 != null && type2 != null && type1 != type2) {
+					return -1;
+				}
 				if (e1.getSourceModule() == e2.getSourceModule()) {
 					ISourceRange r1 = e1.getSourceRange();
 					ISourceRange r2 = e2.getSourceRange();
