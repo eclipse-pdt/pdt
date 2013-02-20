@@ -43,6 +43,10 @@ public class PHPResponseHandler {
 				IBreakpoint breakpoint = fDebugTarget.findBreakpoint(fileName,
 						lineNumber);
 				if (breakpoint != null) {
+					if (fDebugTarget.isFirstBreakpointAdded(breakpoint)) {
+						fDebugTarget.addBreakpointFiles(fDebugTarget
+								.getProject());
+					}
 					PHPLineBreakpoint lineBreakpoint = (PHPLineBreakpoint) breakpoint;
 					org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint rbp = lineBreakpoint
 							.getRuntimeBreakpoint();

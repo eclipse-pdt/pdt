@@ -1150,6 +1150,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget,
 		return false;
 	}
 
+	public boolean isFirstBreakpointAdded(IBreakpoint breakpoint) {
+		return fAddFilesPaths.size() == 0;
+	}
+
 	public void addBreakpointFiles(IProject... projects) {
 		if (debugger.getCurrentProtocolID() >= RemoteDebugger.PROTOCOL_ID_2012121702) {
 			List<String> paths = new ArrayList<String>();
