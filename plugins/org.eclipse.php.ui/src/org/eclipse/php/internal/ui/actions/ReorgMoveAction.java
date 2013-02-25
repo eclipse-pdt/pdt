@@ -89,7 +89,9 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 
 			// don't open the move dialog, resource could be moved directly
 			// using the drop target
-			
+			if (target != null && directMove(selection) == true) {
+				return null;
+			}
 
 			action.selectionChanged(selection);
 
