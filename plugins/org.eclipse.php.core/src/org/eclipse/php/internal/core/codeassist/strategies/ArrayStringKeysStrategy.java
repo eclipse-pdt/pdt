@@ -53,6 +53,10 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 
 		SourceRange replaceRange = getReplacementRange(context);
 		ArrayKeyContext arrayContext = (ArrayKeyContext) context;
+		if (arrayContext.hasQuotes()) {// https://bugs.eclipse.org/bugs/show_bug.cgi?id=401766
+			replaceRange = new SourceRange(replaceRange.getOffset(),
+					replaceRange.getLength() + 1);
+		}
 		CompletionRequestor requestor = arrayContext.getCompletionRequestor();
 
 		String prefix = arrayContext.getPrefix();
