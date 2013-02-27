@@ -33,7 +33,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 
 %eofclose
 
-%caseless
 %function next_token
 
 %standalone
