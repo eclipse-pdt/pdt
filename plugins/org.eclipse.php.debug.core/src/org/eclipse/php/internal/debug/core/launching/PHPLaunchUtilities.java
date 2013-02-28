@@ -935,6 +935,13 @@ public class PHPLaunchUtilities {
 		return cmdLineList.toArray(new String[cmdLineList.size()]);
 	}
 
+	public static String[] getCommandLine(ILaunchConfiguration configuration,
+			String phpExe, String phpConfigDir, String scriptPath, String[] args)
+			throws CoreException {
+		return getCommandLine(configuration, phpExe, phpConfigDir, scriptPath,
+				args, null);
+	}
+
 	public static String[] getCommandLineForPHP54BuildinServer(
 			ILaunchConfiguration configuration, String phpExe,
 			String phpConfigDir, String server, String root, String routerFile,
