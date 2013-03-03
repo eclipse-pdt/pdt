@@ -163,7 +163,7 @@ public class PHPDocMethodReturnTypeEvaluator extends
 						if (typeName.equals(SELF_RETURN_TYPE) && types != null) {
 							for (IType t : types) {
 								IEvaluatedType type = getEvaluatedType(
-										t.getElementName(), currentNamespace);
+										PHPModelUtils.getFullName(t), null);
 								if (type != null) {
 									evaluated.add(type);
 								}
