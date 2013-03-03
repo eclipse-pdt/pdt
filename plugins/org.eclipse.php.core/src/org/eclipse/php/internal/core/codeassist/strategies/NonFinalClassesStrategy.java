@@ -46,7 +46,7 @@ public class NonFinalClassesStrategy extends GlobalClassesStrategy {
 	}
 
 	@Override
-	protected Object getExtraInfo() {
+	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }

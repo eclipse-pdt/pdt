@@ -81,7 +81,7 @@ public class UseTraitNameStrategy extends GlobalTypesStrategy {
 	}
 
 	@Override
-	protected Object getExtraInfo() {
+	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }

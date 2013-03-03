@@ -29,7 +29,7 @@ public class FunctionParameterTypeStrategy extends GlobalTypesStrategy {
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return " "; //$NON-NLS-1$
 	}
-	protected Object getExtraInfo() {
+	protected int getExtraInfo() {
 		return ProposalExtraInfo.TYPE_ONLY;
 	}
 }

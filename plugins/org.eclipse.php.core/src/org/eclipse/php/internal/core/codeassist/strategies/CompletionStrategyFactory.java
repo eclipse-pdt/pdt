@@ -103,7 +103,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new GlobalClassesStrategy(
 					context) {
 				@Override
-				protected Object getExtraInfo() {
+				protected int getExtraInfo() {
 					return ProposalExtraInfo.TYPE_ONLY;
 				}
 			} };

@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.AliasType;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
@@ -83,13 +84,28 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		// now we compute type suffix in PHPCompletionProposalCollector
 		String suffix = "";//$NON-NLS-1$ 
 		String nsSuffix = getNSSuffix(abstractContext);
+		int extraInfo = getExtraInfo();
+		if ((abstractContext.getOffset() - abstractContext.getPrefix().length()
+				- 1 >= 0)
+				&& (abstractContext.getDocument().getChar(
+						abstractContext.getOffset()
+								- abstractContext.getPrefix().length() - 1) == '\'' || abstractContext
+						.getDocument().getChar(
+								abstractContext.getOffset()
+										- abstractContext.getPrefix().length()
+										- 1) == '\"')) {
+			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_NAMESPACE;
+		}
+		if ("namespace".equals(abstractContext.getPreviousWord(1))) {
+			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_NAMESPACE;
+		}
 
 		for (IType type : types) {
 			try {
 				int flags = type.getFlags();
 				reporter.reportType(type,
 						PHPFlags.isNamespace(flags) ? nsSuffix : suffix,
-						replacementRange, getExtraInfo());
+						replacementRange, extraInfo);
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
@@ -394,8 +410,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	 * 
 	 * @return
 	 */
-	protected Object getExtraInfo() {
-		// TODO Auto-generated method stub
-		return null;
+	protected int getExtraInfo() {
+		return ProposalExtraInfo.DEFAULT;
 	}
 }

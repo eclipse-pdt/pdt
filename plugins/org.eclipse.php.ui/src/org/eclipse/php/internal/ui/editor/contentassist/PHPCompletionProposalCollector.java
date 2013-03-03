@@ -286,6 +286,11 @@ public class PHPCompletionProposalCollector extends
 				return DOUBLE_COLON.equals(nextWord) ? defaultResult
 						: DOUBLE_COLON;
 			}
+
+			@Override
+			public Object getExtraInfo() {
+				return typeProposal.getExtraInfo();
+			}
 		};
 
 		scriptProposal.setRelevance(computeRelevance(typeProposal));

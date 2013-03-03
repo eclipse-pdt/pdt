@@ -28,7 +28,7 @@ public class NamespaceDocTypesCompositeStrategy extends
 		if (concreteContext.isGlobal()) {
 			GlobalTypesStrategy strategy = new GlobalTypesStrategy(context) {
 
-				protected Object getExtraInfo() {
+				protected int getExtraInfo() {
 					return ProposalExtraInfo.TYPE_ONLY;
 				}
 			};

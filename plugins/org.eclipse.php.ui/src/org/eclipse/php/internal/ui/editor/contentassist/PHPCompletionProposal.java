@@ -27,6 +27,7 @@ import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.strategies.IncludeStatementStrategy;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.Image;
@@ -180,5 +181,9 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 					}, true);
 		}
 		return fCreator;
+	}
+
+	public Object getExtraInfo() {
+		return ProposalExtraInfo.DEFAULT;
 	}
 }

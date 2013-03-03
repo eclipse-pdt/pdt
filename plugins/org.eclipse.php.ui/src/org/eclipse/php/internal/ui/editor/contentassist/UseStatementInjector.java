@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.codeassist.AliasType;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -218,12 +219,20 @@ public class UseStatementInjector {
 			if (modelElement.getElementType() == IModelElement.TYPE
 					&& PHPFlags.isNamespace(((IType) modelElement).getFlags())) {
 
+				if (proposal instanceof PHPCompletionProposal) {
+					PHPCompletionProposal phpCompletionProposal = (PHPCompletionProposal) proposal;
+					if (ProposalExtraInfo.isNoInsert(phpCompletionProposal
+							.getExtraInfo())) {
+						return offset;
+					}
+				}
 				if (offset - proposal.getReplacementLength() > 0) {
 					String prefix = document.get(
 							offset - proposal.getReplacementLength(),
 							proposal.getReplacementLength());
-					String fullName = PHPModelUtils
-							.getFullName((IType) modelElement);
+					String fullName = ((IType) modelElement).getElementName();
+					// String fullName = PHPModelUtils
+					// .getFullName((IType) modelElement);
 					if (fullName.startsWith(prefix)
 							&& prefix
 									.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) < 0) {
