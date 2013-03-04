@@ -42,6 +42,7 @@ public class ClassObjMemberContext extends ClassMemberContext {
 
 	private boolean isThis;
 	private boolean isDirectThis;
+	private boolean isParent;
 
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
@@ -66,6 +67,18 @@ public class ClassObjMemberContext extends ClassMemberContext {
 		}
 
 		if (!isThis) {
+			lhsIndex = elementStart - "$parent".length()
+					- getTriggerType().getName().length();
+			if (lhsIndex >= 0) {
+				TextSequence statementText = getStatementText();
+				String parentText = statementText.subSequence(lhsIndex,
+						elementStart - getTriggerType().getName().length())
+						.toString();
+				if (parentText.equals("$parent")) { //$NON-NLS-1$
+					isParent = true;
+				}
+			}
+
 			IType[] types = getLhsTypes();
 			if (types != null && types.length > 0) {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil
@@ -121,5 +134,9 @@ public class ClassObjMemberContext extends ClassMemberContext {
 	 */
 	public boolean isDirectThis() {
 		return isDirectThis;
+	}
+
+	public boolean isParent() {
+		return isParent;
 	}
 }
