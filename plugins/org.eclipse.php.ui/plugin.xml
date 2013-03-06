@@ -1041,6 +1041,12 @@
 			id="org.eclipse.pdt.ui.edit.text.php.show.outline" />
 
 		<!-- source -->
+      <command
+            name="%ActionDefinition.sourceQuickMenu.name"
+            description="%ActionDefinition.sourceQuickMenu.description"
+            categoryId="org.eclipse.jdt.ui.category.source"
+            id="org.eclipse.dltk.ui.edit.text.java.source.quickMenu">
+      </command>
 		<command name="%action.addDescription.name" description="%action.addDescription.description"
 			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.add.description" />
 		<command name="%toggleMarkOccurrences.label" description="%toggleMarkOccurrences.description"
@@ -1110,6 +1116,32 @@
             id="org.eclipse.php.ui.newWizard"
             name="%command.newWizard.name">
       </command>
+      
+<!-- edit -->
+      <command
+            name="%ActionDefinition.selectEnclosing.name"
+            description="%ActionDefinition.selectEnclosing.description"
+            categoryId="org.eclipse.ui.category.edit"
+            id="org.eclipse.pdt.ui.edit.text.select.enclosing">
+      </command>
+      <command
+            name="%ActionDefinition.selectNext.name"
+            description="%ActionDefinition.selectNext.description"
+            categoryId="org.eclipse.ui.category.edit"
+            id="org.eclipse.pdt.ui.edit.text.select.next">
+      </command>
+      <command
+            name="%ActionDefinition.selectPrevious.name"
+            description="%ActionDefinition.selectPrevious.description"
+            categoryId="org.eclipse.ui.category.edit"
+            id="org.eclipse.pdt.ui.edit.text.select.previous">
+      </command>
+      <command
+            name="%ActionDefinition.selectLast.name"
+            description="%ActionDefinition.selectLast.description"
+            categoryId="org.eclipse.ui.category.edit"
+            id="org.eclipse.pdt.ui.edit.text.select.last">
+      </command>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -1126,6 +1158,21 @@
 		<key sequence="M1+O" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.dltk.ui.edit.text.script.show.outline" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<!-- source -->
+      <key
+            sequence="M2+M3+S" contextId="org.eclipse.dltk.ui.context.views"
+            commandId="org.eclipse.dltk.ui.edit.text.java.source.quickMenu"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="M2+M3+S"
+            commandId=""
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="COMMAND+ALT+S" contextId="org.eclipse.dltk.ui.context.views"
+            commandId="org.eclipse.dltk.ui.edit.text.java.source.quickMenu"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+            
 		<key sequence="M1+M2+J" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.php.ui.edit.text.add.description" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 
@@ -1254,6 +1301,77 @@
             commandId="org.eclipse.ui.window.previousEditor"
             sequence="M1+M2+TAB"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+<!-- edit -->
+      <key
+            sequence="M2+M3+ARROW_UP"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.pdt.ui.edit.text.select.enclosing"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="M2+M3+ARROW_UP"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId=""
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="CTRL+SHIFT+ARROW_UP"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.pdt.ui.edit.text.select.enclosing"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+            
+      <key
+            sequence="M2+M3+ARROW_RIGHT"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.pdt.ui.edit.text.select.next"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="M2+M3+ARROW_RIGHT"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId=""
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="CTRL+SHIFT+ARROW_RIGHT"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.pdt.ui.edit.text.select.next"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            sequence="M2+M3+ARROW_LEFT"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.pdt.ui.edit.text.select.previous"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="M2+M3+ARROW_LEFT"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId=""
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="CTRL+SHIFT+ARROW_LEFT"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.pdt.ui.edit.text.select.previous"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            sequence="M2+M3+ARROW_DOWN"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.pdt.ui.edit.text.select.last"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="M2+M3+ARROW_DOWN"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId=""
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            platform="carbon"
+            sequence="CTRL+SHIFT+ARROW_DOWN"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.pdt.ui.edit.text.select.last"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+            
     <scheme
           description="PDT key bindings"
           id="org.eclipse.php.ui.keybindings.scheme"
