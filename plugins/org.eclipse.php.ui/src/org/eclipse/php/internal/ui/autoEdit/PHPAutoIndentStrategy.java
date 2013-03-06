@@ -171,7 +171,12 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		}
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < startingEmptyLines; i++) {
-			sb.append(newline);
+			String lineDelimiter = newline;
+			try {
+				lineDelimiter = tempdocument.getLineDelimiter(i);
+			} catch (BadLocationException e) {
+			}
+			sb.append(lineDelimiter);
 		}
 		for (int i = 0; i < list.size(); i++) {
 			if (!formatter.getIgnoreLines().contains(i + 1)) {
@@ -180,7 +185,13 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 			sb.append(list.get(i));
 			if (i == list.size() - 1) {
 			} else {
-				sb.append(newline);
+				String lineDelimiter = newline;
+				try {
+					lineDelimiter = tempdocument
+							.getLineDelimiter(startingEmptyLines + i);
+				} catch (BadLocationException e) {
+				}
+				sb.append(lineDelimiter);
 			}
 
 		}
