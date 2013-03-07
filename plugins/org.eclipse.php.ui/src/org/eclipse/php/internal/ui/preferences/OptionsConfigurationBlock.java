@@ -495,7 +495,8 @@ public abstract class OptionsConfigurationBlock {
 	}
 
 	protected String getValue(Key key) {
-		if (fDisabledProjectSettings != null) {
+		if (fDisabledProjectSettings != null
+				&& fDisabledProjectSettings.get(key) != null) {
 			return (String) fDisabledProjectSettings.get(key);
 		}
 		return key.getStoredValue(fLookupOrder, false, fManager);
