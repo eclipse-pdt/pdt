@@ -662,6 +662,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 						getSelectedDebuggerId());
 				exes.setDefaultItem(getSelectedDebuggerId(), phpExe);
 
+				ServersManager.setDefaultServer(project,
+						fDefaultServer.getText());
 			} else {
 				if (debugUINode != null) {
 					// Removed a project specific
