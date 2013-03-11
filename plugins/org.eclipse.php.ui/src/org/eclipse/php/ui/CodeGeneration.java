@@ -161,6 +161,11 @@ public class CodeGeneration {
 	 *             Thrown when the evaluation of the code template fails.
 	 * @since 3.1
 	 */
+	public static String getFileComment(ISourceModule sm, String lineDelimiter)
+			throws CoreException {
+		return StubUtility.getFileComment(sm, lineDelimiter);
+	}
+
 	public static String getFileComment(IScriptProject sp, String lineDelimiter)
 			throws CoreException {
 		return StubUtility.getFileComment(sp, lineDelimiter);

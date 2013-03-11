@@ -237,8 +237,7 @@ public class AddDescriptionAction extends Action implements
 			String lineDelim) {
 		String delimPlusIndent = lineDelim + indentation;
 		String indentedPattern = originalPattern.replaceAll(lineDelim,
-				delimPlusIndent)
-				+ delimPlusIndent;
+				delimPlusIndent) + delimPlusIndent;
 
 		return indentedPattern;
 	}
@@ -251,8 +250,8 @@ public class AddDescriptionAction extends Action implements
 	private String createTypeComment(IType type, String lineDelimiter)
 			throws CoreException {
 
-		return CodeGeneration.getTypeComment(type.getScriptProject(), type
-				.getTypeQualifiedName(), /* typeParameterNames */null,
+		return CodeGeneration.getTypeComment(type.getScriptProject(),
+				type.getTypeQualifiedName(), /* typeParameterNames */null,
 				lineDelimiter);
 	}
 
@@ -399,8 +398,7 @@ public class AddDescriptionAction extends Action implements
 						&& region.getType() == PHPRegionContext.PHP_CONTENT) {
 					phpScriptRegion = (IPhpScriptRegion) region;
 					try {
-						docBlock = CodeGeneration.getFileComment(data
-								.getScriptProject(), null);
+						docBlock = CodeGeneration.getFileComment(data, null);
 					} catch (CoreException e) {
 						Logger.logException(
 								"Generating default phpdoc comment", e);

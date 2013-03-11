@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.corext.util.Strings;
 import org.eclipse.dltk.internal.ui.DLTKUIStatus;
@@ -191,6 +192,24 @@ public class StubUtility {
 	 * @see org.eclipse.jdt.ui.CodeGeneration#getFileComment(ICompilationUnit,
 	 * String)
 	 */
+	public static String getFileComment(ISourceModule sm, String lineDelimiter)
+			throws CoreException {
+		Template template = getCodeTemplate(
+				CodeTemplateContextType.FILECOMMENT_ID, sm.getScriptProject());
+		if (template == null) {
+			return null;
+		}
+
+		CodeTemplateContext context = new CodeTemplateContext(
+				template.getContextTypeId(), sm.getScriptProject(),
+				lineDelimiter);
+		context.setVariable(CodeTemplateContextType.FILENAME,
+				sm.getElementName());
+		context.setVariable(CodeTemplateContextType.PROJECTNAME, sm
+				.getScriptProject().getElementName());
+		return evaluateTemplate(context, template);
+	}
+
 	public static String getFileComment(IScriptProject sp, String lineDelimiter)
 			throws CoreException {
 		Template template = getCodeTemplate(
