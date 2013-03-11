@@ -189,10 +189,12 @@ public class PHPElementLinks {
 			IType[] types = null;
 
 			try {
-				
-				int offset = member.getSourceRange() != null ? member.getSourceRange().getOffset() : 0;
+
+				int offset = member.getSourceRange() != null ? member
+						.getSourceRange().getOffset() : 0;
 				types = PHPModelUtils.getTypes(refTypeName,
-						member.getSourceModule(), offset, new NullProgressMonitor());
+						member.getSourceModule(), offset,
+						new NullProgressMonitor());
 			} catch (ModelException e) {
 				PHPUiPlugin.log(e);
 			}
@@ -202,9 +204,12 @@ public class PHPElementLinks {
 				if (segments.length > 3) {
 					String refMemberName = segments[3];
 					IMethod method = type.getMethod(refMemberName);
-					if (method != null) {
+					if (method != null && method.exists()) {
 						return method;
 					} else {
+						// if (refMemberName.startsWith("$")) {
+						// refMemberName = refMemberName.substring(0);
+						// }
 						return type.getField(refMemberName);
 					}
 				}

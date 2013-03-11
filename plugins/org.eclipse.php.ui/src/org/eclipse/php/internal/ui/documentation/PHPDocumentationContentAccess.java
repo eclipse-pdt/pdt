@@ -923,14 +923,25 @@ public class PHPDocumentationContentAccess {
 					description = url;
 				}
 				String link = "<a href=\"" + url + "\">" + description + "</a>";
-				m.appendReplacement(sb, link);
+				// m.appendReplacement(sb, link);
+				sb.append(fBuf.toString().replace(m.group(), link));
 			} else {
-				m.appendReplacement(sb,
-						handleLink(Arrays.asList(new TypeReference(0, 0, url)))
-								.toString());
+				sb.append(fBuf.toString()
+						.replace(
+								m.group(),
+								handleLink(Arrays.asList(new TypeReference(0,
+										0, url)))));
+				// try {
+				// m.appendReplacement(
+				// sb,
+				// handleLink(
+				// Arrays.asList(new TypeReference(0, 0, url)))
+				// .toString());
+				// } catch (Exception e) {
+				// }
 			}
 		}
-		m.appendTail(sb);
+		// m.appendTail(sb);
 		fBuf = sb;
 		sb = null;
 	}
