@@ -639,7 +639,8 @@ public class PHPDocumentationContentAccess {
 			fBuf.append(magicMethod.desc);
 			fBuf.append(BLOCK_TAG_START);
 
-			if (magicMethod.parameterNames.length > 0) {
+			if (magicMethod.parameterNames != null
+					&& magicMethod.parameterNames.length > 0) {
 
 				fBuf.append("<dt>"); //$NON-NLS-1$
 				fBuf.append(PHPDocumentationMessages.JavaDoc2HTMLTextReader_parameters_section);
