@@ -50,8 +50,11 @@ public abstract class PHPCoreOptionsConfigurationBlock extends
 		if (fProject != null) {
 			final Key versionKey = getPHPCoreKey(Keys.PHP_VERSION);
 			// synch the php facets version if needed
-			final String newVersion = versionKey.getStoredValue(currContext,
-					fManager);
+			String newVersion = versionKey
+					.getStoredValue(currContext, fManager);
+			if (newVersion == null) {
+				newVersion = getValue(versionKey);
+			}
 			final IStatus status = PHPFacets.setFacetedVersion(fProject,
 					PHPVersion.byAlias(newVersion));
 			if (!status.isOK()) {
