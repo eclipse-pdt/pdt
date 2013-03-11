@@ -552,8 +552,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						mi.isConstructor = false;
 						mi.returnType = split[0];
 
-						MagicMethod magicMethod = MagicMemberUtil
-								.getMagicMethod(docTag.getValue());
+						MagicMethod magicMethod;
+						if (mi.name != null && mi.name.indexOf('(') > 0) {
+							magicMethod = MagicMemberUtil
+									.getMagicMethod2(docTag.getValue());
+							mi.name = magicMethod.name;
+						} else {
+							magicMethod = MagicMemberUtil.getMagicMethod(docTag
+									.getValue());
+						}
 						if (magicMethod != null) {
 							mi.parameterNames = magicMethod.parameterNames;
 							mi.parameterTypes = magicMethod.parameterTypes;

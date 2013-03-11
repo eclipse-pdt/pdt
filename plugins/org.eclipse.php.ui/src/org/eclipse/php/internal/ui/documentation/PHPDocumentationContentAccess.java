@@ -700,6 +700,11 @@ public class PHPDocumentationContentAccess {
 									.equals(member.getElementName())) {
 								return MagicMemberUtil.getMagicMethod(docTag
 										.getValue());
+							} else if (MagicMemberUtil
+									.removeParenthesis2(split).equals(
+											member.getElementName())) {
+								return MagicMemberUtil.getMagicMethod2(docTag
+										.getValue());
 							}
 						}
 					}

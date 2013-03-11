@@ -480,6 +480,10 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 						}
 
 						String name = removeParenthesis(split);
+						int index = name.indexOf('(');
+						if (index > 0) {
+							name = name.substring(0, index);
+						}
 						int offset = docTag.sourceStart();
 						int length = docTag.sourceStart() + 6;
 						modifyDeclaration(null, new DeclarationInfo(
