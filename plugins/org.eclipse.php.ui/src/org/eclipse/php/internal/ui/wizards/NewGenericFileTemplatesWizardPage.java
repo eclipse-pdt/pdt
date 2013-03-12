@@ -297,8 +297,8 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		}
 		resetTableViewerInput();
 		Dialog.applyDialogFont(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.NEW);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.NEW);
 		setControl(parent);
 	}
 
@@ -447,6 +447,14 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		return PHPTemplateStore.compileTemplate(
 				getTemplatesContextTypeRegistry(), template, containerName,
 				fileName);
+	}
+
+	public CompiledTemplate compileTemplate(String containerName,
+			String fileName, String lineDelimiter) {
+		Template template = getSelectedTemplate();
+		return PHPTemplateStore.compileTemplate(
+				getTemplatesContextTypeRegistry(), template, containerName,
+				fileName, lineDelimiter);
 	}
 
 	public TemplateProposal createTemplateProposal() {

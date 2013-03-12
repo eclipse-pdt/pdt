@@ -14,16 +14,15 @@ package org.eclipse.php.internal.ui.editor.templates;
 import java.util.*;
 
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.templates.IScriptTemplateIndenter;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.dltk.utils.TextUtils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.templates.Template;
-import org.eclipse.jface.text.templates.TemplateBuffer;
-import org.eclipse.jface.text.templates.TemplateException;
-import org.eclipse.jface.text.templates.TemplateVariable;
+import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.templates.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
@@ -37,6 +36,8 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 	private static final String DOLLAR_SIGN = "$";
 	public static final char BLANK = ' ';
 	public static final char TAB = '\t';
+
+	private String fLineDelimiter;
 
 	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType,
 			IDocument document, int offset, int length,
@@ -77,7 +78,39 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 					newPattern, template.isAutoInsertable());
 
 		}
-		TemplateBuffer result = super.evaluate(template);
+		if (!canEvaluate(template))
+			return null;
+
+		final String[] lines = TextUtils.splitLines(template.getPattern());
+		if (lines.length > 1) {
+			String delimeter;
+			if (fLineDelimiter == null) {
+				delimeter = TextUtilities
+						.getDefaultLineDelimiter(getDocument());
+			} else {
+				delimeter = fLineDelimiter;
+			}
+			final String indent = calculateIndent(getDocument(), getStart());
+			final IScriptTemplateIndenter indenter = getIndenter();
+			final StringBuffer buffer = new StringBuffer(lines[0]);
+
+			// Except first line
+			for (int i = 1; i < lines.length; i++) {
+				buffer.append(delimeter);
+				indenter.indentLine(buffer, indent, lines[i]);
+			}
+
+			template = new Template(template.getName(),
+					template.getDescription(), template.getContextTypeId(),
+					buffer.toString(), template.isAutoInsertable());
+		}
+
+		TemplateTranslator translator = new TemplateTranslator();
+		TemplateBuffer buffer = translator.translate(template);
+
+		getContextType().resolve(buffer, this);
+
+		TemplateBuffer result = buffer;
 		// 300533: Switching through template keys? in fore and forek template
 		// is corrupter
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=300533
@@ -146,4 +179,9 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 		return templateVariable.isUnambiguous()
 				&& DOLLAR.equals(templateVariable.getType());
 	}
+
+	public void setLineDelimiter(String lineDelimiter) {
+		this.fLineDelimiter = lineDelimiter;
+	}
+
 }

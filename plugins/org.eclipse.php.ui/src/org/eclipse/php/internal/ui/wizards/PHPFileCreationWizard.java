@@ -21,12 +21,15 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -70,8 +73,15 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				.getContainerName();
 		final String fileName = phpFileCreationWizardPage.getFileName();
 		newPhpTemplatesWizardPage.resetTableViewerInput();
+		IScriptProject project = null;
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IResource resource = root.findMember(new Path(containerName));
+		if (!resource.exists() || !(resource instanceof IContainer)) {
+			project = DLTKCore.create(resource.getProject());
+		}
+		String lineSeparator = Util.getLineSeparator(null, project);
 		final PHPTemplateStore.CompiledTemplate template = this.newPhpTemplatesWizardPage
-				.compileTemplate(containerName, fileName);
+				.compileTemplate(containerName, fileName, lineSeparator);
 
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor)
