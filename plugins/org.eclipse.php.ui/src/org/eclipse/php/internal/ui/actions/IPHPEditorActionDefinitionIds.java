@@ -225,4 +225,29 @@ public interface IPHPEditorActionDefinitionIds extends
 	 * <code>"org.eclipse.php.ui.edit.text.php.open.call.hierarchy"</code>).
 	 */
 	public static final String OPEN_PHP_MANUAL = "org.eclipse.php.ui.edit.text.php.open.manual"; //$NON-NLS-1$
+
+	/**
+	 * Action definition ID of the edit -> select enclosing action (value
+	 * <code>"org.eclipse.pdt.ui.edit.text.select.enclosing"</code>).
+	 */
+	public static final String SELECT_ENCLOSING = "org.eclipse.pdt.ui.edit.text.select.enclosing"; //$NON-NLS-1$
+
+	/**
+	 * Action definition ID of the edit -> select next action (value
+	 * <code>"org.eclipse.pdt.ui.edit.text.select.next"</code>).
+	 */
+	public static final String SELECT_NEXT = "org.eclipse.pdt.ui.edit.text.select.next"; //$NON-NLS-1$
+
+	/**
+	 * Action definition ID of the edit -> select previous action (value
+	 * <code>"org.eclipse.pdt.ui.edit.text.select.previous"</code>).
+	 */
+	public static final String SELECT_PREVIOUS = "org.eclipse.pdt.ui.edit.text.select.previous"; //$NON-NLS-1$
+
+	/**
+	 * Action definition ID of the edit -> select restore last action (value
+	 * <code>"org.eclipse.pdt.ui.edit.text.select.last"</code>).
+	 */
+	public static final String SELECT_LAST = "org.eclipse.pdt.ui.edit.text.select.last"; //$NON-NLS-1$
+
 }

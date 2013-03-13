@@ -87,6 +87,7 @@ import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
 import org.eclipse.php.internal.ui.autoEdit.TabAutoEditStrategy;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
+import org.eclipse.php.internal.ui.editor.selectionactions.*;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderProxy;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
@@ -320,6 +321,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	 * mark if we have installed the projectionSupport.
 	 */
 	private boolean projectionSupportInstalled = false;;
+
+	/** The selection history of the editor */
+	private SelectionHistory fSelectionHistory;
 
 	/**
 	 * Internal implementation class for a change listener.
@@ -1971,9 +1975,31 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	protected void createActions() {
 		super.createActions();
 
+		fSelectionHistory = new SelectionHistory(this);
+
+		Action action = new StructureSelectEnclosingAction(this,
+				fSelectionHistory);
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.SELECT_ENCLOSING);
+		setAction(StructureSelectionAction.ENCLOSING, action);
+
+		action = new StructureSelectNextAction(this, fSelectionHistory);
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.SELECT_NEXT);
+		setAction(StructureSelectionAction.NEXT, action);
+
+		action = new StructureSelectPreviousAction(this, fSelectionHistory);
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.SELECT_PREVIOUS);
+		setAction(StructureSelectionAction.PREVIOUS, action);
+
+		StructureSelectHistoryAction historyAction = new StructureSelectHistoryAction(
+				this, fSelectionHistory);
+		historyAction
+				.setActionDefinitionId(IPHPEditorActionDefinitionIds.SELECT_LAST);
+		setAction(StructureSelectionAction.HISTORY, historyAction);
+		fSelectionHistory.setHistoryAction(historyAction);
+
 		final ResourceBundle resourceBundle = PHPUIMessages.getResourceBundle();
 
-		Action action = new GotoMatchingBracketAction(this);
+		action = new GotoMatchingBracketAction(this);
 		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action);
 
