@@ -118,18 +118,21 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 
 			currentNS = null;
 			try {
-				IType type = (IType) sourceModule.getElementAt(offset)
-						.getAncestor(IModelElement.TYPE);
-				if (type.getParent() instanceof IType) {
-					type = (IType) type.getParent();
-				}
-				if (type != null && (PHPFlags.isNamespace(type.getFlags()))) {
-					currentNS = type;
-					fullName = NamespaceReference.NAMESPACE_SEPARATOR
-							+ currentNS.getElementName()
-							+ NamespaceReference.NAMESPACE_SEPARATOR + lastWord;
-				} else {
+				if (sourceModule.getElementAt(offset) != null) {
+					IType type = (IType) sourceModule.getElementAt(offset)
+							.getAncestor(IModelElement.TYPE);
+					if (type.getParent() instanceof IType) {
+						type = (IType) type.getParent();
+					}
+					if (type != null && (PHPFlags.isNamespace(type.getFlags()))) {
+						currentNS = type;
+						fullName = NamespaceReference.NAMESPACE_SEPARATOR
+								+ currentNS.getElementName()
+								+ NamespaceReference.NAMESPACE_SEPARATOR
+								+ lastWord;
+					} else {
 
+					}
 				}
 			} catch (ModelException e1) {
 				e1.printStackTrace();
