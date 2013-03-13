@@ -209,6 +209,13 @@ public class UseStatementInjector {
 		}
 		if (modelElement == null)
 			return offset;
+		if (proposal instanceof PHPCompletionProposal) {
+			PHPCompletionProposal phpCompletionProposal = (PHPCompletionProposal) proposal;
+			if (ProposalExtraInfo.isNoInsert(phpCompletionProposal
+					.getExtraInfo())) {
+				return offset;
+			}
+		}
 		try {
 			// quanlified namespace should return offset directly
 			if (offset - proposal.getReplacementLength() > 0
@@ -219,13 +226,6 @@ public class UseStatementInjector {
 			if (modelElement.getElementType() == IModelElement.TYPE
 					&& PHPFlags.isNamespace(((IType) modelElement).getFlags())) {
 
-				if (proposal instanceof PHPCompletionProposal) {
-					PHPCompletionProposal phpCompletionProposal = (PHPCompletionProposal) proposal;
-					if (ProposalExtraInfo.isNoInsert(phpCompletionProposal
-							.getExtraInfo())) {
-						return offset;
-					}
-				}
 				if (offset - proposal.getReplacementLength() > 0) {
 					String prefix = document.get(
 							offset - proposal.getReplacementLength(),

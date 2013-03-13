@@ -167,6 +167,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 
 	public void reportField(IField field, String suffix,
 			SourceRange replaceRange, boolean removeDollar, int subRelevance) {
+		reportField(field, suffix, replaceRange, removeDollar, subRelevance,
+				null);
+	}
+
+	public void reportField(IField field, String suffix,
+			SourceRange replaceRange, boolean removeDollar, int subRelevance,
+			Object extraInfo) {
 		if (processedFields.contains(field)) {
 			return;
 		}
@@ -195,7 +202,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 				completion = completion.substring(1);
 			}
 			proposal.setCompletion(completion);
-
+			proposal.setExtraInfo(extraInfo);
 			proposal.setModelElement(field);
 			proposal.setFlags(flags);
 			proposal.setRelevance(relevance);

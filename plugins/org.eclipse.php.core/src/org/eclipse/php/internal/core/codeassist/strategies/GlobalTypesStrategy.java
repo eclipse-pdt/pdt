@@ -120,9 +120,13 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 						IType[] subTypes = type.getTypes();
 						for (IType subType : subTypes) {
 							int subFlags = type.getFlags();
-							reporter.reportType(subType, PHPFlags
-									.isNamespace(subFlags) ? nsSuffix : suffix,
-									replacementRange, extraInfo);
+							reporter.reportType(
+									subType,
+									PHPFlags.isNamespace(subFlags) ? nsSuffix
+											: suffix,
+									replacementRange,
+									extraInfo
+											| ProposalExtraInfo.CLASS_IN_NAMESPACE);
 						}
 					}
 				}

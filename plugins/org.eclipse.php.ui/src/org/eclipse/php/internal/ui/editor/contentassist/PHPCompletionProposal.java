@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.ui.text.hover.CompletionHoverControlCreator;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
@@ -29,6 +30,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.strategies.IncludeStatementStrategy;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
@@ -61,8 +63,13 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 			word = word.substring(1);
 		}
 		boolean result = isPrefix(prefix, word);
+		if (!result && ProposalExtraInfo.isClassInNamespace(getExtraInfo())
+				&& (getModelElement() instanceof IType)) {
+			IType type = (IType) getModelElement();
+			result = isPrefix(prefix, PHPModelUtils.getFullName(type));
+		}
 		// int index = word.indexOf(" - ");
-		// if (!result && index >= 0 && prefix.indexOf('\\') >= 0) {
+		// if (!result && index >= 0) {
 		// StringBuffer sb = new StringBuffer();
 		// sb.append(word.substring(index + " - ".length()));
 		// sb.append('\\');

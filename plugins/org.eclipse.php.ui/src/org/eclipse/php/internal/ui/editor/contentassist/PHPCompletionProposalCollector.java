@@ -235,6 +235,11 @@ public class PHPCompletionProposalCollector extends
 				fReplacementStringComputed = true;
 				IType type = (IType) typeProposal.getModelElement();
 
+				if (ProposalExtraInfo.isClassInNamespace(typeProposal
+						.getExtraInfo())) {
+					return PHPModelUtils.getFullName(type);
+				}
+
 				String prefix = "";
 				try {
 					int flags = type.getFlags();

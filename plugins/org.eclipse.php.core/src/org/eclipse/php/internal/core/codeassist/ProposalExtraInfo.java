@@ -10,6 +10,7 @@ public final class ProposalExtraInfo {
 	public static final int STUB = 1 << 4;
 	public static final int METHOD_ONLY = 1 << 5;
 	public static final int NO_INSERT_NAMESPACE = 1 << 6;
+	public static final int CLASS_IN_NAMESPACE = 1 << 7;
 
 	public static boolean isTypeOnly(int flags) {
 		return (flags & TYPE_ONLY) != 0;
@@ -66,6 +67,18 @@ public final class ProposalExtraInfo {
 	public static boolean isNoInsert(Object flags) {
 		if (flags instanceof Integer) {
 			return isNoInsert(((Integer) flags).intValue());
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isClassInNamespace(int flags) {
+		return (flags & CLASS_IN_NAMESPACE) != 0;
+	}
+
+	public static boolean isClassInNamespace(Object flags) {
+		if (flags instanceof Integer) {
+			return isClassInNamespace(((Integer) flags).intValue());
 		} else {
 			return false;
 		}

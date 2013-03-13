@@ -156,4 +156,8 @@ public interface ICompletionReporter {
 	 * @return
 	 */
 	public IModuleSource getModule();
+
+	public void reportField(IField field, String suffix,
+			SourceRange replaceRange, boolean removeDollar, int subRelevance,
+			Object extraInfo);
 }
