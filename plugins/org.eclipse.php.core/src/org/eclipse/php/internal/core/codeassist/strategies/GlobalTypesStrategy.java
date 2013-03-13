@@ -48,12 +48,21 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	protected final int falseFlag;
 	protected static final IType[] EMPTY = {};
 	private boolean aliasAdded = false;
+	private boolean addClassInNamespace = false;
 
 	public GlobalTypesStrategy(ICompletionContext context, int trueFlag,
 			int falseFlag) {
 		super(context, null);
 		this.trueFlag = trueFlag;
 		this.falseFlag = falseFlag;
+	}
+
+	public GlobalTypesStrategy(ICompletionContext context, int trueFlag,
+			int falseFlag, boolean addClassInNamespace) {
+		super(context, null);
+		this.trueFlag = trueFlag;
+		this.falseFlag = falseFlag;
+		this.addClassInNamespace = addClassInNamespace;
 	}
 
 	public GlobalTypesStrategy(ICompletionContext context) {
@@ -106,6 +115,17 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 				reporter.reportType(type,
 						PHPFlags.isNamespace(flags) ? nsSuffix : suffix,
 						replacementRange, extraInfo);
+				if (addClassInNamespace) {
+					if (PHPFlags.isNamespace(flags)) {
+						IType[] subTypes = type.getTypes();
+						for (IType subType : subTypes) {
+							int subFlags = type.getFlags();
+							reporter.reportType(subType, PHPFlags
+									.isNamespace(subFlags) ? nsSuffix : suffix,
+									replacementRange, extraInfo);
+						}
+					}
+				}
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
@@ -412,5 +432,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	 */
 	protected int getExtraInfo() {
 		return ProposalExtraInfo.DEFAULT;
+	}
+
+	public void setAddClassInNamespace(boolean addClassInNamespace) {
+		this.addClassInNamespace = addClassInNamespace;
 	}
 }

@@ -31,6 +31,11 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 		super(context, Modifiers.AccNameSpace, 0);
 	}
 
+	public NamespacesStrategy(ICompletionContext context,
+			boolean addClassInNamespace) {
+		super(context, Modifiers.AccNameSpace, 0, addClassInNamespace);
+	}
+
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}
