@@ -319,12 +319,6 @@
          <description>PHP Core Facet</description>
       </project-facet>
       <project-facet-version facet="php.core.component" version="1">
-         <constraint>
-             <and>
-                <conflicts facet="jst.java" />
-                <conflicts group="modules" />
-             </and>
-         </constraint>
       </project-facet-version>
       <project-facet
             id="php.component">
