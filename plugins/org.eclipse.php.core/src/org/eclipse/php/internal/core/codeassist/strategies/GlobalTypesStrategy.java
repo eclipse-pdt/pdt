@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
+import org.eclipse.php.internal.core.codeassist.contexts.UseNameContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
@@ -87,6 +88,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
 			return;
 		}
+		boolean isUseContext = context instanceof UseNameContext;
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
@@ -105,17 +107,24 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 										- 1) == '\"')) {
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_NAMESPACE;
 		}
-		if ("namespace".equals(abstractContext.getPreviousWord(1))) {
+		if ("namespace".equals(abstractContext.getPreviousWord(1))
+				|| isUseContext) {
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_NAMESPACE;
 		}
 
 		for (IType type : types) {
 			try {
 				int flags = type.getFlags();
-				reporter.reportType(type,
-						PHPFlags.isNamespace(flags) ? nsSuffix : suffix,
-						replacementRange, extraInfo);
-				if (addClassInNamespace) {
+				boolean isNamespace = PHPFlags.isNamespace(flags);
+				if (!isNamespace && isUseContext) {
+					reporter.reportType(type, isNamespace ? nsSuffix : suffix,
+							replacementRange, extraInfo
+									| ProposalExtraInfo.CLASS_IN_NAMESPACE);
+				} else {
+					reporter.reportType(type, isNamespace ? nsSuffix : suffix,
+							replacementRange, extraInfo);
+				}
+				if (addClassInNamespace && isNamespace) {
 					if (PHPFlags.isNamespace(flags)) {
 						IType[] subTypes = type.getTypes();
 						for (IType subType : subTypes) {
