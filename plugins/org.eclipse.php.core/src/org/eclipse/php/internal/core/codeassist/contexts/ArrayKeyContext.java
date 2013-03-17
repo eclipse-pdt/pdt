@@ -87,6 +87,14 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 			}
 			endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
 					statementText, startPosition);
+			if (endPosition > 0
+					&& (statementText.charAt(endPosition - 1) == '\"' || statementText
+							.charAt(endPosition - 1) == '\'')) {
+				hasQuotes = true;
+				startPosition = endPosition - 1;
+				endPosition = PHPTextSequenceUtilities.readBackwardSpaces(
+						statementText, startPosition);
+			}
 			if (endPosition == 0
 					|| statementText.charAt(endPosition - 1) != '[') {
 				return false;
