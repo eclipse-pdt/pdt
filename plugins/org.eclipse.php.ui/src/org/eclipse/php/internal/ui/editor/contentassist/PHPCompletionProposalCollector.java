@@ -226,8 +226,14 @@ public class PHPCompletionProposalCollector extends
 			private boolean fReplacementStringComputed = false;
 
 			public String getReplacementString() {
-				if (!fReplacementStringComputed)
-					setReplacementString(computeReplacementString());
+				if (!fReplacementStringComputed) {
+					String replacementString = computeReplacementString();
+					if (ProposalExtraInfo.isAddQuote(typeProposal
+							.getExtraInfo())) {
+						replacementString = "'" + replacementString + "'";
+					}
+					setReplacementString(replacementString);
+				}
 				return super.getReplacementString();
 			}
 
@@ -238,6 +244,12 @@ public class PHPCompletionProposalCollector extends
 				if (ProposalExtraInfo.isClassInNamespace(typeProposal
 						.getExtraInfo())) {
 					return PHPModelUtils.getFullName(type);
+					// String result = PHPModelUtils.getFullName(type);
+					// if (ProposalExtraInfo.isAddQuote(typeProposal
+					// .getExtraInfo())) {
+					// result = "'" + result + "'";
+					// }
+					// return result;
 				}
 
 				String prefix = "";

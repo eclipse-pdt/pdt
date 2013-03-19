@@ -11,6 +11,7 @@ public final class ProposalExtraInfo {
 	public static final int METHOD_ONLY = 1 << 5;
 	public static final int NO_INSERT_NAMESPACE = 1 << 6;
 	public static final int CLASS_IN_NAMESPACE = 1 << 7;
+	public static final int ADD_QUOTES = 1 << 8;
 
 	public static boolean isTypeOnly(int flags) {
 		return (flags & TYPE_ONLY) != 0;
@@ -82,6 +83,18 @@ public final class ProposalExtraInfo {
 		} else {
 			return false;
 		}
+	}
+
+	public static boolean isAddQuote(Object flags) {
+		if (flags instanceof Integer) {
+			return contain(((Integer) flags).intValue(), ADD_QUOTES);
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean contain(int flags, int flag) {
+		return (flags & flag) != 0;
 	}
 
 }
