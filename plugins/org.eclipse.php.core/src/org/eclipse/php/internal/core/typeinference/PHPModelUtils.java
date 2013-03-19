@@ -349,6 +349,9 @@ public class PHPModelUtils {
 		int elementType = 0;
 		String elementName = null;
 		for (T element : elements) {
+			if (element == null) {
+				continue;
+			}
 			if (elementName == null) {
 				elementType = element.getElementType();
 				elementName = element.getElementName();
