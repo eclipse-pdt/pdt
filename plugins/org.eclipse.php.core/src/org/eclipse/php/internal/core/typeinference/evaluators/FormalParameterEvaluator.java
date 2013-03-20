@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -92,15 +93,38 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 												.getName();
 										if (typeName
 												.endsWith(PHPDocClassVariableEvaluator.BRACKETS)) {
-											typeName = typeName.substring(0, typeName.length() -2);
+											typeName = typeName.substring(0,
+													typeName.length() - 2);
 										}
-										result = PHPClassType
-												.fromTypeName(
-														typeName,
-														methodContext
-																.getSourceModule(),
-														references[1]
-																.sourceStart());
+										if (typeName.indexOf('|') >= 0) {
+											String[] typeNames = typeName
+													.split("|");
+											MultiTypeType arrayType = new MultiTypeType();
+											for (int i = 0; i < typeNames.length; i++) {
+												if (typeNames[i].trim()
+														.length() == 0
+														|| typeNames[i]
+																.equals("|")) {
+													continue;
+												}
+												arrayType
+														.addType(PHPClassType
+																.fromTypeName(
+																		typeNames[i],
+																		methodContext
+																				.getSourceModule(),
+																		references[1]
+																				.sourceStart()));
+											}
+											result = arrayType;
+										} else
+											result = PHPClassType
+													.fromTypeName(
+															typeName,
+															methodContext
+																	.getSourceModule(),
+															references[1]
+																	.sourceStart());
 									}
 								}
 							}
