@@ -1002,7 +1002,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			fieldSet.addAll(Arrays.asList(PHPModelUtils
 					.getSuperTypeHierarchyField(type, hierarchy, prefix,
 							exactName, monitor)));
-			IField[] temp = fieldSet.toArray(new IField[fields.size()]);
+			IField[] temp = fieldSet.toArray(new IField[fieldSet.size()]);
 			for (IField field : temp) {
 				fields.add(field);
 			}
