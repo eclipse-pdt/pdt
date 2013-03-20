@@ -55,6 +55,8 @@ public class PHPVersionConfigurationBlock extends
 	protected Button useShortTagsButton;
 	protected Label nameLabel;
 
+	protected PHPVersion minimumVersion = null;
+
 	private boolean hideShortTags;
 
 	public PHPVersionConfigurationBlock(IStatusChangeListener context,
@@ -67,6 +69,10 @@ public class PHPVersionConfigurationBlock extends
 			boolean hideShortTags) {
 		this(context, project, container);
 		this.hideShortTags = hideShortTags;
+	}
+
+	public void setMinimumVersion(PHPVersion version) {
+		this.minimumVersion = version;
 	}
 
 	public void setEnabled(boolean isEnabled) {
@@ -182,6 +188,11 @@ public class PHPVersionConfigurationBlock extends
 	private List prepareVersionEntryList() {
 		ArrayList entryList = new ArrayList();
 		for (int i = 0; i < PHP_VERSION_DESCRIPTIONS.length; i++) {
+			if (minimumVersion != null
+					&& PHPVersion.byAlias(PHP_VERSION_VALUES[i]).isLessThan(
+							minimumVersion)) {
+				continue;
+			}
 			String description = PHP_VERSION_DESCRIPTIONS[i];
 			String value = PHP_VERSION_VALUES[i];
 			Entry entry = new ValuedCombo.Entry(value, description);

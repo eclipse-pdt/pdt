@@ -112,7 +112,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		fragment = (WizardFragment) Platform.getAdapterManager().loadAdapter(
 				data, PHPProjectWizardFirstPage.class.getName());
 
-		fVersionGroup = new VersionGroup(composite);
+		fVersionGroup = new VersionGroup(composite, PHPVersion.PHP4);
 		fLayoutGroup = new LayoutGroup(composite);
 		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
 
@@ -526,7 +526,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 				+ ".last.external.project"; //$NON-NLS-1$
 		private Link fPreferenceLink;
 
-		public VersionGroup(Composite composite) {
+		public VersionGroup(Composite composite, PHPVersion minimumVersion) {
 			final int numColumns = 3;
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -553,6 +553,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 						public void statusChanged(IStatus status) {
 						}
 					}, (IProject) null, null);
+			fConfigurationBlock.setMinimumVersion(minimumVersion);
 			fConfigurationBlock.createContents(group);
 			fConfigurationBlock.setEnabled(false);
 			// fPreferenceLink = new Link(fGroup, SWT.NONE);
