@@ -255,8 +255,29 @@ public class TabAutoEditStrategy implements IAutoEditStrategy {
 				.getIndentationChar(document);
 
 		if (indentChar == ' ') {
+			// determine where in line this command begins
+			int lineOffset = -1;
+			try {
+				IRegion lineInfo = document
+						.getLineInformationOfOffset(command.offset);
+				lineOffset = command.offset - lineInfo.getOffset();
+			} catch (BadLocationException e) {
+				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+			}
+
 			int indentSize = formatterCommonPrferences
 					.getIndentationSize(document);
+
+			if (lineOffset > 0) {
+				lineOffset %= indentSize;
+				indentSize -= lineOffset;
+			}
+
+			if (indentSize == 0) {
+				indentSize = formatterCommonPrferences
+						.getIndentationSize(document);
+			}
+
 			command.text += getIndentationString(indentSize);
 		} else {
 			command.text += "\t"; //$NON-NLS-1$
