@@ -16,6 +16,7 @@ import java.util.*;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Declaration;
@@ -425,12 +426,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									if (element instanceof IType) {
 										IType type = (IType) element;
 										try {
-											fields.addAll(Arrays
-													.asList(PHPModelUtils
-															.getTypeField(type,
-																	fieldName,
-																	true)));
-										} catch (ModelException e) {
+											fields.addAll(Arrays.asList(PHPModelUtils
+													.getTypeHierarchyField(
+															type,
+															fieldName,
+															true,
+															new NullProgressMonitor())));
+										} catch (Exception e) {
 											PHPCorePlugin.log(e);
 										}
 									}
