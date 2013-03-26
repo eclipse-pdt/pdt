@@ -28,9 +28,9 @@ import org.eclipse.dltk.internal.core.SourceRange;
 public interface ICompletionReporter {
 
 	public final static int RELEVANCE_KEYWORD = 10000000;
-	public final static int RELEVANCE_METHOD = 1000000;
-	public final static int RELEVANCE_CLASS = 100000;
-	public final static int RELEVANCE_VAR = 10000;
+	public final static int RELEVANCE_VAR = 1000000;
+	public final static int RELEVANCE_METHOD = 100000;
+	public final static int RELEVANCE_CLASS = 10000;
 	public final static int RELEVANCE_CONST = 1000;
 	public final static int RELEVANCE_ADJUST = 100;
 

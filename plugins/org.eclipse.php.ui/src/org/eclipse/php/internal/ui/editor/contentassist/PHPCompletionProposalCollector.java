@@ -21,6 +21,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.AliasType;
+import org.eclipse.php.internal.core.codeassist.CompletionFlag;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
@@ -39,6 +40,7 @@ public class PHPCompletionProposalCollector extends
 	private IDocument document;
 	private boolean explicit;
 	private int offset;
+	private int flags = CompletionFlag.DEFAULT;
 
 	public PHPCompletionProposalCollector(IDocument document, ISourceModule cu,
 			boolean explicit) {
@@ -335,9 +337,22 @@ public class PHPCompletionProposalCollector extends
 		// if (ProposalExtraInfo.STUB.equals(proposal.getExtraInfo())) {
 		// return Integer.MAX_VALUE;
 		// }
-		if (ProposalExtraInfo.isMagicMethod(proposal.getExtraInfo())) {
+		if (proposal.getModelElement() instanceof IMethod
+				&& ProposalExtraInfo.isMagicMethod(proposal.getExtraInfo())) {
 			return -1;
 		}
+		if (proposal.getModelElement() instanceof IField
+				&& ProposalExtraInfo.isMagicMethod(proposal.getExtraInfo())) {
+			return Integer.MAX_VALUE;
+		}
 		return super.computeRelevance(proposal);
+	}
+
+	public boolean filter(int flag) {
+		return (flags & flag) != 0;
+	}
+
+	public void addFlag(int flag) {
+		flags |= flag;
 	}
 }

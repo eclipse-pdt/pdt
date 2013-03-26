@@ -24,10 +24,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.AliasType;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
-import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
+import org.eclipse.php.internal.core.codeassist.*;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.UseNameContext;
@@ -85,6 +82,13 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
+		if (abstractContext.getCompletionRequestor() instanceof IPHPCompletionRequestor) {
+			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) abstractContext
+					.getCompletionRequestor();
+			if (phpCompletionRequestor.filter(CompletionFlag.STOP_REPORT_TYPE)) {
+				return;
+			}
+		}
 		if (abstractContext.getPrefixWithoutProcessing().trim().length() == 0) {
 			return;
 		}

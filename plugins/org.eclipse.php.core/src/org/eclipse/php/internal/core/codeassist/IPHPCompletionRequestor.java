@@ -51,4 +51,15 @@ public interface IPHPCompletionRequestor {
 	 * @return document offset
 	 */
 	public void setOffset(int offset);
+
+	/**
+	 * This is used in ICompletionStrategy,if this method return
+	 * true,ICompletionStrategy.apply() should return immediately
+	 * 
+	 * @param flag
+	 * @return
+	 */
+	public boolean filter(int flag);
+
+	public void addFlag(int flag);
 }
