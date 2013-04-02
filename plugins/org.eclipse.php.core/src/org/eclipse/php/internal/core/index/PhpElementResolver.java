@@ -22,6 +22,7 @@ import org.eclipse.dltk.core.SourceRange;
 import org.eclipse.dltk.core.index2.IElementResolver;
 import org.eclipse.dltk.internal.core.*;
 import org.eclipse.php.core.compiler.IPHPModifiers;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.model.IncludeField;
 
@@ -184,6 +185,10 @@ public class PhpElementResolver implements IElementResolver {
 						String type = values[0];
 						if (PhpIndexingVisitor.NULL_VALUE.equals(type)) {
 							type = null;
+						}
+						if (type != null) {
+							type = type.replace(Constants.DOT,
+									Constants.TYPE_SEPERATOR_CHAR);
 						}
 						String param = values[1];
 

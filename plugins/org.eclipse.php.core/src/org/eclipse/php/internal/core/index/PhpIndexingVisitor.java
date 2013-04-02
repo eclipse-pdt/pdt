@@ -39,11 +39,13 @@ import org.eclipse.dltk.core.index2.IIndexingRequestor.DeclarationInfo;
 import org.eclipse.dltk.core.index2.IIndexingRequestor.ReferenceInfo;
 import org.eclipse.php.core.compiler.IPHPModifiers;
 import org.eclipse.php.core.index.PhpIndexingVisitorExtension;
+import org.eclipse.php.internal.core.Constants;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 
 /**
  * PHP indexing visitor for H2 database
@@ -218,7 +220,11 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 	public boolean visit(MethodDeclaration method) throws Exception {
 		fNodes.push(method);
 		methodGlobalVars.add(new HashSet<String>());
-
+		PHPDocBlock doc = null;
+		if (method instanceof IPHPDocAwareDeclaration) {
+			IPHPDocAwareDeclaration declaration = (IPHPDocAwareDeclaration) method;
+			doc = declaration.getPHPDoc();
+		}
 		Declaration parentDeclaration = null;
 		if (!declarations.empty()) {
 			parentDeclaration = declarations.peek();
@@ -272,7 +278,9 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 							type = fp.getParameterType().getName();
 						}
 					}
-
+				}
+				if (type == NULL_VALUE && doc != null) {
+					type = getParamType(doc, arg.getName(), type);
 				}
 
 				metadata.append(type);
@@ -311,6 +319,32 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		}
 
 		return visitGeneral(method);
+	}
+
+	private String getParamType(PHPDocBlock docBlock, String paramName,
+			String defaultType) {
+		String result = defaultType;
+		if (docBlock != null) {
+			for (PHPDocTag tag : docBlock.getTags()) {
+				if (tag.getTagKind() == PHPDocTag.PARAM) {
+					SimpleReference[] references = tag.getReferences();
+					if (references.length == 2) {
+						if (references[0].getName().equals(paramName)) {
+							String typeName = references[1].getName();
+							if (typeName
+									.endsWith(PHPDocClassVariableEvaluator.BRACKETS)) {
+								typeName = typeName.substring(0,
+										typeName.length() - 2);
+							}
+							result = typeName.replace(
+									Constants.TYPE_SEPERATOR_CHAR,
+									Constants.DOT);
+						}
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {
