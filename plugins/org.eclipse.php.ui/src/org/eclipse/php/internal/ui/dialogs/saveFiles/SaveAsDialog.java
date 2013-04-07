@@ -24,12 +24,13 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
+import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizardProxy;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
@@ -67,7 +68,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	 */
 	private Image dlgTitleImage = null;
 
-	private PHPProjectCreationWizard newProjectWizard;
+	private IWorkbenchWizard newProjectWizard;
 
 	/**
 	 * Creates a new Save As dialog for no specific file.
@@ -86,8 +87,8 @@ public class SaveAsDialog extends TitleAreaDialog {
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 		shell.setText(""); //$NON-NLS-1$
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell,
-				IIDEHelpContextIds.SAVE_AS_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(shell, IIDEHelpContextIds.SAVE_AS_DIALOG);
 	}
 
 	/*
@@ -343,7 +344,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 		} else if (IDialogConstants.CANCEL_ID == buttonId) {
 			cancelPressed();
 		} else if (NEW_PROJ_ID == buttonId) {
-			newProjectWizard = new PHPProjectCreationWizard();
+			newProjectWizard = PHPProjectCreationWizardProxy.getProjectWizard();
 			newProjectWizard.init(PlatformUI.getWorkbench(),
 					StructuredSelection.EMPTY);
 			WizardDialog dialog = new WizardDialog(getShell(), newProjectWizard);

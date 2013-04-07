@@ -27,6 +27,7 @@
 	<extension-point id="phpFormatterPrefBlock" name="%extension-point.name.12" schema="schema/phpFormatterPrefBlock.exsd" />
 	<extension-point id="quickFixProcessors" name="%quickFixProcessorExtensionPoint" schema="schema/quickFixProcessors.exsd"/>
 	<extension-point id="quickAssistProcessors" name="%quickAssistProcessorExtensionPoint" schema="schema/quickAssistProcessors.exsd"/>
+	<extension-point id="phpProjectWizard" name="%extension-point.name.13" schema="schema/phpNewProjectWizard.exsd" />
 	
 	
 	<!--PHP formatter processoer registration, for PHP Content:-->
