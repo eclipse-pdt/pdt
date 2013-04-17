@@ -149,4 +149,14 @@ public class PHPCompletionProposalLabelProvider extends
 			return super.createTypeImageDescriptor(proposal);
 		}
 	}
+
+	public String createFieldProposalLabel(CompletionProposal proposal) {
+		return super.createFieldProposalLabel(proposal);
+	}
+
+	@Override
+	public ImageDescriptor createFieldImageDescriptor(
+			CompletionProposal proposal) {
+		return super.createFieldImageDescriptor(proposal);
+	}
 }

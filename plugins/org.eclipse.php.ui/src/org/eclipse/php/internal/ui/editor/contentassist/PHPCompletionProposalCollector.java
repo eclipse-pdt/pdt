@@ -319,6 +319,52 @@ public class PHPCompletionProposalCollector extends
 
 	}
 
+	protected IScriptCompletionProposal createFieldProposal(
+			final CompletionProposal proposal) {
+		String completion = String.valueOf(proposal.getCompletion());
+		int start = proposal.getReplaceStart();
+		int length = getLength(proposal);
+		String label = ((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createFieldProposalLabel(proposal);
+		Image image = getImage(((PHPCompletionProposalLabelProvider) getLabelProvider())
+				.createFieldImageDescriptor(proposal));
+		int relevance = computeRelevance(proposal);
+		// CompletionContext context = getContext();
+		// ScriptCompletionProposal scriptProposal =
+		// createScriptCompletionProposal(
+		// completion, start, length, image, label, relevance, /*
+		// * context
+		// * .isInDoc
+		// * ()
+		// */false);
+		ScriptCompletionProposal scriptProposal = new PHPCompletionProposal(
+				completion, start, length, image, label, relevance) {
+			private boolean fReplacementStringComputed = false;
+
+			public String getReplacementString() {
+				if (!fReplacementStringComputed) {
+					String replacementString = super.getReplacementString();
+					if (ProposalExtraInfo.isAddQuote(proposal.getExtraInfo())) {
+						replacementString = "'" + replacementString + "'";
+					}
+					setReplacementString(replacementString);
+				}
+				fReplacementStringComputed = true;
+				return super.getReplacementString();
+			}
+
+			@Override
+			public Object getExtraInfo() {
+				return proposal.getExtraInfo();
+			}
+		};
+		if (getSourceModule().getScriptProject() != null)
+			scriptProposal.setProposalInfo(new FieldProposalInfo(
+					getSourceModule().getScriptProject(), proposal));
+		scriptProposal.setTriggerCharacters(getVarTrigger());
+		return scriptProposal;
+	}
+
 	public int getOffset() {
 		return offset;
 	}

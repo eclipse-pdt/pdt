@@ -23,6 +23,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.ArrayKeyContext;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -66,15 +67,17 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 			ArrayKeyFinder finder = new ArrayKeyFinder(prefix);
 			moduleDeclaration.traverse(finder);
 			Set<String> names = finder.getNames();
+			int extraObject = ProposalExtraInfo.DEFAULT;
+			if (!arrayContext.hasQuotes()) {
+				extraObject |= ProposalExtraInfo.ADD_QUOTES;
+			}
 			for (String name : names) {
 
 				if (!requestor.isContextInformationMode()) {
-					if (!arrayContext.hasQuotes()) {
-						name = "\'" + name + "\'";
-					}
 					reporter.reportField(new FakeField(
 							(ModelElement) arrayContext.getSourceModule(),
-							name, 0, 0), "", replaceRange, false); // NON-NLS-1
+							name, 0, 0), "", replaceRange, false, 0,
+							extraObject); // NON-NLS-1
 				}
 
 			}
