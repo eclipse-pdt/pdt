@@ -1,0 +1,13 @@
+--TEST--
+Test Variable
+--FILE--
+<? 
+$some_var = 5;
+// $some
+function some_function()
+{
+     $some_|
+
+}
+?>
+--EXPECT--
