@@ -70,7 +70,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 
 				if (!requestor.isContextInformationMode()) {
 					if (!arrayContext.hasQuotes()) {
-						name = "\"" + name + "\"";
+						name = "\'" + name + "\'";
 					}
 					reporter.reportField(new FakeField(
 							(ModelElement) arrayContext.getSourceModule(),
