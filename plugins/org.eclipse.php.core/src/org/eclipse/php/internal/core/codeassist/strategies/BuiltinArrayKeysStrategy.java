@@ -11,6 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
@@ -23,6 +27,7 @@ import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.ProposalExtraInfo;
 import org.eclipse.php.internal.core.codeassist.contexts.ArrayKeyContext;
 import org.eclipse.php.internal.core.language.PHPVariables;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
@@ -67,17 +72,23 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 
 		String prefix = arrayContext.getPrefix();
 
+		int extraObject = ProposalExtraInfo.DEFAULT;
+		if (!arrayContext.hasQuotes()) {
+			extraObject |= ProposalExtraInfo.ADD_QUOTES;
+		}
 		// report server variables:
 		if (arrayVarName.equals("$_SERVER")
 				|| arrayVarName.equals("$HTTP_SERVER_VARS")) { // NON-NLS-1
 			// //NON-NLS-2
-			reportVariables(reporter, arrayContext, SERVER_VARS, prefix);
+			reportVariables(reporter, arrayContext, SERVER_VARS, prefix,
+					extraObject);
 		}
 		// report session variables:
 		else if (arrayVarName.equals("$_SESSION")
 				|| arrayVarName.equals("$HTTP_SESSION_VARS")) { // NON-NLS-1
 			// //NON-NLS-2
-			reportVariables(reporter, arrayContext, SESSION_VARS, prefix);
+			reportVariables(reporter, arrayContext, SESSION_VARS, prefix,
+					extraObject);
 		}
 		// report global variables in special globals array:
 		else if (arrayVarName.equals("$GLOBALS")) { // NON-NLS-1
@@ -87,9 +98,18 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 				matchRule = MatchRule.EXACT;
 			}
 			IDLTKSearchScope scope = createSearchScope();
-			IField[] elements = PhpModelAccess.getDefault().findFields(prefix,
-					matchRule, Modifiers.AccGlobal, Modifiers.AccConstant,
-					scope, null);
+			IField[] elements = PhpModelAccess.getDefault().findFields(
+					"$" + prefix, matchRule, Modifiers.AccGlobal,
+					Modifiers.AccConstant, scope, null);
+			List<IField> list = new ArrayList<IField>();
+
+			if (!prefix.startsWith("$")) {
+				elements = PhpModelAccess.getDefault().findFields("$" + prefix,
+						matchRule, Modifiers.AccGlobal, Modifiers.AccConstant,
+						scope, null);
+				list.addAll(Arrays.asList(elements));
+				elements = list.toArray(new IField[list.size()]);
+			}
 
 			SourceRange replaceRange = getReplacementRange(arrayContext);
 			for (IModelElement element : elements) {
@@ -100,7 +120,8 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 							(ModelElement) field.getParent(), field
 									.getElementName().substring(1),
 							sourceRange.getOffset(), sourceRange.getLength());
-					reporter.reportField(fakeField, "", replaceRange, true); // NON-NLS-1
+					reporter.reportField(fakeField, "", replaceRange, true, 0,
+							extraObject); // NON-NLS-1
 				} catch (ModelException e) {
 					PHPCorePlugin.log(e);
 				}
@@ -108,19 +129,21 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 
 			PHPVersion phpVersion = arrayContext.getPhpVersion();
 			reportVariables(reporter, arrayContext,
-					PHPVariables.getVariables(phpVersion), prefix, true);
+					PHPVariables.getVariables(phpVersion), prefix, true,
+					extraObject);
 		}
 	}
 
 	protected void reportVariables(ICompletionReporter reporter,
-			ArrayKeyContext context, String[] variables, String prefix)
-			throws BadLocationException {
-		reportVariables(reporter, context, variables, prefix, false);
+			ArrayKeyContext context, String[] variables, String prefix,
+			int extraObject) throws BadLocationException {
+		reportVariables(reporter, context, variables, prefix, false,
+				extraObject);
 	}
 
 	protected void reportVariables(ICompletionReporter reporter,
 			ArrayKeyContext context, String[] variables, String prefix,
-			boolean removeDollar) throws BadLocationException {
+			boolean removeDollar, int extraObject) throws BadLocationException {
 		CompletionRequestor requestor = context.getCompletionRequestor();
 		SourceRange replaceRange = getReplacementRange(context);
 		for (String variable : variables) {
@@ -133,7 +156,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 					reporter.reportField(
 							new FakeField((ModelElement) context
 									.getSourceModule(), variable, 0, 0), "",
-							replaceRange, false); // NON-NLS-1
+							replaceRange, false, 0, extraObject); // NON-NLS-1
 				}
 			}
 		}

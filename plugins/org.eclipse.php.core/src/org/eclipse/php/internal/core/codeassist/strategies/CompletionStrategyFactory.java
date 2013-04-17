@@ -135,6 +135,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 					new BuiltinArrayKeysStrategy(context),
 					new GlobalElementsCompositeStrategy(context, false),
 					new LocalMethodVariablesStrategyForArray(context),
+					new BuiltinArrayKeysStrategy(context),
 					new ArrayStringKeysStrategy(context) };
 		}
 		if (contextClass == FunctionParameterTypeContext.class) {
