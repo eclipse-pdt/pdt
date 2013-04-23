@@ -24,6 +24,9 @@ public class PairParenthesesAutoEditStrategy implements
 	private static final char PAREN_OPEN = '(';
 	private static final char PAREN_CLOSE = ')';
 
+	private static final char BRACKET_OPEN = '[';
+	private static final char BRACKET_CLOSE = ']';
+
 	private static PHPDocumentRegionEdgeMatcher matcher = new PHPDocumentRegionEdgeMatcher();
 
 	/**
@@ -83,13 +86,13 @@ public class PairParenthesesAutoEditStrategy implements
 			int indexInText = text.length() - 1;
 			while (indexInText >= 0) {
 				char currChar = text.charAt(indexInText);
-				if (currChar == PAREN_CLOSE) {
+				if (currChar == PAREN_CLOSE || currChar == BRACKET_CLOSE) {
 					tRegion = getPhpToken(sdRegion, regionStart + indexInText);
 					if (tRegion == null
 							|| tRegion.getType() == PHPRegionTypes.PHP_ARRAY) {
 						parenCloseCounter++;
 					}
-				} else if (currChar == PAREN_OPEN) {
+				} else if (currChar == PAREN_OPEN || currChar == BRACKET_OPEN) {
 					tRegion = getPhpToken(sdRegion, regionStart + indexInText);
 					boolean found = false;
 					if (tRegion != null) {
@@ -254,7 +257,9 @@ public class PairParenthesesAutoEditStrategy implements
 		}
 
 		String trimmedLineEnd = lineEnd.trim();
-		if (trimmedLineEnd.length() > 0 && trimmedLineEnd.charAt(0) == ')') {
+		if (trimmedLineEnd.length() > 0
+				&& (trimmedLineEnd.charAt(0) == PAREN_CLOSE || trimmedLineEnd
+						.charAt(0) == BRACKET_CLOSE)) {
 			// if there is a ) then there is a problem with
 			// parenCloseInsertionStrategy calc
 			// and we need to add manually another indentation.
