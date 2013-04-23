@@ -19,6 +19,7 @@
 	<extension-point id="completionContextResolvers" name="PHP Completion Context Resolver" schema="schema/completionContextResolvers.exsd" />
  	<extension-point id="languageModelProviders" name="PHP Language Model Provider" schema="schema/languageModelProviders.exsd"/>
  	<extension-point id="phpFormatterCommonPreferences" name="PHP Code Formatter Common Preferences" schema="schema/phpFormatterCommonPreferences.exsd"/>
+  <extension-point id="indentationStrategy" name="Indentation Strategy Extension" schema="schema/indentationStrategy.exsd"/>
 
 	<!-- PHP Model Handler -->
 	<extension
