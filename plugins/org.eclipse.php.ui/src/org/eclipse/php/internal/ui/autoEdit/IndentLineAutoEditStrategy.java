@@ -40,14 +40,20 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 		implements IAutoEditStrategy {
 
 	private final CurlyCloseAutoEditStrategy curlyCloseAutoEditStrategy = new CurlyCloseAutoEditStrategy();
+	private final ParenthesesCloseAutoEditStrategy parenCloseAutoEditStrategy = new ParenthesesCloseAutoEditStrategy();
 
 	private final StringBuffer helpBuffer = new StringBuffer();
 
 	IAfterNewLineAutoEditStrategy pairCurlyBracketAutoEditStrategy = new PairCurlyBracketAutoEditStrategy();
+	IAfterNewLineAutoEditStrategy pairParenthesesAutoEditStrategy = new PairParenthesesAutoEditStrategy();
+
+	private IndentationExtensionRegistry registry = IndentationExtensionRegistry
+			.getInstance();
 
 	private void autoIndentAfterNewLine(final IStructuredDocument document,
 			final DocumentCommand command) {
 		try {
+
 			helpBuffer.setLength(0);
 			helpBuffer.append(command.text);
 
@@ -145,6 +151,18 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 			}
 		}
 
+		if (TypingPreferences.closeBrackets && prevChar == '(') {
+			if (currentState != PHPPartitionTypes.PHP_DEFAULT) {
+				if (document.getLength() == offset) {
+					currentState = FormatterUtils.getPartitionType(document,
+							offset - 1);
+				}
+			}
+			if (currentState == PHPPartitionTypes.PHP_DEFAULT) {
+				return pairParenthesesAutoEditStrategy;
+			}
+		}
+
 		if (TypingPreferences.closeCurlyBracket && prevChar == '{') {
 			if (currentState != PHPPartitionTypes.PHP_DEFAULT)
 				if (document.getLength() == offset)
@@ -162,7 +180,12 @@ public class IndentLineAutoEditStrategy extends DefaultIndentationStrategy
 		switch (insertionStrtegyKey) {
 		case '}':
 			return curlyCloseAutoEditStrategy;
+		case ')':
+			return parenCloseAutoEditStrategy;
 		default:
+			if (registry.hasExtensions()) {
+				return registry.getExtensions().get(0);
+			}
 			return this;
 		}
 	}
