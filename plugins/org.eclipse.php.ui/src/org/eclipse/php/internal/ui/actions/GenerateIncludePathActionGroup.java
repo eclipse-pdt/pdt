@@ -181,10 +181,10 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 
 		public CreateLinkedSourceFolderAction() {
 			super(true);
-			setText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Link_label); //$NON-NLS-1$
-			setToolTipText(""); //$NON-NLS-1$
+			setText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Link_label);
+			setToolTipText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Link_tooltip);
 			setImageDescriptor(DLTKPluginImages.DESC_ELCL_ADD_LINKED_SOURCE_TO_BUILDPATH);
-			setDescription(""); //$NON-NLS-1$
+			setDescription(NewWizardMessages.PackageExplorerActionGroup_FormText_createLinkedFolder);
 		}
 	}
 
