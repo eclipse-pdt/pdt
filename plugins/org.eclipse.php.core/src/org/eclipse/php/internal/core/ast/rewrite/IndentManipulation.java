@@ -186,7 +186,7 @@ public final class IndentManipulation {
 			}
 		}
 		if (end == 0) {
-			return "";
+			return ""; //$NON-NLS-1$
 		} else if (end == size) {
 			return line;
 		} else {
@@ -262,7 +262,7 @@ public final class IndentManipulation {
 		}
 		String trimmed;
 		if (start == size)
-			trimmed = "";
+			trimmed = ""; //$NON-NLS-1$
 		else
 			trimmed = line.substring(start);
 

@@ -40,16 +40,16 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  */
 public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 
-	protected final static String[] SERVER_VARS = { "DOCUMENT_ROOT",
-			"GATEWAY_INTERFACE", "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING",
-			"HTTP_ACCEPT_LANGUAGE", "HTTP_CONNECTION", "HTTP_HOST",
-			"HTTP_USER_AGENT", "PATH", "PATH_TRANSLATED", "PHP_SELF",
-			"QUERY_STRING", "REMOTE_ADDR", "REMOTE_PORT", "REQUEST_METHOD",
-			"REQUEST_TIME", "REQUEST_URI", "SCRIPT_FILENAME", "SCRIPT_NAME",
-			"SERVER_ADDR", "SERVER_ADMIN", "SERVER_NAME", "SERVER_PORT",
-			"SERVER_PROTOCOL", "SERVER_SIGNATURE", "SERVER_SOFTWARE", };
+	protected final static String[] SERVER_VARS = { "DOCUMENT_ROOT", //$NON-NLS-1$
+			"GATEWAY_INTERFACE", "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"HTTP_ACCEPT_LANGUAGE", "HTTP_CONNECTION", "HTTP_HOST", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"HTTP_USER_AGENT", "PATH", "PATH_TRANSLATED", "PHP_SELF", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			"QUERY_STRING", "REMOTE_ADDR", "REMOTE_PORT", "REQUEST_METHOD", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			"REQUEST_TIME", "REQUEST_URI", "SCRIPT_FILENAME", "SCRIPT_NAME", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			"SERVER_ADDR", "SERVER_ADMIN", "SERVER_NAME", "SERVER_PORT", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			"SERVER_PROTOCOL", "SERVER_SIGNATURE", "SERVER_SOFTWARE", }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-	protected final static String[] SESSION_VARS = { "SID" };
+	protected final static String[] SESSION_VARS = { "SID" }; //$NON-NLS-1$
 
 	public BuiltinArrayKeysStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
@@ -77,21 +77,21 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			extraObject |= ProposalExtraInfo.ADD_QUOTES;
 		}
 		// report server variables:
-		if (arrayVarName.equals("$_SERVER")
-				|| arrayVarName.equals("$HTTP_SERVER_VARS")) { // NON-NLS-1
+		if (arrayVarName.equals("$_SERVER") //$NON-NLS-1$
+				|| arrayVarName.equals("$HTTP_SERVER_VARS")) { // NON-NLS-1 //$NON-NLS-1$
 			// //NON-NLS-2
 			reportVariables(reporter, arrayContext, SERVER_VARS, prefix,
 					extraObject);
 		}
 		// report session variables:
-		else if (arrayVarName.equals("$_SESSION")
-				|| arrayVarName.equals("$HTTP_SESSION_VARS")) { // NON-NLS-1
+		else if (arrayVarName.equals("$_SESSION") //$NON-NLS-1$
+				|| arrayVarName.equals("$HTTP_SESSION_VARS")) { // NON-NLS-1 //$NON-NLS-1$
 			// //NON-NLS-2
 			reportVariables(reporter, arrayContext, SESSION_VARS, prefix,
 					extraObject);
 		}
 		// report global variables in special globals array:
-		else if (arrayVarName.equals("$GLOBALS")) { // NON-NLS-1
+		else if (arrayVarName.equals("$GLOBALS")) { // NON-NLS-1 //$NON-NLS-1$
 
 			MatchRule matchRule = MatchRule.PREFIX;
 			if (requestor.isContextInformationMode()) {
@@ -99,12 +99,12 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			}
 			IDLTKSearchScope scope = createSearchScope();
 			IField[] elements = PhpModelAccess.getDefault().findFields(
-					"$" + prefix, matchRule, Modifiers.AccGlobal,
+					"$" + prefix, matchRule, Modifiers.AccGlobal, //$NON-NLS-1$
 					Modifiers.AccConstant, scope, null);
 			List<IField> list = new ArrayList<IField>();
 
-			if (!prefix.startsWith("$")) {
-				elements = PhpModelAccess.getDefault().findFields("$" + prefix,
+			if (!prefix.startsWith("$")) { //$NON-NLS-1$
+				elements = PhpModelAccess.getDefault().findFields("$" + prefix, //$NON-NLS-1$
 						matchRule, Modifiers.AccGlobal, Modifiers.AccConstant,
 						scope, null);
 				list.addAll(Arrays.asList(elements));
@@ -120,7 +120,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 							(ModelElement) field.getParent(), field
 									.getElementName().substring(1),
 							sourceRange.getOffset(), sourceRange.getLength());
-					reporter.reportField(fakeField, "", replaceRange, true, 0,
+					reporter.reportField(fakeField, "", replaceRange, true, 0, //$NON-NLS-1$
 							extraObject); // NON-NLS-1
 				} catch (ModelException e) {
 					PHPCorePlugin.log(e);
@@ -155,7 +155,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 						|| variable.length() == prefix.length()) {
 					reporter.reportField(
 							new FakeField((ModelElement) context
-									.getSourceModule(), variable, 0, 0), "",
+									.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
 							replaceRange, false, 0, extraObject); // NON-NLS-1
 				}
 			}

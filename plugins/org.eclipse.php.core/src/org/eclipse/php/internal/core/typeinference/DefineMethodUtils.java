@@ -15,7 +15,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 public class DefineMethodUtils {
 
-	public static String DEFINE = "define";
+	public static String DEFINE = "define"; //$NON-NLS-1$
 
 	public static PHPCallExpression getDefineNodeByField(
 			ModuleDeclaration module, IField field) throws ModelException {

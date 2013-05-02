@@ -57,7 +57,7 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 	protected boolean filterKeyword(KeywordData keyword) {
 		// if the class does not have parent
 		if ((keyword.context & PHPKeywords.METHOD_BODY) != 0
-				&& keyword.name.equals("parent")) {
+				&& keyword.name.equals("parent")) { //$NON-NLS-1$
 			ICompletionContext context = getContext();
 			if (context instanceof GlobalMethodStatementContext) {
 				GlobalMethodStatementContext globalContext = (GlobalMethodStatementContext) context;

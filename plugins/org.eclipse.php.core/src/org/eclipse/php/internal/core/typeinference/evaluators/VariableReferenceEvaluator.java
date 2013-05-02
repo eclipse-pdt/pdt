@@ -60,7 +60,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		IContext context = goal.getContext();
 
 		// Handle $this variable reference
-		if (variableReference.getName().equals("$this")) {
+		if (variableReference.getName().equals("$this")) { //$NON-NLS-1$
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
 				final LambdaFunctionDeclaration[] lambdas = new LambdaFunctionDeclaration[1];

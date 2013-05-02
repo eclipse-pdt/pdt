@@ -67,7 +67,7 @@ public abstract class BodyDeclaration extends Statement {
 	 */ 
 	public void setModifier(int modifier) {
 		if (PHPFlags.toString(modifier) == null) {
-			throw new IllegalArgumentException("Invalid modifier");
+			throw new IllegalArgumentException("Invalid modifier"); //$NON-NLS-1$
 		}
 		preValueChange(getModifierProperty());
 		this.modifier = modifier;

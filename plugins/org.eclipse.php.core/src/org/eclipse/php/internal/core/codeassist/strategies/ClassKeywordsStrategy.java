@@ -46,8 +46,8 @@ public class ClassKeywordsStrategy extends KeywordsStrategy {
 	}
 
 	protected boolean filterKeyword(KeywordData keyword) {
-		if (keyword.name.equals("array")
-				&& statementText.toString().indexOf("=") > 0) {
+		if (keyword.name.equals("array") //$NON-NLS-1$
+				&& statementText.toString().indexOf("=") > 0) { //$NON-NLS-1$
 			return false;
 		}
 		if ((keyword.context & PHPKeywords.CLASS_BODY) == 0) {

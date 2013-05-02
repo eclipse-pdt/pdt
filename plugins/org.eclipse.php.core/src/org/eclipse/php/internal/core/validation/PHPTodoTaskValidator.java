@@ -167,13 +167,13 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 							}
 						} catch (BadLocationException e) {
 							Logger.logException(CoreMessages
-									.getString("PHPTodoTaskAstParser_0"), e);
+									.getString("PHPTodoTaskAstParser_0"), e); //$NON-NLS-1$
 						}
 					}
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException("Failed validating file for tasks " + file, e);
+			Logger.logException("Failed validating file for tasks " + file, e); //$NON-NLS-1$
 		} finally {
 			if (model != null) {
 				model.releaseFromRead();

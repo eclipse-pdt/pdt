@@ -245,14 +245,14 @@ public class IncludePathManager {
 						.append(localPath.toString());
 			} else {
 				IResource entry = (IResource) includePath.getEntry();
-				buf.append("0;").append(entry.getFullPath().toString());
+				buf.append("0;").append(entry.getFullPath().toString()); //$NON-NLS-1$
 			}
 			if (i < includePathEntries.length - 1) {
 				buf.append(PREF_SEP);
 			}
 		}
 		modifyingIncludePath = true;
-		WorkspaceJob job = new WorkspaceJob("Modifying Include Path") {
+		WorkspaceJob job = new WorkspaceJob("Modifying Include Path") { //$NON-NLS-1$
 			public IStatus runInWorkspace(IProgressMonitor monitor)
 					throws CoreException {
 				CorePreferencesSupport.getInstance()

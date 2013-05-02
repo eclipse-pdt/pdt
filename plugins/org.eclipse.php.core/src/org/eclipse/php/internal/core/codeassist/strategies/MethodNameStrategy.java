@@ -43,7 +43,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class MethodNameStrategy extends AbstractCompletionStrategy {
 
-	private static String CONSTRUCTOR_SUFFIX = "()";
+	private static String CONSTRUCTOR_SUFFIX = "()"; //$NON-NLS-1$
 
 	public MethodNameStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
@@ -70,7 +70,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 
 		String suffix = getSuffix(concreteContext);
 		SourceRange replaceRange = null;
-		if (suffix.equals("")) {
+		if (suffix.equals("")) { //$NON-NLS-1$
 			replaceRange = getReplacementRange(concreteContext);
 		} else {
 			replaceRange = getReplacementRangeWithBraces(concreteContext);
@@ -107,8 +107,8 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		// Add constructors:
 		functions.add(declaringClass.getElementName());
 		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
-			functions.add("__construct");
-			functions.add("__destruct");
+			functions.add("__construct"); //$NON-NLS-1$
+			functions.add("__destruct"); //$NON-NLS-1$
 		}
 
 		for (String function : functions) {
@@ -117,7 +117,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 						|| function.length() == prefix.length()) {
 					FakeMethod fakeMethod = new FakeMethod(
 							(ModelElement) declaringClass, function);
-					if (function.equals("__construct")) {
+					if (function.equals("__construct")) { //$NON-NLS-1$
 						fakeMethod.setConstructor(true);
 					}
 					reporter.reportMethod(fakeMethod, suffix, replaceRange);

@@ -65,7 +65,7 @@ public class NamespaceMemberContext extends StatementContext {
 
 		String triggerText = statementText.subSequence(elementStart - 1,
 				elementStart).toString();
-		if (!triggerText.equals("\\")) {
+		if (!triggerText.equals("\\")) { //$NON-NLS-1$
 			return false;
 		}
 
@@ -81,7 +81,7 @@ public class NamespaceMemberContext extends StatementContext {
 				statementText, endNamespace, false);
 		String nsName = statementText.subSequence(nsNameStart, elementStart)
 				.toString();
-		if (nsName.equals("\\")) {
+		if (nsName.equals("\\")) { //$NON-NLS-1$
 			isGlobal = true;
 			return true;
 		}

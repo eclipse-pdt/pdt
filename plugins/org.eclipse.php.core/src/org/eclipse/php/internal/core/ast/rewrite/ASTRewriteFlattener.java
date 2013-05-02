@@ -353,16 +353,16 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(Comment comment) {
 		result.append(getComment(comment));
-		result.append("\n");
+		result.append("\n"); //$NON-NLS-1$
 		return false;
 	}
 
 	public String getComment(Comment comment) {
 		if (comment.getCommentType() == Comment.TYPE_SINGLE_LINE) {
-			return "//";
+			return "//"; //$NON-NLS-1$
 		}
 		if (comment.getCommentType() == Comment.TYPE_MULTILINE) {
-			return "/* */";
+			return "/* */"; //$NON-NLS-1$
 		}
 		if (comment.getCommentType() == Comment.TYPE_PHPDOC) {
 			return "/** */"; //$NON-NLS-1$"
@@ -429,7 +429,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		for (int i = 0; i < expressions.size(); i++) {
 			expressions.get(i).accept(this);
 			if (i + 1 < expressions.size()) {
-				result.append(", ");
+				result.append(", "); //$NON-NLS-1$
 			}
 		}
 		result.append(";\n"); //$NON-NLS-1$
@@ -446,7 +446,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			expressionStatement.getExpression().accept(this);
 			result.append(";\n"); //$NON-NLS-1$
 		} else {
-			result.append("Missing();");
+			result.append("Missing();"); //$NON-NLS-1$
 		}
 		return false;
 	}
@@ -494,7 +494,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
-		result.append("namespace ");
+		result.append("namespace "); //$NON-NLS-1$
 		namespaceDeclaration.childrenAccept(this);
 		if (namespaceDeclaration.getBody() == null) {
 			result.append(";\n"); //$NON-NLS-1$
@@ -504,32 +504,32 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(NamespaceName namespaceName) {
 		if (namespaceName.isGlobal()) {
-			result.append("\\");
+			result.append("\\"); //$NON-NLS-1$
 		}
 		if (namespaceName.isCurrent()) {
-			result.append("namespace\\");
+			result.append("namespace\\"); //$NON-NLS-1$
 		}
 		List<Identifier> segments = namespaceName.segments();
 		Iterator<Identifier> it = segments.iterator();
 		while (it.hasNext()) {
 			it.next().accept(this);
 			if (it.hasNext()) {
-				result.append("\\");
+				result.append("\\"); //$NON-NLS-1$
 			}
 		}
 		return false;
 	}
 
 	public boolean visit(UseStatement useStatement) {
-		result.append("use ");
+		result.append("use "); //$NON-NLS-1$
 		Iterator<UseStatementPart> it = useStatement.parts().iterator();
 		while (it.hasNext()) {
 			it.next().accept(this);
 			if (it.hasNext()) {
-				result.append(", ");
+				result.append(", "); //$NON-NLS-1$
 			}
 		}
-		result.append(";\n");
+		result.append(";\n"); //$NON-NLS-1$
 		return false;
 	}
 
@@ -537,7 +537,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		useStatementPart.getName().accept(this);
 		Identifier alias = useStatementPart.getAlias();
 		if (alias != null) {
-			result.append(" as ");
+			result.append(" as "); //$NON-NLS-1$
 			alias.accept(this);
 		}
 		return false;
@@ -546,7 +546,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(FormalParameter formalParameter) {
 		if (formalParameter.isMandatory()) {
 			if (formalParameter.getAST().apiLevel() == PHPVersion.PHP4) {
-				result.append("const "); // only for PHP 4
+				result.append("const "); // only for PHP 4 //$NON-NLS-1$
 			}
 		}
 		Expression paramType = formalParameter.getParameterType();
@@ -558,7 +558,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		formalParameter.getParameterName().accept(this);
 		Expression defaultValue = formalParameter.getDefaultValue();
 		if (defaultValue != null /* && defaultValue.getLength() > 0 */) {
-			result.append(" = ");
+			result.append(" = "); //$NON-NLS-1$
 			defaultValue.accept(this);
 		}
 		return false;
@@ -604,7 +604,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(FunctionDeclaration functionDeclaration) {
-		result.append(" function ");
+		result.append(" function "); //$NON-NLS-1$
 		if (functionDeclaration.isReference()) {
 			result.append('&');
 		}
@@ -770,7 +770,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(LambdaFunctionDeclaration functionDeclaration) {
-		result.append(" function ");
+		result.append(" function "); //$NON-NLS-1$
 		if (functionDeclaration.isReference()) {
 			result.append('&');
 		}
@@ -781,7 +781,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		while (paramIt.hasNext()) {
 			paramIt.next().accept(this);
 			if (paramIt.hasNext()) {
-				result.append(", ");
+				result.append(", "); //$NON-NLS-1$
 			}
 		}
 		result.append(')');
@@ -789,7 +789,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		List<Expression> lexicalVariables = functionDeclaration
 				.lexicalVariables();
 		if (lexicalVariables.size() > 0) {
-			result.append(" use (");
+			result.append(" use ("); //$NON-NLS-1$
 			Iterator<Expression> it = lexicalVariables.iterator();
 			while (it.hasNext()) {
 				it.next().accept(this);
@@ -975,9 +975,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(SwitchCase switchCase) {
 		if (switchCase.isDefault()) {
-			result.append("default:\n");
+			result.append("default:\n"); //$NON-NLS-1$
 		} else {
-			result.append("case ");
+			result.append("case "); //$NON-NLS-1$
 			if (switchCase.getValue() != null) {
 				switchCase.getValue().accept(this);
 				result.append(":\n"); //$NON-NLS-1$
@@ -1032,7 +1032,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(Variable variable) {
 		if (variable.isDollared()) {
-			result.append("$");
+			result.append("$"); //$NON-NLS-1$
 		}
 		variable.getName().accept(this);
 		return false;

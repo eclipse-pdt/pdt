@@ -55,7 +55,7 @@ import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClass
  */
 public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
-	private static final String DOLOR = "$";
+	private static final String DOLOR = "$"; //$NON-NLS-1$
 	private static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
 	private static final String EXTENSION_POINT = "phpIndexingVisitors"; //$NON-NLS-1$
@@ -150,17 +150,17 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				Map<String, String> info = new HashMap<String, String>();
 				for (PHPDocTag tag : docBlock.getTags()) {
 					if (tag.getTagKind() == PHPDocTag.DEPRECATED) {
-						info.put("d", null);
+						info.put("d", null); //$NON-NLS-1$
 					} else if (tag.getTagKind() == PHPDocTag.RETURN) {
 						StringBuilder buf = new StringBuilder();
 						for (SimpleReference ref : tag.getReferences()) {
-							String type = ref.getName().replaceAll(",", "~");
+							String type = ref.getName().replaceAll(",", "~"); //$NON-NLS-1$ //$NON-NLS-2$
 							if (buf.length() > 0) {
 								buf.append(',');
 							}
 							buf.append(type);
 						}
-						info.put("r", buf.toString());
+						info.put("r", buf.toString()); //$NON-NLS-1$
 					}
 				}
 				StringBuilder buf = new StringBuilder();
@@ -298,7 +298,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				}
 				metadata.append(defaultValue);
 				if (i.hasNext()) {
-					metadata.append(",");
+					metadata.append(","); //$NON-NLS-1$
 				}
 			}
 		}
@@ -390,7 +390,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 		for (int i = 0; i < superClasses.length; ++i) {
 			metadata.append(superClasses[i]);
 			if (i < superClasses.length - 1) {
-				metadata.append(",");
+				metadata.append(","); //$NON-NLS-1$
 			}
 		}
 
@@ -429,7 +429,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 				if (fullyQualifiedName.getNamespace() != null) {
 					String namespace = fullyQualifiedName.getNamespace()
 							.getName();
-					String subnamespace = "";
+					String subnamespace = ""; //$NON-NLS-1$
 					if (namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR
 							&& namespace
 									.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
@@ -532,7 +532,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 
 	private String removeParenthesis(final String[] split) {
 		final String name = split[1];
-		return name.endsWith("()") ? name.substring(0, name.length() - 2)
+		return name.endsWith("()") ? name.substring(0, name.length() - 2) //$NON-NLS-1$
 				: name;
 	}
 
@@ -633,7 +633,7 @@ public class PhpIndexingVisitor extends PhpIndexingVisitorExtension {
 					include,
 					new ReferenceInfo(IModelElement.METHOD, filePath
 							.sourceStart(), filePath.sourceEnd()
-							- filePath.sourceStart(), "include", Integer
+							- filePath.sourceStart(), "include", Integer //$NON-NLS-1$
 							.toString(1), null));
 
 			String fullPath = ASTUtils.stripQuotes(((Scalar) filePath)

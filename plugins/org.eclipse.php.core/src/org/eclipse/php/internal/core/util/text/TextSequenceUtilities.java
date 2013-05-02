@@ -32,7 +32,7 @@ public final class TextSequenceUtilities {
 	public static TextSequence createTextSequence(
 			IStructuredDocumentRegion source, int startOffset, int length) {
 
-		String s = "";//$NON-NLS-1$
+		String s = ""; //$NON-NLS-1$
 		try {
 			s = source.getParentDocument().get(startOffset, length);
 		} catch (BadLocationException e) {

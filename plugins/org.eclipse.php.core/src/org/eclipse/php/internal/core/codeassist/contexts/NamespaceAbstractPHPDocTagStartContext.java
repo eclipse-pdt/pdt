@@ -66,10 +66,10 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 			String lastWord = stack.pop();
 			if (lastWord.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) >= 0) {
 				if (!stack.empty() && isPrefix(lastWord)) {
-					if (lastWord.startsWith("\\")) {
+					if (lastWord.startsWith("\\")) { //$NON-NLS-1$
 						// isGlobal = true;
 					}
-					if (lastWord.startsWith("\\")
+					if (lastWord.startsWith("\\") //$NON-NLS-1$
 							&& lastWord
 									.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR) == 0) {
 						isGlobal = true;
@@ -112,7 +112,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 		} else {
 			namespaces = PhpModelAccess.NULL_TYPES;
 		}
-		if (lastWord.startsWith("\\")) {
+		if (lastWord.startsWith("\\")) { //$NON-NLS-1$
 			nsPrefix = null;
 		} else {
 
@@ -149,7 +149,7 @@ public abstract class NamespaceAbstractPHPDocTagStartContext extends
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		if (fullName.startsWith("\\")) {
+		if (fullName.startsWith("\\")) { //$NON-NLS-1$
 			fullName = fullName.substring(1);
 		}
 		possibleNamespaces = PhpModelAccess.getDefault().findTypes(null,

@@ -47,13 +47,13 @@ import java.util.Map;
 public class MapXMLWriter extends XMLWriter {
 
 	/** The map tag identifier for the saved XML */
-	public static final String MAP_TAG = "map";//$NON-NLS-1$
+	public static final String MAP_TAG = "map"; //$NON-NLS-1$
 	/** The key tag identifier for the saved XML */
-	public static final String KEY_TAG = "key";//$NON-NLS-1$
+	public static final String KEY_TAG = "key"; //$NON-NLS-1$
 	/** The value tag identifier for the saved XML */
-	public static final String VALUE_TAG = "value";//$NON-NLS-1$
+	public static final String VALUE_TAG = "value"; //$NON-NLS-1$
 	/** The name tag identifier for the saved XML */
-	public static final String NAME_TAG = "name";//$NON-NLS-1$
+	public static final String NAME_TAG = "name"; //$NON-NLS-1$
 
 	/**
 	 * Constructs a new HashMapXMLWriter

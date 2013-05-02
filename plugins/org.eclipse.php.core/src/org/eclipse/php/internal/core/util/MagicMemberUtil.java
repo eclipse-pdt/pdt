@@ -3,7 +3,7 @@ package org.eclipse.php.internal.core.util;
 import java.util.regex.Pattern;
 
 public class MagicMemberUtil {
-	public static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
+	public static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
 
 	public static class MagicMember {
 		public String name;
@@ -23,7 +23,7 @@ public class MagicMemberUtil {
 
 	public static String removeParenthesis(final String[] split) {
 		final String name = split[1];
-		return name.endsWith("()") ? name.substring(0, name.length() - 2)
+		return name.endsWith("()") ? name.substring(0, name.length() - 2) //$NON-NLS-1$
 				: name;
 	}
 
@@ -33,7 +33,7 @@ public class MagicMemberUtil {
 		if (index > 0) {
 			name = name.substring(0, index);
 		}
-		return name.endsWith("()") ? name.substring(0, name.length() - 2)
+		return name.endsWith("()") ? name.substring(0, name.length() - 2) //$NON-NLS-1$
 				: name;
 	}
 
@@ -53,10 +53,10 @@ public class MagicMemberUtil {
 				}
 				if (docValue.startsWith(mi.name)) {
 					docValue = docValue.substring(mi.name.length()).trim();
-					if (docValue.startsWith("(") && docValue.indexOf(')') > 0) {
+					if (docValue.startsWith("(") && docValue.indexOf(')') > 0) { //$NON-NLS-1$
 						int endIndex = docValue.indexOf(')');
 						String paramsString = docValue.substring(1, endIndex);
-						String[] params = paramsString.split(",");
+						String[] params = paramsString.split(","); //$NON-NLS-1$
 						String[] paramType = new String[params.length];
 						String[] paramName = new String[params.length];
 						String[] paramValue = new String[params.length];
@@ -121,10 +121,10 @@ public class MagicMemberUtil {
 				}
 				if (docValue.startsWith(mi.name)) {
 					docValue = docValue.substring(mi.name.length()).trim();
-					if (docValue.startsWith("(") && docValue.indexOf(')') > 0) {
+					if (docValue.startsWith("(") && docValue.indexOf(')') > 0) { //$NON-NLS-1$
 						int endIndex = docValue.indexOf(')');
 						String paramsString = docValue.substring(1, endIndex);
-						String[] params = paramsString.split(",");
+						String[] params = paramsString.split(","); //$NON-NLS-1$
 						String[] paramType = new String[params.length];
 						String[] paramName = new String[params.length];
 						String[] paramValue = new String[params.length];

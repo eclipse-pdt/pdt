@@ -48,12 +48,12 @@ import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTyp
 public class PHPDocMethodReturnTypeEvaluator extends
 		AbstractMethodReturnTypeEvaluator {
 
-	private static final String BRACKETS = "[]";
+	private static final String BRACKETS = "[]"; //$NON-NLS-1$
 
 	private final static Pattern ARRAY_TYPE_PATTERN = Pattern
-			.compile("array\\[.*\\]");
+			.compile("array\\[.*\\]"); //$NON-NLS-1$
 
-	private final static String SELF_RETURN_TYPE = "self";
+	private final static String SELF_RETURN_TYPE = "self"; //$NON-NLS-1$
 
 	/**
 	 * Used for splitting the data types list of the returned tag
@@ -239,8 +239,8 @@ public class PHPDocMethodReturnTypeEvaluator extends
 
 	private MultiTypeType getArrayType(String type, IType currentNamespace,
 			int offset) {
-		int beginIndex = type.indexOf("[") + 1;
-		int endIndex = type.lastIndexOf("]");
+		int beginIndex = type.indexOf("[") + 1; //$NON-NLS-1$
+		int endIndex = type.lastIndexOf("]"); //$NON-NLS-1$
 		if (endIndex != -1) {
 			type = type.substring(beginIndex, endIndex);
 		}
@@ -250,16 +250,16 @@ public class PHPDocMethodReturnTypeEvaluator extends
 		if (m.find()) {
 			arrayType
 					.addType(getArrayType(m.group(), currentNamespace, offset));
-			type = m.replaceAll("");
+			type = m.replaceAll(""); //$NON-NLS-1$
 		} else if (type.endsWith(BRACKETS) && type.length() > 2) {
 			arrayType.addType(getArrayType(
 					type.substring(0, type.length() - 2), currentNamespace,
 					offset));
-			type = type.replaceAll(BRACKETS, "");
+			type = type.replaceAll(BRACKETS, ""); //$NON-NLS-1$
 		}
-		String[] typeNames = type.split(",");
+		String[] typeNames = type.split(","); //$NON-NLS-1$
 		for (String name : typeNames) {
-			if (!"".equals(name)) {
+			if (!"".equals(name)) { //$NON-NLS-1$
 
 				if (name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
 						&& currentNamespace != null) {

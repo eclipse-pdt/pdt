@@ -35,6 +35,6 @@ public class PHPDocReturnTagContext extends PHPDocTagContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return "return".equalsIgnoreCase(getTagName());
+		return "return".equalsIgnoreCase(getTagName()); //$NON-NLS-1$
 	}
 }

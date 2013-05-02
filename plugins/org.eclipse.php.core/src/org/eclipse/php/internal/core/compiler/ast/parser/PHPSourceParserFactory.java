@@ -45,7 +45,7 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements
 		PHPVersion phpVersion = ProjectOptions.getPhpVersion(fileName);
 		AbstractPHPSourceParser parser = createParser(fileName, phpVersion);
 		if (parser == null) {
-			throw new IllegalStateException("Unknown PHP version!");
+			throw new IllegalStateException(Messages.PHPSourceParserFactory_0);
 		}
 		return parser;
 	}

@@ -49,7 +49,7 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 		GotoStatementContext gotoStatementContext = (GotoStatementContext) context;
 
 		String prefix = gotoStatementContext.getPrefix();
-		if (prefix.startsWith("$")) {
+		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
 		try {
@@ -68,7 +68,7 @@ public class GotoStatementStrategy extends GlobalElementStrategy {
 			List<String> getoLabels = vistor.getGotoLabels();
 			SourceRange range = getReplacementRange(context);
 			for (String label : getoLabels) {
-				reporter.reportKeyword(label, "", range);
+				reporter.reportKeyword(label, "", range); //$NON-NLS-1$
 			}
 		} catch (Exception e) {
 		}

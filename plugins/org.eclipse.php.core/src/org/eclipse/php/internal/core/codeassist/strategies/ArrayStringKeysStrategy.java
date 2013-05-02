@@ -76,7 +76,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 				if (!requestor.isContextInformationMode()) {
 					reporter.reportField(new FakeField(
 							(ModelElement) arrayContext.getSourceModule(),
-							name, 0, 0), "", replaceRange, false, 0,
+							name, 0, 0), "", replaceRange, false, 0, //$NON-NLS-1$
 							extraObject); // NON-NLS-1
 				}
 
@@ -105,7 +105,7 @@ public class ArrayStringKeysStrategy extends AbstractCompletionStrategy {
 						|| variable.length() == prefix.length()) {
 					reporter.reportField(
 							new FakeField((ModelElement) context
-									.getSourceModule(), variable, 0, 0), "",
+									.getSourceModule(), variable, 0, 0), "", //$NON-NLS-1$
 							replaceRange, false); // NON-NLS-1
 				}
 			}

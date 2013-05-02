@@ -239,14 +239,14 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 			// if the namespace is not blank, append it to the key.
 			StringBuffer key = new StringBuffer();
-			if (namespaceName != null && !"".equals(namespaceName.trim())) {
+			if (namespaceName != null && !"".equals(namespaceName.trim())) { //$NON-NLS-1$
 				String nameSpace = namespaceName;
-				if (namespaceName.startsWith("\\")
-						|| namespaceName.startsWith("/")) {
+				if (namespaceName.startsWith("\\") //$NON-NLS-1$
+						|| namespaceName.startsWith("/")) { //$NON-NLS-1$
 					nameSpace = namespaceName.substring(1);
 				}
 				if (nameSpace.length() > 0) {
-					key.append(nameSpace.toLowerCase()).append("$");
+					key.append(nameSpace.toLowerCase()).append("$"); //$NON-NLS-1$
 				}
 			}
 			key.append(typeName);
@@ -310,14 +310,14 @@ public class PerFileModelAccessCache implements IModelAccessCache {
 
 			// if the namespace is not blank, append it to the key.
 			StringBuffer key = new StringBuffer();
-			if (namespaceName != null && !"".equals(namespaceName.trim())) {
+			if (namespaceName != null && !"".equals(namespaceName.trim())) { //$NON-NLS-1$
 				String nameSpace = namespaceName;
-				if (namespaceName.startsWith("\\")
-						|| namespaceName.startsWith("/")) {
+				if (namespaceName.startsWith("\\") //$NON-NLS-1$
+						|| namespaceName.startsWith("/")) { //$NON-NLS-1$
 					nameSpace = namespaceName.substring(1);
 				}
 				if (nameSpace.length() > 0) {
-					key.append(nameSpace.toLowerCase()).append("$");
+					key.append(nameSpace.toLowerCase()).append("$"); //$NON-NLS-1$
 				}
 			}
 			key.append(typeName);

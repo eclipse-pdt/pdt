@@ -42,7 +42,7 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 		FormalParameter parameter = (FormalParameter) typedGoal.getExpression();
 
 		SimpleReference type = parameter.getParameterType();
-		if (type != null && "array".equals(type.getName()) == false) {
+		if (type != null && "array".equals(type.getName()) == false) { //$NON-NLS-1$
 			result = PHPClassType.fromSimpleReference(type);
 		} else {
 			IContext context = typedGoal.getContext();
@@ -98,13 +98,13 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 										}
 										if (typeName.indexOf('|') >= 0) {
 											String[] typeNames = typeName
-													.split("|");
+													.split("|"); //$NON-NLS-1$
 											MultiTypeType arrayType = new MultiTypeType();
 											for (int i = 0; i < typeNames.length; i++) {
 												if (typeNames[i].trim()
 														.length() == 0
 														|| typeNames[i]
-																.equals("|")) {
+																.equals("|")) { //$NON-NLS-1$
 													continue;
 												}
 												arrayType

@@ -74,10 +74,10 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 							if (isImplementedIterator(superTypes)) {
 								subGoals.add(new MethodElementReturnTypeGoal(
 										subgoal.getContext(),
-										new IType[] { type }, "current"));
+										new IType[] { type }, "current")); //$NON-NLS-1$
 								subGoals.add(new PHPDocMethodReturnTypeGoal(
 										subgoal.getContext(),
-										new IType[] { type }, "current"));
+										new IType[] { type }, "current")); //$NON-NLS-1$
 							}
 						}
 						return subGoals.toArray(new IGoal[subGoals.size()]);
@@ -166,7 +166,7 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 		if (superClasses == null)
 			return false;
 		for (IType superClass : superClasses) {
-			if (superClass.getFullyQualifiedName().equalsIgnoreCase("Iterator")) {
+			if (superClass.getFullyQualifiedName().equalsIgnoreCase("Iterator")) { //$NON-NLS-1$
 				return true;
 			}
 		}

@@ -215,16 +215,16 @@ public class CodeAssistUtils {
 
 	private static VariableReference getVariableReference(String variableName,
 			int position) {
-		String start = "";
+		String start = ""; //$NON-NLS-1$
 		int arrayType = 0;
-		if (variableName.endsWith("]")) {
-			start = "[";
+		if (variableName.endsWith("]")) { //$NON-NLS-1$
+			start = "["; //$NON-NLS-1$
 			arrayType = ArrayVariableReference.VARIABLE_ARRAY;
-		} else if (variableName.endsWith("}")) {
-			start = "{";
+		} else if (variableName.endsWith("}")) { //$NON-NLS-1$
+			start = "{"; //$NON-NLS-1$
 			arrayType = ArrayVariableReference.VARIABLE_HASHTABLE;
 		}
-		if (!"".equals(start)) {
+		if (!"".equals(start)) { //$NON-NLS-1$
 			int startIndex = variableName.indexOf(start);
 			String name = variableName.substring(0, startIndex);
 			return new ArrayVariableReference(position, position
@@ -361,7 +361,7 @@ public class CodeAssistUtils {
 		String text = statementText.subSequence(0, propertyEndPosition)
 				.toString();
 		if (lastObjectOperator == -1
-				|| (text.indexOf('>') >= 0 && text.indexOf("->") < 0)) {
+				|| (text.indexOf('>') >= 0 && text.indexOf("->") < 0)) { //$NON-NLS-1$
 			// if there is no "->" or "::" in the left sequence then we need to
 			// calc the object type
 			return innerGetClassName(sourceModule, statementText,
@@ -385,7 +385,7 @@ public class CodeAssistUtils {
 		boolean arrayReference = false;
 		PHPVersion version = ProjectOptions.getPhpVersion(sourceModule
 				.getScriptProject().getProject());
-		if (propertyName.endsWith("]")
+		if (propertyName.endsWith("]") //$NON-NLS-1$
 				&& version.isGreaterThan(PHPVersion.PHP5_3)) {
 			int closeBracketIndex = propertyName.lastIndexOf(')');
 			if (closeBracketIndex >= 0) {
@@ -561,9 +561,9 @@ public class CodeAssistUtils {
 		String className = statementText.subSequence(classNameStart,
 				propertyEndPosition).toString();
 		if (isClassTriger && className != null && className.length() != 0) {
-			if ("self".equals(className)
-					|| "parent".equals(className)
-					|| (phpVersion.isGreaterThan(PHPVersion.PHP5) && "static"
+			if ("self".equals(className) //$NON-NLS-1$
+					|| "parent".equals(className) //$NON-NLS-1$
+					|| (phpVersion.isGreaterThan(PHPVersion.PHP5) && "static" //$NON-NLS-1$
 							.equals(className))) {
 				IType classData = PHPModelUtils.getCurrentType(sourceModule,
 						offset - className.length() - 2); // the offset before
@@ -575,7 +575,7 @@ public class CodeAssistUtils {
 				}
 			}
 			if (className.length() > 0) {
-				if (className.startsWith("$")
+				if (className.startsWith("$") //$NON-NLS-1$
 						&& phpVersion.isGreaterThan(PHPVersion.PHP5)) {
 					int statementStart = statementText
 							.getOriginalOffset(classNameStart);
@@ -614,9 +614,9 @@ public class CodeAssistUtils {
 							+ quotedVarName.substring(1,
 									quotedVarName.length() - 1); //$NON-NLS-1$
 					// check for $array[0] scenario
-				} else if (testedVar.endsWith("}")) {
+				} else if (testedVar.endsWith("}")) { //$NON-NLS-1$
 					className = testedVar;
-				} else if (testedVar.endsWith("]")) {
+				} else if (testedVar.endsWith("]")) { //$NON-NLS-1$
 					if (statementText.toString().lastIndexOf('[') > 0) {
 						int end = statementText.toString().lastIndexOf('[');
 						int classNameStart1 = PHPTextSequenceUtilities

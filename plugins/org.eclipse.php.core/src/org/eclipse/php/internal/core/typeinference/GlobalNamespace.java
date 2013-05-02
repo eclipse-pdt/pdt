@@ -31,7 +31,7 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
  */
 public class GlobalNamespace extends SourceType {
 
-	public static final String NAME = "<global>";
+	public static final String NAME = "<global>"; //$NON-NLS-1$
 
 	public GlobalNamespace(IScriptProject project) {
 		super((ModelElement) project, NAME);

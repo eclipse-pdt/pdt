@@ -85,7 +85,7 @@ public class IncludePath implements IAdaptable {
 	}
 
 	public String toString() {
-		return new StringBuilder("Include Path [").append(entry.toString())
+		return new StringBuilder("Include Path [").append(entry.toString()) //$NON-NLS-1$
 				.append(']').toString();
 	}
 

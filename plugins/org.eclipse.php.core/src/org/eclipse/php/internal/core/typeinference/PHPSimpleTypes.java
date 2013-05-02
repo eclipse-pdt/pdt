@@ -32,29 +32,29 @@ public class PHPSimpleTypes {
 			SimpleType.TYPE_BOOLEAN);
 	public static final IEvaluatedType STRING = new SimpleType(
 			SimpleType.TYPE_STRING);
-	public static final IEvaluatedType OBJECT = new PHPClassType("object");
-	public static final IEvaluatedType RESOURCE = new PHPClassType("resource");
+	public static final IEvaluatedType OBJECT = new PHPClassType("object"); //$NON-NLS-1$
+	public static final IEvaluatedType RESOURCE = new PHPClassType("resource"); //$NON-NLS-1$
 	public static final IEvaluatedType ARRAY = new MultiTypeType();
-	public static final IEvaluatedType VOID = new PHPClassType("void");
+	public static final IEvaluatedType VOID = new PHPClassType("void"); //$NON-NLS-1$
 	public static final IEvaluatedType NULL = new SimpleType(
 			SimpleType.TYPE_NULL);
 
 	static {
 		SIMPLE_TYPES = new HashMap<String, IEvaluatedType>();
-		SIMPLE_TYPES.put("array", new MultiTypeType());
-		SIMPLE_TYPES.put("bool", BOOLEAN);
-		SIMPLE_TYPES.put("boolean", BOOLEAN);
-		SIMPLE_TYPES.put("int", NUMBER);
-		SIMPLE_TYPES.put("integer", NUMBER);
-		SIMPLE_TYPES.put("float", NUMBER);
-		SIMPLE_TYPES.put("double", NUMBER);
-		SIMPLE_TYPES.put("number", NUMBER);
-		SIMPLE_TYPES.put("string", STRING);
-		SIMPLE_TYPES.put("resource", RESOURCE);
-		SIMPLE_TYPES.put("string", STRING);
-		SIMPLE_TYPES.put("object", OBJECT);
-		SIMPLE_TYPES.put("void", VOID);
-		SIMPLE_TYPES.put("null", NULL);
+		SIMPLE_TYPES.put("array", new MultiTypeType()); //$NON-NLS-1$
+		SIMPLE_TYPES.put("bool", BOOLEAN); //$NON-NLS-1$
+		SIMPLE_TYPES.put("boolean", BOOLEAN); //$NON-NLS-1$
+		SIMPLE_TYPES.put("int", NUMBER); //$NON-NLS-1$
+		SIMPLE_TYPES.put("integer", NUMBER); //$NON-NLS-1$
+		SIMPLE_TYPES.put("float", NUMBER); //$NON-NLS-1$
+		SIMPLE_TYPES.put("double", NUMBER); //$NON-NLS-1$
+		SIMPLE_TYPES.put("number", NUMBER); //$NON-NLS-1$
+		SIMPLE_TYPES.put("string", STRING); //$NON-NLS-1$
+		SIMPLE_TYPES.put("resource", RESOURCE); //$NON-NLS-1$
+		SIMPLE_TYPES.put("string", STRING); //$NON-NLS-1$
+		SIMPLE_TYPES.put("object", OBJECT); //$NON-NLS-1$
+		SIMPLE_TYPES.put("void", VOID); //$NON-NLS-1$
+		SIMPLE_TYPES.put("null", NULL); //$NON-NLS-1$
 	}
 
 	/**

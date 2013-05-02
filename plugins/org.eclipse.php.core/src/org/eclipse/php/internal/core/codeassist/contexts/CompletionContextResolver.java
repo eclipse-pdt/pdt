@@ -54,12 +54,12 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 			List<ICompletionContextResolver> resolvers = new LinkedList<ICompletionContextResolver>();
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
 					.getConfigurationElementsFor(
-							"org.eclipse.php.core.completionContextResolvers");
+							"org.eclipse.php.core.completionContextResolvers"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
-				if (element.getName().equals("resolver")) {
+				if (element.getName().equals("resolver")) { //$NON-NLS-1$
 					try {
 						resolvers.add((ICompletionContextResolver) element
-								.createExecutableExtension("class"));
+								.createExecutableExtension("class")); //$NON-NLS-1$
 					} catch (CoreException e) {
 						PHPCorePlugin.log(e);
 					}

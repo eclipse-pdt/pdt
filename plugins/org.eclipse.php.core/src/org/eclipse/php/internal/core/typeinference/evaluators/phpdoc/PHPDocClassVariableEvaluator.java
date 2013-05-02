@@ -40,14 +40,14 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVaria
  */
 public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
-	private static final String SPLASH = "\\";
+	private static final String SPLASH = "\\"; //$NON-NLS-1$
 
-	public static final String BRACKETS = "[]";
+	public static final String BRACKETS = "[]"; //$NON-NLS-1$
 
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
 	public final static Pattern ARRAY_TYPE_PATTERN = Pattern
-			.compile("array\\[.*\\]");
+			.compile("array\\[.*\\]"); //$NON-NLS-1$
 
 	public PHPDocClassVariableEvaluator(IGoal goal) {
 		super(goal);
@@ -196,8 +196,8 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
 	public static MultiTypeType getArrayType(String type,
 			IType currentNamespace, int offset) {
-		int beginIndex = type.indexOf("[") + 1;
-		int endIndex = type.lastIndexOf("]");
+		int beginIndex = type.indexOf("[") + 1; //$NON-NLS-1$
+		int endIndex = type.lastIndexOf("]"); //$NON-NLS-1$
 		if (endIndex != -1) {
 			type = type.substring(beginIndex, endIndex);
 		}
@@ -206,11 +206,11 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		if (m.find()) {
 			arrayType
 					.addType(getArrayType(m.group(), currentNamespace, offset));
-			type = m.replaceAll("");
+			type = m.replaceAll(""); //$NON-NLS-1$
 		}
-		String[] typeNames = type.split(",");
+		String[] typeNames = type.split(","); //$NON-NLS-1$
 		for (String name : typeNames) {
-			if (!"".equals(name)) {
+			if (!"".equals(name)) { //$NON-NLS-1$
 
 				if (name.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0
 						&& currentNamespace != null) {

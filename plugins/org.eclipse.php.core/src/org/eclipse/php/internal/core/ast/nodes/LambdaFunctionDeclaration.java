@@ -167,7 +167,7 @@ public class LambdaFunctionDeclaration extends Expression {
 		if (isStatic) {
 			buffer.append(" isStatic='").append(isStatic); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		buffer.append("'>\n");
+		buffer.append("'>\n"); //$NON-NLS-1$
 		buffer.append(TAB).append(tab).append("<FormalParameters>\n"); //$NON-NLS-1$
 		for (ASTNode node : this.formalParameters) {
 			node.toString(buffer, TAB + TAB + tab);

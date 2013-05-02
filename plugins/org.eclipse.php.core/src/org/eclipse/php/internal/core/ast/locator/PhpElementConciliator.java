@@ -192,7 +192,7 @@ public class PhpElementConciliator {
 
 			// check if the node is 'define'
 			if ((locateNode instanceof Identifier)
-					&& "define".equals(((Identifier) locateNode).getName())
+					&& "define".equals(((Identifier) locateNode).getName()) //$NON-NLS-1$
 					&& node instanceof FunctionInvocation) {
 				FunctionInvocation inv = (FunctionInvocation) node;
 				List<Expression> parameters = inv.parameters();
@@ -513,8 +513,8 @@ public class PhpElementConciliator {
 				Variable var = (Variable) variableName;
 				if (var.isDollared() && var.getName() instanceof Identifier) {
 					final Identifier id = (Identifier) var.getName();
-					return id.getName().equals("_GLOBALS")
-							|| id.getName().equals("GLOBALS");
+					return id.getName().equals("_GLOBALS") //$NON-NLS-1$
+							|| id.getName().equals("GLOBALS"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -568,7 +568,7 @@ public class PhpElementConciliator {
 			targetIdentifier = ((FunctionDeclaration) locateNode)
 					.getFunctionName();
 		} else if (locateNode instanceof Identifier
-				&& !"define".equals(((Identifier) locateNode).getName())) {
+				&& !"define".equals(((Identifier) locateNode).getName())) { //$NON-NLS-1$
 			targetIdentifier = (Identifier) locateNode;
 			parent = targetIdentifier.getParent();
 			if (parent != null && parent.getType() == ASTNode.NAMESPACE_NAME) {

@@ -139,12 +139,12 @@ public class ClassDeclaration extends TypeDeclaration implements
 
 	public final void addSuperClass(ASTNode expression) {
 		throw new IllegalStateException(
-				"Use setSuperClass() or setInterfaceList()/addInterface() instead");
+				"Use setSuperClass() or setInterfaceList()/addInterface() instead"); //$NON-NLS-1$
 	}
 
 	public final void setSuperClasses(ASTListNode exprList) {
 		throw new IllegalStateException(
-				"Use setSuperClass() or setInterfaceList()/addInterface() instead");
+				"Use setSuperClass() or setInterfaceList()/addInterface() instead"); //$NON-NLS-1$
 	}
 
 	public PHPDocBlock getPHPDoc() {

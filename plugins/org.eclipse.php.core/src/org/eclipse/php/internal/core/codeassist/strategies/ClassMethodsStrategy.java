@@ -60,7 +60,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		String suffix = getSuffix(concreteContext);
 
 		SourceRange replaceRange = null;
-		if (suffix.equals("")) {
+		if (suffix.equals("")) { //$NON-NLS-1$
 			replaceRange = getReplacementRange(concreteContext);
 		} else {
 			replaceRange = getReplacementRangeWithBraces(concreteContext);
@@ -98,7 +98,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 
 					if (concreteContext.isInUseTraitStatement()) {
 						// result.add(method);
-						reporter.reportMethod((IMethod) method, "",
+						reporter.reportMethod((IMethod) method, "", //$NON-NLS-1$
 								replaceRange, ProposalExtraInfo.METHOD_ONLY);
 					} else if ((!isConstructor(method) || inConstructor
 							&& isSuperConstructor(method, type, concreteContext))
@@ -163,7 +163,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 
 	private boolean isConstructor(IMethod method) {
 		String methodName = method.getElementName();
-		if (methodName.equals("__construct")
+		if (methodName.equals("__construct") //$NON-NLS-1$
 				|| methodName
 						.equals(method.getDeclaringType().getElementName())) {
 			return true;
@@ -191,8 +191,8 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		String nextWord = null;
 		try {
 			nextWord = abstractContext.getNextWord();
-			if ("(".equals(nextWord)) {
-				return "";
+			if ("(".equals(nextWord)) { //$NON-NLS-1$
+				return ""; //$NON-NLS-1$
 			} else {
 				// workaround for
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=323462

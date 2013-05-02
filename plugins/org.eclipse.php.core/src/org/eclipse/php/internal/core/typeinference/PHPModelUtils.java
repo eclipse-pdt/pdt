@@ -183,7 +183,7 @@ public class PHPModelUtils {
 			if (!isGlobal) {
 				// 1. It can be a special 'namespace' keyword, which points to
 				// the current namespace:
-				if ("namespace".equalsIgnoreCase(namespace)) {
+				if ("namespace".equalsIgnoreCase(namespace)) { //$NON-NLS-1$
 					IType currentNamespace = PHPModelUtils.getCurrentNamespace(
 							sourceModule, offset);
 					return currentNamespace.getElementName();
@@ -718,7 +718,7 @@ public class PHPModelUtils {
 		if (fieldName == null || fieldName.length() == 0) {
 			return PhpModelAccess.NULL_FIELDS;
 		}
-		if (!fieldName.startsWith("$")) { // variables are not supported by
+		if (!fieldName.startsWith("$")) { // variables are not supported by //$NON-NLS-1$
 			// namespaces in PHP 5.3
 			String namespace = extractNamespaceName(fieldName, sourceModule,
 					offset);
@@ -1309,7 +1309,7 @@ public class PHPModelUtils {
 		case IModelElement.FIELD:
 			return getNodeByField(rootNode, (IField) element);
 		default:
-			throw new IllegalArgumentException("Unsupported element type: "
+			throw new IllegalArgumentException("Unsupported element type: " //$NON-NLS-1$
 					+ element.getClass().getName());
 		}
 	}
@@ -1461,10 +1461,10 @@ public class PHPModelUtils {
 			for (IField field : fields) {
 				String elementName = field.getElementName();
 
-				if (elementName.startsWith("$")) {
+				if (elementName.startsWith("$")) { //$NON-NLS-1$
 					nameSet.add(elementName.substring(1));
 				}
-				if (elementName.startsWith("$") && !prefix.startsWith("$")) {
+				if (elementName.startsWith("$") && !prefix.startsWith("$")) { //$NON-NLS-1$ //$NON-NLS-2$
 					elementName = elementName.substring(1);
 				}
 				if (exactName
@@ -1478,7 +1478,7 @@ public class PHPModelUtils {
 			fields = TraitUtils.getTraitFields(type, nameSet);
 			for (IField field : fields) {
 				String elementName = field.getElementName();
-				if (elementName.startsWith("$") && !prefix.startsWith("$")) {
+				if (elementName.startsWith("$") && !prefix.startsWith("$")) { //$NON-NLS-1$ //$NON-NLS-2$
 					elementName = elementName.substring(1);
 				}
 				if (exactName
@@ -2011,7 +2011,7 @@ public class PHPModelUtils {
 			throws ModelException {
 
 		int typeFlags = type.getFlags();
-		IMethod[] methods = getTypeMethod(type, "", false);
+		IMethod[] methods = getTypeMethod(type, "", false); //$NON-NLS-1$
 		for (IMethod method : methods) {
 			String methodName = method.getElementName();
 			int methodFlags = method.getFlags();
@@ -2074,7 +2074,7 @@ public class PHPModelUtils {
 
 	public static boolean isConstructor(IMethod method) {
 		String methodName = method.getElementName();
-		if (methodName.equals("__construct")
+		if (methodName.equals("__construct") //$NON-NLS-1$
 				|| methodName
 						.equals(method.getDeclaringType().getElementName())) {
 			return true;
@@ -2095,11 +2095,11 @@ public class PHPModelUtils {
 			}
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
 			IModelElement[] members = PHPModelUtils.getTypeHierarchyField(type,
-					hierarchy, "", false, null);
+					hierarchy, "", false, null); //$NON-NLS-1$
 			if (hasStaticOrConstMember(members)) {
 				return true;
 			}
-			members = PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, "",
+			members = PHPModelUtils.getTypeHierarchyMethod(type, hierarchy, "", //$NON-NLS-1$
 					false, null);
 			if (hasStaticOrConstMember(members)) {
 				return true;
@@ -2195,7 +2195,7 @@ public class PHPModelUtils {
 			// statementText.subTextSequence(
 			// functionNameStart + 1, propertyEndPosition - 1);
 			String newClassName = newClassStatementText.toString().trim();
-			if (newClassName.startsWith("new") && newClassName.endsWith(")")) {
+			if (newClassName.startsWith("new") && newClassName.endsWith(")")) { //$NON-NLS-1$ //$NON-NLS-2$
 				int newClassNameEnd = getFunctionNameEndOffset(
 						newClassStatementText,
 						newClassStatementText.length() - 1);
@@ -2213,7 +2213,7 @@ public class PHPModelUtils {
 
 					return newClassName;
 				}
-			} else if (newClassName.startsWith("new")) {
+			} else if (newClassName.startsWith("new")) { //$NON-NLS-1$
 				return newClassName.substring(3).trim();
 			}
 		}

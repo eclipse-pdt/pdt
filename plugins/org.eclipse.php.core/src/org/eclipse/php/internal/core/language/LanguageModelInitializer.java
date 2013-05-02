@@ -28,7 +28,7 @@ import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserve
 
 public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
-	public static final String PHP_LANGUAGE_LIBRARY = "PHP Language Library";
+	public static final String PHP_LANGUAGE_LIBRARY = "PHP Language Library"; //$NON-NLS-1$
 
 	/**
 	 * Path of the language model for php projects
@@ -151,7 +151,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 				// see getTargetLocation() below for description:
 				if (path.segmentCount() > 2) {
-					return "__language__".equals(path.segment(path
+					return "__language__".equals(path.segment(path //$NON-NLS-1$
 							.segmentCount() - 2));
 				}
 			}
@@ -203,12 +203,12 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
 					.getConfigurationElementsFor(
-							"org.eclipse.php.core.languageModelProviders");
+							"org.eclipse.php.core.languageModelProviders"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
-				if (element.getName().equals("provider")) {
+				if (element.getName().equals("provider")) { //$NON-NLS-1$
 					try {
 						providers.add((ILanguageModelProvider) element
-								.createExecutableExtension("class"));
+								.createExecutableExtension("class")); //$NON-NLS-1$
 					} catch (CoreException e) {
 						PHPCorePlugin.log(e);
 					}
@@ -226,7 +226,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		return provider
 				.getPlugin()
 				.getStateLocation()
-				.append("__language__")
+				.append("__language__") //$NON-NLS-1$
 				.append(Integer.toHexString(sourcePath.toOSString().hashCode()));
 	}
 }

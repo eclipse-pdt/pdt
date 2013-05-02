@@ -63,7 +63,7 @@ public class CastEvaluator extends GoalEvaluator {
 		if (result instanceof PHPClassType) {
 			this.result = (PHPClassType) result;
 		} else {
-			this.result = new PHPClassType("StdClass");
+			this.result = new PHPClassType("StdClass"); //$NON-NLS-1$
 		}
 		return IGoal.NO_GOALS;
 	}

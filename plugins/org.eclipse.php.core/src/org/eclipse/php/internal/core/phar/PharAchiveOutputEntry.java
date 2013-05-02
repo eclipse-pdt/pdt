@@ -48,7 +48,7 @@ public class PharAchiveOutputEntry implements IAchiveOutputEntry {
 	}
 
 	public boolean isDirectory() {
-		return name.endsWith("/");
+		return name.endsWith("/"); //$NON-NLS-1$
 	}
 
 	public void setCompressedSize(long csize) {

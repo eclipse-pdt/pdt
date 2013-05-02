@@ -36,9 +36,9 @@ public class PHPDocPropertyTagContext extends PHPDocTagContext {
 
 	public static final Set<String> TAGS = new HashSet<String>();
 	static {
-		TAGS.add("property");
-		TAGS.add("property-read");
-		TAGS.add("property-write");
+		TAGS.add("property"); //$NON-NLS-1$
+		TAGS.add("property-read"); //$NON-NLS-1$
+		TAGS.add("property-write"); //$NON-NLS-1$
 	}
 
 	public boolean isValid(ISourceModule sourceModule, int offset,

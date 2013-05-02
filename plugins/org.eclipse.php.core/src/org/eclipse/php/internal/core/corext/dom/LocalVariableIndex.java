@@ -67,7 +67,7 @@ public class LocalVariableIndex extends AbstractVisitor {
 		Expression name = variable.getName();
 		if (variable.isDollared() && name.getType() == ASTNode.IDENTIFIER) {
 			String variableName = ((Identifier) name).getName();
-			if (!variableName.equalsIgnoreCase("this")
+			if (!variableName.equalsIgnoreCase("this") //$NON-NLS-1$
 					&& !variablesSet.contains(variableName)) {
 				variablesSet.add(variableName);
 				handleVariableBinding();

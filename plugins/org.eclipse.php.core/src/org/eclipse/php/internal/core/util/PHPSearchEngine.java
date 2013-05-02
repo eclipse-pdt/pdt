@@ -46,7 +46,7 @@ import org.eclipse.php.internal.core.phar.PharPath;
 public class PHPSearchEngine implements IIncludepathListener {
 
 	private static Pattern RELATIVE_PATH_PATTERN = Pattern
-			.compile("\\.\\.?[/\\\\].*");
+			.compile("\\.\\.?[/\\\\].*"); //$NON-NLS-1$
 
 	private Map<IProject, IncludePath[]> projectIncludePaths;
 	private static PHPSearchEngine instance = new PHPSearchEngine();
@@ -99,7 +99,7 @@ public class PHPSearchEngine implements IIncludepathListener {
 			Set<String> exclusiveFiles) {
 		if (path == null || currentWorkingDir == null
 				|| currentScriptDir == null || currentProject == null) {
-			throw new NullPointerException("Parameters can't be null");
+			throw new NullPointerException(Messages.PHPSearchEngine_1);
 		}
 
 		// check whether the path is absolute

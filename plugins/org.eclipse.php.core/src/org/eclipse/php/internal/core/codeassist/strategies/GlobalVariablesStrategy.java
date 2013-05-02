@@ -68,7 +68,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		String prefix = abstractContext.getPrefix();
 
-		if (prefix.length() > 0 && !prefix.startsWith("$")) {
+		if (prefix.length() > 0 && !prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
 		CompletionRequestor requestor = abstractContext
@@ -107,7 +107,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 
 		SourceRange replaceRange = getReplacementRange(context);
 		for (IModelElement var : fields) {
-			reporter.reportField((IField) var, "", replaceRange, false);
+			reporter.reportField((IField) var, "", replaceRange, false); //$NON-NLS-1$
 		}
 
 		if (showPhpVariables) {
@@ -119,7 +119,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 						reporter.reportField(
 								new FakeField((ModelElement) abstractContext
 										.getSourceModule(), variable, 0, 0),
-								"", replaceRange, false); // NON-NLS-1
+								"", replaceRange, false); // NON-NLS-1 //$NON-NLS-1$
 					}
 				}
 			}

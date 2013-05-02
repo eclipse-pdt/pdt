@@ -19,12 +19,12 @@ import org.eclipse.php.internal.core.PHPVersion;
 
 public class PHPMagicMethods {
 
-	private static final String[] MAGIC_METHODS = { "__get", "__set", "__call",
-			"__sleep", "__wakeup", };
-	private static final String[] MAGIC_METHODS_PHP5 = { "__isset", "__unset",
-			"__toString", "__set_state", "__clone", "__autoload", };
-	private static final String[] MAGIC_METHODS_PHP5_3 = { "__callstatic",
-			"__invoke", };
+	private static final String[] MAGIC_METHODS = { "__get", "__set", "__call", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"__sleep", "__wakeup", }; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] MAGIC_METHODS_PHP5 = { "__isset", "__unset", //$NON-NLS-1$ //$NON-NLS-2$
+			"__toString", "__set_state", "__clone", "__autoload", }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String[] MAGIC_METHODS_PHP5_3 = { "__callstatic", //$NON-NLS-1$
+			"__invoke", }; //$NON-NLS-1$
 
 	public static String[] getMethods(PHPVersion phpVersion) {
 		List<String> methods = new LinkedList<String>();

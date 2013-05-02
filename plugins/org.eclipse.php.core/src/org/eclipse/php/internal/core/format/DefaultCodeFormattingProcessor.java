@@ -39,8 +39,8 @@ public class DefaultCodeFormattingProcessor extends AbstractVisitor implements
 			String useTabs = (String) options
 					.get(PHPCoreConstants.FORMATTER_USE_TABS);
 			if (useTabs != null) {
-				String indentation = "\t";
-				if ("false".equalsIgnoreCase(useTabs)) {
+				String indentation = "\t"; //$NON-NLS-1$
+				if ("false".equalsIgnoreCase(useTabs)) { //$NON-NLS-1$
 					String sizeValue = (String) options
 							.get(PHPCoreConstants.FORMATTER_INDENTATION_SIZE);
 					if (sizeValue != null) {

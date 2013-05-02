@@ -55,7 +55,7 @@ public class RandomAccessCharArrayReader extends Reader {
 	 */
 	public int read(char[] cbuf, int off, int len) {
 		if (input == null) {
-			throw new IllegalStateException("The char array reader was closed.");
+			throw new IllegalStateException("The char array reader was closed."); //$NON-NLS-1$
 		}
 		int result = len;
 		if (len + position >= input.length) {
@@ -80,10 +80,10 @@ public class RandomAccessCharArrayReader extends Reader {
 	 */
 	public void reset(int position) {
 		if (input == null) {
-			throw new IllegalStateException("The char array reader was closed.");
+			throw new IllegalStateException("The char array reader was closed."); //$NON-NLS-1$
 		}
 		if (position < 0 || position >= input.length) {
-			throw new IllegalArgumentException("Illegal position (got " + position + " for a character array in the length of " + input.length);
+			throw new IllegalArgumentException("Illegal position (got " + position + " for a character array in the length of " + input.length); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		this.position = position;
 	}

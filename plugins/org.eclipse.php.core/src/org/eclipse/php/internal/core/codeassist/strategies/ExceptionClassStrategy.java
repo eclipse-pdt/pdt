@@ -32,7 +32,7 @@ public class ExceptionClassStrategy extends ExceptionClassInstantiationStrategy 
 		IType[] types = getTypes(abstractContext);
 
 		for (IType type : types) {
-			reporter.reportType(type, "", replacementRange);
+			reporter.reportType(type, "", replacementRange); //$NON-NLS-1$
 		}
 	}
 }

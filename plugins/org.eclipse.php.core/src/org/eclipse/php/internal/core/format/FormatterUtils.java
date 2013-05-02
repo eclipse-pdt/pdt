@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class FormatterUtils {
-	private static final String FORMATTER_COMMON_PREFERENCE_EXT = "org.eclipse.php.core.phpFormatterCommonPreferences";
+	private static final String FORMATTER_COMMON_PREFERENCE_EXT = "org.eclipse.php.core.phpFormatterCommonPreferences"; //$NON-NLS-1$
 	private static PHPStructuredTextPartitioner partitioner = new PHPStructuredTextPartitioner();
 	private static IFormatterCommonPrferences usedFormatter;
 
@@ -201,7 +201,7 @@ public class FormatterUtils {
 				if (element.getName().equals("processor")) { //$NON-NLS-1$
 					try {
 						usedFormatter = (IFormatterCommonPrferences) element
-								.createExecutableExtension("class");
+								.createExecutableExtension("class"); //$NON-NLS-1$
 					} catch (CoreException e) {
 					}
 					;

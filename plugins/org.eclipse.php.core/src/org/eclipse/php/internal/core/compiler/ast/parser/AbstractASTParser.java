@@ -127,7 +127,7 @@ abstract public class AbstractASTParser extends lr_parser {
 				&& kind != ASTNodeKinds.NAMESPACE_DECLARATION
 				&& metBracketedNSDecl) {
 			reportError(new ASTError(s.sourceStart(), s.sourceEnd()),
-					"No code may exist outside of namespace {}");
+					Messages.AbstractASTParser_0);
 		}
 
 		if (currentNamespace != null && currentNamespace != s) {
@@ -211,7 +211,7 @@ abstract public class AbstractASTParser extends lr_parser {
 		int endPosition = cur_token.right;
 		int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
 
-		StringBuilder errorMessage = new StringBuilder("syntax error");
+		StringBuilder errorMessage = new StringBuilder(Messages.AbstractASTParser_1);
 
 		// current token can be either null, string or phpdoc - according to
 		// this resolve:
@@ -221,24 +221,24 @@ abstract public class AbstractASTParser extends lr_parser {
 			currentText = getTokenName(cur_token.sym);
 		}
 		if (currentText != null && currentText.length() > 0) {
-			if (currentText.equals(";")) { // This means EOF, since it's
+			if (currentText.equals(";")) { // This means EOF, since it's //$NON-NLS-1$
 				// substituted by the lexer
 				// explicitly.
 				currentText = "EOF"; //$NON-NLS-1$
 			}
 			endPosition = startPosition + currentText.length();
-			errorMessage.append(", unexpected '").append(currentText).append(
+			errorMessage.append(Messages.AbstractASTParser_4).append(currentText).append(
 					'\'');
 		}
 
 		if (rowOfProbe.length <= 6) {
-			errorMessage.append(", expecting ");
+			errorMessage.append(Messages.AbstractASTParser_5);
 			boolean first = true;
 			for (int probe = 0; probe < rowOfProbe.length; probe += 2) {
 				String tokenName = getTokenName(rowOfProbe[probe]);
 				if (tokenName != null) {
 					if (!first) {
-						errorMessage.append(" or ");
+						errorMessage.append(Messages.AbstractASTParser_6);
 					}
 					errorMessage.append('\'').append(tokenName).append('\'');
 					first = false;
@@ -278,7 +278,7 @@ abstract public class AbstractASTParser extends lr_parser {
 					if (!justDeclarationNodes) {
 						reportError(
 								new ASTError(s.sourceStart(), s.sourceEnd()),
-								"Namespace declaration statement has to be the very first statement in the script");
+								Messages.AbstractASTParser_7);
 					}
 				}
 			}

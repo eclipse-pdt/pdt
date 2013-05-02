@@ -34,11 +34,11 @@ import org.eclipse.php.internal.core.tar.TarArchiveFile;
 import org.eclipse.php.internal.core.tar.TarException;
 
 public class PHPToolkitUtil {
-	public static final String PHAR_EXTENSTION = "phar";
-	public static final String TAR_EXTENSTION = "tar";
-	public static final String BZ2_EXTENSTION = "bz2";
-	public static final String GZ_EXTENSTION = "gz";
-	public static final String ZIP_EXTENSTION = "zip";
+	public static final String PHAR_EXTENSTION = "phar"; //$NON-NLS-1$
+	public static final String TAR_EXTENSTION = "tar"; //$NON-NLS-1$
+	public static final String BZ2_EXTENSTION = "bz2"; //$NON-NLS-1$
+	public static final String GZ_EXTENSTION = "gz"; //$NON-NLS-1$
+	public static final String ZIP_EXTENSTION = "zip"; //$NON-NLS-1$
 	public static final String[] PHAR_EXTENSTIONS = new String[] {
 			PHAR_EXTENSTION, TAR_EXTENSTION, BZ2_EXTENSTION, GZ_EXTENSTION,
 			ZIP_EXTENSTION };
@@ -264,7 +264,7 @@ public class PHPToolkitUtil {
 
 	private static String getExtension(File localFile) {
 		if (localFile.isFile()) {
-			int index = localFile.getName().lastIndexOf(".");
+			int index = localFile.getName().lastIndexOf("."); //$NON-NLS-1$
 			if (localFile.getName().length() > index + 1) {
 				String extension = localFile.getName().substring(index + 1);
 				return extension;

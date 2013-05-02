@@ -198,8 +198,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 											.next();
 									if (modelElement instanceof IField) {
 										String fieldName = elementName;
-										if (!fieldName.startsWith("$")) {
-											fieldName = "$" + fieldName;
+										if (!fieldName.startsWith("$")) { //$NON-NLS-1$
+											fieldName = "$" + fieldName; //$NON-NLS-1$
 										}
 										if (modelElement.getElementName()
 												.equals(fieldName)
@@ -635,7 +635,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									for (IModelElement modelElement : children) {
 										String name = modelElement
 												.getElementName();
-										if (name.startsWith("$")) {
+										if (name.startsWith("$")) { //$NON-NLS-1$
 											name = name.substring(1);
 										}
 										if (name.equals(reference.getName())) {
@@ -922,7 +922,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return PHPModelUtils.getFunctions(elementName,
 									sourceModule, offset, null, null);
 						}
-						if ("insteadof".equals(nextWord)
+						if ("insteadof".equals(nextWord) //$NON-NLS-1$
 								|| "as".equals(nextWord)) { //$NON-NLS-1$
 							if (types != null && types.length > 0) {
 								List<IMethod> methods = new LinkedList<IMethod>();

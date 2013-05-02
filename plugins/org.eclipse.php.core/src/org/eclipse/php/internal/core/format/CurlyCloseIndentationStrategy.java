@@ -37,7 +37,7 @@ public class CurlyCloseIndentationStrategy implements IIndentationStrategy {
 						true);
 		final IRegion indentationBaseLine = document
 				.getLineInformation(indentationBaseLineIndex);
-		String blanks = "";
+		String blanks = ""; //$NON-NLS-1$
 		if (indentationBaseLine != null) {
 			blanks = FormatterUtils
 					.getLineBlanks(document, indentationBaseLine);

@@ -106,7 +106,7 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 					getPhpVersion(), statementText, endPosition, true);
 			arrayVarName = statementText
 					.subSequence(startPosition, endPosition).toString();
-			if (!arrayVarName.startsWith("$")) {
+			if (!arrayVarName.startsWith("$")) { //$NON-NLS-1$
 				return false;
 			}
 

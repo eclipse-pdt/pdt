@@ -252,7 +252,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	 * @return the type of the given variable
 	 */
 	private String getTypeBinding(String variableName, PHPDocTag docTag) {
-		final String[] split = docTag.getValue().trim().split("\\s+");
+		final String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
 		if (split.length < 2) {
 			return null;
 		}
@@ -278,7 +278,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	 */
 	class ClassDeclarationSearcher extends ContextFinder {
 
-		private static final String NULL = "null";
+		private static final String NULL = "null"; //$NON-NLS-1$
 		private TypeDeclaration typeDeclaration;
 		private ASTNode result;
 		private IContext context;

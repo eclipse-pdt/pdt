@@ -103,7 +103,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (typeName == null) {
 			return null;
 		}
-		String key = IModelElement.TYPE + ":" + typeName;
+		String key = IModelElement.TYPE + ":" + typeName; //$NON-NLS-1$
 		IBinding binding = bindingTables.bindingKeysToBindings.get(key);
 		if (binding == null) {
 			binding = new TypeBinding(this, type, modelElement);
@@ -118,7 +118,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (typeName == null) {
 			return null;
 		}
-		String key = IModelElement.TYPE + ":" + typeName;
+		String key = IModelElement.TYPE + ":" + typeName; //$NON-NLS-1$
 		IBinding binding = bindingTables.bindingKeysToBindings.get(key);
 		if (binding == null) {
 			binding = new TypeBinding(this, type, modelElements);
@@ -340,7 +340,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	IMethodBinding resolveMethod(MethodDeclaration method) {
 		if (method == null || method.getFunction() == null) {
 			throw new IllegalArgumentException(
-					"Can not resolve null expression");
+					"Can not resolve null expression"); //$NON-NLS-1$
 		}
 
 		try {
@@ -368,7 +368,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	ITypeBinding resolveExpressionType(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException(
-					"Can not resolve null expression");
+					"Can not resolve null expression"); //$NON-NLS-1$
 		}
 		int start = expression.getStart();
 		int length = expression.getLength();
@@ -538,7 +538,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			Variable var = (Variable) member;
 			if (!var.isDollared() && var.getName() instanceof Identifier) {
 				Identifier id = (Identifier) var.getName();
-				final String fieldName = "$" + id.getName();
+				final String fieldName = "$" + id.getName(); //$NON-NLS-1$
 				final ITypeBinding type = fieldAccess.getDispatcher()
 						.resolveTypeBinding();
 				return Bindings.findFieldInHierarchy(type, fieldName);
@@ -576,7 +576,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			Variable var = (Variable) member;
 			if (var.isDollared() && var.getName() instanceof Identifier) {
 				Identifier id = (Identifier) var.getName();
-				final String fieldName = "$" + id.getName();
+				final String fieldName = "$" + id.getName(); //$NON-NLS-1$
 				final ITypeBinding type = fieldAccess.getClassName()
 						.resolveTypeBinding();
 				return Bindings.findFieldInHierarchy(type, fieldName);
@@ -857,7 +857,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			Expression name = variable.getName();
 			if (variable.isDollared() && name instanceof Identifier) {
 				String variableName = ((Identifier) name).getName();
-				if (!variableName.equalsIgnoreCase("this")
+				if (!variableName.equalsIgnoreCase("this") //$NON-NLS-1$
 						&& !variablesSet.contains(variableName)) {
 					String searchName = ((Identifier) this.variable.getName())
 							.getName();

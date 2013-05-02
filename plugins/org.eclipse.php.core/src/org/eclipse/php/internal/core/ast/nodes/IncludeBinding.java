@@ -29,7 +29,7 @@ public class IncludeBinding implements IIncludeBinding {
 		super();
 		final String scalars = ASTNodes.getScalars(includeDeclaration.getExpression());
 		this.model = model;		
-		this.name = scalars.replace("\'", "").replace("\"", "");
+		this.name = scalars.replace("\'", "").replace("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		this.includedSourceModule = FileNetworkUtility.findSourceModule(this.model, this.name);
 	}	
 	
@@ -42,7 +42,7 @@ public class IncludeBinding implements IIncludeBinding {
 	}
 
 	public String getKey() {
-		return model.getHandleIdentifier() + "#" + name;
+		return model.getHandleIdentifier() + "#" + name; //$NON-NLS-1$
 	}
 
 	public int getKind() {

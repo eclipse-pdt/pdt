@@ -137,7 +137,7 @@ public class TraitAlias extends Expression {
 		buffer.append(tab).append("<TraitAlias"); //$NON-NLS-1$
 		appendInterval(buffer);
 		if (functionName != null) {
-			buffer.append(" functionName='").append(functionName.getName()).append("' "); //$NON-NLS-1$
+			buffer.append(" functionName='").append(functionName.getName()).append("' "); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		buffer.append(" modifier='").append(PHPFlags.toString(modifier)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		traitMethod.toString(buffer, TAB + tab);

@@ -32,8 +32,8 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  */
 public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 
-	private static final String CALLABLE = "callable";
-	public static final String[] KEYWORDS = { "self", "parent" };
+	private static final String CALLABLE = "callable"; //$NON-NLS-1$
+	public static final String[] KEYWORDS = { "self", "parent" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * @param context
@@ -55,7 +55,7 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 
 		FunctionParameterTypeContext context = (FunctionParameterTypeContext) getContext();
 		String prefix = context.getPrefix();
-		String suffix = "";
+		String suffix = ""; //$NON-NLS-1$
 		SourceRange replaceRange = getReplacementRange(context);
 		if (context.getEnclosingType() != null) {
 			try {

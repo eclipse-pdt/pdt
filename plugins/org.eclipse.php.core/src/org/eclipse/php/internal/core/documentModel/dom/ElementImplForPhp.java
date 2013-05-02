@@ -33,7 +33,7 @@ import org.w3c.dom.Node;
 public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable,
 		IImplForPhp {
 
-	private static final String WORKBENCH_ADAPTER = "org.eclipse.ui.model.IWorkbenchAdapter";
+	private static final String WORKBENCH_ADAPTER = "org.eclipse.ui.model.IWorkbenchAdapter"; //$NON-NLS-1$
 	private IModelElement modelElement;
 
 	public ElementImplForPhp() {

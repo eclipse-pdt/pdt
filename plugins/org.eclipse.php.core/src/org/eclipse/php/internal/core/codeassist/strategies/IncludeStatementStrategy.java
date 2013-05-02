@@ -84,9 +84,9 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 
 		final IPath prefixPath = new Path(prefix);
 		IPath prefixPathFolder = prefixPath;
-		IPath lastSegmant = new Path("");
-		if (prefixPath.segmentCount() != 0 && !prefix.endsWith("\\")
-				&& !prefix.endsWith("/")) {
+		IPath lastSegmant = new Path(""); //$NON-NLS-1$
+		if (prefixPath.segmentCount() != 0 && !prefix.endsWith("\\") //$NON-NLS-1$
+				&& !prefix.endsWith("/")) { //$NON-NLS-1$
 			prefixPathFolder = prefixPath.removeLastSegments(1);
 			lastSegmant = new Path(prefixPath.lastSegment());
 		}

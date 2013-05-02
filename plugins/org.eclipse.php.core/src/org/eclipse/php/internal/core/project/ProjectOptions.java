@@ -89,7 +89,7 @@ public class ProjectOptions {
 	public static boolean useShortTags(IProject project) {
 		String useShortTags = CorePreferencesSupport.getInstance()
 				.getPreferencesValue(Keys.EDITOR_USE_SHORT_TAGS, null, project);
-		return "true".equals(useShortTags);
+		return "true".equals(useShortTags); //$NON-NLS-1$
 	}
 
 	public static boolean useShortTags(IModelElement modelElement) {

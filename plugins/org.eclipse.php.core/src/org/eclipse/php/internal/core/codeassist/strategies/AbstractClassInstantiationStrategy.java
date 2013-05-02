@@ -98,7 +98,7 @@ public abstract class AbstractClassInstantiationStrategy extends
 				fullyQualifiedName, alias);
 		IMethod ctorMethod = FakeConstructor.createFakeConstructor(null,
 				aliasType, type.equals(enclosingClass));
-		reporter.reportMethod(ctorMethod, "", replacementRange);
+		reporter.reportMethod(ctorMethod, "", replacementRange); //$NON-NLS-1$
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

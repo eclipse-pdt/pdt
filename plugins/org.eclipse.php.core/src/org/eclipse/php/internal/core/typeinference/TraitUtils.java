@@ -160,7 +160,7 @@ public class TraitUtils {
 				}
 				IField[] fields;
 				try {
-					fields = PHPModelUtils.getTypeField(traitType, "", false);
+					fields = PHPModelUtils.getTypeField(traitType, "", false); //$NON-NLS-1$
 					// fields = traitType.getFields();
 					for (IField field : fields) {
 						List<IField> aliasList = getFieldWrapper(useTrait,
@@ -170,7 +170,7 @@ public class TraitUtils {
 								continue;
 							}
 							String elementName = alias.getElementName();
-							if (elementName.startsWith("$")) {
+							if (elementName.startsWith("$")) { //$NON-NLS-1$
 								elementName = elementName.substring(1);
 							}
 							if (!nameSet.contains(elementName)) {
@@ -189,7 +189,7 @@ public class TraitUtils {
 			IField field, IType type) {
 		List<IField> result = new ArrayList<IField>();
 		String fieldName = field.getElementName();
-		if (fieldName.startsWith("$")) {
+		if (fieldName.startsWith("$")) { //$NON-NLS-1$
 			fieldName = fieldName.substring(1);
 		}
 		TraitPrecedenceObject tpo = useTrait.getPrecedenceMap().get(fieldName);
@@ -252,7 +252,7 @@ public class TraitUtils {
 				}
 				IMethod[] methods;
 				try {
-					methods = PHPModelUtils.getTypeMethod(traitType, "", false);
+					methods = PHPModelUtils.getTypeMethod(traitType, "", false); //$NON-NLS-1$
 					// methods = traitType.getMethods();
 					for (IMethod method : methods) {
 
@@ -359,8 +359,8 @@ public class TraitUtils {
 		public FieldWrapper(IMember member, int flags, String name, IType type) {
 			super((ModelElement) member.getParent(), member.getElementName());
 			this.member = member;
-			if (!name.startsWith("$")) {
-				name = "$" + name;
+			if (!name.startsWith("$")) { //$NON-NLS-1$
+				name = "$" + name; //$NON-NLS-1$
 			}
 			this.name = name;
 			this.type = type;

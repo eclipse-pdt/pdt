@@ -74,7 +74,7 @@ public class NamespaceReference extends TypeReference {
 			buf.append(NAMESPACE_SEPARATOR);
 		}
 		if (local) {
-			buf.append("namespace\\");
+			buf.append("namespace\\"); //$NON-NLS-1$
 		}
 		buf.append(super.getName());
 		return buf.toString();

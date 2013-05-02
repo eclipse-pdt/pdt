@@ -52,7 +52,7 @@ public class LocalMethodVariablesStrategyForArray extends
 					if ("$this".startsWith(prefix)) { //$NON-NLS-1$
 						reporter.reportField(
 								new FakeField((ModelElement) declaringType,
-										"$this", 0, 0), "", replaceRange, false); //NON-NLS-1 //$NON-NLS-2$
+										"$this", 0, 0), "", replaceRange, false); //NON-NLS-1  //$NON-NLS-1$//$NON-NLS-2$
 					}
 				}
 			}
@@ -60,7 +60,7 @@ public class LocalMethodVariablesStrategyForArray extends
 			for (IModelElement element : PHPModelUtils.getMethodFields(
 					enclosingMethod, prefix,
 					requestor.isContextInformationMode(), null)) {
-				reporter.reportField((IField) element, "", replaceRange, false);
+				reporter.reportField((IField) element, "", replaceRange, false); //$NON-NLS-1$
 			}
 
 		} catch (ModelException e) {

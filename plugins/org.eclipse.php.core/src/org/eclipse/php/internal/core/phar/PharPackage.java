@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.Path;
 
 public class PharPackage {
 
-	private IPath stubLocation = new Path(""); // internal location
+	private IPath stubLocation = new Path(""); // internal location //$NON-NLS-1$
 
 	private String stubVersion;
 	private String alias;

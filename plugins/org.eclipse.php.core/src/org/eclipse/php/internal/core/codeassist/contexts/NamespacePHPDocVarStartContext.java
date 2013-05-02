@@ -32,10 +32,10 @@ public class NamespacePHPDocVarStartContext extends
 
 	public static List<String> TAGS = new ArrayList<String>();
 	static {
-		TAGS.add("return");
-		TAGS.add("see");
-		TAGS.add("var");
-		TAGS.add("link");
+		TAGS.add("return"); //$NON-NLS-1$
+		TAGS.add("see"); //$NON-NLS-1$
+		TAGS.add("var"); //$NON-NLS-1$
+		TAGS.add("link"); //$NON-NLS-1$
 	}
 
 	@Override

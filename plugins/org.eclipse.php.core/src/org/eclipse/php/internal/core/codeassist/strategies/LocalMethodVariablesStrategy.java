@@ -34,7 +34,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 
-	private static final String THIS = "$this";
+	private static final String THIS = "$this"; //$NON-NLS-1$
 
 	public LocalMethodVariablesStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
@@ -59,7 +59,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 
 		String suffix = getSuffix(concreteContext);
 		SourceRange replaceRange = null;
-		if (suffix.equals("")) {
+		if (suffix.equals("")) { //$NON-NLS-1$
 			replaceRange = getReplacementRange(concreteContext);
 		} else {
 			replaceRange = getReplacementRangeWithBraces(concreteContext);
@@ -100,7 +100,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		for (IModelElement element : PHPModelUtils.getMethodFields(
 				enclosingMethod, prefix, requestor.isContextInformationMode(),
 				null)) {
-			reporter.reportField((IField) element, "", replaceRange, false,
+			reporter.reportField((IField) element, "", replaceRange, false, //$NON-NLS-1$
 					ICompletionReporter.RELEVANCE_ADJUST);
 		}
 
@@ -111,7 +111,7 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 						|| variable.length() == prefix.length()) {
 					reporter.reportField(new FakeField(
 							(ModelElement) concreteContext.getSourceModule(),
-							variable, 0, 0), "", replaceRange, false,
+							variable, 0, 0), "", replaceRange, false, //$NON-NLS-1$
 							-ICompletionReporter.RELEVANCE_ADJUST); // NON-NLS-1
 				}
 			}

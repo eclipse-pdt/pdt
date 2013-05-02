@@ -54,7 +54,7 @@ public class ClassObjMemberContext extends ClassMemberContext {
 		}
 
 		int elementStart = getElementStart();
-		int lhsIndex = elementStart - "$this".length()
+		int lhsIndex = elementStart - "$this".length() //$NON-NLS-1$
 				- getTriggerType().getName().length();
 		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
@@ -67,7 +67,7 @@ public class ClassObjMemberContext extends ClassMemberContext {
 		}
 
 		if (!isThis) {
-			lhsIndex = elementStart - "$parent".length()
+			lhsIndex = elementStart - "$parent".length() //$NON-NLS-1$
 					- getTriggerType().getName().length();
 			if (lhsIndex >= 0) {
 				TextSequence statementText = getStatementText();

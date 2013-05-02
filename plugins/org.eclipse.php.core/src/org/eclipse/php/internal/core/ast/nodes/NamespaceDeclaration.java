@@ -72,7 +72,7 @@ public class NamespaceDeclaration extends Statement {
 
 		if (!bracketed && name == null) {
 			throw new IllegalArgumentException(
-					"Namespace name must not be null in an un-bracketed statement");
+					"Namespace name must not be null in an un-bracketed statement"); //$NON-NLS-1$
 		}
 
 		this.bracketed = bracketed;

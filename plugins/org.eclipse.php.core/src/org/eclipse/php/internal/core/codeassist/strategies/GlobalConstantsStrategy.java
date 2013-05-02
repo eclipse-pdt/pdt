@@ -58,7 +58,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		}
 
 		String prefix = abstractContext.getPrefix();
-		if (prefix.startsWith("$")) {
+		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
 
@@ -107,7 +107,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		// workaround end
 		SourceRange replaceRange = getReplacementRange(abstractContext);
 		for (IModelElement constant : enclosingTypeConstants) {
-			reporter.reportField((IField) constant, "", replaceRange, false);
+			reporter.reportField((IField) constant, "", replaceRange, false); //$NON-NLS-1$
 		}
 
 	}

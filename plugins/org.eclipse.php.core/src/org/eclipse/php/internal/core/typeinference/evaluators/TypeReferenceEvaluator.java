@@ -59,7 +59,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 		final IContext context = goal.getContext();
 		String className = typeReference.getName();
 
-		if ("self".equals(className) || "static".equals(className)) { //$NON-NLS-1$
+		if ("self".equals(className) || "static".equals(className)) { //$NON-NLS-1$ //$NON-NLS-2$
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
 				IEvaluatedType instanceType = methodContext.getInstanceType();
@@ -111,15 +111,15 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 										}
 										if (namespace != null
 												&& !namespace.getName().equals(
-														"")) {
+														"")) { //$NON-NLS-1$
 											String nsName = namespace.getName();
-											if (nsName.equals("\\")) {
+											if (nsName.equals("\\")) { //$NON-NLS-1$
 												typeName = nsName + typeName;
 											} else {
 												if (nsName
-														.startsWith("namespace\\")) {
+														.startsWith("namespace\\")) { //$NON-NLS-1$
 													nsName = nsName.replace(
-															"namespace\\", "");
+															"namespace\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
 												}
 												typeName = nsName
 														+ NamespaceReference.NAMESPACE_SEPARATOR

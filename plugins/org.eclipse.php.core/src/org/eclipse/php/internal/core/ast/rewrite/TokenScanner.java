@@ -40,8 +40,8 @@ public class TokenScanner {
 
 	public static final int END_OF_FILE = sym.EOF;
 	public static final int LEXICAL_ERROR = 20002;
-	private static final String[] MODIFIERS = { "public", "private",
-			"protected", "static", "abstract", "final" };
+	private static final String[] MODIFIERS = { "public", "private", //$NON-NLS-1$ //$NON-NLS-2$
+			"protected", "static", "abstract", "final" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	// public static final int DOCUMENT_ERROR= 20003;
 
 	private AstLexer scanner;

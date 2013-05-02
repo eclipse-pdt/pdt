@@ -13,9 +13,9 @@ import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 public class ExceptionClassInstantiationStrategy extends
 		AbstractClassInstantiationStrategy {
-	private static final String CORE_PHP = "Core.php";
-	private static final String BASIC_PHP = "basic.php";
-	private static final String EXCEPTION = "Exception";
+	private static final String CORE_PHP = "Core.php"; //$NON-NLS-1$
+	private static final String BASIC_PHP = "basic.php"; //$NON-NLS-1$
+	private static final String EXCEPTION = "Exception"; //$NON-NLS-1$
 
 	private IType exceptionType;
 

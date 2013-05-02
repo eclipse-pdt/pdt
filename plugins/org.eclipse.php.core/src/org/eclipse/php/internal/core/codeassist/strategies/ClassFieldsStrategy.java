@@ -110,6 +110,6 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 	}
 
 	public String getSuffix() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 }

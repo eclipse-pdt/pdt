@@ -23,7 +23,7 @@ import org.eclipse.dltk.core.index2.IIndexingParser;
  */
 public class PhpIndexerParticipant implements IIndexerParticipant {
 
-	private static final String QUALIFIER_SEP = "\\";
+	private static final String QUALIFIER_SEP = "\\"; //$NON-NLS-1$
 	private PhpElementResolver elementResolver;
 	private PhpIndexingParser parser;
 

@@ -46,8 +46,8 @@ public class InterfaceDeclarationKeywordContext extends
 		}
 		try {
 			String previousWord = getPreviousWord();
-			if (!"extends".equalsIgnoreCase(previousWord)
-					&& !"interface".equalsIgnoreCase(previousWord)) {
+			if (!"extends".equalsIgnoreCase(previousWord) //$NON-NLS-1$
+					&& !"interface".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
 				return true;
 			}
 		} catch (BadLocationException e) {

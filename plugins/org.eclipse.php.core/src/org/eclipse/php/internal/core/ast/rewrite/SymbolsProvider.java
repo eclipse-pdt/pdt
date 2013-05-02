@@ -537,49 +537,49 @@ public class SymbolsProvider {
 	 */
 	public static int getModifierSym(String modifier, PHPVersion phpVersion) {
 		if (PHPVersion.PHP5_4 == phpVersion) {
-			if (modifier.equals("public")) {
+			if (modifier.equals("public")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_PUBLIC;
-			} else if (modifier.equals("private")) {
+			} else if (modifier.equals("private")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_PRIVATE;
-			} else if (modifier.equals("protected")) {
+			} else if (modifier.equals("protected")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_PROTECTED;
-			} else if (modifier.equals("static")) {
+			} else if (modifier.equals("static")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_STATIC;
-			} else if (modifier.equals("abstract")) {
+			} else if (modifier.equals("abstract")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_ABSTRACT;
-			} else if (modifier.equals("final")) {
+			} else if (modifier.equals("final")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php54.ParserConstants.T_FINAL;
 			}
 		} else if (PHPVersion.PHP5_3 == phpVersion) {
-			if (modifier.equals("public")) {
+			if (modifier.equals("public")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_PUBLIC;
-			} else if (modifier.equals("private")) {
+			} else if (modifier.equals("private")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_PRIVATE;
-			} else if (modifier.equals("protected")) {
+			} else if (modifier.equals("protected")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_PROTECTED;
-			} else if (modifier.equals("static")) {
+			} else if (modifier.equals("static")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_STATIC;
-			} else if (modifier.equals("abstract")) {
+			} else if (modifier.equals("abstract")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_ABSTRACT;
-			} else if (modifier.equals("final")) {
+			} else if (modifier.equals("final")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php53.ParserConstants.T_FINAL;
 			}
 		} else if (PHPVersion.PHP5 == phpVersion) {
-			if (modifier.equals("public")) {
+			if (modifier.equals("public")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_PUBLIC;
-			} else if (modifier.equals("private")) {
+			} else if (modifier.equals("private")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_PRIVATE;
-			} else if (modifier.equals("protected")) {
+			} else if (modifier.equals("protected")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_PROTECTED;
-			} else if (modifier.equals("static")) {
+			} else if (modifier.equals("static")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_STATIC;
-			} else if (modifier.equals("abstract")) {
+			} else if (modifier.equals("abstract")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_ABSTRACT;
-			} else if (modifier.equals("final")) {
+			} else if (modifier.equals("final")) { //$NON-NLS-1$
 				return org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants.T_FINAL;
 			}
 		} else if (PHPVersion.PHP4 == phpVersion) {
-			if (modifier.equals("static")) {
+			if (modifier.equals("static")) { //$NON-NLS-1$
 				return ParserConstants.T_STATIC;
 			}
 		}

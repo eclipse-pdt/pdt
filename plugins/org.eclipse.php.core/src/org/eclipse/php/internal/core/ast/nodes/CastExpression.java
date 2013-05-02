@@ -164,7 +164,7 @@ public class CastExpression extends Expression {
 	 */
 	public void setCastingType(int castingType) {
 		if (getCastType(castingType) == null) {
-			throw new IllegalArgumentException("Invalid type");
+			throw new IllegalArgumentException("Invalid type"); //$NON-NLS-1$
 		}
 		preValueChange(CASTING_TYPE_PROPERTY);
 		this.castingType = castingType;

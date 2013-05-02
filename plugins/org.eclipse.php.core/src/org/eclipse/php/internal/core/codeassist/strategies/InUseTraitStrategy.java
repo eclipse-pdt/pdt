@@ -70,7 +70,7 @@ public class InUseTraitStrategy extends AbstractCompletionStrategy {
 						type, fileContext, offset);
 				if (modelElements != null) {
 					for (IType typeElement : modelElements) {
-						reporter.reportType(typeElement, "", replacementRange,
+						reporter.reportType(typeElement, "", replacementRange, //$NON-NLS-1$
 								ProposalExtraInfo.TYPE_ONLY);
 					}
 				}

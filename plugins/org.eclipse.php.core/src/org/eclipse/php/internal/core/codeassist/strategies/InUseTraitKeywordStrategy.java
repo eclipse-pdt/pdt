@@ -12,7 +12,7 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 public class InUseTraitKeywordStrategy extends KeywordsStrategy {
 
 	// private static final String CALLABLE = "callable";
-	public static final String[] KEYWORDS = { "as", "insteadof" };
+	public static final String[] KEYWORDS = { "as", "insteadof" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * @param context
@@ -34,7 +34,7 @@ public class InUseTraitKeywordStrategy extends KeywordsStrategy {
 
 		AbstractCompletionContext context = (AbstractCompletionContext) getContext();
 		String prefix = context.getPrefix();
-		String suffix = "";
+		String suffix = ""; //$NON-NLS-1$
 		SourceRange replaceRange = getReplacementRange(context);
 		// if (context.getEnclosingType() != null) {
 		// try {

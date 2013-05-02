@@ -23,9 +23,9 @@ public class TypeCastingContext extends StatementContext {
 			return false;
 		}
 		try {
-			if (getStatementText().toString().startsWith("(")
-					&& getNextWord().startsWith(")")
-					&& getNextWord(2).startsWith("$")) {
+			if (getStatementText().toString().startsWith("(") //$NON-NLS-1$
+					&& getNextWord().startsWith(")") //$NON-NLS-1$
+					&& getNextWord(2).startsWith("$")) { //$NON-NLS-1$
 				return true;
 			}
 		} catch (BadLocationException e) {

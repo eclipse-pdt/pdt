@@ -48,7 +48,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		}
 
 		String prefix = abstractContext.getPrefix();
-		if (prefix.startsWith("$")) {
+		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return;
 		}
 

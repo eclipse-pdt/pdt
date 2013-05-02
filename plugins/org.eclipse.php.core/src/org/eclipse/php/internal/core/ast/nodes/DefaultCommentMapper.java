@@ -158,7 +158,7 @@ public class DefaultCommentMapper {
 			return this.document.getLineOfOffset(position);
 		} catch (BadLocationException e) {
 			throw new IllegalArgumentException(
-					"getLineNumber() in DefaultCommentMapper with " + position);
+					"getLineNumber() in DefaultCommentMapper with " + position); //$NON-NLS-1$
 		}
 	}
 
@@ -421,7 +421,7 @@ public class DefaultCommentMapper {
 	private void resetTo(int begin, int end) throws IOException {
 		if (scanner == null) {
 			throw new IllegalArgumentException(
-					"null at resetTo(int begin, int end)");
+					"null at resetTo(int begin, int end)"); //$NON-NLS-1$
 		}
 		this.scanner.yyreset(new IntervalDocumentReader(this.document, begin,
 				end));

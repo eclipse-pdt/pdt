@@ -100,21 +100,21 @@ public class FileUtils {
 			throws FileNotFoundException, IOException {
 		if (file == null) {
 			throw new IllegalArgumentException(CoreMessages
-					.getString("FileUtils_2"));
+					.getString("FileUtils_2")); //$NON-NLS-1$
 		}
 		if (!file.exists()) {
 			throw new FileNotFoundException(CoreMessages
-					.getString("FileUtils_3")
+					.getString("FileUtils_3") //$NON-NLS-1$
 					+ file);
 		}
 		if (!file.isFile()) {
 			throw new IllegalArgumentException(CoreMessages
-					.getString("FileUtils_4")
+					.getString("FileUtils_4") //$NON-NLS-1$
 					+ file);
 		}
 		if (!file.canWrite()) {
 			throw new IllegalArgumentException(CoreMessages
-					.getString("FileUtils_5")
+					.getString("FileUtils_5") //$NON-NLS-1$
 					+ file);
 		}
 

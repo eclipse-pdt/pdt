@@ -40,7 +40,7 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit implements
 	}
 
 	public String getLanguageName() {
-		return "PHP";
+		return "PHP"; //$NON-NLS-1$
 	}
 
 	public String getNatureId() {

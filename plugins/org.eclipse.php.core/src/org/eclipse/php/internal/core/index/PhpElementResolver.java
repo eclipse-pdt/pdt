@@ -75,7 +75,7 @@ public class PhpElementResolver implements IElementResolver {
 
 		default:
 			Logger.log(Logger.WARNING, PhpElementResolver.class.getName()
-					+ ": Unsupported element type (" + elementType + ")");
+					+ ": Unsupported element type (" + elementType + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return null;
 	}
@@ -95,7 +95,7 @@ public class PhpElementResolver implements IElementResolver {
 			return null;
 		}
 		Map<String, String> info = new HashMap<String, String>();
-		StringTokenizer tok = new StringTokenizer(doc, ";");
+		StringTokenizer tok = new StringTokenizer(doc, ";"); //$NON-NLS-1$
 		while (tok.hasMoreTokens()) {
 			String key = tok.nextToken();
 			String value = null;
@@ -111,7 +111,7 @@ public class PhpElementResolver implements IElementResolver {
 
 	protected static boolean isDeprecated(String doc) {
 		Map<String, String> info = decodeDocInfo(doc);
-		return (info != null && info.containsKey("d"));
+		return (info != null && info.containsKey("d")); //$NON-NLS-1$
 	}
 
 	private static class IndexField extends SourceField implements
@@ -157,7 +157,7 @@ public class PhpElementResolver implements IElementResolver {
 			IPHPDocAwareElement {
 
 		private final static Pattern ARRAY_TYPE_PATTERN = Pattern
-				.compile("array\\[.*\\]");
+				.compile("array\\[.*\\]"); //$NON-NLS-1$
 		private int flags;
 		private ISourceRange sourceRange;
 		private ISourceRange nameRange;
@@ -177,7 +177,7 @@ public class PhpElementResolver implements IElementResolver {
 			if (parameterNames != null) {
 				this.parameters = new IParameter[parameterNames.length];
 				for (int i = 0; i < parameterNames.length; i++) {
-					String[] values = parameterNames[i].split("\\"
+					String[] values = parameterNames[i].split("\\" //$NON-NLS-1$
 							+ PhpIndexingVisitor.PARAMETER_SEPERATOR);
 					if (values.length == 1) {
 						this.parameters[i] = new MethodParameterInfo(values[0]);
@@ -236,11 +236,11 @@ public class PhpElementResolver implements IElementResolver {
 		public String[] getReturnTypes() {
 			Map<String, String> info = decodeDocInfo(doc);
 			if (info != null) {
-				String types = info.get("r");
+				String types = info.get("r"); //$NON-NLS-1$
 				if (types != null) {
-					String[] returnTypes = types.split(",");
+					String[] returnTypes = types.split(","); //$NON-NLS-1$
 					for (int i = 0; i < returnTypes.length; i++) {
-						returnTypes[i] = returnTypes[i].replaceAll("~", ",");
+						returnTypes[i] = returnTypes[i].replaceAll("~", ","); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					return returnTypes;
 				}

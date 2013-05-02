@@ -110,7 +110,7 @@ public class UseStatement extends Statement {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<UseStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(">\n"); //$NON-NLS-1$
 		for (UseStatementPart part : this.parts) {
 			part.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$

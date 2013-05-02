@@ -40,9 +40,9 @@ public abstract class ClassMemberContext extends StatementContext {
 	 */
 	public enum Trigger {
 		/** Class trigger type: '::' */
-		CLASS("::"),
+		CLASS("::"), //$NON-NLS-1$
 		/** Object trigger type: '->' */
-		OBJECT("->"), ;
+		OBJECT("->"), ; //$NON-NLS-1$
 
 		String name;
 
@@ -87,9 +87,9 @@ public abstract class ClassMemberContext extends StatementContext {
 
 		String triggerText = statementText.subSequence(elementStart - 2,
 				elementStart).toString();
-		if (triggerText.equals("->")) {
+		if (triggerText.equals("->")) { //$NON-NLS-1$
 			triggerType = Trigger.OBJECT;
-		} else if (triggerText.equals("::")) {
+		} else if (triggerText.equals("::")) { //$NON-NLS-1$
 			triggerType = Trigger.CLASS;
 		} else {
 			return false;

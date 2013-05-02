@@ -42,21 +42,21 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 	}
 
 	public String getName() {
-		return "Core API";
+		return Messages.DefaultLanguageModelProvider_1;
 	}
 
 	private String getLanguageLibraryPath(IScriptProject project,
 			PHPVersion phpVersion) {
 		if (phpVersion == PHPVersion.PHP4) {
-			return LANGUAGE_LIBRARY_PATH + "4";
+			return LANGUAGE_LIBRARY_PATH + "4"; //$NON-NLS-1$
 		}
 		if (phpVersion == PHPVersion.PHP5) {
-			return LANGUAGE_LIBRARY_PATH + "5";
+			return LANGUAGE_LIBRARY_PATH + "5"; //$NON-NLS-1$
 		}
 		if (phpVersion == PHPVersion.PHP5_3) {
-			return LANGUAGE_LIBRARY_PATH + "5.3";
+			return LANGUAGE_LIBRARY_PATH + "5.3"; //$NON-NLS-1$
 		}
-		return LANGUAGE_LIBRARY_PATH + "5.4";
+		return LANGUAGE_LIBRARY_PATH + "5.4"; //$NON-NLS-1$
 	}
 
 	public Plugin getPlugin() {

@@ -82,7 +82,7 @@ public class NamespaceUseNameContext extends UseStatementContext {
 
 		String triggerText = statementText.subSequence(elementStart - 1,
 				elementStart).toString();
-		if (!triggerText.equals("\\")) {
+		if (!triggerText.equals("\\")) { //$NON-NLS-1$
 			return false;
 		}
 
@@ -101,8 +101,8 @@ public class NamespaceUseNameContext extends UseStatementContext {
 		if (nsName.indexOf('\\') < 0) {
 			return false;
 		}
-		if (!nsName.startsWith("\\")) {
-			nsName = "\\" + nsName;
+		if (!nsName.startsWith("\\")) { //$NON-NLS-1$
+			nsName = "\\" + nsName; //$NON-NLS-1$
 		}
 		try {
 			namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule,

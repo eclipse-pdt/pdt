@@ -36,7 +36,7 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 				.getExpression();
 		Expression className = expression.getClassName();
 		if ((className instanceof TypeReference)) {
-			if (((TypeReference) className).getName().equals("self")
+			if (((TypeReference) className).getName().equals("self") //$NON-NLS-1$
 					&& (goal.getContext() instanceof MethodContext)) {
 				MethodContext methodContext = (MethodContext) goal.getContext();
 				result = methodContext.getInstanceType();

@@ -32,11 +32,11 @@ public class UsePart extends ASTNode {
 	}
 
 	public String toString() {
-		StringBuilder buf = new StringBuilder("[USE: ").append(getNamespace().getFullyQualifiedName());
+		StringBuilder buf = new StringBuilder("[USE: ").append(getNamespace().getFullyQualifiedName()); //$NON-NLS-1$
 		if (getAlias() != null) {
-			buf.append(" AS ").append(getAlias().getName());
+			buf.append(" AS ").append(getAlias().getName()); //$NON-NLS-1$
 		}
-		buf.append("]");
+		buf.append("]"); //$NON-NLS-1$
 		return buf.toString();
 	}
 

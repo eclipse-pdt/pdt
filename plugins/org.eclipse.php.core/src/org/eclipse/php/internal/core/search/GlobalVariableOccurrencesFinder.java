@@ -143,7 +143,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 					if (var.isDollared()
 							&& varName.getType() == ASTNode.IDENTIFIER) {
 						final String name = ((Identifier) varName).getName();
-						if ("GLOBALS".equals(name) || "_GLOBALS".equals(name)) { //$NON-NLS-1$
+						if ("GLOBALS".equals(name) || "_GLOBALS".equals(name)) { //$NON-NLS-1$ //$NON-NLS-2$
 							addOccurrence(scalar);
 						}
 					}

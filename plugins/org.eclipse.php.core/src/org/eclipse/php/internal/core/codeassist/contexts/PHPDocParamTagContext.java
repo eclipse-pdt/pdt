@@ -35,6 +35,6 @@ public class PHPDocParamTagContext extends PHPDocTagContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return "param".equalsIgnoreCase(getTagName());
+		return "param".equalsIgnoreCase(getTagName()); //$NON-NLS-1$
 	}
 }

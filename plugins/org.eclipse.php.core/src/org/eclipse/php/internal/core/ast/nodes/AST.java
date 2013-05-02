@@ -208,7 +208,7 @@ public class AST {
 			return lexer54;
 		} else {
 			throw new IllegalArgumentException(CoreMessages
-					.getString("ASTParser_1")
+					.getString("ASTParser_1") //$NON-NLS-1$
 					+ phpVersion);
 		}
 	}
@@ -263,7 +263,7 @@ public class AST {
 			return parser;
 		} else {
 			throw new IllegalArgumentException(CoreMessages
-					.getString("ASTParser_1")
+					.getString("ASTParser_1") //$NON-NLS-1$
 					+ phpVersion);
 		}
 	}

@@ -119,7 +119,7 @@ public class PHPKeywords {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_4());
 				} else {
 					throw new IllegalArgumentException(
-							"No PHP version defined for project!");
+							Messages.PHPKeywords_0);
 				}
 				instances.put(version, instance);
 			}

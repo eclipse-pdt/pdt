@@ -188,6 +188,6 @@ public char[] getContents() {
  */
 public String toString() {
 	char[] contents = getContents();
-	return (contents != null) ? new String(contents) : "";
+	return (contents != null) ? new String(contents) : ""; //$NON-NLS-1$
 }
 }

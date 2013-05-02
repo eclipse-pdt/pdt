@@ -29,10 +29,10 @@ import org.eclipse.php.internal.core.codeassist.contexts.ClassDeclarationKeyword
 public class ClassDeclarationKeywordsStrategy extends
 		AbstractCompletionStrategy {
 
-	private static final String IMPLEMENTS_WITH_BLANK = " implements ";
-	private static final String EXTENDS_WITH_BLANK = " extends ";
-	private static final String IMPLEMENTS = "implements";
-	private static final String EXTENDS = "extends";
+	private static final String IMPLEMENTS_WITH_BLANK = " implements "; //$NON-NLS-1$
+	private static final String EXTENDS_WITH_BLANK = " extends "; //$NON-NLS-1$
+	private static final String IMPLEMENTS = "implements"; //$NON-NLS-1$
+	private static final String EXTENDS = "extends"; //$NON-NLS-1$
 
 	public ClassDeclarationKeywordsStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {
@@ -68,6 +68,6 @@ public class ClassDeclarationKeywordsStrategy extends
 	}
 
 	public String getSuffix(AbstractCompletionContext context) {
-		return context.hasWhitespaceBeforeCursor() ? " " : "";
+		return context.hasWhitespaceBeforeCursor() ? " " : ""; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

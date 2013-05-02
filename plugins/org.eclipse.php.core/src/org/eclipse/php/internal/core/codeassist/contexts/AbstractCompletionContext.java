@@ -434,7 +434,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
 				phpVersion, statementText, wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		String previousWord = statementText.subSequence(wordStart, wordEnd)
 				.toString();
@@ -448,7 +448,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
 				phpVersion, statementText, wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
 
@@ -478,7 +478,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 		}
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		String previousWord = statementText.subSequence(wordStart, wordEnd)
 				.toString();
@@ -492,7 +492,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(
 				phpVersion, statementText, wordEnd, true);
 		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
 
@@ -738,7 +738,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 					if (startTokenRegion.getType() != PHPRegionTypes.PHP_LINE_COMMENT
 							&& startTokenRegion.getType() != PHPRegionTypes.PHP_COMMENT
 							&& startTokenRegion.getType() != PHPRegionTypes.WHITESPACE
-							&& !startTokenRegion.getType().startsWith("PHPDOC")) {
+							&& !startTokenRegion.getType().startsWith("PHPDOC")) { //$NON-NLS-1$
 						types.add(startTokenRegion.getType());
 					}
 					if (startTokenRegion.getType() == PHPRegionTypes.PHP_CURLY_OPEN
@@ -883,7 +883,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 						if (startTokenRegion != null
 								&& startTokenRegion.getType() == PHPRegionTypes.PHP_USE) {
 							String[] types = statementText1.toString().trim()
-									.substring(3).trim().split(",");
+									.substring(3).trim().split(","); //$NON-NLS-1$
 							useTypes = new ArrayList<String>();
 							for (String type : types) {
 								useTypes.add(type.trim());

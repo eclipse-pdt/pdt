@@ -132,7 +132,7 @@ public class BindingUtility {
 		}
 		ISourceModule elementModule = element.getSourceModule();
 		if (!elementModule.equals(sourceModule)) {
-			throw new IllegalArgumentException("Unknown model element");
+			throw new IllegalArgumentException("Unknown model element"); //$NON-NLS-1$
 		}
 		return getType(new SourceRange(element.getSourceRange()));
 	}
@@ -173,7 +173,7 @@ public class BindingUtility {
 		}
 		if (contextFinder.getNode() == null) {
 			throw new ModelException(new IllegalArgumentException(
-					"AST node can not be found for the given source range: "
+					"AST node can not be found for the given source range: " //$NON-NLS-1$
 							+ sourceRange), IStatus.ERROR);
 		}
 		return contextFinder;
@@ -234,7 +234,7 @@ public class BindingUtility {
 		}
 		ISourceModule elementModule = element.getSourceModule();
 		if (!elementModule.equals(sourceModule)) {
-			throw new IllegalArgumentException("Unknown model element");
+			throw new IllegalArgumentException("Unknown model element"); //$NON-NLS-1$
 		}
 		return getModelElement(new SourceRange(element.getSourceRange()), true);
 	}
@@ -446,8 +446,8 @@ public class BindingUtility {
 		}
 
 		public String toString() {
-			return new StringBuilder("<offset=").append(offset)
-					.append(", length=").append(length).append(">").toString();
+			return new StringBuilder("<offset=").append(offset) //$NON-NLS-1$
+					.append(", length=").append(length).append(">").toString(); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

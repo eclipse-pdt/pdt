@@ -37,7 +37,7 @@ public class PharUtil {
 
 	public static byte[] getStubVersionBytes(String version) {
 		int versionNumberLength = 4;
-		String[] s = version.split("\\.");
+		String[] s = version.split("\\."); //$NON-NLS-1$
 
 		List<Integer> versionNumbers = new ArrayList<Integer>();
 

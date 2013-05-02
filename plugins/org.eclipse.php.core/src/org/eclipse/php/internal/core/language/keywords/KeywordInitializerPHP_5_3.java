@@ -24,15 +24,15 @@ public class KeywordInitializerPHP_5_3 extends KeywordInitializerPHP_5 {
 		super.initialize(list);
 
 		// update "const" keyword
-		list.remove(new KeywordData("const", "", 0));
-		list.add(new KeywordData("const", WHITESPACE_SUFFIX, 1,
+		list.remove(new KeywordData("const", "", 0)); //$NON-NLS-1$ //$NON-NLS-2$
+		list.add(new KeywordData("const", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
 
-		list.add(new KeywordData("goto", WHITESPACE_SUFFIX, 1));
-		list.add(new KeywordData("namespace", WHITESPACE_SUFFIX, 1));
+		list.add(new KeywordData("goto", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
+		list.add(new KeywordData("namespace", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 		if (this.getClass().getName()
 				.equals(KeywordInitializerPHP_5_3.class.getName())) {
-			list.add(new KeywordData("use", WHITESPACE_SUFFIX, 1));
+			list.add(new KeywordData("use", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 		}
 
 	}

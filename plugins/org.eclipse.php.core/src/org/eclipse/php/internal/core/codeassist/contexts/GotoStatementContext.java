@@ -20,7 +20,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 
 public class GotoStatementContext extends StatementContext {
 
-	private static final String GOTO_KEYWORD = "goto";
+	private static final String GOTO_KEYWORD = "goto"; //$NON-NLS-1$
 
 	private IModelElement currentElement;
 

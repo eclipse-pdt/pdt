@@ -14,7 +14,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 
 public class NamespaceInstanceOfStrategy extends NamespaceTypesStrategy {
 
-	private static final String SPLASH = "\\";
+	private static final String SPLASH = "\\"; //$NON-NLS-1$
 
 	public NamespaceInstanceOfStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {

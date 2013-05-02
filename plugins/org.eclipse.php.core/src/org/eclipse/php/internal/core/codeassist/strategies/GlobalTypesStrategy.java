@@ -41,7 +41,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  */
 public class GlobalTypesStrategy extends GlobalElementStrategy {
 
-	private static final String SPLASH = "\\";
+	private static final String SPLASH = "\\"; //$NON-NLS-1$
 	protected final int trueFlag;
 	protected final int falseFlag;
 	protected static final IType[] EMPTY = {};
@@ -111,7 +111,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 										- 1) == '\"')) {
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_NAMESPACE;
 		}
-		if ("namespace".equals(abstractContext.getPreviousWord(1))
+		if ("namespace".equals(abstractContext.getPreviousWord(1)) //$NON-NLS-1$
 				|| isUseContext) {
 			extraInfo = extraInfo | ProposalExtraInfo.NO_INSERT_NAMESPACE;
 		}
@@ -220,7 +220,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			String name = (String) iterator.next();
 			String fullName = result.get(name).getNamespace()
 					.getFullyQualifiedName();
-			if (fullName.startsWith("\\")) {
+			if (fullName.startsWith("\\")) { //$NON-NLS-1$
 				fullName = fullName.substring(1);
 			}
 			IType[] elements = PhpModelAccess.getDefault().findTypes(null,
@@ -317,7 +317,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			throws BadLocationException {
 
 		String prefix = context.getPrefix();
-		if (prefix.startsWith("$")) {
+		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return EMPTY;
 		}
 
@@ -362,7 +362,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		String prefix = context.getPrefix();
 		SourceRange replaceRange = getReplacementRange(context);
 
-		if (CodeAssistUtils.startsWithIgnoreCase("self", prefix)) {
+		if (CodeAssistUtils.startsWithIgnoreCase("self", prefix)) { //$NON-NLS-1$
 			if (!context.getCompletionRequestor().isContextInformationMode()
 					|| prefix.length() == 4) { // "self".length()
 
@@ -385,7 +385,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 							ISourceRange sourceRange = selfClassData
 									.getSourceRange();
 							FakeMethod ctorMethod = new FakeMethod(
-									(ModelElement) selfClassData, "self",
+									(ModelElement) selfClassData, "self", //$NON-NLS-1$
 									sourceRange.getOffset(),
 									sourceRange.getLength(),
 									sourceRange.getOffset(),
@@ -404,10 +404,10 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 							reporter.reportMethod(
 									new FakeMethod(
 											(ModelElement) selfClassData,
-											"self", sourceRange.getOffset(),
+											"self", sourceRange.getOffset(), //$NON-NLS-1$
 											sourceRange.getLength(),
 											sourceRange.getOffset(),
-											sourceRange.getLength()), "()",
+											sourceRange.getLength()), "()", //$NON-NLS-1$
 									replaceRange);
 						}
 					} catch (ModelException e) {

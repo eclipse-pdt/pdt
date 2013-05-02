@@ -27,13 +27,13 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  */
 public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 
-	public static final String[] PHPDOC_TAGS = { "abstract", "access",
-			"author", "category", "copyright", "deprecated", "example",
-			"final", "filesource", "global", "ignore", "internal", "license",
-			"link", "method", "namespace", "name", "package", "param",
-			"property", "return", "see", "since", "static", "staticvar",
-			"subpackage", "todo", "throws", "tutorial", "uses", "var",
-			"version" };
+	public static final String[] PHPDOC_TAGS = { "abstract", "access", //$NON-NLS-1$ //$NON-NLS-2$
+			"author", "category", "copyright", "deprecated", "example", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			"final", "filesource", "global", "ignore", "internal", "license", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+			"link", "method", "namespace", "name", "package", "param", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+			"property", "return", "see", "since", "static", "staticvar", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+			"subpackage", "todo", "throws", "tutorial", "uses", "var", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+			"version" }; //$NON-NLS-1$
 
 	public PHPDocTagStrategy(ICompletionContext context,
 			IElementFilter elementFilter) {

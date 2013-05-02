@@ -100,8 +100,8 @@ public class FullyQualifiedTraitMethodReference extends Expression {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<FunctionName"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" functionName='").append(functionName.getName())
-				.append("'");
+		buffer.append(" functionName='").append(functionName.getName()) //$NON-NLS-1$
+				.append("'"); //$NON-NLS-1$
 		buffer.append(">\n"); //$NON-NLS-1$
 		className.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$

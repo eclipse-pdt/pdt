@@ -42,7 +42,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		// throw new IOException("crc error");
 
 		// Just print a message, like the previous versions of this class did
-		System.err.println("BZip2 CRC error");
+		System.err.println("BZip2 CRC error"); //$NON-NLS-1$
 	}
 
 	private void makeMaps() {
@@ -145,24 +145,24 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		if (this.in != null) {
 			return read0();
 		} else {
-			throw new IOException("stream closed");
+			throw new IOException("stream closed"); //$NON-NLS-1$
 		}
 	}
 
 	public int read(final byte[] dest, final int offs, final int len)
 			throws IOException {
 		if (offs < 0) {
-			throw new IndexOutOfBoundsException("offs(" + offs + ") < 0.");
+			throw new IndexOutOfBoundsException("offs(" + offs + ") < 0."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (len < 0) {
-			throw new IndexOutOfBoundsException("len(" + len + ") < 0.");
+			throw new IndexOutOfBoundsException("len(" + len + ") < 0."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (offs + len > dest.length) {
-			throw new IndexOutOfBoundsException("offs(" + offs + ") + len("
-					+ len + ") > dest.length(" + dest.length + ").");
+			throw new IndexOutOfBoundsException("offs(" + offs + ") + len(" //$NON-NLS-1$ //$NON-NLS-2$
+					+ len + ") > dest.length(" + dest.length + ")."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (this.in == null) {
-			throw new IOException("stream closed");
+			throw new IOException("stream closed"); //$NON-NLS-1$
 		}
 
 		final int hi = offs + len;
@@ -217,14 +217,14 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
 		int magic2 = this.in.read();
 		if (magic2 != 'h') {
-			throw new IOException("Stream is not BZip2 formatted: expected 'h'"
-					+ " as first byte but got '" + (char) magic2 + "'");
+			throw new IOException("Stream is not BZip2 formatted: expected 'h'" //$NON-NLS-1$
+					+ " as first byte but got '" + (char) magic2 + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		int blockSize = this.in.read();
 		if ((blockSize < '1') || (blockSize > '9')) {
-			throw new IOException("Stream is not BZip2 formatted: illegal "
-					+ "blocksize " + (char) blockSize);
+			throw new IOException("Stream is not BZip2 formatted: illegal " //$NON-NLS-1$
+					+ "blocksize " + (char) blockSize); //$NON-NLS-1$
 		}
 
 		this.blockSize100k = blockSize - '0';
@@ -252,7 +252,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 				magic5 != 0x59 // 'Y'
 		) {
 			this.currentState = EOF;
-			throw new IOException("bad block header");
+			throw new IOException("bad block header"); //$NON-NLS-1$
 		} else {
 			this.storedBlockCRC = bsGetInt();
 			this.blockRandomised = bsR(1) == 1;
@@ -326,7 +326,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 				int thech = inShadow.read();
 
 				if (thech < 0) {
-					throw new IOException("unexpected end of stream");
+					throw new IOException("unexpected end of stream"); //$NON-NLS-1$
 				}
 
 				bsBuffShadow = (bsBuffShadow << 8) | thech;
@@ -348,7 +348,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 			int thech = this.in.read();
 
 			if (thech < 0) {
-				throw new IOException("unexpected end of stream");
+				throw new IOException("unexpected end of stream"); //$NON-NLS-1$
 			}
 
 			bsBuffShadow = (bsBuffShadow << 8) | thech;
@@ -596,7 +596,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 							bsLiveShadow += 8;
 							continue;
 						} else {
-							throw new IOException("unexpected end of stream");
+							throw new IOException("unexpected end of stream"); //$NON-NLS-1$
 						}
 					}
 					int zvec = (bsBuffShadow >> (bsLiveShadow - zn))
@@ -613,7 +613,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 								continue;
 							} else {
 								throw new IOException(
-										"unexpected end of stream");
+										"unexpected end of stream"); //$NON-NLS-1$
 							}
 						}
 						bsLiveShadow--;
@@ -631,11 +631,11 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 				}
 
 				if (lastShadow >= limitLast) {
-					throw new IOException("block overrun");
+					throw new IOException("block overrun"); //$NON-NLS-1$
 				}
 			} else {
 				if (++lastShadow >= limitLast) {
-					throw new IOException("block overrun");
+					throw new IOException("block overrun"); //$NON-NLS-1$
 				}
 
 				final char tmp = yy[nextSym - 1];
@@ -679,7 +679,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 						bsLiveShadow += 8;
 						continue;
 					} else {
-						throw new IOException("unexpected end of stream");
+						throw new IOException("unexpected end of stream"); //$NON-NLS-1$
 					}
 				}
 				int zvec = (bsBuffShadow >> (bsLiveShadow - zn))
@@ -695,7 +695,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 							bsLiveShadow += 8;
 							continue;
 						} else {
-							throw new IOException("unexpected end of stream");
+							throw new IOException("unexpected end of stream"); //$NON-NLS-1$
 						}
 					}
 					bsLiveShadow--;
@@ -730,7 +730,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 					bsLiveShadow += 8;
 					continue;
 				} else {
-					throw new IOException("unexpected end of stream");
+					throw new IOException("unexpected end of stream"); //$NON-NLS-1$
 				}
 			}
 			bsLiveShadow--;
@@ -764,7 +764,7 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 		}
 
 		if ((this.origPtr < 0) || (this.origPtr >= tt.length)) {
-			throw new IOException("stream corrupted");
+			throw new IOException("stream corrupted"); //$NON-NLS-1$
 		}
 
 		this.su_tPos = tt[this.origPtr];

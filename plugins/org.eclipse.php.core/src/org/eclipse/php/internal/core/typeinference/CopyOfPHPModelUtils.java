@@ -159,7 +159,7 @@ public class CopyOfPHPModelUtils {
 			if (!isGlobal) {
 				// 1. It can be a special 'namespace' keyword, which points to
 				// the current namespace:
-				if ("namespace".equalsIgnoreCase(namespace)) {
+				if ("namespace".equalsIgnoreCase(namespace)) { //$NON-NLS-1$
 					IType currentNamespace = CopyOfPHPModelUtils.getCurrentNamespace(
 							sourceModule, offset);
 					return currentNamespace.getElementName();
@@ -567,7 +567,7 @@ public class CopyOfPHPModelUtils {
 		if (fieldName == null || fieldName.length() == 0) {
 			return PhpModelAccess.NULL_FIELDS;
 		}
-		if (!fieldName.startsWith("$")) { // variables are not supported by
+		if (!fieldName.startsWith("$")) { // variables are not supported by //$NON-NLS-1$
 			// namespaces in PHP 5.3
 			String namespace = extractNamespaceName(fieldName, sourceModule,
 					offset);
@@ -1157,7 +1157,7 @@ public class CopyOfPHPModelUtils {
 		case IModelElement.FIELD:
 			return getNodeByField(rootNode, (IField) element);
 		default:
-			throw new IllegalArgumentException("Unsupported element type: "
+			throw new IllegalArgumentException("Unsupported element type: " //$NON-NLS-1$
 					+ element.getClass().getName());
 		}
 	}
@@ -1302,7 +1302,7 @@ public class CopyOfPHPModelUtils {
 			IField[] fields = type.getFields();
 			for (IField field : fields) {
 				String elementName = field.getElementName();
-				if (elementName.startsWith("$") && !prefix.startsWith("$")) {
+				if (elementName.startsWith("$") && !prefix.startsWith("$")) { //$NON-NLS-1$ //$NON-NLS-2$
 					elementName = elementName.substring(1);
 				}
 				if (exactName
@@ -1835,11 +1835,11 @@ public class CopyOfPHPModelUtils {
 			}
 			ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
 			IModelElement[] members = CopyOfPHPModelUtils.getTypeHierarchyField(type,
-					hierarchy, "", false, null);
+					hierarchy, "", false, null); //$NON-NLS-1$
 			if (hasStaticOrConstMember(members)) {
 				return true;
 			}
-			members = CopyOfPHPModelUtils.getTypeHierarchyMethod(type, hierarchy, "",
+			members = CopyOfPHPModelUtils.getTypeHierarchyMethod(type, hierarchy, "", //$NON-NLS-1$
 					false, null);
 			if (hasStaticOrConstMember(members)) {
 				return true;

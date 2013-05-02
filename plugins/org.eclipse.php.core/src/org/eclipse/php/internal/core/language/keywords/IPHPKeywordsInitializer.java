@@ -21,16 +21,16 @@ import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
  */
 public interface IPHPKeywordsInitializer {
 
-	public static final String OPEN_BLOCK_SUFFIX = " {";
-	public static final String PAAMAYIM_NEKUDOTAYIM_SUFFIX = "::";
-	public static final String WS_QUOTES_SEMICOLON_SUFFIX = " '';";
-	public static final String EMPTY_SUFFIX = "";
-	public static final String COLON_SUFFIX = ":";
-	public static final String WHITESPACE_COLON_SUFFIX = " :";
-	public static final String SEMICOLON_SUFFIX = ";";
-	public static final String WHITESPACE_PARENTESES_SUFFIX = " ()";
-	public static final String WHITESPACE_SUFFIX = " ";
-	public static final String PARENTESES_SUFFIX = "()";
+	public static final String OPEN_BLOCK_SUFFIX = " {"; //$NON-NLS-1$
+	public static final String PAAMAYIM_NEKUDOTAYIM_SUFFIX = "::"; //$NON-NLS-1$
+	public static final String WS_QUOTES_SEMICOLON_SUFFIX = " '';"; //$NON-NLS-1$
+	public static final String EMPTY_SUFFIX = ""; //$NON-NLS-1$
+	public static final String COLON_SUFFIX = ":"; //$NON-NLS-1$
+	public static final String WHITESPACE_COLON_SUFFIX = " :"; //$NON-NLS-1$
+	public static final String SEMICOLON_SUFFIX = ";"; //$NON-NLS-1$
+	public static final String WHITESPACE_PARENTESES_SUFFIX = " ()"; //$NON-NLS-1$
+	public static final String WHITESPACE_SUFFIX = " "; //$NON-NLS-1$
+	public static final String PARENTESES_SUFFIX = "()"; //$NON-NLS-1$
 
 	/**
 	 * Initialize the given list with keywords data compatible with this PHP

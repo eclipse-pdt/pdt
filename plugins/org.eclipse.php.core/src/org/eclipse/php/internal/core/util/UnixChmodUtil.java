@@ -38,7 +38,7 @@ public class UnixChmodUtil {
 	 */
 	public static boolean chmod(String file, int mode) {
 		if (System.getProperty("os.name").startsWith("Windows")) { //$NON-NLS-1$ //$NON-NLS-2$
-			throw new IllegalAccessError("Not a Unix-compliant system"); //$NON-NLS-1$
+			throw new IllegalAccessError(Messages.UnixChmodUtil_0); 
 		}
 
 		boolean status = true;

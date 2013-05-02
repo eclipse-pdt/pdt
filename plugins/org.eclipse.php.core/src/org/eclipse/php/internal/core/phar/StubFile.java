@@ -73,7 +73,7 @@ public class StubFile {
 			}
 			if (!stubHasBeenFound) {
 				PharUtil
-						.throwPharException("the file is not a well formated stub");
+						.throwPharException("the file is not a well formated stub"); //$NON-NLS-1$
 			}
 		} finally {
 			bis.close();

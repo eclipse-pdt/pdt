@@ -197,19 +197,19 @@ public class DeclarationScope {
 	}
 
 	public String toString() {
-		StringBuilder buf = new StringBuilder("Variable Declarations (")
-				.append(context).append("): \n\n");
+		StringBuilder buf = new StringBuilder("Variable Declarations (") //$NON-NLS-1$
+				.append(context).append("): \n\n"); //$NON-NLS-1$
 		Iterator<String> i = decls.keySet().iterator();
 		while (i.hasNext()) {
 			String varName = i.next();
-			buf.append(varName).append(" => { \n\n");
+			buf.append(varName).append(" => { \n\n"); //$NON-NLS-1$
 			LinkedList<Declaration> varDecls = decls.get(varName);
 			if (varDecls != null) {
 				for (Declaration declNode : varDecls) {
-					buf.append(declNode.toString()).append(", \n\n");
+					buf.append(declNode.toString()).append(", \n\n"); //$NON-NLS-1$
 				}
 			}
-			buf.append("}, \n\n");
+			buf.append("}, \n\n"); //$NON-NLS-1$
 		}
 		return buf.toString();
 	}

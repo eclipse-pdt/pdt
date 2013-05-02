@@ -46,7 +46,7 @@ public abstract class AbstractPHPDocTagStartContext extends PHPDocTagContext {
 		}
 		if (!stack.empty()) {
 			String lastWord = stack.pop();
-			if (lastWord.startsWith("@")) {
+			if (lastWord.startsWith("@")) { //$NON-NLS-1$
 				lastWord = lastWord.substring(1);
 			}
 			if (!statementTextString.endsWith(lastWord)) {

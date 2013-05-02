@@ -82,38 +82,38 @@ public final class NodeInfoStore {
 			switch (node.getType()) {
 			case ASTNode.ASSIGNMENT:
 				Assignment assignment = (Assignment) node;
-				assignment.setLeftHandSide(this.ast.newVariable("a"));
+				assignment.setLeftHandSide(this.ast.newVariable("a")); //$NON-NLS-1$
 				assignment.setOperator(Assignment.OP_EQUAL);
-				assignment.setRightHandSide(this.ast.newVariable("a"));
+				assignment.setRightHandSide(this.ast.newVariable("a")); //$NON-NLS-1$
 				break;
 			case ASTNode.INFIX_EXPRESSION:
 				InfixExpression expression = (InfixExpression) node;
-				expression.setLeft(this.ast.newScalar("a"));
+				expression.setLeft(this.ast.newScalar("a")); //$NON-NLS-1$
 				expression.setOperator(InfixExpression.OP_MINUS);
-				expression.setRight(this.ast.newVariable("a"));
+				expression.setRight(this.ast.newVariable("a")); //$NON-NLS-1$
 				break;
 			case ASTNode.VARIABLE:
 				Variable variable = (Variable) node;
-				variable.setName(this.ast.newIdentifier(""));
+				variable.setName(this.ast.newIdentifier("")); //$NON-NLS-1$
 				break;
 			case ASTNode.FOR_STATEMENT:
 				ForStatement forStatement = (ForStatement) node;
 				Assignment assignment1 = this.ast.newAssignment();
-				assignment1.setLeftHandSide(this.ast.newVariable("a"));
+				assignment1.setLeftHandSide(this.ast.newVariable("a")); //$NON-NLS-1$
 				assignment1.setOperator(Assignment.OP_EQUAL);
-				assignment1.setRightHandSide(this.ast.newVariable("a"));
+				assignment1.setRightHandSide(this.ast.newVariable("a")); //$NON-NLS-1$
 				forStatement.initializers().add(assignment1);
 
 				InfixExpression expression1 = this.ast.newInfixExpression();
-				expression1.setLeft(this.ast.newScalar("a"));
+				expression1.setLeft(this.ast.newScalar("a")); //$NON-NLS-1$
 				expression1.setOperator(InfixExpression.OP_IS_NOT_EQUAL);
-				expression1.setRight(this.ast.newVariable("a"));
+				expression1.setRight(this.ast.newVariable("a")); //$NON-NLS-1$
 
 				forStatement.conditions().add(expression1);
 
 				PostfixExpression pexp = this.ast.newPostfixExpression();
 				pexp.setOperator(PostfixExpression.OP_INC);
-				pexp.setVariable(this.ast.newVariable("a"));
+				pexp.setVariable(this.ast.newVariable("a")); //$NON-NLS-1$
 
 				forStatement.updaters().add(pexp);
 				forStatement.setBody(this.ast.newBlock());
@@ -122,7 +122,7 @@ public final class NodeInfoStore {
 			case ASTNode.FUNCTION_INVOCATION:
 				FunctionInvocation functionInvocation = (FunctionInvocation) node;
 				FunctionName functionName = this.ast.newFunctionName();
-				functionName.setName(this.ast.newIdentifier(""));
+				functionName.setName(this.ast.newIdentifier("")); //$NON-NLS-1$
 				functionInvocation.setFunctionName(functionName);
 				break;
 			}

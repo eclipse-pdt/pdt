@@ -114,7 +114,7 @@ public class NamespaceName extends Identifier {
 		if (global) {
 			buf.append('\\');
 		} else if (current) {
-			buf.append("namespace\\");
+			buf.append("namespace\\"); //$NON-NLS-1$
 		}
 		for (int i = 0; i < segments.length; ++i) {
 			if (i > 0) {
@@ -148,8 +148,8 @@ public class NamespaceName extends Identifier {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<NamespaceName"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" global='").append(global).append('\'');
-		buffer.append(" current='").append(current).append('\'');
+		buffer.append(" global='").append(global).append('\''); //$NON-NLS-1$
+		buffer.append(" current='").append(current).append('\''); //$NON-NLS-1$
 		buffer.append(">\n"); //$NON-NLS-1$
 		for (ASTNode node : this.segments) {
 			node.toString(buffer, TAB + tab);

@@ -164,13 +164,13 @@ public class MethodReturnTypeEvaluator extends
 	 * @return the type of the given variable
 	 */
 	private String getTypeBinding(String methodName, PHPDocTag docTag) {
-		final String[] split = docTag.getValue().trim().split("\\s+");
+		final String[] split = docTag.getValue().trim().split("\\s+"); //$NON-NLS-1$
 		if (split.length < 2) {
 			return null;
 		}
 		if (split[1].equals(methodName)) {
 			return split[0];
-		} else if (split[1].length() > 2 && split[1].endsWith("()")) {
+		} else if (split[1].length() > 2 && split[1].endsWith("()")) { //$NON-NLS-1$
 			final String substring = split[1].substring(0,
 					split[1].length() - 2);
 			return substring.equals(methodName) ? split[0] : null;

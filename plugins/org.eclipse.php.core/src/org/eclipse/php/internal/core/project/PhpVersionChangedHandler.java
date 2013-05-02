@@ -22,7 +22,7 @@ import org.eclipse.php.internal.core.preferences.*;
 
 public class PhpVersionChangedHandler implements IResourceChangeListener {
 
-	private static final String PHP_VERSION = "phpVersion";
+	private static final String PHP_VERSION = "phpVersion"; //$NON-NLS-1$
 
 	private HashMap<IProject, HashSet> projectListeners = new HashMap<IProject, HashSet>();
 	private HashMap<IProject, PreferencesPropagatorListener> preferencesPropagatorListeners = new HashMap<IProject, PreferencesPropagatorListener>();

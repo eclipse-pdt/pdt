@@ -93,7 +93,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 					continue;
 				}
 				List<String> commentWords = Arrays.asList(text.trim().split(
-						"[ \r\n]"));
+						"[ \r\n]")); //$NON-NLS-1$
 				commentWords = removeEmptyString(commentWords);
 				if (commentWords.size() <= wordSize) {
 					wordSize = wordSize - commentWords.size();

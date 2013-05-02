@@ -44,7 +44,7 @@ public class NamespacesStrategy extends GlobalTypesStrategy {
 			throws BadLocationException {
 
 		String prefix = context.getPrefix();
-		if (prefix.startsWith("$")) {
+		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			return EMPTY;
 		}
 

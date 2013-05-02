@@ -437,7 +437,7 @@ public class Util {
 	 * extension is not known.
 	 */
 	public static String defaultPhpExtension() {
-		return "php";
+		return "php"; //$NON-NLS-1$
 	}
 
 	/**
@@ -784,7 +784,7 @@ public class Util {
 			// TODO (jerome) reenable once JDT UI supports other file extensions
 			// (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=71460)
 			if (!ENABLE_PHP_LIKE_EXTENSIONS)
-				PHP_LIKE_EXTENSIONS = new char[][] { "php".toCharArray() };
+				PHP_LIKE_EXTENSIONS = new char[][] { "php".toCharArray() }; //$NON-NLS-1$
 			else {
 				IContentType javaContentType = Platform.getContentTypeManager()
 						.getContentType(PHPNature.ID);
@@ -811,13 +811,13 @@ public class Util {
 				// note that file extensions contains "java" as it is defined in
 				// JDT Core's plugin.xml
 				char[][] extensions = new char[length][];
-				extensions[0] = "php".toCharArray(); // ensure that "java" is
+				extensions[0] = "php".toCharArray(); // ensure that "java" is //$NON-NLS-1$
 				// first
 				int index = 1;
 				Iterator iterator = fileExtensions.iterator();
 				while (iterator.hasNext()) {
 					String fileExtension = (String) iterator.next();
-					if ("php".equals(fileExtension))
+					if ("php".equals(fileExtension)) //$NON-NLS-1$
 						continue;
 					extensions[index++] = fileExtension.toCharArray();
 				}
@@ -3259,10 +3259,10 @@ public class Util {
 		int i = 0;
 		while (i < numberOfLines) {
 			try {
-				String lineDelimiter = (i == numberOfLines - 1 ? "" : document
+				String lineDelimiter = (i == numberOfLines - 1 ? "" : document //$NON-NLS-1$
 						.getLineDelimiter(i));
 				if (lineDelimiter == null) {
-					lineDelimiter = "";
+					lineDelimiter = ""; //$NON-NLS-1$
 				}
 				IRegion lineInformation = document.getLineInformation(i);
 				result[i] = lineInformation.getOffset()

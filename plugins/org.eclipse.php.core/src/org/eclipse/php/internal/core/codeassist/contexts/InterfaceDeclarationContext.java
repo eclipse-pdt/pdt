@@ -39,7 +39,7 @@ public abstract class InterfaceDeclarationContext extends
 			TextSequence statementText = getStatementText();
 			String typeString = statementText.subSequence(typeEnd - 10,
 					typeEnd - 1).toString();
-			if ("interface".equals(typeString)) {
+			if ("interface".equals(typeString)) { //$NON-NLS-1$
 				return true;
 			}
 		}

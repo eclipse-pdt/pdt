@@ -89,7 +89,7 @@ public class ProjectBackwardCompatibilityUtil {
 						.getDocumentElement();
 			} catch (final Exception e) {
 				throw new IOException(CoreMessages
-						.getString("PHPProjectOptions_1"));
+						.getString("PHPProjectOptions_1")); //$NON-NLS-1$
 			} finally {
 				reader.close();
 			}
@@ -147,10 +147,10 @@ public class ProjectBackwardCompatibilityUtil {
 			}
 			break;
 		case IBuildpathEntry.BPE_LIBRARY:
-			if ("var".equalsIgnoreCase(entryKindAttr)) {
+			if ("var".equalsIgnoreCase(entryKindAttr)) { //$NON-NLS-1$
 				variableName = pathAttr;
 				if (variableName != null && variableName.length() > 0) {
-					String resolvedPath = "";
+					String resolvedPath = ""; //$NON-NLS-1$
 					Preferences pluginPreferences = PHPCorePlugin.getDefault()
 							.getPluginPreferences();
 					String pathString = pluginPreferences

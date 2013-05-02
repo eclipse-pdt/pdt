@@ -64,7 +64,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 		}
 
 		int elementStart = getElementStart();
-		int lhsIndex = elementStart - "parent".length()
+		int lhsIndex = elementStart - "parent".length() //$NON-NLS-1$
 				- getTriggerType().getName().length();
 		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
@@ -76,7 +76,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 			}
 		}
 
-		lhsIndex = elementStart - "self".length()
+		lhsIndex = elementStart - "self".length() //$NON-NLS-1$
 				- getTriggerType().getName().length();
 		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();

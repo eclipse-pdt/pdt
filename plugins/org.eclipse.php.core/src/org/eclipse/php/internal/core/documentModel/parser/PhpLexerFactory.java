@@ -25,7 +25,7 @@ public class PhpLexerFactory {
 			return new org.eclipse.php.internal.core.documentModel.parser.php54.PhpLexer(
 					reader);
 		}
-		throw new IllegalArgumentException("Unknown PHP version");
+		throw new IllegalArgumentException("Unknown PHP version"); //$NON-NLS-1$
 	}
 
 	public static AbstractPhpLexer createLexer(InputStream stream,
@@ -46,6 +46,6 @@ public class PhpLexerFactory {
 			return new org.eclipse.php.internal.core.documentModel.parser.php54.PhpLexer(
 					stream);
 		}
-		throw new IllegalArgumentException("Unknown PHP version");
+		throw new IllegalArgumentException("Unknown PHP version"); //$NON-NLS-1$
 	}
 }

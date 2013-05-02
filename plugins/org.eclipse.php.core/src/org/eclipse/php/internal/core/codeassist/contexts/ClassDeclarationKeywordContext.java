@@ -48,8 +48,8 @@ public class ClassDeclarationKeywordContext extends ClassDeclarationContext {
 		if (!hasImplements()) { // check that the previous word is not a keyword
 			try {
 				String previousWord = getPreviousWord();
-				if (!"extends".equalsIgnoreCase(previousWord)
-						&& !"implements".equalsIgnoreCase(previousWord)) {
+				if (!"extends".equalsIgnoreCase(previousWord) //$NON-NLS-1$
+						&& !"implements".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
 					return true;
 				}
 			} catch (BadLocationException e) {

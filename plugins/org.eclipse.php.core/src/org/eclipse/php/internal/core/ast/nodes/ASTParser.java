@@ -41,7 +41,7 @@ import org.eclipse.php.internal.core.project.ProjectOptions;
 public class ASTParser {
 
 	// version tags
-	private static final Reader EMPTY_STRING_READER = new StringReader("");
+	private static final Reader EMPTY_STRING_READER = new StringReader(""); //$NON-NLS-1$
 
 	/**
 	 * THREAD SAFE AST PARSER STARTS HERE
@@ -79,7 +79,7 @@ public class ASTParser {
 	 */
 	public static ASTParser newParser(PHPVersion version, boolean useShortTags) {
 		try {
-			return new ASTParser(new StringReader(""), version, false,
+			return new ASTParser(new StringReader(""), version, false, //$NON-NLS-1$
 					useShortTags);
 		} catch (IOException e) {
 			assert false;
@@ -109,10 +109,10 @@ public class ASTParser {
 			ISourceModule sourceModule) {
 		if (sourceModule == null) {
 			throw new IllegalStateException(
-					"ASTParser - Can't parser with null ISourceModule");
+					"ASTParser - Can't parser with null ISourceModule"); //$NON-NLS-1$
 		}
 		try {
-			final ASTParser parser = new ASTParser(new StringReader(""),
+			final ASTParser parser = new ASTParser(new StringReader(""), //$NON-NLS-1$
 					version, false, ProjectOptions.useShortTags(sourceModule
 							.getScriptProject().getProject()), sourceModule);
 			parser.setSource(sourceModule.getSourceAsCharArray());
@@ -186,7 +186,7 @@ public class ASTParser {
 		}
 
 		progressMonitor.beginTask(
-				"Creating Abstract Syntax Tree for source...", 3);
+				"Creating Abstract Syntax Tree for source...", 3); //$NON-NLS-1$
 		final Scanner lexer = this.ast.lexer();
 		final lr_parser phpParser = this.ast.parser();
 		progressMonitor.worked(1);
@@ -419,7 +419,7 @@ public class ASTParser {
 			return lexer54;
 		} else {
 			throw new IllegalArgumentException(
-					CoreMessages.getString("ASTParser_1") + phpVersion);
+					CoreMessages.getString("ASTParser_1") + phpVersion); //$NON-NLS-1$
 		}
 	}
 
@@ -443,7 +443,7 @@ public class ASTParser {
 			return parser;
 		} else {
 			throw new IllegalArgumentException(
-					CoreMessages.getString("ASTParser_1") + phpVersion);
+					CoreMessages.getString("ASTParser_1") + phpVersion); //$NON-NLS-1$
 		}
 
 	}

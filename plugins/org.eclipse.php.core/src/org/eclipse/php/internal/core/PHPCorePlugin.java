@@ -71,7 +71,7 @@ public class PHPCorePlugin extends Plugin {
 	 * plug-in start-up.
 	 */
 	void initializeAfterStart() {
-		Job job = new Job("") {
+		Job job = new Job("") { //$NON-NLS-1$
 			protected IStatus run(IProgressMonitor monitor) {
 
 				// start the include path manager
@@ -408,25 +408,25 @@ public class PHPCorePlugin extends Plugin {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findMethods("", MatchRule.PREFIX,
+				PhpModelAccess.getDefault().findMethods("", MatchRule.PREFIX, //$NON-NLS-1$
 						Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findTypes("", MatchRule.PREFIX,
+				PhpModelAccess.getDefault().findTypes("", MatchRule.PREFIX, //$NON-NLS-1$
 						Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findFields("", MatchRule.PREFIX,
+				PhpModelAccess.getDefault().findFields("", MatchRule.PREFIX, //$NON-NLS-1$
 						Modifiers.AccGlobal, 0, scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);
 				}
 
-				PhpModelAccess.getDefault().findIncludes("", MatchRule.PREFIX,
+				PhpModelAccess.getDefault().findIncludes("", MatchRule.PREFIX, //$NON-NLS-1$
 						scope, monitor);
 				if (monitor != null) {
 					monitor.worked(25);

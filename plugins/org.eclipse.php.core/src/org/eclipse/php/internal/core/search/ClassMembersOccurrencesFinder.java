@@ -213,7 +213,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				for (IModelElement modelElement : members) {
 					if (modelElement.getElementName().equals(memberName)
 							|| modelElement.getElementName().equals(
-									"$" + memberName)) {
+									"$" + memberName)) { //$NON-NLS-1$
 						if (modelElement instanceof IMethod) {
 							if (dispatcherType == null
 									&& typeBinding.getPHPElement() != null) {

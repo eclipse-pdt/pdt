@@ -25,7 +25,7 @@ import org.eclipse.dltk.ti.goals.IGoal;
 
 public class PHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
-	private static final String GOAL_EVALUATOR_FACTORIES_EXT = "org.eclipse.php.core.goalEvaluatorFactories";
+	private static final String GOAL_EVALUATOR_FACTORIES_EXT = "org.eclipse.php.core.goalEvaluatorFactories"; //$NON-NLS-1$
 	private final static FactoryInfo[] factoryInfos;
 
 	private static class FactoryInfo {
@@ -43,7 +43,7 @@ public class PHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 	}
 
 	private static int getPriority(IConfigurationElement element) {
-		String priority = element.getAttribute("priority");
+		String priority = element.getAttribute("priority"); //$NON-NLS-1$
 		if (priority == null) {
 			return 0;
 		}
@@ -64,7 +64,7 @@ public class PHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			try {
 				int priority = getPriority(element);
 				IGoalEvaluatorFactory factory = (IGoalEvaluatorFactory) element
-						.createExecutableExtension("class");
+						.createExecutableExtension("class"); //$NON-NLS-1$
 				if (factory != null) {
 					factories.add(new FactoryInfo(priority, factory));
 				}

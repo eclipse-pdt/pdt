@@ -43,11 +43,11 @@ public class InterfaceDeclarationKeywordsStrategy extends AbstractCompletionStra
 		SourceRange replaceRange = getReplacementRange(concreteContext);
 
 		if (!concreteContext.hasExtends()) {
-			reporter.reportKeyword("extends", getSuffix(concreteContext), replaceRange);
+			reporter.reportKeyword("extends", getSuffix(concreteContext), replaceRange); //$NON-NLS-1$
 		}
 	}
 	
 	public String getSuffix(AbstractCompletionContext context) {
-		return context.hasWhitespaceBeforeCursor() ? " " : "";
+		return context.hasWhitespaceBeforeCursor() ? " " : ""; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

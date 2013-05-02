@@ -38,7 +38,7 @@ public class InstanceOfContext extends StatementContext {
 
 		try {
 			String previousWord = getPreviousWord();
-			if ("instanceof".equalsIgnoreCase(previousWord)) {
+			if ("instanceof".equalsIgnoreCase(previousWord)) { //$NON-NLS-1$
 				return true;
 			}
 		} catch (BadLocationException e) {

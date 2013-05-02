@@ -38,7 +38,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 			.getString("AbstractOccurrencesFinder.0"); //$NON-NLS-1$
 	protected static final String BASE_WRITE_DESCRIPTION = CoreMessages
 			.getString("AbstractOccurrencesFinder.1"); //$NON-NLS-1$
-	protected static final String BRACKETS = "()";
+	protected static final String BRACKETS = "()"; //$NON-NLS-1$
 
 	protected List<OccurrenceLocation> fResult;
 	protected String fDescription;
@@ -111,7 +111,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor
 						IResource.DEPTH_ONE);
 				ProblemDesc[] problems = new ProblemDesc[markers.length];
 				for (int i = 0; i < markers.length; ++i) {
-					problems[i] = new ProblemDesc(markers[i].getAttribute("id",
+					problems[i] = new ProblemDesc(markers[i].getAttribute("id",//$NON-NLS-1$
 							0), markers[i].getAttribute(IMarker.CHAR_START, 0),
 							markers[i].getAttribute(IMarker.CHAR_END, 0),
 							markers[i].getAttribute(IMarker.SEVERITY, 0));

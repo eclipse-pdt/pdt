@@ -221,7 +221,7 @@ import org.eclipse.text.edits.*;
 	public String createIndentString(int indentationUnits) {
 		try {
 			return createCodeFormatter(this.options, new Region(0, 0),
-					createDocument("", null)).createIndentationString(
+					createDocument("", null)).createIndentationString( //$NON-NLS-1$
 					indentationUnits);
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -364,7 +364,7 @@ import org.eclipse.text.edits.*;
 				suffix = "}"; //$NON-NLS-1$
 			}
 			if (node instanceof MethodDeclaration) {
-				prefix += "class x{";
+				prefix += "class x{"; //$NON-NLS-1$
 				suffix = "}"; //$NON-NLS-1$
 			}
 
@@ -372,7 +372,7 @@ import org.eclipse.text.edits.*;
 				&& node.getType() != ASTNode.SINGLE_FIELD_DECLARATION) {
 		} else if (node instanceof BodyDeclaration) {
 		} else if (node instanceof Comment) {
-			prefix += "class x{";
+			prefix += "class x{"; //$NON-NLS-1$
 			suffix = "}"; //$NON-NLS-1$
 		} else {
 			if (node.getType() == ASTNode.CATCH_CLAUSE) {

@@ -72,9 +72,9 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			// we use reflection here since we don't know the constant value of
 			// of this state in specific PHP version lexer
 			ST_PHP_LINE_COMMENT = phpLexer.getClass()
-					.getField("ST_PHP_LINE_COMMENT").getInt(phpLexer);
+					.getField("ST_PHP_LINE_COMMENT").getInt(phpLexer); //$NON-NLS-1$
 			ST_PHP_IN_SCRIPTING = phpLexer.getClass()
-					.getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer);
+					.getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer); //$NON-NLS-1$
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
@@ -315,9 +315,9 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 				start, length), null);
 		try {
 			ST_PHP_LINE_COMMENT = phpLexer.getClass()
-					.getField("ST_PHP_LINE_COMMENT").getInt(phpLexer);
+					.getField("ST_PHP_LINE_COMMENT").getInt(phpLexer); //$NON-NLS-1$
 			ST_PHP_IN_SCRIPTING = phpLexer.getClass()
-					.getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer);
+					.getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer); //$NON-NLS-1$
 		} catch (Exception e) {
 			Logger.logException(e);
 		}

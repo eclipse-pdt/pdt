@@ -45,7 +45,7 @@ public class GZIPInputStreamForPhar extends InflaterInputStream {
 	 */
 	private void ensureOpen() throws IOException {
 		if (closed) {
-			throw new IOException("Stream closed");
+			throw new IOException("Stream closed"); //$NON-NLS-1$
 		}
 	}
 

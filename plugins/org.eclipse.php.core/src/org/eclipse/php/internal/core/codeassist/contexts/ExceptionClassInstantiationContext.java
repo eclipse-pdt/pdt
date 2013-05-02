@@ -16,8 +16,8 @@ public class ExceptionClassInstantiationContext extends StatementContext {
 		try {
 			String previousWord = getPreviousWord();
 			String previous2Word = getPreviousWord(2);
-			if ("new".equalsIgnoreCase(previousWord)
-					&& "throw".equalsIgnoreCase(previous2Word)) {
+			if ("new".equalsIgnoreCase(previousWord) //$NON-NLS-1$
+					&& "throw".equalsIgnoreCase(previous2Word)) { //$NON-NLS-1$
 				return true;
 			}
 		} catch (BadLocationException e) {

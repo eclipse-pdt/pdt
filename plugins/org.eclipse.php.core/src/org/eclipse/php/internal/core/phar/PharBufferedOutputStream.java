@@ -48,15 +48,15 @@ public class PharBufferedOutputStream implements IAchiveOutputStream {
 			SignatureBufferedOutputStream fileContentStream2,
 			PharPackage pharPackage) throws IOException {
 		this.os = fileContentStream2;
-		manifest = File.createTempFile("temp1", ".tmp");
+		manifest = File.createTempFile("temp1", ".tmp"); //$NON-NLS-1$ //$NON-NLS-2$
 		manifestOutputStream = new BufferedOutputStream(new FileOutputStream(
 				manifest));
 
-		fileDescription = File.createTempFile("temp2", ".tmp");
+		fileDescription = File.createTempFile("temp2", ".tmp"); //$NON-NLS-1$ //$NON-NLS-2$
 		fileDescriptionOutputStream = new BufferedOutputStream(
 				new FileOutputStream(fileDescription));
 
-		fileContent = File.createTempFile("temp3", ".tmp");
+		fileContent = File.createTempFile("temp3", ".tmp"); //$NON-NLS-1$ //$NON-NLS-2$
 		fileContentStream = new NumberedBufferedOutputStream(
 				new FileOutputStream(fileContent));
 		this.pharPackage = pharPackage;

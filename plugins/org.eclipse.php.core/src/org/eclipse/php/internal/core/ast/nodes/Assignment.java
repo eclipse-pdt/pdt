@@ -212,7 +212,7 @@ public class Assignment extends Expression implements IOperationNode {
 	 */
 	public void setOperator(int assignmentOperator) {
 		if (getOperator(assignmentOperator) == null) {
-			throw new IllegalArgumentException("Invalid operator");
+			throw new IllegalArgumentException("Invalid operator"); //$NON-NLS-1$
 		}
 		preValueChange(OPERATOR_PROPERTY);
 		this.operator = assignmentOperator;

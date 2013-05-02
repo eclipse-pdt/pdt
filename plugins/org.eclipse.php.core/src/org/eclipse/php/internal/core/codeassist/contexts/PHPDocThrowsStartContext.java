@@ -31,7 +31,7 @@ public class PHPDocThrowsStartContext extends AbstractPHPDocTagStartContext {
 
 	public static List<String> TAGS = new ArrayList<String>();
 	static {
-		TAGS.add("throws");
+		TAGS.add("throws"); //$NON-NLS-1$
 	}
 
 	@Override

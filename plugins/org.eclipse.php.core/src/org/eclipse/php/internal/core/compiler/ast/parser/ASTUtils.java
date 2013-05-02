@@ -38,7 +38,7 @@ import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 public class ASTUtils {
 
 	private static final Pattern VAR_COMMENT_PATTERN = Pattern
-			.compile("(.*)(\\$[^\\s]+)(\\s+)([^\\s]+).*");
+			.compile("(.*)(\\$[^\\s]+)(\\s+)([^\\s]+).*"); //$NON-NLS-1$
 
 	/**
 	 * Parses @@var comment using regular expressions
@@ -404,7 +404,7 @@ public class ASTUtils {
 	public static FieldDeclaration getConstantDeclaration(
 			CallExpression callExpression) {
 		String name = callExpression.getName();
-		if ("define".equalsIgnoreCase(name)) {//$NON-NLS-0$
+		if ("define".equalsIgnoreCase(name)) { //$NON-NLS-1$
 			CallArgumentsList args = callExpression.getArgs();
 			if (args != null && args.getChilds() != null) {
 				ASTNode argument = (ASTNode) args.getChilds().get(0);

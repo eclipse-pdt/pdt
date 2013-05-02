@@ -198,7 +198,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setName(field.getElementName());
 
 			String completion = field.getElementName() + suffix;
-			if (removeDollar && completion.startsWith("$")) {
+			if (removeDollar && completion.startsWith("$")) { //$NON-NLS-1$
 				completion = completion.substring(1);
 			}
 			proposal.setCompletion(completion);
@@ -334,7 +334,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 			proposal.setCompletion((completionName + suffix));
 
 			try {
-				proposal.setIsConstructor(elementName.equals("__construct")
+				proposal.setIsConstructor(elementName.equals("__construct") //$NON-NLS-1$
 						|| method.isConstructor());
 				proposal.setFlags(method.getFlags());
 			} catch (ModelException e) {

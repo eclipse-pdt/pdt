@@ -53,12 +53,12 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			List<ICompletionStrategyFactory> factories = new LinkedList<ICompletionStrategyFactory>();
 			IConfigurationElement[] elements = Platform.getExtensionRegistry()
 					.getConfigurationElementsFor(
-							"org.eclipse.php.core.completionStrategyFactories");
+							"org.eclipse.php.core.completionStrategyFactories"); //$NON-NLS-1$
 			for (IConfigurationElement element : elements) {
-				if (element.getName().equals("factory")) {
+				if (element.getName().equals("factory")) { //$NON-NLS-1$
 					try {
 						factories.add((ICompletionStrategyFactory) element
-								.createExecutableExtension("class"));
+								.createExecutableExtension("class")); //$NON-NLS-1$
 					} catch (CoreException e) {
 						PHPCorePlugin.log(e);
 					}

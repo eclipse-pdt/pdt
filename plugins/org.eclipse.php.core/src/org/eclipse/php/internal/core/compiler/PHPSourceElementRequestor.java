@@ -53,11 +53,11 @@ import org.eclipse.php.internal.core.util.MagicMemberUtil.MagicMethod;
  */
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
-	private static final String MAGIC_PROPERTY_TYPE = "MagicPropertyType";
-	private static final String CONSTRUCTOR_NAME = "__construct";
-	private static final String VOID_RETURN_TYPE = "void";
-	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
-	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace";
+	private static final String MAGIC_PROPERTY_TYPE = "MagicPropertyType"; //$NON-NLS-1$
+	private static final String CONSTRUCTOR_NAME = "__construct"; //$NON-NLS-1$
+	private static final String VOID_RETURN_TYPE = "void"; //$NON-NLS-1$
+	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
+	private static final String GLOBAL_NAMESPACE_CONTAINER_NAME = "global namespace"; //$NON-NLS-1$
 	private static final String DEFAULT_VALUE = " "; //$NON-NLS-1$
 	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
@@ -88,13 +88,13 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		// Load PHP source element requester extensions
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(PHPCorePlugin.ID,
-						"phpSourceElementRequestors");
+						"phpSourceElementRequestors"); //$NON-NLS-1$
 		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<PHPSourceElementRequestorExtension>(
 				elements.length);
 		for (IConfigurationElement element : elements) {
 			try {
 				PHPSourceElementRequestorExtension extension = (PHPSourceElementRequestorExtension) element
-						.createExecutableExtension("class");
+						.createExecutableExtension("class"); //$NON-NLS-1$
 				extension.setRequestor(fRequestor);
 				extension.setSourceModule(sourceModule);
 				requestors.add(extension);
@@ -194,7 +194,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				parameters[indx] = arg.getName();
 				indx++;
 				if (i.hasNext()) {
-					metadata.append(",");
+					metadata.append(","); //$NON-NLS-1$
 				}
 			}
 		}
@@ -436,7 +436,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					String namespace = fullyQualifiedName.getNamespace()
 							.getName();
 
-					String subnamespace = "";
+					String subnamespace = ""; //$NON-NLS-1$
 					if (namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR
 							&& namespace
 									.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) > 0) {
@@ -577,7 +577,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	private String removeParenthesis(final String[] split) {
 		final String name = split[1];
-		return name.endsWith("()") ? name.substring(0, name.length() - 2)
+		return name.endsWith("()") ? name.substring(0, name.length() - 2) //$NON-NLS-1$
 				: name;
 	}
 
@@ -705,7 +705,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		// information in order to access it quickly:
 		if (include.getExpr() instanceof Scalar) {
 			Scalar filePath = (Scalar) include.getExpr();
-			fRequestor.acceptMethodReference("include", 0,
+			fRequestor.acceptMethodReference("include", 0, //$NON-NLS-1$
 					filePath.sourceStart(), filePath.sourceEnd());
 		}
 		return true;

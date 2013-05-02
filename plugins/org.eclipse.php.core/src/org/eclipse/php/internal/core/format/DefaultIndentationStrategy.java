@@ -37,7 +37,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					PHPPartitionTypes.PHP_MULTI_LINE_COMMENT,
 					PHPPartitionTypes.PHP_DOC });
 
-	private static final String BLANK = "";
+	private static final String BLANK = ""; //$NON-NLS-1$
 	private static boolean pairArrayParen;
 	private static int pairArrayOffset;
 
@@ -629,7 +629,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		final int newForOffset;
 
 		// code for not formatting comments
-		if (lineText.trim().startsWith("//") && enterKeyPressed) {
+		if (lineText.trim().startsWith("//") && enterKeyPressed) { //$NON-NLS-1$
 			lastNonEmptyLineIndex = lineOfOffset;
 			indentationBaseLineIndex = lineOfOffset;
 			int i = lineInformationOfOffset.getOffset();
@@ -804,7 +804,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					.createHeuristicScanner(document, offset, true);
 			if (inBracelessBlock(scanner, document, offset)) {
 				// lineState.inBracelessBlock = true;
-				if (!"{".equals(commandText)) {
+				if (!"{".equals(commandText)) { //$NON-NLS-1$
 					indent(document, result, indentationObject.indentationChar,
 							indentationObject.indentationSize);
 				}
@@ -1074,7 +1074,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return true;
 			} else if (token.getType() == PHPRegionTypes.PHP_HEREDOC_TAG
 					&& document.get(lineInfo.getOffset(), lineInfo.getLength())
-							.trim().endsWith(";")) {
+							.trim().endsWith(";")) { //$NON-NLS-1$
 				return true;
 			}
 		} catch (final BadLocationException e) {

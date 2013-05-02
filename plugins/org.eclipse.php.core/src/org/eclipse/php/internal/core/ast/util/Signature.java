@@ -1618,7 +1618,7 @@ public static char[] getQualifier(char[] name) {
  */
 public static String getQualifier(String name) {
 	char[] qualifier = getQualifier(name.toCharArray());
-	if (qualifier.length == 0) return "";
+	if (qualifier.length == 0) return ""; //$NON-NLS-1$
 	return new String(qualifier);
 }
 /**

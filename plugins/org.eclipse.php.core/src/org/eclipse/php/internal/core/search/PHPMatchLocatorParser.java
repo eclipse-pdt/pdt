@@ -126,7 +126,7 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 				Scalar filePath = (Scalar) include.getExpr();
 				CallExpression callExpression = new CallExpressionLocation(
 						filePath.sourceStart(), filePath.sourceEnd(), null,
-						"include", new CallArgumentsList());
+						"include", new CallArgumentsList()); //$NON-NLS-1$
 				locator.match(callExpression, getNodeSet());
 			}
 		} else if (node instanceof Argument) {

@@ -38,7 +38,7 @@ public abstract class ClassDeclarationContext extends TypeDeclarationContext {
 			TextSequence statementText = getStatementText();
 			String typeString = statementText.subSequence(typeEnd - 6,
 					typeEnd - 1).toString();
-			if ("class".equals(typeString)) {
+			if ("class".equals(typeString)) { //$NON-NLS-1$
 				return true;
 			}
 		}
