@@ -366,7 +366,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		// JobSafeStructuredDocument document= new JobSafeStructuredDocument();
 		// IDocumentPartitioner partitioner= new PHPStructuredTextPartitioner();
 		//
-		//		//document.setDocumentPartitioner("org.eclipse.wst.sse.core.default_structured_text_partitioning", partitioner); //$NON-NLS-1$
+		//		//document.setDocumentPartitioner("org.eclipse.wst.sse.core.default_structured_text_partitioning", partitioner); 
 		// document.setDocumentPartitioner( partitioner);
 		//
 		// IPreferenceStore store=
@@ -385,7 +385,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 		// viewer.setEditable(false);
 		// viewer.setDocument(document);
 		//
-		//		Font font= JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont"); //$NON-NLS-1$		
+		//		Font font= JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont"); 		
 		// viewer.getTextWidget().setFont(font);
 		// new PHPSourcePreviewerUpdater(viewer, configuration, store);
 		//
@@ -628,7 +628,7 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	private boolean confirmOverwrite(File file) {
 		return MessageDialog.openQuestion(getShell(),
 				PreferencesMessages.CodeTemplateBlock_export_exists_title,
-				"The selected file already exists. Do you want to replace it?");
+				PreferencesMessages.PHPCodeTemplateBlock_2);
 	}
 
 	public void performDefaults() {

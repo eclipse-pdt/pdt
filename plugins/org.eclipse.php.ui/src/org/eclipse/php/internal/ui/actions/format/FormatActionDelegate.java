@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions.format;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
@@ -66,7 +65,7 @@ public class FormatActionDelegate extends
 			IStatus status = Status.OK_STATUS;
 
 			Object[] elements = fSelection.toArray();
-			monitor.beginTask("", elements.length); //$NON-NLS-1$
+			monitor.beginTask("", elements.length); //$NON-NLS-1$ 
 			for (int i = 0; i < elements.length; i++) {
 				IResource resource = null;
 				if (elements[i] instanceof IModelElement) {
@@ -87,7 +86,7 @@ public class FormatActionDelegate extends
 				status = fErrorStatus;
 				fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR,
 						SSEUIMessages.FormatActionDelegate_errorStatusMessage,
-						null); //$NON-NLS-1$
+						null);
 			}
 
 			return status;
@@ -97,10 +96,10 @@ public class FormatActionDelegate extends
 
 	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID,
 			IStatus.ERROR,
-			SSEUIMessages.FormatActionDelegate_errorStatusMessage, null); //$NON-NLS-1$
+			SSEUIMessages.FormatActionDelegate_errorStatusMessage, null);
 
 	protected Job getJob() {
-		return new FormatJob(SSEUIMessages.FormatActionDelegate_jobName); //$NON-NLS-1$
+		return new FormatJob(SSEUIMessages.FormatActionDelegate_jobName);
 	}
 
 	// @Override

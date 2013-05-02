@@ -48,7 +48,7 @@ public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput
 	@Override
 	public String getName() {
 		String result = super.getName();
-		return result + "." + Util.defaultPhpExtension();
+		return result + "." + Util.defaultPhpExtension(); //$NON-NLS-1$
 	}
 
 	public URI getURI(Object element) {

@@ -34,7 +34,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public final class ProjectTemplateStore {
 
-	private static final String KEY = PreferenceConstants.CODE_TEMPLATES_KEY; //$NON-NLS-1$
+	private static final String KEY = PreferenceConstants.CODE_TEMPLATES_KEY; 
 
 	private final TemplateStore fInstanceStore;
 	private final TemplateStore fProjectStore;

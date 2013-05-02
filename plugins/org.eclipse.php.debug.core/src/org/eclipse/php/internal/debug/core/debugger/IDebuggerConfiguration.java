@@ -36,21 +36,21 @@ public interface IDebuggerConfiguration {
 	/**
 	 * Attribute key for the debugger's name.
 	 */
-	public String DEBUGGER_NAME = "name";
+	public String DEBUGGER_NAME = "name"; //$NON-NLS-1$
 	/**
 	 * Attribute key for the debugger's id.
 	 */
-	public String DEBUGGER_ID = "id";
+	public String DEBUGGER_ID = "id"; //$NON-NLS-1$
 	/**
 	 * Attribute key for the debugger's delegate for executing PHP scripts using
 	 * a local PHP executable.
 	 */
-	public String SCRIPT_LAUNCH_DELEGATE_CLASS = "scriptDelegateClass";
+	public String SCRIPT_LAUNCH_DELEGATE_CLASS = "scriptDelegateClass"; //$NON-NLS-1$
 	/**
 	 * Attribute key for the debugger's delegate for executing PHP using a web
 	 * server.
 	 */
-	public String WEB_LAUNCH_DELEGATE_CLASS = "webDelegateClass";
+	public String WEB_LAUNCH_DELEGATE_CLASS = "webDelegateClass"; //$NON-NLS-1$
 
 	/**
 	 * Opens a dialog for editing/displaying the debugger's configuration.

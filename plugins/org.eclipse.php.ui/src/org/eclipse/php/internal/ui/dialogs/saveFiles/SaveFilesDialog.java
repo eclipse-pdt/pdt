@@ -61,18 +61,18 @@ public class SaveFilesDialog extends ListSelectionDialog {
 						return NLS
 								.bind("{0} [{1}]", new String[] { title, file.getFullPath().toString() }); //$NON-NLS-1$
 					}
-				}, PHPUIMessages.SaveFilesDialog_1); //$NON-NLS-1$
+				}, PHPUIMessages.SaveFilesDialog_1); 
 		this.promptAutoSave = promptAutoSave;
 		this.result = result;
-		setTitle(PHPUIMessages.SaveFilesDialog_2); //$NON-NLS-1$
-		setMessage(PHPUIMessages.SaveFilesDialog_3); //$NON-NLS-1$
+		setTitle(PHPUIMessages.SaveFilesDialog_2); 
+		setMessage(PHPUIMessages.SaveFilesDialog_3); 
 	}
 
 	protected Control createDialogArea(Composite container) {
 		Composite area = (Composite) super.createDialogArea(container);
 		if (promptAutoSave) {
 			final Button check = new Button(area, SWT.CHECK);
-			check.setText(PHPUIMessages.SaveFilesDialog_4); //$NON-NLS-1$
+			check.setText(PHPUIMessages.SaveFilesDialog_4); 
 			check.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					result.setAutoSave(check.getSelection());

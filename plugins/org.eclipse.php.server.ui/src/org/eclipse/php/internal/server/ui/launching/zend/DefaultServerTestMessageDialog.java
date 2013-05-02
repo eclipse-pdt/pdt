@@ -58,7 +58,7 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 		Link link = new Link(labelComposite, SWT.NONE);
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link
-				.setText("Click <a>here</a> for more information on setting up remote debugging."); //$NON-NLS-1$
+				.setText(org.eclipse.php.internal.server.ui.launching.zend.JFaceResources.DefaultServerTestMessageDialog_0); 
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				PlatformUI.getWorkbench().getHelpSystem().displayHelp(
@@ -95,15 +95,15 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 
 	private String getAccessibleMessageFor(Image image) {
 		if (image.equals(getErrorImage())) {
-			return JFaceResources.getString("error");//$NON-NLS-1$
+			return JFaceResources.getString("error"); //$NON-NLS-1$
 		}
 
 		if (image.equals(getWarningImage())) {
-			return JFaceResources.getString("warning");//$NON-NLS-1$
+			return JFaceResources.getString("warning"); //$NON-NLS-1$
 		}
 
 		if (image.equals(getInfoImage())) {
-			return JFaceResources.getString("info");//$NON-NLS-1$
+			return JFaceResources.getString("info"); //$NON-NLS-1$
 		}
 
 		if (image.equals(getQuestionImage())) {

@@ -168,7 +168,7 @@ public abstract class OptionsConfigurationBlock {
 		for (int i = 0; i < allKeys.length; i++) {
 			if (allKeys[i].getStoredValue(fLookupOrder, false, fManager) == null) {
 				PHPUiPlugin
-						.logErrorMessage("preference option missing: " + allKeys[i] + " (" + this.getClass().getName() + ')'); //$NON-NLS-1$//$NON-NLS-2$
+						.logErrorMessage("preference option missing: " + allKeys[i] + " (" + this.getClass().getName() + ')'); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -538,7 +538,7 @@ public abstract class OptionsConfigurationBlock {
 			String newValue);
 
 	protected String[] getTokens(String text, String separator) {
-		StringTokenizer tok = new StringTokenizer(text, separator); //$NON-NLS-1$
+		StringTokenizer tok = new StringTokenizer(text, separator); 
 		int nTokens = tok.countTokens();
 		String[] res = new String[nTokens];
 		for (int i = 0; i < res.length; i++) {

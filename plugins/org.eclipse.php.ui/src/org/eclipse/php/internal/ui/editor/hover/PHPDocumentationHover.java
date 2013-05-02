@@ -570,7 +570,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 					HTMLPrinter.addParagraph(buffer, reader);
 				}
 				if (i != elements.length - 1) {
-					buffer.append("<hr>");
+					buffer.append("<hr>"); //$NON-NLS-1$
 				}
 				hasContents = true;
 			} else if (element.getElementType() == IModelElement.FIELD) {
@@ -676,7 +676,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 								.getParent();
 						Expression function = invocation.getFunctionName()
 								.getName();
-						String functionName = "";
+						String functionName = ""; //$NON-NLS-1$
 						// for PHP5.3
 						if (function instanceof NamespaceName) {
 							// global function
@@ -705,12 +705,12 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 											.getCurrentNamespace(
 													field.getSourceModule(),
 													function.getStart());
-									String fullyQualifiedFuncName = "";
+									String fullyQualifiedFuncName = ""; //$NON-NLS-1$
 									if (currentNamespace != null) {
-										fullyQualifiedFuncName = "\\"
+										fullyQualifiedFuncName = "\\" //$NON-NLS-1$
 												+ currentNamespace
 														.getElementName()
-												+ "\\" + functionName;
+												+ "\\" + functionName; //$NON-NLS-1$
 									} else {
 										fullyQualifiedFuncName = functionName;
 									}
@@ -728,7 +728,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 						} else if (function instanceof Identifier) {
 							functionName = ((Identifier) function).getName();
 						}
-						if (functionName.equalsIgnoreCase("define")
+						if (functionName.equalsIgnoreCase("define") //$NON-NLS-1$
 								&& invocation.parameters().size() >= 2
 								&& invocation.parameters().get(1) instanceof Scalar) {
 							constantValue = ((Scalar) invocation.parameters()
@@ -851,7 +851,7 @@ public class PHPDocumentationHover extends AbstractPHPEditorTextHover implements
 			String label, int labelLeft, int labelTop, boolean isFirstElement) {
 
 		// workaround to make the window wide enough
-		label = label + "&nbsp";
+		label = label + "&nbsp"; //$NON-NLS-1$
 		if (imageName != null) {
 			StringBuffer imageStyle = new StringBuffer("position: absolute; "); //$NON-NLS-1$
 			imageStyle.append("width: ").append(imageWidth).append("px; "); //$NON-NLS-1$ //$NON-NLS-2$

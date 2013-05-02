@@ -89,7 +89,7 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 				TemplateVariable[] variables = buffer.getVariables();
 				for (int i = 0; i != variables.length; i++) {
 					TemplateVariable variable = variables[i];
-					if ("cursor".equals(variable.getName())) {//$NON-NLS-1$
+					if ("cursor".equals(variable.getName())) { //$NON-NLS-1$
 						offset = variable.getOffsets()[0];
 					}
 				}
@@ -130,7 +130,7 @@ public class PHPTemplateStore extends ContributionTemplateStore {
 		}
 
 		IFile file = ResourcesPlugin.getWorkspace().getRoot()
-				.getFile(new Path(containerName + "/" + fileName));
+				.getFile(new Path(containerName + "/" + fileName)); //$NON-NLS-1$
 		ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 		TemplateContextType type = contextTypeRegistry.getContextType(template
 				.getContextTypeId());

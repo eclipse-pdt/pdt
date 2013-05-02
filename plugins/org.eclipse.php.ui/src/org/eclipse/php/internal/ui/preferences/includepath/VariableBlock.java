@@ -307,7 +307,7 @@ public class VariableBlock {
 		// try {
 		// dialog.run(true, true, runnable);
 		// } catch (InvocationTargetException e) {
-		//				ExceptionHandler.handle(e, getShell(), PHPUIMessages.getString("VariableBlock.operation_errror.title"), PHPUIMessages.getString("VariableBlock.operation_errror.message")); //$NON-NLS-1$ //$NON-NLS-2$
+		//				ExceptionHandler.handle(e, getShell(), PHPUIMessages.getString("VariableBlock.operation_errror.title"), PHPUIMessages.getString("VariableBlock.operation_errror.message")); 
 		// return false;
 		// } catch (InterruptedException e) {
 		// return false;
@@ -433,7 +433,7 @@ public class VariableBlock {
 		 * (name.equals(initSelection)) { initSelectedElement = elem; } } else {
 		 * PHPCorePlugin
 		 * .logErrorMessage("VariableBlock: IncludePath variable with null value: "
-		 * + name); //$NON-NLS-1$ } } fVariablesList.setElements(elements);
+		 * + name); } } fVariablesList.setElements(elements);
 		 */
 		if (initSelectedElement != null) {
 			ISelection sel = new StructuredSelection(initSelectedElement);

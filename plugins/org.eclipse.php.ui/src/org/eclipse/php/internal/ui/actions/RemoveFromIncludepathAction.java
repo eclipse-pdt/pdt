@@ -22,7 +22,6 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier;
-import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.*;
@@ -43,9 +42,9 @@ public class RemoveFromIncludepathAction extends Action implements
 	// BuildpathContainer iff isEnabled()
 
 	public RemoveFromIncludepathAction(IWorkbenchSite site) {
-		super("Remove from Include Path",
+		super(Messages.RemoveFromIncludepathAction_0,
 				DLTKPluginImages.DESC_ELCL_REMOVE_FROM_BP);
-		setToolTipText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_RemoveFromCP_tooltip);
+		setToolTipText(""); //$NON-NLS-1$
 		fSelectedElements = new ArrayList<Object>();
 	}
 
@@ -61,7 +60,7 @@ public class RemoveFromIncludepathAction extends Action implements
 				BuildPathUtils.removeEntryFromBuildPath(scriptProject,
 						projFragment.getBuildpathEntry());
 			} catch (ModelException e) {
-				Logger.logException("Could not remove buildPathEntry", e);
+				Logger.logException("Could not remove buildPathEntry", e); //$NON-NLS-1$
 			}
 		} else if (object instanceof IProjectFragment) {
 			IProjectFragment root = (IProjectFragment) object;
@@ -87,7 +86,7 @@ public class RemoveFromIncludepathAction extends Action implements
 				manager.setIncludePath(proj,
 						entries.toArray(new IncludePath[entries.size()]));
 			} catch (ModelException e) {
-				Logger.logException("Could not remove buildPathEntry", e);
+				Logger.logException("Could not remove buildPathEntry", e); //$NON-NLS-1$
 			}
 		}
 	}

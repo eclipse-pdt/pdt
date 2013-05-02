@@ -311,10 +311,10 @@ public class CodeGeneration {
 						Scalar scalar = (Scalar) expression;
 						switch (scalar.getScalarType()) {
 						case Scalar.TYPE_INT:
-							fieldType = "integer";
+							fieldType = "integer"; //$NON-NLS-1$
 							break;
 						case Scalar.TYPE_STRING:
-							fieldType = "string";
+							fieldType = "string"; //$NON-NLS-1$
 							break;
 						}
 					}
@@ -326,7 +326,7 @@ public class CodeGeneration {
 
 			if (null == fieldType && null != varType) {
 				if (varType.isAmbiguous()) {
-					fieldType = "Ambiguous";
+					fieldType = "Ambiguous"; //$NON-NLS-1$
 				} else {
 					fieldType = varType.getName();
 				}
@@ -652,12 +652,12 @@ public class CodeGeneration {
 				List<ITypeBinding> returnTypesList = removeDuplicateTypes(returnTypes);
 				for (ITypeBinding returnType : returnTypesList) {
 					if (returnType.isUnknown()) {
-						returnTypeBuffer.append("null").append("|");
+						returnTypeBuffer.append("null").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
 					} else if (returnType.isAmbiguous()) {
-						returnTypeBuffer.append("Ambiguous").append("|");
+						returnTypeBuffer.append("Ambiguous").append("|"); //$NON-NLS-1$ //$NON-NLS-2$
 					} else {
 						returnTypeBuffer.append(returnType.getName()).append(
-								"|");
+								"|"); //$NON-NLS-1$
 					}
 				}
 				if (returnTypeBuffer.length() > 0) {
@@ -687,7 +687,7 @@ public class CodeGeneration {
 		// add parameter type before parameter name
 		for (int i = 0; i < paramNames.length; i++) {
 			if (null != parameterTypes && null != parameterTypes[i]) {
-				paramNames[i] = parameterTypes[i] + " " + paramNames[i];
+				paramNames[i] = parameterTypes[i] + " " + paramNames[i]; //$NON-NLS-1$
 				// } else {
 				// String parameterType =
 				// detectFromHungarianNotation(paramNames[i]);

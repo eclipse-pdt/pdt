@@ -60,7 +60,7 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 public class PHPContentOutlineConfiguration extends
 		HTMLContentOutlineConfiguration {
 
-	private static final String OUTLINE_PAGE = "org.eclipse.php.ui.OutlinePage";
+	private static final String OUTLINE_PAGE = "org.eclipse.php.ui.OutlinePage"; //$NON-NLS-1$
 	public static final int MODE_PHP = 1;
 	public static final int MODE_HTML = 2;
 
@@ -103,12 +103,12 @@ public class PHPContentOutlineConfiguration extends
 		IContributionItem[] items;
 
 		changeOutlineModeActionPHP = new ChangeOutlineModeAction(
-				PHPUIMessages.PHPOutlinePage_mode_php, MODE_PHP, this, viewer); //$NON-NLS-1$
+				PHPUIMessages.PHPOutlinePage_mode_php, MODE_PHP, this, viewer); 
 		final IContributionItem showPHPItem = new ActionContributionItem(
 				changeOutlineModeActionPHP);
 
 		changeOutlineModeActionHTML = new ChangeOutlineModeAction(
-				PHPUIMessages.PHPOutlinePage_mode_html, MODE_HTML, this, viewer); //$NON-NLS-1$
+				PHPUIMessages.PHPOutlinePage_mode_html, MODE_HTML, this, viewer); 
 
 		propertyChangeListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -130,7 +130,7 @@ public class PHPContentOutlineConfiguration extends
 		// Custom filter group
 		if (fCustomFiltersActionGroup == null) {
 			fCustomFiltersActionGroup = new CustomFiltersActionGroup(
-					OUTLINE_PAGE, viewer); //$NON-NLS-1$
+					OUTLINE_PAGE, viewer); 
 		}
 
 		final IContributionItem filtersItem = new FilterActionGroupContributionItem(
@@ -159,7 +159,7 @@ public class PHPContentOutlineConfiguration extends
 			final TreeViewer viewer) {
 		IContributionItem[] items;
 		// fShowGroupsAction = new ShowGroupsAction("Show Groups", viewer);
-		//		final IContributionItem showGroupsItem = new ActionContributionItem(fShowGroupsAction); //$NON-NLS-1$
+		//		final IContributionItem showGroupsItem = new ActionContributionItem(fShowGroupsAction); 
 
 		// fixed bug 174653
 		// use only the toggleLinking menu and dispose the others
@@ -426,7 +426,7 @@ public class PHPContentOutlineConfiguration extends
 
 		public String getText(Object element) {
 			if (element instanceof UseStatementsNode) {
-				return PHPUIMessages.PHPContentOutlineConfiguration_2; //$NON-NLS-1$
+				return PHPUIMessages.PHPContentOutlineConfiguration_2; 
 			}
 			if (element instanceof IModelElement) {
 				IModelElement me = (IModelElement) element;
@@ -440,7 +440,7 @@ public class PHPContentOutlineConfiguration extends
 				if (alias != null) {
 					return NLS.bind(
 							PHPUIMessages.PHPContentOutlineConfiguration_3,
-							super.getText(element), //$NON-NLS-1$
+							super.getText(element), 
 							alias.getName());
 				}
 			}
@@ -474,7 +474,7 @@ public class PHPContentOutlineConfiguration extends
 		 */
 		public FilterActionGroupContributionItem(
 				CustomFiltersActionGroup actionGroup) {
-			super("filters");
+			super("filters"); //$NON-NLS-1$
 			fActionGroup = actionGroup;
 			// fState= state;
 		}
@@ -485,7 +485,7 @@ public class PHPContentOutlineConfiguration extends
 		public void fill(Menu menu, int index) {
 			new MenuItem(menu, SWT.SEPARATOR, index);
 			MenuItem mi = new MenuItem(menu, SWT.CHECK, index + 1);
-			mi.setText(FilterMessages.OpenCustomFiltersDialogAction_text); //$NON-NLS-1$
+			mi.setText(FilterMessages.OpenCustomFiltersDialogAction_text); 
 			mi.setImage(DLTKPluginImages.DESC_ELCL_FILTER.createImage());
 
 			mi.setEnabled(getMode() == MODE_PHP);

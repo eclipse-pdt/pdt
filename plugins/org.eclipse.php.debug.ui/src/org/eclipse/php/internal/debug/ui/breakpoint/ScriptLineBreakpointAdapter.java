@@ -247,7 +247,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 				status = new MultiStatus(SSEUIPlugin.ID, IStatus.OK,
 						(IStatus[]) errors.toArray(new IStatus[0]),
 						SSEUIMessages.ManageBreakpoints_error_adding_message1,
-						null); //$NON-NLS-1$
+						null);
 			} else {
 				status = (IStatus) errors.get(0);
 			}
@@ -264,7 +264,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 					|| getBreakpoints(getMarkers(editor)).length < 1) {
 				ErrorDialog.openError(shell,
 						SSEUIMessages.ManageBreakpoints_error_adding_title1,
-						status.getMessage(), status); //$NON-NLS-1$ //$NON-NLS-2$
+						status.getMessage(), status);
 				return false;
 			}
 		}
@@ -314,8 +314,10 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 						IResource.DEPTH_ZERO);
 				if (allMarkers != null) {
 					for (int i = 0; i < allMarkers.length; i++) {
-						if (includesRulerLine(editor, annotationModel
-								.getMarkerPosition(allMarkers[i]), document)) {
+						if (includesRulerLine(editor,
+								annotationModel
+										.getMarkerPosition(allMarkers[i]),
+								document)) {
 							markers.add(allMarkers[i]);
 						}
 					}
@@ -478,8 +480,7 @@ public class ScriptLineBreakpointAdapter implements IToggleBreakpointsTarget {
 													.getInstance()
 													.getResource(
 															input,
-															model
-																	.getContentTypeIdentifier(),
+															model.getContentTypeIdentifier(),
 															getFileExtension(input));
 										}
 									}

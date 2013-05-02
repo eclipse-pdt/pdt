@@ -64,8 +64,8 @@ public class DeleteWizard extends RefactoringWizard {
 	}
 
 	private static class DeleteInputPage extends MessageWizardPage {
-		private static final String PAGE_NAME = "DeleteInputPage"; //$NON-NLS-1$
-		private static final String DIALOG_SETTINGS_DELETE_SUB_PACKAGES = "deleteSubPackages"; //$NON-NLS-1$
+		private static final String PAGE_NAME = "DeleteInputPage"; //$NON-NLS-1$ 
+		private static final String DIALOG_SETTINGS_DELETE_SUB_PACKAGES = "deleteSubPackages"; //$NON-NLS-1$ 
 		private Button fDeleteSubPackagesCheckBox;
 
 		public DeleteInputPage() {

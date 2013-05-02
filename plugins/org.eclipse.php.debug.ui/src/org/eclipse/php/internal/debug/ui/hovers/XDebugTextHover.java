@@ -125,8 +125,8 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements
 		}
 
 		if (value != null) {
-			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;")
-					.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			// value = value.replaceAll("\n", "<br>");
 		}
 
@@ -159,8 +159,8 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements
 		}
 
 		if (value != null) {
-			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;")
-					.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			// value = value.replaceAll("\n", "<br>");
 		}
 		return value;

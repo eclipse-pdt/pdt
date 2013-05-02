@@ -62,8 +62,8 @@ import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 		implements IPHPProjectCreateWizardPage {
 
-	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$
-	protected static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
+	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$ 
+	protected static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$ 
 
 	protected final PHPProjectWizardFirstPage fFirstPage;
 
@@ -378,7 +378,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 			IProgressMonitor monitor) throws CoreException {
 		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1
 				: 0)) * 2;
-		monitor.beginTask("", ticks); //$NON-NLS-1$
+		monitor.beginTask("", ticks); //$NON-NLS-1$ 
 		try {
 			if (fDotProjectBackup != null) {
 				IFileStore projectFile = EFS.getStore(projectLocation)
@@ -420,7 +420,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 	private File createBackup(IFileStore source, String name)
 			throws CoreException {
 		try {
-			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$//$NON-NLS-2$
+			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$ //$NON-NLS-2$ 
 			copyFile(source, bak);
 			return bak;
 		} catch (IOException e) {
@@ -484,7 +484,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage
 			if (!fKeepContent) {
 				if (DLTKCore.DEBUG) {
 					System.err
-							.println("Add compiler compilance options here..."); //$NON-NLS-1$
+							.println("Add compiler compilance options here..."); //$NON-NLS-1$ 
 				}
 			}
 

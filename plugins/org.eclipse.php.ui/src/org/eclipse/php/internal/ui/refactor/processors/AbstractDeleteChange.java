@@ -21,37 +21,42 @@ import org.eclipse.dltk.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.dltk.internal.corext.refactoring.base.DLTKChange;
 import org.eclipse.ltk.core.refactoring.Change;
 
-
 abstract class AbstractDeleteChange extends DLTKChange {
-	
+
 	protected abstract Change doDelete(IProgressMonitor pm)
 			throws CoreException;
-	
-	/* non java-doc
+
+	/*
+	 * non java-doc
+	 * 
 	 * @see IChange#perform(ChangeContext, IProgressMonitor)
 	 */
 	public final Change perform(IProgressMonitor pm) throws CoreException {
 		try {
-			pm.beginTask(RefactoringCoreMessages.AbstractDeleteChange_deleting, 1); 
+			pm.beginTask(RefactoringCoreMessages.AbstractDeleteChange_deleting,
+					1);
 			Change undo = doDelete(pm);
 			return undo;
 		} finally {
 			pm.done();
 		}
 	}
-	
-	protected static void saveFileIfNeeded(IFile file, IProgressMonitor pm) throws CoreException {
-		ITextFileBuffer buffer= FileBuffers.getTextFileBufferManager().getTextFileBuffer(file.getFullPath(), LocationKind.NORMALIZE);
-		if (buffer != null && buffer.isDirty() &&  buffer.isStateValidated() && buffer.isSynchronized()) {
-			pm.beginTask("", 2); //$NON-NLS-1$
+
+	protected static void saveFileIfNeeded(IFile file, IProgressMonitor pm)
+			throws CoreException {
+		ITextFileBuffer buffer = FileBuffers.getTextFileBufferManager()
+				.getTextFileBuffer(file.getFullPath(), LocationKind.NORMALIZE);
+		if (buffer != null && buffer.isDirty() && buffer.isStateValidated()
+				&& buffer.isSynchronized()) {
+			pm.beginTask("", 2); //$NON-NLS-1$ 
 			buffer.commit(new SubProgressMonitor(pm, 1), false);
-			file.refreshLocal(IResource.DEPTH_ONE, new SubProgressMonitor(pm, 1));
+			file.refreshLocal(IResource.DEPTH_ONE,
+					new SubProgressMonitor(pm, 1));
 			pm.done();
 		} else {
-			pm.beginTask("", 1); //$NON-NLS-1$
+			pm.beginTask("", 1); //$NON-NLS-1$ 
 			pm.worked(1);
 			pm.done();
 		}
 	}
 }
-

@@ -81,7 +81,7 @@ public class PHPOutlineInformationControl extends
 
 		IDecoratorManager decoratorMgr = PlatformUI.getWorkbench()
 				.getDecoratorManager();
-		if (decoratorMgr.getEnabled("org.eclipse.php.ui.override.decorator")) {//$NON-NLS-1$
+		if (decoratorMgr.getEnabled("org.eclipse.php.ui.override.decorator")) { //$NON-NLS-1$
 			((ScriptUILabelProvider) viewer.getLabelProvider())
 					.addLabelDecorator(new OverrideIndicatorLabelDecorator());
 		}

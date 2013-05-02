@@ -65,7 +65,7 @@ public class SearchUtil {
 				if (firstFound)
 					result = Messages.format(
 							PHPUIMessages.SearchUtil_workingSetConcatenation,
-							new String[] { result, workingSetName }); //$NON-NLS-1$
+							new String[] { result, workingSetName }); 
 				else {
 					result = workingSetName;
 					firstFound = true;

@@ -29,7 +29,7 @@ import org.eclipse.swt.browser.Browser;
  */
 public class PHPSessionLaunchMapper implements ILaunchesListener {
 
-	private static final String SYSTEM_DEBUG_PROPERTY = "org.eclipse.php.debug.ui.activeDebugging";
+	private static final String SYSTEM_DEBUG_PROPERTY = "org.eclipse.php.debug.ui.activeDebugging"; //$NON-NLS-1$
 	private static PHPSessionLaunchMapper instance;
 	private IntHashtable map;
 
@@ -132,7 +132,7 @@ public class PHPSessionLaunchMapper implements ILaunchesListener {
 		for (ILaunch launch : launches) {
 			hasActiveLaunch |= !launch.isTerminated();
 		}
-		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true"
-				: "false");
+		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true" //$NON-NLS-1$
+				: "false"); //$NON-NLS-1$
 	}
 }

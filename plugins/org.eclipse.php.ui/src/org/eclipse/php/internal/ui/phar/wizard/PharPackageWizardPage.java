@@ -64,7 +64,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 
 	private static final String SPLASH1 = "/"; //$NON-NLS-1$
 	private static final String SPLASH2 = "\\"; //$NON-NLS-1$
-	private static final String PAGE_NAME = PharPackagerMessages.JarPackageWizardPage_Title; //$NON-NLS-1$
+	private static final String PAGE_NAME = PharPackagerMessages.JarPackageWizardPage_Title; 
 	private static final String STORE_EXPORT_TYPE = PAGE_NAME + ".EXPORT_TYPE"; //$NON-NLS-1$
 	private static final String STORE_COMPRESS_TYPE = PAGE_NAME
 			+ ".COMPRESS_TYPE"; //$NON-NLS-1$
@@ -444,7 +444,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			if (resources.length != 1)
 				setErrorMessage(PharPackagerMessages.JarManifestWizardPage_error_onlyOneManifestMustBeSelected);
 			else {
-				//				setErrorMessage(""); //$NON-NLS-1$
+				//				setErrorMessage(""); 
 				if(resources[0] instanceof ISourceModule){
 					ISourceModule sm = (ISourceModule)resources[0];
 					resources[0] = sm.getResource();
@@ -486,7 +486,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 				if (selection.length == 1 && (selection[0] instanceof IFile || selection[0] instanceof ISourceModule))
 					res.setOK();
 //				else
-//					res.setError(""); //$NON-NLS-1$
+//					res.setError(""); 
 				return res;
 			}
 		});
@@ -878,7 +878,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			return false;
 		}
 		if (pharData.getAbsolutePharLocation().toString().endsWith(SPLASH1)
-				|| pharData.getAbsolutePharLocation().toString().endsWith(SPLASH2)) { //$NON-NLS-1$
+				|| pharData.getAbsolutePharLocation().toString().endsWith(SPLASH2)) { 
 			setErrorMessage(PharPackagerMessages.JarPackageWizardPage_error_exportDestinationMustNotBeDirectory);
 			fDestinationNamesCombo.setFocus();
 			return false;
@@ -954,7 +954,7 @@ public class PharPackageWizardPage extends WizardExportResourcesPage implements
 			if (fManifestFileText.getText() != null) {
 				pharData.setStubLocation(new Path(fManifestFileText.getText()));
 			} else {
-				pharData.setStubLocation(new Path(""));
+				pharData.setStubLocation(new Path("")); //$NON-NLS-1$
 				setErrorMessage(PharPackagerMessages.JarPackageWizardPage_error_StubFileNull);
 			}
 		}

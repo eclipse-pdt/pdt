@@ -114,7 +114,7 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 			textEditor.selectAndReveal(compiledTemplate.offset, 0);
 
 			// set document dirty
-			document.replace(0, 0, "");
+			document.replace(0, 0, ""); //$NON-NLS-1$
 		} catch (PartInitException e) {
 			Logger.logException(e);
 			return false;

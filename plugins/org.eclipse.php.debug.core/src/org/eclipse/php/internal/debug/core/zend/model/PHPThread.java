@@ -90,7 +90,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
 	 * @see org.eclipse.debug.core.model.IThread#getName()
 	 */
 	public String getName() throws DebugException {
-		return "PHPthread";
+		return "PHPthread";  //$NON-NLS-1$
 	}
 
 	/*

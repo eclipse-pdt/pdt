@@ -75,8 +75,8 @@ public abstract class StructureSelectionAction extends Action {
 				MessageDialog
 						.openInformation(
 								fEditor.getEditorSite().getShell(),
-								"Expand Selection To",
-								"No source code attached to class file. To perform this operation you will need to attach source.");
+								Messages.StructureSelectionAction_0,
+								Messages.StructureSelectionAction_1);
 				return;
 			}
 		} catch (ModelException e) {

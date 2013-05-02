@@ -38,7 +38,7 @@ public class PhpTemplateVariables {
 		public static final String NAME = "index"; //$NON-NLS-1$
 
 		public Index() {
-			super(NAME, "A proposal for an index");
+			super(NAME, Messages.PhpTemplateVariables_4);
 		}
 
 		protected String resolve(TemplateContext context) {
@@ -70,11 +70,11 @@ public class PhpTemplateVariables {
 		public NewVariable() {
 			super(
 					NAME,
-					"Proposes a new variable, optionally with a specified prefix, for example: ${var:new_variable(prefix)}.");
+					Messages.PhpTemplateVariables_17);
 		}
 
 		protected String resolve(TemplateContext context) {
-			return "dupcia";
+			return "dupcia"; //$NON-NLS-1$
 		}
 
 		public void resolve(TemplateVariable variable, TemplateContext context) {
@@ -114,7 +114,7 @@ public class PhpTemplateVariables {
 		public static final String NAME = "variable"; //$NON-NLS-1$
 
 		public Variable() {
-			super(NAME, "Evaluates to field or local variable");
+			super(NAME, Messages.PhpTemplateVariables_22);
 		}
 
 		protected String[] resolveAll(TemplateContext context) {
@@ -141,7 +141,7 @@ public class PhpTemplateVariables {
 		public static final String NAME = "encoding"; //$NON-NLS-1$
 
 		public Encoding() {
-			super(NAME, "Evaluates to file encoding");
+			super(NAME, Messages.PhpTemplateVariables_23);
 		}
 
 		protected String resolve(TemplateContext context) {
@@ -171,7 +171,7 @@ public class PhpTemplateVariables {
 		public static final String NAME = "function_container"; //$NON-NLS-1$
 
 		public FunctionContainer() {
-			super(NAME, "Enclosing function name");
+			super(NAME, Messages.PhpTemplateVariables_24);
 		}
 
 		protected String resolve(TemplateContext context) {
@@ -205,7 +205,7 @@ public class PhpTemplateVariables {
 		public static final String NAME = "class_container"; //$NON-NLS-1$
 
 		public ClassContainer() {
-			super(NAME, "Enclosing class name");
+			super(NAME, Messages.PhpTemplateVariables_25);
 		}
 
 		protected String resolve(TemplateContext context) {
@@ -239,7 +239,7 @@ public class PhpTemplateVariables {
 		public static final String NAME = "class"; //$NON-NLS-1$
 
 		public Class() {
-			super(NAME, "Evaluates all classes");
+			super(NAME, Messages.PhpTemplateVariables_26);
 		}
 
 		protected String[] resolveAll(TemplateContext context) {
@@ -290,11 +290,11 @@ public class PhpTemplateVariables {
 		public static final String NAME = "number_variable"; //$NON-NLS-1$
 
 		public NumberVariable() {
-			super(NAME, "A proposal for an number_variable");
+			super(NAME, Messages.PhpTemplateVariables_27);
 		}
 
 		protected String resolve(TemplateContext context) {
-			return "dupcia";
+			return "dupcia"; //$NON-NLS-1$
 		}
 
 		public void resolve(TemplateVariable variable, TemplateContext context) {
@@ -313,7 +313,7 @@ public class PhpTemplateVariables {
 			Set knownVarsSet = new HashSet(Arrays.asList(knownVars));
 
 			List params = variable.getVariableType().getParams();
-			String result = "$" + findUnusedName("index", knownVarsSet);
+			String result = "$" + findUnusedName("index", knownVarsSet); //$NON-NLS-1$ //$NON-NLS-2$
 			variable.setValue(result);
 			variable.setResolved(true);
 		}
@@ -404,7 +404,7 @@ public class PhpTemplateVariables {
 		public static final String NAME = "namespace"; //$NON-NLS-1$
 
 		public Namespace() {
-			super(NAME, "Evaluates to file encoding");
+			super(NAME, Messages.PhpTemplateVariables_31);
 		}
 
 		protected String resolve(TemplateContext context) {
@@ -419,7 +419,7 @@ public class PhpTemplateVariables {
 				parent = parent.getParent();
 				if (parent.getElementName().length() == 0)
 					break;
-				path = parent.getElementName() + "\\" + path;
+				path = parent.getElementName() + "\\" + path; //$NON-NLS-1$
 			}
 			return path;
 

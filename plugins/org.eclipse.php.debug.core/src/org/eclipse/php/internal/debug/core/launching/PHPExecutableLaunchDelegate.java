@@ -46,7 +46,7 @@ import com.ibm.icu.text.MessageFormat;
 
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
-	public static final String SAVE_AUTOMATICALLY = "save_automatically";
+	public static final String SAVE_AUTOMATICALLY = "save_automatically"; //$NON-NLS-1$
 
 	protected Map<String, String> envVariables = null;
 
@@ -83,7 +83,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 		} catch (java.io.IOException e1) {
 			Logger.logException(
-					"PHPDebugTarget: Debugger didn't find file to debug.", e1);
+					"PHPDebugTarget: Debugger didn't find file to debug.", e1); //$NON-NLS-1$
 			String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;
 			throw new DebugException(new Status(IStatus.ERROR,
 					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
@@ -179,13 +179,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			return;
 		}
 
-		if (fileName == null || fileName.equals("")) {
-			displayErrorMessage("Please set a valid PHP file for this launch.");
+		if (fileName == null || fileName.equals("")) { //$NON-NLS-1$
+			displayErrorMessage(PHPDebugCoreMessages.PHPExecutableLaunchDelegate_0);
 			return;
 		}
 
 		if (phpExeString == null) {
-			displayErrorMessage("Please set a valid PHP executable for this launch.");
+			displayErrorMessage(PHPDebugCoreMessages.PHPExecutableLaunchDelegate_4);
 			return;
 		}
 
@@ -261,7 +261,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 			// Determine PHP configuration file location:
 			String phpConfigDir = phpExeFile.getParent();
-			if (phpIniLocation != null && !phpIniLocation.equals("")) {
+			if (phpIniLocation != null && !phpIniLocation.equals("")) { //$NON-NLS-1$
 				phpConfigDir = new File(phpIniLocation).getParent();
 			}
 
@@ -384,8 +384,8 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration,
 			String mode, IProgressMonitor monitor) throws CoreException {
 		String filePath = configuration.getAttribute(
-				IPHPDebugConstants.ATTR_FILE, "");
-		if ("".equals(filePath)) {
+				IPHPDebugConstants.ATTR_FILE, ""); //$NON-NLS-1$
+		if ("".equals(filePath)) { //$NON-NLS-1$
 			return super.saveBeforeLaunch(configuration, mode, monitor);
 		}
 		return super.saveBeforeLaunch(configuration, mode, monitor);

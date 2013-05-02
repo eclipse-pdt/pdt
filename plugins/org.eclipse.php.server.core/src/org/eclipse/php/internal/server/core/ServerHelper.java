@@ -93,12 +93,12 @@ public class ServerHelper {
 					listener.propertyChange(event);
 				} catch (Exception e) {
 					Logger
-							.logException("Error firing property change event",
+							.logException("Error firing property change event", //$NON-NLS-1$
 									e);
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException("Error in property event", e);
+			Logger.logException("Error in property event", e); //$NON-NLS-1$
 		}
 	}
 

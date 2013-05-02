@@ -30,9 +30,9 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
  * extension point.
  */
 public class NewWizard extends Wizard {
-	private static final String EXAMPLE = "example";
+	private static final String EXAMPLE = "example"; //$NON-NLS-1$
 
-	private static final String ZEND = ".zend.";
+	private static final String ZEND = ".zend."; //$NON-NLS-1$
 
 	private static final String CATEGORY_SEPARATOR = "/"; //$NON-NLS-1$
 

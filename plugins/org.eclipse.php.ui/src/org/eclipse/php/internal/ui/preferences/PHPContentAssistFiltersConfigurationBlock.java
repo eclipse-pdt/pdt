@@ -39,7 +39,7 @@ public class PHPContentAssistFiltersConfigurationBlock extends
 				PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, 0);
 		showStrictOptionsCheckBox = addCheckBox(composite,
 				PHPUIMessages.CodeAssistPreferencePage_showStrictOptions,
-				PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0); //$NON-NLS-1$
+				PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0); 
 	}
 
 	protected IPreferenceStore getPreferenceStore() {

@@ -16,7 +16,7 @@ public class PharLeveledStructureProvider implements
 		ILeveledImportStructureProvider {
 	private PharFile tarFile;
 
-	private PharEntry root = new PharEntry();//$NON-NLS-1$
+	private PharEntry root = new PharEntry();
 
 	private Map children;
 
@@ -34,7 +34,7 @@ public class PharLeveledStructureProvider implements
 	public PharLeveledStructureProvider(PharFile sourceFile) {
 		super();
 		tarFile = sourceFile;
-		root.setName("/");
+		root.setName("/"); //$NON-NLS-1$
 	}
 
 	/**

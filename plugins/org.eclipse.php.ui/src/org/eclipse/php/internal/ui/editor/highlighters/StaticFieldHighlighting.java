@@ -77,6 +77,6 @@ public class StaticFieldHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Static fields";
+		return Messages.StaticFieldHighlighting_0;
 	}
 }

@@ -160,7 +160,7 @@ public class ProblemLocation implements IProblemLocation {
 
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
-		buf.append("Id: ").append(getErrorCode(fId)).append('\n'); //$NON-NLS-1$
+		buf.append(Messages.ProblemLocation_0).append(getErrorCode(fId)).append('\n'); 
 		buf.append('[').append(fOffset)
 				.append(", ").append(fLength).append(']').append('\n'); //$NON-NLS-1$
 		String[] arg = fArguments;
@@ -177,28 +177,28 @@ public class ProblemLocation implements IProblemLocation {
 		StringBuffer buf = new StringBuffer();
 
 		if ((code & IProblem.TypeRelated) != 0) {
-			buf.append("TypeRelated + "); //$NON-NLS-1$
+			buf.append(Messages.ProblemLocation_2); 
 		}
 		if ((code & IProblem.FieldRelated) != 0) {
-			buf.append("FieldRelated + "); //$NON-NLS-1$
+			buf.append(Messages.ProblemLocation_3); 
 		}
 		if ((code & IProblem.ConstructorRelated) != 0) {
-			buf.append("ConstructorRelated + "); //$NON-NLS-1$
+			buf.append(Messages.ProblemLocation_4); 
 		}
 		if ((code & IProblem.MethodRelated) != 0) {
-			buf.append("MethodRelated + "); //$NON-NLS-1$
+			buf.append(Messages.ProblemLocation_5); 
 		}
 		if ((code & IProblem.ImportRelated) != 0) {
-			buf.append("ImportRelated + "); //$NON-NLS-1$
+			buf.append(Messages.ProblemLocation_6); 
 		}
 		if ((code & IProblem.Internal) != 0) {
-			buf.append("Internal + "); //$NON-NLS-1$
+			buf.append(Messages.ProblemLocation_7); 
 		}
 		if ((code & IProblem.Syntax) != 0) {
-			buf.append("Syntax + "); //$NON-NLS-1$
+			buf.append(Messages.ProblemLocation_8); 
 		}
 		if ((code & IProblem.Documentation) != 0) {
-			buf.append("PHPdoc + "); //$NON-NLS-1$
+			buf.append(Messages.ProblemLocation_9); 
 		}
 		buf.append(code & IProblem.IgnoreCategoriesMask);
 

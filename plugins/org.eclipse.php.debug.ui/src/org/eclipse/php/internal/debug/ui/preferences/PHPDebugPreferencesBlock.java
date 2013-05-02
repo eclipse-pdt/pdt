@@ -58,7 +58,7 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
-	private static final String UNRESOLVED_PHP_VERSION = "Unresolved PHP Version"; //$NON-NLS-1$
+	private static final String UNRESOLVED_PHP_VERSION = PHPDebugUIMessages.PHPDebugPreferencesBlock_3; 
 	private static final String DEBUGGERS_PAGE_ID = "org.eclipse.php.debug.ui.installedDebuggersPage"; //$NON-NLS-1$
 	private static final String SERVERS_PAGE_ID = "org.eclipse.php.server.internal.ui.PHPServersPreferencePage"; //$NON-NLS-1$
 	private static final String PHP_EXE_PAGE_ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"; //$NON-NLS-1$
@@ -124,7 +124,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 					.getNode(getPreferenceNodeQualifier());
 			if (node != null && project != null) {
 				if (getBasePathValue(project) == null
-						|| getBasePathValue(project) == "") {
+						|| getBasePathValue(project) == "") { //$NON-NLS-1$
 					setBasePathValue(project, project.getName());
 				}
 				String projectServerName = ServersManager.getDefaultServer(
@@ -143,10 +143,10 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 							enableCLIDebug);
 					transferEncoding = node.get(
 							PHPDebugCorePreferenceNames.TRANSFER_ENCODING,
-							transferEncoding); //$NON-NLS-1$
+							transferEncoding); 
 					outputEncoding = node.get(
 							PHPDebugCorePreferenceNames.OUTPUT_ENCODING,
-							outputEncoding); //$NON-NLS-1$
+							outputEncoding); 
 					// Check that if the project had a non-defined exe, and now
 					// there is one that is valid. we set
 					// it with the new valid default exe.
@@ -387,14 +387,14 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	}
 
 	private void createBaseURLGroup(Composite composite) {
-		Group baseURLGroup = createGroup(composite, "Default Base URL");
+		Group baseURLGroup = createGroup(composite, PHPDebugUIMessages.PHPDebugPreferencesBlock_9);
 
 		addBasePathLabelAndText(baseURLGroup);
 		addBaseURLLabelAndText(baseURLGroup);
 	}
 
 	private void addBaseURLLabelAndText(Group baseURLGroup) {
-		addLabelControl(baseURLGroup, "Auto-generated Base URL",
+		addLabelControl(baseURLGroup, PHPDebugUIMessages.PHPDebugPreferencesBlock_10,
 				PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 
 		addBaseURLText(baseURLGroup);
@@ -415,7 +415,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	}
 
 	private void addBasePathLabelAndText(Group baseURLGroup) {
-		addLabelControl(baseURLGroup, "Base Path: ",
+		addLabelControl(baseURLGroup, PHPDebugUIMessages.PHPDebugPreferencesBlock_11,
 				PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 		addBasePathText(baseURLGroup);
 	}

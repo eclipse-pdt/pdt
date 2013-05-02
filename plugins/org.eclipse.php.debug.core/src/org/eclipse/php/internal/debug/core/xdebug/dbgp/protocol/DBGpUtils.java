@@ -44,21 +44,21 @@ public class DBGpUtils {
 			return (String) encoded.get(fileName);
 		}
 
-		String fileURIStr = "";
+		String fileURIStr = ""; //$NON-NLS-1$
 		if (fileName == null || fileName.length() == 0) {
 			return fileURIStr;
 		}
 		// make the fileName absolute in URI terms if it isn't
 		if (fileName.charAt(0) != '/') {
-			fileName = "/" + fileName;
+			fileName = "/" + fileName; //$NON-NLS-1$
 		}
 
 		try {
-			URI uri = new URI("file", "", fileName, null, null);
+			URI uri = new URI("file", "", fileName, null, null); //$NON-NLS-1$ //$NON-NLS-2$
 			fileURIStr = uri.toASCIIString();
 			encoded.put(fileName, fileURIStr);
 		} catch (URISyntaxException e) {
-			DBGpLogger.logException("URISyntaxException - 1", null, e);
+			DBGpLogger.logException("URISyntaxException - 1", null, e); //$NON-NLS-1$
 		}
 		return fileURIStr;
 	}
@@ -70,7 +70,7 @@ public class DBGpUtils {
 	 * @return the file name
 	 */
 	public static String getFilenameFromURIString(String fileURIStr) {
-		String filePath = "";
+		String filePath = ""; //$NON-NLS-1$
 		try {
 			URI uri = new URI(fileURIStr);
 			filePath = uri.getPath();
@@ -79,7 +79,7 @@ public class DBGpUtils {
 				filePath = filePath.substring(1);
 			}
 		} catch (URISyntaxException e) {
-			DBGpLogger.logException("URISyntaxException - 2", null, e);
+			DBGpLogger.logException("URISyntaxException - 2", null, e); //$NON-NLS-1$
 		}
 
 		return filePath;
@@ -107,15 +107,15 @@ public class DBGpUtils {
 					|| resp.getErrorCode() == DBGpResponse.ERROR_CANT_GET_PROPERTY) {
 				return true;
 			} else {
-				DBGpLogger.logError("DBGp Response Error: " + resp.getCommand()
-						+ ":=" + resp.getErrorCode() + " msg:"
+				DBGpLogger.logError("DBGp Response Error: " + resp.getCommand() //$NON-NLS-1$
+						+ ":=" + resp.getErrorCode() + " msg:" //$NON-NLS-1$ //$NON-NLS-2$
 						+ resp.getErrorMessage(), caller, null);
 			}
 		} else {
 			// init, parser failure, unknown type, proxyError. Callers of this
 			// are not
 			// expecting init either
-			DBGpLogger.logError("Unexpected XML or parser failure: "
+			DBGpLogger.logError("Unexpected XML or parser failure: " //$NON-NLS-1$
 					+ resp.getRawXML(), caller, null);
 		}
 		return false;
@@ -129,7 +129,7 @@ public class DBGpUtils {
 	public static void openInternalBrowserView(final String url) {
 
 		// can't invoke this on the UI Thread
-		final String viewId = "org.eclipse.ui.browser.view";
+		final String viewId = "org.eclipse.ui.browser.view"; //$NON-NLS-1$
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
 				IWorkbenchWindow window = PlatformUI.getWorkbench()

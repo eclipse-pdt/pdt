@@ -37,7 +37,7 @@ public final class ContributedProcessorDescriptor {
 	private static final String ID = "id"; //$NON-NLS-1$
 	private static final String CLASS = "class"; //$NON-NLS-1$
 
-	//	private static final String REQUIRED_SOURCE_LEVEL= "requiredSourceLevel"; //$NON-NLS-1$
+	// private static final String REQUIRED_SOURCE_LEVEL= "requiredSourceLevel";
 
 	private static final String HANDLED_MARKER_TYPES = "handledMarkerTypes"; //$NON-NLS-1$
 	private static final String MARKER_TYPE = "markerType"; //$NON-NLS-1$
@@ -83,10 +83,10 @@ public final class ContributedProcessorDescriptor {
 		if (children.length > 1) {
 			String id = fConfigurationElement.getAttribute(ID);
 			return new StatusInfo(IStatus.ERROR,
-					"Only one < enablement > element allowed. Disabling " + id); //$NON-NLS-1$
+					Messages.ContributedProcessorDescriptor_4 + id);
 		}
 		return new StatusInfo(IStatus.OK,
-				"Syntactically correct quick assist/fix processor"); //$NON-NLS-1$
+				Messages.ContributedProcessorDescriptor_5);
 	}
 
 	private boolean matches(ISourceModule cunit) {
@@ -116,7 +116,8 @@ public final class ContributedProcessorDescriptor {
 						.getNatureIds();
 				evalContext.addVariable(
 						"projectNatures", Arrays.asList(natures)); //$NON-NLS-1$
-				//				evalContext.addVariable("sourceLevel", javaProject.getOption(JavaCore.COMPILER_SOURCE, true)); //$NON-NLS-1$
+				// evalContext.addVariable("sourceLevel",
+				// javaProject.getOption(JavaCore.COMPILER_SOURCE, true));
 				return expression.evaluate(evalContext) == EvaluationResult.TRUE;
 			} catch (CoreException e) {
 				PHPUiPlugin.log(e);
@@ -136,8 +137,11 @@ public final class ContributedProcessorDescriptor {
 					if (expectedType.isInstance(extension)) {
 						fProcessorInstance = extension;
 					} else {
-						String message = "Invalid extension to " + fConfigurationElement.getName() //$NON-NLS-1$
-								+ ". Must extends '" + expectedType.getName() + "'." + fConfigurationElement.getContributor().getName(); //$NON-NLS-1$ //$NON-NLS-2$
+						String message = Messages.ContributedProcessorDescriptor_8
+								+ fConfigurationElement.getName()
+								+ Messages.ContributedProcessorDescriptor_9
+								+ expectedType.getName()
+								+ "'." + fConfigurationElement.getContributor().getName(); //$NON-NLS-1$
 						PHPUiPlugin.log(new Status(IStatus.ERROR,
 								PHPUiPlugin.ID, message));
 						fStatus = Boolean.FALSE;

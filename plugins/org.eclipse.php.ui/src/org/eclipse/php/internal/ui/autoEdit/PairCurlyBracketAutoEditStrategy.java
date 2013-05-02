@@ -120,7 +120,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 									.getRegionAtCharacterOffset(regionStart
 											+ indexInText);
 							int start = reg.getStart() + tRegion.getStart();
-							if (text.substring(start, start + 2).equals("${")) {
+							if (text.substring(start, start + 2).equals("${")) { //$NON-NLS-1$
 								found = true;
 							}
 						}
@@ -207,7 +207,7 @@ public class PairCurlyBracketAutoEditStrategy implements
 			}
 		}
 		String lineEnd = document.get(offset, lengthToCopyDown).trim();
-		if (lineEnd.startsWith(")") || lineEnd.startsWith("]")) {
+		if (lineEnd.startsWith(")") || lineEnd.startsWith("]")) { //$NON-NLS-1$ //$NON-NLS-2$
 			return true;
 		}
 		return false;

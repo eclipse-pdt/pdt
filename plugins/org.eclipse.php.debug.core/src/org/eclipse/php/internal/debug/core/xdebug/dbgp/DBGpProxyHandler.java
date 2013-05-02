@@ -173,7 +173,7 @@ public class DBGpProxyHandler {
 			}
 
 			if (proxyPort == XDebugPreferenceMgr.getPort()) {
-				displayErrorMessage(PHPDebugCoreMessages.XDebug_DBGpProxyHandler_0); //$NON-NLS-1$
+				displayErrorMessage(PHPDebugCoreMessages.XDebug_DBGpProxyHandler_0); 
 				XDebugPreferenceMgr.setUseProxy(false);
 			} else {
 				setProxyInfo(proxyHost, proxyPort, ideKey, idePort,
@@ -189,7 +189,7 @@ public class DBGpProxyHandler {
 						protected IStatus run(IProgressMonitor monitor) {
 							if (registerWithProxy() == false) {
 								displayErrorMessage(PHPDebugCoreMessages.XDebug_DBGpProxyHandler_1
-										+ getErrorMsg()); //$NON-NLS-1$
+										+ getErrorMsg()); 
 								XDebugPreferenceMgr.setUseProxy(false);
 							}
 							return Status.OK_STATUS;
@@ -271,7 +271,7 @@ public class DBGpProxyHandler {
 			if (dbgpResp == null) {
 				errorCode = 9999;
 				if (ioe instanceof EOFException) {
-					errorMsg = PHPDebugCoreMessages.XDebug_DBGpProxyHandler_2; //$NON-NLS-1$
+					errorMsg = PHPDebugCoreMessages.XDebug_DBGpProxyHandler_2; 
 				} else {
 					errorMsg = ioe.getMessage();
 					if (errorMsg == null) {
@@ -339,7 +339,7 @@ public class DBGpProxyHandler {
 				MessageDialog
 						.openError(Display.getDefault().getActiveShell(),
 								PHPDebugCoreMessages.XDebug_DBGpProxyHandler_3,
-								message); //$NON-NLS-1$
+								message); 
 			}
 		});
 	}

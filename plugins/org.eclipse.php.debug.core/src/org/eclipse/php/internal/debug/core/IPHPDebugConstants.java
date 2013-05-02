@@ -26,34 +26,34 @@ public interface IPHPDebugConstants {
 	/**
 	 * Unique identifier for the PHP debug model (value
 	 */
-	public static final String ID_PHP_DEBUG_CORE = "org.eclipse.php.debug.core";
+	public static final String ID_PHP_DEBUG_CORE = "org.eclipse.php.debug.core"; //$NON-NLS-1$
 
-	public static final String PHP_Port = ID_PHP_DEBUG_CORE + ".PHP_Port";
-	public static final String PHP_URL = ID_PHP_DEBUG_CORE + ".PHP_URL";
-	public static final String PHP_Project = ID_PHP_DEBUG_CORE + ".PHP_Project";
-	public static final String PHP_File = ID_PHP_DEBUG_CORE + ".PHP_File";
-	public static final String PHP_Exe = ID_PHP_DEBUG_CORE + ".PHP_EXE";
+	public static final String PHP_Port = ID_PHP_DEBUG_CORE + ".PHP_Port"; //$NON-NLS-1$
+	public static final String PHP_URL = ID_PHP_DEBUG_CORE + ".PHP_URL"; //$NON-NLS-1$
+	public static final String PHP_Project = ID_PHP_DEBUG_CORE + ".PHP_Project"; //$NON-NLS-1$
+	public static final String PHP_File = ID_PHP_DEBUG_CORE + ".PHP_File"; //$NON-NLS-1$
+	public static final String PHP_Exe = ID_PHP_DEBUG_CORE + ".PHP_EXE"; //$NON-NLS-1$
 	public static final String ConditionEnabled = ID_PHP_DEBUG_CORE
-			+ ".ConditionEnabled";
-	public static final String Condition = ID_PHP_DEBUG_CORE + ".Condition";
+			+ ".ConditionEnabled"; //$NON-NLS-1$
+	public static final String Condition = ID_PHP_DEBUG_CORE + ".Condition"; //$NON-NLS-1$
 	public static final String PHPProcessType = ID_PHP_DEBUG_CORE
-			+ ".launching.PHPProcess";
+			+ ".launching.PHPProcess"; //$NON-NLS-1$
 	public static final String RUN_WITH_DEBUG_INFO = ID_PHP_DEBUG_CORE
-			+ ".RunWithDebugInfo";
+			+ ".RunWithDebugInfo"; //$NON-NLS-1$
 	public static final String OPEN_IN_BROWSER = ID_PHP_DEBUG_CORE
-			+ ".OpenInBrowser";
+			+ ".OpenInBrowser"; //$NON-NLS-1$
 
-	public static final String Default_Server_Name = "Default PHP Web Server";
-	public static final String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType";
-	public static final String PHPServerLaunchType = "org.eclipse.php.debug.core.launching.webPageLaunch";
+	public static final String Default_Server_Name = PHPDebugCoreMessages.IPHPDebugConstants_0;
+	public static final String PHPEXELaunchType = "org.eclipse.php.debug.core.launching.PHPExeLaunchConfigurationType"; //$NON-NLS-1$
+	public static final String PHPServerLaunchType = "org.eclipse.php.debug.core.launching.webPageLaunch"; //$NON-NLS-1$
 	// public static final String USE_INTERNAL_BROWSER = ID_PHP_DEBUG_CORE
 	// + ".UseExternalBrowser";
 	public static final String USE_SSH_TUNNEL = ID_PHP_DEBUG_CORE
-			+ ".UseSSHTunnel";//$NON-NLS-1$
+			+ ".UseSSHTunnel"; //$NON-NLS-1$
 	public static final String SSH_TUNNEL_USER_NAME = ID_PHP_DEBUG_CORE
-			+ ".SSHTunnelUserName";//$NON-NLS-1$
+			+ ".SSHTunnelUserName"; //$NON-NLS-1$
 	public static final String SSH_TUNNEL_PASSWORD = ID_PHP_DEBUG_CORE
-			+ ".SSHTunnelPassword";//$NON-NLS-1$
+			+ ".SSHTunnelPassword"; //$NON-NLS-1$
 	public static final String SSH_TUNNEL_SECURE_PREF_NODE = "/org.eclipse.php/DEBUG"; //$NON-NLS-1$
 
 	/**
@@ -73,13 +73,13 @@ public interface IPHPDebugConstants {
 	 * Debug parameters initializer preferences key
 	 */
 	public static final String PHP_DEBUG_PARAMETERS_INITIALIZER = ID_PHP_DEBUG_CORE
-			+ ".debugParametersInitializer";
+			+ ".debugParametersInitializer"; //$NON-NLS-1$
 
 	public static final String DEBUG_PER_PROJECT = ID_PHP_DEBUG_CORE
 			+ ".use-project-settings"; //$NON-NLS-1$
 	public static final String DEBUG_QUALIFIER = ID_PHP_DEBUG_CORE
 			+ ".Debug_Process_Preferences"; //$NON-NLS-1$
-	public static final String PREFERENCE_PAGE_ID = "org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage";
+	public static final String PREFERENCE_PAGE_ID = "org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"; //$NON-NLS-1$
 	public static final String PROJECT_PAGE_ID = "org.eclipse.php.debug.ui.property.PhpDebugPreferencePage"; //$NON-NLS-1$
 
 	public static final String DEBUGGING_PAGES = "debugPages"; //$NON-NLS-1$

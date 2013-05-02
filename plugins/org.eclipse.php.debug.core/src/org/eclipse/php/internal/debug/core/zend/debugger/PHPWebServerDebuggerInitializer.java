@@ -130,7 +130,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 							| IWorkbenchBrowserSupport.STATUS;
 
 					StringBuilder browserTitle = new StringBuilder(debugURL
-							.getProtocol()).append("://").append(
+							.getProtocol()).append("://").append( //$NON-NLS-1$
 							debugURL.getHost());
 					if (debugURL.getPort() != -1) {
 						browserTitle.append(':').append(debugURL.getPort());
@@ -140,17 +140,17 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 					IWorkbenchBrowserSupport browserSupport = PlatformUI
 							.getWorkbench().getBrowserSupport();
 					IWebBrowser browser = browserSupport.createBrowser(
-							browserStyle, "PDTDebuggerBrowser",
+							browserStyle, "PDTDebuggerBrowser", //$NON-NLS-1$
 							browserTitle.toString(), browserTitle.toString());
 
 					if (PHPDebugPlugin.DEBUG) {
-						System.out.println("Opening URL in a browser: "
+						System.out.println("Opening URL in a browser: " //$NON-NLS-1$
 								+ debugURL.toString());
 					}
 					browser.openURL(debugURL);
 
 				} catch (Throwable t) {
-					Logger.logException("Error initializing the web browser.",
+					Logger.logException("Error initializing the web browser.", //$NON-NLS-1$
 							t);
 					String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
 					exception[0] = new DebugException(new Status(IStatus.ERROR,
@@ -180,7 +180,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 			if (parametersInitializer instanceof IWebDebugParametersInitializer) {
 				IWebDebugParametersInitializer webParametersInitializer = (IWebDebugParametersInitializer) parametersInitializer;
 
-				StringBuilder getParams = new StringBuilder("?");
+				StringBuilder getParams = new StringBuilder("?"); //$NON-NLS-1$
 
 				// Initialize debug parameters (using cookies):
 				Hashtable<String, String> debugParameters = parametersInitializer
@@ -228,7 +228,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 
 				// Open the connection:
 				if (PHPDebugPlugin.DEBUG) {
-					System.out.println("Opening URL connection: "
+					System.out.println("Opening URL connection: " //$NON-NLS-1$
 							+ requestURL.toString());
 				}
 				HttpURLConnection urlConection = (HttpURLConnection) requestURL
@@ -250,8 +250,8 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 						String value = URLEncoder.encode(headers.get(key),
 								URL_ENCODING);
 						if (PHPDebugPlugin.DEBUG) {
-							System.out.println("Adding HTTP header: " + key
-									+ "=" + value);
+							System.out.println("Adding HTTP header: " + key //$NON-NLS-1$
+									+ "=" + value); //$NON-NLS-1$
 						}
 						urlConection.addRequestProperty(key, value);
 					}
@@ -270,14 +270,14 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 								.append('=')
 								.append(URLEncoder.encode(value, URL_ENCODING));
 						if (k.hasMoreElements()) {
-							cookieBuf.append("; ");
+							cookieBuf.append("; "); //$NON-NLS-1$
 						}
 					}
 					if (PHPDebugPlugin.DEBUG) {
-						System.out.println("Setting cookies: "
+						System.out.println("Setting cookies: " //$NON-NLS-1$
 								+ cookieBuf.toString());
 					}
-					urlConection.addRequestProperty("Cookie",
+					urlConection.addRequestProperty("Cookie", //$NON-NLS-1$
 							cookieBuf.toString());
 				}
 
@@ -322,7 +322,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				String headerKey = urlConection.getHeaderFieldKey(1);
 				if (headerKey == null) {
 					Logger.log(Logger.WARNING,
-							"No HeaderKey returned by server. Most likely not started");
+							"No HeaderKey returned by server. Most likely not started"); //$NON-NLS-1$
 					String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_1;
 					throw new DebugException(new Status(IStatus.ERROR,
 							PHPDebugPlugin.getID(),
@@ -331,15 +331,15 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				}
 
 				for (int i = 1; (headerKey = urlConection.getHeaderFieldKey(i)) != null; i++) {
-					if (headerKey.equals("X-Zend-Debug-Server")) {
+					if (headerKey.equals("X-Zend-Debug-Server")) { //$NON-NLS-1$
 						String headerValue = urlConection
 								.getHeaderField(headerKey);
-						if (!headerValue.equals("OK")) {
+						if (!headerValue.equals("OK")) { //$NON-NLS-1$
 							Logger.log(Logger.WARNING,
-									"Unexpected Header Value returned by Server. "
+									"Unexpected Header Value returned by Server. " //$NON-NLS-1$
 											+ headerValue);
 							String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_2
-									+ " - " + headerValue;
+									+ " - " + headerValue; //$NON-NLS-1$
 							throw new DebugException(new Status(IStatus.ERROR,
 									PHPDebugPlugin.getID(),
 									IPHPDebugConstants.INTERNAL_ERROR,
@@ -356,14 +356,14 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				inputStream.close();
 			}
 		} catch (UnknownHostException e) {
-			Logger.logException("Unknown host: " + requestURL.getHost(), e);
+			Logger.logException("Unknown host: " + requestURL.getHost(), e); //$NON-NLS-1$
 		} catch (ConnectException e) {
-			Logger.logException("Unable to connect to URL " + requestURL, e);
+			Logger.logException("Unable to connect to URL " + requestURL, e); //$NON-NLS-1$
 		} catch (IOException e) {
-			Logger.logException("Unable to connect to URL " + requestURL, e);
+			Logger.logException("Unable to connect to URL " + requestURL, e); //$NON-NLS-1$
 		} catch (Exception e) {
 			Logger.logException(
-					"Unexpected exception communicating with Web server", e);
+					"Unexpected exception communicating with Web server", e); //$NON-NLS-1$
 			String errorMessage = e.getMessage();
 			throw new DebugException(new Status(IStatus.ERROR,
 					PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,

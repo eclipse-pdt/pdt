@@ -49,7 +49,7 @@ public class BreakpointMarkerUpdater implements IMarkerUpdater {
 	 * @see org.eclipse.ui.texteditor.IMarkerUpdater#getMarkerType()
 	 */
 	public String getMarkerType() {
-		return PHPLineBreakpoint.MARKER_ID; //$NON-NLS-1$
+		return PHPLineBreakpoint.MARKER_ID; 
 	}
 
 	/**

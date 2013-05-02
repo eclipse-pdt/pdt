@@ -96,7 +96,7 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 		}
 		IStatus status = op.getStatus();
 		if (!status.isOK()) {
-			ErrorDialog.openError(getShell(), "", null, status);
+			ErrorDialog.openError(getShell(), "", null, status); //$NON-NLS-1$
 			return !(status.matches(IStatus.ERROR));
 		}
 		return true;
@@ -113,7 +113,7 @@ public class PharPackageWizard extends Wizard implements IExportWizard {
 		// ignore the selection argument since the main export wizard changed it
 		fSelection = getValidSelection();
 		pharPackage = new PharPackage();
-		setWindowTitle("");
+		setWindowTitle(""); //$NON-NLS-1$
 		// setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_JAR_PACKAGER);
 		setNeedsProgressMonitor(true);
 	}

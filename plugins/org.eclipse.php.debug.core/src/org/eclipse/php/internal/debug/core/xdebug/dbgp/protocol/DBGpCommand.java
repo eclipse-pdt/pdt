@@ -20,24 +20,24 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 
 public class DBGpCommand {
 
-	private static final String id = " -i ";
+	private static final String id = " -i "; //$NON-NLS-1$
 
 	// -------------------------------------------------------------------------
 	// status and feature management commands
 	// -------------------------------------------------------------------------
-	public static final String status = "status";
-	public static final String featureGet = "feature_get";
-	public static final String featureSet = "feature_set";
+	public static final String status = "status"; //$NON-NLS-1$
+	public static final String featureGet = "feature_get"; //$NON-NLS-1$
+	public static final String featureSet = "feature_set"; //$NON-NLS-1$
 
 	// -------------------------------------------------------------------------
 	// execution commands "cmd -i id"
 	// -------------------------------------------------------------------------
-	public static final String run = "run";
-	public static final String stepInto = "step_into";
-	public static final String stepOver = "step_over";
-	public static final String StepOut = "step_out";
-	public static final String stop = "stop";
-	public static final String detach = "detach";
+	public static final String run = "run"; //$NON-NLS-1$
+	public static final String stepInto = "step_into"; //$NON-NLS-1$
+	public static final String stepOver = "step_over"; //$NON-NLS-1$
+	public static final String StepOut = "step_out"; //$NON-NLS-1$
+	public static final String stop = "stop"; //$NON-NLS-1$
+	public static final String detach = "detach"; //$NON-NLS-1$
 
 	// -------------------------------------------------------------------------
 	// breakpoint cmds
@@ -54,58 +54,58 @@ public class DBGpCommand {
 	// -o hit_condidtion
 	// -r 0|1
 	// expression in php for conditional breakpoints
-	public static final String breakPointSet = "breakpoint_set";
+	public static final String breakPointSet = "breakpoint_set"; //$NON-NLS-1$
 
 	// breakpoint_get -i id -d bp_id (bp_id = breakpoint id);
-	public static final String breakPointGet = "breakpoint_get";
+	public static final String breakPointGet = "breakpoint_get"; //$NON-NLS-1$
 
 	// breakpoint_update -i id -d bp_id [arguments]
 	// -s
 	// -n
 	// -h
 	// -o
-	public static final String breakPointUpdate = "breakpoint_update";
+	public static final String breakPointUpdate = "breakpoint_update"; //$NON-NLS-1$
 
 	// breakpoint_remove -i id -d bp_id
-	public static final String breakPointRemove = "breakpoint_remove";
+	public static final String breakPointRemove = "breakpoint_remove"; //$NON-NLS-1$
 
 	// breakpoint_list -i id
-	public static final String breakPointList = "breakpoint_list";
+	public static final String breakPointList = "breakpoint_list"; //$NON-NLS-1$
 
 	// -------------------------------------------------------------------------
 	// stack commands
 	// -------------------------------------------------------------------------
 	// stack-depth -i id
-	public static final String stackDepth = "stack-depth";
+	public static final String stackDepth = "stack-depth"; //$NON-NLS-1$
 
 	// stack_get -i id -d depth (-d is optional)
-	public static final String stackGet = "stack_get";
+	public static final String stackGet = "stack_get"; //$NON-NLS-1$
 
 	// -------------------------------------------------------------------------
 	// variable/streams management commands
 	// -------------------------------------------------------------------------
 	// property_set -i id -n property_long_name -d {NUM} -l data_length --
 	// {DATA}
-	public static final String propSet = "property_set";
+	public static final String propSet = "property_set"; //$NON-NLS-1$
 
 	// property_get -i id -n property_long_name
-	public static final String propGet = "property_get";
+	public static final String propGet = "property_get"; //$NON-NLS-1$
 
 	// property_value -i id -n property_long_name
-	public static final String propValue = "property_value";
+	public static final String propValue = "property_value"; //$NON-NLS-1$
 
 	// context_get -i id -d depth
-	public static final String contextGet = "context_get";
+	public static final String contextGet = "context_get"; //$NON-NLS-1$
 
 	// eval -i id -- {DATA}
-	public static final String eval = "eval";
+	public static final String eval = "eval"; //$NON-NLS-1$
 
 	// stdout/stderr -i id -c 0|1|2
-	public static final String stdout = "stdout";
-	public static final String stderr = "stderr";
+	public static final String stdout = "stdout"; //$NON-NLS-1$
+	public static final String stderr = "stderr"; //$NON-NLS-1$
 
 	// break
-	public static final String suspend = "break";
+	public static final String suspend = "break"; //$NON-NLS-1$
 
 	Socket socket;
 	OutputStreamWriter outStream;
@@ -156,10 +156,10 @@ public class DBGpCommand {
 			String encoding) throws IOException {
 		String fullCmd = command + id + cmdId;
 		if (args != null) {
-			fullCmd = fullCmd + " " + args;
+			fullCmd = fullCmd + " " + args; //$NON-NLS-1$
 		}
 		if (DBGpLogger.debugCmd()) {
-			DBGpLogger.debug("cmd: " + fullCmd);
+			DBGpLogger.debug("cmd: " + fullCmd); //$NON-NLS-1$
 		}
 
 		synchronized (socket) {

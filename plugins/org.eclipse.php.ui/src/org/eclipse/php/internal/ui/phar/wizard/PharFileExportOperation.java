@@ -79,7 +79,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		IStatus status = ex.getStatus();
 		String message = ex.getLocalizedMessage();
 		if (message == null || message.length() < 1) {
-			message = "";
+			message = ""; //$NON-NLS-1$
 			status = new Status(status.getSeverity(), status.getPlugin(),
 					status.getCode(), message, ex);
 		}
@@ -219,7 +219,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		}
 
 		if (!resource.isAccessible()) {
-			addWarning("", null);
+			addWarning("", null); //$NON-NLS-1$
 			return;
 		}
 
@@ -228,7 +228,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			try {
 				isInJavaProject = resource.getProject().hasNature(PHPNature.ID);
 			} catch (CoreException ex) {
-				addWarning("", ex);
+				addWarning("", ex); //$NON-NLS-1$
 				return;
 			}
 			if (isInJavaProject) {
@@ -249,7 +249,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 						pkgRoot = findPackageFragmentRoot(jProject, resource
 								.getFullPath().removeLastSegments(1));
 				} catch (ModelException ex) {
-					addWarning("", ex);
+					addWarning("", ex); //$NON-NLS-1$
 					return;
 				}
 			}
@@ -279,8 +279,8 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 
 			if (fJarPackage.areDirectoryEntriesIncluded()) {
 
-				exportResource(progressMonitor, resource, destinationPath
-						.append(File.separator));
+				exportResource(progressMonitor, resource,
+						destinationPath.append(File.separator));
 
 				progressMonitor.worked(1);
 				ModalContext.checkCanceled(progressMonitor);
@@ -299,7 +299,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		} catch (CoreException exception) {
 			// this should never happen because an #isAccessible check is done
 			// before #members is invoked
-			addWarning("", exception);
+			addWarning("", exception); //$NON-NLS-1$
 		}
 		if (children != null) {
 			for (int i = 0; i < children.length; i++) {
@@ -325,10 +325,10 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 
 		try {
 			if (resource instanceof IFile) {
-				progressMonitor.subTask("");
+				progressMonitor.subTask(""); //$NON-NLS-1$
 				fJarBuilder.writeFile((IFile) resource, destinationPath);
 			} else {
-				progressMonitor.subTask("");
+				progressMonitor.subTask(""); //$NON-NLS-1$
 				fJarBuilder.writeFile((IFolder) resource, destinationPath);
 			}
 
@@ -363,7 +363,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 				if (project.hasNature(PHPNature.ID))
 					return DLTKCore.create(project);
 			} catch (CoreException ex) {
-				addWarning("", ex);
+				addWarning("", ex); //$NON-NLS-1$
 			}
 		}
 		return null;
@@ -380,7 +380,7 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 	private void handleCoreExceptionOnExport(CoreException ex) {
 		Throwable realEx = ex.getStatus().getException();
 		if (realEx instanceof IOException && realEx.getMessage() != null
-				&& realEx.getMessage().startsWith("duplicate entry:")) //$NON-NLS-1$ hardcoded message string from java.util.zip.ZipOutputStream.putNextEntry(ZipEntry)
+				&& realEx.getMessage().startsWith("duplicate entry:")) // hardcoded message string from java.util.zip.ZipOutputStream.putNextEntry(ZipEntry) //$NON-NLS-1$
 			addWarning(ex.getMessage(), realEx);
 		else
 			addToStatus(ex);
@@ -396,19 +396,19 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 		String message = null;
 		switch (fStatus.getSeverity()) {
 		case IStatus.OK:
-			message = "OK"; //$NON-NLS-1$
+			message = PharPackagerMessages.PharFileExportOperation_10;
 			break;
 		case IStatus.INFO:
-			message = "INFO";
+			message = PharPackagerMessages.PharFileExportOperation_11;
 			break;
 		case IStatus.WARNING:
-			message = "WARNING";
+			message = PharPackagerMessages.PharFileExportOperation_12;
 			break;
 		case IStatus.ERROR:
 			if (fJarPackages.length > 1)
-				message = "ERROR";
+				message = PharPackagerMessages.PharFileExportOperation_13;
 			else
-				message = "ERROR";
+				message = PharPackagerMessages.PharFileExportOperation_13;
 			break;
 		default:
 			// defensive code in case new severity is defined
@@ -452,15 +452,16 @@ public class PharFileExportOperation extends WorkspaceModifyOperation implements
 			throws InvocationTargetException, InterruptedException {
 		try {
 			if (!preconditionsOK())
-				throw new InvocationTargetException(null, "");
+				throw new InvocationTargetException(null, ""); //$NON-NLS-1$
 			int totalWork = countSelectedElements();
 			progressMonitor.beginTask("", totalWork); //$NON-NLS-1$
 
 			fJarBuilder = PharExportHelper.createPlainPharBuilder(fJarPackage);
 			// fJarBuilder = new PlainPharBuilder();
 			fJarBuilder.open(fJarPackage, fParentShell, fStatus);
-			fJarBuilder.writeStub(fJarBuilder.getStubProvider().create(
-					fJarPackage), progressMonitor);
+			fJarBuilder.writeStub(
+					fJarBuilder.getStubProvider().create(fJarPackage),
+					progressMonitor);
 			exportSelectedElements(progressMonitor);
 			fJarBuilder.writeSignature(progressMonitor);
 			// if (getStatus().getSeverity() != IStatus.ERROR) {

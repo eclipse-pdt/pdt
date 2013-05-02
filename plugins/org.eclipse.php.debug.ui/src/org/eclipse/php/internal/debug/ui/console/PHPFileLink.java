@@ -75,8 +75,8 @@ public class PHPFileLink implements IHyperlink {
 		}
 		// did not find source
 		MessageDialog.openInformation(PHPDebugUIPlugin
-				.getActiveWorkbenchShell(), "Information", MessageFormat
-				.format("Source not found for {0}", new Object[] { fileName }));
+				.getActiveWorkbenchShell(), Messages.PHPFileLink_0, MessageFormat
+				.format(Messages.PHPFileLink_1, new Object[] { fileName }));
 	}
 
 	protected void openElementInEditor(Object element) throws CoreException {

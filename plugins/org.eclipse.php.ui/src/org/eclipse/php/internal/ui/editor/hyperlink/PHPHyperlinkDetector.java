@@ -32,7 +32,7 @@ import org.eclipse.ui.texteditor.IEditorStatusLine;
 
 public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
-	private static final String NEW = "new";
+	private static final String NEW = "new"; //$NON-NLS-1$
 
 	/*
 	 * @see

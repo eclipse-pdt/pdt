@@ -64,6 +64,8 @@ public final class PHPUIMessages extends NLS {
 	public static String IncludePathProjectsPage_Folders_Label;
 	public static String moveAction_error_readOnly;
 	public static String IncludePath_AddEntryToBuildPathMessage;
+	public static String OverrideIndicatorManager_0;
+
 	public static String OverrideIndicatorManager_open_error_title;
 	public static String MarkOccurrencesConfigurationBlock_markImplementors;
 	public static String CommentAction_label;
@@ -392,6 +394,8 @@ public final class PHPUIMessages extends NLS {
 	public static String FoldingConfigurationBlock_error_not_exist;
 	public static String ImplementOccurrencesFinder_3;
 	public static String CopyResourcesToClipboardAction_copy;
+	public static String PHPOutlineContentProvider_0;
+
 	public static String PHPOutlineContentProvider_useStatementsNode;
 	public static String PHPSearchResultPage_groupby_file_tooltip;
 	public static String RenameAction_text;
@@ -438,6 +442,8 @@ public final class PHPUIMessages extends NLS {
 	public static String FragmentedWizard_1;
 	public static String PHPFileCreationWizardPage_4;
 	public static String FragmentedWizard_0;
+
+	public static String FragmentedWizard_7;
 	public static String PHPFileCreationWizardPage_3;
 	public static String PHPManualPreferencePage_0;
 	public static String PHPManualConfigurationBlock_url;
@@ -598,6 +604,10 @@ public final class PHPUIMessages extends NLS {
 	public static String NewVariableEntryDialog_title;
 	public static String typingPage_autoClose_braces;
 	public static String NewPHPManualSiteDialog_updateTitle;
+	public static String SaveAsDialog_6;
+
+	public static String SaveAsDialog_7;
+
 	public static String SaveAsDialog_createNewProject;
 	public static String OpenResource_error_messageArgs;
 	public static String deleteAction_confirm_title;
@@ -640,6 +650,14 @@ public final class PHPUIMessages extends NLS {
 	public static String VariableCreationDialog_error_whitespace;
 	public static String ColorPage_TaskTag;
 	public static String IncludePathsBlock_includepath_uncheckall_button;
+	public static String PHPStructuredEditor_0;
+
+	public static String PHPStructuredEditor_18;
+
+	public static String PHPStructuredEditor_19;
+
+	public static String PHPStructuredEditor_20;
+
 	public static String PHPStructuredEditor_Source;
 	public static String MarkOccurrencesConfigurationBlock_markTypeOccurrences;
 	public static String Search_Error_search_notsuccessful_message;
@@ -977,6 +995,9 @@ public final class PHPUIMessages extends NLS {
 	public static String CodeTemplateBlock_templates_edit_button;
 
 	public static String CodeAssistPreferencePage_showVariablesFromReferencedFiles;
+
+	public static String PHPUiPlugin_4;
+	public static String PHPUiPlugin_5;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PHPUIMessages.class);

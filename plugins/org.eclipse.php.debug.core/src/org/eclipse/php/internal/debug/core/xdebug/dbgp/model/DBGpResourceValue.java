@@ -36,7 +36,7 @@ public class DBGpResourceValue extends DBGpValue {
 		if (data != null && data.trim().length() > 0) {
 			setValueString(data);
 		} else {
-			setValueString("");
+			setValueString(""); //$NON-NLS-1$
 		}
 	}
 

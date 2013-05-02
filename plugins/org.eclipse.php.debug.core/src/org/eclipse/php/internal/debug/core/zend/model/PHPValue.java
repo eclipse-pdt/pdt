@@ -25,8 +25,8 @@ import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
  */
 public class PHPValue extends PHPDebugElement implements IValue {
 
-	private static final String[] VARIABLE_TYPES = { "NULL", "INT", "STRING",
-			"BOOLEAN", "DOUBLE", "ARRAY", "OBJECT", "RESOURCE" };
+	private static final String[] VARIABLE_TYPES = { "NULL", "INT", "STRING", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			"BOOLEAN", "DOUBLE", "ARRAY", "OBJECT", "RESOURCE" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
 	private Expression fVariable;
 	private ExpressionValue fValue;
@@ -97,8 +97,8 @@ public class PHPValue extends PHPDebugElement implements IValue {
 				.getExpressionManager();
 		Expression variable = fVariable;
 		if (fGlobal) {
-			String exp = "$GLOBALS[\"" + fVariable.getFullName().substring(1)
-					+ "\"]";
+			String exp = "$GLOBALS[\"" + fVariable.getFullName().substring(1) //$NON-NLS-1$
+					+ "\"]"; //$NON-NLS-1$
 			variable = new DefaultExpression(exp);
 		}
 		expressionManager.update(variable, 1);

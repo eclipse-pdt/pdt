@@ -907,7 +907,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider
 							PreferenceConstants.EDITOR_TASK_COLOR).equals(
 							prefKey)) {
 				boolean enabled = getColorPreferences().getBoolean(prefKey);
-				prefKey = prefKey.split("\\.")[1];
+				prefKey = prefKey.split("\\.")[1]; //$NON-NLS-1$
 				if (enabled) {
 					addTextAttribute(prefKey);
 				} else {

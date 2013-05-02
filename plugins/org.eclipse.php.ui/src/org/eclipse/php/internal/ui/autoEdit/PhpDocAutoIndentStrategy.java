@@ -41,10 +41,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
  * comments.
  */
 public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
-	private static final String PHPDOC_COMMENT_BLOCK_START = "/**";
-	private static final String PHP_COMMENT_BLOCK_START = "/*";
-	private static final String PHP_COMMENT_BLOCK_MID = " *";
-	private static final String PHP_COMMENT_BLOCK_END = " */";
+	private static final String PHPDOC_COMMENT_BLOCK_START = "/**"; //$NON-NLS-1$
+	private static final String PHP_COMMENT_BLOCK_START = "/*"; //$NON-NLS-1$
+	private static final String PHP_COMMENT_BLOCK_MID = " *"; //$NON-NLS-1$
+	private static final String PHP_COMMENT_BLOCK_END = " */"; //$NON-NLS-1$
 
 	/** The partitioning that this strategy operates on. */
 	private final String fPartitioning;
@@ -122,7 +122,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 
 						// Check if we need end tag
 						if (getCommentEnd(d, offset) > 0) {
-							endTag = "";
+							endTag = ""; //$NON-NLS-1$
 						}
 						if (TypingPreferences.addDocTags) {
 							// we need to close the comment before computing
@@ -600,7 +600,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 												.equals(PHPRegionTypes.PHPDOC_COMMENT_END) || tokenType
 												.equals(PHPRegionTypes.PHP_COMMENT_END))
 										&& document.get(offset - 2, 2).equals(
-												"*/")) {
+												"*/")) { //$NON-NLS-1$
 
 									ITextRegion region = commentRegion;
 									// go up in document and search for the
@@ -804,7 +804,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		}
 		// replacing all non-spaces/tabs to single-space, in order to get
 		// "char-clean" prefix
-		leadingString = leadingString.replaceAll("[^\\s]", " ");
+		leadingString = leadingString.replaceAll("[^\\s]", " "); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return leadingString;
 	}

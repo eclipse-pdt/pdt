@@ -75,7 +75,7 @@ public class PHPINIUtil {
 	private static void modifyExtensionDir(File phpIniFile, String extensionPath) {
 		try {
 			INIFileModifier m = new INIFileModifier(phpIniFile);
-			m.addEntry("extension_dir", extensionPath, true);
+			m.addEntry("extension_dir", extensionPath, true); //$NON-NLS-1$
 			m.close();
 		} catch (IOException e) {
 			PHPDebugPlugin.log(e);
@@ -220,12 +220,12 @@ public class PHPINIUtil {
 						debuggerFile.getAbsolutePath());
 			}
 			modifyExtensionDir(tempIniFile,
-					new File(debuggerFile.getParentFile(), "ext")
+					new File(debuggerFile.getParentFile(), "ext") //$NON-NLS-1$
 							.getAbsolutePath());
 		}
 
 		if (PHPDebugPlugin.DEBUG) {
-			System.out.println("\nPHP.ini contents:\n---------------------");
+			System.out.println("\nPHP.ini contents:\n---------------------"); //$NON-NLS-1$
 			try {
 				BufferedReader r = new BufferedReader(new FileReader(
 						tempIniFile));
@@ -302,10 +302,10 @@ public class PHPINIUtil {
 		FileWriter fw = new FileWriter(phpIniFile, true);
 
 		// TODO expose default php.ini in PHP properties
-		fw.append("\ndate.timezone= \"")
+		fw.append("\ndate.timezone= \"") //$NON-NLS-1$
 				.append(Calendar.getInstance().getTimeZone().getID())
-				.append("\"\n");
-		fw.append("memory_limit = \"256M\"\n");
+				.append("\"\n"); //$NON-NLS-1$
+		fw.append("memory_limit = \"256M\"\n"); //$NON-NLS-1$
 		fw.close();
 
 	}
@@ -328,16 +328,16 @@ public class PHPINIUtil {
 			// Try to detect via library:
 			try {
 				Process p = Runtime.getRuntime().exec(
-						new String[] { phpExeFile.getAbsolutePath(), "-i" });
+						new String[] { phpExeFile.getAbsolutePath(), "-i" }); //$NON-NLS-1$
 				BufferedReader r = new BufferedReader(new InputStreamReader(
 						p.getInputStream()));
 				String l;
 				while ((l = r.readLine()) != null) {
-					int i = l.indexOf(" => ");
+					int i = l.indexOf(" => "); //$NON-NLS-1$
 					if (i > 0) {
 						String key = l.substring(0, i);
 						String value = l.substring(i + 4);
-						if ("Loaded Configuration File".equals(key)) {
+						if ("Loaded Configuration File".equals(key)) { //$NON-NLS-1$
 							phpIniFile = new File(value);
 							break;
 						}

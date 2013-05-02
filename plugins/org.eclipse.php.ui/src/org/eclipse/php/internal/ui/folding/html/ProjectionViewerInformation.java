@@ -86,9 +86,9 @@ class ProjectionViewerInformation {
 
 		public void perform(IDocument document, IDocumentListener owner) {
 			IJobManager jobManager = Job.getJobManager();
-			if (jobManager.find("Applying annotation model changes").length == 0) {
+			if (jobManager.find("Applying annotation model changes").length == 0) { //$NON-NLS-1$
 				ApplyAnnotationModelChangesJob job = new ApplyAnnotationModelChangesJob(
-						"Applying annotation model changes", fInfo);
+						"Applying annotation model changes", fInfo); //$NON-NLS-1$
 				job.setPriority(Job.DECORATE);
 				job.setSystem(true);
 				job.schedule();

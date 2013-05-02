@@ -136,7 +136,7 @@ public class SSHTunnel {
 					if (e.getCause() != null
 							&& e.getCause().getMessage() != null
 							&& e.getCause().getMessage().toLowerCase().indexOf(
-									"already registered") == -1) //$NON-NLS-1$
+									Messages.SSHTunnel_2) == -1) 
 					{
 						ex = e;
 					}
@@ -149,13 +149,13 @@ public class SSHTunnel {
 								IStatus.WARNING,
 								Activator.PLUGIN_ID,
 								CONNECTION_WARNING_CODE,
-								"The debugger tunnel might not have been initialized", ex); //$NON-NLS-1$
+								Messages.SSHTunnel_3, ex); 
 					} else {
 						status = new Status(
 								IStatus.ERROR,
 								Activator.PLUGIN_ID,
 								CONNECTION_ERROR_CODE,
-								"The debugger tunnel connection could not be established", ex); //$NON-NLS-1$
+								Messages.SSHTunnel_4, ex); 
 					}
 				}
 			} catch (JSchException ee) {
@@ -165,7 +165,7 @@ public class SSHTunnel {
 							IStatus.ERROR,
 							Activator.PLUGIN_ID,
 							CONNECTION_ERROR_CODE,
-							"Could not establish a tunnel connection to " + remoteHost, ee); //$NON-NLS-1$
+							Messages.SSHTunnel_5 + remoteHost, ee); 
 					break;
 				}
 				if (session != null && session.isConnected()) {
@@ -183,7 +183,7 @@ public class SSHTunnel {
 			// Change the Status to INFO and deliver the accurate password to
 			// the caller.
 			status = new Status(IStatus.INFO, Activator.PLUGIN_ID,
-					CONNECTION_PASSWORD_CHANGED_CODE, newPassword, null); //$NON-NLS-1$
+					CONNECTION_PASSWORD_CHANGED_CODE, newPassword, null); 
 		}
 
 		return status;

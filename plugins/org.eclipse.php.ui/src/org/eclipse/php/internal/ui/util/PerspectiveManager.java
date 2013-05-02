@@ -47,7 +47,7 @@ public class PerspectiveManager {
 		} catch (WorkbenchException e) {
 			MessageDialog.openError(window.getShell(),
 					PHPUIMessages.PerspectiveManager_PerspectiveError_Title,
-					PHPUIMessages.PerspectiveManager_PerspectiveError_Message); //$NON-NLS-1$ //$NON-NLS-2$
+					PHPUIMessages.PerspectiveManager_PerspectiveError_Message); 
 		}
 	}
 
@@ -67,7 +67,7 @@ public class PerspectiveManager {
 		String perspectiveName = getPerspectiveLabel(perspectiveId);
 		String message = NLS.bind(
 				PHPUIMessages.PerspectiveManager_Switch_Dialog_Message,
-				perspectiveName); //$NON-NLS-1$
+				perspectiveName); 
 
 		final String preferenceKey = perspectiveId + ".switch_to_perspective"; //$NON-NLS-1$
 
@@ -101,7 +101,7 @@ public class PerspectiveManager {
 				.openYesNoQuestion(shell,
 						PHPUIMessages.PerspectiveManager_Switch_Dialog_Title,
 						message, null, false, PHPUiPlugin.getDefault()
-								.getPreferenceStore(), preferenceKey); //$NON-NLS-1$
+								.getPreferenceStore(), preferenceKey); 
 		boolean answer = (dialog.getReturnCode() == IDialogConstants.YES_ID);
 		synchronized (PerspectiveManager.class) {
 			fPrompting = false;

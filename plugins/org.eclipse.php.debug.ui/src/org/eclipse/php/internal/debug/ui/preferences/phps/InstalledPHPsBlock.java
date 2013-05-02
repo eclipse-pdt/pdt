@@ -143,8 +143,8 @@ public class InstalledPHPsBlock {
 
 	}
 
-	private static final String[] PHP_CANDIDATE_BIN = { "php", "php-cli",
-			"php-cgi", "php.exe", "php-cli.exe", "php-cgi.exe" };
+	private static final String[] PHP_CANDIDATE_BIN = { "php", "php-cli", //$NON-NLS-1$ //$NON-NLS-2$
+			"php-cgi", "php.exe", "php-cli.exe", "php-cgi.exe" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 	// Action buttons
 	private Button fAddButton;

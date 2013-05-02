@@ -14,8 +14,6 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.corext.refactoring.RefactoringAvailabilityTester;
 import org.eclipse.dltk.internal.corext.refactoring.reorg.ReorgUtils;
-import org.eclipse.dltk.internal.ui.refactoring.RefactoringMessages;
-import org.eclipse.dltk.internal.ui.refactoring.reorg.ReorgMessages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.actions.SelectionDispatchAction;
 import org.eclipse.dltk.ui.util.ExceptionHandler;
@@ -33,8 +31,8 @@ public class DeleteAction extends SelectionDispatchAction {
 
 	public DeleteAction(IWorkbenchSite site) {
 		super(site);
-		setText(ReorgMessages.DeleteAction_3);
-		setDescription(ReorgMessages.DeleteAction_4);
+		setText(""); //$NON-NLS-1$
+		setDescription(""); //$NON-NLS-1$
 		ISharedImages workbenchImages = DLTKUIPlugin.getDefault()
 				.getWorkbench().getSharedImages();
 		setDisabledImageDescriptor(workbenchImages
@@ -45,7 +43,7 @@ public class DeleteAction extends SelectionDispatchAction {
 				.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 
 		if (DLTKCore.DEBUG) {
-			System.err.println("Add help support here..."); //$NON-NLS-1$
+			System.err.println(Messages.DeleteAction_0);
 		}
 	}
 
@@ -83,11 +81,8 @@ public class DeleteAction extends SelectionDispatchAction {
 		try {
 			startDeleteRefactoring(selection.toArray(), getShell());
 		} catch (CoreException e) {
-			ExceptionHandler
-					.handle(
-							e,
-							RefactoringMessages.OpenRefactoringWizardAction_refactoring,
-							RefactoringMessages.OpenRefactoringWizardAction_exception);
+			ExceptionHandler.handle(e, "", //$NON-NLS-1$
+					""); //$NON-NLS-1$
 		}
 	}
 

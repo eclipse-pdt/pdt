@@ -18,7 +18,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class PHPDebugUIMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.ui.PHPDebugUIMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.ui.PHPDebugUIMessages"; //$NON-NLS-1$
 
 	public static String addPHPexeDialog_browse1;
 	public static String addPHPexeDialog_duplicateName;
@@ -51,6 +51,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String DebugPHPArgumentsTab_scriptArguments;
 	public static String DebugPHPArgumentsTab_unknownError;
 	public static String DebugPHPArgumentsTab_variables;
+
+	public static String DefaultPHPBreakpointProvider_0;
 	public static String EnableSetCondition_1;
 	public static String EnterCondition_1;
 	public static String ErrorCreatingBreakpoint_1;
@@ -90,6 +92,18 @@ public class PHPDebugUIMessages extends NLS {
 	public static String MPresentation_Stepping_1;
 	public static String MPresentation_Suspended_1;
 	public static String MPresentation_Terminated_1;
+	public static String NewPHPsComboBlock_13;
+
+	public static String NewPHPsComboBlock_14;
+
+	public static String NewPHPsComboBlock_15;
+
+	public static String NewPHPsComboBlock_4;
+
+	public static String NewPHPsComboBlock_5;
+
+	public static String NewPHPsComboBlock_7;
+
 	public static String PHP_File;
 	public static String PHP_File_Not_Exist;
 	public static String PHP_Location_Message;
@@ -118,7 +132,15 @@ public class PHPDebugUIMessages extends NLS {
 
 	public static String PHPDebugPreferencesBlock_1;
 
+	public static String PHPDebugPreferencesBlock_10;
+
+	public static String PHPDebugPreferencesBlock_11;
+
 	public static String PHPDebugPreferencesBlock_2;
+
+	public static String PHPDebugPreferencesBlock_3;
+
+	public static String PHPDebugPreferencesBlock_9;
 
 	public static String PHPDebugStepFilterPreferencePage_addFilter;
 
@@ -143,8 +165,31 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPDebugStepFilterPreferencePage_stepFiltersAreApplied;
 
 	public static String PHPDebugStepFilterPreferencePage_useStepFilters;
+	public static String PHPDebugUIPlugin_0;
+	public static String PHPDebugUIPlugin_2;
+
 	public static String PHPexe_Run_With_Debug_Info;
+	public static String PHPExeCompositeFragment_0;
+
+	public static String PHPExeCompositeFragment_1;
+
+	public static String PHPExeCompositeFragment_10;
+
+	public static String PHPExeCompositeFragment_11;
+
+	public static String PHPExeCompositeFragment_13;
+
+	public static String PHPExeCompositeFragment_15;
+
+	public static String PHPExeCompositeFragment_2;
+
+	public static String PHPExeCompositeFragment_3;
+
+	public static String PHPExecutableLaunchTab_2;
+
 	public static String PHPExecutableLaunchTab_isNotPHPFile;
+
+	public static String PHPExeLaunchShortcut_0;
 
 	public static String PHPexesComboBlock_1;
 
@@ -191,6 +236,10 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPRunToLineAdapter_0;
 	public static String PHPRunToLineAdapter_1;
 	public static String PHPRunToLineAdapter_2;
+	public static String PHPsComboBlock_2;
+
+	public static String PHPsComboBlock_3;
+
 	public static String PHPsComboBlock_noPHPsMessage;
 	public static String PHPsComboBlock_NoPHPsTitle;
 	public static String PHPsPreferencePage_1;
@@ -210,6 +259,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String XDebugWatch_failed;
 	public static String XDebugHover_empty;
 	public static String XDebugPresentation_line;
+	public static String XDebugVariableValueEditor_0;
+
 	public static String XDebugVariableValueEditor_invalidValue;
 
 	static {

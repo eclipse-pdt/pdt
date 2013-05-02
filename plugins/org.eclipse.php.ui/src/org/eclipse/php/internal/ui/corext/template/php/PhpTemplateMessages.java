@@ -62,6 +62,7 @@ final class PhpTemplateMessages extends NLS {
 	public static String CodeTemplateContextType_validate_unknownvariable;
 	public static String CodeTemplateContextType_validate_missingvariable;
 	public static String CodeTemplateContextType_validate_invalidcomment;
+	public static String TemplateSet_3;
 	public static String TemplateSet_error_missing_attribute;
 	public static String TemplateSet_error_read;
 	public static String TemplateSet_error_write;

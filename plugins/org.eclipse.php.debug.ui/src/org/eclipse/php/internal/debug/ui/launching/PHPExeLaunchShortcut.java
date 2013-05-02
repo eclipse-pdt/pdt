@@ -108,7 +108,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 						documentProvider.saveDocument(null, input, document,
 								true);
 						// set document dirty
-						document.replace(0, 0, "");
+						document.replace(0, 0, ""); //$NON-NLS-1$
 					}
 					path = ((NonExistingPHPFileEditorInput) input)
 							.getPath(input);// Untitled
@@ -207,7 +207,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 					PreferencesUtil
 							.createPreferenceDialogOn(
 									PHPDebugUIPlugin.getActiveWorkbenchShell(),
-									"org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage",
+									"org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage", //$NON-NLS-1$
 									null, null).open();
 					return;
 				}
@@ -361,7 +361,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 	 *         fails for some reason.
 	 */
 	protected static String getNewConfigurationName(String fileName) {
-		String configurationName = "New_configuration";
+		String configurationName = PHPDebugUIMessages.PHPExeLaunchShortcut_0; 
 		try {
 			IPath path = Path.fromOSString(fileName);
 
@@ -375,15 +375,15 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut2 {
 			String lastSegment = path.lastSegment();
 			if (lastSegment != null) {
 				if (fileExtention != null) {
-					lastSegment = lastSegment.replaceFirst("." + fileExtention,
-							"");
+					lastSegment = lastSegment.replaceFirst("." + fileExtention, //$NON-NLS-1$
+							""); //$NON-NLS-1$
 				}
 				configurationName = lastSegment;
 			}
 		} catch (Exception e) {
 			Logger.log(Logger.WARNING_DEBUG,
-					"Could not generate configuration name for " + fileName
-							+ ".\nThe default name will be used.", e);
+					"Could not generate configuration name for " + fileName //$NON-NLS-1$
+							+ ".\nThe default name will be used.", e); //$NON-NLS-1$
 		}
 		return DebugPlugin.getDefault().getLaunchManager()
 				.generateUniqueLaunchConfigurationNameFrom(configurationName);

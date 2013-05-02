@@ -13,7 +13,7 @@ package org.eclipse.php.internal.debug.ui.refactoring;
 import org.eclipse.osgi.util.NLS;
 
 public class RefactoringMessages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.jdt.internal.debug.core.refactoring.RefactoringMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.jdt.internal.debug.core.refactoring.RefactoringMessages"; //$NON-NLS-1$
 
 	public static String ClassPrepareBreakpointTypeChange_0;
 

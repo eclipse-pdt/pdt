@@ -41,7 +41,7 @@ public abstract class PharBuilder implements IPharBuilder {
 		IStatus status = ex.getStatus();
 		String message = ex.getLocalizedMessage();
 		if (message == null || message.length() < 1) {
-			message = "";
+			message = ""; //$NON-NLS-1$
 			status = new Status(status.getSeverity(), status.getPlugin(),
 					status.getCode(), message, ex);
 		}

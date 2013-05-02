@@ -107,13 +107,13 @@ public class PHPOverrideCompletionProposal extends
 					for (int i = 0; i < parameters.length; i++) {
 						IParameter parameter = parameters[i];
 						if (parameter.getType() != null) {
-							sb.append(parameter.getType()).append(" ");
+							sb.append(parameter.getType()).append(" "); //$NON-NLS-1$
 						}
 						sb.append(parameter.getName());
 						if (parameter.getDefaultValue() != null) {
-							sb.append("=").append(parameter.getDefaultValue());
+							sb.append("=").append(parameter.getDefaultValue()); //$NON-NLS-1$
 						}
-						sb.append(",");
+						sb.append(","); //$NON-NLS-1$
 					}
 					String infoDisplayString = sb.toString();
 					if (infoDisplayString.length() > 0) {

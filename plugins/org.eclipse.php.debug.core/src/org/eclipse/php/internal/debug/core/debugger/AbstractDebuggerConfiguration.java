@@ -32,7 +32,7 @@ public abstract class AbstractDebuggerConfiguration implements
 	protected Preferences preferences;
 	private HashMap<String, String> attributes;
 	private ICommunicationDaemon communicationDaemon;
-	private static final String EMPTY_STRING = "";
+	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	/**
 	 * AbstractDebuggerConfiguration constructor.

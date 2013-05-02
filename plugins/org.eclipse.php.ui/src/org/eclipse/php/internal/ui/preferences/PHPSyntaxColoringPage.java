@@ -371,7 +371,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		fUnderline.setEnabled(false);
 		((GridData) fUnderline.getLayoutData()).horizontalSpan = 2;
 		fClearStyle = new Button(editingComposite, SWT.PUSH);
-		fClearStyle.setText(SSEUIMessages.Restore_Default_UI_); //$NON-NLS-1$ = "Restore Default"
+		fClearStyle.setText(SSEUIMessages.Restore_Default_UI_); // =
+																// "Restore Default"
 		fClearStyle.setLayoutData(new GridData(SWT.BEGINNING));
 		((GridData) fClearStyle.getLayoutData()).horizontalIndent = 20;
 		fClearStyle.setEnabled(false);
@@ -380,7 +381,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 
 		((GridLayout) sampleArea.getLayout()).marginLeft = 5;
 		((GridLayout) sampleArea.getLayout()).marginTop = 5;
-		createLabel(sampleArea, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
+		createLabel(sampleArea, SSEUIMessages.Sample_text__UI_); // =
+																	// "&Sample text:"
 		SourceViewer viewer = new SourceViewer(sampleArea, null, SWT.BORDER
 				| SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
 				| SWT.READ_ONLY);
@@ -391,7 +393,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		gridData3.horizontalSpan = 2;
 		fText.setLayoutData(gridData3);
 		fText.setEditable(false);
-		fText.setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
+		fText.setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$ 
 		fText.addKeyListener(getTextKeyListener());
 		fText.addSelectionListener(getTextSelectionListener());
 		fText.addMouseListener(getTextMouseListener());
@@ -1099,11 +1101,11 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	protected void initHighlightingPositions() {
 		highlightingPositionMap = new HashMap<String, Position[]>();
 		IPath stateLocation = PHPUiPlugin.getDefault().getStateLocation();
-		IPath path = stateLocation.append("/_" + "PHPSyntax"); //$NON-NLS-1$
+		IPath path = stateLocation.append("/_" + "PHPSyntax"); //$NON-NLS-1$ //$NON-NLS-2$ 
 		IFileStore fileStore = EFS.getLocalFileSystem().getStore(path);
 
 		NonExistingPHPFileEditorInput input = new NonExistingPHPFileEditorInput(
-				fileStore, "PHPSyntax");
+				fileStore, "PHPSyntax"); //$NON-NLS-1$
 
 		File realFile = ((NonExistingPHPFileEditorInput) input).getPath(input)
 				.toFile();

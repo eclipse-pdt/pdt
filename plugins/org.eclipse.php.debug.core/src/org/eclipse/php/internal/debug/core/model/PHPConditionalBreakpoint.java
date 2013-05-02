@@ -29,7 +29,7 @@ import com.ibm.icu.text.MessageFormat;
 public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 
 	private boolean fConditionEnabled = false;
-	private String fCondition = "";
+	private String fCondition = ""; //$NON-NLS-1$
 
 	public PHPConditionalBreakpoint() {
 	}
@@ -58,7 +58,7 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 								Integer.toString(lineNumber) }));
 				attributes.put(IPHPDebugConstants.ConditionEnabled,
 						Boolean.FALSE);
-				attributes.put(IPHPDebugConstants.Condition, "");
+				attributes.put(IPHPDebugConstants.Condition, ""); //$NON-NLS-1$
 				attributes.put(IBreakpoint.PERSISTED, Boolean.FALSE);
 				attributes.put(IMarker.LINE_NUMBER, new Integer(lineNumber));
 				marker.setAttributes(attributes);

@@ -171,7 +171,7 @@ public class TemplateSet {
 		TemplateContextType type = fRegistry.getContextType(template
 				.getContextTypeId());
 		if (type == null) {
-			return "Unknown context type: " + template.getContextTypeId(); //$NON-NLS-1$
+			return PhpTemplateMessages.TemplateSet_3 + template.getContextTypeId(); 
 		}
 		try {
 			type.validate(template.getPattern());
@@ -281,7 +281,7 @@ public class TemplateSet {
 			code = TEMPLATE_PARSE_EXCEPTION;
 		else
 			code = TEMPLATE_IO_EXCEPTION;
-		//		IStatus status= JavaUIStatus.createError(code, TemplateMessages.getString("TemplateSet.error.read"), t); //$NON-NLS-1$
+		//		IStatus status= JavaUIStatus.createError(code, TemplateMessages.getString("TemplateSet.error.read"), t); 
 		// throw new JavaUIException(status);
 		throw new CoreException(
 				new Status(
@@ -292,7 +292,7 @@ public class TemplateSet {
 	private static void throwWriteException(Throwable t) throws CoreException {
 		// IStatus status=
 		// JavaUIStatus.createError(IJavaStatusConstants.TEMPLATE_IO_EXCEPTION,
-		//			TemplateMessages.getString("TemplateSet.error.write"), t); //$NON-NLS-1$
+		//			TemplateMessages.getString("TemplateSet.error.write"), t); 
 		// throw new JavaUIException(status);
 		throw new CoreException(
 				new Status(

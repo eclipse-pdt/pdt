@@ -63,7 +63,7 @@ public class ResourceAndContainerGroup implements Listener {
 	private boolean showClosedProjects = true;
 
 	// problem indicator
-	private String problemMessage = "";//$NON-NLS-1$
+	private String problemMessage = ""; //$NON-NLS-1$
 
 	private int problemType = PROBLEM_NONE;
 
@@ -433,8 +433,8 @@ public class ResourceAndContainerGroup implements Listener {
 			if (root.getFile(path).exists()) {
 				problemType = PROBLEM_PATH_OCCUPIED;
 				problemMessage = NLS.bind(
-						IDEWorkbenchMessages.ResourceGroup_pathOccupied, path
-								.makeRelative());
+						IDEWorkbenchMessages.ResourceGroup_pathOccupied,
+						path.makeRelative());
 				return false;
 			}
 			path = path.removeLastSegments(1);
@@ -454,7 +454,7 @@ public class ResourceAndContainerGroup implements Listener {
 			return false;
 		}
 		problemType = PROBLEM_NONE;
-		problemMessage = "";//$NON-NLS-1$
+		problemMessage = ""; //$NON-NLS-1$
 
 		if (!validateContainer() || !validateResourceName()) {
 			return false;

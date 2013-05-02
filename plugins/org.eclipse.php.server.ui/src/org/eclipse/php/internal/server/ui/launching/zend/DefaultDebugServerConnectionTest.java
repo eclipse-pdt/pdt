@@ -113,7 +113,7 @@ public class DefaultDebugServerConnectionTest implements
 						}
 					}
 					if (!isFinished) {
-						showCustomErrorDialog(addTimeOutsMessage("A timeout occurred when the debug server attempted to connect to the following client hosts/IPs:\n")); //$NON-NLS-1$
+						showCustomErrorDialog(addTimeOutsMessage(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest.1"))); //$NON-NLS-1$
 					}
 				} catch (FileNotFoundException fnfe) {// dummy.php was not found
 					showCustomErrorDialog(NLS

@@ -131,7 +131,7 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 				Control result = super.createDialogArea(parent);
 				if (DLTKCore.DEBUG) {
 					System.err
-							.println("CreateMultipleSourceFoldersDialog: Add help support"); //$NON-NLS-1$
+							.println("CreateMultipleSourceFoldersDialog: Add help support"); //$NON-NLS-1$ 
 				}
 				// PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
 				// IDLTKHelpContextIds.BP_CHOOSE_EXISTING_FOLDER_TO_MAKE_SOURCE_FOLDER);
@@ -153,8 +153,8 @@ public class CreateMultipleSourceFoldersDialog extends TrayDialog {
 					public void propertyChange(PropertyChangeEvent event) {
 						if (event.getProperty().equals(IAction.RESULT)) {
 							if (event.getNewValue().equals(Boolean.TRUE)) {
-								result[0] = addFakeFolder(fScriptProject
-										.getProject(), newElement);
+								result[0] = addFakeFolder(
+										fScriptProject.getProject(), newElement);
 							} else {
 								wizard.cancel();
 							}

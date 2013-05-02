@@ -37,10 +37,10 @@ public class DebugParametersInitializersRegistry {
 	private static final String LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE = "launchConfigurationType"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String HANDLER_ATTRIBUTE = "handler"; //$NON-NLS-1$
-	private static final String MODE_ATTRIBUTE = "mode";
-	private static final String RUN = "run";
-	private static final String DEBUG = "debug";
-	private static final String PROFILE = "profile";
+	private static final String MODE_ATTRIBUTE = "mode"; //$NON-NLS-1$
+	private static final String RUN = "run"; //$NON-NLS-1$
+	private static final String DEBUG = "debug"; //$NON-NLS-1$
+	private static final String PROFILE = "profile"; //$NON-NLS-1$
 
 	/** Debug parameters initializers stored by ID */
 	private Dictionary runInitializers = new Hashtable();
@@ -158,7 +158,7 @@ public class DebugParametersInitializersRegistry {
 				String configurationTypeId = initializerFactory.element
 						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
 				if (configurationTypeId != null
-						&& !"".equals(configurationTypeId)
+						&& !"".equals(configurationTypeId) //$NON-NLS-1$
 						&& configurationTypeId.equals(launch
 								.getLaunchConfiguration().getType()
 								.getIdentifier())) {
@@ -172,7 +172,7 @@ public class DebugParametersInitializersRegistry {
 						.nextElement();
 				String configurationTypeId = initializerFactory.element
 						.getAttribute(LAUNCH_CONFIGURATION_TYPE_ATTRIBUTE);
-				if ((configurationTypeId == null || ""
+				if ((configurationTypeId == null || "" //$NON-NLS-1$
 						.equals(configurationTypeId))
 						&& !PHPDebugPlugin.getID().equals(
 								initializerFactory.element
@@ -210,7 +210,7 @@ public class DebugParametersInitializersRegistry {
 		public IDebugParametersInitializer createParametersInitializer() {
 			SafeRunner
 					.run(new SafeRunnable(
-							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") {
+							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") { //$NON-NLS-1$
 						public void run() throws Exception {
 							parametersInitializer = (IDebugParametersInitializer) element
 									.createExecutableExtension(CLASS_ATTRIBUTE);

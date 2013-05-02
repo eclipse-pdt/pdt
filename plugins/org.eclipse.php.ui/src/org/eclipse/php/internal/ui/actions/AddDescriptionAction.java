@@ -401,7 +401,7 @@ public class AddDescriptionAction extends Action implements
 						docBlock = CodeGeneration.getFileComment(data, null);
 					} catch (CoreException e) {
 						Logger.logException(
-								"Generating default phpdoc comment", e);
+								"Generating default phpdoc comment", e); //$NON-NLS-1$
 						docBlock = createDefaultComment(null);
 					}
 					break;

@@ -80,7 +80,7 @@ public class PHPStructuredTextViewerConfiguration extends
 	private static final String FORMATTER_PROCESSOR_EXT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
 	private static final String EMPTY = ""; //$NON-NLS-1$
 	private static final String[] DEFAULT_PREFIXES = new String[] {
-			"//", "#", EMPTY }; //$NON-NLS-1$
+			"//", "#", EMPTY }; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final IAutoEditStrategy indentLineAutoEditStrategy = new IndentLineAutoEditStrategy();
 	private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
 	private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();

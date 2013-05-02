@@ -48,7 +48,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 			lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
 		}
 
-		String fileName = "";
+		String fileName = ""; //$NON-NLS-1$
 		if (resource instanceof IWorkspaceRoot) {
 			// TODO: Improvement: Breakpoint: we need to handle this because
 			// PHPBreakpoint can be setup with this situation

@@ -159,7 +159,7 @@ public class PHPModelPresentation extends LabelProvider implements
 
 				IPath path = Path.fromPortableString(fileName);
 
-				if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) {
+				if ((path.getDevice() == null) && (path.toString().startsWith("org.eclipse.dltk"))) { //$NON-NLS-1$
 					String fullPathString = path.toString();
 					String absolutePath = fullPathString
 							.substring(fullPathString.indexOf(':') + 1);
@@ -184,7 +184,7 @@ public class PHPModelPresentation extends LabelProvider implements
 
 			}
 			if (fileName != null) {
-				return fileName + " [line: " + lineNumber.toString() + "]";
+				return fileName + " [line: " + lineNumber.toString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);
@@ -243,7 +243,7 @@ public class PHPModelPresentation extends LabelProvider implements
 				}
 			}
 		} else if (thread.isTerminated()) {
-			buf.append(PHPDebugUIMessages.MPresentation_Terminated_1); //$NON-NLS-1$
+			buf.append(PHPDebugUIMessages.MPresentation_Terminated_1); 
 		}
 		return buf.toString();
 	}
@@ -256,7 +256,7 @@ public class PHPModelPresentation extends LabelProvider implements
 				String frameName = phpStackFrame.getName();
 				if (frameName != null && frameName.length() > 0) {
 					buffer.append(frameName);
-					buffer.append("(): ");
+					buffer.append("(): "); //$NON-NLS-1$
 				}
 
 				String sourceName = phpStackFrame.getSourceName();
@@ -319,7 +319,7 @@ public class PHPModelPresentation extends LabelProvider implements
 
 			return new FileStoreEditorInput(fileStore);
 		}
-		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: "
+		Logger.log(Logger.WARNING_DEBUG, "Unknown editor input type: " //$NON-NLS-1$
 				+ element.getClass().getName());
 		return null;
 	}

@@ -101,6 +101,6 @@ public class ClassHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Classes";
+		return Messages.ClassHighlighting_0;
 	}
 }

@@ -30,7 +30,7 @@ public class PHPManualSiteDescriptor {
 	private static final String DIRECTOR_ATTRIBUTE = "director"; //$NON-NLS-1$
 	private static final String EXTENSION_ATTRIBUTE = "extension"; //$NON-NLS-1$
 
-	public static final String DEFAULT_PHP_MANUAL_SITE = PHPUIMessages.PHPManualSiteDescriptor_URL; //$NON-NLS-1$
+	public static final String DEFAULT_PHP_MANUAL_SITE = PHPUIMessages.PHPManualSiteDescriptor_URL; 
 
 	public static final String DEFAULT_PHP_MANUAL_EXTENSION = "php"; //$NON-NLS-1$
 

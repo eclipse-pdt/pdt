@@ -65,7 +65,7 @@ public class TunnelTester {
 				MultiStatus status = new MultiStatus(
 						Activator.PLUGIN_ID,
 						0,
-						"The tunnel connection did not indicate a fatal error, however, the SSH connection returned false for an isConnected query",
+						Messages.TunnelTester_0,
 						null);
 				status.add(connectionResult); // add any other statuses into the
 				// multi-status, so we can track a password change, for example.

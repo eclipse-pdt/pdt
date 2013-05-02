@@ -159,7 +159,7 @@ public class OccurrencesSearchGroup extends ActionGroup {
 	 * Method declared on ActionGroup.
 	 */
 	public void fillContextMenu(IMenuManager manager) {
-		String menuText = "SearchMessages.group_occurrences";
+		String menuText = "SearchMessages.group_occurrences"; //$NON-NLS-1$
 		String shortcut = getShortcutString();
 		if (shortcut != null) {
 			menuText = menuText + '\t' + shortcut;
@@ -181,7 +181,7 @@ public class OccurrencesSearchGroup extends ActionGroup {
 				if (mm.isEmpty()) {
 					mm
 							.add(new Action(
-									"SearchMessages.group_occurrences_quickMenu_noEntriesAvailable") {
+									"SearchMessages.group_occurrences_quickMenu_noEntriesAvailable") { //$NON-NLS-1$
 								public boolean isEnabled() {
 									return false;
 								}

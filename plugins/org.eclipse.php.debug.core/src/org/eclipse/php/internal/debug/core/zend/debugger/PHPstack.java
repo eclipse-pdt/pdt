@@ -56,10 +56,10 @@ public class PHPstack {
 	}
 
 	public String toString() {
-		String toReturn = "***\n";
+		String toReturn = "***\n"; //$NON-NLS-1$
 		Enumeration e = layers.elements();
 		while (e.hasMoreElements()) {
-			toReturn += e.nextElement().toString() + "\n" + "***\n";
+			toReturn += e.nextElement().toString() + "\n" + "***\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return toReturn;
 	}

@@ -69,10 +69,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		setPageComplete(false);
 		setTitle(NewWizardMessages.ScriptProjectWizardFirstPage_page_title);
 		setDescription(NewWizardMessages.ScriptProjectWizardFirstPage_page_description);
-		fInitialName = ""; //$NON-NLS-1$
+		fInitialName = ""; //$NON-NLS-1$ 
 	}
 
-	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$
+	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$ 
 	protected static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
 	protected URI fCurrProjectLocation; // null if location is platform location
 
@@ -83,7 +83,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	private Boolean fIsAutobuild;
 
 	private static final String PAGE_NAME = NewWizardMessages.ScriptProjectWizardFirstPage_page_title;
-	public static final String ERROR_MESSAGE = "ErrorMessage";
+	public static final String ERROR_MESSAGE = "ErrorMessage"; //$NON-NLS-1$
 
 	protected Validator fPdtValidator;
 	protected String fInitialName;
@@ -308,7 +308,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			}
 
 			if (fragment != null) {
-				fragment.getWizardModel().putObject("ProjectName",
+				fragment.getWizardModel().putObject("ProjectName", //$NON-NLS-1$
 						fNameGroup.getName());
 				if (!fragment.isComplete()) {
 					setErrorMessage((String) fragment.getWizardModel()
@@ -360,11 +360,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
 					true));
-			fGroup.setText(PHPUIMessages.JavaScriptSupportGroup_OptionBlockTitle); //$NON-NLS-1$
+			fGroup.setText(PHPUIMessages.JavaScriptSupportGroup_OptionBlockTitle);
 
 			fEnableJavaScriptSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
 			fEnableJavaScriptSupport
-					.setText(PHPUIMessages.JavaScriptSupportGroup_EnableSupport); //$NON-NLS-1$
+					.setText(PHPUIMessages.JavaScriptSupportGroup_EnableSupport);
 			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING,
 					SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.addSelectionListener(this);
@@ -403,12 +403,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 
 			fStdRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fStdRadio
-					.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_ProjectSrc); //$NON-NLS-1$
+					.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_ProjectSrc);
 			fStdRadio.setDialogFieldListener(this);
 
 			fSrcBinRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fSrcBinRadio
-					.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_SrcResources); //$NON-NLS-1$
+					.setLabelText(PHPUIMessages.LayoutGroup_OptionBlock_SrcResources);
 			fSrcBinRadio.setDialogFieldListener(this);
 
 			// getting Preferences default choice
@@ -424,7 +424,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false),
 					true));
-			fGroup.setText(PHPUIMessages.LayoutGroup_OptionBlock_Title); //$NON-NLS-1$
+			fGroup.setText(PHPUIMessages.LayoutGroup_OptionBlock_Title);
 
 			fStdRadio.doFillIntoGrid(fGroup, 3);
 			LayoutUtil
@@ -434,7 +434,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 
 			fPreferenceLink = new Link(fGroup, SWT.NONE);
 			fPreferenceLink
-					.setText(PHPUIMessages.ToggleLinkingAction_link_description); //$NON-NLS-1$
+					.setText(PHPUIMessages.ToggleLinkingAction_link_description);
 			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING,
 					true, false));
 			fPreferenceLink.addSelectionListener(this);
@@ -523,7 +523,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 		public PHPVersionConfigurationBlock fConfigurationBlock;
 
 		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID
-				+ ".last.external.project"; //$NON-NLS-1$
+				+ ".last.external.project"; //$NON-NLS-1$ 
 		private Link fPreferenceLink;
 
 		public VersionGroup(Composite composite, PHPVersion minimumVersion) {
@@ -532,15 +532,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			group.setLayout(initGridLayout(new GridLayout(numColumns, false),
 					true));
-			group.setText(PHPUIMessages.VersionGroup_OptionBlock_Title);//$NON-NLS-1$ 
+			group.setText(PHPUIMessages.VersionGroup_OptionBlock_Title);
 			fDefaultValues = new SelectionButtonDialogField(SWT.RADIO);
 			fDefaultValues.setDialogFieldListener(this);
 			fDefaultValues
-					.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fDefaultValues);//$NON-NLS-1$ 
+					.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fDefaultValues);
 			fCustomValues = new SelectionButtonDialogField(SWT.RADIO);
 			fCustomValues.setDialogFieldListener(this);
 			fCustomValues
-					.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fCustomValues);//$NON-NLS-1$ 
+					.setLabelText(PHPUIMessages.VersionGroup_OptionBlock_fCustomValues);
 
 			fDefaultValues.setSelection(true);
 			fCustomValues.setSelection(false);
@@ -804,7 +804,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 			IProgressMonitor monitor) throws CoreException {
 		int ticks = ((fDotProjectBackup != null ? 1 : 0) + (fDotBuildpathBackup != null ? 1
 				: 0)) * 2;
-		monitor.beginTask("", ticks); //$NON-NLS-1$
+		monitor.beginTask("", ticks); //$NON-NLS-1$ 
 		try {
 			if (fDotProjectBackup != null) {
 				IFileStore projectFile = EFS.getStore(projectLocation)
@@ -846,7 +846,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 	private File createBackup(IFileStore source, String name)
 			throws CoreException {
 		try {
-			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$//$NON-NLS-2$
+			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$ //$NON-NLS-2$ 
 			copyFile(source, bak);
 			return bak;
 		} catch (IOException e) {
@@ -928,7 +928,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements
 							.fromPortableString(rootLocation.getPath())
 							.append(projectHandle.getName()).toString(), null);
 				} catch (URISyntaxException e) {
-					Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
+					Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$ 
 				}
 			}
 

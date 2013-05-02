@@ -256,8 +256,8 @@ public class PathMapper implements IXMLPreferencesStorable {
 		}
 
 		public String toString() {
-			StringBuilder buf = new StringBuilder("Mapping { ");
-			buf.append(localPath).append(", ").append(remotePath).append(", ")
+			StringBuilder buf = new StringBuilder("Mapping { "); //$NON-NLS-1$
+			buf.append(localPath).append(", ").append(remotePath).append(", ") //$NON-NLS-1$ //$NON-NLS-2$
 					.append(type);
 			return buf.toString();
 		}

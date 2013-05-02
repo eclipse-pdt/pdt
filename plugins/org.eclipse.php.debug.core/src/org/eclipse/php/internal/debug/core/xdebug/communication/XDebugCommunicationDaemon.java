@@ -59,7 +59,7 @@ import com.ibm.icu.text.MessageFormat;
 public class XDebugCommunicationDaemon extends
 		AbstractDebuggerCommunicationDaemon {
 
-	public static final String XDEBUG_DEBUGGER_ID = "org.eclipse.php.debug.core.xdebugDebugger";
+	public static final String XDEBUG_DEBUGGER_ID = "org.eclipse.php.debug.core.xdebugDebugger"; //$NON-NLS-1$
 	private PortChangeListener portChangeListener;
 
 	// private boolean isInitialized;
@@ -142,7 +142,7 @@ public class XDebugCommunicationDaemon extends
 		// thread so we should make damn sure we don't throw an exception here
 		// otherwise it will abort that thread.
 		if (DBGpLogger.debugSession()) {
-			DBGpLogger.debug("Connection established: " + socket.toString());
+			DBGpLogger.debug("Connection established: " + socket.toString()); //$NON-NLS-1$
 		}
 
 		try {
@@ -180,7 +180,7 @@ public class XDebugCommunicationDaemon extends
 			}
 		} catch (Exception e) {
 			DBGpLogger.logException(
-					"Unexpected Exception: Listener thread still listening",
+					"Unexpected Exception: Listener thread still listening", //$NON-NLS-1$
 					this, e);
 		}
 		// isInitialized = true;
@@ -205,7 +205,7 @@ public class XDebugCommunicationDaemon extends
 				.getDefault()
 				.getLaunchManager()
 				.getSourcePathComputer(
-						"org.eclipse.php.debug.core.sourcePathComputer.php"));
+						"org.eclipse.php.debug.core.sourcePathComputer.php")); //$NON-NLS-1$
 		ILaunchConfigurationType type = null;
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
 
@@ -351,7 +351,7 @@ public class XDebugCommunicationDaemon extends
 
 		public void run() {
 			String insert = session.getRemoteAddress().getCanonicalHostName()
-					+ "/" + session.getRemoteAddress().getHostAddress();
+					+ "/" + session.getRemoteAddress().getHostAddress(); //$NON-NLS-1$
 			String message = MessageFormat.format(
 					PHPDebugCoreMessages.XDebugMessage_remoteSessionPrompt,
 					new Object[] { insert });

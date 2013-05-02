@@ -412,9 +412,9 @@ public class BindingLabelProvider extends LabelProvider {
 		// ITypeBinding bound= binding.getBound();
 		// if (bound != null) {
 		// if (binding.isUpperbound()) {
-		//					buffer.append(" extends "); //$NON-NLS-1$
+		//					buffer.append(" extends "); 
 		// } else {
-		//					buffer.append(" super "); //$NON-NLS-1$
+		//					buffer.append(" super "); 
 		// }
 		// getTypeLabel(bound, flags & ScriptElementLabels.T_TYPE_PARAMETERS,
 		// buffer);

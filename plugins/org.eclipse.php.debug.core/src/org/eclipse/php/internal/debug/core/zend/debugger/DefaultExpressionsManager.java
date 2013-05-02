@@ -31,8 +31,8 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 	private Map hashResultDepthOne = new HashMap();
 	private Map hashResultDepthZero = new HashMap();
 	// private Map globalHashResultDepthOne = new HashMap();
-	private String[] localsVariablePath = new String[] { "get_defined_vars()" };
-	private String[] globalVariablePath = new String[] { "$GLOBALS" };
+	private String[] localsVariablePath = new String[] { "get_defined_vars()" }; //$NON-NLS-1$
+	private String[] globalVariablePath = new String[] { "$GLOBALS" }; //$NON-NLS-1$
 	private ExpressionsValueDeserializer expressionValueDeserializer;
 
 	/**
@@ -115,8 +115,8 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 
 	private static String[] minimizeArray(String[] name) {
 		String firstName = name[0];
-		if (firstName.startsWith("$GLOBALS[GLOBALS]")) {
-			firstName = "$GLOBALS" + firstName.substring(17);
+		if (firstName.startsWith("$GLOBALS[GLOBALS]")) { //$NON-NLS-1$
+			firstName = "$GLOBALS" + firstName.substring(17); //$NON-NLS-1$
 			name[0] = firstName;
 			return minimizeArray(name);
 		}
@@ -124,15 +124,15 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		if (name.length < 2) {
 			return name;
 		}
-		if (name[0].equals("get_defined_vars()")) {
-			if (name[1].equals("GLOBALS")) {
+		if (name[0].equals("get_defined_vars()")) { //$NON-NLS-1$
+			if (name[1].equals("GLOBALS")) { //$NON-NLS-1$
 				String[] newName = new String[name.length - 1];
-				newName[0] = "$GLOBALS";
+				newName[0] = "$GLOBALS"; //$NON-NLS-1$
 				System.arraycopy(name, 2, newName, 1, name.length - 2);
 				return minimizeArray(newName);
 			}
 		}
-		if (name[0].equals("$GLOBALS") && name[1].equals("GLOBALS")) {
+		if (name[0].equals("$GLOBALS") && name[1].equals("GLOBALS")) { //$NON-NLS-1$ //$NON-NLS-2$
 			String[] newName = new String[name.length - 1];
 			newName[0] = name[0];
 			System.arraycopy(name, 2, newName, 1, name.length - 2);
@@ -159,7 +159,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		// search for globals variable
 		for (int i = 0; i < localVariables.length; i++) {
 			String s = localVariables[i].getFullName();
-			if (s.equals("$GLOBALS")) {
+			if (s.equals("$GLOBALS")) { //$NON-NLS-1$
 
 				// remove globals from array
 				Expression[] newLocals = new Expression[localVariables.length - 1];
@@ -171,7 +171,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 			}
 		}
 
-		hashResultDepthOne.put("LOCALS", localVariables);
+		hashResultDepthOne.put("LOCALS", localVariables); //$NON-NLS-1$
 
 		return localVariables;
 	}
@@ -193,7 +193,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 		// search for globals variable.
 		for (int i = 0; i < globalVariables.length; i++) {
 			String s = globalVariables[i].getFullName();
-			if (s.equals("$GLOBALS")) {
+			if (s.equals("$GLOBALS")) { //$NON-NLS-1$
 
 				// remove globals from array
 				Expression[] newGlobals = new Expression[globalVariables.length - 1];
@@ -205,7 +205,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
 			}
 		}
 
-		hashResultDepthOne.put("GlOBAS", globalVariables);
+		hashResultDepthOne.put("GlOBAS", globalVariables); //$NON-NLS-1$
 
 		return globalVariables;
 	}

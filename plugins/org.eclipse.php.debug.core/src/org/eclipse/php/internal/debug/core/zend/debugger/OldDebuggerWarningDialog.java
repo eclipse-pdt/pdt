@@ -34,18 +34,16 @@ public class OldDebuggerWarningDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 		Composite composite = (Composite) super.createDialogArea(parent);
 
-		getShell().setText("Old Zend Debugger Protocol ID");
+		getShell().setText(Messages.OldDebuggerWarningDialog_0);
 
 		Label label = new Label(composite, SWT.NONE);
 		label
-				.setText("The Zend Debugger component on your server is an older version than the\n"
-						+ "one expected by Zend Studio.  You should update the debugger component\n"
-						+ "on your server or some debugging features may not work properly!");
+				.setText(Messages.OldDebuggerWarningDialog_1);
 
 		Link link = new Link(composite, SWT.NONE);
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link
-				.setText("To download the latest version of Zend Debugger click <a>here</a>.");
+				.setText(Messages.OldDebuggerWarningDialog_4);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
@@ -54,7 +52,7 @@ public class OldDebuggerWarningDialog extends Dialog {
 					IWebBrowser browser = browserSupport.getExternalBrowser();
 					browser
 							.openURL(new URL(
-									"http://www.zend.com/en/products/studio/downloads"));
+									"http://www.zend.com/en/products/studio/downloads")); //$NON-NLS-1$
 				} catch (Exception e) {
 				}
 			}
@@ -62,8 +60,7 @@ public class OldDebuggerWarningDialog extends Dialog {
 		link = new Link(composite, SWT.NONE);
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		link
-				.setText("To download a complete PHP Web Application Server that includes the\n"
-						+ "Zend Debugger and other useful functionality click <a>here</a>.\n");
+				.setText(Messages.OldDebuggerWarningDialog_6);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
@@ -71,18 +68,18 @@ public class OldDebuggerWarningDialog extends Dialog {
 							.getWorkbench().getBrowserSupport();
 					IWebBrowser browser = browserSupport.getExternalBrowser();
 					browser.openURL(new URL(
-							"http://www.zend.com/app-server/downloads"));
+							"http://www.zend.com/app-server/downloads")); //$NON-NLS-1$
 				} catch (Exception e) {
 				}
 			}
 		});
 
 		final Button button = new Button(composite, SWT.CHECK);
-		button.setText("Don't show this message again.");
+		button.setText(Messages.OldDebuggerWarningDialog_9);
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				PHPDebugPlugin.getDefault().getPluginPreferences().setValue(
-						"DontShowOlderDebuggerWarning", button.getSelection());
+						"DontShowOlderDebuggerWarning", button.getSelection()); //$NON-NLS-1$
 			}
 		});
 

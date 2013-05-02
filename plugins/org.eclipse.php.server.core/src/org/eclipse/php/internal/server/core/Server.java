@@ -27,19 +27,19 @@ import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 public class Server implements IXMLPreferencesStorable, IAdaptable {
 
 	// Used as a root element name when saving and loading the preferences.
-	public static final String SERVER_ELEMENT = "server";
+	public static final String SERVER_ELEMENT = "server"; //$NON-NLS-1$
 
 	// Server properties.
-	public static final String NAME = "name";
-	public static final String BASE_URL = "base_url";
-	public static final String DOCUMENT_ROOT = "document_root";
-	public static final String PORT = "port";
-	public static final String HOSTNAME = "hostname";
-	public static final String FILE_NAME = "file_name";
+	public static final String NAME = "name"; //$NON-NLS-1$
+	public static final String BASE_URL = "base_url"; //$NON-NLS-1$
+	public static final String DOCUMENT_ROOT = "document_root"; //$NON-NLS-1$
+	public static final String PORT = "port"; //$NON-NLS-1$
+	public static final String HOSTNAME = "hostname"; //$NON-NLS-1$
+	public static final String FILE_NAME = "file_name"; //$NON-NLS-1$
 
 	private static final int DEFAULT_HTTP_PORT = 80;
 
-	public static final String LOCALSERVER = "localserver";
+	public static final String LOCALSERVER = "localserver"; //$NON-NLS-1$
 
 	private ServerHelper helper;
 
@@ -126,7 +126,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	}
 
 	public String getName() {
-		return getAttribute(Server.NAME, "");
+		return getAttribute(Server.NAME, ""); //$NON-NLS-1$
 	}
 
 	public void setName(String name) {
@@ -134,14 +134,14 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	}
 
 	public String getBaseURL() {
-		String base = getAttribute(Server.BASE_URL, "");
+		String base = getAttribute(Server.BASE_URL, ""); //$NON-NLS-1$
 		String port = getPortString();
 
 		URL resultURL;
 		try {
 			URL baseURL = new URL(base);
 			resultURL = new URL(baseURL.getProtocol(), baseURL.getHost(),
-					getFormattedPort(port), "");
+					getFormattedPort(port), ""); //$NON-NLS-1$
 		} catch (MalformedURLException e) {
 			// hopefully this is not called as setBaseURL is safe
 			return base;
@@ -162,12 +162,12 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 		if (baseURL.getPort() != -1) {
 			this.setPort(String.valueOf(baseURL.getPort()));
 		}
-		URL url2 = new URL(baseURL.getProtocol(), baseURL.getHost(), "");
+		URL url2 = new URL(baseURL.getProtocol(), baseURL.getHost(), ""); //$NON-NLS-1$
 		setAttribute(Server.BASE_URL, url2.toString());
 	}
 
 	public String getHost() {
-		return getAttribute(Server.HOSTNAME, "localhost");
+		return getAttribute(Server.HOSTNAME, "localhost"); //$NON-NLS-1$
 	}
 
 	public void setHost(String host) {
@@ -179,7 +179,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	}
 
 	public String getDocumentRoot() {
-		return getAttribute(Server.DOCUMENT_ROOT, "");
+		return getAttribute(Server.DOCUMENT_ROOT, ""); //$NON-NLS-1$
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 		try {
 			return new URL(this.getBaseURL());
 		} catch (Exception e) {
-			Logger.logException("Could not get root URL", e);
+			Logger.logException("Could not get root URL", e); //$NON-NLS-1$
 			return null;
 		}
 
@@ -200,7 +200,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	protected static String renderCommandLine(String[] commandLine,
 			String separator) {
 		if (commandLine == null || commandLine.length < 1)
-			return "";
+			return ""; //$NON-NLS-1$
 		StringBuffer buf = new StringBuffer(commandLine[0]);
 		for (int i = 1; i < commandLine.length; i++) {
 			buf.append(separator);
@@ -218,13 +218,13 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	}
 
 	public String getPortString() {
-		return getAttribute(Server.PORT, "80");
+		return getAttribute(Server.PORT, "80"); //$NON-NLS-1$
 	}
 
 	public void setPort(String port) {
 		try {
-			if (port.equals("")) {
-				setAttribute(Server.PORT, "80");
+			if (port.equals("")) { //$NON-NLS-1$
+				setAttribute(Server.PORT, "80"); //$NON-NLS-1$
 			} else {
 				setAttribute(Server.PORT, port);
 			}
@@ -260,7 +260,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		return "Server [" + getName() + "::" + getHost() + ']';
+		return "Server [" + getName() + "::" + getHost() + ']'; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/*

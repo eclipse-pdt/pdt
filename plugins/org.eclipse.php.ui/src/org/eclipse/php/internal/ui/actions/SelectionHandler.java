@@ -68,7 +68,7 @@ public abstract class SelectionHandler extends AbstractHandler {
 						return module.getElementAt(offset);
 					} catch (ModelException e) {
 						throw new ExecutionException(
-								"Error trying to resolve document's element", e); //$NON-NLS-1 
+								Messages.SelectionHandler_0, e); //$NON-NLS-1 
 					}
 				}
 			}

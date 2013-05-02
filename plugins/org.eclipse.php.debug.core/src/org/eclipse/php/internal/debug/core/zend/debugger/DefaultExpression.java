@@ -50,7 +50,7 @@ public class DefaultExpression implements Expression {
 	}
 
 	public String toString() {
-		return getLastName() + " = " + getValue().getValueAsString();
+		return getLastName() + " = " + getValue().getValueAsString(); //$NON-NLS-1$
 	}
 
 	public Expression createChildExpression(String endName,

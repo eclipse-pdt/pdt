@@ -27,7 +27,7 @@ public class DebugHandlersRegistry {
 	private static final String HANDLER_TAG = "handler"; //$NON-NLS-1$
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
-	private static final String REMOTE_DEBUGGER_ATTRIBUTE = "debugger";
+	private static final String REMOTE_DEBUGGER_ATTRIBUTE = "debugger"; //$NON-NLS-1$
 
 	/** Debug handlers stored by ID */
 	private Dictionary actions = new Hashtable();
@@ -108,7 +108,7 @@ public class DebugHandlersRegistry {
 		public IDebugHandler createHandler() {
 			Platform
 					.run(new SafeRunnable(
-							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugHandlers") {
+							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugHandlers") { //$NON-NLS-1$							
 						public void run() throws Exception {
 							handler = (IDebugHandler) element
 									.createExecutableExtension(CLASS_ATTRIBUTE);

@@ -38,7 +38,7 @@ public class CommunicationDaemonRegistry {
 	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 
-	private static final String DEFAULT_DEBUG_DAEMONS_NAMESPACE = "org.eclipse.php.debug.core";
+	private static final String DEFAULT_DEBUG_DAEMONS_NAMESPACE = "org.eclipse.php.debug.core"; //$NON-NLS-1$
 
 	/** Actions stored by ID */
 	private Dictionary<String, CommunicationDaemonFactory> daemons = new Hashtable<String, CommunicationDaemonFactory>();
@@ -184,7 +184,7 @@ public class CommunicationDaemonRegistry {
 			if (daemon == null) {
 				SafeRunner
 						.run(new SafeRunnable(
-								"Error creation extension for extension-point org.eclipse.php.internal.debug.daemon.communication") {
+								"Error creation extension for extension-point org.eclipse.php.internal.debug.daemon.communication") { //$NON-NLS-1$
 							public void run() throws Exception {
 								daemon = (ICommunicationDaemon) element
 										.createExecutableExtension(CLASS_ATTRIBUTE);

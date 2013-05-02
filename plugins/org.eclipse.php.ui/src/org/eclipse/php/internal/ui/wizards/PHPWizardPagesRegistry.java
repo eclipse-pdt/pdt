@@ -32,7 +32,7 @@ public class PHPWizardPagesRegistry {
 
 	private PHPWizardPagesRegistry() {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(EXTENSION_POINT); //$NON-NLS-1$
+				.getConfigurationElementsFor(EXTENSION_POINT); 
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (PAGE_ELEMENT.equals(element.getName())) {
@@ -61,7 +61,7 @@ public class PHPWizardPagesRegistry {
 		if (elementsList != null) {
 			final List pagesList = new LinkedList();
 			SafeRunner.run(new SafeRunnable(
-					PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) { //$NON-NLS-1$
+					PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) { 
 						public void run() throws Exception {
 							Iterator i = elementsList.iterator();
 							while (i.hasNext()) {
@@ -94,7 +94,7 @@ public class PHPWizardPagesRegistry {
 		if (elementsList != null) {
 			final List pagesList = new LinkedList();
 			SafeRunner.run(new SafeRunnable(
-					PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) { //$NON-NLS-1$
+					PHPUIMessages.PHPWizardPagesRegistry_0 + EXTENSION_POINT) { 
 						public void run() throws Exception {
 							Iterator i = elementsList.iterator();
 							while (i.hasNext()) {

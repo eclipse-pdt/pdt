@@ -197,9 +197,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 							.getRegionAtCharacterOffset(selectionOffset);
 					if (textRegion instanceof ForeignRegion) {
 						ForeignRegion foreignRegion = (ForeignRegion) textRegion;
-						isJavaScriptRegion = "script"
-								.equalsIgnoreCase(foreignRegion
-										.getSurroundingTag());
+						isJavaScriptRegion = "script" //$NON-NLS-1$
+						.equalsIgnoreCase(foreignRegion.getSurroundingTag());
 					}
 
 					// Check if the containing project has JS nature or not
@@ -228,7 +227,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 						// Pop a question dialog - if the user selects 'Yes' JS
 						// Support is added, otherwise no change
 						int addJavaScriptSupport = OptionalMessageDialog.open(
-								"PROMPT_ADD_JAVASCRIPT_SUPPORT",
+								"PROMPT_ADD_JAVASCRIPT_SUPPORT",//$NON-NLS-1$
 								activeWorkbenchShell,
 								PHPUIMessages.PHPStructuredTextViewer_0, null,
 								PHPUIMessages.PHPStructuredTextViewer_1,
@@ -433,7 +432,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 							structuredDocument, structuredDocumentRegion,
 							structuredDocumentRegion, null, newList, null, 0, 0);
 					redrawRegionsReplaced(regionsReplacedEvent);
-				} 
+				}
 			}
 			super.redrawRegionChanged(structuredDocumentEvent);
 		}

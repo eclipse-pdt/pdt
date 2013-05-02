@@ -364,7 +364,7 @@ public class PHPLaunchUtilities {
 								.openConfirm(
 										Display.getDefault().getActiveShell(),
 										PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-										"A previous launch with 'Debug All Pages' or 'Start Debug From' attribute was identifed.\nLaunching a new session will terminate and remove the old launch, directing all future debug requests associated with it to the new launch.\nDo you wish to continue and launch a new session?")); //$NON-NLS-1$
+										PHPDebugCoreMessages.PHPLaunchUtilities_0)); 
 					} else {
 						if (newIsDebugAllPages) {
 							resultHolder.setResult(MessageDialog
@@ -372,7 +372,7 @@ public class PHPLaunchUtilities {
 											Display.getDefault()
 													.getActiveShell(),
 											PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-											"The requested launch has a 'Debug All Pages' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?")); //$NON-NLS-1$
+											PHPDebugCoreMessages.PHPLaunchUtilities_7)); 
 						} else {
 							// newIsStartDebugFrom == true
 							resultHolder.setResult(MessageDialog
@@ -380,7 +380,7 @@ public class PHPLaunchUtilities {
 											Display.getDefault()
 													.getActiveShell(),
 											PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-											"The requested launch has a 'Start Debug From' attribute.\nLaunching this type of session will terminate and remove any other previous launches.\nDo you wish to continue and launch the new session?")); //$NON-NLS-1$
+											PHPDebugCoreMessages.PHPLaunchUtilities_8)); 
 						}
 					}
 					if (resultHolder.getResult()) {
@@ -735,7 +735,7 @@ public class PHPLaunchUtilities {
 				map.put(attribute.substring(0, index),
 						attribute.substring(index + 1));
 			} catch (Exception e) {
-				Logger.logException("Error while parsing launch attribute '"
+				Logger.logException("Error while parsing launch attribute '" //$NON-NLS-1$
 						+ attribute + '\'', e);
 			}
 		}
@@ -781,8 +781,8 @@ public class PHPLaunchUtilities {
 				queryStringBuf.append('&').append(arg);
 			}
 		}
-		env.put("QUERY_STRING", queryStringBuf.toString());
-		env.put("REDIRECT_STATUS", "1"); //$NON-NLS-1$
+		env.put("QUERY_STRING", queryStringBuf.toString()); //$NON-NLS-1$
+		env.put("REDIRECT_STATUS", "1"); //$NON-NLS-1$ //$NON-NLS-2$
 		env.put("PHPRC", phpConfigDir); //$NON-NLS-1$
 
 		appendLibrarySearchPathEnv(env, new File(phpExeDir));
@@ -795,10 +795,10 @@ public class PHPLaunchUtilities {
 			String phpExeDir, String[] scriptArguments) {
 		Map<String, String> env = new HashMap<String, String>();
 		env.put("REQUEST_METHOD", "GET"); //$NON-NLS-1$ //$NON-NLS-2$
-		//		env.put("SCRIPT_FILENAME", fileName); //$NON-NLS-1$
-		//		env.put("SCRIPT_NAME", fileName); //$NON-NLS-1$
-		//		env.put("PATH_TRANSLATED", fileName); //$NON-NLS-1$
-		//		env.put("PATH_INFO", fileName); //$NON-NLS-1$
+		//		env.put("SCRIPT_FILENAME", fileName);
+		//		env.put("SCRIPT_NAME", fileName);
+		//		env.put("PATH_TRANSLATED", fileName);
+		//		env.put("PATH_INFO", fileName);
 
 		// Build query string
 		StringBuilder queryStringBuf = new StringBuilder(query);
@@ -808,8 +808,8 @@ public class PHPLaunchUtilities {
 				queryStringBuf.append('&').append(arg);
 			}
 		}
-		env.put("QUERY_STRING", queryStringBuf.toString());
-		env.put("REDIRECT_STATUS", "1"); //$NON-NLS-1$
+		env.put("QUERY_STRING", queryStringBuf.toString()); //$NON-NLS-1$
+		env.put("REDIRECT_STATUS", "1"); //$NON-NLS-1$ //$NON-NLS-2$
 		env.put("PHPRC", phpConfigDir); //$NON-NLS-1$
 
 		appendLibrarySearchPathEnv(env, new File(phpExeDir));
@@ -861,7 +861,7 @@ public class PHPLaunchUtilities {
 	private static String getLibrarySearchEnvValue(String variable,
 			File phpExeDir, boolean quoted) {
 		StringBuilder buf = new StringBuilder();
-		File libDirectory = new File(phpExeDir.getParentFile(), "lib");
+		File libDirectory = new File(phpExeDir.getParentFile(), "lib"); //$NON-NLS-1$
 		if (libDirectory.exists()) {
 			buf.append(createPath(libDirectory, quoted));
 		} else {
@@ -885,7 +885,7 @@ public class PHPLaunchUtilities {
 	private static String getLibrarySearchEnvVariable() {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
 		if (os.startsWith("Win")) { //$NON-NLS-1$
-			return null; // "PATH"; //$NON-NLS-1$
+			return null; // "PATH";
 		}
 		if (os.startsWith("Mac")) { //$NON-NLS-1$
 			return "DYLD_LIBRARY_PATH"; //$NON-NLS-1$
@@ -920,15 +920,15 @@ public class PHPLaunchUtilities {
 			String[] args, String phpVersion) throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		IProject project = getProject(configuration);
-		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on"
-				: "off";
-		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on"
-				: "off";
+		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on" //$NON-NLS-1$
+				: "off"; //$NON-NLS-1$
+		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on" //$NON-NLS-1$
+				: "off"; //$NON-NLS-1$
 
 		List<String> cmdLineList = new LinkedList<String>();
-		cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c",
-				phpConfigDir, "-d", "asp_tags=" + aspTags, "-d",
-				"short_open_tag=" + shortOpenTag, scriptPath }));
+		cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c", //$NON-NLS-1$
+				phpConfigDir, "-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				"short_open_tag=" + shortOpenTag, scriptPath })); //$NON-NLS-1$
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
 		}
@@ -948,27 +948,27 @@ public class PHPLaunchUtilities {
 			String[] args) throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		IProject project = getProject(configuration);
-		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on"
-				: "off";
-		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on"
-				: "off";
-		if (server.startsWith("http://")) {
+		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on" //$NON-NLS-1$
+				: "off"; //$NON-NLS-1$
+		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on" //$NON-NLS-1$
+				: "off"; //$NON-NLS-1$
+		if (server.startsWith("http://")) { //$NON-NLS-1$
 			server = server.substring(7);
-		} else if (server.startsWith("https://")) {
+		} else if (server.startsWith("https://")) { //$NON-NLS-1$
 			server = server.substring(8);
 		}
 
 		List<String> cmdLineList = new LinkedList<String>();
 		if (routerFile == null) {
-			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S",
-					server, "-t", root, "-n", "-c", phpConfigDir, "-d",
-					"asp_tags=" + aspTags, "-d",
-					"short_open_tag=" + shortOpenTag }));
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S", //$NON-NLS-1$
+					server, "-t", root, "-n", "-c", phpConfigDir, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					"asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$
+					"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
 		} else {
-			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S",
-					server, "-t", root, routerFile, "-n", "-c", phpConfigDir,
-					"-d", "asp_tags=" + aspTags, "-d",
-					"short_open_tag=" + shortOpenTag }));
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S", //$NON-NLS-1$
+					server, "-t", root, routerFile, "-n", "-c", phpConfigDir, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					"-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
 		}
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
@@ -1067,7 +1067,7 @@ public class PHPLaunchUtilities {
 			buf.append(key).append('=');
 			try {
 				buf.append(URLEncoder.encode((String) parameters.get(key),
-						"UTF-8"));
+						"UTF-8")); //$NON-NLS-1$
 			} catch (UnsupportedEncodingException exc) {
 			}
 			if (e.hasMoreElements()) {

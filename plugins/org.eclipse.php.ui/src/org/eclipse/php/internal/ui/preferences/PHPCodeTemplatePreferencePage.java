@@ -34,7 +34,7 @@ public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 	private PHPCodeTemplateBlock fCodeTemplateConfigurationBlock;
 
 	public PHPCodeTemplatePreferencePage() {
-		setDescription(PHPUIMessages.CodeTemplatesPreferencePage_title); //$NON-NLS-1$
+		setDescription(PHPUIMessages.CodeTemplatesPreferencePage_title); 
 	}
 
 	/*

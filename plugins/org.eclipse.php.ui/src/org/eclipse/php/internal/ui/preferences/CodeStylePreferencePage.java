@@ -49,7 +49,7 @@ public class CodeStylePreferencePage extends PropertyAndPreferencePage
 		comp.setLayout(layout);
 
 		Label descLabel = new Label(comp, SWT.NONE);
-		descLabel.setText("Expand the tree to edit Code Style preferences");
+		descLabel.setText(PreferencesMessages.CodeStylePreferencePage_0);
 
 		return comp;
 	}

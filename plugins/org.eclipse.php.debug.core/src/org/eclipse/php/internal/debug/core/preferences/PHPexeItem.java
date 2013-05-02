@@ -216,7 +216,7 @@ public class PHPexeItem {
 	 */
 	public void setExecutable(File executable) {
 		if (executable == null) {
-			throw new IllegalArgumentException("PHP executable path is null");
+			throw new IllegalArgumentException("PHP executable path is null"); //$NON-NLS-1$
 		}
 
 		if (executable.equals(this.executable)) {
@@ -282,10 +282,10 @@ public class PHPexeItem {
 	 */
 	public String toString() {
 		StringBuilder buf = new StringBuilder(name);
-		buf.append(" [path: ").append(executable.getAbsolutePath());
-		buf.append(", config file: ").append(config.getAbsolutePath());
-		buf.append(", sapi: ").append(sapiType);
-		buf.append("]");
+		buf.append(" [path: ").append(executable.getAbsolutePath()); //$NON-NLS-1$
+		buf.append(", config file: ").append(config.getAbsolutePath()); //$NON-NLS-1$
+		buf.append(", sapi: ").append(sapiType); //$NON-NLS-1$
+		buf.append("]"); //$NON-NLS-1$
 		return buf.toString();
 	}
 
@@ -375,7 +375,7 @@ public class PHPexeItem {
 			// Detect version and type:
 			String output = exec(
 					executable.getAbsolutePath(),
-					"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
+					"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			Matcher m = PHP_VERSION.matcher(output);
 			if (m.find()) {
 				initFields(m);
@@ -388,7 +388,7 @@ public class PHPexeItem {
 					initFields(m);
 				} else {
 					PHPDebugPlugin
-							.logErrorMessage("Can't determine version of the PHP executable"); //$NON-NLS-1$	
+							.logErrorMessage("Can't determine version of the PHP executable"); //$NON-NLS-1$
 					// this.executable = null;
 					return;
 				}
@@ -399,7 +399,7 @@ public class PHPexeItem {
 			if (detectedConfig == null) {
 				output = exec(
 						executable.getAbsolutePath(),
-						"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$
+						"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				if (sapiType == SAPI_CLI) {
 					m = PHP_CLI_CONFIG.matcher(output);
 				} else if (sapiType == SAPI_CGI) {
@@ -488,7 +488,7 @@ public class PHPexeItem {
 		try {
 			PHPexes.changePermissions(executable);
 			exec(executable.getAbsolutePath(),
-					"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", scriptFile); //$NON-NLS-1$ //$NON-NLS-2$
+					"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", scriptFile); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		} catch (IOException e) {
 			DebugPlugin.log(e);
 			status = false;

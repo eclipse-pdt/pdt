@@ -198,7 +198,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			}
 
 			// update useStatements
-			Job job = new Job("Updating Outline view") {
+			Job job = new Job(PHPUIMessages.PHPOutlineContentProvider_0) {
 
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
@@ -312,7 +312,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		public UseStatementsNode(ISourceModule sourceModule) {
 			super((ModelElement) sourceModule,
 					PHPUIMessages.PHPOutlineContentProvider_useStatementsNode,
-					0, null); //$NON-NLS-1$
+					0, null); 
 			fSourceModule = sourceModule;
 		}
 

@@ -17,9 +17,9 @@ import org.eclipse.php.internal.core.PHPToolkitUtil;
 public class PHPArchiveFileFilter extends ViewerFilter {
 
 	public static final String[] FILTER_EXTENSIONS = new String[] {
-			"*.phar", "*.tar", "*.bz2", "*.gz", "*.zip" }; //$NON-NLS-1$
+			"*.phar", "*.tar", "*.bz2", "*.gz", "*.zip" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
-	//	private static final String[] fgArchiveExtensions = { "phar","zip" }; //$NON-NLS-1$ 
+	//	private static final String[] fgArchiveExtensions = { "phar","zip" }; 
 
 	private List fExcludes;
 

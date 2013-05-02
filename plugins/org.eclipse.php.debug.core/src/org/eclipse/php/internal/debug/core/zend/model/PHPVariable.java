@@ -107,15 +107,15 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 				.getExpressionManager();
 		Expression changeVar = variable;
 		if (global) {
-			String exp = "$GLOBALS[\"" + variable.getFullName().substring(1)
-					+ "\"]";
+			String exp = "$GLOBALS[\"" + variable.getFullName().substring(1) //$NON-NLS-1$
+					+ "\"]"; //$NON-NLS-1$
 			changeVar = new DefaultExpression(exp);
 		}
 		boolean status = expressionManager
 				.assignValue(changeVar, expression, 1);
 		if (!status) {
-			Logger.debugMSG("[" + this
-					+ "] PHPValue: Problem changing variable value");
+			Logger.debugMSG("[" + this //$NON-NLS-1$
+					+ "] PHPValue: Problem changing variable value"); //$NON-NLS-1$
 		}
 		expressionManager.update(changeVar, 1);
 		value.updateValue(changeVar.getValue());

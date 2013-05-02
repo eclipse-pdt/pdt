@@ -191,7 +191,7 @@ public class ServerLaunchConfigurationTab extends
 		data.widthHint = 100;
 		label.setLayoutData(data);
 		label.setFont(parent.getFont());
-		label.setText("PHP Server:");
+		label.setText(PHPServerUIMessages.getString("ServerLaunchConfigurationTab.0")); //$NON-NLS-1$
 
 		serverCombo = new Combo(phpServerComp, SWT.SINGLE | SWT.BORDER
 				| SWT.READ_ONLY);
@@ -344,11 +344,11 @@ public class ServerLaunchConfigurationTab extends
 	protected void updateURLComponents(String urlStr) {
 		try {
 			URL url = new URL(urlStr);
-			String port = url.getPort() == -1 ? "" : ":" + url.getPort();
+			String port = url.getPort() == -1 ? "" : ":" + url.getPort(); //$NON-NLS-1$ //$NON-NLS-2$
 			fURLHost.setText(url.getProtocol()
 					+ "://" + url.getHost() + port + "/"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (url.getQuery() != null) {
-				fURLPath.setText(url.getPath() + "?" + url.getQuery());
+				fURLPath.setText(url.getPath() + "?" + url.getQuery()); //$NON-NLS-1$
 			} else {
 				fURLPath.setText(url.getPath());
 			}
@@ -515,13 +515,13 @@ public class ServerLaunchConfigurationTab extends
 		if (basePath == null && resource.getProject() != null)
 			basePath = resource.getProject().getName();
 		else if (basePath == null && resource.getProject() == null) {
-			basePath = "";
+			basePath = ""; //$NON-NLS-1$
 		}
 
 		int type = resource.getType();
 		if (type == IResource.FILE || type == IResource.FOLDER) {
 
-			formatFile = basePath + "/"
+			formatFile = basePath + "/" //$NON-NLS-1$
 					+ resource.getFullPath().removeFirstSegments(1).toString();
 		} else {
 			formatFile = basePath + "/"; //$NON-NLS-1$
@@ -609,7 +609,7 @@ public class ServerLaunchConfigurationTab extends
 		String fileName = fFile.getText();
 
 		String urlPath = fURLPath.getText().replace('\\', '/');
-		if (urlPath.startsWith("/")) {
+		if (urlPath.startsWith("/")) { //$NON-NLS-1$
 			urlPath = urlPath.substring(1);
 		}
 		String url = fURLHost.getText() + urlPath;

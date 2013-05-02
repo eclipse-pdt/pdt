@@ -342,7 +342,7 @@ public class StubUtility {
 		StringBuffer buf = new StringBuffer();
 		buf.append("@see "); //$NON-NLS-1$
 		buf.append(declaringClassQualifiedName);
-		buf.append("::");
+		buf.append("::"); //$NON-NLS-1$
 		buf.append(methodName);
 		buf.append('(');
 
@@ -425,7 +425,7 @@ public class StubUtility {
 				templateName = CodeTemplateContextType.OVERRIDECOMMENT_ID;
 		} else if (retTypeSig == null
 				&& typeName != null
-				&& (typeName.equals(methodName) || "constructor"
+				&& (typeName.equals(methodName) || "constructor" //$NON-NLS-1$
 						.equals(methodName))) {
 			templateName = CodeTemplateContextType.CONSTRUCTORCOMMENT_ID;
 		}

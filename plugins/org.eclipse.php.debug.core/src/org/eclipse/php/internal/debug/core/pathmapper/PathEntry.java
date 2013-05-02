@@ -22,9 +22,9 @@ public class PathEntry {
 	 * Type of the file that this entry contains
 	 */
 	public enum Type {
-		WORKSPACE("Workspace File"), INCLUDE_VAR("Include Path Variable"), INCLUDE_FOLDER(
-				"Include Path Folder"), EXTERNAL("External File"), SERVER(
-				"Server File"), ;
+		WORKSPACE("Workspace File"), INCLUDE_VAR("Include Path Variable"), INCLUDE_FOLDER( //$NON-NLS-1$ //$NON-NLS-2$
+				"Include Path Folder"), EXTERNAL("External File"), SERVER( //$NON-NLS-1$ //$NON-NLS-2$
+				"Server File"), ; //$NON-NLS-1$
 
 		private String name;
 
@@ -139,8 +139,8 @@ public class PathEntry {
 	}
 
 	public String toString() {
-		StringBuilder buf = new StringBuilder("Path Entry: ");
-		buf.append(abstractPath).append(" (").append(type).append(")");
+		StringBuilder buf = new StringBuilder("Path Entry: "); //$NON-NLS-1$
+		buf.append(abstractPath).append(" (").append(type).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 		return buf.toString();
 	}
 }

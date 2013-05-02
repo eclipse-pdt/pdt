@@ -36,7 +36,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 	private static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions"; //$NON-NLS-1$
 	private static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline"; //$NON-NLS-1$
 	public static final String ID_MVC = "org.zend.php.framework.ui.views.mvc"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_DEBUG_UI_DEBUG_PERSPECTIVE = "org.eclipse.debug.ui.DebugPerspective"; //$//$NON-NLS-1$	
+	private static final String ORG_ECLIPSE_DEBUG_UI_DEBUG_PERSPECTIVE = "org.eclipse.debug.ui.DebugPerspective"; //$	 //$NON-NLS-1$
 
 	public void createInitialLayout(IPageLayout layout) {
 
@@ -81,7 +81,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 
 		IFolderLayout outlineFolder = layout.createFolder(TOP_RIGHT_LOCATION,
-				IPageLayout.RIGHT, (float) 0.75, editorArea); //$NON-NLS-1$
+				IPageLayout.RIGHT, (float) 0.75, editorArea); 
 		outlineFolder.addView(IPageLayout.ID_OUTLINE);
 		outlineFolder.addPlaceholder(ID_PROJECT_OUTLINE);
 		outlineFolder.addPlaceholder(ID_MVC);

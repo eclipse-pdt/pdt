@@ -101,7 +101,7 @@ public class SaveFilesHandler {
 
 		public void run() {
 			monitor.beginTask(PHPUIMessages.SaveFilesHandler_0, dirtyEditors
-					.size()); //$NON-NLS-1$
+					.size()); 
 			for (Iterator i = dirtyEditors.iterator(); i.hasNext();) {
 				if (monitor.isCanceled()) {
 					return;

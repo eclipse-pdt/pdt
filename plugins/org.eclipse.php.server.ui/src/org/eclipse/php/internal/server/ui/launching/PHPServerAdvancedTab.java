@@ -130,31 +130,31 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		tunnelGroup = new Group(composite, SWT.NONE);
 		tunnelGroup.setLayout(new GridLayout(1, false));
 		tunnelGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		tunnelGroup.setText("SSH Tunnel");
+		tunnelGroup.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.1")); //$NON-NLS-1$
 
 		Group browserGroup = new Group(composite, SWT.NONE);
 		browserGroup.setLayout(new GridLayout(1, false));
 		browserGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		browserGroup.setText("Browser");
+		browserGroup.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.2")); //$NON-NLS-1$
 
 		// == Controls ==
 		// Add the tunneling controls
 		PixelConverter converter = new PixelConverter(composite);
 		debugThroughTunnel = new Button(tunnelGroup, SWT.CHECK);
-		debugThroughTunnel.setText("Debug Through SSH Tunnel");
+		debugThroughTunnel.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.3")); //$NON-NLS-1$
 		Composite credentialsComposite = new Composite(tunnelGroup, SWT.NONE);
 		credentialsComposite.setLayout(new GridLayout(2, false));
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalIndent = 20;
 		credentialsComposite.setLayoutData(data);
 		nameLabel = new Label(credentialsComposite, SWT.NONE);
-		nameLabel.setText("User Name:");
+		nameLabel.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.4")); //$NON-NLS-1$
 		userName = new Text(credentialsComposite, SWT.BORDER | SWT.SINGLE);
 		data = new GridData();
 		data.widthHint = converter.convertHorizontalDLUsToPixels(150);
 		userName.setLayoutData(data);
 		passwordLabel = new Label(credentialsComposite, SWT.NONE);
-		passwordLabel.setText("Password:");
+		passwordLabel.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.5")); //$NON-NLS-1$
 		password = new Text(credentialsComposite, SWT.PASSWORD | SWT.BORDER
 				| SWT.SINGLE);
 		data = new GridData();
@@ -170,7 +170,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		data.horizontalSpan = 2;
 		testConnectionComposite.setLayoutData(data);
 		testButton = new Button(testConnectionComposite, SWT.PUSH);
-		testButton.setText("Test Connection");
+		testButton.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.6")); //$NON-NLS-1$
 		testResultLabel = new CLabel(testConnectionComposite, SWT.NONE);
 		testResultLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		testButton.addSelectionListener(new SelectionAdapter() {
@@ -181,10 +181,10 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		});
 		testResultLabel.addMouseListener(new MouseAdapter() {
 			public void mouseUp(MouseEvent e) {
-				Object messageData = testResultLabel.getData("info");
+				Object messageData = testResultLabel.getData("info"); //$NON-NLS-1$
 				if (messageData != null) {
 					MessageDialog.openInformation(getShell(),
-							"SSH Tunnel Test", messageData.toString());
+							PHPServerUIMessages.getString("PHPServerAdvancedTab.8"), messageData.toString()); //$NON-NLS-1$
 				}
 			}
 		});
@@ -199,7 +199,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 		// Add the Browser group controls
 		openBrowser = new Button(browserGroup, SWT.CHECK);
-		openBrowser.setText("Open in Browser");
+		openBrowser.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.9")); //$NON-NLS-1$
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalSpan = 3;
 		openBrowser.setLayoutData(data);
@@ -230,31 +230,31 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		});
 
 		// Add the Session group controls
-		debugAllPagesBt = createRadioButton(sessionGroup, "Debug &All Pages");
+		debugAllPagesBt = createRadioButton(sessionGroup, PHPServerUIMessages.getString("PHPServerAdvancedTab.10")); //$NON-NLS-1$
 		data = (GridData) debugAllPagesBt.getLayoutData();
 		data.horizontalSpan = 3;
 		data.horizontalIndent = 20;
 
 		debugFirstPageBt = createRadioButton(sessionGroup,
-				"Debug &First Page Only");
+				PHPServerUIMessages.getString("PHPServerAdvancedTab.11")); //$NON-NLS-1$
 		data = (GridData) debugFirstPageBt.getLayoutData();
 		data.horizontalSpan = 3;
 		data.horizontalIndent = 20;
 
-		debugStartFromBt = createRadioButton(sessionGroup, "&Start Debug from:");
+		debugStartFromBt = createRadioButton(sessionGroup, PHPServerUIMessages.getString("PHPServerAdvancedTab.12")); //$NON-NLS-1$
 		data = (GridData) debugStartFromBt.getLayoutData();
 		data.horizontalIndent = 20;
 
 		debugFromTxt = new Text(sessionGroup, SWT.SINGLE | SWT.BORDER);
 		debugFromTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		resetBt = createPushButton(sessionGroup, "Default", null);
+		resetBt = createPushButton(sessionGroup, PHPServerUIMessages.getString("PHPServerAdvancedTab.13"), null); //$NON-NLS-1$
 		resetBt.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if (launchConfiguration != null) {
 					try {
 						debugFromTxt.setText(launchConfiguration.getAttribute(
-								Server.BASE_URL, ""));
+								Server.BASE_URL, "")); //$NON-NLS-1$
 					} catch (CoreException e1) {
 					}
 				}
@@ -262,7 +262,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		});
 
 		debugContinueBt = createCheckButton(sessionGroup,
-				"&Continue Debug from This Page");
+				PHPServerUIMessages.getString("PHPServerAdvancedTab.15")); //$NON-NLS-1$
 		data = (GridData) debugContinueBt.getLayoutData();
 		data.horizontalSpan = 3;
 		data.horizontalIndent = 40;
@@ -288,12 +288,12 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 		KeyListener userInputListener = new KeyListener() {
 			public void keyReleased(KeyEvent e) {
-				testResultLabel.setText("");
+				testResultLabel.setText(""); //$NON-NLS-1$
 				testButton.setEnabled((userName.getText().trim().length() > 0));
 			}
 
 			public void keyPressed(KeyEvent e) {
-				testResultLabel.setText("");
+				testResultLabel.setText(""); //$NON-NLS-1$
 			}
 		};
 		userName.addKeyListener(userInputListener);
@@ -302,7 +302,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 
 	protected void createDebuggerSelectionControl(Composite parent) {
 		Group group = new Group(parent, SWT.NONE);
-		group.setText("Debugger"); //$NON-NLS-1$
+		group.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.18")); //$NON-NLS-1$
 		GridLayout ly = new GridLayout(1, false);
 		ly.marginHeight = 0;
 		ly.marginWidth = 0;
@@ -323,7 +323,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		data.widthHint = 100;
 		label.setLayoutData(data);
 		label.setFont(font);
-		label.setText("Server Debugger:");
+		label.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.19")); //$NON-NLS-1$
 
 		fDebuggersCombo = new Combo(debuggerServerComp, SWT.SINGLE | SWT.BORDER
 				| SWT.READ_ONLY);
@@ -337,16 +337,16 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 				openBrowser.setSelection(isXDebug
 						|| debugFirstPageBt.getEnabled());
 				if (isXDebug) {
-					openBrowser.setText("Open in Browser (locked for XDebug)");
+					openBrowser.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.20")); //$NON-NLS-1$
 				} else {
-					openBrowser.setText("Open in Browser");
+					openBrowser.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.21")); //$NON-NLS-1$
 				}
 				updateLaunchConfigurationDialog();
 				updateDebugServerTesters();
 			}
 		});
 
-		validateDebuggerBtn = createPushButton(debuggerServerComp, "Test", null); //$NON-NLS-1$
+		validateDebuggerBtn = createPushButton(debuggerServerComp, PHPServerUIMessages.getString("PHPServerAdvancedTab.22"), null); //$NON-NLS-1$
 		validateDebuggerBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				updateDebugServerTesters();
@@ -367,7 +367,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		});
 
 		configureDebugger = createPushButton(debuggerServerComp,
-				PHPServerUIMessages.getString("ServerTab.configure"), null); //$NON-NLS-1$
+				PHPServerUIMessages.getString(PHPServerUIMessages.getString("PHPServerAdvancedTab.23")), null); //$NON-NLS-1$
 		configureDebugger.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent e) {
@@ -384,11 +384,11 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	protected void createBreakControl(Composite parent) {
 
 		Group group = new Group(parent, SWT.NONE);
-		group.setText("Breakpoint");
+		group.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.24")); //$NON-NLS-1$
 		group.setLayout(new GridLayout(1, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-		breakOnFirstLine = createCheckButton(group, "Break at First Line");
+		breakOnFirstLine = createCheckButton(group, PHPServerUIMessages.getString("PHPServerAdvancedTab.25")); //$NON-NLS-1$
 		breakOnFirstLine.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				setDirty(true);
@@ -441,7 +441,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 * @param enabled
 	 */
 	protected void updateTunnelComponents(boolean enabled) {
-		testResultLabel.setText("");
+		testResultLabel.setText(""); //$NON-NLS-1$
 		setEnabled(enabled, userName, password, nameLabel, passwordLabel,
 				testResultLabel);
 		testButton
@@ -483,11 +483,11 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		testButton.setEnabled(false);
 		testResultLabel.setForeground(Display.getDefault().getSystemColor(
 				SWT.COLOR_BLUE));
-		testResultLabel.setText("Testing Connection...");
+		testResultLabel.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.27")); //$NON-NLS-1$
 		testResultLabel.setCursor(Display.getDefault().getSystemCursor(
 				SWT.CURSOR_WAIT));
-		testResultLabel.setData("info", null);
-		Job connectionTest = new UIJob("SSH Tunnel Test") {
+		testResultLabel.setData("info", null); //$NON-NLS-1$
+		Job connectionTest = new UIJob(PHPServerUIMessages.getString("PHPServerAdvancedTab.29")) { //$NON-NLS-1$
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				try {
 					String remoteHost = PHPLaunchUtilities
@@ -504,18 +504,18 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 								.getSystemColor(SWT.COLOR_DARK_RED));
 						if (port > -1) {
 							testResultLabel
-									.setText("Missing host (click for more information)");
+									.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.30")); //$NON-NLS-1$
 							testResultLabel
 									.setData(
-											"info",
-											"Missing host address. \nPlease fill in the Server part in the 'Server' tab before testing the connection.");
+											"info", //$NON-NLS-1$
+											PHPServerUIMessages.getString("PHPServerAdvancedTab.32")); //$NON-NLS-1$
 						} else {
 							testResultLabel
-									.setText("Error (click for more information)");
+									.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.33")); //$NON-NLS-1$
 							testResultLabel
 									.setData(
-											"info",
-											"Could not determin the port to tunnel. \nPlease 'Apply' the dialog and try again.");
+											"info", //$NON-NLS-1$
+											PHPServerUIMessages.getString("PHPServerAdvancedTab.35")); //$NON-NLS-1$
 						}
 					}
 
@@ -529,7 +529,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 					if (connectionStatus.isOK()) {
 						testResultLabel.setForeground(Display.getDefault()
 								.getSystemColor(SWT.COLOR_DARK_GREEN));
-						testResultLabel.setText("Successfully connected");
+						testResultLabel.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.36")); //$NON-NLS-1$
 					} else if (connectionStatus.isMultiStatus()) {
 						// A case where the connection indicate that it was
 						// successful, however, we were still not able to verify
@@ -539,8 +539,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 						testResultLabel.setForeground(Display.getDefault()
 								.getSystemColor(SWT.COLOR_DARK_YELLOW));
 						testResultLabel
-								.setText("Undetermined (click for more information)");
-						testResultLabel.setData("info",
+								.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.37")); //$NON-NLS-1$
+						testResultLabel.setData("info", //$NON-NLS-1$
 								connectionStatus.getMessage());
 						// Update the password fields in case the multi status
 						// also contains a password change information
@@ -560,13 +560,13 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 						testResultLabel.setForeground(Display.getDefault()
 								.getSystemColor(SWT.COLOR_DARK_GREEN));
 						testResultLabel
-								.setText("Connected with warnings (click for more information)");
-						testResultLabel.setData("info",
+								.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.39")); //$NON-NLS-1$
+						testResultLabel.setData("info", //$NON-NLS-1$
 								connectionStatus.getMessage());
 					} else if (connectionStatus.getSeverity() == IStatus.INFO) {
 						testResultLabel.setForeground(Display.getDefault()
 								.getSystemColor(SWT.COLOR_DARK_GREEN));
-						testResultLabel.setText("Successfully connected");
+						testResultLabel.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.41")); //$NON-NLS-1$
 						// update the password field in case that the info
 						// indicated a password change.
 						if (connectionStatus.getCode() == TunnelTester.PASSWORD_CHANGED_CODE) {
@@ -578,15 +578,15 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 						testResultLabel.setForeground(Display.getDefault()
 								.getSystemColor(SWT.COLOR_DARK_RED));
 						testResultLabel
-								.setText("Failed to Connect (click for more information)");
-						testResultLabel.setData("info",
+								.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.42")); //$NON-NLS-1$
+						testResultLabel.setData("info", //$NON-NLS-1$
 								connectionStatus.getMessage());
 					}
 				} catch (OperationCanceledException oce) {
 					testButton.setEnabled(true);
 					testResultLabel.setCursor(null);
 					testResultLabel.setForeground(null);
-					testResultLabel.setText("Canceled");
+					testResultLabel.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.44")); //$NON-NLS-1$
 				}
 				return Status.OK_STATUS;
 			}
@@ -611,7 +611,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getName()
 	 */
 	public String getName() {
-		return "Debugger";
+		return PHPServerUIMessages.getString("PHPServerAdvancedTab.45"); //$NON-NLS-1$
 	}
 
 	/*
@@ -632,7 +632,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			updateTunnelComponents(isUsingTunnel);
 			if (isUsingTunnel) {
 				userName.setText(configuration.getAttribute(
-						IPHPDebugConstants.SSH_TUNNEL_USER_NAME, ""));
+						IPHPDebugConstants.SSH_TUNNEL_USER_NAME, "")); //$NON-NLS-1$
 				if (userName.getText().length() > 0) {
 					// Load the password from the Secured Storage
 					try {
@@ -640,14 +640,14 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 								.getSecurePreferences(
 										PHPLaunchUtilities
 												.getDebugHost(launchConfiguration))
-								.get(userName.getText(), ""));
+								.get(userName.getText(), "")); //$NON-NLS-1$
 					} catch (StorageException e) {
 						Logger.logException(
-								"Error accessing the secured storage", e);
-						password.setText("");
+								"Error accessing the secured storage", e); //$NON-NLS-1$
+						password.setText(""); //$NON-NLS-1$
 					}
 				} else {
-					password.setText("");
+					password.setText(""); //$NON-NLS-1$
 				}
 			}
 			// Zend debugger have the option not to use a browser to start a
@@ -689,7 +689,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 				debugContinueBt.setSelection(shouldContinue);
 			}
 			String startFromURL = configuration.getAttribute(
-					IPHPDebugConstants.DEBUGGING_START_FROM_URL, "");
+					IPHPDebugConstants.DEBUGGING_START_FROM_URL, ""); //$NON-NLS-1$
 			debugFromTxt.setText(startFromURL);
 			updateDebugFrom();
 			// in case we are dealing with XDebug, enable the browser control
@@ -711,7 +711,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	protected void initializeDebuggerControl(ILaunchConfiguration configuration) {
 		try {
 			String debuggerID = configuration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, "");
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, ""); //$NON-NLS-1$
 			if (debuggerID != null && !debuggerID.equals("")) { //$NON-NLS-1$
 				fDebuggersCombo.setText(PHPDebuggersRegistry
 						.getDebuggerName(debuggerID));
@@ -768,9 +768,9 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 		sessionGroup.setVisible(!isXDebug);
 		openBrowser.setEnabled(!isXDebug);
 		if (isXDebug) {
-			openBrowser.setText("Open in Browser (locked for XDebug)");
+			openBrowser.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.54")); //$NON-NLS-1$
 		} else {
-			openBrowser.setText("Open in Browser");
+			openBrowser.setText(PHPServerUIMessages.getString("PHPServerAdvancedTab.55")); //$NON-NLS-1$
 		}
 	}
 
@@ -835,13 +835,13 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 									true /* encrypt */);
 				}
 			} catch (StorageException e) {
-				Logger.logException("Error saving to the secured storage", e);
+				Logger.logException("Error saving to the secured storage", e); //$NON-NLS-1$
 			}
 		} else {
 			configuration.setAttribute(IPHPDebugConstants.SSH_TUNNEL_USER_NAME,
-					"");
+					""); //$NON-NLS-1$
 			configuration.setAttribute(IPHPDebugConstants.SSH_TUNNEL_PASSWORD,
-					"");
+					""); //$NON-NLS-1$
 		}
 		configuration.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER,
 				isOpenInBrowser);
@@ -917,19 +917,19 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			boolean valid = userName.getText().trim().length() > 0;
 			testButton.setEnabled(valid);
 			if (!valid) {
-				setErrorMessage("Missing user name for the SSH tunnel connection");
+				setErrorMessage(PHPServerUIMessages.getString("PHPServerAdvancedTab.59")); //$NON-NLS-1$
 				return false;
 			}
 		}
 		if (debugStartFromBt.getSelection()) {
-			if (debugFromTxt.getText().trim().equals("")) {
-				setErrorMessage("Invalid debug start page");
+			if (debugFromTxt.getText().trim().equals("")) { //$NON-NLS-1$
+				setErrorMessage(PHPServerUIMessages.getString("PHPServerAdvancedTab.61")); //$NON-NLS-1$
 				return false;
 			}
 			try {
 				new URL(debugFromTxt.getText());
 			} catch (MalformedURLException mue) {
-				setErrorMessage("Invalid URL");
+				setErrorMessage(PHPServerUIMessages.getString("PHPServerAdvancedTab.62")); //$NON-NLS-1$
 				return false;
 			}
 		}
@@ -982,8 +982,8 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 			IConfigurationElement element = elements[i];
 			if ("debugServerTest".equals(element.getName())) { //$NON-NLS-1$
 				String debuggerTypeName = elements[i]
-						.getAttribute("debuggerTypeName");
-				String overridesIds = elements[i].getAttribute("overridesId");
+						.getAttribute("debuggerTypeName"); //$NON-NLS-1$
+				String overridesIds = elements[i].getAttribute("overridesId"); //$NON-NLS-1$
 				if (debuggerTypeName.equals(currentDebuggerType)) {// must be
 																	// equal to
 																	// the
@@ -1022,10 +1022,10 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	// Update the 'debug from' related widgets
 	private void updateDebugFrom() {
 		if (launchConfiguration != null
-				&& debugFromTxt.getText().trim().equals("")) {
+				&& debugFromTxt.getText().trim().equals("")) { //$NON-NLS-1$
 			try {
 				debugFromTxt.setText(launchConfiguration.getAttribute(
-						Server.BASE_URL, ""));
+						Server.BASE_URL, "")); //$NON-NLS-1$
 			} catch (CoreException e) {
 			}
 		}

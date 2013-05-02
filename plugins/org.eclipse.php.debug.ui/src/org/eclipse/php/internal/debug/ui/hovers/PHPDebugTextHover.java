@@ -92,7 +92,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 							varOffset = prevPhpToken.getStart();
 						}
 					} catch (BadLocationException e) {
-						Logger.logException("Error retrieving the value\n", e);
+						Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
 					}
 				} else if (regionType == PHPRegionTypes.PHP_STRING) {
 					try {
@@ -109,7 +109,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 										.get(phpScriptRegion.getStart()
 												+ nextRegion.getStart(),
 												nextRegion.getLength());
-								if (!"(".equals(nextTokenString)) {
+								if (!"(".equals(nextTokenString)) { //$NON-NLS-1$
 									varOffset = phpScriptRegion.getStart()
 											+ prevRegion.getStart();
 									varLength = region.getEnd()
@@ -118,7 +118,7 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 							}
 						}
 					} catch (BadLocationException e) {
-						Logger.logException("Error retrieving the value\n", e);
+						Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
 					}
 				}
 
@@ -129,10 +129,10 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 								varOffset, varLength);
 						variable = textViewer.getDocument().get(
 								variableRange[0], variableRange[1]);
-						variable = "<B>" + variable + " = </B>"
+						variable = "<B>" + variable + " = </B>" //$NON-NLS-1$ //$NON-NLS-2$
 								+ getValue(debugTarget, variable);
 					} catch (BadLocationException e) {
-						Logger.logException("Error retrieving the value\n", e);
+						Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
 					}
 					return variable;
 				}
@@ -202,13 +202,13 @@ public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements
 		String value = expression.getValue().getValueAsString();
 
 		if (value != null && value.length() == 0) {
-			value = "Empty";
+			value = "Empty"; //$NON-NLS-1$
 			return value;
 		}
 
 		if (value != null) {
-			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;")
-					.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+			value = value.replaceAll("\t", "    ").replaceAll("&", "&amp;") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					.replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			// value = value.replaceAll("\n", "<br>");
 		}
 

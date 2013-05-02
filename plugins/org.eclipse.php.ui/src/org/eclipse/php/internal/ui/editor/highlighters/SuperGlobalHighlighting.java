@@ -32,7 +32,7 @@ public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 		private boolean isSuperGlobal(VariableBase n) {
 			if (n instanceof Variable
 					&& ((Variable) n).getName() instanceof Identifier) {
-				String name = "$"
+				String name = "$" //$NON-NLS-1$
 						+ ((Identifier) ((Variable) n).getName()).getName();
 				String[] globals = PHPVariables.getVariables(PHPVersion.PHP5_3);
 				for (String global : globals) {
@@ -57,6 +57,6 @@ public class SuperGlobalHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Superglobal variables";
+		return Messages.SuperGlobalHighlighting_0;
 	}
 }

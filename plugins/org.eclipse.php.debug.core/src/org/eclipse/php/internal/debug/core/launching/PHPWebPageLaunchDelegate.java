@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
-	private static final String ILAUNCH_LISTENER_EXTENTION_ID = "org.eclipse.php.debug.core.phpLaunchDelegateListener";
+	private static final String ILAUNCH_LISTENER_EXTENTION_ID = "org.eclipse.php.debug.core.phpLaunchDelegateListener"; //$NON-NLS-1$
 	protected Job runDispatch;
 	protected ILaunch launch;
 	protected IDebuggerInitializer debuggerInitializer;
@@ -105,7 +105,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		try {
 			for (IConfigurationElement e : config) {
 
-				final Object o = e.createExecutableExtension("class");
+				final Object o = e.createExecutableExtension("class"); //$NON-NLS-1$
 				if (o instanceof ILaunchDelegateListener) {
 					ISafeRunnable runnable = new ISafeRunnable() {
 
@@ -115,9 +115,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 						}
 
 						public void handleException(Throwable exception) {
-							System.out.println("One of the"
+							System.out.println("One of the" //$NON-NLS-1$
 									+ ILAUNCH_LISTENER_EXTENTION_ID
-									+ "extensions fail");
+									+ "extensions fail"); //$NON-NLS-1$
 						}
 					};
 					SafeRunner.run(runnable);
@@ -178,10 +178,10 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		PHPLaunchUtilities.showDebugView();
 		this.launch = launch;
 		Server server = ServersManager.getServer(configuration.getAttribute(
-				Server.NAME, ""));
+				Server.NAME, "")); //$NON-NLS-1$
 		if (server == null) {
 			Logger.log(Logger.ERROR,
-					"Launch configuration could not find server");
+					"Launch configuration could not find server"); //$NON-NLS-1$
 			terminated();
 			// throw CoreException();
 			return;
@@ -210,7 +210,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 				IDebugParametersKeys.PHP_WEB_PAGE_DEBUG);
 		wc.doSave();
 
-		String URL = new String(configuration.getAttribute(Server.BASE_URL, "")
+		String URL = new String(configuration.getAttribute(Server.BASE_URL, "") //$NON-NLS-1$
 				.getBytes());
 		boolean isDebugLaunch = mode.equals(ILaunchManager.DEBUG_MODE);
 		if (isDebugLaunch) {
@@ -254,7 +254,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	public boolean preLaunchCheck(final ILaunchConfiguration configuration,
 			final String mode, IProgressMonitor monitor) throws CoreException {
 		// Check if the server exists
-		final String serverName = configuration.getAttribute(Server.NAME, "");
+		final String serverName = configuration.getAttribute(Server.NAME, ""); //$NON-NLS-1$
 		Server server = ServersManager.getServer(serverName);
 		if (server == null) {
 			Display.getDefault().asyncExec(new Runnable() {
@@ -297,7 +297,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			String errorMessage = null;
 			if (status == null) {
 				Logger.traceException(
-						"Unexpected Error return from debuggerInitializer ", e);
+						"Unexpected Error return from debuggerInitializer ", e); //$NON-NLS-1$
 				fireError(PHPDebugCoreMessages.Debugger_Unexpected_Error_1, e);
 				errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
 			} else {
@@ -327,7 +327,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				MessageDialog.openError(Display.getDefault().getActiveShell(),
-						"Debug Error", message);
+						PHPDebugCoreMessages.PHPWebPageLaunchDelegate_0, message);
 			}
 		});
 	}
@@ -393,14 +393,14 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		private ILaunch launch;
 
 		public RunDispatchJobWebServer(ILaunch launch) {
-			super("RunDispatchJobWebServer");
+			super("RunDispatchJobWebServer"); //$NON-NLS-1$
 			this.launch = launch;
 			setSystem(true);
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
 			initiateDebug(launch);
-			Logger.debugMSG("Terminating debug session: calling PHPDebugTarget.terminate()");
+			Logger.debugMSG("Terminating debug session: calling PHPDebugTarget.terminate()"); //$NON-NLS-1$
 			terminated();
 			return Status.OK_STATUS;
 		}
@@ -420,7 +420,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 
 		public String getName() throws DebugException {
-			return "Session Terminated";
+			return "Session Terminated"; //$NON-NLS-1$
 		}
 
 		public IProcess getProcess() {
@@ -448,7 +448,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 
 		public String getModelIdentifier() {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		public Object getAdapter(Class adapter) {

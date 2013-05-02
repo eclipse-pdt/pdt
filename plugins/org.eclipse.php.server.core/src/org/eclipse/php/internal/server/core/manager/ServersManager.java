@@ -44,9 +44,9 @@ import org.osgi.service.prefs.BackingStoreException;
 public class ServersManager implements PropertyChangeListener, IAdaptable {
 
 	/** Servers preferences key */
-	public static final String SERVERS_PREFERENCES_KEY = "phpServers";
+	public static final String SERVERS_PREFERENCES_KEY = "phpServers"; //$NON-NLS-1$
 	/** Default server name preferences key */
-	public static final String DEFAULT_SERVER_PREFERENCES_KEY = "defaultPHPServer";
+	public static final String DEFAULT_SERVER_PREFERENCES_KEY = "defaultPHPServer"; //$NON-NLS-1$
 
 	// defaultServersMap holds a mapping between an IProject to a Server.
 	// We take advantage of the NULL wrapping to indicate that a null values
@@ -59,9 +59,9 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 
 	private static ServersManager instance;
 	private static final String NODE_QUALIFIER = Activator.PLUGIN_ID
-			+ ".phpServersPrefs";
-	private static final String BASE_URL = "http://localhost";
-	public static final String Default_Server_Name = "Default PHP Web Server";
+			+ ".phpServersPrefs"; //$NON-NLS-1$
+	private static final String BASE_URL = "http://localhost"; //$NON-NLS-1$
+	public static final String Default_Server_Name = "Default PHP Web Server"; //$NON-NLS-1$
 
 	public static ServersManager getInstance() {
 		if (instance == null) {
@@ -289,7 +289,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 							.getString(DEFAULT_SERVER_PREFERENCES_KEY);
 				}
 			}
-			if (serverName != null && !"".equals(serverName)) {
+			if (serverName != null && !"".equals(serverName)) { //$NON-NLS-1$
 				server = (Server) manager.servers.get(serverName);
 				// Map this server as the default for the project (if not null)
 				// or for the workspace (when the project is null).
@@ -379,7 +379,7 @@ public class ServersManager implements PropertyChangeListener, IAdaptable {
 	 */
 	public static Server createServer(String name, String baseURL)
 			throws MalformedURLException {
-		Server server = new Server(name, "localhost", baseURL, "");
+		Server server = new Server(name, "localhost", baseURL, ""); //$NON-NLS-1$ //$NON-NLS-2$
 		server = ServersManager.getServer(server);
 		addServer(server);
 		return server;

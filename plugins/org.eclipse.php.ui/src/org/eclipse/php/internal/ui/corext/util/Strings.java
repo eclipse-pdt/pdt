@@ -555,7 +555,7 @@ public class Strings {
 
 	private static int findLastNonEmptyLineIndex(String[] sourceLines) {
 		for (int i = sourceLines.length - 1; i >= 0; i--) {
-			if (!sourceLines[i].trim().equals(""))//$NON-NLS-1$
+			if (!sourceLines[i].trim().equals("")) //$NON-NLS-1$
 				return i;
 		}
 		return -1;
@@ -713,9 +713,9 @@ public class Strings {
 	 * @return the trimmed string
 	 */
 	public static String removeDuplicateWhitespaces(String string) {
-		Pattern pattern = Pattern.compile("\\s+");
+		Pattern pattern = Pattern.compile("\\s+"); //$NON-NLS-1$
 		Matcher matcher = pattern.matcher(string);
 		matcher.find();
-		return matcher.replaceAll(" ");
+		return matcher.replaceAll(" "); //$NON-NLS-1$
 	}
 }

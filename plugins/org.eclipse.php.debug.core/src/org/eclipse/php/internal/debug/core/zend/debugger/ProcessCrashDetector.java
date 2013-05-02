@@ -76,7 +76,7 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 			try {
 				ILaunchConfiguration config = launch.getLaunchConfiguration();
 				if (config.getAttribute(
-						PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, "")
+						PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, "") //$NON-NLS-1$
 						.equals(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID)) {
 					streamerReqd = config.getAttribute(
 							IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true)

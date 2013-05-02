@@ -26,11 +26,11 @@ import org.eclipse.ui.IWorkbench;
 public class PHPExeWizard extends FragmentedWizard implements INewWizard {
 
 	public static final String MODEL = "phpExe"; //$NON-NLS-1$
-	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.debug.ui.phpExeWizardCompositeFragment";
+	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.debug.ui.phpExeWizardCompositeFragment"; //$NON-NLS-1$
 	private PHPexeItem[] existingItems;
 
 	public PHPExeWizard(PHPexeItem[] existingItems) {
-		this(existingItems, "Add new PHP Executable");
+		this(existingItems, Messages.PHPExeWizard_0);
 	}
 
 	public PHPExeWizard(PHPexeItem[] existingItems, String title,

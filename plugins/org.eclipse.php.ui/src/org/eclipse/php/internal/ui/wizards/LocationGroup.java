@@ -48,7 +48,7 @@ public class LocationGroup extends Observable implements Observer,
 	private Shell shell;
 
 	private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID
-			+ ".last.external.project"; //$NON-NLS-1$
+			+ ".last.external.project"; //$NON-NLS-1$ 
 
 	public LocationGroup(Composite composite, NameGroup nameGroup, Shell shell) {
 		this.fNameGroup = nameGroup;
@@ -76,7 +76,7 @@ public class LocationGroup extends Observable implements Observer,
 		// fExternalRadio.attachDialogField(fLocation);
 		fWorkspaceRadio.setSelection(true);
 		fExternalRadio.setSelection(false);
-		fPreviousExternalLocation = ""; //$NON-NLS-1$
+		fPreviousExternalLocation = ""; //$NON-NLS-1$ 
 		fWorkspaceRadio.doFillIntoGrid(group, numColumns);
 		fExternalRadio.doFillIntoGrid(group, numColumns);
 		fLocation.doFillIntoGrid(group, numColumns);
@@ -113,7 +113,7 @@ public class LocationGroup extends Observable implements Observer,
 		List<String> docRoots = new ArrayList<String>();
 		for (int i = 0; i < servers.length; i++) {
 			String docRoot = servers[i].getDocumentRoot();
-			if (docRoot != null && !"".equals(docRoot.trim())) { //$NON-NLS-1$
+			if (docRoot != null && !"".equals(docRoot.trim())) { //$NON-NLS-1$ 
 				docRoots.add(docRoot);
 			}
 		}
@@ -122,7 +122,7 @@ public class LocationGroup extends Observable implements Observer,
 			fLocalServerRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fLocalServerRadio.setDialogFieldListener(this);
 			fLocalServerRadio
-					.setLabelText(PHPUIMessages.PHPProjectWizardFirstPage_localServerLabel); //$NON-NLS-1$
+					.setLabelText(PHPUIMessages.PHPProjectWizardFirstPage_localServerLabel);
 			fLocalServerRadio.setSelection(false);
 			fLocalServerRadio.doFillIntoGrid(group, numColumns);
 			fSeverLocationList = new ComboDialogField(SWT.READ_ONLY);
@@ -167,7 +167,7 @@ public class LocationGroup extends Observable implements Observer,
 			final IPath path = Platform.getLocation().append(name);
 			return path.toOSString();
 		} else {
-			return ""; //$NON-NLS-1$
+			return ""; //$NON-NLS-1$ 
 		}
 	}
 
@@ -193,7 +193,7 @@ public class LocationGroup extends Observable implements Observer,
 	private String[] getDocItems(String[] docRootArray) {
 		String[] items = new String[docRootArray.length];
 		for (int i = 0; i < docRootArray.length; i++) {
-			items[i] = docRootArray[i] + File.separator + fNameGroup.getName(); //$NON-NLS-1$
+			items[i] = docRootArray[i] + File.separator + fNameGroup.getName();
 		}
 		return items;
 	}
@@ -247,7 +247,7 @@ public class LocationGroup extends Observable implements Observer,
 				if (environment != null && environment.isLocal()) {
 					fLocation.setText(fPreviousExternalLocation);
 				} else {
-					fLocation.setText(""); //$NON-NLS-1$
+					fLocation.setText(""); //$NON-NLS-1$ 
 				}
 			}
 		}

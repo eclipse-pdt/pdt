@@ -202,7 +202,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 							.removeEntryFromIncludePath(project, buildpathEntry);
 				}
 			} catch (ModelException e) {
-				Logger.logException("Failed adding entries to build path", e); ////$NON-NLS-1$
+				Logger.logException("Failed adding entries to build path", e); // //$NON-NLS-1$
 			}
 		}
 	}

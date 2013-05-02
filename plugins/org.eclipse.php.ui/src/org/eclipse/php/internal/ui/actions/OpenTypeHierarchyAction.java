@@ -30,8 +30,6 @@ import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
-import org.eclipse.dltk.internal.ui.DLTKUIMessages;
-import org.eclipse.dltk.internal.ui.actions.ActionMessages;
 import org.eclipse.dltk.internal.ui.actions.ActionUtil;
 import org.eclipse.dltk.internal.ui.actions.OpenActionUtil;
 import org.eclipse.dltk.internal.ui.browsing.LogicalPackage;
@@ -87,9 +85,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 	 */
 	public OpenTypeHierarchyAction(IWorkbenchSite site) {
 		super(site);
-		setText("Open &Type Hierarchy");
-		setToolTipText("Open &Type Hierarchy");
-		setDescription("Open &Type Hierarchy");
+		setText(Messages.OpenTypeHierarchyAction_0);
+		setToolTipText(Messages.OpenTypeHierarchyAction_0);
+		setDescription(Messages.OpenTypeHierarchyAction_0);
 		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 		// IPHPHelpContextIds.OPEN_TYPE_HIERARCHY_ACTION);
 	}
@@ -165,8 +163,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 		if (fEditor.getModelElement() instanceof ISourceModule) {
 			ISourceModule sourceModule = (ISourceModule) fEditor
 					.getModelElement();
-			IModelElement element = getSelectionModelElement(selection
-					.getOffset(), selection.getLength(), sourceModule);
+			IModelElement element = getSelectionModelElement(
+					selection.getOffset(), selection.getLength(), sourceModule);
 			if (element == null) {
 				lastSelectedElement = null;
 				return false;
@@ -263,9 +261,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			// || firstElement instanceof PHPSuperClassNameData || firstElement
 			// instanceof PHPInterfaceNameData
 			if (!(input instanceof IModelElement)) {
-				IStatus status = createStatus("A PHP element must be selected.");
-				ErrorDialog.openError(getShell(), getDialogTitle(),
-						ActionMessages.OpenTypeHierarchyAction_messages_title,
+				IStatus status = createStatus(Messages.OpenTypeHierarchyAction_3);
+				ErrorDialog.openError(getShell(), getDialogTitle(), "", //$NON-NLS-1$
 						status);
 				return;
 			}
@@ -279,8 +276,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 				run((IModelElement[]) result.toArray(new IModelElement[result
 						.size()]));
 			} else {
-				ErrorDialog.openError(getShell(), getDialogTitle(),
-						ActionMessages.OpenTypeHierarchyAction_messages_title,
+				ErrorDialog.openError(getShell(), getDialogTitle(), "", //$NON-NLS-1$
 						status);
 			}
 			// ISourceModule sourceModule = (ISourceModule) input;
@@ -327,10 +323,10 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 
 		IModelElement input = null;
 		if (candidates.length > 1) {
-			String title = DLTKUIMessages.OpenTypeHierarchyUtil_selectionDialog_title;
-			String message = DLTKUIMessages.OpenTypeHierarchyUtil_selectionDialog_message;
-			input = OpenActionUtil.selectModelElement(candidates, window
-					.getShell(), title, message);
+			String title = ""; //$NON-NLS-1$
+			String message = ""; //$NON-NLS-1$
+			input = OpenActionUtil.selectModelElement(candidates,
+					window.getShell(), title, message);
 		} else {
 			input = candidates[0];
 		}
@@ -356,15 +352,14 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 			result.setInputElement(input);
 			return result;
 		} catch (CoreException e) {
-			ExceptionHandler.handle(e, window.getShell(),
-					DLTKUIMessages.OpenTypeHierarchyUtil_error_open_view, e
-							.getMessage());
+			ExceptionHandler.handle(e, window.getShell(), "", e //$NON-NLS-1$
+					.getMessage());
 		}
 		return null;
 	}
 
 	private static String getDialogTitle() {
-		return ActionMessages.OpenTypeInHierarchyAction_dialogTitle;
+		return ""; //$NON-NLS-1$
 	}
 
 	private static IStatus createStatus(String message) {
@@ -396,7 +391,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 
 	private static IStatus compileCandidates(List result, IModelElement elem) {
 		IStatus ok = new Status(IStatus.OK, PHPUiPlugin.getPluginId(), 0,
-				"", null); //$NON-NLS-1$		
+				"", null); //$NON-NLS-1$
 		try {
 			switch (elem.getElementType()) {
 			// case IModelElement.INITIALIZER:
@@ -412,7 +407,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 					result.add(elem);
 					return ok;
 				}
-				return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_script_resources);
+				return createStatus(""); //$NON-NLS-1$
 			case IModelElement.PACKAGE_DECLARATION:
 				result.add(elem.getAncestor(IModelElement.SCRIPT_FOLDER));
 				return ok;
@@ -440,11 +435,11 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements
 					result.addAll(Arrays.asList(types));
 					return ok;
 				}
-				return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_types);
+				return createStatus(""); //$NON-NLS-1$
 			}
 		} catch (ModelException e) {
 			return e.getStatus();
 		}
-		return createStatus(ActionMessages.OpenTypeHierarchyAction_messages_no_valid_script_element);
+		return createStatus(""); //$NON-NLS-1$
 	}
 }

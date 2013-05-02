@@ -178,7 +178,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		fProjectsPage = new PHPProjectsWorkbookPage(fBuildPathList,
 				fPageContainer);
 		fProjectsPage
-				.setTitle(PHPUIMessages.IncludePathProjectsPage_Folders_Label); //$NON-NLS-1$
+				.setTitle(PHPUIMessages.IncludePathProjectsPage_Folders_Label);
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_projects);
 		item.setImage(projectImage);
@@ -187,7 +187,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		fLibrariesPage = new PHPLibrariesWorkbookPage(this.supportZips(),
 				fBuildPathList, fPageContainer);
 		fLibrariesPage
-				.setTitle(PHPUIMessages.IncludePathLibrariesPage_Folders_Label); //$NON-NLS-1$
+				.setTitle(PHPUIMessages.IncludePathLibrariesPage_Folders_Label);
 		fLibrariesPage.setScriptProject(getScriptProject());
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_libraries);
@@ -200,9 +200,9 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		composite.addDisposeListener(new ImageDisposer(cpoImage));
 		PHPBuildpathOrderingWorkbookPage ordpage = new PHPBuildpathOrderingWorkbookPage(
 				fBuildPathList);
-		setTitle(PHPUIMessages.IncludePathOrderPage_Folders_Label); //$NON-NLS-1$
+		setTitle(PHPUIMessages.IncludePathOrderPage_Folders_Label);
 		item = new TabItem(folder, SWT.NONE);
-		item.setText(PHPUIMessages.BuildPathsBlock_tab_order); //$NON-NLS-1$
+		item.setText(PHPUIMessages.BuildPathsBlock_tab_order);
 		item.setImage(cpoImage);
 		item.setData(ordpage);
 		item.setControl(ordpage.getControl(folder));
@@ -266,8 +266,8 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		// in case there are any, the user is prompted with a question
 		if (addedElements.size() > 0) {
 			for (BPListElement listElement : addedElements) {
-				if (!BuildPathUtils.isContainedInBuildpath(listElement
-						.getPath(), fCurrScriptProject)) {
+				if (!BuildPathUtils.isContainedInBuildpath(
+						listElement.getPath(), fCurrScriptProject)) {
 					buildPathEntries.add(listElement.getBuildpathEntry());
 				}
 			}
@@ -278,7 +278,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 				BuildPathUtils.addEntriesToBuildPath(fCurrScriptProject,
 						buildPathEntries);
 			} catch (ModelException e) {
-				Logger.logException("Failed adding entries to build path", e); ////$NON-NLS-1$
+				Logger.logException("Failed adding entries to build path", e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -294,7 +294,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 			monitor = new NullProgressMonitor();
 		}
 		monitor.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_Script);
-		monitor.beginTask("", buildpathEntries.size() * 4 + 4); //$NON-NLS-1$
+		monitor.beginTask("", buildpathEntries.size() * 4 + 4); //$NON-NLS-1$ 
 		try {
 			IProject project = javaProject.getProject();
 			IPath projPath = project.getFullPath();
@@ -319,8 +319,8 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=307982
 					// Add project in build path,press ok,then edit the
 					// project's access rules will throw exception.
-					BuildPathUtils.removeEntryFromBuildPath(javaProject, entry
-							.getBuildpathEntry());
+					BuildPathUtils.removeEntryFromBuildPath(javaProject,
+							entry.getBuildpathEntry());
 				}
 
 				IResource res = entry.getResource();

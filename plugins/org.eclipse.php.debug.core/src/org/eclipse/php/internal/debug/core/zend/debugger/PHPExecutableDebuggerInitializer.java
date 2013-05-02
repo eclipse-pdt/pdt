@@ -83,7 +83,7 @@ public class PHPExecutableDebuggerInitializer {
 
 			// Determine configuration file directory:
 			String phpConfigDir = phpExeFile.getParent();
-			if (phpIniLocation != null && !phpIniLocation.equals("")) {
+			if (phpIniLocation != null && !phpIniLocation.equals("")) { //$NON-NLS-1$
 				phpConfigDir = new File(phpIniLocation).getParent();
 			}
 
@@ -128,8 +128,8 @@ public class PHPExecutableDebuggerInitializer {
 
 			if (PHPDebugPlugin.DEBUG) {
 				System.out
-						.println("Executing: " + Arrays.toString(phpCmdArray));
-				System.out.println("Process environment: "
+						.println("Executing: " + Arrays.toString(phpCmdArray)); //$NON-NLS-1$
+				System.out.println("Process environment: " //$NON-NLS-1$
 						+ Arrays.toString(environmetVars));
 			}
 
@@ -139,7 +139,7 @@ public class PHPExecutableDebuggerInitializer {
 			File workingDirFile = new File(workingDir);
 			if (workingDirFile.exists()) {
 				if (PHPDebugPlugin.DEBUG) {
-					System.out.println("Working directory: " + workingDir);
+					System.out.println("Working directory: " + workingDir); //$NON-NLS-1$
 				}
 				p = Runtime.getRuntime().exec(phpCmdArray, environmetVars,
 						workingDirFile);
@@ -157,10 +157,10 @@ public class PHPExecutableDebuggerInitializer {
 					String message = e.getLocalizedMessage();
 					if (message != null) {
 						message = message.replaceFirst(e.getClass().getName()
-								+ ": ", "");
+								+ ": ", ""); //$NON-NLS-1$ //$NON-NLS-2$
 						MessageDialog.openError(display.getActiveShell(),
-								"Error", NLS.bind(
-										"Error running PHP executable:\n\n{0}",
+								PHPDebugCoreMessages.PHPExecutableDebuggerInitializer_6, NLS.bind(
+										PHPDebugCoreMessages.PHPExecutableDebuggerInitializer_7,
 										message));
 					}
 				}

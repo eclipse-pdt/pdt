@@ -45,7 +45,7 @@ public class PHPVersionConfigurationBlock extends
 			PHPUIMessages.PHPCreationDataModelProvider_0,
 			PHPUIMessages.PHPCreationDataModelProvider_1,
 			PHPUIMessages.PHPCreationDataModelProvider_2,
-			PHPUIMessages.PHPCreationDataModelProvider_3 }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			PHPUIMessages.PHPCreationDataModelProvider_3 }; 
 
 	private static final Key PREF_PHP_VERSION = getPHPCoreKey(Keys.PHP_VERSION);
 	private static final Key PREF_ASP_TAGS = getPHPCoreKey(Keys.EDITOR_USE_ASP_TAGS);

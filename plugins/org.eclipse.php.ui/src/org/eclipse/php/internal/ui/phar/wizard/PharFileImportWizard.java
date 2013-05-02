@@ -29,9 +29,9 @@ public class PharFileImportWizard extends Wizard implements IImportWizard {
 		AbstractUIPlugin plugin = WorkbenchPlugin.getDefault();
 		IDialogSettings workbenchSettings = plugin.getDialogSettings();
 		IDialogSettings section = workbenchSettings
-				.getSection("ZipFileImportWizard");//$NON-NLS-1$
+				.getSection("ZipFileImportWizard"); //$NON-NLS-1$
 		if (section == null) {
-			section = workbenchSettings.addNewSection("ZipFileImportWizard");//$NON-NLS-1$
+			section = workbenchSettings.addNewSection("ZipFileImportWizard"); //$NON-NLS-1$
 		}
 		setDialogSettings(section);
 	}
@@ -70,7 +70,7 @@ public class PharFileImportWizard extends Wizard implements IImportWizard {
 
 		setWindowTitle(DataTransferMessages.DataTransfer_importTitle);
 		setDefaultPageImageDescriptor(IDEWorkbenchPlugin
-				.getIDEImageDescriptor("wizban/importzip_wiz.png"));//$NON-NLS-1$
+				.getIDEImageDescriptor("wizban/importzip_wiz.png")); //$NON-NLS-1$
 		setNeedsProgressMonitor(true);
 	}
 

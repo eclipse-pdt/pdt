@@ -136,6 +136,6 @@ public class DeprecatedHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Deprecated members";
+		return Messages.DeprecatedHighlighting_0;
 	}
 }

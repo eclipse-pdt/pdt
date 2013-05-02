@@ -85,7 +85,7 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 						IDOMNode node = (IDOMNode) model
 								.getIndexedRegion(command.offset - 1);
 						if (node != null
-								&& prefixedWith(document, command.offset, "<")) { //$NON-NLS-1$ //$NON-NLS-2$
+								&& prefixedWith(document, command.offset, "<")) { //$NON-NLS-1$
 							if (!TypingPreferences.addPhpCloseTag
 									&& TypingPreferences.addPhpForPhpStartTags) {
 								command.text += "php "; //$NON-NLS-1$

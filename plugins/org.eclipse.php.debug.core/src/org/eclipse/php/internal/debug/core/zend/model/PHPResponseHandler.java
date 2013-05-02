@@ -26,7 +26,7 @@ public class PHPResponseHandler {
 		public void started(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: StartResponseHandler failed");
+						"PHPResponseHandler: StartResponseHandler failed"); //$NON-NLS-1$
 
 		}
 	}
@@ -37,8 +37,8 @@ public class PHPResponseHandler {
 
 		public void breakpointAdded(String fileName, int lineNumber, int id,
 				boolean success) {
-			String info = "Filename: " + fileName + " lineNumber " + lineNumber
-					+ " id: " + id;
+			String info = "Filename: " + fileName + " lineNumber " + lineNumber //$NON-NLS-1$ //$NON-NLS-2$
+					+ " id: " + id; //$NON-NLS-1$
 			if (success) {
 				IBreakpoint breakpoint = fDebugTarget.findBreakpoint(fileName,
 						lineNumber);
@@ -57,13 +57,13 @@ public class PHPResponseHandler {
 					// BreakpointManager because it's a Run-To-Line breakpoint.
 					Logger
 							.trace(
-									"debug",
-									"PHPResponseHandler:: BreakpointAddedResponseHandler unable to find breakpoint "
+									"debug", //$NON-NLS-1$
+									"PHPResponseHandler:: BreakpointAddedResponseHandler unable to find breakpoint " //$NON-NLS-1$
 											+ info);
 				}
 			} else {
 				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: BreakpointAddedResponseHandler failed "
+						"PHPResponseHandler: BreakpointAddedResponseHandler failed " //$NON-NLS-1$
 								+ info);
 			}
 		}
@@ -94,7 +94,7 @@ public class PHPResponseHandler {
 		public void stepInto(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: StepIntoResponseHandler failed");
+						"PHPResponseHandler: StepIntoResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
@@ -107,7 +107,7 @@ public class PHPResponseHandler {
 		public void stepOver(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: StepOverResponseHandler failed");
+						"PHPResponseHandler: StepOverResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
@@ -120,7 +120,7 @@ public class PHPResponseHandler {
 		public void stepOut(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: StepOutResponseHandler failed");
+						"PHPResponseHandler: StepOutResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
@@ -133,7 +133,7 @@ public class PHPResponseHandler {
 		public void go(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: GoResponseHandler failed");
+						"PHPResponseHandler: GoResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
@@ -146,7 +146,7 @@ public class PHPResponseHandler {
 		public void pause(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: PauseResponseHandler failed");
+						"PHPResponseHandler: PauseResponseHandler failed"); //$NON-NLS-1$
 
 		}
 
@@ -159,7 +159,7 @@ public class PHPResponseHandler {
 		public void addFiles(boolean success) {
 			if (!success)
 				Logger.log(Logger.ERROR,
-						"PHPResponseHandler: AddFilesResponseHandler failed");
+						"PHPResponseHandler: AddFilesResponseHandler failed"); //$NON-NLS-1$
 		}
 
 	}

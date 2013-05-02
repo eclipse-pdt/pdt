@@ -86,8 +86,8 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 
 	public PHPProjectWizardBasePage(IDataModel dataModel, String pageName) {
 		super(dataModel, pageName);
-		setTitle(PHPUIMessages.PHPProjectWizardBasePage_0); //$NON-NLS-1$
-		setDescription(PHPUIMessages.PHPProjectWizardBasePage_1); //$NON-NLS-1$
+		setTitle(PHPUIMessages.PHPProjectWizardBasePage_0); 
+		setDescription(PHPUIMessages.PHPProjectWizardBasePage_1); 
 		setPageComplete(false);
 	}
 
@@ -140,7 +140,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements
 
 	protected void setHelpContext(Composite top) {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(top,
-				IPHPHelpContextIds.CREATING_PROJECTS_AND_FILES); //$NON-NLS-1$
+				IPHPHelpContextIds.CREATING_PROJECTS_AND_FILES); 
 	}
 
 	protected void createProjectNameGroup(Composite parent) {

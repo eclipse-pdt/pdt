@@ -29,7 +29,7 @@ import org.eclipse.dltk.core.ModelException;
  */
 public class ConstantNode {
 
-	private static final String CONSTANT_NODE_LABEL = "constants";
+	private static final String CONSTANT_NODE_LABEL = "constants"; //$NON-NLS-1$
 
 	public ConstantNode() {
 	}

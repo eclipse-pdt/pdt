@@ -31,19 +31,19 @@ public class BasePathValidator implements IPageControlValidator {
 	public void validate() {
 		if (fDefaultBasePath != null) {
 			String textAsString = fDefaultBasePath.getText();
-			if (textAsString.equalsIgnoreCase("")) {
-				this.errorMessage = "Base Path cannot contain an empty value for root type '/'";
+			if (textAsString.equalsIgnoreCase("")) { //$NON-NLS-1$
+				this.errorMessage = Messages.BasePathValidator_1;
 				this.fDefaultBasePath.setMessage(this.errorMessage);
 				isValid = false;
-			} else if (!textAsString.startsWith("/")) {
-				this.errorMessage = "Base Path must start with '/' prefix";
+			} else if (!textAsString.startsWith("/")) { //$NON-NLS-1$
+				this.errorMessage = Messages.BasePathValidator_3;
 				this.fDefaultBasePath.setMessage(this.errorMessage);
 				isValid = false;
 
 			} else {
 				this.errorMessage = null;
 				this.fDefaultBasePath
-						.setMessage("Example Path: '/<projectName>' | /<path> | '/'");
+						.setMessage(Messages.BasePathValidator_4);
 				isValid = true;
 			}
 		} else {

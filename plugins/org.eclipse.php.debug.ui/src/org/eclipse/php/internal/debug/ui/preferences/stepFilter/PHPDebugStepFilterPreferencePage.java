@@ -425,7 +425,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 					+ DebugStepFilter.FILTER_TOKENS_DELIM
 					+ filters[i].isReadOnly()
 					+ DebugStepFilter.FILTER_TOKENS_DELIM
-					+ filters[i].getPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ filters[i].getPath()); 
 		}
 		String pref = serializeList((String[]) filtersPersistenceList
 				.toArray(new String[filtersPersistenceList.size()]));
@@ -543,7 +543,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 	private String[] parseList(String listString) {
 		ArrayList<String> list = new ArrayList<String>();
 		StringTokenizer tokenizer = new StringTokenizer(listString,
-				DebugStepFilter.FILTERS_PREF_LIST_DELIM); //$NON-NLS-1$
+				DebugStepFilter.FILTERS_PREF_LIST_DELIM); 
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			list.add(token);
@@ -560,7 +560,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < list.length; i++) {
 			if (i > 0) {
-				buffer.append(DebugStepFilter.FILTERS_PREF_LIST_DELIM); //$NON-NLS-1$
+				buffer.append(DebugStepFilter.FILTERS_PREF_LIST_DELIM); 
 			}
 			buffer.append(list[i]);
 		}

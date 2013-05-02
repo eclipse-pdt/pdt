@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Label;
 public class PHPExeCompositeFragment extends CompositeFragment implements
 		IPHPExeCompositeFragment {
 
-	private static final String PHP_INI = "php.ini";
+	private static final String PHP_INI = "php.ini"; //$NON-NLS-1$
 	private PHPexeItem[] existingItems;
 	private StringDialogField fPHPexeName;
 	private StringButtonDialogField fPHPExePath;
@@ -56,8 +56,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 	public PHPExeCompositeFragment(Composite parent, IControlHandler handler,
 			boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		setDescription("Specify the PHP Executable Information");
-		setDisplayName("PHP Executable");
+		setDescription(PHPDebugUIMessages.PHPExeCompositeFragment_0);
+		setDisplayName(PHPDebugUIMessages.PHPExeCompositeFragment_2);
 		controlHandler.setDescription(getDescription());
 		controlHandler.setImageDescriptor(PHPDebugUIImages
 				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
@@ -74,7 +74,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 	public void setData(Object data) {
 		if (data != null && !(data instanceof PHPexeItem)) {
 			throw new IllegalArgumentException(
-					"Data must be instance of PHPExeItem");
+					PHPDebugUIMessages.PHPExeCompositeFragment_3);
 		}
 		super.setData(data);
 		init();
@@ -131,7 +131,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			public void changeControlPressed(DialogField field) {
 				FileDialog dialog = new FileDialog(getShell());
 				dialog.setFilterPath(fPHPIni.getText());
-				dialog.setFilterExtensions(new String[] { "*.ini", "*.*" });
+				dialog.setFilterExtensions(new String[] { "*.ini", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
 				dialog.setText(PHPDebugUIMessages.addPHPexeDialog_pickPHPIniDialog_message);
 				String newPath = dialog.open();
 				if (newPath != null) {
@@ -154,7 +154,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 
 		fSapiTypesLabel = new Label(parent, SWT.LEFT | SWT.WRAP);
 		fSapiTypesLabel.setFont(parent.getFont());
-		fSapiTypesLabel.setText("&SAPI Type:");
+		fSapiTypesLabel.setText(PHPDebugUIMessages.PHPExeCompositeFragment_1);
 		GridData data = new GridData();
 		data.horizontalSpan = 1;
 		fSapiTypesLabel.setLayoutData(data);
@@ -265,7 +265,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 					hideDebuggersCombo();
 				}
 			}
-			setTitle("Add PHP Executable");
+			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_10);
 		} else {
 			initialName = phpExeItem.getName();
 			fPHPexeName.setTextWithoutUpdate(phpExeItem.getName());
@@ -299,7 +299,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			fSapiTypes.setEnabled(phpExeItem.isEditable());
 			fSapiTypesLabel.setEnabled(phpExeItem.isEditable());
 
-			setTitle("Edit PHP Executable");
+			setTitle(PHPDebugUIMessages.PHPExeCompositeFragment_11);
 		}
 
 		controlHandler.setTitle(getTitle());
@@ -334,8 +334,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			return;
 		}
 		if (!executableLocation.getName().toLowerCase().contains("php")) { //$NON-NLS-1$
-			setMessage(
-					"Selected location doesn't refer to a valid PHP executable",
+			setMessage(PHPDebugUIMessages.PHPExeCompositeFragment_13,
 					IMessageProvider.ERROR);
 			return;
 		}
@@ -349,8 +348,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		}
 
 		if (phpExeItem.getExecutable() == null) {
-			setMessage(
-					"Selected location doesn't refer to a valid PHP executable",
+			setMessage(PHPDebugUIMessages.PHPExeCompositeFragment_13,
 					IMessageProvider.ERROR);
 			return;
 		}
@@ -377,7 +375,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 
 		String sapiType = fSapiTypes.getText().trim();
 		if (sapiType.length() == 0) {
-			setMessage("Please select SAPI type", IMessageProvider.ERROR);
+			setMessage(PHPDebugUIMessages.PHPExeCompositeFragment_15,
+					IMessageProvider.ERROR);
 			return;
 		}
 

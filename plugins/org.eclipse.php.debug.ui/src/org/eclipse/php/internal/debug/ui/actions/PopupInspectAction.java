@@ -223,7 +223,7 @@ public class PopupInspectAction implements IWorkbenchWindowActionDelegate,
 					IContextService contextService = (IContextService) fTextEditor
 							.getSite().getService(IContextService.class);
 					contextActivation = contextService
-							.activateContext("org.eclipse.php.debug.ui.xdebug");
+							.activateContext("org.eclipse.php.debug.ui.xdebug"); //$NON-NLS-1$
 				}
 				return result;
 			}

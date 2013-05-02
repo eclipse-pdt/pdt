@@ -76,7 +76,7 @@ public class XDebugWebLaunchConfigurationDelegate extends
 		if (server == null) {
 			Logger.log(Logger.ERROR,
 					"Launch configuration could not find server"); //$NON-NLS-1$
-			displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_1); //$NON-NLS-1$
+			displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_1); 
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			return;
 		}
@@ -214,7 +214,7 @@ public class XDebugWebLaunchConfigurationDelegate extends
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				launch.addDebugTarget(target);
 				subMonitor
-						.subTask(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_4); //$NON-NLS-1$
+						.subTask(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_4); 
 				target.waitForInitialSession(
 						(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
 						XDebugPreferenceMgr.createSessionPreferences(), monitor);

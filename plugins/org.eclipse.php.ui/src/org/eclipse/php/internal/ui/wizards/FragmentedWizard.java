@@ -164,7 +164,7 @@ public class FragmentedWizard implements IWizard {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
 				MessageDialog.openError(shell,
-						PHPUIMessages.FragmentedWizard_0, message); //$NON-NLS-1$
+						PHPUIMessages.FragmentedWizard_0, message); 
 			}
 		});
 	}
@@ -181,7 +181,7 @@ public class FragmentedWizard implements IWizard {
 			public void run() {
 				Shell shell = Display.getDefault().getActiveShell();
 				ErrorDialog.openError(shell, PHPUIMessages.FragmentedWizard_1,
-						message, status); //$NON-NLS-1$
+						message, status); 
 			}
 		});
 	}
@@ -273,7 +273,7 @@ public class FragmentedWizard implements IWizard {
 		if (t instanceof CoreException) {
 			openError(t.getLocalizedMessage(), ((CoreException) t).getStatus());
 		} else if (t instanceof NullPointerException)
-			openError("NullPointerException"); //$NON-NLS-1$
+			openError(PHPUIMessages.FragmentedWizard_7); 
 		else
 			openError(t.getLocalizedMessage());
 

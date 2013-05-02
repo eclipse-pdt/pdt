@@ -183,7 +183,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 	}
 
 	private void updateInputForCurrentEditor(final IEditorPart editorPart) {
-		Job updateInput = new UIJob("Loading functions") { //$NON-NLS-1$ 
+		Job updateInput = new UIJob("Loading functions") { //$NON-NLS-1$
 
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
@@ -477,7 +477,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		private String url;
 
 		public ShowFunctionHelpAction() {
-			super(PHPUIMessages.PHPFunctionsPart_0); //$NON-NLS-1$
+			super(PHPUIMessages.PHPFunctionsPart_0); 
 		}
 
 		public void setURL(String url) {

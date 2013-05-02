@@ -127,7 +127,7 @@ public class DetectGroup extends Observable implements Observer,
 	 */
 	public void widgetDefaultSelected(SelectionEvent e) {
 		if (DLTKCore.DEBUG) {
-			System.err.println("DetectGroup show compilancePreferencePage..."); //$NON-NLS-1$
+			System.err.println("DetectGroup show compilancePreferencePage..."); //$NON-NLS-1$ 
 		}
 
 	}

@@ -41,7 +41,7 @@ public class SemanticHighlightingManager {
 		super();
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(
-						"org.eclipse.wst.sse.ui.semanticHighlighting");
+						"org.eclipse.wst.sse.ui.semanticHighlighting"); //$NON-NLS-1$
 		try {
 			loadContributor(elements);
 			// Sort the contributors according to their priority
@@ -58,9 +58,9 @@ public class SemanticHighlightingManager {
 	private SemanticHighlightingManager loadContributor(
 			IConfigurationElement[] elements) throws Exception {
 		for (IConfigurationElement element : elements) {
-			String target = element.getAttribute("target");
-			if ("org.eclipse.php.core.phpsource".equals(target)) {
-				final Object o = element.createExecutableExtension("class");
+			String target = element.getAttribute("target"); //$NON-NLS-1$
+			if ("org.eclipse.php.core.phpsource".equals(target)) { //$NON-NLS-1$
+				final Object o = element.createExecutableExtension("class"); //$NON-NLS-1$
 				if (o instanceof AbstractSemanticHighlighting) {
 					AbstractSemanticHighlighting instance = (AbstractSemanticHighlighting) o;
 					rules.add(instance);

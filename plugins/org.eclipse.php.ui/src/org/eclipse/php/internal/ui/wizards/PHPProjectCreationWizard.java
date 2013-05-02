@@ -32,7 +32,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 public class PHPProjectCreationWizard extends NewElementWizard implements
 		INewWizard, IExecutableExtension {
 
-	public static final String SELECTED_PROJECT = "SelectedProject";
+	public static final String SELECTED_PROJECT = "SelectedProject"; //$NON-NLS-1$
 
 	public static final String WIZARD_ID = "org.eclipse.php.wizards.newproject"; //$NON-NLS-1$
 
@@ -121,7 +121,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements
 			Object eanblement = null;
 			if (model != null) {
 				eanblement = model
-						.getObject("REMOTE_GROUP_REMOTE_PROJECT_ENABLED");
+						.getObject("REMOTE_GROUP_REMOTE_PROJECT_ENABLED"); //$NON-NLS-1$
 			}
 
 			if (model != null && eanblement != null && (Boolean) eanblement) {

@@ -54,7 +54,7 @@ public class SortAction extends Action {
 		setDescription(PHPUIMessages.PHPOutlinePage_Sort_description);
 
 		boolean checked = PHPUiPlugin.getDefault().getPreferenceStore()
-				.getBoolean(PREF_IS_SORTED); //$NON-NLS-1$
+				.getBoolean(PREF_IS_SORTED); 
 		valueChanged(checked, false);
 	}
 
@@ -79,6 +79,6 @@ public class SortAction extends Action {
 
 		if (store)
 			PHPUiPlugin.getDefault().getPreferenceStore()
-					.setValue(PREF_IS_SORTED, on); //$NON-NLS-1$
+					.setValue(PREF_IS_SORTED, on); 
 	}
 }

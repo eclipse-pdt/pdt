@@ -62,7 +62,7 @@ class NewWizardSelectionPage extends WorkbenchWizardSelectionPage {
 			IStructuredSelection selection, IWizardCategory root,
 			IWizardDescriptor[] primary, boolean projectsOnly) {
 		super(
-				"newWizardSelectionPage", workbench, selection, null, WorkbenchTriggerPoints.NEW_WIZARDS);//$NON-NLS-1$
+				"newWizardSelectionPage", workbench, selection, null, WorkbenchTriggerPoints.NEW_WIZARDS); //$NON-NLS-1$
 
 		setTitle(WorkbenchMessages.NewWizardSelectionPage_description);
 		wizardCategories = root;

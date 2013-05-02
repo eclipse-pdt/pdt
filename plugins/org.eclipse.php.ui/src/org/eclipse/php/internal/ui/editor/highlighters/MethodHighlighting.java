@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -198,6 +197,6 @@ public class MethodHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Methods";
+		return Messages.MethodHighlighting_0;
 	}
 }

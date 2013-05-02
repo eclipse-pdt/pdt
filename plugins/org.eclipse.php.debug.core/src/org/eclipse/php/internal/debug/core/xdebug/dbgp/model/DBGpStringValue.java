@@ -48,17 +48,17 @@ public class DBGpStringValue extends DBGpValue {
 			try {
 				setValueBytes(getValueString().getBytes(XMLEncoding));
 			} catch (UnsupportedEncodingException uee) {
-				DBGpLogger.logException("unexpected encoding problem", this,
+				DBGpLogger.logException("unexpected encoding problem", this, //$NON-NLS-1$
 						uee);
 				// use the platform encoding
 				try {
 					setValueBytes(getValueString().getBytes());
 				} catch (DebugException e) {
-					DBGpLogger.logException("unexpected exception", this, e);
+					DBGpLogger.logException("unexpected exception", this, e); //$NON-NLS-1$
 					setValueBytes(new byte[0]);
 				}
 			} catch (DebugException e) {
-				DBGpLogger.logException("unexpected exception", this, e);
+				DBGpLogger.logException("unexpected exception", this, e); //$NON-NLS-1$
 				setValueBytes(new byte[0]);
 			}
 		}
@@ -153,7 +153,7 @@ public class DBGpStringValue extends DBGpValue {
 			// length
 			stringInfo[0] = new SimpleVariable(
 					PHPDebugCoreMessages.XDebug_DBGpStringValue_0, iv,
-					getDebugTarget()); //$NON-NLS-1$
+					getDebugTarget()); 
 		}
 		return stringInfo;
 	}

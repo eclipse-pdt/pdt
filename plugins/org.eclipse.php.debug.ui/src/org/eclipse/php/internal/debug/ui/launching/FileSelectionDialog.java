@@ -69,7 +69,7 @@ public class FileSelectionDialog extends MessageDialog {
 			String message) {
 		super(
 				parentShell,
-				"Choose Location", null, message, MessageDialog.NONE, new String[] { "OK", "Cancel" }, 0); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				Messages.FileSelectionDialog_0, null, message, MessageDialog.NONE, new String[] { Messages.FileSelectionDialog_1, Messages.FileSelectionDialog_2 }, 0); 
 		root = rootElement;
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 	}

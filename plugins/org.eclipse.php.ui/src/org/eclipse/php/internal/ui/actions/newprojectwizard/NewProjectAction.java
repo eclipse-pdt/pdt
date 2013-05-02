@@ -97,7 +97,7 @@ public class NewProjectAction extends Action {
 		IWizardCategory root = WorkbenchPlugin.getDefault()
 				.getNewWizardRegistry().getRootCategory();
 		IWizardDescriptor localphpWizard = root
-				.findWizard("com.zend.php.ide.ui.project.wizard.localphp");
+				.findWizard("com.zend.php.ide.ui.project.wizard.localphp"); //$NON-NLS-1$
 		if (localphpWizard == null) {// pdt
 			org.eclipse.ui.internal.dialogs.NewWizard wizard = new org.eclipse.ui.internal.dialogs.NewWizard();
 			wizard.setProjectsOnly(true);
@@ -110,10 +110,10 @@ public class NewProjectAction extends Action {
 			IDialogSettings workbenchSettings = IDEWorkbenchPlugin.getDefault()
 					.getDialogSettings();
 			IDialogSettings wizardSettings = workbenchSettings
-					.getSection("NewWizardAction");//$NON-NLS-1$
+					.getSection("NewWizardAction"); //$NON-NLS-1$ 
 			if (wizardSettings == null) {
 				wizardSettings = workbenchSettings
-						.addNewSection("NewWizardAction");//$NON-NLS-1$
+						.addNewSection("NewWizardAction"); //$NON-NLS-1$
 			}
 			wizard.setDialogSettings(wizardSettings);
 			wizard.setForcePreviousAndNextButtons(true);
@@ -145,10 +145,10 @@ public class NewProjectAction extends Action {
 			IDialogSettings workbenchSettings = IDEWorkbenchPlugin.getDefault()
 					.getDialogSettings();
 			IDialogSettings wizardSettings = workbenchSettings
-					.getSection("NewWizardAction");//$NON-NLS-1$
+					.getSection("NewWizardAction"); //$NON-NLS-1$
 			if (wizardSettings == null) {
 				wizardSettings = workbenchSettings
-						.addNewSection("NewWizardAction");//$NON-NLS-1$
+						.addNewSection("NewWizardAction"); //$NON-NLS-1$
 			}
 			wizard.setDialogSettings(wizardSettings);
 			wizard.setForcePreviousAndNextButtons(true);

@@ -18,7 +18,7 @@ import org.eclipse.osgi.util.NLS;
  * 
  */
 public class PHPDebugCoreMessages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.core.PHPDebugCoreMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.core.PHPDebugCoreMessages"; //$NON-NLS-1$
 
 	public static String LineBreakPointMessage_1;
 	public static String ConditionalBreakPointMessage_1;
@@ -41,6 +41,22 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String Debugger_Error_Crash_Message;
 	public static String Debugger_Incompatible_Protocol;
 
+	public static String IPHPDebugConstants_0;
+
+	public static String PHPExecutableDebuggerInitializer_6;
+
+	public static String PHPExecutableDebuggerInitializer_7;
+
+	public static String PHPExecutableLaunchDelegate_0;
+
+	public static String PHPExecutableLaunchDelegate_4;
+
+	public static String PHPLaunchUtilities_0;
+
+	public static String PHPLaunchUtilities_7;
+
+	public static String PHPLaunchUtilities_8;
+
 	public static String PHPLaunchUtilities_activeLaunchDetected;
 	public static String PHPLaunchUtilities_confirmation;
 	public static String PHPLaunchUtilities_multipleLaunchesPrompt;
@@ -51,11 +67,15 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String PHPLaunchUtilities_terminate;
 	public static String PHPLaunchUtilities_waitingForDebugger;
 
+	public static String PHPWebPageLaunchDelegate_0;
+
 	public static String PHPWebPageLaunchDelegate_serverNotFound;
 
 	public static String DebuggerConfigurationDialog_debugPort;
 	public static String DebuggerConfigurationDialog_invalidPort;
 	public static String DebuggerConfigurationDialog_invalidPortRange;
+
+	public static String ServerDebugHandler_0;
 
 	public static String ZendDebuggerConfigurationDialog_client_host_ip;
 

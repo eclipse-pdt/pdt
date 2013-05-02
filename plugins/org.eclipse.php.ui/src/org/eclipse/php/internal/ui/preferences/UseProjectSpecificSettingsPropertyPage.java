@@ -84,7 +84,7 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 
 		if (getProject() != null) {
 			fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK);
-			fEnableProjectSettings.setText(SSEUIMessages.EnableProjectSettings); //$NON-NLS-1$//$NON-NLS-2$
+			fEnableProjectSettings.setText(SSEUIMessages.EnableProjectSettings);
 			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING,
 					SWT.CENTER, false, false));
 			boolean enabledForProject = new ProjectScope(getProject()).getNode(
@@ -107,10 +107,10 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 		 */
 		if (getProject() != null) {
 			fProjectSettingsLink
-					.setText("<a>" + SSEUIMessages.ConfigureWorkspaceSettings + "</a>"); //$NON-NLS-1$//$NON-NLS-2$
+					.setText("<a>" + SSEUIMessages.ConfigureWorkspaceSettings + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$ 
 		} else {
 			fProjectSettingsLink
-					.setText("<a>" + SSEUIMessages.ConfigureProjectSettings + "</a>"); //$NON-NLS-1$//$NON-NLS-2$
+					.setText("<a>" + SSEUIMessages.ConfigureProjectSettings + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		updateLinkEnablement();
@@ -250,9 +250,9 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends
 				new ProjectScope(getProject()).getNode(
 						getPreferenceNodeQualifier()).flush();
 			} catch (BackingStoreException e) {
-				Logger
-						.logException(
-								"problem saving preference settings to scope " + new ProjectScope(getProject()).getName(), e); //$NON-NLS-1$
+				Logger.logException(
+						"problem saving preference settings to scope " //$NON-NLS-1$
+								+ new ProjectScope(getProject()).getName(), e);
 				ok = false;
 			}
 		}

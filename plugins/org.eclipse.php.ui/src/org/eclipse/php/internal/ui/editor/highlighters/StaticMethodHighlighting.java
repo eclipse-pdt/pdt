@@ -68,6 +68,6 @@ public class StaticMethodHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Static methods";
+		return Messages.StaticMethodHighlighting_0;
 	}
 }

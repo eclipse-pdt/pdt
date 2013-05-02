@@ -34,20 +34,20 @@ public class EvaluationContextManager implements IWindowListener,
 	 */
 	// private static final String INSTANCE_OF_IJAVA_STACK_FRAME =
 	// PHPDebugUIPlugin.ID
-	//			+ ".instanceof.IJavaStackFrame"; //$NON-NLS-1$
+	//			+ ".instanceof.IJavaStackFrame"; 
 	/**
 	 * System property indicating the frame in the debug view supports 'force
 	 * return'
 	 */
 	// private static final String SUPPORTS_FORCE_RETURN = PHPDebugUIPlugin.ID
-	//			+ ".supportsForceReturn"; //$NON-NLS-1$	
+	//			+ ".supportsForceReturn"; 	
 	/**
 	 * System property indicating whether the frame in the debug view supports
 	 * instance and reference retrieval (1.5 VMs and later).
 	 */
 	// private static final String SUPPORTS_INSTANCE_RETRIEVAL =
 	// PHPDebugUIPlugin.ID
-	//			+ ".supportsInstanceRetrieval"; //$NON-NLS-1$
+	//			+ ".supportsInstanceRetrieval"; 
 
 	private Map fContextsByPage = null;
 
@@ -131,20 +131,20 @@ public class EvaluationContextManager implements IWindowListener,
 		fContextsByPage.put(page, frame);
 		System.setProperty(DEBUGGER_ACTIVE, "true"); //$NON-NLS-1$
 		// if (frame.canForceReturn()) {
-		//				System.setProperty(SUPPORTS_FORCE_RETURN, "true"); //$NON-NLS-1$
+		//				System.setProperty(SUPPORTS_FORCE_RETURN, "true"); 
 		// } else {
-		//				System.setProperty(SUPPORTS_FORCE_RETURN, "false"); //$NON-NLS-1$
+		//				System.setProperty(SUPPORTS_FORCE_RETURN, "false"); 
 		// }
 		// if
 		// (((IJavaDebugTarget)frame.getDebugTarget()).supportsInstanceRetrieval()){
-		//				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "true"); //$NON-NLS-1$
+		//				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "true"); 
 		// } else {
-		//				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false"); //$NON-NLS-1$
+		//				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false"); 
 		// }
 		// if (instOf) {
-		//				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "true"); //$NON-NLS-1$
+		//				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "true"); 
 		// } else {
-		//				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); //$NON-NLS-1$
+		//				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); 
 		// }
 	}
 
@@ -158,10 +158,10 @@ public class EvaluationContextManager implements IWindowListener,
 		if (fContextsByPage != null) {
 			fContextsByPage.remove(page);
 			// if (fContextsByPage.isEmpty()) {
-			//				System.setProperty(DEBUGGER_ACTIVE, "false"); //$NON-NLS-1$
-			//				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); //$NON-NLS-1$
-			//				System.setProperty(SUPPORTS_FORCE_RETURN, "false"); //$NON-NLS-1$
-			//				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false"); //$NON-NLS-1$
+			//				System.setProperty(DEBUGGER_ACTIVE, "false"); 
+			//				System.setProperty(INSTANCE_OF_IJAVA_STACK_FRAME, "false"); 
+			//				System.setProperty(SUPPORTS_FORCE_RETURN, "false"); 
+			//				System.setProperty(SUPPORTS_INSTANCE_RETRIEVAL, "false"); 
 			// }
 		}
 	}

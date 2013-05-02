@@ -104,7 +104,7 @@ public final class New extends WizardHandler {
 		IWizardCategory root = WorkbenchPlugin.getDefault()
 				.getNewWizardRegistry().getRootCategory();
 		IWizardDescriptor localphpWizard = root
-				.findWizard("com.zend.php.ide.ui.project.wizard.localphp");
+				.findWizard("com.zend.php.ide.ui.project.wizard.localphp"); //$NON-NLS-1$
 		if (localphpWizard == null) {// pdt
 			org.eclipse.ui.internal.dialogs.NewWizard wizard = new org.eclipse.ui.internal.dialogs.NewWizard();
 			wizard.setCategoryId(categoryId);

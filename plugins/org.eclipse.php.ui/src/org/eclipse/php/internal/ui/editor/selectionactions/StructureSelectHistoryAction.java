@@ -21,9 +21,9 @@ public class StructureSelectHistoryAction extends Action implements IUpdate {
 
 	public StructureSelectHistoryAction(PHPStructuredEditor editor,
 			SelectionHistory history) {
-		super("&Restore Last Selection");
-		setToolTipText("Restore Last Selection");
-		setDescription("Restore last selection");
+		super(Messages.StructureSelectHistoryAction_3);
+		setToolTipText(Messages.StructureSelectHistoryAction_4);
+		setDescription(Messages.StructureSelectHistoryAction_5);
 		Assert.isNotNull(history);
 		Assert.isNotNull(editor);
 		fHistory = history;

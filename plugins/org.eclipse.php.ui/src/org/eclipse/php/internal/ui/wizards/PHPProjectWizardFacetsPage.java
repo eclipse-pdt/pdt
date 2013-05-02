@@ -57,7 +57,7 @@ public class PHPProjectWizardFacetsPage extends NewElementWizardPage implements
 	 * Constructor for ScriptProjectWizardSecondPage.
 	 */
 	public PHPProjectWizardFacetsPage(PHPProjectWizardFirstPage mainPage) {
-		super("PHPProjectWizardFacetsPage");
+		super("PHPProjectWizardFacetsPage"); //$NON-NLS-1$
 		fFirstPage = mainPage;
 
 		this.fpjwcListener = new IFacetedProjectListener() {

@@ -39,7 +39,7 @@ import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
 public class PHPDocumentationContentAccess {
 
 	private static final Pattern INLINE_LINK_PATTERN = Pattern
-			.compile("\\{@link[\\s]+[^\\}]*\\}");
+			.compile("\\{@link[\\s]+[^\\}]*\\}"); //$NON-NLS-1$
 
 	private static final String BLOCK_TAG_START = "<dl>"; //$NON-NLS-1$
 	private static final String BLOCK_TAG_END = "</dl>"; //$NON-NLS-1$
@@ -684,7 +684,7 @@ public class PHPDocumentationContentAccess {
 				type = ((IMethod) member).getDeclaringType();
 				PHPDocBlock doc = PHPModelUtils.getDocBlock(type);
 				if (doc != null) {
-					Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
+					Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
 					final PHPDocTag[] tags = doc.getTags();
 					for (PHPDocTag docTag : tags) {
 						final int tagKind = docTag.getTagKind();
@@ -713,7 +713,7 @@ public class PHPDocumentationContentAccess {
 				type = ((IField) member).getDeclaringType();
 				PHPDocBlock doc = PHPModelUtils.getDocBlock(type);
 				if (doc != null) {
-					Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");
+					Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+"); //$NON-NLS-1$
 					final PHPDocTag[] tags = doc.getTags();
 					for (PHPDocTag docTag : tags) {
 						final int tagKind = docTag.getTagKind();
@@ -840,11 +840,11 @@ public class PHPDocumentationContentAccess {
 		if (shortDescription != null && shortDescription.length() > 0)
 			fBuf.append(shortDescription);
 		if (longDescription != null && longDescription.length() > 0) {
-			fBuf.append("<p>");
-			longDescription = longDescription.replaceAll("\r\n", "<p>");
-			longDescription = longDescription.replaceAll("\n\r", "<p>");
-			longDescription = longDescription.replaceAll("\n", "<p>");
-			longDescription = longDescription.replaceAll("\r", "<p>");
+			fBuf.append("<p>"); //$NON-NLS-1$
+			longDescription = longDescription.replaceAll("\r\n", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\n\r", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\n", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
+			longDescription = longDescription.replaceAll("\r", "<p>"); //$NON-NLS-1$ //$NON-NLS-2$
 			fBuf.append(longDescription);
 		} else if (fMethod != null) {
 			CharSequence inherited = fJavadocLookup
@@ -919,16 +919,16 @@ public class PHPDocumentationContentAccess {
 		Matcher m = INLINE_LINK_PATTERN.matcher(fBuf);
 		StringBuffer sb = new StringBuffer();
 		while (m.find()) {
-			String[] strs = m.group().split("[\\s]+", 3);
+			String[] strs = m.group().split("[\\s]+", 3); //$NON-NLS-1$
 			String url = removeLastRightCurlyBrace(strs[1]);
-			if (url.toLowerCase().startsWith("http")) {
-				String description = "";
+			if (url.toLowerCase().startsWith("http")) { //$NON-NLS-1$
+				String description = ""; //$NON-NLS-1$
 				if (strs.length == 3) {
 					description = removeLastRightCurlyBrace(strs[2]);
 				} else {
 					description = url;
 				}
-				String link = "<a href=\"" + url + "\">" + description + "</a>";
+				String link = "<a href=\"" + url + "\">" + description + "</a>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				// m.appendReplacement(sb, link);
 				sb.append(fBuf.toString().replace(m.group(), link));
 			} else {
@@ -953,7 +953,7 @@ public class PHPDocumentationContentAccess {
 	}
 
 	private String removeLastRightCurlyBrace(String str) {
-		if (str.endsWith("}")) {
+		if (str.endsWith("}")) { //$NON-NLS-1$
 			return str.substring(0, str.length() - 1);
 		}
 		return str;
@@ -1374,7 +1374,7 @@ public class PHPDocumentationContentAccess {
 				TypeReference type = (TypeReference) first;
 				String name = type.getName();
 
-				int typeNameEnd = name.indexOf("::");
+				int typeNameEnd = name.indexOf("::"); //$NON-NLS-1$
 				if (typeNameEnd == -1) {
 					refTypeName = name;
 				} else {
@@ -1383,18 +1383,18 @@ public class PHPDocumentationContentAccess {
 					int argsListStart = name.indexOf('(', typeNameEnd);
 					if (argsListStart == -1) {
 						refMemberName = name.substring(typeNameEnd
-								+ "::".length());
+								+ "::".length()); //$NON-NLS-1$
 					} else {
 						refMemberName = name.substring(
-								typeNameEnd + "::".length(), argsListStart);
+								typeNameEnd + "::".length(), argsListStart); //$NON-NLS-1$
 
 						int argsListEnd = name.indexOf(argsListStart, ')');
 						if (argsListEnd == -1) {
 							refMethodParamTypes = new String[0];
 						} else {
 							String argsList = name.substring(argsListStart
-									+ ")".length(), argsListEnd);
-							String[] args = argsList.split(",");
+									+ ")".length(), argsListEnd); //$NON-NLS-1$
+							String[] args = argsList.split(","); //$NON-NLS-1$
 							for (int i = 0; i < args.length; i++) {
 								args[i] = args[i].trim();
 							}
@@ -1406,12 +1406,12 @@ public class PHPDocumentationContentAccess {
 			} // else if (first instanceof MemberRef) {
 				// MemberRef memberRef = (MemberRef) first;
 				// Name qualifier = memberRef.getQualifier();
-				//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); //$NON-NLS-1$
+				//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); 
 				// refMemberName = memberRef.getName().getIdentifier();
 				// } else if (first instanceof MethodRef) {
 				// MethodRef methodRef = (MethodRef) first;
 				// Name qualifier = methodRef.getQualifier();
-				//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); //$NON-NLS-1$
+				//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); 
 				// refMemberName = methodRef.getName().getIdentifier();
 				// List params = methodRef.parameters();
 				// int ps = params.size();
@@ -1452,7 +1452,7 @@ public class PHPDocumentationContentAccess {
 					sb.append(refTypeName);
 					if (refMemberName != null) {
 						if (refTypeName.length() > 0) {
-							sb.append("::");
+							sb.append("::"); //$NON-NLS-1$
 						}
 						sb.append(refMemberName);
 						if (refMethodParamTypes != null) {

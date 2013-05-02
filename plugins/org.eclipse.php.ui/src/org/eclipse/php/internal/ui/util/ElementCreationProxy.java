@@ -35,7 +35,7 @@ public class ElementCreationProxy {
 			SafeRunner.run(new SafeRunnable(
 					PHPUIMessages.ElementCreationProxy_0 + element.getName()
 							+ PHPUIMessages.ElementCreationProxy_1
-							+ extensionPointName) { //$NON-NLS-1$ //$NON-NLS-2$
+							+ extensionPointName) { 
 						public void run() throws Exception {
 							elementObject = element
 									.createExecutableExtension("class"); //$NON-NLS-1$

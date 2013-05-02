@@ -70,29 +70,29 @@ public class ExpressionsValueDeserializer {
 
 	private ExpressionValue buildIntType(VariableReader reader) {
 		String value = reader.readToken();
-		String valueAsString = "(int) " + value;
+		String valueAsString = "(int) " + value; //$NON-NLS-1$
 		return new ExpressionValue(ExpressionValue.INT_TYPE, value,
 				valueAsString, null);
 	}
 
 	private ExpressionValue buildDoubleType(VariableReader reader) {
 		String value = reader.readToken();
-		String valueAsString = "(double) " + value;
+		String valueAsString = "(double) " + value; //$NON-NLS-1$
 		return new ExpressionValue(ExpressionValue.DOUBLE_TYPE, value,
 				valueAsString, null);
 	}
 
 	private ExpressionValue buildSringType(VariableReader reader) {
 		String value = reader.readString();
-		String valueAsString = "(string:" + value.length() + ") " + value;
+		String valueAsString = "(string:" + value.length() + ") " + value; //$NON-NLS-1$ //$NON-NLS-2$
 		return new ExpressionValue(ExpressionValue.STRING_TYPE, value,
 				valueAsString, null);
 	}
 
 	private ExpressionValue buildBooleanType(VariableReader reader) {
 		String value = reader.readToken();
-		String valueAsString = "(boolean) "
-				+ ((value.equals("0")) ? "false" : "true");
+		String valueAsString = "(boolean) " //$NON-NLS-1$
+				+ ((value.equals("0")) ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return new ExpressionValue(ExpressionValue.BOOLEAN_TYPE, value,
 				valueAsString, null);
 	}
@@ -102,7 +102,7 @@ public class ExpressionsValueDeserializer {
 		reader.readInt();
 
 		String value = reader.readToken();
-		String valueAsString = "resource (" + resourceNumber + ") of type ("
+		String valueAsString = "resource (" + resourceNumber + ") of type (" //$NON-NLS-1$ //$NON-NLS-2$
 				+ value + ')';
 		return new ExpressionValue(ExpressionValue.RESOURCE_TYPE, value,
 				valueAsString, null);
@@ -140,8 +140,8 @@ public class ExpressionsValueDeserializer {
 			variableNodes[i].setValue(build(expression, reader));
 		}
 
-		return new ExpressionValue(ExpressionValue.ARRAY_TYPE, "Array",
-				"Array [" + originalLength + ']', variableNodes);
+		return new ExpressionValue(ExpressionValue.ARRAY_TYPE, "Array", //$NON-NLS-1$
+				"Array [" + originalLength + ']', variableNodes); //$NON-NLS-1$
 	}
 
 	private ExpressionValue buildObjectType(Expression expression,
@@ -171,11 +171,11 @@ public class ExpressionsValueDeserializer {
 				expressionNodes[i] = createDefaultVariable(name);
 			} else {
 				expressionNodes[i] = expression.createChildExpression(name,
-						"->" + name);
+						"->" + name); //$NON-NLS-1$
 			}
 			expressionNodes[i].setValue(build(expression, reader));
 		}
-		String valueAsString = "Object of: " + objectName;
+		String valueAsString = "Object of: " + objectName; //$NON-NLS-1$
 
 		return new ExpressionValue(ExpressionValue.OBJECT_TYPE, objectName,
 				valueAsString, expressionNodes);

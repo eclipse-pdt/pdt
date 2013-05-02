@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
 public class PDTMylynPlugin extends Plugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.php.mylyn.ui";
+	public static final String PLUGIN_ID = "org.eclipse.php.mylyn.ui"; //$NON-NLS-1$
 
 	// The shared instance
 	private static PDTMylynPlugin plugin;

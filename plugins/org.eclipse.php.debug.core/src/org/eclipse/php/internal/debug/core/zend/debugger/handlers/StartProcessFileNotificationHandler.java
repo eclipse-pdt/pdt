@@ -177,7 +177,7 @@ public class StartProcessFileNotificationHandler implements
 
 					IPath path = Path.fromPortableString(secondaryId);
 					if ((path.getDevice() == null)
-							&& (path.toString().startsWith("org.eclipse.dltk"))) {
+							&& (path.toString().startsWith("org.eclipse.dltk"))) { //$NON-NLS-1$
 						String fullPathString = path.toString();
 						String absolutePath = fullPathString
 								.substring(fullPathString.indexOf(':') + 1);

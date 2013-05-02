@@ -57,7 +57,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 				.getAttribute(stackData, "filename")); //$NON-NLS-1$
 		qualifiedFile = ((DBGpTarget) getDebugTarget())
 				.mapToWorkspaceFileIfRequired(qualifiedFile);
-		String function = DBGpResponse.getAttribute(stackData, "where"); //$NON-NLS-1$ 
+		String function = DBGpResponse.getAttribute(stackData, "where"); //$NON-NLS-1$
 		// check to see if the file exists in the workspace
 		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot()
 				.findFilesForLocation(new Path(qualifiedFile));
@@ -66,12 +66,12 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 			// get the file found in workspace and show project/file
 			String projectName = file.getProject().getName();
 			String projectRelPath = file.getProjectRelativePath().toString();
-			fileName = projectName + "/" + projectRelPath;
+			fileName = projectName + "/" + projectRelPath; //$NON-NLS-1$
 		} else {
 			// fileName = null;
 			fileName = qualifiedFile;
 		}
-		name = fileName + "." + function + "() : lineno " + lineNo;
+		name = fileName + "." + function + "() : lineno " + lineNo; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/*

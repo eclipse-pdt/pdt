@@ -39,7 +39,7 @@ public class InternalConstantHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Internal constants";
+		return Messages.InternalConstantHighlighting_0;
 	}
 
 	@Override

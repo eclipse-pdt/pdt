@@ -63,8 +63,8 @@ public class ReorgPolicyFactory {
 				.getActualScriptElementsToReorg();
 
 		if (false) {
-			System.out.println("createReorgPolicy():"); //$NON-NLS-1$
-			System.out.println(" resources: " + Arrays.asList(resources)); //$NON-NLS-1$
+			System.out.println("createReorgPolicy():"); //$NON-NLS-1$ 
+			System.out.println(" resources: " + Arrays.asList(resources)); //$NON-NLS-1$ 
 			System.out.println(" elements: " + Arrays.asList(modelElements)); //$NON-NLS-1$
 		}
 
@@ -87,11 +87,11 @@ public class ReorgPolicyFactory {
 							IModelElement.SCRIPT_FOLDER))
 				return NO;
 			if (copy)
-				return new CopyPackagesPolicy(ArrayTypeConverter
-						.toPackageArray(modelElements));
+				return new CopyPackagesPolicy(
+						ArrayTypeConverter.toPackageArray(modelElements));
 			else
-				return new MovePackagesPolicy(ArrayTypeConverter
-						.toPackageArray(modelElements));
+				return new MovePackagesPolicy(
+						ArrayTypeConverter.toPackageArray(modelElements));
 		}
 
 		if (ReorgUtils.hasElementsOfType(modelElements,
@@ -101,11 +101,13 @@ public class ReorgPolicyFactory {
 							IModelElement.PROJECT_FRAGMENT))
 				return NO;
 			if (copy)
-				return new CopyProjectFragmentsPolicy(ArrayTypeConverter
-						.toProjectFragmentArray(modelElements));
+				return new CopyProjectFragmentsPolicy(
+						ArrayTypeConverter
+								.toProjectFragmentArray(modelElements));
 			else
-				return new MoveProjectFragmentsPolicy(ArrayTypeConverter
-						.toProjectFragmentArray(modelElements));
+				return new MoveProjectFragmentsPolicy(
+						ArrayTypeConverter
+								.toProjectFragmentArray(modelElements));
 		}
 
 		if (ReorgUtils.hasElementsOfType(resources, IResource.FILE
@@ -119,12 +121,14 @@ public class ReorgPolicyFactory {
 					| IResource.FOLDER))
 				return NO;
 			if (copy)
-				return new CopyFilesFoldersAndCusPolicy(ReorgUtils
-						.getFiles(resources), ReorgUtils.getFolders(resources),
+				return new CopyFilesFoldersAndCusPolicy(
+						ReorgUtils.getFiles(resources),
+						ReorgUtils.getFolders(resources),
 						ArrayTypeConverter.toCuArray(modelElements));
 			else
-				return new MoveFilesFoldersAndCusPolicy(ReorgUtils
-						.getFiles(resources), ReorgUtils.getFolders(resources),
+				return new MoveFilesFoldersAndCusPolicy(
+						ReorgUtils.getFiles(resources),
+						ReorgUtils.getFolders(resources),
 						ArrayTypeConverter.toCuArray(modelElements));
 		}
 
@@ -139,7 +143,7 @@ public class ReorgPolicyFactory {
 			else {
 				if (DLTKCore.DEBUG) {
 					System.err
-							.println("TODO: ReorgPolicyFactory: Add MoveSubCuElementsPolicy support"); //$NON-NLS-1$
+							.println("TODO: ReorgPolicyFactory: Add MoveSubCuElementsPolicy support"); //$NON-NLS-1$ 
 				}
 				// return new MoveSubCuElementsPolicy(modelElements);
 			}
@@ -536,13 +540,13 @@ public class ReorgPolicyFactory {
 			if (scriptDest instanceof IScriptFolder)
 				return (IScriptFolder) scriptDest;
 			if (scriptDest instanceof IProjectFragment)
-				return ((IProjectFragment) scriptDest).getScriptFolder(""); //$NON-NLS-1$
+				return ((IProjectFragment) scriptDest).getScriptFolder(""); //$NON-NLS-1$ 
 			if (scriptDest instanceof IScriptProject) {
 				try {
 					IProjectFragment root = ReorgUtils
 							.getCorrespondingProjectFragment((IScriptProject) scriptDest);
 					if (root != null)
-						return root.getScriptFolder(""); //$NON-NLS-1$
+						return root.getScriptFolder(""); //$NON-NLS-1$ 
 				} catch (ModelException e) {
 					// fall through
 				}
@@ -605,9 +609,7 @@ public class ReorgPolicyFactory {
 			} else {
 				IContainer destinationAsContainer = getDestinationAsContainer();
 				if (destinationAsContainer != null)
-					oh
-							.confirmOverwritting(reorgQueries,
-									destinationAsContainer);
+					oh.confirmOverwritting(reorgQueries, destinationAsContainer);
 			}
 			fFiles = oh.getFilesWithoutUnconfirmedOnes();
 			fFolders = oh.getFoldersWithoutUnconfirmedOnes();
@@ -1210,8 +1212,9 @@ public class ReorgPolicyFactory {
 			IResource res = ReorgUtils.getResource(cu);
 			if (res != null && res.isLinked()) {
 				if (ResourceUtil.getResource(dest) instanceof IContainer)
-					return copyFileToContainer(cu, (IContainer) ResourceUtil
-							.getResource(dest), nameProposer, copyQueries);
+					return copyFileToContainer(cu,
+							(IContainer) ResourceUtil.getResource(dest),
+							nameProposer, copyQueries);
 			}
 
 			String newName = nameProposer.createNewName(cu, dest);
@@ -1225,8 +1228,8 @@ public class ReorgPolicyFactory {
 						.getFullPath().append(newName);
 				INewNameQuery nameQuery = copyQueries
 						.createNewSourceModuleNameQuery(cu, newName);
-				return new CreateCopyOfSourceModuleChange(newPath, cu
-						.getSource(), cu, nameQuery);
+				return new CreateCopyOfSourceModuleChange(newPath,
+						cu.getSource(), cu, nameQuery);
 			} catch (CoreException e) {
 				return simpleCopy; // fallback - no ui here
 			}
@@ -1327,8 +1330,8 @@ public class ReorgPolicyFactory {
 			IProjectFragment destination = getDestinationAsProjectFragment();
 			CopyArguments javaArgs = new CopyArguments(destination,
 					fReorgExecutionLog);
-			CopyArguments resourceArgs = new CopyArguments(destination
-					.getResource(), fReorgExecutionLog);
+			CopyArguments resourceArgs = new CopyArguments(
+					destination.getResource(), fReorgExecutionLog);
 			IScriptFolder[] packages = getPackages();
 			for (int i = 0; i < packages.length; i++) {
 				fModifications.copy(packages[i], javaArgs, resourceArgs);
@@ -1442,8 +1445,7 @@ public class ReorgPolicyFactory {
 							cu.getElementName());
 				else
 					newName = Messages
-							.format(
-									RefactoringCoreMessages.CopyRefactoring_cu_copyOfMore,
+							.format(RefactoringCoreMessages.CopyRefactoring_cu_copyOfMore,
 									new String[] { String.valueOf(i),
 											cu.getElementName() });
 				if (isNewNameOk(destination, newName)
@@ -1474,13 +1476,11 @@ public class ReorgPolicyFactory {
 				String newName;
 				if (i == 1)
 					newName = Messages
-							.format(
-									RefactoringCoreMessages.CopyRefactoring_resource_copyOf1,
+							.format(RefactoringCoreMessages.CopyRefactoring_resource_copyOf1,
 									res.getName());
 				else
 					newName = Messages
-							.format(
-									RefactoringCoreMessages.CopyRefactoring_resource_copyOfMore,
+							.format(RefactoringCoreMessages.CopyRefactoring_resource_copyOfMore,
 									new String[] { String.valueOf(i),
 											res.getName() });
 				if (isNewNameOk(destination, newName)
@@ -1503,13 +1503,11 @@ public class ReorgPolicyFactory {
 				String newName;
 				if (i == 1)
 					newName = Messages
-							.format(
-									RefactoringCoreMessages.CopyRefactoring_package_copyOf1,
+							.format(RefactoringCoreMessages.CopyRefactoring_package_copyOf1,
 									pack.getElementName());
 				else
 					newName = Messages
-							.format(
-									RefactoringCoreMessages.CopyRefactoring_package_copyOfMore,
+							.format(RefactoringCoreMessages.CopyRefactoring_package_copyOfMore,
 									new String[] { String.valueOf(i),
 											pack.getElementName() });
 				if (isNewNameOk(destination, newName)
@@ -1961,7 +1959,7 @@ public class ReorgPolicyFactory {
 
 		private TextChangeManager createChangeManager(IProgressMonitor pm,
 				RefactoringStatus status) throws ModelException {
-			pm.beginTask("", 1);//$NON-NLS-1$
+			pm.beginTask("", 1); //$NON-NLS-1$
 			try {
 				if (!fUpdateReferences)
 					return new TextChangeManager();
@@ -2028,8 +2026,8 @@ public class ReorgPolicyFactory {
 			IResource resource = ResourceUtil.getResource(cu);
 			if (resource != null && resource.isLinked()) {
 				if (ResourceUtil.getResource(dest) instanceof IContainer)
-					return moveFileToContainer(cu, (IContainer) ResourceUtil
-							.getResource(dest));
+					return moveFileToContainer(cu,
+							(IContainer) ResourceUtil.getResource(dest));
 			}
 			return new MoveSourceModuleChange(cu, dest);
 		}
@@ -2054,8 +2052,7 @@ public class ReorgPolicyFactory {
 			if (destination != null) {
 				ISourceModule[] cus = getCus();
 				pm.beginTask("", cus.length); //$NON-NLS-1$
-				pm
-						.subTask(RefactoringCoreMessages.MoveRefactoring_scanning_qualified_names);
+				pm.subTask(RefactoringCoreMessages.MoveRefactoring_scanning_qualified_names);
 				for (int i = 0; i < cus.length; i++) {
 					ISourceModule cu = cus[i];
 					IType[] types = cu.getTypes();
@@ -2081,7 +2078,7 @@ public class ReorgPolicyFactory {
 			}
 			// QualifiedNameFinder.process(fQualifiedNameSearchResult,
 			// type.getFullyQualifiedName(), destination.getElementName() + "."
-			// + type.getTypeQualifiedName(), //$NON-NLS-1$
+			// + type.getTypeQualifiedName(),
 			// fFilePatterns, type.getScriptProject().getProject(), pm);
 		}
 

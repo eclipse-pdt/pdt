@@ -71,6 +71,6 @@ public class CurlyOpenAutoEditStrategy extends IndentLineAutoEditStrategy
 	}
 
 	protected String getCommandText() {
-		return "{";
+		return "{"; //$NON-NLS-1$
 	}
 }

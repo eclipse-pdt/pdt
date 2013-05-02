@@ -26,11 +26,11 @@ public class DBGpPreferences {
 	public static final int DBGP_CAPTURE_DEFAULT = 0;
 
 	// define the session property keys
-	public static final String DBGP_MAX_DEPTH_PROPERTY = "MaxDepth";
-	public static final String DBGP_SHOW_GLOBALS_PROPERTY = "ShowGlobals";
-	public static final String DBGP_MAX_CHILDREN_PROPERTY = "MaxChildren";
-	public static final String DBGP_CAPTURE_STDOUT_PROPERTY = "CaptureStdout";
-	public static final String DBGP_CAPTURE_STDERR_PROPERTY = "CaptureStderr";
+	public static final String DBGP_MAX_DEPTH_PROPERTY = "MaxDepth"; //$NON-NLS-1$
+	public static final String DBGP_SHOW_GLOBALS_PROPERTY = "ShowGlobals"; //$NON-NLS-1$
+	public static final String DBGP_MAX_CHILDREN_PROPERTY = "MaxChildren"; //$NON-NLS-1$
+	public static final String DBGP_CAPTURE_STDOUT_PROPERTY = "CaptureStdout"; //$NON-NLS-1$
+	public static final String DBGP_CAPTURE_STDERR_PROPERTY = "CaptureStderr"; //$NON-NLS-1$
 
 	private Map preferences = new HashMap();
 

@@ -77,7 +77,7 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 		@Override
 		public void endVisit(Program program) {
 			if (visitField < 0) {
-				throw new IllegalStateException("visitField is negative: "
+				throw new IllegalStateException("visitField is negative: " //$NON-NLS-1$
 						+ visitField);
 			}
 		}
@@ -222,6 +222,6 @@ public class FieldHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Fields";
+		return Messages.FieldHighlighting_0;
 	}
 }

@@ -102,7 +102,7 @@ public class IncludePathUtils {
 			String folderElementName = folder.getElementName();
 			StringBuilder sb = new StringBuilder();
 			if (folderElementName.length() != 0) {
-				sb.append(folderElementName).append("/");
+				sb.append(folderElementName).append("/"); //$NON-NLS-1$
 			}
 			sb.append(sourceModule.getElementName());
 			return new Path(sb.toString());

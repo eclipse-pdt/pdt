@@ -44,9 +44,9 @@ public class PathMappingComposite extends Composite {
 	private static final int IDX_ADD = 0;
 	private static final int IDX_EDIT = 1;
 	private static final int IDX_REMOVE = 2;
-	private static final String[] buttonLabels = { "&Add", "&Edit", "&Remove" };
-	private static final String[] columnHeaders = { "Path on server",
-			"Local path" };
+	private static final String[] buttonLabels = { Messages.PathMappingComposite_0, Messages.PathMappingComposite_1, Messages.PathMappingComposite_2 };
+	private static final String[] columnHeaders = { Messages.PathMappingComposite_3,
+			Messages.PathMappingComposite_4 };
 	private static final ColumnLayoutData[] columnLayoutDatas = new ColumnLayoutData[] {
 			new ColumnWeightData(50), new ColumnWeightData(50) };
 
@@ -140,7 +140,7 @@ public class PathMappingComposite extends Composite {
 	public void setData(Object data) {
 		if (!(data instanceof Mapping[])) {
 			throw new IllegalArgumentException(
-					"Data must be instance of Mapping[]");
+					"Data must be instance of Mapping[]"); //$NON-NLS-1$
 		}
 		Mapping[] mappings = (Mapping[]) data;
 		fMapList.setElements(Arrays.asList(mappings));

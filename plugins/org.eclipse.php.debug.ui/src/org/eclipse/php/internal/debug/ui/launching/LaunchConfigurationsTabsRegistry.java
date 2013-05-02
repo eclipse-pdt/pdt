@@ -267,7 +267,7 @@ public class LaunchConfigurationsTabsRegistry {
 
 		public String getModes() {
 			if (modes == null) {
-				modes = "";
+				modes = ""; //$NON-NLS-1$
 			}
 			return modes;
 		}

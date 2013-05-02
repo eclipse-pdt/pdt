@@ -160,27 +160,27 @@ public class StackLayer {
 		StringBuffer buffer = new StringBuffer(20);
 		buffer.append(toStringCalledFunctionLine());
 		buffer
-				.append("  " + callerFileName + " line "
+				.append("  " + callerFileName + " line " //$NON-NLS-1$ //$NON-NLS-2$
 						+ (callerLineNumber + 1));
 		return buffer.toString();
 	}
 
 	public String toStringCalledFunctionLine() {
 		if (getCallerFunctionName() == null
-				|| getCallerFunctionName().equals("")) {
-			return "";
+				|| getCallerFunctionName().equals("")) { //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
 		}
 		StringBuffer buffer = new StringBuffer(getCallerFunctionName() + '(');
 		Expression[] variables = getVariables();
 		for (int i = 0; i < variables.length; i++) {
 			Expression expression = variables[i];
-			buffer.append(" $");
+			buffer.append(" $"); //$NON-NLS-1$
 			buffer.append(expression.getLastName());
 			if (i != variables.length - 1) {
 				buffer.append(',');
 			}
 		}
-		buffer.append(" )");
+		buffer.append(" )"); //$NON-NLS-1$
 		return buffer.toString();
 	}
 

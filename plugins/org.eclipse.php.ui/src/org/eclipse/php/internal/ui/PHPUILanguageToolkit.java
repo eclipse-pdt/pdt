@@ -44,7 +44,7 @@ public class PHPUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 	}
 
 	public String getEditorId(Object inputElement) {
-		return "org.eclipse.php.editor";
+		return "org.eclipse.php.editor"; //$NON-NLS-1$
 	}
 
 	public ScriptElementLabels getScriptElementLabels() {

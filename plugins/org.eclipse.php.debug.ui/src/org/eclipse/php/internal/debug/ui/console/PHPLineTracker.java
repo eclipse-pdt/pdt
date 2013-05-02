@@ -48,12 +48,12 @@ public class PHPLineTracker implements IConsoleLineTrackerExtension {
 	 * @see org.eclipse.debug.ui.console.IConsoleLineTracker#lineAppended(org.eclipse.jface.text.IRegion)
 	 */
 	public void lineAppended(IRegion line) {
-		String message = "";
+		String message = ""; //$NON-NLS-1$
 		try {
 			message = fConsole.getDocument().get(line.getOffset(),
 					line.getLength());
 		} catch (BadLocationException e) {
-			Logger.logException("PHPLineTracker error getting message", e);
+			Logger.logException("PHPLineTracker error getting message", e); //$NON-NLS-1$
 			return;
 		}
 		if (fPHPHyperLink != null) {

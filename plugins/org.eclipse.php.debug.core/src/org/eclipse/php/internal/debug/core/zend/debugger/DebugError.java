@@ -54,10 +54,10 @@ public class DebugError implements Cloneable {
 		return errorIndex == 11;
 	}
 
-	private static String codeToName[] = new String[] { "Debug Error",
-			"Debug Warning", "Parsing Error", "Notice", "Fatal Error",
-			"Core Warning", "Compile Error", "Compile Warning", "User Error",
-			"User Warning", "User Notice", "Debug Strict (PHP 5)" };
+	private static String codeToName[] = new String[] { "Debug Error", //$NON-NLS-1$
+			"Debug Warning", "Parsing Error", "Notice", "Fatal Error", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			"Core Warning", "Compile Error", "Compile Warning", "User Error", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			"User Warning", "User Notice", "Debug Strict (PHP 5)" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	private static int getErrorIndex(int code) {
 		int index = (int) (Math.log(code) / Math.log(2));
@@ -78,9 +78,9 @@ public class DebugError implements Cloneable {
 	public DebugError() {
 		id = -1;
 		code = 1;
-		fileName = "";
+		fileName = ""; //$NON-NLS-1$
 		lineNumber = -1;
-		text = "";
+		text = ""; //$NON-NLS-1$
 	}
 
 	public DebugError(int code, String fileName, int lineNumber, String text) {
@@ -141,7 +141,7 @@ public class DebugError implements Cloneable {
 		IPath filePath = new Path(fileName);
 		if (filePath.segmentCount() > 1
 				&& filePath.segment(filePath.segmentCount() - 2).equals(
-						"Untitled_Documents")) {
+						"Untitled_Documents")) { //$NON-NLS-1$
 			return filePath.lastSegment();
 		}
 		return fileName;
@@ -192,18 +192,18 @@ public class DebugError implements Cloneable {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(getCodeName());
 		if (lineNumber >= 0) {
-			buffer.append(": ");
+			buffer.append(": "); //$NON-NLS-1$
 			buffer.append(getFileDisplayName());
-			buffer.append(" line ");
+			buffer.append(" line "); //$NON-NLS-1$
 			// buffer.append(lineNumber + 1);
 			buffer.append(lineNumber);
 		}
-		buffer.append(" - " + getErrorText());
+		buffer.append(" - " + getErrorText()); //$NON-NLS-1$
 		return buffer.toString();
 	}
 
 	public int getErrorTextLength() {
-		return (" - " + getErrorText()).length();
+		return (" - " + getErrorText()).length(); //$NON-NLS-1$
 	}
 
 	@Override

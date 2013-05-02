@@ -58,7 +58,7 @@ public class Resources {
 		if (result != null)
 			return result;
 		return new Status(IStatus.OK, PHPUiPlugin.getPluginId(), IStatus.OK,
-				"", null); //$NON-NLS-1$		
+				"", null); 		 //$NON-NLS-1$
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class Resources {
 				PHPUiPlugin.getPluginId(),
 				NLS
 						.bind(
-								"File {0} has been modified since the beginning of the operation",
+								Messages.Resources_0,
 								file.getFullPath().toString()));
 		if (status == null) {
 			return entry;
@@ -153,7 +153,7 @@ public class Resources {
 			return status;
 		} else {
 			MultiStatus result = new MultiStatus(PHPUiPlugin.getPluginId(), 0,
-					"There are modified resources", null);
+					Messages.Resources_4, null);
 			result.add(status);
 			result.add(entry);
 			return result;
@@ -163,7 +163,7 @@ public class Resources {
 	private static IStatus addOutOfSync(IStatus status, IResource resource) {
 		IStatus entry = new Status(IStatus.ERROR, ResourcesPlugin.PI_RESOURCES,
 				IResourceStatus.OUT_OF_SYNC_LOCAL, NLS.bind(
-						"Resource {0} is out of sync with the file system",
+						Messages.Resources_5,
 						resource.getFullPath().toString()), null);
 		if (status == null) {
 			return entry;
@@ -173,7 +173,7 @@ public class Resources {
 		} else {
 			MultiStatus result = new MultiStatus(ResourcesPlugin.PI_RESOURCES,
 					IResourceStatus.OUT_OF_SYNC_LOCAL,
-					"Some resources are out of sync", null);
+					Messages.Resources_6, null);
 			result.add(status);
 			result.add(entry);
 			return result;

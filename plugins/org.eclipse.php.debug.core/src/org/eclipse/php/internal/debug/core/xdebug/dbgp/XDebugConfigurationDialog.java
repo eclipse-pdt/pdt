@@ -88,7 +88,7 @@ public class XDebugConfigurationDialog extends
 		Composite mainSubSection = subsections[0];
 		addLabelControl(mainSubSection,
 				PHPDebugCoreMessages.DebuggerConfigurationDialog_debugPort,
-				XDebugPreferenceMgr.XDEBUG_PREF_PORT); //$NON-NLS-1$
+				XDebugPreferenceMgr.XDEBUG_PREF_PORT); 
 		portTextBox = addNumTextField(mainSubSection,
 				XDebugPreferenceMgr.XDEBUG_PREF_PORT, 5, 2, false);
 		showGlobals = addCheckBox(
@@ -142,12 +142,12 @@ public class XDebugConfigurationDialog extends
 		});
 		addLabelControl(proxySubSection,
 				PHPDebugCoreMessages.XDebugConfigurationDialog_idekey,
-				XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY); //$NON-NLS-1$
+				XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY); 
 		idekeyTextBox = addATextField(proxySubSection,
 				XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY, 100, 2);
 		addLabelControl(proxySubSection,
 				PHPDebugCoreMessages.XDebugConfigurationDialog_proxy,
-				XDebugPreferenceMgr.XDEBUG_PREF_PROXY); //$NON-NLS-1$
+				XDebugPreferenceMgr.XDEBUG_PREF_PROXY); 
 		proxyTextBox = addATextField(proxySubSection,
 				XDebugPreferenceMgr.XDEBUG_PREF_PROXY, 100, 2);
 

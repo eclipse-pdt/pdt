@@ -110,7 +110,7 @@ public class DebugConnectionThread implements Runnable {
 		responseTable = new IntHashtable();
 		responseHandlers = new Hashtable<Integer, ResponseHandler>();
 		messageHandlers = new HashMap<Integer, IDebugMessageHandler>();
-		theThread = new Thread(this, "PHP Debug Conection");
+		theThread = new Thread(this, "PHP Debug Conection"); //$NON-NLS-1$
 		theThread.start();
 	}
 
@@ -203,7 +203,7 @@ public class DebugConnectionThread implements Runnable {
 	 */
 	public Object sendRequest(Object request) throws Exception {
 		if (PHPDebugPlugin.DEBUG) {
-			System.out.println("Sending syncrhonic request: " + request);
+			System.out.println("Sending syncrhonic request: " + request); //$NON-NLS-1$
 		}
 		try {
 			IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
@@ -306,7 +306,7 @@ public class DebugConnectionThread implements Runnable {
 	 */
 	public void sendRequest(Object request, ResponseHandler responseHandler) {
 		if (PHPDebugPlugin.DEBUG) {
-			System.out.println("Sending asynchronic request: " + request);
+			System.out.println("Sending asynchronic request: " + request); //$NON-NLS-1$
 		}
 		int msgId = lastRequestID++;
 		IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
@@ -493,7 +493,7 @@ public class DebugConnectionThread implements Runnable {
 	protected int getSessionID(String query) {
 		int indx = query
 				.lastIndexOf(AbstractDebugParametersInitializer.DEBUG_SESSION_ID
-						+ "=");
+						+ "="); //$NON-NLS-1$
 		if (indx < 0) {
 			return -1;
 		}
@@ -780,7 +780,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 
 		public void start() {
-			theThread = new Thread(this, "PHP Debug Message Handler");
+			theThread = new Thread(this, "PHP Debug Message Handler"); //$NON-NLS-1$
 			// This makes the printing much faster.
 			theThread.setPriority(1);
 			theThread.start();
@@ -917,7 +917,7 @@ public class DebugConnectionThread implements Runnable {
 							.queueOut();
 
 					if (PHPDebugPlugin.DEBUG) {
-						System.out.println("New message received: "
+						System.out.println("New message received: " //$NON-NLS-1$
 								+ newInputMessage);
 					}
 
@@ -971,13 +971,13 @@ public class DebugConnectionThread implements Runnable {
 								if (messageHandler != null) {
 									if (PHPDebugPlugin.DEBUG) {
 										System.out
-												.println("Creating message handler: "
+												.println("Creating message handler: " //$NON-NLS-1$
 														+ messageHandler
 																.getClass()
 																.getName()
 																.replaceFirst(
-																		".*\\.",
-																		""));
+																		".*\\.", //$NON-NLS-1$
+																		"")); //$NON-NLS-1$
 									}
 									// handle the request
 									messageHandler.handle(newInputMessage,
@@ -1169,7 +1169,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 
 		public void start() {
-			theThread = new Thread(this, "PHP Debug Message Reader");
+			theThread = new Thread(this, "PHP Debug Message Reader"); //$NON-NLS-1$
 			theThread.start();
 			// Log.writeLog("Input Manager is started");
 		}

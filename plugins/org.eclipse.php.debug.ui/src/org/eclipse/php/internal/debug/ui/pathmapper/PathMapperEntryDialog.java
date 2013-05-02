@@ -240,7 +240,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 
 		ignoreMappingBtn = new Button(typeSelectionGroup, SWT.RADIO);
 		ignoreMappingBtn
-				.setText("Do not map the following server path to a local resource:");
+				.setText(Messages.PathMapperEntryDialog_18);
 		layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = 2;
 		ignoreMappingBtn.setLayoutData(layoutData);
@@ -266,7 +266,7 @@ public class PathMapperEntryDialog extends TitleAreaDialog {
 				.convertWidthInCharsToPixels(1);
 		layoutData.widthHint = convertWidthInCharsToPixels(70);
 		ignorePathText.setLayoutData(layoutData);
-		ignorePathText.setText("");
+		ignorePathText.setText(""); //$NON-NLS-1$
 
 		applyDialogFont(mainComp);
 		initializeValues();

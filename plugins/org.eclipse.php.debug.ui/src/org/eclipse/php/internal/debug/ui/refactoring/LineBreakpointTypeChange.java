@@ -46,7 +46,7 @@ public class LineBreakpointTypeChange extends LineBreakpointChange {
 	 */
 	public String getName() {
 		String msg = MessageFormat.format(
-				RefactoringMessages.LineBreakpointTypeChange_1,
+				"", //$NON-NLS-1$
 				new String[] { getBreakpointLabel(getOriginalBreakpoint()) });
 		if (!"".equals(destResource.getName())) { //$NON-NLS-1$
 			msg = MessageFormat.format(

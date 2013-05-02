@@ -129,8 +129,8 @@ public class WorkingSetAwarePHPExplorerContentProvider extends
 
 	private boolean isKnownWorkingSet(IWorkingSet set) {
 		String id = set.getId();
-		return "org.eclipse.dltk.ui.ScriptWorkingSetPage".equals(id)
-				|| "org.eclipse.dltk.internal.ui.OthersWorkingSet".equals(id);
+		return "org.eclipse.dltk.ui.ScriptWorkingSetPage".equals(id) //$NON-NLS-1$
+				|| "org.eclipse.dltk.internal.ui.OthersWorkingSet".equals(id); //$NON-NLS-1$
 	}
 
 	private IProject getProject(IModelElement element) {

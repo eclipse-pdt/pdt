@@ -35,14 +35,14 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	public PathMapperCompositeFragment(Composite parent,
 			IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		controlHandler.setTitle("PHP Executable Path Mapping");
+		controlHandler.setTitle(Messages.PathMapperCompositeFragment_0);
 		controlHandler
-				.setDescription("Specify mapping between PHP executable relative and local paths");
+				.setDescription(Messages.PathMapperCompositeFragment_1);
 		controlHandler.setImageDescriptor(PHPDebugUIImages
 				.getImageDescriptor(PHPDebugUIImages.IMG_WIZBAN_PHPEXE));
-		setDisplayName("Path Mapping");
-		setTitle("Edit PHP Executable Path Mapping");
-		setDescription("Configure PHP Executable Path Mapping");
+		setDisplayName(Messages.PathMapperCompositeFragment_2);
+		setTitle(Messages.PathMapperCompositeFragment_3);
+		setDescription(Messages.PathMapperCompositeFragment_4);
 		if (isForEditing) {
 			setData(((PHPExeEditDialog) controlHandler).getPHPExeItem());
 		}
@@ -111,7 +111,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	public void setData(Object phpExeItem) {
 		if (phpExeItem != null && !(phpExeItem instanceof PHPexeItem)) {
 			throw new IllegalArgumentException(
-					"The given object is not a PHPExeItem");
+					Messages.PathMapperCompositeFragment_5);
 		}
 		super.setData(phpExeItem);
 		init();

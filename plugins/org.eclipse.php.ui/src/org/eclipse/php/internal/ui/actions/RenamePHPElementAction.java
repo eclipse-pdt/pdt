@@ -133,7 +133,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	private void run(IModelElement element) throws CoreException {
 		if (!ActionUtils.isProcessable(getShell(), element))
 			return;
-		throw new RuntimeException(PHPUIMessages.RenamePHPElementAction_0); //$NON-NLS-1$
+		throw new RuntimeException(PHPUIMessages.RenamePHPElementAction_0); 
 	}
 
 	private static boolean isRenameAvailable(IModelElement element)

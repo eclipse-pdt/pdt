@@ -30,8 +30,8 @@ public class ContextManager {
 	private ILock fFramesInitLock = Job.getJobManager().newLock();
 	private int fSuspendCount;
 
-	private final static String DUMMY_PHP_FILE = "dummy.php";
-	private final static String THIS_VARIABLE = "$this";
+	private final static String DUMMY_PHP_FILE = "dummy.php"; //$NON-NLS-1$
+	private final static String THIS_VARIABLE = "$this"; //$NON-NLS-1$
 
 	public ContextManager(PHPDebugTarget target, IRemoteDebugger debugger) {
 		super();
@@ -168,7 +168,7 @@ public class ContextManager {
 			resolvedFile = fTarget.getLastFileName();
 		}
 		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(),
-				resolvedFile, (layers.length == 1) ? ""
+				resolvedFile, (layers.length == 1) ? "" //$NON-NLS-1$
 						: layers[layers.length - 1].getCalledFunctionName(),
 				fTarget.getLastStop(), frameCt, getLocalVariables());
 

@@ -139,7 +139,7 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 
 		ArrayList<DebugStepFilter> list = new ArrayList<DebugStepFilter>();
 		for (int i = 0; i < parsedFilters.length; i++) {
-			String[] tokens = parsedFilters[i].split("\\"
+			String[] tokens = parsedFilters[i].split("\\" //$NON-NLS-1$
 					+ DebugStepFilter.FILTER_TOKENS_DELIM);
 			if (tokens.length != 4) {
 				return new DebugStepFilter[0];
@@ -168,7 +168,7 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 	private String[] parseList(String listString) {
 		ArrayList<String> list = new ArrayList<String>();
 		StringTokenizer tokenizer = new StringTokenizer(listString,
-				DebugStepFilter.FILTERS_PREF_LIST_DELIM); //$NON-NLS-1$
+				DebugStepFilter.FILTERS_PREF_LIST_DELIM); 
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			list.add(token);

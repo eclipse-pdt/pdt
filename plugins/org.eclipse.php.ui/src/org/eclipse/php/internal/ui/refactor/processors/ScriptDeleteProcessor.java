@@ -53,7 +53,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 	private Change fDeleteChange;
 	private boolean fDeleteSubPackages;
 
-	public static final String IDENTIFIER = "org.eclipse.dltk.ui.DeleteProcessor"; //$NON-NLS-1$
+	public static final String IDENTIFIER = "org.eclipse.dltk.ui.DeleteProcessor"; //$NON-NLS-1$ 
 
 	public ScriptDeleteProcessor(Object[] elements) {
 		fElements = elements;
@@ -302,17 +302,13 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 				.getTextFileBuffer(file.getFullPath(), LocationKind.NORMALIZE);
 		if (buffer != null && buffer.isDirty()) {
 			if (buffer.isStateValidated() && buffer.isSynchronized()) {
-				result
-						.addWarning(Messages
-								.format(
-										RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
-										file.getFullPath().toString()));
+				result.addWarning(Messages
+						.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
+								file.getFullPath().toString()));
 			} else {
-				result
-						.addFatalError(Messages
-								.format(
-										RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
-										file.getFullPath().toString()));
+				result.addFatalError(Messages
+						.format(RefactoringCoreMessages.ScriptDeleteProcessor_unsaved_changes,
+								file.getFullPath().toString()));
 			}
 		}
 	}
@@ -383,9 +379,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 		for (int i = 0; i < fScriptElements.length; i++) {
 			if (fScriptElements[i] instanceof IScriptFolder) {
 				modelElements
-						.addAll(Arrays
-								.asList(ModelElementUtil
-										.getPackageAndSubpackages((IScriptFolder) fScriptElements[i])));
+						.addAll(Arrays.asList(ModelElementUtil
+								.getPackageAndSubpackages((IScriptFolder) fScriptElements[i])));
 			} else {
 				modelElements.add(fScriptElements[i]);
 			}
@@ -518,8 +513,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 							false, IReorgQueries.CONFIRM_DELETE_LINKED_PARENT);
 			if (!query
 					.confirm(Messages
-							.format(
-									RefactoringCoreMessages.ScriptDeleteProcessor_delete_linked_folder_question,
+							.format(RefactoringCoreMessages.ScriptDeleteProcessor_delete_linked_folder_question,
 									new String[] { frag.getResource().getName() })))
 				return;
 		}
@@ -602,8 +596,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 				|| !root.isArchive())
 			return false;
 		String question = Messages.format(
-				RefactoringCoreMessages.DeleteRefactoring_3, root
-						.getElementName());
+				RefactoringCoreMessages.DeleteRefactoring_3,
+				root.getElementName());
 		return !query.confirm(question, referencingProjects.toArray());
 	}
 
@@ -620,8 +614,8 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 				IFolder folder = (IFolder) resource;
 				if (containsSourceFolder(folder)) {
 					String question = Messages.format(
-							RefactoringCoreMessages.DeleteRefactoring_5, folder
-									.getName());
+							RefactoringCoreMessages.DeleteRefactoring_5,
+							folder.getName());
 					if (!query.confirm(question))
 						foldersToSkip.add(folder);
 				}
@@ -669,7 +663,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 			IModelElement element = fScriptElements[i];
 			if (element instanceof IProjectFragment) {
 				IProject project = element.getScriptProject().getProject();
-				IFile buildpathFile = project.getFile(".classpath"); //$NON-NLS-1$
+				IFile buildpathFile = project.getFile(".classpath"); //$NON-NLS-1$ 
 				if (buildpathFile.exists())
 					result.add(buildpathFile);
 			}
@@ -678,7 +672,7 @@ public final class ScriptDeleteProcessor extends DeleteProcessor implements
 	}
 
 	public Change createChange(IProgressMonitor pm) throws CoreException {
-		pm.beginTask("", 1); //$NON-NLS-1$
+		pm.beginTask("", 1); //$NON-NLS-1$ 
 		pm.done();
 		return fDeleteChange;
 	}

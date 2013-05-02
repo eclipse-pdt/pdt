@@ -55,37 +55,37 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	static {
 
 		PROJECT_WIZARD_ID
-				.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard");
+				.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard");
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard");
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard");
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard");
+				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"); //$NON-NLS-1$
 
-		PROJECT_WIZARD_ID.add("com.zend.php.ccm.ui.ccmProjectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.localphp");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.cvs.ui.projectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.existingphp");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.git.ui.projectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.github.ui.projectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.openshift.ui.projectWizard");
+		PROJECT_WIZARD_ID.add("com.zend.php.ccm.ui.ccmProjectWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.localphp"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.cvs.ui.projectWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.ui.project.wizard.existingphp"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.git.ui.projectWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.github.ui.projectWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.openshift.ui.projectWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.PHPRemoteProjectCreationWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.svn.ui.SVNProjectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ide.phpcloud.ui.projectWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.ccm.ui.restfulProjectWizard");
+				.add("com.zend.php.ui.wizards.PHPRemoteProjectCreationWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.svn.ui.SVNProjectWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ide.phpcloud.ui.projectWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.ccm.ui.restfulProjectWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID_SET.addAll(PROJECT_WIZARD_ID);
 
 		PROJECT_WIZARD_ID
-				.add("org.zend.php.framework.ui.wizards.ZendFrameworkProjectCreationWizard");
+				.add("org.zend.php.framework.ui.wizards.ZendFrameworkProjectCreationWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("org.zend.php.framework.ui.wizards.NewZendItemWizard");
+				.add("org.zend.php.framework.ui.wizards.NewZendItemWizard"); //$NON-NLS-1$
 	}
 	// id constants
-	private static final String DIALOG_SETTING_SECTION_NAME = "NewWizardSelectionPage."; //$NON-NLS-1$
+	private static final String DIALOG_SETTING_SECTION_NAME = "NewWizardSelectionPage."; //$NON-NLS-1$ 
 
 	private final static int SIZING_LISTS_HEIGHT = 200;
 
@@ -345,7 +345,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 		if (!projectsOnly) {
 
 			IWizardCategory phpCategory = wizardCategories
-					.findCategory(new Path("org.eclipse.php.project.ui"));
+					.findCategory(new Path("org.eclipse.php.project.ui")); //$NON-NLS-1$
 			// IWizardCategory[] children = wizardCategories.getCategories();
 			// for (int i = 0; i < children.length; i++) {
 			// if ("org.eclipse.php.project.ui".equals(children[i].getId())) {
@@ -363,7 +363,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 					inputArray.add(categories[i]);
 				}
 				IWizardDescriptor folder = wizardCategories
-						.findWizard("org.eclipse.ui.wizards.new.folder");
+						.findWizard("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
 				if (folder != null) {
 					inputArray.add(folder);
 				}
@@ -385,7 +385,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 			if (wizardCategories.getParent() == null) {
 				IWizardCategory[] children = wizardCategories.getCategories();
 				for (int i = 0; i < children.length; i++) {
-					if (!"org.eclipse.php.project.ui".equals(children[i]
+					if (!"org.eclipse.php.project.ui".equals(children[i] //$NON-NLS-1$
 							.getId())) {
 						inputArray.add(children[i]);
 					}
@@ -749,7 +749,7 @@ class NewWizardNewPage implements ISelectionChangedListener {
 	 * @since 3.0
 	 */
 	private void updateDescription(IWizardDescriptor selectedObject) {
-		String string = ""; //$NON-NLS-1$
+		String string = ""; //$NON-NLS-1$ 
 		if (selectedObject != null) {
 			string = selectedObject.getDescription();
 		}

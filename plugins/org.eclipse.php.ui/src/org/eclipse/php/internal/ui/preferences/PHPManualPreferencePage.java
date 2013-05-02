@@ -28,7 +28,7 @@ public class PHPManualPreferencePage extends
 	}
 
 	protected void setDescription() {
-		setDescription(PHPUIMessages.PHPManualPreferencePage_0); //$NON-NLS-1$
+		setDescription(PHPUIMessages.PHPManualPreferencePage_0); 
 	}
 
 	protected void setPreferenceStore() {

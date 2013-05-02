@@ -51,7 +51,7 @@ public class FragmentedWizardPage extends WizardPage implements IWizardHandle {
 			comp = new Composite(parentComp, SWT.NONE);
 			comp.setLayout(new FillLayout(SWT.VERTICAL));
 			Label label = new Label(comp, SWT.NONE);
-			label.setText("Internal error"); //$NON-NLS-1$
+			label.setText(Messages.FragmentedWizardPage_0); 
 		}
 		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		data.widthHint = convertHorizontalDLUsToPixels(150);

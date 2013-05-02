@@ -58,7 +58,7 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	private int lastValidOperation = DND.DROP_NONE;
 
 	private IPHPMoveActionDelegator fReorgMoveAction;
-	private static final String MOVE_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$
+	private static final String MOVE_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$ 
 
 	/**
 	 * Constructs a new drop adapter.
@@ -243,8 +243,8 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	private IStatus performFileDrop(Object data) {
 		MultiStatus problems = new MultiStatus(PlatformUI.PLUGIN_ID, 0,
 				ResourceNavigatorMessages.DropAdapter_problemImporting, null);
-		mergeStatus(problems, validateTarget(getCurrentTarget(),
-				getCurrentTransfer()));
+		mergeStatus(problems,
+				validateTarget(getCurrentTarget(), getCurrentTransfer()));
 
 		final IContainer target = getActualTarget((IResource) getCurrentTarget());
 		final String[] names = (String[]) data;
@@ -268,8 +268,8 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 	private IStatus performResourceCopy(Shell shell, IResource[] sources) {
 		MultiStatus problems = new MultiStatus(PlatformUI.PLUGIN_ID, 1,
 				ResourceNavigatorMessages.DropAdapter_problemsMoving, null);
-		mergeStatus(problems, validateTarget(getCurrentTarget(),
-				getCurrentTransfer()));
+		mergeStatus(problems,
+				validateTarget(getCurrentTarget(), getCurrentTransfer()));
 
 		IContainer target = getActualTarget((IResource) getCurrentTarget());
 		CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation(
@@ -286,8 +286,8 @@ public class PHPNavigatorDropAdapter extends NavigatorDropAdapter {
 		MultiStatus problems = new MultiStatus(PlatformUI.PLUGIN_ID, 1,
 				ResourceNavigatorMessages.DropAdapter_problemsMoving, null);
 
-		mergeStatus(problems, validateTarget(getCurrentTarget(),
-				getCurrentTransfer()));
+		mergeStatus(problems,
+				validateTarget(getCurrentTarget(), getCurrentTransfer()));
 
 		IContainer target = getActualTarget((IResource) getCurrentTarget());
 		ReadOnlyStateChecker checker = new ReadOnlyStateChecker(getShell(),

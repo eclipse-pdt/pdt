@@ -29,14 +29,14 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 
 public class PHPIncludePathPage extends DataModelWizardPage implements
-		/* ISimpleWebModuleCreationDataModelProperties, */IStatusChangeListener {
+/* ISimpleWebModuleCreationDataModelProperties, */IStatusChangeListener {
 
 	protected PHPBuildPathsBlock fIncludePathsBlock;
 
 	public PHPIncludePathPage(IDataModel dataModel, String pageName) {
 		super(dataModel, pageName);
-		setDescription("PHP Include Path"); //$NON-NLS-1$
-		setTitle("PHP Include Path"); //$NON-NLS-1$
+		setDescription(Messages.PHPIncludePathPage_0);
+		setTitle(Messages.PHPIncludePathPage_0);
 		setPageComplete(true);
 
 		createIncludePathsBlock();
@@ -49,8 +49,8 @@ public class PHPIncludePathPage extends DataModelWizardPage implements
 	}
 
 	public IScriptProject getDummyProject() {
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				"DUMMY______________Project"); //$NON-NLS-1$
+		IProject project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject("DUMMY______________Project"); //$NON-NLS-1$
 		return DLTKCore.create(project);
 	}
 

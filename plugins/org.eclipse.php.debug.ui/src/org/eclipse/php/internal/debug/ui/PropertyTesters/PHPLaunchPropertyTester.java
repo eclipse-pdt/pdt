@@ -115,7 +115,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 				return false;
 			}
 			return PHPToolkitUtil.isPhpProject((IProject) resource)
-					&& args.length > 0 && "webPage".equals(args[0]);
+					&& args.length > 0 && "webPage".equals(args[0]); //$NON-NLS-1$
 
 		} catch (CoreException e) {
 			PHPDebugUIPlugin.log(e);

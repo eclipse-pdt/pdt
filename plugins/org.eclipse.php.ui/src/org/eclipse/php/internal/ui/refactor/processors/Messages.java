@@ -4,11 +4,13 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.refactor.processors.messages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.refactor.processors.messages"; //$NON-NLS-1$
 
 	public static String ReorgUtils_14;
 
 	public static String DeleteFolderAndSubFolder;
+
+	public static String DeleteModifications_1;
 
 	static {
 		reloadMessages();

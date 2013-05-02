@@ -106,7 +106,7 @@ public class PHPConsoleColorProvider extends ConsoleColorProvider {
 					String id = element.getAttribute("id"); //$NON-NLS-1$
 					if (!listeners.containsKey(id)) {
 						String overridesIds = element
-								.getAttribute("overridesId");
+								.getAttribute("overridesId"); //$NON-NLS-1$
 						if (overridesIds != null) {
 							StringTokenizer st = new StringTokenizer(
 									overridesIds, ", "); //$NON-NLS-1$

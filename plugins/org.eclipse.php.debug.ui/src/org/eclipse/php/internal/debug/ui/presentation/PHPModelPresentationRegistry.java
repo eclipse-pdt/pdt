@@ -114,7 +114,7 @@ public class PHPModelPresentationRegistry {
 
 			SafeRunner
 					.run(new SafeRunnable(
-							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") {
+							"Error creation extension for extension-point org.eclipse.php.internal.debug.core.phpDebugParametersInitializers") { //$NON-NLS-1$
 						public void run() throws Exception {
 							modelPresentation = (IDebugModelPresentation) element
 									.createExecutableExtension(CLASS_ATTRIBUTE);

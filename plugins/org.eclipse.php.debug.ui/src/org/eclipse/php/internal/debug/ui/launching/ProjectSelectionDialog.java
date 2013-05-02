@@ -58,8 +58,8 @@ public class ProjectSelectionDialog extends ElementListSelectionDialog {
 			setElements(projects);
 		}
 
-		setTitle(title); //$NON-NLS-1$
-		setMessage(message); //$NON-NLS-1$
+		setTitle(title); 
+		setMessage(message); 
 
 	}
 

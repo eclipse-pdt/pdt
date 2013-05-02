@@ -125,7 +125,7 @@ public class PHPDebuggersRegistry {
 			DEFAULT_DEBUGGER_ID = id;
 		} else {
 			throw new IllegalArgumentException(
-					"No such debugger id was registered: " + id);
+					"No such debugger id was registered: " + id); //$NON-NLS-1$
 		}
 	}
 
@@ -156,7 +156,7 @@ public class PHPDebuggersRegistry {
 				final String name = element.getAttribute(NAME_ATTRIBUTE);
 				final String id = element.getAttribute(ID_ATTRIBUTE);
 				boolean isPDT = element.getNamespaceIdentifier().startsWith(
-						"org.eclipse.php");
+						"org.eclipse.php"); //$NON-NLS-1$
 				boolean filter = WorkbenchActivityHelper
 						.filterItem(new IPluginContribution() {
 							public String getLocalId() {

@@ -50,7 +50,7 @@ public class DBGpContainerVariable extends DBGpBaseVariable implements
 			endIndex = numChildren - 1;
 		}
 
-		return "[" + startIndex + "..." + endIndex + "]";
+		return "[" + startIndex + "..." + endIndex + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/*
@@ -59,7 +59,7 @@ public class DBGpContainerVariable extends DBGpBaseVariable implements
 	 * @see org.eclipse.debug.core.model.IVariable#getReferenceTypeName()
 	 */
 	public String getReferenceTypeName() throws DebugException {
-		return "Container";
+		return "Container"; //$NON-NLS-1$
 	}
 
 	/*

@@ -31,7 +31,7 @@ public class PHPPreferencePageBlocksRegistry {
 
 	private static final String EXTENSION_POINT_NAME = "phpPreferencePageBlocks"; //$NON-NLS-1$
 	private static final String BLOCK_TAG = "block"; //$NON-NLS-1$
-	//	private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
+	//	private static final String ID_ATTRIBUTE = "id"; 
 	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
 	private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 	private static final String PAGE_ID_ATTRIBUTE = "pageId"; //$NON-NLS-1$
@@ -137,7 +137,7 @@ public class PHPPreferencePageBlocksRegistry {
 		public IPHPPreferencePageBlock createPHPPreferencePageBlock() {
 			SafeRunner.run(new SafeRunnable(
 					PHPUIMessages.PHPPreferencePageBlocksRegistry_0
-							+ PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) { //$NON-NLS-1$ //$NON-NLS-2$
+							+ PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) { //$NON-NLS-1$
 						public void run() throws Exception {
 							try {
 								preferencesPageBlock = (IPHPPreferencePageBlock) element

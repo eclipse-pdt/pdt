@@ -21,66 +21,66 @@ import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 public abstract class SimpleDebugHandler implements IDebugHandler {
 
 	public void ready(String fileName, int lineNumber) {
-		Logger.debugMSG("PHPSimpleDebugHandler: ready: " + fileName + " "
+		Logger.debugMSG("PHPSimpleDebugHandler: ready: " + fileName + " " //$NON-NLS-1$ //$NON-NLS-2$
 				+ lineNumber);
 	}
 
 	public void debugChanged() {
-		Logger.debugMSG("PHPSimpleDebugHandler: debugChanged");
+		Logger.debugMSG("PHPSimpleDebugHandler: debugChanged"); //$NON-NLS-1$
 	}
 
 	public void debuggerErrorOccured(DebugError debugError) {
-		Logger.debugMSG("PHPSimpleDebugHandler: debuggerErrorOccured: "
+		Logger.debugMSG("PHPSimpleDebugHandler: debuggerErrorOccured: " //$NON-NLS-1$
 				+ debugError);
 	}
 
 	public void sessionStarted(String remoteFile, String uri, String query,
 			String options) {
-		Logger.debugMSG("PHPSimpleDebugHandler: sessionStarted ");
-		Logger.debugMSG("                       fileName: " + remoteFile);
-		Logger.debugMSG("                       uri: " + uri);
-		Logger.debugMSG("                       query: " + query);
-		Logger.debugMSG("                       options: " + options);
+		Logger.debugMSG("PHPSimpleDebugHandler: sessionStarted "); //$NON-NLS-1$
+		Logger.debugMSG("                       fileName: " + remoteFile); //$NON-NLS-1$
+		Logger.debugMSG("                       uri: " + uri); //$NON-NLS-1$
+		Logger.debugMSG("                       query: " + query); //$NON-NLS-1$
+		Logger.debugMSG("                       options: " + options); //$NON-NLS-1$
 	}
 
 	public void sessionEnded() {
-		Logger.debugMSG("PHPSimpleDebugHandler: sessionEnded");
+		Logger.debugMSG("PHPSimpleDebugHandler: sessionEnded"); //$NON-NLS-1$
 	}
 
 	public void connectionTimedout() {
-		Logger.debugMSG("PHPSimpleDebugHandler: connectionTimedout");
+		Logger.debugMSG("PHPSimpleDebugHandler: connectionTimedout"); //$NON-NLS-1$
 	}
 
 	public void multipleBindOccured() {
-		Logger.debugMSG("PHPSimpleDebugHandler: multipleBindOccured");
+		Logger.debugMSG("PHPSimpleDebugHandler: multipleBindOccured"); //$NON-NLS-1$
 	}
 
 	public void handleScriptEnded() {
-		Logger.debugMSG("PHPSimpleDebugHandler: handleScriptEnded");
+		Logger.debugMSG("PHPSimpleDebugHandler: handleScriptEnded"); //$NON-NLS-1$
 	}
 
 	public void connectionEstablished() {
-		Logger.debugMSG("PHPSimpleDebugHandler: connectionEstablished");
+		Logger.debugMSG("PHPSimpleDebugHandler: connectionEstablished"); //$NON-NLS-1$
 	}
 
 	public void connectionClosed() {
-		Logger.debugMSG("PHPSimpleDebugHandler: connectionClosed");
+		Logger.debugMSG("PHPSimpleDebugHandler: connectionClosed"); //$NON-NLS-1$
 	}
 
 	public void newOutput(String output) {
-		Logger.debugMSG("PHPSimpleDebugHandler: newOutput " + output);
+		Logger.debugMSG("PHPSimpleDebugHandler: newOutput " + output); //$NON-NLS-1$
 	}
 
 	public void newHeaderOutput(String output) {
-		Logger.debugMSG("PHPSimpleDebugHandler: newHeaderOutput " + output);
+		Logger.debugMSG("PHPSimpleDebugHandler: newHeaderOutput " + output); //$NON-NLS-1$
 	}
 
 	public void parsingErrorOccured(DebugError debugError) {
-		Logger.debugMSG("PHPSimpleDebugHandler: parsingErrorOccured "
+		Logger.debugMSG("PHPSimpleDebugHandler: parsingErrorOccured " //$NON-NLS-1$
 				+ debugError);
 	}
 
 	public void wrongDebugServer() {
-		Logger.debugMSG("PHPSimpleDebugHandler: wrongDebugServer");
+		Logger.debugMSG("PHPSimpleDebugHandler: wrongDebugServer"); //$NON-NLS-1$
 	}
 }

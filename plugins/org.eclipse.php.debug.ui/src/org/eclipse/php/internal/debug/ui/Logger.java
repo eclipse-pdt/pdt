@@ -24,7 +24,7 @@ import org.osgi.framework.Bundle;
  * plugin. Other plugins should make their own copy, with appropriate ID.
  */
 public class Logger {
-	private static final String PLUGIN_ID = PHPDebugUIPlugin.getID(); //$NON-NLS-1$
+	private static final String PLUGIN_ID = PHPDebugUIPlugin.getID(); 
 
 	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
 

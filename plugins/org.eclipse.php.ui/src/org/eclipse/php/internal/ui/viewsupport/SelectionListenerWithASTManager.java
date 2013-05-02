@@ -148,7 +148,7 @@ public class SelectionListenerWithASTManager {
 			}
 			final ISourceModule typeRoot = (ISourceModule) input;
 
-			fCurrentJob = new Job("Selection Job titile") {
+			fCurrentJob = new Job("Selection Job titile") { //$NON-NLS-1$
 				public IStatus run(IProgressMonitor monitor) {
 					if (monitor == null) {
 						monitor = new NullProgressMonitor();
@@ -203,10 +203,10 @@ public class SelectionListenerWithASTManager {
 				// thrown when canceling the AST creation
 			} catch (ModelException e) {
 				new Status(Status.ERROR, PHPUiPlugin.ID,
-						"error retrieving AST from Provider");
+						"error retrieving AST from Provider"); //$NON-NLS-1$
 			} catch (IOException e) {
 				new Status(Status.ERROR, PHPUiPlugin.ID,
-						"error retrieving AST from Provider");
+						"error retrieving AST from Provider"); //$NON-NLS-1$
 			}
 			return Status.CANCEL_STATUS;
 		}

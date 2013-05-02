@@ -48,7 +48,7 @@ import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
 public final class ParameterGuessingProposal extends
 		PHPOverrideCompletionProposal implements
 		IPHPCompletionProposalExtension {
-	private static final String PARENS = "()";
+	private static final String PARENS = "()"; //$NON-NLS-1$
 	private static final char[] NO_TRIGGERS = new char[0];
 	protected static final String LPAREN = "("; //$NON-NLS-1$
 	protected static final String RPAREN = ")"; //$NON-NLS-1$
@@ -253,7 +253,7 @@ public final class ParameterGuessingProposal extends
 	}
 
 	public String getReplacementString() {
-		String prefix = "";
+		String prefix = ""; //$NON-NLS-1$
 		try {
 			if (method.isConstructor()) {
 				IType type = method.getDeclaringType();
@@ -498,7 +498,7 @@ public final class ParameterGuessingProposal extends
 
 	private void openErrorDialog(Exception e) {
 		Shell shell = getTextViewer().getTextWidget().getShell();
-		MessageDialog.openError(shell, "Error guessing parameters",
+		MessageDialog.openError(shell, Messages.ParameterGuessingProposal_0,
 				e.getMessage());
 	}
 

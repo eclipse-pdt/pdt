@@ -15,7 +15,7 @@ import org.eclipse.osgi.util.NLS;
 
 public final class PreferencesMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.preferences.PreferencesMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.preferences.PreferencesMessages"; //$NON-NLS-1$
 
 	private PreferencesMessages() {
 		// Do not instantiate
@@ -54,6 +54,7 @@ public final class PreferencesMessages extends NLS {
 	public static String CodeAssistAdvancedConfigurationBlock_parameterNameFromAttachedJavadoc_timeout_emptyInput;
 	public static String CodeAssistAdvancedConfigurationBlock_parameterNameFromAttachedJavadoc_timeout_invalidInput;
 	public static String CodeAssistAdvancedConfigurationBlock_parameterNameFromAttachedJavadoc_timeout_invalidRange;
+	public static String CodeStylePreferencePage_0;
 	public static String ImportOrganizeConfigurationBlock_emptylines_between_groups_label;
 	public static String ImportOrganizeConfigurationBlock_error_invalidnumberofemptylines;
 	public static String ImportOrganizePreferencePage_description;
@@ -802,6 +803,7 @@ public final class PreferencesMessages extends NLS {
 	public static String FavoriteStaticMemberInputDialog_error_invalidTypeName;
 	public static String FavoriteStaticMemberInputDialog_error_entryExists;
 
+	public static String PHPCodeTemplateBlock_2;
 	public static String PHPCoreOptionsConfigurationBlock_SettingVersionFailed_Title;
 
 }

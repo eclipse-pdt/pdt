@@ -224,7 +224,7 @@ public class DeleteModifications extends RefactoringModifications {
 							.getLanguageToolkit(pack);
 					if (DLTKCore.DEBUG) {
 						System.err
-								.println("TODO: Additional Check required..."); //$NON-NLS-1$
+								.println(Messages.DeleteModifications_1); 
 					}
 					if (pack.isRootFolder()
 							&& (toolkit == null || (toolkit != null && (!DLTKContentTypeManager

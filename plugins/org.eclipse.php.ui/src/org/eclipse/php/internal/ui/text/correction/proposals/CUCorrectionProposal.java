@@ -86,7 +86,7 @@ public class CUCorrectionProposal extends ChangeCorrectionProposal {
 		super(name, change, relevance, image);
 		if (cu == null) {
 			throw new IllegalArgumentException(
-					"Compilation unit must not be null"); //$NON-NLS-1$
+					CorrectionMessages.CUCorrectionProposal_0); 
 		}
 		fCompilationUnit = cu;
 		fLinkedProposalModel = null;

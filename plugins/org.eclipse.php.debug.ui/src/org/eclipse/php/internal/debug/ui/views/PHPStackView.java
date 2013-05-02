@@ -89,7 +89,7 @@ public class PHPStackView extends AbstractDebugView implements
 				}
 			} catch (DebugException e) {
 				Logger.logException(
-						"StackViewContentProvider unexpected error", e);
+						"StackViewContentProvider unexpected error", e); //$NON-NLS-1$
 			}
 			return new Object[0];
 		}

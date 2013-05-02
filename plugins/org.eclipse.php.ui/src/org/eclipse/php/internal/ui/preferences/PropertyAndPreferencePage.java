@@ -175,7 +175,7 @@ public abstract class PropertyAndPreferencePage extends PreferencePage
 	private Link createLink(Composite composite, String text) {
 		Link link = new Link(composite, SWT.NONE);
 		link.setFont(composite.getFont());
-		link.setText("<A>" + text + "</A>"); //$NON-NLS-1$//$NON-NLS-2$
+		link.setText("<A>" + text + "</A>"); //$NON-NLS-1$ //$NON-NLS-2$
 		link.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				doLinkActivated((Link) e.widget);

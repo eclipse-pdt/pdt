@@ -24,11 +24,11 @@ public class MD5 {
 			return null;
 		}
 		if (str.length() == 0) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		String passwordDigest = null;
 		try {
-			MessageDigest md5 = MessageDigest.getInstance("MD5");
+			MessageDigest md5 = MessageDigest.getInstance("MD5"); //$NON-NLS-1$
 			md5.reset();
 			md5.update(str.getBytes());
 			byte digest[] = md5.digest();
@@ -42,7 +42,7 @@ public class MD5 {
 			}
 			passwordDigest = buffer.toString();
 		} catch (Exception e) {
-			Logger.logException("Message digest error", e);
+			Logger.logException("Message digest error", e); //$NON-NLS-1$
 		}
 		if (passwordDigest == null) {
 			return null;

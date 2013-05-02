@@ -171,8 +171,8 @@ public class INIFileModifier {
 	 * @return result string
 	 */
 	private String quoteString(String str) {
-		if (str.startsWith("\"") && str.endsWith("\"") || str.startsWith("'")
-				&& str.endsWith("'")) {
+		if (str.startsWith("\"") && str.endsWith("\"") || str.startsWith("'") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				&& str.endsWith("'")) { //$NON-NLS-1$
 			return str;
 		}
 		return '"' + str + '"';
@@ -326,7 +326,7 @@ public class INIFileModifier {
 					if (m.matches()) {
 						String oldName = m.group(1);
 						String oldValue = m.group(2);
-						if (!line.startsWith(";")
+						if (!line.startsWith(";") //$NON-NLS-1$
 								&& oldName.equals(name)
 								&& (commentPattern == null || oldValue
 										.matches(commentPattern))) {

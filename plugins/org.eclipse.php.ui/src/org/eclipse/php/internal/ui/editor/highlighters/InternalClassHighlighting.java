@@ -125,7 +125,7 @@ public class InternalClassHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Internal classes";
+		return Messages.InternalClassHighlighting_0;
 	}
 
 	@Override

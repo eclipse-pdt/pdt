@@ -77,7 +77,7 @@ public class LaunchUtilities {
 				Shell shell = getShell();
 				ErrorDialog.openError(shell,
 						PHPDebugUIMessages.LaunchUtilities_error, message,
-						status); //$NON-NLS-1$
+						status); 
 			}
 		});
 	}
@@ -92,7 +92,7 @@ public class LaunchUtilities {
 	 */
 	public static void openError(Shell shell, String message) {
 		MessageDialog.openError(shell,
-				PHPDebugUIMessages.LaunchUtilities_error, message); //$NON-NLS-1$
+				PHPDebugUIMessages.LaunchUtilities_error, message); 
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class LaunchUtilities {
 	 */
 	public static void openError(Shell shell, String message, IStatus status) {
 		ErrorDialog.openError(shell, PHPDebugUIMessages.LaunchUtilities_error,
-				message, status); //$NON-NLS-1$
+				message, status); 
 	}
 
 	public static String getProjectFromDialog(Shell shell,

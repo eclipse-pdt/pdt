@@ -34,7 +34,7 @@ public class PHPActionDelegatorRegistry {
 
 	private PHPActionDelegatorRegistry() {
 		IConfigurationElement[] elements = Platform.getExtensionRegistry()
-				.getConfigurationElementsFor(EXTENSION_POINT); //$NON-NLS-1$
+				.getConfigurationElementsFor(EXTENSION_POINT); 
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (ACTION_ELEMENT.equals(element.getName())) {
@@ -80,7 +80,7 @@ public class PHPActionDelegatorRegistry {
 						Logger.logException(
 								PHPUIMessages.PHPActionDelegatorRegistry_0
 										+ element.getAttribute(CLASS_ATTRIBUTE),
-								e); //$NON-NLS-1$
+								e); 
 					}
 				}
 			}
@@ -121,7 +121,7 @@ public class PHPActionDelegatorRegistry {
 						Logger.logException(
 								PHPUIMessages.PHPActionDelegatorRegistry_1
 										+ element.getAttribute(CLASS_ATTRIBUTE),
-								e); //$NON-NLS-1$
+								e); 
 					}
 				}
 			}

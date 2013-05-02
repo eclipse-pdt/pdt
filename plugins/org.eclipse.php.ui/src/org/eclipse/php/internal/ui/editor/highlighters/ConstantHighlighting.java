@@ -45,9 +45,9 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 			String value = scalar.getStringValue();
 			if ((scalar.getScalarType() == Scalar.TYPE_STRING && !isInQuote || scalar
 					.getScalarType() == Scalar.TYPE_SYSTEM)
-					&& !"null".equals(value)
-					&& !"false".equals(value)
-					&& !"true".equals(value)
+					&& !"null".equals(value) //$NON-NLS-1$
+					&& !"false".equals(value) //$NON-NLS-1$
+					&& !"true".equals(value) //$NON-NLS-1$
 					&& value.charAt(0) != '\''
 					&& value.charAt(0) != '"') {
 				highlight(scalar);
@@ -102,6 +102,6 @@ public class ConstantHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Constants";
+		return Messages.ConstantHighlighting_0;
 	}
 }

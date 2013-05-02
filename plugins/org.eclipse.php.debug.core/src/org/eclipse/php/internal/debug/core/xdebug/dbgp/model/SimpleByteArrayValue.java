@@ -32,11 +32,11 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 	}
 
 	public String getReferenceTypeName() throws DebugException {
-		return "byte[]";
+		return "byte[]"; //$NON-NLS-1$
 	}
 
 	public String getValueString() throws DebugException {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public IVariable[] getVariables() throws DebugException {
@@ -114,8 +114,8 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 				if (rangeStart <= rangeEnd) {
 					IValue iv = new SimpleByteArrayValue(bytes, rangeStart,
 							rangeEnd, debugTarget);
-					childVariables[j + startOffset] = new SimpleVariable("["
-							+ rangeStart + ".." + rangeEnd + "]", iv,
+					childVariables[j + startOffset] = new SimpleVariable("[" //$NON-NLS-1$
+							+ rangeStart + ".." + rangeEnd + "]", iv, //$NON-NLS-1$ //$NON-NLS-2$
 							debugTarget);
 					rangeStart += split;
 

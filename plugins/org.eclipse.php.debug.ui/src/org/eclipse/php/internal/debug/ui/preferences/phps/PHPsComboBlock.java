@@ -102,7 +102,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 				if (def != null)
 					return def.getName()
 							+ " (" + def.getExecutable().toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-				return "No PHP exes defined"; //$NON-NLS-1$
+				return PHPDebugUIMessages.PHPsComboBlock_2; 
 			}
 		};
 	}
@@ -203,7 +203,7 @@ public class PHPsComboBlock implements ISelectionProvider {
 		bottomLeft.setLayoutData(data);
 		// Add the label
 		Label executableLabel = new Label(bottomLeft, SWT.WRAP);
-		executableLabel.setText("PHP Executable:");
+		executableLabel.setText(PHPDebugUIMessages.PHPsComboBlock_3);
 		data = new GridData(GridData.BEGINNING);
 		data.widthHint = 100;
 		executableLabel.setLayoutData(data);

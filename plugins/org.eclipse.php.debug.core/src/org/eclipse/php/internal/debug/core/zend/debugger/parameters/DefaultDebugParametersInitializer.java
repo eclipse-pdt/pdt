@@ -41,22 +41,22 @@ public class DefaultDebugParametersInitializer extends
 	 */
 	public Hashtable<String, String> getDebugParameters(ILaunch launch) {
 		Hashtable<String, String> parameters = new Hashtable<String, String>();
-		parameters.put(START_DEBUG, "1");
+		parameters.put(START_DEBUG, "1"); //$NON-NLS-1$
 
 		String port = launch.getAttribute(IDebugParametersKeys.PORT);
 		if (port != null) {
 			parameters.put(DEBUG_PORT, port);
 		} else {
 			PHPDebugPlugin
-					.logErrorMessage("A port was not defined for the DefaultDebugParametersInitializer.");
+					.logErrorMessage("A port was not defined for the DefaultDebugParametersInitializer."); //$NON-NLS-1$
 		}
 
 		if (getBooleanValue(launch
 				.getAttribute(IDebugParametersKeys.PASSIVE_DEBUG))) {
-			parameters.put(DEBUG_PASSIVE, "1");
+			parameters.put(DEBUG_PASSIVE, "1"); //$NON-NLS-1$
 		}
 
-		parameters.put(SEND_SESS_END, "1");
+		parameters.put(SEND_SESS_END, "1"); //$NON-NLS-1$
 
 		if (getBooleanValue(launch
 				.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
@@ -68,7 +68,7 @@ public class DefaultDebugParametersInitializer extends
 		if (ILaunchManager.DEBUG_MODE.equals(launch.getLaunchMode())
 				&& getBooleanValue(launch
 						.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT))) {
-			parameters.put(DEBUG_STOP, "1");
+			parameters.put(DEBUG_STOP, "1"); //$NON-NLS-1$
 		}
 		String url = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
 		if (url != null) {
@@ -83,10 +83,10 @@ public class DefaultDebugParametersInitializer extends
 						IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 				if (IPHPDebugConstants.DEBUGGING_ALL_PAGES
 						.equals(sessionSetting)) {
-					parameters.put(DEBUG_ALL_PAGES, "1");
+					parameters.put(DEBUG_ALL_PAGES, "1"); //$NON-NLS-1$
 				} else if (IPHPDebugConstants.DEBUGGING_FIRST_PAGE
 						.equals(sessionSetting)) {
-					parameters.put(DEBUG_FIRST_PAGE, "1");
+					parameters.put(DEBUG_FIRST_PAGE, "1"); //$NON-NLS-1$
 				} else if (IPHPDebugConstants.DEBUGGING_START_FROM
 						.equals(sessionSetting)) {
 					parameters
@@ -95,12 +95,12 @@ public class DefaultDebugParametersInitializer extends
 									launchConfiguration
 											.getAttribute(
 													IPHPDebugConstants.DEBUGGING_START_FROM_URL,
-													""));
+													"")); //$NON-NLS-1$
 					if (launchConfiguration
 							.getAttribute(
 									IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE,
 									false)) {
-						parameters.put(DEBUG_CONTINUE, "1");
+						parameters.put(DEBUG_CONTINUE, "1"); //$NON-NLS-1$
 					}
 				}
 			} catch (CoreException ce) {
@@ -127,7 +127,7 @@ public class DefaultDebugParametersInitializer extends
 		try {
 			return new URL(url);
 		} catch (MalformedURLException e) {
-			Logger.logException("Malformed URL: " + url, e);
+			Logger.logException("Malformed URL: " + url, e); //$NON-NLS-1$
 		}
 		return null;
 	}

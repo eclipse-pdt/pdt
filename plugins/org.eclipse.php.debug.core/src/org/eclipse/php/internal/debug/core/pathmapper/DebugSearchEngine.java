@@ -175,7 +175,7 @@ public class DebugSearchEngine {
 
 		final PathEntry[] localFile = new PathEntry[1];
 
-		Job findJob = new Job("Searching for local file...") {
+		Job findJob = new Job(Messages.DebugSearchEngine_0) {
 			protected IStatus run(IProgressMonitor monitor) {
 				// First, look into the path mapper:
 				localFile[0] = pathMapper.getLocalFile(remoteFile);
@@ -508,7 +508,7 @@ public class DebugSearchEngine {
 					String id = element.getAttribute("id"); //$NON-NLS-1$
 					if (!filtersMap.containsKey(id)) {
 						String overridesIds = element
-								.getAttribute("overridesId");
+								.getAttribute("overridesId"); //$NON-NLS-1$
 						if (overridesIds != null) {
 							StringTokenizer st = new StringTokenizer(
 									overridesIds, ", "); //$NON-NLS-1$
@@ -581,7 +581,7 @@ public class DebugSearchEngine {
 		if (resource == null || !resource.exists() || !resource.isAccessible()) {
 			return;
 		}
-		WorkspaceJob findJob = new WorkspaceJob("") {
+		WorkspaceJob findJob = new WorkspaceJob("") { //$NON-NLS-1$
 			public IStatus runInWorkspace(IProgressMonitor monitor)
 					throws CoreException {
 				resource.accept(new IResourceVisitor() {
@@ -623,10 +623,10 @@ public class DebugSearchEngine {
 			String[] phpExtensions = type
 					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 			StringBuilder buf = new StringBuilder();
-			buf.append(".*\\.(");
+			buf.append(".*\\.("); //$NON-NLS-1$
 			for (int i = 0; i < phpExtensions.length; ++i) {
 				if (i > 0) {
-					buf.append("|");
+					buf.append("|"); //$NON-NLS-1$
 				}
 				buf.append(phpExtensions[i]);
 			}

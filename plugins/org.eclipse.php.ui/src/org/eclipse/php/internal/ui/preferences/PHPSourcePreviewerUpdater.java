@@ -55,9 +55,9 @@ public class PHPSourcePreviewerUpdater {
 			 */
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(
-						"org.eclipse.wst.sse.ui.textfont")) { //$NON-NLS-1$ 
+						"org.eclipse.wst.sse.ui.textfont")) { //$NON-NLS-1$
 					Font font = JFaceResources
-							.getFont("org.eclipse.wst.sse.ui.textfont");
+							.getFont("org.eclipse.wst.sse.ui.textfont"); //$NON-NLS-1$
 					viewer.getTextWidget().setFont(font);
 				}
 			}

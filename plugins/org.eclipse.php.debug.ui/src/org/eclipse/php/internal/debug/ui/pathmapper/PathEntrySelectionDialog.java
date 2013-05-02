@@ -83,7 +83,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
 
-		newShell.setText("Path Mapping - Select Local Resource");
+		newShell.setText(Messages.PathEntrySelectionDialog_0);
 		newShell.setImage(PHPDebugUIImages
 				.get(PHPDebugUIImages.IMG_OBJ_PATH_MAPPING));
 
@@ -107,7 +107,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		selectMappingBtn = new Button(parent, SWT.RADIO);
 		selectMappingBtn.setSelection(true);
 		selectMappingBtn
-				.setText("Select the local resource that matches the following server path:");
+				.setText(Messages.PathEntrySelectionDialog_1);
 		GridData layoutData = new GridData();
 		layoutData.horizontalSpan = 2;
 		selectMappingBtn.setLayoutData(layoutData);
@@ -154,7 +154,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 		ignoreMappingBtn = new Button(parent, SWT.RADIO);
 		ignoreMappingBtn
-				.setText("Do not map the following server path to a local resource:");
+				.setText(Messages.PathEntrySelectionDialog_2);
 		layoutData = new GridData();
 		layoutData.horizontalSpan = 2;
 		ignoreMappingBtn.setLayoutData(layoutData);
@@ -179,7 +179,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 		configurePathBtn = new Button(parent, SWT.PUSH);
 		configurePathBtn.setEnabled(false);
-		configurePathBtn.setText("&Configure...");
+		configurePathBtn.setText(Messages.PathEntrySelectionDialog_3);
 		configurePathBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				ConfigurePathDialog dialog = new ConfigurePathDialog(
@@ -201,7 +201,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 				IDialogConstants.OK_LABEL, true);
 		okButton.setEnabled(false);
 
-		createButton(parent, IDialogConstants.CANCEL_ID, "&Stop Debugger",
+		createButton(parent, IDialogConstants.CANCEL_ID, Messages.PathEntrySelectionDialog_4,
 				false);
 	}
 
@@ -275,7 +275,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 			initializeDialogUnits(parent);
 
-			getShell().setText("Select the Path");
+			getShell().setText(Messages.PathEntrySelectionDialog_5);
 			getShell()
 					.setImage(
 							PHPDebugUIImages
@@ -450,7 +450,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 		public String getText(Object element) {
 			if (element == EXTERNAL_CONTAINER) {
-				return "External Files";
+				return Messages.PathEntrySelectionDialog_6;
 			}
 
 			if (element instanceof IBuildpathEntry) {
@@ -470,7 +470,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 				VirtualPath tmpPath = entry.getAbstractPath().clone();
 				tmpPath.removeFirstSegment();
 				path = tmpPath.toString();
-				if (path.startsWith("/")) {
+				if (path.startsWith("/")) { //$NON-NLS-1$
 					path = path.substring(1);
 				}
 			}
@@ -490,7 +490,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 				if (includePath != null && path.startsWith(includePath)) {
 					path = path.substring(includePath.length());
 				}
-				if (path.startsWith("/")) {
+				if (path.startsWith("/")) { //$NON-NLS-1$
 					path = path.substring(1);
 				}
 			}

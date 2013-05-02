@@ -221,13 +221,13 @@ public class PHPPluginImages {
 	public static final ImageDescriptor DESC_OVR_DEPRECATED = create(T_OVR,
 			"deprecated.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_CONSTANT = create(T_OVR,
-			"constant_co.gif"); //$NON-NLS-1$ 	
+			"constant_co.gif"); 	 //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_ABSTRACT = create(T_OVR,
-			"abstract_co.gif"); //$NON-NLS-1$ 	
+			"abstract_co.gif"); 	 //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_FINAL = create(T_OVR,
-			"final_co.gif"); //$NON-NLS-1$ 	
+			"final_co.gif"); 	 //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_STATIC = create(T_OVR,
-			"static_co.gif"); //$NON-NLS-1$ 	
+			"static_co.gif"); 	 //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_OBJS_ZIP = createManaged(T_OBJ,
 			IMG_OBJS_ZIP);
@@ -264,16 +264,16 @@ public class PHPPluginImages {
 			"filter_ps.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_WIZBAN_ADD_LIBRARY = create(
-			T_WIZBAN, "addlibrary_wiz.gif");//$NON-NLS-1$
+			T_WIZBAN, "addlibrary_wiz.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_WIZBAN_ADD_PHP_PROJECT = create(
-			T_WIZBAN, "newphpprj_wiz.gif");//$NON-NLS-1$
+			T_WIZBAN, "newphpprj_wiz.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_WIZBAN_ADD_PHP_FILE = create(
-			T_WIZBAN, "newpfile_wiz.gif");//$NON-NLS-1$
+			T_WIZBAN, "newpfile_wiz.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_TOOL_INCLUDEPATH_ORDER = create(
 			T_OBJ, "cp_order_obj.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_TEMPLATE = createManaged(
-			CLASS_BROWSER, IMG_TEMPLATE);//$NON-NLS-1$
+			CLASS_BROWSER, IMG_TEMPLATE);
 	public static final ImageDescriptor DESC_OBJS_EXTJAR = createManaged(T_OBJ,
 			IMG_OBJS_EXTJAR);
 	public static final ImageDescriptor DESC_OBJS_TRAIT = createManaged(T_OBJ,
@@ -350,7 +350,7 @@ public class PHPPluginImages {
 		/*
 		 * try { ImageDescriptor id=
 		 * ImageDescriptor.createFromURL(makeIconFileURL("c" + type, relPath));
-		 * //$NON-NLS-1$ if (id != null) action.setHoverImageDescriptor(id); }
+		 * if (id != null) action.setHoverImageDescriptor(id); }
 		 * catch (MalformedURLException e) { }
 		 */
 

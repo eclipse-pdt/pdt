@@ -64,7 +64,7 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 	public ChangeCorrectionProposal(String name, Change change, int relevance,
 			Image image) {
 		if (name == null) {
-			throw new IllegalArgumentException("Name must not be null"); //$NON-NLS-1$
+			throw new IllegalArgumentException(CorrectionMessages.ChangeCorrectionProposal_0); 
 		}
 		fName = name;
 		fChange = change;
@@ -188,7 +188,7 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 			}
 		} catch (CoreException e) {
 			buf
-					.append("Unexpected error when accessing this proposal:<p><pre>"); //$NON-NLS-1$
+					.append(CorrectionMessages.ChangeCorrectionProposal_2); 
 			buf.append(e.getLocalizedMessage());
 			buf.append("</pre>"); //$NON-NLS-1$
 		}
@@ -305,7 +305,7 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal,
 	 */
 	public void setDisplayName(String name) {
 		if (name == null) {
-			throw new IllegalArgumentException("Name must not be null"); //$NON-NLS-1$
+			throw new IllegalArgumentException(CorrectionMessages.ChangeCorrectionProposal_5); 
 		}
 		fName = name;
 	}

@@ -259,7 +259,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		List newBuildpath = null;
 		IProject project = fCurrScriptProject.getProject();
 		projectExists = (project.exists() && project
-				.getFile(".buildpath").exists()); //$NON-NLS-1$
+				.getFile(".buildpath").exists()); //$NON-NLS-1$ 
 		if (projectExists) {
 			if (buildpathEntries == null) {
 				buildpathEntries = fCurrScriptProject.readRawBuildpath();
@@ -333,12 +333,12 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 	}
 
 	public boolean hasChangesInBuildpathFile() {
-		IFile file = fCurrScriptProject.getProject().getFile(".buildpath"); //$NON-NLS-1$
+		IFile file = fCurrScriptProject.getProject().getFile(".buildpath"); //$NON-NLS-1$ 
 		return fFileTimeStamp != file.getModificationStamp();
 	}
 
 	public void initializeTimeStamps() {
-		IFile file = fCurrScriptProject.getProject().getFile(".buildpath"); //$NON-NLS-1$
+		IFile file = fCurrScriptProject.getProject().getFile(".buildpath"); //$NON-NLS-1$ 
 		fFileTimeStamp = file.getModificationStamp();
 		fUserSettingsTimeStamp = getEncodedSettings();
 	}
@@ -402,7 +402,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 					srcFolder.getFullPath(), srcFolder, false));
 		}
 		if (DLTKCore.DEBUG) {
-			System.err.println("Add default library"); //$NON-NLS-1$
+			System.err.println("Add default library"); //$NON-NLS-1$ 
 		}
 		// IBuildpathEntry[] InterpreterEnvironmentEntries=
 		// PreferenceConstants.getDefaultInterpreterEnvironmentLibrary();
@@ -491,8 +491,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 			} else {
 				fPathStatus
 						.setWarning(Messages
-								.format(
-										NewWizardMessages.BuildPathsBlock_warning_EntriesMissing,
+								.format(NewWizardMessages.BuildPathsBlock_warning_EntriesMissing,
 										String.valueOf(nEntriesMissing)));
 			}
 		}
@@ -500,14 +499,12 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 			if (nEntriesInvalid == 1) {
 				fPathStatus
 						.setError(Messages
-								.format(
-										IncludePathMessages.BuildPathsBlock_warning_EntryInvalid,
+								.format(IncludePathMessages.BuildPathsBlock_warning_EntryInvalid,
 										entryInvalid.getPath().toString()));
 			} else {
 				fPathStatus
 						.setError(Messages
-								.format(
-										IncludePathMessages.BuildPathsBlock_warning_EntriesInvalid,
+								.format(IncludePathMessages.BuildPathsBlock_warning_EntriesInvalid,
 										String.valueOf(nEntriesInvalid)));
 			}
 		}
@@ -574,7 +571,7 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 			System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
 			newNatures[prevNatures.length] = nature;
 			if (DLTKCore.DEBUG) {
-				System.err.println("Add selection of possible natures here"); //$NON-NLS-1$
+				System.err.println("Add selection of possible natures here"); //$NON-NLS-1$ 
 			}
 			description.setNatureIds(newNatures);
 			project.setDescription(description, monitor);
@@ -602,9 +599,8 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
-		monitor
-				.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_Script);
-		monitor.beginTask("", buildpathEntries.size() * 4 + 4); //$NON-NLS-1$
+		monitor.setTaskName(NewWizardMessages.BuildPathsBlock_operationdesc_Script);
+		monitor.beginTask("", buildpathEntries.size() * 4 + 4); //$NON-NLS-1$ 
 		try {
 			IProject project = javaProject.getProject();
 			IPath projPath = project.getFullPath();
@@ -767,11 +763,9 @@ public abstract class AbstractIncludepathsBlock extends BuildpathsBlock {
 		IResource initSelection = null;
 		FolderSelectionDialog dialog = new FolderSelectionDialog(getShell(),
 				lp, cp);
-		dialog
-				.setTitle(NewWizardMessages.BuildPathsBlock_ChooseOutputFolderDialog_title);
+		dialog.setTitle(NewWizardMessages.BuildPathsBlock_ChooseOutputFolderDialog_title);
 		dialog.setValidator(validator);
-		dialog
-				.setMessage(NewWizardMessages.BuildPathsBlock_ChooseOutputFolderDialog_description);
+		dialog.setMessage(NewWizardMessages.BuildPathsBlock_ChooseOutputFolderDialog_description);
 		dialog.addFilter(filter);
 		dialog.setInput(fWorkspaceRoot);
 		dialog.setInitialSelection(initSelection);

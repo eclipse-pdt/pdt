@@ -25,25 +25,25 @@ public class PHPRefactorActionGroup extends RefactorActionGroup {
 		super(part);
 		this.part = part;
 		IPHPActionDelegator renamePHPElement = PHPActionDelegatorRegistry
-				.getActionDelegator("org.eclipse.php.ui.actions.RenameElement");
+				.getActionDelegator("org.eclipse.php.ui.actions.RenameElement"); //$NON-NLS-1$
 
 		if (renamePHPElement != null) {
 			fRenameAction = new SelectionDispatchActionDelegate(part.getSite(),
 					renamePHPElement);
-			fRenameAction.setText("Rename...");
+			fRenameAction.setText(Messages.PHPRefactorActionGroup_1);
 			fRenameAction
 					.setActionDefinitionId(IScriptEditorActionDefinitionIds.RENAME_ELEMENT);
 		}
 
 		IPHPActionDelegator movePHPElement = PHPActionDelegatorRegistry
-				.getActionDelegator("org.eclipse.php.ui.actions.Move");
+				.getActionDelegator("org.eclipse.php.ui.actions.Move"); //$NON-NLS-1$
 
 		if (movePHPElement != null) {
 			fMoveAction = new SelectionDispatchActionDelegate(part.getSite(),
 					movePHPElement);
-			fMoveAction.setText("Move...");
+			fMoveAction.setText(Messages.PHPRefactorActionGroup_3);
 			fMoveAction
-					.setActionDefinitionId("org.eclipse.php.ui.edit.text.move.element");
+					.setActionDefinitionId("org.eclipse.php.ui.edit.text.move.element"); //$NON-NLS-1$
 		}
 
 	}

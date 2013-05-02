@@ -79,7 +79,7 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 	 * getName()
 	 */
 	public String getName() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/*
@@ -108,7 +108,7 @@ public abstract class IncludepathRenameParticipant extends RenameParticipant {
 		IResource resource = getBreakpointContainer();
 		gatherChanges(resource, changes, getArguments().getNewName());
 		if (changes.size() > 1) {
-			return new CompositeChange("", (Change[]) changes
+			return new CompositeChange("", (Change[]) changes //$NON-NLS-1$
 					.toArray(new Change[changes.size()]));
 		} else if (changes.size() == 1) {
 			return (Change) changes.get(0);

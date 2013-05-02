@@ -107,7 +107,7 @@ public class PhpTemplateCompletionProcessor extends
 			try {
 				if (offset > 2) {
 					String accessPrefix = document.get(offset - 2, 2);
-					if ("->".equals(accessPrefix) || "::".equals(accessPrefix)) {
+					if ("->".equals(accessPrefix) || "::".equals(accessPrefix)) { //$NON-NLS-1$ //$NON-NLS-2$
 						isFieldAccess = true;
 					}
 				}

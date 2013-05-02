@@ -80,8 +80,8 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	public static final String CATCHBLOCK_ID = CODETEMPLATES_PREFIX
 			+ "catchblock"; //$NON-NLS-1$
 	public static final String METHODSTUB_ID = CODETEMPLATES_PREFIX
-			+ "methodbody"; //$NON-NLS-1$	
-	public static final String NEWTYPE_ID = CODETEMPLATES_PREFIX + "newtype"; //$NON-NLS-1$	
+			+ "methodbody"; 	 //$NON-NLS-1$
+	public static final String NEWTYPE_ID = CODETEMPLATES_PREFIX + "newtype"; 	 //$NON-NLS-1$
 	public static final String CONSTRUCTORSTUB_ID = CODETEMPLATES_PREFIX
 			+ "constructorbody"; //$NON-NLS-1$
 	public static final String GETTERSTUB_ID = CODETEMPLATES_PREFIX
@@ -185,12 +185,12 @@ public class CodeTemplateContextType extends ScriptTemplateContextType {
 	 * 
 	 * public Todo() { super("todo",
 	 * PhpTemplateMessages.CodeTemplateContextType_variable_description_todo);
-	 * //$NON-NLS-1$ }
+	 * }
 	 * 
 	 * protected String resolve(TemplateContext context) { String todoTaskTag=
 	 * StubUtility.getTodoTaskTag(((CodeTemplateContext)
 	 * context).getJavaProject()); if (todoTaskTag == null) return "XXX";
-	 * //$NON-NLS-1$
+	 * 
 	 * 
 	 * return todoTaskTag; } }
 	 */

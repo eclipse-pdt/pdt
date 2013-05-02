@@ -59,8 +59,8 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	 */
 	public PHPFileCreationWizardPage(final ISelection selection) {
 		super("wizardPage"); //$NON-NLS-1$
-		setTitle(PHPUIMessages.PHPFileCreationWizardPage_3); //$NON-NLS-1$
-		setDescription(PHPUIMessages.PHPFileCreationWizardPage_4); //$NON-NLS-1$
+		setTitle(PHPUIMessages.PHPFileCreationWizardPage_3); 
+		setDescription(PHPUIMessages.PHPFileCreationWizardPage_4); 
 		setImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_FILE);
 		this.selection = selection;
 	}
@@ -75,7 +75,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		layout.numColumns = 3;
 		layout.verticalSpacing = 9;
 		Label label = new Label(container, SWT.NULL);
-		label.setText(PHPUIMessages.PHPFileCreationWizardPage_5); //$NON-NLS-1$
+		label.setText(PHPUIMessages.PHPFileCreationWizardPage_5); 
 
 		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -88,7 +88,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		});
 
 		final Button button = new Button(container, SWT.PUSH);
-		button.setText(PHPUIMessages.PHPFileCreationWizardPage_6); //$NON-NLS-1$
+		button.setText(PHPUIMessages.PHPFileCreationWizardPage_6); 
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent e) {
 				handleBrowse();
@@ -96,7 +96,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		});
 
 		targetResourceLabel = new Label(container, SWT.NULL);
-		targetResourceLabel.setText(PHPUIMessages.PHPFileCreationWizardPage_7); //$NON-NLS-1$
+		targetResourceLabel.setText(PHPUIMessages.PHPFileCreationWizardPage_7); 
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		fileText.setFocus();
@@ -187,7 +187,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 				containerText.setText(container.getFullPath().toString());
 			}
 		}
-		setInitialFileName(PHPUIMessages.PHPFileCreationWizardPage_8); //$NON-NLS-1$
+		setInitialFileName(PHPUIMessages.PHPFileCreationWizardPage_8); 
 	}
 
 	protected void setInitialFileName(final String fileName) {
@@ -204,7 +204,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	private void handleBrowse() {
 		final ContainerSelectionDialog dialog = new ContainerSelectionDialog(
 				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
-				PHPUIMessages.PHPFileCreationWizardPage_9); //$NON-NLS-1$
+				PHPUIMessages.PHPFileCreationWizardPage_9); 
 		dialog.showClosedProjects(false);
 		if (dialog.open() == Window.OK) {
 			final Object[] result = dialog.getResult();
@@ -221,27 +221,27 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		final String fileName = getFileName();
 
 		if (container.length() == 0) {
-			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_10); //$NON-NLS-1$
+			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_10); 
 			return;
 		}
 		final IContainer containerFolder = getContainer(container);
 		if (containerFolder == null || !containerFolder.exists()) {
-			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_11); //$NON-NLS-1$
+			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_11); 
 			return;
 		}
 		if (!containerFolder.getProject().isOpen()) {
-			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_12); //$NON-NLS-1$
+			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_12); 
 			return;
 		}
 		if (fileName != null
 				&& !fileName.equals("") && containerFolder.getFile(new Path(fileName)).exists()) { //$NON-NLS-1$
-			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_14); //$NON-NLS-1$
+			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_14); 
 			return;
 		}
 
 		int dotIndex = fileName.lastIndexOf('.');
 		if (fileName.length() == 0 || dotIndex == 0) {
-			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_15); //$NON-NLS-1$
+			updateStatus(PHPUIMessages.PHPFileCreationWizardPage_15); 
 			return;
 		}
 
@@ -250,7 +250,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			for (int i = 0; i < fileNameWithoutExtention.length(); i++) {
 				char ch = fileNameWithoutExtention.charAt(i);
 				if (!(Character.isJavaIdentifierPart(ch) || ch == '.' || ch == '-')) {
-					updateStatus(PHPUIMessages.PHPFileCreationWizardPage_16); //$NON-NLS-1$
+					updateStatus(PHPUIMessages.PHPFileCreationWizardPage_16); 
 					return;
 				}
 			}
@@ -264,7 +264,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			final String[] fileExtensions = contentType
 					.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 			StringBuffer buffer = new StringBuffer(
-					PHPUIMessages.PHPFileCreationWizardPage_17); //$NON-NLS-1$
+					PHPUIMessages.PHPFileCreationWizardPage_17); 
 			buffer.append(fileExtensions[0]);
 			for (String extension : fileExtensions) {
 				buffer.append(", ").append(extension); //$NON-NLS-1$

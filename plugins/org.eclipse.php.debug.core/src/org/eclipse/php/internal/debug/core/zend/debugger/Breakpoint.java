@@ -24,13 +24,13 @@ import java.util.Iterator;
  */
 public class Breakpoint implements Cloneable {
 
-	public static final String NAME_CHANGED_PROPERTY = "fileName";
-	public static final String LINE_CHANGED_PROPERTY = "lineNumber";
-	public static final String ID_CHANGED_PROPERTY = "id";
-	public static final String TYPE_CHANGED_PROPERTY = "type";
-	public static final String LIFETIME_CHANGED_PROPERTY = "lifetime";
-	public static final String EXPRESSION_CHANGED_PROPERTY = "expression";
-	public static final String ENABLE_CHANGED_PROPERTY = "enable";
+	public static final String NAME_CHANGED_PROPERTY = "fileName"; //$NON-NLS-1$
+	public static final String LINE_CHANGED_PROPERTY = "lineNumber"; //$NON-NLS-1$
+	public static final String ID_CHANGED_PROPERTY = "id"; //$NON-NLS-1$
+	public static final String TYPE_CHANGED_PROPERTY = "type"; //$NON-NLS-1$
+	public static final String LIFETIME_CHANGED_PROPERTY = "lifetime"; //$NON-NLS-1$
+	public static final String EXPRESSION_CHANGED_PROPERTY = "expression"; //$NON-NLS-1$
+	public static final String ENABLE_CHANGED_PROPERTY = "enable"; //$NON-NLS-1$
 
 	static final long serialVersionUID = 8217568055748309793L;
 
@@ -38,24 +38,24 @@ public class Breakpoint implements Cloneable {
 
 	// break point type
 	public static final int ZEND_CONDITIONAL_BREAKPOINT = 2;
-	public static final String CONDITIONAL_STRING = "Conditional";
+	public static final String CONDITIONAL_STRING = "Conditional"; //$NON-NLS-1$
 	public static final int ZEND_STATIC_BREAKPOINT = 1;
-	public static final String STATIC_STRING = "Static";
+	public static final String STATIC_STRING = "Static"; //$NON-NLS-1$
 	// break point lifetime
 	public static final int ZEND_ONETIME_BREAKPOINT = 1;
-	public static final String ONETIME_STRING = "One time";
+	public static final String ONETIME_STRING = "One time"; //$NON-NLS-1$
 	public static final int ZEND_PERMANENT_BREAKPOINT = 2;
-	public static final String PERMANENT_STRING = "Permanent";
+	public static final String PERMANENT_STRING = "Permanent"; //$NON-NLS-1$
 
 	private int id;
 	private int type;
 	private int lifetime;
-	private String expression = "";
+	private String expression = ""; //$NON-NLS-1$
 	private boolean enable;
 	private boolean conditionalFlag = false;
 	private boolean staticFlag = true;
 
-	protected String fileName = "";
+	protected String fileName = ""; //$NON-NLS-1$
 	protected int lineNumber = -1;
 	transient protected Collection listeners;
 
@@ -63,7 +63,7 @@ public class Breakpoint implements Cloneable {
 	 * Creates new Breakpoint
 	 */
 	public Breakpoint() {
-		this("", DEFAULT_ID);
+		this("", DEFAULT_ID); //$NON-NLS-1$
 	}
 
 	public Breakpoint(String fileName, int lineNumber) {
@@ -103,7 +103,7 @@ public class Breakpoint implements Cloneable {
 		// ensure we can never set the filename to null
 		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=312951
 		if (newFileName == null) {
-			newFileName = "";
+			newFileName = ""; //$NON-NLS-1$
 		}
 
 		if (fileName.equals(newFileName)) {
@@ -203,7 +203,7 @@ public class Breakpoint implements Cloneable {
 		if (!this.expression.equals(expression)) {
 			String oldValue = this.expression;
 			this.expression = expression;
-			if (!expression.equals("")) {
+			if (!expression.equals("")) { //$NON-NLS-1$
 				setConditionalFlag(true);
 			} else {
 				setConditionalFlag(false);
@@ -234,8 +234,8 @@ public class Breakpoint implements Cloneable {
 	}
 
 	public String toString() {
-		return "id: " + id + " type: " + type + "  file name: " + getFileName()
-				+ " line: " + getLineNumber();
+		return "id: " + id + " type: " + type + "  file name: " + getFileName() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ " line: " + getLineNumber(); //$NON-NLS-1$
 	}
 
 	public boolean equals(Object obj) {

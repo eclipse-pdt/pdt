@@ -318,7 +318,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	}
 
 	public String getName() {
-		return "PHP Script"; //$NON-NLS-1$
+		return PHPDebugUIMessages.PHPExecutableLaunchTab_2; 
 	}
 
 	protected PHPexeDescriptor getSpecificPHPexeDescriptor() {

@@ -146,7 +146,7 @@ public class PHPActionConstants {
 	 * 
 	 * @since 3.4
 	 */
-	public static final String FIND_METHOD_EXIT_OCCURRENCES = "org.eclipse.php.ui.actions.MethodExitOccurrences"; //$NON-NLS-1$		
+	public static final String FIND_METHOD_EXIT_OCCURRENCES = "org.eclipse.php.ui.actions.MethodExitOccurrences"; 		 //$NON-NLS-1$
 
 	/**
 	 * Name of toggle mark occurrences global action (value
@@ -154,5 +154,5 @@ public class PHPActionConstants {
 	 * 
 	 * @since 3.4
 	 */
-	public static final String TOGGLE_MARK_OCCURRENCES = "org.eclipse.php.ui.actions.toggleMarkOccurrences";
+	public static final String TOGGLE_MARK_OCCURRENCES = "org.eclipse.php.ui.actions.toggleMarkOccurrences"; //$NON-NLS-1$
 }

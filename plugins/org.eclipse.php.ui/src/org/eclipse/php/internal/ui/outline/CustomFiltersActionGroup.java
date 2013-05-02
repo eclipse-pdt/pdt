@@ -102,7 +102,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		 */
 		public void fill(Menu menu, int index) {
 			MenuItem mi = new MenuItem(menu, SWT.CHECK, index);
-			mi.setText("&" + fItemNumber + " " + fFilterName); //$NON-NLS-1$  //$NON-NLS-2$
+			mi.setText("&" + fItemNumber + " " + fFilterName); //$NON-NLS-1$ //$NON-NLS-2$  
 			/*
 			 * XXX: Don't set the image - would look bad because other menu
 			 * items don't provide image XXX: Get working set specific image
@@ -126,8 +126,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		}
 	}
 
-	private static final String TAG_CUSTOM_FILTERS = "customFilters"; //$NON-NLS-1$
-	private static final String TAG_USER_DEFINED_PATTERNS_ENABLED = "userDefinedPatternsEnabled"; //$NON-NLS-1$
+	private static final String TAG_CUSTOM_FILTERS = "customFilters"; //$NON-NLS-1$ 
+	private static final String TAG_USER_DEFINED_PATTERNS_ENABLED = "userDefinedPatternsEnabled"; //$NON-NLS-1$ 
 	private static final String TAG_USER_DEFINED_PATTERNS = "userDefinedPatterns"; //$NON-NLS-1$
 	private static final String TAG_XML_DEFINED_FILTERS = "xmlDefinedFilters"; //$NON-NLS-1$
 	private static final String TAG_LRU_FILTERS = "lastRecentlyUsedFilters"; //$NON-NLS-1$
@@ -140,7 +140,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	private static final String SEPARATOR = ","; //$NON-NLS-1$
 
 	private static final int MAX_FILTER_MENU_ENTRIES = 3;
-	private static final String RECENT_FILTERS_GROUP_NAME = "recentFiltersGroup"; //$NON-NLS-1$
+	private static final String RECENT_FILTERS_GROUP_NAME = "recentFiltersGroup"; //$NON-NLS-1$ 
 
 	private StructuredViewer fViewer;
 
@@ -386,7 +386,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 		 * Don't change the separator group name. Using this name ensures that
 		 * other filters get contributed to the same group.
 		 */
-		viewMenu.add(new Separator("filters")); //$NON-NLS-1$
+		viewMenu.add(new Separator("filters")); //$NON-NLS-1$ 
 		viewMenu.add(new GroupMarker(RECENT_FILTERS_GROUP_NAME));
 		viewMenu.add(new ShowFilterDialogAction());
 
@@ -456,7 +456,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 			Boolean isEnabled = Boolean.valueOf(filterDescs[i].isEnabled());
 			if (fEnabledFilterIds.containsKey(id)) {
 				// XXX: dltk logging?
-				//DLTKUIPlugin.logErrorMessage("WARNING: Duplicate id for extension-point \"org.eclipse.dltk.ui.modelElementFilters\""); //$NON-NLS-1$
+				// DLTKUIPlugin.logErrorMessage("WARNING: Duplicate id for extension-point \"org.eclipse.dltk.ui.modelElementFilters\"");
 			}
 			fEnabledFilterIds.put(id, isEnabled);
 			fFilterDescriptorMap.put(id, filterDescs[i]);
@@ -513,9 +513,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 					}
 				}
 				if (filtersToRemove.contains(id)) {
-					fViewer
-							.removeFilter((ViewerFilter) fInstalledBuiltInFilters
-									.get(id));
+					fViewer.removeFilter((ViewerFilter) fInstalledBuiltInFilters
+							.get(id));
 					fInstalledBuiltInFilters.remove(id);
 				}
 			}
@@ -550,8 +549,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 
 		fUserDefinedPatternsEnabled = store
 				.getBoolean(getPreferenceKey(TAG_USER_DEFINED_PATTERNS_ENABLED));
-		setUserDefinedPatterns(CustomFiltersDialog.convertFromString(store
-				.getString(getPreferenceKey(TAG_USER_DEFINED_PATTERNS)),
+		setUserDefinedPatterns(CustomFiltersDialog.convertFromString(
+				store.getString(getPreferenceKey(TAG_USER_DEFINED_PATTERNS)),
 				SEPARATOR));
 
 		Iterator iter = fEnabledFilterIds.entrySet().iterator();
@@ -582,7 +581,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 
 		// see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=22533
 		store.setValue(getPreferenceKey(TAG_DUMMY_TO_TEST_EXISTENCE),
-				"storedViewPreferences");//$NON-NLS-1$
+				"storedViewPreferences"); //$NON-NLS-1$
 
 		store.setValue(getPreferenceKey(TAG_USER_DEFINED_PATTERNS_ENABLED),
 				fUserDefinedPatternsEnabled);
@@ -608,7 +607,7 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	}
 
 	private String getPreferenceKey(String tag) {
-		return "CustomFiltersActionGroup." + fTargetId + '.' + tag; //$NON-NLS-1$
+		return "CustomFiltersActionGroup." + fTargetId + '.' + tag; //$NON-NLS-1$ 
 	}
 
 	// ---------- view instance persistency ----------
@@ -621,8 +620,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	 */
 	public void saveState(IMemento memento) {
 		IMemento customFilters = memento.createChild(TAG_CUSTOM_FILTERS);
-		customFilters.putString(TAG_USER_DEFINED_PATTERNS_ENABLED, Boolean
-				.toString(fUserDefinedPatternsEnabled));
+		customFilters.putString(TAG_USER_DEFINED_PATTERNS_ENABLED,
+				Boolean.toString(fUserDefinedPatternsEnabled));
 		saveUserDefinedPatterns(customFilters);
 		saveXmlDefinedFilters(customFilters);
 		saveLRUFilters(customFilters);
@@ -747,8 +746,8 @@ public class CustomFiltersActionGroup extends ActionGroup {
 	private void cleanUpPatternDuplicates() {
 		if (!areUserDefinedPatternsEnabled())
 			return;
-		List userDefinedPatterns = new ArrayList(Arrays
-				.asList(fUserDefinedPatterns));
+		List userDefinedPatterns = new ArrayList(
+				Arrays.asList(fUserDefinedPatterns));
 		FilterDescriptor[] filters = getCachedFilterDescriptors();
 
 		for (int i = 0; i < filters.length; i++) {

@@ -26,14 +26,14 @@ public class SimpleByteValue extends DBGpElement implements IValue {
 	}
 
 	public String getReferenceTypeName() throws DebugException {
-		return "byte";
+		return "byte"; //$NON-NLS-1$
 	}
 
 	public String getValueString() throws DebugException {
 		// TODO: Cache ?
 		String valStr = Integer.toHexString(value & 0xFF);
 		if (valStr.length() == 1) {
-			valStr = "0" + valStr;
+			valStr = "0" + valStr; //$NON-NLS-1$
 		}
 		return valStr;
 	}

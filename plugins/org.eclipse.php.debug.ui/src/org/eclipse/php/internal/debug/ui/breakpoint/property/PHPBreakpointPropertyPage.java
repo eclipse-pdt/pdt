@@ -42,12 +42,12 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements
 				PHPConditionalBreakpoint.class);
 		if (breakpoint == null) {
 			Logger.log(Logger.ERROR,
-					"Could not adapt to PHPConditionalBreakpoint");
+					"Could not adapt to PHPConditionalBreakpoint"); //$NON-NLS-1$
 			return null;
 		}
 		conditionEnabled = breakpoint.isConditionEnabled();
 		String currentCondition = breakpoint.getCondition();
-		if (currentCondition.equals("")) {
+		if (currentCondition.equals("")) { //$NON-NLS-1$
 			conditionEnabled = true;
 		}
 		Label label = new Label(parent, SWT.WRAP);
@@ -98,7 +98,7 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements
 	public boolean performOk() {
 		if (breakpoint != null) {
 			String condition = text.getText().trim();
-			if (condition.equals(""))
+			if (condition.equals("")) //$NON-NLS-1$
 				conditionEnabled = false;
 			try {
 				breakpoint.setConditionWithEnable(conditionEnabled, condition);

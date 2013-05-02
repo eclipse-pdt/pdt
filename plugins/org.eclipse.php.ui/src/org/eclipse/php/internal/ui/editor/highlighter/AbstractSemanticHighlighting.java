@@ -57,21 +57,21 @@ public abstract class AbstractSemanticHighlighting implements
 
 	public ISourceModule getSourceModule() {
 		if (sourceModule == null) {
-			throw new IllegalStateException("Source module cannot be null");
+			throw new IllegalStateException("Source module cannot be null"); //$NON-NLS-1$
 		}
 		return sourceModule;
 	}
 
 	protected AbstractSemanticHighlighting highlight(ISourceRange range) {
 		if (range == null) {
-			throw new IllegalArgumentException("Range cannot be null");
+			throw new IllegalArgumentException("Range cannot be null"); //$NON-NLS-1$
 		}
 		return highlight(range.getOffset(), range.getLength());
 	}
 
 	protected AbstractSemanticHighlighting highlight(ASTNode node) {
 		if (node == null) {
-			throw new IllegalArgumentException("Node cannot be null");
+			throw new IllegalArgumentException("Node cannot be null"); //$NON-NLS-1$
 		}
 		return highlight(node.getStart(), node.getLength());
 	}

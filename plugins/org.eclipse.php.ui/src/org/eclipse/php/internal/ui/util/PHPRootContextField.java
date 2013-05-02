@@ -28,7 +28,7 @@ public class PHPRootContextField {
 	public PHPRootContextField(Composite parent,
 			DataModelSynchHelper synchHelper) {
 		Label rootContextLabel = new Label(parent, SWT.NULL);
-		rootContextLabel.setText(PHPUIMessages.PHPRootContextField_0); //$NON-NLS-1$
+		rootContextLabel.setText(PHPUIMessages.PHPRootContextField_0); 
 
 		rootContext = new Text(parent, SWT.BORDER);
 

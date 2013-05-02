@@ -26,11 +26,11 @@ public class CollapseAllAction extends Action {
 		super(ScriptMessages.CollapseAllAction_label);
 		setDescription(ScriptMessages.CollapseAllAction_description);
 		setToolTipText(ScriptMessages.CollapseAllAction_tooltip);
-		DLTKPluginImages.setLocalImageDescriptors(this, "collapseall.gif"); //$NON-NLS-1$
+		DLTKPluginImages.setLocalImageDescriptors(this, "collapseall.gif"); //$NON-NLS-1$ 
 
 		fPackageExplorer = part;
 		if (DLTKCore.DEBUG) {
-			System.err.println("Add help support here..."); //$NON-NLS-1$
+			System.err.println("Add help support here..."); //$NON-NLS-1$ 
 		}
 
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,

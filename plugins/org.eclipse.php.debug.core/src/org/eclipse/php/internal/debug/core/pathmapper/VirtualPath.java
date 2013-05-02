@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
 public class VirtualPath implements Cloneable {
 
 	private static final Pattern VOLNAME = Pattern
-			.compile("([A-Za-z]:)[/\\\\](.*)");
+			.compile("([A-Za-z]:)[/\\\\](.*)"); //$NON-NLS-1$
 	private static final Pattern PROTOCOL = Pattern
-			.compile("([A-Za-z]*://)(.*)");
+			.compile("([A-Za-z]*://)(.*)"); //$NON-NLS-1$
 	private LinkedList<String> segments;
 	private String device;
 	private char sepChar;
@@ -43,24 +43,24 @@ public class VirtualPath implements Cloneable {
 		if (path == null) {
 			throw new NullPointerException();
 		}
-		if (path.startsWith("\\\\")) { // Network path
+		if (path.startsWith("\\\\")) { // Network path //$NON-NLS-1$
 			sepChar = '\\';
-			device = "\\\\";
+			device = "\\\\"; //$NON-NLS-1$
 			path = path.substring(2);
 		}
-		if (path.startsWith("\\")) {
+		if (path.startsWith("\\")) { //$NON-NLS-1$
 			sepChar = '\\';
-			device = "\\";
+			device = "\\"; //$NON-NLS-1$
 			path = path.substring(1);
 		} else {
 			Matcher m = VOLNAME.matcher(path);
 			if (m.matches()) { // Windows path
 				sepChar = '\\';
-				device = m.group(1) + "\\"; // correct path from C:/ to C:\
+				device = m.group(1) + "\\"; // correct path from C:/ to C:\ //$NON-NLS-1$
 				path = m.group(2);
-			} else if (path.startsWith("/")) { // Unix path
+			} else if (path.startsWith("/")) { // Unix path //$NON-NLS-1$
 				sepChar = '/';
-				device = "/";
+				device = "/"; //$NON-NLS-1$
 			} else {
 				m = PROTOCOL.matcher(path);
 				if (m.matches()) { // URL
@@ -69,12 +69,12 @@ public class VirtualPath implements Cloneable {
 					path = m.group(2);
 				} else {
 					throw new IllegalArgumentException(
-							"Illegal or not full path: " + path);
+							"Illegal or not full path: " + path);//$NON-NLS-1$
 				}
 			}
 		}
 
-		StringTokenizer st = new StringTokenizer(path, "/\\");
+		StringTokenizer st = new StringTokenizer(path, "/\\"); //$NON-NLS-1$
 		segments = new LinkedList<String>();
 		while (st.hasMoreTokens()) {
 			String segment = st.nextToken();
@@ -92,8 +92,8 @@ public class VirtualPath implements Cloneable {
 	 *         <code>false</code>
 	 */
 	public static boolean isAbsolute(String path) {
-		return (path.startsWith("\\\\") || VOLNAME.matcher(path).matches()
-				|| path.startsWith("/") || PROTOCOL.matcher(path).matches());
+		return (path.startsWith("\\\\") || VOLNAME.matcher(path).matches() //$NON-NLS-1$
+				|| path.startsWith("/") || PROTOCOL.matcher(path).matches()); //$NON-NLS-1$
 	}
 
 	protected VirtualPath(String device, char sepChar,

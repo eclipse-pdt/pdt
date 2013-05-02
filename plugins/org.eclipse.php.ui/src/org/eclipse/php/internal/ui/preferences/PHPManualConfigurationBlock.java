@@ -250,7 +250,7 @@ public class PHPManualConfigurationBlock implements
 
 		addCheckBox(composite,
 				PHPUIMessages.PHPManualConfigurationBlock_openInNewBrowser,
-				PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER, 0); //$NON-NLS-1$
+				PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER, 0); 
 		addFiller(composite);
 
 		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);

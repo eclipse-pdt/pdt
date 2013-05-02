@@ -1062,8 +1062,8 @@
 			categoryId="org.eclipse.ui.category.views" id="org.eclipse.php.ui.explorer" />
 
 		<!-- refactoring -->
-		<command name="Rename"
-			description="Rename" categoryId="org.eclipse.php.ui.category.refactoring"
+		<command name="%command.name.0"
+			description="%command.description.0" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.dltk.ui.edit.text.script.rename.element" />
 			
 		<command name="%ActionDefinition.moveElement.name"
@@ -1375,9 +1375,9 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
             
     <scheme
-          description="PDT key bindings"
+          description="%scheme.description"
           id="org.eclipse.php.ui.keybindings.scheme"
-          name="PDT Key Bindings Scheme"
+          name="%scheme.name"
           parentId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
@@ -2135,7 +2135,7 @@
    <extension point="org.eclipse.ltk.core.refactoring.renameParticipants">
       <renameParticipant
             class="org.eclipse.php.internal.ui.refactor.participants.IncludepathRenameIParentParticipant"
-            name="ScriptProject Rename"
+            name="%renameParticipant.name"
             id="org.eclipse.php.ui.refactoring.sourceModuleRename"> 
          <enablement>
            <with variable="affectedNatures">
@@ -2150,7 +2150,7 @@
       </renameParticipant>
       <renameParticipant
             class="org.eclipse.php.internal.ui.refactor.participants.IncludepathRenameIParentParticipant"
-            name="ScriptFolder Rename"
+            name="%renameParticipant.name.0"
             id="org.eclipse.php.ui.refactoring.scriptFolderRename"> 
          <enablement>
            <with variable="affectedNatures">
@@ -2165,7 +2165,7 @@
       </renameParticipant>
       <renameParticipant
             class="org.eclipse.php.internal.ui.refactor.participants.IncludepathRenameIParentParticipant"
-            name="Fragment Rename"
+            name="%renameParticipant.name.1"
             id="org.eclipse.php.ui.refactoring.projectFragmentRename"> 
          <enablement>
            <with variable="affectedNatures">
@@ -2183,7 +2183,7 @@
 		point="org.eclipse.dltk.ui.scriptCompletionProposalSorters">
 		<proposalSorter
 			id="org.eclipse.php.ui.AlphabeticSorter"
-			name="Alphabetic Sorter"
+			name="%proposalSorter.name.0"
 			class="org.eclipse.php.internal.ui.editor.contentassist.PHPAlphabeticSorter"/>
 	</extension>
 	<extension

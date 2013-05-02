@@ -127,7 +127,7 @@ public class ASTRewriteCorrectionProposal extends CUCorrectionProposal {
 	protected ASTRewrite getRewrite() throws CoreException {
 		if (fRewrite == null) {
 			IStatus status = DLTKUIStatus.createError(IStatus.ERROR,
-					"Rewriter not initialized", null); //$NON-NLS-1$
+					Messages.ASTRewriteCorrectionProposal_0, null); 
 			throw new CoreException(status);
 		}
 		return fRewrite;

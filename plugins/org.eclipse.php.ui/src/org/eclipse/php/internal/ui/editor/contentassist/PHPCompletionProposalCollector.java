@@ -232,7 +232,7 @@ public class PHPCompletionProposalCollector extends
 					String replacementString = computeReplacementString();
 					if (ProposalExtraInfo.isAddQuote(typeProposal
 							.getExtraInfo())) {
-						replacementString = "'" + replacementString + "'";
+						replacementString = "'" + replacementString + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					setReplacementString(replacementString);
 				}
@@ -254,7 +254,7 @@ public class PHPCompletionProposalCollector extends
 					// return result;
 				}
 
-				String prefix = "";
+				String prefix = ""; //$NON-NLS-1$
 				try {
 					int flags = type.getFlags();
 					IType currentNamespace = PHPModelUtils
@@ -345,7 +345,7 @@ public class PHPCompletionProposalCollector extends
 				if (!fReplacementStringComputed) {
 					String replacementString = super.getReplacementString();
 					if (ProposalExtraInfo.isAddQuote(proposal.getExtraInfo())) {
-						replacementString = "'" + replacementString + "'";
+						replacementString = "'" + replacementString + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 					}
 					setReplacementString(replacementString);
 				}

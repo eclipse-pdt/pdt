@@ -17,7 +17,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 
 public class DBGpSessionHandler {
 
-	public static final String IDEKEY_PREFIX = "ECLIPSE_DBGP";
+	public static final String IDEKEY_PREFIX = "ECLIPSE_DBGP"; //$NON-NLS-1$
 
 	private static DBGpSessionHandler globalSessionHandler;
 	private static Object sessionHandlerCreator = new Object();
@@ -66,9 +66,9 @@ public class DBGpSessionHandler {
 			}
 		}
 		if (DBGpLogger.debugSession()) {
-			DBGpLogger.debug("session test:" + session.getIdeKey() + "="
-					+ target.getIdeKey() + ", " + session.getSessionId() + "="
-					+ target.getSessionID() + " == " + isCorrect);
+			DBGpLogger.debug("session test:" + session.getIdeKey() + "=" //$NON-NLS-1$ //$NON-NLS-2$
+					+ target.getIdeKey() + ", " + session.getSessionId() + "=" //$NON-NLS-1$ //$NON-NLS-2$
+					+ target.getSessionID() + " == " + isCorrect); //$NON-NLS-1$
 		}
 		return isCorrect;
 	}
@@ -111,8 +111,8 @@ public class DBGpSessionHandler {
 		boolean allocated = false;
 		Object[] copiedListeners = listeners.getListeners();
 		if (DBGpLogger.debugSession()) {
-			DBGpLogger.debug("firing to " + copiedListeners.length
-					+ " active debug targets");
+			DBGpLogger.debug("firing to " + copiedListeners.length //$NON-NLS-1$
+					+ " active debug targets"); //$NON-NLS-1$
 		}
 		for (int i = 0; i < copiedListeners.length && !allocated; i++) {
 			IDBGpSessionListener l = (IDBGpSessionListener) copiedListeners[i];

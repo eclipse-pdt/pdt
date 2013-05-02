@@ -136,7 +136,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 				new PHPIPListLabelProvider());
 		fFoldersList.setDialogFieldListener(adapter);
 		fFoldersList
-				.setLabelText(PHPUIMessages.IncludePathSourcePage_Folders_Label); //$NON-NLS-1$
+				.setLabelText(PHPUIMessages.IncludePathSourcePage_Folders_Label); 
 
 		fFoldersList.setViewerSorter(new BPListElementSorter());
 
@@ -256,7 +256,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		if (fAddedElements.size() > 0) {
 			addToBuildPath = IncludePathUtils.openConfirmationDialog(
 					getShell(), PHPUIMessages.IncludePath_AddEntryTitle,
-					PHPUIMessages.IncludePath_AddEntryToBuildPathMessage); //$NON-NLS-1$ ////$NON-NLS-2$
+					PHPUIMessages.IncludePath_AddEntryToBuildPathMessage); //
 			for (IChangeListener listener : addedElementListeners) {
 				listener.update(true);
 			}

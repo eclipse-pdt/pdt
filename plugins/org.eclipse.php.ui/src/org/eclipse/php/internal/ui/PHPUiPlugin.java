@@ -78,9 +78,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	// the switch for creating a demo project is -pd. divide to chars for
 	// performance reasons
-	public static final char CREATE_TEST_PROJECT_SWITCH_FIRST_CHAR = '-'; //$NON-NLS-1$
-	public static final char CREATE_TEST_PROJECT_SWITCH_SECOND_CHAR = 'p'; //$NON-NLS-1$
-	public static final char CREATE_TEST_PROJECT_SWITCH_THIRD_CHAR = 'd'; //$NON-NLS-1$
+	public static final char CREATE_TEST_PROJECT_SWITCH_FIRST_CHAR = '-';
+	public static final char CREATE_TEST_PROJECT_SWITCH_SECOND_CHAR = 'p';
+	public static final char CREATE_TEST_PROJECT_SWITCH_THIRD_CHAR = 'd';
 
 	static {
 		String value = Platform.getDebugOption("org.eclipse.php.ui/debug"); //$NON-NLS-1$
@@ -112,8 +112,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	private PHPTemplateStore fCodeTemplateStore;
 
-	public static String OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME = "Open Call Hierarchy action";
-	public static String OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME = "Open Type Hierarchy action";
+	public static String OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME = PHPUIMessages.PHPUiPlugin_4;
+	public static String OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME = PHPUIMessages.PHPUiPlugin_5;
 
 	/**
 	 * The constructor.
@@ -138,7 +138,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 * @param context
 	 */
 	void initializeAfterStart(final BundleContext context) {
-		Job job = new Job("") {
+		Job job = new Job("") { //$NON-NLS-1$
 			protected IStatus run(IProgressMonitor monitor) {
 
 				PlatformUI.getWorkbench().getDisplay()

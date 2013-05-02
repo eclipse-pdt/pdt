@@ -48,10 +48,10 @@ public class PHPVariableValueEditor implements IVariableValueEditor {
 	public boolean editVariable(IVariable variable, Shell shell) {
 		try {
 			String name = variable.getName();
-			String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0; //$NON-NLS-1$
+			String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0; 
 			String message = NLS.bind(
 					PHPDebugUIMessages.PHPPrimitiveValueEditor_1,
-					new String[] { name }); //$NON-NLS-1$
+					new String[] { name }); 
 			PHPValue value = (PHPValue) variable.getValue();
 			String initialValue = value.getValue();
 			PrimitiveValidator validator = new PrimitiveValidator();
@@ -64,7 +64,7 @@ public class PHPVariableValueEditor implements IVariableValueEditor {
 		} catch (DebugException e) {
 			DebugUIPlugin.errorDialog(shell,
 					PHPDebugUIMessages.PHPPrimitiveValueEditor_2,
-					PHPDebugUIMessages.PHPPrimitiveValueEditor_3, e); //$NON-NLS-1$ //$NON-NLS-2$
+					PHPDebugUIMessages.PHPPrimitiveValueEditor_3, e); 
 		}
 		return true;
 	}

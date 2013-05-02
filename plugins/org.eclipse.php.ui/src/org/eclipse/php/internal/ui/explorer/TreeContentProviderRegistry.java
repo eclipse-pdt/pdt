@@ -51,14 +51,14 @@ public class TreeContentProviderRegistry {
 					try {
 
 						Object execExt = configElement
-								.createExecutableExtension(CONTENT_PROVIDER); //$NON-NLS-1$
+								.createExecutableExtension(CONTENT_PROVIDER); 
 						if (execExt instanceof ITreeContentProvider) {
 							contentProviders
 									.add((ITreeContentProvider) execExt);
 						}
 
 						Object labelProvider = configElement
-								.createExecutableExtension(LABEL_PROVIDER); //$NON-NLS-1$
+								.createExecutableExtension(LABEL_PROVIDER); 
 						if (labelProvider instanceof ILabelProvider) {
 							labelProviders.add((ILabelProvider) labelProvider);
 						}

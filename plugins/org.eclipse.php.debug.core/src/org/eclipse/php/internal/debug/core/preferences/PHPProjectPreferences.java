@@ -92,7 +92,7 @@ public class PHPProjectPreferences {
 					PHPDebugCorePreferenceNames.DEFAULT_BASE_PATH, basePath);
 		}
 		if (project != null && basePath == null) {
-			return "/" + project.getName();
+			return "/" + project.getName(); //$NON-NLS-1$
 		}
 		return basePath;
 	}

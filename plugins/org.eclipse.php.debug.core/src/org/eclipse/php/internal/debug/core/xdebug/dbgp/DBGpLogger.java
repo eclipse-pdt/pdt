@@ -54,7 +54,7 @@ public class DBGpLogger {
 	 */
 	public static void debug(String info) {
 		if (debugOn) {
-			System.out.println("-->DBGp: " + info);
+			System.out.println("-->DBGp: " + info); //$NON-NLS-1$
 		}
 	}
 
@@ -65,7 +65,7 @@ public class DBGpLogger {
 	 *            the exception to output
 	 */
 	public static void debugException(Throwable exc) {
-		debug(exc.getClass().toString() + ":" + exc.getMessage());
+		debug(exc.getClass().toString() + ":" + exc.getMessage()); //$NON-NLS-1$
 		if (exc != null) {
 			StackTraceElement[] els = exc.getStackTrace();
 			for (int i = 0; i < els.length; i++) {
@@ -79,7 +79,7 @@ public class DBGpLogger {
 		StringBuffer msg = new StringBuffer();
 		if (obj != null) {
 			msg.append(obj.getClass().toString());
-			msg.append(" : ");
+			msg.append(" : "); //$NON-NLS-1$
 		}
 		if (info != null) {
 			msg.append(info);
@@ -96,7 +96,7 @@ public class DBGpLogger {
 		PrintStream ps = new PrintStream(bs);
 		exc.printStackTrace(ps);
 		IStatus stat = new Status(IStatus.ERROR, PHPDebugPlugin.ID,
-				IStatus.ERROR, msg + "\n" + bs.toString(), null);
+				IStatus.ERROR, msg + "\n" + bs.toString(), null); //$NON-NLS-1$
 		theLog.log(stat);
 	}
 
@@ -169,15 +169,15 @@ public class DBGpLogger {
 		StringBuffer msg = new StringBuffer();
 		if (obj != null) {
 			msg.append(obj.getClass().toString());
-			msg.append(" : ");
+			msg.append(" : "); //$NON-NLS-1$
 		}
 		if (info != null) {
 			msg.append(info);
 		}
 		if (exc != null) {
-			msg.append("Exception:");
+			msg.append("Exception:"); //$NON-NLS-1$
 			msg.append(exc.getClass().toString());
-			msg.append(" msg: ");
+			msg.append(" msg: "); //$NON-NLS-1$
 			msg.append(exc.getMessage());
 		}
 		IStatus stat = new Status(type, PHPDebugPlugin.ID, type,

@@ -858,7 +858,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		public OccurrencesFinderJob(IDocument document,
 				OccurrenceLocation[] locations, ISelection selection) {
-			super("mark occrrences job name"); // TODO should externals
+			super("mark occrrences job name"); // TODO should externals //$NON-NLS-1$
 			fDocument = document;
 			fSelection = selection;
 			fLocations = locations;
@@ -2966,7 +2966,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		if (!fMarkOccurrenceAnnotations)
 			return;
 
-		String updatingOccurencesJobName = "Updating occurence annotations";
+		String updatingOccurencesJobName = "Updating occurence annotations"; //$NON-NLS-1$
 
 		IJobManager jobManager = Job.getJobManager();
 		if (jobManager.find(updatingOccurencesJobName).length > 0) {
@@ -3160,7 +3160,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				inputElement, null);
 		addReconcileListener(fOverrideIndicatorManager);
 		if (provideAST) {
-			Job job = new Job("Installing override indicator") {
+			Job job = new Job("Installing override indicator") { //$NON-NLS-1$
 
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
@@ -3320,7 +3320,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 	protected void selectionChanged() {
 		if (getSelectionProvider() == null)
 			return;
-		Job job = new Job("PHPStructuredEditor selection changed job") {
+		Job job = new Job("PHPStructuredEditor selection changed job") { //$NON-NLS-1$
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {

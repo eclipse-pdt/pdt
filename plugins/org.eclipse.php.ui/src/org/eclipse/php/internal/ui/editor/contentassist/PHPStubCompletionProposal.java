@@ -36,9 +36,9 @@ public class PHPStubCompletionProposal extends PHPCompletionProposal implements
 		fReplacementStringComputed = true;
 		// IType type = (IType) typeProposal.getModelElement();
 		// type.getElementName();
-		String result = "class "
+		String result = "class " //$NON-NLS-1$
 				+ typeProposal.getModelElement().getElementName()
-				+ "{\r\n\t\r\n}";
+				+ "{\r\n\t\r\n}"; //$NON-NLS-1$
 		result = addComment(result);
 		result = addIndent(result, typeProposal.getReplaceStart());
 

@@ -82,7 +82,7 @@ public class InternalFunctionHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Internal functions";
+		return Messages.InternalFunctionHighlighting_0;
 	}
 
 	@Override

@@ -52,6 +52,6 @@ public abstract class PHPDebugElement extends DebugElement {
 	public String toString() {
 		String className = getClass().getName();
 		className = className.substring(className.lastIndexOf('.') + 1);
-		return className + "@" + Integer.toHexString(hashCode());
+		return className + "@" + Integer.toHexString(hashCode()); //$NON-NLS-1$
 	}
 }

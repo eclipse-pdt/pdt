@@ -44,12 +44,12 @@ public class InitializeAfterLoadJob extends UIJob {
 	}
 
 	public InitializeAfterLoadJob() {
-		super(PHPUIMessages.InitializeAfterLoadJob_0); //$NON-NLS-1$
+		super(PHPUIMessages.InitializeAfterLoadJob_0); 
 		setSystem(true);
 	}
 
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		Job job = new RealJob(PHPUIMessages.InitializeAfterLoadJob_1); //$NON-NLS-1$
+		Job job = new RealJob(PHPUIMessages.InitializeAfterLoadJob_1); 
 		job.setPriority(Job.SHORT);
 		job.schedule();
 		return new Status(IStatus.OK, PHPCorePlugin.getPluginId(), IStatus.OK,

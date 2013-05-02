@@ -40,15 +40,15 @@ import org.eclipse.help.internal.toc.TocFileProvider;
 public class HelpContextGenerator {
 
 	private static final String NEW_LINE = System.getProperty("line.separator"); //$NON-NLS-1$
-	private static final String INVALID_LABEL_CHARS = "[^a-zA-Z$\\d]";//$NON-NLS-1$
-	private static final String INVALID_CHAR_REPLACEMENT = "_";//$NON-NLS-1$
+	private static final String INVALID_LABEL_CHARS = "[^a-zA-Z$\\d]"; //$NON-NLS-1$
+	private static final String INVALID_CHAR_REPLACEMENT = "_"; //$NON-NLS-1$
 	private static final String PHP_CONTRIBUTOR_ID = "org.eclipse.php.help"; //$NON-NLS-1$
-	private static final String JAVA_HELP_CONTEXT_TEMPLATE = "template.txt"; //$NON-NLS-1$// This file should be located next to this class
-	private static final String JAVA_HELP_CONTEXT_NAME = "IPHPHelpContextIds.java"; //$NON-NLS-1$// This will be generated next to this class
+	private static final String JAVA_HELP_CONTEXT_TEMPLATE = "template.txt"; // This file should be located next to this class //$NON-NLS-1$
+	private static final String JAVA_HELP_CONTEXT_NAME = "IPHPHelpContextIds.java"; // This will be generated next to this class //$NON-NLS-1$
 	private static final String HELP_CONTEXT_FILE = "helpContexts.xml"; //$NON-NLS-1$
-	private static final String DESCRIPTION_POSTFIX = " Help";//$NON-NLS-1$
-	private static final String CONTEXT_BLOCK = "\t<context id=\"%1$s\">" + NEW_LINE + "\t\t<description>%2$s</description>" + NEW_LINE + "\t\t<topic href=\"%3$s\" label=\"%4$s\"/>" + NEW_LINE + "\t</context>" + NEW_LINE;//$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
-	private static final String JAVA_CONSTANT_LINE = "public static final String %1$s = PREFIX + \"%2$s\"; //$NON-NLS-1$ [%3$s]" + NEW_LINE;//$NON-NLS-1$
+	private static final String DESCRIPTION_POSTFIX = " Help"; //$NON-NLS-1$
+	private static final String CONTEXT_BLOCK = "\t<context id=\"%1$s\">" + NEW_LINE + "\t\t<description>%2$s</description>" + NEW_LINE + "\t\t<topic href=\"%3$s\" label=\"%4$s\"/>" + NEW_LINE + "\t</context>" + NEW_LINE; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	private static final String JAVA_CONSTANT_LINE = "public static final String %1$s = PREFIX + \"%2$s\"; [%3$s]" + NEW_LINE; //$NON-NLS-1$
 
 	private LinkedHashSet<String> topics = new LinkedHashSet<String>();
 
@@ -102,7 +102,7 @@ public class HelpContextGenerator {
 		}
 
 		newJavaFileBuilder.append('}');
-		helpContextBuilder.append("</contexts>");//$NON-NLS-1$
+		helpContextBuilder.append("</contexts>"); //$NON-NLS-1$
 		// Write the generated files
 		writeFile(helpContextFile, helpContextBuilder.toString());
 		writeFile(newJavaFile, newJavaFileBuilder.toString());
@@ -233,7 +233,7 @@ public class HelpContextGenerator {
 				.replace(
 						File.separatorChar + "bin" + File.separatorChar, File.separatorChar + "src" + File.separatorChar); //$NON-NLS-1$ //$NON-NLS-2$
 		javaTemplateFile = new File(srcFilePath);
-		//		Assert.assertTrue("Could not locate the Java template file", javaTemplateFile.exists()); //$NON-NLS-1$
+		//		Assert.assertTrue("Could not locate the Java template file", javaTemplateFile.exists()); 
 		return javaTemplateFile;
 	}
 }

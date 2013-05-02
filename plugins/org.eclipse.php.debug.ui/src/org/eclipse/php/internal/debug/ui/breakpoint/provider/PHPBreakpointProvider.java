@@ -35,7 +35,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider,
 			if ("provider".equals(element.getName())) { //$NON-NLS-1$
 				try {
 					provider = (IPHPBreakpointProvider) element
-							.createExecutableExtension("class");
+							.createExecutableExtension("class"); //$NON-NLS-1$
 					break;
 				} catch (CoreException e) {
 					PHPUiPlugin.log(e);

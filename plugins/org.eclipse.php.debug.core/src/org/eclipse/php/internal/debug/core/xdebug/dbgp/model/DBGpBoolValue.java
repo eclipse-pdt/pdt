@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
 
 public class DBGpBoolValue extends DBGpValue {
 
-	String[] allowedValues = { "false", "true" };
+	String[] allowedValues = { "false", "true" }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public DBGpBoolValue(DBGpVariable owningVariable, Node property) {
 		super(owningVariable, property);
@@ -42,9 +42,9 @@ public class DBGpBoolValue extends DBGpValue {
 			try {
 				int bool = Integer.parseInt(data);
 				if (1 == bool) {
-					setValueString("true");
+					setValueString("true"); //$NON-NLS-1$
 				} else if (0 == bool) {
-					setValueString("false");
+					setValueString("false"); //$NON-NLS-1$
 				}
 			} catch (NumberFormatException nfe) {
 
@@ -61,10 +61,10 @@ public class DBGpBoolValue extends DBGpValue {
 	 */
 	public void setValue(String expression) throws DebugException {
 		String data;
-		if (expression.equals("true")) {
-			data = "1";
-		} else if (expression.equals("false")) {
-			data = "0";
+		if (expression.equals("true")) { //$NON-NLS-1$
+			data = "1"; //$NON-NLS-1$
+		} else if (expression.equals("false")) { //$NON-NLS-1$
+			data = "0"; //$NON-NLS-1$
 		} else {
 			data = expression;
 		}

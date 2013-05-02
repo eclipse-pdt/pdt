@@ -59,7 +59,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 
 	protected boolean isValidPrefix(String prefix) {
 		String word = getDisplayString();
-		if (word.startsWith("$") && !prefix.startsWith("$")) {
+		if (word.startsWith("$") && !prefix.startsWith("$")) { //$NON-NLS-1$ //$NON-NLS-2$
 			word = word.substring(1);
 		}
 		boolean result = isPrefix(prefix, word);

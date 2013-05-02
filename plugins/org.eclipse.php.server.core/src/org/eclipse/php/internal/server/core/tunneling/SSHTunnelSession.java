@@ -76,7 +76,7 @@ public class SSHTunnelSession {
 				}
 				if (session == null)
 					throw new JSchException(
-							"Could not create a debug tunneling session to " + hostname); //$NON-NLS-1$
+							Messages.SSHTunnelSession_0 + hostname); 
 				if (session.getTimeout() != DEFAULT_TIMEOUT)
 					session.setTimeout(DEFAULT_TIMEOUT);
 				SSHTunnelSession schSession = new SSHTunnelSession(session);

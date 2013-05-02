@@ -21,8 +21,8 @@ import java.util.Map;
  */
 public class DeployFilter {
 
-	private static final String[] BASIC_FILTERS = new String[] { ".settings",
-			".project", ".cache", ".svn", "CVS" };
+	private static final String[] BASIC_FILTERS = new String[] { ".settings", //$NON-NLS-1$
+			".project", ".cache", ".svn", "CVS" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private static DeployFilter instance;
 	private Map filters;
 

@@ -4,7 +4,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class IncludePathMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.preferences.includepath.IncludePathMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.preferences.includepath.IncludePathMessages"; //$NON-NLS-1$
 
 	public static String BuildPathDialogAccess_ZIPArchiveDialog_new_title;
 	public static String BuildPathDialogAccess_ZIPArchiveDialog_new_description;
@@ -25,6 +25,8 @@ public class IncludePathMessages extends NLS {
 	public static String BuildPathsBlock_warning_EntriesInvalid;
 
 	public static String CPListLabelProvider_invalid;
+
+	public static String FilteredElementTreeSelectionDialog_1;
 
 	private IncludePathMessages() {
 		// Do not instantiate

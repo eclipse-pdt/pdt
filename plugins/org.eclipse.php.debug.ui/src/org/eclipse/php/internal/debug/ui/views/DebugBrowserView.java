@@ -106,7 +106,8 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener {
 
 						if (events[i].getKind() == DebugEvent.TERMINATE) {
 							target = (IPHPDebugTarget) obj;
-							Job job = new UIJob("debug output") { //$NON-NLS-1$
+							Job job = new UIJob(
+									PHPDebugUIMessages.PHPDebugUIPlugin_0) { //$NON-NLS-1$
 								public IStatus runInUIThread(
 										IProgressMonitor monitor) {
 									update(target);
@@ -202,7 +203,7 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener {
 
 			if (debugOutput != null) {
 				String contentType = debugOutput.getContentType();
-				if (contentType != null && !contentType.startsWith("text")) {
+				if (contentType != null && !contentType.startsWith("text")) { //$NON-NLS-1$
 					return; // we don't show garbage anymore
 				}
 				String output = debugOutput.toString();

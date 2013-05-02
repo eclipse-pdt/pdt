@@ -244,6 +244,6 @@ public abstract class CommentHandler extends AbstractHandler implements
 	protected void displayCommentActinosErrorDialog(IEditorPart editor) {
 		MessageDialog.openError(editor.getSite().getShell(),
 				PHPUIMessages.AddBlockComment_error_title,
-				PHPUIMessages.AddBlockComment_error_messageBadSelection); //$NON-NLS-1$
+				PHPUIMessages.AddBlockComment_error_messageBadSelection); 
 	}
 }

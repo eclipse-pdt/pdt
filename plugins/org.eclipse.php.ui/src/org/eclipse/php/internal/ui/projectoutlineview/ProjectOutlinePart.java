@@ -103,7 +103,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements
 	private void activateContext() {
 		IContextService contextService = (IContextService) getSite()
 				.getService(IContextService.class);
-		contextService.activateContext("org.eclipse.php.ui.contexts.window");
+		contextService.activateContext("org.eclipse.php.ui.contexts.window"); //$NON-NLS-1$
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class TarLeveledStructureProvider implements
 		ILeveledImportStructureProvider {
 	private TarFile tarFile;
 
-	private TarEntry root = new TarEntry("/");//$NON-NLS-1$
+	private TarEntry root = new TarEntry("/"); //$NON-NLS-1$
 
 	private Map children;
 

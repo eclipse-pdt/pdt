@@ -20,9 +20,9 @@ public class StructureSelectEnclosingAction extends StructureSelectionAction {
 
 	public StructureSelectEnclosingAction(PHPStructuredEditor editor,
 			SelectionHistory history) {
-		super("&Enclosing Element", editor, history);
-		setToolTipText("Expand Selection to Include Enclosing Element");
-		setDescription("Expand selection to include enclosing element");
+		super(Messages.StructureSelectEnclosingAction_3, editor, history);
+		setToolTipText(Messages.StructureSelectEnclosingAction_4);
+		setDescription(Messages.StructureSelectEnclosingAction_5);
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 		// IJavaHelpContextIds.STRUCTURED_SELECT_ENCLOSING_ACTION);
 	}

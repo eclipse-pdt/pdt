@@ -20,7 +20,7 @@ import org.eclipse.php.internal.core.documentModel.provisional.contenttype.Conte
 
 public class LaunchUtil {
 
-	public static final String ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE = "org.eclipse.wst.html.core.htmlsource";
+	public static final String ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
 
 	public static String[] getRequiredNatures() {
 		return new String[] { org.eclipse.php.internal.core.project.PHPNature.ID };

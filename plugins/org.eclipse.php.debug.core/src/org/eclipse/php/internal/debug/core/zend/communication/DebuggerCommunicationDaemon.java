@@ -33,7 +33,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNam
 public class DebuggerCommunicationDaemon extends
 		AbstractDebuggerCommunicationDaemon implements ICommunicationDaemon {
 
-	public static final String ZEND_DEBUGGER_ID = "org.eclipse.php.debug.core.zendDebugger";
+	public static final String ZEND_DEBUGGER_ID = "org.eclipse.php.debug.core.zendDebugger"; //$NON-NLS-1$
 	private IPropertyChangeListener portChangeListener;
 
 	/**

@@ -79,7 +79,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 					// do nothing in this case
 				} catch (IOException e) {
 					Logger.logException(
-							"Problem while closing the debugger ServerSocket.",
+							"Problem while closing the debugger ServerSocket.", //$NON-NLS-1$
 							e);
 				} finally {
 					serverSocket = null;
@@ -126,7 +126,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 			handleMultipleBindingError();
 		} catch (IOException e) {
 			Logger.logException(
-					"Error while restting the socket for the debug requests.",
+					"Error while restting the socket for the debug requests.", //$NON-NLS-1$
 					e);
 		}
 		return false;
@@ -142,9 +142,9 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 		final int port = getReceiverPort();
 		Logger.log(
 				Logger.ERROR,
-				"The debug port "
+				"The debug port " //$NON-NLS-1$
 						+ port
-						+ " is in use. Please select a different port for the debugger.");
+						+ " is in use. Please select a different port for the debugger."); //$NON-NLS-1$
 	}
 
 	/**
@@ -184,11 +184,11 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 			}
 			isAlive = true;
 		}
-		String port = " - Port: "
+		String port = " - Port: " //$NON-NLS-1$
 				+ ((serverSocket != null) ? String.valueOf(serverSocket
-						.getLocalPort()) : "??");
+						.getLocalPort()) : "??"); //$NON-NLS-1$
 		listenerThread = new Thread(new ReceiverThread(),
-				"PHP Debugger Daemon Thread " + port);
+				"PHP Debugger Daemon Thread " + port); //$NON-NLS-1$
 		listenerThread.setDaemon(true);
 		listenerThread.start();
 	}
@@ -218,7 +218,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements
 				synchronized (lock) {
 					if (isAlive) {
 						Logger.logException(
-								"Error while listening to incoming debug requests. Listen thread terminated!",
+								"Error while listening to incoming debug requests. Listen thread terminated!", //$NON-NLS-1$
 								e);
 						isAlive = false;
 					}

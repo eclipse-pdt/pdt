@@ -109,7 +109,7 @@ public class DebugOutputView extends AbstractDebugView implements
 								target = (IPHPDebugTarget) ((PHPThread) obj)
 										.getDebugTarget();
 							}
-							Job job = new UIJob("debug output") {
+							Job job = new UIJob("debug output") { //$NON-NLS-1$
 								public IStatus runInUIThread(
 										IProgressMonitor monitor) {
 									update(target);
@@ -164,17 +164,17 @@ public class DebugOutputView extends AbstractDebugView implements
 		Color dflt = Display.getDefault().getSystemColor(
 				SWT.COLOR_LIST_BACKGROUND);
 
-		if ("true".equalsIgnoreCase(useDefault)) {
+		if ("true".equalsIgnoreCase(useDefault)) { //$NON-NLS-1$
 			return dflt;
 		}
 
 		String bgColor = store
 				.getString(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND);
-		if (bgColor == null || bgColor.equals("")) {
+		if (bgColor == null || bgColor.equals("")) { //$NON-NLS-1$
 			return dflt;
 		}
 
-		String[] rgb = bgColor.split(",");
+		String[] rgb = bgColor.split(","); //$NON-NLS-1$
 		RGB color;
 		try {
 			color = new RGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]),

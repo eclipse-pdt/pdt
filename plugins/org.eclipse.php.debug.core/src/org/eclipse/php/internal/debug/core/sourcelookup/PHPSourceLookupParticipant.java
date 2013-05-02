@@ -112,8 +112,8 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 						final PharArchiveFile archiveFile = new PharArchiveFile(
 								pharPath.getPharName());
 						final IArchiveEntry entry = archiveFile
-								.getArchiveEntry((pharPath.getFolder().length() == 0 ? ""
-										: pharPath.getFolder() + "/")
+								.getArchiveEntry((pharPath.getFolder().length() == 0 ? "" //$NON-NLS-1$
+										: pharPath.getFolder() + "/") //$NON-NLS-1$
 										+ pharPath.getFile());
 						return new Object[] { new ExternalEntryFile(fileName,
 								archiveFile, entry) };
@@ -176,7 +176,7 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 		 * @see IStorage#isReadOnly()
 		 */
 		public String toString() {
-			return "ExternalEntryFile[" + this.fileName + "]"; //$NON-NLS-2$ //$NON-NLS-1$
+			return "ExternalEntryFile[" + this.fileName + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 	}

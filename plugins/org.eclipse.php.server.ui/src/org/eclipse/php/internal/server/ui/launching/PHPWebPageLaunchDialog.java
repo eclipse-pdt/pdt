@@ -369,11 +369,11 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	protected void updateURLComponents(String urlStr) {
 		try {
 			URL url = new URL(urlStr);
-			String port = url.getPort() == -1 ? "" : ":" + url.getPort();
+			String port = url.getPort() == -1 ? "" : ":" + url.getPort(); //$NON-NLS-1$ //$NON-NLS-2$
 			fURLHost.setText(url.getProtocol()
 					+ "://" + url.getHost() + port + "/"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (url.getQuery() != null) {
-				fURLPath.setText(url.getPath() + "?" + url.getQuery());
+				fURLPath.setText(url.getPath() + "?" + url.getQuery()); //$NON-NLS-1$
 			} else {
 				fURLPath.setText(url.getPath());
 			}
@@ -415,7 +415,7 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed() {
 		String urlPath = fURLPath.getText().replace('\\', '/');
-		if (urlPath.startsWith("/")) {
+		if (urlPath.startsWith("/")) { //$NON-NLS-1$
 			urlPath = urlPath.substring(1);
 		}
 		this.pathString = this.fURLHost.getText() + urlPath;

@@ -56,7 +56,7 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
 				| SWT.LEFT);
 		useSmartSubWordNavigation.setLayoutData(gd);
 		useSmartSubWordNavigation
-				.setText(PHPUIMessages.PHPEditorPreferencePage_0); //$NON-NLS-1$
+				.setText(PHPUIMessages.PHPEditorPreferencePage_0); 
 	}
 
 	protected void performDefaults() {

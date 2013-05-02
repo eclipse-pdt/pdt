@@ -61,9 +61,13 @@ public final class CorrectionMessages extends NLS {
 	public static String CorrectPackageDeclarationProposal_add_description;
 	public static String CorrectPackageDeclarationProposal_change_description;
 
+	public static String ChangeCorrectionProposal_0;
+	public static String ChangeCorrectionProposal_2;
+	public static String ChangeCorrectionProposal_5;
 	public static String ChangeCorrectionProposal_error_title;
 	public static String ChangeCorrectionProposal_error_message;
 	public static String ChangeCorrectionProposal_name_with_shortcut;
+	public static String CUCorrectionProposal_0;
 	public static String CUCorrectionProposal_error_title;
 	public static String CUCorrectionProposal_error_message;
 	public static String ReorgCorrectionsSubProcessor_renametype_description;

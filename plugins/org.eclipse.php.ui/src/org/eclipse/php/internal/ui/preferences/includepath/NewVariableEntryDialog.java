@@ -95,7 +95,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 		super(parent);
 		setTitle(NewWizardMessages.NewVariableEntryDialog_title);
 		this.environment = environment;
-		updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$
+		updateStatus(new StatusInfo(IStatus.ERROR, "")); //$NON-NLS-1$ 
 
 		String[] buttonLabels = new String[] { NewWizardMessages.NewVariableEntryDialog_vars_extend, };
 
@@ -181,8 +181,8 @@ public class NewVariableEntryDialog extends StatusDialog {
 	 */
 	protected IDialogSettings getDialogBoundsSettings() {
 		return PHPUiPlugin.getDefault().getDialogSettings()/*
-															 * getDialogSettingsSection(
-															 * getClass
+															 * getDialogSettingsSection
+															 * ( getClass
 															 * ().getName())
 															 */;
 	}
@@ -260,8 +260,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 				fResultPaths[i] = new Path(curr.getName());
 				File file = curr.getPath().toFile();
 				if (!file.exists()) {
-					status
-							.setError(NewWizardMessages.NewVariableEntryDialog_info_notexists);
+					status.setError(NewWizardMessages.NewVariableEntryDialog_info_notexists);
 					isValidSelection = false;
 					break;
 				}
@@ -271,8 +270,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 			}
 		} else {
 			isValidSelection = false;
-			status
-					.setInfo(NewWizardMessages.NewVariableEntryDialog_info_noselection);
+			status.setInfo(NewWizardMessages.NewVariableEntryDialog_info_noselection);
 		}
 		if (isValidSelection && nSelected > 1) {
 			String str = Messages.format(
@@ -318,13 +316,10 @@ public class NewVariableEntryDialog extends StatusDialog {
 		// .chooseExternalArchiveEntries(getShell(), environment);
 		JARFileSelectionDialog dialog = new JARFileSelectionDialog(getShell(),
 				true, true, true);
-		dialog
-				.setTitle(NewWizardMessages.NewVariableEntryDialog_ExtensionDialog_title);
-		dialog
-				.setMessage(Messages
-						.format(
-								NewWizardMessages.NewVariableEntryDialog_ExtensionDialog_description,
-								elem.getName()));
+		dialog.setTitle(NewWizardMessages.NewVariableEntryDialog_ExtensionDialog_title);
+		dialog.setMessage(Messages
+				.format(NewWizardMessages.NewVariableEntryDialog_ExtensionDialog_description,
+						elem.getName()));
 		dialog.setInput(file);
 		if (dialog.open() == Window.OK) {
 			Object[] selected = dialog.getResult();

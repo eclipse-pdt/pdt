@@ -185,7 +185,7 @@ public class PHPManual {
 
 			if (path == null) {
 
-				String className = type.getElementName(); //$NON-NLS-1$
+				String className = type.getElementName();
 				path = (String) getPHPEntityPathMap().get(
 						className.toLowerCase());
 				if (path == null) {
@@ -222,8 +222,8 @@ public class PHPManual {
 		if (path == null) {
 			IType declaringType = method.getDeclaringType();
 			if (declaringType != null) {
-				String functionName = declaringType.getElementName()
-						+ "::" + method.getElementName(); //$NON-NLS-1$
+				String functionName = declaringType.getElementName() + "::" //$NON-NLS-1$
+						+ method.getElementName();
 				path = (String) getPHPEntityPathMap().get(
 						functionName.toLowerCase());
 				if (path == null) {
@@ -248,8 +248,8 @@ public class PHPManual {
 			buf.append(className);
 			buf.append("-"); //$NON-NLS-1$
 		}
-		buf.append(Pattern
-				.compile("([A-Z])").matcher(methodName).replaceAll("-$1").replaceAll("_", "-")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$)
+		buf.append(Pattern.compile("([A-Z])").matcher(methodName) //$NON-NLS-1$
+				.replaceAll("-$1").replaceAll("_", "-")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return buf.toString().toLowerCase().replaceAll("-+", "-"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -276,10 +276,10 @@ public class PHPManual {
 				browser.openURL(new URL(null, url, new MkHandler()));
 			} else if (url.startsWith("help://")) { //$NON-NLS-1$
 				// convert to help system URL
-				String helpURL = url.substring("help://".length());
+				String helpURL = url.substring("help://".length()); //$NON-NLS-1$
 				// open in Help System
-				PlatformUI.getWorkbench().getHelpSystem().displayHelpResource(
-						helpURL);
+				PlatformUI.getWorkbench().getHelpSystem()
+						.displayHelpResource(helpURL);
 
 			} else {
 				URL url2 = validateUrlExists(url);
@@ -288,9 +288,8 @@ public class PHPManual {
 					// need to open some kind of err dialog and return
 					MessageDialog d = new MessageDialog(PlatformUI
 							.getWorkbench().getActiveWorkbenchWindow()
-							.getShell(), PHPUIMessages.PHPManual_title,
-							null, //$NON-NLS-1$
-							PHPUIMessages.PHPManual_noManual_msg, //$NON-NLS-1$
+							.getShell(), PHPUIMessages.PHPManual_title, null,
+							PHPUIMessages.PHPManual_noManual_msg,
 							MessageDialog.INFORMATION,
 							new String[] { IDialogConstants.OK_LABEL }, 0);
 					d.open();
@@ -308,17 +307,17 @@ public class PHPManual {
 
 	protected URL validateUrlExists(String url) throws MalformedURLException {
 		URL url2 = new URL(url);
-		if ("file".equals(url2.getProtocol())) {//$NON-NLS-1$
+		if ("file".equals(url2.getProtocol())) { //$NON-NLS-1$
 			return validateFileUrlExists(url, url2);
 		}
-		//		else if ("http".equals(url2.getProtocol())){//$NON-NLS-1$
+		// else if ("http".equals(url2.getProtocol())){
 		// return validateHttpUrlExists(url, url2);
 		// }
 		return url2;
 	}
 
 	private URL validateFileUrlExists(String url, URL url2) {
-		File file = new File(url.substring("file://".length()));
+		File file = new File(url.substring("file://".length())); //$NON-NLS-1$
 		if (null != file && file.exists()) {
 			return url2;
 		} else {

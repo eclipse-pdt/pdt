@@ -171,7 +171,7 @@ public class ContainerSelectionGroup extends Composite {
 
 		if (allowNewContainerName) {
 			if (container == null) {
-				containerNameField.setText("");//$NON-NLS-1$
+				containerNameField.setText(""); //$NON-NLS-1$
 			} else {
 				String text = container.getFullPath().makeRelative().toString();
 				containerNameField.setText(text);

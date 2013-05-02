@@ -62,9 +62,9 @@ public class StructureSelectNextAction extends StructureSelectionAction {
 
 	public StructureSelectNextAction(PHPStructuredEditor editor,
 			SelectionHistory history) {
-		super("&Next Element", editor, history);
-		setToolTipText("Expand Selection to Include Next Sibling");
-		setDescription("Expand selection to include next sibling");
+		super(Messages.StructureSelectNextAction_3, editor, history);
+		setToolTipText(Messages.StructureSelectNextAction_4);
+		setDescription(Messages.StructureSelectNextAction_5);
 		// PlatformUI
 		// .getWorkbench()
 		// .getHelpSystem()

@@ -127,7 +127,7 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 				String className = configuration
 						.getAttribute(
 								PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
-								"");
+								""); //$NON-NLS-1$
 				if (className.length() == 0) {
 					throw new IllegalArgumentException();
 				}
@@ -137,7 +137,7 @@ public class PHPLaunchDelegateProxy implements ILaunchConfigurationDelegate2 {
 			} catch (Throwable t) {
 				throw new CoreException(new Status(IStatus.ERROR,
 						PHPDebugPlugin.ID, 0,
-						"Launch configuration delegate loading error.", t));
+						"Launch configuration delegate loading error.", t)); //$NON-NLS-1$
 			}
 		}
 		return launchConfigurationDelegate;

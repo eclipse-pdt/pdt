@@ -58,7 +58,7 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 			String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0;
 			String message = MessageFormat.format(
 					PHPDebugUIMessages.PHPPrimitiveValueEditor_1,
-					new Object[] { name }); //$NON-NLS-1$
+					new Object[] { name }); 
 			String initialValue = getValueString(variable);
 
 			PrimitiveValidator validator = new PrimitiveValidator(variable);
@@ -147,8 +147,8 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 					errorMsg = PHPDebugUIMessages.XDebugVariableValueEditor_invalidValue;
 				}
 			} catch (DebugException e) {
-				Logger.logException("DebugException", e);
-				errorMsg = "unexpected error occurred, see log for details";
+				Logger.logException("DebugException", e); //$NON-NLS-1$
+				errorMsg = PHPDebugUIMessages.XDebugVariableValueEditor_0;
 			}
 			return errorMsg;
 		}

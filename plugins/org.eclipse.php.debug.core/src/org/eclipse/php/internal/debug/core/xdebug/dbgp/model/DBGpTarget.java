@@ -1135,7 +1135,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		resp = session.sendSyncCmd(DBGpCommand.featureGet, "-n supports_async"); //$NON-NLS-1$
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 			// TODO: could check the supported atttribute ?
-			//String supportedAttr = DBGpResponse.getAttribute(resp, "supported"); //$NON-NLS-1$
+			//String supportedAttr = DBGpResponse.getAttribute(resp, "supported"); 
 			Node child = resp.getParentNode().getFirstChild();
 			if (child != null) {
 				String supported = child.getNodeValue();

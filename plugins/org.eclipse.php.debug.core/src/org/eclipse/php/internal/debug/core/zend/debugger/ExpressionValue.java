@@ -30,7 +30,7 @@ public class ExpressionValue {
 	public static int RESOURCE_TYPE = 7;
 
 	public static final ExpressionValue NULL_VALUE = new ExpressionValue(
-			NULL_TYPE, null, "null", null);
+			NULL_TYPE, null, "null", null); //$NON-NLS-1$
 
 	protected int type;
 	protected Expression[] children;

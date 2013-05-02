@@ -38,7 +38,7 @@ import org.w3c.dom.Node;
 
 public class DBGpSession {
 
-	public static final String DEFAULT_SESSION_ENCODING = "ISO-8859-1";
+	public static final String DEFAULT_SESSION_ENCODING = "ISO-8859-1"; //$NON-NLS-1$
 	public static final String DEFAULT_BINARY_ENCODING = Charset
 			.defaultCharset().name();
 	public static final String DEFAULT_OUTPUT_ENCODING = Charset
@@ -100,13 +100,13 @@ public class DBGpSession {
 					threadId = parsedResponse.getThreadId();
 					isGood = true;
 				} else {
-					DBGpLogger.logError("Init response not received. XML="
+					DBGpLogger.logError("Init response not received. XML=" //$NON-NLS-1$
 							+ parsedResponse.getRawXML(), this, null);
 					// TODO: dialog box up
 				}
 			} else {
 				DBGpLogger.logError(
-						"Unexpected null from readResponse waiting for Init",
+						"Unexpected null from readResponse waiting for Init", //$NON-NLS-1$
 						this, null);
 			}
 			if (!isGood) {
@@ -115,10 +115,10 @@ public class DBGpSession {
 
 		} catch (UnsupportedEncodingException e) {
 			DBGpLogger
-					.logException("UnsupportedEncodingException - 1", this, e);
+					.logException("UnsupportedEncodingException - 1", this, e); //$NON-NLS-1$
 			endSession();
 		} catch (IOException e) {
-			DBGpLogger.logException("IOException - 1", this, e);
+			DBGpLogger.logException("IOException - 1", this, e); //$NON-NLS-1$
 			endSession();
 		}
 	}
@@ -235,7 +235,7 @@ public class DBGpSession {
 	private class AsyncResponseHandlerJob extends Job {
 
 		public AsyncResponseHandlerJob() {
-			super("DBGp Response Handler");
+			super("DBGp Response Handler"); //$NON-NLS-1$
 			setSystem(true);
 		}
 
@@ -276,7 +276,7 @@ public class DBGpSession {
 									&& respErrorCode != DBGpResponse.ERROR_INVALID_RESPONSE) {
 								handleStreamData(parsedResponse);
 							} else {
-								DBGpLogger.logWarning("Unknown type of XML: "
+								DBGpLogger.logWarning("Unknown type of XML: " //$NON-NLS-1$
 										+ response, DBGpSession.this, null);
 							}
 						}
@@ -288,7 +288,7 @@ public class DBGpSession {
 				} catch (Throwable t) {
 					DBGpLogger
 							.logException(
-									"Unexpected exception. Terminating the debug session",
+									"Unexpected exception. Terminating the debug session", //$NON-NLS-1$
 									this, t);
 
 					// send a dummy response back to unblock the target. It will
@@ -335,7 +335,7 @@ public class DBGpSession {
 			} catch (NumberFormatException nfe) {
 				idObj = new Integer(DBGpCmd.getLastIdSent());
 				if (DBGpLogger.debugResp()) {
-					DBGpLogger.debug("no txn id, using last which was"
+					DBGpLogger.debug("no txn id, using last which was" //$NON-NLS-1$
 							+ idObj.toString());
 				}
 			}
@@ -373,7 +373,7 @@ public class DBGpSession {
 				try {
 					streamStr = new String(streamData, outputEncoding);
 				} catch (UnsupportedEncodingException e) {
-					DBGpLogger.logException("invalid encoding: "
+					DBGpLogger.logException("invalid encoding: " //$NON-NLS-1$
 							+ outputEncoding, this, e);
 					streamStr = new String(streamData);
 				}
@@ -469,20 +469,20 @@ public class DBGpSession {
 					Node stackData = parsedResponse.getParentNode()
 							.getFirstChild(); // get the first stack entry
 					String line = DBGpResponse
-							.getAttribute(stackData, "lineno");
+							.getAttribute(stackData, "lineno"); //$NON-NLS-1$
 					int lineno = 0;
 					try {
 						lineno = Integer.parseInt(line);
 						String filename = DBGpUtils
 								.getFilenameFromURIString(DBGpResponse
-										.getAttribute(stackData, "filename"));
+										.getAttribute(stackData, "filename")); //$NON-NLS-1$
 						filename = debugTarget
 								.mapToWorkspaceFileIfRequired(filename);
 						debugTarget.breakpointHit(filename, lineno);
 					} catch (NumberFormatException nfe) {
 						DBGpLogger
 								.logException(
-										"Unexpected number format exception",
+										"Unexpected number format exception", //$NON-NLS-1$
 										this, nfe);
 					}
 				}
@@ -579,13 +579,13 @@ public class DBGpSession {
 
 		try {
 			if (DBGpLogger.debugResp()) {
-				DBGpLogger.debug("Response: "
+				DBGpLogger.debug("Response: " //$NON-NLS-1$
 						+ new String(byteArray, sessionEncoding));
 			}
 			return byteArray;
 		} catch (UnsupportedEncodingException e) {
 			DBGpLogger
-					.logException("UnsupportedEncodingException - 2", this, e);
+					.logException("UnsupportedEncodingException - 2", this, e); //$NON-NLS-1$
 			endSession();
 		}
 		return null;
@@ -606,7 +606,7 @@ public class DBGpSession {
 		String outputEncoding = null;
 		if (launchConfig != null) {
 			try {
-				outputEncoding = launchConfig.getAttribute(encodingKey, "");
+				outputEncoding = launchConfig.getAttribute(encodingKey, ""); //$NON-NLS-1$
 			} catch (CoreException e) {
 			}
 		}
@@ -724,10 +724,10 @@ public class DBGpSession {
 	public String toString() {
 		StringBuffer strBuf = new StringBuffer(getIdeKey());
 		if (getSessionId() != null) {
-			strBuf.append(" - Session:");
+			strBuf.append(" - Session:"); //$NON-NLS-1$
 			strBuf.append(getSessionId());
 		} else {
-			strBuf.append(" - Web Server Session");
+			strBuf.append(" - Web Server Session"); //$NON-NLS-1$
 		}
 		return strBuf.toString();
 	}

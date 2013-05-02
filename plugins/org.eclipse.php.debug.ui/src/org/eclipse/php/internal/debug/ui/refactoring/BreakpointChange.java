@@ -98,7 +98,7 @@ public abstract class BreakpointChange extends Change {
 	 * @return
 	 */
 	protected String getOriginalBreakpointTypeName() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/*

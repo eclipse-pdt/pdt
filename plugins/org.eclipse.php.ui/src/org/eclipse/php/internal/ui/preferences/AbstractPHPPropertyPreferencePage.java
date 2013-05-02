@@ -125,7 +125,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage
 		if (getProject() != null) {
 			fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK);
 			fEnableProjectSettings
-					.setText(PHPUIMessages.AbstractPHPPropertyPreferencePage_0); //$NON-NLS-1$
+					.setText(PHPUIMessages.AbstractPHPPropertyPreferencePage_0); 
 			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING,
 					SWT.CENTER, false, false));
 			boolean enabledForProject = createPreferenceScopes()[0].getNode(
@@ -148,10 +148,10 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage
 		 */
 		if (getProject() != null) {
 			fProjectSettingsLink
-					.setText("<a>" + PHPUIMessages.AbstractPHPPropertyPreferencePage_1 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+					.setText("<a>" + PHPUIMessages.AbstractPHPPropertyPreferencePage_1 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			fProjectSettingsLink
-					.setText("<a>" + PHPUIMessages.AbstractPHPPropertyPreferencePage_2 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+					.setText("<a>" + PHPUIMessages.AbstractPHPPropertyPreferencePage_2 + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		updateLinkEnablement();
@@ -255,7 +255,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage
 				return area;
 			}
 		};
-		dialog.setMessage(PHPUIMessages.AbstractPHPPropertyPreferencePage_3); //$NON-NLS-1$
+		dialog.setMessage(PHPUIMessages.AbstractPHPPropertyPreferencePage_3); 
 		dialog.setContentProvider(new IStructuredContentProvider() {
 			public void dispose() {
 			}
@@ -273,7 +273,7 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage
 						.getWorkbench().getDecoratorManager()
 						.getLabelDecorator()));
 		dialog.setInput(ResourcesPlugin.getWorkspace());
-		dialog.setTitle(PHPUIMessages.AbstractPHPPropertyPreferencePage_4); //$NON-NLS-1$
+		dialog.setTitle(PHPUIMessages.AbstractPHPPropertyPreferencePage_4); 
 		if (dialog.open() == Window.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length > 0) {

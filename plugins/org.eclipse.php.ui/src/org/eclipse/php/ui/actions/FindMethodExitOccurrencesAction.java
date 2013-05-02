@@ -67,8 +67,8 @@ public class FindMethodExitOccurrencesAction extends
 	 */
 	public FindMethodExitOccurrencesAction(IWorkbenchSite site) {
 		super(site);
-		setText("ActionMessages.FindMethodExitOccurrencesAction_label");
-		setToolTipText("ActionMessages.FindMethodExitOccurrencesAction_tooltip");
+		setText("ActionMessages.FindMethodExitOccurrencesAction_label"); //$NON-NLS-1$
+		setToolTipText("ActionMessages.FindMethodExitOccurrencesAction_tooltip"); //$NON-NLS-1$
 		// TODO: attach find method occurrences context
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 		// IJavaHelpContextIds.FIND_METHOD_EXIT_OCCURRENCES);

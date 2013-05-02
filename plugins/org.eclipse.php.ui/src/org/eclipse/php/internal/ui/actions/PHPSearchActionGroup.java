@@ -89,7 +89,7 @@ public class PHPSearchActionGroup extends ActionGroup {
 			IMenuManager target = menu;
 			IMenuManager searchSubMenu = null;
 			if (fEditor != null) {
-				String groupName = "SearchMessages.group_search";
+				String groupName = "SearchMessages.group_search"; //$NON-NLS-1$
 				searchSubMenu = new MenuManager(groupName,
 						ITextEditorActionConstants.GROUP_FIND);
 				searchSubMenu.add(new GroupMarker(

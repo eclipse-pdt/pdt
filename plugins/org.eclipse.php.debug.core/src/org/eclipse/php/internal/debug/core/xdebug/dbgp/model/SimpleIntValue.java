@@ -30,7 +30,7 @@ public class SimpleIntValue extends DBGpElement implements IValue {
 	}
 
 	public String getReferenceTypeName() throws DebugException {
-		return "int";
+		return "int"; //$NON-NLS-1$
 	}
 
 	public String getValueString() throws DebugException {
@@ -38,8 +38,8 @@ public class SimpleIntValue extends DBGpElement implements IValue {
 		if (currentValue == wantedValue) {
 			return Integer.toString(currentValue);
 		} else {
-			return Integer.toString(currentValue) + " ("
-					+ Integer.toString(wantedValue) + ")";
+			return Integer.toString(currentValue) + " (" //$NON-NLS-1$
+					+ Integer.toString(wantedValue) + ")"; //$NON-NLS-1$
 		}
 	}
 

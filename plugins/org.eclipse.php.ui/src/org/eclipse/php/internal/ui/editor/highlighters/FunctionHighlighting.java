@@ -69,6 +69,6 @@ public class FunctionHighlighting extends AbstractSemanticHighlighting {
 	}
 
 	public String getDisplayName() {
-		return "Functions";
+		return Messages.FunctionHighlighting_0;
 	}
 }

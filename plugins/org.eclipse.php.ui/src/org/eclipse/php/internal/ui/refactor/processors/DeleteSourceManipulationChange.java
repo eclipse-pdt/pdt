@@ -87,7 +87,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 		// explorer
 		// since the primary working copy still exists.
 		if (element instanceof ISourceModule) {
-			pm.beginTask("", 2); //$NON-NLS-1$
+			pm.beginTask("", 2); //$NON-NLS-1$ 
 			ISourceModule unit = (ISourceModule) element;
 			saveCUnitIfNeeded(unit, new SubProgressMonitor(pm, 1));
 			// element.delete(false, new SubProgressMonitor(pm, 1));
@@ -109,7 +109,7 @@ public class DeleteSourceManipulationChange extends AbstractDeleteChange {
 		} else if (element instanceof IScriptFolder) {
 			ISourceModule[] units = ((IScriptFolder) element)
 					.getSourceModules();
-			pm.beginTask("", units.length + 1); //$NON-NLS-1$
+			pm.beginTask("", units.length + 1); //$NON-NLS-1$ 
 			for (int i = 0; i < units.length; i++) {
 				saveCUnitIfNeeded(units[i], new SubProgressMonitor(pm, 1));
 			}

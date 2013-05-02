@@ -131,7 +131,8 @@ public class FilteredElementTreeSelectionDialog extends
 
 		// This is a copy of the super method, but without auto-expansion.
 		protected WorkbenchJob doCreateRefreshJob() {
-			return new WorkbenchJob("Refresh Filter") {//$NON-NLS-1$
+			return new WorkbenchJob(
+					IncludePathMessages.FilteredElementTreeSelectionDialog_1) {
 
 				public IStatus runInUIThread(IProgressMonitor monitor) {
 					if (treeViewer.getControl().isDisposed()) {
@@ -227,8 +228,8 @@ public class FilteredElementTreeSelectionDialog extends
 		applyDialogFont(tree);
 
 		TreeViewer viewer = tree.getViewer();
-		SWTUtil.setAccessibilityText(viewer.getControl(), Strings
-				.removeMnemonicIndicator(getMessage()));
+		SWTUtil.setAccessibilityText(viewer.getControl(),
+				Strings.removeMnemonicIndicator(getMessage()));
 		return viewer;
 	}
 

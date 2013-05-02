@@ -25,12 +25,12 @@ public class ChangeOutlineModeAction extends Action {
 	public ChangeOutlineModeAction(String label, int mode,
 			PHPContentOutlineConfiguration contentOutlineConfiguration,
 			TreeViewer viewer) {
-		super(label, AS_RADIO_BUTTON); //$NON-NLS-1$
+		super(label, AS_RADIO_BUTTON); 
 		this.mode = mode;
 		this.contentOutlineConfiguration = contentOutlineConfiguration;
 		this.viewer = viewer;
 		int prefMode = PHPUiPlugin.getDefault().getPreferenceStore().getInt(
-				PreferenceConstants.PREF_OUTLINEMODE); //$NON-NLS-1$
+				PreferenceConstants.PREF_OUTLINEMODE); 
 		setChecked(prefMode == mode);
 	}
 

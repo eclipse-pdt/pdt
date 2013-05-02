@@ -39,7 +39,7 @@ import org.eclipse.ui.actions.SelectionListenerAction;
 @SuppressWarnings("restriction")
 public class ReorgMoveAction extends AbstractMoveDelegator {
 
-	private static final String MOVE_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.Move";
+	private static final String MOVE_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.Move"; //$NON-NLS-1$
 	private IStructuredSelection selectedResources;
 	private Shell fShell;
 	private AbstractMoveDelegator moveActionDelegate;
@@ -145,8 +145,8 @@ public class ReorgMoveAction extends AbstractMoveDelegator {
 
 			if (refactoringStatus != null && !refactoringStatus.isOK()) {
 				MessageDialog
-						.openError(fShell, "Error moving resource",
-								"A resource with the same name exists in the target folder.");
+						.openError(fShell, Messages.ReorgMoveAction_0,
+								Messages.ReorgMoveAction_1);
 			}
 			return false;
 		}

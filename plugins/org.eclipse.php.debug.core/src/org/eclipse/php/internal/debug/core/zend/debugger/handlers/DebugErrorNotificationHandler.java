@@ -27,7 +27,7 @@ public class DebugErrorNotificationHandler implements IDebugMessageHandler {
 		int errorLevel = parseError.getErrorLevel();
 		DebugError debugError = new DebugError();
 		String errorText = parseError.getErrorText();
-		if (errorText != null && !errorText.equals("")) {
+		if (errorText != null && !errorText.equals("")) { //$NON-NLS-1$
 			debugError.setErrorText(errorText);
 		}
 

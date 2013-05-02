@@ -70,20 +70,20 @@ public class DBGpResponse {
 	/*
 	 * status codes {"", "starting", "stopping", "stopped", "running", "break"};
 	 */
-	public static final String STATUS_STARTING = "starting";
-	public static final String STATUS_STOPPING = "stopping";
-	public static final String STATUS_STOPPED = "stopped";
-	public static final String STATUS_RUNNING = "running";
-	public static final String STATUS_BREAK = "break";
+	public static final String STATUS_STARTING = "starting"; //$NON-NLS-1$
+	public static final String STATUS_STOPPING = "stopping"; //$NON-NLS-1$
+	public static final String STATUS_STOPPED = "stopped"; //$NON-NLS-1$
+	public static final String STATUS_RUNNING = "running"; //$NON-NLS-1$
+	public static final String STATUS_BREAK = "break"; //$NON-NLS-1$
 
 	/*
 	 * reason codes {"ok", "error", "aborted", "exception"};
 	 */
 
-	public static final String REASON_OK = "ok";
-	public static final String REASON_ERROR = "error";
-	public static final String REASON_ABORTED = "aborted";
-	public static final String REASON_EXCEPTION = "exception";
+	public static final String REASON_OK = "ok"; //$NON-NLS-1$
+	public static final String REASON_ERROR = "error"; //$NON-NLS-1$
+	public static final String REASON_ABORTED = "aborted"; //$NON-NLS-1$
+	public static final String REASON_EXCEPTION = "exception"; //$NON-NLS-1$
 
 	private DocumentBuilder db;
 	private Document doc;
@@ -105,7 +105,7 @@ public class DBGpResponse {
 	private String idekey;
 	private String session;
 	private String threadId;
-	private String engineVersion = "";
+	private String engineVersion = ""; //$NON-NLS-1$
 	private EngineTypes engineType = EngineTypes.other;
 	private String fileUri;
 
@@ -183,15 +183,15 @@ public class DBGpResponse {
 			doc = db.parse(is);
 			parent = doc.getFirstChild();
 			String nodeName = parent.getNodeName();
-			if (nodeName.equals("response")) {
+			if (nodeName.equals("response")) { //$NON-NLS-1$
 				parseResponseType();
-			} else if (nodeName.equals("init")) {
+			} else if (nodeName.equals("init")) { //$NON-NLS-1$
 				parseInitType();
-			} else if (nodeName.equals("stream")) {
+			} else if (nodeName.equals("stream")) { //$NON-NLS-1$
 				parseStreamType();
-			} else if (nodeName.equals("proxyinit")) {
+			} else if (nodeName.equals("proxyinit")) { //$NON-NLS-1$
 				parseProxyInitType();
-			} else if (nodeName.equals("proxyerror")) {
+			} else if (nodeName.equals("proxyerror")) { //$NON-NLS-1$
 				parseProxyErrorType();
 			}
 
@@ -209,7 +209,7 @@ public class DBGpResponse {
 
 	private void parseStreamType() {
 		type = STREAM;
-		streamType = getTopAttribute("type");
+		streamType = getTopAttribute("type"); //$NON-NLS-1$
 		Node Child = parent.getFirstChild();
 		if (Child != null) {
 			streamData = Child.getNodeValue();
@@ -225,7 +225,7 @@ public class DBGpResponse {
 
 	private void parseProxyInitType() {
 		type = PROXY_INIT;
-		idekey = getTopAttribute("idekey");
+		idekey = getTopAttribute("idekey"); //$NON-NLS-1$
 		// caller can retrieve address, port
 		getErrorInformation(false);
 
@@ -240,20 +240,20 @@ public class DBGpResponse {
 	private void parseInitType() {
 		// get the init information
 		type = INIT;
-		idekey = getTopAttribute("idekey");
-		threadId = getTopAttribute("thread");
-		session = getTopAttribute("session");
+		idekey = getTopAttribute("idekey"); //$NON-NLS-1$
+		threadId = getTopAttribute("thread"); //$NON-NLS-1$
+		session = getTopAttribute("session"); //$NON-NLS-1$
 		if (session.trim().length() == 0) {
 			session = null;
 		}
-		fileUri = getTopAttribute("fileuri");
+		fileUri = getTopAttribute("fileuri"); //$NON-NLS-1$
 		// engine may not be the first child so you will need to search
 		// for it.
 		NodeList nodes = parent.getChildNodes();
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Node node = nodes.item(i);
-			if (node.getNodeName().equals("engine")) {
-				engineVersion = getAttribute(node, "version");
+			if (node.getNodeName().equals("engine")) { //$NON-NLS-1$
+				engineVersion = getAttribute(node, "version"); //$NON-NLS-1$
 				NodeList moreNodes = node.getChildNodes();
 				if (moreNodes != null && moreNodes.getLength() > 0) {
 					String engineTypeStr = moreNodes.item(0).getNodeValue();
@@ -278,18 +278,18 @@ public class DBGpResponse {
 
 	private void parseResponseType() {
 		type = RESPONSE;
-		id = getTopAttribute("transaction_id");
-		command = getTopAttribute("command");
-		status = getTopAttribute("status");
-		reason = getTopAttribute("reason");
+		id = getTopAttribute("transaction_id"); //$NON-NLS-1$
+		command = getTopAttribute("command"); //$NON-NLS-1$
+		status = getTopAttribute("status"); //$NON-NLS-1$
+		reason = getTopAttribute("reason"); //$NON-NLS-1$
 		getErrorInformation(true);
 	}
 
 	private void getErrorInformation(boolean checkID) {
 		// get the error information
 		Node errNode = parent.getFirstChild();
-		if (errNode != null && errNode.getNodeName().equals("error")) {
-			String errVal = getAttribute(errNode, "code");
+		if (errNode != null && errNode.getNodeName().equals("error")) { //$NON-NLS-1$
+			String errVal = getAttribute(errNode, "code"); //$NON-NLS-1$
 			try {
 				errorCode = Integer.parseInt(errVal);
 			} catch (NumberFormatException nfe) {
@@ -319,7 +319,7 @@ public class DBGpResponse {
 	}
 
 	public static String getAttribute(Node node, String attrName) {
-		String attrValue = "";
+		String attrValue = ""; //$NON-NLS-1$
 		if (node != null && node.hasAttributes()) {
 			NamedNodeMap attrs = node.getAttributes();
 			Node attribute = attrs.getNamedItem(attrName);

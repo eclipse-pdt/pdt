@@ -25,7 +25,7 @@ import org.osgi.util.tracker.ServiceTracker;
 public class Activator extends Plugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.php.server.core";
+	public static final String PLUGIN_ID = "org.eclipse.php.server.core"; //$NON-NLS-1$
 
 	// Debug mode identifier
 	public static final boolean isDebugMode;

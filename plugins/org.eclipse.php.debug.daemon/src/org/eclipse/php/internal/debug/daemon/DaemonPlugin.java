@@ -62,7 +62,7 @@ public class DaemonPlugin extends Plugin {
 	 * @param context
 	 */
 	void initializeAfterStart(final BundleContext context) {
-		Job job = new Job("") {
+		Job job = new Job("") { //$NON-NLS-1$
 			protected IStatus run(IProgressMonitor monitor) {
 				startDaemons(null);
 				return Status.OK_STATUS;

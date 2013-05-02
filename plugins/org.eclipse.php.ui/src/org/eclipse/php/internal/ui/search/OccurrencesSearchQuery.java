@@ -60,7 +60,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 	public IStatus run(IProgressMonitor monitor) {
 		if (fFinder == null) {
 			return new StatusInfo(IStatus.ERROR,
-					"Query has already been running"); //$NON-NLS-1$
+					org.eclipse.php.internal.ui.search.Messages.OccurrencesSearchQuery_0); 
 		}
 		if (monitor == null)
 			monitor = new NullProgressMonitor();
@@ -117,7 +117,7 @@ public class OccurrencesSearchQuery implements ISearchQuery {
 			if (lineStartOffset >= 0) {
 				// lineNumber - 1, FIXME - set the correct line content
 				lineElement = new DLTKElementLine(astRoot.getSourceModule(),
-						lineStartOffset, "");
+						lineStartOffset, ""); //$NON-NLS-1$
 				lineToGroup.put(key, lineElement);
 			}
 		}

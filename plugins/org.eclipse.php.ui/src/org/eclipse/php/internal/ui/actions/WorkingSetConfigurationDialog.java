@@ -369,7 +369,7 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		IWorkingSetManager manager = PlatformUI.getWorkbench()
 				.getWorkingSetManager();
 		IWorkingSetNewWizard wizard = manager
-				.createWorkingSetNewWizard(new String[] { "org.eclipse.php.ui.workingset.PHPWorkingSetPage" });
+				.createWorkingSetNewWizard(new String[] { "org.eclipse.php.ui.workingset.PHPWorkingSetPage" }); //$NON-NLS-1$
 		// the wizard can't be null since we have at least the Script working
 		// set.
 		WizardDialog dialog = new WizardDialog(getShell(), wizard);
@@ -404,9 +404,10 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 		// save the original working set values for restoration when selection
 		// dialog is cancelled.
 		if (firstEdit) {
-			originalWorkingSet = PlatformUI.getWorkbench()
-					.getWorkingSetManager().createWorkingSet(
-							editWorkingSet.getName(),
+			originalWorkingSet = PlatformUI
+					.getWorkbench()
+					.getWorkingSetManager()
+					.createWorkingSet(editWorkingSet.getName(),
 							editWorkingSet.getElements());
 		} else {
 			fEditedWorkingSets.remove(editWorkingSet);

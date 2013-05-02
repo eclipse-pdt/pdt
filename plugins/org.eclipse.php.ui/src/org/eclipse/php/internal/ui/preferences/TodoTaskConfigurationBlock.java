@@ -430,7 +430,7 @@ public class TodoTaskConfigurationBlock extends
 					String content = document.get();
 					if (documentAdapter != null) {
 						documentAdapter.replaceTextRange(0, content.length(),
-								"");
+								""); //$NON-NLS-1$
 						documentAdapter.replaceTextRange(0, 0, content);
 					}
 

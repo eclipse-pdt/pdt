@@ -25,9 +25,9 @@ import org.eclipse.php.internal.core.project.PHPNature;
  */
 public class PhpDemoProject {
 
-	private static final String SRC_FOLDER = "src/";//$NON-NLS-1$	
-	private static final String FILES_PATH = "/resources/phpdemo/"; //$NON-NLS-1$	
-	private static final String TEST_PROJECT_NAME = "PHPDemo"; //$NON-NLS-1$	
+	private static final String SRC_FOLDER = "src/";	 //$NON-NLS-1$
+	private static final String FILES_PATH = "/resources/phpdemo/"; 	 //$NON-NLS-1$
+	private static final String TEST_PROJECT_NAME = "PHPDemo"; 	 //$NON-NLS-1$
 	private static final String FILE_NAME1 = "01-Visibility1.php"; //$NON-NLS-1$
 	private static final String FILE_NAME2 = "02-Visibility2.php"; //$NON-NLS-1$
 	private static final String FILE_NAME3 = "03-html.php"; //$NON-NLS-1$

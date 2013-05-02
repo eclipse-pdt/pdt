@@ -26,7 +26,7 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 	private boolean modifiable = false;
 	private IVariable[] variables = new IVariable[0];
 	private DBGpBaseVariable owner;
-	private String valueString = "";
+	private String valueString = ""; //$NON-NLS-1$
 	private byte[] valueBytes = null;
 
 	public byte[] getValueBytes() {
@@ -37,7 +37,7 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 		this.valueBytes = valueBytes;
 	}
 
-	private static final String ENCODING_BASE64 = "base64";
+	private static final String ENCODING_BASE64 = "base64"; //$NON-NLS-1$
 
 	public DBGpValue(DBGpBaseVariable variable) {
 		super(variable.getDebugTarget());
@@ -109,7 +109,7 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 	 */
 	void simpleParseNode(Node property) {
 		String data = null;
-		String encoding = DBGpResponse.getAttribute(property, "encoding");
+		String encoding = DBGpResponse.getAttribute(property, "encoding"); //$NON-NLS-1$
 		Node Child = property.getFirstChild();
 		if (Child != null) {
 			data = decodeValue(Child.getNodeValue(), encoding);
@@ -126,7 +126,7 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 				try {
 					resStr = new String(valueBytes, target.getBinaryEncoding());
 				} catch (UnsupportedEncodingException e) {
-					DBGpLogger.logException("unexpected encoding problem",
+					DBGpLogger.logException("unexpected encoding problem", //$NON-NLS-1$
 							this, e);
 					resStr = new String(valueBytes);
 				}

@@ -26,7 +26,7 @@ import org.eclipse.debug.ui.*;
 public class PHPExeLaunchConfigurationTabGroup extends
 		AbstractLaunchConfigurationTabGroup {
 
-	protected final String CONFIGURATION_TAB_GROUP_ID = "org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe";
+	protected final String CONFIGURATION_TAB_GROUP_ID = "org.eclipse.php.deubg.ui.launching.launchConfigurationTabGroup.phpexe"; //$NON-NLS-1$
 
 	/*
 	 * (non-Javadoc)

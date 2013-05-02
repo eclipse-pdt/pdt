@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 public class ServerEditDialog extends TitleAreaDialog implements
 		IControlHandler {
 
-	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.server.ui.serverWizardAndComposite";
+	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.server.ui.serverWizardAndComposite"; //$NON-NLS-1$
 	private Server server;
 	private ArrayList runtimeComposites;
 	private SelectionListener tabsListener;

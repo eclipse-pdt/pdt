@@ -131,14 +131,14 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		while (itr.hasNext()) {
 			IBreakpoint breakpoint = (IBreakpoint) itr.next();
 			if (breakpoint instanceof PHPConditionalBreakpoint) {
-				String condition = "";
+				String condition = ""; //$NON-NLS-1$
 				try {
 					ConditionDialog((PHPConditionalBreakpoint) breakpoint,
 							condition);
 				} catch (CoreException ce) {
 					// ConditionDialog doesn't throw CoreException. Just Log
 					Logger.logException(
-							"PHP: Exception setting condition in breakpoint",
+							"PHP: Exception setting condition in breakpoint", //$NON-NLS-1$
 							ce);
 				}
 			}
@@ -156,7 +156,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		String currentCondition = breakpoint.getCondition();
 		condition = currentCondition;
 		boolean enableCondition = breakpoint.isConditionEnabled();
-		if (currentCondition.equals(""))
+		if (currentCondition.equals("")) //$NON-NLS-1$
 			enableCondition = true;
 
 		Shell activeShell = PHPDebugUIPlugin.getActiveWorkbenchShell();
@@ -171,7 +171,7 @@ public class BreakpointSetConditionAction implements IObjectActionDelegate {
 		}
 		condition = dialog.getValue();
 		enableCondition = dialog.isSetConditionEnabled();
-		if (condition.equals(""))
+		if (condition.equals("")) //$NON-NLS-1$
 			enableCondition = false;
 		breakpoint.setConditionWithEnable(enableCondition, condition);
 		return true;

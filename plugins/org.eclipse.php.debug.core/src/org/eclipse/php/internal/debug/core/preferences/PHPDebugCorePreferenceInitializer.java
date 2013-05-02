@@ -44,8 +44,8 @@ public class PHPDebugCorePreferenceInitializer extends
 		node.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 10000);
 		node.putInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 50000); // 50
 																				// seconds
-		node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "UTF-8");
-		node.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, "UTF-8");
+		node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "UTF-8"); //$NON-NLS-1$
+		node.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, "UTF-8"); //$NON-NLS-1$
 		node.put(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS,
 				PHPExecutableLaunchDelegate.class.getName());
 		node.put(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
@@ -63,14 +63,14 @@ public class PHPDebugCorePreferenceInitializer extends
 					.getNetworkInterfaces();
 			while (ii.hasMoreElements()) {
 				NetworkInterface i = ii.nextElement();
-				if (i.getDisplayName().contains("VMware")) {
+				if (i.getDisplayName().contains("VMware")) { //$NON-NLS-1$
 					continue;
 				}
 				Enumeration<InetAddress> aa = i.getInetAddresses();
 				while (aa.hasMoreElements()) {
 					InetAddress a = aa.nextElement();
 					if (a instanceof Inet4Address && !a.isLoopbackAddress()) {
-						b.append(a.getHostAddress()).append(",");
+						b.append(a.getHostAddress()).append(","); //$NON-NLS-1$
 					}
 				}
 			}

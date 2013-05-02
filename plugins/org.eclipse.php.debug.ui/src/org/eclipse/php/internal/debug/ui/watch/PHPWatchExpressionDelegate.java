@@ -74,7 +74,7 @@ public class PHPWatchExpressionDelegate implements IWatchExpressionDelegate {
 	private final class EvaluationRunnable extends Job {
 
 		public EvaluationRunnable() {
-			super("EvaluationRunnable");
+			super("EvaluationRunnable"); //$NON-NLS-1$
 			setSystem(true);
 		}
 

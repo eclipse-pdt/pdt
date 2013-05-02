@@ -35,15 +35,15 @@ import org.eclipse.ui.activities.WorkbenchActivityHelper;
  */
 public class PHPexes {
 
-	private static final String NULL_PLACE_HOLDER = "null";
-	private static final String SEPARATOR_FOR_PHPVERSION = "/";
+	private static final String NULL_PLACE_HOLDER = "null"; //$NON-NLS-1$
+	private static final String SEPARATOR_FOR_PHPVERSION = "/"; //$NON-NLS-1$
 	private static final String DEFAULT_ATTRIBUTE = "default"; //$NON-NLS-1$
 	private static final String EXTENSION_POINT_NAME = "phpExe"; //$NON-NLS-1$
 	private static final String LOCATION_ATTRIBUTE = "location"; //$NON-NLS-1$
 	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
 	private static final String DEBUGGER_ID_ATTRIBUTE = "debuggerID"; //$NON-NLS-1$
 	private static final String PHPEXE_TAG = "phpExe"; //$NON-NLS-1$
-	public static final String SEPARATOR = ";";
+	public static final String SEPARATOR = ";"; //$NON-NLS-1$
 	private static final String VERSION_ATTRIBUTE = "version"; //$NON-NLS-1$
 	public static final String ZEND_DEBUGGER_ID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 
@@ -225,7 +225,7 @@ public class PHPexes {
 						.hasNext();) {
 					PHPexeItem item = iterator2.next();
 					if (item != null
-							&& item.getVersion().compareTo("5.4.0") >= 0) {
+							&& item.getVersion().compareTo("5.4.0") >= 0) { //$NON-NLS-1$
 						return item;
 					}
 				}
@@ -245,7 +245,7 @@ public class PHPexes {
 						.hasNext();) {
 					PHPexeItem item = iterator2.next();
 					if (item != null
-							&& item.getVersion().compareTo("5.4.0") >= 0) {
+							&& item.getVersion().compareTo("5.4.0") >= 0) { //$NON-NLS-1$
 						result.add(item);
 					}
 				}
@@ -279,7 +279,7 @@ public class PHPexes {
 						iniEquals = exeItem.getINILocation() == null;
 					} else {
 						iniEquals = exeItem.getINILocation() == null ? iniFilePath == null
-								|| iniFilePath.equals("")
+								|| iniFilePath.equals("") //$NON-NLS-1$
 								: iniFilePath.equals(exeItem.getINILocation()
 										.toString());
 					}
@@ -347,7 +347,7 @@ public class PHPexes {
 		String namesString = prefs
 				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_NAMES);
 		if (namesString == null) {
-			namesString = "";
+			namesString = ""; //$NON-NLS-1$
 		}
 		final String[] names = namesString.length() > 0 ? namesString
 				.split(SEPARATOR) : new String[0];
@@ -356,7 +356,7 @@ public class PHPexes {
 		String locationsString = prefs
 				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_LOCATIONS);
 		if (locationsString == null) {
-			locationsString = "";
+			locationsString = ""; //$NON-NLS-1$
 		}
 		final String[] phpExecutablesLocations = locationsString.length() > 0 ? locationsString
 				.split(SEPARATOR) : new String[0];
@@ -365,7 +365,7 @@ public class PHPexes {
 		String inisString = prefs
 				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_INIS);
 		if (inisString == null) {
-			inisString = "";
+			inisString = ""; //$NON-NLS-1$
 		}
 		// In case there is no preference value for the
 		// PHPDebugCorePreferenceNames.INSTALLED_PHP_INIS,
@@ -377,7 +377,7 @@ public class PHPexes {
 		String debuggersString = prefs
 				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_DEBUGGERS);
 		if (debuggersString == null) {
-			debuggersString = "";
+			debuggersString = ""; //$NON-NLS-1$
 		}
 		final String[] debuggers = debuggersString.length() > 0 ? debuggersString
 				.split(SEPARATOR) : new String[0];
@@ -386,7 +386,7 @@ public class PHPexes {
 		String defaultItemForPHPVersionString = prefs
 				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_DEFAULT_FOR_VERSIONS);
 		if (defaultItemForPHPVersionString == null) {
-			defaultItemForPHPVersionString = "";
+			defaultItemForPHPVersionString = ""; //$NON-NLS-1$
 		}
 		final String[] defaultItemForPHPVersions = defaultItemForPHPVersionString
 				.length() > 0 ? defaultItemForPHPVersionString.split(SEPARATOR)
@@ -396,7 +396,7 @@ public class PHPexes {
 		assert names.length == phpExecutablesLocations.length;
 		for (int i = 0; i < phpExecutablesLocations.length; i++) {
 			String iniLocation = NULL_PLACE_HOLDER.equals(phpIniLocations[i]) ? null
-					: phpIniLocations[i]; //$NON-NLS-1$
+					: phpIniLocations[i]; 
 			// 361399: PDT Project Properties Debug page cause hang
 			if ((names.length <= i) || (debuggers.length <= i)) {
 				break;
@@ -441,14 +441,14 @@ public class PHPexes {
 		String defaultsString = prefs
 				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_DEFAULTS);
 		if (defaultsString == null) {
-			defaultsString = "";
+			defaultsString = ""; //$NON-NLS-1$
 		}
 		// Apply the default items
 		final String[] defaults = defaultsString.length() > 0 ? defaultsString
 				.split(SEPARATOR) : new String[0];
 		for (String defaultExe : defaults) {
 			// Get a pair of a debugger id and its default executable
-			String[] debuggerDefault = defaultExe.split("=");
+			String[] debuggerDefault = defaultExe.split("="); //$NON-NLS-1$
 			if (debuggerDefault.length == 2) {
 				setDefaultItem(debuggerDefault[0], debuggerDefault[1]);
 			}
@@ -473,12 +473,12 @@ public class PHPexes {
 				String location = element.getAttribute(LOCATION_ATTRIBUTE);
 				final String version = element.getAttribute(VERSION_ATTRIBUTE);
 				String debuggerID = element.getAttribute(DEBUGGER_ID_ATTRIBUTE);
-				if (debuggerID == null || debuggerID.equals("")) {
+				if (debuggerID == null || debuggerID.equals("")) { //$NON-NLS-1$
 					// The debugger id is an optional field, so in case that
 					// none was entered assign the debugger to Zend.
 					debuggerID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
 				}
-				final boolean isDefault = "true".equalsIgnoreCase(element
+				final boolean isDefault = "true".equalsIgnoreCase(element //$NON-NLS-1$
 						.getAttribute(DEFAULT_ATTRIBUTE));
 
 				if (isWindows)
@@ -536,11 +536,11 @@ public class PHPexes {
 									1,
 									PHPDebugPlugin.getID(),
 									1001,
-									"PHP executable "
+									"PHP executable " //$NON-NLS-1$
 											+ location
-											+ " not found neither in plugin "
+											+ " not found neither in plugin " //$NON-NLS-1$
 											+ pluginId
-											+ " nor in fragments attached to it",
+											+ " nor in fragments attached to it", //$NON-NLS-1$
 									null));
 			}
 		}
@@ -632,7 +632,7 @@ public class PHPexes {
 			}
 			locationsString.append(item.getExecutable().toString());
 			inisString.append(item.getINILocation() != null ? item
-					.getINILocation().toString() : NULL_PLACE_HOLDER); //$NON-NLS-1$
+					.getINILocation().toString() : NULL_PLACE_HOLDER); 
 			namesString.append(item.getName());
 			debuggersString.append(item.getDebuggerID());
 			if (item.geDefaultForPHPVersionSize() > 0) {

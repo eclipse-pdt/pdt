@@ -94,7 +94,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 
-	protected boolean isDebugMode = System.getProperty("loggingDebug") != null;
+	protected boolean isDebugMode = System.getProperty("loggingDebug") != null; //$NON-NLS-1$
 	private DebugConnectionThread connection;
 	private IDebugHandler debugHandler;
 	private Map<String, String> resolvedFiles;
@@ -248,7 +248,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public boolean setCurrentWorkingDirectory(String cwd) {
 		try {
 			EvalRequest request = new EvalRequest();
-			request.setCommand(String.format("chdir('%1$s')", cwd));
+			request.setCommand(String.format("chdir('%1$s')", cwd)); //$NON-NLS-1$
 			IDebugResponseMessage response = sendCustomRequest(request);
 			if (response != null && response instanceof EvalResponse) {
 				String result = ((EvalResponse) response).getResult();
@@ -1043,7 +1043,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				if (response.getStatus() == 0) {
 					result = response.getResult();
 				} else {
-					result = "---ERROR---";
+					result = "---ERROR---"; //$NON-NLS-1$
 				}
 			}
 			return result;
@@ -1173,7 +1173,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				if (i > 0) {
 					String previousScript = remoteStack.getLayer(i - 1)
 							.getResolvedCalledFileName();
-					String previousScriptDir = ".";
+					String previousScriptDir = "."; //$NON-NLS-1$
 					int idx = Math.max(previousScript.lastIndexOf('/'),
 							previousScript.lastIndexOf('\\'));
 					if (idx != -1) {
@@ -1329,7 +1329,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 						.getEntry();
 				if (bPath.getEntryKind() == IBuildpathEntry.BPE_CONTAINER
 						&& !bPath.getPath().toString()
-								.equals("org.eclipse.php.core.LANGUAGE")) {
+								.equals("org.eclipse.php.core.LANGUAGE")) { //$NON-NLS-1$
 					IBuildpathContainer buildpathContainer = DLTKCore
 							.getBuildpathContainer(bPath.getPath(),
 									DLTKCore.create(project));

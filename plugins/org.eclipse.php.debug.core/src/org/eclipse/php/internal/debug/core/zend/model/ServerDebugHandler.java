@@ -86,14 +86,14 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 						fDebugTarget.getStartResponseHandler());
 				if (!fStatus) {
 					Logger.log(Logger.ERROR,
-							"ServerDebugHandler: debugger.start return false");
+							"ServerDebugHandler: debugger.start return false"); //$NON-NLS-1$
 					try {
 						fDebugTarget.disconnect();
 					} catch (DebugException e) {
 						Logger.logException(e);
 					}
 				}
-				fDebugTarget.setLastCommand("start");
+				fDebugTarget.setLastCommand("start"); //$NON-NLS-1$
 			} else {
 				startLock.setRunStart(true);
 			}
@@ -116,9 +116,9 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 						fDebugTarget.getStartResponseHandler());
 				if (!fStatus) {
 					Logger.log(Logger.ERROR,
-							"ServerDebugHandler: debugger.start return false");
+							"ServerDebugHandler: debugger.start return false"); //$NON-NLS-1$
 				}
-				fDebugTarget.setLastCommand("start");
+				fDebugTarget.setLastCommand("start"); //$NON-NLS-1$
 			} else {
 				startLock.setRunStart(true);
 			}
@@ -131,7 +131,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		fDebugTarget.setLastStop(lineNumber);
 		fDebugTarget.setLastFileName(fileName);
 		String fLastcmd = fDebugTarget.getLastCommand();
-		Logger.debugMSG("ServerDebugHandler: lastCMD " + fLastcmd);
+		Logger.debugMSG("ServerDebugHandler: lastCMD " + fLastcmd); //$NON-NLS-1$
 
 		fDebugTarget.setBreakpoints(new IBreakpoint[] {});
 
@@ -145,63 +145,63 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		} catch (CoreException e) {
 		}
 
-		if (fLastcmd.equals("start")) {
+		if (fLastcmd.equals("start")) { //$NON-NLS-1$
 			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(),
 					lineNumber);
-		} else if (fLastcmd.equals("resume")) {
+		} else if (fLastcmd.equals("resume")) { //$NON-NLS-1$
 			fDebugTarget.breakpointHit(fDebugTarget.getLastFileName(),
 					lineNumber);
-		} else if (fLastcmd.equals("suspend")) {
+		} else if (fLastcmd.equals("suspend")) { //$NON-NLS-1$
 			fDebugTarget.suspended(DebugEvent.CLIENT_REQUEST);
-		} else if (fLastcmd.equals("stepReturn")) {
+		} else if (fLastcmd.equals("stepReturn")) { //$NON-NLS-1$
 			fDebugTarget.suspended(DebugEvent.STEP_RETURN);
-		} else if (fLastcmd.equals("stepOver")) {
+		} else if (fLastcmd.equals("stepOver")) { //$NON-NLS-1$
 			fDebugTarget.suspended(DebugEvent.STEP_OVER);
-		} else if (fLastcmd.equals("stepInto")) {
+		} else if (fLastcmd.equals("stepInto")) { //$NON-NLS-1$
 			fDebugTarget.suspended(DebugEvent.STEP_INTO);
-		} else if (fLastcmd.equals("terminate")) {
+		} else if (fLastcmd.equals("terminate")) { //$NON-NLS-1$
 			// Shouldn't happen, try to shut down cleanly
 			fRemoteDebugger.finish();
 			fDebugTarget.terminated();
-		} else if (fLastcmd.equals("breakpointAdded")) {
+		} else if (fLastcmd.equals("breakpointAdded")) { //$NON-NLS-1$
 
-		} else if (fLastcmd.equals("breakpointRemoved")) {
+		} else if (fLastcmd.equals("breakpointRemoved")) { //$NON-NLS-1$
 
 		}
 
 	}
 
 	public void sessionEnded() {
-		Logger.debugMSG("ServerDebugHandler: Starting sessionEnded()");
+		Logger.debugMSG("ServerDebugHandler: Starting sessionEnded()"); //$NON-NLS-1$
 		super.sessionEnded();
 
 	}
 
 	public void connectionClosed() {
-		Logger.debugMSG("ServerDebugHandler: Starting connectionClosed()");
+		Logger.debugMSG("ServerDebugHandler: Starting connectionClosed()"); //$NON-NLS-1$
 		super.connectionClosed();
 		fRemoteDebugger.finish();
 		// if (fDebugTarget.isPHPCGI()) {
 		// Logger.debugMSG("ServerDebugHandler: Calling Terminated() for PHP CGI");
-		Logger.debugMSG("ServerDebugHandler: Calling Terminated()");
+		Logger.debugMSG("ServerDebugHandler: Calling Terminated()"); //$NON-NLS-1$
 		fDebugTarget.terminated();
 		// }
 	}
 
 	public void handleScriptEnded() {
-		Logger.debugMSG("ServerDebugHandler: handleScriptEnded");
+		Logger.debugMSG("ServerDebugHandler: handleScriptEnded"); //$NON-NLS-1$
 		try {
-			Logger.debugMSG("ServerDebugHandler: Calling Terminate()");
+			Logger.debugMSG("ServerDebugHandler: Calling Terminate()"); //$NON-NLS-1$
 			fDebugTarget.terminate();
 
 		} catch (DebugException e1) {
-			Logger.logException("ServerDebugHandler: terminate failed", e1);
+			Logger.logException("ServerDebugHandler: terminate failed", e1); //$NON-NLS-1$
 		}
 	}
 
 	public void multipleBindOccured() {
 		super.multipleBindOccured();
-		Logger.log(Logger.WARNING, "ServerDebugHandler: Multiple Bind Occured");
+		Logger.log(Logger.WARNING, "ServerDebugHandler: Multiple Bind Occured"); //$NON-NLS-1$
 
 		String errorMessage = PHPDebugCoreMessages.DebuggerDebugPortInUse_1;
 		fRemoteDebugger.closeConnection();
@@ -239,7 +239,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	 */
 	public void wrongDebugServer() {
 		super.wrongDebugServer();
-		fDebugTarget.fireError("Incompatible Debug Server version.", null);
+		fDebugTarget.fireError(PHPDebugCoreMessages.ServerDebugHandler_0, null);
 		fRemoteDebugger.finish();
 	}
 

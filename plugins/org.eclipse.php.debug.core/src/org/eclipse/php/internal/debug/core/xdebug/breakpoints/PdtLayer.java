@@ -77,8 +77,8 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 					if (bLineNumber == lineno && bFileName.equals(filename)) {
 						bpFound = breakpoint;
 						if (DBGpLogger.debugBP()) {
-							DBGpLogger.debug("breakpoint at " + filename + "("
-									+ lineno + ") found");
+							DBGpLogger.debug("breakpoint at " + filename + "(" //$NON-NLS-1$ //$NON-NLS-2$
+									+ lineno + ") found"); //$NON-NLS-1$
 						}
 
 					}
@@ -93,13 +93,13 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 						try {
 							if (DBGpLogger.debugBP()) {
 								DBGpLogger
-										.debug("removing runtoline breakpoint");
+										.debug("removing runtoline breakpoint"); //$NON-NLS-1$
 							}
 							bmgr.removeBreakpoint(breakpoint, true);
 						} catch (CoreException e) {
 							DBGpLogger
 									.logException(
-											"Exception trying to remove a runtoline breakpoint",
+											"Exception trying to remove a runtoline breakpoint", //$NON-NLS-1$
 											this, e);
 						}
 					}
@@ -127,7 +127,7 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 	}
 
 	public String getSystemDebugProperty() {
-		return "org.eclipse.php.debug.ui.activeDebugging";
+		return "org.eclipse.php.debug.ui.activeDebugging"; //$NON-NLS-1$
 	}
 
 }

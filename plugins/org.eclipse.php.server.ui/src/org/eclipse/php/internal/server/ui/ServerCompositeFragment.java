@@ -72,7 +72,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 	public void setData(Object server) throws IllegalArgumentException {
 		if (server != null && !(server instanceof Server)) {
 			throw new IllegalArgumentException(
-					"The given object is not a Server");
+					"The given object is not a Server"); //$NON-NLS-1$
 		}
 		super.setData(server);
 		init();
@@ -211,7 +211,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		setMessage(getDescription(), IMessageProvider.NONE);
 
 		String urlStr = url.getText();
-		if (urlStr != null && !urlStr.trim().equals("")) {
+		if (urlStr != null && !urlStr.trim().equals("")) { //$NON-NLS-1$
 			boolean ok = checkServerUrl(urlStr);
 			if (!ok) {
 				setMessage(
@@ -275,7 +275,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		if (webrootStr.length() != 0 && !new Path(webrootStr).toFile().exists()) {
 			setMessage(
 					PHPServerUIMessages
-							.getString("ServerCompositeFragment.webrootNotExists"), IMessageProvider.ERROR);//$NON-NLS-1$
+							.getString("ServerCompositeFragment.webrootNotExists"), IMessageProvider.ERROR); //$NON-NLS-1$
 		}
 
 		controlHandler.update();
@@ -296,11 +296,11 @@ public class ServerCompositeFragment extends CompositeFragment {
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		group.setLayoutData(data);
 		group.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.serverProperties"));
+				.getString("ServerCompositeFragment.serverProperties")); //$NON-NLS-1$
 
 		Label urlLabel = new Label(group, SWT.None);
 		urlLabel.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.baseURL"));
+				.getString("ServerCompositeFragment.baseURL")); //$NON-NLS-1$
 
 		url = new Text(group, SWT.BORDER);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
@@ -320,7 +320,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 		Label labelRoot = new Label(group, SWT.None);
 		labelRoot.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.localWebRoot"));
+				.getString("ServerCompositeFragment.localWebRoot")); //$NON-NLS-1$
 		labelRoot.setLayoutData(new GridData());
 
 		webroot = new Text(group, SWT.BORDER);
@@ -339,7 +339,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 
 		Button browseButton = new Button(group, SWT.PUSH);
 		browseButton.setText(PHPServerUIMessages
-				.getString("ServerCompositeFragment.browse"));
+				.getString("ServerCompositeFragment.browse")); //$NON-NLS-1$
 
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {

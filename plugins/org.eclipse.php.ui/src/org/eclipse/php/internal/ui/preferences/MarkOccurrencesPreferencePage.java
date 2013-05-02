@@ -37,7 +37,7 @@ public final class MarkOccurrencesPreferencePage extends
 	 * #setDescription()
 	 */
 	protected void setDescription() {
-		setDescription(PHPUIMessages.MarkOccurrencesConfigurationBlock_title); //$NON-NLS-1$
+		setDescription(PHPUIMessages.MarkOccurrencesConfigurationBlock_title); 
 	}
 
 	/*

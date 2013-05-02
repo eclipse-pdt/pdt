@@ -22,7 +22,7 @@ import org.eclipse.php.internal.debug.ui.launching.LaunchConfigurationsTabsRegis
 public class ServerLaunchConfigurationTabGroup extends
 		AbstractLaunchConfigurationTabGroup {
 
-	protected final String CONFIGURATION_TAB_GROUP_ID = "org.eclipse.php.server.ui.launchConfigurationTabGroup";
+	protected final String CONFIGURATION_TAB_GROUP_ID = "org.eclipse.php.server.ui.launchConfigurationTabGroup"; //$NON-NLS-1$
 
 	public ServerLaunchConfigurationTabGroup() {
 		super();

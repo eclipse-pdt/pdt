@@ -62,7 +62,7 @@ public class OpenBrowserUtil {
 					browser.openURL(helpSystemUrl);
 				} catch (PartInitException ex) {
 					// XXX: show dialog?
-					//										PHPUiPlugin.logErrorStatus("Opening Javadoc failed", ex.getStatus()); //$NON-NLS-1$
+					//										PHPUiPlugin.logErrorStatus("Opening Javadoc failed", ex.getStatus()); 
 				}
 			}
 		});

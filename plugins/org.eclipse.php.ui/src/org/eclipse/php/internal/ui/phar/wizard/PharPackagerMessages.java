@@ -16,7 +16,7 @@ import org.eclipse.osgi.util.NLS;
 
 public final class PharPackagerMessages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.phar.wizard.PharPackagerMessages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.phar.wizard.PharPackagerMessages"; //$NON-NLS-1$
 
 	public static String AbstractJarDestinationWizardPage_destinationCombo_AccessibilityText;
 
@@ -375,18 +375,27 @@ public final class PharPackagerMessages extends NLS {
 	public static String JarPackageWizardPage_PHAR_file_extension_tar4;
 
 	public static String JarPackageWizardPage_error_exportPharnameMustBeSet;
-	
+
 	public static String JarPackageWizardPage_Signature_Type;
-	
+
 	public static String JarPackageWizardPage_Title;
-	
+
 	public static String JarPackageWizardPage_no;
-	
+
 	public static String JarPackageWizardPage_yes;
 
 	public static String JarPackageWizardPage_error_cantExportPHARIntoItself;
-	
+
 	public static String JarPackageWizardPage_error_StubFileNull;
+
+	public static String PharFileExportOperation_10;
+
+	public static String PharFileExportOperation_11;
+
+	public static String PharFileExportOperation_12;
+
+	public static String PharFileExportOperation_13;
+
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, PharPackagerMessages.class);
 	}

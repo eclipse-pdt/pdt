@@ -3,7 +3,7 @@ package org.eclipse.php.internal.ui.phar.wizard;
 import org.eclipse.osgi.util.NLS;
 
 public class PharImportMessages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.phar.wizard.messages";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.php.internal.ui.phar.wizard.messages"; //$NON-NLS-1$
 
 	// ==============================================================================
 	// Data Transfer Wizards

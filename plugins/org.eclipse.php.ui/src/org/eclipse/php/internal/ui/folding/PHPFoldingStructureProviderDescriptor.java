@@ -90,7 +90,7 @@ public final class PHPFoldingStructureProviderDescriptor {
 			return prefs;
 		} else {
 			throw new IllegalStateException(
-					PHPUIMessages.PHPFoldingStructureProviderDescriptor_0); //$NON-NLS-1$
+					PHPUIMessages.PHPFoldingStructureProviderDescriptor_0); 
 		}
 	}
 

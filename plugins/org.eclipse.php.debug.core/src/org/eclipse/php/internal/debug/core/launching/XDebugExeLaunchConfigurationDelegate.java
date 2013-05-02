@@ -63,7 +63,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 				IPHPDebugConstants.ATTR_FILE, (String) null);
 		if (phpScriptString == null || phpScriptString.trim().length() == 0) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_0); //$NON-NLS-1$
+			displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_0); 
 			return;
 		}
 		if (monitor.isCanceled()) {
@@ -175,7 +175,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 				ideKey = DBGpProxyHandler.instance.getCurrentIdeKey();
 				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
 					displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_2
-							+ DBGpProxyHandler.instance.getErrorMsg()); //$NON-NLS-1$
+							+ DBGpProxyHandler.instance.getErrorMsg()); 
 					DebugPlugin.getDefault().getLaunchManager()
 							.removeLaunch(launch);
 					return;
@@ -198,7 +198,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
 		subMonitor.beginTask(
 				PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_3,
-				10); //$NON-NLS-1$
+				10); 
 
 		// determine the working directory. default is the location of the
 		// script
@@ -271,7 +271,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 				target.setProcess(eclipseProcessWrapper);
 				launch.addDebugTarget(target);
 				subMonitor
-						.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4); //$NON-NLS-1$
+						.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4); 
 				target.waitForInitialSession(
 						(DBGpBreakpointFacade) IDELayerFactory.getIDELayer(),
 						XDebugPreferenceMgr.createSessionPreferences(), monitor);

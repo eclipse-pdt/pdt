@@ -32,8 +32,8 @@ import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
  */
 public class PhpTemplateContext extends ScriptTemplateContext {
 
-	private static final String DOLLAR = "dollar";
-	private static final String DOLLAR_SIGN = "$";
+	private static final String DOLLAR = "dollar"; //$NON-NLS-1$
+	private static final String DOLLAR_SIGN = "$"; //$NON-NLS-1$
 	public static final char BLANK = ' ';
 	public static final char TAB = '\t';
 
@@ -69,7 +69,7 @@ public class PhpTemplateContext extends ScriptTemplateContext {
 
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < length; i++) {
-				sb.append(" ");
+				sb.append(" "); //$NON-NLS-1$
 			}
 			String newPattern = TextUtils.replace(template.getPattern(), TAB,
 					sb.toString());

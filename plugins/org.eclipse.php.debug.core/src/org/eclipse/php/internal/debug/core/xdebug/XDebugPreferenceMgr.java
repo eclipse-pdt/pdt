@@ -24,29 +24,29 @@ public class XDebugPreferenceMgr {
 
 	// general
 	public static final String XDEBUG_PREF_PORT = PHPDebugPlugin.ID
-			+ ".xdebug_port";
+			+ ".xdebug_port"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_SHOWSUPERGLOBALS = PHPDebugPlugin.ID
-			+ ".xdebug_showSuperGlobals";
+			+ ".xdebug_showSuperGlobals"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_ARRAYDEPTH = PHPDebugPlugin.ID
-			+ ".xdebug_arrayDepth";
+			+ ".xdebug_arrayDepth"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_CHILDREN = PHPDebugPlugin.ID
-			+ ".xdebug_children";
+			+ ".xdebug_children"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_MULTISESSION = PHPDebugPlugin.ID
-			+ ".xdebug_multisession";
+			+ ".xdebug_multisession"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_REMOTESESSION = PHPDebugPlugin.ID
-			+ ".xdebug_remotesession";
+			+ ".xdebug_remotesession"; //$NON-NLS-1$
 	// capture output
 	public static final String XDEBUG_PREF_CAPTURESTDOUT = PHPDebugPlugin.ID
-			+ ".xdebug_capturestdout";
+			+ ".xdebug_capturestdout"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_CAPTURESTDERR = PHPDebugPlugin.ID
-			+ ".xdebug_capturestderr";
+			+ ".xdebug_capturestderr"; //$NON-NLS-1$
 	// proxy
 	public static final String XDEBUG_PREF_USEPROXY = PHPDebugPlugin.ID
-			+ ".xdebug_useproxy";
+			+ ".xdebug_useproxy"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_IDEKEY = PHPDebugPlugin.ID
-			+ ".xdebug_idekey";
+			+ ".xdebug_idekey"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_PROXY = PHPDebugPlugin.ID
-			+ ".xdebug_proxy";
+			+ ".xdebug_proxy"; //$NON-NLS-1$
 
 	public static enum AcceptRemoteSession {
 		off, localhost, any, prompt

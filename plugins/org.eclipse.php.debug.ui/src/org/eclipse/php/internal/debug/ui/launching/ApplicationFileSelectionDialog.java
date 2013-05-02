@@ -32,7 +32,7 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 
 public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 
-	private static final String SHOW_EXTERNAL_FILES = "ApplicationFileSelectionDialog_showExternalFiles";
+	private static final String SHOW_EXTERNAL_FILES = "ApplicationFileSelectionDialog_showExternalFiles"; //$NON-NLS-1$
 	protected String[] fExtensions;
 	protected String[] fRequiredNatures;
 	private Button fExternalFilesBt;
@@ -65,9 +65,9 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 		setShellStyle(SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 		setTitle(title);
 		if (title == null)
-			setTitle("Title"); //$NON-NLS-1$
+			setTitle(Messages.ApplicationFileSelectionDialog_2); 
 		if (message == null)
-			message = "Message"; //$NON-NLS-1$
+			message = Messages.ApplicationFileSelectionDialog_1; 
 		setMessage(message);
 		setAllowMultiple(allowMultiple);
 
@@ -125,7 +125,7 @@ public class ApplicationFileSelectionDialog extends ElementTreeSelectionDialog {
 
 		// Attach the checkbox
 		fExternalFilesBt = new Button(composite, SWT.CHECK);
-		fExternalFilesBt.setText("Show non-workspace files");
+		fExternalFilesBt.setText(Messages.ApplicationFileSelectionDialog_0);
 		GridData data = new GridData();
 		data.grabExcessHorizontalSpace = true;
 		data.horizontalIndent = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);

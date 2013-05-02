@@ -61,7 +61,7 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 			return new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(),
-					"Invalid breakpoint");
+					PHPDebugUIMessages.DefaultPHPBreakpointProvider_0);
 		}
 
 		IStatus status = null;
@@ -216,9 +216,9 @@ public class DefaultPHPBreakpointProvider implements IPHPBreakpointProvider,
 							startOffset = partitions[i].getOffset();
 							linePart = idoc.get(startOffset,
 									partitions[i].getLength()).trim();
-							if (Pattern.matches(".*[a-zA-Z0-0_]+.*", linePart)
+							if (Pattern.matches(".*[a-zA-Z0-0_]+.*", linePart) //$NON-NLS-1$
 									&& !linePart.trim().toLowerCase()
-											.equals("<?php")) {
+											.equals("<?php")) { //$NON-NLS-1$
 								result = startOffset;
 								break;
 							}

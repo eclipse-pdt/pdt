@@ -64,7 +64,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 
 	private ImageDescriptorRegistry fImageDescriptorRegistry;
 
-	public static final String ID = "org.eclipse.php.debug.ui";
+	public static final String ID = "org.eclipse.php.debug.ui"; //$NON-NLS-1$
 	public static final int INTERNAL_ERROR = 10001;
 	private ShowViewListener showViewListener;
 	private TerminateDebugLaunchListener finishDebugLaunchListener;
@@ -93,15 +93,15 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		// the user to return to the PHP perspective when all the debug sessions
 		// where terminated.
 		finishDebugLaunchListener = new TerminateDebugLaunchListener();
-		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(
-				finishDebugLaunchListener);
+		DebugPlugin.getDefault().getLaunchManager()
+				.addLaunchListener(finishDebugLaunchListener);
 
 		// Install the FirstSelectionDebugLaunchListener, which is responsible
 		// of selecting the
 		// new launch in the LaunchView.
 		firstSelectionDebugLaunchListener = new FirstSelectionDebugLaunchListener();
-		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(
-				firstSelectionDebugLaunchListener);
+		DebugPlugin.getDefault().getLaunchManager()
+				.addLaunchListener(firstSelectionDebugLaunchListener);
 
 		// Register the PHPDebugElementAdapterFactory.
 		// To make sure we are the first adapter factory for the IVariable
@@ -136,13 +136,13 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 
 		// Uninstall the debug event listener.
 		if (finishDebugLaunchListener != null) {
-			DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(
-					finishDebugLaunchListener);
+			DebugPlugin.getDefault().getLaunchManager()
+					.removeLaunchListener(finishDebugLaunchListener);
 		}
 		// Uninstall the debug event listener.
 		if (firstSelectionDebugLaunchListener != null) {
-			DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(
-					firstSelectionDebugLaunchListener);
+			DebugPlugin.getDefault().getLaunchManager()
+					.removeLaunchListener(firstSelectionDebugLaunchListener);
 		}
 
 		plugin = null;
@@ -172,7 +172,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(
-				"org.eclipse.php.debug.ui", path);
+				"org.eclipse.php.debug.ui", path); //$NON-NLS-1$
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
 			IPerspectiveDescriptor descriptor = page.getPerspective();
-			if (descriptor.getId().indexOf("php") != -1) {
+			if (descriptor.getId().indexOf("php") != -1) { //$NON-NLS-1$
 				if (page != null) {
 					IViewPart part = page.findView(viewID);
 					if (part == null) {
@@ -237,8 +237,8 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 							page.showView(viewID);
 						} catch (PartInitException e) {
 							ErrorDialog.openError(window.getShell(),
-									PHPDebugUIMessages.ShowView_errorTitle, e
-											.getMessage(), e.getStatus());
+									PHPDebugUIMessages.ShowView_errorTitle,
+									e.getMessage(), e.getStatus());
 						}
 					} else {
 						// page.bringToTop(part);
@@ -275,7 +275,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	 * longer used by any of the launch configuration definitions.
 	 */
 	private void cleanSecuredStorage() {
-		Job cleanStorageJob = new Job("Cleans the PHP Tunnels Storage") {
+		Job cleanStorageJob = new Job(PHPDebugUIMessages.PHPDebugUIPlugin_2) {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					// First, collect all the tunnel definitions in the launch
@@ -324,7 +324,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 					}
 				} catch (Exception e) {
 					Logger.logException(
-							"Error while cleaning up the php debug tunnels credentials from the secured storage",
+							"Error while cleaning up the php debug tunnels credentials from the secured storage", //$NON-NLS-1$
 							e);
 				}
 				return Status.OK_STATUS;
@@ -346,7 +346,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 				IPHPDebugConstants.USE_SSH_TUNNEL, false);
 		if (isUsingTunnel) {
 			String userName = configuration.getAttribute(
-					IPHPDebugConstants.SSH_TUNNEL_USER_NAME, "");
+					IPHPDebugConstants.SSH_TUNNEL_USER_NAME, ""); //$NON-NLS-1$
 			if (userName.length() > 0) {
 				String debugHost = PHPLaunchUtilities
 						.getDebugHost(configuration);
@@ -373,7 +373,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 							continue;
 						if (PHPDebugPlugin.getOpenDebugViewsOption()) {
 							Job job = new org.eclipse.ui.progress.UIJob(
-									"debug output") {
+									PHPDebugUIMessages.PHPDebugUIPlugin_0) {
 								public IStatus runInUIThread(
 										IProgressMonitor monitor) {
 									showView(DebugBrowserView.ID_PHPBrowserOutput);
@@ -393,7 +393,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 						final Object data = events[i].getData();
 						if (data instanceof IStatus) {
 							Job job = new org.eclipse.ui.progress.UIJob(
-									"debug output") {
+									PHPDebugUIMessages.PHPDebugUIPlugin_0) {
 								public IStatus runInUIThread(
 										IProgressMonitor monitor) {
 									IStatus status = (IStatus) data;

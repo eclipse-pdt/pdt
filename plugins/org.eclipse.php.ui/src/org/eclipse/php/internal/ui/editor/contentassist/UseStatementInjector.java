@@ -66,7 +66,7 @@ public class UseStatementInjector {
 
 	private Collection<Identifier> createIdentifiers(AST ast,
 			String namespaceName) {
-		String[] split = namespaceName.split("\\\\");
+		String[] split = namespaceName.split("\\\\"); //$NON-NLS-1$
 		List<Identifier> identifiers = new ArrayList<Identifier>(split.length);
 		for (String s : split) {
 			identifiers.add(ast.newIdentifier(s));
@@ -104,7 +104,7 @@ public class UseStatementInjector {
 		StringBuilder nameBuf = new StringBuilder();
 		NamespaceName name = namespaceDecl.getName();
 		if (name == null) {
-			return "\\";
+			return "\\"; //$NON-NLS-1$
 		}
 		for (Identifier identifier : name.segments()) {
 			if (nameBuf.length() > 0) {
@@ -534,7 +534,7 @@ public class UseStatementInjector {
 
 							List<String> importedTypeName = getImportedTypeName(
 									moduleDeclaration, offset);
-							String typeName = "";
+							String typeName = ""; //$NON-NLS-1$
 							if (!useAlias) {
 								typeName = modelElement.getElementName()
 										.toLowerCase();

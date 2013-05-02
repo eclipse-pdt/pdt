@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 public class PHPExeEditDialog extends TitleAreaDialog implements
 		IControlHandler {
 
-	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.debug.ui.phpExeWizardCompositeFragment";
+	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.debug.ui.phpExeWizardCompositeFragment"; //$NON-NLS-1$
 	private List<CompositeFragment> runtimeComposites;
 	private PHPexeItem phpExeItem;
 	private PHPexeItem[] existingItems;
@@ -90,7 +90,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 			tabItem.setControl(fragment);
 			runtimeComposites.add(fragment);
 		}
-		getShell().setText("Edit PHP Executable");
+		getShell().setText(Messages.PHPExeEditDialog_1);
 		tabs.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				CTabItem item = (CTabItem) e.item;

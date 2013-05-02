@@ -41,7 +41,7 @@ import org.eclipse.ui.PlatformUI;
 public class PHPsPreferencePage extends AbstractPreferencePage implements
 		IWorkbenchPreferencePage {
 
-	public static String ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage";
+	public static String ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"; //$NON-NLS-1$
 	// PHP Block
 	private InstalledPHPsBlock fPHPBlock;
 
@@ -103,7 +103,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements
 		// PHPexeItem phpexe = getCurrentDefaultPHP();
 		// if (phpexe == null) {
 		// setValid(false);
-		//					setErrorMessage(PHPDebugUIMessages.PHPsPreferencePage_13); //$NON-NLS-1$
+		//					setErrorMessage(PHPDebugUIMessages.PHPsPreferencePage_13); 
 		// } else {
 		// setValid(true);
 		// setErrorMessage(null);

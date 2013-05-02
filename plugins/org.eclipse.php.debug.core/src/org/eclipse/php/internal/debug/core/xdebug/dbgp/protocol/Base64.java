@@ -156,9 +156,9 @@ public class Base64 {
 	// TODO: not a great way to do this, should work with chars not bytes.
 	// We convert utf-16 to ASCII and create conversion tables based on ASCII
 	// code points
-	private static final String INTERNAL_ENCODING = "ASCII";
+	private static final String INTERNAL_ENCODING = "ASCII"; //$NON-NLS-1$
 
-	private static String base64CharSetSequence = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+	private static String base64CharSetSequence = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="; //$NON-NLS-1$
 
 	// Table to convert a number from 0-64 to an (Base64) ASCII byte equivalent
 	private static byte[] valToBase64CharTable;

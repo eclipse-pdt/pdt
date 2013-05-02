@@ -43,7 +43,7 @@ public class PHPFormatProcessorProxy implements IStructuredFormatProcessor {
 	private static final String FORMATTER_PROCESSOR = "processor"; //$NON-NLS-1$
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 
-	private static final String PHP_FORMATTER_PROCESSORS_POINT = "org.eclipse.php.ui.phpFormatterProcessor";
+	private static final String PHP_FORMATTER_PROCESSORS_POINT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
 
 	private static IConfigurationElement phpFormatterElement;
 	private static String phpFormatterClassName;

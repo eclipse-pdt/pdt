@@ -35,13 +35,13 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	public PathMapperCompositeFragment(Composite parent,
 			IControlHandler handler, boolean isForEditing) {
 		super(parent, handler, isForEditing);
-		controlHandler.setTitle("Server Path Mapping");
+		controlHandler.setTitle(Messages.PathMapperCompositeFragment_0);
 		controlHandler
-				.setDescription("Specify mapping between server and local paths");
+				.setDescription(Messages.PathMapperCompositeFragment_1);
 		controlHandler.setImageDescriptor(ServersPluginImages.DESC_WIZ_SERVER);
-		setDisplayName("Path Mapping");
-		setTitle("Edit Server Path Mapping");
-		setDescription("Configure Server Path Mapping");
+		setDisplayName(Messages.PathMapperCompositeFragment_2);
+		setTitle(Messages.PathMapperCompositeFragment_3);
+		setDescription(Messages.PathMapperCompositeFragment_4);
 		if (isForEditing) {
 			setData(((ServerEditDialog) controlHandler).getServer());
 		}
@@ -117,7 +117,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 	public void setData(Object server) {
 		if (!(server instanceof Server)) {
 			throw new IllegalArgumentException(
-					"The given object is not a Server");
+					"The given object is not a Server"); //$NON-NLS-1$
 		}
 		super.setData(server);
 		init();

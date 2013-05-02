@@ -122,17 +122,18 @@ public class IncludepathRenameIParentParticipant extends
 					entry = replaceBuildpath(destProjectName,
 							newBuildPathEntryList, renamedPath, entry);
 
-					includePath = new IncludePath(entry, includePath
-							.getProject());
+					includePath = new IncludePath(entry,
+							includePath.getProject());
 				}
 
 			} else if (includePath.getEntry() instanceof IResource) {
 				IResource oldRes = (IResource) includePath.getEntry();
 
 				if (renamedPath.isPrefixOf(oldRes.getFullPath())) {
-					renamedPath = renamedPath.removeLastSegments(1).append(
-							destProjectName).append(
-							oldRes.getFullPath().removeFirstSegments(
+					renamedPath = renamedPath
+							.removeLastSegments(1)
+							.append(destProjectName)
+							.append(oldRes.getFullPath().removeFirstSegments(
 									renamedPath.segmentCount()));
 					IResource newRes = null;
 					if (oldRes.getType() == IResource.FILE) {
@@ -145,8 +146,8 @@ public class IncludepathRenameIParentParticipant extends
 						newRes = ResourcesPlugin.getWorkspace().getRoot()
 								.getProject(renamedPath.toString());
 					}
-					includePath = new IncludePath(newRes, includePath
-							.getProject());
+					includePath = new IncludePath(newRes,
+							includePath.getProject());
 				}
 			}
 		}
@@ -156,17 +157,18 @@ public class IncludepathRenameIParentParticipant extends
 	protected IBuildpathEntry replaceBuildpath(String destProjectName,
 			Set<IBuildpathEntry> newBuildPathEntryList, IPath renamedPath,
 			IBuildpathEntry entry) {
-		renamedPath = renamedPath.removeLastSegments(1).append(destProjectName)
-				.append(
-						entry.getPath().removeFirstSegments(
-								renamedPath.segmentCount()));
+		renamedPath = renamedPath
+				.removeLastSegments(1)
+				.append(destProjectName)
+				.append(entry.getPath().removeFirstSegments(
+						renamedPath.segmentCount()));
 		// remove the old entry
 		newBuildPathEntryList.remove(entry);
 		entry = new BuildpathEntry(entry.getContentKind(),
-				entry.getEntryKind(), renamedPath, entry.isExported(), entry
-						.getInclusionPatterns(), entry.getExclusionPatterns(),
-				entry.getAccessRules(), entry.combineAccessRules(), entry
-						.getExtraAttributes(), entry.isExternal());
+				entry.getEntryKind(), renamedPath, entry.isExported(),
+				entry.getInclusionPatterns(), entry.getExclusionPatterns(),
+				entry.getAccessRules(), entry.combineAccessRules(),
+				entry.getExtraAttributes(), entry.isExternal());
 		// add the new entry
 		newBuildPathEntryList.add(entry);
 		return entry;
@@ -223,7 +225,7 @@ public class IncludepathRenameIParentParticipant extends
 
 		@Override
 		public String getName() {
-			return "Rename Includepath";
+			return Messages.IncludepathRenameIParentParticipant_0;
 		}
 
 		@Override
@@ -256,7 +258,7 @@ public class IncludepathRenameIParentParticipant extends
 
 		@Override
 		public Object getModifiedElement() {
-			return "Rename Includepath";
+			return Messages.IncludepathRenameIParentParticipant_0;
 		}
 
 	}

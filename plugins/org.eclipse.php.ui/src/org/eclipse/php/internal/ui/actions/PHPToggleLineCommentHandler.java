@@ -51,7 +51,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 		try {
 			// TODO this will be remove soon,just to see if this method is
 			// executed in Zend Studio.
-			Logger.log(Logger.ERROR, "PHP Toggle Line Comment is starting.");
+			Logger.log(Logger.ERROR, "PHP Toggle Line Comment is starting."); //$NON-NLS-1$
 			// get text selection lines info
 			int selectionStartLine = textSelection.getStartLine();
 			int selectionEndLine = textSelection.getEndLine();
@@ -87,7 +87,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 			if (lineTypedRegions != null
 					&& lineTypedRegions.length == 1
 					&& lineTypedRegions[0].getType().equals(
-							"org.eclipse.php.PHP_DEFAULT")) {
+							"org.eclipse.php.PHP_DEFAULT")) { //$NON-NLS-1$
 
 				// save the selection position since it will be changing
 				Position selectionPosition = null;
@@ -143,7 +143,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 				}
 			} else {
 				org.eclipse.core.expressions.EvaluationContext evaluationContext = new org.eclipse.core.expressions.EvaluationContext(
-						null, "") {
+						null, "") { //$NON-NLS-1$
 					@Override
 					public Object getVariable(String name) {
 						if (ISources.ACTIVE_EDITOR_NAME.equals(name)) {
@@ -160,13 +160,13 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 
 		} catch (InvocationTargetException e) {
 			Logger.logException(
-					"Problem running toggle comment progess dialog.", e); //$NON-NLS-1$
+					"Problem running toggle comment progess dialog.", e); //$NON-NLS-1$ 
 		} catch (InterruptedException e) {
 			Logger.logException(
 					"Problem running toggle comment progess dialog.", e); //$NON-NLS-1$
 		} catch (BadLocationException e) {
 			Logger.logException(
-					"The given selection " + textSelection + " must be invalid", e); //$NON-NLS-1$ //$NON-NLS-2$
+					"The given selection " + textSelection + " must be invalid", e); //$NON-NLS-1$  //$NON-NLS-2$
 		} catch (ExecutionException e) {
 		} finally {
 			// clean everything up
@@ -346,7 +346,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 					monitor.worked(1);
 				}
 			} catch (BadLocationException e) {
-				Logger.logException("Bad location while toggling comments.", e); //$NON-NLS-1$
+				Logger.logException("Bad location while toggling comments.", e); //$NON-NLS-1$ 
 			}
 			// done work
 			monitor.done();
@@ -430,7 +430,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 				}
 
 				// remove the comment prefix
-				document.replace(commentPrefixOffset, commentPrefixLength, ""); //$NON-NLS-1$
+				document.replace(commentPrefixOffset, commentPrefixLength, ""); //$NON-NLS-1$ 
 
 				if (commentSuffix != null) {
 					commentSuffixOffset -= commentPrefixLength;
@@ -475,12 +475,12 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 			} catch (Exception e) {
 				Logger.log(
 						Logger.WARNING,
-						"Exception caused by readAndDispatch, not caused by or fatal to caller",
+						"Exception caused by readAndDispatch, not caused by or fatal to caller", //$NON-NLS-1$
 						e);
 			} catch (LinkageError e) {
 				Logger.log(
 						Logger.WARNING,
-						"LinkageError caused by readAndDispatch, not caused by or fatal to caller",
+						"LinkageError caused by readAndDispatch, not caused by or fatal to caller", //$NON-NLS-1$
 						e);
 			} catch (VirtualMachineError e) {
 				// re-throw these
@@ -493,7 +493,7 @@ public class PHPToggleLineCommentHandler extends AbstractCommentHandler {
 				// handle
 				Logger.log(
 						Logger.WARNING,
-						"Error caused by readAndDispatch, not caused by or fatal to caller",
+						"Error caused by readAndDispatch, not caused by or fatal to caller", //$NON-NLS-1$
 						e);
 			}
 		}

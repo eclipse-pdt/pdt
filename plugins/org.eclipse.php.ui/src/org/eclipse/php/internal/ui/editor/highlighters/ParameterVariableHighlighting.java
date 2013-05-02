@@ -62,6 +62,6 @@ public class ParameterVariableHighlighting extends AbstractSemanticHighlighting 
 	}
 
 	public String getDisplayName() {
-		return "Parameter variables";
+		return Messages.ParameterVariableHighlighting_0;
 	}
 }

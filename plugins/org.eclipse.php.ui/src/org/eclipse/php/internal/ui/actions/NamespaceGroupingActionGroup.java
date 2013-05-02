@@ -45,9 +45,9 @@ public class NamespaceGroupingActionGroup extends ActionGroup {
 	class GroupByNamespacesAction extends Action {
 
 		public GroupByNamespacesAction() {
-			super("Group by &namespaces", AS_CHECK_BOX);
-			setDescription("Groups PHP elements by namespaces");
-			setToolTipText("Groups PHP elements by namespaces");
+			super(Messages.NamespaceGroupingActionGroup_0, AS_CHECK_BOX);
+			setDescription(Messages.NamespaceGroupingActionGroup_2);
+			setToolTipText(Messages.NamespaceGroupingActionGroup_2);
 
 			// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 			// IStudioHelpContextIds.EXECUTION_STATISTICS_VIEW);

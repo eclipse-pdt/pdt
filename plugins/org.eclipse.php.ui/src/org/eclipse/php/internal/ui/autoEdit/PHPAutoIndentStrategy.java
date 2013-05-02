@@ -96,7 +96,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 						.length() == 0) {// blank line
 					if (command.offset != region.getOffset()) {
 						document.replace(region.getOffset(),
-								region.getLength(), "");
+								region.getLength(), ""); //$NON-NLS-1$
 						// adjust the offset
 						command.offset = region.getOffset();
 					}
@@ -154,7 +154,7 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		}
 		JobSafeStructuredDocument newdocument = new JobSafeStructuredDocument(
 				new PhpSourceParser());
-		String start = "<?php";
+		String start = "<?php"; //$NON-NLS-1$
 		newdocument.set(start + newline + tempsb.toString());
 		PhpFormatter formatter = new PhpFormatter(0, newdocument.getLength(),
 				true);

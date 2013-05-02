@@ -24,7 +24,7 @@ public abstract class AbstractToggleLinkingAction extends Action {
 		super(PHPUIMessages.ToggleLinkingAction_label);
 		setDescription(PHPUIMessages.ToggleLinkingAction_description);
 		setToolTipText(PHPUIMessages.ToggleLinkingAction_tooltip);
-		PHPPluginImages.setLocalImageDescriptors(this, "synced.gif"); //$NON-NLS-1$		
+		PHPPluginImages.setLocalImageDescriptors(this, "synced.gif"); 		 //$NON-NLS-1$
 		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 		// IPHPHelpContextIds.LINK_EDITOR_ACTION);
 	}

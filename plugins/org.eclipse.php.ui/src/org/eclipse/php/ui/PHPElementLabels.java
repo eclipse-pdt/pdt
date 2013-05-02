@@ -106,7 +106,7 @@ public class PHPElementLabels extends ScriptElementLabels {
 				if (type != null) {
 					getTypeLabel(type, T_FULLY_QUALIFIED
 							| (flags & QUALIFIER_FLAGS), buf);
-					buf.append("::");
+					buf.append("::"); //$NON-NLS-1$
 				}
 			}
 
@@ -170,7 +170,7 @@ public class PHPElementLabels extends ScriptElementLabels {
 						buf.append(params[i].getName());
 					}
 					if (bInitializers && params[i].getDefaultValue() != null) {
-						buf.append("=");
+						buf.append("="); //$NON-NLS-1$
 						buf.append(params[i].getDefaultValue());
 					}
 				}

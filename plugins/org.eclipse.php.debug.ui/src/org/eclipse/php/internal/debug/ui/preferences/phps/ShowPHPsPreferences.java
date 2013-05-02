@@ -33,14 +33,14 @@ public class ShowPHPsPreferences implements IMarkerResolution {
 	 */
 	public void run(IMarker marker) {
 		IPreferencePage page = new PHPsPreferencePage();
-		showPreferencePage(PHPsPreferencePage.ID, page); //$NON-NLS-1$
+		showPreferencePage(PHPsPreferencePage.ID, page); 
 	}
 
 	/**
 	 * @see org.eclipse.ui.IMarkerResolution#getLabel()
 	 */
 	public String getLabel() {
-		return PHPDebugUIMessages.ShowPHPsPreferencePageTitle; //$NON-NLS-1$
+		return PHPDebugUIMessages.ShowPHPsPreferencePageTitle; 
 	}
 
 	protected void showPreferencePage(String id, IPreferencePage page) {

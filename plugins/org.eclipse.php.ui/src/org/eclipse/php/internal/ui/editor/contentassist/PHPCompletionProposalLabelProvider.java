@@ -64,7 +64,7 @@ public class PHPCompletionProposalLabelProvider extends
 			if (type instanceof AliasType) {
 				AliasType aliasType = (AliasType) type;
 				nameBuffer.append(aliasType.getAlias());
-				nameBuffer.append("()");
+				nameBuffer.append("()"); //$NON-NLS-1$
 				return nameBuffer.toString();
 			}
 		}

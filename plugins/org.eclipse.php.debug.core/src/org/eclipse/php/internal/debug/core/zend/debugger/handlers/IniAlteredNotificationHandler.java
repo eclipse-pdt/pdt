@@ -32,7 +32,7 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
  */
 public class IniAlteredNotificationHandler implements IDebugMessageHandler {
 
-	private static final String INCLUDE_PATH = "include_path";
+	private static final String INCLUDE_PATH = "include_path"; //$NON-NLS-1$
 
 	public void handle(IDebugMessage message, PHPDebugTarget debugTarget) {
 		IniAlteredNotification iniMessage = (IniAlteredNotification) message;
@@ -74,10 +74,10 @@ public class IniAlteredNotificationHandler implements IDebugMessageHandler {
 		if (oldValue == null || oldValue.trim().length() == 0) {
 			return new ArrayList<String>();
 		}
-		String separator = ":";
+		String separator = ":"; //$NON-NLS-1$
 		int semicolonIndex = oldValue.indexOf(';');
 		if (semicolonIndex != -1) {
-			separator = ";";
+			separator = ";"; //$NON-NLS-1$
 		}
 		return new ArrayList<String>(Arrays.asList(oldValue.split(separator)));
 	}

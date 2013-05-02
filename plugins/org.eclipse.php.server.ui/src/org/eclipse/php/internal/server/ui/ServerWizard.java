@@ -31,7 +31,7 @@ import org.eclipse.ui.IWorkbench;
 
 public class ServerWizard extends FragmentedWizard implements INewWizard {
 
-	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.server.ui.serverWizardAndComposite";
+	protected static final String FRAGMENT_GROUP_ID = "org.eclipse.php.server.ui.serverWizardAndComposite"; //$NON-NLS-1$
 
 	public ServerWizard() {
 		this(PHPServerUIMessages.getString("ServerWizard.serverCreation")); //$NON-NLS-1$

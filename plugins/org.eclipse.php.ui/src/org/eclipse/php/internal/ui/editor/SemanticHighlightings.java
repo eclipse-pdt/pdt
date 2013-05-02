@@ -354,7 +354,7 @@ public class SemanticHighlightings {
 		 * getDisplayName()
 		 */
 		public String getDisplayName() {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		/*

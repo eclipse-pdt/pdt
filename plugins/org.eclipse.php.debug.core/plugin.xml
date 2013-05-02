@@ -27,7 +27,7 @@
    <extension
          point="org.eclipse.debug.core.sourceLocators">
       <sourceLocator
-            name="PHP Source Lookup Director"
+            name="%sourceLocator.name"
             class="org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector"
             id="org.eclipse.php.debug.core.sourceLookupDirector.php">
       </sourceLocator>
@@ -36,9 +36,9 @@
          point="org.eclipse.debug.core.sourceContainerTypes">
       <sourceContainerType
             class="org.eclipse.php.internal.debug.core.sourcelookup.containers.WorkspaceRootSourceContainer"
-            description="This source container is used for searching files in the root"
+            description="%sourceContainerType.description"
             id="org.eclipse.php.debug.core.containerType.workspaceRoot"
-            name="Workspace Root Source Container">
+            name="%sourceContainerType.name">
       </sourceContainerType>
    </extension>
    

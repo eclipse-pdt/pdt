@@ -40,36 +40,36 @@ public class NewWizardMenu extends BaseNewWizardMenu {
 	private static final List<String> PROJECT_WIZARD_ID = new ArrayList<String>();
 	static {
 		PROJECT_WIZARD_ID
-				.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard");
+				.add("org.eclipse.php.ui.wizards.PHPFileCreationWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard");
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPClassWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard");
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPInterfaceWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard");
+				.add("com.zend.php.ui.wizards.phpElementsWizard.NewPHPTraitWizard"); //$NON-NLS-1$
 
 		PROJECT_WIZARD_ID
-				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard");
-		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.folder");
-		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.file");
+				.add("org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.ui.wizards.new.file"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard");
+				.add("org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard");
+				.add("org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard");
+				.add("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("org.eclipse.ui.editors.wizards.UntitledTextFileWizard");
+				.add("org.eclipse.ui.editors.wizards.UntitledTextFileWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("org.zend.php.framework.ui.wizards.NewZendItemWizard");
+				.add("org.zend.php.framework.ui.wizards.NewZendItemWizard"); //$NON-NLS-1$
 
 		PROJECT_WIZARD_ID
-				.add("com.zend.php.ui.wizards.wizards.RemoteFolderWizard");
-		PROJECT_WIZARD_ID.add("org.eclipse.php.wst.jsdt.ui.NewJSWizard");
+				.add("com.zend.php.ui.wizards.wizards.RemoteFolderWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("org.eclipse.php.wst.jsdt.ui.NewJSWizard"); //$NON-NLS-1$
 		PROJECT_WIZARD_ID
-				.add("org.eclipse.mylyn.tasks.ui.wizards.new.repository.task");
-		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestCaseWizard");
-		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestSuiteWizard");
+				.add("org.eclipse.mylyn.tasks.ui.wizards.new.repository.task"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestCaseWizard"); //$NON-NLS-1$
+		PROJECT_WIZARD_ID.add("com.zend.php.phpunit.wizards.TestSuiteWizard"); //$NON-NLS-1$
 	}
 	private final IAction newExampleAction;
 	private final IAction newProjectAction;
