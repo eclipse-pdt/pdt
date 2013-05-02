@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.internal.ui.actions.ActionMessages;
+import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.AddSourceFolderWizard;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage.ConfigureBuildPathAction;
@@ -28,6 +30,7 @@ import org.eclipse.dltk.ui.IContextMenuConstants;
 import org.eclipse.dltk.ui.actions.AbstractOpenWizardAction;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.part.Page;
@@ -87,7 +90,7 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 	private static class NoActionAvailable extends Action {
 		public NoActionAvailable() {
 			setEnabled(false);
-			setText(""); //$NON-NLS-1$
+			setText(NewWizardMessages.GenerateBuildPathActionGroup_no_action_available);
 		}
 	}
 
@@ -161,9 +164,9 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 
 		public CreateLocalSourceFolderAction() {
 			super(false);
-			setText(""); //$NON-NLS-1$
-			setDescription(""); //$NON-NLS-1$
-			setToolTipText(""); //$NON-NLS-1$
+			setText(ActionMessages.OpenNewSourceFolderWizardAction_text2);
+			setDescription(ActionMessages.OpenNewSourceFolderWizardAction_description);
+			setToolTipText(ActionMessages.OpenNewSourceFolderWizardAction_tooltip);
 			setImageDescriptor(DLTKPluginImages.DESC_TOOL_NEWPACKROOT);
 			if (DLTKCore.DEBUG) {
 				System.err.println(Messages.GenerateIncludePathActionGroup_0);
@@ -178,10 +181,10 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 
 		public CreateLinkedSourceFolderAction() {
 			super(true);
-			setText(""); //$NON-NLS-1$
-			setToolTipText(""); //$NON-NLS-1$
+			setText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Link_label);
+			setToolTipText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_Link_tooltip);
 			setImageDescriptor(DLTKPluginImages.DESC_ELCL_ADD_LINKED_SOURCE_TO_BUILDPATH);
-			setDescription(""); //$NON-NLS-1$
+			setDescription(NewWizardMessages.PackageExplorerActionGroup_FormText_createLinkedFolder);
 		}
 	}
 
@@ -251,7 +254,7 @@ public class GenerateIncludePathActionGroup extends ActionGroup /*
 		super.fillContextMenu(menu);
 		if (!canOperateOnSelection())
 			return;
-		String menuText = ""; //$NON-NLS-1$
+		String menuText = PHPUIMessages.IncludePathActionGroup_label;
 		IMenuManager subMenu = new MenuManager(menuText, MENU_ID);
 		subMenu.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {

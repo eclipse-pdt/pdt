@@ -27,6 +27,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.IDLTKStatusConstants;
 import org.eclipse.dltk.internal.ui.actions.ActionUtil;
+import org.eclipse.dltk.internal.ui.callhierarchy.CallHierarchyMessages;
 import org.eclipse.dltk.internal.ui.callhierarchy.CallHierarchyUI;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.actions.SelectionDispatchAction;
@@ -66,9 +67,9 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
 	 */
 	public OpenCallHierarchyAction(IWorkbenchSite site) {
 		super(site);
-		setText(""); //$NON-NLS-1$
-		setToolTipText(""); //$NON-NLS-1$
-		setDescription(""); //$NON-NLS-1$
+		setText(CallHierarchyMessages.OpenCallHierarchyAction_label);
+		setToolTipText(CallHierarchyMessages.OpenCallHierarchyAction_tooltip);
+		setDescription(CallHierarchyMessages.OpenCallHierarchyAction_description);
 		// PlatformUI.getWorkbench().getHelpSystem().setHelp(this,
 		// IJavaHelpContextIds.CALL_HIERARCHY_OPEN_ACTION);
 	}
