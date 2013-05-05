@@ -948,7 +948,8 @@ public class PHPDocumentationContentAccess {
 			}
 		}
 		// m.appendTail(sb);
-		fBuf = sb;
+		fBuf.append(sb);
+		// fBuf = sb;
 		sb = null;
 	}
 
@@ -1406,12 +1407,14 @@ public class PHPDocumentationContentAccess {
 			} // else if (first instanceof MemberRef) {
 				// MemberRef memberRef = (MemberRef) first;
 				// Name qualifier = memberRef.getQualifier();
-				//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); 
+				// refTypeName = qualifier == null ? "" :
+				// qualifier.getFullyQualifiedName();
 				// refMemberName = memberRef.getName().getIdentifier();
 				// } else if (first instanceof MethodRef) {
 				// MethodRef methodRef = (MethodRef) first;
 				// Name qualifier = methodRef.getQualifier();
-				//				refTypeName = qualifier == null ? "" : qualifier.getFullyQualifiedName(); 
+				// refTypeName = qualifier == null ? "" :
+				// qualifier.getFullyQualifiedName();
 				// refMemberName = methodRef.getName().getIdentifier();
 				// List params = methodRef.parameters();
 				// int ps = params.size();
