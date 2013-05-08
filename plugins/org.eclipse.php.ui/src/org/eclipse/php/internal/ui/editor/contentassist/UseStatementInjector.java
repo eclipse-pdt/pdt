@@ -79,7 +79,23 @@ public class UseStatementInjector {
 		SourceType ns = (SourceType) PHPModelUtils.getPossibleCurrentNamespace(
 				sourceModule, offset);
 		if (ns == null) {
-			return null;
+			if (program.statements() != null
+					&& !program.statements().isEmpty()
+					&& (program.statements().get(0) instanceof NamespaceDeclaration)) {
+				NamespaceDeclaration result = (NamespaceDeclaration) program
+						.statements().get(0);
+				for (Statement statement : program.statements()) {
+					if (statement.getStart() >= offset) {
+						return result;
+					}
+					if (statement instanceof NamespaceDeclaration) {
+						result = (NamespaceDeclaration) statement;
+					}
+				}
+				return result;
+			} else {
+				return null;
+			}
 		}
 		ASTNode node = null;
 		try {
@@ -381,8 +397,8 @@ public class UseStatementInjector {
 											new ProjectScope(modelElement
 													.getScriptProject()
 													.getProject()),
-											new InstanceScope(),
-											new DefaultScope() };
+											InstanceScope.INSTANCE,
+											DefaultScope.INSTANCE };
 									for (int i = 0; i < contents.length; i++) {
 										IScopeContext scopeContext = contents[i];
 										IEclipsePreferences node = scopeContext
@@ -623,7 +639,8 @@ public class UseStatementInjector {
 										new ProjectScope(modelElement
 												.getScriptProject()
 												.getProject()),
-										new InstanceScope(), new DefaultScope() };
+										InstanceScope.INSTANCE,
+										DefaultScope.INSTANCE };
 								for (int i = 0; i < contents.length; i++) {
 									IScopeContext scopeContext = contents[i];
 									IEclipsePreferences node = scopeContext
