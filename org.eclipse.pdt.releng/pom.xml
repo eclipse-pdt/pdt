@@ -80,6 +80,8 @@
 		<module>../plugins/org.eclipse.php.mylyn.ui</module>
 		<module>../plugins/org.eclipse.php.server.core</module>
 		<module>../plugins/org.eclipse.php.server.ui</module>
+		<module>../plugins/org.eclipse.php.formatter.core</module>
+		<module>../plugins/org.eclipse.php.formatter.ui</module>
 		<module>../features/org.eclipse.php.source-feature</module>
 		<module>../features/org.eclipse.php.test-feature</module>
 		<module>../plugins/org.eclipse.php.ui</module>
