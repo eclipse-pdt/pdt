@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.php.ui.phpFormatterProcessor">
+         <processor
+	        class="org.eclipse.php.formatter.core.PHPCodeFormatterProxy"
+	        id="org.eclipse.php.formatter.core.PHPCodeFormatter"
+	        name="PHP Code Formatter"/>     
+   </extension>
+   <extension
+         point="org.eclipse.php.core.phpFormatterCommonPreferences">
+         <processor
+	        class="org.eclipse.php.formatter.core.PHPCodeFormatterCommonPreferences"
+	        id="org.eclipse.php.formatter.core.PHPCodeFormatterCommonPreferences"
+	        name="PHP Code Formatter Common Preferences"/>     
+   </extension>
+</plugin>

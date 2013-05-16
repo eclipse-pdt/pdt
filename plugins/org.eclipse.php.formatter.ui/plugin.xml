@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+   <extension-point id="profiles" name="PHP Formatter Profiles" schema="schema/profiles.exsd"/>
+   
+   <extension point="org.eclipse.php.ui.phpFormatterPrefBlock">
+    <block
+        class="org.eclipse.php.formatter.ui.preferences.PHPFormatterConfigurationWrapperProxy"
+        id="org.eclipse.php.formatter.ui.preferences.PHPFormatterConfigurationWrapper"
+        name="PHP Formatter Configuration Block"/>
+	</extension>
+       
+     <extension
+      point="org.eclipse.php.formatter.ui.profiles">
+   		<profile
+         class="org.eclipse.php.formatter.ui.preferences.ZendFrameworkFormatterPreferences"
+         id="org.eclipse.php.formatter.ui.preferences.ZendFrameworkFormatterPreferences"
+         name="Zend Framework 1 Conventions"/>
+     <profile
+           class="org.eclipse.php.formatter.ui.preferences.PSR2FormatterPreferences"
+           id="org.eclipse.php.formatter.ui.psr2"
+           name="PSR-2">
+     </profile>
+  	 </extension>
+     <extension
+           point="org.eclipse.core.runtime.adapters">
+        <factory
+              adaptableType="org.eclipse.core.runtime.preferences.IScopeContext"
+              class="org.eclipse.php.formatter.ui.ProfileAdapterFactory">
+           <adapter
+                 type="org.eclipse.php.core.format.IProfileManager">
+           </adapter>
+        </factory>
+     </extension>
+     <extension
+           point="org.eclipse.core.runtime.adapters">
+        <factory
+              adaptableType="org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard"
+              class="org.eclipse.php.formatter.ui.ProfileAdapterFactory">
+           <adapter
+                 type="org.eclipse.php.core.format.IProfileManager">
+           </adapter>
+        </factory>
+     </extension>
+</plugin>
