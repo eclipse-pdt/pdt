@@ -114,8 +114,8 @@ public class CodeFormatterConfigurationBlock extends
 		public void widgetSelected(SelectionEvent e) {
 			final int index = fProfileCombo.getSelectionIndex();
 			Profile selectedProfile = fSortedProfiles.get(index);
-			updatePDTPreferences(new CodeFormatterPreferences(
-					selectedProfile.getSettings()));
+			// updatePDTPreferences(new CodeFormatterPreferences(
+			// selectedProfile.getSettings()));
 			fProfileManager.setSelected(selectedProfile);
 		}
 
@@ -571,8 +571,13 @@ public class CodeFormatterConfigurationBlock extends
 		return composite;
 	}
 
-	// This method was added to update required PDT preferences from Neon
-	// Settings
+	/**
+	 * This method was added to update required PDT preferences from Neon
+	 * Settings
+	 * 
+	 * @deprecated
+	 * @param preferences
+	 */
 	public void updatePDTPreferences(CodeFormatterPreferences preferences) {
 		Key indentKey = PHPFormatterConfigurationBlock.PREF_FORMATTER_INDENTATION_SIZE;
 		Key tabSizeKey = PHPFormatterConfigurationBlock.PREF_FORMATTER_TAB_SIZE;

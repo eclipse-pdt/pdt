@@ -275,7 +275,7 @@ public class ModifyDialog extends StatusDialog {
 					FormatterUIPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$
 			updateStatus(fStandardStatus);
 		}
-		configBlock.updatePDTPreferences(codeFormatterPreferences);
+		// configBlock.updatePDTPreferences(codeFormatterPreferences);
 		fProfile.setSettings(codeFormatterPreferences.getMap());
 		fApplyButton.setEnabled(false);
 	}

@@ -29,7 +29,9 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
  * @author guy.g
- * 
+ * @deprecated Formatter configuration block is now provided by
+ *             org.eclipse.php.formatter
+ *             .ui.preferences.CodeFormatterConfigurationBlock
  */
 public class PHPFormatterConfigurationBlock extends
 		PHPCoreOptionsConfigurationBlock implements ModifyListener,
@@ -73,10 +75,10 @@ public class PHPFormatterConfigurationBlock extends
 		Group formattingComposite = createComposite(parent, 2);
 		final String[] tabPolicyLabels = new String[] {
 				PHPUIMessages.PHPFormatterConfigurationBlock_tabsLabel,
-				PHPUIMessages.PHPFormatterConfigurationBlock_spacesLabel }; 
+				PHPUIMessages.PHPFormatterConfigurationBlock_spacesLabel };
 		Label indentTabsLabel = new Label(formattingComposite, SWT.NULL);
 		indentTabsLabel
-				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_tabPolicyLabel); 
+				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_tabPolicyLabel);
 		tabPolicyCombo = new Combo(formattingComposite, SWT.NULL
 				| SWT.READ_ONLY);
 		tabPolicyCombo.setItems(tabPolicyLabels);
@@ -87,7 +89,7 @@ public class PHPFormatterConfigurationBlock extends
 
 		Label indentSizeLabel = new Label(formattingComposite, SWT.NULL);
 		indentSizeLabel
-				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeLabel); 
+				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeLabel);
 		indentSizeTxt = new Text(formattingComposite, SWT.BORDER);
 		indentSizeTxt.setTextLimit(2);
 		indentSizeTxt.setLayoutData(gd);
@@ -97,7 +99,7 @@ public class PHPFormatterConfigurationBlock extends
 
 		Label tabSizeLabel = new Label(formattingComposite, SWT.NULL);
 		tabSizeLabel
-				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_tabSizeLabel); 
+				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_tabSizeLabel);
 		tabSizeTxt = new Text(formattingComposite, SWT.BORDER);
 		tabSizeTxt.setTextLimit(2);
 		tabSizeTxt.setLayoutData(gd);
@@ -107,7 +109,7 @@ public class PHPFormatterConfigurationBlock extends
 
 		Label indentWrapLineSize = new Label(formattingComposite, SWT.NULL);
 		indentWrapLineSize
-				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentWrapLineSizeLabel); 
+				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentWrapLineSizeLabel);
 		fDefaultIndentWrapLineSizeTxt = new Text(formattingComposite,
 				SWT.BORDER);
 		fDefaultIndentWrapLineSizeTxt.setTextLimit(2);
@@ -115,7 +117,7 @@ public class PHPFormatterConfigurationBlock extends
 
 		Label indentArrayInitSize = new Label(formattingComposite, SWT.NULL);
 		indentArrayInitSize
-				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentArrayInitSizeLabel); 
+				.setText(PHPUIMessages.PHPFormatterConfigurationBlock_indentArrayInitSizeLabel);
 		fDefaultIndentArrayInitSizeTxt = new Text(formattingComposite,
 				SWT.BORDER);
 		fDefaultIndentArrayInitSizeTxt.setTextLimit(2);
@@ -162,7 +164,7 @@ public class PHPFormatterConfigurationBlock extends
 							|| fIndentationSize > MAX_INDENT_SIZE) {
 						fFormatterStatus = new StatusInfo(
 								IStatus.ERROR,
-								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); 
+								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage);
 					} else {
 						setValue(PREF_FORMATTER_INDENTATION_SIZE,
 								String.valueOf(fIndentationSize));
@@ -171,7 +173,7 @@ public class PHPFormatterConfigurationBlock extends
 				} catch (NumberFormatException nfe) {
 					fFormatterStatus = new StatusInfo(
 							IStatus.ERROR,
-							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); 
+							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage);
 				}
 			}
 			if (PREF_FORMATTER_TAB_SIZE.equals(changedKey)) {
@@ -181,7 +183,7 @@ public class PHPFormatterConfigurationBlock extends
 							|| fTabSize > MAX_INDENT_SIZE) {
 						fFormatterStatus = new StatusInfo(
 								IStatus.ERROR,
-								PHPUIMessages.PHPFormatterConfigurationBlock_tabSizeErrorMessage); 
+								PHPUIMessages.PHPFormatterConfigurationBlock_tabSizeErrorMessage);
 					} else {
 						setValue(PREF_FORMATTER_TAB_SIZE,
 								String.valueOf(fTabSize));
@@ -190,7 +192,7 @@ public class PHPFormatterConfigurationBlock extends
 				} catch (NumberFormatException nfe) {
 					fFormatterStatus = new StatusInfo(
 							IStatus.ERROR,
-							PHPUIMessages.PHPFormatterConfigurationBlock_tabSizeErrorMessage); 
+							PHPUIMessages.PHPFormatterConfigurationBlock_tabSizeErrorMessage);
 				}
 			}
 			if (PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE.equals(changedKey)) {
@@ -200,7 +202,7 @@ public class PHPFormatterConfigurationBlock extends
 							|| fIndentationWrappedLineSize > MAX_INDENT_SIZE) {
 						fFormatterStatus = new StatusInfo(
 								IStatus.ERROR,
-								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); 
+								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage);
 					} else {
 						setValue(PREF_FORMATTER_INDENTATION_WRAPPED_LINE_SIZE,
 								String.valueOf(fIndentationWrappedLineSize));
@@ -209,7 +211,7 @@ public class PHPFormatterConfigurationBlock extends
 				} catch (NumberFormatException nfe) {
 					fFormatterStatus = new StatusInfo(
 							IStatus.ERROR,
-							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); 
+							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage);
 				}
 			}
 			if (PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE.equals(changedKey)) {
@@ -219,7 +221,7 @@ public class PHPFormatterConfigurationBlock extends
 							|| fIndentationArrayInitSize > MAX_INDENT_SIZE) {
 						fFormatterStatus = new StatusInfo(
 								IStatus.ERROR,
-								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); 
+								PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage);
 					} else {
 						setValue(PREF_FORMATTER_INDENTATION_ARRAY_INIT_SIZE,
 								String.valueOf(fIndentationArrayInitSize));
@@ -228,7 +230,7 @@ public class PHPFormatterConfigurationBlock extends
 				} catch (NumberFormatException nfe) {
 					fFormatterStatus = new StatusInfo(
 							IStatus.ERROR,
-							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage); 
+							PHPUIMessages.PHPFormatterConfigurationBlock_indentSizeErrorMessage);
 				}
 			} else {
 				return;
@@ -254,7 +256,7 @@ public class PHPFormatterConfigurationBlock extends
 
 	private Group createComposite(Composite parent, int numColumns) {
 		Group group = new Group(parent, SWT.NONE);
-		group.setText(PHPUIMessages.PHPFormatterConfigurationBlock_0); 
+		group.setText(PHPUIMessages.PHPFormatterConfigurationBlock_0);
 
 		// GridLayout
 		GridLayout layout = new GridLayout();

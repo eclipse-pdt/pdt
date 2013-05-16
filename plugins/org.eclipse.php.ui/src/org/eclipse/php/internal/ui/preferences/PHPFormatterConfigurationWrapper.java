@@ -21,6 +21,9 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * Description:
  * 
  * @author moshe, 2007
+ * @deprecated Formatter preference page is now provided by
+ *             org.eclipse.php.formatter
+ *             .ui.preferences.PHPFormatterConfigurationWrapperProxy
  */
 public class PHPFormatterConfigurationWrapper implements
 		IPHPFormatterConfigurationBlockWrapper {
