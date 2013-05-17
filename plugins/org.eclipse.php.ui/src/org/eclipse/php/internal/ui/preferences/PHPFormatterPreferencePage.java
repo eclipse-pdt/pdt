@@ -51,8 +51,8 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 				container);
 		setDescription(fConfigurationBlock.getDescription());
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,
-				IPHPHelpContextIds.FORMATTER_PREFERENCES);
+		PlatformUI.getWorkbench().getHelpSystem()
+				.setHelp(parent, IPHPHelpContextIds.FORMATTER_PREFERENCES);
 	}
 
 	private IPHPFormatterConfigurationBlockWrapper getFormatterPreferencesBlock() {
@@ -68,6 +68,11 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 						element, formatterExtensionName);
 				prefBlock = (IPHPFormatterConfigurationBlockWrapper) ecProxy
 						.getObject();
+				// no need to check for more elements here, as only one can be
+				// set as prefBlock
+				// TODO allow more than one prefBlock
+				break;
+
 			}
 		}
 
