@@ -28,6 +28,7 @@
 	<extension-point id="quickFixProcessors" name="%quickFixProcessorExtensionPoint" schema="schema/quickFixProcessors.exsd"/>
 	<extension-point id="quickAssistProcessors" name="%quickAssistProcessorExtensionPoint" schema="schema/quickAssistProcessors.exsd"/>
 	<extension-point id="phpProjectWizard" name="%extension-point.name.13" schema="schema/phpNewProjectWizard.exsd" />
+ <extension-point id="libraryButtonHandlers" name="Library Button Handlers" schema="schema/libraryButtonHandlers.exsd"/>
 	
 	
 	<!--PHP formatter processoer registration, for PHP Content:-->
