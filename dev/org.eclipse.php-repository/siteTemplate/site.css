@@ -69,11 +69,6 @@ STYLE type ="text/css">td.spacer {
 	color: #187dc6;
 }
 
-.td_header {
-	background: url("https://www.jboss.org/dms/tools/images/tools-banner.png") 0 no-repeat;
-	height: 100px;
-}
-
 .column-header {
 	font-size:small;
 }
