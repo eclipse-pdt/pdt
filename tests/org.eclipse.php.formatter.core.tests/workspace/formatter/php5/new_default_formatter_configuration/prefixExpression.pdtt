@@ -1,0 +1,16 @@
+--TEST--
+Test formatting for PrefixExpression
+--FILE--
+<?php
+  ++ $a;
+ 	-- foo () ;
+ 	+- $a;
++-+- $a;
+?>
+--EXPECT--
+<?php
+++ $a;
+-- foo ();
++ - $a;
++ - + - $a;
+?>

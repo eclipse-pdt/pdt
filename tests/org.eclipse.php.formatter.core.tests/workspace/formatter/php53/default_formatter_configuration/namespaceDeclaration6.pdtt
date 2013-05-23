@@ -1,0 +1,12 @@
+--TEST--
+Test formatting NamespaceDeclaration, NamespaceName
+--FILE--
+<?php
+		namespace NS1 \ NS2 \ NS3;
+
+?>
+--EXPECT--
+<?php
+namespace NS1\NS2\NS3;
+
+?>

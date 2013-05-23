@@ -1,0 +1,14 @@
+--TEST--
+Test formatting UseStatement, UseStatementPart
+--FILE--
+<?php
+	use NS1 \ NS2   ;
+		use NS3 \ NS4   ;
+           echo '1';
+?>
+--EXPECT--
+<?php
+use NS1\NS2;
+use NS3\NS4;
+echo '1';
+?>

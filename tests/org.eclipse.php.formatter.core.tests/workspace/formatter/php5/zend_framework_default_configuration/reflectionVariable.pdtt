@@ -1,0 +1,12 @@
+--TEST--
+Test formatting for ReflectionVariable
+--FILE--
+<?php
+	$$a ;
+  $$foo  () ;
+?>
+--EXPECT--
+<?php
+$$a;
+$$foo();
+?>

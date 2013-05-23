@@ -1,0 +1,16 @@
+--TEST--
+Test formatting global namespace parameter
+--FILE--
+<?php
+class Test extends \Test2{
+public function run(\Test3 $test){
+}
+}
+?>
+--EXPECT--
+<?php
+class Test extends \Test2 {
+	public function run(\Test3 $test) {
+	}
+}
+?>

@@ -1,0 +1,35 @@
+--TEST--
+Tests formatting pasted method.
+--FILE--
+<?php
+class A {
+       
+        function copy_is_bad() {
+                print "relative indent not kept";
+        }
+        |
+}
+
+?>
+--OTHER--
+
+        function copy_is_bad() {
+                print "relative indent not kept";
+        }
+        
+--EXPECT--
+<?php
+class A {
+       
+        function copy_is_bad() {
+                print "relative indent not kept";
+        }
+
+        function copy_is_bad() {
+        	print "relative indent not kept";
+        }
+        
+        
+}
+
+?>

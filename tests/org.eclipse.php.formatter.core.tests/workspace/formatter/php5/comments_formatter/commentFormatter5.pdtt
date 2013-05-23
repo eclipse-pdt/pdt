@@ -1,0 +1,29 @@
+--TEST--
+Test formatting for comments
+Bug 367584 - Possible NPE in PHPDocTag
+--FILE--
+<?php
+$e = array (
+       array('level'=>'INFO'),
+       // TODO comment
+       array('level'=>'INFO'),
+);
+/**
+ * @param
+ */
+function foo (int $a, int $b){
+}
+?>
+--EXPECT--
+<?php
+$e = array(array('level' => 'INFO'), 
+// TODO comment
+array('level' => 'INFO'));
+/**
+ *
+ * @param            
+ *
+ */
+function foo (int $a, int $b)
+{}
+?>

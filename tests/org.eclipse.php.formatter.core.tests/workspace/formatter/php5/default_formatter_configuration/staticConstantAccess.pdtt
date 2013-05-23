@@ -1,0 +1,37 @@
+--TEST--
+Test formatting for StaticConstantAccess
+--FILE--
+<?php
+//from PHP 5.3.0 only
+//const CONSTANT = 'Hello World';
+
+class MyClass {
+	const CONSTANT = 'Hello World';
+}
+
+interface MyInterface {
+	const CONSTANT = 'Hello World';
+}
+
+	//echo 	CONSTANT	;
+	echo  MyClass::CONSTANT ;
+	echo   MyInterface::CONSTANT ;
+?>
+--EXPECT--
+<?php
+// from PHP 5.3.0 only
+// const CONSTANT = 'Hello World';
+
+
+class MyClass {
+	const CONSTANT = 'Hello World';
+}
+
+interface MyInterface {
+	const CONSTANT = 'Hello World';
+}
+
+// echo CONSTANT ;
+echo MyClass::CONSTANT;
+echo MyInterface::CONSTANT;
+?>

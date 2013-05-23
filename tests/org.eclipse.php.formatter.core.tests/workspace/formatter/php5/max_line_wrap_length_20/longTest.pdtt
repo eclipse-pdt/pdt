@@ -1,0 +1,62 @@
+--TEST--
+Test formatting array statements
+--FILE--
+<?php
+
+$a = 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123 + 123;
+while /* kuku */ ( /* kuku */$a > 0 ) {
+	while ( $b > 0 ) {
+	}
+}
+
+while ( $c > 0 ) {
+	while ( $d > 0 ) {
+	}
+}
+
+while ( $e > 0 )
+	while ( $f > 0 ) {
+	}
+
+while ( $g > 0 ) {
+	while ( $h > 0 ) {
+	}
+}
+
+do {
+} while ( $g > 1 );
+?>
+--EXPECT--
+<?php
+
+$a = 123 + 123 + 123 +
+		 123 + 123 +
+		 123 + 123 +
+		 123 + 123 +
+		 123 + 123 +
+		 123 + 123 +
+		 123 + 123 +
+		 123 + 123 +
+		 123;
+while /* kuku */ ( /* kuku */$a > 0 ) {
+	while ( $b > 0 ) {
+	}
+}
+
+while ( $c > 0 ) {
+	while ( $d > 0 ) {
+	}
+}
+
+while ( $e > 0 )
+	while ( $f > 0 ) {
+	}
+
+while ( $g > 0 ) {
+	while ( $h > 0 ) {
+	}
+}
+
+do {
+} while ( $g > 1 );
+?>

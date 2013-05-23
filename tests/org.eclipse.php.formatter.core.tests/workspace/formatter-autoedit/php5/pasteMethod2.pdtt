@@ -1,0 +1,39 @@
+--TEST--
+Tests formatting pasted method.
+--FILE--
+<?php
+
+function f ()
+{
+	echo "DSaf";
+}
+
+
+|
+
+?>
+--OTHER--
+
+function f ()
+{
+	echo "DSaf";
+}
+
+--EXPECT--
+<?php
+
+function f ()
+{
+	echo "DSaf";
+}
+
+
+
+function f ()
+{
+	echo "DSaf";
+}
+
+
+
+?>

@@ -1,0 +1,16 @@
+--TEST--
+Test formatting for CloneExpression
+--FILE--
+<?php
+$obj1 = 
+	clone 
+			       $obj2;
+$obj3 = 
+	clone 
+			       $obj4;			       
+?> 
+--EXPECT--
+<?php
+$obj1 = clone $obj2;
+$obj3 = clone $obj4;
+?>

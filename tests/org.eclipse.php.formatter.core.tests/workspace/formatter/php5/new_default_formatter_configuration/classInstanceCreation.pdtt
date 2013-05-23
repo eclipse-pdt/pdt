@@ -1,0 +1,14 @@
+--TEST--
+Test formatting for ClassInstanceCreation
+--FILE--
+<?php
+// This will call B() as a constructor
+$b = new B ( );
+$c = new SplFileObject($file_name, $open_mode, $use_include_path, $context);
+?> 
+--EXPECT--
+<?php
+// This will call B() as a constructor
+$b = new B ();
+$c = new SplFileObject ( $file_name, $open_mode, $use_include_path, $context );
+?> 

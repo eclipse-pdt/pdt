@@ -1,0 +1,17 @@
+--TEST--
+Tests formatting pasted method.
+--FILE--
+<?php
+|
+?>
+--OTHER--
+class A {
+      public static function foo(){ echo 'bar'; }
+}
+--EXPECT--
+<?php
+class A {
+	public static function foo(){ echo 'bar'; }
+}
+
+?>

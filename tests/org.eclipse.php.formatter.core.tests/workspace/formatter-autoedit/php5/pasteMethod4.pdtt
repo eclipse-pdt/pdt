@@ -1,0 +1,37 @@
+--TEST--
+Tests formatting pasted method.
+--FILE--
+<?php
+class test
+{
+|
+}
+
+?>
+--OTHER--
+function test ()
+{
+    echo ("test");
+    echo ("test");
+    
+    echo ("test");
+    echo ("test");
+    echo ("test");
+}
+--EXPECT--
+<?php
+class test
+{
+	function test ()
+	{
+		echo ("test");
+		echo ("test");
+	
+		echo ("test");
+		echo ("test");
+		echo ("test");
+	}
+	
+}
+
+?>

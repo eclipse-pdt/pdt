@@ -1,0 +1,17 @@
+--TEST--
+Test formatting for ArrayElement
+--FILE--
+<?php
+$a = array (0, 'Dodo'=>'Golo', $a[$a] ,
+ $b=>foo(), 4=>$myClass->getFirst() );
+?>
+--EXPECT--
+<?php
+$a = array (
+		0,
+		'Dodo' => 'Golo',
+		$a [$a],
+		$b => foo (),
+		4 => $myClass->getFirst () 
+);
+?>

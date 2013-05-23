@@ -1,0 +1,28 @@
+--TEST--
+Test formatting for InstanceOfExpression
+--FILE--
+<?php
+class MyClass
+{
+}
+
+class NotMyClass
+{
+}
+$a = new MyClass;
+
+var_dump($a instanceof MyClass);
+var_dump($a instanceof NotMyClass);
+?>
+--EXPECT--
+<?php
+class MyClass {
+}
+
+class NotMyClass {
+}
+$a = new MyClass ();
+
+var_dump ( $a instanceof MyClass );
+var_dump ( $a instanceof NotMyClass );
+?>

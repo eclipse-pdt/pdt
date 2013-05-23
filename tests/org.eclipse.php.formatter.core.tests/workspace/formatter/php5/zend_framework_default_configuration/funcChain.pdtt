@@ -1,0 +1,12 @@
+--TEST--
+Test formatting for MethodChain
+--FILE--
+<?php
+foo()->foo()->foo()->foo();
+?>
+--EXPECT--
+<?php
+foo()->foo()
+    ->foo()
+    ->foo();
+?>

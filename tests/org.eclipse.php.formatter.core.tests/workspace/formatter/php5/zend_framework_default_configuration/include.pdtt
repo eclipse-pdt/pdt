@@ -1,0 +1,16 @@
+--TEST--
+Test formatting for Include
+--FILE--
+<?php
+include('myFile.php');
+ include_once(   $myFile);
+  require(	$myClass->getFileName()	 );
+  require_once(   A::FILE_NAME);
+?>
+--EXPECT--
+<?php
+include ('myFile.php');
+include_once ($myFile);
+require ($myClass->getFileName());
+require_once (A::FILE_NAME);
+?>

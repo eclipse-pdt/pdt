@@ -1,0 +1,16 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+$this->event = new ServiceEvent ( array (
+		'initialize' => array (
+				function ($req, $res, $e) {|
+?>
+--EXPECT--
+<?php
+$this->event = new ServiceEvent ( array (
+		'initialize' => array (
+				function ($req, $res, $e) {
+					
+				}
+?>

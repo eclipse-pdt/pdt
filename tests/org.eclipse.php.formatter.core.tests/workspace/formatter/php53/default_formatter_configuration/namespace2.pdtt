@@ -1,0 +1,42 @@
+--TEST--
+Test formatting for ArrayAccess
+--FILE--
+<?php
+
+namespace NN;
+use a;
+
+class AAA
+{
+}
+
+class BB extends AAA
+{
+}
+
+namespace NN1;
+use a;
+
+class AAA
+{
+}
+?>
+--EXPECT--
+<?php
+
+namespace NN;
+
+use a;
+
+class AAA {
+}
+class BB extends AAA {
+}
+
+namespace NN1;
+
+use a;
+
+class AAA {
+}
+?>

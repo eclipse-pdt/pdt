@@ -1,0 +1,20 @@
+--TEST--
+Test formatting for FieldDeclaration
+--FILE--
+<?php
+class MyClass {
+	 var 	$a ,  $b	;
+        public $a = 	3	;
+  final   
+  private   static 	$var
+  ;
+}
+?>
+--EXPECT--
+<?php
+class MyClass {
+	var $a, $b;
+	public $a = 3;
+	private static final $var;
+}
+?>

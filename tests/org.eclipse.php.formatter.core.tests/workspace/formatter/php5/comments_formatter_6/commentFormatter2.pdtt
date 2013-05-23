@@ -1,0 +1,58 @@
+--TEST--
+Test formatting for comments
+--FILE--
+<?php
+
+/**
+ *             This is the header comment for the example interface.
+ */
+
+	/**
+
+ *    This is the phpdoc for the example interface.Multiple line comments in case the line comment formatting is enabled
+ */
+interface Example
+{
+/**
+     * The following is some sample code which illustrates source formatting
+     * within javadoc comments: Descriptions of parameters and return values are best appended at end of the javadoc comment.
+     *
+     *
+     *
+     *
+     * @param $a int
+     *            The first parameter. For an optimum result, this should be
+     *            an odd number between 0 and 100.
+     * @param $b int The second parameter.
+     * @return int The result of the foo operation, usually within 0 and 1000.blalalalalala
+     */
+    function foo (int $a, int $b);
+}
+?>
+--EXPECT--
+<?php
+/**
+ *             This is the header comment for the example interface.
+ */
+/**
+
+ *    This is the phpdoc for the example interface.Multiple line comments in case the line comment formatting is enabled
+ */
+interface Example
+{
+    /**
+     * The following is some sample code which illustrates source formatting
+     * within javadoc comments: Descriptions of parameters and return values are best appended at end of the javadoc comment.
+     *
+     *
+     *
+     *
+     * @param $a int
+     *            The first parameter. For an optimum result, this should be
+     *            an odd number between 0 and 100.
+     * @param $b int The second parameter.
+     * @return int The result of the foo operation, usually within 0 and 1000.blalalalalala
+     */
+    function foo (int $a, int $b);
+}
+?>

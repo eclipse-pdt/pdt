@@ -1,0 +1,12 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php 
+echo (new Human("Gonzalo"))->hello();
+( new className() )->class();
+?>
+--EXPECT--
+<?php
+echo (new Human ( "Gonzalo" ))->hello ();
+(new className ())->class ();
+?>

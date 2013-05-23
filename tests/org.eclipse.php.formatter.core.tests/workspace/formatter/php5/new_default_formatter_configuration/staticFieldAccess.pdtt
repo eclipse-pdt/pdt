@@ -1,0 +1,30 @@
+--TEST--
+Test formatting for StaticFieldAccess
+--FILE--
+<?php
+
+class MyClass {
+	static $field1 = 'Hello World';
+}
+
+interface MyInterface {
+	static $field2 = 'Hello World';
+}
+
+	echo 	MyClass::$field1;
+	echo 	MyInterface::$field2;
+?>
+--EXPECT--
+<?php
+
+class MyClass {
+	static $field1 = 'Hello World';
+}
+
+interface MyInterface {
+	static $field2 = 'Hello World';
+}
+
+echo MyClass::$field1;
+echo MyInterface::$field2;
+?>

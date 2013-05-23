@@ -1,0 +1,18 @@
+--TEST--
+Test formatting for FunctionName
+--FILE--
+<?php
+function myFunction($a, $b) {
+
+}
+
+$a = 'myFunction';
+		$a (  1,  2  )  ;
+?>
+--EXPECT--
+<?php
+function myFunction ($a, $b)
+{}
+$a = 'myFunction';
+$a(1, 2);
+?>

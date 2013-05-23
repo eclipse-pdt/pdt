@@ -1,0 +1,30 @@
+--TEST--
+Test formatting if statements
+--FILE--
+<?php
+      if ( $end_date <= $start_date )
+      {
+         echo AI_Output::Highlight( "ui-icon-cancel", "The end date must be after the start date." );
+      }
+/*
+      else if ( $end_date > strtotime( "-5 days" ) )
+      {
+         echo AI_Output::Highlight( "ui-icon-cancel", "The End Date must be more than 5 calendar days ago." );
+      }
+*/
+      else
+      {
+      }
+
+?>
+--EXPECT--
+<?php
+if ($end_date <= $start_date) {
+	echo AI_Output::Highlight ( "ui-icon-cancel", "The end date must be after the start date." );
+} /*
+ * else if ( $end_date > strtotime( "-5 days" ) ) { echo AI_Output::Highlight(
+ * "ui-icon-cancel", "The End Date must be more than 5 calendar days ago." ); }
+ */
+else {
+}
+?>

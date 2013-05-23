@@ -1,0 +1,37 @@
+--TEST--
+Tests formatting default statements.
+--FILE--
+<?php
+switch ($e) {
+	case 1 :
+		// comment 1
+		echo '1';
+			
+		echo '2';
+		echo '3';
+		break;
+	default :
+		// default
+		echo '2';|
+		echo '3';
+		break;
+}
+?>
+--EXPECT--
+<?php
+switch ($e) {
+	case 1 :
+		// comment 1
+		echo '1';
+			
+		echo '2';
+		echo '3';
+		break;
+	default :
+		// default
+		echo '2';
+		
+		echo '3';
+		break;
+}
+?>

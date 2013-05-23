@@ -1,0 +1,28 @@
+--TEST--
+Test formatting for Reference
+--FILE--
+<?php
+function foo() {
+	;
+}
+class MyClass {
+}
+ $a = 0;
+	$b = &$a;
+$bb 	= 	&new MyClass ( );
+$bbb = 	&foo ();
+	$newref =& returns_reference ();
+?>
+--EXPECT--
+<?php
+function foo() {
+	;
+}
+class MyClass {
+}
+$a = 0;
+$b = &$a;
+$bb = &new MyClass ();
+$bbb = &foo ();
+$newref = & returns_reference ();
+?>

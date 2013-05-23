@@ -1,0 +1,14 @@
+--TEST--
+Test formatting for Quote
+--FILE--
+<?php
+echo "this is $a quote";
+echo   "'single ${$complex->quote()}'";
+  echo "Heredoc\n  This is here documents \nHeredoc"; 
+?>
+--EXPECT--
+<?php
+echo "this is $a quote";
+echo "'single ${$complex->quote()}'";
+echo "Heredoc\n  This is here documents \nHeredoc";
+?>

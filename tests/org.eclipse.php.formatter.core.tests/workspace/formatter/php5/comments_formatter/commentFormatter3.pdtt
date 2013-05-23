@@ -1,0 +1,30 @@
+--TEST--
+Test formatting for comments
+--FILE--
+<?php
+
+    // This is a long comment with	whitespace that should be split in sddddd blalalalalala blalalalalala
+interface Example
+{
+/*
+     * The following is some sample code which illustrates source formatting
+     * within javadoc comments: Descriptions of parameters and return values are best appended at end of the javadoc comment.
+     *
+     */
+    function foo (int $a, int $b);
+}
+?>
+--EXPECT--
+<?php
+// This is a long comment with whitespace that should be split in sddddd
+// blalalalalala blalalalalala
+interface Example
+{
+    /*
+     * The following is some sample code which illustrates source formatting
+     * within javadoc comments: Descriptions of parameters and return values are
+     * best appended at end of the javadoc comment.
+     */
+    function foo (int $a, int $b);
+}
+?>

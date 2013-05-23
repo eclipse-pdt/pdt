@@ -1,0 +1,10 @@
+--TEST--
+Test formatting for ConditionalExpression, PHP 5.3 only (true statement omitted)
+--FILE--
+<?php
+$hello=(isset($_GET) ) ?: 'hello';
+?>
+--EXPECT--
+<?php
+$hello = (isset ( $_GET )) ?  : 'hello';
+?>

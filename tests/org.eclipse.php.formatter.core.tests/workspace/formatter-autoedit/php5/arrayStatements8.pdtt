@@ -1,0 +1,23 @@
+--TEST--
+Tests formatting array statements.
+--FILE--
+<?php
+$e = array(array('level' => 'INFO'), 
+    // TODO comment
+    // TODO comment
+    array('level' => 'INFO'));
+$e = array(array('level' => 'INFO'), 
+    // TODO comment
+    array('level' => 'INFO'));|
+?>
+--EXPECT--
+<?php
+$e = array(array('level' => 'INFO'), 
+    // TODO comment
+    // TODO comment
+    array('level' => 'INFO'));
+$e = array(array('level' => 'INFO'), 
+    // TODO comment
+    array('level' => 'INFO'));
+
+?>

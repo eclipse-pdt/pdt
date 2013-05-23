@@ -1,0 +1,16 @@
+--TEST--
+Test formatting for ConditionalExpression
+--FILE--
+<?php
+echo ($first ? $second : $third);
+echo (true?'true':false?'t':'f');
+echo (	(   true 	?   'true' 	: 
+'false') 
+? 't' : 'f');
+?>
+--EXPECT--
+<?php
+echo ($first ? $second : $third);
+echo (true ? 'true' : false ? 't' : 'f');
+echo ((true ? 'true' : 'false') ? 't' : 'f');
+?>

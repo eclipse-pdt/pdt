@@ -1,0 +1,99 @@
+--TEST--
+Test formatting for comments
+--FILE--
+<?php
+/**
+ * This is the comment for the example interface.
+ */
+ interface Example {
+// This is a long comment    with	whitespace     that should be split in multiple line comments in case the line comment formatting is enabled
+function foo3();
+ 
+//	function commented() {
+//			echo("indented");
+//	}
+
+	//	function indentedCommented() {
+	//			echo("indented");
+	//	}
+
+/* block comment          on first column*/
+ function bar();
+	/*
+	*
+	* These possibilities include:
+	* <ul><li>Formatting of header comments.</li><li>Formatting of Javadoc tags</li></ul>
+	*/
+				function bar2(); // This is a long comment that should be split in multiple line comments in case the line comment formatting is enabled
+ /**
+ * The following is some sample code which illustrates source formatting within javadoc comments:
+ * Descriptions of parameters and return values are best appended at end of the javadoc comment.
+ * @param $a int The first parameter. For an optimum result, this should be an odd number
+ * between 0 and 100.
+ * @param $b int The second parameter.
+ * @return int The result of the foo operation, usually within 0 and 1000.
+ */ function foo(int $a, int $b);
+}
+class Test {
+		function trailingCommented() {
+				echo("indented");		// comment
+				echo("indent");		// comment
+					/*
+ * block comment on first column
+ */
+		}
+}
+?>
+--EXPECT--
+<?php
+/**
+ * This is the comment for the example interface.
+ */
+interface Example
+{
+    // This is a long comment with whitespace that should be split in multiple
+    // line comments in case the line comment formatting is enabled
+    function foo3 ();
+    // function commented() {
+    // echo("indented");
+    // }
+    // function indentedCommented() {
+    // echo("indented");
+    // }
+    /* block comment on first column */
+    function bar ();
+    /*
+     * These possibilities include: <ul><li>Formatting of header
+     * comments.</li><li>Formatting of Javadoc tags</li></ul>
+     */
+    function bar2 (); // This is a long comment that should be split in multiple
+                     // line comments in case the line comment formatting is
+                     // enabled
+    /**
+     * The following is some sample code which illustrates source formatting
+     * within javadoc comments:
+     * Descriptions of parameters and return values are best appended at end of
+     * the javadoc comment.
+     * 
+     * @param $a int
+     *            The first parameter. For an optimum result, this should be an
+     *            odd number
+     *            between 0 and 100.
+     * @param $b int
+     *            The second parameter.
+     * @return int The result of the foo operation, usually within 0 and 1000.
+     */
+    function foo (int $a, int $b);
+}
+class Test
+{
+    function trailingCommented ()
+    {
+        echo ("indented"); // comment
+        echo ("indent"); // comment
+        /*
+         * block comment on first column
+         */
+    }
+}
+?>

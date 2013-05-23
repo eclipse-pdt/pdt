@@ -1,0 +1,17 @@
+--TEST--
+Test formatting switch statements
+--FILE--
+<?php
+    //formatter issues
+    $a = 1;
+    $test = array_filter(array(), function ($row) use ($a)
+    {
+       return 'test';
+    }); 
+--EXPECT--
+<?php
+// formatter issues
+$a = 1;
+$test = array_filter ( array (), function ($row) use($a) {
+	return 'test';
+} ); 

@@ -1,0 +1,22 @@
+--TEST--
+Test formatting for IgnoreError
+--FILE--
+<?php
+class MyClass {
+	function foo() {
+		echo '1';
+	}
+}
+$a = new MyClass ( );
+@$a -> foo ( );
+?>
+--EXPECT--
+<?php
+class MyClass {
+	function foo() {
+		echo '1';
+	}
+}
+$a = new MyClass ();
+@$a->foo ();
+?>

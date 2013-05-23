@@ -1,0 +1,36 @@
+--TEST--
+Test formatting for comments
+--FILE--
+<?php
+
+/**
+ *             This is the header comment for the example interface.
+ */
+
+/**
+
+ *    This is the phpdoc for the example interface.
+ */
+interface Example
+{
+    // This is a long comment with	whitespace that should be split in sddddd @formatter:off
+    // multiple line comments in case the line comment formatting is enabled
+    function foo3 ();
+}
+?>
+--EXPECT--
+<?php
+/**
+ *             This is the header comment for the example interface.
+ */
+/**
+ * This is the phpdoc for the example interface.
+ */
+interface Example
+{
+    // This is a long comment with whitespace that should be split in sddddd
+    // @formatter:off
+    // multiple line comments in case the line comment formatting is enabled
+    function foo3 ();
+}
+?>

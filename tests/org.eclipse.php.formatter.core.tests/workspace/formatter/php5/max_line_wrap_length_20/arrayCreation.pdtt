@@ -1,0 +1,35 @@
+--TEST--
+Test formatting for ArrayCreation
+--FILE--
+<?php
+$a = array (1, 2, 3 );
+$b = array ('Dodo' => 'Golo', 'Dafna' => 'Dodidu', 
+'Dodo' => 'Golo', 'Dafna' => 'Dodidu', 'Dodo' => 'Golo', 
+'Dafna' => 'Dodidu', 'Dodo' => 'Golo', 'Dafna' => 'Dodidu' );
+$c = array (      $a , $b         => foo (), 1         => $myClass->getFirst (), $a, $b =>       foo (), 1 => $myClass->getFirst (), $a, $b => foo (), 1 => $myClass->getFirst (), $a, $b => foo (), 1 => $myClass->getFirst () );
+?>
+--EXPECT--
+<?php
+$a = array (1, 2, 3 );
+$b = array (
+		'Dodo' => 'Golo', 
+		'Dafna' => 'Dodidu', 
+		'Dodo' => 'Golo', 
+		'Dafna' => 'Dodidu', 
+		'Dodo' => 'Golo', 
+		'Dafna' => 'Dodidu', 
+		'Dodo' => 'Golo', 
+		'Dafna' => 'Dodidu' );
+$c = array ($a, 
+		$b => foo (), 
+		1 => $myClass->getFirst (), 
+		$a, 
+		$b => foo (), 
+		1 => $myClass->getFirst (), 
+		$a, 
+		$b => foo (), 
+		1 => $myClass->getFirst (), 
+		$a, 
+		$b => foo (), 
+		1 => $myClass->getFirst () );
+?>

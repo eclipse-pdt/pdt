@@ -1,0 +1,20 @@
+--TEST--
+Test formatting NamespaceDeclaration, NamespaceName
+--FILE--
+<?php
+namespace models;
+
+class User implements \My_Old_Style_Interface {
+
+}
+ 
+?>
+--EXPECT--
+<?php
+namespace models;
+
+class User implements \My_Old_Style_Interface {
+
+}
+
+?>

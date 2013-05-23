@@ -1,0 +1,132 @@
+--TEST--
+Test formatting for Quote
+--FILE--
+<?php
+class Test {
+	public function a() {
+		try
+		{
+			$this->getApplication ()->runAction ();
+			$this->application->render ();
+			// Get debug level
+			$registryDebugLevel = 'Core_Debug::' .
+					 Core_Registry::get ( 'SYSTEM:DEBUG_LEVEL' );
+			$debugLevel = defined ( $registryDebugLevel ) ? constant ( $registryDebugLevel ) : NULL;
+			// Display debug information if requested
+			if ($debugLevel === Core_Debug::DEBUG_ALL || $debugLevel ===
+					 Core_Debug::DEBUG_PERFORMANCE)
+					{
+						Core_Debug::outputDebugPerformanceInfo ( $this->applicationType );
+			}
+			if ($debugLevel === Core_Debug::DEBUG_ALL)
+				Core_Debug::outputDebugMessages ( $this->applicationType );
+		} catch ( Core_HaltExecutionException $exception )
+		{
+			Lib_NativeFunctions::nativeFunction_exit ( 0 );
+		} catch ( Core_Exception $exception )
+		{
+			Core_Logger::write ( 'An uncaught exception was thrown.' );
+			exit ( 1 );
+		}
+	}
+	
+	/**
+	 * Internal initilization helper function.
+	 * Overwrites default
+	 * values based on registry values.
+	 *
+	 * @return void
+	 */
+	private function init() {
+		// Set system timezone
+		$defaultTimezone = Core_Registry::get ( 'SYSTEM:DEFAULT_TIMEZONE' );
+		if (! $defaultTimezone ||
+				 ! date_default_timezone_set ( $defaultTimezone ))
+				{
+					date_default_timezone_set ( 'Europe/Helsinki' );
+		}
+	}
+	
+	/**
+	 * Cleans used output buffer.
+	 * If something was sent to
+	 * output, it will be logged.
+	 *
+	 * @return void
+	 */
+	public function cleanOutputBuffer() {
+		$this->outputBufferCleaned = true;
+		// Get all output written to output buffer
+		$obOutput = Lib_NativeFunctions::ob_get_contents ();
+		Lib_NativeFunctions::ob_end_clean ();
+		if (! empty ( $obOutput ))
+		{
+			Core_Logger::write ( 'Output written outside view components. Output: ' .
+					 $obOutput, 'SYSTEM' );
+}
+}
+}
+
+?>
+--EXPECT--
+<?php
+class Test {
+	public function a() {
+		try {
+			$this->getApplication ()->runAction ();
+			$this->application->render ();
+			// Get debug level
+			$registryDebugLevel = 'Core_Debug::' .
+					 Core_Registry::get ( 'SYSTEM:DEBUG_LEVEL' );
+			$debugLevel = defined ( $registryDebugLevel ) ? constant ( $registryDebugLevel ) : NULL;
+			// Display debug information if requested
+			if ($debugLevel === Core_Debug::DEBUG_ALL || $debugLevel ===
+					 Core_Debug::DEBUG_PERFORMANCE) {
+				Core_Debug::outputDebugPerformanceInfo ( $this->applicationType );
+			}
+			if ($debugLevel === Core_Debug::DEBUG_ALL)
+				Core_Debug::outputDebugMessages ( $this->applicationType );
+		} catch ( Core_HaltExecutionException $exception ) {
+			Lib_NativeFunctions::nativeFunction_exit ( 0 );
+		} catch ( Core_Exception $exception ) {
+			Core_Logger::write ( 'An uncaught exception was thrown.' );
+			exit ( 1 );
+		}
+	}
+	
+	/**
+	 * Internal initilization helper function.
+	 * Overwrites default
+	 * values based on registry values.
+	 *
+	 * @return void
+	 */
+	private function init() {
+		// Set system timezone
+		$defaultTimezone = Core_Registry::get ( 'SYSTEM:DEFAULT_TIMEZONE' );
+		if (! $defaultTimezone ||
+				 ! date_default_timezone_set ( $defaultTimezone )) {
+			date_default_timezone_set ( 'Europe/Helsinki' );
+		}
+	}
+	
+	/**
+	 * Cleans used output buffer.
+	 * If something was sent to
+	 * output, it will be logged.
+	 *
+	 * @return void
+	 */
+	public function cleanOutputBuffer() {
+		$this->outputBufferCleaned = true;
+		// Get all output written to output buffer
+		$obOutput = Lib_NativeFunctions::ob_get_contents ();
+		Lib_NativeFunctions::ob_end_clean ();
+		if (! empty ( $obOutput )) {
+			Core_Logger::write ( 'Output written outside view components. Output: ' .
+					 $obOutput, 'SYSTEM' );
+		}
+	}
+}
+
+?>

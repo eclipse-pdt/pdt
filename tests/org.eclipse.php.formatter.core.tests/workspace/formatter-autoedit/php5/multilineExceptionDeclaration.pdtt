@@ -1,0 +1,19 @@
+--TEST--
+Tests auto editing multiline statements.
+--FILE--
+<?php
+if ($tableVersion != 0) {
+    throw new Pdf_Exception("Unable to read version $tableVersion table",|
+            Pdf_Exception::DONT_UNDERSTAND_TABLE_VERSION);
+}
+
+?>
+--EXPECT--
+<?php
+if ($tableVersion != 0) {
+    throw new Pdf_Exception("Unable to read version $tableVersion table",
+    		
+            Pdf_Exception::DONT_UNDERSTAND_TABLE_VERSION);
+}
+
+?>

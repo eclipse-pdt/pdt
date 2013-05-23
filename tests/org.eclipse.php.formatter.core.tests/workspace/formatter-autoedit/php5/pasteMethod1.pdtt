@@ -1,0 +1,69 @@
+--TEST--
+Tests formatting pasted method.
+--FILE--
+<?php
+class ZendTest
+{
+	public function newsPageBeforePaste ()
+	{
+		$query = "
+            SELECT T.*
+            FROM Page_Main AS T
+            WHERE
+            (
+                POSITION( CONCAT( '\n', 'TopSecondary', '\n' ) IN CONCAT( '\n', Menu, '\n' ) )
+                AND Enabled = 1
+            )
+            ORDER BY Hierarchy_Structure ASC";
+		return $query;
+	}
+	|
+}
+?>
+--OTHER--
+	public function newsPageAfterPaste ()
+	{
+		$query = "
+            SELECT T.*
+            FROM Page_Main AS T
+            WHERE
+            (
+                POSITION( CONCAT( '\n', 'TopSecondary', '\n' ) IN CONCAT( '\n', Menu, '\n' ) )
+                AND Enabled = 1
+            )
+            ORDER BY Hierarchy_Structure ASC";
+		return $query;
+	}
+--EXPECT--
+<?php
+class ZendTest
+{
+	public function newsPageBeforePaste ()
+	{
+		$query = "
+            SELECT T.*
+            FROM Page_Main AS T
+            WHERE
+            (
+                POSITION( CONCAT( '\n', 'TopSecondary', '\n' ) IN CONCAT( '\n', Menu, '\n' ) )
+                AND Enabled = 1
+            )
+            ORDER BY Hierarchy_Structure ASC";
+		return $query;
+	}
+	public function newsPageAfterPaste ()
+	{
+		$query = "
+            SELECT T.*
+            FROM Page_Main AS T
+            WHERE
+            (
+                POSITION( CONCAT( '\n', 'TopSecondary', '\n' ) IN CONCAT( '\n', Menu, '\n' ) )
+                AND Enabled = 1
+            )
+            ORDER BY Hierarchy_Structure ASC";
+		return $query;
+	}
+	
+}
+?>

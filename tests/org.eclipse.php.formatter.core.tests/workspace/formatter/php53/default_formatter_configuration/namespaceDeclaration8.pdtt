@@ -1,0 +1,25 @@
+--TEST--
+Test formatting NamespaceDeclaration, NamespaceName
+--FILE--
+<?php
+
+namespace Test;
+
+    try
+    {
+    	$config = $parser->parse($configArray, $config);
+    }
+    catch( \LiveTest\Config\Parser\UnknownTagException $e)
+    {
+    	throw new ConfigurationException('Unknown tag ("'.$e->getTagName().'") found in the configuration file.', null, $e);
+    }
+--EXPECT--
+<?php
+
+namespace Test;
+
+try {
+	$config = $parser->parse ( $configArray, $config );
+} catch ( \LiveTest\Config\Parser\UnknownTagException $e ) {
+	throw new ConfigurationException ( 'Unknown tag ("' . $e->getTagName () . '") found in the configuration file.', null, $e );
+}

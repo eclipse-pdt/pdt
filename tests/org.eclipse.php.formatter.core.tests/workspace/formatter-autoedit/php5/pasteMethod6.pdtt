@@ -1,0 +1,21 @@
+--TEST--
+Tests formatting pasted method.
+--FILE--
+<?php
+class A {
+
+	function cp(){ echo "copy-paste";}
+	|
+}
+?>
+--OTHER--
+	function cp(){ echo "copy-paste";}
+--EXPECT--
+<?php
+class A {
+
+	function cp(){ echo "copy-paste";}
+	function cp(){ echo "copy-paste";}
+	
+}
+?>

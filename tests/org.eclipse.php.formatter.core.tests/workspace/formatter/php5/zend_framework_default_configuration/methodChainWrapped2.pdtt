@@ -1,0 +1,22 @@
+--TEST--
+Test formatting for MethodChain
+--FILE--
+<?php
+class Test {
+	public function init() {
+		$ajaxContext = $this->_helper->getHelper ( 'AjaxContext' ) ->foo() ->foo1();
+	}
+}
+?>
+--EXPECT--
+<?php
+class Test
+{
+    public function init ()
+    {
+        $ajaxContext = $this->_helper->getHelper('AjaxContext')
+            ->foo()
+            ->foo1();
+    }
+}
+?>

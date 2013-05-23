@@ -1,0 +1,34 @@
+--TEST--
+Test formatting for GlobalStatement
+--FILE--
+<?php
+$a = 1;
+$b = 2;
+
+function Sum1()
+{
+    global $a, $b;
+    $b = $a + $b;
+} 
+
+
+function Sum2()
+{
+    $GLOBALS['b'] = $GLOBALS['a'] + $GLOBALS['b'];
+} 
+
+?>
+--EXPECT--
+<?php
+$a = 1;
+$b = 2;
+function Sum1 ()
+{
+    global $a, $b;
+    $b = $a + $b;
+}
+function Sum2 ()
+{
+    $GLOBALS['b'] = $GLOBALS['a'] + $GLOBALS['b'];
+}
+?>

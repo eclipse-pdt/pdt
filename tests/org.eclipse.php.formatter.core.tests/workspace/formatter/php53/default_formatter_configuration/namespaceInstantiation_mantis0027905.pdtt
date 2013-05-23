@@ -1,0 +1,15 @@
+--TEST--
+Test formatting NamespaceDeclaration, NamespaceName
+--FILE--
+<?php
+	namespace my\name;
+	class MyClass {}
+	$c = new \my\name\MyClass; 
+?>
+--EXPECT--
+<?php
+namespace my\name;
+class MyClass {
+}
+$c = new \my\name\MyClass ();
+?>

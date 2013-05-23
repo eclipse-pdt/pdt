@@ -1,0 +1,19 @@
+--TEST--
+Test formatting for Assignment
+--FILE--
+<?php
+$a  =  5 ;
+$a +=  5 ;
+$a .=
+ $b;
+ $a = foo();
+ $a = $b->foo();
+?>
+--EXPECT--
+<?php
+$a = 5;
+$a += 5;
+$a .= $b;
+$a = foo();
+$a = $b->foo();
+?>

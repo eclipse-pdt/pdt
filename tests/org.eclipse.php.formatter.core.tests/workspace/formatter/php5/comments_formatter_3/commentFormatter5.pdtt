@@ -1,0 +1,33 @@
+--TEST--
+Test formatting for comments
+--FILE--
+<?php
+ interface Example {
+function foo3();
+ /**
+ * @param $a int 
+ * @param $b int
+     * 
+* 
+     * 
+ * @return int 
+ */ 
+ function foo(int $a, int $b);
+}
+?>
+--EXPECT--
+<?php
+interface Example
+{
+    function foo3 ();
+    /**
+     * 
+     * @param $a int        
+     * @param $b int        
+     *
+     *
+     *
+     * @return int */
+    function foo (int $a, int $b);
+}
+?>

@@ -1,0 +1,67 @@
+--TEST--
+Test formatting PHP with HTML mixed code
+--FILE--
+<?php if ($this->pageCount):  ?>
+<div class="paginationControl"><!-- previous page link -->   
+<?php if (isset($this->previous)):  ?>
+  <a href="<?php echo $this->url(array('page' => $this->previous)); ?>">&lt; Previous page </a> |
+<?php else :    ?>
+  <span class="disabled">&lt; previous</span> |
+   <?php endif;   ?>
+<?php
+foreach ($this->pagesInRange as $page) :
+   if ($page != $this->current) :
+?>
+   <a href="<?php echo $this->url(array('page' => $page));?>"><?php echo $page;?> </a> |
+<?php  else:
+echo $page;
+?> |
+<?php endif;
+endforeach;
+?>
+
+<!-- Next page link -->
+<?php if (isset($this->next)) :  ?>
+  <a href="<?php echo $this->url(array('page' => $this->next));?>"> next&gt; </a>
+<?php    else :      ?>
+  <span class="disabled">next &gt;</span>
+   <?php endif;  ?>
+</div>
+<?php endif; ?>
+--EXPECT--
+<?php if ($this->pageCount):  ?>
+<div class="paginationControl">
+	<!-- previous page link -->   
+<?php if (isset($this->previous)):  ?>
+  <a href="<?php echo $this->url(array('page' => $this->previous)); ?>">&lt;
+		Previous page </a> |
+<?php else :    ?>
+  <span class="disabled">&lt; previous</span> |
+   <?php endif;   ?>
+<?php
+
+	foreach ( $this->pagesInRange as $page ) :
+		if ($page != $this->current) :
+			?>
+   <a href="<?php echo $this->url(array('page' => $page));?>"><?php echo $page;?> </a> |
+
+		 <?php
+else :
+			echo $page;
+			?> |
+
+		<?php
+endif;
+	endforeach
+	;
+	?>
+
+<!-- Next page link -->
+<?php if (isset($this->next)) :  ?>
+  <a href="<?php echo $this->url(array('page' => $this->next));?>">
+		next&gt; </a>
+<?php    else :      ?>
+  <span class="disabled">next &gt;</span>
+   <?php endif;  ?>
+</div>
+<?php endif; ?>

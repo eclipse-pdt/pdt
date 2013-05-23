@@ -1,0 +1,59 @@
+--TEST--
+Test formatting for ContinueStatement
+--FILE--
+<?php
+while (list($key, $value) = each($arr)) {
+    if (!($key % 2)) { // skip odd members
+        continue;
+    }
+    do_something_odd($value);
+}
+
+$i = 0;
+while ($i++ < 5) {
+    echo "Outer<br />\n";
+    while (1) {
+        echo "&nbsp;&nbsp;Middle<br />\n";
+        while (1) {
+            echo "&nbsp;&nbsp;Inner<br />\n";
+            continue 3;
+        }
+        echo "This never gets output.<br />\n";
+    }
+    echo "Neither does this.<br />\n";
+}
+
+for ($i = 0; $i < 5; ++$i) {
+    if ($i == 2)
+        continue
+    print "$i\n";
+}
+?>
+--EXPECT--
+<?php
+while ( list ( $key, $value ) = each ( $arr ) ) {
+	if (! ($key % 2)) { // skip odd members
+		continue;
+	}
+	do_something_odd ( $value );
+}
+
+$i = 0;
+while ( $i ++ < 5 ) {
+	echo "Outer<br />\n";
+	while ( 1 ) {
+		echo "&nbsp;&nbsp;Middle<br />\n";
+		while ( 1 ) {
+			echo "&nbsp;&nbsp;Inner<br />\n";
+			continue 3;
+		}
+		echo "This never gets output.<br />\n";
+	}
+	echo "Neither does this.<br />\n";
+}
+
+for($i = 0; $i < 5; ++ $i) {
+	if ($i == 2)
+		continue print "$i\n";
+}
+?>

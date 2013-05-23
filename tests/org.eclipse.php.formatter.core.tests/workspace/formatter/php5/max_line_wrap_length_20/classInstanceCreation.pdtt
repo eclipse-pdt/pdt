@@ -1,0 +1,46 @@
+--TEST--
+Test formatting for ClassInstanceCreation
+--FILE--
+<?php
+class A
+{
+   function A()
+   {
+       echo "I am the constructor of A.<br />\n";
+   }
+
+   function B()
+   {
+       echo "I am a regular function named B in class A.<br />\n";
+       echo "I am not a constructor in A.<br />\n";
+   }
+}
+
+class B extends A
+{
+}
+
+// This will call B() as a constructor
+$b = new B ( );
+$c = new SplFileObject($file_name, $open_mode, $use_include_path, $context);
+
+?> 
+--EXPECT--
+<?php
+class A {
+	function A() {
+		echo "I am the constructor of A.<br />\n";
+	}
+	function B() {
+		echo "I am a regular function named B in class A.<br />\n";
+		echo "I am not a constructor in A.<br />\n";
+	}
+}
+class B extends A {
+}
+
+// This will call B() as a constructor
+$b = new B ();
+$c = new SplFileObject ( $file_name, $open_mode, $use_include_path, $context );
+
+?>

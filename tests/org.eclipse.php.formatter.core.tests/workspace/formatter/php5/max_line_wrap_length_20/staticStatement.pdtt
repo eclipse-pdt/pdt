@@ -1,0 +1,12 @@
+--TEST--
+Test formatting StaticStatement
+--FILE--
+<?php
+	static $a ;
+ static  $a ,   $b 	=  5 ;
+?>
+--EXPECT--
+<?php
+static $a;
+static $a, $b = 5;
+?>

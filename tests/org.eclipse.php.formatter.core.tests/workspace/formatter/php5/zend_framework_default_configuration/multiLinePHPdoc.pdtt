@@ -1,0 +1,18 @@
+--TEST--
+Test formatting for multi-line PHPDOC indentation and formatting
+--FILE--
+<?php
+echo "";
+	/**
+ 		* 		This is my multi-line // 
+ 	*			comment with wrong internal and external indentation
+ 			*/
+?>
+--EXPECT--
+<?php
+echo "";
+/**
+ * This is my multi-line //
+ * comment with wrong internal and external indentation
+ */
+?>

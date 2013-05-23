@@ -1,0 +1,16 @@
+--TEST--
+Test formatting for InfixExpression
+--FILE--
+<?php
+$a + 1;
+ 3 - 2;
+ foo() * $a->bar();
+ 'string'.$c;
+?>
+--EXPECT--
+<?php
+$a + 1;
+3 - 2;
+foo () * $a->bar ();
+'string' . $c;
+?>

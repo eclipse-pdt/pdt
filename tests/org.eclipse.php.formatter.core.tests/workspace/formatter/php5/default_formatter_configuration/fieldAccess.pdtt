@@ -1,0 +1,24 @@
+--TEST--
+Test formatting for FieldAccess
+--FILE--
+<?php
+class MyClass {
+	public $a;
+	public $b;
+}
+
+$a = new MyClass ( );
+$a-> a ;
+$a  ->  b;
+?>
+--EXPECT--
+<?php
+class MyClass {
+	public $a;
+	public $b;
+}
+
+$a = new MyClass ();
+$a->a;
+$a->b;
+?>

@@ -1,0 +1,11 @@
+--TEST--
+Test formatting for BackTickExpression
+--FILE--
+<?php
+echo   `.\exec.sh`	
+;
+?>
+--EXPECT--
+<?php
+echo `.\exec.sh`;
+?>

@@ -1,0 +1,12 @@
+--TEST--
+Test formatting UseStatement, UseStatementPart
+--FILE--
+<?php
+ use  NS;
+		echo '1';
+?>
+--EXPECT--
+<?php
+use NS;
+echo '1';
+?>

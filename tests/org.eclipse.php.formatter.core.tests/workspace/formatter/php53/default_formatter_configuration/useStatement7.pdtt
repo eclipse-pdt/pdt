@@ -1,0 +1,18 @@
+--TEST--
+Test formatting UseStatement, UseStatementPart
+--FILE--
+<?php
+	namespace NS {
+	use NS1 \ NS2;
+	 use NS3  \NS4  ;
+		echo '1';
+	}
+?>
+--EXPECT--
+<?php
+namespace NS {
+	use NS1\NS2;
+	use NS3\NS4;
+	echo '1';
+}
+?>
