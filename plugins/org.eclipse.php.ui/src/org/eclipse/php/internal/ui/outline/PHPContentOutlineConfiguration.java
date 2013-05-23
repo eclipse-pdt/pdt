@@ -315,10 +315,8 @@ public class PHPContentOutlineConfiguration extends
 									return lastSelection;
 								}
 							lastSelection = new StructuredSelection(
-									computedSourceReference);
+									parent);
 							return lastSelection;
-							// return new StructuredSelection(
-							// computedSourceReference);
 						}
 					}
 				}
