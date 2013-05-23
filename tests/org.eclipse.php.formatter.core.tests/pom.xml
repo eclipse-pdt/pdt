@@ -10,7 +10,7 @@
 		<relativePath>../../org.eclipse.pdt.releng/pom.xml</relativePath>
 	</parent>
 	<groupId>org.eclipse.php</groupId>
-	<artifactId>org.eclipse.php.debug.ui</artifactId>
+	<artifactId>org.eclipse.php.formatter.core.tests</artifactId>
 	<version>3.2.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 </project>
