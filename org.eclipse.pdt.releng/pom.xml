@@ -96,6 +96,7 @@
 		<module>../features/org.eclipse.php.test-feature</module>
 		<module>../plugins/org.eclipse.php.ui</module>
 		<module>../tests/org.eclipse.php.ui.tests</module>
+		<module>../tests/org.eclipse.php.formatter.core.tests</module>
 	</modules>
 
 </project>
