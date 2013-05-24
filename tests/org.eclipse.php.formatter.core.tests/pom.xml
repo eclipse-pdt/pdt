@@ -31,7 +31,7 @@
 					</bundleStartLevel>
 					<testSuite>org.eclipse.php.formatter.core.tests</testSuite>
 					<testClass>org.eclipse.php.formatter.core.tests.AllTests</testClass>
-					<testFailureIgnore>true</testFailureIgnore>
+					<testFailureIgnore>false</testFailureIgnore>
 					<skip>false</skip>
 				</configuration>
 			</plugin>
