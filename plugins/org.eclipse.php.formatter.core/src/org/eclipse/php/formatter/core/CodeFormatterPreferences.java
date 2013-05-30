@@ -939,9 +939,9 @@ public class CodeFormatterPreferences {
 				this.comment_line_length = Integer
 						.parseInt((String) commentLineLengthOption);
 			} catch (NumberFormatException e) {
-				this.comment_line_length = -1;
+				this.comment_line_length = 9999;
 			} catch (ClassCastException e) {
-				this.comment_line_length = -1;
+				this.comment_line_length = 9999;
 			}
 		}
 		final Object commentNewLinesAtBlockBoundariesOption = preferences

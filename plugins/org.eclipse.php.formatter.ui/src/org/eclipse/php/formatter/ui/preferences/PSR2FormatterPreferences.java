@@ -184,7 +184,7 @@ final public class PSR2FormatterPreferences implements
 		preferences.comment_insert_new_line_for_parameter = true;
 		preferences.comment_new_lines_at_block_boundaries = true;
 		preferences.comment_new_lines_at_javadoc_boundaries = true;
-		preferences.comment_line_length = -1;
+		preferences.comment_line_length = 9999;
 		preferences.comment_preserve_white_space_between_code_and_line_comments = false;
 		preferences.never_indent_block_comments_on_first_column = false;
 		preferences.never_indent_line_comments_on_first_column = false;

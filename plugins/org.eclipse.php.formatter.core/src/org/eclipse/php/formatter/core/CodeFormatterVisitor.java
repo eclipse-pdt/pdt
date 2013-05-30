@@ -1049,7 +1049,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					appendToBuffer("//"); //$NON-NLS-1$
 
 					for (String word : commentWords) {
-						if (this.preferences.comment_line_length != -1
+						if (this.preferences.comment_line_length != 9999
 								&& !newLineStart
 								&& (lineWidth + 1 + word.length() > this.preferences.comment_line_length)) {
 							insertNewLine();
@@ -1402,7 +1402,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 								sb.append(w).append(" "); //$NON-NLS-1$
 							}
 							// +1 means ' ' after "/*",+2 means "*/"
-							if (this.preferences.comment_line_length == -1
+							if (this.preferences.comment_line_length == 9999
 									|| lineWidth + 1 + sb.length() + 2 <= this.preferences.comment_line_length) {
 								appendToBuffer(" "); //$NON-NLS-1$
 								appendToBuffer(sb.toString());
@@ -1835,7 +1835,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 
 	private void indertWordToCommentBlock(String word, int indentLength,
 			String blanks) {
-		if (this.preferences.comment_line_length != -1
+		if (this.preferences.comment_line_length != 9999
 				&& !newLineOfComment
 				&& (lineWidth + 1 + word.length() > this.preferences.comment_line_length)) {
 			insertNewLine();
@@ -1859,7 +1859,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	private void indertWordToComment(PHPDocTag phpDocTag, int tagLength,
 			String word, boolean insertSpace) {
 		word = word.trim();
-		if (this.preferences.comment_line_length != -1
+		if (this.preferences.comment_line_length != 9999
 				&& !newLineOfComment
 				&& (lineWidth + 1 + word.length() > this.preferences.comment_line_length)) {
 			insertNewLine();
