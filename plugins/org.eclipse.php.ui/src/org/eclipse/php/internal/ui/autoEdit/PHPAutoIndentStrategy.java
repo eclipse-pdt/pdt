@@ -37,12 +37,7 @@ import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
  */
 public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 
-	private DefaultIndentationStrategy defaultStrategy;
-
 	public PHPAutoIndentStrategy() {
-
-		defaultStrategy = new DefaultIndentationStrategy();
-
 	}
 
 	/*
@@ -85,11 +80,11 @@ public class PHPAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
 		StringBuffer helpBuffer = new StringBuffer();
 		try {
 			if (document instanceof IStructuredDocument) {
-
-				defaultStrategy.placeMatchingBlanksForStructuredDocument(
-						(IStructuredDocument) document, helpBuffer,
-						document.getLineOfOffset(command.offset),
-						command.offset);
+				DefaultIndentationStrategy
+						.placeMatchingBlanksForStructuredDocument(
+								(IStructuredDocument) document, helpBuffer,
+								document.getLineOfOffset(command.offset),
+								command.offset);
 				IRegion region = document.getLineInformation(document
 						.getLineOfOffset(command.offset));
 				if (document.get(region.getOffset(), region.getLength()).trim()

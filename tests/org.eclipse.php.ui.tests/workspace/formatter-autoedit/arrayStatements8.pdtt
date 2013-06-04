@@ -2,11 +2,10 @@
 Tests formatting array statements.
 --FILE--
 <?php
-$inputFilter->add(array(|));
+$a= array(|$b);
 ?>
 --EXPECT--
 <?php
-$inputFilter->add(array(
-		
-));
+$a= array(
+		$b);
 ?>
