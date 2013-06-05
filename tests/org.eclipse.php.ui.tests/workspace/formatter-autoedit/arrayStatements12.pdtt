@@ -7,6 +7,6 @@ $inputFilter->add(array(|));
 --EXPECT--
 <?php
 $inputFilter->add(array(
-		
+	
 ));
 ?>
