@@ -26,7 +26,6 @@ import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.tests.model.AbstractModelTests;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -67,8 +66,8 @@ public class FileNetworkTests extends AbstractModelTests {
 			IOException {
 		IFile file = getFile(getFilePath(subfolder + "/hierarchy"));
 		StringBuilder buf = new StringBuilder();
-		BufferedReader r = new BufferedReader(new InputStreamReader(file
-				.getContents()));
+		BufferedReader r = new BufferedReader(new InputStreamReader(
+				file.getContents()));
 		String l;
 		while ((l = r.readLine()) != null) {
 			buf.append(l).append("\n");
