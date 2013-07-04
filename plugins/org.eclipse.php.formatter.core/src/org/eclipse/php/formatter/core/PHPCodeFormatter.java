@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -66,7 +67,9 @@ public class PHPCodeFormatter implements IContentFormatter,
 
 		Map<String, Object> p = new HashMap<String, Object>(
 				defaultPrefrencesValues);
-		if (node != null && node.keys().length > 0) {
+		if (node != null
+				&& node.keys().length > 0
+				&& node.get(PreferenceConstants.FORMATTER_PROFILE, null) != null) {
 			Set<String> propetiesNames = p.keySet();
 			for (Iterator<String> iter = propetiesNames.iterator(); iter
 					.hasNext();) {

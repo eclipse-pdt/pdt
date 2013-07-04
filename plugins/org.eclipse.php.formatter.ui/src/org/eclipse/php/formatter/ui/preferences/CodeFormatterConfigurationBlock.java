@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.formatter.core.CodeFormatterPreferences;
+import org.eclipse.php.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 import org.eclipse.php.formatter.ui.FormatterUIPlugin;
 import org.eclipse.php.formatter.ui.Logger;
@@ -31,6 +32,7 @@ import org.eclipse.php.formatter.ui.preferences.ProfileManager.Profile;
 import org.eclipse.php.internal.ui.preferences.IStatusChangeListener;
 import org.eclipse.php.internal.ui.preferences.PHPCoreOptionsConfigurationBlock;
 import org.eclipse.php.internal.ui.preferences.PHPFormatterConfigurationBlock;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.php.internal.ui.util.Messages;
@@ -51,8 +53,9 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class CodeFormatterConfigurationBlock extends
 		PHPCoreOptionsConfigurationBlock implements SelectionListener {
-	private static final Key PROFILE_KEY = new Key(FormatterUIPlugin.PLUGIN_ID,
-			FormatterUIPlugin.FORMATTER_PROFILE);
+	private static final Key PROFILE_KEY = new Key(
+			FormatterCorePlugin.PLUGIN_ID,
+			PreferenceConstants.FORMATTER_PROFILE);
 	private static final String DIALOGSTORE_LASTLOADPATH = FormatterUIPlugin.PLUGIN_ID
 			+ ".loadpath"; //$NON-NLS-1$
 	private static final String DIALOGSTORE_LASTSAVEPATH = FormatterUIPlugin.PLUGIN_ID

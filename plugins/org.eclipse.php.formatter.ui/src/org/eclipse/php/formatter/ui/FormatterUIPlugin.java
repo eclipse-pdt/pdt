@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.formatter.ui.preferences.ProfileManager;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -21,8 +22,6 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle
  */
 public class FormatterUIPlugin extends AbstractUIPlugin {
-
-	public static final String FORMATTER_PROFILE = "formatterProfile";
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.php.formatter.ui";
@@ -86,7 +85,8 @@ public class FormatterUIPlugin extends AbstractUIPlugin {
 	private void initPreferenceDefaults() {
 		IPreferenceStore store = FormatterUIPlugin.getDefault()
 				.getPreferenceStore();
-		store.setDefault(FORMATTER_PROFILE, ProfileManager.PHP_PROFILE);
+		store.setDefault(PreferenceConstants.FORMATTER_PROFILE,
+				ProfileManager.PHP_PROFILE);
 	}
 
 	public String getID() {

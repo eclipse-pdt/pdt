@@ -16,6 +16,7 @@ package org.eclipse.php.internal.ui.preferences.util;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.ui.preferences.IWorkingCopyManager;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -74,6 +75,11 @@ public final class Key {
 		} else {
 			getNode(context, manager).remove(fKey);
 		}
+		try {
+			getNode(context, manager).flush();
+		} catch (BackingStoreException e) {
+			PHPUiPlugin.log(e);
+		}
 	}
 
 	public void setStoredValue(IScopeContext[] context, String value,
@@ -82,6 +88,11 @@ public final class Key {
 			getNode(context[0], manager).put(fKey, value);
 		} else {
 			getNode(context[0], manager).remove(fKey);
+		}
+		try {
+			getNode(context[0], manager).flush();
+		} catch (BackingStoreException e) {
+			PHPUiPlugin.log(e);
 		}
 	}
 

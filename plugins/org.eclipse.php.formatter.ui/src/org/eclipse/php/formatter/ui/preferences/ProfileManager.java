@@ -416,15 +416,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	public static boolean hasProjectSpecificSettings(IScopeContext context) {
 		IEclipsePreferences prefs = context
 				.getNode(FormatterCorePlugin.PLUGIN_ID);
-		for (final Iterator<String> keyIter = fKeys.iterator(); keyIter
-				.hasNext();) {
-			final String key = keyIter.next();
-			Object val = prefs.get(key, null);
-			if (val != null) {
-				return true;
-			}
-		}
-		return false;
+		return prefs.get(PreferenceConstants.FORMATTER_PROFILE, null) != null;
 	}
 
 	/**
