@@ -1,0 +1,19 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php
+class stats{
+	private $arr = array(1,2,  //3
+	);
+			
+}
+?>
+--EXPECT--
+<?php
+class stats {
+	private $arr = array (
+			1,
+			2  // 3
+		);
+}
+?>

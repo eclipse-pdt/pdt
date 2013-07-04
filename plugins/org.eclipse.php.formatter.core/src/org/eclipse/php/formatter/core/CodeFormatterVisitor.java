@@ -204,6 +204,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	// insert chars to the buffer except space
 	private void appendToBuffer(Object obj) {
 		isPrevSpace = false;
+		if (obj == null) return;
 		replaceBuffer.append(obj);
 		if (!lineSeparator.equals(obj)) {
 			lineWidth += obj.toString().length();
@@ -819,7 +820,7 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		boolean oldIgnoreEmptyLineSetting = ignoreEmptyLineSetting;
 		ignoreEmptyLineSetting = false;
 
-		StringBuffer secondReplaceBuffer = null;
+		String secondReplaceBuffer = null;
 		int startLine = document.getLineOfOffset(offset);
 		int endLine = document.getLineOfOffset(end);
 		int commentStartLine = -1;
@@ -894,9 +895,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					}
 					if (position >= 0) {
 						if (!secondReplaceBufferNeeded)
-							secondReplaceBuffer = new StringBuffer(
-									replaceBuffer.substring(position
-											+ lineSeparator.length()));
+							secondReplaceBuffer = replaceBuffer
+									.substring(position
+											+ lineSeparator.length());
 						replaceBuffer.replace(
 								position + lineSeparator.length(),
 								replaceBuffer.length(), ""); //$NON-NLS-1$
@@ -1085,8 +1086,11 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 						indent();
 						needInsertNewLine = false;
 						needIndentNewLine = false;
-						afterNewLine = EMPTY_STRING;
+						if (secondReplaceBuffer == null) {
+							secondReplaceBuffer = afterNewLine;
+						}
 						appendToBuffer(secondReplaceBuffer);
+						afterNewLine = EMPTY_STRING;
 						secondReplaceBufferNeeded = false;
 					}
 					handleCharsWithoutComments(comment.sourceStart() + offset,

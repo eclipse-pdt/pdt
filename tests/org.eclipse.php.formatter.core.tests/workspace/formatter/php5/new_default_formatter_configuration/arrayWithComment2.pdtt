@@ -1,0 +1,24 @@
+--TEST--
+Test Abs Class
+--FILE--
+<?php
+class stats{
+	private $arr = array(
+			'map'=>	array(2,100),  //49
+			
+	);
+}
+?>
+--EXPECT--
+<?php
+class stats {
+	private $arr = array (
+			'map' => array (
+					2,
+					100 
+			)  // 49
+		)
+
+	;
+}
+?>
