@@ -663,7 +663,7 @@ public class ProfileManager extends Observable implements IProfileManager {
 	 */
 	public void setSelected(String profileId) {
 		final Profile newSelected = fProfiles.get(profileId);
-		if (newSelected != null && !newSelected.equals(fSelected)) {
+		if (newSelected != null) {
 			fSelected = newSelected;
 			notifyObservers(SELECTION_CHANGED_EVENT);
 		}

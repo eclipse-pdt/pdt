@@ -117,8 +117,6 @@ public class CodeFormatterConfigurationBlock extends
 		public void widgetSelected(SelectionEvent e) {
 			final int index = fProfileCombo.getSelectionIndex();
 			Profile selectedProfile = fSortedProfiles.get(index);
-			// updatePDTPreferences(new CodeFormatterPreferences(
-			// selectedProfile.getSettings()));
 			fProfileManager.setSelected(selectedProfile);
 		}
 
@@ -510,6 +508,17 @@ public class CodeFormatterConfigurationBlock extends
 				.getProfile(ProfileManager.PHP_PROFILE));
 
 		super.performDefaults();
+	}
+
+	@Override
+	public boolean performOk() {
+		if (this.fComposite.isEnabled()) {
+			final int index = fProfileCombo.getSelectionIndex();
+			Profile selectedProfile = fProfileManager.getSortedProfiles().get(
+					index);
+			fProfileManager.setSelected(selectedProfile);
+		}
+		return super.performOk();
 	}
 
 	public void widgetDefaultSelected(SelectionEvent e) {
