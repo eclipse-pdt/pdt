@@ -15,7 +15,10 @@ package org.eclipse.php.internal.core;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.AbstractLanguageToolkit;
 import org.eclipse.dltk.core.IArchive;
@@ -27,6 +30,10 @@ import org.eclipse.php.internal.core.project.PHPNature;
 public class PHPLanguageToolkit extends AbstractLanguageToolkit implements
 		IDLTKLanguageToolkitExtension {
 
+	private static final IContentType PHP_CONTENT_TYPE = Platform
+			.getContentTypeManager().getContentType(
+					ContentTypeIdForPHP.ContentTypeID_PHP);
+
 	private static PHPLanguageToolkit toolkit = new PHPLanguageToolkit();
 
 	protected String getCorePluginID() {
@@ -34,9 +41,7 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit implements
 	}
 
 	public String[] getLanguageFileExtensions() {
-		IContentType type = Platform.getContentTypeManager().getContentType(
-				ContentTypeIdForPHP.ContentTypeID_PHP);
-		return type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		return PHP_CONTENT_TYPE.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 	}
 
 	public String getLanguageName() {
@@ -68,4 +73,11 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit implements
 	public boolean isArchiveFileName(String name) {
 		return PHPToolkitUtil.isPharFileName(name);
 	}
+
+	@Override
+	public IStatus validateSourceModule(IResource resource) {
+		return (PHP_CONTENT_TYPE.isAssociatedWith(resource.getName())) ? Status.OK_STATUS
+				: Status.CANCEL_STATUS;
+	}
+
 }
