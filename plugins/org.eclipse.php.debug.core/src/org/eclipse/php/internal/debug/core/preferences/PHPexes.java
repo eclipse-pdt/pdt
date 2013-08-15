@@ -332,6 +332,23 @@ public class PHPexes {
 		return allItems.toArray(new PHPexeItem[allItems.size()]);
 	}
 
+	/**
+	 * Returns an array of all the installed CLI {@link PHPexeItem}s for all the
+	 * installed debuggers.
+	 * 
+	 * @return An array of all the installed CLI debuggers.
+	 */
+	public PHPexeItem[] getCLIItems() {
+		ArrayList<PHPexeItem> cliItems = new ArrayList<PHPexeItem>();
+		PHPexeItem[] allItems = getAllItems();
+		for (PHPexeItem item : allItems) {
+			if (item.getSapiType().equals(PHPexeItem.SAPI_CLI)) {
+				cliItems.add(item);
+			}
+		}
+		return cliItems.toArray(new PHPexeItem[cliItems.size()]);
+	}
+
 	// Load executables from the preferences.
 	private void load() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
