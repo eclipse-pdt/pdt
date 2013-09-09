@@ -342,7 +342,8 @@ public class PHPexes {
 		ArrayList<PHPexeItem> cliItems = new ArrayList<PHPexeItem>();
 		PHPexeItem[] allItems = getAllItems();
 		for (PHPexeItem item : allItems) {
-			if (item.getSapiType().equals(PHPexeItem.SAPI_CLI)) {
+			if (item.getSapiType() != null
+					&& PHPexeItem.SAPI_CLI.equals(item.getSapiType())) {
 				cliItems.add(item);
 			}
 		}
@@ -413,7 +414,7 @@ public class PHPexes {
 		assert names.length == phpExecutablesLocations.length;
 		for (int i = 0; i < phpExecutablesLocations.length; i++) {
 			String iniLocation = NULL_PLACE_HOLDER.equals(phpIniLocations[i]) ? null
-					: phpIniLocations[i]; 
+					: phpIniLocations[i];
 			// 361399: PDT Project Properties Debug page cause hang
 			if ((names.length <= i) || (debuggers.length <= i)) {
 				break;
@@ -649,7 +650,7 @@ public class PHPexes {
 			}
 			locationsString.append(item.getExecutable().toString());
 			inisString.append(item.getINILocation() != null ? item
-					.getINILocation().toString() : NULL_PLACE_HOLDER); 
+					.getINILocation().toString() : NULL_PLACE_HOLDER);
 			namesString.append(item.getName());
 			debuggersString.append(item.getDebuggerID());
 			if (item.geDefaultForPHPVersionSize() > 0) {
