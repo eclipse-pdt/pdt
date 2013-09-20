@@ -1,0 +1,16 @@
+--TEST--
+Find use statement in class scope (illegal)
+--CONFIG--
+namespace: Languages\Danish
+offset: 114
+--FILE--
+<?php
+namespace Languages;
+
+class Greenlandic
+{
+    use Languages\Danish;
+}
+?>
+--EXPECT--
+null

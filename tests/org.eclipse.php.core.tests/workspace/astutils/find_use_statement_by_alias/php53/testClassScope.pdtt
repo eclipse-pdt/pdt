@@ -1,0 +1,20 @@
+--TEST--
+Find use statement in class scope (illegal)
+--CONFIG--
+alias: Danish
+offset: 114
+--FILE--
+<?php
+namespace Languages;
+
+class Greenlandic
+{
+    use Languages\Danish;
+    
+    function func() {
+		$obj = new Danish;
+	}
+}
+?>
+--EXPECT--
+null

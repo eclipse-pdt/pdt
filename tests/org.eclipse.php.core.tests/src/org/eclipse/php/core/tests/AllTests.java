@@ -16,6 +16,9 @@ import junit.framework.TestSuite;
 
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.CompilerParserTests;
+import org.eclipse.php.core.tests.compiler_ast.parser.FindUseStatementByAliasTests;
+import org.eclipse.php.core.tests.compiler_ast.parser.FindUseStatementByNamespaceTests;
+import org.eclipse.php.core.tests.compiler_ast.parser.GetUseStatementsByTests;
 import org.eclipse.php.core.tests.compiler_ast.phpdoc.PHPDocAwareDeclarationTests;
 import org.eclipse.php.core.tests.compiler_ast.phpdoc.PHPDocParserTests;
 import org.eclipse.php.core.tests.document.lexer.DocumentLexerTests;
@@ -46,6 +49,9 @@ public class AllTests {
 		// Model tests:
 		suite.addTest(DomParserTests.suite());
 		suite.addTest(CompilerParserTests.suite());
+		suite.addTest(FindUseStatementByAliasTests.suite());
+		suite.addTest(FindUseStatementByNamespaceTests.suite());
+		suite.addTest(GetUseStatementsByTests.suite());
 		suite.addTest(ErrorReportingTests.suite());
 		suite.addTest(ASTRewriteTests.suite());
 		suite.addTest(ASTMatcherTests.suite());

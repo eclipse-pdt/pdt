@@ -1,0 +1,13 @@
+--TEST--
+Find use statement in namespace scope
+--CONFIG--
+namespace: Languages\Danish
+offset: 65
+--FILE--
+<?php
+namespace MyProject {
+	use Languages\Danish;
+}
+?>
+--EXPECT--
+[USE: Languages\Danish]

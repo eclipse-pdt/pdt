@@ -1,0 +1,14 @@
+--TEST--
+Find use statement in global scope importing a class with same name
+--CONFIG--
+namespace: My\Full\NSname
+offset: 127
+--FILE--
+<?php
+use My\Full\Classname as Another, My\Full\NSname;
+
+$obj = new Another; // instantiates object of class My\Full\Classname
+NSname\subns\func(); // calls function My\Full\NSname\subns\func
+?>
+--EXPECT--
+[USE: My\Full\NSname]

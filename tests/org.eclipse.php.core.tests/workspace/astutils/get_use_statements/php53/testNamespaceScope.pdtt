@@ -1,0 +1,23 @@
+--TEST--
+Get use statements in namespace scope
+--CONFIG--
+offset: 65
+--FILE--
+<?php
+namespace MyProject {
+	use Languages\Danish;
+	
+	$obj = new Danish;
+}
+?>
+--EXPECT--
+<UseStatement start="29" end="50">
+	<Parts>
+		<UsePart start="0" end="0">
+			<FullyQualifiedReference start="33" end="49" name="Languages\Danish">
+				<NamespaceReference start="33" end="42" name="Languages" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</UsePart>
+	</Parts>
+</UseStatement>

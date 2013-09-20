@@ -1,0 +1,30 @@
+--TEST--
+Get use statements in global scope - two parts in one statement
+--CONFIG--
+offset: 68
+--FILE--
+<?php
+use My\Full\Classname as Another, My\Full\NSname;
+
+$obj = new Another; // instantiates object of class My\Full\Classname
+NSname\subns\func(); // calls function My\Full\NSname\subns\func
+?>
+--EXPECT--
+<UseStatement start="6" end="55">
+	<Parts>
+		<UsePart start="0" end="0">
+			<FullyQualifiedReference start="10" end="27" name="My\Full\Classname">
+				<NamespaceReference start="10" end="17" name="My\Full" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<SimpleReference start="31" end="38" name="Another">
+			</SimpleReference>
+		</UsePart>
+		<UsePart start="0" end="0">
+			<FullyQualifiedReference start="40" end="54" name="My\Full\NSname">
+				<NamespaceReference start="40" end="47" name="My\Full" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</UsePart>
+	</Parts>
+</UseStatement>

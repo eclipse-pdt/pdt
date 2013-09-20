@@ -1,0 +1,80 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Zend Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Zend Technologies - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.core.compiler.ast.parser;
+
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+
+/**
+ * AST visitor for finding use statements by alias.
+ * 
+ * @author Kaloyan Raev
+ */
+public class FindUseStatementByAliasASTVisitor extends
+		AbstractUseStatementASTVisitor {
+
+	/**
+	 * The alias to look for.
+	 */
+	private String aliasName;
+
+	/**
+	 * The found {@link UsePart} node to return as result.
+	 */
+	private UsePart result;
+
+	/**
+	 * Constructor of the visitor.
+	 * 
+	 * @param aliasName
+	 *            the alias to look for
+	 * @param offset
+	 *            the position in the AST tree after which the search stops
+	 */
+	public FindUseStatementByAliasASTVisitor(String aliasName, int offset) {
+		super(offset);
+		this.aliasName = aliasName;
+	}
+
+	/**
+	 * Returns the found {@link UsePart} node that corresponds to the specified
+	 * alias name.
+	 * 
+	 * @return a <code>UsePart</code> node, or
+	 *         <code>null<code> if there is not use statement for the specified alias name.
+	 */
+	public UsePart getResult() {
+		return result;
+	}
+
+	/**
+	 * Compares the alias of the {@link UsePart} node being visited with the
+	 * alias name that the visitor is looking for.
+	 */
+	@Override
+	protected boolean visit(UsePart usePart) {
+		String alias;
+		if (usePart.getAlias() != null) {
+			alias = usePart.getAlias().getName();
+		} else {
+			// In case there's no alias - the alias is the
+			// last segment of the namespace name:
+			alias = usePart.getNamespace().getName();
+		}
+
+		if (aliasName.equalsIgnoreCase(alias)) {
+			result = usePart;
+			return false;
+		}
+
+		return true;
+	}
+
+}

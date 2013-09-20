@@ -1,0 +1,16 @@
+--TEST--
+Find use statement in global scope after the offset
+--CONFIG--
+namespace: My\Full\NSname
+offset: 111
+--FILE--
+<?php
+use My\Full\Classname as Another;
+
+$obj = new Another; // instantiates object of class My\Full\Classname
+NSname\subns\func(); // calls function My\Full\NSname\subns\func
+
+use My\Full\NSname;
+?>
+--EXPECT--
+null

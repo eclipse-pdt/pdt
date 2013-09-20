@@ -27,7 +27,6 @@ import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
-import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.IContext;
@@ -103,8 +102,7 @@ public class ASTUtils {
 		int len = name.length();
 		if (len > 1
 				&& (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name
-						.charAt(0) == '"'
-						&& name.charAt(len - 1) == '"')) {
+						.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
 			name = name.substring(1, len - 1);
 		}
 		return name;
@@ -412,8 +410,8 @@ public class ASTUtils {
 					String constant = ASTUtils.stripQuotes(((Scalar) argument)
 							.getValue());
 					FieldDeclaration fieldDeclaration = new FieldDeclaration(
-							constant, argument.sourceStart(), argument
-									.sourceEnd(), callExpression.sourceStart(),
+							constant, argument.sourceStart(),
+							argument.sourceEnd(), callExpression.sourceStart(),
 							callExpression.sourceEnd());
 					fieldDeclaration.setModifier(Modifiers.AccGlobal
 							| Modifiers.AccConstant | Modifiers.AccFinal);
@@ -439,47 +437,18 @@ public class ASTUtils {
 	 *         statement couldn't be found
 	 */
 	public static UsePart findUseStatementByAlias(
-			ModuleDeclaration moduleDeclaration, final String aliasName,
-			final int offset) {
-		final UsePart[] result = new UsePart[1];
+			ModuleDeclaration moduleDeclaration, String aliasName, int offset) {
+
+		FindUseStatementByAliasASTVisitor visitor = new FindUseStatementByAliasASTVisitor(
+				aliasName, offset);
+
 		try {
-			moduleDeclaration.traverse(new ASTVisitor() {
-				boolean found;
-
-				public boolean visit(Statement s) throws Exception {
-					if (s instanceof UseStatement) {
-						UseStatement useStatement = (UseStatement) s;
-						for (UsePart usePart : useStatement.getParts()) {
-							String alias;
-							if (usePart.getAlias() != null) {
-								alias = usePart.getAlias().getName();
-							} else {
-								// In case there's no alias - the alias is the
-								// last segment of the namespace name:
-								alias = usePart.getNamespace().getName();
-							}
-							if (aliasName.equalsIgnoreCase(alias)) {
-								found = true;
-								result[0] = usePart;
-								break;
-							}
-						}
-					}
-					return visitGeneral(s);
-				}
-
-				public boolean visitGeneral(ASTNode node) throws Exception {
-					if (found || node.sourceStart() > offset) {
-						return false;
-					}
-					return super.visitGeneral(node);
-				}
-			});
+			moduleDeclaration.traverse(visitor);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
 
-		return result[0];
+		return visitor.getResult();
 	}
 
 	/**
@@ -499,39 +468,17 @@ public class ASTUtils {
 	public static UsePart findUseStatementByNamespace(
 			ModuleDeclaration moduleDeclaration, final String namespace,
 			final int offset) {
-		final UsePart[] result = new UsePart[1];
+
+		FindUseStatementByNamespaceASTVisitor visitor = new FindUseStatementByNamespaceASTVisitor(
+				namespace, offset);
+
 		try {
-			moduleDeclaration.traverse(new ASTVisitor() {
-				boolean found;
-
-				public boolean visit(Statement s) throws Exception {
-					if (s instanceof UseStatement) {
-						UseStatement useStatement = (UseStatement) s;
-						for (UsePart usePart : useStatement.getParts()) {
-							String ns = usePart.getNamespace()
-									.getFullyQualifiedName();
-							if (namespace.equalsIgnoreCase(ns)) {
-								found = true;
-								result[0] = usePart;
-								break;
-							}
-						}
-					}
-					return visitGeneral(s);
-				}
-
-				public boolean visitGeneral(ASTNode node) throws Exception {
-					if (found || node.sourceStart() > offset) {
-						return false;
-					}
-					return super.visitGeneral(node);
-				}
-			});
+			moduleDeclaration.traverse(visitor);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
 
-		return result[0];
+		return visitor.getResult();
 	}
 
 	/**
@@ -547,26 +494,16 @@ public class ASTUtils {
 	 */
 	public static UseStatement[] getUseStatements(
 			ModuleDeclaration moduleDeclaration, final int offset) {
-		final List<UseStatement> result = new LinkedList<UseStatement>();
-		try {
-			moduleDeclaration.traverse(new ASTVisitor() {
-				public boolean visit(Statement s) throws Exception {
-					if (s instanceof UseStatement) {
-						result.add((UseStatement) s);
-					}
-					return visitGeneral(s);
-				}
 
-				public boolean visitGeneral(ASTNode node) throws Exception {
-					if (node.sourceStart() > offset) {
-						return false;
-					}
-					return super.visitGeneral(node);
-				}
-			});
+		GetUseStatementsASTVisitor visitor = new GetUseStatementsASTVisitor(
+				offset);
+
+		try {
+			moduleDeclaration.traverse(visitor);
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
-		return (UseStatement[]) result.toArray(new UseStatement[result.size()]);
+
+		return visitor.getResult();
 	}
 }

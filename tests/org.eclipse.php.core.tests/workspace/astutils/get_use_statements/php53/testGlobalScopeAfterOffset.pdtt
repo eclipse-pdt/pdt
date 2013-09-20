@@ -1,0 +1,26 @@
+--TEST--
+Get use statements in global scope as there use statements after the offset
+--CONFIG--
+offset: 111
+--FILE--
+<?php
+use My\Full\Classname as Another;
+
+$obj = new Another; // instantiates object of class My\Full\Classname
+NSname\subns\func(); // calls function My\Full\NSname\subns\func
+
+use My\Full\NSname;
+?>
+--EXPECT--
+<UseStatement start="6" end="39">
+	<Parts>
+		<UsePart start="0" end="0">
+			<FullyQualifiedReference start="10" end="27" name="My\Full\Classname">
+				<NamespaceReference start="10" end="17" name="My\Full" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<SimpleReference start="31" end="38" name="Another">
+			</SimpleReference>
+		</UsePart>
+	</Parts>
+</UseStatement>
