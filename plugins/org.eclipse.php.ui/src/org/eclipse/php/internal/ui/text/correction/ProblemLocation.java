@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction;
 
+import java.util.Scanner;
+
 import org.eclipse.dltk.compiler.problem.CategorizedProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.IScriptModelMarker;
@@ -34,7 +36,12 @@ public class ProblemLocation implements IProblemLocation {
 
 	public ProblemLocation(int offset, int length, IScriptAnnotation annotation) {
 		if (annotation.getId() != null) {
-			fId = Integer.parseInt(annotation.getId().name());
+			Scanner scan = new Scanner(annotation.getId().name());
+			if (scan.hasNextInt()) {
+				fId = scan.nextInt();
+			} else {
+				fId = -1;
+			}
 		} else {
 			fId = -1;
 		}
