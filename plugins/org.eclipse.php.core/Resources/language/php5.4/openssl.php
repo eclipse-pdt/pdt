@@ -529,16 +529,17 @@ function openssl_digest ($data, $method, $raw_output = null) {}
  * @param password string <p>
  * The password.
  * </p>
- * @param raw_output bool[optional] <p>
- * Setting to true will return as raw output data, otherwise the return
- * value is base64 encoded.
+ * @param options int[optional] <p>
+ * options can be one of
+ * OPENSSL_RAW_DATA,
+ * OPENSSL_ZERO_PADDING.
  * </p>
  * @param iv string[optional] <p>
  * A non-NULL Initialization Vector.
  * </p>
  * @return string the encrypted string on success&return.falseforfailure;.
  */
-function openssl_encrypt ($data, $method, $password, $raw_output = null, $iv = null) {}
+function openssl_encrypt ($data, $method, $password, $options = null, $iv = null) {}
 
 /**
  * Decrypts data
@@ -552,17 +553,17 @@ function openssl_encrypt ($data, $method, $password, $raw_output = null, $iv = n
  * @param password string <p>
  * The password.
  * </p>
- * @param raw_input bool[optional] <p>
- * Setting to true will take a raw encoded string,
- * otherwise a base64 string is assumed for the
- * data parameter.
+ * @param options int[optional] <p>
+ * options can be one of
+ * OPENSSL_RAW_DATA,
+ * OPENSSL_ZERO_PADDING.
  * </p>
  * @param iv string[optional] <p>
  * A non-NULL Initialization Vector. 
  * </p>
  * @return string The decrypted string on success&return.falseforfailure;.
  */
-function openssl_decrypt ($data, $method, $password, $raw_input = null, $iv = null) {}
+function openssl_decrypt ($data, $method, $password, $options = null, $iv = null) {}
 
 /**
  * Gets the cipher iv length
@@ -901,8 +902,8 @@ function openssl_random_pseudo_bytes ($length, &$crypto_strong = null) {}
  */
 function openssl_error_string () {}
 
-define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8o 01 Jun 2010");
-define ('OPENSSL_VERSION_NUMBER', 9470207);
+define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8y 5 Feb 2013");
+define ('OPENSSL_VERSION_NUMBER', 9470367);
 define ('X509_PURPOSE_SSL_CLIENT', 1);
 define ('X509_PURPOSE_SSL_SERVER', 2);
 define ('X509_PURPOSE_NS_SSL_SERVER', 3);
@@ -920,6 +921,11 @@ define ('OPENSSL_ALGO_SHA1', 1);
 define ('OPENSSL_ALGO_MD5', 2);
 define ('OPENSSL_ALGO_MD4', 3);
 define ('OPENSSL_ALGO_DSS1', 5);
+define ('OPENSSL_ALGO_SHA224', 6);
+define ('OPENSSL_ALGO_SHA256', 7);
+define ('OPENSSL_ALGO_SHA384', 8);
+define ('OPENSSL_ALGO_SHA512', 9);
+define ('OPENSSL_ALGO_RMD160', 10);
 
 /**
  * When signing a message, use cleartext signing with the MIME
@@ -1017,6 +1023,11 @@ define ('OPENSSL_CIPHER_AES_256_CBC', 7);
 define ('OPENSSL_KEYTYPE_RSA', 0);
 define ('OPENSSL_KEYTYPE_DSA', 1);
 define ('OPENSSL_KEYTYPE_DH', 2);
+
+/**
+ * This constant is only available when PHP is compiled with OpenSSL 0.9.8+.
+ * @link http://www.php.net/manual/en/openssl.constants.php
+ */
 define ('OPENSSL_KEYTYPE_EC', 3);
 define ('OPENSSL_RAW_DATA', 1);
 define ('OPENSSL_ZERO_PADDING', 2);
