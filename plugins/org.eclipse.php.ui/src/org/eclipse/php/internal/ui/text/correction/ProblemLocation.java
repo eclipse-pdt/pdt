@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction;
 
+import java.util.Scanner;
+
 import org.eclipse.dltk.compiler.problem.CategorizedProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.core.IScriptModelMarker;
@@ -34,7 +36,12 @@ public class ProblemLocation implements IProblemLocation {
 
 	public ProblemLocation(int offset, int length, IScriptAnnotation annotation) {
 		if (annotation.getId() != null) {
-			fId = Integer.parseInt(annotation.getId().name());
+			Scanner scan = new Scanner(annotation.getId().name());
+			if (scan.hasNextInt()) {
+				fId = scan.nextInt();
+			} else {
+				fId = -1;
+			}
 		} else {
 			fId = -1;
 		}
@@ -160,7 +167,8 @@ public class ProblemLocation implements IProblemLocation {
 
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
-		buf.append(Messages.ProblemLocation_0).append(getErrorCode(fId)).append('\n'); 
+		buf.append(Messages.ProblemLocation_0).append(getErrorCode(fId))
+				.append('\n');
 		buf.append('[').append(fOffset)
 				.append(", ").append(fLength).append(']').append('\n'); //$NON-NLS-1$
 		String[] arg = fArguments;
@@ -177,28 +185,28 @@ public class ProblemLocation implements IProblemLocation {
 		StringBuffer buf = new StringBuffer();
 
 		if ((code & IProblem.TypeRelated) != 0) {
-			buf.append(Messages.ProblemLocation_2); 
+			buf.append(Messages.ProblemLocation_2);
 		}
 		if ((code & IProblem.FieldRelated) != 0) {
-			buf.append(Messages.ProblemLocation_3); 
+			buf.append(Messages.ProblemLocation_3);
 		}
 		if ((code & IProblem.ConstructorRelated) != 0) {
-			buf.append(Messages.ProblemLocation_4); 
+			buf.append(Messages.ProblemLocation_4);
 		}
 		if ((code & IProblem.MethodRelated) != 0) {
-			buf.append(Messages.ProblemLocation_5); 
+			buf.append(Messages.ProblemLocation_5);
 		}
 		if ((code & IProblem.ImportRelated) != 0) {
-			buf.append(Messages.ProblemLocation_6); 
+			buf.append(Messages.ProblemLocation_6);
 		}
 		if ((code & IProblem.Internal) != 0) {
-			buf.append(Messages.ProblemLocation_7); 
+			buf.append(Messages.ProblemLocation_7);
 		}
 		if ((code & IProblem.Syntax) != 0) {
-			buf.append(Messages.ProblemLocation_8); 
+			buf.append(Messages.ProblemLocation_8);
 		}
 		if ((code & IProblem.Documentation) != 0) {
-			buf.append(Messages.ProblemLocation_9); 
+			buf.append(Messages.ProblemLocation_9);
 		}
 		buf.append(code & IProblem.IgnoreCategoriesMask);
 
