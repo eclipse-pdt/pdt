@@ -367,9 +367,12 @@ import org.eclipse.text.edits.*;
 				prefix += "class x{"; //$NON-NLS-1$
 				suffix = "}"; //$NON-NLS-1$
 			}
-
+		} else if (node instanceof Assignment) {
+			prefix = "<?php\n"; //$NON-NLS-1$
+			suffix = ";"; //$NON-NLS-1$
 		} else if (node instanceof Expression
 				&& node.getType() != ASTNode.SINGLE_FIELD_DECLARATION) {
+			node.getClass();
 		} else if (node instanceof BodyDeclaration) {
 		} else if (node instanceof Comment) {
 			prefix += "class x{"; //$NON-NLS-1$

@@ -122,7 +122,7 @@ public final class NodeInfoStore {
 			case ASTNode.FUNCTION_INVOCATION: {
 				FunctionInvocation functionInvocation = (FunctionInvocation) node;
 				FunctionName functionName = this.ast.newFunctionName();
-				functionName.setName(this.ast.newIdentifier("")); //$NON-NLS-1$
+				functionName.setName(this.ast.newIdentifier("a")); //$NON-NLS-1$
 				functionInvocation.setFunctionName(functionName);
 				break;
 			}
@@ -130,7 +130,7 @@ public final class NodeInfoStore {
 				MethodInvocation methodInvocation = (MethodInvocation) node;
 				methodInvocation.setDispatcher(this.ast.newVariable("a")); //$NON-NLS-1$
 				FunctionName fName = this.ast.newFunctionName(this.ast
-						.newIdentifier("")); //$NON-NLS-1$
+						.newIdentifier("a")); //$NON-NLS-1$
 				FunctionInvocation mInvocation = this.ast
 						.newFunctionInvocation();
 				mInvocation.setFunctionName(fName);
