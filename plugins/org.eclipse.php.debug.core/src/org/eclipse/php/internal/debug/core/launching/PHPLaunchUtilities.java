@@ -50,9 +50,7 @@ import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
-import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
-import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.server.core.Server;
@@ -364,7 +362,7 @@ public class PHPLaunchUtilities {
 								.openConfirm(
 										Display.getDefault().getActiveShell(),
 										PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-										PHPDebugCoreMessages.PHPLaunchUtilities_0)); 
+										PHPDebugCoreMessages.PHPLaunchUtilities_0));
 					} else {
 						if (newIsDebugAllPages) {
 							resultHolder.setResult(MessageDialog
@@ -372,7 +370,7 @@ public class PHPLaunchUtilities {
 											Display.getDefault()
 													.getActiveShell(),
 											PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-											PHPDebugCoreMessages.PHPLaunchUtilities_7)); 
+											PHPDebugCoreMessages.PHPLaunchUtilities_7));
 						} else {
 							// newIsStartDebugFrom == true
 							resultHolder.setResult(MessageDialog
@@ -380,7 +378,7 @@ public class PHPLaunchUtilities {
 											Display.getDefault()
 													.getActiveShell(),
 											PHPDebugCoreMessages.PHPLaunchUtilities_confirmation,
-											PHPDebugCoreMessages.PHPLaunchUtilities_8)); 
+											PHPDebugCoreMessages.PHPLaunchUtilities_8));
 						}
 					}
 					if (resultHolder.getResult()) {
@@ -795,10 +793,10 @@ public class PHPLaunchUtilities {
 			String phpExeDir, String[] scriptArguments) {
 		Map<String, String> env = new HashMap<String, String>();
 		env.put("REQUEST_METHOD", "GET"); //$NON-NLS-1$ //$NON-NLS-2$
-		//		env.put("SCRIPT_FILENAME", fileName);
-		//		env.put("SCRIPT_NAME", fileName);
-		//		env.put("PATH_TRANSLATED", fileName);
-		//		env.put("PATH_INFO", fileName);
+		// env.put("SCRIPT_FILENAME", fileName);
+		// env.put("SCRIPT_NAME", fileName);
+		// env.put("PATH_TRANSLATED", fileName);
+		// env.put("PATH_INFO", fileName);
 
 		// Build query string
 		StringBuilder queryStringBuf = new StringBuilder(query);
@@ -925,10 +923,24 @@ public class PHPLaunchUtilities {
 		String shortOpenTag = ProjectOptions.useShortTags(project) ? "on" //$NON-NLS-1$
 				: "off"; //$NON-NLS-1$
 
+		boolean builtIn = false;
+		final PHPexeItem[] phpItems = PHPexes.getInstance().getAllItems();
+		for (PHPexeItem item : phpItems) {
+			if (item.getExecutable().getAbsolutePath().equals(phpExe)) {
+				builtIn = !item.isEditable();
+				break;
+			}
+		}
 		List<String> cmdLineList = new LinkedList<String>();
-		cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c", //$NON-NLS-1$
-				phpConfigDir, "-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				"short_open_tag=" + shortOpenTag, scriptPath })); //$NON-NLS-1$
+		if (builtIn) {
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-n", "-c", //$NON-NLS-1$ //$NON-NLS-2$
+					phpConfigDir, "-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					"short_open_tag=" + shortOpenTag, scriptPath })); //$NON-NLS-1$
+		} else {
+			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-c", //$NON-NLS-1$
+					phpConfigDir, "-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					"short_open_tag=" + shortOpenTag, scriptPath })); //$NON-NLS-1$
+		}
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
 		}
