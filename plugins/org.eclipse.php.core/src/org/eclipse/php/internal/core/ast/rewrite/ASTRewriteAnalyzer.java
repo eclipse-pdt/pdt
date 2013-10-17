@@ -1201,6 +1201,16 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return this.formatter.computeIndentUnits(getIndentOfLine(offset));
 	}
 
+	private int getCurrentLineStart(String str, int pos) {
+		for (int i = pos - 1; i >= 0; i--) {
+			char ch = str.charAt(i);
+			if (IndentManipulation.isLineDelimiterChar(ch)) {
+				return i + 1;
+			}
+		}
+		return 0;
+	}
+
 	final void doTextInsert(int insertOffset, ASTNode node,
 			int initialIndentLevel, boolean removeLeadingIndent,
 			TextEditGroup editGroup) {
@@ -1247,8 +1257,15 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				}
 				currPos = offset;
 			} else {
-				String destIndentString = this.formatter
-						.getIndentString(getCurrentLine(formatted, offset));
+				int lineOffset = getCurrentLineStart(formatted, offset);
+				String destIndentString = (lineOffset == 0) ? this.formatter
+						.createIndentString(initialIndentLevel)
+						: this.formatter.getIndentString(getCurrentLine(
+								formatted, offset));
+				/*
+				 * String destIndentString = this.formatter
+				 * .getIndentString(getCurrentLine(formatted, offset));
+				 */
 				if (data instanceof CopyPlaceholderData) { // replace with a
 					// copy/move target
 					CopySourceInfo copySource = ((CopyPlaceholderData) data).copySource;

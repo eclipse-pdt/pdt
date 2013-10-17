@@ -14,6 +14,7 @@ package org.eclipse.php.internal.ui.text.correction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Scanner;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.*;
@@ -118,10 +119,10 @@ public class PHPCorrectionProcessor implements
 		if (annotation instanceof IScriptAnnotation) {
 			IScriptAnnotation javaAnnotation = (IScriptAnnotation) annotation;
 			if (javaAnnotation.getId() != null) {
-				String problemId = javaAnnotation.getId().name();
+				Scanner problemScanner = new Scanner(javaAnnotation.getId().name());
 				ISourceModule cu = javaAnnotation.getSourceModule();
-				if (cu != null) {
-					return hasCorrections(cu, Integer.parseInt(problemId),
+				if (problemScanner.hasNextInt() && cu != null) {
+					return hasCorrections(cu, problemScanner.nextInt(),
 							javaAnnotation.getMarkerType());
 				}
 			}

@@ -119,11 +119,38 @@ public final class NodeInfoStore {
 				forStatement.setBody(this.ast.newBlock());
 
 				break;
-			case ASTNode.FUNCTION_INVOCATION:
+			case ASTNode.FUNCTION_INVOCATION: {
 				FunctionInvocation functionInvocation = (FunctionInvocation) node;
+				FunctionName functionName = this.ast.newFunctionName();
+				functionName.setName(this.ast.newIdentifier("a")); //$NON-NLS-1$
+				functionInvocation.setFunctionName(functionName);
+				break;
+			}
+			case ASTNode.METHOD_INVOCATION:
+				MethodInvocation methodInvocation = (MethodInvocation) node;
+				methodInvocation.setDispatcher(this.ast.newVariable("a")); //$NON-NLS-1$
+				FunctionName fName = this.ast.newFunctionName(this.ast
+						.newIdentifier("a")); //$NON-NLS-1$
+				FunctionInvocation mInvocation = this.ast
+						.newFunctionInvocation();
+				mInvocation.setFunctionName(fName);
+				methodInvocation.setMethod(mInvocation);
+				break;
+			case ASTNode.STATIC_METHOD_INVOCATION: {
+				StaticMethodInvocation sMethod = (StaticMethodInvocation) node;
+				FunctionInvocation functionInvocation = this.ast
+						.newFunctionInvocation();
 				FunctionName functionName = this.ast.newFunctionName();
 				functionName.setName(this.ast.newIdentifier("")); //$NON-NLS-1$
 				functionInvocation.setFunctionName(functionName);
+				sMethod.setMethod(functionInvocation);
+				sMethod.setClassName(this.ast.newIdentifier("")); //$NON-NLS-1$
+				break;
+			}
+			case ASTNode.CLASS_INSTANCE_CREATION:
+				ClassInstanceCreation inst = (ClassInstanceCreation) node;
+				inst.setClassName(this.ast.newClassName(this.ast
+						.newIdentifier(""))); //$NON-NLS-1$
 				break;
 			}
 			return node;
