@@ -63,7 +63,7 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 				GlobalMethodStatementContext globalContext = (GlobalMethodStatementContext) context;
 				IType type = globalContext.getEnclosingType();
 				try {
-					if (PHPFlags.isClass(type.getFlags())) {
+					if (type != null && PHPFlags.isClass(type.getFlags())) {
 						ITypeHierarchy hierarchy = getCompanion()
 								.getSuperTypeHierarchy(type, null);
 						IType[] superTypes = hierarchy.getAllSupertypes(type);

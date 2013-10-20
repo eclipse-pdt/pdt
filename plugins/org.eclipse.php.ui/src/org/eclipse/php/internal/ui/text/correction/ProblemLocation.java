@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 import org.eclipse.dltk.compiler.problem.CategorizedProblem;
 import org.eclipse.dltk.compiler.problem.IProblem;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.IScriptModelMarker;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
 import org.eclipse.dltk.ui.editor.ScriptMarkerAnnotation;
@@ -33,6 +34,7 @@ public class ProblemLocation implements IProblemLocation {
 	private final int fLength;
 	private final boolean fIsError;
 	private final String fMarkerType;
+	private final IProblemIdentifier fIdentifier;
 
 	public ProblemLocation(int offset, int length, IScriptAnnotation annotation) {
 		if (annotation.getId() != null) {
@@ -42,8 +44,10 @@ public class ProblemLocation implements IProblemLocation {
 			} else {
 				fId = -1;
 			}
+			fIdentifier = annotation.getId();
 		} else {
 			fId = -1;
+			fIdentifier = null;
 		}
 		fArguments = annotation.getArguments();
 		fOffset = offset;
@@ -64,13 +68,21 @@ public class ProblemLocation implements IProblemLocation {
 		fLength = length;
 		fIsError = isError;
 		fMarkerType = markerType;
+		fIdentifier = null;
 	}
 
 	public ProblemLocation(IProblem problem) {
 		if (problem.getID() != null) {
-			fId = Integer.parseInt(problem.getID().name());
+			Scanner scan = new Scanner(problem.getID().name());
+			if (scan.hasNextInt()) {
+				fId = scan.nextInt();
+			} else {
+				fId = -1;
+			}
+			fIdentifier = problem.getID();
 		} else {
 			fId = -1;
+			fIdentifier = null;
 		}
 		fArguments = problem.getArguments();
 		fOffset = problem.getSourceStart();
@@ -89,6 +101,10 @@ public class ProblemLocation implements IProblemLocation {
 	 */
 	public int getProblemId() {
 		return fId;
+	}
+
+	public IProblemIdentifier getProblemIdentifier() {
+		return fIdentifier;
 	}
 
 	/*
