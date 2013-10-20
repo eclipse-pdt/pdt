@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.correction;
 
+import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 
@@ -59,6 +60,8 @@ public interface IProblemLocation {
 	 * @return The id of the problem.
 	 */
 	int getProblemId();
+
+	IProblemIdentifier getProblemIdentifier();
 
 	/**
 	 * Returns the original arguments recorded into the problem.

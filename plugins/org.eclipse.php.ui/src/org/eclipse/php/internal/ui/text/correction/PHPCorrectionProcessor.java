@@ -18,6 +18,7 @@ import java.util.Scanner;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.*;
+import org.eclipse.dltk.compiler.problem.IProblemIdentifier;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
@@ -95,10 +96,10 @@ public class PHPCorrectionProcessor implements
 		return fgContributedAssistProcessors;
 	}
 
-	public static boolean hasCorrections(ISourceModule cu, int problemId,
-			String markerType) {
+	public static boolean hasCorrections(ISourceModule cu,
+			IProblemIdentifier identifier, String markerType) {
 		ContributedProcessorDescriptor[] processors = getCorrectionProcessors();
-		SafeHasCorrections collector = new SafeHasCorrections(cu, problemId);
+		SafeHasCorrections collector = new SafeHasCorrections(cu, identifier);
 		for (int i = 0; i < processors.length; i++) {
 			if (processors[i].canHandleMarkerType(markerType)) {
 				collector.process(processors[i]);
@@ -119,12 +120,9 @@ public class PHPCorrectionProcessor implements
 		if (annotation instanceof IScriptAnnotation) {
 			IScriptAnnotation javaAnnotation = (IScriptAnnotation) annotation;
 			if (javaAnnotation.getId() != null) {
-				Scanner problemScanner = new Scanner(javaAnnotation.getId().name());
 				ISourceModule cu = javaAnnotation.getSourceModule();
-				if (problemScanner.hasNextInt() && cu != null) {
-					return hasCorrections(cu, problemScanner.nextInt(),
-							javaAnnotation.getMarkerType());
-				}
+				return hasCorrections(cu, javaAnnotation.getId(),
+						javaAnnotation.getMarkerType());
 			}
 
 		}
@@ -503,11 +501,20 @@ public class PHPCorrectionProcessor implements
 			SafeCorrectionProcessorAccess {
 		private final ISourceModule fCu;
 		private final int fProblemId;
+		private final IProblemIdentifier fIdentifier;
 		private boolean fHasCorrections;
 
-		public SafeHasCorrections(ISourceModule cu, int problemId) {
+		public SafeHasCorrections(ISourceModule cu,
+				IProblemIdentifier identifier) {
 			fCu = cu;
-			fProblemId = problemId;
+			Scanner problemScanner = new Scanner(identifier.name());
+			if (problemScanner.hasNextInt()) {
+				fProblemId = problemScanner.nextInt();
+			} else {
+				fProblemId = -1;
+			}
+			this.fIdentifier = identifier;
+
 			fHasCorrections = false;
 		}
 
@@ -520,6 +527,11 @@ public class PHPCorrectionProcessor implements
 			IQuickFixProcessor processor = (IQuickFixProcessor) desc
 					.getProcessor(fCu, IQuickFixProcessor.class);
 			if (processor != null && processor.hasCorrections(fCu, fProblemId)) {
+				fHasCorrections = true;
+			} else if (processor != null
+					&& processor instanceof IQuickFixProcessorExtension
+					&& ((IQuickFixProcessorExtension) processor)
+							.hasCorrections(fCu, fIdentifier)) {
 				fHasCorrections = true;
 			}
 		}
