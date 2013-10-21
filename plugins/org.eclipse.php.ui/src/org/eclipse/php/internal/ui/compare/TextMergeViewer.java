@@ -4747,6 +4747,10 @@ public class TextMergeViewer extends ContentMergeViewer implements IAdaptable {
 					}
 					return null;
 				}
+
+				public int getChangesCount() {
+					return 0;
+				}
 			};
 		}
 		if (adapter == OutlineViewerCreator.class) {
