@@ -1,0 +1,19 @@
+--TEST--
+Should complete item() method in namespaced method after return assign
+--FILE--
+<?
+namespace NS;
+class A {
+  function item() {
+    return new A();
+  }
+}
+
+function test_arg(A $t) {
+  $x = $t->item();
+  $x->|
+}	}
+}
+?>
+--EXPECT--
+method(item)
