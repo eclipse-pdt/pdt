@@ -380,6 +380,14 @@ public class PHPCompletionProposalCollector extends
 
 	@Override
 	public int computeRelevance(CompletionProposal proposal) {
+
+		if (proposal.getExtraInfo() != null
+				&& proposal.getExtraInfo() instanceof String) {
+			Integer relevance = CompletionRelevanceComputer.getInstance()
+					.getTypeRelevance((String) proposal.getExtraInfo());
+			return proposal.getRelevance() * relevance;
+		}
+
 		// if (ProposalExtraInfo.STUB.equals(proposal.getExtraInfo())) {
 		// return Integer.MAX_VALUE;
 		// }

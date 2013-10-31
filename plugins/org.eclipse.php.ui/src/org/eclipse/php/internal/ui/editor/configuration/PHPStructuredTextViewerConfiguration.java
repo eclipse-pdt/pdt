@@ -20,9 +20,7 @@ import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.contentassist.*;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -45,8 +43,10 @@ import org.eclipse.php.internal.ui.autoEdit.IndentLineAutoEditStrategy;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
+import org.eclipse.php.internal.ui.editor.contentassist.CompletionRelevanceComputer;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistant;
+import org.eclipse.php.internal.ui.editor.contentassist.ParameterGuessingProposal;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.BestMatchHover;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
@@ -219,6 +219,37 @@ public class PHPStructuredTextViewerConfiguration extends
 				fContentAssistant.uninstall();
 			}
 			fContentAssistant = new PHPContentAssistant();
+
+			fContentAssistant.addCompletionListener(new ICompletionListener() {
+
+				private String currentSelection;
+
+				public void selectionChanged(ICompletionProposal proposal,
+						boolean smartToggle) {
+
+					if (proposal instanceof ParameterGuessingProposal) {
+						ParameterGuessingProposal scriptProposal = (ParameterGuessingProposal) proposal;
+
+						if (scriptProposal.getExtraInfo() != null
+								&& scriptProposal.getExtraInfo() instanceof String) {
+							currentSelection = (String) scriptProposal
+									.getExtraInfo();
+						}
+					}
+				}
+
+				public void assistSessionStarted(ContentAssistEvent event) {
+
+				}
+
+				public void assistSessionEnded(ContentAssistEvent event) {
+
+					if (currentSelection != null) {
+						CompletionRelevanceComputer.getInstance()
+								.incrementTypeProposal(currentSelection);
+					}
+				}
+			});
 
 			// content assistant configurations
 			fContentAssistant
