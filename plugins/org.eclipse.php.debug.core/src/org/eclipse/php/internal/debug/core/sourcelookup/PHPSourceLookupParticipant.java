@@ -28,9 +28,9 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.Openable;
 import org.eclipse.dltk.internal.core.util.HandleFactory;
-import org.eclipse.dltk.internal.ui.search.DLTKSearchScopeFactory;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.phar.PharArchiveFile;
 import org.eclipse.php.internal.core.phar.PharPath;
@@ -86,9 +86,8 @@ public class PHPSourceLookupParticipant extends AbstractSourceLookupParticipant 
 
 			if (fileName != null) {
 				HandleFactory fac = new HandleFactory();
-				IDLTKSearchScope scope = DLTKSearchScopeFactory.getInstance()
-						.createWorkspaceScope(true,
-								PHPLanguageToolkit.getDefault());
+				IDLTKSearchScope scope = SearchEngine
+						.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 				IPath localPath = EnvironmentPathUtils.getFile(
 						LocalEnvironment.getInstance(), new Path(fileName))
 						.getFullPath();
