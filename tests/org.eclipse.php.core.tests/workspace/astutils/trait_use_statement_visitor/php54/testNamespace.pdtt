@@ -1,0 +1,45 @@
+--TEST--
+Get trait use statements in an example of traits inside namespaces
+--FILE--
+<?php
+namespace NSOne {
+	trait Hello {
+	    public function sayHello() {
+	        echo 'Hello ';
+	    }
+	}
+	
+	trait World {
+	    public function sayWorld() {
+	        echo 'World!';
+	    }
+	}
+	
+	trait HelloWorld {
+	    use Hello, World;
+	}
+}
+
+namespace NSTwo {
+	class MyHelloWorld {
+	    use NSOne\HelloWorld;
+	}
+}
+
+$o = new MyHelloWorld();
+$o->sayHello();
+$o->sayWorld();
+?>
+--EXPECT--
+<TraitUseStatement start="219" end="236">
+	<FullyQualifiedReference start="223" end="228" name="Hello">
+	</FullyQualifiedReference>
+	<FullyQualifiedReference start="230" end="235" name="World">
+	</FullyQualifiedReference>
+</TraitUseStatement>
+<TraitUseStatement start="288" end="309">
+	<FullyQualifiedReference start="292" end="308" name="NSOne\HelloWorld">
+		<NamespaceReference start="292" end="297" name="NSOne" global="false" local="false">
+		</NamespaceReference>
+	</FullyQualifiedReference>
+</TraitUseStatement>
