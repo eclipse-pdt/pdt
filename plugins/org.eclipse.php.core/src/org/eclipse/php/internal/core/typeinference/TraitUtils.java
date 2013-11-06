@@ -19,7 +19,7 @@ import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.php.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.compiler.ast.visitor.PHPASTVisitor;
+import org.eclipse.php.internal.core.compiler.ast.visitor.TraitUseStatementASTVisitor;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
@@ -37,7 +37,8 @@ public class TraitUtils {
 			final ISourceRange sourceRange = type.getSourceRange();
 			ModuleDeclaration moduleDeclaration = SourceParserUtil
 					.getModuleDeclaration(sourceModule);
-			moduleDeclaration.traverse(new PHPASTVisitor() {
+			moduleDeclaration.traverse(new TraitUseStatementASTVisitor() {
+				@Override
 				public boolean visit(TraitUseStatement s) throws Exception {
 					if (s.sourceStart() > sourceRange.getOffset()
 							&& s.sourceEnd() < sourceRange.getOffset()
