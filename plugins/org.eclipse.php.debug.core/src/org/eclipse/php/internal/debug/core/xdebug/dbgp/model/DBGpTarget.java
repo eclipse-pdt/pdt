@@ -1116,6 +1116,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 		resp = session.sendSyncCmd(DBGpCommand.featureSet,
 				"-n max_children -v " + getMaxChildren()); //$NON-NLS-1$
 		DBGpUtils.isGoodDBGpResponse(this, resp);
+		resp = session.sendSyncCmd(DBGpCommand.featureSet,
+				"-n max_data -v " + getMaxData()); //$NON-NLS-1$
+		DBGpUtils.isGoodDBGpResponse(this, resp);
 		resp = session.sendSyncCmd(DBGpCommand.featureGet, "-n encoding"); //$NON-NLS-1$
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 			Node child = resp.getParentNode().getFirstChild();
@@ -2274,6 +2277,15 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget,
 			return sessionPreferences.getInt(
 					DBGpPreferences.DBGP_MAX_CHILDREN_PROPERTY,
 					DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT);
+		}
+		return DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT;
+	}
+	
+	public int getMaxData() {
+		if (sessionPreferences != null) {
+			return sessionPreferences.getInt(
+					DBGpPreferences.DBGP_MAX_DATA_PROPERTY,
+					DBGpPreferences.DBGP_MAX_DATA_DEFAULT);
 		}
 		return DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT;
 	}

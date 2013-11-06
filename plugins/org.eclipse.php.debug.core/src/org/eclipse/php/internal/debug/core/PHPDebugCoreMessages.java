@@ -121,6 +121,8 @@ public class PHPDebugCoreMessages extends NLS {
 	// proxy
 	public static String XDebugConfigurationDialog_useProxy;
 	public static String XDebugConfigurationDialog_idekey;
+
+	public static String XDebugConfigurationDialog_MaxData;
 	public static String XDebugConfigurationDialog_proxy;
 
 	// General XDebug messages

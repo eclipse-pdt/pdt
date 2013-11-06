@@ -42,6 +42,7 @@ public class XDebugConfigurationDialog extends
 	private Button showGlobals;
 	private Spinner variableDepth;
 	private Spinner maxChildren;
+	private Spinner maxData;
 	private Button useMultiSession;
 	private Combo acceptRemoteSession;
 
@@ -107,6 +108,12 @@ public class XDebugConfigurationDialog extends
 				XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN);
 		maxChildren = addVariableLevel(mainSubSection,
 				XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN, 1, 500, 2);
+
+		addLabelControl(mainSubSection,
+				PHPDebugCoreMessages.XDebugConfigurationDialog_MaxData,
+				XDebugPreferenceMgr.XDEBUG_PREF_DATA);
+		maxData = addVariableLevel(mainSubSection,
+				XDebugPreferenceMgr.XDEBUG_PREF_DATA, 1, Integer.MAX_VALUE, 2);
 
 		useMultiSession = addCheckBox(mainSubSection,
 				PHPDebugCoreMessages.XDebugConfigurationDialog_useMultisession,
@@ -257,6 +264,8 @@ public class XDebugConfigurationDialog extends
 				variableDepth.getSelection());
 		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN, maxChildren
 				.getSelection());
+		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_DATA,
+				maxData.getSelection());
 		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION,
 				useMultiSession.getSelection());
 		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_REMOTESESSION,
@@ -301,6 +310,7 @@ public class XDebugConfigurationDialog extends
 				.getInt(XDebugPreferenceMgr.XDEBUG_PREF_ARRAYDEPTH));
 		maxChildren.setSelection(prefs
 				.getInt(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN));
+		maxData.setSelection(prefs.getInt(XDebugPreferenceMgr.XDEBUG_PREF_DATA));
 		acceptRemoteSession.select(prefs
 				.getInt(XDebugPreferenceMgr.XDEBUG_PREF_REMOTESESSION));
 

@@ -31,6 +31,8 @@ public class XDebugPreferenceMgr {
 			+ ".xdebug_arrayDepth"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_CHILDREN = PHPDebugPlugin.ID
 			+ ".xdebug_children"; //$NON-NLS-1$
+	public static final String XDEBUG_PREF_DATA = PHPDebugPlugin.ID
+			+ ".xdebug_data"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_MULTISESSION = PHPDebugPlugin.ID
 			+ ".xdebug_multisession"; //$NON-NLS-1$
 	public static final String XDEBUG_PREF_REMOTESESSION = PHPDebugPlugin.ID
@@ -82,6 +84,7 @@ public class XDebugPreferenceMgr {
 				useMultiSessionDefault());
 		prefs.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN,
 				getChildrenDefault());
+		prefs.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_DATA, getDataDefault());
 		prefs.setDefault(XDebugPreferenceMgr.XDEBUG_PREF_REMOTESESSION,
 				getAcceptRemoteSessionDefault());
 
@@ -111,6 +114,9 @@ public class XDebugPreferenceMgr {
 						XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN,
 						preferences
 								.getDefaultInt(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN));
+		preferences
+				.setValue(XDebugPreferenceMgr.XDEBUG_PREF_DATA, preferences
+						.getDefaultInt(XDebugPreferenceMgr.XDEBUG_PREF_DATA));
 		preferences
 				.setValue(
 						XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION,
@@ -172,6 +178,9 @@ public class XDebugPreferenceMgr {
 				.getInt(XDebugPreferenceMgr.XDEBUG_PREF_CHILDREN);
 		sessionPrefs.setValue(DBGpPreferences.DBGP_MAX_CHILDREN_PROPERTY,
 				maxChildren);
+
+		int maxData = uiPrefs.getInt(XDebugPreferenceMgr.XDEBUG_PREF_DATA);
+		sessionPrefs.setValue(DBGpPreferences.DBGP_MAX_DATA_PROPERTY, maxData);
 
 		boolean getSuperGlobals = uiPrefs
 				.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_SHOWSUPERGLOBALS);
@@ -242,6 +251,10 @@ public class XDebugPreferenceMgr {
 
 	private static int getChildrenDefault() {
 		return DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT;
+	}
+
+	private static int getDataDefault() {
+		return DBGpPreferences.DBGP_MAX_DATA_DEFAULT;
 	}
 
 	private static int getPortDefault() {
