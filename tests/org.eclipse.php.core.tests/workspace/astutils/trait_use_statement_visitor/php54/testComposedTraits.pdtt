@@ -1,0 +1,39 @@
+--TEST--
+Get trait use statements in an example of composed traits
+--FILE--
+<?php
+trait Hello {
+    public function sayHello() {
+        echo 'Hello ';
+    }
+}
+
+trait World {
+    public function sayWorld() {
+        echo 'World!';
+    }
+}
+
+trait HelloWorld {
+    use Hello, World;
+}
+
+class MyHelloWorld {
+    use HelloWorld;
+}
+
+$o = new MyHelloWorld();
+$o->sayHello();
+$o->sayWorld();
+?>
+--EXPECT--
+<TraitUseStatement start="187" end="204">
+	<FullyQualifiedReference start="191" end="196" name="Hello">
+	</FullyQualifiedReference>
+	<FullyQualifiedReference start="198" end="203" name="World">
+	</FullyQualifiedReference>
+</TraitUseStatement>
+<TraitUseStatement start="233" end="248">
+	<FullyQualifiedReference start="237" end="247" name="HelloWorld">
+	</FullyQualifiedReference>
+</TraitUseStatement>

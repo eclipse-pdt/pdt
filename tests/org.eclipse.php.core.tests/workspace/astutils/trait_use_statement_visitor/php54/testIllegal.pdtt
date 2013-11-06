@@ -1,0 +1,19 @@
+--TEST--
+Get trait use statements in an example where the "use" keyword is used, but none of the usages is a legal trait use statement.
+--FILE--
+<?php
+use My\Full\NSname;
+
+namespace MyProject {
+	use Languages\Danish;
+	
+	$obj = new Danish;
+}
+
+class HelloWorld {
+	public function hello() {
+		use Hello;
+	}
+}
+?>
+--EXPECT--

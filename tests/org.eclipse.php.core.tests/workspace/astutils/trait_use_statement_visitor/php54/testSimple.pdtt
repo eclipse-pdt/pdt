@@ -1,0 +1,28 @@
+--TEST--
+Get trait use statements in a simple example
+--FILE--
+<?php
+trait ezcReflectionReturnInfo {
+    function getReturnType() { /*1*/ }
+    function getReturnDescription() { /*2*/ }
+}
+
+class ezcReflectionMethod extends ReflectionMethod {
+    use ezcReflectionReturnInfo;
+    /* ... */
+}
+
+class ezcReflectionFunction extends ReflectionFunction {
+    use ezcReflectionReturnInfo;
+    /* ... */
+}
+?>
+--EXPECT--
+<TraitUseStatement start="183" end="211">
+	<FullyQualifiedReference start="187" end="210" name="ezcReflectionReturnInfo">
+	</FullyQualifiedReference>
+</TraitUseStatement>
+<TraitUseStatement start="290" end="318">
+	<FullyQualifiedReference start="294" end="317" name="ezcReflectionReturnInfo">
+	</FullyQualifiedReference>
+</TraitUseStatement>
