@@ -19,10 +19,12 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
@@ -53,8 +55,15 @@ public class XDebugWebLaunchConfigurationDelegate extends
 
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(
-				XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)) {
+		String debuggerId = XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID;
+		if (!DaemonPlugin.getDefault().validateCommunicationDaemons(debuggerId)) {
+			int port = PHPDebugPlugin.getDebugPort(debuggerId);
+			if (!PHPLaunchUtilities.isPortAvailable(port)) {
+				PHPLaunchUtilities
+						.showLaunchErrorMessage(NLS
+								.bind(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_PortInUse,
+										port));
+			}
 			monitor.setCanceled(true);
 			monitor.done();
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
