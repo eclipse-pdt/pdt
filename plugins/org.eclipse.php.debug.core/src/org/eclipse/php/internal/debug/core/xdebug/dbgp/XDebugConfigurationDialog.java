@@ -11,12 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
+
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.preferences.AbstractDebuggerConfigurationDialog;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
+import org.eclipse.php.internal.debug.core.xdebug.communication.XDebugCommunicationDaemon;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -400,10 +406,17 @@ public class XDebugConfigurationDialog extends
 				Integer iValue = new Integer(value);
 				int i = iValue.intValue();
 				if (!timeoutField) {
-
 					if (i <= 0 || i > 65535) {
 						valid = false;
 						errorMessage = PHPDebugCoreMessages.XDebugConfigurationDialog_invalidPortRange;
+					}
+					if (valid) {
+						if (iValue != PHPDebugPlugin
+								.getDebugPort(XDebugCommunicationDaemon.XDEBUG_DEBUGGER_ID)
+								&& !PHPLaunchUtilities.isPortAvailable(iValue)) {
+							valid = false;
+							errorMessage = PHPDebugCoreMessages.XDebugConfigurationDialog_PortInUse;
+						}
 					}
 				} else {
 					if (i < 10 || i > 100000) {
