@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -66,6 +66,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(CatchClause s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(FinallyClause s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
@@ -282,6 +287,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 
+	public boolean endvisit(YieldStatement s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
 	public boolean endvisit(Scalar s) throws Exception {
 		endvisitGeneral(s);
 		return false;
@@ -430,6 +440,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(CatchClause s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(FinallyClause s) throws Exception {
 		return visitGeneral(s);
 	}
 
@@ -602,6 +616,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
+	public boolean visit(YieldStatement s) throws Exception {
+		return visitGeneral(s);
+	}
+
 	public boolean visit(Scalar s) throws Exception {
 		return visitGeneral(s);
 	}
@@ -722,6 +740,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (nodeClass.equals(CatchClause.class)) {
 			return endvisit((CatchClause) s);
+		}
+		if (nodeClass.equals(FinallyClause.class)) {
+			return endvisit((FinallyClause) s);
 		}
 		if (nodeClass.equals(ConstantDeclaration.class)) {
 			return endvisit((ConstantDeclaration) s);
@@ -851,6 +872,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (nodeClass.equals(ReturnStatement.class)) {
 			return endvisit((ReturnStatement) s);
+		}
+
+		if (nodeClass.equals(YieldStatement.class)) {
+			return endvisit((YieldStatement) s);
 		}
 		if (nodeClass.equals(Scalar.class)) {
 			return endvisit((Scalar) s);
@@ -1013,6 +1038,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (nodeClass.equals(CatchClause.class)) {
 			return visit((CatchClause) s);
 		}
+		if (nodeClass.equals(FinallyClause.class)) {
+			return visit((FinallyClause) s);
+		}
 		if (nodeClass.equals(ConstantDeclaration.class)) {
 			return visit((ConstantDeclaration) s);
 		}
@@ -1141,6 +1169,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (nodeClass.equals(ReturnStatement.class)) {
 			return visit((ReturnStatement) s);
+		}
+		if (nodeClass.equals(YieldStatement.class)) {
+			return visit((YieldStatement) s);
 		}
 		if (nodeClass.equals(Scalar.class)) {
 			return visit((Scalar) s);

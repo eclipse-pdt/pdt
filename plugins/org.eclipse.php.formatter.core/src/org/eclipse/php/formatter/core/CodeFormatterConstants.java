@@ -259,7 +259,7 @@ public class CodeFormatterConstants {
 	 * @since 3.0
 	 */
 	public static final String FORMATTER_ALIGNMENT_FOR_MULTIPLE_FIELDS = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.alignment_for_multiple_fields";//$NON-NLS-1$	
+			+ ".formatter.alignment_for_multiple_fields";//$NON-NLS-1$
 	/**
 	 * <pre>
 	 * FORMATTER / Option for alignment of parameters in constructor declaration
@@ -795,7 +795,7 @@ public class CodeFormatterConstants {
 	 * @since 3.2
 	 */
 	public static final String FORMATTER_INDENT_EMPTY_LINES = FormatterCorePlugin.PLUGIN_ID
-			+ ".formatter.indent_empty_lines"; //$NON-NLS-1$	
+			+ ".formatter.indent_empty_lines"; //$NON-NLS-1$
 	/**
 	 * <pre>
 	 * FORMATTER / Option to indent statements inside a block
@@ -855,7 +855,7 @@ public class CodeFormatterConstants {
 
 	/**
 	 * <pre>
-	 * FORMATTER / Option to specify the equivalent number of spaces that represents one indentation 
+	 * FORMATTER / Option to specify the equivalent number of spaces that represents one indentation
 	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.indentation.size&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;4&quot;
@@ -3445,7 +3445,7 @@ public class CodeFormatterConstants {
 			+ ".formatter.tabulation.char"; //$NON-NLS-1$
 	/**
 	 * <pre>
-	 * FORMATTER / Option to specify the equivalent number of spaces that represents one tabulation 
+	 * FORMATTER / Option to specify the equivalent number of spaces that represents one tabulation
 	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.tabulation.size&quot;
 	 *     - possible values:   &quot;&lt;n&gt;&quot;, where n is zero or a positive integer
 	 *     - default:           &quot;4&quot;
@@ -3458,7 +3458,7 @@ public class CodeFormatterConstants {
 
 	/**
 	 * <pre>
-	 * FORMATTER / Option to use tabulations only for leading indentations 
+	 * FORMATTER / Option to use tabulations only for leading indentations
 	 *     - option id:         &quot;org.eclipse.jdt.core.formatter.use_tabs_only_for_leading_indentations&quot;
 	 *     - possible values:   { TRUE, FALSE }
 	 *     - default:           FALSE

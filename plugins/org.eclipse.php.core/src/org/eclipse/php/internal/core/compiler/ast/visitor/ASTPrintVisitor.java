@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -147,6 +147,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean endvisit(CatchClause s) throws Exception {
 		xmlWriter.endTag("CatchClause"); //$NON-NLS-1$
+		return true;
+	}
+
+	public boolean endvisit(FinallyClause s) throws Exception {
+		xmlWriter.endTag("FinallyClause"); //$NON-NLS-1$
 		return true;
 	}
 
@@ -362,6 +367,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	public boolean endvisit(YieldStatement s) throws Exception {
+		xmlWriter.endTag("YieldStatement"); //$NON-NLS-1$
+		return true;
+	}
+
 	public boolean endvisit(Scalar s) throws Exception {
 		xmlWriter.endTag("Scalar"); //$NON-NLS-1$
 		return true;
@@ -536,6 +546,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(CatchClause s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("CatchClause", parameters); //$NON-NLS-1$
+		return true;
+	}
+
+	public boolean visit(FinallyClause s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("FinallyClause", parameters); //$NON-NLS-1$
 		return true;
 	}
 
@@ -858,6 +874,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(ReturnStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReturnStatement", parameters); //$NON-NLS-1$
+		return true;
+	}
+
+	public boolean visit(YieldStatement s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("YieldStatement", parameters); //$NON-NLS-1$
 		return true;
 	}
 

@@ -226,6 +226,7 @@ final class PHPDefaultFormatterPreferences implements
 
 		preferences.control_statement_insert_newline_before_else_and_elseif_in_if = false;
 		preferences.control_statement_insert_newline_before_catch_in_try = false;
+		preferences.control_statement_insert_newline_before_finally_in_try = false;
 		preferences.control_statement_insert_newline_before_while_in_do = false;
 		preferences.control_statement_keep_then_on_same_line = false;
 		preferences.control_statement_keep_simple_if_on_one_line = false;

@@ -1,0 +1,43 @@
+--TEST--
+Test finally
+--FILE--
+<?php 
+try {
+    throw new Exception();
+} finally {
+    
+}
+?>
+--EXPECT--
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE| 
+|1
+PHP_TRY|try|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_THROW|throw|1
+WHITESPACE| |1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|Exception|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE| |1
+PHP_FINALLY|finally|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1

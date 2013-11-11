@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -36,7 +36,7 @@ public class CorePreferenceConstants {
 	public static void initializeDefaultValues() {
 		IEclipsePreferences node = new DefaultScope().getNode(PHPCorePlugin.ID);
 
-		node.put(Keys.PHP_VERSION, PHPVersion.PHP5_4.getAlias());
+		node.put(Keys.PHP_VERSION, PHPVersion.PHP5_5.getAlias());
 		node.put(PHPCoreConstants.TASK_TAGS, PHPCoreConstants.DEFAULT_TASK_TAGS);
 		node.put(PHPCoreConstants.TASK_PRIORITIES,
 				PHPCoreConstants.DEFAULT_TASK_PRIORITIES);

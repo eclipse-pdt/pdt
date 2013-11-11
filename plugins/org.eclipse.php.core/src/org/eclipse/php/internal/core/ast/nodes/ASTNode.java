@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -110,6 +110,8 @@ public abstract class ASTNode implements Visitable {
 	public static final int TRAIT_DECLARATION = 72;
 	public static final int FULLY_QUALIFIED_TRAIT_METHOD_REFERENCE = 73;
 	public static final int TRAIT_ALIAS = 74;
+	public static final int YIELD_STATEMENT = 75;
+	public static final int FINALLY_CLAUSE = 76;
 
 	/**
 	 * Internal convenience constant indicating that there is definite risk of
@@ -678,6 +680,8 @@ public abstract class ASTNode implements Visitable {
 			return ReflectionVariable.class;
 		case RETURN_STATEMENT:
 			return ReturnStatement.class;
+		case YIELD_STATEMENT:
+			return YieldStatement.class;
 		case SCALAR:
 			return Scalar.class;
 		case STATIC_FIELD_ACCESS:
@@ -706,6 +710,8 @@ public abstract class ASTNode implements Visitable {
 			return WhileStatement.class;
 		case PARENTHESIS_EXPRESSION:
 			return ParenthesisExpression.class;
+		case FINALLY_CLAUSE:
+			return FinallyClause.class;
 		}
 		throw new IllegalArgumentException();
 	}

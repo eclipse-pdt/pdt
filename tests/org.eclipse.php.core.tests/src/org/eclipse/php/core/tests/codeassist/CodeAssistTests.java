@@ -57,6 +57,10 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
 				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
 				"/workspace/codeassist/php54" });
+
+		TESTS.put(PHPVersion.PHP5_5, new String[] {
+				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
+				"/workspace/codeassist/php54", "/workspace/codeassist/php55" });
 	};
 
 	protected static IProject project;

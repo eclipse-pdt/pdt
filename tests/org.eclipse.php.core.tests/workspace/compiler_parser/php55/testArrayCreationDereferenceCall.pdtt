@@ -1,0 +1,57 @@
+--TEST--
+Test Array Creation
+--FILE--
+<?php array(1, 2)[0]->x(); [1, 2][0]->y(); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="46">
+	<ExpressionStatement start="6" end="26">
+		<PHPCallExpression start="6" end="25">
+			<ArrayCreation start="6" end="20">
+				<ArrayElement start="12" end="13">
+					<Scalar start="12" end="13" type="int" value="1">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="15" end="16">
+					<Scalar start="15" end="16" type="int" value="2">
+					</Scalar>
+				</ArrayElement>
+				<PHPArrayDereferenceList start="0" end="-1">
+					<DereferenceNode start="17" end="20">
+						<Scalar start="18" end="19" type="int" value="0">
+						</Scalar>
+					</DereferenceNode>
+				</PHPArrayDereferenceList>
+			</ArrayCreation>
+			<SimpleReference start="22" end="23" name="x">
+			</SimpleReference>
+			<PHPCallArgumentsList start="24" end="24">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="27" end="42">
+		<PHPCallExpression start="27" end="41">
+			<ArrayCreation start="27" end="36">
+				<ArrayElement start="28" end="29">
+					<Scalar start="28" end="29" type="int" value="1">
+					</Scalar>
+				</ArrayElement>
+				<ArrayElement start="31" end="32">
+					<Scalar start="31" end="32" type="int" value="2">
+					</Scalar>
+				</ArrayElement>
+				<PHPArrayDereferenceList start="0" end="-1">
+					<DereferenceNode start="33" end="36">
+						<Scalar start="34" end="35" type="int" value="0">
+						</Scalar>
+					</DereferenceNode>
+				</PHPArrayDereferenceList>
+			</ArrayCreation>
+			<SimpleReference start="38" end="39" name="y">
+			</SimpleReference>
+			<PHPCallArgumentsList start="40" end="40">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="43" end="45">
+	</EmptyStatement>
+</ModuleDeclaration>
