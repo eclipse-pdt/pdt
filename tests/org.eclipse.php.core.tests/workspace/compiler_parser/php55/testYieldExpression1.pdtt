@@ -1,0 +1,41 @@
+--TEST--
+Test Yield expression
+--FILE--
+<?php function test() { $x = (yield); $x = (yield $a); $x = (yield $a => $b); } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="83">
+	<PHPMethodDeclaration start="6" end="79" modifiers="" name="test">
+		<ExpressionStatement start="24" end="37">
+			<Assignment start="24" end="36" operator="=">
+				<VariableReference start="24" end="26" name="$x">
+				</VariableReference>
+				<YieldExpression start="30" end="35">
+				</YieldExpression>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start="38" end="54">
+			<Assignment start="38" end="53" operator="=">
+				<VariableReference start="38" end="40" name="$x">
+				</VariableReference>
+				<YieldExpression start="44" end="52">
+					<VariableReference start="50" end="52" name="$a">
+					</VariableReference>
+				</YieldExpression>
+			</Assignment>
+		</ExpressionStatement>
+		<ExpressionStatement start="55" end="77">
+			<Assignment start="55" end="76" operator="=">
+				<VariableReference start="55" end="57" name="$x">
+				</VariableReference>
+				<YieldExpression start="61" end="75">
+					<VariableReference start="67" end="69" name="$a">
+					</VariableReference>
+					<VariableReference start="73" end="75" name="$b">
+					</VariableReference>
+				</YieldExpression>
+			</Assignment>
+		</ExpressionStatement>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="80" end="82">
+	</EmptyStatement>
+</ModuleDeclaration>

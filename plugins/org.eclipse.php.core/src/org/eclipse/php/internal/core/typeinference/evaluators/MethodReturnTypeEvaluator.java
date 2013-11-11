@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -29,11 +29,9 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.YieldExpression;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
@@ -42,6 +40,8 @@ public class MethodReturnTypeEvaluator extends
 		AbstractMethodReturnTypeEvaluator {
 
 	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
+	private final List<IEvaluatedType> yieldEvaluated = new LinkedList<IEvaluatedType>();
+	private final List<IGoal> yieldGoals = new LinkedList<IGoal>();
 
 	public MethodReturnTypeEvaluator(IGoal goal) {
 		super(goal);
@@ -87,6 +87,17 @@ public class MethodReturnTypeEvaluator extends
 							} else {
 								subGoals.add(new ExpressionTypeGoal(
 										innerContext, expr));
+							}
+						} else if (node instanceof YieldExpression) {
+							YieldExpression statement = (YieldExpression) node;
+							Expression expr = statement.getExpr();
+							if (expr == null) {
+								yieldEvaluated.add(PHPSimpleTypes.NULL);
+							} else {
+								final ExpressionTypeGoal yg = new ExpressionTypeGoal(
+										innerContext, expr);
+								subGoals.add(yg);
+								yieldGoals.add(yg);
 							}
 						}
 						return super.visitGeneral(node);
@@ -180,12 +191,21 @@ public class MethodReturnTypeEvaluator extends
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE && result != null) {
-			evaluated.add((IEvaluatedType) result);
+			if (!yieldGoals.contains(subgoal)) {
+				evaluated.add((IEvaluatedType) result);
+			} else {
+				yieldEvaluated.add((IEvaluatedType) result);
+			}
 		}
 		return IGoal.NO_GOALS;
 	}
 
 	public Object produceResult() {
+		if (yieldEvaluated.size() > 0 || yieldGoals.size() > 0) {
+			GeneratorClassType generatorClassType = new GeneratorClassType();
+			generatorClassType.getTypes().addAll(yieldEvaluated);
+			evaluated.add(generatorClassType);
+		}
 		return PHPTypeInferenceUtils.combineTypes(evaluated);
 	}
 

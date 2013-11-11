@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -561,10 +561,12 @@ public class CodeAssistUtils {
 		String className = statementText.subSequence(classNameStart,
 				propertyEndPosition).toString();
 		if (isClassTriger && className != null && className.length() != 0) {
-			if ("self".equals(className) //$NON-NLS-1$
-					|| "parent".equals(className) //$NON-NLS-1$
+			final String comparable = PHPVersion.PHP5_4.isLessThan(phpVersion) ? className
+					.toLowerCase() : className;
+			if ("self".equals(comparable) //$NON-NLS-1$
+					|| "parent".equals(comparable) //$NON-NLS-1$
 					|| (phpVersion.isGreaterThan(PHPVersion.PHP5) && "static" //$NON-NLS-1$
-							.equals(className))) {
+					.equals(comparable))) {
 				IType classData = PHPModelUtils.getCurrentType(sourceModule,
 						offset - className.length() - 2); // the offset before
 				// "self::",

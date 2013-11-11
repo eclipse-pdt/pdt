@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -18,8 +18,10 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
@@ -49,6 +51,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 
 	public boolean isValid(ISourceModule sourceModule, int offset,
 			CompletionRequestor requestor) {
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(sourceModule);
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
@@ -71,7 +74,8 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 			String parentText = statementText.subSequence(lhsIndex,
 					elementStart - getTriggerType().getName().length())
 					.toString();
-			if (parentText.equals("parent")) { //$NON-NLS-1$
+
+			if (parentText.equals("parent") || (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.toLowerCase().equals("parent"))) { //$NON-NLS-1$ //$NON-NLS-2$
 				isParent = isDirectParent = true;
 			}
 		}
@@ -83,7 +87,7 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 			String parentText = statementText.subSequence(lhsIndex,
 					elementStart - getTriggerType().getName().length())
 					.toString();
-			if (parentText.equals("self")) { //$NON-NLS-1$
+			if (parentText.equals("self") || (PHPVersion.PHP5_4.isLessThan(phpVersion) && parentText.toLowerCase().equals("self"))) { //$NON-NLS-1$ //$NON-NLS-2$
 				isSelf = isDirectSelf = true;
 			}
 		}

@@ -16,6 +16,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.typeinference.GeneratorClassType;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
@@ -45,7 +46,13 @@ public class IteratorTypeGoalEvaluator extends GoalEvaluator {
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 
 		if (state != GoalState.RECURSIVE) {
-			if (result instanceof PHPClassType) {
+			if (result instanceof GeneratorClassType) {
+				MultiTypeType type = new MultiTypeType();
+				type.getTypes()
+						.addAll(((GeneratorClassType) result).getTypes());
+				this.result = type;
+				return IGoal.NO_GOALS;
+			} else if (result instanceof PHPClassType) {
 				if (subgoal instanceof ExpressionTypeGoal) {
 					ISourceModule sourceModule = ((ISourceModuleContext) subgoal
 							.getContext()).getSourceModule();

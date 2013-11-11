@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -29,7 +29,9 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
@@ -285,6 +287,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		private int offset;
 		private int length;
 		private String variableName;
+		private ISourceModule sourceModule;
 		private Map<ASTNode, IContext> staticDeclarations;
 
 		public ClassDeclarationSearcher(ISourceModule sourceModule,
@@ -294,6 +297,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			this.typeDeclaration = typeDeclaration;
 			this.offset = offset;
 			this.length = length;
+			this.sourceModule = sourceModule;
 			this.variableName = variableName;
 			this.staticDeclarations = new HashMap<ASTNode, IContext>();
 		}
@@ -307,6 +311,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			this.typeDeclaration = typeDeclaration;
 			this.offset = offset;
 			this.length = length;
+			this.sourceModule = sourceModule;
 			this.variableName = variableName;
 			this.staticDeclarations = new HashMap<ASTNode, IContext>();
 		}
@@ -363,8 +368,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 						if (left instanceof StaticFieldAccess) {
 							StaticFieldAccess fieldAccess = (StaticFieldAccess) left;
 							Expression dispatcher = fieldAccess.getDispatcher();
-							if (dispatcher instanceof TypeReference
-									&& "self".equals(((TypeReference) dispatcher).getName())) { //$NON-NLS-1$
+							if (isSelf(dispatcher)) {
 								Expression field = fieldAccess.getField();
 								if (field instanceof VariableReference
 										&& variableName
@@ -397,6 +401,22 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 		public boolean visitGeneral(ASTNode e) throws Exception {
 			return e.sourceStart() <= offset || variableName != null;
+		}
+
+		private boolean isSelf(Expression dispatcher) {
+			if (!(dispatcher instanceof TypeReference)) {
+				return false;
+			}
+			if ("self".equals(((TypeReference) dispatcher).getName())) { //$NON-NLS-1$
+				return true;
+			} else if (PHPVersion.PHP5_4.isLessThan(ProjectOptions
+					.getPhpVersion(sourceModule))
+					&& "self".equals(((TypeReference) dispatcher).getName() //$NON-NLS-1$
+							.toLowerCase())) {
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

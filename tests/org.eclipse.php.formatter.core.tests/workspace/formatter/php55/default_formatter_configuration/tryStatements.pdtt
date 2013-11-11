@@ -1,0 +1,24 @@
+--TEST--
+Test formatting try statements
+--FILE--
+<?php
+try {
+	echo 'kuku';
+} catch (Exception $e) {
+ 	print $e; 
+} finally {
+    print 'xD';
+}
+
+?>
+--EXPECT--
+<?php
+try {
+	echo 'kuku';
+} catch ( Exception $e ) {
+	print $e;
+} finally {
+	print 'xD';
+}
+
+?>

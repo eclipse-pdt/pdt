@@ -241,6 +241,7 @@ public class CodeFormatterPreferences {
 
 	public boolean control_statement_insert_newline_before_else_and_elseif_in_if;
 	public boolean control_statement_insert_newline_before_catch_in_try;
+	public boolean control_statement_insert_newline_before_finally_in_try;
 	public boolean control_statement_insert_newline_before_while_in_do;
 	public boolean control_statement_keep_then_on_same_line;
 	public boolean control_statement_keep_simple_if_on_one_line;
@@ -827,6 +828,9 @@ public class CodeFormatterPreferences {
 		control_statement_insert_newline_before_catch_in_try = getBooleanValue(
 				preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_CATCH_IN_TRY_STATEMENT);
+		control_statement_insert_newline_before_finally_in_try = getBooleanValue(
+				preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_FINALLY_IN_TRY_STATEMENT);
 		control_statement_insert_newline_before_while_in_do = getBooleanValue(
 				preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_WHILE_IN_DO_STATEMENT);
@@ -1605,6 +1609,10 @@ public class CodeFormatterPreferences {
 		options.put(
 				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_CATCH_IN_TRY_STATEMENT,
 				control_statement_insert_newline_before_catch_in_try ? TRUE
+						: FALSE);
+		options.put(
+				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_FINALLY_IN_TRY_STATEMENT,
+				control_statement_insert_newline_before_finally_in_try ? TRUE
 						: FALSE);
 		options.put(
 				CodeFormatterConstants.FORMATTER_INSERT_NEW_LINE_BEFORE_WHILE_IN_DO_STATEMENT,

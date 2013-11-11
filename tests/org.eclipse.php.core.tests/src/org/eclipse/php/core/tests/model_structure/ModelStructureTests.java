@@ -50,6 +50,8 @@ public class ModelStructureTests extends AbstractPDTTTest {
 				new String[] { "/workspace/model_structure/php53" });
 		TESTS.put(PHPVersion.PHP5_4,
 				new String[] { "/workspace/model_structure/php53" });
+		TESTS.put(PHPVersion.PHP5_5,
+				new String[] { "/workspace/model_structure/php53" });
 	};
 
 	protected static IProject project;

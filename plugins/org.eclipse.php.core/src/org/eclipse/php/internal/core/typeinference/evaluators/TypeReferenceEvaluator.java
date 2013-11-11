@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -35,10 +35,12 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -55,11 +57,35 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 		this.typeReference = typeReference;
 	}
 
+	private boolean isSelfOrStatic() {
+		String name = typeReference.getName();
+		if (goal.getContext() instanceof ISourceModuleContext
+				&& PHPVersion.PHP5_4.isLessThan(ProjectOptions
+						.getPhpVersion(((ISourceModuleContext) goal
+								.getContext()).getSourceModule()))) {
+			name = name.toLowerCase();
+		}
+
+		return "self".equals(name) || "static".equals(name); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	private boolean isParent() {
+		String name = typeReference.getName();
+		if (goal.getContext() instanceof ISourceModuleContext
+				&& PHPVersion.PHP5_4.isLessThan(ProjectOptions
+						.getPhpVersion(((ISourceModuleContext) goal
+								.getContext()).getSourceModule()))) {
+			name = name.toLowerCase();
+		}
+
+		return "parent".equals(name); //$NON-NLS-1$
+	}
+
 	public IGoal[] init() {
 		final IContext context = goal.getContext();
 		String className = typeReference.getName();
 
-		if ("self".equals(className) || "static".equals(className)) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (isSelfOrStatic()) {
 			if (context instanceof MethodContext) {
 				MethodContext methodContext = (MethodContext) context;
 				IEvaluatedType instanceType = methodContext.getInstanceType();
@@ -67,7 +93,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 					result = instanceType;
 				}
 			}
-		} else if ("parent".equals(className)) { //$NON-NLS-1$
+		} else if (isParent()) { //$NON-NLS-1$
 			if (context instanceof MethodContext) {
 				final MethodContext methodContext = (MethodContext) context;
 				ModuleDeclaration rootNode = methodContext.getRootNode();

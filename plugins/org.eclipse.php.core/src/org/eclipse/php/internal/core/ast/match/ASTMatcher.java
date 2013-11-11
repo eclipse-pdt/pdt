@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -784,6 +784,16 @@ public class ASTMatcher {
 		return safeSubtreeMatch(node.getExpression(), o.getExpression());
 	}
 
+	public boolean match(YieldExpression node, Object other) {
+		if (!(other instanceof YieldExpression)) {
+			return false;
+		}
+		YieldExpression o = (YieldExpression) other;
+
+		return safeSubtreeMatch(node.getKey(), o.getKey())
+				&& safeSubtreeMatch(node.getExpression(), o.getExpression());
+	}
+
 	public boolean match(Scalar node, Object other) {
 		if (!(other instanceof Scalar)) {
 			return false;
@@ -881,8 +891,19 @@ public class ASTMatcher {
 		}
 		TryStatement o = (TryStatement) other;
 
-		return (safeSubtreeMatch(node.getTryStatement(), o.getTryStatement()) && safeSubtreeListMatch(
-				node.getCatchClauses(), o.getCatchClauses()));
+		return (safeSubtreeMatch(node.getTryStatement(), o.getTryStatement())
+				&& safeSubtreeListMatch(node.getCatchClauses(),
+						o.getCatchClauses()) && safeSubtreeMatch(
+					node.finallyClause(), o.finallyClause()));
+	}
+
+	public boolean match(FinallyClause node, Object other) {
+		if (!(other instanceof FinallyClause)) {
+			return false;
+		}
+		FinallyClause o = (FinallyClause) other;
+
+		return (safeSubtreeMatch(node.getBody(), o.getBody()));
 	}
 
 	public boolean match(UnaryOperation node, Object other) {

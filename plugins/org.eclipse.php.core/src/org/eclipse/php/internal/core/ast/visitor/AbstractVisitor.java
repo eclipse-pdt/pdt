@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -263,6 +263,10 @@ public abstract class AbstractVisitor implements Visitor {
 		return true;
 	}
 
+	public boolean visit(YieldExpression YieldExpression) {
+		return true;
+	}
+
 	public boolean visit(Scalar scalar) {
 		return true;
 	}
@@ -485,7 +489,10 @@ public abstract class AbstractVisitor implements Visitor {
 	public void endVisit(ReflectionVariable reflectionVariable) {
 	}
 
-	public void endVisit(ReturnStatement returnStatement) {
+	public void endVisit(ReturnStatement YieldExpression) {
+	}
+
+	public void endVisit(YieldExpression YieldExpression) {
 	}
 
 	public void endVisit(Scalar scalar) {
@@ -610,6 +617,13 @@ public abstract class AbstractVisitor implements Visitor {
 
 	public void endVisit(TraitUseStatement node) {
 	}
+
 	// php5.4 ends
 
+	public boolean visit(FinallyClause node) {
+		return true;
+	}
+
+	public void endVisit(FinallyClause node) {
+	}
 }

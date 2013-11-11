@@ -39,6 +39,10 @@ public class DocumentLexerTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
 				"/workspace/document_lexer/php53",
 				"/workspace/document_lexer/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] {
+				"/workspace/document_lexer/php53",
+				"/workspace/document_lexer/php54",
+				"/workspace/document_lexer/php55" });
 	};
 
 	public static void setUpSuite() throws Exception {

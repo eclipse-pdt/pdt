@@ -1,0 +1,10 @@
+--TEST--
+Test unfinished try statement error reporting
+--FILE--
+<?php
+try {
+    
+}
+?>
+--EXPECT--
+[line=5, start=17, end=18] syntax error, catch or finally clause expected

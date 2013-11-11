@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -138,6 +138,10 @@ public class HierarchicalVisitor extends AbstractVisitor {
 	}
 
 	public boolean visit(CatchClause catchClause) {
+		return visit((Statement) catchClause);
+	}
+
+	public boolean visit(FinallyClause catchClause) {
 		return visit((Statement) catchClause);
 	}
 
@@ -304,6 +308,10 @@ public class HierarchicalVisitor extends AbstractVisitor {
 
 	public boolean visit(ReturnStatement returnStatement) {
 		return visit((Statement) returnStatement);
+	}
+
+	public boolean visit(YieldExpression returnStatement) {
+		return visit((Expression) returnStatement);
 	}
 
 	public boolean visit(Scalar scalar) {

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -42,7 +42,9 @@ public class DereferenceNode extends ASTNode {
 
 	public void traverse(ASTVisitor visitor) throws Exception {
 		if (visitor.visit(this)) {
-			getExpression().traverse(visitor);
+			if (exp != null) {
+				getExpression().traverse(visitor);
+			}
 			visitor.endvisit(this);
 		}
 	}

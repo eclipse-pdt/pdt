@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -26,9 +26,11 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * 1,
  * 1.3,
  * __CLASS__
+ * "string"[0]
+ * `
  */
-public class Scalar extends StringLiteral {
-
+public class Scalar extends StringLiteral implements Dereferencable {
+	private PHPArrayDereferenceList arrayDereferenceList;
 	// 'int'
 	public static final int TYPE_INT = 0;
 	// 'real'
@@ -44,13 +46,29 @@ public class Scalar extends StringLiteral {
 
 	private final int scalarType;
 
-	public Scalar(int start, int end, String value, int type) {
+	public Scalar(int start, int end, String value, int type,
+			PHPArrayDereferenceList arrayDereference) {
 		super(start, end, value);
 		this.scalarType = type;
 	}
 
+	public Scalar(int start, int end, String value, int type) {
+		this(start, end, value, type, null);
+	}
+
+	public PHPArrayDereferenceList getArrayDereferenceList() {
+		return arrayDereferenceList;
+	}
+
+	public void setArrayDereferenceList(
+			PHPArrayDereferenceList arrayDereferenceList) {
+		this.arrayDereferenceList = arrayDereferenceList;
+	}
+
 	public void traverse(ASTVisitor visitor) throws Exception {
-		visitor.visit(this);
+		if (visitor.visit(this) && getArrayDereferenceList() != null) {
+			getArrayDereferenceList().traverse(visitor);
+		}
 		visitor.endvisit(this);
 	}
 
