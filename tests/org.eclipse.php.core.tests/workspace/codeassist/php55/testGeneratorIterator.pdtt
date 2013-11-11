@@ -1,0 +1,18 @@
+--TEST--
+Test generator with foreach
+--FILE--
+<?php
+class T {
+    public function x() {
+        
+    }
+}
+function gen () {
+    yield new T();
+}
+foreach (gen() as $v) {
+    $v->|
+}
+?>
+--EXPECT--
+method(x)

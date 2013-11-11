@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -1891,6 +1891,37 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return false;
 	}
 
+	public boolean visit(YieldExpression node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+
+		RewriteEvent event = getEvent(node, YieldExpression.KEY_PROPERTY);
+		if (event != null) {
+			rewriteKeyValue(node, event);
+		}
+
+		if (isChanged(node, YieldExpression.EXPRESSION_PROPERTY)) {
+			try {
+				int offset = node.getKey() != null ? node.getKey().getEnd()
+						: getScanner().getTokenEndOffset(
+								SymbolsProvider.getSymbol(
+										SymbolsProvider.YIELD_ID,
+										scanner.getPHPVersion()),
+								node.getStart());
+				ensureSpaceBeforeReplace(node,
+						YieldExpression.EXPRESSION_PROPERTY, offset, 0);
+
+				rewriteNode(node, YieldExpression.EXPRESSION_PROPERTY, offset,
+						ASTRewriteFormatter.SPACE);
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		}
+
+		return false;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -2055,6 +2086,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	public boolean visit(CatchClause node) { // catch (Exception) Block
 		return rewriteRequiredNodeVisit(node, CatchClause.CLASS_NAME_PROPERTY,
 				CatchClause.BODY_PROPERTY);
+	}
+
+	public boolean visit(FinallyClause node) { // catch (Exception) Block
+		return rewriteRequiredNodeVisit(node, FinallyClause.BODY_PROPERTY);
 	}
 
 	/*
@@ -2739,6 +2774,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			int start = node.getStart();
 			if (node instanceof ForEachStatement) {
 				start = ((ForEachStatement) node).getValue().getStart();
+			} else if (node instanceof YieldExpression) {
+				start = ((YieldExpression) node).getExpression().getStart();
 			}
 			doTextInsert(start, newValue, 0, false, editGroup);
 			doTextInsert(start, "=>", editGroup); //$NON-NLS-1$
@@ -2751,6 +2788,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				deleteEndPos = ((ArrayElement) node).getValue().getStart();
 			} else if (node instanceof ForEachStatement) {
 				deleteEndPos = ((ForEachStatement) node).getValue().getStart();
+			} else if (node instanceof YieldExpression) {
+				deleteEndPos = ((YieldExpression) node).getExpression()
+						.getStart();
 			}
 			int deleteStartPos = removedExpression.getStart();
 			doTextRemove(deleteStartPos, deleteEndPos - deleteStartPos,
@@ -2761,6 +2801,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				rewriteRequiredNode(node, ArrayElement.KEY_PROPERTY);
 			} else if (node instanceof ForEachStatement) {
 				rewriteRequiredNode(node, ForEachStatement.KEY_PROPERTY);
+			} else if (node instanceof YieldExpression) {
+				rewriteRequiredNode(node, YieldExpression.KEY_PROPERTY);
 			}
 			break;
 		}

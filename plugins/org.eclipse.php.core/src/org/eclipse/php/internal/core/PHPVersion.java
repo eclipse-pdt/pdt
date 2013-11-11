@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -35,7 +35,8 @@ public enum PHPVersion {
 	 * </ul>
 	 */
 	PHP5_3("php5.3"), //$NON-NLS-1$
-	PHP5_4("php5.4"); //$NON-NLS-1$
+	PHP5_4("php5.4"), //$NON-NLS-1$
+	PHP5_5("php5.5"); //$NON-NLS-1$
 
 	private String alias;
 

@@ -82,6 +82,9 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceTabPage_foreach;
 	public static String WhiteSpaceTabPage_foreach_before_arrow;
 	public static String WhiteSpaceTabPage_foreach_after_arrow;
+	public static String WhiteSpaceTabPage_yield;
+	public static String WhiteSpaceTabPage_yield_before_arrow;
+	public static String WhiteSpaceTabPage_yield_after_arrow;
 
 	public static String WhiteSpaceTabPage_param_type_ref;
 	public static String WhiteSpaceTabPage_type_arguments;
@@ -144,6 +147,7 @@ final public class FormatterMessages extends NLS {
 	public static String WhiteSpaceOptions_catch;
 	public static String WhiteSpaceOptions_for;
 	public static String WhiteSpaceOptions_foreach;
+	public static String WhiteSpaceOptions_yield;
 	public static String WhiteSpaceOptions_list;
 	public static String WhiteSpaceOptions_if;
 	public static String WhiteSpaceOptions_switch;

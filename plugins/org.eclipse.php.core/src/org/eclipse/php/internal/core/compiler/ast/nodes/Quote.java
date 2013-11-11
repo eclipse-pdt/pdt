@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -19,18 +19,20 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents complex qoute(i.e. qoute that includes string and variables).
- * Also represents heredoc
- * <pre>e.g.<pre>
+ * Represents complex qoute(i.e. qoute that includes string and variables). Also
+ * represents heredoc
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
  * "this is $a quote",
  * "'single ${$complex->quote()}'"
  * >>>Heredoc\n  This is here documents \nHeredoc;\n
- *
+ * 
  * Note: "This is".$not." a quote node",
- *       'This is $not a quote too'
+ * 'This is $not a quote too'
  */
 public class Quote extends Expression {
-
 	public static final int QT_QUOTE = 0;
 	public static final int QT_SINGLE = 1;
 	public static final int QT_HEREDOC = 2;
@@ -39,7 +41,8 @@ public class Quote extends Expression {
 	private final List<? extends Expression> expressions;
 	private final int quoteType;
 
-	public Quote(int start, int end, List<? extends Expression> expressions, int type) {
+	public Quote(int start, int end, List<? extends Expression> expressions,
+			int type) {
 		super(start, end);
 
 		this.expressions = expressions;
@@ -48,16 +51,16 @@ public class Quote extends Expression {
 
 	public static String getType(int type) {
 		switch (type) {
-			case QT_QUOTE:
-				return "quote"; //$NON-NLS-1$
-			case QT_SINGLE:
-				return "single"; //$NON-NLS-1$
-			case QT_HEREDOC:
-				return "heredoc"; //$NON-NLS-1$
-			case QT_NOWDOC:
-				return "nowdoc"; //$NON-NLS-1$
-			default:
-				throw new IllegalArgumentException();
+		case QT_QUOTE:
+			return "quote"; //$NON-NLS-1$
+		case QT_SINGLE:
+			return "single"; //$NON-NLS-1$
+		case QT_HEREDOC:
+			return "heredoc"; //$NON-NLS-1$
+		case QT_NOWDOC:
+			return "nowdoc"; //$NON-NLS-1$
+		default:
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -68,6 +71,7 @@ public class Quote extends Expression {
 				expression.traverse(visitor);
 			}
 		}
+
 		visitor.endvisit(this);
 	}
 

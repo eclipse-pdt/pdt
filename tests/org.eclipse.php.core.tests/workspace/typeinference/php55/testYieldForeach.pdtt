@@ -1,0 +1,6 @@
+--TEST--
+Test yield with foreach
+--FILE--
+<?php class A {} function b() { yield new A(); } foreach (b() as $item) { testYieldForeach($item); } ?>
+--EXPECT--
+A

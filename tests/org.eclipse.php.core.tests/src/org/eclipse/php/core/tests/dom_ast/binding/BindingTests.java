@@ -471,6 +471,27 @@ public class BindingTests extends TestCase {
 
 	}
 
+	public void testMethodDeclarationGeneratorBinding() throws Exception {
+		String str = "<?php class MyClass { function foo(){ yield 1; } } ?>";
+		Program program = createAndParse(str);
+
+		ClassDeclaration classDeclaration = (ClassDeclaration) program
+				.statements().get(0);
+		MethodDeclaration methodDeclaration = (MethodDeclaration) classDeclaration
+				.getBody().statements().get(0);
+
+		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
+		Assert.assertNotNull(methodBinding);
+		Assert.assertTrue(methodBinding.getName().equals("foo"));
+		Assert.assertNotNull(methodBinding.getDeclaringClass());
+		Assert.assertTrue(methodBinding.getDeclaringClass().getName()
+				.equals("MyClass"));
+		Assert.assertTrue(methodBinding.isConstructor() == false);
+		Assert.assertTrue(methodBinding.getReturnType()[0].getName().equals(
+				"Generator"));
+
+	}
+
 	// public void testMethodParametersBinding() throws Exception {
 	// String str =
 	// "<?php class MyClass { function foo(MyClass $instance){} } ?>";

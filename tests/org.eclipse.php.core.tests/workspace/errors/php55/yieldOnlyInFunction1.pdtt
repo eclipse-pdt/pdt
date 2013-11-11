@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished try statement error reporting
+--FILE--
+<?php
+yield $x;
+?>
+--EXPECT--
+[line=3, start=6, end=14] syntax error, the yield expression can only be used inside a function

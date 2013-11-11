@@ -1,0 +1,35 @@
+--TEST--
+Test formatting for YieldStatement
+--FILE--
+<?php
+function square($num)
+{
+    $x = (yield $num * $num  );
+}
+
+function small_numbers()
+{
+    $x = (  yield $x =>array (0, 1, 2));
+}
+
+function &returns_reference()
+{
+    $x = ( yield $u => $someref );
+}
+?>
+--EXPECT--
+<?php
+function square($num) {
+	$x = (yield $num * $num);
+}
+function small_numbers() {
+	$x = (yield $x => array (
+			0,
+			1,
+			2 
+	));
+}
+function &returns_reference() {
+	$x = (yield $u => $someref);
+}
+?>

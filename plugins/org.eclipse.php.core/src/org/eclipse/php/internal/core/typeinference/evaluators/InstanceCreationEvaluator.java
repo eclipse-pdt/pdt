@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -15,11 +15,14 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class InstanceCreationEvaluator extends GoalEvaluator {
@@ -36,7 +39,7 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 				.getExpression();
 		Expression className = expression.getClassName();
 		if ((className instanceof TypeReference)) {
-			if (((TypeReference) className).getName().equals("self") //$NON-NLS-1$
+			if (isSelf((TypeReference) className)
 					&& (goal.getContext() instanceof MethodContext)) {
 				MethodContext methodContext = (MethodContext) goal.getContext();
 				result = methodContext.getInstanceType();
@@ -57,6 +60,18 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		this.result = (IEvaluatedType) result;
 		return IGoal.NO_GOALS;
+	}
+
+	private boolean isSelf(TypeReference className) {
+		String name = className.getName();
+		if (goal.getContext() instanceof ISourceModuleContext
+				&& PHPVersion.PHP5_4.isLessThan(ProjectOptions
+						.getPhpVersion(((ISourceModuleContext) goal
+								.getContext()).getSourceModule()))) {
+			name = name.toLowerCase();
+		}
+
+		return "self".equals(name); //$NON-NLS-1$
 	}
 
 }

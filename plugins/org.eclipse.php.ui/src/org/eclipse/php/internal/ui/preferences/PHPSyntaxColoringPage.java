@@ -6,7 +6,7 @@ package org.eclipse.php.internal.ui.preferences;
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     Zend Technologies - initial API and implementation
  *******************************************************************************/
@@ -393,7 +393,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		gridData3.horizontalSpan = 2;
 		fText.setLayoutData(gridData3);
 		fText.setEditable(false);
-		fText.setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$ 
+		fText.setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
 		fText.addKeyListener(getTextKeyListener());
 		fText.addSelectionListener(getTextSelectionListener());
 		fText.addMouseListener(getTextMouseListener());
@@ -1101,7 +1101,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 	protected void initHighlightingPositions() {
 		highlightingPositionMap = new HashMap<String, Position[]>();
 		IPath stateLocation = PHPUiPlugin.getDefault().getStateLocation();
-		IPath path = stateLocation.append("/_" + "PHPSyntax"); //$NON-NLS-1$ //$NON-NLS-2$ 
+		IPath path = stateLocation.append("/_" + "PHPSyntax"); //$NON-NLS-1$ //$NON-NLS-2$
 		IFileStore fileStore = EFS.getLocalFileSystem().getStore(path);
 
 		NonExistingPHPFileEditorInput input = new NonExistingPHPFileEditorInput(
@@ -1118,7 +1118,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 			final ISourceModule sourceModule = DLTKUIPlugin
 					.getDocumentProvider().getWorkingCopy(input);
 			if (sourceModule != null) {
-				ASTParser parser = ASTParser.newParser(PHPVersion.PHP5_4,
+				ASTParser parser = ASTParser.newParser(PHPVersion.PHP5_5,
 						sourceModule);
 				parser.setSource(fDocument.get().toCharArray());
 

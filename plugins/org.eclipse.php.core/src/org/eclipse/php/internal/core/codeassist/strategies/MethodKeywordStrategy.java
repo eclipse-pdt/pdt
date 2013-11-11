@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -17,6 +17,8 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.IElementFilter;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
@@ -57,13 +59,13 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 	protected boolean filterKeyword(KeywordData keyword) {
 		// if the class does not have parent
 		if ((keyword.context & PHPKeywords.METHOD_BODY) != 0
-				&& keyword.name.equals("parent")) { //$NON-NLS-1$
+				&& isParent(keyword)) {
 			ICompletionContext context = getContext();
 			if (context instanceof GlobalMethodStatementContext) {
 				GlobalMethodStatementContext globalContext = (GlobalMethodStatementContext) context;
 				IType type = globalContext.getEnclosingType();
 				try {
-					if (PHPFlags.isClass(type.getFlags())) {
+					if (type != null && PHPFlags.isClass(type.getFlags())) {
 						ITypeHierarchy hierarchy = getCompanion()
 								.getSuperTypeHierarchy(type, null);
 						IType[] superTypes = hierarchy.getAllSupertypes(type);
@@ -79,6 +81,17 @@ public class MethodKeywordStrategy extends KeywordsStrategy {
 			}
 		}
 		return (keyword.context & PHPKeywords.METHOD_BODY) == 0;
+	}
+
+	protected boolean isParent(KeywordData keyword) {
+		String name = keyword.name;
+		if (PHPVersion.PHP5_4
+				.isLessThan(((AbstractCompletionContext) getContext())
+						.getPhpVersion())) {
+			name = name.toLowerCase();
+		}
+
+		return name.equals("parent"); //$NON-NLS-1$
 	}
 
 }

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -276,6 +276,12 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		catchClause.getVariable().accept(this);
 		result.append(") "); //$NON-NLS-1$
 		catchClause.getStatement().accept(this);
+		return false;
+	}
+
+	public boolean visit(FinallyClause finallyClause) {
+		result.append("finally "); //$NON-NLS-1$
+		finallyClause.getBody().accept(this);
 		return false;
 	}
 
@@ -718,8 +724,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(InfixExpression infixExpression) {
 		infixExpression.getLeft().accept(this);
 		result.append(' ');
-		result.append(InfixExpression
-				.getOperator(infixExpression.getOperator()));
+		result.append(InfixExpression.getOperator(infixExpression.getOperator()));
 		result.append(' ');
 		infixExpression.getRight().accept(this);
 		return false;
@@ -921,6 +926,15 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(ReturnStatement returnStatement) {
 		result.append("return "); //$NON-NLS-1$
+		if (returnStatement.getExpr() != null) {
+			returnStatement.getExpr().accept(this);
+		}
+		result.append(";\n"); //$NON-NLS-1$
+		return false;
+	}
+
+	public boolean visit(YieldExpression returnStatement) {
+		result.append("yield "); //$NON-NLS-1$
 		if (returnStatement.getExpr() != null) {
 			returnStatement.getExpr().accept(this);
 		}

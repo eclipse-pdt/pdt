@@ -1,0 +1,101 @@
+--TEST--
+Show self static variables
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?php
+class Abc {
+
+	//static fields
+	static private $staticPrivateField = "staticPrivateField\n";
+	static protected $staticProtectedField = "staticProtectedField\n";
+	static public $staticPublicField = "staticPublicField\n";
+	static $staticDefaultField = "staticDefaultField\n";
+		
+	//static functions
+	static public function publicStaticFunction() { echo "publicStaticFunction\n";}
+	static protected function protectedStaticFunction() {echo "protectedStaticFunction\n";}
+	static private function privateStaticFunction() {echo "privateStaticFunction\n";}
+	static function defaultStaticFunction() {echo "defaultStaticFunction\n";}
+	
+	//non static fields
+	private $privateField = "privateField\n";
+	protected $protectedField = "protectedField\n";
+	public $publicField = "publicField\n";
+	var $defalutField = "defalutField\n";
+	
+	//non static functions
+	public function publicNonStaticFunction() {echo "publicNonStaticFunction\n";}
+	protected function protectedNonStaticFunction() {echo "protectedNonStaticFunction\n";}
+	private function privateNonStaticFunction() {echo "privateNonStaticFunction\n";}
+	function defaultNonStaticFunction() {echo "defaultNonStaticFunction\n";}
+	
+	const CONSTANT_FIELD = "CONSTANT_FIELD";
+
+
+	private static $a_Core = array();
+	
+	public function __destruct() {
+		unset(seLF::$|);
+	}
+	
+	function foo() {
+		
+		self::privateNonStaticFunction();
+		self::protectedNonStaticFunction();
+		self::publicNonStaticFunction();
+		self::defaultNonStaticFunction();
+		
+		self::privateStaticFunction();
+		self::protectedStaticFunction();
+		self::publicStaticFunction();
+		self::defaultStaticFunction();
+		
+		echo self::$staticPrivateField;
+		echo self::$staticProtectedField;
+		echo self::$staticPublicField;
+		echo self::$staticDefaultField;
+
+		echo self::CONSTANT_FIELD;
+		
+		self::|;
+	}
+}
+
+$abc = new Abc();
+$abc->foo();
+
+//execution results
+//privateNonStaticFunction
+//protectedNonStaticFunction
+//publicNonStaticFunction
+//defaultNonStaticFunction
+//privateStaticFunction
+//protectedStaticFunction
+//publicStaticFunction
+//defaultStaticFunction
+//staticPrivateField
+//staticProtectedField
+//staticPublicField
+//staticDefaultField
+//CONSTANT_FIELD
+
+?>
+--EXPECT--
+field($a_Core)
+field($staticDefaultField)
+field($staticPrivateField)
+field($staticProtectedField)
+field($staticPublicField)
+field(CONSTANT_FIELD)
+method(__destruct)
+method(defaultNonStaticFunction)
+method(defaultStaticFunction)
+method(foo)
+method(privateNonStaticFunction)
+method(privateStaticFunction)
+method(protectedNonStaticFunction)
+method(protectedStaticFunction)
+method(publicNonStaticFunction)
+method(publicStaticFunction)
+

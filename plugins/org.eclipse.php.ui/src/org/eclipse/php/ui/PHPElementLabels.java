@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -119,13 +119,11 @@ public class PHPElementLabels extends ScriptElementLabels {
 
 			if (getFlag(flags, ScriptElementLabels.M_APP_RETURNTYPE)
 					&& method.exists() && !method.isConstructor()) {
-				if (!method.isConstructor()) {
-					String type = method.getType();
-					if (type != null) {
-						// int offset = buf.length();
-						buf.append(ScriptElementLabels.DECL_STRING);
-						buf.append(type);
-					}
+				String type = method.getType();
+				if (type != null) {
+					// int offset = buf.length();
+					buf.append(ScriptElementLabels.DECL_STRING);
+					buf.append(type);
 				}
 			}
 
