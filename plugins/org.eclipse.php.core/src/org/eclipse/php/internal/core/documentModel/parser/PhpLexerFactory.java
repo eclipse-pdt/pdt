@@ -25,6 +25,10 @@ public class PhpLexerFactory {
 			return new org.eclipse.php.internal.core.documentModel.parser.php54.PhpLexer(
 					reader);
 		}
+		if (phpVersion == PHPVersion.PHP5_5) {
+			return new org.eclipse.php.internal.core.documentModel.parser.php55.PhpLexer(
+					reader);
+		}
 		throw new IllegalArgumentException("Unknown PHP version"); //$NON-NLS-1$
 	}
 
@@ -44,6 +48,10 @@ public class PhpLexerFactory {
 		}
 		if (phpVersion == PHPVersion.PHP5_4) {
 			return new org.eclipse.php.internal.core.documentModel.parser.php54.PhpLexer(
+					stream);
+		}
+		if (phpVersion == PHPVersion.PHP5_5) {
+			return new org.eclipse.php.internal.core.documentModel.parser.php55.PhpLexer(
 					stream);
 		}
 		throw new IllegalArgumentException("Unknown PHP version"); //$NON-NLS-1$

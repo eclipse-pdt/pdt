@@ -49,7 +49,7 @@ public class CodeFormatterPreview extends PhpPreview {
 			CodeFormatterVisitor codeFormatter = new CodeFormatterVisitor(
 					fPreviewDocument, codeFormatterPreferences,
 					System.getProperty(Platform.PREF_LINE_SEPARATOR),
-					PHPVersion.PHP5_3, true, region);
+					PHPVersion.PHP5_5, true, region);
 			List<?> changes = codeFormatter.getChanges();
 			fInput = applyChanges(fOriInput, changes);
 

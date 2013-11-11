@@ -1,0 +1,23 @@
+--TEST--
+Test Yield Statement
+--FILE--
+<?php yield; yield $a; yield 3; ?>
+--EXPECT--
+<Program start='0' length='34'>
+	<Statements>
+		<YieldStatement start='6' length='6'>
+		</YieldStatement>
+		<YieldStatement start='13' length='9'>
+			<Variable start='19' length='2' isDollared='true'>
+				<Identifier start='20' length='1' name='a'/>
+			</Variable>
+		</YieldStatement>
+		<YieldStatement start='23' length='8'>
+			<Scalar start='29' length='1' type='int' value='3'/>
+		</YieldStatement>
+		<EmptyStatement start='32' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
+

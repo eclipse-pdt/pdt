@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -1894,6 +1894,31 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ReturnStatement)
+	 */
+	public boolean visit(YieldStatement node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+
+		try {
+			int offset = getScanner().getTokenEndOffset(
+					SymbolsProvider.getSymbol(SymbolsProvider.RETURN_ID,
+							scanner.getPHPVersion()), node.getStart());
+			ensureSpaceBeforeReplace(node, YieldStatement.EXPRESSION_PROPERTY,
+					offset, 0);
+
+			rewriteNode(node, YieldStatement.EXPRESSION_PROPERTY, offset,
+					ASTRewriteFormatter.SPACE);
+		} catch (CoreException e) {
+			handleException(e);
+		}
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ArrayAccess)
 	 */
 	public boolean visit(ArrayAccess node) {
@@ -2055,6 +2080,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	public boolean visit(CatchClause node) { // catch (Exception) Block
 		return rewriteRequiredNodeVisit(node, CatchClause.CLASS_NAME_PROPERTY,
 				CatchClause.BODY_PROPERTY);
+	}
+
+	public boolean visit(FinallyClause node) { // catch (Exception) Block
+		return rewriteRequiredNodeVisit(node, CatchClause.BODY_PROPERTY);
 	}
 
 	/*

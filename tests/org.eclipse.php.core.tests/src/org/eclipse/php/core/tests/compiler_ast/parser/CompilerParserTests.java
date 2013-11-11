@@ -45,6 +45,10 @@ public class CompilerParserTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
 				"/workspace/compiler_parser/php53",
 				"/workspace/compiler_parser/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] {
+				"/workspace/compiler_parser/php53",
+				"/workspace/compiler_parser/php54",
+				"/workspace/compiler_parser/php55" });
 	};
 
 	public static void setUpSuite() throws Exception {
@@ -84,7 +88,6 @@ public class CompilerParserTests extends AbstractPDTTTest {
 												null,
 												ProjectOptions
 														.useShortTags((IProject) null));
-
 								String actual = ASTPrintVisitor
 										.toXMLString((ASTNode) moduleDeclaration);
 								assertContents(pdttFile.getExpected(), actual);

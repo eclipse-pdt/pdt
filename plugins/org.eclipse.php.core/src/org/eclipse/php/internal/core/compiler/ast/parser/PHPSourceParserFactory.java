@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -76,6 +76,10 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements
 			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PhpSourceParser(
 					fileName);
 		}
+		if (PHPVersion.PHP5_5 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php55.PhpSourceParser(
+					fileName);
+		}
 		return null;
 	}
 
@@ -98,6 +102,9 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements
 		}
 		if (PHPVersion.PHP5_4 == phpVersion) {
 			return new org.eclipse.php.internal.core.compiler.ast.parser.php54.PhpSourceParser();
+		}
+		if (PHPVersion.PHP5_5 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php55.PhpSourceParser();
 		}
 		return null;
 	}

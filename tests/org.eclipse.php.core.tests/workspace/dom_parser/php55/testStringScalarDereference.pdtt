@@ -1,0 +1,30 @@
+--TEST--
+String scalar dereference
+--FILE--
+<?php "string"[0]; 'string'[0]; ?>
+--EXPECT--
+<Program start='0' length='34'>
+	<Statements>
+		<ExpressionStatement start='6' length='12'>
+			<Scalar start='6' length='11' type='string' value='"string"'>
+				<PHPArrayDereferenceList start='-1' length='0'>
+					<DereferenceNode start='14' length='3'>
+						<Scalar start='15' length='1' type='int' value='0'/>
+					</DereferenceNode>
+				</PHPArrayDereferenceList>
+			</Scalar>
+		</ExpressionStatement>
+		<ExpressionStatement start='19' length='12'>
+			<Scalar start='19' length='11' type='string' value='&apos;string&apos;'>
+				<PHPArrayDereferenceList start='-1' length='0'>
+					<DereferenceNode start='27' length='3'>
+						<Scalar start='28' length='1' type='int' value='0'/>
+					</DereferenceNode>
+				</PHPArrayDereferenceList>
+			</Scalar>
+		</ExpressionStatement>
+		<EmptyStatement start='32' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

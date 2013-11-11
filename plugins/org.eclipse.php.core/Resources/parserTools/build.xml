@@ -4,48 +4,54 @@
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
     http://www.eclipse.org/legal/epl-v10.html
-    
+
     Contributors:
         IBM Corporation - initial API and implementation
         Zend Technologies
  -->
 <project name="Builds all parser classes" default="main">
-	
+
 	<target name="main">
 		<dirname property="antfile.dir" file="${ant.file}"/>
-		
+
 		<!-- PHP 4 AST -->
 		<ant dir="${antfile.dir}/parser/php4/" antfile="generateAstParser.xml" />
 		<ant dir="${antfile.dir}/parser/php4/" antfile="generateAstScanner.xml" />
 		<ant dir="${antfile.dir}/parser/php4/" antfile="generateCompilerAstParser.xml" />
-		
+
 		<!-- PHP 5 AST -->
 		<ant dir="${antfile.dir}/parser/php5/" antfile="generateAstParser.xml" />
 		<ant dir="${antfile.dir}/parser/php5/" antfile="generateAstScanner.xml" />
 		<ant dir="${antfile.dir}/parser/php5/" antfile="generateCompilerAstParser.xml" />
-		
+
 		<!-- PHP 5.3 AST -->
 		<ant dir="${antfile.dir}/parser/php53/" antfile="generateAstParser.xml" />
 		<ant dir="${antfile.dir}/parser/php53/" antfile="generateAstScanner.xml" />
 		<ant dir="${antfile.dir}/parser/php53/" antfile="generateCompilerAstParser.xml" />
-		
-		<!-- PHP 5.3 AST -->
+
+		<!-- PHP 5.4 AST -->
 		<ant dir="${antfile.dir}/parser/php54/" antfile="generateAstParser.xml" />
 		<ant dir="${antfile.dir}/parser/php54/" antfile="generateAstScanner.xml" />
 		<ant dir="${antfile.dir}/parser/php54/" antfile="generateCompilerAstParser.xml" />
-		
+
+		<!-- PHP 5.5 AST -->
+		<ant dir="${antfile.dir}/parser/php55/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php55/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php55/" antfile="generateCompilerAstParser.xml" />
+
 		<!-- PHPDoc Lexer -->
 		<ant dir="${antfile.dir}/parser/phpdoc/" antfile="generatePHPDocScanner.xml" />
-		
+
 		<!-- Highlighting Lexer -->
 		<ant dir="${antfile.dir}/highlighting/php4" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php5" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php53" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php54" antfile="generateHighlightingScanner.xml" />
+		<ant dir="${antfile.dir}/highlighting/php55" antfile="generateHighlightingScanner.xml" />
 		<!-- Disabled automatic generation, since JFlex 1.2.2 is not available for download -->
 		<!-- <ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" /> -->
 		<!-- <ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" /> -->
-		
+
 	</target>
-	
+
 </project>

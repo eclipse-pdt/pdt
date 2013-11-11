@@ -50,6 +50,9 @@ public class FormatterTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter/php5" });
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
 				"/workspace/formatter/php5", "/workspace/formatter/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] {
+				"/workspace/formatter/php5", "/workspace/formatter/php54",
+				"/workspace/formatter/php55" });
 	};
 
 	protected static Map<PdttFile, IFile> filesMap = new LinkedHashMap<PdttFile, IFile>();

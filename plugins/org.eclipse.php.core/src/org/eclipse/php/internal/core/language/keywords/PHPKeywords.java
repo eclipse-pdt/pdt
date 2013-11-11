@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -117,9 +117,10 @@ public class PHPKeywords {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_3());
 				} else if (PHPVersion.PHP5_4 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_4());
+				} else if (PHPVersion.PHP5_5 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_5_5());
 				} else {
-					throw new IllegalArgumentException(
-							Messages.PHPKeywords_0);
+					throw new IllegalArgumentException(Messages.PHPKeywords_0);
 				}
 				instances.put(version, instance);
 			}

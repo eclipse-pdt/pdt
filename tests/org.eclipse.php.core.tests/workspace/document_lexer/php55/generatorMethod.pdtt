@@ -1,0 +1,44 @@
+--TEST--
+Test 
+--FILE--
+<?php 
+function() {
+    while(true) {
+        yield $item;
+    }
+}
+?>
+--EXPECT--
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE| 
+|1
+PHP_FUNCTION|function|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_TRUE|true|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_YIELD|yield|1
+WHITESPACE| |1
+PHP_VARIABLE|$item|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1

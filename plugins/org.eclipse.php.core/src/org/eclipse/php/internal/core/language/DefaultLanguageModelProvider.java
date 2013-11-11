@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -56,7 +56,10 @@ class DefaultLanguageModelProvider implements ILanguageModelProvider {
 		if (phpVersion == PHPVersion.PHP5_3) {
 			return LANGUAGE_LIBRARY_PATH + "5.3"; //$NON-NLS-1$
 		}
-		return LANGUAGE_LIBRARY_PATH + "5.4"; //$NON-NLS-1$
+		if (phpVersion == PHPVersion.PHP5_4) {
+			return LANGUAGE_LIBRARY_PATH + "5.4"; //$NON-NLS-1$
+		}
+		return LANGUAGE_LIBRARY_PATH + "5.5"; //$NON-NLS-1$
 	}
 
 	public Plugin getPlugin() {

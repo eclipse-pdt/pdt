@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -22,26 +22,39 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents the try statement
- * <pre>e.g.<pre>
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
  * try {
  *   statements...
  * } catch (Exception $e) {
  *   statements...
  * } catch (AnotherException $ae) {
  *   statements...
+ * } finally {
+ *   statements... (php 5.5)
  * }
  */
 public class TryStatement extends Statement {
 
 	private final Block tryStatement;
 	private final List<CatchClause> catchClauses;
+	private final FinallyClause finallyClause;
 
-	public TryStatement(int start, int end, Block tryStatement, List<CatchClause> catchClauses) {
+	public TryStatement(int start, int end, Block tryStatement,
+			List<CatchClause> catchClauses, FinallyClause finallyClause) {
 		super(start, end);
 
 		assert tryStatement != null && catchClauses != null;
 		this.tryStatement = tryStatement;
 		this.catchClauses = catchClauses;
+		this.finallyClause = finallyClause;
+	}
+
+	public TryStatement(int start, int end, Block tryStatement,
+			List<CatchClause> catchClauses) {
+		this(start, end, tryStatement, catchClauses, null);
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -51,6 +64,8 @@ public class TryStatement extends Statement {
 			for (CatchClause catchClause : catchClauses) {
 				catchClause.traverse(visitor);
 			}
+			if (finallyClause != null)
+				finallyClause.traverse(visitor);
 		}
 		visitor.endvisit(this);
 	}
@@ -65,6 +80,10 @@ public class TryStatement extends Statement {
 
 	public Block getTryStatement() {
 		return tryStatement;
+	}
+
+	public FinallyClause getFinallyClause() {
+		return finallyClause;
 	}
 
 	/**

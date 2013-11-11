@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -276,6 +276,8 @@ public interface PHPRegionTypes {
 
 	static final String PHP_RETURN = "PHP_RETURN"; //$NON-NLS-1$
 
+	static final String PHP_YIELD = "PHP_YIELD"; //$NON-NLS-1$
+
 	// static final String PHP_IS_NOT_IDENTICAL = "PHP_IS_NOT_IDENTICAL";
 
 	// static final String PHP_IS_GREATER_OR_EQUAL = "PHP_IS_GREATER_OR_EQUAL";
@@ -312,6 +314,8 @@ public interface PHPRegionTypes {
 	// static final String PHP_COMMA = "PHP_COMMA";
 
 	static final String PHP_CATCH = "PHP_CATCH"; //$NON-NLS-1$
+
+	static final String PHP_FINALLY = "PHP_FINALLY"; //$NON-NLS-1$
 
 	// static final String PHP_DEC = "PHP_DEC";
 

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -21,11 +21,17 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents array creation
- * <pre>e.g.<pre> array(1,2,3,),
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
+ * array(1,2,3,),
  * array('Dodo'=>'Golo','Dafna'=>'Dodidu')
  * array($a, $b=>foo(), 1=>$myClass->getFirst())
+ * array($a, $b=>foo(), 1=>$myClass->getFirst())[0]
  */
-public class ArrayCreation extends Expression {
+public class ArrayCreation extends Expression implements Dereferencable {
+	private PHPArrayDereferenceList arrayDereferenceList;
 
 	private final List<ArrayElement> elements;
 
@@ -36,13 +42,26 @@ public class ArrayCreation extends Expression {
 		this.elements = elements;
 	}
 
+	public PHPArrayDereferenceList getArrayDereferenceList() {
+		return arrayDereferenceList;
+	}
+
+	public void setArrayDereferenceList(
+			PHPArrayDereferenceList arrayDereferenceList) {
+		this.arrayDereferenceList = arrayDereferenceList;
+	}
+
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
+		if (visitor.visit(this)) {
 			for (ArrayElement element : elements) {
 				element.traverse(visitor);
 			}
+
+			if (getArrayDereferenceList() != null) {
+				getArrayDereferenceList().traverse(visitor);
+			}
 		}
+
 		visitor.endvisit(this);
 	}
 

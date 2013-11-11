@@ -204,7 +204,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 	// insert chars to the buffer except space
 	private void appendToBuffer(Object obj) {
 		isPrevSpace = false;
-		if (obj == null) return;
+		if (obj == null)
+			return;
 		replaceBuffer.append(obj);
 		if (!lineSeparator.equals(obj)) {
 			lineWidth += obj.toString().length();
@@ -332,6 +333,19 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 					.setAST(new AST(reader, PHPVersion.PHP5_4, false,
 							useShortTags));
 			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php54.CompilerAstLexer.ST_IN_SCRIPTING; // save
+			// the
+			// initial
+			// state
+			// for
+			// reset
+			// operation
+		} else if (PHPVersion.PHP5_5.equals(phpVersion)) {
+			result = new org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer(
+					reader);
+			((org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer) result)
+					.setAST(new AST(reader, PHPVersion.PHP5_5, false,
+							useShortTags));
+			stInScriptin = org.eclipse.php.internal.core.compiler.ast.parser.php55.CompilerAstLexer.ST_IN_SCRIPTING; // save
 			// the
 			// initial
 			// state
@@ -2291,7 +2305,16 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		} else {
 			appendToBuffer(CLOSE_BRACKET);
 		}
-		handleChars(lastPosition, arrayCreation.getEnd());
+
+		if (arrayCreation.getArrayDereferenceList() != null
+				&& !arrayCreation.getArrayDereferenceList().getDereferences()
+						.isEmpty()) {
+			lastPosition = formatDereference(lastPosition,
+					arrayCreation.getArrayDereferenceList());
+		} else {
+			handleChars(lastPosition, arrayCreation.getEnd());
+		}
+
 		return false;
 	}
 
@@ -2646,7 +2669,8 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 				&& (statements[0].getParent().getParent() instanceof IfStatement)
 				&& (((IfStatement) statements[0].getParent().getParent())
 						.getFalseStatement() == null)
-				&& (statements[0].getType() == ASTNode.RETURN_STATEMENT || statements[0]
+				&& (statements[0].getType() == ASTNode.RETURN_STATEMENT
+						|| statements[0].getType() == ASTNode.YIELD_STATEMENT || statements[0]
 						.getType() == ASTNode.THROW_STATEMENT);
 	}
 
@@ -3599,40 +3623,42 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		if (functionInvocation.getArrayDereferenceList() != null
 				&& !functionInvocation.getArrayDereferenceList()
 						.getDereferences().isEmpty()) {
-			handleChars(lastPosition, functionInvocation
-					.getArrayDereferenceList().getDereferences().get(0)
-					.getStart());
-			lastPosition = functionInvocation.getArrayDereferenceList()
-					.getDereferences().get(0).getStart();
-			for (DereferenceNode dereferenceNode : functionInvocation
-					.getArrayDereferenceList().getDereferences()) {
-
-				if (dereferenceNode.getName() instanceof Scalar) {
-					appendToBuffer(OPEN_BRACKET);
-					// handleChars(lastPosition, dereferenceNode.getStart());
-					Scalar scalar = (Scalar) dereferenceNode.getName();
-					appendToBuffer(scalar.getStringValue());
-					appendToBuffer(CLOSE_BRACKET);
-					handleChars(dereferenceNode.getStart(),
-							dereferenceNode.getEnd());
-				} else {
-					appendToBuffer(OPEN_BRACKET);
-					handleChars(lastPosition, dereferenceNode.getName()
-							.getStart());
-					dereferenceNode.getName().accept(this);
-					appendToBuffer(CLOSE_BRACKET);
-					handleChars(dereferenceNode.getName().getEnd(),
-							dereferenceNode.getEnd());
-				}
-
-				// handleChars(dereferenceNode.getEnd(),
-				// dereferenceNode.getEnd());
-				lastPosition = dereferenceNode.getEnd();
-			}
+			lastPosition = formatDereference(lastPosition,
+					functionInvocation.getArrayDereferenceList());
 		} else {
 			handleChars(lastPosition, functionInvocation.getEnd());
 		}
 
+	}
+
+	private int formatDereference(int lastPosition, PHPArrayDereferenceList list) {
+		handleChars(lastPosition, list.getDereferences().get(0).getStart());
+		lastPosition = list.getDereferences().get(0).getStart();
+		for (DereferenceNode dereferenceNode : list.getDereferences()) {
+
+			if (dereferenceNode.getName() instanceof Scalar) {
+				appendToBuffer(OPEN_BRACKET);
+				// handleChars(lastPosition, dereferenceNode.getStart());
+				Scalar scalar = (Scalar) dereferenceNode.getName();
+				appendToBuffer(scalar.getStringValue());
+				appendToBuffer(CLOSE_BRACKET);
+				handleChars(dereferenceNode.getStart(),
+						dereferenceNode.getEnd());
+			} else {
+				appendToBuffer(OPEN_BRACKET);
+				handleChars(lastPosition, dereferenceNode.getName().getStart());
+				dereferenceNode.getName().accept(this);
+				appendToBuffer(CLOSE_BRACKET);
+				handleChars(dereferenceNode.getName().getEnd(),
+						dereferenceNode.getEnd());
+			}
+
+			// handleChars(dereferenceNode.getEnd(),
+			// dereferenceNode.getEnd());
+			lastPosition = dereferenceNode.getEnd();
+		}
+
+		return lastPosition;
 	}
 
 	private void handlePrintCall(FunctionInvocation functionInvocation) {
@@ -4568,6 +4594,22 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 		return false;
 	}
 
+	public boolean visit(YieldStatement yieldStatement) {
+		int lastPosition = yieldStatement.getStart() + 5;
+		lineWidth += 5;
+
+		Expression expression = yieldStatement.getExpression();
+		if (expression != null) {
+			insertSpace();
+			handleChars(lastPosition, expression.getStart());
+			expression.accept(this);
+			lastPosition = expression.getEnd();
+		}
+
+		handleSemicolon(lastPosition, yieldStatement.getEnd());
+		return false;
+	}
+
 	public boolean visit(Scalar scalar) {
 		calcLinesAndWidth(scalar);
 		return false;
@@ -4782,6 +4824,20 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 			handleChars(lastStatementEndOffset, catchClauses[i].getStart());
 			catchClauses[i].accept(this);
 			lastStatementEndOffset = catchClauses[i].getEnd();
+		}
+		if (tryStatement.finallyClause() != null) {
+			if (preferences.control_statement_insert_newline_before_finally_in_try) {
+				insertNewLine();
+				indent();
+			} else {
+				if (this.preferences.insert_space_after_closing_brace_in_block) {
+					insertSpace();
+				}
+			}
+			handleChars(lastStatementEndOffset, tryStatement.finallyClause()
+					.getStart());
+			tryStatement.finallyClause().accept(this);
+			lastStatementEndOffset = tryStatement.finallyClause().getEnd();
 		}
 		return false;
 	}

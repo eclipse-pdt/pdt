@@ -85,7 +85,7 @@ foreach ($intClasses as $intClass) {
 
 print "\n";
 $constants = get_defined_constants(true);
-$intConstants = $constants["internal"];
+$intConstants = @$constants["internal"];
 // add magic constants:
 $intConstants['__FILE__'] = null;
 $intConstants['__LINE__'] = null;
@@ -159,7 +159,8 @@ function make_funckey_from_ref ($ref) {
 function parse_phpdoc_functions ($phpdocDir) {
 	$xml_files = array_merge (
 		glob ("{$phpdocDir}/reference/*/*/*.xml")
-	);
+  );
+  $functionsDoc = array();
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
 
@@ -246,6 +247,11 @@ function parse_phpdoc_functions ($phpdocDir) {
 					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($match[2]);
 				}
 			}
+			
+			if (preg_match ('@&warn\.deprecated.func-(.*?);@s', $xml, $match)) {
+				$deprecatedSince = $match[1];
+				$functionsDoc[$refname]['deprecated'] = 'Since ' . str_replace('-', '.',$deprecatedSince);
+			}
 
 			// Create information for function alias
 			if ($function_alias) {
@@ -262,6 +268,7 @@ function parse_phpdoc_functions ($phpdocDir) {
  * @return array Class information gathered from the PHP.net documentation by parsing XML files
  */
 function parse_phpdoc_classes ($phpdocDir) {
+  $classesDoc = array();
 	$xml_files = array_merge (
 		glob ("{$phpdocDir}/reference/*/reference.xml"),
 		glob ("{$phpdocDir}/reference/*/classes.xml"),
@@ -290,7 +297,10 @@ function parse_phpdoc_classes ($phpdocDir) {
 					$fields_xml_file = array_merge (
 						glob ("{$phpdocDir}/reference/*/" . $refname . ".xml")
 					);
-	
+                    if (count($fields_xml_file) == 0) {
+                        echo "Documentation for $refname not exists! \n";
+                        continue;
+                    }
 					if($fields_xml_file[0] != null) {
 						$xml_field_data = file_get_contents ($fields_xml_file[0]);
 						if($xml_field_data != null) {
@@ -358,6 +368,7 @@ function parse_phpdoc_classes ($phpdocDir) {
  * @return array Constant information gathered from the PHP.net documentation by parsing XML files
  */
 function parse_phpdoc_constants ($phpdocDir) {
+  $constantsDoc = array();
 	exec ("find ".addslashes($phpdocDir)." -name \"*constants.xml\"", $xml_files);
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
@@ -776,6 +787,7 @@ function print_doccomment ($ref, $tabs = 0) {
 		$funckey = make_funckey_from_ref ($ref);
 		$returntype = @$functionsDoc[$funckey]['returntype'];
 		$desc = @$functionsDoc[$funckey]['quickref'];
+		$deprecated = @$functionsDoc[$funckey]['deprecated'];
 		$returndoc = newline_to_phpdoc (@$functionsDoc[$funckey]['returndoc'], $tabs);
 
 		$paramsRef = $ref->getParameters();
@@ -825,6 +837,10 @@ function print_doccomment ($ref, $tabs = 0) {
 			if ($returntype) {
 				print_tabs ($tabs);
 				print " * @return {$returntype} {$returndoc}\n";
+			}
+			if ($ref->isDeprecated() || $deprecated) {
+				print_tabs ($tabs);
+				print " * @deprecated {$deprecated}\n";
 			}
 			print_tabs ($tabs);
 			print " */\n";
@@ -903,7 +919,7 @@ function finish_file_output($filename) {
 	//if (file_exists ($filename)) {
 	//	rename ($filename, "{$filename}.bak");
 	//}
-	print "?>\n";
+	//print "? >";
 	file_put_contents ($filename, ob_get_contents());
 	ob_end_clean();
 }

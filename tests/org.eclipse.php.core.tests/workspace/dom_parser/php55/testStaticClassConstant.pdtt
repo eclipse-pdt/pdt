@@ -1,0 +1,36 @@
+--TEST--
+Test Static class constant
+--FILE--
+<?php className::class; self::class;?>
+--EXPECT--
+<Program start='0' length='38'>
+	<Statements>
+		<ExpressionStatement start='6' length='17'>
+			<StaticConstantAccess start='6' length='16'>
+				<ClassName>
+					<NamespaceName start='6' length='9' global='false' current='false'>
+						<Identifier start='6' length='9' name='className'/>
+					</NamespaceName>
+				</ClassName>
+				<Constant>
+					<Identifier start='17' length='5' name='class'/>
+				</Constant>
+			</StaticConstantAccess>
+		</ExpressionStatement>
+		<ExpressionStatement start='24' length='12'>
+			<StaticConstantAccess start='24' length='11'>
+				<ClassName>
+					<NamespaceName start='24' length='4' global='false' current='false'>
+						<Identifier start='24' length='4' name='self'/>
+					</NamespaceName>
+				</ClassName>
+				<Constant>
+					<Identifier start='30' length='5' name='class'/>
+				</Constant>
+			</StaticConstantAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='36' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
