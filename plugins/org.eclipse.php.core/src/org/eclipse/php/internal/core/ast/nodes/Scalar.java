@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -47,6 +47,7 @@ public class Scalar extends Expression {
 
 	private String stringValue;
 	private int scalarType;
+	private PHPArrayDereferenceList arrayDereferenceList;
 
 	/**
 	 * The structural property of this node type.
@@ -55,6 +56,9 @@ public class Scalar extends Expression {
 			Scalar.class, "stringValue", String.class, MANDATORY); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor TYPE_PROPERTY = new SimplePropertyDescriptor(
 			Scalar.class, "scalarType", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor ARRAY_DEREFERENCE_LIST = new ChildPropertyDescriptor(
+			Scalar.class,
+			"arrayDereferenceList", PHPArrayDereferenceList.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type:
@@ -64,13 +68,15 @@ public class Scalar extends Expression {
 
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(
-				2);
+				3);
 		propertyList.add(VALUE_PROPERTY);
 		propertyList.add(TYPE_PROPERTY);
+		propertyList.add(ARRAY_DEREFERENCE_LIST);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 
-	public Scalar(int start, int end, AST ast, String value, int type) {
+	public Scalar(int start, int end, AST ast, String value, int type,
+			PHPArrayDereferenceList arrayDereference) {
 		super(start, end, ast);
 
 		if (value == null) {
@@ -79,6 +85,11 @@ public class Scalar extends Expression {
 
 		setScalarType(type);
 		setStringValue(value);
+		setArrayDereferenceList(arrayDereference);
+	}
+
+	public Scalar(int start, int end, AST ast, String value, int type) {
+		this(start, end, ast, value, type, null);
 	}
 
 	public Scalar(AST ast) {
@@ -94,12 +105,21 @@ public class Scalar extends Expression {
 	}
 
 	public void childrenAccept(Visitor visitor) {
+		if (arrayDereferenceList != null) {
+			arrayDereferenceList.accept(visitor);
+		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
+		if (arrayDereferenceList != null) {
+			arrayDereferenceList.traverseBottomUp(visitor);
+		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
+		if (arrayDereferenceList != null) {
+			arrayDereferenceList.traverseTopDown(visitor);
+		}
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
@@ -109,7 +129,15 @@ public class Scalar extends Expression {
 		if (stringValue != null) {
 			buffer.append(" value='").append(getXmlStringValue(stringValue)).append("'"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		buffer.append("/>"); //$NON-NLS-1$
+		if (arrayDereferenceList != null) {
+			buffer.append(">\n"); //$NON-NLS-1$
+			arrayDereferenceList.toString(buffer, TAB + tab);
+			buffer.append("\n");
+			buffer.append(tab);
+			buffer.append("</Scalar>"); //$NON-NLS-1$
+		} else {
+			buffer.append("/>"); //$NON-NLS-1$
+		}
 	}
 
 	public static String getType(int type) {
@@ -133,6 +161,15 @@ public class Scalar extends Expression {
 
 	public int getType() {
 		return ASTNode.SCALAR;
+	}
+
+	public PHPArrayDereferenceList getArrayDereferenceList() {
+		return arrayDereferenceList;
+	}
+
+	public void setArrayDereferenceList(
+			PHPArrayDereferenceList arrayDereferenceList) {
+		this.arrayDereferenceList = arrayDereferenceList;
 	}
 
 	/**
@@ -236,8 +273,14 @@ public class Scalar extends Expression {
 
 	@Override
 	ASTNode clone0(AST target) {
+		PHPArrayDereferenceList newArrayDereferenceList = null;
+		if (arrayDereferenceList != null) {
+			newArrayDereferenceList = ASTNode.copySubtree(target,
+					arrayDereferenceList);
+		}
 		final Scalar result = new Scalar(this.getStart(), this.getEnd(),
-				target, getStringValue(), getScalarType());
+				target, getStringValue(), getScalarType(),
+				newArrayDereferenceList);
 		return result;
 	}
 
@@ -245,6 +288,20 @@ public class Scalar extends Expression {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
 			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property,
+			boolean get, ASTNode child) {
+		if (property == ARRAY_DEREFERENCE_LIST) {
+			if (get) {
+				return getArrayDereferenceList();
+			} else {
+				setArrayDereferenceList((PHPArrayDereferenceList) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
 	}
 
 }

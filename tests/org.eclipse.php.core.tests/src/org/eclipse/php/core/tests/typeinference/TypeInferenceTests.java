@@ -50,6 +50,7 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 	protected static final int ENGINE_TIMEOUT = 100000;
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
+
 		TESTS.put(PHPVersion.PHP5,
 				new String[] { "/workspace/typeinference/php5" });
 		TESTS.put(PHPVersion.PHP5_3,
@@ -57,6 +58,10 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
 				"/workspace/typeinference/php5",
 				"/workspace/typeinference/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] {
+				"/workspace/typeinference/php5",
+				"/workspace/typeinference/php54",
+				"/workspace/typeinference/php55" });
 	};
 
 	private static PHPTypeInferencer typeInferenceEngine;

@@ -1,0 +1,25 @@
+--TEST--
+Test Try Finally Statement
+--FILE--
+<?php try { $error = 'Always throw this error'; } finally { echo ''; }  ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="75">
+	<TryStatement start="6" end="70">
+		<ExpressionStatement start="12" end="47">
+			<Assignment start="12" end="46" operator="=">
+				<VariableReference start="12" end="18" name="$error">
+				</VariableReference>
+				<Scalar start="21" end="46" type="string" value="&apos;Always throw this error&apos;">
+				</Scalar>
+			</Assignment>
+		</ExpressionStatement>
+		<FinallyClause start="50" end="70">
+			<EchoStatement start="60" end="68">
+				<Scalar start="65" end="67" type="string" value="&apos;&apos;">
+				</Scalar>
+			</EchoStatement>
+		</FinallyClause>
+	</TryStatement>
+	<EmptyStatement start="72" end="74">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -39,13 +39,15 @@ public class PHPVersionConfigurationBlock extends
 
 	public static final String[] PHP_VERSION_VALUES = {
 			PHPVersion.PHP4.getAlias(), PHPVersion.PHP5.getAlias(),
-			PHPVersion.PHP5_3.getAlias(), PHPVersion.PHP5_4.getAlias() };
+			PHPVersion.PHP5_3.getAlias(), PHPVersion.PHP5_4.getAlias(),
+			PHPVersion.PHP5_5.getAlias() };
 
 	public static final String[] PHP_VERSION_DESCRIPTIONS = {
 			PHPUIMessages.PHPCreationDataModelProvider_0,
 			PHPUIMessages.PHPCreationDataModelProvider_1,
 			PHPUIMessages.PHPCreationDataModelProvider_2,
-			PHPUIMessages.PHPCreationDataModelProvider_3 }; 
+			PHPUIMessages.PHPCreationDataModelProvider_3,
+			PHPUIMessages.PHPCreationDataModelProvider_4 };
 
 	private static final Key PREF_PHP_VERSION = getPHPCoreKey(Keys.PHP_VERSION);
 	private static final Key PREF_ASP_TAGS = getPHPCoreKey(Keys.EDITOR_USE_ASP_TAGS);

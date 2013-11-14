@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -87,5 +87,7 @@ public interface ASTNodeKinds {
 	public static final int GOTO_LABEL = 71;
 	public static final int GOTO_STATEMENT = 72;
 	public static final int LAMBDA_FUNCTION = 73;
+	public static final int YIELD_STATEMENT = 74;
+	public static final int FINALLY_CLAUSE = 75;
 
 }

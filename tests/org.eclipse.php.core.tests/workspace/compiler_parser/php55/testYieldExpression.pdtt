@@ -1,0 +1,29 @@
+--TEST--
+Test Yield expression
+--FILE--
+<?php function test() { yield; yield $a; yield $a => $b; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="62">
+	<PHPMethodDeclaration start="6" end="58" modifiers="" name="test">
+		<ExpressionStatement start="24" end="30">
+			<YieldExpression start="24" end="29">
+			</YieldExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start="31" end="40">
+			<YieldExpression start="31" end="39">
+				<VariableReference start="37" end="39" name="$a">
+				</VariableReference>
+			</YieldExpression>
+		</ExpressionStatement>
+		<ExpressionStatement start="41" end="56">
+			<YieldExpression start="41" end="55">
+				<VariableReference start="47" end="49" name="$a">
+				</VariableReference>
+				<VariableReference start="53" end="55" name="$b">
+				</VariableReference>
+			</YieldExpression>
+		</ExpressionStatement>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="59" end="61">
+	</EmptyStatement>
+</ModuleDeclaration>

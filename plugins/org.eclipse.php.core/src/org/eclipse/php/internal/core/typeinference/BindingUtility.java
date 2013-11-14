@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -30,6 +30,7 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.YieldExpression;
 import org.eclipse.php.internal.core.typeinference.context.IModelCacheContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.VariableReferenceEvaluator;
@@ -521,6 +522,7 @@ public class BindingUtility {
 
 		final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 		final List<Expression> returnExpressions = new LinkedList<Expression>();
+		final List<Expression> yieldExpressions = new LinkedList<Expression>();
 
 		if (functionDeclaration != null) {
 
@@ -534,6 +536,10 @@ public class BindingUtility {
 						} else {
 							returnExpressions.add(expr);
 						}
+					} else if (node instanceof YieldExpression) {
+						YieldExpression statement = (YieldExpression) node;
+						Expression expr = statement.getExpr();
+						yieldExpressions.add(expr);
 					}
 					return super.visitGeneral(node);
 				}
@@ -564,6 +570,33 @@ public class BindingUtility {
 					e.printStackTrace();
 				}
 				continue;
+			}
+		}
+		if (yieldExpressions.size() > 0) {
+			GeneratorClassType generator = new GeneratorClassType();
+			for (Expression expr : yieldExpressions) {
+				if (expr == null) {
+					generator.getTypes().add(PHPSimpleTypes.NULL);
+				} else {
+					SourceRange sourceRange = new SourceRange(expr);
+					try {
+						ContextFinder contextFinder = getContext(sourceRange);
+						IContext context = contextFinder.getContext();
+						IEvaluatedType resolvedExpression = PHPTypeInferenceUtils
+								.resolveExpression(sourceModule,
+										sourceModuleDeclaration, context, expr);
+						if (resolvedExpression != null) {
+							generator.getTypes().add(resolvedExpression);
+						}
+					} catch (ModelException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
+						}
+						continue;
+					}
+				}
+
+				evaluated.add(generator);
 			}
 		}
 		return (IEvaluatedType[]) evaluated

@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -20,4 +20,5 @@ public class PHPFacetsConstants {
 	public static final String PHP_COMPONENT_VERSION_5 = "5"; //$NON-NLS-1$
 	public static final String PHP_COMPONENT_VERSION_5_3 = "5.3"; //$NON-NLS-1$
 	public static final String PHP_COMPONENT_VERSION_5_4 = "5.4"; //$NON-NLS-1$
+	public static final String PHP_COMPONENT_VERSION_5_5 = "5.5"; //$NON-NLS-1$
 }

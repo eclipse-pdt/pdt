@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -156,6 +156,7 @@ public final class PHPUIMessages extends NLS {
 	public static String PHPEditorPreferencePage_0;
 	public static String SearchParticipant_error_noNature;
 	public static String VariableCreationDialog_titleedit;
+	public static String PHPCreationDataModelProvider_4;
 	public static String PHPCreationDataModelProvider_3;
 	public static String PHPCreationDataModelProvider_2;
 	public static String PHPCreationDataModelProvider_1;

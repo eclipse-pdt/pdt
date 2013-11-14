@@ -1,0 +1,30 @@
+--TEST--
+Test ForEach with list()
+--FILE--
+<?php foreach ($arr as list($value)) { $value = $value * 2; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="65">
+	<ForEachStatement start="6" end="61">
+		<VariableReference start="15" end="19" name="$arr">
+		</VariableReference>
+		<ListVariable start="23" end="35">
+			<VariableReference start="28" end="34" name="$value">
+			</VariableReference>
+		</ListVariable>
+		<ExpressionStatement start="39" end="59">
+			<Assignment start="39" end="58" operator="=">
+				<VariableReference start="39" end="45" name="$value">
+				</VariableReference>
+				<InfixExpression start="48" end="58" operator="*">
+					<VariableReference start="48" end="54" name="$value">
+					</VariableReference>
+					<Scalar start="57" end="58" type="int" value="2">
+					</Scalar>
+				</InfixExpression>
+			</Assignment>
+		</ExpressionStatement>
+	</ForEachStatement>
+	<EmptyStatement start="62" end="64">
+	</EmptyStatement>
+</ModuleDeclaration>
+

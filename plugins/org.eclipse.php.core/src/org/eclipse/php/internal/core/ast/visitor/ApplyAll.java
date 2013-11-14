@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -688,6 +688,24 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public void endVisit(TraitUseStatement node) {
 		endVisitNode(node);
 	}
+
 	// php5.4 ends
+
+	// php5.5
+	public boolean visit(YieldExpression node) {
+		return apply(node);
+	}
+
+	public void endVisit(YieldExpression node) {
+		endVisitNode(node);
+	}
+
+	public boolean visit(FinallyClause node) {
+		return apply(node);
+	}
+
+	public void endVisit(FinallyClause node) {
+		endVisitNode(node);
+	}
 
 }

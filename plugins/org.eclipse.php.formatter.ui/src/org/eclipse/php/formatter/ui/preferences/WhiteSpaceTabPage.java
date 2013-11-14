@@ -192,7 +192,7 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 			ISelectionChangedListener, ICheckStateListener {
 
 		private final String PREF_INNER_INDEX = FormatterUIPlugin.PLUGIN_ID
-				+ "formatter_page.white_space.php_view.inner"; //$NON-NLS-1$ 
+				+ "formatter_page.white_space.php_view.inner"; //$NON-NLS-1$
 		private final String PREF_OPTION_INDEX = FormatterUIPlugin.PLUGIN_ID
 				+ "formatter_page.white_space.php_view.option"; //$NON-NLS-1$
 
@@ -728,6 +728,13 @@ public class WhiteSpaceTabPage extends ModifyDialogTabPage {
 		codeFormatterPreferences.insert_space_after_arrow_in_foreach = getBooleanValue(
 				preferences,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FOREACH);
+
+		codeFormatterPreferences.insert_space_before_arrow_in_yield = getBooleanValue(
+				preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD);
+		codeFormatterPreferences.insert_space_after_arrow_in_yield = getBooleanValue(
+				preferences,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD);
 
 		codeFormatterPreferences.insert_space_before_comma_in_class_variable = getBooleanValue(
 				preferences,

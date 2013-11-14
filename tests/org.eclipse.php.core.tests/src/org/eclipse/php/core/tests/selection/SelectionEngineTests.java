@@ -48,6 +48,9 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
 				"/workspace/selection/php5", "/workspace/selection/php53",
 				"/workspace/selection/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] {
+				"/workspace/selection/php5", "/workspace/selection/php53",
+				"/workspace/selection/php54", "/workspace/selection/php55" });
 	};
 
 	protected static IProject project;

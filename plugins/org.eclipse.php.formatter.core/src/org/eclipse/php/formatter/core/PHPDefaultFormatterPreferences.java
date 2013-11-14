@@ -105,6 +105,9 @@ final class PHPDefaultFormatterPreferences implements
 		preferences.insert_space_before_arrow_in_foreach = true;
 		preferences.insert_space_after_arrow_in_foreach = true;
 
+		preferences.insert_space_before_arrow_in_yield = true;
+		preferences.insert_space_after_arrow_in_yield = true;
+
 		preferences.insert_space_before_comma_in_class_variable = false;
 		preferences.insert_space_after_comma_in_class_variable = true;
 		preferences.insert_space_before_comma_in_class_constant = false;
@@ -226,6 +229,7 @@ final class PHPDefaultFormatterPreferences implements
 
 		preferences.control_statement_insert_newline_before_else_and_elseif_in_if = false;
 		preferences.control_statement_insert_newline_before_catch_in_try = false;
+		preferences.control_statement_insert_newline_before_finally_in_try = false;
 		preferences.control_statement_insert_newline_before_while_in_do = false;
 		preferences.control_statement_keep_then_on_same_line = false;
 		preferences.control_statement_keep_simple_if_on_one_line = false;

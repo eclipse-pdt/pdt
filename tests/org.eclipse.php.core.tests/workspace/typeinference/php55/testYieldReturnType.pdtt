@@ -1,0 +1,6 @@
+--TEST--
+Test yield
+--FILE--
+<?php function a () { yield; } testYieldReturnType(a()); ?>
+--EXPECT--
+Generator

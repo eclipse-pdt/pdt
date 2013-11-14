@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -221,6 +221,17 @@ public class ASTParser {
 				ASTParser.EMPTY_STRING_READER);
 	}
 
+	// php 5.5 analysis
+	private static org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer createEmptyLexer_55() {
+		return new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer(
+				ASTParser.EMPTY_STRING_READER);
+	}
+
+	private static org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser createEmptyParser_55() {
+		return new org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser(
+				createEmptyLexer_55());
+	}
+
 	// php 5.4 analysis
 	private static org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer createEmptyLexer_54() {
 		return new org.eclipse.php.internal.core.ast.scanner.php54.PhpAstLexer(
@@ -417,6 +428,12 @@ public class ASTParser {
 			lexer54.setUseShortTags(useShortTags);
 			lexer54.setAST(ast);
 			return lexer54;
+		} else if (PHPVersion.PHP5_5 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer lexer55 = getLexer55(reader);
+			lexer55.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer55.setUseShortTags(useShortTags);
+			lexer55.setAST(ast);
+			return lexer55;
 		} else {
 			throw new IllegalArgumentException(
 					CoreMessages.getString("ASTParser_1") + phpVersion); //$NON-NLS-1$
@@ -439,6 +456,10 @@ public class ASTParser {
 			return parser;
 		} else if (PHPVersion.PHP5_4 == phpVersion) {
 			org.eclipse.php.internal.core.ast.scanner.php54.PhpAstParser parser = createEmptyParser_54();
+			parser.setAST(ast);
+			return parser;
+		} else if (PHPVersion.PHP5_5 == phpVersion) {
+			org.eclipse.php.internal.core.ast.scanner.php55.PhpAstParser parser = createEmptyParser_55();
 			parser.setAST(ast);
 			return parser;
 		} else {
@@ -472,6 +493,19 @@ public class ASTParser {
 		phpAstLexer54.yyreset(reader);
 		phpAstLexer54.resetCommentList();
 		return phpAstLexer54;
+	}
+
+	/**
+	 * @param reader
+	 * @return the singleton
+	 *         {@link org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer}
+	 */
+	private static org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer getLexer55(
+			Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php55.PhpAstLexer phpAstLexer55 = createEmptyLexer_55();
+		phpAstLexer55.yyreset(reader);
+		phpAstLexer55.resetCommentList();
+		return phpAstLexer55;
 	}
 
 	/**

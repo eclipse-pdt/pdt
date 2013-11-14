@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -200,7 +200,7 @@ public final class ASTProvider {
 		}
 	}
 
-	public static final PHPVersion SHARED_AST_LEVEL = PHPVersion.PHP5_4;
+	public static final PHPVersion SHARED_AST_LEVEL = PHPVersion.PHP5_5;
 	public static final boolean SHARED_AST_STATEMENT_RECOVERY = true;
 	public static final boolean SHARED_BINDING_RECOVERY = true;
 

@@ -27,14 +27,15 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 	private final String PREVIEW = "<?php\n"
 			+ createPreviewHeader(FormatterMessages.ControlStatementsTabPage_preview_header)
 			+ "class Example { function bar() {	do {} while ( true );"
-			+ "try {} catch ( Exception $e ) {	}} function foo2() {if (true) {return;}"
+			+ "try {} catch ( Exception $e ) {	} finally {}} function foo2() {if (true) {return;}"
 			+ "if (true) {return;} elseif (false) {return;} else { return;}}" + "function foo($s) {	if (true) return;	if (true)	return; else if (false) return; else return;}}?>"; //$NON-NLS-1$
 
 	private CodeFormatterPreview fPreview;
 
 	protected CheckboxPreference fThenStatementPref, fSimpleIfPref,
-			newLineBeforeElseCB, newLineBeforeCatchCB, newLineBeforeWhileCB,
-			ifElseSameLineCB, elseIfSameLineCB, guardianSameLineCB;
+			newLineBeforeElseCB, newLineBeforeCatchCB, newLineBeforeFinallyCB,
+			newLineBeforeWhileCB, ifElseSameLineCB, elseIfSameLineCB,
+			guardianSameLineCB;
 
 	public ControlStatementsTabPage(ModifyDialog modifyDialog,
 			CodeFormatterPreferences codeFormatterPreferences) {
@@ -58,6 +59,13 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 				FormatterMessages.ControlStatementsTabPage_general_group_insert_new_line_before_catch_statements);
 		newLineBeforeCatchCB
 				.setIsChecked(codeFormatterPreferences.control_statement_insert_newline_before_catch_in_try);
+
+		newLineBeforeFinallyCB = createOption(
+				generalGroup,
+				numColumns,
+				FormatterMessages.ControlStatementsTabPage_general_group_insert_new_line_before_finally_statements);
+		newLineBeforeFinallyCB
+				.setIsChecked(codeFormatterPreferences.control_statement_insert_newline_before_finally_in_try);
 
 		newLineBeforeWhileCB = createOption(
 				generalGroup,
@@ -157,6 +165,8 @@ public class ControlStatementsTabPage extends ModifyDialogTabPage {
 			codeFormatterPreferences.control_statement_insert_newline_before_else_and_elseif_in_if = newLineBeforeElseCB
 					.isChecked();
 			codeFormatterPreferences.control_statement_insert_newline_before_catch_in_try = newLineBeforeCatchCB
+					.isChecked();
+			codeFormatterPreferences.control_statement_insert_newline_before_finally_in_try = newLineBeforeFinallyCB
 					.isChecked();
 			codeFormatterPreferences.control_statement_insert_newline_before_while_in_do = newLineBeforeWhileCB
 					.isChecked();

@@ -47,6 +47,7 @@ public class CodeAssistTests extends AbstractPDTTTest {
 	protected static final char OFFSET_CHAR = '|';
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
+
 		TESTS.put(PHPVersion.PHP5, new String[] {
 				"/workspace/codeassist/php5/exclusive",
 				"/workspace/codeassist/php5" });
@@ -57,6 +58,9 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		TESTS.put(PHPVersion.PHP5_4, new String[] {
 				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
 				"/workspace/codeassist/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] {
+				"/workspace/codeassist/php5", "/workspace/codeassist/php53",
+				"/workspace/codeassist/php54", "/workspace/codeassist/php55" });
 	};
 
 	protected static IProject project;

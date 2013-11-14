@@ -149,6 +149,7 @@ public final class WhiteSpaceOptions {
 
 	private final static String FOR_PREVIEW = "for ($i= 0, $j= 0; $i < 8; $i++, $j--) {}"; //$NON-NLS-1$
 	private final static String FOREACH_PREVIEW = "foreach ($s as $key => $value) {}"; //$NON-NLS-1$
+	private final static String YIELD_PREVIEW = "function a() { yield $value; yield $key => $value; $x = (yield $value); $x = (yield $key => $value); }"; //$NON-NLS-1$
 
 	private final static String WHILE_PREVIEW = "while ($condition) {} do {} while ($condition);"; //$NON-NLS-1$
 
@@ -504,6 +505,7 @@ public final class WhiteSpaceOptions {
 		createStaticTree(workingValues, statements);
 		createGlobalTree(workingValues, statements);
 		createEchoTree(workingValues, statements);
+		createYieldStatementTree(workingValues, statements);
 
 		final InnerNode expressions = new InnerNode(null, workingValues,
 				FormatterMessages.WhiteSpaceTabPage_expressions);
@@ -927,6 +929,12 @@ public final class WhiteSpaceOptions {
 				FormatterMessages.WhiteSpaceOptions_array_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_ARRAY_CREATION,
 				ARRAY_CREATION_PREVIEW);
+		createOption(
+				parent,
+				workingValues,
+				FormatterMessages.WhiteSpaceOptions_yield,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD,
+				YIELD_PREVIEW);
 	}
 
 	private static void createBeforeArrowTree(Map workingValues,
@@ -955,6 +963,13 @@ public final class WhiteSpaceOptions {
 				FormatterMessages.WhiteSpaceOptions_array_decl,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_ARRAY_CREATION,
 				ARRAY_CREATION_PREVIEW);
+		createOption(
+				parent,
+				workingValues,
+				FormatterMessages.WhiteSpaceOptions_yield,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD,
+				YIELD_PREVIEW);
+
 	}
 
 	private static void createAfterSemicolonTree(Map workingValues,
@@ -1896,6 +1911,27 @@ public final class WhiteSpaceOptions {
 				FormatterMessages.WhiteSpaceTabPage_foreach_after_arrow,
 				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_FOREACH,
 				FOREACH_PREVIEW);
+
+		return root;
+	}
+
+	private static InnerNode createYieldStatementTree(Map workingValues,
+			InnerNode parent) {
+		final InnerNode root = new InnerNode(parent, workingValues,
+				FormatterMessages.WhiteSpaceTabPage_yield);
+
+		createOption(
+				root,
+				workingValues,
+				FormatterMessages.WhiteSpaceTabPage_yield_before_arrow,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_BEFORE_ARROW_IN_YIELD,
+				YIELD_PREVIEW);
+		createOption(
+				root,
+				workingValues,
+				FormatterMessages.WhiteSpaceTabPage_yield_after_arrow,
+				CodeFormatterConstants.FORMATTER_INSERT_SPACE_AFTER_ARROW_IN_YIELD,
+				YIELD_PREVIEW);
 
 		return root;
 	}

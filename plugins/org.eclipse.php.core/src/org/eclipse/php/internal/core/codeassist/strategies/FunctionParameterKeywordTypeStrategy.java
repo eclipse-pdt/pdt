@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -61,8 +61,11 @@ public class FunctionParameterKeywordTypeStrategy extends KeywordsStrategy {
 			try {
 				int flags = context.getEnclosingType().getFlags();
 				if (!PHPFlags.isNamespace(flags)) {
+					String pref = PHPVersion.PHP5_4.isLessThan(context
+							.getPhpVersion()) ? prefix.toLowerCase() : prefix;
+
 					for (String keyword : KEYWORDS) {
-						if (keyword.startsWith(prefix)) {
+						if (keyword.startsWith(pref)) {
 							reporter.reportKeyword(keyword, suffix,
 									replaceRange);
 						}

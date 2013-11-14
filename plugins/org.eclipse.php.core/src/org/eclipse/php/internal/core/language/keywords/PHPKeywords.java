@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -43,6 +43,7 @@ public class PHPKeywords {
 		public String suffix;
 		public int suffixOffset;
 		public int context = GLOBAL;
+		public boolean ignoreCase = false;
 
 		/**
 		 * Constructs keyword data with default context: {@link #GLOBAL}
@@ -51,18 +52,30 @@ public class PHPKeywords {
 		 * @param suffix
 		 * @param suffixOffset
 		 */
-		public KeywordData(String name, String suffix, int suffixOffset) {
+		public KeywordData(String name, String suffix, int suffixOffset,
+				boolean ignoreCase) {
 			this.name = name;
 			this.suffix = suffix;
 			this.suffixOffset = suffixOffset;
+			this.ignoreCase = ignoreCase;
+		}
+
+		public KeywordData(String name, String suffix, int suffixOffset) {
+			this(name, suffix, suffixOffset, false);
 		}
 
 		public KeywordData(String name, String suffix, int suffixOffset,
-				int context) {
+				int context, boolean ignoreCase) {
 			this.name = name;
 			this.suffix = suffix;
 			this.suffixOffset = suffixOffset;
 			this.context = context;
+			this.ignoreCase = ignoreCase;
+		}
+
+		public KeywordData(String name, String suffix, int suffixOffset,
+				int context) {
+			this(name, suffix, suffixOffset, context, false);
 		}
 
 		public int hashCode() {
@@ -91,7 +104,8 @@ public class PHPKeywords {
 		}
 
 		public int compareTo(KeywordData o) {
-			return this.name.compareTo(o.name);
+			return this.ignoreCase ? this.name.compareToIgnoreCase(o.name)
+					: this.name.compareTo(o.name);
 		}
 	}
 
@@ -117,9 +131,10 @@ public class PHPKeywords {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_3());
 				} else if (PHPVersion.PHP5_4 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_5_4());
+				} else if (PHPVersion.PHP5_5 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_5_5());
 				} else {
-					throw new IllegalArgumentException(
-							Messages.PHPKeywords_0);
+					throw new IllegalArgumentException(Messages.PHPKeywords_0);
 				}
 				instances.put(version, instance);
 			}
@@ -136,7 +151,9 @@ public class PHPKeywords {
 	public Collection<KeywordData> findByPrefix(String prefix) {
 		List<KeywordData> result = new LinkedList<KeywordData>();
 		for (KeywordData data : keywordData) {
-			if (data.name.startsWith(prefix)) {
+			if (data.name.startsWith(prefix)
+					|| (data.ignoreCase && prefix != null && data.name
+							.toLowerCase().startsWith(prefix.toLowerCase()))) {
 				result.add(data);
 			}
 		}
@@ -152,7 +169,9 @@ public class PHPKeywords {
 	public Collection<String> findNamesByPrefix(String prefix) {
 		List<String> result = new LinkedList<String>();
 		for (KeywordData data : keywordData) {
-			if (data.name.startsWith(prefix)) {
+			if (data.name.startsWith(prefix)
+					|| (data.ignoreCase && prefix != null && data.name
+							.toLowerCase().startsWith(prefix.toLowerCase()))) {
 				result.add(data.name);
 			}
 		}

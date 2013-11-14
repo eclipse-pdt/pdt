@@ -1,0 +1,88 @@
+--TEST--
+Test Array Creation
+--FILE--
+<?php array(1, 2)[0]->x(); [1, 2][0]->y(); ?>
+--EXPECT--
+<Program start='0' length='45'>
+	<Statements>
+		<ExpressionStatement start='6' length='20'>
+			<MethodInvocation start='6' length='19'>
+				<Dispatcher>
+					<ArrayCreation start='6' length='14'>
+						<ArrayElement start='12' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='12' length='1' type='int' value='1'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='15' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='15' length='1' type='int' value='2'/>
+							</Value>
+						</ArrayElement>
+							<PHPArrayDereferenceList start='-1' length='0'>
+								<DereferenceNode start='17' length='3'>
+									<Scalar start='18' length='1' type='int' value='0'/>
+								</DereferenceNode>
+							</PHPArrayDereferenceList>
+					</ArrayCreation>
+				</Dispatcher>
+				<Property>
+					<FunctionInvocation start='22' length='3'>
+						<FunctionName start='22' length='1'>
+							<Variable start='22' length='1' isDollared='false'>
+								<Identifier start='22' length='1' name='x'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</Property>
+			</MethodInvocation>
+		</ExpressionStatement>
+		<ExpressionStatement start='27' length='15'>
+			<MethodInvocation start='27' length='14'>
+				<Dispatcher>
+					<ArrayCreation start='27' length='9'>
+						<ArrayElement start='28' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='28' length='1' type='int' value='1'/>
+							</Value>
+						</ArrayElement>
+						<ArrayElement start='31' length='1'>
+							<Key>
+							</Key>
+							<Value>
+								<Scalar start='31' length='1' type='int' value='2'/>
+							</Value>
+						</ArrayElement>
+							<PHPArrayDereferenceList start='-1' length='0'>
+								<DereferenceNode start='33' length='3'>
+									<Scalar start='34' length='1' type='int' value='0'/>
+								</DereferenceNode>
+							</PHPArrayDereferenceList>
+					</ArrayCreation>
+				</Dispatcher>
+				<Property>
+					<FunctionInvocation start='38' length='3'>
+						<FunctionName start='38' length='1'>
+							<Variable start='38' length='1' isDollared='false'>
+								<Identifier start='38' length='1' name='y'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</Property>
+			</MethodInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='43' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

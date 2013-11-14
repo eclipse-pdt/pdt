@@ -47,6 +47,7 @@ final public class ZendFrameworkFormatterPreferences implements
 		preferences.insert_space_after_arrow_in_field_access = false;
 		preferences.insert_space_after_arrow_in_foreach = true;
 		preferences.insert_space_after_arrow_in_method_invocation = false;
+		preferences.insert_space_after_arrow_in_yield = true;
 		preferences.insert_space_after_assignment = true;
 		preferences.insert_space_after_binary_operation = true;
 		preferences.insert_space_after_closing_brace_in_block = true;
@@ -85,6 +86,7 @@ final public class ZendFrameworkFormatterPreferences implements
 		preferences.insert_space_before_arrow_in_field_access = false;
 		preferences.insert_space_before_arrow_in_foreach = true;
 		preferences.insert_space_before_arrow_in_method_invocation = false;
+		preferences.insert_space_before_arrow_in_yield = true;
 		preferences.insert_space_before_assignment = true;
 		preferences.insert_space_before_binary_operation = true;
 		preferences.insert_space_before_closing_bracket_in_array = false;

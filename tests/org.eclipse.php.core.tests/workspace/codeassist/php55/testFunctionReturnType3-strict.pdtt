@@ -1,0 +1,21 @@
+--TEST--
+Test Singleton Instance
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=true
+--FILE--
+<?php
+class Singleton {
+	private static $_instance;
+	private function __construct() {}
+	public static function getInstance() {
+		if (SELF::$_instance instanceof self === false) {
+			seLF::$_instance = new self();
+		}
+		return SElf::$_instance;
+	}
+	public function foo() {
+	}
+} Singleton::getInstance()->|; ?>
+--EXPECT--
+method(foo)
+method(getInstance)

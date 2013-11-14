@@ -67,6 +67,8 @@ public class FormatterTests extends AbstractPDTTTest {
 				new String[] { "/workspace/formatter/php53" });
 		TESTS.put(PHPVersion.PHP5_4,
 				new String[] { "/workspace/formatter/php54" });
+		TESTS.put(PHPVersion.PHP5_5,
+				new String[] { "/workspace/formatter/php55" });
 	};
 
 	protected static Map<PdttFile, IFile> filesMap = new LinkedHashMap<PdttFile, IFile>();
@@ -242,7 +244,7 @@ public class FormatterTests extends AbstractPDTTTest {
 
 		protected void setUp() throws Exception {
 			setUpSuite();
-			
+
 			if (xmlFile != null) {
 				scopeContext = new InstanceScope();
 				profileManager = new ProfileManager(new ArrayList<Profile>(),
@@ -259,13 +261,13 @@ public class FormatterTests extends AbstractPDTTTest {
 				} catch (Exception e) {
 					Logger.logException(e);
 				}
-				
+
 				final File file = new File(abcolutXmlFilePath);
 				assertTrue("Formatter Configuration Not Found " + file.toString(), file.exists());
-				
+
 				List<Profile> profiles = null;
 				try {
-					
+
 					profiles = ProfileStore.readProfilesFromFile(file);
 				} catch (CoreException e) {
 					Logger
