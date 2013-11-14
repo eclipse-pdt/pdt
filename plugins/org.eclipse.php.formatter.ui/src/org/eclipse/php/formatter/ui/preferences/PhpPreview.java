@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.php.formatter.core.CodeFormatterPreferences;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
@@ -23,9 +24,12 @@ import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -107,6 +111,14 @@ public abstract class PhpPreview {
 				|| fInput.length() == 0) {
 			return;
 		}
+
+		final IPreferenceStore editorStore = EditorsPlugin.getDefault()
+				.getPreferenceStore();
+		fText.setBackground(editorStore
+				.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT) ? null
+				: new Color(fText.getDisplay(), PreferenceConverter.getColor(
+						editorStore,
+						AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND)));
 
 		fStyleProvider.loadColors();
 

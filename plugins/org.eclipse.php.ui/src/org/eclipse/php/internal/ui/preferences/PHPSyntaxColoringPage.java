@@ -25,6 +25,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
@@ -66,6 +67,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.internal.editors.text.EditorsPlugin;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
@@ -398,6 +401,14 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements
 		fText.addSelectionListener(getTextSelectionListener());
 		fText.addMouseListener(getTextMouseListener());
 		fText.addTraverseListener(getTraverseListener());
+
+		final IPreferenceStore editorStore = EditorsPlugin.getDefault()
+				.getPreferenceStore();
+		fText.setBackground(editorStore
+				.getBoolean(AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND_SYSTEM_DEFAULT) ? null
+				: new Color(fText.getDisplay(), PreferenceConverter.getColor(
+						editorStore,
+						AbstractTextEditor.PREFERENCE_COLOR_BACKGROUND)));
 		setAccessible(fText, SSEUIMessages.Sample_text__UI_);
 		fDocument = StructuredModelManager.getModelManager()
 				.createStructuredDocumentFor(
