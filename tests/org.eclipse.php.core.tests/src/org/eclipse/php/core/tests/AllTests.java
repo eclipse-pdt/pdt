@@ -19,7 +19,7 @@ import org.eclipse.php.core.tests.compiler_ast.parser.CompilerParserTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.FindUseStatementByAliasTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.FindUseStatementByNamespaceTests;
 import org.eclipse.php.core.tests.compiler_ast.parser.GetUseStatementsByTests;
-import org.eclipse.php.core.tests.compiler_ast.parser.TraitUseStatementASTVisitorTests;
+import org.eclipse.php.core.tests.compiler_ast.parser.TraitUseStatementVisitorTests;
 import org.eclipse.php.core.tests.compiler_ast.phpdoc.PHPDocAwareDeclarationTests;
 import org.eclipse.php.core.tests.compiler_ast.phpdoc.PHPDocParserTests;
 import org.eclipse.php.core.tests.document.lexer.DocumentLexerTests;
@@ -53,7 +53,7 @@ public class AllTests {
 		suite.addTest(FindUseStatementByAliasTests.suite());
 		suite.addTest(FindUseStatementByNamespaceTests.suite());
 		suite.addTest(GetUseStatementsByTests.suite());
-		suite.addTest(TraitUseStatementASTVisitorTests.suite());
+		suite.addTest(TraitUseStatementVisitorTests.suite());
 		suite.addTest(ErrorReportingTests.suite());
 		suite.addTest(ASTRewriteTests.suite());
 		suite.addTest(ASTMatcherTests.suite());

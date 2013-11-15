@@ -1,0 +1,8 @@
+--TEST--
+Get type declarations in a simple example
+--FILE--
+<?php
+class MyClass {}
+?>
+--EXPECT--
+MyClass

@@ -1,0 +1,14 @@
+--TEST--
+Get type declarations inside a for loop
+--FILE--
+<?php
+for (;;) {
+	class MyClass {}
+    interface MyInterface {}
+	trait MyTrait {}
+}
+?>
+--EXPECT--
+MyClass
+MyInterface
+MyTrait

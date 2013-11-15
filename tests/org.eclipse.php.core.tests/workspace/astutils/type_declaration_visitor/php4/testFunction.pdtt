@@ -1,0 +1,10 @@
+--TEST--
+Get type declarations inside a function
+--FILE--
+<?php
+function foo() {
+	class MyClass {}
+}
+?>
+--EXPECT--
+MyClass

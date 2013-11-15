@@ -1,0 +1,12 @@
+--TEST--
+Get type declarations inside a while loop
+--FILE--
+<?php
+while (true) {
+	class MyClass {}
+	interface MyInterface {}
+}
+?>
+--EXPECT--
+MyClass
+MyInterface

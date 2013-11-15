@@ -22,31 +22,43 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.compiler.ast.nodes.TraitUseStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.AbstractPHPSourceParser;
 import org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory;
-import org.eclipse.php.internal.core.compiler.ast.visitor.TraitUseStatementASTVisitor;
+import org.eclipse.php.internal.core.compiler.ast.visitor.TypeDeclarationVisitor;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 
-public class TraitUseStatementASTVisitorTests extends AbstractPDTTTest {
+public class TypeDeclarationVisitorTests extends AbstractPDTTTest {
 
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(
+				PHPVersion.PHP4,
+				new String[] { "/workspace/astutils/type_declaration_visitor/php4" });
+		TESTS.put(
+				PHPVersion.PHP5,
+				new String[] { "/workspace/astutils/type_declaration_visitor/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] {
+				"/workspace/astutils/type_declaration_visitor/php5",
+				"/workspace/astutils/type_declaration_visitor/php53" });
+		TESTS.put(
 				PHPVersion.PHP5_4,
-				new String[] { "/workspace/astutils/trait_use_statement_visitor/php54" });
+				new String[] { "/workspace/astutils/type_declaration_visitor/php54" });
+		TESTS.put(PHPVersion.PHP5_5, new String[] {
+				"/workspace/astutils/type_declaration_visitor/php54",
+				"/workspace/astutils/type_declaration_visitor/php55" });
 	};
 
-	public TraitUseStatementASTVisitorTests(String description) {
+	public TypeDeclarationVisitorTests(String description) {
 		super(description);
 	}
 
 	public static Test suite() {
 
-		TestSuite suite = new TestSuite("Trait Use Statement Tests");
+		TestSuite suite = new TestSuite("Type Declaration Visitor Tests");
 
 		for (final PHPVersion phpVersion : TESTS.keySet()) {
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
@@ -75,13 +87,12 @@ public class TraitUseStatementASTVisitorTests extends AbstractPDTTTest {
 								final StringBuilder builder = new StringBuilder();
 
 								moduleDeclaration
-										.traverse(new TraitUseStatementASTVisitor() {
+										.traverse(new TypeDeclarationVisitor() {
 											@Override
-											public boolean visit(
-													TraitUseStatement s)
-													throws Exception {
-												builder.append(s);
-												return false;
+											public void visitType(
+													TypeDeclaration s) {
+												builder.append(s.getName());
+												builder.append('\n');
 											}
 										});
 

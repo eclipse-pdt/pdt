@@ -1,0 +1,16 @@
+--TEST--
+Get type declarations inside a switch block
+--FILE--
+<?php
+$i = 0;
+switch ($i) {
+    case 0:
+		class MyClass {}
+        break;
+    default:
+		class MyClass2 {}
+}
+?>
+--EXPECT--
+MyClass
+MyClass2

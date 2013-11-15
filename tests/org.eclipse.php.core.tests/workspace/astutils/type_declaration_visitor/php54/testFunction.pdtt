@@ -1,0 +1,14 @@
+--TEST--
+Get type declarations inside a function
+--FILE--
+<?php
+function foo() {
+	class MyClass {}
+    interface MyInterface {}
+	trait MyTrait {}
+}
+?>
+--EXPECT--
+MyClass
+MyInterface
+MyTrait
