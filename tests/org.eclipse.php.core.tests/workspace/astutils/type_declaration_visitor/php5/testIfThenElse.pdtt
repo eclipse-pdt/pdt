@@ -1,0 +1,23 @@
+--TEST--
+Get type declarations inside an if-then-else block
+--FILE--
+<?php
+$i = 0;
+if ($i = 0) {
+	class MyClass {}
+	interface MyInterface {}
+} elseif ($i = 1) {
+	class MyClass2 {}
+	interface MyInterface2 {}
+} else {
+	class MyClass3 {}
+	interface MyInterface3 {}
+}
+?>
+--EXPECT--
+MyClass
+MyInterface
+MyClass2
+MyInterface2
+MyClass3
+MyInterface3

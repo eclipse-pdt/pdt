@@ -1,0 +1,17 @@
+--TEST--
+Get type declarations inside an if-then-else block
+--FILE--
+<?php
+$i = 0;
+if ($i = 0) {
+	class MyClass {}
+} elseif ($i = 1) {
+	class MyClass2 {}
+} else {
+	class MyClass3 {}
+}
+?>
+--EXPECT--
+MyClass
+MyClass2
+MyClass3

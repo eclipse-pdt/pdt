@@ -1,0 +1,14 @@
+--TEST--
+Get type declarations inside a for-each loop
+--FILE--
+<?php
+foreach (array() as $x) {
+	class MyClass {}
+    interface MyInterface {}
+	trait MyTrait {}
+}
+?>
+--EXPECT--
+MyClass
+MyInterface
+MyTrait

@@ -10,15 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.visitor;
 
-import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.TraitUseStatement;
 
 /**
@@ -33,34 +25,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.TraitUseStatement;
  * 
  * @author Kaloyan Raev
  */
-public abstract class TraitUseStatementASTVisitor extends ASTVisitor {
-
-	/**
-	 * The visitor must always look inside {@link ModuleDeclaration}s.
-	 */
-	@Override
-	public boolean visit(ModuleDeclaration s) throws Exception {
-		return true;
-	}
-
-	/**
-	 * The visitor must look into an {@link Expression} only if it is a
-	 * {@link Block} (because it can be a block of a class declaration).
-	 */
-	@Override
-	public boolean visit(Expression s) throws Exception {
-		return s instanceof Block;
-	}
-
-	/**
-	 * The visitor must look into a {@link TypeDeclaration} only if it is a
-	 * {@link NamespaceDeclaration} or a {@link ClassDeclaration}.
-	 */
-	@Override
-	public boolean visit(TypeDeclaration s) throws Exception {
-		return s instanceof NamespaceDeclaration
-				|| s instanceof ClassDeclaration;
-	}
+public abstract class TraitUseStatementVisitor extends TypeDeclarationVisitor {
 
 	/**
 	 * The visitor must check if a {@link Statement} is a
@@ -73,7 +38,7 @@ public abstract class TraitUseStatementASTVisitor extends ASTVisitor {
 		if (s instanceof TraitUseStatement) {
 			return visit((TraitUseStatement) s);
 		}
-		return false;
+		return super.visit(s);
 	}
 
 	/**
@@ -87,14 +52,5 @@ public abstract class TraitUseStatementASTVisitor extends ASTVisitor {
 	 * @throws Exception
 	 */
 	public abstract boolean visit(TraitUseStatement s) throws Exception;
-
-	/**
-	 * In all other cases the visitor must not look deeper into the AST tree -
-	 * there is no chance to find an {@link TraitUseStatement} there.
-	 */
-	@Override
-	public boolean visitGeneral(ASTNode node) throws Exception {
-		return false;
-	}
 
 }

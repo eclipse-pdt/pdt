@@ -1,0 +1,28 @@
+--TEST--
+Get type declarations inside a try-catch block
+--FILE--
+<?php
+try {
+	class MyClass {}
+	interface MyInterface {}
+	trait MyTrait {}
+} catch (Exception $e) {
+	class MyClass2 {}
+	interface MyInterface2 {}
+	trait MyTrait2 {}
+} finally {
+	class MyClass3 {}
+	interface MyInterface3 {}
+	trait MyTrait3 {}
+}
+?>
+--EXPECT--
+MyClass
+MyInterface
+MyTrait
+MyClass2
+MyInterface2
+MyTrait2
+MyClass3
+MyInterface3
+MyTrait3
