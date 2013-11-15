@@ -1,0 +1,14 @@
+--TEST--
+Get type declarations inside a namespace
+--FILE--
+<?php
+namespace NS {
+	class MyClass {}
+    interface MyInterface {}
+	trait MyTrait {}
+}
+?>
+--EXPECT--
+MyClass
+MyInterface
+MyTrait

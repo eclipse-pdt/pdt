@@ -1,0 +1,13 @@
+--TEST--
+Get type declarations inside an anonymous function
+--FILE--
+<?php
+$greet = function($name) {
+	class MyClass {}
+    interface MyInterface {}
+};
+$greet('World');
+?>
+--EXPECT--
+MyClass
+MyInterface

@@ -1,0 +1,14 @@
+--TEST--
+Get type declarations inside a declare block
+--FILE--
+<?php
+declare(x=1) {
+	class MyClass {}
+    interface MyInterface {}
+	trait MyTrait {}
+}
+?>
+--EXPECT--
+MyClass
+MyInterface
+MyTrait

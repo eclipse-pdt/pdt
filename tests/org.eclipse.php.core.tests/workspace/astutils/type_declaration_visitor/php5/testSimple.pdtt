@@ -1,0 +1,10 @@
+--TEST--
+Get type declarations in a simple example
+--FILE--
+<?php
+class MyClass {}
+interface MyInterface {}
+?>
+--EXPECT--
+MyClass
+MyInterface
