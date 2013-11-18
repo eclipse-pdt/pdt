@@ -21,8 +21,8 @@ import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
 import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.AbstractBuildParticipantType;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
@@ -88,13 +88,18 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 			// create problem collector
 			final ProblemCollector problemCollector = new ProblemCollector();
 			// parse
-			moduleDeclaration = parser.parse((IModuleSource) context
-					.getSourceModule(), problemCollector);
+			moduleDeclaration = parser
+					.parse((IModuleSource) context.getSourceModule(),
+							problemCollector);
 			// put result to the cache
 			SourceParserUtil.putModuleToCache(cacheEntry, moduleDeclaration,
 					problemCollector);
 			// report errors to the build context
 			problemCollector.copyTo(context.getProblemReporter());
+
+			// push AST to build context
+			context.set(IBuildContext.ATTR_MODULE_DECLARATION,
+					moduleDeclaration);
 		}
 	}
 
