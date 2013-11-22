@@ -9,6 +9,7 @@ Test PHPDoc Function Return Type
 function foo() {}
 ?>
 --EXPECT--
+type(ArrayAccess)
 type(ArrayObject)
 type(ArrayIterator)
 keyword(array)

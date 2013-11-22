@@ -1,0 +1,16 @@
+--TEST--
+Test PHPDoc Function Return Type
+--FILE--
+<?php
+interface TestInterface1{
+}
+class T2{
+	/**
+	 * @return Test|
+	 */
+	function test(){
+	}
+}
+?>
+--EXPECT--
+type(TestInterface1)

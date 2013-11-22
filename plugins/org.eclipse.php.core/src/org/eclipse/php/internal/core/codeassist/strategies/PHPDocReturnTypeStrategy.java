@@ -4,13 +4,14 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.core.codeassist.ICompletionContext;
@@ -23,7 +24,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  * 
  * @author michael
  */
-public class PHPDocReturnTypeStrategy extends GlobalClassesStrategy {
+public class PHPDocReturnTypeStrategy extends GlobalTypesStrategy {
 
 	private static final String[] ALL_TYPE = new String[] { "array", "array", //$NON-NLS-1$ //$NON-NLS-2$
 			"mixed", "void", "integer", "int", "string", "float", "double", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
@@ -31,7 +32,12 @@ public class PHPDocReturnTypeStrategy extends GlobalClassesStrategy {
 	private static final String EMPTY = ""; //$NON-NLS-1$
 
 	public PHPDocReturnTypeStrategy(ICompletionContext context) {
-		super(context);
+		super(context, 0, Modifiers.AccNameSpace);
+	}
+
+	public PHPDocReturnTypeStrategy(ICompletionContext context, int trueFlag,
+			int falseFlag) {
+		super(context, trueFlag, falseFlag);
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
