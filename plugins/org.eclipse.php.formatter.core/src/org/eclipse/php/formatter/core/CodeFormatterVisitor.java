@@ -1036,8 +1036,9 @@ public class CodeFormatterVisitor extends AbstractVisitor implements
 							}
 						}
 					}
-					commentWords = Arrays.asList(commentContent.substring(2)
-							.trim().split("[ \t]")); //$NON-NLS-1$
+					int commentTokLen = commentContent.startsWith("#") ? 1 : 2;//$NON-NLS-1$
+					commentWords = Arrays.asList(commentContent
+							.substring(commentTokLen).trim().split("[ \t]")); //$NON-NLS-1$
 					commentWords = removeEmptyString(commentWords);
 					commentContent = join(commentWords, " "); //$NON-NLS-1$
 					commentContent = commentContent.trim();

@@ -1,0 +1,14 @@
+--TEST--
+Test formatting for comments starting with #
+--FILE--
+<?php
+	# first comment
+#comment #2
+$a=2;
+?>
+--EXPECT--
+<?php
+// first comment
+// comment #2
+$a = 2;
+?>
