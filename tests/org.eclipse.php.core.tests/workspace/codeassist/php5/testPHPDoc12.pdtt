@@ -1,0 +1,17 @@
+--TEST--
+Test PHPDoc @param type
+--FILE--
+<?php
+interface TestType1 {}
+interface TestType2 {}
+class TestType3{}
+/**
+ * @param TestT| 
+ */
+function f1($param1, $param2) { }
+
+?>
+--EXPECT--
+type(TestType1)
+type(TestType2)
+type(TestType3)

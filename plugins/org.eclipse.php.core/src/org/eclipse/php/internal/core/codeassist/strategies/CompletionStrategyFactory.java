@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.core.codeassist.ICompletionContext;
 import org.eclipse.php.core.codeassist.ICompletionContextResolver;
 import org.eclipse.php.core.codeassist.ICompletionStrategy;
@@ -100,8 +101,8 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new PHPDocTagStrategy(context) };
 		}
 		if (contextClass == PHPDocVarStartContext.class) {
-			return new ICompletionStrategy[] { new GlobalClassesStrategy(
-					context) {
+			return new ICompletionStrategy[] { new GlobalTypesStrategy(context,
+					0, Modifiers.AccNameSpace) {
 				@Override
 				protected int getExtraInfo() {
 					return ProposalExtraInfo.TYPE_ONLY;

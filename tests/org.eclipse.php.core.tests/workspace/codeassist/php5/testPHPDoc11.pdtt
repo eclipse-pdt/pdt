@@ -1,0 +1,15 @@
+--TEST--
+Test PHPDoc @var type
+--FILE--
+<?php
+interface TestInterface1 {
+}
+class T1 {
+    /**
+     * @var Test| 
+     */
+	private $param;
+}
+?>
+--EXPECT--
+type(TestInterface1)

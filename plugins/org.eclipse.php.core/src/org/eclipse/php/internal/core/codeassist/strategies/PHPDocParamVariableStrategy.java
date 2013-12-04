@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -19,11 +19,13 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
 
 /**
  * This strategy completes variable names in 'param' PHPDoc tag
+ * 
  * @author michael
  */
 public class PHPDocParamVariableStrategy extends FunctionArgumentsStrategy {
-	
-	public PHPDocParamVariableStrategy(ICompletionContext context, IElementFilter elementFilter) {
+
+	public PHPDocParamVariableStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -37,10 +39,16 @@ public class PHPDocParamVariableStrategy extends FunctionArgumentsStrategy {
 			return;
 		}
 		PHPDocTagContext tagContext = (PHPDocTagContext) context;
-		
+
 		String prefix = tagContext.getPrefix();
+		String prev = tagContext.getPreviousWord();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
 			super.apply(reporter);
+		} else if (prev.equalsIgnoreCase("param")) { //$NON-NLS-1$
+			final PHPDocReturnTypeStrategy returnStrategy = new PHPDocReturnTypeStrategy(
+					context);
+			returnStrategy.apply(reporter);
+
 		}
 	}
 
