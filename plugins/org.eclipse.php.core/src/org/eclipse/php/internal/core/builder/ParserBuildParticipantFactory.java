@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 xored software, Inc.
+ * Copyright (c) 2008, 2014 xored software, Inc.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,8 +8,11 @@
  *
  * Contributors:
  *     xored software, Inc. - initial API and Implementation (Alex Panchenko)
+ *     Zend Technologies - [424340] Library Folders (Kaloyan Raev)
  *******************************************************************************/
 package org.eclipse.php.internal.core.builder;
+
+import static org.eclipse.php.core.util.LibraryFolderUtil.isInLibraryFolder;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -19,10 +22,8 @@ import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
-import org.eclipse.dltk.core.DLTKLanguageManager;
-import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.AbstractBuildParticipantType;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
@@ -61,6 +62,12 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 		}
 
 		public void build(IBuildContext context) throws CoreException {
+			IModelElement element = context.getModelElement();
+			if (element != null && isInLibraryFolder(element)) {
+				// skip syntax check for code inside library folders
+				return;
+			}
+
 			IModuleDeclaration moduleDeclaration = (ModuleDeclaration) context
 					.get(IBuildContext.ATTR_MODULE_DECLARATION);
 			if (moduleDeclaration != null) {

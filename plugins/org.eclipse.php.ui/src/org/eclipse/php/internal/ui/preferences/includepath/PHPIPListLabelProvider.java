@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences.includepath;
+
+import static org.eclipse.php.core.util.LibraryFolderUtil.isInLibraryFolder;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.DLTKCore;
@@ -93,8 +95,12 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 		IModelElement modelElement = DLTKCore.create(resource);
 
 		if (null != modelElement) {
-			if (modelElement instanceof IScriptFolder)
-				return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;
+			if (modelElement instanceof IScriptFolder) {
+				if (isInLibraryFolder(modelElement))
+					return PHPPluginImages.DESC_OBJS_PHP_LIBFOLDER;
+				else
+					return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;
+			}
 		} else {
 			return PlatformUI.getWorkbench().getSharedImages()
 					.getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER);

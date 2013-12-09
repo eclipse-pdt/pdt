@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
+
+import static org.eclipse.php.core.util.LibraryFolderUtil.isInLibraryFolder;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -112,10 +114,17 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 					return PHPPluginImages
 							.get(PHPPluginImages.IMG_OBJS_PHP_FOLDER);
 			} else {// in build path ...
-				if (modelElement.getElementType() == IModelElement.SCRIPT_FOLDER
-						|| element instanceof IFolder)
-					return PHPPluginImages
-							.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
+				if (modelElement.getElementType() == IModelElement.PROJECT_FRAGMENT
+						|| modelElement.getElementType() == IModelElement.SCRIPT_FOLDER
+						|| element instanceof IFolder) {
+					if (isInLibraryFolder(modelElement)) {
+						return PHPPluginImages
+								.get(PHPPluginImages.IMG_OBJS_PHP_LIBFOLDER);
+					} else {
+						return PHPPluginImages
+								.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
+					}
+				}
 			}
 		}
 		try {
