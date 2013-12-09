@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,11 +30,13 @@ import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.osgi.service.environment.EnvironmentInfo;
+import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
 import org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
+import org.eclipse.php.internal.ui.explorer.LibraryFolderChangeListener;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -96,6 +98,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private PHPEditorTextHoverDescriptor[] fPHPEditorTextHoverDescriptors;
 	private PHPManualSiteDescriptor[] fPHPManualSiteDescriptors;
 	private ImagesOnFileSystemRegistry fImagesOnFSRegistry;
+	private LibraryFolderChangeListener libraryFolderChangeListener;
 
 	/**
 	 * The AST provider.
@@ -140,6 +143,10 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	void initializeAfterStart(final BundleContext context) {
 		Job job = new Job("") { //$NON-NLS-1$
 			protected IStatus run(IProgressMonitor monitor) {
+
+				libraryFolderChangeListener = new LibraryFolderChangeListener();
+				LibraryFolderManager.getInstance().addListener(
+						libraryFolderChangeListener);
 
 				PlatformUI.getWorkbench().getDisplay()
 						.asyncExec(new Runnable() {
@@ -214,6 +221,13 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
+
+		if (libraryFolderChangeListener != null) {
+			LibraryFolderManager.getInstance().removeListener(
+					libraryFolderChangeListener);
+			libraryFolderChangeListener = null;
+		}
+
 		Platform.getJobManager().cancel(OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
 		Platform.getJobManager().cancel(OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
 		fASTProvider = null;
