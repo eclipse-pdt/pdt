@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,6 +101,8 @@ public class PHPPluginImages {
 			+ "folderroot_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_MISSING_PHPFOLDER_ROOT = NAME_PREFIX
 			+ "folderroot_nonexist_obj.gif"; //$NON-NLS-1$
+	public static final String IMG_OBJS_PHP_LIBFOLDER = NAME_PREFIX
+			+ "libfolder_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_MODEL = NAME_PREFIX
 			+ "script_model_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_UNKNOWN = NAME_PREFIX
@@ -175,6 +177,8 @@ public class PHPPluginImages {
 			T_OBJ, IMG_OBJS_PHPFOLDER_ROOT);
 	public static final ImageDescriptor DESC_OBJS_MISSING_PHPFOLDER_ROOT = createManaged(
 			T_OBJ, IMG_OBJS_MISSING_PHPFOLDER_ROOT);
+	public static final ImageDescriptor DESC_OBJS_PHP_LIBFOLDER = createManaged(
+			T_OBJ, IMG_OBJS_PHP_LIBFOLDER);
 	public static final ImageDescriptor DESC_OBJS_PHP_MODEL = createManaged(
 			T_OBJ, IMG_OBJS_PHP_MODEL);
 	public static final ImageDescriptor DESC_OBJ_PHP_CLASSES_GROUP = createManaged(
@@ -221,13 +225,13 @@ public class PHPPluginImages {
 	public static final ImageDescriptor DESC_OVR_DEPRECATED = create(T_OVR,
 			"deprecated.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_CONSTANT = create(T_OVR,
-			"constant_co.gif"); 	 //$NON-NLS-1$
+			"constant_co.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_ABSTRACT = create(T_OVR,
-			"abstract_co.gif"); 	 //$NON-NLS-1$
+			"abstract_co.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_FINAL = create(T_OVR,
-			"final_co.gif"); 	 //$NON-NLS-1$
+			"final_co.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_OVR_STATIC = create(T_OVR,
-			"static_co.gif"); 	 //$NON-NLS-1$
+			"static_co.gif"); //$NON-NLS-1$
 
 	public static final ImageDescriptor DESC_OBJS_ZIP = createManaged(T_OBJ,
 			IMG_OBJS_ZIP);
@@ -350,8 +354,8 @@ public class PHPPluginImages {
 		/*
 		 * try { ImageDescriptor id=
 		 * ImageDescriptor.createFromURL(makeIconFileURL("c" + type, relPath));
-		 * if (id != null) action.setHoverImageDescriptor(id); }
-		 * catch (MalformedURLException e) { }
+		 * if (id != null) action.setHoverImageDescriptor(id); } catch
+		 * (MalformedURLException e) { }
 		 */
 
 		ImageDescriptor descriptor = create("e" + type, relPath); //$NON-NLS-1$
