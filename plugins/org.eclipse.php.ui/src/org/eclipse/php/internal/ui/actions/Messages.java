@@ -13,6 +13,10 @@ public class Messages extends NLS {
 	public static String SelectionHandler_0;
 	public static String DeleteAction_0;
 	public static String GenerateIncludePathActionGroup_0;
+	public static String LibraryFolderAction_Dialog_description;
+	public static String LibraryFolderAction_Dialog_title;
+	public static String LibraryFolderAction_UseAsLibraryFolder_label;
+	public static String LibraryFolderAction_UseAsSourceFolder_label;
 	public static String OpenTypeHierarchyAction_0;
 	public static String OpenTypeHierarchyAction_3;
 	public static String OpenCallHierarchyAction_0;

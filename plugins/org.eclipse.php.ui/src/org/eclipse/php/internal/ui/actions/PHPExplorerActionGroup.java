@@ -122,6 +122,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 		phpRefactorActionGroup = new PHPRefactorActionGroup(getPart());
 		filtered.add(phpRefactorActionGroup);
 		filtered.add(new GenerateIncludePathActionGroup(getPart()));
+		filtered.add(new LibraryFolderActionGroup(getPart()));
 		filtered.add(new NamespaceGroupingActionGroup(getPart().getTreeViewer()));
 		filtered.add(new PHPFileOperationActionGroup(getPart()));
 
