@@ -24,6 +24,7 @@ Export-Package: org.eclipse.php.core.codeassist,
  org.eclipse.php.core.format,
  org.eclipse.php.core.index,
  org.eclipse.php.core.language,
+ org.eclipse.php.core.util,
  org.eclipse.php.internal.core;
   x-friends:="org.eclipse.php.core.performance.tests,
    org.eclipse.php.core.tests,
