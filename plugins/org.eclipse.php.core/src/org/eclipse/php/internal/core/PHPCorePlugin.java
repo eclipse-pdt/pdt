@@ -25,6 +25,7 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.dltk.internal.core.search.ProjectIndexerManager;
+import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -76,6 +77,9 @@ public class PHPCorePlugin extends Plugin {
 
 				// start the include path manager
 				IncludePathManager.getInstance();
+
+				// start the library folder manager
+				LibraryFolderManager.getInstance();
 
 				// register the listener in charge of converting the projects -
 				// applies for projects being opened during work

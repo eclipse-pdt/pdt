@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.core.compiler.PHPFlags;
+import org.eclipse.php.core.libfolders.LibraryFolderManager;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.ui.util.LabelProviderUtil;
@@ -112,10 +113,19 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 					return PHPPluginImages
 							.get(PHPPluginImages.IMG_OBJS_PHP_FOLDER);
 			} else {// in build path ...
-				if (modelElement.getElementType() == IModelElement.SCRIPT_FOLDER
-						|| element instanceof IFolder)
-					return PHPPluginImages
-							.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
+				if (modelElement.getElementType() == IModelElement.PROJECT_FRAGMENT
+						|| modelElement.getElementType() == IModelElement.SCRIPT_FOLDER
+						|| element instanceof IFolder) {
+					LibraryFolderManager lfm = LibraryFolderManager
+							.getInstance();
+					if (lfm.isInLibraryFolder(modelElement)) {
+						return PHPPluginImages
+								.get(PHPPluginImages.IMG_OBJS_PHP_LIBFOLDER);
+					} else {
+						return PHPPluginImages
+								.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
+					}
+				}
 			}
 		}
 		try {
