@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui;
 
 import java.io.IOException;
 
+import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
@@ -97,6 +98,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private PHPManualSiteDescriptor[] fPHPManualSiteDescriptors;
 	private ImagesOnFileSystemRegistry fImagesOnFSRegistry;
 
+	private AutoDetectLibraryFolderListener autoDetectLibraryFolderListener;
+
 	/**
 	 * The AST provider.
 	 * 
@@ -127,6 +130,11 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+
+		autoDetectLibraryFolderListener = new AutoDetectLibraryFolderListener();
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(
+				autoDetectLibraryFolderListener,
+				IResourceChangeEvent.POST_CHANGE);
 
 		initializeAfterStart(context);
 	}
@@ -214,6 +222,13 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
+
+		if (autoDetectLibraryFolderListener != null) {
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(
+					autoDetectLibraryFolderListener);
+			autoDetectLibraryFolderListener = null;
+		}
+
 		Platform.getJobManager().cancel(OPEN_TYPE_HIERARCHY_ACTION_FAMILY_NAME);
 		Platform.getJobManager().cancel(OPEN_CALL_HIERARCHY_ACTION_FAMILY_NAME);
 		fASTProvider = null;

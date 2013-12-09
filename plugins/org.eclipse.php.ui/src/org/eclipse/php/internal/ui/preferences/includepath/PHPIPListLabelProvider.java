@@ -24,6 +24,7 @@ import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.php.core.util.LibraryFolderUtil;
 import org.eclipse.php.internal.ui.phar.wizard.PharUIUtil;
 import org.eclipse.php.internal.ui.util.LabelProviderUtil;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -93,8 +94,12 @@ public class PHPIPListLabelProvider extends BPListLabelProvider {
 		IModelElement modelElement = DLTKCore.create(resource);
 
 		if (null != modelElement) {
-			if (modelElement instanceof IScriptFolder)
-				return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;
+			if (modelElement instanceof IScriptFolder) {
+				if (LibraryFolderUtil.inLibraryFolder(modelElement))
+					return PHPPluginImages.DESC_OBJS_PHP_LIBFOLDER;
+				else
+					return PHPPluginImages.DESC_OBJS_PHPFOLDER_ROOT;
+			}
 		} else {
 			return PlatformUI.getWorkbench().getSharedImages()
 					.getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER);

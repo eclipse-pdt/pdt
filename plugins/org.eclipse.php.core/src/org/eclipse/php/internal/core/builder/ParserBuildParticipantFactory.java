@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.builder;
 
+import static org.eclipse.php.core.util.LibraryFolderUtil.inLibraryFolder;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -19,10 +21,8 @@ import org.eclipse.dltk.ast.parser.IModuleDeclaration;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.env.IModuleSource;
 import org.eclipse.dltk.compiler.problem.ProblemCollector;
-import org.eclipse.dltk.core.DLTKLanguageManager;
-import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.ISourceModuleInfoCache.ISourceModuleInfo;
-import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.builder.AbstractBuildParticipantType;
 import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
@@ -61,6 +61,11 @@ public class ParserBuildParticipantFactory extends AbstractBuildParticipantType
 		}
 
 		public void build(IBuildContext context) throws CoreException {
+			// skip syntax check for code inside library folders
+			IModelElement element = context.getModelElement();
+			if (element != null && inLibraryFolder(element))
+				return;
+
 			IModuleDeclaration moduleDeclaration = (ModuleDeclaration) context
 					.get(IBuildContext.ATTR_MODULE_DECLARATION);
 			if (moduleDeclaration != null) {
