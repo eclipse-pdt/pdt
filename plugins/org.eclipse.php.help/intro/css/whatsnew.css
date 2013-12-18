@@ -1,0 +1,7 @@
+a#pdt-noteworthy img {
+	background-image: url(../images/php.jpg);
+}
+
+a#pdt-noteworthy:hover img {
+	background-image: url(../images/php.jpg);
+}

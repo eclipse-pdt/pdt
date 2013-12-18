@@ -1,0 +1,7 @@
+a#pdt-tutorial img {
+	background-image: url(../images/php.jpg);
+}
+
+a#pdt-tutorial:hover img {
+	background-image: url(../images/php.jpg);
+}

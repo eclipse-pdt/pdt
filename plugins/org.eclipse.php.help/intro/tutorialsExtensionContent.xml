@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?><!--
+    Copyright (c) 2013 Kaloyan Raev and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+ 
+    Contributors:
+         Kaloyan Raev <kaloyan.r@zend.com> - initial API and implementation
+ -->
+
+<introContent>
+	<extensionContent id="org.eclipse.pdt" name="PDT"
+		style="css/tutorials.css" alt-style="css/tutorials.properties" path="tutorials/@">
+		<group label="PHP" id="pdt" style-id="content-group">
+			<link
+				url="http://www.eclipse.org/pdt/help/html/creating_and_uploading_a_project.htm?cp=4_2_1_0"
+				label="Create Projects and Files" id="pdt-tutorial" style-id="content-link">
+				<text>Learn how to create PHP projects and files</text>
+			</link>
+			<link
+				url="http://www.eclipse.org/pdt/help/html/working_with_code_assist.htm?cp=4_2_1_1"
+				label="Work with Content Assist" id="pdt-tutorial" style-id="content-link">
+				<text>Learn how to use content assist in order to write code quickly, easily, and accurately</text>
+			</link>
+			<link
+				url="http://www.eclipse.org/pdt/help/html/working_with_the_debugger.htm?cp=4_2_1_2"
+				label="Work with the Debugger" id="pdt-tutorial" style-id="content-link">
+				<text>Learn how to debug files and applications both remotely and locally</text>
+			</link>
+		</group>
+	</extensionContent>
+</introContent>
