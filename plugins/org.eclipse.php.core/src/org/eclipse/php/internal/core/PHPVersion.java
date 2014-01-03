@@ -69,4 +69,12 @@ public enum PHPVersion {
 		return Aliases.map.values();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public static PHPVersion getLatestVersion() {
+		return PHP5_5;
+	}
+
 }
