@@ -21,9 +21,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 
@@ -340,6 +343,17 @@ public class PHPexeItem {
 		phpexes.setItemDefaultForPHPVersion(this, phpVersion);
 	}
 
+	public IStatus validateDebugger() {
+		AbstractDebuggerConfiguration[] debuggers = PHPDebuggersRegistry
+				.getDebuggersConfigurations();
+		for (AbstractDebuggerConfiguration debugger : debuggers) {
+			if (getDebuggerID().equals(debugger.getDebuggerId())) {
+				return debugger.validate(this);
+			}
+		}
+		return Status.OK_STATUS;
+	}
+
 	void addPHPVersionToDefaultList(PHPVersion phpVersion) {
 		defaultForPHPVersionList.add(phpVersion);
 	}
@@ -449,7 +463,7 @@ public class PHPexeItem {
 	 *            Command array
 	 * @throws IOException
 	 */
-	private static String exec(String... cmd) throws IOException {
+	public static String exec(String... cmd) throws IOException {
 		String[] envParams = null;
 		String env = PHPLaunchUtilities
 				.getLibrarySearchPathEnv(new File(cmd[0]).getParentFile());

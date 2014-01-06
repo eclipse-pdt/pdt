@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -333,7 +334,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 					IMessageProvider.ERROR);
 			return;
 		}
-		if (!executableLocation.getName().toLowerCase().contains("php")) { //$NON-NLS-1$
+		if (!executableLocation.getName().toLowerCase().contains("php") //$NON-NLS-1$
+				|| executableLocation.isDirectory()) {
 			setMessage(PHPDebugUIMessages.PHPExeCompositeFragment_13,
 					IMessageProvider.ERROR);
 			return;
@@ -398,13 +400,23 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		phpExeItem.setINILocation(iniFile);
 		phpExeItem.setSapiType(sapiType);
 
-		setMessage(getDescription(), IMessageProvider.NONE);
+		IStatus status = phpExeItem.validateDebugger();
+		if (status.getSeverity() != IStatus.OK) {
+			if (status.getSeverity() == IStatus.ERROR) {
+				setMessage(status.getMessage(), IMessageProvider.ERROR);
+				return;
+			} else {
+				setMessage(status.getMessage(), IMessageProvider.WARNING);
+			}
+		} else {
+			setMessage(getDescription(), IMessageProvider.NONE);
+		}
 		controlHandler.update();
 	}
 
 	protected void setMessage(String message, int type) {
 		controlHandler.setMessage(message, type);
-		setComplete(type == IMessageProvider.NONE);
+		setComplete(type != IMessageProvider.ERROR);
 		controlHandler.update();
 	}
 

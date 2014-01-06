@@ -14,10 +14,18 @@
  */
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
+import java.io.File;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
 import org.eclipse.php.internal.debug.core.launching.PHPWebPageLaunchDelegate;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -27,6 +35,8 @@ import org.eclipse.swt.widgets.Shell;
  * @since PDT 1.0
  */
 public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
+
+	private static final String EXTENSION_ID = "zend_debugger"; //$NON-NLS-1$
 
 	/**
 	 * Constructs a new ZendDebuggerConfiguration.
@@ -111,4 +121,24 @@ public class ZendDebuggerConfiguration extends AbstractDebuggerConfiguration {
 								.getDefaultBoolean(PHPDebugCorePreferenceNames.RUN_WITH_DEBUG_INFO));
 		save();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
+	 * #validate()
+	 */
+	public IStatus validate(PHPexeItem item) {
+		File executable = item.getExecutable();
+		PHPexes.changePermissions(executable);
+		if (!isInstalled(item, EXTENSION_ID)) {
+			return new Status(
+					IStatus.WARNING,
+					PHPDebugPlugin.ID,
+					PHPDebugCoreMessages.ZendDebuggerConfiguration_ZendDebuggerNotInstalledError);
+		}
+		return Status.OK_STATUS;
+	}
+
 }
