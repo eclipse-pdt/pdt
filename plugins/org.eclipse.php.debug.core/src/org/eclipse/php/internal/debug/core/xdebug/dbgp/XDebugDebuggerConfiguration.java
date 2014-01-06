@@ -11,9 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.XDebugExeLaunchConfigurationDelegate;
 import org.eclipse.php.internal.debug.core.launching.XDebugWebLaunchConfigurationDelegate;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.swt.widgets.Shell;
 
@@ -24,6 +33,9 @@ import org.eclipse.swt.widgets.Shell;
  * @since PDT 1.0
  */
 public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
+
+	private static final String REMOTE_ENABLE = "remote_enable"; //$NON-NLS-1$
+	private static final String EXTENSION_ID = "xdebug"; //$NON-NLS-1$
 
 	/**
 	 * Constructs a new XDebugDebuggerConfiguration.
@@ -94,4 +106,56 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		XDebugPreferenceMgr.applyDefaults(preferences);
 		save();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration
+	 * #validate()
+	 */
+	public IStatus validate(PHPexeItem item) {
+		File executable = item.getExecutable();
+		try {
+			PHPexes.changePermissions(executable);
+			if (isInstalled(item, EXTENSION_ID)) {
+				String output = null;
+				File iniFile = item.getINILocation();
+				if (iniFile != null) {
+					output = PHPexeItem.exec(executable.getAbsolutePath(),
+							"-c", iniFile.getAbsolutePath(), "--ri", //$NON-NLS-1$ //$NON-NLS-2$
+							EXTENSION_ID);
+				} else {
+					output = PHPexeItem.exec(executable.getAbsolutePath(),
+							"--ri", EXTENSION_ID); //$NON-NLS-1$
+				}
+				if (output != null) {
+					String[] properties = output.split("\n"); //$NON-NLS-1$
+					for (String property : properties) {
+						String[] columns = property.split("=>"); //$NON-NLS-1$
+						if (columns.length == 3
+								&& (EXTENSION_ID + '.' + REMOTE_ENABLE)
+										.equals(columns[0].trim())) {
+							String value = columns[1].trim();
+							if (!"on".equalsIgnoreCase(value)) { //$NON-NLS-1$
+								return new Status(
+										IStatus.WARNING,
+										PHPDebugPlugin.ID,
+										PHPDebugCoreMessages.XDebugDebuggerConfiguration_XDebugNotEnabledError);
+							}
+						}
+					}
+				}
+			} else {
+				return new Status(
+						IStatus.WARNING,
+						PHPDebugPlugin.ID,
+						PHPDebugCoreMessages.XDebugDebuggerConfiguration_XDebugNotInstalledError);
+			}
+		} catch (IOException e) {
+			PHPDebugPlugin.log(e);
+		}
+		return Status.OK_STATUS;
+	}
+
 }

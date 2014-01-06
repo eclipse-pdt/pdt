@@ -77,6 +77,8 @@ public class PHPDebugCoreMessages extends NLS {
 
 	public static String ServerDebugHandler_0;
 
+	public static String ZendDebuggerConfiguration_ZendDebuggerNotInstalledError;
+
 	public static String ZendDebuggerConfigurationDialog_client_host_ip;
 
 	public static String ZendDebuggerConfigurationDialog_debug_response_timeout;
@@ -167,6 +169,10 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_DBGpVariable_1;
 	public static String XDebug_IDBGpModelConstants_0;
 	public static String XDebug_IDBGpModelConstants_1;
+
+	public static String XDebugDebuggerConfiguration_XDebugNotEnabledError;
+
+	public static String XDebugDebuggerConfiguration_XDebugNotInstalledError;
 
 	static {
 		// load message values from bundle file

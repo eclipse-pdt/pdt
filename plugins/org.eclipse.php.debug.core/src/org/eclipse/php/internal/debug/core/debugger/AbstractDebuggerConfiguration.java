@@ -14,11 +14,15 @@
  */
 package org.eclipse.php.internal.debug.core.debugger;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 
 /**
  * An abstract implementation of the IDebuggerConfiguration.
@@ -160,4 +164,32 @@ public abstract class AbstractDebuggerConfiguration implements
 	 * Note that the changes affecting the PDT immediately.
 	 */
 	public abstract void applyDefaults();
+
+	/**
+	 * Validate debugger configuration for specified {@link PHPexeItem}
+	 * instance.
+	 * 
+	 * @return validation status
+	 */
+	public abstract IStatus validate(PHPexeItem item);
+
+	protected boolean isInstalled(PHPexeItem exeItem, String extensionId) {
+		try {
+			String output = null;
+			File iniFile = exeItem.getINILocation();
+			if (iniFile != null) {
+				output = PHPexeItem.exec(exeItem.getExecutable()
+						.getAbsolutePath(), "-c", iniFile //$NON-NLS-1$
+						.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
+			} else {
+				output = PHPexeItem.exec(exeItem.getExecutable()
+						.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
+			}
+			return output != null && !output.trim().startsWith("Exception"); //$NON-NLS-1$
+		} catch (IOException e) {
+			PHPDebugPlugin.log(e);
+		}
+		return false;
+	}
+
 }

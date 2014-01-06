@@ -97,7 +97,6 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 				CompositeFragment fragment = (CompositeFragment) item
 						.getControl();
 				setTitle(fragment.getTitle());
-				setDescription(fragment.getDescription());
 			}
 		});
 		return tabs;
