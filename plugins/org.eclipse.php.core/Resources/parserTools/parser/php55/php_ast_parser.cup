@@ -3331,12 +3331,12 @@ T_ISSET:s T_OPEN_PARENTHESE isset_variables:varList T_CLOSE_PARENTHESE:e
 			new Identifier(sleft, sright, parser.ast, "isset")), varList);
 :}
 
-| T_EMPTY:s T_OPEN_PARENTHESE variable:var T_CLOSE_PARENTHESE:e
+| T_EMPTY:s T_OPEN_PARENTHESE expr:expr T_CLOSE_PARENTHESE:e
 {:
-	LinkedList varList = new LinkedList();
-	varList.add(var);
+	LinkedList exprList = new LinkedList();
+	exprList.add(expr);
 	RESULT = new FunctionInvocation(sleft, eright, parser.ast,
-		new FunctionName(sleft, sright, parser.ast, new Identifier(sleft, sright, parser.ast, "empty")), varList);
+		new FunctionName(sleft, sright, parser.ast, new Identifier(sleft, sright, parser.ast, "empty")), exprList);
 :}
 
 | T_INCLUDE:include expr:expr

@@ -3813,12 +3813,12 @@ T_ISSET:start T_OPEN_PARENTHESE:openPar isset_variables:varList T_CLOSE_PARENTHE
 	RESULT = result;
 :}
 
-| T_EMPTY:start T_OPEN_PARENTHESE:openPar variable:var T_CLOSE_PARENTHESE:end
+| T_EMPTY:start T_OPEN_PARENTHESE:openPar expr:expr T_CLOSE_PARENTHESE:end
 {:
 	SimpleReference name = new SimpleReference(startleft, startright, "empty");
-	PHPCallArgumentsList varList = new PHPCallArgumentsList(openParright, endleft);
-	varList.addNode(var);
-	PHPCallExpression result = new PHPCallExpression(startleft, endright, null, name, varList);
+	PHPCallArgumentsList exprList = new PHPCallArgumentsList(openParright, endleft);
+	exprList.addNode(expr);
+	PHPCallExpression result = new PHPCallExpression(startleft, endright, null, name, exprList);
 	RESULT = result;
 :}
 
