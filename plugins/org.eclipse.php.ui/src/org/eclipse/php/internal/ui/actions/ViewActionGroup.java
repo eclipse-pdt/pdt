@@ -10,7 +10,6 @@
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.dltk.internal.ui.workingsets.IWorkingSetActionGroup;
-import org.eclipse.dltk.internal.ui.workingsets.WorkingSetFilterActionGroup;
 import org.eclipse.dltk.internal.ui.workingsets.WorkingSetMessages;
 import org.eclipse.dltk.internal.ui.workingsets.WorkingSetModel;
 import org.eclipse.jface.action.IMenuManager;
@@ -20,6 +19,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.php.internal.ui.workingset.PHPWorkingSetFilterActionGroup;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -41,7 +41,7 @@ public class ViewActionGroup extends
 	private IMenuManager fMenuManager;
 	private IWorkingSetActionGroup fActiveActionGroup;
 	private WorkingSetShowActionGroup fShowActionGroup;
-	private WorkingSetFilterActionGroup fFilterActionGroup;
+	private PHPWorkingSetFilterActionGroup fFilterActionGroup;
 
 	public ViewActionGroup(int mode, IPropertyChangeListener changeListener,
 			IWorkbenchPartSite site) {
@@ -53,7 +53,7 @@ public class ViewActionGroup extends
 				}
 			};
 		}
-		fFilterActionGroup = new WorkingSetFilterActionGroup(site,
+		fFilterActionGroup = new PHPWorkingSetFilterActionGroup(site,
 				fChangeListener);
 		fShowActionGroup = new WorkingSetShowActionGroup(site);
 		fMode = mode;
@@ -139,7 +139,7 @@ public class ViewActionGroup extends
 			fChangeListener.propertyChange(event);
 	}
 
-	public WorkingSetFilterActionGroup getFilterGroup() {
+	public PHPWorkingSetFilterActionGroup getFilterGroup() {
 		return fFilterActionGroup;
 	}
 
