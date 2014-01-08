@@ -327,16 +327,7 @@ public class PhpWorkingSetPage extends WizardPage implements IWorkingSetPage {
 				findCheckedElements(checkedResources, children[i]);
 			else if (fTree.getChecked(children[i])) {
 				checkedResources.add(children[i]);
-				addChildren(checkedResources, children[i]);
 			}
-		}
-	}
-
-	private void addChildren(List checkedResources, Object parent) {
-		Object[] children = fTreeContentProvider.getChildren(parent);
-		for (int i = 0; i < children.length; i++) {
-			checkedResources.add(children[i]);
-			addChildren(checkedResources, children[i]);
 		}
 	}
 
