@@ -12,7 +12,6 @@ package org.eclipse.php.internal.ui.workingset;
 
 import org.eclipse.dltk.internal.ui.workingsets.WorkingSetFilterActionGroup;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
@@ -26,35 +25,34 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class PHPWorkingSetFilterActionGroup extends WorkingSetFilterActionGroup {
 
-	private final PHPWorkingSetFilter fWorkingSetFilter;
+	private PHPWorkingSetFilter fWorkingSetFilter;
 
 	public PHPWorkingSetFilterActionGroup(IWorkbenchPartSite site,
 			IPropertyChangeListener changeListener) {
 		super(site, changeListener);
-		fWorkingSetFilter = new PHPWorkingSetFilter();
 	}
 
 	public PHPWorkingSetFilterActionGroup(Shell shell, IWorkbenchPage page,
 			IPropertyChangeListener changeListener) {
 		super(shell, page, changeListener);
-		fWorkingSetFilter = new PHPWorkingSetFilter();
 	}
 
 	@Override
 	public boolean isFiltered(Object parent, Object object) {
-		if (fWorkingSetFilter == null)
-			return false;
-		return !fWorkingSetFilter.select(null, parent, object);
+		return !getWorkingSetFilter().select(null, parent, object);
 	}
 
 	@Override
 	public void setWorkingSet(IWorkingSet workingSet, boolean refreshViewer) {
-		fWorkingSetFilter.setWorkingSet(workingSet);
+		getWorkingSetFilter().setWorkingSet(workingSet);
 		super.setWorkingSet(workingSet, refreshViewer);
 	}
 
 	@Override
-	public ViewerFilter getWorkingSetFilter() {
+	public PHPWorkingSetFilter getWorkingSetFilter() {
+		if (fWorkingSetFilter == null) {
+			fWorkingSetFilter = new PHPWorkingSetFilter();
+		}
 		return fWorkingSetFilter;
 	}
 
