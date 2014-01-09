@@ -36,6 +36,7 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	public static final String PORT = "port"; //$NON-NLS-1$
 	public static final String HOSTNAME = "hostname"; //$NON-NLS-1$
 	public static final String FILE_NAME = "file_name"; //$NON-NLS-1$
+	public static final String DEBUGGER = "debuggerId"; //$NON-NLS-1$
 
 	private static final int DEFAULT_HTTP_PORT = 80;
 
@@ -150,7 +151,8 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 	}
 
 	private int getFormattedPort(String port) {
-		int i = (port == null || port.length() == 0) ?  -1 : Integer.valueOf(port);
+		int i = (port == null || port.length() == 0) ? -1 : Integer
+				.valueOf(port);
 		if (i == DEFAULT_HTTP_PORT) {
 			i = -1;
 		}
@@ -231,6 +233,14 @@ public class Server implements IXMLPreferencesStorable, IAdaptable {
 		} catch (Throwable e) {
 			;
 		}
+	}
+
+	public void setDebuggerId(String debuggerId) {
+		setAttribute(Server.DEBUGGER, debuggerId);
+	}
+
+	public String getDebuggerId() {
+		return getAttribute(Server.DEBUGGER, null);
 	}
 
 	public int hashCode() {

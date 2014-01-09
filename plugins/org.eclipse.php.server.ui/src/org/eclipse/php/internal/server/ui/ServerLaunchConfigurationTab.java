@@ -191,7 +191,8 @@ public class ServerLaunchConfigurationTab extends
 		data.widthHint = 100;
 		label.setLayoutData(data);
 		label.setFont(parent.getFont());
-		label.setText(PHPServerUIMessages.getString("ServerLaunchConfigurationTab.0")); //$NON-NLS-1$
+		label.setText(PHPServerUIMessages
+				.getString("ServerLaunchConfigurationTab.0")); //$NON-NLS-1$
 
 		serverCombo = new Combo(phpServerComp, SWT.SINGLE | SWT.BORDER
 				| SWT.READ_ONLY);
@@ -651,8 +652,12 @@ public class ServerLaunchConfigurationTab extends
 		String debuggerID = null;
 		try {
 			debuggerID = configuration.getAttribute(
-					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID,
-					PHPDebugPlugin.getCurrentDebuggerId());
+					PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, (String) null);
+			if (debuggerID == null) {
+				String serverName = configuration.getAttribute(Server.NAME,
+						(String) null);
+				debuggerID = PHPDebugPlugin.getDebuggerId(serverName);
+			}
 			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry
 					.getDebuggerConfiguration(debuggerID);
 			configuration.setAttribute(

@@ -38,6 +38,7 @@ import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
+import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
@@ -158,14 +159,37 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	/**
-	 * Returns the debugger id that is currently in use.
+	 * Return default debugger id.
 	 * 
-	 * @return The debugger id that is in use.
-	 * @since PDT 1.0
+	 * @return default debugger id
 	 */
 	public static String getCurrentDebuggerId() {
+		// For backward compatibility try to get default debugger from
+		// preferences
 		Preferences prefs = getDefault().getPluginPreferences();
-		return prefs.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
+		String id = prefs
+				.getString(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
+		if (id == null || id.isEmpty()) {
+			return DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
+		}
+		return id;
+	}
+
+	/**
+	 * Return id of debugger associated with specified server.
+	 * 
+	 * @param serverName
+	 * @return debugger id
+	 */
+	public static String getDebuggerId(String serverName) {
+		if (serverName != null) {
+			Server server = ServersManager.getServer(serverName);
+			String serverDebuggerId = server.getDebuggerId();
+			if (serverDebuggerId != null) {
+				return serverDebuggerId;
+			}
+		}
+		return PHPDebugPlugin.getCurrentDebuggerId();
 	}
 
 	/**
@@ -409,9 +433,6 @@ public class PHPDebugPlugin extends Plugin {
 		return getCurrentDebuggerId();
 	}
 
-	// public static PHPexeItem getPHPexeItem(IProject project) {
-	//
-	// }
 	public static PHPexeItem getPHPexeItem(IProject project) {
 		if (project != null) {
 
@@ -420,12 +441,10 @@ public class PHPDebugPlugin extends Plugin {
 			if (node != null) {
 				// Replace the workspace defaults with the project-specific
 				// settings.
-				String phpDebuggerId = node.get(
-						PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, null);
 				String phpExe = node.get(
 						PHPDebugCorePreferenceNames.DEFAULT_PHP, null);
-				if (phpDebuggerId != null && phpExe != null) {
-					return PHPexes.getInstance().getItem(phpDebuggerId, phpExe);
+				if (phpExe != null) {
+					return PHPexes.getInstance().getItem(phpExe);
 				}
 			}
 			PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
@@ -447,8 +466,15 @@ public class PHPDebugPlugin extends Plugin {
 	}
 
 	public static PHPexeItem getWorkspaceDefaultExe() {
-		String phpDebuggerId = PHPDebugPlugin.getCurrentDebuggerId();
-		return PHPexes.getInstance().getDefaultItem(phpDebuggerId);
+		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		if (prefs != null) {
+			String exeName = prefs
+					.getString(PHPDebugCorePreferenceNames.DEFAULT_PHP);
+			if (exeName != null) {
+				return PHPexes.getInstance().getItem(exeName);
+			}
+		}
+		return PHPexes.getInstance().getDefaultItem(getCurrentDebuggerId());
 	}
 
 	// Creates a preferences scope for the given project.
