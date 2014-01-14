@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2014 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -425,10 +424,13 @@ public class CodeFormatterConfigurationBlock extends
 		if (profiles == null)
 			profiles = new ArrayList<Profile>();
 
+		PreferencesAccess access = PreferencesAccess
+				.getWorkingCopyPreferences(fManager);
+
 		if (project != null) {
-			fCurrContext = new ProjectScope(project);
+			fCurrContext = access.getProjectScope(project);
 		} else {
-			fCurrContext = fInstanceScope;
+			fCurrContext = access.getInstanceScope();
 		}
 
 		fProfileManager = new ProfileManager(profiles, fCurrContext);
