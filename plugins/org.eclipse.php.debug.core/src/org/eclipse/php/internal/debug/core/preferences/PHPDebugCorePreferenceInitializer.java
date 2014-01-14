@@ -59,6 +59,7 @@ public class PHPDebugCorePreferenceInitializer extends
 
 		try {
 			StringBuilder b = new StringBuilder();
+			b.append("127.0.0.1"); //$NON-NLS-1$
 			Enumeration<NetworkInterface> ii = NetworkInterface
 					.getNetworkInterfaces();
 			while (ii.hasMoreElements()) {
@@ -70,11 +71,10 @@ public class PHPDebugCorePreferenceInitializer extends
 				while (aa.hasMoreElements()) {
 					InetAddress a = aa.nextElement();
 					if (a instanceof Inet4Address && !a.isLoopbackAddress()) {
-						b.append(a.getHostAddress()).append(","); //$NON-NLS-1$
+						b.append(",").append(a.getHostAddress()); //$NON-NLS-1$
 					}
 				}
 			}
-			b.append("127.0.0.1"); //$NON-NLS-1$
 			node.put(PHPDebugCorePreferenceNames.CLIENT_IP, b.toString());
 		} catch (Exception e) {
 		}
