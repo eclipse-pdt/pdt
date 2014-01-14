@@ -42,7 +42,7 @@ echo data()['name'];
 			</FunctionBody>
 		</FunctionDeclaration>
 		<EchoStatement start='83' length='20'>
-			<FunctionInvocation start='88' length='6'>
+			<FunctionInvocation start='88' length='14'>
 				<FunctionName start='88' length='4'>
 					<NamespaceName start='88' length='4' global='false' current='false'>
 						<Identifier start='88' length='4' name='data'/>

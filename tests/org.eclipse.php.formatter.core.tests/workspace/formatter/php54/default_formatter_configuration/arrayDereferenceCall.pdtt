@@ -1,0 +1,13 @@
+--TEST--
+Test array dereference call, bug: 425620
+	
+--FILE--
+<?php 
+data()  [  'name'   ];
+return     data()[1];
+?>
+--EXPECT--
+<?php
+data ()['name'];
+return data ()[1];
+?>

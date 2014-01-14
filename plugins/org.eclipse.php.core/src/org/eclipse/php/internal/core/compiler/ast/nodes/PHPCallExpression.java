@@ -28,9 +28,22 @@ public class PHPCallExpression extends CallExpression implements Dereferencable 
 		super(start, end, receiver, name, args);
 	}
 
+	public PHPCallExpression(int start, int end, ASTNode receiver, String name,
+			CallArgumentsList args, PHPArrayDereferenceList arrayDereferenceList) {
+		super(start, end, receiver, name, args);
+		setArrayDereferenceList(arrayDereferenceList);
+	}
+
 	public PHPCallExpression(int start, int end, ASTNode receiver,
 			SimpleReference name, CallArgumentsList args) {
 		super(start, end, receiver, name, args);
+	}
+
+	public PHPCallExpression(int start, int end, ASTNode receiver,
+			SimpleReference name, CallArgumentsList args,
+			PHPArrayDereferenceList arrayDereferenceList) {
+		super(start, end, receiver, name, args);
+		setArrayDereferenceList(arrayDereferenceList);
 	}
 
 	public PHPCallExpression(ASTNode receiver, String name,

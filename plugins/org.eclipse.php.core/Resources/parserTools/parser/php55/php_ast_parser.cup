@@ -331,7 +331,7 @@ non terminal ClassInstanceCreation new_expr;
 
 non terminal ParameterAndDereferenceList method;
 non terminal ParameterAndDereferenceList array_method_dereference;
-non terminal VariableBase array_function_dereference;
+non terminal PHPArrayDereferenceList optional_dereference;
 
 //php5.5
 non terminal FinallyClause finally_clause;
@@ -2354,60 +2354,60 @@ lexical_var_list:list T_COMMA T_VARIABLE:var
 ;
 
 function_call ::=
-namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
-	RESULT = new FunctionInvocation(listleft, eright, parser.ast,
+	RESULT = new FunctionInvocation(listleft, dereference == null ? eright : dereferenceright, parser.ast,
 		new FunctionName(listleft, listright, parser.ast,
-			new NamespaceName(listleft, listright, parser.ast, list, false, false)), parameters);
+			new NamespaceName(listleft, listright, parser.ast, list, false, false)), parameters, dereference);
 :}
 
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
-	RESULT = new FunctionInvocation(sleft, eright, parser.ast,
+	RESULT = new FunctionInvocation(sleft, dereference == null ? eright : dereferenceright, parser.ast,
 		new FunctionName(sleft, listright, parser.ast,
 			new NamespaceName(sleft, listright, parser.ast, list, false, true)), parameters);
 :}
 
-| T_NS_SEPARATOR:s namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| T_NS_SEPARATOR:s namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
-	RESULT = new FunctionInvocation(sleft, eright, parser.ast,
+	RESULT = new FunctionInvocation(sleft, dereference == null ? eright : dereferenceright, parser.ast,
 		new FunctionName(sleft, listright, parser.ast,
 			new NamespaceName(sleft, listright, parser.ast, list, true, false)), parameters);
 :}
 
-| class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
-	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-		new FunctionInvocation(fnleft, eright, parser.ast,
+	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? eright : dereferenceright, parser.ast, className,
+		new FunctionInvocation(fnleft, dereference == null ? eright : dereferenceright, parser.ast,
 			new FunctionName(fnleft, fnright, parser.ast,
 				fn), parameters));
 :}
 
-| class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
-	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-		new FunctionInvocation(reflectionNameleft, eright, parser.ast,
+	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? eright : dereferenceright, parser.ast, className,
+		new FunctionInvocation(reflectionNameleft, dereference == null ? eright : dereferenceright, parser.ast,
 			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
 :}
 
-| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_name:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
-	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
-		new FunctionInvocation(fnleft, eright, parser.ast,
+	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? eright : dereferenceright, parser.ast, className,
+		new FunctionInvocation(fnleft, dereference == null ? eright : dereferenceright, parser.ast,
 			new FunctionName(fnleft, fnright, parser.ast,
 				fn), parameters));
 :}
 
-| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
-	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className,
+	RESULT = new StaticMethodInvocation(classNameleft, dereference == null ? eright : dereferenceright, parser.ast, className,
 		new FunctionInvocation(reflectionNameleft, eright, parser.ast,
 			new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters));
 :}
 
-| variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e optional_dereference:dereference
 {:
-	RESULT = new FunctionInvocation(reflectionNameleft, eright, parser.ast,
+	RESULT = new FunctionInvocation(reflectionNameleft, dereference == null ? eright : dereferenceright, parser.ast,
 		new FunctionName(reflectionNameleft, reflectionNameright, parser.ast, reflectionName), parameters);
 :}
 ;
@@ -2939,6 +2939,18 @@ array_method_dereference:dereference
 :}
 ;
 
+optional_dereference ::=
+chaining_dereference:dereference
+{:
+    RESULT = dereference;
+:}
+
+| /* empty */
+{:
+    RESULT = null;
+:}
+;
+
 variable_without_objects ::=
 reference_variable:var
 {:
@@ -2976,42 +2988,6 @@ reference_variable:var
 :}
 ;
 
-array_function_dereference ::=
-array_function_dereference:method T_OPEN_RECT:start dim_offset:index T_CLOSE_RECT:end
-{:
-	FunctionInvocation fi = null;
-	if(method instanceof FunctionInvocation){
-		fi = (FunctionInvocation)method;
-	}else if(method instanceof StaticMethodInvocation){
-		fi = ((StaticMethodInvocation)method).getMethod();
-
-	}
-	if(fi != null){
-		DereferenceNode var = new DereferenceNode(startleft, endright, parser.ast, index);
-		fi.getArrayDereferenceList().getDereferences().add(var);
-	}
-	RESULT = method;
-:}
-
-|function_call:method T_OPEN_RECT:start dim_offset:index T_CLOSE_RECT:end
-{:
-	FunctionInvocation fi = null;
-	if(method instanceof FunctionInvocation){
-		fi = (FunctionInvocation)method;
-	}else if(method instanceof StaticMethodInvocation){
-		fi = ((StaticMethodInvocation)method).getMethod();
-
-	}
-	if(fi != null){
-		PHPArrayDereferenceList arrayDereferenceList = new PHPArrayDereferenceList(parser.ast);
-		DereferenceNode var = new DereferenceNode(startleft, endright, parser.ast, index);
-		arrayDereferenceList.getDereferences().add(var);
-		fi.setArrayDereferenceList(arrayDereferenceList);
-	}
-	RESULT = method;
-:}
-;
-
 base_variable_with_function_calls ::=
 base_variable:var
 {: RESULT = var; :}
@@ -3019,8 +2995,6 @@ base_variable:var
 | function_call:var
 {: RESULT = var; :}
 
-| array_function_dereference:var
-{: RESULT = var; :}
 | array_creation_dereference:var
 {: RESULT = var; :}
 ;

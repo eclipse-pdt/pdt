@@ -28,7 +28,7 @@ echo data()['name'];
 		</ReturnStatement>
 	</PHPMethodDeclaration>
 	<EchoStatement start="83" end="103">
-		<PHPCallExpression start="88" end="94">
+		<PHPCallExpression start="88" end="102">
 			<FullyQualifiedReference start="88" end="92" name="data">
 			</FullyQualifiedReference>
 			<PHPCallArgumentsList start="93" end="93">

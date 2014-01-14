@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -39,9 +39,16 @@ public class StaticMethodInvocation extends PHPCallExpression {
 
 	public StaticMethodInvocation(int start, int end, ASTNode receiver,
 			Expression functionName, SimpleReference name,
-			CallArgumentsList args) {
+			CallArgumentsList args, PHPArrayDereferenceList arrayDereferenceList) {
 		super(start, end, receiver, name, args);
 		this.functionName = functionName;
+		setArrayDereferenceList(arrayDereferenceList);
+	}
+
+	public StaticMethodInvocation(int start, int end, ASTNode receiver,
+			Expression functionName, SimpleReference name,
+			CallArgumentsList args) {
+		this(start, end, receiver, functionName, name, args, null);
 	}
 
 	public StaticMethodInvocation(int start, int end, ASTNode receiver,
@@ -50,8 +57,20 @@ public class StaticMethodInvocation extends PHPCallExpression {
 	}
 
 	public StaticMethodInvocation(int start, int end, ASTNode receiver,
+			SimpleReference name, CallArgumentsList args,
+			PHPArrayDereferenceList arrayDereferenceList) {
+		super(start, end, receiver, name, args, arrayDereferenceList);
+	}
+
+	public StaticMethodInvocation(int start, int end, ASTNode receiver,
 			String name, CallArgumentsList args) {
 		super(start, end, receiver, name, args);
+	}
+
+	public StaticMethodInvocation(int start, int end, ASTNode receiver,
+			String name, CallArgumentsList args,
+			PHPArrayDereferenceList arrayDereferenceList) {
+		super(start, end, receiver, name, args, arrayDereferenceList);
 	}
 
 	public void traverse(ASTVisitor pVisitor) throws Exception {
