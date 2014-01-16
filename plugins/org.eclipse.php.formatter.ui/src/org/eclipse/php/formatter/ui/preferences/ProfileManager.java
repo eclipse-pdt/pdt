@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Zend Techologies Ltd.
+ * Copyright (c) 2013, 2014 Zend Techologies Ltd.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,12 +27,10 @@ import org.eclipse.php.core.format.IProfileManager;
 import org.eclipse.php.formatter.core.CodeFormatterPreferences;
 import org.eclipse.php.formatter.core.FormatterCorePlugin;
 import org.eclipse.php.formatter.core.ICodeFormatterPreferencesInitializer;
-import org.eclipse.php.formatter.core.Logger;
 import org.eclipse.php.formatter.ui.FormatterMessages;
 import org.eclipse.php.formatter.ui.FormatterUIPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.Messages;
-import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * The model for the set of profiles which are available in the workbench.
@@ -492,11 +490,6 @@ public class ProfileManager extends Observable implements IProfileManager {
 		} else if (context.getName() == ProjectScope.SCOPE
 				&& !profile.isSharedProfile()) {
 			prefs.put(PROFILE_KEY, profile.getID());
-		}
-		try {
-			prefs.flush();
-		} catch (BackingStoreException e) {
-			Logger.logException(e);
 		}
 	}
 
