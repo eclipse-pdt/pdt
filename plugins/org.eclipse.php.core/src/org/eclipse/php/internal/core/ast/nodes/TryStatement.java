@@ -290,8 +290,10 @@ public class TryStatement extends Statement {
 	ASTNode clone0(AST target) {
 		Block body = ASTNode.copySubtree(target, getBody());
 		final List catchs = ASTNode.copySubtrees(target, this.catchClauses);
+		final FinallyClause finallyClause = ASTNode.copySubtree(target,
+				this.finallyClause);
 		final TryStatement result = new TryStatement(this.getStart(),
-				this.getEnd(), target, body, catchs);
+				this.getEnd(), target, body, catchs, finallyClause);
 		return result;
 	}
 
@@ -311,6 +313,13 @@ public class TryStatement extends Statement {
 				return getBody();
 			} else {
 				setBody((Block) child);
+				return null;
+			}
+		} else if (property == FINALLY_CLAUSE_PROPERTY) {
+			if (get) {
+				return finallyClause();
+			} else {
+				setFinallyClause((FinallyClause) child);
 				return null;
 			}
 		}
