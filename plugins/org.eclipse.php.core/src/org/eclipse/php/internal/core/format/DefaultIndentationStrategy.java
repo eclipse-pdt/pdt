@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -298,10 +298,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		PHPHeuristicScanner scanner = PHPHeuristicScanner
 				.createHeuristicScanner(document, lineStart, true);
 		if (inBracelessBlock(scanner, document, lineStart)) {
-			if (scanner.previousToken(forOffset - 1,
-					PHPHeuristicScanner.UNBOUND) == PHPHeuristicScanner.TokenLPAREN)
-				return true;
-			return false;
+			return true;
 		}
 		// need to get to the first tRegion - so that we wont get the state of
 		// the
