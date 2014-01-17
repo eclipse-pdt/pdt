@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -1091,12 +1091,6 @@ public final class PHPHeuristicScanner implements Symbols {
 	public boolean isBracelessBlockStart(int position, int bound) {
 		if (position < 1)
 			return false;
-		switch (nextToken(position, PHPHeuristicScanner.UNBOUND)) {
-		case TokenIF:
-		case TokenFOR:
-		case TokenWHILE:
-			return false;
-		}
 
 		switch (previousToken(position, bound)) {
 		case TokenDO:
