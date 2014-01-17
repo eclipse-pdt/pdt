@@ -797,14 +797,14 @@ public class NewPHPsComboBlock {
 				debugger = PHPDebugUIMessages.NewPHPsComboBlock_7;
 			}
 			name = item.getName()
-					+ " (" + debugger + " " + item.getVersion() + " " + item.getSapiType() + " " + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+					+ " (" + debugger + " " + item.getVersion() + " " + item.getSapiType() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
 		if (isDefault) {
 			String defaultPrefix = PHPDebugUIMessages.NewPHPsComboBlock_13;
 			if (project != null) {
 				defaultPrefix = PHPDebugUIMessages.NewPHPsComboBlock_14;
 			}
-			return defaultPrefix + PHPDebugUIMessages.NewPHPsComboBlock_15 + name;
+			return defaultPrefix + PHPDebugUIMessages.NewPHPsComboBlock_15 + " " + name; //$NON-NLS-1$
 		}
 		return name;
 	}
