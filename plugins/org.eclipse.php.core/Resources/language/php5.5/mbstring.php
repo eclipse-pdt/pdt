@@ -218,10 +218,13 @@ function mb_preferred_mime_name ($encoding) {}
  * The string being checked for length.
  * </p>
  * @param encoding string[optional] &mbstring.encoding.parameter;
- * @return int the number of characters in
+ * @return mixed the number of characters in
  * string str having character encoding
  * encoding. A multi-byte character is
  * counted as 1.
+ * </p>
+ * <p>
+ * Returns false if the given encoding is invalid.
  */
 function mb_strlen ($str, $encoding = null) {}
 
@@ -816,15 +819,55 @@ function mb_decode_numericentity ($str, array $convmap, $encoding = null) {}
  * The message of the mail.
  * </p>
  * @param additional_headers string[optional] <p>
- * additional_headers is inserted at
- * the end of the header. This is typically used to add extra
- * headers. Multiple extra headers are separated with a
- * newline ("\n").
+ * String to be inserted at the end of the email header.
+ * </p>
+ * <p>
+ * This is typically used to add extra headers (From, Cc, and Bcc).
+ * Multiple extra headers should be separated with a CRLF (\r\n).
+ * Validate parameter not to be injected unwanted headers by attackers.
+ * </p>
+ * <p>
+ * When sending mail, the mail must contain
+ * a From header. This can be set with the 
+ * additional_headers parameter, or a default
+ * can be set in &php.ini;.
+ * </p>
+ * <p>
+ * Failing to do this will result in an error
+ * message similar to Warning: mail(): "sendmail_from" not
+ * set in php.ini or custom "From:" header missing.
+ * The From header sets also
+ * Return-Path under Windows.
+ * </p>
+ * <p>
+ * If messages are not received, try using a LF (\n) only.
+ * Some Unix mail transfer agents (most notably
+ * qmail) replace LF by CRLF
+ * automatically (which leads to doubling CR if CRLF is used).
+ * This should be a last resort, as it does not comply with
+ * RFC 2822.
  * </p>
  * @param additional_parameter string[optional] <p>
  * additional_parameter is a MTA command line
  * parameter. It is useful when setting the correct Return-Path
  * header when using sendmail.
+ * </p>
+ * <p>
+ * This parameter is escaped by escapeshellcmd internally
+ * to prevent command execution. escapeshellcmd prevents
+ * command execution, but allows to add addtional parameters. For security reason,
+ * this parameter should be validated.
+ * </p>
+ * <p>
+ * Since escapeshellcmd is applied automatically, some characters
+ * that are allowed as email addresses by internet RFCs cannot be used. Programs
+ * that are required to use these characters mail cannot be used.
+ * </p>
+ * <p>
+ * The user that the webserver runs as should be added as a trusted user to the
+ * sendmail configuration to prevent a 'X-Warning' header from being added
+ * to the message when the envelope sender (-f) is set using this method.
+ * For sendmail users, this file is /etc/mail/trusted-users.
  * </p>
  * @return bool Returns true on success or false on failure.
  */

@@ -167,6 +167,11 @@ class SimpleXMLElement implements Traversable {
 	 */
 	public function addAttribute ($name, $value = null, $namespace = null) {}
 
+	/**
+	 * Returns the string content
+	 * @link http://www.php.net/manual/en/simplexmlelement.tostring.php
+	 * @return string the string content on success or an empty string on failure.
+	 */
 	public function __toString () {}
 
 	/**
@@ -393,6 +398,11 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	 */
 	public function addAttribute ($name, $value = null, $namespace = null) {}
 
+	/**
+	 * Returns the string content
+	 * @link http://www.php.net/manual/en/simplexmlelement.tostring.php
+	 * @return string the string content on success or an empty string on failure.
+	 */
 	public function __toString () {}
 
 	/**
