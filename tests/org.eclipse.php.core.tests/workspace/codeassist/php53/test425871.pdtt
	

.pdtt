@@ -1,0 +1,12 @@
+--TEST--
+CA in braceless if 
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowStrictOptions=false
+--FILE--
+<?
+if(is_nu|)
+    $nTest = 'test';
+--EXPECT--
+method(is_null)
+method(is_numeric)
+?>

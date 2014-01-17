@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -112,7 +112,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return currLineIndex;
 
 			currLineIndex = getNextLineIndex(document, checkMultiLine,
-					currLineIndex);
+					currLineIndex, offset);
 		}
 		return 0;
 	}
@@ -157,11 +157,12 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return document.getLineOfOffset(scanner.getPosition());
 			}
 		}
+
 		return currLineIndex;
 	}
 
 	private static int getNextLineIndex(IStructuredDocument document,
-			boolean checkMultiLine, int currLineIndex)
+			boolean checkMultiLine, int currLineIndex, int offset)
 			throws BadLocationException {
 
 		final IRegion lineInfo = document.getLineInformation(currLineIndex);
@@ -173,6 +174,11 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		String forLineEndState = FormatterUtils.getPartitionType(document,
 				currLineEndOffset);
 
+		int insideBraceless = getMultilineInsideBraceless(document,
+				Math.min(currLineEndOffset, offset));
+		if (insideBraceless >= 0) {
+			return document.getLineOfOffset(insideBraceless);
+		}
 		if (isMultilineType(checkedLineBeginState)
 				&& (checkMultiLine || shouldNotConsiderAsIndentationBase(
 						checkedLineBeginState, forLineEndState))) {
@@ -182,6 +188,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				return index;
 			}
 		}
+
 		if (checkMultiLine) {
 			int result = adjustLine(document, currLineIndex, currLineEndOffset);
 			if (result == currLineIndex && result != 0) {
@@ -189,6 +196,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			}
 			return result;
 		}
+
 		return currLineIndex - 1;
 	}
 
@@ -296,18 +304,17 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			return false;
 
 		PHPHeuristicScanner scanner = PHPHeuristicScanner
-				.createHeuristicScanner(document, lineStart, true);
-		if (inBracelessBlock(scanner, document, lineStart)) {
-			if (scanner.previousToken(forOffset - 1,
-					PHPHeuristicScanner.UNBOUND) == PHPHeuristicScanner.TokenLPAREN)
-				return true;
-			return false;
+				.createHeuristicScanner(document, checkedOffset, true);
+		if (inBracelessBlock(scanner, document, checkedOffset)) {
+			return true;
 		}
+
+		while (Character.isWhitespace(document.getChar(lineStart)))
+			lineStart++;
+
 		// need to get to the first tRegion - so that we wont get the state of
 		// the
 		// tRegion in the previos line
-		while (Character.isWhitespace(document.getChar(lineStart)))
-			lineStart++;
 
 		// checked line beginning offset (after incrementing spaces in beginning
 		final String checkedLineBeginState = FormatterUtils.getPartitionType(
@@ -320,12 +327,24 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 		// the current potential line for formatting begin offset
 		final String forLineEndState = FormatterUtils.getPartitionType(
 				document, forOffset);
+		if (isMultilineAfterBraceless(document, checkedOffset)) {
+			// braceless block end go up
+			return false;
+		}
 		if (!lineContainIncompleteBlock(document, checkedOffset, lineStart,
 				currLineIndex)
 				&& (shouldNotConsiderAsIndentationBase(checkedLineBeginState,
-						forLineEndState) || (checkMultiLine && isInMultiLineStatement(
-						document, checkedLineBeginState, checkedLineEndState,
-						checkedOffset, lineStart, currLineIndex))))
+						forLineEndState))) {
+			return false;
+		}
+		if (!lineContainIncompleteBlock(document, checkedOffset, lineStart,
+				currLineIndex)
+				&& (shouldNotConsiderAsIndentationBase(checkedLineBeginState,
+						forLineEndState) || (checkMultiLine
+						&& isInMultiLineStatement(document,
+								checkedLineBeginState, checkedLineEndState,
+								checkedOffset, lineStart, currLineIndex) && !isMultilineContentInsideBraceless(
+							document, checkedOffset))))
 			return false;
 
 		// Fix bug #201688
@@ -376,6 +395,94 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				|| forLineEndState == checkedLineBeginState;
 	}
 
+	private static boolean isMultilineContentInsideBraceless(
+			IStructuredDocument document, int checkedOffset) {
+		try {
+			PHPHeuristicScanner scanner = PHPHeuristicScanner
+					.createHeuristicScanner(document, checkedOffset - 1, true);
+			int start = scanner.previousToken(checkedOffset - 1,
+					PHPHeuristicScanner.UNBOUND);
+			if (start == PHPHeuristicScanner.TokenLBRACE) {
+				if (scanner.isBracelessBlockStart(scanner.getPosition() - 1,
+						PHPHeuristicScanner.UNBOUND)) {
+					return true;
+				}
+			}
+		} catch (BadLocationException e) {
+		}
+		return false;
+	}
+
+	private static boolean isMultilineAfterBraceless(
+			IStructuredDocument document, int checkedOffset) {
+		return getMultilineInsideBraceless(document, checkedOffset) >= 0;
+	}
+
+	private static int getMultilineInsideBraceless(
+			IStructuredDocument document, int checkedOffset) {
+		try {
+			PHPHeuristicScanner scanner = PHPHeuristicScanner
+					.createHeuristicScanner(document, checkedOffset - 1, true);
+			int start = scanner.previousToken(checkedOffset - 1,
+					PHPHeuristicScanner.UNBOUND);
+			if (!(start == PHPHeuristicScanner.TokenRBRACE))
+				return -1;
+
+			int openingPeer = scanner.findOpeningPeer(scanner.getPosition(),
+					PHPHeuristicScanner.UNBOUND, PHPHeuristicScanner.LBRACE,
+					PHPHeuristicScanner.RBRACE);
+			if (openingPeer == PHPHeuristicScanner.NOT_FOUND) {
+				return -1;
+			}
+			int prev = scanner.previousToken(openingPeer - 1,
+					PHPHeuristicScanner.UNBOUND);
+			if (prev == PHPHeuristicScanner.TokenRPAREN) {
+				int openParent = scanner.findOpeningPeer(scanner.getPosition(),
+						PHPHeuristicScanner.UNBOUND,
+						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+				if (openParent == PHPHeuristicScanner.NOT_FOUND) {
+					return -1;
+				}
+				prev = scanner.previousToken(openParent - 1,
+						PHPHeuristicScanner.UNBOUND);
+			}
+			if (!inBracelessBlock(scanner, document, scanner.getPosition() - 1)) {
+				return -1;
+			}
+
+			// move to first from braceless
+			prev = scanner.previousToken(scanner.getPosition() - 1,
+					PHPHeuristicScanner.UNBOUND);
+
+			// we inside braceless block. Now we have to move before it
+			if (prev == PHPHeuristicScanner.TokenRPAREN) {
+				// if, for, while or similar
+				int openParent = scanner.findOpeningPeer(scanner.getPosition(),
+						PHPHeuristicScanner.UNBOUND,
+						PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
+				if (openParent == PHPHeuristicScanner.NOT_FOUND) {
+					return -1;
+				}
+			}
+			prev = scanner.previousToken(scanner.getPosition() - 1,
+					PHPHeuristicScanner.UNBOUND);
+			int result = scanner.getPosition();
+			if (prev == PHPHeuristicScanner.TokenIF) {
+				prev = scanner
+						.previousToken(start, PHPHeuristicScanner.UNBOUND);
+				if (prev == PHPHeuristicScanner.TokenELSE) {
+					result = scanner.getPosition();
+				}
+			}
+
+			return result;
+
+		} catch (BadLocationException e) {
+		}
+
+		return -1;
+	}
+
 	private static boolean isInMultiLineStatement(IStructuredDocument document,
 			String checkedLineBeginState, String checkedLineEndState,
 			int checkedOffset, int lineStart, int currLineIndex)
@@ -388,40 +495,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			IStructuredDocument document, int lineStart, int currLineIndex,
 			int checkedOffset) throws BadLocationException {
 
-		// TODO moveLineStartToNonBlankChar or moveLineEndToNonBlankChar
 		lineStart = moveLineStartToNonBlankChar(document, lineStart,
 				currLineIndex);
-		// char lineStartChar = document.getChar(lineStart - 1);
-		// if (lineStartChar == PHPHeuristicScanner.RBRACE
-		// // || lineStartChar == PHPHeuristicScanner.RBRACKET
-		// || lineStartChar == PHPHeuristicScanner.RPAREN) {
-		//
-		// PHPHeuristicScanner scanner = PHPHeuristicScanner
-		// .createHeuristicScanner(document, lineStart, true);
-		// if (lineStartChar == PHPHeuristicScanner.RBRACE) {
-		// int peer = scanner.findOpeningPeer(checkedOffset,
-		// PHPHeuristicScanner.UNBOUND,
-		// PHPHeuristicScanner.LBRACE, PHPHeuristicScanner.RBRACE);
-		// if (peer != PHPHeuristicScanner.NOT_FOUND) {
-		// lineStart = peer;
-		// }
-		// } else if (lineStartChar == PHPHeuristicScanner.RBRACKET) {
-		// int peer = scanner.findOpeningPeer(checkedOffset,
-		// PHPHeuristicScanner.UNBOUND,
-		// PHPHeuristicScanner.LBRACKET,
-		// PHPHeuristicScanner.RBRACKET);
-		// if (peer != PHPHeuristicScanner.NOT_FOUND) {
-		// lineStart = peer;
-		// }
-		// } else {
-		// int peer = scanner.findOpeningPeer(checkedOffset,
-		// PHPHeuristicScanner.UNBOUND,
-		// PHPHeuristicScanner.LPAREN, PHPHeuristicScanner.RPAREN);
-		// if (peer != PHPHeuristicScanner.NOT_FOUND) {
-		// lineStart = peer;
-		// }
-		// }
-		// }
 
 		TextSequence textSequence = PHPTextSequenceUtilities
 				.getStatement(lineStart,
@@ -769,6 +844,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 								.getOffset() + indentationBaseLine.getLength();
 						offset = baseLineEndOffset;
 						line = indentationBaseLineIndex;
+						// check if after braceless
+
 						if (shouldIndent(document, offset, line)) {
 							indent(document, result, indentationChar,
 									indentationSize);
@@ -1037,24 +1114,14 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 
 	private static boolean inBracelessBlock(PHPHeuristicScanner scanner,
 			IStructuredDocument document, int offset) {
-		boolean isBracelessBlock = scanner.isBracelessBlockStart(offset - 1,
-				PHPHeuristicScanner.UNBOUND);
-		if (isBracelessBlock) {
-			try {
-				IRegion region = document.getLineInformationOfOffset(offset);
-				String trimedLine = document.get(offset,
-						region.getOffset() + region.getLength() - offset)
-						.trim();
-				if (!(trimedLine.startsWith(BLANK + PHPHeuristicScanner.LBRACE)))
-				// && trimedLine.contains(Character
-				// .toString(PHPHeuristicScanner.LBRACE)))
-				{
-					return true;
-				}
-			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		try {
+			if (scanner.isBracelessBlockStart(offset - 1,
+					PHPHeuristicScanner.UNBOUND)
+					&& scanner.nextToken(offset, PHPHeuristicScanner.UNBOUND) != PHPHeuristicScanner.TokenLBRACE) {
+				return true;
 			}
+
+		} catch (Throwable e) {
 		}
 		return false;
 	}
@@ -1196,6 +1263,7 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 					}
 				}
 			}
+
 		} catch (final BadLocationException e) {
 		}
 		return false;
