@@ -166,7 +166,7 @@ abstract public class AbstractASTParser extends lr_parser {
 			statements.addAll((List) value);
 		}
 
-		while (!declarations.isEmpty()) {
+		if (!declarations.isEmpty()) {
 			statements.add(declarations.remove(0));
 		}
 		if (!statements.isEmpty()) {
