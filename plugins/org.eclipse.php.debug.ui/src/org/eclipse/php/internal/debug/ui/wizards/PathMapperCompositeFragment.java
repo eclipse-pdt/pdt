@@ -86,7 +86,7 @@ public class PathMapperCompositeFragment extends CompositeFragment {
 		}
 	}
 
-	protected void validate() {
+	public void validate() {
 		setMessage(getDescription(), IMessageProvider.NONE);
 		setComplete(true);
 		controlHandler.update();
