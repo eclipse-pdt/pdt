@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
@@ -97,6 +96,7 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 				CompositeFragment fragment = (CompositeFragment) item
 						.getControl();
 				setTitle(fragment.getTitle());
+				fragment.validate();
 			}
 		});
 		return tabs;
@@ -133,14 +133,4 @@ public class PHPExeEditDialog extends TitleAreaDialog implements
 		}
 	}
 
-	public void setMessage(String newMessage, int newType) {
-		// Override the WARNING with an INFORMATION.
-		// We have a bug that cause the warning to be displayed in all the tabs
-		// and not
-		// only in the selected one. (TODO - Fix this)
-		if (newType == IMessageProvider.WARNING) {
-			newType = IMessageProvider.INFORMATION;
-		}
-		super.setMessage(newMessage, newType);
-	}
 }

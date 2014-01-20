@@ -202,7 +202,7 @@ public class ServerCompositeFragment extends CompositeFragment {
 		controlHandler.setTitle(getTitle());
 	}
 
-	protected void validate() {
+	public void validate() {
 		if (getServer() == null) {
 			setMessage("", IMessageProvider.ERROR); //$NON-NLS-1$
 			return;

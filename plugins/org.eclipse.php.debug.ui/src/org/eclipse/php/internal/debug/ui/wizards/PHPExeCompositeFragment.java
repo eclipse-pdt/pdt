@@ -312,7 +312,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		fDebuggersLabel.setVisible(false);
 	}
 
-	protected void validate() {
+	public void validate() {
 		PHPexeItem phpExeItem = getPHPExeItem();
 
 		// Check whether we can edit this item

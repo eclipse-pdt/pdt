@@ -203,6 +203,11 @@ public abstract class CompositeFragment extends Composite {
 	}
 
 	/**
+	 * Validate data values in current composite.
+	 */
+	public abstract void validate();
+
+	/**
 	 * Sets the completeness state of this composite.
 	 * 
 	 * @param isComplete
