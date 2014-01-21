@@ -182,8 +182,7 @@ public class ContentAssistTests extends AbstractPDTTTest {
 
 	protected static void closeEditor() {
 		fEditor.doSave(null);
-		fEditor.close(false);
-		fEditor.dispose();
+		fEditor.getSite().getPage().closeEditor(fEditor, false);
 		fEditor = null;
 		if (testFile.exists()) {
 			try {

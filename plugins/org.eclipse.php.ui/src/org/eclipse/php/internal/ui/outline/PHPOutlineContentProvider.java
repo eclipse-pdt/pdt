@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -235,13 +235,15 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 					if ((delta != null || e.getType() == ElementChangedEvent.POST_CHANGE)
 							&& fOutlineViewer != null
 							&& fOutlineViewer.getControl() != null
-							&& !fOutlineViewer.getControl()
-									.isDisposed()) {
+							&& !fOutlineViewer.getControl().isDisposed()) {
 						Display d = control.getDisplay();
 						if (d != null) {
 							d.asyncExec(new Runnable() {
 								public void run() {
-									fOutlineViewer.refresh();
+									if (fOutlineViewer.getTree() == null
+											|| (fOutlineViewer.getTree() != null && !fOutlineViewer
+													.getTree().isDisposed()))
+										fOutlineViewer.refresh();
 								}
 							});
 						}
@@ -312,7 +314,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		public UseStatementsNode(ISourceModule sourceModule) {
 			super((ModelElement) sourceModule,
 					PHPUIMessages.PHPOutlineContentProvider_useStatementsNode,
-					0, null); 
+					0, null);
 			fSourceModule = sourceModule;
 		}
 
