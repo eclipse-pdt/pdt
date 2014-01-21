@@ -14,31 +14,6 @@
 	<version>3.2.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
 
-	<profiles>
-		<profile>
-			<id>macosx</id>
-			<activation>
-				<os>
-					<family>mac</family>
-				</os>
-			</activation>
-			<properties>
-				<test.vmargs>-Xmx512m -XX:MaxPermSize=256m -XstartOnFirstThread</test.vmargs>
-			</properties>
-		</profile>
-		<profile>
-			<id>other-os</id>
-			<activation>
-				<os>
-					<family>!mac</family>
-				</os>
-			</activation>
-			<properties>
-				<test.vmargs>-Xmx512m -XX:MaxPermSize=256m</test.vmargs>
-			</properties>
-		</profile>
-	</profiles>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -49,14 +24,15 @@
 					<testSuite>org.eclipse.php.ui.tests</testSuite>
 					<testClass>org.eclipse.php.ui.tests.AllTests</testClass>
 					<useUIHarness>true</useUIHarness>
-	                <useUIThread>true</useUIThread>
-					<argLine>${test.vmargs}</argLine>
+					<useUIThread>true</useUIThread>
+					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs}</argLine>
 					<dependencies>
 						<dependency>
 							<type>p2-installable-unit</type>
 							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
 						</dependency>
 					</dependencies>
+					<testFailureIgnore>false</testFailureIgnore>
 				</configuration>
 			</plugin>
 		</plugins>

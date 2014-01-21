@@ -13,25 +13,26 @@
 	<artifactId>org.eclipse.php.core.tests</artifactId>
 	<version>3.2.0-SNAPSHOT</version>
 	<packaging>eclipse-test-plugin</packaging>
-	
-	
+
+
 	<build>
-	  <plugins>
-	  	<plugin>
-    		<groupId>org.eclipse.tycho</groupId>
-    		<artifactId>tycho-surefire-plugin</artifactId>
-    		<version>${tycho-version}</version>
-    		<configuration>
-      			<testSuite>org.eclipse.php.core.tests</testSuite>
-      			<testClass>org.eclipse.php.core.tests.AllTests</testClass>
-      			<dependencies>
-					<dependency>
-						<type>p2-installable-unit</type>
-						<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
-					</dependency>
-				</dependencies>
-    		</configuration>
-  		</plugin>
-	  </plugins>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<testSuite>org.eclipse.php.core.tests</testSuite>
+					<testClass>org.eclipse.php.core.tests.AllTests</testClass>
+					<dependencies>
+						<dependency>
+							<type>p2-installable-unit</type>
+							<artifactId>org.eclipse.dltk.core.index.sql.h2</artifactId>
+						</dependency>
+					</dependencies>
+					<testFailureIgnore>false</testFailureIgnore>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>

@@ -21,7 +21,7 @@
 				<configuration>
 					<useUIHarness>true</useUIHarness>
 					<useUIThread>false</useUIThread>
-					<argLine>-Xmx512m -XX:MaxPermSize=256m</argLine>
+					<argLine>-Xmx512m -XX:MaxPermSize=256m ${test.vmargs}</argLine>
 					<bundleStartLevel>
 						<bundle>
 							<id>org.eclipse.equinox.ds</id>
