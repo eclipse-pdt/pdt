@@ -6,7 +6,7 @@
  * Opens a bzip2 compressed file
  * @link http://www.php.net/manual/en/function.bzopen.php
  * @param filename string <p>
- * The name of the file to open.
+ * The name of the file to open, or an existing stream resource.
  * </p>
  * @param mode string <p>
  * Similar to the fopen function, only 'r' (read)

@@ -1393,9 +1393,6 @@ class IntlTimeZone  {
 	const DISPLAY_LONG_GMT = 6;
 	const DISPLAY_SHORT_COMMONLY_USED = 7;
 	const DISPLAY_GENERIC_LOCATION = 8;
-	const TYPE_ANY = 0;
-	const TYPE_CANONICAL = 1;
-	const TYPE_CANONICAL_LOCATION = 2;
 
 
 	private function __construct () {}
@@ -1432,8 +1429,6 @@ class IntlTimeZone  {
 	 */
 	public static function getGMT () {}
 
-	public static function getUnknown () {}
-
 	/**
 	 * Get an enumeration over time zone IDs associated with the
   given country or offset
@@ -1454,13 +1449,6 @@ class IntlTimeZone  {
 	public static function countEquivalentIDs ($zoneId) {}
 
 	/**
-	 * @param zoneType
-	 * @param region[optional]
-	 * @param rawOffset[optional]
-	 */
-	public static function createTimeZoneIDEnumeration ($zoneType, $region, $rawOffset) {}
-
-	/**
 	 * Get the canonical system timezone ID or the normalized custom time zone ID for the given time zone ID
 	 * @link http://www.php.net/manual/en/intltimezone.getcanonicalid.php
 	 * @param zoneId string <p>
@@ -1470,11 +1458,6 @@ class IntlTimeZone  {
 	 * @return string 
 	 */
 	public static function getCanonicalID ($zoneId, &$isSystemID = null) {}
-
-	/**
-	 * @param zoneId
-	 */
-	public static function getRegion ($zoneId) {}
 
 	/**
 	 * Get the timezone data version currently used by ICU
@@ -1619,9 +1602,6 @@ class IntlCalendar  {
 	const DOW_TYPE_WEEKEND = 1;
 	const DOW_TYPE_WEEKEND_OFFSET = 2;
 	const DOW_TYPE_WEEKEND_CEASE = 3;
-	const WALLTIME_FIRST = 1;
-	const WALLTIME_LAST = 0;
-	const WALLTIME_NEXT_VALID = 2;
 
 
 	/**
@@ -1734,28 +1714,28 @@ class IntlCalendar  {
 	/**
 	 * Whether this objectʼs time is after that of the passed object
 	 * @link http://www.php.net/manual/en/intlcalendar.after.php
-	 * @param calendar IntlCalendar <p>
-	 * The calendar whose time will be checked against this objectʼs time.
+	 * @param other IntlCalendar <p>
+	 * The calendar whose time will be checked against the primary objectʼs time.
 	 * </p>
 	 * @return bool true if this objectʼs current time is after that of the
 	 * calendar argumentʼs time. Returns false otherwise.
 	 * Also returns false on failure. You can use exceptions or
 	 * intl_get_error_code to detect error conditions.
 	 */
-	public function after (IntlCalendar $calendar) {}
+	public function after (IntlCalendar $other) {}
 
 	/**
 	 * Whether this objectʼs time is before that of the passed object
 	 * @link http://www.php.net/manual/en/intlcalendar.before.php
-	 * @param calendar IntlCalendar <p>
-	 * The calendar whose time will be checked against this objectʼs time.
+	 * @param other IntlCalendar <p>
+	 * The calendar whose time will be checked against the primary objectʼs time.
 	 * </p>
 	 * @return bool true if this objectʼs current time is before that of the
 	 * calendar argumentʼs time. Returns false otherwise.
 	 * Also returns false on failure. You can use exceptions or
 	 * intl_get_error_code to detect error conditions.
 	 */
-	public function before (IntlCalendar $calendar) {}
+	public function before (IntlCalendar $other) {}
 
 	/**
 	 * Set a time field or several common fields at once
@@ -1951,13 +1931,13 @@ class IntlCalendar  {
 	/**
 	 * Whether another calendar is equal but for a different time
 	 * @link http://www.php.net/manual/en/intlcalendar.isequivalentto.php
-	 * @param calendar IntlCalendar <p>
+	 * @param other IntlCalendar <p>
 	 * The other calendar against which the comparison is to be made.
 	 * </p>
 	 * @return bool Assuming there are no argument errors, returns true iif the calendars are
 	 * equivalent except possibly for their set time.
 	 */
-	public function isEquivalentTo (IntlCalendar $calendar) {}
+	public function isEquivalentTo (IntlCalendar $other) {}
 
 	/**
 	 * Whether date/time interpretation is in lenient mode
@@ -2015,15 +1995,20 @@ class IntlCalendar  {
 	public function setLenient ($isLenient) {}
 
 	/**
-	 * @param numberOfDays
+	 * Set minimal number of days the first week in a year or month can have
+	 * @link http://www.php.net/manual/en/intlcalendar.setminimaldaysinfirstweek.php
+	 * @param minimalDays int <p>
+	 * The number of minimal days to set.
+	 * </p>
+	 * @return bool true on success, false on failure.
 	 */
-	public function setMinimalDaysInFirstWeek ($numberOfDays) {}
+	public function setMinimalDaysInFirstWeek ($minimalDays) {}
 
 	/**
 	 * Compare time of two IntlCalendar objects for equality
 	 * @link http://www.php.net/manual/en/intlcalendar.equals.php
-	 * @param calendar IntlCalendar <p>
-	 * The calendar to compare with this object.
+	 * @param other IntlCalendar <p>
+	 * The calendar to compare with the primary object.
 	 * </p>
 	 * @return bool true if the current time of both this and the passed in
 	 * IntlCalendar object are the same, or false
@@ -2031,47 +2016,7 @@ class IntlCalendar  {
 	 * happen if bad arguments are passed in. In any case, the two cases can be
 	 * distinguished by calling intl_get_error_code.
 	 */
-	public function equals (IntlCalendar $calendar) {}
-
-	/**
-	 * Get behavior for handling repeating wall time
-	 * @link http://www.php.net/manual/en/intlcalendar.getrepeatedwalltimeoption.php
-	 * @return int One of the constants IntlCalendar::WALLTIME_FIRST or
-	 * IntlCalendar::WALLTIME_LAST.
-	 */
-	public function getRepeatedWallTimeOption () {}
-
-	/**
-	 * Get behavior for handling skipped wall time
-	 * @link http://www.php.net/manual/en/intlcalendar.getskippedwalltimeoption.php
-	 * @return int One of the constants IntlCalendar::WALLTIME_FIRST,
-	 * IntlCalendar::WALLTIME_LAST or
-	 * IntlCalendar::WALLTIME_NEXT_VALID.
-	 */
-	public function getSkippedWallTimeOption () {}
-
-	/**
-	 * Set behavior for handling repeating wall times at negative timezone offset transitions
-	 * @link http://www.php.net/manual/en/intlcalendar.setrepeatedwalltimeoption.php
-	 * @param wallTimeOption int <p>
-	 * One of the constants IntlCalendar::WALLTIME_FIRST or
-	 * IntlCalendar::WALLTIME_LAST.
-	 * </p>
-	 * @return bool true on success. Failure can only happen due to invalid parameters.
-	 */
-	public function setRepeatedWallTimeOption ($wallTimeOption) {}
-
-	/**
-	 * Set behavior for handling skipped wall times at positive timezone offset transitions
-	 * @link http://www.php.net/manual/en/intlcalendar.setskippedwalltimeoption.php
-	 * @param wallTimeOption int <p>
-	 * One of the constants IntlCalendar::WALLTIME_FIRST,
-	 * IntlCalendar::WALLTIME_LAST or
-	 * IntlCalendar::WALLTIME_NEXT_VALID. 
-	 * </p>
-	 * @return bool true on success. Failure can only happen due to invalid parameters.
-	 */
-	public function setSkippedWallTimeOption ($wallTimeOption) {}
+	public function equals (IntlCalendar $other) {}
 
 	/**
 	 * Create an IntlCalendar from a DateTime object or string
@@ -2241,28 +2186,28 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Whether this objectʼs time is after that of the passed object
 	 * @link http://www.php.net/manual/en/intlcalendar.after.php
-	 * @param calendar IntlCalendar <p>
-	 * The calendar whose time will be checked against this objectʼs time.
+	 * @param other IntlCalendar <p>
+	 * The calendar whose time will be checked against the primary objectʼs time.
 	 * </p>
 	 * @return bool true if this objectʼs current time is after that of the
 	 * calendar argumentʼs time. Returns false otherwise.
 	 * Also returns false on failure. You can use exceptions or
 	 * intl_get_error_code to detect error conditions.
 	 */
-	public function after (IntlCalendar $calendar) {}
+	public function after (IntlCalendar $other) {}
 
 	/**
 	 * Whether this objectʼs time is before that of the passed object
 	 * @link http://www.php.net/manual/en/intlcalendar.before.php
-	 * @param calendar IntlCalendar <p>
-	 * The calendar whose time will be checked against this objectʼs time.
+	 * @param other IntlCalendar <p>
+	 * The calendar whose time will be checked against the primary objectʼs time.
 	 * </p>
 	 * @return bool true if this objectʼs current time is before that of the
 	 * calendar argumentʼs time. Returns false otherwise.
 	 * Also returns false on failure. You can use exceptions or
 	 * intl_get_error_code to detect error conditions.
 	 */
-	public function before (IntlCalendar $calendar) {}
+	public function before (IntlCalendar $other) {}
 
 	/**
 	 * Set a time field or several common fields at once
@@ -2458,13 +2403,13 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	/**
 	 * Whether another calendar is equal but for a different time
 	 * @link http://www.php.net/manual/en/intlcalendar.isequivalentto.php
-	 * @param calendar IntlCalendar <p>
+	 * @param other IntlCalendar <p>
 	 * The other calendar against which the comparison is to be made.
 	 * </p>
 	 * @return bool Assuming there are no argument errors, returns true iif the calendars are
 	 * equivalent except possibly for their set time.
 	 */
-	public function isEquivalentTo (IntlCalendar $calendar) {}
+	public function isEquivalentTo (IntlCalendar $other) {}
 
 	/**
 	 * Whether date/time interpretation is in lenient mode
@@ -2522,15 +2467,20 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	public function setLenient ($isLenient) {}
 
 	/**
-	 * @param numberOfDays
+	 * Set minimal number of days the first week in a year or month can have
+	 * @link http://www.php.net/manual/en/intlcalendar.setminimaldaysinfirstweek.php
+	 * @param minimalDays int <p>
+	 * The number of minimal days to set.
+	 * </p>
+	 * @return bool true on success, false on failure.
 	 */
-	public function setMinimalDaysInFirstWeek ($numberOfDays) {}
+	public function setMinimalDaysInFirstWeek ($minimalDays) {}
 
 	/**
 	 * Compare time of two IntlCalendar objects for equality
 	 * @link http://www.php.net/manual/en/intlcalendar.equals.php
-	 * @param calendar IntlCalendar <p>
-	 * The calendar to compare with this object.
+	 * @param other IntlCalendar <p>
+	 * The calendar to compare with the primary object.
 	 * </p>
 	 * @return bool true if the current time of both this and the passed in
 	 * IntlCalendar object are the same, or false
@@ -2538,47 +2488,7 @@ class IntlGregorianCalendar extends IntlCalendar  {
 	 * happen if bad arguments are passed in. In any case, the two cases can be
 	 * distinguished by calling intl_get_error_code.
 	 */
-	public function equals (IntlCalendar $calendar) {}
-
-	/**
-	 * Get behavior for handling repeating wall time
-	 * @link http://www.php.net/manual/en/intlcalendar.getrepeatedwalltimeoption.php
-	 * @return int One of the constants IntlCalendar::WALLTIME_FIRST or
-	 * IntlCalendar::WALLTIME_LAST.
-	 */
-	public function getRepeatedWallTimeOption () {}
-
-	/**
-	 * Get behavior for handling skipped wall time
-	 * @link http://www.php.net/manual/en/intlcalendar.getskippedwalltimeoption.php
-	 * @return int One of the constants IntlCalendar::WALLTIME_FIRST,
-	 * IntlCalendar::WALLTIME_LAST or
-	 * IntlCalendar::WALLTIME_NEXT_VALID.
-	 */
-	public function getSkippedWallTimeOption () {}
-
-	/**
-	 * Set behavior for handling repeating wall times at negative timezone offset transitions
-	 * @link http://www.php.net/manual/en/intlcalendar.setrepeatedwalltimeoption.php
-	 * @param wallTimeOption int <p>
-	 * One of the constants IntlCalendar::WALLTIME_FIRST or
-	 * IntlCalendar::WALLTIME_LAST.
-	 * </p>
-	 * @return bool true on success. Failure can only happen due to invalid parameters.
-	 */
-	public function setRepeatedWallTimeOption ($wallTimeOption) {}
-
-	/**
-	 * Set behavior for handling skipped wall times at positive timezone offset transitions
-	 * @link http://www.php.net/manual/en/intlcalendar.setskippedwalltimeoption.php
-	 * @param wallTimeOption int <p>
-	 * One of the constants IntlCalendar::WALLTIME_FIRST,
-	 * IntlCalendar::WALLTIME_LAST or
-	 * IntlCalendar::WALLTIME_NEXT_VALID. 
-	 * </p>
-	 * @return bool true on success. Failure can only happen due to invalid parameters.
-	 */
-	public function setSkippedWallTimeOption ($wallTimeOption) {}
+	public function equals (IntlCalendar $other) {}
 
 	/**
 	 * Create an IntlCalendar from a DateTime object or string
@@ -2985,13 +2895,6 @@ class IntlRuleBasedBreakIterator extends IntlBreakIterator implements Traversabl
 	 * @return ReturnType 
 	 */
 	public function getRuleStatusVec () {}
-
-	/**
-	 * Get the binary form of compiled rules
-	 * @link http://www.php.net/manual/en/intlrulebasedbreakiterator.getbinaryrules.php
-	 * @return ReturnType 
-	 */
-	public function getBinaryRules () {}
 
 	/**
 	 * Create break iterator for word breaks
@@ -4434,8 +4337,6 @@ function intltz_get_id (IntlTimeZone $timeZone) {}
 
 function intltz_get_gmt () {}
 
-function intltz_get_unknown () {}
-
 /**
  * @param countryOrRawOffset[optional]
  */
@@ -4447,22 +4348,10 @@ function intltz_create_enumeration ($countryOrRawOffset) {}
 function intltz_count_equivalent_ids ($zoneId) {}
 
 /**
- * @param zoneType
- * @param region[optional]
- * @param rawOffset[optional]
- */
-function intltz_create_time_zone_id_enumeration ($zoneType, $region, $rawOffset) {}
-
-/**
  * @param zoneId
  * @param isSystemID[optional]
  */
 function intltz_get_canonical_id ($zoneId, &$isSystemID) {}
-
-/**
- * @param zoneId
- */
-function intltz_get_region ($zoneId) {}
 
 function intltz_get_tz_data_version () {}
 
@@ -4754,28 +4643,6 @@ function intlcal_to_date_time (IntlCalendar $calendar) {}
 /**
  * @param calendar IntlCalendar
  */
-function intlcal_get_repeated_wall_time_option (IntlCalendar $calendar) {}
-
-/**
- * @param calendar IntlCalendar
- */
-function intlcal_get_skipped_wall_time_option (IntlCalendar $calendar) {}
-
-/**
- * @param calendar IntlCalendar
- * @param wallTimeOption
- */
-function intlcal_set_repeated_wall_time_option (IntlCalendar $calendar, $wallTimeOption) {}
-
-/**
- * @param calendar IntlCalendar
- * @param wallTimeOption
- */
-function intlcal_set_skipped_wall_time_option (IntlCalendar $calendar, $wallTimeOption) {}
-
-/**
- * @param calendar IntlCalendar
- */
 function intlcal_get_error_code (IntlCalendar $calendar) {}
 
 /**
@@ -4848,15 +4715,9 @@ function intl_is_failure ($error_code) {}
  */
 function intl_error_name ($error_code) {}
 
-
-/**
- * Limit on locale length, set to 80 in PHP code. Locale names longer 
- * than this limit will not be accepted.
- * @link http://www.php.net/manual/en/intl.constants.php
- */
 define ('INTL_MAX_LOCALE_LEN', 80);
-define ('INTL_ICU_VERSION', 51.2);
-define ('INTL_ICU_DATA_VERSION', 51.2);
+define ('INTL_ICU_VERSION', "4.4.2");
+define ('INTL_ICU_DATA_VERSION', "4.4.2");
 define ('ULOC_ACTUAL_LOCALE', 0);
 define ('ULOC_VALID_LOCALE', 1);
 define ('GRAPHEME_EXTR_COUNT', 0);
@@ -4955,7 +4816,7 @@ define ('U_ILLEGAL_PAD_POSITION', 65800);
 define ('U_UNMATCHED_BRACES', 65801);
 define ('U_UNSUPPORTED_PROPERTY', 65802);
 define ('U_UNSUPPORTED_ATTRIBUTE', 65803);
-define ('U_FMT_PARSE_ERROR_LIMIT', 65810);
+define ('U_FMT_PARSE_ERROR_LIMIT', 65809);
 define ('U_BRK_INTERNAL_ERROR', 66048);
 define ('U_BRK_ERROR_START', 66048);
 define ('U_BRK_HEX_DIGITS_EXPECTED', 66049);

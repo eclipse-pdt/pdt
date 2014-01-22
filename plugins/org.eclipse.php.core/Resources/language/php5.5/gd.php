@@ -708,6 +708,26 @@ function imagecolorexactalpha ($image, $red, $green, $blue, $alpha) {}
 function imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {}
 
 /**
+ * Captures a window
+ * @link http://www.php.net/manual/en/function.imagegrabwindow.php
+ * @param window_handle int <p>
+ * The HWND window ID.
+ * </p>
+ * @param client_area int[optional] <p>
+ * Include the client area of the application window.
+ * </p>
+ * @return resource an image resource identifier on success, false on failure.
+ */
+function imagegrabwindow ($window_handle, $client_area = null) {}
+
+/**
+ * Captures the whole screen
+ * @link http://www.php.net/manual/en/function.imagegrabscreen.php
+ * @return resource an image resource identifier on success, false on failure.
+ */
+function imagegrabscreen () {}
+
+/**
  * Rotate an image with a given angle
  * @link http://www.php.net/manual/en/function.imagerotate.php
  * @param image resource 
@@ -1776,6 +1796,170 @@ function imageftbbox ($size, $angle, $fontfile, $text, array $extrainfo = null) 
  * </tr>
  */
 function imagefttext ($image, $size, $angle, $x, $y, $color, $fontfile, $text, array $extrainfo = null) {}
+
+/**
+ * Load a PostScript Type 1 font from file
+ * @link http://www.php.net/manual/en/function.imagepsloadfont.php
+ * @param filename string <p>
+ * Path to the Postscript font file.
+ * </p>
+ * @return resource In the case everything went right, a valid font index will be returned and
+ * can be used for further purposes. Otherwise the function returns false.
+ */
+function imagepsloadfont ($filename) {}
+
+/**
+ * Free memory used by a PostScript Type 1 font
+ * @link http://www.php.net/manual/en/function.imagepsfreefont.php
+ * @param font_index resource <p>
+ * A font resource, returned by imagepsloadfont.
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ */
+function imagepsfreefont ($font_index) {}
+
+/**
+ * Change the character encoding vector of a font
+ * @link http://www.php.net/manual/en/function.imagepsencodefont.php
+ * @param font_index resource <p>
+ * A font resource, returned by imagepsloadfont.
+ * </p>
+ * @param encodingfile string <p>
+ * The exact format of this file is described in T1libs documentation. 
+ * T1lib comes with two ready-to-use files, 
+ * IsoLatin1.enc and 
+ * IsoLatin2.enc.
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ */
+function imagepsencodefont ($font_index, $encodingfile) {}
+
+/**
+ * Extend or condense a font
+ * @link http://www.php.net/manual/en/function.imagepsextendfont.php
+ * @param font_index resource <p>
+ * A font resource, returned by imagepsloadfont.
+ * </p>
+ * @param extend float <p>
+ * Extension value, must be greater than 0.
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ */
+function imagepsextendfont ($font_index, $extend) {}
+
+/**
+ * Slant a font
+ * @link http://www.php.net/manual/en/function.imagepsslantfont.php
+ * @param font_index resource <p>
+ * A font resource, returned by imagepsloadfont.
+ * </p>
+ * @param slant float <p>
+ * Slant level.
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ */
+function imagepsslantfont ($font_index, $slant) {}
+
+/**
+ * Draws a text over an image using PostScript Type1 fonts
+ * @link http://www.php.net/manual/en/function.imagepstext.php
+ * @param image resource 
+ * @param text string <p>
+ * The text to be written.
+ * </p>
+ * @param font_index resource <p>
+ * A font resource, returned by imagepsloadfont.
+ * </p>
+ * @param size int <p>
+ * size is expressed in pixels.
+ * </p>
+ * @param foreground int <p>
+ * The color in which the text will be painted.
+ * </p>
+ * @param background int <p>
+ * The color to which the text will try to fade in with antialiasing.
+ * No pixels with the color background are 
+ * actually painted, so the background image does not need to be of solid
+ * color.
+ * </p>
+ * @param x int <p>
+ * x-coordinate for the lower-left corner of the first character.
+ * </p>
+ * @param y int <p>
+ * y-coordinate for the lower-left corner of the first character.
+ * </p>
+ * @param space int[optional] <p>
+ * Allows you to change the default value of a space in a font. This
+ * amount is added to the normal value and can also be negative.
+ * Expressed in character space units, where 1 unit is 1/1000th of an 
+ * em-square.
+ * </p>
+ * @param tightness int[optional] <p>
+ * tightness allows you to control the amount
+ * of white space between characters. This amount is added to the
+ * normal character width and can also be negative.
+ * Expressed in character space units, where 1 unit is 1/1000th of an 
+ * em-square.
+ * </p>
+ * @param angle float[optional] <p>
+ * angle is in degrees.
+ * </p>
+ * @param antialias_steps int[optional] <p>
+ * Allows you to control the number of colours used for antialiasing 
+ * text. Allowed values are 4 and 16. The higher value is recommended
+ * for text sizes lower than 20, where the effect in text quality is
+ * quite visible. With bigger sizes, use 4. It's less computationally
+ * intensive.
+ * </p>
+ * @return array This function returns an array containing the following elements:
+ * <tr valign="top">
+ * <td>0</td>
+ * <td>lower left x-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>1</td>
+ * <td>lower left y-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2</td>
+ * <td>upper right x-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>3</td>
+ * <td>upper right y-coordinate</td>
+ * </tr>
+ */
+function imagepstext ($image, $text, $font_index, $size, $foreground, $background, $x, $y, $space = null, $tightness = null, $angle = null, $antialias_steps = null) {}
+
+/**
+ * Give the bounding box of a text rectangle using PostScript Type1 fonts
+ * @link http://www.php.net/manual/en/function.imagepsbbox.php
+ * @param text string <p>
+ * The text to be written.
+ * </p>
+ * @param font resource 
+ * @param size int <p>
+ * size is expressed in pixels.
+ * </p>
+ * @return array an array containing the following elements:
+ * <tr valign="top">
+ * <td>0</td>
+ * <td>left x-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>1</td>
+ * <td>upper y-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2</td>
+ * <td>right x-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>3</td>
+ * <td>lower y-coordinate</td>
+ * </tr>
+ */
+function imagepsbbox ($text, $font, $size) {}
 
 /**
  * Return the image types supported by this PHP build

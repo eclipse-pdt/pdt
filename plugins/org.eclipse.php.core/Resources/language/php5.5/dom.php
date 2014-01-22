@@ -2320,7 +2320,8 @@ class DOMText extends DOMCharacterData  {
 	/**
 	 * Indicates whether this text node contains whitespace
 	 * @link http://www.php.net/manual/en/domtext.iswhitespaceinelementcontent.php
-	 * @return bool Returns true on success or false on failure.
+	 * @return bool true if node contains zero or more whitespace characters and
+	 * nothing else. Returns false otherwise.
 	 */
 	public function isWhitespaceInElementContent () {}
 
@@ -3005,7 +3006,8 @@ class DOMCdataSection extends DOMText  {
 	/**
 	 * Indicates whether this text node contains whitespace
 	 * @link http://www.php.net/manual/en/domtext.iswhitespaceinelementcontent.php
-	 * @return bool Returns true on success or false on failure.
+	 * @return bool true if node contains zero or more whitespace characters and
+	 * nothing else. Returns false otherwise.
 	 */
 	public function isWhitespaceInElementContent () {}
 

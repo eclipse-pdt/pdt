@@ -570,7 +570,7 @@ class ReflectionParameter implements Reflector {
 	public function getDeclaringClass () {}
 
 	/**
-	 * Get class
+	 * Get the type hinted class
 	 * @link http://www.php.net/manual/en/reflectionparameter.getclass.php
 	 * @return ReflectionClass A ReflectionClass object.
 	 */

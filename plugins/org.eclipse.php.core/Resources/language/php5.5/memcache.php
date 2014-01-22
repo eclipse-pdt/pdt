@@ -1,8 +1,56 @@
 <?php
 
-// Start of memcache v.2.2.7
+// Start of memcache v.3.0.8
 
-class Memcache  {
+class MemcachePool  {
+
+	public function connect () {}
+
+	public function addserver () {}
+
+	public function setserverparams () {}
+
+	public function setfailurecallback () {}
+
+	public function getserverstatus () {}
+
+	public function findserver () {}
+
+	public function getversion () {}
+
+	public function add () {}
+
+	public function set () {}
+
+	public function replace () {}
+
+	public function cas () {}
+
+	public function append () {}
+
+	public function prepend () {}
+
+	public function get () {}
+
+	public function delete () {}
+
+	public function getstats () {}
+
+	public function getextendedstats () {}
+
+	public function setcompressthreshold () {}
+
+	public function increment () {}
+
+	public function decrement () {}
+
+	public function close () {}
+
+	public function flush () {}
+
+}
+
+class Memcache extends MemcachePool  {
 
 	/**
 	 * Open memcached server connection
@@ -383,8 +431,6 @@ class Memcache  {
 	 */
 	public function flush () {}
 
-	public function setoptimeout () {}
-
 }
 
 function memcache_connect () {}
@@ -395,6 +441,8 @@ function memcache_add_server () {}
 
 function memcache_set_server_params () {}
 
+function memcache_set_failure_callback () {}
+
 function memcache_get_server_status () {}
 
 function memcache_get_version () {}
@@ -404,6 +452,12 @@ function memcache_add () {}
 function memcache_set () {}
 
 function memcache_replace () {}
+
+function memcache_cas () {}
+
+function memcache_append () {}
+
+function memcache_prepend () {}
 
 function memcache_get () {}
 
@@ -435,9 +489,11 @@ function memcache_close () {}
 
 function memcache_flush () {}
 
-function memcache_setoptimeout () {}
-
 define ('MEMCACHE_COMPRESSED', 2);
+define ('MEMCACHE_USER1', 65536);
+define ('MEMCACHE_USER2', 131072);
+define ('MEMCACHE_USER3', 262144);
+define ('MEMCACHE_USER4', 524288);
 define ('MEMCACHE_HAVE_SESSION', 1);
 
-// End of memcache v.2.2.7
+// End of memcache v.3.0.8
