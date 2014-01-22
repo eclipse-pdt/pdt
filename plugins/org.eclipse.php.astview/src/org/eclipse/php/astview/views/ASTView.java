@@ -45,6 +45,7 @@ import org.eclipse.php.internal.core.ast.nodes.AST;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -67,7 +68,9 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 public class ASTView extends ViewPart implements IShowInSource {
 
 	// TODO check with the PHP fields
-	private static final PHPVersion PHP5= PHPVersion.PHP5;
+
+	private static final PHPVersion PHP5 = PHPVersion.getLatestVersion();
+
 	/** (Used to get rid of deprecation warnings in code)
 	 * @deprecated
 	 */
@@ -478,13 +481,10 @@ public class ASTView extends ViewPart implements IShowInSource {
 	}
 	
 	private String getInitialASTLevel(ISourceModule typeRoot) {
-		return PHP5.getAlias();
-/*		String option= typeRoot.getScriptProject().getOption(DLTKCore.  JavaCore.COMPILER_SOURCE, true);
-		if (option.compareTo(JavaCore.VERSION_1_5) >= 0) {
-			return PHP5;
-		}
-		return fCurrentASTLevel; // use previous level
-*/	}
+		return ProjectOptions.getPhpVersion(typeRoot.getScriptProject().getProject()).isGreaterThan(PHP4) ? 
+			PHP5.getAlias(): 
+			PHP4.getAlias();
+	}
 
 	private Program internalSetInput(ISourceModule input, int offset, int length, String astLevel) throws CoreException {
 		if (input.getBuffer() == null) {
