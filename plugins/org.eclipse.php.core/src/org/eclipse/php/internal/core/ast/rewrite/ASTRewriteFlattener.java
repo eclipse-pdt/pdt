@@ -745,15 +745,18 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		result.append("interface "); //$NON-NLS-1$
 		interfaceDeclaration.getName().accept(this);
-		result.append(" extends "); //$NON-NLS-1$
-		boolean isFirst = true;
-		Identifier[] interfaces = interfaceDeclaration.getInterfaces();
-		for (int i = 0; interfaces != null && i < interfaces.length; i++) {
-			if (!isFirst) {
-				result.append(", "); //$NON-NLS-1$
+		List<Identifier> interfaces;
+		if (interfaceDeclaration.interfaces().size() > 0) {
+			result.append(" extends "); //$NON-NLS-1$
+			boolean isFirst = true;
+			interfaces = interfaceDeclaration.interfaces();
+			for (Identifier interfaceItem : interfaces) {
+				if (!isFirst) {
+					result.append(", "); //$NON-NLS-1$
+				}
+				interfaceItem.accept(this);
+				isFirst = false;
 			}
-			interfaces[i].accept(this);
-			isFirst = false;
 		}
 		interfaceDeclaration.getBody().accept(this);
 		return false;
