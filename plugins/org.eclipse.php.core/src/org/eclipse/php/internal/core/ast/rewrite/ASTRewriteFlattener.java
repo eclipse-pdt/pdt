@@ -215,17 +215,17 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(Block block) {
-		if (block.isCurly()) {
+		if (block.isBracketed()) {
 			result.append("{\n"); //$NON-NLS-1$
-		} else {
+		} else if (block.isColon()) {
 			result.append(":\n"); //$NON-NLS-1$
 		}
 
 		visitList(block, Block.STATEMENTS_PROPERTY, null);
 
-		if (block.isCurly()) {
+		if (block.isBracketed()) {
 			result.append("}\n"); //$NON-NLS-1$
-		} else {
+		} else if (block.isColon()) {
 			StructuralPropertyDescriptor locationInParent = block
 					.getLocationInParent();
 			if (locationInParent == IfStatement.TRUE_STATEMENT_PROPERTY) {
@@ -501,9 +501,14 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
 		result.append("namespace "); //$NON-NLS-1$
-		namespaceDeclaration.childrenAccept(this);
+		namespaceDeclaration.getName().accept(this);
 		if (namespaceDeclaration.getBody() == null) {
 			result.append(";\n"); //$NON-NLS-1$
+		} else {
+			if (namespaceDeclaration.getBody().isBracketed() != true) {
+				result.append(";\n"); //$NON-NLS-1$
+			}
+			namespaceDeclaration.getBody().accept(this);
 		}
 		return false;
 	}

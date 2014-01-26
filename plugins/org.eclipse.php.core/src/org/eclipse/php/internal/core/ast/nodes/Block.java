@@ -35,14 +35,21 @@ public class Block extends Statement {
 
 	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<Statement>(STATEMENTS_PROPERTY);
 	private boolean isCurly;
-	
+
+	private static enum BodyStartSymbol {
+		NONE, BRACKLET, COLON
+	};
+
+	private BodyStartSymbol bodyStartSymbol = BodyStartSymbol.NONE;
+
 	/**
 	 * The "statements" structural property of this node type.
 	 */
-	public static final ChildListPropertyDescriptor STATEMENTS_PROPERTY = 
-		new ChildListPropertyDescriptor(Block.class, "statements", Statement.class, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor IS_CURLY_PROPERTY = 
-		new SimplePropertyDescriptor(Block.class, "isCurly", Boolean.class, OPTIONAL); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor STATEMENTS_PROPERTY = new ChildListPropertyDescriptor(
+			Block.class, "statements", Statement.class, CYCLE_RISK); //$NON-NLS-1$
+
+	public static final SimplePropertyDescriptor IS_CURLY_PROPERTY = new SimplePropertyDescriptor(
+			Block.class, "isCurly", Boolean.class, OPTIONAL); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -130,17 +137,49 @@ public class Block extends Statement {
 	public boolean isCurly() {
 		return isCurly;
 	}
-	
+
 	/**
 	 * is this a curly block or an old (ie - : endblock) style
 	 * 
-	 * @param isCurly the assignment operator
-	 * @exception IllegalArgumentException if the argument is incorrect
-	 */ 
+	 * @param isCurly
+	 *            the assignment operator
+	 * @exception IllegalArgumentException
+	 *                if the argument is incorrect
+	 * 
+	 * @deprecated <code>setBracketAsBodyStartSymbol</code>,
+	 *             <code>setColonAsBodyStartSymbol</code> or
+	 *             <code>clearBodyStartSymbol</code> should be use instead of
+	 *             this method.
+	 */
 	public void setIsCurly(boolean isCurly) {
 		preValueChange(IS_CURLY_PROPERTY);
 		this.isCurly = isCurly;
+		if (isCurly == true) {
+			setBracketAsBodyStartSymbol();
+		} else {
+			setColonAsBodyStartSymbol();
+		}
 		postValueChange(IS_CURLY_PROPERTY);
+	}
+
+	public boolean isBracketed() {
+		return bodyStartSymbol == BodyStartSymbol.BRACKLET;
+	}
+
+	public void setBracketAsBodyStartSymbol() {
+		bodyStartSymbol = BodyStartSymbol.BRACKLET;
+	}
+
+	public boolean isColon() {
+		return bodyStartSymbol == BodyStartSymbol.COLON;
+	}
+
+	public void setColonAsBodyStartSymbol() {
+		bodyStartSymbol = BodyStartSymbol.COLON;
+	}
+
+	public void clearBodyStartSymbol() {
+		bodyStartSymbol = BodyStartSymbol.NONE;
 	}
 
 	/**
