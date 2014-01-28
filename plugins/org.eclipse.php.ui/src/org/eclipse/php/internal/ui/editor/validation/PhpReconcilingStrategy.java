@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -30,8 +30,10 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.util.Util;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.ASTProvider;
 import org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -140,18 +142,25 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		}
 
 		try {
-			// TODO : create ast if needed
-			boolean isASTNeeded = initialReconcile
-					|| PHPUiPlugin.getDefault().getASTProvider().isActive(unit);
-			// reconcile
+			final ASTProvider astProvider = PHPUiPlugin.getDefault()
+					.getASTProvider();
+
 			synchronized (unit) {
 				unit.reconcile(true, null, fProgressMonitor);
 			}
-			if (isASTNeeded) {
+
+			// read DOM AST from provider if avaiable
+			Program createdAST = astProvider.getAST(unit,
+					SharedASTProvider.WAIT_NO, fProgressMonitor);
+			if (astProvider.isActive(unit) && createdAST != null) {
+				return createdAST;
+			}
+
+			if (initialReconcile || astProvider.isActive(unit)) {
 				PHPVersion phpVersion = ProjectOptions.getPhpVersion(unit
 						.getScriptProject().getProject());
 				ASTParser newParser = ASTParser.newParser(phpVersion, unit);
-				Program createdAST = newParser.createAST(null);
+				createdAST = newParser.createAST(null);
 				if (createdAST != null && document != null) {
 					createdAST.setSourceModule(unit);
 					createdAST.setSourceRange(0, document.getLength());
@@ -201,6 +210,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		final IModelElement modelElement = ((PHPStructuredEditor) fEditor)
 				.getModelElement();
 		if (modelElement instanceof ISourceModule) {
+
 			final Program ast[] = new Program[1];
 			try {
 				SafeRunner.run(new ISafeRunnable() {

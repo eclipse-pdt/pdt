@@ -195,7 +195,6 @@ public final class ASTProvider {
 			// The instanceof check is not need but helps clients, see
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=84862
 			return PHPUiConstants.PHP_EDITOR_ID.equals(id)
-					|| PHPUiConstants.PHP_EDITOR_ID.equals(id)
 					|| ref.getPart(false) instanceof PHPStructuredEditor;
 		}
 	}
