@@ -249,10 +249,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 			String[] args = PHPLaunchUtilities.getProgramArguments(launch
 					.getLaunchConfiguration());
-			String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch
-					.getLaunchConfiguration(), phpExeString, phpConfigDir,
-					fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null,
-					phpV);
+			String[] cmdLine = PHPLaunchUtilities.getCommandLine(
+					launch.getLaunchConfiguration(), phpExeString,
+					phpConfigDir, fileName,
+					PHPexeItem.SAPI_CLI.equals(sapiType) ? args : null, phpV);
 
 			// Set library search path:
 			String libPath = PHPLaunchUtilities

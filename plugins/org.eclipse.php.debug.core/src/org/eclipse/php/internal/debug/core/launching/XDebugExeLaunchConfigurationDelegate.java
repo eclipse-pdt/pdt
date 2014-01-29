@@ -232,7 +232,7 @@ public class XDebugExeLaunchConfigurationDelegate extends
 			}
 		}
 		String[] args = null;
-		if (sapiType == PHPexeItem.SAPI_CLI) {
+		if (PHPexeItem.SAPI_CLI.equals(sapiType)) {
 			args = PHPLaunchUtilities.getProgramArguments(launch
 					.getLaunchConfiguration());
 		}
