@@ -156,7 +156,7 @@ public class AutoDetectLibraryFolderJob extends WorkspaceJob {
 
 		for (String name : folderNames) {
 			IModelElement folder = DLTKCore.create(project.getFolder(name));
-			if (folder.exists()) {
+			if (folder != null && folder.exists()) {
 				result.add(folder);
 			}
 		}
