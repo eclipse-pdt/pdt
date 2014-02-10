@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła - Allow change context and strategies from UI
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist;
 
@@ -83,10 +84,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements
 		relevanceConst = RELEVANCE_CONST;
 
 		try {
-			ICompletionContextResolver[] contextResolvers = CompletionContextResolver
-					.getActive();
-			ICompletionStrategyFactory[] strategyFactories = CompletionStrategyFactory
-					.getActive();
+			ICompletionContextResolver[] contextResolvers;
+			ICompletionStrategyFactory[] strategyFactories;
+			if (requestor instanceof IPHPCompletionRequestorExtension) {
+				contextResolvers = ((IPHPCompletionRequestorExtension) requestor)
+						.getContextResolvers();
+				strategyFactories = ((IPHPCompletionRequestorExtension) requestor)
+						.getStrategyFactories();
+			} else {
+				contextResolvers = CompletionContextResolver.getActive();
+				strategyFactories = CompletionStrategyFactory.getActive();
+			}
 
 			CompletionCompanion companion = new CompletionCompanion();
 			org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module
