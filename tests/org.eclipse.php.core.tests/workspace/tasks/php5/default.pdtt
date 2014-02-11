@@ -1,0 +1,15 @@
+--TEST--
+Default configuration
+--FILE--
+<?php
+/**
+ * @todo aaa
+ * FIXME bbb
+ * XXX ccc
+ * xXx invalid
+ */
+?>
+--EXPECT--
+[line=3, start=13, end=22, priority=1] @todo aaa
+[line=4, start=26, end=35, priority=2] FIXME bbb
+[line=5, start=39, end=46, priority=1] XXX ccc
