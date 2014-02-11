@@ -1,0 +1,17 @@
+--TEST--
+Default configuration
+--CONFIG--
+tags:NORMAL,INFO,HIGH
+priorities:NORMAL,LOW,HIGH
+--FILE--
+<?php
+/**
+ * NORMAL text
+ * INFO text
+ * HIGH text
+ */
+?>
+--EXPECT--
+[line=3, start=13, end=24, priority=1] NORMAL text
+[line=4, start=28, end=37, priority=0] INFO text
+[line=5, start=41, end=50, priority=2] HIGH text

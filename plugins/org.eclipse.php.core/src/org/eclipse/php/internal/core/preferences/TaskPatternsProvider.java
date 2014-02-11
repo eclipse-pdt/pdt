@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -95,14 +95,9 @@ public class TaskPatternsProvider {
 			boolean caseSensitive) {
 		Pattern[] patterns = new Pattern[workspaceTaskTags.length];
 		for (int i = 0; i < workspaceTaskTags.length; i++) {
-			TaskTag tag = workspaceTaskTags[i];
-			String tagString = tag.getTag();
-			if (caseSensitive) {
-				patterns[i] = Pattern.compile(tagString, Pattern.LITERAL);
-			} else {
-				patterns[i] = Pattern.compile(tagString,
-						Pattern.CASE_INSENSITIVE | Pattern.LITERAL);
-			}
+			patterns[i] = Pattern.compile(workspaceTaskTags[i].getTag(),
+					(!caseSensitive ? Pattern.CASE_INSENSITIVE : 0)
+							| Pattern.LITERAL);
 		}
 
 		return patterns;
@@ -128,16 +123,16 @@ public class TaskPatternsProvider {
 	private class TaskTagsListener implements ITaskTagsListener {
 
 		public void taskTagsChanged(TaskTagsEvent event) {
-			TaskPatternsProvider.this.taskTagsChanged(event.getProject(), event
-					.getTaskTags(), event.isCaseSensitive());
+			TaskPatternsProvider.this.taskTagsChanged(event.getProject(),
+					event.getTaskTags(), event.isCaseSensitive());
 		}
 
 		public void taskPrioritiesChanged(TaskTagsEvent event) {
 		}
 
 		public void taskCaseChanged(TaskTagsEvent event) {
-			TaskPatternsProvider.this.taskTagsChanged(event.getProject(), event
-					.getTaskTags(), event.isCaseSensitive());
+			TaskPatternsProvider.this.taskTagsChanged(event.getProject(),
+					event.getTaskTags(), event.isCaseSensitive());
 		}
 
 	}

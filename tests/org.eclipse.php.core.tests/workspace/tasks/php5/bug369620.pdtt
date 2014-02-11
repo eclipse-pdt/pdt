@@ -1,0 +1,16 @@
+--TEST--
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=369620
+--CONFIG--
+tags:XY,TODO,FIXME
+priorities:NORMAL,NORMAL,NORMAL
+--FILE--
+<?php
+//foobar "D:\XY\php\test.php"
+//"D:\XY\php\test.php"
+// XY Text
+// XY: My text
+//fooXYbar
+?>
+--EXPECT--
+[line=4, start=62, end=69, priority=1] XY Text
+[line=5, start=73, end=84, priority=1] XY: My text
