@@ -1,0 +1,16 @@
+--TEST--
+Default configuration
+--CONFIG--
+caseSensitive:disabled
+--FILE--
+<?php
+/**
+ * @toDo aaa
+ * FixMe bbb
+ * xXx ccc
+ */
+?>
+--EXPECT--
+[line=3, start=13, end=22, priority=1] @toDo aaa
+[line=4, start=26, end=35, priority=2] FixMe bbb
+[line=5, start=39, end=46, priority=1] xXx ccc

@@ -1,0 +1,13 @@
+--TEST--
+Two (or more) tags in one line
+--FILE--
+<?php
+/**
+ * @todo Fix it FIXME Repair!
+ * TODO: Another
+ */
+?>
+--EXPECT--
+[line=3, start=13, end=25, priority=1] @todo Fix it
+[line=3, start=26, end=39, priority=2] FIXME Repair!
+[line=4, start=43, end=56, priority=1] TODO: Another
