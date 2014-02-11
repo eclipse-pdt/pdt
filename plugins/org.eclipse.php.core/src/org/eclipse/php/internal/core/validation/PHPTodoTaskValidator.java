@@ -1,107 +1,92 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [427907]
  *******************************************************************************/
 package org.eclipse.php.internal.core.validation;
 
-import org.eclipse.core.resources.*;
+import java.io.IOException;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.builder.IBuildContext;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.validation.AbstractValidator;
-import org.eclipse.wst.validation.ValidationResult;
-import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 
 /**
- * This Validator creates (and removes) the task markers that will eventually
- * show up in the task view
+ * This Validator creates the task markers that will eventually show up in the
+ * task view
  * 
  * @author Eden K.,2008
  * 
  */
-public class PHPTodoTaskValidator extends AbstractValidator {
+public class PHPTodoTaskValidator implements IBuildParticipant {
 
 	protected TaskTag[] taskTags = null;
 
-	public ValidationResult validate(IResource resource, int kind,
-			ValidationState state, IProgressMonitor monitor) {
-		// process only PHP files
-		if (resource.getType() != IResource.FILE
-				|| !(PHPToolkitUtil.isPhpFile((IFile) resource))) {
-			return null;
+	public void build(IBuildContext context) throws CoreException {
+		if (context.get(IBuildContext.ATTR_MODULE_DECLARATION) == null
+				|| !(context.get(IBuildContext.ATTR_MODULE_DECLARATION) instanceof PHPModuleDeclaration)) {
+			return;
+		}
+		if (taskTags == null) {
+			TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();
+			getTaskTags(context.getSourceModule().getScriptProject()
+					.getProject(), taskTagsProvider);
+		}
+		try {
+			IStructuredDocument doc = StructuredModelManager
+					.getModelManager()
+					.createStructuredDocumentFor(
+							context.getFileName(),
+							String.copyValueOf(context.getContentsAsCharArray()),
+							null);
+			validateContent(context, doc);
+		} catch (IOException e) {
 		}
 
-		ValidationResult result = new ValidationResult();
-		IReporter reporter = result.getReporter(monitor);
-		validateFile(reporter, (IFile) resource, kind);
-
-		return result;
 	}
 
 	/**
 	 * Search for tasks in the validated file and create a marker for each task
 	 * found
 	 */
-	public void validateFile(IReporter reporter, IFile file, int kind) {
-
-		// populate the task tags from the preferences
-		// in case it is empty or it is a clean/full build
-		if (taskTags == null || (kind == 0)) {
-			populateTaskTags(file);
+	public void validateContent(IBuildContext context, IStructuredDocument doc) {
+		if (doc == null) {
+			return;
 		}
 
-		// remove the markers currently existing for this resource
-		// in case of project/folder, the markers are deleted recursively
 		try {
-			file.deleteMarkers(PHPCoreConstants.PHP_MARKER_TYPE, false,
-					IResource.DEPTH_INFINITE);
-		} catch (CoreException e) {
-		}
-		IStructuredModel model = null;
-		try {
-			// desperately try to get the model :) In case it doesn't exist yet,
-			// create it
-			try {
-				model = StructuredModelManager.getModelManager()
-						.getExistingModelForRead(file);
-			} catch (Exception e) {
-				try {
-					model = StructuredModelManager.getModelManager()
-							.createUnManagedStructuredModelFor(file);
-				} catch (Exception e2) {
-				}
-			}
-			if (model == null) {
-				return;
-			}
+
 			// collect the tasks info and report
-			IStructuredDocumentRegion[] sdRegions = model
-					.getStructuredDocument().getStructuredDocumentRegions();
+			IStructuredDocumentRegion[] sdRegions = doc
+					.getStructuredDocumentRegions();
 			for (IStructuredDocumentRegion structuredDocumentRegion : sdRegions) {
 
 				IStructuredDocument document = structuredDocumentRegion
@@ -157,8 +142,8 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 									}
 
 									try {
-										reportTask(document, file, reporter,
-												offset, length, priority);
+										reportTask(context, document, offset,
+												length, priority);
 									} catch (CoreException e) {
 										Logger.logException(
 												"Failed creating task", e); //$NON-NLS-1$
@@ -173,25 +158,10 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException("Failed validating file for tasks " + file, e); //$NON-NLS-1$
-		} finally {
-			if (model != null) {
-				model.releaseFromRead();
-				model = null;
-			}
-
+			Logger.logException(
+					"Failed validating file for tasks " + context.getFileName(), e); //$NON-NLS-1$
 		}
 
-	}
-
-	/**
-	 * Get the project and populate the task tags list from the preferences
-	 * 
-	 * @param helper
-	 */
-	private void populateTaskTags(IFile file) {
-		TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();
-		getTaskTags(file.getProject(), taskTagsProvider);
 	}
 
 	public void cleanup(IReporter reporter) {
@@ -250,8 +220,8 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	 * @throws BadLocationException
 	 * @throws CoreException
 	 */
-	private void reportTask(IStructuredDocument document, IFile file,
-			IReporter taskReporter, int offset, int length, int priority)
+	private void reportTask(IBuildContext context,
+			IStructuredDocument document, int offset, int length, int priority)
 			throws BadLocationException, CoreException {
 		int lineNumber = document.getLineOfOffset(offset);
 
@@ -260,33 +230,10 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 		int charEnd = offset + taskStr.length();
 
 		// report the task
-		createMarker(file, taskStr, lineNumber, priority, offset, charEnd);
-
-	}
-
-	/**
-	 * Creates a PHP task marker based on the given information
-	 * 
-	 * @param file
-	 * @param taskStr
-	 * @param lineNumber
-	 * @param priority
-	 * @param offset
-	 * @param charEnd
-	 * @throws CoreException
-	 */
-	private void createMarker(IFile file, String taskStr, int lineNumber,
-			int priority, int offset, int charEnd) throws CoreException {
-		IMarker marker = file.createMarker(PHPCoreConstants.PHP_MARKER_TYPE);
-
-		marker.setAttribute(IMarker.TASK, true);
-
-		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber + 1);
-		marker.setAttribute(IMarker.CHAR_START, offset);
-		marker.setAttribute(IMarker.CHAR_END, charEnd);
-		marker.setAttribute(IMarker.MESSAGE, taskStr);
-		marker.setAttribute(IMarker.USER_EDITABLE, false);
-		marker.setAttribute(IMarker.PRIORITY, priority);
+		// createMarker(file, taskStr, lineNumber, priority, offset, charEnd);
+		context.getProblemReporter().reportProblem(
+				new ValidationProblem(taskStr, ProblemIdentifier.TASK,
+						priority, offset, charEnd, lineNumber + 1));
 	}
 
 	/**
@@ -338,5 +285,4 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 		}
 		return textRegion;
 	}
-
 }
