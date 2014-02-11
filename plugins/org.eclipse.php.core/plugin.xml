@@ -167,11 +167,20 @@
 	<extension
 		point="org.eclipse.dltk.core.buildParticipant">
 		<buildParticipant
-			class="org.eclipse.php.internal.core.builder.ParserBuildParticipantFactory"
-			id="org.eclipse.php.core.buildParticipant.parser"
-			name="%parserBuildParticipant.name"
-			nature="org.eclipse.php.core.PHPNature">
-		</buildParticipant>
+            class="org.eclipse.php.internal.core.builder.ParserBuildParticipantFactory"
+            id="org.eclipse.php.core.buildParticipant.parser"
+            name="%parserBuildParticipant.name"
+            nature="org.eclipse.php.core.PHPNature">
+        </buildParticipant>
+        <buildParticipant
+            class="org.eclipse.php.internal.core.validation.TodoTaskBuildParticipantFactory"
+            id="org.eclipse.php.core.buildParticipant.todoTask"
+            name="%todoTaskBuildParticipant.name"
+            nature="org.eclipse.php.core.PHPNature">
+            <requires
+                  id="org.eclipse.php.core.buildParticipant.parser">
+            </requires>
+        </buildParticipant>
 	</extension>
 
 	<extension
@@ -261,30 +270,7 @@
 			name="severity" />
 		<attribute
 			name="userEditable" />
-		<super
-			type="org.eclipse.core.resources.taskmarker" />
-	</extension>
-
-	<extension
-		id="org.eclipse.php.core.PHPTaskValidator"
-		name="PHPTaskValidator"
-		point="org.eclipse.wst.validation.validatorV2">
-		<validator
-			build="true"
-			class="org.eclipse.php.internal.core.validation.PHPTodoTaskValidator"
-			manual="true"
-			sourceid="org.eclipse.php.core.phpsource"
-			version="1"
-			markerId="org.eclipse.php.core.phpTaskMarker">
-			<include>
-				<rules>
-					<contentType
-						id="org.eclipse.php.core.phpsource"></contentType>
-				</rules>
-			</include>
-			<group
-				id="org.eclipse.wst.sse.core.structuredModelGroup" />
-		</validator>
+		<super type="org.eclipse.dltk.core.task"/>
 	</extension>
 
 	<!-- DLTK SQL-based index -->
@@ -402,7 +388,7 @@
       <renameParticipant
             class="org.eclipse.php.internal.core.libfolders.LibraryFolderRenameParticipant"
             name="%libraryFolderRenameParticipant.name"
-            id="org.eclipse.php.core.refactoring.libraryFolderRename"> 
+            id="org.eclipse.php.core.refactoring.libraryFolderRename">
          <enablement>
             <with variable="affectedNatures">
                <iterate operator="or">
@@ -417,5 +403,17 @@
             </with>
          </enablement>
       </renameParticipant>
+   </extension>
+   <extension
+         point="org.eclipse.dltk.core.problemFactory">
+      <problemIdentifierFactory
+            class="org.eclipse.php.internal.core.validation.ProblemIdentifierFactory"
+            namespace="org.eclipse.php.internal.core.validation.ProblemIdentifier">
+      </problemIdentifierFactory>
+      <problemFactory
+            class="org.eclipse.php.internal.core.validation.ProblemFactory"
+            nature="org.eclipse.php.core.PHPNature"
+            priority="0">
+      </problemFactory>
    </extension>
 </plugin>

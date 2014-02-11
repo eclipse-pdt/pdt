@@ -32,6 +32,7 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	private boolean hasErrors;
 	private List<VarComment> varComments;
 	private List<PHPDocBlock> phpDocBlocks = new LinkedList<PHPDocBlock>();
+	private List<Comment> otherComments = new LinkedList<Comment>();
 
 	public PHPModuleDeclaration(int start, int end, List<Statement> statements,
 			List<ASTError> errors, List<VarComment> varComments) {
@@ -149,6 +150,10 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 
 	public List<PHPDocBlock> getPhpDocBlocks() {
 		return phpDocBlocks;
+	}
+
+	public List<Comment> getOtherComments() {
+		return otherComments;
 	}
 
 	private class ErrorSearcher extends ASTVisitor {

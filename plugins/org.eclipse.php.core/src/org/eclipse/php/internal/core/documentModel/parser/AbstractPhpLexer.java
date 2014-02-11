@@ -218,6 +218,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 	public LinkedList<ITextRegion> bufferedTokens = null;
 	public int bufferedLength;
+	public int bufferedStart;
 	public Object bufferedState;
 
 	/**
@@ -235,6 +236,8 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 
 		bufferedState = createLexicalStateMemento();
 		String yylex = yylex();
+		int start = getTokenStart();
+		bufferedLength = 0;
 		if (PHPPartitionTypes.isPHPDocCommentState(yylex)) {
 			final StringBuffer buffer = new StringBuffer();
 			int length = 0;
@@ -249,10 +252,12 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			bufferedTokens.add(new ContextRegion(yylex, 0, yylength(),
 					yylength()));
 			yylex = removeFromBuffer();
+			bufferedStart = start;
 		} else if (PHPPartitionTypes.isPHPCommentState(yylex)) {
 			bufferedTokens = new LinkedList<ITextRegion>();
 			checkForTodo(bufferedTokens, yylex, 0, yylength(), yytext());
 			yylex = removeFromBuffer();
+			bufferedStart = start;
 		}
 
 		if (yylex == PHP_CLOSETAG) {
@@ -267,6 +272,7 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 	 */
 	private String removeFromBuffer() {
 		ITextRegion region = (ITextRegion) bufferedTokens.removeFirst();
+		bufferedStart += bufferedLength;
 		bufferedLength = region.getLength();
 		return region.getType();
 	}
@@ -275,7 +281,13 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 		return bufferedTokens == null ? yylength() : bufferedLength;
 	}
 
+	public int getOffset() {
+		return bufferedTokens == null ? getTokenStart() : bufferedStart;
+	}
+
 	private Pattern[] todos;
+
+	final private static String aroundTodoPattern = "[\\w@#$\\^%&*)/\\\\|]"; //$NON-NLS-1$
 
 	public void setPatterns(IProject project) {
 		if (project != null) {
@@ -299,18 +311,25 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			int commentStart, int commentLength, String comment) {
 		ArrayList<Matcher> matchers = createMatcherList(comment);
 		int startPosition = 0;
-
 		Matcher matcher = getMinimalMatcher(matchers, startPosition);
 		ITextRegion tRegion = null;
 		while (matcher != null) {
 			int startIndex = matcher.start();
 			int endIndex = matcher.end();
-			if (startIndex != startPosition) {
+			if ((startIndex > 0 && comment
+					.substring(startIndex - 1, startIndex).matches(
+							aroundTodoPattern))
+					|| (endIndex < commentLength && comment.substring(endIndex,
+							endIndex + 1).matches(aroundTodoPattern))) {
+				matcher = getMinimalMatcher(matchers, endIndex);
+				continue;
+			} else if (startIndex != startPosition) {
 				tRegion = new ContextRegion(token,
 						commentStart + startPosition, startIndex
 								- startPosition, startIndex - startPosition);
 				result.add(tRegion);
 			}
+
 			tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO,
 					commentStart + startIndex, endIndex - startIndex, endIndex
 							- startIndex);
@@ -323,49 +342,6 @@ public abstract class AbstractPhpLexer implements Scanner, PHPRegionTypes {
 			result.add(new ContextRegion(token, commentStart + startPosition,
 					length, length));
 		}
-
-		// String[] words = comment.split("\\W+");
-		// int startPosition = 0;
-		// for (int i = 0; i < words.length; i++) {
-		// String word = words[i];
-		// ArrayList<Matcher> matchers = createMatcherList(word);
-		//
-		// Matcher matcher = getMinimalMatcher(matchers, 0);
-		// ITextRegion tRegion = null;
-		// int index = comment.indexOf(word, startPosition);
-		// if (matcher != null) {
-		// int startIndex = matcher.start();
-		// int endIndex = matcher.end();
-		// if (endIndex - startIndex == word.length()) {
-		//
-		// if (index - startPosition > 0) {
-		// tRegion = new ContextRegion(token, commentStart
-		// + startPosition, index - startPosition, index
-		// - startPosition);
-		// result.add(tRegion);
-		// startPosition = index;
-		// }
-		// tRegion = new ContextRegion(PHPRegionTypes.PHPDOC_TODO,
-		// commentStart + index, endIndex - startIndex,
-		// endIndex - startIndex);
-		// result.add(tRegion);
-		// startPosition += endIndex;
-		// } else {
-		// final int length = word.length() - startPosition;
-		// result.add(new ContextRegion(token, commentStart
-		// + startPosition, length, length));
-		// }
-		// } else {
-		// final int length = word.length() + index - startPosition;
-		// result.add(new ContextRegion(token, commentStart
-		// + startPosition, length, length));
-		// startPosition += length;
-		// }
-		// }
-		// if (words.length == 0) {
-		// result.add(new ContextRegion(token, commentStart, commentLength,
-		// commentLength));
-		// }
 	}
 
 	private ArrayList<Matcher> createMatcherList(String content) {
