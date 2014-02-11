@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -205,6 +205,8 @@ public interface PHPCoreConstants {
 	/**
 	 * PHP Task Marker
 	 */
+	public static final String PHP_MARKER_PREFIX = "org.eclipse.php.core"; //$NON-NLS-1$
+
 	public static final String PHP_MARKER_TYPE = "org.eclipse.php.core.phpTaskMarker"; //$NON-NLS-1$
 
 	public static final int AccClassField = (1 << 10);
