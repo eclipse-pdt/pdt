@@ -14,6 +14,10 @@
 		<antrun-version>1.6</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs />
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.exclusions>**/parser/*/CompilerAstParser.java,**/parser/DocumentorLexer.java,**/scanner/*/PhpAstLexer.java,**/scanner/*/PhpAstParser.java,**/documentModel/parser/PHPTokenizer.java,**/parser/*/PhpLexer.java</sonar.exclusions>
+		<sonar.jacoco.fPath>../../org.eclipse.pdt.releng/target/jacoco.exec</sonar.jacoco.fPath>
 	</properties>
 	<profiles>
 		<profile>
@@ -50,6 +54,25 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.6.4.201312101107</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<destFile>${sonar.jacoco.fPath}</destFile>
+							<includes>
+								<include>org.eclipse.php.*</include>
+							</includes>
+							<append>true</append>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -74,7 +97,7 @@
 	<pluginRepositories>
 		<pluginRepository>
 			<id>maven.eclipse.org</id>
-      <url>https://repo.eclipse.org/content/repositories/releases/</url>
+			<url>https://repo.eclipse.org/content/repositories/releases/</url>
 		</pluginRepository>
 		<pluginRepository>
 			<id>jboss-public-repository-group</id>
