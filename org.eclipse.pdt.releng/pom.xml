@@ -14,6 +14,10 @@
 		<antrun-version>1.6</antrun-version>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<test.vmargs />
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.exclusions>**/parser/*/CompilerAstParser.java,**/parser/DocumentorLexer.java,**/scanner/*/PhpAstLexer.java,**/scanner/*/PhpAstParser.java,**/documentModel/parser/PHPTokenizer.java,**/parser/*/PhpLexer.java,**/*Messages.java</sonar.exclusions>
+		<sonar.jacoco.reportPath>../../org.eclipse.pdt.releng/target/jacoco.exec</sonar.jacoco.reportPath>
 	</properties>
 	<profiles>
 		<profile>
