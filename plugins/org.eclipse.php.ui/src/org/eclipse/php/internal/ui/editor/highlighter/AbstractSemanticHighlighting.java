@@ -12,23 +12,21 @@ package org.eclipse.php.internal.ui.editor.highlighter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.BufferManager;
+import org.eclipse.dltk.internal.ui.editor.DocumentAdapter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Position;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightingStyle;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.ui.editor.SharedASTProvider;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
 import org.eclipse.wst.sse.ui.ISemanticHighlightingExtension2;
@@ -106,34 +104,26 @@ public abstract class AbstractSemanticHighlighting implements
 	protected Program getProgram(final IStructuredDocumentRegion region) {// region.getParentDocument().get()
 		sourceModule = null;
 		// resolve current sourceModule
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				IWorkbenchPage page = PHPUiPlugin.getActivePage();
-				if (page != null) {
-					IEditorPart editor = page.getActiveEditor();
-					if (editor instanceof PHPStructuredEditor) {
-						PHPStructuredEditor phpStructuredEditor = (PHPStructuredEditor) editor;
-						if (phpStructuredEditor.getTextViewer() != null
-								&& phpStructuredEditor != null
-								&& phpStructuredEditor.getDocument() == region
-										.getParentDocument()) {
-							if (phpStructuredEditor != null
-									&& phpStructuredEditor.getTextViewer() != null) {
-								sourceModule = (ISourceModule) phpStructuredEditor
-										.getModelElement();
-							}
-						}
-					}
+		Enumeration openBuffers = BufferManager.getDefaultBufferManager()
+				.getOpenBuffers();
+		while (openBuffers.hasMoreElements()) {
+			Object nextElement = openBuffers.nextElement();
+			if (nextElement instanceof DocumentAdapter) {
+				DocumentAdapter adapt = (DocumentAdapter) nextElement;
+				if (adapt.getDocument().equals(region.getParentDocument())
+						&& adapt.getOwner() instanceof ISourceModule) {
+					sourceModule = (ISourceModule) adapt.getOwner();
+					break;
 				}
 			}
-		});
+		}
 
 		// resolve AST
 		Program program = null;
 		if (sourceModule != null) {
 			try {
 				program = SharedASTProvider.getAST(sourceModule,
-						SharedASTProvider.WAIT_YES, null);
+						SharedASTProvider.WAIT_ACTIVE_ONLY, null);
 			} catch (ModelException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
