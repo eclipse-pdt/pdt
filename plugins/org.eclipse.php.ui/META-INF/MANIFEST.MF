@@ -113,6 +113,6 @@ Export-Package: org.eclipse.php.internal.ui;x-internal:=true,
  org.eclipse.php.ui.util,
  org.eclipse.php.ui.wizards
 Bundle-Vendor: %Bundle-Vendor.1
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.core.expressions,
  org.eclipse.php.internal.ui.preferences
