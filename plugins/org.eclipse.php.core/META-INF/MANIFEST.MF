@@ -750,5 +750,5 @@ Export-Package: org.eclipse.php.core.codeassist,
    org.eclipse.php.ui.tests"
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 
