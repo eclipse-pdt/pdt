@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [426054]
  *******************************************************************************/
 package org.eclipse.php.internal.core.language.keywords;
 
@@ -54,9 +55,8 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
 		list.add(new KeywordData("global", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("if", WHITESPACE_PARENTESES_SUFFIX, 2)); //$NON-NLS-1$
-		list
-				.add(new KeywordData("include_once", //$NON-NLS-1$
-						WS_QUOTES_SEMICOLON_SUFFIX, 2));
+		list.add(new KeywordData("include_once", //$NON-NLS-1$
+				WS_QUOTES_SEMICOLON_SUFFIX, 2));
 		list.add(new KeywordData("include", WS_QUOTES_SEMICOLON_SUFFIX, 2)); //$NON-NLS-1$
 		list.add(new KeywordData("isset", PARENTESES_SUFFIX, 1)); //$NON-NLS-1$
 		list.add(new KeywordData("list", PARENTESES_SUFFIX, 1)); //$NON-NLS-1$
@@ -66,11 +66,11 @@ public class KeywordInitializerPHP_4 implements IPHPKeywordsInitializer {
 		list.add(new KeywordData("parent", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2, //$NON-NLS-1$
 				PHPKeywords.METHOD_BODY | PHPKeywords.METHOD_PARAM));
 		list.add(new KeywordData("print", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
-		list
-				.add(new KeywordData("require_once", //$NON-NLS-1$
-						WS_QUOTES_SEMICOLON_SUFFIX, 2));
+		list.add(new KeywordData("require_once", //$NON-NLS-1$
+				WS_QUOTES_SEMICOLON_SUFFIX, 2));
 		list.add(new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2)); //$NON-NLS-1$
-		list.add(new KeywordData("return", WHITESPACE_SUFFIX, 1)); //$NON-NLS-1$
+		list.add(new KeywordData(
+				"return", WHITESPACE_SUFFIX, 1, PHPKeywords.METHOD_BODY | PHPKeywords.GLOBAL)); //$NON-NLS-1$
 		list.add(new KeywordData("static", WHITESPACE_SUFFIX, 1, //$NON-NLS-1$
 				PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
 		list.add(new KeywordData("switch", WHITESPACE_PARENTESES_SUFFIX, 2)); //$NON-NLS-1$
