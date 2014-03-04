@@ -1,0 +1,14 @@
+--TEST--
+Test bug #414814
+--FILE--
+<?php
+class MyClass implements ArrayAccess {
+	public $myField;
+}
+
+$x = new MyClass();
+$x['something'] = "";
+$x->my|
+?>
+--EXPECT--
+field($myField)

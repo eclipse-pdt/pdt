@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2009, 2014 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *     Dawid Pakuła [414814]
+ *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
 import java.util.*;
@@ -145,7 +157,9 @@ public class DeclarationScope {
 						decl = new Declaration(
 								declNode instanceof GlobalStatement, declNode);
 						varDecls.set(level, decl);
-					} else {
+					} else if (!(declNode instanceof Assignment && (((Assignment) declNode)
+							.getVariable() instanceof ArrayVariableReference))) {
+						// bug 414814
 						decl.setNode(declNode);
 					}
 
@@ -163,7 +177,6 @@ public class DeclarationScope {
 			varDecls.addLast(new Declaration(
 					declNode instanceof GlobalStatement, declNode));
 		}
-
 	}
 
 	public static boolean isInSameBlock(Statement block, ASTNode oldNode,
