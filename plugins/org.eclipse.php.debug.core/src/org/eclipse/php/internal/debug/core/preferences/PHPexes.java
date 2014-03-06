@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -43,6 +43,8 @@ public class PHPexes {
 	private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
 	private static final String DEBUGGER_ID_ATTRIBUTE = "debuggerID"; //$NON-NLS-1$
 	private static final String PHPEXE_TAG = "phpExe"; //$NON-NLS-1$
+	private static final String TRUE = "true"; //$NON-NLS-1$
+	private static final String FALSE = "false"; //$NON-NLS-1$
 	public static final String SEPARATOR = ";"; //$NON-NLS-1$
 	private static final String VERSION_ATTRIBUTE = "version"; //$NON-NLS-1$
 	public static final String ZEND_DEBUGGER_ID = DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID;
@@ -385,10 +387,20 @@ public class PHPexes {
 		if (inisString == null) {
 			inisString = ""; //$NON-NLS-1$
 		}
+
 		// In case there is no preference value for the
 		// PHPDebugCorePreferenceNames.INSTALLED_PHP_INIS,
 		// the size of the array is set to be the same as the executables array.
 		final String[] phpIniLocations = inisString.length() > 0 ? inisString
+				.split(SEPARATOR) : new String[phpExecutablesLocations.length];
+
+		// Load default inis settings
+		String loadDefaultInisString = prefs
+				.getString(PHPDebugCorePreferenceNames.INSTALLED_PHP_LOAD_DEFAULT_INIS);
+		if (loadDefaultInisString == null) {
+			loadDefaultInisString = ""; //$NON-NLS-1$
+		}
+		final String[] loadDefaultInis = loadDefaultInisString.length() > 0 ? loadDefaultInisString
 				.split(SEPARATOR) : new String[phpExecutablesLocations.length];
 
 		// Load the debuggers array
@@ -420,7 +432,10 @@ public class PHPexes {
 				break;
 			}
 			final PHPexeItem item = new PHPexeItem(names[i],
-					phpExecutablesLocations[i], iniLocation, debuggers[i]);
+					phpExecutablesLocations[i], iniLocation, debuggers[i],
+					loadDefaultInis[i] != null
+							&& loadDefaultInis[i].equals(TRUE));
+
 			// the size of defaultItemForPHPVersions may be 0 when you use this
 			// first time
 			if (defaultItemForPHPVersions.length == phpExecutablesLocations.length) {
@@ -639,6 +654,7 @@ public class PHPexes {
 		final StringBuffer namesString = new StringBuffer();
 		final StringBuffer debuggersString = new StringBuffer();
 		final StringBuffer defaultItemForPHPVersionString = new StringBuffer();
+		final StringBuffer loadIniDefaultString = new StringBuffer();
 		for (int i = 0; i < phpItems.length; i++) {
 			final PHPexeItem item = phpItems[i];
 			if (i > 0) {
@@ -647,12 +663,15 @@ public class PHPexes {
 				namesString.append(SEPARATOR);
 				debuggersString.append(SEPARATOR);
 				defaultItemForPHPVersionString.append(SEPARATOR);
+				loadIniDefaultString.append(SEPARATOR);
 			}
 			locationsString.append(item.getExecutable().toString());
 			inisString.append(item.getINILocation() != null ? item
 					.getINILocation().toString() : NULL_PLACE_HOLDER);
 			namesString.append(item.getName());
 			debuggersString.append(item.getDebuggerID());
+			loadIniDefaultString.append(item.isLoadDefaultINI() ? TRUE : FALSE);
+
 			if (item.geDefaultForPHPVersionSize() > 0) {
 				for (int j = 0; j < item.geDefaultForPHPVersionSize(); j++) {
 					if (j > 0) {
@@ -678,6 +697,9 @@ public class PHPexes {
 		prefs.setValue(
 				PHPDebugCorePreferenceNames.INSTALLED_PHP_DEFAULT_FOR_VERSIONS,
 				defaultItemForPHPVersionString.toString());
+		prefs.setValue(
+				PHPDebugCorePreferenceNames.INSTALLED_PHP_LOAD_DEFAULT_INIS,
+				loadIniDefaultString.toString());
 		// save the default executables per debugger id
 		final StringBuffer defaultsString = new StringBuffer();
 		Iterator<PHPexeItem> iterator = defaultItems.values().iterator();

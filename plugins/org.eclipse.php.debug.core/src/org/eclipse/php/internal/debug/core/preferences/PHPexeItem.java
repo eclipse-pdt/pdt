@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [339547]
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.preferences;
 
@@ -56,6 +57,7 @@ public class PHPexeItem {
 	private File executable;
 	private String version;
 	private boolean editable = true;
+	private boolean loadDefaultINI = false;
 	private String debuggerID;
 	private boolean isDefault;
 	/**
@@ -78,12 +80,33 @@ public class PHPexeItem {
 	 */
 	public PHPexeItem(String name, String executable, String config,
 			String debuggerID) {
+		this(name, executable, config, debuggerID, false);
+	}
+
+	/**
+	 * Constructs a new PHP executable item.
+	 * 
+	 * @param name
+	 *            PHP executable nice name (like: PHP 5.3 CGI)
+	 * @param executable
+	 *            PHP executable file
+	 * @param config
+	 *            The configuration file (php.ini) location (can be null)
+	 * @param debuggerID
+	 *            ID of debugger (see org.eclipse.php.debug.core.phpDebuggers
+	 *            extension point)
+	 * @param loadDefaultINI
+	 *            Disable php "-n" usage
+	 */
+	public PHPexeItem(String name, String executable, String config,
+			String debuggerID, boolean loadDefaultINI) {
 		this.name = name;
 		this.debuggerID = debuggerID;
 		this.executable = new File(executable);
 		if (config != null && config.length() > 0) {
 			this.config = new File(config);
 		}
+		this.loadDefaultINI = loadDefaultINI;
 
 		detectFromPHPExe();
 	}
@@ -330,6 +353,22 @@ public class PHPexeItem {
 	}
 
 	/**
+	 * @return return loadDefault
+	 */
+	public boolean isLoadDefaultINI() {
+		return loadDefaultINI;
+	}
+
+	/**
+	 * If true PHPLaunchUtilities ignore "-n"
+	 * 
+	 * @param loadDefaultINI
+	 */
+	public void setLoadDefaultINI(boolean loadDefaultINI) {
+		this.loadDefaultINI = loadDefaultINI;
+	}
+
+	/**
 	 * Set or un-set this item to be the default php executable item.
 	 * 
 	 * @param isDefault
@@ -413,7 +452,7 @@ public class PHPexeItem {
 			if (detectedConfig == null) {
 				output = exec(
 						executable.getAbsolutePath(),
-						"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						this.loadDefaultINI ? "" : "-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-i"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				if (sapiType == SAPI_CLI) {
 					m = PHP_CLI_CONFIG.matcher(output);
 				} else if (sapiType == SAPI_CGI) {
@@ -502,7 +541,7 @@ public class PHPexeItem {
 		try {
 			PHPexes.changePermissions(executable);
 			exec(executable.getAbsolutePath(),
-					"-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", scriptFile); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					this.loadDefaultINI ? "" : "-n", "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", scriptFile); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		} catch (IOException e) {
 			DebugPlugin.log(e);
 			status = false;
