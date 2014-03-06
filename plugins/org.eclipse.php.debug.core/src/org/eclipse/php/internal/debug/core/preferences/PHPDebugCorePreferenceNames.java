@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -26,7 +26,8 @@ public class PHPDebugCorePreferenceNames {
 	public static final String STOP_AT_FIRST_LINE = Debug_ID
 			+ "stop_at_first_line_string"; //$NON-NLS-1$
 	public static final String ZEND_DEBUG_PORT = Debug_ID + "zend_debug_port"; //$NON-NLS-1$
-	public static final String ZEND_NEW_PROTOCOL = Debug_ID + "zend_new_protocol"; //$NON-NLS-1$
+	public static final String ZEND_NEW_PROTOCOL = Debug_ID
+			+ "zend_new_protocol"; //$NON-NLS-1$
 	public static final String CLIENT_IP = Debug_ID + "client_ip"; //$NON-NLS-1$
 	public static final String DEBUG_RESPONSE_TIMEOUT = Debug_ID
 			+ "response_timeout"; //$NON-NLS-1$
@@ -42,6 +43,8 @@ public class PHPDebugCorePreferenceNames {
 			+ "installedPHPDebuggers"; //$NON-NLS-1$
 	public static final String INSTALLED_PHP_DEFAULTS = Debug_ID
 			+ "installedPHPDefaults"; //$NON-NLS-1$
+	public static final String INSTALLED_PHP_LOAD_DEFAULT_INIS = Debug_ID
+			+ "installedPHPLoadIniDefaults"; //$NON-NLS-1$
 
 	// Project default PHP executables keys
 	public static final String DEFAULT_PHP = Debug_ID + "defaultPHP"; //$NON-NLS-1$

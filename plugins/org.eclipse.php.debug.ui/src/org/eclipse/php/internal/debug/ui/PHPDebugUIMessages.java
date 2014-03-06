@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -29,6 +29,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String addPHPexeDialog_phpDebugger;
 	public static String addPHPexeDialog_phpHome;
 	public static String addPHPexeDialog_phpIni;
+	public static String addPHPexeDialog_loadDefaultPHPIni;
 	public static String addPHPexeDialog_phpName;
 	public static String addPHPexeDialog_pickPHPIniDialog_message;
 	public static String addPHPexeDialog_pickPHPRootDialog_message;

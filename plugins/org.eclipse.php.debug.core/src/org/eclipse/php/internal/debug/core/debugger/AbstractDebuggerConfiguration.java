@@ -4,13 +4,13 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
 /**
- * 
+ *
  */
 package org.eclipse.php.internal.debug.core.debugger;
 
@@ -179,11 +179,13 @@ public abstract class AbstractDebuggerConfiguration implements
 			File iniFile = exeItem.getINILocation();
 			if (iniFile != null) {
 				output = PHPexeItem.exec(exeItem.getExecutable()
-						.getAbsolutePath(), "-c", iniFile //$NON-NLS-1$
-						.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
+						.getAbsolutePath(),
+						exeItem.isLoadDefaultINI() ? "" : "-n", "-c", iniFile //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
 			} else {
-				output = PHPexeItem.exec(exeItem.getExecutable()
-						.getAbsolutePath(), "--re", extensionId); //$NON-NLS-1$
+				output = PHPexeItem
+						.exec(exeItem.getExecutable().getAbsolutePath(),
+								exeItem.isLoadDefaultINI() ? "" : "-n", "--re", extensionId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 			return output != null && !output.trim().startsWith("Exception"); //$NON-NLS-1$
 		} catch (IOException e) {

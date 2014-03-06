@@ -1,14 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *     Aptana Inc.
+ *     Dawid Pakuła [339547]
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
@@ -926,7 +927,7 @@ public class PHPLaunchUtilities {
 		final PHPexeItem[] phpItems = PHPexes.getInstance().getAllItems();
 		for (PHPexeItem item : phpItems) {
 			if (item.getExecutable().getAbsolutePath().equals(phpExe)) {
-				builtIn = !item.isEditable();
+				builtIn = !item.isEditable() || !item.isLoadDefaultINI();
 				break;
 			}
 		}
@@ -956,7 +957,7 @@ public class PHPLaunchUtilities {
 	public static String[] getCommandLineForPHP54BuildinServer(
 			ILaunchConfiguration configuration, String phpExe,
 			String phpConfigDir, String server, String root, String routerFile,
-			String[] args) throws CoreException {
+			String[] args, boolean useDefaultPHPIni) throws CoreException {
 		// Check if we should treat ASP tags as PHP tags
 		IProject project = getProject(configuration);
 		String aspTags = ProjectOptions.isSupportingAspTags(project) ? "on" //$NON-NLS-1$
@@ -971,20 +972,38 @@ public class PHPLaunchUtilities {
 
 		List<String> cmdLineList = new LinkedList<String>();
 		if (routerFile == null) {
-			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S", //$NON-NLS-1$
-					server, "-t", root, "-n", "-c", phpConfigDir, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					"asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$
-					"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
+			cmdLineList
+					.addAll(Arrays
+							.asList(new String[] {
+									phpExe,
+									"-S", //$NON-NLS-1$
+									server,
+									"-t", root, useDefaultPHPIni ? "" : "-n", "-c", phpConfigDir, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+									"asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$
+									"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
 		} else {
-			cmdLineList.addAll(Arrays.asList(new String[] { phpExe, "-S", //$NON-NLS-1$
-					server, "-t", root, routerFile, "-n", "-c", phpConfigDir, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					"-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
+			cmdLineList
+					.addAll(Arrays
+							.asList(new String[] {
+									phpExe,
+									"-S", //$NON-NLS-1$
+									server,
+									"-t", root, routerFile, useDefaultPHPIni ? "" : "-n", "-c", phpConfigDir, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+									"-d", "asp_tags=" + aspTags, "-d", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+									"short_open_tag=" + shortOpenTag })); //$NON-NLS-1$
 		}
 		if (args != null) {
 			cmdLineList.addAll(Arrays.asList(args));
 		}
 		return cmdLineList.toArray(new String[cmdLineList.size()]);
+	}
+
+	public static String[] getCommandLineForPHP54BuildinServer(
+			ILaunchConfiguration configuration, String phpExe,
+			String phpConfigDir, String server, String root, String routerFile,
+			String[] args) throws CoreException {
+		return getCommandLineForPHP54BuildinServer(configuration, phpExe,
+				phpConfigDir, server, root, routerFile, args, false);
 	}
 
 	/**

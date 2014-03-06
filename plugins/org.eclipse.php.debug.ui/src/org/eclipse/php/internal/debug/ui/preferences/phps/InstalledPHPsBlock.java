@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [339547]
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.preferences.phps;
 
@@ -444,7 +445,9 @@ public class InstalledPHPsBlock {
 		PHPexeItem phpExeToEdit = new PHPexeItem(phpExe.getName(),
 				phpExe.getExecutable(), phpExe.getINILocation(),
 				phpExe.getDebuggerID(), phpExe.isEditable());
+		// phpExeToEdit.setLoadDefaultINI(phpExe.isLoadDefaultINI());
 		phpExeToEdit.setSapiType(phpExe.getSapiType());
+		phpExeToEdit.setLoadDefaultINI(phpExe.isLoadDefaultINI());
 		PHPExeEditDialog dialog = new PHPExeEditDialog(getShell(),
 				phpExeToEdit, phpExes.getAllItems());
 		dialog.setTitle(PHPDebugUIMessages.InstalledPHPsBlock_8);
@@ -456,6 +459,7 @@ public class InstalledPHPsBlock {
 		phpExe.setINILocation(phpExeToEdit.getINILocation());
 		phpExe.setDebuggerID(phpExeToEdit.getDebuggerID());
 		phpExe.setSapiType(phpExeToEdit.getSapiType());
+		phpExe.setLoadDefaultINI(phpExeToEdit.isLoadDefaultINI());
 
 		fPHPExeList.refresh();
 		commitChanges();

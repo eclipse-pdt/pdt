@@ -1,13 +1,14 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009,2014 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
+ *     Dawid Pakuła [339547]
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.wizards;
 
@@ -33,10 +34,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.*;
 
 public class PHPExeCompositeFragment extends CompositeFragment implements
 		IPHPExeCompositeFragment {
@@ -46,6 +44,7 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 	private StringDialogField fPHPexeName;
 	private StringButtonDialogField fPHPExePath;
 	private StringButtonDialogField fPHPIni;
+	private Button fLoadDefaultPHPIni;
 	private List<String> debuggersIds;
 	private Label fDebuggersLabel;
 	private Combo fDebuggers;
@@ -153,6 +152,13 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 		((GridData) fPHPIni.getTextControl(parent).getLayoutData()).widthHint = pixelConverter
 				.convertWidthInCharsToPixels(50);
 
+		fLoadDefaultPHPIni = new Button(parent, SWT.CHECK);
+		fLoadDefaultPHPIni
+				.setText(PHPDebugUIMessages.addPHPexeDialog_loadDefaultPHPIni);
+		GridData loadDefaultPHPIniData = new GridData(GridData.FILL);
+		loadDefaultPHPIniData.horizontalSpan = 3;
+		fLoadDefaultPHPIni.setLayoutData(loadDefaultPHPIniData);
+
 		fSapiTypesLabel = new Label(parent, SWT.LEFT | SWT.WRAP);
 		fSapiTypesLabel.setFont(parent.getFont());
 		fSapiTypesLabel.setText(PHPDebugUIMessages.PHPExeCompositeFragment_1);
@@ -226,6 +232,16 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 			}
 		});
 
+		fLoadDefaultPHPIni.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent e) {
+				validate();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+				validate();
+			}
+		});
+
 		fSapiTypes.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				validate();
@@ -279,6 +295,8 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 						.toString());
 			}
 			fPHPIni.setEnabled(phpExeItem.isEditable());
+			fLoadDefaultPHPIni.setEnabled(phpExeItem.isEditable());
+			fLoadDefaultPHPIni.setSelection(phpExeItem.isLoadDefaultINI());
 			String debuggerID = phpExeItem.getDebuggerID();
 			fDebuggers.setEnabled(phpExeItem.isEditable());
 			fDebuggersLabel.setEnabled(phpExeItem.isEditable());
@@ -392,6 +410,9 @@ public class PHPExeCompositeFragment extends CompositeFragment implements
 						IMessageProvider.ERROR);
 				return;
 			}
+		}
+		if (phpExeItem != null && phpExeItem.isEditable()) {
+			phpExeItem.setLoadDefaultINI(fLoadDefaultPHPIni.getSelection());
 		}
 
 		phpExeItem.setName(name);
