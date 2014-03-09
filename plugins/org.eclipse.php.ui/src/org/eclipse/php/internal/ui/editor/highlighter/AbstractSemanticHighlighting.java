@@ -132,8 +132,9 @@ public abstract class AbstractSemanticHighlighting implements
 		Program program = null;
 		if (sourceModule != null) {
 			try {
+				// have to be avaiable, always after validator reconciler
 				program = SharedASTProvider.getAST(sourceModule,
-						SharedASTProvider.WAIT_YES, null);
+						SharedASTProvider.WAIT_NO, null);
 			} catch (ModelException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

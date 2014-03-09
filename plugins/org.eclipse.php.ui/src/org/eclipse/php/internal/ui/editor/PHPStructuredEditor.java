@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
@@ -56,6 +56,7 @@ import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.link.LinkedModeModel;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.text.source.ImageUtilities;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
@@ -99,7 +100,8 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
+import org.eclipse.swt.custom.ST;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -129,13 +131,15 @@ import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
+import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
+import org.eclipse.wst.sse.ui.reconcile.ISourceReconcilingListener;
 
 import com.ibm.icu.text.BreakIterator;
 
 public class PHPStructuredEditor extends StructuredTextEditor implements
-		IPhpScriptReconcilingListener {
+		IPhpScriptReconcilingListener, ISourceReconcilingListener {
 
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
 
@@ -2286,23 +2290,25 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		fInformationPresenter.install(getSourceViewer());
 
 		// bug fix - #154817
-		StyledText styledText = getTextViewer().getTextWidget();
-		styledText.getContent().addTextChangeListener(new TextChangeListener() {
-
-			public void textChanging(TextChangingEvent event) {
-			}
-
-			public void textChanged(TextChangedEvent event) {
-				// Mark AST dirty
-				PHPUiPlugin.getDefault().getASTProvider().markASTDirty();
-			}
-
-			public void textSet(TextChangedEvent event) {
-				refreshViewer();
-			}
-
-		});
-
+		// StyledText styledText = getTextViewer().getTextWidget();
+		// styledText.getContent().addTextChangeListener(new
+		// TextChangeListener() {
+		//
+		// public void textChanging(TextChangingEvent event) {
+		// }
+		//
+		// public void textChanged(TextChangedEvent event) {
+		// // Mark AST dirty
+		// PHPUiPlugin.getDefault().getASTProvider().markASTDirty();
+		// }
+		//
+		// public void textSet(TextChangedEvent event) {
+		// refreshViewer();
+		// }
+		//
+		// });
+		setReconcilerListener(this.getSourceViewerConfiguration(),
+				this.getTextViewer());
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
@@ -2310,15 +2316,32 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		setHelpContextId(IPHPHelpContextIds.EDITOR_PREFERENCES);//$NON-NLS-1$
 	}
 
-	private void refreshViewer() {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				StructuredTextViewer viewer = getTextViewer();
-				if (viewer != null) {
-					viewer.getTextWidget().redraw();
-				}
-			}
-		});
+	private void setReconcilerListener(SourceViewerConfiguration config,
+			StructuredTextViewer viewer) {
+		IReconciler reconciler = config.getReconciler(viewer);
+		if (reconciler instanceof DocumentRegionProcessor) {
+			((DocumentRegionProcessor) reconciler).addReconcilingListener(this);
+		}
+	}
+
+	private void removeReconcilerListener(SourceViewerConfiguration config,
+			StructuredTextViewer viewer) {
+		IReconciler reconciler = config.getReconciler(viewer);
+		if (reconciler instanceof DocumentRegionProcessor) {
+			((DocumentRegionProcessor) reconciler)
+					.removeReconcilingListener(this);
+		}
+	}
+
+	@Override
+	protected void setSourceViewerConfiguration(SourceViewerConfiguration config) {
+		SourceViewerConfiguration old = getSourceViewerConfiguration();
+		super.setSourceViewerConfiguration(config);
+		StructuredTextViewer textViewer = this.getTextViewer();
+		if (textViewer != null) {
+			removeReconcilerListener(old, textViewer);
+			setReconcilerListener(config, textViewer);
+		}
 
 	}
 
@@ -2819,8 +2842,32 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
-		for (int i = 0, length = listeners.length; i < length; ++i)
-			((IScriptReconcilingListener) listeners[i]).aboutToBeReconciled();
+		for (int i = 0, length = listeners.length; i < length; ++i) {
+			if (listeners[i] instanceof IScriptReconcilingListener) {
+				((IScriptReconcilingListener) listeners[i])
+						.aboutToBeReconciled();
+			} else if (listeners[i] instanceof IPhpScriptReconcilingListener) {
+				((IPhpScriptReconcilingListener) listeners[i])
+						.aboutToBeReconciled();
+			}
+		}
+	}
+
+	public void reconciled(IDocument document, IAnnotationModel model,
+			boolean forced, IProgressMonitor progressMonitor) {
+		// Notify listeners
+		Object[] listeners = fReconcilingListeners.getListeners();
+		for (int i = 0, length = listeners.length; i < length; ++i) {
+			if (listeners[i] instanceof IScriptReconcilingListener) {
+				((IScriptReconcilingListener) listeners[i]).reconciled(
+						(ISourceModule) getModelElement(), forced,
+						progressMonitor);
+				;
+			}
+		}
+		if (PHPUiPlugin.getDefault() == null)
+			return;
+		selectionChanged();
 	}
 
 	/*
@@ -2837,18 +2884,19 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		PHPUiPlugin phpPlugin = PHPUiPlugin.getDefault();
 		if (phpPlugin == null)
 			return;
-
 		// Always notify AST provider
 		ISourceModule inputModelElement = (ISourceModule) getModelElement();
-		// TODO: notify AST provider
+
+		// notify AST provider
 		phpPlugin.getASTProvider().reconciled(ast, inputModelElement,
 				progressMonitor);
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
 		for (int i = 0, length = listeners.length; i < length; ++i)
-			((IPhpScriptReconcilingListener) listeners[i]).reconciled(ast,
-					forced, progressMonitor);
+			if (listeners[i] instanceof IPhpScriptReconcilingListener)
+				((IPhpScriptReconcilingListener) listeners[i]).reconciled(ast,
+						forced, progressMonitor);
 	}
 
 	/**
@@ -2939,8 +2987,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 		return annotationModel;
 	}
 
-	protected void updateOccurrenceAnnotations(ITextSelection selection,
-			Program astRoot) {
+	protected void updateOccurrenceAnnotations(final ITextSelection selection,
+			final Program astRoot) {
+
+		if (fOccurrencesFinderJob != null)
+			fOccurrencesFinderJob.cancel();
+		if (!fMarkOccurrenceAnnotations)
+			return;
 		updateOccurencesAnnotationsRunJob(selection, astRoot);
 	}
 
@@ -2980,7 +3033,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				try {
 					astRoot = SharedASTProvider.getAST(
 							(ISourceModule) sourceModule,
-							SharedASTProvider.WAIT_YES,
+							SharedASTProvider.WAIT_ACTIVE_ONLY,
 							new NullProgressMonitor());
 				} catch (ModelException e) {
 					Logger.logException(e);
@@ -3364,7 +3417,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 			caret[0] = offset + styledText.getCaretOffset();
 		}
 		// IModelElement element = getElementAt(caret[0], false);
-		IModelElement element = getElementAt(caret[0], true);
+		IModelElement element = getElementAt(caret[0], false);
 		if (!(element instanceof ISourceReference))
 			return null;
 		return (ISourceReference) element;
@@ -3416,6 +3469,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				int length = range.getLength();
 				if (offset < 0 || length < 0)
 					return;
+				// XXX fix bad location exception
+				if (offset + length > getDocument().getLength()) {
+					length = length - offset + length
+							- getDocument().getLength();
+				}
 				setHighlightRange(offset, length, moveCursor);
 				if (!moveCursor)
 					return;
@@ -3440,6 +3498,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements
 				}
 			} catch (ModelException x) {
 			} catch (IllegalArgumentException x) {
+			} catch (Throwable x) {
 			}
 		} else if (moveCursor) {
 			resetHighlightRange();

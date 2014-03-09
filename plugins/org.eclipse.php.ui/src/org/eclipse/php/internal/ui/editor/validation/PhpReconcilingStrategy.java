@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.internal.ui.text.IProblemRequestorExtension;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.text.IDocument;
@@ -144,10 +145,8 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		try {
 			final ASTProvider astProvider = PHPUiPlugin.getDefault()
 					.getASTProvider();
-
-			synchronized (unit) {
-				unit.reconcile(true, null, fProgressMonitor);
-			}
+			SourceModule module = (SourceModule) unit;
+			unit.reconcile(true, null, fProgressMonitor);
 
 			// read DOM AST from provider if avaiable
 			Program createdAST = astProvider.getAST(unit,
@@ -160,7 +159,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 				PHPVersion phpVersion = ProjectOptions.getPhpVersion(unit
 						.getScriptProject().getProject());
 				ASTParser newParser = ASTParser.newParser(phpVersion, unit);
-				createdAST = newParser.createAST(null);
+				createdAST = newParser.createAST(fProgressMonitor);
 				if (createdAST != null && document != null) {
 					createdAST.setSourceModule(unit);
 					createdAST.setSourceRange(0, document.getLength());
@@ -203,12 +202,19 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			}
 		}
 
+		if (fProgressMonitor != null) {
+			fProgressMonitor.isCanceled();
+		}
+
+		fProgressMonitor = new NullProgressMonitor();
+
 		if (!(fEditor instanceof PHPStructuredEditor)) {
 			return;
 		}
 
-		final IModelElement modelElement = ((PHPStructuredEditor) fEditor)
-				.getModelElement();
+		final IModelElement modelElement = DLTKUIPlugin.getDefault()
+				.getWorkingCopyManager()
+				.getWorkingCopy(fEditor.getEditorInput());
 		if (modelElement instanceof ISourceModule) {
 
 			final Program ast[] = new Program[1];
@@ -284,16 +290,6 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		if (model instanceof IProblemRequestorExtension)
 			return (IProblemRequestorExtension) model;
 		return null;
-	}
-
-	public void aboutToBeReconciled() {
-		if (fIsScriptReconcilingListener) {
-			fJavaReconcilingListener.aboutToBeReconciled();
-		}
-	}
-
-	public void notifyListeners(boolean notify) {
-		fNotify = notify;
 	}
 
 	public void cleanup(IReporter reporter) {
